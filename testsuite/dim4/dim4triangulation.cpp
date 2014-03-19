@@ -79,7 +79,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(boundary);
     CPPUNIT_TEST(boundaryComponents);
     CPPUNIT_TEST(boundaryInclusions);
-    CPPUNIT_TEST(vertexLinks);
+    CPPUNIT_TEST(vertexLinksSpecific);
     CPPUNIT_TEST(eulerCharacteristic);
     CPPUNIT_TEST(homologyH1);
     CPPUNIT_TEST(fundGroup);
@@ -87,6 +87,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(barycentricSubdivision);
     CPPUNIT_TEST(eltmove15);
+    CPPUNIT_TEST(vertexLinks);
     CPPUNIT_TEST(edgeLinks);
 
     CPPUNIT_TEST_SUITE_END();
@@ -825,7 +826,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             }
         }
 
-        void vertexLinks() {
+        void vertexLinksSpecific() {
             verifyLinksSpheres(empty, 0);
             verifyLinksSpheres(s4_id, 5);
             verifyLinksSpheres(s4_doubleConeS3, 3);
@@ -1368,6 +1369,170 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             runCensusAllNoBdry(verifyEltmove15);
         }
 
+        static void verifyVertexLinks(Dim4Triangulation* tri) {
+            for (unsigned long i = 0; i < tri->getNumberOfVertices(); ++i) {
+                Dim4Vertex* v = tri->getVertex(i);
+                Dim4Isomorphism* iso;
+
+                const NTriangulation* link = v->buildLink();
+                NTriangulation* link2 = v->buildLinkDetail(true, &iso);
+
+                if (link->getNumberOfTetrahedra() != v->getDegree()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", vertex " << i << ": "
+                        << "link has incorrect number of tetrahedra.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (! link2->isIdenticalTo(*link)) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", vertex " << i << ": "
+                        << "variants of buildLink() give different results.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (! link->isConnected()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", vertex " << i << ": "
+                        << "link of vertex is not connected.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                // TODO: This bit
+                /*
+                if (v->isBoundary() &&
+                        v->getBoundaryComponent()->getNumberOfTetrahedra() > 0) {
+                    if (link->hasBoundaryFaces()) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ", vertex " << i << ": "
+                            << "link of boundary vertex is closed.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                } else {
+                    if (! link->hasBoundaryFaces()) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ", vertex " << i << ": "
+                            << "link of internal/ideal vertex is not closed.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+
+                if (v->isValid()) {
+                    if (v->isBoundary()) {
+                        if (link->getEulerChar() != 1) {
+                            std::ostringstream msg;
+                            msg << tri->getPacketLabel() << ", edge "
+                                << i << ": "
+                                << "link of boundary edge is not a disc.";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    } else {
+                        if (link->getEulerChar() != 2) {
+                            std::ostringstream msg;
+                            msg << tri->getPacketLabel() << ", edge "
+                                << i << ": "
+                                << "link of internal edge is not a sphere.";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    }
+                }
+                */
+
+                // Make sure the edge link matches what happens on
+                // the vertex links.
+                unsigned j, k;
+                Dim4Pentachoron* p;
+                NPerm5 perm;
+                const regina::NTetrahedron *t, *adj;
+                unsigned vNum;
+                for (j = 0; j < v->getDegree(); ++j) {
+                    p = tri->getPentachoron(iso->pentImage(j));
+                    perm = iso->facetPerm(j);
+                    vNum = perm[4];
+                    if (p->getVertex(vNum) != v) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ", vertex " << i << ": "
+                            << "link does not map 4 -> vertex correctly.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (perm[0] != p->getTetrahedronMapping(vNum)[0] ||
+                            perm[1] != p->getTetrahedronMapping(vNum)[1] ||
+                            perm[2] != p->getTetrahedronMapping(vNum)[2] ||
+                            perm[3] != p->getTetrahedronMapping(vNum)[3]) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ", vertex " << i << ": "
+                            << "link does not map 0,1,2,3 -> opposite "
+                            "tetrahedron correctly.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    for (k = 0; k < 4; ++k) {
+                        t = link->getTetrahedron(j);
+                        adj = t->adjacentTetrahedron(k);
+                        if (adj) {
+                            if (! p->adjacentPentachoron(perm[k])) {
+                                std::ostringstream msg;
+                                msg << tri->getPacketLabel()
+                                    << ", vertex " << i << ": "
+                                    << "link has extra adjacent tetrahedron.";
+                                CPPUNIT_FAIL(msg.str());
+                            } else if (p->adjacentPentachoron(perm[k]) !=
+                                    tri->getPentachoron(iso->pentImage(
+                                    link->tetrahedronIndex(adj)))) {
+                                std::ostringstream msg;
+                                msg << tri->getPacketLabel()
+                                    << ", vertex " << i << ": "
+                                    << "link has wrong adjacent tetrahedron.";
+                                CPPUNIT_FAIL(msg.str());
+                            } else if (p->adjacentGluing(perm[k]) !=
+                                    iso->facetPerm(
+                                        link->tetrahedronIndex(adj)) *
+                                    perm4to5(t->adjacentGluing(k)) *
+                                    perm.inverse()) {
+                                std::ostringstream msg;
+                                msg << tri->getPacketLabel()
+                                    << ", vertex " << i << ": "
+                                    << "link has wrong adjacent gluing.";
+                                CPPUNIT_FAIL(msg.str());
+                            }
+                        } else {
+                            if (p->adjacentPentachoron(perm[k])) {
+                                std::ostringstream msg;
+                                msg << tri->getPacketLabel()
+                                    << ", vertex " << i << ": "
+                                    << "link missing adjacent tetrahedron.";
+                                CPPUNIT_FAIL(msg.str());
+                            }
+                        }
+                    }
+                }
+
+                delete link2;
+                delete iso;
+            }
+        }
+
+        void vertexLinks() {
+            verifyVertexLinks(&empty);
+            verifyVertexLinks(&s4_id);
+            verifyVertexLinks(&s4_doubleConeS3);
+            verifyVertexLinks(&s3xs1);
+            verifyVertexLinks(&rp4);
+            verifyVertexLinks(&s3xs1Twisted);
+            verifyVertexLinks(&ball_singlePent);
+            verifyVertexLinks(&ball_foldedPent);
+            verifyVertexLinks(&ball_singleConeS3);
+            verifyVertexLinks(&ball_layerAndFold);
+            verifyVertexLinks(&idealPoincareProduct);
+            verifyVertexLinks(&mixedPoincareProduct);
+            verifyVertexLinks(&idealFigEightProduct);
+            verifyVertexLinks(&mixedFigEightProduct);
+            verifyVertexLinks(&pillow_twoCycle);
+            verifyVertexLinks(&pillow_threeCycle);
+            verifyVertexLinks(&pillow_fourCycle);
+
+            runCensusAllBounded(verifyVertexLinks);
+            runCensusAllNoBdry(verifyVertexLinks);
+        }
         static void verifyEdgeLinks(Dim4Triangulation* tri) {
             for (unsigned long i = 0; i < tri->getNumberOfEdges(); ++i) {
                 Dim4Edge* e = tri->getEdge(i);
