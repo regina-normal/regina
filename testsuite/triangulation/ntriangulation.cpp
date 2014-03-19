@@ -4112,7 +4112,43 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void eltMove14() {
-            // TODO
+            verifyEltMove14(&empty);
+            verifyEltMove14(&singleTet);
+            verifyEltMove14(&s3);
+            verifyEltMove14(&s3_large);
+            verifyEltMove14(&s2xs1);
+            verifyEltMove14(&rp3_1);
+            verifyEltMove14(&rp3_2);
+            verifyEltMove14(&rp3_large);
+            verifyEltMove14(&lens3_1);
+            verifyEltMove14(&lens8_3);
+            verifyEltMove14(&lens8_3_large);
+            verifyEltMove14(&lens7_1_loop);
+            verifyEltMove14(&rp3rp3);
+            verifyEltMove14(&q32xz3);
+            verifyEltMove14(&q28);
+            verifyEltMove14(&q20_large);
+            verifyEltMove14(&weberSeifert);
+            verifyEltMove14(&lens100_1);
+            verifyEltMove14(&ball_large);
+            verifyEltMove14(&ball_large_pillows);
+            verifyEltMove14(&ball_large_snapped);
+            verifyEltMove14(&singleTet_bary);
+            verifyEltMove14(&fig8_bary);
+            verifyEltMove14(&lst3_4_7);
+            verifyEltMove14(&figure8);
+            verifyEltMove14(&rp2xs1);
+            verifyEltMove14(&solidKB);
+            verifyEltMove14(&gieseking);
+            verifyEltMove14(&invalidEdges);
+            verifyEltMove14(&twoProjPlaneCusps);
+            verifyEltMove14(&cuspedGenusTwoTorus);
+            verifyEltMove14(&pinchedSolidTorus);
+            verifyEltMove14(&pinchedSolidKB);
+
+            runCensusAllClosed(verifyEltMove14);
+            runCensusAllBounded(verifyEltMove14);
+            runCensusAllIdeal(verifyEltMove14);
         }
 };
 
