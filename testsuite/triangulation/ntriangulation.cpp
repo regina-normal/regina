@@ -101,6 +101,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(simplification);
     CPPUNIT_TEST(reordering);
     CPPUNIT_TEST(propertyUpdates);
+    CPPUNIT_TEST(eltMove14);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -4015,6 +4016,139 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "is valid.", ! t.isValid());
             CPPUNIT_ASSERT_MESSAGE("A bad 1-tetrahedron triangulation "
                 "is orientable.", ! t.isOrientable());
+        }
+
+        static void verifyEltMove14(NTriangulation* tri) {
+            unsigned long n = tri->getNumberOfTetrahedra();
+            for (unsigned long i = 0; i < n; ++i) {
+                NTriangulation large(*tri);
+                large.oneFourMove(large.getTetrahedron(i));
+
+                if (large.getNumberOfTetrahedra() != n + 3) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "1-4 move gives wrong # tetrahedra.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (large.isValid() != tri->isValid()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "1-4 move changes validity.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (large.isOrientable() != tri->isOrientable()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "1-4 move changes orientability.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (large.isClosed() != tri->isClosed()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "1-4 move changes closedness.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (large.getNumberOfBoundaryComponents() !=
+                        tri->getNumberOfBoundaryComponents()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "1-4 move changes # boundary components.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (large.getEulerCharTri() != tri->getEulerCharTri()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "1-4 move changes Euler characteristic.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (tri->isValid()) {
+                    if (! (large.getHomologyH1() == tri->getHomologyH1())) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ", tet " << i << ": "
+                            << "1-4 move changes H1.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                    if (! (large.getHomologyH2() == tri->getHomologyH2())) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ", tet " << i << ": "
+                            << "1-4 move changes H2.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+
+                // Shrink.
+                if (large.isIsomorphicTo(*tri).get()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "1-4 move: result is isomorphic.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                bool res =
+                    large.collapseEdge(large.getTetrahedron(n + 2)->getEdge(
+                    regina::NEdge::edgeNumber[0][3]), true, true);
+
+                if (! res) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "1-4 move: could not recollapse edge.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (! large.isIsomorphicTo(*tri).get()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "1-4 move: recollapse is not isomorphic.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void eltMove14() {
+            verifyEltMove14(&empty);
+            verifyEltMove14(&singleTet);
+            verifyEltMove14(&s3);
+            verifyEltMove14(&s3_large);
+            verifyEltMove14(&s2xs1);
+            verifyEltMove14(&rp3_1);
+            verifyEltMove14(&rp3_2);
+            verifyEltMove14(&rp3_large);
+            verifyEltMove14(&lens3_1);
+            verifyEltMove14(&lens8_3);
+            verifyEltMove14(&lens8_3_large);
+            verifyEltMove14(&lens7_1_loop);
+            verifyEltMove14(&rp3rp3);
+            verifyEltMove14(&q32xz3);
+            verifyEltMove14(&q28);
+            verifyEltMove14(&q20_large);
+            verifyEltMove14(&weberSeifert);
+            //verifyEltMove14(&lens100_1); Too slow.
+            verifyEltMove14(&ball_large);
+            verifyEltMove14(&ball_large_pillows);
+            verifyEltMove14(&ball_large_snapped);
+            verifyEltMove14(&singleTet_bary);
+            verifyEltMove14(&fig8_bary);
+            verifyEltMove14(&lst3_4_7);
+            verifyEltMove14(&figure8);
+            verifyEltMove14(&rp2xs1);
+            verifyEltMove14(&solidKB);
+            verifyEltMove14(&gieseking);
+            verifyEltMove14(&invalidEdges);
+            verifyEltMove14(&twoProjPlaneCusps);
+            verifyEltMove14(&cuspedGenusTwoTorus);
+            verifyEltMove14(&pinchedSolidTorus);
+            verifyEltMove14(&pinchedSolidKB);
+
+            runCensusAllClosed(verifyEltMove14, true);
+            runCensusAllBounded(verifyEltMove14, true);
+            runCensusAllIdeal(verifyEltMove14, true);
         }
 };
 

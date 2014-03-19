@@ -32,6 +32,7 @@ Version 4.96  [ (under development) ]
             - New convenience operators == and !=.
         Class Dim2Triangulation:
             - New routine isIdenticalTo().
+            - New local modification oneThreeMove().
         Class Dim2VertexEmbedding:
             - New convenience operators == and !=.
         Class NAbelianGroup:
@@ -54,6 +55,7 @@ Version 4.96  [ (under development) ]
             - New convenience operators == and !=.
         Class NTriangulation:
             - New routine isIdenticalTo().
+            - New local modification oneFourMove().
         Class NVertexEmbedding:
             - New convenience operators == and !=.
         Class SnapPeaException, SnapPeaFatalError, SnapPeaMemoryFull:
