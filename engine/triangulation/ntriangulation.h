@@ -1785,6 +1785,40 @@ class REGINA_API NTriangulation : public NPacket,
          */
         bool twoThreeMove(NTriangle* t, bool check = true, bool perform = true);
         /**
+         * Checks the eligibility of and/or performs a 1-4 move
+         * about the given tetrahedron.
+         * This involves replacing one tetrahedron with four tetrahedra:
+         * each new tetrahedron runs from one face of
+         * the original tetrahedron to a new common internal degree four vertex.
+         *
+         * This move can always be performed.  The \a check argument is
+         * present (as for other moves), but is simply ignored (since
+         * the move is always legal).  The \a perform argument is also
+         * present for consistency with other moves, but if it is set to
+         * \c false then this routine does nothing and returns no useful
+         * information.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (edges, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a t)
+         * can no longer be used.
+         *
+         * See the page on \ref pachner for definitions and terminology
+         * relating to Pachner moves.  After the move, the new belt face will be
+         * <tt>getTetrahedra().back()->getVertex(3)</tt>.
+         *
+         * \pre The given tetrahedron is a tetrahedron of this triangulation.
+         *
+         * @param t the tetrahedron about which to perform the move.
+         * @param check this argument is ignored, since this move is
+         * always legal (see the notes above).
+         * @param perform \c true if we are to perform the move
+         * (defaults to \c true).
+         * @return \c true always.
+         */
+        bool oneFourMove(NTetrahedron* t, bool check = true,
+            bool perform = true);
+        /**
          * Checks the eligibility of and/or performs a 4-4 move
          * about the given edge.
          * This involves replacing the four tetrahedra joined at that
