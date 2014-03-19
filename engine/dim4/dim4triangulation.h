@@ -1328,9 +1328,9 @@ class REGINA_API Dim4Triangulation : public NPacket,
 
         /**
          * Checks the eligibility of and/or performs a 1-5 move
-         * about the given facet.
-         * This involves replacing one pentachora with five pentachora:
-         * each new pentachoron runs from one boundary tetrahedron of
+         * upon the given pentachoron.
+         * This involves replacing one pentachoron with five pentachora:
+         * each new pentachoron runs from one facet of
          * the original pentachoron to a new common internal degree five vertex.
          *
          * This move can always be performed.  The \a check argument is
