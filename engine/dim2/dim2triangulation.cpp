@@ -486,28 +486,4 @@ bool Dim2Triangulation::oneThreeMove( Dim2Triangle *t, bool check, bool perform 
     return true; 
 }
 
-bool Dim2Triangulation::threeOneMove( Dim2Vertex *v, bool check, bool perform )
-{
-    // not yet okay-ed by bab
-    #ifdef DEBUG
-    std::cerr << "Performing 1-3 move\n";
-    #endif
-    // check if vertex is standard and incident to three triangles
-    if (!perform) return (v->isBoundary() ? false : true );
-
-
-    return true;
-}
-
-bool Dim2Triangulation::twoTwoMove( Dim2Edge *e, bool check, bool perform )
-{
-    // not yet implemented
-    #ifdef DEBUG
-    std::cerr << "Performing 1-3 move\n";
-    #endif
-    return false;
-}        
-
-
-
 } // namespace regina
