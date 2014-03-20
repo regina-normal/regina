@@ -479,6 +479,12 @@
             quadrilateral or quadrilateral-octagon coordinates.
            </para>
            <para>
+            &regina; can compute boundary slopes for spun-normal surfaces,
+            but this feature
+            <link linkend="options-general">must be explicitly enabled</link>
+            in &regina;'s preferences.  The details are as follows.
+           </para>
+           <para>
             If the triangulation is oriented,
             the vertex links are all tori and the underlying
             coordinate system is normal (not almost normal), then
@@ -490,10 +496,24 @@
             <replaceable>q</replaceable> times around the longitude.
            </para>
            <para>
-            &regina; uses &snappy;'s conventions for the meridian and
-            longitude on each cusp.  If there are multiple cusps,
-            these pairs will be ordered by vertex number.
+            The meridian and longitude are chosen to be the shortest and
+            second shortest basis on each cusp, and their orientations
+            follow the convention used by the &snappy; kernel.  Be warned,
+            however, that this choice might not be unique for some cusp shapes,
+            and the resolution of such ambiguities might be machine-dependent.
            </para>
+           <para>
+            If there are multiple cusps, these boundary slopes
+            will be ordered by vertex number.
+           </para>
+           <warning><para>
+            If this triangulation originated from &snappea;, &regina; cannot
+            tell what meridian and longitude &snappea; was originally using
+            (since &regina; does not keep track of peripheral curves on cusps).
+            Therefore &regina; will always give boundary slopes relative to the
+            shortest and second-shortest basis, as described above,
+            which might not be what you expect.
+           </para></warning>
           </glossdef>
          </glossentry>
         </glosslist>

@@ -46,10 +46,12 @@
 #include "regina-core.h"
 #include "shareableobject.h"
 
-// Forward declaration of SnapPea structures.
-struct Triangulation;
-
 namespace regina {
+
+// Forward declaration of SnapPea structures.
+namespace snappea {
+    struct Triangulation;
+}
 
 class NMatrixInt;
 class NTriangulation;
@@ -60,6 +62,44 @@ class NTriangulation;
  */
 
 #ifndef EXCLUDE_SNAPPEA
+
+/**
+ * A base class for all exceptions that are thrown from within the
+ * SnapPea kernel.
+ */
+struct SnapPeaException {
+};
+
+/**
+ * An exception that is thrown when the SnapPea kernel encounters a
+ * fatal error.
+ */
+struct SnapPeaFatalError : public SnapPeaException {
+    std::string function;
+        /**< The function from the SnapPea kernel in which the
+             fatal error occurred. */
+    std::string file;
+        /**< The source file from the SnapPea kernel in which the
+             fatal error occurred. */
+
+    /**
+     * Creates a new exception, indicating where in the SnapPea kernel
+     * the error occurred.
+     *
+     * @param fromFunction the function from the SnapPea kernel in which
+     * the error occurred.
+     * @param fromFile the source file from the SnapPea kernel in which
+     * the error occurred.
+     */
+    SnapPeaFatalError(const char* fromFunction, const char* fromFile);
+};
+
+/**
+ * An exception that is thrown when the SnapPea kernel finds that all
+ * available memory has been exhausted.
+ */
+struct SnapPeaMemoryFull : public SnapPeaException {
+};
 
 /**
  * Offers direct access to the SnapPea kernel from within Regina.
@@ -76,6 +116,11 @@ class NTriangulation;
  * This class is designed to act as the sole conduit between the Regina
  * calculation engine and the SnapPea kernel.  Regina code should not
  * interact with the SnapPea kernel other than through this class.
+ *
+ * There are many places in the SnapPea kernel where SnapPea throws a
+ * fatal error.  As of Regina 4.96, these fatal errors are converted
+ * into exceptions (subclassed from SnapPeaException), which can be caught
+ * and handled politely.
  *
  * Regina uses the variant of the SnapPea kernel that is shipped with
  * SnapPy, as well as some additional code written explicitly for SnapPy.
@@ -128,7 +173,7 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
         } SolutionType;
 
     private:
-        ::Triangulation* snappeaData;
+        regina::snappea::Triangulation* snappeaData;
             /**< The triangulation stored in SnapPea's native format. */
         static bool kernelMessages;
             /**< Should the SnapPea kernel write diagnostic messages to
@@ -271,10 +316,13 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          * To compute these slopes directly from a normal surface, see
          * NNormalSurface::boundarySlopes().
          *
-         * This code makes use of the \e SnapPy kernel, and the choice
-         * of meridian and longitude on each cusp follows \e SnapPy's
-         * conventions.  In particular, we use the orientations for
-         * meridian and longitude from \e SnapPy. The orientations of the
+         * The meridian and longitude are chosen to be the shortest and
+         * second shortest basis on each cusp, and their orientations
+         * follow the convention used by the \e SnapPy kernel.  Be warned,
+         * however, that this choice might not be unique for some cusp shapes,
+         * and the resolution of such ambiguities might be machine-dependent.
+         *
+         * The orientations of the
          * boundary curves of a spun-normal surface are chosen so
          * that \e if meridian and longitude are a positive basis as
          * vieved from the cusp, then as one travels along an oriented
@@ -282,6 +330,13 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          * to one's right and down into the manifold to one's left.
          *
          * \pre All vertex links in this triangulation must be tori.
+         *
+         * \warning If this triangulation originated from SnapPea, Regina
+         * cannot tell what meridian and longitude SnapPea was originally using
+         * (since Regina does not keep track of peripheral curves on cusps).
+         * Therefore Regina will always give boundary slopes relative to the
+         * shortest and second-shortest basis, as described above, which
+         * might not be what you expect.
          *
          * @author William Pettersson and Stephan Tillmann
          *
@@ -495,8 +550,8 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          * @return a corresponding SnapPea structure, or 0 if the
          * conversion was unsuccessful.
          */
-        static ::Triangulation* reginaToSnapPea(const NTriangulation& tri,
-            bool allowClosed);
+        static regina::snappea::Triangulation* reginaToSnapPea(
+            const NTriangulation& tri, bool allowClosed);
 
         /**
          * Creates a new native Regina triangulation that mirrors the
@@ -509,10 +564,18 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          * @return a corresponding Regina triangulation, or 0 if
          * \a tri is a null pointer.
          */
-        static NTriangulation* snapPeaToRegina(::Triangulation* tri);
+        static NTriangulation* snapPeaToRegina(
+            regina::snappea::Triangulation* tri);
 };
 
 /*@}*/
+
+// Inline functions for SnapPeaFatalError
+
+inline SnapPeaFatalError::SnapPeaFatalError(
+        const char* fromFunction, const char* fromFile) :
+        function(fromFunction), file(fromFile) {
+}
 
 // Inline functions for NSnapPeaTriangulation
 

@@ -7,6 +7,7 @@ SET ( SOURCES
 # adding more source files
 ADD_SUBDIRECTORY("angle")
 ADD_SUBDIRECTORY("census")
+ADD_SUBDIRECTORY("dim2")
 ADD_SUBDIRECTORY("maths")
 IF (NOT EXCLUDE_SNAPPEA)
 ADD_SUBDIRECTORY("snappea")

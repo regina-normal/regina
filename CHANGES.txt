@@ -7,6 +7,52 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
+Version 4.96  [ (under development) ]
+
+    ENGINE:
+        Class Dim2EdgeEmbedding:
+            - New convenience operators == and !=.
+        Class Dim2Triangulation:
+            - New routine isIdenticalTo().
+            - New local modification oneThreeMove().
+        Class Dim2VertexEmbedding:
+            - New convenience operators == and !=.
+        Class NAbelianGroup:
+            - New convenience operator !=.
+        Class NFaceEmbedding:
+            - New convenience operators == and !=.
+        Class NNormalSurface:
+            - Routine boundarySlopes() now uses (shortest, second-shortest)
+              curves on the cusp as its (meridian, longitude) basis.
+              This reverts a change in behaviour from the previous release
+              caused by the recent sync with the SnapPy 2.0.3 kernel.
+        Class NSnapPeaTriangulation:
+            - Updated the SnapPea kernel to the one shipped with SnapPy 2.1.
+            - The entire SnapPea kernel now lives within the namespace
+              regina::snappea, which should ensure safety even if a
+              conflicting SnapPy kernel is simultaneously loaded via Python.
+            - Fatal errors in the SnapPea kernel are now handled by throwing
+              exceptions, instead of quitting abruptly.
+            - Routine slopeEquations() now uses (shortest, second-shortest)
+              curves on the cusp as its (meridian, longitude) basis.
+              This reverts a change in behaviour from the previous release
+              caused by the recent sync with the SnapPy 2.0.3 kernel.
+        Class NTriangleEmbedding:
+            - New convenience operators == and !=.
+        Class NTriangulation:
+            - New routine isIdenticalTo().
+            - New local modification oneFourMove().
+        Class NVertexEmbedding:
+            - New convenience operators == and !=.
+        Class SnapPeaException, SnapPeaFatalError, SnapPeaMemoryFull:
+            - New exceptions to be thrown by the SnapPea kernel.
+        Header permconv.h:
+            - New conversion routines perm3to5() and perm5to3().
+    USER INTERFACE:
+        - Boundary slopes for spun-normal surfaces must now be explicitly
+          enabled in preferences, since the (meridian, longitude) basis might
+          not be what the user expects.
+
 Version 4.95  [ 12 November, 2013 ]
 
     GENERAL:

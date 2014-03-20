@@ -128,6 +128,26 @@ class REGINA_API Dim2EdgeEmbedding {
          * corresponding vertices of getTriangle().
          */
         NPerm3 getVertices() const;
+
+        /**
+         * Tests whether this and the given embedding are identical.
+         * Here "identical" means that they refer to the same edge of
+         * the same triangle.
+         *
+         * @param rhs the embedding to compare with this.
+         * @return \c true if and only if both embeddings are identical.
+         */
+        bool operator == (const Dim2EdgeEmbedding& rhs) const;
+
+        /**
+         * Tests whether this and the given embedding are different.
+         * Here "different" means that they do not refer to the same edge of
+         * the same triangle.
+         *
+         * @param rhs the embedding to compare with this.
+         * @return \c true if and only if both embeddings are identical.
+         */
+        bool operator != (const Dim2EdgeEmbedding& rhs) const;
 };
 
 /**
@@ -295,6 +315,16 @@ inline int Dim2EdgeEmbedding::getEdge() const {
 
 inline NPerm3 Dim2EdgeEmbedding::getVertices() const {
     return triangle_->getEdgeMapping(edge_);
+}
+
+inline bool Dim2EdgeEmbedding::operator == (const Dim2EdgeEmbedding& other)
+        const {
+    return ((triangle_ == other.triangle_) && (edge_ == other.edge_));
+}
+
+inline bool Dim2EdgeEmbedding::operator != (const Dim2EdgeEmbedding& other)
+        const {
+    return ((triangle_ != other.triangle_) || (edge_ != other.edge_));
 }
 
 // Inline functions for Dim2Edge

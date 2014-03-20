@@ -82,6 +82,8 @@ void addNVertex() {
             return_value_policy<reference_existing_object>())
         .def("getVertex", &NVertexEmbedding::getVertex)
         .def("getVertices", &NVertexEmbedding::getVertices)
+        .def(self == self)
+        .def(self != self)
     ;
 
     scope s = class_<NVertex, bases<regina::ShareableObject>,

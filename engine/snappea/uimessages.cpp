@@ -40,15 +40,13 @@
 
 bool regina::NSnapPeaTriangulation::kernelMessages = false;
 
+namespace regina { namespace snappea {
+
 /**
  * Supply bare-bones UI messaging functions for the SnapPea kernel to use.
  *
  * See snappea/kernel/SnapPea.h for details on what each function should do.
  */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 void uAcknowledge(const char *message) {
     if (regina::NSnapPeaTriangulation::kernelMessagesEnabled())
@@ -70,13 +68,13 @@ int uQuery(const char *message, const int num_responses,
 
 void uFatalError(const char *function, const char *file) {
     std::cerr << "FATAL ERROR: " << file << ", " << function << std::endl;
-    exit(1);
+    throw regina::SnapPeaFatalError(function, file);
 }
 
 void uAbortMemoryFull(void) {
     std::cerr << "FATAL ERROR: Available memory has been exhausted."
         << std::endl;
-    exit(1);
+    throw regina::SnapPeaMemoryFull();
 }
 
 
@@ -84,7 +82,7 @@ void uPrepareMemFullMessage() {
     // Do nothing for now.
 }
 
-void uLongComputationBegins(char *message, Boolean /* is_abortable */) {
+void uLongComputationBegins(const char *message, Boolean /* is_abortable */) {
     if (regina::NSnapPeaTriangulation::kernelMessagesEnabled())
         std::cout << message << std::endl;
 }
@@ -96,7 +94,4 @@ FuncResult uLongComputationContinues() {
 void uLongComputationEnds() {
 }
 
-#ifdef __cplusplus
-} // extern "C"
-#endif
-
+} } // namespaces

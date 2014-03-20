@@ -39,9 +39,11 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
+#include "dim2/dim2triangulation.h"
 #include "maths/approx.h"
 #include "maths/nmatrixint.h"
 #include "maths/numbertheory.h"
+#include "maths/permconv.h"
 #include "packet/ncontainer.h"
 #include "split/nsignature.h"
 #include "subcomplex/nstandardtri.h"
@@ -54,6 +56,7 @@
 #include "testsuite/exhaustive.h"
 #include "testsuite/triangulation/testtriangulation.h"
 
+using regina::Dim2Triangulation;
 using regina::NAbelianGroup;
 using regina::NExampleTriangulation;
 using regina::NGroupPresentation;
@@ -74,6 +77,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(standardness);
     CPPUNIT_TEST(orientability);
     CPPUNIT_TEST(boundaryComponents);
+    CPPUNIT_TEST(vertexLinksSpecific);
     CPPUNIT_TEST(vertexLinks);
     CPPUNIT_TEST(eulerCharacteristic);
     CPPUNIT_TEST(homologyH1);
@@ -97,6 +101,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(simplification);
     CPPUNIT_TEST(reordering);
     CPPUNIT_TEST(propertyUpdates);
+    CPPUNIT_TEST(eltMove14);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -235,45 +240,89 @@ class NTriangulationTest : public CppUnit::TestFixture {
         void setUp() {
             // Begin with trivial cases.
             // The empty triangulation needs no initialisation whatsoever.
+            empty.setPacketLabel("Empty triangulation");
+
             singleTet.newTetrahedron();
+            singleTet.setPacketLabel("Single tetrahedron");
 
             // Some of our triangulations can be constructed automatically.
             s3.insertLayeredLensSpace(1, 0);
+            s3.setPacketLabel("S^3");
+
             s2xs1.insertLayeredLensSpace(0, 1);
+            s2xs1.setPacketLabel("S^2 x S^1");
+
             rp3_1.insertLayeredLensSpace(2, 1);
+            rp3_1.setPacketLabel("RP^3 (1 vtx)");
+
             rp3_2.insertLayeredLoop(2, false);
+            rp3_2.setPacketLabel("RP^3 (2 vtx)");
+
             lens8_3.insertLayeredLensSpace(8, 3);
+            lens8_3.setPacketLabel("L(8,3)");
+
             lens100_1.insertLayeredLensSpace(100, 1);
+            lens100_1.setPacketLabel("L(100,1)");
+
             lst3_4_7.insertLayeredSolidTorus(3, 4);
+            lst3_4_7.setPacketLabel("LST(3,4,7)");
+
             q28.insertLayeredLoop(7, true);
+            q28.setPacketLabel("S^3 / Q_28");
+
             lens7_1_loop.insertLayeredLoop(7, false);
+            lens7_1_loop.setPacketLabel("Layered loop L(7,1)");
 
             // Some of our triangulations can be generated from
             // splitting surfaces.
             generateFromSig(rp3rp3, "aabccd.b.d");
+            rp3rp3.setPacketLabel("RP^3 # RP^3");
+
             generateFromSig(q32xz3, "aabcdb.cedfef");
+            q32xz3.setPacketLabel("S^3 / Q_32 x Z_3");
+
             generateFromSig(s3_large, "abc.abd.cef.de.fg.g");
+            s3_large.setPacketLabel("Large S^3");
+
             generateFromSig(lens8_3_large, "aabcb.cd.d");
+            lens8_3_large.setPacketLabel("Large L(8,3)");
+
             generateFromSig(rp3_large, "aabcdedcfb.fg.e.g");
+            rp3_large.setPacketLabel("Large RP^3");
+
             generateFromSig(q20_large, "abcdeabcdef.fg.g");
+            q20_large.setPacketLabel("Large S^3 / Q_20");
 
             // Some are hard-coded in the calculation engine as sample
             // triangulations.
             copyAndDelete(weberSeifert, NExampleTriangulation::weberSeifert());
+            weberSeifert.setPacketLabel("Weber-Seifert");
+
             copyAndDelete(figure8,
                 NExampleTriangulation::figureEightKnotComplement());
+            figure8.setPacketLabel("Figure 8 knot complement");
+
             copyAndDelete(solidKB, NExampleTriangulation::solidKleinBottle());
+            solidKB.setPacketLabel("Solid Klein bottle");
+
             copyAndDelete(rp2xs1, NExampleTriangulation::rp2xs1());
+            rp2xs1.setPacketLabel("RP^2 x S^1");
+
             copyAndDelete(gieseking, NExampleTriangulation::gieseking());
+            gieseking.setPacketLabel("Gieseking manifold");
+
             copyAndDelete(cuspedGenusTwoTorus,
                 NExampleTriangulation::cuspedGenusTwoTorus());
+            cuspedGenusTwoTorus.setPacketLabel("Cusped solid genus 2 torus");
 
             singleTet_bary.newTetrahedron();
             singleTet_bary.barycentricSubdivision();
+            singleTet_bary.setPacketLabel("Subdivided tetrahedron");
 
             copyAndDelete(fig8_bary,
                 NExampleTriangulation::figureEightKnotComplement());
             fig8_bary.barycentricSubdivision();
+            fig8_bary.setPacketLabel("Subdivided figure 8 knot complement");
 
             // The rest alas must be done manually.
             NTetrahedron* r;
@@ -289,6 +338,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             r->joinTo(1, s, NPerm4());
             r->joinTo(2, s, NPerm4());
             r->joinTo(3, s, NPerm4());
+            lens3_1.setPacketLabel("L(3,1)");
 
             // For a triangulation with invalid edges, we simply fold
             // the faces of a tetrahedron together in pairs (as in a
@@ -296,9 +346,11 @@ class NTriangulationTest : public CppUnit::TestFixture {
             r = invalidEdges.newTetrahedron();
             r->joinTo(0, r, NPerm4(1, 0, 3, 2));
             r->joinTo(2, r, NPerm4(1, 0, 3, 2));
+            invalidEdges.setPacketLabel("Triangulation with invalid edges");
 
             twoProjPlaneCusps.insertTriangulation(invalidEdges);
             twoProjPlaneCusps.barycentricSubdivision();
+            twoProjPlaneCusps.setPacketLabel("Triangulation with RP^2 cusps");
 
             // To construct a solid torus with a pinched longitude, we
             // identify two opposite faces of a square pyramid.
@@ -306,6 +358,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             s = pinchedSolidTorus.newTetrahedron();
             r->joinTo(3, s, NPerm4(0, 1, 2, 3));
             r->joinTo(2, s, NPerm4(0, 3, 1, 2));
+            pinchedSolidTorus.setPacketLabel("Pinched solid torus");
 
             // The pinched solid Klein bottle is much the same, except
             // for a twist before the opposite faces are identified.
@@ -313,6 +366,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             s = pinchedSolidKB.newTetrahedron();
             r->joinTo(3, s, NPerm4(0, 1, 2, 3));
             r->joinTo(2, s, NPerm4(0, 2, 1, 3));
+            pinchedSolidKB.setPacketLabel("Pinched solid Klein bottle");
 
             // This ball used to cause a crash once upon a time.
             // Throw it into the test suite for good measure.
@@ -326,6 +380,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             s->joinTo(1, t, NPerm4(2,0,1,3));
             t->joinTo(1, u, NPerm4(2,0,1,3));
             u->joinTo(2, u, NPerm4(1,2));
+            ball_large.setPacketLabel("4-tetrahedron ball");
 
             // Make two triangular pillows, then join them together.
             // This crashed with 2-0 vertex moves once upon a time.
@@ -340,6 +395,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             t->joinTo(1, u, NPerm4());
             t->joinTo(2, u, NPerm4());
             r->joinTo(3, t, NPerm4());
+            ball_large_pillows.setPacketLabel("4-tetrahedron pillow ball");
 
             // Make three snapped balls and join them together.
             r = ball_large_snapped.newTetrahedron();
@@ -350,6 +406,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             t->joinTo(2, t, NPerm4(2, 1));
             r->joinTo(1, s, NPerm4());
             s->joinTo(0, t, NPerm4());
+            ball_large_snapped.setPacketLabel("3-tetrahedron snapped ball");
         }
 
         void tearDown() {
@@ -1103,7 +1160,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             }
         }
 
-        void vertexLinks() {
+        void vertexLinksSpecific() {
             verifyVertexCount(singleTet, 4, "Single tetrahedron");
             verifyVertexDisc(singleTet, 0, "Single tetrahedron");
             verifyVertexDisc(singleTet, 1, "Single tetrahedron");
@@ -1253,6 +1310,188 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "Pinched solid Klein bottle");
             verifyVertexDisc(pinchedSolidKB, 2,
                 "Pinched solid Klein bottle");
+        }
+
+        static void verifyVertexLinks(NTriangulation* tri) {
+            for (unsigned long i = 0; i < tri->getNumberOfVertices(); ++i) {
+                NVertex* v = tri->getVertex(i);
+                NIsomorphism* iso;
+
+                const Dim2Triangulation* link = v->buildLink();
+                Dim2Triangulation* link2 = v->buildLinkDetail(true, &iso);
+
+                if (link->getNumberOfTriangles() != v->getDegree()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", vertex " << i << ": "
+                        << "link has incorrect number of triangles.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (! link2->isIdenticalTo(*link)) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", vertex " << i << ": "
+                        << "variants of buildLink() give different results.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (! link->isConnected()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", vertex " << i << ": "
+                        << "link of vertex is not connected.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (v->isIdeal()) {
+                    // Vertex link should be closed but not a sphere.
+                    if (! link->isClosed()) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ", vertex " << i << ": "
+                            << "link of ideal vertex is not a closed surface.";
+                        CPPUNIT_FAIL(msg.str());
+                    } else if (link->getEulerChar() == 2) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ", vertex " << i << ": "
+                            << "link of ideal vertex is a sphere.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                } else if (! v->isStandard()) {
+                    // Vertex link should have boundary and not be a disc.
+                    if (link->isClosed()) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ", vertex " << i << ": "
+                            << "link of invalid vertex is closed.";
+                        CPPUNIT_FAIL(msg.str());
+                    } else if (link->getEulerChar() == 1) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ", vertex " << i << ": "
+                            << "link of invalid vertex is a disc.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                } else if (! v->isBoundary()) {
+                    // Vertex link should be a sphere.
+                    if (! link->isClosed()) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ", vertex " << i << ": "
+                            << "link of internal vertex is not closed.";
+                        CPPUNIT_FAIL(msg.str());
+                    } else if (link->getEulerChar() != 2) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ", vertex " << i << ": "
+                            << "link of internal vertex is not a sphere.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                } else {
+                    // Vertex link should be a disc.
+                    if (link->isClosed() || link->getEulerChar() != 1) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ", vertex " << i << ": "
+                            << "link of real boundary vertex is not a disc.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+
+                unsigned j, k;
+                NTetrahedron* tet;
+                NPerm4 perm;
+                const regina::Dim2Triangle *t, *adj;
+                unsigned vNum;
+                for (j = 0; j < v->getDegree(); ++j) {
+                    tet = tri->getTetrahedron(iso->tetImage(j));
+                    perm = iso->facePerm(j);
+                    vNum = perm[3];
+                    if (tet->getVertex(vNum) != v) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ", vertex " << i << ": "
+                            << "link does not map 3 -> vertex correctly.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (perm[0] != tet->getTriangleMapping(vNum)[0] ||
+                            perm[1] != tet->getTriangleMapping(vNum)[1] ||
+                            perm[2] != tet->getTriangleMapping(vNum)[2]) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ", vertex " << i << ": "
+                            << "link does not map 0,1,2 -> opposite "
+                            "triangle correctly.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    for (k = 0; k < 3; ++k) {
+                        t = link->getTriangle(j);
+                        adj = t->adjacentTriangle(k);
+                        if (adj) {
+                            if (! tet->adjacentTetrahedron(perm[k])) {
+                                std::ostringstream msg;
+                                msg << tri->getPacketLabel()
+                                    << ", vertex " << i << ": "
+                                    << "link has extra adjacent triangle.";
+                                CPPUNIT_FAIL(msg.str());
+                            } else if (tet->adjacentTetrahedron(perm[k]) !=
+                                    tri->getTetrahedron(iso->tetImage(
+                                    link->triangleIndex(adj)))) {
+                                std::ostringstream msg;
+                                msg << tri->getPacketLabel()
+                                    << ", vertex " << i << ": "
+                                    << "link has wrong adjacent triangle.";
+                                CPPUNIT_FAIL(msg.str());
+                            } else if (tet->adjacentGluing(perm[k]) !=
+                                    iso->facetPerm(link->triangleIndex(adj)) *
+                                    perm3to4(t->adjacentGluing(k)) *
+                                    perm.inverse()) {
+                                std::ostringstream msg;
+                                msg << tri->getPacketLabel()
+                                    << ", vertex " << i << ": "
+                                    << "link has wrong adjacent gluing.";
+                                CPPUNIT_FAIL(msg.str());
+                            }
+                        } else {
+                            if (tet->adjacentTetrahedron(perm[k])) {
+                                std::ostringstream msg;
+                                msg << tri->getPacketLabel()
+                                    << ", vertex " << i << ": "
+                                    << "link missing adjacent triangle.";
+                                CPPUNIT_FAIL(msg.str());
+                            }
+                        }
+                    }
+                }
+
+                delete link2;
+                delete iso;
+            }
+        }
+
+        void vertexLinks() {
+            verifyVertexLinks(&empty);
+            verifyVertexLinks(&singleTet);
+            verifyVertexLinks(&s3);
+            verifyVertexLinks(&s2xs1);
+            verifyVertexLinks(&rp3_1);
+            verifyVertexLinks(&rp3_2);
+            verifyVertexLinks(&lens3_1);
+            verifyVertexLinks(&lens8_3);
+            verifyVertexLinks(&lens8_3_large);
+            verifyVertexLinks(&lens7_1_loop);
+            verifyVertexLinks(&rp3rp3);
+            verifyVertexLinks(&q32xz3);
+            verifyVertexLinks(&q28);
+            verifyVertexLinks(&weberSeifert);
+            verifyVertexLinks(&lens100_1);
+            verifyVertexLinks(&ball_large);
+            verifyVertexLinks(&ball_large_pillows);
+            verifyVertexLinks(&ball_large_snapped);
+            verifyVertexLinks(&lst3_4_7);
+            verifyVertexLinks(&figure8);
+            verifyVertexLinks(&rp2xs1);
+            verifyVertexLinks(&solidKB);
+            verifyVertexLinks(&gieseking);
+            verifyVertexLinks(&invalidEdges);
+            verifyVertexLinks(&twoProjPlaneCusps);
+            verifyVertexLinks(&cuspedGenusTwoTorus);
+            verifyVertexLinks(&pinchedSolidTorus);
+            verifyVertexLinks(&pinchedSolidKB);
+
+            runCensusAllClosed(verifyVertexLinks);
+            runCensusAllBounded(verifyVertexLinks);
+            runCensusAllIdeal(verifyVertexLinks);
         }
 
         void verifyEuler(const NTriangulation& tri,
@@ -2651,7 +2890,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyTVS2xS1(7); verifyTVS2xS1(8);
         }
 
-        void verifyDoubleCover(const NTriangulation& tri, const char* triName) {
+        void verifyDoubleCover(const NTriangulation& tri) {
             // PRE: tri is either empty or connected.
 
             NTriangulation cover(tri);
@@ -2671,7 +2910,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 regina::NContainer parent;
                 if (cover.splitIntoComponents(&parent) != 2) {
                     std::ostringstream msg;
-                    msg << triName << ": Orientable double cover does not "
+                    msg << tri.getPacketLabel()
+                        << ": Orientable double cover does not "
                         "contain precisely two components.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2681,7 +2921,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 while (child) {
                     if (! tri.isIsomorphicTo(*child).get()) {
                         std::ostringstream msg;
-                        msg << triName << ": Orientable double cover "
+                        msg << tri.getPacketLabel()
+                            << ": Orientable double cover "
                             "contains a component not isomorphic to the "
                             "original.";
                         CPPUNIT_FAIL(msg.str());
@@ -2694,14 +2935,16 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 // We should come away with a proper connected double cover.
                 if (cover.getNumberOfComponents() != 1) {
                     std::ostringstream msg;
-                    msg << triName << ": Orientable double cover does not "
+                    msg << tri.getPacketLabel()
+                        << ": Orientable double cover does not "
                         "contain precisely one component.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (! cover.isOrientable()) {
                     std::ostringstream msg;
-                    msg << triName << ": Orientable double cover is not "
+                    msg << tri.getPacketLabel()
+                        << ": Orientable double cover is not "
                         "orientable.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2709,7 +2952,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 if (cover.getNumberOfTetrahedra() !=
                         2 * tri.getNumberOfTetrahedra()) {
                     std::ostringstream msg;
-                    msg << triName << ": Orientable double cover does not "
+                    msg << tri.getPacketLabel()
+                        << ": Orientable double cover does not "
                         "contain precisely twice as many tetrahedra.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2717,7 +2961,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 if (cover.getNumberOfTriangles() !=
                         2 * tri.getNumberOfTriangles()) {
                     std::ostringstream msg;
-                    msg << triName << ": Orientable double cover does not "
+                    msg << tri.getPacketLabel()
+                        << ": Orientable double cover does not "
                         "contain precisely twice as many triangles.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2725,7 +2970,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 if (tri.isValid() && cover.getNumberOfEdges() !=
                         2 * tri.getNumberOfEdges()) {
                     std::ostringstream msg;
-                    msg << triName << ": Orientable double cover does not "
+                    msg << tri.getPacketLabel()
+                        << ": Orientable double cover does not "
                         "contain precisely twice as many edges.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2734,7 +2980,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
                         cover.getNumberOfVertices() !=
                         2 * tri.getNumberOfVertices()) {
                     std::ostringstream msg;
-                    msg << triName << ": Orientable double cover does not "
+                    msg << tri.getPacketLabel()
+                        << ": Orientable double cover does not "
                         "contain precisely twice as many vertices.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2746,7 +2993,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
                     hCover.addTorsionElement(2);
                     if (! (tri.getHomologyH1() == hCover)) {
                         std::ostringstream msg;
-                        msg << triName << ": Orientable double cover has H1 = "
+                        msg << tri.getPacketLabel()
+                            << ": Orientable double cover has H1 = "
                             << cover.getHomologyH1().str()
                             << ", which does not match the original H1 = "
                             << tri.getHomologyH1().str() << '.';
@@ -2757,39 +3005,42 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void doubleCover() {
-            verifyDoubleCover(empty, "Empty triangulation");
-            verifyDoubleCover(singleTet, "Single tetrahedron");
-            verifyDoubleCover(s3, "S^3");
-            verifyDoubleCover(s2xs1, "S^2 x S^1");
-            verifyDoubleCover(rp3_1, "RP^3 (1 vtx)");
-            verifyDoubleCover(rp3_2, "RP^3 (2 vtx)");
-            verifyDoubleCover(lens3_1, "L(3,1)");
-            verifyDoubleCover(lens8_3, "L(8,3)");
-            verifyDoubleCover(lens8_3_large, "Large L(8,3)");
-            verifyDoubleCover(lens7_1_loop, "Layered loop L(7,1)");
-            verifyDoubleCover(rp3rp3, "RP^3 # RP^3");
-            verifyDoubleCover(q32xz3, "S^3 / Q_32 x Z_3");
-            verifyDoubleCover(q28, "S^3 / Q_28");
-            verifyDoubleCover(weberSeifert, "Weber-Seifert");
-            verifyDoubleCover(lens100_1, "L(100,1)");
-            verifyDoubleCover(ball_large, "4-tetrahedron ball");
-            verifyDoubleCover(ball_large_pillows, "4-tetrahedron pillow ball");
-            verifyDoubleCover(ball_large_snapped, "3-tetrahedron snapped ball");
-            verifyDoubleCover(lst3_4_7, "LST(3,4,7)");
-            verifyDoubleCover(figure8, "Figure eight knot complement");
-            verifyDoubleCover(rp2xs1, "RP^2 x S^1");
-            verifyDoubleCover(solidKB, "Solid Klein bottle");
-            verifyDoubleCover(gieseking, "Gieseking manifold");
-            verifyDoubleCover(invalidEdges, "Triangulation with invalid edges");
-            verifyDoubleCover(twoProjPlaneCusps,
-                "Triangulation with RP^2 cusps");
-            verifyDoubleCover(cuspedGenusTwoTorus,
-                "Cusped solid genus 2 torus");
-            verifyDoubleCover(pinchedSolidTorus, "Pinched solid torus");
-            verifyDoubleCover(pinchedSolidKB, "Pinched solid Klein bottle");
+            verifyDoubleCover(empty);
+            verifyDoubleCover(singleTet);
+            verifyDoubleCover(s3);
+            verifyDoubleCover(s3_large);
+            verifyDoubleCover(s2xs1);
+            verifyDoubleCover(rp3_1);
+            verifyDoubleCover(rp3_2);
+            verifyDoubleCover(rp3_large);
+            verifyDoubleCover(lens3_1);
+            verifyDoubleCover(lens8_3);
+            verifyDoubleCover(lens8_3_large);
+            verifyDoubleCover(lens7_1_loop);
+            verifyDoubleCover(rp3rp3);
+            verifyDoubleCover(q32xz3);
+            verifyDoubleCover(q28);
+            verifyDoubleCover(q20_large);
+            verifyDoubleCover(weberSeifert);
+            verifyDoubleCover(lens100_1);
+            verifyDoubleCover(ball_large);
+            verifyDoubleCover(ball_large_pillows);
+            verifyDoubleCover(ball_large_snapped);
+            verifyDoubleCover(singleTet_bary);
+            verifyDoubleCover(fig8_bary);
+            verifyDoubleCover(lst3_4_7);
+            verifyDoubleCover(figure8);
+            verifyDoubleCover(rp2xs1);
+            verifyDoubleCover(solidKB);
+            verifyDoubleCover(gieseking);
+            verifyDoubleCover(invalidEdges);
+            verifyDoubleCover(twoProjPlaneCusps);
+            verifyDoubleCover(cuspedGenusTwoTorus);
+            verifyDoubleCover(pinchedSolidTorus);
+            verifyDoubleCover(pinchedSolidKB);
         }
 
-        void verifyBary(const NTriangulation& tri, const char* name) {
+        void verifyBary(const NTriangulation& tri) {
             NTriangulation b(tri);
             b.barycentricSubdivision();
 
@@ -2797,7 +3048,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             // they can never turn valid into invalid.
             if (tri.isValid() && ! b.isValid()) {
                 std::ostringstream msg;
-                msg << name
+                msg << tri.getPacketLabel()
                     << ": Barycentric subdivision breaks validity.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -2806,14 +3057,14 @@ class NTriangulationTest : public CppUnit::TestFixture {
             // Only consider the valid -> valid case here.
             if (tri.isValid() && (tri.isIdeal() != b.isIdeal())) {
                 std::ostringstream msg;
-                msg << name
+                msg << tri.getPacketLabel()
                     << ": Barycentric subdivision breaks idealness.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (tri.hasBoundaryTriangles() != b.hasBoundaryTriangles()) {
                 std::ostringstream msg;
-                msg << name
+                msg << tri.getPacketLabel()
                     << ": Barycentric subdivision breaks boundary triangles.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -2821,28 +3072,28 @@ class NTriangulationTest : public CppUnit::TestFixture {
             // As with ideal, consider valid inputs only.
             if (tri.isValid() && (tri.isClosed() != b.isClosed())) {
                 std::ostringstream msg;
-                msg << name
+                msg << tri.getPacketLabel()
                     << ": Barycentric subdivision breaks closedness.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (tri.isOrientable() != b.isOrientable()) {
                 std::ostringstream msg;
-                msg << name
+                msg << tri.getPacketLabel()
                     << ": Barycentric subdivision breaks orientability.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (tri.isConnected() != b.isConnected()) {
                 std::ostringstream msg;
-                msg << name
+                msg << tri.getPacketLabel()
                     << ": Barycentric subdivision breaks connectedness.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (tri.getNumberOfComponents() != b.getNumberOfComponents()) {
                 std::ostringstream msg;
-                msg << name
+                msg << tri.getPacketLabel()
                     << ": Barycentric subdivision breaks connected components.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -2852,7 +3103,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             if (tri.isValid() && (tri.getNumberOfBoundaryComponents() !=
                     b.getNumberOfBoundaryComponents())) {
                 std::ostringstream msg;
-                msg << name
+                msg << tri.getPacketLabel()
                     << ": Barycentric subdivision breaks boundary components.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -2862,7 +3113,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             if (tri.isValid() &&
                     (tri.getEulerCharTri() != b.getEulerCharTri())) {
                 std::ostringstream msg;
-                msg << name
+                msg << tri.getPacketLabel()
                     << ": Barycentric subdivision breaks Euler char (tri).";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -2870,7 +3121,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             if (tri.isValid() &&
                     (tri.getEulerCharManifold() != b.getEulerCharManifold())) {
                 std::ostringstream msg;
-                msg << name
+                msg << tri.getPacketLabel()
                     << ": Barycentric subdivision breaks Euler char (mfd).";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -2884,61 +3135,59 @@ class NTriangulationTest : public CppUnit::TestFixture {
 
             if (! (tri.getHomologyH1() == b.getHomologyH1())) {
                 std::ostringstream msg;
-                msg << name
+                msg << tri.getPacketLabel()
                     << ": Barycentric subdivision breaks H1.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (! (tri.getHomologyH2() == b.getHomologyH2())) {
                 std::ostringstream msg;
-                msg << name
+                msg << tri.getPacketLabel()
                     << ": Barycentric subdivision breaks H2.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
 
         void barycentricSubdivision() {
-            verifyBary(empty, "Empty triangulation");
-            verifyBary(singleTet, "Single tetrahedron");
-            verifyBary(s3, "S^3");
-            verifyBary(s2xs1, "S^2 x S^1");
-            verifyBary(rp3_1, "RP^3 (1 vtx)");
-            verifyBary(rp3_2, "RP^3 (2 vtx)");
-            verifyBary(lens3_1, "L(3,1)");
-            verifyBary(lens8_3, "L(8,3)");
-            // (too large) verifyBary(lens8_3_large, "Large L(8,3)");
-            verifyBary(lens7_1_loop, "Layered loop L(7,1)");
-            verifyBary(rp3rp3, "RP^3 # RP^3");
-            verifyBary(q32xz3, "S^3 / Q_32 x Z_3");
-            verifyBary(q28, "S^3 / Q_28");
-            // (too large) verifyBary(weberSeifert, "Weber-Seifert");
-            verifyBary(lens100_1, "L(100,1)");
-            verifyBary(ball_large, "4-tetrahedron ball");
-            verifyBary(ball_large_pillows, "4-tetrahedron pillow ball");
-            verifyBary(ball_large_snapped, "3-tetrahedron snapped ball");
-            verifyBary(lst3_4_7, "LST(3,4,7)");
-            verifyBary(figure8, "Figure eight knot complement");
-            verifyBary(rp2xs1, "RP^2 x S^1");
-            verifyBary(solidKB, "Solid Klein bottle");
-            verifyBary(gieseking, "Gieseking manifold");
-            verifyBary(invalidEdges, "Triangulation with invalid edges");
-            verifyBary(twoProjPlaneCusps,
-                "Triangulation with RP^2 cusps");
-            verifyBary(cuspedGenusTwoTorus,
-                "Cusped solid genus 2 torus");
-            verifyBary(pinchedSolidTorus, "Pinched solid torus");
-            verifyBary(pinchedSolidKB, "Pinched solid Klein bottle");
+            verifyBary(empty);
+            verifyBary(singleTet);
+            verifyBary(s3);
+            verifyBary(s2xs1);
+            verifyBary(rp3_1);
+            verifyBary(rp3_2);
+            verifyBary(lens3_1);
+            verifyBary(lens8_3);
+            // (too large) verifyBary(lens8_3_large);
+            verifyBary(lens7_1_loop);
+            verifyBary(rp3rp3);
+            verifyBary(q32xz3);
+            verifyBary(q28);
+            // (too large) verifyBary(weberSeifert);
+            verifyBary(lens100_1);
+            verifyBary(ball_large);
+            verifyBary(ball_large_pillows);
+            verifyBary(ball_large_snapped);
+            verifyBary(lst3_4_7);
+            verifyBary(figure8);
+            verifyBary(rp2xs1);
+            verifyBary(solidKB);
+            verifyBary(gieseking);
+            verifyBary(invalidEdges);
+            verifyBary(twoProjPlaneCusps);
+            verifyBary(cuspedGenusTwoTorus);
+            verifyBary(pinchedSolidTorus);
+            verifyBary(pinchedSolidKB);
         }
 
-        void verifyIdealToFinite(const NTriangulation& tri,
-                const char* triName) {
+        void verifyIdealToFinite(const NTriangulation& tri) {
             NTriangulation finite(tri);
             finite.idealToFinite();
 
             // Are there any ideal vertices remaining?
             if (finite.isIdeal()) {
                 std::ostringstream msg;
-                msg << triName << ": idealToFinite() leaves ideal vertices.";
+                msg << tri.getPacketLabel()
+                    << ": idealToFinite() leaves ideal vertices.";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -2948,7 +3197,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
                     finite.getVertices().end(); ++vit)
                 if ((*vit)->isBoundary() && ! (*vit)->isStandard()) {
                     std::ostringstream msg;
-                    msg << triName << ": idealToFinite() leaves "
+                    msg << tri.getPacketLabel()
+                        << ": idealToFinite() leaves "
                         "invalid vertices .";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2966,7 +3216,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
                     ++newInvEdges;
             if (oldInvEdges != newInvEdges) {
                 std::ostringstream msg;
-                msg << triName << ": idealToFinite() changes "
+                msg << tri.getPacketLabel()
+                    << ": idealToFinite() changes "
                     "invalid edges .";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -2975,7 +3226,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             if (tri.getNumberOfBoundaryComponents() !=
                     finite.getNumberOfBoundaryComponents()) {
                 std::ostringstream msg;
-                msg << triName << ": idealToFinite() changes "
+                msg << tri.getPacketLabel()
+                    << ": idealToFinite() changes "
                     "the number of boundary components.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -3002,7 +3254,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
 
                 if (bcOld != bcNew) {
                     std::ostringstream msg;
-                    msg << triName << ": idealToFinite() changes "
+                    msg << tri.getPacketLabel()
+                        << ": idealToFinite() changes "
                         "the topology of one or more boundary components.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -3010,54 +3263,52 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void idealToFinite() {
-            verifyIdealToFinite(empty, "Empty triangulation");
-            verifyIdealToFinite(singleTet, "Single tetrahedron");
-            verifyIdealToFinite(singleTet_bary,
-                "Single tetrahedron subdivided");
-            verifyIdealToFinite(s3, "S^3");
-            verifyIdealToFinite(s2xs1, "S^2 x S^1");
-            verifyIdealToFinite(rp3_1, "RP^3 (1 vtx)");
-            verifyIdealToFinite(rp3_2, "RP^3 (2 vtx)");
-            verifyIdealToFinite(lens3_1, "L(3,1)");
-            verifyIdealToFinite(lens8_3, "L(8,3)");
-            verifyIdealToFinite(lens8_3_large, "Large L(8,3)");
-            verifyIdealToFinite(lens7_1_loop, "Layered loop L(7,1)");
-            verifyIdealToFinite(rp3rp3, "RP^3 # RP^3");
-            verifyIdealToFinite(q32xz3, "S^3 / Q_32 x Z_3");
-            verifyIdealToFinite(q28, "S^3 / Q_28");
-            verifyIdealToFinite(weberSeifert, "Weber-Seifert");
-            verifyIdealToFinite(lens100_1, "L(100,1)");
-            verifyIdealToFinite(ball_large, "4-tetrahedron ball");
-            verifyIdealToFinite(ball_large_pillows,
-                "4-tetrahedron pillow ball");
-            verifyIdealToFinite(ball_large_snapped,
-                "3-tetrahedron snapped ball");
-            verifyIdealToFinite(lst3_4_7, "LST(3,4,7)");
-            verifyIdealToFinite(figure8, "Figure eight knot complement");
-            verifyIdealToFinite(fig8_bary,
-                "Figure eight knot complement subdivided");
-            verifyIdealToFinite(rp2xs1, "RP^2 x S^1");
-            verifyIdealToFinite(solidKB, "Solid Klein bottle");
-            verifyIdealToFinite(gieseking, "Gieseking manifold");
-            verifyIdealToFinite(invalidEdges,
-                "Triangulation with invalid edges");
-            verifyIdealToFinite(twoProjPlaneCusps,
-                "Triangulation with RP^2 cusps");
-            verifyIdealToFinite(cuspedGenusTwoTorus,
-                "Cusped solid genus 2 torus");
-            verifyIdealToFinite(pinchedSolidTorus, "Pinched solid torus");
-            verifyIdealToFinite(pinchedSolidKB, "Pinched solid Klein bottle");
+            verifyIdealToFinite(empty);
+            verifyIdealToFinite(singleTet);
+            verifyIdealToFinite(singleTet_bary);
+            verifyIdealToFinite(s3);
+            verifyIdealToFinite(s3_large);
+            verifyIdealToFinite(s2xs1);
+            verifyIdealToFinite(rp3_1);
+            verifyIdealToFinite(rp3_2);
+            verifyIdealToFinite(rp3_large);
+            verifyIdealToFinite(lens3_1);
+            verifyIdealToFinite(lens8_3);
+            verifyIdealToFinite(lens8_3_large);
+            verifyIdealToFinite(lens7_1_loop);
+            verifyIdealToFinite(rp3rp3);
+            verifyIdealToFinite(q32xz3);
+            verifyIdealToFinite(q28);
+            verifyIdealToFinite(q20_large);
+            verifyIdealToFinite(weberSeifert);
+            verifyIdealToFinite(lens100_1);
+            verifyIdealToFinite(ball_large);
+            verifyIdealToFinite(ball_large_pillows);
+            verifyIdealToFinite(ball_large_snapped);
+            verifyIdealToFinite(singleTet_bary);
+            verifyIdealToFinite(fig8_bary);
+            verifyIdealToFinite(lst3_4_7);
+            verifyIdealToFinite(figure8);
+            verifyIdealToFinite(fig8_bary);
+            verifyIdealToFinite(rp2xs1);
+            verifyIdealToFinite(solidKB);
+            verifyIdealToFinite(gieseking);
+            verifyIdealToFinite(invalidEdges);
+            verifyIdealToFinite(twoProjPlaneCusps);
+            verifyIdealToFinite(cuspedGenusTwoTorus);
+            verifyIdealToFinite(pinchedSolidTorus);
+            verifyIdealToFinite(pinchedSolidKB);
         }
 
-        void verifyFiniteToIdeal(const NTriangulation& tri,
-                const char* triName) {
+        void verifyFiniteToIdeal(const NTriangulation& tri) {
             NTriangulation ideal(tri);
             ideal.finiteToIdeal();
 
             // Are there any boundary triangles remaining?
             if (ideal.hasBoundaryTriangles()) {
                 std::ostringstream msg;
-                msg << triName << ": finiteToIdeal() leaves boundary triangles.";
+                msg << tri.getPacketLabel()
+                    << ": finiteToIdeal() leaves boundary triangles.";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -3074,7 +3325,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
                     ++newInvEdges;
             if (oldInvEdges != newInvEdges) {
                 std::ostringstream msg;
-                msg << triName << ": finiteToIdeal() changes "
+                msg << tri.getPacketLabel()
+                    << ": finiteToIdeal() changes "
                     "invalid edges .";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -3104,7 +3356,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
 
                 if (bcOld != bcNew) {
                     std::ostringstream msg;
-                    msg << triName << ": finiteToIdeal() changes "
+                    msg << tri.getPacketLabel()
+                        << ": finiteToIdeal() changes "
                         "the topology of one or more non-sphere "
                         "boundary components.";
                     CPPUNIT_FAIL(msg.str());
@@ -3113,43 +3366,41 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void finiteToIdeal() {
-            verifyFiniteToIdeal(empty, "Empty triangulation");
-            verifyFiniteToIdeal(singleTet, "Single tetrahedron");
-            verifyFiniteToIdeal(singleTet_bary,
-                "Single tetrahedron subdivided");
-            verifyFiniteToIdeal(s3, "S^3");
-            verifyFiniteToIdeal(s2xs1, "S^2 x S^1");
-            verifyFiniteToIdeal(rp3_1, "RP^3 (1 vtx)");
-            verifyFiniteToIdeal(rp3_2, "RP^3 (2 vtx)");
-            verifyFiniteToIdeal(lens3_1, "L(3,1)");
-            verifyFiniteToIdeal(lens8_3, "L(8,3)");
-            verifyFiniteToIdeal(lens8_3_large, "Large L(8,3)");
-            verifyFiniteToIdeal(lens7_1_loop, "Layered loop L(7,1)");
-            verifyFiniteToIdeal(rp3rp3, "RP^3 # RP^3");
-            verifyFiniteToIdeal(q32xz3, "S^3 / Q_32 x Z_3");
-            verifyFiniteToIdeal(q28, "S^3 / Q_28");
-            verifyFiniteToIdeal(weberSeifert, "Weber-Seifert");
-            verifyFiniteToIdeal(lens100_1, "L(100,1)");
-            verifyFiniteToIdeal(ball_large, "4-tetrahedron ball");
-            verifyFiniteToIdeal(ball_large_pillows,
-                "4-tetrahedron pillow ball");
-            verifyFiniteToIdeal(ball_large_snapped,
-                "3-tetrahedron snapped ball");
-            verifyFiniteToIdeal(lst3_4_7, "LST(3,4,7)");
-            verifyFiniteToIdeal(figure8, "Figure eight knot complement");
-            verifyFiniteToIdeal(fig8_bary,
-                "Figure eight knot complement subdivided");
-            verifyFiniteToIdeal(rp2xs1, "RP^2 x S^1");
-            verifyFiniteToIdeal(solidKB, "Solid Klein bottle");
-            verifyFiniteToIdeal(gieseking, "Gieseking manifold");
-            verifyFiniteToIdeal(invalidEdges,
-                "Triangulation with invalid edges");
-            verifyFiniteToIdeal(twoProjPlaneCusps,
-                "Triangulation with RP^2 cusps");
-            verifyFiniteToIdeal(cuspedGenusTwoTorus,
-                "Cusped solid genus 2 torus");
-            verifyFiniteToIdeal(pinchedSolidTorus, "Pinched solid torus");
-            verifyFiniteToIdeal(pinchedSolidKB, "Pinched solid Klein bottle");
+            verifyFiniteToIdeal(empty);
+            verifyFiniteToIdeal(singleTet);
+            verifyFiniteToIdeal(singleTet_bary);
+            verifyFiniteToIdeal(s3);
+            verifyFiniteToIdeal(s3_large);
+            verifyFiniteToIdeal(s2xs1);
+            verifyFiniteToIdeal(rp3_1);
+            verifyFiniteToIdeal(rp3_2);
+            verifyFiniteToIdeal(rp3_large);
+            verifyFiniteToIdeal(lens3_1);
+            verifyFiniteToIdeal(lens8_3);
+            verifyFiniteToIdeal(lens8_3_large);
+            verifyFiniteToIdeal(lens7_1_loop);
+            verifyFiniteToIdeal(rp3rp3);
+            verifyFiniteToIdeal(q32xz3);
+            verifyFiniteToIdeal(q28);
+            verifyFiniteToIdeal(q20_large);
+            verifyFiniteToIdeal(weberSeifert);
+            verifyFiniteToIdeal(lens100_1);
+            verifyFiniteToIdeal(ball_large);
+            verifyFiniteToIdeal(ball_large_pillows);
+            verifyFiniteToIdeal(ball_large_snapped);
+            verifyFiniteToIdeal(singleTet_bary);
+            verifyFiniteToIdeal(fig8_bary);
+            verifyFiniteToIdeal(lst3_4_7);
+            verifyFiniteToIdeal(figure8);
+            verifyFiniteToIdeal(fig8_bary);
+            verifyFiniteToIdeal(rp2xs1);
+            verifyFiniteToIdeal(solidKB);
+            verifyFiniteToIdeal(gieseking);
+            verifyFiniteToIdeal(invalidEdges);
+            verifyFiniteToIdeal(twoProjPlaneCusps);
+            verifyFiniteToIdeal(cuspedGenusTwoTorus);
+            verifyFiniteToIdeal(pinchedSolidTorus);
+            verifyFiniteToIdeal(pinchedSolidKB);
         }
 
         void drillEdge() {
@@ -3253,34 +3504,36 @@ class NTriangulationTest : public CppUnit::TestFixture {
             }
         }
 
-        void verifyDehydration(const NTriangulation& tri, const char* name) {
+        void verifyDehydration(const NTriangulation& tri) {
             std::string dehydrate = tri.dehydrate();
             if (dehydrate.empty()) {
                 std::ostringstream msg;
-                msg << name << ": Cannot dehydrate.";
+                msg << tri.getPacketLabel() << ": Cannot dehydrate.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             NTriangulation rehydrate;
             if (! rehydrate.insertRehydration(dehydrate)) {
                 std::ostringstream msg;
-                msg << name << ": Cannot rehydrate \"" << dehydrate << "\".";
+                msg << tri.getPacketLabel()
+                    << ": Cannot rehydrate \"" << dehydrate << "\".";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (! rehydrate.isIsomorphicTo(tri).get()) {
                 std::ostringstream msg;
-                msg << name << ": Rehydration of \"" << dehydrate
+                msg << tri.getPacketLabel()
+                    << ": Rehydration of \"" << dehydrate
                     << "\" is not isomorphic to the original.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
 
-        void verifyNoDehydration(const NTriangulation& tri, const char* name) {
+        void verifyNoDehydration(const NTriangulation& tri) {
             std::string dehydrate = tri.dehydrate();
             if (! dehydrate.empty()) {
                 std::ostringstream msg;
-                msg << name
+                msg << tri.getPacketLabel()
                     << ": Should not dehydrate, but instead dehydrates to \""
                     << dehydrate << "\".";
                 CPPUNIT_FAIL(msg.str());
@@ -3288,46 +3541,48 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void dehydration() {
-            verifyDehydration(empty, "Empty triangulation");
-            verifyNoDehydration(singleTet, "Single tetrahedron");
-            verifyDehydration(s3, "S^3");
-            verifyDehydration(s2xs1, "S^2 x S^1");
-            verifyDehydration(rp3_1, "RP^3 (1 vtx)");
-            verifyDehydration(rp3_2, "RP^3 (2 vtx)");
-            verifyDehydration(lens3_1, "L(3,1)");
-            verifyDehydration(lens8_3, "L(8,3)");
-            verifyDehydration(lens8_3_large, "Large L(8,3)");
-            verifyDehydration(lens7_1_loop, "Layered loop L(7,1)");
-            verifyDehydration(rp3rp3, "RP^3 # RP^3");
-            verifyDehydration(q32xz3, "S^3 / Q_32 x Z_3");
-            verifyDehydration(q28, "S^3 / Q_28");
-            verifyDehydration(weberSeifert, "Weber-Seifert");
-            verifyNoDehydration(lens100_1, "L(100,1)");
-            verifyNoDehydration(ball_large, "4-tetrahedron ball");
-            verifyNoDehydration(ball_large_pillows,
-                "4-tetrahedron pillow ball");
-            verifyNoDehydration(ball_large_snapped,
-                "4-tetrahedron snapped ball");
-            verifyNoDehydration(lst3_4_7, "LST(3,4,7)");
-            verifyDehydration(figure8, "Figure eight knot complement");
-            verifyDehydration(rp2xs1, "RP^2 x S^1");
-            verifyNoDehydration(solidKB, "Solid Klein bottle");
-            verifyDehydration(gieseking, "Gieseking manifold");
-            verifyDehydration(invalidEdges, "Triangulation with invalid edges");
-            verifyDehydration(twoProjPlaneCusps,
-                "Triangulation with RP^2 cusps");
-            verifyDehydration(cuspedGenusTwoTorus,
-                "Cusped solid genus 2 torus");
-            verifyNoDehydration(pinchedSolidTorus, "Pinched solid torus");
-            verifyNoDehydration(pinchedSolidKB, "Pinched solid Klein bottle");
+            verifyDehydration(empty);
+            verifyNoDehydration(singleTet);
+            verifyDehydration(s3);
+            verifyDehydration(s3_large);
+            verifyDehydration(s2xs1);
+            verifyDehydration(rp3_1);
+            verifyDehydration(rp3_2);
+            verifyDehydration(rp3_large);
+            verifyDehydration(lens3_1);
+            verifyDehydration(lens8_3);
+            verifyDehydration(lens8_3_large);
+            verifyDehydration(lens7_1_loop);
+            verifyDehydration(rp3rp3);
+            verifyDehydration(q32xz3);
+            verifyDehydration(q28);
+            verifyDehydration(q20_large);
+            verifyDehydration(weberSeifert);
+            verifyNoDehydration(lens100_1);
+            verifyNoDehydration(ball_large);
+            verifyNoDehydration(ball_large_pillows);
+            verifyNoDehydration(ball_large_snapped);
+            verifyNoDehydration(singleTet_bary);
+            verifyNoDehydration(fig8_bary);
+            verifyNoDehydration(lst3_4_7);
+            verifyDehydration(figure8);
+            verifyDehydration(rp2xs1);
+            verifyNoDehydration(solidKB);
+            verifyDehydration(gieseking);
+            verifyDehydration(invalidEdges);
+            verifyDehydration(twoProjPlaneCusps);
+            verifyDehydration(cuspedGenusTwoTorus);
+            verifyNoDehydration(pinchedSolidTorus);
+            verifyNoDehydration(pinchedSolidKB);
         }
 
-        void verifyIsoSig(const NTriangulation& tri, const char* name) {
+        void verifyIsoSig(const NTriangulation& tri) {
             std::string sig = tri.isoSig();
 
             if (sig.empty()) {
                 std::ostringstream msg;
-                msg << name << ": Cannot create isomorphism signature.";
+                msg << tri.getPacketLabel()
+                    << ": Cannot create isomorphism signature.";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -3335,7 +3590,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             if (tri.getNumberOfSimplices() == 0) {
                 if (sigSize != 0) {
                     std::ostringstream msg;
-                    msg << name
+                    msg << tri.getPacketLabel()
                         << ": isoSigSize() returns incorrect value: "
                         << sigSize << '.';
                     CPPUNIT_FAIL(msg.str());
@@ -3347,7 +3602,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
                         break;
                 if (c == tri.getNumberOfComponents()) {
                     std::ostringstream msg;
-                    msg << name
+                    msg << tri.getPacketLabel()
                         << ": isoSigSize() returns incorrect value: "
                         << sigSize << '.';
                     CPPUNIT_FAIL(msg.str());
@@ -3357,13 +3612,15 @@ class NTriangulationTest : public CppUnit::TestFixture {
             NTriangulation* rebuild = NTriangulation::fromIsoSig(sig);
             if (! rebuild) {
                 std::ostringstream msg;
-                msg << name << ": Cannot reconstruct from isomorphism "
+                msg << tri.getPacketLabel()
+                    << ": Cannot reconstruct from isomorphism "
                     "signature \"" << sig << "\".";
                 CPPUNIT_FAIL(msg.str());
             }
             if (! rebuild->isIsomorphicTo(tri).get()) {
                 std::ostringstream msg;
-                msg << name << ": Reconstruction from \"" << sig
+                msg << tri.getPacketLabel()
+                    << ": Reconstruction from \"" << sig
                     << "\" is not isomorphic to the original.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -3381,7 +3638,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 otherSig = other->isoSig();
                 if (otherSig != sig) {
                     std::ostringstream msg;
-                    msg << name << ": Random isomorphism gives different "
+                    msg << tri.getPacketLabel()
+                        << ": Random isomorphism gives different "
                         "signature: " << otherSig << " != " << sig << std::endl;
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -3398,7 +3656,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 otherSig = other->isoSig();
                 if (otherSig != sig) {
                     std::ostringstream msg;
-                    msg << name << ": Random in-place isomorphism gives "
+                    msg << tri.getPacketLabel()
+                        << ": Random in-place isomorphism gives "
                         "different signature: "
                         << otherSig << " != " << sig << std::endl;
                     CPPUNIT_FAIL(msg.str());
@@ -3417,7 +3676,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
 
                 if (relabel->detail() != rebuild->detail()) {
                     std::ostringstream msg;
-                    msg << name << ": relabelling returned from "
+                    msg << tri.getPacketLabel()
+                        << ": relabelling returned from "
                         "isoSig() does not recover fromIsoSig(\""
                         << sig << "\")." << std::endl;
                     CPPUNIT_FAIL(msg.str());
@@ -3430,41 +3690,48 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void isomorphismSignature() {
-            verifyIsoSig(empty, "Empty triangulation");
-            verifyIsoSig(singleTet, "Single tetrahedron");
-            verifyIsoSig(s3, "S^3");
-            verifyIsoSig(s2xs1, "S^2 x S^1");
-            verifyIsoSig(rp3_1, "RP^3 (1 vtx)");
-            verifyIsoSig(rp3_2, "RP^3 (2 vtx)");
-            verifyIsoSig(lens3_1, "L(3,1)");
-            verifyIsoSig(lens8_3, "L(8,3)");
-            verifyIsoSig(lens8_3_large, "Large L(8,3)");
-            verifyIsoSig(lens7_1_loop, "Layered loop L(7,1)");
-            verifyIsoSig(rp3rp3, "RP^3 # RP^3");
-            verifyIsoSig(q32xz3, "S^3 / Q_32 x Z_3");
-            verifyIsoSig(q28, "S^3 / Q_28");
-            verifyIsoSig(weberSeifert, "Weber-Seifert");
-            verifyIsoSig(lens100_1, "L(100,1)");
-            verifyIsoSig(ball_large, "4-tetrahedron ball");
-            verifyIsoSig(ball_large_pillows, "4-tetrahedron pillow ball");
-            verifyIsoSig(ball_large_snapped, "4-tetrahedron snapped ball");
-            verifyIsoSig(lst3_4_7, "LST(3,4,7)");
-            verifyIsoSig(figure8, "Figure eight knot complement");
-            verifyIsoSig(rp2xs1, "RP^2 x S^1");
-            verifyIsoSig(solidKB, "Solid Klein bottle");
-            verifyIsoSig(gieseking, "Gieseking manifold");
-            verifyIsoSig(invalidEdges, "Triangulation with invalid edges");
-            verifyIsoSig(twoProjPlaneCusps, "Triangulation with RP^2 cusps");
-            verifyIsoSig(cuspedGenusTwoTorus, "Cusped solid genus 2 torus");
-            verifyIsoSig(pinchedSolidTorus, "Pinched solid torus");
-            verifyIsoSig(pinchedSolidKB, "Pinched solid Klein bottle");
+            verifyIsoSig(empty);
+            verifyIsoSig(singleTet);
+            verifyIsoSig(s3);
+            verifyIsoSig(s3_large);
+            verifyIsoSig(s2xs1);
+            verifyIsoSig(rp3_1);
+            verifyIsoSig(rp3_2);
+            verifyIsoSig(rp3_large);
+            verifyIsoSig(lens3_1);
+            verifyIsoSig(lens8_3);
+            verifyIsoSig(lens8_3_large);
+            verifyIsoSig(lens7_1_loop);
+            verifyIsoSig(rp3rp3);
+            verifyIsoSig(q32xz3);
+            verifyIsoSig(q28);
+            verifyIsoSig(q20_large);
+            verifyIsoSig(weberSeifert);
+            verifyIsoSig(lens100_1);
+            verifyIsoSig(ball_large);
+            verifyIsoSig(ball_large_pillows);
+            verifyIsoSig(ball_large_snapped);
+            verifyIsoSig(singleTet_bary);
+            verifyIsoSig(fig8_bary);
+            verifyIsoSig(lst3_4_7);
+            verifyIsoSig(figure8);
+            verifyIsoSig(rp2xs1);
+            verifyIsoSig(solidKB);
+            verifyIsoSig(gieseking);
+            verifyIsoSig(invalidEdges);
+            verifyIsoSig(twoProjPlaneCusps);
+            verifyIsoSig(cuspedGenusTwoTorus);
+            verifyIsoSig(pinchedSolidTorus);
+            verifyIsoSig(pinchedSolidKB);
 
             NTriangulation t;
             t.insertTriangulation(lens8_3);
             t.insertTriangulation(ball_large_pillows);
-            verifyIsoSig(t, "L(8,3) U B^3");
+            t.setPacketLabel("L(8,3) U B^3");
+            verifyIsoSig(t);
             t.insertTriangulation(cuspedGenusTwoTorus);
-            verifyIsoSig(t, "L(8,3) U B^3 U (cusped genus 2 torus)");
+            t.setPacketLabel("L(8,3) U B^3 U (cusped genus 2 torus)");
+            verifyIsoSig(t);
         }
 
         void verifySimplification(const NTriangulation& tri,
@@ -3595,7 +3862,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             delete tri;
         }
 
-        void testReordering(const NTriangulation& t, const char* name) {
+        void testReordering(const NTriangulation& t) {
             NTriangulation a(t);
             a.reorderTetrahedraBFS();
 
@@ -3614,28 +3881,28 @@ class NTriangulationTest : public CppUnit::TestFixture {
 
             if (! t.isIsomorphicTo(a).get()) {
                 std::ostringstream msg;
-                msg << "Triangulation " << name
+                msg << "Triangulation " << t.getPacketLabel()
                     << " changes its isomorphism class when its tetrahedra "
                     "are reordered in the forward direction.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (! t.isIsomorphicTo(b).get()) {
                 std::ostringstream msg;
-                msg << "Triangulation " << name
+                msg << "Triangulation " << t.getPacketLabel()
                     << " changes its isomorphism class when its tetrahedra "
                     "are reordered in the reverse direction.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (! t.isIsomorphicTo(*c).get()) {
                 std::ostringstream msg;
-                msg << "Triangulation " << name
+                msg << "Triangulation " << t.getPacketLabel()
                     << " changes its isomorphism class when a random "
                     "isomorphism is applied.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (! t.isIsomorphicTo(d).get()) {
                 std::ostringstream msg;
-                msg << "Triangulation " << name
+                msg << "Triangulation " << t.getPacketLabel()
                     << " changes its isomorphism class when a random "
                     "isomorphism is applied and then its tetrahedra are "
                     "reordered in the forward direction.";
@@ -3643,7 +3910,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             }
             if (! t.isIsomorphicTo(e).get()) {
                 std::ostringstream msg;
-                msg << "Triangulation " << name
+                msg << "Triangulation " << t.getPacketLabel()
                     << " changes its isomorphism class when a random "
                     "isomorphism is applied and then its tetrahedra are "
                     "reordered in the reverse direction.";
@@ -3654,34 +3921,39 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void reordering() {
-            testReordering(empty, "Empty triangulation");
-            testReordering(singleTet, "Single tetrahedron");
-            testReordering(s3, "S^3");
-            testReordering(s2xs1, "S^2 x S^1");
-            testReordering(rp3_1, "RP^3 (1 vtx)");
-            testReordering(rp3_2, "RP^3 (2 vtx)");
-            testReordering(lens3_1, "L(3,1)");
-            testReordering(lens8_3, "L(8,3)");
-            testReordering(lens8_3_large, "Large L(8,3)");
-            testReordering(lens7_1_loop, "Layered loop L(7,1)");
-            testReordering(rp3rp3, "RP^3 # RP^3");
-            testReordering(q32xz3, "S^3 / Q_32 x Z_3");
-            testReordering(q28, "S^3 / Q_28");
-            testReordering(weberSeifert, "Weber-Seifert");
-            testReordering(lens100_1, "L(100,1)");
-            testReordering(ball_large, "4-tetrahedron ball");
-            testReordering(ball_large_pillows, "4-tetrahedron pillow ball");
-            testReordering(ball_large_snapped, "3-tetrahedron snapped ball");
-            testReordering(lst3_4_7, "LST(3,4,7)");
-            testReordering(figure8, "Figure eight knot complement");
-            testReordering(rp2xs1, "RP^2 x S^1");
-            testReordering(solidKB, "Solid Klein bottle");
-            testReordering(gieseking, "Gieseking manifold");
-            testReordering(invalidEdges, "Triangulation with invalid edges");
-            testReordering(twoProjPlaneCusps, "Triangulation with RP^2 cusps");
-            testReordering(cuspedGenusTwoTorus, "Cusped solid genus 2 torus");
-            testReordering(pinchedSolidTorus, "Pinched solid torus");
-            testReordering(pinchedSolidKB, "Pinched solid Klein bottle");
+            testReordering(empty);
+            testReordering(singleTet);
+            testReordering(s3);
+            testReordering(s3_large);
+            testReordering(s2xs1);
+            testReordering(rp3_1);
+            testReordering(rp3_2);
+            testReordering(rp3_large);
+            testReordering(lens3_1);
+            testReordering(lens8_3);
+            testReordering(lens8_3_large);
+            testReordering(lens7_1_loop);
+            testReordering(rp3rp3);
+            testReordering(q32xz3);
+            testReordering(q28);
+            testReordering(q20_large);
+            testReordering(weberSeifert);
+            testReordering(lens100_1);
+            testReordering(ball_large);
+            testReordering(ball_large_pillows);
+            testReordering(ball_large_snapped);
+            testReordering(singleTet_bary);
+            testReordering(fig8_bary);
+            testReordering(lst3_4_7);
+            testReordering(figure8);
+            testReordering(rp2xs1);
+            testReordering(solidKB);
+            testReordering(gieseking);
+            testReordering(invalidEdges);
+            testReordering(twoProjPlaneCusps);
+            testReordering(cuspedGenusTwoTorus);
+            testReordering(pinchedSolidTorus);
+            testReordering(pinchedSolidKB);
 
             // Try this with some disconnected triangulations also.
             {
@@ -3689,8 +3961,9 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 t.insertTriangulation(s2xs1);
                 t.insertTriangulation(singleTet);
                 t.insertTriangulation(figure8);
-                testReordering(t, "(S^2 x S^1) U (Single tetrahedron) U "
+                t.setPacketLabel("(S^2 x S^1) U (Single tetrahedron) U "
                     "(Figure eight knot complement)");
+                testReordering(t);
             }
         }
 
@@ -3743,6 +4016,139 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "is valid.", ! t.isValid());
             CPPUNIT_ASSERT_MESSAGE("A bad 1-tetrahedron triangulation "
                 "is orientable.", ! t.isOrientable());
+        }
+
+        static void verifyEltMove14(NTriangulation* tri) {
+            unsigned long n = tri->getNumberOfTetrahedra();
+            for (unsigned long i = 0; i < n; ++i) {
+                NTriangulation large(*tri);
+                large.oneFourMove(large.getTetrahedron(i));
+
+                if (large.getNumberOfTetrahedra() != n + 3) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "1-4 move gives wrong # tetrahedra.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (large.isValid() != tri->isValid()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "1-4 move changes validity.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (large.isOrientable() != tri->isOrientable()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "1-4 move changes orientability.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (large.isClosed() != tri->isClosed()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "1-4 move changes closedness.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (large.getNumberOfBoundaryComponents() !=
+                        tri->getNumberOfBoundaryComponents()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "1-4 move changes # boundary components.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (large.getEulerCharTri() != tri->getEulerCharTri()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "1-4 move changes Euler characteristic.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (tri->isValid()) {
+                    if (! (large.getHomologyH1() == tri->getHomologyH1())) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ", tet " << i << ": "
+                            << "1-4 move changes H1.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                    if (! (large.getHomologyH2() == tri->getHomologyH2())) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ", tet " << i << ": "
+                            << "1-4 move changes H2.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+
+                // Shrink.
+                if (large.isIsomorphicTo(*tri).get()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "1-4 move: result is isomorphic.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                bool res =
+                    large.collapseEdge(large.getTetrahedron(n + 2)->getEdge(
+                    regina::NEdge::edgeNumber[0][3]), true, true);
+
+                if (! res) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "1-4 move: could not recollapse edge.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (! large.isIsomorphicTo(*tri).get()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "1-4 move: recollapse is not isomorphic.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void eltMove14() {
+            verifyEltMove14(&empty);
+            verifyEltMove14(&singleTet);
+            verifyEltMove14(&s3);
+            verifyEltMove14(&s3_large);
+            verifyEltMove14(&s2xs1);
+            verifyEltMove14(&rp3_1);
+            verifyEltMove14(&rp3_2);
+            verifyEltMove14(&rp3_large);
+            verifyEltMove14(&lens3_1);
+            verifyEltMove14(&lens8_3);
+            verifyEltMove14(&lens8_3_large);
+            verifyEltMove14(&lens7_1_loop);
+            verifyEltMove14(&rp3rp3);
+            verifyEltMove14(&q32xz3);
+            verifyEltMove14(&q28);
+            verifyEltMove14(&q20_large);
+            verifyEltMove14(&weberSeifert);
+            //verifyEltMove14(&lens100_1); Too slow.
+            verifyEltMove14(&ball_large);
+            verifyEltMove14(&ball_large_pillows);
+            verifyEltMove14(&ball_large_snapped);
+            verifyEltMove14(&singleTet_bary);
+            verifyEltMove14(&fig8_bary);
+            verifyEltMove14(&lst3_4_7);
+            verifyEltMove14(&figure8);
+            verifyEltMove14(&rp2xs1);
+            verifyEltMove14(&solidKB);
+            verifyEltMove14(&gieseking);
+            verifyEltMove14(&invalidEdges);
+            verifyEltMove14(&twoProjPlaneCusps);
+            verifyEltMove14(&cuspedGenusTwoTorus);
+            verifyEltMove14(&pinchedSolidTorus);
+            verifyEltMove14(&pinchedSolidKB);
+
+            runCensusAllClosed(verifyEltMove14, true);
+            runCensusAllBounded(verifyEltMove14, true);
+            runCensusAllIdeal(verifyEltMove14, true);
         }
 };
 
