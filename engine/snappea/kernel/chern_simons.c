@@ -97,27 +97,29 @@
  *  sake of an almost vanishingly small set of exceptions.]
  */
 
+/*
+ * Marc Culler 2014/02/15 - Now can use a function stored in the triangulation
+ * structure to computer dilogarithms for high precision manifolds.
+ */
+
 #include "kernel.h"
+#include "kernel_namespace.h"
 
 #define CS_EPSILON  1e-8
 
-#define LOG_TWO_PI  1.83787706640934548356
-
-namespace regina { namespace snappea {
-
-static FuncResult   compute_CS(Triangulation *manifold, double value[2]);
-static FuncResult   algorithm_one(Triangulation *manifold, double value[2]);
+static FuncResult   compute_CS(Triangulation *manifold, Real value[2]);
+static FuncResult   algorithm_one(Triangulation *manifold, Real value[2]);
 static Complex      alg1_compute_Fu(Triangulation *manifold, int which_approximation, Boolean *Li2_error_flag);
 static Complex      Li2(Complex w, ShapeInversion *z_history, Boolean *Li2_error_flag);
 static Complex      log_w_minus_k_with_history(Complex w, int k,
-                        double regular_arg, ShapeInversion *z_history);
+                        Real regular_arg, ShapeInversion *z_history);
 static int          get_history_length(ShapeInversion *z_history);
 static int          get_wide_angle(ShapeInversion *z_history, int requested_index);
 
 
 void set_CS_value(
     Triangulation   *manifold,
-    double          a_value)
+    Real          a_value)
 {
     manifold->CS_value_is_known     = TRUE;
     manifold->CS_value[ultimate]    = a_value;
@@ -130,7 +132,7 @@ void set_CS_value(
 void get_CS_value(
     Triangulation   *manifold,
     Boolean         *value_is_known,
-    double          *the_value,
+    Real            *the_value,
     int             *the_precision,
     Boolean         *requires_initialization)
 {
@@ -164,10 +166,10 @@ void get_CS_value(
 void compute_CS_value_from_fudge(
     Triangulation   *manifold)
 {
-    double  computed_value[2];
+    Real  computed_value[2];
 
     if (manifold->CS_fudge_is_known == TRUE
-     && compute_CS(manifold, computed_value) == func_OK)
+	&& compute_CS(manifold, computed_value) == func_OK)
     {
         manifold->CS_value_is_known     = TRUE;
         manifold->CS_value[ultimate]    = computed_value[ultimate]    + manifold->CS_fudge[ultimate];
@@ -185,10 +187,10 @@ void compute_CS_value_from_fudge(
 void compute_CS_fudge_from_value(
     Triangulation   *manifold)
 {
-    double  computed_value[2];
+    Real  computed_value[2];
 
     if (manifold->CS_value_is_known == TRUE
-     && compute_CS(manifold, computed_value) == func_OK)
+	&& compute_CS(manifold, computed_value) == func_OK)
     {
         manifold->CS_fudge_is_known     = TRUE;
         manifold->CS_fudge[ultimate]    = manifold->CS_value[ultimate]    - computed_value[ultimate];
@@ -205,7 +207,8 @@ void compute_CS_fudge_from_value(
 
 static FuncResult compute_CS(
     Triangulation   *manifold,
-    double          value[2])
+    Real            value[2]
+)
 {
     Cusp    *cusp;
 
@@ -239,7 +242,8 @@ static FuncResult compute_CS(
 
 static FuncResult algorithm_one(
     Triangulation   *manifold,
-    double          value[2])
+    Real            value[2]
+)
 {
     Boolean Li2_error_flag;
     int     i;
@@ -287,7 +291,7 @@ static FuncResult algorithm_one(
 
     for (i = 0; i < 2; i++)     /* i = ultimate, penultimate */
 
-        Fu[i] = alg1_compute_Fu(manifold, i, &Li2_error_flag);
+      Fu[i] = alg1_compute_Fu(manifold, i, &Li2_error_flag);
 
     /*
      *  If Li2() failed, return func_failed;
@@ -367,9 +371,10 @@ static FuncResult algorithm_one(
 static Complex alg1_compute_Fu(
     Triangulation   *manifold,
     int             which_approximation,    /* ultimate or penultimate */
-    Boolean         *Li2_error_flag)
+    Boolean         *Li2_error_flag
+)
 {
-    Complex         Fu;
+    Complex         Fu, dilog;
     Tetrahedron     *tet;
     static const Complex    minus_i = {0.0, -1.0};
 
@@ -445,22 +450,27 @@ static Complex alg1_compute_Fu(
         /*
          *  To compute the dilogarithm of z, Li2() wants to be
          *  passed w = log(z) / 2 pi i and the shape_history of z.
+	 *  (MC) But the external dilog function should accept z.
          */
 
-        Fu = complex_plus
-        (
-            Fu,
-            Li2
-            (
-                complex_div
-                (
-                    tet->shape[filled]->cwl[which_approximation][0].log,
-                    TwoPiI
-                ),
-                tet->shape_history[filled],
-                Li2_error_flag
-            )
-        );
+      if (manifold->dilog == NULL)
+	dilog = Li2
+	  (
+	   complex_div
+	   (
+	    tet->shape[filled]->cwl[which_approximation][0].log,
+	    TwoPiI
+	    ),
+	   tet->shape_history[filled],
+	   Li2_error_flag
+	   );
+      else
+	dilog = manifold->dilog
+	  (
+	    tet->shape[filled]->cwl[which_approximation][0].rect
+	   );
+
+        Fu = complex_plus(Fu, dilog);
     }
 
     /*
@@ -539,7 +549,7 @@ static Complex Li2(
      */
     static const int    num_terms = 30;
     static const int    n = 2;
-    static const double a[] ={
+    static const Real a[] ={
         0.0,
         6.58223444747044060787e-2, 
         9.91161685556909575800e-4, 
@@ -791,11 +801,11 @@ static Complex Li2(
 static Complex log_w_minus_k_with_history(
     Complex         w,
     int             k,
-    double          regular_arg,
+    Real          regular_arg,
     ShapeInversion  *z_history)
 {
     int     which_strip;
-    double  estimated_argument;
+    Real  estimated_argument;
     int     i;
 
     /*
@@ -946,7 +956,7 @@ static Complex log_w_minus_k_with_history(
         complex_log(
             complex_minus(
                 w,
-                complex_real_mult((double)k, One)
+                complex_real_mult((Real)k, One)
             ),
             estimated_argument
         )
@@ -980,5 +990,4 @@ static int get_wide_angle(
 
     return z_history->wide_angle;
 }
-
-} } // namespaces
+#include "end_namespace.h"

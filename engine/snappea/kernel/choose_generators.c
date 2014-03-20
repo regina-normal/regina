@@ -94,8 +94,7 @@
  */
 
 #include "kernel.h"
-
-namespace regina { namespace snappea {
+#include "kernel_namespace.h"
 
 
 static void    initialize_flags(Triangulation *manifold);
@@ -1052,5 +1051,4 @@ static void eliminate_empty_relations(Triangulation *manifold)
         if (edge->num_incident_generators == 0)
             edge->active_relation = FALSE;
 }
-
-} } // namespaces
+#include "end_namespace.h"

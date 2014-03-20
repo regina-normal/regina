@@ -5,7 +5,7 @@
  *
  *      Triangulation   *fill_cusps(Triangulation   *manifold,
  *                                  Boolean         fill_cusp[],
- *                                  char            *new_name,
+ *                                  const char      *new_name,
  *                                  Boolean         fill_all_cusps);
  *
  *      Triangulation   *fill_reasonable_cusps(Triangulation *manifold);
@@ -64,8 +64,7 @@
  */
 
 #include "kernel.h"
-
-namespace regina { namespace snappea {
+#include "kernel_namespace.h"
 
 static Boolean  check_fill_cusp_array(Triangulation *manifold, Boolean fill_cusp[]);
 static Boolean  cusp_is_fillable_x(Cusp *cusp);
@@ -75,7 +74,7 @@ static Boolean  no_cusps_to_be_filled(int num_cusps, Boolean fill_cusp[]);
 Triangulation *fill_cusps(
     Triangulation   *manifold,
     Boolean         fill_cusp[],
-    char            *new_name,
+    const char      *new_name,
     Boolean         fill_all_cusps)
 {
     Triangulation   *new_triangulation;
@@ -302,5 +301,4 @@ Boolean is_closed_manifold(
     return (all_cusps_are_filled(manifold)
      && all_Dehn_coefficients_are_relatively_prime_integers(manifold));
 }
-
-} } // namespaces
+#include "end_namespace.h"

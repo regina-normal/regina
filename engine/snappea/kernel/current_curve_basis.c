@@ -41,11 +41,10 @@
  */
 
 #include "kernel.h"
+#include "kernel_namespace.h"
 
 #define EPSILON     1e-5
 #define BIG_MODULUS 1e+5
-
-namespace regina { namespace snappea {
 
 static void current_curve_basis_on_cusp(Cusp *cusp, MatrixInt22 basis_change);
 
@@ -192,5 +191,4 @@ void install_current_curve_bases(
 
     my_free(change_matrices);
 }
-
-} } // namespaces
+#include "end_namespace.h"

@@ -60,8 +60,7 @@
  */
 
 #include "kernel.h"
-
-namespace regina { namespace snappea {
+#include "kernel_namespace.h"
 
 /*
  *  The entries in allowable_change must not exceed 0.5.
@@ -88,7 +87,7 @@ static void scale_delta(
 {
     int     i;
     Complex max;
-    double  scaled_max,
+    Real  scaled_max,
             factor;
 
     /*
@@ -273,5 +272,4 @@ static void recompute_shapes(
         }
     }
 }
-
-} } // namespaces
+#include "end_namespace.h"

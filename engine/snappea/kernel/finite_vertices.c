@@ -95,8 +95,7 @@
  */
 
 #include "kernel.h"
-
-namespace regina { namespace snappea {
+#include "kernel_namespace.h"
 
 static void initialize_matching_cusps(Triangulation *manifold, Cusp **special_fake_cusp);
 static void merge_cusps(Triangulation *manifold);
@@ -561,5 +560,4 @@ static void set_real_cusps(
             my_free(dead_cusp);
         }
 }
-
-} } // namespaces
+#include "end_namespace.h"

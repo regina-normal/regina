@@ -38,8 +38,8 @@
  */
 
 #include "kernel.h"
+#include "kernel_namespace.h"
 
-namespace regina { namespace snappea {
 
 typedef struct
 {
@@ -422,5 +422,4 @@ static void compute_cusp_Euler_characteristics(
         cusp->euler_characteristic /= 2;
     }
 }
-
-} } // namespaces
+#include "end_namespace.h"

@@ -15,8 +15,7 @@
  */
 
 #include "kernel.h"
-
-namespace regina { namespace snappea {
+#include "kernel_namespace.h"
 
 
 Boolean all_Dehn_coefficients_are_integers(
@@ -61,8 +60,8 @@ Boolean Dehn_coefficients_are_integers(
         cusp->is_complete == TRUE
      ||
         (
-            cusp->m == (double)(int)cusp->m
-         && cusp->l == (double)(int)cusp->l
+            cusp->m == (Real)(int)cusp->m
+         && cusp->l == (Real)(int)cusp->l
         )
     );
 }
@@ -76,8 +75,8 @@ Boolean Dehn_coefficients_are_relatively_prime_integers(
         cusp->is_complete == TRUE
      ||
         (
-            cusp->m == (double)(int)cusp->m
-         && cusp->l == (double)(int)cusp->l
+            cusp->m == (Real)(int)cusp->m
+         && cusp->l == (Real)(int)cusp->l
          && gcd((long int)cusp->m, (long int)cusp->l) == 1
         )
     );
@@ -116,5 +115,4 @@ Boolean all_cusps_are_filled(
 
     return TRUE;
 }
-
-} } // namespaces
+#include "end_namespace.h"

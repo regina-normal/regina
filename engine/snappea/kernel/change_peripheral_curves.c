@@ -22,8 +22,7 @@
  */
 
 #include "kernel.h"
-
-namespace regina { namespace snappea {
+#include "kernel_namespace.h"
 
 FuncResult change_peripheral_curves(
           Triangulation *manifold,
@@ -34,7 +33,7 @@ FuncResult change_peripheral_curves(
                 f,
                 old_m,
                 old_l;
-    double      old_m_coef, /* changed from int to double, JRW 2000/01/18 */
+    Real      old_m_coef, /* changed from int to Real, JRW 2000/01/18 */
                 old_l_coef;
     Tetrahedron *tet;
     Cusp        *cusp;
@@ -236,5 +235,4 @@ FuncResult change_peripheral_curves(
 
     return func_OK;
 }
-
-} } // namespaces
+#include "end_namespace.h"

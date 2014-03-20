@@ -20,8 +20,7 @@
 
 #include "kernel.h"
 #include "canonize.h"
-
-namespace regina { namespace snappea {
+#include "kernel_namespace.h"
 
 
 Boolean is_canonical_triangulation(
@@ -31,7 +30,7 @@ Boolean is_canonical_triangulation(
                 *nbr_tet;
     FaceIndex   f,
                 nbr_f;
-    double      sum_of_tilts;
+    Real      sum_of_tilts;
     Boolean     result;
 
     /*
@@ -73,5 +72,4 @@ Boolean is_canonical_triangulation(
 
     return result;
 }
-
-} } // namespaces
+#include "end_namespace.h"

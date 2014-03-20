@@ -21,13 +21,12 @@
  */
 
 #include "kernel.h"
-
-namespace regina { namespace snappea {
+#include "kernel_namespace.h"
 
 #define ERROR_EPSILON   1e-3
 
 
-double safe_acos(double x)
+Real safe_acos(Real x)
 {
     if (x > 1.0)
     {
@@ -46,7 +45,7 @@ double safe_acos(double x)
 }
 
 
-double safe_asin(double x)
+Real safe_asin(Real x)
 {
     if (x > 1.0)
     {
@@ -65,7 +64,7 @@ double safe_asin(double x)
 }
 
 
-double safe_sqrt(double x)
+Real safe_sqrt(Real x)
 {
     if (x < 0.0)
     {
@@ -78,15 +77,15 @@ double safe_sqrt(double x)
 }
 
 
-double arcsinh(
-    double  x)
+Real arcsinh(
+    Real  x)
 {
     return log(x + sqrt(x*x + 1.0));
 }
 
 
-double arccosh(
-    double  x)
+Real arccosh(
+    Real  x)
 {
     if (x < 1.0)
     {
@@ -97,5 +96,4 @@ double arccosh(
 
     return log(x + sqrt(x*x - 1.0));
 }
-
-} } // namespaces
+#include "end_namespace.h"

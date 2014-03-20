@@ -83,13 +83,12 @@
 
 #include "kernel.h"
 #include "canonize.h"
+#include "kernel_namespace.h"
 
 #define MAX_ATTEMPTS            64
 #define MAX_RETRIANGULATIONS    64
 #define MAX_MOVES   1000
 #define ANGLE_EPSILON           1e-6
-
-namespace regina { namespace snappea {
 
 static FuncResult   validate_hyperbolic_structure(Triangulation *manifold);
 static Boolean      attempt_cancellation(Triangulation *manifold);
@@ -97,7 +96,7 @@ static Boolean      attempt_three_to_two(Triangulation *manifold);
 static Boolean      concave_edge(EdgeClass *edge);
 static Boolean      attempt_two_to_three(Triangulation *manifold);
 static Boolean      concave_face(Tetrahedron *tet, FaceIndex f);
-static double       sum_of_tilts(Tetrahedron *tet0, FaceIndex f0);
+static Real       sum_of_tilts(Tetrahedron *tet0, FaceIndex f0);
 static Boolean      would_create_negatively_oriented_tetrahedra(Tetrahedron *tet0, FaceIndex f0);
 static Boolean      validate_canonical_triangulation(Triangulation *manifold);
 
@@ -482,7 +481,7 @@ static Boolean concave_face(
 }
 
 
-static double sum_of_tilts(
+static Real sum_of_tilts(
     Tetrahedron *tet0,
     FaceIndex   f0)
 {
@@ -563,5 +562,4 @@ static Boolean validate_canonical_triangulation(
 
     return TRUE;
 }
-
-} } // namespaces
+#include "end_namespace.h"

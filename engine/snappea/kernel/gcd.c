@@ -22,8 +22,7 @@
  */
 
 #include "kernel.h"
-
-namespace regina { namespace snappea {
+#include "kernel_namespace.h"
 
 long int gcd(
     long int    a,
@@ -207,5 +206,4 @@ long int Zq_inverse(
 
     return a;
 }
-
-} } // namespaces
+#include "end_namespace.h"

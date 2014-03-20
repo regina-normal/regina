@@ -96,10 +96,9 @@
  */
 
 #include "kernel.h"
+#include "kernel_namespace.h"
 
 #define TORSION_EPSILON 1e-5
-
-namespace regina { namespace snappea {
 
 
 void core_geodesic(
@@ -151,7 +150,7 @@ void compute_core_geodesic(
     int         i;
     long int    positive_d,
                 negative_c;
-    double      pi_over_n;
+    Real      pi_over_n;
 
     /*
      *  If the Cusp is unfilled or the Dehn filling coefficients aren't
@@ -190,11 +189,11 @@ void compute_core_geodesic(
          */
         length[i] = complex_plus(
                 complex_real_mult(
-                    (double) (- negative_c),
+		    (Real) (double)(- negative_c),
                     cusp->holonomy[i][M]
                 ),
                 complex_real_mult(
-                    (double) positive_d,
+		    (Real) (double) positive_d,
                     cusp->holonomy[i][L]
                 )
             );
@@ -214,10 +213,10 @@ void compute_core_geodesic(
         pi_over_n = PI / *singularity_index;
 
         while (length[i].imag < - pi_over_n + TORSION_EPSILON)
-            length[i].imag += 2 * pi_over_n;
+            length[i].imag += 2.0 * pi_over_n;
 
         while (length[i].imag >   pi_over_n + TORSION_EPSILON)
-            length[i].imag -= 2 * pi_over_n;
+            length[i].imag -= 2.0 * pi_over_n;
 
         /*
          *  In the case of a Klein bottle cusp, H(m) will be purely
@@ -232,5 +231,4 @@ void compute_core_geodesic(
 
     }
 }
-
-} } // namespaces
+#include "end_namespace.h"

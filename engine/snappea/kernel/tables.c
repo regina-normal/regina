@@ -29,8 +29,7 @@
  */
 
 #include "kernel.h"
-
-namespace regina { namespace snappea {
+#include "kernel_namespace.h"
 
 /*
  *  edge3[i] is the index of the complex edge parameter associated with
@@ -228,5 +227,4 @@ const char index_by_permutation[256] = {
     -1, -1,  2, -1, -1, -1, -1, -1,  3, -1, -1, -1, -1, -1, -1, -1,
     -1,  1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-
-} } // namespaces
+#include "end_namespace.h"
