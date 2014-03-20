@@ -68,13 +68,13 @@ int uQuery(const char *message, const int num_responses,
 
 void uFatalError(const char *function, const char *file) {
     std::cerr << "FATAL ERROR: " << file << ", " << function << std::endl;
-    exit(1);
+    throw regina::SnapPeaFatalError(function, file);
 }
 
 void uAbortMemoryFull(void) {
     std::cerr << "FATAL ERROR: Available memory has been exhausted."
         << std::endl;
-    exit(1);
+    throw regina::SnapPeaMemoryFull();
 }
 
 

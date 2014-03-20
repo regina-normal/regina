@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Test Suite                                                            *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,52 +32,17 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
-#include "dim2/dim2boundarycomponent.h"
-#include "dim2/dim2component.h"
-#include "dim2/dim2edge.h"
-#include "dim2/dim2triangle.h"
-#include "dim2/dim2triangulation.h"
-#include "dim2/dim2vertex.h"
-#include "../globalarray.h"
+/**
+ * This file allows all tests from this directory to be added to
+ * the overall test runner, without requiring any further inclusion
+ * of headers that define the specific corresponding test fixtures.
+ *
+ * The routines declared below (which should add tests to the given
+ * test runner) should be implemented in this directory and then called
+ * from the top-level test suite directory.
+ */
 
-using namespace boost::python;
-using regina::Dim2Edge;
-using regina::Dim2EdgeEmbedding;
-using regina::python::GlobalArray;
+#include <cppunit/ui/text/TestRunner.h>
 
-namespace {
-    GlobalArray<regina::NPerm3> Dim2Edge_ordering(Dim2Edge::ordering, 3);
-}
-
-void addDim2Edge() {
-    class_<Dim2EdgeEmbedding>("Dim2EdgeEmbedding",
-            init<regina::Dim2Triangle*, int>())
-        .def(init<const Dim2EdgeEmbedding&>())
-        .def("getTriangle", &Dim2EdgeEmbedding::getTriangle,
-            return_value_policy<reference_existing_object>())
-        .def("getEdge", &Dim2EdgeEmbedding::getEdge)
-        .def("getVertices", &Dim2EdgeEmbedding::getVertices)
-        .def(self == self)
-        .def(self != self)
-    ;
-
-    scope s = class_<Dim2Edge, bases<regina::ShareableObject>,
-            std::auto_ptr<Dim2Edge>, boost::noncopyable>("Dim2Edge", no_init)
-        .def("getNumberOfEmbeddings", &Dim2Edge::getNumberOfEmbeddings)
-        .def("getEmbedding", &Dim2Edge::getEmbedding,
-            return_internal_reference<>())
-        .def("getTriangulation", &Dim2Edge::getTriangulation,
-            return_value_policy<reference_existing_object>())
-        .def("getComponent", &Dim2Edge::getComponent,
-            return_value_policy<reference_existing_object>())
-        .def("getBoundaryComponent", &Dim2Edge::getBoundaryComponent,
-            return_value_policy<reference_existing_object>())
-        .def("getVertex", &Dim2Edge::getVertex,
-            return_value_policy<reference_existing_object>())
-        .def("isBoundary", &Dim2Edge::isBoundary)
-    ;
-
-    s.attr("ordering") = &Dim2Edge_ordering;
-}
+void addDim2Triangulation(CppUnit::TextUi::TestRunner& runner);
 

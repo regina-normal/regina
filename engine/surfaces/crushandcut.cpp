@@ -1595,7 +1595,7 @@ bool NNormalSurface::isIncompressible() const {
             if (which == 2) {
                 // We have more than two components with boundary.
                 // This should never happen.
-                std::cerr << "ERROR: isCompressible() sliced to give "
+                std::cerr << "ERROR: isIncompressible() sliced to give "
                     "more than two components with boundary." << std::endl;
                 delete cut;
                 return false;

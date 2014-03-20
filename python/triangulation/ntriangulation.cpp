@@ -59,6 +59,8 @@ namespace {
         NTriangulation::threeTwoMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_twoThreeMove,
         NTriangulation::twoThreeMove, 1, 3);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_oneFourMove,
+        NTriangulation::oneFourMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_fourFourMove,
         NTriangulation::fourFourMove, 2, 4);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_twoZeroMove,
@@ -239,6 +241,7 @@ void addNTriangulation() {
         .def("edgeIndex", &NTriangulation::edgeIndex)
         .def("faceIndex", &NTriangulation::faceIndex)
         .def("triangleIndex", &NTriangulation::triangleIndex)
+        .def("isIdenticalTo", &NTriangulation::isIdenticalTo)
         .def("isIsomorphicTo", isIsomorphicTo_ptr,
             return_value_policy<manage_new_object>())
         .def("isContainedIn", isContainedIn_ptr,
@@ -288,6 +291,7 @@ void addNTriangulation() {
             OL_simplifyToLocalMinimum())
         .def("threeTwoMove", &NTriangulation::threeTwoMove, OL_threeTwoMove())
         .def("twoThreeMove", &NTriangulation::twoThreeMove, OL_twoThreeMove())
+        .def("oneFourMove", &NTriangulation::oneFourMove, OL_oneFourMove())
         .def("fourFourMove", &NTriangulation::fourFourMove, OL_fourFourMove())
         .def("twoZeroMove", twoZeroMove_vertex, OL_twoZeroMove())
         .def("twoZeroMove", twoZeroMove_edge, OL_twoZeroMove())

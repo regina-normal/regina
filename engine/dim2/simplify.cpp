@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,52 +32,66 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
-#include "dim2/dim2boundarycomponent.h"
-#include "dim2/dim2component.h"
-#include "dim2/dim2edge.h"
-#include "dim2/dim2triangle.h"
 #include "dim2/dim2triangulation.h"
-#include "dim2/dim2vertex.h"
-#include "../globalarray.h"
 
-using namespace boost::python;
-using regina::Dim2Edge;
-using regina::Dim2EdgeEmbedding;
-using regina::python::GlobalArray;
+namespace regina {
 
-namespace {
-    GlobalArray<regina::NPerm3> Dim2Edge_ordering(Dim2Edge::ordering, 3);
+bool Dim2Triangulation::oneThreeMove(Dim2Triangle* tri, bool /* check */,
+        bool perform) {
+    if ( !perform )
+        return true; // You can always do this move.
+
+    ChangeEventSpan span(this);
+
+    // Before we unglue, record how the adjacent triangles are glued to tri.
+    Dim2Triangle* adjTri[3];
+    NPerm3 adjGlue[3];
+    unsigned i, j;
+    for (i=0; i<3; i++) {
+        adjTri[i] = tri->adjacentTriangle(i);
+        if (adjTri[i])
+            adjGlue[i] = tri->adjacentGluing(i);
+    }
+
+    // Unglue the old triangle.
+    tri->isolate();
+
+    // The new triangles.
+    // Edge i of the old triangle will become a edge of newTri[i].
+    // Vertex i of newTri[i] will become the new internal vertex, and
+    // the other two vertices of newTri[i] will keep the same vertex numbers
+    // that they had in the old triangle.
+    Dim2Triangle* newTri[3];
+    for (i = 0; i < 3; ++i)
+        newTri[i] = newTriangle();
+
+    // Glue the new triangles to each other internally.
+    for (i = 0; i < 3; ++i)
+        for (j = i + 1; j < 3; ++j)
+            newTri[i]->joinTo(j, newTri[j], NPerm3(i, j));
+
+    // Attach the new triangles to the old triangulation.
+    for (i = 0; i < 3; ++i) {
+        if (adjTri[i] == tri) {
+            // The old triangle was glued to itself.
+
+            // We might have already made this gluing from the other side:
+            if (newTri[i]->adjacentTriangle(i))
+                continue;
+
+            // Nope, do it now.
+            newTri[i]->joinTo(i, newTri[adjGlue[i][i]], adjGlue[i]);
+        } else if (adjTri[i]) {
+            // The old triangle was glued elsewhere.
+            newTri[i]->joinTo(i, adjTri[i], adjGlue[i]);
+        }
+    }
+
+    // Delete the old triangle.
+    removeTriangle(tri);
+
+    // All done!
+    return true;
 }
 
-void addDim2Edge() {
-    class_<Dim2EdgeEmbedding>("Dim2EdgeEmbedding",
-            init<regina::Dim2Triangle*, int>())
-        .def(init<const Dim2EdgeEmbedding&>())
-        .def("getTriangle", &Dim2EdgeEmbedding::getTriangle,
-            return_value_policy<reference_existing_object>())
-        .def("getEdge", &Dim2EdgeEmbedding::getEdge)
-        .def("getVertices", &Dim2EdgeEmbedding::getVertices)
-        .def(self == self)
-        .def(self != self)
-    ;
-
-    scope s = class_<Dim2Edge, bases<regina::ShareableObject>,
-            std::auto_ptr<Dim2Edge>, boost::noncopyable>("Dim2Edge", no_init)
-        .def("getNumberOfEmbeddings", &Dim2Edge::getNumberOfEmbeddings)
-        .def("getEmbedding", &Dim2Edge::getEmbedding,
-            return_internal_reference<>())
-        .def("getTriangulation", &Dim2Edge::getTriangulation,
-            return_value_policy<reference_existing_object>())
-        .def("getComponent", &Dim2Edge::getComponent,
-            return_value_policy<reference_existing_object>())
-        .def("getBoundaryComponent", &Dim2Edge::getBoundaryComponent,
-            return_value_policy<reference_existing_object>())
-        .def("getVertex", &Dim2Edge::getVertex,
-            return_value_policy<reference_existing_object>())
-        .def("isBoundary", &Dim2Edge::isBoundary)
-    ;
-
-    s.attr("ordering") = &Dim2Edge_ordering;
-}
-
+} // namespace regina

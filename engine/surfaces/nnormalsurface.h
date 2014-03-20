@@ -1552,10 +1552,13 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * The rational boundary slope is therefore <tt>-L/M</tt>, and
          * there are <tt>gcd(L,M)</tt> boundary curves with this slope.
          *
-         * This code makes use of the \e SnapPy kernel, and the choice of
-         * meridian and longitude on each cusp follows \e SnapPy's conventions.
-         * In particular, we use the orientations for meridian and longitude
-         * from \e SnapPy. The orientations of the boundary curves of a
+         * The meridian and longitude are chosen to be the shortest and
+         * second shortest basis on each cusp, and their orientations
+         * follow the convention used by the \e SnapPy kernel.  Be warned,
+         * however, that this choice might not be unique for some cusp shapes,
+         * and the resolution of such ambiguities might be machine-dependent.
+         *
+         * The orientations of the boundary curves of a
          * spun-normal surface are chosen so that \e if meridian and
          * longitude are a positive basis as vieved from the cusp, then
          * as one travels along an oriented boundary curve, the
@@ -1571,6 +1574,13 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * triangulation is a torus, and if the underlying coordinate system
          * is for normal surfaces (not almost normal surfaces).  If these
          * conditions are not met, this routine will return 0.
+         *
+         * \warning If this triangulation originated from SnapPea, Regina
+         * cannot tell what meridian and longitude SnapPea was originally using
+         * (since Regina does not keep track of peripheral curves on cusps).
+         * Therefore Regina will always give boundary slopes relative to the
+         * shortest and second-shortest basis, as described above, which
+         * might not be what you expect.
          *
          * @author William Pettersson and Stephan Tillmann
          *

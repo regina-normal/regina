@@ -125,6 +125,9 @@ NMatrixInt* NSnapPeaTriangulation::slopeEquations() const {
     int i,j;
     if (! snappeaData)
         return 0;
+
+    ::install_shortest_bases(snappeaData);
+
     NMatrixInt* matrix =
         new NMatrixInt(2*snappeaData->num_cusps, 3*snappeaData->num_tetrahedra);
     for(i=0; i< snappeaData->num_cusps; i++) {

@@ -119,6 +119,7 @@ void addNAbelianGroup() {
         .def("isZ", &NAbelianGroup::isZ)
         .def("isZn", &NAbelianGroup::isZn)
         .def(self == self)
+        .def(self != self)
     ;
 }
 

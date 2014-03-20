@@ -35,7 +35,9 @@
 #include <cmath>
 #include <iomanip>
 #include <cppunit/extensions/HelperMacros.h>
+#include "maths/nmatrixint.h"
 #include "snappea/nsnappeatriangulation.h"
+#include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
 #include "testsuite/snappea/testsnappea.h"
@@ -53,6 +55,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(volume);
     CPPUNIT_TEST(flat);
     CPPUNIT_TEST(degenerate);
+    CPPUNIT_TEST(spunBoundaries);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -537,6 +540,61 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                 "The orientable degenerate triangulation", 9);
             testDegenerate(degenerateNor,
                 "The non-orientable degenerate triangulation", 9);
+        }
+
+        void spunBoundaries() {
+            NTriangulation* t =
+                NExampleTriangulation::figureEightKnotComplement();
+
+            regina::NNormalSurfaceList* s =
+                regina::NNormalSurfaceList::enumerate(t, regina::NS_QUAD);
+            if (s->getNumberOfSurfaces() != 4)
+                CPPUNIT_FAIL(
+                    "The figure 8 knot complement should have 4 vertex "
+                    "surfaces in quad space.");
+
+            regina::NMatrixInt* m;
+            bool found[4];
+            for (int i = 0; i < s->getNumberOfSurfaces(); ++i) {
+                m = s->getSurface(i)->boundarySlopes();
+                if (m->rows() != 1 || m->columns() != 2) {
+                    CPPUNIT_FAIL(
+                        "Figure 8 knot complement: boundarySlopes() "
+                        "should give 1x2 matrices.");
+                }
+                if (m->entry(0, 0) == 1 && m->entry(0, 1) == 4)
+                    found[0] = true;
+                else if (m->entry(0, 0) == 1 && m->entry(0, 1) == -4)
+                    found[1] = true;
+                else if (m->entry(0, 0) == -1 && m->entry(0, 1) == 4)
+                    found[2] = true;
+                else if (m->entry(0, 0) == -1 && m->entry(0, 1) == -4)
+                    found[3] = true;
+                else {
+                    std::ostringstream msg;
+                    msg << "Figure 8 knot complement: boundarySlopes() "
+                        "gives unexpected result ("
+                        << m->entry(0, 0) << ", " << m->entry(0, 1) << ").";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                delete m;
+            }
+
+            if (! found[0])
+                CPPUNIT_FAIL("Figure 8 knot complement: did not find "
+                    "boundary slope (1, 4).");
+            if (! found[1])
+                CPPUNIT_FAIL("Figure 8 knot complement: did not find "
+                    "boundary slope (1, -4).");
+            if (! found[2])
+                CPPUNIT_FAIL("Figure 8 knot complement: did not find "
+                    "boundary slope (-1, 4).");
+            if (! found[3])
+                CPPUNIT_FAIL("Figure 8 knot complement: did not find "
+                    "boundary slope (-1, -4).");
+
+            delete s;
+            delete t;
         }
 };
 

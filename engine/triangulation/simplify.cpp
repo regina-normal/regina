@@ -334,6 +334,64 @@ bool NTriangulation::twoThreeMove(NTriangle* f, bool check, bool perform) {
     return true;
 }
 
+bool NTriangulation::oneFourMove(NTetrahedron* tet, bool /* check */,
+        bool perform) {
+    if ( !perform )
+        return true; // You can always do this move.
+
+    ChangeEventSpan span(this);
+
+    // Before we unglue, record how the adjacent tetrahedra are glued to tet.
+    NTetrahedron* adjTet[4];
+    NPerm4 adjGlue[4];
+    unsigned i, j;
+    for (i=0; i<4; i++) {
+        adjTet[i] = tet->adjacentTetrahedron(i);
+        if (adjTet[i])
+            adjGlue[i] = tet->adjacentGluing(i);
+    }
+
+    // Unglue the old tetrahedron.
+    tet->isolate();
+
+    // The new tetrahedra.
+    // Face i of the old tetrahedron will become a facet of newTet[i].
+    // Vertex i of newTet[i] will become the new internal vertex, and
+    // the other three vertices of newTet[i] will keep the same vertex numbers
+    // that they had in the old tetrahedron.
+    NTetrahedron* newTet[4];
+    for (i = 0; i < 4; ++i)
+        newTet[i] = newTetrahedron();
+
+    // Glue the new tetrahedra to each other internally.
+    for (i = 0; i < 4; ++i)
+        for (j = i + 1; j < 4; ++j)
+            newTet[i]->joinTo(j, newTet[j], NPerm4(i, j));
+
+    // Attach the new tetrahedra to the old triangulation.
+    for (i = 0; i < 4; ++i) {
+        if (adjTet[i] == tet) {
+            // The old tetrahedron was glued to itself.
+
+            // We might have already made this gluing from the other side:
+            if (newTet[i]->adjacentTetrahedron(i))
+                continue;
+
+            // Nope, do it now.
+            newTet[i]->joinTo(i, newTet[adjGlue[i][i]], adjGlue[i]);
+        } else if (adjTet[i]) {
+            // The old tetrahedron was glued elsewhere.
+            newTet[i]->joinTo(i, adjTet[i], adjGlue[i]);
+        }
+    }
+
+    // Delete the old tetrahedron.
+    removeTetrahedron(tet);
+
+    // All done!
+    return true;
+}
+
 bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
         bool perform) {
     const std::deque<NEdgeEmbedding>& embs = e->getEmbeddings();
