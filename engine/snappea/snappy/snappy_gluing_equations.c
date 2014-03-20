@@ -1,6 +1,5 @@
 #include "../kernel/kernel.h"
-
-namespace regina { namespace snappea {
+#include "../kernel/kernel_namespace.h"
 
 /*
  * This file was originally named "gluing_equations.c" when distributed with
@@ -14,7 +13,6 @@ namespace regina { namespace snappea {
  * topology of 3-manifolds, http://snappy.computop.org
  *
  * */
-
 
 /*
 
@@ -155,4 +153,4 @@ void free_cusp_equation(int* equation){
   my_free(equation);
 }
   
-} } // namespaces
+#include "../kernel/end_namespace.h"
