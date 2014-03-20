@@ -14,6 +14,7 @@ SET ( FILES
   isomorphic
   nxmldim2trireader
   skeleton
+  simplify
   )
 
 # Prepend folder name

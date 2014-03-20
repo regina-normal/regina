@@ -135,6 +135,26 @@ class REGINA_API NVertexEmbedding {
          * is this vertex.
          */
         NPerm4 getVertices() const;
+
+        /**
+         * Tests whether this and the given embedding are identical.
+         * Here "identical" means that they refer to the same vertex of
+         * the same tetrahedron.
+         *
+         * @param rhs the embedding to compare with this.
+         * @return \c true if and only if both embeddings are identical.
+         */
+        bool operator == (const NVertexEmbedding& rhs) const;
+
+        /**
+         * Tests whether this and the given embedding are different.
+         * Here "different" means that they do not refer to the same vertex of
+         * the same tetrahedron.
+         *
+         * @param rhs the embedding to compare with this.
+         * @return \c true if and only if both embeddings are identical.
+         */
+        bool operator != (const NVertexEmbedding& rhs) const;
 };
 
 /**
@@ -551,6 +571,16 @@ inline int NVertexEmbedding::getVertex() const {
 
 inline NPerm4 NVertexEmbedding::getVertices() const {
     return tetrahedron->getVertexMapping(vertex);
+}
+
+inline bool NVertexEmbedding::operator == (const NVertexEmbedding& other)
+        const {
+    return ((tetrahedron == other.tetrahedron) && (vertex == other.vertex));
+}
+
+inline bool NVertexEmbedding::operator != (const NVertexEmbedding& other)
+        const {
+    return ((tetrahedron != other.tetrahedron) || (vertex != other.vertex));
 }
 
 } // namespace regina

@@ -223,6 +223,11 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
          * Notify us that a surface has been renamed.
          */
         void notifySurfaceRenamed();
+
+        /**
+         * Notify that preferences have changed.
+         */
+        void updatePreferences();
 };
 
 inline SurfaceModel::~SurfaceModel() {
