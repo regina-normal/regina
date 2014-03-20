@@ -82,7 +82,7 @@ void uPrepareMemFullMessage() {
     // Do nothing for now.
 }
 
-void uLongComputationBegins(char *message, Boolean /* is_abortable */) {
+void uLongComputationBegins(const char *message, Boolean /* is_abortable */) {
     if (regina::NSnapPeaTriangulation::kernelMessagesEnabled())
         std::cout << message << std::endl;
 }
