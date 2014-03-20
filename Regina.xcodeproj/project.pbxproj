@@ -931,6 +931,12 @@
 		057FA753180615F6008E25F6 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA750180615F5008E25F6 /* libxml2.dylib */; };
 		057FA754180615F6008E25F6 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA751180615F5008E25F6 /* libz.dylib */; };
 		057FA7561806184B008E25F6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA7551806184A008E25F6 /* UIKit.framework */; };
+		0583655D18DB882B008B08D9 /* simplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0583655C18DB882B008B08D9 /* simplify.cpp */; };
+		0583656218DB8876008B08D9 /* double_SnapPy.h in Headers */ = {isa = PBXBuildFile; fileRef = 0583655E18DB8876008B08D9 /* double_SnapPy.h */; };
+		0583656318DB8876008B08D9 /* end_namespace.h in Headers */ = {isa = PBXBuildFile; fileRef = 0583655F18DB8876008B08D9 /* end_namespace.h */; };
+		0583656418DB8876008B08D9 /* kernel_namespace.h in Headers */ = {isa = PBXBuildFile; fileRef = 0583656018DB8876008B08D9 /* kernel_namespace.h */; };
+		0583656518DB8876008B08D9 /* real_type.h in Headers */ = {isa = PBXBuildFile; fileRef = 0583656118DB8876008B08D9 /* real_type.h */; };
+		0583656C18DB88E8008B08D9 /* dim2triangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0583656818DB88D9008B08D9 /* dim2triangulation.cpp */; };
 		058637F1181DBC3E00E95307 /* data in Resources */ = {isa = PBXBuildFile; fileRef = 058637F0181DBC3E00E95307 /* data */; };
 		058637F3181DBC5900E95307 /* syntax in Resources */ = {isa = PBXBuildFile; fileRef = 058637F2181DBC5800E95307 /* syntax */; };
 		058637F5181DBCE100E95307 /* pylib in Resources */ = {isa = PBXBuildFile; fileRef = 058637F4181DBCE100E95307 /* pylib */; };
@@ -1870,6 +1876,14 @@
 		057FA750180615F5008E25F6 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/usr/lib/libxml2.dylib; sourceTree = DEVELOPER_DIR; };
 		057FA751180615F5008E25F6 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/usr/lib/libz.dylib; sourceTree = DEVELOPER_DIR; };
 		057FA7551806184A008E25F6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		0583655C18DB882B008B08D9 /* simplify.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = simplify.cpp; sourceTree = "<group>"; };
+		0583655E18DB8876008B08D9 /* double_SnapPy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = double_SnapPy.h; sourceTree = "<group>"; };
+		0583655F18DB8876008B08D9 /* end_namespace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = end_namespace.h; sourceTree = "<group>"; };
+		0583656018DB8876008B08D9 /* kernel_namespace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kernel_namespace.h; sourceTree = "<group>"; };
+		0583656118DB8876008B08D9 /* real_type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = real_type.h; sourceTree = "<group>"; };
+		0583656718DB88D9008B08D9 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		0583656818DB88D9008B08D9 /* dim2triangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2triangulation.cpp; sourceTree = "<group>"; };
+		0583656918DB88D9008B08D9 /* testdim2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testdim2.h; sourceTree = "<group>"; };
 		058637F0181DBC3E00E95307 /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = data; path = engine/data; sourceTree = "<group>"; };
 		058637F2181DBC5800E95307 /* syntax */ = {isa = PBXFileReference; lastKnownFileType = folder; name = syntax; path = src/syntax; sourceTree = "<group>"; };
 		058637F4181DBCE100E95307 /* pylib */ = {isa = PBXFileReference; lastKnownFileType = folder; path = pylib; sourceTree = SOURCE_ROOT; };
@@ -2126,6 +2140,7 @@
 				052F9C48180600FA00FAE4DF /* isomorphic.cpp */,
 				052F9C49180600FA00FAE4DF /* nxmldim2trireader.cpp */,
 				052F9C4A180600FA00FAE4DF /* nxmldim2trireader.h */,
+				0583655C18DB882B008B08D9 /* simplify.cpp */,
 				052F9C4B180600FA00FAE4DF /* skeleton.cpp */,
 			);
 			path = dim2;
@@ -2423,8 +2438,10 @@
 				052F9D2F180600FA00FAE4DF /* cusp_shapes.c */,
 				052F9D30180600FA00FAE4DF /* cusps.c */,
 				052F9D31180600FA00FAE4DF /* Dehn_coefficients.c */,
+				0583655E18DB8876008B08D9 /* double_SnapPy.h */,
 				052F9D32180600FA00FAE4DF /* dual_one_skeleton_curve.h */,
 				052F9D33180600FA00FAE4DF /* edge_classes.c */,
+				0583655F18DB8876008B08D9 /* end_namespace.h */,
 				052F9D34180600FA00FAE4DF /* filling.c */,
 				052F9D35180600FA00FAE4DF /* find_cusp.c */,
 				052F9D36180600FA00FAE4DF /* finite_vertices.c */,
@@ -2438,6 +2455,7 @@
 				052F9D3E180600FA00FAE4DF /* intersection_numbers.c */,
 				052F9D3F180600FA00FAE4DF /* isometry.h */,
 				052F9D40180600FA00FAE4DF /* kernel.h */,
+				0583656018DB8876008B08D9 /* kernel_namespace.h */,
 				052F9D41180600FA00FAE4DF /* kernel_prototypes.h */,
 				052F9D42180600FA00FAE4DF /* kernel_typedefs.h */,
 				052F9D43180600FA00FAE4DF /* link_projection.h */,
@@ -2449,6 +2467,7 @@
 				052F9D49180600FA00FAE4DF /* positioned_tet.h */,
 				052F9D4A180600FA00FAE4DF /* precision.c */,
 				052F9D4B180600FA00FAE4DF /* README.txt */,
+				0583656118DB8876008B08D9 /* real_type.h */,
 				052F9D4C180600FA00FAE4DF /* shortest_cusp_basis.c */,
 				052F9D4D180600FA00FAE4DF /* simplify_triangulation.c */,
 				052F9D4E180600FA00FAE4DF /* SnapPea.h */,
@@ -2783,6 +2802,7 @@
 				052FA0CB1806088B00FAE4DF /* angle */,
 				052FA0CF1806088B00FAE4DF /* census */,
 				052FA0D61806088B00FAE4DF /* CMakeLists.txt */,
+				0583656618DB88D9008B08D9 /* dim2 */,
 				052FA0D71806088B00FAE4DF /* exhaustive.cpp */,
 				052FA0D81806088B00FAE4DF /* exhaustive.h */,
 				052FA0D91806088B00FAE4DF /* maths */,
@@ -3233,6 +3253,16 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		0583656618DB88D9008B08D9 /* dim2 */ = {
+			isa = PBXGroup;
+			children = (
+				0583656718DB88D9008B08D9 /* CMakeLists.txt */,
+				0583656818DB88D9008B08D9 /* dim2triangulation.cpp */,
+				0583656918DB88D9008B08D9 /* testdim2.h */,
+			);
+			path = dim2;
+			sourceTree = "<group>";
+		};
 		05A47F961809CB7500F86BFD /* examples */ = {
 			isa = PBXGroup;
 			children = (
@@ -3289,6 +3319,7 @@
 				052F9E8C180600FB00FAE4DF /* nxmlalgebrareader.h in Headers */,
 				052FA06E180600FB00FAE4DF /* nperm.h in Headers */,
 				052FA09C180600FB00FAE4DF /* stlutils.h in Headers */,
+				0583656218DB8876008B08D9 /* double_SnapPy.h in Headers */,
 				052F9F2F180600FB00FAE4DF /* nsfsaltset.h in Headers */,
 				052F9F0B180600FB00FAE4DF /* csvsurfacelist.h in Headers */,
 				052F9F49180600FB00FAE4DF /* nprimes.h in Headers */,
@@ -3373,6 +3404,7 @@
 				052FA005180600FB00FAE4DF /* nplugtrisolidtorus.h in Headers */,
 				052F9EB1180600FB00FAE4DF /* dim2exampletriangulation.h in Headers */,
 				052F9F01180600FB00FAE4DF /* nfileinfo.h in Headers */,
+				0583656518DB8876008B08D9 /* real_type.h in Headers */,
 				052F9F31180600FB00FAE4DF /* nsimplesurfacebundle.h in Headers */,
 				052F9F13180600FB00FAE4DF /* pdf.h in Headers */,
 				052F9F3C180600FB00FAE4DF /* ninteger.h in Headers */,
@@ -3395,6 +3427,7 @@
 				052FA090180600FB00FAE4DF /* nmatrix2.h in Headers */,
 				052F9F86180600FB00FAE4DF /* homology.h in Headers */,
 				055DDCF01808575300C973FB /* surfacefiltertype.h in Headers */,
+				0583656318DB8876008B08D9 /* end_namespace.h in Headers */,
 				052F9F17180600FB00FAE4DF /* snappea.h in Headers */,
 				052F9EDE180600FB00FAE4DF /* integer.h in Headers */,
 				052F9EF5180600FB00FAE4DF /* ntreelp-impl.h in Headers */,
@@ -3458,6 +3491,7 @@
 				052F9ED9180600FB00FAE4DF /* full_cone.h in Headers */,
 				052F9FF9180600FB00FAE4DF /* nlayeredloop.h in Headers */,
 				052FA064180600FB00FAE4DF /* nface.h in Headers */,
+				0583656418DB8876008B08D9 /* kernel_namespace.h in Headers */,
 				052F9EAD180600FB00FAE4DF /* dim2component.h in Headers */,
 				052F9FE9180600FB00FAE4DF /* nblockedsfs.h in Headers */,
 				052FA003180600FB00FAE4DF /* npluggedtorusbundle.h in Headers */,
@@ -3699,6 +3733,7 @@
 				052FA1071806088B00FAE4DF /* nfacepairing.cpp in Sources */,
 				052FA1191806088B00FAE4DF /* eltmoves.cpp in Sources */,
 				052FA10A1806088B00FAE4DF /* ninteger.cpp in Sources */,
+				0583656C18DB88E8008B08D9 /* dim2triangulation.cpp in Sources */,
 				052FA1131806088B00FAE4DF /* nsnappeatriangulation.cpp in Sources */,
 				052FA1041806088B00FAE4DF /* dim2census.cpp in Sources */,
 				052FA11A1806088B00FAE4DF /* nhomologicaldata.cpp in Sources */,
@@ -4166,6 +4201,7 @@
 				052FA037180600FB00FAE4DF /* nsanstandard.cpp in Sources */,
 				052FA073180600FB00FAE4DF /* ntriangle.cpp in Sources */,
 				052F9EC4180600FB00FAE4DF /* ndoubledescriptor.tcc in Sources */,
+				0583655D18DB882B008B08D9 /* simplify.cpp in Sources */,
 				052FA05B180600FB00FAE4DF /* hydrate.cpp in Sources */,
 				052FA02F180600FB00FAE4DF /* nnormalsurfacelist.cpp in Sources */,
 				052F9E8B180600FB00FAE4DF /* nxmlalgebrareader.cpp in Sources */,
