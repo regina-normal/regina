@@ -200,6 +200,7 @@
  */
 
 #include "kernel.h"
+#include "kernel_namespace.h"
 
 /*
  *  I chose to define a SymmetryGroupPresentation data structure
@@ -439,7 +440,7 @@ static Boolean is_inverting_matrix(
 {
     int i,
         j;
-    const static MatrixInt22    inverting_matrix = {{-1, 0}, {0, -1}};
+    static const MatrixInt22    inverting_matrix = {{-1, 0}, {0, -1}};
 
     for (i = 0; i < 2; i++)
         for (j = 0; j < 2; j++)
@@ -2007,3 +2008,4 @@ static void free_cyclic_word(
 
     my_free(word);
 }
+#include "end_namespace.h"
