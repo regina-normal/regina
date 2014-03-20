@@ -77,8 +77,7 @@
 #define _isometry_
 
 #include "kernel.h"
-
-namespace regina { namespace snappea {
+#include "kernel_namespace.h"
 
 typedef struct Isometry     Isometry;
 
@@ -178,6 +177,6 @@ struct IsometryList
 
 };
 
-} } // namespaces
+#include "end_namespace.h"
 
 #endif

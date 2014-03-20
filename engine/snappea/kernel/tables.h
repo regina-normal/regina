@@ -10,8 +10,7 @@
 #define _tables_
 
 #include "kernel_typedefs.h"
-
-namespace regina { namespace snappea {
+#include "kernel_namespace.h"
 
 extern const EdgeIndex      edge3[6];
 extern const EdgeIndex      edge_between_faces[4][4];
@@ -30,6 +29,6 @@ extern const FaceIndex      vt_side[4][3];
 extern const Permutation    permutation_by_index[24];
 extern const char           index_by_permutation[256];
 
-} } // namespaces
+#include "end_namespace.h"
 
 #endif

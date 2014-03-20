@@ -33,7 +33,7 @@
 
 #include "SnapPea.h"
 
-namespace regina { namespace snappea {
+#include "kernel_namespace.h"
 
 #define NEW_STRUCT(struct_type)     (struct_type *) my_malloc((size_t) sizeof(struct_type))
 #define NEW_ARRAY(n, struct_type)   (struct_type *) my_malloc((size_t) (n) * sizeof(struct_type))
@@ -132,6 +132,7 @@ typedef unsigned char   Permutation;
 
 /*  Some unix C libraries define PI in math.h,  */
 /*  and complain about a second definition.     */
+/*
 #ifndef PI
 #define PI               3.14159265358979323846
 #endif
@@ -142,6 +143,7 @@ typedef unsigned char   Permutation;
 #define THREE_PI_OVER_2  4.71238898038468985769
 #define ROOT_3_OVER_2    0.86602540378443864676
 #define ROOT_3           1.73205080756887729352
+*/
 
 #define TRUE            1
 #define FALSE           0
@@ -171,19 +173,6 @@ enum
 };
 
 typedef MatrixParity GluingParity;
-
-/*
- *  The constants complete and filled facilitate reference
- *  to the shape of a Tetrahedron as part of the complete or
- *  Dehn filled hyperbolic structure, respectively.
- */
-
-typedef int FillingStatus;
-enum
-{
-    complete,
-    filled
-};
 
 /*
  *  The constants initial and current are synonymous with complete
@@ -325,7 +314,7 @@ enum
 
 typedef struct
 {
-    double  edge_length[4][4];
+    Real  edge_length[4][4];
     Boolean has_been_set[4];
 } VertexCrossSections;
 
@@ -437,7 +426,41 @@ typedef struct
 
 typedef struct extra Extra;
 
+#include "end_namespace.h"
 
-} } // namespaces
+/*
+ *  Normally one expects all the code to be compiled with the same set
+ *  of calling conventions.  An exception arises when using C++
+ *  in conjunction with ANSI library routines that require callback functions.
+ *  Specifically, qsort() wants a comparision function declared using
+ *  C calling conventions.  Typically this requires that the C++ code
+ *  declare the callback function as cdecl or _cdecl ("C declaration").
+ *  If this doesn't work, try the following syntax (which will require
+ *  something like "#define CDECL_END }" to provide the closing bracket).
+ *      
+ *      extern "C"
+ *      {
+ *          int comp(const void *a, const void *b)
+ *          {
+ *              ...
+ *          }
+ *      }
+ *
+ *  If all else fails, read the documentation for your C++ compiler,
+ *  and contact weeks@northnet.org if you have problems.   If this
+ *  gets to be a headache, I can replace the standard library's qsort()
+ *  with a hard-coded qsort (such as the one on page 120 of K&R 2nd ed.).
+ */
+
+#ifdef __cplusplus
+
+#define CDECL   __cdecl
+//#define CDECL cdecl
+
+#else
+
+#define CDECL   /* We're not using C++, so CDECL may be empty. */
+
+#endif
 
 #endif

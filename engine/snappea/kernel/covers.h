@@ -31,7 +31,7 @@
  *  This file (covers.h) is intended solely for inclusion in SnapPea.h.
  */
 
-namespace regina { namespace snappea {
+#include "kernel_namespace.h"
 
 /*
  *  A covering is "regular" iff for any two lifts of a point in the base
@@ -137,5 +137,4 @@ enum
     /* eventually an option for dihedral covers could be added */
 };
 
-} } // namespaces
-
+#include "end_namespace.h"

@@ -21,7 +21,7 @@
 #include "kernel_typedefs.h"
 #include "triangulation.h"
 
-namespace regina { namespace snappea {
+#include "kernel_namespace.h"
 
 typedef struct
 {
@@ -33,6 +33,6 @@ typedef struct
     Orientation orientation;
 } PositionedTet;
 
-} } // namespaces
+#include "end_namespace.h"
 
 #endif

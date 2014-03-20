@@ -84,10 +84,10 @@
 #ifndef _tersest_triangulation_
 #define _tersest_triangulation_
 
-namespace regina { namespace snappea {
+#include "kernel_namespace.h"
 
 typedef unsigned char TersestTriangulation[18];
 
-} } // namespaces
+#include "end_namespace.h"
 
 #endif

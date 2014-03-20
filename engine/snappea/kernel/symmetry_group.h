@@ -12,7 +12,7 @@
 #include "kernel.h"
 #include "isometry.h"
 
-namespace regina { namespace snappea {
+#include "kernel_namespace.h"
 
 /*
  *  Symmetries are just Isometries from a manifold to itself.
@@ -152,6 +152,6 @@ struct SymmetryGroup
 
 };
 
-} } // namespaces
+#include "end_namespace.h"
 
 #endif

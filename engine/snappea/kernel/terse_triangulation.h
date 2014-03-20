@@ -92,8 +92,7 @@
 #define _terse_triangulation_
 
 #include "kernel.h"
-
-namespace regina { namespace snappea {
+#include "kernel_namespace.h"
 
 struct TerseTriangulation
 {
@@ -114,6 +113,6 @@ struct TerseTriangulation
 
 };
 
-} } // namespaces
+#include "end_namespace.h"
 
 #endif

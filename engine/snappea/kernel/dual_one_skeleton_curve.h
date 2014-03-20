@@ -38,7 +38,7 @@
 
 #include "SnapPea.h"
 
-namespace regina { namespace snappea {
+#include "kernel_namespace.h"
 
 /*
  *  An array of four Booleans represents the intersection
@@ -110,6 +110,6 @@ struct DualOneSkeletonCurve
 
 };
 
-} } // namespaces
+#include "end_namespace.h"
 
 #endif

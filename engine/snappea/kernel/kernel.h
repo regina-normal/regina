@@ -10,20 +10,14 @@
 
 #include "SnapPea.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <string.h>
 #include <math.h>
 #include <limits.h>
 #include <float.h>
-/*  Some C implementations define DBL_MAX, DBL_MIN, FLT_MAX,        */
-/*  and FLT_MIN in limits.h as well as float.h, leading to          */
-/*  "redefinition" warnings.  If this is the case on your system,   */
-/*  uncomment the following lines and insert them between           */
-/*  "#include <limits.h>"  and "#include <float.h>" above.          */
-/*                                                                  */
-/*  #undef DBL_MAX  */
-/*  #undef DBL_MIN  */
-/*  #undef FLT_MAX  */
-/*  #undef FLT_MIN  */
 
 #include "kernel_typedefs.h"
 #include "triangulation.h"
@@ -35,4 +29,9 @@
 #include "kernel_prototypes.h"
 #include "tables.h"
 
+#ifdef __cplusplus
+}
 #endif
+
+#endif
+
