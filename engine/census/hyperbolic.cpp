@@ -309,6 +309,13 @@ NHyperbolicMinSearcher::NHyperbolicMinSearcher(std::istream& in,
 }
 
 int NHyperbolicMinSearcher::mergeEdgeClasses() {
+    /**
+     * As well as detecting edges that are self-identified in reverse,
+     * we strip out low-degree edges here.  Although we are interested
+     * in non-geometric triangulations, we can still ignore triangulations
+     * with low-degree edges because (with a little work) they can be
+     * proven to be non-minimal.
+     */
     NTetFace face = order[orderElt];
     NTetFace adj = (*pairing_)[face];
 

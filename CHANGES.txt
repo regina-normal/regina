@@ -21,6 +21,9 @@ Version 4.96  [ (under development) ]
             - New convenience operator !=.
         Class NFaceEmbedding:
             - New convenience operators == and !=.
+        Class NHyperbolicMinSearcher:
+            - New enumeration class for building a census of minimal ideal
+              triangulations of cusped finite-volume hyperbolic 3-manifolds.
         Class NNormalSurface:
             - Routine boundarySlopes() now uses (shortest, second-shortest)
               curves on the cusp as its (meridian, longitude) basis.

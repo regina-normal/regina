@@ -2448,8 +2448,12 @@ class REGINA_API NClosedPrimeMinSearcher : public NCompactSearcher {
 
 /**
  * A gluing permutation search class that offers a specialised search
- * algorithm for when only minimal ideal triangulations of finite-volume
- * hyperbolic 3-manifolds are required.
+ * algorithm for when only minimal ideal triangulations of cusped
+ * finite-volume hyperbolic 3-manifolds are required.  Here every vertex
+ * link will be a torus or Klein bottle.
+ *
+ * Note that this searches for \e any triangulations of such hyperbolic
+ * manifolds, not just \e geometric triangulations.
  *
  * Note that additional unwanted triangulations (e.g., non-hyperbolic or
  * non-minimal triangulations) may still be produced by this search.
@@ -2477,10 +2481,11 @@ class REGINA_API NHyperbolicMinSearcher : public NEulerSearcher {
     public:
         /**
          * Creates a new search manager for use when only minimal ideal
-         * triangulations of finite-volume hyperbolic 3-manifolds are required.
-         * Note that other unwanted triangulations may still be produced (e.g.,
-         * non-hyperbolic or non-minimal triangulations), but there will be
-         * far fewer of these than when using the NGluingPermSearcher
+         * triangulations of cusped finite-volume hyperbolic 3-manifolds are
+         * required.  Here every vertex link will be a torus or Klein bottle.
+         * Note that other unwanted triangulations may still be produced
+         * (e.g., non-hyperbolic or non-minimal triangulations), but there
+         * will be far fewer of these than when using the NGluingPermSearcher
          * class directly.
          *
          * For details on how a search manager is used, see the
