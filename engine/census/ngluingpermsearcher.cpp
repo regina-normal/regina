@@ -278,6 +278,8 @@ NGluingPermSearcher* NGluingPermSearcher::readTaggedData(std::istream& in,
         ans = new NCompactSearcher(in, use, useArgs);
     else if (c == NClosedPrimeMinSearcher::dataTag_)
         ans = new NClosedPrimeMinSearcher(in, use, useArgs);
+    else if (c == NHyperbolicMinSearcher::dataTag_)
+        ans = new NHyperbolicMinSearcher(in, use, useArgs);
     else
         return 0;
 
