@@ -55,6 +55,10 @@ Version 4.96  [ (under development) ]
         - Boundary slopes for spun-normal surfaces must now be explicitly
           enabled in preferences, since the (meridian, longitude) basis might
           not be what the user expects.
+    UTILITIES:
+        tricensus:
+            - New argument -h/--minhyp for enumerating minimal ideal
+              triangulations of cusped finite-volume hyperbolic 3-manifolds.
 
 Version 4.95  [ 12 November, 2013 ]
 

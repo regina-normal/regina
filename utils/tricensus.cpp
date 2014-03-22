@@ -80,6 +80,7 @@ regina::NBoolSet
 int minimal = 0;
 int minimalPrime = 0;
 int minimalPrimeP2 = 0;
+int minimalHyp = 0;
 int dim2 = 0;
 int dim4 = 0;
 int usePairs = 0;
@@ -191,7 +192,7 @@ void foundGluingPerms(const typename CensusType::GluingPermSearcher* perms,
             ok = false;
         else if ((! orientability.hasTrue()) && tri->isOrientable())
             ok = false;
-        else if ((minimal || minimalPrime || minimalPrimeP2) &&
+        else if ((minimal || minimalPrime || minimalPrimeP2 || minimalHyp) &&
                 ! CensusType::mightBeMinimal(tri))
             ok = false;
 
@@ -305,12 +306,16 @@ regina::NText* parameterPacket() {
     else
         descStream << "Orientable and non-orientable\n";
 
-    if (minimalPrimeP2)
+    if (minimalHyp)
+        descStream << "Ignored triangulations that are obviously not "
+            "minimal ideal triangulations of cusped finite-volume "
+            "hyperbolic 3-manifolds\n";
+    else if (minimalPrimeP2)
         descStream << "Ignored obviously non-minimal, non-prime, "
-            << "disc-reducible and/or P2-reducible triangulations\n";
+            "disc-reducible and/or P2-reducible triangulations\n";
     else if (minimalPrime)
         descStream << "Ignored obviously non-minimal, non-prime and/or "
-            << "disc-reducible triangulations\n";
+            "disc-reducible triangulations\n";
     else if (minimal)
         descStream << "Ignored obviously non-minimal triangulations\n";
 
@@ -353,6 +358,9 @@ int main(int argc, const char* argv[]) {
             "Ignore obviously non-minimal, non-prime and/or disc-reducible triangulations.", 0 },
         { "minprimep2", 'N', POPT_ARG_NONE, &minimalPrimeP2, 0,
             "Ignore obviously non-minimal, non-prime, disc-reducible and/or P2-reducible triangulations.", 0 },
+        { "minhyp", 'h', POPT_ARG_NONE, &minimalHyp, 0,
+            "Ignore triangulations that are obviously not minimal ideal "
+            "triangulations of cusped finite-volume hyperbolic 3-manifolds.", 0 },
         { "dim2", '2', POPT_ARG_NONE, &dim2, 0,
             "Run a census of 2-manifold triangulations, "
             "not 3-manifold triangulations.  Here --tetrahedra counts "
@@ -413,7 +421,8 @@ int main(int argc, const char* argv[]) {
     } else if (genPairs && (argFinite || argIdeal)) {
         std::cerr << "Finiteness options cannot be used with -p/--genpairs.\n";
         broken = true;
-    } else if (genPairs && (minimal || minimalPrime || minimalPrimeP2)) {
+    } else if (genPairs &&
+            (minimal || minimalPrime || minimalPrimeP2 || minHyp)) {
         std::cerr << "Minimality options cannot be used with -p/--genpairs.\n";
         broken = true;
     } else if (genPairs && sigs) {
@@ -429,7 +438,10 @@ int main(int argc, const char* argv[]) {
         std::cerr << "Primeness options cannot be used with -2/--dim2 "
             "(the weaker -m/--minimal can).\n";
         broken = true;
-    } else if (dim4 && (minimal || minimalPrime || minimalPrimeP2)) {
+    } else if (dim2 && minHyp) {
+        std::cerr << "Hyperbolicity options cannot be used with -2/--dim2.\n";
+        broken = true;
+    } else if (dim4 && (minimal || minimalPrime || minimalPrimeP2 || minHyp)) {
         std::cerr << "Minimality options cannot be used with -4/--dim4.\n";
         broken = true;
     } else if (usePairs && nTet) {
@@ -457,6 +469,10 @@ int main(int argc, const char* argv[]) {
         broken = true;
     } else if (argFinite && argIdeal) {
         std::cerr << "Options -f/--finite and -d/--ideal "
+            << "cannot be used together.\n";
+        broken = true;
+    } else if (argFinite && minHyp) {
+        std::cerr << "Options -f/--finite and -h/--minhyp "
             << "cannot be used together.\n";
         broken = true;
     } else if (genPairs && usePairs) {
@@ -603,7 +619,7 @@ int runCensus() {
             regina::NCensus::PURGE_P2_REDUCIBLE;
     else if (minimalPrime)
         whichPurge = regina::NCensus::PURGE_NON_MINIMAL_PRIME;
-    else if (minimal)
+    else if (minimal || minHyp)
         whichPurge = regina::NCensus::PURGE_NON_MINIMAL;
 
     if (usePairs) {
