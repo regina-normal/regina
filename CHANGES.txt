@@ -19,6 +19,10 @@ Version 4.96  [ (under development) ]
             - New convenience operators == and !=.
         Class NAbelianGroup:
             - New convenience operator !=.
+        Class NBoundaryComponent:
+            - Renamed getEulerCharacteristic() to getEulerChar(), which
+              is easier on the fingers.  The old name has been kept as a
+              deprecated alias for backward compatibility.
         Class NCensus:
             - New constant PURGE_NON_MINIMAL_HYP, for use in building a
               census of cusped finite volume hyperbolic 3-manifolds.
@@ -35,6 +39,11 @@ Version 4.96  [ (under development) ]
               curves on the cusp as its (meridian, longitude) basis.
               This reverts a change in behaviour from the previous release
               caused by the recent sync with the SnapPy 2.0.3 kernel.
+            - Renamed getEulerCharacteristic() to getEulerChar(), which
+              is easier on the fingers.  The old name has been kept as a
+              deprecated alias for backward compatibility.
+            - Renamed the protected routine calculateEulerCharacteristic() to
+              calculateEulerChar().
         Class NSnapPeaTriangulation:
             - Updated the SnapPea kernel to the one shipped with SnapPy 2.1.
             - The entire SnapPea kernel now lives within the namespace
@@ -51,6 +60,10 @@ Version 4.96  [ (under development) ]
         Class NTriangulation:
             - New routine isIdenticalTo().
             - New local modification oneFourMove().
+        Class NVertex:
+            - Renamed getLinkEulerCharacteristic() to getLinkEulerChar(), which
+              is easier on the fingers.  The old name has been kept as a
+              deprecated alias for backward compatibility.
         Class NVertexEmbedding:
             - New convenience operators == and !=.
         Class SnapPeaException, SnapPeaFatalError, SnapPeaMemoryFull:

@@ -1298,7 +1298,7 @@ bool NNormalSurface::isCompressingDisc(bool knownConnected) const {
     // Is it even a disc?
     if (! hasRealBoundary())
         return false;
-    if (getEulerCharacteristic() != 1)
+    if (getEulerChar() != 1)
         return false;
 
     if (! knownConnected) {
@@ -1314,7 +1314,7 @@ bool NNormalSurface::isCompressingDisc(bool knownConnected) const {
     NTriangulation::BoundaryComponentIterator bit;
     for (bit = getTriangulation()->getBoundaryComponents().begin();
             bit != getTriangulation()->getBoundaryComponents().end(); ++bit)
-        if ((*bit)->getEulerCharacteristic() == 2)
+        if ((*bit)->getEulerChar() == 2)
             ++origSphereCount;
 
     // Now cut along the disc, and see if we get an extra sphere as a
@@ -1334,7 +1334,7 @@ bool NNormalSurface::isCompressingDisc(bool knownConnected) const {
     unsigned long newSphereCount = 0;
     for (bit = cut->getBoundaryComponents().begin();
             bit != cut->getBoundaryComponents().end(); ++bit)
-        if ((*bit)->getEulerCharacteristic() == 2)
+        if ((*bit)->getEulerChar() == 2)
             ++newSphereCount;
 
     if (newSphereCount == origSphereCount)
@@ -1450,7 +1450,7 @@ namespace {
                 }
 
                 // Compute the Euler characteristic of the boundary component.
-                long ec = t_->getBoundaryComponent(0)->getEulerCharacteristic();
+                long ec = t_->getBoundaryComponent(0)->getEulerChar();
 
                 // Look for a normal disc or sphere to crush.
                 NNormalSurface* ans;
@@ -1522,7 +1522,7 @@ namespace {
                     while (t_) {
                         if (t_->getNumberOfBoundaryComponents() == 1 &&
                                 t_->getBoundaryComponent(0)->
-                                    getEulerCharacteristic() == ec) {
+                                    getEulerChar() == ec) {
                             // Found it.
                             t_->makeOrphan();
                             break;
@@ -1567,8 +1567,7 @@ bool NNormalSurface::isIncompressible() const {
     // Rule out spheres.
     // From the preconditions, we can assume this surface to be
     // closed, compact and connected.
-    if (getEulerCharacteristic() == 2 ||
-            ((! isTwoSided()) && getEulerCharacteristic() == 1))
+    if (getEulerChar() == 2 || ((! isTwoSided()) && getEulerChar() == 1))
         return false;
 
     if (isThinEdgeLink().first) {

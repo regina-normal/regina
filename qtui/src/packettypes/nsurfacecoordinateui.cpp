@@ -158,7 +158,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         else if (index.column() == 2) {
             if (! s->isCompact())
                 return QVariant();
-            return s->getEulerCharacteristic().stringValue().c_str();
+            return s->getEulerChar().stringValue().c_str();
         } else if (surfaces_->isEmbeddedOnly() && index.column() == 3) {
             if (! s->isCompact())
                 return QVariant();
