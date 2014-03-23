@@ -19,8 +19,14 @@ Version 4.96  [ (under development) ]
             - New convenience operators == and !=.
         Class NAbelianGroup:
             - New convenience operator !=.
+        Class NCensus:
+            - New constant PURGE_NON_MINIMAL_HYP, for use in building a
+              census of cusped finite volume hyperbolic 3-manifolds.
         Class NFaceEmbedding:
             - New convenience operators == and !=.
+        Class NGluingPermSearcher:
+            - Removed protected routine mayPurge(), since this behaviour is
+              already provided by specialised subclasses of NGluingPermSearcher.
         Class NHyperbolicMinSearcher:
             - New enumeration class for building a census of minimal ideal
               triangulations of cusped finite-volume hyperbolic 3-manifolds.

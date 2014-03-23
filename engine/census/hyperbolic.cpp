@@ -52,7 +52,7 @@ NHyperbolicMinSearcher::NHyperbolicMinSearcher(const NFacePairing* pairing,
         const NFacePairing::IsoList* autos, bool orientableOnly,
         UseGluingPerms use, void* useArgs) :
         NEulerSearcher(0, pairing, autos, orientableOnly,
-            NCensus::PURGE_NON_MINIMAL, use, useArgs) {
+            NCensus::PURGE_NON_MINIMAL_HYP, use, useArgs) {
 }
 
 void NHyperbolicMinSearcher::runSearch(long maxDepth) {

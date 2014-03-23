@@ -528,34 +528,6 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
             bool testDegree3) const;
 
         /**
-         * Determines whether the permutations under construction are
-         * doomed to model a triangulation that can be purged from the
-         * census.  The conditions under which a triangulation may be
-         * purged are specified by the search parameter \a whichPurge_.
-         *
-         * Note that this routine will not identify all triangulations
-         * that satisfy the given conditions; however, whenever this
-         * routine \e does return \c true it is guaranteed that the
-         * permutations under construction will only lead to
-         * triangulations that do meet the given conditions.
-         *
-         * Tests that do not refer to the gluing permutation for the
-         * given face will not be run.
-         *
-         * This routine is not fussy about the order in which gluing
-         * permutations are selected, as long as permutations not yet
-         * selected have the corresponding element of permIndices[] set
-         * to -1.
-         *
-         * @param face the specific tetrahedron face upon which tests
-         * will be based.
-         * @return \c true if the permutations under construction will only
-         * lead to triangulations that may be purged, or \c false if the
-         * results are inconclusive.
-         */
-        bool mayPurge(const NTetFace& face) const;
-
-        /**
          * Returns the character used to identify this class when
          * storing tagged data in text format.
          *
