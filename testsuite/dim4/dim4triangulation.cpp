@@ -80,7 +80,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(boundaryComponents);
     CPPUNIT_TEST(boundaryInclusions);
     CPPUNIT_TEST(vertexLinksSpecific);
-    CPPUNIT_TEST(eulerCharacteristic);
+    CPPUNIT_TEST(eulerChar);
     CPPUNIT_TEST(homologyH1);
     CPPUNIT_TEST(fundGroup);
     CPPUNIT_TEST(makeCanonical);
@@ -910,7 +910,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             }
         }
 
-        void eulerCharacteristic() {
+        void eulerChar() {
             verifyEulerChar(empty, 0, 0);
             verifyEulerChar(s4_id, 2, 2);
             verifyEulerChar(s4_doubleConeS3, 2, 2);
