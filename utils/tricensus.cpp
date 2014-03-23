@@ -495,10 +495,6 @@ int main(int argc, const char* argv[]) {
         std::cerr << "Options -f/--finite and -d/--ideal "
             << "cannot be used together.\n";
         broken = true;
-    } else if (argFinite && minimalHyp) {
-        std::cerr << "Options -f/--finite and -h/--minhyp "
-            << "cannot be used together.\n";
-        broken = true;
     } else if (genPairs && usePairs) {
         std::cerr << "Options -p/--genpairs and -P/--usepairs "
             << "cannot be used together.\n";
