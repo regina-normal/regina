@@ -183,6 +183,13 @@ void foundGluingPerms(const typename CensusType::GluingPermSearcher* perms,
     if (perms) {
         typename CensusType::Triangulation* tri = perms->triangulate();
 
+        // For minimalHyp, we don't run CensusType::mightBeMinimal().
+        // This is because mightBeMinimal() only tests for immediate
+        // reductions (i.e., it doesn't use 4-4 moves or well-climbing
+        // techniques), and NHyperbolicMinSearcher already ensures that
+        // no such moves are possible (since it ensures no internal vertices
+        // and no low-degree edges).
+
         bool ok = true;
         if (! tri->isValid())
             ok = false;
@@ -192,7 +199,7 @@ void foundGluingPerms(const typename CensusType::GluingPermSearcher* perms,
             ok = false;
         else if ((! orientability.hasTrue()) && tri->isOrientable())
             ok = false;
-        else if ((minimal || minimalPrime || minimalPrimeP2 || minimalHyp) &&
+        else if ((minimal || minimalPrime || minimalPrimeP2) &&
                 ! CensusType::mightBeMinimal(tri))
             ok = false;
 
