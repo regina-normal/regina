@@ -79,7 +79,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(boundaryComponents);
     CPPUNIT_TEST(vertexLinksSpecific);
     CPPUNIT_TEST(vertexLinks);
-    CPPUNIT_TEST(eulerCharacteristic);
+    CPPUNIT_TEST(eulerChar);
     CPPUNIT_TEST(homologyH1);
     CPPUNIT_TEST(homologyH1Bdry);
     CPPUNIT_TEST(fundGroup);
@@ -752,11 +752,11 @@ class NTriangulationTest : public CppUnit::TestFixture {
                     << " link is non-orientable.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (v->getLinkEulerCharacteristic() != 1) {
+            if (v->getLinkEulerChar() != 1) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link has Euler characteristic "
-                    << v->getLinkEulerCharacteristic() << ", not 1.";
+                    << v->getLinkEulerChar() << ", not 1.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
@@ -809,11 +809,11 @@ class NTriangulationTest : public CppUnit::TestFixture {
                     << " link is non-orientable.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (v->getLinkEulerCharacteristic() != 2) {
+            if (v->getLinkEulerChar() != 2) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link has Euler characteristic "
-                    << v->getLinkEulerCharacteristic() << ", not 2.";
+                    << v->getLinkEulerChar() << ", not 2.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
@@ -866,11 +866,11 @@ class NTriangulationTest : public CppUnit::TestFixture {
                     << " link is non-orientable.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (v->getLinkEulerCharacteristic() != 0) {
+            if (v->getLinkEulerChar() != 0) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link has Euler characteristic "
-                    << v->getLinkEulerCharacteristic() << ", not 0.";
+                    << v->getLinkEulerChar() << ", not 0.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
@@ -923,11 +923,11 @@ class NTriangulationTest : public CppUnit::TestFixture {
                     << " link is orientable.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (v->getLinkEulerCharacteristic() != 0) {
+            if (v->getLinkEulerChar() != 0) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link has Euler characteristic "
-                    << v->getLinkEulerCharacteristic() << ", not 0.";
+                    << v->getLinkEulerChar() << ", not 0.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
@@ -980,11 +980,11 @@ class NTriangulationTest : public CppUnit::TestFixture {
                     << " link is non-orientable.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (v->getLinkEulerCharacteristic() != -2) {
+            if (v->getLinkEulerChar() != -2) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link has Euler characteristic "
-                    << v->getLinkEulerCharacteristic() << ", not -2.";
+                    << v->getLinkEulerChar() << ", not -2.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
@@ -1037,11 +1037,11 @@ class NTriangulationTest : public CppUnit::TestFixture {
                     << " link is orientable.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (v->getLinkEulerCharacteristic() != 1) {
+            if (v->getLinkEulerChar() != 1) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link has Euler characteristic "
-                    << v->getLinkEulerCharacteristic() << ", not 1.";
+                    << v->getLinkEulerChar() << ", not 1.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
@@ -1094,11 +1094,11 @@ class NTriangulationTest : public CppUnit::TestFixture {
                     << " link is non-orientable.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (v->getLinkEulerCharacteristic() != 0) {
+            if (v->getLinkEulerChar() != 0) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link has Euler characteristic "
-                    << v->getLinkEulerCharacteristic() << ", not 0.";
+                    << v->getLinkEulerChar() << ", not 0.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
@@ -1151,11 +1151,11 @@ class NTriangulationTest : public CppUnit::TestFixture {
                     << " link is orientable.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (v->getLinkEulerCharacteristic() != 0) {
+            if (v->getLinkEulerChar() != 0) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link has Euler characteristic "
-                    << v->getLinkEulerCharacteristic() << ", not 0.";
+                    << v->getLinkEulerChar() << ", not 0.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
@@ -1515,7 +1515,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             }
         }
 
-        void eulerCharacteristic() {
+        void eulerChar() {
             verifyEuler(empty, 0, 0, "Empty triangulation");
             verifyEuler(singleTet, 1, 1, "Single tetrahedron");
             verifyEuler(s3, 0, 0, "S^3");
@@ -1948,13 +1948,13 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 const NNormalSurface* f;
                 for (size_t i = 0; i < s->getNumberOfSurfaces(); ++i) {
                     f = s->getSurface(i);
-                    if (f->getEulerCharacteristic() == 2 &&
+                    if (f->getEulerChar() == 2 &&
                             (! f->hasRealBoundary()) &&
                             ! f->isVertexLinking()) {
                         // Normal sphere
                         expected = false;
                         break;
-                    } else if (f->getEulerCharacteristic() == 1 &&
+                    } else if (f->getEulerChar() == 1 &&
                             (! f->hasRealBoundary()) &&
                             (! f->isTwoSided()) &&
                             ! f->isVertexLinking()) {
@@ -1962,7 +1962,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
                         // normal sphere
                         expected = false;
                         break;
-                    } else if (f->getEulerCharacteristic() == 1 &&
+                    } else if (f->getEulerChar() == 1 &&
                             f->hasRealBoundary() && ! f->isVertexLinking()) {
                         // Normal disc
                         expected = false;
@@ -2537,8 +2537,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
                          tri->isOrientable() &&
                          tri->isConnected() &&
                          tri->getNumberOfBoundaryComponents() == 1 &&
-                         tri->getBoundaryComponent(0)->getEulerCharacteristic()
-                            == 0 &&
+                         tri->getBoundaryComponent(0)->getEulerChar() == 0 &&
                          tri->getHomologyH1().isZ() &&
                          (tri->getNumberOfTetrahedra() < 4 ||
                             (tri->getNumberOfTetrahedra() == 4 &&
@@ -3241,14 +3240,14 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 std::vector<BCSpec> bcOld;
                 for (bcit = tri.getBoundaryComponents().begin();
                         bcit != tri.getBoundaryComponents().end(); ++bcit)
-                    bcOld.push_back(BCSpec((*bcit)->getEulerCharacteristic(),
+                    bcOld.push_back(BCSpec((*bcit)->getEulerChar(),
                         (*bcit)->isOrientable()));
                 std::sort(bcOld.begin(), bcOld.end());
 
                 std::vector<BCSpec> bcNew;
                 for (bcit = finite.getBoundaryComponents().begin();
                         bcit != finite.getBoundaryComponents().end(); ++bcit)
-                    bcNew.push_back(BCSpec((*bcit)->getEulerCharacteristic(),
+                    bcNew.push_back(BCSpec((*bcit)->getEulerChar(),
                         (*bcit)->isOrientable()));
                 std::sort(bcNew.begin(), bcNew.end());
 
@@ -3341,16 +3340,16 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 std::vector<BCSpec> bcOld;
                 for (bcit = tri.getBoundaryComponents().begin();
                         bcit != tri.getBoundaryComponents().end(); ++bcit)
-                    if ((*bcit)->getEulerCharacteristic() != 2)
+                    if ((*bcit)->getEulerChar() != 2)
                         bcOld.push_back(
-                            BCSpec((*bcit)->getEulerCharacteristic(),
+                            BCSpec((*bcit)->getEulerChar(),
                             (*bcit)->isOrientable()));
                 std::sort(bcOld.begin(), bcOld.end());
 
                 std::vector<BCSpec> bcNew;
                 for (bcit = ideal.getBoundaryComponents().begin();
                         bcit != ideal.getBoundaryComponents().end(); ++bcit)
-                    bcNew.push_back(BCSpec((*bcit)->getEulerCharacteristic(),
+                    bcNew.push_back(BCSpec((*bcit)->getEulerChar(),
                         (*bcit)->isOrientable()));
                 std::sort(bcNew.begin(), bcNew.end());
 
@@ -3447,8 +3446,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
                         (tmp0.getNumberOfBoundaryComponents() == 1) &&
                         (tmp0.getHomologyH1().isZ()) &&
                         (tmp0.getBoundaryComponent(0)->isOrientable()) &&
-                        (tmp0.getBoundaryComponent(0)->
-                            getEulerCharacteristic() == 0) &&
+                        (tmp0.getBoundaryComponent(0)->getEulerChar() == 0) &&
                         (! tmp0.isSolidTorus())))
                     CPPUNIT_FAIL("Layered 3-sphere: drilling edge 0 "
                         "does not give a non-trivial knot complement.");

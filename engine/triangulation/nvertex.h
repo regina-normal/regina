@@ -194,7 +194,7 @@ class REGINA_API NVertex : public ShareableObject, public NMarkedElement {
                  predefined vertex link constants in NVertex. */
         bool linkOrientable;
             /**< Specifies whether the vertex link is orientable. */
-        long linkEulerCharacteristic;
+        long linkEulerChar;
             /**< Specifies the Euler characteristic of the vertex link. */
         Dim2Triangulation* linkTri;
             /**< A triangulation of the vertex link.  This will only be
@@ -443,6 +443,22 @@ class REGINA_API NVertex : public ShareableObject, public NMarkedElement {
          *
          * @return the Euler characteristic of the vertex link.
          */
+        long getLinkEulerChar() const;
+
+        /**
+         * A deprecated alias for getLinkEulerChar().
+         *
+         * Returns the Euler characteristic of the vertex link.
+         *
+         * This routine does not require a full triangulation of the
+         * vertex link, and so can be much faster than calling
+         * buildLink().getEulerChar().
+         *
+         * \deprecated This routine will be removed in a future version of
+         * Regina.  Please use the identical routine getLinkEulerChar() instead.
+         *
+         * @return the Euler characteristic of the vertex link.
+         */
         long getLinkEulerCharacteristic() const;
 
         void writeTextShort(std::ostream& out) const;
@@ -473,7 +489,7 @@ namespace regina {
 
 inline NVertex::NVertex(NComponent* myComponent) : component(myComponent),
         boundaryComponent(0), linkOrientable(true),
-        linkEulerCharacteristic(0), linkTri(0) {
+        linkEulerChar(0), linkTri(0) {
 }
 
 inline NTriangulation* NVertex::getTriangulation() const {
@@ -526,8 +542,12 @@ inline bool NVertex::isLinkOrientable() const {
     return linkOrientable;
 }
 
+inline long NVertex::getLinkEulerChar() const {
+    return linkEulerChar;
+}
+
 inline long NVertex::getLinkEulerCharacteristic() const {
-    return linkEulerCharacteristic;
+    return linkEulerChar;
 }
 
 inline const std::vector<NVertexEmbedding>& NVertex::getEmbeddings() const {

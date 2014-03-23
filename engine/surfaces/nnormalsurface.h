@@ -1164,6 +1164,23 @@ class REGINA_API NNormalSurface : public ShareableObject {
          *
          * @return the Euler characteristic.
          */
+        NLargeInteger getEulerChar() const;
+        /**
+         * A deprecated alias for getEulerChar().
+         *
+         * Returns the Euler characteristic of this surface.
+         *
+         * This routine caches its results, which means that once it has
+         * been called for a particular surface, subsequent calls return
+         * the answer immediately.
+         *
+         * \pre This normal surface is compact (has finitely many discs).
+         *
+         * \deprecated This routine will be removed in a future version of
+         * Regina.  Please use the identical routine getEulerChar() instead.
+         *
+         * @return the Euler characteristic.
+         */
         NLargeInteger getEulerCharacteristic() const;
         /**
          * Returns whether or not this surface is orientable.
@@ -1690,7 +1707,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
          *
          * \pre This normal surface is compact (has finitely many discs).
          */
-        void calculateEulerCharacteristic() const;
+        void calculateEulerChar() const;
         /**
          * Calculates whether this surface is orientable and/or
          * two-sided and stores the results as properties.
@@ -1795,10 +1812,14 @@ inline bool NNormalSurface::isCompact() const {
     return compact.value();
 }
 
-inline NLargeInteger NNormalSurface::getEulerCharacteristic() const {
+inline NLargeInteger NNormalSurface::getEulerChar() const {
     if (! eulerChar.known())
-        calculateEulerCharacteristic();
+        calculateEulerChar();
     return eulerChar.value();
+}
+
+inline NLargeInteger NNormalSurface::getEulerCharacteristic() const {
+    return getEulerChar();
 }
 
 inline bool NNormalSurface::isOrientable() const {

@@ -86,7 +86,7 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
     REGINA_SURFACE_FILTER(NSurfaceFilterProperties, NS_FILTER_PROPERTIES)
 
     private:
-        std::set<NLargeInteger> eulerCharacteristic;
+        std::set<NLargeInteger> eulerChar;
             /**< The set of allowable Euler characteristics.  An empty
                  set signifies that any Euler characteristic is allowed. */
         NBoolSet orientability;
@@ -240,7 +240,7 @@ inline NSurfaceFilterProperties::NSurfaceFilterProperties() :
 inline NSurfaceFilterProperties::NSurfaceFilterProperties(
         const NSurfaceFilterProperties& cloneMe) :
         NSurfaceFilter(),
-        eulerCharacteristic(cloneMe.eulerCharacteristic),
+        eulerChar(cloneMe.eulerChar),
         orientability(cloneMe.orientability),
         compactness(cloneMe.compactness),
         realBoundary(cloneMe.realBoundary) {
@@ -248,10 +248,10 @@ inline NSurfaceFilterProperties::NSurfaceFilterProperties(
 
 inline const std::set<NLargeInteger>& NSurfaceFilterProperties::getECs()
         const {
-    return eulerCharacteristic;
+    return eulerChar;
 }
 inline unsigned long NSurfaceFilterProperties::getNumberOfECs() const {
-    return eulerCharacteristic.size();
+    return eulerChar.size();
 }
 inline NBoolSet NSurfaceFilterProperties::getOrientability() const {
     return orientability;
@@ -265,15 +265,15 @@ inline NBoolSet NSurfaceFilterProperties::getRealBoundary() const {
 
 inline void NSurfaceFilterProperties::addEC(const NLargeInteger& ec) {
     ChangeEventSpan span(this);
-    eulerCharacteristic.insert(ec);
+    eulerChar.insert(ec);
 }
 inline void NSurfaceFilterProperties::removeEC(const NLargeInteger& ec) {
     ChangeEventSpan span(this);
-    eulerCharacteristic.erase(ec);
+    eulerChar.erase(ec);
 }
 inline void NSurfaceFilterProperties::removeAllECs() {
     ChangeEventSpan span(this);
-    eulerCharacteristic.clear();
+    eulerChar.clear();
 }
 inline void NSurfaceFilterProperties::setOrientability(const NBoolSet& value) {
     ChangeEventSpan span(this);

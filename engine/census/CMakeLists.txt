@@ -13,6 +13,7 @@ SET ( FILES
   dim4gluingperms
   dim4gluingpermsearcher
   euler
+  hyperbolic
   ncensus
   nfacepairing
   ngluingperms
