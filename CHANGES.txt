@@ -67,6 +67,7 @@ Version 4.96  [ (under development) ]
             - The entire SnapPea kernel now lives within the namespace
               regina::snappea, which should ensure safety even if a
               conflicting SnapPy kernel is simultaneously loaded via Python.
+              The SnapPea kernel is also linked as C++ now (no 'extern "C"').
             - Fatal errors in the SnapPea kernel are now handled by throwing
               exceptions, instead of quitting abruptly.
             - Routine slopeEquations() now uses (shortest, second-shortest)
