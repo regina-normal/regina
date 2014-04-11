@@ -137,14 +137,25 @@ namespace {
             unsigned nInnerTet_;
                 /**< The number of inner tetrahedra. */
 
+            CutBdry* cut_[4];
+                /**< The four triangle / quadrilateral type (i) boundaries
+                     of this block.  These are boundaries that run along
+                     the original normal surface.  Specifically, cut_[i]
+                     is the boundary that faces vertex i of the outer
+                     tetrahedron; here each quadrilateral boundary will
+                     appear as two different cut_[i] elements, and each
+                     triangle boundary will appear as either one or three
+                     different cut_[i] elements.  No element of this
+                     array will be 0. */
+
             OuterBdry* bdry_[4];
                 /**< The four quadrilateral / hexagonal type (ii) boundaries
                      of this block.  These are boundaries that meet faces of
                      the outer tetrahedron (not boundaries that run along the
                      original normal surface).  Specifically, bdry_[i]
-                     is the boundary on face i of the outer tetrahedron
-                     (or 0 if this block does not actually meet face i
-                     of the outer tetrahedron). */
+                     is the boundary on face i of the outer tetrahedron,
+                     or 0 if this block does not actually meet face i
+                     of the outer tetrahedron. */
 
             NTetrahedron* link_[4];
                 /**< Indicates which inner tetrahedra in this block (if any)
@@ -498,6 +509,119 @@ namespace {
     };
 
     /**
+     * Represents a triangle or quadrilateral piece of a block boundary,
+     * where the block meets a triangle or quadrilateral of the original
+     * normal surface.
+     *
+     * For each such triangle or quadrilateral, we number the vertices
+     * from 0 to 2 (for a triangle) or 0 to 3 (for a quadrilateral),
+     * and for each such quadrilateral we decompose it into triangles
+     * numbered 0 and 1; see cut-surface.fig for details of how this
+     * is done for each normal triangle or quadrilateral type.
+     * Since the numbering depends only on the normal triangle or
+     * quadrilateral type, it follows that both blocks on either side of
+     * the same normal triangle or quadrilateral will number its
+     * vertices in the same way.
+     *
+     * In the diagram cut-surface.fig, the vertices of each normal
+     * triangle or quadrilateral are numbered using plain integers,
+     * and the four vertices of the surrounding tetrahedron are numbered
+     * using integers in circles.
+     */
+    class CutBdry {
+        protected:
+            Block* block_;
+                /**< The block whose boundary this is a piece of. */
+
+        public:
+            /**
+             * A virtual destructor that does nothing.
+             */
+            virtual ~CutBdry();
+
+            /**
+             * Identifies (i.e., glues together) this piece of boundary
+             * and the given piece of boundary, so that the
+             * corresponding blocks are reglued together as if we had
+             * never sliced along the normal surface.
+             *
+             * This routine assumes that this and the given piece of
+             * boundary are the same shape (i.e., both triangles or
+             * both quadrilaterals).
+             */
+            virtual void joinTo(CutBdry* other) = 0; /* PRE: other is same shape */
+
+        protected:
+            /**
+             * Initialises a new object with the given block.
+             */
+            CutBdry(Block* block);
+    };
+
+    /**
+     * A piece of block boundary that is a single triangle.
+     *
+     * See cut-surface.fig for details of how the vertices of the
+     * triangle are numbered, and see the CutBdry class notes for what
+     * all the numbers on this diagram actually mean.
+     */
+    class CutTri : public CutBdry {
+        private:
+            NTetrahedron* innerTet_;
+                /**< The inner tetrahedron of the block that supplies the
+                     inner boundary face for this triangle. */
+            NPerm4 innerVertices_;
+                /**< Maps vertices 0, 1 and 2 of this boundary triangle
+                     to the corresponding vertex numbers of innerTet_. */
+
+        public:
+            /**
+             * See CutBdry::joinTo() for details.
+             */
+            virtual void joinTo(CutBdry* other);
+
+        private:
+            /**
+             * Initialises a new object with the given block.
+             */
+            CutTri(Block* block);
+    };
+
+    /**
+     * A piece of block boundary that is a triangulated quadrilateral.
+     *
+     * See cut-surface.fig for details of how the quadrilateral is
+     * triangulated, and see the CutBdry class notes for what all the
+     * numbers on this diagram actually mean.
+     */
+    class CutQuad : public CutBdry {
+        private:
+            NTetrahedron* innerTet_[2];
+                /**< The two inner tetrahedra of the block that supply the
+                     two triangular faces for this boundary quadrilateral. */
+            NPerm4 innerVertices_[2];
+                /**< For the ith face of this quadrilateral, the permutation
+                     innerVertices_[i] maps the vertices 0, 1 and 2
+                     of this triangle to the corresponding vertex numbers in
+                     the inner tetrahedron innerTet_[i].  The numbering of
+                     vertices on the triangle is not shown in cut-surface.fig,
+                     but it does not matter since the block on the other side
+                     will number the vertices in the same way. */
+
+        public:
+            /**
+             * See CutBdry::joinTo() for details.
+             */
+            virtual void joinTo(CutBdry* other);
+
+        private:
+            /**
+             * Initialises a new object with the given block.
+             */
+            CutQuad(Block* block);
+    };
+
+    /**
      * Stores a full set of triangulated blocks within a single
      * "outer" tetrahedron of the original triangulation, as formed by
      * cutting along some normal surface within this original triangulation.
@@ -638,8 +762,15 @@ namespace {
     };
 
     inline Block::~Block() {
-        for (unsigned i = 0; i < 4; ++i)
+        unsigned i;
+        for (i = 0; i < 4; ++i)
             delete bdry_[i];
+        for (i = 0; i < 4; ++i) {
+            // Careful!  The same CutBdry object may appear as multiple
+            // elements of the cut_[] array.
+            delete cut_[i];
+            cut_[i] = 0;
+        }
         delete[] innerTet_;
     }
 
@@ -1011,6 +1142,35 @@ namespace {
         innerVertices_[3] = innerVertices_[3] * NPerm4(1, 2, 0, 3);
 
         outerVertices_ = outerVertices_ * NPerm4(1, 2, 0, 3);
+    }
+
+    inline CutBdry::~CutBdry() {
+        // Empty virtual destructor.
+    }
+
+    inline CutBdry::CutBdry(Block* block) : block_(block) {
+    }
+
+    inline void CutTri::joinTo(CutBdry* other) {
+        // Assume other is a CutTri.
+        CutTri* dest = static_cast<CutTri*>(other);
+        innerTet_->joinTo(innerVertices_[3], dest->innerTet_,
+            dest->innerVertices_ * innerVertices_.inverse());
+    }
+
+    inline CutTri::CutTri(Block* block) : CutBdry(block) {
+    }
+
+    inline void CutQuad::joinTo(CutBdry* other) {
+        // Assume other is a CutQuad.
+        CutQuad* dest = static_cast<CutQuad*>(other);
+
+        for (int i = 0; i < 2; ++i)
+            innerTet_[i]->joinTo(innerVertices_[i][3], dest->innerTet_[i],
+                dest->innerVertices_[i] * innerVertices_[i].inverse());
+    }
+
+    inline CutQuad::CutQuad(Block* block) : CutBdry(block) {
     }
 
     TetBlockSet::TetBlockSet(const NNormalSurface* s, unsigned long tetIndex,
