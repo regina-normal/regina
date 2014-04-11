@@ -88,10 +88,14 @@ namespace regina {
  *   onto the missing vertex neighbourhoods at the end of the cutting
  *   procedure.
  *
- * - For each block, we organise the boundaries of type (ii) into
- *   quadrilaterals and hexagons (each of which is the intersection of
- *   the block with a single face of the enclosing tetrahedron).  These
- *   are represented by the classes BdryQuad and BdryHex respectively.
+ * - For each block, we organise the boundaries of type (i) into
+ *   triangles and quadrilaterals (each triangle faces a single vertex,
+ *   and each quadrilateral faces a pair of vertices); these are
+ *   represented by the classes CutTri and CutQuad respectively.
+ *   We organise the boundaries of type (ii) into quadrilaterals and hexagons
+ *   (each of which is the intersection of the block with a single face of
+ *   the enclosing tetrahedron); these are represented by the classes
+ *   OuterQuad and OuterHex respectively.
  *
  * - The overall cutting algorithm then works as follows:
  *
@@ -114,7 +118,8 @@ namespace regina {
 // ------------------------------------------------------------------------
 
 namespace {
-    class Bdry;
+    class CutBdry;
+    class OuterBdry;
 
     /**
      * A single triangulated block within a single tetrahedron of the
@@ -132,7 +137,7 @@ namespace {
             unsigned nInnerTet_;
                 /**< The number of inner tetrahedra. */
 
-            Bdry* bdry_[4];
+            OuterBdry* bdry_[4];
                 /**< The four quadrilateral / hexagonal type (ii) boundaries
                      of this block.  These are boundaries that meet faces of
                      the outer tetrahedron (not boundaries that run along the
@@ -352,7 +357,7 @@ namespace {
      * numbers), and the vertices of the outer boundary face are numbered
      * using integers in circles (these are the \e outer vertex numbers).
      */
-    class Bdry {
+    class OuterBdry {
         protected:
             Block* block_;
                 /**< The block whose boundary this is a piece of. */
@@ -365,7 +370,7 @@ namespace {
             /**
              * A virtual destructor that does nothing.
              */
-            virtual ~Bdry();
+            virtual ~OuterBdry();
 
             /**
              * Identifies (i.e., glues together) this piece of boundary
@@ -376,7 +381,7 @@ namespace {
              * boundary are the same shape (i.e., both quadrilaterals or
              * both hexagons).
              */
-            virtual void joinTo(Bdry* other) = 0; /* PRE: other is same shape */
+            virtual void joinTo(OuterBdry* other) = 0; /* PRE: other is same shape */
 
         protected:
             /**
@@ -384,17 +389,17 @@ namespace {
              * given mapping from outer vertex numbers to vertices of
              * the outer tetrahedron.
              */
-            Bdry(Block* block, NPerm4 outerVertices);
+            OuterBdry(Block* block, NPerm4 outerVertices);
     };
 
     /**
      * A piece of block boundary that is a triangulated quadrilateral.
      *
      * See boundaries.fig for details of how the quadrilateral is
-     * triangulated, and see the Bdry class notes for what all the
+     * triangulated, and see the OuterBdry class notes for what all the
      * numbers on this diagram actually mean.
      */
-    class BdryQuad : public Bdry {
+    class OuterQuad : public OuterBdry {
         private:
             NTetrahedron* innerTet_[2];
                 /**< The two inner tetrahedra of the block that supply the
@@ -407,9 +412,9 @@ namespace {
 
         public:
             /**
-             * See Bdry::joinTo() for details.
+             * See OuterBdry::joinTo() for details.
              */
-            virtual void joinTo(Bdry* other);
+            virtual void joinTo(OuterBdry* other);
 
         private:
             /**
@@ -417,7 +422,7 @@ namespace {
              * given mapping from outer vertex numbers to vertices of
              * the outer tetrahedron.
              */
-            BdryQuad(Block* block, NPerm4 outerVertices);
+            OuterQuad(Block* block, NPerm4 outerVertices);
 
             /**
              * Layers a new tetrahedron upon the quadrilateral boundary, so
@@ -438,10 +443,10 @@ namespace {
      * A piece of block boundary that is a triangulated hexagon.
      *
      * See boundaries.fig for details of how the hexagon is
-     * triangulated, and see the Bdry class notes for what all the
+     * triangulated, and see the OuterBdry class notes for what all the
      * numbers on this diagram actually mean.
      */
-    class BdryHex : public Bdry {
+    class OuterHex : public OuterBdry {
         private:
             NTetrahedron* innerTet_[4];
                 /**< The four inner tetrahedra of the block that supply the
@@ -454,9 +459,9 @@ namespace {
 
         public:
             /**
-             * See Bdry::joinTo() for details.
+             * See OuterBdry::joinTo() for details.
              */
-            virtual void joinTo(Bdry* other);
+            virtual void joinTo(OuterBdry* other);
 
         private:
             /**
@@ -464,7 +469,7 @@ namespace {
              * given mapping from outer vertex numbers to vertices of
              * the outer tetrahedron.
              */
-            BdryHex(Block* block, NPerm4 outerVertices);
+            OuterHex(Block* block, NPerm4 outerVertices);
 
             /**
              * Layers four new tetrahedra upon the hexagon boundary, so
@@ -675,25 +680,25 @@ namespace {
 
         NPerm4 vertices = NPerm4(0, type);
 
-        BdryQuad* q;
+        OuterQuad* q;
 
         bdry_[vertices[0]] = 0;
 
-        q = new BdryQuad(this, vertices * NPerm4(0, 2, 3, 1));
+        q = new OuterQuad(this, vertices * NPerm4(0, 2, 3, 1));
         q->innerTet_[0] = innerTet_[1];
         q->innerTet_[1] = innerTet_[2];
         q->innerVertices_[0] = NPerm4(2, 3, 1, 0);
         q->innerVertices_[1] = NPerm4(1, 3, 2, 0);
         bdry_[vertices[1]] = q;
 
-        q = new BdryQuad(this, vertices * NPerm4(2, 3));
+        q = new OuterQuad(this, vertices * NPerm4(2, 3));
         q->innerTet_[0] = innerTet_[0];
         q->innerTet_[1] = innerTet_[2];
         q->innerVertices_[0] = NPerm4(2, 1, 0, 3);
         q->innerVertices_[1] = NPerm4(0, 3, 2, 1);
         bdry_[vertices[2]] = q;
 
-        q = new BdryQuad(this, vertices);
+        q = new OuterQuad(this, vertices);
         q->innerTet_[0] = innerTet_[0];
         q->innerTet_[1] = innerTet_[1];
         q->innerVertices_[0] = NPerm4(3, 1, 0, 2);
@@ -718,30 +723,30 @@ namespace {
             regina::vertexSplitDefn[type][1],
             regina::vertexSplitDefn[type][3]);
 
-        BdryQuad* q;
+        OuterQuad* q;
 
-        q = new BdryQuad(this, vertices * NPerm4(2, 3, 1, 0));
+        q = new OuterQuad(this, vertices * NPerm4(2, 3, 1, 0));
         q->innerTet_[0] = innerTet_[2];
         q->innerTet_[1] = innerTet_[1];
         q->innerVertices_[0] = NPerm4(1, 0, 2, 3);
         q->innerVertices_[1] = NPerm4(2, 3, 1, 0);
         bdry_[vertices[0]] = q;
 
-        q = new BdryQuad(this, vertices * NPerm4(3, 0, 2, 1));
+        q = new OuterQuad(this, vertices * NPerm4(3, 0, 2, 1));
         q->innerTet_[0] = innerTet_[3];
         q->innerTet_[1] = innerTet_[2];
         q->innerVertices_[0] = NPerm4(2, 1, 3, 0);
         q->innerVertices_[1] = NPerm4(3, 0, 2, 1);
         bdry_[vertices[1]] = q;
 
-        q = new BdryQuad(this, vertices * NPerm4(0, 1, 3, 2));
+        q = new OuterQuad(this, vertices * NPerm4(0, 1, 3, 2));
         q->innerTet_[0] = innerTet_[0];
         q->innerTet_[1] = innerTet_[3];
         q->innerVertices_[0] = NPerm4(3, 2, 0, 1);
         q->innerVertices_[1] = NPerm4(0, 1, 3, 2);
         bdry_[vertices[2]] = q;
 
-        q = new BdryQuad(this, vertices * NPerm4(1, 2, 0, 3));
+        q = new OuterQuad(this, vertices * NPerm4(1, 2, 0, 3));
         q->innerTet_[0] = innerTet_[1];
         q->innerTet_[1] = innerTet_[0];
         q->innerVertices_[0] = NPerm4(0, 3, 1, 2);
@@ -767,10 +772,10 @@ namespace {
             NEdge::edgeVertex[5 - type][0],
             NEdge::edgeVertex[5 - type][1]);
 
-        BdryQuad* q;
-        BdryHex* h;
+        OuterQuad* q;
+        OuterHex* h;
 
-        h = new BdryHex(this, vertices * NPerm4(1, 3, 2, 0));
+        h = new OuterHex(this, vertices * NPerm4(1, 3, 2, 0));
         h->innerTet_[0] = innerTet_[2];
         h->innerTet_[1] = innerTet_[7];
         h->innerTet_[2] = innerTet_[5];
@@ -781,7 +786,7 @@ namespace {
         h->innerVertices_[3] = NPerm4(0, 2, 1, 3);
         bdry_[vertices[0]] = h;
 
-        h = new BdryHex(this, vertices * NPerm4(0, 3, 2, 1));
+        h = new OuterHex(this, vertices * NPerm4(0, 3, 2, 1));
         h->innerTet_[0] = innerTet_[0];
         h->innerTet_[1] = innerTet_[7];
         h->innerTet_[2] = innerTet_[6];
@@ -792,14 +797,14 @@ namespace {
         h->innerVertices_[3] = NPerm4(0, 1, 3, 2);
         bdry_[vertices[1]] = h;
 
-        q = new BdryQuad(this, vertices * NPerm4(3, 1, 0, 2));
+        q = new OuterQuad(this, vertices * NPerm4(3, 1, 0, 2));
         q->innerTet_[0] = innerTet_[2];
         q->innerTet_[1] = innerTet_[0];
         q->innerVertices_[0] = NPerm4(3, 1, 0, 2);
         q->innerVertices_[1] = NPerm4(0, 2, 3, 1);
         bdry_[vertices[2]] = q;
 
-        q = new BdryQuad(this, vertices * NPerm4(2, 0, 1, 3));
+        q = new OuterQuad(this, vertices * NPerm4(2, 0, 1, 3));
         q->innerTet_[0] = innerTet_[6];
         q->innerTet_[1] = innerTet_[5];
         q->innerVertices_[0] = NPerm4(3, 2, 1, 0);
@@ -828,9 +833,9 @@ namespace {
         innerTet_[7]->joinTo(2, innerTet_[10], NPerm4());
         innerTet_[9]->joinTo(0, innerTet_[10], NPerm4());
 
-        BdryHex* h;
+        OuterHex* h;
 
-        h = new BdryHex(this, NPerm4(2, 1, 3, 0));
+        h = new OuterHex(this, NPerm4(2, 1, 3, 0));
         h->innerTet_[0] = innerTet_[2];
         h->innerTet_[1] = innerTet_[8];
         h->innerTet_[2] = innerTet_[3];
@@ -841,7 +846,7 @@ namespace {
         h->innerVertices_[3] = NPerm4(0, 2, 1, 3);
         bdry_[0] = h;
 
-        h = new BdryHex(this, NPerm4(3, 2, 0, 1));
+        h = new OuterHex(this, NPerm4(3, 2, 0, 1));
         h->innerTet_[0] = innerTet_[3];
         h->innerTet_[1] = innerTet_[5];
         h->innerTet_[2] = innerTet_[0];
@@ -852,7 +857,7 @@ namespace {
         h->innerVertices_[3] = NPerm4(1, 3, 2, 0);
         bdry_[1] = h;
 
-        h = new BdryHex(this, NPerm4(0, 3, 1, 2));
+        h = new OuterHex(this, NPerm4(0, 3, 1, 2));
         h->innerTet_[0] = innerTet_[0];
         h->innerTet_[1] = innerTet_[8];
         h->innerTet_[2] = innerTet_[1];
@@ -863,7 +868,7 @@ namespace {
         h->innerVertices_[3] = NPerm4(2, 0, 3, 1);
         bdry_[2] = h;
 
-        h = new BdryHex(this, NPerm4(1, 0, 2, 3));
+        h = new OuterHex(this, NPerm4(1, 0, 2, 3));
         h->innerTet_[0] = innerTet_[1];
         h->innerTet_[1] = innerTet_[5];
         h->innerTet_[2] = innerTet_[2];
@@ -887,17 +892,17 @@ namespace {
         linkVertices_[3] = NPerm4(1, 2, 3, 0);
     }
 
-    inline Bdry::~Bdry() {
+    inline OuterBdry::~OuterBdry() {
         // Empty virtual destructor.
     }
 
-    inline Bdry::Bdry(Block* block, NPerm4 outerVertices) :
+    inline OuterBdry::OuterBdry(Block* block, NPerm4 outerVertices) :
             block_(block), outerVertices_(outerVertices) {
     }
 
-    void BdryQuad::joinTo(Bdry* other) {
-        // Assume other is a BdryQuad.
-        BdryQuad* dest = static_cast<BdryQuad*>(other);
+    void OuterQuad::joinTo(OuterBdry* other) {
+        // Assume other is an OuterQuad.
+        OuterQuad* dest = static_cast<OuterQuad*>(other);
 
         // Get the map from *this* 012 to *dest* tetrahedron vertices.
         NPerm4 destMap = block_->outerTet()->
@@ -908,7 +913,7 @@ namespace {
             dest->reflect();
             if (destMap != dest->outerVertices_) {
                 // This should never happen.
-                std::cerr << "ERROR: Cannot match up BdryQuad pair."
+                std::cerr << "ERROR: Cannot match up OuterQuad pair."
                     << std::endl;
                 ::exit(1);
             }
@@ -920,11 +925,11 @@ namespace {
                 dest->innerVertices_[i] * innerVertices_[i].inverse());
     }
 
-    inline BdryQuad::BdryQuad(Block* block, NPerm4 outerVertices) :
-            Bdry(block, outerVertices) {
+    inline OuterQuad::OuterQuad(Block* block, NPerm4 outerVertices) :
+            OuterBdry(block, outerVertices) {
     }
 
-    void BdryQuad::reflect() {
+    void OuterQuad::reflect() {
         NTetrahedron* layering = block_->layeringTetrahedron();
 
         layering->joinTo(0, innerTet_[1],
@@ -939,9 +944,9 @@ namespace {
         outerVertices_ = outerVertices_ * NPerm4(1, 2);
     }
 
-    void BdryHex::joinTo(Bdry* other) {
-        // Assume other is a BdryQuad.
-        BdryHex* dest = static_cast<BdryHex*>(other);
+    void OuterHex::joinTo(OuterBdry* other) {
+        // Assume other is an OuterQuad.
+        OuterHex* dest = static_cast<OuterHex*>(other);
 
         // Get the map from *this* 012 to *dest* tetrahedron vertices.
         NPerm4 destMap = block_->outerTet()->
@@ -959,11 +964,11 @@ namespace {
                 dest->innerVertices_[i] * innerVertices_[i].inverse());
     }
 
-    inline BdryHex::BdryHex(Block* block, NPerm4 outerVertices) :
-            Bdry(block, outerVertices) {
+    inline OuterHex::OuterHex(Block* block, NPerm4 outerVertices) :
+            OuterBdry(block, outerVertices) {
     }
 
-    void BdryHex::reflect() {
+    void OuterHex::reflect() {
         NTetrahedron* layering0 = block_->layeringTetrahedron();
         NTetrahedron* layering1 = block_->layeringTetrahedron();
         NTetrahedron* layering2 = block_->layeringTetrahedron();
@@ -993,7 +998,7 @@ namespace {
         outerVertices_ = outerVertices_ * NPerm4(1, 2);
     }
 
-    void BdryHex::rotate() {
+    void OuterHex::rotate() {
         NTetrahedron* t = innerTet_[0];
         innerTet_[0] = innerTet_[1];
         innerTet_[1] = innerTet_[2];
