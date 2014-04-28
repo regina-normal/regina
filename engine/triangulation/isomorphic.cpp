@@ -57,11 +57,6 @@ std::auto_ptr<NIsomorphism> NTriangulation::isContainedIn(
         return std::auto_ptr<NIsomorphism>(0);
 }
 
-unsigned long NTriangulation::findAllSubcomplexesIn(
-        const NTriangulation& other, std::list<NIsomorphism*>& results) const {
-    return findIsomorphisms(other, results, false, false);
-}
-
 unsigned long NTriangulation::findIsomorphisms(
         const NTriangulation& other, std::list<NIsomorphism*>& results,
         bool completeIsomorphism, bool firstOnly) const {

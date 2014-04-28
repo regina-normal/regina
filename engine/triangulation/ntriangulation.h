@@ -1042,6 +1042,10 @@ class REGINA_API NTriangulation : public NPacket,
          * created isomorphism (if it exists) will be automatically
          * destroyed.
          *
+         * If more than one such isomorphism exists, only one will be
+         * returned.  For a routine that returns all such isomorphisms,
+         * see findAllIsomorphisms().
+         *
          * \todo \opt Improve the complexity by choosing a tetrahedron
          * mapping from each component and following gluings to
          * determine the others.
@@ -1088,6 +1092,32 @@ class REGINA_API NTriangulation : public NPacket,
          */
         std::auto_ptr<NIsomorphism> isContainedIn(const NTriangulation& other)
             const;
+
+        /**
+         * Finds all ways in which this triangulation is combinatorially
+         * isomorphic to the given triangulation.
+         *
+         * This routine behaves identically to isIsomorphicTo(), except that
+         * instead of returning just one isomorphism, all such isomorphisms
+         * are returned.
+         *
+         * See the isIsomorphicTo() notes for additional information.
+         *
+         * The isomorphisms that are found will be inserted into the
+         * given list.  These isomorphisms will be newly created, and
+         * the caller of this routine is responsible for destroying
+         * them.  The given list will not be emptied before the new
+         * isomorphisms are inserted.
+         *
+         * \ifacespython Not present.
+         *
+         * @param other the triangulation to compare with this one.
+         * @param results the list in which any isomorphisms found will
+         * be stored.
+         * @return the number of isomorphisms that were found.
+         */
+        unsigned long findAllIsomorphisms(const NTriangulation& other,
+                std::list<NIsomorphism*>& results) const;
 
         /**
          * Finds all ways in which an isomorphic copy of this triangulation
@@ -3728,6 +3758,16 @@ inline unsigned long NTriangulation::getNumberOfFaces<2>() const {
 template <>
 inline unsigned long NTriangulation::getNumberOfFaces<3>() const {
     return getNumberOfTetrahedra();
+}
+
+inline unsigned long NTriangulation::findAllIsomorphisms(
+        const NTriangulation& other, std::list<NIsomorphism*>& results) const {
+    return findIsomorphisms(other, results, true, false);
+}
+
+inline unsigned long NTriangulation::findAllSubcomplexesIn(
+        const NTriangulation& other, std::list<NIsomorphism*>& results) const {
+    return findIsomorphisms(other, results, false, false);
 }
 
 inline long NTriangulation::getEulerCharTri() const {
