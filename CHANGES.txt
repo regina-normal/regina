@@ -61,6 +61,7 @@ Version 4.96  [ (under development) ]
         Class NTriangulation:
             - New routine isIdenticalTo().
             - New local modification oneFourMove().
+            - New routine findAllIsomorphisms().
         Class NVertex:
             - Renamed getLinkEulerCharacteristic() to getLinkEulerChar(), which
               is easier on the fingers.  The old name has been kept as a
