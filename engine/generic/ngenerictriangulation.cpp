@@ -35,6 +35,8 @@
 #include "generic/ngenerictriangulation.h"
 
 // Template implementations:
+#include "generic/canonical-impl.h"
+#include "generic/isomorphism-impl.h"
 #include "generic/isosig-impl.h"
 
 // Dimension-specific headers required for template instantiations:

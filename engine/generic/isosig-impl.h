@@ -149,7 +149,7 @@ namespace {
 }
 
 template <int dim>
-std::string NGenericTriangulation<dim>::isoSig(
+std::string NGenericTriangulation<dim>::isoSigFrom(
         const typename DimTraits<dim>::Triangulation& tri,
         unsigned simp,
         const typename DimTraits<dim>::Perm& vertices,
@@ -339,13 +339,14 @@ std::string NGenericTriangulation<dim>::isoSig(
 
 template <int dim>
 std::string NGenericTriangulation<dim>::isoSig(
-        const typename DimTraits<dim>::Triangulation& tri,
-        typename DimTraits<dim>::Isomorphism** relabelling) {
+        typename DimTraits<dim>::Isomorphism** relabelling) const {
     // These typedefs are already present in the class declaration,
     // but gcc 4.7.3 seems to break unless we include them here also.
     typedef typename DimTraits<dim>::Perm Perm;
     typedef typename DimTraits<dim>::Triangulation Triangulation;
     typedef typename DimTraits<dim>::Isomorphism Isomorphism;
+
+    const Triangulation& tri(static_cast<const Triangulation&>(*this));
 
     // Make sure the user is not trying to do something illegal.
     if (relabelling && tri.getNumberOfComponents() != 1) {
@@ -381,7 +382,7 @@ std::string NGenericTriangulation<dim>::isoSig(
 
         for (simp = 0; simp < (*it)->getNumberOfSimplices(); ++simp)
             for (perm = 0; perm < Perm::nPerms; ++perm) {
-                curr = isoSig(tri, (*it)->getSimplex(simp)->markedIndex(),
+                curr = isoSigFrom(tri, (*it)->getSimplex(simp)->markedIndex(),
                     Perm::orderedSn[perm], currRelabelling);
                 if ((simp == 0 && perm == 0) || (curr < comp[i])) {
                     comp[i].swap(curr);
