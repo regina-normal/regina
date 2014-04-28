@@ -120,6 +120,8 @@ const unsigned NPerm5::invS5[120] = {
     62, 69,110, 87, 92,117, 70, 65, 88,113,118, 95
 };
 
+const unsigned* NPerm5::invSn = NPerm5::invS5;
+
 const NPerm5 NPerm5::S4[24] = {
     NPerm5(0,1,2,3,4), NPerm5(0,1,3,2,4), NPerm5(0,2,3,1,4), NPerm5(0,2,1,3,4),
     NPerm5(0,3,1,2,4), NPerm5(0,3,2,1,4), NPerm5(1,0,3,2,4), NPerm5(1,0,2,3,4),

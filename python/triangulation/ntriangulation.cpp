@@ -244,6 +244,7 @@ void addNTriangulation() {
         .def("isIdenticalTo", &NTriangulation::isIdenticalTo)
         .def("isIsomorphicTo", isIsomorphicTo_ptr,
             return_value_policy<manage_new_object>())
+        .def("makeCanonical", &NTriangulation::makeCanonical)
         .def("isContainedIn", isContainedIn_ptr,
             return_value_policy<manage_new_object>())
         .def("hasTwoSphereBoundaryComponents",
