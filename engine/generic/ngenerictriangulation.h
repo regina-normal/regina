@@ -43,6 +43,7 @@
 
 #include "regina-core.h"
 #include "generic/dimtraits.h"
+#include <list>
 #include <string>
 
 namespace regina {
@@ -78,9 +79,212 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
         using typename DimTraits<dim>::Simplex;
         using typename DimTraits<dim>::Triangulation;
 
-    protected:
+    public:
         /**
-         * Constructs the isomorphism signature for the given triangulation.
+         * \name Isomorphism Testing
+         */
+        /*@{*/
+
+        /**
+         * Determines if this triangulation is combinatorially identical
+         * to the given triangulation.
+         *
+         * Here "identical" means that the triangulations have the same
+         * number of top-dimensional simplices, with gluings between the same
+         * pairs of numbered simplices using the same gluing permutations.
+         * In other words, "identical" means that the triangulations
+         * are isomorphic via the identity isomorphism.
+         *
+         * To test for the less strict combinatorial isomorphism (which
+         * allows relabelling of the top-dimensional simplices and their
+         * vertices), see isIsomorphicTo() instead.
+         *
+         * This test does \e not examine the textual simplex descriptions,
+         * as seen in Simplex::getDescription(); these may still differ.
+         * It also does not test the numbering of vertices, edges and so on,
+         * as used by getVertex(), getEdge() and so on;
+         * although at the time of writing these will always be
+         * numbered the same for identical triangulations, it is
+         * conceivable that in future versions of Regina there may
+         * be situations in which identical triangulations can acquire
+         * different numberings for vertices, edges, etc.
+         *
+         * @param other the triangulation to compare with this one.
+         * @return \c true if and only if the two triangulations are
+         * combinatorially identical.
+         */
+        bool isIdenticalTo(const typename DimTraits<dim>::Triangulation& other)
+            const;
+
+        /**
+         * Determines if this triangulation is combinatorially
+         * isomorphic to the given triangulation.
+         *
+         * Specifically, this routine determines if there is a
+         * one-to-one and onto boundary complete combinatorial
+         * isomorphism from this triangulation to \a other.  Boundary
+         * complete isomorphisms are described in detail in the
+         * Isomorphism class notes.
+         *
+         * In particular, note that this triangulation and \a other must
+         * contain the same number of top-dimensional simplices for such an
+         * isomorphism to exist.
+         *
+         * If you need to ensure that top-dimensional simplices are labelled
+         * the same in both triangulations, see the stricter test
+         * isIdenticalTo() instead.
+         *
+         * If a boundary complete isomorphism is found, the details of
+         * this isomorphism are returned.  The isomorphism is newly
+         * constructed, and so to assist with memory management is
+         * returned as a std::auto_ptr.  Thus, to test whether an
+         * isomorphism exists without having to explicitly deal with the
+         * isomorphism itself, you can call
+         * <tt>if (isIsomorphicTo(other).get())</tt> and the newly
+         * created isomorphism (if it exists) will be automatically
+         * destroyed.
+         *
+         * If more than one such isomorphism exists, only one will be
+         * returned.  For a routine that returns all such isomorphisms,
+         * see findAllIsomorphisms().
+         *
+         * \todo \opt Improve the complexity by choosing a simplex
+         * mapping from each component and following gluings to
+         * determine the others.
+         *
+         * @param other the triangulation to compare with this one.
+         * @return details of the isomorphism if the two triangulations
+         * are combinatorially isomorphic, or a null pointer otherwise.
+         */
+        std::auto_ptr<typename DimTraits<dim>::Isomorphism> isIsomorphicTo(
+            const typename DimTraits<dim>::Triangulation& other) const;
+
+        /**
+         * Determines if an isomorphic copy of this triangulation is
+         * contained within the given triangulation, possibly as a
+         * subcomplex of some larger component (or components).
+         *
+         * Specifically, this routine determines if there is a boundary
+         * incomplete combinatorial isomorphism from this triangulation
+         * to \a other.  Boundary incomplete isomorphisms are described
+         * in detail in the Isomorphism class notes.
+         *
+         * In particular, note that facets of top-dimensional simplices that
+         * lie on the boundary of this triangulation need not correspond to
+         * boundary facets of \a other, and that \a other may contain more
+         * top-dimensional simplices than this triangulation.
+         *
+         * If a boundary incomplete isomorphism is found, the details of
+         * this isomorphism are returned.  The isomorphism is newly
+         * constructed, and so to assist with memory management is
+         * returned as a std::auto_ptr.  Thus, to test whether an
+         * isomorphism exists without having to explicitly deal with the
+         * isomorphism itself, you can call
+         * <tt>if (isContainedIn(other).get())</tt> and the newly
+         * created isomorphism (if it exists) will be automatically
+         * destroyed.
+         *
+         * If more than one such isomorphism exists, only one will be
+         * returned.  For a routine that returns all such isomorphisms,
+         * see findAllSubcomplexesIn().
+         *
+         * @param other the triangulation in which to search for an
+         * isomorphic copy of this triangulation.
+         * @return details of the isomorphism if such a copy is found,
+         * or a null pointer otherwise.
+         */
+        std::auto_ptr<typename DimTraits<dim>::Isomorphism> isContainedIn(
+            const typename DimTraits<dim>::Triangulation& other) const;
+
+        /**
+         * Finds all ways in which this triangulation is combinatorially
+         * isomorphic to the given triangulation.
+         *
+         * This routine behaves identically to isIsomorphicTo(), except that
+         * instead of returning just one isomorphism, all such isomorphisms
+         * are returned.
+         *
+         * See the isIsomorphicTo() notes for additional information.
+         *
+         * The isomorphisms that are found will be inserted into the
+         * given list.  These isomorphisms will be newly created, and
+         * the caller of this routine is responsible for destroying
+         * them.  The given list will not be emptied before the new
+         * isomorphisms are inserted.
+         *
+         * \ifacespython Not present.
+         *
+         * @param other the triangulation to compare with this one.
+         * @param results the list in which any isomorphisms found will
+         * be stored.
+         * @return the number of isomorphisms that were found.
+         */
+        unsigned long findAllIsomorphisms(
+            const typename DimTraits<dim>::Triangulation& other,
+            std::list<typename DimTraits<dim>::Isomorphism*>& results) const;
+
+        /**
+         * Finds all ways in which an isomorphic copy of this triangulation
+         * is contained within the given triangulation, possibly as a
+         * subcomplex of some larger component (or components).
+         *
+         * This routine behaves identically to isContainedIn(), except
+         * that instead of returning just one isomorphism (which may be
+         * boundary incomplete and need not be onto), all such isomorphisms
+         * are returned.
+         *
+         * See the isContainedIn() notes for additional information.
+         *
+         * The isomorphisms that are found will be inserted into the
+         * given list.  These isomorphisms will be newly created, and
+         * the caller of this routine is responsible for destroying
+         * them.  The given list will not be emptied before the new
+         * isomorphisms are inserted.
+         *
+         * \ifacespython Not present.
+         *
+         * @param other the triangulation in which to search for
+         * isomorphic copies of this triangulation.
+         * @param results the list in which any isomorphisms found will
+         * be stored.
+         * @return the number of isomorphisms that were found.
+         */
+        unsigned long findAllSubcomplexesIn(
+            const typename DimTraits<dim>::Triangulation& other,
+            std::list<typename DimTraits<dim>::Isomorphism*>& results) const;
+
+        /**
+         * Relabel the top-dimensional simplices and their vertices so that
+         * this triangulation is in canonical form.  This is essentially
+         * the lexicographically smallest labelling when the facet
+         * gluings are written out in order.
+         *
+         * Two triangulations are isomorphic if and only if their canonical
+         * forms are identical.
+         *
+         * The lexicographic ordering assumes that the facet gluings are
+         * written in order of simplex index and then facet number.
+         * Each gluing is written as the destination simplex index
+         * followed by the gluing permutation (which in turn is written
+         * as the images of 0,1,...,<i>dim</i> in order).
+         *
+         * \pre This routine currently works only when the triangulation
+         * is connected.  It may be extended to work with disconnected
+         * triangulations in later versions of Regina.
+         *
+         * @return \c true if the triangulation was changed, or \c false
+         * if the triangulation was in canonical form to begin with.
+         */
+        bool makeCanonical();
+
+        /*@}*/
+        /**
+         * \name Exporting Triangulations
+         */
+        /*@{*/
+
+        /**
+         * Constructs the isomorphism signature for this triangulation.
          *
          * An <i>isomorphism signature</i> is a compact text representation of
          * a triangulation.  Unlike dehydrations for 3-manifold triangulations,
@@ -90,9 +294,9 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * That is, two triangulations of dimension \a dim are combinatorially
          * isomorphic if and only if their isomorphism signatures are the same.
          *
-         * The isomorphism signature is constructed entirely of
-         * printable characters, and has length proportional to
-         * <tt>n log n</tt>, where \a n is the number of simplices.
+         * The isomorphism signature is constructed entirely of printable
+         * characters, and has length proportional to <tt>n log n</tt>,
+         * where \a n is the number of top-dimenisonal simplices.
          *
          * Isomorphism signatures are more general than dehydrations:
          * they can be used with any triangulation (including closed,
@@ -115,6 +319,18 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * fromIsoSig() will be combinatorially identical to
          * <tt>relabelling.apply(this)</tt>.
          *
+         * For a full and precise description of the isomorphism signature
+         * format for 3-manifold triangulations, see <i>Simplification paths
+         * in the Pachner graphs of closed orientable 3-manifold
+         * triangulations</i>, Burton, 2011, <tt>arXiv:1110.6080</tt>.
+         * The format for other dimensions is essentially the same, but with
+         * minor dimension-specific adjustments.
+         *
+         * \ifacespython The isomorphism argument is not present.
+         * Instead there are two routines: fromIsoSig(), which returns a
+         * string only, and fromIsoSigDetail(), which returns a pair
+         * (signature, relabelling).
+         *
          * \pre If \a relabelling is non-null, then this triangulation
          * must be non-empty and connected.  The facility to return a
          * relabelling for disconnected triangulations may be added to
@@ -125,17 +341,20 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * \a p-dimensional triangulation and a \a q-dimensional triangulation
          * for different \a p and \a q.
          *
-         * @param tri the triangulation whose isomorphism signature will be
-         * computed.
          * @param relabelling if non-null, this will be modified to point to a
          * new isomorphism describing the relationship between this
          * triangulation and that reconstructed from fromIsoSig(), as
          * described above.
-         * @return the isomorphism signature of the given triangulation.
+         * @return the isomorphism signature of this triangulation.
          */
-        static std::string isoSig(
-            const typename DimTraits<dim>::Triangulation& tri,
-            typename DimTraits<dim>::Isomorphism** relabelling = 0);
+        std::string isoSig(
+            typename DimTraits<dim>::Isomorphism** relabelling = 0) const;
+
+        /*@}*/
+        /**
+         * \name Importing Triangulations
+         */
+        /*@{*/
 
         /**
          * Recovers a full triangulation from an isomorphism signature.
@@ -150,6 +369,13 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * produce an identical triangulation to the original, but it
          * \e is guaranteed to produce a combinatorially isomorphic
          * triangulation.
+         *
+         * For a full and precise description of the isomorphism signature
+         * format for 3-manifold triangulations, see <i>Simplification paths
+         * in the Pachner graphs of closed orientable 3-manifold
+         * triangulations</i>, Burton, 2011, <tt>arXiv:1110.6080</tt>.
+         * The format for other dimensions is essentially the same, but with
+         * minor dimension-specific adjustments.
          *
          * \warning Do not mix isomorphism signatures between dimensions!
          * It is possible that the same string could corresponding to both a
@@ -208,6 +434,8 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          */
         static size_t isoSigComponentSize(const std::string& sig);
 
+        /*@}*/
+
     private:
         /**
          * Internal to isoSig().
@@ -226,7 +454,7 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * for the correct number of simplices.
          * @return the candidate isomorphism signature.
          */
-        static std::string isoSig(
+        static std::string isoSigFrom(
             const typename DimTraits<dim>::Triangulation& tri,
             unsigned simp,
             const typename DimTraits<dim>::Perm& vertices,

@@ -46,7 +46,7 @@ using regina::python::GlobalArray;
 namespace {
     GlobalArray<NPerm3> NPerm3_S3_arr(NPerm3::S3, 6);
     GlobalArray<NPerm3> NPerm3_orderedS3_arr(NPerm3::orderedS3, 6);
-    GlobalArray<int> NPerm3_invS3_arr(NPerm3::invS3, 6);
+    GlobalArray<unsigned> NPerm3_invS3_arr(NPerm3::invS3, 6);
     GlobalArray<NPerm3> NPerm3_S2_arr(NPerm3::S2, 2);
 
     int perm3_getItem(const NPerm3& p, int index) {
@@ -89,6 +89,7 @@ void addNPerm3() {
     s.attr("orderedS3") = &NPerm3_orderedS3_arr;
     s.attr("orderedSn") = &NPerm3_orderedS3_arr;
     s.attr("invS3") = &NPerm3_invS3_arr;
+    s.attr("invSn") = &NPerm3_invS3_arr;
     s.attr("S2") = &NPerm3_S2_arr;
     s.attr("Sn_1") = &NPerm3_S2_arr;
 }
