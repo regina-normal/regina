@@ -808,30 +808,7 @@ class REGINA_API Dim4Triangulation : public NPacket,
         using NGenericTriangulation<4>::isContainedIn;
         using NGenericTriangulation<4>::findAllIsomorphisms;
         using NGenericTriangulation<4>::findAllSubcomplexesIn;
-
-        /**
-         * Relabel the pentachora and their vertices so that this
-         * triangulation is in canonical form.  This is essentially
-         * the lexicographically smallest labelling when the facet
-         * gluings are written out in order.
-         *
-         * Two triangulations are isomorphic if and only if their canonical
-         * forms are identical.
-         *
-         * The lexicographic ordering assumes that the facet gluings are
-         * written in order of petachoron index and then facet number.
-         * Each gluing is written as the destination pentachoron index
-         * followed by the gluing permutation (which in turn is written
-         * as the images of 0,1,2,3,4 in order).
-         *
-         * \pre This routine currently works only when the triangulation
-         * is connected.  It may be extended to work with disconnected
-         * triangulations in later versions of Regina.
-         *
-         * @return \c true if the triangulation was changed, or \c false
-         * if the triangulation was in canonical form to begin with.
-         */
-        bool makeCanonical();
+        using NGenericTriangulation<4>::makeCanonical;
 
         /*@}*/
         /**
