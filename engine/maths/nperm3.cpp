@@ -48,6 +48,8 @@ const int NPerm3::invS3[6] = {
     0, 1, 4, 3, 2, 5
 };
 
+const int* NPerm3::invSn = NPerm3::invS3;
+
 const NPerm3 NPerm3::orderedS3[6] = {
     NPerm3(code012), NPerm3(code021),
     NPerm3(code102), NPerm3(code120),
