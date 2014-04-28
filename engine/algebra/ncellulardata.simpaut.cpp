@@ -42,7 +42,7 @@ NSimplicialAutGrp::NSimplicialAutGrp(const NTriangulation &input)
 {
  tri3 = &input; tri4 = NULL;
  std::list< NIsomorphism* > isoList;
- input.findIsomorphisms( input, isoList, true, false );
+ input.findAllIsomorphisms( input, isoList );
  for (std::list< NIsomorphism* >::iterator i=isoList.begin(); i!=isoList.end(); i++)
   {
    isoStruct tempI; tempI.germ.resize( input.getNumberOfSimplices() );
@@ -60,7 +60,7 @@ NSimplicialAutGrp::NSimplicialAutGrp(const Dim4Triangulation &input)
 {
  tri4 = &input; tri3 = NULL;
  std::list< Dim4Isomorphism* > isoList;
- input.findIsomorphisms( input, isoList, true, false );
+ input.findAllIsomorphisms( input, isoList );
  for (std::list< Dim4Isomorphism* >::iterator i=isoList.begin(); i!=isoList.end(); i++)
   {
    isoStruct tempI; tempI.germ.resize( input.getNumberOfSimplices() );
