@@ -35,7 +35,9 @@ Version 4.96  [ (under development) ]
             - New local modification oneThreeMove().
             - New routine findAllIsomorphisms().
             - Several isomorphism-related routines have been moved into
-              the dimension-agnostic NGenericTriangulation template.
+              the dimension-agnostic NGenericTriangulation template, and
+              isomorphism signature routines now inherit directly from
+              NGenericTriangulation instead of using wrappers.
               See the NGenericTriangulation notes below for details.
         Class Dim2VertexEmbedding:
             - New convenience operators == and !=.
@@ -55,6 +57,7 @@ Version 4.96  [ (under development) ]
               findAllSubcomplexesIn() from Dim2Triangulation and
               NTriangulation into this class.
             - New routine findAllIsomorphisms().
+            - Made isoSig(), fromIsoSig() and isoSigComponentSize() public.
         Class NGluingPermSearcher:
             - Removed protected routine mayPurge(), since this behaviour is
               already provided by specialised subclasses of NGluingPermSearcher.
@@ -90,7 +93,9 @@ Version 4.96  [ (under development) ]
             - New local modification oneFourMove().
             - New routine findAllIsomorphisms().
             - Several isomorphism-related routines have been moved into
-              the dimension-agnostic NGenericTriangulation template.
+              the dimension-agnostic NGenericTriangulation template, and
+              isomorphism signature routines now inherit directly from
+              NGenericTriangulation instead of using wrappers.
               See the NGenericTriangulation notes above for details.
         Class NVertex:
             - Renamed getLinkEulerCharacteristic() to getLinkEulerChar(), which
