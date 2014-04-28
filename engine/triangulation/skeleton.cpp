@@ -72,7 +72,7 @@ void NTriangulation::calculateSkeleton() const {
         //     NComponent.boundaryComponents
     calculateVertexLinks();
         // Sets valid, ideal, NVertex.link,
-        //     NVertex.linkEulerCharacteristic, NComponent.ideal,
+        //     NVertex.linkEulerChar, NComponent.ideal,
         //     boundaryComponents, NVertex.boundaryComponent
 }
 
@@ -525,7 +525,7 @@ void NTriangulation::calculateVertexLinks() const {
     // Here we use the formula:  chi = (2 v_int + v_bdry - f) / 2, which
     // is easily proven with a little arithmetic.
 
-    // Note that NVertex::linkEulerCharacteristic is initialised to 0 in
+    // Note that NVertex::linkEulerChar is initialised to 0 in
     // the NVertex constructor.
 
     // Begin by calculating (2 v_int + v_bdry) for each vertex link.
@@ -546,14 +546,14 @@ void NTriangulation::calculateVertexLinks() const {
 
         if (e->isBoundary()) {
             // Contribute to v_bdry.
-            end0->linkEulerCharacteristic++;
+            end0->linkEulerChar++;
             if (e->valid)
-                end1->linkEulerCharacteristic++;
+                end1->linkEulerChar++;
         } else {
             // Contribute to 2 v_int.
-            end0->linkEulerCharacteristic += 2;
+            end0->linkEulerChar += 2;
             if (e->valid)
-                end1->linkEulerCharacteristic += 2;
+                end1->linkEulerChar += 2;
         }
     }
 
@@ -565,13 +565,13 @@ void NTriangulation::calculateVertexLinks() const {
         vertex = *it;
 
         // Fix the Euler characteristic (subtract f, divide by two).
-        vertex->linkEulerCharacteristic = (vertex->linkEulerCharacteristic
+        vertex->linkEulerChar = (vertex->linkEulerChar
             - static_cast<long>(vertex->getEmbeddings().size())) / 2;
 
         if (vertex->isBoundary()) {
             // We haven't added ideal vertices to the boundary list yet,
             // so this must be real boundary.
-            if (vertex->linkEulerCharacteristic == 1)
+            if (vertex->linkEulerChar == 1)
                 vertex->link = NVertex::DISC;
             else {
                 vertex->link = NVertex::NON_STANDARD_BDRY;
@@ -579,10 +579,10 @@ void NTriangulation::calculateVertexLinks() const {
                 standard = false;
             }
         } else {
-            if (vertex->linkEulerCharacteristic == 2)
+            if (vertex->linkEulerChar == 2)
                 vertex->link = NVertex::SPHERE;
             else {
-                if (vertex->linkEulerCharacteristic == 0)
+                if (vertex->linkEulerChar == 0)
                     vertex->link = (vertex->isLinkOrientable() ?
                         NVertex::TORUS : NVertex::KLEIN_BOTTLE);
                 else {
@@ -613,9 +613,9 @@ void NTriangulation::calculateBoundaryProperties() const {
 
     for (BoundaryComponentIterator it = boundaryComponents.begin();
             it != boundaryComponents.end(); it++) {
-        if ((*it)->getEulerCharacteristic() == 2)
+        if ((*it)->getEulerChar() == 2)
             localTwoSphereBoundaryComponents = true;
-        else if ((*it)->isIdeal() && (*it)->getEulerCharacteristic() < 0)
+        else if ((*it)->isIdeal() && (*it)->getEulerChar() < 0)
             localNegativeIdealBoundaryComponents = true;
 
         // Stop the search if we've found everything we're looking for.

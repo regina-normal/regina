@@ -90,6 +90,10 @@ class REGINA_API NCensus {
                  any triangulation that is non-minimal may be ignored.
                  Note that this is simply a combination of the constants
                  \a PURGE_NON_MINIMAL and \a PURGE_NON_PRIME. */
+        static const int PURGE_NON_MINIMAL_HYP;
+            /**< Indicates that any triangulation that is not a minimal ideal
+                 triangulation of a cusped finite-volume hyperbolic 3-manifold
+                 may be ignored. */
         static const int PURGE_P2_REDUCIBLE;
             /**< Indicates that any triangulation containing an embedded
                  two-sided projective plane may be ignored. */

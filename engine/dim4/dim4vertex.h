@@ -52,6 +52,7 @@ namespace regina {
 
 class Dim4BoundaryComponent;
 class Dim4Component;
+class Dim4Isomorphism;
 class Dim4Pentachoron;
 class Dim4Triangulation;
 class NTriangulation;
@@ -133,6 +134,26 @@ class REGINA_API Dim4VertexEmbedding {
          * is this vertex.
          */
         NPerm5 getVertices() const;
+
+        /**
+         * Tests whether this and the given embedding are identical.
+         * Here "identical" means that they refer to the same vertex of
+         * the same pentachoron.
+         *
+         * @param rhs the embedding to compare with this.
+         * @return \c true if and only if both embeddings are identical.
+         */
+        bool operator == (const Dim4VertexEmbedding& rhs) const;
+
+        /**
+         * Tests whether this and the given embedding are different.
+         * Here "different" means that they do not refer to the same vertex of
+         * the same pentachoron.
+         *
+         * @param rhs the embedding to compare with this.
+         * @return \c true if and only if both embeddings are identical.
+         */
+        bool operator != (const Dim4VertexEmbedding& rhs) const;
 };
 
 /**
@@ -244,55 +265,110 @@ class REGINA_API Dim4Vertex : public ShareableObject, public NMarkedElement {
         unsigned long getDegree() const;
 
         /**
-         * Returns the link of this vertex.
+         * Returns a full 3-manifold triangulation describing
+         * the link of this vertex.
          *
-         * The vertex link is a 3-manifold, and so this routine returns
-         * a full-blown 3-manifold triangulation.  Note that this
-         * triangulation is read-only (though of course you can clone it
-         * and then operate upon the clone).
-         *
-         * It is guaranteed that 3-sphere recognition has already been
-         * run over this vertex link.  This means that, amongst other
-         * things, calls to NTriangulation::isThreeSphere() will be very
-         * fast, and calls to NTriangulation::knowsThreeSphere() will
-         * return \c true.
+         * This routine is fast (it uses a pre-computed triangulation).
+         * The downside is that the triangulation is read-only, and does
+         * not contain any information on how the tetrahedra in the link
+         * correspond to pentachora in the original triangulation
+         * (though this is easily deduced; see below).  If you want a
+         * writable triangulation, or one with this extra information,
+         * then call buildLinkDetail() instead.
          *
          * The triangulation of the vertex link is built as follows.
          * Let \a i lie between 0 and getDegree()-1 inclusive, let
          * \a pent represent <tt>getEmbedding(i).getPentachoron()</tt>,
          * and let \a v represent <tt>getEmbedding(i).getVertex()</tt>.
-         * Then <tt>getLink()->getTetrahedron(i)</tt> is the tetrahedron
+         * Then <tt>buildLink()->getTetrahedron(i)</tt> is the tetrahedron
          * in the vertex link that "slices off" vertex \a v from
          * pentachoron \a pent.  In other words,
-         * <tt>getLink()->getTetrahedron(i)</tt> in the vertex link
-         * corresponds to <tt>pent->getTetrahedron(v)</tt> in the
+         * <tt>buildLink()->getTetrahedron(i)</tt> in the vertex link
+         * is parallel to tetrahedron <tt>pent->getTetrahedron(v)</tt> in the
          * surrounding 4-manifold triangulation.
          *
          * The vertices of each tetrahedron in the vertex link are
          * numbered as follows.  Following the discussion above,
-         * suppose that <tt>getLink()->getTetrahedron(i)</tt>
-         * corresponds to <tt>pent->getTetrahedron(v)</tt>.
-         * The correspondence from the vertices of
-         * <tt>getLink()->getTetrahedron(i)</tt> to the vertices of
-         * <tt>pent->getTetrahedron(v)</tt> is given by the map
-         * <tt>pent->getTetrahedronMapping(v)</tt>.
-         * This is an <tt>NPerm5</tt> object, sending 4 to \a v, and sending
-         * the vertices of the tetrahedron in the domain (0123) to
-         * the vertices of the tetrahedron in the range (01234 excluding \a v).
+         * suppose that <tt>buildLink()->getTetrahedron(i)</tt>
+         * sits within \c pent and is parallel to
+         * <tt>pent->getTetrahedron(v)</tt>.
+         * Then vertices 0,1,2,3 of the tetrahedron in the link will be
+         * parallel to vertices 0,1,2,3 of the corresponding Dim4Tetrahedron.
+         * The permutation <tt>pent->getTetrahedronMapping(v)</tt> will map
+         * vertices 0,1,2,3 of the tetrahedron in the link to the
+         * corresponding vertices of \c pent (those opposite \c v),
+         * and will map 4 to \c v itself.
          *
-         * @return the triangulated link of this vertex.
-         */
-        const NTriangulation* getLink() const;
-
-        /**
-         * A synonym for getLink().  This is provided for consistency
-         * with the 3-dimensional analogue NTriangulation::buildLink().
+         * This Dim4Vertex object will retain ownership of the triangulation
+         * that is returned.  If you wish to edit the triangulation, you
+         * should make a new clone and edit the clone instead.
          *
-         * See getLink() for further details.
-         *
-         * @return the triangulated link of this vertex.
+         * @return the read-only triangulated link of this vertex.
          */
         const NTriangulation* buildLink() const;
+
+        /**
+         * Returns a full 3-manifold triangulation describing
+         * the link of this vertex.
+         *
+         * This routine is heavyweight (it computes a new triangulation
+         * each time).  The benefit is that the triangulation is writeable,
+         * and optionally contain detailed information on how the tetrahedra
+         * in the link correspond to pentachora in the original triangulation.
+         * If you do not need this extra information, consider using the
+         * faster buildLink() instead.
+         *
+         * See the buildLink() documentation for an explanation of
+         * exactly how the triangulation will be constructed.
+         *
+         * If \a labels is passed as \c true, each tetrahedron of the new
+         * vertex link will be given a text description of the form
+         * <tt>p&nbsp;(v)</tt>, where \c p is the index of the pentachoron
+         * the tetrahedron is from, and \c v is the vertex of that pentachoron
+         * that this tetrahedron links.
+         *
+         * If \a inclusion is non-null (i.e., it points to some
+         * Dim4Isomorphism pointer \a p), then it will be modified to
+         * point to a new Dim4Isomorphism that describes in detail how the
+         * individual tetrahedra of the link sit within pentachora of
+         * the original triangulation.  Specifically, after this routine
+         * is called, <tt>p->pentImage(i)</tt> will indicate which pentachoron
+         * \a pent of the 4-manifold triangulation contains the <i>i</i>th
+         * tetrahedron of the link.  Moreover, <tt>p->facetPerm(i)</tt> will
+         * indicate exactly where the <i>i</i>th tetrahedron sits within
+         * \a pent: it will send 4 to the vertex of \a pent that the
+         * tetrahedron links, and it will send 0,1,2,3 to the vertices of
+         * \a pent that are parallel to vertices 0,1,2,3 of this tetrahedron.
+         *
+         * The triangulation that is returned, as well as the isomorphism
+         * if one was requested, will be newly allocated.  The caller of
+         * this routine is responsible for destroying these objects.
+         *
+         * Strictly speaking, this is an abuse of the Dim4Isomorphism class
+         * (the domain is a triangulation of the wrong dimension, and
+         * the map is not 1-to-1 into the range pentachora).  We use
+         * it anyway, but you should not attempt to call any high-level
+         * routines (such as Dim4Isomorphism::apply).
+         *
+         * \ifacespython The second (isomorphism) argument is not present.
+         * Instead this routine returns a pair (triangulation, isomorphism).
+         * As a side-effect, the isomorphism will always be constructed
+         * (i.e., it is not optional).
+         *
+         * @return a newly constructed triangulation of the link of this vertex.
+         */
+        NTriangulation* buildLinkDetail(bool labels = true,
+            Dim4Isomorphism** inclusion = 0) const;
+
+        /**
+         * A synonym for buildLink().  This is provided for consistency
+         * with the 3-dimensional analogue NTriangulation::getLink().
+         *
+         * See buildLink() for further details.
+         *
+         * @return the read-only triangulated link of this vertex.
+         */
+        const NTriangulation* getLink() const;
 
         /**
          * Determines if this vertex is valid.
@@ -392,6 +468,16 @@ inline int Dim4VertexEmbedding::getVertex() const {
     return vertex_;
 }
 
+inline bool Dim4VertexEmbedding::operator == (const Dim4VertexEmbedding& other)
+        const {
+    return ((pent_ == other.pent_) && (vertex_ == other.vertex_));
+}
+
+inline bool Dim4VertexEmbedding::operator != (const Dim4VertexEmbedding& other)
+        const {
+    return ((pent_ != other.pent_) || (vertex_ != other.vertex_));
+}
+
 // Inline functions for Dim4Vertex
 
 inline Dim4Vertex::Dim4Vertex(Dim4Component* component) :
@@ -433,11 +519,11 @@ inline unsigned long Dim4Vertex::getDegree() const {
     return emb_.size();
 }
 
-inline const NTriangulation* Dim4Vertex::getLink() const {
+inline const NTriangulation* Dim4Vertex::buildLink() const {
     return link_;
 }
 
-inline const NTriangulation* Dim4Vertex::buildLink() const {
+inline const NTriangulation* Dim4Vertex::getLink() const {
     return link_;
 }
 

@@ -34,22 +34,75 @@ Version 5.0  [ (under development) ]
 Version 4.96  [ (under development) ]
 
     ENGINE:
+        Class Dim2EdgeEmbedding:
+            - New convenience operators == and !=.
+        Class Dim2Triangulation:
+            - New routine isIdenticalTo().
+            - New local modification oneThreeMove().
+        Class Dim2VertexEmbedding:
+            - New convenience operators == and !=.
         Class NAbelianGroup:
             - New convenience operator !=.
+        Class NBoundaryComponent:
+            - Renamed getEulerCharacteristic() to getEulerChar(), which
+              is easier on the fingers.  The old name has been kept as a
+              deprecated alias for backward compatibility.
+        Class NCensus:
+            - New constant PURGE_NON_MINIMAL_HYP, for use in building a
+              census of cusped finite volume hyperbolic 3-manifolds.
+        Class NFaceEmbedding:
+            - New convenience operators == and !=.
+        Class NGluingPermSearcher:
+            - Removed protected routine mayPurge(), since this behaviour is
+              already provided by specialised subclasses of NGluingPermSearcher.
+        Class NHyperbolicMinSearcher:
+            - New enumeration class for building a census of minimal ideal
+              triangulations of cusped finite-volume hyperbolic 3-manifolds.
         Class NNormalSurface:
             - Routine boundarySlopes() now uses (shortest, second-shortest)
               curves on the cusp as its (meridian, longitude) basis.
               This reverts a change in behaviour from the previous release
               caused by the recent sync with the SnapPy 2.0.3 kernel.
+            - Renamed getEulerCharacteristic() to getEulerChar(), which
+              is easier on the fingers.  The old name has been kept as a
+              deprecated alias for backward compatibility.
+            - Renamed the protected routine calculateEulerCharacteristic() to
+              calculateEulerChar().
         Class NSnapPeaTriangulation:
+            - Updated the SnapPea kernel to the one shipped with SnapPy 2.1.
+            - The entire SnapPea kernel now lives within the namespace
+              regina::snappea, which should ensure safety even if a
+              conflicting SnapPy kernel is simultaneously loaded via Python.
+              The SnapPea kernel is also linked as C++ now (no 'extern "C"').
             - Fatal errors in the SnapPea kernel are now handled by throwing
               exceptions, instead of quitting abruptly.
             - Routine slopeEquations() now uses (shortest, second-shortest)
               curves on the cusp as its (meridian, longitude) basis.
               This reverts a change in behaviour from the previous release
               caused by the recent sync with the SnapPy 2.0.3 kernel.
+        Class NTriangleEmbedding:
+            - New convenience operators == and !=.
+        Class NTriangulation:
+            - New routine isIdenticalTo().
+            - New local modification oneFourMove().
+        Class NVertex:
+            - Renamed getLinkEulerCharacteristic() to getLinkEulerChar(), which
+              is easier on the fingers.  The old name has been kept as a
+              deprecated alias for backward compatibility.
+        Class NVertexEmbedding:
+            - New convenience operators == and !=.
         Class SnapPeaException, SnapPeaFatalError, SnapPeaMemoryFull:
             - New exceptions to be thrown by the SnapPea kernel.
+        Header permconv.h:
+            - New conversion routines perm3to5() and perm5to3().
+    USER INTERFACE:
+        - Boundary slopes for spun-normal surfaces must now be explicitly
+          enabled in preferences, since the (meridian, longitude) basis might
+          not be what the user expects.
+    UTILITIES:
+        tricensus:
+            - New argument -h/--minhyp for enumerating minimal ideal
+              triangulations of cusped finite-volume hyperbolic 3-manifolds.
 
 Version 4.95  [ 12 November, 2013 ]
 

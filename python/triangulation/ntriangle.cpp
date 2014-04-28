@@ -60,6 +60,8 @@ void addNTriangle() {
         .def("getFace", &NTriangleEmbedding::getFace)
         .def("getTriangle", &NTriangleEmbedding::getTriangle)
         .def("getVertices", &NTriangleEmbedding::getVertices)
+        .def(self == self)
+        .def(self != self)
     ;
 
     {

@@ -23,6 +23,7 @@
  */
 
 #include "kernel.h"
+#include "kernel_namespace.h"
 
 
 double index_to_hue(
@@ -68,7 +69,7 @@ double horoball_hue(
      *  is in the eye of the beholder.
      */
 
-    const static int    base_hue[6] = { 0,      /*  red     */
+    static const int    base_hue[6] = { 0,      /*  red     */
                                         3,      /*  cyan    */
                                         2,      /*  green   */
                                         4,      /*  blue    */
@@ -77,3 +78,4 @@ double horoball_hue(
 
     return (base_hue[index%6] + index_to_hue(index/6)) / 6.0;
 }
+#include "end_namespace.h"

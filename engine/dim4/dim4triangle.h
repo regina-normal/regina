@@ -135,6 +135,26 @@ class REGINA_API Dim4TriangleEmbedding {
          * vertices of getPentachoron().
          */
         NPerm5 getVertices() const;
+
+        /**
+         * Tests whether this and the given embedding are identical.
+         * Here "identical" means that they refer to the same triangle of
+         * the same pentachoron.
+         *
+         * @param rhs the embedding to compare with this.
+         * @return \c true if and only if both embeddings are identical.
+         */
+        bool operator == (const Dim4TriangleEmbedding& rhs) const;
+
+        /**
+         * Tests whether this and the given embedding are different.
+         * Here "different" means that they do not refer to the same triangle
+         * of the same pentachoron.
+         *
+         * @param rhs the embedding to compare with this.
+         * @return \c true if and only if both embeddings are identical.
+         */
+        bool operator != (const Dim4TriangleEmbedding& rhs) const;
 };
 
 /**
@@ -414,6 +434,16 @@ inline int Dim4TriangleEmbedding::getTriangle() const {
 
 inline NPerm5 Dim4TriangleEmbedding::getVertices() const {
     return pent_->getTriangleMapping(tri_);
+}
+
+inline bool Dim4TriangleEmbedding::operator ==
+        (const Dim4TriangleEmbedding& other) const {
+    return ((pent_ == other.pent_) && (tri_ == other.tri_));
+}
+
+inline bool Dim4TriangleEmbedding::operator !=
+        (const Dim4TriangleEmbedding& other) const {
+    return ((pent_ != other.pent_) || (tri_ != other.tri_));
 }
 
 // Inline functions for Dim4Triangle

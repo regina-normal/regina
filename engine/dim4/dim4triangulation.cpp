@@ -54,6 +54,32 @@ Dim4Triangulation::Dim4Triangulation(const std::string& description) :
     delete attempt;
 }
 
+bool Dim4Triangulation::isIdenticalTo(const Dim4Triangulation& other) const {
+    if (pentachora_.size() != other.pentachora_.size())
+        return false;
+
+    unsigned long i;
+    unsigned j;
+    for (i = 0; i < pentachora_.size(); ++i)
+        for (j = 0; j < 5; ++j) {
+            if (pentachora_[i]->adjacentPentachoron(j)) {
+                if (! other.pentachora_[i]->adjacentPentachoron(j))
+                    return false;
+                if (pentachora_[i]->adjacentPentachoron(j)->markedIndex() !=
+                        other.pentachora_[i]->adjacentPentachoron(j)->markedIndex())
+                    return false;
+                if (pentachora_[i]->adjacentGluing(j) !=
+                        other.pentachora_[i]->adjacentGluing(j))
+                    return false;
+            } else {
+                if (other.pentachora_[i]->adjacentPentachoron(j))
+                    return false;
+            }
+        }
+
+    return true;
+}
+
 void Dim4Triangulation::swapContents(Dim4Triangulation& other) {
     ChangeEventSpan span1(this);
     ChangeEventSpan span2(&other);

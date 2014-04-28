@@ -11,7 +11,7 @@
  *  infinity.  matrix_generators() writes the MoebiusTransformations
  *  to the array generators[], which it assumes has already been allocated.
  *
- * NMD 2010/3/22: Now matrix generators assumse that choose_generators
+ * NMD 2010/3/22: Now matrix generators assumes that choose_generators
  * has been called in advance.  This is to prevent a double-call of
  * choose_generators in fundamental_group.c
  *
@@ -20,6 +20,7 @@
  */
 
 #include "kernel.h"
+#include "kernel_namespace.h"
 
 static FuncResult compute_one_generator(Tetrahedron *tet, FaceIndex f, MoebiusTransformation *mt);
 
@@ -166,10 +167,10 @@ static FuncResult compute_one_generator(
      *  we will bravely push forward with the computation.  The justification
      *  for such boldness is that the Complex constant Infinity is not actually
      *  infinite, but is just a large number (1e34).  Its square is less than
-     *  the assumed value of DBL_MAX, so we can safely compute squares
+     *  the assumed value of REAL_MAX, so we can safely compute squares
      *  of "infinite" numbers and expect them to cancel properly with other
      *  infinite numbers.  In the normalization step we also assume the fourth
-     *  power of "infinity" is less than DBL_MAX.  (DBL_MAX is 1.2e+4932
+     *  power of "infinity" is less than REAL_MAX.  (DBL_MAX is 1.2e+4932
      *  on a Mac and 1.8e+308 on a Sun or NeXT, so we shouldn't run into
      *  trouble (knock on wood).)
      *
@@ -221,3 +222,4 @@ static FuncResult compute_one_generator(
                             );
     return func_OK;
 }
+#include "end_namespace.h"

@@ -177,6 +177,7 @@ regina::NBoolSet
 int minimal = 0;
 int minimalPrime = 0;
 int minimalPrimeP2 = 0;
+int minimalHyp = 0;
 int whichPurge = 0;
 int dim2 = 0;
 int dim4 = 0;
@@ -240,6 +241,10 @@ int parseCmdLine(int argc, const char* argv[], bool isController) {
         { "minprimep2", 'N', POPT_ARG_NONE, &minimalPrimeP2, 0,
             "Ignore obviously non-minimal, non-prime, disc-reducible and/or "
             "P2-reducible triangulations.", 0 },
+        { "minhyp", 'h', POPT_ARG_NONE, &minimalHyp, 0,
+            "Ignore triangulations that are obviously not minimal ideal "
+            "triangulations of cusped finite-volume hyperbolic 3-manifolds.  "
+            "Implies --ideal.", 0 },
         { "dim2", '2', POPT_ARG_NONE, &dim2, 0,
             "Run a census of 2-manifold triangulations, "
             "not 3-manifold triangulations.", 0 },
@@ -298,6 +303,10 @@ int parseCmdLine(int argc, const char* argv[], bool isController) {
         return 1;
     }
 
+    // Some options imply others.
+    if (minimalHyp)
+        argIdeal = 1;
+
     // Run a sanity check on the command-line arguments.
     bool broken = false;
     if (pairsFile.empty()) {
@@ -313,21 +322,35 @@ int parseCmdLine(int argc, const char* argv[], bool isController) {
             std::cerr << "Options -o/--orientable and -n/--nonorientable "
                 << "cannot be used together.\n";
         broken = true;
+    } else if (argFinite && minimalHyp) {
+        std::cerr << "Options -f/--finite and -h/--minhyp"
+            << "cannot be used together.\n";
+        broken = true;
+    } else if (argFinite && argIdeal) {
+        std::cerr << "Options -f/--finite and -d/--ideal "
+            << "cannot be used together.\n";
+        broken = true;
     } else if (dim2 && dim4) {
         if (isController)
             std::cerr << "Options -2/--dim2 and -4/--dim4 "
                 "cannot be used together.\n";
         broken = true;
-    } else if (dim2 && (argFinite || argIdeal)) {
+    } else if (dim2 && minimalHyp) {
         if (isController)
-            std::cerr << "Finiteness options cannot be used with -2/--dim2.\n";
+            std::cerr << "Hyperbolicity options cannot be used with "
+                "-2/--dim2.\n";
         broken = true;
     } else if (dim2 && (minimalPrime || minimalPrimeP2)) {
         if (isController)
             std::cerr << "Primeness options cannot be used with -2/--dim2 "
                 "(the weaker -m/--minimal can).\n";
         broken = true;
-    } else if (dim4 && (minimal || minimalPrime || minimalPrimeP2)) {
+    } else if (dim2 && (argFinite || argIdeal)) {
+        if (isController)
+            std::cerr << "Finiteness options cannot be used with -2/--dim2.\n";
+        broken = true;
+    } else if (dim4 &&
+            (minimal || minimalPrime || minimalPrimeP2 || minimalHyp)) {
         if (isController)
             std::cerr << "Minimality options cannot be used with -4/--dim4.\n";
         broken = true;
@@ -358,6 +381,8 @@ int parseCmdLine(int argc, const char* argv[], bool isController) {
             regina::NCensus::PURGE_P2_REDUCIBLE;
     else if (minimalPrime)
         whichPurge = regina::NCensus::PURGE_NON_MINIMAL_PRIME;
+    else if (minimalHyp)
+        whichPurge = regina::NCensus::PURGE_NON_MINIMAL_HYP;
     else if (minimal)
         whichPurge = regina::NCensus::PURGE_NON_MINIMAL;
     else
@@ -673,6 +698,13 @@ void slaveFoundGluingPerms(const typename CensusType::GluingPermSearcher* perms,
     if (perms) {
         typename CensusType::Triangulation* tri = perms->triangulate();
 
+        // For minimalHyp, we don't run CensusType::mightBeMinimal().
+        // This is because mightBeMinimal() only tests for immediate
+        // reductions (i.e., it doesn't use 4-4 moves or well-climbing
+        // techniques), and NHyperbolicMinSearcher already ensures that
+        // no such moves are possible (since it ensures no internal vertices
+        // and no low-degree edges).
+
         bool ok = true;
         if (! tri->isValid())
             ok = false;
@@ -743,12 +775,16 @@ void slaveDescribeCensusParameters(std::ostream& out) {
     else
         out << "Orientable and non-orientable\n";
 
-    if (minimalPrimeP2)
+    if (minimalHyp)
+        out << "Ignored triangulations that are obviously not "
+            "minimal ideal triangulations of cusped finite-volume "
+            "hyperbolic 3-manifolds\n";
+    else if (minimalPrimeP2)
         out << "Ignored obviously non-minimal, non-prime, "
-            << "disc-reducible and/or P2-reducible triangulations\n";
+            "disc-reducible and/or P2-reducible triangulations\n";
     else if (minimalPrime)
         out << "Ignored obviously non-minimal, non-prime and/or "
-            << "disc-reducible triangulations\n";
+            "disc-reducible triangulations\n";
     else if (minimal)
         out << "Ignored obviously non-minimal triangulations\n";
 }

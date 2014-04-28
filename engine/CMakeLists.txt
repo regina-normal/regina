@@ -27,6 +27,10 @@ ADD_SUBDIRECTORY("surfaces")
 ADD_SUBDIRECTORY("triangulation")
 ADD_SUBDIRECTORY("utilities")
 
+# Some C files need to be compiled using the C++ compiler (e.g., snappea,
+# where we have added C++ namespaces).
+SET_SOURCE_FILES_PROPERTIES( ${SOURCES_C_AS_CPP} PROPERTIES LANGUAGE CXX )
+
 ADD_DEFINITIONS(-DREGINA_DLL_EXPORTS=1)
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/engine)

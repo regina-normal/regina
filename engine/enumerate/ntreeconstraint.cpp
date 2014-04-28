@@ -91,7 +91,7 @@ bool LPConstraintNonSpun::addRows(
     if (tri->getNumberOfVertices() != 1 ||
             (! tri->getVertex(0)->isIdeal()) ||
             (! tri->getVertex(0)->isLinkOrientable()) ||
-            tri->getVertex(0)->getLinkEulerCharacteristic() != 0)
+            tri->getVertex(0)->getLinkEulerChar() != 0)
         return false;
 
     // Compute the two slope equations for the torus cusp, if we can.
@@ -194,7 +194,7 @@ void BanTorusBoundary::init(const int* columnPerm) {
     for (i = 0; i < tri_->getNumberOfBoundaryComponents(); ++i) {
         bc = tri_->getBoundaryComponent(i);
         if ((! bc->isIdeal()) && bc->isOrientable() &&
-                bc->getEulerCharacteristic() == 0) {
+                bc->getEulerChar() == 0) {
             // We've found a real torus boundary.
             for (k = 0; k < bc->getNumberOfTriangles(); ++k)
                 banTriangle[bc->getTriangle(k)->markedIndex()] = true;
