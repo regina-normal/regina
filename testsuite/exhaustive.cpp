@@ -81,8 +81,6 @@ namespace {
 
     template <>
     struct TestFunctionHolder<3> {
-        // Work around the fact that we cannot cast between function
-        // pointers and void*.
         typedef regina::NTriangulation Triangulation;
         NTriangulationTestFunction f_;
         TestFunctionHolder(NTriangulationTestFunction f) : f_(f) {}

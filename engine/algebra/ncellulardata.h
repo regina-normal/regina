@@ -839,6 +839,7 @@ private:
      *       corresponding index of this in (i+1)-simplex]. We orient these 
      *       cells as the boundary of this i+1-simplex, so the boundary map is
      *       -1*sign corresponding boundary map of the i+1 simplex.
+     *       TODO: edit the above.  It no longer makes sense to me. 
      *  dcIx is Indexing for the dual cells.  dcIx[i] indexes the non-ideal, 
      *       nonboundary standard cells of dimension (3 or 4)-i. We orient 
      *       these via the getEmbeddings conventions in Regina.
@@ -854,12 +855,12 @@ private:
     // generic type for holding chain complex data 
     // this will be a 2x2 grid 1st coordinate the cell index and 
     //  2nd coordinate the indices of the incident faces.
-    public:
+  public:
     typedef NSparseGrid< coverFacetData > ccMapType; 
     // there is a ccMapType for chain complexes (9 coordinate systems, 
     //  all dimensions)
     typedef std::map< ChainComplexLocator, ccMapType* > ccCollectionType;
-    private:
+  private:
     // the "master" chain complex for the manifold. 
     ccCollectionType genCC;  
     typedef std::map< ChainMapLocator, ccMapType* > cmCollectionType;
@@ -1030,6 +1031,7 @@ private:
     bool inMaximalTree(const NTriangle* fac, unsigned long num) const;
     bool inMaximalTree(const NTetrahedron* tet, unsigned long num) const;
     
+ public:
    /**
     * During initialization many reverse-lookups are needed.  We proved 
     * them in one place. see cellulardata.lookups.cpp for implementations.
@@ -1089,6 +1091,42 @@ private:
    unsigned long pi1Lookup(const NTriangle* fac, unsigned long num) const;
    unsigned long pi1Lookup(const NTetrahedron* tet, unsigned long num) const;
 
+   /**
+    * Returns the NTriangulation/Dim4Triangulation index of the cell with 
+    * NCellularData STD_coord index idx.  
+    */
+   unsigned long nicIndex( const unsigned long dim, 
+                           const unsigned long idx ) const; // nicIx
+   /**
+    * Returns the NTriangulation/Dim4Triangulation index of the cell with 
+    * NCellularData STD_coord index idx.  The first entry is the index of
+    * the simplex, and the 2nd is the index of the facet in that simplex
+    * corresponding to the ideal cell.  So icIndex( 0, 2 ) is represents
+    * the 2nd ideal 0-cell.  The first coordinate is the edge index, and 
+    * the second coordinate is either 0 or 1, indicating which end of the
+    * edge. 
+    */
+   std::pair< unsigned long, unsigned long > icIndex( const unsigned long dim, 
+                                      const unsigned long idx ) const; // icIx
+   /**
+    * Returns the NTriangulation/Dim4Triangulation index of the cell with 
+    * NCellularData DUAL_coord index idx.
+    */
+   unsigned long dcIndex( const unsigned long dim, 
+                          const unsigned long idx ) const; // dcIx
+   /* ??
+    */
+   unsigned long bcIndex( const unsigned long dim, 
+                          const unsigned long idx ) const; // bcIx;
+   /* ??
+    */
+   unsigned long rIndex( const unsigned long dim, 
+                         const unsigned long idx ) const; // rIx;
+
+   unsigned long stdCellCount( const unsigned long dim ) const;
+   unsigned long idCellCount( const unsigned long dim ) const;
+
+ private:
    /**
     *  Internal routines to set up chain complexes. 
     */
@@ -1458,6 +1496,12 @@ public:
      *  Generic routine for all bool-response queries with enum input.
      */
     bool boolInfo( const BoolRequest &b_desc) const;
+
+    /**
+     *  Returns the group of simplicial automorphisms of the triangulation. 
+     * TODO: not yet implemented. Return value needs fixing, for one..
+     */
+    void simplicialAutomorphismGroup() const;
 
     /**
      *  Provides a text string that identifies the manifold uniquely 

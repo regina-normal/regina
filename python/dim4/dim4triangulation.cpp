@@ -222,6 +222,7 @@ void addDim4Triangulation() {
         .def("edgeIndex", &Dim4Triangulation::edgeIndex)
         .def("triangleIndex", &Dim4Triangulation::triangleIndex)
         .def("tetrahedronIndex", &Dim4Triangulation::tetrahedronIndex)
+        .def("isIdenticalTo", &Dim4Triangulation::isIdenticalTo)
         .def("isIsomorphicTo", isIsomorphicTo_ptr,
             return_value_policy<manage_new_object>())
         .def("makeCanonical", &Dim4Triangulation::makeCanonical)

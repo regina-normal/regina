@@ -42,13 +42,10 @@
 #endif
 
 #include <vector>
-#include <memory>
-
 #include "regina-core.h"
 #include "shareableobject.h"
 #include "maths/nperm5.h"
 #include "utilities/nmarkedvector.h"
-
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
@@ -140,16 +137,24 @@ class REGINA_API Dim4EdgeEmbedding {
         NPerm5 getVertices() const;
 
         /**
-         *  Equality operator for Dim4EdgeEmbeddings, allows for
-         *  find() lookups in getEmbeddings(). 
+         * Tests whether this and the given embedding are identical.
+         * Here "identical" means that they refer to the same edge of
+         * the same pentachoron.
+         *
+         * @param rhs the embedding to compare with this.
+         * @return \c true if and only if both embeddings are identical.
          */
-        bool operator==(const Dim4EdgeEmbedding &oth) const;
+        bool operator == (const Dim4EdgeEmbedding& rhs) const;
 
         /**
-         *  Inequality operator for Dim4EdgeEmbeddings.
+         * Tests whether this and the given embedding are different.
+         * Here "different" means that they do not refer to the same edge of
+         * the same pentachoron.
+         *
+         * @param rhs the embedding to compare with this.
+         * @return \c true if and only if both embeddings are identical.
          */
-        bool operator!=(const Dim4EdgeEmbedding &oth) const;
-
+        bool operator != (const Dim4EdgeEmbedding& rhs) const;
 };
 
 /**
@@ -241,6 +246,9 @@ class REGINA_API Dim4Edge : public ShareableObject, public NMarkedElement {
             /**< Is this edge invalid?  This will be 0 if the edge is
                  valid, or a bitwise combination of \a INVALID_IDENTIFICATION
                  and/or \a INVALID_LINK if the edge is invalid. */
+        Dim2Triangulation* link_;
+            /**< A triangulation of the edge link.  This will only be
+             * constructed on demand; until then it will be null. */
 
     public:
         /**
@@ -375,18 +383,101 @@ class REGINA_API Dim4Edge : public ShareableObject, public NMarkedElement {
         bool hasBadLink() const;
 
         /**
-         * Returns a full triangulation of the link of the edge. 
+         * Returns a full 2-manifold triangulation describing
+         * the link of this edge.
          *
-         * If you call buildLink passing to it an allocated Dim4Isomorphism
-         * pointer, initialized to have the same number of pentachora
-         * as getNumberOfEmbeddings(), then buildLink will fill it out
-         * with an Dim4Isomorphism where pentImage(i) is the pentachoron of
-         * the Dim4Triangulation which contains the i-th triangle of the link.
-         * Moreover, facePerm will send 0 and 1 to this Dim4Edge's vertices in that
-         * pentachoron, and vertices 2,3,4 (describing the triangle) to 
-         * the triangle opposite pentImage(i). 
+         * This routine is fast (it uses a pre-computed triangulation
+         * where possible).  The downside is that the triangulation is
+         * read-only, and does not contain any information on how the
+         * triangles in the link correspond to pentachora in the original
+         * triangulation (though this is easily deduced; see below).
+         * If you want a writable triangulation, or one with this extra
+         * information, then call buildLinkDetail() instead.
+         *
+         * The triangulation of the edge link is built as follows.
+         * Let \a i lie between 0 and getDegree()-1 inclusive, let
+         * \a pent represent <tt>getEmbedding(i).getPentachoron()</tt>,
+         * and let \a e represent <tt>getEmbedding(i).getEdge()</tt>.
+         * Then <tt>buildLink()->getTriangle(i)</tt> is the triangle
+         * in the edge link that links edge \a e of pentachoron \a pent.
+         * In other words, <tt>buildLink()->getTriangle(i)</tt> in the edge link
+         * is parallel to triangle <tt>pent->getTriangle(e)</tt> in the
+         * surrounding 4-manifold triangulation.
+         *
+         * The vertices of each triangle in the edge link are
+         * numbered as follows.  Following the discussion above,
+         * suppose that <tt>buildLink()->getTriangle(i)</tt>
+         * sits within \c pent and is parallel to
+         * <tt>pent->getTriangle(e)</tt>.
+         * Then vertices 0,1,2 of the triangle in the link will be
+         * parallel to vertices 0,1,2 of the corresponding Dim4Triangle.
+         * The permutation <tt>pent->getTriangleMapping(e)</tt> will map
+         * vertices 0,1,2 of the triangle in the link to the
+         * corresponding vertices of \c pent (those opposite \c e),
+         * and will map 3 and 4 to the vertices of \c e itself.
+         *
+         * This Dim4Edge object will retain ownership of the triangulation
+         * that is returned.  If you wish to edit the triangulation, you
+         * should make a new clone and edit the clone instead.
+         *
+         * @return the read-only triangulated link of this edge.
          */
-        std::auto_ptr< Dim2Triangulation > buildLink(Dim4Isomorphism* inc=NULL) const;
+        const Dim2Triangulation* buildLink() const;
+
+        /**
+         * Returns a full 2-manifold triangulation describing
+         * the link of this edge.
+         *
+         * This routine is heavyweight (it computes a new triangulation
+         * each time).  The benefit is that the triangulation is writeable,
+         * and optionally contain detailed information on how the triangles
+         * in the link correspond to pentachora in the original triangulation.
+         * If you do not need this extra information, consider using the
+         * faster buildLink() instead.
+         *
+         * See the buildLink() documentation for an explanation of
+         * exactly how the triangulation will be constructed.
+         *
+         * If \a labels is passed as \c true, each triangle of the new
+         * edge link will be given a text description of the form
+         * <tt>p&nbsp;(e)</tt>, where \c p is the index of the pentachoron
+         * the triangle is from, and \c e is the edge of that pentachoron
+         * that this triangle links.
+         *
+         * If \a inclusion is non-null (i.e., it points to some
+         * Dim4Isomorphism pointer \a p), then it will be modified to
+         * point to a new Dim4Isomorphism that describes in detail how the
+         * individual triangles of the link sit within pentachora of
+         * the original triangulation.  Specifically, after this routine
+         * is called, <tt>p->pentImage(i)</tt> will indicate which pentachoron
+         * \a pent of the 4-manifold triangulation contains the <i>i</i>th
+         * triangle of the link.  Moreover, <tt>p->facetPerm(i)</tt> will
+         * indicate exactly where the <i>i</i>th triangle sits within
+         * \a pent: (i) it will send 3,4 to the vertices of \a pent that lie
+         * on the edge that the triangle links, with 3 and 4 mapping to
+         * vertices 0 and 1 respectively of the corresponding Dim4Edge;
+         * and (ii) it will send 0,1,2 to the vertices of \a pent that
+         * are parallel to vertices 0,1,2 of this triangle.
+         *
+         * The triangulation that is returned, as well as the isomorphism
+         * if one was requested, will be newly allocated.  The caller of
+         * this routine is responsible for destroying these objects.
+         *
+         * Strictly speaking, this is an abuse of the Dim4Isomorphism class
+         * (the domain is a triangulation of the wrong dimension, and
+         * the map is not 1-to-1 into the range pentachora).  We use
+         * it anyway, but you should not attempt to call any high-level
+         * routines (such as Dim4Isomorphism::apply).
+         *
+         * \ifacespython The second (isomorphism) argument is not present.
+         * Instead this routine returns a pair (triangulation, isomorphism).
+         * As a side-effect, the isomorphism will always be constructed
+         * (i.e., it is not optional).
+         *
+         * @return a newly constructed triangulation of the link of this edge.
+         */
+        Dim2Triangulation* buildLinkDetail(bool labels = true,
+            Dim4Isomorphism** inclusion = 0) const;
 
         void writeTextShort(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
@@ -446,19 +537,20 @@ inline NPerm5 Dim4EdgeEmbedding::getVertices() const {
     return pent_->getEdgeMapping(edge_);
 }
 
-inline bool Dim4EdgeEmbedding::operator==(const Dim4EdgeEmbedding &oth) const {
-    return ( (pent_ == oth.pent_) && (edge_ == oth.edge_) );
+inline bool Dim4EdgeEmbedding::operator == (const Dim4EdgeEmbedding& other)
+        const {
+    return ((pent_ == other.pent_) && (edge_ == other.edge_));
 }
 
-inline bool Dim4EdgeEmbedding::operator!=(const Dim4EdgeEmbedding &oth) const {
-    return ( (pent_ != oth.pent_) || (edge_ != oth.edge_) );
+inline bool Dim4EdgeEmbedding::operator != (const Dim4EdgeEmbedding& other)
+        const {
+    return ((pent_ != other.pent_) || (edge_ != other.edge_));
 }
-
 
 // Inline functions for Dim4Edge
 
 inline Dim4Edge::Dim4Edge(Dim4Component* component) :
-        component_(component), boundaryComponent_(0), invalid_(0) {
+        component_(component), boundaryComponent_(0), invalid_(0), link_(0) {
 }
 
 inline Dim4Edge::~Dim4Edge() {
@@ -512,6 +604,15 @@ inline bool Dim4Edge::hasBadIdentification() const {
 
 inline bool Dim4Edge::hasBadLink() const {
     return (invalid_ & Dim4Edge::INVALID_LINK);
+}
+
+inline const Dim2Triangulation* Dim4Edge::buildLink() const {
+    if (! link_) {
+        // This is a construct-on-demand member; cast away constness to
+        // set it here.
+        const_cast<Dim4Edge*>(this)->link_ = buildLinkDetail(false, 0);
+    }
+    return link_;
 }
 
 inline void Dim4Edge::writeTextShort(std::ostream& out) const {

@@ -32,9 +32,9 @@
 
 /* end stub */
 
-#include "dim4/dim4edge.h"
-#include "dim4/dim4isomorphism.h"
 #include "dim2/dim2triangulation.h"
+#include "dim4/dim4edge.h"
+#include "maths/permconv.h"
 #include <sstream>
 
 namespace regina {
@@ -71,54 +71,87 @@ const NPerm5 Dim4Edge::ordering[10] = {
     NPerm5(3, 4, 0, 1, 2)
 };
 
-// TODO: have a pass-by-reference Dim4Isomorphism that describes
-//       how the link is sitting in the Dim4Triangulation. 
-std::auto_ptr< Dim2Triangulation > Dim4Edge::buildLink(Dim4Isomorphism* inc) const
-{
-    std::auto_ptr< Dim2Triangulation > retval ( new Dim2Triangulation );
-    for (unsigned long i=0; i<getNumberOfEmbeddings(); i++)
-       {
-        Dim2Triangle* tTri( retval->newTriangle() );
-        std::stringstream temp;
-        Dim4Pentachoron* pen( getEmbedding(i).getPentachoron() );
-        temp << pen->getTriangulation()->pentachoronIndex( pen );
-        temp << " " << getEmbedding(i).getEdge();
-        tTri->setDescription( temp.str() );        
-       }     
-    for (unsigned long i=0; i<getNumberOfEmbeddings(); i++) {
-       const Dim4EdgeEmbedding eEmb( getEmbedding(i) );
-       const NPerm5 edgInc( eEmb.getVertices() );
+Dim2Triangulation* Dim4Edge::buildLinkDetail(bool labels,
+        Dim4Isomorphism** inclusion) const {
+    // Build the triangulation.
+    Dim2Triangulation* ans = new Dim2Triangulation();
+    NPacket::ChangeEventSpan span(ans);
 
-       for (unsigned long j=2; j<5; j++)
-            if ( !(eEmb.getPentachoron()->getTetrahedron(edgInc[j])->isBoundary()) && 
-               (retval->getTriangle(i)->adjacentTriangle(j-2)==NULL) ) { 
-          NPerm5 penGlue( eEmb.getPentachoron()->adjacentGluing(edgInc[j]) );
+    if (inclusion)
+        *inclusion = new Dim4Isomorphism(emb_.size());
 
-          const Dim4EdgeEmbedding adjEdjInc( const_cast< Dim4Pentachoron* >
-            (eEmb.getPentachoron()->adjacentPentachoron(edgInc[j])), 
-             Dim4Edge::edgeNumber[penGlue[edgInc[0]]][penGlue[edgInc[1]]]);
-          // lets lookup adjEdjInc in emb_
-          unsigned long adjeEmbIndx = find(emb_.begin(), emb_.end(), 
-                adjEdjInc) - emb_.begin();
-          NPerm5 incTrans( 
-            adjEdjInc.getVertices().inverse() * penGlue * edgInc );
-          NPerm3 tPerm( incTrans[2]-2, incTrans[3]-2, incTrans[4]-2 );
-          // which is the target triangle 
-          retval->getTriangle(i)->joinTo(j-2, 
-                retval->getTriangle(adjeEmbIndx), tPerm);
+    std::vector<Dim4EdgeEmbedding>::const_iterator it, adjIt;
+    Dim2Triangle* tTri;
+    NPerm5 perm;
+    int i;
+    for (it = emb_.begin(), i = 0; it != emb_.end(); ++it, ++i) {
+        tTri = ans->newTriangle();
+        if (labels) {
+            std::stringstream s;
+            s << it->getPentachoron()->markedIndex() <<
+                " (" << it->getEdge() << ')';
+            tTri->setDescription(s.str());
         }
-     }
+        if (inclusion) {
+            (*inclusion)->pentImage(i) = it->getPentachoron()->markedIndex();
 
-    if ( (inc != NULL) ? (inc->getSourcePentachora() == retval->getNumberOfTriangles()) : false )
-      for (unsigned long j=0; j<getNumberOfEmbeddings(); j++)
-       { // it will be set up so that 0 and 1 go to the edge vertices in the pentachora
-         // 2,3,4 will go to the triangle opposite. 
-         Dim4Pentachoron* pen( getEmbedding(j).getPentachoron() );
-         inc->pentImage(j) = pen->getTriangulation()->pentachoronIndex( pen );
-         inc->facetPerm(j) = getEmbedding(j).getVertices();
-       }
+            perm = it->getPentachoron()->getTriangleMapping(it->getEdge());
+            if (perm[3] ==
+                    it->getPentachoron()->getEdgeMapping(it->getEdge())[0])
+                (*inclusion)->facetPerm(i) = perm;
+            else
+                (*inclusion)->facetPerm(i) = perm * NPerm5(3, 4);
+        }
+    }
 
-    return retval;
+    Dim4Pentachoron *pent, *adj;
+    NPerm5 adjGluing;
+    int exitTet, e;
+    int edgeInLink;
+    int adjIndex;
+    int adjEdge;
+    for (it = emb_.begin(), i = 0; it != emb_.end(); ++it, ++i) {
+        pent = it->getPentachoron();
+        e = it->getEdge();
+
+        for (exitTet = 0; exitTet < 5; ++exitTet) {
+            if (exitTet == edgeVertex[e][0] || exitTet == edgeVertex[e][1])
+                continue;
+
+            adj = pent->adjacentPentachoron(exitTet);
+            if (! adj)
+                continue;
+
+            edgeInLink = pent->getTriangleMapping(e).preImageOf(exitTet);
+            if (ans->getTriangle(i)->adjacentTriangle(edgeInLink)) {
+                // We've already made this gluing in the vertex link
+                // from the other side.
+                continue;
+            }
+
+            adjGluing = pent->adjacentGluing(exitTet);
+            adjEdge = edgeNumber[adjGluing[edgeVertex[e][0]]]
+                                [adjGluing[edgeVertex[e][1]]];
+
+            // TODO: We need to find which *embedding* corresponds to
+            // the adjacent pentachoron/edge pair.
+            // Currently we do a simple linear scan, which makes the
+            // overall link construction quadratic.  This can surely be
+            // made linear(ish) with the right data structure and/or algorithm.
+            for (adjIt = emb_.begin(), adjIndex = 0;
+                    adjIt != emb_.end(); ++adjIt, ++adjIndex)
+                if (adjIt->getPentachoron() == adj &&
+                        adjIt->getEdge() == adjEdge)
+                    break; // Sets adjIndex to the right value.
+
+            ans->getTriangle(i)->joinTo(edgeInLink, ans->getTriangle(adjIndex),
+                perm5to3(adj->getTriangleMapping(adjEdge).inverse() *
+                    adjGluing *
+                    pent->getTriangleMapping(e)));
+        }
+    }
+
+    return ans;
 }
 
 void Dim4Edge::writeTextLong(std::ostream& out) const {
