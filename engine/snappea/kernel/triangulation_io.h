@@ -66,6 +66,8 @@
  *  in SnapPea.h.  It depends on some of the typedefs there.
  */
 
+#include "kernel_namespace.h"
+
 typedef struct TriangulationData    TriangulationData;
 typedef struct CuspData             CuspData;
 typedef struct TetrahedronData      TetrahedronData;
@@ -75,10 +77,10 @@ struct TriangulationData
     char            *name;
     int             num_tetrahedra;
     SolutionType    solution_type;
-    double          volume;
+    Real          volume;
     Orientability   orientability;
     Boolean         CS_value_is_known;
-    double          CS_value;
+    Real          CS_value;
     int             num_or_cusps,
                     num_nonor_cusps;
     CuspData        *cusp_data;
@@ -88,7 +90,7 @@ struct TriangulationData
 struct CuspData
 {
     CuspTopology    topology;
-    double          m,
+    Real          m,
                     l;
 };
 
@@ -103,3 +105,5 @@ struct TetrahedronData
     int             curve[2][2][4][4];
     Complex         filled_shape;
 };
+
+#include "end_namespace.h"

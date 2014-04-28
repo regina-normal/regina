@@ -43,6 +43,7 @@
 #include "testsuite/algebra/testalgebra.h"
 #include "testsuite/angle/testangle.h"
 #include "testsuite/census/testcensus.h"
+#include "testsuite/dim2/testdim2.h"
 #include "testsuite/dim4/testdim4.h"
 #include "testsuite/maths/testmaths.h"
 #ifndef EXCLUDE_SNAPPEA
@@ -149,6 +150,9 @@ bool runAllTests() {
     // addNMVPolynomialRing(runner); <-- NMVPolynomialRing class not ready yet.
     addNSVPolynomialRing(runner);
     addNCellularData(runner);
+
+    // Dim2riangulation:
+    addDim2Triangulation(runner);
 
     // Triangulation:
     addNTriangulation(runner);

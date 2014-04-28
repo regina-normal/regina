@@ -53,6 +53,32 @@ Dim2Triangulation::Dim2Triangulation(const std::string& description) :
     delete attempt;
 }
 
+bool Dim2Triangulation::isIdenticalTo(const Dim2Triangulation& other) const {
+    if (triangles_.size() != other.triangles_.size())
+        return false;
+
+    unsigned long i;
+    unsigned j;
+    for (i = 0; i < triangles_.size(); ++i)
+        for (j = 0; j < 3; ++j) {
+            if (triangles_[i]->adjacentTriangle(j)) {
+                if (! other.triangles_[i]->adjacentTriangle(j))
+                    return false;
+                if (triangles_[i]->adjacentTriangle(j)->markedIndex() !=
+                        other.triangles_[i]->adjacentTriangle(j)->markedIndex())
+                    return false;
+                if (triangles_[i]->adjacentGluing(j) !=
+                        other.triangles_[i]->adjacentGluing(j))
+                    return false;
+            } else {
+                if (other.triangles_[i]->adjacentTriangle(j))
+                    return false;
+            }
+        }
+
+    return true;
+}
+
 bool Dim2Triangulation::isMinimal() const {
     // 2-sphere:
     if (getEulerChar() == 2)
@@ -421,67 +447,5 @@ void Dim2Triangulation::clearAllProperties() {
     if (calculatedSkeleton_)
         deleteSkeleton();
 }
-
-
-bool Dim2Triangulation::oneThreeMove( Dim2Triangle *t, bool check, bool perform )
-{
-    // not yet okay-ed by bab
-    #ifdef DEBUG
-    std::cerr << "Performing 1-3 move\n";
-    #endif
-
-    if (!perform) return true; // this move can always be done.
-
-    // two calls to newTriangle( std::string desc )
-    Dim2Triangle *newTu = newTriangle();
-    Dim2Triangle *newTl = newTriangle();
-    // glue these two triangles together
-    newTu->joinTo(1, newTl, NPerm3( 0, 2, 1 ) );
-
-    // get info on the triangles across edges 1 and 2 from t before we disconnect those gluings
-    Dim2Triangle *triu( t->adjacentTriangle(1) );
-    Dim2Triangle *tril( t->adjacentTriangle(2) );
-    NPerm3 glueU(t->adjacentGluing(1));
-    NPerm3 glueL(t->adjacentGluing(2));
-
-    // unjoin twice, 
-    t->unjoin(1); t->unjoin(2);
-
-    // 4 joins with the pre-existing triangles and new triangles
-    t->joinTo(1, newTl, NPerm3( 1, 0, 2 ) );
-    t->joinTo(2, newTu, NPerm3( 2, 1, 0 ) );
-    newTu->joinTo(2, triu, NPerm3( glueU[0], glueU[1], glueU[2] ) );
-    newTl->joinTo(1, tril, NPerm3( glueL[0], glueL[1], glueL[2] ) );
-
-    // TODO: put in the labels of the new triangles which triangles, edges and vertex
-    //       indices are "new" vs "old" so that we can keep track in the circle packing
-    //       code which introductions were artificial. 
-
-    return true; 
-}
-
-bool Dim2Triangulation::threeOneMove( Dim2Vertex *v, bool check, bool perform )
-{
-    // not yet okay-ed by bab
-    #ifdef DEBUG
-    std::cerr << "Performing 1-3 move\n";
-    #endif
-    // check if vertex is standard and incident to three triangles
-    if (!perform) return (v->isBoundary() ? false : true );
-
-
-    return true;
-}
-
-bool Dim2Triangulation::twoTwoMove( Dim2Edge *e, bool check, bool perform )
-{
-    // not yet implemented
-    #ifdef DEBUG
-    std::cerr << "Performing 1-3 move\n";
-    #endif
-    return false;
-}        
-
-
 
 } // namespace regina

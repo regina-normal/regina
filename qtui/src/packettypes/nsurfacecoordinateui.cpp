@@ -158,7 +158,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         else if (index.column() == 2) {
             if (! s->isCompact())
                 return QVariant();
-            return s->getEulerCharacteristic().stringValue().c_str();
+            return s->getEulerChar().stringValue().c_str();
         } else if (surfaces_->isEmbeddedOnly() && index.column() == 3) {
             if (! s->isCompact())
                 return QVariant();
@@ -180,7 +180,9 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 3)) {
             if (! s->isCompact()) {
 #ifndef EXCLUDE_SNAPPEA
-                regina::NMatrixInt* slopes = s->boundarySlopes();
+                regina::NMatrixInt* slopes =
+                    (ReginaPrefSet::global().surfacesSupportSpunBdry ?
+                    s->boundarySlopes() : 0);
                 if (slopes) {
                     QString ans = tr("Spun:");
                     // Display each boundary slope as (nu(L), -nu(M)).
@@ -580,7 +582,9 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     connect(model, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
         this, SLOT(notifySurfaceRenamed()));
 
-    // Tidy up.
+    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
+        this, SLOT(updatePreferences()));
+
     refresh();
 }
 
@@ -747,5 +751,10 @@ void NSurfaceCoordinateUI::columnResized(int section, int, int newSize) {
 
 void NSurfaceCoordinateUI::notifySurfaceRenamed() {
     setDirty(true);
+}
+
+void NSurfaceCoordinateUI::updatePreferences() {
+    if (surfaces->allowsSpun())
+        refresh();
 }
 

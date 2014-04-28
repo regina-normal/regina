@@ -42,5 +42,7 @@ void addPermConv() {
     def("perm5to4", regina::perm5to4);
     def("perm3to4", regina::perm3to4);
     def("perm4to3", regina::perm4to3);
+    def("perm3to5", regina::perm3to5);
+    def("perm5to3", regina::perm5to3);
 }
 
