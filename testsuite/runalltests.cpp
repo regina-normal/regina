@@ -145,14 +145,12 @@ bool runAllTests() {
     // Algebra:
     addNBinaryA5(runner);
     addNBinaryS4(runner);
+    addNGroupPresentation(runner);
     addNMarkedAbelianGroup(runner);
     addNBilinearForm(runner);
     // addNMVPolynomialRing(runner); <-- NMVPolynomialRing class not ready yet.
     addNSVPolynomialRing(runner);
     addNCellularData(runner);
-
-    // Algebra:
-    addNGroupPresentation(runner);
 
     // Dim2Triangulation:
     addDim2Triangulation(runner);
