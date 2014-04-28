@@ -40,6 +40,10 @@
 #include "maths/permconv.h"
 #include "triangulation/ntriangulation.h"
 
+// TODO: below include file is only needed for the order() routine.  So if we 
+//  put this in another file, similarly put this include... -ryan
+#include "maths/npartition.h"
+
 namespace regina {
 
 void Dim4Triangulation::calculateSkeleton() const {
@@ -875,5 +879,120 @@ void Dim4Triangulation::calculateEdgeLinks() const {
                 (*it)->invalid_ |= Dim4Edge::INVALID_LINK;
         }
 }
+
+// * * * *  code to convert to ordered delta complex * * * *
+
+Dim4Isomorphism* ordering_iso(const Dim4Triangulation &trig) // , bool force_oriented)
+{
+ // false for remain fixed, true for reverse
+ NPartition edgeOr( trig.getNumberOfEdges(), 0, false );
+ for ( ; !edgeOr.atEnd(); ++edgeOr ) // iterate through all possible edge orientations.
+  { // edgeOr.partition().get(index) is bool..
+   // now we need to check if with these conventions there is a labelling of the
+   // pentachora. 
+   bool validLabel(true);
+   for (unsigned long i=0; i<trig.getNumberOfPentachora(); i++)
+    { // check on the i-th pentachoron.  Maybe form a set of the inbound edge 
+      // count? 
+      std::set< unsigned long > inCount; 
+      // for each vertex we count how many of the incident edges have natural 
+      // orientations inwards. 
+      const Dim4Pentachoron* pen( trig.getPentachoron(i) );
+      for (unsigned long j=0; j<5; j++) // look into vertex j
+       { // and edge between j and j+k
+        unsigned long NUM(0);
+        for (unsigned long k=1; k<5; k++)
+         {
+          const Dim4Edge* edg( pen->getEdge( Dim4Edge::edgeNumber[j][(j+k) % 5] ) );
+          NPerm5 eInc( pen->getEdgeMapping( Dim4Edge::edgeNumber[j][(j+k) % 5] ) );
+          if (eInc[edgeOr.partition().get(trig.edgeIndex(edg)) ? 0 : 1]==j) NUM++;
+         } 
+        inCount.insert(NUM);
+       }
+     if (inCount.size()<5) // invalid! must be exactly 5 distinct inward-pointing edge counts 
+       { validLabel = false; break; }         
+    }
+   if (validLabel)
+    {
+     // we have a valid labelling.  Generate the return permutation. 
+     Dim4Isomorphism* retval( new Dim4Isomorphism( trig.getNumberOfPentachora() ) );
+     for (unsigned long i=0; i<trig.getNumberOfPentachora(); i++)
+      { // determine retval->facetperm(i)
+       std::map< unsigned long, unsigned long > relabel;
+       const Dim4Pentachoron* pen( trig.getPentachoron(i) );
+       for (unsigned long j=0; j<5; j++)
+        {
+         unsigned long NUM(0);
+         for (unsigned long k=1; k<5; k++)
+          {
+           const Dim4Edge* edg( pen->getEdge( Dim4Edge::edgeNumber[j][(j+k)%5] ) );
+           NPerm5 eInc( pen->getEdgeMapping( Dim4Edge::edgeNumber[j][(j+k)%5] ) );
+           if (eInc[edgeOr.partition().get(trig.edgeIndex(edg)) ? 0 : 1]==j) NUM++;
+          }
+         relabel.insert( std::pair< unsigned long, unsigned long >(j, NUM) );
+        }
+       // now relabel should map from vertices to their counts.  Is this retval or
+       // its inverse? 
+       retval->simpImage(i)=i;
+       retval->facetPerm(i)=NPerm5(relabel[0], relabel[1], relabel[2], relabel[3], relabel[4]);
+      }
+     return retval;
+    }
+  }
+ return NULL;
+}
+
+bool Dim4Triangulation::order()
+{
+    if(!calculatedSkeleton_)
+        calculateSkeleton();
+
+    //if(forceOriented && !isOrientable())
+    //    return false;
+
+    // find the isomorphism to order (and orient) the triangulation
+
+    Dim4Isomorphism* iso = ordering_iso(*this); //, forceOriented);
+    if(!iso) return false;
+
+    // apply the isomorphism
+
+    iso -> applyInPlace(this);
+    delete iso;
+
+    // consistency check TODO
+    if(! isOrdered())
+       { std::cout<<"Dim4Triangulation::order() error 1."<<std::endl; exit(1); }
+    //if(forceOriented && ! isOrientable())
+    //   { std::cout<<"Dim4Triangulation::order() error 2."<<std::endl; exit(1); }
+    return true;
+}
+
+bool Dim4Triangulation::isOrdered() const
+{
+ for (unsigned long i=0; i<getNumberOfPentachora(); i++)
+  { // check on the i-th pentachoron.  Maybe form a set of the inbound edge 
+    // count? 
+    std::set< unsigned long > inCount; 
+    // for each vertex we count how many of the incident edges have natural 
+    // orientations inwards. 
+    const Dim4Pentachoron* pen( getPentachoron(i) );
+    for (unsigned long j=0; j<5; j++) // look into vertex j
+     { // and edge between j and j+k
+      unsigned long NUM(0);
+      for (unsigned long k=1; k<5; k++)
+       {
+        const Dim4Edge* edg( pen->getEdge( Dim4Edge::edgeNumber[j][(j+k) % 5] ) );
+        NPerm5 eInc( pen->getEdgeMapping( Dim4Edge::edgeNumber[j][(j+k) % 5] ) );
+          if (eInc[1]==j) NUM++;
+       } 
+      inCount.insert(NUM);
+     }
+    if (inCount.size()<5) // invalid! must be exactly 5 distinct inward-pointing edge counts 
+       return false;          
+  }
+ return true;
+}
+
 
 } // namespace regina
