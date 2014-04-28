@@ -215,33 +215,33 @@ class NSparseGrid {
 	 */
 	virtual ~NSparseGrid();
 
-        /**
-	 * Assignment of bilinear forms.
-         */
-        NSparseGrid& operator = (const NSparseGrid & cloneMe);
+   /**
+    * Assignment of bilinear forms.
+    */
+    NSparseGrid& operator = (const NSparseGrid & cloneMe);
 
 	/**
 	 * Access to the grid map. 
 	 */
 	const std::map< NMultiIndex< unsigned long >, T* > & getGrid() const;
 
-	/**
-	 * sets the entry corresponding to index I to a pointer
-         * to a T type equal to val. If already allocated it
-         * copies val to the currently allocated T in the grid. 
-         */
+    /**
+     * sets the entry corresponding to index I to a pointer
+     * to a T type equal to val. If already allocated it
+     * copies val to the currently allocated T in the grid. 
+     */
 	void setEntry( const NMultiIndex< unsigned long > & I, const T & val );
 
-	/**
-         *  Gives the entry corresponding to index I, the null
-         * pointer if it is not allocated.
-	 */
-        const T* getEntry( const NMultiIndex< unsigned long > & I ) const;
+    /**
+     *  Gives the entry corresponding to index I, the null
+     * pointer if it is not allocated.
+     */
+    const T* getEntry( const NMultiIndex< unsigned long > & I ) const;
 
-        /**
-	 * Lists all elements in the grid.
-	 */
-        void writeTextShort(std::ostream& out) const;
+    /**
+     * Lists all elements in the grid.
+     */
+    void writeTextShort(std::ostream& out) const;
 };
 
 /**
@@ -258,22 +258,22 @@ class NSparseGrid {
  */
 template <class T>
 class NSparseGridRing : public NSparseGrid<T> {
-        public:
+   public:
 
-        NSparseGridRing(unsigned long dim);
+   NSparseGridRing(unsigned long dim);
 
-        NSparseGridRing(const NSparseGridRing & cloneMe);
+   NSparseGridRing(const NSparseGridRing & cloneMe);
 
         /**
          * Overloaded for a val == T::zero safety check.
          */
-        void setEntry( const NMultiIndex< unsigned long > &I, const T &val );
+   void setEntry( const NMultiIndex< unsigned long > &I, const T &val );
 
-	/**
-	 * Increment an entry.  This will allocate the entry if it
-         * is not already allocated, and deallocate if after incrementation
-         * it becomes zero. 
-	 */
+   /**
+    * Increment an entry.  This will allocate the entry if it
+    * is not already allocated, and deallocate if after incrementation
+    * it becomes zero. 
+    */
 	void incEntry( const NMultiIndex< unsigned long > & I, const T & val );
 };
 
