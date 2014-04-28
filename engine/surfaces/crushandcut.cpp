@@ -197,7 +197,13 @@ namespace {
              * be) to the corresponding quadrilateral or hexagon of the
              * adjacent block.
              */
-            void joinTo(int face, Block* other);
+            void joinToAdjacent(int face, Block* other);
+
+            /**
+             * TODO: Document.
+             */
+            void joinAcrossSurface(int facingVertex, int awayFromVertex,
+                Block* other);
 
             /**
              * Creates a new inner tetrahedron within this block.
@@ -585,6 +591,10 @@ namespace {
              * Initialises a new object with the given block.
              */
             CutTri(Block* block);
+
+        friend class TriPrism;
+        friend class TruncHalfTet;
+        friend class TruncTet;
     };
 
     /**
@@ -619,6 +629,9 @@ namespace {
              * Initialises a new object with the given block.
              */
             CutQuad(Block* block);
+
+        friend class QuadPrism;
+        friend class TruncHalfTet;
     };
 
     /**
@@ -759,18 +772,31 @@ namespace {
              * See the data member \a vertexNbd_ for further details.
              */
             NTetrahedron* vertexNbd(int vertex);
+
+            /**
+             * Glues all blocks within this outer tetrahedron together
+             * along the normal surface.  The resulting effect is that we
+             * subdivide the outer tetrahedron into individual blocks
+             * separated by the normal surface, but we do not actually
+             * cut along the surface at all.
+             */
+            void joinInternally();
     };
 
     inline Block::~Block() {
-        unsigned i;
+        unsigned i, j;
         for (i = 0; i < 4; ++i)
             delete bdry_[i];
+        /* TODO: Reinstate this when all CutQuads are built.
         for (i = 0; i < 4; ++i) {
             // Careful!  The same CutBdry object may appear as multiple
             // elements of the cut_[] array.
+            for (j = i + 1; j < 4; ++j)
+                if (cut_[j] == cut_[i])
+                    cut_[j] = 0;
             delete cut_[i];
-            cut_[i] = 0;
         }
+        */
         delete[] innerTet_;
     }
 
@@ -778,8 +804,13 @@ namespace {
         return outerTet_;
     }
 
-    inline void Block::joinTo(int face, Block* other) {
+    inline void Block::joinToAdjacent(int face, Block* other) {
         bdry_[face]->joinTo(other->bdry_[outerTet_->adjacentFace(face)]);
+    }
+
+    inline void Block::joinAcrossSurface(int facingVertex,
+            int awayFromVertex, Block* other) {
+        cut_[facingVertex]->joinTo(other->cut_[awayFromVertex]);
     }
 
     inline NTetrahedron* Block::layeringTetrahedron() {
@@ -812,6 +843,7 @@ namespace {
         NPerm4 vertices = NPerm4(0, type);
 
         OuterQuad* q;
+        CutTri* c;
 
         bdry_[vertices[0]] = 0;
 
@@ -835,6 +867,16 @@ namespace {
         q->innerVertices_[0] = NPerm4(3, 1, 0, 2);
         q->innerVertices_[1] = NPerm4(0, 1, 3, 2);
         bdry_[vertices[3]] = q;
+
+        c = new CutTri(this);
+        c->innerTet_ = innerTet_[0];
+        c->innerVertices_ = NPerm4(1, 3, 2, 0);
+        cut_[type] = c;
+
+        c = new CutTri(this);
+        c->innerTet_ = innerTet_[2];
+        c->innerVertices_ = NPerm4(0, 1, 3, 2);
+        cut_[(type + 1) % 4] = cut_[(type + 2) % 4] = cut_[(type + 3) % 4] = c;
 
         link_[vertices[0]] = innerTet_[0];
         linkVertices_[vertices[0]] = vertices * NPerm4(0, 1, 3, 2);
@@ -1009,6 +1051,28 @@ namespace {
         h->innerVertices_[2] = NPerm4(3, 0, 1, 2);
         h->innerVertices_[3] = NPerm4(3, 1, 0, 2);
         bdry_[3] = h;
+
+        CutTri* c;
+
+        c = new CutTri(this);
+        c->innerTet_ = innerTet_[0];
+        c->innerVertices_ = NPerm4();
+        cut_[0] = c;
+
+        c = new CutTri(this);
+        c->innerTet_ = innerTet_[1];
+        c->innerVertices_ = NPerm4(3, 1, 2, 0);
+        cut_[1] = c;
+
+        c = new CutTri(this);
+        c->innerTet_ = innerTet_[2];
+        c->innerVertices_ = NPerm4(0, 3, 2, 1);
+        cut_[2] = c;
+
+        c = new CutTri(this);
+        c->innerTet_ = innerTet_[3];
+        c->innerVertices_ = NPerm4(0, 1, 3, 2);
+        cut_[3] = c;
 
         link_[0] = innerTet_[0];
         linkVertices_[0] = NPerm4(1, 2, 3, 0);
@@ -1241,6 +1305,8 @@ namespace {
             else
                 truncHalfTet_[1]->attachVertexNbd(vertexNbd_[i], i);
         }
+
+        joinInternally(); // TODO: Make this optional!!!
     }
 
     TetBlockSet::~TetBlockSet() {
@@ -1313,6 +1379,25 @@ namespace {
     inline NTetrahedron* TetBlockSet::vertexNbd(int vertex) {
         return vertexNbd_[vertex];
     }
+
+    void TetBlockSet::joinInternally() {
+        unsigned i, j;
+
+        // Join along normal triangles.
+        for (i = 0; i < 4; ++i)
+            if (triCount_[i]) {
+                for (j = 0; j + 1 < triCount_[i]; ++j)
+                    triPrism_[i][j + 1]->joinAcrossSurface(i, (i + 1) % 4,
+                        triPrism_[i][j]);
+                if (quadCount_)
+                    ; // TODO: Join the last triPrism_ with the right truncTet_.
+                else
+                    truncTet_->joinAcrossSurface(i, (i + 1) % 4,
+                        triPrism_[i][triCount_[i] - 1]);
+            }
+
+        // TODO: Join along normal quadrilaterals.
+    }
 }
 
 // ------------------------------------------------------------------------
@@ -1359,13 +1444,14 @@ NTriangulation* NNormalSurface::cutAlong() const {
 
             quadBlocks = sets[tet0]->numQuadBlocks(face0, fromVertex0);
             for (i = 0; i < quadBlocks; ++i)
-                sets[tet0]->quadBlock(fromVertex0, i)->joinTo(
+                sets[tet0]->quadBlock(fromVertex0, i)->joinToAdjacent(
                     face0, sets[tet1]->quadBlock(fromVertex1, i));
 
             sets[tet0]->vertexNbd(fromVertex0)->joinTo(
                 face0, sets[tet1]->vertexNbd(fromVertex1), gluing);
         }
-        sets[tet0]->hexBlock(face0)->joinTo(face0, sets[tet1]->hexBlock(face1));
+        sets[tet0]->hexBlock(face0)->joinToAdjacent(face0,
+            sets[tet1]->hexBlock(face1));
     }
 
     // All done!  Clean up.
