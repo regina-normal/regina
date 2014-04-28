@@ -903,58 +903,8 @@ class REGINA_API Dim2Triangulation : public NPacket,
          */
         /*@{*/
 
-        /**
-         * Constructs the isomorphism signature for this triangulation.
-         *
-         * An <i>isomorphism signature</i> is a compact text representation of
-         * a triangulation.  Unlike dehydrations for 3-manifold triangulations,
-         * an isomorphism signature uniquely determines a triangulation up
-         * to combinatorial isomorphism.  That is, two 2-manifold
-         * triangulations are combinatorially isomorphic if and only if
-         * their isomorphism signatures are the same.
-         *
-         * The isomorphism signature is constructed entirely of
-         * printable characters, and has length proportional to
-         * <tt>n log n</tt>, where \a n is the number of triangles.
-         *
-         * Isomorphism signatures are more general than dehydrations:
-         * they can be used with any triangulation (including closed,
-         * bounded and/or disconnected triangulations, as well
-         * as triangulations with large numbers of triangles).
-         *
-         * The time required to construct the isomorphism signature of a
-         * triangulation is <tt>O(n^2 log^2 n)</tt>.
-         *
-         * The routine fromIsoSig() can be used to recover a
-         * triangulation from an isomorphism signature.  The triangulation
-         * recovered might not be identical to the original, but it will be
-         * combinatorially isomorphic.
-         *
-         * If \a relabelling is non-null (i.e., it points to some
-         * Dim2Isomorphism pointer \a p), then it will be modified to point
-         * to a new Dim2Isomorphism that describes the precise relationship
-         * between this triangulation and the reconstruction from fromIsoSig().
-         * Specifically, the triangulation that is reconstructed from
-         * fromIsoSig() will be combinatorially identical to
-         * <tt>relabelling.apply(this)</tt>.
-         *
-         * \ifacespython The isomorphism argument is not present.
-         * Instead there are two routines: fromIsoSig(), which returns a
-         * string only, and fromIsoSigDetail(), which returns a pair
-         * (signature, relabelling).
-         *
-         * \pre If \a relabelling is non-null, then this triangulation
-         * must be non-empty and connected.  The facility to return a
-         * relabelling for disconnected triangulations may be added to
-         * Regina in a later release.
-         *
-         * @param relabelling if non-null, this will be modified to point to a
-         * new isomorphism describing the relationship between this
-         * triangulation and that reconstructed from fromIsoSig(), as
-         * described above.
-         * @return the isomorphism signature of this triangulation.
-         */
-        std::string isoSig(Dim2Isomorphism** relabelling = 0) const;
+        using NGenericTriangulation<2>::isoSig;
+
         /**
          * Returns C++ code that can be used with insertConstruction()
          * to reconstruct this triangulation.
@@ -983,26 +933,7 @@ class REGINA_API Dim2Triangulation : public NPacket,
          */
         /*@{*/
 
-        /**
-         * Recovers a full triangulation from an isomorphism signature.
-         * See isoSig() for more information on isomorphism signatures.
-         *
-         * The triangulation that is returned will be newly created.
-         *
-         * Calling isoSig() followed by fromIsoSig() is not guaranteed to
-         * produce an identical triangulation to the original, but it
-         * \e is guaranteed to produce a combinatorially isomorphic
-         * triangulation.
-         *
-         * @param signature the isomorphism signature of the
-         * triangulation to construct.  Note that, unlike dehydration
-         * strings for 3-manifold triangulations, case is important for
-         * isomorphism signatures.
-         * @return a newly allocated triangulation if the reconstruction was
-         * successful, or null if the given string was not a valid
-         * isomorphism signature.
-         */
-        static Dim2Triangulation* fromIsoSig(const std::string& signature);
+        using NGenericTriangulation<2>::fromIsoSig;
         using NGenericTriangulation<2>::isoSigComponentSize;
 
         /*@}*/
@@ -1428,16 +1359,6 @@ inline bool Dim2Triangulation::isConnected() const {
 
 inline NPacket* Dim2Triangulation::internalClonePacket(NPacket*) const {
     return new Dim2Triangulation(*this);
-}
-
-inline std::string Dim2Triangulation::isoSig(Dim2Isomorphism** relabelling)
-        const {
-    return NGenericTriangulation<2>::isoSig(*this, relabelling);
-}
-
-inline Dim2Triangulation* Dim2Triangulation::fromIsoSig(
-        const std::string& signature) {
-    return NGenericTriangulation<2>::fromIsoSig(signature);
 }
 
 } // namespace regina

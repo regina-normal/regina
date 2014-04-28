@@ -2953,6 +2953,8 @@ class REGINA_API NTriangulation : public NPacket,
          */
         /*@{*/
 
+        using NGenericTriangulation<3>::isoSig;
+
         /**
          * Dehydrates this triangulation into an alphabetical string.
          *
@@ -2994,64 +2996,7 @@ class REGINA_API NTriangulation : public NPacket,
          * @see insertRehydration
          */
         std::string dehydrate() const;
-        /**
-         * Constructs the isomorphism signature for this triangulation.
-         *
-         * An <i>isomorphism signature</i> is a compact text representation
-         * of a triangulation.  Unlike dehydrations, an isomorphism signature
-         * uniquely determines a triangulation up to combinatorial isomorphism.
-         * That is, two triangulations are combinatorially isomorphic if
-         * and only if their isomorphism signatures are the same.
-         *
-         * The isomorphism signature is constructed entirely of
-         * printable characters, and has length proportional to
-         * <tt>n log n</tt>, where \a n is the number of tetrahedra.
-         *
-         * Isomorphism signatures are more general than dehydrations:
-         * they can be used with any triangulation (including closed, ideal,
-         * bounded, invalid and/or disconnected triangulations, as well
-         * as triangulations with large numbers of tetrahedra).
-         *
-         * The time required to construct the isomorphism signature of a
-         * triangulation is <tt>O(n^2 log^2 n)</tt>.
-         *
-         * The routine fromIsoSig() can be used to recover a
-         * triangulation from an isomorphism signature.  The triangulation
-         * recovered might not be identical to the original, but it will be
-         * combinatorially isomorphic.
-         *
-         * If \a relabelling is non-null (i.e., it points to some
-         * NIsomorphism pointer \a p), then it will be modified to point
-         * to a new NIsomorphism that describes the precise relationship
-         * between this triangulation and the reconstruction from fromIsoSig().
-         * Specifically, the triangulation that is reconstructed from
-         * fromIsoSig() will be combinatorially identical to
-         * <tt>relabelling.apply(this)</tt>.
-         *
-         * For a full and precise description of the isomorphism signature
-         * format, see <i>Simplification paths in the Pachner graphs of
-         * closed orientable 3-manifold triangulations</i>, Burton, 2011,
-         * <tt>arXiv:1110.6080</tt>.
-         *
-         * \ifacespython The isomorphism argument is not present.
-         * Instead there are two routines: fromIsoSig(), which returns a
-         * string only, and fromIsoSigDetail(), which returns a pair
-         * (signature, relabelling).
-         *
-         * \pre If \a relabelling is non-null, then this triangulation
-         * must be non-empty and connected.  The facility to return a
-         * relabelling for disconnected triangulations may be added to
-         * Regina in a later release.
-         *
-         * @param relabelling if non-null, this will be modified to point to a
-         * new isomorphism describing the relationship between this
-         * triangulation and that reconstructed from fromIsoSig(), as
-         * described above.
-         * @return the isomorphism signature of this triangulation.
-         *
-         * @see fromIsoSig
-         */
-        std::string isoSig(NIsomorphism** relabelling = 0) const;
+
         /**
          * Returns C++ code that can be used with insertConstruction()
          * to reconstruct this triangulation.
@@ -3073,6 +3018,7 @@ class REGINA_API NTriangulation : public NPacket,
          * @return the C++ code that was generated.
          */
         std::string dumpConstruction() const;
+
         /**
          * Returns a string containing the full contents of a SnapPea
          * data file that describes this triangulation.  This string
@@ -3145,31 +3091,10 @@ class REGINA_API NTriangulation : public NPacket,
          * @see insertRehydration
          */
         static NTriangulation* rehydrate(const std::string& dehydration);
-        /**
-         * Recovers a full triangulation from an isomorphism signature.
-         * See isoSig() for more information on isomorphism signatures.
-         *
-         * The triangulation that is returned will be newly created.
-         *
-         * Calling isoSig() followed by fromIsoSig() is not guaranteed to
-         * produce an identical triangulation to the original, but it
-         * \e is guaranteed to produce a combinatorially isomorphic
-         * triangulation.
-         *
-         * For a full and precise description of the isomorphism signature
-         * format, see <i>Simplification paths in the Pachner graphs of
-         * closed orientable 3-manifold triangulations</i>, Burton, 2011,
-         * <tt>arXiv:1110.6080</tt>.
-         *
-         * @param signature the isomorphism signature of the
-         * triangulation to construct.  Note that, unlike dehydration
-         * strings, case is important for isomorphism signatures.
-         * @return a newly allocated triangulation if the reconstruction was
-         * successful, or null if the given string was not a valid
-         * isomorphism signature.
-         */
-        static NTriangulation* fromIsoSig(const std::string& signature);
+
+        using NGenericTriangulation<3>::fromIsoSig;
         using NGenericTriangulation<3>::isoSigComponentSize;
+
         /**
          * Extracts a triangulation from a string that contains the
          * full contents of a SnapPea data file.  This routine could,
@@ -3806,15 +3731,6 @@ inline const NTriangulation::TuraevViroSet&
 inline void NTriangulation::writeTextShort(std::ostream& out) const {
     out << "Triangulation with " << tetrahedra.size()
         << (tetrahedra.size() == 1 ? " tetrahedron" : " tetrahedra");
-}
-
-inline std::string NTriangulation::isoSig(NIsomorphism** relabelling) const {
-    return NGenericTriangulation<3>::isoSig(*this, relabelling);
-}
-
-inline NTriangulation* NTriangulation::fromIsoSig(
-        const std::string& signature) {
-    return NGenericTriangulation<3>::fromIsoSig(signature);
 }
 
 } // namespace regina

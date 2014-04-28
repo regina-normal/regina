@@ -81,6 +81,11 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
 
     public:
         /**
+         * \name Isomorphism Testing
+         */
+        /*@{*/
+
+        /**
          * Determines if this triangulation is combinatorially identical
          * to the given triangulation.
          *
@@ -248,9 +253,14 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
             const typename DimTraits<dim>::Triangulation& other,
             std::list<typename DimTraits<dim>::Isomorphism*>& results) const;
 
-    protected:
+        /*@}*/
         /**
-         * Constructs the isomorphism signature for the given triangulation.
+         * \name Exporting Triangulations
+         */
+        /*@{*/
+
+        /**
+         * Constructs the isomorphism signature for this triangulation.
          *
          * An <i>isomorphism signature</i> is a compact text representation of
          * a triangulation.  Unlike dehydrations for 3-manifold triangulations,
@@ -285,6 +295,18 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * fromIsoSig() will be combinatorially identical to
          * <tt>relabelling.apply(this)</tt>.
          *
+         * For a full and precise description of the isomorphism signature
+         * format for 3-manifold triangulations, see <i>Simplification paths
+         * in the Pachner graphs of closed orientable 3-manifold
+         * triangulations</i>, Burton, 2011, <tt>arXiv:1110.6080</tt>.
+         * The format for other dimensions is essentially the same, but with
+         * minor dimension-specific adjustments.
+         *
+         * \ifacespython The isomorphism argument is not present.
+         * Instead there are two routines: fromIsoSig(), which returns a
+         * string only, and fromIsoSigDetail(), which returns a pair
+         * (signature, relabelling).
+         *
          * \pre If \a relabelling is non-null, then this triangulation
          * must be non-empty and connected.  The facility to return a
          * relabelling for disconnected triangulations may be added to
@@ -295,17 +317,20 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * \a p-dimensional triangulation and a \a q-dimensional triangulation
          * for different \a p and \a q.
          *
-         * @param tri the triangulation whose isomorphism signature will be
-         * computed.
          * @param relabelling if non-null, this will be modified to point to a
          * new isomorphism describing the relationship between this
          * triangulation and that reconstructed from fromIsoSig(), as
          * described above.
-         * @return the isomorphism signature of the given triangulation.
+         * @return the isomorphism signature of this triangulation.
          */
-        static std::string isoSig(
-            const typename DimTraits<dim>::Triangulation& tri,
-            typename DimTraits<dim>::Isomorphism** relabelling = 0);
+        std::string isoSig(
+            typename DimTraits<dim>::Isomorphism** relabelling = 0) const;
+
+        /*@}*/
+        /**
+         * \name Importing Triangulations
+         */
+        /*@{*/
 
         /**
          * Recovers a full triangulation from an isomorphism signature.
@@ -320,6 +345,13 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * produce an identical triangulation to the original, but it
          * \e is guaranteed to produce a combinatorially isomorphic
          * triangulation.
+         *
+         * For a full and precise description of the isomorphism signature
+         * format for 3-manifold triangulations, see <i>Simplification paths
+         * in the Pachner graphs of closed orientable 3-manifold
+         * triangulations</i>, Burton, 2011, <tt>arXiv:1110.6080</tt>.
+         * The format for other dimensions is essentially the same, but with
+         * minor dimension-specific adjustments.
          *
          * \warning Do not mix isomorphism signatures between dimensions!
          * It is possible that the same string could corresponding to both a
@@ -378,6 +410,8 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          */
         static size_t isoSigComponentSize(const std::string& sig);
 
+        /*@}*/
+
     private:
         /**
          * Internal to isoSig().
@@ -396,7 +430,7 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * for the correct number of simplices.
          * @return the candidate isomorphism signature.
          */
-        static std::string isoSig(
+        static std::string isoSigFrom(
             const typename DimTraits<dim>::Triangulation& tri,
             unsigned simp,
             const typename DimTraits<dim>::Perm& vertices,
