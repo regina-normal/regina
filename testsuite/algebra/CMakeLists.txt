@@ -6,6 +6,7 @@ SET ( FILES
   nbinarya5
   nbinarys4
   ncellulardata
+  ngrouppresentation
   nmarkedabeliangroup
   nmvpolynomialring
   nsvpolynomialring

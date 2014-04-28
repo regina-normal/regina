@@ -151,7 +151,10 @@ bool runAllTests() {
     addNSVPolynomialRing(runner);
     addNCellularData(runner);
 
-    // Dim2riangulation:
+    // Algebra:
+    addNGroupPresentation(runner);
+
+    // Dim2Triangulation:
     addDim2Triangulation(runner);
 
     // Triangulation:
