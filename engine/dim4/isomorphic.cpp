@@ -57,12 +57,6 @@ std::auto_ptr<Dim4Isomorphism> Dim4Triangulation::isContainedIn(
         return std::auto_ptr<Dim4Isomorphism>(0);
 }
 
-unsigned long Dim4Triangulation::findAllSubcomplexesIn(
-        const Dim4Triangulation& other, std::list<Dim4Isomorphism*>& results)
-        const {
-    return findIsomorphisms(other, results, false, false);
-}
-
 unsigned long Dim4Triangulation::findIsomorphisms(
         const Dim4Triangulation& other, std::list<Dim4Isomorphism*>& results,
         bool completeIsomorphism, bool firstOnly) const {
