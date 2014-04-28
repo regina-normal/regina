@@ -160,6 +160,7 @@ void addNNormalSurface() {
         .def("writeRawVector", writeRawVector_stdio)
         .def("isEmpty", &NNormalSurface::isEmpty)
         .def("isCompact", &NNormalSurface::isCompact)
+        .def("getEulerChar", &NNormalSurface::getEulerChar)
         .def("getEulerCharacteristic", &NNormalSurface::getEulerCharacteristic)
         .def("isOrientable", &NNormalSurface::isOrientable)
         .def("isTwoSided", &NNormalSurface::isTwoSided)

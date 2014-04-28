@@ -50,6 +50,7 @@ class NCensusTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(rawCountsPrimeMinimalOr);
     CPPUNIT_TEST(rawCountsPrimeMinimalNor);
     CPPUNIT_TEST(rawCountsBounded);
+    CPPUNIT_TEST(rawCountsHypMin);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -104,6 +105,20 @@ class NCensusTest : public CppUnit::TestFixture {
             unsigned nOrientable[] = { 1, 3, 14, 120, 1531 };
             rawCountsCompare(1, 3, nOrientable, "bounded compact orbl",
                 NBoolSet::sTrue, NBoolSet::sTrue, NBoolSet::sTrue, -1, 0, 0);
+        }
+
+        void rawCountsHypMin() {
+            // Enforced: all vertices torus/KB, no low-degree edges.
+            unsigned nAll[] = { 1, 1, 7, 31, 224, 1075, 6348 };
+            rawCountsCompare(1, 4, nAll, "candidate minimal cusped hyperbolic",
+                NBoolSet::sFalse, NBoolSet::sBoth, NBoolSet::sFalse, -1,
+                NCensus::PURGE_NON_MINIMAL_HYP, 0);
+
+            unsigned nOrientable[] = { 1, 0, 3, 14, 113, 590, 3481 };
+            rawCountsCompare(1, 5, nOrientable,
+                "candidate minimal cusped hyperbolic orbl",
+                NBoolSet::sFalse, NBoolSet::sTrue, NBoolSet::sFalse, -1,
+                NCensus::PURGE_NON_MINIMAL_HYP, 0);
         }
 
         static void rawCountsCompare(unsigned minTets, unsigned maxTets,

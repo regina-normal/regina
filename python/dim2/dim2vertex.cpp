@@ -64,6 +64,8 @@ void addDim2Vertex() {
             return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim2VertexEmbedding::getVertex)
         .def("getVertices", &Dim2VertexEmbedding::getVertices)
+        .def(self == self)
+        .def(self != self)
     ;
 
     scope s = class_<Dim2Vertex, bases<regina::ShareableObject>,

@@ -130,6 +130,26 @@ class REGINA_API Dim2VertexEmbedding {
          * vertex number of getTriangle().
          */
         NPerm3 getVertices() const;
+
+        /**
+         * Tests whether this and the given embedding are identical.
+         * Here "identical" means that they refer to the same vertex of
+         * the same triangle.
+         *
+         * @param rhs the embedding to compare with this.
+         * @return \c true if and only if both embeddings are identical.
+         */
+        bool operator == (const Dim2VertexEmbedding& rhs) const;
+
+        /**
+         * Tests whether this and the given embedding are different.
+         * Here "different" means that they do not refer to the same vertex of
+         * the same triangle.
+         *
+         * @param rhs the embedding to compare with this.
+         * @return \c true if and only if both embeddings are identical.
+         */
+        bool operator != (const Dim2VertexEmbedding& rhs) const;
 };
 
 /**
@@ -273,6 +293,16 @@ inline Dim2Triangle* Dim2VertexEmbedding::getTriangle() const {
 
 inline int Dim2VertexEmbedding::getVertex() const {
     return vertex_;
+}
+
+inline bool Dim2VertexEmbedding::operator == (const Dim2VertexEmbedding& other)
+        const {
+    return ((triangle_ == other.triangle_) && (vertex_ == other.vertex_));
+}
+
+inline bool Dim2VertexEmbedding::operator != (const Dim2VertexEmbedding& other)
+        const {
+    return ((triangle_ != other.triangle_) || (vertex_ != other.vertex_));
 }
 
 // Inline functions for Dim2Vertex
