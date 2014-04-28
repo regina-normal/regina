@@ -118,6 +118,32 @@ void NTriangulation::addTetrahedron(NTetrahedron* t) {
     clearAllProperties();
 }
 
+bool NTriangulation::isIdenticalTo(const NTriangulation& other) const {
+    if (tetrahedra.size() != other.tetrahedra.size())
+        return false;
+
+    unsigned long i;
+    unsigned j;
+    for (i = 0; i < tetrahedra.size(); ++i)
+        for (j = 0; j < 4; ++j) {
+            if (tetrahedra[i]->adjacentTetrahedron(j)) {
+                if (! other.tetrahedra[i]->adjacentTetrahedron(j))
+                    return false;
+                if (tetrahedra[i]->adjacentTetrahedron(j)->markedIndex() !=
+                        other.tetrahedra[i]->adjacentTetrahedron(j)->markedIndex())
+                    return false;
+                if (tetrahedra[i]->adjacentGluing(j) !=
+                        other.tetrahedra[i]->adjacentGluing(j))
+                    return false;
+            } else {
+                if (other.tetrahedra[i]->adjacentTetrahedron(j))
+                    return false;
+            }
+        }
+
+    return true;
+}
+
 void NTriangulation::swapContents(NTriangulation& other) {
     ChangeEventSpan span1(this);
     ChangeEventSpan span2(&other);
@@ -455,7 +481,7 @@ long NTriangulation::getEulerCharManifold() const {
     for (BoundaryComponentIterator it = boundaryComponents.begin();
             it != boundaryComponents.end(); ++it)
         if ((*it)->isIdeal())
-            ans += (*it)->getEulerCharacteristic() - 1;
+            ans += (*it)->getEulerChar() - 1;
 
     // If we have an invalid triangulation, we need to locate non-standard
     // boundary vertices and invalid edges, and truncate those unwanted bits
@@ -463,7 +489,7 @@ long NTriangulation::getEulerCharManifold() const {
     if (! valid) {
         for (VertexIterator it = vertices.begin(); it != vertices.end(); ++it)
             if ((*it)->getLink() == NVertex::NON_STANDARD_BDRY)
-                ans += (*it)->getLinkEulerCharacteristic() - 1;
+                ans += (*it)->getLinkEulerChar() - 1;
         for (EdgeIterator it = edges.begin(); it != edges.end(); ++it)
             if (! (*it)->isValid())
                 ++ans;

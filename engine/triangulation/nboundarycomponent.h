@@ -62,7 +62,7 @@ class NVertex;
 /**
  * Represents a component of the boundary of a triangulation.
  * Note that an ideal vertex constitutes a boundary component of its
- * own. 
+ * own.
  *
  * We can run into some interesting cases with invalid triangulations.
  * Suppose some vertex link is a multiply punctured surface (which makes
@@ -205,6 +205,20 @@ class REGINA_API NBoundaryComponent :
          *
          * @return the Euler characteristic.
          */
+        long getEulerChar() const;
+
+        /**
+         * A deprecated alias for getEulerChar().
+         *
+         * Returns the Euler characteristic of this boundary component.
+         * If this boundary component is ideal, the Euler characteristic
+         * of the link of the corresponding ideal vertex is returned.
+         *
+         * \deprecated This routine will be removed in a future version of
+         * Regina.  Please use the identical routine getEulerChar() instead.
+         *
+         * @return the Euler characteristic.
+         */
         long getEulerCharacteristic() const;
 
         /**
@@ -219,7 +233,7 @@ class REGINA_API NBoundaryComponent :
 
         /**
          * Determines if this boundary component is orientable.
-         * If the boundary component is ideal, the orientability 
+         * If the boundary component is ideal, the orientability
          * of the link of the corresponding ideal vertex is returned.
          *
          * @return \c true if and only if this boundary component is
@@ -302,10 +316,14 @@ inline NVertex* NBoundaryComponent::getVertex(unsigned long index) const {
     return vertices[index];
 }
 
-inline long NBoundaryComponent::getEulerCharacteristic() const {
+inline long NBoundaryComponent::getEulerChar() const {
     return (isIdeal() ?
-        vertices.front()->getLinkEulerCharacteristic() :
+        vertices.front()->getLinkEulerChar() :
         long(vertices.size()) - long(edges.size()) + long(triangles.size()));
+}
+
+inline long NBoundaryComponent::getEulerCharacteristic() const {
+    return getEulerChar();
 }
 
 inline bool NBoundaryComponent::isIdeal() const {
@@ -315,7 +333,7 @@ inline bool NBoundaryComponent::isIdeal() const {
 inline bool NBoundaryComponent::isOrientable() const {
     return orientable;
 }
-        
+
 inline void NBoundaryComponent::writeTextShort(std::ostream& out) const {
     out << (isIdeal() ? "Ideal " : "Finite ") << "boundary component";
 }

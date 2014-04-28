@@ -345,7 +345,7 @@ void NNormalSurface::calculateOctPosition() const {
     return;
 }
 
-void NNormalSurface::calculateEulerCharacteristic() const {
+void NNormalSurface::calculateEulerChar() const {
     unsigned long index, tot;
     int type;
     NLargeInteger ans = NLargeInteger::zero;
@@ -436,7 +436,7 @@ NMatrixInt* NNormalSurface::boundarySlopes() const {
             return 0;
         if (! (*it)->isLinkOrientable())
             return 0;
-        if ((*it)->getLinkEulerCharacteristic() != 0)
+        if ((*it)->getLinkEulerChar() != 0)
             return 0;
     }
 

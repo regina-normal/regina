@@ -135,6 +135,26 @@ class REGINA_API NVertexEmbedding {
          * is this vertex.
          */
         NPerm4 getVertices() const;
+
+        /**
+         * Tests whether this and the given embedding are identical.
+         * Here "identical" means that they refer to the same vertex of
+         * the same tetrahedron.
+         *
+         * @param rhs the embedding to compare with this.
+         * @return \c true if and only if both embeddings are identical.
+         */
+        bool operator == (const NVertexEmbedding& rhs) const;
+
+        /**
+         * Tests whether this and the given embedding are different.
+         * Here "different" means that they do not refer to the same vertex of
+         * the same tetrahedron.
+         *
+         * @param rhs the embedding to compare with this.
+         * @return \c true if and only if both embeddings are identical.
+         */
+        bool operator != (const NVertexEmbedding& rhs) const;
 };
 
 /**
@@ -174,7 +194,7 @@ class REGINA_API NVertex : public ShareableObject, public NMarkedElement {
                  predefined vertex link constants in NVertex. */
         bool linkOrientable;
             /**< Specifies whether the vertex link is orientable. */
-        long linkEulerCharacteristic;
+        long linkEulerChar;
             /**< Specifies the Euler characteristic of the vertex link. */
         Dim2Triangulation* linkTri;
             /**< A triangulation of the vertex link.  This will only be
@@ -423,6 +443,22 @@ class REGINA_API NVertex : public ShareableObject, public NMarkedElement {
          *
          * @return the Euler characteristic of the vertex link.
          */
+        long getLinkEulerChar() const;
+
+        /**
+         * A deprecated alias for getLinkEulerChar().
+         *
+         * Returns the Euler characteristic of the vertex link.
+         *
+         * This routine does not require a full triangulation of the
+         * vertex link, and so can be much faster than calling
+         * buildLink().getEulerChar().
+         *
+         * \deprecated This routine will be removed in a future version of
+         * Regina.  Please use the identical routine getLinkEulerChar() instead.
+         *
+         * @return the Euler characteristic of the vertex link.
+         */
         long getLinkEulerCharacteristic() const;
 
         void writeTextShort(std::ostream& out) const;
@@ -453,7 +489,7 @@ namespace regina {
 
 inline NVertex::NVertex(NComponent* myComponent) : component(myComponent),
         boundaryComponent(0), linkOrientable(true),
-        linkEulerCharacteristic(0), linkTri(0) {
+        linkEulerChar(0), linkTri(0) {
 }
 
 inline NTriangulation* NVertex::getTriangulation() const {
@@ -506,8 +542,12 @@ inline bool NVertex::isLinkOrientable() const {
     return linkOrientable;
 }
 
+inline long NVertex::getLinkEulerChar() const {
+    return linkEulerChar;
+}
+
 inline long NVertex::getLinkEulerCharacteristic() const {
-    return linkEulerCharacteristic;
+    return linkEulerChar;
 }
 
 inline const std::vector<NVertexEmbedding>& NVertex::getEmbeddings() const {
@@ -551,6 +591,16 @@ inline int NVertexEmbedding::getVertex() const {
 
 inline NPerm4 NVertexEmbedding::getVertices() const {
     return tetrahedron->getVertexMapping(vertex);
+}
+
+inline bool NVertexEmbedding::operator == (const NVertexEmbedding& other)
+        const {
+    return ((tetrahedron == other.tetrahedron) && (vertex == other.vertex));
+}
+
+inline bool NVertexEmbedding::operator != (const NVertexEmbedding& other)
+        const {
+    return ((tetrahedron != other.tetrahedron) || (vertex != other.vertex));
 }
 
 } // namespace regina

@@ -57,6 +57,7 @@ void addNBoundaryComponent() {
             return_value_policy<reference_existing_object>())
         .def("getVertex", &NBoundaryComponent::getVertex,
             return_value_policy<reference_existing_object>())
+        .def("getEulerChar", &NBoundaryComponent::getEulerChar)
         .def("getEulerCharacteristic",
             &NBoundaryComponent::getEulerCharacteristic)
         .def("isIdeal", &NBoundaryComponent::isIdeal)
