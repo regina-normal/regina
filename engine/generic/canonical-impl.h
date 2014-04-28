@@ -32,16 +32,15 @@
 
 /* end stub */
 
-#include "dim2/dim2isomorphism.h"
-#include "dim2/dim2triangulation.h"
+#include "generic/ngenerictriangulation.h"
 
 namespace regina {
 
 namespace {
     /**
      * For internal use by makeCanonical().  This routines assumes that
-     * the preimage of triangle 0 has been fixed (along with the
-     * corresponding edge permutation), and tries to extend
+     * the preimage of simplex 0 has been fixed (along with the
+     * corresponding vertex permutation), and tries to extend
      * this to a "possibly canonical" isomorphism.
      *
      * If it becomes clear that the isomorphism cannot be made canonical
@@ -54,70 +53,71 @@ namespace {
      *
      * This routine currently only works for connected triangulations.
      */
-    bool extendIsomorphism(const Dim2Triangulation* tri,
-            Dim2Isomorphism& current, Dim2Isomorphism& currentInv,
-            const Dim2Isomorphism& best, const Dim2Isomorphism& bestInv) {
+    template <int dim>
+    bool extendIsomorphism(
+            const typename DimTraits<dim>::Triangulation* tri,
+            typename DimTraits<dim>::Isomorphism& current,
+            typename DimTraits<dim>::Isomorphism& currentInv,
+            const typename DimTraits<dim>::Isomorphism& best,
+            const typename DimTraits<dim>::Isomorphism& bestInv) {
         bool better = false;
 
-        unsigned nTriangles = tri->getNumberOfTriangles();
-        unsigned triangle;
+        unsigned nSimp = tri->getNumberOfSimplices();
+        unsigned simplex;
 
-        for (triangle = 0; triangle < nTriangles; ++triangle)
-            if (triangle != currentInv.simpImage(0))
-                current.simpImage(triangle) = -1;
+        for (simplex = 0; simplex < nSimp; ++simplex)
+            if (simplex != currentInv.simpImage(0))
+                current.simpImage(simplex) = -1;
 
-        int edge;
+        int facet;
 
         unsigned origTri, origTriBest;
-        int origEdge, origEdgeBest;
+        int origFacet, origFacetBest;
 
-        Dim2Triangle *adjTri, *adjTriBest;
+        typename DimTraits<dim>::Simplex *adjTri, *adjTriBest;
         unsigned adjTriIndex, adjTriIndexBest;
         unsigned finalImage, finalImageBest;
 
-        NPerm3 gluingPerm, gluingPermBest;
-        NPerm3 finalGluing, finalGluingBest;
+        typename DimTraits<dim>::Perm gluingPerm, gluingPermBest;
+        typename DimTraits<dim>::Perm finalGluing, finalGluingBest;
         int comp;
 
         bool justAssigned;
         unsigned lastAssigned = 0;
-        for (triangle = 0; triangle < nTriangles; ++triangle) {
-            // INV: We have already selected the preimage of triangle and
-            // the corresponding edge permutation by the time we reach
+        for (simplex = 0; simplex < nSimp; ++simplex) {
+            // INV: We have already selected the preimage of simplex and
+            // the corresponding facet permutation by the time we reach
             // this point.
-            origTri = currentInv.simpImage(triangle);
-            origTriBest = bestInv.simpImage(triangle);
+            origTri = currentInv.simpImage(simplex);
+            origTriBest = bestInv.simpImage(simplex);
 
-            for (edge = 0; edge < 3; ++edge) {
-                origEdge = current.facetPerm(origTri).preImageOf(edge);
-                origEdgeBest = best.facetPerm(origTriBest).preImageOf(edge);
+            for (facet = 0; facet <= dim; ++facet) {
+                origFacet = current.facetPerm(origTri).preImageOf(facet);
+                origFacetBest = best.facetPerm(origTriBest).preImageOf(facet);
 
-                // Check out the adjacency along triangle/edge.
-                adjTri = tri->getTriangle(origTri)->adjacentTriangle(
-                    origEdge);
-                adjTriIndex = (adjTri ?
-                    tri->triangleIndex(adjTri) : nTriangles);
-                adjTriBest = tri->getTriangle(origTriBest)->
-                    adjacentTriangle(origEdgeBest);
+                // Check out the adjacency along simplex/facet.
+                adjTri = tri->getSimplex(origTri)->adjacentSimplex(origFacet);
+                adjTriIndex = (adjTri ? tri->simplexIndex(adjTri) : nSimp);
+                adjTriBest = tri->getSimplex(origTriBest)->
+                    adjacentSimplex(origFacetBest);
                 adjTriIndexBest = (adjTriBest ?
-                    tri->triangleIndex(adjTriBest) : nTriangles);
+                    tri->simplexIndex(adjTriBest) : nSimp);
 
                 justAssigned = false;
                 if (adjTri && current.simpImage(adjTriIndex) < 0) {
-                    // We have a new triangle that needs assignment.
+                    // We have a new simplex that needs assignment.
                     ++lastAssigned;
                     current.simpImage(adjTriIndex) = lastAssigned;
                     currentInv.simpImage(lastAssigned) = adjTriIndex;
                     justAssigned = true;
                 }
 
-                finalImage = (adjTri ?
-                    current.simpImage(adjTriIndex) : nTriangles);
+                finalImage = (adjTri ? current.simpImage(adjTriIndex) : nSimp);
                 finalImageBest = (adjTriBest ?
-                    best.simpImage(adjTriIndexBest) : nTriangles);
+                    best.simpImage(adjTriIndexBest) : nSimp);
 
                 // We now have a gluing (but possibly not a gluing
-                // permutation).  Compare adjacent triangle indices.
+                // permutation).  Compare adjacent simplex indices.
                 if ((! better) && finalImage > finalImageBest)
                     return false; // Worse than best-so-far.
                 if (finalImage < finalImageBest)
@@ -127,10 +127,10 @@ namespace {
                 if (! adjTri)
                     continue;
 
-                gluingPerm = tri->getTriangle(origTri)->adjacentGluing(
-                    origEdge);
-                gluingPermBest = tri->getTriangle(origTriBest)->
-                    adjacentGluing(origEdgeBest);
+                gluingPerm = tri->getSimplex(origTri)->adjacentGluing(
+                    origFacet);
+                gluingPermBest = tri->getSimplex(origTriBest)->
+                    adjacentGluing(origFacetBest);
 
                 if (justAssigned) {
                     // We can choose the permutation ourselves.
@@ -167,39 +167,45 @@ namespace {
     }
 }
 
-bool Dim2Triangulation::makeCanonical() {
-    unsigned nTriangles = getNumberOfTriangles();
+template <int dim>
+bool NGenericTriangulation<dim>::makeCanonical() {
+    typename DimTraits<dim>::Triangulation* me =
+        static_cast<typename DimTraits<dim>::Triangulation*>(this);
+
+    typedef typename DimTraits<dim>::Perm Perm;
+    unsigned nSimp = me->getNumberOfSimplices();
 
     // Get the empty triangulation out of the way.
-    if (nTriangles == 0)
+    if (nSimp == 0)
         return false;
 
     // Prepare to search for isomorphisms.
-    Dim2Isomorphism current(nTriangles), currentInv(nTriangles);
-    Dim2Isomorphism best(nTriangles), bestInv(nTriangles);
+    typename DimTraits<dim>::Isomorphism current(nSimp), currentInv(nSimp);
+    typename DimTraits<dim>::Isomorphism best(nSimp), bestInv(nSimp);
 
     // The thing to best is the identity isomorphism.
-    unsigned tri, inner;
-    for (tri = 0; tri < nTriangles; ++tri) {
-        best.simpImage(tri) = bestInv.simpImage(tri) = tri;
-        best.facetPerm(tri) = bestInv.facetPerm(tri) = NPerm3();
+    unsigned simp, inner;
+    for (simp = 0; simp < nSimp; ++simp) {
+        best.simpImage(simp) = bestInv.simpImage(simp) = simp;
+        best.facetPerm(simp) = bestInv.facetPerm(simp) = Perm();
     }
 
-    // Run through potential preimages of triangle 0.
+    // Run through potential preimages of simplex 0.
     int perm;
-    for (tri = 0; tri < nTriangles; ++tri) {
-        for (perm = 0; perm < 6; ++perm) {
+    for (simp = 0; simp < nSimp; ++simp) {
+        for (perm = 0; perm < Perm::nPerms; ++perm) {
             // Build a "perhaps canonical" isomorphism based on this
-            // preimage of triangle 0.
-            current.simpImage(tri) = 0;
-            currentInv.simpImage(0) = tri;
+            // preimage of simplex 0.
+            current.simpImage(simp) = 0;
+            currentInv.simpImage(0) = simp;
 
-            current.facetPerm(tri) = NPerm3::S3[NPerm3::invS3[perm]];
-            currentInv.facetPerm(0) = NPerm3::S3[perm];
+            current.facetPerm(simp) = Perm::Sn[Perm::invSn[perm]];
+            currentInv.facetPerm(0) = Perm::Sn[perm];
 
-            if (extendIsomorphism(this, current, currentInv, best, bestInv)) {
+            if (extendIsomorphism<dim>(me, current, currentInv,
+                    best, bestInv)) {
                 // This is better than anything we've seen before.
-                for (inner = 0; inner < nTriangles; ++inner) {
+                for (inner = 0; inner < nSimp; ++inner) {
                     best.simpImage(inner) = current.simpImage(inner);
                     best.facetPerm(inner) = current.facetPerm(inner);
                     bestInv.simpImage(inner) = currentInv.simpImage(inner);
@@ -214,7 +220,7 @@ bool Dim2Triangulation::makeCanonical() {
         return false;
 
     // Do it.
-    best.applyInPlace(this);
+    best.applyInPlace(me);
     return true;
 }
 

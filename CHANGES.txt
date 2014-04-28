@@ -35,9 +35,9 @@ Version 4.96  [ (under development) ]
         Class NFaceEmbedding:
             - New convenience operators == and !=.
         Class NGenericTriangulation:
-            - Moved isIdenticalTo(), isIsomorphicTo(), isContainedIn() and
-              findAllSubcomplexesIn() from Dim2Triangulation and
-              NTriangulation into this class.
+            - Moved isIdenticalTo(), isIsomorphicTo(), isContainedIn(),
+              findAllSubcomplexesIn() and makeCanonical() from
+              Dim2Triangulation and NTriangulation into this class.
             - New routine findAllIsomorphisms().
             - Made isoSig(), fromIsoSig() and isoSigComponentSize() public.
         Class NGluingPermSearcher:
@@ -73,7 +73,7 @@ Version 4.96  [ (under development) ]
         Class NTriangulation:
             - New routine isIdenticalTo().
             - New local modification oneFourMove().
-            - New routine findAllIsomorphisms().
+            - New routines findAllIsomorphisms() and makeCanonical().
             - Several isomorphism-related routines have been moved into
               the dimension-agnostic NGenericTriangulation template, and
               isomorphism signature routines now inherit directly from

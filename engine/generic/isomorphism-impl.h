@@ -32,8 +32,6 @@
 
 /* end stub */
 
-#include <algorithm>
-#include <string>
 #include "generic/ngenerictriangulation.h"
 
 namespace regina {

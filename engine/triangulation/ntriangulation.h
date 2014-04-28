@@ -989,6 +989,7 @@ class REGINA_API NTriangulation : public NPacket,
         using NGenericTriangulation<3>::isContainedIn;
         using NGenericTriangulation<3>::findAllIsomorphisms;
         using NGenericTriangulation<3>::findAllSubcomplexesIn;
+        using NGenericTriangulation<3>::makeCanonical;
 
         /*@}*/
         /**

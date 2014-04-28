@@ -15,6 +15,7 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
+    canonical-impl.h
     dimtraits.h
     isomorphism-impl.h
     isosig-impl.h
