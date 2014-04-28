@@ -85,14 +85,14 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * to the given triangulation.
          *
          * Here "identical" means that the triangulations have the same
-         * number of simplices, with gluings between the same pairs
-         * of numbered simplices using the same gluing permutations.
+         * number of top-dimensional simplices, with gluings between the same
+         * pairs of numbered simplices using the same gluing permutations.
          * In other words, "identical" means that the triangulations
          * are isomorphic via the identity isomorphism.
          *
          * To test for the less strict combinatorial isomorphism (which
-         * allows relabelling of the simplices and their vertices),
-         * see isIsomorphicTo() instead.
+         * allows relabelling of the top-dimensional simplices and their
+         * vertices), see isIsomorphicTo() instead.
          *
          * This test does \e not examine the textual simplex descriptions,
          * as seen in Simplex::getDescription(); these may still differ.
@@ -122,11 +122,12 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * Isomorphism class notes.
          *
          * In particular, note that this triangulation and \a other must
-         * contain the same number of simplices for such an isomorphism
-         * to exist.
+         * contain the same number of top-dimensional simplices for such an
+         * isomorphism to exist.
          *
-         * If you need to ensure that simplices are labelled the same in both
-         * triangulations, see the stricter test isIdenticalTo() instead.
+         * If you need to ensure that top-dimensional simplices are labelled
+         * the same in both triangulations, see the stricter test
+         * isIdenticalTo() instead.
          *
          * If a boundary complete isomorphism is found, the details of
          * this isomorphism are returned.  The isomorphism is newly
@@ -163,10 +164,10 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * to \a other.  Boundary incomplete isomorphisms are described
          * in detail in the Isomorphism class notes.
          *
-         * In particular, note that facets of simplices that lie on the
-         * boundary of this triangulation need not correspond to boundary
-         * facets of \a other, and that \a other may contain more
-         * simplices than this triangulation.
+         * In particular, note that facets of top-dimensional simplices that
+         * lie on the boundary of this triangulation need not correspond to
+         * boundary facets of \a other, and that \a other may contain more
+         * top-dimensional simplices than this triangulation.
          *
          * If a boundary incomplete isomorphism is found, the details of
          * this isomorphism are returned.  The isomorphism is newly
@@ -259,9 +260,9 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * That is, two triangulations of dimension \a dim are combinatorially
          * isomorphic if and only if their isomorphism signatures are the same.
          *
-         * The isomorphism signature is constructed entirely of
-         * printable characters, and has length proportional to
-         * <tt>n log n</tt>, where \a n is the number of simplices.
+         * The isomorphism signature is constructed entirely of printable
+         * characters, and has length proportional to <tt>n log n</tt>,
+         * where \a n is the number of top-dimenisonal simplices.
          *
          * Isomorphism signatures are more general than dehydrations:
          * they can be used with any triangulation (including closed,
