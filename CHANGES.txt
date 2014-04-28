@@ -15,6 +15,10 @@ Version 4.96  [ (under development) ]
         Class Dim2Triangulation:
             - New routine isIdenticalTo().
             - New local modification oneThreeMove().
+            - New routine findAllIsomorphisms().
+            - Several isomorphism-related routines have been moved into
+              the dimension-agnostic NGenericTriangulation template.
+              See the NGenericTriangulation notes below for details.
         Class Dim2VertexEmbedding:
             - New convenience operators == and !=.
         Class NAbelianGroup:
@@ -28,6 +32,11 @@ Version 4.96  [ (under development) ]
               census of cusped finite volume hyperbolic 3-manifolds.
         Class NFaceEmbedding:
             - New convenience operators == and !=.
+        Class NGenericTriangulation:
+            - Moved isIdenticalTo(), isIsomorphicTo(), isContainedIn() and
+              findAllSubcomplexesIn() from Dim2Triangulation and
+              NTriangulation into this class.
+            - New routine findAllIsomorphisms().
         Class NGluingPermSearcher:
             - Removed protected routine mayPurge(), since this behaviour is
               already provided by specialised subclasses of NGluingPermSearcher.
@@ -62,6 +71,9 @@ Version 4.96  [ (under development) ]
             - New routine isIdenticalTo().
             - New local modification oneFourMove().
             - New routine findAllIsomorphisms().
+            - Several isomorphism-related routines have been moved into
+              the dimension-agnostic NGenericTriangulation template.
+              See the NGenericTriangulation notes above for details.
         Class NVertex:
             - Renamed getLinkEulerCharacteristic() to getLinkEulerChar(), which
               is easier on the fingers.  The old name has been kept as a

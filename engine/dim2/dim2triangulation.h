@@ -41,7 +41,6 @@
 #define __DIM2TRIANGULATION_H
 #endif
 
-#include <list>
 #include <memory>
 #include <vector>
 #include "regina-core.h"
@@ -667,134 +666,11 @@ class REGINA_API Dim2Triangulation : public NPacket,
          */
         /*@{*/
 
-        /**
-         * Determines if this triangulation is combinatorially identical
-         * to the given triangulation.
-         *
-         * Here "identical" means that the triangulations have the same
-         * number of triangles, with gluings between the same pairs
-         * of numbered triangles using the same gluing permutations.
-         * In other words, "identical" means that the triangulations
-         * are isomorphic via the identity isomorphism.
-         *
-         * To test for the less strict combinatorial isomorphism (which
-         * allows relabelling of the triangles and their vertices),
-         * see isIsomorphicTo() instead.
-         *
-         * This test does \e not examine the textual triangle descriptions,
-         * as seen in Dim2Triangle::getDescription(); these may still differ.
-         * It also does not test the numbering of vertices and edges of
-         * the triangulation, as used by getVertex() and getEdge();
-         * although at the time of writing these will always be
-         * numbered the same for identical triangulations, it is
-         * conceivable that in future versions of Regina there may
-         * be situations in which identical triangulations can acquire
-         * different vertex and edge numberings.
-         *
-         * @param other the triangulation to compare with this one.
-         * @return \c true if and only if the two triangulations are
-         * combinatorially identical.
-         */
-        bool isIdenticalTo(const Dim2Triangulation& other) const;
-
-        /**
-         * Determines if this triangulation is combinatorially
-         * isomorphic to the given triangulation.
-         *
-         * Specifically, this routine determines if there is a
-         * one-to-one and onto boundary complete combinatorial
-         * isomorphism from this triangulation to \a other.  Boundary
-         * complete isomorphisms are described in detail in the
-         * Dim2Isomorphism class notes.
-         *
-         * In particular, note that this triangulation and \a other must
-         * contain the same number of triangles for such an isomorphism
-         * to exist.
-         *
-         * If you need to ensure that triangles are labelled the same in both
-         * triangulations, see the stricter test isIdenticalTo() instead.
-         *
-         * If a boundary complete isomorphism is found, the details of
-         * this isomorphism are returned.  The isomorphism is newly
-         * constructed, and so to assist with memory management is
-         * returned as a std::auto_ptr.  Thus, to test whether an
-         * isomorphism exists without having to explicitly deal with the
-         * isomorphism itself, you can call
-         * <tt>if (isIsomorphicTo(other).get())</tt> and the newly
-         * created isomorphism (if it exists) will be automatically
-         * destroyed.
-         *
-         * @param other the triangulation to compare with this one.
-         * @return details of the isomorphism if the two triangulations
-         * are combinatorially isomorphic, or a null pointer otherwise.
-         */
-        std::auto_ptr<Dim2Isomorphism> isIsomorphicTo(
-            const Dim2Triangulation& other) const;
-
-        /**
-         * Determines if an isomorphic copy of this triangulation is
-         * contained within the given triangulation, possibly as a
-         * subcomplex of some larger component (or components).
-         *
-         * Specifically, this routine determines if there is a boundary
-         * incomplete combinatorial isomorphism from this triangulation
-         * to \a other.  Boundary incomplete isomorphisms are described
-         * in detail in the Dim2Isomorphism class notes.
-         *
-         * In particular, note that boundary edges of this triangulation
-         * need not correspond to boundary edges of \a other, and that
-         * \a other can contain more triangles than this triangulation.
-         *
-         * If a boundary incomplete isomorphism is found, the details of
-         * this isomorphism are returned.  The isomorphism is newly
-         * constructed, and so to assist with memory management is
-         * returned as a std::auto_ptr.  Thus, to test whether an
-         * isomorphism exists without having to explicitly deal with the
-         * isomorphism itself, you can call
-         * <tt>if (isContainedIn(other).get())</tt> and the newly
-         * created isomorphism (if it exists) will be automatically
-         * destroyed.
-         *
-         * If more than one such isomorphism exists, only one will be
-         * returned.  For a routine that returns all such isomorphisms,
-         * see findAllSubcomplexesIn().
-         *
-         * @param other the triangulation in which to search for an
-         * isomorphic copy of this triangulation.
-         * @return details of the isomorphism if such a copy is found,
-         * or a null pointer otherwise.
-         */
-        std::auto_ptr<Dim2Isomorphism> isContainedIn(
-            const Dim2Triangulation& other) const;
-
-        /**
-         * Finds all ways in which an isomorphic copy of this triangulation
-         * is contained within the given triangulation, possibly as a
-         * subcomplex of some larger component (or components).
-         *
-         * This routine behaves identically to isContainedIn(), except
-         * that instead of returning just one isomorphism (which may be
-         * boundary incomplete and need not be onto), all such isomorphisms
-         * are returned.
-         *
-         * See the isContainedIn() notes for additional information.
-         *
-         * The isomorphisms that are found will be inserted into the
-         * given list.  These isomorphisms will be newly created, and
-         * the caller of this routine is responsible for destroying
-         * them.  The given list will not be emptied before the new
-         * isomorphisms are inserted.
-         *
-         * \ifacespython Not present.
-         *
-         * @param other the triangulation in which to search for
-         * isomorphic copies of this triangulation.
-         * @param results the list in which any isomorphisms found will
-         * be stored.
-         * @return the number of isomorphisms that were found.
-         */
-        unsigned long findAllSubcomplexesIn(const Dim2Triangulation& other,
-                std::list<Dim2Isomorphism*>& results) const;
+        using NGenericTriangulation<2>::isIdenticalTo;
+        using NGenericTriangulation<2>::isIsomorphicTo;
+        using NGenericTriangulation<2>::isContainedIn;
+        using NGenericTriangulation<2>::findAllIsomorphisms;
+        using NGenericTriangulation<2>::findAllSubcomplexesIn;
 
         /**
          * Relabel the triangles and their vertices so that this
@@ -1257,6 +1133,7 @@ class REGINA_API Dim2Triangulation : public NPacket,
         static bool compatibleTriangles(Dim2Triangle* src, Dim2Triangle* dest,
             NPerm3 p);
 
+    friend class regina::NGenericTriangulation<2>;
     friend class regina::Dim2Triangle;
     friend class regina::NXMLDim2TriangulationReader;
 };

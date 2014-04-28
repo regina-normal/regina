@@ -39,30 +39,6 @@
 
 namespace regina {
 
-std::auto_ptr<Dim2Isomorphism> Dim2Triangulation::isIsomorphicTo(
-        const Dim2Triangulation& other) const {
-    std::list<Dim2Isomorphism*> results;
-    if (findIsomorphisms(other, results, true, true))
-        return std::auto_ptr<Dim2Isomorphism>(results.front());
-    else
-        return std::auto_ptr<Dim2Isomorphism>(0);
-}
-
-std::auto_ptr<Dim2Isomorphism> Dim2Triangulation::isContainedIn(
-        const Dim2Triangulation& other) const {
-    std::list<Dim2Isomorphism*> results;
-    if (findIsomorphisms(other, results, false, true))
-        return std::auto_ptr<Dim2Isomorphism>(results.front());
-    else
-        return std::auto_ptr<Dim2Isomorphism>(0);
-}
-
-unsigned long Dim2Triangulation::findAllSubcomplexesIn(
-        const Dim2Triangulation& other, std::list<Dim2Isomorphism*>& results)
-        const {
-    return findIsomorphisms(other, results, false, false);
-}
-
 unsigned long Dim2Triangulation::findIsomorphisms(
         const Dim2Triangulation& other, std::list<Dim2Isomorphism*>& results,
         bool completeIsomorphism, bool firstOnly) const {
