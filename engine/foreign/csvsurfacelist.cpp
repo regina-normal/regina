@@ -93,7 +93,7 @@ namespace {
         }
         if (fields & surfaceExportEuler) {
             if (s->isCompact())
-                out << s->getEulerCharacteristic();
+                out << s->getEulerChar();
             out << ',';
         }
         if (fields & surfaceExportOrient) {

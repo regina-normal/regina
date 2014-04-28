@@ -179,7 +179,7 @@ void NSurfaceSummaryUI::refresh() {
         if (! s->isCompact())
             ++spun;
         else if (s->hasRealBoundary()) {
-            euler = s->getEulerCharacteristic();
+            euler = s->getEulerChar();
             allECsBounded.insert(euler);
 
             type = std::make_pair(boolIndex(s->isTwoSided()),
@@ -189,7 +189,7 @@ void NSurfaceSummaryUI::refresh() {
             ++countBounded[type.first][type.second][euler];
             ++bounded;
         } else {
-            euler = s->getEulerCharacteristic();
+            euler = s->getEulerChar();
             allECsClosed.insert(euler);
 
             type = std::make_pair(boolIndex(s->isTwoSided()),

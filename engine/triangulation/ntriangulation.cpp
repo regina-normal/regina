@@ -481,7 +481,7 @@ long NTriangulation::getEulerCharManifold() const {
     for (BoundaryComponentIterator it = boundaryComponents.begin();
             it != boundaryComponents.end(); ++it)
         if ((*it)->isIdeal())
-            ans += (*it)->getEulerCharacteristic() - 1;
+            ans += (*it)->getEulerChar() - 1;
 
     // If we have an invalid triangulation, we need to locate non-standard
     // boundary vertices and invalid edges, and truncate those unwanted bits
@@ -489,7 +489,7 @@ long NTriangulation::getEulerCharManifold() const {
     if (! valid) {
         for (VertexIterator it = vertices.begin(); it != vertices.end(); ++it)
             if ((*it)->getLink() == NVertex::NON_STANDARD_BDRY)
-                ans += (*it)->getLinkEulerCharacteristic() - 1;
+                ans += (*it)->getLinkEulerChar() - 1;
         for (EdgeIterator it = edges.begin(); it != edges.end(); ++it)
             if (! (*it)->isValid())
                 ++ans;

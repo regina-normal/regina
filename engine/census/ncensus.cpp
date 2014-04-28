@@ -43,9 +43,10 @@ namespace regina {
 
 const int NCensus::PURGE_NON_MINIMAL = 1;
 const int NCensus::PURGE_NON_PRIME = 2;
-const int NCensus::PURGE_NON_MINIMAL_PRIME = 3;
-    /**< PURGE_NON_MINIMAL_PRIME = PURGE_NON_MINIMAL | PURGE_NON_PRIME */
+const int NCensus::PURGE_NON_MINIMAL_PRIME =
+    NCensus::PURGE_NON_MINIMAL | NCensus::PURGE_NON_PRIME;
 const int NCensus::PURGE_P2_REDUCIBLE = 4;
+const int NCensus::PURGE_NON_MINIMAL_HYP = 8 | NCensus::PURGE_NON_MINIMAL;
 
 unsigned long NCensus::formCensus(NPacket* parent, unsigned nTetrahedra,
         NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,

@@ -44,7 +44,7 @@
 namespace regina {
 
 NLargeInteger NSurfaceFilterProperties::getEC(unsigned long index) const {
-    std::set<NLargeInteger>::const_iterator it = eulerCharacteristic.begin();
+    std::set<NLargeInteger>::const_iterator it = eulerChar.begin();
     advance(it, index);
     return *it;
 }
@@ -60,8 +60,8 @@ bool NSurfaceFilterProperties::accept(const NNormalSurface& surface) const {
         if (! orientability.contains(surface.isOrientable()))
             return false;
 
-        if (eulerCharacteristic.size() > 0)
-            if (! eulerCharacteristic.count(surface.getEulerCharacteristic()))
+        if (eulerChar.size() > 0)
+            if (! eulerChar.count(surface.getEulerChar()))
                 return false;
     }
 
@@ -72,11 +72,11 @@ bool NSurfaceFilterProperties::accept(const NNormalSurface& surface) const {
 void NSurfaceFilterProperties::writeTextLong(std::ostream& o) const {
     o << "Filter normal surfaces with restrictions:\n";
 
-    if (eulerCharacteristic.size() > 0) {
+    if (eulerChar.size() > 0) {
         o << "    Euler characteristic:";
         std::set<NLargeInteger>::const_reverse_iterator it;
-        for (it = eulerCharacteristic.rbegin();
-                it != eulerCharacteristic.rend(); it++)
+        for (it = eulerChar.rbegin();
+                it != eulerChar.rend(); it++)
             o << ' ' << *it;
         o << '\n';
     }
@@ -91,10 +91,10 @@ void NSurfaceFilterProperties::writeTextLong(std::ostream& o) const {
 void NSurfaceFilterProperties::writeXMLFilterData(std::ostream& out) const {
     using regina::xml::xmlValueTag;
 
-    if (eulerCharacteristic.size() > 0) {
+    if (eulerChar.size() > 0) {
         out << "    <euler> ";
         for (std::set<NLargeInteger>::const_iterator it =
-                eulerCharacteristic.begin(); it != eulerCharacteristic.end();
+                eulerChar.begin(); it != eulerChar.end();
                 it++)
             out << (*it) << ' ';
         out << "</euler>\n";
