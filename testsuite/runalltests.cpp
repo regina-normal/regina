@@ -140,7 +140,7 @@ bool runAllTests() {
     addMatrixOps(runner);
     addPermConv(runner);
 
-    // Dim2riangulation:
+    // Dim2Triangulation:
     addDim2Triangulation(runner);
 
     // Triangulation:
