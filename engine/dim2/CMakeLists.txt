@@ -2,7 +2,6 @@
 
 # Files to compile
 SET ( FILES
-  canonical
   dim2boundarycomponent
   dim2component
   dim2edge

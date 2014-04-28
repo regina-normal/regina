@@ -671,30 +671,7 @@ class REGINA_API Dim2Triangulation : public NPacket,
         using NGenericTriangulation<2>::isContainedIn;
         using NGenericTriangulation<2>::findAllIsomorphisms;
         using NGenericTriangulation<2>::findAllSubcomplexesIn;
-
-        /**
-         * Relabel the triangles and their vertices so that this
-         * triangulation is in canonical form.  This is essentially
-         * the lexicographically smallest labelling when the edge
-         * gluings are written out in order.
-         *
-         * Two triangulations are isomorphic if and only if their canonical
-         * forms are identical.
-         *
-         * The lexicographic ordering assumes that the edge gluings are
-         * written in order of triangle index and then edge number.
-         * Each gluing is written as the destination triangle index
-         * followed by the gluing permutation (which in turn is written
-         * as the images of 0,1,2 in order).
-         *
-         * \pre This routine currently works only when the triangulation
-         * is connected.  It may be extended to work with disconnected
-         * triangulations in later versions of Regina.
-         *
-         * @return \c true if the triangulation was changed, or \c false
-         * if the triangulation was in canonical form to begin with.
-         */
-        bool makeCanonical();
+        using NGenericTriangulation<2>::makeCanonical;
 
         /*@}*/
         /**
