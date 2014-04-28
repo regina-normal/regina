@@ -102,7 +102,14 @@ class REGINA_API NPerm3 {
          * Specifically, the inverse of permutation <tt>S3[i]</tt> is
          * the permutation <tt>S3[ invS3[i] ]</tt>.
          */
-        static const int invS3[6];
+        static const unsigned invS3[6];
+
+        /**
+         * A dimension-agnostic alias for NPerm3::invS3.  In general, for
+         * each \a K the class NPermK will define an alias \a invSn
+         * that references the list of all permutations NPermK::invSK.
+         */
+        static const unsigned* invSn;
 
         /**
          * Contains all possible permutations of three elements in
