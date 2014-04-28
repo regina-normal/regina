@@ -76,6 +76,19 @@ const NGroupExpressionTerm& NGroupExpression::getTerm(
     return *pos;
 }
 
+bool NGroupExpression::operator==(const NGroupExpression& comp) const
+{
+    std::list< NGroupExpressionTerm >::const_iterator i1=terms.begin();
+    std::list< NGroupExpressionTerm >::const_iterator i2=comp.terms.begin();
+    while ( (i1!=terms.end()) && (i2!=comp.terms.end()) )
+     {
+      if (!((*i1) == (*i2))) return false;
+      i1++; i2++;
+     }
+    if ( (i1!=terms.end()) || (i2!=comp.terms.end()) ) return false;
+    return true;
+}
+
 NGroupExpression* NGroupExpression::inverse() const {
     NGroupExpression* ans = new NGroupExpression();
     transform(terms.begin(), terms.end(), front_inserter(ans->terms),
@@ -438,7 +451,8 @@ void NGroupPresentation::applySubstitution( NGroupExpression& this_word,
 }
 
 namespace {
-    // An anonymous namespace for some helper routines.
+    // An unnamed namespace for some helper routines.
+    // "anonymous namespace" is apparently not correct terminology -ryan
 
     bool compare_length( const NGroupExpression* first, 
              const NGroupExpression* second ) 
@@ -544,6 +558,145 @@ void NGroupExpression::cycleLeft()
    terms.push_front(temp);
   }
 }
+
+NGroupExpression::NGroupExpression( const std::string &input, bool* valid )
+{ // interpret input as NGroupExpression as one of forms a^7b^-2,
+  // a^7B^2, aaaaaaaBB, g0^7g1^-2. Initialize. If valid allocated set to true
+  // or false depending on if operation is successful or not. 
+
+  // WSNULL - at start of word, nothing has been input. 
+  // WSVARLET - read a letter, but do not know if we're in an a^5 or g2^-2 sit.
+  // WSVARNUM - gk situation read.
+  // WSEXP - ^ read
+  // WSEXPSIG ^- read
+  // WSEXPNUM reading numbers after ^ or ^-
+  // WSERR - an error occured.
+  enum WORD_STATUS { WSNULL, WSVARLET, WSVARNUM, WSEXP, WSEXPSIG, WSEXPNUM, WSERR };
+
+  // a loop that goes through the entries of input. 
+  WORD_STATUS WS(WSNULL);
+  NGroupExpressionTerm buildTerm;
+  for (std::string::const_iterator i=input.begin(); i!=input.end(); i++)
+   {// read *i, see what to do next. 
+    // case 1: it is a letter a..z or A..Z
+    if ( ( (int(*i) >= int('a') ) && ( int(*i) <= int('z') ) ) ||
+         ( (int(*i) >= int('A') ) && ( int(*i) <= int('Z') ) ) ) // we have a letter
+    if (WS==WSNULL) // fresh letter 
+     {
+      // build buildTerm. 
+      if ( (int(*i) >= int('a') ) && ( int(*i) <= int('z') ) )
+       {buildTerm.generator = (unsigned long)(*i) - (unsigned long)('a');
+        buildTerm.exponent = 1; } else
+      if ( (int(*i) >= int('A') ) && ( int(*i) <= int('Z') ) )
+       {buildTerm.generator = (unsigned long)(*i) - (unsigned long)('A');
+        buildTerm.exponent = -1; }
+      else { WS=WSERR; break; }
+      WS=WSVARLET; continue;
+     } else  
+    if ( (WS==WSVARLET) || (WS==WSVARNUM) || (WS==WSEXPNUM) ) 
+     { // new letter but previous letter to finish
+      terms.push_back(buildTerm);
+      if ( (int(*i) >= int('a') ) && ( int(*i) <= int('z') ) )
+       {buildTerm.generator = (unsigned long)(*i) - (unsigned long)('a');
+        buildTerm.exponent = 1; } else
+      if ( (int(*i) >= int('A') ) && ( int(*i) <= int('Z') ) )
+       {buildTerm.generator = (unsigned long)(*i) - (unsigned long)('A');
+        buildTerm.exponent = -1; }
+      else { WS=WSERR; break; }
+       WS=WSVARLET; continue;
+     } // anything else is a mistake.
+    else { WS=WSERR; break; } // end case 1          
+
+    // case 2: it is a ^, can only occur after a generator
+    if ( (*i) == '^' )
+     {
+      if (!( (WS==WSVARLET) || (WS=WSVARNUM) ) )
+       { WS=WSERR; break; }
+      WS=WSEXP; continue;
+     } // end case 2
+
+    // case 3: it is a -, only valid after ^
+    if ( (*i) == '-' )
+     {
+      if (!(WS==WSEXP)) { WS=WSERR; break; }
+      buildTerm.exponent = -buildTerm.exponent; // ok with A^-1. 
+      WS=WSEXPSIG; continue;
+     } // end case 3
+
+    // case 4: it is a number 
+    if ( (int(*i) >= int('0')) && (int(*i) <= int('9')) )
+     { //  subcase (a) this is to build a variable
+      // buildTerm.generator == 'g'
+      if ( (WS==WSVARLET) && (buildTerm.generator == 
+           (unsigned long)('g') - (unsigned long)('a') ) )
+       {
+        buildTerm.generator=(unsigned long)(*i)-(unsigned long)('0');
+        WS=WSVARNUM; continue;
+       } else // we've already started building the variable number
+      if ( WS==WSVARNUM )
+       {
+        buildTerm.generator=10*buildTerm.generator + 
+            ( (unsigned long)(*i)-(unsigned long)('0') );
+        continue;
+       } else //  subcase (b) this is to build an exponent.
+      if ( (WS==WSEXP) || (WS==WSEXPSIG) ) // ^num or ^-num
+       {
+        if (buildTerm.exponent<0)
+         buildTerm.exponent = -( (unsigned long)(*i) - (unsigned long)('0') );
+        else
+         buildTerm.exponent = (unsigned long)(*i) - (unsigned long)('0');
+        WS=WSEXPNUM; continue;
+       } else
+      if (WS==WSEXPNUM) // blah[num] previously dealt with numbers
+       {
+        if (buildTerm.exponent<0)
+         buildTerm.exponent = 10*buildTerm.exponent -
+          ( (unsigned long)(*i) - (unsigned long)('0') );
+        else
+         buildTerm.exponent = 10*buildTerm.exponent +
+          ( (unsigned long)(*i) - (unsigned long)('0') );
+        continue;
+       }
+      else { WS=WSERR; break; }
+     } // end case 4
+    // now we've dealt will all important input.  Let's deal with spaces next,
+    //  and any other input will fail. 
+    if ( int(*i)==int(' ') ) continue;
+    else { WS=WSERR; break; }
+   } // end i loop
+ // did we reach the end of input without any errors? if so, append buildTerm
+ if (WS!=WSERR)
+  {
+  terms.push_back(buildTerm);
+  if (valid != NULL) (*valid) = true;
+  }  
+ // if not, delete everything in this word
+ else
+  {
+    if (valid != NULL) (*valid) = false;
+    terms.clear();
+  }  
+}
+
+bool NGroupExpression::addStringFirst( const std::string& input)
+{
+ bool temp(false);
+ NGroupExpression tword( NGroupExpression(input, &temp) );
+ if (!temp) return false;
+ else addTermsFirst(tword);
+ return true;
+}
+
+bool NGroupExpression::addStringLast( const std::string& input)
+{
+ bool temp(false);
+ NGroupExpression tword( NGroupExpression(input, &temp) );
+ if (!temp) return false;
+ else addTermsLast(tword);
+ return true;
+}
+
+//      **********         **********  NGroupPresentation below **************
 
 bool NGroupPresentation::simplifyWord( NGroupExpression &input ) const
  {
@@ -761,9 +914,7 @@ NGroupPresentation& NGroupPresentation::operator=(
 }
 
 bool NGroupPresentation::intelligentNielsen()
-{
-    return intelligentSimplifyDetail().get();
-}
+{ return intelligentSimplifyDetail().get(); }
 
 std::auto_ptr<NHomGroupPresentation> 
     NGroupPresentation::intelligentNielsenDetail()
@@ -872,14 +1023,19 @@ std::auto_ptr<NHomGroupPresentation>
 }
 
 /**
- *  This routine attempts to rewrite the presentation so that generators
+ * This routine rewrites the presentation so that generators
  * of the group map to generators of the abelianization, with any
- * left-over generators mapping to zero. 
+ * left-over generators mapping to zero. Specifically, if the group
+ * has rank N and M invariant factors d1 | d2 | ... | dM then
+ * generators 1 through N will map to the free generators of the
+ * abelianization.  Generators N+1 through N+M will map to torsion
+ * generators of orders d1 through dM respectively.  Any additional
+ * generators will be indexed by integers N+M+1 or larger, and will
+ * have trivial abelianization.  Keep in mind that the snf algorithm
+ * puts the invariant factors before the free factors. 
  */
 bool NGroupPresentation::homologicalAlignment()
-{
- return homologicalAlignmentDetail().get();
-}
+{ return homologicalAlignmentDetail().get(); }
 
 std::auto_ptr<NHomGroupPresentation> 
     NGroupPresentation::homologicalAlignmentDetail()
@@ -896,13 +1052,14 @@ std::auto_ptr<NHomGroupPresentation>
   epsilon[j] = 1;
   std::vector<NLargeInteger> temp( abelianized->snfRep(epsilon) );
   for (unsigned long i=0; i<abelianized->minNumberOfGenerators(); i++)
-    abMat.entry(i,j) = temp[i];   
+    abMat.entry(i,j) = temp[i]; // columns are snfreps of abelianized gens.
   }
 
  unsigned long SR( abelianized->getNumberOfInvariantFactors() );
 
  // step 2: we will mimic the simple smith normal form algorithm algorithm 
- //         here, using corresponding moves on the group presentation. 
+ //         using corresponding moves on the group presentation. 
+ //         first the free generators.
  for (unsigned long i=abelianized->getNumberOfInvariantFactors(); 
       i<abelianized->minNumberOfGenerators(); i++)
   { // in row i we will eliminate all but one entry using column
@@ -912,65 +1069,85 @@ std::auto_ptr<NHomGroupPresentation>
     unsigned long j0=0, j1=abMat.columns()-1;
     while (j0 < j1)
     { // if at j0 its zero, inc, if at j1 zero, dec
-      if (abMat.entry(i,j0).isZero()) { j0++; continue; } 
-      if (abMat.entry(i,j1).isZero()) { j1--; continue; }
-      // column op! 
-      if (abMat.entry(i,j0).abs() < abMat.entry(i,j1).abs())
-       { NLargeInteger q = abMat.entry(i,j1) / abMat.entry(i,j0); 
-         // subtract q times column j0 from column j1 
-         for (unsigned long r=0; r<abMat.rows(); r++)
-           abMat.entry(r,j1) -= abMat.entry(r,j0)*q; 
-         NGroupPresentation oldPres(*this);
-         std::vector<NGroupExpression> fVec( nGenerators );
-         std::vector<NGroupExpression> bVec( nGenerators );
-         for (unsigned long l=0; l<nGenerators; l++)
-           {
-            fVec[l].addTermLast( NGroupExpressionTerm( l, 1 ) );
-            bVec[l].addTermLast( NGroupExpressionTerm( l, 1 ) );
-            if (l==j1) { 
-             fVec[l].addTermLast( NGroupExpressionTerm( j0, q.longValue() ) );
-             bVec[l].addTermLast( NGroupExpressionTerm( j0, -q.longValue() ) );}
-           }
-         // manufacture the Nielsen automorphism... 
-         nielsenCombine(j1, j0, -q.longValue() );
-         std::auto_ptr<NHomGroupPresentation> tempHom(
-           new NHomGroupPresentation( oldPres, *this, fVec, bVec ) );
-         if (!retval.get()) retval.reset( tempHom.release() );
-         else retval.reset( tempHom->composeWith( *retval.get() ).release() );
-       }
-      else // (i,j0).abs >= (i,j1).abs()
-       { NLargeInteger q = abMat.entry(i,j0) / abMat.entry(i,j1); 
-         // substract q times column j1 from column j0 
-         for (unsigned long r=0; r<abMat.rows(); r++)
-           abMat.entry(r,j0) -= abMat.entry(r,j1)*q; 
-         NGroupPresentation oldPres(*this);
-         std::vector<NGroupExpression> fVec( nGenerators );
-         std::vector<NGroupExpression> bVec( nGenerators );
-         for (unsigned long l=0; l<nGenerators; l++)
-           {
-            fVec[l].addTermLast( NGroupExpressionTerm( l, 1 ) );
-            bVec[l].addTermLast( NGroupExpressionTerm( l, 1 ) );
-            if (l==j0) { 
-             fVec[l].addTermLast( NGroupExpressionTerm( j1, q.longValue() ) );
-             bVec[l].addTermLast( NGroupExpressionTerm( j1, -q.longValue() ) );}
-           }
-         // manufacture the Nielsen automorphism... 
-         nielsenCombine(j0, j1, -q.longValue() );
-         std::auto_ptr<NHomGroupPresentation> tempHom(
-           new NHomGroupPresentation( oldPres, *this, fVec, bVec ) );
-         if (!retval.get()) retval.reset( tempHom.release() );
-         else retval.reset( tempHom->composeWith( *retval.get() ).release() );
-       }
-    }
-    { nielsenTransposition(i, j1); abMat.swapColumns(i, j1); }
-   // TODO signs
+     if (abMat.entry(i,j0).isZero()) { j0++; continue; } 
+     if (abMat.entry(i,j1).isZero()) { j1--; continue; }
+     // column op! 
+     bool colFlag( abMat.entry(i,j0).abs() < abMat.entry(i,j1).abs() );
+     NLargeInteger q = abMat.entry(i,colFlag ? j1 : j0) / 
+                       abMat.entry(i,colFlag ? j0 : j1); 
+     // subtract q times column j0 from column j1 
+     for (unsigned long r=0; r<abMat.rows(); r++)
+      abMat.entry(r,colFlag ? j1 : j0) -= abMat.entry(r,colFlag ? j0 : j1)*q; 
+     NGroupPresentation oldPres(*this);
+     std::vector<NGroupExpression> fVec( nGenerators ), bVec( nGenerators );
+     for (unsigned long l=0; l<nGenerators; l++) {
+      fVec[l].addTermLast( NGroupExpressionTerm( l, 1 ) );
+      bVec[l].addTermLast( NGroupExpressionTerm( l, 1 ) );
+      if (l==j1) { 
+       fVec[l].addTermLast( NGroupExpressionTerm( 
+           colFlag ? j0 : j1, q.longValue() ) );
+       bVec[l].addTermLast( NGroupExpressionTerm( 
+           colFlag ? j0 : j1, -q.longValue() ) );} }
+     // manufacture the Nielsen automorphism... 
+     nielsenCombine(colFlag ? j1 : j0, colFlag ? j0 : j1, -q.longValue() );
+     std::auto_ptr<NHomGroupPresentation> tempHom(
+       new NHomGroupPresentation( oldPres, *this, fVec, bVec ) );
+     if (!retval.get()) retval.reset( tempHom.release() ); else 
+          retval.reset( tempHom->composeWith( *retval.get() ).release() );
+    } // j0==j1 is the column such that entry (i,j1) is +-1. 
+    nielsenTransposition(i, j1); 
+    abMat.swapColumns(i, j1); 
+    // NOTE: the matrix will have the form:
+    //       [ * * * ]
+    //       [ 0 D 0 ]  At this point, with D a diagonal +-1 matrix.
   }
-
- // step 3: kill the free parts of the abelianizations of the other generators.
- //         these are row ops. 
- // TODO the torsion part...
-
- // step 4: reduce the torsion part to generators modulo invariant factors.
+ // we are aiming for:
+ //  [ P * 0 ]  with P diagonal and coprime to the di's. 
+ //  [ 0 D 0 ] so we erase the * entries over D.
+ for (unsigned long i=0; i<abelianized->getNumberOfInvariantFactors(); i++)
+  for (unsigned long j=abelianized->getNumberOfInvariantFactors(); 
+       j<abelianized->minNumberOfGenerators(); j++)
+    abMat.entry(i,j) = 0;
+ // now we're at [ * 0 * ]
+ //              [ 0 D 0 ]
+ // step 3: reduce inv fac terms, kill the rest.
+ for (unsigned long i=0; i<abelianized->getNumberOfInvariantFactors(); i++)
+  { // let's start working on entry(i,j0) and (i,j1) with j0<j1 in 0...invFacNum
+    unsigned long j0=0, j1=abMat.columns()-1;
+    while (j0 < j1)
+    { // if at j0 its zero, inc, if at j1 zero, dec
+     if ((abMat.entry(i,j0) % abelianized->getInvariantFactor(i)).isZero()) { j0++; continue; } 
+     if ((abMat.entry(i,j1) % abelianized->getInvariantFactor(i)).isZero()) { j1--; continue; }
+     // column op! 
+     bool colFlag( (abMat.entry(i,j0) % abelianized->getInvariantFactor(i)).abs() < 
+                   (abMat.entry(i,j1) % abelianized->getInvariantFactor(i)).abs() );
+     NLargeInteger q = abMat.entry(i,colFlag ? j1 : j0) / 
+                       abMat.entry(i,colFlag ? j0 : j1); 
+     // subtract q times column j0 from column j1 
+     for (unsigned long r=0; r<abMat.rows(); r++)
+      abMat.entry(r,colFlag ? j1 : j0) -= abMat.entry(r,colFlag ? j0 : j1)*q; 
+     NGroupPresentation oldPres(*this);
+     std::vector<NGroupExpression> fVec( nGenerators ), bVec( nGenerators );
+     for (unsigned long l=0; l<nGenerators; l++) {
+      fVec[l].addTermLast( NGroupExpressionTerm( l, 1 ) );
+      bVec[l].addTermLast( NGroupExpressionTerm( l, 1 ) );
+      if (l==j1) { 
+       fVec[l].addTermLast( NGroupExpressionTerm( 
+           colFlag ? j0 : j1, q.longValue() ) );
+       bVec[l].addTermLast( NGroupExpressionTerm( 
+           colFlag ? j0 : j1, -q.longValue() ) );} }
+     // manufacture the Nielsen automorphism... 
+     nielsenCombine(colFlag ? j1 : j0, colFlag ? j0 : j1, -q.longValue() );
+     std::auto_ptr<NHomGroupPresentation> tempHom(
+       new NHomGroupPresentation( oldPres, *this, fVec, bVec ) );
+     if (!retval.get()) retval.reset( tempHom.release() ); else 
+          retval.reset( tempHom->composeWith( *retval.get() ).release() );
+    } // j0==j1 is the column such that entry (i,j1) is +-1. 
+    nielsenTransposition(i, j1); 
+    abMat.swapColumns(i, j1); 
+  }
+ // now we're at [ P 0 0 ]
+ //              [ 0 D 0 ] so we're essentially done.
 
  // call prettify
  std::auto_ptr<NHomGroupPresentation> tempHom( prettyRewritingDetail() );
