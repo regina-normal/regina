@@ -185,6 +185,14 @@ class REGINA_API NGroupExpression : public ShareableObject {
         NGroupExpression& operator=(const NGroupExpression& copyMe);
 
         /**
+         * Equality operator. Checks to see if these two words represent
+         * the same literal string, or not.
+         *
+         * &returns true if the string literals are identical.
+         */
+        bool operator==(const NGroupExpression& comp) const;
+
+        /**
          * Returns the list of terms in this expression.
          * These are the actual terms stored internally; any
          * modifications made to this list will show up in the
@@ -344,6 +352,38 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * Multiplies *this on the left by word.
          */
         void addTermsFirst( const NGroupExpression& word);
+
+        /**
+         * Attempts to interpret input as a string form of an NGroupExpression.
+         * Valid input must be in one of the four basic forms:
+         *
+         *  (1) a^7b^-2, 
+         *  (2) aaaaaaaBB,
+         *  (3) a^7B^2, 
+         *  (4) g0^7g1^-2.
+         * 
+         * Sets valid to true if string successfully interpreted and algorithm
+         * completed successfully.  Sets to false if the algorithm failed to 
+         * interpret the string, in which case this NGroupExpression is 
+         * uninitialized (triv word). 
+         */ 
+        NGroupExpression( const std::string &input, bool* valid=NULL );
+
+        /**
+         * Multiplies *this on the left by the word interpretation of the
+         * string input.  See NGroupExpression( std::string, bool ) for
+         * valid input forms. 
+         *
+         * @return true if the string is interpreted and the completes 
+         *  successfully. false if the algorithm has any trouble interpreting 
+         *  the input, in which case *this is untouched.
+         */ 
+        bool addStringFirst( const std::string& input);
+
+        /**
+         * Same as addStringFirst, except this algorithm appends on the right.
+         */
+        bool addStringLast( const std::string& input);
 
         /**
          *  Given a word of the form g_i1^j1 g_i2^j2 ... g_in^jn
@@ -783,7 +823,8 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * @returns true if and only if the nielsen automorphism had an effect
          *  on at least one relation.
          */
-        bool nielsenTransposition(const unsigned long &i, const unsigned long &j);
+        bool nielsenTransposition(const unsigned long &i, 
+                                  const unsigned long &j);
 
         /**
          *  This replaces a generator in a presentation by its inverse, and
