@@ -44,11 +44,11 @@ const NPerm3 NPerm3::S3[6] = {
 
 const NPerm3* NPerm3::Sn = NPerm3::S3;
 
-const int NPerm3::invS3[6] = {
+const unsigned NPerm3::invS3[6] = {
     0, 1, 4, 3, 2, 5
 };
 
-const int* NPerm3::invSn = NPerm3::invS3;
+const unsigned* NPerm3::invSn = NPerm3::invS3;
 
 const NPerm3 NPerm3::orderedS3[6] = {
     NPerm3(code012), NPerm3(code021),
