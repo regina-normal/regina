@@ -121,6 +121,13 @@ class REGINA_API NPerm4 {
         static const unsigned invS4[24];
 
         /**
+         * A dimension-agnostic alias for NPerm4::invS4.  In general, for
+         * each \a K the class NPermK will define an alias \a invSn
+         * that references the list of all permutations NPermK::invSK.
+         */
+        static const unsigned* invSn;
+
+        /**
          * Contains all possible permutations of four elements in
          * lexicographical order.
          */
