@@ -564,7 +564,7 @@ class REGINA_API NMarkedAbelianGroup : public ShareableObject {
         /**
          * Expresses the given vector as a combination of free and torsion
          * generators.  This answer is coordinate dependant, meaning the answer
-         * may change depending on how the Smith normal form is computed.
+         * may change depending on how the Smith Normal Form is computed.
          *
          * Recall that this marked abelian was defined by matrices \a M
          * and \a N with M*N=0; suppose that \a M is an \a m by \a l matrix
