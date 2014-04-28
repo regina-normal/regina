@@ -39,24 +39,6 @@
 
 namespace regina {
 
-std::auto_ptr<Dim4Isomorphism> Dim4Triangulation::isIsomorphicTo(
-        const Dim4Triangulation& other) const {
-    std::list<Dim4Isomorphism*> results;
-    if (findIsomorphisms(other, results, true, true))
-        return std::auto_ptr<Dim4Isomorphism>(results.front());
-    else
-        return std::auto_ptr<Dim4Isomorphism>(0);
-}
-
-std::auto_ptr<Dim4Isomorphism> Dim4Triangulation::isContainedIn(
-        const Dim4Triangulation& other) const {
-    std::list<Dim4Isomorphism*> results;
-    if (findIsomorphisms(other, results, false, true))
-        return std::auto_ptr<Dim4Isomorphism>(results.front());
-    else
-        return std::auto_ptr<Dim4Isomorphism>(0);
-}
-
 unsigned long Dim4Triangulation::findIsomorphisms(
         const Dim4Triangulation& other, std::list<Dim4Isomorphism*>& results,
         bool completeIsomorphism, bool firstOnly) const {
