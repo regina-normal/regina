@@ -142,7 +142,7 @@ bool runAllTests() {
     // Algebra:
     addNGroupPresentation(runner);
 
-    // Dim2riangulation:
+    // Dim2Triangulation:
     addDim2Triangulation(runner);
 
     // Triangulation:
