@@ -139,6 +139,9 @@ bool runAllTests() {
     addMatrixOps(runner);
     addPermConv(runner);
 
+    // Algebra:
+    addNGroupPresentation(runner);
+
     // Dim2riangulation:
     addDim2Triangulation(runner);
 
