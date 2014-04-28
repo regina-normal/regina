@@ -1002,7 +1002,7 @@ bool NHomMarkedAbelianGroup::isCycleMap() const
         std::vector<NLargeInteger> FcycJ( range.getRankCC(), NLargeInteger::zero );
         for (unsigned long i=0; i<matrix.rows(); i++) for (unsigned long k=0; k<matrix.columns(); k++)
             FcycJ[i] += matrix.entry(i,k) * cycJ[k];
-        if (!range.isCycle(FcycJ)) return false;
+        if (!range.isCycle(FcycJ)) { return false; }
     }
     return true;
 }
