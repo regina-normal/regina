@@ -21,6 +21,7 @@ SET ( FILES
   nmvpolynomialring
   nsvpolynomialring
   nxmlalgebrareader
+  ncellulardata.simpaut
   )
 
 # Prepend folder name
@@ -42,5 +43,6 @@ if (${REGINA_INSTALL_DEV})
     nmvpolynomialring.h
     nsvpolynomialring.h
     nxmlalgebrareader.h
+    ncellulardata.simpaut.h
     DESTINATION ${INCLUDEDIR}/algebra COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

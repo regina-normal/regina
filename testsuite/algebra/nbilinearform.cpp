@@ -79,53 +79,57 @@ class NBilinearFormTest : public CppUnit::TestFixture {
     std::vector< NCellularData* > cdList;
 
     public:
-        void setUp() {
-          copyAndDelete(weberSeifert, NExampleTriangulation::weberSeifert());
+
+    void setUp() {
+      copyAndDelete(weberSeifert, NExampleTriangulation::weberSeifert());
 	  s1s1s1.insertRehydration("gepaadcefeffnkkanax");
 	  comp1.insertRehydration("jgofiaaaceedfhiiifkxkfnbtxe");
 
-	  cdList.resize(3);
-	  cdList[0] = new NCellularData( weberSeifert ); cdList[1] = new NCellularData( s1s1s1 );
-	  cdList[2] = new NCellularData( comp1 );
-  	 }
+      cdList.resize(3);
+      cdList[0] = new NCellularData( weberSeifert ); 
+      cdList[1] = new NCellularData( s1s1s1 );
+      cdList[2] = new NCellularData( comp1 );
+     } // end setUp
 
-        void tearDown() {
-	 for (unsigned long i=0; i<cdList.size(); i++) delete cdList[i];
-         }
+   void tearDown() {
+    for (unsigned long i=0; i<cdList.size(); i++) delete cdList[i];  }
 
-	void constructors_test() {
-	 // let's check that the standard inner product on R^n is an iso between R^n and its 
-         //  dual for all n == 1,2,3,...,10, say.
-         for (unsigned long dim=1; dim<11; dim++)
-	  {
-	  NMarkedAbelianGroup ldom( dim, NLargeInteger::zero );
-	  NMarkedAbelianGroup rdom( dim, NLargeInteger::zero );
-	  NMarkedAbelianGroup zed( 1, NLargeInteger::zero );
-	  NSparseGridRing< NLargeInteger > pairing(3);
-          for (unsigned long i=0; i<dim; i++)
-           {
-            regina::NMultiIndex< unsigned long > I(3);
-	    I[0]=i; I[1]=i; I[2]=0;
-	    pairing.incEntry( I, NLargeInteger::one );
-           }
- 	  NBilinearForm innP(ldom, rdom, zed, pairing);
-	  if (!innP.leftAdjoint().isIsomorphism()) 
-           CPPUNIT_FAIL("Left-adjoint to standard inner product on R^n is not isomorphism.");
-	  if (!innP.rightAdjoint().isIsomorphism()) 
-           CPPUNIT_FAIL("Right-adjoint to standard inner product on R^n is not isomorphism.");
-          if (!innP.isSymmetric()) CPPUNIT_FAIL("Standard inner product isn't symmetric.");
-          if (innP.zFormSignature() != dim) CPPUNIT_FAIL("Standard inner product doesn't have full signature.");
-	  }
-        // ??
-	};
-	void symmetry_test() {
-	  
-	// todo
-        }
-	void composition_test() {
-	// todo
-	};
-};
+   void constructors_test() {
+   // let's check that the standard inner product on R^n is an iso 
+   // between R^n and its dual for all n == 1,2,3,...,10, say.
+   for (unsigned long dim=1; dim<11; dim++)
+    {
+     NMarkedAbelianGroup ldom( dim, NLargeInteger::zero );
+     NMarkedAbelianGroup rdom( dim, NLargeInteger::zero );
+     NMarkedAbelianGroup zed( 1, NLargeInteger::zero );
+     NSparseGridRing< NLargeInteger > pairing(3);
+     for (unsigned long i=0; i<dim; i++)
+      {
+       regina::NMultiIndex< unsigned long > I(3);
+       I[0]=i; I[1]=i; I[2]=0;
+       pairing.incEntry( I, NLargeInteger::one );
+      }
+     NBilinearForm innP(ldom, rdom, zed, pairing);
+     if (!innP.leftAdjoint().isIsomorphism()) 
+        CPPUNIT_FAIL("Left-adjoint to standard inner product on R^n"
+                     " is not isomorphism.");
+     if (!innP.rightAdjoint().isIsomorphism()) 
+      CPPUNIT_FAIL("Right-adjoint to standard inner product on R^n is"
+                   " not isomorphism.");
+     if (!innP.isSymmetric()) CPPUNIT_FAIL("Standard inner product"
+            " isn't symmetric.");
+     if (innP.zFormSignature() != dim) 
+      CPPUNIT_FAIL("Standard inner product doesn't have full signature.");
+    }
+   }; // end constructorsTest
+
+void symmetry_test() {// TODO
+       }
+
+void composition_test() { // TODO
+    };
+
+}; // end NBilinearFormTest
 
 void addNBilinearForm(CppUnit::TextUi::TestRunner& runner) {
     runner.addTest(NBilinearFormTest::suite());

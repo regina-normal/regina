@@ -425,108 +425,139 @@ void Dim4TriCellularInfoUI::refresh() {
     if (tri->isValid()) {
         NCellularData Minfo(*tri);
 
-       Cells->setText(QObject::tr("%1, %2, %3, %4, %5").
-            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(0, NCellularData::STD_coord) ) ).
-            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(1, NCellularData::STD_coord) ) ).
-            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(2, NCellularData::STD_coord) ) ).
-            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(3, NCellularData::STD_coord) ) ).
-            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(4, NCellularData::STD_coord) ) ));
+    Cells->setText(QObject::tr("%1, %2, %3, %4, %5").
+     arg(Minfo.cellCount( NCellularData::ChainComplexLocator(0, 
+         NCellularData::STD_coord) ) ).
+     arg(Minfo.cellCount( NCellularData::ChainComplexLocator(1, 
+         NCellularData::STD_coord) ) ).
+     arg(Minfo.cellCount( NCellularData::ChainComplexLocator(2, 
+         NCellularData::STD_coord) ) ).
+     arg(Minfo.cellCount( NCellularData::ChainComplexLocator(3, 
+         NCellularData::STD_coord) ) ).
+     arg(Minfo.cellCount( NCellularData::ChainComplexLocator(4, 
+         NCellularData::STD_coord) ) ));
 
-        DualCells->setText(QObject::tr("%1, %2, %3, %4, %5").
-            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(0, NCellularData::DUAL_coord) ) ).
-            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(1, NCellularData::DUAL_coord) ) ).
-            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(2, NCellularData::DUAL_coord) ) ).
-            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(3, NCellularData::DUAL_coord) ) ).
-            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(4, NCellularData::DUAL_coord) ) ));
+    DualCells->setText(QObject::tr("%1, %2, %3, %4, %5").
+     arg(Minfo.cellCount( NCellularData::ChainComplexLocator(0, 
+         NCellularData::DUAL_coord) ) ).
+     arg(Minfo.cellCount( NCellularData::ChainComplexLocator(1, 
+         NCellularData::DUAL_coord) ) ).
+     arg(Minfo.cellCount( NCellularData::ChainComplexLocator(2, 
+         NCellularData::DUAL_coord) ) ).
+     arg(Minfo.cellCount( NCellularData::ChainComplexLocator(3, 
+         NCellularData::DUAL_coord) ) ).
+     arg(Minfo.cellCount( NCellularData::ChainComplexLocator(4, 
+         NCellularData::DUAL_coord) ) ));
 
-        EulerChar->setText(QString::number(Minfo.eulerChar()));
+    EulerChar->setText(QString::number(Minfo.eulerChar()));
 
-        H0H1H2H3->setText(QObject::tr("H0 = %1,  H1 = %2,  H2 = %3,  H3 = %4,  H4 = %5").
-            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(0, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->toString().c_str() ).
-            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(1, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->toString().c_str() ).            
-            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(2, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->toString().c_str() ).           
-            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(3, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->toString().c_str() ).           
-            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(4, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->toString().c_str() ) );          
+    H0H1H2H3->setText(QObject::tr("H0 = %1,  H1 = %2,  H2 = %3,  "
+            "H3 = %4,  H4 = %5").
+    arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(0, 
+         NCellularData::coVariant, NCellularData::DUAL_coord, 0) 
+          )->toString().c_str() ).
+    arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(1, 
+         NCellularData::coVariant, NCellularData::DUAL_coord, 0) 
+          )->toString().c_str() ).            
+    arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(2, 
+         NCellularData::coVariant, NCellularData::DUAL_coord, 0) 
+          )->toString().c_str() ).           
+    arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(3, 
+         NCellularData::coVariant, NCellularData::DUAL_coord, 0) 
+          )->toString().c_str() ).           
+    arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(4, 
+         NCellularData::coVariant, NCellularData::DUAL_coord, 0) 
+          )->toString().c_str() ) );          
 
-         HBdry->setText(QObject::tr("H0 = %1,  H1 = %2,  H2 = %3,  H3 = %4").
-            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(0, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) )->toString().c_str() ).
-            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(1, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) )->toString().c_str() ).            
-            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(2, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) )->toString().c_str() ).            
-            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(3, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) )->toString().c_str() ) );          
+    HBdry->setText(QObject::tr("H0 = %1,  H1 = %2,  H2 = %3,  H3 = %4").
+     arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(0, 
+      NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) 
+       )->toString().c_str() ).
+     arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(1, 
+      NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0)
+       )->toString().c_str() ).            
+     arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(2, 
+      NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) 
+       )->toString().c_str() ).            
+     arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(3, 
+      NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) 
+       )->toString().c_str() ) );          
 
-        BdryMap1->setText(Minfo.homGroup( NCellularData::HomLocator( 
-            NCellularData::GroupLocator( 1, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0 ), 
-            NCellularData::GroupLocator( 1, NCellularData::coVariant, NCellularData::STD_coord, 0 ) ) 
-                        )->toString().c_str() );
-        BdryMap2->setText(Minfo.homGroup( NCellularData::HomLocator( 
-            NCellularData::GroupLocator( 2, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0 ), 
-            NCellularData::GroupLocator( 2, NCellularData::coVariant, NCellularData::STD_coord, 0 ) ) 
-                        )->toString().c_str() );
+    BdryMap1->setText(Minfo.homGroup( NCellularData::HomLocator( 
+     NCellularData::GroupLocator( 1, NCellularData::coVariant, 
+        NCellularData::STD_BDRY_coord, 0 ), 
+     NCellularData::GroupLocator( 1, NCellularData::coVariant, 
+        NCellularData::STD_coord, 0 ) ) 
+      )->toString().c_str() );
+    BdryMap2->setText(Minfo.homGroup( NCellularData::HomLocator( 
+     NCellularData::GroupLocator( 2, NCellularData::coVariant, 
+        NCellularData::STD_BDRY_coord, 0 ), 
+     NCellularData::GroupLocator( 2, NCellularData::coVariant, 
+        NCellularData::STD_coord, 0 ) ) 
+      )->toString().c_str() );
 
-        if (! tri->isConnected()) {
-            QString msg(QObject::tr("Triangulation is disconnected."));
-            sig->setText(msg);
-            AlexInv->setText(msg);
-            Comments->setText(msg);
-        } else {
-            if (tri->isOrientable()) {
-                const regina::NBilinearForm* bil( Minfo.bilinearForm( NCellularData::FormLocator( 
-                NCellularData::intersectionForm,
-            NCellularData::GroupLocator( 2, NCellularData::coVariant, NCellularData::DUAL_coord, 0 ), 
-            NCellularData::GroupLocator( 2, NCellularData::coVariant, NCellularData::DUAL_coord, 0 ) ) ) );
-                std::stringstream ts;
-              // we need to record more than signature if the manifold has boundary since the
-              // intersection form is likely degenerate.  Let's record its rank. 
-                ts << bil->zFormSignature() ;
-               unsigned long rk (bil->rank());
-               if (rk != bil->ldomain().getRank()) 
-                ts << " [rank == "<<rk<<"]";
-               sig->setText( ts.str().c_str() ); 
-            } else {
-                // The torsion linking form routines insist on orientability,
-                // so we should avoid calling them.
-                QString msg(QObject::tr("Manifold is non-orientable."));
-                sig->setText(msg);
-            }
+ if (! tri->isConnected()) {
+     QString msg(QObject::tr("Triangulation is disconnected."));
+     sig->setText(msg);
+     AlexInv->setText(msg);
+     Comments->setText(msg); } else {
+ if (tri->isOrientable()) {
+  const regina::NBilinearForm* bil( Minfo.bilinearForm( 
+   NCellularData::FormLocator( NCellularData::intersectionForm,
+    NCellularData::GroupLocator( 2, NCellularData::coVariant, 
+                                    NCellularData::DUAL_coord, 0 ), 
+    NCellularData::GroupLocator( 2, NCellularData::coVariant, 
+                                    NCellularData::DUAL_coord, 0 ) ) ) );
+  std::stringstream ts;
+  // we need to record more than signature if the manifold has boundary since 
+  // the intersection form is likely degenerate.  Let's record its rank. 
+  ts << bil->zFormSignature() ;
+  unsigned long rk (bil->rank());
+  if (rk != bil->ldomain().getRank()) 
+  ts << " [rank == "<<rk<<"]";
+  sig->setText( ts.str().c_str() );  } else {
+  // The torsion linking form routines insist on orientability,
+  // so we should avoid calling them.
+  QString msg(QObject::tr("Manifold is non-orientable."));
+  sig->setText(msg); }
 
-            if (Minfo.unmarkedGroup( NCellularData::GroupLocator(1, 
-                NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->getRank()==1)
-             {
-                std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > > alex(
-                    Minfo.alexanderIdeal() );
-                std::string aString;
-                for (std::list< NSVPolynomialRing<NLargeInteger> >::iterator i = alex->begin();
-                     i != alex->end(); i++)
-                  {
-                  if (i!=alex->begin()) aString.append(", ");
-                  aString.append( i->toString() );
-                  }
-              AlexInv->setText(QObject::tr(aString.c_str()));
-             }
-            else
-             AlexInv->setText(QObject::tr("No Alexander invariant."));
+ if (Minfo.unmarkedGroup( NCellularData::GroupLocator(1, 
+     NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->getRank()==1)
+  {
+   std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > > 
+    alex( Minfo.alexanderIdeal() );
+   std::string aString;
+   for (std::list< NSVPolynomialRing<NLargeInteger> >::iterator 
+    i = alex->begin(); i != alex->end(); i++)
+     {
+      if (i!=alex->begin()) aString.append(", ");
+      aString.append( i->toString() );
+     }
+   AlexInv->setText(QObject::tr(aString.c_str()));
+  }
+ else AlexInv->setText(QObject::tr("No Alexander invariant."));
 
-            // The embeddability comment is good for both orientable and
-            // non-orientable triangulations.
-            // Encase it in <qt>..</qt> so it can wrap over multiple lines.
-            Comments->setText(QString("<qt>Nothing to say, yet. </qt>"));
-            //Comments->setText(QString("<qt>%1</qt>").arg(
-            //    Qt::escape(Minfo.stringInfo(NCellularData::TORFORM_embinfo).c_str())));
-        }
-    } else {
-        QString msg(QObject::tr("Invalid Triangulation"));
-        Cells->setText(msg);
-        DualCells->setText(msg);
-        EulerChar->setText(msg);
-        H0H1H2H3->setText(msg);
-        HBdry->setText(msg);
-        BdryMap1->setText(msg);
-        BdryMap2->setText(msg);
-        sig->setText(msg);
-        AlexInv->setText(msg);
-        Comments->setText(msg);
-    }
-}
+ // The embeddability comment is good for both orientable and
+ // non-orientable triangulations. Encase it in <qt>..</qt> 
+ // so it can wrap over multiple lines.
+ Comments->setText(QString("<qt>Nothing to say, yet. </qt>"));
+ //Comments->setText(QString("<qt>%1</qt>").arg(
+ //    Qt::escape(Minfo.stringInfo(NCellularData::TORFORM_embinfo).c_str())));
+  }
+ } else {
+   QString msg(QObject::tr("Invalid Triangulation"));
+   Cells->setText(msg);
+   DualCells->setText(msg);
+   EulerChar->setText(msg);
+   H0H1H2H3->setText(msg);
+   HBdry->setText(msg);
+   BdryMap1->setText(msg);
+   BdryMap2->setText(msg);
+   sig->setText(msg);
+   AlexInv->setText(msg);
+   Comments->setText(msg);
+   }
+ }
 
 Dim4TriCellularInfoUI::Dim4TriCellularInfoUI(regina::Dim4Triangulation* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),

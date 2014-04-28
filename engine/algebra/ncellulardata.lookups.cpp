@@ -78,10 +78,12 @@ unsigned long NCellularData::icIxLookup(const NTetrahedron* tet,
 { return lower_bound( icIx[2].begin(), icIx[2].end(), 
   4*tri3->tetrahedronIndex(tet)+i ) - icIx[2].begin(); }
 
+// ideal vertices
 unsigned long NCellularData::icIxLookup(const Dim4Edge* edg, unsigned long i) 
  const
 { return lower_bound( icIx[0].begin(), icIx[0].end(), 
   2*tri4->edgeIndex(edg) + i) - icIx[0].begin(); }
+// ideal edges
 unsigned long NCellularData::icIxLookup(const Dim4Triangle* fac, 
  unsigned long i) const
 { return lower_bound( icIx[1].begin(), icIx[1].end(), 
@@ -224,6 +226,33 @@ unsigned long NCellularData::pi1Lookup(const NTetrahedron* tet,
          (numIdealCells[1] - maxTreeIdB.size())  + 
          (numNonIdealCells[2] - maxTreeStd.size()) + 
          (I - num_less_than(maxTreeSttIdB, I )); }
+
+unsigned long NCellularData::nicIndex( const unsigned long dim, 
+                           const unsigned long idx ) const // nicIx
+{ return nicIx[dim][idx]; }
+
+std::pair< unsigned long, unsigned long > NCellularData::icIndex( 
+    const unsigned long dim, const unsigned long idx ) const // nicIx
+{ return std::pair< unsigned long, unsigned long >
+    ( icIx[dim][idx]/(dim + 2), icIx[dim][idx] % (dim + 2) ); }
+
+unsigned long NCellularData::dcIndex( const unsigned long dim, 
+                       const unsigned long idx ) const // dcIx
+{ return dcIx[dim][idx];}
+
+unsigned long NCellularData::bcIndex( const unsigned long dim, 
+                          const unsigned long idx ) const // bcIx;
+{ return bcIx[dim][idx]; }
+
+unsigned long NCellularData::rIndex( const unsigned long dim, 
+                         const unsigned long idx ) const // rIx;
+{ return rIx[dim][idx]; }
+
+unsigned long NCellularData::stdCellCount( const unsigned long dim ) const
+{ return ( dim < (tri3 ? 4 : 5 ) ? nicIx[dim].size() : 0); }
+
+unsigned long NCellularData::idCellCount( const unsigned long dim ) const
+{ return ( dim < (tri3 ? 3 : 4 ) ? icIx[dim].size() : 0); }
 
 
 } // regina namespace
