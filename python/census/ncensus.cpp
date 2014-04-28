@@ -69,6 +69,7 @@ void addNCensus() {
     s.attr("PURGE_NON_MINIMAL") = NCensus::PURGE_NON_MINIMAL;
     s.attr("PURGE_NON_PRIME") = NCensus::PURGE_NON_PRIME;
     s.attr("PURGE_NON_MINIMAL_PRIME") = NCensus::PURGE_NON_MINIMAL_PRIME;
+    s.attr("PURGE_NON_MINIMAL_HYP") = NCensus::PURGE_NON_MINIMAL_HYP;
     s.attr("PURGE_P2_REDUCIBLE") = NCensus::PURGE_P2_REDUCIBLE;
 }
 

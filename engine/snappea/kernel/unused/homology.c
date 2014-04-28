@@ -39,6 +39,7 @@
  */
 
 #include "kernel.h"
+#include "kernel_namespace.h"
 
 static void         group_to_relation_matrix(GroupPresentation *group, RelationMatrix *relation_matrix, Boolean *overflow);
 static void         allocate_relation_matrix_from_group(GroupPresentation *group, RelationMatrix *relation_matrix);
@@ -921,7 +922,7 @@ static void add_row_multiple(
             sum   = term0 + term1;
 
             if (    (term0 > 0 && term1 > 0 && sum < 0)
-                 || (term0 < 0 && term1 < 0 && (sum > 0 || sum == LONG_MIN)))
+                 || (term0 < 0 && term1 < 0 && (sum > 0 || sum == LIMIT_MIN)))
                 /*
                  *  The addition would cause an overflow.
                  *  Set *overflow to TRUE and let the calling function
@@ -991,7 +992,7 @@ static void add_column_multiple(
             sum   = term0 + term1;
 
             if (    (term0 > 0 && term1 > 0 && sum < 0)
-                 || (term0 < 0 && term1 < 0 && (sum > 0 || sum == LONG_MIN)))
+                 || (term0 < 0 && term1 < 0 && (sum > 0 || sum == LIMIT_MIN)))
                 /*
                  *  The addition would cause an overflow.
                  *  Set *overflow to TRUE and let the calling function
@@ -1087,3 +1088,4 @@ void free_relations(
     if (relation_matrix->relations != NULL)
         my_free(relation_matrix->relations);
 }
+#include "end_namespace.h"

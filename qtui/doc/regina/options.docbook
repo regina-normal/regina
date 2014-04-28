@@ -83,6 +83,24 @@
     </para></glossdef>
    </glossentry>
    <glossentry>
+    <glossterm><guilabel>Support boundary slopes for spun-normal
+    surfaces</guilabel></glossterm>
+    <glossdef><para>
+     &regina; can compute boundary slopes for spun-normal surfaces,
+     but this feature must be explicitly enabled here.
+    </para><para>
+     It is disabled by default because the meridian and longitude are
+     always chosen to be the shortest and second-shortest basis on each cusp.
+     This might not be what you expect&mdash;&regina; cannot
+     tell what basis you might have been using elsewhere, such as in
+     &snappy;.
+    </para><para>
+     If you check this box, &regina; will
+     <link linkend="surfaces-spun">show boundary slopes</link>
+     where it is able to compute them.
+    </para></glossdef>
+   </glossentry>
+   <glossentry>
     <glossterm><guilabel>Support transversely oriented normal
     surfaces</guilabel></glossterm>
     <glossdef><para>

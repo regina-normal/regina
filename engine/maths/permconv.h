@@ -103,6 +103,32 @@ REGINA_API NPerm4 perm3to4(const NPerm3& p);
  */
 REGINA_API NPerm3 perm4to3(const NPerm4& p);
 
+/**
+ * Converts the given 3-element permutation to a 5-element permutation.
+ * The resulting 5-element permutation will map 3 to 3 and 4 to 4, and will
+ * map 0, 1 and 2 to their respective images under \a p.
+ *
+ * @param p the given 3-element permutation.
+ * @return the permutation \a p expressed as a permutation of five
+ * elements, not three.
+ */
+REGINA_API NPerm5 perm3to5(const NPerm3& p);
+
+/**
+ * Expresses the given 5-element permutation as a 3-element permutation.
+ * The resulting 3-element permutation will map 0, 1 and 2 to their
+ * respective images under \a p.  It is assumed that \p maps 3,4 to 3,4
+ * (but it may do so in either order); otherwise this conversion cannot
+ * be performed.
+ *
+ * \pre The given permutation maps 3,4 to 3,4 in some order.
+ *
+ * @param p the given 5-element permutation.
+ * @return the permutation \a p expressed as a permutation of three
+ * elements, not five.
+ */
+REGINA_API NPerm3 perm5to3(const NPerm5& p);
+
 /*@}*/
 
 // Inline conversion functions
@@ -127,6 +153,15 @@ inline NPerm3 perm4to3(const NPerm4& p) {
     // Code map: 0,3,8,7,12,15 -> 0,1,2,3,4,5.
     unsigned char c = p.getPermCode2();
     return NPerm3::fromPermCode(c == 8 ? 2 : c == 7 ? 3 : c / 3);
+}
+
+inline NPerm5 perm3to5(const NPerm3& p) {
+    return NPerm5(p[0], p[1], p[2], 3, 4);
+}
+
+inline NPerm3 perm5to3(const NPerm5& p) {
+    // This can probably be streamlined...
+    return NPerm3(p[0], p[1], p[2]);
 }
 
 } // namespace regina

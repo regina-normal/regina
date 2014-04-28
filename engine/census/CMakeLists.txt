@@ -9,6 +9,7 @@ SET ( FILES
   dim2gluingperms
   dim2gluingpermsearcher
   euler
+  hyperbolic
   ncensus
   nfacepairing
   ngluingperms
