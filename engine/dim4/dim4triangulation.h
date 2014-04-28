@@ -848,10 +848,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
          * contain the same number of pentachora for such an isomorphism
          * to exist.
          *
-         * \todo \opt Improve the complexity by choosing a pentachoron
-         * mapping from each component and following gluings to
-         * determine the others.
-         *
          * If you need to ensure that pentachora are labelled the same in both
          * triangulations, see the stricter test isIdenticalTo() instead.
          *
@@ -864,6 +860,14 @@ class REGINA_API Dim4Triangulation : public NPacket,
          * <tt>if (isIsomorphicTo(other).get())</tt> and the newly
          * created isomorphism (if it exists) will be automatically
          * destroyed.
+         *
+         * If more than one such isomorphism exists, only one will be
+         * returned.  For a routine that returns all such isomorphisms,
+         * see findAllIsomorphisms().
+         *
+         * \todo \opt Improve the complexity by choosing a pentachoron
+         * mapping from each component and following gluings to
+         * determine the others.
          *
          * @param other the triangulation to compare with this one.
          * @return details of the isomorphism if the two triangulations
@@ -907,6 +911,32 @@ class REGINA_API Dim4Triangulation : public NPacket,
          */
         std::auto_ptr<Dim4Isomorphism> isContainedIn(
             const Dim4Triangulation& other) const;
+
+        /**
+         * Finds all ways in which this triangulation is combinatorially
+         * isomorphic to the given triangulation.
+         *
+         * This routine behaves identically to isIsomorphicTo(), except that
+         * instead of returning just one isomorphism, all such isomorphisms
+         * are returned.
+         *
+         * See the isIsomorphicTo() notes for additional information.
+         *
+         * The isomorphisms that are found will be inserted into the
+         * given list.  These isomorphisms will be newly created, and
+         * the caller of this routine is responsible for destroying
+         * them.  The given list will not be emptied before the new
+         * isomorphisms are inserted.
+         *
+         * \ifacespython Not present.
+         *
+         * @param other the triangulation to compare with this one.
+         * @param results the list in which any isomorphisms found will
+         * be stored.
+         * @return the number of isomorphisms that were found.
+         */
+        unsigned long findAllIsomorphisms(const Dim4Triangulation& other,
+                std::list<Dim4Isomorphism*>& results) const;
 
         /**
          * Finds all ways in which an isomorphic copy of this triangulation
@@ -2246,6 +2276,18 @@ inline long Dim4Triangulation::triangleIndex(const Dim4Triangle* tri) const {
 inline long Dim4Triangulation::tetrahedronIndex(const Dim4Tetrahedron* tet)
         const {
     return tet->markedIndex();
+}
+
+inline unsigned long Dim4Triangulation::findAllIsomorphisms(
+        const Dim4Triangulation& other, std::list<Dim4Isomorphism*>& results)
+        const {
+    return findIsomorphisms(other, results, true, false);
+}
+
+inline unsigned long Dim4Triangulation::findAllSubcomplexesIn(
+        const Dim4Triangulation& other, std::list<Dim4Isomorphism*>& results)
+        const {
+    return findIsomorphisms(other, results, false, false);
 }
 
 inline long Dim4Triangulation::getEulerCharTri() const {
