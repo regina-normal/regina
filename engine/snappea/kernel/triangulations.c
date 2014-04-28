@@ -56,6 +56,7 @@
 
 #include "kernel.h"
 #include <stdio.h>  /* for sprintf() in check_neighbors_and_gluings() */
+#include "kernel_namespace.h"
 
 static void check_neighbors_and_gluings(Triangulation *manifold);
 static int  count_the_edge_classes(Triangulation *manifold);
@@ -784,6 +785,11 @@ void copy_triangulation(
     my_free(new_tet);
     my_free(new_edge);
     my_free(new_cusp);
+
+    /*
+     * Copy the dilog function pointer.
+     */
+    destination->dilog = source->dilog;
 }
 
 
@@ -823,6 +829,7 @@ void initialize_triangulation(
     manifold->CS_value[penultimate]     = 0.0;
     manifold->CS_fudge[ultimate]        = 0.0;
     manifold->CS_fudge[penultimate]     = 0.0;
+    manifold->dilog                     = NULL;
 
     initialize_tetrahedron(&manifold->tet_list_begin);
     initialize_tetrahedron(&manifold->tet_list_end);
@@ -1091,3 +1098,4 @@ Permutation compose_permutations(
 
     return result;
 }
+#include "end_namespace.h"

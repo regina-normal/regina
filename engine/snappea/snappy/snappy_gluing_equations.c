@@ -1,4 +1,5 @@
 #include "../kernel/kernel.h"
+#include "../kernel/kernel_namespace.h"
 
 /*
  * This file was originally named "gluing_equations.c" when distributed with
@@ -12,7 +13,6 @@
  * topology of 3-manifolds, http://snappy.computop.org
  *
  * */
-
 
 /*
 
@@ -153,3 +153,4 @@ void free_cusp_equation(int* equation){
   my_free(equation);
 }
   
+#include "../kernel/end_namespace.h"

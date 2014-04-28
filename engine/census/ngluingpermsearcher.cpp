@@ -96,22 +96,25 @@ NGluingPermSearcher* NGluingPermSearcher::bestSearcher(
         bool orientableOnly, bool finiteOnly, int whichPurge,
         UseGluingPerms use, void* useArgs) {
     // Use an optimised algorithm if possible.
-    if (pairing->getNumberOfTetrahedra() >= 3) {
-        if (finiteOnly && pairing->isClosed() &&
+    if (finiteOnly) {
+        if (pairing->isClosed() && pairing->getNumberOfTetrahedra() >= 3 &&
                 (whichPurge & NCensus::PURGE_NON_MINIMAL) &&
                 (whichPurge & NCensus::PURGE_NON_PRIME) &&
                 (orientableOnly ||
                     (whichPurge & NCensus::PURGE_P2_REDUCIBLE))) {
-            // Closed prime minimal P2-irreducible triangulations with >= 3
-            // tetrahedra.
-            return new NClosedPrimeMinSearcher(pairing, autos, orientableOnly,
-                use, useArgs);
-        }
-    }
-
-    if (finiteOnly)
+                // Closed prime minimal P2-irreducible triangulations with >= 3
+                // tetrahedra.
+                return new NClosedPrimeMinSearcher(pairing, autos,
+                    orientableOnly, use, useArgs);
+            }
         return new NCompactSearcher(pairing, autos, orientableOnly,
             whichPurge, use, useArgs);
+    }
+
+    if (pairing->isClosed() && ((whichPurge & NCensus::PURGE_NON_MINIMAL_HYP) ==
+            NCensus::PURGE_NON_MINIMAL_HYP))
+        return new NHyperbolicMinSearcher(pairing, autos, orientableOnly,
+            use, useArgs);
 
     return new NGluingPermSearcher(pairing, autos, orientableOnly, finiteOnly,
         whichPurge, use, useArgs);
@@ -192,7 +195,13 @@ void NGluingPermSearcher::runSearch(long maxDepth) {
         permIndex(adj) = NPerm4::invS3[permIndex(face)];
 
         // Is this going to lead to an unwanted triangulation?
-        if (mayPurge(face))
+        //
+        // Don't test for degree 1 or 2 edges here - for situations
+        // where these can be purged, we will be using a specialised
+        // subclass of NGluingPermSearcher with its own custom
+        // implementation of runSearch().
+        if (lowDegreeEdge(face, false /* degree 1,2 */,
+                whichPurge_ & NCensus::PURGE_NON_MINIMAL))
             continue;
         if (! orientableOnly_)
             if (badEdgeLink(face))
@@ -278,6 +287,8 @@ NGluingPermSearcher* NGluingPermSearcher::readTaggedData(std::istream& in,
         ans = new NCompactSearcher(in, use, useArgs);
     else if (c == NClosedPrimeMinSearcher::dataTag_)
         ans = new NClosedPrimeMinSearcher(in, use, useArgs);
+    else if (c == NHyperbolicMinSearcher::dataTag_)
+        ans = new NHyperbolicMinSearcher(in, use, useArgs);
     else
         return 0;
 
@@ -562,36 +573,6 @@ bool NGluingPermSearcher::lowDegreeEdge(const NTetFace& face,
 
     // No bad low-degree edges were found.
     return false;
-}
-
-bool NGluingPermSearcher::mayPurge(const NTetFace& face) const {
-    // Are we allowed to purge on edges of degree 3?
-    bool mayPurgeDeg3 = (whichPurge_ & NCensus::PURGE_NON_MINIMAL);
-
-    // Are we allowed to purge on edges of degree 1 or 2?
-    //
-    // A 2-0 edge move or a 2-1 edge move can result in one or more of
-    // the following topological changes.
-    //
-    // Bigon squashing:
-    //   - Disc reduction;
-    //   - Sphere decomposition or reduction;
-    //   - Crushing embedded RP2 to an invalid edge.
-    //
-    // Pillow squashing:
-    //   - Loss of 3-ball;
-    //   - Loss of 3-sphere;
-    //   - Loss of L(3,1).
-    //
-    bool mayPurgeDeg12 = (whichPurge_ & NCensus::PURGE_NON_MINIMAL) &&
-        (whichPurge_ & NCensus::PURGE_NON_PRIME) &&
-        ((whichPurge_ & NCensus::PURGE_P2_REDUCIBLE) || orientableOnly_) &&
-        finiteOnly_ && (getNumberOfTetrahedra() > 2);
-
-    if (mayPurgeDeg12 || mayPurgeDeg3)
-        return lowDegreeEdge(face, mayPurgeDeg12, mayPurgeDeg3);
-    else
-        return false;
 }
 
 } // namespace regina

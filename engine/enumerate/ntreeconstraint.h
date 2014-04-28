@@ -286,7 +286,7 @@ class LPConstraintBase {
          * linear function(s), but instead runs independent tests.
          * For instance, if this class is used to constraint Euler
          * characteristic, then ideally this routine would call
-         * s->getEulerCharacteristic() and test the return value of that
+         * s->getEulerChar() and test the return value of that
          * routine instead.
          *
          * @param s the surface to test.
@@ -866,7 +866,7 @@ inline void LPConstraintEuler::constrain(
 }
 
 inline bool LPConstraintEuler::verify(const NNormalSurface* s) {
-    return (s->getEulerCharacteristic() > 0);
+    return (s->getEulerChar() > 0);
 }
 
 inline bool LPConstraintEuler::supported(NormalCoords coords) {

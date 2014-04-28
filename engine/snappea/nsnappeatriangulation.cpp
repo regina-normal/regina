@@ -39,17 +39,10 @@
 #include "snappea/nsnappeatriangulation.h"
 #include "snappea/kernel/kernel_prototypes.h"
 #include "snappea/kernel/triangulation.h"
+#include "snappea/kernel/unix_file_io.h"
 #include "snappea/snappy/SnapPy.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/nthread.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-#include "snappea/kernel/unix_file_io.h"
-#ifdef __cplusplus
-}
-#endif
 
 namespace regina {
 
@@ -63,7 +56,7 @@ namespace {
 NSnapPeaTriangulation::NSnapPeaTriangulation(const NSnapPeaTriangulation& tri) :
         ShareableObject() {
     if (tri.snappeaData)
-        ::copy_triangulation(tri.snappeaData, &snappeaData);
+        regina::snappea::copy_triangulation(tri.snappeaData, &snappeaData);
     else
         snappeaData = 0;
 }
@@ -72,47 +65,48 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri,
         bool allowClosed) {
     snappeaData = reginaToSnapPea(tri, allowClosed);
     if (snappeaData) {
-        ::find_complete_hyperbolic_structure(snappeaData);
+        regina::snappea::find_complete_hyperbolic_structure(snappeaData);
     }
 }
 
 NSnapPeaTriangulation::~NSnapPeaTriangulation() {
-    ::free_triangulation(snappeaData);
+    regina::snappea::free_triangulation(snappeaData);
 }
 
 NSnapPeaTriangulation::SolutionType NSnapPeaTriangulation::solutionType()
         const {
     if (! snappeaData)
         return NSnapPeaTriangulation::not_attempted;
-    return static_cast<SolutionType>(::get_complete_solution_type(snappeaData));
+    return static_cast<SolutionType>(
+        regina::snappea::get_complete_solution_type(snappeaData));
 }
 
 double NSnapPeaTriangulation::volume() const {
     if (! snappeaData)
         return 0;
-    return ::volume(snappeaData, 0);
+    return regina::snappea::volume(snappeaData, 0);
 }
 
 double NSnapPeaTriangulation::volume(int& precision) const {
     if (! snappeaData)
         return 0;
-    return ::volume(snappeaData, &precision);
+    return regina::snappea::volume(snappeaData, &precision);
 }
 
 NTriangulation* NSnapPeaTriangulation::canonize() const {
     if (! snappeaData)
         return 0;
 
-    ::Triangulation* tmp;
-    ::copy_triangulation(snappeaData, &tmp);
+    regina::snappea::Triangulation* tmp;
+    regina::snappea::copy_triangulation(snappeaData, &tmp);
 
-    if (::canonize(tmp) != ::func_OK) {
-        ::free_triangulation(tmp);
+    if (regina::snappea::canonize(tmp) != regina::snappea::func_OK) {
+        regina::snappea::free_triangulation(tmp);
         return 0;
     }
 
     NTriangulation* ans = snapPeaToRegina(tmp);
-    ::free_triangulation(tmp);
+    regina::snappea::free_triangulation(tmp);
     return ans;
 }
 
@@ -120,8 +114,8 @@ void NSnapPeaTriangulation::randomize() {
     if (! snappeaData)
         return;
 
-    ::randomize_triangulation(snappeaData);
-    ::find_complete_hyperbolic_structure(snappeaData);
+    regina::snappea::randomize_triangulation(snappeaData);
+    regina::snappea::find_complete_hyperbolic_structure(snappeaData);
 }
 
 /**
@@ -132,7 +126,7 @@ NMatrixInt* NSnapPeaTriangulation::slopeEquations() const {
     if (! snappeaData)
         return 0;
 
-    ::install_shortest_bases(snappeaData);
+    regina::snappea::install_shortest_bases(snappeaData);
 
     NMatrixInt* matrix =
         new NMatrixInt(2*snappeaData->num_cusps, 3*snappeaData->num_tetrahedra);
@@ -150,20 +144,22 @@ NMatrixInt* NSnapPeaTriangulation::slopeEquations() const {
         // Stephan Tillmann, Mathematische Zeitschrift,
         // DOI: 10.1007/s00209-011-0958-8.
         //   
-        int *equations = ::get_cusp_equation(snappeaData, i, 1, 0, &numRows);
+        int *equations =
+            regina::snappea::get_cusp_equation(snappeaData, i, 1, 0, &numRows);
         for(j=0; j< snappeaData->num_tetrahedra; j++) {
             matrix->entry(2*i,3*j) = equations[3*j+1] - equations[3*j+2];
             matrix->entry(2*i,3*j+1) = equations[3*j+2] - equations[3*j];
             matrix->entry(2*i,3*j+2) = equations[3*j] - equations[3*j+1];
         }
-        ::free_cusp_equation(equations);
-        equations = ::get_cusp_equation(snappeaData, i, 0, 1, &numRows);
+        regina::snappea::free_cusp_equation(equations);
+        equations =
+            regina::snappea::get_cusp_equation(snappeaData, i, 0, 1, &numRows);
         for(j=0; j< snappeaData->num_tetrahedra; j++) {
             matrix->entry(2*i+1,3*j) = equations[3*j+1] - equations[3*j+2];
             matrix->entry(2*i+1,3*j+1) = equations[3*j+2] - equations[3*j];
             matrix->entry(2*i+1,3*j+2) = equations[3*j] - equations[3*j+1];
         }
-        ::free_cusp_equation(equations);
+        regina::snappea::free_cusp_equation(equations);
     }
     return matrix;
 }
@@ -176,8 +172,8 @@ bool NSnapPeaTriangulation::verifyTriangulation(const NTriangulation& tri)
     if (! snappeaData)
         return false;
 
-    ::TriangulationData *data;
-    ::triangulation_to_data(snappeaData, &data);
+    regina::snappea::TriangulationData *data;
+    regina::snappea::triangulation_to_data(snappeaData, &data);
 
     int tet, face, i;
     if (data->num_tetrahedra != tri.getNumberOfTetrahedra()) {
@@ -209,7 +205,8 @@ bool NSnapPeaTriangulation::verifyTriangulation(const NTriangulation& tri)
 
 void NSnapPeaTriangulation::saveAsSnapPea(const char* filename) const {
     if (snappeaData)
-        write_triangulation(snappeaData, const_cast<char*>(filename));
+        regina::snappea::write_triangulation(
+            snappeaData, const_cast<char*>(filename));
 }
 
 void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {
@@ -221,7 +218,7 @@ void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {
     }
 }
 
-::Triangulation* NSnapPeaTriangulation::reginaToSnapPea(
+regina::snappea::Triangulation* NSnapPeaTriangulation::reginaToSnapPea(
         const NTriangulation& tri, bool allowClosed) {
     // Make sure SnapPea is likely to be comfortable with it.
     if (tri.getNumberOfTetrahedra() == 0)
@@ -249,21 +246,22 @@ void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {
     if (tri.getNumberOfTetrahedra() >= INT_MAX)
         return 0;
 
-    ::TriangulationData data;
+    regina::snappea::TriangulationData data;
     data.name = strdup(tri.getPacketLabel().c_str());
     data.num_tetrahedra = static_cast<int>(tri.getNumberOfTetrahedra());
 
     // Fields recalculated by SnapPea:
-    data.solution_type = ::not_attempted;
+    data.solution_type = regina::snappea::not_attempted;
     data.volume = 0;
-    data.orientability = ::unknown_orientability;
+    data.orientability = regina::snappea::unknown_orientability;
     data.CS_value_is_known = false;
     data.CS_value = 0;
     data.num_or_cusps = 0;
     data.num_nonor_cusps = 0;
     data.cusp_data = 0;
 
-    data.tetrahedron_data = new ::TetrahedronData[data.num_tetrahedra];
+    data.tetrahedron_data = new regina::snappea::TetrahedronData[
+        data.num_tetrahedra];
     int tet, face, i, j, k, l;
     NTriangulation::TetrahedronIterator it = tri.getTetrahedra().begin();
     for (tet = 0; tet < data.num_tetrahedra; tet++) {
@@ -289,8 +287,8 @@ void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {
         it++;
     }
 
-    ::Triangulation* ans;
-    ::data_to_triangulation(&data, &ans);
+    regina::snappea::Triangulation* ans;
+    regina::snappea::data_to_triangulation(&data, &ans);
 
     delete[] data.tetrahedron_data;
     free(data.name);
@@ -313,12 +311,13 @@ void NSnapPeaTriangulation::disableKernelMessages() {
     kernelMessages = false;
 }
 
-NTriangulation* NSnapPeaTriangulation::snapPeaToRegina(::Triangulation* tri) {
+NTriangulation* NSnapPeaTriangulation::snapPeaToRegina(
+        regina::snappea::Triangulation* tri) {
     if (! tri)
         return 0;
 
-    ::TriangulationData* data;
-    ::triangulation_to_data(tri, &data);
+    regina::snappea::TriangulationData* data;
+    regina::snappea::triangulation_to_data(tri, &data);
 
     NTriangulation* ans = new NTriangulation();
     ans->setPacketLabel(data->name);
@@ -337,7 +336,7 @@ NTriangulation* NSnapPeaTriangulation::snapPeaToRegina(::Triangulation* tri) {
                     NPerm4(data->tetrahedron_data[i].gluing[j]));
 
     delete[] tet;
-    ::free_triangulation_data(data);
+    regina::snappea::free_triangulation_data(data);
     return ans;
 }
 
