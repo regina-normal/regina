@@ -34,7 +34,6 @@
 
 #include <vector>
 #include <map>
-#include <sstream>
 
 #include "dim4/dim4triangulation.h"
 
@@ -112,95 +111,92 @@ void Dim4Triangulation::barycentricSubdivision() {
     delete[] newPent;
 }
 
-// NOTE: the class subDivNot below should be local to Dim4Triangulation::idealToFinite but
-// this is not allowed until we move to C++0x as templates can't be instantantiated
-// with local types in the current version of GCC.  TODO: Might have to put something in
-// here to ensure subDivNot does not make it into the Regina library.
-//
-// We list the types of pentachora:
-// (1) Original pentachoron, i.e. no ideal vertices.
-// else pen has an ideal vertex. Pen coords.
-// (2) Cone on standard tetrahedron, at pent barycentre. Using ambient pent coords.
-// (3) Cone on ideal tetrahedron, at pent barycentre. Using ambient pent coords.
-// Remaining are cone at pent barycentre of subdivided tetrahedron, ON:
-// (4) Cone on std tri at tet barycentre, using tet coords
-// (5) Cone on ideal tri at tet barycentre, using tet coords
-// else
-// (6) cone at tet barycentre of subdivided triangle with ideal vertices, using tri coords.
-enum subDivType { _OP, _CT, _CiT, _CCt, _CCit, _CCdt };
-//                 (1) (2)   (3)   (4)   (5)     (6)
+namespace {
+    // Supporting material for idealToFinite().
 
-struct subDivNot { // used for types (a) and (b) via tetFlag.
-    subDivType penType;
-    unsigned long penIdx;
-    unsigned long tetIdx; // needed for all but (1).
-    unsigned long triIdx; // needed for (4), (5), (6).
-    unsigned long vtxIdx; // needed to specify which triangle vertex for (6).
+    // NOTE: the class subDivNot below should be local to Dim4Triangulation::idealToFinite but
+    // this is not allowed until we move to C++0x as templates can't be instantantiated
+    // with local types in the current version of GCC.  TODO: Might have to put something in
+    // here to ensure subDivNot does not make it into the Regina library.
+    //
+    // We list the types of pentachora:
+    // (1) Original pentachoron, i.e. no ideal vertices.
+    // else pen has an ideal vertex. Pen coords.
+    // (2) Cone on standard tetrahedron, at pent barycentre. Using ambient pent coords.
+    // (3) Cone on ideal tetrahedron, at pent barycentre. Using ambient pent coords.
+    // Remaining are cone at pent barycentre of subdivided tetrahedron, ON:
+    // (4) Cone on std tri at tet barycentre, using tet coords
+    // (5) Cone on ideal tri at tet barycentre, using tet coords
+    // else
+    // (6) cone at tet barycentre of subdivided triangle with ideal vertices, using tri coords.
+    enum subDivType { _OP, _CT, _CiT, _CCt, _CCit, _CCdt };
+    //                 (1) (2)   (3)   (4)   (5)     (6)
 
-    subDivNot( const subDivNot &cloneMe )
-    {
-        penType = cloneMe.penType;
-        penIdx = cloneMe.penIdx;
-        tetIdx = cloneMe.tetIdx;
-        triIdx = cloneMe.triIdx;
-        vtxIdx = cloneMe.vtxIdx;
-    }
+    struct subDivNot { // used for types (a) and (b) via tetFlag.
+        subDivType penType;
+        unsigned long penIdx;
+        unsigned long tetIdx; // needed for all but (1).
+        unsigned long triIdx; // needed for (4), (5), (6).
+        unsigned long vtxIdx; // needed to specify which triangle vertex for (6).
 
-// final three options optional.
-    subDivNot( subDivType PT, unsigned long PI, unsigned long TI=0,
-               unsigned long tI=0, unsigned long VI=0 )
-    {
-        penType = PT;
-        penIdx = PI;
-        tetIdx = TI;
-        triIdx = tI;
-        vtxIdx = VI;
-    }
+        subDivNot( const subDivNot &cloneMe )
+        {
+            penType = cloneMe.penType;
+            penIdx = cloneMe.penIdx;
+            tetIdx = cloneMe.tetIdx;
+            triIdx = cloneMe.triIdx;
+            vtxIdx = cloneMe.vtxIdx;
+        }
 
-    bool operator<(const subDivNot &other) const
-    {
-        if (penIdx < other.penIdx) return true;
-        if (penIdx > other.penIdx) return false;
-        if (penType < other.penType) return true;
-        if (penType > other.penType) return false;
-        // same penType here.
-        if (penType == _OP) return false;
-        if (tetIdx < other.tetIdx) return true;
-        if (tetIdx > other.tetIdx) return false;
-        if ( (penType == _CT) || (penType == _CiT) ) return false;
-        // done with (1), (2), (3)
-        if (triIdx < other.triIdx) return true;
-        if (triIdx > other.triIdx) return false;
-        if ( (penType==_CCt) || (penType==_CCit) ) return false;
-        // only _CCdt (6) left
-        if (vtxIdx < other.vtxIdx) return true;
-        if (vtxIdx > other.vtxIdx) return false;
-        return false;
-    }
+    // final three options optional.
+        subDivNot( subDivType PT, unsigned long PI, unsigned long TI=0,
+                   unsigned long tI=0, unsigned long VI=0 )
+        {
+            penType = PT;
+            penIdx = PI;
+            tetIdx = TI;
+            triIdx = tI;
+            vtxIdx = VI;
+        }
 
-    std::string label() const
-    {
-        std::stringstream retval;
-        if (penType==_OP)   retval<<"OP."   <<penIdx;
-        else //1
-            if (penType==_CT)   retval<<"CT.P"  <<penIdx<<"T"<<tetIdx;
-            else //2
-                if (penType==_CiT)  retval<<"CiT.P" <<penIdx<<"v"<<tetIdx;
-                else //3
-                    if (penType==_CCt)  retval<<"CCt.P" <<
-                                                  penIdx<<"T"<<tetIdx<<"t"<<triIdx;
-                    else //4
-                        if (penType==_CCit) retval<<"CCit.P"<<
-                                                      penIdx<<"T"<<tetIdx<<"v"<<triIdx;
-                        else //5
-                            if (penType==_CCdt) retval<<"CCdt.P"<<
-                                                          penIdx<<"T"<<tetIdx<<"t"<<triIdx<<"v"<<vtxIdx; //6
-        return retval.str();
-    }
-}; // end def subDivNot
+        bool operator<(const subDivNot &other) const
+        {
+            if (penIdx < other.penIdx) return true;
+            if (penIdx > other.penIdx) return false;
+            if (penType < other.penType) return true;
+            if (penType > other.penType) return false;
+            // same penType here.
+            if (penType == _OP) return false;
+            if (tetIdx < other.tetIdx) return true;
+            if (tetIdx > other.tetIdx) return false;
+            if ( (penType == _CT) || (penType == _CiT) ) return false;
+            // done with (1), (2), (3)
+            if (triIdx < other.triIdx) return true;
+            if (triIdx > other.triIdx) return false;
+            if ( (penType==_CCt) || (penType==_CCit) ) return false;
+            // only _CCdt (6) left
+            if (vtxIdx < other.vtxIdx) return true;
+            if (vtxIdx > other.vtxIdx) return false;
+            return false;
+        }
 
-bool Dim4Triangulation::idealToFinite()
-{
+#if 0 // Not used at present.
+        std::string label() const
+        {
+            std::stringstream retval;
+            if (penType==_OP)   retval<<"OP."   <<penIdx; //1
+            else if (penType==_CT)   retval<<"CT.P"  <<penIdx<<"T"<<tetIdx; //2
+            else if (penType==_CiT)  retval<<"CiT.P" <<penIdx<<"v"<<tetIdx; //3
+            else if (penType==_CCt)  retval<<"CCt.P" << penIdx<<"T"<<tetIdx<<"t"<<triIdx; //4
+            else if (penType==_CCit) retval<<"CCit.P"<< penIdx<<"T"<<tetIdx<<"v"<<triIdx; //5
+            else if (penType==_CCdt) retval<<"CCdt.P"<< penIdx<<"T"<<tetIdx<<"t"<<triIdx<<"v"<<vtxIdx; //6
+            return retval.str();
+        }
+#endif
+    }; // end def subDivNot
+} // anonymous namespace
+
+bool Dim4Triangulation::idealToFinite() {
     bool idVrts(false);
     for (unsigned long i=0; i<getNumberOfVertices(); i++)
         if (getVertex(i)->isIdeal()) {
