@@ -523,6 +523,11 @@ class REGINA_API NGroupExpression : public ShareableObject {
  *
  * If there are \a g generators, they will be numbered 0, 1, ..., <i>g</i>-1.
  *
+ * \todo let's make intelligent simplify a tad more intelligent, and the GUI
+ * call a bit more safe.  Perhaps parallelize the GUI call, and give users
+ * parameters to ensure it won't crash the computer.  Also look at the FPGroup
+ * package.
+ *
  * \testpart
  */
 class REGINA_API NGroupPresentation : public ShareableObject {
