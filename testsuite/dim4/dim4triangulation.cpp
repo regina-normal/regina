@@ -89,6 +89,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(eltMove15);
     CPPUNIT_TEST(vertexLinks);
     CPPUNIT_TEST(edgeLinks);
+    CPPUNIT_TEST(idealToFinite);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -128,6 +129,8 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
         Dim4Triangulation idealPoincareProduct;
             /**< An ideal triangulation of the product P x I, where
                  P is the Poincare homology sphere. */
+        Dim4Triangulation idealCappellShaneson;
+            /**< The simplest triangulated non-trivial 2-knot exterior */
 
         // Both ideal and real boundary:
         Dim4Triangulation mixedPoincareProduct;
@@ -198,6 +201,9 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             copyAndDelete(idealPoincareProduct,
                 Dim4ExampleTriangulation::doubleCone(*base),
                 "(S^3 / P_120) x I (double cone)");
+            copyAndDelete(idealCappellShaneson,
+                Dim4ExampleTriangulation::cappellShaneson(),
+                "2-pentachoron Cappell-Shaneson 2-knot exterior");
             copyAndDelete(mixedPoincareProduct,
                 Dim4ExampleTriangulation::singleCone(*base),
                 "(S^3 / P_120) x I (single cone)");
@@ -376,6 +382,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyValid(ball_singleConeS3);
             verifyValid(ball_layerAndFold);
             verifyValid(idealPoincareProduct);
+            verifyValid(idealCappellShaneson);
             verifyValid(mixedPoincareProduct);
             verifyInvalid(idealFigEightProduct, 3, 2, 2, 0, 0);
             verifyInvalid(mixedFigEightProduct, 2, 1, 1, 0, 0);
@@ -402,6 +409,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyConnected(ball_singleConeS3);
             verifyConnected(ball_layerAndFold);
             verifyConnected(idealPoincareProduct);
+            verifyConnected(idealCappellShaneson);
             verifyConnected(mixedPoincareProduct);
             verifyConnected(idealFigEightProduct);
             verifyConnected(mixedFigEightProduct);
@@ -435,6 +443,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyOrientable(ball_singleConeS3);
             verifyOrientable(ball_layerAndFold);
             verifyOrientable(idealPoincareProduct);
+            verifyOrientable(idealCappellShaneson);
             verifyOrientable(mixedPoincareProduct);
             verifyOrientable(idealFigEightProduct);
             verifyOrientable(mixedFigEightProduct);
@@ -517,6 +526,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyBoundary(ball_singleConeS3, true);
             verifyBoundary(ball_layerAndFold, true);
             verifyBoundary(idealPoincareProduct, false, 2);
+            verifyBoundary(idealCappellShaneson, false, 1, 0, true);
             verifyBoundary(mixedPoincareProduct, true, 1);
             verifyBoundary(idealFigEightProduct, false, 0, true, false);
             verifyBoundary(mixedFigEightProduct, true, 0, true, false);
@@ -617,6 +627,8 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyBoundaryCount(idealPoincareProduct, 2);
             verifyBoundaryTri(idealPoincareProduct, 0, "S3/P120");
             verifyBoundaryTri(idealPoincareProduct, 1, "S3/P120");
+            verifyBoundaryCount(idealCappellShaneson, 1);
+            verifyBoundaryTri(idealCappellShaneson, 0, "S2 x S1");
             verifyBoundaryCount(mixedPoincareProduct, 2);
             verifyBoundaryTri(mixedPoincareProduct, 0, "S3/P120");
             verifyBoundaryTri(mixedPoincareProduct, 1, "S3/P120");
@@ -843,6 +855,8 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyLink(idealPoincareProduct, 0, "S3");
             verifyLink(idealPoincareProduct, 1, "S3/P120");
             verifyLink(idealPoincareProduct, 2, "S3/P120");
+            verifyLinkCount(idealCappellShaneson, 1);
+            verifyLink(idealCappellShaneson, 0, "S2 x S1");
             verifyLinkCount(mixedPoincareProduct, 2);
             verifyLink(mixedPoincareProduct, 0, "B3");
             verifyLink(mixedPoincareProduct, 1, "S3/P120");
@@ -953,6 +967,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyHomologyH1(ball_singleConeS3, "0");
             verifyHomologyH1(ball_layerAndFold, "0");
             verifyHomologyH1(idealPoincareProduct, "0");
+            verifyHomologyH1(idealCappellShaneson, "Z");
             verifyHomologyH1(mixedPoincareProduct, "0");
             verifyHomologyH1(idealFigEightProduct, "Z");
             verifyHomologyH1(mixedFigEightProduct, "Z");
@@ -1790,6 +1805,48 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
 
             runCensusAllBounded(verifyEdgeLinks);
             runCensusAllNoBdry(verifyEdgeLinks);
+        }
+
+        void verifyIdealToFinite(const Dim4Triangulation& tri) {
+            // TODO: Expand this test significantly.
+
+            // Test the same triangulation under several random isomorphisms,
+            // since the idealToFinite() code implements cases separately for
+            // truncating differently-labelled vertices.
+            for (unsigned i = 0; i < 10; ++i) {
+                Dim4Isomorphism* iso = Dim4Isomorphism::random(
+                    tri.getNumberOfPentachora());
+                Dim4Triangulation* other = iso->apply(&tri);
+
+                other->idealToFinite();
+                if (other->isValid() != tri.isValid()) {
+                    std::ostringstream msg;
+                    msg<<tri.getPacketLabel()<<" : idealToFinite nonmanifold.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (!(tri.getHomologyH1()==other->getHomologyH1())) {
+                    std::ostringstream msg;
+                    msg<<tri.getPacketLabel()<<" : idealToFinite H1 error.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (!(tri.getHomologyH2()==other->getHomologyH2())) {
+                    std::ostringstream msg;
+                    msg<<tri.getPacketLabel()<<" : idealToFinite H2 error.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                delete other;
+                delete iso;
+            }
+        }
+
+        void idealToFinite() {
+            // we should take the ideal triangulations we know, truncate them, 
+            // verify they're manifolds, and verify they have the same
+            // homological and homotopy information as before. 
+            verifyIdealToFinite(s4_id); // null test
+            // verifyIdealToFinite(idealPoincareProduct);
+            verifyIdealToFinite(idealCappellShaneson);
         }
 };
 
