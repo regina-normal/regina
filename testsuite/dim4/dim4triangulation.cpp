@@ -1058,29 +1058,35 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyFundGroup(mixedFigEightProduct, "");
         }
 
-        void verifyMakeCanonical(const Dim4Triangulation& tri,
-                int trials = 10) {
-            Dim4Triangulation canonical(tri);
+        static void verifyMakeCanonical(Dim4Triangulation* tri) {
+            // Currently makeCanonical() insists on connected
+            // triangulations only.
+            if (! tri->isConnected())
+                return;
+
+            const int trials = 10;
+
+            Dim4Triangulation canonical(*tri);
             canonical.makeCanonical();
 
             for (int i = 0; i < trials; ++i) {
                 Dim4Isomorphism* iso = Dim4Isomorphism::random(
-                    tri.getNumberOfPentachora());
-                Dim4Triangulation* t = iso->apply(&tri);
+                    tri->getNumberOfPentachora());
+                Dim4Triangulation* t = iso->apply(tri);
                 delete iso;
 
                 t->makeCanonical();
 
-                if (! t->isIsomorphicTo(tri).get()) {
+                if (! t->isIsomorphicTo(*tri).get()) {
                     std::ostringstream msg;
                     msg << "Canonical form for "
-                        << tri.getPacketLabel() << " is non-isomorphic.";
+                        << tri->getPacketLabel() << " is non-isomorphic.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 if (t->detail() != canonical.detail()) {
                     std::ostringstream msg;
                     msg << "Canonical form for "
-                        << tri.getPacketLabel() << " is inconsistent.";
+                        << tri->getPacketLabel() << " is inconsistent.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
@@ -1089,31 +1095,15 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
         }
 
         void makeCanonical() {
-            verifyMakeCanonical(empty);
-            verifyMakeCanonical(s4_id);
-            verifyMakeCanonical(s4_doubleConeS3);
-            verifyMakeCanonical(s3xs1);
-            verifyMakeCanonical(rp4);
-            verifyMakeCanonical(s3xs1Twisted);
-            verifyMakeCanonical(ball_singlePent);
-            verifyMakeCanonical(ball_foldedPent);
-            verifyMakeCanonical(ball_singleConeS3);
-            verifyMakeCanonical(ball_layerAndFold);
-            verifyMakeCanonical(idealPoincareProduct);
-            verifyMakeCanonical(mixedPoincareProduct);
-            verifyMakeCanonical(idealFigEightProduct);
-            verifyMakeCanonical(mixedFigEightProduct);
-            verifyMakeCanonical(pillow_twoCycle);
-            verifyMakeCanonical(pillow_threeCycle);
-            verifyMakeCanonical(pillow_fourCycle);
+            testManualAll(verifyMakeCanonical);
         }
 
-        void verifyIsoSig(const Dim4Triangulation& tri) {
-            std::string sig = tri.isoSig();
+        static void verifyIsoSig(Dim4Triangulation* tri) {
+            std::string sig = tri->isoSig();
 
             if (sig.empty()) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Cannot create isomorphism signature.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -1121,33 +1111,33 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             Dim4Triangulation* rebuild = Dim4Triangulation::fromIsoSig(sig);
             if (! rebuild) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Cannot reconstruct from isomorphism signature \""
                     << sig << "\".";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (! rebuild->isIsomorphicTo(tri).get()) {
+            if (! rebuild->isIsomorphicTo(*tri).get()) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Reconstruction from \"" << sig
                     << "\" is not isomorphic to the original.";
                 CPPUNIT_FAIL(msg.str());
             }
             delete rebuild;
 
-            if (tri.getNumberOfPentachora() == 0)
+            if (tri->getNumberOfPentachora() == 0)
                 return;
 
             std::string otherSig;
             for (unsigned i = 0; i < 10; ++i) {
                 Dim4Isomorphism* iso = Dim4Isomorphism::random(
-                    tri.getNumberOfPentachora());
-                Dim4Triangulation* other = iso->apply(&tri);
+                    tri->getNumberOfPentachora());
+                Dim4Triangulation* other = iso->apply(tri);
 
                 otherSig = other->isoSig();
                 if (otherSig != sig) {
                     std::ostringstream msg;
-                    msg << tri.getPacketLabel()
+                    msg << tri->getPacketLabel()
                         << ": Random isomorphism gives different signature: "
                         << otherSig << " != " << sig << std::endl;
                     CPPUNIT_FAIL(msg.str());
@@ -1159,89 +1149,74 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
         }
 
         void isomorphismSignature() {
-            verifyIsoSig(empty);
-            verifyIsoSig(s4_id);
-            verifyIsoSig(s4_doubleConeS3);
-            verifyIsoSig(s3xs1);
-            verifyIsoSig(rp4);
-            verifyIsoSig(s3xs1Twisted);
-            verifyIsoSig(ball_singlePent);
-            verifyIsoSig(ball_foldedPent);
-            verifyIsoSig(ball_singleConeS3);
-            verifyIsoSig(ball_layerAndFold);
-            verifyIsoSig(idealPoincareProduct);
-            verifyIsoSig(mixedPoincareProduct);
-            verifyIsoSig(idealFigEightProduct);
-            verifyIsoSig(mixedFigEightProduct);
-            verifyIsoSig(pillow_twoCycle);
-            verifyIsoSig(pillow_threeCycle);
-            verifyIsoSig(pillow_fourCycle);
+            testManualAll(verifyIsoSig);
 
+            // Also test some disconnected cases.
             Dim4Triangulation t;
             t.insertTriangulation(rp4);
             t.insertTriangulation(ball_layerAndFold);
             t.setPacketLabel("Disjoint union of two terms");
-            verifyIsoSig(t);
+            verifyIsoSig(&t);
             t.insertTriangulation(idealPoincareProduct);
             t.setPacketLabel("Disjoint union of three terms");
-            verifyIsoSig(t);
+            verifyIsoSig(&t);
         }
 
-        void verifyBary(const Dim4Triangulation& tri) {
-            Dim4Triangulation b(tri);
+        static void verifyBary(Dim4Triangulation* tri) {
+            Dim4Triangulation b(*tri);
             b.barycentricSubdivision();
 
             // Note that subdivisions can turn invalid into valid, but
             // they can never turn valid into invalid.
-            if (tri.isValid() && ! b.isValid()) {
+            if (tri->isValid() && ! b.isValid()) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks validity.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             // Ideal triangulations must be valid, so only consider the
             // valid -> valid case here.
-            if (tri.isValid() && (tri.isIdeal() != b.isIdeal())) {
+            if (tri->isValid() && (tri->isIdeal() != b.isIdeal())) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks idealness.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri.hasBoundaryTetrahedra() != b.hasBoundaryTetrahedra()) {
+            if (tri->hasBoundaryTetrahedra() != b.hasBoundaryTetrahedra()) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks boundary tetrahedra.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             // Some invalid -> valid cases can turn non-closed into closed.
             // Just consider valid only.
-            if (tri.isValid() && (tri.isClosed() != b.isClosed())) {
+            if (tri->isValid() && (tri->isClosed() != b.isClosed())) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks closedness.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri.isOrientable() != b.isOrientable()) {
+            if (tri->isOrientable() != b.isOrientable()) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks orientability.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri.isConnected() != b.isConnected()) {
+            if (tri->isConnected() != b.isConnected()) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks connectedness.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri.getNumberOfComponents() != b.getNumberOfComponents()) {
+            if (tri->getNumberOfComponents() != b.getNumberOfComponents()) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks connected components.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -1249,72 +1224,56 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             // Invalid vertices and edges can wreak havoc on the
             // counting and labelling of boundary components (see
             // Dim4BoundaryComponent for details).
-            if (tri.isValid() && (tri.getNumberOfBoundaryComponents() !=
+            if (tri->isValid() && (tri->getNumberOfBoundaryComponents() !=
                     b.getNumberOfBoundaryComponents())) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks boundary components.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             // The same problem with invalid triangulations and boundary
             // components bites us with Euler characteristic also.
-            if (tri.isValid() &&
-                    (tri.getEulerCharTri() != b.getEulerCharTri())) {
+            if (tri->isValid() &&
+                    (tri->getEulerCharTri() != b.getEulerCharTri())) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks Euler char (tri).";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri.isValid() &&
-                    (tri.getEulerCharManifold() != b.getEulerCharManifold())) {
+            if (tri->isValid() &&
+                    (tri->getEulerCharManifold() != b.getEulerCharManifold())) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks Euler char (mfd).";
                 CPPUNIT_FAIL(msg.str());
             }
 
             // Now run more expensive tests that will be better with
             // *small* triangulations.
-            if (! tri.isValid())
+            if (! tri->isValid())
                 return;
 
             b.intelligentSimplify();
 
-            if (! (tri.getHomologyH1() == b.getHomologyH1())) {
+            if (! (tri->getHomologyH1() == b.getHomologyH1())) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks H1.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! (tri.getHomologyH2() == b.getHomologyH2())) {
+            if (! (tri->getHomologyH2() == b.getHomologyH2())) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks H2.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
 
         void barycentricSubdivision() {
-            verifyBary(empty);
-            verifyBary(s4_id);
-            verifyBary(s4_doubleConeS3);
-            verifyBary(s3xs1);
-            verifyBary(rp4);
-            verifyBary(s3xs1Twisted);
-            verifyBary(ball_singlePent);
-            verifyBary(ball_foldedPent);
-            verifyBary(ball_singleConeS3);
-            verifyBary(ball_layerAndFold);
-            // (too large) verifyBary(idealPoincareProduct);
-            // (too large) verifyBary(mixedPoincareProduct);
-            verifyBary(idealFigEightProduct);
-            verifyBary(mixedFigEightProduct);
-            verifyBary(pillow_twoCycle);
-            verifyBary(pillow_threeCycle);
-            verifyBary(pillow_fourCycle);
+            testManualTiny(verifyBary);
         }
 
         static void verifyEltMove15(Dim4Triangulation* tri) {
