@@ -628,8 +628,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyBoundaryTri(idealPoincareProduct, 0, "S3/P120");
             verifyBoundaryTri(idealPoincareProduct, 1, "S3/P120");
             verifyBoundaryCount(idealCappellShaneson, 1);
-// replace with suitable test.
-//           verifyBoundaryTri(idealCappellShaneson, 0, "S2xS1");
+            verifyBoundaryTri(idealCappellShaneson, 0, "S2 x S1");
             verifyBoundaryCount(mixedPoincareProduct, 2);
             verifyBoundaryTri(mixedPoincareProduct, 0, "S3/P120");
             verifyBoundaryTri(mixedPoincareProduct, 1, "S3/P120");
@@ -857,7 +856,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyLink(idealPoincareProduct, 1, "S3/P120");
             verifyLink(idealPoincareProduct, 2, "S3/P120");
             verifyLinkCount(idealCappellShaneson, 1);
-// replace w/suitable        verifyLink(idealCappellShaneson, 0, "S2xS1");
+            verifyLink(idealCappellShaneson, 0, "S2 x S1");
             verifyLinkCount(mixedPoincareProduct, 2);
             verifyLink(mixedPoincareProduct, 0, "B3");
             verifyLink(mixedPoincareProduct, 1, "S3/P120");
@@ -1808,33 +1807,34 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             runCensusAllNoBdry(verifyEdgeLinks);
         }
 
-        void verifyTrunc(const Dim4Triangulation& tri) {
+        void verifyIdealToFinite(const Dim4Triangulation& tri) {
+            // TODO: Expand this test significantly.
             Dim4Triangulation b(tri);
             b.idealToFinite();
-            if (!b.isValid()) {
-                std::ostringstream msg; 
+            if (b.isValid() != tri.isValid()) {
+                std::ostringstream msg;
                 msg<<tri.getPacketLabel()<<" : idealToFinite nonmanifold.";
                 CPPUNIT_FAIL(msg.str());
-                }
+            }
             if (!(tri.getHomologyH1()==b.getHomologyH1())) {
-                std::ostringstream msg; 
+                std::ostringstream msg;
                 msg<<tri.getPacketLabel()<<" : idealToFinite H1 error.";
                 CPPUNIT_FAIL(msg.str());
-                }
+            }
             if (!(tri.getHomologyH2()==b.getHomologyH2())) {
-                std::ostringstream msg; 
+                std::ostringstream msg;
                 msg<<tri.getPacketLabel()<<" : idealToFinite H2 error.";
                 CPPUNIT_FAIL(msg.str());
-                }
             }
+        }
 
         void idealToFinite() {
             // we should take the ideal triangulations we know, truncate them, 
             // verify they're manifolds, and verify they have the same
             // homological and homotopy information as before. 
-            verifyTrunc( s4_id ); // null test
-            verifyTrunc( idealPoincareProduct );
-            verifyTrunc( idealCappellShaneson );
+            verifyIdealToFinite(s4_id); // null test
+            verifyIdealToFinite(idealPoincareProduct);
+            verifyIdealToFinite(idealCappellShaneson);
         }
 };
 
