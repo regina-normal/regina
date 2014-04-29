@@ -261,6 +261,7 @@ void addDim4Triangulation() {
             OL_collapseEdge())
         .def("barycentricSubdivision",
             &Dim4Triangulation::barycentricSubdivision)
+        .def("idealToFinite", &Dim4Triangulation::idealToFinite)
         .def("insertTriangulation", &Dim4Triangulation::insertTriangulation)
         .def("isoSig", isoSig_void)
         .def("isoSigDetail", isoSig_relabelling)
