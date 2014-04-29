@@ -1447,6 +1447,16 @@ class REGINA_API Dim4Triangulation : public NPacket,
          */
         void barycentricSubdivision();
 
+        /**
+         * Converts an ideal triangulation into a finite triangulation.
+         * All ideal or invalid vertices are truncated and thus
+         * converted into real boundary components made from unglued
+         * facets of pentachora.
+         *
+         * @return \c true if and only if the triangulation was changed.
+         */
+        bool idealToFinite();
+
         /*@}*/
         /**
          * \name Building Triangulations
