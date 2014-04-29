@@ -194,12 +194,16 @@ namespace {
         }
 #endif
     }; // end def subDivNot
+
+    inline bool shouldTruncate(Dim4Vertex* v) {
+        return (v->isIdeal() || ! v->isValid());
+    }
 } // anonymous namespace
 
 bool Dim4Triangulation::idealToFinite() {
     bool idVrts(false);
     for (unsigned long i=0; i<getNumberOfVertices(); i++)
-        if (getVertex(i)->isIdeal()) {
+        if (shouldTruncate(getVertex(i))) {
             idVrts=true;
             break;
         }
@@ -216,7 +220,7 @@ bool Dim4Triangulation::idealToFinite() {
         const Dim4Pentachoron* aPen( getPentachoron(i) ); // ambient pent
         bool pIv(false);   // check if has ideal vertices
         for (unsigned long j=0; j<5; j++)
-            if (aPen->getVertex(j)->isIdeal())
+            if (shouldTruncate(aPen->getVertex(j)))
                 pIv = true;
         if (!pIv) {
             newPens.insert( std::pair< subDivNot, Dim4Pentachoron* >
@@ -225,13 +229,13 @@ bool Dim4Triangulation::idealToFinite() {
         }
         for (unsigned long j=0; j<5; j++) { // tet / pen vtx loop
             // _CiT check
-            if (aPen->getVertex(j)->isIdeal())
+            if (shouldTruncate(aPen->getVertex(j)))
                 newPens.insert( std::pair< subDivNot, Dim4Pentachoron* >
                                 ( subDivNot( _CiT, i, j ), newTri->newPentachoron() ) );
             // _CT check
             bool TIv(false); // tet across from j has ideal vertex?
             for (unsigned long k=1; k<5; k++)
-                if (aPen->getVertex( (j+k) % 5)->isIdeal())
+                if (shouldTruncate(aPen->getVertex( (j+k) % 5)))
                     TIv = true;
             if (!TIv) {
                 newPens.insert( std::pair< subDivNot, Dim4Pentachoron* >
@@ -241,20 +245,20 @@ bool Dim4Triangulation::idealToFinite() {
             // we're in situation 4, 5, or 6.
             const Dim4Tetrahedron* aTet( aPen->getTetrahedron(j) );
             for (unsigned long k=0; k<4; k++) {
-                if (aTet->getVertex(k)->isIdeal())
+                if (shouldTruncate(aTet->getVertex(k)))
                     newPens.insert( std::pair< subDivNot, Dim4Pentachoron* >
                                     ( subDivNot( _CCit, i, j, k ), newTri->newPentachoron() ) ); // CCit
                 newPens.insert( std::pair< subDivNot, Dim4Pentachoron* > // CCt
                                 ( subDivNot( _CCt, i, j, k ), newTri->newPentachoron() ) );
                 bool tIv(false); // check if remaining triangle has ideal vertex or not.
                 for (unsigned long l=1; l<4; l++)
-                    if (aTet->getVertex( (k+l) % 4)->isIdeal()) tIv = true;
+                    if (shouldTruncate(aTet->getVertex( (k+l) % 4))) tIv = true;
                 if (!tIv) continue;
                 // the only way we can get here is the triangle has ideal vertices.
                 // So we have to subdivide canonically.
                 const Dim4Triangle* aTri( aTet->getTriangle(k) );
                 for (unsigned long l=0; l<3; l++)
-                    if (aTri->getVertex(l)->isIdeal() )
+                    if (shouldTruncate(aTri->getVertex(l)) )
                         newPens.insert( std::pair< subDivNot, Dim4Pentachoron* >
                                         ( subDivNot( _CCdt, i, j, k, l ), newTri->newPentachoron() ) );
             } // end k loop
@@ -272,18 +276,18 @@ bool Dim4Triangulation::idealToFinite() {
 
             bool TIv(false);
             for (unsigned long j=0; j<4; j++)
-                if (aTet->getVertex(j)->isIdeal()) {
+                if (shouldTruncate(aTet->getVertex(j))) {
                     TIv=true;
                     break;
                 }
             if (!TIv) { // decide between _OP (1) and _CT (2) for these
                 subDivNot p0( _OP, pentachoronIndex( tEmb0.getPentachoron() ) );
                 subDivNot p1( _OP, pentachoronIndex( tEmb1.getPentachoron() ) );
-                if (tEmb0.getPentachoron()->getVertex( tEmb0.getTetrahedron() )->isIdeal()) {
+                if (shouldTruncate(tEmb0.getPentachoron()->getVertex( tEmb0.getTetrahedron() ))) {
                     p0.penType = _CT;
                     p0.tetIdx = aTet->getEmbedding(0).getTetrahedron();
                 }
-                if (tEmb1.getPentachoron()->getVertex( tEmb1.getTetrahedron() )->isIdeal()) {
+                if (shouldTruncate(tEmb1.getPentachoron()->getVertex( tEmb1.getTetrahedron() ))) {
                     p1.penType = _CT;
                     p1.tetIdx = aTet->getEmbedding(1).getTetrahedron();
                 }
@@ -305,7 +309,7 @@ bool Dim4Triangulation::idealToFinite() {
             for (unsigned long j=0; j<4; j++) {
                 bool tIV(false);   // check if tri across from vertex j has ideal vertices
                 for (unsigned long k=1; k<4; k++)
-                    if (aTet->getVertex( (j+k) % 4 )->isIdeal()) {
+                    if (shouldTruncate(aTet->getVertex( (j+k) % 4 ))) {
                         tIV=true;
                         break;
                     }
@@ -334,7 +338,7 @@ bool Dim4Triangulation::idealToFinite() {
                     p0.penType = _CCdt;
                     p1.penType = _CCdt;
                     for (unsigned long k=0; k<3; k++)
-                        if (aTri->getVertex(k)->isIdeal()) {
+                        if (shouldTruncate(aTri->getVertex(k))) {
                             p0.vtxIdx = k;
                             p1.vtxIdx = k; // the tri with no ideal vertices.
 #ifdef DEBUG // test to check if p0 and p1 exist 
@@ -348,7 +352,7 @@ bool Dim4Triangulation::idealToFinite() {
                             newPens[ p0 ]->joinTo( 4, newPens[ p1 ], NPerm5() );
                         }
                 }
-                if (aTet->getVertex(j)->isIdeal()) { // we have a _CCit
+                if (shouldTruncate(aTet->getVertex(j))) { // we have a _CCit
                     subDivNot p0( _CCit, pentachoronIndex( tEmb0.getPentachoron() ) );
                     subDivNot p1( _CCit, pentachoronIndex( tEmb1.getPentachoron() ) );
                     p0.tetIdx = tEmb0.getTetrahedron();
@@ -373,7 +377,7 @@ bool Dim4Triangulation::idealToFinite() {
         const Dim4Pentachoron* aPen( getPentachoron(i) );
         bool pIv(false);
         for (unsigned long j=0; j<5; j++)
-            if (aPen->getVertex(j)->isIdeal()) pIv = true;
+            if (shouldTruncate(aPen->getVertex(j))) pIv = true;
         if (!pIv) continue; // nothing to do!
         // step 1: all the gluings corresponding to triangle subdivisions, i.e.
         //    all  objects of type (6) CCdt and (4) CCt if on a common pen, tet and triangle.
@@ -385,7 +389,7 @@ bool Dim4Triangulation::idealToFinite() {
                 const Dim4Triangle* aTri( aTet->getTriangle(k) );
                 bool tidV(false);
                 for (unsigned long l=0; l<3; l++)
-                    if (aTri->getVertex(l)->isIdeal()) {
+                    if (shouldTruncate(aTri->getVertex(l))) {
                         tidV = true;
                         break;
                     }
@@ -394,7 +398,7 @@ bool Dim4Triangulation::idealToFinite() {
                 // gluing pattern CCdt 0 -- CCdt 2 -- CCt -- CCdt 1, if not ideal just erase the
                 // CCt uses tet coords.  So we need the tri inclusion.
                 NPerm5 triInc( aTet->getTriangleMapping(k) );
-                if (aTri->getVertex(1)->isIdeal()) { // glue this CCdt to CCt.
+                if (shouldTruncate(aTri->getVertex(1))) { // glue this CCdt to CCt.
                     p0.penType = _CCdt;
                     p1.penType = _CCt;
                     p0.vtxIdx = 1;
@@ -409,7 +413,7 @@ bool Dim4Triangulation::idealToFinite() {
                     newPens[ p0 ]->joinTo( 1, newPens[ p1 ],
                                            NPerm5(triInc[0], triInc[2], triInc[1], triInc[3], triInc[4] ) );
                 }
-                if (aTri->getVertex(2)->isIdeal()) { // glue this CCdt to CCt.
+                if (shouldTruncate(aTri->getVertex(2))) { // glue this CCdt to CCt.
                     p0.penType = _CCdt;
                     p1.penType = _CCt;
                     p0.vtxIdx  = 2;
@@ -424,8 +428,8 @@ bool Dim4Triangulation::idealToFinite() {
                     newPens[ p0 ]->joinTo( 2, newPens[ p1 ],
                                            NPerm5( triInc[0], triInc[2], triInc[1], triInc[3], triInc[4] ) );
                 }
-                if (aTri->getVertex(0)->isIdeal()
-                        && aTri->getVertex(2)->isIdeal()) { // glue 0 to 2
+                if (shouldTruncate(aTri->getVertex(0))
+                        && shouldTruncate(aTri->getVertex(2))) { // glue 0 to 2
                     p0.penType = _CCdt;
                     p1.penType = _CCdt;
                     p0.vtxIdx = 2;
@@ -440,8 +444,8 @@ bool Dim4Triangulation::idealToFinite() {
 #endif // and if gluings previously set. 
                     newPens[ p0 ]->joinTo( 1, newPens[ p1 ], NPerm5(0, 2, 1, 3, 4) );
                 }
-                if (aTri->getVertex(0)->isIdeal()
-                        && !aTri->getVertex(2)->isIdeal()) { // glue 0 CCdt to CCt
+                if (shouldTruncate(aTri->getVertex(0))
+                        && ! shouldTruncate(aTri->getVertex(2))) { // glue 0 CCdt to CCt
                     p0.penType = _CCdt;
                     p1.penType = _CCt;
                     p0.vtxIdx = 0;
@@ -467,7 +471,7 @@ bool Dim4Triangulation::idealToFinite() {
             const Dim4Tetrahedron* aTet( aPen->getTetrahedron(j) );
             bool tIv(false);
             for (unsigned long k=0; k<4; k++)
-                if (aTet->getVertex(k)->isIdeal()) {
+                if (shouldTruncate(aTet->getVertex(k))) {
                     tIv=true;
                     break;
                 }
@@ -476,7 +480,7 @@ bool Dim4Triangulation::idealToFinite() {
             // ideal vertices.  If not, jump to next step.
             // (a) glue the CCit's (tet coords) to the CCdt's and CCts (tri and tet coords).
             for (unsigned long k=0; k<4; k++)
-                if (aTet->getVertex(k)->isIdeal()) {
+                if (shouldTruncate(aTet->getVertex(k))) {
                     subDivNot p0( _CCdt, i, j ); // will have to
                     subDivNot p1( _CCit, i, j, k ); // modify later
                     for (unsigned long l=1; l<4; l++) {
@@ -525,31 +529,31 @@ bool Dim4Triangulation::idealToFinite() {
                 if (eMap[3]==triInc2[0] ) { // id vtx 0 in tri2 adj
                     glueT=triInc2[0];
                     p0.penType = _CCt;
-                } else if (!aTet->getVertex( triInc2[1] )->isIdeal() &&
+                } else if (! shouldTruncate(aTet->getVertex( triInc2[1] )) &&
                            eMap[3]==triInc2[2] ) { // id vtx 1 in tri2 adj
                     glueT=triInc2[2];
                     p0.penType = _CCt;
                 } else // id vtx
-                    if (!aTet->getVertex( triInc2[0] )->isIdeal() &&
-                            !aTet->getVertex( triInc2[2] )->isIdeal() &&
+                    if (! shouldTruncate(aTet->getVertex( triInc2[0] )) &&
+                            ! shouldTruncate(aTet->getVertex( triInc2[2] )) &&
                             eMap[3]==triInc2[1] ) {
                         glueT=triInc2[1];
                         p0.penType = _CCt;
                     } else // now the _CCdt
-                        if (aTet->getVertex( triInc2[1] )->isIdeal() &&
+                        if (shouldTruncate(aTet->getVertex( triInc2[1] )) &&
                                 eMap[3]==triInc2[2] ) { // CCdt vtx 1
                             glueT=2;
                             p0.penType = _CCdt;
                             incPerm0 = triInc2;
                             p0.vtxIdx = 1;
-                        } else if ( aTet->getVertex( triInc2[2] )->isIdeal() &&
-                                    !aTet->getVertex( triInc2[0] )->isIdeal() &&
+                        } else if ( shouldTruncate(aTet->getVertex( triInc2[2] )) &&
+                                    ! shouldTruncate(aTet->getVertex( triInc2[0] )) &&
                                     eMap[3]==triInc2[1] ) {
                             glueT=1;
                             p0.penType = _CCdt;
                             incPerm0 = triInc2;
                             p0.vtxIdx = 2;
-                        } else if ( aTet->getVertex( triInc2[0] )->isIdeal() &&
+                        } else if ( shouldTruncate(aTet->getVertex( triInc2[0] )) &&
                                     eMap[3]==triInc2[1] ) {
                             glueT=0;
                             p0.penType = _CCdt;
@@ -560,27 +564,27 @@ bool Dim4Triangulation::idealToFinite() {
                         }
                 if (eMap[2]==triInc3[0]) { // repeating the above for the other side.
                     p1.penType = _CCt;
-                } else if (!aTet->getVertex( triInc3[1] )->isIdeal() &&
+                } else if (! shouldTruncate(aTet->getVertex( triInc3[1] )) &&
                            eMap[2]==triInc3[2] ) { // id vtx 1 in tri2 adj
                     p1.penType = _CCt;
                 } else // id vtx
-                    if (!aTet->getVertex( triInc3[0] )->isIdeal() &&
-                            !aTet->getVertex( triInc3[2] )->isIdeal() &&
+                    if (! shouldTruncate(aTet->getVertex( triInc3[0] )) &&
+                            ! shouldTruncate(aTet->getVertex( triInc3[2] )) &&
                             eMap[2]==triInc3[1] ) {
                         p1.penType = _CCt;
                     } else // now the _CCdt
-                        if (aTet->getVertex( triInc3[1] )->isIdeal() &&
+                        if (shouldTruncate(aTet->getVertex( triInc3[1] )) &&
                                 eMap[2]==triInc3[2] ) { // CCdt vtx 1
                             p1.penType = _CCdt;
                             incPerm1 = triInc3;
                             p1.vtxIdx = 1;
-                        } else if ( aTet->getVertex( triInc3[2] )->isIdeal() &&
-                                    !aTet->getVertex( triInc3[0] )->isIdeal() &&
+                        } else if ( shouldTruncate(aTet->getVertex( triInc3[2] )) &&
+                                    ! shouldTruncate(aTet->getVertex( triInc3[0] )) &&
                                     eMap[2]==triInc3[1] ) {
                             p1.penType = _CCdt;
                             incPerm1 = triInc3;
                             p1.vtxIdx = 2;
-                        } else if ( aTet->getVertex( triInc3[0] )->isIdeal() &&
+                        } else if ( shouldTruncate(aTet->getVertex( triInc3[0] )) &&
                                     eMap[2]==triInc3[1] ) {
                             p1.penType = _CCdt;
                             incPerm1 = NPerm5(triInc3[1],triInc3[2],triInc3[0], triInc3[3], triInc3[4] );
@@ -605,7 +609,7 @@ bool Dim4Triangulation::idealToFinite() {
         // step 3: glue types in common pen but not in common tet facet.
         // we have an ideal vertex, so this pen is subdivided at the barycentre.
         for (unsigned long j=0; j<5; j++)
-            if (aPen->getVertex(j)->isIdeal()) {
+            if (shouldTruncate(aPen->getVertex(j))) {
                 // **all** CiT type (4) gluings done
                 subDivNot p0( _CiT, i, j ); // uses pen coords
                 subDivNot p1( _CCit, i );   // uses tet coords.
@@ -647,15 +651,15 @@ bool Dim4Triangulation::idealToFinite() {
             // check if the triangle has any ideal vertices
             bool tIv(false);
             for (unsigned long k=0; k<3; k++)
-                if (aTri->getVertex(k)->isIdeal()) {
+                if (shouldTruncate(aTri->getVertex(k))) {
                     tIv=true;
                     break;
                 }
             // if tIv true, both sides are type CCt.
             bool s0it(false), s1it(false); // check if adjacent tets have ideal vertices
             for (unsigned long k=0; k<4; k++) {
-                if (aPen->getVertex(tet0inc[k])->isIdeal()) s0it=true;
-                if (aPen->getVertex(tet1inc[k])->isIdeal()) s1it=true;
+                if (shouldTruncate(aPen->getVertex(tet0inc[k]))) s0it=true;
+                if (shouldTruncate(aPen->getVertex(tet1inc[k]))) s1it=true;
             }
             subDivNot p0( s0it ? _CCt : _CT, i, triInc[3], s0it ? tri0idx : 0 );
             subDivNot p1( s1it ? _CCt : _CT, i, triInc[4], s1it ? tri1idx : 0 );
@@ -675,7 +679,7 @@ bool Dim4Triangulation::idealToFinite() {
                                            triInc[4])*(s0it ? tet0inc : NPerm5()));
             if (!tIv) continue;
             for (unsigned long k=0; k<3; k++)
-                if (aTri->getVertex(k)->isIdeal()) {
+                if (shouldTruncate(aTri->getVertex(k))) {
                     // _CCdt uses triangle coordinates, which are fixed.
                     p0.penType =_CCdt;
                     p1.penType = _CCdt;
