@@ -44,6 +44,7 @@
 #include "regina-core.h"
 #include "generic/dimtraits.h"
 #include <list>
+#include <memory>
 #include <string>
 
 namespace regina {
