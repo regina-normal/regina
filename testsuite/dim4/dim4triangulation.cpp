@@ -163,6 +163,12 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
                  according to a permutation in S_4, which in this case is
                  a 4-cycle. */
 
+        // Disconnected triangulations:
+        Dim4Triangulation disjoint2;
+            /**< A disjoint union of two triangulations. */
+        Dim4Triangulation disjoint3;
+            /**< A disjoint union of three triangulations. */
+
     public:
         void copyAndDelete(Dim4Triangulation& dest, Dim4Triangulation* source,
                 const char* name) {
@@ -262,6 +268,17 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             p[0]->joinTo(3, p[1], NPerm5());
             p[0]->joinTo(4, p[1], NPerm5(3, 2, 0, 1, 4));
             pillow_fourCycle.setPacketLabel("Invalid 4-cycle pillow");
+
+            // Build disconnected triangulations from others that we
+            // already have.
+            disjoint2.insertTriangulation(s3xs1);
+            disjoint2.insertTriangulation(ball_layerAndFold);
+            disjoint2.setPacketLabel("Disjoint union of two triangulations");
+
+            disjoint3.insertTriangulation(rp4);
+            disjoint3.insertTriangulation(ball_layerAndFold);
+            disjoint3.insertTriangulation(idealPoincareProduct);
+            disjoint3.setPacketLabel("Disjoint union of three triangulations");
         }
 
         void tearDown() {
@@ -289,6 +306,8 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             f(&pillow_twoCycle);
             f(&pillow_threeCycle);
             f(&pillow_fourCycle);
+            f(&disjoint2);
+            f(&disjoint3);
         }
 
         /**
@@ -314,6 +333,8 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             f(&pillow_twoCycle);
             f(&pillow_threeCycle);
             f(&pillow_fourCycle);
+            f(&disjoint2);
+            // f(&disjoint3);
         }
 
         void verifyValid(const Dim4Triangulation& tri) {
@@ -446,6 +467,12 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
                     " is reported as disconnected.");
         }
 
+        void verifyDisconnected(const Dim4Triangulation& tri) {
+            if (tri.isConnected())
+                CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
+                    " is reported as connected.");
+        }
+
         void connectedness() {
             verifyConnected(empty);
             verifyConnected(s4_id);
@@ -465,6 +492,8 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyConnected(pillow_twoCycle);
             verifyConnected(pillow_threeCycle);
             verifyConnected(pillow_fourCycle);
+            verifyDisconnected(disjoint2);
+            verifyDisconnected(disjoint3);
         }
 
         void verifyOrientable(const Dim4Triangulation& tri,
@@ -1150,16 +1179,6 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
 
         void isomorphismSignature() {
             testManualAll(verifyIsoSig);
-
-            // Also test some disconnected cases.
-            Dim4Triangulation t;
-            t.insertTriangulation(rp4);
-            t.insertTriangulation(ball_layerAndFold);
-            t.setPacketLabel("Disjoint union of two terms");
-            verifyIsoSig(&t);
-            t.insertTriangulation(idealPoincareProduct);
-            t.setPacketLabel("Disjoint union of three terms");
-            verifyIsoSig(&t);
         }
 
         static void verifyBary(Dim4Triangulation* tri) {
