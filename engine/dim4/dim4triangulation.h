@@ -929,23 +929,23 @@ class REGINA_API Dim4Triangulation : public NPacket,
          */
         bool isConnected() const;
 
-        // NOTE for Ben: this seems to be quite a bit more efficent than the NTriangulation::order()
-        //  routine written by Goerner.  Perhaps we should port this code back to NTriangulation 
-        //  as well. Would have to accomodate the forceOriented condition. --ryan 
         /**
-         * Relabels tetrahedron vertices in this triangulation to give
+         * Relabels pentachoron vertices in this triangulation to give
          * an ordered triangulation, if possible.
          *
-         * To be an ordered triangulation, all face gluings (when restricted
-         * to the tetrahedron face) must be order preserving. In other words,
+         * To be an ordered triangulation, all facet gluings (when restricted
+         * to the pentachoron facet) must be order preserving. In other words,
          * it must be possible to orient all edges of the triangulation in
          * such a fashion that they are consistent with the ordering of the
-         * vertices in each tetrahedron.
+         * vertices in each pentachoron.
          *
          * If it is possible to order this triangulation, the vertices
-         * of each tetrahedron will be relabelled accordingly and this
+         * of each pentachoron will be relabelled accordingly and this
          * routine will return \c true.  Otherwise, this routine will
          * return \c false and the triangulation will not be changed.
+         *
+         * \todo \opt This is more efficient than the NTriangulation analogue;
+         * perhaps merge this and/or make it dimension-agnostic.
          *
          * @return \c true if the triangulation has been successfully ordered
          * as described above, or \c false if not.
@@ -1584,9 +1584,9 @@ class REGINA_API Dim4Triangulation : public NPacket,
 
         /**
          * Converts an ideal triangulation into a finite triangulation.
-         * All ideal or non-standard vertices are truncated and thus
+         * All ideal or invalid vertices are truncated and thus
          * converted into real boundary components made from unglued
-         * faces of tetrahedra.
+         * facets of pentachora.
          *
          * @return \c true if and only if the triangulation was changed.
          * @author Ryan Budney
