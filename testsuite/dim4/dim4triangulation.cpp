@@ -1967,8 +1967,8 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyIdealToFinite(&pillow_threeCycle);
             verifyIdealToFinite(&pillow_fourCycle);
 
-            runCensusAllBounded(verifyIdealToFinite);
-            // runCensusAllNoBdry(verifyIdealToFinite);
+            runCensusAllBounded(verifyIdealToFinite); // No change
+            runCensusAllNoBdry(verifyIdealToFinite); // Sometimes change
         }
 };
 
