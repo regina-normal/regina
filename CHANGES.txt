@@ -44,6 +44,12 @@ Version 4.96  [ (under development) ]
         Class Dim2Triangulation:
             - New routine isIdenticalTo().
             - New local modification oneThreeMove().
+            - New routine findAllIsomorphisms().
+            - Several isomorphism-related routines have been moved into
+              the dimension-agnostic NGenericTriangulation template, and
+              isomorphism signature routines now inherit directly from
+              NGenericTriangulation instead of using wrappers.
+              See the NGenericTriangulation notes below for details.
         Class Dim2VertexEmbedding:
             - New convenience operators == and !=.
         Class NAbelianGroup:
@@ -57,6 +63,12 @@ Version 4.96  [ (under development) ]
               census of cusped finite volume hyperbolic 3-manifolds.
         Class NFaceEmbedding:
             - New convenience operators == and !=.
+        Class NGenericTriangulation:
+            - Moved isIdenticalTo(), isIsomorphicTo(), isContainedIn(),
+              findAllSubcomplexesIn() and makeCanonical() from
+              Dim2Triangulation and NTriangulation into this class.
+            - New routine findAllIsomorphisms().
+            - Made isoSig(), fromIsoSig() and isoSigComponentSize() public.
         Class NGluingPermSearcher:
             - Removed protected routine mayPurge(), since this behaviour is
               already provided by specialised subclasses of NGluingPermSearcher.
@@ -73,6 +85,10 @@ Version 4.96  [ (under development) ]
               deprecated alias for backward compatibility.
             - Renamed the protected routine calculateEulerCharacteristic() to
               calculateEulerChar().
+        Class NPerm3, NPerm4, NPerm5:
+            - New dimension-agnostic alias invSn.
+            - Changed the type of NPerm3::invS3 from int to unsigned,
+              for consistenty with NPerm4 and NPerm5.
         Class NSnapPeaTriangulation:
             - Updated the SnapPea kernel to the one shipped with SnapPy 2.1.
             - The entire SnapPea kernel now lives within the namespace
@@ -90,7 +106,12 @@ Version 4.96  [ (under development) ]
         Class NTriangulation:
             - New routine isIdenticalTo().
             - New local modification oneFourMove().
-            - New routine findAllIsomorphisms().
+            - New routines findAllIsomorphisms() and makeCanonical().
+            - Several isomorphism-related routines have been moved into
+              the dimension-agnostic NGenericTriangulation template, and
+              isomorphism signature routines now inherit directly from
+              NGenericTriangulation instead of using wrappers.
+              See the NGenericTriangulation notes above for details.
         Class NVertex:
             - Renamed getLinkEulerCharacteristic() to getLinkEulerChar(), which
               is easier on the fingers.  The old name has been kept as a

@@ -60,6 +60,8 @@ const unsigned NPerm4::invS4[24] = {
     14, 21, 22, 17
 };
 
+const unsigned* NPerm4::invSn = NPerm4::invS4;
+
 const unsigned* allPermsS4Inv = NPerm4::invS4;
 
 const NPerm4 NPerm4::orderedS4[24] = {
