@@ -1809,22 +1809,34 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
 
         void verifyIdealToFinite(const Dim4Triangulation& tri) {
             // TODO: Expand this test significantly.
-            Dim4Triangulation b(tri);
-            b.idealToFinite();
-            if (b.isValid() != tri.isValid()) {
-                std::ostringstream msg;
-                msg<<tri.getPacketLabel()<<" : idealToFinite nonmanifold.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (!(tri.getHomologyH1()==b.getHomologyH1())) {
-                std::ostringstream msg;
-                msg<<tri.getPacketLabel()<<" : idealToFinite H1 error.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (!(tri.getHomologyH2()==b.getHomologyH2())) {
-                std::ostringstream msg;
-                msg<<tri.getPacketLabel()<<" : idealToFinite H2 error.";
-                CPPUNIT_FAIL(msg.str());
+
+            // Test the same triangulation under several random isomorphisms,
+            // since the idealToFinite() code implements cases separately for
+            // truncating differently-labelled vertices.
+            for (unsigned i = 0; i < 10; ++i) {
+                Dim4Isomorphism* iso = Dim4Isomorphism::random(
+                    tri.getNumberOfPentachora());
+                Dim4Triangulation* other = iso->apply(&tri);
+
+                other->idealToFinite();
+                if (other->isValid() != tri.isValid()) {
+                    std::ostringstream msg;
+                    msg<<tri.getPacketLabel()<<" : idealToFinite nonmanifold.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (!(tri.getHomologyH1()==other->getHomologyH1())) {
+                    std::ostringstream msg;
+                    msg<<tri.getPacketLabel()<<" : idealToFinite H1 error.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (!(tri.getHomologyH2()==other->getHomologyH2())) {
+                    std::ostringstream msg;
+                    msg<<tri.getPacketLabel()<<" : idealToFinite H2 error.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                delete other;
+                delete iso;
             }
         }
 
