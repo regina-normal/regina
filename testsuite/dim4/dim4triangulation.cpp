@@ -1807,14 +1807,14 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             runCensusAllNoBdry(verifyEdgeLinks);
         }
 
-        void verifyIdealToFinite(const Dim4Triangulation& tri) {
+        static void verifyIdealToFinite(Dim4Triangulation* tri) {
             bool shouldTruncate = false;
-            if (tri.isValid() && ! tri.isIdeal()) {
+            if (tri->isValid() && ! tri->isIdeal()) {
                 // Should not truncate any vertices.
             } else {
-                for (unsigned i = 0; i < tri.getNumberOfVertices(); ++i)
-                    if (tri.getVertex(i)->isIdeal() ||
-                            ! tri.getVertex(i)->isValid()) {
+                for (unsigned i = 0; i < tri->getNumberOfVertices(); ++i)
+                    if (tri->getVertex(i)->isIdeal() ||
+                            ! tri->getVertex(i)->isValid()) {
                         shouldTruncate = true;
                         break;
                     }
@@ -1822,11 +1822,11 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
 
             if (! shouldTruncate) {
                 // The idealToFinite routine should leave tri unchanged.
-                Dim4Triangulation other(tri);
+                Dim4Triangulation other(*tri);
                 other.idealToFinite();
-                if (! other.isIdenticalTo(tri)) {
+                if (! other.isIdenticalTo(*tri)) {
                     std::ostringstream msg;
-                    msg << tri.getPacketLabel() << ": "
+                    msg << tri->getPacketLabel() << ": "
                         << "idealToFinite modifies a triangulation with "
                         "no truncatable vertices.";
                     CPPUNIT_FAIL(msg.str());
@@ -1840,140 +1840,135 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             //
             // We use just a couple of different isomorphisms here, since this
             // is a slow test and we are running it over a great many examples.
-            Dim4Triangulation* other;
             for (unsigned i = 0; i < 2; ++i) {
+                Dim4Triangulation other(*tri);
                 if (i > 0) {
                     Dim4Isomorphism* iso = Dim4Isomorphism::random(
-                        tri.getNumberOfPentachora());
-                    other = iso->apply(&tri);
+                        other.getNumberOfPentachora());
+                    iso->applyInPlace(&other);
                     delete iso;
-                } else
-                    other = new Dim4Triangulation(tri);
+                }
 
-                other->idealToFinite();
+                other.idealToFinite();
 
-                if (other->isIdenticalTo(tri)) {
+                if (other.isIdenticalTo(*tri)) {
                     std::ostringstream msg;
-                    msg << tri.getPacketLabel() << ": "
+                    msg << tri->getPacketLabel() << ": "
                         << "idealToFinite does not modify a triangulation with "
                         "truncatable vertices.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (! other->hasBoundaryTetrahedra()) {
+                if (! other.hasBoundaryTetrahedra()) {
                     std::ostringstream msg;
-                    msg << tri.getPacketLabel() << ": "
+                    msg << tri->getPacketLabel() << ": "
                         << "idealToFinite does not produce real boundary.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (other->isIdeal()) {
+                if (other.isIdeal()) {
                     std::ostringstream msg;
-                    msg << tri.getPacketLabel() << ": "
+                    msg << tri->getPacketLabel() << ": "
                         << "idealToFinite does not remove ideal vertices.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (other->isOrientable() != tri.isOrientable()) {
+                if (other.isOrientable() != tri->isOrientable()) {
                     std::ostringstream msg;
-                    msg << tri.getPacketLabel() << ": "
+                    msg << tri->getPacketLabel() << ": "
                         << "idealToFinite changes orientability.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (other->isClosed() != tri.isClosed()) {
+                if (other.isClosed() != tri->isClosed()) {
                     std::ostringstream msg;
-                    msg << tri.getPacketLabel() << ": "
+                    msg << tri->getPacketLabel() << ": "
                         << "idealToFinite changes closedness.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (other->isConnected() != tri.isConnected()) {
+                if (other.isConnected() != tri->isConnected()) {
                     std::ostringstream msg;
-                    msg << tri.getPacketLabel() << ": "
+                    msg << tri->getPacketLabel() << ": "
                         << "idealToFinite changes connectedness.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (tri.isValid()) {
+                if (tri->isValid()) {
                     // Subdivision can change invalid to valid, but never
                     // the other way.
-                    if (! other->isValid()) {
+                    if (! other.isValid()) {
                         std::ostringstream msg;
-                        msg << tri.getPacketLabel() << ": "
+                        msg << tri->getPacketLabel() << ": "
                             << "idealToFinite destroys validity.";
                         CPPUNIT_FAIL(msg.str());
                     }
 
                     // Subdivisions can change these properties for
                     // invalid triangulations.
-                    if (other->getEulerCharManifold() !=
-                            tri.getEulerCharManifold()) {
+                    if (other.getEulerCharManifold() !=
+                            tri->getEulerCharManifold()) {
                         std::ostringstream msg;
-                        msg << tri.getPacketLabel() << ": "
+                        msg << tri->getPacketLabel() << ": "
                             << "idealToFinite changes Euler characteristic.";
                         CPPUNIT_FAIL(msg.str());
                     }
 
-                    if (other->getNumberOfBoundaryComponents() !=
-                            tri.getNumberOfBoundaryComponents()) {
+                    if (other.getNumberOfBoundaryComponents() !=
+                            tri->getNumberOfBoundaryComponents()) {
                         std::ostringstream msg;
-                        msg << tri.getPacketLabel() << ": "
+                        msg << tri->getPacketLabel() << ": "
                             << "idealToFinite changes # boundary components.";
                         CPPUNIT_FAIL(msg.str());
                     }
 
                     // These properties can only be computed for valid
                     // triangulations.
-                    other->intelligentSimplify();
+                    other.intelligentSimplify();
 
-                    if (! (other->getHomologyH1() == tri.getHomologyH1())) {
+                    if (! (other.getHomologyH1() == tri->getHomologyH1())) {
                         std::ostringstream msg;
-                        msg << tri.getPacketLabel() << ": "
+                        msg << tri->getPacketLabel() << ": "
                             << "idealToFinite changes H1.";
                         CPPUNIT_FAIL(msg.str());
                     }
 
-                    if (! (other->getHomologyH2() == tri.getHomologyH2())) {
+                    if (! (other.getHomologyH2() == tri->getHomologyH2())) {
                         std::ostringstream msg;
-                        msg << tri.getPacketLabel() << ": "
+                        msg << tri->getPacketLabel() << ": "
                             << "idealToFinite changes H2.";
                         CPPUNIT_FAIL(msg.str());
                     }
                 }
-
-                delete other;
             }
         }
 
         void idealToFinite() {
             // Triangulations that should not change:
-            verifyIdealToFinite(empty);
-            verifyIdealToFinite(s4_id);
-            verifyIdealToFinite(s4_doubleConeS3);
-            verifyIdealToFinite(s3xs1);
-            verifyIdealToFinite(rp4);
-            verifyIdealToFinite(s3xs1Twisted);
-            verifyIdealToFinite(ball_singlePent);
-            verifyIdealToFinite(ball_foldedPent);
-            verifyIdealToFinite(ball_singleConeS3);
-            verifyIdealToFinite(ball_layerAndFold);
+            verifyIdealToFinite(&empty);
+            verifyIdealToFinite(&s4_id);
+            verifyIdealToFinite(&s4_doubleConeS3);
+            verifyIdealToFinite(&s3xs1);
+            verifyIdealToFinite(&rp4);
+            verifyIdealToFinite(&s3xs1Twisted);
+            verifyIdealToFinite(&ball_singlePent);
+            verifyIdealToFinite(&ball_foldedPent);
+            verifyIdealToFinite(&ball_singleConeS3);
+            verifyIdealToFinite(&ball_layerAndFold);
 
             // Ideal triangulations that should change:
-            verifyIdealToFinite(idealPoincareProduct);
-            verifyIdealToFinite(idealCappellShaneson);
-            verifyIdealToFinite(mixedPoincareProduct);
+            verifyIdealToFinite(&idealPoincareProduct);
+            verifyIdealToFinite(&idealCappellShaneson);
+            verifyIdealToFinite(&mixedPoincareProduct);
 
             // Invalid triangulations that should change:
-            verifyIdealToFinite(idealFigEightProduct);
-            verifyIdealToFinite(mixedFigEightProduct);
-            verifyIdealToFinite(pillow_twoCycle);
-            verifyIdealToFinite(pillow_threeCycle);
-            verifyIdealToFinite(pillow_fourCycle);
+            verifyIdealToFinite(&idealFigEightProduct);
+            verifyIdealToFinite(&mixedFigEightProduct);
+            verifyIdealToFinite(&pillow_twoCycle);
+            verifyIdealToFinite(&pillow_threeCycle);
+            verifyIdealToFinite(&pillow_fourCycle);
 
-            /*
             runCensusAllBounded(verifyIdealToFinite);
-            runCensusAllNoBdry(verifyIdealToFinite);
-            */
+            // runCensusAllNoBdry(verifyIdealToFinite);
         }
 };
 
