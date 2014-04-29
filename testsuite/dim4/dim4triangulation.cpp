@@ -203,7 +203,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
                 "(S^3 / P_120) x I (double cone)");
             copyAndDelete(idealCappellShaneson,
                 Dim4ExampleTriangulation::cappellShaneson(),
-                "2-Pentachoron Cappell-Shaneson 2-knot exterior");
+                "2-pentachoron Cappell-Shaneson 2-knot exterior");
             copyAndDelete(mixedPoincareProduct,
                 Dim4ExampleTriangulation::singleCone(*base),
                 "(S^3 / P_120) x I (single cone)");
@@ -1833,7 +1833,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             // verify they're manifolds, and verify they have the same
             // homological and homotopy information as before. 
             verifyIdealToFinite(s4_id); // null test
-            verifyIdealToFinite(idealPoincareProduct);
+            // verifyIdealToFinite(idealPoincareProduct);
             verifyIdealToFinite(idealCappellShaneson);
         }
 };
