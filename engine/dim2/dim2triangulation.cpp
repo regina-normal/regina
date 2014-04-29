@@ -53,32 +53,6 @@ Dim2Triangulation::Dim2Triangulation(const std::string& description) :
     delete attempt;
 }
 
-bool Dim2Triangulation::isIdenticalTo(const Dim2Triangulation& other) const {
-    if (triangles_.size() != other.triangles_.size())
-        return false;
-
-    unsigned long i;
-    unsigned j;
-    for (i = 0; i < triangles_.size(); ++i)
-        for (j = 0; j < 3; ++j) {
-            if (triangles_[i]->adjacentTriangle(j)) {
-                if (! other.triangles_[i]->adjacentTriangle(j))
-                    return false;
-                if (triangles_[i]->adjacentTriangle(j)->markedIndex() !=
-                        other.triangles_[i]->adjacentTriangle(j)->markedIndex())
-                    return false;
-                if (triangles_[i]->adjacentGluing(j) !=
-                        other.triangles_[i]->adjacentGluing(j))
-                    return false;
-            } else {
-                if (other.triangles_[i]->adjacentTriangle(j))
-                    return false;
-            }
-        }
-
-    return true;
-}
-
 bool Dim2Triangulation::isMinimal() const {
     // 2-sphere:
     if (getEulerChar() == 2)

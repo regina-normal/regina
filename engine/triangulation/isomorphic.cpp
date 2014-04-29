@@ -39,29 +39,6 @@
 
 namespace regina {
 
-std::auto_ptr<NIsomorphism> NTriangulation::isIsomorphicTo(
-        const NTriangulation& other) const {
-    std::list<NIsomorphism*> results;
-    if (findIsomorphisms(other, results, true, true))
-        return std::auto_ptr<NIsomorphism>(results.front());
-    else
-        return std::auto_ptr<NIsomorphism>(0);
-}
-
-std::auto_ptr<NIsomorphism> NTriangulation::isContainedIn(
-        const NTriangulation& other) const {
-    std::list<NIsomorphism*> results;
-    if (findIsomorphisms(other, results, false, true))
-        return std::auto_ptr<NIsomorphism>(results.front());
-    else
-        return std::auto_ptr<NIsomorphism>(0);
-}
-
-unsigned long NTriangulation::findAllSubcomplexesIn(
-        const NTriangulation& other, std::list<NIsomorphism*>& results) const {
-    return findIsomorphisms(other, results, false, false);
-}
-
 unsigned long NTriangulation::findIsomorphisms(
         const NTriangulation& other, std::list<NIsomorphism*>& results,
         bool completeIsomorphism, bool firstOnly) const {
