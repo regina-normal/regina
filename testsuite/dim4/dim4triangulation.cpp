@@ -267,6 +267,55 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
         void tearDown() {
         }
 
+        /**
+         * Run a given test over all hand-coded test cases.
+         */
+        void testManualAll(Dim4TriangulationTestFunction f) {
+            f(&empty);
+            f(&s4_id);
+            f(&s4_doubleConeS3);
+            f(&s3xs1);
+            f(&rp4);
+            f(&s3xs1Twisted);
+            f(&ball_singlePent);
+            f(&ball_foldedPent);
+            f(&ball_singleConeS3);
+            f(&ball_layerAndFold);
+            f(&idealPoincareProduct);
+            f(&idealCappellShaneson);
+            f(&mixedPoincareProduct);
+            f(&idealFigEightProduct);
+            f(&mixedFigEightProduct);
+            f(&pillow_twoCycle);
+            f(&pillow_threeCycle);
+            f(&pillow_fourCycle);
+        }
+
+        /**
+         * Run a given test over all hand-coded test cases that are not
+         * too large.
+         */
+        void testManualTiny(Dim4TriangulationTestFunction f) {
+            f(&empty);
+            f(&s4_id);
+            f(&s4_doubleConeS3);
+            f(&s3xs1);
+            f(&rp4);
+            f(&s3xs1Twisted);
+            f(&ball_singlePent);
+            f(&ball_foldedPent);
+            f(&ball_singleConeS3);
+            f(&ball_layerAndFold);
+            // f(&idealPoincareProduct);
+            f(&idealCappellShaneson);
+            // f(&mixedPoincareProduct);
+            f(&idealFigEightProduct);
+            f(&mixedFigEightProduct);
+            f(&pillow_twoCycle);
+            f(&pillow_threeCycle);
+            f(&pillow_fourCycle);
+        }
+
         void verifyValid(const Dim4Triangulation& tri) {
             if (! tri.isValid()) {
                 CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
@@ -1362,24 +1411,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
         }
 
         void eltMove15() {
-            verifyEltMove15(&empty);
-            verifyEltMove15(&s4_id);
-            verifyEltMove15(&s4_doubleConeS3);
-            verifyEltMove15(&s3xs1);
-            verifyEltMove15(&rp4);
-            verifyEltMove15(&s3xs1Twisted);
-            verifyEltMove15(&ball_singlePent);
-            verifyEltMove15(&ball_foldedPent);
-            verifyEltMove15(&ball_singleConeS3);
-            verifyEltMove15(&ball_layerAndFold);
-            verifyEltMove15(&idealPoincareProduct);
-            verifyEltMove15(&mixedPoincareProduct);
-            verifyEltMove15(&idealFigEightProduct);
-            verifyEltMove15(&mixedFigEightProduct);
-            verifyEltMove15(&pillow_twoCycle);
-            verifyEltMove15(&pillow_threeCycle);
-            verifyEltMove15(&pillow_fourCycle);
-
+            testManualAll(verifyEltMove15);
             runCensusAllBounded(verifyEltMove15);
             runCensusAllNoBdry(verifyEltMove15);
         }
@@ -1573,24 +1605,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
         }
 
         void vertexLinks() {
-            verifyVertexLinks(&empty);
-            verifyVertexLinks(&s4_id);
-            verifyVertexLinks(&s4_doubleConeS3);
-            verifyVertexLinks(&s3xs1);
-            verifyVertexLinks(&rp4);
-            verifyVertexLinks(&s3xs1Twisted);
-            verifyVertexLinks(&ball_singlePent);
-            verifyVertexLinks(&ball_foldedPent);
-            verifyVertexLinks(&ball_singleConeS3);
-            verifyVertexLinks(&ball_layerAndFold);
-            verifyVertexLinks(&idealPoincareProduct);
-            verifyVertexLinks(&mixedPoincareProduct);
-            verifyVertexLinks(&idealFigEightProduct);
-            verifyVertexLinks(&mixedFigEightProduct);
-            verifyVertexLinks(&pillow_twoCycle);
-            verifyVertexLinks(&pillow_threeCycle);
-            verifyVertexLinks(&pillow_fourCycle);
-
+            testManualAll(verifyVertexLinks);
             runCensusAllBounded(verifyVertexLinks);
             runCensusAllNoBdry(verifyVertexLinks);
         }
@@ -1785,24 +1800,11 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
         }
 
         void edgeLinks() {
-            verifyEdgeLinks(&empty);
-            verifyEdgeLinks(&s4_id);
-            verifyEdgeLinks(&s4_doubleConeS3);
-            verifyEdgeLinks(&s3xs1);
-            verifyEdgeLinks(&rp4);
-            verifyEdgeLinks(&s3xs1Twisted);
-            verifyEdgeLinks(&ball_singlePent);
-            verifyEdgeLinks(&ball_foldedPent);
-            verifyEdgeLinks(&ball_singleConeS3);
-            verifyEdgeLinks(&ball_layerAndFold);
-            verifyEdgeLinks(&idealPoincareProduct);
-            verifyEdgeLinks(&mixedPoincareProduct);
-            verifyEdgeLinks(&idealFigEightProduct); // Has torus link
-            verifyEdgeLinks(&mixedFigEightProduct); // Has torus link
-            verifyEdgeLinks(&pillow_twoCycle);
-            verifyEdgeLinks(&pillow_threeCycle);
-            verifyEdgeLinks(&pillow_fourCycle); // Has PP link
-
+            // Notes:
+            // idealFigEightProduct -> has torus link
+            // mixedFigEightProduct -> has torus link
+            // pillow_fourCycle -> has PP link
+            testManualAll(verifyEdgeLinks);
             runCensusAllBounded(verifyEdgeLinks);
             runCensusAllNoBdry(verifyEdgeLinks);
         }
@@ -1943,31 +1945,8 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
         }
 
         void idealToFinite() {
-            // Triangulations that should not change:
-            verifyIdealToFinite(&empty);
-            verifyIdealToFinite(&s4_id);
-            verifyIdealToFinite(&s4_doubleConeS3);
-            verifyIdealToFinite(&s3xs1);
-            verifyIdealToFinite(&rp4);
-            verifyIdealToFinite(&s3xs1Twisted);
-            verifyIdealToFinite(&ball_singlePent);
-            verifyIdealToFinite(&ball_foldedPent);
-            verifyIdealToFinite(&ball_singleConeS3);
-            verifyIdealToFinite(&ball_layerAndFold);
-
-            // Ideal triangulations that should change:
-            verifyIdealToFinite(&idealPoincareProduct);
-            verifyIdealToFinite(&idealCappellShaneson);
-            verifyIdealToFinite(&mixedPoincareProduct);
-
-            // Invalid triangulations that should change:
-            verifyIdealToFinite(&idealFigEightProduct);
-            verifyIdealToFinite(&mixedFigEightProduct);
-            verifyIdealToFinite(&pillow_twoCycle);
-            verifyIdealToFinite(&pillow_threeCycle);
-            verifyIdealToFinite(&pillow_fourCycle);
-
-            runCensusAllBounded(verifyIdealToFinite); // No change
+            testManualAll(verifyIdealToFinite);
+            runCensusAllBounded(verifyIdealToFinite); // Never change
             runCensusAllNoBdry(verifyIdealToFinite); // Sometimes change
         }
 };
