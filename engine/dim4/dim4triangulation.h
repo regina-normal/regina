@@ -949,16 +949,12 @@ class REGINA_API Dim4Triangulation : public NPacket,
          *
          * @return \c true if the triangulation has been successfully ordered
          * as described above, or \c false if not.
-         *
-         * @author Ryan Budney
          */
         bool order();
 
         /**
          * Returns true if the gluings maps between pentachora preserve the
          * relative order of the vertices. 
-         *
-         * @author Ryan Budney
          */
         bool isOrdered() const;
 
@@ -1589,7 +1585,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
          * facets of pentachora.
          *
          * @return \c true if and only if the triangulation was changed.
-         * @author Ryan Budney
          */
         bool idealToFinite();
 
