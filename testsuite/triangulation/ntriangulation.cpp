@@ -97,6 +97,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(finiteToIdeal);
     CPPUNIT_TEST(drillEdge);
     CPPUNIT_TEST(dehydration);
+    CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(simplification);
     CPPUNIT_TEST(reordering);
@@ -3572,6 +3573,72 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyDehydration(cuspedGenusTwoTorus);
             verifyNoDehydration(pinchedSolidTorus);
             verifyNoDehydration(pinchedSolidKB);
+        }
+
+        void verifyMakeCanonical(const NTriangulation& tri,
+                int trials = 10) {
+            NTriangulation canonical(tri);
+            canonical.makeCanonical();
+
+            for (int i = 0; i < trials; ++i) {
+                NIsomorphism* iso = NIsomorphism::random(
+                    tri.getNumberOfSimplices());
+                NTriangulation* t = iso->apply(&tri);
+                delete iso;
+
+                t->makeCanonical();
+
+                if (! t->isIsomorphicTo(tri).get()) {
+                    std::ostringstream msg;
+                    msg << "Canonical form for "
+                        << tri.getPacketLabel() << " is non-isomorphic.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (t->detail() != canonical.detail()) {
+                    std::ostringstream msg;
+                    msg << "Canonical form for "
+                        << tri.getPacketLabel() << " is inconsistent.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                delete t;
+            }
+        }
+
+        void makeCanonical() {
+            verifyMakeCanonical(empty);
+            verifyMakeCanonical(singleTet);
+            verifyMakeCanonical(s3);
+            verifyMakeCanonical(s3_large);
+            verifyMakeCanonical(s2xs1);
+            verifyMakeCanonical(rp3_1);
+            verifyMakeCanonical(rp3_2);
+            verifyMakeCanonical(rp3_large);
+            verifyMakeCanonical(lens3_1);
+            verifyMakeCanonical(lens8_3);
+            verifyMakeCanonical(lens8_3_large);
+            verifyMakeCanonical(lens7_1_loop);
+            verifyMakeCanonical(rp3rp3);
+            verifyMakeCanonical(q32xz3);
+            verifyMakeCanonical(q28);
+            verifyMakeCanonical(q20_large);
+            verifyMakeCanonical(weberSeifert);
+            verifyMakeCanonical(lens100_1);
+            verifyMakeCanonical(ball_large);
+            verifyMakeCanonical(ball_large_pillows);
+            verifyMakeCanonical(ball_large_snapped);
+            verifyMakeCanonical(singleTet_bary);
+            verifyMakeCanonical(fig8_bary);
+            verifyMakeCanonical(lst3_4_7);
+            verifyMakeCanonical(figure8);
+            verifyMakeCanonical(rp2xs1);
+            verifyMakeCanonical(solidKB);
+            verifyMakeCanonical(gieseking);
+            verifyMakeCanonical(invalidEdges);
+            verifyMakeCanonical(twoProjPlaneCusps);
+            verifyMakeCanonical(cuspedGenusTwoTorus);
+            verifyMakeCanonical(pinchedSolidTorus);
+            verifyMakeCanonical(pinchedSolidKB);
         }
 
         void verifyIsoSig(const NTriangulation& tri) {

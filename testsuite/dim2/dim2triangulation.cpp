@@ -38,6 +38,7 @@
 
 #include "testsuite/dim2/testdim2.h"
 
+using regina::Dim2Isomorphism;
 using regina::Dim2Triangulation;
 using regina::Dim2ExampleTriangulation;
 
@@ -45,6 +46,7 @@ class Dim2TriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(Dim2TriangulationTest);
 
     CPPUNIT_TEST(eltMove13);
+    CPPUNIT_TEST(makeCanonical);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -179,6 +181,50 @@ class Dim2TriangulationTest : public CppUnit::TestFixture {
             verifyEltMove13(&disc);
             verifyEltMove13(&annulus);
             verifyEltMove13(&mobius);
+        }
+
+        void verifyMakeCanonical(const Dim2Triangulation& tri,
+                int trials = 10) {
+            Dim2Triangulation canonical(tri);
+            canonical.makeCanonical();
+
+            for (int i = 0; i < trials; ++i) {
+                Dim2Isomorphism* iso = Dim2Isomorphism::random(
+                    tri.getNumberOfSimplices());
+                Dim2Triangulation* t = iso->apply(&tri);
+                delete iso;
+
+                t->makeCanonical();
+
+                if (! t->isIsomorphicTo(tri).get()) {
+                    std::ostringstream msg;
+                    msg << "Canonical form for "
+                        << tri.getPacketLabel() << " is non-isomorphic.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (t->detail() != canonical.detail()) {
+                    std::ostringstream msg;
+                    msg << "Canonical form for "
+                        << tri.getPacketLabel() << " is inconsistent.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                delete t;
+            }
+        }
+
+        void makeCanonical() {
+            verifyMakeCanonical(empty);
+            verifyMakeCanonical(s2);
+            verifyMakeCanonical(s2Tet);
+            verifyMakeCanonical(s2Oct);
+            verifyMakeCanonical(torus);
+            verifyMakeCanonical(torus2);
+            verifyMakeCanonical(rp2);
+            verifyMakeCanonical(kb);
+            verifyMakeCanonical(disc);
+            verifyMakeCanonical(annulus);
+            verifyMakeCanonical(mobius);
         }
 };
 

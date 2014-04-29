@@ -101,6 +101,8 @@ Version 4.96  [ (under development) ]
         tricensus:
             - New argument -h/--minhyp for enumerating minimal ideal
               triangulations of cusped finite-volume hyperbolic 3-manifolds.
+    TEST SUITE:
+        - New tests for makeCanonical() in dimensions 2 and 3.
 
 Version 4.95  [ 12 November, 2013 ]
 
