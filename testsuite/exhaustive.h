@@ -46,10 +46,12 @@
  */
 
 namespace regina {
+    class Dim2Triangulation;
     class Dim4Triangulation;
     class NTriangulation;
 }
 
+typedef void (*Dim2TriangulationTestFunction)(regina::Dim2Triangulation*);
 typedef void (*Dim4TriangulationTestFunction)(regina::Dim4Triangulation*);
 typedef void (*NTriangulationTestFunction)(regina::NTriangulation*);
 
