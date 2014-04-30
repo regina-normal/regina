@@ -36,6 +36,7 @@
 #include "dim2/dim2exampletriangulation.h"
 #include "dim2/dim2triangulation.h"
 
+#include "testsuite/exhaustive.h"
 #include "testsuite/dim2/testdim2.h"
 
 using regina::Dim2Isomorphism;
@@ -125,6 +126,23 @@ class Dim2TriangulationTest : public CppUnit::TestFixture {
         void tearDown() {
         }
 
+        /**
+         * Run a given test over all hand-coded cases.
+         */
+        void testManualAll(Dim2TriangulationTestFunction f) {
+            f(&empty);
+            f(&s2);
+            f(&s2Tet);
+            f(&s2Oct);
+            f(&torus);
+            f(&torus2);
+            f(&rp2);
+            f(&kb);
+            f(&disc);
+            f(&annulus);
+            f(&mobius);
+        }
+
         static void verifyEltMove13(Dim2Triangulation* tri) {
             unsigned long n = tri->getNumberOfTriangles();
             for (unsigned long i = 0; i < n; ++i) {
@@ -170,42 +188,38 @@ class Dim2TriangulationTest : public CppUnit::TestFixture {
         }
 
         void eltMove13() {
-            verifyEltMove13(&empty);
-            verifyEltMove13(&s2);
-            verifyEltMove13(&s2Tet);
-            verifyEltMove13(&s2Oct);
-            verifyEltMove13(&torus);
-            verifyEltMove13(&torus2);
-            verifyEltMove13(&rp2);
-            verifyEltMove13(&kb);
-            verifyEltMove13(&disc);
-            verifyEltMove13(&annulus);
-            verifyEltMove13(&mobius);
+            testManualAll(verifyEltMove13);
         }
 
-        void verifyMakeCanonical(const Dim2Triangulation& tri,
-                int trials = 10) {
-            Dim2Triangulation canonical(tri);
+        static void verifyMakeCanonical(Dim2Triangulation* tri) {
+            // Currently makeCanonical() insists on connected
+            // triangulations only.
+            if (! tri->isConnected())
+                return;
+
+            const int trials = 10;
+
+            Dim2Triangulation canonical(*tri);
             canonical.makeCanonical();
 
             for (int i = 0; i < trials; ++i) {
                 Dim2Isomorphism* iso = Dim2Isomorphism::random(
-                    tri.getNumberOfSimplices());
-                Dim2Triangulation* t = iso->apply(&tri);
+                    tri->getNumberOfSimplices());
+                Dim2Triangulation* t = iso->apply(tri);
                 delete iso;
 
                 t->makeCanonical();
 
-                if (! t->isIsomorphicTo(tri).get()) {
+                if (! t->isIsomorphicTo(*tri).get()) {
                     std::ostringstream msg;
                     msg << "Canonical form for "
-                        << tri.getPacketLabel() << " is non-isomorphic.";
+                        << tri->getPacketLabel() << " is non-isomorphic.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 if (t->detail() != canonical.detail()) {
                     std::ostringstream msg;
                     msg << "Canonical form for "
-                        << tri.getPacketLabel() << " is inconsistent.";
+                        << tri->getPacketLabel() << " is inconsistent.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
@@ -214,17 +228,7 @@ class Dim2TriangulationTest : public CppUnit::TestFixture {
         }
 
         void makeCanonical() {
-            verifyMakeCanonical(empty);
-            verifyMakeCanonical(s2);
-            verifyMakeCanonical(s2Tet);
-            verifyMakeCanonical(s2Oct);
-            verifyMakeCanonical(torus);
-            verifyMakeCanonical(torus2);
-            verifyMakeCanonical(rp2);
-            verifyMakeCanonical(kb);
-            verifyMakeCanonical(disc);
-            verifyMakeCanonical(annulus);
-            verifyMakeCanonical(mobius);
+            testManualAll(verifyMakeCanonical);
         }
 };
 

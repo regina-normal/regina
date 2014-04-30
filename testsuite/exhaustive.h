@@ -46,9 +46,11 @@
  */
 
 namespace regina {
+    class Dim2Triangulation;
     class NTriangulation;
 }
 
+typedef void (*Dim2TriangulationTestFunction)(regina::Dim2Triangulation*);
 typedef void (*NTriangulationTestFunction)(regina::NTriangulation*);
 
 void runCensusMinClosed(NTriangulationTestFunction f, bool small_ = false);
