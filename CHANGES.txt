@@ -130,6 +130,10 @@ Version 4.96  [ (under development) ]
               triangulations of cusped finite-volume hyperbolic 3-manifolds.
     TEST SUITE:
         - New tests for makeCanonical() in dimensions 2 and 3.
+        - New tests for isoSig() in dimension 2.
+        - The test suite framework now contains more systematic, automated and
+          dimension-agnostic tools for making tests on triangulations as
+          comprehensive as possible.
 
 Version 4.95  [ 12 November, 2013 ]
 
