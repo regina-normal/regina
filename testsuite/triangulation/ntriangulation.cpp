@@ -432,9 +432,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         /**
-         * Run a given test over all hand-coded test cases.
+         * Run a given test over all hand-coded test cases that are not
+         * obscenely large.
          */
-        void testManualAll(NTriangulationTestFunction f) {
+        void testManualSmall(NTriangulationTestFunction f) {
             f(&empty);
             f(&singleTet);
             f(&s3);
@@ -448,7 +449,6 @@ class NTriangulationTest : public CppUnit::TestFixture {
             f(&q32xz3);
             f(&q28);
             f(&weberSeifert);
-            f(&lens100_1);
             f(&lst3_4_7);
             f(&figure8);
             f(&rp2xs1);
@@ -470,6 +470,14 @@ class NTriangulationTest : public CppUnit::TestFixture {
             f(&fig8_bary);
             f(&disjoint2);
             f(&disjoint3);
+        }
+
+        /**
+         * Run a given test over all hand-coded test cases.
+         */
+        void testManualAll(NTriangulationTestFunction f) {
+            testManualSmall(f);
+            f(&lens100_1);
         }
 
         void validity() {
@@ -3069,145 +3077,116 @@ class NTriangulationTest : public CppUnit::TestFixture {
             testManualAll(verifyDoubleCover);
         }
 
-        void verifyBary(const NTriangulation& tri) {
-            NTriangulation b(tri);
+        static void verifyBary(NTriangulation* tri) {
+            NTriangulation b(*tri);
             b.barycentricSubdivision();
 
             // Note that subdivisions can turn invalid into valid, but
             // they can never turn valid into invalid.
-            if (tri.isValid() && ! b.isValid()) {
+            if (tri->isValid() && ! b.isValid()) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks validity.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             // Subdivisions can also turn invalid into ideal.
             // Only consider the valid -> valid case here.
-            if (tri.isValid() && (tri.isIdeal() != b.isIdeal())) {
+            if (tri->isValid() && (tri->isIdeal() != b.isIdeal())) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks idealness.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri.hasBoundaryTriangles() != b.hasBoundaryTriangles()) {
+            if (tri->hasBoundaryTriangles() != b.hasBoundaryTriangles()) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks boundary triangles.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             // As with ideal, consider valid inputs only.
-            if (tri.isValid() && (tri.isClosed() != b.isClosed())) {
+            if (tri->isValid() && (tri->isClosed() != b.isClosed())) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks closedness.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri.isOrientable() != b.isOrientable()) {
+            if (tri->isOrientable() != b.isOrientable()) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks orientability.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri.isConnected() != b.isConnected()) {
+            if (tri->isConnected() != b.isConnected()) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks connectedness.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri.getNumberOfComponents() != b.getNumberOfComponents()) {
+            if (tri->getNumberOfComponents() != b.getNumberOfComponents()) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks connected components.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             // Invalid vertices can become new boundary components.
             // Only consider valid inputs here.
-            if (tri.isValid() && (tri.getNumberOfBoundaryComponents() !=
+            if (tri->isValid() && (tri->getNumberOfBoundaryComponents() !=
                     b.getNumberOfBoundaryComponents())) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks boundary components.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             // The same problem with invalid triangulations and boundary
             // components bites us with Euler characteristic also.
-            if (tri.isValid() &&
-                    (tri.getEulerCharTri() != b.getEulerCharTri())) {
+            if (tri->isValid() &&
+                    (tri->getEulerCharTri() != b.getEulerCharTri())) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks Euler char (tri).";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri.isValid() &&
-                    (tri.getEulerCharManifold() != b.getEulerCharManifold())) {
+            if (tri->isValid() &&
+                    (tri->getEulerCharManifold() != b.getEulerCharManifold())) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks Euler char (mfd).";
                 CPPUNIT_FAIL(msg.str());
             }
 
             // Now run more expensive tests that will be better with
             // *small* triangulations.
-            if (! tri.isValid())
+            if (! tri->isValid())
                 return;
 
             b.intelligentSimplify();
 
-            if (! (tri.getHomologyH1() == b.getHomologyH1())) {
+            if (! (tri->getHomologyH1() == b.getHomologyH1())) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks H1.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! (tri.getHomologyH2() == b.getHomologyH2())) {
+            if (! (tri->getHomologyH2() == b.getHomologyH2())) {
                 std::ostringstream msg;
-                msg << tri.getPacketLabel()
+                msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks H2.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
 
         void barycentricSubdivision() {
-            verifyBary(empty);
-            verifyBary(singleTet);
-            verifyBary(s3);
-            verifyBary(s2xs1);
-            verifyBary(rp3_1);
-            verifyBary(rp3_2);
-            verifyBary(lens3_1);
-            verifyBary(lens8_3);
-            // (too large) verifyBary(lens8_3_large);
-            verifyBary(lens7_1_loop);
-            verifyBary(rp3rp3);
-            verifyBary(q32xz3);
-            verifyBary(q28);
-            // (too large) verifyBary(weberSeifert);
-            verifyBary(lens100_1);
-            verifyBary(ball_large);
-            verifyBary(ball_large_pillows);
-            verifyBary(ball_large_snapped);
-            verifyBary(lst3_4_7);
-            verifyBary(figure8);
-            verifyBary(rp2xs1);
-            verifyBary(solidKB);
-            verifyBary(gieseking);
-            verifyBary(invalidEdges);
-            verifyBary(twoProjPlaneCusps);
-            verifyBary(cuspedGenusTwoTorus);
-            verifyBary(pinchedSolidTorus);
-            verifyBary(pinchedSolidKB);
-            verifyBary(disjoint2);
-            verifyBary(disjoint3);
+            testManualAll(verifyBary);
         }
 
         static void verifyIdealToFinite(NTriangulation* tri) {
@@ -4033,42 +4012,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void eltMove14() {
-            verifyEltMove14(&empty);
-            verifyEltMove14(&singleTet);
-            verifyEltMove14(&s3);
-            verifyEltMove14(&s3_large);
-            verifyEltMove14(&s2xs1);
-            verifyEltMove14(&rp3_1);
-            verifyEltMove14(&rp3_2);
-            verifyEltMove14(&rp3_large);
-            verifyEltMove14(&lens3_1);
-            verifyEltMove14(&lens8_3);
-            verifyEltMove14(&lens8_3_large);
-            verifyEltMove14(&lens7_1_loop);
-            verifyEltMove14(&rp3rp3);
-            verifyEltMove14(&q32xz3);
-            verifyEltMove14(&q28);
-            verifyEltMove14(&q20_large);
-            verifyEltMove14(&weberSeifert);
-            //verifyEltMove14(&lens100_1); Too slow.
-            verifyEltMove14(&ball_large);
-            verifyEltMove14(&ball_large_pillows);
-            verifyEltMove14(&ball_large_snapped);
-            verifyEltMove14(&singleTet_bary);
-            verifyEltMove14(&fig8_bary);
-            verifyEltMove14(&lst3_4_7);
-            verifyEltMove14(&figure8);
-            verifyEltMove14(&rp2xs1);
-            verifyEltMove14(&solidKB);
-            verifyEltMove14(&gieseking);
-            verifyEltMove14(&invalidEdges);
-            verifyEltMove14(&twoProjPlaneCusps);
-            verifyEltMove14(&cuspedGenusTwoTorus);
-            verifyEltMove14(&pinchedSolidTorus);
-            verifyEltMove14(&pinchedSolidKB);
-            verifyEltMove14(&disjoint2);
-            verifyEltMove14(&disjoint3);
-
+            testManualSmall(verifyEltMove14);
             runCensusAllClosed(verifyEltMove14, true);
             runCensusAllBounded(verifyEltMove14, true);
             runCensusAllIdeal(verifyEltMove14, true);
