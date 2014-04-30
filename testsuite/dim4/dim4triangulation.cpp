@@ -50,6 +50,7 @@
 #include "triangulation/ntriangulation.h"
 
 #include "testsuite/exhaustive.h"
+#include "testsuite/generic/generictriangulation.h"
 #include "testsuite/dim4/testdim4.h"
 
 using regina::Dim2Triangulation;
@@ -70,9 +71,14 @@ using regina::NTetrahedron;
 using regina::NTriangulation;
 using regina::NVertex;
 
-class Dim4TriangulationTest : public CppUnit::TestFixture {
+class Dim4TriangulationTest : public TriangulationTest<4> {
     CPPUNIT_TEST_SUITE(Dim4TriangulationTest);
 
+    // Generic tests:
+    CPPUNIT_TEST(makeCanonical);
+    CPPUNIT_TEST(isomorphismSignature);
+
+    // Dimension-specific tests:
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(connectedness);
     CPPUNIT_TEST(orientability);
@@ -83,8 +89,6 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(eulerChar);
     CPPUNIT_TEST(homologyH1);
     CPPUNIT_TEST(fundGroup);
-    CPPUNIT_TEST(makeCanonical);
-    CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(barycentricSubdivision);
     CPPUNIT_TEST(eltMove15);
     CPPUNIT_TEST(vertexLinks);
@@ -335,6 +339,14 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             f(&pillow_fourCycle);
             f(&disjoint2);
             // f(&disjoint3);
+        }
+
+        void makeCanonical() {
+            testManualAll(verifyMakeCanonical);
+        }
+
+        void isomorphismSignature() {
+            testManualAll(verifyIsomorphismSignature);
         }
 
         void verifyValid(const Dim4Triangulation& tri) {
@@ -1085,100 +1097,6 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyFundGroup(mixedPoincareProduct, "");
             verifyFundGroup(idealFigEightProduct, "");
             verifyFundGroup(mixedFigEightProduct, "");
-        }
-
-        static void verifyMakeCanonical(Dim4Triangulation* tri) {
-            // Currently makeCanonical() insists on connected
-            // triangulations only.
-            if (! tri->isConnected())
-                return;
-
-            const int trials = 10;
-
-            Dim4Triangulation canonical(*tri);
-            canonical.makeCanonical();
-
-            for (int i = 0; i < trials; ++i) {
-                Dim4Isomorphism* iso = Dim4Isomorphism::random(
-                    tri->getNumberOfPentachora());
-                Dim4Triangulation* t = iso->apply(tri);
-                delete iso;
-
-                t->makeCanonical();
-
-                if (! t->isIsomorphicTo(*tri).get()) {
-                    std::ostringstream msg;
-                    msg << "Canonical form for "
-                        << tri->getPacketLabel() << " is non-isomorphic.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-                if (t->detail() != canonical.detail()) {
-                    std::ostringstream msg;
-                    msg << "Canonical form for "
-                        << tri->getPacketLabel() << " is inconsistent.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                delete t;
-            }
-        }
-
-        void makeCanonical() {
-            testManualAll(verifyMakeCanonical);
-        }
-
-        static void verifyIsoSig(Dim4Triangulation* tri) {
-            std::string sig = tri->isoSig();
-
-            if (sig.empty()) {
-                std::ostringstream msg;
-                msg << tri->getPacketLabel()
-                    << ": Cannot create isomorphism signature.";
-                CPPUNIT_FAIL(msg.str());
-            }
-
-            Dim4Triangulation* rebuild = Dim4Triangulation::fromIsoSig(sig);
-            if (! rebuild) {
-                std::ostringstream msg;
-                msg << tri->getPacketLabel()
-                    << ": Cannot reconstruct from isomorphism signature \""
-                    << sig << "\".";
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (! rebuild->isIsomorphicTo(*tri).get()) {
-                std::ostringstream msg;
-                msg << tri->getPacketLabel()
-                    << ": Reconstruction from \"" << sig
-                    << "\" is not isomorphic to the original.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            delete rebuild;
-
-            if (tri->getNumberOfPentachora() == 0)
-                return;
-
-            std::string otherSig;
-            for (unsigned i = 0; i < 10; ++i) {
-                Dim4Isomorphism* iso = Dim4Isomorphism::random(
-                    tri->getNumberOfPentachora());
-                Dim4Triangulation* other = iso->apply(tri);
-
-                otherSig = other->isoSig();
-                if (otherSig != sig) {
-                    std::ostringstream msg;
-                    msg << tri->getPacketLabel()
-                        << ": Random isomorphism gives different signature: "
-                        << otherSig << " != " << sig << std::endl;
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                delete other;
-                delete iso;
-            }
-        }
-
-        void isomorphismSignature() {
-            testManualAll(verifyIsoSig);
         }
 
         static void verifyBary(Dim4Triangulation* tri) {
