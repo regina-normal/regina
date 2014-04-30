@@ -54,6 +54,7 @@
 #include "triangulation/nvertex.h"
 
 #include "testsuite/exhaustive.h"
+#include "testsuite/generic/generictriangulation.h"
 #include "testsuite/triangulation/testtriangulation.h"
 
 using regina::Dim2Triangulation;
@@ -70,9 +71,14 @@ using regina::NTetrahedron;
 using regina::NTriangulation;
 using regina::NVertex;
 
-class NTriangulationTest : public CppUnit::TestFixture {
+class NTriangulationTest : public TriangulationTest<3> {
     CPPUNIT_TEST_SUITE(NTriangulationTest);
 
+    // Generic tests:
+    CPPUNIT_TEST(makeCanonical);
+    CPPUNIT_TEST(isomorphismSignature);
+
+    // Dimension-specific tests:
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(standardness);
     CPPUNIT_TEST(orientability);
@@ -97,8 +103,6 @@ class NTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(finiteToIdeal);
     CPPUNIT_TEST(drillEdge);
     CPPUNIT_TEST(dehydration);
-    CPPUNIT_TEST(makeCanonical);
-    CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(simplification);
     CPPUNIT_TEST(reordering);
     CPPUNIT_TEST(propertyUpdates);
@@ -478,6 +482,14 @@ class NTriangulationTest : public CppUnit::TestFixture {
         void testManualAll(NTriangulationTestFunction f) {
             testManualSmall(f);
             f(&lens100_1);
+        }
+
+        void makeCanonical() {
+            testManualAll(verifyMakeCanonical);
+        }
+
+        void isomorphismSignature() {
+            testManualAll(verifyIsomorphismSignature);
         }
 
         void validity() {
@@ -3517,163 +3529,6 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyNoDehydration(pinchedSolidKB);
             verifyNoDehydration(disjoint2);
             verifyNoDehydration(disjoint3);
-        }
-
-        static void verifyMakeCanonical(NTriangulation* tri) {
-            // Currently makeCanonical() insists on connected
-            // triangulations only.
-            if (! tri->isConnected())
-                return;
-
-            const int trials = 10;
-
-            NTriangulation canonical(*tri);
-            canonical.makeCanonical();
-
-            for (int i = 0; i < trials; ++i) {
-                NIsomorphism* iso = NIsomorphism::random(
-                    tri->getNumberOfSimplices());
-                NTriangulation* t = iso->apply(tri);
-                delete iso;
-
-                t->makeCanonical();
-
-                if (! t->isIsomorphicTo(*tri).get()) {
-                    std::ostringstream msg;
-                    msg << "Canonical form for "
-                        << tri->getPacketLabel() << " is non-isomorphic.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-                if (t->detail() != canonical.detail()) {
-                    std::ostringstream msg;
-                    msg << "Canonical form for "
-                        << tri->getPacketLabel() << " is inconsistent.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                delete t;
-            }
-        }
-
-        void makeCanonical() {
-            testManualAll(verifyMakeCanonical);
-        }
-
-        static void verifyIsoSig(NTriangulation* tri) {
-            std::string sig = tri->isoSig();
-
-            if (sig.empty()) {
-                std::ostringstream msg;
-                msg << tri->getPacketLabel()
-                    << ": Cannot create isomorphism signature.";
-                CPPUNIT_FAIL(msg.str());
-            }
-
-            size_t sigSize = NTriangulation::isoSigComponentSize(sig);
-            if (tri->getNumberOfSimplices() == 0) {
-                if (sigSize != 0) {
-                    std::ostringstream msg;
-                    msg << tri->getPacketLabel()
-                        << ": isoSigSize() returns incorrect value: "
-                        << sigSize << '.';
-                    CPPUNIT_FAIL(msg.str());
-                }
-            } else {
-                size_t c;
-                for (c = 0; c < tri->getNumberOfComponents(); ++c)
-                    if (sigSize == tri->getComponent(c)->getNumberOfSimplices())
-                        break;
-                if (c == tri->getNumberOfComponents()) {
-                    std::ostringstream msg;
-                    msg << tri->getPacketLabel()
-                        << ": isoSigSize() returns incorrect value: "
-                        << sigSize << '.';
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
-
-            NTriangulation* rebuild = NTriangulation::fromIsoSig(sig);
-            if (! rebuild) {
-                std::ostringstream msg;
-                msg << tri->getPacketLabel()
-                    << ": Cannot reconstruct from isomorphism "
-                    "signature \"" << sig << "\".";
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (! rebuild->isIsomorphicTo(*tri).get()) {
-                std::ostringstream msg;
-                msg << tri->getPacketLabel()
-                    << ": Reconstruction from \"" << sig
-                    << "\" is not isomorphic to the original.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            delete rebuild;
-
-            if (tri->getNumberOfTetrahedra() == 0)
-                return;
-
-            std::string otherSig;
-            for (unsigned i = 0; i < 10; ++i) {
-                NIsomorphism* iso = NIsomorphism::random(
-                    tri->getNumberOfTetrahedra());
-                NTriangulation* other = iso->apply(tri);
-
-                otherSig = other->isoSig();
-                if (otherSig != sig) {
-                    std::ostringstream msg;
-                    msg << tri->getPacketLabel()
-                        << ": Random isomorphism gives different "
-                        "signature: " << otherSig << " != " << sig << std::endl;
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                delete other;
-                delete iso;
-            }
-            for (unsigned i = 0; i < 10; ++i) {
-                NIsomorphism* iso = NIsomorphism::random(
-                    tri->getNumberOfTetrahedra());
-                NTriangulation* other = new NTriangulation(*tri);
-                iso->applyInPlace(other);
-
-                otherSig = other->isoSig();
-                if (otherSig != sig) {
-                    std::ostringstream msg;
-                    msg << tri->getPacketLabel()
-                        << ": Random in-place isomorphism gives "
-                        "different signature: "
-                        << otherSig << " != " << sig << std::endl;
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                delete other;
-                delete iso;
-            }
-
-            if (tri->getNumberOfComponents() == 1) {
-                NIsomorphism* relabelling;
-                tri->isoSig(&relabelling);
-
-                NTriangulation* rebuild = NTriangulation::fromIsoSig(sig);
-                NTriangulation* relabel = relabelling->apply(tri);
-
-                if (relabel->detail() != rebuild->detail()) {
-                    std::ostringstream msg;
-                    msg << tri->getPacketLabel()
-                        << ": relabelling returned from "
-                        "isoSig() does not recover fromIsoSig(\""
-                        << sig << "\")." << std::endl;
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                delete relabelling;
-                delete rebuild;
-                delete relabel;
-            }
-        }
-
-        void isomorphismSignature() {
-            testManualAll(verifyIsoSig);
         }
 
         void verifySimplification(const NTriangulation& tri,
