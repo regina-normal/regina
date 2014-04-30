@@ -1507,6 +1507,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyVertexLinks(&cuspedGenusTwoTorus);
             verifyVertexLinks(&pinchedSolidTorus);
             verifyVertexLinks(&pinchedSolidKB);
+            verifyVertexLinks(&disjoint2);
+            verifyVertexLinks(&disjoint3);
 
             runCensusAllClosed(verifyVertexLinks);
             runCensusAllBounded(verifyVertexLinks);
@@ -2386,6 +2388,16 @@ class NTriangulationTest : public CppUnit::TestFixture {
             tri = new NTriangulation();
             delete verifyNotThreeSphere(tri, "Empty triangulation");
 
+            // Some disconnected examples.
+            verifyNotThreeSphere(&disjoint2, "Disjoint, 2 components");
+            verifyNotThreeSphere(&disjoint3, "Disjoint, 3 components");
+
+            tri = new NTriangulation();
+            tri->insertLayeredLensSpace(1,0);
+            tri->insertLayeredLensSpace(1,0);
+            tri->setPacketLabel("S^3 U S^3");
+            delete verifyNotThreeSphere(tri);
+
             // An exhaustive census run:
             runCensusMinClosed(&testThreeSphere6);
             runCensusAllClosed(&testThreeSphere6);
@@ -2538,6 +2550,15 @@ class NTriangulationTest : public CppUnit::TestFixture {
 
             tri = NExampleTriangulation::poincareHomologySphere();
             delete verifyNotThreeBall(tri, "Poincare homology sphere");
+
+            // Some disconnected examples.
+            verifyNotThreeBall(&disjoint2, "Disjoint, 2 components");
+            verifyNotThreeBall(&disjoint3, "Disjoint, 3 components");
+
+            tri = new NTriangulation();
+            tri->newTetrahedron();
+            tri->newTetrahedron();
+            delete verifyNotThreeBall(tri, "B^3 U B^3");
         }
 
         static void testSolidTorus4(NTriangulation* tri) {
@@ -2919,6 +2940,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
 
         void verifyDoubleCover(const NTriangulation& tri) {
             // PRE: tri is either empty or connected.
+            if (! tri.isConnected())
+                return;
 
             NTriangulation cover(tri);
             cover.makeDoubleCover();
@@ -3065,6 +3088,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyDoubleCover(cuspedGenusTwoTorus);
             verifyDoubleCover(pinchedSolidTorus);
             verifyDoubleCover(pinchedSolidKB);
+            verifyDoubleCover(disjoint2);
+            verifyDoubleCover(disjoint3);
         }
 
         void verifyBary(const NTriangulation& tri) {
