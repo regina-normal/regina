@@ -1129,6 +1129,7 @@ bool NTriangulation::isHaken() const {
     // Okay: we are closed, connected, orientable and irreducible.
     // Move to a copy of this triangulation, which we can mess with.
     NTriangulation t(*this);
+    t.intelligentSimplify();
 
     // First check for an easy answer via homology:
     if (t.getHomologyH1().getRank() > 0) {
