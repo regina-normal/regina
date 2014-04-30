@@ -82,6 +82,12 @@ class Dim2TriangulationTest : public CppUnit::TestFixture {
         Dim2Triangulation mobius;
             /**< A Mobius band with one triangle. */
 
+        // Disconnected triangulations:
+        Dim2Triangulation disjoint2;
+            /**< A disjoint union of two triangulations. */
+        Dim2Triangulation disjoint3;
+            /**< A disjoint union of three triangulations. */
+
     public:
         void copyAndDelete(Dim2Triangulation& dest, Dim2Triangulation* source) {
             dest.insertTriangulation(*source);
@@ -121,6 +127,13 @@ class Dim2TriangulationTest : public CppUnit::TestFixture {
 
             copyAndDelete(mobius, Dim2ExampleTriangulation::mobius());
             mobius.setPacketLabel("Mobius band");
+
+            disjoint2.insertTriangulation(torus);
+            disjoint2.insertTriangulation(mobius);
+
+            disjoint3.insertTriangulation(kb);
+            disjoint3.insertTriangulation(annulus);
+            disjoint3.insertTriangulation(s2);
         }
 
         void tearDown() {
@@ -141,6 +154,8 @@ class Dim2TriangulationTest : public CppUnit::TestFixture {
             f(&disc);
             f(&annulus);
             f(&mobius);
+            f(&disjoint2);
+            f(&disjoint3);
         }
 
         static void verifyEltMove13(Dim2Triangulation* tri) {
