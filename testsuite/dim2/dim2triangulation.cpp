@@ -37,17 +37,21 @@
 #include "dim2/dim2triangulation.h"
 
 #include "testsuite/exhaustive.h"
+#include "testsuite/generic/generictriangulation.h"
 #include "testsuite/dim2/testdim2.h"
 
-using regina::Dim2Isomorphism;
 using regina::Dim2Triangulation;
 using regina::Dim2ExampleTriangulation;
 
-class Dim2TriangulationTest : public CppUnit::TestFixture {
+class Dim2TriangulationTest : public TriangulationTest<2> {
     CPPUNIT_TEST_SUITE(Dim2TriangulationTest);
 
-    CPPUNIT_TEST(eltMove13);
+    // Generic tests:
     CPPUNIT_TEST(makeCanonical);
+    CPPUNIT_TEST(isomorphismSignature);
+
+    // Dimension-specific tests:
+    CPPUNIT_TEST(eltMove13);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -160,6 +164,14 @@ class Dim2TriangulationTest : public CppUnit::TestFixture {
             f(&disjoint3);
         }
 
+        void makeCanonical() {
+            testManualAll(verifyMakeCanonical);
+        }
+
+        void isomorphismSignature() {
+            testManualAll(verifyIsomorphismSignature);
+        }
+
         static void verifyEltMove13(Dim2Triangulation* tri) {
             unsigned long n = tri->getNumberOfTriangles();
             for (unsigned long i = 0; i < n; ++i) {
@@ -206,46 +218,6 @@ class Dim2TriangulationTest : public CppUnit::TestFixture {
 
         void eltMove13() {
             testManualAll(verifyEltMove13);
-        }
-
-        static void verifyMakeCanonical(Dim2Triangulation* tri) {
-            // Currently makeCanonical() insists on connected
-            // triangulations only.
-            if (! tri->isConnected())
-                return;
-
-            const int trials = 10;
-
-            Dim2Triangulation canonical(*tri);
-            canonical.makeCanonical();
-
-            for (int i = 0; i < trials; ++i) {
-                Dim2Isomorphism* iso = Dim2Isomorphism::random(
-                    tri->getNumberOfSimplices());
-                Dim2Triangulation* t = iso->apply(tri);
-                delete iso;
-
-                t->makeCanonical();
-
-                if (! t->isIsomorphicTo(*tri).get()) {
-                    std::ostringstream msg;
-                    msg << "Canonical form for "
-                        << tri->getPacketLabel() << " is non-isomorphic.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-                if (t->detail() != canonical.detail()) {
-                    std::ostringstream msg;
-                    msg << "Canonical form for "
-                        << tri->getPacketLabel() << " is inconsistent.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                delete t;
-            }
-        }
-
-        void makeCanonical() {
-            testManualAll(verifyMakeCanonical);
         }
 };
 
