@@ -183,6 +183,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
         void setUp() {
             // The empty triangulation needs no initialisation whatsoever.
+            empty.setPacketLabel("Empty triangulation");
 
             // We can pull some of our triangulations straight out of the can
             // via Dim4ExampleTriangulation.
