@@ -130,10 +130,12 @@ class Dim2TriangulationTest : public CppUnit::TestFixture {
 
             disjoint2.insertTriangulation(torus);
             disjoint2.insertTriangulation(mobius);
+            disjoint2.setPacketLabel("Torus U Mobius");
 
             disjoint3.insertTriangulation(kb);
             disjoint3.insertTriangulation(annulus);
             disjoint3.insertTriangulation(s2);
+            disjoint3.setPacketLabel("KB U Annulus U S^2");
         }
 
         void tearDown() {
