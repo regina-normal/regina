@@ -202,6 +202,12 @@ class NTriangulationTest : public CppUnit::TestFixture {
             /**< The barycentric subdivision of the figure eight knot
                  complement. */
 
+        // Disconnected triangulations:
+        NTriangulation disjoint2;
+            /**< A disjoint union of two triangulations. */
+        NTriangulation disjoint3;
+            /**< A disjoint union of three triangulations. */
+
     public:
         void copyAndDelete(NTriangulation& dest, NTriangulation* source) {
             dest.insertTriangulation(*source);
@@ -408,6 +414,18 @@ class NTriangulationTest : public CppUnit::TestFixture {
             r->joinTo(1, s, NPerm4());
             s->joinTo(0, t, NPerm4());
             ball_large_snapped.setPacketLabel("3-tetrahedron snapped ball");
+
+            // Build disconnected triangulations from others that we
+            // already have.
+            disjoint2.insertTriangulation(gieseking);
+            disjoint2.insertTriangulation(cuspedGenusTwoTorus);
+            disjoint2.setPacketLabel("Gieseking U (cusped genus 2 torus)");
+
+            disjoint3.insertTriangulation(s2xs1);
+            disjoint3.insertTriangulation(ball_large_pillows);
+            disjoint3.insertTriangulation(figure8);
+            disjoint3.setPacketLabel("(S^2 x S^1) U (B^3) U "
+                "(Figure eight knot complement)");
         }
 
         void tearDown() {
@@ -2728,6 +2746,15 @@ class NTriangulationTest : public CppUnit::TestFixture {
             tri = NExampleTriangulation::poincareHomologySphere();
             delete verifyNotSolidTorus(tri, "Poincare homology sphere");
 
+            // Some disconnected triangulations:
+            verifyNotSolidTorus(&disjoint2, "2-component manifold");
+            verifyNotSolidTorus(&disjoint3, "3-component manifold");
+
+            tri = new NTriangulation();
+            tri->insertLayeredSolidTorus(1, 2);
+            tri->insertLayeredSolidTorus(1, 2);
+            delete verifyNotSolidTorus(tri, "LST U LST");
+
             // An exhaustive census run:
             runCensusAllBounded(&testSolidTorus4);
         }
@@ -3177,6 +3204,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyBary(cuspedGenusTwoTorus);
             verifyBary(pinchedSolidTorus);
             verifyBary(pinchedSolidKB);
+            verifyBary(disjoint2);
+            verifyBary(disjoint3);
         }
 
         void verifyIdealToFinite(const NTriangulation& tri) {
@@ -3298,6 +3327,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyIdealToFinite(cuspedGenusTwoTorus);
             verifyIdealToFinite(pinchedSolidTorus);
             verifyIdealToFinite(pinchedSolidKB);
+            verifyIdealToFinite(disjoint2);
+            verifyIdealToFinite(disjoint3);
         }
 
         void verifyFiniteToIdeal(const NTriangulation& tri) {
@@ -3401,6 +3432,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyFiniteToIdeal(cuspedGenusTwoTorus);
             verifyFiniteToIdeal(pinchedSolidTorus);
             verifyFiniteToIdeal(pinchedSolidKB);
+            verifyFiniteToIdeal(disjoint2);
+            verifyFiniteToIdeal(disjoint3);
         }
 
         void drillEdge() {
@@ -3573,10 +3606,18 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyDehydration(cuspedGenusTwoTorus);
             verifyNoDehydration(pinchedSolidTorus);
             verifyNoDehydration(pinchedSolidKB);
+            verifyNoDehydration(disjoint2);
+            verifyNoDehydration(disjoint3);
         }
 
-        void verifyMakeCanonical(const NTriangulation& tri,
-                int trials = 10) {
+        void verifyMakeCanonical(const NTriangulation& tri) {
+            // Currently makeCanonical() insists on connected
+            // triangulations only.
+            if (! tri.isConnected())
+                return;
+
+            const int trials = 10;
+
             NTriangulation canonical(tri);
             canonical.makeCanonical();
 
@@ -3639,6 +3680,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyMakeCanonical(cuspedGenusTwoTorus);
             verifyMakeCanonical(pinchedSolidTorus);
             verifyMakeCanonical(pinchedSolidKB);
+            verifyMakeCanonical(disjoint2);
+            verifyMakeCanonical(disjoint3);
         }
 
         void verifyIsoSig(const NTriangulation& tri) {
@@ -3788,15 +3831,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyIsoSig(cuspedGenusTwoTorus);
             verifyIsoSig(pinchedSolidTorus);
             verifyIsoSig(pinchedSolidKB);
-
-            NTriangulation t;
-            t.insertTriangulation(lens8_3);
-            t.insertTriangulation(ball_large_pillows);
-            t.setPacketLabel("L(8,3) U B^3");
-            verifyIsoSig(t);
-            t.insertTriangulation(cuspedGenusTwoTorus);
-            t.setPacketLabel("L(8,3) U B^3 U (cusped genus 2 torus)");
-            verifyIsoSig(t);
+            verifyIsoSig(disjoint2);
+            verifyIsoSig(disjoint3);
         }
 
         void verifySimplification(const NTriangulation& tri,
@@ -4019,17 +4055,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             testReordering(cuspedGenusTwoTorus);
             testReordering(pinchedSolidTorus);
             testReordering(pinchedSolidKB);
-
-            // Try this with some disconnected triangulations also.
-            {
-                NTriangulation t;
-                t.insertTriangulation(s2xs1);
-                t.insertTriangulation(singleTet);
-                t.insertTriangulation(figure8);
-                t.setPacketLabel("(S^2 x S^1) U (Single tetrahedron) U "
-                    "(Figure eight knot complement)");
-                testReordering(t);
-            }
+            testReordering(disjoint2);
+            testReordering(disjoint3);
         }
 
         void propertyUpdates() {
@@ -4210,6 +4237,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyEltMove14(&cuspedGenusTwoTorus);
             verifyEltMove14(&pinchedSolidTorus);
             verifyEltMove14(&pinchedSolidKB);
+            verifyEltMove14(&disjoint2);
+            verifyEltMove14(&disjoint3);
 
             runCensusAllClosed(verifyEltMove14, true);
             runCensusAllBounded(verifyEltMove14, true);
