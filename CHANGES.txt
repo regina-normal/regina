@@ -21,6 +21,8 @@ Version 4.96  [ (under development) ]
               isomorphism signature routines now inherit directly from
               NGenericTriangulation instead of using wrappers.
               See the NGenericTriangulation notes below for details.
+            - New routine hasBoundaryEdges().  This is redundant, but is
+              provided for compatibility with NTriangulation.
         Class Dim2VertexEmbedding:
             - New convenience operators == and !=.
         Class NAbelianGroup:

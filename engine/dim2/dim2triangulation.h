@@ -708,6 +708,17 @@ class REGINA_API Dim2Triangulation : public NPacket,
          */
         bool isClosed() const;
         /**
+         * Determines if this triangulation has any boundary edges.
+         *
+         * This routine is redundant in dimension two, since it returns
+         * \c true if and only if isClosed() returns \c false.
+         * It is provided simply for compatibility with higher-dimensional
+         * triangulation classes.
+         *
+         * @return \c true if and only if there are boundary edges.
+         */
+        bool hasBoundaryEdges() const;
+        /**
          * Determines if this triangulation is orientable.
          *
          * @return \c true if and only if this triangulation is orientable.
@@ -1316,6 +1327,10 @@ inline bool Dim2Triangulation::isClosed() const {
     if (! calculatedSkeleton_)
         calculateSkeleton();
     return boundaryComponents_.empty();
+}
+
+inline bool Dim2Triangulation::hasBoundaryEdges() const {
+    return ! isClosed();
 }
 
 inline bool Dim2Triangulation::isOrientable() const {
