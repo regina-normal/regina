@@ -83,6 +83,7 @@ class NTriangulationTest : public TriangulationTest<3> {
     CPPUNIT_TEST(standardness);
     CPPUNIT_TEST(orientability);
     CPPUNIT_TEST(boundaryComponents);
+    CPPUNIT_TEST(boundaryTriangles);
     CPPUNIT_TEST(vertexLinksSpecific);
     CPPUNIT_TEST(vertexLinks);
     CPPUNIT_TEST(eulerChar);
@@ -772,6 +773,27 @@ class NTriangulationTest : public TriangulationTest<3> {
 
             // TODO: Test the individual boundary components.
             // TODO: Check that nobody has too many boundary components.
+        }
+
+        static void verifyBoundaryTriangles(NTriangulation* tri) {
+            unsigned long found = 0;
+
+            unsigned long i, j;
+            for (i = 0; i < tri->getNumberOfTetrahedra(); ++i)
+                for (j = 0; j < 4; ++j)
+                    if (! tri->getTetrahedron(i)->adjacentTetrahedron(j))
+                        ++found;
+
+            if (found != tri->getNumberOfBoundaryTriangles()) {
+                std::ostringstream msg;
+                msg << tri->getPacketLabel()
+                    << " reports the wrong number of boundary triangles.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void boundaryTriangles() {
+            testManualAll(verifyBoundaryTriangles);
         }
 
         void verifyVertexCount(NTriangulation& tri, unsigned nVertices,
