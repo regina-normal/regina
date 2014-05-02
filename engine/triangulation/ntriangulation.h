@@ -1110,6 +1110,12 @@ class REGINA_API NTriangulation : public NPacket,
          */
         bool hasBoundaryFaces() const;
         /**
+         * Returns the number of boundary triangles in this triangulation.
+         *
+         * @return the total number of boundary triangles.
+         */
+        unsigned long getNumberOfBoundaryTriangles() const;
+        /**
          * Determines if this triangulation is closed.
          * This is the case if and only if it has no boundary.
          * Note that ideal triangulations are not closed.
@@ -3687,6 +3693,12 @@ inline bool NTriangulation::hasBoundaryTriangles() const {
 
 inline bool NTriangulation::hasBoundaryFaces() const {
     return hasBoundaryTriangles();
+}
+
+inline unsigned long NTriangulation::getNumberOfBoundaryTriangles() const {
+    if (! calculatedSkeleton)
+        calculateSkeleton();
+    return 2 * triangles.size() - 4 * tetrahedra.size();
 }
 
 inline bool NTriangulation::isClosed() const {

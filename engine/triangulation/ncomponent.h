@@ -264,6 +264,12 @@ class REGINA_API NComponent : public ShareableObject, public NMarkedElement {
          * @return \c true if and only if this component is closed.
          */
         bool isClosed() const;
+        /**
+         * Returns the number of boundary triangles in this component.
+         *
+         * @return the number of boundary triangles.
+         */
+        unsigned long getNumberOfBoundaryTriangles() const;
 
         void writeTextShort(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
@@ -355,6 +361,10 @@ inline bool NComponent::isOrientable() const {
 
 inline bool NComponent::isClosed() const {
     return (boundaryComponents.empty());
+}
+
+inline unsigned long NComponent::getNumberOfBoundaryTriangles() const {
+    return 2 * triangles.size() - 4 * tetrahedra.size();
 }
 
 } // namespace regina
