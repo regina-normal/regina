@@ -906,6 +906,12 @@ class REGINA_API Dim4Triangulation : public NPacket,
          */
         bool hasBoundaryTetrahedra() const;
         /**
+         * Returns the number of boundary tetrahedra in this triangulation.
+         *
+         * @return the total number of boundary tetrahedra.
+         */
+        unsigned long getNumberOfBoundaryTetrahedra() const;
+        /**
          * Determines if this triangulation is closed.
          * This is the case if and only if it has no boundary components.
          *
@@ -2067,6 +2073,12 @@ inline bool Dim4Triangulation::hasBoundaryTetrahedra() const {
     if (! calculatedSkeleton_)
         calculateSkeleton();
     return (2 * tetrahedra_.size() > 5 * pentachora_.size());
+}
+
+inline unsigned long Dim4Triangulation::getNumberOfBoundaryTetrahedra() const {
+    if (! calculatedSkeleton_)
+        calculateSkeleton();
+    return 2 * tetrahedra_.size() - 5 * pentachora_.size();
 }
 
 inline bool Dim4Triangulation::isClosed() const {

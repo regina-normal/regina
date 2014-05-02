@@ -84,6 +84,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
     CPPUNIT_TEST(orientability);
     CPPUNIT_TEST(boundary);
     CPPUNIT_TEST(boundaryComponents);
+    CPPUNIT_TEST(boundaryTetrahedra);
     CPPUNIT_TEST(boundaryInclusions);
     CPPUNIT_TEST(vertexLinksSpecific);
     CPPUNIT_TEST(eulerChar);
@@ -751,6 +752,27 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             verifyBoundaryCount(pillow_threeCycle, 1);
             verifyBoundaryTri(pillow_threeCycle, 0, "L(3,1)");
             verifyBoundaryCount(pillow_fourCycle, 0);
+        }
+
+        static void verifyBoundaryTetrahedra(Dim4Triangulation* tri) {
+            unsigned long found = 0;
+
+            unsigned long i, j;
+            for (i = 0; i < tri->getNumberOfPentachora(); ++i)
+                for (j = 0; j < 5; ++j)
+                    if (! tri->getPentachoron(i)->adjacentPentachoron(j))
+                        ++found;
+
+            if (found != tri->getNumberOfBoundaryTetrahedra()) {
+                std::ostringstream msg;
+                msg << tri->getPacketLabel()
+                    << " reports the wrong number of boundary tetrahedra.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void boundaryTetrahedra() {
+            testManualAll(verifyBoundaryTetrahedra);
         }
 
         void verifyBoundaryInclusions(const Dim4Triangulation& tri) {
