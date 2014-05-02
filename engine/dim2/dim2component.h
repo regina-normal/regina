@@ -233,6 +233,13 @@ class REGINA_API Dim2Component : public ShareableObject, public NMarkedElement {
          */
         bool isClosed() const;
 
+        /**
+         * Returns the number of boundary edges in this component.
+         *
+         * @return the number of boundary edges.
+         */
+        unsigned long getNumberOfBoundaryEdges() const;
+
         void writeTextShort(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
 
@@ -317,6 +324,10 @@ inline bool Dim2Component::isOrientable() const {
 
 inline bool Dim2Component::isClosed() const {
     return (boundaryComponents_.empty());
+}
+
+inline unsigned long Dim2Component::getNumberOfBoundaryEdges() const {
+    return 2 * edges_.size() - 3 * triangles_.size();
 }
 
 } // namespace regina
