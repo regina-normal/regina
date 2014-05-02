@@ -259,6 +259,8 @@ void addNTriangulation() {
         .def("isStandard", &NTriangulation::isStandard)
         .def("hasBoundaryFaces", &NTriangulation::hasBoundaryFaces)
         .def("hasBoundaryTriangles", &NTriangulation::hasBoundaryTriangles)
+        .def("getNumberOfBoundaryTriangles",
+            &NTriangulation::getNumberOfBoundaryTriangles)
         .def("isClosed", &NTriangulation::isClosed)
         .def("isOrientable", &NTriangulation::isOrientable)
         .def("isOriented", &NTriangulation::isOriented)
