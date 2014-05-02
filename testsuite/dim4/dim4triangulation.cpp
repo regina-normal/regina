@@ -1919,7 +1919,8 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (b->getEulerCharTri() != tri->getEulerCharTri()) {
+            if (b->getEulerCharTri() != tri->getEulerCharTri() ||
+                    b->getEulerCharManifold() != tri->getEulerCharManifold()) {
                 std::ostringstream msg;
                 msg << tri->getPacketLabel() << ": "
                     << "iBundle gives the wrong Euler characteristic.";
