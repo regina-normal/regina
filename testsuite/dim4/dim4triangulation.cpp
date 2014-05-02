@@ -96,6 +96,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
     CPPUNIT_TEST(edgeLinks);
     CPPUNIT_TEST(idealToFinite);
     CPPUNIT_TEST(iBundle);
+    CPPUNIT_TEST(s1Bundle);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -1976,6 +1977,93 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
         void iBundle() {
             runCensusAllClosed(verifyIBundle);
             runCensusAllBounded(verifyIBundle);
+        }
+
+        static void verifyS1Bundle(NTriangulation* tri) {
+            // For now, only work with compact triangulations.
+            if ((! tri->isValid()) || tri->isIdeal())
+                return;
+
+            Dim4Triangulation* b = Dim4ExampleTriangulation::s1Bundle(*tri);
+
+            if (! b->isValid()) {
+                std::ostringstream msg;
+                msg << tri->getPacketLabel() << ": "
+                    << "s1Bundle gives an invalid triangulation.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (b->isOrientable() != tri->isOrientable()) {
+                std::ostringstream msg;
+                msg << tri->getPacketLabel() << ": "
+                    << "s1Bundle has mismatched orientability.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (b->getNumberOfComponents() != tri->getNumberOfComponents()) {
+                std::ostringstream msg;
+                msg << tri->getPacketLabel() << ": "
+                    << "s1Bundle has the wrong number of components.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (b->getEulerCharTri() != 0 || b->getEulerCharManifold() != 0) {
+                std::ostringstream msg;
+                msg << tri->getPacketLabel() << ": "
+                    << "s1Bundle gives the wrong Euler characteristic.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (b->getNumberOfBoundaryComponents() !=
+                    tri->getNumberOfBoundaryComponents()) {
+                std::ostringstream msg;
+                msg << tri->getPacketLabel() << ": "
+                    << "s1Bundle has the wrong number of "
+                        "boundary components.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            unsigned long expectBdryTets =
+                20 * tri->getNumberOfBoundaryTriangles();
+
+            if (b->getNumberOfBoundaryTetrahedra() != expectBdryTets) {
+                std::ostringstream msg;
+                msg << tri->getPacketLabel() << ": "
+                    << "s1Bundle has the wrong number of "
+                        "boundary tetrahedra.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Simplify the triangulation before running any more
+            // expensive tests.
+            b->intelligentSimplify();
+
+            regina::NAbelianGroup expectH1(tri->getHomologyH1());
+            expectH1.addRank();
+
+            if (b->getHomologyH1() != expectH1) {
+                std::ostringstream msg;
+                msg << tri->getPacketLabel() << ": "
+                    << "s1Bundle gives incorrect H1.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            regina::NAbelianGroup expectH2(tri->getHomologyH2());
+            expectH2.addGroup(tri->getHomologyH1());
+
+            if (b->getHomologyH2() != expectH2) {
+                std::ostringstream msg;
+                msg << tri->getPacketLabel() << ": "
+                    << "s1Bundle gives incorrect H2.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            delete b;
+        }
+
+        void s1Bundle() {
+            runCensusAllClosed(verifyS1Bundle);
+            runCensusAllBounded(verifyS1Bundle);
         }
 };
 
