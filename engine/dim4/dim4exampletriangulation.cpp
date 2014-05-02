@@ -363,8 +363,39 @@ namespace {
                                 wallSide[i][k][j][l], NPerm5(j, k));
                         }
                     }
+            }
+        }
+
+        /**
+         * Glue the walls of two adjacent prisms together.
+         */
+        void glueAdjacent(Prism& adj, unsigned face, const NPerm4& gluing) {
+            NPerm5 gluing5 = perm4to5(gluing);
+            unsigned i, k, l;
+            for (i = 0; i < 2; ++i) {
+                wallBase3[i][face]->joinTo(4,
+                    adj.wallBase3[i][gluing[face]],
+                    gluing5);
+
+                for (k = 0; k < 4; ++k) {
+                    if (k == face)
+                        continue;
+
+                    wallBase2[i][face][k]->joinTo(4,
+                        adj.wallBase2[i][gluing[face]][gluing[k]],
+                        gluing5);
+
+                    for (l = 0; l < 4; ++l) {
+                        if (l == face || l == k)
+                            continue;
+
+                        wallSide[i][face][k][l]->joinTo(4,
+                            adj.wallSide[i][gluing[face]][gluing[k]][gluing[l]],
+                            gluing5);
+                    }
                 }
             }
+        }
     };
 }
 
@@ -380,14 +411,9 @@ Dim4Triangulation* Dim4ExampleTriangulation::iBundle(
     // We have at least one tetrahedron.  Off we go.
     Prism* prism = new Prism[n];
 
-    unsigned long i, j, k, l;
-    int face;
-    unsigned long adjIndex;
-    const NTetrahedron *tet, *adjTet;
-    NPerm4 map;
-
     // Build the boundaries first so we get the relevant pentachora
     // numbered correctly within the final triangulation.
+    unsigned long i;
     for (i = 0; i < n; ++i)
         prism[i].buildBdry(ans, 0); // Pentachora 0..n-1
     for (i = 0; i < n; ++i)
@@ -399,25 +425,28 @@ Dim4Triangulation* Dim4ExampleTriangulation::iBundle(
         prism[i].glueInternally();
     }
 
-    /*
+    // Glue adjacent prisms together.
+    unsigned long adjIndex;
+    unsigned face;
+    const NTetrahedron *tet, *adj;
+    for (i = 0; i < n; ++i) {
         tet = base.getTetrahedron(i);
         for (face = 0; face < 4; ++face) {
-            adjTet = tet->adjacentTetrahedron(face);
-            if (adjTet == 0)
+            adj = tet->adjacentTetrahedron(face);
+            if (! adj)
                 continue;
 
-            adjIndex = base.tetrahedronIndex(adjTet);
-            if (adjIndex > i)
+            // Make sure we haven't already glued this from the other side.
+            adjIndex = adj->markedIndex();
+            if (adjIndex < i ||
+                    (adjIndex == i && tet->adjacentFace(face) < face))
                 continue;
 
-            map = tet->adjacentGluing(face);
-            if (adjIndex == i && map[face] > face)
-                continue;
-
-            pent[i]->joinTo(face, pent[adjIndex], perm4to5(map));
+            // Glue the prisms together!
+            prism[i].glueAdjacent(prism[adjIndex], face,
+                tet->adjacentGluing(face));
         }
     }
-    */
 
     delete[] prism;
     return ans;
