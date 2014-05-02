@@ -47,6 +47,7 @@
 namespace regina {
 
 class Dim4Triangulation;
+class NIsomorphism;
 class NTriangulation;
 
 /**
@@ -253,6 +254,41 @@ class REGINA_API Dim4ExampleTriangulation {
          * destroyed by the caller of this routine.
          */
         static Dim4Triangulation* s1Bundle(const NTriangulation& base);
+
+        /**
+         * Returns a bundle formed from a given 3-manifold and a given
+         * monodromy.
+         *
+         * Specifically, let \a M be the given 3-manifold triangulation.
+         * This routine builds the bundle <tt>M x I</tt>, and then
+         * identifies the two copies of \a M on the boundary according
+         * to the given homeomorphism from \a M to itself.
+         * The homeomorphism must be expressed as a combinatorial
+         * automorphism, which means that for a non-trivial monodromy you
+         * may need to do some work to find a sufficiently symmetric
+         * 3-manifold triangulation to begin with.
+         *
+         * The resulting manifold will contain 82 pentachora for each
+         * original tetrahedron of \a M, and will contain many internal
+         * vertices.  It is highly recommended that you call
+         * Dim4Triangulation::intelligentSimplify() afterwards if you do
+         * not need to preserve the combinatorial structure.
+         *
+         * \pre The given monodromy must be an isomorphism from \a M to
+         * itself; that is, a combinatorial automorphism.
+         *
+         * \warning If the given 3-manifold triangulation has ideal boundary,
+         * then you will obtain an invalid 4-manifold triangulation as a result.
+         *
+         * @param base the 3-manifold triangulation \a M, as described above.
+         * @param monodromy the homeomorphism from \a M to itself, as
+         * described above.
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static Dim4Triangulation* bundleWithMonodromy(
+            const NTriangulation& base,
+            const NIsomorphism& monodromy);
 
         /*@}*/
         /**
