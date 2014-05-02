@@ -73,6 +73,8 @@ void addDim4Component() {
         .def("isIdeal", &Dim4Component::isIdeal)
         .def("isOrientable", &Dim4Component::isOrientable)
         .def("isClosed", &Dim4Component::isClosed)
+        .def("getNumberOfBoundaryTetrahedra",
+            &Dim4Component::getNumberOfBoundaryTetrahedra)
     ;
 }
 

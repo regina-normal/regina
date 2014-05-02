@@ -769,6 +769,26 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     << " reports the wrong number of boundary tetrahedra.";
                 CPPUNIT_FAIL(msg.str());
             }
+
+            unsigned long c;
+            regina::Dim4Component* comp;
+            for (c = 0; c < tri->getNumberOfComponents(); ++c) {
+                comp = tri->getComponent(c);
+                found = 0;
+
+                for (i = 0; i < comp->getNumberOfPentachora(); ++i)
+                    for (j = 0; j < 5; ++j)
+                        if (! comp->getPentachoron(i)->adjacentPentachoron(j))
+                            ++found;
+
+                if (found != comp->getNumberOfBoundaryTetrahedra()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel()
+                        << " reports the wrong number of "
+                        "boundary tetrahedra in component " << c << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
         }
 
         void boundaryTetrahedra() {
