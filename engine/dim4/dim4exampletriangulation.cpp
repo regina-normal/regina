@@ -455,5 +455,20 @@ Dim4Triangulation* Dim4ExampleTriangulation::iBundle(
     return ans;
 }
 
+Dim4Triangulation* Dim4ExampleTriangulation::s1Bundle(
+        const NTriangulation& base) {
+    Dim4Triangulation* ans = iBundle(base);
+    NPacket::ChangeEventSpan span(ans);
+    ans->setPacketLabel(base.getPacketLabel() + " x S1");
+
+    NPerm5 id;
+    unsigned long n = base.getNumberOfTetrahedra();
+    unsigned long i;
+    for (i = 0; i < n; ++i)
+        ans->getPentachoron(i)->joinTo(4, ans->getPentachoron(i + n), id);
+
+    return ans;
+}
+
 } // namespace regina
 

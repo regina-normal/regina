@@ -218,7 +218,7 @@ class REGINA_API Dim4ExampleTriangulation {
          * and the second copy is obtained by mapping vertices 0,1,2,3 of
          * tetrahedron \a i of \a M to vertices 0,1,2,3 of pentachoron \a n+i.
          *
-         * The product itself will contain 58 pentachora for each
+         * The product itself will contain 82 pentachora for each
          * original tetrahedron of \a M, and will contain many internal
          * vertices.  It is highly recommended that you call
          * Dim4Triangulation::intelligentSimplify() afterwards if you do
@@ -231,6 +231,26 @@ class REGINA_API Dim4ExampleTriangulation {
          * destroyed by the caller of this routine.
          */
         static Dim4Triangulation* iBundle(const NTriangulation& base);
+
+        /**
+         * Returns a triangulation of the product <tt>M x S1</tt>,
+         * where \a M is the given 3-manifold triangulation.
+         * This simply calls iBundle() and then glues together the
+         * two copies of \a M on the boundary.
+         *
+         * The product will contain 82 pentachora for each
+         * original tetrahedron of \a M, and will contain many internal
+         * vertices.  It is highly recommended that you call
+         * Dim4Triangulation::intelligentSimplify() afterwards if you do
+         * not need to preserve the combinatorial structure.
+         *
+         * \warning If the given 3-manifold triangulation has ideal boundary,
+         * then you will obtain an invalid 4-manifold triangulation as a result.
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static Dim4Triangulation* s1Bundle(const NTriangulation& base);
 
         /*@}*/
         /**
