@@ -169,6 +169,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::cappellShaneson() {
 Dim4Triangulation* Dim4ExampleTriangulation::doubleCone(
         const NTriangulation& base) {
     Dim4Triangulation* ans = new Dim4Triangulation();
+    NPacket::ChangeEventSpan span(ans);
     ans->setPacketLabel("Double cone over " + base.getPacketLabel());
 
     unsigned long n = base.getNumberOfTetrahedra();
@@ -216,6 +217,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::doubleCone(
 Dim4Triangulation* Dim4ExampleTriangulation::singleCone(
         const NTriangulation& base) {
     Dim4Triangulation* ans = new Dim4Triangulation();
+    NPacket::ChangeEventSpan span(ans);
     ans->setPacketLabel("Single cone over " + base.getPacketLabel());
 
     unsigned long n = base.getNumberOfTetrahedra();
@@ -402,6 +404,7 @@ namespace {
 Dim4Triangulation* Dim4ExampleTriangulation::iBundle(
         const NTriangulation& base) {
     Dim4Triangulation* ans = new Dim4Triangulation();
+    NPacket::ChangeEventSpan span(ans);
     ans->setPacketLabel(base.getPacketLabel() + " x I");
 
     unsigned long n = base.getNumberOfTetrahedra();
