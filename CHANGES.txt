@@ -39,6 +39,8 @@ Version 4.96  [ (under development) ]
     ENGINE:
         Class NAbelianGroup:
             - New convenience operator !=.
+        Class Dim2Component:
+            - New routine getNumberOfBoundaryEdges().
         Class Dim2EdgeEmbedding:
             - New convenience operators == and !=.
         Class Dim2Triangulation:
@@ -50,6 +52,9 @@ Version 4.96  [ (under development) ]
               isomorphism signature routines now inherit directly from
               NGenericTriangulation instead of using wrappers.
               See the NGenericTriangulation notes below for details.
+            - New routines getNumberOfBoundaryEdges() and hasBoundaryEdges().
+              The latter is redundant, but is provided for compatibility with
+              NTriangulation.
         Class Dim2VertexEmbedding:
             - New convenience operators == and !=.
         Class NAbelianGroup:
@@ -61,6 +66,8 @@ Version 4.96  [ (under development) ]
         Class NCensus:
             - New constant PURGE_NON_MINIMAL_HYP, for use in building a
               census of cusped finite volume hyperbolic 3-manifolds.
+        Class NComponent:
+            - New routine getNumberOfBoundaryTriangles().
         Class NFaceEmbedding:
             - New convenience operators == and !=.
         Class NGenericTriangulation:
@@ -112,6 +119,7 @@ Version 4.96  [ (under development) ]
               isomorphism signature routines now inherit directly from
               NGenericTriangulation instead of using wrappers.
               See the NGenericTriangulation notes above for details.
+            - New routine getNumberOfBoundaryTriangles().
         Class NVertex:
             - Renamed getLinkEulerCharacteristic() to getLinkEulerChar(), which
               is easier on the fingers.  The old name has been kept as a
