@@ -261,6 +261,13 @@ class REGINA_API Dim4Component : public ShareableObject, public NMarkedElement {
          */
         bool isClosed() const;
 
+        /**
+         * Returns the number of boundary tetrahedra in this component.
+         *
+         * @return the number of boundary tetrahedra.
+         */
+        unsigned long getNumberOfBoundaryTetrahedra() const;
+
         void writeTextShort(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
 
@@ -355,6 +362,10 @@ inline bool Dim4Component::isOrientable() const {
 
 inline bool Dim4Component::isClosed() const {
     return (boundaryComponents_.empty());
+}
+
+inline unsigned long Dim4Component::getNumberOfBoundaryTetrahedra() const {
+    return 2 * tetrahedra_.size() - 5 * pentachora_.size();
 }
 
 } // namespace regina

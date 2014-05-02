@@ -233,6 +233,8 @@ void addDim4Triangulation() {
         .def("isValid", &Dim4Triangulation::isValid)
         .def("isIdeal", &Dim4Triangulation::isIdeal)
         .def("hasBoundaryTetrahedra", &Dim4Triangulation::hasBoundaryTetrahedra)
+        .def("getNumberOfBoundaryTetrahedra",
+            &Dim4Triangulation::getNumberOfBoundaryTetrahedra)
         .def("isClosed", &Dim4Triangulation::isClosed)
         .def("isOrientable", &Dim4Triangulation::isOrientable)
         .def("isConnected", &Dim4Triangulation::isConnected)

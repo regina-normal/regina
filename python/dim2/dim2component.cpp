@@ -93,6 +93,8 @@ void addDim2Component() {
             return_value_policy<reference_existing_object>())
         .def("isOrientable", &Dim2Component::isOrientable)
         .def("isClosed", &Dim2Component::isClosed)
+        .def("getNumberOfBoundaryEdges",
+            &Dim2Component::getNumberOfBoundaryEdges)
     ;
 }
 
