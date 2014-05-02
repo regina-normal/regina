@@ -1095,8 +1095,10 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             verifyFundGroup(ball_layerAndFold, "0");
             verifyFundGroup(idealPoincareProduct, "");
             verifyFundGroup(mixedPoincareProduct, "");
-            verifyFundGroup(idealFigEightProduct, "");
-            verifyFundGroup(mixedFigEightProduct, "");
+            verifyFundGroup(idealFigEightProduct, "Z~Free(2)"
+            " w/monodromy a --> b, b --> b a^-1 b^2");
+            verifyFundGroup(mixedFigEightProduct, "Z~Free(2)"
+            " w/monodromy a --> b, b --> b a^-1 b^2");
         }
 
         static void verifyBary(Dim4Triangulation* tri) {

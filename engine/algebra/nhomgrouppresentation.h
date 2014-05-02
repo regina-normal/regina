@@ -117,7 +117,6 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
                 const std::vector<NGroupExpression> &map,
                 const std::vector<NGroupExpression> &map2);
 
-
         /**
          * Creates a new identity homomorphism for the given group.
          *
