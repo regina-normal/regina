@@ -719,6 +719,12 @@ class REGINA_API Dim2Triangulation : public NPacket,
          */
         bool hasBoundaryEdges() const;
         /**
+         * Returns the number of boundary edges in this triangulation.
+         *
+         * @return the total number of boundary edges.
+         */
+        unsigned long getNumberOfBoundaryEdges() const;
+        /**
          * Determines if this triangulation is orientable.
          *
          * @return \c true if and only if this triangulation is orientable.
@@ -1331,6 +1337,12 @@ inline bool Dim2Triangulation::isClosed() const {
 
 inline bool Dim2Triangulation::hasBoundaryEdges() const {
     return ! isClosed();
+}
+
+inline unsigned long Dim2Triangulation::getNumberOfBoundaryEdges() const {
+    if (! calculatedSkeleton_)
+        calculateSkeleton();
+    return 2 * edges_.size() - 3 * triangles_.size();
 }
 
 inline bool Dim2Triangulation::isOrientable() const {
