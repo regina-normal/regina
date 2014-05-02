@@ -227,6 +227,7 @@ class REGINA_API Dim4ExampleTriangulation {
          * \warning If the given 3-manifold triangulation has ideal boundary,
          * then you will obtain an invalid 4-manifold triangulation as a result.
          *
+         * @param base the 3-manifold triangulation \a M, as described above.
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
@@ -247,6 +248,7 @@ class REGINA_API Dim4ExampleTriangulation {
          * \warning If the given 3-manifold triangulation has ideal boundary,
          * then you will obtain an invalid 4-manifold triangulation as a result.
          *
+         * @param base the 3-manifold triangulation \a M, as described above.
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
