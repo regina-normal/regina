@@ -206,6 +206,32 @@ class REGINA_API Dim4ExampleTriangulation {
          */
         static Dim4Triangulation* singleCone(const NTriangulation& base);
 
+        /**
+         * Returns a triangulation of the product <tt>M x I</tt>,
+         * where \a M is the given 3-manifold triangulation.
+         *
+         * The boundary of this product will consist of two copies of \a M,
+         * both combinatorially isomorphic to the original triangulation.
+         * If \a n is the number of tetrahedra in \a M, then the first copy of
+         * \a M on the boundary is obtained by mapping vertices 0,1,2,3 of
+         * tetrahedron \a i of \a M to vertices 0,1,2,3 of pentachoron \a i,
+         * and the second copy is obtained by mapping vertices 0,1,2,3 of
+         * tetrahedron \a i of \a M to vertices 0,1,2,3 of pentachoron \a n+i.
+         *
+         * The product itself will contain 58 pentachora for each
+         * original tetrahedron of \a M, and will contain many internal
+         * vertices.  It is highly recommended that you call
+         * Dim4Triangulation::intelligentSimplify() afterwards if you do
+         * not need to preserve the combinatorial structure.
+         *
+         * \warning If the given 3-manifold triangulation has ideal boundary,
+         * then you will obtain an invalid 4-manifold triangulation as a result.
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static Dim4Triangulation* iBundle(const NTriangulation& base);
+
         /*@}*/
         /**
          * (end: Constructions from 3-Manifold Triangulations)
