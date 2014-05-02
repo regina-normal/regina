@@ -28,6 +28,8 @@ Version 5.0  [ (under development) ]
 Version 4.96  [ (under development) ]
 
     ENGINE:
+        Class Dim2Component:
+            - New routine getNumberOfBoundaryEdges().
         Class Dim2EdgeEmbedding:
             - New convenience operators == and !=.
         Class Dim2Triangulation:
@@ -53,6 +55,8 @@ Version 4.96  [ (under development) ]
         Class NCensus:
             - New constant PURGE_NON_MINIMAL_HYP, for use in building a
               census of cusped finite volume hyperbolic 3-manifolds.
+        Class NComponent:
+            - New routine getNumberOfBoundaryTriangles().
         Class NFaceEmbedding:
             - New convenience operators == and !=.
         Class NGenericTriangulation:

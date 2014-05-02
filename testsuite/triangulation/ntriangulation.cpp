@@ -790,6 +790,26 @@ class NTriangulationTest : public TriangulationTest<3> {
                     << " reports the wrong number of boundary triangles.";
                 CPPUNIT_FAIL(msg.str());
             }
+
+            unsigned long c;
+            regina::NComponent* comp;
+            for (c = 0; c < tri->getNumberOfComponents(); ++c) {
+                comp = tri->getComponent(c);
+                found = 0;
+
+                for (i = 0; i < comp->getNumberOfTetrahedra(); ++i)
+                    for (j = 0; j < 4; ++j)
+                        if (! comp->getTetrahedron(i)->adjacentTetrahedron(j))
+                            ++found;
+
+                if (found != comp->getNumberOfBoundaryTriangles()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel()
+                        << " reports the wrong number of "
+                        "boundary triangles in component " << c << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
         }
 
         void boundaryTriangles() {
