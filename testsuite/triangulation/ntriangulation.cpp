@@ -1911,7 +1911,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyFundGroup(twoProjPlaneCusps.getFundamentalGroup(),
                 "Fund(tri with projective plane cusps)", "Z_2");
             verifyFundGroup(cuspedGenusTwoTorus.getFundamentalGroup(),
-                "Fund(cusped solid genus two torus)", "Free (2 generators)");
+                "Fund(cusped solid genus two torus)", "Free(2)");
             verifyFundGroup(pinchedSolidTorus.getFundamentalGroup(),
                 "Fund(pinched solid torus)", "Z");
             verifyFundGroup(pinchedSolidKB.getFundamentalGroup(),

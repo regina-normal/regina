@@ -211,6 +211,10 @@ NGroupPresentation::NGroupPresentation(const NGroupPresentation& cloneMe) :
         back_inserter(relations), FuncNewCopyPtr<NGroupExpression>());
 }
 
+// TODO: To add: platonic groups, octahedral/cubical, dihedral,
+//       icosahedral/dodecahedral, tetrahedral and binary versions of them.  
+//       Free products of torsion groups, free products with amalgamation.
+//       currently intelligentSimplify() isn't smart enough for this. 
 std::string NGroupPresentation::recogniseGroup() const {
     std::ostringstream out;
     unsigned long nRels = relations.size();
@@ -219,58 +223,46 @@ std::string NGroupPresentation::recogniseGroup() const {
 
     // Run through cases.
     if (nGenerators == 0)
-        out << 0;
-    else if (nGenerators == 1) {
-        // Each term is of the form g^k=1.  This is Z_d where d is the
-        // gcd of the various values of k.
-        unsigned long d = 0;
-        for (unsigned long i = 0; i < nRels; i++) {
-            rel = relations[i];
-            if (rel->getNumberOfTerms() > 1)
-                rel->simplify();
-            // The relation should have at most one term now.
-            if (rel->getNumberOfTerms() == 1) {
-                exp = rel->getExponent(0);
-                if (exp > 0)
-                    d = gcd(d, exp);
-                else if (exp < 0)
-                    d = gcd(d, -exp);
+        { out << 0; return out.str(); }
+
+    // Let's record the abelianisation.
+    std::auto_ptr< NAbelianGroup > ab( abelianisation() );
+
+    // abelian test
+    if (isAbelian()) { 
+        out << ab.get()->str();
+        return out.str();
+    }
+
+    // not (clearly) abelian.  Check if free.
+    if (nRels == 0) { 
+        out << "Free(" << nGenerators << ")"; 
+        return out.str();
+    }
+
+    // let's check if its an extension over Z. 
+    if (ab.get()->getRank()==1) {
+        NGroupPresentation presCopy( *this );
+        std::auto_ptr< NHomGroupPresentation > AUT( 
+            presCopy.identify_extension_over_Z() );
+        if (AUT.get() != NULL) {
+            // Let's try to identify the fibre. 
+            std::string domStr( AUT.get()->getDomain().recogniseGroup() );
+            if (domStr.length()>0) {
+                out<<"Z~"<<domStr<<" w/monodromy ";
+            unsigned long numGen( 
+                AUT.get()->getDomain().getNumberOfGenerators() );
+            for (unsigned long i=0; i<numGen; i++) {
+              if (i!=0) out<<", ";
+              if (numGen<27) out<<( (char) (i+97) ); 
+              else out<<"g"<<i;
+              out<<" --> ";     
+              AUT.get()->evaluate(i).writeText(out, (numGen<27) ? true : false);
+              }
             }
         }
-        if (d == 0)
-            out << 'Z';
-        else if (d == 1)
-            out << 0;
-        else
-            out << "Z_" << d;
-    } else if (nRels == 0) {
-        out << "Free (" << nGenerators << " generators)";
-    } else if (nGenerators == 2 && nRels == 1) {
-        // See if it's the abelian Z + Z.
-        rel = relations[0];
-        rel->simplify(true);
+    }         
 
-        // Look for a relation (x y x^-1 y^-1).
-        if (rel->getNumberOfTerms() == 4) {
-            if (rel->getGenerator(0) == rel->getGenerator(2) &&
-                    rel->getGenerator(1) == rel->getGenerator(3) &&
-                    rel->getGenerator(0) != rel->getGenerator(1) &&
-                    labs(rel->getExponent(0)) == 1 &&
-                    labs(rel->getExponent(1)) == 1 &&
-                    rel->getExponent(0) + rel->getExponent(2) == 0 &&
-                    rel->getExponent(1) + rel->getExponent(3) == 0)
-                out << "Z + Z (abelian)";
-        }
-// TODO: To add: platonic groups, octahedral/cubical, dihedral,
-//       icosahedral/dodecahedral, tetrahedral and binary versions of them.  
-//       Free products of torsion groups, free products with amalgamation.
-//       currently intelligentSimplify() isn't smart enough for this. 
-    } else if (nGenerators == 2 && nRels == 2) {
-        // TODO: See if it's the quaternions.
-    } else {
-        // nGenerators >= 2 and nRels >= 2.
-        // Don't have anything intelligent to say at this point.
-    }
     return out.str();
 }
 

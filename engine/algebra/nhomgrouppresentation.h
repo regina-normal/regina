@@ -90,6 +90,30 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
                 const std::vector<NGroupExpression> &map);
 
         /**
+         * Creates a new homomorphism from the given data.
+         * If called using this constructor, one is declaring a map both
+         * from the domain to range, and a map from the range to domain. 
+         * Usually one would want this second map to be the inverse of
+         * the first.  
+         *
+         * @param domain the domain of the homomorphism.
+         * @param range the range of the homomorphism.
+         * @param map a vector of length \a g, where \a g is the number
+         *  of generators of the domain, and where this homomorphism
+         *  sends the <i>i</i>th generator of the domain to the
+         *  element <tt>map[i]</tt> of the range.
+         * @param map2 a vector of length \a k where \a k is the number
+         *  of generators of the range. <tt>map2[i]</tt> is a word in
+         *  the generators of the domain.
+         *
+         * \ifacespython Not present.
+         */
+        NHomGroupPresentation(const NGroupPresentation &domain,
+                const NGroupPresentation &range,
+                const std::vector<NGroupExpression> &map,
+                const std::vector<NGroupExpression> &map2);
+
+        /**
          * Creates a new identity homomorphism for the given group.
          *
          * @param groupForIdentity both the range and domain of the
