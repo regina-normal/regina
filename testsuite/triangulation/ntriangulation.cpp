@@ -2193,8 +2193,8 @@ class NTriangulationTest : public TriangulationTest<3> {
             if (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
                     tri->isConnected()) {
                 regina::NContainer parent;
-                unsigned long comps = tri->connectedSumDecomposition(&parent);
-                if (comps > 0) {
+                long comps = tri->connectedSumDecomposition(&parent);
+                if (comps != 0) {
                     std::ostringstream msg;
                     msg << "The 3-sphere " << tri->getPacketLabel()
                         << " was reported as having one or more "
@@ -2228,7 +2228,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             if (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
                     tri->isConnected()) {
                 regina::NContainer parent;
-                unsigned long comps = tri->connectedSumDecomposition(&parent);
+                long comps = tri->connectedSumDecomposition(&parent);
                 if (comps == 0) {
                     std::ostringstream msg;
                     msg << "The non-3-sphere " << tri->getPacketLabel()
@@ -2296,8 +2296,8 @@ class NTriangulationTest : public TriangulationTest<3> {
             if (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
                     tri->isConnected()) {
                 regina::NContainer parent;
-                unsigned long comps = tri->connectedSumDecomposition(&parent);
-                if (expected && comps > 0) {
+                long comps = tri->connectedSumDecomposition(&parent);
+                if (expected && comps != 0) {
                     std::ostringstream msg;
                     msg << "The census 3-sphere " << tri->getPacketLabel()
                         << " was reported as having one or more "

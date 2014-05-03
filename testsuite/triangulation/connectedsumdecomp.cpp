@@ -454,12 +454,23 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
         static void testDecomp(NTriangulation* tri) {
             // Checked the connectedSumDecomposition() preconditions.
-            if (! (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
-                    tri->isConnected()))
+            if (! (tri->isValid() && tri->isClosed() && tri->isConnected()))
                 return;
 
             NContainer parent;
-            unsigned long ncomp = tri->connectedSumDecomposition(&parent);
+            long ncomp = tri->connectedSumDecomposition(&parent);
+
+            if (ncomp == -1) {
+                // The routine reported an embedded two-sided projective plane.
+                if (tri->isOrientable()) {
+                    std::ostringstream msg;
+                    msg << "Triangulation " << tri->getPacketLabel()
+                        << " is orientable but reports an embedded "
+                        "two-sided projective plane.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                return;
+            }
 
             if (ncomp != parent.getNumberOfChildren()) {
                 std::ostringstream msg;
@@ -471,16 +482,20 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
             NAbelianGroup h1;
             NTriangulation* term;
+            bool foundNor = false;
             for (regina::NPacket* p = parent.getFirstTreeChild(); p;
                     p = p->getNextTreeSibling()) {
                 term = static_cast<NTriangulation*>(p);
+                if (! term->isOrientable())
+                    foundNor = true;
                 if (! term->isZeroEfficient()) {
-                    // Special cases: 2-tetrahedron RP3, L(3,1), S2xS1.
+                    // Special cases: 2-tetrahedron RP3, L(3,1), S2xS1, S2x~S1.
                     if (! (term->getNumberOfTetrahedra() == 2 &&
                             (term->isoSig() == "cMcabbgqw" /* RP3 */ ||
                             term->isoSig() == "cMcabbgqj" /* L(3,1) */ ||
                             term->isoSig() == "cPcbbbaai" /* L(3,1) */ ||
-                            term->isoSig() == "cMcabbjaj" /* S2xS1 */))) {
+                            term->isoSig() == "cMcabbjaj" /* S2xS1 */ ||
+                            term->isoSig() == "cPcbbbajs" /* S2x~S1 */))) {
                         std::ostringstream msg;
                         msg << "Triangulation " << tri->getPacketLabel()
                             << " reports a non-zero-efficient summand "
@@ -496,6 +511,20 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
                 h1.addGroup(term->getHomologyH1());
+            }
+
+            if ((! foundNor) && (! tri->isOrientable())) {
+                std::ostringstream msg;
+                msg << "Triangulation " << tri->getPacketLabel()
+                    << " is non-orientable but none of its summands are.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (foundNor && tri->isOrientable()) {
+                std::ostringstream msg;
+                msg << "Triangulation " << tri->getPacketLabel()
+                    << " is orientable but one of its summands is not.";
+                CPPUNIT_FAIL(msg.str());
             }
 
             if (! (h1 == tri->getHomologyH1())) {
