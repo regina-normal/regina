@@ -65,6 +65,7 @@ using regina::Dim4Vertex;
 using regina::NAbelianGroup;
 using regina::NExampleTriangulation;
 using regina::NGroupPresentation;
+using regina::NIsomorphism;
 using regina::NPerm5;
 using regina::NStandardTriangulation;
 using regina::NTetrahedron;
@@ -97,6 +98,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
     CPPUNIT_TEST(idealToFinite);
     CPPUNIT_TEST(iBundle);
     CPPUNIT_TEST(s1Bundle);
+    CPPUNIT_TEST(bundleWithMonodromy);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -2065,6 +2067,100 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
         void s1Bundle() {
             runCensusAllClosed(verifyS1Bundle);
             runCensusAllBounded(verifyS1Bundle);
+        }
+
+        static void verifyBundleWithMonodromy(NTriangulation* tri) {
+            // For now, only work with compact triangulations.
+            if ((! tri->isValid()) || tri->isIdeal())
+                return;
+
+            std::list<NIsomorphism*> autos;
+            tri->findAllIsomorphisms(*tri, autos);
+
+            for (std::list<NIsomorphism*>::const_iterator it = autos.begin();
+                    it != autos.end(); ++it) {
+                Dim4Triangulation* b =
+                    Dim4ExampleTriangulation::bundleWithMonodromy(*tri, **it);
+
+                if (! b->isValid()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ": "
+                        << "bundleWithMonodromy gives an "
+                        "invalid triangulation.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (b->isOrientable() && ! tri->isOrientable()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ": "
+                        << "bundleWithMonodromy destroys non-orientability.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (b->getNumberOfComponents() !=
+                        tri->getNumberOfComponents()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ": "
+                        << "bundleWithMonodromy has the wrong number "
+                        "of components.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (b->getEulerCharTri() != 0 ||
+                        b->getEulerCharManifold() != 0) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ": "
+                        << "bundleWithMonodromy gives the wrong "
+                        "Euler characteristic.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (b->getNumberOfBoundaryComponents() !=
+                        tri->getNumberOfBoundaryComponents()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ": "
+                        << "bundleWithMonodromy gives the wrong number of "
+                            "boundary components.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                unsigned long expectBdryTets =
+                    20 * tri->getNumberOfBoundaryTriangles();
+
+                if (b->getNumberOfBoundaryTetrahedra() != expectBdryTets) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ": "
+                        << "bundleWithMonodromy gives the wrong number of "
+                            "boundary tetrahedra.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                // TODO: It would be nice to test something about
+                // homology here.  Note that, since we are passing a
+                // combinatorial isomorphism, b must have (M x S1) as a
+                // finite sheeted cover.
+
+                delete *it;
+            }
+        }
+
+        void bundleWithMonodromy() {
+            runCensusAllClosed(verifyBundleWithMonodromy, false /* small */);
+            runCensusAllBounded(verifyBundleWithMonodromy, false /* small */);
+
+            // A case for which using inverse isomorphism gluings will
+            // definitely break things, since the gluings are not involutions.
+            // This is the two-vertex, two-tetrahedron L(3,1);
+            // the degree two vertex is 0(0) == 1(1).
+            NTriangulation tri;
+            NTetrahedron* t0 = tri.newTetrahedron();
+            NTetrahedron* t1 = tri.newTetrahedron();
+            t0->joinTo(0, t1, regina::NPerm4(1,3,0,2));
+            t0->joinTo(1, t1, regina::NPerm4(1,2,3,0));
+            t0->joinTo(2, t1, regina::NPerm4(1,2,3,0));
+            t0->joinTo(3, t1, regina::NPerm4(1,2,3,0));
+            tri.setPacketLabel("Hand-coded L(3,1)");
+            verifyBundleWithMonodromy(&tri);
         }
 };
 
