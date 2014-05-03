@@ -6,6 +6,23 @@ Regina - A Normal Surface Theory Calculator
     For a full list of changes, including all changes to the C++/Python API,
     see the file CHANGES.txt.
 
+Version 4.96  [ (under development) ]
+
+    Features:
+        - Connected sum decomposition is now available for non-orientable
+          manifolds (arXiv:1212.1441).
+        - Elementary 1-4 moves on triangulations are now available.
+        - Several more conveniences for Python and C++ users.
+        - Many structural changes under the hood, to prepare Regina for
+          the coming 4-manifolds release.
+    Behaviour changes:
+        - Boundary slopes for spun-normal surfaces must now be explicitly
+          enabled in preferences, since they rely on SnapPea's default choice
+          of peripheral curves (which might not be what the user expects).
+    Command-line utilities:
+        - tricensus now has options to work with cusped hyperbolic manifolds.
+
+
 Version 4.95  [ 12 November, 2013 ]
 
     Features:
