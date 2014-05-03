@@ -1149,11 +1149,10 @@ void NTriGluingsUI::connectedSumDecomposition() {
         ReginaSupport::info(ui,
             tr("This triangulation is empty."),
             tr("It has no prime summands."));
-    else if (! (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
-            tri->isConnected()))
+    else if (! (tri->isValid() && tri->isClosed() && tri->isConnected()))
         ReginaSupport::sorry(ui,
             tr("Connected sum decomposition is "
-            "currently only available for closed orientable connected "
+            "currently only available for closed, connected "
             "3-manifold triangulations."));
     else {
         std::auto_ptr<PatienceDialog> dlg(PatienceDialog::warn(tr(
@@ -1175,35 +1174,51 @@ void NTriGluingsUI::connectedSumDecomposition() {
             base = tri;
 
         // Form the decomposition.
-        unsigned long nSummands = tri->connectedSumDecomposition(base);
+        long nSummands = tri->connectedSumDecomposition(base);
 
         // Let the user know what happened.
         dlg.reset();
-        if (nSummands == 0)
+        if (nSummands < 0) {
+            ReginaSupport::sorry(ui,
+                tr("<qt>This manifold contains an embedded two-sided "
+                "projective plane.<p>"
+                "Regina cannot always compute connected "
+                "sum decompositions in such cases, and this triangulation "
+                "in particular is one such case that it cannot resolve.</qt>"));
+        } else if (nSummands == 0) {
             ReginaSupport::info(ui,
                 tr("This is the 3-sphere."),
                 tr("It has no prime summands."));
-        else {
+        } else {
             // There is at least one new summand triangulation.
             // Make sure the new summands are visible.
             enclosingPane->getMainWindow()->ensureVisibleInTree(
                 base->getLastTreeChild());
 
             if (nSummands == 1) {
-                // Special-case S2xS1 and RP3, which do not have
+                // Special-case S2xS1, S2x~S1 and RP3, which do not have
                 // 0-efficient triangulations.
                 NTriangulation* small = static_cast<NTriangulation*>
                     (base->getFirstTreeChild());
                 if (small->getNumberOfTetrahedra() <= 2 &&
                         small->getHomologyH1().isZ()) {
-                    // The only closed prime orientable manifold with
-                    // H_1 = Z and <= 2 tetrahedra is S2xS1.
-                    ReginaSupport::info(ui,
-                        tr("<qt>This is the prime manifold "
-                        "S<sup>2</sup> x S<sup>1</sup>.</qt>"),
-                        tr("I cannot decompose it further.  "
-                        "However, I have constructed a new minimal "
-                        "(but not 0-efficient) triangulation."));
+                    // The only closed prime manifolds with
+                    // H_1 = Z and <= 2 tetrahedra are S2xS1 and S2x~S1.
+                    if (small->isOrientable())
+                        ReginaSupport::info(ui,
+                            tr("<qt>This is the prime manifold "
+                            "S<sup>2</sup> x S<sup>1</sup>.</qt>"),
+                            tr("I cannot decompose it further.  "
+                            "However, I have constructed a new minimal "
+                            "(but not 0-efficient) triangulation."));
+                    else
+                        ReginaSupport::info(ui,
+                            tr("<qt>This is the prime manifold "
+                            "S<sup>2</sup> x~ S<sup>1</sup> "
+                            "(the non-orientable twisted product).</qt>"),
+                            tr("I cannot decompose it further.  "
+                            "However, I have constructed a new minimal "
+                            "(but not 0-efficient) triangulation."));
                 } else if (small->getNumberOfTetrahedra() <= 2 &&
                         small->getHomologyH1().isZn(2)) {
                     // The only closed prime orientable manifold with
