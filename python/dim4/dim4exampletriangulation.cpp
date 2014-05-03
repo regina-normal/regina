@@ -60,6 +60,9 @@ void addDim4ExampleTriangulation() {
             return_value_policy<manage_new_object>())
         .def("s1Bundle", &Dim4ExampleTriangulation::s1Bundle,
             return_value_policy<manage_new_object>())
+        .def("bundleWithMonodromy",
+            &Dim4ExampleTriangulation::bundleWithMonodromy,
+            return_value_policy<manage_new_object>())
         .staticmethod("fourSphere")
         .staticmethod("rp4")
         .staticmethod("s3xs1")
@@ -69,6 +72,7 @@ void addDim4ExampleTriangulation() {
         .staticmethod("singleCone")
         .staticmethod("iBundle")
         .staticmethod("s1Bundle")
+        .staticmethod("bundleWithMonodromy")
     ;
 }
 

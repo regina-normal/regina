@@ -470,5 +470,22 @@ Dim4Triangulation* Dim4ExampleTriangulation::s1Bundle(
     return ans;
 }
 
+Dim4Triangulation* Dim4ExampleTriangulation::bundleWithMonodromy(
+        const NTriangulation& base, const NIsomorphism& monodromy) {
+    Dim4Triangulation* ans = iBundle(base);
+    NPacket::ChangeEventSpan span(ans);
+    ans->setPacketLabel(base.getPacketLabel() + " x I / ~");
+
+    NPerm5 id;
+    unsigned long n = base.getNumberOfTetrahedra();
+    unsigned long i;
+    for (i = 0; i < n; ++i)
+        ans->getPentachoron(i)->joinTo(4,
+            ans->getPentachoron(monodromy.simpImage(i) + n),
+            perm4to5(monodromy.facetPerm(i)));
+
+    return ans;
+}
+
 } // namespace regina
 
