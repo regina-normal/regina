@@ -2172,14 +2172,19 @@ class REGINA_API NTriangulation : public NPacket,
          * of the given parent packet.  The original triangulation will
          * be left unchanged.
          *
-         * Note that this routine is currently only available for
-         * closed orientable triangulations; see the list of
-         * preconditions for full details.  The 0-efficiency prime
-         * decomposition algorithm of Jaco and Rubinstein is used.
+         * For non-orientable triangulations, this routine is only guaranteed
+         * to succeed if the original manifold contains no embedded two-sided
+         * projective planes.  If the manifold \e does contain embedded
+         * two-sided projective planes, then this routine might still succeed
+         * but it might fail; however, such a failure will always be detected,
+         * and in such a case this routine will return -1 instead (without
+         * building any prime summands at all).
+         *
+         * Note that this routine is currently only available for closed
+         * triangulations; see the list of preconditions for full details.
          *
          * If the given parent packet is 0, the new prime summand
-         * triangulations will be inserted as children of this
-         * triangulation.
+         * triangulations will be inserted as children of this triangulation.
          *
          * This routine can optionally assign unique (and sensible)
          * packet labels to each of the new prime summand triangulations.
@@ -2188,16 +2193,28 @@ class REGINA_API NTriangulation : public NPacket,
          * triangulations are only temporary objects used as part
          * of a larger routine.
          *
-         * If this is a triangulation of a 3-sphere, no prime summand
-         * triangulations will be created at all.
+         * If this is a triangulation of a 3-sphere then no prime summand
+         * triangulations will be created at all, and this routine will
+         * return 0.
+         *
+         * The underlying algorithm appears in "A new approach to crushing
+         * 3-manifold triangulations", Discrete and Computational Geometry,
+         * to appear, arXiv:1212.1441.  This algorithm is based on the
+         * Jaco-Rubinstein 0-efficiency algorithm, and works in both
+         * orientable and non-orientable settings.
+         *
+         * \warning Users are strongly advised to check the return value if
+         * embedded two-sided projective planes are a possibility, since in
+         * such a case this routine might fail (as explained above).
+         * Note however that this routine might still succeed, and so success
+         * is not a proof that no embedded two-sided projective planes exist.
          *
          * \warning The algorithms used in this routine rely on normal
          * surface theory and so can be very slow for larger triangulations.
          * For 3-sphere testing, see the routine isThreeSphere() which
          * uses faster methods where possible.
          *
-         * \pre This triangulation is valid, closed, orientable and
-         * connected.
+         * \pre This triangulation is valid, closed and connected.
          *
          * @param primeParent the packet beneath which the new prime
          * summand triangulations will be inserted, or 0 if they
@@ -2206,10 +2223,11 @@ class REGINA_API NTriangulation : public NPacket,
          * should be assigned unique packet labels, or \c false if
          * they should be left without labels at all.
          * @return the number of prime summands created, 0 if this
-         * triangulation is a 3-sphere or 0 if this triangulation does
-         * not meet the preconditions described above.
+         * triangulation is a 3-sphere, or -1 if this routine failed
+         * because this is a non-orientable triangulation with embedded
+         * two-sided projective planes.
          */
-        unsigned long connectedSumDecomposition(NPacket* primeParent = 0,
+        long connectedSumDecomposition(NPacket* primeParent = 0,
             bool setLabels = true);
         /**
          * Determines whether this is a triangulation of a 3-sphere.
