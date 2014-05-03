@@ -114,14 +114,16 @@ unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
     return whichComp;
 }
 
-unsigned long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
+long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
         bool setLabels) {
     // Precondition checks.
-    if (! (isValid() && isClosed() && isOrientable() && isConnected()))
+    if (! (isValid() && isClosed() && isConnected()))
         return 0;
 
     if (! primeParent)
         primeParent = this;
+
+    bool initOrientable = isOrientable();
 
     // Make a working copy, simplify and record the initial homology.
     NTriangulation* working = new NTriangulation(*this);
@@ -149,7 +151,7 @@ unsigned long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
             toProcess.getFirstTreeChild()))) {
         // INV: Our triangulation is the connected sum of all the
         // children of toProcess, all the elements of primeComponents
-        // and possibly some copies of S2xS1, RP3 and/or L(3,1).
+        // and possibly some copies of S2xS1, S2x~S1, RP3, and/or L(3,1).
 
         // Work with the last child.
         processing->makeOrphan();
@@ -160,6 +162,23 @@ unsigned long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
             crushed = sphere->crush();
             delete sphere;
             delete processing;
+
+            if (! crushed->isValid()) {
+                // We must have had an embedded two-sided projective plane.
+                // Abort.
+
+                delete crushed;
+
+                std::list<NTriangulation*>::iterator it;
+                for (it = primeComponents.begin();
+                        it != primeComponents.end(); ++it)
+                    delete *it;
+
+                // All children of toProcess will be deleted automatically
+                // with toProcess itself (which is on the stack).
+
+                return -1;
+            }
 
             crushed->intelligentSimplify();
 
@@ -177,43 +196,49 @@ unsigned long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
             // We have no non-trivial normal 2-spheres!
             // The triangulation is 0-efficient (and prime).
             // Is it a 3-sphere?
-            if (processing->getNumberOfVertices() > 1) {
-                // Proposition 5.1 of Jaco & Rubinstein's 0-efficiency
-                // paper:  If a closed orientable triangulation T is
-                // 0-efficient then either T has one vertex or T is a
-                // 3-sphere with precisely two vertices.
-                //
-                // It follows then that this is a 3-sphere.
-                // Toss it away.
-                delete sphere;
-                delete processing;
+            if (! processing->isOrientable()) {
+                // Definitely not a sphere.
+                primeComponents.push_back(processing);
             } else {
-                // Now we have a closed orientable one-vertex 0-efficient
-                // triangulation.
-                // We have to look for an almost normal sphere.
-                //
-                // From the proof of Proposition 5.12 in Jaco & Rubinstein's
-                // 0-efficiency paper, we see that we can restrict our
-                // search to octagonal almost normal surfaces.
-                // Furthermore, from the result in the quadrilateral-octagon
-                // coordinates paper, we can restrict this search further
-                // to vertex octagonal almost normal surfaces in
-                // quadrilateral-octagonal space.
-                sphere = processing->hasOctagonalAlmostNormalSphere();
-                if (sphere) {
-                    // It's a 3-sphere.  Toss this component away.
+                // Orientable, and so possibly a sphere.  Test this precisely.
+                if (processing->getNumberOfVertices() > 1) {
+                    // Proposition 5.1 of Jaco & Rubinstein's 0-efficiency
+                    // paper:  If a closed orientable triangulation T is
+                    // 0-efficient then either T has one vertex or T is a
+                    // 3-sphere with precisely two vertices.
+                    //
+                    // It follows then that this is a 3-sphere.
+                    // Toss it away.
                     delete sphere;
                     delete processing;
                 } else {
-                    // It's a non-trivial prime component!
-                    primeComponents.push_back(processing);
+                    // Now we have a closed orientable one-vertex 0-efficient
+                    // triangulation.
+                    // We have to look for an almost normal sphere.
+                    //
+                    // From the proof of Proposition 5.12 in Jaco & Rubinstein's
+                    // 0-efficiency paper, we see that we can restrict our
+                    // search to octagonal almost normal surfaces.
+                    // Furthermore, from the result in the quadrilateral-octagon
+                    // coordinates paper, we can restrict this search further
+                    // to vertex octagonal almost normal surfaces in
+                    // quadrilateral-octagonal space.
+                    sphere = processing->hasOctagonalAlmostNormalSphere();
+                    if (sphere) {
+                        // It's a 3-sphere.  Toss this component away.
+                        delete sphere;
+                        delete processing;
+                    } else {
+                        // It's a non-trivial prime component!
+                        primeComponents.push_back(processing);
+                    }
                 }
             }
         }
     }
 
-    // Run a final homology check and put back our missing S2xS1, RP3
-    // and L(3,1) terms.
+    // Run a final homology check and put back our missing S2xS1, S2x~S1,
+    // RP3 and L(3,1) terms.
     unsigned long finalZ = 0, finalZ2 = 0, finalZ3 = 0;
     for (std::list<NTriangulation*>::iterator it = primeComponents.begin();
             it != primeComponents.end(); it++) {
@@ -225,10 +250,21 @@ unsigned long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
 
     while (finalZ++ < initZ) {
         working = new NTriangulation();
-        working->insertLayeredLensSpace(0, 1);
+        if (initOrientable) {
+            // Build S2 x S1.
+            working->insertLayeredLensSpace(0, 1);
+        } else {
+            // Build S2 x~ S1.
+            NTetrahedron* t0 = working->newTetrahedron();
+            NTetrahedron* t1 = working->newTetrahedron();
+            t0->joinTo(0, t1, NPerm4(0, 1, 3, 2));
+            t0->joinTo(1, t1, NPerm4(0, 1, 3, 2));
+            t0->joinTo(2, t1, NPerm4(1, 3, 2, 0));
+            t0->joinTo(3, t1, NPerm4(2, 0, 1, 3));
+        }
         primeComponents.push_back(working);
-        irreducible = false; // Implied by the S2xS1 summand.
-        zeroEfficient = false; // Implied by the S2xS1 summand.
+        irreducible = false; // Implied by the S2xS1 or S2x~S1 summand.
+        zeroEfficient = false; // Implied by the S2xS1 or S2x~S1 summand.
     }
     while (finalZ2++ < initZ2) {
         working = new NTriangulation();
@@ -266,10 +302,10 @@ unsigned long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
     } else if (whichComp == 1) {
         threeSphere = false;
         if (! irreducible.known()) {
-            // If our manifold is S2xS1 then it is *not* irreducible;
+            // If our manifold is S2xS1 or S2x~S1 then it is *not* irreducible;
             // however, in this case we will have already set irreducible
-            // to false when putting back the S2xS1 summands above (and
-            // therefore irreducible.known() will be true).
+            // to false when putting back the S2xS1 or S2x~S1 summands above
+            // (and therefore irreducible.known() will be true).
             irreducible = true;
         }
     } else if (whichComp == 0) {
@@ -631,7 +667,7 @@ NPacket* NTriangulation::makeZeroEfficient() {
     else
         connSum->setPacketLabel(getPacketLabel() + " - Decomposition");
 
-    unsigned long ans = connectedSumDecomposition(connSum, true);
+    long ans = connectedSumDecomposition(connSum, true);
     if (ans > 1) {
         // Composite!
         return connSum;
