@@ -106,6 +106,11 @@ Version 4.96  [ (under development) ]
         Class NTriangleEmbedding:
             - New convenience operators == and !=.
         Class NTriangulation:
+            - Routine connectedSumDecomposition() now works for non-orientable
+              triangulations also.  There is a caveat if there are embedded
+              two-sided projective planes (see the documentation for details),
+              and so the return type is now a signed long to allow for error
+              conditions to be returned.
             - New routine isIdenticalTo().
             - New local modification oneFourMove().
             - New routines findAllIsomorphisms() and makeCanonical().
