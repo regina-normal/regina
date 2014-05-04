@@ -2709,6 +2709,42 @@ class REGINA_API NTriangulation : public NPacket,
          */
         void drillEdge(NEdge* e);
 
+        /**
+         * Punctures this manifold by removing a 3-ball from the interior of
+         * the given tetrahedron.  If no tetrahedron is specified (i.e.,
+         * the tetrahedron pointer is \c null), then the puncture will be
+         * taken from the interior of tetrahedron 0.
+         *
+         * The puncture will not meet the boundary of the tetrahedron,
+         * so nothing will go wrong if the tetrahedron has boundary facets
+         * and/or ideal vertices.  A side-effect of this, however, is
+         * that the resulting triangulation will contain additional vertices,
+         * and will almost certainly be far from minimal.
+         * It is highly recommended that you run intelligentSimplify()
+         * if you do not need to preserve the combinatorial structure of
+         * the new triangulation.
+         *
+         * The puncturing is done by subdividing the original tetrahedron.
+         * The new tetrahedra will have orientations consistent with the
+         * original tetrahedra, so if the triangulation was originally oriented
+         * then it will also be oriented after this routine has been called.
+         * See isOriented() for further details on oriented triangulations.
+         *
+         * The new sphere boundary will be formed from two triangles;
+         * specifically, face 0 of the last and second-last tetrahedra
+         * of the triangulation.  These two triangles will be joined so
+         * that vertex 1 of each tetrahedron coincides, and vertices 2,3
+         * of one map to vertices 3,2 of the other.
+         *
+         * \pre This triangulation is non-empty, and if \c tet is non-null
+         * then it is in fact a tetrahedron of this triangulation.
+         *
+         * @param tet the tetrahedron inside which the puncture will be
+         * taken.  This may be \c null (the default), in which case the
+         * first tetrahedron will be used.
+         */
+        void puncture(NTetrahedron* tet = 0);
+
         /*@}*/
         /**
          * \name Building Triangulations
