@@ -96,6 +96,7 @@ Version 4.96  [ (under development) ]
               NGenericTriangulation instead of using wrappers.
               See the NGenericTriangulation notes above for details.
             - New routine getNumberOfBoundaryTriangles().
+            - New routine puncture().
         Class NVertex:
             - Renamed getLinkEulerCharacteristic() to getLinkEulerChar(), which
               is easier on the fingers.  The old name has been kept as a
