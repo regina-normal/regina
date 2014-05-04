@@ -346,6 +346,7 @@ void addNTriangulation() {
         .def("insertLayeredLoop", &NTriangulation::insertLayeredLoop)
         .def("insertAugTriSolidTorus", &NTriangulation::insertAugTriSolidTorus)
         .def("insertSFSOverSphere", &NTriangulation::insertSFSOverSphere)
+        .def("connectedSumWith", &NTriangulation::connectedSumWith)
         .def("insertTriangulation", &NTriangulation::insertTriangulation)
         .def("insertRehydration", &NTriangulation::insertRehydration)
         .def("dehydrate", &NTriangulation::dehydrate)

@@ -2909,6 +2909,25 @@ class REGINA_API NTriangulation : public NPacket,
         void insertSFSOverSphere(long a1 = 1, long b1 = 0,
             long a2 = 1, long b2 = 0, long a3 = 1, long b3 = 0);
         /**
+         * Forms the connected sum of this triangulation with the given
+         * triangulation.  This triangulation will be altered directly.
+         *
+         * If this and the given triangulation are both oriented, then
+         * the result will be oriented also, and the connected sum will
+         * respect these orientations.
+         *
+         * This and/or the given triangulation may be bounded or ideal, or
+         * even invalid; in all cases the connected sum will be formed
+         * correctly.  Note, however, that the result might possibly
+         * contain internal vertices (even if the original triangulations
+         * do not).
+         *
+         * \pre This triangulation is connected and non-empty.
+         *
+         * @param other the triangulation to sum with this.
+         */
+        void connectedSumWith(const NTriangulation& other);
+        /**
          * Inserts a copy of the given triangulation into this
          * triangulation.
          *

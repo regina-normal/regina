@@ -12,7 +12,7 @@ Version 4.96  [ (under development) ]
         - Connected sum decomposition is now available for non-orientable
           manifolds (arXiv:1212.1441).
         - Elementary 1-4 moves on triangulations are now available.
-        - 3-manifolds can now be punctured.
+        - You can now puncture 3-manifolds and build connected sums.
         - Several more conveniences for Python and C++ users.
         - Many structural changes under the hood, to prepare Regina for
           the coming 4-manifolds release.
