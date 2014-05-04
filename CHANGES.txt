@@ -10,6 +10,8 @@ Regina - A Normal Surface Theory Calculator
 Version 4.96  [ (under development) ]
 
     ENGINE:
+        Class Dim2BoundaryComponent:
+            - New convenience routine getComponent().
         Class Dim2Component:
             - New routine getNumberOfBoundaryEdges().
         Class Dim2EdgeEmbedding:
@@ -31,6 +33,7 @@ Version 4.96  [ (under development) ]
         Class NAbelianGroup:
             - New convenience operator !=.
         Class NBoundaryComponent:
+            - New convenience routine getComponent().
             - Renamed getEulerCharacteristic() to getEulerChar(), which
               is easier on the fingers.  The old name has been kept as a
               deprecated alias for backward compatibility.
