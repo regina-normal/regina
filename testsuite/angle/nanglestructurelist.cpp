@@ -53,6 +53,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(gieseking);
     CPPUNIT_TEST(figure8);
     CPPUNIT_TEST(loopC2);
+    CPPUNIT_TEST(taut);
     CPPUNIT_TEST(tautVsAll);
 
     CPPUNIT_TEST_SUITE_END();
@@ -205,6 +206,69 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
             testSize(list, "the untwisted layered loop C(2)", 0, false, false);
 
             delete list;
+        }
+
+        void verifyTaut(const char* isoSig, unsigned long nTaut) {
+            NTriangulation* tri = NTriangulation::fromIsoSig(isoSig);
+            if (! tri) {
+                std::ostringstream msg;
+                msg << "Could not reconstruct from isoSig: " << isoSig << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            NAngleStructureList* a = NAngleStructureList::enumerate(tri, true);
+            if (a->getNumberOfStructures() != nTaut) {
+                std::ostringstream msg;
+                msg << "Taut angle structures for " << isoSig << ": "
+                    "found " << a->getNumberOfStructures()
+                    << " structures instead of the expected " << nTaut << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // TODO: Verify that each is in fact a taut angle structure.
+
+            delete a;
+            delete tri;
+        }
+
+        void taut() {
+            // The following taut angle structure counts were computed
+            // using Regina 4.95, via the old double description method.
+
+            // The trefoil:
+            verifyTaut("cPcbbbadu", 1);
+
+            // Some small hyperbolic knots:
+            verifyTaut("cPcbbbiht", 3);
+            verifyTaut("dLQbcccdero", 4);
+            verifyTaut("gLLMQccefeffdfeqldg", 15);
+            verifyTaut("fLLQcbcdeeemgopdp", 7);
+            verifyTaut("eLPkbcddddcwjb", 4);
+
+            // Some larger hyperbolic knots:
+            verifyTaut("qLvALPzLMQMkbfefhhijmonmnoppppapmggfmgxjgjpeeo", 80);
+            verifyTaut("qLLLLAzzPPQkcefehikilmnpmnoppiitdsvivjvvukvunb", 189);
+            verifyTaut("qLLLLPzPwPQkcefehjkjljopppnooiitdvqiepdtidxfmi", 127);
+            verifyTaut("qLLzPvMzPAQkccdghhjjmlonnnppphgggcbagbvdatdasb", 206);
+            verifyTaut("rLLLMzwwPAMQccdfegihimlnompqqpqiceakanuandeuoamom", 145);
+            verifyTaut("rLvLvvQPAPQQccfimimliokqlqpqoppdejdvdaglcelsgsfgj", 97);
+            verifyTaut("vLLvLvMzAzMAQQQcehlnkilrqppootssututuiiiaiicimgggooabfaalll", 440);
+            verifyTaut("uLLvLLvMALQMQQcceihoijpsqnorqorsttrtiimriwfiiksokjovllxoj", 440);
+            verifyTaut("sLLvLLvLQAQQQceihimlqqmronpoprpriimrwlmmilifskbvlga", 396);
+            verifyTaut("qLvLLvPQLQQkbefhnlnkmolkpmoppmtmohhhuaautvbbkb", 62);
+
+            // Examples from Jonathan:
+            verifyTaut("hLvQAkcdcfeeggqjjqhnqj", 0);
+            verifyTaut("oLLLAAwzPQcbedgfhfilknmnnmxxnxhxjxxkxqaxw", 0);
+            verifyTaut("vvLLAvQvMwwQMQQcdheglkjpopsnstqsrutuuwrawwxhwxhclrmhaqwrrrr", 0);
+            verifyTaut("CLwvvwQAzAPwQLwLQzQkaciklmhjmonrqptspvuwxyzzyBAABjghqqhxxgaaaahaajaahaharwqqkn", 0);
+            verifyTaut("CLvzMzwQwwvzzQPQPPAkccfigkmiljkovqxustywyxzxAyABBqjqwfqqoaajvujaljladbrxwxwvxw", 4);
+
+            verifyTaut("JLwvvvwwLzwLQAQQPwvQLQQQcackhnsqpxtoyuwtzyrvBywGAzHIEDFHIGFGIngqxgabgaabqhqxhqxrarrabkbgcnnnkrrww", 0);
+            verifyTaut("JLwvvvwwLzwLMQQQPMzMPMQPcackhnsqpxovutwAzyrvByxuAEzCGDEHFGIHIjgqxgabgabqhxqxhqxrarrjwajwrwrqrrxjj", 0);
+            verifyTaut("JLwvvwMwzMLPzAAvMQLwQAQQcacikmhmqounrtpsyxvDwBCEFEFAHCGHGHFIIjghqhxgababhqxrabwabhahajoslfhahawgj", 0);
+            verifyTaut("JLvzMzwQwwvPAPwQwAPvPAMQcccfigkmiljkoutuwvutxtyzACBDEGFGFIHHIqjqwfqqoaajvqhlaallalaaaaaaqqajshhrr", 4);
+            verifyTaut("JLLLAAwzLLAwQwvvwMAQAAQMcbedgfhfilnnnpoqrstvCxEBDzFAFEGEFHHIIxxnxhxjxxxaxgvcxxafenatpkatbwqrrqfqr", 0);
         }
 
         void verifyTautVsAll(NTriangulation* t, const char* name) {
