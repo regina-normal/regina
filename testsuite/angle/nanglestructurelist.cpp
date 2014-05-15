@@ -53,7 +53,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(gieseking);
     CPPUNIT_TEST(figure8);
     CPPUNIT_TEST(loopC2);
-    CPPUNIT_TEST(tautOnly);
+    CPPUNIT_TEST(tautVsAll);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -207,7 +207,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
             delete list;
         }
 
-        void verifyTautOnly(NTriangulation* t, const char* name) {
+        void verifyTautVsAll(NTriangulation* t, const char* name) {
             NAngleStructureList* all = NAngleStructureList::enumerate(t, false);
             NAngleStructureList* taut = NAngleStructureList::enumerate(t, true);
 
@@ -253,7 +253,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
             delete taut;
         }
 
-        void verifyTautOnly(const char* dehydration) {
+        void verifyTautVsAll(const char* dehydration) {
             NTriangulation* t = NTriangulation::rehydrate(dehydration);
             if (t->getNumberOfTetrahedra() == 0) {
                 std::ostringstream msg;
@@ -261,19 +261,19 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            verifyTautOnly(t, dehydration);
+            verifyTautVsAll(t, dehydration);
 
             delete t;
         }
 
-        void tautOnly() {
-            verifyTautOnly("baaaade"); // m000
-            verifyTautOnly("dadbcccaqrb"); // m010
-            verifyTautOnly("hbnajbcdeefgghvfeevho"); // v1000
-            verifyTautOnly("hepacdefegfggcurmsktu"); // y500
+        void tautVsAll() {
+            verifyTautVsAll("baaaade"); // m000
+            verifyTautVsAll("dadbcccaqrb"); // m010
+            verifyTautVsAll("hbnajbcdeefgghvfeevho"); // v1000
+            verifyTautVsAll("hepacdefegfggcurmsktu"); // y500
 
-            verifyTautOnly(&triEmpty, "the empty triangulation");
-            verifyTautOnly(&triOneTet, "a standalone tetrahedron");
+            verifyTautVsAll(&triEmpty, "the empty triangulation");
+            verifyTautVsAll(&triOneTet, "a standalone tetrahedron");
         }
 };
 
