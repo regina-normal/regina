@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "algebra/ngrouppresentation.h"
+#include "angle/nanglestructure.h"
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
@@ -291,6 +292,9 @@ void addNTriangulation() {
         .def("hasOctagonalAlmostNormalSphere",
             &NTriangulation::hasOctagonalAlmostNormalSphere,
             return_value_policy<manage_new_object>())
+        .def("hasStrictAngleStructure",
+            &NTriangulation::hasStrictAngleStructure,
+            return_value_policy<manage_new_object>())
         .def("intelligentSimplify", &NTriangulation::intelligentSimplify)
         .def("simplifyToLocalMinimum", &NTriangulation::simplifyToLocalMinimum,
             OL_simplifyToLocalMinimum())
@@ -346,6 +350,7 @@ void addNTriangulation() {
         .def("insertLayeredLoop", &NTriangulation::insertLayeredLoop)
         .def("insertAugTriSolidTorus", &NTriangulation::insertAugTriSolidTorus)
         .def("insertSFSOverSphere", &NTriangulation::insertSFSOverSphere)
+        .def("connectedSumWith", &NTriangulation::connectedSumWith)
         .def("insertTriangulation", &NTriangulation::insertTriangulation)
         .def("insertRehydration", &NTriangulation::insertRehydration)
         .def("dehydrate", &NTriangulation::dehydrate)

@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,38 +32,41 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
-#include "surfaces/normalcoords.h"
+#include "angle/nanglestructure.h"
+#include "enumerate/ntreeconstraint.h"
+#include "enumerate/ntreelp.h"
+#include "triangulation/ntriangulation.h"
 
-using namespace boost::python;
+namespace regina {
 
-void addNormalCoords() {
-    scope global;
+NAngleStructure* NTriangulation::hasStrictAngleStructure() {
+    // Knock off the empty triangulation first.
+    if (tetrahedra.empty())
+        return 0;
 
-    enum_<regina::NormalCoords>("NormalCoords")
-        .value("NS_STANDARD", regina::NS_STANDARD)
-        .value("NS_AN_STANDARD", regina::NS_AN_STANDARD)
-        .value("NS_QUAD", regina::NS_QUAD)
-        .value("NS_AN_QUAD_OCT", regina::NS_AN_QUAD_OCT)
-        .value("NS_EDGE_WEIGHT", regina::NS_EDGE_WEIGHT)
-        .value("NS_FACE_ARCS", regina::NS_FACE_ARCS)
-        .value("NS_TRIANGLE_ARCS", regina::NS_TRIANGLE_ARCS)
-        .value("NS_AN_LEGACY", regina::NS_AN_LEGACY)
-        .value("NS_ORIENTED", regina::NS_ORIENTED)
-        .value("NS_ORIENTED_QUAD", regina::NS_ORIENTED_QUAD)
-        .value("NS_ANGLE", regina::NS_ANGLE)
-        ;
+    LPInitialTableaux<LPConstraintNone> eqns(this, NS_ANGLE, false);
 
-    global.attr("NS_STANDARD") = regina::NS_STANDARD;
-    global.attr("NS_AN_STANDARD") = regina::NS_AN_STANDARD;
-    global.attr("NS_QUAD") = regina::NS_QUAD;
-    global.attr("NS_AN_QUAD_OCT") = regina::NS_AN_QUAD_OCT;
-    global.attr("NS_EDGE_WEIGHT") = regina::NS_EDGE_WEIGHT;
-    global.attr("NS_FACE_ARCS") = regina::NS_FACE_ARCS;
-    global.attr("NS_TRIANGLE_ARCS") = regina::NS_TRIANGLE_ARCS;
-    global.attr("NS_AN_LEGACY") = regina::NS_AN_LEGACY;
-    global.attr("NS_ORIENTED") = regina::NS_ORIENTED;
-    global.attr("NS_ORIENTED_QUAD") = regina::NS_ORIENTED_QUAD;
-    global.attr("NS_ANGLE") = regina::NS_ANGLE;
+    LPData<LPConstraintNone, NInteger> lp;
+    lp.reserve(&eqns);
+
+    // Find an initial basis.
+    lp.initStart();
+
+    // Set all angles to be strictly positive.
+    unsigned i;
+    for (i = 0; i < eqns.columns(); ++i)
+        lp.constrainPositive(i);
+
+    // Test for a solution!
+    if (! lp.isFeasible())
+        return 0;
+
+    // We have a strict angle structure: reconstruct it.
+    unsigned long len = 3 * tetrahedra.size() + 1;
+    NAngleStructureVector* v = new NAngleStructureVector(len);
+    lp.extractSolution(*v, 0 /* type vector */);
+    return new NAngleStructure(this, v);
 }
+
+} // namespace regina
 

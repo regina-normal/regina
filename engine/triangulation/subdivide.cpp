@@ -433,4 +433,31 @@ void NTriangulation::puncture(NTetrahedron* tet) {
     tet->joinTo(0, prism[0][0], NPerm4(3,0,1,2));
 }
 
+void NTriangulation::connectedSumWith(const NTriangulation& other) {
+    // Precondition check.
+    if (tetrahedra.empty() || ! isConnected())
+        return;
+
+    ChangeEventSpan span(this);
+
+    NTetrahedron* bdry[2][2];
+    unsigned long n;
+
+    puncture();
+
+    n = tetrahedra.size();
+    bdry[0][0] = tetrahedra[n - 2];
+    bdry[0][1] = tetrahedra[n - 1];
+
+    insertTriangulation(other);
+    puncture(tetrahedra[n]);
+
+    n = tetrahedra.size();
+    bdry[1][0] = tetrahedra[n - 2];
+    bdry[1][1] = tetrahedra[n - 1];
+
+    bdry[0][0]->joinTo(0, bdry[1][0], NPerm4(2, 3));
+    bdry[0][1]->joinTo(0, bdry[1][1], NPerm4(2, 3));
+}
+
 } // namespace regina

@@ -63,6 +63,7 @@
 
 namespace regina {
 
+class NAngleStructure;
 class NBoundaryComponent;
 class NComponent;
 class NEdge;
@@ -1484,6 +1485,24 @@ class REGINA_API NTriangulation : public NPacket,
          * disc, or 0 if none exists.
          */
         NNormalSurface* hasOctagonalAlmostNormalSphere();
+        /**
+         * Searches for a strict angle structure on this triangulation.
+         * Recall that a \e strict angle structure is one in which every
+         * angle is strictly between 0 and &pi;.  If a strict angle structure
+         * exists, then this routine is guaranteed to find one.
+         *
+         * The underlying algorithm runs a single linear program (it does
+         * \e not enumerate all vertex angle structures).  This means
+         * that it is likely to be fast even for large triangulations.
+         *
+         * The angle structure returned (if any) depends upon this
+         * triangulation, and so the angle structure must be destroyed
+         * before this triangulation is destroyed.
+         *
+         * @return a newly allocated strict angle structure, or 0 if none
+         * exists.
+         */
+        NAngleStructure* hasStrictAngleStructure();
 
         /*@}*/
         /**
@@ -2908,6 +2927,25 @@ class REGINA_API NTriangulation : public NPacket,
          */
         void insertSFSOverSphere(long a1 = 1, long b1 = 0,
             long a2 = 1, long b2 = 0, long a3 = 1, long b3 = 0);
+        /**
+         * Forms the connected sum of this triangulation with the given
+         * triangulation.  This triangulation will be altered directly.
+         *
+         * If this and the given triangulation are both oriented, then
+         * the result will be oriented also, and the connected sum will
+         * respect these orientations.
+         *
+         * This and/or the given triangulation may be bounded or ideal, or
+         * even invalid; in all cases the connected sum will be formed
+         * correctly.  Note, however, that the result might possibly
+         * contain internal vertices (even if the original triangulations
+         * do not).
+         *
+         * \pre This triangulation is connected and non-empty.
+         *
+         * @param other the triangulation to sum with this.
+         */
+        void connectedSumWith(const NTriangulation& other);
         /**
          * Inserts a copy of the given triangulation into this
          * triangulation.
