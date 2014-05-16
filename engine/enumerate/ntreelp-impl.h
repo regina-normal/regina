@@ -904,7 +904,7 @@ void LPData<LPConstraint, Integer>::extractSolution(
             v.setElement(pos, v[pos] + lcm);
         } else {
             // For strict angle structures, we pass type == 0, and we
-            // constrain *all* coordiantes as positive.
+            // constrain *all* coordinates as positive.
             for (pos = 0;
                     pos <= 3 * origTableaux_->tri()->getNumberOfTetrahedra();
                     ++pos)

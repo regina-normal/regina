@@ -1687,7 +1687,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
          *
          * @param tri the triangulation in which to search.
          * @param quadOct \c true if we should search for vertex
-         * surfaces in quadrilateral-octagon coordiantes, or \c false
+         * surfaces in quadrilateral-octagon coordinates, or \c false
          * (the default) if we should search for surfaces in standard
          * almost normal coordinates.
          * @return a newly allocated vertex octagonal almost normal sphere
