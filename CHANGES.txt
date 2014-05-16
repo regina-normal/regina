@@ -47,6 +47,8 @@ Version 4.96  [ (under development) ]
             - Enumeration of taut angle strutures now uses Regina's tree
               traversal / linear programming machinery, which is *much*
               faster than the old double description method.
+            - The new routine enumerateTautDD() allows users to access the
+              older (and much slower) double description method if required.
         Class NAngleStructureVector:
             - New routine makeAngleEquations() to build the angle structure
               equations independently of an angle structure list.

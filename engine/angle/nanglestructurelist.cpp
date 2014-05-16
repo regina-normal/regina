@@ -117,6 +117,36 @@ NAngleStructureList* NAngleStructureList::enumerate(NTriangulation* owner,
     }
 }
 
+NAngleStructureList* NAngleStructureList::enumerateTautDD(
+        NTriangulation* owner) {
+    NAngleStructureList* ans = new NAngleStructureList(true /* taut only */);
+
+    // Form the matching equations.
+    NMatrixInt* eqns = NAngleStructureVector::makeAngleEquations(owner);
+
+    // Form the taut constraints.
+    NEnumConstraintList* constraints = new NEnumConstraintList(
+        owner->getNumberOfTetrahedra());
+
+    unsigned base = 0;
+    for (unsigned c = 0; c < constraints->size(); ++c) {
+        (*constraints)[c].insert((*constraints)[c].end(), base++);
+        (*constraints)[c].insert((*constraints)[c].end(), base++);
+        (*constraints)[c].insert((*constraints)[c].end(), base++);
+    }
+
+    // Find the angle structures.
+    NDoubleDescription::enumerateExtremalRays<NAngleStructureVector>(
+        StructureInserter(*ans, owner), *eqns, constraints, 0 /* tracker */);
+
+    // All done!
+    owner->insertChildLast(ans);
+
+    delete eqns;
+    delete constraints;
+    return ans;
+}
+
 NTriangulation* NAngleStructureList::getTriangulation() const {
     return dynamic_cast<NTriangulation*>(getTreeParent());
 }
