@@ -49,6 +49,7 @@
 
 namespace regina {
 
+class Dim2Component;
 class Dim2Edge;
 class Dim2Vertex;
 
@@ -120,6 +121,14 @@ class REGINA_API Dim2BoundaryComponent :
          */
         Dim2Vertex* getVertex(unsigned long index) const;
 
+        /**
+         * Returns the component of the triangulation to which this
+         * boundary component belongs.
+         *
+         * @return the component containing this boundary component.
+         */
+        Dim2Component* getComponent() const;
+
         void writeTextShort(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
 
@@ -134,6 +143,11 @@ class REGINA_API Dim2BoundaryComponent :
 };
 
 /*@}*/
+
+} // namespace regina
+// Some more headers that are required for inline functions:
+#include "dim2/dim2vertex.h"
+namespace regina {
 
 // Inline functions for Dim2BoundaryComponent
 
@@ -157,6 +171,10 @@ inline Dim2Edge* Dim2BoundaryComponent::getEdge(unsigned long index) const {
 
 inline Dim2Vertex* Dim2BoundaryComponent::getVertex(unsigned long index) const {
     return vertices_[index];
+}
+
+inline Dim2Component* Dim2BoundaryComponent::getComponent() const {
+    return vertices_.front()->getComponent();
 }
 
 inline void Dim2BoundaryComponent::writeTextShort(std::ostream& out) const {
