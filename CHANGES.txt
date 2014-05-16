@@ -39,6 +39,8 @@ Version 4.96  [ (under development) ]
     ENGINE:
         Class NAbelianGroup:
             - New convenience operator !=.
+        Class Dim2BoundaryComponent:
+            - New convenience routine getComponent().
         Class Dim2Component:
             - New routine getNumberOfBoundaryEdges().
         Class Dim2EdgeEmbedding:
@@ -60,6 +62,7 @@ Version 4.96  [ (under development) ]
         Class NAbelianGroup:
             - New convenience operator !=.
         Class NBoundaryComponent:
+            - New convenience routine getComponent().
             - Renamed getEulerCharacteristic() to getEulerChar(), which
               is easier on the fingers.  The old name has been kept as a
               deprecated alias for backward compatibility.
@@ -112,10 +115,10 @@ Version 4.96  [ (under development) ]
             - New convenience operators == and !=.
         Class NTriangulation:
             - Routine connectedSumDecomposition() now works for non-orientable
-              triangulations also.  There is a caveat if there are embedded
-              two-sided projective planes (see the documentation for details),
-              and so the return type is now a signed long to allow for error
-              conditions to be returned.
+              triangulations also (arXiv:1212.1441).  There is a caveat if
+              there are embedded two-sided projective planes (see the
+              documentation for details), and so the return type is now a
+              signed long to allow for error conditions to be returned.
             - New routine isIdenticalTo().
             - New local modification oneFourMove().
             - New routines findAllIsomorphisms() and makeCanonical().
@@ -125,6 +128,7 @@ Version 4.96  [ (under development) ]
               NGenericTriangulation instead of using wrappers.
               See the NGenericTriangulation notes above for details.
             - New routine getNumberOfBoundaryTriangles().
+            - New routine puncture().
         Class NVertex:
             - Renamed getLinkEulerCharacteristic() to getLinkEulerChar(), which
               is easier on the fingers.  The old name has been kept as a
