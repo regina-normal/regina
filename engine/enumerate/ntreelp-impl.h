@@ -51,6 +51,7 @@
  */
 // #define REGINA_NOOPT_REORDER_COLUMNS
 
+#include "angle/nanglestructure.h"
 #include "enumerate/ntreeconstraint.h"
 #include "enumerate/ntreelp.h"
 #include "maths/matrixops.h"
@@ -116,8 +117,28 @@ template <class LPConstraint>
 LPInitialTableaux<LPConstraint>::LPInitialTableaux(
         NTriangulation* tri, NormalCoords coords, bool enumeration) :
         tri_(tri), coords_(coords) {
+    unsigned r, c;
+
     // Fetch the original (unadjusted) matrix of matching equations.
-    eqns_ = regina::makeMatchingEquations(tri, coords);
+    if (coords_ != NS_ANGLE) {
+        eqns_ = regina::makeMatchingEquations(tri, coords);
+        scaling_ = 0;
+    } else {
+        eqns_ = NAngleStructureVector::makeAngleEquations(tri);
+
+        // Scale each row so that the rightmost entry (used for
+        // projectivising the angle structure polytope) is always -2.
+        // This is possible since the matrix returned by NAngleStructureVector
+        // will have final entries of -1 and -2 only.
+        scaling_ = -2;
+        long rightmost;
+        for (r = 0; r < eqns_->rows(); ++r) {
+            rightmost = eqns_->entry(r, eqns_->columns() - 1).longValue();
+            if (rightmost != scaling_)
+                for (c = 0; c < eqns_->columns(); ++c)
+                    eqns_->entry(r, c) *= (scaling_ / rightmost);
+        }
+    }
 
     // Compute the rank of the matrix, and reorder its rows so
     // the first \a rank_ rows are full rank.
@@ -130,8 +151,7 @@ LPInitialTableaux<LPConstraint>::LPInitialTableaux(
 
     // Create and fill the sparse columns.
     col_ = new Col[cols_];
-    unsigned r, c;
-    for (c = 0; c < eqns_->columns(); ++c)
+    for (c = 0; c < eqns_->columns() - (scaling_ ? 1 : 0); ++c)
         for (r = 0; r < rank_; ++r)
             if (eqns_->entry(r, c) != 0)
                 col_[c].push(r, eqns_->entry(r, c).longValue());
@@ -146,10 +166,11 @@ template <class LPConstraint>
 void LPInitialTableaux<LPConstraint>::reorder(bool) {
     // This is a "do-nothing" version of reorder().
     int i, j;
-    if (coords_ == NS_QUAD) {
+    if (coords_ == NS_QUAD || coords_ == NS_ANGLE) {
         // Leave the columns exactly as they were.
         for (i = 0; i < cols_; ++i)
             columnPerm_[i] = i;
+        return;
     } else {
         // Keep the tetrahedra in the same order, but move
         // quadrilaterals to the front and triangles to the back
@@ -229,10 +250,16 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
             columnPerm_[3 * n + 4 * i + 2] = 7 * k + 2;
             columnPerm_[3 * n + 4 * i + 3] = 7 * k + 3;
         }
+    } else if (coords_ == NS_ANGLE) {
+        // TODO: Find a good heuristic to use for angle structure coordinates.
+        // For now, we'll leave the columns exactly as they were.
+        for (i = 0; i < cols_; ++i)
+            columnPerm_[i] = i;
+        return;
     } else {
-        // We're doing vertex enumeration in quad coordinates,
-        // or we're in standard coordinates but just searching
-        // for a single solution under some constraints.
+        // Either we're doing vertex enumeration in quad coordinates,
+        // or we're in standard coordinates but just searching for a
+        // single solution under some constraints.
         //
         // Process the rows in increasing order by number of tetrahedra
         // touched, and place the columns for each tetrahedron in the
@@ -266,7 +293,8 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
                     if (touched[k])
                         continue;
                     if (coords_ == NS_QUAD) {
-                        // We're in quadrilateral coordinates.
+                        // We're in quadrilateral or angle structure
+                        // coordinates.
                         if (eqns_->entry(j, 3 * k) != 0 ||
                                 eqns_->entry(j, 3 * k + 1) != 0 ||
                                 eqns_->entry(j, 3 * k + 2) != 0)
@@ -296,7 +324,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
                 if (touched[k])
                     continue;
                 if (coords_ == NS_QUAD) {
-                    // We're in quadrilateral coordinates.
+                    // We're in quadrilateral or angle structure coordinates.
                     if ((eqns_->entry(bestRow, 3 * k) != 0 ||
                             eqns_->entry(bestRow, 3 * k + 1) != 0 ||
                             eqns_->entry(bestRow, 3 * k + 2) != 0)) {
@@ -343,7 +371,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
                 continue;
             touched[k] = true;
             if (coords_ == NS_QUAD) {
-                // We're in quadrilateral coordinates.
+                // We're in quadrilateral or angle structure coordinates.
                 columnPerm_[3 * (n - nTouched) - 3] = 3 * k;
                 columnPerm_[3 * (n - nTouched) - 2] = 3 * k + 1;
                 columnPerm_[3 * (n - nTouched) - 1] = 3 * k + 2;

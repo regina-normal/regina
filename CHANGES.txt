@@ -10,6 +10,10 @@ Regina - A Normal Surface Theory Calculator
 Version 4.96  [ (under development) ]
 
     ENGINE:
+        Class BanConstraintBase (and subclasses):
+            - Extended the tree traversal / linear programming machinery to
+              work with angle structures.  This is used for enumerating all
+              taut angle structures, or finding a single strict angle structure.
         Class Dim2BoundaryComponent:
             - New convenience routine getComponent().
         Class Dim2Component:
@@ -30,6 +34,11 @@ Version 4.96  [ (under development) ]
               NTriangulation.
         Class Dim2VertexEmbedding:
             - New convenience operators == and !=.
+        Class LPConstraintBase (and subclasses), LPData, LPInitialTableaux,
+              LPMatrix:
+            - Extended the tree traversal / linear programming machinery to
+              work with angle structures.  This is used for enumerating all
+              taut angle structures, or finding a single strict angle structure.
         Class NAbelianGroup:
             - New convenience operator !=.
         Class NAngleStructureVector:

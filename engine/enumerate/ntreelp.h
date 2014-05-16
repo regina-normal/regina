@@ -72,6 +72,8 @@ class NTriangulation;
  * Burton and Ozlen, Algorithmica (to appear), DOI 10.1007/s00453-012-9645-3,
  * and "A fast branching algorithm for unknot recognition with
  * experimental polynomial-time behaviour", Burton and Ozlen, arXiv:1211.1079.
+ * It is also used for locating a single strict angle structure, and for
+ * enumerating all taut angle structures.
  *
  * The operations on this matrix class are tailored and optimised
  * specifically for use with the dual simplex method in the context
@@ -98,6 +100,10 @@ class NTriangulation;
  *
  * This matrix is stored in dense form.  All elements are of the integer class
  * \a Integer, which is supplied as a template argument.
+ *
+ * \pre The default constructor for the template class Integer must intialise
+ * each new integer to zero.  The classes NInteger and NNativeInteger,
+ * for instance, have this property.
  *
  * \apinotfinal
  *
@@ -347,8 +353,10 @@ class LPMatrix {
 };
 
 /**
- * Stores an adjusted matrix of matching equations from the
- * underlying triangulation, in sparse form.
+ * Stores an adjusted matrix of homogeneous linear matching equations based on
+ * a given triangulation, in sparse form.  Typically these will be
+ * the normal surface matching equations in some coordinate system,
+ * or the angle structure equations.
  *
  * This class forms part of the tree traversal algorithms for enumerating
  * and locating normal surfaces, as described in "A tree traversal algorithm
@@ -356,6 +364,8 @@ class LPMatrix {
  * Burton and Ozlen, Algorithmica (to appear), DOI 10.1007/s00453-012-9645-3,
  * and "A fast branching algorithm for unknot recognition with
  * experimental polynomial-time behaviour", Burton and Ozlen, arXiv:1211.1079.
+ * It is also used for locating a single strict angle structure, and for
+ * enumerating all taut angle structures.
  *
  * The adjustments (which are all carried out in the LPInitialTableaux
  * class constructor) are as follows:
@@ -369,8 +379,8 @@ class LPMatrix {
  *   traversal algorithm; see columnPerm() for a list of constraints that
  *   such a reordering must satisfy.
  *
- * There is also optional support for adding extra linear constraints
- * (such as a constraint on Euler characteristic).  These extra
+ * There is also optional support for adding extra linear constraints (such as
+ * a constraint on Euler characteristic for normal surfaces).  These extra
  * constraints are supplied by the template parameter \a LPConstraint,
  * and will generate LPConstraint::nConstraints additional rows and columns
  * (used by the additional variables that evaluate the corresponding linear
@@ -390,9 +400,9 @@ class LPMatrix {
  * (in particular, multiplying columns of this matrix by rows of some
  * other matrix).
  *
- * This class can only work in quadrilateral normal coordinates
- * (NS_QUAD) or standard normal coordinates (NS_STANDARD).
- * No other coordinate systems are supported.
+ * This class can only work in quadrilateral normal coordinates (NS_QUAD),
+ * standard normal coordinates (NS_STANDARD), or angle structure coordinates
+ * (NS_ANGLE).  No other coordinate systems are supported.
  *
  * \warning The implementation of this class relies on the fact that the
  * sum of <i>absolute values</i> of all coefficients in each column is
@@ -461,7 +471,8 @@ class LPInitialTableaux {
             /**< The underlying triangulation. */
         NormalCoords coords_;
             /**< The coordinate system used for the matrix of matching
-                 equations; this must be one of NS_QUAD or NS_STANDARD. */
+                 equations; this must be one of NS_QUAD, NS_STANDARD,
+                 or NS_ANGLE. */
         NMatrixInt* eqns_;
             /**< The adjusted matching equation matrix, in dense form.
                  The precise adjustments that we make are described in the
@@ -474,12 +485,24 @@ class LPInitialTableaux {
                  any additional constraints from the template parameter
                  LPConstraint. */
 
+        int scaling_;
+            /**< In angle structure coordinates, the final coordinate is a
+                 scaling coordinate used to projectivise the angle structure
+                 polytope to become a polyhedral cone.  As a result, the
+                 final coordinate is given the same coefficient \a scaling_
+                 in every equation.  In other words, every entry in column
+                 coordinateColumns()-1 of the matrix is equal to \a scaling_.
+                 In all normal surface coordinate systems (which do not
+                 need to be projectivised), \a scaling_ will be zero. */
         Col* col_;
-            /**< An array of size \a cols_, storing the individual
-                 columns of this adjusted matrix in sparse form. */
+            /**< An array of size \a cols_ that stores the individual columns
+                 of this adjusted matrix in sparse form.  In angle structure
+                 coordinates, the column col_[coordinateColumns()-1] will be
+                 ignored, since this column of the matrix is described by the
+                 \a scaling_ member instead. */
 
         int* columnPerm_;
-            /**< A permutation of 0,...,cols_ - 1 that maps column numbers
+            /**< A permutation of 0,...,cols_-1 that maps column numbers
                  in the adjusted matrix to column numbers in the original
                  (unmodified) matrix of matching equations that was originally
                  derived from the triangulation.  See columnPerm() for
@@ -499,11 +522,13 @@ class LPInitialTableaux {
          *
          * @param tri the underlying 3-manifold triangulation.
          * @param coords the coordinate system to use for the matrix of
-         * matching equations; this must be one of NS_QUAD or NS_STANDARD.
+         * matching equations; this must be one of NS_QUAD, NS_STANDARD,
+         * or NS_ANGLE.
          * @param enumeration \c true if we should optimise the tableaux
-         * for a full enumeration of vertex surfaces, or \c false if we
-         * should optimise the tableaux for an existence test (such as
-         * searching for a non-trivial normal disc or sphere).
+         * for a full enumeration of vertex surfaces or taut angle structures,
+         * or \c false if we should optimise the tableaux for an existence test
+         * (such as searching for a non-trivial normal disc or sphere, or
+         * a strict angle structure).
          */
         LPInitialTableaux(NTriangulation* tri,
             NormalCoords coords, bool enumeration);
@@ -546,11 +571,11 @@ class LPInitialTableaux {
         inline unsigned columns() const;
 
         /**
-         * Returns the number of columns that correspond to normal
-         * coordinates.  This is precisely the number of columns in the
-         * original matrix of matching equations.
+         * Returns the number of columns that correspond to normal coordinates
+         * or angle structure coordinates.  This is precisely the number of
+         * columns in the original matrix of matching equations.
          *
-         * @return the number of normal coordinate columns.
+         * @return the number of normal or angle structure coordinate columns.
          */
         inline unsigned coordinateColumns() const;
 
@@ -578,9 +603,9 @@ class LPInitialTableaux {
          * column numbers in the original (unmodified) matching equation
          * matrix that was originally derived from the triangulation.
          *
-         * The permutation is returned as an array of columns()
-         * integers, such that column \a i of this adjusted matrix corresponds
-         * to column <tt>columnPerm()[i]</tt> of the original matrix.
+         * The permutation is returned as an array of columns() integers,
+         * such that column \a i of this adjusted matrix corresponds to
+         * column <tt>columnPerm()[i]</tt> of the original matrix.
          *
          * If you are imposing additional constraints through the
          * template parameter LPConstraint, then the corresponding extra
@@ -596,8 +621,8 @@ class LPInitialTableaux {
          * - The quadrilateral coordinate columns must appear as the
          *   first 3<i>n</i> columns of the adjusted matrix.
          *   In particular, when working in the 7<i>n</i>-dimensional
-         *   standard coordinate system, the remaining 4<i>n</i> triangle
-         *   coordinate columns must appear last.
+         *   standard normal coordinate system, the remaining 4<i>n</i>
+         *   triangle coordinate columns must appear last.
          *
          * - The quadrilateral coordinate columns must be grouped by
          *   tetrahedron and ordered by quadrilateral type.  In other
@@ -609,13 +634,19 @@ class LPInitialTableaux {
          *   the tetrahedra, but not the quadrilateral coordinates
          *   within each tetrahedron.
          *
-         * - The triangle coordinate columns (if we have them) must likewise
-         *   be grouped by tetrahedron, and these tetrahedra must appear in
-         *   the same order as for the quadrilateral types.  In other
-         *   words, for each \a i = 0,...,\a n-1, the quadrilateral columns
+         * - The triangle coordinate columns (if we are working in standard
+         *   normal coordinates) must likewise be grouped by tetrahedron,
+         *   and these tetrahedra must appear in the same order as for the
+         *   quadrilateral types.  In other words, for each
+         *   \a i = 0,...,\a n-1, the quadrilateral columns
          *   3<i>i</i>, 3<i>i</i>+1 and 3<i>i</i>+2 and the triangle columns
          *   3<i>n</i>+4<i>i</i>, 3<i>n</i>+4<i>i</i>+1, 3<i>n</i>+4<i>i</i>+2 
          *   and 3<i>n</i>+4<i>i</i>+3 all refer to the same tetrahedron.
+         *
+         * - For angle structure coordinates, the constraints are analogous to
+         *   those for quadrilateral coordinates: the angle coordinates
+         *   must be grouped by tetrahedron and ordered by angle type,
+         *   and the final scaling coordinate must remain last.
          *
          * @return details of the permutation describing how columns
          * were reordered.
@@ -671,6 +702,8 @@ class LPInitialTableaux {
          * This routine is optimised to use the sparse representation of
          * columns in this matrix.
          *
+         * This routine is not used with angle structure coordinates.
+         *
          * \pre The given matrix \a m has precisely rank() columns.
          *
          * \pre Column \a thisCol of this matrix describes one of the
@@ -723,9 +756,10 @@ class LPInitialTableaux {
          * variables that correspond to these extra constraint(s).
          *
          * @param enumeration \c true if we should optimise the ordering
-         * for a full enumeration of vertex surfaces, or \c false if we
-         * should optimise the ordering for an existence test (such as
-         * searching for a non-trivial normal disc or sphere).
+         * for a full enumeration of vertex surfaces or taut angle structures,
+         * or \c false if we should optimise the ordering for an existence test
+         * (such as searching for a non-trivial normal disc or sphere, or
+         * a strict angle structure).
          */
         void reorder(bool enumeration);
 };
@@ -740,6 +774,8 @@ class LPInitialTableaux {
  * Burton and Ozlen, Algorithmica (to appear), DOI 10.1007/s00453-012-9645-3,
  * and "A fast branching algorithm for unknot recognition with
  * experimental polynomial-time behaviour", Burton and Ozlen, arXiv:1211.1079.
+ * It is also used for locating a single strict angle structure, and for
+ * enumerating all taut angle structures.
  *
  * This class is designed to represent a state partway through the tree
  * traversal algorithm, where the tableaux has been altered to
@@ -794,6 +830,7 @@ class LPInitialTableaux {
  * parameter LPConstraint.  If there are no such constraints, simply use
  * the template parameter LPConstraintNone.
  *
+ * In the context of normal surfaces (not angle structures):
  * Although the underlying coordinate system is based on quadrilaterals
  * and (optionally) triangles, this class has elementary support for
  * octagons also, as seen in \e almost normal surface theory.  For the
@@ -832,6 +869,10 @@ class LPInitialTableaux {
  *
  * \pre The template parameter LPConstraint must be one of the subclasses of
  * LPConstraintBase.  See the LPConstraintBase class notes for further details.
+ *
+ * \pre The default constructor for the template class Integer must intialise
+ * each new integer to zero.  The classes NInteger and NNativeInteger,
+ * for instance, have this property.
  *
  * \apinotfinal
  *
@@ -894,7 +935,8 @@ class LPData {
                  This will be one of the two quadrilateral columns that
                  together "represent" the octagon type, as described in
                  the class notes.
-                 If we have not declared an octagon type, this is -1. */
+                 If we have not declared an octagon type (or if we are
+                 working with angle structures), this is -1. */
         int octSecondary_;
             /**< If we have declared an octagon type, this stores the
                  second of the two quadrilateral columns that together
@@ -902,8 +944,8 @@ class LPData {
                  notes.  This is the quadrilateral column that we set to
                  zero and deactivate (as opposed to \a octPrimary_, which
                  we keep to count the number of octagons).
-                 If we have not declared an octagon type, this variable
-                 is undefined. */
+                 If we have not declared an octagon type (or if we are
+                 working with angle structures), this variable is undefined. */
 
     public:
         /**
@@ -977,10 +1019,11 @@ class LPData {
 
         /**
          * Returns the number of columns in this tableaux that correspond to
-         * normal coordinates.  This is precisely the number of columns in the
-         * original matrix of matching equations.
+         * normal coordinates or angle structure coordinates.  This is
+         * precisely the number of columns in the original matrix of
+         * matching equations.
          *
-         * @return the number of normal coordinate columns.
+         * @return the number of normal or angle structure coordinate columns.
          */
         inline unsigned coordinateColumns() const;
 
@@ -1090,6 +1133,8 @@ class LPData {
          * variables has already been deactivated, but in this case the
          * routine will immediately set the system to infeasible and return.
          *
+         * This routine is not used with angle structure coordinates.
+         *
          * \pre This is the first time constrainOct() has been called on
          * this tableaux.  This is because this class can only handle one
          * octagon type in the entire system.
@@ -1147,7 +1192,7 @@ class LPData {
          *
          * This routine is not used as an internal part of the tree traversal
          * algorithm; instead it is offered as a helper routine for
-         * reconstructing the normal surfaces that result.
+         * reconstructing the normal surfaces or angle structures that result.
          *
          * \pre The given vector \a v has been initialised to the zero vector
          * of length origTableaux_->columns().  Note that the NRay constructor
@@ -1467,20 +1512,34 @@ template <class LPConstraint>
 template <typename Integer>
 inline Integer LPInitialTableaux<LPConstraint>::multColByRow(
         const LPMatrix<Integer>& m, unsigned mRow, unsigned thisCol) const {
-    Integer ans = col_[thisCol].innerProduct(m, mRow);
+    if (scaling_ && thisCol == coordinateColumns() - 1) {
+        // Multiply the entire row by the scaling coefficient.
+        Integer ans; // Initialised to zero.
+        for (unsigned i = 0; i < rank_; ++i)
+            ans += m.entry(mRow, i);
+        ans *= scaling_;
+        return ans;
+    } else {
+        // Just pick out individual coefficients using the sparse
+        // representation of the column.
+        Integer ans = col_[thisCol].innerProduct(m, mRow);
 
-    unsigned i;
-    for (i = 0; i < col_[thisCol].nPlus; ++i)
-        ans += m.entry(mRow, col_[thisCol].plus[i]);
-    for (i = 0; i < col_[thisCol].nMinus; ++i)
-        ans -= m.entry(mRow, col_[thisCol].minus[i]);
-    return ans;
+        unsigned i;
+        for (i = 0; i < col_[thisCol].nPlus; ++i)
+            ans += m.entry(mRow, col_[thisCol].plus[i]);
+        for (i = 0; i < col_[thisCol].nMinus; ++i)
+            ans -= m.entry(mRow, col_[thisCol].minus[i]);
+        return ans;
+    }
 }
 
 template <class LPConstraint>
 template <typename Integer>
 inline Integer LPInitialTableaux<LPConstraint>::multColByRowOct(
         const LPMatrix<Integer>& m, unsigned mRow, unsigned thisCol) const {
+    // By the preconditions of this routine, we must be working in some normal
+    // or almost normal coordinate system, and so there is no scaling
+    // coordinate to worry about.
     Integer ans = col_[thisCol].innerProductOct(m, mRow);
 
     unsigned i;
@@ -1506,6 +1565,10 @@ inline void LPInitialTableaux<LPConstraint>::fillInitialTableaux(
         // as final rows to the matrix.
         col_[c].fillFinalRows(m, c);
     }
+
+    if (scaling_)
+        for (i = 0; i < rank_; ++i)
+            m.entry(i, coordinateColumns() - 1) = scaling_;
 }
 
 // Template functions for LPData
