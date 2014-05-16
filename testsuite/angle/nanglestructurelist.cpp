@@ -34,6 +34,7 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 #include "angle/nanglestructurelist.h"
+#include "surfaces/nnormalsurface.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
@@ -225,7 +226,55 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            // TODO: Verify that each is in fact a taut angle structure.
+            unsigned long i, j, k;
+            regina::NRational tmp, tot;
+            regina::NEdge* e;
+            for (i = 0; i < a->getNumberOfStructures(); ++i) {
+                const NAngleStructure* s = a->getStructure(i);
+
+                for (j = 0; j < tri->getNumberOfTetrahedra(); ++j) {
+                    tot = 0;
+                    for (k = 0; k < 3; ++k) {
+                        tmp = s->getAngle(j, k);
+                        if (tmp != 0 && tmp != 1) {
+                            std::ostringstream msg;
+                            msg << "Taut angle structures #" << i
+                                << "for " << isoSig << ": bad angle found.";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                        tot += tmp;
+                    }
+                    if (tot != 1) {
+                        std::ostringstream msg;
+                        msg << "Taut angle structures #" << i
+                            << "for " << isoSig << ": wrong number of "
+                            "pi angles in tetrahedron " << j << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+
+                for (j = 0; j < tri->getNumberOfEdges(); ++j) {
+                    e = tri->getEdge(j);
+                    if (e->isBoundary())
+                        continue;
+
+                    tot = 0;
+                    for (k = 0; k < e->getNumberOfEmbeddings(); ++k) {
+                        tot += s->getAngle(
+                            e->getEmbedding(k).getTetrahedron()->markedIndex(),
+                            regina::vertexSplit[
+                                e->getEmbedding(k).getVertices()[0]][
+                                e->getEmbedding(k).getVertices()[1]]);
+                    }
+                    if (tot != 2) {
+                        std::ostringstream msg;
+                        msg << "Taut angle structures #" << i
+                            << "for " << isoSig << ": wrong sum of "
+                            "angles around edge " << j << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
 
             delete a;
             delete tri;
