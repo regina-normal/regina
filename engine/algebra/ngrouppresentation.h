@@ -45,6 +45,7 @@
 #include <list>
 #include <vector>
 #include <set>
+
 #include "regina-core.h"
 #include "shareableobject.h"
 #include "utilities/memutils.h"
@@ -185,6 +186,14 @@ class REGINA_API NGroupExpression : public ShareableObject {
         NGroupExpression& operator=(const NGroupExpression& copyMe);
 
         /**
+         * Equality operator. Checks to see if these two words represent
+         * the same literal string, or not.
+         *
+         * &returns true if the string literals are identical.
+         */
+        bool operator==(const NGroupExpression& comp) const;
+
+        /**
          * Returns the list of terms in this expression.
          * These are the actual terms stored internally; any
          * modifications made to this list will show up in the
@@ -245,6 +254,11 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * This effectively turns this word into the identity element.
          */
         void erase();
+
+        /**
+         * @return true if and only if this is the unit, i.e. trivial word.
+         */   
+        bool isTrivial() const;
 
         /**
          * Returns the term at the given index in this expression.
@@ -344,6 +358,38 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * Multiplies *this on the left by word.
          */
         void addTermsFirst( const NGroupExpression& word);
+
+        /**
+         * Attempts to interpret input as a string form of an NGroupExpression.
+         * Valid input must be in one of the four basic forms:
+         *
+         *  (1) a^7b^-2, 
+         *  (2) aaaaaaaBB,
+         *  (3) a^7B^2, 
+         *  (4) g0^7g1^-2.
+         * 
+         * Sets valid to true if string successfully interpreted and algorithm
+         * completed successfully.  Sets to false if the algorithm failed to 
+         * interpret the string, in which case this NGroupExpression is 
+         * uninitialized (triv word). 
+         */ 
+        NGroupExpression( const std::string &input, bool* valid=NULL );
+
+        /**
+         * Multiplies *this on the left by the word interpretation of the
+         * string input.  See NGroupExpression( std::string, bool ) for
+         * valid input forms. 
+         *
+         * @return true if the string is interpreted and the completes 
+         *  successfully. false if the algorithm has any trouble interpreting 
+         *  the input, in which case *this is untouched.
+         */ 
+        bool addStringFirst( const std::string& input);
+
+        /**
+         * Same as addStringFirst, except this algorithm appends on the right.
+         */
+        bool addStringLast( const std::string& input);
 
         /**
          *  Given a word of the form g_i1^j1 g_i2^j2 ... g_in^jn
@@ -486,7 +532,10 @@ class REGINA_API NGroupExpression : public ShareableObject {
  * \todo let's make intelligent simplify a tad more intelligent, and the GUI
  * call a bit more safe.  Perhaps parallelize the GUI call, and give users
  * parameters to ensure it won't crash the computer.  Also look at the FPGroup
- * package.
+ * package. We should also have a simple way of creating NGroupPresentation
+ * objects directly from text strings.  We would like to have something like
+ * NGroupPresentation( numGens, "abAAB", "bccd" ) etc. with arbitrary 
+ * numbers of relators. Maybe std::tuple.  Or "variadic templates"?
  *
  * \testpart
  */
@@ -523,6 +572,19 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * @return a reference to this group presentation.
          */
         NGroupPresentation& operator=(const NGroupPresentation& copyMe);
+
+        /**
+         * Constructor that allows arbitrary number of relators. One calls
+         * this with arbitrarily-many arguments.  The first argument nGens
+         * is the number of generators one wants the group to have. The
+         * remaining arguments are all of type std::string and are the
+         * relators. If you are compiling the Regina library against 
+         * c++11, you can initialize an NGroupPresentation via
+         * NGroupPresentation( nGens, { "rel1", "rel2", ... } ) via the
+         * C++11 initializer_list construction. 
+         */
+        NGroupPresentation(unsigned long nGens,  
+            std::vector<std::string> &rels);
 
         /**
          * Adds one or more generators to the group presentation.
@@ -788,7 +850,8 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * @returns true if and only if the nielsen automorphism had an effect
          *  on at least one relation.
          */
-        bool nielsenTransposition(const unsigned long &i, const unsigned long &j);
+        bool nielsenTransposition(const unsigned long &i, 
+                                  const unsigned long &j);
 
         /**
          *  This replaces a generator in a presentation by its inverse, and
@@ -833,10 +896,18 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         std::auto_ptr<NHomGroupPresentation> intelligentNielsenDetail();
 
         /**
-         *  This routine attempts to rewrite the presentation so that generators
-         * of the group map to generators of the abelianization, with any
+         * This routine attempts to rewrite the presentation so that generators
+         * of the group map to generators of the abelianisation, with any
          * left-over generators mapping to zero (if possible).  Consider this a
-         * homological-alignment of the generators. 
+         * homological-alignment of the presentation. 
+         *
+         * If the abelianisation of this group has rank N and M invariant
+         * factors d0 | d2 | ... | d(M-1), this routine applies Nielsen moves
+         * to the presentation to ensure that under the markedAbelianisation
+         * routine, generators 0 through M-1 are mapped to generators of the
+         * relevant Z_di group.  Similarly, generators M through M+N-1 are
+         * mapped to +-1 in the appropriate factor. All further generators 
+         * will be mapped to zero. 
          *
          * @returns true if presentation has changed
          */
@@ -897,6 +968,31 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          *   map this to the integers. 
          */
         std::auto_ptr< NHomGroupPresentation > identify_extension_over_Z();
+
+        /**
+         *  This routine attempts to identify the current presentation as that
+         * of a circle bundle over a surface.  Returns a string description of
+         * the bundle if it succeeds, and an empty string if it fails. 
+         *
+         * \apinotfinal TODO - incomplete.  Should consider making this and
+         *  perhaps all the identify routines private?  
+         */
+        std::string identify_circle_bundle_over_surface();
+
+        /**
+         * Routine attempts to determine if this groups is clearly a free
+         * product of other groups.  This is an unsophisticated algorithm
+         * and will likely only have success if one has pre-processed the
+         * presentation with simplification routines beforehand. 
+         *
+         * @return a list of NGroupPresentation's.  This will be an empty
+         *  list if the routine fails, and a list of allocated pointers
+         *  otherwise.
+         *
+         * \apinotfinal Reconsider how the end-user should see this 
+         *  routine. 
+         */
+        std::list< NGroupPresentation* > identify_free_product() const;
 
         /**
          * Returns a TeX representation of this group presentation.
