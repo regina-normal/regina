@@ -32,6 +32,9 @@ Version 4.96  [ (under development) ]
             - New convenience operators == and !=.
         Class NAbelianGroup:
             - New convenience operator !=.
+        Class NAngleStructureVector:
+            - New routine makeAngleEquations() to build the angle structure
+              equations independently of an angle structure list.
         Class NBoundaryComponent:
             - New convenience routine getComponent().
             - Renamed getEulerCharacteristic() to getEulerChar(), which

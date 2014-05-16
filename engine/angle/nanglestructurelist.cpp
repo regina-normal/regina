@@ -52,44 +52,8 @@ void* NAngleStructureList::Enumerator::run(void*) {
     if (tracker)
         tracker->newStage("Enumerating vertex angle structures");
 
-    // Form the matching equations (one per non-boundary edge plus
-    // one per tetrahedron).
-    unsigned long nTetrahedra = triang->getNumberOfTetrahedra();
-    unsigned long nCoords = 3 * nTetrahedra + 1;
-
-    long nEquations = long(triang->getNumberOfEdges()) +
-        long(triang->getNumberOfTetrahedra());
-    for (NTriangulation::BoundaryComponentIterator bit =
-            triang->getBoundaryComponents().begin();
-            bit != triang->getBoundaryComponents().end(); bit++)
-        nEquations -= (*bit)->getNumberOfEdges();
-
-    NMatrixInt eqns(nEquations, nCoords);
-    unsigned long row = 0;
-
-    std::deque<NEdgeEmbedding>::const_iterator embit;
-    NPerm4 perm;
-    unsigned long index;
-    for (NTriangulation::EdgeIterator eit = triang->getEdges().begin();
-            eit != triang->getEdges().end(); eit++) {
-        if ((*eit)->isBoundary())
-            continue;
-        for (embit = (*eit)->getEmbeddings().begin();
-                embit != (*eit)->getEmbeddings().end(); embit++) {
-            index = triang->tetrahedronIndex((*embit).getTetrahedron());
-            perm = (*embit).getVertices();
-            eqns.entry(row, 3 * index + vertexSplit[perm[0]][perm[1]]) += 1;
-        }
-        eqns.entry(row, nCoords - 1) = -2;
-        row++;
-    }
-    for (index = 0; index < nTetrahedra; index++) {
-        eqns.entry(row, 3 * index) = 1;
-        eqns.entry(row, 3 * index + 1) = 1;
-        eqns.entry(row, 3 * index + 2) = 1;
-        eqns.entry(row, nCoords - 1) = -1;
-        row++;
-    }
+    // Form the matching equations.
+    NMatrixInt* eqns = NAngleStructureVector::makeAngleEquations(triang);
 
     // Form the taut constraints, if we need them.
     NEnumConstraintList* constraints = 0;
@@ -106,9 +70,10 @@ void* NAngleStructureList::Enumerator::run(void*) {
 
     // Find the angle structures.
     NDoubleDescription::enumerateExtremalRays<NAngleStructureVector>(
-        StructureInserter(*list, triang), eqns, constraints, tracker);
+        StructureInserter(*list, triang), *eqns, constraints, tracker);
 
     // All done!
+    delete eqns;
     delete constraints;
 
     if (! (tracker && tracker->isCancelled()))
