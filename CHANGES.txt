@@ -60,6 +60,8 @@ Version 4.96  [ (under development) ]
               census of cusped finite volume hyperbolic 3-manifolds.
         Class NComponent:
             - New routine getNumberOfBoundaryTriangles().
+        Class NExampleTriangulation:
+            - New example trefoilKnotComplement().
         Class NFaceEmbedding:
             - New convenience operators == and !=.
         Class NGenericTriangulation:
