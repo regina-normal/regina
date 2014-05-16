@@ -307,8 +307,9 @@ class LPConstraintBase {
          * s->getEulerChar() and test the return value of that
          * routine instead.
          *
-         * This routine is only for use with normal (or almost normal)
-         * surface coordinate systems, not angle structure coordinates.
+         * If these linear constraints work with angle structure coordinates
+         * (not normal or almost normal surfaces), then this routine should
+         * return \c false.
          *
          * @param s the surface to test.
          * @return \c true if the given surface satisfies these linear
@@ -324,8 +325,9 @@ class LPConstraintBase {
          * linear function(s), but instead runs independent tests;
          * see the related routine verify(const NNormalSurface*) for examples.
          *
-         * This routine is only for use with angle structure coordinates,
-         * not normal (or almost normal) surface coordinate systems.
+         * If these linear constraints work with normal or almost normal
+         * surfaces (not angle structure coordinates), then this routine should
+         * return \c false.
          *
          * @param s the angle structure to test.
          * @return \c true if the given angle structure satisfies these linear
@@ -477,6 +479,7 @@ class LPConstraintEuler : public LPConstraintBase {
             LPData<regina::LPConstraintEuler, Integer>& lp,
             unsigned numCols);
         static bool verify(const NNormalSurface* s);
+        static bool verify(const NAngleStructure*);
         static bool supported(NormalCoords coords);
 };
 
@@ -550,6 +553,7 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
             LPData<regina::LPConstraintNonSpun, Integer>& lp,
             unsigned numCols);
         static bool verify(const NNormalSurface* s);
+        static bool verify(const NAngleStructure*);
         static bool supported(NormalCoords coords);
 };
 #endif // EXCLUDE_SNAPPEA
@@ -921,6 +925,10 @@ inline bool LPConstraintEuler::verify(const NNormalSurface* s) {
     return (s->getEulerChar() > 0);
 }
 
+inline bool LPConstraintEuler::verify(const NAngleStructure*) {
+    return false;
+}
+
 inline bool LPConstraintEuler::supported(NormalCoords coords) {
     return (coords == NS_STANDARD || coords == NS_AN_STANDARD);
 }
@@ -967,6 +975,10 @@ inline void LPConstraintNonSpun::constrain(
 
 inline bool LPConstraintNonSpun::verify(const NNormalSurface* s) {
     return s->isCompact();
+}
+
+inline bool LPConstraintNonSpun::verify(const NAngleStructure*) {
+    return false;
 }
 
 inline bool LPConstraintNonSpun::supported(NormalCoords coords) {

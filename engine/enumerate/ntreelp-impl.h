@@ -894,28 +894,38 @@ void LPData<LPConstraint, Integer>::extractSolution(
     // Since we have multiplied everything by lcm, instead of
     // adding +1 to each relevant variable we must add +lcm.
     size_t pos;
-    const unsigned long nTets =
-        origTableaux_->tri()->getNumberOfTetrahedra();
-
-    // First take into account the quadrilateral types...
-    for (i = 0; i < nTets; ++i)
-        if (type[i] && type[i] < 4) {
-            pos = columnPerm[3 * i + type[i] - 1];
-            v.setElement(pos, v[pos] + lcm);
-        }
-    // ... and then the triangle types.
-    for (i = 3 * nTets; i < v.size(); ++i)
-        if (type[i - 2 * nTets]) {
-            pos = columnPerm[i];
-            v.setElement(pos, v[pos] + lcm);
-        }
-
-    // Next take into account the changes of variable due to
-    // past calls to constrainOct().
-    if (octPrimary_ >= 0) {
-        pos = columnPerm[octPrimary_];
+    if (origTableaux_->coords() == NS_ANGLE) {
+        // For angle structures, the only coordinate that is explicitly
+        // constrained to be positive is the final scaling coordinate.
+        // Even better, this coordinate is not moved by the column permutation.
+        pos = 3 * origTableaux_->tri()->getNumberOfTetrahedra();
         v.setElement(pos, v[pos] + lcm);
-        v.setElement(columnPerm[octSecondary_], v[pos]);
+    } else {
+        // For normal and almost normal surfaces, we need to work through
+        // each past call to constrainPositive() and/or constrainOct().
+        const unsigned long nTets =
+            origTableaux_->tri()->getNumberOfTetrahedra();
+
+        // First take into account the quadrilateral types...
+        for (i = 0; i < nTets; ++i)
+            if (type[i] && type[i] < 4) {
+                pos = columnPerm[3 * i + type[i] - 1];
+                v.setElement(pos, v[pos] + lcm);
+            }
+        // ... and then the triangle types.
+        for (i = 3 * nTets; i < v.size(); ++i)
+            if (type[i - 2 * nTets]) {
+                pos = columnPerm[i];
+                v.setElement(pos, v[pos] + lcm);
+            }
+
+        // Next take into account the changes of variable due to
+        // past calls to constrainOct().
+        if (octPrimary_ >= 0) {
+            pos = columnPerm[octPrimary_];
+            v.setElement(pos, v[pos] + lcm);
+            v.setElement(columnPerm[octSecondary_], v[pos]);
+        }
     }
 
     // To finish, divide through by the gcd so we have the

@@ -257,6 +257,20 @@ class REGINA_API NAngleStructure : public ShareableObject {
          */
         bool isVeering() const;
 
+        /**
+         * Gives read-only access to the raw vector that sits beneath this
+         * angle structure.
+         *
+         * Generally users should not need this function.  However, it is
+         * provided here in case the need should arise (e.g., for reasons
+         * of efficiency).
+         *
+         * \ifacespython Not present.
+         *
+         * @return the underlying raw vector.
+         */
+        const NAngleStructureVector* rawVector() const;
+
         void writeTextShort(std::ostream& out) const;
 
         /**
@@ -323,6 +337,10 @@ inline bool NAngleStructure::isVeering() const {
     if ((flags & flagCalculatedType) == 0)
         calculateType();
     return ((flags & flagVeering) != 0);
+}
+
+inline const NAngleStructureVector* NAngleStructure::rawVector() const {
+    return vector;
 }
 
 } // namespace regina

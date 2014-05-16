@@ -547,6 +547,16 @@ class LPInitialTableaux {
         inline NTriangulation* tri() const;
 
         /**
+         * Returns the coordinate system that is used for the matrix of
+         * matching equations.  This will be the same coordinate system
+         * that was passed to the LPInitialTableaux constructor; in particular,
+         * it will always be one of NS_QUAD, NS_STANDARD, or NS_ANGLE.
+         *
+         * @return the coordinate system.
+         */
+        NormalCoords coords() const;
+
+        /**
          * Returns the rank of this matrix.
          *
          * Note that, if we are imposing extra constraints through the
@@ -1481,6 +1491,11 @@ inline LPInitialTableaux<LPConstraint>::~LPInitialTableaux() {
 template <class LPConstraint>
 inline NTriangulation* LPInitialTableaux<LPConstraint>::tri() const {
     return tri_;
+}
+
+template <class LPConstraint>
+inline NormalCoords LPInitialTableaux<LPConstraint>::coords() const {
+    return coords_;
 }
 
 template <class LPConstraint>

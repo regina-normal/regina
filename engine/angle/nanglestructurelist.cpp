@@ -34,6 +34,7 @@
 
 #include "angle/nanglestructurelist.h"
 #include "enumerate/ndoubledescription.h"
+#include "enumerate/ntreetraversal.h"
 #include "maths/nmatrixint.h"
 #include "progress/nprogresstracker.h"
 #include "surfaces/nnormalsurface.h"
@@ -49,39 +50,52 @@ namespace regina {
 typedef std::vector<NAngleStructure*>::const_iterator StructureIteratorConst;
 
 void* NAngleStructureList::Enumerator::run(void*) {
-    if (tracker)
-        tracker->newStage("Enumerating vertex angle structures");
-
     // Form the matching equations.
     NMatrixInt* eqns = NAngleStructureVector::makeAngleEquations(triang);
 
-    // Form the taut constraints, if we need them.
-    NEnumConstraintList* constraints = 0;
-    if (list->tautOnly_) {
-        constraints = new NEnumConstraintList(triang->getNumberOfTetrahedra());
+    if (list->tautOnly_ && triang->getNumberOfTetrahedra() > 0) {
+        // For now just stick to arbitrary precision arithmetic.
+        // TODO: Use native integer types when the angle equation matrix
+        // is sufficiently small / simple.
+        if (tracker)
+            tracker->newStage("Enumerating taut angle structures");
 
-        unsigned base = 0;
-        for (unsigned c = 0; c < constraints->size(); ++c) {
-            (*constraints)[c].insert((*constraints)[c].end(), base++);
-            (*constraints)[c].insert((*constraints)[c].end(), base++);
-            (*constraints)[c].insert((*constraints)[c].end(), base++);
+        NTautEnumeration<LPConstraintNone, BanNone, NInteger> search(triang);
+        while (search.next(tracker)) {
+            list->structures.push_back(search.buildStructure());
+            if (tracker && tracker->isCancelled())
+                break;
         }
+
+        if (! (tracker && tracker->isCancelled()))
+            triang->insertChildLast(list);
+
+        if (tracker)
+            tracker->setFinished();
+    } else {
+        // For the empty triangulation, we fall through here regardless
+        // of whether we want taut or all vertex angle structures (but
+        // either way, the answer is the same - just one empty structure).
+        //
+        // For all other triangulations, we fall through here if we are
+        // after all vertex angle structures.
+        if (tracker)
+            tracker->newStage("Enumerating vertex angle structures");
+
+        // Find the angle structures.
+        NDoubleDescription::enumerateExtremalRays<NAngleStructureVector>(
+            StructureInserter(*list, triang), *eqns, 0 /* constraints */,
+            tracker);
+
+        // All done!
+        if (! (tracker && tracker->isCancelled()))
+            triang->insertChildLast(list);
+
+        if (tracker)
+            tracker->setFinished();
     }
 
-    // Find the angle structures.
-    NDoubleDescription::enumerateExtremalRays<NAngleStructureVector>(
-        StructureInserter(*list, triang), *eqns, constraints, tracker);
-
-    // All done!
     delete eqns;
-    delete constraints;
-
-    if (! (tracker && tracker->isCancelled()))
-        triang->insertChildLast(list);
-
-    if (tracker)
-        tracker->setFinished();
-
     return 0;
 }
 

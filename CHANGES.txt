@@ -41,6 +41,12 @@ Version 4.96  [ (under development) ]
               taut angle structures, or finding a single strict angle structure.
         Class NAbelianGroup:
             - New convenience operator !=.
+        Class NAngleStructure:
+            - New convenience routine rawVector().
+        Class NAngleStructureList:
+            - Enumeration of taut angle strutures now uses Regina's tree
+              traversal / linear programming machinery, which is *much*
+              faster than the old double description method.
         Class NAngleStructureVector:
             - New routine makeAngleEquations() to build the angle structure
               equations independently of an angle structure list.
@@ -96,6 +102,14 @@ Version 4.96  [ (under development) ]
               curves on the cusp as its (meridian, longitude) basis.
               This reverts a change in behaviour from the previous release
               caused by the recent sync with the SnapPy 2.0.3 kernel.
+        Class NTautEnumeration:
+            - New class for enumerating taut angle structures that uses
+              Regina's tree traversal / linear programming machinery.
+              This is *much* faster than the old double description method.
+        Class NTreeTraversal:
+            - Extended the tree traversal / linear programming machinery to
+              work with angle structures.  This is used for enumerating all
+              taut angle structures, or finding a single strict angle structure.
         Class NTriangleEmbedding:
             - New convenience operators == and !=.
         Class NTriangulation:

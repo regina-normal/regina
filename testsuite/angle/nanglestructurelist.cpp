@@ -239,7 +239,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
                         if (tmp != 0 && tmp != 1) {
                             std::ostringstream msg;
                             msg << "Taut angle structures #" << i
-                                << "for " << isoSig << ": bad angle found.";
+                                << " for " << isoSig << ": bad angle found.";
                             CPPUNIT_FAIL(msg.str());
                         }
                         tot += tmp;
@@ -247,7 +247,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
                     if (tot != 1) {
                         std::ostringstream msg;
                         msg << "Taut angle structures #" << i
-                            << "for " << isoSig << ": wrong number of "
+                            << " for " << isoSig << ": wrong number of "
                             "pi angles in tetrahedron " << j << ".";
                         CPPUNIT_FAIL(msg.str());
                     }
@@ -269,7 +269,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
                     if (tot != 2) {
                         std::ostringstream msg;
                         msg << "Taut angle structures #" << i
-                            << "for " << isoSig << ": wrong sum of "
+                            << " for " << isoSig << ": wrong sum of "
                             "angles around edge " << j << ".";
                         CPPUNIT_FAIL(msg.str());
                     }
