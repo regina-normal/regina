@@ -63,6 +63,7 @@
 
 namespace regina {
 
+class NAngleStructure;
 class NBoundaryComponent;
 class NComponent;
 class NEdge;
@@ -1484,6 +1485,24 @@ class REGINA_API NTriangulation : public NPacket,
          * disc, or 0 if none exists.
          */
         NNormalSurface* hasOctagonalAlmostNormalSphere();
+        /**
+         * Searches for a strict angle structure on this triangulation.
+         * Recall that a \e strict angle structure is one in which every
+         * angle is strictly between 0 and &pi;.  If a strict angle structure
+         * exists, then this routine is guaranteed to find one.
+         *
+         * The underlying algorithm runs a single linear program (it does
+         * \e not enumerate all vertex angle structures).  This means
+         * that it is likely to be fast even for large triangulations.
+         *
+         * The angle structure returned (if any) depends upon this
+         * triangulation, and so the angle structure must be destroyed
+         * before this triangulation is destroyed.
+         *
+         * @return a newly allocated strict angle structure, or 0 if none
+         * exists.
+         */
+        NAngleStructure* hasStrictAngleStructure();
 
         /*@}*/
         /**

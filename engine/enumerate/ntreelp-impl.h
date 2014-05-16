@@ -895,11 +895,21 @@ void LPData<LPConstraint, Integer>::extractSolution(
     // adding +1 to each relevant variable we must add +lcm.
     size_t pos;
     if (origTableaux_->coords() == NS_ANGLE) {
-        // For angle structures, the only coordinate that is explicitly
-        // constrained to be positive is the final scaling coordinate.
-        // Even better, this coordinate is not moved by the column permutation.
-        pos = 3 * origTableaux_->tri()->getNumberOfTetrahedra();
-        v.setElement(pos, v[pos] + lcm);
+        if (type) {
+            // For taut angle structures, the only coordinate that is explicitly
+            // constrained to be positive is the final scaling coordinate.
+            // Even better, this coordinate is never moved by the column
+            // permutation.
+            pos = 3 * origTableaux_->tri()->getNumberOfTetrahedra();
+            v.setElement(pos, v[pos] + lcm);
+        } else {
+            // For strict angle structures, we pass type == 0, and we
+            // constrain *all* coordiantes as positive.
+            for (pos = 0;
+                    pos <= 3 * origTableaux_->tri()->getNumberOfTetrahedra();
+                    ++pos)
+                v.setElement(pos, v[pos] + lcm);
+        }
     } else {
         // For normal and almost normal surfaces, we need to work through
         // each past call to constrainPositive() and/or constrainOct().

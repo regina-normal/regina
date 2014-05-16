@@ -1220,6 +1220,9 @@ class LPData {
          * this tableaux, indicating which variables were previously fixed as
          * positive via calls to constrainPositive().  This is necessary
          * because LPData does not keep such historical data on its own.
+         * As a special case, when extracting a strict angle structure
+         * one may pass \a type = 0, in which case this routine will
+         * assume that \e every coordinate was constrained as positive.
          */
         void extractSolution(NRay& v, const char* type) const;
 

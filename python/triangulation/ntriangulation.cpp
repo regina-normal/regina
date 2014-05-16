@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "algebra/ngrouppresentation.h"
+#include "angle/nanglestructure.h"
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
@@ -290,6 +291,9 @@ void addNTriangulation() {
             return_value_policy<manage_new_object>())
         .def("hasOctagonalAlmostNormalSphere",
             &NTriangulation::hasOctagonalAlmostNormalSphere,
+            return_value_policy<manage_new_object>())
+        .def("hasStrictAngleStructure",
+            &NTriangulation::hasStrictAngleStructure,
             return_value_policy<manage_new_object>())
         .def("intelligentSimplify", &NTriangulation::intelligentSimplify)
         .def("simplifyToLocalMinimum", &NTriangulation::simplifyToLocalMinimum,
