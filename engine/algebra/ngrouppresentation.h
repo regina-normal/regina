@@ -45,6 +45,7 @@
 #include <list>
 #include <vector>
 #include <set>
+
 #include "regina-core.h"
 #include "shareableobject.h"
 #include "utilities/memutils.h"
@@ -253,6 +254,11 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * This effectively turns this word into the identity element.
          */
         void erase();
+
+        /**
+         * @return true if and only if this is the unit, i.e. trivial word.
+         */   
+        bool isTrivial() const;
 
         /**
          * Returns the term at the given index in this expression.
@@ -526,7 +532,10 @@ class REGINA_API NGroupExpression : public ShareableObject {
  * \todo let's make intelligent simplify a tad more intelligent, and the GUI
  * call a bit more safe.  Perhaps parallelize the GUI call, and give users
  * parameters to ensure it won't crash the computer.  Also look at the FPGroup
- * package.
+ * package. We should also have a simple way of creating NGroupPresentation
+ * objects directly from text strings.  We would like to have something like
+ * NGroupPresentation( numGens, "abAAB", "bccd" ) etc. with arbitrary 
+ * numbers of relators. Maybe std::tuple.  Or "variadic templates"?
  *
  * \testpart
  */
@@ -563,6 +572,19 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * @return a reference to this group presentation.
          */
         NGroupPresentation& operator=(const NGroupPresentation& copyMe);
+
+        /**
+         * Constructor that allows arbitrary number of relators. One calls
+         * this with arbitrarily-many arguments.  The first argument nGens
+         * is the number of generators one wants the group to have. The
+         * remaining arguments are all of type std::string and are the
+         * relators. If you are compiling the Regina library against 
+         * c++11, you can initialize an NGroupPresentation via
+         * NGroupPresentation( nGens, { "rel1", "rel2", ... } ) via the
+         * C++11 initializer_list construction. 
+         */
+        NGroupPresentation(unsigned long nGens,  
+            std::vector<std::string> &rels);
 
         /**
          * Adds one or more generators to the group presentation.
@@ -874,10 +896,18 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         std::auto_ptr<NHomGroupPresentation> intelligentNielsenDetail();
 
         /**
-         *  This routine attempts to rewrite the presentation so that generators
-         * of the group map to generators of the abelianization, with any
+         * This routine attempts to rewrite the presentation so that generators
+         * of the group map to generators of the abelianisation, with any
          * left-over generators mapping to zero (if possible).  Consider this a
-         * homological-alignment of the generators. 
+         * homological-alignment of the presentation. 
+         *
+         * If the abelianisation of this group has rank N and M invariant
+         * factors d0 | d2 | ... | d(M-1), this routine applies Nielsen moves
+         * to the presentation to ensure that under the markedAbelianisation
+         * routine, generators 0 through M-1 are mapped to generators of the
+         * relevant Z_di group.  Similarly, generators M through M+N-1 are
+         * mapped to +-1 in the appropriate factor. All further generators 
+         * will be mapped to zero. 
          *
          * @returns true if presentation has changed
          */
@@ -938,6 +968,31 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          *   map this to the integers. 
          */
         std::auto_ptr< NHomGroupPresentation > identify_extension_over_Z();
+
+        /**
+         *  This routine attempts to identify the current presentation as that
+         * of a circle bundle over a surface.  Returns a string description of
+         * the bundle if it succeeds, and an empty string if it fails. 
+         *
+         * \apinotfinal TODO - incomplete.  Should consider making this and
+         *  perhaps all the identify routines private?  
+         */
+        std::string identify_circle_bundle_over_surface();
+
+        /**
+         * Routine attempts to determine if this groups is clearly a free
+         * product of other groups.  This is an unsophisticated algorithm
+         * and will likely only have success if one has pre-processed the
+         * presentation with simplification routines beforehand. 
+         *
+         * @return a list of NGroupPresentation's.  This will be an empty
+         *  list if the routine fails, and a list of allocated pointers
+         *  otherwise.
+         *
+         * \apinotfinal Reconsider how the end-user should see this 
+         *  routine. 
+         */
+        std::list< NGroupPresentation* > identify_free_product() const;
 
         /**
          * Returns a TeX representation of this group presentation.
