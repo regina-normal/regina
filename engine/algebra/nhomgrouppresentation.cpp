@@ -115,14 +115,15 @@ void NHomGroupPresentation::writeTextLong(std::ostream& out) const
      out << "Homomorphism with ";
     out<<"domain ";
     domain_->writeTextCompact(out);
-    out<<std::endl;
+    out<<" "; // std::endl;
 
     out<<"map[";
     for (unsigned long i=0; i<domain_->getNumberOfGenerators(); i++) {
-        if (i!=0)
-            out<<", ";
-        out<<"g"<<i<<" --> "; 
-        map_[i]->writeTextShort(out);
+        if (i!=0) out<<", ";
+        if (domain_->getNumberOfGenerators()<=26) out<<char('a' + i)<<" --> ";
+        else  out<<"g"<<i<<" --> "; 
+        if (range_->getNumberOfGenerators()<=26) map_[i]->writeText(out, true);
+        else map_[i]->writeText(out, false);
     }
     out<<"]";
 

@@ -95,11 +95,6 @@ class Dim4Triangulation;
  *
  * \testpart
  *
- * \todo  0) See to what extent the Singular library can replace my roll-my-own 
- *          Groebner basis algorithms.  It appears to do everything over finite 
- *          fields and rational coefficients, but maybe I wouldn't be able to 
- *          do much better than that for multi-variable polynomials. 
- *
  * \todo  1) (a) Homomorphisms to finite groups, (b) covering spaces, 
  *        (c) Pi_2 presentations as a module over Pi_1. Immediately: pi1
  *        presentation simplification code needs smoothing, recognition code 
@@ -188,6 +183,12 @@ class Dim4Triangulation;
  * \todo \optlong Why not just move to monoid presentations, and kill 
  *        generators for a max tree in the presentation?   Would be more 
  *        natural and involve less re-indexing. 
+ *
+ * \todo \optlong Add orientation cocycle, as canonical element in 
+ *       H^1(M;Z_2). We could give this as an explicit cocycle in
+ *       H^1(M;Z_2) or perhaps it would be better to describe it as
+ *       a homomorphism H_1(M,Z_2) --> Z_2 ? Explicit cocycle seems 
+ *       fine. Let's return it in the dual CC coordinates. 
  *
  * Guide to ncellulardata.*.cpp files:
  *
@@ -1255,6 +1256,39 @@ public:
      * 4-manifold) this routine returns 0.  
      */
     long int signature() const;
+
+    /**
+     * This returns the Hurewicz map.  It is the natural homomorphism from 
+     * the fundamental group to the 1st homology group.  We will store the
+     * Hurewicz map as a matrix whose (j,i)-th entry is where the i-th
+     * generator of the fundamental group in DUAL_coord is sent to in the
+     * DUAL_coord version of H_1 with integer coefficients. 
+     *
+     * \apinotfinal moreover, this routine is not fully implemented yet. 
+     */
+    NMatrixInt hurewicz_map_H1() const;
+
+    /**
+     *  This returns the i-th Stiefel-Whitney class of the manifold.  It 
+     * will be returned as an element of the i-th cochain complex with Z_2
+     * coefficients, in DUAL_coord. At present only i==1 is implemented. 
+     *
+     * \apinotfinal We'll repackage this routine before NCellularData is
+     *  released.  I should also implement i==2 to give tests for the
+     *  spin structures paper. 
+     */
+    std::vector< bool > stiefel_whitney( unsigned long i ) const;
+
+    /**
+     * This is a rephrasing of the 1st Stiefel-Whitney class but in terms
+     * of the fundamental group.  The value of this vector on k is the
+     * evaluation of the Stiefel-Whitney class on the k-th generator of 
+     * the fundamental group, in DUAL_coord. 
+     *
+     * \apinotfinal We'll repackage this routine before NCellularData is
+     *  released.
+     */
+    std::vector< bool > PI1_stiefel_whitney1() const;
 
     /**
      * Determine if the torsion linking form is hyperbolic.  Returns true if 

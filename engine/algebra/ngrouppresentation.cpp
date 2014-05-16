@@ -35,6 +35,8 @@
 #include <iterator>
 #include <map>
 #include <sstream>
+#include <algorithm>
+
 #include "algebra/ngrouppresentation.h"
 #include "algebra/nhomgrouppresentation.h"
 #include "algebra/nmarkedabeliangroup.h"
@@ -102,7 +104,6 @@ void NGroupExpression::invert() {
 	for (it = terms.begin(); it != terms.end(); it++)
 		(*it).exponent = -(*it).exponent;
 }
-
 
 NGroupExpression* NGroupExpression::power(long exponent) const {
     NGroupExpression* ans = new NGroupExpression();
@@ -227,13 +228,11 @@ NGroupPresentation::NGroupPresentation(const NGroupPresentation& cloneMe) :
 
 // TODO: To add: platonic groups, octahedral/cubical, dihedral,
 //       icosahedral/dodecahedral, tetrahedral and binary versions of them.  
-//       Free products of torsion groups, free products with amalgamation.
-//       currently intelligentSimplify() isn't smart enough for this. 
+//       Also need to recognise circle bundles over surfaces. 
+//       Free products with amalgamation. Currently intelligentSimplify() 
+//       isn't smart enough for this. 
 std::string NGroupPresentation::recogniseGroup() const {
     std::ostringstream out;
-    unsigned long nRels = relations.size();
-    NGroupExpression* rel;
-    long exp;
 
     // Run through cases.
     if (nGenerators == 0)
@@ -249,12 +248,15 @@ std::string NGroupPresentation::recogniseGroup() const {
     }
 
     // not (clearly) abelian.  Check if free.
-    if (nRels == 0) { 
+    if (relations.size() == 0) { 
         out << "Free(" << nGenerators << ")"; 
         return out.str();
     }
 
-    // let's check if its an extension over Z. 
+    // Check if its an extension over Z. 
+    // TODO: eventually look for extensions over at least fg abelian groups. 
+    //   ??maybe?? some other finite groups but it's not clear how to look 
+    //   for those. 
     if (ab.get()->getRank()==1) {
         NGroupPresentation presCopy( *this );
         std::auto_ptr< NHomGroupPresentation > AUT( 
@@ -273,13 +275,37 @@ std::string NGroupPresentation::recogniseGroup() const {
               out<<" --> ";     
               AUT.get()->evaluate(i).writeText(out, (numGen<27) ? true : false);
               }
-            }
+             return out.str();
+            } // domain not recognised, but it is an extension
+          // TODO: put in something here for this case. 
         }
     }         
 
-    return out.str();
-}
+    std::list< NGroupPresentation* > fpDecomp( identify_free_product() );
+    if (fpDecomp.size()>1) {
+      out<<"FreeProduct( ";
+      for (std::list< NGroupPresentation* >::iterator i=fpDecomp.begin(); 
+            i!=fpDecomp.end(); i++) {
+        std::string facStr( (*i)->recogniseGroup() );
+        if (facStr.length()>0) {
+         if (i!=fpDecomp.begin()) out<<", ";
+         out<<facStr;
+         } 
+        else { // TODO: put in something here for this case. 
+        }
+        delete (*i);
+     }
+     out<<" )";
+     return out.str(); 
+    }
 
+    // TODO: let's put in the undergraduate test for finiteness, that every
+    //  word can be written as a product of generators a^xb^yc^z with xyz
+    //  in a finite interval. Look for the relators that would allow for this
+    //  kind of conclusion. 
+
+    return std::string(); // returns empty string if not recognised.
+}
 
 std::auto_ptr<NAbelianGroup> NGroupPresentation::abelianisation() const
 {
@@ -442,10 +468,7 @@ void NGroupPresentation::applySubstitution( NGroupExpression& this_word,
  this_word.simplify();
 }
 
-namespace {
-    // An unnamed namespace for some helper routines.
-    // "anonymous namespace" is apparently not correct terminology -ryan
-
+namespace { // anonymous namespace
     bool compare_length( const NGroupExpression* first, 
              const NGroupExpression* second ) 
      {  return ( first->wordLength() < second->wordLength() ); }
@@ -563,7 +586,8 @@ NGroupExpression::NGroupExpression( const std::string &input, bool* valid )
   // WSEXPSIG ^- read
   // WSEXPNUM reading numbers after ^ or ^-
   // WSERR - an error occured.
-  enum WORD_STATUS { WSNULL, WSVARLET, WSVARNUM, WSEXP, WSEXPSIG, WSEXPNUM, WSERR };
+  enum WORD_STATUS { WSNULL, WSVARLET, WSVARNUM, WSEXP, WSEXPSIG, 
+                     WSEXPNUM, WSERR };
 
   // a loop that goes through the entries of input. 
   WORD_STATUS WS(WSNULL);
@@ -572,7 +596,7 @@ NGroupExpression::NGroupExpression( const std::string &input, bool* valid )
    {// read *i, see what to do next. 
     // case 1: it is a letter a..z or A..Z
     if ( ( (int(*i) >= int('a') ) && ( int(*i) <= int('z') ) ) ||
-         ( (int(*i) >= int('A') ) && ( int(*i) <= int('Z') ) ) ) // we have a letter
+         ( (int(*i) >= int('A') ) && ( int(*i) <= int('Z') ) ) ) 
     if (WS==WSNULL) // fresh letter 
      {
       // build buildTerm. 
@@ -688,22 +712,37 @@ bool NGroupExpression::addStringLast( const std::string& input)
  return true;
 }
 
-//      **********         **********  NGroupPresentation below **************
+//             **********  NGroupPresentation below **************
+
+NGroupPresentation::NGroupPresentation(unsigned long nGens,  
+            std::vector<std::string> &rels)
+{
+    nGenerators = nGens;
+    for (std::vector<std::string>::iterator i=rels.begin();
+         i!=rels.end(); i++)
+    relations.push_back( new NGroupExpression(*i) );
+}
 
 bool NGroupPresentation::simplifyWord( NGroupExpression &input ) const
  {
-  input.simplify(false);
-  bool retval(false);
-  for (unsigned long i=0; i<relations.size(); i++)
-   { // apply relations[i] to input word.
-     std::set< NWordSubstitutionData > sub_list;
+  bool retval( input.simplify(false) );
+  if (input.isTrivial()) return retval;
+
+  // now recursively apply relators until no reduction is possible.
+  bool continueSimplify(true);
+  while (continueSimplify) {
+   continueSimplify = false;
+   for (unsigned long i=0; i<relations.size(); i++)  { 
+     std::set< NWordSubstitutionData > sub_list; // highest score is *first*
      dehnAlgorithmSubMetric( input, *relations[i], sub_list );
      if (sub_list.size() != 0) if ( (*sub_list.begin()).score > 0 )
         {
         applySubstitution( input, *relations[i], *sub_list.begin() );
-        retval = true; 
+        if (input.isTrivial()) return true;
+        continueSimplify = true; retval = true; 
         }
    }
+  }
   return retval;
  }
 
@@ -1015,24 +1054,12 @@ std::auto_ptr<NHomGroupPresentation>
  return std::auto_ptr<NHomGroupPresentation>(retval.release());
 }
 
-/**
- * This routine rewrites the presentation so that generators
- * of the group map to generators of the abelianization, with any
- * left-over generators mapping to zero. Specifically, if the group
- * has rank N and M invariant factors d1 | d2 | ... | dM then
- * generators 1 through N will map to the free generators of the
- * abelianization.  Generators N+1 through N+M will map to torsion
- * generators of orders d1 through dM respectively.  Any additional
- * generators will be indexed by integers N+M+1 or larger, and will
- * have trivial abelianization.  Keep in mind that the snf algorithm
- * puts the invariant factors before the free factors. 
- */
 bool NGroupPresentation::homologicalAlignment()
 { return homologicalAlignmentDetail().get(); }
 
 std::auto_ptr<NHomGroupPresentation> 
     NGroupPresentation::homologicalAlignmentDetail()
-{
+{//TODO: it appears there's a problem in the new code here.
  std::auto_ptr<NHomGroupPresentation> retval; // only allocate if appropriate.
  // step 1: compute abelianization and how generators map to abelianization.
  std::auto_ptr< NMarkedAbelianGroup > abelianized( markedAbelianisation() );
@@ -1048,13 +1075,12 @@ std::auto_ptr<NHomGroupPresentation>
     abMat.entry(i,j) = temp[i]; // columns are snfreps of abelianized gens.
   }
 
- unsigned long SR( abelianized->getNumberOfInvariantFactors() );
-
+ unsigned long abNF( abelianized->getNumberOfInvariantFactors() );
+ unsigned long abNG( abelianized->minNumberOfGenerators() );
  // step 2: we will mimic the simple smith normal form algorithm algorithm 
  //         using corresponding moves on the group presentation. 
  //         first the free generators.
- for (unsigned long i=abelianized->getNumberOfInvariantFactors(); 
-      i<abelianized->minNumberOfGenerators(); i++)
+ for (unsigned long i=abNF; i<abNG; i++)
   { // in row i we will eliminate all but one entry using column
     // operations.  Now we need to do a while loop -- find any two non-zero
     // entries in the row, and reduce.  If there's only one non-zero entry, 
@@ -1094,17 +1120,14 @@ std::auto_ptr<NHomGroupPresentation>
     //       [ * * * ]
     //       [ 0 D 0 ]  At this point, with D a diagonal +-1 matrix.
   }
- // we are aiming for:
- //  [ P * 0 ]  with P diagonal and coprime to the di's. 
- //  [ 0 D 0 ] so we erase the * entries over D.
- for (unsigned long i=0; i<abelianized->getNumberOfInvariantFactors(); i++)
-  for (unsigned long j=abelianized->getNumberOfInvariantFactors(); 
-       j<abelianized->minNumberOfGenerators(); j++)
+
+ for (unsigned long i=0; i<abNF; i++) for (unsigned long j=abNF; j<abNG; j++)
     abMat.entry(i,j) = 0;
  // now we're at [ * 0 * ]
  //              [ 0 D 0 ]
+
  // step 3: reduce inv fac terms, kill the rest.
- for (unsigned long i=0; i<abelianized->getNumberOfInvariantFactors(); i++)
+ for (unsigned long i=0; i<abNF; i++)
   { // let's start working on entry(i,j0) and (i,j1) with j0<j1 in 0...invFacNum
     unsigned long j0=0, j1=abMat.columns()-1;
     while (j0 < j1)
@@ -1116,6 +1139,7 @@ std::auto_ptr<NHomGroupPresentation>
                    (abMat.entry(i,j1) % abelianized->getInvariantFactor(i)).abs() );
      NLargeInteger q = abMat.entry(i,colFlag ? j1 : j0) / 
                        abMat.entry(i,colFlag ? j0 : j1); 
+
      // subtract q times column j0 from column j1 
      for (unsigned long r=0; r<abMat.rows(); r++)
       abMat.entry(r,colFlag ? j1 : j0) -= abMat.entry(r,colFlag ? j0 : j1)*q; 
@@ -1124,7 +1148,7 @@ std::auto_ptr<NHomGroupPresentation>
      for (unsigned long l=0; l<nGenerators; l++) {
       fVec[l].addTermLast( NGroupExpressionTerm( l, 1 ) );
       bVec[l].addTermLast( NGroupExpressionTerm( l, 1 ) );
-      if (l==j1) { 
+      if (l==j1) {
        fVec[l].addTermLast( NGroupExpressionTerm( 
            colFlag ? j0 : j1, q.longValue() ) );
        bVec[l].addTermLast( NGroupExpressionTerm( 
@@ -1136,8 +1160,9 @@ std::auto_ptr<NHomGroupPresentation>
      if (!retval.get()) retval.reset( tempHom.release() ); else 
           retval.reset( tempHom->composeWith( *retval.get() ).release() );
     } // j0==j1 is the column such that entry (i,j1) is +-1. 
+    if (i!=j1) {
     nielsenTransposition(i, j1); 
-    abMat.swapColumns(i, j1); 
+    abMat.swapColumns(i, j1);  }
   }
  // now we're at [ P 0 0 ]
  //              [ 0 D 0 ] so we're essentially done.
@@ -1151,34 +1176,193 @@ std::auto_ptr<NHomGroupPresentation>
  return std::auto_ptr<NHomGroupPresentation>( retval.release() );
 }
 
-// TODO: we should probably make this more sophisticated at some point.  For
-//  example < a, b : a^2, abaB > it would not detect as abelian. 
+bool NGroupExpression::isTrivial() const
+{    return terms.empty(); }
+
+// This algorithm has to be at least moderately sophisticated to ensure it
+// recognises that < a, b, a^2, abaB > is abelian. 
 bool NGroupPresentation::isAbelian() const
- {
-  // The idea will be to take all commutators of the generators, and see if
-  //  the relators can kill them. 
-  for (unsigned long i=0; i<nGenerators; i++)
-   for (unsigned long j=i+1; j<nGenerators; j++)
-    {
-     NGroupExpression COM; // commutator [gi,gj]
-     COM.addTermLast( i, 1 );   COM.addTermLast( j, 1 );
-     COM.addTermLast( i, -1 );  COM.addTermLast( j, -1 );
-     // reduce! We use dehnAlgorithmSubMetric
-     std::set< NWordSubstitutionData > sub_list;
-     // loop through all relators in the group, X. 
-     bool commute(false);
-     for (unsigned long k=0; (k<relations.size()) && (!commute); k++)
-      {
-       dehnAlgorithmSubMetric( COM, *relations[k], sub_list, 1 ); 
-       // check to see if sub_list has a score=4 move.
-       for (std::set< NWordSubstitutionData >::iterator I=sub_list.begin();
-            I!=sub_list.end(); I++)
-        if (I->score == 4) { commute = true; break; }
-      }
-     if (!commute) return false; 
-    }
-  return true;
+{
+ // The idea will be to take all commutators of the generators, and see if
+ //  the relators can kill them.
+ for (unsigned long i=0; i<nGenerators; i++)
+  for (unsigned long j=i+1; j<nGenerators; j++)
+   {
+    // let's see if we can recursively apply the relations to 
+    // [gi,gj] in order to kill it. 
+    NGroupExpression COM; // commutator [gi,gj]
+    COM.addTermLast( i, 1 );   COM.addTermLast( j, 1 );
+    COM.addTermLast( i, -1 );  COM.addTermLast( j, -1 );
+    simplifyWord( COM );
+    if (!COM.isTrivial()) return false;
+   }
+ return true;
+}
+
+std::list< NGroupPresentation* > 
+    NGroupPresentation::identify_free_product() const
+{
+ // let's create a list of generators not used in the relators, then 
+ // generators that appear in a common generator, or recursively related 
+ std::set< unsigned long > unRelated;
+ for (unsigned long i=0; i<getNumberOfGenerators(); i++)
+    unRelated.insert(i);
+ std::list< std::set< unsigned long > > equivRel;
+ // determine which generators are used in the relators, to initialize
+ // equivRel. 
+ { // forced scope
+ std::set< unsigned long > usedRels;
+ for (unsigned long i=0; i<relations.size(); i++)
+  for (std::list<NGroupExpressionTerm>::const_iterator 
+    T=relations[i]->getTerms().begin();
+    T!=relations[i]->getTerms().end(); T++) 
+    usedRels.insert( T->generator ); 
+ for (std::set< unsigned long >::iterator i=usedRels.begin();
+    i!=usedRels.end(); i++)
+  { std::set< unsigned long > singleton;
+    singleton.insert( *i );
+    unRelated.erase( *i );
+    equivRel.push_back(singleton); }
+ } // end forced scope
+ // now we grow the equivalence relation. 
+
+ for (unsigned long i=0; i<relations.size(); i++) {
+  std::set< unsigned long > relSet; // related by relations[i]
+  if ( (unRelated.size()==0) && (equivRel.size()==1) ) break;
+  for (std::list<NGroupExpressionTerm>::const_iterator 
+         T=relations[i]->getTerms().begin();
+         T!=relations[i]->getTerms().end(); T++) 
+      relSet.insert( T->generator );
+  if (relSet.size() < 2) continue; // in case of empty word
+  for (std::set< unsigned long >::iterator I=relSet.begin(); I!=relSet.end();
+       I++) 
+  for (std::set< unsigned long >::iterator J=I; J!=relSet.end(); J++) {
+    if (I==J) continue;
+  std::list< std::set< unsigned long > >::iterator SI;
+  std::list< std::set< unsigned long > >::iterator SJ;
+  for (SI=equivRel.begin(); SI!=equivRel.end(); SI++)
+    if (SI->find( *I )!=SI->end()) break;
+  for (SJ=equivRel.begin(); SJ!=equivRel.end(); SJ++)
+    if (SJ->find( *J )!=SJ->end()) break;
+  if (SI==SJ) continue; // so we merge the sets SI and SJ are pointing to.
+  SI->insert( SJ->begin(), SJ->end() );
+  equivRel.erase( SJ );
+  } // I J loop
+ } // i loop
+
+ if ( (equivRel.size()+unRelated.size()) < 2) 
+    return std::list< NGroupPresentation* >();
+ // build return value. We'll have subgroup free products, and a free group
+ // provided unRelated is non-empty. 
+
+ std::list< NGroupPresentation* > retval;
+ if (unRelated.size()>0) {
+   NGroupPresentation* newGrp( new NGroupPresentation );
+   newGrp->addGenerator( unRelated.size() );
+   retval.push_back( newGrp );
+   }
+ for (std::list< std::set< unsigned long > >::iterator I=equivRel.begin();
+      I!=equivRel.end(); I++) {
+    NGroupPresentation* newGrp( new NGroupPresentation );
+    newGrp->addGenerator( I->size() );
+    std::map< unsigned long, unsigned long > downMap; // old to new map
+    unsigned long count(0);
+    for (std::set< unsigned long >::iterator J=I->begin(); J!=I->end(); J++)
+     {
+      downMap.insert( std::pair< unsigned long, unsigned long >(*J, count) );
+      count++;
+     }
+   // Build map from this groups generators to corresponding generators of *this
+   // decide which relators from *this are relevant. 
+    for (unsigned long i=0; i<relations.size(); i++)
+     {
+      // check if relations[i] generator is in *I
+      if (I->find( relations[i]->getTerm(0).generator)!=I->end()) // yes!
+       {
+        NGroupExpression* newRel( new NGroupExpression );
+        for (std::list<NGroupExpressionTerm>::const_iterator 
+              ET=relations[i]->getTerms().begin();
+             ET!=relations[i]->getTerms().end(); ET++)
+          newRel->addTermLast( downMap[ ET->generator ], ET->exponent );
+        newGrp->addRelation( newRel );
+       }
+     } // end relations i loop
+    retval.push_back( newGrp );
  }
+ return retval;
+} // end identify_free_product()
+
+/**
+ *  This algorithm is to recognise the fundamental groups of circle bundles
+ * over surfaces, and determine (as best as it can) the type of circle bundle.
+ *
+ * Over S^2, there is S^1 x S^2, S^3, RP3 and lens spaces. These are the
+ *  cyclic fundamental groups.
+ *
+ * Over RP^2 there is S^1 x RP^2 and S^2 x~ S^1 are the only two non-orientable
+ *  manifolds, these are Z + Z_2 and Z.  The orientable manifolds are:
+ * S^1 x~ RP^2, L_{4,1}, S^3/Q(8), SFS(S^2 | 1/2, -1/2, 1/3) and more generally
+ *  SFS(S^2 | 1/2, -1/2, 1/k) == SFS( RP^2 | k ) with fundamental group
+ *  < b, f | bfb^-1 = f^-1, b^2f^k > these are all finite groups. 
+ *
+ * Over S^1xS^1 there is...
+ *
+ * Over S^1 x~ S^1 there is...
+ *
+ * Over \Sigma_2 there is...
+ *
+ * Over \Sigma_{-3} there is...
+ *
+ * I'll extend the algorithm provided \Sigma_2 or \Sigma_{-3}'s are found
+ *  in the census. 
+ *
+ * We should probably alter the return value to something more informative, 
+ * eventually. 
+ *
+ * Will return an empty string if could not identify fundamental group in this
+ * class. 
+ */
+std::string NGroupPresentation::identify_circle_bundle_over_surface()
+{
+ // start with the most readily-computable invariant, H_1
+ std::auto_ptr< NAbelianGroup > ab( abelianisation() );
+ std::stringstream retval;
+
+ // rank 0
+ if (ab.get()->getRank()==0)
+  {
+   if (nGenerators==0) return std::string("S3");
+   if (nGenerators==1) { // Lens space
+     unsigned long ord( ab.get()->getInvariantFactor(0).longValue() );
+     retval<<"L("<<ord<<",";
+     if (ord<5) retval<<"1"; else retval<<"?";
+     retval<<")";
+     return retval.str();
+    }
+   // we need to also recognise the SFS(S^2 : 1/2, -1/2, 1/k) manifolds, 
+   // equivalently SFS(RP^2 : k).  These are orientable manifolds. 
+   if ( (nGenerators==2) && (relations.size()==2) ) {
+       // these groups have reduced presentations of the form
+       // < b, f | bfb^-1 = f^-1, b^2f^k > we need to be a little careful
+       // about seeing them
+     
+     }  // end 2 gen, 2 relator group
+   } // end ab is finite.
+
+ // rank 1
+ if (ab.get()->getRank()==1)
+  {}
+ //  cyclic
+
+ // rank 2
+ if (ab.get()->getRank()==2)
+  {}
+
+ // TODO: higher-rank cases
+
+ return std::string();
+}
+
 
 bool NGroupPresentation::nielsenTransposition(const unsigned long &i, 
                                               const unsigned long &j)
@@ -1227,8 +1411,10 @@ bool NGroupPresentation::nielsenCombine(const unsigned long &i,
 
 
 // these macros are used only in the identify_extension_over_Z routine below.
+namespace { // anonymous namespace to ensure not put in the library
 #define idx(gen, cov) ((unsigned long)(gen-1)+nGm1*cov)
 #define unidx(dat) std::pair<unsigned long, unsigned long>((dat % nGm1)+1, dat/nGm1)
+}
 
 // if presentation is of a group that can bet written as an extension
 //  0 --> A --> G --> Z --> 0
@@ -1447,7 +1633,7 @@ std::auto_ptr< NHomGroupPresentation >
   { // increment the words in tempTable
    for ( std::list< NGroupExpression >::iterator I=tempTable.begin(); 
          I != tempTable.end(); I++)
-   { 
+   {
     std::list< NGroupExpressionTerm >& It(I->getTerms() );
     for (std::list<NGroupExpressionTerm>::iterator J=It.begin();
          J!=It.end(); J++)
@@ -1532,6 +1718,7 @@ bool NGroupPresentation::isValid() const
  *  4) Makes elementary simplifications to aid in seeing standard
  *     relators like commutators. 
  */
+namespace { // anonymous namespace
 bool compare_words(const NGroupExpression* first, 
                    const NGroupExpression* second)
 {
@@ -1586,6 +1773,7 @@ bool compare_words(const NGroupExpression* first,
  // exactly the same words. 
  return false;
 }
+} // end anonymous namespace
 
 bool NGroupPresentation::prettyRewriting()
 { return prettyRewritingDetail().get(); }
@@ -1598,10 +1786,7 @@ std::auto_ptr<NHomGroupPresentation> NGroupPresentation::prettyRewritingDetail()
  std::list<NGroupExpression*> relatorPile;
  for (unsigned long i=0; i<relations.size(); i++)
   relatorPile.push_back( relations[i] );
- NGroupPresentation oldPres(*this); // copy this presentation for return constructor
-
- // begin the loop: find length 1, simplify others, delete length 0... repeat
- //  if we did simplify any relators. 
+ NGroupPresentation oldPres(*this); 
 
  // step 1: cyclic reduce relators. Delete length 0 relators. 
  //         delete generators corresponding to length 1 relators
@@ -1609,7 +1794,7 @@ std::auto_ptr<NHomGroupPresentation> NGroupPresentation::prettyRewritingDetail()
  for ( it = relatorPile.begin(); it != relatorPile.end(); it++ ) 
     (*it)->simplify(true);
 
- std::set<unsigned long> genToDel; // keep track of which generators we've eliminated
+ std::set<unsigned long> genToDel; // generators we've eliminated
  bool reloopFlag(true);
  while (reloopFlag)
   {
@@ -1710,10 +1895,6 @@ std::auto_ptr<NHomGroupPresentation> NGroupPresentation::prettyRewritingDetail()
     while ( relations[i]->getTerm(0).generator != smallestGen )
      relations[i]->cycleRight();
   }
-
- // step 6: TODO keep track of 1 and 2 letter words in relators, try to clean
- //         up as much as possible so that commutators are identified and
- //         written in the form aba^-1b^-1
 
  return std::auto_ptr<NHomGroupPresentation>( redMap.release() );
 }
