@@ -38,10 +38,13 @@
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
+
+#include "testsuite/exhaustive.h"
 #include "testsuite/angle/testangle.h"
 
 using regina::NAngleStructure;
 using regina::NAngleStructureList;
+using regina::NAngleStructureVector;
 using regina::NExampleTriangulation;
 using regina::NTetrahedron;
 using regina::NTriangulation;
@@ -56,6 +59,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(loopC2);
     CPPUNIT_TEST(taut);
     CPPUNIT_TEST(tautVsAll);
+    CPPUNIT_TEST(tautStrictTreeVsDD);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -387,6 +391,174 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
 
             verifyTautVsAll(&triEmpty, "the empty triangulation");
             verifyTautVsAll(&triOneTet, "a standalone tetrahedron");
+        }
+
+        static bool lexLess(const NAngleStructureVector* a,
+                const NAngleStructureVector* b) {
+            for (unsigned i = 0; i < a->size(); ++i) {
+                if ((*a)[i] < (*b)[i])
+                    return true;
+                if ((*a)[i] > (*b)[i])
+                    return false;
+            }
+            return false;
+        }
+
+        static bool identical(const NAngleStructureList* lhs,
+                const NAngleStructureList* rhs) {
+            if (lhs->getNumberOfStructures() != rhs->getNumberOfStructures())
+                return false;
+
+            unsigned long n = lhs->getNumberOfStructures();
+            if (n == 0)
+                return true;
+
+            typedef const NAngleStructureVector* VecPtr;
+            VecPtr* lhsRaw = new VecPtr[n];
+            VecPtr* rhsRaw = new VecPtr[n];
+
+            unsigned long i;
+            for (i = 0; i < n; ++i) {
+                lhsRaw[i] = lhs->getStructure(i)->rawVector();
+                rhsRaw[i] = rhs->getStructure(i)->rawVector();
+            }
+
+            std::sort(lhsRaw, lhsRaw + n, lexLess);
+            std::sort(rhsRaw, rhsRaw + n, lexLess);
+
+            bool ok = true;
+            for (i = 0; i < n; ++i)
+                if (! (*(lhsRaw[i]) == *(rhsRaw[i]))) {
+                    ok = false;
+                    break;
+                }
+
+            delete[] lhsRaw;
+            delete[] rhsRaw;
+            return ok;
+        }
+
+        static bool identicalTaut(const NAngleStructureList* all,
+                const NAngleStructureList* taut) {
+            if (all->getNumberOfStructures() < taut->getNumberOfStructures())
+                return false;
+
+            unsigned long nAll = all->getNumberOfStructures();
+            unsigned long nTaut = taut->getNumberOfStructures();
+
+            typedef const NAngleStructureVector* VecPtr;
+            VecPtr* allRaw = new VecPtr[nAll + 1];
+            VecPtr* tautRaw = new VecPtr[nTaut + 1];
+
+            unsigned long i;
+            unsigned long foundAll = 0;
+            for (i = 0; i < nAll; ++i)
+                if (all->getStructure(i)->isTaut())
+                    allRaw[foundAll++] = all->getStructure(i)->rawVector();
+            for (i = 0; i < nTaut; ++i)
+                tautRaw[i] = taut->getStructure(i)->rawVector();
+
+            if (foundAll != nTaut) {
+                delete[] allRaw;
+                delete[] tautRaw;
+                return false;
+            }
+
+            std::sort(allRaw, allRaw + nTaut, lexLess);
+            std::sort(tautRaw, tautRaw + nTaut, lexLess);
+
+            bool ok = true;
+            for (i = 0; i < nTaut; ++i)
+                if (! (*(allRaw[i]) == *(tautRaw[i]))) {
+                    ok = false;
+                    break;
+                }
+
+            delete[] allRaw;
+            delete[] tautRaw;
+            return ok;
+        }
+
+        static void verifyTreeVsDD(NTriangulation* tri) {
+            NAngleStructureList* all = NAngleStructureList::enumerate(
+                tri, false);
+            NAngleStructureList* tautTree = NAngleStructureList::enumerate(
+                tri, true);
+            NAngleStructureList* tautDD = NAngleStructureList::enumerateTautDD(
+                tri);
+            NAngleStructure* strictTree = tri->hasStrictAngleStructure();
+
+            if (all->isTautOnly()) {
+                std::ostringstream msg;
+                msg << "Vertex angle structure enumeration gives "
+                    "incorrect flags for " << tri->getPacketLabel() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (! tautTree->isTautOnly()) {
+                std::ostringstream msg;
+                msg << "Taut angle structure enumeration (tree) gives "
+                    "incorrect flags for " << tri->getPacketLabel() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (! tautDD->isTautOnly()) {
+                std::ostringstream msg;
+                msg << "Taut angle structure enumeration (DD) gives "
+                    "incorrect flags for " << tri->getPacketLabel() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (all->spansTaut() != tautTree->spansTaut() ||
+                    all->spansTaut() != tautDD->spansTaut()) {
+                std::ostringstream msg;
+                msg << "Flag for spansTaut() mismatched between "
+                    "different enumeration methods for "
+                    << tri->getPacketLabel() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (all->spansStrict() && ! strictTree) {
+                std::ostringstream msg;
+                msg << "Finding a strict angle structure (tree) gives "
+                    "no solution when one should exist for "
+                    << tri->getPacketLabel() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (strictTree && ! all->spansStrict()) {
+                std::ostringstream msg;
+                msg << "Finding a strict angle structure (tree) gives "
+                    "a solution when none should exist for "
+                    << tri->getPacketLabel() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (! identical(tautTree, tautDD)) {
+                std::ostringstream msg;
+                msg << "Taut angle structure enumeration gives "
+                    "different solutions for tree vs DD for "
+                    << tri->getPacketLabel() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (! identicalTaut(all, tautTree)) {
+                std::ostringstream msg;
+                msg << "Taut angle structure enumeration (tree) gives "
+                    "different taut solutions from full vertex enumeration "
+                    "for "<< tri->getPacketLabel() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            delete all;
+            delete tautTree;
+            delete tautDD;
+            delete strictTree;
+        }
+
+        void tautStrictTreeVsDD() {
+            runCensusAllIdeal(verifyTreeVsDD);
+            runCensusAllClosed(verifyTreeVsDD); // Should be no solns.
+            runCensusAllBounded(verifyTreeVsDD); // May have partial solns.
         }
 };
 
