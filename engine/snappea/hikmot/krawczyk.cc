@@ -6,11 +6,11 @@
 #include "kv/rdouble.hpp"
 #include "kv/complex.hpp"
 
+namespace regina {
+
 namespace ub = boost::numeric::ublas;
 
 typedef regina::kv::interval<double> itvd;
-
-namespace regina {
 
 class Krawczyk {
 	public:

@@ -14,20 +14,21 @@
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
 #include <boost/numeric/bindings/lapack/gesv.hpp>
 #include <boost/numeric/bindings/blas/blas3.hpp>
-namespace bnb = boost::numeric::bindings;
 #endif
 
 #ifdef USE_ATLAS
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
 #include <boost/numeric/bindings/atlas/clapack.hpp>
 #include <boost/numeric/bindings/atlas/cblas3.hpp>
-namespace bnb = boost::numeric::bindings;
 #endif
 
 
-namespace ub = boost::numeric::ublas;
-
 namespace regina { namespace kv {
+
+namespace ub = boost::numeric::ublas;
+#if defined(USE_LAPACK) || defined(USE_ATLAS)
+namespace bnb = boost::numeric::bindings;
+#endif
 
 template <class T>
 bool invert(const ub::matrix<T>& a, ub::matrix<T>& b) {

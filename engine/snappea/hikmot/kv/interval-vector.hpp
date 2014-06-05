@@ -11,9 +11,9 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include <snappea/hikmot/kv/interval.hpp>
 
-namespace ub = boost::numeric::ublas;
-
 namespace regina { namespace kv {
+
+namespace ub = boost::numeric::ublas;
 
 template <class T> inline ub::vector<T> mid (const ub::vector< interval<T> >& I) {
 	int i;

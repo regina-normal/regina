@@ -19,9 +19,9 @@
 #include <snappea/hikmot/kv/matrix-inversion.hpp>
 #include <snappea/hikmot/kv/make-candidate.hpp>
 
-namespace ub = boost::numeric::ublas;
-
 namespace regina { namespace kv {
+
+namespace ub = boost::numeric::ublas;
 
 template <class T, class F>
 bool

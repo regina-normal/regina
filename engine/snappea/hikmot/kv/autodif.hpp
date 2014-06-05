@@ -16,10 +16,10 @@
 #include <snappea/hikmot/kv/convert.hpp>
 
 
+namespace regina { namespace kv {
+
 namespace ub = boost::numeric::ublas;
 
-
-namespace regina { namespace kv {
 
 	template <class T> class autodif;
 	template <class C, class T> struct convertible<C, autodif<T> > {
