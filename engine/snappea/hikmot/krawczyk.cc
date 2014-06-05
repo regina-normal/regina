@@ -1,4 +1,6 @@
+#if 0
 #include <Python.h>
+#endif
 #include <iostream>
 #include "kv/kraw-approx.hpp"
 #include "kv/rdouble.hpp"
@@ -79,6 +81,7 @@ template <class F> class ComplexReal {
 };
 
 
+#if 0
 // python interface
 
 PyObject* krawczyk(PyObject* self, PyObject* args)
@@ -236,3 +239,4 @@ static PyMethodDef krawczykmethods[] = {
 extern "C" void initkrawczyk() {
 	Py_InitModule("krawczyk", krawczykmethods);
 }
+#endif
