@@ -8,7 +8,7 @@
 #include <boost/type_traits.hpp>
 #include <boost/utility/enable_if.hpp>
 
-namespace kv {
+namespace regina { namespace kv {
 	// C is convertible to T or not
 	template <class C, class T> struct convertible {
 		static const bool value = boost::is_convertible<C, T>::value;
@@ -17,6 +17,6 @@ namespace kv {
 	template <class C, class T> struct acceptable_n;
 	// C is acceptable as string constant of T
 	template <class C, class T> struct acceptable_s;
-}
+} }
 
 #endif // CONVERT_HPP

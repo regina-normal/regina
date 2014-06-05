@@ -8,8 +8,9 @@
 
 namespace ub = boost::numeric::ublas;
 
-typedef kv::interval<double> itvd;
+typedef regina::kv::interval<double> itvd;
 
+namespace regina {
 
 class Krawczyk {
 	public:
@@ -62,11 +63,11 @@ template <class F> class ComplexReal {
 		int m = n / 2;
 		int i;
 		ub::vector<T> y(n);
-		ub::vector< kv::complex<T> > xc(m);
-		ub::vector< kv::complex<T> > yc(m);
+		ub::vector< regina::kv::complex<T> > xc(m);
+		ub::vector< regina::kv::complex<T> > yc(m);
 
 		for (i=0; i<m; i++) {
-			xc(i) = kv::complex<T>(x(i*2), x(i*2+1));
+			xc(i) = regina::kv::complex<T>(x(i*2), x(i*2+1));
 		}
 
 		yc = f(xc);
@@ -79,6 +80,8 @@ template <class F> class ComplexReal {
 		return y;
 	}
 };
+
+} // namespace regina
 
 
 #if 0

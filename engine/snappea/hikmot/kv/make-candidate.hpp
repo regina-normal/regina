@@ -11,7 +11,7 @@
  * calculate radius of candidate set from newton step vector
  */
 
-namespace kv {
+namespace regina { namespace kv {
 
 template <class T> void make_candidate(boost::numeric::ublas::vector<T>& x)
 {
@@ -26,6 +26,6 @@ template <class T> void make_candidate(boost::numeric::ublas::vector<T>& x)
 	for (i=0; i<n; i++) x(i) = 2. * m;
 }
 
-} // namespace kv
+} } // namespace regina::kv
 
 #endif // MAKE_CANDIDATE_HPP

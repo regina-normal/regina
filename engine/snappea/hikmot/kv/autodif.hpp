@@ -19,7 +19,7 @@
 namespace ub = boost::numeric::ublas;
 
 
-namespace kv {
+namespace regina { namespace kv {
 
 	template <class T> class autodif;
 	template <class C, class T> struct convertible<C, autodif<T> > {
@@ -42,12 +42,12 @@ template <class T> class autodif {
 		d.resize(0);
 	}
 
-	template <class C> explicit autodif(const C& x, typename boost::enable_if_c< kv::acceptable_n<C, autodif>::value >::type* =0) {
+	template <class C> explicit autodif(const C& x, typename boost::enable_if_c< regina::kv::acceptable_n<C, autodif>::value >::type* =0) {
 		v = x;
 		d.resize(0);
 	}
 
-	template <class C> typename boost::enable_if_c< kv::acceptable_n<C, autodif>::value, autodif& >::type operator=(const C& x) {
+	template <class C> typename boost::enable_if_c< regina::kv::acceptable_n<C, autodif>::value, autodif& >::type operator=(const C& x) {
 		v = x;
 		d.resize(0);
 		return *this;
@@ -69,7 +69,7 @@ template <class T> class autodif {
 		return r;
 	}
 
-	template <class C> friend typename boost::enable_if_c< kv::acceptable_n<C, autodif>::value, autodif >::type operator+(const autodif& a, const C& b) {
+	template <class C> friend typename boost::enable_if_c< regina::kv::acceptable_n<C, autodif>::value, autodif >::type operator+(const autodif& a, const C& b) {
 		autodif r;
 
 		r.v = a.v + b;
@@ -78,7 +78,7 @@ template <class T> class autodif {
 		return r;
 	}
 
-	template <class C> friend typename boost::enable_if_c< kv::acceptable_n<C, autodif>::value, autodif >::type operator+(const C& a, const autodif& b) {
+	template <class C> friend typename boost::enable_if_c< regina::kv::acceptable_n<C, autodif>::value, autodif >::type operator+(const C& a, const autodif& b) {
 		autodif r;
 
 		r.v = a + b.v;
@@ -92,7 +92,7 @@ template <class T> class autodif {
 		return a;
 	}
 
-	template <class C> friend typename boost::enable_if_c< kv::acceptable_n<C, autodif>::value, autodif& >::type operator+=(autodif& a, const C& b) {
+	template <class C> friend typename boost::enable_if_c< regina::kv::acceptable_n<C, autodif>::value, autodif& >::type operator+=(autodif& a, const C& b) {
 		a.v += b;
 		return a;
 	}
@@ -113,7 +113,7 @@ template <class T> class autodif {
 		return r;
 	}
 
-	template <class C> friend typename boost::enable_if_c< kv::acceptable_n<C, autodif>::value, autodif >::type operator-(const autodif& a, const C& b) {
+	template <class C> friend typename boost::enable_if_c< regina::kv::acceptable_n<C, autodif>::value, autodif >::type operator-(const autodif& a, const C& b) {
 		autodif r;
 
 		r.v = a.v - b;
@@ -122,7 +122,7 @@ template <class T> class autodif {
 		return r;
 	}
 
-	template <class C> friend typename boost::enable_if_c< kv::acceptable_n<C, autodif>::value, autodif >::type operator-(const C& a, const autodif& b) {
+	template <class C> friend typename boost::enable_if_c< regina::kv::acceptable_n<C, autodif>::value, autodif >::type operator-(const C& a, const autodif& b) {
 		autodif r;
 
 		r.v = a - b.v;
@@ -136,7 +136,7 @@ template <class T> class autodif {
 		return a;
 	}
 
-	template <class C> friend typename boost::enable_if_c< kv::acceptable_n<C, autodif>::value, autodif& >::type operator-=(autodif& a, const C& b) {
+	template <class C> friend typename boost::enable_if_c< regina::kv::acceptable_n<C, autodif>::value, autodif& >::type operator-=(autodif& a, const C& b) {
 		a.v -= b;
 		return a;
 	}
@@ -166,7 +166,7 @@ template <class T> class autodif {
 		return r;
 	}
 
-	template <class C> friend typename boost::enable_if_c< kv::acceptable_n<C, autodif>::value, autodif >::type operator*(const autodif& a, const C& b) {
+	template <class C> friend typename boost::enable_if_c< regina::kv::acceptable_n<C, autodif>::value, autodif >::type operator*(const autodif& a, const C& b) {
 		autodif r;
 
 		r.v = a.v * b;
@@ -176,7 +176,7 @@ template <class T> class autodif {
 		return r;
 	}
 
-	template <class C> friend typename boost::enable_if_c< kv::acceptable_n<C, autodif>::value, autodif >::type operator*(const C& a, const autodif& b) {
+	template <class C> friend typename boost::enable_if_c< regina::kv::acceptable_n<C, autodif>::value, autodif >::type operator*(const C& a, const autodif& b) {
 		autodif r;
 
 		r.v = a * b.v;
@@ -191,7 +191,7 @@ template <class T> class autodif {
 		return a;
 	}
 
-	template <class C> friend typename boost::enable_if_c< kv::acceptable_n<C, autodif>::value, autodif& >::type operator*=(autodif& a, const C& b) {
+	template <class C> friend typename boost::enable_if_c< regina::kv::acceptable_n<C, autodif>::value, autodif& >::type operator*=(autodif& a, const C& b) {
 		a.v *= b;
 		// a.r *= b;
 		a.r *= T(b); // assist for VC++
@@ -214,7 +214,7 @@ template <class T> class autodif {
 		return r;
 	}
 
-	template <class C> friend typename boost::enable_if_c< kv::acceptable_n<C, autodif>::value, autodif >::type operator/(const autodif& a, const C& b) {
+	template <class C> friend typename boost::enable_if_c< regina::kv::acceptable_n<C, autodif>::value, autodif >::type operator/(const autodif& a, const C& b) {
 		autodif r;
 
 		r.v = a.v / b;
@@ -224,7 +224,7 @@ template <class T> class autodif {
 		return r;
 	}
 
-	template <class C> friend typename boost::enable_if_c< kv::acceptable_n<C, autodif>::value, autodif >::type operator/(const C& a, const autodif& b) {
+	template <class C> friend typename boost::enable_if_c< regina::kv::acceptable_n<C, autodif>::value, autodif >::type operator/(const C& a, const autodif& b) {
 		autodif r;
 
 		r.v = a / b.v;
@@ -238,7 +238,7 @@ template <class T> class autodif {
 		return a;
 	}
 
-	template <class C> friend typename boost::enable_if_c< kv::acceptable_n<C, autodif>::value, autodif& >::type operator/=(autodif& a, const C& b) {
+	template <class C> friend typename boost::enable_if_c< regina::kv::acceptable_n<C, autodif>::value, autodif& >::type operator/=(autodif& a, const C& b) {
 		a.v /= b;
 		// a.d /= b;
 		a.d /= T(b); // assist for VC++
@@ -571,6 +571,6 @@ template <class T> class autodif {
 	}
 };
 
-} // namespace kv
+} } // namespace regina::kv
 
 #endif //AUTODIF_HPP

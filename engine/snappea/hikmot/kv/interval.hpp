@@ -15,7 +15,7 @@
 #include <snappea/hikmot/kv/constants.hpp>
 
 
-namespace kv {
+namespace regina { namespace kv {
 
 template <class T> struct rop {
 
@@ -1698,6 +1698,6 @@ template <class T> struct constants< interval<T> > {
 	}
 };
 
-} // namespace kv
+} } // namespace regina::kv
 
 #endif // INTERVAL_HPP

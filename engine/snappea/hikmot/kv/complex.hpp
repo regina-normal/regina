@@ -11,7 +11,7 @@
 #include <snappea/hikmot/kv/convert.hpp>
 
 
-namespace kv {
+namespace regina { namespace kv {
 
 
 template <class T> class complex;
@@ -377,6 +377,6 @@ template <class T> class complex {
 	}
 };
 
-} // namespace kv
+} } // namespace regina::kv
 
 #endif // COMPLEX_HPP

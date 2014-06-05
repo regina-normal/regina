@@ -19,7 +19,7 @@
   #endif
 #endif
 
-namespace kv {
+namespace regina { namespace kv {
 
 #if defined(KV_FASTROUND)
 
@@ -110,6 +110,6 @@ struct hwround {
 #endif
 #endif
 
-} // namespace kv
+} } // namespace regina::kv
 
 #endif // HWROUND_HPP

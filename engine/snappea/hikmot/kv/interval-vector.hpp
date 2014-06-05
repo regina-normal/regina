@@ -13,7 +13,7 @@
 
 namespace ub = boost::numeric::ublas;
 
-namespace kv {
+namespace regina { namespace kv {
 
 template <class T> inline ub::vector<T> mid (const ub::vector< interval<T> >& I) {
 	int i;
@@ -296,6 +296,6 @@ template <class T> inline T max_norm (const ub::matrix< interval<T> >& x) {
 	return r;
 }
 
-} // namespace kv
+} } // namespace regina::kv
 
 #endif // INTERVAL_VECTOR_HPP

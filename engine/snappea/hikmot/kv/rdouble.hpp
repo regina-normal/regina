@@ -16,7 +16,7 @@
 #include <cstdlib>
 #include <snappea/hikmot/kv/hwround.hpp>
 
-namespace kv {
+namespace regina { namespace kv {
 
 template <> struct rop <double> {
 
@@ -765,6 +765,6 @@ template <> struct rop <double> {
 	}
 };
 
-} // namespace kv
+} } // namespace regina::kv
 
 #endif // RDOUBLE_HPP

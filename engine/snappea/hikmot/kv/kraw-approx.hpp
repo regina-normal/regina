@@ -21,7 +21,7 @@
 
 namespace ub = boost::numeric::ublas;
 
-namespace kv {
+namespace regina { namespace kv {
 
 template <class T, class F>
 bool
@@ -122,6 +122,6 @@ krawczyk_approx(F f, ub::vector<T>& c, ub::vector< interval<T> >& result, ub::ve
 	}
 }
 
-} // namespace kv
+} } // namespace regina::kv
 
 #endif // KRAW_APPROX_HPP

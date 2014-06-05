@@ -8,7 +8,7 @@
 #include <iostream>
 #include <string>
 
-namespace kv {
+namespace regina { namespace kv {
 
 template <class T> struct constants {
 	static T pi() {
@@ -58,6 +58,6 @@ template <> struct constants<double> {
 	}
 };
 
-} // namespace kv
+} } // namespace regina::kv
 
 #endif // CONSTANTS_HPP
