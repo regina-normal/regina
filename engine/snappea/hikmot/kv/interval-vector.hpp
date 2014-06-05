@@ -9,7 +9,7 @@
 
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
-#include <kv/interval.hpp>
+#include <snappea/hikmot/kv/interval.hpp>
 
 namespace ub = boost::numeric::ublas;
 

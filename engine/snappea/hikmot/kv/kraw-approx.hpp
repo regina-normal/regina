@@ -12,12 +12,12 @@
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/io.hpp>
-#include <kv/interval.hpp>
-#include <kv/rdouble.hpp>
-#include <kv/interval-vector.hpp>
-#include <kv/autodif.hpp>
-#include <kv/matrix-inversion.hpp>
-#include <kv/make-candidate.hpp>
+#include <snappea/hikmot/kv/interval.hpp>
+#include <snappea/hikmot/kv/rdouble.hpp>
+#include <snappea/hikmot/kv/interval-vector.hpp>
+#include <snappea/hikmot/kv/autodif.hpp>
+#include <snappea/hikmot/kv/matrix-inversion.hpp>
+#include <snappea/hikmot/kv/make-candidate.hpp>
 
 namespace ub = boost::numeric::ublas;
 

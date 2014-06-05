@@ -11,8 +11,8 @@
 #include <cmath>
 #include <string>
 
-#include <kv/convert.hpp>
-#include <kv/constants.hpp>
+#include <snappea/hikmot/kv/convert.hpp>
+#include <snappea/hikmot/kv/constants.hpp>
 
 
 namespace kv {

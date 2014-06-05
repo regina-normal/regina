@@ -13,7 +13,7 @@
 #include <boost/numeric/ublas/io.hpp>
 #include <cmath>
 
-#include <kv/convert.hpp>
+#include <snappea/hikmot/kv/convert.hpp>
 
 
 namespace ub = boost::numeric::ublas;
