@@ -234,6 +234,15 @@ class REGINA_API NExampleTriangulation {
         static NTriangulation* figureEightKnotComplement();
 
         /**
+         * Returns a two-tetrahedron ideal triangulation of the trefoil
+         * knot complement.
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static NTriangulation* trefoilKnotComplement();
+
+        /**
          * Returns a four-tetrahedron ideal triangulation of the
          * Whitehead link complement.
          *

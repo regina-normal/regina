@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,38 +32,41 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
-#include "triangulation/nboundarycomponent.h"
-#include "triangulation/nedge.h"
-#include "triangulation/ntriangle.h"
-#include "triangulation/nvertex.h"
+#include "angle/nanglestructure.h"
+#include "enumerate/ntreeconstraint.h"
+#include "enumerate/ntreelp.h"
+#include "triangulation/ntriangulation.h"
 
-using namespace boost::python;
-using regina::NBoundaryComponent;
+namespace regina {
 
-void addNBoundaryComponent() {
-    class_<NBoundaryComponent, bases<regina::ShareableObject>,
-            std::auto_ptr<NBoundaryComponent>, boost::noncopyable>
-            ("NBoundaryComponent", no_init)
-        .def("getNumberOfFaces", &NBoundaryComponent::getNumberOfFaces)
-        .def("getNumberOfTriangles", &NBoundaryComponent::getNumberOfTriangles)
-        .def("getNumberOfEdges", &NBoundaryComponent::getNumberOfEdges)
-        .def("getNumberOfVertices", &NBoundaryComponent::getNumberOfVertices)
-        .def("getFace", &NBoundaryComponent::getFace,
-            return_value_policy<reference_existing_object>())
-        .def("getTriangle", &NBoundaryComponent::getTriangle,
-            return_value_policy<reference_existing_object>())
-        .def("getEdge", &NBoundaryComponent::getEdge,
-            return_value_policy<reference_existing_object>())
-        .def("getVertex", &NBoundaryComponent::getVertex,
-            return_value_policy<reference_existing_object>())
-        .def("getComponent", &NBoundaryComponent::getComponent,
-            return_value_policy<reference_existing_object>())
-        .def("getEulerChar", &NBoundaryComponent::getEulerChar)
-        .def("getEulerCharacteristic",
-            &NBoundaryComponent::getEulerCharacteristic)
-        .def("isIdeal", &NBoundaryComponent::isIdeal)
-        .def("isOrientable", &NBoundaryComponent::isOrientable)
-    ;
+NAngleStructure* NTriangulation::hasStrictAngleStructure() {
+    // Knock off the empty triangulation first.
+    if (tetrahedra.empty())
+        return 0;
+
+    LPInitialTableaux<LPConstraintNone> eqns(this, NS_ANGLE, false);
+
+    LPData<LPConstraintNone, NInteger> lp;
+    lp.reserve(&eqns);
+
+    // Find an initial basis.
+    lp.initStart();
+
+    // Set all angles to be strictly positive.
+    unsigned i;
+    for (i = 0; i < eqns.columns(); ++i)
+        lp.constrainPositive(i);
+
+    // Test for a solution!
+    if (! lp.isFeasible())
+        return 0;
+
+    // We have a strict angle structure: reconstruct it.
+    unsigned long len = 3 * tetrahedra.size() + 1;
+    NAngleStructureVector* v = new NAngleStructureVector(len);
+    lp.extractSolution(*v, 0 /* type vector */);
+    return new NAngleStructure(this, v);
 }
+
+} // namespace regina
 
