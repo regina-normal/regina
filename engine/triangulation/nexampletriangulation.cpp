@@ -316,6 +316,20 @@ NTriangulation* NExampleTriangulation::figureEightKnotComplement() {
     return ans;
 }
 
+NTriangulation* NExampleTriangulation::trefoilKnotComplement() {
+    NTriangulation* ans = new NTriangulation();
+    ans->setPacketLabel("Trefoil knot complement");
+
+    NTetrahedron* r = ans->newTetrahedron();
+    NTetrahedron* s = ans->newTetrahedron();
+    r->joinTo(0, s, NPerm4(2, 3));
+    r->joinTo(1, s, NPerm4(2, 3));
+    r->joinTo(2, s, NPerm4(1, 3));
+    r->joinTo(3, s, NPerm4(0, 2));
+
+    return ans;
+}
+
 NTriangulation* NExampleTriangulation::whiteheadLinkComplement() {
     NTriangulation* ans = new NTriangulation();
     ans->setPacketLabel("Whitehead link complement");

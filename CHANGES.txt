@@ -37,6 +37,12 @@ Version 5.0  [ (under development) ]
 Version 4.96  [ (under development) ]
 
     ENGINE:
+        Class BanConstraintBase (and subclasses):
+            - Extended the tree traversal / linear programming machinery to
+              work with angle structures.  This is used for enumerating all
+              taut angle structures, or finding a single strict angle structure.
+        Class Dim2BoundaryComponent:
+            - New convenience routine getComponent().
         Class Dim2Component:
             - New routine getNumberOfBoundaryEdges().
         Class Dim2EdgeEmbedding:
@@ -55,9 +61,26 @@ Version 4.96  [ (under development) ]
               NTriangulation.
         Class Dim2VertexEmbedding:
             - New convenience operators == and !=.
+        Class LPConstraintBase (and subclasses), LPData, LPInitialTableaux,
+              LPMatrix:
+            - Extended the tree traversal / linear programming machinery to
+              work with angle structures.  This is used for enumerating all
+              taut angle structures, or finding a single strict angle structure.
         Class NAbelianGroup:
             - New convenience operator !=.
+        Class NAngleStructure:
+            - New convenience routine rawVector().
+        Class NAngleStructureList:
+            - Enumeration of taut angle strutures now uses Regina's tree
+              traversal / linear programming machinery, which is *much*
+              faster than the old double description method.
+            - The new routine enumerateTautDD() allows users to access the
+              older (and much slower) double description method if required.
+        Class NAngleStructureVector:
+            - New routine makeAngleEquations() to build the angle structure
+              equations independently of an angle structure list.
         Class NBoundaryComponent:
+            - New convenience routine getComponent().
             - Renamed getEulerCharacteristic() to getEulerChar(), which
               is easier on the fingers.  The old name has been kept as a
               deprecated alias for backward compatibility.
@@ -66,6 +89,8 @@ Version 4.96  [ (under development) ]
               census of cusped finite volume hyperbolic 3-manifolds.
         Class NComponent:
             - New routine getNumberOfBoundaryTriangles().
+        Class NExampleTriangulation:
+            - New example trefoilKnotComplement().
         Class NFaceEmbedding:
             - New convenience operators == and !=.
         Class NGenericTriangulation:
@@ -90,6 +115,8 @@ Version 4.96  [ (under development) ]
               deprecated alias for backward compatibility.
             - Renamed the protected routine calculateEulerCharacteristic() to
               calculateEulerChar().
+        Enum NormalCoords:
+            - New coordinate system NS_ANGLE for use with angle structures.
         Class NPerm3, NPerm4, NPerm5:
             - New dimension-agnostic alias invSn.
             - Changed the type of NPerm3::invS3 from int to unsigned,
@@ -106,14 +133,25 @@ Version 4.96  [ (under development) ]
               curves on the cusp as its (meridian, longitude) basis.
               This reverts a change in behaviour from the previous release
               caused by the recent sync with the SnapPy 2.0.3 kernel.
+        Class NTautEnumeration:
+            - New class for enumerating taut angle structures that uses
+              Regina's tree traversal / linear programming machinery.
+              This is *much* faster than the old double description method.
+        Class NTreeTraversal:
+            - Extended the tree traversal / linear programming machinery to
+              work with angle structures.  This is used for enumerating all
+              taut angle structures, or finding a single strict angle structure.
         Class NTriangleEmbedding:
             - New convenience operators == and !=.
         Class NTriangulation:
+            - New routine hasStrictAngleStructure(), which uses fast
+              linear programming machinery.
             - Routine connectedSumDecomposition() now works for non-orientable
-              triangulations also.  There is a caveat if there are embedded
-              two-sided projective planes (see the documentation for details),
-              and so the return type is now a signed long to allow for error
-              conditions to be returned.
+              triangulations also (arXiv:1212.1441).  There is a caveat if
+              there are embedded two-sided projective planes (see the
+              documentation for details), and so the return type is now a
+              signed long to allow for error conditions to be returned.
+            - New routine connectedSumWith() for building connected sums.
             - New routine isIdenticalTo().
             - New local modification oneFourMove().
             - New routines findAllIsomorphisms() and makeCanonical().
@@ -123,6 +161,7 @@ Version 4.96  [ (under development) ]
               NGenericTriangulation instead of using wrappers.
               See the NGenericTriangulation notes above for details.
             - New routine getNumberOfBoundaryTriangles().
+            - New routine puncture().
         Class NVertex:
             - Renamed getLinkEulerCharacteristic() to getLinkEulerChar(), which
               is easier on the fingers.  The old name has been kept as a

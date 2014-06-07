@@ -49,6 +49,7 @@
 
 namespace regina {
 
+class Dim4Component;
 class Dim4Edge;
 class Dim4Tetrahedron;
 class Dim4Pentachoron;
@@ -226,6 +227,14 @@ class REGINA_API Dim4BoundaryComponent :
         Dim4Vertex* getVertex(unsigned long index) const;
 
         /**
+         * Returns the component of the triangulation to which this
+         * boundary component belongs.
+         *
+         * @return the component containing this boundary component.
+         */
+        Dim4Component* getComponent() const;
+
+        /**
          * Returns the full 3-manifold triangulation of this boundary
          * component.  Note that this triangulation is read-only (though
          * of course you can clone it and then operate upon the clone).
@@ -361,6 +370,11 @@ inline Dim4Edge* Dim4BoundaryComponent::getEdge(unsigned long index) const {
 
 inline Dim4Vertex* Dim4BoundaryComponent::getVertex(unsigned long index) const {
     return vertices_[index];
+}
+
+inline Dim4Component* Dim4BoundaryComponent::getComponent() const {
+    // There may be no tetrahedra, but there is always a vertex.
+    return vertices_.front()->getComponent();
 }
 
 inline const NTriangulation* Dim4BoundaryComponent::getTriangulation() const {
