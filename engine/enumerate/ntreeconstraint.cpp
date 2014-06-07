@@ -126,7 +126,8 @@ bool LPConstraintNonSpun::addRows(
 BanConstraintBase::BanConstraintBase(NTriangulation* tri, int coords) :
         tri_(tri), coords_(coords) {
     unsigned nCols = (coords == NS_QUAD || coords == NS_AN_QUAD_OCT ?
-        3 * tri->getNumberOfTetrahedra() :
+            3 * tri->getNumberOfTetrahedra() :
+        coords == NS_ANGLE ? 3 * tri->getNumberOfTetrahedra() + 1 :
         7 * tri->getNumberOfTetrahedra());
     banned_ = new bool[nCols];
     marked_ = new bool[nCols];

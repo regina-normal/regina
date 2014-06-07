@@ -36,7 +36,8 @@ Don't forget:
     what's this & tooltips
     documentation in handbook, feature set, index & file format
     any new tips of the day?
-    journal references (www, KDE docs, example files, headers)
+    journal references (www, KDE docs, example files, headers;
+        search for arXiv and "to appear")
     check that all headers are installed correctly
     check for doxygen warnings
     check for docbook warnings/errors
