@@ -48,6 +48,7 @@
 
 namespace regina {
 
+class NMatrixInt;
 class NTriangulation;
 class NXMLAngleStructureReader;
 
@@ -98,6 +99,24 @@ class REGINA_API NAngleStructureVector : public NRay {
          * @param cloneMe the vector to clone.
          */
         NAngleStructureVector(const NVector<NLargeInteger>& cloneMe);
+
+        /**
+         * Creates a new set of angle structure equations for the given
+         * triangulation.
+         *
+         * Each equation will be represented as a row of the matrix, and
+         * each column will represent a coordinate in the underlying
+         * coordinate system (which is described in the NAngleStructureVector
+         * class notes).
+         *
+         * The returned matrix will be newly allocated and its destruction
+         * will be the responsibility of the caller of this routine.
+         *
+         * @param tri the triangulation upon which these angle structure
+         * equations will be based.
+         * @return a newly allocated set of equations.
+         */
+        static NMatrixInt* makeAngleEquations(const NTriangulation* tri);
 };
 
 /**
@@ -169,8 +188,8 @@ class REGINA_API NAngleStructure : public ShareableObject {
          * inclusive.
          * @param edgePair the number of the vertex splitting
          * representing the pair of edges holding the requested angle;
-         * this should be between 0 and 2 inclusive.  See ::vertexSplit
-         * and ::vertexSplitDefn for details regarding vertex splittings.
+         * this should be between 0 and 2 inclusive.  See regina::vertexSplit
+         * and regina::vertexSplitDefn for details regarding vertex splittings.
          * @return the requested angle scaled down by <i>pi</i>.
          */
         NRational getAngle(unsigned long tetIndex, int edgePair) const;
@@ -238,6 +257,20 @@ class REGINA_API NAngleStructure : public ShareableObject {
          */
         bool isVeering() const;
 
+        /**
+         * Gives read-only access to the raw vector that sits beneath this
+         * angle structure.
+         *
+         * Generally users should not need this function.  However, it is
+         * provided here in case the need should arise (e.g., for reasons
+         * of efficiency).
+         *
+         * \ifacespython Not present.
+         *
+         * @return the underlying raw vector.
+         */
+        const NAngleStructureVector* rawVector() const;
+
         void writeTextShort(std::ostream& out) const;
 
         /**
@@ -304,6 +337,10 @@ inline bool NAngleStructure::isVeering() const {
     if ((flags & flagCalculatedType) == 0)
         calculateType();
     return ((flags & flagVeering) != 0);
+}
+
+inline const NAngleStructureVector* NAngleStructure::rawVector() const {
+    return vector;
 }
 
 } // namespace regina

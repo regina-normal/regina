@@ -63,6 +63,7 @@
 
 namespace regina {
 
+class NAngleStructure;
 class NBoundaryComponent;
 class NComponent;
 class NEdge;
@@ -1484,6 +1485,24 @@ class REGINA_API NTriangulation : public NPacket,
          * disc, or 0 if none exists.
          */
         NNormalSurface* hasOctagonalAlmostNormalSphere();
+        /**
+         * Searches for a strict angle structure on this triangulation.
+         * Recall that a \e strict angle structure is one in which every
+         * angle is strictly between 0 and &pi;.  If a strict angle structure
+         * exists, then this routine is guaranteed to find one.
+         *
+         * The underlying algorithm runs a single linear program (it does
+         * \e not enumerate all vertex angle structures).  This means
+         * that it is likely to be fast even for large triangulations.
+         *
+         * The angle structure returned (if any) depends upon this
+         * triangulation, and so the angle structure must be destroyed
+         * before this triangulation is destroyed.
+         *
+         * @return a newly allocated strict angle structure, or 0 if none
+         * exists.
+         */
+        NAngleStructure* hasStrictAngleStructure();
 
         /*@}*/
         /**
@@ -2709,6 +2728,42 @@ class REGINA_API NTriangulation : public NPacket,
          */
         void drillEdge(NEdge* e);
 
+        /**
+         * Punctures this manifold by removing a 3-ball from the interior of
+         * the given tetrahedron.  If no tetrahedron is specified (i.e.,
+         * the tetrahedron pointer is \c null), then the puncture will be
+         * taken from the interior of tetrahedron 0.
+         *
+         * The puncture will not meet the boundary of the tetrahedron,
+         * so nothing will go wrong if the tetrahedron has boundary facets
+         * and/or ideal vertices.  A side-effect of this, however, is
+         * that the resulting triangulation will contain additional vertices,
+         * and will almost certainly be far from minimal.
+         * It is highly recommended that you run intelligentSimplify()
+         * if you do not need to preserve the combinatorial structure of
+         * the new triangulation.
+         *
+         * The puncturing is done by subdividing the original tetrahedron.
+         * The new tetrahedra will have orientations consistent with the
+         * original tetrahedra, so if the triangulation was originally oriented
+         * then it will also be oriented after this routine has been called.
+         * See isOriented() for further details on oriented triangulations.
+         *
+         * The new sphere boundary will be formed from two triangles;
+         * specifically, face 0 of the last and second-last tetrahedra
+         * of the triangulation.  These two triangles will be joined so
+         * that vertex 1 of each tetrahedron coincides, and vertices 2,3
+         * of one map to vertices 3,2 of the other.
+         *
+         * \pre This triangulation is non-empty, and if \c tet is non-null
+         * then it is in fact a tetrahedron of this triangulation.
+         *
+         * @param tet the tetrahedron inside which the puncture will be
+         * taken.  This may be \c null (the default), in which case the
+         * first tetrahedron will be used.
+         */
+        void puncture(NTetrahedron* tet = 0);
+
         /*@}*/
         /**
          * \name Building Triangulations
@@ -2872,6 +2927,25 @@ class REGINA_API NTriangulation : public NPacket,
          */
         void insertSFSOverSphere(long a1 = 1, long b1 = 0,
             long a2 = 1, long b2 = 0, long a3 = 1, long b3 = 0);
+        /**
+         * Forms the connected sum of this triangulation with the given
+         * triangulation.  This triangulation will be altered directly.
+         *
+         * If this and the given triangulation are both oriented, then
+         * the result will be oriented also, and the connected sum will
+         * respect these orientations.
+         *
+         * This and/or the given triangulation may be bounded or ideal, or
+         * even invalid; in all cases the connected sum will be formed
+         * correctly.  Note, however, that the result might possibly
+         * contain internal vertices (even if the original triangulations
+         * do not).
+         *
+         * \pre This triangulation is connected and non-empty.
+         *
+         * @param other the triangulation to sum with this.
+         */
+        void connectedSumWith(const NTriangulation& other);
         /**
          * Inserts a copy of the given triangulation into this
          * triangulation.

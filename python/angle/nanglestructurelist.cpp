@@ -76,7 +76,10 @@ void addNAngleStructureList() {
             return_value_policy<reference_existing_object>())
         .def("enumerate", enumerate_3,
             return_value_policy<reference_existing_object>())
+        .def("enumerateTautDD", &NAngleStructureList::enumerateTautDD,
+            return_value_policy<reference_existing_object>())
         .staticmethod("enumerate")
+        .staticmethod("enumerateTautDD")
     ;
 
     s.attr("packetType") = regina::PacketType(NAngleStructureList::packetType);

@@ -49,6 +49,7 @@
 
 namespace regina {
 
+class NComponent;
 class NEdge;
 class NTriangle;
 class NTetrahedron;
@@ -199,6 +200,14 @@ class REGINA_API NBoundaryComponent :
         NVertex* getVertex(unsigned long index) const;
 
         /**
+         * Returns the component of the triangulation to which this
+         * boundary component belongs.
+         *
+         * @return the component containing this boundary component.
+         */
+        NComponent* getComponent() const;
+
+        /**
          * Returns the Euler characteristic of this boundary component.
          * If this boundary component is ideal, the Euler characteristic
          * of the link of the corresponding ideal vertex is returned.
@@ -314,6 +323,11 @@ inline NEdge* NBoundaryComponent::getEdge(unsigned long index) const {
 
 inline NVertex* NBoundaryComponent::getVertex(unsigned long index) const {
     return vertices[index];
+}
+
+inline NComponent* NBoundaryComponent::getComponent() const {
+    // There may be no triangles, but there is always a vertex.
+    return vertices.front()->getComponent();
 }
 
 inline long NBoundaryComponent::getEulerChar() const {
