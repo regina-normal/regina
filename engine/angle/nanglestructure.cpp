@@ -33,6 +33,8 @@
 /* end stub */
 
 #include "angle/nanglestructure.h"
+#include "maths/nmatrixint.h"
+#include "surfaces/nnormalsurface.h" // For vertexSplit.
 #include "triangulation/ntriangulation.h"
 #include "utilities/xmlutils.h"
 
@@ -45,6 +47,49 @@ const unsigned long NAngleStructure::flagStrict = 1;
 const unsigned long NAngleStructure::flagTaut = 2;
 const unsigned long NAngleStructure::flagCalculatedType = 4;
 const unsigned long NAngleStructure::flagVeering = 8;
+
+NMatrixInt* NAngleStructureVector::makeAngleEquations(
+        const NTriangulation* tri) {
+    unsigned long n = tri->getNumberOfTetrahedra();
+    unsigned long cols = 3 * n + 1;
+
+    // We have one equation per non-boundary edge plus one per tetrahedron.
+    long rows = long(tri->getNumberOfEdges()) +
+        long(tri->getNumberOfTetrahedra());
+    for (NTriangulation::BoundaryComponentIterator bit =
+            tri->getBoundaryComponents().begin();
+            bit != tri->getBoundaryComponents().end(); bit++)
+        rows -= (*bit)->getNumberOfEdges();
+
+    NMatrixInt* eqns = new NMatrixInt(rows, cols);
+    unsigned long row = 0;
+
+    std::deque<NEdgeEmbedding>::const_iterator embit;
+    NPerm4 perm;
+    unsigned long index;
+    for (NTriangulation::EdgeIterator eit = tri->getEdges().begin();
+            eit != tri->getEdges().end(); eit++) {
+        if ((*eit)->isBoundary())
+            continue;
+        for (embit = (*eit)->getEmbeddings().begin();
+                embit != (*eit)->getEmbeddings().end(); embit++) {
+            index = tri->tetrahedronIndex((*embit).getTetrahedron());
+            perm = (*embit).getVertices();
+            eqns->entry(row, 3 * index + vertexSplit[perm[0]][perm[1]]) += 1;
+        }
+        eqns->entry(row, cols - 1) = -2;
+        ++row;
+    }
+    for (index = 0; index < n; index++) {
+        eqns->entry(row, 3 * index) = 1;
+        eqns->entry(row, 3 * index + 1) = 1;
+        eqns->entry(row, 3 * index + 2) = 1;
+        eqns->entry(row, cols - 1) = -1;
+        ++row;
+    }
+
+    return eqns;
+}
 
 NAngleStructure* NAngleStructure::clone() const {
     NAngleStructure* ans = new NAngleStructure(triangulation,

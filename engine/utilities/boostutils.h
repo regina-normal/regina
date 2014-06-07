@@ -145,8 +145,8 @@ struct remove_pointer {
  * type <tt>T&</tt>.  Thus it can be passed to routines expecting
  * references to <tt>T</tt> but can also be passed by reference itself.
  *
- * See global routines ::ref() and ::cref() for simple creation of these
- * wrappers.
+ * See global routines regina::boost::ref() and regina::boost::cref()
+ * for simple creation of these wrappers.
  *
  * \ifacespython Not present.
  *

@@ -44,6 +44,7 @@
 #define __NTREETRAVERSAL_IMPL_H
 #endif
 
+#include "angle/nanglestructure.h"
 #include "enumerate/ntreetraversal.h"
 #include "progress/nprogresstracker.h"
 #include "surfaces/nsanstandard.h"
@@ -133,8 +134,24 @@ NNormalSurface* NTreeTraversal<LPConstraint, BanConstraint, Integer>::
 }
 
 template <class LPConstraint, typename BanConstraint, typename Integer>
+NAngleStructure* NTreeTraversal<LPConstraint, BanConstraint, Integer>::
+        buildStructure() const {
+    // Note that the vector constructors automatically set all
+    // elements to zero, as required by LPData::extractSolution().
+    if (coords_ != NS_ANGLE)
+        return 0;
+
+    NAngleStructureVector* v = new NAngleStructureVector(3 * nTets_ + 1);
+    lpSlot_[nTypes_]->extractSolution(*v, type_);
+    return new NAngleStructure(origTableaux_.tri(), v);
+}
+
+template <class LPConstraint, typename BanConstraint, typename Integer>
 bool NTreeTraversal<LPConstraint, BanConstraint, Integer>::verify(
         const NNormalSurface* s, const NMatrixInt* matchingEqns) const {
+    if (coords_ == NS_ANGLE)
+        return false;
+
     // Rebuild the matching equations if necessary.
     NMatrixInt* tmpEqns = 0;
     if (! matchingEqns) {
@@ -148,8 +165,38 @@ bool NTreeTraversal<LPConstraint, BanConstraint, Integer>::verify(
     for (row = 0; row < matchingEqns->rows(); ++row) {
         NLargeInteger ans; // Initialised to zero.
         for (col = 0; col < matchingEqns->columns(); ++col)
-            ans += (matchingEqns->entry(row, col) *
-                (*s->rawVector())[col]);
+            ans += (matchingEqns->entry(row, col) * (*s->rawVector())[col]);
+        if (ans != 0) {
+            delete tmpEqns;
+            return false;
+        }
+    }
+    delete tmpEqns;
+
+    // Verify any additional constraints.
+    return LPConstraint::verify(s);
+}
+
+template <class LPConstraint, typename BanConstraint, typename Integer>
+bool NTreeTraversal<LPConstraint, BanConstraint, Integer>::verify(
+        const NAngleStructure* s, const NMatrixInt* angleEqns) const {
+    if (coords_ != NS_ANGLE)
+        return false;
+
+    // Rebuild the matching equations if necessary.
+    NMatrixInt* tmpEqns = 0;
+    if (! angleEqns) {
+        tmpEqns = NAngleStructureVector::makeAngleEquations(
+            origTableaux_.tri());
+        angleEqns = tmpEqns;
+    }
+
+    // Verify the angle equations.
+    unsigned row, col;
+    for (row = 0; row < angleEqns->rows(); ++row) {
+        NLargeInteger ans; // Initialised to zero.
+        for (col = 0; col < angleEqns->columns(); ++col)
+            ans += (angleEqns->entry(row, col) * (*s->rawVector())[col]);
         if (ans != 0) {
             delete tmpEqns;
             return false;
@@ -167,25 +214,27 @@ NTreeTraversal<LPConstraint, BanConstraint, Integer>::NTreeTraversal(
         int branchesPerQuad, int branchesPerTri, bool enumeration) :
         BanConstraint(tri, coords),
         origTableaux_(tri,
-            (coords == NS_QUAD || coords == NS_AN_QUAD_OCT ?
-             NS_QUAD : NS_STANDARD),
-             enumeration),
+            (coords == NS_AN_QUAD_OCT ? NS_QUAD :
+             coords == NS_AN_STANDARD ? NS_STANDARD :
+             coords),
+            enumeration),
         coords_(coords),
         nTets_(tri->getNumberOfTetrahedra()),
-        nTypes_(coords == NS_QUAD || coords == NS_AN_QUAD_OCT ?
-            nTets_ : 5 * nTets_),
+        nTypes_(coords == NS_QUAD || coords == NS_AN_QUAD_OCT ||
+            coords == NS_ANGLE ? nTets_ : 5 * nTets_),
         /* Each time we branch, one LP can be solved in-place:
            therefore we use branchesPerQuad-1 and branchesPerTri-1.
            The final +1 is for the root node. */
-        nTableaux_(coords == NS_QUAD || coords == NS_AN_QUAD_OCT ?
+        nTableaux_(coords == NS_QUAD || coords == NS_AN_QUAD_OCT ||
+                coords == NS_ANGLE ?
             (branchesPerQuad - 1) * nTets_ + 1 :
             (branchesPerQuad - 1) * nTets_ +
                 (branchesPerTri - 1) * nTets_ * 4 + 1),
         type_(new char[nTypes_ + 1]),
         typeOrder_(new int[nTypes_]),
         level_(0),
-        octLevel_(coords == NS_AN_STANDARD ||
-            coords == NS_AN_QUAD_OCT ? -1 : nTypes_),
+        octLevel_(coords == NS_AN_STANDARD || coords == NS_AN_QUAD_OCT ?
+            -1 : nTypes_),
         lp_(new LPData<LPConstraint, Integer>[nTableaux_]),
         lpSlot_(new LPData<LPConstraint, Integer>*[nTypes_ + 1]),
         nextSlot_(new LPData<LPConstraint, Integer>*[nTypes_ + 1]),
@@ -248,41 +297,72 @@ int NTreeTraversal<LPConstraint, BanConstraint, Integer>::feasibleBranches(
         int quadType) {
     // Spin off clones for the new linear programs (reusing as much
     // work as possible).
-    tmpLP_[0].initClone(*lpSlot_[level_ + 1]);
+    if (coords_ == NS_ANGLE) {
+        // Only spin off three clones, since we know at least one angle
+        // must be non-zero.
+        // Also, there is no need to use constrainPositive here, since
+        // the angle equations already enforce at least one positive
+        // angle per tetrahedra (assuming the final scaling coordinate
+        // has already been enforced to be positive).
+        tmpLP_[0].initClone(*lpSlot_[level_ + 1]);
 
-    tmpLP_[1].initClone(tmpLP_[0]);
-    tmpLP_[1].constrainZero(3 * quadType + 1);
-    tmpLP_[1].constrainZero(3 * quadType + 2);
-    tmpLP_[1].constrainPositive(3 * quadType);
+        tmpLP_[1].initClone(tmpLP_[0]);
+        tmpLP_[1].constrainZero(3 * quadType);
+        tmpLP_[1].constrainZero(3 * quadType + 2);
 
-    tmpLP_[0].constrainZero(3 * quadType);
-    if (! tmpLP_[0].isFeasible()) {
-        // Branches 0, 2 and 3 will all be infeasible.
-        // Save some work and jump straight to the solution.
-        return (tmpLP_[1].isFeasible() ? 1 : 0);
+        tmpLP_[0].constrainZero(3 * quadType + 1);
+        if (! tmpLP_[0].isFeasible()) {
+            // The first and third branches will both be infeasible.
+            // Save some work and jump straight to the solution.
+            return (tmpLP_[1].isFeasible() ? 1 : 0);
+        }
+
+        tmpLP_[2].initClone(tmpLP_[0]);
+        tmpLP_[2].constrainZero(3 * quadType);
+
+        tmpLP_[0].constrainZero(3 * quadType + 2);
+
+        // Determine which of these systems are feasible.
+        return ((tmpLP_[0].isFeasible() ? 1 : 0) +
+            (tmpLP_[1].isFeasible() ? 1 : 0) +
+            (tmpLP_[2].isFeasible() ? 1 : 0));
+    } else {
+        tmpLP_[0].initClone(*lpSlot_[level_ + 1]);
+
+        tmpLP_[1].initClone(tmpLP_[0]);
+        tmpLP_[1].constrainZero(3 * quadType + 1);
+        tmpLP_[1].constrainZero(3 * quadType + 2);
+        tmpLP_[1].constrainPositive(3 * quadType);
+
+        tmpLP_[0].constrainZero(3 * quadType);
+        if (! tmpLP_[0].isFeasible()) {
+            // Branches 0, 2 and 3 will all be infeasible.
+            // Save some work and jump straight to the solution.
+            return (tmpLP_[1].isFeasible() ? 1 : 0);
+        }
+
+        tmpLP_[2].initClone(tmpLP_[0]);
+        tmpLP_[2].constrainZero(3 * quadType + 2);
+        tmpLP_[2].constrainPositive(3 * quadType + 1);
+
+        tmpLP_[0].constrainZero(3 * quadType + 1);
+        if (! tmpLP_[0].isFeasible()) {
+            // Branches 0 and 3 will both be infeasible.
+            return (tmpLP_[1].isFeasible() ? 1 : 0) +
+                   (tmpLP_[2].isFeasible() ? 1 : 0);
+        }
+
+        tmpLP_[3].initClone(tmpLP_[0]);
+        tmpLP_[3].constrainPositive(3 * quadType + 2);
+
+        tmpLP_[0].constrainZero(3 * quadType + 2);
+
+        // Determine which of these systems are feasible.
+        return ((tmpLP_[0].isFeasible() ? 1 : 0) +
+            (tmpLP_[1].isFeasible() ? 1 : 0) +
+            (tmpLP_[2].isFeasible() ? 1 : 0) +
+            (tmpLP_[3].isFeasible() ? 1 : 0));
     }
-
-    tmpLP_[2].initClone(tmpLP_[0]);
-    tmpLP_[2].constrainZero(3 * quadType + 2);
-    tmpLP_[2].constrainPositive(3 * quadType + 1);
-
-    tmpLP_[0].constrainZero(3 * quadType + 1);
-    if (! tmpLP_[0].isFeasible()) {
-        // Branches 0 and 3 will both be infeasible.
-        return (tmpLP_[1].isFeasible() ? 1 : 0) +
-               (tmpLP_[2].isFeasible() ? 1 : 0);
-    }
-
-    tmpLP_[3].initClone(tmpLP_[0]);
-    tmpLP_[3].constrainPositive(3 * quadType + 2);
-
-    tmpLP_[0].constrainZero(3 * quadType + 2);
-
-    // Determine which of these systems are feasible.
-    return ((tmpLP_[0].isFeasible() ? 1 : 0) +
-        (tmpLP_[1].isFeasible() ? 1 : 0) +
-        (tmpLP_[2].isFeasible() ? 1 : 0) +
-        (tmpLP_[3].isFeasible() ? 1 : 0));
 }
 
 template <class LPConstraint, typename BanConstraint, typename Integer>
@@ -294,7 +374,13 @@ double NTreeTraversal<LPConstraint, BanConstraint, Integer>::percent() const {
     // Just check the first few types, until the margin of
     // error is sufficiently small.
     for (unsigned i = 0; range > 0.01 && i < nTypes_; ++i) {
-        if (typeOrder_[i] >= nTets_) {
+        if (coords_ == NS_ANGLE) {
+            // Angle structure coordinates.
+            range /= 3.0;
+            if (type_[typeOrder_[i]] == 0)
+                break; // All zeroes from here down.
+            percent += (range * (type_[typeOrder_[i]] - 1));
+        } else if (typeOrder_[i] >= nTets_) {
             // Triangle coordinate.
             range /= 2.0;
             percent += (range * type_[typeOrder_[i]]);
@@ -689,6 +775,185 @@ bool NTreeEnumeration<LPConstraint, BanConstraint, Integer>::next(
     // If we ever make it out here, it's because some other
     // thread cancelled the search.  The result should be ignored.
     return false;
+}
+
+template <class LPConstraint, typename BanConstraint, typename Integer>
+bool NTautEnumeration<LPConstraint, BanConstraint, Integer>::next(
+        NProgressTracker* tracker) {
+    // Note that for taut angle structures we have no domination test and
+    // no zero test.  The domination comes for free (every taut angle
+    // structure is at a vertex of the angle structure polytope), and the
+    // zero test will always be satisfied because we have enforced the
+    // scaling coordinate to be positive.
+
+    if (type_[typeOrder_[0]] == 0) {
+        // We are starting the search from the very beginning.
+        // (We know this because the very first thing that happens at
+        // the very first branch is that type_[typeOrder_[0]] is
+        // incremented to 1.  For taut angle structures, type 0 is
+        // simply a placeholder for "we haven't reached this type yet".)
+        //
+        // Prepare the root node by finding an initial basis
+        // from the original starting tableaux.
+        lp_[0].initStart();
+
+        // Ensure that we avoid the zero solution, by insisting that the
+        // final scaling coordinate be positive.
+        lp_[0].constrainPositive(origTableaux_.coordinateColumns() - 1);
+
+        BanConstraint::enforceBans(lp_[0]);
+        ++nVisited_;
+
+        // Is the system feasible at the root node?
+        // If not, there can be no solutions at all.
+        if (! lp_[0].isFeasible())
+            return false;
+
+        /**
+         * If we ever need to reorder the search tree at the very
+         * beginning, here is where we do it.
+         *
+         * Note that, since setNext() works on typeOrder_[level_ + 1],
+         * we must temporarily set level_ = -1 before we call it.
+         *
+        level_ = -1;
+        setNext(...);
+        level_ = 0;
+         */
+    } else {
+        // We are starting the search from a previous solution.
+        // Make the next incremental change to the type vector
+        // to continue the search.
+        ++type_[typeOrder_[level_]];
+    }
+
+    // And... continue the search!
+    unsigned idx; /* Index of the type we are currently choosing. */
+    while (true) {
+        // Update the state of progress and test for cancellation.
+        if (tracker && ! tracker->setPercent(percent()))
+            break;
+
+#ifdef REGINA_TREE_TRACE
+        dumpTypes(std::cout);
+        std::cout << std::endl;
+#endif
+        /* INVARIANTS:
+         *
+         * - 0 <= level_ < nTypes_.
+         *
+         * - We have explicitly set type_[typeOrder_[0,...,level_]],
+         *   though it is possible that type_[typeOrder_[level_]] is
+         *   out of range (too large).  All later elements
+         *   type_[typeOrder_[level_+1,...,nTypes_-1]] are 0.
+         *
+         * - The parent node in the tree (where type_[typeOrder_[level_]] == 0)
+         *   passes the feasibility test; however we do not yet know whether
+         *   this node in the tree (with our new value for
+         *   type_[typeOrder_[level_]]) passes these tests.
+         */
+        idx = typeOrder_[level_];
+
+        // Check whether type_[idx] is out of range, and if so then
+        // backtrack further up the tree.
+        if (type_[idx] == 4) {
+            // This column is out of range.
+            // Backtrack.
+            type_[idx] = 0;
+            --level_;
+            if (level_ < 0) {
+                // Out of options: the tree traversal is finished.
+                return false;
+            }
+            ++type_[typeOrder_[level_]];
+            continue;
+        }
+
+        // This is a node in the search tree that we need to examine.
+        ++nVisited_;
+
+        // All that's left is the feasibility test.
+        // Bring on the linear programming.
+
+        // First, prepare the tableaux for our new type at this level
+        // of the tree.
+        if (! type_[idx]) {
+            // This is the first time we have visited this node.
+            // Jump straight to type 1, since taut angle structures must
+            // have some non-zero angle in each tetrahedron.
+            ++type_[idx];
+
+            // Since the parent node already passes the
+            // feasibility test, we will simply overwrite the
+            // parent tableaux "in place", avoiding the need for
+            // an expensive copy operation.
+            lpSlot_[level_ + 1] = lpSlot_[level_];
+
+            // So that we can reuse as much work as possible, we
+            // will gradually spin off clones of this tableaux
+            // that we can later use with type_[idx] == 1, 2 or 3.
+            nextSlot_[level_ + 1] = nextSlot_[level_] + 2;
+
+            nextSlot_[level_]->initClone(*lpSlot_[level_]);
+
+            lpSlot_[level_]->constrainZero(3 * idx + 1);
+            (nextSlot_[level_] + 1)->initClone(*lpSlot_[level_]);
+
+            lpSlot_[level_]->constrainZero(3 * idx + 2);
+        } else {
+            // We have type_[idx] == 2 or 3.
+            //
+            // Find the appropriate clone that we spun off earlier when
+            // type_[idx] was 0 (but immediately incremented to 1), and
+            // then add the missing constraints that we did not
+            // enforce during the cloning process.
+            lpSlot_[level_ + 1] = nextSlot_[level_] + type_[idx] - 2;
+
+            switch (type_[idx]) {
+                case 2:
+                    lpSlot_[level_ + 1]->constrainZero(3 * idx);
+                    lpSlot_[level_ + 1]->constrainZero(3 * idx + 2);
+                    break;
+                case 3:
+                    lpSlot_[level_ + 1]->constrainZero(3 * idx);
+                    break;
+            }
+        }
+
+        // Now all our constraints are enforced, and we can
+        // simply test the tableaux for feasibility.
+        if (lpSlot_[level_ + 1]->isFeasible()) {
+            if (level_ < nTypes_ - 1) {
+                // We pass the feasibility test, but we're not at a leaf node.
+                // Head deeper into the tree.
+                ++level_;
+            } else {
+                // We pass the feasibility test, *and* we're at a leaf node.
+                // This means we've found a solution!
+                ++nSolns_;
+                return true;
+            }
+        } else {
+            // We failed the feasibility test.
+            // Abandon this subtree, increment the type at the
+            // current level, and continue searching.
+            ++type_[idx];
+        }
+    }
+
+    // If we ever make it out here, it's because some other
+    // thread cancelled the search.  The result should be ignored.
+    return false;
+}
+
+template <class LPConstraint, typename BanConstraint, typename Integer>
+bool NTautEnumeration<LPConstraint, BanConstraint, Integer>::
+        writeStructure(const NTautEnumeration& tree, void*) {
+    std::cout << "SOLN #" << tree.nSolns() << ": ";
+    NAngleStructure* s = tree.buildStructure();
+    std::cout << s->str() << std::endl;
+    delete s;
+    return true;
 }
 
 template <class LPConstraint, typename BanConstraint, typename Integer>
