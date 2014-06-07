@@ -387,4 +387,77 @@ bool NTriangulation::finiteToIdeal() {
     return true;
 }
 
+void NTriangulation::puncture(NTetrahedron* tet) {
+    if (! tet) {
+        // Preconditions disallow empty triangulations, but anyway:
+        if (tetrahedra.empty())
+            return;
+
+        tet = tetrahedra.front();
+    }
+
+    ChangeEventSpan span(this);
+
+    // We will attach a pair of triangular prisms to face 123 of tet.
+    // We will join the rectangular walls of the prisms together, and
+    // one triangular end from each will join to form the new S^2 boundary.
+    NTetrahedron* prism[2][3];
+
+    // Create the new tetrahedra in an order that ensures that the new
+    // S^2 boundary will appear in the final two tetrahedra.
+    int i, j;
+    for (j = 0; j < 3; ++j)
+        for (i = 0; i < 2; ++i)
+            prism[i][j] = newTetrahedron();
+
+    prism[0][0]->joinTo(0, prism[0][1], NPerm4(3,0,1,2));
+    prism[0][1]->joinTo(0, prism[0][2], NPerm4(3,0,1,2));
+
+    prism[1][0]->joinTo(1, prism[1][1], NPerm4(3,0,1,2));
+    prism[1][1]->joinTo(1, prism[1][2], NPerm4(3,2,0,1));
+
+    prism[0][0]->joinTo(1, prism[1][0], NPerm4(1,2,3,0));
+    prism[0][0]->joinTo(2, prism[1][0], NPerm4(1,2,3,0));
+    prism[0][1]->joinTo(1, prism[1][1], NPerm4(1,2,3,0));
+    prism[0][1]->joinTo(2, prism[1][1], NPerm4(1,2,3,0));
+    prism[0][2]->joinTo(1, prism[1][2], NPerm4(0,1,3,2));
+    prism[0][2]->joinTo(2, prism[1][2], NPerm4(0,1,3,2));
+
+    NTetrahedron* adj = tet->adjacentTetrahedron(0);
+    if (adj) {
+        NPerm4 gluing = tet->adjacentGluing(0);
+        tet->unjoin(0);
+        prism[1][0]->joinTo(0, adj, gluing);
+    }
+
+    tet->joinTo(0, prism[0][0], NPerm4(3,0,1,2));
+}
+
+void NTriangulation::connectedSumWith(const NTriangulation& other) {
+    // Precondition check.
+    if (tetrahedra.empty() || ! isConnected())
+        return;
+
+    ChangeEventSpan span(this);
+
+    NTetrahedron* bdry[2][2];
+    unsigned long n;
+
+    puncture();
+
+    n = tetrahedra.size();
+    bdry[0][0] = tetrahedra[n - 2];
+    bdry[0][1] = tetrahedra[n - 1];
+
+    insertTriangulation(other);
+    puncture(tetrahedra[n]);
+
+    n = tetrahedra.size();
+    bdry[1][0] = tetrahedra[n - 2];
+    bdry[1][1] = tetrahedra[n - 1];
+
+    bdry[0][0]->joinTo(0, bdry[1][0], NPerm4(2, 3));
+    bdry[0][1]->joinTo(0, bdry[1][1], NPerm4(2, 3));
+}
+
 } // namespace regina

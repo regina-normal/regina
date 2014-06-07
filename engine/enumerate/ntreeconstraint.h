@@ -48,6 +48,7 @@
 
 namespace regina {
 
+class NAngleStructure;
 class NNormalSurface;
 class NTriangulation;
 
@@ -61,16 +62,23 @@ class LPMatrix;
 
 /**
  * A base class for additional linear constraints that we can add to the
- * tableaux of normal surface matching equations.  This is used with
- * NTreeEnumeration, NTreeSingleSoln and related algorithms for enumerating and
- * locating normal surfaces in a 3-manifold triangulation.  See the
- * LPInitialTableaux class notes for details on how these constraints
- * interact with the tableaux of matching equations.
+ * tableaux of normal surface or angle structure matching equations.  This is
+ * used with NTreeEnumeration, NTreeSingleSoln and related algorithms for
+ * enumerating and locating normal surfaces or angle structures in a
+ * 3-manifold triangulation.  See the LPInitialTableaux class notes for
+ * details on how these constraints interact with the tableaux of
+ * matching equations.
  *
  * The linear constraints may be equalities or inequalities, and there
  * may be more than one such constraint.  If all constraints are
  * homogeneous equalities, the class should derive from LPConstraintSubspace
  * instead (not this base class).
+ *
+ * In angle structure coordinates, these linear constraints must \e not
+ * involve the scaling coordinate (the final coordinate that is used to
+ * convert the angle structure polytope into a polyhedral cone).
+ * The coefficient for the final scaling coordinate in each additional
+ * linear constraint will be assumed to be zero.
  *
  * This base class provides no functionality.  For documentation's sake
  * only, the notes here describe the functionality that any subclass
@@ -183,6 +191,8 @@ class LPConstraintBase {
              * form an octagon type, and if necessary we implicitly adjust
              * the coefficients stored in this data structure accordingly.
              *
+             * This routine is not used with angle structure coordinates.
+             *
              * \pre The given matrix has at least \a nConstraints columns
              * and at least \a mRow + 1 rows.
              *
@@ -210,7 +220,7 @@ class LPConstraintBase {
          * depend upon the underlying triangulation.  For this reason,
          * the triangulation is explicitly passed, along with the
          * permutation that indicates which columns of the initial tableaux
-         * correspond to which normal coordinates.
+         * correspond to which normal or angle structure coordinates.
          *
          * More precisely: recall that, for each linear function, the initial
          * tableaux acquires one new variable \a x_i that evaluates this linear
@@ -236,6 +246,14 @@ class LPConstraintBase {
          * variables as described above).  Otherwise (if the linear function
          * were successfully constructed) this routine should return \c true.
          *
+         * If you are implementing this routine in a subclass that
+         * works with angle structure coordinates, remember that your
+         * linear constraints must not interact with the scaling coordinate
+         * (the final angle structure coordinate that is used to projectivise
+         * the angle structure polytope into a polyhedral cone).  Your
+         * implementation of this routine \e must ensure that your
+         * linear constraints all have coefficient zero in this column.
+         *
          * \pre For all coefficients in the array \a col, the
          * Coefficients substructures have all been initialised with the
          * default constructor and not modified since.
@@ -243,9 +261,9 @@ class LPConstraintBase {
          * @param col the array of columns as stored in the initial
          * tableaux (i.e., the data member LPInitialTableaux::col_).
          * @param columnPerm the corresponding permutation of columns
-         * that describes how columns of the tableaux correspond to
-         * normal coordinates in the underlying triangulation (i.e., the
-         * data member LPInitialTableaux::columnPerm_).
+         * that describes how columns of the tableaux correspond to normal or
+         * angle structure coordinates in the underlying triangulation
+         * (i.e., the data member LPInitialTableaux::columnPerm_).
          * @param tri the underlying triangulation.
          * @return \c true if the linear functions were successfully
          * constructed, or \c false if not (in which case they will be
@@ -289,11 +307,33 @@ class LPConstraintBase {
          * s->getEulerChar() and test the return value of that
          * routine instead.
          *
+         * If these linear constraints work with angle structure coordinates
+         * (not normal or almost normal surfaces), then this routine should
+         * return \c false.
+         *
          * @param s the surface to test.
          * @return \c true if the given surface satisfies these linear
          * constraints, or \c false if it does not.
          */
         static bool verify(const NNormalSurface* s);
+
+        /**
+         * Ensures that the given angle structure satisfies the extra
+         * constraints described by this class.
+         *
+         * Ideally this test is not based on explicitly recomputing the
+         * linear function(s), but instead runs independent tests;
+         * see the related routine verify(const NNormalSurface*) for examples.
+         *
+         * If these linear constraints work with normal or almost normal
+         * surfaces (not angle structure coordinates), then this routine should
+         * return \c false.
+         *
+         * @param s the angle structure to test.
+         * @return \c true if the given angle structure satisfies these linear
+         * constraints, or \c false if it does not.
+         */
+        static bool verify(const NAngleStructure* s);
 
         /**
          * Indicates whether the given coordinate system is supported by
@@ -325,7 +365,7 @@ class LPConstraintBase {
  * equations should derive from LPConstraintSubspace, not LPConstraintBase.
  * In other words, any set of constraints derived from LPConstraintSubspace
  * should simply restrict our attention to a vector subspace of the
- * normal surface coordinate system.
+ * normal surface or angle structure coordinate system.
  *
  * This class does not provide any additional functionality.  It is
  * merely a convenience to help describe and enforce preconditions.
@@ -339,7 +379,7 @@ class LPConstraintSubspace : public LPConstraintBase {
 
 /**
  * A do-nothing class that imposes no additional linear constraints on
- * the tableaux of normal surface matching equations.
+ * the tableaux of normal surface or angle structure matching equations.
  *
  * See the LPConstraintBase class notes for details on all member
  * functions and structs.
@@ -373,6 +413,7 @@ class LPConstraintNone : public LPConstraintSubspace {
         static void constrain(
             LPData<regina::LPConstraintNone, Integer>&, unsigned);
         static bool verify(const NNormalSurface*);
+        static bool verify(const NAngleStructure*);
         static bool supported(NormalCoords coords);
 };
 
@@ -438,6 +479,7 @@ class LPConstraintEuler : public LPConstraintBase {
             LPData<regina::LPConstraintEuler, Integer>& lp,
             unsigned numCols);
         static bool verify(const NNormalSurface* s);
+        static bool verify(const NAngleStructure*);
         static bool supported(NormalCoords coords);
 };
 
@@ -511,6 +553,7 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
             LPData<regina::LPConstraintNonSpun, Integer>& lp,
             unsigned numCols);
         static bool verify(const NNormalSurface* s);
+        static bool verify(const NAngleStructure*);
         static bool supported(NormalCoords coords);
 };
 #endif // EXCLUDE_SNAPPEA
@@ -519,40 +562,42 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
  * A base class for additional banning and marking constraints that we
  * can place on tree traversal algorithms.  This is used with
  * NTreeEnumeration, NTreeSingleSoln and related algorithms for
- * enumerating and locating normal surfaces in a 3-manifold triangulation.
+ * enumerating and locating normal surfaces and angle structures in a
+ * 3-manifold triangulation.
  *
  * This class adds constraints of two types:
  *
- * - \e Banning constraints, which ensure that certain normal coordinates
+ * - \e Banning constraints, which ensure that certain coordinates
  *   are set to zero;
  *
  * - \e Marking constraints, which are more flexible and can be used in
  *   different ways by different algorithms.
  *
- * All of these constraints operate only on normal coordinates in the
- * underlying tableaux (and in particular not the additional variables
- * introduced by additional linear constraints, as described by
- * LPConstraintBase and its subclasses).
+ * All of these constraints operate only on normal or angle structure
+ * coordinates in the underlying tableaux (and in particular not the
+ * additional variables introduced by additional linear constraints,
+ * as described by LPConstraintBase and its subclasses).
  *
  * Currently marking is used in the following ways:
  *
- * - The NTreeEnumeration algorithm does not use marking at all.
+ * - The NTreeEnumeration and NTautEnumeration algorithms do not use marking
+ *   at all.
  *
  * - In the NTreeSingleSoln algorithm, marking affects what is considered
- *   a non-trivial surface.  Normally, a non-trivial surface is defined
+ *   a non-trivial normal surface.  Normally, a non-trivial surface is defined
  *   to be one in which some triangle coordinate is zero.  With marking,
  *   a non-trivial surface is redefined to be one in which some \e unmarked
  *   triangle coordinate is zero.  In other words, marked triangle types
  *   are effectively ignored when determining whether a surface is non-trivial
  *   or not.
  *
- * At present, marking is not used at all for quadrilateral coordinates.
- * Howver, marking is a very new feature, and this concept may be expanded
- * in future versions of Regina.
+ * At present, marking is not used at all for quadrilateral coordinates
+ * or angle structures.  However, marking is a very new feature, and this
+ * concept may be expanded in future versions of Regina.
  *
- * This class does not record disc types in the order of their normal
- * coordinates; instead it records them in the order of their columns in
- * a tableaux for linear programming (as used in LPInitialTableaux).
+ * This class does not record disc types in the order of their normal or
+ * angle structure coordinates; instead it records them in the order of their
+ * columns in a tableaux for linear programming (as used in LPInitialTableaux).
  * This means that there is a little more work required in setting up
  * the initial lists of banned and marked columns, but then these lists are
  * easy to use on the fly during tree traversal algorithms.
@@ -560,9 +605,9 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
  * This base class provides limited functionality (as documented below).
  * Subclasses \e must implement a constructor (which, like this base
  * class, takes a triangulation and a coordinate system), must implement
- * init() which determines which normal coordinates are banned and/or marked,
- * and must implement supported(), which indicates which normal
- * coordinate system this constraint class can work with.
+ * init() which determines which coordinates are banned and/or marked,
+ * and must implement supported(), which indicates which normal or angle
+ * structure coordinate system this constraint class can work with.
  *
  * \apinotfinal
  *
@@ -574,27 +619,27 @@ class BanConstraintBase {
             /**< The triangulation with which we are working. */
         int coords_;
             /**< The normal or almost normal coordinate system in which
-                 we are working.  This must be one of NS_QUAD,
-                 NS_STANDARD, NS_AN_QUAD_OCT, or NS_AN_STANDARD. */
+                 we are working.  This must be one of NS_QUAD, NS_STANDARD,
+                 NS_AN_QUAD_OCT, NS_AN_STANDARD, or NS_ANGLE. */
         bool* banned_;
             /**< Indicates which columns of a tableaux correspond to banned
-                 disc types.
-                 The size of this array is the number of normal coordinates
-                 (so we explicitly exclude extra columns that arise from the
-                 template parameter LPConstraint. */
+                 coordinates (e.g., banned normal disc types).
+                 The size of this array is the number of normal or angle
+                 structure coordinates (so we explicitly exclude extra columns
+                 that arise from the template parameter LPConstraint. */
         bool* marked_;
             /**< Indicates which columns of a tableaux correspond to marked
-                 disc types.
-                 The size of this array is the number of normal coordinates
-                 (so we explicitly exclude extra columns that arise from the
-                 template parameter LPConstraint. */
+                 coordinates (e.g., marked normal disc types).
+                 The size of this array is the number of normal or angle
+                 structure coordinates (so we explicitly exclude extra columns
+                 that arise from the template parameter LPConstraint. */
 
     protected:
         /**
          * Constructs and initialises the \a banned_ and \a marked_ arrays
          * to be entirely \c false.  The only purpose of passing the
          * triangulation and coordinate system is to determine how many
-         * normal coordinates we are dealing with.
+         * normal or angle structure coordinates we are dealing with.
          *
          * \warning Before you use this object, the routine init() must be
          * called to fill in the \a banned_ and \a marked_ arrays with the
@@ -602,9 +647,9 @@ class BanConstraintBase {
          * types at all.
          *
          * @param tri the triangulation with which we are working.
-         * @param coords the normal or almost normal coordinate system in
+         * @param coords the coordinate system in
          * which we are working.  This must be one of NS_QUAD,
-         * NS_STANDARD, NS_AN_QUAD_OCT, or NS_AN_STANDARD.
+         * NS_STANDARD, NS_AN_QUAD_OCT, NS_AN_STANDARD, or NS_ANGLE.
          */
         BanConstraintBase(NTriangulation* tri, int coords);
 
@@ -615,9 +660,9 @@ class BanConstraintBase {
 
         /**
          * Enforces all bans described by this class in the given
-         * tableaux.  Specifically, for each banned disc type, this
+         * tableaux.  Specifically, for each banned coordinate, this
          * routine calls LPData::constrainZero() on the corresponding
-         * normal coordinate column.
+         * coordinate column.
          *
          * @param lp the tableaux in which to enforce the bans.
          */
@@ -626,14 +671,15 @@ class BanConstraintBase {
 
 #ifdef __DOXYGEN
         /**
-         * Idetifies which disc types to ban and mark, and records the
+         * Identifies which coordinates to ban and mark, and records the
          * corresponding tableaux columns in the \a banned_ and \a marked_
          * arrays respectively.
          *
          * @param columnPerm the permutation of columns that describes how
-         * columns of the tableaux correspond to normal coordinates in
-         * the underlying triangulation.  Specifically, this permutation must
-         * be the same permutation returned by LPInitialTableaux::columnPerm().
+         * columns of the tableaux correspond to normal or angle strutcure
+         * coordinates in the underlying triangulation.  Specifically, this
+         * permutation must be the same permutation returned by
+         * LPInitialTableaux::columnPerm().
          */
         void init(const int* columnPerm);
 
@@ -660,7 +706,7 @@ class BanConstraintBase {
 };
 
 /**
- * A do-nothing class that bans no disc types and marks no disc types.
+ * A do-nothing class that bans no coordinates and marks no coordinates.
  *
  * See the BanConstraintBase class notes for details on all member
  * functions and structs.
@@ -678,12 +724,12 @@ class BanNone : public BanConstraintBase {
          *
          * Although one should normally call the routine init() before
          * using this object, for BanNone this is not strictly necessary
-         * since there are no disc types to ban or mark.
+         * since there are no coordinates to ban or mark.
          *
          * @param tri the triangulation with which we are working.
-         * @param coords the normal or almost normal coordinate system in
+         * @param coords the coordinate system in
          * which we are working.  This must be one of NS_QUAD,
-         * NS_STANDARD, NS_AN_QUAD_OCT, or NS_AN_STANDARD.
+         * NS_STANDARD, NS_AN_QUAD_OCT, NS_AN_STANDARD, or NS_ANGLE.
          */
         BanNone(NTriangulation* tri, int coords);
 
@@ -694,6 +740,9 @@ class BanNone : public BanConstraintBase {
 /**
  * A class that bans normal disc types that meet the boundary of the
  * underlying triangulation.  No disc types are marked at all.
+ *
+ * This class is only for use with normal or almost normal surfaces, not
+ * angle structures.
  *
  * \warning This class only works as expected in \e standard normal or
  * almost normal coordinates.  In quadrilateral or quadrilateral-octagon
@@ -743,6 +792,9 @@ class BanBoundary : public BanConstraintBase {
  *
  * - this class marks any normal triangle in the link of a vertex on a
  *   torus boundary.
+ *
+ * This class is only for use with normal or almost normal surfaces, not
+ * angle structures.
  *
  * \warning As with BanBoundary, this class only works as expected in
  * \e standard normal or almost normal coordinates.  In quadrilateral or
@@ -819,6 +871,10 @@ inline bool LPConstraintNone::verify(const NNormalSurface*) {
     return true;
 }
 
+inline bool LPConstraintNone::verify(const NAngleStructure*) {
+    return true;
+}
+
 inline bool LPConstraintNone::supported(NormalCoords) {
     return true;
 }
@@ -869,6 +925,10 @@ inline bool LPConstraintEuler::verify(const NNormalSurface* s) {
     return (s->getEulerChar() > 0);
 }
 
+inline bool LPConstraintEuler::verify(const NAngleStructure*) {
+    return false;
+}
+
 inline bool LPConstraintEuler::supported(NormalCoords coords) {
     return (coords == NS_STANDARD || coords == NS_AN_STANDARD);
 }
@@ -915,6 +975,10 @@ inline void LPConstraintNonSpun::constrain(
 
 inline bool LPConstraintNonSpun::verify(const NNormalSurface* s) {
     return s->isCompact();
+}
+
+inline bool LPConstraintNonSpun::verify(const NAngleStructure*) {
+    return false;
 }
 
 inline bool LPConstraintNonSpun::supported(NormalCoords coords) {
