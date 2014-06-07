@@ -126,7 +126,34 @@ enum NormalCoords {
      * Represents quadrilateral coordinates for transversely oriented 
      * normal surfaces.
      */
-    NS_ORIENTED_QUAD = 301
+    NS_ORIENTED_QUAD = 301,
+    /**
+     * Represents angle structure coordinates.
+     *
+     * This coordinate system is \e not for use with normal surfaces:
+     * it cannot be used either to display them or enumerate them.
+     * Instead it is for use with angle structures on triangulations.
+     * Because the combinatorics and linear algebra of angle strutures
+     * are tightly related to those of normal surfaces, we include
+     * NS_ANGLE here so that angle structure routines can make use of
+     * some of Regina's existing normal surface machinery.
+     *
+     * For a triangulation with \a n tetrahedra, this system has
+     * 3<i>n</i>+1 coordinates.  The first 3<i>n</i> are analogous
+     * to quadrilateral coordinates (specifically, for each
+     * quadrilateral type \a Q, the corresponding angle structure coordinate
+     * represents the pair of angles in the same tetrahedron that \a Q does
+     * not meet).  The final coordinate is a scaling coordinate, used to
+     * projectivise the angle structure polytope so that it becomes a
+     * polyhedral cone that is invariant under (positive) scaling.
+     * If the final scaling coordinate is \a s, then a rational value of \a x
+     * in any other coordinate position should be interpreted as the angle
+     * <i>x</i>.&pi;/<i>s</i>.
+     *
+     * \pre This coordinate system must not be used with any of Regina's
+     * routines unless they explicitly declare that NS_ANGLE is allowed.
+     */
+    NS_ANGLE = 400
 };
 
 /*@}*/

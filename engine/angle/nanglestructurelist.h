@@ -246,6 +246,30 @@ class REGINA_API NAngleStructureList : public NPacket {
         static NAngleStructureList* enumerate(NTriangulation* owner,
             bool tautOnly = false, NProgressTracker* tracker = 0);
 
+        /**
+         * A slower, alternative method to enumerate all taut angle structures
+         * on the given triangulation.  A list containing all taut angle
+         * structures will be returned.
+         *
+         * The algorithm used by this routine is based on the double
+         * description method.  The algorithm used by enumerate() (the
+         * preferred method) is instead based on linear programming, and is
+         * typically \e much faster than this routine for larger triangulations.
+         *
+         * The angle structure list that is created will be inserted as the
+         * last child of the given triangulation.  This triangulation \b must
+         * remain the parent of this angle structure list, and must not
+         * change while this angle structure list remains in existence.
+         *
+         * \warning This routine is slow, and users will not want to call it
+         * unless they have some specialised need.
+         *
+         * @param owner the triangulation for which the taut angle structures
+         * will be enumerated.
+         * @return the newly created angle structure list.
+         */
+        static NAngleStructureList* enumerateTautDD(NTriangulation* owner);
+
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
         static NXMLPacketReader* getXMLReader(NPacket* parent,
