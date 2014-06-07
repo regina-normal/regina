@@ -914,13 +914,21 @@ class REGINA_API NNormalSurface : public ShareableObject {
         NLargeInteger getOrientedTriangleCoord(unsigned long tetIndex,
             int vertex, bool orientation) const;
         /**
-         * Returns the number of oriented quadrilateral discs of the given
+         * Returns the number of quadrilateral discs of the given
          * type in this normal surface.
+         *
+         * In each tetrahedron, there are three types of quadrilaterals,
+         * defined by how they separate the four tetrahedron vertices into
+         * two pairs.  These types are labelled 0, 1 and 2, and they
+         * correspond exactly to the three vertex splittings described
+         * by regina::vertexSplit.  Specifically:
+         *
+         * - type 0 separates vertices 0,1 of the tetrahedron from vertices 2,3;
+         * - type 1 separates vertices 0,2 of the tetrahedron from vertices 1,3;
+         * - type 2 separates vertices 0,3 of the tetrahedron from vertices 1,2.
+         *
          * A quadrilateral disc type is identified by specifying a
-         * tetrahedron and a vertex splitting of that tetrahedron that
-         * describes how the quadrilateral partitions the tetrahedron
-         * vertices.  See regina::vertexSplit for more details on vertex
-         * splittings.
+         * tetrahedron and a vertex splitting 0, 1 or 2 as described above.
          *
          * If you are using a coordinate system that adorns discs with
          * additional information (such as orientation), this routine
@@ -932,8 +940,8 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * this should be between 0 and
          * NTriangulation::getNumberOfTetrahedra()-1 inclusive.
          * @param quadType the number of the vertex splitting that this
-         * quad type represents; this should be between 0 and 2
-         * inclusive.
+         * quad type represents, as described above;
+         * this should be between 0 and 2 inclusive.
          * @return the number of quadrilateral discs of the given type.
          */
         NLargeInteger getQuadCoord(unsigned long tetIndex,
@@ -946,14 +954,6 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * transversely oriented normal surfaces; for details see
          * "The Thurston norm via normal surfaces", Stephan Tillmann and
          * Daryl Cooper, Pacific Journal of Mathematics 239 (2009), 1-15.
-         *
-         * An oriented triangular disc type is identified by specifying a
-         * tetrahedron, a vertex of that tetrahedron that the
-         * triangle surrounds, and a boolean orientation.  The \c true
-         * orientation indicates a triangle whose "transverse" orientation
-         * points to the nearby vertex, and the \c false orientation
-         * indicates a triangle whose "transverse" orientation points to
-         * the opposite face.
          *
          * An oriented quadrilateral disc type is identified by specifying a
          * tetrahedron, a vertex splitting of that tetrahedron as
@@ -981,11 +981,19 @@ class REGINA_API NNormalSurface : public ShareableObject {
         /**
          * Returns the number of octagonal discs of the given type
          * in this normal surface.
+         *
+         * In each tetrahedron, there are three types of octagons,
+         * defined by how they separate the four tetrahedron vertices into
+         * two pairs.  These types are labelled 0, 1 and 2, and they
+         * correspond exactly to the three vertex splittings described
+         * by regina::vertexSplit.  Specifically:
+         *
+         * - type 0 separates vertices 0,1 of the tetrahedron from vertices 2,3;
+         * - type 1 separates vertices 0,2 of the tetrahedron from vertices 1,3;
+         * - type 2 separates vertices 0,3 of the tetrahedron from vertices 1,2.
+         *
          * An octagonal disc type is identified by specifying a
-         * tetrahedron and a vertex splitting of that tetrahedron that
-         * describes how the octagon partitions the tetrahedron
-         * vertices.  See regina::vertexSplit for more details on vertex
-         * splittings.
+         * tetrahedron and a vertex splitting 0, 1 or 2 as described above.
          *
          * If you are using a coordinate system that adorns discs with
          * additional information (such as orientation), this routine
@@ -997,8 +1005,8 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * this should be between 0 and
          * NTriangulation::getNumberOfTetrahedra()-1 inclusive.
          * @param octType the number of the vertex splitting that this
-         * octagon type represents; this should be between 0 and 2
-         * inclusive.
+         * octagon type represents, as described above;
+         * this should be between 0 and 2 inclusive.
          * @return the number of octagonal discs of the given type.
          */
         NLargeInteger getOctCoord(unsigned long tetIndex,
