@@ -51,6 +51,7 @@ void addNormalCoords() {
         .value("NS_AN_LEGACY", regina::NS_AN_LEGACY)
         .value("NS_ORIENTED", regina::NS_ORIENTED)
         .value("NS_ORIENTED_QUAD", regina::NS_ORIENTED_QUAD)
+        .value("NS_ANGLE", regina::NS_ANGLE)
         ;
 
     global.attr("NS_STANDARD") = regina::NS_STANDARD;
@@ -63,5 +64,6 @@ void addNormalCoords() {
     global.attr("NS_AN_LEGACY") = regina::NS_AN_LEGACY;
     global.attr("NS_ORIENTED") = regina::NS_ORIENTED;
     global.attr("NS_ORIENTED_QUAD") = regina::NS_ORIENTED_QUAD;
+    global.attr("NS_ANGLE") = regina::NS_ANGLE;
 }
 

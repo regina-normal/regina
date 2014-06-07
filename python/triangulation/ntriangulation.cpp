@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "algebra/ngrouppresentation.h"
+#include "angle/nanglestructure.h"
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
@@ -85,6 +86,8 @@ namespace {
         NTriangulation::connectedSumDecomposition, 0, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_idealToFinite,
         NTriangulation::idealToFinite, 0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_puncture,
+        NTriangulation::puncture, 0, 1);
 
     void simplifiedFundamentalGroup_own(NTriangulation& tri,
             std::auto_ptr<regina::NGroupPresentation> group) {
@@ -289,6 +292,9 @@ void addNTriangulation() {
         .def("hasOctagonalAlmostNormalSphere",
             &NTriangulation::hasOctagonalAlmostNormalSphere,
             return_value_policy<manage_new_object>())
+        .def("hasStrictAngleStructure",
+            &NTriangulation::hasStrictAngleStructure,
+            return_value_policy<manage_new_object>())
         .def("intelligentSimplify", &NTriangulation::intelligentSimplify)
         .def("simplifyToLocalMinimum", &NTriangulation::simplifyToLocalMinimum,
             OL_simplifyToLocalMinimum())
@@ -333,6 +339,7 @@ void addNTriangulation() {
         .def("finiteToIdeal", &NTriangulation::finiteToIdeal)
         .def("barycentricSubdivision", &NTriangulation::barycentricSubdivision)
         .def("drillEdge", &NTriangulation::drillEdge)
+        .def("puncture", &NTriangulation::puncture, OL_puncture())
         .def("layerOn", &NTriangulation::layerOn,
             return_value_policy<reference_existing_object>())
         .def("insertLayeredSolidTorus",
@@ -343,6 +350,7 @@ void addNTriangulation() {
         .def("insertLayeredLoop", &NTriangulation::insertLayeredLoop)
         .def("insertAugTriSolidTorus", &NTriangulation::insertAugTriSolidTorus)
         .def("insertSFSOverSphere", &NTriangulation::insertSFSOverSphere)
+        .def("connectedSumWith", &NTriangulation::connectedSumWith)
         .def("insertTriangulation", &NTriangulation::insertTriangulation)
         .def("insertRehydration", &NTriangulation::insertRehydration)
         .def("dehydrate", &NTriangulation::dehydrate)

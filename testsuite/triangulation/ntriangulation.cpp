@@ -59,6 +59,8 @@
 
 using regina::Dim2Triangulation;
 using regina::NAbelianGroup;
+using regina::NBoundaryComponent;
+using regina::NComponent;
 using regina::NExampleTriangulation;
 using regina::NGroupPresentation;
 using regina::NIsomorphism;
@@ -68,6 +70,7 @@ using regina::NPerm4;
 using regina::NSignature;
 using regina::NStandardTriangulation;
 using regina::NTetrahedron;
+using regina::NTriangle;
 using regina::NTriangulation;
 using regina::NVertex;
 
@@ -103,6 +106,7 @@ class NTriangulationTest : public TriangulationTest<3> {
     CPPUNIT_TEST(idealToFinite);
     CPPUNIT_TEST(finiteToIdeal);
     CPPUNIT_TEST(drillEdge);
+    CPPUNIT_TEST(puncture);
     CPPUNIT_TEST(dehydration);
     CPPUNIT_TEST(simplification);
     CPPUNIT_TEST(reordering);
@@ -141,7 +145,8 @@ class NTriangulationTest : public TriangulationTest<3> {
             /**< A twisted layered loop representing S^3 / Q_28. */
         NTriangulation weberSeifert;
             /**< The Weber-Seifert dodecahedral space.  With 23 tetrahedra,
-                 this is too large for running normal surface algorithms.*/
+                 this is too large for running normal surface algorithms
+                 here in the test suite. */
 
         // Closed orientable, very large:
         NTriangulation lens100_1;
@@ -3498,6 +3503,180 @@ class NTriangulationTest : public TriangulationTest<3> {
                     CPPUNIT_FAIL("2-tetrahedron ball: drilling the "
                         "internal edge does not give a solid torus.");
             }
+        }
+
+        static void verifyPuncture(NTriangulation* tri) {
+            unsigned long n = tri->getNumberOfTetrahedra();
+            if (n == 0)
+                return;
+
+            for (unsigned long i = 0; i <= n; ++i) {
+                NTriangulation punc(*tri);
+                NTetrahedron* origTet;
+                if (i == n) {
+                    origTet = tri->getTetrahedron(0);
+                    punc.puncture();
+                } else {
+                    origTet = tri->getTetrahedron(i);
+                    punc.puncture(punc.getTetrahedron(i));
+                }
+
+                if (punc.getNumberOfTetrahedra() != n + 6) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "puncture gives wrong # tetrahedra.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (punc.isValid() != tri->isValid()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "puncture changes validity.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (punc.isIdeal() != tri->isIdeal()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "puncture changes idealness.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (punc.isStandard() != tri->isStandard()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "puncture changes standardness.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (punc.isConnected() != tri->isConnected()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "puncture changes connectedness.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (punc.isOrientable() != tri->isOrientable()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "puncture changes orientability.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (punc.isOriented() != tri->isOriented()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "puncture changes orientedness.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (punc.isClosed()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "puncture gives a closed triangulation.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (punc.getNumberOfBoundaryComponents() !=
+                        tri->getNumberOfBoundaryComponents() + 1) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "puncture gives wrong # boundary components.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (punc.getNumberOfBoundaryTriangles() !=
+                        tri->getNumberOfBoundaryTriangles() + 2) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "puncture gives wrong # boundary triangles.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                unsigned long nPunc = punc.getNumberOfTetrahedra();
+                NBoundaryComponent* bc = punc.getTetrahedron(nPunc - 1)->
+                    getTriangle(0)->getBoundaryComponent();
+                if (bc == 0 || bc != punc.getTetrahedron(nPunc - 2)->
+                        getTriangle(0)->getBoundaryComponent()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "puncture gives wrong boundary triangles.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (bc->getNumberOfTriangles() != 2) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "puncture gives wrong number of S^2 triangles.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (bc->getEulerChar() != 2) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "puncture gives wrong S^2 Euler characteristic.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (punc.getTetrahedron(nPunc - 1)->getVertex(1) !=
+                        punc.getTetrahedron(nPunc - 2)->getVertex(1) ||
+                        punc.getTetrahedron(nPunc - 1)->getVertex(2) !=
+                        punc.getTetrahedron(nPunc - 2)->getVertex(3) ||
+                        punc.getTetrahedron(nPunc - 1)->getVertex(3) !=
+                        punc.getTetrahedron(nPunc - 2)->getVertex(2)) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "puncture gives wrong S^2 vertex labels.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (punc.getEulerCharTri() != tri->getEulerCharTri() + 1) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "puncture gives wrong Euler characteristic (tri).";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (punc.getEulerCharManifold() !=
+                        tri->getEulerCharManifold() + 1) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", tet " << i << ": "
+                        << "puncture gives wrong Euler characteristic (mfd).";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (tri->isValid()) {
+                    if (! (punc.getHomologyH1() == tri->getHomologyH1())) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ", tet " << i << ": "
+                            << "puncture changes H1.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                    NAbelianGroup expectH2(tri->getHomologyH2());
+                    NAbelianGroup foundH2(punc.getHomologyH2());
+                    NComponent* c = origTet->getComponent();
+                    if (! c->isClosed()) {
+                        // X -> X + Z
+                        expectH2.addRank();
+                    } else if (! c->isOrientable()) {
+                        // X + Z_2 -> X + Z
+                        expectH2.addRank();
+                        foundH2.addTorsionElement(2);
+                    }
+
+                    if (foundH2 != expectH2) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ", tet " << i << ": "
+                            << "puncture gives the wrong H2.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
+        }
+
+        void puncture() {
+            testManualSmall(verifyPuncture);
+            runCensusAllClosed(verifyPuncture, true);
+            runCensusAllBounded(verifyPuncture, true);
+            runCensusAllIdeal(verifyPuncture, true);
         }
 
         void verifyDehydration(const NTriangulation& tri) {
