@@ -955,14 +955,6 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * "The Thurston norm via normal surfaces", Stephan Tillmann and
          * Daryl Cooper, Pacific Journal of Mathematics 239 (2009), 1-15.
          *
-         * An oriented triangular disc type is identified by specifying a
-         * tetrahedron, a vertex of that tetrahedron that the
-         * triangle surrounds, and a boolean orientation.  The \c true
-         * orientation indicates a triangle whose "transverse" orientation
-         * points to the nearby vertex, and the \c false orientation
-         * indicates a triangle whose "transverse" orientation points to
-         * the opposite face.
-         *
          * An oriented quadrilateral disc type is identified by specifying a
          * tetrahedron, a vertex splitting of that tetrahedron as
          * described in getQuadCoord(), and a boolean orientation.
