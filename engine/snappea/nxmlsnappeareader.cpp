@@ -41,17 +41,16 @@ namespace regina {
 void NXMLSnapPeaReader::endContentSubElement(
         const std::string& subTagName, NXMLElementReader* subReader) {
     if (subTagName == "snappea") {
-        if (snappea_->snappeaData) {
+        if (snappea_->data_) {
             // We can't have two <snappea>..</snappea> blocks.
             return;
         }
 
         try {
-            snappea_->snappeaData =
-                regina::snappea::read_triangulation_from_string(
+            snappea_->data_ = regina::snappea::read_triangulation_from_string(
                 dynamic_cast<NXMLCharsReader*>(subReader)->getChars().c_str());
         } catch (regina::SnapPeaFatalError& err) {
-            snappea_->snappeaData = 0;
+            snappea_->data_ = 0;
         }
     }
 }

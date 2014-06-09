@@ -204,10 +204,10 @@ class REGINA_API NSnapPeaTriangulation : public NPacket {
         } SolutionType;
 
     private:
-        regina::snappea::Triangulation* snappeaData;
+        regina::snappea::Triangulation* data_;
             /**< The triangulation stored in SnapPea's native format,
                  or 0 if this is a null triangulation. */
-        static bool kernelMessages;
+        static bool kernelMessages_;
             /**< Should the SnapPea kernel write diagnostic messages to
                  standard output? */
 
@@ -684,15 +684,15 @@ inline SnapPeaFatalError::SnapPeaFatalError(
 
 // Inline functions for NSnapPeaTriangulation
 
-inline NSnapPeaTriangulation::NSnapPeaTriangulation() : snappeaData(0) {
+inline NSnapPeaTriangulation::NSnapPeaTriangulation() : data_(0) {
 }
 
 inline bool NSnapPeaTriangulation::isNull() const {
-    return (snappeaData == 0);
+    return (data_ == 0);
 }
 
 inline NTriangulation* NSnapPeaTriangulation::toRegina() const {
-    return snapPeaToRegina(snappeaData);
+    return snapPeaToRegina(data_);
 }
 
 inline void NSnapPeaTriangulation::dump() const {

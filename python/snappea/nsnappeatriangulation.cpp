@@ -60,7 +60,7 @@ void addNSnapPeaTriangulation() {
             std::auto_ptr<NSnapPeaTriangulation>, boost::noncopyable>
             ("NSnapPeaTriangulation", init<>())
         .def(init<const std::string&>())
-        .def(init<const NSnapPeaTriangulation*>())
+        .def(init<const NSnapPeaTriangulation&>())
         .def(init<const NTriangulation&, optional<bool> >())
         .def("isNull", &NSnapPeaTriangulation::isNull)
         .def("solutionType", &NSnapPeaTriangulation::solutionType)
