@@ -223,6 +223,9 @@ class REGINA_API NSnapPeaTriangulation : public NPacket {
          * SnapPea data file.  The argument should be the \e contents
          * of a SnapPea file (not the filename itself).
          *
+         * If this operation is successful, this constructor will immediately
+         * ask SnapPea to try to find a complete hyperbolic structure.
+         *
          * If this operation fails (e.g., if the given string does not
          * represent a valid SnapPea data file), then this will be a
          * null triangulation.  You can test for this by calling isNull().

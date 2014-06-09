@@ -49,6 +49,10 @@ void NXMLSnapPeaReader::endContentSubElement(
         try {
             snappea_->data_ = regina::snappea::read_triangulation_from_string(
                 dynamic_cast<NXMLCharsReader*>(subReader)->getChars().c_str());
+            if (snappea_->data_) {
+                regina::snappea::find_complete_hyperbolic_structure(
+                    snappea_->data_);
+            }
         } catch (regina::SnapPeaFatalError& err) {
             snappea_->data_ = 0;
         }
