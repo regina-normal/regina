@@ -43,6 +43,7 @@
 #include "snappea/snappy/SnapPy.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/nthread.h"
+#include "utilities/xmlutils.h"
 
 namespace regina {
 
@@ -53,8 +54,18 @@ namespace {
     static NMutex snapMutex;
 }
 
-NSnapPeaTriangulation::NSnapPeaTriangulation(const NSnapPeaTriangulation& tri) :
-        ShareableObject() {
+NSnapPeaTriangulation::NSnapPeaTriangulation(const std::string& fileContents) {
+    snappeaData = 0;
+    try {
+        snappeaData = regina::snappea::read_triangulation_from_string(
+            fileContents.c_str());
+        setPacketLabel(get_triangulation_name(snappeaData));
+    } catch (regina::SnapPeaFatalError& err) {
+        snappeaData = 0;
+    }
+}
+
+NSnapPeaTriangulation::NSnapPeaTriangulation(const NSnapPeaTriangulation& tri) {
     if (tri.snappeaData)
         regina::snappea::copy_triangulation(tri.snappeaData, &snappeaData);
     else
@@ -66,6 +77,7 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri,
     snappeaData = reginaToSnapPea(tri, allowClosed);
     if (snappeaData) {
         regina::snappea::find_complete_hyperbolic_structure(snappeaData);
+        regina::snappea::install_shortest_bases(snappeaData);
     }
 }
 
@@ -114,6 +126,8 @@ void NSnapPeaTriangulation::randomize() {
     if (! snappeaData)
         return;
 
+    ChangeEventSpan span(this);
+
     regina::snappea::randomize_triangulation(snappeaData);
     regina::snappea::find_complete_hyperbolic_structure(snappeaData);
 }
@@ -125,8 +139,6 @@ NMatrixInt* NSnapPeaTriangulation::slopeEquations() const {
     int i,j;
     if (! snappeaData)
         return 0;
-
-    regina::snappea::install_shortest_bases(snappeaData);
 
     NMatrixInt* matrix =
         new NMatrixInt(2*snappeaData->num_cusps, 3*snappeaData->num_tetrahedra);
@@ -203,10 +215,9 @@ bool NSnapPeaTriangulation::verifyTriangulation(const NTriangulation& tri)
     return true;
 }
 
-void NSnapPeaTriangulation::saveAsSnapPea(const char* filename) const {
+void NSnapPeaTriangulation::save(const char* filename) const {
     if (snappeaData)
-        regina::snappea::write_triangulation(
-            snappeaData, const_cast<char*>(filename));
+        regina::snappea::write_triangulation(snappeaData, filename);
 }
 
 void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {
@@ -311,6 +322,16 @@ void NSnapPeaTriangulation::disableKernelMessages() {
     kernelMessages = false;
 }
 
+std::string NSnapPeaTriangulation::snapPea() const {
+    if (! snappeaData)
+        return std::string();
+
+    char* file = regina::snappea::string_triangulation(snappeaData);
+    std::string ans(file);
+    free(file);
+    return ans;
+}
+
 NTriangulation* NSnapPeaTriangulation::snapPeaToRegina(
         regina::snappea::Triangulation* tri) {
     if (! tri)
@@ -338,6 +359,14 @@ NTriangulation* NSnapPeaTriangulation::snapPeaToRegina(
     delete[] tet;
     regina::snappea::free_triangulation_data(data);
     return ans;
+}
+
+void NSnapPeaTriangulation::writeXMLPacketData(std::ostream& out) const {
+    if (! snappeaData)
+        return;
+
+    out << "  <snappea>" << regina::xml::xmlEncodeSpecialChars(snapPea())
+        << "</snappea>\n";
 }
 
 } // namespace regina

@@ -56,9 +56,11 @@ namespace {
 }
 
 void addNSnapPeaTriangulation() {
-    scope s = class_<NSnapPeaTriangulation, bases<regina::ShareableObject>,
+    scope s = class_<NSnapPeaTriangulation, bases<regina::NPacket>,
             std::auto_ptr<NSnapPeaTriangulation>, boost::noncopyable>
-            ("NSnapPeaTriangulation", init<const NSnapPeaTriangulation&>())
+            ("NSnapPeaTriangulation", init<>())
+        .def(init<const std::string&>())
+        .def(init<const NSnapPeaTriangulation*>())
         .def(init<const NTriangulation&, optional<bool> >())
         .def("isNull", &NSnapPeaTriangulation::isNull)
         .def("solutionType", &NSnapPeaTriangulation::solutionType)
@@ -72,8 +74,10 @@ void addNSnapPeaTriangulation() {
         .def("canonize", &NSnapPeaTriangulation::canonize,
             return_value_policy<manage_new_object>())
         .def("randomize", &NSnapPeaTriangulation::randomize)
+        .def("snapPea", &NSnapPeaTriangulation::snapPea)
         .def("dump", &NSnapPeaTriangulation::dump)
         .def("saveAsSnapPea", &NSnapPeaTriangulation::saveAsSnapPea)
+        .def("save", &NSnapPeaTriangulation::save)
         .def("kernelMessagesEnabled",
             &NSnapPeaTriangulation::kernelMessagesEnabled)
         .def("enableKernelMessages",
@@ -97,5 +101,8 @@ void addNSnapPeaTriangulation() {
         .value("other_solution", NSnapPeaTriangulation::other_solution)
         .value("no_solution", NSnapPeaTriangulation::no_solution)
     ;
+
+    implicitly_convertible<std::auto_ptr<NSnapPeaTriangulation>,
+        std::auto_ptr<regina::NPacket> >();
 }
 

@@ -32,78 +32,34 @@
 
 /* end stub */
 
-/*! \file packet/packettype.h
- *  \brief Defines constants for the various packet types known to Regina.
- */
-
-#ifndef __PACKETTYPE_H
-#ifndef __DOXYGEN
-#define __PACKETTYPE_H
-#endif
-
-#include "regina-core.h"
+#include "snappea/nsnappeatriangulation.h"
+#include "snappea/nxmlsnappeareader.h"
+#include "snappea/kernel/unix_file_io.h"
 
 namespace regina {
 
-/**
- * \weakgroup packet
- * @{
- */
+void NXMLSnapPeaReader::endContentSubElement(
+        const std::string& subTagName, NXMLElementReader* subReader) {
+    if (subTagName == "snappea") {
+        if (snappea_->snappeaData) {
+            // We can't have two <snappea>..</snappea> blocks.
+            return;
+        }
 
-/**
- * Represents the different types of packet that are available in Regina.
- *
- * IDs 0-9999 are reserved for future use by Regina.  If you are extending
- * Regina to include your own packet type, you should choose an ID >= 10000.
- */
-enum PacketType {
-    /**
-     * Represents a container packet, of class NContainer.
-     */
-    PACKET_CONTAINER = 1,
-    /**
-     * Represents a text packet, of class NText.
-     */
-    PACKET_TEXT = 2,
-    /**
-     * Represents a 3-manifold triangulation, of class NTriangulation.
-     */
-    PACKET_TRIANGULATION = 3,
-    /**
-     * Represents a normal surface list, of class NNormalSurfaceList.
-     */
-    PACKET_NORMALSURFACELIST = 6,
-    /**
-     * Represents a script packet, of class NScript.
-     */
-    PACKET_SCRIPT = 7,
-    /**
-     * Represents a normal surface filter, of class NSurfaceFilter or
-     * one of its descendant classes.
-     */
-    PACKET_SURFACEFILTER = 8,
-    /**
-     * Represents an angle structure list, of class NAngleStructureList.
-     */
-    PACKET_ANGLESTRUCTURELIST = 9,
-    /**
-     * Represents a PDF document, of class NPDF.
-     */
-    PACKET_PDF = 10,
-    /**
-     * Represents a 2-manifold triangulation, of class Dim2Triangulation.
-     */
-    PACKET_DIM2TRIANGULATION = 15,
-    /**
-     * Represents a triangulation in the embedded SnapPea kernel, of
-     * class NSnapPeaTriangulation.
-     */
-    PACKET_SNAPPEATRIANGULATION = 16
-};
+        try {
+            snappea_->snappeaData =
+                regina::snappea::read_triangulation_from_string(
+                dynamic_cast<NXMLCharsReader*>(subReader)->getChars().c_str());
+        } catch (regina::SnapPeaFatalError& err) {
+            snappea_->snappeaData = 0;
+        }
+    }
+}
 
-/*@}*/
+NXMLPacketReader* NSnapPeaTriangulation::getXMLReader(NPacket*,
+        NXMLTreeResolver& resolver) {
+    return new NXMLSnapPeaReader(resolver);
+}
 
 } // namespace regina
-
-#endif
 

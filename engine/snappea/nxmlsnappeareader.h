@@ -32,76 +32,72 @@
 
 /* end stub */
 
-/*! \file packet/packettype.h
- *  \brief Defines constants for the various packet types known to Regina.
+/*! \file packet/nxmlsnappeareader.h
+ *  \brief Deals with parsing XML data for SnapPea triangulations.
  */
 
-#ifndef __PACKETTYPE_H
+#ifndef __NXMLSNAPPEAREADER_H
 #ifndef __DOXYGEN
-#define __PACKETTYPE_H
+#define __NXMLSNAPPEAREADER_H
 #endif
 
 #include "regina-core.h"
+#include "packet/nxmlpacketreader.h"
+#include "snappea/nsnappeatriangulation.h"
 
 namespace regina {
 
 /**
- * \weakgroup packet
+ * \weakgroup snappea
  * @{
  */
 
 /**
- * Represents the different types of packet that are available in Regina.
+ * An XML packet reader that reads a single SnapPea triangulation.
  *
- * IDs 0-9999 are reserved for future use by Regina.  If you are extending
- * Regina to include your own packet type, you should choose an ID >= 10000.
+ * \ifacespython Not present.
  */
-enum PacketType {
-    /**
-     * Represents a container packet, of class NContainer.
-     */
-    PACKET_CONTAINER = 1,
-    /**
-     * Represents a text packet, of class NText.
-     */
-    PACKET_TEXT = 2,
-    /**
-     * Represents a 3-manifold triangulation, of class NTriangulation.
-     */
-    PACKET_TRIANGULATION = 3,
-    /**
-     * Represents a normal surface list, of class NNormalSurfaceList.
-     */
-    PACKET_NORMALSURFACELIST = 6,
-    /**
-     * Represents a script packet, of class NScript.
-     */
-    PACKET_SCRIPT = 7,
-    /**
-     * Represents a normal surface filter, of class NSurfaceFilter or
-     * one of its descendant classes.
-     */
-    PACKET_SURFACEFILTER = 8,
-    /**
-     * Represents an angle structure list, of class NAngleStructureList.
-     */
-    PACKET_ANGLESTRUCTURELIST = 9,
-    /**
-     * Represents a PDF document, of class NPDF.
-     */
-    PACKET_PDF = 10,
-    /**
-     * Represents a 2-manifold triangulation, of class Dim2Triangulation.
-     */
-    PACKET_DIM2TRIANGULATION = 15,
-    /**
-     * Represents a triangulation in the embedded SnapPea kernel, of
-     * class NSnapPeaTriangulation.
-     */
-    PACKET_SNAPPEATRIANGULATION = 16
+class REGINA_API NXMLSnapPeaReader : public NXMLPacketReader {
+    private:
+        NSnapPeaTriangulation* snappea_;
+            /**< The SnapPea triangulation currently being read. */
+
+    public:
+        /**
+         * Creates a new SnapPea triangulation reader.
+         *
+         * @param resolver the master resolver that will be used to fix
+         * dangling packet references after the entire XML file has been read.
+         */
+        NXMLSnapPeaReader(NXMLTreeResolver& resolver);
+
+        virtual NPacket* getPacket();
+        virtual NXMLElementReader* startContentSubElement(
+            const std::string& subTagName,
+            const regina::xml::XMLPropertyDict& subTagProps);
+        virtual void endContentSubElement(const std::string& subTagName,
+            NXMLElementReader* subReader);
 };
 
 /*@}*/
+
+// Inline functions for NXMLSnapPeaReader
+
+inline NXMLSnapPeaReader::NXMLSnapPeaReader(NXMLTreeResolver& resolver) :
+        NXMLPacketReader(resolver), snappea_(new NSnapPeaTriangulation()) {
+}
+
+inline NPacket* NXMLSnapPeaReader::getPacket() {
+    return snappea_;
+}
+
+inline NXMLElementReader* NXMLSnapPeaReader::startContentSubElement(
+        const std::string& subTagName, const regina::xml::XMLPropertyDict&) {
+    if (subTagName == "snappea")
+        return new NXMLCharsReader();
+    else
+        return new NXMLElementReader();
+}
 
 } // namespace regina
 

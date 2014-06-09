@@ -3,6 +3,7 @@
 # Files to compile
 SET ( FILES
   nsnappeatriangulation
+  nxmlsnappeareader
   uimessages)
 
 
@@ -22,6 +23,7 @@ SET(SOURCES_C_AS_CPP ${SOURCES_C_AS_CPP} PARENT_SCOPE)
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     nsnappeatriangulation.h
+    nxmlsnappeareader.h
     DESTINATION ${INCLUDEDIR}/snappea COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
 

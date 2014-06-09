@@ -33,7 +33,7 @@
 /* end stub */
 
 /*! \file snappea/nsnappeatriangulation.h
- *  \brief Allows Regina triangulations to interact with the SnapPea kernel.
+ *  \brief Provides access to the SnapPea kernel.
  */
 
 #ifndef __NSNAPPEATRIANGULATION_H
@@ -44,7 +44,7 @@
 #include "regina-config.h" // For EXCLUDE_SNAPPEA
 
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "packet/npacket.h"
 
 namespace regina {
 
@@ -54,7 +54,9 @@ namespace snappea {
 }
 
 class NMatrixInt;
+class NSnapPeaTriangulation;
 class NTriangulation;
+class NXMLSnapPeaReader;
 
 /**
  * \weakgroup triangulation
@@ -102,20 +104,46 @@ struct SnapPeaMemoryFull : public SnapPeaException {
 };
 
 /**
+ * Stores information about the SnapPea triangulation packet.
+ * See the general PacketInfo template notes for further details.
+ *
+ * \ifacespython Not present.
+ */
+template <>
+struct PacketInfo<PACKET_SNAPPEATRIANGULATION> {
+    typedef NSnapPeaTriangulation Class;
+    inline static const char* name() {
+        return "SnapPea Triangulation";
+    }
+};
+
+/**
  * Offers direct access to the SnapPea kernel from within Regina.
- *
- * An object of this class represents a 3-manifold triangulation, stored in
- * SnapPea's internal format.  Such an object may be constructed by cloning
- * either a standard Regina triangulation or another SnapPea triangulation.
- *
- * Note that not all Regina triangulations can be represented in SnapPea
- * format, since Regina works with more general kinds of triangulation
- * than SnapPea does.  You should always call isNull() to test whether any
- * Regina-to-SnapPea conversion was successful.
- *
  * This class is designed to act as the sole conduit between the Regina
- * calculation engine and the SnapPea kernel.  Regina code should not
- * interact with the SnapPea kernel other than through this class.
+ * calculation engine and Regina's inbuilt version of the C/C++ SnapPea kernel.
+ * Regina should not interact with the SnapPea kernel at the C/C++ level other
+ * than through this class.
+ *
+ * As an alternative, if you have SnapPy installed then you may interact
+ * directly with SnapPy via Python.  SnapPy's version of the SnapPea
+ * kernel might or might not be compatible with Regina's, but this
+ * should not cause problems (since Regina uses namespaces to keep the two
+ * versions of the kernel strictly separate).
+ *
+ * An object of this class represents a 3-manifold triangulation, stored
+ * directly in the SnapPea kernel using SnapPea's internal format.
+ *
+ * This might be a <i>null triangulation</i>, i.e., one that contains no
+ * data at all.  This might occur for several reasons; examples include
+ * (but are not limited to):
+ *
+ * - attempting to build a SnapPea triangulation from a Regina triangulation
+ *   that is invalid, has boundary faces, or has higher genus vertex
+ *   links (none of which SnapPea can handle);
+ *
+ * - attempting to read a broken SnapPea data file.
+ *
+ * You can call isNull() to test whether you have a null triangulation.
  *
  * There are many places in the SnapPea kernel where SnapPea throws a
  * fatal error.  As of Regina 4.96, these fatal errors are converted
@@ -123,7 +151,8 @@ struct SnapPeaMemoryFull : public SnapPeaException {
  * and handled politely.
  *
  * Regina uses the variant of the SnapPea kernel that is shipped with
- * SnapPy, as well as some additional code written explicitly for SnapPy.
+ * SnapPy 2.1 (standard precision), as well as some additional code
+ * written explicitly for SnapPy.
  * The SnapPea kernel was written by Jeff Weeks, and SnapPy was written by
  * Marc Culler, Nathan Dunfield, and others.  SnapPy and the corresponding
  * SnapPea kernel are distributed under the terms of the GNU General
@@ -135,7 +164,9 @@ struct SnapPeaMemoryFull : public SnapPeaException {
  *
  * \testpart
  */
-class REGINA_API NSnapPeaTriangulation : public ShareableObject {
+class REGINA_API NSnapPeaTriangulation : public NPacket {
+    REGINA_PACKET(NSnapPeaTriangulation, PACKET_SNAPPEATRIANGULATION)
+
     public:
         /**
          * Describes the different types of solution that can be found when
@@ -174,17 +205,44 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
 
     private:
         regina::snappea::Triangulation* snappeaData;
-            /**< The triangulation stored in SnapPea's native format. */
+            /**< The triangulation stored in SnapPea's native format,
+                 or 0 if this is a null triangulation. */
         static bool kernelMessages;
             /**< Should the SnapPea kernel write diagnostic messages to
                  standard output? */
 
     public:
         /**
-         * Creates a SnapPea clone of the given SnapPea triangulation.
-         * This SnapPea triangulation stands independent of \a tri,
-         * so this triangulation will not be affected if \a tri is later
-         * changed or destroyed.
+         * Creates a null triangulation, with no internal SnapPea data
+         * at all.
+         */
+        NSnapPeaTriangulation();
+
+        /**
+         * Creates a new SnapPea triangulation from the contents of
+         * SnapPea data file.  The argument should be the \e contents
+         * of a SnapPea file (not the filename itself).
+         *
+         * If this operation fails (e.g., if the given string does not
+         * represent a valid SnapPea data file), then this will be a
+         * null triangulation.  You can test for this by calling isNull().
+         *
+         * This constructor could (for example) be used in a Python session to
+         * pass data from SnapPy through to Regina's copy of the SnapPea
+         * kernel (which is strictly separate from SnapPy's), without
+         * losing any of SnapPy's internal information.
+         *
+         * The triangulation will automatically be given a packet label
+         * based on the manifold name stored in the data file.
+         *
+         * @param fileContents the contents of a SnapPea data file.
+         */
+        NSnapPeaTriangulation(const std::string& fileContents);
+
+        /**
+         * Creates a copy of the given SnapPea triangulation.
+         * This copy will be independent (i.e., this triangulation will
+         * not be affected if \a tri is later changed or destroyed).
          *
          * If \a tri is a null triangulation then this will be a null
          * triangulation also.  See isNull() for further details.
@@ -197,12 +255,11 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
         NSnapPeaTriangulation(const NSnapPeaTriangulation& tri);
 
         /**
-         * Creates a SnapPea clone of the given Regina triangulation.
-         * This SnapPea triangulation stands independent of \a tri,
-         * so this triangulation will not be affected if \a tri is later
-         * changed or destroyed.
+         * Converts the given Regina triangulation to a SnapPea triangulation.
+         * This copy will be independent (i.e., this triangulation will
+         * not be affected if \a tri is later changed or destroyed).
          *
-         * Note that, since Regina works with more general kinds of
+         * Since Regina works with more general kinds of
          * trianguations than SnapPea, not all Regina triangulations can be
          * represented in SnapPea format.  If the conversion is
          * unsuccessful, this will be marked as a null triangulation.
@@ -212,12 +269,17 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          * If the conversion is successful, this constructor will immediately
          * ask SnapPea to try to find a complete hyperbolic structure.
          *
+         * On each cusp, the meridian and longitude are chosen to be the
+         * (shortest, second shortest) basis, and their orientations
+         * follow the convention used by the \e SnapPy kernel.  Be warned,
+         * however, that this choice might not be unique for some cusp shapes,
+         * and the resolution of such ambiguities might be machine-dependent.
+         *
          * SnapPea is designed primarily to work with ideal
          * triangulations only.  Passing closed triangulations can
-         * occasionally cause the SnapPea kernel to raise a fatal error,
-         * which in turn will crash the entire program.  Thus by default,
-         * closed triangulations are never converted (a null SnapPea
-         * triangulation will be created instead).  See the optional
+         * occasionally cause the SnapPea kernel to crash the entire program.
+         * Thus by default, closed triangulations are never converted (a null
+         * SnapPea triangulation will be created instead).  See the optional
          * argument \a allowClosed for how to change this behaviour.
          *
          * Note also that the tetrahedron and vertex numbers might be changed
@@ -246,10 +308,10 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          * Determines whether this triangulation contains valid SnapPea
          * data.
          *
-         * A null SnapPea triangulation can occur when converting unusual
-         * types of Regina triangulation into SnapPea format, since
-         * Regina is written to deal with more general types of triangulations
-         * than SnapPea.
+         * A null SnapPea triangulation can occur (for instance)
+         * when converting unusual types of Regina triangulation into
+         * SnapPea format, or when reading broken SnapPea data files.
+         * See the NSnapPeaTriangulation class notes for details.
          *
          * @return \c true if this is a null triangulation, or \c false
          * if this triangulation contains valid SnapPea data.
@@ -316,12 +378,6 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          * To compute these slopes directly from a normal surface, see
          * NNormalSurface::boundarySlopes().
          *
-         * The meridian and longitude are chosen to be the shortest and
-         * second shortest basis on each cusp, and their orientations
-         * follow the convention used by the \e SnapPy kernel.  Be warned,
-         * however, that this choice might not be unique for some cusp shapes,
-         * and the resolution of such ambiguities might be machine-dependent.
-         *
          * The orientations of the
          * boundary curves of a spun-normal surface are chosen so
          * that \e if meridian and longitude are a positive basis as
@@ -331,12 +387,14 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          *
          * \pre All vertex links in this triangulation must be tori.
          *
-         * \warning If this triangulation originated from SnapPea, Regina
-         * cannot tell what meridian and longitude SnapPea was originally using
-         * (since Regina does not keep track of peripheral curves on cusps).
-         * Therefore Regina will always give boundary slopes relative to the
-         * shortest and second-shortest basis, as described above, which
-         * might not be what you expect.
+         * \warning If this triangulation was constructed from a Regina
+         * triangulation (of class NTriangulation), then Regina will have
+         * no information about what meridian and longitude the user wishes
+         * to use (since Regina does not keep track of peripheral curves
+         * on cusps).  Therefore Regina will give boundary slopes relative
+         * to the (shortest, second-shortest) basis, as described in the
+         * constructor NSnapPeaTriangulation(const NTriangulation&, bool).
+         * This might not be what the user expects.
          *
          * @author William Pettersson and Stephan Tillmann
          *
@@ -407,8 +465,8 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          * Verifies that the tetrahedron face gluings from this SnapPea
          * triangulation match the given Regina triangulation precisely.
          *
-         * This is useful if you are not sure whether SnapPea will relabel
-         * and/or retriangulate.
+         * This is useful if you need to test whether SnapPea has relabelled
+         * and/or retriangulated.
          *
          * This routine is equivalent to testing whether the given
          * triangulation is identical to the triangulation returned by
@@ -435,17 +493,41 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          * the responsibility of the caller of this routine to
          * eventually delete it.
          *
+         * The packet label of the new triangulation will be the internal
+         * SnapPea manifold name of this SnapPea triangulation (not
+         * Regina's packet label for this triangulation).
+         *
          * @return a new Regina triangulation, or \c null if this is a
          * null SnapPea triangulation (see isNull()).
          */
         NTriangulation* toRegina() const;
 
         /**
-         * Dumps the underlying SnapPea data to standard output.
+         * Returns the full internal SnapPea data as a string, using SnapPea's
+         * file format.  All information that would typically be saved to a
+         * SnapPea file will be included in this string, including data
+         * that Regina does not store in its own internal triangulation
+         * format (e.g., peripheral curves).
          *
-         * This routine should be regarded primarily as a diagnostic tool
-         * for investigating how the SnapPea kernel has modified and/or
-         * analysed a triangulation.
+         * Such a string could (for example) be used in a Python session to
+         * pass data from Regina's copy of the SnapPea kernel to SnapPy
+         * (which uses a separate copy of the SnapPea kernel), without
+         * losing any of SnapPea's internal information.
+         *
+         * If you wish to export this data to a SnapPea \e file, you
+         * should call saveAsSnapPea() instead (which has less overhead).
+         *
+         * If this triangulation does not contain any valid SnapPea
+         * data, then the resulting string will be empty.  See isNull()
+         * for further details.
+         *
+         * @return a string containing the full internal SnapPea data.
+         */
+        std::string snapPea() const;
+
+        /**
+         * Deprecated routine that dumps the full internal SnapPea data to
+         * standard output, using SnapPea's file format.
          *
          * Note that the SnapPea data is written using C-style output
          * (i.e., using the \a stdout file pointer), which may or may not
@@ -455,31 +537,44 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          * If this triangulation does not contain any valid SnapPea
          * data, this routine will do nothing.  See isNull() for further
          * details.
+         *
+         * \deprecated
          */
         void dump() const;
 
         /**
-         * Saves the underlying triangulation as a native SnapPea file.
-         * Like dump(), this routine is provided primarily as a diagnostic
-         * tool.
+         * Deprecated routine that saves the underlying triangulation as
+         * a native SnapPea data file.
          *
-         * For a general export-to-SnapPea method, users are referred to
-         * regina::writeSnapPea() instead, which avoids the internal SnapPea
-         * conversion entirely and simply writes Regina's native
-         * triangulation data in SnapPea's text format.
+         * This routine has been renamed as save().  See save() for
+         * further details on how this routine behaves.
+         *
+         * \deprecated This routine has been renamed as save().
+         *
+         * @param filename the name of the SnapPea file to write, or
+         * \c null if the data should be written to standard output.
+         */
+        void saveAsSnapPea(const char* filename) const;
+
+        /**
+         * Saves the underlying triangulation as a native SnapPea file.
+         *
+         * If you are trying to save a Regina triangulation (of class
+         * NTriangulation) as a SnapPy data file, you should use
+         * regina::writeSnapPea() instead (which is more robust, and
+         * which bypasses the SnapPea kernel entirely).
          *
          * Passing an empty string as the filename will cause the
-         * SnapPea data to be written to standard output, just like
-         * dump().  See the dump() documentation for caveats when
-         * combining the C-style output of this routine with \a std::cout.
+         * SnapPea data to be written to standard output.
          *
          * If this triangulation does not contain any valid SnapPea
          * data, this routine will do nothing.  See isNull() for further
          * details.
          *
-         * @param filename the name of the SnapPea file to write.
+         * @param filename the name of the SnapPea file to write, or
+         * \c null if the data should be written to standard output.
          */
-        void saveAsSnapPea(const char* filename) const;
+        void save(const char* filename) const;
 
         virtual void writeTextShort(std::ostream& out) const;
 
@@ -521,6 +616,14 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          * This routine (which interacts with static data) is thread-safe.
          */
         static void disableKernelMessages();
+
+        virtual bool dependsOnParent() const;
+        static NXMLPacketReader* getXMLReader(NPacket* parent,
+            NXMLTreeResolver& resolver);
+
+    protected:
+        virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual void writeXMLPacketData(std::ostream& out) const;
 
     private:
         /**
@@ -566,6 +669,8 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          */
         static NTriangulation* snapPeaToRegina(
             regina::snappea::Triangulation* tri);
+
+    friend class regina::NXMLSnapPeaReader;
 };
 
 /*@}*/
@@ -579,6 +684,9 @@ inline SnapPeaFatalError::SnapPeaFatalError(
 
 // Inline functions for NSnapPeaTriangulation
 
+inline NSnapPeaTriangulation::NSnapPeaTriangulation() : snappeaData(0) {
+}
+
 inline bool NSnapPeaTriangulation::isNull() const {
     return (snappeaData == 0);
 }
@@ -588,7 +696,20 @@ inline NTriangulation* NSnapPeaTriangulation::toRegina() const {
 }
 
 inline void NSnapPeaTriangulation::dump() const {
-    saveAsSnapPea("");
+    std::cout << snapPea();
+    std::cout.flush();
+}
+
+inline void NSnapPeaTriangulation::saveAsSnapPea(const char* filename) const {
+    save(filename);
+}
+
+inline bool NSnapPeaTriangulation::dependsOnParent() const {
+    return false;
+}
+
+inline NPacket* NSnapPeaTriangulation::internalClonePacket(NPacket*) const {
+    return new NSnapPeaTriangulation(*this);
 }
 
 #endif // EXCLUDE_SNAPPEA
