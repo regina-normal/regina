@@ -52,6 +52,7 @@ void NXMLSnapPeaReader::endContentSubElement(
             if (snappea_->data_) {
                 regina::snappea::find_complete_hyperbolic_structure(
                     snappea_->data_);
+                regina::snappea::do_Dehn_filling(snappea_->data_);
             }
         } catch (regina::SnapPeaFatalError& err) {
             snappea_->data_ = 0;

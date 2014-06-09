@@ -61,6 +61,7 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const std::string& fileContents) :
             fileContents.c_str());
         if (data_) {
             regina::snappea::find_complete_hyperbolic_structure(data_);
+            regina::snappea::do_Dehn_filling(data_);
             setPacketLabel(get_triangulation_name(data_));
         }
     } catch (regina::SnapPeaFatalError& err) {
@@ -80,6 +81,7 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri,
     data_ = reginaToSnapPea(tri, allowClosed);
     if (data_) {
         regina::snappea::find_complete_hyperbolic_structure(data_);
+        regina::snappea::do_Dehn_filling(data_);
 
         // Regina triangulations know nothing about peripheral curves.
         // Install a sensible basis for each cusp.
@@ -136,6 +138,7 @@ void NSnapPeaTriangulation::randomize() {
 
     regina::snappea::randomize_triangulation(data_);
     regina::snappea::find_complete_hyperbolic_structure(data_);
+    regina::snappea::do_Dehn_filling(data_);
 }
 
 /**
