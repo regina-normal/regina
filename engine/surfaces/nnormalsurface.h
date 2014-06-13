@@ -548,7 +548,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          */
         virtual NLargeInteger getTriangleCoord(unsigned long tetIndex,
             int vertex, NTriangulation* triang) const = 0;
-        
+
         /**
          * Returns the number of oriented triangular discs of the given type in
          * this normal surface.
@@ -810,7 +810,6 @@ class REGINA_API NNormalSurface : public ShareableObject {
         NNormalSurface(NTriangulation* triang,
             NNormalSurfaceVector* newVector);
 
-
         /**
          * A Python-only routine that creates a new normal surface
          * inside the given triangulation with the given coordinate vector.
@@ -835,7 +834,6 @@ class REGINA_API NNormalSurface : public ShareableObject {
         NNormalSurface(NTriangulation* triang, NormalCoords coordSystem,
             List allCoords);
         #endif
-
 
         /**
          * Destroys this normal surface.
