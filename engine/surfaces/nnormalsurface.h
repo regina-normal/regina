@@ -793,6 +793,10 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * Creates a new normal surface inside the given triangulation
          * with the given coordinate vector.
          *
+         * This normal surface will claim ownership of the given vector
+         * (i.e., you should not change or delete the vector yourself
+         * afterwards).
+         *
          * \pre The given coordinate vector represents a
          * normal surface inside the given triangulation.
          * \pre The given coordinate vector cannot be the null pointer.
