@@ -280,7 +280,7 @@ inline const char* NPDF::data() const {
 }
 
 inline bool NPDF::isNull() const {
-    return data_;
+    return ! data_;
 }
 
 inline size_t NPDF::size() const {
