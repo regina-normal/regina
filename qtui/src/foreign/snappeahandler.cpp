@@ -79,8 +79,8 @@ bool SnapPeaHandler::exportData(regina::NPacket* data,
                 "to SnapPea format."));
         return false;
     }
-    if (! regina::writeSnapPea(
-            static_cast<const char*>(QFile::encodeName(fileName)), *tri)) {
+    if (! tri->saveSnapPea(
+            static_cast<const char*>(QFile::encodeName(fileName)))) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("The export failed."),
             QObject::tr("<qt>An unknown error occurred, probably related "
