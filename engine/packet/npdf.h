@@ -74,7 +74,8 @@ struct PacketInfo<PACKET_PDF> {
  * A packet that can hold a PDF document.
  *
  * This packet may or may not contain a PDF document at any given time.
- * This state can be changed by calling reset().
+ * This can be tested by calling isNull(), and can be changed by calling
+ * reset().
  */
 class REGINA_API NPDF : public NPacket {
     REGINA_PACKET(NPDF, PACKET_PDF)
@@ -135,7 +136,8 @@ class REGINA_API NPDF : public NPacket {
          * any way.
          *
          * It is possible to pass a null pointer as the data array, in
-         * which case the new packet will have no PDF document stored.
+         * which case the new packet will have no PDF document stored
+         * (so isNull() will return \c true).
          *
          * \ifacespython Not present.
          *
@@ -155,12 +157,21 @@ class REGINA_API NPDF : public NPacket {
         ~NPDF();
 
         /**
+         * Determines whether this packet is currently holding a PDF
+         * document.
+         *
+         * @return \c true if and only if this packet is holding a
+         * PDF document.
+         */
+        bool isNull() const;
+
+        /**
          * Returns a pointer to the block of raw data that forms this
          * PDF document.  The number of bytes in this block can be found
          * by calling size().
          *
-         * If no PDF document is currently stored, this routine will
-         * return a null pointer.
+         * If no PDF document is currently stored (i.e., isNull()
+         * returns \c true), then this routine will return a null pointer.
          *
          * \ifacespython Not present.
          *
@@ -171,8 +182,8 @@ class REGINA_API NPDF : public NPacket {
         /**
          * Returns the size of this PDF document in bytes.
          *
-         * If no PDF document is currently stored, this routine will
-         * return zero.
+         * If no PDF document is currently stored (i.e., isNull()
+         * returns \c true), then this routine will return zero.
          *
          * @return the number of bytes.
          */
@@ -180,6 +191,7 @@ class REGINA_API NPDF : public NPacket {
 
         /**
          * Empties this PDF packet so that no document is stored.
+         * After calling this routine, isNull() will return \c true.
          *
          * The old data will be deallocated if required.
          */
@@ -243,6 +255,10 @@ inline NPDF::~NPDF() {
 }
 
 inline const char* NPDF::data() const {
+    return data_;
+}
+
+inline bool NPDF::isNull() const {
     return data_;
 }
 

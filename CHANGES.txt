@@ -93,6 +93,8 @@ Version 4.96  [ (under development) ]
         Class NPacket:
             - New routine save(), which is now the preferred way of saving
               Regina data files.
+        Class NPDF:
+            - New routine isNull() to test if a PDF document is stored.
         Class NPerm3, NPerm4, NPerm5:
             - New dimension-agnostic alias invSn.
             - Changed the type of NPerm3::invS3 from int to unsigned,
