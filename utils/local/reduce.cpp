@@ -359,7 +359,7 @@ int main(int argc, const char* argv[]) {
     // Are we saving results?
     if (outFile) {
         printf("\nSaving results to %s...\n", outFile);
-        writeXMLFile(outFile, tree);
+        tree->save(outFile);
     } else
         printf("\nNot saving results.\n");
 

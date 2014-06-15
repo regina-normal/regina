@@ -517,7 +517,7 @@ int main(int argc, const char* argv[]) {
     // Are we saving results?
     if (outFile && newTree) {
         fprintf(stderr, "\nSaving results to %s...\n", outFile);
-        writeXMLFile(outFile, newTree);
+        newTree->save(outFile);
     } else
         fprintf(stderr, "\nNot saving results.\n");
 

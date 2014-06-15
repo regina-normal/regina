@@ -73,8 +73,7 @@ bool PDFHandler::exportData(regina::NPacket* data, const QString& fileName,
                 "real PDF data."));
         return false;
     }
-    if (! regina::writePDF(
-            static_cast<const char*>(QFile::encodeName(fileName)), *pdf)) {
+    if (! pdf->savePDF(static_cast<const char*>(QFile::encodeName(fileName)))) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("The export failed."), 
             QObject::tr("<qt>An unknown error occurred, probably related "

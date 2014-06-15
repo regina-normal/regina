@@ -984,7 +984,7 @@ void slaveProcessPartialSearch() {
             std::string outFile;
             slaveMakeTaskFilename(outFile, ".rga");
 
-            if (regina::writeXMLFile(outFile.c_str(), parent))
+            if (parent->save(outFile.c_str()))
                 slaveSendResult(nSolns);
             else
                 slaveBail("Output file could not be written.");
@@ -1076,7 +1076,7 @@ void slaveProcessPairing() {
             std::string outFile;
             slaveMakeTaskFilename(outFile, ".rga");
 
-            if (regina::writeXMLFile(outFile.c_str(), parent))
+            if (parent->save(outFile.c_str()))
                 slaveSendResult(nSolns);
             else
                 slaveBail("Output file could not be written.");

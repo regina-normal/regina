@@ -120,7 +120,7 @@ int main(int argc, char* argv[]) {
     } else {
         // Real output file.
         // Use compressed / uncompressed XML
-        result = regina::writeXMLFile(newFile.c_str(), tree, typeOpt == 'x');
+        result = tree->save(newFile.c_str(), typeOpt == 'x');
     }
 
     if (! result) {

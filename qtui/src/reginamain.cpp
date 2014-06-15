@@ -873,8 +873,8 @@ bool ReginaMain::saveFile() {
             writeTree = child;
     }
 
-    if (regina::writeXMLFile(static_cast<const char*>(
-            QFile::encodeName(localFile)), writeTree)) {
+    if (writeTree->save(static_cast<const char*>(
+            QFile::encodeName(localFile)))) {
         setModified(false);
         return true;
     } else {

@@ -583,7 +583,7 @@ int mainController() {
     // Are we saving results?
     if (outFile && newTree) {
         ctrlLogStamp() << "Saving results to " << outFile << "." << std::endl;
-        writeXMLFile(outFile, newTree);
+        newTree->save(outFile);
     } else
         ctrlLogStamp() << "Not saving results." << std::endl;
 

@@ -352,7 +352,7 @@ int main(int argc, char* argv[]) {
             if (line != "y") {
                 std::cerr << "Not saving data file.\n";
                 renameMfds = false;
-            } else if (writeXMLFile(argv[i], tree))
+            } else if (tree->save(argv[i]))
                 std::cerr << "Data saved to " << argv[i] << ".\n";
             else
                 std::cerr << "ERROR: The data file could not be saved.\n";

@@ -106,7 +106,7 @@ int main(int argc, char* argv[]) {
     // Tidy up the final data file and write it.
     if (outputFile.empty())
         ans->writeXMLFile(std::cout);
-    else if (! regina::writeXMLFile(outputFile.c_str(), ans))
+    else if (! ans->save(outputFile.c_str()))
         std::cerr << "File " << outputFile << " could not be written.\n";
 
     delete ans;
