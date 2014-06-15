@@ -43,7 +43,7 @@
 
 #include <string>
 #include "regina-core.h"
-#include "ntriangulation.h"
+#include "triangulation/ntriangulation.h"
 
 namespace regina {
 
