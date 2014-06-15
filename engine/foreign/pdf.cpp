@@ -83,26 +83,16 @@ NPDF* readPDF(const char* filename) {
 }
 
 bool writePDF(const char* filename, const NPDF& pdf) {
-    // Use FILE* for symmetry with readPDF().
-
-    // Open the file.
-    FILE* out = fopen(filename, "wb");
-    if (!out)
-        return false;
-
-    // Is there anything to write?
-    const char* data = pdf.data();
-    if (data) {
-        size_t size = pdf.size();
-        if (fwrite(data, 1, size, out) != size) {
-            fclose(out);
+    if (pdf.isNull()) {
+        // Preserve old behaviour for backward compatibility: create an
+        // empty file.
+        FILE* out = fopen(filename, "wb");
+        if (! out)
             return false;
-        }
-    }
-
-    // All done.
-    fclose(out);
-    return true;
+        fclose(out);
+        return true;
+    } else
+        return pdf.savePDF(filename);
 }
 
 } // namespace regina

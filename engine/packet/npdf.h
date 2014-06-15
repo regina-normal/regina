@@ -216,6 +216,27 @@ class REGINA_API NPDF : public NPacket {
          */
         void reset(char* data, size_t size, OwnershipPolicy alloc);
 
+        /**
+         * Saves this PDF document to the given file in PDF format.
+         *
+         * This routine does not check whether the contents of this
+         * packet \e look like a PDF document; it simply writes them
+         * blindly to the filesystem.
+         *
+         * If no PDF document is currently stored in this PDF packet
+         * (i.e., isNull() returns \c true), then this routine will do
+         * nothing and simply return \c true.
+         *
+         * \i18n This routine makes no assumptions about the
+         * \ref i18n "character encoding" used in the given file \e name, and
+         * simply passes it unchanged to low-level C/C++ file I/O routines.
+         *
+         * @param filename the name of the PDF file to write.
+         * @return \c true if the file was successfully written, or
+         * \c false otherwise.
+         */
+        bool savePDF(const char* filename) const;
+
         virtual void writeTextShort(std::ostream& out) const;
         static NXMLPacketReader* getXMLReader(NPacket* parent,
             NXMLTreeResolver& resolver);

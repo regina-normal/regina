@@ -74,22 +74,12 @@ class NPDF;
 REGINA_API NPDF* readPDF(const char *filename);
 
 /**
- * Writes the given PDF document to the given file.
+ * Deprecated function that writes the given PDF document to the given file.
  *
- * This routine does not check whether the contents of the given packet
- * \e look like a PDF document; it simply writes them blindly to the
- * given file.
- *
- * If the given PDF packet is empty (i.e., does not contain a real block
- * of data) then the resulting file will be created but left empty.
- *
- * \i18n This routine makes no assumptions about the
- * \ref i18n "character encoding" used in the given file \e name, and
- * simply passes it through unchanged to low-level C/C++ file I/O routines.
- *
- * @param filename the filename of the PDF document to write.
- * @param pdf the PDF packet to write to the given file.
- * @return \c true if the export was successful, or \c false otherwise.
+ * \deprecated This routine has been renamed as NPDF::savePDF().  This old
+ * routine behaves exactly as in the past, but the new NPDF::savePDF() has
+ * a slight change in behaviour: it no longer creates an empty file if the
+ * PDF packet contains no data.  See NPDF::savePDF() for further details.
  */
 REGINA_API bool writePDF(const char* filename, const NPDF& pdf);
 

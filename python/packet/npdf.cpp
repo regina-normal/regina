@@ -48,6 +48,7 @@ void addNPDF() {
         .def("isNull", &NPDF::isNull)
         .def("size", &NPDF::size)
         .def("reset", reset_empty)
+        .def("savePDF", &NPDF::savePDF)
     ;
 
     s.attr("packetType") = regina::PacketType(NPDF::packetType);

@@ -84,6 +84,28 @@ void NPDF::reset(char* data, size_t size, OwnershipPolicy alloc) {
     }
 }
 
+bool NPDF::savePDF(const char* filename) const {
+    if (! data_)
+        return true;
+
+    // Use FILE* for symmetry with the PDF load routine.
+
+    // Open the file.
+    FILE* out = fopen(filename, "wb");
+    if (!out)
+        return false;
+
+    // Is there anything to write?
+    if (fwrite(data_, 1, size_, out) != size_) {
+        fclose(out);
+        return false;
+    }
+
+    // All done.
+    fclose(out);
+    return true;
+}
+
 void NPDF::writeXMLPacketData(std::ostream& out) const {
     if (! data_) {
         // We have an empty PDF packet.
