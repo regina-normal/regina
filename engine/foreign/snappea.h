@@ -116,50 +116,23 @@ REGINA_API NTriangulation* readSnapPea(const char *filename);
 REGINA_API NTriangulation* readSnapPea(std::istream& in);
 
 /**
- * Writes the given triangulation to the given file in SnapPea format.
- * This routine writes to the filesystem; see
- * writesnapPea(std::ostream&, NTriangulation&) for a variant of this
- * routine that can write to an arbitrary output stream.
-
- * All information aside from tetrahedron gluings will be flagged as
- * unknown for SnapPea to recalculate.  The manifold name written in the
- * file will be derived from the packet label.
+ * Deprecated function that writes the given triangulation to the given file
+ * using SnapPea's native file format.
  *
- * \pre The given triangulation is not invalid, and does not contain any
- * boundary triangles.
- *
- * \i18n This routine makes no assumptions about the
- * \ref i18n "character encoding" used in the given file \e name, and
- * simply passes it through unchanged to low-level C/C++ file I/O routines.
- * The \e contents of the file will be written using UTF-8.
- *
- * @param filename the name of the SnapPea file to which to write.
- * @param tri the triangulation to write to the SnapPea file.
- * @return \c true if the export was successful, or \c false if there
- * was a problem writing to the file.
+ * \deprecated This routine has been renamed as NTriangulation::saveSnapPea().
+ * See the documentation of NTriangulation::saveSnapPea() for further details.
  */
 REGINA_API bool writeSnapPea(const char* filename, const NTriangulation& tri);
 
 /**
- * Writes the given triangulation to the given output stream using SnapPea's
- * file format.  This is essentially the same as
- * writeSnapPea(const char*, NTriangulation&), except that it can work with
- * any output stream.
+ * Deprecated function that writes the given triangulation to the
+ * given output stream using SnapPea's native file format.
  *
- * All information aside from tetrahedron gluings will be flagged as
- * unknown for SnapPea to recalculate.  The manifold name written in the
- * file will be derived from the packet label.
+ * \deprecated This routine has been renamed as
+ * NTriangulation::snapPea(std::ostream&).  See the documentation for
+ * NTriangulation::snapPea(std::ostream&) for further information.
  *
- * \pre The given triangulation is not invalid, and does not contain any
- * boundary triangles.
- *
- * \i18n The contents of the SnapPea file will be written using UTF-8.
- *
- * \ifacespython Not present, although the filesystem variant
- * writeSnapPea(const char*, NTriangulation&) is available.
- *
- * @param out the output stream to which to write.
- * @param tri the triangulation to write to the SnapPea file.
+ * \ifacespython Not present.
  */
 REGINA_API void writeSnapPea(std::ostream& out, const NTriangulation& tri);
 

@@ -153,6 +153,9 @@ Version 4.96  [ (under development) ]
               See the NGenericTriangulation notes above for details.
             - New routine getNumberOfBoundaryTriangles().
             - New routine puncture().
+            - New routines snapPea(std::ostream&) and saveSnapPea().
+              These (and the existing snapPea()) are now the preferred ways
+              of exporting an NTriangulation to SnapPea's native file format.
             - New routines recogniser(), recogniser(std::ostream&),
               saveRecogniser(), plus US-spelled variants recognizer(), etc.
               These are now the preferred ways of exporting data for
@@ -178,6 +181,11 @@ Version 4.96  [ (under development) ]
               The new versious have a change in behaviour, in that they now
               require a non-empty filename (the old behaviour can be recreated
               by calling NTriangulation::recogniser() instead).
+        Routine writeSnapPea():
+            - The two variants of this routine have been renamed as
+              NTriangulation::snapPea(std::ostream&) and
+              NTriangulation::saveSnapPea(const char*).  The old names
+              are deprecated but have been kept for backward compatibility.
         Routine writeXMLFile():
             - Renamed to NPacket::save().  The old name is deprecated but
               has been kept for backward compatibility.

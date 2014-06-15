@@ -718,8 +718,78 @@ std::string NTriangulation::dumpConstruction() const {
 
 std::string NTriangulation::snapPea() const {
     std::ostringstream out;
-    writeSnapPea(out, *this);
+    snapPea(out);
     return out.str();
+}
+
+void NTriangulation::snapPea(std::ostream& out) const {
+    // Sanity checks.
+    if ((! isValid()) || hasBoundaryTriangles())
+        return;
+
+    // Write header information.
+    out << "% Triangulation\n";
+    if (getPacketLabel().empty())
+        out << "Regina_Triangulation\n";
+    else
+        out << stringToToken(getPacketLabel()) << '\n';
+
+    // Write general details.
+    out << "not_attempted 0.0\n";
+    out << "unknown_orientability\n";
+    out << "CS_unknown\n";
+
+    // Write cusps.
+    out << "0 0\n";
+
+    // Write tetrahedra.
+    out << getNumberOfTetrahedra() << '\n';
+
+    int i, j;
+    for (NTriangulation::TetrahedronIterator it = getTetrahedra().begin();
+            it != getTetrahedra().end(); it++) {
+        // Although our precondition states that there are no boundary
+        // triangles, we test for this anyway.  If somebody makes a mistake and
+        // calls this routine with a bounded triangulation, we don't want
+        // to wind up calling tetrahedronIndex(0) and crashing.
+        for (i = 0; i < 4; i++)
+            if ((*it)->adjacentTetrahedron(i))
+                out << "   " << tetrahedronIndex(
+                    (*it)->adjacentTetrahedron(i)) << ' ';
+            else
+                out << "   -1 ";
+        out << '\n';
+        for (i = 0; i < 4; i++)
+            out << ' ' << (*it)->adjacentGluing(i).str();
+        out << '\n';
+
+        // Incident cusps.
+        for (i = 0; i < 4; i++)
+            out << "  -1 ";
+        out << '\n';
+
+        // Meridians and longitudes.
+        for (i = 0; i < 4; i++) {
+            for (j = 0; j < 16; j++)
+                out << "  0";
+            out << '\n';
+        }
+
+        // Tetrahedron shape.
+        out << "0.0 0.0\n";
+    }
+}
+
+bool NTriangulation::saveSnapPea(const char* filename) const {
+    // Sanity checks.
+    if ((! isValid()) || hasBoundaryTriangles())
+        return false;
+
+    std::ofstream out(filename);
+    if (!out)
+        return false;
+    snapPea(out);
+    return true;
 }
 
 std::string NTriangulation::recogniser() const {
