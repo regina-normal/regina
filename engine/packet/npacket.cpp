@@ -33,6 +33,7 @@
 /* end stub */
 
 #include <set>
+#include <fstream>
 #include <sstream>
 #include "engine.h"
 #include "packet/npacket.h"
@@ -40,6 +41,7 @@
 #include "packet/nscript.h"
 #include "utilities/base64.h"
 #include "utilities/xmlutils.h"
+#include "utilities/zstream.h"
 
 namespace regina {
 
