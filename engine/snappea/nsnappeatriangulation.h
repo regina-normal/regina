@@ -537,11 +537,12 @@ class REGINA_API NSnapPeaTriangulation : public NPacket {
          * cause unexpected behaviour when used in conjunction with
          * \a std::cout.
          *
-         * If this triangulation does not contain any valid SnapPea
-         * data, this routine will do nothing.  See isNull() for further
-         * details.
+         * If this triangulation does not contain any valid SnapPea data
+         * (i.e., isNull() returns \c true), then this routine will do nothing.
          *
-         * \deprecated
+         * \deprecated This routine will be removed in a future version of
+         * Regina.  Instead you should simply print the string returned from
+         * snapPea().
          */
         void dump() const;
 
@@ -549,13 +550,12 @@ class REGINA_API NSnapPeaTriangulation : public NPacket {
          * Deprecated routine that saves the underlying triangulation as
          * a native SnapPea data file.
          *
-         * This routine has been renamed as saveSnapPea().  See saveSnapPea()
-         * for further details on how this routine behaves.
-         *
          * \deprecated This routine has been renamed as saveSnapPea().
-         *
-         * @param filename the name of the SnapPea file to write, or
-         * \c null if the data should be written to standard output.
+         * This old routine behaves exactly as in the past, but the new
+         * routine has a slight change in behaviour: it now requires a
+         * non-empty filename.  To send data to standard output (as in
+         * the old routine), you can simply print the string returned from
+         * snapPea().  See the saveSnapPea() documentation for further details.
          */
         void saveAsSnapPea(const char* filename) const;
 
@@ -563,21 +563,15 @@ class REGINA_API NSnapPeaTriangulation : public NPacket {
          * Saves the underlying triangulation as a native SnapPea file.
          *
          * If you are trying to export an NTriangulation object to SnapPea's
-         * file format (i.e., you do not actually wish to work with the
-         * SnapPea kernel), then you should call NTriangulation::saveSnapPea()
-         * instead.
+         * file format (i.e., you do not actually wish to work with the SnapPea
+         * kernel), then you should call NTriangulation::saveSnapPea() instead.
          *
-         * Passing an empty string as the filename will cause the
-         * SnapPea data to be written to standard output.
+         * If this triangulation does not contain any valid SnapPea data
+         * (i.e., isNull() returns \c true), then this routine will do
+         * nothing and return \c false.
          *
-         * If this triangulation does not contain any valid SnapPea
-         * data (i.e., isNull() returns \c true), then this routine will
-         * do nothing and return \c false.
-         *
-         * @param filename the name of the SnapPea file to write, or
-         * \c null if the data should be written to standard output.
-         * @return \c true if the file was successfully written, or
-         * \c false otherwise.
+         * @param filename the name of the SnapPea file to write.
+         * @return \c true if and only if the file was successfully written.
          */
         bool saveSnapPea(const char* filename) const;
 
@@ -698,15 +692,6 @@ inline bool NSnapPeaTriangulation::isNull() const {
 
 inline NTriangulation* NSnapPeaTriangulation::toRegina() const {
     return snapPeaToRegina(data_);
-}
-
-inline void NSnapPeaTriangulation::dump() const {
-    std::cout << snapPea();
-    std::cout.flush();
-}
-
-inline void NSnapPeaTriangulation::saveAsSnapPea(const char* filename) const {
-    saveSnapPea(filename);
 }
 
 inline bool NSnapPeaTriangulation::dependsOnParent() const {

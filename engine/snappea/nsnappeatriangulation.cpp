@@ -224,13 +224,6 @@ bool NSnapPeaTriangulation::verifyTriangulation(const NTriangulation& tri)
     return true;
 }
 
-bool NSnapPeaTriangulation::saveSnapPea(const char* filename) const {
-    if (data_)
-        return regina::snappea::write_triangulation(data_, filename);
-    else
-        return false;
-}
-
 void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {
     if (data_) {
         out << "SnapPea triangulation with " << data_->num_tetrahedra
@@ -341,6 +334,27 @@ std::string NSnapPeaTriangulation::snapPea() const {
     std::string ans(file);
     free(file);
     return ans;
+}
+
+void NSnapPeaTriangulation::dump() const {
+    if (! data_)
+        return;
+
+    char* file = regina::snappea::string_triangulation(data_);
+    printf("%s", file);
+    fflush(stdout);
+    free(file);
+}
+
+void NSnapPeaTriangulation::saveAsSnapPea(const char* filename) const {
+    if (data_)
+        regina::snappea::write_triangulation(data_, filename);
+}
+
+bool NSnapPeaTriangulation::saveSnapPea(const char* filename) const {
+    if (! (data_ && filename && *filename))
+        return false;
+    return regina::snappea::write_triangulation(data_, filename);
 }
 
 NTriangulation* NSnapPeaTriangulation::snapPeaToRegina(
