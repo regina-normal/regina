@@ -77,6 +77,7 @@ void addNSnapPeaTriangulation() {
         .def("snapPea", &NSnapPeaTriangulation::snapPea)
         .def("dump", &NSnapPeaTriangulation::dump)
         .def("saveAsSnapPea", &NSnapPeaTriangulation::saveAsSnapPea)
+        .def("saveSnapPea", &NSnapPeaTriangulation::saveSnapPea)
         .def("save", &NSnapPeaTriangulation::save)
         .def("kernelMessagesEnabled",
             &NSnapPeaTriangulation::kernelMessagesEnabled)

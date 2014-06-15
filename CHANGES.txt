@@ -120,8 +120,8 @@ Version 4.96  [ (under development) ]
               second-shortest) curves on each cusp as its (meridian, longitude)
               basis.  This reverts a change in behaviour from the previous
               release caused by the recent sync with the SnapPy 2.0.3 kernel.
-            - Routine saveAsSnapPea() has been renamed as save().  The old
-              name is deprecated but has been kept for backward compatibility.
+            - Renamed saveAsSnapPea() to saveSnapPea().  The old name is
+              deprecated but has been kept for backward compatibility.
             - Routine dump() is deprecated.  Instead, simply call snapPea() and
               write the resulting string to standard output.
         Class NTautEnumeration:

@@ -224,9 +224,13 @@ bool NSnapPeaTriangulation::verifyTriangulation(const NTriangulation& tri)
     return true;
 }
 
-void NSnapPeaTriangulation::save(const char* filename) const {
-    if (data_)
+bool NSnapPeaTriangulation::saveSnapPea(const char* filename) const {
+    if (data_) {
         regina::snappea::write_triangulation(data_, filename);
+        // TODO: Catch errors?
+        return true;
+    } else
+        return false;
 }
 
 void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {
