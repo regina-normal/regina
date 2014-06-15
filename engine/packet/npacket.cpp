@@ -522,6 +522,21 @@ NPacket* NPacket::clone(bool cloneDescendants, bool end) const {
     return ans;
 }
 
+bool NPacket::save(const char* filename, bool compressed) const {
+    if (compressed) {
+        CompressionStream out(filename);
+        if (! out)
+            return false;
+        writeXMLFile(out);
+    } else {
+        std::ofstream out(filename);
+        if (! out)
+            return false;
+        writeXMLFile(out);
+    }
+    return true;
+}
+
 void NPacket::internalCloneDescendants(NPacket* parent) const {
     NPacket* child = firstTreeChild;
     NPacket* clone;

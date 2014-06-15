@@ -56,23 +56,11 @@ class NPacket;
  */
 
 /**
- * Writes the subtree with the given packet as matriarch to disk as a
- * complete XML file.  The XML file may be optionally compressed.
+ * Deprecated routine that writes a packet tree (or subtree) to a Regina
+ * data file using Regina's native XML file format.
  *
- * This is the preferred way of writing a packet tree to file.
- *
- * \pre The given packet does not depend on its parent.
- *
- * \i18n This routine makes no assumptions about the
- * \ref i18n "character encoding" used in the given file \e name, and simply
- * passes it through unchanged to low-level C/C++ file I/O routines.
- *
- * @param fileName the pathname of the file to write to.
- * @param subtree the matriarch of the packet tree that should be written.
- * @param compressed \c true if the XML file should be compressed or
- * \c false if it should be stored as plain text.
- * @return \c true if and only if the packet subtree was successfully
- * written.
+ * \deprecated This routine has been renamed as NPacket::save().
+ * See the documentation of NPacket::save() for further details.
  */
 REGINA_API bool writeXMLFile(const char* fileName, NPacket* subtree,
     bool compressed = true);

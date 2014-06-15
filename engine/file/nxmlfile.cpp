@@ -120,18 +120,7 @@ namespace {
 }
 
 bool writeXMLFile(const char* fileName, NPacket* subtree, bool compressed) {
-    if (compressed) {
-        CompressionStream out(fileName);
-        if (! out)
-            return false;
-        subtree->writeXMLFile(out);
-    } else {
-        std::ofstream out(fileName);
-        if (! out)
-            return false;
-        subtree->writeXMLFile(out);
-    }
-    return true;
+    return subtree->save(fileName, compressed);
 }
 
 NPacket* readXMLFile(const char* fileName) {

@@ -90,6 +90,9 @@ Version 4.96  [ (under development) ]
               calculateEulerChar().
         Enum NormalCoords:
             - New coordinate system NS_ANGLE for use with angle structures.
+        Class NPacket:
+            - New routine save(), which is now the preferred way of saving
+              Regina data files.
         Class NPerm3, NPerm4, NPerm5:
             - New dimension-agnostic alias invSn.
             - Changed the type of NPerm3::invS3 from int to unsigned,
@@ -156,6 +159,9 @@ Version 4.96  [ (under development) ]
             - New I/O class for the new SnapPea triangulation packet type.
         Class SnapPeaException, SnapPeaFatalError, SnapPeaMemoryFull:
             - New exceptions to be thrown by the SnapPea kernel.
+        Routine writeXMLFile():
+            - Renamed to NPacket::save().  The old name is deprecated but
+              has been kept for backward compatibility.
         Header permconv.h:
             - New conversion routines perm3to5() and perm5to3().
     USER INTERFACE:

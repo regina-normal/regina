@@ -54,6 +54,8 @@ namespace {
         NPacket::nextTreePacket, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_clone,
         NPacket::clone, 0, 2);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_save,
+        NPacket::save, 1, 2);
 
     void reparent_check(NPacket& child, NPacket* newParent,
             bool first = false) {
@@ -157,6 +159,7 @@ void addNPacket() {
         .def("isPacketEditable", &NPacket::isPacketEditable)
         .def("clone", &NPacket::clone, OL_clone()[
             return_value_policy<reference_existing_object>()])
+        .def("save", &NPacket::save, OL_save())
         .def("internalID", &NPacket::internalID);
     ;
 }
