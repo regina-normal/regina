@@ -78,8 +78,9 @@ REGINA_API NPDF* readPDF(const char *filename);
  *
  * \deprecated This routine has been renamed as NPDF::savePDF().  This old
  * routine behaves exactly as in the past, but the new NPDF::savePDF() has
- * a slight change in behaviour: it no longer creates an empty file if the
- * PDF packet contains no data.  See NPDF::savePDF() for further details.
+ * a slight change in behaviour: if the PDF packet contains no data then
+ * it no longer creates an empty file, but instead does nothing and returns
+ * \c false.  See NPDF::savePDF() for further details.
  */
 REGINA_API bool writePDF(const char* filename, const NPDF& pdf);
 

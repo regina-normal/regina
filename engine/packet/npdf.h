@@ -225,7 +225,7 @@ class REGINA_API NPDF : public NPacket {
          *
          * If no PDF document is currently stored in this PDF packet
          * (i.e., isNull() returns \c true), then this routine will do
-         * nothing and simply return \c true.
+         * nothing and simply return \c false.
          *
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given file \e name, and

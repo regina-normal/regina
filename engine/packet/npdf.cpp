@@ -86,7 +86,7 @@ void NPDF::reset(char* data, size_t size, OwnershipPolicy alloc) {
 
 bool NPDF::savePDF(const char* filename) const {
     if (! data_)
-        return true;
+        return false;
 
     // Use FILE* for symmetry with the PDF load routine.
 

@@ -172,10 +172,11 @@ Version 4.96  [ (under development) ]
         Class SnapPeaException, SnapPeaFatalError, SnapPeaMemoryFull:
             - New exceptions to be thrown by the SnapPea kernel.
         Routine writePDF():
-            - Renamed to NPDF::savePDF().  The old name is deprecated but
-              has been kept for backward compatibility.  The new function
-              NPDF::savePDF() has a slight change in behaviour: if the PDF
-              packet contains no data then it no longer creates an empty file.
+            - Renamed to NPDF::savePDF().  The old name is deprecated but has
+              been kept for backward compatibility.  The new NPDF::savePDF()
+              has a slight change in behaviour: if the PDF packet contains
+              no data then the old routine created an empty file and returned
+              true, whereas the new routine does nothing and returns false.
         Routine writeRecogniser(), writeRecognizer():
             - Renamed to NTriangulation::saveRecogniser() / saveRecognizer().
               The old names are deprecated but kept for backward compatibility.
