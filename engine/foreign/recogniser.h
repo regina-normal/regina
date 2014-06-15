@@ -43,6 +43,7 @@
 
 #include <string>
 #include "regina-core.h"
+#include "ntriangulation.h"
 
 namespace regina {
 
@@ -54,27 +55,30 @@ class NTriangulation;
  */
 
 /**
- * Writes the given triangulation to the given file in Matveev's 3-manifold
- * recogniser format.
+ * Deprecated function that writes the given triangulation to the given file
+ * in Matveev's 3-manifold recogniser format.
  *
- * \pre The given triangulation is not invalid, and does not contain any
- * boundary triangles.
- *
- * \i18n This routine makes no assumptions about the
- * \ref i18n "character encoding" used in the given file \e name, and
- * simply passes it through unchanged to low-level C/C++ file I/O routines.
- * The \e contents of the file will be written using UTF-8.
- *
- * @param filename the name of the Recogniser file to which to write.
- * This may be the null pointer (or the empty string), in which case the
- * data will be written to standard output instead.
- * @param tri the triangulation to write to the Recogniser file.
- * @return \c true if the export was successful, or \c false otherwise.
+ * \deprecated This routine has been renamed as
+ * NTriangulation::saveRecogniser().  This old routine behaves exactly as in
+ * the past, but the new NTriangulation::saveRecogniser() has a slight change
+ * of behaviour: unlike the old routine, it now requires a non-empty filename.
+ * To send data to standard output (as in the old routine), you may call
+ * NTriangulation::recogniser() and simply print the resulting string.
+ * See the NTriangulation::saveRecogniser() documentation for further details.
  */
 REGINA_API bool writeRecogniser(const char* filename, NTriangulation& tri);
 
 /**
- * A synonym for writeRecogniser().  See writeRecogniser() for details.
+ * Deprecated function that writes the given triangulation to the given file
+ * in Matveev's 3-manifold recogniser format.
+ *
+ * \deprecated This routine has been renamed as
+ * NTriangulation::saveRecogniser().  This old routine behaves exactly as in
+ * the past, but the new NTriangulation::saveRecogniser() has a slight change
+ * of behaviour: unlike the old routine, it now requires a non-empty filename.
+ * To send data to standard output (as in the old routine), you may call
+ * NTriangulation::recogniser() and simply print the resulting string.
+ * See the NTriangulation::saveRecogniser() documentation for further details.
  */
 REGINA_API bool writeRecognizer(const char* filename, NTriangulation& tri);
 
@@ -82,8 +86,12 @@ REGINA_API bool writeRecognizer(const char* filename, NTriangulation& tri);
 
 // Inline functions:
 
+inline bool writeRecogniser(const char* filename, NTriangulation& tri) {
+    return tri.saveRecogniser(filename);
+}
+
 inline bool writeRecognizer(const char* filename, NTriangulation& tri) {
-    return writeRecogniser(filename, tri);
+    return tri.saveRecogniser(filename);
 }
 
 } // namespace regina

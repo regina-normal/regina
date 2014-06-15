@@ -53,6 +53,10 @@ namespace {
         &NTriangulation::twoZeroMove;
     bool (NTriangulation::*twoZeroMove_edge)(regina::NEdge*, bool, bool) =
         &NTriangulation::twoZeroMove;
+    std::string (NTriangulation::*recogniser_void)() const =
+        &NTriangulation::recogniser;
+    std::string (NTriangulation::*recognizer_void)() const =
+        &NTriangulation::recognizer;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
         NTriangulation::simplifyToLocalMinimum, 0, 1);
@@ -363,6 +367,10 @@ void addNTriangulation() {
         .def("isoSigComponentSize", &NTriangulation::isoSigComponentSize)
         .def("dumpConstruction", &NTriangulation::dumpConstruction)
         .def("snapPea", &NTriangulation::snapPea)
+        .def("recogniser", recogniser_void)
+        .def("recognizer", recognizer_void)
+        .def("saveRecogniser", &NTriangulation::saveRecogniser)
+        .def("saveRecognizer", &NTriangulation::saveRecognizer)
         .def("fromSnapPea", &NTriangulation::fromSnapPea,
             return_value_policy<manage_new_object>())
         .def("enterTextTriangulation", enterTextTriangulation_stdio,

@@ -721,6 +721,69 @@ std::string NTriangulation::snapPea() const {
     return out.str();
 }
 
+std::string NTriangulation::recogniser() const {
+    std::ostringstream out;
+    recogniser(out);
+    return out.str();
+}
+
+std::string NTriangulation::recognizer() const {
+    std::ostringstream out;
+    recogniser(out);
+    return out.str();
+}
+
+void NTriangulation::recogniser(std::ostream& out) const {
+    // Sanity checks.
+    if ((! isValid()) || hasBoundaryTriangles())
+        return;
+
+    // Write the header.
+    out << "triangulation" << std::endl;
+
+    // Write face gluings.
+    NTriangle* f;
+    NTetrahedron* tet;
+    NPerm4 vert;
+    for (unsigned i = 0; i < getNumberOfTriangles(); ++i) {
+        f = getTriangle(i);
+
+        tet = f->getEmbedding(0).getTetrahedron();
+        vert = f->getEmbedding(0).getVertices();
+        out << 't' << (tetrahedronIndex(tet) + 1)
+            << '(' << (vert[0] + 1)
+            << ',' << (vert[1] + 1)
+            << ',' << (vert[2] + 1) << ") - ";
+
+        tet = f->getEmbedding(1).getTetrahedron();
+        vert = f->getEmbedding(1).getVertices();
+        out << 't' << (tetrahedronIndex(tet) + 1)
+            << '(' << (vert[0] + 1)
+            << ',' << (vert[1] + 1)
+            << ',' << (vert[2] + 1) << ')';
+
+        if (i != getNumberOfTriangles() - 1)
+            out << ',';
+        out << std::endl;
+    }
+
+    // Write the footer.
+    out << "end" << std::endl;
+}
+
+bool NTriangulation::saveRecogniser(const char* filename) const {
+    // Sanity checks.
+    if ((! isValid()) || hasBoundaryTriangles())
+        return false;
+
+    // Write to file or stdout as appropriate.
+    std::ofstream out(filename);
+    if (! out)
+        return false;
+    recogniser(out);
+    return true;
+}
+
 NTriangulation* NTriangulation::fromSnapPea(const std::string& snapPeaData) {
     std::istringstream in(snapPeaData);
     return readSnapPea(in);

@@ -7,7 +7,6 @@ SET ( FILES
   isosig
   orb
   pdf
-  recogniser
   snappea
   )
 

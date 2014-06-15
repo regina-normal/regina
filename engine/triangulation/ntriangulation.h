@@ -3140,6 +3140,92 @@ class REGINA_API NTriangulation : public NPacket,
          */
         std::string snapPea() const;
 
+        /**
+         * Returns a string that expresses this triangulation in
+         * Matveev's 3-manifold recogniser format.
+         *
+         * \pre This triangulation is not invalid, and does not contain
+         * any boundary triangles.
+         *
+         * @return a string containing the 3-manifold recogniser data.
+         */
+        std::string recogniser() const;
+
+        /**
+         * A synonym for recogniser().  This returns a string that
+         * expresses this triangulation in Matveev's 3-manifold
+         * recogniser format.
+         *
+         * \pre This triangulation is not invalid, and does not contain
+         * any boundary triangles.
+         *
+         * @return a string containing the 3-manifold recogniser data.
+         */
+        std::string recognizer() const;
+
+        /**
+         * Writes a string expressing this triangulation in Matveev's
+         * 3-manifold recogniser format to the given output stream.
+         *
+         * \pre This triangulation is not invalid, and does not contain
+         * any boundary triangles.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which the recogniser data file
+         * will be written.
+         */
+        void recogniser(std::ostream& out) const;
+
+        /**
+         * A synonym for recognizer(std::ostream&).  This writes
+         * a string expressing this triangulation in Matveev's
+         * 3-manifold recogniser format to the given output stream.
+         *
+         * \pre This triangulation is not invalid, and does not contain
+         * any boundary triangles.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which the recogniser data file
+         * will be written.
+         */
+        void recognizer(std::ostream& out) const;
+
+        /**
+         * Writes this triangulation to the given file in Matveev's
+         * 3-manifold recogniser format.
+         *
+         * \pre This triangulation is not invalid, and does not contain
+         * any boundary triangles.
+         *
+         * \i18n This routine makes no assumptions about the
+         * \ref i18n "character encoding" used in the given file \e name, and
+         * simply passes it through unchanged to low-level C/C++ file I/O
+         * routines.  The \e contents of the file will be written using UTF-8.
+         *
+         * @param filename the name of the Recogniser file to which to write.
+         * @return \c true if and only if the file was successfully written.
+         */
+        bool saveRecogniser(const char* filename) const;
+
+        /**
+         * A synonym for saveRecogniser().  This writes this triangulation to
+         * the given file in Matveev's 3-manifold recogniser format.
+         *
+         * \pre This triangulation is not invalid, and does not contain
+         * any boundary triangles.
+         *
+         * \i18n This routine makes no assumptions about the
+         * \ref i18n "character encoding" used in the given file \e name, and
+         * simply passes it through unchanged to low-level C/C++ file I/O
+         * routines.  The \e contents of the file will be written using UTF-8.
+         *
+         * @param filename the name of the Recogniser file to which to write.
+         * @return \c true if and only if the file was successfully written.
+         */
+        bool saveRecognizer(const char* filename) const;
+
         /*@}*/
         /**
          * \name Importing Triangulations
@@ -3836,6 +3922,14 @@ inline const NTriangulation::TuraevViroSet&
 inline void NTriangulation::writeTextShort(std::ostream& out) const {
     out << "Triangulation with " << tetrahedra.size()
         << (tetrahedra.size() == 1 ? " tetrahedron" : " tetrahedra");
+}
+
+inline void NTriangulation::recognizer(std::ostream& out) const {
+    recogniser(out);
+}
+
+inline bool NTriangulation::saveRecognizer(const char* filename) const {
+    return saveRecogniser(filename);
 }
 
 } // namespace regina
