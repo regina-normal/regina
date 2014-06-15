@@ -88,6 +88,10 @@ Version 4.96  [ (under development) ]
               deprecated alias for backward compatibility.
             - Renamed the protected routine calculateEulerCharacteristic() to
               calculateEulerChar().
+        Class NNormalSurfaceList:
+            - New routines saveCSVStandard() and saveCSVEdgeWeight().
+              These are now the preferred ways of exporting a normal surface
+              list to CSV format.
         Enum NormalCoords:
             - New coordinate system NS_ANGLE for use with angle structures.
         Class NPacket:
@@ -171,6 +175,13 @@ Version 4.96  [ (under development) ]
             - New I/O class for the new SnapPea triangulation packet type.
         Class SnapPeaException, SnapPeaFatalError, SnapPeaMemoryFull:
             - New exceptions to be thrown by the SnapPea kernel.
+        Enum SurfaceExportFields:
+            - Moved from foreign/csvsurfacelist.h to
+              surfaces/nnormalsurfacelist.h.
+        Routine writeCSVStandard(), writeCSVEdgeWeight():
+            - Renamed to NNormalSurfaceList::saveCSVStandard() and
+              NNormalSurfaceList::saveCSVEdgeWeight().  The old names
+              are deprecated but have been kept for backward compatibility.
         Routine writePDF():
             - Renamed to NPDF::savePDF().  The old name is deprecated but has
               been kept for backward compatibility.  The new NPDF::savePDF()
@@ -191,6 +202,10 @@ Version 4.96  [ (under development) ]
         Routine writeXMLFile():
             - Renamed to NPacket::save().  The old name is deprecated but
               has been kept for backward compatibility.
+        Header csvsurfacelist.h:
+            - Deprecated.  The declaration of SurfaceExportFields is now
+              in surfaces/nnormalsurfacelist.h instead.  The old header
+              now includes surfaces/nnormalsurfacelist.h automatically.
         Header permconv.h:
             - New conversion routines perm3to5() and perm5to3().
     USER INTERFACE:

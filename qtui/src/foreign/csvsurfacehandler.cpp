@@ -52,8 +52,8 @@ bool CSVSurfaceHandler::exportData(regina::NPacket* data,
         const QString& fileName, QWidget* parentWidget) const {
     regina::NNormalSurfaceList* list =
         dynamic_cast<regina::NNormalSurfaceList*>(data);
-    if (! regina::writeCSVStandard(
-            static_cast<const char*>(QFile::encodeName(fileName)), *list)) {
+    if (! list->saveCSVStandard(
+            static_cast<const char*>(QFile::encodeName(fileName)))) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("The export failed."), 
             QObject::tr("<qt>An unknown error occurred, probably related "
