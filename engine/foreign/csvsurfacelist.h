@@ -37,6 +37,8 @@
  *
  *  \deprecated The enumeration type SurfaceExportFields (which was once
  *  declared in this file) is now declared in surfaces/nnormalsurfacelist.h.
+ *  Moreover, all global functions that were once declared in this file have
+ *  now been renamed to member functions of NNormalSurfaceList.
  *  Please include surfaces/nnormalsurfacelist.h instead.
  */
 
