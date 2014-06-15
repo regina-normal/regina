@@ -41,6 +41,7 @@
 
 #include "foreign/snappea.h"
 #include "triangulation/ntriangulation.h"
+#include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
 
 // Property IDs:
