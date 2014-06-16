@@ -32,6 +32,8 @@
 
 /* end stub */
 
+#include <cstdio>
+#include <sys/stat.h>
 #include "packet/npdf.h"
 #include "utilities/base64.h"
 #include "utilities/xmlutils.h"
@@ -39,6 +41,50 @@
 #define BASE64_LINE_LEN 76
 
 namespace regina {
+
+NPDF::NPDF(const char* filename) : data_(0), size_(0), alloc_(OWN_NEW) {
+    // Use FILE* so we can call fstat().
+
+    // Open the file.
+    FILE* in = fopen(filename, "rb");
+    if (! in)
+        return;
+
+    // Get the file size.
+    struct stat s;
+    if (fstat(fileno(in), &s)) {
+        fclose(in);
+        return;
+    }
+    size_t size = s.st_size;
+
+    if (size == 0) {
+        fclose(in);
+        return;
+    }
+
+    // Read the file contents.
+    char* data = new char[size];
+    if (fread(data, 1, size, in) != size) {
+        fclose(in);
+        delete[] data;
+        return;
+    }
+
+    // Is there more to the file that we weren't expecting?
+    char c;
+    if (fread(&c, 1, 1, in) > 0) {
+        fclose(in);
+        delete[] data;
+        return;
+    }
+
+    // All good!
+    fclose(in);
+
+    data_ = data;
+    size_ = size;
+}
 
 void NPDF::reset() {
     ChangeEventSpan span(this);

@@ -32,54 +32,19 @@
 
 /* end stub */
 
-#include <cstdio>
-#include <sys/stat.h>
-
 #include "foreign/pdf.h"
 #include "packet/npdf.h"
 
 namespace regina {
 
 NPDF* readPDF(const char* filename) {
-    // Use FILE* so we can call fstat().
+    NPDF* ans = new NPDF(filename);
 
-    // Open the file.
-    FILE* in = fopen(filename, "rb");
-    if (! in)
+    if (ans->isNull()) {
+        delete ans;
         return 0;
-
-    // Get the file size.
-    struct stat s;
-    if (fstat(fileno(in), &s)) {
-        fclose(in);
-        return 0;
-    }
-    size_t size = s.st_size;
-
-    if (size == 0) {
-        fclose(in);
-        return new NPDF();
-    }
-
-    // Read the file contents.
-    char* data = new char[size];
-    if (fread(data, 1, size, in) != size) {
-        fclose(in);
-        delete[] data;
-        return 0;
-    }
-
-    // Is there more to the file that we weren't expecting?
-    char c;
-    if (fread(&c, 1, 1, in) > 0) {
-        fclose(in);
-        delete[] data;
-        return 0;
-    }
-
-    // All good!
-    fclose(in);
-    return new NPDF(data, size, NPDF::OWN_NEW);
+    } else
+        return ans;
 }
 
 bool writePDF(const char* filename, const NPDF& pdf) {

@@ -98,6 +98,7 @@ Version 4.96  [ (under development) ]
             - New routine save(), which is now the preferred way of saving
               Regina data files.
         Class NPDF:
+            - New constructor that reads a PDF document from a given file.
             - New routine isNull() to test if a PDF document is stored.
             - New routine savePDF(), which is now the preferred way of
               exporting a PDF packet to a PDF file.
@@ -178,6 +179,8 @@ Version 4.96  [ (under development) ]
         Enum SurfaceExportFields:
             - Moved from foreign/csvsurfacelist.h to
               surfaces/nnormalsurfacelist.h.
+        Routine readPDF():
+            - Explicitly return 0 if the given file exists but is empty.
         Routine writeCSVStandard(), writeCSVEdgeWeight():
             - Renamed to NNormalSurfaceList::saveCSVStandard() and
               NNormalSurfaceList::saveCSVEdgeWeight().  The old names

@@ -123,6 +123,24 @@ class REGINA_API NPDF : public NPacket {
         NPDF();
 
         /**
+         * Creates a PDF packet with data read from the given PDF file.
+         *
+         * This routine does not check whether the given file \e looks
+         * like a PDF document; it simply loads the file contents blindly.
+         *
+         * If the file could not be read, then no PDF document will be
+         * stored in this packet.  You can test this by calling isNull().
+         *
+         * \i18n This routine makes no assumptions about the
+         * \ref i18n "character encoding" used in the given file \e name, and
+         * simply passes it through unchanged to low-level C/C++ file I/O
+         * routines.
+         *
+         * @param filename the filename of the PDF document to read.
+         */
+        NPDF(const char* filename);
+
+        /**
          * Creates a packet to store the given PDF data.
          *
          * The \a data array must contain a full PDF document as a

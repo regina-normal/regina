@@ -45,6 +45,7 @@ namespace {
 void addNPDF() {
     scope s = class_<NPDF, bases<regina::NPacket>,
             std::auto_ptr<NPDF>, boost::noncopyable>("NPDF", init<>())
+        .def(init<const char*>())
         .def("isNull", &NPDF::isNull)
         .def("size", &NPDF::size)
         .def("reset", reset_empty)

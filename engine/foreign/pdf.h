@@ -53,16 +53,18 @@ class NPDF;
  */
 
 /**
- * Reads a PDF document from the given file.  A newly allocated PDF packet
- * will be returned; it is the user's responsibility to deallocate this
- * when it is finished with.
+ * Reads a PDF document from the given file.
+ *
+ * A newly allocated PDF packet will be returned; it is the user's
+ * responsibility to deallocate this when it is finished with.
  *
  * This routine does not check whether the given file \e looks like a
  * PDF document; it simply loads the file contents blindly.
  *
  * The packet label of the new PDF packet will be left empty.
  *
- * If the file could not be read, 0 will be returned.
+ * If the file could not be read, or if the file is empty,
+ * then 0 will be returned.
  *
  * \i18n This routine makes no assumptions about the
  * \ref i18n "character encoding" used in the given file \e name, and
