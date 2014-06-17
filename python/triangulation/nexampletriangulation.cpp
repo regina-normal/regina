@@ -103,6 +103,7 @@ void addNExampleTriangulation() {
         .staticmethod("weberSeifert")
         .staticmethod("smallClosedOrblHyperbolic")
         .staticmethod("smallClosedNonOrblHyperbolic")
+        .staticmethod("sphere600")
         .staticmethod("lst3_4_7")
         .staticmethod("solidKleinBottle")
         .staticmethod("figureEightKnotComplement")
