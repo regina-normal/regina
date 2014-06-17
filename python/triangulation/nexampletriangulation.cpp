@@ -71,6 +71,8 @@ void addNExampleTriangulation() {
         .def("smallClosedNonOrblHyperbolic",
             &NExampleTriangulation::smallClosedNonOrblHyperbolic,
             return_value_policy<manage_new_object>())
+        .def("sphere600", &NExampleTriangulation::sphere600,
+            return_value_policy<manage_new_object>())
         .def("lst3_4_7", &NExampleTriangulation::lst3_4_7,
             return_value_policy<manage_new_object>())
         .def("solidKleinBottle", &NExampleTriangulation::solidKleinBottle,
