@@ -71,6 +71,8 @@ void addNExampleTriangulation() {
         .def("smallClosedNonOrblHyperbolic",
             &NExampleTriangulation::smallClosedNonOrblHyperbolic,
             return_value_policy<manage_new_object>())
+        .def("sphere600", &NExampleTriangulation::sphere600,
+            return_value_policy<manage_new_object>())
         .def("lst3_4_7", &NExampleTriangulation::lst3_4_7,
             return_value_policy<manage_new_object>())
         .def("solidKleinBottle", &NExampleTriangulation::solidKleinBottle,
@@ -101,6 +103,7 @@ void addNExampleTriangulation() {
         .staticmethod("weberSeifert")
         .staticmethod("smallClosedOrblHyperbolic")
         .staticmethod("smallClosedNonOrblHyperbolic")
+        .staticmethod("sphere600")
         .staticmethod("lst3_4_7")
         .staticmethod("solidKleinBottle")
         .staticmethod("figureEightKnotComplement")

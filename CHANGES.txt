@@ -64,6 +64,8 @@ Version 4.96  [ (under development) ]
             - New routine getNumberOfBoundaryTriangles().
         Class NExampleTriangulation:
             - New example trefoilKnotComplement().
+            - New example sphere600() (sourced from the 600-cell in the
+              Benedetti-Lutz library of triangulations).
         Class NFaceEmbedding:
             - New convenience operators == and !=.
         Class NGenericTriangulation:
