@@ -111,22 +111,24 @@ class REGINA_API NNormalSurfaceVectorOrientedQuad :
          */
         NNormalSurfaceVectorOrientedQuad(const NVector<NLargeInteger>& cloneMe);
 
-        virtual NNormalSurfaceVector* makeMirror(NTriangulation* triang) const;
+        virtual NNormalSurfaceVector* makeMirror(const NTriangulation* triang)
+            const;
 
-        virtual const NVertex* isVertexLink(NTriangulation* triang) const;
+        virtual const NVertex* isVertexLink(const NTriangulation* triang) const;
 
         virtual NLargeInteger getQuadCoord(unsigned long tetIndex,
-            int quadType, NTriangulation* triang) const;
+            int quadType, const NTriangulation* triang) const;
         virtual NLargeInteger getOrientedQuadCoord(unsigned long tetIndex,
-            int quadType, NTriangulation* triang, bool orientation) const;
+            int quadType, const NTriangulation* triang, bool orientation) const;
         virtual NLargeInteger getOctCoord(unsigned long tetIndex,
-            int octType, NTriangulation* triang) const;
+            int octType, const NTriangulation* triang) const;
 
         static NNormalSurfaceVector* makeZeroVector(
             const NTriangulation* triangulation);
-        static NMatrixInt* makeMatchingEquations(NTriangulation* triangulation);
+        static NMatrixInt* makeMatchingEquations(
+            const NTriangulation* triangulation);
         static NEnumConstraintList* makeEmbeddedConstraints(
-            NTriangulation* triangulation);
+            const NTriangulation* triangulation);
 };
 
 /*@}*/
@@ -142,26 +144,26 @@ inline NNormalSurfaceVectorOrientedQuad::NNormalSurfaceVectorOrientedQuad(
 }
 
 inline NLargeInteger NNormalSurfaceVectorOrientedQuad::getQuadCoord(
-        unsigned long tetIndex, int quadType, NTriangulation* tri) const {
+        unsigned long tetIndex, int quadType, const NTriangulation* tri) const {
     return getOrientedQuadCoord(tetIndex, quadType, tri, true)
            + getOrientedQuadCoord(tetIndex, quadType, tri, false);
 }
 
 inline NLargeInteger NNormalSurfaceVectorOrientedQuad::getOrientedQuadCoord(
-        unsigned long tetIndex, int quadType, NTriangulation*, 
+        unsigned long tetIndex, int quadType, const NTriangulation*, 
         bool orientation) const {
     return (*this)[6 * tetIndex + 2 * quadType +
         (orientation ? 0 : 1)];
 }
 
 inline const NVertex* NNormalSurfaceVectorOrientedQuad::isVertexLink(
-        NTriangulation*) const {
+        const NTriangulation*) const {
     // Quad space does not contain vertex links at all.
     return 0;
 }
 
 inline NLargeInteger NNormalSurfaceVectorOrientedQuad::getOctCoord(
-        unsigned long, int, NTriangulation*) const {
+        unsigned long, int, const NTriangulation*) const {
     return zero;
 }
 

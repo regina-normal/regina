@@ -173,8 +173,8 @@ struct HyperInfo;
  *   sum.</li>
  *   <li>Static public functions <tt>void
  *   makeZeroVector(const Dim4Triangulation*)</tt>,
- *   <tt>NMatrixInt* makeMatchingEquations(Dim4Triangulation*)</tt> and
- *   makeEmbeddedConstraints(Dim4Triangulation*) must be
+ *   <tt>NMatrixInt* makeMatchingEquations(const Dim4Triangulation*)</tt> and
+ *   makeEmbeddedConstraints(const Dim4Triangulation*) must be
  *   declared and implemented.</li>
  * </ul>
  *
@@ -224,7 +224,7 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
          * @return \c true if and only if the normal hypersurface represented
          * is compact.
          */
-        virtual bool isCompact(Dim4Triangulation* triang) const;
+        virtual bool isCompact(const Dim4Triangulation* triang) const;
         /**
          * Determines if the normal hypersurface represented is vertex
          * linking.  A <i>vertex linking</i> hypersurface contains only
@@ -241,7 +241,7 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
          * @return \c true if and only if the normal hypersurface represented
          * is vertex linking.
          */
-        virtual bool isVertexLinking(Dim4Triangulation* triang) const;
+        virtual bool isVertexLinking(const Dim4Triangulation* triang) const;
         /**
          * Determines if a rational multiple of the normal hypersurface
          * represented is the link of a single vertex.
@@ -256,7 +256,8 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
          * @return the vertex linked by this hypersurface, or 0 if this
          * hypersurface is not the link of a single vertex.
          */
-        virtual const Dim4Vertex* isVertexLink(Dim4Triangulation* triang) const;
+        virtual const Dim4Vertex* isVertexLink(const Dim4Triangulation* triang)
+            const;
         /**
          * Determines if a rational multiple of the normal hypersurface
          * represented is the thin link of a single edge.
@@ -271,7 +272,8 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
          * @return the edge linked by this hypersurface, or 0 if this
          * hypersurface is not a thin edge link.
          */
-        virtual const Dim4Edge* isThinEdgeLink(Dim4Triangulation* triang) const;
+        virtual const Dim4Edge* isThinEdgeLink(const Dim4Triangulation* triang)
+            const;
 
         /**
          * Returns the number of tetrahedron pieces of the given type in
@@ -290,7 +292,7 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
          * @return the number of tetrahedron pieces of the given type.
          */
         virtual NLargeInteger getTetrahedronCoord(unsigned long pentIndex,
-            int vertex, Dim4Triangulation* triang) const = 0;
+            int vertex, const Dim4Triangulation* triang) const = 0;
         /**
          * Returns the number of prism pieces of the given type
          * in this normal hypersurface.
@@ -308,7 +310,7 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
          * @return the number of prism pieces of the given type.
          */
         virtual NLargeInteger getPrismCoord(unsigned long pentIndex,
-            int prismType, Dim4Triangulation* triang) const = 0;
+            int prismType, const Dim4Triangulation* triang) const = 0;
         /**
          * Returns the number of times this normal hypersurface crosses the
          * given edge.
@@ -323,7 +325,7 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
          * given edge.
          */
         virtual NLargeInteger getEdgeWeight(unsigned long edgeIndex,
-            Dim4Triangulation* triang) const = 0;
+            const Dim4Triangulation* triang) const = 0;
 
         /**
          * Returns a new normal hypersurface vector of the appropriate length
@@ -355,7 +357,7 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
          */
         #ifdef __DOXYGEN
             static NMatrixInt* makeMatchingEquations(
-                Dim4Triangulation* triangulation);
+                const Dim4Triangulation* triangulation);
         #endif
         /**
          * Creates a new set of validity constraints representing
@@ -370,7 +372,7 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
          */
         #ifdef __DOXYGEN
             static NEnumConstraintList* makeEmbeddedConstraints(
-                Dim4Triangulation* triangulation);
+                const Dim4Triangulation* triangulation);
         #endif
 };
 
@@ -393,7 +395,7 @@ class REGINA_API NNormalHypersurface : public ShareableObject {
         NNormalHypersurfaceVector* vector_;
             /**< Contains the coordinates of the normal hypersurface in
              *   whichever space is appropriate. */
-        Dim4Triangulation* triangulation_;
+        const Dim4Triangulation* triangulation_;
             /**< The triangulation in which this normal hypersurface resides. */
 
         std::string name_;
@@ -422,7 +424,7 @@ class REGINA_API NNormalHypersurface : public ShareableObject {
          * @param newVector a vector containing the coordinates of the
          * normal hypersurface in whichever space is appropriate.
          */
-        NNormalHypersurface(Dim4Triangulation* triangulation,
+        NNormalHypersurface(const Dim4Triangulation* triangulation,
             NNormalHypersurfaceVector* vector);
         /**
          * Destroys this normal hypersurface.
@@ -512,7 +514,7 @@ class REGINA_API NNormalHypersurface : public ShareableObject {
          *
          * @return the underlying triangulation.
          */
-        Dim4Triangulation* getTriangulation() const;
+        const Dim4Triangulation* getTriangulation() const;
 
         /**
          * Returns the name associated with this normal hypersurface.
@@ -773,7 +775,7 @@ inline NLargeInteger NNormalHypersurface::getEdgeWeight(unsigned long edgeIndex)
 inline unsigned NNormalHypersurface::getNumberOfCoords() const {
     return vector_->size();
 }
-inline Dim4Triangulation* NNormalHypersurface::getTriangulation() const {
+inline const Dim4Triangulation* NNormalHypersurface::getTriangulation() const {
     return triangulation_;
 }
 

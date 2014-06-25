@@ -61,7 +61,7 @@ class REGINA_API NXMLNormalSurfaceReader : public NXMLElementReader {
     private:
         NNormalSurface* surface;
             /**< The normal surface currently being read. */
-        NTriangulation* tri;
+        const NTriangulation* tri;
             /**< The triangulation in which this surface lives. */
         NormalCoords coords;
             /**< The coordinate system used by this surface. */
@@ -77,7 +77,7 @@ class REGINA_API NXMLNormalSurfaceReader : public NXMLElementReader {
          * @param newTri the triangulation in which this normal surface lives.
          * @param newCoords the coordinate system used by this normal surface.
          */
-        NXMLNormalSurfaceReader(NTriangulation* newTri,
+        NXMLNormalSurfaceReader(const NTriangulation* newTri,
             NormalCoords newCoords);
 
         /**
@@ -109,7 +109,7 @@ class REGINA_API NXMLNormalSurfaceListReader : public NXMLPacketReader {
     private:
         NNormalSurfaceList* list;
             /**< The normal surface list currently being read. */
-        NTriangulation* tri;
+        const NTriangulation* tri;
             /**< The triangulation in which these normal surfaces live. */
 
     public:
@@ -120,7 +120,7 @@ class REGINA_API NXMLNormalSurfaceListReader : public NXMLPacketReader {
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          */
-        NXMLNormalSurfaceListReader(NTriangulation* newTri,
+        NXMLNormalSurfaceListReader(const NTriangulation* newTri,
             NXMLTreeResolver& resolver);
 
         virtual NPacket* getPacket();
@@ -136,7 +136,7 @@ class REGINA_API NXMLNormalSurfaceListReader : public NXMLPacketReader {
 // Inline functions for NXMLNormalSurfaceReader
 
 inline NXMLNormalSurfaceReader::NXMLNormalSurfaceReader(
-        NTriangulation* newTri, NormalCoords newCoords) :
+        const NTriangulation* newTri, NormalCoords newCoords) :
         surface(0), tri(newTri), coords(newCoords), vecLen(-1) {
 }
 
@@ -147,7 +147,7 @@ inline NNormalSurface* NXMLNormalSurfaceReader::getSurface() {
 // Inline functions for NXMLNormalSurfaceListReader
 
 inline NXMLNormalSurfaceListReader::NXMLNormalSurfaceListReader(
-        NTriangulation* newTri, NXMLTreeResolver& resolver) :
+        const NTriangulation* newTri, NXMLTreeResolver& resolver) :
         NXMLPacketReader(resolver), list(0), tri(newTri) {
 }
 

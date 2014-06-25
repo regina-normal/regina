@@ -129,15 +129,15 @@ class REGINA_API NNormalHypersurfaceVectorMirrored :
          * lives.
          * @return a newly created mirror vector.
          */
-        virtual NNormalHypersurfaceVector* makeMirror(Dim4Triangulation* triang)
-            const = 0;
+        virtual NNormalHypersurfaceVector* makeMirror(
+            const Dim4Triangulation* triang) const = 0;
 
         virtual NLargeInteger getTetrahedronCoord(unsigned long pentIndex,
-            int vertex, Dim4Triangulation* triang) const;
+            int vertex, const Dim4Triangulation* triang) const;
         virtual NLargeInteger getPrismCoord(unsigned long pentIndex,
-            int prismType, Dim4Triangulation* triang) const;
+            int prismType, const Dim4Triangulation* triang) const;
         virtual NLargeInteger getEdgeWeight(unsigned long edgeIndex,
-            Dim4Triangulation* triang) const;
+            const Dim4Triangulation* triang) const;
 };
 
 /*@}*/
@@ -161,14 +161,15 @@ inline NNormalHypersurfaceVectorMirrored::~NNormalHypersurfaceVectorMirrored() {
 }
 
 inline NLargeInteger NNormalHypersurfaceVectorMirrored::getTetrahedronCoord(
-        unsigned long pentIndex, int vertex, Dim4Triangulation* triang) const {
+        unsigned long pentIndex, int vertex, const Dim4Triangulation* triang)
+        const {
     if (! mirror_)
         const_cast<NNormalHypersurfaceVectorMirrored*>(this)->mirror_ =
             makeMirror(triang);
     return mirror_->getTetrahedronCoord(pentIndex, vertex, triang);
 }
 inline NLargeInteger NNormalHypersurfaceVectorMirrored::getPrismCoord(
-        unsigned long pentIndex, int prismType, Dim4Triangulation* triang)
+        unsigned long pentIndex, int prismType, const Dim4Triangulation* triang)
         const {
     if (! mirror_)
         const_cast<NNormalHypersurfaceVectorMirrored*>(this)->mirror_ =
@@ -176,7 +177,7 @@ inline NLargeInteger NNormalHypersurfaceVectorMirrored::getPrismCoord(
     return mirror_->getPrismCoord(pentIndex, prismType, triang);
 }
 inline NLargeInteger NNormalHypersurfaceVectorMirrored::getEdgeWeight(
-        unsigned long edgeIndex, Dim4Triangulation* triang) const {
+        unsigned long edgeIndex, const Dim4Triangulation* triang) const {
     if (! mirror_)
         const_cast<NNormalHypersurfaceVectorMirrored*>(this)->mirror_ =
             makeMirror(triang);
