@@ -366,7 +366,7 @@ Closed: True
 Orientable: True
 Connected: True
 
-Fundamental group: 
+Fundamental group: FreeProduct( Z_2, Z_2 )
 Generators: a, b
 Relations:
     a^2

@@ -48,5 +48,5 @@ void addNBinaryA5(CppUnit::TextUi::TestRunner& runner);
 void addNBinaryS4(CppUnit::TextUi::TestRunner& runner);
 void addNMVPolynomialRing(CppUnit::TextUi::TestRunner& runner);
 void addNSVPolynomialRing(CppUnit::TextUi::TestRunner& runner);
-
+void addNGroupPresentation(CppUnit::TextUi::TestRunner& runner);
 

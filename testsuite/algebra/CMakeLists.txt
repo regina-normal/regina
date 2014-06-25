@@ -6,6 +6,7 @@ SET ( FILES
   nbinarys4
   nmvpolynomialring
   nsvpolynomialring
+  ngrouppresentation
   )
 
 # Prepend folder name
