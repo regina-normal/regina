@@ -328,7 +328,7 @@ struct NormalInfo;
  *   <li>Static public functions <tt>void
  *   makeZeroVector(const NTriangulation*)</tt>,
  *   <tt>NMatrixInt* makeMatchingEquations(const NTriangulation*)</tt> and
- *   makeEmbeddedConstraints(NTriangulation*) must be
+ *   makeEmbeddedConstraints(const NTriangulation*) must be
  *   declared and implemented.</li>
  * </ul>
  *
