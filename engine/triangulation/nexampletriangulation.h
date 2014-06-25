@@ -195,6 +195,20 @@ class REGINA_API NExampleTriangulation {
          */
         static NTriangulation* smallClosedNonOrblHyperbolic();
 
+        /**
+         * Returns the boundary 3-sphere of the regular 600-cell.
+         * This is a triangulation of the 3-sphere that is a simplicial
+         * complex, and in which every edge has degree five.
+         *
+         * The triangulation was extracted from the Benedetti-Lutz
+         * library of triangulations.  See:
+         * http://page.math.tu-berlin.de/~lutz/stellar/library_of_triangulations.html
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static NTriangulation* sphere600();
+
         /*@}*/
         /**
          * \name Finite Bounded Triangulations

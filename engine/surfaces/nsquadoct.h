@@ -108,15 +108,17 @@ class REGINA_API NNormalSurfaceVectorQuadOct :
          */
         NNormalSurfaceVectorQuadOct(const NVector<NLargeInteger>& cloneMe);
 
-        virtual NNormalSurfaceVector* makeMirror(NTriangulation* triang) const;
+        virtual NNormalSurfaceVector* makeMirror(const NTriangulation* triang)
+            const;
 
-        virtual const NVertex* isVertexLink(NTriangulation* triang) const;
+        virtual const NVertex* isVertexLink(const NTriangulation* triang) const;
 
         static NNormalSurfaceVector* makeZeroVector(
             const NTriangulation* triangulation);
-        static NMatrixInt* makeMatchingEquations(NTriangulation* triangulation);
+        static NMatrixInt* makeMatchingEquations(
+            const NTriangulation* triangulation);
         static NEnumConstraintList* makeEmbeddedConstraints(
-            NTriangulation* triangulation);
+            const NTriangulation* triangulation);
 };
 
 /*@}*/
@@ -132,7 +134,7 @@ inline NNormalSurfaceVectorQuadOct::NNormalSurfaceVectorQuadOct(
 }
 
 inline const NVertex* NNormalSurfaceVectorQuadOct::isVertexLink(
-        NTriangulation*) const {
+        const NTriangulation*) const {
     // Quad-oct space does not contain vertex links at all.
     return 0;
 }
