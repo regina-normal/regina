@@ -41,7 +41,7 @@
 namespace regina {
 
 NLargeInteger NNormalSurfaceVectorOriented::getEdgeWeight(
-        unsigned long edgeIndex, NTriangulation* triang) const {
+        unsigned long edgeIndex, const NTriangulation* triang) const {
     // Find a tetrahedron next to the edge in question.
     const NEdgeEmbedding& emb = triang->getEdges()[edgeIndex]->
         getEmbeddings().front();
@@ -60,7 +60,8 @@ NLargeInteger NNormalSurfaceVectorOriented::getEdgeWeight(
 }
 
 NLargeInteger NNormalSurfaceVectorOriented::getTriangleArcs(
-        unsigned long triIndex, int triVertex, NTriangulation* triang) const {
+        unsigned long triIndex, int triVertex, const NTriangulation* triang)
+        const {
     // Find a tetrahedron next to the triangle in question.
     const NTriangleEmbedding& emb = triang->getTriangles()[triIndex]->
         getEmbedding(0);
@@ -83,7 +84,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorOriented::makeZeroVector(
 }
 
 NMatrixInt* NNormalSurfaceVectorOriented::makeMatchingEquations(
-        NTriangulation* triangulation) {
+        const NTriangulation* triangulation) {
     unsigned long nCoords = 14 * triangulation->getNumberOfTetrahedra();
     // Six equations per non-boundary triangle.
     // F_boundary + 2 F_internal = 4 T
@@ -143,7 +144,7 @@ NMatrixInt* NNormalSurfaceVectorOriented::makeMatchingEquations(
 }
 
 NEnumConstraintList* NNormalSurfaceVectorOriented::makeEmbeddedConstraints(
-        NTriangulation* triangulation) {
+        const NTriangulation* triangulation) {
     // TODO: Must be a neater way of doing this, but might mean re-working
     // bitmasks.
     NEnumConstraintList* ans = new NEnumConstraintList(
