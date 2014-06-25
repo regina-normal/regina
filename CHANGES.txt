@@ -82,6 +82,8 @@ Version 4.96  [ (under development) ]
             - New routine getNumberOfBoundaryTriangles().
         Class NExampleTriangulation:
             - New example trefoilKnotComplement().
+            - New example sphere600() (sourced from the 600-cell in the
+              Benedetti-Lutz library of triangulations).
         Class NFaceEmbedding:
             - New convenience operators == and !=.
         Class NGenericTriangulation:
@@ -106,6 +108,13 @@ Version 4.96  [ (under development) ]
               deprecated alias for backward compatibility.
             - Renamed the protected routine calculateEulerCharacteristic() to
               calculateEulerChar().
+            - Routine getTriangulation() now returns a const NTriangulation*
+              (previously this was non-const).  Likewise, many routines have
+              NTriangulation* arguments changed from non-const to const.
+        Class NNormalSurfaceList:
+            - Many routines have NTriangulation* arguments changed from
+              non-const to const.  This also applies to global routines
+              related to this class, such as makeMatchingEquations().
         Enum NormalCoords:
             - New coordinate system NS_ANGLE for use with angle structures.
         Class NPerm3, NPerm4, NPerm5:
@@ -159,6 +168,9 @@ Version 4.96  [ (under development) ]
               deprecated alias for backward compatibility.
         Class NVertexEmbedding:
             - New convenience operators == and !=.
+        Class NXMLNormalSurfaceReader, NXMLNormalSurfaceListReader:
+            - Many routines have NTriangulation* arguments changed from
+              non-const to const.
         Class SnapPeaException, SnapPeaFatalError, SnapPeaMemoryFull:
             - New exceptions to be thrown by the SnapPea kernel.
         Header permconv.h:
