@@ -143,7 +143,7 @@ NNormalSurface* NNormalSurface::doubleSurface() const {
     return ans;
 }
 
-NNormalSurface::NNormalSurface(NTriangulation* triang,
+NNormalSurface::NNormalSurface(const NTriangulation* triang,
         NNormalSurfaceVector* newVector) :
         vector(newVector),
         triangulation(triang) {
@@ -170,7 +170,8 @@ void NNormalSurface::writeTextShort(std::ostream& out) const {
     }
 }
 
-bool NNormalSurfaceVector::hasMultipleOctDiscs(NTriangulation* triang) const {
+bool NNormalSurfaceVector::hasMultipleOctDiscs(const NTriangulation* triang)
+        const {
     unsigned long nTets = triang->getNumberOfTetrahedra();
     int oct;
     NLargeInteger coord;
@@ -188,7 +189,7 @@ bool NNormalSurfaceVector::hasMultipleOctDiscs(NTriangulation* triang) const {
     return false;
 }
 
-bool NNormalSurfaceVector::isCompact(NTriangulation* triang) const {
+bool NNormalSurfaceVector::isCompact(const NTriangulation* triang) const {
     unsigned long nTets = triang->getNumberOfTetrahedra();
     unsigned long tet;
     int type;
@@ -208,7 +209,7 @@ bool NNormalSurfaceVector::isCompact(NTriangulation* triang) const {
     return true;
 }
 
-bool NNormalSurfaceVector::isSplitting(NTriangulation* triang) const {
+bool NNormalSurfaceVector::isSplitting(const NTriangulation* triang) const {
     unsigned long nTets = triang->getNumberOfTetrahedra();
     unsigned long tet;
     int type;
@@ -231,7 +232,8 @@ bool NNormalSurfaceVector::isSplitting(NTriangulation* triang) const {
     return true;
 }
 
-NLargeInteger NNormalSurfaceVector::isCentral(NTriangulation* triang) const {
+NLargeInteger NNormalSurfaceVector::isCentral(const NTriangulation* triang)
+        const {
     unsigned long nTets = triang->getNumberOfTetrahedra();
     unsigned long tet;
     int type;
@@ -384,7 +386,7 @@ void NNormalSurface::calculateRealBoundary() const {
 
     unsigned long index;
     unsigned long tot = triangulation->getNumberOfTetrahedra();
-    NTetrahedron* tet;
+    const NTetrahedron* tet;
     int type, face;
 
     for (index = 0; index < tot; index++) {
@@ -423,7 +425,7 @@ void NNormalSurface::calculateRealBoundary() const {
 
 #ifndef EXCLUDE_SNAPPEA
 NMatrixInt* NNormalSurface::boundarySlopes() const {
-    NTriangulation *tri = getTriangulation();
+    const NTriangulation *tri = getTriangulation();
 
     // Check the preconditions.
     if (! tri->isOriented())
@@ -514,12 +516,12 @@ void NNormalSurface::writeXMLData(std::ostream& out) const {
 // Default implementations for oriented surfaces. Returns zero as any
 // coordinate system which supports orientation should override these.
 NLargeInteger NNormalSurfaceVector::getOrientedTriangleCoord(
-        unsigned long, int, NTriangulation*, bool) const {
+        unsigned long, int, const NTriangulation*, bool) const {
     return NLargeInteger::zero;
 };
 
 NLargeInteger NNormalSurfaceVector::getOrientedQuadCoord(
-        unsigned long, int, NTriangulation*, bool) const {
+        unsigned long, int, const NTriangulation*, bool) const {
     return NLargeInteger::zero;
 };
 
