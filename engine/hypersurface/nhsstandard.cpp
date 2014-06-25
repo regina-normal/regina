@@ -44,7 +44,7 @@
 namespace regina {
 
 NLargeInteger NNormalHypersurfaceVectorStandard::getEdgeWeight(
-        unsigned long edgeIndex, Dim4Triangulation* triang) const {
+        unsigned long edgeIndex, const Dim4Triangulation* triang) const {
     // Find a pentachoron next to the edge in question.
     const Dim4EdgeEmbedding& emb = triang->getEdges()[edgeIndex]->
         getEmbeddings().front();
@@ -74,7 +74,7 @@ NNormalHypersurfaceVector* NNormalHypersurfaceVectorStandard::makeZeroVector(
 }
 
 NMatrixInt* NNormalHypersurfaceVectorStandard::makeMatchingEquations(
-        Dim4Triangulation* triangulation) {
+        const Dim4Triangulation* triangulation) {
     unsigned long nCoords = 15 * triangulation->getNumberOfPentachora();
     // Seven equations per non-boundary facet.
     // T_boundary + 2 T_internal = 5 P
@@ -136,7 +136,7 @@ NMatrixInt* NNormalHypersurfaceVectorStandard::makeMatchingEquations(
 }
 
 NEnumConstraintList* NNormalHypersurfaceVectorStandard::makeEmbeddedConstraints(
-        Dim4Triangulation* triangulation) {
+        const Dim4Triangulation* triangulation) {
     NEnumConstraintList* ans = new NEnumConstraintList(
         30 * triangulation->getNumberOfPentachora());
 

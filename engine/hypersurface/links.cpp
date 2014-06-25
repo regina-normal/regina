@@ -37,7 +37,7 @@
 
 namespace regina {
 
-bool NNormalHypersurfaceVector::isVertexLinking(Dim4Triangulation* triang)
+bool NNormalHypersurfaceVector::isVertexLinking(const Dim4Triangulation* triang)
         const {
     unsigned long nPents = triang->getNumberOfPentachora();
     unsigned long pent;
@@ -51,7 +51,7 @@ bool NNormalHypersurfaceVector::isVertexLinking(Dim4Triangulation* triang)
 }
 
 const Dim4Vertex* NNormalHypersurfaceVector::isVertexLink(
-        Dim4Triangulation* triang) const {
+        const Dim4Triangulation* triang) const {
     unsigned long nPents = triang->getNumberOfPentachora();
     unsigned long pent;
     int type;
@@ -67,7 +67,7 @@ const Dim4Vertex* NNormalHypersurfaceVector::isVertexLink(
     Dim4Vertex* ans = 0;
     NLargeInteger ansMult;
 
-    Dim4Pentachoron* p;
+    const Dim4Pentachoron* p;
     NLargeInteger coord;
 
     for (pent = 0; pent < nPents; pent++) {
@@ -109,7 +109,7 @@ const Dim4Vertex* NNormalHypersurfaceVector::isVertexLink(
 }
 
 const Dim4Edge* NNormalHypersurfaceVector::isThinEdgeLink(
-        Dim4Triangulation* triang) const {
+        const Dim4Triangulation* triang) const {
     unsigned long nPents = triang->getNumberOfPentachora();
     unsigned long pent;
     int type;
@@ -118,7 +118,7 @@ const Dim4Edge* NNormalHypersurfaceVector::isThinEdgeLink(
     Dim4Edge* ans = 0;
     NLargeInteger ansMult;
 
-    Dim4Pentachoron* p;
+    const Dim4Pentachoron* p;
     NLargeInteger coord;
 
     for (pent = 0; pent < nPents; pent++) {
