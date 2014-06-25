@@ -104,18 +104,18 @@ class REGINA_API NNormalHypersurfaceVectorStandard :
             const NVector<NLargeInteger>& cloneMe);
 
         virtual NLargeInteger getTetrahedronCoord(unsigned long pentIndex,
-            int vertex, Dim4Triangulation* triang) const;
+            int vertex, const Dim4Triangulation* triang) const;
         virtual NLargeInteger getPrismCoord(unsigned long pentIndex,
-            int prismType, Dim4Triangulation* triang) const;
+            int prismType, const Dim4Triangulation* triang) const;
         virtual NLargeInteger getEdgeWeight(unsigned long edgeIndex,
-            Dim4Triangulation* triang) const;
+            const Dim4Triangulation* triang) const;
 
         static NNormalHypersurfaceVector* makeZeroVector(
             const Dim4Triangulation* triangulation);
         static NMatrixInt* makeMatchingEquations(
-            Dim4Triangulation* triangulation);
+            const Dim4Triangulation* triangulation);
         static NEnumConstraintList* makeEmbeddedConstraints(
-            Dim4Triangulation* triangulation);
+            const Dim4Triangulation* triangulation);
 };
 
 /*@}*/
@@ -131,11 +131,12 @@ inline NNormalHypersurfaceVectorStandard::NNormalHypersurfaceVectorStandard(
 }
 
 inline NLargeInteger NNormalHypersurfaceVectorStandard::getTetrahedronCoord(
-        unsigned long pentIndex, int vertex, Dim4Triangulation*) const {
+        unsigned long pentIndex, int vertex, const Dim4Triangulation*) const {
     return (*this)[15 * pentIndex + vertex];
 }
 inline NLargeInteger NNormalHypersurfaceVectorStandard::getPrismCoord(
-        unsigned long pentIndex, int prismType, Dim4Triangulation*) const {
+        unsigned long pentIndex, int prismType, const Dim4Triangulation*)
+        const {
     return (*this)[15 * pentIndex + 5 + prismType];
 }
 
