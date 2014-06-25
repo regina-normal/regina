@@ -62,7 +62,7 @@ class REGINA_API NXMLNormalHypersurfaceReader : public NXMLElementReader {
     private:
         NNormalHypersurface* surface_;
             /**< The normal hypersurface currently being read. */
-        Dim4Triangulation* tri_;
+        const Dim4Triangulation* tri_;
             /**< The triangulation in which this hypersurface lives. */
         HyperCoords coords_;
             /**< The coordinate system used by this hypersurface. */
@@ -78,7 +78,7 @@ class REGINA_API NXMLNormalHypersurfaceReader : public NXMLElementReader {
          * @param tri the triangulation in which this normal hypersurface lives.
          * @param coords the coordinate system used by this normal hypersurface.
          */
-        NXMLNormalHypersurfaceReader(Dim4Triangulation* tri,
+        NXMLNormalHypersurfaceReader(const Dim4Triangulation* tri,
             HyperCoords coords);
 
         /**
@@ -110,7 +110,7 @@ class REGINA_API NXMLNormalHypersurfaceListReader : public NXMLPacketReader {
     private:
         NNormalHypersurfaceList* list_;
             /**< The normal hypersurface list currently being read. */
-        Dim4Triangulation* tri_;
+        const Dim4Triangulation* tri_;
             /**< The triangulation in which these normal hypersurfaces live. */
 
     public:
@@ -120,7 +120,7 @@ class REGINA_API NXMLNormalHypersurfaceListReader : public NXMLPacketReader {
          * @param tri the triangulation in which these normal hypersurfaces
          * live.
          */
-        NXMLNormalHypersurfaceListReader(Dim4Triangulation* tri,
+        NXMLNormalHypersurfaceListReader(const Dim4Triangulation* tri,
             NXMLTreeResolver& resolver);
 
         virtual NPacket* getPacket();
@@ -136,8 +136,8 @@ class REGINA_API NXMLNormalHypersurfaceListReader : public NXMLPacketReader {
 // Inline functions for NXMLNormalHypersurfaceReader
 
 inline NXMLNormalHypersurfaceReader::NXMLNormalHypersurfaceReader(
-        Dim4Triangulation* tri, HyperCoords coords) : surface_(0), tri_(tri),
-        coords_(coords), vecLen_(-1) {
+        const Dim4Triangulation* tri, HyperCoords coords) :
+        surface_(0), tri_(tri), coords_(coords), vecLen_(-1) {
 }
 
 inline NNormalHypersurface* NXMLNormalHypersurfaceReader::getHypersurface() {
@@ -147,7 +147,7 @@ inline NNormalHypersurface* NXMLNormalHypersurfaceReader::getHypersurface() {
 // Inline functions for NXMLNormalHypersurfaceListReader
 
 inline NXMLNormalHypersurfaceListReader::NXMLNormalHypersurfaceListReader(
-        Dim4Triangulation* tri, NXMLTreeResolver& resolver) :
+        const Dim4Triangulation* tri, NXMLTreeResolver& resolver) :
         NXMLPacketReader(resolver), list_(0), tri_(tri) {
 }
 

@@ -814,8 +814,8 @@ REGINA_API NNormalHypersurfaceVector* makeZeroVector(
  * constants in NNormalHypersurfaceList.
  * @return a newly allocated set of matching equations.
  */
-REGINA_API NMatrixInt* makeMatchingEquations(Dim4Triangulation* triangulation,
-    HyperCoords coords);
+REGINA_API NMatrixInt* makeMatchingEquations(
+    const Dim4Triangulation* triangulation, HyperCoords coords);
 /**
  * Creates a new set of validity constraints representing the condition that
  * normal hypersurfaces be embedded.  The validity constraints will be expressed
@@ -831,7 +831,7 @@ REGINA_API NMatrixInt* makeMatchingEquations(Dim4Triangulation* triangulation,
  * @return a newly allocated set of constraints.
  */
 REGINA_API NEnumConstraintList* makeEmbeddedConstraints(
-    Dim4Triangulation* triangulation, HyperCoords coords);
+    const Dim4Triangulation* triangulation, HyperCoords coords);
 
 /*@}*/
 
