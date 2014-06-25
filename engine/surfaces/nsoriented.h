@@ -111,25 +111,26 @@ class REGINA_API NNormalSurfaceVectorOriented : public NNormalSurfaceVector {
         NNormalSurfaceVectorOriented(const NVector<NLargeInteger>& cloneMe);
 
         virtual NLargeInteger getTriangleCoord(unsigned long tetIndex,
-            int vertex, NTriangulation* triang) const;
+            int vertex, const NTriangulation* triang) const;
         virtual NLargeInteger getQuadCoord(unsigned long tetIndex,
-            int quadType, NTriangulation* triang) const;
+            int quadType, const NTriangulation* triang) const;
         virtual NLargeInteger getOrientedTriangleCoord(unsigned long tetIndex,
-            int vertex, NTriangulation* triang, bool orientation) const;
+            int vertex, const NTriangulation* triang, bool orientation) const;
         virtual NLargeInteger getOrientedQuadCoord(unsigned long tetIndex,
-            int quadType, NTriangulation* triang, bool orientation) const;
+            int quadType, const NTriangulation* triang, bool orientation) const;
         virtual NLargeInteger getOctCoord(unsigned long tetIndex,
-            int octType, NTriangulation* triang) const;
+            int octType, const NTriangulation* triang) const;
         virtual NLargeInteger getEdgeWeight(unsigned long edgeIndex,
-            NTriangulation* triang) const;
+            const NTriangulation* triang) const;
         virtual NLargeInteger getTriangleArcs(unsigned long triIndex,
-            int triVertex, NTriangulation* triang) const;
+            int triVertex, const NTriangulation* triang) const;
 
         static NNormalSurfaceVector* makeZeroVector(
             const NTriangulation* triangulation);
-        static NMatrixInt* makeMatchingEquations(NTriangulation* triangulation);
+        static NMatrixInt* makeMatchingEquations(
+            const NTriangulation* triangulation);
         static NEnumConstraintList* makeEmbeddedConstraints(
-            NTriangulation* triangulation);
+            const NTriangulation* triangulation);
 };
 
 /*@}*/
@@ -145,30 +146,30 @@ inline NNormalSurfaceVectorOriented::NNormalSurfaceVectorOriented(
 }
 
 inline NLargeInteger NNormalSurfaceVectorOriented::getTriangleCoord(
-        unsigned long tetIndex, int vertex, NTriangulation* tri) const {
+        unsigned long tetIndex, int vertex, const NTriangulation* tri) const {
     return getOrientedTriangleCoord(tetIndex,vertex,tri, true)
            + getOrientedTriangleCoord(tetIndex,vertex,tri, false);
 }
 inline NLargeInteger NNormalSurfaceVectorOriented::getQuadCoord(
-        unsigned long tetIndex, int quadType, NTriangulation* tri) const {
+        unsigned long tetIndex, int quadType, const NTriangulation* tri) const {
     return getOrientedQuadCoord(tetIndex,quadType,tri, true)
            + getOrientedQuadCoord(tetIndex,quadType,tri, false);
 }
 
 inline NLargeInteger NNormalSurfaceVectorOriented::getOrientedTriangleCoord(
-        unsigned long tetIndex, int vertex, NTriangulation*,
+        unsigned long tetIndex, int vertex, const NTriangulation*,
         bool orientation) const {
     return (*this)[14 * tetIndex + 2 * vertex +
         (orientation ? 0 : 1)];
 }
 inline NLargeInteger NNormalSurfaceVectorOriented::getOrientedQuadCoord(
-        unsigned long tetIndex, int quadType, NTriangulation*, 
+        unsigned long tetIndex, int quadType, const NTriangulation*, 
         bool orientation) const {
     return (*this)[14 * tetIndex + 8 + 2 * quadType +
         (orientation ? 0 : 1)];
 }
 inline NLargeInteger NNormalSurfaceVectorOriented::getOctCoord(
-        unsigned long, int, NTriangulation*) const {
+        unsigned long, int, const NTriangulation*) const {
     return zero;
 }
 

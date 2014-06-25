@@ -112,21 +112,22 @@ class REGINA_API NNormalSurfaceVectorANStandard : public NNormalSurfaceVector {
         NNormalSurfaceVectorANStandard(const NVector<NLargeInteger>& cloneMe);
 
         virtual NLargeInteger getTriangleCoord(unsigned long tetIndex,
-            int vertex, NTriangulation* triang) const;
+            int vertex, const NTriangulation* triang) const;
         virtual NLargeInteger getQuadCoord(unsigned long tetIndex,
-            int quadType, NTriangulation* triang) const;
+            int quadType, const NTriangulation* triang) const;
         virtual NLargeInteger getOctCoord(unsigned long tetIndex,
-            int octType, NTriangulation* triang) const;
+            int octType, const NTriangulation* triang) const;
         virtual NLargeInteger getEdgeWeight(unsigned long edgeIndex,
-            NTriangulation* triang) const;
+            const NTriangulation* triang) const;
         virtual NLargeInteger getTriangleArcs(unsigned long triIndex,
-            int triVertex, NTriangulation* triang) const;
+            int triVertex, const NTriangulation* triang) const;
 
         static NNormalSurfaceVector* makeZeroVector(
             const NTriangulation* triangulation);
-        static NMatrixInt* makeMatchingEquations(NTriangulation* triangulation);
+        static NMatrixInt* makeMatchingEquations(
+            const NTriangulation* triangulation);
         static NEnumConstraintList* makeEmbeddedConstraints(
-            NTriangulation* triangulation);
+            const NTriangulation* triangulation);
 };
 
 /*@}*/
@@ -142,15 +143,15 @@ inline NNormalSurfaceVectorANStandard::NNormalSurfaceVectorANStandard(
 }
 
 inline NLargeInteger NNormalSurfaceVectorANStandard::getTriangleCoord(
-        unsigned long tetIndex, int vertex, NTriangulation*) const {
+        unsigned long tetIndex, int vertex, const NTriangulation*) const {
     return (*this)[10 * tetIndex + vertex];
 }
 inline NLargeInteger NNormalSurfaceVectorANStandard::getQuadCoord(
-        unsigned long tetIndex, int quadType, NTriangulation*) const {
+        unsigned long tetIndex, int quadType, const NTriangulation*) const {
     return (*this)[10 * tetIndex + 4 + quadType];
 }
 inline NLargeInteger NNormalSurfaceVectorANStandard::getOctCoord(
-        unsigned long tetIndex, int octType, NTriangulation*) const {
+        unsigned long tetIndex, int octType, const NTriangulation*) const {
     return (*this)[10 * tetIndex + 7 + octType];
 }
 
