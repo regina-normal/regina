@@ -45,7 +45,8 @@
 
 namespace regina {
 
-bool NNormalHypersurfaceVector::isCompact(Dim4Triangulation* triang) const {
+bool NNormalHypersurfaceVector::isCompact(const Dim4Triangulation* triang)
+        const {
     unsigned long nPents = triang->getNumberOfPentachora();
     unsigned long pent;
     int type;
@@ -60,7 +61,7 @@ bool NNormalHypersurfaceVector::isCompact(Dim4Triangulation* triang) const {
     return true;
 }
 
-NNormalHypersurface::NNormalHypersurface(Dim4Triangulation* triangulation,
+NNormalHypersurface::NNormalHypersurface(const Dim4Triangulation* triangulation,
         NNormalHypersurfaceVector* vector) :
         vector_(vector), triangulation_(triangulation) {
 }
@@ -193,7 +194,7 @@ void NNormalHypersurface::calculateRealBoundary() const {
 
     unsigned long index;
     unsigned long tot = triangulation_->getNumberOfPentachora();
-    Dim4Pentachoron* pent;
+    const Dim4Pentachoron* pent;
     int type, facet;
 
     for (index = 0; index < tot; index++) {

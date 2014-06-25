@@ -225,7 +225,7 @@ namespace {
 // ------------------------------------------------------------------------
 
 NTriangulation* NNormalHypersurface::triangulate() const {
-    Dim4Triangulation* outer = getTriangulation();
+    const Dim4Triangulation* outer = getTriangulation();
     NTriangulation* inner = new NTriangulation();
 
     // Get rid of an empty *outer* triangulation now.
@@ -239,7 +239,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
     unsigned long nTets = outer->getNumberOfTetrahedra();
     TetData** tetData = new TetData*[nTets];
 
-    Dim4Pentachoron* outerPent;
+    const Dim4Pentachoron* outerPent;
     Dim4Tetrahedron* outerTet;
     NPerm5 outerTetEmb;
 
