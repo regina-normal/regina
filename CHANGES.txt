@@ -64,6 +64,8 @@ Version 4.96  [ (under development) ]
             - New routine getNumberOfBoundaryTriangles().
         Class NExampleTriangulation:
             - New example trefoilKnotComplement().
+            - New example sphere600() (sourced from the 600-cell in the
+              Benedetti-Lutz library of triangulations).
         Class NFaceEmbedding:
             - New convenience operators == and !=.
         Class NGenericTriangulation:
@@ -88,6 +90,14 @@ Version 4.96  [ (under development) ]
               deprecated alias for backward compatibility.
             - Renamed the protected routine calculateEulerCharacteristic() to
               calculateEulerChar().
+            - Routine getTriangulation() now returns a const NTriangulation*
+              (previously this was non-const).  Likewise, many routines in
+              this and related classes have NTriangulation* arguments changed
+              from non-const to const.
+        Class NNormalSurfaceList:
+            - Many routines in this and related classes have NTriangulation*
+              arguments changed from non-const to const.  This also applies to
+              related global routines, such as makeMatchingEquations().
         Enum NormalCoords:
             - New coordinate system NS_ANGLE for use with angle structures.
         Class NPerm3, NPerm4, NPerm5:

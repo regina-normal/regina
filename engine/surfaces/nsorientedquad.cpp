@@ -50,7 +50,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeZeroVector(
 }
 
 NMatrixInt* NNormalSurfaceVectorOrientedQuad::makeMatchingEquations(
-        NTriangulation* triangulation) {
+        const NTriangulation* triangulation) {
     unsigned long nCoords = 6 * triangulation->getNumberOfTetrahedra();
     // Two equation per non-boundary edge.
     long nEquations = 2*long(triangulation->getNumberOfEdges());
@@ -96,7 +96,7 @@ NMatrixInt* NNormalSurfaceVectorOrientedQuad::makeMatchingEquations(
 }
 
 NEnumConstraintList* NNormalSurfaceVectorOrientedQuad::makeEmbeddedConstraints(
-        NTriangulation* triangulation) {
+        const NTriangulation* triangulation) {
     NEnumConstraintList* ans = new NEnumConstraintList(
         8 * triangulation->getNumberOfTetrahedra());
 
@@ -140,7 +140,7 @@ namespace {
 }
 
 NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
-        NTriangulation* triang) const {
+        const NTriangulation* triang) const {
     // We're going to do this by wrapping around each edge and seeing
     // what comes.
     unsigned long nRows = 14 * triang->getNumberOfTetrahedra();
