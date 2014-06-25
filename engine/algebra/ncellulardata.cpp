@@ -64,9 +64,9 @@ const NAbelianGroup* NCellularData::unmarkedGroup(
  if (g_desc.dim > topDim) return NULL;
  // chain complex of the form A -- ccN --> B -- ccM --> C, compute ccN and ccM
  const NMatrixInt* ccN = integerChainComplex( 
-                          ChainComplexLocator( g_desc.dim+1, g_desc.hcs ) );
+                         ChainComplexLocator( g_desc.dim+1, g_desc.hcs ) );
  const NMatrixInt* ccM = integerChainComplex( 
-                          ChainComplexLocator( g_desc.dim, g_desc.hcs ) );
+                         ChainComplexLocator( g_desc.dim, g_desc.hcs ) );
  const NMatrixInt* tempMat(NULL);
  if ( g_desc.dim == 0 ) 
   {
@@ -1142,7 +1142,7 @@ const NMatrixInt* NCellularData::integerChainMap(
 }
 
 unsigned long num_less_than(const std::set<unsigned long> &thelist, 
-                            const unsigned long &obj); // forward dec.
+                            const unsigned long &obj); // forward declaration.
 
 // Eventually this should return the appropriate map from the (a_desc)-stage 
 //  of the chain complex for the Alexander module.  The current algorithm is 
@@ -1159,27 +1159,14 @@ const NMatrixRing< NSVPolynomialRing< NLargeInteger > >*
  std::map< ChainComplexLocator, NMatrixRing< 
             NSVPolynomialRing< NLargeInteger > >* >::const_iterator p;
  ChainComplexLocator range_desc(a_desc); range_desc.dim--;
-
- // if precomputed, return that.
+ // reasons for giving up.
  p = alexanderChainComplexes.find(a_desc);
  if (p != alexanderChainComplexes.end()) return (p->second);
- // if not, work, let's find other reasons to give up, such as the request 
- //  not being implemented yet. 
  ccCollectionType::const_iterator q; q = genCC.find(a_desc);
- // genCC is the master map of chain complexes.  Above puts in a request 
- // for the specific map of the chain complex with domain described by a_desc.
  if (q == genCC.end()) return NULL; // that chain complex does not exist!
- // chain complex exists, and q points to it. 
  if (a_desc.hcs != DUAL_coord) return NULL; 
- // the chain complex exists in non DUAL_coord coordinates, 
- // wordle data hasn't been implemented yet, so abort if you get this far. 
  if ((a_desc.dim > 2) || (a_desc.dim<1)) return NULL; 
- // similarly, only dimensions 1->0, 2->1 
- // permitted at present. *now* we have no excuses for not doing something. 
- // Sigh.  If only there were more reasons to give up!
- // build a list of the dual 1-cells indexed by dcIx[1] that are in the 
- // maximal tree, maxTreeStd uses indexing from nicIx[dim-1], so we 
- // need to switch over. 
+ // get to work, no reason to give up. 
  std::set< unsigned long > maxTreedcIx; 
  // dcIx index vs. nicIx[dim-1] indices of max tree maxTreeStd
  for (std::set<unsigned long>::const_iterator i=maxTreeStd.begin(); 
@@ -1261,15 +1248,16 @@ const NMatrixRing< NSVPolynomialRing< NLargeInteger > >*
   return buildMat; 
 }
 
+namespace {
 /*
  *  Given integers n != 0 and m, this routine computes d and r so that
  *   m = dn + r with 0 <= r < |n|
  */
 void signedLongDivAlg( signed long n, signed long m, 
                        signed long &d, signed long &r )
-{
- d = m/n; r = m-d*n; if (r<0) { r += abs(n); d += ( (n>0) ? -1 : 1 ); } 
-}
+{ d = m/n; r = m-d*n; if (r<0) { r += abs(n); d += ( (n>0) ? -1 : 1 ); } }
+
+} // end anonymous namespace
 
 std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > 
   NCellularData::alexanderPresentationMatrix() const
@@ -1386,8 +1374,12 @@ std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > >
         (new std::list< NSVPolynomialRing< NLargeInteger > >(alexIdeal));
 }
 
+namespace {
+
 std::string embeddabilityString(const NTriangulation* tri, 
     const NCellularData* cdat, const NBilinearForm* tlf); // forward ref
+
+}
 
 std::string NCellularData::stringInfo( const StringRequest &s_desc ) const
 { //TODO - this routine isn't complete yet. 
@@ -1422,6 +1414,7 @@ std::string NCellularData::stringInfo( const StringRequest &s_desc ) const
  return retval;
 }
 
+namespace {
 // this routine computes a string describing embeddability of the manifold 
 // into S^4, it assumes cdat is derived from tri, and tlf is the torsion 
 // linking form for cdat.
@@ -1588,13 +1581,72 @@ std::string embeddabilityString(const NTriangulation* tri,
   return retval;
 } // end embeddabilityString()
 
-
+} // end anonymous namespace
 
 bool NCellularData::boolInfo( const BoolRequest &b_desc) const
 { // TODO something!
   return true;
 }
 // eventually we can have a tribool routine as well...
+
+std::vector< bool > NCellularData::stiefel_whitney( unsigned long i ) const
+{
+ if (i!=1) return std::vector<bool>();
+ std::vector<bool> retval; 
+ retval.resize( cellCount( ChainComplexLocator( 1, DUAL_coord ) ) );
+ // numDualCells[1] or cellCount( ChainComplexLocator( 1, DUAL_coord ) )
+ const NTetrahedron* tet; const Dim4Pentachoron* pen;
+ unsigned long idx;
+ for (unsigned long i=0; i<retval.size(); i++)
+  {
+   if (tri3 != NULL) 
+    { tet = tri3->getTriangle(dcIx[1][i])->getEmbedding(0).getTetrahedron();
+      idx = tri3->getTriangle(dcIx[1][i])->getEmbedding(0).getFace();
+      retval[i] = (tet->adjacentGluing(idx).sign() > 0) ? true : false; }
+   else 
+    { pen = tri4->getTetrahedron(dcIx[1][i])->getEmbedding(0).getPentachoron();
+      idx = tri4->getTetrahedron(dcIx[1][i])->getEmbedding(0).getTetrahedron();
+      retval[i] = (pen->adjacentGluing(idx).sign() > 0) ? true : false; }
+  } // true indicates preserving the orientations given by characteristic maps.
+ return retval;
+}
+
+// The Hurewicz map where the i-th column is the DUAL_coord CC listing
+// of the i-th generator of the fundamental group, computed in DUAL_coord. 
+
+NMatrixInt NCellularData::hurewicz_map_H1() const
+{
+ // The idea to compute this is to take the endpoints of the i-th generator.
+ // In the 4-dimensional case they're in either the dual 1-skeleton or the
+ // refined version where they can be in the dual 1-skeleton of the boundary. 
+ // We have to close this to a loop with the unique arc in the maximal forest,
+ // and then push that into the chain complex for DUAL_coord (which lacks the
+ // edges in the boundary, etc... ). 
+ // TODO
+ return NMatrixInt(0,0);
+}
+
+std::vector< bool > NCellularData::PI1_stiefel_whitney1() const
+{ 
+ std::vector<bool> SW_H1( stiefel_whitney( 1 ) );
+ // given generator gi of the fundamental group, we need to compute its
+ // H1 representative. 
+
+ // TODO: finish! For this we'll need to know the minimal arcs in the
+ //  maximal forest.  This exists somewhere in the code, I think... just
+ //  need to figure out where. 
+ /*  maxTreeStd    stores the edges dual to co-dimension 1 simplices, 
+  *                indexed by nicIx[n-1]
+  *  maxTreeStB    boundary edges dual to co-dimension 2 boundary faces, 
+  *                indexed by bcIx[n-2]
+  *  maxTreeIdB    boundary edges dual to co-dimension 2 ideal boundary faces,
+  *                indexed by icIx[n-2]
+  *  maxTreeSttIdB edges connecting top-dimensional simplices barycentres 
+  *                to boundary cd1 barycentres, indexed by icIx[n-1]
+  */
+ return std::vector<bool>();
+}
+
 
 
 } // namespace regina
