@@ -32,37 +32,40 @@
 
 /* end stub */
 
-#include "surfaces/nnormalsurface.h"
-#include "surfaces/nprism.h"
+#include "angle/nanglestructure.h"
+#include "enumerate/ntreeconstraint.h"
+#include "enumerate/ntreelp.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
 
-std::ostream& operator << (std::ostream& out, const NPrismSpec& spec) {
-    out << '(' << spec.tetIndex << ", " << spec.edge << ')';
-    return out;
-}
+NAngleStructure* NTriangulation::hasStrictAngleStructure() {
+    // Knock off the empty triangulation first.
+    if (tetrahedra.empty())
+        return 0;
 
-NPrismSetSurface::NPrismSetSurface(const NNormalSurface& surface) {
-    const NTriangulation* tri = surface.getTriangulation();
-    unsigned long nTet = tri->getNumberOfTetrahedra();
+    LPInitialTableaux<LPConstraintNone> eqns(this, NS_ANGLE, false);
 
-    if (nTet == 0) {
-        quadType = 0;
-        return;
-    }
+    LPData<LPConstraintNone, NInteger> lp;
+    lp.reserve(&eqns);
 
-    // Work out which tetrahedra contain which quad types.
-    quadType = new signed char[nTet];
-    for (unsigned long tet = 0; tet < nTet; tet++)
-        if (surface.getQuadCoord(tet, 0) != 0)
-            quadType[tet] = 0;
-        else if (surface.getQuadCoord(tet, 1) != 0)
-            quadType[tet] = 1;
-        else if (surface.getQuadCoord(tet, 2) != 0)
-            quadType[tet] = 2;
-        else
-            quadType[tet] = -1;
+    // Find an initial basis.
+    lp.initStart();
+
+    // Set all angles to be strictly positive.
+    unsigned i;
+    for (i = 0; i < eqns.columns(); ++i)
+        lp.constrainPositive(i);
+
+    // Test for a solution!
+    if (! lp.isFeasible())
+        return 0;
+
+    // We have a strict angle structure: reconstruct it.
+    unsigned long len = 3 * tetrahedra.size() + 1;
+    NAngleStructureVector* v = new NAngleStructureVector(len);
+    lp.extractSolution(*v, 0 /* type vector */);
+    return new NAngleStructure(this, v);
 }
 
 } // namespace regina

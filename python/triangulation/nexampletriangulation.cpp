@@ -71,12 +71,17 @@ void addNExampleTriangulation() {
         .def("smallClosedNonOrblHyperbolic",
             &NExampleTriangulation::smallClosedNonOrblHyperbolic,
             return_value_policy<manage_new_object>())
+        .def("sphere600", &NExampleTriangulation::sphere600,
+            return_value_policy<manage_new_object>())
         .def("lst3_4_7", &NExampleTriangulation::lst3_4_7,
             return_value_policy<manage_new_object>())
         .def("solidKleinBottle", &NExampleTriangulation::solidKleinBottle,
             return_value_policy<manage_new_object>())
         .def("figureEightKnotComplement",
             &NExampleTriangulation::figureEightKnotComplement,
+            return_value_policy<manage_new_object>())
+        .def("trefoilKnotComplement",
+            &NExampleTriangulation::trefoilKnotComplement,
             return_value_policy<manage_new_object>())
         .def("whiteheadLinkComplement",
             &NExampleTriangulation::whiteheadLinkComplement,
@@ -98,9 +103,11 @@ void addNExampleTriangulation() {
         .staticmethod("weberSeifert")
         .staticmethod("smallClosedOrblHyperbolic")
         .staticmethod("smallClosedNonOrblHyperbolic")
+        .staticmethod("sphere600")
         .staticmethod("lst3_4_7")
         .staticmethod("solidKleinBottle")
         .staticmethod("figureEightKnotComplement")
+        .staticmethod("trefoilKnotComplement")
         .staticmethod("whiteheadLinkComplement")
         .staticmethod("gieseking")
         .staticmethod("cuspedGenusTwoTorus")

@@ -162,8 +162,8 @@ REGINA_API bool numberDiscsAwayFromVertex(int discType, int vertex);
 /**
  * Determines whether or not the natural boundary orientation of a normal
  * disc of the given type follows the given directed normal arc.
- * Natural boundary orientation is defined by arrays ::triDiscArcs,
- * ::quadDiscArcs and ::octDiscArcs.
+ * Natural boundary orientation is defined by arrays regina::triDiscArcs,
+ * regina::quadDiscArcs and regina::octDiscArcs.
  *
  * \pre The given normal arc lies on a normal disc of the given type.
  *
@@ -468,7 +468,7 @@ class REGINA_API NDiscSetSurface {
     protected:
         NDiscSetTet** discSets;
             /**< The disc sets corresponding to each tetrahedron. */
-        NTriangulation* triangulation;
+        const NTriangulation* triangulation;
             /**< The triangulation in which the normal surface lives. */
 
     protected:

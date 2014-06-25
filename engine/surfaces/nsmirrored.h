@@ -127,23 +127,23 @@ class REGINA_API NNormalSurfaceVectorMirrored : public NNormalSurfaceVector {
          * lives.
          * @return a newly created mirror vector.
          */
-        virtual NNormalSurfaceVector* makeMirror(NTriangulation* triang)
+        virtual NNormalSurfaceVector* makeMirror(const NTriangulation* triang)
             const = 0;
 
         virtual NLargeInteger getTriangleCoord(unsigned long tetIndex,
-            int vertex, NTriangulation* triang) const;
+            int vertex, const NTriangulation* triang) const;
         virtual NLargeInteger getOrientedTriangleCoord(unsigned long tetIndex,
-            int vertex, NTriangulation* triang, bool orientation) const;
+            int vertex, const NTriangulation* triang, bool orientation) const;
         virtual NLargeInteger getQuadCoord(unsigned long tetIndex,
-            int quadType, NTriangulation* triang) const;
+            int quadType, const NTriangulation* triang) const;
         virtual NLargeInteger getOrientedQuadCoord(unsigned long tetIndex,
-            int quadType, NTriangulation* triang, bool orientation) const;
+            int quadType, const NTriangulation* triang, bool orientation) const;
         virtual NLargeInteger getOctCoord(unsigned long tetIndex,
-            int octType, NTriangulation* triang) const;
+            int octType, const NTriangulation* triang) const;
         virtual NLargeInteger getEdgeWeight(unsigned long edgeIndex,
-            NTriangulation* triang) const;
+            const NTriangulation* triang) const;
         virtual NLargeInteger getTriangleArcs(unsigned long triIndex,
-            int triVertex, NTriangulation* triang) const;
+            int triVertex, const NTriangulation* triang) const;
 };
 
 /*@}*/
@@ -167,14 +167,14 @@ inline NNormalSurfaceVectorMirrored::~NNormalSurfaceVectorMirrored() {
 }
 
 inline NLargeInteger NNormalSurfaceVectorMirrored::getTriangleCoord(
-        unsigned long tetIndex, int vertex, NTriangulation* triang) const {
+        unsigned long tetIndex, int vertex, const NTriangulation* triang) const {
     if (! mirror)
         const_cast<NNormalSurfaceVectorMirrored*>(this)->mirror =
             makeMirror(triang);
     return mirror->getTriangleCoord(tetIndex, vertex, triang);
 }
 inline NLargeInteger NNormalSurfaceVectorMirrored::getOrientedTriangleCoord(
-        unsigned long tetIndex, int vertex, NTriangulation* triang,
+        unsigned long tetIndex, int vertex, const NTriangulation* triang,
         bool orientation) const {
     if (! mirror)
         const_cast<NNormalSurfaceVectorMirrored*>(this)->mirror =
@@ -183,14 +183,14 @@ inline NLargeInteger NNormalSurfaceVectorMirrored::getOrientedTriangleCoord(
         orientation);
 }
 inline NLargeInteger NNormalSurfaceVectorMirrored::getQuadCoord(
-        unsigned long tetIndex, int quadType, NTriangulation* triang) const {
+        unsigned long tetIndex, int quadType, const NTriangulation* triang) const {
     if (! mirror)
         const_cast<NNormalSurfaceVectorMirrored*>(this)->mirror =
             makeMirror(triang);
     return mirror->getQuadCoord(tetIndex, quadType, triang);
 }
 inline NLargeInteger NNormalSurfaceVectorMirrored::getOrientedQuadCoord(
-        unsigned long tetIndex, int quadType, NTriangulation* triang,
+        unsigned long tetIndex, int quadType, const NTriangulation* triang,
         bool orientation) const {
     if (! mirror)
         const_cast<NNormalSurfaceVectorMirrored*>(this)->mirror =
@@ -199,14 +199,14 @@ inline NLargeInteger NNormalSurfaceVectorMirrored::getOrientedQuadCoord(
         orientation);
 }
 inline NLargeInteger NNormalSurfaceVectorMirrored::getOctCoord(
-        unsigned long tetIndex, int octType, NTriangulation* triang) const {
+        unsigned long tetIndex, int octType, const NTriangulation* triang) const {
     if (! mirror)
         const_cast<NNormalSurfaceVectorMirrored*>(this)->mirror =
             makeMirror(triang);
     return mirror->getOctCoord(tetIndex, octType, triang);
 }
 inline NLargeInteger NNormalSurfaceVectorMirrored::getEdgeWeight(
-        unsigned long edgeIndex, NTriangulation* triang) const {
+        unsigned long edgeIndex, const NTriangulation* triang) const {
     if (! mirror)
         const_cast<NNormalSurfaceVectorMirrored*>(this)->mirror =
             makeMirror(triang);
@@ -214,7 +214,7 @@ inline NLargeInteger NNormalSurfaceVectorMirrored::getEdgeWeight(
 }
 inline NLargeInteger NNormalSurfaceVectorMirrored::getTriangleArcs(
         unsigned long triIndex, int triVertex,
-        NTriangulation* triang) const {
+        const NTriangulation* triang) const {
     if (! mirror)
         const_cast<NNormalSurfaceVectorMirrored*>(this)->mirror =
             makeMirror(triang);

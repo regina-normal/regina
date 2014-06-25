@@ -145,7 +145,8 @@ class NTriangulationTest : public TriangulationTest<3> {
             /**< A twisted layered loop representing S^3 / Q_28. */
         NTriangulation weberSeifert;
             /**< The Weber-Seifert dodecahedral space.  With 23 tetrahedra,
-                 this is too large for running normal surface algorithms.*/
+                 this is too large for running normal surface algorithms
+                 here in the test suite. */
 
         // Closed orientable, very large:
         NTriangulation lens100_1;

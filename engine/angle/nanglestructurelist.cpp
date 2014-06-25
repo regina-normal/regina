@@ -34,6 +34,7 @@
 
 #include "angle/nanglestructurelist.h"
 #include "enumerate/ndoubledescription.h"
+#include "enumerate/ntreetraversal.h"
 #include "maths/nmatrixint.h"
 #include "progress/nprogresstracker.h"
 #include "surfaces/nnormalsurface.h"
@@ -49,74 +50,52 @@ namespace regina {
 typedef std::vector<NAngleStructure*>::const_iterator StructureIteratorConst;
 
 void* NAngleStructureList::Enumerator::run(void*) {
-    if (tracker)
-        tracker->newStage("Enumerating vertex angle structures");
+    // Form the matching equations.
+    NMatrixInt* eqns = NAngleStructureVector::makeAngleEquations(triang);
 
-    // Form the matching equations (one per non-boundary edge plus
-    // one per tetrahedron).
-    unsigned long nTetrahedra = triang->getNumberOfTetrahedra();
-    unsigned long nCoords = 3 * nTetrahedra + 1;
+    if (list->tautOnly_ && triang->getNumberOfTetrahedra() > 0) {
+        // For now just stick to arbitrary precision arithmetic.
+        // TODO: Use native integer types when the angle equation matrix
+        // is sufficiently small / simple.
+        if (tracker)
+            tracker->newStage("Enumerating taut angle structures");
 
-    long nEquations = long(triang->getNumberOfEdges()) +
-        long(triang->getNumberOfTetrahedra());
-    for (NTriangulation::BoundaryComponentIterator bit =
-            triang->getBoundaryComponents().begin();
-            bit != triang->getBoundaryComponents().end(); bit++)
-        nEquations -= (*bit)->getNumberOfEdges();
-
-    NMatrixInt eqns(nEquations, nCoords);
-    unsigned long row = 0;
-
-    std::deque<NEdgeEmbedding>::const_iterator embit;
-    NPerm4 perm;
-    unsigned long index;
-    for (NTriangulation::EdgeIterator eit = triang->getEdges().begin();
-            eit != triang->getEdges().end(); eit++) {
-        if ((*eit)->isBoundary())
-            continue;
-        for (embit = (*eit)->getEmbeddings().begin();
-                embit != (*eit)->getEmbeddings().end(); embit++) {
-            index = triang->tetrahedronIndex((*embit).getTetrahedron());
-            perm = (*embit).getVertices();
-            eqns.entry(row, 3 * index + vertexSplit[perm[0]][perm[1]]) += 1;
+        NTautEnumeration<LPConstraintNone, BanNone, NInteger> search(triang);
+        while (search.next(tracker)) {
+            list->structures.push_back(search.buildStructure());
+            if (tracker && tracker->isCancelled())
+                break;
         }
-        eqns.entry(row, nCoords - 1) = -2;
-        row++;
+
+        if (! (tracker && tracker->isCancelled()))
+            triang->insertChildLast(list);
+
+        if (tracker)
+            tracker->setFinished();
+    } else {
+        // For the empty triangulation, we fall through here regardless
+        // of whether we want taut or all vertex angle structures (but
+        // either way, the answer is the same - just one empty structure).
+        //
+        // For all other triangulations, we fall through here if we are
+        // after all vertex angle structures.
+        if (tracker)
+            tracker->newStage("Enumerating vertex angle structures");
+
+        // Find the angle structures.
+        NDoubleDescription::enumerateExtremalRays<NAngleStructureVector>(
+            StructureInserter(*list, triang), *eqns, 0 /* constraints */,
+            tracker);
+
+        // All done!
+        if (! (tracker && tracker->isCancelled()))
+            triang->insertChildLast(list);
+
+        if (tracker)
+            tracker->setFinished();
     }
-    for (index = 0; index < nTetrahedra; index++) {
-        eqns.entry(row, 3 * index) = 1;
-        eqns.entry(row, 3 * index + 1) = 1;
-        eqns.entry(row, 3 * index + 2) = 1;
-        eqns.entry(row, nCoords - 1) = -1;
-        row++;
-    }
 
-    // Form the taut constraints, if we need them.
-    NEnumConstraintList* constraints = 0;
-    if (list->tautOnly_) {
-        constraints = new NEnumConstraintList(triang->getNumberOfTetrahedra());
-
-        unsigned base = 0;
-        for (unsigned c = 0; c < constraints->size(); ++c) {
-            (*constraints)[c].insert((*constraints)[c].end(), base++);
-            (*constraints)[c].insert((*constraints)[c].end(), base++);
-            (*constraints)[c].insert((*constraints)[c].end(), base++);
-        }
-    }
-
-    // Find the angle structures.
-    NDoubleDescription::enumerateExtremalRays<NAngleStructureVector>(
-        StructureInserter(*list, triang), eqns, constraints, tracker);
-
-    // All done!
-    delete constraints;
-
-    if (! (tracker && tracker->isCancelled()))
-        triang->insertChildLast(list);
-
-    if (tracker)
-        tracker->setFinished();
-
+    delete eqns;
     return 0;
 }
 
@@ -136,6 +115,36 @@ NAngleStructureList* NAngleStructureList::enumerate(NTriangulation* owner,
         delete e;
         return ans;
     }
+}
+
+NAngleStructureList* NAngleStructureList::enumerateTautDD(
+        NTriangulation* owner) {
+    NAngleStructureList* ans = new NAngleStructureList(true /* taut only */);
+
+    // Form the matching equations.
+    NMatrixInt* eqns = NAngleStructureVector::makeAngleEquations(owner);
+
+    // Form the taut constraints.
+    NEnumConstraintList* constraints = new NEnumConstraintList(
+        owner->getNumberOfTetrahedra());
+
+    unsigned base = 0;
+    for (unsigned c = 0; c < constraints->size(); ++c) {
+        (*constraints)[c].insert((*constraints)[c].end(), base++);
+        (*constraints)[c].insert((*constraints)[c].end(), base++);
+        (*constraints)[c].insert((*constraints)[c].end(), base++);
+    }
+
+    // Find the angle structures.
+    NDoubleDescription::enumerateExtremalRays<NAngleStructureVector>(
+        StructureInserter(*ans, owner), *eqns, constraints, 0 /* tracker */);
+
+    // All done!
+    owner->insertChildLast(ans);
+
+    delete eqns;
+    delete constraints;
+    return ans;
 }
 
 NTriangulation* NAngleStructureList::getTriangulation() const {

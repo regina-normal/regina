@@ -76,7 +76,7 @@ namespace regina {
 REGINA_API extern const int vertexSplit[4][4];
 /**
  * Lists which vertex splits meet which edges.
- * See ::vertexSplit for details on what a vertex split is.
+ * See regina::vertexSplit for details on what a vertex split is.
  * <tt>vertexSplitMeeting[i][j][0,1]</tt> are the numbers of the two
  * vertex splits that meet the edge joining tetrahedron vertices
  * <tt>i</tt> and <tt>j</tt>.
@@ -85,7 +85,7 @@ REGINA_API extern const int vertexSplitMeeting[4][4][2];
 
 /**
  * Lists the vertices which each vertex split splits.
- * See ::vertexSplit for details on what a vertex split is.
+ * See regina::vertexSplit for details on what a vertex split is.
  * Vertex split number \c i splits the vertex pairs
  * <tt>vertexSplitDefn[i][0,1]</tt> and
  * <tt>vertexSplitDefn[i][2,3]</tt>.
@@ -103,7 +103,7 @@ REGINA_API extern const int vertexSplitDefn[3][4];
 /**
  * Lists the second vertex with which each vertex is paired under each
  * vertex split.
- * See ::vertexSplit for details on what a vertex split is.
+ * See regina::vertexSplit for details on what a vertex split is.
  * Vertex split number \c i pairs vertex \c v with
  * vertex <tt>vertexSplitPartner[i][v]</tt>.
  */
@@ -111,7 +111,7 @@ REGINA_API extern const int vertexSplitPartner[3][4];
 
 /**
  * Contains strings describing which vertices each vertex split splits.
- * See ::vertexSplit for details on what a vertex split is.
+ * See regina::vertexSplit for details on what a vertex split is.
  * The string describing vertex split number \c i is
  * <tt>vertexSplitString[i]</tt> and is of the form <tt>02/13</tt>,
  * which in this case is the vertex split that splits vertices 0,2 from
@@ -327,8 +327,8 @@ struct NormalInfo;
  *   Otherwise you can use the default implementations (which returns zero).
  *   <li>Static public functions <tt>void
  *   makeZeroVector(const NTriangulation*)</tt>,
- *   <tt>NMatrixInt* makeMatchingEquations(NTriangulation*)</tt> and
- *   makeEmbeddedConstraints(NTriangulation*) must be
+ *   <tt>NMatrixInt* makeMatchingEquations(const NTriangulation*)</tt> and
+ *   makeEmbeddedConstraints(const NTriangulation*) must be
  *   declared and implemented.</li>
  * </ul>
  *
@@ -425,7 +425,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return \c true if and only if there is an octagonal disc type
          * present and its coordinate is greater than one.
          */
-        virtual bool hasMultipleOctDiscs(NTriangulation* triang) const;
+        virtual bool hasMultipleOctDiscs(const NTriangulation* triang) const;
         /**
          * Determines if the normal surface represented is compact (has
          * finitely many discs).
@@ -440,7 +440,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return \c true if and only if the normal surface represented
          * is compact.
          */
-        virtual bool isCompact(NTriangulation* triang) const;
+        virtual bool isCompact(const NTriangulation* triang) const;
         /**
          * Determines if the normal surface represented is vertex
          * linking.  A <i>vertex linking</i> surface contains only
@@ -456,7 +456,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return \c true if and only if the normal surface represented
          * is vertex linking.
          */
-        virtual bool isVertexLinking(NTriangulation* triang) const;
+        virtual bool isVertexLinking(const NTriangulation* triang) const;
         /**
          * Determines if a rational multiple of the normal surface represented
          * is the link of a single vertex.
@@ -470,7 +470,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return the vertex linked by this surface, or 0 if this
          * surface is not the link of a single vertex.
          */
-        virtual const NVertex* isVertexLink(NTriangulation* triang) const;
+        virtual const NVertex* isVertexLink(const NTriangulation* triang) const;
         /**
          * Determines if a rational multiple of the normal surface represented
          * is the thin link of a single edge.
@@ -494,7 +494,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * as described above.
          */
         virtual std::pair<const NEdge*, const NEdge*> isThinEdgeLink(
-            NTriangulation* triang) const;
+            const NTriangulation* triang) const;
         /**
          * Determines if the normal surface represented is a splitting
          * surface in the given triangulation.  A \a splitting surface
@@ -511,7 +511,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return \c true if and only if the normal surface represented
          * is a splitting surface.
          */
-        virtual bool isSplitting(NTriangulation* triang) const;
+        virtual bool isSplitting(const NTriangulation* triang) const;
         /**
          * Determines if the normal surface represented is a central
          * surface in the given triangulation.  A \a central surface
@@ -529,7 +529,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return the number of tetrahedra that the surface meets if it
          * is a central surface, or 0 if it is not a central surface.
          */
-        virtual NLargeInteger isCentral(NTriangulation* triang) const;
+        virtual NLargeInteger isCentral(const NTriangulation* triang) const;
 
         /**
          * Returns the number of triangular discs of the given type in
@@ -547,8 +547,8 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return the number of triangular discs of the given type.
          */
         virtual NLargeInteger getTriangleCoord(unsigned long tetIndex,
-            int vertex, NTriangulation* triang) const = 0;
-        
+            int vertex, const NTriangulation* triang) const = 0;
+
         /**
          * Returns the number of oriented triangular discs of the given type in
          * this normal surface.
@@ -570,7 +570,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return the number of triangular discs of the given type.
          */
         virtual NLargeInteger getOrientedTriangleCoord(unsigned long tetIndex,
-            int vertex, NTriangulation* triang, bool orientation) const;
+            int vertex, const NTriangulation* triang, bool orientation) const;
 
         /**
          * Returns the number of quadrilateral discs of the given type
@@ -588,7 +588,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return the number of quadrilateral discs of the given type.
          */
         virtual NLargeInteger getQuadCoord(unsigned long tetIndex,
-            int quadType, NTriangulation* triang) const = 0;
+            int quadType, const NTriangulation* triang) const = 0;
 
         /**
          * Returns the number of oriented quadrilateral discs of the given type
@@ -611,7 +611,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return the number of quadrilateral discs of the given type.
          */
         virtual NLargeInteger getOrientedQuadCoord(unsigned long tetIndex,
-            int quadType, NTriangulation* triang, bool orientation) const;
+            int quadType, const NTriangulation* triang, bool orientation) const;
         /**
          * Returns the number of octagonal discs of the given type
          * in this normal surface.
@@ -628,7 +628,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return the number of octagonal discs of the given type.
          */
         virtual NLargeInteger getOctCoord(unsigned long tetIndex,
-            int octType, NTriangulation* triang) const = 0;
+            int octType, const NTriangulation* triang) const = 0;
         /**
          * Returns the number of times this normal surface crosses the
          * given edge.
@@ -642,7 +642,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * given edge.
          */
         virtual NLargeInteger getEdgeWeight(unsigned long edgeIndex,
-            NTriangulation* triang) const = 0;
+            const NTriangulation* triang) const = 0;
         /**
          * Returns the number of arcs in which this normal surface
          * intersects the given triangle in the given direction.
@@ -659,7 +659,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * given triangle with the given arc type.
          */
         virtual NLargeInteger getTriangleArcs(unsigned long triIndex,
-            int triVertex, NTriangulation* triang) const = 0;
+            int triVertex, const NTriangulation* triang) const = 0;
         /**
          * A deprecated alias for getTriangleArcs().
          *
@@ -684,7 +684,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * given triangle with the given arc type.
          */
         NLargeInteger getFaceArcs(unsigned long triIndex,
-            int triVertex, NTriangulation* triang) const;
+            int triVertex, const NTriangulation* triang) const;
 
         /**
          * Returns a new normal surface vector of the appropriate length
@@ -692,7 +692,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * system corresponding to this subclass of NNormalSurfaceVector.
          * All elements of the new vector will be initialised to zero.
          *
-         * See ::makeZeroVector() for further details.
+         * See regina::makeZeroVector() for further details.
          *
          * @param triangulation the triangulation upon which the
          * underlying coordinate system is based.
@@ -708,7 +708,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * system corresponding to this particular subclass of
          * NNormalSurfaceVector.
          *
-         * See ::makeMatchingEquations() for further details.
+         * See regina::makeMatchingEquations() for further details.
          *
          * @param triangulation the triangulation upon which these
          * matching equations will be based.
@@ -716,7 +716,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          */
         #ifdef __DOXYGEN
             static NMatrixInt* makeMatchingEquations(
-                NTriangulation* triangulation);
+                const NTriangulation* triangulation);
         #endif
         /**
          * Creates a new set of validity constraints representing
@@ -731,7 +731,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          */
         #ifdef __DOXYGEN
             static NEnumConstraintList* makeEmbeddedConstraints(
-                NTriangulation* triangulation);
+                const NTriangulation* triangulation);
         #endif
 };
 
@@ -762,7 +762,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
         NNormalSurfaceVector* vector;
             /**< Contains the coordinates of the normal surface in whichever
              *   space is appropriate. */
-        NTriangulation* triangulation;
+        const NTriangulation* triangulation;
             /**< The triangulation in which this normal surface resides. */
 
         std::string name;
@@ -793,6 +793,10 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * Creates a new normal surface inside the given triangulation
          * with the given coordinate vector.
          *
+         * This normal surface will claim ownership of the given vector
+         * (i.e., you should not change or delete the vector yourself
+         * afterwards).
+         *
          * \pre The given coordinate vector represents a
          * normal surface inside the given triangulation.
          * \pre The given coordinate vector cannot be the null pointer.
@@ -803,9 +807,8 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * @param newVector a vector containing the coordinates of the
          * normal surface in whichever space is appropriate.
          */
-        NNormalSurface(NTriangulation* triang,
+        NNormalSurface(const NTriangulation* triang,
             NNormalSurfaceVector* newVector);
-
 
         /**
          * A Python-only routine that creates a new normal surface
@@ -813,7 +816,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
          *
          * \pre The given coordinate system is one in which Regina is
          * able to enumerate and store normal surfaces (not a system
-         * like ::NS_EDGE_WEIGHT, which is for viewing purposes only).
+         * like regina::NS_EDGE_WEIGHT, which is for viewing purposes only).
          * \pre The given coordinate vector represents a normal surface
          * inside the given triangulation (in particular, it satisfies the
          * relevant system of matching equations).  This will not be checked,
@@ -828,10 +831,9 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * converted internally to NLargeInteger objects.
          */
         #ifdef __DOXYGEN
-        NNormalSurface(NTriangulation* triang, NormalCoords coordSystem,
+        NNormalSurface(const NTriangulation* triang, NormalCoords coordSystem,
             List allCoords);
         #endif
-
 
         /**
          * Destroys this normal surface.
@@ -914,12 +916,21 @@ class REGINA_API NNormalSurface : public ShareableObject {
         NLargeInteger getOrientedTriangleCoord(unsigned long tetIndex,
             int vertex, bool orientation) const;
         /**
-         * Returns the number of oriented quadrilateral discs of the given
+         * Returns the number of quadrilateral discs of the given
          * type in this normal surface.
+         *
+         * In each tetrahedron, there are three types of quadrilaterals,
+         * defined by how they separate the four tetrahedron vertices into
+         * two pairs.  These types are labelled 0, 1 and 2, and they
+         * correspond exactly to the three vertex splittings described
+         * by regina::vertexSplit.  Specifically:
+         *
+         * - type 0 separates vertices 0,1 of the tetrahedron from vertices 2,3;
+         * - type 1 separates vertices 0,2 of the tetrahedron from vertices 1,3;
+         * - type 2 separates vertices 0,3 of the tetrahedron from vertices 1,2.
+         *
          * A quadrilateral disc type is identified by specifying a
-         * tetrahedron and a vertex splitting of that tetrahedron that
-         * describes how the quadrilateral partitions the tetrahedron
-         * vertices.  See ::vertexSplit for more details on vertex splittings.
+         * tetrahedron and a vertex splitting 0, 1 or 2 as described above.
          *
          * If you are using a coordinate system that adorns discs with
          * additional information (such as orientation), this routine
@@ -931,8 +942,8 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * this should be between 0 and
          * NTriangulation::getNumberOfTetrahedra()-1 inclusive.
          * @param quadType the number of the vertex splitting that this
-         * quad type represents; this should be between 0 and 2
-         * inclusive.
+         * quad type represents, as described above;
+         * this should be between 0 and 2 inclusive.
          * @return the number of quadrilateral discs of the given type.
          */
         NLargeInteger getQuadCoord(unsigned long tetIndex,
@@ -945,14 +956,6 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * transversely oriented normal surfaces; for details see
          * "The Thurston norm via normal surfaces", Stephan Tillmann and
          * Daryl Cooper, Pacific Journal of Mathematics 239 (2009), 1-15.
-         *
-         * An oriented triangular disc type is identified by specifying a
-         * tetrahedron, a vertex of that tetrahedron that the
-         * triangle surrounds, and a boolean orientation.  The \c true
-         * orientation indicates a triangle whose "transverse" orientation
-         * points to the nearby vertex, and the \c false orientation
-         * indicates a triangle whose "transverse" orientation points to
-         * the opposite face.
          *
          * An oriented quadrilateral disc type is identified by specifying a
          * tetrahedron, a vertex splitting of that tetrahedron as
@@ -980,10 +983,19 @@ class REGINA_API NNormalSurface : public ShareableObject {
         /**
          * Returns the number of octagonal discs of the given type
          * in this normal surface.
+         *
+         * In each tetrahedron, there are three types of octagons,
+         * defined by how they separate the four tetrahedron vertices into
+         * two pairs.  These types are labelled 0, 1 and 2, and they
+         * correspond exactly to the three vertex splittings described
+         * by regina::vertexSplit.  Specifically:
+         *
+         * - type 0 separates vertices 0,1 of the tetrahedron from vertices 2,3;
+         * - type 1 separates vertices 0,2 of the tetrahedron from vertices 1,3;
+         * - type 2 separates vertices 0,3 of the tetrahedron from vertices 1,2.
+         *
          * An octagonal disc type is identified by specifying a
-         * tetrahedron and a vertex splitting of that tetrahedron that
-         * describes how the octagon partitions the tetrahedron
-         * vertices.  See ::vertexSplit for more details on vertex splittings.
+         * tetrahedron and a vertex splitting 0, 1 or 2 as described above.
          *
          * If you are using a coordinate system that adorns discs with
          * additional information (such as orientation), this routine
@@ -995,8 +1007,8 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * this should be between 0 and
          * NTriangulation::getNumberOfTetrahedra()-1 inclusive.
          * @param octType the number of the vertex splitting that this
-         * octagon type represents; this should be between 0 and 2
-         * inclusive.
+         * octagon type represents, as described above;
+         * this should be between 0 and 2 inclusive.
          * @return the number of octagonal discs of the given type.
          */
         NLargeInteger getOctCoord(unsigned long tetIndex,
@@ -1083,7 +1095,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
          *
          * @return the underlying triangulation.
          */
-        NTriangulation* getTriangulation() const;
+        const NTriangulation* getTriangulation() const;
 
         /**
          * Returns the name associated with this normal surface.
@@ -1685,7 +1697,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
          *
          * @param tri the triangulation in which to search.
          * @param quadOct \c true if we should search for vertex
-         * surfaces in quadrilateral-octagon coordiantes, or \c false
+         * surfaces in quadrilateral-octagon coordinates, or \c false
          * (the default) if we should search for surfaces in standard
          * almost normal coordinates.
          * @return a newly allocated vertex octagonal almost normal sphere
@@ -1737,7 +1749,7 @@ inline NNormalSurfaceVector::NNormalSurfaceVector(
 inline NNormalSurfaceVector::~NNormalSurfaceVector() {
 }
 inline NLargeInteger NNormalSurfaceVector::getFaceArcs(unsigned long triIndex,
-        int triVertex, NTriangulation* triang) const {
+        int triVertex, const NTriangulation* triang) const {
     return getTriangleArcs(triIndex, triVertex, triang);
 }
 
@@ -1791,7 +1803,7 @@ inline NDiscType NNormalSurface::getOctPosition() const {
 inline size_t NNormalSurface::getNumberOfCoords() const {
     return vector->size();
 }
-inline NTriangulation* NNormalSurface::getTriangulation() const {
+inline const NTriangulation* NNormalSurface::getTriangulation() const {
     return triangulation;
 }
 
