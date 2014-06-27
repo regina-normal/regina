@@ -90,10 +90,17 @@ Version 4.96  [ (under development) ]
               deprecated alias for backward compatibility.
             - Renamed the protected routine calculateEulerCharacteristic() to
               calculateEulerChar().
+            - Routine getTriangulation() now returns a const NTriangulation*
+              (previously this was non-const).  Likewise, many routines in
+              this and related classes have NTriangulation* arguments changed
+              from non-const to const.
         Class NNormalSurfaceList:
             - New routines saveCSVStandard() and saveCSVEdgeWeight().
               These are now the preferred ways of exporting a normal surface
               list to CSV format.
+            - Many routines in this and related classes have NTriangulation*
+              arguments changed from non-const to const.  This also applies to
+              related global routines, such as makeMatchingEquations().
         Enum NormalCoords:
             - New coordinate system NS_ANGLE for use with angle structures.
         Class NPacket:

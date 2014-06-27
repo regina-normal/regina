@@ -85,9 +85,9 @@ NNormalSurfaceVector* makeZeroVector(const NTriangulation* triangulation,
 
 namespace {
     struct MatchingEquations : public Returns<NMatrixInt*> {
-        NTriangulation* tri_;
+        const NTriangulation* tri_;
 
-        MatchingEquations(NTriangulation* tri) : tri_(tri) {}
+        MatchingEquations(const NTriangulation* tri) : tri_(tri) {}
 
         template <typename Coords>
         inline NMatrixInt* operator() (Coords) {
@@ -96,16 +96,16 @@ namespace {
     };
 }
 
-NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
+NMatrixInt* makeMatchingEquations(const NTriangulation* triangulation,
         NormalCoords coords) {
     return forCoords(coords, MatchingEquations(triangulation), 0);
 }
 
 namespace {
     struct EmbeddedConstraints : public Returns<NEnumConstraintList*> {
-        NTriangulation* tri_;
+        const NTriangulation* tri_;
 
-        EmbeddedConstraints(NTriangulation* tri) : tri_(tri) {}
+        EmbeddedConstraints(const NTriangulation* tri) : tri_(tri) {}
 
         template <typename Coords>
         inline NEnumConstraintList* operator() (Coords) {
@@ -114,8 +114,8 @@ namespace {
     };
 }
 
-NEnumConstraintList* makeEmbeddedConstraints(NTriangulation* triangulation,
-        NormalCoords coords) {
+NEnumConstraintList* makeEmbeddedConstraints(
+        const NTriangulation* triangulation, NormalCoords coords) {
     return forCoords(coords, EmbeddedConstraints(triangulation), 0);
 }
 

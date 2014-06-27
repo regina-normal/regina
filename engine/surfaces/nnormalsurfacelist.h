@@ -1719,8 +1719,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
  * @return a new zero vector of the correct class and length.
  */
 REGINA_API NNormalSurfaceVector* makeZeroVector(
-        const NTriangulation* triangulation,
-        NormalCoords coords);
+    const NTriangulation* triangulation, NormalCoords coords);
 /**
  * Creates a new set of normal surface matching equations for the
  * given triangulation using the given coordinate system.
@@ -1736,8 +1735,8 @@ REGINA_API NNormalSurfaceVector* makeZeroVector(
  * @param coords the coordinate system to be used.
  * @return a newly allocated set of matching equations.
  */
-REGINA_API NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
-    NormalCoords coords);
+REGINA_API NMatrixInt* makeMatchingEquations(
+    const NTriangulation* triangulation, NormalCoords coords);
 /**
  * Creates a new set of validity constraints representing the condition that
  * normal surfaces be embedded.  The validity constraints will be expressed
@@ -1751,7 +1750,7 @@ REGINA_API NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
  * @return a newly allocated set of constraints.
  */
 REGINA_API NEnumConstraintList* makeEmbeddedConstraints(
-    NTriangulation* triangulation, NormalCoords coords);
+    const NTriangulation* triangulation, NormalCoords coords);
 
 /*@}*/
 

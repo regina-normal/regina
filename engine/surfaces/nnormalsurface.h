@@ -327,8 +327,8 @@ struct NormalInfo;
  *   Otherwise you can use the default implementations (which returns zero).
  *   <li>Static public functions <tt>void
  *   makeZeroVector(const NTriangulation*)</tt>,
- *   <tt>NMatrixInt* makeMatchingEquations(NTriangulation*)</tt> and
- *   makeEmbeddedConstraints(NTriangulation*) must be
+ *   <tt>NMatrixInt* makeMatchingEquations(const NTriangulation*)</tt> and
+ *   makeEmbeddedConstraints(const NTriangulation*) must be
  *   declared and implemented.</li>
  * </ul>
  *
@@ -425,7 +425,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return \c true if and only if there is an octagonal disc type
          * present and its coordinate is greater than one.
          */
-        virtual bool hasMultipleOctDiscs(NTriangulation* triang) const;
+        virtual bool hasMultipleOctDiscs(const NTriangulation* triang) const;
         /**
          * Determines if the normal surface represented is compact (has
          * finitely many discs).
@@ -440,7 +440,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return \c true if and only if the normal surface represented
          * is compact.
          */
-        virtual bool isCompact(NTriangulation* triang) const;
+        virtual bool isCompact(const NTriangulation* triang) const;
         /**
          * Determines if the normal surface represented is vertex
          * linking.  A <i>vertex linking</i> surface contains only
@@ -456,7 +456,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return \c true if and only if the normal surface represented
          * is vertex linking.
          */
-        virtual bool isVertexLinking(NTriangulation* triang) const;
+        virtual bool isVertexLinking(const NTriangulation* triang) const;
         /**
          * Determines if a rational multiple of the normal surface represented
          * is the link of a single vertex.
@@ -470,7 +470,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return the vertex linked by this surface, or 0 if this
          * surface is not the link of a single vertex.
          */
-        virtual const NVertex* isVertexLink(NTriangulation* triang) const;
+        virtual const NVertex* isVertexLink(const NTriangulation* triang) const;
         /**
          * Determines if a rational multiple of the normal surface represented
          * is the thin link of a single edge.
@@ -494,7 +494,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * as described above.
          */
         virtual std::pair<const NEdge*, const NEdge*> isThinEdgeLink(
-            NTriangulation* triang) const;
+            const NTriangulation* triang) const;
         /**
          * Determines if the normal surface represented is a splitting
          * surface in the given triangulation.  A \a splitting surface
@@ -511,7 +511,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return \c true if and only if the normal surface represented
          * is a splitting surface.
          */
-        virtual bool isSplitting(NTriangulation* triang) const;
+        virtual bool isSplitting(const NTriangulation* triang) const;
         /**
          * Determines if the normal surface represented is a central
          * surface in the given triangulation.  A \a central surface
@@ -529,7 +529,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return the number of tetrahedra that the surface meets if it
          * is a central surface, or 0 if it is not a central surface.
          */
-        virtual NLargeInteger isCentral(NTriangulation* triang) const;
+        virtual NLargeInteger isCentral(const NTriangulation* triang) const;
 
         /**
          * Returns the number of triangular discs of the given type in
@@ -547,7 +547,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return the number of triangular discs of the given type.
          */
         virtual NLargeInteger getTriangleCoord(unsigned long tetIndex,
-            int vertex, NTriangulation* triang) const = 0;
+            int vertex, const NTriangulation* triang) const = 0;
 
         /**
          * Returns the number of oriented triangular discs of the given type in
@@ -570,7 +570,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return the number of triangular discs of the given type.
          */
         virtual NLargeInteger getOrientedTriangleCoord(unsigned long tetIndex,
-            int vertex, NTriangulation* triang, bool orientation) const;
+            int vertex, const NTriangulation* triang, bool orientation) const;
 
         /**
          * Returns the number of quadrilateral discs of the given type
@@ -588,7 +588,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return the number of quadrilateral discs of the given type.
          */
         virtual NLargeInteger getQuadCoord(unsigned long tetIndex,
-            int quadType, NTriangulation* triang) const = 0;
+            int quadType, const NTriangulation* triang) const = 0;
 
         /**
          * Returns the number of oriented quadrilateral discs of the given type
@@ -611,7 +611,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return the number of quadrilateral discs of the given type.
          */
         virtual NLargeInteger getOrientedQuadCoord(unsigned long tetIndex,
-            int quadType, NTriangulation* triang, bool orientation) const;
+            int quadType, const NTriangulation* triang, bool orientation) const;
         /**
          * Returns the number of octagonal discs of the given type
          * in this normal surface.
@@ -628,7 +628,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return the number of octagonal discs of the given type.
          */
         virtual NLargeInteger getOctCoord(unsigned long tetIndex,
-            int octType, NTriangulation* triang) const = 0;
+            int octType, const NTriangulation* triang) const = 0;
         /**
          * Returns the number of times this normal surface crosses the
          * given edge.
@@ -642,7 +642,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * given edge.
          */
         virtual NLargeInteger getEdgeWeight(unsigned long edgeIndex,
-            NTriangulation* triang) const = 0;
+            const NTriangulation* triang) const = 0;
         /**
          * Returns the number of arcs in which this normal surface
          * intersects the given triangle in the given direction.
@@ -659,7 +659,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * given triangle with the given arc type.
          */
         virtual NLargeInteger getTriangleArcs(unsigned long triIndex,
-            int triVertex, NTriangulation* triang) const = 0;
+            int triVertex, const NTriangulation* triang) const = 0;
         /**
          * A deprecated alias for getTriangleArcs().
          *
@@ -684,7 +684,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * given triangle with the given arc type.
          */
         NLargeInteger getFaceArcs(unsigned long triIndex,
-            int triVertex, NTriangulation* triang) const;
+            int triVertex, const NTriangulation* triang) const;
 
         /**
          * Returns a new normal surface vector of the appropriate length
@@ -716,7 +716,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          */
         #ifdef __DOXYGEN
             static NMatrixInt* makeMatchingEquations(
-                NTriangulation* triangulation);
+                const NTriangulation* triangulation);
         #endif
         /**
          * Creates a new set of validity constraints representing
@@ -731,7 +731,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          */
         #ifdef __DOXYGEN
             static NEnumConstraintList* makeEmbeddedConstraints(
-                NTriangulation* triangulation);
+                const NTriangulation* triangulation);
         #endif
 };
 
@@ -762,7 +762,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
         NNormalSurfaceVector* vector;
             /**< Contains the coordinates of the normal surface in whichever
              *   space is appropriate. */
-        NTriangulation* triangulation;
+        const NTriangulation* triangulation;
             /**< The triangulation in which this normal surface resides. */
 
         std::string name;
@@ -807,7 +807,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * @param newVector a vector containing the coordinates of the
          * normal surface in whichever space is appropriate.
          */
-        NNormalSurface(NTriangulation* triang,
+        NNormalSurface(const NTriangulation* triang,
             NNormalSurfaceVector* newVector);
 
         /**
@@ -831,7 +831,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * converted internally to NLargeInteger objects.
          */
         #ifdef __DOXYGEN
-        NNormalSurface(NTriangulation* triang, NormalCoords coordSystem,
+        NNormalSurface(const NTriangulation* triang, NormalCoords coordSystem,
             List allCoords);
         #endif
 
@@ -1095,7 +1095,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
          *
          * @return the underlying triangulation.
          */
-        NTriangulation* getTriangulation() const;
+        const NTriangulation* getTriangulation() const;
 
         /**
          * Returns the name associated with this normal surface.
@@ -1749,7 +1749,7 @@ inline NNormalSurfaceVector::NNormalSurfaceVector(
 inline NNormalSurfaceVector::~NNormalSurfaceVector() {
 }
 inline NLargeInteger NNormalSurfaceVector::getFaceArcs(unsigned long triIndex,
-        int triVertex, NTriangulation* triang) const {
+        int triVertex, const NTriangulation* triang) const {
     return getTriangleArcs(triIndex, triVertex, triang);
 }
 
@@ -1803,7 +1803,7 @@ inline NDiscType NNormalSurface::getOctPosition() const {
 inline size_t NNormalSurface::getNumberOfCoords() const {
     return vector->size();
 }
-inline NTriangulation* NNormalSurface::getTriangulation() const {
+inline const NTriangulation* NNormalSurface::getTriangulation() const {
     return triangulation;
 }
 
