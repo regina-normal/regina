@@ -128,8 +128,8 @@ class REGINA_API NPDF : public NPacket {
          * This routine does not check whether the given file \e looks
          * like a PDF document; it simply loads the file contents blindly.
          *
-         * If the file could not be read, then no PDF document will be
-         * stored in this packet.  You can test this by calling isNull().
+         * If the file could not be read or is empty, then no PDF document will
+         * be stored in this packet.  You can test this by calling isNull().
          *
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given file \e name, and
