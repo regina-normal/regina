@@ -35,10 +35,10 @@
 #include <cstring>
 #include <fstream>
 #include "engine.h"
-#include "file/nxmlcallback.h"
 #include "packet/ncontainer.h"
 #include "packet/nxmlpacketreader.h"
 #include "packet/nxmltreeresolver.h"
+#include "utilities/nxmlcallback.h"
 #include "utilities/stringutils.h"
 #include "utilities/zstream.h"
 

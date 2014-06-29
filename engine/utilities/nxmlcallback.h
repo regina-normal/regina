@@ -32,7 +32,7 @@
 
 /* end stub */
 
-/*! \file file/nxmlcallback.h
+/*! \file utilities/nxmlcallback.h
  *  \brief Deals with parsing XML program data at the file level.
  */
 
@@ -44,7 +44,7 @@
 #include <iostream>
 #include <stack>
 #include "regina-core.h"
-#include "file/nxmlelementreader.h"
+#include "utilities/nxmlelementreader.h"
 
 namespace regina {
 
