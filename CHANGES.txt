@@ -189,6 +189,7 @@ Version 4.96  [ (under development) ]
             - Moved from foreign/csvsurfacelist.h to
               surfaces/nnormalsurfacelist.h.
         Routine readPDF():
+            - Deprecated, in favour of the new filename-based NPDF constructor.
             - Explicitly return 0 if the given file exists but is empty.
         Routine writeCSVStandard(), writeCSVEdgeWeight():
             - Renamed to NNormalSurfaceList::saveCSVStandard() and

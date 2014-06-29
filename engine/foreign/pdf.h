@@ -34,6 +34,9 @@
 
 /*! \file foreign/pdf.h
  *  \brief Allows reading and writing PDF documents.
+ *
+ *  \deprecated All global functions that were once declared in this file have
+ *  now been renamed to member functions of NPDF.
  */
 
 #ifndef __PDF_H
@@ -53,25 +56,18 @@ class NPDF;
  */
 
 /**
- * Reads a PDF document from the given file.
+ * Deprecated function that reads a PDF document from the given file.
  *
- * A newly allocated PDF packet will be returned; it is the user's
- * responsibility to deallocate this when it is finished with.
+ * If the file could not be read, or if the file is empty, then 0 will be
+ * returned.  Otherwise a newly allocated PDF packet will be returned, and it
+ * is the user's responsibility to deallocate this when it is finished with.
  *
- * This routine does not check whether the given file \e looks like a
- * PDF document; it simply loads the file contents blindly.
- *
- * The packet label of the new PDF packet will be left empty.
- *
- * If the file could not be read, or if the file is empty,
- * then 0 will be returned.
- *
- * \i18n This routine makes no assumptions about the
- * \ref i18n "character encoding" used in the given file \e name, and
- * simply passes it through unchanged to low-level C/C++ file I/O routines.
- *
- * @param filename the filename of the PDF document to read.
- * @return a new PDF packet containing the PDF document, or 0 on error.
+ * \deprecated You should use the NPDF constructor NPDF::NPDF(const char*),
+ * and you should pass the filename as the single string argument.
+ * In situations where this routine would have returned a null pointer, the
+ * NPDF constructor will instead create a null document (i.e., one for which
+ * NPDF::isNull() returns \c true).  See the NPDF constructor for further
+ * details.
  */
 REGINA_API NPDF* readPDF(const char *filename);
 
