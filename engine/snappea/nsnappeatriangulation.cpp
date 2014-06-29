@@ -43,6 +43,7 @@
 #include "snappea/snappy/SnapPy.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/nthread.h"
+#include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {
@@ -54,11 +55,16 @@ namespace {
     static NMutex snapMutex;
 }
 
-NSnapPeaTriangulation::NSnapPeaTriangulation(const std::string& fileContents) :
-        data_(0) {
+NSnapPeaTriangulation::NSnapPeaTriangulation(
+        const std::string& fileNameOrContents) : data_(0) {
     try {
-        data_ = regina::snappea::read_triangulation_from_string(
-            fileContents.c_str());
+        if (startsWith(fileNameOrContents, "% Triangulation"))
+            data_ = regina::snappea::read_triangulation_from_string(
+                fileNameOrContents.c_str());
+        else
+            data_ = regina::snappea::read_triangulation(
+                fileNameOrContents.c_str());
+
         if (data_) {
             regina::snappea::find_complete_hyperbolic_structure(data_);
             regina::snappea::do_Dehn_filling(data_);

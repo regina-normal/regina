@@ -34,6 +34,9 @@
 
 /*! \file foreign/snappea.h
  *  \brief Allows reading and writing SnapPea files.
+ *
+ *  \deprecated All global functions that were once declared in this
+ *  file have now been renamed to member functions of NSnapPeaTriangulation.
  */
 
 #ifndef __SNAPPEA_H
@@ -55,63 +58,55 @@ class NTriangulation;
  */
 
 /**
- * Reads a triangulation from the given SnapPea file.
- * This routine reads from the filesystem; see readSnapPea(std::istream&)
- * for a variant of this routine that can read from an arbitrary input stream.
- *
- * A newly allocated triangulation will be returned; it is the user's
- * responsibility to deallocate this when it is finished with.
- *
- * The packet label of the new triangulation will be the manifold name
- * read from the second line of the SnapPea file.  The first line of the
- * SnapPea file must simply be ``<tt>% Triangulation</tt>.
+ * Deprecated function that reads the given SnapPea data file and converts
+ * the result to Regina's NTriangulation class (thereby losing some
+ * SnapPea-specific information in the process).
  *
  * If the file could not be read or if the data was not in the correct
- * format, 0 will be returned.
+ * format, 0 will be returned.  Otherwise a newly allocated triangulation
+ * will be returned, and it is the user's responsibility to deallocate this
+ * when it is finished with.
  *
- * \pre The first two lines of the SnapPea file each contain at most
- * 1000 characters.
+ * \deprecated You should use the NSnapPeaTriangulation constructor
+ * NSnapPeaTriangulation::NSnapPeaTriangulation(const std::string&)
+ * instead.  In situations where this routine would have returned a
+ * null pointer, the NSnapPeaTriangulation constructor will instead
+ * create a null triangulation (i.e., one for which isNull() returns \c true).
+ * See the NSnapPeaTriangulation constructor for further details.
  *
- * \i18n This routine makes no assumptions about the
- * \ref i18n "character encoding" used in the given file \e name, and
- * simply passes it through unchanged to low-level C/C++ file I/O routines.
- * It assumes however that the \e contents of the file are in UTF-8.
- *
- * @param filename the name of the SnapPea file from which to read.
- * @return a new triangulation containing the data read from the SnapPea
- * file, or 0 on error.
+ * \warning Since this routine returns an NTriangulation (Regina's native data
+ * type), it will lose any SnapPea-specific information (such as peripheral
+ * curves).  It is strongly recommended that you use the NSnapPeaTriangulation
+ * constructor instead (as described above), since this will return an
+ * NSnapPeaTriangulation object that preserves SnapPea's additional data.
  */
 REGINA_API NTriangulation* readSnapPea(const char *filename);
 
 /**
- * Reads a triangulation from an input stream that contains the contents
- * of a SnapPea file.  This is essentially the same as
- * readSnapPea(const char*), except that it can work with any input stream.
- *
- * A newly allocated triangulation will be returned; it is the user's
- * responsibility to deallocate this when it is finished with.
- *
- * The packet label of the new triangulation will be the manifold name
- * read from the second line of the SnapPea file.  The first line of the
- * SnapPea file must simply be ``<tt>% Triangulation</tt>.
+ * Deprecated function that reads the contents of a SnapPea data file from
+ * the given input stream, and converts the result to Regina's NTriangulation
+ * class (thereby losing some SnapPea-specific information in the process).
  *
  * If the input stream could not be read or if the data was not in the correct
- * format, 0 will be returned.
+ * format, 0 will be returned.  Otherwise a newly allocated triangulation will
+ * be returned, and it is the user's responsibility to deallocate this when
+ * it is finished with.
  *
- * \pre The first two lines of the SnapPea file each contain at most
- * 1000 characters.
+ * \deprecated You should use the NSnapPeaTriangulation constructor
+ * NSnapPeaTriangulation::NSnapPeaTriangulation(const std::string&)
+ * instead (you will need to pass the contents of the input stream, not
+ * the input stream itself).  In situations where this routine would have
+ * returned a null pointer, the NSnapPeaTriangulation constructor will instead
+ * create a null triangulation (i.e., one for which isNull() returns \c true).
+ * See the NSnapPeaTriangulation constructor for further details.
  *
- * \i18n This routine makes no assumptions about the
- * \ref i18n "character encoding" used in the given file \e name, and
- * simply passes it through unchanged to low-level C/C++ file I/O routines.
- * It assumes however that the \e contents of the file are in UTF-8.
+ * \warning Since this routine returns an NTriangulation (Regina's native data
+ * type), it will lose any SnapPea-specific information (such as peripheral
+ * curves).  It is strongly recommended that you use the NSnapPeaTriangulation
+ * constructor instead (as described above), since this will return an
+ * NSnapPeaTriangulation object that preserves SnapPea's additional data.
  *
- * \ifacespython Not present, although the filesystem variant
- * readSnapPea(const char*) is available.
- *
- * @param in the input stream from which to read.
- * @return a new triangulation containing the data read from the SnapPea
- * data, or 0 on error.
+ * \ifacespython Not present.
  */
 REGINA_API NTriangulation* readSnapPea(std::istream& in);
 

@@ -220,8 +220,14 @@ class REGINA_API NSnapPeaTriangulation : public NPacket {
 
         /**
          * Creates a new SnapPea triangulation from the contents of
-         * SnapPea data file.  The argument should be the \e contents
-         * of a SnapPea file (not the filename itself).
+         * SnapPea data file.  The argument may be the \e name of a
+         * SnapPea file, or it may also be the \e contents of a SnapPea file
+         * (so the file itself need not actually exist on the filesystem).
+         *
+         * This routine uses the SnapPea kernel to read the data file,
+         * and so all SnapPea-specific information will be preserved
+         * (including information that Regina itself does not store,
+         * such as peripheral curves).
          *
          * If this operation is successful, this constructor will immediately
          * ask SnapPea to try to find a complete hyperbolic structure.
@@ -230,17 +236,30 @@ class REGINA_API NSnapPeaTriangulation : public NPacket {
          * represent a valid SnapPea data file), then this will be a
          * null triangulation.  You can test for this by calling isNull().
          *
-         * This constructor could (for example) be used in a Python session to
+         * The triangulation will automatically be given a packet label
+         * based on the manifold name stored in the second line of the
+         * SnapPea data file.
+         *
+         * \note This constructor can be used in a Python session to
          * pass data from SnapPy through to Regina's copy of the SnapPea
          * kernel (which is strictly separate from SnapPy's), without
          * losing any of SnapPy's internal information.
          *
-         * The triangulation will automatically be given a packet label
-         * based on the manifold name stored in the data file.
+         * \warning If (for some reason) you pass a filename that begins
+         * with "% Triangulation", then Regina will interpret this as
+         * the contents of a SnapPea file (not a filename).
          *
-         * @param fileContents the contents of a SnapPea data file.
+         * \i18n If the given argument is a filename, then this routine makes
+         * no assumptions about the \ref i18n "character encoding" used in the
+         * filename, and simply passes it through unchanged to low-level C/C++
+         * file I/O routines.  This routine assumes that the file \e contents,
+         * however, are in UTF-8 (the standard encoding used throughout Regina).
+         *
+         * @param fileNameOrContents either the name of a SnapPea data
+         * file, or the contents of a SnapPea data file (which need not
+         * actually exist on the filesystem).
          */
-        NSnapPeaTriangulation(const std::string& fileContents);
+        NSnapPeaTriangulation(const std::string& fileNameOrContents);
 
         /**
          * Creates a copy of the given SnapPea triangulation.

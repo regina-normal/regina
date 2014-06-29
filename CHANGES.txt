@@ -119,9 +119,9 @@ Version 4.96  [ (under development) ]
             - Updated the SnapPea kernel to the one shipped with SnapPy 2.1.
             - NSnapPeaTriangulation is now a fully-fledged packet type
               (and therefore subclasses from NPacket).
-            - Two new constructors: a default constructor that
-              builds a null triangulation, and a string constructor that
-              takes the contents of a native SnapPea data file.
+            - Two new constructors: a default constructor that builds a null
+              triangulation, and a string constructor that takes either the
+              name or the contents of a native SnapPea data file.
             - New routine snapPea() to return internal SnapPea data in
               SnapPea's native file format.
             - The entire SnapPea kernel now lives within the namespace
@@ -197,6 +197,13 @@ Version 4.96  [ (under development) ]
         Routine readPDF():
             - Deprecated, in favour of the new filename-based NPDF constructor.
             - Explicitly return 0 if the given file exists but is empty.
+        Routine readSnapPea():
+            - Both variants of this routine are now deprecated, in favour of the
+              new NSnapPeaTriangulation constructor which preserves additional
+              SnapPea-specific data.  The old routines have been kept for
+              backward compatibility, and retain their old lossy behaviour
+              (i.e., returning an NTriangulation that drops any additional
+              data specific to SnapPea, such as peripheral curves).
         Routine writeCSVStandard(), writeCSVEdgeWeight():
             - Renamed to NNormalSurfaceList::saveCSVStandard() and
               NNormalSurfaceList::saveCSVEdgeWeight().  The old names
