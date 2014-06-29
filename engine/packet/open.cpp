@@ -32,13 +32,10 @@
 
 /* end stub */
 
-#include <cctype>
 #include <cstring>
 #include <fstream>
 #include "engine.h"
-#include "file/nfileinfo.h"
 #include "file/nxmlcallback.h"
-#include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/nxmlpacketreader.h"
 #include "packet/nxmltreeresolver.h"
@@ -119,12 +116,8 @@ namespace {
     const int regChunkSize = 1024;
 }
 
-bool writeXMLFile(const char* fileName, NPacket* subtree, bool compressed) {
-    return subtree->save(fileName, compressed);
-}
-
-NPacket* readXMLFile(const char* fileName) {
-    DecompressionStream in(fileName);
+NPacket* open(const char* filename) {
+    DecompressionStream in(filename);
     if (! in)
         return 0;
 
@@ -257,21 +250,6 @@ NPacket* readXMLFile(const char* fileName) {
         return p;
     } else
         return 0;
-}
-
-NPacket* readFileMagic(const std::string& fileName) {
-    NFileInfo* info = NFileInfo::identify(fileName);
-    if (! info)
-        return 0;
-
-    NPacket* ans;
-    if (info->getType() == NFileInfo::TYPE_XML)
-        ans = readXMLFile(fileName.c_str());
-    else
-        ans = 0;
-
-    delete info;
-    return ans;
 }
 
 } // namespace regina

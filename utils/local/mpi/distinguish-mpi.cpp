@@ -741,7 +741,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Read the data file.
-    if (! (tree = readXMLFile(filename.c_str()))) {
+    if (! (tree = open(filename.c_str()))) {
         fprintf(stderr, "ERROR: Could not read data from %s.\n",
             filename.c_str());
         MPI_Finalize();

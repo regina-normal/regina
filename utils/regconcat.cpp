@@ -93,7 +93,7 @@ int main(int argc, char* argv[]) {
     regina::NPacket* data;
     for(std::list<std::string>::const_iterator it = files.begin();
             it != files.end(); it++) {
-        data = regina::readFileMagic(*it);
+        data = regina::open(it->c_str());
         if (!data) {
             std::cerr << "File " << *it << " could not be read.\n";
             error = true;

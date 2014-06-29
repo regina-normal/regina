@@ -1271,6 +1271,25 @@ class REGINA_API NPacket : public ShareableObject {
         void fireDestructionEvent();
 };
 
+/**
+ * Reads a Regina data file, and returns the corresponding packet tree.
+ * This uses Regina's native XML file format; it does not matter whether
+ * the XML file is compressed or uncompressed.
+ *
+ * If the file could not be opened or the top-level packet in the tree
+ * could not be read, this routine will return 0.  If some packet deeper
+ * within the tree could not be read then that particular packet (and
+ * its descendants, if any) will simply be ignored.
+ *
+ * \i18n This routine makes no assumptions about the
+ * \ref i18n "character encoding" used in the given file \e name, and simply
+ * passes it through unchanged to low-level C/C++ file I/O routines.
+ *
+ * @param filename the pathname of the file to read from.
+ * @return the packet tree read from file, or 0 on error (as explained above).
+ */
+REGINA_API NPacket* open(const char* filename);
+
 /*@}*/
 
 // Inline functions for NPacket

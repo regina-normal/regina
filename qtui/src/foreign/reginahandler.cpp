@@ -44,7 +44,7 @@
 
 regina::NPacket* ReginaHandler::importData(const QString& fileName,
         ReginaMain* parentWidget) const {
-    regina::NPacket* ans = regina::readFileMagic(
+    regina::NPacket* ans = regina::open(
         static_cast<const char*>(QFile::encodeName(fileName)));
     if (! ans)
         ReginaSupport::sorry(parentWidget,

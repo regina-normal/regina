@@ -340,7 +340,7 @@ void ReginaMain::fileOpenUrl(const QUrl& url) {
         return;
     }
 
-    regina::NPacket* packetTree = regina::readFileMagic(
+    regina::NPacket* packetTree = regina::open(
         static_cast<const char*>(QFile::encodeName(localFile)));
 
     if (! packetTree) {
@@ -385,7 +385,7 @@ void ReginaMain::fileOpenExample(const QUrl& url, const QString& description) {
         return;
     }
 
-    regina::NPacket* packetTree = regina::readXMLFile(
+    regina::NPacket* packetTree = regina::open(
         static_cast<const char*>(QFile::encodeName(localFile)));
 
     if (! packetTree) {

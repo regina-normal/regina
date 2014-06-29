@@ -1408,8 +1408,7 @@ void NTriGluingsUI::censusLookup() {
             arg(Qt::escape(f.shortDisplayName())));
         QCoreApplication::instance()->processEvents();
 
-        census = regina::readFileMagic(
-            static_cast<const char*>(f.encodeFilename()));
+        census = regina::open(static_cast<const char*>(f.encodeFilename()));
         if (! census) {
             // Disable the file automatically: it didn't work this time,
             // it won't work next time.

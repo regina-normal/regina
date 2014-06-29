@@ -162,5 +162,7 @@ void addNPacket() {
         .def("save", &NPacket::save, OL_save())
         .def("internalID", &NPacket::internalID);
     ;
+
+    def("open", regina::open, return_value_policy<manage_new_object>());
 }
 

@@ -188,6 +188,12 @@ Version 4.96  [ (under development) ]
         Enum SurfaceExportFields:
             - Moved from foreign/csvsurfacelist.h to
               surfaces/nnormalsurfacelist.h.
+        Routine open():
+            - New routine which is now the preferred way to read a
+              native Regina data file.
+        Routine readFileMagic(), readXMLFile():
+            - Renamed to regina::open(), and now declared in npacket.h.
+              The old names are deprecated but kept for backward compatibility.
         Routine readPDF():
             - Deprecated, in favour of the new filename-based NPDF constructor.
             - Explicitly return 0 if the given file exists but is empty.

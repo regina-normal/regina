@@ -4,8 +4,7 @@
 SET ( FILES
   nfileinfo
   nglobaldirs
-  nxmlcallback
-  nxmlfile)
+  nxmlcallback)
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )
