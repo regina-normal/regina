@@ -80,6 +80,8 @@ QIcon PacketManager::icon(NPacket* packet, bool allowLock) {
     }
     else if (packet->getPacketType() == NScript::packetType)
         id = IconCache::packet_script;
+    else if (packet->getPacketType() == NSnapPeaTriangulation::packetType)
+        id = IconCache::packet_snappea;
     else if (packet->getPacketType() == NNormalSurfaceList::packetType)
         id = IconCache::packet_surfaces;
     else if (packet->getPacketType() == NText::packetType)

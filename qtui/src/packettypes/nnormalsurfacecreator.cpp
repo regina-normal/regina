@@ -126,7 +126,8 @@ QString NNormalSurfaceCreator::parentWhatsThis() {
 
 regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
         QWidget* parentWidget) {
-    if (parent->getPacketType() != regina::NTriangulation::packetType) {
+    // Note that parent may be either NTriangulation or NSnapPeaTriangulation.
+    if (! dynamic_cast<regina::NTriangulation*>(parent)) {
         ReginaSupport::sorry(ui,
             ui->tr("The selected parent is not a 3-manifold triangulation."),
             ui->tr("Normal surfaces must live within a 3-manifold "
