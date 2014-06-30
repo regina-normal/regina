@@ -72,6 +72,8 @@ void addNSnapPeaTriangulation() {
             return_value_policy<manage_new_object>())
         .def("canonize", &NSnapPeaTriangulation::canonize,
             return_value_policy<manage_new_object>())
+        .def("canonise", &NSnapPeaTriangulation::canonise,
+            return_value_policy<manage_new_object>())
         .def("randomize", &NSnapPeaTriangulation::randomize)
         .def("randomise", &NSnapPeaTriangulation::randomise)
         .def("dump", &NSnapPeaTriangulation::dump)

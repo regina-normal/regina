@@ -474,6 +474,18 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         NSnapPeaTriangulation* canonize() const;
 
         /**
+         * A synonym for canonize(), which constructs the canonical
+         * retriangulation of the canonical cell decomposition.
+         * See canonize() for further details.
+         *
+         * \pre This is an ideal triangulation, not a closed triangulation.
+         *
+         * @return the canonical triangulation of the canonical cell
+         * decomposition, or 0 if this could not be constructed.
+         */
+        NSnapPeaTriangulation* canonise() const;
+
+        /**
          * Asks SnapPea to randomly retriangulate this manifold, using
          * local moves that preserve the topology.  This can help when SnapPea
          * is having difficulty finding a complete hyperbolic structure.
@@ -649,6 +661,10 @@ inline bool NSnapPeaTriangulation::isNull() const {
 
 inline bool NSnapPeaTriangulation::dependsOnParent() const {
     return false;
+}
+
+inline NSnapPeaTriangulation* NSnapPeaTriangulation::canonise() const {
+    return canonize();
 }
 
 inline void NSnapPeaTriangulation::randomise() {

@@ -142,7 +142,8 @@ Version 4.96  [ (under development) ]
               The old name is deprecated but kept for backward compatibility.
             - Routine dump() is deprecated.  Instead, simply call snapPea() and
               write the resulting string to standard output.
-            - Routine canonize() now returns a (richer) NSnapPeaTriangulation.
+            - Routine canonize() now returns a (richer) NSnapPeaTriangulation,
+              and has a new synonym canonise().
             - Routines toRegina() and verifyTriangulation() are deprecated,
               since they are obsolete now that NSnapPeaTriangulation inherits
               from NTriangulation.
