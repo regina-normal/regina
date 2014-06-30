@@ -246,7 +246,6 @@ ReginaPrefSet::ReginaPrefSet() :
         surfacesCreationList(regina::NS_LIST_DEFAULT),
         surfacesInitialCompat(LocalCompat),
         surfacesSupportOriented(false),
-        surfacesSupportSpunBdry(false),
         treeJumpSize(10),
         tabDim2Tri(0),
         tabDim2TriSkeleton(0),
@@ -508,7 +507,6 @@ void ReginaPrefSet::readInternal() {
         surfacesInitialCompat = ReginaPrefSet::LocalCompat; /* default */
 
     surfacesSupportOriented = settings.value("SupportOriented", false).toBool();
-    surfacesSupportSpunBdry = settings.value("SupportSpunBdry", false).toBool();
     settings.endGroup();
 
     settings.beginGroup("Tree");
@@ -615,7 +613,6 @@ void ReginaPrefSet::saveInternal() const {
     }
 
     settings.setValue("SupportOriented", surfacesSupportOriented);
-    settings.setValue("SupportSpunBdry", surfacesSupportSpunBdry);
     settings.endGroup();
 
     settings.beginGroup("Tabs");

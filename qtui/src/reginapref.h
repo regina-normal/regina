@@ -108,7 +108,6 @@ class ReginaPrefGeneral : public QWidget {
         // QCheckBox* cbDisplayTagsInTree;
         QCheckBox* cbWarnOnNonEmbedded;
         QCheckBox* cbSupportOriented;
-        QCheckBox* cbSupportSpunBdry;
         QCheckBox* cbGraphvizLabels;
         QLineEdit* editTreeJumpSize;
         QCheckBox* cbTipOfDay;
@@ -120,7 +119,6 @@ class ReginaPrefGeneral : public QWidget {
 
     private slots:
         void orientedChecked(int);
-        void spunBdryChecked(int);
 
     friend class ReginaPreferences;
 };

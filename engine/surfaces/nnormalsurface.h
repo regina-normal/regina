@@ -1568,7 +1568,15 @@ class REGINA_API NNormalSurface : public ShareableObject {
         /**
          * Computes the boundary slopes of this surface at each cusp of
          * the triangulation.  This is for use with spun-normal surfaces
-         * (for closed surfaces all boundary slopes are zero).
+         * (since for closed surfaces all boundary slopes are zero).
+         *
+         * This routine is only available for use with SnapPea triangulations,
+         * since it needs to know the specific meridian and longitude on each
+         * cusp.  This information is \e only available through the SnapPea
+         * kernel, since Regina does not use or store peripheral curves for
+         * its own NTriangulation class.  Therefore, if the underlying
+         * triangulation (as returned by getTriangulation()) is not of the
+         * subclass NSnapPeaTriangulation, this routine will simply return 0.
          *
          * The results are returned in a matrix with \a V rows and two
          * columns, where \a V is the number of vertices in the triangulation.
@@ -1580,12 +1588,6 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * <i>-M</i> times around the longitude.
          * The rational boundary slope is therefore <tt>-L/M</tt>, and
          * there are <tt>gcd(L,M)</tt> boundary curves with this slope.
-         *
-         * The meridian and longitude are chosen to be the shortest and
-         * second shortest basis on each cusp, and their orientations
-         * follow the convention used by the \e SnapPy kernel.  Be warned,
-         * however, that this choice might not be unique for some cusp shapes,
-         * and the resolution of such ambiguities might be machine-dependent.
          *
          * The orientations of the boundary curves of a
          * spun-normal surface are chosen so that \e if meridian and
@@ -1604,18 +1606,13 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * is for normal surfaces (not almost normal surfaces).  If these
          * conditions are not met, this routine will return 0.
          *
-         * \warning If this triangulation originated from SnapPea, Regina
-         * cannot tell what meridian and longitude SnapPea was originally using
-         * (since Regina does not keep track of peripheral curves on cusps).
-         * Therefore Regina will always give boundary slopes relative to the
-         * shortest and second-shortest basis, as described above, which
-         * might not be what you expect.
-         *
          * @author William Pettersson and Stephan Tillmann
          *
          * @return a newly allocated matrix with \a number_of_vertices
          * rows and two columns as described above, or 0 if the boundary
-         * slopes cannot be computed.
+         * slopes cannot be computed (e.g., if the underlying triangulation
+         * is not of type NSnapPeaTriangulation, or if it fails to meet the
+         * preconditions outlined above).
          */
         NMatrixInt* boundarySlopes() const;
 #endif // EXCLUDE_SNAPPEA

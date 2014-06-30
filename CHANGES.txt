@@ -81,10 +81,9 @@ Version 4.96  [ (under development) ]
             - New enumeration class for building a census of minimal ideal
               triangulations of cusped finite-volume hyperbolic 3-manifolds.
         Class NNormalSurface:
-            - Routine boundarySlopes() now uses (shortest, second-shortest)
-              curves on the cusp as its (meridian, longitude) basis.
-              This reverts a change in behaviour from the previous release
-              caused by the recent sync with the SnapPy 2.0.3 kernel.
+            - Routine boundarySlopes() now requires the underlying
+              triangulation to be of type NSnapPeaTriangulation, and it takes
+              the meridian and longitude directly from the SnapPea kernel.
             - Renamed getEulerCharacteristic() to getEulerChar(), which
               is easier on the fingers.  The old name has been kept as a
               deprecated alias for backward compatibility.
@@ -253,10 +252,6 @@ Version 4.96  [ (under development) ]
               been kept for backward compatibility.
         Header permconv.h:
             - New conversion routines perm3to5() and perm5to3().
-    USER INTERFACE:
-        - Boundary slopes for spun-normal surfaces must now be explicitly
-          enabled in preferences, since the (meridian, longitude) basis might
-          not be what the user expects.
     UTILITIES:
         tricensus:
             - New argument -h/--minhyp for enumerating minimal ideal

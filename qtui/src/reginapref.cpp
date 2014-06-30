@@ -184,8 +184,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
     generalPrefs->cbSupportOriented->setChecked(
         prefSet.surfacesSupportOriented);
-    generalPrefs->cbSupportSpunBdry->setChecked(
-        prefSet.surfacesSupportSpunBdry);
 
     foreach (const ReginaFilePref& f, prefSet.censusFiles) {
         new ReginaFilePrefItem(censusPrefs->listFiles, f);
@@ -224,8 +222,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     // Finish off.
     connect(generalPrefs->cbSupportOriented, SIGNAL(stateChanged(int)),
         generalPrefs, SLOT(orientedChecked(int)));
-    connect(generalPrefs->cbSupportSpunBdry, SIGNAL(stateChanged(int)),
-        generalPrefs, SLOT(spunBdryChecked(int)));
     connect(buttonBox, SIGNAL(clicked(QAbstractButton *)), this, SLOT(clicked(QAbstractButton *)));
 }
 
@@ -295,8 +291,6 @@ void ReginaPreferences::slotApply() {
 
     prefSet.surfacesSupportOriented =
         generalPrefs->cbSupportOriented->isChecked();
-    prefSet.surfacesSupportSpunBdry =
-        generalPrefs->cbSupportSpunBdry->isChecked();
 
     prefSet.censusFiles.clear();
     for (int i=0; i < censusPrefs->listFiles->count();i++) {
@@ -564,17 +558,6 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
         "is not checked in the dialog for a new normal surface list.</qt>"));
     layout->addWidget(cbWarnOnNonEmbedded);
 
-    cbSupportSpunBdry = new QCheckBox(tr("Support boundary slopes for "
-        "spun-normal surfaces"));
-    cbSupportSpunBdry->setWhatsThis(tr("<qt>Show boundary slopes where "
-        "possible for spun-normal surfaces.<p>"
-        "This feature is disabled by default, because the meridian and "
-        "longitude are always chosen to be the <b>shortest and second-shortest "
-        "basis</b> on each cusp.  This might not be what you expect&mdash;"
-        "Regina cannot tell what basis you might have "
-        "been using elsewhere, such as in SnapPy.</qt>"));
-    layout->addWidget(cbSupportSpunBdry);
-
     cbSupportOriented = new QCheckBox(tr("Support transversely oriented "
         "normal surfaces (highly experimental)"));
     cbSupportOriented->setWhatsThis(tr("<qt>Allow the enumeration of "
@@ -641,26 +624,6 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
     // Add some space at the end.
     layout->addStretch(1);
     setLayout(layout);
-}
-
-void ReginaPrefGeneral::spunBdryChecked(int state) {
-    if (state == Qt::Checked) {
-        QMessageBox box(QMessageBox::Warning,
-            tr("Warning"),
-            tr("Boundary slopes are always relative to shortest bases."),
-            QMessageBox::Yes | QMessageBox::No, this);
-        box.setInformativeText(
-            tr("When computing boundary slopes, the meridian and "
-            "longitude are always chosen to be the <b>shortest and "
-            "second-shortest basis</b> on each cusp.  This might not "
-            "be what you expect&mdash;Regina cannot tell "
-            "what basis you might have been using elsewhere, "
-            "such as in SnapPy.<p>"
-            "Are you sure you wish to enable this feature?</qt>"));
-        box.setDefaultButton(QMessageBox::No);
-        if (box.exec() != QMessageBox::Yes)
-            cbSupportSpunBdry->setChecked(false);
-    }
 }
 
 void ReginaPrefGeneral::orientedChecked(int state) {
