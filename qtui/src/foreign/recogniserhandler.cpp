@@ -45,7 +45,7 @@
 const RecogniserHandler RecogniserHandler::instance;
 
 PacketFilter* RecogniserHandler::canExport() const {
-    return new SingleTypeFilter<regina::NTriangulation>();
+    return new SubclassFilter<regina::NTriangulation>();
 }
 
 bool RecogniserHandler::exportData(regina::NPacket* data,

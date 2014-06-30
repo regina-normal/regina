@@ -48,7 +48,7 @@
 const SourceHandler SourceHandler::instance;
 
 PacketFilter* SourceHandler::canExport() const {
-    return new SingleTypeFilter<regina::NTriangulation>();
+    return new SubclassFilter<regina::NTriangulation>();
 }
 
 bool SourceHandler::exportData(regina::NPacket* data, const QString& fileName,

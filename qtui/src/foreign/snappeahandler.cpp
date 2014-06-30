@@ -33,7 +33,7 @@
 /* end stub */
 
 #include "foreign/snappea.h"
-#include "triangulation/ntriangulation.h"
+#include "snappea/nsnappeatriangulation.h"
 
 #include "reginamain.h"
 #include "reginasupport.h"
@@ -47,19 +47,22 @@ const SnapPeaHandler SnapPeaHandler::instance;
 
 regina::NPacket* SnapPeaHandler::importData(const QString& fileName,
         ReginaMain* parentWidget) const {
-    regina::NPacket* ans = regina::readSnapPea(
+    regina::NSnapPeaTriangulation* ans = new regina::NSnapPeaTriangulation(
         static_cast<const char*>(QFile::encodeName(fileName)));
-    if (! ans)
+    if (ans->isNull()) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
             QObject::tr("<qt>Please check that the file <tt>%1</tt> "
                 "is readable and in SnapPea format.</qt>").
                 arg(Qt::escape(fileName)));
+        delete ans;
+        return 0;
+    }
     return ans;
 }
 
 PacketFilter* SnapPeaHandler::canExport() const {
-    return new SingleTypeFilter<regina::NTriangulation>();
+    return new SubclassFilter<regina::NTriangulation>();
 }
 
 bool SnapPeaHandler::exportData(regina::NPacket* data,
