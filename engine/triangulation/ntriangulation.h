@@ -270,6 +270,12 @@ class REGINA_API NTriangulation : public NPacket,
          * If Regina cannot interpret the given string, this will be
          * left as the empty triangulation.
          *
+         * \warning If you pass the contents of a SnapPea data file,
+         * then only the tetrahedron gluings will be read; all other
+         * SnapPea-specific information (such as peripheral curves) will
+         * be lost.  See fromSnapPea() for details, and for other
+         * alternatives that preserve SnapPea-specific data.
+         *
          * @param description a string that describes a 3-manifold
          * triangulation.
          */
@@ -3124,70 +3130,94 @@ class REGINA_API NTriangulation : public NPacket,
          * can be used in a Python session to pass the triangulation directly
          * to SnapPy (without writing to the filesystem).
          *
-         * The only real information included in the SnapPea file will be the
-         * tetrahedron face gluings and the manifold name (the latter will be
-         * derived from the packet label).  All other information will be
-         * marked as unknown.  This is because SnapPea does not know
-         * about other information that Regina stores (such as 0-efficiency,
-         * or the Turaev-Viro invariants), and because Regina's NTriangulation
-         * class does not know about other information that SnapPea stores
-         * (such as peripheral curves, or tetrahedron shapes).
+         * Regarding what gets stored in the SnapPea data file:
+         *
+         * - If you are calling this from one of Regina's own NTriangulation
+         *   objects, then only the tetrahedron gluings and the manifold name
+         *   will be stored (the name will be derived from the packet label).
+         *   All other SnapPea-specific information (such as peripheral curves)
+         *   will be marked as unknown (since Regina does not track such
+         *   information itself), and of course other Regina-specific
+         *   information (such as the Turaev-Viro invariants) will not
+         *   be written to the SnapPea file at all.
+         *
+         * - If you are calling this from the subclass NSnapPeaTriangulation,
+         *   then all additional SnapPea-specific information will be written
+         *   to the file (indeed, the SnapPea kernel itself will be used to
+         *   produce the file contents).
          *
          * If you wish to export a triangulation to a SnapPea \e file, you
          * should call saveSnapPea() instead (which has better performance, and
          * does not require you to construct an enormous intermediate string).
          *
-         * \pre This triangulation is not invalid, and does not contain
-         * any boundary triangles.
+         * If this triangulation is empty, invalid, or contains boundary
+         * triangles (which SnapPea cannot represent), then the resulting
+         * string will be empty.
          *
          * @return a string containing the contents of the corresponding
          * SnapPea data file.
          */
-        std::string snapPea() const;
+        virtual std::string snapPea() const;
 
         /**
          * Writes the full contents of a SnapPea data file describing this
          * triangulation to the given output stream.
          *
-         * The only real information included in the SnapPea file will be the
-         * tetrahedron face gluings and the manifold name (the latter will be
-         * derived from the packet label).  All other information will be
-         * marked as unknown.  This is because SnapPea does not know
-         * about other information that Regina stores (such as 0-efficiency,
-         * or the Turaev-Viro invariants), and because Regina's NTriangulation
-         * class does not know about other information that SnapPea stores
-         * (such as peripheral curves, or tetrahedron shapes).
+         * Regarding what gets stored in the SnapPea data file:
+         *
+         * - If you are calling this from one of Regina's own NTriangulation
+         *   objects, then only the tetrahedron gluings and the manifold name
+         *   will be stored (the name will be derived from the packet label).
+         *   All other SnapPea-specific information (such as peripheral curves)
+         *   will be marked as unknown (since Regina does not track such
+         *   information itself), and of course other Regina-specific
+         *   information (such as the Turaev-Viro invariants) will not
+         *   be written to the SnapPea file at all.
+         *
+         * - If you are calling this from the subclass NSnapPeaTriangulation,
+         *   then all additional SnapPea-specific information will be written
+         *   to the file (indeed, the SnapPea kernel itself will be used to
+         *   produce the file contents).
          *
          * If you wish to extract the SnapPea data file as a string, you should
          * call the zero-argument routine snapPea() instead.  If you wish to
          * write to a real SnapPea data file on the filesystem, you should call
          * saveSnapPea() (which is also available in Python).
          *
-         * \pre This triangulation is not invalid, and does not contain
-         * any boundary triangles.
+         * If this triangulation is empty, invalid, or contains boundary
+         * triangles (which SnapPea cannot represent), then nothing will
+         * be written to the output stream.
          *
          * \ifacespython Not present.
          *
          * @param out the output stream to which the SnapPea data file
          * will be written.
          */
-        void snapPea(std::ostream& out) const;
+        virtual void snapPea(std::ostream& out) const;
 
         /**
          * Writes this triangulation to the given file using SnapPea's
          * native file format.
          *
-         * The only real information included in the SnapPea file will be the
-         * tetrahedron face gluings and the manifold name (the latter will be
-         * derived from the packet label).  All other information will be
-         * marked as unknown.  This is because SnapPea does not know
-         * about other information that Regina stores (such as 0-efficiency,
-         * or the Turaev-Viro invariants), and because Regina's NTriangulation
-         * class does not know about other information that SnapPea stores
-         * (such as peripheral curves, or tetrahedron shapes).
+         * Regarding what gets stored in the SnapPea data file:
          *
-         * \pre The given triangulation is not invalid, and does not contain
-         * any boundary triangles.
+         * - If you are calling this from one of Regina's own NTriangulation
+         *   objects, then only the tetrahedron gluings and the manifold name
+         *   will be stored (the name will be derived from the packet label).
+         *   All other SnapPea-specific information (such as peripheral curves)
+         *   will be marked as unknown (since Regina does not track such
+         *   information itself), and of course other Regina-specific
+         *   information (such as the Turaev-Viro invariants) will not
+         *   be written to the SnapPea file at all.
+         *
+         * - If you are calling this from the subclass NSnapPeaTriangulation,
+         *   then all additional SnapPea-specific information will be written
+         *   to the file (indeed, the SnapPea kernel itself will be used to
+         *   produce the file contents).
+         *
+         * If this triangulation is empty, invalid, or contains boundary
+         * triangles (which SnapPea cannot represent), then the file
+         * will not be written and this routine will return \c false.
          *
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given file \e name, and
@@ -3197,7 +3227,7 @@ class REGINA_API NTriangulation : public NPacket,
          * @param filename the name of the SnapPea file to which to write.
          * @return \c true if and only if the file was successfully written.
          */
-        bool saveSnapPea(const char* filename) const;
+        virtual bool saveSnapPea(const char* filename) const;
 
         /**
          * Returns a string that expresses this triangulation in
@@ -3340,25 +3370,33 @@ class REGINA_API NTriangulation : public NPacket,
         using NGenericTriangulation<3>::isoSigComponentSize;
 
         /**
-         * Extracts a triangulation from a string that contains the
-         * full contents of a SnapPea data file.  This routine could,
-         * for instance, be used to receive a triangulation from SnapPy
-         * without writing to the filesystem.
+         * Extracts the tetrahedron gluings from a string that contains the
+         * full contents of a SnapPea data file.  All other SnapPea-specific
+         * information (such as peripheral curves) will be ignored, since
+         * Regina's NTriangulation class does not track such information itself.
          *
-         * If you wish to read a triangulation from a SnapPea \e file,
-         * you should use the global function readSnapPea() instead
-         * (which has better performance, and does not require you to
-         * construct an enormous intermediate string).
+         * If you wish to preserve all SnapPea-specific information from the
+         * data file, you should work with the NSnapPeaTriangulation class
+         * instead (which uses the SnapPea kernel directly, and can therefore
+         * store anything that SnapPea can).
          *
-         * For details on how the triangulation will be extracted,
-         * see the documentation for readSnapPea().
+         * If you wish to read a triangulation from a SnapPea \e file, you
+         * should likewise call the NSnapPeaTriangulation constructor, giving
+         * the filename as argument.  This will read all SnapPea-specific
+         * information (as described above), and also avoids constructing an
+         * enormous intermediate string.
          *
          * The triangulation that is returned will be newly created.
          * If the SnapPea data is not in the correct format, this
          * routine will return 0 instead.
          *
-         * \pre The first two lines of the SnapPea file each contain at
-         * most 1000 characters.
+         * \warning This routine is "lossy", in that drops SnapPea-specific
+         * information (as described above).  Unless you specifically need an
+         * NTriangulation (not an NSnapPeaTriangulation) or you need to avoid
+         * calling routines from the SnapPea kernel, it is highly recommended
+         * that you create an NSnapPeaTriangulation from the given file
+         * contents instead.  See the string-based NSnapPeaTriangulation
+         * constructor for how to do this.
          *
          * @param snapPeaData a string containing the full contents of a
          * SnapPea data file.
@@ -3366,7 +3404,6 @@ class REGINA_API NTriangulation : public NPacket,
          * or 0 on error.
          */
         static NTriangulation* fromSnapPea(const std::string& snapPeaData);
-
 
         /*@}*/
 

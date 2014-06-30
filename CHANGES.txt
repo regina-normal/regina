@@ -117,28 +117,42 @@ Version 4.96  [ (under development) ]
               for consistenty with NPerm4 and NPerm5.
         Class NSnapPeaTriangulation:
             - Updated the SnapPea kernel to the one shipped with SnapPy 2.1.
-            - NSnapPeaTriangulation is now a fully-fledged packet type
-              (and therefore subclasses from NPacket).
+            - NSnapPeaTriangulation is now a fully-fledged packet type, and
+              derives from NTriangulation.  The inherited NTriangulation
+              must not be modified directly; instead this is automatically
+              kept in sync with the SnapPea data.
             - Two new constructors: a default constructor that builds a null
               triangulation, and a string constructor that takes either the
               name or the contents of a native SnapPea data file.
-            - New routine snapPea() to return internal SnapPea data in
-              SnapPea's native file format.
+            - The Regina-to-SnapPea constructor and the copy constructor are
+              now merged: which behaviour you get now depends on whether
+              you pass an object of Regina's own NTriangulation type or
+              of the subclass NSnapPeaTriangulation.
+            - If one of Regina's own NTriangulation objects is passed to
+              the constructor, then the constructor now installs the (shortest,
+              second-shortest) curves on each cusp as its (meridian, longitude)
+              basis.  This reverts a change in behaviour from the previous
+              release caused by the recent sync with the SnapPy 2.0.3 kernel.
+            - New output routines snapPea() and saveSnapPea().  These override
+              the "lossy" conversion routines NTriangulation::snapPea() and
+              NTriangulation::saveSnapPea() so that they output all
+              SnapPea-specific data.
+            - New routine name() to access SnapPea's internal manifold name.
+            - Renamed saveAsSnapPea() to saveSnapPea() (see above).  The new
+              routine now returns a boolean, and requires a non-empty filename.
+              The old name is deprecated but kept for backward compatibility.
+            - Routine dump() is deprecated.  Instead, simply call snapPea() and
+              write the resulting string to standard output.
+            - Routine canonize() now returns a (richer) NSnapPeaTriangulation.
+            - Routines toRegina() and verifyTriangulation() are deprecated,
+              since they are obsolete now that NSnapPeaTriangulation inherits
+              from NTriangulation.
             - The entire SnapPea kernel now lives within the namespace
               regina::snappea, which should ensure safety even if a
               conflicting SnapPy kernel is simultaneously loaded via Python.
               The SnapPea kernel is also linked as C++ now (no 'extern "C"').
             - Fatal errors in the SnapPea kernel are now handled by throwing
               exceptions, instead of quitting abruptly.
-            - The NTriangulation constructor now installs the (shortest,
-              second-shortest) curves on each cusp as its (meridian, longitude)
-              basis.  This reverts a change in behaviour from the previous
-              release caused by the recent sync with the SnapPy 2.0.3 kernel.
-            - Renamed saveAsSnapPea() to saveSnapPea().  The new routine now
-              returns a boolean, and requires a non-empty filename.  The old
-              name is deprecated but has been kept for backward compatibility.
-            - Routine dump() is deprecated.  Instead, simply call snapPea() and
-              write the resulting string to standard output.
         Class NTautEnumeration:
             - New class for enumerating taut angle structures that uses
               Regina's tree traversal / linear programming machinery.
@@ -175,6 +189,8 @@ Version 4.96  [ (under development) ]
               saveRecogniser(), plus US-spelled variants recognizer(), etc.
               These are now the preferred ways of exporting data for
               Matveev's 3-manifold recogniser.
+            - Routines snapPea() and saveSnapPea() now do nothing if the
+              triangulation is empty.
         Class NVertex:
             - Renamed getLinkEulerCharacteristic() to getLinkEulerChar(), which
               is easier on the fingers.  The old name has been kept as a
@@ -201,9 +217,9 @@ Version 4.96  [ (under development) ]
             - Both variants of this routine are now deprecated, in favour of the
               new NSnapPeaTriangulation constructor which preserves additional
               SnapPea-specific data.  The old routines have been kept for
-              backward compatibility, and retain their old lossy behaviour
-              (i.e., returning an NTriangulation that drops any additional
-              data specific to SnapPea, such as peripheral curves).
+              backward compatibility, and (unlike the new routines) retain
+              their old "lossy" behaviour (i.e., returning an NTriangulation
+              that drops any SnapPea-specific data, such as peripheral curves).
         Routine writeCSVStandard(), writeCSVEdgeWeight():
             - Renamed to NNormalSurfaceList::saveCSVStandard() and
               NNormalSurfaceList::saveCSVEdgeWeight().  The old names

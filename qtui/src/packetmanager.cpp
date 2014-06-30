@@ -47,6 +47,7 @@
 #include "packettypes/nnormalsurfaceui.h"
 #include "packettypes/npdfui.h"
 #include "packettypes/nscriptui.h"
+#include "packettypes/nsnappeaui.h"
 #include "packettypes/nsurfacefiltercomb.h"
 #include "packettypes/nsurfacefilterprop.h"
 #include "packettypes/ntextui.h"
@@ -115,6 +116,10 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
             enclosingPane);
     if (packet->getPacketType() == NScript::packetType) {
         return new NScriptUI(dynamic_cast<NScript*>(packet), enclosingPane);
+    }
+    if (packet->getPacketType() == NSnapPeaTriangulation::packetType) {
+        return new NSnapPeaUI(dynamic_cast<NSnapPeaTriangulation*>(packet),
+            enclosingPane);
     }
     if (packet->getPacketType() == NSurfaceFilter::packetType) {
         if (((NSurfaceFilter*)packet)->getFilterType() ==

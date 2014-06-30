@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Qt User Interface                                                    *
+ *  KDE User Interface                                                    *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,67 +32,86 @@
 
 /* end stub */
 
-#include "iconcache.h"
-#include "reginasupport.h"
+/*! \file nsnappeagluings.h
+ *  \brief Provides a face gluing viewer for SnapPea triangulations.
+ */
 
-QIcon IconCache::cache_[IconCache::END_OF_LIST];
-QIcon IconCache::locked_[IconCache::END_OF_LIST];
-QIcon IconCache::emblemLocked_;
+#ifndef __NSNAPPEAGLUINGS_H
+#define __NSNAPPEAGLUINGS_H
 
-void IconCache::load(IconID id) {
-    switch (id) {
-        case regina:
-            cache_[id] = ReginaSupport::regIcon("regina");
-            return;
-        case packet_angles:
-            cache_[id] = ReginaSupport::regIcon("packet_angles");
-            return;
-        case packet_container:
-            cache_[id] = ReginaSupport::regIcon("packet_container");
-            return;
-        case packet_dim2triangulation:
-            cache_[id] = ReginaSupport::regIcon("packet_dim2triangulation");
-            return;
-        case packet_filter:
-            cache_[id] = ReginaSupport::regIcon("packet_filter");
-            return;
-        case packet_pdf:
-            cache_[id] = ReginaSupport::regIcon("packet_pdf");
-            return;
-        case packet_script:
-            cache_[id] = ReginaSupport::regIcon("packet_script");
-            return;
-        case packet_snappea:
-            cache_[id] = ReginaSupport::regIcon("packet_snappea");
-            return;
-        case packet_surfaces:
-            cache_[id] = ReginaSupport::regIcon("packet_surfaces");
-            return;
-        case packet_text:
-            cache_[id] = ReginaSupport::regIcon("packet_text");
-            return;
-        case packet_triangulation:
-            cache_[id] = ReginaSupport::regIcon("packet_triangulation");
-            return;
-        case filter_comb:
-            cache_[id] = ReginaSupport::regIcon("filter_comb");
-            return;
-        case filter_prop:
-            cache_[id] = ReginaSupport::regIcon("filter_prop");
-            return;
+#include "packettypes/ntrigluings.h"
 
-        // Keep gcc happy: list all enumeration values.
-        case END_OF_LIST:
-            return;
-    }
-}
+namespace regina {
+    class NSnapPeaTriangulation;
+};
 
-void IconCache::constructLocked(IconID id) {
-    QIcon base = icon(id);
+/**
+ * A SnapPea triangulation page for viewing face gluings.
+ */
+class NSnapPeaGluingsUI : public QObject, public PacketEditorTab {
+    Q_OBJECT
 
-    if (emblemLocked_.isNull())
-        emblemLocked_ = ReginaSupport::themeIcon("emblem-locked");
+    private:
+        /**
+         * Packet details
+         */
+        regina::NSnapPeaTriangulation* tri;
 
-    locked_[id] = ReginaSupport::overlayIcon(base, emblemLocked_);
-}
+        /**
+         * Internal components
+         */
+        QWidget* ui;
+        QTableView* faceTable;
+        GluingsModel* model;
 
+        /**
+         * Gluing actions
+         */
+        QAction* actRandomise;
+        QAction* actToRegina;
+        QLinkedList<QAction*> triActionList;
+        QLinkedList<QAction*> enableWhenWritable;
+        QLinkedList<QAction*> requiresNonNull;
+
+    public:
+        /**
+         * Constructor and destructor.
+         */
+        NSnapPeaGluingsUI(regina::NSnapPeaTriangulation* packet,
+                PacketTabbedUI* useParentUI, bool readWrite);
+        ~NSnapPeaGluingsUI();
+
+        /**
+         * Fill the given toolbar with triangulation actions.
+         *
+         * This is necessary since the toolbar will not be a part of
+         * this page, but this page (as the editor) keeps track of the
+         * available actions.
+         */
+        void fillToolBar(QToolBar* bar);
+
+        /**
+         * PacketEditorTab overrides.
+         */
+        regina::NPacket* getPacket();
+        QWidget* getInterface();
+        const QLinkedList<QAction*>& getPacketTypeActions();
+        void refresh();
+        void commit();
+        void setReadWrite(bool readWrite);
+
+    public slots:
+        /**
+         * Triangulation actions.
+         */
+        void randomise();
+        void vertexLinks();
+        void toRegina();
+
+        /**
+         * Update the states of internal components.
+         */
+        void updateNonNullActions();
+};
+
+#endif

@@ -411,6 +411,9 @@ class ReginaPrefSet : public QObject {
         unsigned tabDim3TriSkeleton;
             /**< The index of the initial sub-tab to open in a 3-manifold
                  triangulation skeleton viewer. */
+        unsigned tabSnapPeaTri;
+            /**< The index of the initial tab to open in a SnapPea
+                 triangulation viewer. */
         unsigned tabSurfaceList;
             /**< The index of the initial sub-tab to open in a normal
                  surface list viewer. */
