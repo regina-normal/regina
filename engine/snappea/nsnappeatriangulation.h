@@ -474,7 +474,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         NSnapPeaTriangulation* canonize() const;
 
         /**
-         * Asks SnapPea to randomly retriangulate this triangulation, using
+         * Asks SnapPea to randomly retriangulate this manifold, using
          * local moves that preserve the topology.  This can help when SnapPea
          * is having difficulty finding a complete hyperbolic structure.
          *
@@ -486,6 +486,12 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * If this is a null SnapPea triangulation, this routine does nothing.
          */
         void randomize();
+
+        /**
+         * A synonym for randomize(), which asks SnapPea to randomly
+         * retriangulate this manifold.  See randomize() for further details.
+         */
+        void randomise();
 
         /**
          * Deprecated routine that verifies whether the tetrahedron face
@@ -643,6 +649,10 @@ inline bool NSnapPeaTriangulation::isNull() const {
 
 inline bool NSnapPeaTriangulation::dependsOnParent() const {
     return false;
+}
+
+inline void NSnapPeaTriangulation::randomise() {
+    randomize();
 }
 
 inline NPacket* NSnapPeaTriangulation::internalClonePacket(NPacket*) const {
