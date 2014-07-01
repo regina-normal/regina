@@ -104,25 +104,25 @@ NSnapPeaGluingsUI::NSnapPeaGluingsUI(regina::NSnapPeaTriangulation* packet,
     requiresNonNull.append(actRandomise);
     connect(actRandomise, SIGNAL(triggered()), this, SLOT(randomise()));
 
-    actToRegina = new QAction(this);
-    actToRegina->setText(tr("&Copy to Regina triangulation"));
-    // TODO: Need a new icon
-    actToRegina->setIcon(ReginaSupport::regIcon("packet_triangulation"));
-    actToRegina->setToolTip(tr(
-        "Copy this to a Regina triangulation"));
-    actToRegina->setWhatsThis(tr("Copy this to one of Regina's native "
-        "3-manifold triangulations.<p>"
-        "This will allow you to use Regina's full suite of tools to "
-        "edit and analyse the triangulation.  However, the native Regina "
-        "triangulation will lose any SnapPea-specific "
-        "information (such as peripheral curves on cusps)."));
-    triActionList.append(actToRegina);
-    requiresNonNull.append(actToRegina);
-    connect(actToRegina, SIGNAL(triggered()), this, SLOT(toRegina()));
-
-    sep = new QAction(this);
-    sep->setSeparator(true);
-    triActionList.append(sep);
+    QAction* actCanonise = new QAction(this);
+    actCanonise->setText(tr("&Canonical retriangulation"));
+    actCanonise->setToolTip(tr(
+        "Build the canonical retriangulation of the canonical "
+        "cell decomposition"));
+    actCanonise->setWhatsThis(tr("<qt>Build the canonical retriangulation "
+        "of the canonical cell decomposition.<p>"
+        "The canonical cell decomposition is described in "
+        "<i>Convex hulls and isometries of cusped hyperbolic 3-manifolds</i>, "
+        "Jeffrey R. Weeks, Topology Appl. 52 (1993), 127-149.<p>"
+        "If this canonical cell decomposition contains non-tetrahedron "
+        "cells, then SnapPea will canonically retriangulate it by introducing "
+        "internal vertices.  See the user handbook for details.<p>"
+        "<b>Warning:</b> SnapPea might not compute the canonical "
+        "cell decomposition correctly.  However, it does guarantee "
+        "that the resulting manifold is homeomorphic to the original.</qt>"));
+    triActionList.append(actCanonise);
+    requiresNonNull.append(actCanonise);
+    connect(actCanonise, SIGNAL(triggered()), this, SLOT(canonise()));
 
     QAction* actVertexLinks = new QAction(this);
     actVertexLinks->setText(tr("&Vertex Links..."));
@@ -138,6 +138,26 @@ NSnapPeaGluingsUI::NSnapPeaGluingsUI(regina::NSnapPeaTriangulation* packet,
     triActionList.append(actVertexLinks);
     requiresNonNull.append(actVertexLinks);
     connect(actVertexLinks, SIGNAL(triggered()), this, SLOT(vertexLinks()));
+
+    sep = new QAction(this);
+    sep->setSeparator(true);
+    triActionList.append(sep);
+
+    actToRegina = new QAction(this);
+    actToRegina->setText(tr("&Copy to Regina triangulation"));
+    // TODO: Need a new icon
+    actToRegina->setIcon(ReginaSupport::regIcon("packet_triangulation"));
+    actToRegina->setToolTip(tr(
+        "Copy this to a Regina triangulation"));
+    actToRegina->setWhatsThis(tr("Copy this to one of Regina's native "
+        "3-manifold triangulations.<p>"
+        "This will allow you to use Regina's full suite of tools to "
+        "edit and analyse the triangulation.  However, the native Regina "
+        "triangulation will lose any SnapPea-specific "
+        "information (such as peripheral curves on cusps)."));
+    triActionList.append(actToRegina);
+    requiresNonNull.append(actToRegina);
+    connect(actToRegina, SIGNAL(triggered()), this, SLOT(toRegina()));
 
     // Tidy up.
 
@@ -247,6 +267,32 @@ void NSnapPeaGluingsUI::randomise() {
         return;
 
     tri->randomize();
+}
+
+void NSnapPeaGluingsUI::canonise() {
+    // We assume the part hasn't become read-only, even though the
+    // packet might have changed its editable property.
+    if (! enclosingPane->tryCommit())
+        return;
+
+    if (tri->isNull())
+        ReginaSupport::sorry(ui,
+            tr("This is a null triangulation: there is no SnapPea "
+            "triangulation for me to canonise."));
+    else {
+        regina::NSnapPeaTriangulation* ans = tri->canonise();
+        if (! ans) {
+            ReginaSupport::sorry(ui,
+                tr("The SnapPea kernel was not able to build the "
+                "canonical retriangulation of the "
+                "canonical cell decomposition."));
+        } else {
+            ans->setPacketLabel(tr("Canonical retriangulation").
+                toAscii().constData());
+            tri->insertChildLast(ans);
+            enclosingPane->getMainWindow()->packetView(ans, true, true);
+        }
+    }
 }
 
 void NSnapPeaGluingsUI::updateNonNullActions() {

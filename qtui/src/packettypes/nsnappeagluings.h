@@ -106,6 +106,7 @@ class NSnapPeaGluingsUI : public QObject, public PacketEditorTab {
          */
         void randomise();
         void vertexLinks();
+        void canonise();
         void toRegina();
 
         /**

@@ -459,6 +459,10 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * construct the canonical retriangulation of the canonical cell
          * decomposition, this routine will return 0.
          *
+         * \warning The SnapPea kernel does not always compute the canonical
+         * cell decomposition correctly.  However, it guarantees that
+         * the manifold that it does compute is homeomorphic to the original.
+         *
          * \warning This matches the triangulation produced by SnapPea's
          * version of canonize().  However, it does not match the
          * triangulation produced by SnapPy's version of canonize().
