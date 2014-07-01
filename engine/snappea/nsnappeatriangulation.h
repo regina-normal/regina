@@ -249,6 +249,10 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         static bool kernelMessages_;
             /**< Should the SnapPea kernel write diagnostic messages to
                  standard output? */
+        static std::complex<double> zero_;
+            /**< The complex number 0.  This is defined as a data member
+                 so that shape() can still return a reference even when
+                 no tetrahedron shapes have been computed. */
 
     public:
         /**
@@ -405,6 +409,9 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * If this is a null triangulation then the empty string will be
          * returned.
          *
+         * \snappy In SnapPy, this routine corresponds to calling
+         * <tt>Manifold.name()</tt>.
+         *
          * @return SnapPea's name for this triangulation.
          */
         std::string name() const;
@@ -418,12 +425,18 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * time Regina does not concern itself with Dehn fillings, so only
          * the complete solution type is offered here.
          *
+         * \snappy In SnapPy, this routine corresponds to calling
+         * <tt>Manifold.solution_type()</tt>.
+         *
          * @return the solution type.
          */
         SolutionType solutionType() const;
 
         /**
          * Computes the volume of the underlying 3-manifold.
+         *
+         * \snappy In SnapPy, this routine corresponds to calling
+         * <tt>Manifold.volume()</tt>.
          *
          * @return the volume of the underlying 3-manifold, or 0 if this
          * is a null triangulation.
@@ -434,8 +447,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * Computes the volume of the underlying 3-manifold and
          * estimates the accuracy of the answer.
          *
-         * @param precision used to return an estimate of the number of
-         * decimal places of accuracy in the calculated volume.
+         * \snappy In SnapPy, this routine corresponds to calling
+         * <tt>Manifold.volume(accuracy=True)</tt>.
          *
          * \ifacespython The \a precision argument is not present.
          * Instead, two routines are offered.  The routine \a volume()
@@ -443,10 +456,38 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * routine \a volumeWithPrecision() takes no arguments and
          * returns a (\a volume, \a precision) tuple.
          *
+         * @param precision used to return an estimate of the number of
+         * decimal places of accuracy in the calculated volume.
+         *
          * @return the volume of the underlying 3-manifold, or 0 if this
          * is a null triangulation.
          */
         double volume(int& precision) const;
+
+        /**
+         * Returns the shape of the given tetrahedron, with respect to
+         * the Dehn filled hyperbolic structure.
+         *
+         * Tetrahedron shapes are given in rectangular form, and using a
+         * fixed coordinate system (fixed alignment, in SnapPea's terminology).
+         *
+         * If this is a null triangulation, or if solutionType() is
+         * not_attempted (i.e., we have not tried to solve for a
+         * hyperbolic structure), then this routine will simply return zero.
+         *
+         * This routine is fast constant time (unlike in SnapPea, where
+         * the corresponding routine \a get_tet_shape takes linear time).
+         * Therefore you can happily call this routine repeatedly without a
+         * significant performance penalty.
+         *
+         * \snappy In SnapPy, this routine corresponds to calling
+         * <tt>Manifold.tetrahedra_shapes(part='rect')[tet]</tt>.
+         *
+         * @param tet the index of a tetrahedron; this must be between
+         * 0 and getNumberOfTetrahedra()-1 inclusive.
+         * @return the shape of the given tetrahedron, in rectangular form.
+         */
+        const std::complex<double>& shape(unsigned tet) const;
 
         /**
          * Returns a matrix for computing boundary slopes of
@@ -476,6 +517,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * boundary curve, the spun-normal surface spirals into the cusp
          * to one's right and down into the manifold to one's left.
          *
+         * \snappy This has no corresponding routine in SnapPy.
+         *
          * \pre All vertex links in this triangulation must be tori.
          *
          * \warning If this triangulation was constructed from a Regina
@@ -502,7 +545,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * The canonical cell decomposition is the one described in
          * "Convex hulls and isometries of cusped hyperbolic 3-manifolds",
          * Jeffrey R. Weeks, Topology Appl. 52 (1993), 127-149.
-         * The canoical retriangulation is defined as follows: If the
+         * The canonical retriangulation is defined as follows: If the
          * canonical cell decomposition is already a triangulation then
          * we leave it untouched.  Otherwise: (i) within each 3-cell of
          * the original complex we introduce a new internal (finite)
@@ -518,6 +561,11 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * If for any reason either Regina or SnapPea are unable to
          * construct the canonical retriangulation of the canonical cell
          * decomposition, this routine will return 0.
+         *
+         * \snappy This has no corresponding routine in SnapPy.  This is
+         * because, if the canonical cell decomposition is not a triangulation,
+         * SnapPy retriangulates in a way that is non-canonical but so
+         * that all vertices are ideal.
          *
          * \warning The SnapPea kernel does not always compute the canonical
          * cell decomposition correctly.  However, it guarantees that
@@ -541,11 +589,6 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * A synonym for canonize(), which constructs the canonical
          * retriangulation of the canonical cell decomposition.
          * See canonize() for further details.
-         *
-         * \pre This is an ideal triangulation, not a closed triangulation.
-         *
-         * @return the canonical triangulation of the canonical cell
-         * decomposition, or 0 if this could not be constructed.
          */
         NSnapPeaTriangulation* canonise() const;
 
@@ -560,6 +603,9 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * to try to find a complete hyperbolic structure.
          *
          * If this is a null SnapPea triangulation, this routine does nothing.
+         *
+         * \snappy In SnapPy, this routine corresponds to calling
+         * <tt>Manifold.randomize()</tt>.
          */
         void randomize();
 
@@ -723,6 +769,11 @@ inline NSnapPeaTriangulation::NSnapPeaTriangulation() :
 
 inline bool NSnapPeaTriangulation::isNull() const {
     return (data_ == 0);
+}
+
+inline const std::complex<double>& NSnapPeaTriangulation::shape(unsigned tet)
+        const {
+    return (shape_ ? shape_[tet] : zero_);
 }
 
 inline bool NSnapPeaTriangulation::dependsOnParent() const {

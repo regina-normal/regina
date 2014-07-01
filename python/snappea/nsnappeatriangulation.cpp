@@ -66,6 +66,8 @@ void addNSnapPeaTriangulation() {
         .def("solutionType", &NSnapPeaTriangulation::solutionType)
         .def("volume", volume_void)
         .def("volumeWithPrecision", volume_precision)
+        .def("shape", &NSnapPeaTriangulation::shape,
+            return_value_policy<copy_const_reference>())
         .def("slopeEquations", &NSnapPeaTriangulation::slopeEquations,
             return_value_policy<manage_new_object>())
         .def("verifyTriangulation", &NSnapPeaTriangulation::verifyTriangulation)

@@ -55,6 +55,8 @@ namespace {
     static NMutex snapMutex;
 }
 
+std::complex<double> NSnapPeaTriangulation::zero_(0, 0);
+
 NSnapPeaTriangulation::NSnapPeaTriangulation(
         const std::string& fileNameOrContents) :
         data_(0), shape_(0), syncing_(false) {
