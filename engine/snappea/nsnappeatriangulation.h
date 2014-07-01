@@ -256,6 +256,11 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
 
     public:
         /**
+         * \name Constructors and Destructors
+         */
+        /*@{*/
+
+        /**
          * Creates a null triangulation, with no internal SnapPea data at all.
          */
         NSnapPeaTriangulation();
@@ -388,6 +393,12 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          */
         ~NSnapPeaTriangulation();
 
+        /*@}*/
+        /**
+         * \name Basic Properties
+         */
+        /*@{*/
+
         /**
          * Determines whether this triangulation contains valid SnapPea data.
          *
@@ -416,6 +427,12 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * @return SnapPea's name for this triangulation.
          */
         std::string name() const;
+
+        /*@}*/
+        /**
+         * \name Hyperbolic Structures
+         */
+        /*@{*/
 
         /**
          * Returns the type of solution found when solving for a hyperbolic
@@ -535,6 +552,12 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          */
         NMatrixInt* slopeEquations() const;
 
+        /*@}*/
+        /**
+         * \name Manipulating SnapPea triangulations
+         */
+        /*@{*/
+
         /**
          * Constructs the canonical retriangulation of the canonical
          * cell decomposition.
@@ -612,6 +635,12 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          */
         void randomise();
 
+        /*@}*/
+        /**
+         * \name Deprecated routines
+         */
+        /*@{*/
+
         /**
          * Deprecated routine that verifies whether the tetrahedron face
          * gluings from this SnapPea triangulation match the given Regina
@@ -641,10 +670,6 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * NTriangulation).
          */
         NTriangulation* toRegina() const;
-
-        virtual std::string snapPea() const;
-        virtual void snapPea(std::ostream& out) const;
-        virtual bool saveSnapPea(const char* filename) const;
 
         /**
          * Deprecated routine that dumps the full internal SnapPea data to
@@ -677,8 +702,11 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          */
         void saveAsSnapPea(const char* filename) const;
 
-        virtual void writeTextShort(std::ostream& out) const;
-        virtual void writeTextLong(std::ostream& out) const;
+        /*@}*/
+        /**
+         * \name SnapPea kernel messages
+         */
+        /*@{*/
 
         /**
          * Returns whether or not the SnapPea kernel writes diagnostic
@@ -719,11 +747,38 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          */
         static void disableKernelMessages();
 
+        /*@}*/
+        /**
+         * \name SnapPea Input and Output
+         */
+        /*@{*/
+
+        virtual std::string snapPea() const;
+        virtual void snapPea(std::ostream& out) const;
+        virtual bool saveSnapPea(const char* filename) const;
+
+        /*@}*/
+        /**
+         * \name Packet Administration
+         */
+        /*@{*/
+
+        virtual void writeTextShort(std::ostream& out) const;
+        virtual void writeTextLong(std::ostream& out) const;
+
         virtual bool dependsOnParent() const;
         static NXMLPacketReader* getXMLReader(NPacket* parent,
             NXMLTreeResolver& resolver);
 
+        /*@}*/
+        /**
+         * \name Packet Listener Interface
+         */
+        /*@{*/
+
         virtual void packetWasChanged(NPacket* packet);
+
+        /*@}*/
 
     protected:
         virtual NPacket* internalClonePacket(NPacket* parent) const;
