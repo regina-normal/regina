@@ -26,6 +26,7 @@ set (IMGS
   packet_triangulation
   packet_view
   python_console
+  randomise
   regina
   snappea
   vtxlinks

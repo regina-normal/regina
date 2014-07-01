@@ -92,7 +92,7 @@ NSnapPeaGluingsUI::NSnapPeaGluingsUI(regina::NSnapPeaTriangulation* packet,
 
     actRandomise = new QAction(this);
     actRandomise->setText(tr("&Randomise"));
-    // TODO: Make an icon
+    actRandomise->setIcon(ReginaSupport::regIcon("randomise"));
     actRandomise->setToolTip(tr(
         "Randomise this triangulation"));
     actRandomise->setEnabled(readWrite);
