@@ -268,6 +268,18 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         NSnapPeaTriangulation(const std::string& fileNameOrContents);
 
         /**
+         * Creates a clone of the given SnapPea triangulation.
+         * This copy will be independent (i.e., this triangulation will
+         * not be affected if \a tri is later changed or destroyed).
+         *
+         * If \a tri is a null triangulation then this will be a null
+         * triangulation also.  See isNull() for further details.
+         *
+         * @param tri the SnapPea triangulation to clone.
+         */
+        NSnapPeaTriangulation(const NSnapPeaTriangulation& tri);
+
+        /**
          * TODO: Redocument; deal with the subclass case correctly.
          *
          * Converts the given Regina triangulation to a SnapPea triangulation.

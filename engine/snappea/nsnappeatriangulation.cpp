@@ -78,6 +78,15 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(
     listen(this);
 }
 
+NSnapPeaTriangulation::NSnapPeaTriangulation(const NSnapPeaTriangulation& tri) :
+        data_(0), syncing_(false) {
+    if (tri.data_) {
+        regina::snappea::copy_triangulation(tri.data_, &data_);
+        sync();
+    }
+    listen(this);
+}
+
 NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri,
         bool allowClosed) :
         data_(0), syncing_(false) {

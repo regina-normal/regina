@@ -123,8 +123,8 @@ Version 4.96  [ (under development) ]
             - Two new constructors: a default constructor that builds a null
               triangulation, and a string constructor that takes either the
               name or the contents of a native SnapPea data file.
-            - The Regina-to-SnapPea constructor and the copy constructor are
-              now merged: which behaviour you get now depends on whether
+            - The Regina-to-SnapPea constructor now doubles as another copy
+              constructor: which behaviour you get now depends on whether
               you pass an object of Regina's own NTriangulation type or
               of the subclass NSnapPeaTriangulation.
             - If one of Regina's own NTriangulation objects is passed to
