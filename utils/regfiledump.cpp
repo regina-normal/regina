@@ -170,7 +170,7 @@ int main(int argc, char* argv[]) {
         "UTF-8", regina::i18n::Locale::codeset());
 
     // Do the actual work.
-    NPacket* tree = regina::readFileMagic(file);
+    NPacket* tree = regina::open(file.c_str());
     if (! tree) {
         std::cerr << "File " << file << " could not be read.\n";
         return 1;

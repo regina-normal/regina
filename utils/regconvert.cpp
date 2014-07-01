@@ -101,7 +101,7 @@ int main(int argc, char* argv[]) {
             "Only uncompressed XML can be written to standard output.");
 
     // Read the old file.
-    regina::NPacket* tree = regina::readFileMagic(oldFile);
+    regina::NPacket* tree = regina::open(oldFile.c_str());
     if (! tree) {
         std::cerr << "File " << oldFile << " could not be read.\n";
         return 1;
@@ -120,7 +120,7 @@ int main(int argc, char* argv[]) {
     } else {
         // Real output file.
         // Use compressed / uncompressed XML
-        result = regina::writeXMLFile(newFile.c_str(), tree, typeOpt == 'x');
+        result = tree->save(newFile.c_str(), typeOpt == 'x');
     }
 
     if (! result) {

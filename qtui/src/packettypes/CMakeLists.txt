@@ -14,6 +14,10 @@ SET ( FILES
   nnormalsurfaceui
   npdfui
   nscriptui
+  nsnappeacreator
+  nsnappeafile
+  nsnappeagluings
+  nsnappeaui
   nsurfacecompatui
   nsurfacecoordinateui
   nsurfacefiltercomb
@@ -43,6 +47,10 @@ SET ( MOC_FILES
   ncompatcanvas.h
   nnormalsurfaceui.h
   nscriptui.h
+  nsnappeacreator.h
+  nsnappeafile.h
+  nsnappeagluings.h
+  nsnappeaui.h
   nsurfacecompatui.h
   nsurfacecoordinateui.h
   nsurfacefiltercomb.h

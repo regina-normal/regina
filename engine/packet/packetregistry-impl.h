@@ -57,6 +57,7 @@
 #include "angle/nanglestructurelist.h"
 #include "packet/npdf.h"
 #include "dim2/dim2triangulation.h"
+#include "snappea/nsnappeatriangulation.h"
 
 namespace regina {
 
@@ -83,6 +84,8 @@ inline typename FunctionObject::ReturnType forPacket(
             return func(PacketInfo<PACKET_PDF>());
         case PACKET_DIM2TRIANGULATION :
             return func(PacketInfo<PACKET_DIM2TRIANGULATION>());
+        case PACKET_SNAPPEATRIANGULATION :
+            return func(PacketInfo<PACKET_SNAPPEATRIANGULATION>());
         default: return defaultReturn;
     }
 }
@@ -108,6 +111,8 @@ inline void forPacket(PacketType packetType, VoidFunctionObject func) {
             func(PacketInfo<PACKET_PDF>()); break;
         case PACKET_DIM2TRIANGULATION :
             func(PacketInfo<PACKET_DIM2TRIANGULATION>()); break;
+        case PACKET_SNAPPEATRIANGULATION :
+            func(PacketInfo<PACKET_SNAPPEATRIANGULATION>()); break;
         default: break;
     }
 }

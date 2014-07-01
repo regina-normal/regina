@@ -48,6 +48,11 @@ namespace {
         s.writeAllSurfaces(std::cout);
     }
 
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_saveCSVStandard,
+        NNormalSurfaceList::saveCSVStandard, 1, 2);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_saveCSVEdgeWeight,
+        NNormalSurfaceList::saveCSVEdgeWeight, 1, 2);
+
     // Write manual overload wrappers since these are static member functions.
     NNormalSurfaceList* unified_2(regina::NTriangulation* owner,
             regina::NormalCoords coords) {
@@ -230,6 +235,10 @@ void addNNormalSurfaceList() {
         .def("recreateMatchingEquations",
             &NNormalSurfaceList::recreateMatchingEquations,
             return_value_policy<manage_new_object>())
+        .def("saveCSVStandard", &NNormalSurfaceList::saveCSVStandard,
+            OL_saveCSVStandard())
+        .def("saveCSVEdgeWeight", &NNormalSurfaceList::saveCSVEdgeWeight,
+            OL_saveCSVEdgeWeight())
         .staticmethod("enumerate")
         .staticmethod("enumerateStandardDirect")
         .staticmethod("enumerateStandardANDirect")

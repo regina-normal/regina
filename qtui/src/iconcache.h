@@ -60,6 +60,7 @@ class IconCache {
             packet_filter,
             packet_pdf,
             packet_script,
+            packet_snappea,
             packet_surfaces,
             packet_text,
             packet_triangulation,

@@ -35,7 +35,6 @@
 #include <boost/python.hpp>
 #include "maths/nmatrixint.h"
 #include "snappea/nsnappeatriangulation.h"
-#include "triangulation/ntriangulation.h"
 
 using namespace boost::python;
 using regina::NSnapPeaTriangulation;
@@ -56,11 +55,14 @@ namespace {
 }
 
 void addNSnapPeaTriangulation() {
-    scope s = class_<NSnapPeaTriangulation, bases<regina::ShareableObject>,
+    scope s = class_<NSnapPeaTriangulation, bases<regina::NTriangulation>,
             std::auto_ptr<NSnapPeaTriangulation>, boost::noncopyable>
-            ("NSnapPeaTriangulation", init<const NSnapPeaTriangulation&>())
+            ("NSnapPeaTriangulation", init<>())
+        .def(init<const std::string&>())
+        .def(init<const NSnapPeaTriangulation&>())
         .def(init<const NTriangulation&, optional<bool> >())
         .def("isNull", &NSnapPeaTriangulation::isNull)
+        .def("name", &NSnapPeaTriangulation::name)
         .def("solutionType", &NSnapPeaTriangulation::solutionType)
         .def("volume", volume_void)
         .def("volumeWithPrecision", volume_precision)
@@ -71,9 +73,13 @@ void addNSnapPeaTriangulation() {
             return_value_policy<manage_new_object>())
         .def("canonize", &NSnapPeaTriangulation::canonize,
             return_value_policy<manage_new_object>())
+        .def("canonise", &NSnapPeaTriangulation::canonise,
+            return_value_policy<manage_new_object>())
         .def("randomize", &NSnapPeaTriangulation::randomize)
+        .def("randomise", &NSnapPeaTriangulation::randomise)
         .def("dump", &NSnapPeaTriangulation::dump)
         .def("saveAsSnapPea", &NSnapPeaTriangulation::saveAsSnapPea)
+        .def("save", &NSnapPeaTriangulation::save)
         .def("kernelMessagesEnabled",
             &NSnapPeaTriangulation::kernelMessagesEnabled)
         .def("enableKernelMessages",
@@ -97,5 +103,8 @@ void addNSnapPeaTriangulation() {
         .value("other_solution", NSnapPeaTriangulation::other_solution)
         .value("no_solution", NSnapPeaTriangulation::no_solution)
     ;
+
+    implicitly_convertible<std::auto_ptr<NSnapPeaTriangulation>,
+        std::auto_ptr<regina::NTriangulation> >();
 }
 

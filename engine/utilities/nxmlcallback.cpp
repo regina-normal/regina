@@ -33,7 +33,7 @@
 /* end stub */
 
 #include <iomanip>
-#include "file/nxmlcallback.h"
+#include "utilities/nxmlcallback.h"
 
 namespace regina {
 

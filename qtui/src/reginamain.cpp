@@ -147,6 +147,10 @@ void ReginaMain::unplugPacketMenu() {
     }
 }
 
+regina::NPacket* ReginaMain::selectedPacket() {
+    return treeView->selectedPacket();
+}
+
 void ReginaMain::setModified(bool modified) {
     dirty = modified;
     actSave->setEnabled(modified);
@@ -340,7 +344,7 @@ void ReginaMain::fileOpenUrl(const QUrl& url) {
         return;
     }
 
-    regina::NPacket* packetTree = regina::readFileMagic(
+    regina::NPacket* packetTree = regina::open(
         static_cast<const char*>(QFile::encodeName(localFile)));
 
     if (! packetTree) {
@@ -385,7 +389,7 @@ void ReginaMain::fileOpenExample(const QUrl& url, const QString& description) {
         return;
     }
 
-    regina::NPacket* packetTree = regina::readXMLFile(
+    regina::NPacket* packetTree = regina::open(
         static_cast<const char*>(QFile::encodeName(localFile)));
 
     if (! packetTree) {
@@ -873,8 +877,8 @@ bool ReginaMain::saveFile() {
             writeTree = child;
     }
 
-    if (regina::writeXMLFile(static_cast<const char*>(
-            QFile::encodeName(localFile)), writeTree)) {
+    if (writeTree->save(static_cast<const char*>(
+            QFile::encodeName(localFile)))) {
         setModified(false);
         return true;
     } else {
