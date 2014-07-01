@@ -332,12 +332,20 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          *
          * Regarding peripheral curves: native Regina triangulations do not
          * store or use peripheral curves themselves, and so this constructor
-         * makes a default choice during the conversion process.  Specifically,
-         * on each cusp the meridian and longitude are chosen to be the
-         * (shortest, second shortest) basis, and their orientations
-         * follow the convention used by the \e SnapPy kernel.  Be warned,
-         * however, that this choice might not be unique for some cusp shapes,
-         * and the resolution of such ambiguities might be machine-dependent.
+         * makes a default choice during the conversion process.  Specifically:
+         *
+         * - On each cusp, the meridian and longitude are chosen to be the
+         *   (shortest, second shortest) basis, and their orientations
+         *   follow the convention used by the \e SnapPy kernel.  Be warned,
+         *   however, that this choice might not be unique for some cusp shapes,
+         *   and the resolution of such ambiguities might be machine-dependent.
+         *
+         * - In some cases SnapPea throws a fatal error when attempting
+         *   to install the (shortest, second shortest) basis; this is
+         *   seen for instance in some flat and degenerate triangulations.
+         *   If this happens then Regina will accept whatever basis SnapPea
+         *   installs by default, but be warned that this default basis
+         *   may change with newer versions of the SnapPea kernel.
          *
          * SnapPea is designed primarily to work with ideal
          * triangulations only.  Passing closed triangulations can

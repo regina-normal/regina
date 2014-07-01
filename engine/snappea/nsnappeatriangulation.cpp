@@ -190,8 +190,12 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri,
     regina::snappea::do_Dehn_filling(data_);
 
     // Regina triangulations know nothing about peripheral curves.
-    // Install a sensible basis for each cusp.
-    regina::snappea::install_shortest_bases(data_);
+    // Install a sensible basis for each cusp, if SnapPea will let us.
+    try {
+        regina::snappea::install_shortest_bases(data_);
+    } catch (regina::SnapPeaFatalError& err) {
+        // Blurgh.  SnapPea says no.
+    }
 
     sync();
     listen(this);
