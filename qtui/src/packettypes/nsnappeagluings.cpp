@@ -239,7 +239,7 @@ void NSnapPeaGluingsUI::vertexLinks() {
             ans->setPacketLabel(tr("Link of vertex %1").arg(
                 tri->vertexIndex(chosen)).toAscii().constData());
             tri->insertChildLast(ans);
-            enclosingPane->getMainWindow()->ensureVisibleInTree(ans);
+            enclosingPane->getMainWindow()->packetView(ans, true, true);
         }
     }
 }
@@ -258,7 +258,7 @@ void NSnapPeaGluingsUI::toRegina() {
         regina::NTriangulation* ans = new regina::NTriangulation(*tri);
         ans->setPacketLabel(tri->getPacketLabel());
         tri->insertChildLast(ans);
-        enclosingPane->getMainWindow()->ensureVisibleInTree(ans);
+        enclosingPane->getMainWindow()->packetView(ans, true, true);
     }
 }
 

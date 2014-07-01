@@ -1093,7 +1093,7 @@ void NTriGluingsUI::vertexLinks() {
             ans->setPacketLabel(tr("Link of vertex %1").arg(
                 tri->vertexIndex(chosen)).toAscii().constData());
             tri->insertChildLast(ans);
-            enclosingPane->getMainWindow()->ensureVisibleInTree(ans);
+            enclosingPane->getMainWindow()->packetView(ans, true, true);
         }
     }
 }
