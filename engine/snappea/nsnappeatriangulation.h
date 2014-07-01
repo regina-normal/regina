@@ -564,11 +564,12 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * spun-normal surfaces at the cusps of the triangulation.  This
          * matrix includes a pair of rows for each cusp in the triangulation:
          * one row for determining the algebraic intersection number
-         * with the meridian, and one row for determining the algebraic
-         * intersection number with the longitude.
+         * with the meridian, followed by one row for determining the
+         * algebraic intersection number with the longitude.
+         *
          * If the triangulation has more than one cusp, these pairs are
-         * ordered by vertex number in the triangulation.  Within each
-         * pair, the meridian row always appears before the longitude row.
+         * ordered by cusp index (as stored by SnapPea).  You can call
+         * cuspVertex() to map these to Regina's vertex indices if needed.
          *
          * This matrix is constructed so that, if \a M and \a L are the
          * rows for the meridian and longitude at some cusp, then for

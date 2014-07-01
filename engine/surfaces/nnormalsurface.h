@@ -1596,10 +1596,11 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * spun-normal surface spirals into the cusp to one's right and
          * down into the manifold to one's left.
          *
-         * If this triangulation contains more than one vertex, the
-         * rows in the resulting matrix are ordered by vertex number in the
-         * triangulation.
-         * 
+         * If the triangulation contains more than one vertex, the rows
+         * in the resulting matrix are ordered by cusp index (as stored by
+         * SnapPea).  You can call NSnapPeaTriangulation::cuspVertex() to
+         * map these to Regina's vertex indices if needed.
+         *
          * At present, Regina can only compute boundary slopes if the
          * triangulation is oriented, if every vertex link in the
          * triangulation is a torus, and if the underlying coordinate system
