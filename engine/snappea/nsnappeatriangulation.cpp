@@ -522,7 +522,9 @@ void NSnapPeaTriangulation::sync() {
                             NPerm4(tData->tetrahedron_data[i].gluing[j]));
 
             regina::snappea::Tetrahedron* stet;
-            if (solutionType() == not_attempted) {
+            SolutionType soln = static_cast<SolutionType>(
+                regina::snappea::get_filled_solution_type(data_));
+            if (soln == not_attempted || soln == no_solution) {
                 shape_ = 0;
             } else {
                 // Fetch the shapes directly from SnapPea's internal

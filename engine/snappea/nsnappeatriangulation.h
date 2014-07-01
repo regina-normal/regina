@@ -250,8 +250,9 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
             /**< The array of tetrahedron shapes, in rectangular form, using a
                  fixed coordinate system (fixed alignment in SnapPea's
                  terminology).  All shapes are with respect to the Dehn filled
-                 hyperbolic structure.  If this is a null triangulation or the
-                 solution type is not_attempted, then shape_ will be 0. */
+                 hyperbolic structure.  If this is a null triangulation, or if
+                 the solution type is no_solution or not_attempted, then
+                 shape_ will be 0. */
         CuspInfo* cusp_;
             /**< An array that caches information about each cusp of the
                  internal SnapPea triangulation.  If this is a null
@@ -501,8 +502,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * Tetrahedron shapes are given in rectangular form, and using a
          * fixed coordinate system (fixed alignment, in SnapPea's terminology).
          *
-         * If this is a null triangulation, or if solutionType() is
-         * not_attempted (i.e., we have not tried to solve for a
+         * If this is a null triangulation, or if solutionType() is no_solution
+         * or not_attempted (i.e., we did not or could not solve for a
          * hyperbolic structure), then this routine will simply return zero.
          *
          * This routine is fast constant time (unlike in SnapPea, where
