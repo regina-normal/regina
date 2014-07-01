@@ -194,7 +194,7 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri,
     // Regina triangulations know nothing about peripheral curves.
     // Install a sensible basis for each cusp, if SnapPea will let us.
     SolutionType soln = static_cast<SolutionType>(
-        regina::snappea::get_complete_solution_type(data_));
+        regina::snappea::get_filled_solution_type(data_));
     if (soln == geometric_solution || soln == nongeometric_solution) {
         try {
             regina::snappea::install_shortest_bases(data_);
@@ -222,7 +222,7 @@ NSnapPeaTriangulation::SolutionType NSnapPeaTriangulation::solutionType()
     if (! data_)
         return NSnapPeaTriangulation::not_attempted;
     return static_cast<SolutionType>(
-        regina::snappea::get_complete_solution_type(data_));
+        regina::snappea::get_filled_solution_type(data_));
 }
 
 double NSnapPeaTriangulation::volume() const {

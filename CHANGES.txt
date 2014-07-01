@@ -146,6 +146,8 @@ Version 4.96  [ (under development) ]
               write the resulting string to standard output.
             - Routine canonize() now returns a (richer) NSnapPeaTriangulation,
               and has a new synonym canonise().
+            - Routine solutionType() now returns the filled solution type
+              (not the complete solution type).
             - Routines toRegina() and verifyTriangulation() are deprecated,
               since they are obsolete now that NSnapPeaTriangulation inherits
               from NTriangulation.

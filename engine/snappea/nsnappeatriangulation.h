@@ -197,7 +197,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
     public:
         /**
          * Describes the different types of solution that can be found when
-         * solving for a complete hyperbolic structure.
+         * solving for a hyperbolic structure.
          *
          * Although this enumeration is identical to SnapPea's own
          * SolutionType, it is declared again in this class because Regina
@@ -272,7 +272,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * such as peripheral curves).
          *
          * If this operation is successful, this constructor will immediately
-         * ask SnapPea to try to find a complete hyperbolic structure.
+         * ask SnapPea to try to find a hyperbolic structure.
          *
          * If this operation fails (e.g., if the given string does not
          * represent a valid SnapPea data file), then this will be a
@@ -339,7 +339,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          *   Regina will attempt to convert this triangulation to
          *   SnapPea format.  If the conversion is successful, this
          *   constructor will immediately ask SnapPea to try to find a
-         *   complete hyperbolic structure.
+         *   hyperbolic structure.
          *
          * Regarding peripheral curves: native Regina triangulations do not
          * store or use peripheral curves themselves, and so this constructor
@@ -418,13 +418,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         std::string name() const;
 
         /**
-         * Returns the type of solution found when solving for a complete
-         * hyperbolic structure.
-         *
-         * Note that SnapPea distinguishes between a complete hyperbolic
-         * structure and a Dehn filled hyperbolic structure.  At the present
-         * time Regina does not concern itself with Dehn fillings, so only
-         * the complete solution type is offered here.
+         * Returns the type of solution found when solving for a hyperbolic
+         * structure, with respect to the current Dehn filling (if any).
          *
          * \snappy In SnapPy, this routine corresponds to calling
          * <tt>Manifold.solution_type()</tt>.
@@ -596,12 +591,12 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         /**
          * Asks SnapPea to randomly retriangulate this manifold, using
          * local moves that preserve the topology.  This can help when SnapPea
-         * is having difficulty finding a complete hyperbolic structure.
+         * is having difficulty finding a hyperbolic structure.
          *
          * This routine uses SnapPea's own internal retriangulation code.
          *
          * After randomizing, this routine will immediately ask SnapPea
-         * to try to find a complete hyperbolic structure.
+         * to try to find a hyperbolic structure.
          *
          * If this is a null SnapPea triangulation, this routine does nothing.
          *
