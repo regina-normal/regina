@@ -429,19 +429,20 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         SolutionType solutionType() const;
 
         /**
-         * Computes the volume of the underlying 3-manifold.
+         * Computes the volume of the current solution to the hyperbolic
+         * gluing equations.
          *
          * \snappy In SnapPy, this routine corresponds to calling
          * <tt>Manifold.volume()</tt>.
          *
-         * @return the volume of the underlying 3-manifold, or 0 if this
-         * is a null triangulation.
+         * @return the estimated volume of the underlying 3-manifold,
+         * or 0 if this is a null triangulation.
          */
         double volume() const;
 
         /**
-         * Computes the volume of the underlying 3-manifold and
-         * estimates the accuracy of the answer.
+         * Computes the volume of the current solution to the hyperbolic
+         * gluing equations, and estimates the accuracy of the answer.
          *
          * \snappy In SnapPy, this routine corresponds to calling
          * <tt>Manifold.volume(accuracy=True)</tt>.
@@ -455,8 +456,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * @param precision used to return an estimate of the number of
          * decimal places of accuracy in the calculated volume.
          *
-         * @return the volume of the underlying 3-manifold, or 0 if this
-         * is a null triangulation.
+         * @return the estimated volume of the underlying 3-manifold,
+         * or 0 if this is a null triangulation.
          */
         double volume(int& precision) const;
 
