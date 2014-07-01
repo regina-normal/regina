@@ -176,7 +176,7 @@ struct PacketInfo<PACKET_SNAPPEATRIANGULATION> {
  * and handled politely.
  *
  * Regina uses the variant of the SnapPea kernel that is shipped with
- * SnapPy 2.1 (standard precision), as well as some additional code
+ * SnapPy 2.2 (standard precision), as well as some additional code
  * written explicitly for SnapPy.
  * The SnapPea kernel was written by Jeff Weeks, and SnapPy was written by
  * Marc Culler, Nathan Dunfield, and others.  SnapPy and the corresponding

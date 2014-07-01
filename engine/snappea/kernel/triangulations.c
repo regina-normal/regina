@@ -80,8 +80,8 @@ void data_to_triangulation(
                     k,
                     l,
                     m;
-    Boolean         all_peripheral_curves_are_zero,
-                    finite_vertices_are_present;
+    /*    Boolean         all_peripheral_curves_are_zero*/
+    Boolean finite_vertices_are_present;
 
     /*
      *  Initialize *manifold_ptr to NULL.
@@ -154,7 +154,7 @@ void data_to_triangulation(
      *  Set up the Tetrahedra.
      */
 
-    all_peripheral_curves_are_zero  = TRUE;
+    /*    all_peripheral_curves_are_zero  = TRUE; */
     finite_vertices_are_present     = FALSE;
 
     for (i = 0; i < manifold->num_tetrahedra; i++)
@@ -191,8 +191,10 @@ void data_to_triangulation(
                         {
                             tet_array[i]->curve[j][k][l][m] = data->tetrahedron_data[i].curve[j][k][l][m];
     
+			    /*
                             if (data->tetrahedron_data[i].curve[j][k][l][m] != 0)
                                 all_peripheral_curves_are_zero = FALSE;
+			    */
                         }
         }
     }
@@ -292,16 +294,18 @@ void data_to_triangulation(
      *
      * find_complete_hyperbolic_structure(manifold);
      * do_Dehn_filling(manifold);
-     */
-
-    /*
+     *
+     *
+     *
      *  If we provided the basis and the manifold is hyperbolic,
      *  replace it with a shortest basis.
+     *
+     * if (all_peripheral_curves_are_zero == TRUE
+     * && (   manifold->solution_type[complete] == geometric_solution
+     *    || manifold->solution_type[complete] == nongeometric_solution))
+     *   install_shortest_bases(manifold);
+     *
      */
-    if (all_peripheral_curves_are_zero == TRUE
-     && (   manifold->solution_type[complete] == geometric_solution
-         || manifold->solution_type[complete] == nongeometric_solution))
-        install_shortest_bases(manifold);
 
     /*
      *  If the Chern-Simons invariant is present, compute the fudge factor.
