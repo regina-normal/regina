@@ -138,31 +138,35 @@ QString NSnapPeaHeaderUI::summaryInfo(regina::NSnapPeaTriangulation* tri) {
         msg += QObject::tr("Ideal, ");
 
     if (tri->isOrientable())
-        msg += QObject::tr("orientable, ");
+        msg += QObject::tr("orientable\n");
     else
-        msg += QObject::tr("non-orientable, ");
+        msg += QObject::tr("non-orientable\n");
 
     switch (tri->solutionType()) {
         case NSnapPeaTriangulation::not_attempted:
-            msg += QObject::tr("solution not attempted");
+            msg += QObject::tr("Solution not attempted");
             break;
         case NSnapPeaTriangulation::geometric_solution:
-            msg += QObject::tr("tetrahedra positively oriented");
+            msg += QObject::tr("Volume: %1\n").arg(tri->volume());
+            msg += QObject::tr("Tetrahedra positively oriented");
             break;
         case NSnapPeaTriangulation::nongeometric_solution:
-            msg += QObject::tr("contains negatively oriented tetrahedra");
+            msg += QObject::tr("Volume: %1\n").arg(tri->volume());
+            msg += QObject::tr("Contains negatively oriented tetrahedra");
             break;
         case NSnapPeaTriangulation::flat_solution:
-            msg += QObject::tr("all tetrahedra flat");
+            msg += QObject::tr("Volume: %1\n").arg(tri->volume());
+            msg += QObject::tr("All tetrahedra flat");
             break;
         case NSnapPeaTriangulation::degenerate_solution:
-            msg += QObject::tr("contains degenerate tetrahedra");
+            msg += QObject::tr("Volume: %1\n").arg(tri->volume());
+            msg += QObject::tr("Contains degenerate tetrahedra");
             break;
         case NSnapPeaTriangulation::other_solution:
-            msg += QObject::tr("unrecognised solution type");
+            msg += QObject::tr("Unrecognised solution type");
             break;
         case NSnapPeaTriangulation::no_solution:
-            msg += QObject::tr("no solution found");
+            msg += QObject::tr("No solution found");
             break;
         default:
             msg += QObject::tr("INVALID SOLUTION TYPE");
