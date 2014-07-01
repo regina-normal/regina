@@ -45,6 +45,7 @@
 
 #include "regina-core.h"
 #include "triangulation/ntriangulation.h"
+#include <complex>
 
 namespace regina {
 
@@ -233,6 +234,12 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         regina::snappea::Triangulation* data_;
             /**< The triangulation stored in SnapPea's native format,
                  or 0 if this is a null triangulation. */
+        std::complex<double>* shape_;
+            /**< The array of tetrahedron shapes, in rectangular form, using a
+                 fixed coordinate system (fixed alignment in SnapPea's
+                 terminology).  All shapes are with respect to the Dehn filled
+                 hyperbolic structure.  If the solution type is not_attempted,
+                 then shape_ will be 0 instead. */
         bool syncing_;
             /**< Set to \c true whilst sync() is being called.  This allows the
                  internal packet listener to distinguish between "legitimate"
@@ -628,6 +635,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         void saveAsSnapPea(const char* filename) const;
 
         virtual void writeTextShort(std::ostream& out) const;
+        virtual void writeTextLong(std::ostream& out) const;
 
         /**
          * Returns whether or not the SnapPea kernel writes diagnostic
@@ -682,6 +690,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         /**
          * Synchronises the inherited NTriangulation data so that the
          * tetrahedra and their gluings match the raw SnapPea data.
+         * Also refreshes the internal array of tetrahedron shapes.
          */
         void sync();
 
@@ -708,7 +717,7 @@ inline SnapPeaFatalError::SnapPeaFatalError(
 // Inline functions for NSnapPeaTriangulation
 
 inline NSnapPeaTriangulation::NSnapPeaTriangulation() :
-        data_(0), syncing_(false) {
+        data_(0), shape_(0), syncing_(false) {
     listen(this);
 }
 

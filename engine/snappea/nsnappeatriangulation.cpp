@@ -57,7 +57,7 @@ namespace {
 
 NSnapPeaTriangulation::NSnapPeaTriangulation(
         const std::string& fileNameOrContents) :
-        data_(0), syncing_(false) {
+        data_(0), shape_(0), syncing_(false) {
     try {
         if (startsWith(fileNameOrContents, "% Triangulation"))
             data_ = regina::snappea::read_triangulation_from_string(
@@ -79,7 +79,7 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(
 }
 
 NSnapPeaTriangulation::NSnapPeaTriangulation(const NSnapPeaTriangulation& tri) :
-        data_(0), syncing_(false) {
+        data_(0), shape_(0), syncing_(false) {
     if (tri.data_) {
         regina::snappea::copy_triangulation(tri.data_, &data_);
         sync();
@@ -89,7 +89,7 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NSnapPeaTriangulation& tri) :
 
 NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri,
         bool allowClosed) :
-        data_(0), syncing_(false) {
+        data_(0), shape_(0), syncing_(false) {
     const NSnapPeaTriangulation* clone =
         dynamic_cast<const NSnapPeaTriangulation*>(&tri);
     if (clone) {
@@ -203,6 +203,7 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri,
 
 NSnapPeaTriangulation::~NSnapPeaTriangulation() {
     unlisten(this);
+    delete[] shape_;
     regina::snappea::free_triangulation(data_);
 }
 
@@ -359,6 +360,23 @@ void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {
     }
 }
 
+void NSnapPeaTriangulation::writeTextLong(std::ostream& out) const {
+    if (! data_) {
+        out << "Null SnapPea triangulation" << std::endl;
+        return;
+    }
+
+    NTriangulation::writeTextLong(out);
+
+    if (shape_) {
+        out << "Tetrahedron shapes:" << std::endl;
+        for (unsigned i = 0; i < getNumberOfTetrahedra(); ++i)
+            out << "  " << i << ": ( " << shape_[i].real()
+                << ", " << shape_[i].imag() << " )" << std::endl;
+    } else
+        out << "No tetrahedron shapes stored." << std::endl;
+}
+
 bool NSnapPeaTriangulation::kernelMessagesEnabled() {
     NMutex::MutexLock ml(snapMutex);
     return kernelMessages_;
@@ -423,6 +441,7 @@ void NSnapPeaTriangulation::sync() {
 
         if (getNumberOfTetrahedra())
             removeAllTetrahedra();
+        delete[] shape_;
 
         if (data_) {
             regina::snappea::TriangulationData* tData;
@@ -442,7 +461,28 @@ void NSnapPeaTriangulation::sync() {
                             NPerm4(tData->tetrahedron_data[i].gluing[j]));
 
             delete[] tet;
+
+            if (solutionType() == not_attempted) {
+                shape_ = 0;
+            } else {
+                // Fetch the shapes directly from SnapPea's internal
+                // data structures, since SnapPea's get_tet_shape()
+                // function is linear time (per tetrahedron).
+                shape_ = new std::complex<double>[tData->num_tetrahedra];
+                regina::snappea::Tetrahedron* tet = data_->tet_list_begin.next;
+                regina::snappea::ComplexWithLog* shape;
+                for (unsigned i = 0; i < tData->num_tetrahedra; ++i) {
+                    shape = &tet->shape[regina::snappea::filled]->
+                            cwl[regina::snappea::ultimate][0 /* fixed */];
+                    shape_[i] = std::complex<double>(
+                        shape->rect.real, shape->rect.imag);
+                    tet = tet->next;
+                }
+            }
+
             regina::snappea::free_triangulation_data(tData);
+        } else {
+            shape_ = 0;
         }
 
         // The packet change event (which we are listening to) will be
