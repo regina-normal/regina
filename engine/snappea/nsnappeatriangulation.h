@@ -519,6 +519,46 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          */
         const std::complex<double>& shape(unsigned tet) const;
 
+        /**
+         * Returns a matrix describing Thurston's gluing equations.
+         *
+         * Each row of this matrix will describe a single equation.
+         * The first getNumberOfEdges() rows will list the edge equations,
+         * and the following getNumberOfBoundaryComponents() rows will list
+         * the cusp equations.
+         *
+         * The edge equations will be ordered arbitrarily.  The cusp equations
+         * will be presented in pairs ordered by cusp index (as stored by
+         * SnapPea); within each pair the meridian equation will appear before
+         * the longitude equation.  You can use cuspVertex() to help translate
+         * between SnapPea's cusp indices and Regina's vertex indices.
+         *
+         * The matrix will contain <tt>3 * getNumberOfTetrahedra()</tt> columns.
+         * The first three columns represent shape parameters <tt>z</tt>,
+         * <tt>1/(1-z)</tt> and <tt>(z-1)/z</tt> for the first tetrahedron;
+         * the next three columns represent shape parameters <tt>z</tt>,
+         * <tt>1/(1-z)</tt> and <tt>(z-1)/z</tt> for the second tetrahedron,
+         * and so on.  By Regina's edge numbering conventions,
+         * <tt>z</tt> corresponds to edges 0 and 5 of the tetrahedron,
+         * <tt>1/(1-z)</tt> corresponds to edges 1 and 4 of the tetrahedron, and
+         * <tt>(z-1)/z</tt> corresponds to edges 2 and 3 of the tetrahedron.
+         *
+         * More specifically, a row of the form <tt>a b c d e f ...</tt>
+         * describes an equation with left hand side
+         * <tt>a * log(z0) + b * log(1/(1-z0)) + c * log((z0-1)/z) +
+         * d * log(z1) + ... = 2 pi i</tt>,
+         * and with right hand side <tt>2 pi i</tt> for an edge equation
+         * or 0 for a cusp equation.
+         *
+         * \snappy In SnapPy, this routine corresponds to calling
+         * <tt>Manifold.gluing_equations()</tt>.
+         *
+         * @return a newly allocated matrix with (\a number_of_rows +
+         * \a number_of_cusps) rows and (3 * \a number_of_tetrahedra) columns
+         * as described above, or 0 if this is a null triangulation.
+         */
+        NMatrixInt* gluingEquations() const;
+
         /*@}*/
         /**
          * \name Cusps
@@ -604,7 +644,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * @author William Pettersson and Stephan Tillmann
          *
          * @return a newly allocated matrix with (2 * \a number_of_cusps) rows
-         * and (3 * \a number_of_tetrahedron) columns as described above,
+         * and (3 * \a number_of_tetrahedra) columns as described above,
          * or 0 if this is a null triangulation.
          */
         NMatrixInt* slopeEquations() const;

@@ -267,16 +267,52 @@ void NSnapPeaTriangulation::randomize() {
     sync();
 }
 
+NMatrixInt* NSnapPeaTriangulation::gluingEquations() const {
+    if (! data_)
+        return 0;
+
+    NMatrixInt* matrix = new NMatrixInt(getNumberOfEdges() +
+        2 * data_->num_cusps, 3 * getNumberOfTetrahedra());
+
+    int numRows, numCols;
+    int row, j;
+
+    int** edgeEqns = regina::snappea::get_gluing_equations(data_,
+        &numRows, &numCols);
+    for (row = 0; row < numRows; ++row)
+        for (j = 0; j < numCols; ++j)
+            matrix->entry(row, j) = edgeEqns[row][j];
+    regina::snappea::free_gluing_equations(edgeEqns, numRows);
+
+    int c;
+    int* cuspEqn;
+    for (c = 0; c < data_->num_cusps; ++c) {
+        cuspEqn = regina::snappea::get_cusp_equation(data_, c, 1, 0, &numCols);
+        for (j = 0; j < numCols; ++j)
+            matrix->entry(row, j) = cuspEqn[j];
+        regina::snappea::free_cusp_equation(cuspEqn);
+        ++row;
+
+        cuspEqn = regina::snappea::get_cusp_equation(data_, c, 0, 1, &numCols);
+        for (j = 0; j < numCols; ++j)
+            matrix->entry(row, j) = cuspEqn[j];
+        regina::snappea::free_cusp_equation(cuspEqn);
+        ++row;
+    }
+
+    return matrix;
+}
+
 /**
  * Written by William Pettersson, 2011.
  */
 NMatrixInt* NSnapPeaTriangulation::slopeEquations() const {
-    int i,j;
     if (! data_)
         return 0;
 
     NMatrixInt* matrix =
         new NMatrixInt(2*data_->num_cusps, 3*data_->num_tetrahedra);
+    int i,j;
     for(i=0; i< data_->num_cusps; i++) {
         int numRows;
         // SnapPea returns "a b c" for each tetrahedron, where the
