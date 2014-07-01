@@ -40,7 +40,7 @@
 
 namespace regina {
 
-bool NNormalSurfaceVector::isVertexLinking(NTriangulation* triang) const {
+bool NNormalSurfaceVector::isVertexLinking(const NTriangulation* triang) const {
     unsigned long nTets = triang->getNumberOfTetrahedra();
     unsigned long tet;
     int type;
@@ -57,7 +57,7 @@ bool NNormalSurfaceVector::isVertexLinking(NTriangulation* triang) const {
     return true;
 }
 
-const NVertex* NNormalSurfaceVector::isVertexLink(NTriangulation* triang)
+const NVertex* NNormalSurfaceVector::isVertexLink(const NTriangulation* triang)
         const {
     unsigned long nTets = triang->getNumberOfTetrahedra();
     unsigned long tet;
@@ -81,7 +81,7 @@ const NVertex* NNormalSurfaceVector::isVertexLink(NTriangulation* triang)
     NVertex* ans = 0;
     NLargeInteger ansMult;
 
-    NTetrahedron* t;
+    const NTetrahedron* t;
     NVertex* v;
     NLargeInteger coord;
 
@@ -132,7 +132,7 @@ const NVertex* NNormalSurfaceVector::isVertexLink(NTriangulation* triang)
 }
 
 std::pair<const NEdge*, const NEdge*> NNormalSurfaceVector::isThinEdgeLink(
-        NTriangulation* triang) const {
+        const NTriangulation* triang) const {
     unsigned long nTets = triang->getNumberOfTetrahedra();
     unsigned long tet;
     int type;
@@ -152,7 +152,7 @@ std::pair<const NEdge*, const NEdge*> NNormalSurfaceVector::isThinEdgeLink(
     const NEdge* ans[2];
     NLargeInteger ansMultDouble;
 
-    NTetrahedron* t;
+    const NTetrahedron* t;
     NEdge* e[6]; // { 2*link, 4*intersect }
     NLargeInteger coord;
     int i;
