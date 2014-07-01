@@ -249,14 +249,6 @@ NSnapPeaTriangulation* NSnapPeaTriangulation::canonize() const {
     return ans;
 }
 
-void NSnapPeaTriangulation::reset(regina::snappea::Triangulation* data) {
-    if (data_)
-        regina::snappea::free_triangulation(data_);
-    data_ = data;
-
-    sync();
-}
-
 void NSnapPeaTriangulation::randomize() {
     if (! data_)
         return;
@@ -432,6 +424,31 @@ void NSnapPeaTriangulation::saveAsSnapPea(const char* filename) const {
         regina::snappea::write_triangulation(data_, filename);
 }
 
+void NSnapPeaTriangulation::writeXMLPacketData(std::ostream& out) const {
+    if (! data_)
+        return;
+
+    out << "  <snappea>" << regina::xml::xmlEncodeSpecialChars(snapPea())
+        << "</snappea>\n";
+}
+
+NTriangulation* NSnapPeaTriangulation::toRegina() const {
+    if (data_) {
+        NTriangulation* ans = new NTriangulation(*this);
+        ans->setPacketLabel(get_triangulation_name(data_));
+        return ans;
+    } else
+        return 0;
+}
+
+void NSnapPeaTriangulation::packetWasChanged(NPacket* packet) {
+    // If the triangulation is changed "illegitimately", via the
+    // inherited NTriangulation interface, then convert this to a null
+    // triangulation.
+    if (packet == this && data_ && ! syncing_)
+        reset(0);
+}
+
 void NSnapPeaTriangulation::sync() {
     // TODO: Check first whether anything has changed, and only resync
     // the NTriangulation data if it has.
@@ -491,29 +508,12 @@ void NSnapPeaTriangulation::sync() {
     syncing_ = false;
 }
 
-void NSnapPeaTriangulation::writeXMLPacketData(std::ostream& out) const {
-    if (! data_)
-        return;
+void NSnapPeaTriangulation::reset(regina::snappea::Triangulation* data) {
+    if (data_)
+        regina::snappea::free_triangulation(data_);
+    data_ = data;
 
-    out << "  <snappea>" << regina::xml::xmlEncodeSpecialChars(snapPea())
-        << "</snappea>\n";
-}
-
-NTriangulation* NSnapPeaTriangulation::toRegina() const {
-    if (data_) {
-        NTriangulation* ans = new NTriangulation(*this);
-        ans->setPacketLabel(get_triangulation_name(data_));
-        return ans;
-    } else
-        return 0;
-}
-
-void NSnapPeaTriangulation::packetWasChanged(NPacket* packet) {
-    // If the triangulation is changed "illegitimately", via the
-    // inherited NTriangulation interface, then convert this to a null
-    // triangulation.
-    if (packet == this && data_ && ! syncing_)
-        reset(0);
+    sync();
 }
 
 } // namespace regina
