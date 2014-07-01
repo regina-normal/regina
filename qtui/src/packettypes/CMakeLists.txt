@@ -15,6 +15,7 @@ SET ( FILES
   npdfui
   nscriptui
   nsnappeacreator
+  nsnappeafile
   nsnappeagluings
   nsnappeaui
   nsurfacecompatui
@@ -47,6 +48,7 @@ SET ( MOC_FILES
   nnormalsurfaceui.h
   nscriptui.h
   nsnappeacreator.h
+  nsnappeafile.h
   nsnappeagluings.h
   nsnappeaui.h
   nsurfacecompatui.h

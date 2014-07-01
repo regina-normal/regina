@@ -41,6 +41,7 @@
 #include "ntrialgebra.h"
 #include "ntricomposition.h"
 #include "nsnappeaui.h"
+#include "nsnappeafile.h"
 #include "nsnappeagluings.h"
 #include "ntriskeleton.h"
 #include "packeteditiface.h"
@@ -70,6 +71,7 @@ NSnapPeaUI::NSnapPeaUI(regina::NSnapPeaTriangulation* packet,
     addTab(skeleton, QObject::tr("&Skeleton"));
     addTab(algebra, QObject::tr("&Algebra"));
     addTab(new NTriCompositionUI(packet, this), QObject::tr("&Composition"));
+    addTab(new NSnapPeaFileUI(packet, this), QObject::tr("&File"));
 
     editIface = new PacketEditTabbedUI(this);
 }
