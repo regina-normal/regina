@@ -59,7 +59,7 @@ std::complex<double> NSnapPeaTriangulation::zero_(0, 0);
 
 NSnapPeaTriangulation::NSnapPeaTriangulation(
         const std::string& fileNameOrContents) :
-        data_(0), shape_(0), syncing_(false) {
+        data_(0), shape_(0), cusp_(0), syncing_(false) {
     try {
         if (startsWith(fileNameOrContents, "% Triangulation"))
             data_ = regina::snappea::read_triangulation_from_string(
@@ -81,7 +81,7 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(
 }
 
 NSnapPeaTriangulation::NSnapPeaTriangulation(const NSnapPeaTriangulation& tri) :
-        data_(0), shape_(0), syncing_(false) {
+        data_(0), shape_(0), cusp_(0), syncing_(false) {
     if (tri.data_) {
         regina::snappea::copy_triangulation(tri.data_, &data_);
         sync();
@@ -91,7 +91,7 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NSnapPeaTriangulation& tri) :
 
 NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri,
         bool allowClosed) :
-        data_(0), shape_(0), syncing_(false) {
+        data_(0), shape_(0), cusp_(0), syncing_(false) {
     const NSnapPeaTriangulation* clone =
         dynamic_cast<const NSnapPeaTriangulation*>(&tri);
     if (clone) {
@@ -210,6 +210,7 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri,
 NSnapPeaTriangulation::~NSnapPeaTriangulation() {
     unlisten(this);
     delete[] shape_;
+    delete[] cusp_;
     regina::snappea::free_triangulation(data_);
 }
 
@@ -465,6 +466,7 @@ void NSnapPeaTriangulation::sync() {
         if (getNumberOfTetrahedra())
             removeAllTetrahedra();
         delete[] shape_;
+        delete[] cusp_;
 
         if (data_) {
             regina::snappea::TriangulationData* tData;
@@ -483,8 +485,7 @@ void NSnapPeaTriangulation::sync() {
                             tet[tData->tetrahedron_data[i].neighbor_index[j]],
                             NPerm4(tData->tetrahedron_data[i].gluing[j]));
 
-            delete[] tet;
-
+            regina::snappea::Tetrahedron* stet;
             if (solutionType() == not_attempted) {
                 shape_ = 0;
             } else {
@@ -492,20 +493,39 @@ void NSnapPeaTriangulation::sync() {
                 // data structures, since SnapPea's get_tet_shape()
                 // function is linear time (per tetrahedron).
                 shape_ = new std::complex<double>[tData->num_tetrahedra];
-                regina::snappea::Tetrahedron* tet = data_->tet_list_begin.next;
+                stet = data_->tet_list_begin.next;
                 regina::snappea::ComplexWithLog* shape;
-                for (unsigned i = 0; i < tData->num_tetrahedra; ++i) {
-                    shape = &tet->shape[regina::snappea::filled]->
+                for (i = 0; i < tData->num_tetrahedra; ++i) {
+                    shape = &stet->shape[regina::snappea::filled]->
                             cwl[regina::snappea::ultimate][0 /* fixed */];
                     shape_[i] = std::complex<double>(
                         shape->rect.real, shape->rect.imag);
-                    tet = tet->next;
+                    stet = stet->next;
                 }
             }
 
+            cusp_ = new CuspInfo[data_->num_cusps];
+            regina::snappea::Cusp* c = data_->cusp_list_begin.next;
+            for (i = 0; i < data_->num_cusps; ++i) {
+                cusp_[c->index].complete = c->is_complete;
+                cusp_[c->index].vertex = 0;
+                c = c->next;
+            }
+            stet = data_->tet_list_begin.next;
+            for (i = 0; i < tData->num_tetrahedra; ++i) {
+                for (j = 0; j < 4; ++j) {
+                    c = stet->cusp[j];
+                    if (cusp_[c->index].vertex == 0)
+                        cusp_[c->index].vertex = tet[i]->getVertex(j);
+                }
+                stet = stet->next;
+            }
+
+            delete[] tet;
             regina::snappea::free_triangulation_data(tData);
         } else {
             shape_ = 0;
+            cusp_ = 0;
         }
 
         // The packet change event (which we are listening to) will be

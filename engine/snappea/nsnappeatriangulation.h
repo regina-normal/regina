@@ -231,6 +231,18 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         } SolutionType;
 
     private:
+        /**
+         * A private structure used to cache information about each cusp of
+         * the internal SnapPea triangulation.
+         */
+        struct CuspInfo {
+            NVertex* vertex;
+                /**< The corresponding vertex of the Regina triangulation. */
+            bool complete;
+                /**< \c true if the cusp is complete, or \c false if it
+                     is filled. */
+        };
+
         regina::snappea::Triangulation* data_;
             /**< The triangulation stored in SnapPea's native format,
                  or 0 if this is a null triangulation. */
@@ -238,8 +250,12 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
             /**< The array of tetrahedron shapes, in rectangular form, using a
                  fixed coordinate system (fixed alignment in SnapPea's
                  terminology).  All shapes are with respect to the Dehn filled
-                 hyperbolic structure.  If the solution type is not_attempted,
-                 then shape_ will be 0 instead. */
+                 hyperbolic structure.  If this is a null triangulation or the
+                 solution type is not_attempted, then shape_ will be 0. */
+        CuspInfo* cusp_;
+            /**< An array that caches information about each cusp of the
+                 internal SnapPea triangulation.  If this is a null
+                 triangulation then cusp_ will be 0. */
         bool syncing_;
             /**< Set to \c true whilst sync() is being called.  This allows the
                  internal packet listener to distinguish between "legitimate"
@@ -502,6 +518,46 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * @return the shape of the given tetrahedron, in rectangular form.
          */
         const std::complex<double>& shape(unsigned tet) const;
+
+        /*@}*/
+        /**
+         * \name Cusps
+         */
+        /*@{*/
+
+        /**
+         * Identifies which vertex of the inherited NTriangulation
+         * corresponds to the given SnapPea cusp.
+         *
+         * When the triangulation is first constructed, SnapPea's cusp \a i
+         * will typically correspond to Regina's vertex \a i.  However,
+         * if SnapPea manipulates the triangulation (e.g., through randomize()),
+         * there is no guarantee that SnapPea and Regina will maintain the
+         * same numbering (since in general Regina does not preserve indices
+         * of skeletal objects through changes to a triangulation, whereas
+         * SnapPea maintains the cusp indices across changes).
+         * This routine can be used to detect when SnapPea's and Regina's
+         * numbering fall out of sync, and to translate between them
+         * if/when this happens.
+         *
+         * @param cusp the index of a cusp according to SnapPea; this must be
+         * between 0 and getNumberOfBoundaryComponents()-1 inclusive.
+         * @return the corresponding vertex of the triangulation according
+         * to Regina.
+         */
+        NVertex* cuspVertex(unsigned cusp) const;
+
+        /**
+         * Determines whether the given cusp is complete or filled.
+         *
+         * \snappy In SnapPy, this routine corresponds to calling
+         * <tt>Manifold.cusp_info('is_complete')[cusp]</tt>.
+         *
+         * @param cusp the index of a cusp according to SnapPea; this must be
+         * between 0 and getNumberOfBoundaryComponents()-1 inclusive.
+         * @return \c true if the cusp is complete, or \c false if it is filled.
+         */
+        bool cuspComplete(unsigned cusp) const;
 
         /**
          * Returns a matrix for computing boundary slopes of
@@ -815,7 +871,7 @@ inline SnapPeaFatalError::SnapPeaFatalError(
 // Inline functions for NSnapPeaTriangulation
 
 inline NSnapPeaTriangulation::NSnapPeaTriangulation() :
-        data_(0), shape_(0), syncing_(false) {
+        data_(0), shape_(0), cusp_(0), syncing_(false) {
     listen(this);
 }
 
@@ -826,6 +882,14 @@ inline bool NSnapPeaTriangulation::isNull() const {
 inline const std::complex<double>& NSnapPeaTriangulation::shape(unsigned tet)
         const {
     return (shape_ ? shape_[tet] : zero_);
+}
+
+inline NVertex* NSnapPeaTriangulation::cuspVertex(unsigned cusp) const {
+    return (cusp_ ? cusp_[cusp].vertex : 0);
+}
+
+inline bool NSnapPeaTriangulation::cuspComplete(unsigned cusp) const {
+    return (cusp_ ? cusp_[cusp].complete : false);
 }
 
 inline bool NSnapPeaTriangulation::dependsOnParent() const {
