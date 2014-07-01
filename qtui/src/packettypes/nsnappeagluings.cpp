@@ -110,7 +110,6 @@ NSnapPeaGluingsUI::NSnapPeaGluingsUI(regina::NSnapPeaTriangulation* packet,
     actToRegina->setIcon(ReginaSupport::regIcon("packet_triangulation"));
     actToRegina->setToolTip(tr(
         "Copy this to a Regina triangulation"));
-    actToRegina->setEnabled(readWrite);
     actToRegina->setWhatsThis(tr("Copy this to one of Regina's native "
         "3-manifold triangulations.<p>"
         "This will allow you to use Regina's full suite of tools to "
