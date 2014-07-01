@@ -177,6 +177,12 @@ class ReginaMain : public QMainWindow {
         regina::NPacket* getPacketTree();
 
         /**
+         * Return the currently selected packet in the packet tree,
+         * or 0 if nothing is selected.
+         */
+        regina::NPacket* selectedPacket();
+
+        /**
          * Indicate that the file is dirty.
          */
         virtual void setModified(bool modified);
@@ -312,6 +318,7 @@ class ReginaMain : public QMainWindow {
         void newFilter();
         void newNormalSurfaces();
         void newPDF();
+        void newSnapPeaTriangulation();
         void newScript();
         void newText();
         void newTriangulation();

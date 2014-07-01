@@ -147,6 +147,10 @@ void ReginaMain::unplugPacketMenu() {
     }
 }
 
+regina::NPacket* ReginaMain::selectedPacket() {
+    return treeView->selectedPacket();
+}
+
 void ReginaMain::setModified(bool modified) {
     dirty = modified;
     actSave->setEnabled(modified);
