@@ -43,6 +43,7 @@
 #include "nsnappeaui.h"
 #include "nsnappeafile.h"
 #include "nsnappeagluings.h"
+#include "nsnappeashapes.h"
 #include "ntriskeleton.h"
 #include "packeteditiface.h"
 #include "reginamain.h"
@@ -70,6 +71,7 @@ NSnapPeaUI::NSnapPeaUI(regina::NSnapPeaTriangulation* packet,
     addTab(gluings, QObject::tr("&Gluings"));
     addTab(skeleton, QObject::tr("&Skeleton"));
     addTab(algebra, QObject::tr("&Algebra"));
+    addTab(new NSnapPeaShapesUI(packet, this), QObject::tr("S&hapes && Cusps"));
     addTab(new NTriCompositionUI(packet, this), QObject::tr("&Composition"));
     addTab(new NSnapPeaFileUI(packet, this), QObject::tr("&File"));
 

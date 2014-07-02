@@ -17,6 +17,7 @@ SET ( FILES
   nsnappeacreator
   nsnappeafile
   nsnappeagluings
+  nsnappeashapes
   nsnappeaui
   nsurfacecompatui
   nsurfacecoordinateui
@@ -50,6 +51,7 @@ SET ( MOC_FILES
   nsnappeacreator.h
   nsnappeafile.h
   nsnappeagluings.h
+  nsnappeashapes.h
   nsnappeaui.h
   nsurfacecompatui.h
   nsurfacecoordinateui.h
