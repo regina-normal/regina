@@ -32,62 +32,49 @@
 
 /* end stub */
 
-/*! \file nsnappeaui.h
- *  \brief Provides an interface for viewing SnapPea triangulations.
+/*! \file nsnappeaalgebra.h
+ *  \brief Provides an algebra viewer for SnapPea triangulations.
  */
 
-#ifndef __NSNAPPEAUI_H
-#define __NSNAPPEAUI_H
+#ifndef __NSNAPPEAALGEBRA_H
+#define __NSNAPPEAALGEBRA_H
 
 #include "../packettabui.h"
 
-class QToolBar;
-class NSnapPeaAlgebraUI;
-class NSnapPeaGluingsUI;
-class NTriSkeletonUI;
-class PacketEditIface;
+class NSnapPeaFundGroupUI;
 class QLabel;
+class QLineEdit;
+class QListWidget;
+class QTreeWidget;
+class QPushButton;
 
 namespace regina {
+    class NPacket;
     class NSnapPeaTriangulation;
 };
 
 /**
- * A packet interface for viewing 3-manifold triangulations.
+ * A triangulation page for viewing algebraic properties.
  */
-class NSnapPeaUI : public PacketTabbedUI {
-    Q_OBJECT
-
+class NSnapPeaAlgebraUI : public PacketTabbedViewerTab {
     private:
         /**
          * Internal components
          */
-        NSnapPeaGluingsUI* gluings;
-        NTriSkeletonUI* skeleton;
-        NSnapPeaAlgebraUI* algebra;
-
-        PacketEditIface* editIface;
+        NSnapPeaFundGroupUI* fundGroup;
 
     public:
         /**
-         * Constructor and destructor.
+         * Constructor.
          */
-        NSnapPeaUI(regina::NSnapPeaTriangulation* packet,
-            PacketPane* newEnclosingPane);
-        ~NSnapPeaUI();
-
-        /**
-         * PacketUI overrides.
-         */
-        PacketEditIface* getEditIface();
-        const QLinkedList<QAction*>& getPacketTypeActions();
-        QString getPacketMenuText() const;
+        NSnapPeaAlgebraUI(regina::NSnapPeaTriangulation* packet,
+                PacketTabbedUI* useParentUI);
 };
 
 /**
- * A header for the SnapPea triangulation viewer.
+ * A triangulation page for viewing homology groups.
  */
-class NSnapPeaHeaderUI : public PacketViewerTab {
+class NSnapPeaHomologyUI : public PacketViewerTab {
     private:
         /**
          * Packet details
@@ -98,20 +85,58 @@ class NSnapPeaHeaderUI : public PacketViewerTab {
          * Internal components
          */
         QWidget* ui;
-        QLabel* header;
-        QToolBar* bar;
+        QLabel* H1;
+        QLabel* H1Rel;
+        QLabel* H1Bdry;
+        QLabel* H2;
+        QLabel* H2Z2;
 
     public:
         /**
          * Constructor.
          */
-        NSnapPeaHeaderUI(regina::NSnapPeaTriangulation* packet,
-                PacketTabbedUI* useParentUI);
+        NSnapPeaHomologyUI(regina::NSnapPeaTriangulation* packet,
+                PacketTabbedViewerTab* useParentUI);
 
         /**
-         * Component queries.
+         * PacketViewerTab overrides.
          */
-        QToolBar* getToolBar();
+        regina::NPacket* getPacket();
+        QWidget* getInterface();
+        void refresh();
+        void editingElsewhere();
+};
+
+/**
+ * A triangulation page for viewing the fundamental group.
+ */
+class NSnapPeaFundGroupUI : public QObject, public PacketViewerTab {
+    Q_OBJECT
+
+    private:
+        /**
+         * Packet details
+         */
+        regina::NSnapPeaTriangulation* tri;
+
+        /**
+         * Internal components
+         */
+        QWidget* ui;
+        QLabel* fundName;
+        QLabel* fundGens;
+        QLabel* fundRelCount;
+        QListWidget* fundRels;
+        QPushButton* btnGAP;
+        QPushButton* btnSimp;
+        unsigned simpDepth;
+
+    public:
+        /**
+         * Constructor.
+         */
+        NSnapPeaFundGroupUI(regina::NSnapPeaTriangulation* packet,
+                PacketTabbedViewerTab* useParentUI);
 
         /**
          * PacketViewerTab overrides.
@@ -121,18 +146,22 @@ class NSnapPeaHeaderUI : public PacketViewerTab {
         void refresh();
         void editingElsewhere();
 
+    public slots:
         /**
-         * Allow other UIs to access the summary information.
+         * Group simplification actions.
          */
-        static QString summaryInfo(regina::NSnapPeaTriangulation* tri);
+        void simplifyGAP();
+        /**
+         * Our internal pi1 simplification code.
+         */
+        void simplifyPi1();
+
+    private:
+        /**
+         * Returns the full path to the GAP executable, or QString::null
+         * if the GAP executable does not appear to be valid.
+         */
+        QString verifyGAPExec();
 };
-
-inline PacketEditIface* NSnapPeaUI::getEditIface() {
-    return editIface;
-}
-
-inline QToolBar* NSnapPeaHeaderUI::getToolBar() {
-    return bar;
-}
 
 #endif

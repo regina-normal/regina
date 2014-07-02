@@ -38,12 +38,12 @@
 #include "snappea/nsnappeatriangulation.h"
 
 // UI includes:
-#include "ntrialgebra.h"
-#include "ntricomposition.h"
 #include "nsnappeaui.h"
+#include "nsnappeaalgebra.h"
 #include "nsnappeafile.h"
 #include "nsnappeagluings.h"
 #include "nsnappeashapes.h"
+#include "ntricomposition.h"
 #include "ntriskeleton.h"
 #include "packeteditiface.h"
 #include "reginamain.h"
@@ -63,7 +63,7 @@ NSnapPeaUI::NSnapPeaUI(regina::NSnapPeaTriangulation* packet,
     gluings = new NSnapPeaGluingsUI(packet, this,
         newEnclosingPane->isReadWrite());
     skeleton = new NTriSkeletonUI(packet, this);
-    algebra = new NTriAlgebraUI(packet, this);
+    algebra = new NSnapPeaAlgebraUI(packet, this);
 
     gluings->fillToolBar(header->getToolBar());
 
