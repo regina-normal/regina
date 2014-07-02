@@ -221,20 +221,50 @@ regina::NPacket* NSnapPeaTriangulationCreator::createPacket(regina::NPacket*,
             return 0;
         }
         if ((! from->isConnected()) || from->hasBoundaryTriangles() ||
-                (! from->isIdeal()) || (! from->isValid()) ||
-                (! from->isStandard()) ||
-                from->getNumberOfBoundaryComponents() <
-                    from->getNumberOfVertices()) {
+                (! from->isValid()) || (! from->isStandard())) {
             ReginaSupport::info(parentWidget,
                 QObject::tr("I cannot convert this triangulation to "
                     "SnapPea."),
-                QObject::tr("I can only convert ideal triangulations that are "
-                    "valid and connected, and in which every vertex link "
-                    "is a torus or Klein bottle."));
+                QObject::tr("I can only convert triangulations that are "
+                    "(i) valid and connected; "
+                    "(ii) have no boundary triangles; and "
+                    "(iii) where every ideal vertex has a torus or "
+                    "Klein bottle link."));
+            return 0;
+        }
+        if (from->isIdeal()) {
+            if (from->getNumberOfVertices() >
+                    from->getNumberOfBoundaryComponents()) {
+                ReginaSupport::info(parentWidget,
+                    QObject::tr("I cannot convert this triangulation to "
+                        "SnapPea."),
+                    QObject::tr("<qt>This triangulation contains both ideal "
+                        "and internal vertices.  SnapPea requires every "
+                        "vertex to be ideal.<p>"
+                        "Please simplify the triangulation "
+                        "and try again.</qt>"));
+                return 0;
+            }
+        } else if (! ReginaPrefSet::global().snapPeaClosed) {
+            ReginaSupport::info(parentWidget,
+                QObject::tr("I cannot convert this triangulation to "
+                    "SnapPea."),
+                QObject::tr("By default, Regina does not send closed manifolds "
+                    "to SnapPea.  You can change this behaviour through "
+                    "Regina's preferences."));
+            return 0;
+        } else if (from->getNumberOfVertices() > 1) {
+            ReginaSupport::info(parentWidget,
+                QObject::tr("I cannot convert this triangulation to "
+                    "SnapPea."),
+                QObject::tr("<qt>For closed manifolds, Regina will only send "
+                    "one-vertex triangulations to SnapPea.<p>"
+                    "Please simplify the triangulation and try again.</qt>"));
             return 0;
         }
 
-        NSnapPeaTriangulation* ans = new NSnapPeaTriangulation(*from);
+        NSnapPeaTriangulation* ans = new NSnapPeaTriangulation(*from,
+            true /* allow closed, since we checked this above. */);
         if (ans->isNull()) {
             ReginaSupport::info(parentWidget,
                 QObject::tr("I was not able to convert this "
