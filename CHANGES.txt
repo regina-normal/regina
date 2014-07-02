@@ -84,6 +84,11 @@ Version 4.96  [ (under development) ]
             - Routine boundarySlopes() now requires the underlying
               triangulation to be of type NSnapPeaTriangulation, and it takes
               the meridian and longitude directly from the SnapPea kernel.
+              It also now orders its rows by SnapPea cusp indices (not Regina's
+              vertex indices); this is identical to past behaviour, but now
+              that SnapPea triangulations can be modified through the SnapPea
+              kernel, it is possible for the numbering schemes to differ
+              and so this distinction now matters.
             - Renamed getEulerCharacteristic() to getEulerChar(), which
               is easier on the fingers.  The old name has been kept as a
               deprecated alias for backward compatibility.
@@ -138,6 +143,10 @@ Version 4.96  [ (under development) ]
               NTriangulation::saveSnapPea() so that they output all
               SnapPea-specific data.
             - New routine name() to access SnapPea's internal manifold name.
+            - New routine shape() to access tetrahedron shapes.
+            - New routines cuspVertex() and cuspComplete() for querying cusps.
+            - New routines gluingEquations() and gluingEquationsRect() to
+              construct Thurston's gluing equations.
             - Renamed saveAsSnapPea() to saveSnapPea() (see above).  The new
               routine now returns a boolean, and requires a non-empty filename.
               The old name is deprecated but kept for backward compatibility.
@@ -145,6 +154,13 @@ Version 4.96  [ (under development) ]
               write the resulting string to standard output.
             - Routine canonize() now returns a (richer) NSnapPeaTriangulation,
               and has a new synonym canonise().
+            - Routine solutionType() now returns the filled solution type
+              (not the complete solution type).
+            - Routine slopeEquations() now orders rows by SnapPea cusp indices
+              (not Regina's vertex indices).  This is identical to past
+              behaviour, but now that SnapPea triangulations can be modified
+              through the SnapPea kernel, it is possible for the numbering
+              schemes to differ and so this distinction now matters.
             - Routines toRegina() and verifyTriangulation() are deprecated,
               since they are obsolete now that NSnapPeaTriangulation inherits
               from NTriangulation.

@@ -45,6 +45,7 @@
 
 #include "regina-core.h"
 #include "triangulation/ntriangulation.h"
+#include <complex>
 
 namespace regina {
 
@@ -196,7 +197,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
     public:
         /**
          * Describes the different types of solution that can be found when
-         * solving for a complete hyperbolic structure.
+         * solving for a hyperbolic structure.
          *
          * Although this enumeration is identical to SnapPea's own
          * SolutionType, it is declared again in this class because Regina
@@ -230,9 +231,32 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         } SolutionType;
 
     private:
+        /**
+         * A private structure used to cache information about each cusp of
+         * the internal SnapPea triangulation.
+         */
+        struct CuspInfo {
+            NVertex* vertex;
+                /**< The corresponding vertex of the Regina triangulation. */
+            bool complete;
+                /**< \c true if the cusp is complete, or \c false if it
+                     is filled. */
+        };
+
         regina::snappea::Triangulation* data_;
             /**< The triangulation stored in SnapPea's native format,
                  or 0 if this is a null triangulation. */
+        std::complex<double>* shape_;
+            /**< The array of tetrahedron shapes, in rectangular form, using a
+                 fixed coordinate system (fixed alignment in SnapPea's
+                 terminology).  All shapes are with respect to the Dehn filled
+                 hyperbolic structure.  If this is a null triangulation, or if
+                 the solution type is no_solution or not_attempted, then
+                 shape_ will be 0. */
+        CuspInfo* cusp_;
+            /**< An array that caches information about each cusp of the
+                 internal SnapPea triangulation.  If this is a null
+                 triangulation then cusp_ will be 0. */
         bool syncing_;
             /**< Set to \c true whilst sync() is being called.  This allows the
                  internal packet listener to distinguish between "legitimate"
@@ -242,8 +266,17 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         static bool kernelMessages_;
             /**< Should the SnapPea kernel write diagnostic messages to
                  standard output? */
+        static std::complex<double> zero_;
+            /**< The complex number 0.  This is defined as a data member
+                 so that shape() can still return a reference even when
+                 no tetrahedron shapes have been computed. */
 
     public:
+        /**
+         * \name Constructors and Destructors
+         */
+        /*@{*/
+
         /**
          * Creates a null triangulation, with no internal SnapPea data at all.
          */
@@ -261,7 +294,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * such as peripheral curves).
          *
          * If this operation is successful, this constructor will immediately
-         * ask SnapPea to try to find a complete hyperbolic structure.
+         * ask SnapPea to try to find a hyperbolic structure.
          *
          * If this operation fails (e.g., if the given string does not
          * represent a valid SnapPea data file), then this will be a
@@ -328,24 +361,25 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          *   Regina will attempt to convert this triangulation to
          *   SnapPea format.  If the conversion is successful, this
          *   constructor will immediately ask SnapPea to try to find a
-         *   complete hyperbolic structure.
+         *   hyperbolic structure.
          *
          * Regarding peripheral curves: native Regina triangulations do not
          * store or use peripheral curves themselves, and so this constructor
          * makes a default choice during the conversion process.  Specifically:
          *
-         * - On each cusp, the meridian and longitude are chosen to be the
+         * - If solution_type() is geometric_solution or nongeometric_solution,
+         *   then on each cusp the meridian and longitude are chosen to be the
          *   (shortest, second shortest) basis, and their orientations
          *   follow the convention used by the \e SnapPy kernel.  Be warned,
          *   however, that this choice might not be unique for some cusp shapes,
          *   and the resolution of such ambiguities might be machine-dependent.
          *
-         * - In some cases SnapPea throws a fatal error when attempting
-         *   to install the (shortest, second shortest) basis; this is
-         *   seen for instance in some flat and degenerate triangulations.
-         *   If this happens then Regina will accept whatever basis SnapPea
-         *   installs by default, but be warned that this default basis
-         *   may change with newer versions of the SnapPea kernel.
+         * - If solution_type() is something else (e.g., degenerate or flat),
+         *   or if SnapPea throws a fatal error when attempting to install the
+         *   (shortest, second shortest) basis as described above, then Regina
+         *   will accept whatever basis SnapPea installs by default.  Be warned
+         *   that this default basis may change (and indeed has changed in the
+         *   past) across different versions of the SnapPea kernel.
          *
          * SnapPea is designed primarily to work with ideal
          * triangulations only.  Passing closed triangulations can
@@ -376,6 +410,12 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          */
         ~NSnapPeaTriangulation();
 
+        /*@}*/
+        /**
+         * \name Basic Properties
+         */
+        /*@{*/
+
         /**
          * Determines whether this triangulation contains valid SnapPea data.
          *
@@ -398,37 +438,48 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * If this is a null triangulation then the empty string will be
          * returned.
          *
+         * \snappy In SnapPy, this routine corresponds to calling
+         * <tt>Manifold.name()</tt>.
+         *
          * @return SnapPea's name for this triangulation.
          */
         std::string name() const;
 
+        /*@}*/
         /**
-         * Returns the type of solution found when solving for a complete
-         * hyperbolic structure.
+         * \name Hyperbolic Structures
+         */
+        /*@{*/
+
+        /**
+         * Returns the type of solution found when solving for a hyperbolic
+         * structure, with respect to the current Dehn filling (if any).
          *
-         * Note that SnapPea distinguishes between a complete hyperbolic
-         * structure and a Dehn filled hyperbolic structure.  At the present
-         * time Regina does not concern itself with Dehn fillings, so only
-         * the complete solution type is offered here.
+         * \snappy In SnapPy, this routine corresponds to calling
+         * <tt>Manifold.solution_type()</tt>.
          *
          * @return the solution type.
          */
         SolutionType solutionType() const;
 
         /**
-         * Computes the volume of the underlying 3-manifold.
+         * Computes the volume of the current solution to the hyperbolic
+         * gluing equations.
          *
-         * @return the volume of the underlying 3-manifold, or 0 if this
-         * is a null triangulation.
+         * \snappy In SnapPy, this routine corresponds to calling
+         * <tt>Manifold.volume()</tt>.
+         *
+         * @return the estimated volume of the underlying 3-manifold,
+         * or 0 if this is a null triangulation.
          */
         double volume() const;
 
         /**
-         * Computes the volume of the underlying 3-manifold and
-         * estimates the accuracy of the answer.
+         * Computes the volume of the current solution to the hyperbolic
+         * gluing equations, and estimates the accuracy of the answer.
          *
-         * @param precision used to return an estimate of the number of
-         * decimal places of accuracy in the calculated volume.
+         * \snappy In SnapPy, this routine corresponds to calling
+         * <tt>Manifold.volume(accuracy=True)</tt>.
          *
          * \ifacespython The \a precision argument is not present.
          * Instead, two routines are offered.  The routine \a volume()
@@ -436,21 +487,165 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * routine \a volumeWithPrecision() takes no arguments and
          * returns a (\a volume, \a precision) tuple.
          *
-         * @return the volume of the underlying 3-manifold, or 0 if this
-         * is a null triangulation.
+         * @param precision used to return an estimate of the number of
+         * decimal places of accuracy in the calculated volume.
+         *
+         * @return the estimated volume of the underlying 3-manifold,
+         * or 0 if this is a null triangulation.
          */
         double volume(int& precision) const;
+
+        /**
+         * Returns the shape of the given tetrahedron, with respect to
+         * the Dehn filled hyperbolic structure.
+         *
+         * Tetrahedron shapes are given in rectangular form, and using a
+         * fixed coordinate system (fixed alignment, in SnapPea's terminology).
+         *
+         * If this is a null triangulation, or if solutionType() is no_solution
+         * or not_attempted (i.e., we did not or could not solve for a
+         * hyperbolic structure), then this routine will simply return zero.
+         *
+         * This routine is fast constant time (unlike in SnapPea, where
+         * the corresponding routine \a get_tet_shape takes linear time).
+         * Therefore you can happily call this routine repeatedly without a
+         * significant performance penalty.
+         *
+         * \snappy In SnapPy, this routine corresponds to calling
+         * <tt>Manifold.tetrahedra_shapes(part='rect')[tet]</tt>.
+         *
+         * @param tet the index of a tetrahedron; this must be between
+         * 0 and getNumberOfTetrahedra()-1 inclusive.
+         * @return the shape of the given tetrahedron, in rectangular form.
+         */
+        const std::complex<double>& shape(unsigned tet) const;
+
+        /**
+         * Returns a matrix describing Thurston's gluing equations.
+         *
+         * Each row of this matrix will describe a single equation.
+         * The first getNumberOfEdges() rows will list the edge equations,
+         * and the following getNumberOfBoundaryComponents() rows will list
+         * the cusp equations.
+         *
+         * The edge equations will be ordered arbitrarily.  The cusp equations
+         * will be presented in pairs ordered by cusp index (as stored by
+         * SnapPea); within each pair the meridian equation will appear before
+         * the longitude equation.  You can use cuspVertex() to help translate
+         * between SnapPea's cusp indices and Regina's vertex indices.
+         *
+         * The matrix will contain <tt>3 * getNumberOfTetrahedra()</tt> columns.
+         * The first three columns represent shape parameters <tt>z</tt>,
+         * <tt>1/(1-z)</tt> and <tt>(z-1)/z</tt> for the first tetrahedron;
+         * the next three columns represent shape parameters <tt>z</tt>,
+         * <tt>1/(1-z)</tt> and <tt>(z-1)/z</tt> for the second tetrahedron,
+         * and so on.  By Regina's edge numbering conventions,
+         * <tt>z</tt> corresponds to edges 0 and 5 of the tetrahedron,
+         * <tt>1/(1-z)</tt> corresponds to edges 1 and 4 of the tetrahedron, and
+         * <tt>(z-1)/z</tt> corresponds to edges 2 and 3 of the tetrahedron.
+         *
+         * More specifically, a row of the form <tt>a b c d e f ...</tt>
+         * describes an equation with left hand side
+         * <tt>a * log(z0) + b * log(1/(1-z0)) + c * log((z0-1)/z) +
+         * d * log(z1) + ... = 2 pi i</tt>,
+         * and with right hand side <tt>2 pi i</tt> for an edge equation
+         * or 0 for a cusp equation.
+         *
+         * See also gluingEquationsRect(), which returns the gluing
+         * equations in a more streamlined form.
+         *
+         * \snappy In SnapPy, this routine corresponds to calling
+         * <tt>Manifold.gluing_equations()</tt>.
+         *
+         * @return a newly allocated matrix with (\a number_of_rows +
+         * \a number_of_cusps) rows and (3 * \a number_of_tetrahedra) columns
+         * as described above, or 0 if this is a null triangulation.
+         */
+        NMatrixInt* gluingEquations() const;
+
+        /**
+         * Returns a matrix describing Thurston's gluing equations in a
+         * streamlined form.
+         *
+         * Each row of this matrix will describe a single equation.
+         * The rows begin with the edge equations (in arbitrary order)
+         * followed by the cusp equations (ordered by cusp index); for
+         * precise details see the documentation for gluingEquations(),
+         * which uses the same ordering.
+         *
+         * The matrix will contain <tt>2 * getNumberOfTetrahedra() + 1</tt>
+         * columns.  Let \a k = getNumberOfTetrahedra()-1, and suppose the
+         * shape parameters for tetrahedra 0, 1, ..., k are
+         * \a z0, \a z1, ..., \a zk (here each shape parameter corresponds
+         * to edges 0 and 5 of the corresponding tetrahedron).
+         * Then a row of the form <tt>a0 b0 a1 b1 ... ak bk c</tt>
+         * describes the equation
+         * <tt>z0^a0 (1-z0)^b0 z1^a1 (1-z1)^b1 ... zk^ak (1-zk)^bk = c</tt>,
+         * where \a c will always be 1 or -1.
+         *
+         * See also gluingEquations(), which returns the gluing
+         * equations in a more transparent term-by-term form.
+         *
+         * \snappy In SnapPy, this routine corresponds to calling
+         * <tt>Manifold.gluing_equations(form='rect')</tt>.
+         *
+         * @return a newly allocated matrix with (\a number_of_rows +
+         * \a number_of_cusps) rows and (2 * \a number_of_tetrahedra + 1)
+         * columns as described above, or 0 if this is a null triangulation.
+         */
+        NMatrixInt* gluingEquationsRect() const;
+
+        /*@}*/
+        /**
+         * \name Cusps
+         */
+        /*@{*/
+
+        /**
+         * Identifies which vertex of the inherited NTriangulation
+         * corresponds to the given SnapPea cusp.
+         *
+         * When the triangulation is first constructed, SnapPea's cusp \a i
+         * will typically correspond to Regina's vertex \a i.  However,
+         * if SnapPea manipulates the triangulation (e.g., through randomize()),
+         * there is no guarantee that SnapPea and Regina will maintain the
+         * same numbering (since in general Regina does not preserve indices
+         * of skeletal objects through changes to a triangulation, whereas
+         * SnapPea maintains the cusp indices across changes).
+         * This routine can be used to detect when SnapPea's and Regina's
+         * numbering fall out of sync, and to translate between them
+         * if/when this happens.
+         *
+         * @param cusp the index of a cusp according to SnapPea; this must be
+         * between 0 and getNumberOfBoundaryComponents()-1 inclusive.
+         * @return the corresponding vertex of the triangulation according
+         * to Regina.
+         */
+        NVertex* cuspVertex(unsigned cusp) const;
+
+        /**
+         * Determines whether the given cusp is complete or filled.
+         *
+         * \snappy In SnapPy, this routine corresponds to calling
+         * <tt>Manifold.cusp_info('is_complete')[cusp]</tt>.
+         *
+         * @param cusp the index of a cusp according to SnapPea; this must be
+         * between 0 and getNumberOfBoundaryComponents()-1 inclusive.
+         * @return \c true if the cusp is complete, or \c false if it is filled.
+         */
+        bool cuspComplete(unsigned cusp) const;
 
         /**
          * Returns a matrix for computing boundary slopes of
          * spun-normal surfaces at the cusps of the triangulation.  This
          * matrix includes a pair of rows for each cusp in the triangulation:
          * one row for determining the algebraic intersection number
-         * with the meridian, and one row for determining the algebraic
-         * intersection number with the longitude.
+         * with the meridian, followed by one row for determining the
+         * algebraic intersection number with the longitude.
+         *
          * If the triangulation has more than one cusp, these pairs are
-         * ordered by vertex number in the triangulation.  Within each
-         * pair, the meridian row always appears before the longitude row.
+         * ordered by cusp index (as stored by SnapPea).  You can call
+         * cuspVertex() to map these to Regina's vertex indices if needed.
          *
          * This matrix is constructed so that, if \a M and \a L are the
          * rows for the meridian and longitude at some cusp, then for
@@ -469,6 +664,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * boundary curve, the spun-normal surface spirals into the cusp
          * to one's right and down into the manifold to one's left.
          *
+         * \snappy This has no corresponding routine in SnapPy.
+         *
          * \pre All vertex links in this triangulation must be tori.
          *
          * \warning If this triangulation was constructed from a Regina
@@ -483,10 +680,16 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * @author William Pettersson and Stephan Tillmann
          *
          * @return a newly allocated matrix with (2 * \a number_of_cusps) rows
-         * and (3 * \a number_of_tetrahedron) columns as described above,
+         * and (3 * \a number_of_tetrahedra) columns as described above,
          * or 0 if this is a null triangulation.
          */
         NMatrixInt* slopeEquations() const;
+
+        /*@}*/
+        /**
+         * \name Manipulating SnapPea triangulations
+         */
+        /*@{*/
 
         /**
          * Constructs the canonical retriangulation of the canonical
@@ -495,7 +698,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * The canonical cell decomposition is the one described in
          * "Convex hulls and isometries of cusped hyperbolic 3-manifolds",
          * Jeffrey R. Weeks, Topology Appl. 52 (1993), 127-149.
-         * The canoical retriangulation is defined as follows: If the
+         * The canonical retriangulation is defined as follows: If the
          * canonical cell decomposition is already a triangulation then
          * we leave it untouched.  Otherwise: (i) within each 3-cell of
          * the original complex we introduce a new internal (finite)
@@ -511,6 +714,11 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * If for any reason either Regina or SnapPea are unable to
          * construct the canonical retriangulation of the canonical cell
          * decomposition, this routine will return 0.
+         *
+         * \snappy This has no corresponding routine in SnapPy.  This is
+         * because, if the canonical cell decomposition is not a triangulation,
+         * SnapPy retriangulates in a way that is non-canonical but so
+         * that all vertices are ideal.
          *
          * \warning The SnapPea kernel does not always compute the canonical
          * cell decomposition correctly.  However, it guarantees that
@@ -534,25 +742,23 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * A synonym for canonize(), which constructs the canonical
          * retriangulation of the canonical cell decomposition.
          * See canonize() for further details.
-         *
-         * \pre This is an ideal triangulation, not a closed triangulation.
-         *
-         * @return the canonical triangulation of the canonical cell
-         * decomposition, or 0 if this could not be constructed.
          */
         NSnapPeaTriangulation* canonise() const;
 
         /**
          * Asks SnapPea to randomly retriangulate this manifold, using
          * local moves that preserve the topology.  This can help when SnapPea
-         * is having difficulty finding a complete hyperbolic structure.
+         * is having difficulty finding a hyperbolic structure.
          *
          * This routine uses SnapPea's own internal retriangulation code.
          *
          * After randomizing, this routine will immediately ask SnapPea
-         * to try to find a complete hyperbolic structure.
+         * to try to find a hyperbolic structure.
          *
          * If this is a null SnapPea triangulation, this routine does nothing.
+         *
+         * \snappy In SnapPy, this routine corresponds to calling
+         * <tt>Manifold.randomize()</tt>.
          */
         void randomize();
 
@@ -561,6 +767,12 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * retriangulate this manifold.  See randomize() for further details.
          */
         void randomise();
+
+        /*@}*/
+        /**
+         * \name Deprecated routines
+         */
+        /*@{*/
 
         /**
          * Deprecated routine that verifies whether the tetrahedron face
@@ -591,10 +803,6 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * NTriangulation).
          */
         NTriangulation* toRegina() const;
-
-        virtual std::string snapPea() const;
-        virtual void snapPea(std::ostream& out) const;
-        virtual bool saveSnapPea(const char* filename) const;
 
         /**
          * Deprecated routine that dumps the full internal SnapPea data to
@@ -627,7 +835,11 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          */
         void saveAsSnapPea(const char* filename) const;
 
-        virtual void writeTextShort(std::ostream& out) const;
+        /*@}*/
+        /**
+         * \name SnapPea kernel messages
+         */
+        /*@{*/
 
         /**
          * Returns whether or not the SnapPea kernel writes diagnostic
@@ -668,11 +880,38 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          */
         static void disableKernelMessages();
 
+        /*@}*/
+        /**
+         * \name SnapPea Input and Output
+         */
+        /*@{*/
+
+        virtual std::string snapPea() const;
+        virtual void snapPea(std::ostream& out) const;
+        virtual bool saveSnapPea(const char* filename) const;
+
+        /*@}*/
+        /**
+         * \name Packet Administration
+         */
+        /*@{*/
+
+        virtual void writeTextShort(std::ostream& out) const;
+        virtual void writeTextLong(std::ostream& out) const;
+
         virtual bool dependsOnParent() const;
         static NXMLPacketReader* getXMLReader(NPacket* parent,
             NXMLTreeResolver& resolver);
 
+        /*@}*/
+        /**
+         * \name Packet Listener Interface
+         */
+        /*@{*/
+
         virtual void packetWasChanged(NPacket* packet);
+
+        /*@}*/
 
     protected:
         virtual NPacket* internalClonePacket(NPacket* parent) const;
@@ -682,6 +921,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         /**
          * Synchronises the inherited NTriangulation data so that the
          * tetrahedra and their gluings match the raw SnapPea data.
+         * Also refreshes the internal array of tetrahedron shapes.
          */
         void sync();
 
@@ -708,12 +948,25 @@ inline SnapPeaFatalError::SnapPeaFatalError(
 // Inline functions for NSnapPeaTriangulation
 
 inline NSnapPeaTriangulation::NSnapPeaTriangulation() :
-        data_(0), syncing_(false) {
+        data_(0), shape_(0), cusp_(0), syncing_(false) {
     listen(this);
 }
 
 inline bool NSnapPeaTriangulation::isNull() const {
     return (data_ == 0);
+}
+
+inline const std::complex<double>& NSnapPeaTriangulation::shape(unsigned tet)
+        const {
+    return (shape_ ? shape_[tet] : zero_);
+}
+
+inline NVertex* NSnapPeaTriangulation::cuspVertex(unsigned cusp) const {
+    return (cusp_ ? cusp_[cusp].vertex : 0);
+}
+
+inline bool NSnapPeaTriangulation::cuspComplete(unsigned cusp) const {
+    return (cusp_ ? cusp_[cusp].complete : false);
 }
 
 inline bool NSnapPeaTriangulation::dependsOnParent() const {
