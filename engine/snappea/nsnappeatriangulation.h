@@ -982,9 +982,24 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         /**
          * Synchronises the inherited NTriangulation data so that the
          * tetrahedra and their gluings match the raw SnapPea data.
-         * Also refreshes the internal array of tetrahedron shapes.
+         * Also refreshes the internal arrays of cusps and tetrahedron shapes.
          */
         void sync();
+
+        /**
+         * Copies the given SnapPea triangulation into the given Regina
+         * triangulation.  Any fillings on the cusps will be ignored;
+         * the Regina triangulation will simply copy the raw
+         * combinatorial data of the triangulation, and nothing more.
+         *
+         * \pre The SnapPea triangulation \a src is non-null.
+         * \pre The Regina triangulation \a dest is empty.
+         *
+         * @param src the SnapPea triangulation to copy from.
+         * @param dest the destination Regina triangulation.
+         */
+        static void fillRegina(regina::snappea::Triangulation* src,
+            NTriangulation& dest);
 
         /**
          * Resets the internal SnapPea data to the given SnapPea triangulation.

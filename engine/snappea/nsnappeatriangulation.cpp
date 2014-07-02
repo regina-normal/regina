@@ -590,21 +590,9 @@ void NSnapPeaTriangulation::sync() {
         filledCusps_ = 0;
 
         if (data_) {
-            regina::snappea::TriangulationData* tData;
-            regina::snappea::triangulation_to_data(data_, &tData);
+            fillRegina(data_, *this);
 
-            NTetrahedron** tet = new NTetrahedron*[tData->num_tetrahedra];
-
-            int i, j;
-            for (i = 0; i < tData->num_tetrahedra; ++i)
-                tet[i] = newTetrahedron();
-
-            for (i = 0; i < tData->num_tetrahedra; ++i)
-                for (j = 0; j < 4; ++j)
-                    if (! tet[i]->adjacentTetrahedron(j))
-                        tet[i]->joinTo(j,
-                            tet[tData->tetrahedron_data[i].neighbor_index[j]],
-                            NPerm4(tData->tetrahedron_data[i].gluing[j]));
+            unsigned i, j;
 
             regina::snappea::Tetrahedron* stet;
             SolutionType soln = static_cast<SolutionType>(
@@ -615,10 +603,10 @@ void NSnapPeaTriangulation::sync() {
                 // Fetch the shapes directly from SnapPea's internal
                 // data structures, since SnapPea's get_tet_shape()
                 // function is linear time (per tetrahedron).
-                shape_ = new std::complex<double>[tData->num_tetrahedra];
+                shape_ = new std::complex<double>[getNumberOfTetrahedra()];
                 stet = data_->tet_list_begin.next;
                 regina::snappea::ComplexWithLog* shape;
-                for (i = 0; i < tData->num_tetrahedra; ++i) {
+                for (i = 0; i < getNumberOfTetrahedra(); ++i) {
                     shape = &stet->shape[regina::snappea::filled]->
                             cwl[regina::snappea::ultimate][0 /* fixed */];
                     shape_[i] = std::complex<double>(
@@ -637,17 +625,14 @@ void NSnapPeaTriangulation::sync() {
                 c = c->next;
             }
             stet = data_->tet_list_begin.next;
-            for (i = 0; i < tData->num_tetrahedra; ++i) {
+            for (i = 0; i < getNumberOfTetrahedra(); ++i) {
                 for (j = 0; j < 4; ++j) {
                     c = stet->cusp[j];
                     if (cusp_[c->index].vertex == 0)
-                        cusp_[c->index].vertex = tet[i]->getVertex(j);
+                        cusp_[c->index].vertex = getTetrahedron(i)->getVertex(j);
                 }
                 stet = stet->next;
             }
-
-            delete[] tet;
-            regina::snappea::free_triangulation_data(tData);
         } else {
             shape_ = 0;
             cusp_ = 0;
@@ -657,6 +642,30 @@ void NSnapPeaTriangulation::sync() {
         // fired at this point.
     }
     syncing_ = false;
+}
+
+void NSnapPeaTriangulation::fillRegina(regina::snappea::Triangulation* src,
+        NTriangulation& dest) {
+    ChangeEventSpan span(&dest);
+
+    regina::snappea::TriangulationData* tData;
+    regina::snappea::triangulation_to_data(src, &tData);
+
+    NTetrahedron** tet = new NTetrahedron*[tData->num_tetrahedra];
+
+    int i, j;
+    for (i = 0; i < tData->num_tetrahedra; ++i)
+        tet[i] = dest.newTetrahedron();
+
+    for (i = 0; i < tData->num_tetrahedra; ++i)
+        for (j = 0; j < 4; ++j)
+            if (! tet[i]->adjacentTetrahedron(j))
+                tet[i]->joinTo(j,
+                    tet[tData->tetrahedron_data[i].neighbor_index[j]],
+                    NPerm4(tData->tetrahedron_data[i].gluing[j]));
+
+    delete[] tet;
+    regina::snappea::free_triangulation_data(tData);
 }
 
 void NSnapPeaTriangulation::reset(regina::snappea::Triangulation* data) {
