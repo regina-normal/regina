@@ -525,8 +525,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          *
          * Each row of this matrix will describe a single equation.
          * The first getNumberOfEdges() rows will list the edge equations,
-         * and the following getNumberOfBoundaryComponents() rows will list
-         * the cusp equations.
+         * and the following 2 * getNumberOfBoundaryComponents() rows
+         * will list the cusp equations.
          *
          * The edge equations will be ordered arbitrarily.  The cusp equations
          * will be presented in pairs ordered by cusp index (as stored by
