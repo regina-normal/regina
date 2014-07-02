@@ -207,6 +207,7 @@ Version 4.96  [ (under development) ]
               Matveev's 3-manifold recogniser.
             - Routines snapPea() and saveSnapPea() now do nothing if the
               triangulation is empty.
+            - New alias homology() for getHomologyH1().
         Class NVertex:
             - Renamed getLinkEulerCharacteristic() to getLinkEulerChar(), which
               is easier on the fingers.  The old name has been kept as a

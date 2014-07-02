@@ -278,6 +278,8 @@ void addNTriangulation() {
         .def("getFundamentalGroup", &NTriangulation::getFundamentalGroup,
             return_internal_reference<>())
         .def("simplifiedFundamentalGroup", simplifiedFundamentalGroup_own)
+        .def("homology", &NTriangulation::homology,
+            return_internal_reference<>())
         .def("getHomologyH1", &NTriangulation::getHomologyH1,
             return_internal_reference<>())
         .def("getHomologyH1Rel", &NTriangulation::getHomologyH1Rel,

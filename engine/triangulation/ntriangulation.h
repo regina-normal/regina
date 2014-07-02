@@ -1253,16 +1253,29 @@ class REGINA_API NTriangulation : public NPacket,
          * calculations will be performed <b>without</b> any truncation
          * of the corresponding projective plane cusp.  Thus if a
          * barycentric subdivision is performed on the triangulation, the
-         * result of getHomologyH1() will change.
+         * result of homology() will change.
          *
          * Bear in mind that each time the triangulation changes, the
          * homology groups will be deleted.  Thus the reference that is
          * returned from this routine should not be kept for later use.
-         * Instead, getHomologyH1() should be called again; this will be
+         * Instead, homology() should be called again; this will be
          * instantaneous if the group has already been calculated.
          *
          * Note that this triangulation is not required to be valid
          * (see isValid()).
+         *
+         * \warning As with every routine implemented by Regina's
+         * NTriangulation class, if you are calling this from the subclass
+         * NSnapPeaTriangulation then <b>any fillings on the cusps will
+         * be ignored</b>.  If you wish to compute homology with fillings,
+         * call NSnapPeaTriangulation::homologyFilled() instead.
+         *
+         * @return the first homology group.
+         */
+        const NAbelianGroup& homology() const;
+        /**
+         * An alias for homology(), which returns the first homology
+         * group for this triangulation.  See homology() for details.
          *
          * @return the first homology group.
          */
@@ -4004,6 +4017,10 @@ inline bool NTriangulation::knowsZeroEfficient() const {
 
 inline bool NTriangulation::knowsSplittingSurface() const {
     return splittingSurface.known();
+}
+
+inline const NAbelianGroup& NTriangulation::getHomologyH1() const {
+    return homology();
 }
 
 inline unsigned long NTriangulation::getHomologyH2Z2() const {
