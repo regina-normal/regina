@@ -223,6 +223,7 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         void connectedSumDecomposition();
         void makeZeroEfficient();
         void censusLookup();
+        void toSnapPea();
 
         /**
          * Update the states of internal components.

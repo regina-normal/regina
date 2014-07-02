@@ -37,15 +37,16 @@
 #include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
+#include "snappea/nsnappeatriangulation.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangle.h"
-#include "triangulation/ntriangulation.h"
 
 // UI includes:
 #include "eltmovedialog.h"
 #include "ntrigluings.h"
 #include "patiencedialog.h"
 #include "reginamain.h"
+#include "reginaprefset.h"
 #include "reginasupport.h"
 #include "choosers/boundarycomponentchooser.h"
 #include "choosers/edgechooser.h"
@@ -819,6 +820,19 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     triActionList.append(actCensusLookup);
     connect(actCensusLookup, SIGNAL(triggered()), this, SLOT(censusLookup()));
 
+    QAction* actToSnapPea = new QAction(this);
+    actToSnapPea->setText(tr("Convert to SnapPea"));
+    actToSnapPea->setIcon(ReginaSupport::regIcon("packet_snappea"));
+    actToSnapPea->setToolTip(tr("Convert this to a SnapPea triangulation"));
+    actToSnapPea->setWhatsThis(tr("<qt>Convert this to a SnapPea "
+        "triangulation.  The original Regina triangulation will be "
+        "kept and left untouched.<p>"
+        "Using a SnapPea triangulation will give you richer access to the "
+        "SnapPea kernel.  For peripheral curves, Regina will attempt "
+        "to install the (shortest, second shortest) basis on each cusp.</qt>"));
+    triActionList.append(actToSnapPea);
+    connect(actToSnapPea, SIGNAL(triggered()), this, SLOT(toSnapPea()));
+
     // Tidy up.
 
     refresh();
@@ -1492,6 +1506,72 @@ void NTriGluingsUI::censusLookup() {
         text->setPacketLabel("ID: " + tri->getHumanLabel());
         tri->insertChildLast(text);
     }
+}
+
+void NTriGluingsUI::toSnapPea() {
+    // We assume the part hasn't become read-only, even though the
+    // packet might have changed its editable property.
+    if (! enclosingPane->tryCommit())
+        return;
+
+    if (tri->getNumberOfTetrahedra() == 0 || tri->hasBoundaryTriangles() ||
+            (! tri->isValid()) || (! tri->isStandard()) ||
+            (! tri->isConnected())) {
+        ReginaSupport::sorry(ui,
+            tr("I could not create a SnapPea triangulation."),
+            tr("SnapPea can only work with triangulations that are "
+                "(i) valid, non-empty and connected; "
+                "(ii) have no boundary triangles; and "
+                "(iii) where every ideal vertex has a torus or "
+                "Klein bottle link."));
+        return;
+    }
+    if (tri->isIdeal()) {
+        if (tri->getNumberOfVertices() > tri->getNumberOfBoundaryComponents()) {
+            ReginaSupport::sorry(ui,
+                tr("I could not create a SnapPea triangulation."),
+                tr("<qt>This triangulation contains both ideal and internal "
+                    "vertices.  SnapPea requires every vertex to be ideal.<p>"
+                    "Please simplify the triangulation and try again.</qt>"));
+            return;
+        }
+    } else if (! ReginaPrefSet::global().snapPeaClosed) {
+        ReginaSupport::sorry(ui,
+            tr("I could not create a SnapPea triangulation."),
+            tr("By default, Regina does not send closed manifolds "
+                "to SnapPea.  You can change this behaviour through "
+                "Regina's preferences."));
+        return;
+    } else if (tri->getNumberOfVertices() > 1) {
+        ReginaSupport::sorry(ui,
+            tr("I could not create a SnapPea triangulation."),
+            tr("<qt>For closed manifolds, Regina will only send "
+                "one-vertex triangulations to SnapPea.<p>"
+                "Please simplify the triangulation and try again.</qt>"));
+        return;
+    }
+
+    regina::NSnapPeaTriangulation* ans = new regina::NSnapPeaTriangulation(*tri,
+        true /* allow closed, since we have already check this */);
+    if (ans->isNull()) {
+        ReginaSupport::sorry(ui,
+            tr("I could not create a SnapPea triangulation."),
+            tr("The SnapPea kernel would not accept the "
+                "triangulation, and I'm not sure why.  "
+                "Please report this to the Regina developers."));
+        return;
+    }
+
+    ReginaSupport::info(ui,
+        tr("I have created a new SnapPea triangulation."),
+        tr("<qt>The new SnapPea triangulation appears beneath this "
+            "Regina triangulation in the packet tree.<p>"
+            "For peripheral curves, I have attempted to install the "
+            "(shortest, second shortest) basis on each cusp.</qt>"));
+
+    ans->setPacketLabel(tri->getPacketLabel());
+    tri->insertChildLast(ans);
+    enclosingPane->getMainWindow()->packetView(ans, true, true);
 }
 
 void NTriGluingsUI::updateRemoveState() {
