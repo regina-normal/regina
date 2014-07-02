@@ -146,16 +146,15 @@ NSnapPeaGluingsUI::NSnapPeaGluingsUI(regina::NSnapPeaTriangulation* packet,
     actToRegina = new QAction(this);
     actToRegina->setText(tr("&Convert to Regina"));
     actToRegina->setIcon(ReginaSupport::regIcon("packet_triangulation"));
-    actToRegina->setToolTip(tr(
-        "Convert this to a Regina triangulation"));
-    actToRegina->setWhatsThis(tr("Convert this to one of Regina's native "
+    actToRegina->setToolTip(tr("Convert this to a Regina triangulation"));
+    actToRegina->setWhatsThis(tr("<qt>Convert this to one of Regina's native "
         "3-manifold triangulations.  The original SnapPea triangulation "
         "will be kept and left untouched.<p>"
         "A native Regina triangulation will allow you to use Regina's "
         "full suite of tools to edit and analyse the triangulation.  "
         "However, the native Regina "
         "triangulation will lose any SnapPea-specific "
-        "information (such as peripheral curves on cusps)."));
+        "information (such as peripheral curves on cusps).</qt>"));
     triActionList.append(actToRegina);
     requiresNonNull.append(actToRegina);
     connect(actToRegina, SIGNAL(triggered()), this, SLOT(toRegina()));
