@@ -9,7 +9,6 @@ import interval
 import complex
 
 pi = interval.interval.pi()
-version = 'v1.0.0'
 
 # Returns the minimum imaginary part of all tetrahedra shapes
 
@@ -24,60 +23,29 @@ def iarg(z):
 	return interval.interval(temp[0],temp[1])
 
 
-def get_data(M):
-	app_sol = [] #approximated solution, [z1.real, z1.imag, z2.real, z2.imag, ....]
-	ind_mat = [] #store matrix of gluing equations
-	# store equations of form 'rect'
-	rect = []
-	equations_rect = M.gluing_equations(form = 'rect')
-	chosen_equation = [] # the i_th line we chose is chosen_equation[i]     
-        num_tet = M.num_tetrahedra()
-        num_cusps = M.num_cusps()
-        # if a cusp is complete, we do not need consistency equation for longitude.
-	ignore = 0
-	for n in range(num_cusps):
-                rect.append(equations_rect[num_tet + n + ignore])
-		chosen_equation.append(num_tet + n + ignore)
-		if M.cusp_info('complete?')[n]:
-                        ignore += 1
-        for n in range(num_tet):
-                rect.append(equations_rect[n])
-                chosen_equation.append(n)
-	
-	for sol in M.tetrahedra_shapes('rect'):
-		app_sol.append(sol.real)
-		app_sol.append(sol.imag)
-	
-	for i in chosen_equation:
-		line = equations_rect[i]
-		temp = []
-		for a in range(len(line)):
-			if a%3<2:
-				for b in line[a]:
-					temp.append(float(b))
-			else:
-				temp.append(float(line[a]))
-		ind_mat.append(temp[:])
-	return app_sol[:], ind_mat[:], chosen_equation[:]
-
-def verify_hyperbolicity(M, print_data = False, save_data = False):
+def verify_hyperbolicity(M):
 	# first check if M has positive solution.
 	hikmot_data = '' # TODO: hex only
-	hikmot_data = 'WARNING: Floating-point numbers are represented in computer as binary numbers. The binary floating-point numbers of output are approximated by the decimal numbers. This means the output decimal numbers are NOT correct rigorously. To avoid this warning, you can use the verify_hyperbolicity_hex(M, print_data = False, save_data = False) function alternatively. The function returns every output by the hexadecimal numbers. There is no error between the binary numbers and the hexadecimal numbers.\n' # TODO: non-hex only
+	hikmot_data = 'WARNING: Floating-point numbers are represented in computer as binary numbers. The binary floating-point numbers of output are approximated by the decimal numbers. This means the output decimal numbers are NOT correct rigorously. To avoid this warning, you can use the verify_hyperbolicity_hex(M) function alternatively. The function returns every output by the hexadecimal numbers. There is no error between the binary numbers and the hexadecimal numbers.\n' # TODO: non-hex only
 	hikmot_data += 'Manifold name: ' + str(M) + '\n'
 	if min_imaginary_shapes(M) < 0.0000000001:
 		hikmot_data += "Approximated solution is not positive enough. Verification fails"
-		if save_data:
-			data_file = open(str(M) + '_hikmot_False.txt', "w")
-			data_file.write(hikmot_data)
-		if print_data:
-			print hikmot_data					
 		return False, []
 	# Start main part
 	# app_sol is the approximated solution by SnapPea
 	# ind_mat is the index matrix
 	# We chose n equations, i-th equation of our n equations is chosen_equation_all[i].
-	app_sol, ind_mat, chosen_equation_all  = get_data(M)
+
+#   FETCH DATA:
+# app_sol is [ z1.real, z1.imag, z2.real, ... ], from shapes_.
+# ind_mat is the MODIFIED array of gluing equations [[a0...] [b0...] c]
+# chosen_equation_all is the list of indices of equations chosen.
+# - COMPLETE: First, the meridional equation for each cusp.
+#   (if a cusp is complete, we do not need consistency equation for longitude.)
+# - ALL: Then, the first num_tet (== num_edges?) of the edge equations.
+# ind_mat is a list of [ a0 a1 ... b0 b1 ... c ], in order of chosen_equation,
+#   as python floats.
+
 	row_num = M.num_cusps()
 	length_c = M.num_tetrahedra()
 
@@ -189,11 +157,6 @@ def verify_hyperbolicity(M, print_data = False, save_data = False):
 			n += 4
 	else:
 		hikmot_data += 'Verification fails\n'
-		if save_data:
-			data_file = open(str(M) + '_hikmot_False.txt', "w")
-			data_file.write(hikmot_data)
-		if print_data:
-			print hikmot_data					
 		return False, ans
 
 	for a in range(length_c):
@@ -204,12 +167,6 @@ def verify_hyperbolicity(M, print_data = False, save_data = False):
 	for z in ans:
 		if z.imag.inf<0 or (1/(1-z)).imag.inf<0 or ((z-1)/z).imag.inf<0:
 			hikmot_data += "contains (possibly) negatively oriented tetrahedra\n Verification fails"
-			if save_data:
-				data_file = open(str(M) + '_hikmot_False.txt', "w")
-				data_file.write(hikmot_data)
-			if print_data:
-				print hikmot_data
-
 			return False, ans
 	
 	hikmot_data += "all positively oriented tetrahedra, rigorously ensured\n"
@@ -221,7 +178,6 @@ def verify_hyperbolicity(M, print_data = False, save_data = False):
 	#
 	hikmot_data += "Check argument condition \n"
 	log_eq = M.gluing_equations('log')
-	log2_eq = M.gluing_equations('rect')
 	n = len(ans)
 	ans_arg = [ans[:],ans[:],ans[:]]
 	arg_verified = True
@@ -262,19 +218,8 @@ def verify_hyperbolicity(M, print_data = False, save_data = False):
 	#"""
 	if arg_verified == False:
 		hikmot_data += 'argument condition is not satisfied.'
-		if save_data:
-                        data_file = open(str(M) + '_hikmot_False.txt', "w")
-                        data_file.write(hikmot_data)
-                if print_data:
-                        print hikmot_data
-
 	if arg_verified and (x[-1] == 1):
 		hikmot_data += 'verification suceeds'
-		if save_data:
-                        data_file = open(str(M) + '_hikmot_True.txt', "w")
-                        data_file.write(hikmot_data)
-                if print_data:
-                        print hikmot_data
 	return (x[-1] == 1) and arg_verified, ans[:]
 
 
