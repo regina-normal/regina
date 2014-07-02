@@ -466,7 +466,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
 
         /**
          * Computes the volume of the current solution to the hyperbolic
-         * gluing equations.
+         * gluing equations.  This will be with respect to the current
+         * Dehn filling (if any).
          *
          * \snappy In SnapPy, this routine corresponds to calling
          * <tt>Manifold.volume()</tt>.
@@ -479,6 +480,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         /**
          * Computes the volume of the current solution to the hyperbolic
          * gluing equations, and estimates the accuracy of the answer.
+         * This will be with respect to the current Dehn filling (if any).
          *
          * \snappy In SnapPy, this routine corresponds to calling
          * <tt>Manifold.volume(accuracy=True)</tt>.
@@ -705,8 +707,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * ordered by cusp index (as stored by SnapPea).  You can call
          * cuspVertex() to map these to Regina's vertex indices if needed.
          *
-         * All cusps are treated as complete.  That is, any Dehn fillings
-         * stored in the SnapPea triangulation will be ignored.
+         * For the purposes of this routine, any fillings on the cusps of
+         * this SnapPea triangulation will be ignored.
          *
          * This matrix is constructed so that, if \a M and \a L are the
          * rows for the meridian and longitude at some cusp, then for
@@ -838,8 +840,11 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         /**
          * Deprecated routine that verifies whether the tetrahedron face
          * gluings from this SnapPea triangulation match the given Regina
-         * triangulation precisely.  This is useful if you need to test
-         * whether SnapPea has relabelled and/or retriangulated.
+         * triangulation precisely.  Any fillings on the cusps of this
+         * SnapPea triangulation will be ignored.
+         *
+         * This is useful if you need to test whether SnapPea has
+         * relabelled and/or retriangulated.
          *
          * \deprecated This routine will be removed in a future version
          * of Regina.  Simply call NTriangulation::isIdenticalTo() instead
@@ -851,7 +856,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
 
         /**
          * Deprecated routine to create a new Regina triangulation that
-         * mirrors the internal SnapPea structure.
+         * mirrors the internal SnapPea structure.  Any fillings on the
+         * cusps will be ignored.
          *
          * The resulting triangulation will be newly created, and it is the
          * responsibility of the caller of this routine to eventually delete it.
