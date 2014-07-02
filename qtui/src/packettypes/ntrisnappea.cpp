@@ -157,22 +157,7 @@ void NTriSnapPeaUI::refresh() {
         int places;
         double ans = snappeaTri->volume(places);
 
-        // Can we say that the volume is approximately zero?
-        bool approxZero = false;
-        if (places >= 6 && fabs(ans) < 1e-7) {
-            // The volume is fairly small and the accuracy is high.
-            // Test whether zero lies comfortably within the estimated
-            // margin of error.
-            double epsilon = 1.0;
-            for (int i = 0; i < places + 1; i++)
-                epsilon /= 10;
-
-            // Now we should have epsilon == 1e-(places+1).
-            if (fabs(ans) < epsilon)
-                approxZero = true;
-        }
-
-        if (approxZero) {
+        if (snappeaTri->volumeZero()) {
             // Zero is within the margin of error, and this margin of
             // error is small.  Report it as zero, with the exact result
             // beneath.

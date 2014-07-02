@@ -238,6 +238,24 @@ double NSnapPeaTriangulation::volume(int& precision) const {
     return regina::snappea::volume(data_, &precision);
 }
 
+bool NSnapPeaTriangulation::volumeZero() const {
+    int precision;
+    double vol = regina::snappea::volume(data_, &precision);
+
+    // Here come the magic numbers.
+    if (precision < 6)
+        return false;
+    if (fabs(vol) > 1e-7)
+        return false;
+
+    // Test whether |vol| < 1e-(precision+1).
+    double epsilon = 1;
+    for (int i = 0; i < precision + 1; ++i)
+        epsilon /= 10;
+
+    return (fabs(vol) < epsilon);
+}
+
 NSnapPeaTriangulation* NSnapPeaTriangulation::canonize() const {
     if (! data_)
         return 0;

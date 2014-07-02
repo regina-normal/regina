@@ -498,6 +498,21 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         double volume(int& precision) const;
 
         /**
+         * Determines whether the current solution to the gluing equations
+         * has volume approximately zero.  This test is \e not rigorous.
+         *
+         * This requires (i) the volume itself to be very close to
+         * zero in an absolute sense, (ii) the volume to be zero
+         * within SnapPea's own estimated precision, and (iii) SnapPea's
+         * estimated precision to be sufficiently good in an absolute sense.
+         *
+         * @return \c true if and only if the volume of the current
+         * solution is approximately zero according to the constraints
+         * outlined above.
+         */
+        bool volumeZero() const;
+
+        /**
          * Returns the shape of the given tetrahedron, with respect to
          * the Dehn filled hyperbolic structure.
          *

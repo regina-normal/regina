@@ -66,6 +66,7 @@ void addNSnapPeaTriangulation() {
         .def("solutionType", &NSnapPeaTriangulation::solutionType)
         .def("volume", volume_void)
         .def("volumeWithPrecision", volume_precision)
+        .def("volumeZero", &NSnapPeaTriangulation::volumeZero)
         .def("shape", &NSnapPeaTriangulation::shape,
             return_value_policy<copy_const_reference>())
         .def("gluingEquations", &NSnapPeaTriangulation::gluingEquations,
