@@ -136,34 +136,59 @@ QString NSnapPeaHeaderUI::summaryInfo(regina::NSnapPeaTriangulation* tri) {
 
     QString msg;
 
-    if (tri->isClosed())
-        msg += QObject::tr("Closed, ");
-    else
-        msg += QObject::tr("Ideal, ");
-
     if (tri->isOrientable())
-        msg += QObject::tr("orientable\n");
+        msg += QObject::tr("Orientable, ");
     else
-        msg += QObject::tr("non-orientable\n");
+        msg += QObject::tr("Non-orientable, ");
+
+    unsigned nFilled = tri->countFilledCusps();
+    unsigned nComplete = tri->countCompleteCusps();
+
+    if (nFilled + nComplete == 1) {
+        msg += QObject::tr("1 cusp, ");
+        if (nFilled)
+            msg += QObject::tr("filled\n");
+        else
+            msg += QObject::tr("complete\n");
+    } else if (nFilled == 0) {
+        msg += QObject::tr("%1 cusps, all complete\n").arg(nComplete);
+    } else if (nComplete == 0) {
+        msg += QObject::tr("%1 cusps, all filled\n").arg(nFilled);
+    } else {
+        msg += QObject::tr("%1 cusps, %2 filled\n")
+            .arg(nFilled + nComplete).arg(nFilled);
+    }
 
     switch (tri->solutionType()) {
         case NSnapPeaTriangulation::not_attempted:
             msg += QObject::tr("Solution not attempted");
             break;
         case NSnapPeaTriangulation::geometric_solution:
-            msg += QObject::tr("Volume: %1\n").arg(tri->volume());
+            if (tri->volumeZero())
+                msg += QObject::tr("Volume approximately zero\n");
+            else
+                msg += QObject::tr("Volume: %1\n").arg(tri->volume());
             msg += QObject::tr("Tetrahedra positively oriented");
             break;
         case NSnapPeaTriangulation::nongeometric_solution:
-            msg += QObject::tr("Volume: %1\n").arg(tri->volume());
+            if (tri->volumeZero())
+                msg += QObject::tr("Volume approximately zero\n");
+            else
+                msg += QObject::tr("Volume: %1\n").arg(tri->volume());
             msg += QObject::tr("Contains negatively oriented tetrahedra");
             break;
         case NSnapPeaTriangulation::flat_solution:
-            msg += QObject::tr("Volume: %1\n").arg(tri->volume());
+            if (tri->volumeZero())
+                msg += QObject::tr("Volume approximately zero\n");
+            else
+                msg += QObject::tr("Volume: %1\n").arg(tri->volume());
             msg += QObject::tr("All tetrahedra flat");
             break;
         case NSnapPeaTriangulation::degenerate_solution:
-            msg += QObject::tr("Volume: %1\n").arg(tri->volume());
+            if (tri->volumeZero())
+                msg += QObject::tr("Volume approximately zero\n");
+            else
+                msg += QObject::tr("Volume: %1\n").arg(tri->volume());
             msg += QObject::tr("Contains degenerate tetrahedra");
             break;
         case NSnapPeaTriangulation::other_solution:
