@@ -1578,6 +1578,9 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * triangulation (as returned by getTriangulation()) is not of the
          * subclass NSnapPeaTriangulation, this routine will simply return 0.
          *
+         * All cusps are treated as complete.  That is, any Dehn fillings
+         * stored in the SnapPea triangulation will be ignored.
+         *
          * The results are returned in a matrix with \a V rows and two
          * columns, where \a V is the number of vertices in the triangulation.
          * If row \a i of the matrix contains the integers

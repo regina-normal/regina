@@ -647,6 +647,9 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * ordered by cusp index (as stored by SnapPea).  You can call
          * cuspVertex() to map these to Regina's vertex indices if needed.
          *
+         * All cusps are treated as complete.  That is, any Dehn fillings
+         * stored in the SnapPea triangulation will be ignored.
+         *
          * This matrix is constructed so that, if \a M and \a L are the
          * rows for the meridian and longitude at some cusp, then for
          * any spun-normal surface with quadrilateral coordinates
