@@ -145,8 +145,8 @@ Version 4.96  [ (under development) ]
             - New routine name() to access SnapPea's internal manifold name.
             - New routine shape() to access tetrahedron shapes.
             - New routines cuspVertex() and cuspComplete() for querying cusps.
-            - New routine gluingEquations() to construct Thurston's gluing
-              equations.
+            - New routines gluingEquations() and gluingEquationsRect() to
+              construct Thurston's gluing equations.
             - Renamed saveAsSnapPea() to saveSnapPea() (see above).  The new
               routine now returns a boolean, and requires a non-empty filename.
               The old name is deprecated but kept for backward compatibility.

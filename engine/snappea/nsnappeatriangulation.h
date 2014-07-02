@@ -551,6 +551,9 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * and with right hand side <tt>2 pi i</tt> for an edge equation
          * or 0 for a cusp equation.
          *
+         * See also gluingEquationsRect(), which returns the gluing
+         * equations in a more streamlined form.
+         *
          * \snappy In SnapPy, this routine corresponds to calling
          * <tt>Manifold.gluing_equations()</tt>.
          *
@@ -559,6 +562,38 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * as described above, or 0 if this is a null triangulation.
          */
         NMatrixInt* gluingEquations() const;
+
+        /**
+         * Returns a matrix describing Thurston's gluing equations in a
+         * streamlined form.
+         *
+         * Each row of this matrix will describe a single equation.
+         * The rows begin with the edge equations (in arbitrary order)
+         * followed by the cusp equations (ordered by cusp index); for
+         * precise details see the documentation for gluingEquations(),
+         * which uses the same ordering.
+         *
+         * The matrix will contain <tt>2 * getNumberOfTetrahedra() + 1</tt>
+         * columns.  Let \a k = getNumberOfTetrahedra()-1, and suppose the
+         * shape parameters for tetrahedra 0, 1, ..., k are
+         * \a z0, \a z1, ..., \a zk (here each shape parameter corresponds
+         * to edges 0 and 5 of the corresponding tetrahedron).
+         * Then a row of the form <tt>a0 b0 a1 b1 ... ak bk c</tt>
+         * describes the equation
+         * <tt>z0^a0 (1-z0)^b0 z1^a1 (1-z1)^b1 ... zk^ak (1-zk)^bk = c</tt>,
+         * where \a c will always be 1 or -1.
+         *
+         * See also gluingEquations(), which returns the gluing
+         * equations in a more transparent term-by-term form.
+         *
+         * \snappy In SnapPy, this routine corresponds to calling
+         * <tt>Manifold.gluing_equations(form='rect')</tt>.
+         *
+         * @return a newly allocated matrix with (\a number_of_rows +
+         * \a number_of_cusps) rows and (2 * \a number_of_tetrahedra + 1)
+         * columns as described above, or 0 if this is a null triangulation.
+         */
+        NMatrixInt* gluingEquationsRect() const;
 
         /*@}*/
         /**

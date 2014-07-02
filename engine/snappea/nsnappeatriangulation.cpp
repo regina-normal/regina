@@ -303,6 +303,71 @@ NMatrixInt* NSnapPeaTriangulation::gluingEquations() const {
     return matrix;
 }
 
+NMatrixInt* NSnapPeaTriangulation::gluingEquationsRect() const {
+    if (! data_)
+        return 0;
+
+    unsigned n = getNumberOfTetrahedra();
+
+    NMatrixInt* matrix = new NMatrixInt(getNumberOfEdges() +
+        2 * data_->num_cusps, 2 * n + 1);
+    // Note: all entries are automatically initialised to zero.
+
+    int numRows, numCols;
+    int row, j;
+    int parity;
+
+    int** edgeEqns = regina::snappea::get_gluing_equations(data_,
+        &numRows, &numCols);
+    for (row = 0; row < numRows; ++row) {
+        parity = 0;
+        for (j = 0; j < n; ++j) {
+            matrix->entry(row, 2 * j) += edgeEqns[row][3 * j];
+            matrix->entry(row, 2 * j + 1) -= edgeEqns[row][3 * j + 1];
+            matrix->entry(row, 2 * j) -= edgeEqns[row][3 * j + 2];
+            matrix->entry(row, 2 * j + 1) += edgeEqns[row][3 * j + 2];
+            if (edgeEqns[row][3 * j + 2] % 2)
+                parity ^= 1;
+        }
+        matrix->entry(row, 2 * n) = (parity ? -1 : 1);
+    }
+    regina::snappea::free_gluing_equations(edgeEqns, numRows);
+
+    int c;
+    int* cuspEqn;
+    for (c = 0; c < data_->num_cusps; ++c) {
+        cuspEqn = regina::snappea::get_cusp_equation(data_, c, 1, 0, &numCols);
+        parity = 0;
+        for (j = 0; j < n; ++j) {
+            matrix->entry(row, 2 * j) += cuspEqn[3 * j];
+            matrix->entry(row, 2 * j + 1) -= cuspEqn[3 * j + 1];
+            matrix->entry(row, 2 * j) -= cuspEqn[3 * j + 2];
+            matrix->entry(row, 2 * j + 1) += cuspEqn[3 * j + 2];
+            if (cuspEqn[3 * j + 2] % 2)
+                parity ^= 1;
+        }
+        matrix->entry(row, 2 * n) = (parity ? -1 : 1);
+        regina::snappea::free_cusp_equation(cuspEqn);
+        ++row;
+
+        cuspEqn = regina::snappea::get_cusp_equation(data_, c, 0, 1, &numCols);
+        parity = 0;
+        for (j = 0; j < n; ++j) {
+            matrix->entry(row, 2 * j) += cuspEqn[3 * j];
+            matrix->entry(row, 2 * j + 1) -= cuspEqn[3 * j + 1];
+            matrix->entry(row, 2 * j) -= cuspEqn[3 * j + 2];
+            matrix->entry(row, 2 * j + 1) += cuspEqn[3 * j + 2];
+            if (cuspEqn[3 * j + 2] % 2)
+                parity ^= 1;
+        }
+        matrix->entry(row, 2 * n) = (parity ? -1 : 1);
+        regina::snappea::free_cusp_equation(cuspEqn);
+        ++row;
+    }
+
+    return matrix;
+}
+
 /**
  * Written by William Pettersson, 2011.
  */
