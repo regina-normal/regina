@@ -257,6 +257,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
             /**< An array that caches information about each cusp of the
                  internal SnapPea triangulation.  If this is a null
                  triangulation then cusp_ will be 0. */
+        unsigned filledCusps_;
+            /**< The number of cusps that are currently filled. */
         bool syncing_;
             /**< Set to \c true whilst sync() is being called.  This allows the
                  internal packet listener to distinguish between "legitimate"
@@ -600,6 +602,47 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * \name Cusps
          */
         /*@{*/
+
+        /**
+         * Returns the total number of cusps (both filled and complete).
+         *
+         * This returns the same value as the inherited function
+         * NTriangulation::getNumberOfBoundaryComponents().
+         *
+         * \snappy In SnapPy, this routine corresponds to calling
+         * <tt>Manifold.num_cusps()</tt>.
+         *
+         * @return the total number of cusps.
+         */
+        unsigned countCusps() const;
+
+        /**
+         * Returns the total number of complete cusps (that is, unfilled cusps).
+         *
+         * It is always true that
+         * <tt>countCompleteCusps() + countFilledCusps() == countCusps()</tt>.
+         *
+         * \snappy This has no corresponding routine in SnapPy,
+         * though the information is easily acessible via
+         * <tt>Manifold.cusp_info('is_complete')</tt>.
+         *
+         * @return the total number of complete cusps.
+         */
+        unsigned countCompleteCusps() const;
+
+        /**
+         * Returns the total number of filled cusps.
+         *
+         * It is always true that
+         * <tt>countCompleteCusps() + countFilledCusps() == countCusps()</tt>.
+         *
+         * \snappy This has no corresponding routine in SnapPy,
+         * though the information is easily acessible via
+         * <tt>Manifold.cusp_info('is_complete')</tt>.
+         *
+         * @return the total number of filled cusps.
+         */
+        unsigned countFilledCusps() const;
 
         /**
          * Identifies which vertex of the inherited NTriangulation
@@ -951,7 +994,7 @@ inline SnapPeaFatalError::SnapPeaFatalError(
 // Inline functions for NSnapPeaTriangulation
 
 inline NSnapPeaTriangulation::NSnapPeaTriangulation() :
-        data_(0), shape_(0), cusp_(0), syncing_(false) {
+        data_(0), shape_(0), cusp_(0), filledCusps_(0), syncing_(false) {
     listen(this);
 }
 
@@ -962,6 +1005,18 @@ inline bool NSnapPeaTriangulation::isNull() const {
 inline const std::complex<double>& NSnapPeaTriangulation::shape(unsigned tet)
         const {
     return (shape_ ? shape_[tet] : zero_);
+}
+
+inline unsigned NSnapPeaTriangulation::countCusps() const {
+    return getNumberOfBoundaryComponents();
+}
+
+inline unsigned NSnapPeaTriangulation::countCompleteCusps() const {
+    return getNumberOfBoundaryComponents() - filledCusps_;
+}
+
+inline unsigned NSnapPeaTriangulation::countFilledCusps() const {
+    return filledCusps_;
 }
 
 inline NVertex* NSnapPeaTriangulation::cuspVertex(unsigned cusp) const {

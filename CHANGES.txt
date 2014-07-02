@@ -147,6 +147,8 @@ Version 4.96  [ (under development) ]
             - New routines cuspVertex() and cuspComplete() for querying cusps.
             - New routines gluingEquations() and gluingEquationsRect() to
               construct Thurston's gluing equations.
+            - New routines countCusps(), countFilledCusps() and
+              countCompleteCusps() to count cusps of different types.
             - Renamed saveAsSnapPea() to saveSnapPea() (see above).  The new
               routine now returns a boolean, and requires a non-empty filename.
               The old name is deprecated but kept for backward compatibility.

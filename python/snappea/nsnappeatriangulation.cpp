@@ -72,6 +72,9 @@ void addNSnapPeaTriangulation() {
             return_value_policy<manage_new_object>())
         .def("gluingEquationsRect", &NSnapPeaTriangulation::gluingEquationsRect,
             return_value_policy<manage_new_object>())
+        .def("countCusps", &NSnapPeaTriangulation::countCusps)
+        .def("countCompleteCusps", &NSnapPeaTriangulation::countCompleteCusps)
+        .def("countFilledCusps", &NSnapPeaTriangulation::countFilledCusps)
         .def("cuspVertex", &NSnapPeaTriangulation::cuspVertex,
             return_value_policy<reference_existing_object>())
         .def("cuspComplete", &NSnapPeaTriangulation::cuspComplete)

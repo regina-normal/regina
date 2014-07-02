@@ -59,7 +59,7 @@ std::complex<double> NSnapPeaTriangulation::zero_(0, 0);
 
 NSnapPeaTriangulation::NSnapPeaTriangulation(
         const std::string& fileNameOrContents) :
-        data_(0), shape_(0), cusp_(0), syncing_(false) {
+        data_(0), shape_(0), cusp_(0), filledCusps_(0), syncing_(false) {
     try {
         if (startsWith(fileNameOrContents, "% Triangulation"))
             data_ = regina::snappea::read_triangulation_from_string(
@@ -81,7 +81,7 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(
 }
 
 NSnapPeaTriangulation::NSnapPeaTriangulation(const NSnapPeaTriangulation& tri) :
-        data_(0), shape_(0), cusp_(0), syncing_(false) {
+        data_(0), shape_(0), cusp_(0), filledCusps_(0), syncing_(false) {
     if (tri.data_) {
         regina::snappea::copy_triangulation(tri.data_, &data_);
         sync();
@@ -91,7 +91,7 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NSnapPeaTriangulation& tri) :
 
 NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri,
         bool allowClosed) :
-        data_(0), shape_(0), cusp_(0), syncing_(false) {
+        data_(0), shape_(0), cusp_(0), filledCusps_(0), syncing_(false) {
     const NSnapPeaTriangulation* clone =
         dynamic_cast<const NSnapPeaTriangulation*>(&tri);
     if (clone) {
@@ -569,6 +569,8 @@ void NSnapPeaTriangulation::sync() {
         delete[] shape_;
         delete[] cusp_;
 
+        filledCusps_ = 0;
+
         if (data_) {
             regina::snappea::TriangulationData* tData;
             regina::snappea::triangulation_to_data(data_, &tData);
@@ -612,6 +614,8 @@ void NSnapPeaTriangulation::sync() {
             for (i = 0; i < data_->num_cusps; ++i) {
                 cusp_[c->index].complete = c->is_complete;
                 cusp_[c->index].vertex = 0;
+                if (! c->is_complete)
+                    ++filledCusps_;
                 c = c->next;
             }
             stet = data_->tet_list_begin.next;
