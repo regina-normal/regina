@@ -44,6 +44,7 @@
 NoSnapPea::NoSnapPea(regina::NTriangulation* useTri, QWidget* parent,
         bool delayedRefresh) :
         QLabel(parent), tri(useTri) {
+    setWordWrap(true);
     if (! delayedRefresh)
         refresh();
 }
@@ -66,7 +67,10 @@ void NoSnapPea::refresh() {
             "bottles).");
     else if ((! tri->isIdeal()) && (! ReginaPrefSet::global().snapPeaClosed))
         msg += tr("This is because the triangulation does not contain any "
-            "ideal vertices.");
+            "ideal vertices.</p>"
+            "By default, Regina does not send closed manifolds "
+            "to SnapPea.  You can change this behaviour through "
+            "Regina's preferences.");
     else if (tri->isIdeal() &&
             tri->getNumberOfBoundaryComponents() < tri->getNumberOfVertices())
         msg += tr("This is because the triangulation contains a mix of "
