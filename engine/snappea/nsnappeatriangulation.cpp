@@ -322,10 +322,10 @@ NMatrixInt* NSnapPeaTriangulation::gluingEquationsRect() const {
     for (row = 0; row < numRows; ++row) {
         parity = 0;
         for (j = 0; j < n; ++j) {
-            matrix->entry(row, 2 * j) += edgeEqns[row][3 * j];
-            matrix->entry(row, 2 * j + 1) -= edgeEqns[row][3 * j + 1];
-            matrix->entry(row, 2 * j) -= edgeEqns[row][3 * j + 2];
-            matrix->entry(row, 2 * j + 1) += edgeEqns[row][3 * j + 2];
+            matrix->entry(row, j) += edgeEqns[row][3 * j];
+            matrix->entry(row, j + n) -= edgeEqns[row][3 * j + 1];
+            matrix->entry(row, j) -= edgeEqns[row][3 * j + 2];
+            matrix->entry(row, j + n) += edgeEqns[row][3 * j + 2];
             if (edgeEqns[row][3 * j + 2] % 2)
                 parity ^= 1;
         }
@@ -339,10 +339,10 @@ NMatrixInt* NSnapPeaTriangulation::gluingEquationsRect() const {
         cuspEqn = regina::snappea::get_cusp_equation(data_, c, 1, 0, &numCols);
         parity = 0;
         for (j = 0; j < n; ++j) {
-            matrix->entry(row, 2 * j) += cuspEqn[3 * j];
-            matrix->entry(row, 2 * j + 1) -= cuspEqn[3 * j + 1];
-            matrix->entry(row, 2 * j) -= cuspEqn[3 * j + 2];
-            matrix->entry(row, 2 * j + 1) += cuspEqn[3 * j + 2];
+            matrix->entry(row, j) += cuspEqn[3 * j];
+            matrix->entry(row, j + n) -= cuspEqn[3 * j + 1];
+            matrix->entry(row, j) -= cuspEqn[3 * j + 2];
+            matrix->entry(row, j + n) += cuspEqn[3 * j + 2];
             if (cuspEqn[3 * j + 2] % 2)
                 parity ^= 1;
         }
@@ -353,10 +353,10 @@ NMatrixInt* NSnapPeaTriangulation::gluingEquationsRect() const {
         cuspEqn = regina::snappea::get_cusp_equation(data_, c, 0, 1, &numCols);
         parity = 0;
         for (j = 0; j < n; ++j) {
-            matrix->entry(row, 2 * j) += cuspEqn[3 * j];
-            matrix->entry(row, 2 * j + 1) -= cuspEqn[3 * j + 1];
-            matrix->entry(row, 2 * j) -= cuspEqn[3 * j + 2];
-            matrix->entry(row, 2 * j + 1) += cuspEqn[3 * j + 2];
+            matrix->entry(row, j) += cuspEqn[3 * j];
+            matrix->entry(row, j + n) -= cuspEqn[3 * j + 1];
+            matrix->entry(row, j) -= cuspEqn[3 * j + 2];
+            matrix->entry(row, j + n) += cuspEqn[3 * j + 2];
             if (cuspEqn[3 * j + 2] % 2)
                 parity ^= 1;
         }

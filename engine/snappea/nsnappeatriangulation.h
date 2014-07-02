@@ -578,9 +578,9 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * shape parameters for tetrahedra 0, 1, ..., k are
          * \a z0, \a z1, ..., \a zk (here each shape parameter corresponds
          * to edges 0 and 5 of the corresponding tetrahedron).
-         * Then a row of the form <tt>a0 b0 a1 b1 ... ak bk c</tt>
+         * Then a row of the form <tt>a0 a1 ... ak b0 b1 ... bk c</tt>
          * describes the equation
-         * <tt>z0^a0 (1-z0)^b0 z1^a1 (1-z1)^b1 ... zk^ak (1-zk)^bk = c</tt>,
+         * <tt>z0^a0 z1^a1 ... zk^ak (1-z0)^b0 (1-z1)^b1 ... (1-zk)^bk = c</tt>,
          * where \a c will always be 1 or -1.
          *
          * See also gluingEquations(), which returns the gluing
