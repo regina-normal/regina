@@ -862,7 +862,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          *
          * @param simplifyPresentation \c true if SnapPea should attempt
          * to simplify the group presentation, or \c false if it should
-         * be left unsimplified.
+         * be left unsimplified.  Even if \a simplifyPresentation is \c false,
+         * this routine will always eliminate adjacent (x, x^-1) pairs.
          * @param fillingsMayAffectGenerators \c true if SnapPea's choice of
          * generators is allowed to depend on the Dehn fillings, or \c false
          * if the choice of generators should be consistent across different
