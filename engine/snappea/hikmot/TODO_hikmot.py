@@ -10,14 +10,6 @@ import complex
 
 pi = interval.interval.pi()
 
-# Returns the minimum imaginary part of all tetrahedra shapes
-
-def min_imaginary_shapes(M):
-	imaginary_shapes = []
-	for i in M.tetrahedra_shapes(part = 'rect'):
-		imaginary_shapes.append(i.imag)
-	return min(imaginary_shapes)
-
 def iarg(z):
 	temp = atan2(z.imag.inf, z.imag.sup, z.real.inf, z.real.sup)
 	return interval.interval(temp[0],temp[1])
