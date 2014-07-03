@@ -794,8 +794,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          *
          * - This routine homologyFilled() respects Dehn fillings, and uses
          *   a combination of both SnapPea's and Regina's code to compute
-         *   homology groups.  There may be (rare) situations in which
-         *   the SnapPea kernel cannot perform its part of the computation,
+         *   homology groups.  There may be situations in which the SnapPea
+         *   kernel cannot perform its part of the computation (see below),
          *   in which case this routine will return a null pointer.
          *
          * - The inherited homology() routine uses only Regina's code, and
@@ -804,6 +804,26 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          *   this means that any fillings on the cusps (which are
          *   specific to SnapPea triangulations) will be ignored.
          *   The homology() routine will always return a solution.
+         *
+         * This routine uses exact arithmetic, and so you are guaranteed
+         * that - if it returns a result at all - that this result does
+         * not suffer from integer overflows.  Essentially, the process
+         * is this: SnapPea constructs the filled relation matrix using
+         * machine integer arithmetic (but detects overflow and returns
+         * \c null in such cases), and then Regina uses exact integer
+         * arithmetic to solve for the abelian group invariants (i.e.,
+         * Smith normal form).
+         *
+         * The situations in which this routine might return \c null are
+         * the following:
+         *
+         * - This is a null triangulation (i.e., isNull() returns \c true);
+         *
+         * - The filling coefficients as stored in SnapPea are not integers;
+         *
+         * - The filling coefficients as stored in SnapPea are integers,
+         *   but are so large that SnapPea was not able to build the
+         *   relation matrix without integer overflow.
          *
          * Note that each time the triangulation changes, the homology
          * group will be deleted.  Thus the pointer that is returned

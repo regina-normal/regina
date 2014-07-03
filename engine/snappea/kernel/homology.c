@@ -45,7 +45,7 @@ static void         group_to_relation_matrix(GroupPresentation *group, RelationM
 static void         allocate_relation_matrix_from_group(GroupPresentation *group, RelationMatrix *relation_matrix);
 static void         read_relations_from_group(GroupPresentation *group, RelationMatrix *relation_matrix, Boolean *overflow);
 
-static void         find_relations(Triangulation *manifold, RelationMatrix *relation_matrix, Boolean *overflow);
+void         find_relations(Triangulation *manifold, RelationMatrix *relation_matrix, Boolean *overflow);
 static void         allocate_relation_matrix(Triangulation *manifold, RelationMatrix *relation_matrix);
 static void         initialize_relations(RelationMatrix *relation_matrix);
 static void         find_edge_relations(Triangulation *manifold, RelationMatrix *relation_matrix);
@@ -391,7 +391,7 @@ static void read_relations_from_group(
 }
 
 
-static void find_relations(
+void find_relations(
     Triangulation   *manifold,
     RelationMatrix  *relation_matrix,
     Boolean         *overflow)

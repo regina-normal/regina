@@ -32,18 +32,55 @@
 
 /* end stub */
 
+#include "maths/nmatrixint.h"
 #include "snappea/nsnappeatriangulation.h"
+#include "snappea/kernel/kernel_prototypes.h"
 
 namespace regina {
 
+namespace snappea {
+    // We need the following functions, which are defined in homology.c:
+    void find_relations(Triangulation *manifold,
+        RelationMatrix *relation_matrix, Boolean *overflow);
+    void free_relations(RelationMatrix *relation_matrix);
+}
+
 const NAbelianGroup* NSnapPeaTriangulation::homologyFilled() const {
+    if (! data_)
+        return 0;
     if (h1Filled_.known())
         return h1Filled_.value();
 
-    // TODO: Calculate it.
+    if (! regina::snappea::all_Dehn_coefficients_are_integers(data_))
+        return (h1Filled_ = 0);
 
-    // Build the group from the presentation matrix and tidy up.
+    // Note: TRUE and FALSE are #defines in SnapPea, and so don't live
+    // in any namespace.  We avoid them here.
+
+    // Fetch the relation matrix from SnapPea.
+    regina::snappea::choose_generators(data_, 0 /* FALSE */, 0 /* FALSE */);
+
+    regina::snappea::Boolean overflow = 0; /* FALSE */
+    regina::snappea::RelationMatrix sRelns;
+
+    regina::snappea::find_relations(data_, &sRelns, &overflow);
+    if (overflow) {
+        regina::snappea::free_relations(&sRelns);
+        return (h1Filled_ = 0);
+    }
+
+    // Pass the relations to Regina.
+    NMatrixInt rRelns(sRelns.num_rows, sRelns.num_columns);
+    unsigned i, j;
+    for (i = 0; i < sRelns.num_rows; ++i)
+        for (j = 0; j < sRelns.num_columns; ++j)
+            rRelns.entry(i, j) = sRelns.relations[i][j];
+
+    regina::snappea::free_relations(&sRelns);
+
+    // Let Regina run Smith normal form.
     NAbelianGroup* ans = new NAbelianGroup();
+    ans->addGroup(rRelns);
     return (h1Filled_ = ans);
 }
 
