@@ -984,8 +984,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * See canonize_part_2.c in the SnapPea source code for details.
          *
          * This routine discards the hyperbolic structure along with all
-         * SnapPea-specific information (such as peripheral curves),
-         * and simply returns one of Regina's native triangulations.
+         * SnapPea-specific information (such as peripheral curves and
+         * fillings), and simply returns one of Regina's native triangulations.
          * If you need to preserve SnapPea-specific information then you
          * should call protoCanonize() instead.
          *
