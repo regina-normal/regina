@@ -171,6 +171,22 @@ struct PacketInfo<PACKET_SNAPPEATRIANGULATION> {
  * - attempting to change a SnapPea triangulation using the inherited
  *   NTriangulation interface (as discussed above).
  *
+ * Regarding fillings:  SnapPea can store and manipulate Dehn fillings
+ * on cusps, and the NSnapPeaTriangulation class respects these where it can.
+ * However, Regina's own NTriangulation class knows nothing about fillings
+ * at all.  Therefore:
+ *
+ * - Routines inherited through the NTriangulation interface will ignore
+ *   fillings completely (so, for instance, homology() will return the
+ *   first homology of the unfilled manifold, even if SnapPea has
+ *   designated fillings on the cusps).
+ *
+ * - Routines that are defined here in the NSnapPeaTriangulation class
+ *   are generally aware of fillings (so, for instance, homologyFilled()
+ *   will return the first homology of the filled manifold).  See the
+ *   individual notes for each member function for details on how it
+ *   handles fillings.
+ *
  * There are many places in the SnapPea kernel where SnapPea throws a
  * fatal error.  As of Regina 4.96, these fatal errors are converted
  * into exceptions (subclassed from SnapPeaException), which can be caught
