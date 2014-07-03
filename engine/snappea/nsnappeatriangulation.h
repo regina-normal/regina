@@ -589,6 +589,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
 
         /**
          * Returns a matrix describing Thurston's gluing equations.
+         * This will be with respect to the current Dehn filling (if any).
          *
          * Each row of this matrix will describe a single equation.
          * The first getNumberOfEdges() rows will list the edge equations,
@@ -632,7 +633,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
 
         /**
          * Returns a matrix describing Thurston's gluing equations in a
-         * streamlined form.
+         * streamlined form.  This will be with respect to the current
+         * Dehn filling (if any).
          *
          * Each row of this matrix will describe a single equation.
          * The rows begin with the edge equations (in arbitrary order)
