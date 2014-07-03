@@ -257,6 +257,9 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
             bool complete;
                 /**< \c true if the cusp is complete, or \c false if it
                      is filled. */
+            double m, l;
+                /**< The filling coefficients on this cusp, or 0 if the
+                     cusp is complete. */
         };
 
         regina::snappea::Triangulation* data_;
