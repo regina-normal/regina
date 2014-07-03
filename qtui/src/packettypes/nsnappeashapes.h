@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,62 +32,29 @@
 
 /* end stub */
 
-/*! \file nsnappeaui.h
- *  \brief Provides an interface for viewing SnapPea triangulations.
+/*! \file nsnappeashapes.h
+ *  \brief Provides access to tetrahedron shapes and cusp data for
+ *  SnapPea triangulations.
  */
 
-#ifndef __NSNAPPEAUI_H
-#define __NSNAPPEAUI_H
+#ifndef __NSNAPPEASHAPES_H
+#define __NSNAPPEASHAPES_H
 
 #include "../packettabui.h"
 
-class QToolBar;
-class NSnapPeaAlgebraUI;
-class NSnapPeaGluingsUI;
-class NTriSkeletonUI;
-class PacketEditIface;
-class QLabel;
+class QTreeWidget;
+class QTreeWidgetItem;
 
 namespace regina {
     class NSnapPeaTriangulation;
 };
 
 /**
- * A packet interface for viewing 3-manifold triangulations.
+ * A triangulation page for viewing normal surface properties.
  */
-class NSnapPeaUI : public PacketTabbedUI {
+class NSnapPeaShapesUI : public QObject, public PacketViewerTab {
     Q_OBJECT
 
-    private:
-        /**
-         * Internal components
-         */
-        NSnapPeaGluingsUI* gluings;
-        NTriSkeletonUI* skeleton;
-        NSnapPeaAlgebraUI* algebra;
-
-        PacketEditIface* editIface;
-
-    public:
-        /**
-         * Constructor and destructor.
-         */
-        NSnapPeaUI(regina::NSnapPeaTriangulation* packet,
-            PacketPane* newEnclosingPane);
-        ~NSnapPeaUI();
-
-        /**
-         * PacketUI overrides.
-         */
-        PacketEditIface* getEditIface();
-        const QLinkedList<QAction*>& getPacketTypeActions();
-        QString getPacketMenuText() const;
-};
-
-/**
- * A header for the SnapPea triangulation viewer.
- */
-class NSnapPeaHeaderUI : public PacketViewerTab {
     private:
         /**
          * Packet details
@@ -98,20 +65,15 @@ class NSnapPeaHeaderUI : public PacketViewerTab {
          * Internal components
          */
         QWidget* ui;
-        QLabel* header;
-        QToolBar* bar;
+        QTreeWidget* cusps;
+        QTreeWidget* shapes;
 
     public:
         /**
-         * Constructor.
+         * Constructor and destructor.
          */
-        NSnapPeaHeaderUI(regina::NSnapPeaTriangulation* packet,
-                PacketTabbedUI* useParentUI);
-
-        /**
-         * Component queries.
-         */
-        QToolBar* getToolBar();
+        NSnapPeaShapesUI(regina::NSnapPeaTriangulation* packet,
+            PacketTabbedUI* useParentUI);
 
         /**
          * PacketViewerTab overrides.
@@ -120,19 +82,6 @@ class NSnapPeaHeaderUI : public PacketViewerTab {
         QWidget* getInterface();
         void refresh();
         void editingElsewhere();
-
-        /**
-         * Allow other UIs to access the summary information.
-         */
-        static QString summaryInfo(regina::NSnapPeaTriangulation* tri);
 };
-
-inline PacketEditIface* NSnapPeaUI::getEditIface() {
-    return editIface;
-}
-
-inline QToolBar* NSnapPeaHeaderUI::getToolBar() {
-    return bar;
-}
 
 #endif

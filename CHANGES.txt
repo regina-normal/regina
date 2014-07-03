@@ -126,6 +126,11 @@ Version 4.96  [ (under development) ]
               derives from NTriangulation.  The inherited NTriangulation
               must not be modified directly; instead this is automatically
               kept in sync with the SnapPea data.
+            - Many new routines: countCompleteCusps(), countCusps(),
+              countFilledCusps(), cuspComplete(), cuspVertex(),
+              gluingEquations(), gluingEquationsRect(),
+              minImaginaryShape(), name(), shape(),
+              volumeZero(), plus others (listed individually below).
             - Two new constructors: a default constructor that builds a null
               triangulation, and a string constructor that takes either the
               name or the contents of a native SnapPea data file.
@@ -142,11 +147,6 @@ Version 4.96  [ (under development) ]
               the "lossy" conversion routines NTriangulation::snapPea() and
               NTriangulation::saveSnapPea() so that they output all
               SnapPea-specific data.
-            - New routine name() to access SnapPea's internal manifold name.
-            - New routine shape() to access tetrahedron shapes.
-            - New routines cuspVertex() and cuspComplete() for querying cusps.
-            - New routines gluingEquations() and gluingEquationsRect() to
-              construct Thurston's gluing equations.
             - Renamed saveAsSnapPea() to saveSnapPea() (see above).  The new
               routine now returns a boolean, and requires a non-empty filename.
               The old name is deprecated but kept for backward compatibility.
@@ -208,6 +208,7 @@ Version 4.96  [ (under development) ]
               Matveev's 3-manifold recogniser.
             - Routines snapPea() and saveSnapPea() now do nothing if the
               triangulation is empty.
+            - New alias homology() for getHomologyH1().
         Class NVertex:
             - Renamed getLinkEulerCharacteristic() to getLinkEulerChar(), which
               is easier on the fingers.  The old name has been kept as a

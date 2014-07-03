@@ -40,7 +40,7 @@
 
 namespace regina {
 
-const NAbelianGroup& NTriangulation::getHomologyH1() const {
+const NAbelianGroup& NTriangulation::homology() const {
     if (H1.known())
         return *H1.value();
 
@@ -122,7 +122,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
         return *H1Rel.value();
 
     if (getNumberOfBoundaryComponents() == 0)
-        return *(H1Rel = new NAbelianGroup(getHomologyH1()));
+        return *(H1Rel = new NAbelianGroup(homology()));
 
     // Calculate the relative first homology wrt the boundary.
 
@@ -264,7 +264,7 @@ const NAbelianGroup& NTriangulation::getHomologyH2() const {
         // Find rank(Z_2) + rank(Z) and take off z2rank.
         rank = getHomologyH1Rel().getRank() +
             getHomologyH1Rel().getTorsionRank(2) -
-            getHomologyH1().getTorsionRank(2) -
+            homology().getTorsionRank(2) -
             z2rank;
     }
 

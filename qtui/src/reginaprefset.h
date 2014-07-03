@@ -409,6 +409,9 @@ class ReginaPrefSet : public QObject {
         unsigned tabSnapPeaTri;
             /**< The index of the initial tab to open in a SnapPea
                  triangulation viewer. */
+        unsigned tabSnapPeaTriAlgebra;
+            /**< The index of the initial sub-tab to open in a SnapPea
+                 triangulation algebra viewer. */
         unsigned tabSurfaceList;
             /**< The index of the initial sub-tab to open in a normal
                  surface list viewer. */

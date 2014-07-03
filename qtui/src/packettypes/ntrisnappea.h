@@ -67,8 +67,7 @@ class NTriSnapPeaUI : public QObject, public PacketViewerTab {
         /**
          * Internal components
          */
-        QWidget* ui;
-        QStackedWidget* data;
+        QStackedWidget* ui;
         QWidget* dataValid;
         QWidget* dataNull;
         QLabel* solutionType;
@@ -98,6 +97,11 @@ class NTriSnapPeaUI : public QObject, public PacketViewerTab {
          * Update properties.
          */
         void updatePreferences();
+
+        /**
+         * Convert this to a full SnapPea triangulation.
+         */
+        void toSnapPea();
 
     private:
         /**

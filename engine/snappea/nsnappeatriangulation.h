@@ -257,6 +257,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
             /**< An array that caches information about each cusp of the
                  internal SnapPea triangulation.  If this is a null
                  triangulation then cusp_ will be 0. */
+        unsigned filledCusps_;
+            /**< The number of cusps that are currently filled. */
         bool syncing_;
             /**< Set to \c true whilst sync() is being called.  This allows the
                  internal packet listener to distinguish between "legitimate"
@@ -464,7 +466,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
 
         /**
          * Computes the volume of the current solution to the hyperbolic
-         * gluing equations.
+         * gluing equations.  This will be with respect to the current
+         * Dehn filling (if any).
          *
          * \snappy In SnapPy, this routine corresponds to calling
          * <tt>Manifold.volume()</tt>.
@@ -477,6 +480,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         /**
          * Computes the volume of the current solution to the hyperbolic
          * gluing equations, and estimates the accuracy of the answer.
+         * This will be with respect to the current Dehn filling (if any).
          *
          * \snappy In SnapPy, this routine corresponds to calling
          * <tt>Manifold.volume(accuracy=True)</tt>.
@@ -494,6 +498,21 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * or 0 if this is a null triangulation.
          */
         double volume(int& precision) const;
+
+        /**
+         * Determines whether the current solution to the gluing equations
+         * has volume approximately zero.  This test is \e not rigorous.
+         *
+         * This requires (i) the volume itself to be very close to
+         * zero in an absolute sense, (ii) the volume to be zero
+         * within SnapPea's own estimated precision, and (iii) SnapPea's
+         * estimated precision to be sufficiently good in an absolute sense.
+         *
+         * @return \c true if and only if the volume of the current
+         * solution is approximately zero according to the constraints
+         * outlined above.
+         */
+        bool volumeZero() const;
 
         /**
          * Returns the shape of the given tetrahedron, with respect to
@@ -521,12 +540,31 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         const std::complex<double>& shape(unsigned tet) const;
 
         /**
+         * Returns the minimum imaginary part found amongst all tetrahedron
+         * shapes, with respect to the Dehn filled hyperbolic structure.
+         *
+         * Tetrahedron shapes are given in rectangular form using a fixed
+         * coordinate system, as described in the documentation for shape().
+         *
+         * If this is a null triangulation, or if solutionType() is no_solution
+         * or not_attempted (i.e., we did not or could not solve for a
+         * hyperbolic structure), then this routine will simply return zero.
+         *
+         * \snappy This has no corresponding routine in SnapPy,
+         * though the information is easily acessible via
+         * <tt>Manifold.tetrahedra_shapes(part='rect')</tt>.
+         *
+         * @return the minimum imaginary part amongst all tetrahedron shapes.
+         */
+        double minImaginaryShape() const;
+
+        /**
          * Returns a matrix describing Thurston's gluing equations.
          *
          * Each row of this matrix will describe a single equation.
          * The first getNumberOfEdges() rows will list the edge equations,
-         * and the following getNumberOfBoundaryComponents() rows will list
-         * the cusp equations.
+         * and the following 2 * getNumberOfBoundaryComponents() rows
+         * will list the cusp equations.
          *
          * The edge equations will be ordered arbitrarily.  The cusp equations
          * will be presented in pairs ordered by cusp index (as stored by
@@ -578,9 +616,9 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * shape parameters for tetrahedra 0, 1, ..., k are
          * \a z0, \a z1, ..., \a zk (here each shape parameter corresponds
          * to edges 0 and 5 of the corresponding tetrahedron).
-         * Then a row of the form <tt>a0 b0 a1 b1 ... ak bk c</tt>
+         * Then a row of the form <tt>a0 a1 ... ak b0 b1 ... bk c</tt>
          * describes the equation
-         * <tt>z0^a0 (1-z0)^b0 z1^a1 (1-z1)^b1 ... zk^ak (1-zk)^bk = c</tt>,
+         * <tt>z0^a0 z1^a1 ... zk^ak (1-z0)^b0 (1-z1)^b1 ... (1-zk)^bk = c</tt>,
          * where \a c will always be 1 or -1.
          *
          * See also gluingEquations(), which returns the gluing
@@ -600,6 +638,47 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * \name Cusps
          */
         /*@{*/
+
+        /**
+         * Returns the total number of cusps (both filled and complete).
+         *
+         * This returns the same value as the inherited function
+         * NTriangulation::getNumberOfBoundaryComponents().
+         *
+         * \snappy In SnapPy, this routine corresponds to calling
+         * <tt>Manifold.num_cusps()</tt>.
+         *
+         * @return the total number of cusps.
+         */
+        unsigned countCusps() const;
+
+        /**
+         * Returns the total number of complete cusps (that is, unfilled cusps).
+         *
+         * It is always true that
+         * <tt>countCompleteCusps() + countFilledCusps() == countCusps()</tt>.
+         *
+         * \snappy This has no corresponding routine in SnapPy,
+         * though the information is easily acessible via
+         * <tt>Manifold.cusp_info('is_complete')</tt>.
+         *
+         * @return the total number of complete cusps.
+         */
+        unsigned countCompleteCusps() const;
+
+        /**
+         * Returns the total number of filled cusps.
+         *
+         * It is always true that
+         * <tt>countCompleteCusps() + countFilledCusps() == countCusps()</tt>.
+         *
+         * \snappy This has no corresponding routine in SnapPy,
+         * though the information is easily acessible via
+         * <tt>Manifold.cusp_info('is_complete')</tt>.
+         *
+         * @return the total number of filled cusps.
+         */
+        unsigned countFilledCusps() const;
 
         /**
          * Identifies which vertex of the inherited NTriangulation
@@ -646,6 +725,9 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * If the triangulation has more than one cusp, these pairs are
          * ordered by cusp index (as stored by SnapPea).  You can call
          * cuspVertex() to map these to Regina's vertex indices if needed.
+         *
+         * For the purposes of this routine, any fillings on the cusps of
+         * this SnapPea triangulation will be ignored.
          *
          * This matrix is constructed so that, if \a M and \a L are the
          * rows for the meridian and longitude at some cusp, then for
@@ -777,8 +859,11 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         /**
          * Deprecated routine that verifies whether the tetrahedron face
          * gluings from this SnapPea triangulation match the given Regina
-         * triangulation precisely.  This is useful if you need to test
-         * whether SnapPea has relabelled and/or retriangulated.
+         * triangulation precisely.  Any fillings on the cusps of this
+         * SnapPea triangulation will be ignored.
+         *
+         * This is useful if you need to test whether SnapPea has
+         * relabelled and/or retriangulated.
          *
          * \deprecated This routine will be removed in a future version
          * of Regina.  Simply call NTriangulation::isIdenticalTo() instead
@@ -790,7 +875,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
 
         /**
          * Deprecated routine to create a new Regina triangulation that
-         * mirrors the internal SnapPea structure.
+         * mirrors the internal SnapPea structure.  Any fillings on the
+         * cusps will be ignored.
          *
          * The resulting triangulation will be newly created, and it is the
          * responsibility of the caller of this routine to eventually delete it.
@@ -921,9 +1007,24 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         /**
          * Synchronises the inherited NTriangulation data so that the
          * tetrahedra and their gluings match the raw SnapPea data.
-         * Also refreshes the internal array of tetrahedron shapes.
+         * Also refreshes the internal arrays of cusps and tetrahedron shapes.
          */
         void sync();
+
+        /**
+         * Copies the given SnapPea triangulation into the given Regina
+         * triangulation.  Any fillings on the cusps will be ignored;
+         * the Regina triangulation will simply copy the raw
+         * combinatorial data of the triangulation, and nothing more.
+         *
+         * \pre The SnapPea triangulation \a src is non-null.
+         * \pre The Regina triangulation \a dest is empty.
+         *
+         * @param src the SnapPea triangulation to copy from.
+         * @param dest the destination Regina triangulation.
+         */
+        static void fillRegina(regina::snappea::Triangulation* src,
+            NTriangulation& dest);
 
         /**
          * Resets the internal SnapPea data to the given SnapPea triangulation.
@@ -948,7 +1049,7 @@ inline SnapPeaFatalError::SnapPeaFatalError(
 // Inline functions for NSnapPeaTriangulation
 
 inline NSnapPeaTriangulation::NSnapPeaTriangulation() :
-        data_(0), shape_(0), cusp_(0), syncing_(false) {
+        data_(0), shape_(0), cusp_(0), filledCusps_(0), syncing_(false) {
     listen(this);
 }
 
@@ -959,6 +1060,18 @@ inline bool NSnapPeaTriangulation::isNull() const {
 inline const std::complex<double>& NSnapPeaTriangulation::shape(unsigned tet)
         const {
     return (shape_ ? shape_[tet] : zero_);
+}
+
+inline unsigned NSnapPeaTriangulation::countCusps() const {
+    return getNumberOfBoundaryComponents();
+}
+
+inline unsigned NSnapPeaTriangulation::countCompleteCusps() const {
+    return getNumberOfBoundaryComponents() - filledCusps_;
+}
+
+inline unsigned NSnapPeaTriangulation::countFilledCusps() const {
+    return filledCusps_;
 }
 
 inline NVertex* NSnapPeaTriangulation::cuspVertex(unsigned cusp) const {
