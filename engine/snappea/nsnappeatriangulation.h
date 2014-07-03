@@ -540,6 +540,25 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         const std::complex<double>& shape(unsigned tet) const;
 
         /**
+         * Returns the minimum imaginary part found amongst all tetrahedron
+         * shapes, with respect to the Dehn filled hyperbolic structure.
+         *
+         * Tetrahedron shapes are given in rectangular form using a fixed
+         * coordinate system, as described in the documentation for shape().
+         *
+         * If this is a null triangulation, or if solutionType() is no_solution
+         * or not_attempted (i.e., we did not or could not solve for a
+         * hyperbolic structure), then this routine will simply return zero.
+         *
+         * \snappy This has no corresponding routine in SnapPy,
+         * though the information is easily acessible via
+         * <tt>Manifold.tetrahedra_shapes(part='rect')</tt>.
+         *
+         * @return the minimum imaginary part amongst all tetrahedron shapes.
+         */
+        double minImaginaryShape() const;
+
+        /**
          * Returns a matrix describing Thurston's gluing equations.
          *
          * Each row of this matrix will describe a single equation.

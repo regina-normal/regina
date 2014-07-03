@@ -256,6 +256,19 @@ bool NSnapPeaTriangulation::volumeZero() const {
     return (fabs(vol) < epsilon);
 }
 
+double NSnapPeaTriangulation::minImaginaryShape() const {
+    if (! shape_)
+        return 0;
+
+    // Since shape_ is non-zero, there is at least one tetrahedron.
+    double ans = shape_[0].imag();
+    for (unsigned i = 1; i < getNumberOfTetrahedra(); ++i)
+        if (ans > shape_[i].imag())
+            ans = shape_[i].imag();
+
+    return ans;
+}
+
 NSnapPeaTriangulation* NSnapPeaTriangulation::canonize() const {
     if (! data_)
         return 0;
