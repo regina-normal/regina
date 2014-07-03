@@ -38,36 +38,17 @@
 
 namespace regina {
 
-namespace snappea {
-    // We need the following functions, which are defined in homology.c:
-    void find_relations(Triangulation *manifold,
-        RelationMatrix *relation_matrix, Boolean *overflow);
-    void free_relations(RelationMatrix *relation_matrix);
-}
-
 const NAbelianGroup* NSnapPeaTriangulation::homologyFilled() const {
     if (! data_)
         return 0;
     if (h1Filled_.known())
         return h1Filled_.value();
 
-    if (! regina::snappea::all_Dehn_coefficients_are_integers(data_))
-        return (h1Filled_ = 0);
-
-    // Note: TRUE and FALSE are #defines in SnapPea, and so don't live in any
-    // namespace.  We avoid them here, and directly use 0 and 1 instead.
-
     // Fetch the relation matrix from SnapPea.
-    regina::snappea::choose_generators(data_, 0 /* FALSE */, 0 /* FALSE */);
-
-    regina::snappea::Boolean overflow = 0; /* FALSE */
     regina::snappea::RelationMatrix sRelns;
-
-    regina::snappea::find_relations(data_, &sRelns, &overflow);
-    if (overflow) {
-        regina::snappea::free_relations(&sRelns);
+    regina::snappea::homology_presentation(data_, &sRelns);
+    if (! sRelns.relations)
         return (h1Filled_ = 0);
-    }
 
     // Pass the relations to Regina.
     NMatrixInt rRelns(sRelns.num_rows, sRelns.num_columns);

@@ -829,7 +829,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * This routine uses exact arithmetic, and so you are guaranteed
          * that - if it returns a result at all - that this result does
          * not suffer from integer overflows.  Essentially, the process
-         * is this: SnapPea constructs the filled relation matrix using
+         * is this: SnapPea constructs a filled relation matrix using
          * machine integer arithmetic (but detects overflow and returns
          * \c null in such cases), and then Regina uses exact integer
          * arithmetic to solve for the abelian group invariants (i.e.,
