@@ -41,10 +41,6 @@
 #include "triangulation/ntriangulation.h"
 #include "utilities/xmlutils.h"
 
-// Property IDs:
-#define PROPID_ALLOWSTRICT 1
-#define PROPID_ALLOWTAUT 2
-
 namespace regina {
 
 typedef std::vector<NAngleStructure*>::const_iterator StructureIteratorConst;

@@ -44,18 +44,6 @@
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
 
-// Property IDs:
-// #define PROPID_EXTRA_TOPOLOGY 1 -- Do not use!
-#define PROPID_H1 10
-#define PROPID_H1REL 11
-#define PROPID_H1BDRY 12
-#define PROPID_H2 13
-#define PROPID_FUNDAMENTALGROUP 14
-
-// Property IDs for properties relating to normal surfaces:
-#define PROPID_ZEROEFFICIENT 201
-#define PROPID_SPLITTINGSURFACE 202
-
 namespace regina {
 
 NTriangulation::NTriangulation(const std::string& description) :
