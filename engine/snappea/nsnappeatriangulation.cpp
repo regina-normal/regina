@@ -550,13 +550,27 @@ void NSnapPeaTriangulation::writeTextLong(std::ostream& out) const {
 
     NTriangulation::writeTextLong(out);
 
+    unsigned i;
     if (shape_) {
         out << "Tetrahedron shapes:" << std::endl;
-        for (unsigned i = 0; i < getNumberOfTetrahedra(); ++i)
+        for (i = 0; i < getNumberOfTetrahedra(); ++i)
             out << "  " << i << ": ( " << shape_[i].real()
                 << ", " << shape_[i].imag() << " )" << std::endl;
     } else
         out << "No tetrahedron shapes stored." << std::endl;
+
+    out << std::endl;
+
+    out << "Cusps:" << std::endl;
+    for (i = 0; i < getNumberOfBoundaryComponents(); ++i) {
+        out << "  " << i
+            << ": Vertex " << cusp_[i].vertex->markedIndex();
+        if (cusp_[i].complete)
+            out << ", complete";
+        else
+            out << ", filled ( " << cusp_[i].m << ", " << cusp_[i].l << " )";
+        out << std::endl;
+    }
 }
 
 bool NSnapPeaTriangulation::kernelMessagesEnabled() {
