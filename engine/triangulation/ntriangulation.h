@@ -1214,6 +1214,13 @@ class REGINA_API NTriangulation : public NPacket,
          *
          * \pre This triangulation has at most one component.
          *
+         * \warning As with every routine implemented by Regina's
+         * NTriangulation class, if you are calling this from the subclass
+         * NSnapPeaTriangulation then <b>any fillings on the cusps will be
+         * ignored</b>.  If you wish to compute the fundamental group with
+         * fillings, call NSnapPeaTriangulation::fundamentalGroupFilled()
+         * instead.
+         *
          * @return the fundamental group.
          */
         const NGroupPresentation& getFundamentalGroup() const;

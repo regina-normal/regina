@@ -602,6 +602,9 @@ void NSnapPeaTriangulation::sync() {
 
         filledCusps_ = 0;
 
+        fundGroupFilled_.clear();
+        h1Filled_.clear();
+
         if (data_) {
             fillRegina(data_, *this);
 

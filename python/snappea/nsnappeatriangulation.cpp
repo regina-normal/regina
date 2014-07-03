@@ -82,6 +82,11 @@ void addNSnapPeaTriangulation() {
         .def("cuspComplete", &NSnapPeaTriangulation::cuspComplete)
         .def("slopeEquations", &NSnapPeaTriangulation::slopeEquations,
             return_value_policy<manage_new_object>())
+        .def("fundamentalGroupFilled",
+            &NSnapPeaTriangulation::fundamentalGroupFilled,
+            return_internal_reference<>())
+        .def("homologyFilled", &NSnapPeaTriangulation::homologyFilled,
+            return_internal_reference<>())
         .def("verifyTriangulation", &NSnapPeaTriangulation::verifyTriangulation)
         .def("toRegina", &NSnapPeaTriangulation::toRegina,
             return_value_policy<manage_new_object>())

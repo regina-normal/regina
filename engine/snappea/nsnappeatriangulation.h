@@ -259,12 +259,22 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
                  triangulation then cusp_ will be 0. */
         unsigned filledCusps_;
             /**< The number of cusps that are currently filled. */
+
+        mutable NProperty<NGroupPresentation, StoreManagedPtr> fundGroupFilled_;
+            /**< The fundamental group of the filled triangulation,
+                 or 0 if this cannot be computed (e.g., if SnapPea
+                 does not return a matrix of relations). */
+        mutable NProperty<NAbelianGroup, StoreManagedPtr> h1Filled_;
+            /**< The first homology group of the filled triangulation,
+                 or 0 if this cannot be computed. */
+
         bool syncing_;
             /**< Set to \c true whilst sync() is being called.  This allows the
                  internal packet listener to distinguish between "legitimate"
                  changes to the inherited NTriangulation via sync(), versus
                  "illegitimate" changes from elsewhere through the inherited
                  NTriangulation interface. */
+
         static bool kernelMessages_;
             /**< Should the SnapPea kernel write diagnostic messages to
                  standard output? */
@@ -766,6 +776,79 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * or 0 if this is a null triangulation.
          */
         NMatrixInt* slopeEquations() const;
+
+        /*@}*/
+        /**
+         * \name Algebraic Invariants
+         */
+        /*@{*/
+
+        /**
+         * Returns the first homology group of the manifold with respect
+         * to the current Dehn filling (if any).  Any complete cusps
+         * (without fillings) will be treated as though they had been
+         * truncated.
+         *
+         * This is different from the inherited homology() routine from
+         * the parent NTriangulation class:
+         *
+         * - This routine homologyFilled() respects Dehn fillings, and uses
+         *   a combination of both SnapPea's and Regina's code to compute
+         *   homology groups.  There may be (rare) situations in which
+         *   the SnapPea kernel cannot perform its part of the computation,
+         *   in which case this routine will return a null pointer.
+         *
+         * - The inherited homology() routine uses only Regina's code, and
+         *   works purely within Regina's own NTriangulation class.  Since
+         *   NTriangulation knows nothing about SnapPea or fillings,
+         *   this means that any fillings on the cusps (which are
+         *   specific to SnapPea triangulations) will be ignored.
+         *   The homology() routine will always return a solution.
+         *
+         * Note that each time the triangulation changes, the homology
+         * group will be deleted.  Thus the pointer that is returned
+         * from this routine should not be kept for later use.  Instead,
+         * homologyFilled() should be called again; this will be
+         * instantaneous if the group has already been calculated.
+         *
+         * @return the first homology group of the filled manifold, or
+         * 0 if this could not be computed.
+         */
+        const NAbelianGroup* homologyFilled() const;
+
+        /**
+         * Returns the fundamental group of the manifold with respect
+         * to the current Dehn filling (if any).  Any complete cusps
+         * (without fillings) will be treated as though they had been
+         * truncated.
+         *
+         * This is different from the inherited getFundamentalGroup() routine
+         * from the parent NTriangulation class:
+         *
+         * - This routine fundamentalGroupFilled() respects Dehn fillings, and
+         *   essentially uses only SnapPea's code to compute fundamental
+         *   groups.  There may be (rare) situations in which the SnapPea
+         *   kernel cannot perform its part of the computation, in which case
+         *   this routine will return a null pointer.
+         *
+         * - The inherited getFundamentalGroup() routine uses only Regina's
+         *   code, and works purely within Regina's own NTriangulation class.
+         *   Since NTriangulation knows nothing about SnapPea or fillings,
+         *   this means that any fillings on the cusps (which are
+         *   specific to SnapPea triangulations) will be ignored.
+         *   The fundamentalGroup() routine will always return a solution
+         *   for connected triangulations.
+         *
+         * Note that each time the triangulation changes, the fundamental
+         * group will be deleted.  Thus the pointer that is returned
+         * from this routine should not be kept for later use.  Instead,
+         * fundamentalGroupFilled() should be called again; this will be
+         * instantaneous if the group has already been calculated.
+         *
+         * @return the fundamental group of the filled manifold, or
+         * 0 if this could not be computed.
+         */
+        const NGroupPresentation* fundamentalGroupFilled() const;
 
         /*@}*/
         /**
