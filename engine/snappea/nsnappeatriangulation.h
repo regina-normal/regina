@@ -799,8 +799,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          *   in which case this routine will return a null pointer.
          *
          * - The inherited homology() routine uses only Regina's code, and
-         *   works purely within Regina's own NTriangulation class.  Since
-         *   NTriangulation knows nothing about SnapPea or fillings,
+         *   works purely within Regina's parent NTriangulation class.
+         *   Since NTriangulation knows nothing about SnapPea or fillings,
          *   this means that any fillings on the cusps (which are
          *   specific to SnapPea triangulations) will be ignored.
          *   The homology() routine will always return a solution.
@@ -837,27 +837,22 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         const NAbelianGroup* homologyFilled() const;
 
         /**
-         * Returns the fundamental group of the manifold with respect
-         * to the current Dehn filling (if any).  Any complete cusps
-         * (without fillings) will be treated as though they had been
-         * truncated.
+         * Returns the fundamental group of the manifold with respect to
+         * the current Dehn filling (if any).  Any complete cusps (without
+         * fillings), and any cusps whose filling coefficients are not coprime
+         * integers, will be treated as though they had been truncated.
          *
          * This is different from the inherited getFundamentalGroup() routine
          * from the parent NTriangulation class:
          *
          * - This routine fundamentalGroupFilled() respects Dehn fillings, and
-         *   essentially uses only SnapPea's code to compute fundamental
-         *   groups.  There may be (rare) situations in which the SnapPea
-         *   kernel cannot perform its part of the computation, in which case
-         *   this routine will return a null pointer.
+         *   directly uses SnapPea's code to compute fundamental groups.
          *
          * - The inherited getFundamentalGroup() routine uses only Regina's
-         *   code, and works purely within Regina's own NTriangulation class.
+         *   code, and works purely within Regina's parent NTriangulation class.
          *   Since NTriangulation knows nothing about SnapPea or fillings,
-         *   this means that any fillings on the cusps (which are
-         *   specific to SnapPea triangulations) will be ignored.
-         *   The fundamentalGroup() routine will always return a solution
-         *   for connected triangulations.
+         *   this means that any fillings on the cusps (which are specific
+         *   to SnapPea triangulations) will be ignored.
          *
          * Note that each time the triangulation changes, the fundamental
          * group will be deleted.  Thus the pointer that is returned
@@ -865,10 +860,24 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * fundamentalGroupFilled() should be called again; this will be
          * instantaneous if the group has already been calculated.
          *
+         * @param simplifyPresentation \c true if SnapPea should attempt
+         * to simplify the group presentation, or \c false if it should
+         * be left unsimplified.
+         * @param fillingsMayAffectGenerators \c true if SnapPea's choice of
+         * generators is allowed to depend on the Dehn fillings, or \c false
+         * if the choice of generators should be consistent across different
+         * fillings.
+         * @param minimiseNumberOfGenerators \c true if SnapPea's group
+         * simplification code should try to reduce the number of
+         * generators at the expense of increasing the total length of
+         * the relations, or \c false if it should do the opposite.
          * @return the fundamental group of the filled manifold, or
          * 0 if this could not be computed.
          */
-        const NGroupPresentation* fundamentalGroupFilled() const;
+        const NGroupPresentation* fundamentalGroupFilled(
+            bool simplifyPresentation = true,
+            bool fillingsMayAffectGenerators = true,
+            bool minimiseNumberOfGenerators = true) const;
 
         /*@}*/
         /**

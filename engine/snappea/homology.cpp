@@ -54,8 +54,8 @@ const NAbelianGroup* NSnapPeaTriangulation::homologyFilled() const {
     if (! regina::snappea::all_Dehn_coefficients_are_integers(data_))
         return (h1Filled_ = 0);
 
-    // Note: TRUE and FALSE are #defines in SnapPea, and so don't live
-    // in any namespace.  We avoid them here.
+    // Note: TRUE and FALSE are #defines in SnapPea, and so don't live in any
+    // namespace.  We avoid them here, and directly use 0 and 1 instead.
 
     // Fetch the relation matrix from SnapPea.
     regina::snappea::choose_generators(data_, 0 /* FALSE */, 0 /* FALSE */);

@@ -50,6 +50,9 @@ namespace {
         return make_tuple(volume, precision);
     }
 
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_fundamentalGroupFilled,
+        NSnapPeaTriangulation::fundamentalGroupFilled, 0, 3);
+
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_enableKernelMessages,
         NSnapPeaTriangulation::enableKernelMessages, 0, 1);
 }
@@ -84,7 +87,11 @@ void addNSnapPeaTriangulation() {
             return_value_policy<manage_new_object>())
         .def("fundamentalGroupFilled",
             &NSnapPeaTriangulation::fundamentalGroupFilled,
-            return_internal_reference<>())
+            OL_fundamentalGroupFilled(args(
+                "simplify_presentation",
+                "fillings_may_affect_generators",
+                "minimize_number_of_generators"))
+            [return_internal_reference<>()])
         .def("homologyFilled", &NSnapPeaTriangulation::homologyFilled,
             return_internal_reference<>())
         .def("verifyTriangulation", &NSnapPeaTriangulation::verifyTriangulation)

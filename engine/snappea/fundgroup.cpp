@@ -33,18 +33,48 @@
 /* end stub */
 
 #include "snappea/nsnappeatriangulation.h"
+#include "snappea/kernel/SnapPea.h"
 
 namespace regina {
 
-const NGroupPresentation* NSnapPeaTriangulation::fundamentalGroupFilled()
-        const {
+const NGroupPresentation* NSnapPeaTriangulation::fundamentalGroupFilled(
+            bool simplifyPresentation,
+            bool fillingsMayAffectGenerators,
+            bool minimiseNumberOfGenerators) const {
     if (fundGroupFilled_.known())
         return fundGroupFilled_.value();
+    if (! data_)
+        return 0;
 
-    // TODO: Calculate it.
+    // Note: TRUE and FALSE are #defines in SnapPea, and so don't live in any
+    // namespace.  We avoid them here, and directly use 0 and 1 instead.
 
-    // Build the group from the presentation matrix and tidy up.
+    // Pass all the work to SnapPea.
+    regina::snappea::GroupPresentation* pres =
+        regina::snappea::fundamental_group(data_,
+            (simplifyPresentation ? 1 : 0),
+            (fillingsMayAffectGenerators ? 1 : 0),
+            (minimiseNumberOfGenerators ? 1 : 0));
+
+    // Convert the results into Regina's NGroupPresentation class.
     NGroupPresentation* ans = new NGroupPresentation();
+    ans->addGenerator(regina::snappea::fg_get_num_generators(pres));
+    unsigned i;
+    int *sReln, *sPos;
+    NGroupExpression* rReln;
+    for (i = 0; i < regina::snappea::fg_get_num_relations(pres); ++i) {
+        sReln = regina::snappea::fg_get_relation(pres, i);
+        rReln = new NGroupExpression();
+        for (sPos = sReln; *sPos; ++sPos)
+            if (*sPos > 0)
+                rReln->addTermLast(*sPos - 1, 1);
+            else
+                rReln->addTermLast(-(*sPos + 1), -1);
+        ans->addRelation(rReln);
+        regina::snappea::fg_free_relation(sReln);
+    }
+
+    regina::snappea::free_group_presentation(pres);
     return (fundGroupFilled_ = ans);
 }
 
