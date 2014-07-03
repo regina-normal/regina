@@ -130,8 +130,8 @@ Version 4.96  [ (under development) ]
               countFilledCusps(), cuspComplete(), cuspVertex(),
               fundamentalGroupFilled(), gluingEquations(),
               gluingEquationsRect(), homologyFilled(), minImaginaryShape(),
-              name(), shape(), volumeZero(), plus others (listed individually
-              below).
+              name(), protoCanonize() and protoCanonise(), shape(),
+              volumeZero(), plus others (listed individually below).
             - Two new constructors: a default constructor that builds a null
               triangulation, and a string constructor that takes either the
               name or the contents of a native SnapPea data file.
@@ -153,8 +153,7 @@ Version 4.96  [ (under development) ]
               The old name is deprecated but kept for backward compatibility.
             - Routine dump() is deprecated.  Instead, simply call snapPea() and
               write the resulting string to standard output.
-            - Routine canonize() now returns a (richer) NSnapPeaTriangulation,
-              and has a new synonym canonise().
+            - Added synonym canonise() for canonize().
             - Routine solutionType() now returns the filled solution type
               (not the complete solution type).
             - Routine slopeEquations() now orders rows by SnapPea cusp indices

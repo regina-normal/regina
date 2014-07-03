@@ -97,6 +97,10 @@ void addNSnapPeaTriangulation() {
         .def("verifyTriangulation", &NSnapPeaTriangulation::verifyTriangulation)
         .def("toRegina", &NSnapPeaTriangulation::toRegina,
             return_value_policy<manage_new_object>())
+        .def("protoCanonize", &NSnapPeaTriangulation::protoCanonize,
+            return_value_policy<manage_new_object>())
+        .def("protoCanonise", &NSnapPeaTriangulation::protoCanonise,
+            return_value_policy<manage_new_object>())
         .def("canonize", &NSnapPeaTriangulation::canonize,
             return_value_policy<manage_new_object>())
         .def("canonise", &NSnapPeaTriangulation::canonise,

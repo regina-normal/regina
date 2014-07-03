@@ -269,7 +269,25 @@ double NSnapPeaTriangulation::minImaginaryShape() const {
     return ans;
 }
 
-NSnapPeaTriangulation* NSnapPeaTriangulation::canonize() const {
+NSnapPeaTriangulation* NSnapPeaTriangulation::protoCanonize() const {
+    if (! data_)
+        return 0;
+
+    regina::snappea::Triangulation* tmp;
+    regina::snappea::copy_triangulation(data_, &tmp);
+
+    if (regina::snappea::proto_canonize(tmp) != regina::snappea::func_OK) {
+        regina::snappea::free_triangulation(tmp);
+        return 0;
+    }
+
+    NSnapPeaTriangulation* ans = new NSnapPeaTriangulation();
+    ans->setPacketLabel(get_triangulation_name(data_));
+    ans->reset(tmp);
+    return ans;
+}
+
+NTriangulation* NSnapPeaTriangulation::canonize() const {
     if (! data_)
         return 0;
 
@@ -281,9 +299,10 @@ NSnapPeaTriangulation* NSnapPeaTriangulation::canonize() const {
         return 0;
     }
 
-    NSnapPeaTriangulation* ans = new NSnapPeaTriangulation();
+    NTriangulation* ans = new NTriangulation();
     ans->setPacketLabel(get_triangulation_name(data_));
-    ans->reset(tmp);
+    fillRegina(tmp, *ans);
+    regina::snappea::free_triangulation(tmp);
     return ans;
 }
 

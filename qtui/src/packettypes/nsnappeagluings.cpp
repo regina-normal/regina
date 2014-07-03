@@ -280,7 +280,7 @@ void NSnapPeaGluingsUI::canonise() {
             tr("This is a null triangulation: there is no SnapPea "
             "triangulation for me to canonise."));
     else {
-        regina::NSnapPeaTriangulation* ans = tri->canonise();
+        regina::NTriangulation* ans = tri->canonise();
         if (! ans) {
             ReginaSupport::sorry(ui,
                 tr("The SnapPea kernel was not able to build the "

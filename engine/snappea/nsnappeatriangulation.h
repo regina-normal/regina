@@ -887,21 +887,82 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         /*@{*/
 
         /**
+         * Constructs the canonical cell decomposition, using an
+         * arbitrary retriangulation if this decomposition contains
+         * non-tetrahedron cells.
+         *
+         * The canonical cell decomposition is the one described in
+         * "Convex hulls and isometries of cusped hyperbolic 3-manifolds",
+         * Jeffrey R. Weeks, Topology Appl. 52 (1993), 127-149.
+         *
+         * If the canonical cell decomposition is already a triangulation then
+         * we leave it untouched, and otherwise we triangulate it arbitrarily.
+         * Either way, we preserve the hyperbolic structure.
+         *
+         * If you need a canonical triangulation (as opposed to an arbitrary
+         * retriangulation), then you should call canonize() instead.
+         *
+         * The resulting triangulation will be newly allocated, and it
+         * is the responsibility of the caller of this routine to destroy it.
+         *
+         * If for any reason either Regina or SnapPea are unable to
+         * construct a triangulation of the canonical cell decomposition,
+         * then this routine will return 0.
+         *
+         * \snappy The function <tt>canonize()</tt> means different
+         * things for SnapPy versus the SnapPea kernel.  Here Regina follows
+         * the naming convention used in the SnapPea kernel.  Specifically:
+         * Regina's routine NSnapPeaTriangulation::protoCanonize()
+         * corresponds to SnapPy's <tt>Manifold.canonize()</tt> and the
+         * SnapPea kernel's <tt>proto_canonize(manifold)</tt>.
+         * Regina's routine NSnapPeaTriangulation::canonize()
+         * corresponds to the SnapPea kernel's <tt>canonize(manifold)</tt>,
+         * and is not available through SnapPy at all.
+         *
+         * \warning The SnapPea kernel does not always compute the canonical
+         * cell decomposition correctly.  However, it guarantees that
+         * the manifold that it does compute is homeomorphic to the original.
+         *
+         * @return the canonical triangulation of the canonical cell
+         * decomposition, or 0 if this could not be constructed.
+         */
+        NSnapPeaTriangulation* protoCanonize() const;
+
+        /**
+         * A synonym for protoCanonize(), which constructs the canonical
+         * cell decomposition using an arbitrary retriangulation if necessary.
+         * See canonize() for further details.
+         */
+        NSnapPeaTriangulation* protoCanonise() const;
+
+        /**
          * Constructs the canonical retriangulation of the canonical
          * cell decomposition.
          *
          * The canonical cell decomposition is the one described in
          * "Convex hulls and isometries of cusped hyperbolic 3-manifolds",
          * Jeffrey R. Weeks, Topology Appl. 52 (1993), 127-149.
-         * The canonical retriangulation is defined as follows: If the
-         * canonical cell decomposition is already a triangulation then
-         * we leave it untouched.  Otherwise: (i) within each 3-cell of
-         * the original complex we introduce a new internal (finite)
-         * vertex and cone the 3-cell boundary to this new vertex, and
-         * (ii) for each 2-cell of the original complex we replace the
-         * two new cones on either side with a ring of tetrahedra surrounding
-         * a new edge that connects the two new vertices on either side.
+         *
+         * If the canonical cell decomposition is already a triangulation
+         * then we leave it untouched.  Otherwise, the canonical
+         * retriangulation introduces internal (finite) vertices, and
+         * is defined as follows:
+         *
+         * - within each 3-cell of the original complex we introduce a new
+         *   internal vertex, and cone the 3-cell boundary to this new vertex;
+         *
+         * - through each 2-cell of the original complex we insert the
+         *   dual edge (joining the two new finite vertices on either side),
+         *   and we replace the two cones on either side of the 2-cell with
+         *   a ring of tetrahedra surrounding this dual edge.
+         *
          * See canonize_part_2.c in the SnapPea source code for details.
+         *
+         * This routine discards the hyperbolic structure along with all
+         * SnapPea-specific information (such as peripheral curves),
+         * and simply returns one of Regina's native triangulations.
+         * If you need to preserve SnapPea-specific information then you
+         * should call protoCanonize() instead.
          *
          * The resulting triangulation will be newly allocated, and it
          * is the responsibility of the caller of this routine to destroy it.
@@ -910,35 +971,31 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * construct the canonical retriangulation of the canonical cell
          * decomposition, this routine will return 0.
          *
-         * \snappy This has no corresponding routine in SnapPy.  This is
-         * because, if the canonical cell decomposition is not a triangulation,
-         * SnapPy retriangulates in a way that is non-canonical but so
-         * that all vertices are ideal.
+         * \snappy The function <tt>canonize()</tt> means different
+         * things for SnapPy versus the SnapPea kernel.  Here Regina follows
+         * the naming convention used in the SnapPea kernel.  Specifically:
+         * Regina's routine NSnapPeaTriangulation::protoCanonize()
+         * corresponds to SnapPy's <tt>Manifold.canonize()</tt> and the
+         * SnapPea kernel's <tt>proto_canonize(manifold)</tt>.
+         * Regina's routine NSnapPeaTriangulation::canonize()
+         * corresponds to the SnapPea kernel's <tt>canonize(manifold)</tt>,
+         * and is not available through SnapPy at all.
          *
          * \warning The SnapPea kernel does not always compute the canonical
          * cell decomposition correctly.  However, it guarantees that
          * the manifold that it does compute is homeomorphic to the original.
          *
-         * \warning This matches the triangulation produced by SnapPea's
-         * version of canonize().  However, it does not match the
-         * triangulation produced by SnapPy's version of canonize().
-         * This is because SnapPy returns an arbitrary simplicial subdivision
-         * of the canonical cell decomposition, whereas SnapPea follows
-         * this with a canonical retriangulation.
-         *
-         * \pre This is an ideal triangulation, not a closed triangulation.
-         *
          * @return the canonical triangulation of the canonical cell
          * decomposition, or 0 if this could not be constructed.
          */
-        NSnapPeaTriangulation* canonize() const;
+        NTriangulation* canonize() const;
 
         /**
          * A synonym for canonize(), which constructs the canonical
          * retriangulation of the canonical cell decomposition.
          * See canonize() for further details.
          */
-        NSnapPeaTriangulation* canonise() const;
+        NTriangulation* canonise() const;
 
         /**
          * Asks SnapPea to randomly retriangulate this manifold, using
@@ -1199,7 +1256,11 @@ inline bool NSnapPeaTriangulation::dependsOnParent() const {
     return false;
 }
 
-inline NSnapPeaTriangulation* NSnapPeaTriangulation::canonise() const {
+inline NSnapPeaTriangulation* NSnapPeaTriangulation::protoCanonise() const {
+    return protoCanonize();
+}
+
+inline NTriangulation* NSnapPeaTriangulation::canonise() const {
     return canonize();
 }
 
