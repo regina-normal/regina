@@ -891,6 +891,10 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * arbitrary retriangulation if this decomposition contains
          * non-tetrahedron cells.
          *
+         * Any fillings on the cusps of this SnapPea triangulation will be
+         * ignored for the purposes of canonisation, though they will be
+         * copied over to the new SnapPea triangulation that is returned.
+         *
          * The canonical cell decomposition is the one described in
          * "Convex hulls and isometries of cusped hyperbolic 3-manifolds",
          * Jeffrey R. Weeks, Topology Appl. 52 (1993), 127-149.
@@ -938,6 +942,11 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         /**
          * Constructs the canonical retriangulation of the canonical
          * cell decomposition.
+         *
+         * Any fillings on the cusps of this SnapPea triangulation will be
+         * ignored.  In the resulting canonical triangulation (which is
+         * one of Regina's native NTriangulation objects, not a SnapPea
+         * triangulation), these fillings will be completely forgotten.
          *
          * The canonical cell decomposition is the one described in
          * "Convex hulls and isometries of cusped hyperbolic 3-manifolds",
