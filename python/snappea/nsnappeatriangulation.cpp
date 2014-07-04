@@ -83,6 +83,7 @@ void addNSnapPeaTriangulation() {
         .def("cuspVertex", &NSnapPeaTriangulation::cuspVertex,
             return_value_policy<reference_existing_object>())
         .def("cuspComplete", &NSnapPeaTriangulation::cuspComplete)
+        .def("filling", &NSnapPeaTriangulation::filling)
         .def("slopeEquations", &NSnapPeaTriangulation::slopeEquations,
             return_value_policy<manage_new_object>())
         .def("fundamentalGroupFilled",
@@ -120,6 +121,14 @@ void addNSnapPeaTriangulation() {
         .staticmethod("kernelMessagesEnabled")
         .staticmethod("enableKernelMessages")
         .staticmethod("disableKernelMessages")
+    ;
+
+    class_<NSnapPeaTriangulation::Filling>("Filling")
+        .def_readwrite("m", &NSnapPeaTriangulation::Filling::m)
+        .def_readwrite("l", &NSnapPeaTriangulation::Filling::l)
+        .def(init<>())
+        .def(init<int, int>())
+        .def(init<const NSnapPeaTriangulation::Filling&>())
     ;
 
     enum_<NSnapPeaTriangulation::SolutionType>("SolutionType")

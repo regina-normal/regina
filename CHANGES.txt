@@ -127,7 +127,7 @@ Version 4.96  [ (under development) ]
               must not be modified directly; instead this is automatically
               kept in sync with the SnapPea data.
             - Many new routines: countCompleteCusps(), countCusps(),
-              countFilledCusps(), cuspComplete(), cuspVertex(),
+              countFilledCusps(), cuspComplete(), cuspVertex(), filling(),
               fundamentalGroupFilled(), gluingEquations(),
               gluingEquationsRect(), homologyFilled(), minImaginaryShape(),
               name(), protoCanonize() and protoCanonise(), shape(),

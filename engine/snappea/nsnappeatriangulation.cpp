@@ -354,7 +354,7 @@ NMatrixInt* NSnapPeaTriangulation::gluingEquations() const {
             ++row;
         } else {
             cuspEqn = regina::snappea::get_cusp_equation(
-                data_, c, cusp_[c].m, cusp_[c].l, &numCols);
+                data_, c, cusp_[c].filling.m, cusp_[c].filling.l, &numCols);
             for (j = 0; j < numCols; ++j)
                 matrix->entry(row, j) = cuspEqn[j];
             regina::snappea::free_cusp_equation(cuspEqn);
@@ -431,7 +431,7 @@ NMatrixInt* NSnapPeaTriangulation::gluingEquationsRect() const {
             ++row;
         } else {
             cuspEqn = regina::snappea::get_cusp_equation(
-                data_, c, cusp_[c].m, cusp_[c].l, &numCols);
+                data_, c, cusp_[c].filling.m, cusp_[c].filling.l, &numCols);
             parity = 0;
             for (j = 0; j < n; ++j) {
                 matrix->entry(row, j) += cuspEqn[3 * j];
@@ -568,7 +568,8 @@ void NSnapPeaTriangulation::writeTextLong(std::ostream& out) const {
         if (cusp_[i].complete)
             out << ", complete";
         else
-            out << ", filled ( " << cusp_[i].m << ", " << cusp_[i].l << " )";
+            out << ", filled ( " << cusp_[i].filling.m << ", "
+                << cusp_[i].filling.l << " )";
         out << std::endl;
     }
 }
@@ -702,10 +703,15 @@ void NSnapPeaTriangulation::sync() {
                 cusp_[c->index].complete = c->is_complete;
                 cusp_[c->index].vertex = 0;
                 if (c->is_complete)
-                    cusp_[c->index].m = cusp_[c->index].l = 0;
-                else {
-                    cusp_[c->index].m = c->m;
-                    cusp_[c->index].l = c->l;
+                    cusp_[c->index].filling.m = cusp_[c->index].filling.l = 0;
+                else if (! regina::snappea::Dehn_coefficients_are_integers(c)) {
+                    // Abort!  Make this a null triangulation.
+                    reset(0); // Calls sync() again, but this is harmless.
+                    syncing_ = false;
+                    return;
+                } else {
+                    cusp_[c->index].filling.m = c->m;
+                    cusp_[c->index].filling.l = c->l;
                     ++filledCusps_;
                 }
                 c = c->next;

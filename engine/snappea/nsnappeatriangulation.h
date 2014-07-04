@@ -169,12 +169,15 @@ struct PacketInfo<PACKET_SNAPPEATRIANGULATION> {
  * - attempting to read a broken SnapPea data file;
  *
  * - attempting to change a SnapPea triangulation using the inherited
- *   NTriangulation interface (as discussed above).
+ *   NTriangulation interface (as discussed above);
+ *
+ * - attempting to import a SnapPea triangulation that uses non-integer
+ *   filling coefficients (as discussed below).
  *
  * Regarding fillings:  SnapPea can store and manipulate Dehn fillings
- * on cusps, and the NSnapPeaTriangulation class respects these where it can.
- * However, Regina's own NTriangulation class knows nothing about fillings
- * at all.  Therefore:
+ * on cusps, and the NSnapPeaTriangulation class respects these where it can
+ * (but only for integer filling coefficients; see below).  However, Regina's
+ * own NTriangulation class knows nothing about fillings at all.  Therefore:
  *
  * - Routines inherited through the NTriangulation interface will ignore
  *   fillings completely (so, for instance, homology() will return the
@@ -186,6 +189,11 @@ struct PacketInfo<PACKET_SNAPPEATRIANGULATION> {
  *   will return the first homology of the filled manifold).  See the
  *   individual notes for each member function for details on how it
  *   handles fillings.
+ *
+ * As noted above, NSnapPeaTriangulation only supports integer filling
+ * coefficients (for now).  Any attempt to import a triangulation from
+ * a SnapPea file with non-integer filling coefficients will result in a
+ * null triangulation (as discussed above).
  *
  * There are many places in the SnapPea kernel where SnapPea throws a
  * fatal error.  As of Regina 4.96, these fatal errors are converted
@@ -246,6 +254,27 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
                 /**< The gluing equations could not be solved. */
         } SolutionType;
 
+        /**
+         * Describes a Dehn filling on a cusp.
+         */
+        struct Filling {
+            int m; /**< The first (meridian) filling coefficient. */
+            int l; /**< The second (longitude) filling coefficient. */
+
+            /**
+             * Creates a (0, 0) filling.
+             */
+            Filling();
+
+            /**
+             * Creates a filling with the given coefficients.
+             *
+             * @param m_ the first (meridian) filling coefficient.
+             * @param l_ the first (longitude) filling coefficient.
+             */
+            Filling(int m_, int l_);
+        };
+
     private:
         /**
          * A private structure used to cache information about each cusp of
@@ -257,8 +286,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
             bool complete;
                 /**< \c true if the cusp is complete, or \c false if it
                      is filled. */
-            double m, l;
-                /**< The filling coefficients on this cusp, or 0 if the
+            Filling filling;
+                /**< The filling coefficients on this cusp, or (0, 0) if the
                      cusp is complete. */
         };
 
@@ -593,8 +622,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          *
          * Each row of this matrix will describe a single equation.
          * The first getNumberOfEdges() rows will list the edge equations,
-         * and the following 2 * getNumberOfBoundaryComponents() rows
-         * will list the cusp equations.
+         * and the following 2 * countCompleteCusps() + countFilledCusps()
+         * rows will list the cusp equations.
          *
          * The edge equations will be ordered arbitrarily.  The cusp equations
          * will be presented in pairs ordered by cusp index (as stored by
@@ -727,7 +756,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * if/when this happens.
          *
          * @param cusp the index of a cusp according to SnapPea; this must be
-         * between 0 and getNumberOfBoundaryComponents()-1 inclusive.
+         * between 0 and countCusps()-1 inclusive.
          * @return the corresponding vertex of the triangulation according
          * to Regina.
          */
@@ -740,10 +769,21 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * <tt>Manifold.cusp_info('is_complete')[cusp]</tt>.
          *
          * @param cusp the index of a cusp according to SnapPea; this must be
-         * between 0 and getNumberOfBoundaryComponents()-1 inclusive.
+         * between 0 and countCusps()-1 inclusive.
          * @return \c true if the cusp is complete, or \c false if it is filled.
          */
         bool cuspComplete(unsigned cusp) const;
+
+        /**
+         * Returns the current filling coefficients for the given cusp.
+         * If the cusp is complete (or if this is a null triangulation),
+         * then the filling returned will be (0, 0).
+         *
+         * @param cusp the index of a cusp according to SnapPea; this must be
+         * between 0 and countCusps()-1 inclusive.
+         * @return the corresponding filling coefficients.
+         */
+        Filling filling(unsigned cusp) const;
 
         /**
          * Returns a matrix for computing boundary slopes of
@@ -1246,6 +1286,14 @@ inline SnapPeaFatalError::SnapPeaFatalError(
         function(fromFunction), file(fromFile) {
 }
 
+// Inline functions for NSnapPeaTriangulation::Filling
+
+inline NSnapPeaTriangulation::Filling::Filling() : m(0), l(0) {
+}
+
+inline NSnapPeaTriangulation::Filling::Filling(int m_, int l_) : m(m_), l(l_) {
+}
+
 // Inline functions for NSnapPeaTriangulation
 
 inline NSnapPeaTriangulation::NSnapPeaTriangulation() :
@@ -1280,6 +1328,11 @@ inline NVertex* NSnapPeaTriangulation::cuspVertex(unsigned cusp) const {
 
 inline bool NSnapPeaTriangulation::cuspComplete(unsigned cusp) const {
     return (cusp_ ? cusp_[cusp].complete : false);
+}
+
+inline NSnapPeaTriangulation::Filling NSnapPeaTriangulation::filling(
+        unsigned cusp) const {
+    return (cusp_ ? cusp_[cusp].filling : Filling());
 }
 
 inline bool NSnapPeaTriangulation::dependsOnParent() const {
