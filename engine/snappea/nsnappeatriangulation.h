@@ -1277,6 +1277,16 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
     friend class regina::NXMLSnapPeaReader;
 };
 
+/**
+ * Writes the given filling coefficients to the given output stream.
+ *
+ * @param out the output stream to which to write.
+ * @param f the filling coefficients to write.
+ * @return out a reference to the given output stream.
+ */
+std::ostream& operator << (std::ostream& out,
+    const NSnapPeaTriangulation::Filling& f);
+
 /*@}*/
 
 // Inline functions for SnapPeaFatalError
@@ -1292,6 +1302,11 @@ inline NSnapPeaTriangulation::Filling::Filling() : m(0), l(0) {
 }
 
 inline NSnapPeaTriangulation::Filling::Filling(int m_, int l_) : m(m_), l(l_) {
+}
+
+inline std::ostream& operator << (std::ostream& out,
+        const NSnapPeaTriangulation::Filling& f) {
+    return out << '(' << f.m << ", " << f.l << ')';
 }
 
 // Inline functions for NSnapPeaTriangulation

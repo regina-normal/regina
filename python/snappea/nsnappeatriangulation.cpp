@@ -129,6 +129,7 @@ void addNSnapPeaTriangulation() {
         .def(init<>())
         .def(init<int, int>())
         .def(init<const NSnapPeaTriangulation::Filling&>())
+        .def(self_ns::str(self))
     ;
 
     enum_<NSnapPeaTriangulation::SolutionType>("SolutionType")

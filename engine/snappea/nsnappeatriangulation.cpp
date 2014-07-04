@@ -568,8 +568,7 @@ void NSnapPeaTriangulation::writeTextLong(std::ostream& out) const {
         if (cusp_[i].complete)
             out << ", complete";
         else
-            out << ", filled ( " << cusp_[i].filling.m << ", "
-                << cusp_[i].filling.l << " )";
+            out << ", filled " << cusp_[i].filling;
         out << std::endl;
     }
 }
