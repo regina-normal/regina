@@ -114,13 +114,6 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri, bool) :
         listen(this);
         return;
     }
-    if (tri.isIdeal()) {
-        // If it's ideal, make sure every vertex is ideal.
-        if (tri.getNumberOfBoundaryComponents() < tri.getNumberOfVertices()) {
-            listen(this);
-            return;
-        }
-    }
     if (tri.getNumberOfTetrahedra() >= INT_MAX) {
         listen(this);
         return;

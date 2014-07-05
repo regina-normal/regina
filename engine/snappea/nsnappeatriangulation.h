@@ -441,15 +441,23 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          *   that this default basis may change (and indeed has changed in the
          *   past) across different versions of the SnapPea kernel.
          *
-         * SnapPea is designed to work with ideal triangulations only.
-         * You can pass a closed triangulation (as an NTriangulation)
-         * to the NSnapPeaTriangulation class constructor, but SnapPea will
-         * automatically convert this into a filling of a cusped manifold.
+         * Regarding internal vertices (i.e., vertices whose links are spheres):
+         * SnapPea is designed to work only with triangulations where
+         * every vertex is ideal.  As a result:
          *
-         * It is possible that the tetrahedron and vertex numbers might be
-         * changed in the new SnapPea triangulation.  In particular, if the
-         * given Regina triangulation is orientable but not oriented, then you
-         * should \e expect these numbers to change.
+         * - You may pass a closed triangulation to this constructor, but
+         *   SnapPea will automatically convert this into a filling of a
+         *   cusped manifold, using an ideal triangulation.
+         *
+         * - You may also pass a triangulation that uses both ideal and
+         *   internal vertices.  In this case, SnapPea will retriangulate
+         *   the manifold so that it uses ideal vertices only.
+         *
+         * Even if SnapPea does not retriangulate the manifold (for the
+         * reasons described above), it is possible that the tetrahedron and
+         * vertex numbers might be changed in the new SnapPea triangulation.
+         * In particular, if the given Regina triangulation is orientable but
+         * not oriented, then you should \e expect these numbers to change.
          *
          * @param tri the Regina triangulation to clone.
          * @param ignored a legacy parameter that is now ignored.

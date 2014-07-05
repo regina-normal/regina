@@ -1526,16 +1526,6 @@ void NTriGluingsUI::toSnapPea() {
                 "Klein bottle link."));
         return;
     }
-    if (tri->isIdeal()) {
-        if (tri->getNumberOfVertices() > tri->getNumberOfBoundaryComponents()) {
-            ReginaSupport::sorry(ui,
-                tr("I could not create a SnapPea triangulation."),
-                tr("<qt>This triangulation contains both ideal and internal "
-                    "vertices.  SnapPea requires every vertex to be ideal.<p>"
-                    "Please simplify the triangulation and try again.</qt>"));
-            return;
-        }
-    }
 
     regina::NSnapPeaTriangulation* ans = new regina::NSnapPeaTriangulation(*tri,
         true /* allow closed, since we have already check this */);

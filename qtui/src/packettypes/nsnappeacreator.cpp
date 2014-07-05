@@ -232,20 +232,6 @@ regina::NPacket* NSnapPeaTriangulationCreator::createPacket(regina::NPacket*,
                     "Klein bottle link."));
             return 0;
         }
-        if (from->isIdeal()) {
-            if (from->getNumberOfVertices() >
-                    from->getNumberOfBoundaryComponents()) {
-                ReginaSupport::info(parentWidget,
-                    QObject::tr("I cannot convert this triangulation to "
-                        "SnapPea."),
-                    QObject::tr("<qt>This triangulation contains both ideal "
-                        "and internal vertices.  SnapPea requires every "
-                        "vertex to be ideal.<p>"
-                        "Please simplify the triangulation "
-                        "and try again.</qt>"));
-                return 0;
-            }
-        }
 
         NSnapPeaTriangulation* ans = new NSnapPeaTriangulation(*from,
             true /* allow closed, since we checked this above. */);

@@ -65,10 +65,6 @@ void NoSnapPea::refresh() {
         msg += tr("This is because the triangulation contains non-standard "
             "vertices (vertices whose links are not spheres, tori or Klein "
             "bottles).");
-    else if (tri->isIdeal() &&
-            tri->getNumberOfBoundaryComponents() < tri->getNumberOfVertices())
-        msg += tr("This is because the triangulation contains a mix of "
-            "finite and ideal vertices.");
     else if (tri->getNumberOfTetrahedra() >= INT_MAX)
         msg += tr("This is because the triangulation has too many "
             "tetrahedra.");
