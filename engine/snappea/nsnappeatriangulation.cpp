@@ -36,6 +36,7 @@
 #include <cstring>
 
 #include "maths/nmatrixint.h"
+#include "maths/numbertheory.h"
 #include "snappea/nsnappeatriangulation.h"
 #include "snappea/kernel/kernel_prototypes.h"
 #include "snappea/kernel/triangulation.h"
@@ -69,8 +70,6 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(
                 fileNameOrContents.c_str());
 
         if (data_) {
-            regina::snappea::find_complete_hyperbolic_structure(data_);
-            regina::snappea::do_Dehn_filling(data_);
             setPacketLabel(get_triangulation_name(data_));
             sync();
         }
@@ -187,12 +186,17 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri,
         return;
     }
 
-    // All done.  Recalculate what we need to.
-    regina::snappea::find_complete_hyperbolic_structure(data_);
-    regina::snappea::do_Dehn_filling(data_);
-
     // Regina triangulations know nothing about peripheral curves.
     // Install a sensible basis for each cusp, if SnapPea will let us.
+    //
+    // Since we need a hyperbolic structure before we can install
+    // (shortest, second shortest) bases, find one now.
+    regina::snappea::find_complete_hyperbolic_structure(data_);
+
+    // I believe there is no need to call do_Dehn_filling() in the case where
+    // all cusps are complete, since find_complete_hyperbolic_structure()
+    // already does this.
+
     SolutionType soln = static_cast<SolutionType>(
         regina::snappea::get_filled_solution_type(data_));
     if (soln == geometric_solution || soln == nongeometric_solution) {
@@ -269,6 +273,73 @@ double NSnapPeaTriangulation::minImaginaryShape() const {
     return ans;
 }
 
+void NSnapPeaTriangulation::unfill(unsigned cusp) {
+    if (! data_)
+        return;
+
+    if (cusp_[cusp].complete) {
+        // Nothing to do.
+        return;
+    }
+
+    regina::snappea::set_cusp_info(data_, cusp, true, 0, 0);
+
+    // Update and refresh internal caches.
+    cusp_[cusp].complete = true;
+    cusp_[cusp].filling.m = cusp_[cusp].filling.l = 0;
+    --filledCusps_;
+
+    regina::snappea::do_Dehn_filling(data_);
+    syncFillings();
+}
+
+bool NSnapPeaTriangulation::fill(int m, int l, unsigned cusp) {
+    if (! data_)
+        return false;
+
+    // Are we unfilling?
+    if (m == 0 && l == 0) {
+        unfill(cusp);
+        return true;
+    }
+
+    // SnapPea expects reals as filling coefficients.
+    //
+    // Here we use the same test as SnapPea for whether these will be
+    // treated as integers:
+    regina::snappea::Real mReal = m;
+    regina::snappea::Real lReal = l;
+    if (m != (int)mReal || l != (int)lReal)
+        return false;
+
+    // Enforce other preconditions on the filling coefficients.
+    if (cusp_[cusp].vertex->isLinkOrientable()) {
+        // Note that the gcd() below is Regina's.
+        if (gcd(m, l) != 1)
+            return false;
+    } else {
+        if (l != 0)
+            return false;
+    }
+
+    // Are we filling a complete cusp, or changing an existing filling?
+    bool wasComplete = cusp_[cusp].complete;
+
+    // Do it.
+    regina::snappea::set_cusp_info(data_, cusp, false, mReal, lReal);
+
+    // Update and refresh internal caches.
+    cusp_[cusp].complete = false;
+    cusp_[cusp].filling.m = m;
+    cusp_[cusp].filling.l = l;
+    if (wasComplete)
+        ++filledCusps_;
+
+    regina::snappea::do_Dehn_filling(data_);
+    syncFillings();
+    return true;
+}
+
 NSnapPeaTriangulation* NSnapPeaTriangulation::protoCanonize() const {
     if (! data_)
         return 0;
@@ -311,9 +382,6 @@ void NSnapPeaTriangulation::randomize() {
         return;
 
     regina::snappea::randomize_triangulation(data_);
-    regina::snappea::find_complete_hyperbolic_structure(data_);
-    regina::snappea::do_Dehn_filling(data_);
-
     sync();
 }
 
@@ -660,41 +728,23 @@ void NSnapPeaTriangulation::sync() {
     {
         ChangeEventSpan span(this);
 
+        // Deal with the combinatorial data and cusps first.
         if (getNumberOfTetrahedra())
             removeAllTetrahedra();
-        delete[] shape_;
+
         delete[] cusp_;
-
         filledCusps_ = 0;
-
-        fundGroupFilled_.clear();
-        h1Filled_.clear();
 
         if (data_) {
             fillRegina(data_, *this);
 
-            unsigned i, j;
-
-            regina::snappea::Tetrahedron* stet;
-            SolutionType soln = static_cast<SolutionType>(
-                regina::snappea::get_filled_solution_type(data_));
-            if (soln == not_attempted || soln == no_solution) {
-                shape_ = 0;
-            } else {
-                // Fetch the shapes directly from SnapPea's internal
-                // data structures, since SnapPea's get_tet_shape()
-                // function is linear time (per tetrahedron).
-                shape_ = new std::complex<double>[getNumberOfTetrahedra()];
-                stet = data_->tet_list_begin.next;
-                regina::snappea::ComplexWithLog* shape;
-                for (i = 0; i < getNumberOfTetrahedra(); ++i) {
-                    shape = &stet->shape[regina::snappea::filled]->
-                            cwl[regina::snappea::ultimate][0 /* fixed */];
-                    shape_[i] = std::complex<double>(
-                        shape->rect.real, shape->rect.imag);
-                    stet = stet->next;
-                }
+            if (regina::snappea::get_filled_solution_type(data_) ==
+                    regina::snappea::not_attempted) {
+                regina::snappea::find_complete_hyperbolic_structure(data_);
+                regina::snappea::do_Dehn_filling(data_);
             }
+
+            unsigned i, j;
 
             cusp_ = new CuspInfo[data_->num_cusps];
             regina::snappea::Cusp* c = data_->cusp_list_begin.next;
@@ -705,7 +755,9 @@ void NSnapPeaTriangulation::sync() {
                     cusp_[c->index].filling.m = cusp_[c->index].filling.l = 0;
                 else if (! regina::snappea::Dehn_coefficients_are_integers(c)) {
                     // Abort!  Make this a null triangulation.
-                    reset(0); // Calls sync() again, but this is harmless.
+                    // Note that reset() calls sync() again; this is
+                    // harmless as long as we return immediately afterwards.
+                    reset(0);
                     syncing_ = false;
                     return;
                 } else {
@@ -715,7 +767,7 @@ void NSnapPeaTriangulation::sync() {
                 }
                 c = c->next;
             }
-            stet = data_->tet_list_begin.next;
+            regina::snappea::Tetrahedron* stet = data_->tet_list_begin.next;
             for (i = 0; i < getNumberOfTetrahedra(); ++i) {
                 for (j = 0; j < 4; ++j) {
                     c = stet->cusp[j];
@@ -725,14 +777,61 @@ void NSnapPeaTriangulation::sync() {
                 stet = stet->next;
             }
         } else {
-            shape_ = 0;
             cusp_ = 0;
         }
+
+        // Next, update all data that depend on the fillings (if any).
+        // Most importantly, this includes the cache of tetrahedron shapes.
+        fillingsHaveChanged();
 
         // The packet change event (which we are listening to) will be
         // fired at this point.
     }
     syncing_ = false;
+}
+
+void NSnapPeaTriangulation::syncFillings() {
+    syncing_ = true;
+    {
+        ChangeEventSpan span(this);
+        fillingsHaveChanged();
+        // The packet change event will be fired at this point.
+    }
+    syncing_ = false;
+}
+
+void NSnapPeaTriangulation::fillingsHaveChanged() {
+    // Clear properties that depend on the fillings.
+    fundGroupFilled_.clear();
+    h1Filled_.clear();
+
+    delete[] shape_;
+
+    if (data_) {
+        // Refresh the array of tetrahedron shapes.
+        regina::snappea::Tetrahedron* stet;
+        SolutionType soln = static_cast<SolutionType>(
+            regina::snappea::get_filled_solution_type(data_));
+        if (soln == not_attempted || soln == no_solution) {
+            shape_ = 0;
+        } else {
+            // Fetch the shapes directly from SnapPea's internal
+            // data structures, since SnapPea's get_tet_shape()
+            // function is linear time (per tetrahedron).
+            shape_ = new std::complex<double>[getNumberOfTetrahedra()];
+            stet = data_->tet_list_begin.next;
+            regina::snappea::ComplexWithLog* shape;
+            for (unsigned i = 0; i < getNumberOfTetrahedra(); ++i) {
+                shape = &stet->shape[regina::snappea::filled]->
+                        cwl[regina::snappea::ultimate][0 /* fixed */];
+                shape_[i] = std::complex<double>(
+                    shape->rect.real, shape->rect.imag);
+                stet = stet->next;
+            }
+        }
+    } else {
+        shape_ = 0;
+    }
 }
 
 void NSnapPeaTriangulation::fillRegina(regina::snappea::Triangulation* src,

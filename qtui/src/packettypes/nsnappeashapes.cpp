@@ -66,8 +66,8 @@ NSnapPeaShapesUI::NSnapPeaShapesUI(regina::NSnapPeaTriangulation* packet,
         "Cusps are numbered according to SnapPea's internal numbering "
         "(see the <i>Cusp #</i> column).  This table gives the "
         "corresponding vertex number (using Regina's numbering, as seen "
-        "in the <i>Skeleton</i> tab, and identifies whether the cusp "
-        "is complete or filled.</qt>"));
+        "in the <i>Skeleton</i> tab), and shows the filling on each cusp "
+        "(if any).</qt>"));
     layout->addWidget(cusps, 1);
 
     label = new QLabel(tr("Tetrahedron shapes:"));
@@ -105,7 +105,7 @@ void NSnapPeaShapesUI::refresh() {
     header = new QTreeWidgetItem();
     header->setText(0, tr("Cusp #"));
     header->setText(1, tr("Vertex #"));
-    header->setText(2, tr("Type"));
+    header->setText(2, tr("Filling"));
     header->setTextAlignment(0, Qt::AlignRight);
     header->setTextAlignment(1, Qt::AlignRight);
     header->setTextAlignment(2, Qt::AlignLeft);
@@ -130,7 +130,12 @@ void NSnapPeaShapesUI::refresh() {
         row = new QTreeWidgetItem();
         row->setText(0, QString::number(i));
         row->setText(1, QString::number(tri->cuspVertex(i)->markedIndex()));
-        row->setText(2, (tri->cuspComplete(i) ? tr("Complete") : tr("Filled")));
+        if (tri->cuspComplete(i))
+            row->setText(2, QString(QChar(0x2014 /* emdash */)));
+        else {
+            NSnapPeaTriangulation::Filling f = tri->filling(i);
+            row->setText(2, tr("%1, %2").arg(f.m).arg(f.l));
+        }
         row->setTextAlignment(0, Qt::AlignRight);
         row->setTextAlignment(1, Qt::AlignRight);
         row->setTextAlignment(2, Qt::AlignLeft);

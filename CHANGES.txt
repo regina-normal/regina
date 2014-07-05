@@ -127,10 +127,10 @@ Version 4.96  [ (under development) ]
               must not be modified directly; instead this is automatically
               kept in sync with the SnapPea data.
             - Many new routines: countCompleteCusps(), countCusps(),
-              countFilledCusps(), cuspComplete(), cuspVertex(), filling(),
-              fundamentalGroupFilled(), gluingEquations(),
+              countFilledCusps(), cuspComplete(), cuspVertex(), fill(),
+              filling(), fundamentalGroupFilled(), gluingEquations(),
               gluingEquationsRect(), homologyFilled(), minImaginaryShape(),
-              name(), protoCanonize() and protoCanonise(), shape(),
+              name(), protoCanonize() and protoCanonise(), shape(), unfill(),
               volumeZero(), plus others (listed individually below).
             - Two new constructors: a default constructor that builds a null
               triangulation, and a string constructor that takes either the

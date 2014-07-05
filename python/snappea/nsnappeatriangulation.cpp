@@ -52,6 +52,12 @@ namespace {
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_fundamentalGroupFilled,
         NSnapPeaTriangulation::fundamentalGroupFilled, 0, 3);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_filling,
+        NSnapPeaTriangulation::filling, 0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_fill,
+        NSnapPeaTriangulation::fill, 2, 3);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_unfill,
+        NSnapPeaTriangulation::unfill, 0, 1);
 
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_enableKernelMessages,
         NSnapPeaTriangulation::enableKernelMessages, 0, 1);
@@ -83,7 +89,9 @@ void addNSnapPeaTriangulation() {
         .def("cuspVertex", &NSnapPeaTriangulation::cuspVertex,
             return_value_policy<reference_existing_object>())
         .def("cuspComplete", &NSnapPeaTriangulation::cuspComplete)
-        .def("filling", &NSnapPeaTriangulation::filling)
+        .def("filling", &NSnapPeaTriangulation::filling, OL_filling())
+        .def("fill", &NSnapPeaTriangulation::fill, OL_fill())
+        .def("unfill", &NSnapPeaTriangulation::unfill, OL_unfill())
         .def("slopeEquations", &NSnapPeaTriangulation::slopeEquations,
             return_value_policy<manage_new_object>())
         .def("fundamentalGroupFilled",

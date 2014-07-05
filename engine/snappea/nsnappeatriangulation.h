@@ -428,8 +428,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * makes a default choice during the conversion process.  Specifically:
          *
          * - If solution_type() is geometric_solution or nongeometric_solution,
-         *   then on each cusp the meridian and longitude are chosen to be the
-         *   (shortest, second shortest) basis, and their orientations
+         *   then on each torus cusp the meridian and longitude are chosen to
+         *   be the (shortest, second shortest) basis, and their orientations
          *   follow the convention used by the \e SnapPy kernel.  Be warned,
          *   however, that this choice might not be unique for some cusp shapes,
          *   and the resolution of such ambiguities might be machine-dependent.
@@ -783,7 +783,46 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * between 0 and countCusps()-1 inclusive.
          * @return the corresponding filling coefficients.
          */
-        Filling filling(unsigned cusp) const;
+        Filling filling(unsigned cusp = 0) const;
+
+        /**
+         * Fills the given cusp.  After filling, this routine will
+         * automatically ask SnapPea to update the hyperbolic structure.
+         *
+         * For orientable cusps only coprime filling coefficients are allowed,
+         * and for non-orientable cusps only (m,0) fillings are allowed.
+         * Although SnapPea can handle more general fillings, Regina
+         * will enforce these conditions; if they are not satisfied then
+         * it will do nothing and simply return \c false.
+         *
+         * As a special case however, you may pass (0, 0) as the filling
+         * coefficients, in which case this routine will behave
+         * identically to unfill().
+         *
+         * It is possible that, if the given integers are extremely
+         * large, SnapPea cannot convert the filling coefficients to its
+         * own internal floating-point representation.  If this happens
+         * then this routine will again do nothing and simply return \c false.
+         *
+         * @param m the first (meridional) filling coefficient.
+         * @param l the second (longitudinal) filling coefficient.
+         * @param cusp the index of the cusp to fill according to SnapPea;
+         * this must be between 0 and countCusps()-1 inclusive.
+         */
+        bool fill(int m, int l, unsigned cusp = 0);
+
+        /**
+         * Removes the filling on given cusp.  After removing the filling,
+         * this routine will automatically ask SnapPea to update the
+         * hyperbolic structure.
+         *
+         * If the given cusp is already complete, then this routine
+         * safely does nothing.
+         *
+         * @param cusp the index of the cusp to unfill according to SnapPea;
+         * this must be between 0 and countCusps()-1 inclusive.
+         */
+        void unfill(unsigned cusp = 0);
 
         /**
          * Returns a matrix for computing boundary slopes of
@@ -1247,9 +1286,36 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         /**
          * Synchronises the inherited NTriangulation data so that the
          * tetrahedra and their gluings match the raw SnapPea data.
-         * Also refreshes the internal arrays of cusps and tetrahedron shapes.
+         * Also refreshes other internal properties and caches,
+         * such as cusps and tetrahedron shapes.
+         *
+         * A change event will be fired by this routine (this will be a
+         * "safe" change event that does not void the triangulation).
+         *
+         * SnapPea will be asked to recompute the hyperbolic structure
+         * only if the current solution type is \a not_attempted.
          */
         void sync();
+
+        /**
+         * Like sync(), but assumes that \e only the filling coefficients
+         * have changed, and that all other data (such as the tetrahedron
+         * gluings, or peripheral curves on the cusps) is unchanged.
+         *
+         * Essentially this just extends fillingsHaveChanged() to also
+         * fire a (safe) change event.
+         */
+        void syncFillings();
+
+        /**
+         * Clears and where necessary refreshes any properties of the
+         * triangulation that depend only on the fillings.
+         *
+         * This routine assumes that the combinatorics of the triangulation
+         * have not changed.  It also assumes that SnapPea has already
+         * called do_Dehn_filling() (so this routine will not call it again).
+         */
+        void fillingsHaveChanged();
 
         /**
          * Copies the given SnapPea triangulation into the given Regina
