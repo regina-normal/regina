@@ -245,14 +245,6 @@ regina::NPacket* NSnapPeaTriangulationCreator::createPacket(regina::NPacket*,
                         "and try again.</qt>"));
                 return 0;
             }
-        } else if (from->getNumberOfVertices() > 1) {
-            ReginaSupport::info(parentWidget,
-                QObject::tr("I cannot convert this triangulation to "
-                    "SnapPea."),
-                QObject::tr("<qt>For closed manifolds, Regina will only send "
-                    "one-vertex triangulations to SnapPea.<p>"
-                    "Please simplify the triangulation and try again.</qt>"));
-            return 0;
         }
 
         NSnapPeaTriangulation* ans = new NSnapPeaTriangulation(*from,

@@ -120,13 +120,6 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri, bool) :
             listen(this);
             return;
         }
-    } else {
-        // No boundary triangles, not ideal.. must be closed.
-        // Make sure it's one-vertex.
-        if (1 != tri.getNumberOfVertices()) {
-            listen(this);
-            return;
-        }
     }
     if (tri.getNumberOfTetrahedra() >= INT_MAX) {
         listen(this);

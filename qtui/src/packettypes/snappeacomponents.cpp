@@ -69,9 +69,6 @@ void NoSnapPea::refresh() {
             tri->getNumberOfBoundaryComponents() < tri->getNumberOfVertices())
         msg += tr("This is because the triangulation contains a mix of "
             "finite and ideal vertices.");
-    else if ((! tri->isIdeal()) && 1 != tri->getNumberOfVertices())
-        msg += tr("This is because the triangulation is closed but has "
-            "more than one vertex.");
     else if (tri->getNumberOfTetrahedra() >= INT_MAX)
         msg += tr("This is because the triangulation has too many "
             "tetrahedra.");

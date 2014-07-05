@@ -441,8 +441,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          *   that this default basis may change (and indeed has changed in the
          *   past) across different versions of the SnapPea kernel.
          *
-         * SnapPea is designed to work with ideal triangulations only.  You
-         * can pass a one-vertex closed triangulation (as an NTriangulation)
+         * SnapPea is designed to work with ideal triangulations only.
+         * You can pass a closed triangulation (as an NTriangulation)
          * to the NSnapPeaTriangulation class constructor, but SnapPea will
          * automatically convert this into a filling of a cusped manifold.
          *

@@ -1535,13 +1535,6 @@ void NTriGluingsUI::toSnapPea() {
                     "Please simplify the triangulation and try again.</qt>"));
             return;
         }
-    } else if (tri->getNumberOfVertices() > 1) {
-        ReginaSupport::sorry(ui,
-            tr("I could not create a SnapPea triangulation."),
-            tr("<qt>For closed manifolds, Regina will only send "
-                "one-vertex triangulations to SnapPea.<p>"
-                "Please simplify the triangulation and try again.</qt>"));
-        return;
     }
 
     regina::NSnapPeaTriangulation* ans = new regina::NSnapPeaTriangulation(*tri,
