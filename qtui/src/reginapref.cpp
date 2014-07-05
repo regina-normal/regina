@@ -155,14 +155,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     item->addTab(pythonPrefs, ReginaSupport::themeIcon("utilities-terminal"),
         tr("Python"));
 
-#ifndef EXCLUDE_SNAPPEA
-    snapPeaPrefs = new ReginaPrefSnapPea(this);
-    item->addTab(snapPeaPrefs, ReginaSupport::regIcon("snappea"),
-        tr("SnapPea"));
-#else
-    snapPeaPrefs = 0;
-#endif
-
     toolsPrefs = new ReginaPrefTools(this);
     item->addTab(toolsPrefs, ReginaSupport::themeIcon("configure"),
         tr("Tools"));
@@ -201,11 +193,9 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     pythonPrefs->updateActiveCount();
 
 #ifndef EXCLUDE_SNAPPEA
-    snapPeaPrefs->cbClosed->setChecked(prefSet.snapPeaClosed);
-    snapPeaPrefs->cbMessages->setChecked(
+    toolsPrefs->cbSnapPeaMessages->setChecked(
         regina::NSnapPeaTriangulation::kernelMessagesEnabled());
 #endif
-
     if (prefSet.pdfExternalViewer.isEmpty()) {
         toolsPrefs->cbDefaultPDFViewer->setChecked(true);
         toolsPrefs->editPDFViewer->setEnabled(false);
@@ -321,11 +311,9 @@ void ReginaPreferences::slotApply() {
     }
 
 #ifndef EXCLUDE_SNAPPEA
-    prefSet.snapPeaClosed = snapPeaPrefs->cbClosed->isChecked();
     regina::NSnapPeaTriangulation::enableKernelMessages(
-        snapPeaPrefs->cbMessages->isChecked());
+        toolsPrefs->cbSnapPeaMessages->isChecked());
 #endif
-
     // Don't be too fussy about what they put in the PDF viewer field, since
     // Regina tries hard to find a suitable PDF viewer regardless.
     if (toolsPrefs->cbDefaultPDFViewer->isChecked())
@@ -644,6 +632,21 @@ void ReginaPrefGeneral::orientedChecked(int state) {
 
 ReginaPrefTools::ReginaPrefTools(QWidget* parent) : QWidget(parent) {
     QBoxLayout* layout = new QVBoxLayout(this);
+
+    cbSnapPeaMessages = new QCheckBox(
+        tr("Diagnostic messages from SnapPea"));
+    cbSnapPeaMessages->setWhatsThis(tr("<qt>Should the SnapPea kernel write "
+        "diagnostic messages to the console?<p>"
+        "These diagnostic messages are emitted by the SnapPea kernel "
+        "embedded within Regina (not from Regina itself).  If you do not "
+        "know what this is all about, you can safely leave this option "
+        "switched off.<p>"
+        "When this option is switched on, if you start Regina from the "
+        "command line then you will see diagnostic messages appear on the "
+        "same console from which you started Regina.  "
+        "If you start Regina from a menu, you will "
+        "not see these messages at all.</qt>"));
+    layout->addWidget(cbSnapPeaMessages);
 
     // Set up the PDF viewer.
     cbDefaultPDFViewer = new QCheckBox(tr("Use default PDF viewer"));
@@ -1155,55 +1158,5 @@ void ReginaPrefPython::deactivate() {
             ReginaSupport::sorry(this,
                 tr("The selected libraries are already inactive."));
     }
-}
-
-ReginaPrefSnapPea::ReginaPrefSnapPea(QWidget* parent) : QWidget(parent) {
-    QBoxLayout* layout = new QVBoxLayout(this);
-
-    cbMessages = new QCheckBox(tr("Diagnostic messages"));
-    cbMessages->setWhatsThis(tr("<qt>Should the SnapPea kernel write "
-        "diagnostic messages to the console?<p>"
-        "These diagnostic messages are emitted by the SnapPea kernel "
-        "embedded within Regina (not from Regina itself).  If you do not "
-        "know what this is all about, you can safely leave this option "
-        "switched off.<p>"
-        "When this option is switched on, if you start Regina from the "
-        "command line then you will see diagnostic messages appear on the "
-        "same console from which you started Regina.  "
-        "If you start Regina from a menu, you will "
-        "not see these messages at all.</qt>"));
-    layout->addWidget(cbMessages);
-
-    cbClosed = new QCheckBox(tr("Allow closed triangulations"));
-    cbClosed->setWhatsThis(tr("<qt>Allow the SnapPea kernel to work with "
-        "closed triangulations.  By default it is only allowed to work with "
-        "ideal triangulations.<p>"
-        "<b>Warning:</b> SnapPea is primarily designed to work with ideal "
-        "triangulations only.  Allowing closed triangulations may "
-        "occasionally cause the SnapPea kernel to raise a fatal error "
-        "and crash Regina completely.  You might lose unsaved work "
-        "as a result.</qt>"));
-    layout->addWidget(cbClosed);
-
-    QBoxLayout* box = new QHBoxLayout();
-    QLabel* label;
-
-    label = new QLabel(tr("<qt><b>Warning:</b></qt>"));
-    label->setAlignment(Qt::AlignTop);
-    box->addWidget(label, 0);
-
-    QLabel* snapPeaWarning = new QLabel(tr(
-        "<qt>SnapPea is primarily designed "
-        "to work with ideal triangulations only!  Allowing it to work "
-        "with closed triangulations may occasionally cause the "
-        "SnapPea kernel to raise a fatal error, and you may lose "
-        "unsaved work as a result.</qt>"));
-    snapPeaWarning->setWordWrap(true);
-    box->addWidget(snapPeaWarning, 1);
-    layout->addLayout(box);
-
-    // Add some space at the end.
-    layout->addStretch(1);
-    setLayout(layout);
 }
 

@@ -240,7 +240,6 @@ ReginaPrefSet::ReginaPrefSet() :
         pythonAutoIndent(true),
         pythonSpacesPerTab(4),
         pythonWordWrap(false),
-        snapPeaClosed(false),
         surfacesCompatThreshold(100),
         surfacesCreationCoords(regina::NS_STANDARD),
         surfacesCreationList(regina::NS_LIST_DEFAULT),
@@ -486,7 +485,6 @@ void ReginaPrefSet::readInternal() {
     settings.endGroup();
 
     settings.beginGroup("SnapPea");
-    snapPeaClosed = settings.value("AllowClosed", false).toBool();
 #ifndef EXCLUDE_SNAPPEA
     regina::NSnapPeaTriangulation::enableKernelMessages(
         settings.value("KernelMessages", false).toBool());
@@ -593,7 +591,6 @@ void ReginaPrefSet::saveInternal() const {
     settings.endGroup();
 
     settings.beginGroup("SnapPea");
-    settings.setValue("AllowClosed", snapPeaClosed);
 #ifndef EXCLUDE_SNAPPEA
     settings.setValue("KernelMessages",
         regina::NSnapPeaTriangulation::kernelMessagesEnabled());

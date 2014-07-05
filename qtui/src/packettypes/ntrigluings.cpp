@@ -1535,13 +1535,6 @@ void NTriGluingsUI::toSnapPea() {
                     "Please simplify the triangulation and try again.</qt>"));
             return;
         }
-    } else if (! ReginaPrefSet::global().snapPeaClosed) {
-        ReginaSupport::sorry(ui,
-            tr("I could not create a SnapPea triangulation."),
-            tr("By default, Regina does not send closed manifolds "
-                "to SnapPea.  You can change this behaviour through "
-                "Regina's preferences."));
-        return;
     } else if (tri->getNumberOfVertices() > 1) {
         ReginaSupport::sorry(ui,
             tr("I could not create a SnapPea triangulation."),

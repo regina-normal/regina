@@ -375,9 +375,6 @@ class ReginaPrefSet : public QObject {
                  python console. */
         bool pythonWordWrap;
             /**< Should python consoles be word wrapped? */
-        bool snapPeaClosed;
-            /**< Do we allow the SnapPea kernel to work with closed (non-ideal)
-                 triangulations, even though it's dangerous? */
         unsigned surfacesCompatThreshold;
             /**< The maximum number of normal surfaces in a list for which the
                  compatibility matrices will be automatically calculated. */

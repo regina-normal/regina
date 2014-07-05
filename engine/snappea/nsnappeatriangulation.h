@@ -441,28 +441,22 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          *   that this default basis may change (and indeed has changed in the
          *   past) across different versions of the SnapPea kernel.
          *
-         * SnapPea is designed primarily to work with ideal
-         * triangulations only.  Passing closed triangulations can
-         * occasionally cause the SnapPea kernel to crash the entire program.
-         * Thus by default, closed triangulations are never converted (a null
-         * SnapPea triangulation will be created instead).  See the optional
-         * argument \a allowClosed for how to change this behaviour.
+         * SnapPea is designed to work with ideal triangulations only.  You
+         * can pass a one-vertex closed triangulation (as an NTriangulation)
+         * to the NSnapPeaTriangulation class constructor, but SnapPea will
+         * automatically convert this into a filling of a cusped manifold.
          *
          * It is possible that the tetrahedron and vertex numbers might be
          * changed in the new SnapPea triangulation.  In particular, if the
          * given Regina triangulation is orientable but not oriented, then you
          * should \e expect these numbers to change.
          *
-         * \warning Passing \a allowClosed as \c true can occasionally
-         * cause the program to crash!  See the notes above for details.
-         *
          * @param tri the Regina triangulation to clone.
-         * @param allowClosed \c true if closed triangulations should be
-         * considered, or \c false if all closed triangulations should give
-         * null SnapPea data (the default).  See above for details.
+         * @param ignored a legacy parameter that is now ignored.
+         * (This argument was once required if you wanted to pass a
+         * closed triangluation to SnapPea.)
          */
-        NSnapPeaTriangulation(const NTriangulation& tri,
-            bool allowClosed = false);
+        NSnapPeaTriangulation(const NTriangulation& tri, bool ignored = false);
 
         /**
          * Destroys this triangulation.  All internal SnapPea data will

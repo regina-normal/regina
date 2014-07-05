@@ -165,8 +165,7 @@ void NTriSnapPeaUI::refresh() {
     if (snappeaTri)
         delete snappeaTri;
 
-    snappeaTri = new NSnapPeaTriangulation(*reginaTri,
-        ReginaPrefSet::global().snapPeaClosed);
+    snappeaTri = new NSnapPeaTriangulation(*reginaTri);
 
     if (snappeaTri->isNull()) {
         ui->setCurrentWidget(dataNull);

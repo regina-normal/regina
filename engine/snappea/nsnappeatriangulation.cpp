@@ -88,8 +88,7 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NSnapPeaTriangulation& tri) :
     listen(this);
 }
 
-NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri,
-        bool allowClosed) :
+NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri, bool) :
         data_(0), shape_(0), cusp_(0), filledCusps_(0), syncing_(false) {
     const NSnapPeaTriangulation* clone =
         dynamic_cast<const NSnapPeaTriangulation*>(&tri);
@@ -123,8 +122,8 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri,
         }
     } else {
         // No boundary triangles, not ideal.. must be closed.
-        // If closed is okay, at least make sure it's one-vertex.
-        if ((! allowClosed) || (1 != tri.getNumberOfVertices())) {
+        // Make sure it's one-vertex.
+        if (1 != tri.getNumberOfVertices()) {
             listen(this);
             return;
         }

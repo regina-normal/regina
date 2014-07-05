@@ -126,6 +126,11 @@ Version 4.96  [ (under development) ]
               derives from NTriangulation.  The inherited NTriangulation
               must not be modified directly; instead this is automatically
               kept in sync with the SnapPea data.
+            - Closed triangulations are now supported always by default
+              (i.e., you do not need to explicitly pass allowClosed=true).
+              The second argument (allowClosed) for the constructor
+              NSnapPeaTriangulation(const NTriangulation&, bool) is
+              deprecated, and is now ignored.
             - Many new routines: countCompleteCusps(), countCusps(),
               countFilledCusps(), cuspComplete(), cuspVertex(), fill(),
               filling(), fundamentalGroupFilled(), gluingEquations(),

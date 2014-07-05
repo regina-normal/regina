@@ -245,14 +245,6 @@ regina::NPacket* NSnapPeaTriangulationCreator::createPacket(regina::NPacket*,
                         "and try again.</qt>"));
                 return 0;
             }
-        } else if (! ReginaPrefSet::global().snapPeaClosed) {
-            ReginaSupport::info(parentWidget,
-                QObject::tr("I cannot convert this triangulation to "
-                    "SnapPea."),
-                QObject::tr("By default, Regina does not send closed manifolds "
-                    "to SnapPea.  You can change this behaviour through "
-                    "Regina's preferences."));
-            return 0;
         } else if (from->getNumberOfVertices() > 1) {
             ReginaSupport::info(parentWidget,
                 QObject::tr("I cannot convert this triangulation to "
