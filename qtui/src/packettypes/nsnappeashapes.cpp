@@ -106,9 +106,9 @@ void NSnapPeaShapesUI::refresh() {
     header->setText(0, tr("Cusp #"));
     header->setText(1, tr("Vertex #"));
     header->setText(2, tr("Filling"));
-    header->setTextAlignment(0, Qt::AlignRight);
-    header->setTextAlignment(1, Qt::AlignRight);
-    header->setTextAlignment(2, Qt::AlignLeft);
+    header->setTextAlignment(0, Qt::AlignCenter);
+    header->setTextAlignment(1, Qt::AlignCenter);
+    header->setTextAlignment(2, Qt::AlignCenter);
     cusps->setHeaderItem(header);
 
     shapes->setColumnCount(3);
@@ -116,9 +116,9 @@ void NSnapPeaShapesUI::refresh() {
     header->setText(0, tr("Tet #"));
     header->setText(1, tr("Real"));
     header->setText(2, tr("Imag"));
-    header->setTextAlignment(0, Qt::AlignRight);
-    header->setTextAlignment(1, Qt::AlignRight);
-    header->setTextAlignment(2, Qt::AlignRight);
+    header->setTextAlignment(0, Qt::AlignCenter);
+    header->setTextAlignment(1, Qt::AlignCenter);
+    header->setTextAlignment(2, Qt::AlignCenter);
     shapes->setHeaderItem(header);
 
     if (tri->isNull())
@@ -136,9 +136,9 @@ void NSnapPeaShapesUI::refresh() {
             NSnapPeaTriangulation::Filling f = tri->filling(i);
             row->setText(2, tr("%1, %2").arg(f.m).arg(f.l));
         }
-        row->setTextAlignment(0, Qt::AlignRight);
-        row->setTextAlignment(1, Qt::AlignRight);
-        row->setTextAlignment(2, Qt::AlignLeft);
+        row->setTextAlignment(0, Qt::AlignCenter);
+        row->setTextAlignment(1, Qt::AlignCenter);
+        row->setTextAlignment(2, Qt::AlignCenter);
         cusps->addTopLevelItem(row);
     }
 
