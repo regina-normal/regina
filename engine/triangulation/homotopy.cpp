@@ -37,13 +37,13 @@
 namespace regina {
 
 const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
-    if (fundamentalGroup.known())
-        return *fundamentalGroup.value();
+    if (fundamentalGroup_.known())
+        return *fundamentalGroup_.value();
 
     NGroupPresentation* ans = new NGroupPresentation();
 
     if (getNumberOfTetrahedra() == 0)
-        return *(fundamentalGroup = ans);
+        return *(fundamentalGroup_ = ans);
 
     // Find a maximal forest in the dual 1-skeleton.
     // Note that this will ensure the skeleton has been calculated.
@@ -53,8 +53,8 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
     // Each non-boundary not-in-forest triangle is a generator.
     // Each non-boundary edge is a relation.
     unsigned long nBdryTri = 0;
-    for (BoundaryComponentIterator bit = boundaryComponents.begin();
-            bit != boundaryComponents.end(); bit++)
+    for (BoundaryComponentIterator bit = boundaryComponents_.begin();
+            bit != boundaryComponents_.end(); bit++)
         nBdryTri += (*bit)->getNumberOfTriangles();
     long nGens = getNumberOfTriangles() - nBdryTri - forest.size();
 
@@ -64,11 +64,11 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
     // Find out which triangle corresponds to which generator.
     long *genIndex = new long[getNumberOfTriangles()];
     long i = 0;
-    for (TriangleIterator fit = triangles.begin(); fit != triangles.end(); fit++)
+    for (TriangleIterator fit = triangles_.begin(); fit != triangles_.end(); fit++)
         if ((*fit)->isBoundary() || forest.count(*fit))
-            genIndex[fit - triangles.begin()] = -1;
+            genIndex[fit - triangles_.begin()] = -1;
         else
-            genIndex[fit - triangles.begin()] = i++;
+            genIndex[fit - triangles_.begin()] = i++;
 
     // Run through each edge and put the relations in the matrix.
     std::deque<NEdgeEmbedding>::const_iterator embit;
@@ -77,7 +77,7 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
     int currTetFace;
     long triGenIndex;
     NGroupExpression* rel;
-    for (EdgeIterator eit = edges.begin(); eit != edges.end(); eit++)
+    for (EdgeIterator eit = edges_.begin(); eit != edges_.end(); eit++)
         if (! (*eit)->isBoundary()) {
             // Put in the relation corresponding to this edge.
             rel = new NGroupExpression();
@@ -102,7 +102,7 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
     delete[] genIndex;
     ans->intelligentSimplify();
 
-    return *(fundamentalGroup = ans);
+    return *(fundamentalGroup_ = ans);
 }
 
 } // namespace regina

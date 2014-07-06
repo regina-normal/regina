@@ -285,7 +285,7 @@ bool NTriangulation::isOriented() const {
     if(!isOrientable())
         return false;
 
-    for(it = tetrahedra.begin(); it != tetrahedra.end(); ++it)
+    for(it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it)
         if( (*it) -> tetOrientation != 1)
             return false;
 
@@ -293,14 +293,14 @@ bool NTriangulation::isOriented() const {
 }
 
 void NTriangulation::orient() {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
 
     NIsomorphism flip_tets_iso(getNumberOfTetrahedra());
 
     TetrahedronIterator it;
     int t;
-    for (t = 0, it = tetrahedra.begin(); it != tetrahedra.end(); ++it, ++t) {
+    for (t = 0, it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it, ++t) {
         flip_tets_iso.tetImage(t) = t;
         if ((*it)->tetOrientation == 1 ||
                 ! (*it)->getComponent()->isOrientable())
@@ -315,7 +315,7 @@ void NTriangulation::orient() {
 bool NTriangulation::isOrdered() const {
     TetrahedronIterator it;
 
-    for(it = tetrahedra.begin(); it != tetrahedra.end(); ++it)
+    for(it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it)
         for(int face = 0; face < 4; face++)
 
             if((*it)->tetrahedra[face]) {
@@ -335,7 +335,7 @@ bool NTriangulation::isOrdered() const {
 
 bool NTriangulation::order(bool force_oriented)
 {
-    if(!calculatedSkeleton)
+    if(!calculatedSkeleton_)
         calculateSkeleton();
 
     if(force_oriented && !isOrientable())

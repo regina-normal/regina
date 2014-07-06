@@ -161,73 +161,74 @@ class REGINA_API NTriangulation : public NPacket,
             /**< A map from (r, whichRoot) pairs to Turaev-Viro invariants. */
 
     private:
-        mutable bool calculatedSkeleton;
+        mutable bool calculatedSkeleton_;
             /**< Has the skeleton been calculated? */
 
-        NMarkedVector<NTetrahedron> tetrahedra;
+        NMarkedVector<NTetrahedron> tetrahedra_;
             /**< The tetrahedra that form the triangulation. */
-        mutable NMarkedVector<NTriangle> triangles;
+        mutable NMarkedVector<NTriangle> triangles_;
             /**< The triangles in the triangulation skeleton. */
-        mutable NMarkedVector<NEdge> edges;
+        mutable NMarkedVector<NEdge> edges_;
             /**< The edges in the triangulation skeleton. */
-        mutable NMarkedVector<NVertex> vertices;
+        mutable NMarkedVector<NVertex> vertices_;
             /**< The vertices in the triangulation skeleton. */
-        mutable NMarkedVector<NComponent> components;
+        mutable NMarkedVector<NComponent> components_;
             /**< The components that form the triangulation. */
-        mutable NMarkedVector<NBoundaryComponent> boundaryComponents;
+        mutable NMarkedVector<NBoundaryComponent> boundaryComponents_;
             /**< The components that form the boundary of the
                  triangulation. */
 
-        mutable bool valid;
+        mutable bool valid_;
             /**< Is the triangulation valid? */
-        mutable bool ideal;
+        mutable bool ideal_;
             /**< Is the triangulation ideal? */
-        mutable bool standard;
+        mutable bool standard_;
             /**< Is the triangulation standard? */
-        mutable bool orientable;
+        mutable bool orientable_;
             /**< Is the triangulation orientable? */
 
-        mutable NProperty<NGroupPresentation, StoreManagedPtr> fundamentalGroup;
+        mutable NProperty<NGroupPresentation, StoreManagedPtr>
+                fundamentalGroup_;
             /**< Fundamental group of the triangulation. */
-        mutable NProperty<NAbelianGroup, StoreManagedPtr> H1;
+        mutable NProperty<NAbelianGroup, StoreManagedPtr> H1_;
             /**< First homology group of the triangulation. */
-        mutable NProperty<NAbelianGroup, StoreManagedPtr> H1Rel;
+        mutable NProperty<NAbelianGroup, StoreManagedPtr> H1Rel_;
             /**< Relative first homology group of the triangulation
              *   with respect to the boundary. */
-        mutable NProperty<NAbelianGroup, StoreManagedPtr> H1Bdry;
+        mutable NProperty<NAbelianGroup, StoreManagedPtr> H1Bdry_;
             /**< First homology group of the boundary. */
-        mutable NProperty<NAbelianGroup, StoreManagedPtr> H2;
+        mutable NProperty<NAbelianGroup, StoreManagedPtr> H2_;
             /**< Second homology group of the triangulation. */
 
-        mutable NProperty<bool> twoSphereBoundaryComponents;
+        mutable NProperty<bool> twoSphereBoundaryComponents_;
             /**< Does the triangulation contain any 2-sphere boundary
                  components? */
-        mutable NProperty<bool> negativeIdealBoundaryComponents;
+        mutable NProperty<bool> negativeIdealBoundaryComponents_;
             /**< Does the triangulation contain any boundary components
                  that are ideal and have negative Euler characteristic? */
 
-        mutable NProperty<bool> zeroEfficient;
+        mutable NProperty<bool> zeroEfficient_;
             /**< Is the triangulation zero-efficient? */
-        mutable NProperty<bool> splittingSurface;
+        mutable NProperty<bool> splittingSurface_;
             /**< Does the triangulation have a normal splitting surface? */
 
-        mutable NProperty<bool> threeSphere;
+        mutable NProperty<bool> threeSphere_;
             /**< Is this a triangulation of a 3-sphere? */
-        mutable NProperty<bool> threeBall;
+        mutable NProperty<bool> threeBall_;
             /**< Is this a triangulation of a 3-dimensional ball? */
-        mutable NProperty<bool> solidTorus;
+        mutable NProperty<bool> solidTorus_;
             /**< Is this a triangulation of the solid torus? */
-        mutable NProperty<bool> irreducible;
+        mutable NProperty<bool> irreducible_;
             /**< Is this 3-manifold irreducible? */
-        mutable NProperty<bool> compressingDisc;
+        mutable NProperty<bool> compressingDisc_;
             /**< Does this 3-manifold contain a compressing disc? */
-        mutable NProperty<bool> haken;
+        mutable NProperty<bool> haken_;
             /**< Is this 3-manifold Haken?
                  This property must only be stored for triangulations
                  that are known to represent closed, connected,
                  orientable, irreducible 3-manifolds. */
 
-        mutable TuraevViroSet turaevViroCache;
+        mutable TuraevViroSet turaevViroCache_;
             /**< The set of Turaev-Viro invariants that have already
                  been calculated. */
 
@@ -3446,11 +3447,11 @@ namespace regina {
 
 // Inline functions for NTriangulation
 
-inline NTriangulation::NTriangulation() : calculatedSkeleton(false) {
+inline NTriangulation::NTriangulation() : calculatedSkeleton_(false) {
 }
 
 inline NTriangulation::NTriangulation(const NTriangulation& cloneMe) :
-        NPacket(), calculatedSkeleton(false) {
+        NPacket(), calculatedSkeleton_(false) {
     cloneFrom(cloneMe);
 }
 
@@ -3468,29 +3469,29 @@ inline bool NTriangulation::dependsOnParent() const {
 }
 
 inline unsigned long NTriangulation::getNumberOfTetrahedra() const {
-    return tetrahedra.size();
+    return tetrahedra_.size();
 }
 
 inline unsigned long NTriangulation::getNumberOfSimplices() const {
-    return tetrahedra.size();
+    return tetrahedra_.size();
 }
 
 inline NTetrahedron* NTriangulation::getTetrahedron(unsigned long index) {
-    return tetrahedra[index];
+    return tetrahedra_[index];
 }
 
 inline NTetrahedron* NTriangulation::getSimplex(unsigned long index) {
-    return tetrahedra[index];
+    return tetrahedra_[index];
 }
 
 inline const NTetrahedron* NTriangulation::getTetrahedron(unsigned long index)
         const {
-    return tetrahedra[index];
+    return tetrahedra_[index];
 }
 
 inline const NTetrahedron* NTriangulation::getSimplex(unsigned long index)
         const {
-    return tetrahedra[index];
+    return tetrahedra_[index];
 }
 
 inline long NTriangulation::tetrahedronIndex(const NTetrahedron* tet) const {
@@ -3506,7 +3507,7 @@ inline NTetrahedron* NTriangulation::newTetrahedron() {
 
     NTetrahedron* tet = new NTetrahedron();
     tet->tri = this;
-    tetrahedra.push_back(tet);
+    tetrahedra_.push_back(tet);
     clearAllProperties();
 
     return tet;
@@ -3521,7 +3522,7 @@ inline NTetrahedron* NTriangulation::newTetrahedron(const std::string& desc) {
 
     NTetrahedron* tet = new NTetrahedron(desc);
     tet->tri = this;
-    tetrahedra.push_back(tet);
+    tetrahedra_.push_back(tet);
     clearAllProperties();
 
     return tet;
@@ -3534,9 +3535,9 @@ inline NTetrahedron* NTriangulation::newSimplex(const std::string& desc) {
 inline void NTriangulation::removeTetrahedronAt(unsigned long index) {
     ChangeEventSpan span(this);
 
-    NTetrahedron* ans = tetrahedra[index];
+    NTetrahedron* ans = tetrahedra_[index];
     ans->isolate();
-    tetrahedra.erase(tetrahedra.begin() + index);
+    tetrahedra_.erase(tetrahedra_.begin() + index);
     delete ans;
 
     clearAllProperties();
@@ -3550,7 +3551,7 @@ inline void NTriangulation::removeTetrahedron(NTetrahedron* tet) {
     ChangeEventSpan span(this);
 
     tet->isolate();
-    tetrahedra.erase(tetrahedra.begin() + tetrahedronIndex(tet));
+    tetrahedra_.erase(tetrahedra_.begin() + tetrahedronIndex(tet));
     delete tet;
 
     clearAllProperties();
@@ -3574,33 +3575,33 @@ inline void NTriangulation::gluingsHaveChanged() {
 }
 
 inline unsigned long NTriangulation::getNumberOfBoundaryComponents() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return boundaryComponents.size();
+    return boundaryComponents_.size();
 }
 
 inline unsigned long NTriangulation::getNumberOfComponents() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return components.size();
+    return components_.size();
 }
 
 inline unsigned long NTriangulation::getNumberOfVertices() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return vertices.size();
+    return vertices_.size();
 }
 
 inline unsigned long NTriangulation::getNumberOfEdges() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return edges.size();
+    return edges_.size();
 }
 
 inline unsigned long NTriangulation::getNumberOfTriangles() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return triangles.size();
+    return triangles_.size();
 }
 
 inline unsigned long NTriangulation::getNumberOfFaces() const {
@@ -3628,14 +3629,14 @@ inline unsigned long NTriangulation::getNumberOfFaces<3>() const {
 }
 
 inline long NTriangulation::getEulerCharTri() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
 
     // Cast away the unsignedness of std::vector::size().
-    return static_cast<long>(vertices.size())
-        - static_cast<long>(edges.size())
-        + static_cast<long>(triangles.size())
-        - static_cast<long>(tetrahedra.size());
+    return static_cast<long>(vertices_.size())
+        - static_cast<long>(edges_.size())
+        + static_cast<long>(triangles_.size())
+        - static_cast<long>(tetrahedra_.size());
 }
 
 inline long NTriangulation::getEulerCharacteristic() const {
@@ -3643,44 +3644,44 @@ inline long NTriangulation::getEulerCharacteristic() const {
 }
 
 inline const std::vector<NTetrahedron*>& NTriangulation::getTetrahedra() const {
-    return (const std::vector<NTetrahedron*>&)(tetrahedra);
+    return (const std::vector<NTetrahedron*>&)(tetrahedra_);
 }
 
 inline const std::vector<NTetrahedron*>& NTriangulation::getSimplices() const {
-    return (const std::vector<NTetrahedron*>&)(tetrahedra);
+    return (const std::vector<NTetrahedron*>&)(tetrahedra_);
 }
 
 inline const std::vector<NBoundaryComponent*>&
         NTriangulation::getBoundaryComponents() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return (const std::vector<NBoundaryComponent*>&)(boundaryComponents);
+    return (const std::vector<NBoundaryComponent*>&)(boundaryComponents_);
 }
 
 inline const std::vector<NComponent*>& NTriangulation::getComponents() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return (const std::vector<NComponent*>&)(components);
+    return (const std::vector<NComponent*>&)(components_);
 }
 
 inline const std::vector<NVertex*>& NTriangulation::getVertices() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return (const std::vector<NVertex*>&)(vertices);
+    return (const std::vector<NVertex*>&)(vertices_);
 }
 
 inline const std::vector<NEdge*>& NTriangulation::getEdges()
         const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return (const std::vector<NEdge*>&)(edges);
+    return (const std::vector<NEdge*>&)(edges_);
 }
 
 inline const std::vector<NTriangle*>& NTriangulation::getTriangles()
         const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return (const std::vector<NTriangle*>&)(triangles);
+    return (const std::vector<NTriangle*>&)(triangles_);
 }
 
 inline const std::vector<NTriangle*>& NTriangulation::getFaces() const {
@@ -3688,34 +3689,34 @@ inline const std::vector<NTriangle*>& NTriangulation::getFaces() const {
 }
 
 inline NComponent* NTriangulation::getComponent(unsigned long index) const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return components[index];
+    return components_[index];
 }
 
 inline NBoundaryComponent* NTriangulation::getBoundaryComponent(
         unsigned long index) const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return boundaryComponents[index];
+    return boundaryComponents_[index];
 }
 
 inline NVertex* NTriangulation::getVertex(unsigned long index) const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return vertices[index];
+    return vertices_[index];
 }
 
 inline NEdge* NTriangulation::getEdge(unsigned long index) const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return edges[index];
+    return edges_[index];
 }
 
 inline NTriangle* NTriangulation::getTriangle(unsigned long index) const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return triangles[index];
+    return triangles_[index];
 }
 
 inline NTriangle* NTriangulation::getFace(unsigned long index) const {
@@ -3748,39 +3749,39 @@ inline long NTriangulation::faceIndex(const NTriangle* tri) const {
 }
 
 inline bool NTriangulation::hasTwoSphereBoundaryComponents() const {
-    if (! twoSphereBoundaryComponents.known())
+    if (! twoSphereBoundaryComponents_.known())
         calculateBoundaryProperties();
-    return twoSphereBoundaryComponents.value();
+    return twoSphereBoundaryComponents_.value();
 }
 
 inline bool NTriangulation::hasNegativeIdealBoundaryComponents() const {
-    if (! negativeIdealBoundaryComponents.known())
+    if (! negativeIdealBoundaryComponents_.known())
         calculateBoundaryProperties();
-    return negativeIdealBoundaryComponents.value();
+    return negativeIdealBoundaryComponents_.value();
 }
 
 inline bool NTriangulation::isValid() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return valid;
+    return valid_;
 }
 
 inline bool NTriangulation::isIdeal() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return ideal;
+    return ideal_;
 }
 
 inline bool NTriangulation::isStandard() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return standard;
+    return standard_;
 }
 
 inline bool NTriangulation::hasBoundaryTriangles() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return (triangles.size() > 2 * tetrahedra.size());
+    return (triangles_.size() > 2 * tetrahedra_.size());
 }
 
 inline bool NTriangulation::hasBoundaryFaces() const {
@@ -3788,40 +3789,40 @@ inline bool NTriangulation::hasBoundaryFaces() const {
 }
 
 inline unsigned long NTriangulation::getNumberOfBoundaryTriangles() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return 2 * triangles.size() - 4 * tetrahedra.size();
+    return 2 * triangles_.size() - 4 * tetrahedra_.size();
 }
 
 inline bool NTriangulation::isClosed() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return boundaryComponents.empty();
+    return boundaryComponents_.empty();
 }
 
 inline bool NTriangulation::isOrientable() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return orientable;
+    return orientable_;
 }
 
 inline bool NTriangulation::isConnected() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return (components.size() <= 1);
+    return (components_.size() <= 1);
 }
 
 inline void NTriangulation::simplifiedFundamentalGroup(
         NGroupPresentation* newGroup) {
-    fundamentalGroup = newGroup;
+    fundamentalGroup_ = newGroup;
 }
 
 inline bool NTriangulation::knowsZeroEfficient() const {
-    return zeroEfficient.known();
+    return zeroEfficient_.known();
 }
 
 inline bool NTriangulation::knowsSplittingSurface() const {
-    return splittingSurface.known();
+    return splittingSurface_.known();
 }
 
 inline unsigned long NTriangulation::getHomologyH2Z2() const {
@@ -3830,12 +3831,12 @@ inline unsigned long NTriangulation::getHomologyH2Z2() const {
 
 inline const NTriangulation::TuraevViroSet&
         NTriangulation::allCalculatedTuraevViro() const {
-    return turaevViroCache;
+    return turaevViroCache_;
 }
 
 inline void NTriangulation::writeTextShort(std::ostream& out) const {
-    out << "Triangulation with " << tetrahedra.size()
-        << (tetrahedra.size() == 1 ? " tetrahedron" : " tetrahedra");
+    out << "Triangulation with " << tetrahedra_.size()
+        << (tetrahedra_.size() == 1 ? " tetrahedron" : " tetrahedra");
 }
 
 } // namespace regina

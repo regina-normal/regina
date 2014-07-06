@@ -743,25 +743,25 @@ inline NTriangulation* NTetrahedron::getTriangulation() const {
 }
 
 inline NComponent* NTetrahedron::getComponent() const {
-    if (! tri->calculatedSkeleton)
+    if (! tri->calculatedSkeleton_)
         tri->calculateSkeleton();
     return component;
 }
 
 inline NVertex* NTetrahedron::getVertex(int vertex) const {
-    if (! tri->calculatedSkeleton)
+    if (! tri->calculatedSkeleton_)
         tri->calculateSkeleton();
     return vertices[vertex];
 }
 
 inline NEdge* NTetrahedron::getEdge(int edge) const {
-    if (! tri->calculatedSkeleton)
+    if (! tri->calculatedSkeleton_)
         tri->calculateSkeleton();
     return edges[edge];
 }
 
 inline NTriangle* NTetrahedron::getTriangle(int face) const {
-    if (! tri->calculatedSkeleton)
+    if (! tri->calculatedSkeleton_)
         tri->calculateSkeleton();
     return triangles[face];
 }
@@ -771,19 +771,19 @@ inline NTriangle* NTetrahedron::getFace(int face) const {
 }
 
 inline NPerm4 NTetrahedron::getVertexMapping(int vertex) const {
-    if (! tri->calculatedSkeleton)
+    if (! tri->calculatedSkeleton_)
         tri->calculateSkeleton();
     return vertexMapping[vertex];
 }
 
 inline NPerm4 NTetrahedron::getEdgeMapping(int edge) const {
-    if (! tri->calculatedSkeleton)
+    if (! tri->calculatedSkeleton_)
         tri->calculateSkeleton();
     return edgeMapping[edge];
 }
 
 inline NPerm4 NTetrahedron::getTriangleMapping(int face) const {
-    if (! tri->calculatedSkeleton)
+    if (! tri->calculatedSkeleton_)
         tri->calculateSkeleton();
     return triMapping[face];
 }
@@ -793,7 +793,7 @@ inline NPerm4 NTetrahedron::getFaceMapping(int face) const {
 }
 
 inline int NTetrahedron::orientation() const {
-    if (! tri->calculatedSkeleton)
+    if (! tri->calculatedSkeleton_)
         tri->calculateSkeleton();
     return tetOrientation;
 }
