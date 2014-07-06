@@ -41,7 +41,7 @@ void NBoundaryComponent::writeTextLong(std::ostream& out) const {
     out << std::endl;
 
     if (isIdeal()) {
-        NVertex* v = vertices.front();
+        NVertex* v = vertices_.front();
         out << "Vertex: " << v->markedIndex() << std::endl;
         out << "Appears as:" << std::endl;
         std::vector<NVertexEmbedding>::const_iterator it;
@@ -52,7 +52,7 @@ void NBoundaryComponent::writeTextLong(std::ostream& out) const {
     } else {
         out << "Triangles:" << std::endl;
         std::vector<NTriangle*>::const_iterator it;
-        for (it = triangles.begin(); it != triangles.end(); ++it) {
+        for (it = triangles_.begin(); it != triangles_.end(); ++it) {
             const NTriangleEmbedding& emb((*it)->getEmbedding(0));
             out << "  " << emb.getTetrahedron()->markedIndex() << " ("
                 << emb.getVertices().trunc3() << ')' << std::endl;

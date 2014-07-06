@@ -41,11 +41,11 @@
 namespace regina {
 
 const NAbelianGroup& NTriangulation::homology() const {
-    if (H1.known())
-        return *H1.value();
+    if (H1_.known())
+        return *H1_.value();
 
     if (getNumberOfTetrahedra() == 0)
-        return *(H1 = new NAbelianGroup());
+        return *(H1_ = new NAbelianGroup());
 
     // Calculate the first homology.
     // Find a maximal forest in the dual 1-skeleton.
@@ -58,8 +58,8 @@ const NAbelianGroup& NTriangulation::homology() const {
     // Each non-boundary edge is a relation.
     unsigned long nBdryEdges = 0;
     unsigned long nBdryTri = 0;
-    for (BoundaryComponentIterator bit = boundaryComponents.begin();
-            bit != boundaryComponents.end(); bit++) {
+    for (BoundaryComponentIterator bit = boundaryComponents_.begin();
+            bit != boundaryComponents_.end(); bit++) {
         nBdryEdges += (*bit)->getNumberOfEdges();
         nBdryTri += (*bit)->getNumberOfTriangles();
     }
@@ -70,13 +70,14 @@ const NAbelianGroup& NTriangulation::homology() const {
     // Find out which triangle corresponds to which generator.
     long* genIndex = new long[getNumberOfTriangles()];
     long i = 0;
-    for (TriangleIterator fit = triangles.begin(); fit != triangles.end(); fit++) {
+    for (TriangleIterator fit = triangles_.begin(); fit != triangles_.end();
+            fit++) {
         if ((*fit)->isBoundary())
-            genIndex[fit - triangles.begin()] = -1;
+            genIndex[fit - triangles_.begin()] = -1;
         else if (forest.count(*fit))
-            genIndex[fit - triangles.begin()] = -1;
+            genIndex[fit - triangles_.begin()] = -1;
         else {
-            genIndex[fit - triangles.begin()] = i;
+            genIndex[fit - triangles_.begin()] = i;
             i++;
         }
     }
@@ -88,7 +89,7 @@ const NAbelianGroup& NTriangulation::homology() const {
     int currTetFace;
     long triGenIndex;
     i = 0;
-    for (EdgeIterator eit = edges.begin(); eit != edges.end(); eit++) {
+    for (EdgeIterator eit = edges_.begin(); eit != edges_.end(); eit++) {
         if (! (*eit)->isBoundary()) {
             // Put in the relation corresponding to this edge.
             for (embit = (*eit)->getEmbeddings().begin();
@@ -114,15 +115,15 @@ const NAbelianGroup& NTriangulation::homology() const {
     // Build the group from the presentation matrix and tidy up.
     NAbelianGroup* ans = new NAbelianGroup();
     ans->addGroup(pres);
-    return *(H1 = ans);
+    return *(H1_ = ans);
 }
 
 const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
-    if (H1Rel.known())
-        return *H1Rel.value();
+    if (H1Rel_.known())
+        return *H1Rel_.value();
 
     if (getNumberOfBoundaryComponents() == 0)
-        return *(H1Rel = new NAbelianGroup(homology()));
+        return *(H1Rel_ = new NAbelianGroup(homology()));
 
     // Calculate the relative first homology wrt the boundary.
 
@@ -138,14 +139,14 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
     unsigned long nBdryEdges = 0;
     unsigned long nBdryTri = 0;
     unsigned long nClosedComponents = 0;
-    for (BoundaryComponentIterator bit = boundaryComponents.begin();
-            bit != boundaryComponents.end(); bit++) {
+    for (BoundaryComponentIterator bit = boundaryComponents_.begin();
+            bit != boundaryComponents_.end(); bit++) {
         nBdryVertices += (*bit)->getNumberOfVertices();
         nBdryEdges += (*bit)->getNumberOfEdges();
         nBdryTri += (*bit)->getNumberOfTriangles();
     }
-    for (ComponentIterator cit = components.begin();
-            cit != components.end(); cit++)
+    for (ComponentIterator cit = components_.begin();
+            cit != components_.end(); cit++)
         if ((*cit)->isClosed())
             nClosedComponents++;
     long nGens = getNumberOfEdges() - nBdryEdges
@@ -157,13 +158,13 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
     // Find out which edge corresponds to which generator.
     long* genIndex = new long[getNumberOfEdges()];
     long i = 0;
-    for (EdgeIterator eit = edges.begin(); eit != edges.end(); eit++) {
+    for (EdgeIterator eit = edges_.begin(); eit != edges_.end(); eit++) {
         if ((*eit)->isBoundary())
-            genIndex[eit - edges.begin()] = -1;
+            genIndex[eit - edges_.begin()] = -1;
         else if (forest.count(*eit))
-            genIndex[eit - edges.begin()] = -1;
+            genIndex[eit - edges_.begin()] = -1;
         else {
-            genIndex[eit - edges.begin()] = i;
+            genIndex[eit - edges_.begin()] = i;
             i++;
         }
     }
@@ -174,7 +175,8 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
     long edgeGenIndex;
     i = 0;
     int triEdge, currEdgeStart, currEdgeEnd, currEdge;
-    for (TriangleIterator fit = triangles.begin(); fit != triangles.end(); fit++) {
+    for (TriangleIterator fit = triangles_.begin(); fit != triangles_.end();
+            fit++) {
         if (! (*fit)->isBoundary()) {
             // Put in the relation corresponding to this triangle.
             currTet = (*fit)->getEmbedding(0).getTetrahedron();
@@ -203,12 +205,12 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
     // Build the group from the presentation matrix and tidy up.
     NAbelianGroup* ans = new NAbelianGroup();
     ans->addGroup(pres);
-    return *(H1Rel = ans);
+    return *(H1Rel_ = ans);
 }
 
 const NAbelianGroup& NTriangulation::getHomologyH1Bdry() const {
-    if (H1Bdry.known())
-        return *H1Bdry.value();
+    if (H1Bdry_.known())
+        return *H1Bdry_.value();
 
     // Run through the individual boundary components and add the
     // appropriate pieces to the homology group.
@@ -216,11 +218,11 @@ const NAbelianGroup& NTriangulation::getHomologyH1Bdry() const {
     unsigned long z2rank = 0;
 
     // Ensure that the skeleton has been calculated.
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
 
-    for (BoundaryComponentIterator bit = boundaryComponents.begin();
-            bit != boundaryComponents.end(); bit++) {
+    for (BoundaryComponentIterator bit = boundaryComponents_.begin();
+            bit != boundaryComponents_.end(); bit++) {
         if ((*bit)->isOrientable()) {
             rank += (2 - (*bit)->getEulerChar());
         } else {
@@ -233,15 +235,15 @@ const NAbelianGroup& NTriangulation::getHomologyH1Bdry() const {
     NAbelianGroup* ans = new NAbelianGroup();
     ans->addRank(rank);
     ans->addTorsionElement(2, z2rank);
-    return *(H1Bdry = ans);
+    return *(H1Bdry_ = ans);
 }
 
 const NAbelianGroup& NTriangulation::getHomologyH2() const {
-    if (H2.known())
-        return *H2.value();
+    if (H2_.known())
+        return *H2_.value();
 
     if (getNumberOfTetrahedra() == 0)
-        return *(H2 = new NAbelianGroup());
+        return *(H2_ = new NAbelianGroup());
 
     // Calculations are different for orientable vs non-orientable
     // components.
@@ -255,8 +257,8 @@ const NAbelianGroup& NTriangulation::getHomologyH2() const {
         // Non-orientable!
         // z2rank = # closed cmpts - # closed orientable cmpts
         z2rank = 0;
-        for (ComponentIterator cit = components.begin();
-                cit != components.end(); cit++)
+        for (ComponentIterator cit = components_.begin();
+                cit != components_.end(); cit++)
             if ((*cit)->isClosed())
                 if (! ((*cit)->isOrientable()))
                     z2rank++;
@@ -273,7 +275,7 @@ const NAbelianGroup& NTriangulation::getHomologyH2() const {
     ans->addRank(rank);
     if (z2rank)
         ans->addTorsionElement(2, z2rank);
-    return *(H2 = ans);
+    return *(H2_ = ans);
 }
 
 } // namespace regina

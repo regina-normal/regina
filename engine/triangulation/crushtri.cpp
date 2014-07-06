@@ -38,13 +38,13 @@ namespace regina {
 
 void NTriangulation::maximalForestInBoundary(std::set<NEdge*>& edgeSet,
         std::set<NVertex*>& vertexSet) const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
 
     vertexSet.clear();
     edgeSet.clear();
-    for (BoundaryComponentIterator bit = boundaryComponents.begin();
-            bit != boundaryComponents.end(); bit++)
+    for (BoundaryComponentIterator bit = boundaryComponents_.begin();
+            bit != boundaryComponents_.end(); bit++)
         stretchBoundaryForestFromVertex((*bit)->getVertex(0),
             edgeSet, vertexSet);
 }
@@ -83,7 +83,7 @@ void NTriangulation::stretchBoundaryForestFromVertex(NVertex* from,
 
 void NTriangulation::maximalForestInSkeleton(std::set<NEdge*>& edgeSet,
         bool canJoinBoundaries) const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
 
     std::set<NVertex*> vertexSet;
@@ -94,7 +94,7 @@ void NTriangulation::maximalForestInSkeleton(std::set<NEdge*>& edgeSet,
     else
         maximalForestInBoundary(edgeSet, vertexSet);
 
-    for (VertexIterator vit = vertices.begin(); vit != vertices.end(); vit++)
+    for (VertexIterator vit = vertices_.begin(); vit != vertices_.end(); vit++)
         if (! (vertexSet.count(*vit))) {
             stretchForestFromVertex(*vit, edgeSet, vertexSet, thisBranch);
             thisBranch.clear();
@@ -144,12 +144,12 @@ bool NTriangulation::stretchForestFromVertex(NVertex* from,
 
 void NTriangulation::maximalForestInDualSkeleton(std::set<NTriangle*>& triSet)
         const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
 
     triSet.clear();
     std::set<NTetrahedron*> visited;
-    for (TetrahedronIterator it = tetrahedra.begin(); it != tetrahedra.end();
+    for (TetrahedronIterator it = tetrahedra_.begin(); it != tetrahedra_.end();
             it++)
         if (! (visited.count(*it)))
             stretchDualForestFromTet(*it, triSet, visited);
