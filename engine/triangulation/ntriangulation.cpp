@@ -76,13 +76,13 @@ NTriangulation::NTriangulation(const std::string& description) :
 
 void NTriangulation::addTetrahedron(NTetrahedron* t) {
     // Make this a no-op if the tetrahedron has already been added.
-    if (t->tri == this)
+    if (t->tri_ == this)
         return;
-    assert(t->tri == 0);
+    assert(t->tri_ == 0);
 
     ChangeEventSpan span(this);
 
-    t->tri = this;
+    t->tri_ = this;
     tetrahedra_.push_back(t);
 
     // Aggressively add neighbours of t (recursively).
@@ -90,7 +90,7 @@ void NTriangulation::addTetrahedron(NTetrahedron* t) {
     bool moreToAdd = false;
     int i;
     for (i = 0; i < 4; ++i)
-        if (t->adjacentTetrahedron(i) && ! t->adjacentTetrahedron(i)->tri) {
+        if (t->adjacentTetrahedron(i) && ! t->adjacentTetrahedron(i)->tri_) {
             moreToAdd = true;
             break;
         }
@@ -106,8 +106,8 @@ void NTriangulation::addTetrahedron(NTetrahedron* t) {
             toFollow.pop();
             for (i = 0; i < 4; ++i) {
                 adj = next->adjacentTetrahedron(i);
-                if (adj && ! adj->tri) {
-                    adj->tri = this;
+                if (adj && ! adj->tri_) {
+                    adj->tri_ = this;
                     tetrahedra_.push_back(adj);
                     toFollow.push(adj);
                 }
@@ -129,9 +129,9 @@ void NTriangulation::swapContents(NTriangulation& other) {
 
     TetrahedronIterator it;
     for (it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it)
-        (*it)->tri = this;
+        (*it)->tri_ = this;
     for (it = other.tetrahedra_.begin(); it != other.tetrahedra_.end(); ++it)
-        (*it)->tri = &other;
+        (*it)->tri_ = &other;
 }
 
 void NTriangulation::moveContentsTo(NTriangulation& dest) {
@@ -149,7 +149,7 @@ void NTriangulation::moveContentsTo(NTriangulation& dest) {
         // However, the subsequent clear() operation does not touch the
         // tetrahedron markings (indices), and so we end up with the
         // correct result (i.e., the markings are correct for dest).
-        (*it)->tri = &dest;
+        (*it)->tri_ = &dest;
         dest.tetrahedra_.push_back(*it);
     }
     tetrahedra_.clear();

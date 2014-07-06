@@ -3506,7 +3506,7 @@ inline NTetrahedron* NTriangulation::newTetrahedron() {
     ChangeEventSpan span(this);
 
     NTetrahedron* tet = new NTetrahedron();
-    tet->tri = this;
+    tet->tri_ = this;
     tetrahedra_.push_back(tet);
     clearAllProperties();
 
@@ -3521,7 +3521,7 @@ inline NTetrahedron* NTriangulation::newTetrahedron(const std::string& desc) {
     ChangeEventSpan span(this);
 
     NTetrahedron* tet = new NTetrahedron(desc);
-    tet->tri = this;
+    tet->tri_ = this;
     tetrahedra_.push_back(tet);
     clearAllProperties();
 

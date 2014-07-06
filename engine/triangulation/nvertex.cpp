@@ -48,11 +48,11 @@ const int NVertex::NON_STANDARD_CUSP = 5;
 const int NVertex::NON_STANDARD_BDRY = 6;
 
 NVertex::~NVertex() {
-    delete linkTri;
+    delete linkTri_;
 }
 
 void NVertex::writeTextShort(std::ostream& out) const {
-    switch(link) {
+    switch(link_) {
         case SPHERE: out << "Internal "; break;
         case DISC: out << "Boundary "; break;
         case TORUS: out << "Torus cusp "; break;
@@ -69,7 +69,7 @@ void NVertex::writeTextLong(std::ostream& out) const {
 
     out << "Appears as:" << std::endl;
     std::vector<NVertexEmbedding>::const_iterator it;
-    for (it = embeddings.begin(); it != embeddings.end(); ++it)
+    for (it = embeddings_.begin(); it != embeddings_.end(); ++it)
         out << "  " << it->getTetrahedron()->markedIndex()
             << " (" << it->getVertex() << ')' << std::endl;
 }
@@ -81,12 +81,12 @@ Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
     NPacket::ChangeEventSpan span(ans);
 
     if (inclusion)
-        *inclusion = new NIsomorphism(embeddings.size());
+        *inclusion = new NIsomorphism(embeddings_.size());
 
     std::vector<NVertexEmbedding>::const_iterator it, adjIt;
     Dim2Triangle* tTri;
     int i;
-    for (it = embeddings.begin(), i = 0; it != embeddings.end(); ++it, ++i) {
+    for (it = embeddings_.begin(), i = 0; it != embeddings_.end(); ++it, ++i) {
         tTri = ans->newTriangle();
         if (labels) {
             std::stringstream s;
@@ -106,7 +106,7 @@ Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
     int edgeInLink;
     int adjIndex;
     int adjVertex;
-    for (it = embeddings.begin(), i = 0; it != embeddings.end(); ++it, ++i) {
+    for (it = embeddings_.begin(), i = 0; it != embeddings_.end(); ++it, ++i) {
         tet = it->getTetrahedron();
         v = it->getVertex();
 
@@ -132,8 +132,8 @@ Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
             // Currently we do a simple linear scan, which makes the
             // overall link construction quadratic.  This can surely be
             // made linear(ish) with the right data structure and/or algorithm.
-            for (adjIt = embeddings.begin(), adjIndex = 0;
-                    adjIt != embeddings.end(); ++adjIt, ++adjIndex)
+            for (adjIt = embeddings_.begin(), adjIndex = 0;
+                    adjIt != embeddings_.end(); ++adjIt, ++adjIndex)
                 if (adjIt->getTetrahedron() == adj &&
                         adjIt->getVertex() == adjVertex)
                     break; // Sets adjIndex to the right value.

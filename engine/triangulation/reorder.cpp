@@ -286,7 +286,7 @@ bool NTriangulation::isOriented() const {
         return false;
 
     for(it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it)
-        if( (*it) -> tetOrientation != 1)
+        if( (*it) -> tetOrientation_ != 1)
             return false;
 
     return true;
@@ -302,7 +302,7 @@ void NTriangulation::orient() {
     int t;
     for (t = 0, it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it, ++t) {
         flip_tets_iso.tetImage(t) = t;
-        if ((*it)->tetOrientation == 1 ||
+        if ((*it)->tetOrientation_ == 1 ||
                 ! (*it)->getComponent()->isOrientable())
             flip_tets_iso.facePerm(t) = NPerm4(); // Identity
         else
@@ -318,8 +318,8 @@ bool NTriangulation::isOrdered() const {
     for(it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it)
         for(int face = 0; face < 4; face++)
 
-            if((*it)->tetrahedra[face]) {
-                NPerm4 perm = (*it) -> tetrahedronPerm[face];
+            if((*it)->tetrahedra_[face]) {
+                NPerm4 perm = (*it) -> tetrahedronPerm_[face];
 
                 // check that the permutation is order preserving on the face
                 int last = -1;
