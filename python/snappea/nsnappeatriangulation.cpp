@@ -37,6 +37,7 @@
 #include "snappea/nsnappeatriangulation.h"
 
 using namespace boost::python;
+using regina::NCusp;
 using regina::NSnapPeaTriangulation;
 using regina::NTriangulation;
 
@@ -52,8 +53,8 @@ namespace {
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_fundamentalGroupFilled,
         NSnapPeaTriangulation::fundamentalGroupFilled, 0, 3);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_filling,
-        NSnapPeaTriangulation::filling, 0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_cusp,
+        NSnapPeaTriangulation::cusp, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_fill,
         NSnapPeaTriangulation::fill, 2, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_unfill,
@@ -64,6 +65,15 @@ namespace {
 }
 
 void addNSnapPeaTriangulation() {
+    class_<NCusp, bases<regina::ShareableObject>,
+            std::auto_ptr<NCusp>, boost::noncopyable>("NCusp", no_init)
+        .def("vertex", &NCusp::vertex,
+            return_value_policy<reference_existing_object>())
+        .def("complete", &NCusp::complete)
+        .def("m", &NCusp::m)
+        .def("l", &NCusp::l)
+    ;
+
     scope s = class_<NSnapPeaTriangulation, bases<regina::NTriangulation>,
             std::auto_ptr<NSnapPeaTriangulation>, boost::noncopyable>
             ("NSnapPeaTriangulation", init<>())
@@ -86,10 +96,8 @@ void addNSnapPeaTriangulation() {
         .def("countCusps", &NSnapPeaTriangulation::countCusps)
         .def("countCompleteCusps", &NSnapPeaTriangulation::countCompleteCusps)
         .def("countFilledCusps", &NSnapPeaTriangulation::countFilledCusps)
-        .def("cuspVertex", &NSnapPeaTriangulation::cuspVertex,
-            return_value_policy<reference_existing_object>())
-        .def("cuspComplete", &NSnapPeaTriangulation::cuspComplete)
-        .def("filling", &NSnapPeaTriangulation::filling, OL_filling())
+        .def("cusp", &NSnapPeaTriangulation::cusp, OL_cusp()[
+            return_value_policy<reference_existing_object>()])
         .def("fill", &NSnapPeaTriangulation::fill, OL_fill())
         .def("unfill", &NSnapPeaTriangulation::unfill, OL_unfill())
         .def("slopeEquations", &NSnapPeaTriangulation::slopeEquations,
@@ -129,15 +137,6 @@ void addNSnapPeaTriangulation() {
         .staticmethod("kernelMessagesEnabled")
         .staticmethod("enableKernelMessages")
         .staticmethod("disableKernelMessages")
-    ;
-
-    class_<NSnapPeaTriangulation::Filling>("Filling")
-        .def_readwrite("m", &NSnapPeaTriangulation::Filling::m)
-        .def_readwrite("l", &NSnapPeaTriangulation::Filling::l)
-        .def(init<>())
-        .def(init<int, int>())
-        .def(init<const NSnapPeaTriangulation::Filling&>())
-        .def(self_ns::str(self))
     ;
 
     enum_<NSnapPeaTriangulation::SolutionType>("SolutionType")

@@ -129,13 +129,13 @@ void NSnapPeaShapesUI::refresh() {
     for (i = 0; i < tri->getNumberOfBoundaryComponents(); ++i) {
         row = new QTreeWidgetItem();
         row->setText(0, QString::number(i));
-        row->setText(1, QString::number(tri->cuspVertex(i)->markedIndex()));
-        if (tri->cuspComplete(i))
+        row->setText(1, QString::number(tri->cusp(i)->vertex()->markedIndex()));
+        if (tri->cusp(i)->complete())
             row->setText(2, QString(QChar(0x2014 /* emdash */)));
-        else {
-            NSnapPeaTriangulation::Filling f = tri->filling(i);
-            row->setText(2, tr("%1, %2").arg(f.m).arg(f.l));
-        }
+        else
+            row->setText(2, tr("%1, %2")
+                .arg(tri->cusp(i)->m())
+                .arg(tri->cusp(i)->l()));
         row->setTextAlignment(0, Qt::AlignCenter);
         row->setTextAlignment(1, Qt::AlignCenter);
         row->setTextAlignment(2, Qt::AlignCenter);

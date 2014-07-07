@@ -119,6 +119,94 @@ struct PacketInfo<PACKET_SNAPPEATRIANGULATION> {
 };
 
 /**
+ * Represents a single cusp of a SnapPea triangulation.
+ * See the NSnapPeaTriangulation class for further details.
+ *
+ * NCusp objects should be considered temporary only.  They are preserved
+ * if you change the fillings (via NSnapPeaTriangulation::fill()
+ * or NSnapPeaTriangulation::unfill()).  However, if you change the SnapPea
+ * triangulation itself (e.g., via randomize()), then all cusp objects will
+ * be deleted and replaced with new ones (using fresh data re-fetched from
+ * the SnapPea kernel).
+ */
+class REGINA_API NCusp : public ShareableObject {
+    private:
+        NVertex* vertex_;
+            /**< The corresponding vertex of the Regina triangulation. */
+        int m_;
+            /**< The first (meridian) filling coefficient, or 0 if this
+                 cusp is complete. */
+        int l_;
+            /**< The second (longitude) filling coefficient, or 0 if this
+                 cusp is complete. */
+
+    public:
+        /**
+         * Default destructor.
+         */
+        virtual ~NCusp();
+
+        /**
+         * Returns the corresponding vertex of the Regina triangulation
+         * (i.e., of the NTriangulation structure that is inherited by
+         * NSnapPeaTriangulation).
+         *
+         * Note that cusp and vertex indexing might not be in sync; that is,
+         * SnapPea's <tt>cusp(i)</tt> need not correspond to Regina's
+         * <tt>getVertex(i)</tt>.
+         *
+         * This routine can be used to detect if/when cusp numbering
+         * and vertex numbering fall out of sync, and to translate
+         * between them if/when this happens.
+         */
+        NVertex* vertex() const;
+
+        /**
+         * Returns whether this cusp is complete.
+         *
+         * \snappy In SnapPy, this field corresponds to querying
+         * <tt>Manifold.cusp_info('is_complete')[cusp_number]</tt>.
+         *
+         * @return \c true if this cusp is complete, or \c false if it is
+         * filled.
+         */
+        bool complete() const;
+
+        /**
+         * Returns the first (meridian) filling coefficient on this cusp,
+         * or 0 if this cusp is complete.
+         *
+         * \snappy In SnapPy, this field corresponds to querying
+         * <tt>Manifold.cusp_info('filling')[cusp_number][0]</tt>.
+         *
+         * @return the first filling coefficient.
+         */
+        int m() const;
+
+        /**
+         * Returns the second (longitude) filling coefficient on this cusp,
+         * or 0 if this cusp is complete.
+         *
+         * \snappy In SnapPy, this field corresponds to querying
+         * <tt>Manifold.cusp_info('filling')[cusp_number][1]</tt>.
+         *
+         * @return the second filling coefficient.
+         */
+        int l() const;
+
+        void writeTextShort(std::ostream& out) const;
+
+    private:
+        /**
+         * A default constructor that performs no initialisation whatsoever.
+         */
+        NCusp();
+
+    friend class NSnapPeaTriangulation;
+        /**< Allow access to private members. */
+};
+
+/**
  * Offers direct access to the SnapPea kernel from within Regina.
  * An object of this class represents a 3-manifold triangulation, stored
  * directly in the SnapPea kernel using SnapPea's internal format.
@@ -254,43 +342,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
                 /**< The gluing equations could not be solved. */
         } SolutionType;
 
-        /**
-         * Describes a Dehn filling on a cusp.
-         */
-        struct Filling {
-            int m; /**< The first (meridian) filling coefficient. */
-            int l; /**< The second (longitude) filling coefficient. */
-
-            /**
-             * Creates a (0, 0) filling.
-             */
-            Filling();
-
-            /**
-             * Creates a filling with the given coefficients.
-             *
-             * @param m_ the first (meridian) filling coefficient.
-             * @param l_ the first (longitude) filling coefficient.
-             */
-            Filling(int m_, int l_);
-        };
-
     private:
-        /**
-         * A private structure used to cache information about each cusp of
-         * the internal SnapPea triangulation.
-         */
-        struct CuspInfo {
-            NVertex* vertex;
-                /**< The corresponding vertex of the Regina triangulation. */
-            bool complete;
-                /**< \c true if the cusp is complete, or \c false if it
-                     is filled. */
-            Filling filling;
-                /**< The filling coefficients on this cusp, or (0, 0) if the
-                     cusp is complete. */
-        };
-
         regina::snappea::Triangulation* data_;
             /**< The triangulation stored in SnapPea's native format,
                  or 0 if this is a null triangulation. */
@@ -301,7 +353,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
                  hyperbolic structure.  If this is a null triangulation, or if
                  the solution type is no_solution or not_attempted, then
                  shape_ will be 0. */
-        CuspInfo* cusp_;
+        NCusp* cusp_;
             /**< An array that caches information about each cusp of the
                  internal SnapPea triangulation.  If this is a null
                  triangulation then cusp_ will be 0. */
@@ -630,8 +682,9 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * The edge equations will be ordered arbitrarily.  The cusp equations
          * will be presented in pairs ordered by cusp index (as stored by
          * SnapPea); within each pair the meridian equation will appear before
-         * the longitude equation.  You can use cuspVertex() to help translate
-         * between SnapPea's cusp indices and Regina's vertex indices.
+         * the longitude equation.  The NCusp::vertex() method (which
+         * is accessed through the cusp() routine) can help translate
+         * between SnapPea's cusp numbers and Regina's vertex numbers.
          *
          * The matrix will contain <tt>3 * getNumberOfTetrahedra()</tt> columns.
          * The first three columns represent shape parameters <tt>z</tt>,
@@ -743,49 +796,32 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         unsigned countFilledCusps() const;
 
         /**
-         * Identifies which vertex of the inherited NTriangulation
-         * corresponds to the given SnapPea cusp.
-         *
-         * When the triangulation is first constructed, SnapPea's cusp \a i
-         * will typically correspond to Regina's vertex \a i.  However,
-         * if SnapPea manipulates the triangulation (e.g., through randomize()),
-         * there is no guarantee that SnapPea and Regina will maintain the
-         * same numbering (since in general Regina does not preserve indices
-         * of skeletal objects through changes to a triangulation, whereas
-         * SnapPea maintains the cusp indices across changes).
-         * This routine can be used to detect when SnapPea's and Regina's
-         * numbering fall out of sync, and to translate between them
-         * if/when this happens.
-         *
-         * @param cusp the index of a cusp according to SnapPea; this must be
-         * between 0 and countCusps()-1 inclusive.
-         * @return the corresponding vertex of the triangulation according
-         * to Regina.
-         */
-        NVertex* cuspVertex(unsigned cusp) const;
-
-        /**
-         * Determines whether the given cusp is complete or filled.
+         * Returns information about the given cusp of this manifold.
+         * This information includes the filling coefficients (if any),
+         * along with other combinatorial information.
          *
          * \snappy In SnapPy, this routine corresponds to calling
-         * <tt>Manifold.cusp_info('is_complete')[cusp]</tt>.
+         * <tt>Manifold.cusp_info()[c]</tt>, though the set of
+         * information returned about each cusp is different.
          *
-         * @param cusp the index of a cusp according to SnapPea; this must be
-         * between 0 and countCusps()-1 inclusive.
-         * @return \c true if the cusp is complete, or \c false if it is filled.
-         */
-        bool cuspComplete(unsigned cusp) const;
-
-        /**
-         * Returns the current filling coefficients for the given cusp.
-         * If the cusp is complete (or if this is a null triangulation),
-         * then the filling returned will be (0, 0).
+         * These NCusp objects should be considered temporary only.  They are
+         * preserved if you change the fillings (via fill() or unfill()).
+         * However, if you change the SnapPea triangulation itself
+         * (e.g., via randomize()), then all cusp objects will be deleted
+         * and replaced with new ones (using fresh data re-fetched from
+         * the SnapPea kernel).
          *
-         * @param cusp the index of a cusp according to SnapPea; this must be
-         * between 0 and countCusps()-1 inclusive.
-         * @return the corresponding filling coefficients.
+         * \warning Be warned that cusp \a i might not correspond to vertex
+         * \a i of the triangulation.  The NCusp::vertex() method (which
+         * is accessed through the cusp() routine) can help translate
+         * between SnapPea's cusp numbers and Regina's vertex numbers.
+         *
+         * @param whichCusp the index of a cusp according to SnapPea;
+         * this must be between 0 and countCusps()-1 inclusive.
+         * @return information about the given cusp, or 0 if this is a
+         * null triangulation.
          */
-        Filling filling(unsigned cusp = 0) const;
+        const NCusp* cusp(unsigned whichCusp = 0) const;
 
         /**
          * Fills the given cusp.  After filling, this routine will
@@ -806,12 +842,19 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * own internal floating-point representation.  If this happens
          * then this routine will again do nothing and simply return \c false.
          *
+         * \warning Be warned that cusp \a i might not correspond to vertex
+         * \a i of the triangulation.  The NCusp::vertex() method (which
+         * is accessed through the cusp() routine) can help translate
+         * between SnapPea's cusp numbers and Regina's vertex numbers.
+         *
          * @param m the first (meridional) filling coefficient.
          * @param l the second (longitudinal) filling coefficient.
-         * @param cusp the index of the cusp to fill according to SnapPea;
-         * this must be between 0 and countCusps()-1 inclusive.
+         * @param whichCusp the index of the cusp to fill according to
+         * SnapPea; this must be between 0 and countCusps()-1 inclusive.
+         * @param \c true if and only if the filling was successful
+         * (according to the conditions outlined above).
          */
-        bool fill(int m, int l, unsigned cusp = 0);
+        bool fill(int m, int l, unsigned whichCusp = 0);
 
         /**
          * Removes the filling on given cusp.  After removing the filling,
@@ -821,10 +864,15 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * If the given cusp is already complete, then this routine
          * safely does nothing.
          *
-         * @param cusp the index of the cusp to unfill according to SnapPea;
-         * this must be between 0 and countCusps()-1 inclusive.
+         * \warning Be warned that cusp \a i might not correspond to vertex
+         * \a i of the triangulation.  The NCusp::vertex() method (which
+         * is accessed through the cusp() routine) can help translate
+         * between SnapPea's cusp numbers and Regina's vertex numbers.
+         *
+         * @param whichCusp the index of the cusp to unfill according to
+         * SnapPea; this must be between 0 and countCusps()-1 inclusive.
          */
-        void unfill(unsigned cusp = 0);
+        void unfill(unsigned whichCusp = 0);
 
         /**
          * Returns a matrix for computing boundary slopes of
@@ -835,8 +883,9 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * algebraic intersection number with the longitude.
          *
          * If the triangulation has more than one cusp, these pairs are
-         * ordered by cusp index (as stored by SnapPea).  You can call
-         * cuspVertex() to map these to Regina's vertex indices if needed.
+         * ordered by cusp index (as stored by SnapPea).  You can examine
+         * <tt>cusp(cusp_number).vertex()</tt> to map these to Regina's
+         * vertex indices if needed.
          *
          * For the purposes of this routine, any fillings on the cusps of
          * this SnapPea triangulation will be ignored.
@@ -1345,16 +1394,6 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
     friend class regina::NXMLSnapPeaReader;
 };
 
-/**
- * Writes the given filling coefficients to the given output stream.
- *
- * @param out the output stream to which to write.
- * @param f the filling coefficients to write.
- * @return out a reference to the given output stream.
- */
-std::ostream& operator << (std::ostream& out,
-    const NSnapPeaTriangulation::Filling& f);
-
 /*@}*/
 
 // Inline functions for SnapPeaFatalError
@@ -1364,17 +1403,28 @@ inline SnapPeaFatalError::SnapPeaFatalError(
         function(fromFunction), file(fromFile) {
 }
 
-// Inline functions for NSnapPeaTriangulation::Filling
+// Inline functions for NCusp
 
-inline NSnapPeaTriangulation::Filling::Filling() : m(0), l(0) {
+inline NCusp::~NCusp() {
 }
 
-inline NSnapPeaTriangulation::Filling::Filling(int m_, int l_) : m(m_), l(l_) {
+inline NCusp::NCusp() {
 }
 
-inline std::ostream& operator << (std::ostream& out,
-        const NSnapPeaTriangulation::Filling& f) {
-    return out << '(' << f.m << ", " << f.l << ')';
+inline NVertex* NCusp::vertex() const {
+    return vertex_;
+}
+
+inline bool NCusp::complete() const {
+    return (m_ == 0 && l_ == 0);
+}
+
+inline int NCusp::m() const {
+    return m_;
+}
+
+inline int NCusp::l() const {
+    return l_;
 }
 
 // Inline functions for NSnapPeaTriangulation
@@ -1405,17 +1455,8 @@ inline unsigned NSnapPeaTriangulation::countFilledCusps() const {
     return filledCusps_;
 }
 
-inline NVertex* NSnapPeaTriangulation::cuspVertex(unsigned cusp) const {
-    return (cusp_ ? cusp_[cusp].vertex : 0);
-}
-
-inline bool NSnapPeaTriangulation::cuspComplete(unsigned cusp) const {
-    return (cusp_ ? cusp_[cusp].complete : false);
-}
-
-inline NSnapPeaTriangulation::Filling NSnapPeaTriangulation::filling(
-        unsigned cusp) const {
-    return (cusp_ ? cusp_[cusp].filling : Filling());
+inline const NCusp* NSnapPeaTriangulation::cusp(unsigned whichCusp) const {
+    return (cusp_ ? cusp_ + whichCusp : 0);
 }
 
 inline bool NSnapPeaTriangulation::dependsOnParent() const {

@@ -58,6 +58,18 @@ namespace {
 
 std::complex<double> NSnapPeaTriangulation::zero_(0, 0);
 
+void NCusp::writeTextShort(std::ostream& out) const {
+    if (complete())
+        out << "Complete cusp: ";
+    else
+        out << "Filled cusp: ";
+
+    out << "vertex " << vertex_->markedIndex();
+
+    if (! complete())
+        out << ", filling (" << m_ << ", " << l_ << ')';
+}
+
 NSnapPeaTriangulation::NSnapPeaTriangulation(
         const std::string& fileNameOrContents) :
         data_(0), shape_(0), cusp_(0), filledCusps_(0), syncing_(false) {
@@ -258,33 +270,32 @@ double NSnapPeaTriangulation::minImaginaryShape() const {
     return ans;
 }
 
-void NSnapPeaTriangulation::unfill(unsigned cusp) {
+void NSnapPeaTriangulation::unfill(unsigned whichCusp) {
     if (! data_)
         return;
 
-    if (cusp_[cusp].complete) {
+    if (cusp_[whichCusp].complete()) {
         // Nothing to do.
         return;
     }
 
-    regina::snappea::set_cusp_info(data_, cusp, true, 0, 0);
+    regina::snappea::set_cusp_info(data_, whichCusp, true, 0, 0);
 
     // Update and refresh internal caches.
-    cusp_[cusp].complete = true;
-    cusp_[cusp].filling.m = cusp_[cusp].filling.l = 0;
+    cusp_[whichCusp].m_ = cusp_[whichCusp].l_ = 0;
     --filledCusps_;
 
     regina::snappea::do_Dehn_filling(data_);
     syncFillings();
 }
 
-bool NSnapPeaTriangulation::fill(int m, int l, unsigned cusp) {
+bool NSnapPeaTriangulation::fill(int m, int l, unsigned whichCusp) {
     if (! data_)
         return false;
 
     // Are we unfilling?
     if (m == 0 && l == 0) {
-        unfill(cusp);
+        unfill(whichCusp);
         return true;
     }
 
@@ -298,7 +309,7 @@ bool NSnapPeaTriangulation::fill(int m, int l, unsigned cusp) {
         return false;
 
     // Enforce other preconditions on the filling coefficients.
-    if (cusp_[cusp].vertex->isLinkOrientable()) {
+    if (cusp_[whichCusp].vertex_->isLinkOrientable()) {
         // Note that the gcd() below is Regina's.
         if (gcd(m, l) != 1)
             return false;
@@ -308,15 +319,14 @@ bool NSnapPeaTriangulation::fill(int m, int l, unsigned cusp) {
     }
 
     // Are we filling a complete cusp, or changing an existing filling?
-    bool wasComplete = cusp_[cusp].complete;
+    bool wasComplete = cusp_[whichCusp].complete();
 
     // Do it.
-    regina::snappea::set_cusp_info(data_, cusp, false, mReal, lReal);
+    regina::snappea::set_cusp_info(data_, whichCusp, false, mReal, lReal);
 
     // Update and refresh internal caches.
-    cusp_[cusp].complete = false;
-    cusp_[cusp].filling.m = m;
-    cusp_[cusp].filling.l = l;
+    cusp_[whichCusp].m_ = m;
+    cusp_[whichCusp].l_ = l;
     if (wasComplete)
         ++filledCusps_;
 
@@ -391,7 +401,7 @@ NMatrixInt* NSnapPeaTriangulation::gluingEquations() const {
     int c;
     int* cuspEqn;
     for (c = 0; c < data_->num_cusps; ++c) {
-        if (cusp_[c].complete) {
+        if (cusp_[c].complete()) {
             cuspEqn = regina::snappea::get_cusp_equation(
                 data_, c, 1, 0, &numCols);
             for (j = 0; j < numCols; ++j)
@@ -407,7 +417,7 @@ NMatrixInt* NSnapPeaTriangulation::gluingEquations() const {
             ++row;
         } else {
             cuspEqn = regina::snappea::get_cusp_equation(
-                data_, c, cusp_[c].filling.m, cusp_[c].filling.l, &numCols);
+                data_, c, cusp_[c].m_, cusp_[c].l_, &numCols);
             for (j = 0; j < numCols; ++j)
                 matrix->entry(row, j) = cuspEqn[j];
             regina::snappea::free_cusp_equation(cuspEqn);
@@ -452,7 +462,7 @@ NMatrixInt* NSnapPeaTriangulation::gluingEquationsRect() const {
     int c;
     int* cuspEqn;
     for (c = 0; c < data_->num_cusps; ++c) {
-        if (cusp_[c].complete) {
+        if (cusp_[c].complete()) {
             cuspEqn = regina::snappea::get_cusp_equation(
                 data_, c, 1, 0, &numCols);
             parity = 0;
@@ -484,7 +494,7 @@ NMatrixInt* NSnapPeaTriangulation::gluingEquationsRect() const {
             ++row;
         } else {
             cuspEqn = regina::snappea::get_cusp_equation(
-                data_, c, cusp_[c].filling.m, cusp_[c].filling.l, &numCols);
+                data_, c, cusp_[c].m_, cusp_[c].l_, &numCols);
             parity = 0;
             for (j = 0; j < n; ++j) {
                 matrix->entry(row, j) += cuspEqn[3 * j];
@@ -617,11 +627,11 @@ void NSnapPeaTriangulation::writeTextLong(std::ostream& out) const {
     out << "Cusps:" << std::endl;
     for (i = 0; i < getNumberOfBoundaryComponents(); ++i) {
         out << "  " << i
-            << ": Vertex " << cusp_[i].vertex->markedIndex();
-        if (cusp_[i].complete)
+            << ": Vertex " << cusp_[i].vertex_->markedIndex();
+        if (cusp_[i].complete())
             out << ", complete";
         else
-            out << ", filled " << cusp_[i].filling;
+            out << ", filled (" << cusp_[i].m_ << ", " << cusp_[i].l_ << ')';
         out << std::endl;
     }
 }
@@ -731,13 +741,12 @@ void NSnapPeaTriangulation::sync() {
 
             unsigned i, j;
 
-            cusp_ = new CuspInfo[data_->num_cusps];
+            cusp_ = new NCusp[data_->num_cusps];
             regina::snappea::Cusp* c = data_->cusp_list_begin.next;
             for (i = 0; i < data_->num_cusps; ++i) {
-                cusp_[c->index].complete = c->is_complete;
-                cusp_[c->index].vertex = 0;
+                cusp_[c->index].vertex_ = 0;
                 if (c->is_complete)
-                    cusp_[c->index].filling.m = cusp_[c->index].filling.l = 0;
+                    cusp_[c->index].m_ = cusp_[c->index].l_ = 0;
                 else if (! regina::snappea::Dehn_coefficients_are_integers(c)) {
                     // Abort!  Make this a null triangulation.
                     // Note that reset() calls sync() again; this is
@@ -746,8 +755,8 @@ void NSnapPeaTriangulation::sync() {
                     syncing_ = false;
                     return;
                 } else {
-                    cusp_[c->index].filling.m = c->m;
-                    cusp_[c->index].filling.l = c->l;
+                    cusp_[c->index].m_ = c->m;
+                    cusp_[c->index].l_ = c->l;
                     ++filledCusps_;
                 }
                 c = c->next;
@@ -756,8 +765,8 @@ void NSnapPeaTriangulation::sync() {
             for (i = 0; i < getNumberOfTetrahedra(); ++i) {
                 for (j = 0; j < 4; ++j) {
                     c = stet->cusp[j];
-                    if (cusp_[c->index].vertex == 0)
-                        cusp_[c->index].vertex = getTetrahedron(i)->getVertex(j);
+                    if (cusp_[c->index].vertex_ == 0)
+                        cusp_[c->index].vertex_ = getTetrahedron(i)->getVertex(j);
                 }
                 stet = stet->next;
             }

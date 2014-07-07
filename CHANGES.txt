@@ -80,6 +80,8 @@ Version 4.96  [ (under development) ]
         Class NHyperbolicMinSearcher:
             - New enumeration class for building a census of minimal ideal
               triangulations of cusped finite-volume hyperbolic 3-manifolds.
+        Class NCusp:
+            - New class to support NSnapPeaTriangulation.
         Class NNormalSurface:
             - Renamed boundarySlopes() to boundaryIntersections(), to make it
               clear that it returns algebraic intersection numbers and not the
@@ -136,11 +138,11 @@ Version 4.96  [ (under development) ]
               NSnapPeaTriangulation(const NTriangulation&, bool) is
               deprecated, and is now ignored.
             - Many new routines: countCompleteCusps(), countCusps(),
-              countFilledCusps(), cuspComplete(), cuspVertex(), fill(),
-              filling(), fundamentalGroupFilled(), gluingEquations(),
-              gluingEquationsRect(), homologyFilled(), minImaginaryShape(),
-              name(), protoCanonize() and protoCanonise(), shape(), unfill(),
-              volumeZero(), plus others (listed individually below).
+              countFilledCusps(), cusp(), fill(), fundamentalGroupFilled(),
+              gluingEquations(), gluingEquationsRect(), homologyFilled(),
+              minImaginaryShape(), name(), protoCanonize() and protoCanonise(),
+              shape(), unfill(), volumeZero(), plus others (listed
+              individually below).
             - Two new constructors: a default constructor that builds a null
               triangulation, and a string constructor that takes either the
               name or the contents of a native SnapPea data file.
