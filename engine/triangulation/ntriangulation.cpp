@@ -713,7 +713,7 @@ std::string NTriangulation::snapPea() const {
 
 void NTriangulation::snapPea(std::ostream& out) const {
     // Sanity checks.
-    if ((! isValid()) || hasBoundaryTriangles() || tetrahedra.empty())
+    if ((! isValid()) || hasBoundaryTriangles() || tetrahedra_.empty())
         return;
 
     // Write header information.
@@ -771,7 +771,7 @@ void NTriangulation::snapPea(std::ostream& out) const {
 
 bool NTriangulation::saveSnapPea(const char* filename) const {
     // Sanity checks.
-    if ((! isValid()) || hasBoundaryTriangles() || tetrahedra.empty())
+    if ((! isValid()) || hasBoundaryTriangles() || tetrahedra_.empty())
         return false;
 
     std::ofstream out(filename);
