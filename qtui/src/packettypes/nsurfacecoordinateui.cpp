@@ -180,7 +180,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 3)) {
             if (! s->isCompact()) {
 #ifndef EXCLUDE_SNAPPEA
-                regina::NMatrixInt* slopes = s->boundarySlopes();
+                regina::NMatrixInt* slopes = s->boundaryIntersections();
                 if (slopes) {
                     QString ans = tr("Spun:");
                     // Display each boundary slope as (nu(L), -nu(M)).

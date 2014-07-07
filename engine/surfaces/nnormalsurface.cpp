@@ -414,7 +414,7 @@ void NNormalSurface::calculateRealBoundary() const {
 }
 
 #ifndef EXCLUDE_SNAPPEA
-NMatrixInt* NNormalSurface::boundarySlopes() const {
+NMatrixInt* NNormalSurface::boundaryIntersections() const {
     // Make sure this is really a SnapPea triangulation.
     const NSnapPeaTriangulation* snapPea =
         dynamic_cast<const NSnapPeaTriangulation*>(getTriangulation());

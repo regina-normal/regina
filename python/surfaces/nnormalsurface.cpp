@@ -183,7 +183,7 @@ void addNNormalSurface() {
         .def("locallyCompatible", &NNormalSurface::locallyCompatible)
         .def("disjoint", &NNormalSurface::disjoint)
 #ifndef EXCLUDE_NORMALIZ
-        .def("boundarySlopes", &NNormalSurface::boundarySlopes,
+        .def("boundaryIntersections", &NNormalSurface::boundaryIntersections,
             return_value_policy<manage_new_object>())
 #endif
         .def("findNonTrivialSphere", &NNormalSurface::findNonTrivialSphere,

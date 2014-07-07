@@ -81,7 +81,11 @@ Version 4.96  [ (under development) ]
             - New enumeration class for building a census of minimal ideal
               triangulations of cusped finite-volume hyperbolic 3-manifolds.
         Class NNormalSurface:
-            - Routine boundarySlopes() now requires the underlying
+            - Renamed boundarySlopes() to boundaryIntersections(), to make it
+              clear that it returns algebraic intersection numbers and not the
+              usual (m, l) pairs.  The old name has *not* been deprecated,
+              but removed completely.
+            - Furthermore, boundaryIntersections() now requires the underlying
               triangulation to be of type NSnapPeaTriangulation, and it takes
               the meridian and longitude directly from the SnapPea kernel.
               It also now orders its rows by SnapPea cusp indices (not Regina's
