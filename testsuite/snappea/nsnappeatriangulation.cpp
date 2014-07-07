@@ -556,10 +556,10 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             regina::NMatrixInt* m;
             bool found[4];
             for (int i = 0; i < s->getNumberOfSurfaces(); ++i) {
-                m = s->getSurface(i)->boundarySlopes();
+                m = s->getSurface(i)->boundaryIntersections();
                 if (m->rows() != 1 || m->columns() != 2) {
                     CPPUNIT_FAIL(
-                        "Figure 8 knot complement: boundarySlopes() "
+                        "Figure 8 knot complement: boundaryIntersections() "
                         "should give 1x2 matrices.");
                 }
                 if (m->entry(0, 0) == 1 && m->entry(0, 1) == 4)
@@ -572,7 +572,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                     found[3] = true;
                 else {
                     std::ostringstream msg;
-                    msg << "Figure 8 knot complement: boundarySlopes() "
+                    msg << "Figure 8 knot complement: boundaryIntersections() "
                         "gives unexpected result ("
                         << m->entry(0, 0) << ", " << m->entry(0, 1) << ").";
                     CPPUNIT_FAIL(msg.str());

@@ -314,7 +314,7 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          * Equivalently, the boundary curves pass <i>L.q</i> times around the
          * meridian and <i>-M.q</i> times around the longitude.
          * To compute these slopes directly from a normal surface, see
-         * NNormalSurface::boundarySlopes().
+         * NNormalSurface::boundaryIntersections().
          *
          * The meridian and longitude are chosen to be the shortest and
          * second shortest basis on each cusp, and their orientations

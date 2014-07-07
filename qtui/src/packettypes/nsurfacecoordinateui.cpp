@@ -182,7 +182,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
 #ifndef EXCLUDE_SNAPPEA
                 regina::NMatrixInt* slopes =
                     (ReginaPrefSet::global().surfacesSupportSpunBdry ?
-                    s->boundarySlopes() : 0);
+                    s->boundaryIntersections() : 0);
                 if (slopes) {
                     QString ans = tr("Spun:");
                     // Display each boundary slope as (nu(L), -nu(M)).

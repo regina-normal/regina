@@ -87,7 +87,7 @@ enum SurfaceExportFields {
              cusps: these written as a list of pairs (\a p, \a q),
              one for each cusp, indicating that the boundary curves of
              the surface run \a p times around the meridian and \a q times
-             around the longitude.  See NNormalSurface::boundarySlopes()
+             around the longitude.  See NNormalSurface::boundaryIntersections()
              for further information on interpreting these values. */
     surfaceExportLink = 0x0020,
         /**< Represents whether a surface is a single vertex link or a

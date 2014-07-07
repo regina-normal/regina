@@ -81,10 +81,14 @@ Version 4.96  [ (under development) ]
             - New enumeration class for building a census of minimal ideal
               triangulations of cusped finite-volume hyperbolic 3-manifolds.
         Class NNormalSurface:
-            - Routine boundarySlopes() now uses (shortest, second-shortest)
-              curves on the cusp as its (meridian, longitude) basis.
-              This reverts a change in behaviour from the previous release
-              caused by the recent sync with the SnapPy 2.0.3 kernel.
+            - Renamed boundarySlopes() to boundaryIntersections(), to make it
+              clear that it returns algebraic intersection numbers and not the
+              usual (m, l) pairs.  The old name has *not* been deprecated,
+              but removed completely.  Furthermore, this routine now uses
+              (shortest, second-shortest) curves on the cusp as its
+              (meridian, longitude) basis.  This reverts a change in behaviour
+              from the previous release caused by the recent sync with the
+              SnapPy 2.0.3 kernel.
             - Renamed getEulerCharacteristic() to getEulerChar(), which
               is easier on the fingers.  The old name has been kept as a
               deprecated alias for backward compatibility.

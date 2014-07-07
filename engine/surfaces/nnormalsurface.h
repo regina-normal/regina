@@ -1566,9 +1566,9 @@ class REGINA_API NNormalSurface : public ShareableObject {
 
 #ifndef EXCLUDE_SNAPPEA
         /**
-         * Computes the boundary slopes of this surface at each cusp of
-         * the triangulation.  This is for use with spun-normal surfaces
-         * (for closed surfaces all boundary slopes are zero).
+         * Computes information about the boundary slopes of this surface at
+         * each cusp of the triangulation.  This is for use with spun-normal
+         * surfaces (for closed surfaces all boundary slopes are zero).
          *
          * The results are returned in a matrix with \a V rows and two
          * columns, where \a V is the number of vertices in the triangulation.
@@ -1617,7 +1617,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * rows and two columns as described above, or 0 if the boundary
          * slopes cannot be computed.
          */
-        NMatrixInt* boundarySlopes() const;
+        NMatrixInt* boundaryIntersections() const;
 #endif // EXCLUDE_SNAPPEA
 
         /**

@@ -111,7 +111,7 @@ namespace {
         if (fields & surfaceExportBdry) {
             if (! s->isCompact()) {
 #ifndef EXCLUDE_SNAPPEA
-                regina::NMatrixInt* slopes = s->boundarySlopes();
+                regina::NMatrixInt* slopes = s->boundaryIntersections();
                 if (slopes) {
                     out << "\"spun:";
                     for (unsigned i = 0; i < slopes->rows(); ++i)

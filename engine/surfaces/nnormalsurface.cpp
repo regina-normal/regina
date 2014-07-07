@@ -424,7 +424,7 @@ void NNormalSurface::calculateRealBoundary() const {
 }
 
 #ifndef EXCLUDE_SNAPPEA
-NMatrixInt* NNormalSurface::boundarySlopes() const {
+NMatrixInt* NNormalSurface::boundaryIntersections() const {
     const NTriangulation *tri = getTriangulation();
 
     // Check the preconditions.
