@@ -40,6 +40,8 @@
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
+
+#include "testsuite/exhaustive.h"
 #include "testsuite/snappea/testsnappea.h"
 
 using regina::NExampleTriangulation;
@@ -56,6 +58,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(flat);
     CPPUNIT_TEST(degenerate);
     CPPUNIT_TEST(spunBoundaries);
+    CPPUNIT_TEST(stability);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -539,6 +542,20 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             delete s;
             delete t;
             delete f8;
+        }
+
+        static void testStability(NTriangulation* tri) {
+            // Just make sure SnapPea can work with the triangulation
+            // without crashing.
+            NSnapPeaTriangulation s(*tri);
+            s.volume();
+            s.randomize();
+            s.volume();
+            NTriangulation t(s);
+        }
+
+        void stability() {
+            runCensusAllNoBdry(&testStability);
         }
 };
 

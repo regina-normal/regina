@@ -193,6 +193,10 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri, bool) :
     // I believe there is no need to call do_Dehn_filling() in the case where
     // all cusps are complete, since find_complete_hyperbolic_structure()
     // already does this.
+    // However, if we passed a closed manifold then SnapPea will have
+    // automatically created a cusp with a filling:
+    if (tri.isClosed())
+        regina::snappea::do_Dehn_filling(data_);
 
     SolutionType soln = static_cast<SolutionType>(
         regina::snappea::get_filled_solution_type(data_));
