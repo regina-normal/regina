@@ -33,14 +33,22 @@
 /* end stub */
 
 // Regina core includes:
+#include "dim2/dim2triangulation.h"
 #include "snappea/nsnappeatriangulation.h"
 
 // UI includes:
 #include "nsnappeashapes.h"
+#include "reginamain.h"
+#include "reginasupport.h"
+#include "choosers/cuspchooser.h"
+#include "choosers/vertexchooser.h"
 
+#include <QAction>
 #include <QHeaderView>
 #include <QLabel>
 #include <QLayout>
+#include <QMessageBox>
+#include <QToolBar>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 
@@ -48,8 +56,8 @@ using regina::NPacket;
 using regina::NSnapPeaTriangulation;
 
 NSnapPeaShapesUI::NSnapPeaShapesUI(regina::NSnapPeaTriangulation* packet,
-        PacketTabbedUI* useParentUI) :
-        PacketViewerTab(useParentUI), tri(packet) {
+        PacketTabbedUI* useParentUI, bool readWrite) :
+        PacketEditorTab(useParentUI), tri(packet) {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
 
@@ -85,6 +93,103 @@ NSnapPeaShapesUI::NSnapPeaShapesUI(regina::NSnapPeaTriangulation* packet,
         "a fixed coordinate system (fixed alignment, in SnapPea's "
         "terminology)."));
     layout->addWidget(shapes, 3);
+
+    // Set up the actions.
+    QAction* sep;
+
+    actRandomise = new QAction(this);
+    actRandomise->setText(tr("&Randomise"));
+    actRandomise->setIcon(ReginaSupport::regIcon("randomise"));
+    actRandomise->setToolTip(tr(
+        "Randomise this triangulation"));
+    actRandomise->setEnabled(readWrite);
+    actRandomise->setWhatsThis(tr("Randomise this triangulation.  "
+        "The manifold will be randomly retriangulated using local moves "
+        "that preserve the topology."));
+    enableWhenWritable.append(actRandomise);
+    triActionList.append(actRandomise);
+    requiresNonNull.append(actRandomise);
+    connect(actRandomise, SIGNAL(triggered()), this, SLOT(randomise()));
+
+    QAction* actCanonise = new QAction(this);
+    actCanonise->setText(tr("&Canonical Retriangulation"));
+    actCanonise->setToolTip(tr(
+        "Build the canonical retriangulation of the canonical "
+        "cell decomposition"));
+    actCanonise->setWhatsThis(tr("<qt>Build the canonical retriangulation "
+        "of the canonical cell decomposition.<p>"
+        "The canonical cell decomposition is described in "
+        "<i>Convex hulls and isometries of cusped hyperbolic 3-manifolds</i>, "
+        "Jeffrey R. Weeks, Topology Appl. 52 (1993), 127-149.<p>"
+        "If this canonical cell decomposition contains non-tetrahedron "
+        "cells, then SnapPea will canonically retriangulate it by introducing "
+        "internal vertices.  See the user handbook for details.<p>"
+        "<b>Warning:</b> SnapPea might not compute the canonical "
+        "cell decomposition correctly.  However, it does guarantee "
+        "that the resulting manifold is homeomorphic to the original.</qt>"));
+    triActionList.append(actCanonise);
+    requiresNonNull.append(actCanonise);
+    connect(actCanonise, SIGNAL(triggered()), this, SLOT(canonise()));
+
+    QAction* actVertexLinks = new QAction(this);
+    actVertexLinks->setText(tr("&Vertex Links..."));
+    actVertexLinks->setIcon(ReginaSupport::regIcon("vtxlinks"));
+    actVertexLinks->setToolTip(tr(
+        "Build a 2-manifold triangulation from a vertex link"));
+    actVertexLinks->setWhatsThis(tr("<qt>Build a 2-manifold triangulation "
+        "from the link of a vertex of this triangulation.<p>"
+        "If <i>V</i> is a vertex, then the <i>link</i> of <i>V</i> is the "
+        "frontier of a small regular neighbourhood of <i>V</i>.  "
+        "The triangles that make up this link sit inside "
+        "the tetrahedron corners that meet together at <i>V</i>.</qt>"));
+    triActionList.append(actVertexLinks);
+    requiresNonNull.append(actVertexLinks);
+    connect(actVertexLinks, SIGNAL(triggered()), this, SLOT(vertexLinks()));
+
+    actFill = new QAction(this);
+    actFill->setText(tr("Permanently &Fill Cusps..."));
+    actFill->setIcon(ReginaSupport::regIcon("fill"));
+    actFill->setToolTip(tr(
+        "Permanently fill one cusp or all cusps of this manifold"));
+    actFill->setWhatsThis(tr("<qt>Retriangulate to permanently "
+        "fill either one cusp or all cusps of this manifold.  "
+        "The original triangulation will be left untouched.</qt>"));
+    triActionList.append(actFill);
+    requiresNonNull.append(actFill);
+    connect(actFill, SIGNAL(triggered()), this, SLOT(fill()));
+
+    sep = new QAction(this);
+    sep->setSeparator(true);
+    triActionList.append(sep);
+
+    actToRegina = new QAction(this);
+    actToRegina->setText(tr("&Convert to Regina"));
+    actToRegina->setIcon(ReginaSupport::regIcon("packet_triangulation"));
+    actToRegina->setToolTip(tr("Convert this to a Regina triangulation"));
+    actToRegina->setWhatsThis(tr("<qt>Convert this to one of Regina's native "
+        "3-manifold triangulations.  The original SnapPea triangulation "
+        "will be kept and left untouched.<p>"
+        "A native Regina triangulation will allow you to use Regina's "
+        "full suite of tools to edit and analyse the triangulation.  "
+        "However, the native Regina "
+        "triangulation will lose any SnapPea-specific "
+        "information (such as peripheral curves on cusps).</qt>"));
+    triActionList.append(actToRegina);
+    requiresNonNull.append(actToRegina);
+    connect(actToRegina, SIGNAL(triggered()), this, SLOT(toRegina()));
+
+    // Tidy up.
+    refresh();
+}
+
+const QLinkedList<QAction*>& NSnapPeaShapesUI::getPacketTypeActions() {
+    return triActionList;
+}
+
+void NSnapPeaShapesUI::fillToolBar(QToolBar* bar) {
+    bar->addAction(actRandomise);
+    bar->addAction(actFill);
+    bar->addAction(actToRegina);
 }
 
 regina::NPacket* NSnapPeaShapesUI::getPacket() {
@@ -121,8 +226,11 @@ void NSnapPeaShapesUI::refresh() {
     header->setTextAlignment(2, Qt::AlignCenter);
     shapes->setHeaderItem(header);
 
-    if (tri->isNull())
+    if (tri->isNull()) {
+        updateNonNullActions();
+        setDirty(false);
         return;
+    }
 
     unsigned i;
     std::complex<double> s;
@@ -143,8 +251,11 @@ void NSnapPeaShapesUI::refresh() {
     }
 
     if (tri->solutionType() == NSnapPeaTriangulation::not_attempted ||
-            tri->solutionType() == NSnapPeaTriangulation::no_solution)
+            tri->solutionType() == NSnapPeaTriangulation::no_solution) {
+        updateNonNullActions();
+        setDirty(false);
         return;
+    }
 
     for (i = 0; i < tri->getNumberOfTetrahedra(); ++i) {
         s = tri->shape(i);
@@ -157,10 +268,163 @@ void NSnapPeaShapesUI::refresh() {
         row->setTextAlignment(2, Qt::AlignRight);
         shapes->addTopLevelItem(row);
     }
+
+    updateNonNullActions();
+    setDirty(false);
 }
 
-void NSnapPeaShapesUI::editingElsewhere() {
-    cusps->clear();
-    shapes->clear();
+void NSnapPeaShapesUI::commit() {
+    // Nothing to commit, since commits happen automatically now.
+    setDirty(false);
+}
+
+void NSnapPeaShapesUI::setReadWrite(bool readWrite) {
+    // Regardless of whether we allow edits, we can do nothing with a
+    // null triangulation.
+    if (tri->isNull())
+        readWrite = false;
+
+    QLinkedListIterator<QAction*> it(enableWhenWritable);
+    while (it.hasNext())
+        (it.next())->setEnabled(readWrite);
+
+    updateNonNullActions();
+}
+
+void NSnapPeaShapesUI::vertexLinks() {
+    // We assume the part hasn't become read-only, even though the
+    // packet might have changed its editable property.
+    if (! enclosingPane->tryCommit())
+        return;
+
+    if (tri->getVertices().empty())
+        ReginaSupport::sorry(ui,
+            tr("This triangulation does not have any vertices."));
+    else {
+        regina::NVertex* chosen =
+            VertexDialog::choose(ui, tri, 0 /* filter */,
+            tr("Vertex Links"),
+            tr("Triangulate the link of which vertex?"),
+            tr("<qt>Regina will triangulate the link of whichever "
+                "vertex you choose.<p>"
+                "If <i>V</i> is a vertex, then the <i>link</i> of "
+                "<i>V</i> is the "
+                "frontier of a small regular neighbourhood of <i>V</i>.  "
+                "The triangles that make up this link sit inside "
+                "the tetrahedron corners that meet together at "
+                "<i>V</i>.</qt>"));
+        if (chosen) {
+            regina::Dim2Triangulation* ans = new regina::Dim2Triangulation(
+                *chosen->buildLink());
+            ans->setPacketLabel(tr("Link of vertex %1").arg(
+                tri->vertexIndex(chosen)).toAscii().constData());
+            tri->insertChildLast(ans);
+            enclosingPane->getMainWindow()->packetView(ans, true, true);
+        }
+    }
+}
+
+void NSnapPeaShapesUI::toRegina() {
+    // We assume the part hasn't become read-only, even though the
+    // packet might have changed its editable property.
+    if (! enclosingPane->tryCommit())
+        return;
+
+    if (tri->isNull())
+        ReginaSupport::sorry(ui,
+            tr("This is a null triangulation: there is no SnapPea "
+            "triangulation for me to convert."));
+    else {
+        regina::NTriangulation* ans = new regina::NTriangulation(*tri);
+        ans->setPacketLabel(tri->getPacketLabel());
+        tri->insertChildLast(ans);
+        enclosingPane->getMainWindow()->packetView(ans, true, true);
+    }
+}
+
+void NSnapPeaShapesUI::fill() {
+    // We assume the part hasn't become read-only, even though the
+    // packet might have changed its editable property.
+    if (! enclosingPane->tryCommit())
+        return;
+
+    if (tri->isNull())
+        ReginaSupport::sorry(ui,
+            tr("This is a null triangulation: there is no SnapPea "
+            "triangulation for me to fill."));
+    else if (tri->countFilledCusps() == 0) {
+        ReginaSupport::sorry(ui,
+            tr("There are no filling coefficients on any of the cusps."),
+            tr("You can enter filling coefficients on the "
+                "<i>Shapes & Cusps</i> tab."));
+    } else {
+        regina::NTriangulation* ans;
+        if (tri->countFilledCusps() == 1)
+            ans = tri->filledTriangulation();
+        else {
+            int chosen = CuspDialog::choose(ui, tri, CuspChooser::filterFilled,
+                tr("Permanently Fill Cusps"),
+                tr("Permanently fill which cusp(s)?"),
+                tr("SnapPea will retriangulate to permanently fill "
+                    "whatever cusp you choose."));
+            if (chosen == CuspChooser::CUSP_NO_SELECTION)
+                return;
+            else if (chosen == CuspChooser::CUSP_ALL)
+                ans = tri->filledTriangulation();
+            else
+                ans = tri->filledTriangulation(chosen);
+        }
+        if (! ans) {
+            ReginaSupport::sorry(ui,
+                tr("SnapPea was not able to contruct the filled "
+                    "triangulation."),
+                tr("Please report this to the Regina developers."));
+        } else {
+            ans->setPacketLabel(tri->getPacketLabel() + " (Filled)");
+            tri->insertChildLast(ans);
+            enclosingPane->getMainWindow()->packetView(ans, true, true);
+        }
+    }
+}
+
+void NSnapPeaShapesUI::randomise() {
+    if (! enclosingPane->commitToModify())
+        return;
+
+    tri->randomize();
+}
+
+void NSnapPeaShapesUI::canonise() {
+    // We assume the part hasn't become read-only, even though the
+    // packet might have changed its editable property.
+    if (! enclosingPane->tryCommit())
+        return;
+
+    if (tri->isNull())
+        ReginaSupport::sorry(ui,
+            tr("This is a null triangulation: there is no SnapPea "
+            "triangulation for me to canonise."));
+    else {
+        regina::NTriangulation* ans = tri->canonise();
+        if (! ans) {
+            ReginaSupport::sorry(ui,
+                tr("The SnapPea kernel was not able to build the "
+                "canonical retriangulation of the "
+                "canonical cell decomposition."));
+        } else {
+            ans->setPacketLabel(tr("Canonical retriangulation").
+                toAscii().constData());
+            tri->insertChildLast(ans);
+            enclosingPane->getMainWindow()->packetView(ans, true, true);
+        }
+    }
+}
+
+void NSnapPeaShapesUI::updateNonNullActions() {
+    if (tri->isNull()) {
+        QLinkedListIterator<QAction*> it(requiresNonNull);
+        while (it.hasNext())
+            (it.next())->setEnabled(false);
+    }
 }
 

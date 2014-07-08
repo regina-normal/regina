@@ -42,6 +42,8 @@
 
 #include "../packettabui.h"
 
+class QAction;
+class QToolBar;
 class QTreeWidget;
 class QTreeWidgetItem;
 
@@ -52,7 +54,7 @@ namespace regina {
 /**
  * A triangulation page for viewing normal surface properties.
  */
-class NSnapPeaShapesUI : public QObject, public PacketViewerTab {
+class NSnapPeaShapesUI : public QObject, public PacketEditorTab {
     Q_OBJECT
 
     private:
@@ -68,20 +70,56 @@ class NSnapPeaShapesUI : public QObject, public PacketViewerTab {
         QTreeWidget* cusps;
         QTreeWidget* shapes;
 
+        /**
+         * Actions
+         */
+        QAction* actRandomise;
+        QAction* actFill;
+        QAction* actToRegina;
+        QLinkedList<QAction*> triActionList;
+        QLinkedList<QAction*> enableWhenWritable;
+        QLinkedList<QAction*> requiresNonNull;
+
     public:
         /**
          * Constructor and destructor.
          */
         NSnapPeaShapesUI(regina::NSnapPeaTriangulation* packet,
-            PacketTabbedUI* useParentUI);
+            PacketTabbedUI* useParentUI, bool readWrite);
 
         /**
-         * PacketViewerTab overrides.
+         * Fill the given toolbar with actions.
+         *
+         * This is necessary since the toolbar will not be a part of
+         * this page, but this page (as the editor) keeps track of the
+         * available actions.
+         */
+        void fillToolBar(QToolBar* bar);
+
+        /**
+         * PacketEditorTab overrides.
          */
         regina::NPacket* getPacket();
         QWidget* getInterface();
+        const QLinkedList<QAction*>& getPacketTypeActions();
         void refresh();
-        void editingElsewhere();
+        void commit();
+        void setReadWrite(bool readWrite);
+
+    public slots:
+        /**
+         * Actions.
+         */
+        void randomise();
+        void vertexLinks();
+        void canonise();
+        void toRegina();
+        void fill();
+
+        /**
+         * Update the states of internal components.
+         */
+        void updateNonNullActions();
 };
 
 #endif
