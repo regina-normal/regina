@@ -259,13 +259,15 @@ class REGINA_API NCusp : public ShareableObject {
  * - attempting to change a SnapPea triangulation using the inherited
  *   NTriangulation interface (as discussed above);
  *
- * - attempting to import a SnapPea triangulation that uses non-integer
- *   filling coefficients (as discussed below).
+ * - attempting to import a SnapPea triangulation that uses unsupported
+ *   (e.g., non-integer or non-coprime) filling coefficients, as discussed
+ *   below).
  *
- * Regarding fillings:  SnapPea can store and manipulate Dehn fillings
- * on cusps, and the NSnapPeaTriangulation class respects these where it can
- * (but only for integer filling coefficients; see below).  However, Regina's
- * own NTriangulation class knows nothing about fillings at all.  Therefore:
+ * Regarding fillings:  SnapPea can store and manipulate Dehn fillings on
+ * cusps, and the NSnapPeaTriangulation class respects these where it can (but
+ * with restrictions on the possible filling coefficients; see below).
+ * However, Regina's own NTriangulation class knows nothing about fillings
+ * at all.  Therefore:
  *
  * - Routines inherited through the NTriangulation interface will ignore
  *   fillings completely (so, for instance, homology() will return the
@@ -278,10 +280,12 @@ class REGINA_API NCusp : public ShareableObject {
  *   individual notes for each member function for details on how it
  *   handles fillings.
  *
- * As noted above, NSnapPeaTriangulation only supports integer filling
- * coefficients (for now).  Any attempt to import a triangulation from
- * a SnapPea file with non-integer filling coefficients will result in a
- * null triangulation (as discussed above).
+ * For now, NSnapPeaTriangulation only supports the following types of filling
+ * coefficients: on orientable cusps the filling coefficients must be
+ * coprime integers, and non non-orientable cusps the filling coefficients
+ * must be the integers (±1, 0).  Any attempt to import a triangulation from
+ * a SnapPea file with filling coefficients outside these requirements will
+ * result in a null triangulation (as discussed above).
  *
  * There are many places in the SnapPea kernel where SnapPea throws a
  * fatal error.  As of Regina 4.96, these fatal errors are converted
@@ -828,7 +832,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * automatically ask SnapPea to update the hyperbolic structure.
          *
          * For orientable cusps only coprime filling coefficients are allowed,
-         * and for non-orientable cusps only (m,0) fillings are allowed.
+         * and for non-orientable cusps only (±1, 0) fillings are allowed.
          * Although SnapPea can handle more general fillings, Regina
          * will enforce these conditions; if they are not satisfied then
          * it will do nothing and simply return \c false.
@@ -970,8 +974,6 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          *
          * - This is a null triangulation (i.e., isNull() returns \c true);
          *
-         * - The filling coefficients as stored in SnapPea are not integers;
-         *
          * - The filling coefficients as stored in SnapPea are integers,
          *   but are so large that SnapPea was not able to build the
          *   relation matrix without integer overflow.
@@ -990,8 +992,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         /**
          * Returns the fundamental group of the manifold with respect to
          * the current Dehn filling (if any).  Any complete cusps (without
-         * fillings), and any cusps whose filling coefficients are not coprime
-         * integers, will be treated as though they had been truncated.
+         * fillings) will be treated as though they had been truncated.
          *
          * This is different from the inherited getFundamentalGroup() routine
          * from the parent NTriangulation class:

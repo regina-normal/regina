@@ -314,7 +314,7 @@ bool NSnapPeaTriangulation::fill(int m, int l, unsigned whichCusp) {
         if (gcd(m, l) != 1)
             return false;
     } else {
-        if (l != 0)
+        if (! (l == 0 && (m == 1 || m == -1)))
             return false;
     }
 
@@ -745,12 +745,20 @@ void NSnapPeaTriangulation::sync() {
             regina::snappea::Cusp* c = data_->cusp_list_begin.next;
             for (i = 0; i < data_->num_cusps; ++i) {
                 cusp_[c->index].vertex_ = 0;
-                if (c->is_complete)
+                if (c->is_complete) {
                     cusp_[c->index].m_ = cusp_[c->index].l_ = 0;
-                else if (! regina::snappea::Dehn_coefficients_are_integers(c)) {
+                } else if (c->topology == Klein_cusp &&
+                        ! (regina::snappea::Dehn_coefficients_are_integers(c)
+                            && c->l == 0 && (c->m == 1 || c->m == -1))) {
                     // Abort!  Make this a null triangulation.
                     // Note that reset() calls sync() again; this is
                     // harmless as long as we return immediately afterwards.
+                    reset(0);
+                    syncing_ = false;
+                    return;
+                } else if (c->topology == torus_cusp &&
+                        ! regina::snappea::Dehn_coefficients_are_relatively_prime_integers(c)) {
+                    // Abort, as above.
                     reset(0);
                     syncing_ = false;
                     return;
