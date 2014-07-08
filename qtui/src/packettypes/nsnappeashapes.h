@@ -42,13 +42,52 @@
 
 #include "../packettabui.h"
 
+#include <QAbstractItemModel>
+
 class QAction;
 class QToolBar;
+class QTreeView;
 class QTreeWidget;
 class QTreeWidgetItem;
 
 namespace regina {
     class NSnapPeaTriangulation;
+};
+
+/**
+ * Note: We always allow editing the fillings in the cusp table.
+ */
+class CuspModel : public QAbstractItemModel {
+    private:
+        /**
+         * Details of the cusps being displayed.
+         */
+        regina::NSnapPeaTriangulation* tri_;
+
+    public:
+        /**
+         * Constructor and destructor.
+         */
+        CuspModel(regina::NSnapPeaTriangulation* tri);
+
+        /**
+         * Rebuild the model from scratch.
+         */
+        void rebuild();
+
+        /**
+         * Overrides for describing and editing data in the model.
+         */
+        QModelIndex index(int row, int column,
+                const QModelIndex& parent) const;
+        QModelIndex parent(const QModelIndex& index) const;
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
+        Qt::ItemFlags flags(const QModelIndex& index) const;
+        bool setData(const QModelIndex& index, const QVariant& value, int role);
 };
 
 /**
@@ -61,13 +100,14 @@ class NSnapPeaShapesUI : public QObject, public PacketEditorTab {
         /**
          * Packet details
          */
+        CuspModel* model;
         regina::NSnapPeaTriangulation* tri;
 
         /**
          * Internal components
          */
         QWidget* ui;
-        QTreeWidget* cusps;
+        QTreeView* cusps;
         QTreeWidget* shapes;
 
         /**
@@ -86,6 +126,7 @@ class NSnapPeaShapesUI : public QObject, public PacketEditorTab {
          */
         NSnapPeaShapesUI(regina::NSnapPeaTriangulation* packet,
             PacketTabbedUI* useParentUI, bool readWrite);
+        ~NSnapPeaShapesUI();
 
         /**
          * Fill the given toolbar with actions.
@@ -121,5 +162,13 @@ class NSnapPeaShapesUI : public QObject, public PacketEditorTab {
          */
         void updateNonNullActions();
 };
+
+inline CuspModel::CuspModel(regina::NSnapPeaTriangulation* tri) : tri_(tri) {
+}
+
+inline QModelIndex CuspModel::parent(const QModelIndex&) const {
+    // All items are top-level.
+    return QModelIndex();
+}
 
 #endif

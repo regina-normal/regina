@@ -49,11 +49,107 @@
 #include <QLayout>
 #include <QMessageBox>
 #include <QToolBar>
+#include <QTreeView>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 
 using regina::NPacket;
 using regina::NSnapPeaTriangulation;
+
+void CuspModel::rebuild() {
+    beginResetModel();
+    endResetModel();
+}
+
+QModelIndex CuspModel::index(int row, int column,
+        const QModelIndex& parent) const {
+    return createIndex(row, column,
+        quint32(columnCount(parent) * row + column));
+}
+
+int CuspModel::rowCount(const QModelIndex& /* unused parent*/) const {
+    return tri_->countCusps();
+}
+
+int CuspModel::columnCount(const QModelIndex& /* unused parent*/) const {
+    return 3;
+}
+
+QVariant CuspModel::data(const QModelIndex& index, int role) const {
+    if (role == Qt::DisplayRole) {
+        const regina::NCusp* cusp = tri_->cusp(index.row());
+        switch (index.column()) {
+            case 0:
+                return QString::number(index.row());
+            case 1:
+                return QString::number(cusp->vertex()->markedIndex());
+            case 2:
+                if (cusp->complete())
+                    return QString(QChar(0x2014 /* emdash */));
+                else
+                    return tr("%1, %2").arg(cusp->m()).arg(cusp->l());
+            default:
+                return QVariant();
+        }
+    } else if (role == Qt::EditRole) {
+        if (index.column() == 2) {
+            const regina::NCusp* cusp = tri_->cusp(index.row());
+            if (cusp->complete())
+                return QString();
+            else
+                return tr("%1, %2").arg(cusp->m()).arg(cusp->l());
+        } else
+            return QVariant();
+    } else if (role == Qt::ToolTipRole) {
+        return headerData(index.column(), Qt::Horizontal, Qt::ToolTipRole);
+    } else if (role == Qt::TextAlignmentRole) {
+        return Qt::AlignCenter;
+    }
+
+    return QVariant();
+}
+
+QVariant CuspModel::headerData(int section, Qt::Orientation orientation,
+        int role) const {
+    if (orientation != Qt::Horizontal)
+        return QVariant();
+
+    if (role == Qt::DisplayRole) {
+        switch (section) {
+            case 0: return tr("Cusp #");
+            case 1: return tr("Vertex #");
+            case 2: return tr("Filling");
+        }
+    } else if (role == Qt::ToolTipRole) {
+        switch (section) {
+            case 0: return tr("The cusp number according to SnapPea");
+            case 1: return tr("<qt>The vertex number according to Regina, "
+                "as seen in the <i>Skeleton</i> tab</qt>");
+            case 2: return tr("The current filling coefficients on this cusp");
+        }
+    } else if (role == Qt::TextAlignmentRole)
+        return Qt::AlignCenter;
+
+    return QVariant();
+}
+
+Qt::ItemFlags CuspModel::flags(const QModelIndex& index) const {
+    if (index.column() == 2)
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+    else
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+}
+
+bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
+        int role) {
+    if (index.column() == 2) {
+        // TODO
+        // localName[realIndex[index.row()]] = value.toString();
+        // emit dataChanged(index, index);
+        return true;
+    } else
+        return false;
+}
 
 NSnapPeaShapesUI::NSnapPeaShapesUI(regina::NSnapPeaTriangulation* packet,
         PacketTabbedUI* useParentUI, bool readWrite) :
@@ -64,18 +160,22 @@ NSnapPeaShapesUI::NSnapPeaShapesUI(regina::NSnapPeaTriangulation* packet,
     QLabel* label = new QLabel(tr("Cusps:"));
     layout->addWidget(label);
 
-    cusps = new QTreeWidget();
+    model = new CuspModel(packet);
+    cusps = new QTreeView();
+    cusps->setItemsExpandable(false);
     cusps->setRootIsDecorated(false);
     cusps->setAlternatingRowColors(true);
     cusps->header()->setStretchLastSection(false);
-    cusps->header()->setResizeMode(QHeaderView::ResizeToContents);
-    cusps->setSelectionMode(QAbstractItemView::NoSelection);
-    cusps->setWhatsThis(tr("<qt>Shows information on each cusp.  "
+    cusps->setSelectionMode(QTreeView::NoSelection);
+    cusps->setWhatsThis(tr("<qt>Shows information on each cusp.<p>"
         "Cusps are numbered according to SnapPea's internal numbering "
-        "(see the <i>Cusp #</i> column).  This table gives the "
+        "(see the <i>Cusp #</i> column).  This table also gives the "
         "corresponding vertex number (using Regina's numbering, as seen "
-        "in the <i>Skeleton</i> tab), and shows the filling on each cusp "
-        "(if any).</qt>"));
+        "in the <i>Skeleton</i> tab).<p>"
+        "You can change the filling on each cusp by typing new "
+        "filling coefficients directly into the table.</qt>"));
+    cusps->setModel(model);
+    cusps->header()->resizeSections(QHeaderView::ResizeToContents);
     layout->addWidget(cusps, 1);
 
     label = new QLabel(tr("Tetrahedron shapes:"));
@@ -182,6 +282,10 @@ NSnapPeaShapesUI::NSnapPeaShapesUI(regina::NSnapPeaTriangulation* packet,
     refresh();
 }
 
+NSnapPeaShapesUI::~NSnapPeaShapesUI() {
+    delete model;
+}
+
 const QLinkedList<QAction*>& NSnapPeaShapesUI::getPacketTypeActions() {
     return triActionList;
 }
@@ -201,20 +305,13 @@ QWidget* NSnapPeaShapesUI::getInterface() {
 }
 
 void NSnapPeaShapesUI::refresh() {
-    cusps->clear();
+    // Rebuild the cusps table.
+    model->rebuild();
+
+    // Rebuild the shapes table.
     shapes->clear();
 
     QTreeWidgetItem *row, *header;
-
-    cusps->setColumnCount(3);
-    header = new QTreeWidgetItem();
-    header->setText(0, tr("Cusp #"));
-    header->setText(1, tr("Vertex #"));
-    header->setText(2, tr("Filling"));
-    header->setTextAlignment(0, Qt::AlignCenter);
-    header->setTextAlignment(1, Qt::AlignCenter);
-    header->setTextAlignment(2, Qt::AlignCenter);
-    cusps->setHeaderItem(header);
 
     shapes->setColumnCount(3);
     header = new QTreeWidgetItem();
@@ -231,25 +328,6 @@ void NSnapPeaShapesUI::refresh() {
         setDirty(false);
         return;
     }
-
-    unsigned i;
-    std::complex<double> s;
-    for (i = 0; i < tri->getNumberOfBoundaryComponents(); ++i) {
-        row = new QTreeWidgetItem();
-        row->setText(0, QString::number(i));
-        row->setText(1, QString::number(tri->cusp(i)->vertex()->markedIndex()));
-        if (tri->cusp(i)->complete())
-            row->setText(2, QString(QChar(0x2014 /* emdash */)));
-        else
-            row->setText(2, tr("%1, %2")
-                .arg(tri->cusp(i)->m())
-                .arg(tri->cusp(i)->l()));
-        row->setTextAlignment(0, Qt::AlignCenter);
-        row->setTextAlignment(1, Qt::AlignCenter);
-        row->setTextAlignment(2, Qt::AlignCenter);
-        cusps->addTopLevelItem(row);
-    }
-
     if (tri->solutionType() == NSnapPeaTriangulation::not_attempted ||
             tri->solutionType() == NSnapPeaTriangulation::no_solution) {
         updateNonNullActions();
@@ -257,7 +335,8 @@ void NSnapPeaShapesUI::refresh() {
         return;
     }
 
-    for (i = 0; i < tri->getNumberOfTetrahedra(); ++i) {
+    std::complex<double> s;
+    for (unsigned i = 0; i < tri->getNumberOfTetrahedra(); ++i) {
         s = tri->shape(i);
         row = new QTreeWidgetItem();
         row->setText(0, QString::number(i));
