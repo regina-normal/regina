@@ -68,6 +68,7 @@ namespace {
      * triangulation combo box.
      */
     enum {
+        EXAMPLE_GIESEKING,
         EXAMPLE_FIG8,
         EXAMPLE_WHITEHEAD,
         EXAMPLE_X101
@@ -165,9 +166,10 @@ NSnapPeaTriangulationCreator::NSnapPeaTriangulationCreator(
     label->setWhatsThis(expln);
     subLayout->addWidget(label);
     exampleWhich = new QComboBox(area);
-    exampleWhich->insertItem(0, QObject::tr("Figure 8 knot complement"));
-    exampleWhich->insertItem(1, QObject::tr("Whitehead link complement"));
-    exampleWhich->insertItem(2, QObject::tr("Census manifold x101"));
+    exampleWhich->insertItem(0, QObject::tr("Gieseking manifold"));
+    exampleWhich->insertItem(1, QObject::tr("Figure 8 knot complement"));
+    exampleWhich->insertItem(2, QObject::tr("Whitehead link complement"));
+    exampleWhich->insertItem(3, QObject::tr("Census manifold x101"));
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
     subLayout->addWidget(exampleWhich, 1);
@@ -267,6 +269,26 @@ regina::NPacket* NSnapPeaTriangulationCreator::createPacket(regina::NPacket*,
         return ans;
     } else if (typeId == TRI_EXAMPLE) {
         switch (exampleWhich->currentIndex()) {
+            case EXAMPLE_GIESEKING:
+                return new NSnapPeaTriangulation(
+"% Triangulation\n"
+"m000\n"
+"geometric_solution  1.01494161\n"
+"nonorientable_manifold\n"
+"CS_unknown\n"
+"\n"
+"0 1\n"
+"    Klein   0.000000000000   0.000000000000\n"
+"\n"
+"1\n"
+"   0    0    0    0 \n"
+" 1320 3021 2130 3102\n"
+"   0    0    0    0 \n"
+"  0  0 -1  1 -1  0  1  0  1  0  0 -1  0 -1  1  0\n"
+"  0  0  1 -1  1  0  0 -1  0 -1  0  1  0  1 -1  0\n"
+"  0  0  0  0  0  0  0  0  1 -1  0  0  0  0  0  0\n"
+"  0  0  0  0  0  0  0  0  1 -1  0  0  0  0  0  0\n"
+"  0.500000000000   0.866025403784\n");
             case EXAMPLE_FIG8:
                 return new NSnapPeaTriangulation(
 "% Triangulation\n"
