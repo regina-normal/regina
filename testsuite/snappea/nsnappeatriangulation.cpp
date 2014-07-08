@@ -301,20 +301,6 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             testIncompatible(edgeInvalid,
                 "A triangulation with two invalid edges "
                 "should not be representable in SnapPea format.");
-
-            CPPUNIT_ASSERT_MESSAGE(
-                "The cusped solid torus with finite vertex "
-                "appears to have been incorrectly constructed.",
-                cuspedTorus.isValid() &&
-                cuspedTorus.isConnected() &&
-                cuspedTorus.isOrientable() &&
-                cuspedTorus.isIdeal() &&
-                cuspedTorus.isStandard() &&
-                (! cuspedTorus.hasBoundaryTriangles()) &&
-                cuspedTorus.getNumberOfTetrahedra() == 3);
-            testIncompatible(cuspedTorus,
-                "A cusped solid torus with an additional finite vertex "
-                "should not be representable in SnapPea format.");
         }
 
         void testVolume(NTriangulation& tri, const char* triName,
@@ -458,8 +444,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             testFlat(flatNor, "The non-orientable flat triangulation", 9);
         }
 
-        void testDegenerate(NTriangulation& tri, const char* triName,
-                int maxPlaces) {
+        void testDegenerate(NTriangulation& tri, const char* triName) {
             // Verify that the triangulation has a degenerate solution
             // and the volume is zero.  The volume is tested to whatever
             // precision is reported (up to a maximum of maxPlaces),
@@ -486,21 +471,17 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                     NSnapPeaTriangulation::degenerate_solution);
             }
 
-            int precision;
-            double foundVol = s.volume(precision);
-
-            // Dumb down the precision to our given maximum.
-            if (precision > maxPlaces)
-                precision = maxPlaces;
-
-            testZeroVolume(triName, foundVol, precision);
+            // Don't test volumes for degenerate solutions, since these
+            // can go all over the shop.
         }
 
         void degenerate() {
             testDegenerate(degenerateOr,
-                "The orientable degenerate triangulation", 9);
+                "The orientable degenerate triangulation");
             testDegenerate(degenerateNor,
-                "The non-orientable degenerate triangulation", 9);
+                "The non-orientable degenerate triangulation");
+            testDegenerate(cuspedTorus,
+                "A cusped solid torus with an additional finite vertex");
         }
 
         void spunBoundaries() {
