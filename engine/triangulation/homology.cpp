@@ -32,15 +32,12 @@
 
 /* end stub */
 
-// ntriangulationhomology.cpp
-//        Implements homology as a property of a triangulation.
-
 #include "triangulation/ntriangulation.h"
 #include "maths/nmatrixint.h"
 
 namespace regina {
 
-const NAbelianGroup& NTriangulation::homology() const {
+const NAbelianGroup& NTriangulation::getHomologyH1() const {
     if (H1_.known())
         return *H1_.value();
 
@@ -123,7 +120,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
         return *H1Rel_.value();
 
     if (getNumberOfBoundaryComponents() == 0)
-        return *(H1Rel_ = new NAbelianGroup(homology()));
+        return *(H1Rel_ = new NAbelianGroup(getHomologyH1()));
 
     // Calculate the relative first homology wrt the boundary.
 
@@ -266,7 +263,7 @@ const NAbelianGroup& NTriangulation::getHomologyH2() const {
         // Find rank(Z_2) + rank(Z) and take off z2rank.
         rank = getHomologyH1Rel().getRank() +
             getHomologyH1Rel().getTorsionRank(2) -
-            homology().getTorsionRank(2) -
+            getHomologyH1().getTorsionRank(2) -
             z2rank;
     }
 
