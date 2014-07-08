@@ -151,10 +151,17 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             n4_9_2.insertRehydration("ebdbcdddcemre");
             n4_1_2_1.insertRehydration("eahbcdddjxxxj");
 
+            // Note: the non-orientable manifold below is the same as
+            // NExampleTriangulation::smallClosedNonOrblHyperbolic()),
+            // but if we build it from NExampleTriangulation then we
+            // seem to get a degenerate solution.  Using the isosig
+            // gives the same triangulation with a different labelling,
+            // which seems to prod SnapPea into finding a better
+            // (non_geometric) solution instead.
             copyAndDelete(closedHypOr,
                 NExampleTriangulation::smallClosedOrblHyperbolic());
-            copyAndDelete(closedHypNor,
-                NExampleTriangulation::smallClosedNonOrblHyperbolic());
+            copyAndDelete(closedHypNor, NTriangulation::fromIsoSig(
+                "lLLLALAQccegffiijkikkkknawmhvwcls"));
 
             copyAndDelete(weberSeifert,
                 NExampleTriangulation::weberSeifert());
@@ -364,7 +371,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             testVolume(n4_1_2_1, "N 4_1^2,1", 3.6638623767, 9);
 
             testVolume(closedHypOr, "or_0.94270736", 0.94270736, 7);
-            testVolume(closedHypNor, "nor_2.02988321", 2.02988121, 7);
+            testVolume(closedHypNor, "nor_2.02988321", 2.02988321, 7);
             testVolume(weberSeifert, "Weber-Seifert", 11.1990647, 6);
         }
 
