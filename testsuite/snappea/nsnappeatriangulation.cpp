@@ -303,45 +303,6 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                 "should not be representable in SnapPea format.");
 
             CPPUNIT_ASSERT_MESSAGE(
-                "The small closed orientable hyperbolic triangulation "
-                "appears to have been incorrectly constructed.",
-                closedHypOr.isValid() &&
-                closedHypOr.isConnected() &&
-                closedHypOr.isOrientable() &&
-                (! closedHypOr.isIdeal()) &&
-                closedHypOr.isStandard() &&
-                (! closedHypOr.hasBoundaryTriangles()));
-            testIncompatible(closedHypOr,
-                "A closed orientable hyperbolic triangulation "
-                "should not be representable in SnapPea format.");
-
-            CPPUNIT_ASSERT_MESSAGE(
-                "The small closed non-orientable hyperbolic triangulation "
-                "appears to have been incorrectly constructed.",
-                closedHypNor.isValid() &&
-                closedHypNor.isConnected() &&
-                (! closedHypNor.isOrientable()) &&
-                (! closedHypNor.isIdeal()) &&
-                closedHypNor.isStandard() &&
-                (! closedHypNor.hasBoundaryTriangles()));
-            testIncompatible(closedHypNor,
-                "A closed non-orientable hyperbolic triangulation "
-                "should not be representable in SnapPea format.");
-
-            CPPUNIT_ASSERT_MESSAGE(
-                "The Weber-Seifert dodecahedral space "
-                "appears to have been incorrectly constructed.",
-                weberSeifert.isValid() &&
-                weberSeifert.isConnected() &&
-                weberSeifert.isOrientable() &&
-                (! weberSeifert.isIdeal()) &&
-                weberSeifert.isStandard() &&
-                (! weberSeifert.hasBoundaryTriangles()));
-            testIncompatible(weberSeifert,
-                "The Weber-Seifert dodecahedral space is closed, and so "
-                "should not be representable in SnapPea format.");
-
-            CPPUNIT_ASSERT_MESSAGE(
                 "The cusped solid torus with finite vertex "
                 "appears to have been incorrectly constructed.",
                 cuspedTorus.isValid() &&
@@ -413,9 +374,9 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             testVolume(n4_9_2,   "N 4_9^2",   4.0597664256, 9);
             testVolume(n4_1_2_1, "N 4_1^2,1", 3.6638623767, 9);
 
-            // testVolume(closedHypOr, "or_0.94270736", 0.94270736, 7);
-            // testVolume(closedHypNor, "nor_2.02988321", 2.02988121, 7);
-            // testVolume(weberSeifert, "Weber-Seifert", 11.1990647, 6);
+            testVolume(closedHypOr, "or_0.94270736", 0.94270736, 7);
+            testVolume(closedHypNor, "nor_2.02988321", 2.02988121, 7);
+            testVolume(weberSeifert, "Weber-Seifert", 11.1990647, 6);
         }
 
         void testZeroVolume(const char* triName, double foundVol,
