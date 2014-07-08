@@ -41,6 +41,7 @@
 #include "patiencedialog.h"
 #include "reginamain.h"
 #include "reginasupport.h"
+#include "choosers/cuspchooser.h"
 #include "choosers/vertexchooser.h"
 
 #include <memory>
@@ -105,7 +106,7 @@ NSnapPeaGluingsUI::NSnapPeaGluingsUI(regina::NSnapPeaTriangulation* packet,
     connect(actRandomise, SIGNAL(triggered()), this, SLOT(randomise()));
 
     QAction* actCanonise = new QAction(this);
-    actCanonise->setText(tr("&Canonical retriangulation"));
+    actCanonise->setText(tr("&Canonical Retriangulation"));
     actCanonise->setToolTip(tr(
         "Build the canonical retriangulation of the canonical "
         "cell decomposition"));
@@ -138,6 +139,18 @@ NSnapPeaGluingsUI::NSnapPeaGluingsUI(regina::NSnapPeaTriangulation* packet,
     triActionList.append(actVertexLinks);
     requiresNonNull.append(actVertexLinks);
     connect(actVertexLinks, SIGNAL(triggered()), this, SLOT(vertexLinks()));
+
+    actFill = new QAction(this);
+    actFill->setText(tr("Permanently &Fill Cusps..."));
+    actFill->setIcon(ReginaSupport::regIcon("fill"));
+    actFill->setToolTip(tr(
+        "Permanently fill one cusp or all cusps of this manifold"));
+    actFill->setWhatsThis(tr("<qt>Retriangulate to permanently "
+        "fill either one cusp or all cusps of this manifold.  "
+        "The original triangulation will be left untouched.</qt>"));
+    triActionList.append(actFill);
+    requiresNonNull.append(actFill);
+    connect(actFill, SIGNAL(triggered()), this, SLOT(fill()));
 
     sep = new QAction(this);
     sep->setSeparator(true);
@@ -176,6 +189,7 @@ const QLinkedList<QAction*>& NSnapPeaGluingsUI::getPacketTypeActions() {
 
 void NSnapPeaGluingsUI::fillToolBar(QToolBar* bar) {
     bar->addAction(actRandomise);
+    bar->addAction(actFill);
     bar->addAction(actToRegina);
 }
 
@@ -259,6 +273,51 @@ void NSnapPeaGluingsUI::toRegina() {
         ans->setPacketLabel(tri->getPacketLabel());
         tri->insertChildLast(ans);
         enclosingPane->getMainWindow()->packetView(ans, true, true);
+    }
+}
+
+void NSnapPeaGluingsUI::fill() {
+    // We assume the part hasn't become read-only, even though the
+    // packet might have changed its editable property.
+    if (! enclosingPane->tryCommit())
+        return;
+
+    if (tri->isNull())
+        ReginaSupport::sorry(ui,
+            tr("This is a null triangulation: there is no SnapPea "
+            "triangulation for me to fill."));
+    else if (tri->countFilledCusps() == 0) {
+        ReginaSupport::sorry(ui,
+            tr("There are no filling coefficients on any of the cusps."),
+            tr("You can enter filling coefficients on the "
+                "<i>Shapes & Cusps</i> tab."));
+    } else {
+        regina::NTriangulation* ans;
+        if (tri->countFilledCusps() == 1)
+            ans = tri->filledTriangulation();
+        else {
+            int chosen = CuspDialog::choose(ui, tri, CuspChooser::filterFilled,
+                tr("Permanently Fill Cusps"),
+                tr("Permanently fill which cusp(s)?"),
+                tr("SnapPea will retriangulate to permanently fill "
+                    "whatever cusp you choose."));
+            if (chosen == CuspChooser::CUSP_NO_SELECTION)
+                return;
+            else if (chosen == CuspChooser::CUSP_ALL)
+                ans = tri->filledTriangulation();
+            else
+                ans = tri->filledTriangulation(chosen);
+        }
+        if (! ans) {
+            ReginaSupport::sorry(ui,
+                tr("SnapPea was not able to contruct the filled "
+                    "triangulation."),
+                tr("Please report this to the Regina developers."));
+        } else {
+            ans->setPacketLabel(tri->getPacketLabel() + " (Filled)");
+            tri->insertChildLast(ans);
+            enclosingPane->getMainWindow()->packetView(ans, true, true);
+        }
     }
 }
 

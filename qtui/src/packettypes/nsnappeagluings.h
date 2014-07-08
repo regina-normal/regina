@@ -68,6 +68,7 @@ class NSnapPeaGluingsUI : public QObject, public PacketEditorTab {
          * Gluing actions
          */
         QAction* actRandomise;
+        QAction* actFill;
         QAction* actToRegina;
         QLinkedList<QAction*> triActionList;
         QLinkedList<QAction*> enableWhenWritable;
@@ -108,6 +109,7 @@ class NSnapPeaGluingsUI : public QObject, public PacketEditorTab {
         void vertexLinks();
         void canonise();
         void toRegina();
+        void fill();
 
         /**
          * Update the states of internal components.
