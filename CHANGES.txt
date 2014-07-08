@@ -138,11 +138,11 @@ Version 4.96  [ (under development) ]
               NSnapPeaTriangulation(const NTriangulation&, bool) is
               deprecated, and is now ignored.
             - Many new routines: countCompleteCusps(), countCusps(),
-              countFilledCusps(), cusp(), fill(), fundamentalGroupFilled(),
-              gluingEquations(), gluingEquationsRect(), homologyFilled(),
-              minImaginaryShape(), name(), protoCanonize() and protoCanonise(),
-              shape(), unfill(), volumeZero(), plus others (listed
-              individually below).
+              countFilledCusps(), cusp(), fill(), filledTriangulation(),
+              fundamentalGroupFilled(), gluingEquations(),
+              gluingEquationsRect(), homologyFilled(), minImaginaryShape(),
+              name(), protoCanonize() and protoCanonise(), shape(), unfill(),
+              volumeZero(), plus others (listed individually below).
             - Two new constructors: a default constructor that builds a null
               triangulation, and a string constructor that takes either the
               name or the contents of a native SnapPea data file.

@@ -828,8 +828,15 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         const NCusp* cusp(unsigned whichCusp = 0) const;
 
         /**
-         * Fills the given cusp.  After filling, this routine will
-         * automatically ask SnapPea to update the hyperbolic structure.
+         * Assigns a Dehn filling to the given cusp.  This routine will
+         * automatically ask SnapPea to update the hyperbolic structure
+         * according to the new filling coefficients.
+         *
+         * The triangulation itself will not change; this routine will
+         * simply ask SnapPea to store the given filling coefficients
+         * alongside the cusp, to be used in operations such as computing
+         * hyperbolic structures.  If you wish to retriangulate to permanently
+         * fill the cusp, call filledTriangulation() instead.
          *
          * For orientable cusps only coprime filling coefficients are allowed,
          * and for non-orientable cusps only (±1, 0) fillings are allowed.
@@ -855,13 +862,13 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * @param l the second (longitudinal) filling coefficient.
          * @param whichCusp the index of the cusp to fill according to
          * SnapPea; this must be between 0 and countCusps()-1 inclusive.
-         * @param \c true if and only if the filling was successful
-         * (according to the conditions outlined above).
+         * @param \c true if and only if the filling coefficients were
+         * accepted (according to the conditions outlined above).
          */
         bool fill(int m, int l, unsigned whichCusp = 0);
 
         /**
-         * Removes the filling on given cusp.  After removing the filling,
+         * Removes any filling on the given cusp.  After removing the filling,
          * this routine will automatically ask SnapPea to update the
          * hyperbolic structure.
          *
@@ -877,6 +884,72 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * SnapPea; this must be between 0 and countCusps()-1 inclusive.
          */
         void unfill(unsigned whichCusp = 0);
+
+        /**
+         * Retriangulates to permanently fill the given cusp.  This uses
+         * the current Dehn filling coefficients on the cusp, as set by fill().
+         *
+         * If this triangulation has more than one cusp to begin with,
+         * then the result will be a new instance of NSnapPeaTriangulation,
+         * and will have one fewer cusp.  Note that the remaining cusps
+         * may be reindexed, and all NCusp structures will be destroyed
+         * and rebuilt.  Auxiliary information on the remaining cusps (such
+         * as filling coefficients and peripheral curves) will be preserved,
+         * and SnapPea will automatically attempt to compute a hyperbolic
+         * structure on the new triangulation.
+         *
+         * If this triangulation has only one cusp, then the result will
+         * be a new instance of NTriangulation (not NSnapPeaTriangulation),
+         * and will represent a closed manifold.
+         *
+         * Either way, the result will be a newly allocated triangulation, and
+         * it is the responsibility of the caller of this routine to destroy it.
+         * The original triangulation (this object) will be left unchanged.
+         * If the given cusp is complete or if this is a null triangulation,
+         * then this routine will simply return 0.
+         *
+         * \warning Be warned that cusp \a i might not correspond to vertex
+         * \a i of the triangulation.  The NCusp::vertex() method (which
+         * is accessed through the cusp() routine) can help translate
+         * between SnapPea's cusp numbers and Regina's vertex numbers.
+         *
+         * @param whichCusp the index of the cusp to permanently fill according
+         * to SnapPea; this must be between 0 and countCusps()-1 inclusive.
+         * @return the new filled triangulation or 0 if the filling was
+         * not possible (as described above).
+         */
+        NTriangulation* filledTriangulation(unsigned whichCusp) const;
+
+        /**
+         * Retriangulates to permanently fill all non-complete cusps.
+         * This uses the current Dehn filling coefficients on the cusps,
+         * as set by fill().
+         *
+         * If every cusp of this triangulation is complete, this routine
+         * will simply return a new clone of this triangulation.
+         *
+         * If some but not all cusps are complete, then the result will
+         * be a new instance of NSnapPeaTriangulation, and will have
+         * fewer cusps.  Note that the remaining cusps may be reindexed,
+         * and all NCusp structures will be destroyed and rebuilt.  Auxiliary
+         * information on the remaining cusps (such as peripheral curves)
+         * will be preserved, and SnapPea will automatically attempt to
+         * compute a hyperbolic structure on the new triangulation.
+         *
+         * If all cusps of this triangulation have filling coefficients
+         * assigned, then the result will be a new instance of NTriangulation
+         * (not NSnapPeaTriangulation), and will represent a closed manifold.
+         *
+         * Whatever happens, the result will be a newly allocated triangulation,
+         * and it is the responsibility of the caller of this routine to
+         * destroy it.  The original triangulation (this object) will be left
+         * unchanged.  If this is a null triangulation, then this routine
+         * will simply return 0.
+         *
+         * @return the new filled triangulation, or 0 if this is a null
+         * triangulation.
+         */
+        NTriangulation* filledTriangulation() const;
 
         /**
          * Returns a matrix for computing boundary slopes of

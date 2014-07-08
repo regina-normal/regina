@@ -44,6 +44,10 @@ using regina::NTriangulation;
 namespace {
     double (NSnapPeaTriangulation::*volume_void)() const =
         &NSnapPeaTriangulation::volume;
+    NTriangulation* (NSnapPeaTriangulation::*filledTriangulation_void)() const =
+        &NSnapPeaTriangulation::filledTriangulation;
+    NTriangulation* (NSnapPeaTriangulation::*filledTriangulation_unsigned)
+        (unsigned) const = &NSnapPeaTriangulation::filledTriangulation;
 
     boost::python::tuple volume_precision(const NSnapPeaTriangulation& t) {
         int precision;
@@ -100,6 +104,10 @@ void addNSnapPeaTriangulation() {
             return_value_policy<reference_existing_object>()])
         .def("fill", &NSnapPeaTriangulation::fill, OL_fill())
         .def("unfill", &NSnapPeaTriangulation::unfill, OL_unfill())
+        .def("filledTriangulation", filledTriangulation_void,
+            return_value_policy<manage_new_object>())
+        .def("filledTriangulation", filledTriangulation_unsigned,
+            return_value_policy<manage_new_object>())
         .def("slopeEquations", &NSnapPeaTriangulation::slopeEquations,
             return_value_policy<manage_new_object>())
         .def("fundamentalGroupFilled",

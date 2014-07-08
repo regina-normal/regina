@@ -335,6 +335,75 @@ bool NSnapPeaTriangulation::fill(int m, int l, unsigned whichCusp) {
     return true;
 }
 
+NTriangulation* NSnapPeaTriangulation::filledTriangulation(unsigned whichCusp)
+        const {
+    if (! data_)
+        return 0;
+    if (cusp_[whichCusp].complete())
+        return 0;
+
+    regina::snappea::Triangulation* t;
+    unsigned nCusps = countCusps();
+    if (nCusps == 1) {
+        t = regina::snappea::fill_cusps(data_, 0, data_->name,
+            1 /* fill_all_cusps = TRUE, which is 1 in SnapPea */);
+
+        if (! t)
+            return 0;
+        NTriangulation* ans = new NTriangulation();
+        fillRegina(t, *ans);
+        return ans;
+    } else {
+        regina::snappea::Boolean* fill_cusp =
+            new regina::snappea::Boolean[nCusps];
+        std::fill(fill_cusp, fill_cusp + nCusps, 0);
+        fill_cusp[whichCusp] = 1; /* TRUE in SnapPea */
+        t = regina::snappea::fill_cusps(data_, fill_cusp, data_->name, 0);
+        delete[] fill_cusp;
+
+        NSnapPeaTriangulation* ans = new NSnapPeaTriangulation();
+        if (t)
+            ans->reset(t);
+        return ans;
+    }
+}
+
+NTriangulation* NSnapPeaTriangulation::filledTriangulation() const {
+    if (! data_)
+        return 0;
+
+    unsigned nCusps = getNumberOfBoundaryComponents();
+    regina::snappea::Triangulation* t;
+    if (filledCusps_ == 0) {
+        // Fill no cusps.
+        return new NSnapPeaTriangulation(*this);
+    } else if (filledCusps_ == nCusps) {
+        // Fill all cusps.
+        t = regina::snappea::fill_cusps(data_, 0, data_->name,
+            1 /* fill_all_cusps = TRUE, which is 1 in SnapPea */);
+
+        if (! t)
+            return 0;
+        NTriangulation* ans = new NTriangulation();
+        fillRegina(t, *ans);
+        return ans;
+    } else {
+        // Fill some but not all cusps.
+        regina::snappea::Boolean* fill_cusp =
+            new regina::snappea::Boolean[nCusps];
+        for (unsigned i = 0; i < nCusps; ++i)
+            fill_cusp[i] = (cusp_[i].complete() ? 0 : 1 /* TRUE in SnapPea */);
+        t = regina::snappea::fill_cusps(data_, fill_cusp, data_->name, 0);
+        delete[] fill_cusp;
+
+        if (! t)
+            return 0;
+        NSnapPeaTriangulation* ans = new NSnapPeaTriangulation();
+        ans->reset(t);
+        return ans;
+    }
+}
+
 NSnapPeaTriangulation* NSnapPeaTriangulation::protoCanonize() const {
     if (! data_)
         return 0;
@@ -747,7 +816,7 @@ void NSnapPeaTriangulation::sync() {
                 cusp_[c->index].vertex_ = 0;
                 if (c->is_complete) {
                     cusp_[c->index].m_ = cusp_[c->index].l_ = 0;
-                } else if (c->topology == Klein_cusp &&
+                } else if (c->topology == regina::snappea::Klein_cusp &&
                         ! (regina::snappea::Dehn_coefficients_are_integers(c)
                             && c->l == 0 && (c->m == 1 || c->m == -1))) {
                     // Abort!  Make this a null triangulation.
@@ -756,7 +825,7 @@ void NSnapPeaTriangulation::sync() {
                     reset(0);
                     syncing_ = false;
                     return;
-                } else if (c->topology == torus_cusp &&
+                } else if (c->topology == regina::snappea::torus_cusp &&
                         ! regina::snappea::Dehn_coefficients_are_relatively_prime_integers(c)) {
                     // Abort, as above.
                     reset(0);
