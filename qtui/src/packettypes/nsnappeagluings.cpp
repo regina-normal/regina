@@ -98,7 +98,3 @@ void NSnapPeaGluingsUI::refresh() {
     model->refreshData(tri);
 }
 
-void NSnapPeaGluingsUI::editingElsewhere() {
-    // TODO: Clear the table
-}
-

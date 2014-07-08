@@ -34,6 +34,7 @@
 
 // Regina core includes:
 #include "dim2/dim2triangulation.h"
+#include "maths/numbertheory.h"
 #include "snappea/nsnappeatriangulation.h"
 
 // UI includes:
@@ -48,6 +49,7 @@
 #include <QLabel>
 #include <QLayout>
 #include <QMessageBox>
+#include <QRegExp>
 #include <QToolBar>
 #include <QTreeView>
 #include <QTreeWidget>
@@ -55,6 +57,10 @@
 
 using regina::NPacket;
 using regina::NSnapPeaTriangulation;
+
+namespace {
+    QRegExp reIntPair("^[^0-9\\-]*(-?\\d+)[^0-9\\-]+(-?\\d+)[^0-9\\-]*$");
+}
 
 void CuspModel::rebuild() {
     beginResetModel();
@@ -143,10 +149,64 @@ Qt::ItemFlags CuspModel::flags(const QModelIndex& index) const {
 bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
         int role) {
     if (index.column() == 2) {
-        // TODO
-        // localName[realIndex[index.row()]] = value.toString();
-        // emit dataChanged(index, index);
-        return true;
+        QString data = value.toString().trimmed();
+        if (data.isEmpty() || data == "-") {
+            tri_->unfill(index.row());
+            return true;
+        }
+        if (! reIntPair.exactMatch(data)) {
+            ReginaSupport::info(0,
+                tr("Please enter a pair of filling coefficients."),
+                tr("<qt>This should be a pair of integers, such as "
+                    "<i>3, 2</i>."));
+            return false;
+        }
+
+        bool mOk, lOk;
+        int m = reIntPair.cap(1).toInt(&mOk);
+        int l = reIntPair.cap(2).toInt(&lOk);
+        if (! (mOk && lOk)) {
+            ReginaSupport::sorry(0,
+                tr("The filling coefficients are too large."),
+                tr("The coefficients you provided are too large for "
+                    "this machine to store using its native integer type."));
+            return false;
+        }
+
+        if (m == 0 && l == 0) {
+            tri_->unfill(index.row());
+            return true;
+        }
+
+        if (regina::gcd(m, l) != 1) {
+            ReginaSupport::sorry(0,
+                tr("The filling coefficients must be coprime."),
+                tr("Although SnapPea can handle more general filling "
+                    "coefficients, Regina insists that the filling "
+                    "coefficients be relatively prime."));
+            return false;
+        }
+        if ((! tri_->cusp(index.row())->vertex()->isLinkOrientable()) &&
+                l != 0) {
+            ReginaSupport::sorry(0,
+                trUtf8("For non-orientable cusps, the filling coefficients "
+                    "must be (±1, 0)."),
+                trUtf8("Although SnapPea can handle more general filling "
+                    "coefficients, Regina insists on (±1, 0) for "
+                    "non-orientable cusps."));
+            return false;
+        }
+        if (tri_->fill(m, l))
+            return true;
+        ReginaSupport::info(0,
+            tr("I could not use these filling coefficients."),
+            tr("<qt>SnapPea rejected them, and I'm not sure why.  "
+                "This could happen (for instance) if the coefficients "
+                "are too large for SnapPea to represent exactly "
+                "using its internal floating point data type.<p>"
+                "If you are not sure what is happening, please feel "
+                "free to contact the Regina developers.</qt>"));
+        return false;
     } else
         return false;
 }
