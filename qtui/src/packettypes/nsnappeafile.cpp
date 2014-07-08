@@ -56,7 +56,9 @@ NSnapPeaFileUI::NSnapPeaFileUI(regina::NSnapPeaTriangulation* packet,
     file->setAcceptRichText(false);
     file->setLineWrapMode(QTextEdit::NoWrap);
     file->setWordWrapMode(QTextOption::NoWrap);
-    file->setWhatsThis("TODO");
+    file->setWhatsThis("The full contents of a SnapPea data file "
+        "representing this SnapPea triangulation.  You can copy this "
+        "to the clipboard if you need to send it to some other application.");
     layout->addWidget(file, 1);
 }
 
