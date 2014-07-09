@@ -40,6 +40,7 @@
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
+#include "columnlayout.h"
 #include "gaprunner.h"
 #include "groupwidget.h"
 #include "ntrialgebra.h"
@@ -115,25 +116,29 @@ NTriAlgebraUI::NTriAlgebraUI(regina::NTriangulation* packet,
         PacketTabbedUI* useParentUI) :
         PacketTabbedViewerTab(useParentUI,
             ReginaPrefSet::global().tabDim3TriAlgebra) {
-    addTab(new NTriHomologyUI(packet, this), tr("&Homology"));
-    addTab(new NTriFundGroupUI(packet, this), tr("&Fund. Group"));
+    addTab(new NTriHomologyFundUI(packet, this),
+        tr("&Homology && Fund. Group"));
     addTab(new NTriTuraevViroUI(packet, this), tr("&Turaev-Viro"));
     addTab(new NTriCellularInfoUI(packet, this), tr("&Cellular Info"));
 }
 
-NTriHomologyUI::NTriHomologyUI(regina::NTriangulation* packet,
+NTriHomologyFundUI::NTriHomologyFundUI(regina::NTriangulation* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
 
-    QGridLayout* homologyGrid = new QGridLayout(ui);//, 7, 4, 0, 5);
+    ColumnLayout* master = new ColumnLayout(ui);
+
+    // Homology:
+
+    QGridLayout* homologyGrid = new QGridLayout();//, 7, 4, 0, 5);
     homologyGrid->setRowStretch(0, 1);
     homologyGrid->setRowStretch(6, 1);
     homologyGrid->setColumnStretch(0, 1);
     homologyGrid->setColumnStretch(3, 1);
 
-    QLabel* label;
     QString msg;
+    QLabel* label;
 
     label = new QLabel(QObject::tr("H1(M):"));
     homologyGrid->addWidget(label, 1, 1);
@@ -179,17 +184,36 @@ NTriHomologyUI::NTriHomologyUI(regina::NTriangulation* packet,
         "with coefficients in Z<sub>2</sub>.</qt>");
     label->setWhatsThis(msg);
     H2Z2->setWhatsThis(msg);
+
+    master->addLayout(homologyGrid, tr("Homology"));
+
+    // Fundamental group:
+
+    QBoxLayout* fundLayout = new QVBoxLayout();
+
+    fgMsg = new QLabel();
+    fgMsg->setAlignment(Qt::AlignCenter);
+    fundLayout->addWidget(fgMsg);
+    fgMsg->hide();
+
+    fgGroup = new GroupWidget(true);
+    fgGroup->setWhatsThis(tr("A full set of generators and relations "
+        "for the fundamental group of this triangulation."));
+    connect(fgGroup, SIGNAL(simplified()), this, SLOT(fundGroupSimplified()));
+    fundLayout->addWidget(fgGroup, 1);
+
+    master->addLayout(fundLayout, tr("Fundamental Group"));
 }
 
-regina::NPacket* NTriHomologyUI::getPacket() {
+regina::NPacket* NTriHomologyFundUI::getPacket() {
     return tri;
 }
 
-QWidget* NTriHomologyUI::getInterface() {
+QWidget* NTriHomologyFundUI::getInterface() {
     return ui;
 }
 
-void NTriHomologyUI::refresh() {
+void NTriHomologyFundUI::refresh() {
     H1->setText(tri->getHomologyH1().str().c_str());
 
     if (tri->isValid()) {
@@ -211,9 +235,19 @@ void NTriHomologyUI::refresh() {
         H2->setText(msg);
         H2Z2->setText(msg);
     }
+
+    if (tri->getNumberOfComponents() <= 1) {
+        fgMsg->hide();
+        fgGroup->refresh(&tri->getFundamentalGroup());
+        fgGroup->show();
+    } else {
+        fgGroup->hide();
+        fgMsg->setText(tr("Cannot calculate\n(disconnected triangulation)"));
+        fgMsg->show();
+    }
 }
 
-void NTriHomologyUI::editingElsewhere() {
+void NTriHomologyFundUI::editingElsewhere() {
     QString msg(QObject::tr("Editing..."));
 
     H1->setText(msg);
@@ -221,58 +255,14 @@ void NTriHomologyUI::editingElsewhere() {
     H1Bdry->setText(msg);
     H2->setText(msg);
     H2Z2->setText(msg);
+
+    fgGroup->hide();
+    fgMsg->setText(tr("Editing..."));
+    fgMsg->show();
 }
 
-NTriFundGroupUI::NTriFundGroupUI(regina::NTriangulation* packet,
-        PacketTabbedViewerTab* useParentUI) :
-        PacketViewerTab(useParentUI), tri(packet) {
-    ui = new QWidget();
-    QBoxLayout* layout = new QHBoxLayout(ui);
-
-    layout->addStretch(1);
-
-    msg = new QLabel();
-    msg->setAlignment(Qt::AlignCenter);
-    layout->addWidget(msg);
-    msg->hide();
-
-    group = new GroupWidget(true);
-    group->setWhatsThis(tr("A full set of generators and relations "
-        "for the fundamental group of this triangulation."));
-    connect(group, SIGNAL(simplified()), this, SLOT(simplified()));
-    layout->addWidget(group, 2);
-
-    layout->addStretch(1);
-}
-
-regina::NPacket* NTriFundGroupUI::getPacket() {
-    return tri;
-}
-
-QWidget* NTriFundGroupUI::getInterface() {
-    return ui;
-}
-
-void NTriFundGroupUI::refresh() {
-    if (tri->getNumberOfComponents() <= 1) {
-        msg->hide();
-        group->refresh(&tri->getFundamentalGroup());
-        group->show();
-    } else {
-        group->hide();
-        msg->setText(tr("Cannot calculate\n(disconnected triangulation)"));
-        msg->show();
-    }
-}
-
-void NTriFundGroupUI::editingElsewhere() {
-    group->hide();
-    msg->setText(tr("Editing..."));
-    msg->show();
-}
-
-void NTriFundGroupUI::simplified() {
-    regina::NGroupPresentation* simp = group->takeSimplifiedGroup();
+void NTriHomologyFundUI::fundGroupSimplified() {
+    regina::NGroupPresentation* simp = fgGroup->takeSimplifiedGroup();
     if (simp)
         tri->simplifiedFundamentalGroup(simp);
 }

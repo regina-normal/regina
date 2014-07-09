@@ -66,9 +66,11 @@ class NTriAlgebraUI : public PacketTabbedViewerTab {
 };
 
 /**
- * A triangulation page for viewing homology groups.
+ * A triangulation page for viewing homology and the fundamental group.
  */
-class NTriHomologyUI : public PacketViewerTab {
+class NTriHomologyFundUI : public QObject, public PacketViewerTab {
+    Q_OBJECT
+
     private:
         /**
          * Packet details
@@ -84,48 +86,14 @@ class NTriHomologyUI : public PacketViewerTab {
         QLabel* H1Bdry;
         QLabel* H2;
         QLabel* H2Z2;
+        QLabel* fgMsg;
+        GroupWidget* fgGroup;
 
     public:
         /**
          * Constructor.
          */
-        NTriHomologyUI(regina::NTriangulation* packet,
-                PacketTabbedViewerTab* useParentUI);
-
-        /**
-         * PacketViewerTab overrides.
-         */
-        regina::NPacket* getPacket();
-        QWidget* getInterface();
-        void refresh();
-        void editingElsewhere();
-};
-
-/**
- * A triangulation page for viewing the fundamental group.
- */
-class NTriFundGroupUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
-    private:
-        /**
-         * Packet details
-         */
-        regina::NTriangulation* tri;
-
-        /**
-         * Internal components
-         */
-        QWidget* ui;
-        QLabel* msg;
-        GroupWidget* group;
-        unsigned simpDepth;
-
-    public:
-        /**
-         * Constructor.
-         */
-        NTriFundGroupUI(regina::NTriangulation* packet,
+        NTriHomologyFundUI(regina::NTriangulation* packet,
                 PacketTabbedViewerTab* useParentUI);
 
         /**
@@ -140,7 +108,7 @@ class NTriFundGroupUI : public QObject, public PacketViewerTab {
         /**
          * Notify us that the presentation has been simplified.
          */
-        void simplified();
+        void fundGroupSimplified();
 };
 
 /**
