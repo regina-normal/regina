@@ -121,7 +121,6 @@ class NSnapPeaHeaderUI : public PacketViewerTab {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         void refresh();
-        void editingElsewhere();
 
         /**
          * Allow other UIs to access the summary information.

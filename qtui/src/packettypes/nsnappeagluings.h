@@ -74,9 +74,6 @@ class NSnapPeaGluingsUI : public QObject, public PacketViewerTab {
 
         /**
          * PacketViewerTab overrides.
-         *
-         * No need to override editingElsewhere(), since commits in the
-         * editor pane are now automatic.
          */
         regina::NPacket* getPacket();
         QWidget* getInterface();

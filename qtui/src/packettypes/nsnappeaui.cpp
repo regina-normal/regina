@@ -122,10 +122,6 @@ void NSnapPeaHeaderUI::refresh() {
     header->setText(summaryInfo(tri));
 }
 
-void NSnapPeaHeaderUI::editingElsewhere() {
-    header->setText(QObject::tr("Editing..."));
-}
-
 QString NSnapPeaHeaderUI::summaryInfo(regina::NSnapPeaTriangulation* tri) {
     if (tri->isNull())
         return QObject::tr("Null triangulation (no SnapPea data)");

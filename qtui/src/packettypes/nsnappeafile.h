@@ -78,7 +78,6 @@ class NSnapPeaFileUI : public QObject, public PacketViewerTab {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         void refresh();
-        void editingElsewhere();
 };
 
 #endif

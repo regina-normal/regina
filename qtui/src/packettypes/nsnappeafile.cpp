@@ -78,7 +78,3 @@ void NSnapPeaFileUI::refresh() {
     }
 }
 
-void NSnapPeaFileUI::editingElsewhere() {
-    file->setPlainText(tr("Editing..."));
-}
-
