@@ -50,6 +50,7 @@ class QToolBar;
 
 namespace regina {
     class NPacket;
+    class NTetrahedron;
     class NTriangulation;
 };
 
