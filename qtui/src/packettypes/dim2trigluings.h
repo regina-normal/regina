@@ -50,18 +50,16 @@ class QToolBar;
 
 namespace regina {
     class Dim2Triangulation;
+    class Dim2Triangle;
     class NPacket;
 };
 
 class Dim2GluingsModel : public QAbstractItemModel {
     protected:
         /**
-         * Details of the working (non-committed) triangulation
+         * Details of the triangulation
          */
-        int nTri;
-        QString* name;
-        int* adjTri;
-        regina::NPerm3* adjPerm;
+        regina::Dim2Triangulation* tri_;
 
         /**
          * Internal status
@@ -72,8 +70,7 @@ class Dim2GluingsModel : public QAbstractItemModel {
         /**
          * Constructor and destructor.
          */
-        Dim2GluingsModel(bool readWrite);
-        ~Dim2GluingsModel();
+        Dim2GluingsModel(regina::Dim2Triangulation* tri, bool readWrite);
 
         /**
          * Read-write state.
@@ -82,10 +79,9 @@ class Dim2GluingsModel : public QAbstractItemModel {
         void setReadWrite(bool readWrite);
 
         /**
-         * Loading and saving local data from/to the packet.
+         * Force a complete refresh.
          */
-        void refreshData(regina::Dim2Triangulation* tri);
-        void commitData(regina::Dim2Triangulation* tri);
+        void rebuild();
 
         /**
          * Overrides for describing and editing data in the model.
@@ -100,12 +96,6 @@ class Dim2GluingsModel : public QAbstractItemModel {
             int role) const;
         Qt::ItemFlags flags(const QModelIndex& index) const;
         bool setData(const QModelIndex& index, const QVariant& value, int role);
-
-        /**
-         * Gluing edit actions.
-         */
-        void addTri();
-        void removeTri(int first, int last);
 
     private:
         /**
@@ -125,7 +115,7 @@ class Dim2GluingsModel : public QAbstractItemModel {
          * edge gluing.  This routine handles both boundary and
          * non-boundary edges.
          */
-        static QString destString(int srcEdge, int destTri,
+        static QString destString(int srcEdge, regina::Dim2Triangle* destTri,
             const regina::NPerm3& gluing);
 
         /**
@@ -152,7 +142,7 @@ class Dim2TriGluingsUI : public QObject, public PacketEditorTab {
         /**
          * Packet details
          */
-        regina::Dim2Triangulation* triangulation;
+        regina::Dim2Triangulation* tri;
 
         /**
          * Internal components
@@ -212,18 +202,7 @@ class Dim2TriGluingsUI : public QObject, public PacketEditorTab {
          * Update the states of internal components.
          */
         void updateRemoveState();
-
-        /**
-         * Notify us of the fact that an edit has been made.
-         */
-        void notifyDataChanged();
 };
-
-inline Dim2GluingsModel::~Dim2GluingsModel() {
-    delete[] name;
-    delete[] adjTri;
-    delete[] adjPerm;
-}
 
 inline bool Dim2GluingsModel::isReadWrite() const {
     return isReadWrite_;

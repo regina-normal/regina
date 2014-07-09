@@ -419,6 +419,7 @@ inline const std::string& Dim2Triangle::getDescription() const {
 }
 
 inline void Dim2Triangle::setDescription(const std::string& desc) {
+    NPacket::ChangeEventSpan span(tri_);
     desc_ = desc;
 }
 
