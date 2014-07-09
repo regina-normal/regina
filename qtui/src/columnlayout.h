@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Qt User Interface                                                    *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,28 +32,31 @@
 
 /* end stub */
 
-#include "triangulation/ncomponent.h"
-#include "triangulation/ntetrahedron.h"
+/*! \file columnlayout.h
+ *  \brief Provides a layout that visibly divides a region into evenly
+ *  spaced columns.
+ */
 
-namespace regina {
+#ifndef __COLUMNLAYOUT_H
+#define __COLUMNLAYOUT_H
 
-void NComponent::writeTextShort(std::ostream& out) const {
-    if (tetrahedra_.size() == 1)
-        out << "Component with 1 tetrahedron";
-    else
-        out << "Component with " << getNumberOfTetrahedra() << " tetrahedra";
-}
+#include <QBoxLayout>
 
-void NComponent::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
-    out << std::endl;
+/**
+ * A layout class that divides a region into evenly spaced columns.
+ *
+ * There will be titles above the columns, and visible dividers between
+ * the columns.
+ */
+class ColumnLayout : public QHBoxLayout {
+    private:
+        bool empty_;
 
-    out << (tetrahedra_.size() == 1 ? "Tetrahedron:" : "Tetrahedra:");
-    std::vector<NTetrahedron*>::const_iterator it;
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it)
-        out << ' ' << (*it)->markedIndex();
-    out << std::endl;
-}
+    public:
+        ColumnLayout();
+        ColumnLayout(QWidget* widget);
 
-} // namespace regina
+        void addLayout(QLayout* layout, const QString& title);
+};
 
+#endif

@@ -2,6 +2,8 @@
 
 # Files to compile
 SET ( FILES
+  fundgroup
+  homology
   nsnappeatriangulation
   nxmlsnappeareader
   uimessages)

@@ -68,6 +68,7 @@ namespace {
      * triangulation combo box.
      */
     enum {
+        EXAMPLE_GIESEKING,
         EXAMPLE_FIG8,
         EXAMPLE_WHITEHEAD,
         EXAMPLE_X101
@@ -165,9 +166,10 @@ NSnapPeaTriangulationCreator::NSnapPeaTriangulationCreator(
     label->setWhatsThis(expln);
     subLayout->addWidget(label);
     exampleWhich = new QComboBox(area);
-    exampleWhich->insertItem(0, QObject::tr("Figure 8 knot complement"));
-    exampleWhich->insertItem(1, QObject::tr("Whitehead link complement"));
-    exampleWhich->insertItem(2, QObject::tr("Census manifold x101"));
+    exampleWhich->insertItem(0, QObject::tr("Gieseking manifold"));
+    exampleWhich->insertItem(1, QObject::tr("Figure 8 knot complement"));
+    exampleWhich->insertItem(2, QObject::tr("Whitehead link complement"));
+    exampleWhich->insertItem(3, QObject::tr("Census manifold x101"));
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
     subLayout->addWidget(exampleWhich, 1);
@@ -232,36 +234,6 @@ regina::NPacket* NSnapPeaTriangulationCreator::createPacket(regina::NPacket*,
                     "Klein bottle link."));
             return 0;
         }
-        if (from->isIdeal()) {
-            if (from->getNumberOfVertices() >
-                    from->getNumberOfBoundaryComponents()) {
-                ReginaSupport::info(parentWidget,
-                    QObject::tr("I cannot convert this triangulation to "
-                        "SnapPea."),
-                    QObject::tr("<qt>This triangulation contains both ideal "
-                        "and internal vertices.  SnapPea requires every "
-                        "vertex to be ideal.<p>"
-                        "Please simplify the triangulation "
-                        "and try again.</qt>"));
-                return 0;
-            }
-        } else if (! ReginaPrefSet::global().snapPeaClosed) {
-            ReginaSupport::info(parentWidget,
-                QObject::tr("I cannot convert this triangulation to "
-                    "SnapPea."),
-                QObject::tr("By default, Regina does not send closed manifolds "
-                    "to SnapPea.  You can change this behaviour through "
-                    "Regina's preferences."));
-            return 0;
-        } else if (from->getNumberOfVertices() > 1) {
-            ReginaSupport::info(parentWidget,
-                QObject::tr("I cannot convert this triangulation to "
-                    "SnapPea."),
-                QObject::tr("<qt>For closed manifolds, Regina will only send "
-                    "one-vertex triangulations to SnapPea.<p>"
-                    "Please simplify the triangulation and try again.</qt>"));
-            return 0;
-        }
 
         NSnapPeaTriangulation* ans = new NSnapPeaTriangulation(*from,
             true /* allow closed, since we checked this above. */);
@@ -297,6 +269,26 @@ regina::NPacket* NSnapPeaTriangulationCreator::createPacket(regina::NPacket*,
         return ans;
     } else if (typeId == TRI_EXAMPLE) {
         switch (exampleWhich->currentIndex()) {
+            case EXAMPLE_GIESEKING:
+                return new NSnapPeaTriangulation(
+"% Triangulation\n"
+"m000\n"
+"geometric_solution  1.01494161\n"
+"nonorientable_manifold\n"
+"CS_unknown\n"
+"\n"
+"0 1\n"
+"    Klein   0.000000000000   0.000000000000\n"
+"\n"
+"1\n"
+"   0    0    0    0 \n"
+" 1320 3021 2130 3102\n"
+"   0    0    0    0 \n"
+"  0  0 -1  1 -1  0  1  0  1  0  0 -1  0 -1  1  0\n"
+"  0  0  1 -1  1  0  0 -1  0 -1  0  1  0  1 -1  0\n"
+"  0  0  0  0  0  0  0  0  1 -1  0  0  0  0  0  0\n"
+"  0  0  0  0  0  0  0  0  1 -1  0  0  0  0  0  0\n"
+"  0.500000000000   0.866025403784\n");
             case EXAMPLE_FIG8:
                 return new NSnapPeaTriangulation(
 "% Triangulation\n"

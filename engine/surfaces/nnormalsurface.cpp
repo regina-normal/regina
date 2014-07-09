@@ -42,16 +42,6 @@
 #include "triangulation/ntriangulation.h"
 #include "utilities/xmlutils.h"
 
-// Property IDs:
-#define PROPID_EULERCHARACTERISTIC 1
-#define PROPID_REALBOUNDARY 5
-#define PROPID_COMPACT 6
-#define PROPID_ORIENTABILITY 7
-#define PROPID_TWOSIDEDNESS 8
-#define PROPID_CONNECTEDNESS 9
-#define PROPID_CANCRUSH 10
-#define PROPID_SURFACENAME 100
-
 namespace regina {
 
 const int vertexSplit[4][4] = {
@@ -424,7 +414,7 @@ void NNormalSurface::calculateRealBoundary() const {
 }
 
 #ifndef EXCLUDE_SNAPPEA
-NMatrixInt* NNormalSurface::boundarySlopes() const {
+NMatrixInt* NNormalSurface::boundaryIntersections() const {
     // Make sure this is really a SnapPea triangulation.
     const NSnapPeaTriangulation* snapPea =
         dynamic_cast<const NSnapPeaTriangulation*>(getTriangulation());

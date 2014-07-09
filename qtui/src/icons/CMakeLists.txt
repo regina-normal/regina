@@ -9,6 +9,7 @@ set (IMGS
   dehydrated
   doublecover
   drilledge
+  fill
   filter_comb
   filter_prop
   finite

@@ -42,6 +42,11 @@
 
 #include "../packettabui.h"
 
+#include <QAbstractItemModel>
+
+class QAction;
+class QToolBar;
+class QTreeView;
 class QTreeWidget;
 class QTreeWidgetItem;
 
@@ -50,38 +55,120 @@ namespace regina {
 };
 
 /**
+ * Note: We always allow editing the fillings in the cusp table.
+ */
+class CuspModel : public QAbstractItemModel {
+    private:
+        /**
+         * Details of the cusps being displayed.
+         */
+        regina::NSnapPeaTriangulation* tri_;
+
+    public:
+        /**
+         * Constructor and destructor.
+         */
+        CuspModel(regina::NSnapPeaTriangulation* tri);
+
+        /**
+         * Rebuild the model from scratch.
+         */
+        void rebuild();
+
+        /**
+         * Overrides for describing and editing data in the model.
+         */
+        QModelIndex index(int row, int column,
+                const QModelIndex& parent) const;
+        QModelIndex parent(const QModelIndex& index) const;
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
+        Qt::ItemFlags flags(const QModelIndex& index) const;
+        bool setData(const QModelIndex& index, const QVariant& value, int role);
+};
+
+/**
  * A triangulation page for viewing normal surface properties.
  */
-class NSnapPeaShapesUI : public QObject, public PacketViewerTab {
+class NSnapPeaShapesUI : public QObject, public PacketEditorTab {
     Q_OBJECT
 
     private:
         /**
          * Packet details
          */
+        CuspModel* model;
         regina::NSnapPeaTriangulation* tri;
 
         /**
          * Internal components
          */
         QWidget* ui;
-        QTreeWidget* cusps;
+        QTreeView* cusps;
         QTreeWidget* shapes;
+
+        /**
+         * Actions
+         */
+        QAction* actRandomise;
+        QAction* actFill;
+        QAction* actToRegina;
+        QLinkedList<QAction*> triActionList;
+        QLinkedList<QAction*> enableWhenWritable;
+        QLinkedList<QAction*> requiresNonNull;
 
     public:
         /**
          * Constructor and destructor.
          */
         NSnapPeaShapesUI(regina::NSnapPeaTriangulation* packet,
-            PacketTabbedUI* useParentUI);
+            PacketTabbedUI* useParentUI, bool readWrite);
+        ~NSnapPeaShapesUI();
 
         /**
-         * PacketViewerTab overrides.
+         * Fill the given toolbar with actions.
+         *
+         * This is necessary since the toolbar will not be a part of
+         * this page, but this page (as the editor) keeps track of the
+         * available actions.
+         */
+        void fillToolBar(QToolBar* bar);
+
+        /**
+         * PacketEditorTab overrides.
          */
         regina::NPacket* getPacket();
         QWidget* getInterface();
+        const QLinkedList<QAction*>& getPacketTypeActions();
         void refresh();
-        void editingElsewhere();
+        void commit();
+        void setReadWrite(bool readWrite);
+
+    public slots:
+        /**
+         * Actions.
+         */
+        void randomise();
+        void vertexLinks();
+        void canonise();
+        void toRegina();
+        void fill();
+
+        /**
+         * Update the states of internal components.
+         */
+        void updateNonNullActions();
 };
+
+inline CuspModel::CuspModel(regina::NSnapPeaTriangulation* tri) : tri_(tri) {
+}
+
+inline QModelIndex CuspModel::parent(const QModelIndex&) const {
+    // All items are top-level.
+    return QModelIndex();
+}
 
 #endif

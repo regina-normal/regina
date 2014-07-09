@@ -80,8 +80,14 @@ Version 4.96  [ (under development) ]
         Class NHyperbolicMinSearcher:
             - New enumeration class for building a census of minimal ideal
               triangulations of cusped finite-volume hyperbolic 3-manifolds.
+        Class NCusp:
+            - New class to support NSnapPeaTriangulation.
         Class NNormalSurface:
-            - Routine boundarySlopes() now requires the underlying
+            - Renamed boundarySlopes() to boundaryIntersections(), to make it
+              clear that it returns algebraic intersection numbers and not the
+              usual (m, l) pairs.  The old name has *not* been deprecated,
+              but removed completely.
+            - Furthermore, boundaryIntersections() now requires the underlying
               triangulation to be of type NSnapPeaTriangulation, and it takes
               the meridian and longitude directly from the SnapPea kernel.
               It also now orders its rows by SnapPea cusp indices (not Regina's
@@ -126,10 +132,16 @@ Version 4.96  [ (under development) ]
               derives from NTriangulation.  The inherited NTriangulation
               must not be modified directly; instead this is automatically
               kept in sync with the SnapPea data.
+            - Closed triangulations are now supported always by default
+              (i.e., you do not need to explicitly pass allowClosed=true).
+              The second argument (allowClosed) for the constructor
+              NSnapPeaTriangulation(const NTriangulation&, bool) is
+              deprecated, and is now ignored.
             - Many new routines: countCompleteCusps(), countCusps(),
-              countFilledCusps(), cuspComplete(), cuspVertex(),
-              gluingEquations(), gluingEquationsRect(),
-              minImaginaryShape(), name(), shape(),
+              countFilledCusps(), cusp(), fill(), filledTriangulation(),
+              fundamentalGroupFilled(), gluingEquations(),
+              gluingEquationsRect(), homologyFilled(), minImaginaryShape(),
+              name(), protoCanonize() and protoCanonise(), shape(), unfill(),
               volumeZero(), plus others (listed individually below).
             - Two new constructors: a default constructor that builds a null
               triangulation, and a string constructor that takes either the
@@ -152,8 +164,7 @@ Version 4.96  [ (under development) ]
               The old name is deprecated but kept for backward compatibility.
             - Routine dump() is deprecated.  Instead, simply call snapPea() and
               write the resulting string to standard output.
-            - Routine canonize() now returns a (richer) NSnapPeaTriangulation,
-              and has a new synonym canonise().
+            - Added synonym canonise() for canonize().
             - Routine solutionType() now returns the filled solution type
               (not the complete solution type).
             - Routine slopeEquations() now orders rows by SnapPea cusp indices
@@ -208,7 +219,6 @@ Version 4.96  [ (under development) ]
               Matveev's 3-manifold recogniser.
             - Routines snapPea() and saveSnapPea() now do nothing if the
               triangulation is empty.
-            - New alias homology() for getHomologyH1().
         Class NVertex:
             - Renamed getLinkEulerCharacteristic() to getLinkEulerChar(), which
               is easier on the fingers.  The old name has been kept as a

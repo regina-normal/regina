@@ -60,18 +60,19 @@ NSnapPeaUI::NSnapPeaUI(regina::NSnapPeaTriangulation* packet,
         PacketTabbedUI(newEnclosingPane,
             ReginaPrefSet::global().tabSnapPeaTri) {
     NSnapPeaHeaderUI* header = new NSnapPeaHeaderUI(packet, this);
-    gluings = new NSnapPeaGluingsUI(packet, this,
+    shapes = new NSnapPeaShapesUI(packet, this,
         newEnclosingPane->isReadWrite());
+    gluings = new NSnapPeaGluingsUI(packet, this);
     skeleton = new NTriSkeletonUI(packet, this);
     algebra = new NSnapPeaAlgebraUI(packet, this);
 
-    gluings->fillToolBar(header->getToolBar());
+    shapes->fillToolBar(header->getToolBar());
 
     addHeader(header);
+    addTab(shapes, QObject::tr("S&hapes && Cusps"));
     addTab(gluings, QObject::tr("&Gluings"));
     addTab(skeleton, QObject::tr("&Skeleton"));
     addTab(algebra, QObject::tr("&Algebra"));
-    addTab(new NSnapPeaShapesUI(packet, this), QObject::tr("S&hapes && Cusps"));
     addTab(new NTriCompositionUI(packet, this), QObject::tr("&Composition"));
     addTab(new NSnapPeaFileUI(packet, this), QObject::tr("&File"));
 
@@ -83,7 +84,7 @@ NSnapPeaUI::~NSnapPeaUI() {
 }
 
 const QLinkedList<QAction*>& NSnapPeaUI::getPacketTypeActions() {
-    return gluings->getPacketTypeActions();
+    return shapes->getPacketTypeActions();
 }
 
 QString NSnapPeaUI::getPacketMenuText() const {
@@ -119,10 +120,6 @@ QWidget* NSnapPeaHeaderUI::getInterface() {
 
 void NSnapPeaHeaderUI::refresh() {
     header->setText(summaryInfo(tri));
-}
-
-void NSnapPeaHeaderUI::editingElsewhere() {
-    header->setText(QObject::tr("Editing..."));
 }
 
 QString NSnapPeaHeaderUI::summaryInfo(regina::NSnapPeaTriangulation* tri) {

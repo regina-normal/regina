@@ -36,6 +36,7 @@
 #include <cstring>
 
 #include "maths/nmatrixint.h"
+#include "maths/numbertheory.h"
 #include "snappea/nsnappeatriangulation.h"
 #include "snappea/kernel/kernel_prototypes.h"
 #include "snappea/kernel/triangulation.h"
@@ -57,6 +58,18 @@ namespace {
 
 std::complex<double> NSnapPeaTriangulation::zero_(0, 0);
 
+void NCusp::writeTextShort(std::ostream& out) const {
+    if (complete())
+        out << "Complete cusp: ";
+    else
+        out << "Filled cusp: ";
+
+    out << "vertex " << vertex_->markedIndex();
+
+    if (! complete())
+        out << ", filling (" << m_ << ", " << l_ << ')';
+}
+
 NSnapPeaTriangulation::NSnapPeaTriangulation(
         const std::string& fileNameOrContents) :
         data_(0), shape_(0), cusp_(0), filledCusps_(0), syncing_(false) {
@@ -69,8 +82,6 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(
                 fileNameOrContents.c_str());
 
         if (data_) {
-            regina::snappea::find_complete_hyperbolic_structure(data_);
-            regina::snappea::do_Dehn_filling(data_);
             setPacketLabel(get_triangulation_name(data_));
             sync();
         }
@@ -89,8 +100,7 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NSnapPeaTriangulation& tri) :
     listen(this);
 }
 
-NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri,
-        bool allowClosed) :
+NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri, bool) :
         data_(0), shape_(0), cusp_(0), filledCusps_(0), syncing_(false) {
     const NSnapPeaTriangulation* clone =
         dynamic_cast<const NSnapPeaTriangulation*>(&tri);
@@ -115,20 +125,6 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri,
             (! tri.isStandard())) {
         listen(this);
         return;
-    }
-    if (tri.isIdeal()) {
-        // If it's ideal, make sure every vertex is ideal.
-        if (tri.getNumberOfBoundaryComponents() < tri.getNumberOfVertices()) {
-            listen(this);
-            return;
-        }
-    } else {
-        // No boundary triangles, not ideal.. must be closed.
-        // If closed is okay, at least make sure it's one-vertex.
-        if ((! allowClosed) || (1 != tri.getNumberOfVertices())) {
-            listen(this);
-            return;
-        }
     }
     if (tri.getNumberOfTetrahedra() >= INT_MAX) {
         listen(this);
@@ -187,12 +183,21 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri,
         return;
     }
 
-    // All done.  Recalculate what we need to.
-    regina::snappea::find_complete_hyperbolic_structure(data_);
-    regina::snappea::do_Dehn_filling(data_);
-
     // Regina triangulations know nothing about peripheral curves.
     // Install a sensible basis for each cusp, if SnapPea will let us.
+    //
+    // Since we need a hyperbolic structure before we can install
+    // (shortest, second shortest) bases, find one now.
+    regina::snappea::find_complete_hyperbolic_structure(data_);
+
+    // I believe there is no need to call do_Dehn_filling() in the case where
+    // all cusps are complete, since find_complete_hyperbolic_structure()
+    // already does this.
+    // However, if we passed a closed manifold then SnapPea will have
+    // automatically created a cusp with a filling:
+    if (tri.isClosed())
+        regina::snappea::do_Dehn_filling(data_);
+
     SolutionType soln = static_cast<SolutionType>(
         regina::snappea::get_filled_solution_type(data_));
     if (soln == geometric_solution || soln == nongeometric_solution) {
@@ -269,7 +274,159 @@ double NSnapPeaTriangulation::minImaginaryShape() const {
     return ans;
 }
 
-NSnapPeaTriangulation* NSnapPeaTriangulation::canonize() const {
+void NSnapPeaTriangulation::unfill(unsigned whichCusp) {
+    if (! data_)
+        return;
+
+    if (cusp_[whichCusp].complete()) {
+        // Nothing to do.
+        return;
+    }
+
+    regina::snappea::set_cusp_info(data_, whichCusp, true, 0, 0);
+
+    // Update and refresh internal caches.
+    cusp_[whichCusp].m_ = cusp_[whichCusp].l_ = 0;
+    --filledCusps_;
+
+    regina::snappea::do_Dehn_filling(data_);
+    syncFillings();
+}
+
+bool NSnapPeaTriangulation::fill(int m, int l, unsigned whichCusp) {
+    if (! data_)
+        return false;
+
+    // Are we unfilling?
+    if (m == 0 && l == 0) {
+        unfill(whichCusp);
+        return true;
+    }
+
+    // SnapPea expects reals as filling coefficients.
+    //
+    // Here we use the same test as SnapPea for whether these will be
+    // treated as integers:
+    regina::snappea::Real mReal = m;
+    regina::snappea::Real lReal = l;
+    if (m != (int)mReal || l != (int)lReal)
+        return false;
+
+    // Enforce other preconditions on the filling coefficients.
+    if (cusp_[whichCusp].vertex_->isLinkOrientable()) {
+        // Note that the gcd() below is Regina's.
+        if (gcd(m, l) != 1)
+            return false;
+    } else {
+        if (! (l == 0 && (m == 1 || m == -1)))
+            return false;
+    }
+
+    // Are we filling a complete cusp, or changing an existing filling?
+    bool wasComplete = cusp_[whichCusp].complete();
+
+    // Do it.
+    regina::snappea::set_cusp_info(data_, whichCusp, false, mReal, lReal);
+
+    // Update and refresh internal caches.
+    cusp_[whichCusp].m_ = m;
+    cusp_[whichCusp].l_ = l;
+    if (wasComplete)
+        ++filledCusps_;
+
+    regina::snappea::do_Dehn_filling(data_);
+    syncFillings();
+    return true;
+}
+
+NTriangulation* NSnapPeaTriangulation::filledTriangulation(unsigned whichCusp)
+        const {
+    if (! data_)
+        return 0;
+    if (cusp_[whichCusp].complete())
+        return 0;
+
+    regina::snappea::Triangulation* t;
+    unsigned nCusps = countCusps();
+    if (nCusps == 1) {
+        t = regina::snappea::fill_cusps(data_, 0, data_->name,
+            1 /* fill_all_cusps = TRUE, which is 1 in SnapPea */);
+
+        if (! t)
+            return 0;
+        NTriangulation* ans = new NTriangulation();
+        fillRegina(t, *ans);
+        return ans;
+    } else {
+        regina::snappea::Boolean* fill_cusp =
+            new regina::snappea::Boolean[nCusps];
+        std::fill(fill_cusp, fill_cusp + nCusps, 0);
+        fill_cusp[whichCusp] = 1; /* TRUE in SnapPea */
+        t = regina::snappea::fill_cusps(data_, fill_cusp, data_->name, 0);
+        delete[] fill_cusp;
+
+        NSnapPeaTriangulation* ans = new NSnapPeaTriangulation();
+        if (t)
+            ans->reset(t);
+        return ans;
+    }
+}
+
+NTriangulation* NSnapPeaTriangulation::filledTriangulation() const {
+    if (! data_)
+        return 0;
+
+    unsigned nCusps = getNumberOfBoundaryComponents();
+    regina::snappea::Triangulation* t;
+    if (filledCusps_ == 0) {
+        // Fill no cusps.
+        return new NSnapPeaTriangulation(*this);
+    } else if (filledCusps_ == nCusps) {
+        // Fill all cusps.
+        t = regina::snappea::fill_cusps(data_, 0, data_->name,
+            1 /* fill_all_cusps = TRUE, which is 1 in SnapPea */);
+
+        if (! t)
+            return 0;
+        NTriangulation* ans = new NTriangulation();
+        fillRegina(t, *ans);
+        return ans;
+    } else {
+        // Fill some but not all cusps.
+        regina::snappea::Boolean* fill_cusp =
+            new regina::snappea::Boolean[nCusps];
+        for (unsigned i = 0; i < nCusps; ++i)
+            fill_cusp[i] = (cusp_[i].complete() ? 0 : 1 /* TRUE in SnapPea */);
+        t = regina::snappea::fill_cusps(data_, fill_cusp, data_->name, 0);
+        delete[] fill_cusp;
+
+        if (! t)
+            return 0;
+        NSnapPeaTriangulation* ans = new NSnapPeaTriangulation();
+        ans->reset(t);
+        return ans;
+    }
+}
+
+NSnapPeaTriangulation* NSnapPeaTriangulation::protoCanonize() const {
+    if (! data_)
+        return 0;
+
+    regina::snappea::Triangulation* tmp;
+    regina::snappea::copy_triangulation(data_, &tmp);
+
+    if (regina::snappea::proto_canonize(tmp) != regina::snappea::func_OK) {
+        regina::snappea::free_triangulation(tmp);
+        return 0;
+    }
+
+    NSnapPeaTriangulation* ans = new NSnapPeaTriangulation();
+    ans->setPacketLabel(get_triangulation_name(data_));
+    ans->reset(tmp);
+    return ans;
+}
+
+NTriangulation* NSnapPeaTriangulation::canonize() const {
     if (! data_)
         return 0;
 
@@ -281,9 +438,10 @@ NSnapPeaTriangulation* NSnapPeaTriangulation::canonize() const {
         return 0;
     }
 
-    NSnapPeaTriangulation* ans = new NSnapPeaTriangulation();
+    NTriangulation* ans = new NTriangulation();
     ans->setPacketLabel(get_triangulation_name(data_));
-    ans->reset(tmp);
+    fillRegina(tmp, *ans);
+    regina::snappea::free_triangulation(tmp);
     return ans;
 }
 
@@ -292,9 +450,6 @@ void NSnapPeaTriangulation::randomize() {
         return;
 
     regina::snappea::randomize_triangulation(data_);
-    regina::snappea::find_complete_hyperbolic_structure(data_);
-    regina::snappea::do_Dehn_filling(data_);
-
     sync();
 }
 
@@ -302,8 +457,9 @@ NMatrixInt* NSnapPeaTriangulation::gluingEquations() const {
     if (! data_)
         return 0;
 
-    NMatrixInt* matrix = new NMatrixInt(getNumberOfEdges() +
-        2 * data_->num_cusps, 3 * getNumberOfTetrahedra());
+    NMatrixInt* matrix = new NMatrixInt(
+        getNumberOfEdges() + data_->num_cusps + countCompleteCusps(),
+        3 * getNumberOfTetrahedra());
 
     int numRows, numCols;
     int row, j;
@@ -318,17 +474,28 @@ NMatrixInt* NSnapPeaTriangulation::gluingEquations() const {
     int c;
     int* cuspEqn;
     for (c = 0; c < data_->num_cusps; ++c) {
-        cuspEqn = regina::snappea::get_cusp_equation(data_, c, 1, 0, &numCols);
-        for (j = 0; j < numCols; ++j)
-            matrix->entry(row, j) = cuspEqn[j];
-        regina::snappea::free_cusp_equation(cuspEqn);
-        ++row;
+        if (cusp_[c].complete()) {
+            cuspEqn = regina::snappea::get_cusp_equation(
+                data_, c, 1, 0, &numCols);
+            for (j = 0; j < numCols; ++j)
+                matrix->entry(row, j) = cuspEqn[j];
+            regina::snappea::free_cusp_equation(cuspEqn);
+            ++row;
 
-        cuspEqn = regina::snappea::get_cusp_equation(data_, c, 0, 1, &numCols);
-        for (j = 0; j < numCols; ++j)
-            matrix->entry(row, j) = cuspEqn[j];
-        regina::snappea::free_cusp_equation(cuspEqn);
-        ++row;
+            cuspEqn = regina::snappea::get_cusp_equation(
+                data_, c, 0, 1, &numCols);
+            for (j = 0; j < numCols; ++j)
+                matrix->entry(row, j) = cuspEqn[j];
+            regina::snappea::free_cusp_equation(cuspEqn);
+            ++row;
+        } else {
+            cuspEqn = regina::snappea::get_cusp_equation(
+                data_, c, cusp_[c].m_, cusp_[c].l_, &numCols);
+            for (j = 0; j < numCols; ++j)
+                matrix->entry(row, j) = cuspEqn[j];
+            regina::snappea::free_cusp_equation(cuspEqn);
+            ++row;
+        }
     }
 
     return matrix;
@@ -340,8 +507,9 @@ NMatrixInt* NSnapPeaTriangulation::gluingEquationsRect() const {
 
     unsigned n = getNumberOfTetrahedra();
 
-    NMatrixInt* matrix = new NMatrixInt(getNumberOfEdges() +
-        2 * data_->num_cusps, 2 * n + 1);
+    NMatrixInt* matrix = new NMatrixInt(
+        getNumberOfEdges() + data_->num_cusps + countCompleteCusps(),
+        2 * n + 1);
     // Note: all entries are automatically initialised to zero.
 
     int numRows, numCols;
@@ -367,33 +535,52 @@ NMatrixInt* NSnapPeaTriangulation::gluingEquationsRect() const {
     int c;
     int* cuspEqn;
     for (c = 0; c < data_->num_cusps; ++c) {
-        cuspEqn = regina::snappea::get_cusp_equation(data_, c, 1, 0, &numCols);
-        parity = 0;
-        for (j = 0; j < n; ++j) {
-            matrix->entry(row, j) += cuspEqn[3 * j];
-            matrix->entry(row, j + n) -= cuspEqn[3 * j + 1];
-            matrix->entry(row, j) -= cuspEqn[3 * j + 2];
-            matrix->entry(row, j + n) += cuspEqn[3 * j + 2];
-            if (cuspEqn[3 * j + 2] % 2)
-                parity ^= 1;
-        }
-        matrix->entry(row, 2 * n) = (parity ? -1 : 1);
-        regina::snappea::free_cusp_equation(cuspEqn);
-        ++row;
+        if (cusp_[c].complete()) {
+            cuspEqn = regina::snappea::get_cusp_equation(
+                data_, c, 1, 0, &numCols);
+            parity = 0;
+            for (j = 0; j < n; ++j) {
+                matrix->entry(row, j) += cuspEqn[3 * j];
+                matrix->entry(row, j + n) -= cuspEqn[3 * j + 1];
+                matrix->entry(row, j) -= cuspEqn[3 * j + 2];
+                matrix->entry(row, j + n) += cuspEqn[3 * j + 2];
+                if (cuspEqn[3 * j + 2] % 2)
+                    parity ^= 1;
+            }
+            matrix->entry(row, 2 * n) = (parity ? -1 : 1);
+            regina::snappea::free_cusp_equation(cuspEqn);
+            ++row;
 
-        cuspEqn = regina::snappea::get_cusp_equation(data_, c, 0, 1, &numCols);
-        parity = 0;
-        for (j = 0; j < n; ++j) {
-            matrix->entry(row, j) += cuspEqn[3 * j];
-            matrix->entry(row, j + n) -= cuspEqn[3 * j + 1];
-            matrix->entry(row, j) -= cuspEqn[3 * j + 2];
-            matrix->entry(row, j + n) += cuspEqn[3 * j + 2];
-            if (cuspEqn[3 * j + 2] % 2)
-                parity ^= 1;
+            cuspEqn = regina::snappea::get_cusp_equation(
+                data_, c, 0, 1, &numCols);
+            parity = 0;
+            for (j = 0; j < n; ++j) {
+                matrix->entry(row, j) += cuspEqn[3 * j];
+                matrix->entry(row, j + n) -= cuspEqn[3 * j + 1];
+                matrix->entry(row, j) -= cuspEqn[3 * j + 2];
+                matrix->entry(row, j + n) += cuspEqn[3 * j + 2];
+                if (cuspEqn[3 * j + 2] % 2)
+                    parity ^= 1;
+            }
+            matrix->entry(row, 2 * n) = (parity ? -1 : 1);
+            regina::snappea::free_cusp_equation(cuspEqn);
+            ++row;
+        } else {
+            cuspEqn = regina::snappea::get_cusp_equation(
+                data_, c, cusp_[c].m_, cusp_[c].l_, &numCols);
+            parity = 0;
+            for (j = 0; j < n; ++j) {
+                matrix->entry(row, j) += cuspEqn[3 * j];
+                matrix->entry(row, j + n) -= cuspEqn[3 * j + 1];
+                matrix->entry(row, j) -= cuspEqn[3 * j + 2];
+                matrix->entry(row, j + n) += cuspEqn[3 * j + 2];
+                if (cuspEqn[3 * j + 2] % 2)
+                    parity ^= 1;
+            }
+            matrix->entry(row, 2 * n) = (parity ? -1 : 1);
+            regina::snappea::free_cusp_equation(cuspEqn);
+            ++row;
         }
-        matrix->entry(row, 2 * n) = (parity ? -1 : 1);
-        regina::snappea::free_cusp_equation(cuspEqn);
-        ++row;
     }
 
     return matrix;
@@ -499,13 +686,27 @@ void NSnapPeaTriangulation::writeTextLong(std::ostream& out) const {
 
     NTriangulation::writeTextLong(out);
 
+    unsigned i;
     if (shape_) {
         out << "Tetrahedron shapes:" << std::endl;
-        for (unsigned i = 0; i < getNumberOfTetrahedra(); ++i)
+        for (i = 0; i < getNumberOfTetrahedra(); ++i)
             out << "  " << i << ": ( " << shape_[i].real()
                 << ", " << shape_[i].imag() << " )" << std::endl;
     } else
         out << "No tetrahedron shapes stored." << std::endl;
+
+    out << std::endl;
+
+    out << "Cusps:" << std::endl;
+    for (i = 0; i < getNumberOfBoundaryComponents(); ++i) {
+        out << "  " << i
+            << ": Vertex " << cusp_[i].vertex_->markedIndex();
+        if (cusp_[i].complete())
+            out << ", complete";
+        else
+            out << ", filled (" << cusp_[i].m_ << ", " << cusp_[i].l_ << ')';
+        out << std::endl;
+    }
 }
 
 bool NSnapPeaTriangulation::kernelMessagesEnabled() {
@@ -595,66 +796,117 @@ void NSnapPeaTriangulation::sync() {
     {
         ChangeEventSpan span(this);
 
+        // Deal with the combinatorial data and cusps first.
         if (getNumberOfTetrahedra())
             removeAllTetrahedra();
-        delete[] shape_;
-        delete[] cusp_;
 
+        delete[] cusp_;
         filledCusps_ = 0;
 
         if (data_) {
             fillRegina(data_, *this);
 
+            if (regina::snappea::get_filled_solution_type(data_) ==
+                    regina::snappea::not_attempted) {
+                regina::snappea::find_complete_hyperbolic_structure(data_);
+                regina::snappea::do_Dehn_filling(data_);
+            }
+
             unsigned i, j;
 
-            regina::snappea::Tetrahedron* stet;
-            SolutionType soln = static_cast<SolutionType>(
-                regina::snappea::get_filled_solution_type(data_));
-            if (soln == not_attempted || soln == no_solution) {
-                shape_ = 0;
-            } else {
-                // Fetch the shapes directly from SnapPea's internal
-                // data structures, since SnapPea's get_tet_shape()
-                // function is linear time (per tetrahedron).
-                shape_ = new std::complex<double>[getNumberOfTetrahedra()];
-                stet = data_->tet_list_begin.next;
-                regina::snappea::ComplexWithLog* shape;
-                for (i = 0; i < getNumberOfTetrahedra(); ++i) {
-                    shape = &stet->shape[regina::snappea::filled]->
-                            cwl[regina::snappea::ultimate][0 /* fixed */];
-                    shape_[i] = std::complex<double>(
-                        shape->rect.real, shape->rect.imag);
-                    stet = stet->next;
-                }
-            }
-
-            cusp_ = new CuspInfo[data_->num_cusps];
+            cusp_ = new NCusp[data_->num_cusps];
             regina::snappea::Cusp* c = data_->cusp_list_begin.next;
             for (i = 0; i < data_->num_cusps; ++i) {
-                cusp_[c->index].complete = c->is_complete;
-                cusp_[c->index].vertex = 0;
-                if (! c->is_complete)
+                cusp_[c->index].vertex_ = 0;
+                if (c->is_complete) {
+                    cusp_[c->index].m_ = cusp_[c->index].l_ = 0;
+                } else if (c->topology == regina::snappea::Klein_cusp &&
+                        ! (regina::snappea::Dehn_coefficients_are_integers(c)
+                            && c->l == 0 && (c->m == 1 || c->m == -1))) {
+                    // Abort!  Make this a null triangulation.
+                    // Note that reset() calls sync() again; this is
+                    // harmless as long as we return immediately afterwards.
+                    reset(0);
+                    syncing_ = false;
+                    return;
+                } else if (c->topology == regina::snappea::torus_cusp &&
+                        ! regina::snappea::Dehn_coefficients_are_relatively_prime_integers(c)) {
+                    // Abort, as above.
+                    reset(0);
+                    syncing_ = false;
+                    return;
+                } else {
+                    cusp_[c->index].m_ = c->m;
+                    cusp_[c->index].l_ = c->l;
                     ++filledCusps_;
+                }
                 c = c->next;
             }
-            stet = data_->tet_list_begin.next;
+            regina::snappea::Tetrahedron* stet = data_->tet_list_begin.next;
             for (i = 0; i < getNumberOfTetrahedra(); ++i) {
                 for (j = 0; j < 4; ++j) {
                     c = stet->cusp[j];
-                    if (cusp_[c->index].vertex == 0)
-                        cusp_[c->index].vertex = getTetrahedron(i)->getVertex(j);
+                    if (cusp_[c->index].vertex_ == 0)
+                        cusp_[c->index].vertex_ = getTetrahedron(i)->getVertex(j);
                 }
                 stet = stet->next;
             }
         } else {
-            shape_ = 0;
             cusp_ = 0;
         }
+
+        // Next, update all data that depend on the fillings (if any).
+        // Most importantly, this includes the cache of tetrahedron shapes.
+        fillingsHaveChanged();
 
         // The packet change event (which we are listening to) will be
         // fired at this point.
     }
     syncing_ = false;
+}
+
+void NSnapPeaTriangulation::syncFillings() {
+    syncing_ = true;
+    {
+        ChangeEventSpan span(this);
+        fillingsHaveChanged();
+        // The packet change event will be fired at this point.
+    }
+    syncing_ = false;
+}
+
+void NSnapPeaTriangulation::fillingsHaveChanged() {
+    // Clear properties that depend on the fillings.
+    fundGroupFilled_.clear();
+    h1Filled_.clear();
+
+    delete[] shape_;
+
+    if (data_) {
+        // Refresh the array of tetrahedron shapes.
+        regina::snappea::Tetrahedron* stet;
+        SolutionType soln = static_cast<SolutionType>(
+            regina::snappea::get_filled_solution_type(data_));
+        if (soln == not_attempted || soln == no_solution) {
+            shape_ = 0;
+        } else {
+            // Fetch the shapes directly from SnapPea's internal
+            // data structures, since SnapPea's get_tet_shape()
+            // function is linear time (per tetrahedron).
+            shape_ = new std::complex<double>[getNumberOfTetrahedra()];
+            stet = data_->tet_list_begin.next;
+            regina::snappea::ComplexWithLog* shape;
+            for (unsigned i = 0; i < getNumberOfTetrahedra(); ++i) {
+                shape = &stet->shape[regina::snappea::filled]->
+                        cwl[regina::snappea::ultimate][0 /* fixed */];
+                shape_[i] = std::complex<double>(
+                    shape->rect.real, shape->rect.imag);
+                stet = stet->next;
+            }
+        }
+    } else {
+        shape_ = 0;
+    }
 }
 
 void NSnapPeaTriangulation::fillRegina(regina::snappea::Triangulation* src,

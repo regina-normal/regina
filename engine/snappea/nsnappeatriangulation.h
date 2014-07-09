@@ -119,6 +119,94 @@ struct PacketInfo<PACKET_SNAPPEATRIANGULATION> {
 };
 
 /**
+ * Represents a single cusp of a SnapPea triangulation.
+ * See the NSnapPeaTriangulation class for further details.
+ *
+ * NCusp objects should be considered temporary only.  They are preserved
+ * if you change the fillings (via NSnapPeaTriangulation::fill()
+ * or NSnapPeaTriangulation::unfill()).  However, if you change the SnapPea
+ * triangulation itself (e.g., via randomize()), then all cusp objects will
+ * be deleted and replaced with new ones (using fresh data re-fetched from
+ * the SnapPea kernel).
+ */
+class REGINA_API NCusp : public ShareableObject {
+    private:
+        NVertex* vertex_;
+            /**< The corresponding vertex of the Regina triangulation. */
+        int m_;
+            /**< The first (meridian) filling coefficient, or 0 if this
+                 cusp is complete. */
+        int l_;
+            /**< The second (longitude) filling coefficient, or 0 if this
+                 cusp is complete. */
+
+    public:
+        /**
+         * Default destructor.
+         */
+        virtual ~NCusp();
+
+        /**
+         * Returns the corresponding vertex of the Regina triangulation
+         * (i.e., of the NTriangulation structure that is inherited by
+         * NSnapPeaTriangulation).
+         *
+         * Note that cusp and vertex indexing might not be in sync; that is,
+         * SnapPea's <tt>cusp(i)</tt> need not correspond to Regina's
+         * <tt>getVertex(i)</tt>.
+         *
+         * This routine can be used to detect if/when cusp numbering
+         * and vertex numbering fall out of sync, and to translate
+         * between them if/when this happens.
+         */
+        NVertex* vertex() const;
+
+        /**
+         * Returns whether this cusp is complete.
+         *
+         * \snappy In SnapPy, this field corresponds to querying
+         * <tt>Manifold.cusp_info('is_complete')[cusp_number]</tt>.
+         *
+         * @return \c true if this cusp is complete, or \c false if it is
+         * filled.
+         */
+        bool complete() const;
+
+        /**
+         * Returns the first (meridian) filling coefficient on this cusp,
+         * or 0 if this cusp is complete.
+         *
+         * \snappy In SnapPy, this field corresponds to querying
+         * <tt>Manifold.cusp_info('filling')[cusp_number][0]</tt>.
+         *
+         * @return the first filling coefficient.
+         */
+        int m() const;
+
+        /**
+         * Returns the second (longitude) filling coefficient on this cusp,
+         * or 0 if this cusp is complete.
+         *
+         * \snappy In SnapPy, this field corresponds to querying
+         * <tt>Manifold.cusp_info('filling')[cusp_number][1]</tt>.
+         *
+         * @return the second filling coefficient.
+         */
+        int l() const;
+
+        void writeTextShort(std::ostream& out) const;
+
+    private:
+        /**
+         * A default constructor that performs no initialisation whatsoever.
+         */
+        NCusp();
+
+    friend class NSnapPeaTriangulation;
+        /**< Allow access to private members. */
+};
+
+/**
  * Offers direct access to the SnapPea kernel from within Regina.
  * An object of this class represents a 3-manifold triangulation, stored
  * directly in the SnapPea kernel using SnapPea's internal format.
@@ -169,7 +257,35 @@ struct PacketInfo<PACKET_SNAPPEATRIANGULATION> {
  * - attempting to read a broken SnapPea data file;
  *
  * - attempting to change a SnapPea triangulation using the inherited
- *   NTriangulation interface (as discussed above).
+ *   NTriangulation interface (as discussed above);
+ *
+ * - attempting to import a SnapPea triangulation that uses unsupported
+ *   (e.g., non-integer or non-coprime) filling coefficients, as discussed
+ *   below).
+ *
+ * Regarding fillings:  SnapPea can store and manipulate Dehn fillings on
+ * cusps, and the NSnapPeaTriangulation class respects these where it can (but
+ * with restrictions on the possible filling coefficients; see below).
+ * However, Regina's own NTriangulation class knows nothing about fillings
+ * at all.  Therefore:
+ *
+ * - Routines inherited through the NTriangulation interface will ignore
+ *   fillings completely (so, for instance, getHomologyH1() will return the
+ *   first homology of the unfilled manifold, even if SnapPea has
+ *   designated fillings on the cusps).
+ *
+ * - Routines that are defined here in the NSnapPeaTriangulation class
+ *   are generally aware of fillings (so, for instance, homologyFilled()
+ *   will return the first homology of the filled manifold).  See the
+ *   individual notes for each member function for details on how it
+ *   handles fillings.
+ *
+ * For now, NSnapPeaTriangulation only supports the following types of filling
+ * coefficients: on orientable cusps the filling coefficients must be
+ * coprime integers, and non non-orientable cusps the filling coefficients
+ * must be the integers (±1, 0).  Any attempt to import a triangulation from
+ * a SnapPea file with filling coefficients outside these requirements will
+ * result in a null triangulation (as discussed above).
  *
  * There are many places in the SnapPea kernel where SnapPea throws a
  * fatal error.  As of Regina 4.96, these fatal errors are converted
@@ -231,18 +347,6 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         } SolutionType;
 
     private:
-        /**
-         * A private structure used to cache information about each cusp of
-         * the internal SnapPea triangulation.
-         */
-        struct CuspInfo {
-            NVertex* vertex;
-                /**< The corresponding vertex of the Regina triangulation. */
-            bool complete;
-                /**< \c true if the cusp is complete, or \c false if it
-                     is filled. */
-        };
-
         regina::snappea::Triangulation* data_;
             /**< The triangulation stored in SnapPea's native format,
                  or 0 if this is a null triangulation. */
@@ -253,18 +357,28 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
                  hyperbolic structure.  If this is a null triangulation, or if
                  the solution type is no_solution or not_attempted, then
                  shape_ will be 0. */
-        CuspInfo* cusp_;
+        NCusp* cusp_;
             /**< An array that caches information about each cusp of the
                  internal SnapPea triangulation.  If this is a null
                  triangulation then cusp_ will be 0. */
         unsigned filledCusps_;
             /**< The number of cusps that are currently filled. */
+
+        mutable NProperty<NGroupPresentation, StoreManagedPtr> fundGroupFilled_;
+            /**< The fundamental group of the filled triangulation,
+                 or 0 if this cannot be computed (e.g., if SnapPea
+                 does not return a matrix of relations). */
+        mutable NProperty<NAbelianGroup, StoreManagedPtr> h1Filled_;
+            /**< The first homology group of the filled triangulation,
+                 or 0 if this cannot be computed. */
+
         bool syncing_;
             /**< Set to \c true whilst sync() is being called.  This allows the
                  internal packet listener to distinguish between "legitimate"
                  changes to the inherited NTriangulation via sync(), versus
                  "illegitimate" changes from elsewhere through the inherited
                  NTriangulation interface. */
+
         static bool kernelMessages_;
             /**< Should the SnapPea kernel write diagnostic messages to
                  standard output? */
@@ -370,8 +484,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * makes a default choice during the conversion process.  Specifically:
          *
          * - If solution_type() is geometric_solution or nongeometric_solution,
-         *   then on each cusp the meridian and longitude are chosen to be the
-         *   (shortest, second shortest) basis, and their orientations
+         *   then on each torus cusp the meridian and longitude are chosen to
+         *   be the (shortest, second shortest) basis, and their orientations
          *   follow the convention used by the \e SnapPy kernel.  Be warned,
          *   however, that this choice might not be unique for some cusp shapes,
          *   and the resolution of such ambiguities might be machine-dependent.
@@ -383,28 +497,30 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          *   that this default basis may change (and indeed has changed in the
          *   past) across different versions of the SnapPea kernel.
          *
-         * SnapPea is designed primarily to work with ideal
-         * triangulations only.  Passing closed triangulations can
-         * occasionally cause the SnapPea kernel to crash the entire program.
-         * Thus by default, closed triangulations are never converted (a null
-         * SnapPea triangulation will be created instead).  See the optional
-         * argument \a allowClosed for how to change this behaviour.
+         * Regarding internal vertices (i.e., vertices whose links are spheres):
+         * SnapPea is designed to work only with triangulations where
+         * every vertex is ideal.  As a result:
          *
-         * It is possible that the tetrahedron and vertex numbers might be
-         * changed in the new SnapPea triangulation.  In particular, if the
-         * given Regina triangulation is orientable but not oriented, then you
-         * should \e expect these numbers to change.
+         * - You may pass a closed triangulation to this constructor, but
+         *   SnapPea will automatically convert this into a filling of a
+         *   cusped manifold, using an ideal triangulation.
          *
-         * \warning Passing \a allowClosed as \c true can occasionally
-         * cause the program to crash!  See the notes above for details.
+         * - You may also pass a triangulation that uses both ideal and
+         *   internal vertices.  In this case, SnapPea will retriangulate
+         *   the manifold so that it uses ideal vertices only.
+         *
+         * Even if SnapPea does not retriangulate the manifold (for the
+         * reasons described above), it is possible that the tetrahedron and
+         * vertex numbers might be changed in the new SnapPea triangulation.
+         * In particular, if the given Regina triangulation is orientable but
+         * not oriented, then you should \e expect these numbers to change.
          *
          * @param tri the Regina triangulation to clone.
-         * @param allowClosed \c true if closed triangulations should be
-         * considered, or \c false if all closed triangulations should give
-         * null SnapPea data (the default).  See above for details.
+         * @param ignored a legacy parameter that is now ignored.
+         * (This argument was once required if you wanted to pass a
+         * closed triangluation to SnapPea.)
          */
-        NSnapPeaTriangulation(const NTriangulation& tri,
-            bool allowClosed = false);
+        NSnapPeaTriangulation(const NTriangulation& tri, bool ignored = false);
 
         /**
          * Destroys this triangulation.  All internal SnapPea data will
@@ -560,17 +676,19 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
 
         /**
          * Returns a matrix describing Thurston's gluing equations.
+         * This will be with respect to the current Dehn filling (if any).
          *
          * Each row of this matrix will describe a single equation.
          * The first getNumberOfEdges() rows will list the edge equations,
-         * and the following 2 * getNumberOfBoundaryComponents() rows
-         * will list the cusp equations.
+         * and the following 2 * countCompleteCusps() + countFilledCusps()
+         * rows will list the cusp equations.
          *
          * The edge equations will be ordered arbitrarily.  The cusp equations
          * will be presented in pairs ordered by cusp index (as stored by
          * SnapPea); within each pair the meridian equation will appear before
-         * the longitude equation.  You can use cuspVertex() to help translate
-         * between SnapPea's cusp indices and Regina's vertex indices.
+         * the longitude equation.  The NCusp::vertex() method (which
+         * is accessed through the cusp() routine) can help translate
+         * between SnapPea's cusp numbers and Regina's vertex numbers.
          *
          * The matrix will contain <tt>3 * getNumberOfTetrahedra()</tt> columns.
          * The first three columns represent shape parameters <tt>z</tt>,
@@ -603,7 +721,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
 
         /**
          * Returns a matrix describing Thurston's gluing equations in a
-         * streamlined form.
+         * streamlined form.  This will be with respect to the current
+         * Dehn filling (if any).
          *
          * Each row of this matrix will describe a single equation.
          * The rows begin with the edge equations (in arbitrary order)
@@ -681,38 +800,156 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         unsigned countFilledCusps() const;
 
         /**
-         * Identifies which vertex of the inherited NTriangulation
-         * corresponds to the given SnapPea cusp.
-         *
-         * When the triangulation is first constructed, SnapPea's cusp \a i
-         * will typically correspond to Regina's vertex \a i.  However,
-         * if SnapPea manipulates the triangulation (e.g., through randomize()),
-         * there is no guarantee that SnapPea and Regina will maintain the
-         * same numbering (since in general Regina does not preserve indices
-         * of skeletal objects through changes to a triangulation, whereas
-         * SnapPea maintains the cusp indices across changes).
-         * This routine can be used to detect when SnapPea's and Regina's
-         * numbering fall out of sync, and to translate between them
-         * if/when this happens.
-         *
-         * @param cusp the index of a cusp according to SnapPea; this must be
-         * between 0 and getNumberOfBoundaryComponents()-1 inclusive.
-         * @return the corresponding vertex of the triangulation according
-         * to Regina.
-         */
-        NVertex* cuspVertex(unsigned cusp) const;
-
-        /**
-         * Determines whether the given cusp is complete or filled.
+         * Returns information about the given cusp of this manifold.
+         * This information includes the filling coefficients (if any),
+         * along with other combinatorial information.
          *
          * \snappy In SnapPy, this routine corresponds to calling
-         * <tt>Manifold.cusp_info('is_complete')[cusp]</tt>.
+         * <tt>Manifold.cusp_info()[c]</tt>, though the set of
+         * information returned about each cusp is different.
          *
-         * @param cusp the index of a cusp according to SnapPea; this must be
-         * between 0 and getNumberOfBoundaryComponents()-1 inclusive.
-         * @return \c true if the cusp is complete, or \c false if it is filled.
+         * These NCusp objects should be considered temporary only.  They are
+         * preserved if you change the fillings (via fill() or unfill()).
+         * However, if you change the SnapPea triangulation itself
+         * (e.g., via randomize()), then all cusp objects will be deleted
+         * and replaced with new ones (using fresh data re-fetched from
+         * the SnapPea kernel).
+         *
+         * \warning Be warned that cusp \a i might not correspond to vertex
+         * \a i of the triangulation.  The NCusp::vertex() method (which
+         * is accessed through the cusp() routine) can help translate
+         * between SnapPea's cusp numbers and Regina's vertex numbers.
+         *
+         * @param whichCusp the index of a cusp according to SnapPea;
+         * this must be between 0 and countCusps()-1 inclusive.
+         * @return information about the given cusp, or 0 if this is a
+         * null triangulation.
          */
-        bool cuspComplete(unsigned cusp) const;
+        const NCusp* cusp(unsigned whichCusp = 0) const;
+
+        /**
+         * Assigns a Dehn filling to the given cusp.  This routine will
+         * automatically ask SnapPea to update the hyperbolic structure
+         * according to the new filling coefficients.
+         *
+         * The triangulation itself will not change; this routine will
+         * simply ask SnapPea to store the given filling coefficients
+         * alongside the cusp, to be used in operations such as computing
+         * hyperbolic structures.  If you wish to retriangulate to permanently
+         * fill the cusp, call filledTriangulation() instead.
+         *
+         * For orientable cusps only coprime filling coefficients are allowed,
+         * and for non-orientable cusps only (±1, 0) fillings are allowed.
+         * Although SnapPea can handle more general fillings, Regina
+         * will enforce these conditions; if they are not satisfied then
+         * it will do nothing and simply return \c false.
+         *
+         * As a special case however, you may pass (0, 0) as the filling
+         * coefficients, in which case this routine will behave
+         * identically to unfill().
+         *
+         * It is possible that, if the given integers are extremely
+         * large, SnapPea cannot convert the filling coefficients to its
+         * own internal floating-point representation.  If this happens
+         * then this routine will again do nothing and simply return \c false.
+         *
+         * \warning Be warned that cusp \a i might not correspond to vertex
+         * \a i of the triangulation.  The NCusp::vertex() method (which
+         * is accessed through the cusp() routine) can help translate
+         * between SnapPea's cusp numbers and Regina's vertex numbers.
+         *
+         * @param m the first (meridional) filling coefficient.
+         * @param l the second (longitudinal) filling coefficient.
+         * @param whichCusp the index of the cusp to fill according to
+         * SnapPea; this must be between 0 and countCusps()-1 inclusive.
+         * @param \c true if and only if the filling coefficients were
+         * accepted (according to the conditions outlined above).
+         */
+        bool fill(int m, int l, unsigned whichCusp = 0);
+
+        /**
+         * Removes any filling on the given cusp.  After removing the filling,
+         * this routine will automatically ask SnapPea to update the
+         * hyperbolic structure.
+         *
+         * If the given cusp is already complete, then this routine
+         * safely does nothing.
+         *
+         * \warning Be warned that cusp \a i might not correspond to vertex
+         * \a i of the triangulation.  The NCusp::vertex() method (which
+         * is accessed through the cusp() routine) can help translate
+         * between SnapPea's cusp numbers and Regina's vertex numbers.
+         *
+         * @param whichCusp the index of the cusp to unfill according to
+         * SnapPea; this must be between 0 and countCusps()-1 inclusive.
+         */
+        void unfill(unsigned whichCusp = 0);
+
+        /**
+         * Retriangulates to permanently fill the given cusp.  This uses
+         * the current Dehn filling coefficients on the cusp, as set by fill().
+         *
+         * If this triangulation has more than one cusp to begin with,
+         * then the result will be a new instance of NSnapPeaTriangulation,
+         * and will have one fewer cusp.  Note that the remaining cusps
+         * may be reindexed, and all NCusp structures will be destroyed
+         * and rebuilt.  Auxiliary information on the remaining cusps (such
+         * as filling coefficients and peripheral curves) will be preserved,
+         * and SnapPea will automatically attempt to compute a hyperbolic
+         * structure on the new triangulation.
+         *
+         * If this triangulation has only one cusp, then the result will
+         * be a new instance of NTriangulation (not NSnapPeaTriangulation),
+         * and will represent a closed manifold.
+         *
+         * Either way, the result will be a newly allocated triangulation, and
+         * it is the responsibility of the caller of this routine to destroy it.
+         * The original triangulation (this object) will be left unchanged.
+         * If the given cusp is complete or if this is a null triangulation,
+         * then this routine will simply return 0.
+         *
+         * \warning Be warned that cusp \a i might not correspond to vertex
+         * \a i of the triangulation.  The NCusp::vertex() method (which
+         * is accessed through the cusp() routine) can help translate
+         * between SnapPea's cusp numbers and Regina's vertex numbers.
+         *
+         * @param whichCusp the index of the cusp to permanently fill according
+         * to SnapPea; this must be between 0 and countCusps()-1 inclusive.
+         * @return the new filled triangulation or 0 if the filling was
+         * not possible (as described above).
+         */
+        NTriangulation* filledTriangulation(unsigned whichCusp) const;
+
+        /**
+         * Retriangulates to permanently fill all non-complete cusps.
+         * This uses the current Dehn filling coefficients on the cusps,
+         * as set by fill().
+         *
+         * If every cusp of this triangulation is complete, this routine
+         * will simply return a new clone of this triangulation.
+         *
+         * If some but not all cusps are complete, then the result will
+         * be a new instance of NSnapPeaTriangulation, and will have
+         * fewer cusps.  Note that the remaining cusps may be reindexed,
+         * and all NCusp structures will be destroyed and rebuilt.  Auxiliary
+         * information on the remaining cusps (such as peripheral curves)
+         * will be preserved, and SnapPea will automatically attempt to
+         * compute a hyperbolic structure on the new triangulation.
+         *
+         * If all cusps of this triangulation have filling coefficients
+         * assigned, then the result will be a new instance of NTriangulation
+         * (not NSnapPeaTriangulation), and will represent a closed manifold.
+         *
+         * Whatever happens, the result will be a newly allocated triangulation,
+         * and it is the responsibility of the caller of this routine to
+         * destroy it.  The original triangulation (this object) will be left
+         * unchanged.  If this is a null triangulation, then this routine
+         * will simply return 0.
+         *
+         * @return the new filled triangulation, or 0 if this is a null
+         * triangulation.
+         */
+        NTriangulation* filledTriangulation() const;
 
         /**
          * Returns a matrix for computing boundary slopes of
@@ -723,8 +960,9 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * algebraic intersection number with the longitude.
          *
          * If the triangulation has more than one cusp, these pairs are
-         * ordered by cusp index (as stored by SnapPea).  You can call
-         * cuspVertex() to map these to Regina's vertex indices if needed.
+         * ordered by cusp index (as stored by SnapPea).  You can examine
+         * <tt>cusp(cusp_number).vertex()</tt> to map these to Regina's
+         * vertex indices if needed.
          *
          * For the purposes of this routine, any fillings on the cusps of
          * this SnapPea triangulation will be ignored.
@@ -737,7 +975,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * Equivalently, the boundary curves pass <i>L.q</i> times around the
          * meridian and <i>-M.q</i> times around the longitude.
          * To compute these slopes directly from a normal surface, see
-         * NNormalSurface::boundarySlopes().
+         * NNormalSurface::boundaryIntersections().
          *
          * The orientations of the
          * boundary curves of a spun-normal surface are chosen so
@@ -769,26 +1007,196 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
 
         /*@}*/
         /**
+         * \name Algebraic Invariants
+         */
+        /*@{*/
+
+        /**
+         * Returns the first homology group of the manifold with respect
+         * to the current Dehn filling (if any).  Any complete cusps
+         * (without fillings) will be treated as though they had been
+         * truncated.
+         *
+         * This is different from the inherited getHomologyH1() routine from
+         * the parent NTriangulation class:
+         *
+         * - This routine homologyFilled() respects Dehn fillings, and uses
+         *   a combination of both SnapPea's and Regina's code to compute
+         *   homology groups.  There may be situations in which the SnapPea
+         *   kernel cannot perform its part of the computation (see below),
+         *   in which case this routine will return a null pointer.
+         *
+         * - The inherited getHomologyH1() routine uses only Regina's code, and
+         *   works purely within Regina's parent NTriangulation class.
+         *   Since NTriangulation knows nothing about SnapPea or fillings,
+         *   this means that any fillings on the cusps (which are
+         *   specific to SnapPea triangulations) will be ignored.
+         *   The getHomologyH1() routine will always return a solution.
+         *
+         * This routine uses exact arithmetic, and so you are guaranteed
+         * that - if it returns a result at all - that this result does
+         * not suffer from integer overflows.  Essentially, the process
+         * is this: SnapPea constructs a filled relation matrix using
+         * machine integer arithmetic (but detects overflow and returns
+         * \c null in such cases), and then Regina uses exact integer
+         * arithmetic to solve for the abelian group invariants (i.e.,
+         * Smith normal form).
+         *
+         * The situations in which this routine might return \c null are
+         * the following:
+         *
+         * - This is a null triangulation (i.e., isNull() returns \c true);
+         *
+         * - The filling coefficients as stored in SnapPea are integers,
+         *   but are so large that SnapPea was not able to build the
+         *   relation matrix without integer overflow.
+         *
+         * Note that each time the triangulation changes, the homology
+         * group will be deleted.  Thus the pointer that is returned
+         * from this routine should not be kept for later use.  Instead,
+         * homologyFilled() should be called again; this will be
+         * instantaneous if the group has already been calculated.
+         *
+         * @return the first homology group of the filled manifold, or
+         * 0 if this could not be computed.
+         */
+        const NAbelianGroup* homologyFilled() const;
+
+        /**
+         * Returns the fundamental group of the manifold with respect to
+         * the current Dehn filling (if any).  Any complete cusps (without
+         * fillings) will be treated as though they had been truncated.
+         *
+         * This is different from the inherited getFundamentalGroup() routine
+         * from the parent NTriangulation class:
+         *
+         * - This routine fundamentalGroupFilled() respects Dehn fillings, and
+         *   directly uses SnapPea's code to compute fundamental groups.
+         *
+         * - The inherited getFundamentalGroup() routine uses only Regina's
+         *   code, and works purely within Regina's parent NTriangulation class.
+         *   Since NTriangulation knows nothing about SnapPea or fillings,
+         *   this means that any fillings on the cusps (which are specific
+         *   to SnapPea triangulations) will be ignored.
+         *
+         * Note that each time the triangulation changes, the fundamental
+         * group will be deleted.  Thus the pointer that is returned
+         * from this routine should not be kept for later use.  Instead,
+         * fundamentalGroupFilled() should be called again; this will be
+         * instantaneous if the group has already been calculated.
+         *
+         * @param simplifyPresentation \c true if SnapPea should attempt
+         * to simplify the group presentation, or \c false if it should
+         * be left unsimplified.  Even if \a simplifyPresentation is \c false,
+         * this routine will always eliminate adjacent (x, x^-1) pairs.
+         * @param fillingsMayAffectGenerators \c true if SnapPea's choice of
+         * generators is allowed to depend on the Dehn fillings, or \c false
+         * if the choice of generators should be consistent across different
+         * fillings.
+         * @param minimiseNumberOfGenerators \c true if SnapPea's group
+         * simplification code should try to reduce the number of
+         * generators at the expense of increasing the total length of
+         * the relations, or \c false if it should do the opposite.
+         * @return the fundamental group of the filled manifold, or
+         * 0 if this could not be computed.
+         */
+        const NGroupPresentation* fundamentalGroupFilled(
+            bool simplifyPresentation = true,
+            bool fillingsMayAffectGenerators = true,
+            bool minimiseNumberOfGenerators = true) const;
+
+        /*@}*/
+        /**
          * \name Manipulating SnapPea triangulations
          */
         /*@{*/
 
         /**
-         * Constructs the canonical retriangulation of the canonical
-         * cell decomposition.
+         * Constructs the canonical cell decomposition, using an
+         * arbitrary retriangulation if this decomposition contains
+         * non-tetrahedron cells.
+         *
+         * Any fillings on the cusps of this SnapPea triangulation will be
+         * ignored for the purposes of canonisation, though they will be
+         * copied over to the new SnapPea triangulation that is returned.
          *
          * The canonical cell decomposition is the one described in
          * "Convex hulls and isometries of cusped hyperbolic 3-manifolds",
          * Jeffrey R. Weeks, Topology Appl. 52 (1993), 127-149.
-         * The canonical retriangulation is defined as follows: If the
-         * canonical cell decomposition is already a triangulation then
-         * we leave it untouched.  Otherwise: (i) within each 3-cell of
-         * the original complex we introduce a new internal (finite)
-         * vertex and cone the 3-cell boundary to this new vertex, and
-         * (ii) for each 2-cell of the original complex we replace the
-         * two new cones on either side with a ring of tetrahedra surrounding
-         * a new edge that connects the two new vertices on either side.
+         *
+         * If the canonical cell decomposition is already a triangulation then
+         * we leave it untouched, and otherwise we triangulate it arbitrarily.
+         * Either way, we preserve the hyperbolic structure.
+         *
+         * If you need a canonical triangulation (as opposed to an arbitrary
+         * retriangulation), then you should call canonize() instead.
+         *
+         * The resulting triangulation will be newly allocated, and it
+         * is the responsibility of the caller of this routine to destroy it.
+         *
+         * If for any reason either Regina or SnapPea are unable to
+         * construct a triangulation of the canonical cell decomposition,
+         * then this routine will return 0.
+         *
+         * \snappy The function <tt>canonize()</tt> means different
+         * things for SnapPy versus the SnapPea kernel.  Here Regina follows
+         * the naming convention used in the SnapPea kernel.  Specifically:
+         * Regina's routine NSnapPeaTriangulation::protoCanonize()
+         * corresponds to SnapPy's <tt>Manifold.canonize()</tt> and the
+         * SnapPea kernel's <tt>proto_canonize(manifold)</tt>.
+         * Regina's routine NSnapPeaTriangulation::canonize()
+         * corresponds to the SnapPea kernel's <tt>canonize(manifold)</tt>,
+         * and is not available through SnapPy at all.
+         *
+         * \warning The SnapPea kernel does not always compute the canonical
+         * cell decomposition correctly.  However, it guarantees that
+         * the manifold that it does compute is homeomorphic to the original.
+         *
+         * @return the canonical triangulation of the canonical cell
+         * decomposition, or 0 if this could not be constructed.
+         */
+        NSnapPeaTriangulation* protoCanonize() const;
+
+        /**
+         * A synonym for protoCanonize(), which constructs the canonical
+         * cell decomposition using an arbitrary retriangulation if necessary.
+         * See canonize() for further details.
+         */
+        NSnapPeaTriangulation* protoCanonise() const;
+
+        /**
+         * Constructs the canonical retriangulation of the canonical
+         * cell decomposition.
+         *
+         * Any fillings on the cusps of this SnapPea triangulation will be
+         * ignored.  In the resulting canonical triangulation (which is
+         * one of Regina's native NTriangulation objects, not a SnapPea
+         * triangulation), these fillings will be completely forgotten.
+         *
+         * The canonical cell decomposition is the one described in
+         * "Convex hulls and isometries of cusped hyperbolic 3-manifolds",
+         * Jeffrey R. Weeks, Topology Appl. 52 (1993), 127-149.
+         *
+         * If the canonical cell decomposition is already a triangulation
+         * then we leave it untouched.  Otherwise, the canonical
+         * retriangulation introduces internal (finite) vertices, and
+         * is defined as follows:
+         *
+         * - within each 3-cell of the original complex we introduce a new
+         *   internal vertex, and cone the 3-cell boundary to this new vertex;
+         *
+         * - through each 2-cell of the original complex we insert the
+         *   dual edge (joining the two new finite vertices on either side),
+         *   and we replace the two cones on either side of the 2-cell with
+         *   a ring of tetrahedra surrounding this dual edge.
+         *
          * See canonize_part_2.c in the SnapPea source code for details.
+         *
+         * This routine discards the hyperbolic structure along with all
+         * SnapPea-specific information (such as peripheral curves and
+         * fillings), and simply returns one of Regina's native triangulations.
+         * If you need to preserve SnapPea-specific information then you
+         * should call protoCanonize() instead.
          *
          * The resulting triangulation will be newly allocated, and it
          * is the responsibility of the caller of this routine to destroy it.
@@ -797,35 +1205,31 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * construct the canonical retriangulation of the canonical cell
          * decomposition, this routine will return 0.
          *
-         * \snappy This has no corresponding routine in SnapPy.  This is
-         * because, if the canonical cell decomposition is not a triangulation,
-         * SnapPy retriangulates in a way that is non-canonical but so
-         * that all vertices are ideal.
+         * \snappy The function <tt>canonize()</tt> means different
+         * things for SnapPy versus the SnapPea kernel.  Here Regina follows
+         * the naming convention used in the SnapPea kernel.  Specifically:
+         * Regina's routine NSnapPeaTriangulation::protoCanonize()
+         * corresponds to SnapPy's <tt>Manifold.canonize()</tt> and the
+         * SnapPea kernel's <tt>proto_canonize(manifold)</tt>.
+         * Regina's routine NSnapPeaTriangulation::canonize()
+         * corresponds to the SnapPea kernel's <tt>canonize(manifold)</tt>,
+         * and is not available through SnapPy at all.
          *
          * \warning The SnapPea kernel does not always compute the canonical
          * cell decomposition correctly.  However, it guarantees that
          * the manifold that it does compute is homeomorphic to the original.
          *
-         * \warning This matches the triangulation produced by SnapPea's
-         * version of canonize().  However, it does not match the
-         * triangulation produced by SnapPy's version of canonize().
-         * This is because SnapPy returns an arbitrary simplicial subdivision
-         * of the canonical cell decomposition, whereas SnapPea follows
-         * this with a canonical retriangulation.
-         *
-         * \pre This is an ideal triangulation, not a closed triangulation.
-         *
          * @return the canonical triangulation of the canonical cell
          * decomposition, or 0 if this could not be constructed.
          */
-        NSnapPeaTriangulation* canonize() const;
+        NTriangulation* canonize() const;
 
         /**
          * A synonym for canonize(), which constructs the canonical
          * retriangulation of the canonical cell decomposition.
          * See canonize() for further details.
          */
-        NSnapPeaTriangulation* canonise() const;
+        NTriangulation* canonise() const;
 
         /**
          * Asks SnapPea to randomly retriangulate this manifold, using
@@ -1007,9 +1411,36 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         /**
          * Synchronises the inherited NTriangulation data so that the
          * tetrahedra and their gluings match the raw SnapPea data.
-         * Also refreshes the internal arrays of cusps and tetrahedron shapes.
+         * Also refreshes other internal properties and caches,
+         * such as cusps and tetrahedron shapes.
+         *
+         * A change event will be fired by this routine (this will be a
+         * "safe" change event that does not void the triangulation).
+         *
+         * SnapPea will be asked to recompute the hyperbolic structure
+         * only if the current solution type is \a not_attempted.
          */
         void sync();
+
+        /**
+         * Like sync(), but assumes that \e only the filling coefficients
+         * have changed, and that all other data (such as the tetrahedron
+         * gluings, or peripheral curves on the cusps) is unchanged.
+         *
+         * Essentially this just extends fillingsHaveChanged() to also
+         * fire a (safe) change event.
+         */
+        void syncFillings();
+
+        /**
+         * Clears and where necessary refreshes any properties of the
+         * triangulation that depend only on the fillings.
+         *
+         * This routine assumes that the combinatorics of the triangulation
+         * have not changed.  It also assumes that SnapPea has already
+         * called do_Dehn_filling() (so this routine will not call it again).
+         */
+        void fillingsHaveChanged();
 
         /**
          * Copies the given SnapPea triangulation into the given Regina
@@ -1046,6 +1477,30 @@ inline SnapPeaFatalError::SnapPeaFatalError(
         function(fromFunction), file(fromFile) {
 }
 
+// Inline functions for NCusp
+
+inline NCusp::~NCusp() {
+}
+
+inline NCusp::NCusp() {
+}
+
+inline NVertex* NCusp::vertex() const {
+    return vertex_;
+}
+
+inline bool NCusp::complete() const {
+    return (m_ == 0 && l_ == 0);
+}
+
+inline int NCusp::m() const {
+    return m_;
+}
+
+inline int NCusp::l() const {
+    return l_;
+}
+
 // Inline functions for NSnapPeaTriangulation
 
 inline NSnapPeaTriangulation::NSnapPeaTriangulation() :
@@ -1074,19 +1529,19 @@ inline unsigned NSnapPeaTriangulation::countFilledCusps() const {
     return filledCusps_;
 }
 
-inline NVertex* NSnapPeaTriangulation::cuspVertex(unsigned cusp) const {
-    return (cusp_ ? cusp_[cusp].vertex : 0);
-}
-
-inline bool NSnapPeaTriangulation::cuspComplete(unsigned cusp) const {
-    return (cusp_ ? cusp_[cusp].complete : false);
+inline const NCusp* NSnapPeaTriangulation::cusp(unsigned whichCusp) const {
+    return (cusp_ ? cusp_ + whichCusp : 0);
 }
 
 inline bool NSnapPeaTriangulation::dependsOnParent() const {
     return false;
 }
 
-inline NSnapPeaTriangulation* NSnapPeaTriangulation::canonise() const {
+inline NSnapPeaTriangulation* NSnapPeaTriangulation::protoCanonise() const {
+    return protoCanonize();
+}
+
+inline NTriangulation* NSnapPeaTriangulation::canonise() const {
     return canonize();
 }
 

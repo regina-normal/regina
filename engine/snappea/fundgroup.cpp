@@ -32,27 +32,66 @@
 
 /* end stub */
 
-#include "triangulation/ncomponent.h"
-#include "triangulation/ntetrahedron.h"
+#include "snappea/nsnappeatriangulation.h"
+#include "snappea/kernel/SnapPea.h"
 
 namespace regina {
 
-void NComponent::writeTextShort(std::ostream& out) const {
-    if (tetrahedra_.size() == 1)
-        out << "Component with 1 tetrahedron";
-    else
-        out << "Component with " << getNumberOfTetrahedra() << " tetrahedra";
-}
+const NGroupPresentation* NSnapPeaTriangulation::fundamentalGroupFilled(
+            bool simplifyPresentation,
+            bool fillingsMayAffectGenerators,
+            bool minimiseNumberOfGenerators) const {
+    if (fundGroupFilled_.known())
+        return fundGroupFilled_.value();
+    if (! data_)
+        return 0;
 
-void NComponent::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
-    out << std::endl;
+    // Note: TRUE and FALSE are #defines in SnapPea, and so don't live in any
+    // namespace.  We avoid them here, and directly use 0 and 1 instead.
 
-    out << (tetrahedra_.size() == 1 ? "Tetrahedron:" : "Tetrahedra:");
-    std::vector<NTetrahedron*>::const_iterator it;
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it)
-        out << ' ' << (*it)->markedIndex();
-    out << std::endl;
+    // Pass all the work to SnapPea.
+    regina::snappea::GroupPresentation* pres =
+        regina::snappea::fundamental_group(data_,
+            (simplifyPresentation ? 1 : 0),
+            (fillingsMayAffectGenerators ? 1 : 0),
+            (minimiseNumberOfGenerators ? 1 : 0));
+
+    // Convert the results into Regina's NGroupPresentation class.
+    // Note that SnapPea gives a sequence of generators, whereas Regina
+    // gives a sequence of (generator, exponent) pairs.  Therefore we
+    // "compress" relations below to group consecutive occurrences of
+    // the same generator, even if simplifyPresentation is false.
+    NGroupPresentation* ans = new NGroupPresentation();
+    ans->addGenerator(regina::snappea::fg_get_num_generators(pres));
+    unsigned i;
+    int *sReln, *sPos;
+    int gen, currGen, currExp;
+    NGroupExpression* rReln;
+    for (i = 0; i < regina::snappea::fg_get_num_relations(pres); ++i) {
+        sReln = regina::snappea::fg_get_relation(pres, i);
+        rReln = new NGroupExpression();
+        currGen = currExp = 0;
+        for (sPos = sReln; *sPos; ++sPos) {
+            gen = (*sPos > 0 ? *sPos : -*sPos);
+            if (gen != currGen) {
+                if (currExp)
+                    rReln->addTermLast(currGen - 1, currExp);
+                currGen = gen;
+                currExp = 0;
+            }
+            if (*sPos > 0)
+                ++currExp;
+            else
+                --currExp;
+        }
+        if (currExp)
+            rReln->addTermLast(currGen - 1, currExp);
+        ans->addRelation(rReln);
+        regina::snappea::fg_free_relation(sReln);
+    }
+
+    regina::snappea::free_group_presentation(pres);
+    return (fundGroupFilled_ = ans);
 }
 
 } // namespace regina

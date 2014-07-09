@@ -1526,30 +1526,6 @@ void NTriGluingsUI::toSnapPea() {
                 "Klein bottle link."));
         return;
     }
-    if (tri->isIdeal()) {
-        if (tri->getNumberOfVertices() > tri->getNumberOfBoundaryComponents()) {
-            ReginaSupport::sorry(ui,
-                tr("I could not create a SnapPea triangulation."),
-                tr("<qt>This triangulation contains both ideal and internal "
-                    "vertices.  SnapPea requires every vertex to be ideal.<p>"
-                    "Please simplify the triangulation and try again.</qt>"));
-            return;
-        }
-    } else if (! ReginaPrefSet::global().snapPeaClosed) {
-        ReginaSupport::sorry(ui,
-            tr("I could not create a SnapPea triangulation."),
-            tr("By default, Regina does not send closed manifolds "
-                "to SnapPea.  You can change this behaviour through "
-                "Regina's preferences."));
-        return;
-    } else if (tri->getNumberOfVertices() > 1) {
-        ReginaSupport::sorry(ui,
-            tr("I could not create a SnapPea triangulation."),
-            tr("<qt>For closed manifolds, Regina will only send "
-                "one-vertex triangulations to SnapPea.<p>"
-                "Please simplify the triangulation and try again.</qt>"));
-        return;
-    }
 
     regina::NSnapPeaTriangulation* ans = new regina::NSnapPeaTriangulation(*tri,
         true /* allow closed, since we have already check this */);

@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Qt User Interface                                                    *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,28 +32,36 @@
 
 /* end stub */
 
-#include "triangulation/ncomponent.h"
-#include "triangulation/ntetrahedron.h"
+// UI includes:
+#include "columnlayout.h"
 
-namespace regina {
+#include <QFrame>
+#include <QLabel>
+#include <QTextDocument> // For Qt::escape().
 
-void NComponent::writeTextShort(std::ostream& out) const {
-    if (tetrahedra_.size() == 1)
-        out << "Component with 1 tetrahedron";
-    else
-        out << "Component with " << getNumberOfTetrahedra() << " tetrahedra";
+ColumnLayout::ColumnLayout() : QHBoxLayout(), empty_(true) {
 }
 
-void NComponent::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
-    out << std::endl;
-
-    out << (tetrahedra_.size() == 1 ? "Tetrahedron:" : "Tetrahedra:");
-    std::vector<NTetrahedron*>::const_iterator it;
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it)
-        out << ' ' << (*it)->markedIndex();
-    out << std::endl;
+ColumnLayout::ColumnLayout(QWidget* widget) :
+        QHBoxLayout(widget), empty_(true) {
 }
 
-} // namespace regina
+void ColumnLayout::addLayout(QLayout* layout, const QString& title) {
+    if (! empty_) {
+        QFrame* divider = new QFrame();
+        divider->setFrameStyle(QFrame::VLine | QFrame::Sunken);
+        addWidget(divider);
+    } else
+        empty_ = false;
 
+    QBoxLayout* col = new QVBoxLayout();
+
+    QLabel* label = new QLabel(QString("<qt><b>%1</b></qt>")
+        .arg(Qt::escape(title)));
+    label->setAlignment(Qt::AlignCenter);
+    col->addWidget(label);
+
+    col->addLayout(layout, 1);
+
+    QHBoxLayout::addLayout(col, 1);
+}

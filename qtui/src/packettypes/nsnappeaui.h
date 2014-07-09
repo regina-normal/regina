@@ -44,6 +44,7 @@
 class QToolBar;
 class NSnapPeaAlgebraUI;
 class NSnapPeaGluingsUI;
+class NSnapPeaShapesUI;
 class NTriSkeletonUI;
 class PacketEditIface;
 class QLabel;
@@ -62,6 +63,7 @@ class NSnapPeaUI : public PacketTabbedUI {
         /**
          * Internal components
          */
+        NSnapPeaShapesUI* shapes;
         NSnapPeaGluingsUI* gluings;
         NTriSkeletonUI* skeleton;
         NSnapPeaAlgebraUI* algebra;
@@ -119,7 +121,6 @@ class NSnapPeaHeaderUI : public PacketViewerTab {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         void refresh();
-        void editingElsewhere();
 
         /**
          * Allow other UIs to access the summary information.

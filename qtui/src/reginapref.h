@@ -57,7 +57,6 @@ class ReginaMain;
 class ReginaPrefCensus;
 class ReginaPrefGeneral;
 class ReginaPrefPython;
-class ReginaPrefSnapPea;
 class ReginaPrefSurfaces;
 class ReginaPrefTools;
 class ReginaPrefTri;
@@ -76,7 +75,6 @@ class ReginaPreferences : public QDialog {
         ReginaPrefSurfaces* surfacePrefs;
         ReginaPrefCensus* censusPrefs;
         ReginaPrefPython* pythonPrefs;
-        ReginaPrefSnapPea* snapPeaPrefs;
         ReginaPrefTools* toolsPrefs;
 
         // Needed for clicked() slot
@@ -184,23 +182,6 @@ class ReginaPrefPython : public QWidget {
 };
 
 /**
- * The page of the Regina configuration dialog that controls interaction
- * with the SnapPea kernel.
- */
-class ReginaPrefSnapPea : public QWidget {
-    Q_OBJECT
-
-    private:
-        QCheckBox* cbClosed;
-        QCheckBox* cbMessages;
-
-    public:
-        ReginaPrefSnapPea(QWidget* parent = 0);
-
-    friend class ReginaPreferences;
-};
-
-/**
  * The page of the Regina configuration dialog for configuring
  * third-party tools.
  */
@@ -208,6 +189,7 @@ class ReginaPrefTools: public QWidget {
     Q_OBJECT
 
     private:
+        QCheckBox* cbSnapPeaMessages;
         QCheckBox* cbDefaultPDFViewer;
         QLineEdit* editPDFViewer;
         QLabel* labelPDFViewer;

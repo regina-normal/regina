@@ -1566,9 +1566,9 @@ class REGINA_API NNormalSurface : public ShareableObject {
 
 #ifndef EXCLUDE_SNAPPEA
         /**
-         * Computes the boundary slopes of this surface at each cusp of
-         * the triangulation.  This is for use with spun-normal surfaces
-         * (since for closed surfaces all boundary slopes are zero).
+         * Computes the information about the boundary slopes of this surface
+         * at each cusp of the triangulation.  This is for use with spun-normal
+         * surfaces (since for closed surfaces all boundary slopes are zero).
          *
          * This routine is only available for use with SnapPea triangulations,
          * since it needs to know the specific meridian and longitude on each
@@ -1618,7 +1618,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * is not of type NSnapPeaTriangulation, or if it fails to meet the
          * preconditions outlined above).
          */
-        NMatrixInt* boundarySlopes() const;
+        NMatrixInt* boundaryIntersections() const;
 #endif // EXCLUDE_SNAPPEA
 
         /**

@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  KDE User Interface                                                    *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,28 +32,89 @@
 
 /* end stub */
 
-#include "triangulation/ncomponent.h"
-#include "triangulation/ntetrahedron.h"
+/*! \file ntrialgebra.h
+ *  \brief Provides an algebra viewer for triangulations.
+ */
+
+#ifndef __GROUPWIDGET_H
+#define __GROUPWIDGET_H
+
+#include <QWidget>
+
+class QLabel;
+class QListWidget;
 
 namespace regina {
+    class NPacket;
+    class NGroupPresentation;
+};
 
-void NComponent::writeTextShort(std::ostream& out) const {
-    if (tetrahedra_.size() == 1)
-        out << "Component with 1 tetrahedron";
-    else
-        out << "Component with " << getNumberOfTetrahedra() << " tetrahedra";
+/**
+ * A triangulation page for viewing the fundamental group.
+ */
+class GroupWidget : public QWidget {
+    Q_OBJECT
+
+    private:
+        const regina::NGroupPresentation* group_;
+        regina::NGroupPresentation* simplified_;
+
+        QWidget* ui_;
+        QLabel* fundName_;
+        QLabel* fundGens_;
+        QLabel* fundRelCount_;
+        QListWidget* fundRels_;
+        unsigned simpDepth_;
+
+    public:
+        /**
+         * Constructor.
+         */
+        GroupWidget(bool allowSimplify, bool paddingStretch);
+        ~GroupWidget();
+
+        /**
+         * Refresh the contents of the widget.
+         */
+        void refresh(const regina::NGroupPresentation* group);
+
+        /**
+         * The following routine drops ownership of simplified_ (it is
+         * assumed that the caller will claim ownership instead), and
+         * sets simplified_ to null.
+         */
+        regina::NGroupPresentation* takeSimplifiedGroup();
+
+    signals:
+        /**
+         * Indicates that the group presentation has been simplified.
+         * Other elements of the UI can use this signal to pass the
+         * simplified group presentation back to Regina's calculation engine.
+         */
+        void simplified();
+
+    public slots:
+        /**
+         * Group simplification actions.
+         */
+        void simplifyGAP();
+        /**
+         * Our internal pi1 simplification code.
+         */
+        void simplifyPi1();
+
+    private:
+        /**
+         * Returns the full path to the GAP executable, or QString::null
+         * if the GAP executable does not appear to be valid.
+         */
+        QString verifyGAPExec();
+};
+
+inline regina::NGroupPresentation* GroupWidget::takeSimplifiedGroup() {
+    regina::NGroupPresentation* ans = simplified_;
+    simplified_ = 0;
+    return ans;
 }
 
-void NComponent::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
-    out << std::endl;
-
-    out << (tetrahedra_.size() == 1 ? "Tetrahedron:" : "Tetrahedra:");
-    std::vector<NTetrahedron*>::const_iterator it;
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it)
-        out << ' ' << (*it)->markedIndex();
-    out << std::endl;
-}
-
-} // namespace regina
-
+#endif

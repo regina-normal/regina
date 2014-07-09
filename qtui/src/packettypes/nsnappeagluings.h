@@ -48,7 +48,7 @@ namespace regina {
 /**
  * A SnapPea triangulation page for viewing face gluings.
  */
-class NSnapPeaGluingsUI : public QObject, public PacketEditorTab {
+class NSnapPeaGluingsUI : public QObject, public PacketViewerTab {
     Q_OBJECT
 
     private:
@@ -64,55 +64,20 @@ class NSnapPeaGluingsUI : public QObject, public PacketEditorTab {
         QTableView* faceTable;
         GluingsModel* model;
 
-        /**
-         * Gluing actions
-         */
-        QAction* actRandomise;
-        QAction* actToRegina;
-        QLinkedList<QAction*> triActionList;
-        QLinkedList<QAction*> enableWhenWritable;
-        QLinkedList<QAction*> requiresNonNull;
-
     public:
         /**
          * Constructor and destructor.
          */
         NSnapPeaGluingsUI(regina::NSnapPeaTriangulation* packet,
-                PacketTabbedUI* useParentUI, bool readWrite);
+                PacketTabbedUI* useParentUI);
         ~NSnapPeaGluingsUI();
 
         /**
-         * Fill the given toolbar with triangulation actions.
-         *
-         * This is necessary since the toolbar will not be a part of
-         * this page, but this page (as the editor) keeps track of the
-         * available actions.
-         */
-        void fillToolBar(QToolBar* bar);
-
-        /**
-         * PacketEditorTab overrides.
+         * PacketViewerTab overrides.
          */
         regina::NPacket* getPacket();
         QWidget* getInterface();
-        const QLinkedList<QAction*>& getPacketTypeActions();
         void refresh();
-        void commit();
-        void setReadWrite(bool readWrite);
-
-    public slots:
-        /**
-         * Triangulation actions.
-         */
-        void randomise();
-        void vertexLinks();
-        void canonise();
-        void toRegina();
-
-        /**
-         * Update the states of internal components.
-         */
-        void updateNonNullActions();
 };
 
 #endif

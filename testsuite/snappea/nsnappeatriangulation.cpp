@@ -40,6 +40,8 @@
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
+
+#include "testsuite/exhaustive.h"
 #include "testsuite/snappea/testsnappea.h"
 
 using regina::NExampleTriangulation;
@@ -56,6 +58,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(flat);
     CPPUNIT_TEST(degenerate);
     CPPUNIT_TEST(spunBoundaries);
+    CPPUNIT_TEST(stability);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -148,10 +151,17 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             n4_9_2.insertRehydration("ebdbcdddcemre");
             n4_1_2_1.insertRehydration("eahbcdddjxxxj");
 
+            // Note: the non-orientable manifold below is the same as
+            // NExampleTriangulation::smallClosedNonOrblHyperbolic()),
+            // but if we build it from NExampleTriangulation then we
+            // seem to get a degenerate solution.  Using the isosig
+            // gives the same triangulation with a different labelling,
+            // which seems to prod SnapPea into finding a better
+            // (non_geometric) solution instead.
             copyAndDelete(closedHypOr,
                 NExampleTriangulation::smallClosedOrblHyperbolic());
-            copyAndDelete(closedHypNor,
-                NExampleTriangulation::smallClosedNonOrblHyperbolic());
+            copyAndDelete(closedHypNor, NTriangulation::fromIsoSig(
+                "lLLLALAQccegffiijkikkkknawmhvwcls"));
 
             copyAndDelete(weberSeifert,
                 NExampleTriangulation::weberSeifert());
@@ -301,59 +311,6 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             testIncompatible(edgeInvalid,
                 "A triangulation with two invalid edges "
                 "should not be representable in SnapPea format.");
-
-            CPPUNIT_ASSERT_MESSAGE(
-                "The small closed orientable hyperbolic triangulation "
-                "appears to have been incorrectly constructed.",
-                closedHypOr.isValid() &&
-                closedHypOr.isConnected() &&
-                closedHypOr.isOrientable() &&
-                (! closedHypOr.isIdeal()) &&
-                closedHypOr.isStandard() &&
-                (! closedHypOr.hasBoundaryTriangles()));
-            testIncompatible(closedHypOr,
-                "A closed orientable hyperbolic triangulation "
-                "should not be representable in SnapPea format.");
-
-            CPPUNIT_ASSERT_MESSAGE(
-                "The small closed non-orientable hyperbolic triangulation "
-                "appears to have been incorrectly constructed.",
-                closedHypNor.isValid() &&
-                closedHypNor.isConnected() &&
-                (! closedHypNor.isOrientable()) &&
-                (! closedHypNor.isIdeal()) &&
-                closedHypNor.isStandard() &&
-                (! closedHypNor.hasBoundaryTriangles()));
-            testIncompatible(closedHypNor,
-                "A closed non-orientable hyperbolic triangulation "
-                "should not be representable in SnapPea format.");
-
-            CPPUNIT_ASSERT_MESSAGE(
-                "The Weber-Seifert dodecahedral space "
-                "appears to have been incorrectly constructed.",
-                weberSeifert.isValid() &&
-                weberSeifert.isConnected() &&
-                weberSeifert.isOrientable() &&
-                (! weberSeifert.isIdeal()) &&
-                weberSeifert.isStandard() &&
-                (! weberSeifert.hasBoundaryTriangles()));
-            testIncompatible(weberSeifert,
-                "The Weber-Seifert dodecahedral space is closed, and so "
-                "should not be representable in SnapPea format.");
-
-            CPPUNIT_ASSERT_MESSAGE(
-                "The cusped solid torus with finite vertex "
-                "appears to have been incorrectly constructed.",
-                cuspedTorus.isValid() &&
-                cuspedTorus.isConnected() &&
-                cuspedTorus.isOrientable() &&
-                cuspedTorus.isIdeal() &&
-                cuspedTorus.isStandard() &&
-                (! cuspedTorus.hasBoundaryTriangles()) &&
-                cuspedTorus.getNumberOfTetrahedra() == 3);
-            testIncompatible(cuspedTorus,
-                "A cusped solid torus with an additional finite vertex "
-                "should not be representable in SnapPea format.");
         }
 
         void testVolume(NTriangulation& tri, const char* triName,
@@ -413,9 +370,9 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             testVolume(n4_9_2,   "N 4_9^2",   4.0597664256, 9);
             testVolume(n4_1_2_1, "N 4_1^2,1", 3.6638623767, 9);
 
-            // testVolume(closedHypOr, "or_0.94270736", 0.94270736, 7);
-            // testVolume(closedHypNor, "nor_2.02988321", 2.02988121, 7);
-            // testVolume(weberSeifert, "Weber-Seifert", 11.1990647, 6);
+            testVolume(closedHypOr, "or_0.94270736", 0.94270736, 7);
+            testVolume(closedHypNor, "nor_2.02988321", 2.02988321, 7);
+            testVolume(weberSeifert, "Weber-Seifert", 11.1990647, 6);
         }
 
         void testZeroVolume(const char* triName, double foundVol,
@@ -497,8 +454,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             testFlat(flatNor, "The non-orientable flat triangulation", 9);
         }
 
-        void testDegenerate(NTriangulation& tri, const char* triName,
-                int maxPlaces) {
+        void testDegenerate(NTriangulation& tri, const char* triName) {
             // Verify that the triangulation has a degenerate solution
             // and the volume is zero.  The volume is tested to whatever
             // precision is reported (up to a maximum of maxPlaces),
@@ -525,21 +481,17 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                     NSnapPeaTriangulation::degenerate_solution);
             }
 
-            int precision;
-            double foundVol = s.volume(precision);
-
-            // Dumb down the precision to our given maximum.
-            if (precision > maxPlaces)
-                precision = maxPlaces;
-
-            testZeroVolume(triName, foundVol, precision);
+            // Don't test volumes for degenerate solutions, since these
+            // can go all over the shop.
         }
 
         void degenerate() {
             testDegenerate(degenerateOr,
-                "The orientable degenerate triangulation", 9);
+                "The orientable degenerate triangulation");
             testDegenerate(degenerateNor,
-                "The non-orientable degenerate triangulation", 9);
+                "The non-orientable degenerate triangulation");
+            testDegenerate(cuspedTorus,
+                "A cusped solid torus with an additional finite vertex");
         }
 
         void spunBoundaries() {
@@ -557,10 +509,10 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             regina::NMatrixInt* m;
             bool found[4];
             for (int i = 0; i < s->getNumberOfSurfaces(); ++i) {
-                m = s->getSurface(i)->boundarySlopes();
+                m = s->getSurface(i)->boundaryIntersections();
                 if (m->rows() != 1 || m->columns() != 2) {
                     CPPUNIT_FAIL(
-                        "Figure 8 knot complement: boundarySlopes() "
+                        "Figure 8 knot complement: boundaryIntersections() "
                         "should give 1x2 matrices.");
                 }
                 if (m->entry(0, 0) == 1 && m->entry(0, 1) == 4)
@@ -573,7 +525,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                     found[3] = true;
                 else {
                     std::ostringstream msg;
-                    msg << "Figure 8 knot complement: boundarySlopes() "
+                    msg << "Figure 8 knot complement: boundaryIntersections() "
                         "gives unexpected result ("
                         << m->entry(0, 0) << ", " << m->entry(0, 1) << ").";
                     CPPUNIT_FAIL(msg.str());
@@ -597,6 +549,20 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             delete s;
             delete t;
             delete f8;
+        }
+
+        static void testStability(NTriangulation* tri) {
+            // Just make sure SnapPea can work with the triangulation
+            // without crashing.
+            NSnapPeaTriangulation s(*tri);
+            s.volume();
+            s.randomize();
+            s.volume();
+            NTriangulation t(s);
+        }
+
+        void stability() {
+            runCensusAllNoBdry(&testStability);
         }
 };
 

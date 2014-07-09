@@ -32,27 +32,37 @@
 
 /* end stub */
 
-#include "triangulation/ncomponent.h"
-#include "triangulation/ntetrahedron.h"
+#include "maths/nmatrixint.h"
+#include "snappea/nsnappeatriangulation.h"
+#include "snappea/kernel/kernel_prototypes.h"
 
 namespace regina {
 
-void NComponent::writeTextShort(std::ostream& out) const {
-    if (tetrahedra_.size() == 1)
-        out << "Component with 1 tetrahedron";
-    else
-        out << "Component with " << getNumberOfTetrahedra() << " tetrahedra";
-}
+const NAbelianGroup* NSnapPeaTriangulation::homologyFilled() const {
+    if (! data_)
+        return 0;
+    if (h1Filled_.known())
+        return h1Filled_.value();
 
-void NComponent::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
-    out << std::endl;
+    // Fetch the relation matrix from SnapPea.
+    regina::snappea::RelationMatrix sRelns;
+    regina::snappea::homology_presentation(data_, &sRelns);
+    if (! sRelns.relations)
+        return (h1Filled_ = 0);
 
-    out << (tetrahedra_.size() == 1 ? "Tetrahedron:" : "Tetrahedra:");
-    std::vector<NTetrahedron*>::const_iterator it;
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it)
-        out << ' ' << (*it)->markedIndex();
-    out << std::endl;
+    // Pass the relations to Regina.
+    NMatrixInt rRelns(sRelns.num_rows, sRelns.num_columns);
+    unsigned i, j;
+    for (i = 0; i < sRelns.num_rows; ++i)
+        for (j = 0; j < sRelns.num_columns; ++j)
+            rRelns.entry(i, j) = sRelns.relations[i][j];
+
+    regina::snappea::free_relations(&sRelns);
+
+    // Let Regina run Smith normal form.
+    NAbelianGroup* ans = new NAbelianGroup();
+    ans->addGroup(rRelns);
+    return (h1Filled_ = ans);
 }
 
 } // namespace regina
