@@ -6,6 +6,7 @@ SET ( FILES
   eltmovedialog
   facetgraphtab
   gaprunner
+  groupwidget
   nanglestructurecreator
   nanglestructureui
   ncompatcanvas
@@ -42,10 +43,11 @@ SET ( MOC_FILES
   dim2trigluings.h
   dim2triskeleton.h
   dim2triui.h
-  facetgraphtab.h
-  nanglestructureui.h
-  gaprunner.h
   eltmovedialog.h
+  facetgraphtab.h
+  gaprunner.h
+  groupwidget.h
+  nanglestructureui.h
   ncompatcanvas.h
   nnormalsurfaceui.h
   nscriptui.h

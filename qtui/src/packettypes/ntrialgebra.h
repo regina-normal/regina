@@ -41,7 +41,7 @@
 
 #include "../packettabui.h"
 
-class NTriFundGroupUI;
+class GroupWidget;
 class QLabel;
 class QLineEdit;
 class QListWidget;
@@ -57,12 +57,6 @@ namespace regina {
  * A triangulation page for viewing algebraic properties.
  */
 class NTriAlgebraUI : public PacketTabbedViewerTab {
-    private:
-        /**
-         * Internal components
-         */
-        NTriFundGroupUI* fundGroup;
-
     public:
         /**
          * Constructor.
@@ -123,12 +117,8 @@ class NTriFundGroupUI : public QObject, public PacketViewerTab {
          * Internal components
          */
         QWidget* ui;
-        QLabel* fundName;
-        QLabel* fundGens;
-        QLabel* fundRelCount;
-        QListWidget* fundRels;
-        QPushButton* btnGAP;
-        QPushButton* btnSimp;
+        QLabel* msg;
+        GroupWidget* group;
         unsigned simpDepth;
 
     public:
@@ -148,20 +138,9 @@ class NTriFundGroupUI : public QObject, public PacketViewerTab {
 
     public slots:
         /**
-         * Group simplification actions.
+         * Notify us that the presentation has been simplified.
          */
-        void simplifyGAP();
-        /**
-         * Our internal pi1 simplification code.
-         */
-        void simplifyPi1();
-
-    private:
-        /**
-         * Returns the full path to the GAP executable, or QString::null
-         * if the GAP executable does not appear to be valid.
-         */
-        QString verifyGAPExec();
+        void simplified();
 };
 
 /**
