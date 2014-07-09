@@ -74,11 +74,6 @@ class SurfaceModel : public QAbstractItemModel {
         unsigned nFiltered;
 
         /**
-         * Local modifications
-         */
-        QString* localName;
-
-        /**
          * Internal status
          */
         bool isReadWrite;
@@ -103,12 +98,6 @@ class SurfaceModel : public QAbstractItemModel {
         void rebuild(regina::NormalCoords coordSystem_);
         void rebuild(regina::NormalCoords coordSystem_,
             regina::NSurfaceFilter* filter);
-
-        /**
-         * Loading and saving local data from/to the packet.
-         */
-        void refreshNames();
-        void commitNames();
 
         /**
          * Updating read/write status.
@@ -183,12 +172,12 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
 
         /**
          * PacketEditorTab overrides.
+         * Note that refresh() is a slot now.
          */
         regina::NPacket* getPacket();
         QWidget* getInterface();
         const QLinkedList<QAction*>& getPacketTypeActions();
         void commit();
-        void refresh();
         void setReadWrite(bool readWrite);
 
         /**
@@ -198,10 +187,9 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
 
     public slots:
         /**
-         * Refill the table of surfaces whilst preserving local
-         * modifications.
+         * More PacketEditorTab overrides.
          */
-        void refreshLocal();
+        void refresh();
 
         /**
          * Surface list actions.
@@ -218,21 +206,10 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
          * Provides auto-resizing of columns.
          */
         void columnResized(int section, int oldSize, int newSize);
-
-        /**
-         * Notify us that a surface has been renamed.
-         */
-        void notifySurfaceRenamed();
-
-        /**
-         * Notify that preferences have changed.
-         */
-        void updatePreferences();
 };
 
 inline SurfaceModel::~SurfaceModel() {
     delete[] realIndex;
-    delete[] localName;
 }
 
 inline regina::NNormalSurfaceList* SurfaceModel::surfaces() const {
