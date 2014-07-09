@@ -67,7 +67,7 @@ GroupWidget::GroupWidget(bool allowSimplify) :
     layout->addWidget(fundRelCount_);
     fundRels_ = new QListWidget();
     fundRels_->setSelectionMode(QListWidget::NoSelection);
-    layout->addWidget(fundRels_, 1);
+    layout->addWidget(fundRels_, 3);
 
     layout->addStretch(1);
 
