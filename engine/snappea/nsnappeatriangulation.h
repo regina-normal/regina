@@ -752,6 +752,11 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          */
         NMatrixInt* gluingEquationsRect() const;
 
+        /**
+         * TODO.
+         */
+        bool verifyHyperbolicity(std::ostream& out, bool hex = false) const;
+
         /*@}*/
         /**
          * \name Cusps
