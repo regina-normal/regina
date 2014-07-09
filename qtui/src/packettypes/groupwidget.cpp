@@ -50,12 +50,13 @@
 #include <QPushButton>
 #include <QTextDocument> // For Qt::escape()
 
-GroupWidget::GroupWidget(bool allowSimplify) :
+GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) :
         QWidget(), group_(0), simplified_(0) {
     QBoxLayout* layout = new QVBoxLayout(this);
     simpDepth_ = 1;
 
-    layout->addStretch(1);
+    if (paddingStretch)
+        layout->addStretch(1);
 
     fundName_ = new QLabel();
     // fundName_->setAlignment(Qt::AlignCenter);
@@ -69,10 +70,10 @@ GroupWidget::GroupWidget(bool allowSimplify) :
     fundRels_->setSelectionMode(QListWidget::NoSelection);
     layout->addWidget(fundRels_, 3);
 
-    layout->addStretch(1);
-
     // The simplification buttons:
     if (allowSimplify) {
+        layout->addStretch(1);
+
         QLabel* label = new QLabel(tr("Try to simplify:"));
         label->setAlignment(Qt::AlignCenter);
         layout->addWidget(label);
@@ -111,7 +112,8 @@ GroupWidget::GroupWidget(bool allowSimplify) :
         buttonBox->addLayout(hLayout);
 
         layout->addLayout(buttonBox);
-    }
+    } else if (paddingStretch)
+        layout->addStretch(1);
 }
 
 GroupWidget::~GroupWidget() {

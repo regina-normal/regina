@@ -41,12 +41,8 @@
 
 #include "../packettabui.h"
 
-class NSnapPeaFundGroupUI;
+class GroupWidget;
 class QLabel;
-class QLineEdit;
-class QListWidget;
-class QTreeWidget;
-class QPushButton;
 
 namespace regina {
     class NPacket;
@@ -56,12 +52,27 @@ namespace regina {
 /**
  * A triangulation page for viewing algebraic properties.
  */
-class NSnapPeaAlgebraUI : public PacketTabbedViewerTab {
+class NSnapPeaAlgebraUI : public QObject, public PacketViewerTab {
     private:
+        /**
+         * Packet details
+         */
+        regina::NSnapPeaTriangulation* tri;
+
         /**
          * Internal components
          */
-        NSnapPeaFundGroupUI* fundGroup;
+        QWidget* ui;
+
+        QLabel* filledH1;
+        QLabel* unfilledH1;
+        GroupWidget* filledFundGroup;
+        GroupWidget* unfilledFundGroup;
+
+        QLabel* filledH1Title;
+        QLabel* unfilledH1Title;
+        QLabel* filledFundGroupTitle;
+        QLabel* unfilledFundGroupTitle;
 
     public:
         /**
@@ -69,34 +80,6 @@ class NSnapPeaAlgebraUI : public PacketTabbedViewerTab {
          */
         NSnapPeaAlgebraUI(regina::NSnapPeaTriangulation* packet,
                 PacketTabbedUI* useParentUI);
-};
-
-/**
- * A triangulation page for viewing homology groups.
- */
-class NSnapPeaHomologyUI : public PacketViewerTab {
-    private:
-        /**
-         * Packet details
-         */
-        regina::NSnapPeaTriangulation* tri;
-
-        /**
-         * Internal components
-         */
-        QWidget* ui;
-        QLabel* H1;
-        QLabel* H1Rel;
-        QLabel* H1Bdry;
-        QLabel* H2;
-        QLabel* H2Z2;
-
-    public:
-        /**
-         * Constructor.
-         */
-        NSnapPeaHomologyUI(regina::NSnapPeaTriangulation* packet,
-                PacketTabbedViewerTab* useParentUI);
 
         /**
          * PacketViewerTab overrides.
@@ -104,64 +87,6 @@ class NSnapPeaHomologyUI : public PacketViewerTab {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         void refresh();
-        void editingElsewhere();
-};
-
-/**
- * A triangulation page for viewing the fundamental group.
- */
-class NSnapPeaFundGroupUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
-    private:
-        /**
-         * Packet details
-         */
-        regina::NSnapPeaTriangulation* tri;
-
-        /**
-         * Internal components
-         */
-        QWidget* ui;
-        QLabel* fundName;
-        QLabel* fundGens;
-        QLabel* fundRelCount;
-        QListWidget* fundRels;
-        QPushButton* btnGAP;
-        QPushButton* btnSimp;
-        unsigned simpDepth;
-
-    public:
-        /**
-         * Constructor.
-         */
-        NSnapPeaFundGroupUI(regina::NSnapPeaTriangulation* packet,
-                PacketTabbedViewerTab* useParentUI);
-
-        /**
-         * PacketViewerTab overrides.
-         */
-        regina::NPacket* getPacket();
-        QWidget* getInterface();
-        void refresh();
-        void editingElsewhere();
-
-    public slots:
-        /**
-         * Group simplification actions.
-         */
-        void simplifyGAP();
-        /**
-         * Our internal pi1 simplification code.
-         */
-        void simplifyPi1();
-
-    private:
-        /**
-         * Returns the full path to the GAP executable, or QString::null
-         * if the GAP executable does not appear to be valid.
-         */
-        QString verifyGAPExec();
 };
 
 #endif

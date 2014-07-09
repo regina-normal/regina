@@ -70,7 +70,7 @@ class GroupWidget : public QWidget {
         /**
          * Constructor.
          */
-        GroupWidget(bool allowSimplify);
+        GroupWidget(bool allowSimplify, bool paddingStretch);
         ~GroupWidget();
 
         /**
