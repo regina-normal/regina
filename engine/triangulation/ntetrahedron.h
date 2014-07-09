@@ -700,6 +700,7 @@ inline const std::string& NTetrahedron::getDescription() const {
 }
 
 inline void NTetrahedron::setDescription(const std::string& desc) {
+    NPacket::ChangeEventSpan span(tri_);
     description_ = desc;
 }
 
