@@ -242,7 +242,8 @@ void NTriHomologyFundUI::refresh() {
         fgGroup->show();
     } else {
         fgGroup->hide();
-        fgMsg->setText(tr("Cannot calculate\n(disconnected triangulation)"));
+        fgMsg->setText(tr("<qt>Cannot calculate<p>"
+            "(disconnected triangulation)</qt>"));
         fgMsg->show();
     }
 }
