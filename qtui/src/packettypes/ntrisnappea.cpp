@@ -200,20 +200,6 @@ void NTriSnapPeaUI::refresh() {
     }
 }
 
-void NTriSnapPeaUI::editingElsewhere() {
-    ui->setCurrentWidget(dataValid);
-
-    QString msg(tr("Editing..."));
-
-    solutionType->setText(msg);
-    solutionType->setEnabled(false);
-    solutionTypeLabel->setWhatsThis(solutionTypeExplnBase);
-    solutionType->setWhatsThis(solutionTypeExplnBase);
-
-    volume->setText(msg);
-    volume->setEnabled(false);
-}
-
 void NTriSnapPeaUI::toSnapPea() {
     if (! snappeaTri) {
         // This should never happen, but...

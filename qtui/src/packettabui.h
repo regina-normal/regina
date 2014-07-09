@@ -169,12 +169,6 @@ class PacketTabbedUI : public QObject, public PacketUI {
         virtual void refresh();
         virtual void setReadWrite(bool readWrite);
 
-        /**
-         * Notify all viewer pages that the packet is currently being
-         * edited.
-         */
-        void notifyEditing();
-
     public slots:
         /**
          * Notification that a new tab has been selected.
@@ -191,16 +185,11 @@ class PacketTabbedUI : public QObject, public PacketUI {
  * A single read-only page within a tabbed packet interface.  See the
  * PacketTabbedUI class notes for further details.
  *
- * When the underlying packet starts being edited within another page of
- * the tabbed packet interface, the routine editingElsewhere() will be
- * called for each viewer tab.  This allows viewer tabs to replace their
- * usual displays with "under construction" notices if necessary.
+ * If the underlying packet is modified (either through the editor page
+ * or from elsewhere), then refresh() will be called for each viewer tab,
+ * at which point tabs can update their displays in the usual fashion.
  *
- * Once these changes are committed within the editor page, refresh()
- * will be called for each viewer tab, at which point tabs can update
- * their displays in the usual fashion.
- *
- * Calls to refresh() and editingElsewhere() will, where possible, be
+ * Calls to refresh() will, where possible, be
  * delayed until just before a viewer is made visible.  In all cases, a
  * viewer page will be refreshed at some point in time before being made
  * visible.  Thus it is not necessary to fill the interface items with
@@ -210,7 +199,7 @@ class PacketTabbedUI : public QObject, public PacketUI {
  * case where it is never made visible).
  *
  * Subclasses should only need to reimplement the virtual routines
- * getPacket(), getInterface(), refresh() and perhaps editingElsewhere().
+ * getPacket(), getInterface(), and refresh().
  */
 class PacketViewerTab : public PacketReadOnlyUI {
     private:
@@ -218,7 +207,7 @@ class PacketViewerTab : public PacketReadOnlyUI {
          * Events that can be delayed until just before the viewer
          * is made visible.
          */
-        enum Action { None = 0, Refresh, EditingElsewhere };
+        enum Action { None = 0, Refresh };
 
         /**
          * External components
@@ -237,16 +226,6 @@ class PacketViewerTab : public PacketReadOnlyUI {
          */
         PacketViewerTab(PacketTabbedUI* useParentUI);
         PacketViewerTab(PacketTabbedViewerTab* useParentUI);
-
-        /**
-         * Updates the interface components in this page to reflect the
-         * fact that the packet is currently being edited from another
-         * page, and that these changes have not yet been committed.
-         *
-         * The default implementation does nothing, i.e., leaves the
-         * display for this page unchanged.
-         */
-        virtual void editingElsewhere();
 
         /**
          * PacketUI overrides.
@@ -387,7 +366,6 @@ class PacketTabbedViewerTab : public QObject, public PacketViewerTab {
         virtual regina::NPacket* getPacket();
         virtual QWidget* getInterface();
         virtual void refresh();
-        virtual void editingElsewhere();
 
     public slots:
         /**
@@ -412,9 +390,6 @@ inline PacketViewerTab::PacketViewerTab(PacketTabbedUI* useParentUI) :
 inline PacketViewerTab::PacketViewerTab(PacketTabbedViewerTab* useParentUI) :
         PacketReadOnlyUI(useParentUI->getEnclosingPane()),
         parentUI(useParentUI), queuedAction(None) {
-}
-
-inline void PacketViewerTab::editingElsewhere() {
 }
 
 inline QString PacketViewerTab::getPacketMenuText() const {

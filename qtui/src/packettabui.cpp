@@ -219,20 +219,6 @@ void PacketTabbedUI::setReadWrite(bool readWrite) {
         editorTab->setReadWrite(readWrite);
 }
 
-void PacketTabbedUI::notifyEditing() {
-    if (header)
-        header->editingElsewhere();
-
-    for (ViewerIterator it = viewerTabs.begin(); it != viewerTabs.end(); it++)
-        if (*it) {
-            if (*it == visibleViewer) {
-                (*it)->editingElsewhere();
-                (*it)->queuedAction = PacketViewerTab::None;
-            } else
-                (*it)->queuedAction = PacketViewerTab::EditingElsewhere;
-        }
-}
-
 void PacketTabbedUI::notifyTabSelected(int newTab) {
     // Remember this tab for next time.
     if (rememberTabSelection_)
@@ -249,17 +235,11 @@ void PacketTabbedUI::notifyTabSelected(int newTab) {
     if (visibleViewer) {
         if (visibleViewer->queuedAction == PacketViewerTab::Refresh)
             visibleViewer->refresh();
-        else if (visibleViewer->queuedAction ==
-                PacketViewerTab::EditingElsewhere)
-            visibleViewer->editingElsewhere();
         visibleViewer->queuedAction = PacketViewerTab::None;
     }
 }
 
 void PacketEditorTab::setDirty(bool newDirty) {
-    if (newDirty)
-        parentUI->notifyEditing();
-
     PacketUI::setDirty(newDirty);
 }
 
@@ -346,18 +326,6 @@ void PacketTabbedViewerTab::refresh() {
     setDirty(false);
 }
 
-void PacketTabbedViewerTab::editingElsewhere() {
-    if (header)
-        header->editingElsewhere();
-
-    for (ViewerIterator it = viewerTabs.begin(); it != viewerTabs.end(); it++)
-        if (*it == visibleViewer) {
-            (*it)->editingElsewhere();
-            (*it)->queuedAction = PacketViewerTab::None;
-        } else
-            (*it)->queuedAction = PacketViewerTab::EditingElsewhere;
-}
-
 void PacketTabbedViewerTab::notifyTabSelected(int newTab) {
     // Remember this tab for next time.
     if (rememberTabSelection_)
@@ -373,8 +341,6 @@ void PacketTabbedViewerTab::notifyTabSelected(int newTab) {
     // Perform any pending actions.
     if (visibleViewer->queuedAction == PacketViewerTab::Refresh)
         visibleViewer->refresh();
-    else if (visibleViewer->queuedAction == PacketViewerTab::EditingElsewhere)
-        visibleViewer->editingElsewhere();
     visibleViewer->queuedAction = PacketViewerTab::None;
 }
 

@@ -144,11 +144,6 @@ void SkeletonWindow::refresh() {
     table->header()->resizeSections(QHeaderView::ResizeToContents);
 }
 
-void SkeletonWindow::editingElsewhere() {
-    setWindowTitle(tr("Editing triangulation..."));
-    model->makeEmpty();
-}
-
 void SkeletonWindow::packetWasChanged(regina::NPacket*) {
     refresh();
 }
