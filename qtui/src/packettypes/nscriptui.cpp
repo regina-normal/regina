@@ -39,6 +39,7 @@
 
 // UI includes:
 #include "bigwidget.h"
+#include "docregistry.h"
 #include "nscriptui.h"
 #include "packetchooser.h"
 #include "packeteditiface.h"
@@ -68,6 +69,8 @@ using regina::NPacket;
 using regina::NScript;
 
 namespace {
+    static DocRegistry<NScript> registry;
+
     QRegExp rePythonIdentifier("^[A-Za-z_][A-Za-z0-9_]*$");
 }
 
@@ -279,30 +282,30 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
    
     // --- Text Editor ---
 
-    document = new QPlainTextEdit(splitter);
-    // Prepare the components.
-    document->setReadOnly(!readWrite);
-    document->setLineWrapMode(QPlainTextEdit::NoWrap);
-    document->setFont(ReginaPrefSet::fixedWidthFont());
+    editWidget = new QPlainTextEdit(splitter);
+    editWidget->setDocument(registry.acquire(script));
+    editWidget->setReadOnly(!readWrite);
+    editWidget->setLineWrapMode(QPlainTextEdit::NoWrap);
+    editWidget->setFont(ReginaPrefSet::fixedWidthFont());
     updateTabWidth();
 
 #if ! (NO_SRCHILITE)
     srchiliteqt::Qt4SyntaxHighlighter* highlighter =
-        new srchiliteqt::Qt4SyntaxHighlighter(document->document());
+        new srchiliteqt::Qt4SyntaxHighlighter(editWidget->document());
     highlighter->init("python.lang", "default.style");
 #endif
 
-    document->setFocus();
-    document->setWhatsThis(tr("Type the Python script into this "
+    editWidget->setFocus();
+    editWidget->setWhatsThis(tr("Type the Python script into this "
         "area.  Any variables listed in the table above will be "
         "set before the script is run."));
 
-    editIface = new PacketEditTextEditor(document);
+    editIface = new PacketEditTextEditor(editWidget);
 
-    splitter->addWidget(document);
+    splitter->addWidget(editWidget);
 
-    splitter->setTabOrder(document, varTable);
-    ui->setFocusProxy(document);
+    splitter->setTabOrder(editWidget, varTable);
+    ui->setFocusProxy(editWidget);
 
     // --- Script Actions ---
 
@@ -383,12 +386,6 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
     // varTable->horizontalHeader()->resizeSections(
     //     QHeaderView::ResizeToContents);
 
-    // Notify us of any changes.
-    connect(varTable, SIGNAL(itemChanged(QTableWidgetItem*)),
-        this, SLOT(notifyScriptChanged()));
-    connect(document, SIGNAL(textChanged()),
-        this, SLOT(notifyScriptChanged()));
-
     // Notify us if the preferences (e.g., the default fixed-width font)
     // change.
     connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
@@ -396,17 +393,19 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
 }
 
 NScriptUI::~NScriptUI() {
+    script->setText(editWidget->toPlainText().toAscii().constData());
+    registry.release(script);
+
     // Make sure the actions, including separators, are all deleted.
     for (QLinkedList<QAction*>::iterator it = scriptActionList.begin() ;
             it != scriptActionList.end(); it++ )
         delete *it;
 
-
     // Clean up.
     delete nameDelegate;
     delete valueDelegate;
     delete editIface;
-    delete document;
+    delete editWidget;
 }
 
 NPacket* NScriptUI::getPacket() {
@@ -425,13 +424,14 @@ QString NScriptUI::getPacketMenuText() const {
     return tr("S&cript");
 }
 
+/*
 void NScriptUI::commit() {
     // Finish whatever edit was going on in the table.
     varTable->endEdit();
 
     // Update the text.
     // TODO: Add trailing newline if we don't have one.
-    script->setText(document->toPlainText().toAscii().constData());
+    // script->setText(editWidget->toPlainText().toAscii().constData());
 
 
     // Update the variables.
@@ -445,6 +445,7 @@ void NScriptUI::commit() {
             varTable->item(i, 0)->text().toAscii().constData(), value);
     }
 }
+*/
 
 void NScriptUI::refresh() {
     // Refresh the variables.
@@ -460,8 +461,8 @@ void NScriptUI::refresh() {
     }
 
     // Refresh the text.
-    document->setPlainText(script->getText().c_str());
-    document->moveCursor(QTextCursor::Start);
+    editWidget->setPlainText(script->getText().c_str());
+    editWidget->moveCursor(QTextCursor::Start);
 }
 
 void NScriptUI::setReadWrite(bool readWrite) {
@@ -470,7 +471,7 @@ void NScriptUI::setReadWrite(bool readWrite) {
     else
         varTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    document->setReadOnly(!readWrite);
+    editWidget->setReadOnly(!readWrite);
     actAdd->setEnabled(readWrite);
     updateRemoveState();
 }
@@ -556,7 +557,7 @@ void NScriptUI::updateRemoveState() {
 
 void NScriptUI::compile() {
     if (enclosingPane->getMainWindow()->getPythonManager().compileScript(ui,
-            document->toPlainText() + "\n\n") == 0) {
+            editWidget->toPlainText() + "\n\n") == 0) {
         #ifdef BOOST_PYTHON_FOUND
         ReginaSupport::success(ui,
             tr("The script compiles successfully."));
@@ -583,20 +584,16 @@ void NScriptUI::execute() {
 
     // Run the script.
     enclosingPane->getMainWindow()->getPythonManager().launchPythonConsole(ui,
-            document->toPlainText() + "\n\n", vars);
-}
-
-void NScriptUI::notifyScriptChanged() {
-    // TODO setDirty(true);
+            editWidget->toPlainText() + "\n\n", vars);
 }
 
 void NScriptUI::updatePreferences() {
-    document->setFont(ReginaPrefSet::fixedWidthFont());
+    editWidget->setFont(ReginaPrefSet::fixedWidthFont());
     updateTabWidth();
 }
 
 void NScriptUI::updateTabWidth() {
-    document->setTabStopWidth(
-        QFontMetrics(document->font()).width('x') *
+    editWidget->setTabStopWidth(
+        QFontMetrics(editWidget->font()).width('x') *
         ReginaPrefSet::global().pythonSpacesPerTab);
 }

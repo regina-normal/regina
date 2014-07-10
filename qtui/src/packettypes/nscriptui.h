@@ -167,7 +167,7 @@ class NScriptUI : public QObject, public PacketUI {
         ScriptVarTable* varTable;
         QStyledItemDelegate* nameDelegate;
         QStyledItemDelegate* valueDelegate;
-        QPlainTextEdit* document;
+        QPlainTextEdit* editWidget;
         PacketEditIface* editIface;
 
         /**
@@ -192,7 +192,6 @@ class NScriptUI : public QObject, public PacketUI {
         PacketEditIface* getEditIface();
         const QLinkedList<QAction*>& getPacketTypeActions();
         QString getPacketMenuText() const;
-        void commit();
         void refresh();
         void setReadWrite(bool readWrite);
 
@@ -214,12 +213,6 @@ class NScriptUI : public QObject, public PacketUI {
          */
         void compile();
         void execute();
-
-        /**
-         * Called whenever the script or its variables within the interface
-         * changes.
-         */
-        void notifyScriptChanged();
 
         /**
          * Notify this interface that the global preferences have been
