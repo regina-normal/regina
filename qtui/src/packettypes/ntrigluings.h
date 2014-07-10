@@ -68,7 +68,7 @@ class GluingsModel : public QAbstractItemModel {
 
     public:
         /**
-         * Constructor and destructor.
+         * Constructor.
          */
         GluingsModel(regina::NTriangulation* tri, bool readWrite);
 
