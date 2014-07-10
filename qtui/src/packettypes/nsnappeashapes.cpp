@@ -69,8 +69,7 @@ void CuspModel::rebuild() {
 
 QModelIndex CuspModel::index(int row, int column,
         const QModelIndex& parent) const {
-    return createIndex(row, column,
-        quint32(columnCount(parent) * row + column));
+    return createIndex(row, column, quint32(3 * row + column));
 }
 
 int CuspModel::rowCount(const QModelIndex& /* unused parent*/) const {
