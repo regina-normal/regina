@@ -75,16 +75,15 @@ struct PacketInfo<PACKET_SCRIPT> {
  * A packet representing a Python script that can be run.
  * Accessor methods for a script work a line at a time.
  *
- * As of Regina 4.95, variables are now stored as pointers to packets, not
- * packet labels.  This affects how variables react to changes in the
- * packets that they point to.  In particular, if a variable \a V points to
- * some packet \a P, then as of Regina 4.95:
+ * Variables are stored as pointers to packets, not packet labels.
+ * This affects how variables react to changes in the packets that they
+ * point to.  In particular, if a variable \a V points to some packet \a P,
+ * then:
  *
  * - if \a P is renamed then \a V will still point to it and the script will
- *   \e not notify listeners of any changes (though of course \a P will
- *   still notify its own listeners);
+ *   notify listeners that the script has changed;
  * - if \a P is deleted then \a V will take the value \c None, and the script
- *   \e will notify listeners of the change.
+ *   will likewise notify listeners of the change.
  */
 class REGINA_API NScript : public NPacket, public NPacketListener {
     REGINA_PACKET(NScript, PACKET_SCRIPT)
@@ -222,6 +221,7 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
             NXMLTreeResolver& resolver);
         virtual bool dependsOnParent() const;
 
+        virtual void packetWasRenamed(NPacket* packet);
         virtual void packetToBeDestroyed(NPacket* packet);
 
     protected:

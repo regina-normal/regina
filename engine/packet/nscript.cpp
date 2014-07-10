@@ -135,6 +135,13 @@ void NScript::writeXMLPacketData(std::ostream& out) const {
     out << "  <text>" << xmlEncodeSpecialChars(text) << "</text>\n";
 }
 
+void NScript::packetWasRenamed(NPacket*) {
+    // We assume that the packet that was renamed is one of the
+    // variables for this packet.
+    // There is nothing to update here; just fire the update.
+    ChangeEventSpan span(this);
+}
+
 void NScript::packetToBeDestroyed(NPacket* packet) {
     // We know the script will change, because one of our variables is
     // listening on this packet.

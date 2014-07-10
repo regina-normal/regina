@@ -131,6 +131,8 @@ Version 4.96  [ (under development) ]
               (see below) and also the XML file format.  Whilst Regina
               has removed much of the functionality for working line-by-line,
               it can still read older files that were stored that way.
+            - A script now fires a change event if one of its variables
+              changes its packet label.
             - New routines getText(), setText() and append().
             - New routine setVariableName() and setVariableValue().
             - Removed routines getLine(), getNumberOfLines(), addFirst(),
