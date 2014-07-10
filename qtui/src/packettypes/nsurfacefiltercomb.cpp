@@ -146,9 +146,9 @@ NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
     */
 
     // Final tidying up.
-    // Connect to one of the radio buttons, not the button group, so that
-    // we only get notified when a real change occurs.
-    connect(typeAnd, SIGNAL(toggled(bool)),
+    // Connect to the button group, so that we only get notified when a
+    // user-initiated change occurs (i.e., not when refresh() changes things).
+    connect(boolType, SIGNAL(buttonClicked(int)),
         this, SLOT(notifyBoolTypeChanged()));
     filter->listen(this);
 }
