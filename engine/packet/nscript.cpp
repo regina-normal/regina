@@ -84,14 +84,13 @@ void NScript::writeTextLong(std::ostream& o) const {
                 o << "(null)" << '\n';
         }
     }
-    o << '\n';
-    copy(lines.begin(), lines.end(),
-        std::ostream_iterator<std::string>(o, "\n"));
+    o << '\n' << text;
 }
 
 NPacket* NScript::internalClonePacket(NPacket*) const {
     NScript* ans = new NScript();
     ans->lines = lines;
+    ans->text = text;
     ans->variables = variables;
     return ans;
 }

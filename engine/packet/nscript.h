@@ -92,11 +92,15 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
     private:
         std::vector<std::string> lines;
             /**< An array storing the lines of this script; none of
-             *   these strings should contain newlines. */
+                 these strings should contain newlines. */
+        std::string text;
+            /**< The complete text of this script, including newlines.
+                 Storing both lines and text is redundant; eventually
+                 the lines array will be removed entirely. */
         std::map<std::string, NPacket*> variables;
             /**< A map storing the variables with which this script
-             *   is to be run.  Variable names are mapped to their
-             *   corresponding values. */
+                 is to be run.  Variable names are mapped to their
+                 corresponding values. */
 
     public:
         /**
@@ -105,19 +109,12 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
         NScript();
 
         /**
-         * Returns the number of lines in this script.
+         * Returns the complete text of this script.
          *
-         * @return the number of lines.
+         * Variables are not included; you must fetch them separately
+         * through other member functions.
          */
-        unsigned long getNumberOfLines() const;
-        /**
-         * Returns the requested line of this script.
-         *
-         * @param index the index of the requested line; this must be
-         * between 0 and getNumberOfLines()-1 inclusive.
-         * @return the requested line.
-         */
-        const std::string& getLine(unsigned long index) const;
+        const std::string& getText() const;
 
         /**
          * Adds the given line to the beginning of this script.
@@ -131,30 +128,6 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
          * @param line the line to add.
          */
         void addLast(const std::string& line);
-        /**
-         * Inserts the given line into the given position in this script.
-         * All subsequent lines will be shifted down to make room.
-         *
-         * @param line the line to insert.
-         * @param index the index at which the new line will be placed;
-         * this must be between 0 and getNumberOfLines() inclusive.
-         */
-        void insertAtPosition(const std::string& line, unsigned long index);
-        /**
-         * Replaces a line of this script with the given line.
-         *
-         * @param line the line to replace the currently stored line.
-         * @param index the index of the line to replace; this must be
-         * between 0 and getNumberOfLines()-1 inclusive.
-         */
-        void replaceAtPosition(const std::string& line, unsigned long index);
-        /**
-         * Removes the requested line from this script.
-         *
-         * @param index the index of the requested line; this must be
-         * between 0 and getNumberOfLines()-1 inclusive.
-         */
-        void removeLineAt(unsigned long index);
         /**
          * Removes all lines from this script.
          */
@@ -246,38 +219,24 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
 inline NScript::NScript() {
 }
 
-inline unsigned long NScript::getNumberOfLines() const {
-    return lines.size();
-}
-inline const std::string& NScript::getLine(unsigned long index) const {
-    return lines[index];
+inline const std::string& NScript::getText() const {
+    return text;
 }
 
 inline void NScript::addFirst(const std::string& line) {
     ChangeEventSpan span(this);
     lines.insert(lines.begin(), line);
+    text = line + '\n' + text;
 }
 inline void NScript::addLast(const std::string& line) {
     ChangeEventSpan span(this);
     lines.push_back(line);
-}
-inline void NScript::insertAtPosition(const std::string& line,
-        unsigned long index) {
-    ChangeEventSpan span(this);
-    lines.insert(lines.begin() + index, line);
-}
-inline void NScript::replaceAtPosition(const std::string& line,
-        unsigned long index) {
-    ChangeEventSpan span(this);
-    lines[index] = line;
-}
-inline void NScript::removeLineAt(unsigned long index) {
-    ChangeEventSpan span(this);
-    lines.erase(lines.begin() + index);
+    text = text + line + '\n';
 }
 inline void NScript::removeAllLines() {
     ChangeEventSpan span(this);
     lines.clear();
+    text.clear();
 }
 
 inline unsigned long NScript::getNumberOfVariables() const {

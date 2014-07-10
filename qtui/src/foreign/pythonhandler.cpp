@@ -167,11 +167,7 @@ bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
     endl(out);
     out << "### " << endMetadataMarker;
     endl(out);
-
-    for (i = 0; i < script->getNumberOfLines(); i++) {
-        out << QString(script->getLine(i).c_str());
-        endl(out);
-    }
+    out << script->getText().c_str();
 
     // All done!
     return true;

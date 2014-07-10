@@ -84,12 +84,6 @@ class NTextUI : public QObject, public PacketUI {
         void commit();
         void refresh();
         void setReadWrite(bool readWrite);
-
-    public slots:
-        /**
-         * Called whenever the text in the interface changes.
-         */
-        void notifyTextChanged();
 };
 
 inline PacketEditIface* NTextUI::getEditIface() {

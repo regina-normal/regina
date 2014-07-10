@@ -48,14 +48,10 @@ namespace {
 void addNScript() {
     scope s = class_<NScript, bases<regina::NPacket>,
             std::auto_ptr<NScript>, boost::noncopyable>("NScript", init<>())
-        .def("getNumberOfLines", &NScript::getNumberOfLines)
-        .def("getLine", &NScript::getLine,
+        .def("getText", &NScript::getText,
             return_value_policy<return_by_value>())
         .def("addFirst", &NScript::addFirst)
         .def("addLast", &NScript::addLast)
-        .def("insertAtPosition", &NScript::insertAtPosition)
-        .def("replaceAtPosition", &NScript::replaceAtPosition)
-        .def("removeLineAt", &NScript::removeLineAt)
         .def("removeAllLines", &NScript::removeAllLines)
         .def("getNumberOfVariables", &NScript::getNumberOfVariables)
         .def("getVariableName", &NScript::getVariableName,

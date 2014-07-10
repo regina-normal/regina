@@ -67,12 +67,11 @@ NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane) :
     layout->addWidget(editWidget, 1);
 
     refresh();
-
-    connect(editWidget, SIGNAL(textChanged()), this, SLOT(notifyTextChanged()));
 }
 
 NTextUI::~NTextUI() {
 //    delete editIface;
+    text->setText(editWidget->toPlainText().toAscii().constData());
     registry.release(text);
     delete ui;
 }
@@ -90,34 +89,16 @@ QString NTextUI::getPacketMenuText() const {
 }
 
 void NTextUI::commit() {
-    text->setText(editWidget->toPlainText().toAscii().constData());
     setDirty(false);
 }
 
 void NTextUI::refresh() {
-    editWidget->clear();
-
-    // Back to all-at-once insertion instead of line-by-line insertion.
-    // Grrr vimpart.
-    if (! text->getText().empty()) {
-        QString data = text->getText().c_str();
-
-        // We are guaranteed that data.length() >= 1.
-        if (data[data.length() - 1] == '\n')
-            data.truncate(data.length() - 1);
-
-        editWidget->setPlainText(data);
-        editWidget->moveCursor(QTextCursor::Start);
-    }
-
+    editWidget->setPlainText(data);
+    editWidget->moveCursor(QTextCursor::Start);
     setDirty(false);
 }
 
 void NTextUI::setReadWrite(bool readWrite) {
     editWidget->setReadOnly(!readWrite);
-}
-
-void NTextUI::notifyTextChanged() {
-    setDirty(true);
 }
 

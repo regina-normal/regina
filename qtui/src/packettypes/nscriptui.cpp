@@ -463,27 +463,9 @@ void NScriptUI::refresh() {
             script->getVariableValue(i)));
     }
 
-    // Refresh the lines.
-    // The first line is handled separately to avoid an additional blank
-    // line from being appended.
-    unsigned long nLines = script->getNumberOfLines();
-    if (nLines == 0)
-        document->clear();
-    else {
-        // Bloody hell.
-        // Trying to support both kate and vimpart with line-by-line
-        // insertion is just too much drama, especially with vimpart's
-        // continually changing behaviour.
-        // Just use setText() and be done with it.
-        QString allLines;
-        for (unsigned long i = 0; i < nLines; i++) {
-            allLines += script->getLine(i).c_str();
-            if (i + 1 < nLines)
-                allLines += '\n';
-        }
-        document->setPlainText(allLines);
-        document->moveCursor(QTextCursor::Start);
-    }
+    // Refresh the text.
+    document->setPlainText(script->getText().c_str());
+    document->moveCursor(QTextCursor::Start);
 
     setDirty(false);
 }
