@@ -582,10 +582,6 @@ QWidget* NSurfaceCoordinateUI::getInterface() {
     return ui;
 }
 
-void NSurfaceCoordinateUI::commit() {
-    setDirty(false);
-}
-
 void NSurfaceCoordinateUI::refresh() {
     // Update the current filter.
     filter->refreshContents();
@@ -616,8 +612,6 @@ void NSurfaceCoordinateUI::refresh() {
         table->header()->resizeSections(QHeaderView::ResizeToContents);
         currentlyResizing = false;
     }
-
-    setDirty(false);
 }
 
 void NSurfaceCoordinateUI::setReadWrite(bool readWrite) {

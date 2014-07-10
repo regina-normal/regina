@@ -676,14 +676,9 @@ QWidget* NTriGluingsUI::getInterface() {
     return ui;
 }
 
-void NTriGluingsUI::commit() {
-    setDirty(false);
-}
-
 void NTriGluingsUI::refresh() {
     model->rebuild();
     updateActionStates();
-    setDirty(false);
 }
 
 void NTriGluingsUI::setReadWrite(bool readWrite) {
@@ -759,9 +754,6 @@ void NTriGluingsUI::removeSelectedTets() {
 }
 
 void NTriGluingsUI::simplify() {
-    if (! enclosingPane->commitToModify())
-        return;
-
     if (! tri->intelligentSimplify())
         ReginaSupport::info(ui,
             tr("I could not simplify the triangulation further."),
@@ -794,16 +786,10 @@ void NTriGluingsUI::orient() {
 }
 
 void NTriGluingsUI::barycentricSubdivide() {
-    if (! enclosingPane->commitToModify())
-        return;
-
     tri->barycentricSubdivision();
 }
 
 void NTriGluingsUI::idealToFinite() {
-    if (! enclosingPane->commitToModify())
-        return;
-
     if (tri->isValid() && ! tri->isIdeal())
         ReginaSupport::info(ui,
             tr("This triangulation has no ideal vertices."),
@@ -813,9 +799,6 @@ void NTriGluingsUI::idealToFinite() {
 }
 
 void NTriGluingsUI::finiteToIdeal() {
-    if (! enclosingPane->commitToModify())
-        return;
-
     if (! tri->hasBoundaryTriangles())
         ReginaSupport::info(ui,
             tr("This triangulation has no real boundary components."),
@@ -826,25 +809,14 @@ void NTriGluingsUI::finiteToIdeal() {
 }
 
 void NTriGluingsUI::elementaryMove() {
-    if (! enclosingPane->commitToModify())
-        return;
-
     (new EltMoveDialog(ui, tri))->show();
 }
 
 void NTriGluingsUI::doubleCover() {
-    if (! enclosingPane->commitToModify())
-        return;
-
     tri->makeDoubleCover();
 }
 
 void NTriGluingsUI::drillEdge() {
-    // We assume the part hasn't become read-only, even though the
-    // packet might have changed its editable property.
-    if (! enclosingPane->tryCommit())
-        return;
-
     if (tri->getEdges().empty())
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any edges."));
@@ -866,11 +838,6 @@ void NTriGluingsUI::drillEdge() {
 }
 
 void NTriGluingsUI::boundaryComponents() {
-    // We assume the part hasn't become read-only, even though the
-    // packet might have changed its editable property.
-    if (! enclosingPane->tryCommit())
-        return;
-
     if (tri->getBoundaryComponents().empty())
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any boundary components."));
@@ -894,11 +861,6 @@ void NTriGluingsUI::boundaryComponents() {
 }
 
 void NTriGluingsUI::vertexLinks() {
-    // We assume the part hasn't become read-only, even though the
-    // packet might have changed its editable property.
-    if (! enclosingPane->tryCommit())
-        return;
-
     if (tri->getVertices().empty())
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any vertices."));
@@ -927,11 +889,6 @@ void NTriGluingsUI::vertexLinks() {
 }
 
 void NTriGluingsUI::splitIntoComponents() {
-    // We assume the part hasn't become read-only, even though the
-    // packet might have changed its editable property.
-    if (! enclosingPane->tryCommit())
-        return;
-
     if (tri->getNumberOfComponents() == 0)
         ReginaSupport::info(ui,
             tr("This triangulation is empty."),
@@ -968,11 +925,6 @@ void NTriGluingsUI::splitIntoComponents() {
 }
 
 void NTriGluingsUI::connectedSumDecomposition() {
-    // We assume the part hasn't become read-only, even though the
-    // packet might have changed its editable property.
-    if (! enclosingPane->tryCommit())
-        return;
-
     if (tri->getNumberOfTetrahedra() == 0)
         ReginaSupport::info(ui,
             tr("This triangulation is empty."),
@@ -1077,9 +1029,6 @@ void NTriGluingsUI::connectedSumDecomposition() {
 }
 
 void NTriGluingsUI::makeZeroEfficient() {
-    if (! enclosingPane->commitToModify())
-        return;
-
     unsigned long initTets = tri->getNumberOfTetrahedra();
     if (initTets == 0) {
         ReginaSupport::info(ui, tr("This triangulation is empty."));
@@ -1189,11 +1138,6 @@ void NTriGluingsUI::makeZeroEfficient() {
 }
 
 void NTriGluingsUI::censusLookup() {
-    // We assume the part hasn't become read-only, even though the
-    // packet might have changed its editable property.
-    if (! enclosingPane->tryCommit())
-        return;
-
     // Copy the list of census files for processing.
     // This is cheap (Qt uses copy-on-write).
     QList<ReginaFilePref> censusFiles = ReginaPrefSet::global().censusFiles;
@@ -1323,11 +1267,6 @@ void NTriGluingsUI::censusLookup() {
 }
 
 void NTriGluingsUI::toSnapPea() {
-    // We assume the part hasn't become read-only, even though the
-    // packet might have changed its editable property.
-    if (! enclosingPane->tryCommit())
-        return;
-
     if (tri->getNumberOfTetrahedra() == 0 || tri->hasBoundaryTriangles() ||
             (! tri->isValid()) || (! tri->isStandard()) ||
             (! tri->isConnected())) {

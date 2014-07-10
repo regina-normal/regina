@@ -397,13 +397,8 @@ QWidget* Dim2TriGluingsUI::getInterface() {
     return ui;
 }
 
-void Dim2TriGluingsUI::commit() {
-    setDirty(false);
-}
-
 void Dim2TriGluingsUI::refresh() {
     model->rebuild();
-    setDirty(false);
 }
 
 void Dim2TriGluingsUI::setReadWrite(bool readWrite) {

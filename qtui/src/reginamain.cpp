@@ -638,34 +638,6 @@ bool ReginaMain::closeAllPanes() {
     return true;
 }
 
-bool ReginaMain::hasUncommittedChanges() {
-    QLinkedList<PacketPane *> panes = allPanes;
-    for (QLinkedList<PacketPane *>::iterator it = panes.begin(); 
-            it != panes.end() ; it++) {
-        if ((*it)->isDirty())
-            return true;
-    }
-    return false;
-}
-
-void ReginaMain::commitAllChanges() {
-    QLinkedList<PacketPane *> panes = allPanes;
-    for (QLinkedList<PacketPane *>::iterator it = panes.begin(); 
-            it != panes.end() ; it++) {
-        if ((*it)->isDirty())
-            (*it)->commit();
-    }
-}
-
-void ReginaMain::discardAllChanges() {
-    QLinkedList<PacketPane *> panes = allPanes;
-    for (QLinkedList<PacketPane *>::iterator it = panes.begin(); 
-            it != panes.end() ; it++) {
-        if ((*it)->isDirty())
-            (*it)->refreshForce();
-    }
-}
-
 void ReginaMain::updateTreeActions() {
     QLinkedList<QAction *>::iterator it;
     for (it = treeGeneralEditActions.begin(); 
@@ -770,19 +742,8 @@ void ReginaMain::initPacketTree() {
 }
 
 void ReginaMain::view(PacketPane* newPane) {
-    // Decide whether to dock or float.
-    bool shouldDock;
-
-    if (supportingDock) {
-        if (dockedPane) {
-            shouldDock = ! dockedPane->isDirty();
-        } else
-            shouldDock = true;
-    } else
-        shouldDock = false;
-
     // Display the new pane.
-    if (shouldDock) {
+    if (supportingDock) {
         dock(newPane);
         newPane->setFocus();
     } else
@@ -845,30 +806,6 @@ bool ReginaMain::initData(regina::NPacket* usePacketTree,
 }
 
 bool ReginaMain::saveFile() {
-    // Does the user have some work that still needs to be committed?
-    while (hasUncommittedChanges()) {
-        QMessageBox msgBox(QMessageBox::Information, tr("Information"),
-            tr("Some of your packets have changes that are "
-            "not yet committed."));
-        msgBox.setInformativeText("<qt>Uncommitted changes will "
-            "not be saved to file.<p>"
-            "Do you wish to commit all of your changes now?</qt>");
-        QPushButton* commit = msgBox.addButton(tr("Commit All"),
-            QMessageBox::AcceptRole);
-        QPushButton* discard = msgBox.addButton(tr("Discard All"),
-            QMessageBox::DestructiveRole);
-        msgBox.addButton(tr("Cancel"), QMessageBox::RejectRole);
-        msgBox.setDefaultButton(commit);
-        msgBox.exec();
-
-        if (msgBox.clickedButton() == commit)
-            commitAllChanges();
-        else if (msgBox.clickedButton() == discard)
-            discardAllChanges();
-        else
-            return false;
-    }
-
     regina::NPacket* writeTree = packetTree;
     if (fakeRoot_) {
         // Save the (visible) child, but only if there is exactly one child.

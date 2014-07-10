@@ -446,8 +446,6 @@ void NScriptUI::commit() {
         script->addVariable(
             varTable->item(i, 0)->text().toAscii().constData(), value);
     }
-
-    setDirty(false);
 }
 
 void NScriptUI::refresh() {
@@ -466,8 +464,6 @@ void NScriptUI::refresh() {
     // Refresh the text.
     document->setPlainText(script->getText().c_str());
     document->moveCursor(QTextCursor::Start);
-
-    setDirty(false);
 }
 
 void NScriptUI::setReadWrite(bool readWrite) {
@@ -507,7 +503,7 @@ void NScriptUI::addVariable() {
     varTable->scrollToItem(nameItem);
 
     // Done!
-    setDirty(true);
+    // TODO setDirty(true);
 }
 
 void NScriptUI::removeSelectedVariables() {
@@ -549,7 +545,7 @@ void NScriptUI::removeSelectedVariables() {
     for (int i = range.bottomRow(); i >= range.topRow(); --i)
         varTable->removeRow(i);
 
-    setDirty(true);
+    // TODO setDirty(true);
 }
 
 void NScriptUI::updateRemoveState() {
@@ -593,7 +589,7 @@ void NScriptUI::execute() {
 }
 
 void NScriptUI::notifyScriptChanged() {
-    setDirty(true);
+    // TODO setDirty(true);
 }
 
 void NScriptUI::updatePreferences() {

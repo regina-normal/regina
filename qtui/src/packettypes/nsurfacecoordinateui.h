@@ -177,7 +177,6 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         regina::NPacket* getPacket();
         QWidget* getInterface();
         const QLinkedList<QAction*>& getPacketTypeActions();
-        void commit();
         void setReadWrite(bool readWrite);
 
         /**

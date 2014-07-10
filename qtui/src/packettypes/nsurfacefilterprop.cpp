@@ -208,17 +208,11 @@ QString NSurfaceFilterPropUI::getPacketMenuText() const {
     return tr("Surface F&ilter");
 }
 
-void NSurfaceFilterPropUI::commit() {
-    setDirty(false);
-}
-
 void NSurfaceFilterPropUI::refresh() {
     setBoolSet(useOrient, optOrient, filter->getOrientability());
     setBoolSet(useCompact, optCompact, filter->getCompactness());
     setBoolSet(useBdry, optBdry, filter->getRealBoundary());
     eulerList->setText(filterECList());
-
-    setDirty(false);
 }
 
 void NSurfaceFilterPropUI::setReadWrite(bool readWrite) {
@@ -282,7 +276,6 @@ bool NSurfaceFilterPropUI::notifyOptionsChanged() {
         eulerList->setText(filterECList());
     }
 
-    setDirty(false);
     inNotify = false;
     return success;
 }

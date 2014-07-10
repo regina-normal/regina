@@ -383,21 +383,10 @@ class ReginaMain : public QMainWindow {
         bool closeAllPanes();
 
         /**
-         * Tests whether there is some open pane with uncommitted changes.
-         */
-        bool hasUncommittedChanges();
-
-        /**
-         * Commit or discard changes in all open panes.
-         */
-        void commitAllChanges();
-        void discardAllChanges();
-
-        /**
          * Various UI updates.
          */
         void updateTreeActions();
-        
+
     private:
         /**
          * Initial setup.

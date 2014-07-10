@@ -385,13 +385,11 @@ void NSnapPeaShapesUI::refresh() {
 
     if (tri->isNull()) {
         updateNonNullActions();
-        setDirty(false);
         return;
     }
     if (tri->solutionType() == NSnapPeaTriangulation::not_attempted ||
             tri->solutionType() == NSnapPeaTriangulation::no_solution) {
         updateNonNullActions();
-        setDirty(false);
         return;
     }
 
@@ -409,12 +407,6 @@ void NSnapPeaShapesUI::refresh() {
     }
 
     updateNonNullActions();
-    setDirty(false);
-}
-
-void NSnapPeaShapesUI::commit() {
-    // Nothing to commit, since commits happen automatically now.
-    setDirty(false);
 }
 
 void NSnapPeaShapesUI::setReadWrite(bool readWrite) {
@@ -431,11 +423,6 @@ void NSnapPeaShapesUI::setReadWrite(bool readWrite) {
 }
 
 void NSnapPeaShapesUI::vertexLinks() {
-    // We assume the part hasn't become read-only, even though the
-    // packet might have changed its editable property.
-    if (! enclosingPane->tryCommit())
-        return;
-
     if (tri->getVertices().empty())
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any vertices."));
@@ -464,11 +451,6 @@ void NSnapPeaShapesUI::vertexLinks() {
 }
 
 void NSnapPeaShapesUI::toRegina() {
-    // We assume the part hasn't become read-only, even though the
-    // packet might have changed its editable property.
-    if (! enclosingPane->tryCommit())
-        return;
-
     if (tri->isNull())
         ReginaSupport::sorry(ui,
             tr("This is a null triangulation: there is no SnapPea "
@@ -482,11 +464,6 @@ void NSnapPeaShapesUI::toRegina() {
 }
 
 void NSnapPeaShapesUI::fill() {
-    // We assume the part hasn't become read-only, even though the
-    // packet might have changed its editable property.
-    if (! enclosingPane->tryCommit())
-        return;
-
     if (tri->isNull())
         ReginaSupport::sorry(ui,
             tr("This is a null triangulation: there is no SnapPea "
@@ -527,18 +504,10 @@ void NSnapPeaShapesUI::fill() {
 }
 
 void NSnapPeaShapesUI::randomise() {
-    if (! enclosingPane->commitToModify())
-        return;
-
     tri->randomize();
 }
 
 void NSnapPeaShapesUI::canonise() {
-    // We assume the part hasn't become read-only, even though the
-    // packet might have changed its editable property.
-    if (! enclosingPane->tryCommit())
-        return;
-
     if (tri->isNull())
         ReginaSupport::sorry(ui,
             tr("This is a null triangulation: there is no SnapPea "

@@ -81,7 +81,6 @@ class NTextUI : public QObject, public PacketUI {
         QWidget* getInterface();
         PacketEditIface* getEditIface();
         QString getPacketMenuText() const;
-        void commit();
         void refresh();
         void setReadWrite(bool readWrite);
 };

@@ -169,13 +169,8 @@ QString NSurfaceFilterCombUI::getPacketMenuText() const {
     return tr("Surface F&ilter");
 }
 
-void NSurfaceFilterCombUI::commit() {
-    setDirty(false);
-}
-
 void NSurfaceFilterCombUI::refresh() {
     boolType->button(filter->getUsesAnd() ? ID_AND : ID_OR)->setChecked(true);
-    setDirty(false);
 }
 
 void NSurfaceFilterCombUI::setReadWrite(bool readWrite) {
@@ -206,7 +201,6 @@ void NSurfaceFilterCombUI::childrenWereReordered(NPacket* p) {
 
 void NSurfaceFilterCombUI::notifyBoolTypeChanged() {
     filter->setUsesAnd(boolType->checkedId() == ID_AND ? true : false);
-    setDirty(false);
 }
 
 void NSurfaceFilterCombUI::refreshChildList() {

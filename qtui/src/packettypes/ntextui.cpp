@@ -88,14 +88,9 @@ QString NTextUI::getPacketMenuText() const {
     return tr("Te&xt");
 }
 
-void NTextUI::commit() {
-    setDirty(false);
-}
-
 void NTextUI::refresh() {
-    editWidget->setPlainText(data);
+    editWidget->setPlainText(text->getText().c_str());
     editWidget->moveCursor(QTextCursor::Start);
-    setDirty(false);
 }
 
 void NTextUI::setReadWrite(bool readWrite) {

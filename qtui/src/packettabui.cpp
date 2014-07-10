@@ -162,25 +162,6 @@ QWidget* PacketTabbedUI::getInterface() {
     return ui;
 }
 
-void PacketTabbedUI::commit() {
-    if (editorTab)
-        editorTab->commit();
-
-    if (header)
-        header->refresh();
-
-    for (ViewerIterator it = viewerTabs.begin(); it != viewerTabs.end(); it++)
-        if (*it) {
-            if (*it == visibleViewer) {
-                (*it)->refresh();
-                (*it)->queuedAction = PacketViewerTab::None;
-            } else
-                (*it)->queuedAction = PacketViewerTab::Refresh;
-        }
-
-    setDirty(false);
-}
-
 void PacketTabbedUI::refresh() {
     if (editorTab)
         editorTab->refresh();
@@ -196,8 +177,6 @@ void PacketTabbedUI::refresh() {
             } else
                 (*it)->queuedAction = PacketViewerTab::Refresh;
         }
-
-    setDirty(false);
 }
 
 PacketUI* PacketTabbedUI::interfaceAtIndex(int tabIndex) {
@@ -237,10 +216,6 @@ void PacketTabbedUI::notifyTabSelected(int newTab) {
             visibleViewer->refresh();
         visibleViewer->queuedAction = PacketViewerTab::None;
     }
-}
-
-void PacketEditorTab::setDirty(bool newDirty) {
-    PacketUI::setDirty(newDirty);
 }
 
 PacketTabbedViewerTab::PacketTabbedViewerTab(PacketTabbedUI* useParentUI,
@@ -322,8 +297,6 @@ void PacketTabbedViewerTab::refresh() {
             (*it)->queuedAction = PacketViewerTab::None;
         } else
             (*it)->queuedAction = PacketViewerTab::Refresh;
-
-    setDirty(false);
 }
 
 void PacketTabbedViewerTab::notifyTabSelected(int newTab) {

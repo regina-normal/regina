@@ -144,7 +144,6 @@ class NSnapPeaShapesUI : public QObject, public PacketEditorTab {
         QWidget* getInterface();
         const QLinkedList<QAction*>& getPacketTypeActions();
         void refresh();
-        void commit();
         void setReadWrite(bool readWrite);
 
     public slots:

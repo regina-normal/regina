@@ -185,7 +185,6 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         const QLinkedList<QAction*>& getPacketTypeActions();
-        void commit();
         void refresh();
         void setReadWrite(bool readWrite);
 

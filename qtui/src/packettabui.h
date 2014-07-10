@@ -165,7 +165,6 @@ class PacketTabbedUI : public QObject, public PacketUI {
          */
         virtual regina::NPacket* getPacket();
         virtual QWidget* getInterface();
-        virtual void commit();
         virtual void refresh();
         virtual void setReadWrite(bool readWrite);
 
@@ -244,11 +243,6 @@ class PacketViewerTab : public PacketReadOnlyUI {
  *
  * Only one read-write page is allowed within each tabbed packet
  * interface.
- *
- * Like any read-write subclass of PacketUI, subclasses of PacketEditorTab
- * should call setDirty(true) whenever changes are made in the interface.
- * Likewise, they should call setDirty(false) at the end of their
- * implementations of commit() and refresh().
  */
 class PacketEditorTab : public PacketUI {
     protected:
@@ -267,7 +261,6 @@ class PacketEditorTab : public PacketUI {
          * PacketUI overrides.
          */
         QString getPacketMenuText() const;
-        void setDirty(bool newDirty);
 };
 
 /**

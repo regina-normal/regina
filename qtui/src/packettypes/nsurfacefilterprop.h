@@ -99,7 +99,6 @@ class NSurfaceFilterPropUI : public QObject, public PacketUI {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         QString getPacketMenuText() const;
-        void commit();
         void refresh();
         void setReadWrite(bool readWrite);
 

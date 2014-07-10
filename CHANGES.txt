@@ -286,6 +286,10 @@ Version 4.96  [ (under development) ]
               been kept for backward compatibility.
         Header permconv.h:
             - New conversion routines perm3to5() and perm5to3().
+    USER INTERFACE:
+        - The commit/refresh buttons are gone: changes are now committed
+          automatically.
+        - Many other changes that implement the engine updates listed above.
     UTILITIES:
         tricensus:
             - New argument -h/--minhyp for enumerating minimal ideal
