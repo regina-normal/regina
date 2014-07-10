@@ -103,7 +103,8 @@ regina::NPacket* PythonHandler::importData(const QString& fileName,
                 } else {
                     // Hmm, it wasn't a script variable after all.
                     readingMetadata = false;
-                    ans->addLast(line.toAscii().constData());
+                    ans->append(line.toAscii().constData());
+                    ans->append("\n");
                 }
             } else if (metadata == endMetadataMarker) {
                 // It's the end of the metadata.
@@ -111,12 +112,14 @@ regina::NPacket* PythonHandler::importData(const QString& fileName,
             } else {
                 // It's not metadata at all.
                 readingMetadata = false;
-                ans->addLast(line.toAscii().constData());
+                ans->append(line.toAscii().constData());
+                ans->append("\n");
             }
         } else {
             // We're out of the metadata.
             readingMetadata = false;
-            ans->addLast(line.toAscii().constData());
+            ans->append(line.toAscii().constData());
+            ans->append("\n");
         }
 
         line = in.readLine();

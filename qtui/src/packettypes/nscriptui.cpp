@@ -429,11 +429,9 @@ void NScriptUI::commit() {
     // Finish whatever edit was going on in the table.
     varTable->endEdit();
 
-    // Update the lines.
-    script->removeAllLines();
-    QStringList lines = document->toPlainText().split("\n");
-    for( QStringList::iterator it = lines.begin(); it != lines.end(); ++it) 
-        script->addLast((*it).isNull() ? "" : (*it).toAscii().constData());
+    // Update the text.
+    // TODO: Add trailing newline if we don't have one.
+    script->setText(document->toPlainText().toAscii().constData());
 
 
     // Update the variables.

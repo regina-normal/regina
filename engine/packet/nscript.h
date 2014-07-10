@@ -90,13 +90,8 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
     REGINA_PACKET(NScript, PACKET_SCRIPT)
 
     private:
-        std::vector<std::string> lines;
-            /**< An array storing the lines of this script; none of
-                 these strings should contain newlines. */
         std::string text;
-            /**< The complete text of this script, including newlines.
-                 Storing both lines and text is redundant; eventually
-                 the lines array will be removed entirely. */
+            /**< The complete text of this script, including newlines. */
         std::map<std::string, NPacket*> variables;
             /**< A map storing the variables with which this script
                  is to be run.  Variable names are mapped to their
@@ -104,34 +99,37 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
 
     public:
         /**
-         * Initialises to a script with no lines and no variables.
+         * Initialises to a script with no text and no variables.
          */
         NScript();
 
         /**
          * Returns the complete text of this script.
          *
-         * Variables are not included; you must fetch them separately
-         * through other member functions.
+         * Variables are not considered part of the text; you can get
+         * and set them through other member functions (see below).
+         *
+         * @return the complete text of this script.
          */
         const std::string& getText() const;
 
         /**
-         * Adds the given line to the beginning of this script.
+         * Replaces the complete text of this script with the given
+         * string.
          *
-         * @param line the line to insert.
-         */
-        void addFirst(const std::string& line);
-        /**
-         * Adds the given line to the end of this script.
+         * Variables are not considered part of the text; you can get
+         * and set them through other member functions (see below).
          *
-         * @param line the line to add.
+         * @param newText the new text for this script.
          */
-        void addLast(const std::string& line);
+        void setText(const std::string& newText);
+
         /**
-         * Removes all lines from this script.
+         * Adds the given text to the end of this script.
+         *
+         * @param extraText the text to add.
          */
-        void removeAllLines();
+        void append(const std::string& extraText);
 
         /**
          * Returns the number of variables associated with this script.
@@ -222,21 +220,14 @@ inline NScript::NScript() {
 inline const std::string& NScript::getText() const {
     return text;
 }
+inline void NScript::setText(const std::string& newText) {
+    ChangeEventSpan span(this);
+    text = newText;
+}
 
-inline void NScript::addFirst(const std::string& line) {
+inline void NScript::append(const std::string& extraText) {
     ChangeEventSpan span(this);
-    lines.insert(lines.begin(), line);
-    text = line + '\n' + text;
-}
-inline void NScript::addLast(const std::string& line) {
-    ChangeEventSpan span(this);
-    lines.push_back(line);
-    text = text + line + '\n';
-}
-inline void NScript::removeAllLines() {
-    ChangeEventSpan span(this);
-    lines.clear();
-    text.clear();
+    text += extraText;
 }
 
 inline unsigned long NScript::getNumberOfVariables() const {
@@ -257,9 +248,7 @@ inline void NScript::removeAllVariables() {
 }
 
 inline void NScript::writeTextShort(std::ostream& o) const {
-    o << "Script with " << lines.size() << " line";
-    if (lines.size() != 1)
-        o << 's';
+    o << "Python script";
 }
 
 inline bool NScript::dependsOnParent() const {

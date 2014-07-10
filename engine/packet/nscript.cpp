@@ -89,7 +89,6 @@ void NScript::writeTextLong(std::ostream& o) const {
 
 NPacket* NScript::internalClonePacket(NPacket*) const {
     NScript* ans = new NScript();
-    ans->lines = lines;
     ans->text = text;
     ans->variables = variables;
     return ans;
@@ -110,9 +109,7 @@ void NScript::writeXMLPacketData(std::ostream& out) const {
         out << "\"/>\n";
     }
 
-    for (std::vector<std::string>::const_iterator it = lines.begin();
-            it != lines.end(); it++)
-        out << "  <line>" << xmlEncodeSpecialChars(*it) << "</line>\n";
+    out << "  <text>" << xmlEncodeSpecialChars(text) << "</text>\n";
 }
 
 void NScript::packetToBeDestroyed(NPacket* packet) {

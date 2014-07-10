@@ -668,7 +668,7 @@ jZdNkm4pXQo+PgpzdGFydHhyZWYKMzUwNjYKJSVFT0YK
 </packet> <!-- LaTeX Document (PDF) -->
 <packet label="3-Manifolds"
 	type="Container" typeid="1"
-	id="wKELAABgAAA="
+	id="gHMKAABgAAA="
 	parent="Sample Data File">
 <packet label="Layered Solid Torus"
 	type="3-Manifold Triangulation" typeid="3"
@@ -1290,17 +1290,18 @@ CS_unknown
 <packet label="Python Script"
 	type="Script" typeid="7"
 	parent="Sample Data File">
-  <var name="tri" valueid="wKELAABgAAA=" value="3-Manifolds"/>
-  <line># This Python script runs through all 3-manifold triangulations in this file</line>
-  <line># and prints the first homology of each.</line>
-  <line>#</line>
-  <line># See the Regina handbook for more elaborate sample Python sessions.</line>
-  <line></line>
-  <line># Output the homology of each triangulation.</line>
-  <line>t = tri.getFirstTreeChild()</line>
-  <line>while t != None:</line>
-  <line>	print t.getPacketLabel() + &quot;:&quot;, t.homology()</line>
-  <line>	t = t.getNextTreeSibling()</line>
+  <var name="tri" valueid="gHMKAABgAAA=" value="3-Manifolds"/>
+  <text># This Python script runs through all 3-manifold triangulations in this file
+# and prints the first homology of each.
+#
+# See the Regina handbook for more elaborate sample Python sessions.
+
+# Output the homology of each triangulation.
+t = tri.getFirstTreeChild()
+while t != None:
+	print t.getPacketLabel() + &quot;:&quot;, t.homology()
+	t = t.getNextTreeSibling()
+</text>
 </packet> <!-- Python Script (Script) -->
 </packet> <!-- Sample Data File (Container) -->
 </reginadata>

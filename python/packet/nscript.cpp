@@ -50,9 +50,8 @@ void addNScript() {
             std::auto_ptr<NScript>, boost::noncopyable>("NScript", init<>())
         .def("getText", &NScript::getText,
             return_value_policy<return_by_value>())
-        .def("addFirst", &NScript::addFirst)
-        .def("addLast", &NScript::addLast)
-        .def("removeAllLines", &NScript::removeAllLines)
+        .def("setText", &NScript::setText)
+        .def("append", &NScript::append)
         .def("getNumberOfVariables", &NScript::getNumberOfVariables)
         .def("getVariableName", &NScript::getVariableName,
             return_value_policy<return_by_value>())

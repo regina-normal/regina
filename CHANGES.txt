@@ -126,10 +126,16 @@ Version 4.96  [ (under development) ]
             - Changed the type of NPerm3::invS3 from int to unsigned,
               for consistenty with NPerm4 and NPerm5.
         Class NScript:
-            - New routine getText().
-            - Removed routines getLine(), getNumberOfLines(),
-              insertAtPosition(), replaceAtPosition(), removeLineAt().
-              These are not deprecated, but removed entirely.
+            - Scripts are now stored as complete strings, not sequences
+              of individual lines.  This affects the member functions
+              (see below) and also the XML file format.  Whilst Regina
+              has removed much of the functionality for working line-by-line,
+              it can still read older files that were stored that way.
+            - New routines getText(), setText() and append().
+            - Removed routines getLine(), getNumberOfLines(), addFirst(),
+              addLast(), insertAtPosition(), replaceAtPosition(),
+              removeLineAt(), and removeAllLines().  These are not deprecated,
+              but removed entirely.
         Class NSnapPeaTriangulation:
             - Updated the SnapPea kernel to the one shipped with SnapPy 2.2
               (standard precision).
