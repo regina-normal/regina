@@ -169,6 +169,25 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
         NPacket* getVariableValue(const std::string& name) const;
 
         /**
+         * Changes the name of an existing variable associated with
+         * this script.
+         *
+         * @param index the index of the variable whose name should change;
+         * this must be between 0 and getNumberOfVariables()-1 inclusive.
+         * @param name the new name to assign to the variable.
+         */
+        void setVariableName(unsigned long index, const std::string& name);
+        /**
+         * Changes the value of an existing variable associated with
+         * this script.
+         *
+         * @param index the index of the variable whose value should change;
+         * this must be between 0 and getNumberOfVariables()-1 inclusive.
+         * @param value the new value to assign to the variable.
+         */
+        void setVariableValue(unsigned long index, NPacket* value);
+
+        /**
          * Adds a new variable to be associated with this script.
          * If a variable with the given name is already stored, this
          * routine will do nothing.

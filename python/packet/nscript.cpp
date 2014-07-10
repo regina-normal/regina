@@ -59,6 +59,8 @@ void addNScript() {
             return_value_policy<reference_existing_object>())
         .def("getVariableValue", getVariableValue_string,
             return_value_policy<reference_existing_object>())
+        .def("setVariableName", &NScript::setVariableName)
+        .def("setVariableValue", &NScript::setVariableValue)
         .def("addVariable", &NScript::addVariable)
         .def("removeVariable", &NScript::removeVariable)
         .def("removeAllVariables", &NScript::removeAllVariables)

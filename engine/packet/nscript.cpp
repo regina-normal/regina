@@ -59,6 +59,29 @@ NPacket* NScript::getVariableValue(const std::string& name) const {
     return (*it).second;
 }
 
+void NScript::setVariableName(unsigned long index, const std::string& name) {
+    std::map<std::string, NPacket*>::const_iterator it = variables.begin();
+    advance(it, index);
+    NPacket* value = it->second;
+
+    ChangeEventSpan span(this);
+    variables.erase(it);
+    variables.insert(std::make_pair(name, value));
+}
+
+void NScript::setVariableValue(unsigned long index, NPacket* value) {
+    std::map<std::string, NPacket*>::iterator it = variables.begin();
+    advance(it, index);
+
+    ChangeEventSpan span(this);
+
+    if (it->second)
+        it->second->unlisten(this);
+    it->second = value;
+    if (it->second)
+        it->second->listen(this);
+}
+
 void NScript::removeVariable(const std::string& name) {
     std::map<std::string, NPacket*>::iterator it = variables.find(name);
     if (it == variables.end())

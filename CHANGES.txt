@@ -132,6 +132,7 @@ Version 4.96  [ (under development) ]
               has removed much of the functionality for working line-by-line,
               it can still read older files that were stored that way.
             - New routines getText(), setText() and append().
+            - New routine setVariableName() and setVariableValue().
             - Removed routines getLine(), getNumberOfLines(), addFirst(),
               addLast(), insertAtPosition(), replaceAtPosition(),
               removeLineAt(), and removeAllLines().  These are not deprecated,
