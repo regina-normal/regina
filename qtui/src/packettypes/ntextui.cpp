@@ -59,17 +59,16 @@ NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane) :
     QBoxLayout* layout = new QVBoxLayout(ui);
     layout->setContentsMargins(0, 0, 0, 0);
 
-    document = new QPlainTextEdit(enclosingPane);
-    document->setDocument(registry.acquire(text));
-    document->setReadOnly(!enclosingPane->isReadWrite());
-    document->setLineWrapMode(QPlainTextEdit::WidgetWidth);
-    editIface = new PacketEditTextEditor(document);
-    layout->addWidget(document, 1);
+    editWidget = new QPlainTextEdit(enclosingPane);
+    editWidget->setDocument(registry.acquire(text));
+    editWidget->setReadOnly(!enclosingPane->isReadWrite());
+    editWidget->setLineWrapMode(QPlainTextEdit::WidgetWidth);
+    editIface = new PacketEditTextEditor(editWidget);
+    layout->addWidget(editWidget, 1);
 
     refresh();
 
-    connect(document, SIGNAL(textChanged()),
-        this, SLOT(notifyTextChanged()));
+    connect(editWidget, SIGNAL(textChanged()), this, SLOT(notifyTextChanged()));
 }
 
 NTextUI::~NTextUI() {
@@ -91,12 +90,12 @@ QString NTextUI::getPacketMenuText() const {
 }
 
 void NTextUI::commit() {
-    text->setText(document->toPlainText().toAscii().constData());
+    text->setText(editWidget->toPlainText().toAscii().constData());
     setDirty(false);
 }
 
 void NTextUI::refresh() {
-    document->clear();
+    editWidget->clear();
 
     // Back to all-at-once insertion instead of line-by-line insertion.
     // Grrr vimpart.
@@ -107,15 +106,15 @@ void NTextUI::refresh() {
         if (data[data.length() - 1] == '\n')
             data.truncate(data.length() - 1);
 
-        document->setPlainText(data);
-        document->moveCursor(QTextCursor::Start);
+        editWidget->setPlainText(data);
+        editWidget->moveCursor(QTextCursor::Start);
     }
 
     setDirty(false);
 }
 
 void NTextUI::setReadWrite(bool readWrite) {
-    document->setReadOnly(!readWrite);
+    editWidget->setReadOnly(!readWrite);
 }
 
 void NTextUI::notifyTextChanged() {
