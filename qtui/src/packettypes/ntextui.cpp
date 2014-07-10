@@ -37,6 +37,7 @@
 
 // UI includes:
 #include "bigwidget.h"
+#include "docregistry.h"
 #include "packeteditiface.h"
 #include "ntextui.h"
 
@@ -48,6 +49,10 @@
 using regina::NPacket;
 using regina::NText;
 
+namespace {
+    static DocRegistry<NText> registry;
+}
+
 NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane) :
         PacketUI(enclosingPane), text(packet) {
     ui = new BigWidget(1, 2);
@@ -55,6 +60,7 @@ NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane) :
     layout->setContentsMargins(0, 0, 0, 0);
 
     document = new QPlainTextEdit(enclosingPane);
+    document->setDocument(registry.acquire(text));
     document->setReadOnly(!enclosingPane->isReadWrite());
     document->setLineWrapMode(QPlainTextEdit::WidgetWidth);
     editIface = new PacketEditTextEditor(document);
@@ -68,6 +74,7 @@ NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane) :
 
 NTextUI::~NTextUI() {
 //    delete editIface;
+    registry.release(text);
     delete ui;
 }
 
@@ -89,12 +96,6 @@ void NTextUI::commit() {
 }
 
 void NTextUI::refresh() {
-    // A kate part needs to be in read-write mode before we can alter its
-    // contents.
-//    bool wasReadWrite = document->isReadWrite();
-//    if (! wasReadWrite)
-//        document->setReadWrite(true);
-
     document->clear();
 
     // Back to all-at-once insertion instead of line-by-line insertion.
@@ -109,9 +110,6 @@ void NTextUI::refresh() {
         document->setPlainText(data);
         document->moveCursor(QTextCursor::Start);
     }
-
-//    if (! wasReadWrite)
-//        document->setReadWrite(false);
 
     setDirty(false);
 }

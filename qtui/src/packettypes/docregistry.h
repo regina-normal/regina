@@ -32,68 +32,81 @@
 
 /* end stub */
 
-/*! \file ntextui.h
- *  \brief Provides an interface for viewing text packets.
+/*! \file docregistry.h
+ *  \brief Provides a way for multiple viewers of a text-based packet to use
+ *  the same underlying QTextDocument.
  */
 
-#ifndef __NTEXTUI_H
-#define __NTEXTUI_H
+#ifndef __DOCREGISTRY_H
+#define __DOCREGISTRY_H
 
-#include "../packetui.h"
+#include <QHash>
+#include <QPlainTextDocumentLayout>
+#include <QTextDocument>
 
-class QPlainTextEdit;
-
-namespace regina {
-    class NPacket;
-    class NText;
-};
+class QTextDocument;
 
 /**
- * A packet interface for viewing text packets.
+ * A registry through which a single text-based packet can be associated
+ * with a single QTextDocument, which is "global" for each packet.
+ * Multiple viewers for the same packet can then work with the same
+ * underlying document, which helps keep different aspects of the GUI in sync.
+ *
+ * The template argument PacketType should be one of Regina's text-based
+ * packet types, such as NText or NScript.  In particular, it must have
+ * the text-based member functions getText() and setText().
  */
-class NTextUI : public QObject, public PacketUI {
-    Q_OBJECT
-
+template <class PacketType>
+class DocRegistry {
     private:
-        /**
-         * Packet details
-         */
-        regina::NText* text;
+        struct Details {
+            QTextDocument* doc;
+            int users;
+        };
 
-        /**
-         * Internal components
-         */
-        QWidget* ui;
-        QPlainTextEdit* editWidget;
-        PacketEditIface* editIface;
+        QHash<PacketType*, Details> details;
+
+        typedef typename QHash<PacketType*, Details>::iterator Iterator;
 
     public:
         /**
-         * Constructor and destructor.
+         * Request or release the "global" document for the given packet.
+         * Each call to acquire() must eventually be followed by a
+         * corresponding call to release().  When all "users" of the
+         * document have called release(), the document will be destroyed
+         * (a new document will be created if acquire() is later called again).
          */
-        NTextUI(regina::NText* packet, PacketPane* newEnclosingPane);
-        ~NTextUI();
-
-        /**
-         * PacketUI overrides.
-         */
-        regina::NPacket* getPacket();
-        QWidget* getInterface();
-        PacketEditIface* getEditIface();
-        QString getPacketMenuText() const;
-        void commit();
-        void refresh();
-        void setReadWrite(bool readWrite);
-
-    public slots:
-        /**
-         * Called whenever the text in the interface changes.
-         */
-        void notifyTextChanged();
+        QTextDocument* acquire(PacketType* packet);
+        void release(PacketType* packet);
 };
 
-inline PacketEditIface* NTextUI::getEditIface() {
-    return editIface;
+template <class PacketType>
+QTextDocument* DocRegistry<PacketType>::acquire(PacketType* packet) {
+    Iterator it = details.find(packet);
+    if (it != details.end()) {
+        ++it->users;
+        return it->doc;
+    } else {
+        Details d;
+        d.doc = new QTextDocument(packet->getText().c_str());
+        d.doc->setDocumentLayout(new QPlainTextDocumentLayout(d.doc));
+        d.users = 1;
+        details.insert(packet, d);
+        return d.doc;
+    }
+}
+
+template <class PacketType>
+void DocRegistry<PacketType>::release(PacketType* packet) {
+    Iterator it = details.find(packet);
+    if (it == details.end())
+        return; // Should never happen.
+
+    --it->users;
+    if (it->users == 0) {
+        delete it->doc;
+        details.erase(it);
+    }
 }
 
 #endif
