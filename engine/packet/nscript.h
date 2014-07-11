@@ -73,12 +73,16 @@ struct PacketInfo<PACKET_SCRIPT> {
 
 /**
  * A packet representing a Python script that can be run.
- * Accessor methods for a script work a line at a time.
  *
- * Variables are stored as pointers to packets, not packet labels.
- * This affects how variables react to changes in the packets that they
- * point to.  In particular, if a variable \a V points to some packet \a P,
- * then:
+ * A script consists of two parts: (i) the \e text, which contains the
+ * Python code; and (ii) a set of \e variables, which refer to packets
+ * in your packet tree.  When running a script, the variables should be
+ * instantiated in the default namespace before the script is run.
+ *
+ * The values of variables are given by pointers to packets (not packet
+ * labels, as in some old versions of Regina).  This affects how variables
+ * react to changes in the packets that they point to.  In particular, if a
+ * variable \a V points to some packet \a P, then:
  *
  * - if \a P is renamed then \a V will still point to it and the script will
  *   notify listeners that the script has changed;
@@ -146,6 +150,16 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
          */
         const std::string& getVariableName(unsigned long index) const;
         /**
+         * Returns the index of the variable stored with the given name.
+         *
+         * @param name the name of the requested variable; note that
+         * names are case sensitive.
+         * @return the index of the requested variable as an integer
+         * between 0 and getNumberOfVariables()-1 inclusive, or -1 if
+         * there is no variable with the given name.
+         */
+        long getVariableIndex(const std::string& name) const;
+        /**
          * Returns the value of the requested variable associated with
          * this script.  Variables may take the value \c null.
          *
@@ -166,16 +180,6 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
          * @return the value of the requested variable.
          */
         NPacket* getVariableValue(const std::string& name) const;
-        /**
-         * Returns the index of the variable stored with the given name.
-         *
-         * @param name the name of the requested variable; note that
-         * names are case sensitive.
-         * @return the index of the requested variable as an integer
-         * between 0 and getNumberOfVariables()-1 inclusive, or -1 if
-         * there is no variable with the given name.
-         */
-        long getVariableIndex(const std::string& name) const;
 
         /**
          * Changes the name of an existing variable associated with
@@ -205,8 +209,10 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
          * If a variable with the given name is already stored, this
          * routine will do nothing.
          *
-         * \warning This may change the indices of other variables, since
-         * (at present) variables are kept stored in sorted order by name.
+         * \warning The index of the new variable might not be
+         * getNumberOfVariables()-1, and this operation may change the
+         * indices of other variables also.  This is because (at present)
+         * variables are kept stored in sorted order by name.
          *
          * @param name the name of the new variable.
          * @param value the value of the new variable; this is allowed
