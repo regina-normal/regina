@@ -273,11 +273,17 @@ inline const std::string& NScript::getText() const {
     return text;
 }
 inline void NScript::setText(const std::string& newText) {
+    if (text == newText)
+        return; // No change event fired.
+
     ChangeEventSpan span(this);
     text = newText;
 }
 
 inline void NScript::append(const std::string& extraText) {
+    if (extraText.empty())
+        return; // No change event fired.
+
     ChangeEventSpan span(this);
     text += extraText;
 }

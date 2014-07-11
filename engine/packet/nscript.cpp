@@ -69,9 +69,13 @@ long NScript::getVariableIndex(const std::string& name) const {
 void NScript::setVariableName(unsigned long index, const std::string& name) {
     std::map<std::string, NPacket*>::const_iterator it = variables.begin();
     advance(it, index);
-    NPacket* value = it->second;
+
+    if (name == it->first)
+        return;
 
     ChangeEventSpan span(this);
+
+    NPacket* value = it->second;
     variables.erase(it);
     variables.insert(std::make_pair(name, value));
 }
@@ -79,6 +83,9 @@ void NScript::setVariableName(unsigned long index, const std::string& name) {
 void NScript::setVariableValue(unsigned long index, NPacket* value) {
     std::map<std::string, NPacket*>::iterator it = variables.begin();
     advance(it, index);
+
+    if (it->second == value)
+        return;
 
     ChangeEventSpan span(this);
 
