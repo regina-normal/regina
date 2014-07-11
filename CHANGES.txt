@@ -134,7 +134,8 @@ Version 4.96  [ (under development) ]
             - A script now fires a change event if one of its variables
               changes its packet label.
             - New routines getText(), setText() and append().
-            - New routine setVariableName() and setVariableValue().
+            - New routine getVariableIndex(), setVariableName(),
+              setVariableValue() and removeVariable(unsigned long).
             - Removed routines getLine(), getNumberOfLines(), addFirst(),
               addLast(), insertAtPosition(), replaceAtPosition(),
               removeLineAt(), and removeAllLines().  These are not deprecated,

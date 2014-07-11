@@ -43,6 +43,11 @@ namespace {
         const = &NScript::getVariableValue;
     regina::NPacket* (NScript::*getVariableValue_string)(const std::string&)
         const = &NScript::getVariableValue;
+
+    void (NScript::*removeVariable_long)(unsigned long) =
+        &NScript::removeVariable;
+    void (NScript::*removeVariable_string)(const std::string&) =
+        &NScript::removeVariable;
 }
 
 void addNScript() {
@@ -59,10 +64,12 @@ void addNScript() {
             return_value_policy<reference_existing_object>())
         .def("getVariableValue", getVariableValue_string,
             return_value_policy<reference_existing_object>())
+        .def("getVariableIndex", &NScript::getVariableIndex)
         .def("setVariableName", &NScript::setVariableName)
         .def("setVariableValue", &NScript::setVariableValue)
         .def("addVariable", &NScript::addVariable)
-        .def("removeVariable", &NScript::removeVariable)
+        .def("removeVariable", removeVariable_long)
+        .def("removeVariable", removeVariable_string)
         .def("removeAllVariables", &NScript::removeAllVariables)
     ;
 

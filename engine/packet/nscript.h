@@ -166,10 +166,24 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
          * @return the value of the requested variable.
          */
         NPacket* getVariableValue(const std::string& name) const;
+        /**
+         * Returns the index of the variable stored with the given name.
+         *
+         * @param name the name of the requested variable; note that
+         * names are case sensitive.
+         * @return the index of the requested variable as an integer
+         * between 0 and getNumberOfVariables()-1 inclusive, or -1 if
+         * there is no variable with the given name.
+         */
+        long getVariableIndex(const std::string& name) const;
 
         /**
          * Changes the name of an existing variable associated with
          * this script.
+         *
+         * \warning This may change the indices of this and other
+         * variables, since (at present) variables are kept stored in
+         * sorted order by name.
          *
          * @param index the index of the variable whose name should change;
          * this must be between 0 and getNumberOfVariables()-1 inclusive.
@@ -191,6 +205,9 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
          * If a variable with the given name is already stored, this
          * routine will do nothing.
          *
+         * \warning This may change the indices of other variables, since
+         * (at present) variables are kept stored in sorted order by name.
+         *
          * @param name the name of the new variable.
          * @param value the value of the new variable; this is allowed
          * to be \c null.
@@ -200,16 +217,26 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
         bool addVariable(const std::string& name, NPacket* value);
         /**
          * Removes the variable stored with the given name.
-         * Note that the indices of other variables may change as a
-         * result of this action.
-         *
          * If no variable is stored with the given name, this routine
-         * will do nothing (but waste time!).
+         * will do nothing.
+         *
+         * \warning This may change the indices of other variables, since
+         * (at present) variables are kept stored in sorted order by name.
          *
          * @param name the name of the variable to remove; note that
          * names are case sensitive.
          */
         void removeVariable(const std::string& name);
+        /**
+         * Removes the variable stored at the given index.
+         *
+         * \warning This may change the indices of other variables, since
+         * (at present) variables are kept stored in sorted order by name.
+         *
+         * @param index the index of the variable to remove;
+         * this must be between 0 and getNumberOfVariables()-1 inclusive.
+         */
+        void removeVariable(unsigned long index);
         /**
          * Removes all variables associated with this script.
          */
