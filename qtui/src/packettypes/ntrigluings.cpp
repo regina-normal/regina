@@ -42,6 +42,7 @@
 #include "triangulation/ntriangle.h"
 
 // UI includes:
+#include "edittableview.h"
 #include "eltmovedialog.h"
 #include "ntrigluings.h"
 #include "patiencedialog.h"
@@ -61,7 +62,6 @@
 #include <QLabel>
 #include <QProgressDialog>
 #include <QRegExp>
-#include <QTableView>
 #include <QTextDocument>
 #include <QToolBar>
 #include <set>
@@ -331,10 +331,10 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         PacketEditorTab(useParentUI), tri(packet) {
     // Set up the table of face gluings.
     model = new GluingsModel(packet, readWrite);
-    faceTable = new QTableView();
+    faceTable = new EditTableView();
     faceTable->setSelectionMode(QAbstractItemView::ContiguousSelection);
     faceTable->setModel(model);
-    
+
     if (readWrite) {
         QAbstractItemView::EditTriggers flags(
             QAbstractItemView::AllEditTriggers);
@@ -681,6 +681,10 @@ void NTriGluingsUI::refresh() {
     updateActionStates();
 }
 
+void NTriGluingsUI::endEdit() {
+    faceTable->endEdit();
+}
+
 void NTriGluingsUI::setReadWrite(bool readWrite) {
     model->setReadWrite(readWrite);
 
@@ -701,10 +705,14 @@ void NTriGluingsUI::setReadWrite(bool readWrite) {
 }
 
 void NTriGluingsUI::addTet() {
+    endEdit();
+
     tri->newTetrahedron();
 }
 
 void NTriGluingsUI::removeSelectedTets() {
+    endEdit();
+
     // Gather together all the tetrahedra to be deleted.
     QModelIndexList sel = faceTable->selectionModel()->selectedIndexes();
     if (sel.empty()) {
@@ -754,6 +762,8 @@ void NTriGluingsUI::removeSelectedTets() {
 }
 
 void NTriGluingsUI::simplify() {
+    endEdit();
+
     if (! tri->intelligentSimplify())
         ReginaSupport::info(ui,
             tr("I could not simplify the triangulation further."),
@@ -762,6 +772,8 @@ void NTriGluingsUI::simplify() {
 }
 
 void NTriGluingsUI::orient() {
+    endEdit();
+
     if (tri->isOriented()) {
         ReginaSupport::info(ui, tr("This triangulation is already oriented."));
         return;
@@ -786,10 +798,14 @@ void NTriGluingsUI::orient() {
 }
 
 void NTriGluingsUI::barycentricSubdivide() {
+    endEdit();
+
     tri->barycentricSubdivision();
 }
 
 void NTriGluingsUI::idealToFinite() {
+    endEdit();
+
     if (tri->isValid() && ! tri->isIdeal())
         ReginaSupport::info(ui,
             tr("This triangulation has no ideal vertices."),
@@ -799,6 +815,8 @@ void NTriGluingsUI::idealToFinite() {
 }
 
 void NTriGluingsUI::finiteToIdeal() {
+    endEdit();
+
     if (! tri->hasBoundaryTriangles())
         ReginaSupport::info(ui,
             tr("This triangulation has no real boundary components."),
@@ -809,14 +827,20 @@ void NTriGluingsUI::finiteToIdeal() {
 }
 
 void NTriGluingsUI::elementaryMove() {
+    endEdit();
+
     (new EltMoveDialog(ui, tri))->show();
 }
 
 void NTriGluingsUI::doubleCover() {
+    endEdit();
+
     tri->makeDoubleCover();
 }
 
 void NTriGluingsUI::drillEdge() {
+    endEdit();
+
     if (tri->getEdges().empty())
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any edges."));
@@ -838,6 +862,8 @@ void NTriGluingsUI::drillEdge() {
 }
 
 void NTriGluingsUI::boundaryComponents() {
+    endEdit();
+
     if (tri->getBoundaryComponents().empty())
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any boundary components."));
@@ -861,6 +887,8 @@ void NTriGluingsUI::boundaryComponents() {
 }
 
 void NTriGluingsUI::vertexLinks() {
+    endEdit();
+
     if (tri->getVertices().empty())
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any vertices."));
@@ -889,6 +917,8 @@ void NTriGluingsUI::vertexLinks() {
 }
 
 void NTriGluingsUI::splitIntoComponents() {
+    endEdit();
+
     if (tri->getNumberOfComponents() == 0)
         ReginaSupport::info(ui,
             tr("This triangulation is empty."),
@@ -925,6 +955,8 @@ void NTriGluingsUI::splitIntoComponents() {
 }
 
 void NTriGluingsUI::connectedSumDecomposition() {
+    endEdit();
+
     if (tri->getNumberOfTetrahedra() == 0)
         ReginaSupport::info(ui,
             tr("This triangulation is empty."),
@@ -1029,6 +1061,8 @@ void NTriGluingsUI::connectedSumDecomposition() {
 }
 
 void NTriGluingsUI::makeZeroEfficient() {
+    endEdit();
+
     unsigned long initTets = tri->getNumberOfTetrahedra();
     if (initTets == 0) {
         ReginaSupport::info(ui, tr("This triangulation is empty."));
@@ -1138,6 +1172,8 @@ void NTriGluingsUI::makeZeroEfficient() {
 }
 
 void NTriGluingsUI::censusLookup() {
+    endEdit();
+
     // Copy the list of census files for processing.
     // This is cheap (Qt uses copy-on-write).
     QList<ReginaFilePref> censusFiles = ReginaPrefSet::global().censusFiles;
@@ -1267,6 +1303,8 @@ void NTriGluingsUI::censusLookup() {
 }
 
 void NTriGluingsUI::toSnapPea() {
+    endEdit();
+
     if (tri->getNumberOfTetrahedra() == 0 || tri->hasBoundaryTriangles() ||
             (! tri->isValid()) || (! tri->isStandard()) ||
             (! tri->isConnected())) {

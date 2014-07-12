@@ -44,7 +44,6 @@
 class GroupWidget;
 class QLabel;
 class QLineEdit;
-class QListWidget;
 class QTreeWidget;
 class QPushButton;
 

@@ -141,6 +141,51 @@ class PacketUI {
         virtual void refresh() = 0;
 
         /**
+         * Ensures that any edits-in-progress are fully committed to the
+         * calculation engine.
+         *
+         * For many interface elements, edits are automatically committed
+         * before anything else is done with the packet (in particular,
+         * before an action is triggered on the packet).  However, there
+         * are exceptions.  For instance:
+         *
+         * - If a QTableView or QListView cell is being edited and an
+         *   action is triggered, the table or list may not update
+         *   its model (i.e., commit the edit) until \e after the action
+         *   event has been processed.  This means that the action event
+         *   needs to force the commit itself, to avoid operating on the
+         *   old version of the packet.
+         *
+         * - If a DocWidget text document is being edited, edits are
+         *   automatically comitted only when the widget loses focus.
+         *   As before, if an action is triggered then the focus-out
+         *   event (and hence the commit) might not be processed until
+         *   after the action.
+         *
+         * Any packet interface that suffers from such problems must do
+         * two things:
+         *
+         * - override endEdit() to commit any edits-in-progress to the
+         *   calculation engine (the table class EditTableView, the list
+         *   class EditListView and the text document class DocWidget
+         *   provide convenient means for doing this);
+         *
+         * - call endEdit() as the first step for each action event on
+         *   the packet (e.g., each action slot).
+         *
+         * It is possible that an edit-in-progress cannot be committed
+         * (for instance, the table cell being edited contains invalid data).
+         * In this case an appropriate error message may be displayed
+         * to the user, and the edit should be rolled back.
+         *
+         * The default implementation of this routine does nothing
+         * (i.e., it assumes there are no edits-in-progress to commit,
+         * or else the commits are (i) automatic and (ii) happen before
+         * any actions are triggered).
+         */
+        virtual void endEdit();
+
+        /**
          * Modify this interface to be read-write or read-only according
          * to the given argument.
          *
@@ -436,6 +481,9 @@ inline PacketUI::PacketUI(PacketPane* newEnclosingPane) :
 }
 
 inline PacketUI::~PacketUI() {
+}
+
+inline void PacketUI::endEdit() {
 }
 
 inline PacketEditIface* PacketUI::getEditIface() {

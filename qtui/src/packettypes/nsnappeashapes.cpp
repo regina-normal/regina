@@ -38,6 +38,7 @@
 #include "snappea/nsnappeatriangulation.h"
 
 // UI includes:
+#include "edittreeview.h"
 #include "nsnappeashapes.h"
 #include "reginamain.h"
 #include "reginasupport.h"
@@ -51,7 +52,6 @@
 #include <QMessageBox>
 #include <QRegExp>
 #include <QToolBar>
-#include <QTreeView>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 
@@ -195,7 +195,7 @@ bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
                     "non-orientable cusps."));
             return false;
         }
-        if (tri_->fill(m, l))
+        if (tri_->fill(m, l, index.row()))
             return true;
         ReginaSupport::info(0,
             tr("I could not use these filling coefficients."),
@@ -220,7 +220,7 @@ NSnapPeaShapesUI::NSnapPeaShapesUI(regina::NSnapPeaTriangulation* packet,
     layout->addWidget(label);
 
     model = new CuspModel(packet);
-    cusps = new QTreeView();
+    cusps = new EditTreeView();
     cusps->setItemsExpandable(false);
     cusps->setRootIsDecorated(false);
     cusps->setAlternatingRowColors(true);
@@ -408,6 +408,10 @@ void NSnapPeaShapesUI::refresh() {
     updateNonNullActions();
 }
 
+void NSnapPeaShapesUI::endEdit() {
+    cusps->endEdit();
+}
+
 void NSnapPeaShapesUI::setReadWrite(bool readWrite) {
     // Regardless of whether we allow edits, we can do nothing with a
     // null triangulation.
@@ -422,6 +426,8 @@ void NSnapPeaShapesUI::setReadWrite(bool readWrite) {
 }
 
 void NSnapPeaShapesUI::vertexLinks() {
+    endEdit();
+
     if (tri->getVertices().empty())
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any vertices."));
@@ -450,6 +456,8 @@ void NSnapPeaShapesUI::vertexLinks() {
 }
 
 void NSnapPeaShapesUI::toRegina() {
+    endEdit();
+
     if (tri->isNull())
         ReginaSupport::sorry(ui,
             tr("This is a null triangulation: there is no SnapPea "
@@ -463,6 +471,8 @@ void NSnapPeaShapesUI::toRegina() {
 }
 
 void NSnapPeaShapesUI::fill() {
+    endEdit();
+
     if (tri->isNull())
         ReginaSupport::sorry(ui,
             tr("This is a null triangulation: there is no SnapPea "
@@ -503,10 +513,14 @@ void NSnapPeaShapesUI::fill() {
 }
 
 void NSnapPeaShapesUI::randomise() {
+    endEdit();
+
     tri->randomize();
 }
 
 void NSnapPeaShapesUI::canonise() {
+    endEdit();
+
     if (tri->isNull())
         ReginaSupport::sorry(ui,
             tr("This is a null triangulation: there is no SnapPea "

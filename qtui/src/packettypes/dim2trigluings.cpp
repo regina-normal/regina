@@ -39,6 +39,7 @@
 
 // UI includes:
 #include "dim2trigluings.h"
+#include "edittableview.h"
 #include "reginamain.h"
 #include "reginasupport.h"
 
@@ -51,7 +52,6 @@
 #include <QLabel>
 #include <QProgressDialog>
 #include <QRegExp>
-#include <QTableView>
 #include <QTextDocument>
 #include <QToolBar>
 #include <set>
@@ -303,7 +303,7 @@ Dim2TriGluingsUI::Dim2TriGluingsUI(regina::Dim2Triangulation* packet,
         PacketEditorTab(useParentUI), tri(packet) {
     // Set up the table of edge gluings.
     model = new Dim2GluingsModel(packet, readWrite);
-    edgeTable = new QTableView();
+    edgeTable = new EditTableView();
     edgeTable->setSelectionMode(QAbstractItemView::ContiguousSelection);
     edgeTable->setModel(model);
     
@@ -401,6 +401,10 @@ void Dim2TriGluingsUI::refresh() {
     model->rebuild();
 }
 
+void Dim2TriGluingsUI::endEdit() {
+    edgeTable->endEdit();
+}
+
 void Dim2TriGluingsUI::setReadWrite(bool readWrite) {
     model->setReadWrite(readWrite);
 
@@ -420,10 +424,14 @@ void Dim2TriGluingsUI::setReadWrite(bool readWrite) {
 }
 
 void Dim2TriGluingsUI::addTri() {
+    endEdit();
+
     tri->newTriangle();
 }
 
 void Dim2TriGluingsUI::removeSelectedTris() {
+    endEdit();
+
     // Gather together all the triangles to be deleted.
     QModelIndexList sel = edgeTable->selectionModel()->selectedIndexes();
     if (sel.empty()) {

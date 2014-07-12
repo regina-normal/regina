@@ -44,9 +44,9 @@
 
 #include <QAbstractItemModel>
 
+class EditTreeView;
 class QAction;
 class QToolBar;
-class QTreeView;
 class QTreeWidget;
 class QTreeWidgetItem;
 
@@ -107,7 +107,7 @@ class NSnapPeaShapesUI : public QObject, public PacketEditorTab {
          * Internal components
          */
         QWidget* ui;
-        QTreeView* cusps;
+        EditTreeView* cusps;
         QTreeWidget* shapes;
 
         /**
@@ -144,6 +144,7 @@ class NSnapPeaShapesUI : public QObject, public PacketEditorTab {
         QWidget* getInterface();
         const QLinkedList<QAction*>& getPacketTypeActions();
         void refresh();
+        void endEdit();
         void setReadWrite(bool readWrite);
 
     public slots:

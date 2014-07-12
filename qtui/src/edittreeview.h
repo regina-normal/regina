@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,54 +32,34 @@
 
 /* end stub */
 
-/*! \file nsnappeagluings.h
- *  \brief Provides a face gluing viewer for SnapPea triangulations.
+/*! \file edittreeview.h
+ *  \brief A subclass of QTreeView with enhancements for use in packet editors.
  */
 
-#ifndef __NSNAPPEAGLUINGS_H
-#define __NSNAPPEAGLUINGS_H
+#ifndef __EDITTREEVIEW_H
+#define __EDITTREEVIEW_H
 
-#include "packettypes/ntrigluings.h"
-
-namespace regina {
-    class NSnapPeaTriangulation;
-};
-
-class QTableView;
+#include <QTreeView>
 
 /**
- * A SnapPea triangulation page for viewing face gluings.
+ * A subclass of QTreeView for use inside a packet editor.
  */
-class NSnapPeaGluingsUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
-    private:
-        /**
-         * Packet details
-         */
-        regina::NSnapPeaTriangulation* tri;
-
-        /**
-         * Internal components
-         */
-        QWidget* ui;
-        QTableView* faceTable;
-        GluingsModel* model;
-
+class EditTreeView : public QTreeView {
     public:
-        /**
-         * Constructor and destructor.
-         */
-        NSnapPeaGluingsUI(regina::NSnapPeaTriangulation* packet,
-                PacketTabbedUI* useParentUI);
-        ~NSnapPeaGluingsUI();
+        EditTreeView(QWidget* parent = 0);
 
         /**
-         * PacketViewerTab overrides.
+         * Finish any cell editing operation that might be in progress.
          */
-        regina::NPacket* getPacket();
-        QWidget* getInterface();
-        void refresh();
+        void endEdit();
 };
+
+inline EditTreeView::EditTreeView(QWidget* parent) : QTreeView(parent) {
+}
+
+inline void EditTreeView::endEdit() {
+    QModelIndex index = currentIndex();
+    currentChanged(index, index);
+}
 
 #endif

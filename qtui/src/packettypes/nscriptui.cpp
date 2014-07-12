@@ -40,6 +40,7 @@
 // UI includes:
 #include "bigwidget.h"
 #include "docwidget.h"
+#include "edittableview.h"
 #include "nscriptui.h"
 #include "packetchooser.h"
 #include "packeteditiface.h"
@@ -61,7 +62,6 @@
 #include <QMessageBox>
 #include <QPlainTextEdit>
 #include <QSplitter>
-#include <QTableWidget>
 #include <QToolBar>
 #include <set>
 
@@ -265,7 +265,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
     layout->addWidget(splitter, 1);
 
     model = new ScriptVarModel(packet, readWrite);
-    varTable = new QTableView();
+    varTable = new EditTableView();
     varTable->setSelectionMode(QAbstractItemView::ContiguousSelection);
     varTable->setModel(model);
 
@@ -440,11 +440,9 @@ void NScriptUI::refresh() {
     updateRemoveState();
 }
 
-bool NScriptUI::endEdit(bool force) {
-    // TODO: QModelIndex index = varTable->currentIndex();
-    // TODO: currentChanged(index, index);
-
-    return true;
+void NScriptUI::endEdit() {
+    varTable->endEdit();
+    editWidget->commit();
 }
 
 void NScriptUI::setReadWrite(bool readWrite) {
@@ -461,6 +459,8 @@ void NScriptUI::setReadWrite(bool readWrite) {
 }
 
 void NScriptUI::addVariable() {
+    endEdit();
+
     // Find a suitable variable name.
     QString varName;
 
@@ -488,6 +488,8 @@ void NScriptUI::addVariable() {
 }
 
 void NScriptUI::removeSelectedVariables() {
+    endEdit();
+
     // Note that selections are contiguous.
     if (! varTable->selectionModel()->hasSelection()) {
         ReginaSupport::info(ui,
@@ -539,8 +541,7 @@ void NScriptUI::updateRemoveState() {
 }
 
 void NScriptUI::compile() {
-    if (! endEdit())
-        return;
+    endEdit();
 
     if (enclosingPane->getMainWindow()->getPythonManager().compileScript(ui,
             editWidget->toPlainText() + "\n\n") == 0) {
@@ -556,8 +557,7 @@ void NScriptUI::compile() {
 }
 
 void NScriptUI::execute() {
-    if (! endEdit())
-        return;
+    endEdit();
 
     // Set up the variable list.
     PythonVariableList vars;

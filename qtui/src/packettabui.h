@@ -166,6 +166,7 @@ class PacketTabbedUI : public QObject, public PacketUI {
         virtual regina::NPacket* getPacket();
         virtual QWidget* getInterface();
         virtual void refresh();
+        virtual void endEdit();
         virtual void setReadWrite(bool readWrite);
 
     public slots:
@@ -373,6 +374,13 @@ inline PacketPane* PacketTabbedUI::getEnclosingPane() {
 
 inline unsigned PacketTabbedUI::tabCount() {
     return tabs->count();
+}
+
+inline void PacketTabbedUI::endEdit() {
+    if (editorTab)
+        editorTab->endEdit();
+
+    // There should be no need to call endEdit() on viewer tabs.
 }
 
 inline PacketViewerTab::PacketViewerTab(PacketTabbedUI* useParentUI) :

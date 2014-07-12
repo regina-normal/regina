@@ -383,6 +383,12 @@ class ReginaMain : public QMainWindow {
         bool closeAllPanes();
 
         /**
+         * Ensure that all panes have committed any edits-in-progress
+         * to the calculation engine.
+         */
+        void endEdit();
+
+        /**
          * Various UI updates.
          */
         void updateTreeActions();

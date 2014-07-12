@@ -638,6 +638,13 @@ bool ReginaMain::closeAllPanes() {
     return true;
 }
 
+void ReginaMain::endEdit() {
+    QLinkedList<PacketPane *> panes = allPanes;
+    for (QLinkedList<PacketPane *>::iterator it = panes.begin(); 
+            it != panes.end() ; it++)
+        ((*it)->getUI()->endEdit());
+}
+
 void ReginaMain::updateTreeActions() {
     QLinkedList<QAction *>::iterator it;
     for (it = treeGeneralEditActions.begin(); 
@@ -806,6 +813,8 @@ bool ReginaMain::initData(regina::NPacket* usePacketTree,
 }
 
 bool ReginaMain::saveFile() {
+    endEdit();
+
     regina::NPacket* writeTree = packetTree;
     if (fakeRoot_) {
         // Save the (visible) child, but only if there is exactly one child.

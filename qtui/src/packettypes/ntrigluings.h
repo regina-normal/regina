@@ -45,7 +45,7 @@
 
 #include <QAbstractItemModel>
 
-class QTableView;
+class EditTableView;
 class QToolBar;
 
 namespace regina {
@@ -148,7 +148,7 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
          * Internal components
          */
         QWidget* ui;
-        QTableView* faceTable;
+        EditTableView* faceTable;
         GluingsModel* model;
 
         /**
@@ -186,6 +186,7 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         QWidget* getInterface();
         const QLinkedList<QAction*>& getPacketTypeActions();
         void refresh();
+        void endEdit();
         void setReadWrite(bool readWrite);
 
     public slots:

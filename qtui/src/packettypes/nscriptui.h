@@ -49,10 +49,10 @@ template <class PacketType, class Sanitise>
 class DocWidget;
 
 class DocWidgetFinalNewline;
+class EditTableView;
 class QAction;
 class QSplitter;
 class QPlainTextEdit;
-class QTableView;
 
 namespace regina {
     class NPacket;
@@ -145,7 +145,7 @@ class NScriptUI : public QObject, public PacketUI {
          */
         QWidget* ui;
         ScriptVarModel* model;
-        QTableView* varTable;
+        EditTableView* varTable;
         QStyledItemDelegate* valueDelegate;
         DocWidget<regina::NScript, DocWidgetFinalNewline>* editWidget;
         PacketEditIface* editIface;
@@ -173,7 +173,7 @@ class NScriptUI : public QObject, public PacketUI {
         const QLinkedList<QAction*>& getPacketTypeActions();
         QString getPacketMenuText() const;
         void refresh();
-        bool endEdit(bool force = false);
+        void endEdit();
         void setReadWrite(bool readWrite);
 
     public slots:

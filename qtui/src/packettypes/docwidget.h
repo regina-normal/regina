@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -179,8 +179,9 @@ inline void DocWidget<PacketType, Sanitise>::commit() {
 }
 
 template <class PacketType, class Sanitise>
-inline void DocWidget<PacketType, Sanitise>::focusOutEvent(QFocusEvent*) {
+inline void DocWidget<PacketType, Sanitise>::focusOutEvent(QFocusEvent* evt) {
     commit();
+    QPlainTextEdit::focusOutEvent(evt);
 }
 
 inline void DocWidgetNoSanitise::sanitise(QString&) {
