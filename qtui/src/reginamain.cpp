@@ -147,6 +147,10 @@ void ReginaMain::unplugPacketMenu() {
     }
 }
 
+regina::NPacket* ReginaMain::selectedPacket() {
+    return treeView->selectedPacket();
+}
+
 void ReginaMain::setModified(bool modified) {
     dirty = modified;
     actSave->setEnabled(modified);
@@ -340,7 +344,7 @@ void ReginaMain::fileOpenUrl(const QUrl& url) {
         return;
     }
 
-    regina::NPacket* packetTree = regina::readFileMagic(
+    regina::NPacket* packetTree = regina::open(
         static_cast<const char*>(QFile::encodeName(localFile)));
 
     if (! packetTree) {
@@ -385,7 +389,7 @@ void ReginaMain::fileOpenExample(const QUrl& url, const QString& description) {
         return;
     }
 
-    regina::NPacket* packetTree = regina::readXMLFile(
+    regina::NPacket* packetTree = regina::open(
         static_cast<const char*>(QFile::encodeName(localFile)));
 
     if (! packetTree) {
@@ -634,32 +638,11 @@ bool ReginaMain::closeAllPanes() {
     return true;
 }
 
-bool ReginaMain::hasUncommittedChanges() {
+void ReginaMain::endEdit() {
     QLinkedList<PacketPane *> panes = allPanes;
     for (QLinkedList<PacketPane *>::iterator it = panes.begin(); 
-            it != panes.end() ; it++) {
-        if ((*it)->isDirty())
-            return true;
-    }
-    return false;
-}
-
-void ReginaMain::commitAllChanges() {
-    QLinkedList<PacketPane *> panes = allPanes;
-    for (QLinkedList<PacketPane *>::iterator it = panes.begin(); 
-            it != panes.end() ; it++) {
-        if ((*it)->isDirty())
-            (*it)->commit();
-    }
-}
-
-void ReginaMain::discardAllChanges() {
-    QLinkedList<PacketPane *> panes = allPanes;
-    for (QLinkedList<PacketPane *>::iterator it = panes.begin(); 
-            it != panes.end() ; it++) {
-        if ((*it)->isDirty())
-            (*it)->refreshForce();
-    }
+            it != panes.end() ; it++)
+        ((*it)->getUI()->endEdit());
 }
 
 void ReginaMain::updateTreeActions() {
@@ -766,19 +749,8 @@ void ReginaMain::initPacketTree() {
 }
 
 void ReginaMain::view(PacketPane* newPane) {
-    // Decide whether to dock or float.
-    bool shouldDock;
-
-    if (supportingDock) {
-        if (dockedPane) {
-            shouldDock = ! dockedPane->isDirty();
-        } else
-            shouldDock = true;
-    } else
-        shouldDock = false;
-
     // Display the new pane.
-    if (shouldDock) {
+    if (supportingDock) {
         dock(newPane);
         newPane->setFocus();
     } else
@@ -841,29 +813,7 @@ bool ReginaMain::initData(regina::NPacket* usePacketTree,
 }
 
 bool ReginaMain::saveFile() {
-    // Does the user have some work that still needs to be committed?
-    while (hasUncommittedChanges()) {
-        QMessageBox msgBox(QMessageBox::Information, tr("Information"),
-            tr("Some of your packets have changes that are "
-            "not yet committed."));
-        msgBox.setInformativeText("<qt>Uncommitted changes will "
-            "not be saved to file.<p>"
-            "Do you wish to commit all of your changes now?</qt>");
-        QPushButton* commit = msgBox.addButton(tr("Commit All"),
-            QMessageBox::AcceptRole);
-        QPushButton* discard = msgBox.addButton(tr("Discard All"),
-            QMessageBox::DestructiveRole);
-        msgBox.addButton(tr("Cancel"), QMessageBox::RejectRole);
-        msgBox.setDefaultButton(commit);
-        msgBox.exec();
-
-        if (msgBox.clickedButton() == commit)
-            commitAllChanges();
-        else if (msgBox.clickedButton() == discard)
-            discardAllChanges();
-        else
-            return false;
-    }
+    endEdit();
 
     regina::NPacket* writeTree = packetTree;
     if (fakeRoot_) {
@@ -873,8 +823,8 @@ bool ReginaMain::saveFile() {
             writeTree = child;
     }
 
-    if (regina::writeXMLFile(static_cast<const char*>(
-            QFile::encodeName(localFile)), writeTree)) {
+    if (writeTree->save(static_cast<const char*>(
+            QFile::encodeName(localFile)))) {
         setModified(false);
         return true;
     } else {

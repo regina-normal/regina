@@ -61,7 +61,6 @@ SurfaceModel::SurfaceModel(regina::NNormalSurfaceList* surfaces,
         bool readWrite) :
         surfaces_(surfaces),
         coordSystem_(surfaces->coords()),
-        localName(0),
         isReadWrite(readWrite) {
     nFiltered = surfaces_->getNumberOfSurfaces();
     if (nFiltered == 0)
@@ -71,8 +70,6 @@ SurfaceModel::SurfaceModel(regina::NNormalSurfaceList* surfaces,
         for (unsigned i = 0; i < nFiltered; ++i)
             realIndex[i] = i;
     }
-
-    refreshNames();
 }
 
 void SurfaceModel::rebuild(regina::NormalCoords coordSystem) {
@@ -99,24 +96,6 @@ void SurfaceModel::rebuild(regina::NormalCoords coordSystem,
     }
 
     endResetModel();
-}
-
-void SurfaceModel::refreshNames() {
-    delete[] localName;
-
-    if (surfaces_->getNumberOfSurfaces() == 0)
-        localName = 0;
-    else {
-        localName = new QString[surfaces_->getNumberOfSurfaces()];
-        for (unsigned i = 0; i < surfaces_->getNumberOfSurfaces(); ++i)
-            localName[i] = surfaces_->getSurface(i)->getName().c_str();
-    }
-}
-
-void SurfaceModel::commitNames() {
-    for (unsigned i = 0; i < surfaces_->getNumberOfSurfaces(); ++i)
-        const_cast<regina::NNormalSurface*>(surfaces_->getSurface(i))->
-            setName(localName[i].toAscii().constData());
 }
 
 void SurfaceModel::setReadWrite(bool readWrite) {
@@ -154,7 +133,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         if (index.column() == 0)
             return tr("%1.").arg(surfaceIndex);
         else if (index.column() == 1)
-            return localName[surfaceIndex];
+            return s->getName().c_str();
         else if (index.column() == 2) {
             if (! s->isCompact())
                 return QVariant();
@@ -180,9 +159,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 3)) {
             if (! s->isCompact()) {
 #ifndef EXCLUDE_SNAPPEA
-                regina::NMatrixInt* slopes =
-                    (ReginaPrefSet::global().surfacesSupportSpunBdry ?
-                    s->boundarySlopes() : 0);
+                regina::NMatrixInt* slopes = s->boundaryIntersections();
                 if (slopes) {
                     QString ans = tr("Spun:");
                     // Display each boundary slope as (nu(L), -nu(M)).
@@ -263,7 +240,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         }
     } else if (role == Qt::EditRole) {
         if (index.column() == 1)
-            return localName[surfaceIndex];
+            return surfaces_->getSurface(surfaceIndex)->getName().c_str();
         else
             return QVariant();
     } else if (role == Qt::ToolTipRole) {
@@ -375,8 +352,13 @@ Qt::ItemFlags SurfaceModel::flags(const QModelIndex& index) const {
 bool SurfaceModel::setData(const QModelIndex& index, const QVariant& value,
         int role) {
     if (index.column() == 1 && role == Qt::EditRole) {
-        localName[realIndex[index.row()]] = value.toString();
-        emit dataChanged(index, index);
+        // At present, NNormalSurface::setName() does not fire a change
+        // event (since a normal surface does not know what list it
+        // belongs to).  Fire it here instead.
+        regina::NPacket::ChangeEventSpan span(surfaces_);
+        const_cast<regina::NNormalSurface*>(
+            surfaces_->getSurface(realIndex[index.row()]))->
+            setName(value.toString().toAscii().constData());
         return true;
     } else
         return false;
@@ -476,7 +458,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     coords = new CoordinateChooser();
     coords->insertAllViewers(surfaces);
     coords->setCurrentSystem(surfaces->coords());
-    connect(coords, SIGNAL(activated(int)), this, SLOT(refreshLocal()));
+    connect(coords, SIGNAL(activated(int)), this, SLOT(refresh()));
     hdrLayout->addWidget(coords);
     QString msg = tr("Allows you to view these normal surfaces in a "
         "different coordinate system.");
@@ -492,7 +474,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
         new SingleTypeFilter<regina::NSurfaceFilter>(),
         PacketChooser::ROOT_AS_PACKET, true, 0, ui);
     filter->setAutoUpdate(true);
-    connect(filter, SIGNAL(activated(int)), this, SLOT(refreshLocal()));
+    connect(filter, SIGNAL(activated(int)), this, SLOT(refresh()));
     hdrLayout->addWidget(filter);
     msg = tr("<qt>Allows you to filter this list so that only normal "
         "surfaces satisfying particular properties are displayed.<p>"
@@ -579,13 +561,6 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     connect(table->selectionModel(),
         SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
         this, SLOT(updateActionStates()));
-    connect(model, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
-        this, SLOT(notifySurfaceRenamed()));
-
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
-
-    refresh();
 }
 
 NSurfaceCoordinateUI::~NSurfaceCoordinateUI() {
@@ -607,12 +582,7 @@ QWidget* NSurfaceCoordinateUI::getInterface() {
     return ui;
 }
 
-void NSurfaceCoordinateUI::commit() {
-    model->commitNames();
-    setDirty(false);
-}
-
-void NSurfaceCoordinateUI::refreshLocal() {
+void NSurfaceCoordinateUI::refresh() {
     // Update the current filter.
     filter->refreshContents();
 
@@ -644,16 +614,6 @@ void NSurfaceCoordinateUI::refreshLocal() {
     }
 }
 
-void NSurfaceCoordinateUI::refresh() {
-    // Refresh the surface names from the underlying packet.
-    model->refreshNames();
-
-    // Refresh the table of surfaces.
-    refreshLocal();
-
-    setDirty(false);
-}
-
 void NSurfaceCoordinateUI::setReadWrite(bool readWrite) {
     isReadWrite = readWrite;
 
@@ -664,7 +624,7 @@ void NSurfaceCoordinateUI::setReadWrite(bool readWrite) {
 void NSurfaceCoordinateUI::packetToBeDestroyed(NPacket*) {
     // Our currently applied filter is about to be destroyed.
     filter->setCurrentIndex(0); // (i.e., None)
-    refreshLocal();
+    refresh();
 }
 
 void NSurfaceCoordinateUI::cutAlong() {
@@ -747,14 +707,5 @@ void NSurfaceCoordinateUI::columnResized(int section, int, int newSize) {
     for (int i = nNonCoordSections; i < model->columnCount(QModelIndex()); i++)
         table->setColumnWidth(i, newSize);
     currentlyResizing = false;
-}
-
-void NSurfaceCoordinateUI::notifySurfaceRenamed() {
-    setDirty(true);
-}
-
-void NSurfaceCoordinateUI::updatePreferences() {
-    if (surfaces->allowsSpun())
-        refresh();
 }
 

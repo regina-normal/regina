@@ -277,10 +277,6 @@ void FacetGraphTab::refresh() {
     stack->setCurrentWidget(layerGraph);
 }
 
-void FacetGraphTab::editingElsewhere() {
-    showInfo(tr("<qt>Editing...</qt>"));
-}
-
 void FacetGraphTab::showInfo(const QString& msg) {
     layerInfo->setText(msg);
     stack->setCurrentWidget(layerInfo);

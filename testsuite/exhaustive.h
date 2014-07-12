@@ -59,6 +59,7 @@ void runCensusMinClosed(NTriangulationTestFunction f, bool small_ = false);
 void runCensusAllClosed(NTriangulationTestFunction f, bool small_ = false);
 void runCensusAllBounded(NTriangulationTestFunction f, bool small_ = false);
 void runCensusAllIdeal(NTriangulationTestFunction f, bool small_ = false);
+void runCensusAllNoBdry(NTriangulationTestFunction f, bool small_ = false);
 
 void runCensusAllClosed(Dim4TriangulationTestFunction f);
 void runCensusAllBounded(Dim4TriangulationTestFunction f);

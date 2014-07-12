@@ -42,16 +42,6 @@
 #include "triangulation/ntriangulation.h"
 #include "utilities/xmlutils.h"
 
-// Property IDs:
-#define PROPID_EULERCHARACTERISTIC 1
-#define PROPID_REALBOUNDARY 5
-#define PROPID_COMPACT 6
-#define PROPID_ORIENTABILITY 7
-#define PROPID_TWOSIDEDNESS 8
-#define PROPID_CONNECTEDNESS 9
-#define PROPID_CANCRUSH 10
-#define PROPID_SURFACENAME 100
-
 namespace regina {
 
 const int vertexSplit[4][4] = {
@@ -424,16 +414,20 @@ void NNormalSurface::calculateRealBoundary() const {
 }
 
 #ifndef EXCLUDE_SNAPPEA
-NMatrixInt* NNormalSurface::boundarySlopes() const {
-    const NTriangulation *tri = getTriangulation();
+NMatrixInt* NNormalSurface::boundaryIntersections() const {
+    // Make sure this is really a SnapPea triangulation.
+    const NSnapPeaTriangulation* snapPea =
+        dynamic_cast<const NSnapPeaTriangulation*>(getTriangulation());
+    if (! snapPea)
+        return 0;
 
     // Check the preconditions.
-    if (! tri->isOriented())
+    if (! snapPea->isOriented())
         return 0;
     if (vector->allowsAlmostNormal())
         return 0;
-    for (NTriangulation::VertexIterator it = tri->getVertices().begin();
-            it != tri->getVertices().end(); ++it) {
+    for (NTriangulation::VertexIterator it = snapPea->getVertices().begin();
+            it != snapPea->getVertices().end(); ++it) {
         if (! (*it)->isIdeal())
             return 0;
         if (! (*it)->isLinkOrientable())
@@ -442,20 +436,12 @@ NMatrixInt* NNormalSurface::boundarySlopes() const {
             return 0;
     }
 
-    NSnapPeaTriangulation snapPea(*tri, false);
-    NMatrixInt* equations = snapPea.slopeEquations();
+    NMatrixInt* equations = snapPea->slopeEquations();
     if (! equations)
         return 0;
 
-    // Check that snappea hasn't changed the triangulation.
-    // It shouldn't, but if it does then the matrix we obtain cannot be used.
-    if (! snapPea.verifyTriangulation(*tri)) {
-        delete equations;
-        return 0;
-    }
-
     unsigned long cusps = equations->rows() / 2;
-    unsigned long numTet = tri->getNumberOfTetrahedra();
+    unsigned long numTet = snapPea->getNumberOfTetrahedra();
     NMatrixInt* slopes = new NMatrixInt(cusps, 2);
     for(unsigned int i=0; i < cusps; i++) {
         NLargeInteger meridian; // constructor sets this to 0

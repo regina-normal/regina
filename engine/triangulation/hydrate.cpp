@@ -209,13 +209,13 @@ bool NTriangulation::insertRehydration(const std::string& dehydration) {
 
 std::string NTriangulation::dehydrate() const {
     // Can we even dehydrate at all?
-    if (tetrahedra.size() > 25 || hasBoundaryTriangles() || ! isConnected())
+    if (tetrahedra_.size() > 25 || hasBoundaryTriangles() || ! isConnected())
         return "";
 
     // Get the empty case out of the way, since it requires an
     // additional two redundant letters (two blocks of N+1 letters to
     // specify "non-obvious gluings").
-    if (tetrahedra.empty())
+    if (tetrahedra_.empty())
         return "aaa";
 
     // Find an isomorphism that will put the triangulation in a form
@@ -236,7 +236,7 @@ std::string NTriangulation::dehydrate() const {
     // describe whether the gluings for some corresponding 8 tetrahedron faces
     // point to previously-seen or previously-unseen tetrahedra.
     // See the Callahan, Hildebrand and Weeks paper for details.
-    unsigned nTets = tetrahedra.size();
+    unsigned nTets = tetrahedra_.size();
     int* image = new int[nTets];
     int* preImage = new int[nTets];
     NPerm4* vertexMap = new NPerm4[nTets];
@@ -277,12 +277,12 @@ std::string NTriangulation::dehydrate() const {
             // These invariants are preserved because the triangulation is
             // connected.  They break when tet == nTets.
             dest = tetrahedronIndex(
-                tetrahedra[tet]->adjacentTetrahedron(face));
+                tetrahedra_[tet]->adjacentTetrahedron(face));
 
             // Is it a gluing we've already seen from the other side?
             if (image[dest] >= 0)
                 if (image[dest] < image[tet] || (image[dest] == image[tet] &&
-                        vertexMap[tet][tetrahedra[tet]->adjacentFace(face)]
+                        vertexMap[tet][tetrahedra_[tet]->adjacentFace(face)]
                         < vertexMap[tet][face]))
                     continue;
 
@@ -292,7 +292,7 @@ std::string NTriangulation::dehydrate() const {
                 image[dest] = nextUnused;
                 preImage[nextUnused] = dest;
                 vertexMap[dest] = vertexMap[tet] *
-                    tetrahedra[tet]->adjacentGluing(face).
+                    tetrahedra_[tet]->adjacentGluing(face).
                     inverse();
                 nextUnused++;
 
@@ -303,7 +303,7 @@ std::string NTriangulation::dehydrate() const {
                 // in dehydration language.
                 destChars[currGluingPos] = LETTER(image[dest]);
                 map = vertexMap[dest] *
-                    tetrahedra[tet]->adjacentGluing(face) *
+                    tetrahedra_[tet]->adjacentGluing(face) *
                     vertexMap[tet].inverse() * NPerm4(3, 2, 1, 0);
                 // Just loop to find the index of the corresponding
                 // gluing permutation.  There's only 24 permutations and

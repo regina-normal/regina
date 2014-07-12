@@ -72,15 +72,15 @@ namespace regina {
 
 NNormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
     // Get the empty triangulation out of the way now.
-    if (tetrahedra.empty())
+    if (tetrahedra_.empty())
         return 0;
 
     // Do we already know the answer?
-    if (zeroEfficient.known() && zeroEfficient.value())
+    if (zeroEfficient_.known() && zeroEfficient_.value())
         return 0;
 
     // Use combinatorial optimisation if we can.
-    if (isValid() && vertices.size() == 1) {
+    if (isValid() && vertices_.size() == 1) {
         // For now, just use the safe arbitrary-precision NInteger type.
         NTreeSingleSoln<LPConstraintEuler> tree(this, NS_STANDARD);
         if (tree.find()) {
@@ -136,14 +136,14 @@ NNormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
 
 NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
     // Get the empty triangulation out of the way now.
-    if (tetrahedra.empty())
+    if (tetrahedra_.empty())
         return 0;
 
     // Use combinatorial optimisation if we can.
     // This is good for large problems, but for small problems a full
     // enumeration is usually faster.  Still, the big problems are the
     // ones we need to be more fussy about.
-    if (vertices.size() == 1) {
+    if (vertices_.size() == 1) {
         // For now, just use the safe arbitrary-precision NInteger type.
         NTreeSingleSoln<LPConstraintEuler> tree(this, NS_AN_STANDARD);
         if (tree.find()) {
@@ -189,7 +189,7 @@ NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
             // Euler char = 2 implies no real boundary.
             found = false; // At least one octagon found so far?
             broken = false; // More than one octagon found so far?
-            for (tet = 0; tet < tetrahedra.size() && ! broken; ++tet)
+            for (tet = 0; tet < tetrahedra_.size() && ! broken; ++tet)
                 for (oct = 0; oct < 3; ++oct) {
                     coord = s->getOctCoord(tet, oct);
                     if (coord > 1) {
@@ -215,34 +215,34 @@ NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
 }
 
 bool NTriangulation::isZeroEfficient() {
-    if (! zeroEfficient.known()) {
+    if (! zeroEfficient_.known()) {
         if (hasTwoSphereBoundaryComponents())
-            zeroEfficient = false;
+            zeroEfficient_ = false;
         else {
             // Operate on a clone of this triangulation, to avoid
             // changing the real packet tree.
             NTriangulation clone(*this);
             NNormalSurface* s = clone.hasNonTrivialSphereOrDisc();
             if (s) {
-                zeroEfficient = false;
+                zeroEfficient_ = false;
                 delete s;
             } else {
-                zeroEfficient = true;
+                zeroEfficient_ = true;
 
                 // Things implied by 0-efficiency:
                 if (isValid() && isClosed() && isConnected())
-                    irreducible = true;
+                    irreducible_ = true;
             }
         }
     }
-    return zeroEfficient.value();
+    return zeroEfficient_.value();
 }
 
 bool NTriangulation::hasSplittingSurface() {
     // Splitting surfaces must unfortunately be calculated using
     // tri-quad coordinates.
-    if (splittingSurface.known())
-        return splittingSurface.value();
+    if (splittingSurface_.known())
+        return splittingSurface_.value();
 
     // Create a normal surface list.
     //
@@ -259,21 +259,21 @@ bool NTriangulation::hasSplittingSurface() {
     for (unsigned long i = 0; i < nSurfaces; i++) {
         s = surfaces->getSurface(i);
 
-        if (! splittingSurface.known())
+        if (! splittingSurface_.known())
             if (s->isSplitting())
-                splittingSurface = true;
+                splittingSurface_ = true;
 
         // See if there is no use running through the rest of the list.
-        if (splittingSurface.known())
+        if (splittingSurface_.known())
             break;
     }
 
     // Done!
-    if (! splittingSurface.known())
-        splittingSurface = false;
+    if (! splittingSurface_.known())
+        splittingSurface_ = false;
 
     // The stack will clean things up for us automatically.
-    return splittingSurface.value();
+    return splittingSurface_.value();
 }
 
 } // namespace regina

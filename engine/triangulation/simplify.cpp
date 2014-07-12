@@ -841,7 +841,7 @@ bool NTriangulation::shellBoundary(NTetrahedron* t,
         bool check, bool perform) {
     // To perform the move we don't even need a skeleton.
     if (check) {
-        if (! calculatedSkeleton)
+        if (! calculatedSkeleton_)
             calculateSkeleton();
 
         int nBdry = 0;
@@ -990,7 +990,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
                 return false;
 
         {
-            long nEdges = edges.size();
+            long nEdges = edges_.size();
 
             // The parent of each edge in the union-find tree, or -1 if
             // an edge is at the root of a tree.
@@ -1068,7 +1068,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
         // overkill, since each vertex in the corresponding graph G will
         // have degree <= 2, but it's fast so we'll do it.
         {
-            long nTriangles = triangles.size();
+            long nTriangles = triangles_.size();
 
             // The parent of each triangle in the union-find tree, or -1 if
             // a triangle is at the root of a tree.
@@ -1178,7 +1178,7 @@ void NTriangulation::reorderTetrahedraBFS(bool reverse) {
             while (used[nextTet])
                 ++nextTet;
 
-            ordered[filled++] = tetrahedra[nextTet];
+            ordered[filled++] = tetrahedra_[nextTet];
             used[nextTet] = true;
             ++nextTet;
         }
@@ -1198,15 +1198,15 @@ void NTriangulation::reorderTetrahedraBFS(bool reverse) {
 
     // Flush the tetrahedra from the triangulation, and reinsert them in
     // the order in which they were found during the breadth-first search.
-    tetrahedra.clear();
+    tetrahedra_.clear();
 
     unsigned long j;
     if (reverse) {
         for (j = n; j > 0; )
-            tetrahedra.push_back(ordered[--j]);
+            tetrahedra_.push_back(ordered[--j]);
     } else {
         for (j = 0; j < n; )
-            tetrahedra.push_back(ordered[j++]);
+            tetrahedra_.push_back(ordered[j++]);
     }
 
     delete[] used;

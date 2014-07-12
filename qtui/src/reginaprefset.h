@@ -375,9 +375,6 @@ class ReginaPrefSet : public QObject {
                  python console. */
         bool pythonWordWrap;
             /**< Should python consoles be word wrapped? */
-        bool snapPeaClosed;
-            /**< Do we allow the SnapPea kernel to work with closed (non-ideal)
-                 triangulations, even though it's dangerous? */
         unsigned surfacesCompatThreshold;
             /**< The maximum number of normal surfaces in a list for which the
                  compatibility matrices will be automatically calculated. */
@@ -391,11 +388,6 @@ class ReginaPrefSet : public QObject {
         bool surfacesSupportOriented;
             /**< Should we offer support for transversely oriented
                  normal surfaces?  This is still highly experimental. */
-        bool surfacesSupportSpunBdry;
-            /**< Should we offer support for boundary slopes with spun
-                 normal surfaces?  This is stable but might cause
-                 confusion because it works with shortest-basis framings,
-                 which might or might not be what the user expects. */
         unsigned tabDim2Tri;
             /**< The index of the initial tab to open in a 2-manifold
                  triangulation viewer. */
@@ -420,6 +412,12 @@ class ReginaPrefSet : public QObject {
         unsigned tabDim4TriSkeleton;
             /**< The index of the initial sub-tab to open in a 4-manifold
                  triangulation skeleton viewer. */
+        unsigned tabSnapPeaTri;
+            /**< The index of the initial tab to open in a SnapPea
+                 triangulation viewer. */
+        unsigned tabSnapPeaTriAlgebra;
+            /**< The index of the initial sub-tab to open in a SnapPea
+                 triangulation algebra viewer. */
         unsigned tabSurfaceList;
             /**< The index of the initial sub-tab to open in a normal
                  surface list viewer. */

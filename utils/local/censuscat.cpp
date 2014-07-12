@@ -111,7 +111,7 @@ void insertTri(const NTriangulation& source) {
 }
 
 void process(const char* filename) {
-    NPacket* tree = readXMLFile(filename);
+    NPacket* tree = open(filename);
     if (tree == 0) {
         std::cerr << "ERROR: Could not read data from " << filename << '.'
             << std::endl;

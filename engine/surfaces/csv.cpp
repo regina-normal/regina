@@ -34,7 +34,6 @@
 
 #include <fstream>
 
-#include "foreign/csvsurfacelist.h"
 #include "maths/nmatrixint.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
@@ -111,7 +110,7 @@ namespace {
         if (fields & surfaceExportBdry) {
             if (! s->isCompact()) {
 #ifndef EXCLUDE_SNAPPEA
-                regina::NMatrixInt* slopes = s->boundarySlopes();
+                regina::NMatrixInt* slopes = s->boundaryIntersections();
                 if (slopes) {
                     out << "\"spun:";
                     for (unsigned i = 0; i < slopes->rows(); ++i)
@@ -163,13 +162,13 @@ namespace {
     }
 }
 
-bool writeCSVStandard(const char* filename, NNormalSurfaceList& surfaces,
+bool NNormalSurfaceList::saveCSVStandard(const char* filename,
         int additionalFields) {
     std::ofstream out(filename);
     if (! out)
         return false;
 
-    unsigned long n = surfaces.getTriangulation()->getNumberOfTetrahedra();
+    unsigned long n = getTriangulation()->getNumberOfTetrahedra();
 
     unsigned long i, j;
 
@@ -184,7 +183,7 @@ bool writeCSVStandard(const char* filename, NNormalSurfaceList& surfaces,
         out << 'Q' << i << ":02/13,";
         out << 'Q' << i << ":03/12";
 
-        if (! surfaces.allowsAlmostNormal()) {
+        if (! allowsAlmostNormal()) {
             if (i < n - 1)
                 out << ',';
             continue;
@@ -201,10 +200,10 @@ bool writeCSVStandard(const char* filename, NNormalSurfaceList& surfaces,
     out << std::endl;
 
     // Write the data for individual surfaces.
-    unsigned long tot = surfaces.getNumberOfSurfaces();
+    unsigned long tot = getNumberOfSurfaces();
     const NNormalSurface* s;
     for (i = 0; i < tot; ++i) {
-        s = surfaces.getSurface(i);
+        s = getSurface(i);
 
         writePropData(out, s, additionalFields);
 
@@ -217,7 +216,7 @@ bool writeCSVStandard(const char* filename, NNormalSurfaceList& surfaces,
             out << s->getQuadCoord(j, 1) << ',';
             out << s->getQuadCoord(j, 2);
 
-            if (! surfaces.allowsAlmostNormal()) {
+            if (! allowsAlmostNormal()) {
                 if (j < n - 1)
                     out << ',';
                 continue;
@@ -238,13 +237,13 @@ bool writeCSVStandard(const char* filename, NNormalSurfaceList& surfaces,
     return true;
 }
 
-bool writeCSVEdgeWeight(const char* filename, NNormalSurfaceList& surfaces,
+bool NNormalSurfaceList::saveCSVEdgeWeight(const char* filename,
         int additionalFields) {
     std::ofstream out(filename);
     if (! out)
         return false;
 
-    unsigned long n = surfaces.getTriangulation()->getNumberOfEdges();
+    unsigned long n = getTriangulation()->getNumberOfEdges();
 
     unsigned long i, j;
 
@@ -259,10 +258,10 @@ bool writeCSVEdgeWeight(const char* filename, NNormalSurfaceList& surfaces,
     out << std::endl;
 
     // Write the data for individual surfaces.
-    unsigned long tot = surfaces.getNumberOfSurfaces();
+    unsigned long tot = getNumberOfSurfaces();
     const NNormalSurface* s;
     for (i = 0; i < tot; ++i) {
-        s = surfaces.getSurface(i);
+        s = getSurface(i);
 
         writePropData(out, s, additionalFields);
 

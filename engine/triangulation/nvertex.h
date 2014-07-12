@@ -68,9 +68,9 @@ class NTriangulation;
  */
 class REGINA_API NVertexEmbedding {
     private:
-        NTetrahedron* tetrahedron;
+        NTetrahedron* tetrahedron_;
             /**< The tetrahedron in which this vertex is contained. */
-        int vertex;
+        int vertex_;
             /**< The vertex number of the tetrahedron that is this vertex. */
 
     public:
@@ -181,22 +181,22 @@ class REGINA_API NVertex : public ShareableObject, public NMarkedElement {
             /**< Specifies a vertex link that has boundary and is not a
                  disc. */
     private:
-        std::vector<NVertexEmbedding> embeddings;
+        std::vector<NVertexEmbedding> embeddings_;
             /**< A list of descriptors telling how this vertex forms a part of
                  each individual tetrahedron that it belongs to. */
-        NComponent* component;
+        NComponent* component_;
             /**< The component that this vertex is a part of. */
-        NBoundaryComponent* boundaryComponent;
+        NBoundaryComponent* boundaryComponent_;
             /**< The boundary component that this vertex is a part of,
                  or 0 if this vertex is internal. */
-        int link;
+        int link_;
             /**< Specifies the link of the vertex according to one of the
                  predefined vertex link constants in NVertex. */
-        bool linkOrientable;
+        bool linkOrientable_;
             /**< Specifies whether the vertex link is orientable. */
-        long linkEulerChar;
+        long linkEulerChar_;
             /**< Specifies the Euler characteristic of the vertex link. */
-        Dim2Triangulation* linkTri;
+        Dim2Triangulation* linkTri_;
             /**< A triangulation of the vertex link.  This will only be
                  constructed on demand; until then it will be null. */
 
@@ -487,120 +487,120 @@ namespace regina {
 
 // Inline functions for NVertex
 
-inline NVertex::NVertex(NComponent* myComponent) : component(myComponent),
-        boundaryComponent(0), linkOrientable(true),
-        linkEulerChar(0), linkTri(0) {
+inline NVertex::NVertex(NComponent* myComponent) : component_(myComponent),
+        boundaryComponent_(0), linkOrientable_(true),
+        linkEulerChar_(0), linkTri_(0) {
 }
 
 inline NTriangulation* NVertex::getTriangulation() const {
-    return embeddings.front().getTetrahedron()->getTriangulation();
+    return embeddings_.front().getTetrahedron()->getTriangulation();
 }
 
 inline NComponent* NVertex::getComponent() const {
-    return component;
+    return component_;
 }
 
 inline NBoundaryComponent* NVertex::getBoundaryComponent() const {
-    return boundaryComponent;
+    return boundaryComponent_;
 }
 
 inline unsigned long NVertex::getDegree() const {
-    return embeddings.size();
+    return embeddings_.size();
 }
 
 inline int NVertex::getLink() const {
-    return link;
+    return link_;
 }
 
 inline const Dim2Triangulation* NVertex::buildLink() const {
-    if (! linkTri) {
+    if (! linkTri_) {
         // This is a construct-on-demand member: cast away constness to
         // set it here.
-        const_cast<NVertex*>(this)->linkTri = buildLinkDetail(false, 0);
+        const_cast<NVertex*>(this)->linkTri_ = buildLinkDetail(false, 0);
     }
-    return linkTri;
+    return linkTri_;
 }
 
 inline bool NVertex::isLinkClosed() const {
-    return (link != DISC && link != NON_STANDARD_BDRY);
+    return (link_ != DISC && link_ != NON_STANDARD_BDRY);
 }
 
 inline bool NVertex::isIdeal() const {
-    return (link == TORUS || link == KLEIN_BOTTLE ||
-        link == NON_STANDARD_CUSP);
+    return (link_ == TORUS || link_ == KLEIN_BOTTLE ||
+        link_ == NON_STANDARD_CUSP);
 }
 
 inline bool NVertex::isBoundary() const {
-    return (boundaryComponent != 0);
+    return (boundaryComponent_ != 0);
 }
 
 inline bool NVertex::isStandard() const {
-    return (link != NON_STANDARD_CUSP && link != NON_STANDARD_BDRY);
+    return (link_ != NON_STANDARD_CUSP && link_ != NON_STANDARD_BDRY);
 }
 
 inline bool NVertex::isLinkOrientable() const {
-    return linkOrientable;
+    return linkOrientable_;
 }
 
 inline long NVertex::getLinkEulerChar() const {
-    return linkEulerChar;
+    return linkEulerChar_;
 }
 
 inline long NVertex::getLinkEulerCharacteristic() const {
-    return linkEulerChar;
+    return linkEulerChar_;
 }
 
 inline const std::vector<NVertexEmbedding>& NVertex::getEmbeddings() const {
-    return embeddings;
+    return embeddings_;
 }
 
 inline unsigned long NVertex::getNumberOfEmbeddings() const {
-    return embeddings.size();
+    return embeddings_.size();
 }
 
 inline const NVertexEmbedding& NVertex::getEmbedding(unsigned long index)
         const {
-    return embeddings[index];
+    return embeddings_[index];
 }
 
-inline NVertexEmbedding::NVertexEmbedding() : tetrahedron(0) {
+inline NVertexEmbedding::NVertexEmbedding() : tetrahedron_(0) {
 }
 
 inline NVertexEmbedding::NVertexEmbedding(NTetrahedron* newTet, int newVertex) :
-        tetrahedron(newTet), vertex(newVertex) {
+        tetrahedron_(newTet), vertex_(newVertex) {
 }
 
 inline NVertexEmbedding::NVertexEmbedding(const NVertexEmbedding& cloneMe) :
-        tetrahedron(cloneMe.tetrahedron), vertex(cloneMe.vertex) {
+        tetrahedron_(cloneMe.tetrahedron_), vertex_(cloneMe.vertex_) {
 }
 
 inline NVertexEmbedding& NVertexEmbedding::operator =
         (const NVertexEmbedding& cloneMe) {
-    tetrahedron = cloneMe.tetrahedron;
-    vertex = cloneMe.vertex;
+    tetrahedron_ = cloneMe.tetrahedron_;
+    vertex_ = cloneMe.vertex_;
     return *this;
 }
 
 inline NTetrahedron* NVertexEmbedding::getTetrahedron() const {
-    return tetrahedron;
+    return tetrahedron_;
 }
 
 inline int NVertexEmbedding::getVertex() const {
-    return vertex;
+    return vertex_;
 }
 
 inline NPerm4 NVertexEmbedding::getVertices() const {
-    return tetrahedron->getVertexMapping(vertex);
+    return tetrahedron_->getVertexMapping(vertex_);
 }
 
 inline bool NVertexEmbedding::operator == (const NVertexEmbedding& other)
         const {
-    return ((tetrahedron == other.tetrahedron) && (vertex == other.vertex));
+    return ((tetrahedron_ == other.tetrahedron_) && (vertex_ == other.vertex_));
 }
 
 inline bool NVertexEmbedding::operator != (const NVertexEmbedding& other)
         const {
-    return ((tetrahedron != other.tetrahedron) || (vertex != other.vertex));
+    return ((tetrahedron_ != other.tetrahedron_) || (vertex_ != other.vertex_));
 }
 
 } // namespace regina

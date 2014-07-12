@@ -33,6 +33,7 @@
 /* end stub */
 
 #include <cassert>
+#include <fstream>
 #include <iostream>
 #include <iomanip>
 #include <sstream>
@@ -40,24 +41,13 @@
 
 #include "foreign/snappea.h"
 #include "triangulation/ntriangulation.h"
+#include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
-
-// Property IDs:
-// #define PROPID_EXTRA_TOPOLOGY 1 -- Do not use!
-#define PROPID_H1 10
-#define PROPID_H1REL 11
-#define PROPID_H1BDRY 12
-#define PROPID_H2 13
-#define PROPID_FUNDAMENTALGROUP 14
-
-// Property IDs for properties relating to normal surfaces:
-#define PROPID_ZEROEFFICIENT 201
-#define PROPID_SPLITTINGSURFACE 202
 
 namespace regina {
 
 NTriangulation::NTriangulation(const std::string& description) :
-        calculatedSkeleton(false) {
+        calculatedSkeleton_(false) {
     NTriangulation* attempt;
 
     if ((attempt = fromIsoSig(description))) {
@@ -76,21 +66,21 @@ NTriangulation::NTriangulation(const std::string& description) :
 
 void NTriangulation::addTetrahedron(NTetrahedron* t) {
     // Make this a no-op if the tetrahedron has already been added.
-    if (t->tri == this)
+    if (t->tri_ == this)
         return;
-    assert(t->tri == 0);
+    assert(t->tri_ == 0);
 
     ChangeEventSpan span(this);
 
-    t->tri = this;
-    tetrahedra.push_back(t);
+    t->tri_ = this;
+    tetrahedra_.push_back(t);
 
     // Aggressively add neighbours of t (recursively).
     // First check whether this is even necessary.
     bool moreToAdd = false;
     int i;
     for (i = 0; i < 4; ++i)
-        if (t->adjacentTetrahedron(i) && ! t->adjacentTetrahedron(i)->tri) {
+        if (t->adjacentTetrahedron(i) && ! t->adjacentTetrahedron(i)->tri_) {
             moreToAdd = true;
             break;
         }
@@ -106,9 +96,9 @@ void NTriangulation::addTetrahedron(NTetrahedron* t) {
             toFollow.pop();
             for (i = 0; i < 4; ++i) {
                 adj = next->adjacentTetrahedron(i);
-                if (adj && ! adj->tri) {
-                    adj->tri = this;
-                    tetrahedra.push_back(adj);
+                if (adj && ! adj->tri_) {
+                    adj->tri_ = this;
+                    tetrahedra_.push_back(adj);
                     toFollow.push(adj);
                 }
             }
@@ -125,13 +115,13 @@ void NTriangulation::swapContents(NTriangulation& other) {
     clearAllProperties();
     other.clearAllProperties();
 
-    tetrahedra.swap(other.tetrahedra);
+    tetrahedra_.swap(other.tetrahedra_);
 
     TetrahedronIterator it;
-    for (it = tetrahedra.begin(); it != tetrahedra.end(); ++it)
-        (*it)->tri = this;
-    for (it = other.tetrahedra.begin(); it != other.tetrahedra.end(); ++it)
-        (*it)->tri = &other;
+    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it)
+        (*it)->tri_ = this;
+    for (it = other.tetrahedra_.begin(); it != other.tetrahedra_.end(); ++it)
+        (*it)->tri_ = &other;
 }
 
 void NTriangulation::moveContentsTo(NTriangulation& dest) {
@@ -142,51 +132,51 @@ void NTriangulation::moveContentsTo(NTriangulation& dest) {
     dest.clearAllProperties();
 
     TetrahedronIterator it;
-    for (it = tetrahedra.begin(); it != tetrahedra.end(); ++it) {
+    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it) {
         // This is an abuse of NMarkedVector, since for a brief moment
         // each tetrahedron belongs to both vectors
-        // tetrahedra and dest.tetrahedra.
+        // tetrahedra_ and dest.tetrahedra_.
         // However, the subsequent clear() operation does not touch the
         // tetrahedron markings (indices), and so we end up with the
         // correct result (i.e., the markings are correct for dest).
-        (*it)->tri = &dest;
-        dest.tetrahedra.push_back(*it);
+        (*it)->tri_ = &dest;
+        dest.tetrahedra_.push_back(*it);
     }
-    tetrahedra.clear();
+    tetrahedra_.clear();
 }
 
 void NTriangulation::clearAllProperties() {
-    if (calculatedSkeleton)
+    if (calculatedSkeleton_)
         deleteSkeleton();
 
-    fundamentalGroup.clear();
-    H1.clear();
-    H1Rel.clear();
-    H1Bdry.clear();
-    H2.clear();
-    zeroEfficient.clear();
-    splittingSurface.clear();
-    twoSphereBoundaryComponents.clear();
-    negativeIdealBoundaryComponents.clear();
-    threeSphere.clear();
-    threeBall.clear();
-    solidTorus.clear();
-    irreducible.clear();
-    compressingDisc.clear();
-    haken.clear();
+    fundamentalGroup_.clear();
+    H1_.clear();
+    H1Rel_.clear();
+    H1Bdry_.clear();
+    H2_.clear();
+    zeroEfficient_.clear();
+    splittingSurface_.clear();
+    twoSphereBoundaryComponents_.clear();
+    negativeIdealBoundaryComponents_.clear();
+    threeSphere_.clear();
+    threeBall_.clear();
+    solidTorus_.clear();
+    irreducible_.clear();
+    compressingDisc_.clear();
+    haken_.clear();
 
-    turaevViroCache.clear();
+    turaevViroCache_.clear();
 }
 
 void NTriangulation::writeTextLong(std::ostream& out) const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
 
     out << "Size of the skeleton:\n";
-    out << "  Tetrahedra: " << tetrahedra.size() << '\n';
-    out << "  Triangles: " << triangles.size() << '\n';
-    out << "  Edges: " << edges.size() << '\n';
-    out << "  Vertices: " << vertices.size() << '\n';
+    out << "  Tetrahedra: " << tetrahedra_.size() << '\n';
+    out << "  Triangles: " << triangles_.size() << '\n';
+    out << "  Edges: " << edges_.size() << '\n';
+    out << "  Vertices: " << vertices_.size() << '\n';
     out << '\n';
 
     NTetrahedron* tet;
@@ -198,8 +188,8 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
     out << "Tetrahedron gluing:\n";
     out << "  Tet  |  glued to:      (012)      (013)      (023)      (123)\n";
     out << "  -----+-------------------------------------------------------\n";
-    for (tetPos=0; tetPos<tetrahedra.size(); tetPos++) {
-        tet = tetrahedra[tetPos];
+    for (tetPos=0; tetPos<tetrahedra_.size(); tetPos++) {
+        tet = tetrahedra_[tetPos];
         out << "  " << std::setw(3) << tetPos << "  |           ";
         for (face=3; face>=0; face--) {
             out << "  ";
@@ -223,8 +213,8 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
     out << "Vertices:\n";
     out << "  Tet  |  vertex:    0   1   2   3\n";
     out << "  -----+--------------------------\n";
-    for (tetPos=0; tetPos<tetrahedra.size(); tetPos++) {
-        tet = tetrahedra[tetPos];
+    for (tetPos=0; tetPos<tetrahedra_.size(); tetPos++) {
+        tet = tetrahedra_[tetPos];
         out << "  " << std::setw(3) << tetPos << "  |          ";
         for (vertex=0; vertex<4; vertex++)
             out << ' ' << std::setw(3) <<
@@ -236,8 +226,8 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
     out << "Edges:\n";
     out << "  Tet  |  edge:   01  02  03  12  13  23\n";
     out << "  -----+--------------------------------\n";
-    for (tetPos=0; tetPos<tetrahedra.size(); tetPos++) {
-        tet = tetrahedra[tetPos];
+    for (tetPos=0; tetPos<tetrahedra_.size(); tetPos++) {
+        tet = tetrahedra_[tetPos];
         out << "  " << std::setw(3) << tetPos << "  |        ";
         for (start=0; start<4; start++)
             for (end=start+1; end<4; end++)
@@ -250,8 +240,8 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
     out << "Triangles:\n";
     out << "  Tet  |  face:  012 013 023 123\n";
     out << "  -----+------------------------\n";
-    for (tetPos=0; tetPos<tetrahedra.size(); tetPos++) {
-        tet = tetrahedra[tetPos];
+    for (tetPos=0; tetPos<tetrahedra_.size(); tetPos++) {
+        tet = tetrahedra_[tetPos];
         out << "  " << std::setw(3) << tetPos << "  |        ";
         for (face=3; face>=0; face--)
             out << ' ' << std::setw(3) << triangleIndex(tet->getTriangle(face));
@@ -269,8 +259,8 @@ void NTriangulation::writeXMLPacketData(std::ostream& out) const {
     NTetrahedron* adjTet;
     int face;
 
-    out << "  <tetrahedra ntet=\"" << tetrahedra.size() << "\">\n";
-    for (it = tetrahedra.begin(); it != tetrahedra.end(); it++) {
+    out << "  <tetrahedra ntet=\"" << tetrahedra_.size() << "\">\n";
+    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); it++) {
         out << "    <tet desc=\"" <<
             xmlEncodeSpecialChars((*it)->getDescription()) << "\"> ";
         for (face = 0; face < 4; face++) {
@@ -287,60 +277,60 @@ void NTriangulation::writeXMLPacketData(std::ostream& out) const {
     }
     out << "  </tetrahedra>\n";
 
-    if (fundamentalGroup.known()) {
+    if (fundamentalGroup_.known()) {
         out << "  <fundgroup>\n";
-        fundamentalGroup.value()->writeXMLData(out);
+        fundamentalGroup_.value()->writeXMLData(out);
         out << "  </fundgroup>\n";
     }
-    if (H1.known()) {
+    if (H1_.known()) {
         out << "  <H1>";
-        H1.value()->writeXMLData(out);
+        H1_.value()->writeXMLData(out);
         out << "</H1>\n";
     }
-    if (H1Rel.known()) {
+    if (H1Rel_.known()) {
         out << "  <H1Rel>";
-        H1Rel.value()->writeXMLData(out);
+        H1Rel_.value()->writeXMLData(out);
         out << "</H1Rel>\n";
     }
-    if (H1Bdry.known()) {
+    if (H1Bdry_.known()) {
         out << "  <H1Bdry>";
-        H1Bdry.value()->writeXMLData(out);
+        H1Bdry_.value()->writeXMLData(out);
         out << "</H1Bdry>\n";
     }
-    if (H2.known()) {
+    if (H2_.known()) {
         out << "  <H2>";
-        H2.value()->writeXMLData(out);
+        H2_.value()->writeXMLData(out);
         out << "</H2>\n";
     }
-    if (twoSphereBoundaryComponents.known())
+    if (twoSphereBoundaryComponents_.known())
         out << "  " << xmlValueTag("twosphereboundarycomponents",
-            twoSphereBoundaryComponents.value()) << '\n';
-    if (negativeIdealBoundaryComponents.known())
+            twoSphereBoundaryComponents_.value()) << '\n';
+    if (negativeIdealBoundaryComponents_.known())
         out << "  " << xmlValueTag("negativeidealboundarycomponents",
-            negativeIdealBoundaryComponents.value()) << '\n';
-    if (zeroEfficient.known())
-        out << "  " << xmlValueTag("zeroeff", zeroEfficient.value())
+            negativeIdealBoundaryComponents_.value()) << '\n';
+    if (zeroEfficient_.known())
+        out << "  " << xmlValueTag("zeroeff", zeroEfficient_.value())
             << '\n';
-    if (splittingSurface.known())
-        out << "  " << xmlValueTag("splitsfce", splittingSurface.value())
+    if (splittingSurface_.known())
+        out << "  " << xmlValueTag("splitsfce", splittingSurface_.value())
             << '\n';
-    if (threeSphere.known())
-        out << "  " << xmlValueTag("threesphere", threeSphere.value()) << '\n';
-    if (threeBall.known())
-        out << "  " << xmlValueTag("threeball", threeBall.value()) << '\n';
-    if (solidTorus.known())
-        out << "  " << xmlValueTag("solidtorus", solidTorus.value()) << '\n';
-    if (irreducible.known())
-        out << "  " << xmlValueTag("irreducible", irreducible.value())
+    if (threeSphere_.known())
+        out << "  " << xmlValueTag("threesphere", threeSphere_.value()) << '\n';
+    if (threeBall_.known())
+        out << "  " << xmlValueTag("threeball", threeBall_.value()) << '\n';
+    if (solidTorus_.known())
+        out << "  " << xmlValueTag("solidtorus", solidTorus_.value()) << '\n';
+    if (irreducible_.known())
+        out << "  " << xmlValueTag("irreducible", irreducible_.value())
             << '\n';
-    if (compressingDisc.known())
-        out << "  " << xmlValueTag("compressingdisc", compressingDisc.value())
+    if (compressingDisc_.known())
+        out << "  " << xmlValueTag("compressingdisc", compressingDisc_.value())
             << '\n';
-    if (haken.known())
-        out << "  " << xmlValueTag("haken", haken.value()) << '\n';
-    if (! turaevViroCache.empty()) {
-        for (TuraevViroSet::const_iterator it = turaevViroCache.begin();
-                it != turaevViroCache.end(); it++)
+    if (haken_.known())
+        out << "  " << xmlValueTag("haken", haken_.value()) << '\n';
+    if (! turaevViroCache_.empty()) {
+        for (TuraevViroSet::const_iterator it = turaevViroCache_.begin();
+                it != turaevViroCache_.end(); it++)
             out << "  <turaevviro r=\"" << (*it).first.first
                 << "\" root=\"" << (*it).first.second
                 << "\" value=\"" << (*it).second << "\"/>\n";
@@ -388,8 +378,8 @@ NTriangulation* NTriangulation::enterTextTriangulation(std::istream& in,
                 << nTet-1 << " inclusive.\n";
             continue;
         }
-        tet = triang->tetrahedra[tetPos];
-        altTet = triang->tetrahedra[altPos];
+        tet = triang->tetrahedra_[tetPos];
+        altTet = triang->tetrahedra_[altPos];
         out << "Enter the three vertices of the first tetrahedron ("
             << tetPos << "), separated by spaces,\n";
         out << "    that will form one face of the gluing: ";
@@ -452,19 +442,19 @@ long NTriangulation::getEulerCharManifold() const {
     long ans = getEulerCharTri();
 
     // Truncate any ideal vertices.
-    for (BoundaryComponentIterator it = boundaryComponents.begin();
-            it != boundaryComponents.end(); ++it)
+    for (BoundaryComponentIterator it = boundaryComponents_.begin();
+            it != boundaryComponents_.end(); ++it)
         if ((*it)->isIdeal())
             ans += (*it)->getEulerChar() - 1;
 
     // If we have an invalid triangulation, we need to locate non-standard
     // boundary vertices and invalid edges, and truncate those unwanted bits
     // also.
-    if (! valid) {
-        for (VertexIterator it = vertices.begin(); it != vertices.end(); ++it)
+    if (! valid_) {
+        for (VertexIterator it = vertices_.begin(); it != vertices_.end(); ++it)
             if ((*it)->getLink() == NVertex::NON_STANDARD_BDRY)
                 ans += (*it)->getLinkEulerChar() - 1;
-        for (EdgeIterator it = edges.begin(); it != edges.end(); ++it)
+        for (EdgeIterator it = edges_.begin(); it != edges_.end(); ++it)
             if (! (*it)->isValid())
                 ++ans;
     }
@@ -473,33 +463,33 @@ long NTriangulation::getEulerCharManifold() const {
 }
 
 void NTriangulation::deleteTetrahedra() {
-    for_each(tetrahedra.begin(), tetrahedra.end(), FuncDelete<NTetrahedron>());
-    tetrahedra.clear();
+    for_each(tetrahedra_.begin(), tetrahedra_.end(), FuncDelete<NTetrahedron>());
+    tetrahedra_.clear();
 }
 
 void NTriangulation::deleteSkeleton() {
     // Now that skeletal destructors are private, we can't just use for_each.
     // How primitive.  Loop through each list indivually.
-    for (VertexIterator it = vertices.begin(); it != vertices.end(); ++it)
+    for (VertexIterator it = vertices_.begin(); it != vertices_.end(); ++it)
         delete *it;
-    for (EdgeIterator it = edges.begin(); it != edges.end(); ++it)
+    for (EdgeIterator it = edges_.begin(); it != edges_.end(); ++it)
         delete *it;
-    for (TriangleIterator it = triangles.begin(); it != triangles.end(); ++it)
+    for (TriangleIterator it = triangles_.begin(); it != triangles_.end(); ++it)
         delete *it;
-    for (ComponentIterator it = components.begin();
-            it != components.end(); ++it)
+    for (ComponentIterator it = components_.begin();
+            it != components_.end(); ++it)
         delete *it;
-    for (BoundaryComponentIterator it = boundaryComponents.begin();
-            it != boundaryComponents.end(); ++it)
+    for (BoundaryComponentIterator it = boundaryComponents_.begin();
+            it != boundaryComponents_.end(); ++it)
         delete *it;
 
-    vertices.clear();
-    edges.clear();
-    triangles.clear();
-    components.clear();
-    boundaryComponents.clear();
+    vertices_.clear();
+    edges_.clear();
+    triangles_.clear();
+    components_.clear();
+    boundaryComponents_.clear();
 
-    calculatedSkeleton = false;
+    calculatedSkeleton_ = false;
 }
 
 void NTriangulation::cloneFrom(const NTriangulation& X) {
@@ -508,7 +498,7 @@ void NTriangulation::cloneFrom(const NTriangulation& X) {
     removeAllTetrahedra();
 
     TetrahedronIterator it;
-    for (it = X.tetrahedra.begin(); it != X.tetrahedra.end(); it++)
+    for (it = X.tetrahedra_.begin(); it != X.tetrahedra_.end(); it++)
         newTetrahedron((*it)->getDescription());
 
     // Make the gluings.
@@ -518,7 +508,7 @@ void NTriangulation::cloneFrom(const NTriangulation& X) {
     NPerm4 adjPerm;
     int face;
     tetPos = 0;
-    for (it = X.tetrahedra.begin(); it != X.tetrahedra.end(); it++) {
+    for (it = X.tetrahedra_.begin(); it != X.tetrahedra_.end(); it++) {
         tet = *it;
         for (face=0; face<4; face++) {
             adjTet = tet->adjacentTetrahedron(face);
@@ -527,8 +517,8 @@ void NTriangulation::cloneFrom(const NTriangulation& X) {
                 adjPerm = tet->adjacentGluing(face);
                 if (adjPos > tetPos ||
                         (adjPos == tetPos && adjPerm[face] > face)) {
-                    tetrahedra[tetPos]->joinTo(face,
-                        tetrahedra[adjPos], adjPerm);
+                    tetrahedra_[tetPos]->joinTo(face,
+                        tetrahedra_[adjPos], adjPerm);
                 }
             }
         }
@@ -536,29 +526,29 @@ void NTriangulation::cloneFrom(const NTriangulation& X) {
     }
 
     // Properties:
-    if (X.fundamentalGroup.known())
-        fundamentalGroup= new NGroupPresentation(*X.fundamentalGroup.value());
-    if (X.H1.known())
-        H1 = new NAbelianGroup(*(X.H1.value()));
-    if (X.H1Rel.known())
-        H1Rel = new NAbelianGroup(*(X.H1Rel.value()));
-    if (X.H1Bdry.known())
-        H1Bdry = new NAbelianGroup(*(X.H1Bdry.value()));
-    if (X.H2.known())
-        H2 = new NAbelianGroup(*(X.H2.value()));
+    if (X.fundamentalGroup_.known())
+        fundamentalGroup_= new NGroupPresentation(*X.fundamentalGroup_.value());
+    if (X.H1_.known())
+        H1_ = new NAbelianGroup(*(X.H1_.value()));
+    if (X.H1Rel_.known())
+        H1Rel_ = new NAbelianGroup(*(X.H1Rel_.value()));
+    if (X.H1Bdry_.known())
+        H1Bdry_ = new NAbelianGroup(*(X.H1Bdry_.value()));
+    if (X.H2_.known())
+        H2_ = new NAbelianGroup(*(X.H2_.value()));
 
-    twoSphereBoundaryComponents = X.twoSphereBoundaryComponents;
-    negativeIdealBoundaryComponents = X.negativeIdealBoundaryComponents;
-    zeroEfficient = X.zeroEfficient;
-    splittingSurface = X.splittingSurface;
-    threeSphere = X.threeSphere;
-    threeBall = X.threeBall;
-    solidTorus = X.solidTorus;
-    irreducible = X.irreducible;
-    compressingDisc = X.compressingDisc;
-    haken = X.haken;
+    twoSphereBoundaryComponents_ = X.twoSphereBoundaryComponents_;
+    negativeIdealBoundaryComponents_ = X.negativeIdealBoundaryComponents_;
+    zeroEfficient_ = X.zeroEfficient_;
+    splittingSurface_ = X.splittingSurface_;
+    threeSphere_ = X.threeSphere_;
+    threeBall_ = X.threeBall_;
+    solidTorus_ = X.solidTorus_;
+    irreducible_ = X.irreducible_;
+    compressingDisc_ = X.compressingDisc_;
+    haken_ = X.haken_;
 
-    turaevViroCache = X.turaevViroCache;
+    turaevViroCache_ = X.turaevViroCache_;
 }
 
 void NTriangulation::insertTriangulation(const NTriangulation& X) {
@@ -569,7 +559,7 @@ void NTriangulation::insertTriangulation(const NTriangulation& X) {
 
     unsigned long tetPos;
     for (tetPos = 0; tetPos < nX; ++tetPos)
-        newTetrahedron(X.tetrahedra[tetPos]->getDescription());
+        newTetrahedron(X.tetrahedra_[tetPos]->getDescription());
 
     // Make the gluings.
     unsigned long adjPos;
@@ -578,7 +568,7 @@ void NTriangulation::insertTriangulation(const NTriangulation& X) {
     NPerm4 adjPerm;
     int face;
     for (tetPos = 0; tetPos < nX; ++tetPos) {
-        tet = X.tetrahedra[tetPos];
+        tet = X.tetrahedra_[tetPos];
         for (face=0; face<4; face++) {
             adjTet = tet->adjacentTetrahedron(face);
             if (adjTet) {
@@ -586,8 +576,8 @@ void NTriangulation::insertTriangulation(const NTriangulation& X) {
                 adjPerm = tet->adjacentGluing(face);
                 if (adjPos > tetPos ||
                         (adjPos == tetPos && adjPerm[face] > face)) {
-                    tetrahedra[norig + tetPos]->joinTo(face,
-                        tetrahedra[norig + adjPos], adjPerm);
+                    tetrahedra_[norig + tetPos]->joinTo(face,
+                        tetrahedra_[norig + adjPos], adjPerm);
                 }
             }
         }
@@ -633,7 +623,7 @@ std::string NTriangulation::dumpConstruction() const {
 " */\n"
 "\n";
 
-    if (tetrahedra.empty()) {
+    if (tetrahedra_.empty()) {
         ans <<
 "/* This triangulation is empty.  No code is being generated. */\n";
         return ans.str();
@@ -646,7 +636,7 @@ std::string NTriangulation::dumpConstruction() const {
 " */\n"
 "\n";
 
-    unsigned long nTetrahedra = tetrahedra.size();
+    unsigned long nTetrahedra = tetrahedra_.size();
     NTetrahedron* tet;
     NPerm4 p;
     unsigned long t;
@@ -654,7 +644,7 @@ std::string NTriangulation::dumpConstruction() const {
 
     ans << "const int adjacencies[" << nTetrahedra << "][4] = {\n";
     for (t = 0; t < nTetrahedra; t++) {
-        tet = tetrahedra[t];
+        tet = tetrahedra_[t];
 
         ans << "    { ";
         for (f = 0; f < 4; f++) {
@@ -675,7 +665,7 @@ std::string NTriangulation::dumpConstruction() const {
 
     ans << "const int gluings[" << nTetrahedra << "][4][4] = {\n";
     for (t = 0; t < nTetrahedra; t++) {
-        tet = tetrahedra[t];
+        tet = tetrahedra_[t];
 
         ans << "    { ";
         for (f = 0; f < 4; f++) {
@@ -717,8 +707,141 @@ std::string NTriangulation::dumpConstruction() const {
 
 std::string NTriangulation::snapPea() const {
     std::ostringstream out;
-    writeSnapPea(out, *this);
+    snapPea(out);
     return out.str();
+}
+
+void NTriangulation::snapPea(std::ostream& out) const {
+    // Sanity checks.
+    if ((! isValid()) || hasBoundaryTriangles() || tetrahedra_.empty())
+        return;
+
+    // Write header information.
+    out << "% Triangulation\n";
+    if (getPacketLabel().empty())
+        out << "Regina_Triangulation\n";
+    else
+        out << stringToToken(getPacketLabel()) << '\n';
+
+    // Write general details.
+    out << "not_attempted 0.0\n";
+    out << "unknown_orientability\n";
+    out << "CS_unknown\n";
+
+    // Write cusps.
+    out << "0 0\n";
+
+    // Write tetrahedra.
+    out << getNumberOfTetrahedra() << '\n';
+
+    int i, j;
+    for (NTriangulation::TetrahedronIterator it = getTetrahedra().begin();
+            it != getTetrahedra().end(); it++) {
+        // Although our precondition states that there are no boundary
+        // triangles, we test for this anyway.  If somebody makes a mistake and
+        // calls this routine with a bounded triangulation, we don't want
+        // to wind up calling tetrahedronIndex(0) and crashing.
+        for (i = 0; i < 4; i++)
+            if ((*it)->adjacentTetrahedron(i))
+                out << "   " << tetrahedronIndex(
+                    (*it)->adjacentTetrahedron(i)) << ' ';
+            else
+                out << "   -1 ";
+        out << '\n';
+        for (i = 0; i < 4; i++)
+            out << ' ' << (*it)->adjacentGluing(i).str();
+        out << '\n';
+
+        // Incident cusps.
+        for (i = 0; i < 4; i++)
+            out << "  -1 ";
+        out << '\n';
+
+        // Meridians and longitudes.
+        for (i = 0; i < 4; i++) {
+            for (j = 0; j < 16; j++)
+                out << "  0";
+            out << '\n';
+        }
+
+        // Tetrahedron shape.
+        out << "0.0 0.0\n";
+    }
+}
+
+bool NTriangulation::saveSnapPea(const char* filename) const {
+    // Sanity checks.
+    if ((! isValid()) || hasBoundaryTriangles() || tetrahedra_.empty())
+        return false;
+
+    std::ofstream out(filename);
+    if (!out)
+        return false;
+    snapPea(out);
+    return true;
+}
+
+std::string NTriangulation::recogniser() const {
+    std::ostringstream out;
+    recogniser(out);
+    return out.str();
+}
+
+std::string NTriangulation::recognizer() const {
+    std::ostringstream out;
+    recogniser(out);
+    return out.str();
+}
+
+void NTriangulation::recogniser(std::ostream& out) const {
+    // Sanity checks.
+    if ((! isValid()) || hasBoundaryTriangles())
+        return;
+
+    // Write the header.
+    out << "triangulation" << std::endl;
+
+    // Write face gluings.
+    NTriangle* f;
+    NTetrahedron* tet;
+    NPerm4 vert;
+    for (unsigned i = 0; i < getNumberOfTriangles(); ++i) {
+        f = getTriangle(i);
+
+        tet = f->getEmbedding(0).getTetrahedron();
+        vert = f->getEmbedding(0).getVertices();
+        out << 't' << (tetrahedronIndex(tet) + 1)
+            << '(' << (vert[0] + 1)
+            << ',' << (vert[1] + 1)
+            << ',' << (vert[2] + 1) << ") - ";
+
+        tet = f->getEmbedding(1).getTetrahedron();
+        vert = f->getEmbedding(1).getVertices();
+        out << 't' << (tetrahedronIndex(tet) + 1)
+            << '(' << (vert[0] + 1)
+            << ',' << (vert[1] + 1)
+            << ',' << (vert[2] + 1) << ')';
+
+        if (i != getNumberOfTriangles() - 1)
+            out << ',';
+        out << std::endl;
+    }
+
+    // Write the footer.
+    out << "end" << std::endl;
+}
+
+bool NTriangulation::saveRecogniser(const char* filename) const {
+    // Sanity checks.
+    if ((! isValid()) || hasBoundaryTriangles())
+        return false;
+
+    // Write to file or stdout as appropriate.
+    std::ofstream out(filename);
+    if (! out)
+        return false;
+    recogniser(out);
+    return true;
 }
 
 NTriangulation* NTriangulation::fromSnapPea(const std::string& snapPeaData) {

@@ -34,17 +34,20 @@
 
 // Regina core includes:
 #include "snappea/nsnappeatriangulation.h"
-#include "triangulation/ntriangulation.h"
 
 // UI includes:
+#include "iconcache.h"
 #include "ntrisnappea.h"
+#include "reginamain.h"
 #include "reginaprefset.h"
+#include "reginasupport.h"
 #include "snappeacomponents.h"
 
 #include <climits>
 #include <cmath>
 #include <QLabel>
 #include <QLayout>
+#include <QPushButton>
 #include <QStackedWidget>
 
 using regina::NPacket;
@@ -54,44 +57,51 @@ using regina::NTriangulation;
 NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
         PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), reginaTri(packet), snappeaTri(0) {
-    ui = new QWidget();
-    QBoxLayout* layout = new QVBoxLayout(ui);
-
-    layout->addStretch(3);
-
-    QLabel* label = new QLabel(tr("<qt><b>SnapPea Calculations</b></qt>"),
-        ui);
-    label->setAlignment(Qt::AlignCenter);
-    layout->addWidget(label);
-
-    layout->addStretch(1);
-
-    data = new QStackedWidget(ui);
+    ui = new QStackedWidget();
 
     // Data for a null SnapPea triangulation:
-
     dataNull = new QWidget();
     QBoxLayout* nullLayout = new QVBoxLayout(dataNull);
+
+    nullLayout->addStretch(3);
+
+    QLabel* label = new QLabel(tr("<qt><b>SnapPea Calculations</b></qt>"));
+    label->setAlignment(Qt::AlignCenter);
+    nullLayout->addWidget(label);
+
+    nullLayout->addStretch(1);
 
     unavailable = new NoSnapPea(reginaTri, dataNull, true);
     unavailable->setAlignment(Qt::AlignCenter);
     nullLayout->addWidget(unavailable);
-    data->addWidget(dataNull);
+
+    nullLayout->addStretch(3);
+
+    ui->addWidget(dataNull);
 
     // Data for a non-null SnapPea triangulation:
-
     dataValid = new QWidget();
-    QGridLayout* validGrid = new QGridLayout(dataValid);
+    QBoxLayout* validLayout = new QVBoxLayout(dataValid);
+
+    validLayout->addStretch(2);
+
+    label = new QLabel(tr("<qt><b>SnapPea Calculations</b></qt>"));
+    label->setAlignment(Qt::AlignCenter);
+    validLayout->addWidget(label);
+
+    validLayout->addStretch(1);
+
+    QGridLayout* validGrid = new QGridLayout();
     validGrid->setColumnStretch(0, 1);
     validGrid->setColumnMinimumWidth(2, 5); // Horizontal gap
     validGrid->setColumnStretch(4, 1);
 
     QString msg;
 
-    solutionTypeLabel = new QLabel(tr("Solution type:"), dataValid);
+    solutionTypeLabel = new QLabel(tr("Solution type:"));
     solutionTypeLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     validGrid->addWidget(solutionTypeLabel, 0, 1);
-    solutionType = new QLabel(dataValid);
+    solutionType = new QLabel();
     solutionType->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     validGrid->addWidget(solutionType, 0, 3);
     solutionTypeExplnBase = tr("The type of solution that was found "
@@ -99,10 +109,10 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
     solutionTypeLabel->setWhatsThis(solutionTypeExplnBase);
     solutionType->setWhatsThis(solutionTypeExplnBase);
 
-    label = new QLabel(tr("Volume:"), dataValid);
+    label = new QLabel(tr("Volume:"));
     label->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     validGrid->addWidget(label, 1, 1);
-    volume = new QLabel(dataValid);
+    volume = new QLabel();
     volume->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     validGrid->addWidget(volume, 1, 3);
     msg = tr("The volume of the underlying 3-manifold.  The estimated "
@@ -110,12 +120,30 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
     label->setWhatsThis(msg);
     volume->setWhatsThis(msg);
 
-    data->addWidget(dataValid);
+    validLayout->addLayout(validGrid);
+
+    validLayout->addStretch(1);
+
+    label = new QLabel(tr("For more detailed information:"));
+    label->setAlignment(Qt::AlignCenter);
+    validLayout->addWidget(label);
+
+    QBoxLayout* buttonArea = new QHBoxLayout();
+    buttonArea->addStretch(1);
+    QPushButton* btnToSnapPea = new QPushButton(
+        IconCache::icon(IconCache::packet_snappea),
+        tr("Convert to a SnapPea triangulation"));
+    buttonArea->addWidget(btnToSnapPea);
+    buttonArea->addStretch(1);
+    validLayout->addLayout(buttonArea);
+
+    validLayout->addStretch(2);
+
+    ui->addWidget(dataValid);
 
     // Finish off.
-    layout->addWidget(data);
-    layout->addStretch(3);
 
+    connect(btnToSnapPea, SIGNAL(clicked()), this, SLOT(toSnapPea()));
     connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
         this, SLOT(updatePreferences()));
 }
@@ -137,14 +165,13 @@ void NTriSnapPeaUI::refresh() {
     if (snappeaTri)
         delete snappeaTri;
 
-    snappeaTri = new NSnapPeaTriangulation(*reginaTri,
-        ReginaPrefSet::global().snapPeaClosed);
+    snappeaTri = new NSnapPeaTriangulation(*reginaTri);
 
     if (snappeaTri->isNull()) {
-        data->setCurrentWidget(dataNull);
+        ui->setCurrentWidget(dataNull);
         unavailable->refresh();
     } else {
-        data->setCurrentWidget(dataValid);
+        ui->setCurrentWidget(dataValid);
 
         solutionType->setText(solutionTypeString(snappeaTri->solutionType()));
         solutionType->setEnabled(true);
@@ -157,22 +184,7 @@ void NTriSnapPeaUI::refresh() {
         int places;
         double ans = snappeaTri->volume(places);
 
-        // Can we say that the volume is approximately zero?
-        bool approxZero = false;
-        if (places >= 6 && fabs(ans) < 1e-7) {
-            // The volume is fairly small and the accuracy is high.
-            // Test whether zero lies comfortably within the estimated
-            // margin of error.
-            double epsilon = 1.0;
-            for (int i = 0; i < places + 1; i++)
-                epsilon /= 10;
-
-            // Now we should have epsilon == 1e-(places+1).
-            if (fabs(ans) < epsilon)
-                approxZero = true;
-        }
-
-        if (approxZero) {
+        if (snappeaTri->volumeZero()) {
             // Zero is within the margin of error, and this margin of
             // error is small.  Report it as zero, with the exact result
             // beneath.
@@ -188,18 +200,33 @@ void NTriSnapPeaUI::refresh() {
     }
 }
 
-void NTriSnapPeaUI::editingElsewhere() {
-    data->setCurrentWidget(dataValid);
+void NTriSnapPeaUI::toSnapPea() {
+    if (! snappeaTri) {
+        // This should never happen, but...
+        ui->setCurrentWidget(dataNull);
+        unavailable->refresh();
+        return;
+    }
 
-    QString msg(tr("Editing..."));
+    NSnapPeaTriangulation* ans = new NSnapPeaTriangulation(*snappeaTri);
+    if (ans->isNull()) {
+        // This should never happen either...
+        ui->setCurrentWidget(dataNull);
+        unavailable->refresh();
+        delete ans;
+        return;
+    }
 
-    solutionType->setText(msg);
-    solutionType->setEnabled(false);
-    solutionTypeLabel->setWhatsThis(solutionTypeExplnBase);
-    solutionType->setWhatsThis(solutionTypeExplnBase);
+    ReginaSupport::info(ui,
+        tr("I have created a new SnapPea triangulation."),
+        tr("<qt>The new SnapPea triangulation appears beneath this "
+            "Regina triangulation in the packet tree.<p>"
+            "For peripheral curves, I have attempted to install the "
+            "(shortest, second shortest) basis on each cusp.</qt>"));
 
-    volume->setText(msg);
-    volume->setEnabled(false);
+    ans->setPacketLabel(reginaTri->getPacketLabel());
+    reginaTri->insertChildLast(ans);
+    enclosingPane->getMainWindow()->packetView(ans, true, true);
 }
 
 QString NTriSnapPeaUI::solutionTypeString(int solnType) {
