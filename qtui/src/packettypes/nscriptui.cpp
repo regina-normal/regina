@@ -290,7 +290,8 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
 
     // --- Text Editor ---
 
-    editWidget = new DocWidget<NScript>(packet, splitter);
+    editWidget = new DocWidget<NScript, DocWidgetFinalNewline>(
+        packet, splitter);
     editWidget->setReadOnly(!readWrite);
     editWidget->setLineWrapMode(QPlainTextEdit::NoWrap);
     editWidget->setFont(ReginaPrefSet::fixedWidthFont());
@@ -440,13 +441,6 @@ void NScriptUI::refresh() {
 }
 
 bool NScriptUI::endEdit(bool force) {
-    // If we don't finish with a newline, add one now.
-    QString text = editWidget->toPlainText();
-    if (! text.endsWith('\n'))
-        text += '\n';
-
-    script->setText(text.toAscii().constData());
-
     // TODO: QModelIndex index = varTable->currentIndex();
     // TODO: currentChanged(index, index);
 

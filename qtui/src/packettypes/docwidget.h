@@ -44,6 +44,7 @@
 #include <QPlainTextDocumentLayout>
 #include <QTextDocument>
 
+class DocWidgetNoSanitise;
 class QTextDocument;
 
 /**
@@ -57,8 +58,18 @@ class QTextDocument;
  * "global" for the packet, in that multiple DocWidget viewers for the
  * same packet will work with the same underlying document, thus keeping
  * all viewers in sync.
+ *
+ * This widget will automatically push changes to the calculation engine
+ * when it loses focus.  (It will not push changes on every keystroke,
+ * since this could be too much of a performance hit.) You can always
+ * force it to push changes at any time by calling commit().
+ *
+ * You can force the widget to "sanitise" the text by passing an extra
+ * template parameter Sanitise.  This must be a class with a static
+ * function void sanitise(QString&).  This will be applied to the text
+ * contents of the widget before each push.
  */
-template <class PacketType>
+template <class PacketType, class Sanitise = DocWidgetNoSanitise>
 class DocWidget : public QPlainTextEdit {
     private:
         struct Details {
@@ -80,6 +91,11 @@ class DocWidget : public QPlainTextEdit {
          */
         void refresh();
 
+        /**
+         * Push any edits-in-progress to the calculation engine.
+         */
+        void commit();
+
     protected:
         /**
          * QWidget overrides.
@@ -87,11 +103,29 @@ class DocWidget : public QPlainTextEdit {
         virtual void focusOutEvent(QFocusEvent*);
 };
 
-template <class PacketType>
-typename DocWidget<PacketType>::Registry DocWidget<PacketType>::registry_;
+/**
+ * A sanitisation class for use with DocWidget that makes no changes to
+ * the text at all.
+ */
+struct DocWidgetNoSanitise {
+    static void sanitise(QString& str);
+};
 
-template <class PacketType>
-DocWidget<PacketType>::DocWidget(PacketType* packet, QWidget* parent) :
+/**
+ * A sanitisation class for use with DocWidget that appends a final
+ * newline if there is not one already.
+ */
+struct DocWidgetFinalNewline {
+    static void sanitise(QString& str);
+};
+
+template <class PacketType, class Sanitise>
+typename DocWidget<PacketType, Sanitise>::Registry
+    DocWidget<PacketType, Sanitise>::registry_;
+
+template <class PacketType, class Sanitise>
+DocWidget<PacketType, Sanitise>::DocWidget(
+        PacketType* packet, QWidget* parent) :
         QPlainTextEdit(parent), packet_(packet) {
     // Find the QTextDocument in the registry for this packet, or create
     // a new document if this packet is not yet registered.
@@ -109,8 +143,8 @@ DocWidget<PacketType>::DocWidget(PacketType* packet, QWidget* parent) :
     }
 }
 
-template <class PacketType>
-DocWidget<PacketType>::~DocWidget() {
+template <class PacketType, class Sanitise>
+DocWidget<PacketType, Sanitise>::~DocWidget() {
     // Push any outstanding changes to the calculation engine.
     packet_->setText(toPlainText().toAscii().constData());
 
@@ -126,16 +160,30 @@ DocWidget<PacketType>::~DocWidget() {
     }
 }
 
-template <class PacketType>
-void DocWidget<PacketType>::refresh() {
+template <class PacketType, class Sanitise>
+inline void DocWidget<PacketType, Sanitise>::refresh() {
     setPlainText(packet_->getText().c_str());
     moveCursor(QTextCursor::Start);
 }
 
-template <class PacketType>
-void DocWidget<PacketType>::focusOutEvent(QFocusEvent*) {
-    // Push the pending edit to the calculation engine.
-    packet_->setText(toPlainText().toAscii().constData());
+template <class PacketType, class Sanitise>
+inline void DocWidget<PacketType, Sanitise>::commit() {
+    QString text = toPlainText();
+    Sanitise::sanitise(text);
+    packet_->setText(text.toAscii().constData());
+}
+
+template <class PacketType, class Sanitise>
+inline void DocWidget<PacketType, Sanitise>::focusOutEvent(QFocusEvent*) {
+    commit();
+}
+
+inline void DocWidgetNoSanitise::sanitise(QString&) {
+}
+
+inline void DocWidgetFinalNewline::sanitise(QString& str) {
+    if (! str.endsWith('\n'))
+        str += '\n';
 }
 
 #endif

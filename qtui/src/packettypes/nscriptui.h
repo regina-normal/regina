@@ -45,9 +45,10 @@
 
 #include <QStyledItemDelegate>
 
-template <class PacketType>
+template <class PacketType, class Sanitise>
 class DocWidget;
 
+class DocWidgetFinalNewline;
 class QAction;
 class QSplitter;
 class QPlainTextEdit;
@@ -146,7 +147,7 @@ class NScriptUI : public QObject, public PacketUI {
         ScriptVarModel* model;
         QTableView* varTable;
         QStyledItemDelegate* valueDelegate;
-        DocWidget<regina::NScript>* editWidget;
+        DocWidget<regina::NScript, DocWidgetFinalNewline>* editWidget;
         PacketEditIface* editIface;
 
         /**
