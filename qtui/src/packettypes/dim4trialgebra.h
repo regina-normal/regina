@@ -33,7 +33,7 @@
 /* end stub */
 
 /*! \file dim4trialgebra.h
- *  \brief Provides an algebra viewer for 4-dimensional triangulations.
+ *  \brief Provides an algebra viewer for 4-manifold triangulations.
  */
 
 #ifndef __DIM4TRIALGEBRA_H
@@ -41,12 +41,8 @@
 
 #include "../packettabui.h"
 
-class Dim4TriFundGroupUI;
+class GroupWidget;
 class QLabel;
-class QLineEdit;
-class QListWidget;
-class QTreeWidget;
-class QPushButton;
 
 namespace regina {
     class NPacket;
@@ -57,12 +53,6 @@ namespace regina {
  * A triangulation page for viewing algebraic properties.
  */
 class Dim4TriAlgebraUI : public PacketTabbedViewerTab {
-    private:
-        /**
-         * Internal components
-         */
-        Dim4TriFundGroupUI* fundGroup;
-
     public:
         /**
          * Constructor.
@@ -72,41 +62,9 @@ class Dim4TriAlgebraUI : public PacketTabbedViewerTab {
 };
 
 /**
- * A triangulation page for viewing homology groups.
+ * A triangulation page for viewing homology and the fundamental group.
  */
-class Dim4TriHomologyUI : public PacketViewerTab {
-    private:
-        /**
-         * Packet details
-         */
-        regina::Dim4Triangulation* tri;
-
-        /**
-         * Internal components
-         */
-        QWidget* ui;
-        QLabel* H1;
-        QLabel* H2;
-
-    public:
-        /**
-         * Constructor.
-         */
-        Dim4TriHomologyUI(regina::Dim4Triangulation* packet,
-                PacketTabbedViewerTab* useParentUI);
-
-        /**
-         * PacketViewerTab overrides.
-         */
-        regina::NPacket* getPacket();
-        QWidget* getInterface();
-        void refresh();
-};
-
-/**
- * A triangulation page for viewing the fundamental group.
- */
-class Dim4TriFundGroupUI : public QObject, public PacketViewerTab {
+class Dim4TriHomologyFundUI : public QObject, public PacketViewerTab {
     Q_OBJECT
 
     private:
@@ -119,19 +77,16 @@ class Dim4TriFundGroupUI : public QObject, public PacketViewerTab {
          * Internal components
          */
         QWidget* ui;
-        QLabel* fundName;
-        QLabel* fundGens;
-        QLabel* fundRelCount;
-        QListWidget* fundRels;
-        QPushButton* btnGAP;
-        QPushButton* btnSimp;
-        unsigned simpDepth;
+        QLabel* H1;
+        QLabel* H2;
+        QLabel* fgMsg;
+        GroupWidget* fgGroup;
 
     public:
         /**
          * Constructor.
          */
-        Dim4TriFundGroupUI(regina::Dim4Triangulation* packet,
+        Dim4TriHomologyFundUI(regina::Dim4Triangulation* packet,
                 PacketTabbedViewerTab* useParentUI);
 
         /**
@@ -143,20 +98,9 @@ class Dim4TriFundGroupUI : public QObject, public PacketViewerTab {
 
     public slots:
         /**
-         * Group simplification actions.
+         * Notify us that the presentation has been simplified.
          */
-        void simplifyGAP();
-        /**
-         * Our internal pi1 simplification code.
-         */
-        void simplifyPi1();
-
-    private:
-        /**
-         * Returns the full path to the GAP executable, or QString::null
-         * if the GAP executable does not appear to be valid.
-         */
-        QString verifyGAPExec();
+        void fundGroupSimplified();
 };
 
 #endif
