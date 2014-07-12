@@ -163,6 +163,7 @@ void runCensusAllNoBdry(NTriangulationTestFunction testFunction, bool small_) {
         NBoolSet::sFalse /* bounded */,
         -1 /* bdry faces */, 0 /* purge */,
         &testCensusTriangulation<3>, &f);
+}
 
 void runCensusAllClosed(Dim4TriangulationTestFunction testFunction) {
     regina::NContainer parent;
