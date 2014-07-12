@@ -47,66 +47,95 @@
 class QTextDocument;
 
 /**
- * A registry through which a single text-based packet can be associated
- * with a single QTextDocument, which is "global" for each packet.
- * Multiple viewers for the same packet can then work with the same
- * underlying document, which helps keep different aspects of the GUI in sync.
+ * A widget for displaying and editing the text contents of a text-based
+ * packet.  The template argument PacketType should be one of Regina's
+ * text-based packet types, such as NText or NScript.  In particular, it
+ * must have the text-based member functions getText() and setText().
  *
- * The template argument PacketType should be one of Regina's text-based
- * packet types, such as NText or NScript.  In particular, it must have
- * the text-based member functions getText() and setText().
+ * This widget keeps an internal registry, through which each packet
+ * is associated with a single QTextDocument.  This QTextDocument is
+ * "global" for the packet, in that multiple DocWidget viewers for the
+ * same packet will work with the same underlying document, thus keeping
+ * all viewers in sync.
  */
 template <class PacketType>
-class DocRegistry {
+class DocWidget : public QPlainTextEdit {
     private:
         struct Details {
             QTextDocument* doc;
             int users;
         };
+        typedef QHash<PacketType*, Details> Registry;
+        static Registry registry_;
 
-        QHash<PacketType*, Details> details;
-
-        typedef typename QHash<PacketType*, Details>::iterator Iterator;
+        PacketType* packet_;
 
     public:
+        DocWidget(PacketType* packet, QWidget* parent);
+        ~DocWidget();
+
         /**
-         * Request or release the "global" document for the given packet.
-         * Each call to acquire() must eventually be followed by a
-         * corresponding call to release().  When all "users" of the
-         * document have called release(), the document will be destroyed
-         * (a new document will be created if acquire() is later called again).
+         * Refresh this widget with the contents of the packet from the
+         * calculation engine.
          */
-        QTextDocument* acquire(PacketType* packet);
-        void release(PacketType* packet);
+        void refresh();
+
+    protected:
+        /**
+         * QWidget overrides.
+         */
+        virtual void focusOutEvent(QFocusEvent*);
 };
 
 template <class PacketType>
-QTextDocument* DocRegistry<PacketType>::acquire(PacketType* packet) {
-    Iterator it = details.find(packet);
-    if (it != details.end()) {
+typename DocWidget<PacketType>::Registry DocWidget<PacketType>::registry_;
+
+template <class PacketType>
+DocWidget<PacketType>::DocWidget(PacketType* packet, QWidget* parent) :
+        QPlainTextEdit(parent), packet_(packet) {
+    // Find the QTextDocument in the registry for this packet, or create
+    // a new document if this packet is not yet registered.
+    typename Registry::Iterator it = registry_.find(packet);
+    if (it != registry_.end()) {
         ++it->users;
-        return it->doc;
+        setDocument(it->doc);
     } else {
         Details d;
         d.doc = new QTextDocument(packet->getText().c_str());
         d.doc->setDocumentLayout(new QPlainTextDocumentLayout(d.doc));
         d.users = 1;
-        details.insert(packet, d);
-        return d.doc;
+        registry_.insert(packet, d);
+        setDocument(d.doc);
     }
 }
 
 template <class PacketType>
-void DocRegistry<PacketType>::release(PacketType* packet) {
-    Iterator it = details.find(packet);
-    if (it == details.end())
-        return; // Should never happen.
+DocWidget<PacketType>::~DocWidget() {
+    // Push any outstanding changes to the calculation engine.
+    packet_->setText(toPlainText().toAscii().constData());
 
-    --it->users;
-    if (it->users == 0) {
-        delete it->doc;
-        details.erase(it);
+    // If we are the last DocWidget registered for this packet, delete
+    // the underlying QTextDocument.
+    typename Registry::Iterator it = registry_.find(packet_);
+    if (it != registry_.end()) { // Should always be true, but just in case..
+        --it->users;
+        if (it->users == 0) {
+            delete it->doc;
+            registry_.erase(it);
+        }
     }
+}
+
+template <class PacketType>
+void DocWidget<PacketType>::refresh() {
+    setPlainText(packet_->getText().c_str());
+    moveCursor(QTextCursor::Start);
+}
+
+template <class PacketType>
+void DocWidget<PacketType>::focusOutEvent(QFocusEvent*) {
+    // Push the pending edit to the calculation engine.
+    packet_->setText(toPlainText().toAscii().constData());
 }
 
 #endif
