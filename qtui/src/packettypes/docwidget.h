@@ -162,8 +162,13 @@ DocWidget<PacketType, Sanitise>::~DocWidget() {
 
 template <class PacketType, class Sanitise>
 inline void DocWidget<PacketType, Sanitise>::refresh() {
+    // We have to jump through several hoops to preserve the cursor
+    // position, sigh.
+    QTextCursor c = textCursor();
+    int pos = c.position();
     setPlainText(packet_->getText().c_str());
-    moveCursor(QTextCursor::Start);
+    c.setPosition(pos);
+    setTextCursor(c);
 }
 
 template <class PacketType, class Sanitise>
