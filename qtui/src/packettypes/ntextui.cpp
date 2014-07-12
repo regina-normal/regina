@@ -37,7 +37,7 @@
 
 // UI includes:
 #include "bigwidget.h"
-#include "docregistry.h"
+#include "docwidget.h"
 #include "packeteditiface.h"
 #include "ntextui.h"
 
@@ -49,18 +49,13 @@
 using regina::NPacket;
 using regina::NText;
 
-namespace {
-    static DocRegistry<NText> registry;
-}
-
 NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane) :
         PacketUI(enclosingPane), text(packet) {
     ui = new BigWidget(1, 2);
     QBoxLayout* layout = new QVBoxLayout(ui);
     layout->setContentsMargins(0, 0, 0, 0);
 
-    editWidget = new QPlainTextEdit(enclosingPane);
-    editWidget->setDocument(registry.acquire(text));
+    editWidget = new DocWidget<NText>(text, enclosingPane);
     editWidget->setReadOnly(!enclosingPane->isReadWrite());
     editWidget->setLineWrapMode(QPlainTextEdit::WidgetWidth);
     editIface = new PacketEditTextEditor(editWidget);
@@ -71,8 +66,6 @@ NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane) :
 
 NTextUI::~NTextUI() {
 //    delete editIface;
-    text->setText(editWidget->toPlainText().toAscii().constData());
-    registry.release(text);
     delete ui;
 }
 
@@ -89,8 +82,7 @@ QString NTextUI::getPacketMenuText() const {
 }
 
 void NTextUI::refresh() {
-    editWidget->setPlainText(text->getText().c_str());
-    editWidget->moveCursor(QTextCursor::Start);
+    editWidget->refresh();
 }
 
 void NTextUI::setReadWrite(bool readWrite) {

@@ -41,7 +41,8 @@
 
 #include "../packetui.h"
 
-class QPlainTextEdit;
+template <class PacketType>
+class DocWidget;
 
 namespace regina {
     class NPacket;
@@ -64,7 +65,7 @@ class NTextUI : public QObject, public PacketUI {
          * Internal components
          */
         QWidget* ui;
-        QPlainTextEdit* editWidget;
+        DocWidget<regina::NText>* editWidget;
         PacketEditIface* editIface;
 
     public:
