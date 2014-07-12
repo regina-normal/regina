@@ -45,23 +45,21 @@
 
 #include <QAbstractItemModel>
 
-class QTableView;
+class EditTableView;
 class QToolBar;
 
 namespace regina {
     class NPacket;
+    class NTetrahedron;
     class NTriangulation;
 };
 
 class GluingsModel : public QAbstractItemModel {
     protected:
         /**
-         * Details of the working (non-committed) triangulation
+         * Details of the triangulation
          */
-        int nTet;
-        QString* name;
-        int* adjTet;
-        regina::NPerm4* adjPerm;
+        regina::NTriangulation* tri_;
 
         /**
          * Internal status
@@ -70,10 +68,9 @@ class GluingsModel : public QAbstractItemModel {
 
     public:
         /**
-         * Constructor and destructor.
+         * Constructor.
          */
-        GluingsModel(bool readWrite);
-        ~GluingsModel();
+        GluingsModel(regina::NTriangulation* tri, bool readWrite);
 
         /**
          * Read-write state.
@@ -82,10 +79,9 @@ class GluingsModel : public QAbstractItemModel {
         void setReadWrite(bool readWrite);
 
         /**
-         * Loading and saving local data from/to the packet.
+         * Force a complete refresh.
          */
-        void refreshData(regina::NTriangulation* tri);
-        void commitData(regina::NTriangulation* tri);
+        void rebuild();
 
         /**
          * Overrides for describing and editing data in the model.
@@ -100,12 +96,6 @@ class GluingsModel : public QAbstractItemModel {
             int role) const;
         Qt::ItemFlags flags(const QModelIndex& index) const;
         bool setData(const QModelIndex& index, const QVariant& value, int role);
-
-        /**
-         * Gluing edit actions.
-         */
-        void addTet();
-        void removeTet(int first, int last);
 
     private:
         /**
@@ -125,7 +115,7 @@ class GluingsModel : public QAbstractItemModel {
          * face gluing.  This routine handles both boundary and
          * non-boundary faces.
          */
-        static QString destString(int srcFace, int destTet,
+        static QString destString(int srcFace, regina::NTetrahedron* destTet,
             const regina::NPerm4& gluing);
 
         /**
@@ -158,7 +148,7 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
          * Internal components
          */
         QWidget* ui;
-        QTableView* faceTable;
+        EditTableView* faceTable;
         GluingsModel* model;
 
         /**
@@ -195,8 +185,8 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         const QLinkedList<QAction*>& getPacketTypeActions();
-        void commit();
         void refresh();
+        void endEdit();
         void setReadWrite(bool readWrite);
 
     public slots:
@@ -230,18 +220,7 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
          */
         void updateRemoveState();
         void updateActionStates();
-
-        /**
-         * Notify us of the fact that an edit has been made.
-         */
-        void notifyDataChanged();
 };
-
-inline GluingsModel::~GluingsModel() {
-    delete[] name;
-    delete[] adjTet;
-    delete[] adjPerm;
-}
 
 inline bool GluingsModel::isReadWrite() const {
     return isReadWrite_;

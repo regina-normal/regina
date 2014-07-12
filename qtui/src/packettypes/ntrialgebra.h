@@ -44,7 +44,6 @@
 class GroupWidget;
 class QLabel;
 class QLineEdit;
-class QListWidget;
 class QTreeWidget;
 class QPushButton;
 
@@ -102,7 +101,6 @@ class NTriHomologyFundUI : public QObject, public PacketViewerTab {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         void refresh();
-        void editingElsewhere();
 
     public slots:
         /**
@@ -145,7 +143,6 @@ class NTriTuraevViroUI : public QObject, public PacketViewerTab {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         void refresh();
-        void editingElsewhere();
 
     public slots:
         /**
@@ -195,7 +192,6 @@ class NTriCellularInfoUI: public PacketViewerTab {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         void refresh();
-        void editingElsewhere();
 };
 
 #endif

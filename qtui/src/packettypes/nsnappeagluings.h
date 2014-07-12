@@ -45,6 +45,8 @@ namespace regina {
     class NSnapPeaTriangulation;
 };
 
+class QTableView;
+
 /**
  * A SnapPea triangulation page for viewing face gluings.
  */

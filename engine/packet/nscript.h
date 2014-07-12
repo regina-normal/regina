@@ -73,92 +73,66 @@ struct PacketInfo<PACKET_SCRIPT> {
 
 /**
  * A packet representing a Python script that can be run.
- * Accessor methods for a script work a line at a time.
  *
- * As of Regina 4.95, variables are now stored as pointers to packets, not
- * packet labels.  This affects how variables react to changes in the
- * packets that they point to.  In particular, if a variable \a V points to
- * some packet \a P, then as of Regina 4.95:
+ * A script consists of two parts: (i) the \e text, which contains the
+ * Python code; and (ii) a set of \e variables, which refer to packets
+ * in your packet tree.  When running a script, the variables should be
+ * instantiated in the default namespace before the script is run.
+ *
+ * The values of variables are given by pointers to packets (not packet
+ * labels, as in some old versions of Regina).  This affects how variables
+ * react to changes in the packets that they point to.  In particular, if a
+ * variable \a V points to some packet \a P, then:
  *
  * - if \a P is renamed then \a V will still point to it and the script will
- *   \e not notify listeners of any changes (though of course \a P will
- *   still notify its own listeners);
+ *   notify listeners that the script has changed;
  * - if \a P is deleted then \a V will take the value \c None, and the script
- *   \e will notify listeners of the change.
+ *   will likewise notify listeners of the change.
  */
 class REGINA_API NScript : public NPacket, public NPacketListener {
     REGINA_PACKET(NScript, PACKET_SCRIPT)
 
     private:
-        std::vector<std::string> lines;
-            /**< An array storing the lines of this script; none of
-             *   these strings should contain newlines. */
+        std::string text;
+            /**< The complete text of this script, including newlines. */
         std::map<std::string, NPacket*> variables;
             /**< A map storing the variables with which this script
-             *   is to be run.  Variable names are mapped to their
-             *   corresponding values. */
+                 is to be run.  Variable names are mapped to their
+                 corresponding values. */
 
     public:
         /**
-         * Initialises to a script with no lines and no variables.
+         * Initialises to a script with no text and no variables.
          */
         NScript();
 
         /**
-         * Returns the number of lines in this script.
+         * Returns the complete text of this script.
          *
-         * @return the number of lines.
-         */
-        unsigned long getNumberOfLines() const;
-        /**
-         * Returns the requested line of this script.
+         * Variables are not considered part of the text; you can get
+         * and set them through other member functions (see below).
          *
-         * @param index the index of the requested line; this must be
-         * between 0 and getNumberOfLines()-1 inclusive.
-         * @return the requested line.
+         * @return the complete text of this script.
          */
-        const std::string& getLine(unsigned long index) const;
+        const std::string& getText() const;
 
         /**
-         * Adds the given line to the beginning of this script.
+         * Replaces the complete text of this script with the given
+         * string.
          *
-         * @param line the line to insert.
-         */
-        void addFirst(const std::string& line);
-        /**
-         * Adds the given line to the end of this script.
+         * Variables are not considered part of the text; you can get
+         * and set them through other member functions (see below).
          *
-         * @param line the line to add.
+         * @param newText the new text for this script.
          */
-        void addLast(const std::string& line);
+        void setText(const std::string& newText);
+
         /**
-         * Inserts the given line into the given position in this script.
-         * All subsequent lines will be shifted down to make room.
+         * Adds the given text to the end of this script.
          *
-         * @param line the line to insert.
-         * @param index the index at which the new line will be placed;
-         * this must be between 0 and getNumberOfLines() inclusive.
+         * @param extraText the text to add.
          */
-        void insertAtPosition(const std::string& line, unsigned long index);
-        /**
-         * Replaces a line of this script with the given line.
-         *
-         * @param line the line to replace the currently stored line.
-         * @param index the index of the line to replace; this must be
-         * between 0 and getNumberOfLines()-1 inclusive.
-         */
-        void replaceAtPosition(const std::string& line, unsigned long index);
-        /**
-         * Removes the requested line from this script.
-         *
-         * @param index the index of the requested line; this must be
-         * between 0 and getNumberOfLines()-1 inclusive.
-         */
-        void removeLineAt(unsigned long index);
-        /**
-         * Removes all lines from this script.
-         */
-        void removeAllLines();
+        void append(const std::string& extraText);
 
         /**
          * Returns the number of variables associated with this script.
@@ -175,6 +149,16 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
          * @return the name of the requested variable.
          */
         const std::string& getVariableName(unsigned long index) const;
+        /**
+         * Returns the index of the variable stored with the given name.
+         *
+         * @param name the name of the requested variable; note that
+         * names are case sensitive.
+         * @return the index of the requested variable as an integer
+         * between 0 and getNumberOfVariables()-1 inclusive, or -1 if
+         * there is no variable with the given name.
+         */
+        long getVariableIndex(const std::string& name) const;
         /**
          * Returns the value of the requested variable associated with
          * this script.  Variables may take the value \c null.
@@ -198,9 +182,37 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
         NPacket* getVariableValue(const std::string& name) const;
 
         /**
+         * Changes the name of an existing variable associated with
+         * this script.
+         *
+         * \warning This may change the indices of this and other
+         * variables, since (at present) variables are kept stored in
+         * sorted order by name.
+         *
+         * @param index the index of the variable whose name should change;
+         * this must be between 0 and getNumberOfVariables()-1 inclusive.
+         * @param name the new name to assign to the variable.
+         */
+        void setVariableName(unsigned long index, const std::string& name);
+        /**
+         * Changes the value of an existing variable associated with
+         * this script.
+         *
+         * @param index the index of the variable whose value should change;
+         * this must be between 0 and getNumberOfVariables()-1 inclusive.
+         * @param value the new value to assign to the variable.
+         */
+        void setVariableValue(unsigned long index, NPacket* value);
+
+        /**
          * Adds a new variable to be associated with this script.
          * If a variable with the given name is already stored, this
          * routine will do nothing.
+         *
+         * \warning The index of the new variable might not be
+         * getNumberOfVariables()-1, and this operation may change the
+         * indices of other variables also.  This is because (at present)
+         * variables are kept stored in sorted order by name.
          *
          * @param name the name of the new variable.
          * @param value the value of the new variable; this is allowed
@@ -211,16 +223,26 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
         bool addVariable(const std::string& name, NPacket* value);
         /**
          * Removes the variable stored with the given name.
-         * Note that the indices of other variables may change as a
-         * result of this action.
-         *
          * If no variable is stored with the given name, this routine
-         * will do nothing (but waste time!).
+         * will do nothing.
+         *
+         * \warning This may change the indices of other variables, since
+         * (at present) variables are kept stored in sorted order by name.
          *
          * @param name the name of the variable to remove; note that
          * names are case sensitive.
          */
         void removeVariable(const std::string& name);
+        /**
+         * Removes the variable stored at the given index.
+         *
+         * \warning This may change the indices of other variables, since
+         * (at present) variables are kept stored in sorted order by name.
+         *
+         * @param index the index of the variable to remove;
+         * this must be between 0 and getNumberOfVariables()-1 inclusive.
+         */
+        void removeVariable(unsigned long index);
         /**
          * Removes all variables associated with this script.
          */
@@ -232,6 +254,7 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
             NXMLTreeResolver& resolver);
         virtual bool dependsOnParent() const;
 
+        virtual void packetWasRenamed(NPacket* packet);
         virtual void packetToBeDestroyed(NPacket* packet);
 
     protected:
@@ -246,38 +269,23 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
 inline NScript::NScript() {
 }
 
-inline unsigned long NScript::getNumberOfLines() const {
-    return lines.size();
+inline const std::string& NScript::getText() const {
+    return text;
 }
-inline const std::string& NScript::getLine(unsigned long index) const {
-    return lines[index];
+inline void NScript::setText(const std::string& newText) {
+    if (text == newText)
+        return; // No change event fired.
+
+    ChangeEventSpan span(this);
+    text = newText;
 }
 
-inline void NScript::addFirst(const std::string& line) {
+inline void NScript::append(const std::string& extraText) {
+    if (extraText.empty())
+        return; // No change event fired.
+
     ChangeEventSpan span(this);
-    lines.insert(lines.begin(), line);
-}
-inline void NScript::addLast(const std::string& line) {
-    ChangeEventSpan span(this);
-    lines.push_back(line);
-}
-inline void NScript::insertAtPosition(const std::string& line,
-        unsigned long index) {
-    ChangeEventSpan span(this);
-    lines.insert(lines.begin() + index, line);
-}
-inline void NScript::replaceAtPosition(const std::string& line,
-        unsigned long index) {
-    ChangeEventSpan span(this);
-    lines[index] = line;
-}
-inline void NScript::removeLineAt(unsigned long index) {
-    ChangeEventSpan span(this);
-    lines.erase(lines.begin() + index);
-}
-inline void NScript::removeAllLines() {
-    ChangeEventSpan span(this);
-    lines.clear();
+    text += extraText;
 }
 
 inline unsigned long NScript::getNumberOfVariables() const {
@@ -298,9 +306,7 @@ inline void NScript::removeAllVariables() {
 }
 
 inline void NScript::writeTextShort(std::ostream& o) const {
-    o << "Script with " << lines.size() << " line";
-    if (lines.size() != 1)
-        o << 's';
+    o << "Python script";
 }
 
 inline bool NScript::dependsOnParent() const {

@@ -38,6 +38,7 @@
 #include "snappea/nsnappeatriangulation.h"
 
 // UI includes:
+#include "edittreeview.h"
 #include "nsnappeashapes.h"
 #include "reginamain.h"
 #include "reginasupport.h"
@@ -51,7 +52,6 @@
 #include <QMessageBox>
 #include <QRegExp>
 #include <QToolBar>
-#include <QTreeView>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 
@@ -69,8 +69,7 @@ void CuspModel::rebuild() {
 
 QModelIndex CuspModel::index(int row, int column,
         const QModelIndex& parent) const {
-    return createIndex(row, column,
-        quint32(columnCount(parent) * row + column));
+    return createIndex(row, column, quint32(3 * row + column));
 }
 
 int CuspModel::rowCount(const QModelIndex& /* unused parent*/) const {
@@ -196,7 +195,7 @@ bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
                     "non-orientable cusps."));
             return false;
         }
-        if (tri_->fill(m, l))
+        if (tri_->fill(m, l, index.row()))
             return true;
         ReginaSupport::info(0,
             tr("I could not use these filling coefficients."),
@@ -221,7 +220,7 @@ NSnapPeaShapesUI::NSnapPeaShapesUI(regina::NSnapPeaTriangulation* packet,
     layout->addWidget(label);
 
     model = new CuspModel(packet);
-    cusps = new QTreeView();
+    cusps = new EditTreeView();
     cusps->setItemsExpandable(false);
     cusps->setRootIsDecorated(false);
     cusps->setAlternatingRowColors(true);
@@ -385,13 +384,11 @@ void NSnapPeaShapesUI::refresh() {
 
     if (tri->isNull()) {
         updateNonNullActions();
-        setDirty(false);
         return;
     }
     if (tri->solutionType() == NSnapPeaTriangulation::not_attempted ||
             tri->solutionType() == NSnapPeaTriangulation::no_solution) {
         updateNonNullActions();
-        setDirty(false);
         return;
     }
 
@@ -409,12 +406,10 @@ void NSnapPeaShapesUI::refresh() {
     }
 
     updateNonNullActions();
-    setDirty(false);
 }
 
-void NSnapPeaShapesUI::commit() {
-    // Nothing to commit, since commits happen automatically now.
-    setDirty(false);
+void NSnapPeaShapesUI::endEdit() {
+    cusps->endEdit();
 }
 
 void NSnapPeaShapesUI::setReadWrite(bool readWrite) {
@@ -431,10 +426,7 @@ void NSnapPeaShapesUI::setReadWrite(bool readWrite) {
 }
 
 void NSnapPeaShapesUI::vertexLinks() {
-    // We assume the part hasn't become read-only, even though the
-    // packet might have changed its editable property.
-    if (! enclosingPane->tryCommit())
-        return;
+    endEdit();
 
     if (tri->getVertices().empty())
         ReginaSupport::sorry(ui,
@@ -464,10 +456,7 @@ void NSnapPeaShapesUI::vertexLinks() {
 }
 
 void NSnapPeaShapesUI::toRegina() {
-    // We assume the part hasn't become read-only, even though the
-    // packet might have changed its editable property.
-    if (! enclosingPane->tryCommit())
-        return;
+    endEdit();
 
     if (tri->isNull())
         ReginaSupport::sorry(ui,
@@ -482,10 +471,7 @@ void NSnapPeaShapesUI::toRegina() {
 }
 
 void NSnapPeaShapesUI::fill() {
-    // We assume the part hasn't become read-only, even though the
-    // packet might have changed its editable property.
-    if (! enclosingPane->tryCommit())
-        return;
+    endEdit();
 
     if (tri->isNull())
         ReginaSupport::sorry(ui,
@@ -527,17 +513,13 @@ void NSnapPeaShapesUI::fill() {
 }
 
 void NSnapPeaShapesUI::randomise() {
-    if (! enclosingPane->commitToModify())
-        return;
+    endEdit();
 
     tri->randomize();
 }
 
 void NSnapPeaShapesUI::canonise() {
-    // We assume the part hasn't become read-only, even though the
-    // packet might have changed its editable property.
-    if (! enclosingPane->tryCommit())
-        return;
+    endEdit();
 
     if (tri->isNull())
         ReginaSupport::sorry(ui,

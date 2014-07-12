@@ -146,9 +146,9 @@ NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
     */
 
     // Final tidying up.
-    // Connect to one of the radio buttons, not the button group, so that
-    // we only get notified when a real change occurs.
-    connect(typeAnd, SIGNAL(toggled(bool)),
+    // Connect to the button group, so that we only get notified when a
+    // user-initiated change occurs (i.e., not when refresh() changes things).
+    connect(boolType, SIGNAL(buttonClicked(int)),
         this, SLOT(notifyBoolTypeChanged()));
     filter->listen(this);
 }
@@ -169,14 +169,8 @@ QString NSurfaceFilterCombUI::getPacketMenuText() const {
     return tr("Surface F&ilter");
 }
 
-void NSurfaceFilterCombUI::commit() {
-    filter->setUsesAnd(boolType->checkedId() == ID_AND ? true : false);
-    setDirty(false);
-}
-
 void NSurfaceFilterCombUI::refresh() {
     boolType->button(filter->getUsesAnd() ? ID_AND : ID_OR)->setChecked(true);
-    setDirty(false);
 }
 
 void NSurfaceFilterCombUI::setReadWrite(bool readWrite) {
@@ -206,7 +200,7 @@ void NSurfaceFilterCombUI::childrenWereReordered(NPacket* p) {
 }
 
 void NSurfaceFilterCombUI::notifyBoolTypeChanged() {
-    setDirty(true);
+    filter->setUsesAnd(boolType->checkedId() == ID_AND ? true : false);
 }
 
 void NSurfaceFilterCombUI::refreshChildList() {

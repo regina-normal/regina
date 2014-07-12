@@ -140,7 +140,6 @@ class SkeletonWindow : public QDialog, public regina::NPacketListener {
          * Update the display.
          */
         void refresh();
-        void editingElsewhere();
         void updateCaption();
 
         /**

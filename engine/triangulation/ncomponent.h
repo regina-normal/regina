@@ -89,6 +89,15 @@ class REGINA_API NComponent : public ShareableObject, public NMarkedElement {
         virtual ~NComponent();
 
         /**
+         * Returns the index of this component in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->componentIndex(this)</tt>.
+         *
+         * @return the index of this component vertex.
+         */
+        unsigned long index() const;
+
+        /**
          * Returns the number of tetrahedra in this component.
          *
          * @return the number of tetrahedra.
@@ -292,6 +301,10 @@ inline NComponent::NComponent() : ideal_(false), orientable_(true) {
 }
 
 inline NComponent::~NComponent() {
+}
+
+inline unsigned long NComponent::index() const {
+    return markedIndex();
 }
 
 inline unsigned long NComponent::getNumberOfTetrahedra() const {

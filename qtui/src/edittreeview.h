@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Qt User Interface                                                     *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,47 +32,34 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
-#include "dim2/dim2component.h"
-#include "dim2/dim2edge.h"
-#include "dim2/dim2triangle.h"
-#include "dim2/dim2triangulation.h"
-#include "dim2/dim2vertex.h"
+/*! \file edittreeview.h
+ *  \brief A subclass of QTreeView with enhancements for use in packet editors.
+ */
 
-using namespace boost::python;
-using regina::Dim2Triangle;
+#ifndef __EDITTREEVIEW_H
+#define __EDITTREEVIEW_H
 
-void addDim2Triangle() {
-    class_<Dim2Triangle, bases<regina::ShareableObject>,
-            std::auto_ptr<Dim2Triangle>, boost::noncopyable>(
-            "Dim2Triangle", no_init)
-        .def("getDescription", &Dim2Triangle::getDescription,
-            return_value_policy<return_by_value>())
-        .def("setDescription", &Dim2Triangle::setDescription)
-        .def("index", &Dim2Triangle::index)
-        .def("adjacentTriangle", &Dim2Triangle::adjacentTriangle,
-            return_value_policy<reference_existing_object>())
-        .def("adjacentSimplex", &Dim2Triangle::adjacentSimplex,
-            return_value_policy<reference_existing_object>())
-        .def("adjacentGluing", &Dim2Triangle::adjacentGluing)
-        .def("adjacentEdge", &Dim2Triangle::adjacentEdge)
-        .def("adjacentFacet", &Dim2Triangle::adjacentFacet)
-        .def("hasBoundary", &Dim2Triangle::hasBoundary)
-        .def("joinTo", &Dim2Triangle::joinTo)
-        .def("unjoin", &Dim2Triangle::unjoin,
-            return_value_policy<reference_existing_object>())
-        .def("isolate", &Dim2Triangle::isolate)
-        .def("getTriangulation", &Dim2Triangle::getTriangulation,
-            return_value_policy<reference_existing_object>())
-        .def("getComponent", &Dim2Triangle::getComponent,
-            return_value_policy<reference_existing_object>())
-        .def("getVertex", &Dim2Triangle::getVertex,
-            return_value_policy<reference_existing_object>())
-        .def("getEdge", &Dim2Triangle::getEdge,
-            return_value_policy<reference_existing_object>())
-        .def("getVertexMapping", &Dim2Triangle::getVertexMapping)
-        .def("getEdgeMapping", &Dim2Triangle::getEdgeMapping)
-        .def("orientation", &Dim2Triangle::orientation)
-    ;
+#include <QTreeView>
+
+/**
+ * A subclass of QTreeView for use inside a packet editor.
+ */
+class EditTreeView : public QTreeView {
+    public:
+        EditTreeView(QWidget* parent = 0);
+
+        /**
+         * Finish any cell editing operation that might be in progress.
+         */
+        void endEdit();
+};
+
+inline EditTreeView::EditTreeView(QWidget* parent) : QTreeView(parent) {
 }
 
+inline void EditTreeView::endEdit() {
+    QModelIndex index = currentIndex();
+    currentChanged(index, index);
+}
+
+#endif

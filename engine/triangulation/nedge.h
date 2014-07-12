@@ -301,6 +301,15 @@ class REGINA_API NEdge : public ShareableObject, public NMarkedElement {
         ~NEdge();
 
         /**
+         * Returns the index of this edge in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->edgeIndex(this)</tt>.
+         *
+         * @return the index of this edge.
+         */
+        unsigned long index() const;
+
+        /**
          * Returns the list of descriptors detailing how this edge forms a
          * part of various tetrahedra in the triangulation.
          * Note that if this edge represents multiple edges of a
@@ -428,6 +437,10 @@ inline NEdge::NEdge(NComponent* myComponent) : component_(myComponent),
 }
 
 inline NEdge::~NEdge() {
+}
+
+inline unsigned long NEdge::index() const {
+    return markedIndex();
 }
 
 inline NTriangulation* NEdge::getTriangulation() const {

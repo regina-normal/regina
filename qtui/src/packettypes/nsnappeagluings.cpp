@@ -49,7 +49,7 @@ NSnapPeaGluingsUI::NSnapPeaGluingsUI(regina::NSnapPeaTriangulation* packet,
         PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), tri(packet) {
     // Set up the table of face gluings.
-    model = new GluingsModel(false /* read-only */);
+    model = new GluingsModel(packet, false /* read-only */);
     faceTable = new QTableView();
     faceTable->setSelectionMode(QAbstractItemView::ContiguousSelection);
     faceTable->setModel(model);
@@ -95,6 +95,6 @@ QWidget* NSnapPeaGluingsUI::getInterface() {
 }
 
 void NSnapPeaGluingsUI::refresh() {
-    model->refreshData(tri);
+    model->rebuild();
 }
 

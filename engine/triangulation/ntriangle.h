@@ -232,6 +232,15 @@ class REGINA_API NTriangle : public ShareableObject, public NMarkedElement {
         virtual ~NTriangle();
 
         /**
+         * Returns the index of this triangle in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->triangleIndex(this)</tt>.
+         *
+         * @return the index of this triangle.
+         */
+        unsigned long index() const;
+
+        /**
          * Determines if this triangle lies entirely on the boundary of the
          * triangulation.
          *
@@ -410,6 +419,10 @@ inline NTriangle::~NTriangle() {
         delete embeddings_[0];
     if (nEmbeddings_ > 1)
         delete embeddings_[1];
+}
+
+inline unsigned long NTriangle::index() const {
+    return markedIndex();
 }
 
 inline NTriangulation* NTriangle::getTriangulation() const {

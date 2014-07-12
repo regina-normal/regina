@@ -112,10 +112,6 @@ void Dim2TriHeaderUI::refresh() {
     header->setText(summaryInfo(tri));
 }
 
-void Dim2TriHeaderUI::editingElsewhere() {
-    header->setText(QObject::tr("Editing..."));
-}
-
 QString Dim2TriHeaderUI::summaryInfo(regina::Dim2Triangulation* tri) {
     QString msg;
     if (tri->getNumberOfTriangles() == 0)

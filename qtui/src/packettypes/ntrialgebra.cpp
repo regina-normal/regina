@@ -242,23 +242,10 @@ void NTriHomologyFundUI::refresh() {
         fgGroup->show();
     } else {
         fgGroup->hide();
-        fgMsg->setText(tr("Cannot calculate\n(disconnected triangulation)"));
+        fgMsg->setText(tr("<qt>Cannot calculate<p>"
+            "(disconnected triangulation)</qt>"));
         fgMsg->show();
     }
-}
-
-void NTriHomologyFundUI::editingElsewhere() {
-    QString msg(QObject::tr("Editing..."));
-
-    H1->setText(msg);
-    H1Rel->setText(msg);
-    H1Bdry->setText(msg);
-    H2->setText(msg);
-    H2Z2->setText(msg);
-
-    fgGroup->hide();
-    fgMsg->setText(tr("Editing..."));
-    fgMsg->show();
 }
 
 void NTriHomologyFundUI::fundGroupSimplified() {
@@ -372,14 +359,6 @@ void NTriTuraevViroUI::refresh() {
             it != invs.end(); it++)
         invariants->addTopLevelItem(new TuraevViroItem(
             (*it).first.first, (*it).first.second, (*it).second));
-}
-
-void NTriTuraevViroUI::editingElsewhere() {
-    paramsLabel->setEnabled(false);
-    params->setEnabled(false);
-    calculate->setEnabled(false);
-
-    invariants->clear();
 }
 
 void NTriTuraevViroUI::calculateInvariant() {
@@ -729,20 +708,5 @@ regina::NPacket* NTriCellularInfoUI::getPacket() {
 
 QWidget* NTriCellularInfoUI::getInterface() {
     return ui;
-}
-
-void NTriCellularInfoUI::editingElsewhere() {
-    QString msg(QObject::tr("Editing..."));
-
-    Cells->setText(msg);
-    DualCells->setText(msg);
-    EulerChar->setText(msg);
-    H0H1H2H3->setText(msg);
-    HBdry->setText(msg);
-    BdryMap->setText(msg);
-    TorForOrders->setText(msg);
-    TorForSigma->setText(msg);
-    TorForLegendre->setText(msg);
-    EmbeddingComments->setText(msg);
 }
 

@@ -160,7 +160,6 @@ void NSurfaceMatchingUI::refresh() {
     }
 
     // Tidy up.
-    setDirty(false);
     everRefreshed = true;
 }
 

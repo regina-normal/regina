@@ -207,6 +207,18 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
         void setDescription(const std::string& desc);
 
         /**
+         * Returns the index of this tetrahedron in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->tetrahedronIndex(this)</tt>.
+         *
+         * Note that tetrahedron indexing may change when a tetrahedron is
+         * added or removed from the underlying triangulation.
+         *
+         * @return the index of this tetrahedron.
+         */
+        unsigned long index() const;
+
+        /**
          * Returns the adjacent tetrahedron glued to the given face of this
          * tetrahedron, or 0 if the given face is on the triangulation
          * boundary.
@@ -700,7 +712,12 @@ inline const std::string& NTetrahedron::getDescription() const {
 }
 
 inline void NTetrahedron::setDescription(const std::string& desc) {
+    NPacket::ChangeEventSpan span(tri_);
     description_ = desc;
+}
+
+inline unsigned long NTetrahedron::index() const {
+    return markedIndex();
 }
 
 inline NTetrahedron* NTetrahedron::adjacentTetrahedron(int face) const {

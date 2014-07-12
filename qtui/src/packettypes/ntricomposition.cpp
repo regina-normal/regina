@@ -247,12 +247,6 @@ void NTriCompositionUI::refresh() {
     details->setRootIsDecorated(foundInnerChildren);
 }
 
-void NTriCompositionUI::editingElsewhere() {
-    details->clear();
-    (new QTreeWidgetItem(details))->setText(0,tr("Editing..."));
-    details->setRootIsDecorated(false);
-}
-
 void NTriCompositionUI::packetToBeDestroyed(regina::NPacket*) {
     // Our current isomorphism test triangulation is about to be
     // destroyed.

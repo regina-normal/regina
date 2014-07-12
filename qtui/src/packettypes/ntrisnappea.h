@@ -90,7 +90,6 @@ class NTriSnapPeaUI : public QObject, public PacketViewerTab {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         void refresh();
-        void editingElsewhere();
 
     public slots:
         /**
