@@ -144,6 +144,18 @@ class REGINA_API Dim2Triangle : public ShareableObject, public NMarkedElement {
         void setDescription(const std::string& desc);
 
         /**
+         * Returns the index of this triangle in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->triangleIndex(this)</tt>.
+         *
+         * Note that triangle indexing may change when a triangle is
+         * added or removed from the underlying triangulation.
+         *
+         * @return the index of this triangle.
+         */
+        unsigned long index() const;
+
+        /**
          * Returns the adjacent triangle glued to the given edge of this
          * triangle, or 0 if the given edge is on the boundary of the
          * 2-manifold triangulation.
@@ -421,6 +433,10 @@ inline const std::string& Dim2Triangle::getDescription() const {
 inline void Dim2Triangle::setDescription(const std::string& desc) {
     NPacket::ChangeEventSpan span(tri_);
     desc_ = desc;
+}
+
+inline unsigned long Dim2Triangle::index() const {
+    return markedIndex();
 }
 
 inline Dim2Triangle* Dim2Triangle::adjacentTriangle(int edge) const {

@@ -34,10 +34,16 @@ Version 4.96  [ (under development) ]
               taut angle structures, or finding a single strict angle structure.
         Class Dim2BoundaryComponent:
             - New convenience routine getComponent().
+            - New routine index().
         Class Dim2Component:
             - New routine getNumberOfBoundaryEdges().
+            - New routine index().
+        Class Dim2Edge:
+            - New routine index().
         Class Dim2EdgeEmbedding:
             - New convenience operators == and !=.
+        Class Dim2Triangle:
+            - New routine index().
         Class Dim2Triangulation:
             - New routine isIdenticalTo().
             - New local modification oneThreeMove().
@@ -50,6 +56,8 @@ Version 4.96  [ (under development) ]
             - New routines getNumberOfBoundaryEdges() and hasBoundaryEdges().
               The latter is redundant, but is provided for compatibility with
               NTriangulation.
+        Class Dim2Vertex:
+            - New routine index().
         Class Dim2VertexEmbedding:
             - New convenience operators == and !=.
         Class LPConstraintBase (and subclasses), LPData, LPInitialTableaux,
@@ -72,6 +80,7 @@ Version 4.96  [ (under development) ]
               equations independently of an angle structure list.
         Class NBoundaryComponent:
             - New convenience routine getComponent().
+            - New routine index().
             - Renamed getEulerCharacteristic() to getEulerChar(), which
               is easier on the fingers.  The old name has been kept as a
               deprecated alias for backward compatibility.
@@ -80,6 +89,9 @@ Version 4.96  [ (under development) ]
               census of cusped finite volume hyperbolic 3-manifolds.
         Class NComponent:
             - New routine getNumberOfBoundaryTriangles().
+            - New routine index().
+        Class NEdge:
+            - New routine index().
         Class NExampleTriangulation:
             - New example trefoilKnotComplement().
             - New example sphere600() (sourced from the 600-cell in the
@@ -218,10 +230,14 @@ Version 4.96  [ (under development) ]
             - New class for enumerating taut angle structures that uses
               Regina's tree traversal / linear programming machinery.
               This is *much* faster than the old double description method.
+        Class NTetrahedron:
+            - New routine index().
         Class NTreeTraversal:
             - Extended the tree traversal / linear programming machinery to
               work with angle structures.  This is used for enumerating all
               taut angle structures, or finding a single strict angle structure.
+        Class NTriangle:
+            - New routine index().
         Class NTriangleEmbedding:
             - New convenience operators == and !=.
         Class NTriangulation:
@@ -256,6 +272,7 @@ Version 4.96  [ (under development) ]
             - Renamed getLinkEulerCharacteristic() to getLinkEulerChar(), which
               is easier on the fingers.  The old name has been kept as a
               deprecated alias for backward compatibility.
+            - New routine index().
         Class NVertexEmbedding:
             - New convenience operators == and !=.
         Class NXMLSnapPeaReader:

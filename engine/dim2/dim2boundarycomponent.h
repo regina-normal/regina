@@ -80,6 +80,15 @@ class REGINA_API Dim2BoundaryComponent :
         virtual ~Dim2BoundaryComponent();
 
         /**
+         * Returns the index of this boundary component in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->boundaryComponentIndex(this)</tt>.
+         *
+         * @return the index of this boundary component vertex.
+         */
+        unsigned long index() const;
+
+        /**
          * Returns the number of edges in this boundary component.
          *
          * @return the number of edges.
@@ -155,6 +164,10 @@ inline Dim2BoundaryComponent::Dim2BoundaryComponent() {
 }
 
 inline Dim2BoundaryComponent::~Dim2BoundaryComponent() {
+}
+
+inline unsigned long Dim2BoundaryComponent::index() const {
+    return markedIndex();
 }
 
 inline unsigned long Dim2BoundaryComponent::getNumberOfEdges() const {

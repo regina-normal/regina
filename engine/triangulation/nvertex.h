@@ -207,6 +207,15 @@ class REGINA_API NVertex : public ShareableObject, public NMarkedElement {
         virtual ~NVertex();
 
         /**
+         * Returns the index of this vertex in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->vertexIndex(this)</tt>.
+         *
+         * @return the index of this vertex.
+         */
+        unsigned long index() const;
+
+        /**
          * Returns the list of descriptors detailing how this vertex forms a
          * part of various tetrahedra in the triangulation.
          * Note that if this vertex represents multiple vertices of a
@@ -490,6 +499,10 @@ namespace regina {
 inline NVertex::NVertex(NComponent* myComponent) : component_(myComponent),
         boundaryComponent_(0), linkOrientable_(true),
         linkEulerChar_(0), linkTri_(0) {
+}
+
+inline unsigned long NVertex::index() const {
+    return markedIndex();
 }
 
 inline NTriangulation* NVertex::getTriangulation() const {

@@ -102,6 +102,15 @@ class REGINA_API NBoundaryComponent :
         virtual ~NBoundaryComponent();
 
         /**
+         * Returns the index of this boundary component in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->boundaryComponentIndex(this)</tt>.
+         *
+         * @return the index of this boundary component vertex.
+         */
+        unsigned long index() const;
+
+        /**
          * Returns the number of triangles in this boundary component.
          *
          * @return the number of triangles.
@@ -291,6 +300,10 @@ inline NBoundaryComponent::NBoundaryComponent(NVertex* idealVertex) {
 }
 
 inline NBoundaryComponent::~NBoundaryComponent() {
+}
+
+inline unsigned long NBoundaryComponent::index() const {
+    return markedIndex();
 }
 
 inline unsigned long NBoundaryComponent::getNumberOfTriangles() const {
