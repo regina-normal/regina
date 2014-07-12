@@ -257,6 +257,15 @@ class REGINA_API Dim4Edge : public ShareableObject, public NMarkedElement {
         ~Dim4Edge();
 
         /**
+         * Returns the index of this edge in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->edgeIndex(this)</tt>.
+         *
+         * @return the index of this edge.
+         */
+        unsigned long index() const;
+
+        /**
          * Returns the list of descriptors detailing how this edge forms a
          * part of various pentachora in the 4-manifold triangulation.
          * Note that if this edge represents multiple edges of a
@@ -554,6 +563,10 @@ inline Dim4Edge::Dim4Edge(Dim4Component* component) :
 }
 
 inline Dim4Edge::~Dim4Edge() {
+}
+
+inline unsigned long Dim4Edge::index() const {
+    return markedIndex();
 }
 
 inline const std::vector<Dim4EdgeEmbedding>& Dim4Edge::getEmbeddings() const {
