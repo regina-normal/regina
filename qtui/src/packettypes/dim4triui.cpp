@@ -112,10 +112,6 @@ void Dim4TriHeaderUI::refresh() {
     header->setText(summaryInfo(tri));
 }
 
-void Dim4TriHeaderUI::editingElsewhere() {
-    header->setText(QObject::tr("Editing..."));
-}
-
 QString Dim4TriHeaderUI::summaryInfo(regina::Dim4Triangulation* tri) {
     if (tri->getNumberOfPentachora() == 0)
         return QObject::tr("Empty");

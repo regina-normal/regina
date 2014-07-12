@@ -101,7 +101,6 @@ class Dim4TriHomologyUI : public PacketViewerTab {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         void refresh();
-        void editingElsewhere();
 };
 
 /**
@@ -141,7 +140,6 @@ class Dim4TriFundGroupUI : public QObject, public PacketViewerTab {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         void refresh();
-        void editingElsewhere();
 
     public slots:
         /**

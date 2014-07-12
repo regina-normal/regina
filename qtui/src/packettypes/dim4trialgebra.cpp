@@ -115,13 +115,6 @@ void Dim4TriHomologyUI::refresh() {
     }
 }
 
-void Dim4TriHomologyUI::editingElsewhere() {
-    QString msg(QObject::tr("Editing..."));
-
-    H1->setText(msg);
-    H2->setText(msg);
-}
-
 Dim4TriFundGroupUI::Dim4TriFundGroupUI(regina::Dim4Triangulation* packet,
         PacketTabbedViewerTab* useParentUI) :
         PacketViewerTab(useParentUI), tri(packet) {
@@ -288,16 +281,6 @@ void Dim4TriFundGroupUI::refresh() {
         btnGAP->setEnabled(true);
         btnSimp->setEnabled(true);
     }
-}
-
-void Dim4TriFundGroupUI::editingElsewhere() {
-    fundName->setText(tr("Editing..."));
-    fundGens->hide();
-    fundRelCount->hide();
-    fundRels->clear();
-    fundRels->hide();
-    btnGAP->setEnabled(false);
-    btnSimp->setEnabled(false);
 }
 
 void Dim4TriFundGroupUI::simplifyPi1() {
