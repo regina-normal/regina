@@ -45,6 +45,9 @@
 
 #include <QStyledItemDelegate>
 
+template <class PacketType>
+class DocWidget;
+
 class QAction;
 class QSplitter;
 class QPlainTextEdit;
@@ -143,7 +146,7 @@ class NScriptUI : public QObject, public PacketUI {
         ScriptVarModel* model;
         QTableView* varTable;
         QStyledItemDelegate* valueDelegate;
-        QPlainTextEdit* editWidget;
+        DocWidget<regina::NScript>* editWidget;
         PacketEditIface* editIface;
 
         /**
@@ -169,6 +172,7 @@ class NScriptUI : public QObject, public PacketUI {
         const QLinkedList<QAction*>& getPacketTypeActions();
         QString getPacketMenuText() const;
         void refresh();
+        bool endEdit(bool force = false);
         void setReadWrite(bool readWrite);
 
     public slots:

@@ -39,7 +39,7 @@
 
 // UI includes:
 #include "bigwidget.h"
-#include "docregistry.h"
+#include "docwidget.h"
 #include "nscriptui.h"
 #include "packetchooser.h"
 #include "packeteditiface.h"
@@ -65,15 +65,10 @@
 #include <QToolBar>
 #include <set>
 
-// TODO: When committing, add a trailing newline if we don't have one.
-// script->setText(editWidget->toPlainText().toAscii().constData());
-
 using regina::NPacket;
 using regina::NScript;
 
 namespace {
-    static DocRegistry<NScript> registry;
-
     QRegExp rePythonIdentifier("^[A-Za-z_][A-Za-z0-9_]*$");
 }
 
@@ -295,8 +290,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
 
     // --- Text Editor ---
 
-    editWidget = new QPlainTextEdit(splitter);
-    editWidget->setDocument(registry.acquire(script));
+    editWidget = new DocWidget<NScript>(packet, splitter);
     editWidget->setReadOnly(!readWrite);
     editWidget->setLineWrapMode(QPlainTextEdit::NoWrap);
     editWidget->setFont(ReginaPrefSet::fixedWidthFont());
@@ -406,9 +400,6 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
 }
 
 NScriptUI::~NScriptUI() {
-    script->setText(editWidget->toPlainText().toAscii().constData());
-    registry.release(script);
-
     // Make sure the actions, including separators, are all deleted.
     for (QLinkedList<QAction*>::iterator it = scriptActionList.begin() ;
             it != scriptActionList.end(); it++ )
@@ -442,11 +433,24 @@ void NScriptUI::refresh() {
     model->rebuild();
 
     // Refresh the text.
-    editWidget->setPlainText(script->getText().c_str());
-    editWidget->moveCursor(QTextCursor::Start);
+    editWidget->refresh();
 
     // Update any actions as necessary.
     updateRemoveState();
+}
+
+bool NScriptUI::endEdit(bool force) {
+    // If we don't finish with a newline, add one now.
+    QString text = editWidget->toPlainText();
+    if (! text.endsWith('\n'))
+        text += '\n';
+
+    script->setText(text.toAscii().constData());
+
+    // TODO: QModelIndex index = varTable->currentIndex();
+    // TODO: currentChanged(index, index);
+
+    return true;
 }
 
 void NScriptUI::setReadWrite(bool readWrite) {
@@ -541,8 +545,8 @@ void NScriptUI::updateRemoveState() {
 }
 
 void NScriptUI::compile() {
-    // Commit any outstanding changes.
-    script->setText(editWidget->toPlainText().toAscii().constData());
+    if (! endEdit())
+        return;
 
     if (enclosingPane->getMainWindow()->getPythonManager().compileScript(ui,
             editWidget->toPlainText() + "\n\n") == 0) {
@@ -558,8 +562,8 @@ void NScriptUI::compile() {
 }
 
 void NScriptUI::execute() {
-    // Commit any outstanding changes.
-    script->setText(editWidget->toPlainText().toAscii().constData());
+    if (! endEdit())
+        return;
 
     // Set up the variable list.
     PythonVariableList vars;
