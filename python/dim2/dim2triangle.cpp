@@ -49,6 +49,7 @@ void addDim2Triangle() {
         .def("getDescription", &Dim2Triangle::getDescription,
             return_value_policy<return_by_value>())
         .def("setDescription", &Dim2Triangle::setDescription)
+        .def("index", &Dim2Triangle::index)
         .def("adjacentTriangle", &Dim2Triangle::adjacentTriangle,
             return_value_policy<reference_existing_object>())
         .def("adjacentSimplex", &Dim2Triangle::adjacentSimplex,

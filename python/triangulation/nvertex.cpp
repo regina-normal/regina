@@ -88,6 +88,7 @@ void addNVertex() {
 
     scope s = class_<NVertex, bases<regina::ShareableObject>,
             std::auto_ptr<NVertex>, boost::noncopyable>("NVertex", no_init)
+        .def("index", &NVertex::index)
         .def("getEmbeddings", vertex_getEmbeddings_list)
         .def("getNumberOfEmbeddings", &NVertex::getNumberOfEmbeddings)
         .def("getEmbedding", &NVertex::getEmbedding,

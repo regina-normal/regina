@@ -196,6 +196,15 @@ class REGINA_API Dim2Edge : public ShareableObject, public NMarkedElement {
         ~Dim2Edge();
 
         /**
+         * Returns the index of this edge in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->edgeIndex(this)</tt>.
+         *
+         * @return the index of this edge.
+         */
+        unsigned long index() const;
+
+        /**
          * Returns the number of descriptors available through getEmbedding().
          * Note that this number will never be greater than two.
          *
@@ -334,6 +343,10 @@ inline Dim2Edge::Dim2Edge(Dim2Component* component) :
 }
 
 inline Dim2Edge::~Dim2Edge() {
+}
+
+inline unsigned long Dim2Edge::index() const {
+    return markedIndex();
 }
 
 inline unsigned Dim2Edge::getNumberOfEmbeddings() const {
