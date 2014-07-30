@@ -66,20 +66,20 @@ class NBoundaryComponent;
  */
 class REGINA_API NComponent : public ShareableObject, public NMarkedElement {
     private:
-        std::vector<NTetrahedron*> tetrahedra;
+        std::vector<NTetrahedron*> tetrahedra_;
             /**< List of tetrahedra in the component. */
-        std::vector<NTriangle*> triangles;
+        std::vector<NTriangle*> triangles_;
             /**< List of triangles in the component. */
-        std::vector<NEdge*> edges;
+        std::vector<NEdge*> edges_;
             /**< List of edges in the component. */
-        std::vector<NVertex*> vertices;
+        std::vector<NVertex*> vertices_;
             /**< List of vertices in the component. */
-        std::vector<NBoundaryComponent*> boundaryComponents;
+        std::vector<NBoundaryComponent*> boundaryComponents_;
             /**< List of boundary components in the component. */
 
-        bool ideal;
+        bool ideal_;
             /**< Is the component ideal? */
-        bool orientable;
+        bool orientable_;
             /**< Is the component orientable? */
 
     public:
@@ -87,6 +87,15 @@ class REGINA_API NComponent : public ShareableObject, public NMarkedElement {
          * Default destructor.
          */
         virtual ~NComponent();
+
+        /**
+         * Returns the index of this component in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->componentIndex(this)</tt>.
+         *
+         * @return the index of this component vertex.
+         */
+        unsigned long index() const;
 
         /**
          * Returns the number of tetrahedra in this component.
@@ -288,83 +297,87 @@ class REGINA_API NComponent : public ShareableObject, public NMarkedElement {
 
 // Inline functions for NComponent
 
-inline NComponent::NComponent() : ideal(false), orientable(true) {
+inline NComponent::NComponent() : ideal_(false), orientable_(true) {
 }
 
 inline NComponent::~NComponent() {
 }
 
+inline unsigned long NComponent::index() const {
+    return markedIndex();
+}
+
 inline unsigned long NComponent::getNumberOfTetrahedra() const {
-    return tetrahedra.size();
+    return tetrahedra_.size();
 }
 
 inline unsigned long NComponent::getNumberOfSimplices() const {
-    return tetrahedra.size();
+    return tetrahedra_.size();
 }
 
 inline unsigned long NComponent::getNumberOfTriangles() const {
-    return triangles.size();
+    return triangles_.size();
 }
 
 inline unsigned long NComponent::getNumberOfFaces() const {
-    return triangles.size();
+    return triangles_.size();
 }
 
 inline unsigned long NComponent::getNumberOfEdges() const {
-    return edges.size();
+    return edges_.size();
 }
 
 inline unsigned long NComponent::getNumberOfVertices() const {
-    return vertices.size();
+    return vertices_.size();
 }
 
 inline unsigned long NComponent::getNumberOfBoundaryComponents() const {
-    return boundaryComponents.size();
+    return boundaryComponents_.size();
 }
 
 inline NTetrahedron* NComponent::getTetrahedron(unsigned long index) const {
-    return tetrahedra[index];
+    return tetrahedra_[index];
 }
 
 inline NTetrahedron* NComponent::getSimplex(unsigned long index) const {
-    return tetrahedra[index];
+    return tetrahedra_[index];
 }
 
 inline NTriangle* NComponent::getTriangle(unsigned long index) const {
-    return triangles[index];
+    return triangles_[index];
 }
 
 inline NTriangle* NComponent::getFace(unsigned long index) const {
-    return triangles[index];
+    return triangles_[index];
 }
 
 inline NEdge* NComponent::getEdge(unsigned long index) const {
-    return edges[index];
+    return edges_[index];
 }
 
 inline NVertex* NComponent::getVertex(unsigned long index) const {
-    return vertices[index];
+    return vertices_[index];
 }
 
 inline NBoundaryComponent* NComponent::getBoundaryComponent(unsigned long index)
         const {
-    return boundaryComponents[index];
+    return boundaryComponents_[index];
 }
 
 inline bool NComponent::isIdeal() const {
-    return ideal;
+    return ideal_;
 }
 
 inline bool NComponent::isOrientable() const {
-    return orientable;
+    return orientable_;
 }
 
 inline bool NComponent::isClosed() const {
-    return (boundaryComponents.empty());
+    return (boundaryComponents_.empty());
 }
 
 inline unsigned long NComponent::getNumberOfBoundaryTriangles() const {
-    return 2 * triangles.size() - 4 * tetrahedra.size();
+    return 2 * triangles_.size() - 4 * tetrahedra_.size();
 }
 
 } // namespace regina

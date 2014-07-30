@@ -481,33 +481,6 @@ void NTriSurfacesUI::refresh() {
     }
 }
 
-void NTriSurfacesUI::editingElsewhere() {
-    QString msg(tr("Editing..."));
-    zeroEff->setText(msg);
-    zeroEff->setPalette(QPalette());
-    splitting->setText(msg);
-    splitting->setPalette(QPalette());
-    threeSphere->setText(msg);
-    threeSphere->setPalette(QPalette());
-    threeBall->setText(msg);
-    threeBall->setPalette(QPalette());
-    solidTorus->setText(msg);
-    solidTorus->setPalette(QPalette());
-    irreducible->setText(msg);
-    irreducible->setPalette(QPalette());
-    haken->setText(msg);
-    haken->setPalette(QPalette());
-    manifold->setText(msg);
-
-    btnZeroEff->setEnabled(false);
-    btnSplitting->setEnabled(false);
-    btnThreeSphere->setEnabled(false);
-    btnThreeBall->setEnabled(false);
-    btnSolidTorus->setEnabled(false);
-    btnIrreducible->setEnabled(false);
-    btnHaken->setEnabled(false);
-}
-
 void NTriSurfacesUI::calculateZeroEff() {
     PatienceDialog* dlg = PatienceDialog::warn(tr(
         "Deciding whether a triangulation is 0-efficient\n"

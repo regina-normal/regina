@@ -51,6 +51,7 @@ void addDim4Pentachoron() {
         .def("getDescription", &Dim4Pentachoron::getDescription,
             return_value_policy<return_by_value>())
         .def("setDescription", &Dim4Pentachoron::setDescription)
+        .def("index", &Dim4Pentachoron::index)
         .def("adjacentPentachoron", &Dim4Pentachoron::adjacentPentachoron,
             return_value_policy<reference_existing_object>())
         .def("adjacentSimplex", &Dim4Pentachoron::adjacentSimplex,

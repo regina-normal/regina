@@ -120,6 +120,25 @@ class TwoTypeFilter : public PacketFilter {
         }
 };
 
+/**
+ * A packet filter that only accepts packets of either a given packet type
+ * or any of its subclasses.
+ *
+ * The template argument T must be one of the available packet types.
+ * The acceptance test will be performed by calling dynamic_cast<T*>
+ * upon each packet being questioned.
+ */
+template <class T>
+class SubclassFilter : public PacketFilter {
+    public:
+        /**
+         * PacketFilter overrides.
+         */
+        virtual bool accept(regina::NPacket* packet) {
+            return dynamic_cast<T*>(packet);
+        }
+};
+
 inline PacketFilter::~PacketFilter() {
 }
 

@@ -68,7 +68,8 @@ namespace regina {
  * infinity is always equal to itself.
  *
  * Rationals will always be stored in lowest terms with non-negative
- * denominator.
+ * denominator. This means the numerator and denominator have no common
+ * integer divisor. 
  *
  * \testpart
  */

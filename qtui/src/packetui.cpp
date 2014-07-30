@@ -106,8 +106,7 @@ DefaultPacketUI::DefaultPacketUI(regina::NPacket* newPacket,
 
 PacketPane::PacketPane(ReginaMain* newMainWindow, NPacket* newPacket,
         QWidget* parent) : QWidget(parent),
-        mainWindow(newMainWindow), frame(0), dirty(false),
-        emergencyClosure(false), emergencyRefresh(false), isCommitting(false),
+        mainWindow(newMainWindow), frame(0),
         editCut(0), editCopy(0), editPaste(0) {
     // Initialise a vertical layout with no padding or spacing.
     QBoxLayout* layout = new QVBoxLayout(this);
@@ -119,26 +118,6 @@ PacketPane::PacketPane(ReginaMain* newMainWindow, NPacket* newPacket,
 
     // Create the actions first, since PacketManager::createUI()
     // might want to modify them.
-    actCommit = new QAction(this);
-    actCommit->setText(tr("Co&mmit"));
-    actCommit->setIcon(ReginaSupport::themeIcon("dialog-ok"));
-    actCommit->setEnabled(false);
-    actCommit->setToolTip(tr("Commit changes to this packet"));
-    actCommit->setWhatsThis(tr("Commit any changes you have made inside "
-        "this packet viewer.  Changes you make will have no effect elsewhere "
-        "until they are committed."));
-    connect(actCommit,SIGNAL(triggered()),this,SLOT(commit()));
-
-    actRefresh = new QAction(this);
-    actRefresh->setText(tr("&Refresh"));
-    actRefresh->setIcon(ReginaSupport::themeIcon("view-refresh"));
-    actRefresh->setToolTip(tr("Discard any changes and refresh this "
-        "packet viewer"));
-    actRefresh->setWhatsThis(tr("Refresh this viewer to show the most "
-        "recent state of the packet.  Any changes you mave made inside this "
-        "viewer that have not been committed will be discarded."));
-    connect(actRefresh,SIGNAL(triggered()), this, SLOT(refresh()));
-
     actDockUndock = new QAction(this);
     actDockUndock->setText(tr("Un&dock"));
     actDockUndock->setIcon(ReginaSupport::themeIcon("mail-attachment"));
@@ -155,8 +134,7 @@ PacketPane::PacketPane(ReginaMain* newMainWindow, NPacket* newPacket,
     actClose->setIcon(ReginaSupport::themeIcon("window-close"));
     actClose->setShortcuts(QKeySequence::Close);
     actClose->setToolTip(tr("Close this packet viewer"));
-    actClose->setWhatsThis(tr("Close this packet viewer.  Any changes "
-        "that have not been committed will be discarded."));
+    actClose->setWhatsThis(tr("Close this packet viewer."));
     connect(actClose,SIGNAL(triggered()), this, SLOT(close()));
 
     // Set up the header and dock/undock button.
@@ -209,23 +187,12 @@ PacketPane::PacketPane(ReginaMain* newMainWindow, NPacket* newPacket,
     layout->addWidget(mainUIWidget, 1);
     setFocusProxy(mainUIWidget);
 
-    // Set up the footer buttons and other actions.
-    QToolBar* footer = new QToolBar(this);
-    footer->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    footer->addAction(actCommit);
-    footer->addAction(actRefresh);
-    footer->addSeparator();
-    footer->addAction(actClose);
-    layout->addWidget(footer);
-
     // Register ourselves to listen for various events.
     newPacket->listen(this);
 }
 
 PacketPane::~PacketPane() {
     delete mainUI;
-    delete actCommit;
-    delete actRefresh;
     delete actDockUndock;
     delete actClose;
 }
@@ -248,23 +215,8 @@ void PacketPane::fillPacketTypeMenu(QMenu* menu) {
         menu->addSeparator();
     }
 
-    menu->addAction(actCommit);
-    menu->addAction(actRefresh);
-    menu->addSeparator();
     menu->addAction(actDockUndock);
     menu->addAction(actClose);
-}
-
-void PacketPane::setDirty(bool newDirty) {
-    if (dirty == newDirty)
-        return;
-
-    dirty = newDirty;
-
-    actCommit->setEnabled(dirty);
-    actRefresh->setText(dirty ? tr("&Discard") : tr("&Refresh"));
-    actRefresh->setIcon(dirty ? ReginaSupport::themeIcon("dialog-cancel") : 
-            ReginaSupport::themeIcon("view-refresh"));
 }
 
 bool PacketPane::setReadWrite(bool allowReadWrite) {
@@ -285,33 +237,9 @@ bool PacketPane::setReadWrite(bool allowReadWrite) {
 }
 
 bool PacketPane::queryClose() {
-    while ((! emergencyClosure) && dirty) {
-        QMessageBox msgBox(QMessageBox::Information, tr("Information"),
-            tr("This packet contains changes that have "
-                "not yet been committed."),
-            QMessageBox::Cancel, this);
-        msgBox.setInformativeText(
-            tr("Do you wish to commit these changes now?"));
-        //msgBox.setDetailedText(
-        //    tr("The packet in question is: %1").
-        //    arg(mainUI->getPacket()->getHumanLabel().c_str()));
-        QPushButton* discardBtn = msgBox.addButton(tr("Discard"),
-            QMessageBox::DestructiveRole);
-        QPushButton* commitBtn = msgBox.addButton(tr("Commit"),
-            QMessageBox::AcceptRole);
-        msgBox.setDefaultButton(commitBtn);
-
-        msgBox.exec();
-        if (msgBox.clickedButton() == discardBtn)
-            break;
-        else if (msgBox.clickedButton() != commitBtn) {
-            // Assume cancel.
-            return false;
-        }
-        commit();
-    }
-
-    // We are definitely going to close the pane.  Do some cleaning up.
+    // Now that changes are automatically synced with the calculation
+    // engine immediately, there is no reason not to close.
+    // Just do some cleaning up.
     mainWindow->isClosing(this);
     return true;
 }
@@ -370,41 +298,8 @@ void PacketPane::deregisterEditOperations() {
 
 void PacketPane::packetWasChanged(regina::NPacket*) {
     // Assume it's this packet.
-
-    // Ignore this if we're responsible for the event.
-    if (isCommitting)
-        return;
-
     refreshHeader();
-
-    if (dirty) {
-        QMessageBox msgBox(this);
-        msgBox.setIcon(QMessageBox::Question);
-        msgBox.setWindowTitle(tr("Question"));
-        msgBox.setText(tr("This packet has been changed elsewhere."));
-        msgBox.setInformativeText(
-            tr("Do you wish to load the other version (discarding "
-            "your changes here), or commit this version "
-            "(overwriting the other version)?"));
-        QPushButton* externalBtn = msgBox.addButton(tr("Use other"),
-            QMessageBox::DestructiveRole);
-        QPushButton* commitBtn = msgBox.addButton(tr("Commit this"),
-            QMessageBox::AcceptRole);
-        msgBox.setDefaultButton(externalBtn);
-        msgBox.exec();
-        if (msgBox.clickedButton() == commitBtn) {
-            // We are already inside someone else's commit / packet-changed
-            // loop, so we can't commit again here and now.
-            // Queue the commit instead.
-            QApplication::postEvent(this,
-                new QEvent((QEvent::Type)EVT_COMMIT_PACKET));
-            return;
-        }
-        // Abandon changes and refresh.
-    }
-
     mainUI->refresh();
-    setDirty(false); // Just in case somebody forgot.
 }
 
 void PacketPane::packetWasRenamed(regina::NPacket*) {
@@ -417,7 +312,7 @@ void PacketPane::packetWasRenamed(regina::NPacket*) {
 
 void PacketPane::packetToBeDestroyed(regina::NPacket*) {
     // Assume it's this packet.
-    closeForce();
+    close();
 }
 
 void PacketPane::childWasAdded(regina::NPacket* packet, regina::NPacket*) {
@@ -439,122 +334,6 @@ void PacketPane::childWasRemoved(regina::NPacket* packet, regina::NPacket*,
         refreshHeader();
 }
 
-void PacketPane::refresh() {
-    if ((! emergencyRefresh) && dirty) {
-        QMessageBox msgBox(QMessageBox::Information,
-            tr("Information"),
-            tr("This packet contains changes that have "
-                "not yet been committed."),
-            QMessageBox::Cancel,
-            this);
-        msgBox.setInformativeText("Are you sure you wish to discard "
-            "these changes?");
-        QPushButton* discardBtn = msgBox.addButton(tr("Discard"),
-            QMessageBox::AcceptRole);
-        msgBox.setDefaultButton(discardBtn);
-        msgBox.exec();
-        if (msgBox.clickedButton() != discardBtn)
-            return;
-    }
-
-    emergencyRefresh = false;
-    mainUI->refresh();
-    setDirty(false); // Just in case somebody forgot.
-}
-
-void PacketPane::refreshForce() {
-    emergencyRefresh = true;
-    refresh();
-}
-
-bool PacketPane::commit() {
-    if (dirty) {
-        // Note that readWrite should be synced with isPacketEditable().
-        // Originally they were different concepts, but that was back
-        // in the days of the read-only KPart.
-        if (! (mainUI->getPacket()->isPacketEditable() && readWrite)) {
-            ReginaSupport::sorry(this,
-                tr("This packet is currently read-only, and so I cannot "
-                    "commit your changes."),
-                tr("<qt>This is typically due to a "
-                    "relationship with another packet.  For instance, "
-                    "any triangulation that contains normal surfaces or "
-                    "angle structures will be read-only.<p>"
-                    "As a workaround, you could try cloning this packet, "
-                    "and then editing the clone instead.</qt>"));
-            return false;
-        }
-
-        isCommitting = true;
-
-        {
-            NPacket::ChangeEventSpan span(mainUI->getPacket());
-            mainUI->commit();
-        }
-
-        setDirty(false); // Just in case somebody forgot.
-        isCommitting = false;
-    }
-
-    return true;
-}
-
-bool PacketPane::commitToModify() {
-    // Note that readWrite should be synced with isPacketEditable().
-    // Originally they were different concepts, but that was back
-    // in the days of the read-only KPart.
-    if (! (mainUI->getPacket()->isPacketEditable() && readWrite)) {
-        ReginaSupport::info(this,
-            tr("This packet is currently read-only."),
-            tr("<qt>This is typically due to its "
-                "relationship with another packet.  For instance, "
-                "any triangulation that contains normal surfaces or "
-                "angle structures will be read-only.<p>"
-                "As a workaround, you could try cloning this packet, "
-                "and then editing the clone instead.</qt>"));
-        return false;
-    }
-
-    return commit();
-}
-
-bool PacketPane::tryCommit() {
-    if (dirty) {
-        // Note that readWrite should be synced with isPacketEditable().
-        // Originally they were different concepts, but that was back
-        // in the days of the read-only KPart.
-        if (! (mainUI->getPacket()->isPacketEditable() && readWrite)) {
-            QMessageBox msg(QMessageBox::Information,
-                    tr("Information"),
-                    tr("This packet is currently read-only, and I "
-                    "cannot commit your recent changes."),
-                    QMessageBox::Yes | QMessageBox::Cancel,
-                    this);
-            msg.setInformativeText(tr("<qt>This is typically due to a "
-                "relationship with another packet.  For instance, "
-                "any triangulation that contains normal surfaces or "
-                "angle structures will be read-only.<p>"
-                "Do you wish to continue using an old version "
-                "of the packet?</qt>"));
-            msg.setDefaultButton(QMessageBox::Yes);
-            if (msg.exec() != QMessageBox::Yes)
-                return false;
-        } else {
-            isCommitting = true;
-
-            {
-                NPacket::ChangeEventSpan span(mainUI->getPacket());
-                mainUI->commit();
-            }
-
-            setDirty(false); // Just in case somebody forgot.
-            isCommitting = false;
-        }
-    }
-
-    return true;
-}
-
 bool PacketPane::close() {
     // Let whoever owns us handle the entire close event.
     // We'll come back to this class when they call queryClose().
@@ -562,11 +341,6 @@ bool PacketPane::close() {
         return frame->close();
     else
         return mainWindow->closeDockedPane();
-}
-
-void PacketPane::closeForce() {
-    emergencyClosure = true;
-    close();
 }
 
 void PacketPane::dockPane() {
@@ -635,7 +409,5 @@ void PacketPane::customEvent(QEvent* evt) {
         setReadWrite(true);
     else if (type == EVT_REFRESH_HEADER)
         refreshHeader();
-    else if (type == EVT_COMMIT_PACKET)
-        commit();
 }
 

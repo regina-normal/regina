@@ -43,5 +43,9 @@
 	<true/>
 	<key>NSHumanReadableCopyright</key>
 	<string>GNU General Public License, with some additional permissions</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+	<key>NSHighResolutionCapable</key>
+	<string>True</string>
 </dict>
 </plist>

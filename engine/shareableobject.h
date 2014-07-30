@@ -72,6 +72,11 @@ namespace regina {
 class REGINA_API ShareableObject : public regina::boost::noncopyable {
     public:
         /**
+         * \name Constructors and Destructors
+         */
+        /*@{*/
+
+        /**
          * Default constructor that does nothing.
          *
          * \ifacespython Not present.
@@ -81,6 +86,12 @@ class REGINA_API ShareableObject : public regina::boost::noncopyable {
          * Default destructor that does nothing.
          */
         virtual ~ShareableObject();
+
+        /*@}*/
+        /**
+         * \name Input and Output
+         */
+        /*@{*/
 
         /**
          * Writes this object in short text format to the given output stream.
@@ -143,6 +154,8 @@ class REGINA_API ShareableObject : public regina::boost::noncopyable {
          * @return a long text representation of this object.
          */
         std::string toStringLong() const;
+
+        /*@}*/
 };
 
 /*@}*/

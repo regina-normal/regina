@@ -380,7 +380,7 @@ int mainSlave() {
             break;
         }
 
-        tree = readFileMagic(filename);
+        tree = open(filename);
         if (! tree) {
             slaveSendResult(RESULT_ERR_INPUT);
             continue;

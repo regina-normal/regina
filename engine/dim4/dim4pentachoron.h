@@ -164,6 +164,18 @@ class REGINA_API Dim4Pentachoron :
         void setDescription(const std::string& desc);
 
         /**
+         * Returns the index of this pentachoron in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->pentachoronIndex(this)</tt>.
+         *
+         * Note that pentachoron indexing may change when a triangle is
+         * added or removed from the underlying triangulation.
+         *
+         * @return the index of this pentachoron.
+         */
+        unsigned long index() const;
+
+        /**
          * Returns the adjacent pentachoron glued to the given facet of this
          * pentachoron, or 0 if the given facet is on the boundary of the
          * 4-manifold triangulation.
@@ -550,6 +562,10 @@ inline const std::string& Dim4Pentachoron::getDescription() const {
 
 inline void Dim4Pentachoron::setDescription(const std::string& desc) {
     desc_ = desc;
+}
+
+inline unsigned long Dim4Pentachoron::index() const {
+    return markedIndex();
 }
 
 inline Dim4Pentachoron* Dim4Pentachoron::adjacentPentachoron(int facet) const {

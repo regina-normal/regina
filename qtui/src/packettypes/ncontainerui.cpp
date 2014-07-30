@@ -113,7 +113,6 @@ QString NContainerUI::getPacketMenuText() const {
 void NContainerUI::refresh() {
     children->setText(QString::number(container->getNumberOfChildren()));
     descendants->setText(QString::number(container->getNumberOfDescendants()));
-    setDirty(false);
 }
 
 void NContainerUI::childWasAdded(NPacket*, NPacket*) {

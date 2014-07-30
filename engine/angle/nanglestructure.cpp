@@ -38,9 +38,6 @@
 #include "triangulation/ntriangulation.h"
 #include "utilities/xmlutils.h"
 
-// Property IDs:
-#define PROPID_FLAGS 1
-
 namespace regina {
 
 const unsigned long NAngleStructure::flagStrict = 1;

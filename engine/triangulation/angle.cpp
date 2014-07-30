@@ -41,7 +41,7 @@ namespace regina {
 
 NAngleStructure* NTriangulation::hasStrictAngleStructure() {
     // Knock off the empty triangulation first.
-    if (tetrahedra.empty())
+    if (tetrahedra_.empty())
         return 0;
 
     LPInitialTableaux<LPConstraintNone> eqns(this, NS_ANGLE, false);
@@ -62,7 +62,7 @@ NAngleStructure* NTriangulation::hasStrictAngleStructure() {
         return 0;
 
     // We have a strict angle structure: reconstruct it.
-    unsigned long len = 3 * tetrahedra.size() + 1;
+    unsigned long len = 3 * tetrahedra_.size() + 1;
     NAngleStructureVector* v = new NAngleStructureVector(len);
     lp.extractSolution(*v, 0 /* type vector */);
     return new NAngleStructure(this, v);

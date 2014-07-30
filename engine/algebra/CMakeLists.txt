@@ -15,13 +15,14 @@ SET ( FILES
   ncellulardata.lookups
   ncellulardata.output
   ncellulardata.tests
+  ncellulardata.simpaut
   ngrouppresentation
   nhomgrouppresentation
   nmarkedabeliangroup
   nmvpolynomialring
   nsvpolynomialring
   nxmlalgebrareader
-  ncellulardata.simpaut
+  nfibring
   )
 
 # Prepend folder name
@@ -44,5 +45,6 @@ if (${REGINA_INSTALL_DEV})
     nsvpolynomialring.h
     nxmlalgebrareader.h
     ncellulardata.simpaut.h
+    nfibring.h
     DESTINATION ${INCLUDEDIR}/algebra COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

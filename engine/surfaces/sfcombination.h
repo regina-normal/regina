@@ -140,8 +140,10 @@ inline bool NSurfaceFilterCombination::getUsesAnd() const {
     return usesAnd;
 }
 inline void NSurfaceFilterCombination::setUsesAnd(bool value) {
-    ChangeEventSpan span(this);
-    usesAnd = value;
+    if (usesAnd != value) {
+        ChangeEventSpan span(this);
+        usesAnd = value;
+    }
 }
 
 inline void NSurfaceFilterCombination::writeTextLong(std::ostream& o) const {

@@ -129,10 +129,6 @@ void NTriHeaderUI::refresh() {
     header->setText(summaryInfo(tri));
 }
 
-void NTriHeaderUI::editingElsewhere() {
-    header->setText(QObject::tr("Editing..."));
-}
-
 QString NTriHeaderUI::summaryInfo(regina::NTriangulation* tri) {
     if (tri->getNumberOfTetrahedra() == 0)
         return QObject::tr("Empty");

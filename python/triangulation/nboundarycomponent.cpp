@@ -45,6 +45,7 @@ void addNBoundaryComponent() {
     class_<NBoundaryComponent, bases<regina::ShareableObject>,
             std::auto_ptr<NBoundaryComponent>, boost::noncopyable>
             ("NBoundaryComponent", no_init)
+        .def("index", &NBoundaryComponent::index)
         .def("getNumberOfFaces", &NBoundaryComponent::getNumberOfFaces)
         .def("getNumberOfTriangles", &NBoundaryComponent::getNumberOfTriangles)
         .def("getNumberOfEdges", &NBoundaryComponent::getNumberOfEdges)

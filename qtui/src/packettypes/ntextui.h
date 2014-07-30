@@ -41,7 +41,10 @@
 
 #include "../packetui.h"
 
-class QPlainTextEdit;
+template <class PacketType, class Sanitise>
+class DocWidget;
+
+class DocWidgetNoSanitise;
 
 namespace regina {
     class NPacket;
@@ -64,7 +67,7 @@ class NTextUI : public QObject, public PacketUI {
          * Internal components
          */
         QWidget* ui;
-        QPlainTextEdit* document;
+        DocWidget<regina::NText, DocWidgetNoSanitise>* editWidget;
         PacketEditIface* editIface;
 
     public:
@@ -81,15 +84,8 @@ class NTextUI : public QObject, public PacketUI {
         QWidget* getInterface();
         PacketEditIface* getEditIface();
         QString getPacketMenuText() const;
-        void commit();
         void refresh();
         void setReadWrite(bool readWrite);
-
-    public slots:
-        /**
-         * Called whenever the text in the interface changes.
-         */
-        void notifyTextChanged();
 };
 
 inline PacketEditIface* NTextUI::getEditIface() {

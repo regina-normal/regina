@@ -78,13 +78,13 @@ class NSurfaceFilterPropUI : public QObject, public PacketUI {
         QComboBox* optCompact;
         QComboBox* optBdry;
         QLineEdit* eulerList;
-        QLabel* eulerExpln1;
-        QLabel* eulerExpln2;
+        QLabel* eulerExpln;
 
         /**
          * Current state
          */
         bool allowReadWrite;
+        bool inNotify;
 
     public:
         /**
@@ -99,15 +99,16 @@ class NSurfaceFilterPropUI : public QObject, public PacketUI {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         QString getPacketMenuText() const;
-        void commit();
         void refresh();
         void setReadWrite(bool readWrite);
 
     public slots:
         /**
-         * Notification of various actions.
+         * Notification of any change in the dialog.
+         * Returns false if the change was not actionable (e.g., if the
+         * list of Euler characteristics was invalid).
          */
-        void notifyFilterChanged();
+        bool notifyOptionsChanged();
 
         /**
          * Update the enabled/disable state of particular components.
@@ -115,19 +116,14 @@ class NSurfaceFilterPropUI : public QObject, public PacketUI {
         void enableDisableOrient();
         void enableDisableCompact();
         void enableDisableBdry();
-        void enableDisableEuler();
 
     private:
         /**
-         * Translate between UI elements and underlying boolean options.
+         * Translate between UI elements and underlying filter options.
          */
         regina::NBoolSet getBoolSet(QCheckBox* use, QComboBox* opt);
         void setBoolSet(QCheckBox* use, QComboBox* opt, regina::NBoolSet set);
-
-        /**
-         * Refresh the Euler characteristic UI elements only.
-         */
-        void refreshECList();
+        QString filterECList();
 };
 
 #endif

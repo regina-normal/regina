@@ -72,9 +72,8 @@ void NPDFExternalViewer::view(regina::NPacket* packet, QWidget* parentWidget) {
         return;
     }
 
-    if (! regina::writePDF(static_cast<const char*>(
-            QFile::encodeName(temp->localFileName())),
-            static_cast<regina::NPDF&>(*packet))) {
+    if (! static_cast<regina::NPDF*>(packet)->savePDF(static_cast<const char*>(
+            QFile::encodeName(temp->localFileName())))) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("<qt>An error occurred whilst writing the PDF "
             "data to the temporary file <i>%1</i>.</qt>").

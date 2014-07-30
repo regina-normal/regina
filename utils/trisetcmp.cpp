@@ -209,7 +209,7 @@ int main(int argc, char* argv[]) {
         usage(argv[0], "Two data files must be specified.");
 
     // Open the two data files.
-    NPacket* tree1 = regina::readFileMagic(file1);
+    NPacket* tree1 = regina::open(file1.c_str());
     if (! tree1) {
         std::cerr << "File " << file1 << " could not be read.\n";
         std::cerr << "Please check that it exists and that it is a Regina data file.\n";
@@ -217,7 +217,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    NPacket* tree2 = regina::readFileMagic(file2);
+    NPacket* tree2 = regina::open(file2.c_str());
     if (! tree2) {
         std::cerr << "File " << file2 << " could not be read.\n";
         std::cerr << "Please check that it exists and that it is a Regina data file.\n";
