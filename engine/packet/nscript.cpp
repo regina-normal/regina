@@ -66,9 +66,11 @@ long NScript::getVariableIndex(const std::string& name) const {
     return distance(variables.begin(), it);
 }
 
+// Note: ryan converted "it" in setVariableName to a regular iterator.
+//       gcc complained about it being a const_iterator.
 void NScript::setVariableName(unsigned long index, const std::string& name) {
-    std::map<std::string, NPacket*>::const_iterator it = variables.begin();
-    advance(it, index);
+    std::map<std::string, NPacket*>::iterator it = variables.begin();
+    advance(it, index); 
 
     if (name == it->first)
         return;

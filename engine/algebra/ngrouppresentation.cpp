@@ -34,6 +34,7 @@
 
 #include <iterator>
 #include <map>
+#include <list>
 #include <sstream>
 #include <algorithm>
 
@@ -262,7 +263,7 @@ std::string NGroupPresentation::recogniseGroup() const {
         std::auto_ptr< NHomGroupPresentation > AUT( 
             presCopy.identify_extension_over_Z() );
         if (AUT.get() != NULL) {
-            // Let's try to identify the fibre. 
+           // Let's try to identify the fibre. 
             std::string domStr( AUT.get()->getDomain().recogniseGroup() );
             if (domStr.length()>0) {
                 out<<"Z~"<<domStr<<" w/monodromy ";
@@ -1059,7 +1060,7 @@ bool NGroupPresentation::homologicalAlignment()
 
 std::auto_ptr<NHomGroupPresentation> 
     NGroupPresentation::homologicalAlignmentDetail()
-{//TODO: it appears there's a problem in the new code here.
+{
  std::auto_ptr<NHomGroupPresentation> retval; // only allocate if appropriate.
  // step 1: compute abelianization and how generators map to abelianization.
  std::auto_ptr< NMarkedAbelianGroup > abelianized( markedAbelianisation() );
@@ -1199,6 +1200,83 @@ bool NGroupPresentation::isAbelian() const
  return true;
 }
 
+/**
+ * This routine takes two words as input, *this and other, and
+ * determines whether or not one can re-label the generators in
+ * this word to get the other word. If so, it returns a non-empty
+ * list of such re-labellings. Re-labellings are partially-defined
+ * permutations (with possible inversions if cyclic=true) on the 
+ * generator set.
+ *
+ * @param other is what the return permutation turn 
+ * @param cyclic, if false we get a list of exact relabellings from
+ *  *this to other.  If true, it can be up to cyclic permutation and
+ *  inversion. If cyclic is true, the routine demands both words 
+ *  are cyclically-reduced.
+ */
+std::list< std::map< unsigned long, NGroupExpressionTerm > >
+ NGroupExpression::relabellingsThisToOther( const NGroupExpression &other, 
+           bool cyclic ) const
+{ // we'll handle the cyclic==true case as a repeated cyclic==false call.
+ if (cyclic)
+  {
+   std::list< std::map< unsigned long, NGroupExpressionTerm > > retval;
+   if (getNumberOfTerms() != other.getNumberOfTerms())
+    return retval;
+   NGroupExpression tempW( *this );
+   for (unsigned long i=0; i<tempW.getNumberOfTerms(); i++)
+    {
+     std::list< std::map< unsigned long, NGroupExpressionTerm > > tempL(
+        tempW.relabellingsThisToOther( other, false ) );
+     // append to retval
+     for (std::list< std::map< unsigned long, NGroupExpressionTerm > >::iterator
+        j=tempL.begin(); j!=tempL.end(); j++)
+        retval.push_back( *j );
+     tempW.cycleRight();
+    }
+   tempW.invert();
+   for (unsigned long i=0; i<tempW.getNumberOfTerms(); i++)
+    {
+     std::list< std::map< unsigned long, NGroupExpressionTerm > > tempL(
+        tempW.relabellingsThisToOther( other, false ) );
+     // append to retval
+     for (std::list< std::map< unsigned long, NGroupExpressionTerm > >::iterator
+        j=tempL.begin(); j!=tempL.end(); j++)
+        retval.push_back( *j );
+     tempW.cycleRight();
+    }
+   return retval;
+   // TODO: consider removing duplicates at this stage.  Or make the return
+   //  value a set. 
+  }
+
+ // cyclic==false
+ std::map< unsigned long, NGroupExpressionTerm > tempMap;
+ std::list<NGroupExpressionTerm>::const_iterator j=other.getTerms().begin();
+ std::list<NGroupExpressionTerm>::const_iterator i=getTerms().begin();
+ for ( ; ( (i!=getTerms().end()) && (j!=other.getTerms().end()) ); i++, j++)
+   if (abs(i->exponent) == abs(j->exponent))
+    { // matching exponents, so check if generators have been used yet.
+     std::map< unsigned long, NGroupExpressionTerm >::iterator k;
+     k=tempMap.find( i->generator );
+     NGroupExpressionTerm MAPTO( j->generator, 
+            (i->exponent == j->exponent) ? 1 : -1 );
+     if (k!=tempMap.end()) { // previously defined, check consistency
+       if (!(k->second == MAPTO)) // contradicting definition
+        return std::list< std::map< unsigned long, NGroupExpressionTerm > >();
+       }
+     else tempMap[i->generator] = MAPTO;
+    }    
+ // check if words had different number of terms
+ if ( (i!=getTerms().end()) || (j!=other.getTerms().end()) )
+  return std::list< std::map< unsigned long, NGroupExpressionTerm > >();
+
+ // okay, we have something.
+ std::list< std::map< unsigned long, NGroupExpressionTerm > > retval;
+ retval.push_back( tempMap );
+ return retval;
+}
+
 std::list< NGroupPresentation* > 
     NGroupPresentation::identify_free_product() const
 {
@@ -1322,64 +1400,250 @@ std::list< NGroupPresentation* >
  * Will return an empty string if could not identify fundamental group in this
  * class. 
  */
-std::string NGroupPresentation::identify_circle_bundle_over_surface()
+std::string NGroupPresentation::identify_circle_bundle_over_surface(bool orientable)
 {
- // start with the most readily-computable invariant, H_1
  std::auto_ptr< NAbelianGroup > ab( abelianisation() );
  std::stringstream retval;
 
- // rank 0
+ // The simplest fundamental groups to recognise: S3, RP3, Lens.
  if (ab.get()->getRank()==0)
   {
    if (nGenerators==0) return std::string("S3");
    if (nGenerators==1) { // Lens space
      unsigned long ord( ab.get()->getInvariantFactor(0).longValue() );
+     if (ord==2) return std::string("RP3");
      retval<<"L("<<ord<<",";
      if (ord<5) retval<<"1"; else retval<<"?";
      retval<<")";
      return retval.str();
     }
-   // we need to also recognise the SFS(S^2 : 1/2, -1/2, 1/k) manifolds, 
-   // equivalently SFS(RP^2 : k).  These are orientable manifolds. 
-   if ( (nGenerators==2) && (relations.size()==2) ) {
-       // these groups have reduced presentations of the form
-       // < b, f | bfb^-1 = f^-1, b^2f^k > we need to be a little careful
-       // about seeing them
-     
-     }  // end 2 gen, 2 relator group
-   } // end ab is finite.
+  }
 
- // rank 1
- if (ab.get()->getRank()==1)
-  {}
- //  cyclic
+ // next simplest: S2 x S1 and S2 x~ S1 (is bundle over RP2)
+ if ( (ab.get()->getRank()==1) && (ab.get()->getNumberOfInvariantFactors()==0) )
+  {
+   if ( (nGenerators==1) && orientable ) return std::string("S2 x S1");
+   if ( (nGenerators==1) && !orientable ) return std::string("S2 x~ S1");
+  }
 
- // rank 2
- if (ab.get()->getRank()==2)
-  {}
+ // next, let's identify the bundles over RP2.  The non-orientable list
+ // is just S2 x~ S1 non-orientable odd euler class (above)
+ //     and S1 x RP2 non-orientable even euler class
+ // the orientable list is more interesting, see next bracket
+ if ( (ab.get()->getRank()==1) && (ab.get()->getNumberOfInvariantFactors()==1) )
+  { // ab Z+Z_k
+   if ( (ab.get()->getInvariantFactor(0).longValue()==2) && 
+        isAbelian() ) return std::string("RP2 x S1");
+  }
 
- // TODO: higher-rank cases
+ // remaining non-or total space for S^1 bundles over RP2. 
+ //       SFS(S^2 : 1/2, -1/2, 1/k) manifolds where k is the euler class, k>1 
+ // equivalently SFS(RP^2 : k).  These have presentations
+ //  < b, f : bfb^-1 = f^-1, b^2f^k=1 >.  These have abelianizations
+ // Z_2 or Z_2^2 depending on whether or not k is odd or even, respectively
+ if ( ( ab.get()->getRank()==0 ) && orientable ) {
+  if ( ( ( ab.get()->getNumberOfInvariantFactors()==1 ) ?
+       ( ab.get()->getInvariantFactor(0).longValue()==2 ) : false ) || 
+       ( ( ab.get()->getNumberOfInvariantFactors()==2 ) ?
+       ( ( ab.get()->getInvariantFactor(0).longValue()==2 ) &&
+         ( ab.get()->getInvariantFactor(1).longValue()==2 ) ) : false ) )
+   {
+    for (unsigned long k=2; k<6; k++)
+     { // TODO: this is very primitive and limited to euler char < 7. 
+      std::stringstream tempstr; 
+      std::vector<std::string> relVec; relVec.push_back("abAb");
+      tempstr<<"aab^"<<k; relVec.push_back(tempstr.str());
+      NGroupPresentation target(2, relVec);
+      target.intelligentSimplify();
+      target.proliferateRelators();
+      tempstr.flush();
+      if (k==2) tempstr<<"S3 / Q8";
+      else      tempstr<<"S1 x~"<<k<<" RP2";
+      if (isSimpleIsomorphicTo(target)) return tempstr.str();
+     }
+   }
+ }
+
+ // bundles over S1 x S1, and S1 x~ S1
+ if ( isAbelian() && (ab.get()->getRank()==3) && 
+                     (ab.get()->getNumberOfInvariantFactors()==0) )
+   return std::string("S1 x S1 x S1");
 
  return std::string();
 }
 
+// Routine (at present) looks for isomorphism between *this group and other,
+// at present only maps of the form that send generators
+//  g_i --> g_{sigma i}^{delta_i} where sigma is some permutation of the
+// generators, and delta is some function {0,1,...,ngens-1} --> {+1, -1}
+//
+// We do this by creating a routine that runs through the relators of this
+// group and checks if there are any partial permutations sigma that allow
+// that relator to be respected by a map.  It builds up a big list of all 
+// these partial subs, one list for every relator in *this group.  As we
+// iterate through the relators we iteratively check compatibility of these
+// subsititions lists, winnowing-down the list of substitions as we go.
+// Once done, if non-empty that would define the map
+// on all generators other than free factors, so then we have to similarly
+// check for free factors in other.  Then we check the inverse (in the free
+// group) descends to a map, if so we're done. 
+//
+// To enable this we should probably carefully index the relations. And we
+// should handle 1-gen relations differently than multiple-gen relations, 
+// otherwise there's a potential memory explosion.  
+//
+// TODO: we can modify this to be a findHom routine. And if the target is 
+// a finite group, find *all* homs up to conjugacy, etc. 
+//
+bool NGroupPresentation::isSimpleIsomorphicTo( const NGroupPresentation& other ) const
+{
+ // Check if presentations have the same number of generators.  
+ if (nGenerators != other.nGenerators) return false;
+ // Check if relations empty
+ if ( (relations.size()==0) && (other.relations.size()==0) ) return true;
+ if ( (relations.size()==0) || (other.relations.size()==0) ) return false;
+ // Both relations.size()>0, and have the same number of generators.
+
+ // list of related by number of generators appearing
+ std::map< unsigned long, std::list< NGroupExpression* > > domRelIdx, ranRelIdx;
+ 
+ for (unsigned long i=0; i<relations.size(); i++)
+  {
+   const std::list<NGroupExpressionTerm> nget( relations[i]->getTerms() );
+   std::set< unsigned long > gensUsed;
+   for (std::list<NGroupExpressionTerm>::const_iterator j=nget.begin();
+        j!=nget.end(); j++)
+     gensUsed.insert( j->generator );
+   domRelIdx[ gensUsed.size() ].push_back( relations[i] );
+  }
+ for (unsigned long i=0; i<other.relations.size(); i++) 
+  {
+   const std::list<NGroupExpressionTerm> nget( other.relations[i]->getTerms() );
+   std::set< unsigned long > gensUsed;
+   for (std::list<NGroupExpressionTerm>::const_iterator j=nget.begin();
+        j!=nget.end(); j++)
+     gensUsed.insert( j->generator );
+   ranRelIdx[ gensUsed.size() ].push_back( other.relations[i] );
+  }
+
+ // for each relator of this we have lists of potential substitutions
+ // typedef std::list< partialSubType > pSubListType;
+ std::list< std::map<unsigned long, NGroupExpressionTerm> > allPartialSubs;
+ allPartialSubs.push_back( std::map<unsigned long, NGroupExpressionTerm>() );
+
+ for (std::map< unsigned long, std::list< NGroupExpression* > >::const_reverse_iterator
+      i=domRelIdx.rbegin(); i!=domRelIdx.rend(); i++)
+  { // currently we'll do the most simplistic thing possible -- look for relabellings
+    // of these relators in the target presentation.
+    unsigned long nGens = i->first;
+    if (ranRelIdx.find(nGens)==ranRelIdx.end()) return false;
+
+     const std::list< NGroupExpression* > DOMR( i->second );
+     const std::list< NGroupExpression* > RANR( ranRelIdx[nGens] );
+      // build list of subs for all DOMR -> RANR possibilities
+     for (std::list< NGroupExpression* >::const_iterator DI=DOMR.begin();
+           DI!=DOMR.end(); DI++)
+      {
+       std::list< std::map<unsigned long, NGroupExpressionTerm> > newPartialSubs;
+       // for each DI, every extension or consistent hom with allPArtialSubs 
+       // we find using DI will be put in newPartialSubs, at the end, we replace
+       // allPartialSubs with newPartialSubs. 
+       for (std::list< NGroupExpression* >::const_iterator RI=RANR.begin();
+           RI!=RANR.end(); RI++)
+        { // built tempList
+         // TODO: let's put the special case nGens==1 here, where instead of 
+         //  looking making all possible maps, we just choose one.  This is 
+         //  because if we get here and its not defined on a torsion element,
+         //  is must have been a free factor Z_k * other stuff.  So we only
+         //  need to choose a complementary map.
+
+         std::list< std::map< unsigned long, NGroupExpressionTerm > >
+           tempList( (*DI)->relabellingsThisToOther( *(*RI), true ) );
+         for (std::list< std::map< unsigned long, NGroupExpressionTerm > >::iterator 
+               X=tempList.begin(); X!=tempList.end(); X++)
+         for (std::list< std::map< unsigned long, NGroupExpressionTerm > >::iterator
+               Y=allPartialSubs.begin(); Y!=allPartialSubs.end(); Y++)
+           {
+            // newMap will be the potential extension of *X and *Y
+            std::map< unsigned long, NGroupExpressionTerm > newMap;
+            std::map< unsigned long, NGroupExpressionTerm >::iterator Xi=X->begin();
+            std::map< unsigned long, NGroupExpressionTerm >::iterator Yi=Y->begin();
+            while ( (Xi!=X->end()) || (Yi!=Y->end()) )
+             {
+              if ( (Xi!=X->end()) && (Yi!=Y->end()) ) {
+               if (Xi->first < Yi->first) { newMap.insert( *Xi ); Xi++; }
+               else if (Xi->first > Yi->first) { newMap.insert( *Yi ); Yi++; }
+               else if (Xi->second == Yi->second) { newMap.insert( *Xi ); Xi++; Yi++; }
+               else // this does not extend
+                goto get_out_of_while_loop_goto_tag;
+               }
+              else if (Xi!=X->end()) { newMap.insert( *Xi ); Xi++; }
+              else if (Yi!=Y->end()) { newMap.insert( *Yi ); Yi++; }
+             }
+            newPartialSubs.push_back( newMap );
+            get_out_of_while_loop_goto_tag: // this skips insertion
+            {} // goto tags apparently can't be at the end of while loops!
+           }
+        } // end RI loop
+       if (newPartialSubs.empty()) return false;
+       allPartialSubs.clear();
+       allPartialSubs.swap( newPartialSubs );
+       // TODO: Remove duplicates if they exist. This would help reduce time 
+       //  wasted
+      } // end DI and newPartialSubs loop 
+  }
+
+ // TODO: if still undefined, there are some free factors.  Count them on 
+ //  both sides then define.
+
+ for (std::list< std::map< unsigned long, NGroupExpressionTerm > >::iterator
+      X=allPartialSubs.begin(); X!=allPartialSubs.end(); X++)
+   {
+    unsigned long gi=0;
+    std::set< unsigned long > rGen;
+    for (std::map<unsigned long, NGroupExpressionTerm >::iterator GI=X->begin(); 
+         GI!=X->end(); GI++)
+     {
+      rGen.insert(GI->second.generator);
+      if (GI->first!=gi) break;
+      else gi++;
+     }
+   if ( (rGen.size()==nGenerators) && (gi==nGenerators) ) 
+    {
+     std::vector< NGroupExpression > map(nGenerators);
+     for (std::map<unsigned long, NGroupExpressionTerm >::iterator GI=X->begin();
+          GI!=X->end(); GI++)
+      {
+        NGroupExpression let;
+        let.addTermFirst( GI->first, GI->second.exponent );
+        map[GI->second.generator] = let;
+      }
+     NHomGroupPresentation invMap( other, *this, map );
+     if (invMap.verifyHom()) { //std::cout<<invMap.detail()<<"\n";
+                               return true;   
+                             }
+    }
+   }
+
+ return false;
+}
 
 bool NGroupPresentation::nielsenTransposition(const unsigned long &i, 
                                               const unsigned long &j)
 {
-    if (i==j) return false;
-    bool retval=false;
-    for (unsigned long l=0; l<relations.size(); l++)
-     {
-      std::list<NGroupExpressionTerm>& terms( relations[l]->getTerms() );
-      for (std::list<NGroupExpressionTerm>::iterator k=terms.begin(); 
-           k!=terms.end(); k++)
-        { 
-          if (k->generator == i) { k->generator = j; retval = true; }
-          else if (k->generator == j) { k->generator = i; retval = true; } 
-        }
+ if (i==j) return false;
+ bool retval=false;
+ for (unsigned long l=0; l<relations.size(); l++)
+  {
+   std::list<NGroupExpressionTerm>& terms( relations[l]->getTerms() );
+   for (std::list<NGroupExpressionTerm>::iterator k=terms.begin(); 
+        k!=terms.end(); k++)
+     { 
+       if (k->generator == i) { k->generator = j; retval = true; }
+       else if (k->generator == j) { k->generator = i; retval = true; } 
      }
-    return retval;
+  }
+ return retval;
 }
 
 bool NGroupPresentation::nielsenInvert(const unsigned long &i)
@@ -1420,8 +1684,15 @@ namespace { // anonymous namespace to ensure not put in the library
 //  0 --> A --> G --> Z --> 0
 // this routine is to change the presentation to appear to be such a split
 //  extension. 
-// TODO: modify this to both return the automorphism of the fibre and the
-//  reducing isomorphism. 
+//
+// TODO: at present it will not declare presentations of the form:
+//  < a, b | a^5, bab^-1=a^2 > extensions over Z, because of the 
+// a^2 term.  Should fix this.  But how to do it in any generality? 
+// Perhaps multiply conjugating automorphisms, to deduce
+//  < a, b | a^5, bab^-1=a^2, ba^2b^-1=a^4=a^-1 > etc...
+// Short-term we can recognise the fibre as being abelian and check
+// invertibility using HomMarkedAbelianGroup routines.
+//
 std::auto_ptr< NHomGroupPresentation > 
     NGroupPresentation::identify_extension_over_Z()
 {

@@ -12,7 +12,7 @@ SET ( FILES
   nmvpolynomialring
   nsvpolynomialring
   nxmlalgebrareader
-  nfibring
+#  nfibring
   )
 
 # Prepend folder name
@@ -33,6 +33,6 @@ if (${REGINA_INSTALL_DEV})
     nmvpolynomialring.h
     nsvpolynomialring.h
     nxmlalgebrareader.h
-    nfibring.h
+#    nfibring.h
     DESTINATION ${INCLUDEDIR}/algebra COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
