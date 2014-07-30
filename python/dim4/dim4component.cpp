@@ -48,6 +48,7 @@ void addDim4Component() {
     class_<Dim4Component, bases<regina::ShareableObject>,
             std::auto_ptr<Dim4Component>, boost::noncopyable>
             ("Dim4Component", no_init)
+        .def("index", &Dim4Component::index)
         .def("getNumberOfPentachora", &Dim4Component::getNumberOfPentachora)
         .def("getNumberOfSimplices", &Dim4Component::getNumberOfSimplices)
         .def("getNumberOfTetrahedra", &Dim4Component::getNumberOfTetrahedra)

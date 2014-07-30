@@ -87,6 +87,7 @@ void addNEdge() {
 
     scope s = class_<NEdge, bases<regina::ShareableObject>,
             std::auto_ptr<NEdge>, boost::noncopyable>("NEdge", no_init)
+        .def("index", &NEdge::index)
         .def("getEmbeddings", edge_getEmbeddings_list)
         .def("getNumberOfEmbeddings", &NEdge::getNumberOfEmbeddings)
         .def("getEmbedding", &NEdge::getEmbedding,

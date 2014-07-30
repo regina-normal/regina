@@ -33,6 +33,7 @@ ENDIF(SRCHILITE_FOUND)
 SET(SOURCES ${SOURCES}
   bigwidget.cpp
   codecchooser.cpp
+  columnlayout.cpp
   examplesaction.cpp
   iconcache.cpp
   introdialog.cpp
@@ -69,6 +70,7 @@ SET(SOURCES ${SOURCES}
   )
 
 SET(MOC_HEADERS ${MOC_HEADERS}
+  columnlayout.h
   coordinatechooser.h
   introdialog.h
   recentfilesaction.h

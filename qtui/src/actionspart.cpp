@@ -415,6 +415,18 @@ void ReginaMain::setupActions() {
     treeGeneralEditActions.append(actAngleStructure);
     treeMenu->addAction(actAngleStructure);
 
+    QAction* actSnapPeaTriangulation = new QAction(this);
+    actSnapPeaTriangulation->setText(tr("New SnapP&ea Triangulation"));
+    actSnapPeaTriangulation->setIcon(IconCache::icon(IconCache::packet_snappea));
+    actSnapPeaTriangulation->setShortcut(tr("Alt+e"));
+    actSnapPeaTriangulation->setToolTip(tr("New SnapPea triangulation"));
+    actSnapPeaTriangulation->setWhatsThis(
+        tr("Create a new SnapPea triangulation."));
+    connect(actSnapPeaTriangulation, SIGNAL(triggered()), this,
+        SLOT(newSnapPeaTriangulation()) );
+    treeGeneralEditActions.append(actSnapPeaTriangulation);
+    treeMenu->addAction(actSnapPeaTriangulation);
+
     QAction* actFilter = new QAction(this);
     actFilter->setText(tr("New &Filter"));
     actFilter->setIcon(IconCache::icon(IconCache::packet_filter));
@@ -781,6 +793,7 @@ void ReginaMain::setupActions() {
     toolBarPacket->addAction(actDim4Triangulation);
     toolBarPacket->addAction(actSurfaces);
     toolBarPacket->addAction(actAngleStructure);
+    toolBarPacket->addAction(actSnapPeaTriangulation);
     toolBarPacket->addAction(actFilter);
     toolBarPacket->addAction(actText);
     toolBarPacket->addAction(actScript);

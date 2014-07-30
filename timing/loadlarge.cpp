@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
     }
 
     std::cout << "Loading..." << std::endl;
-    regina::NPacket* tree = regina::readXMLFile(file);
+    regina::NPacket* tree = regina::open(file);
     if (! tree) {
         std::cerr << "ERROR: Could not load file: " << file << std::endl;
         return 1;

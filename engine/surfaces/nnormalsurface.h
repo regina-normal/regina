@@ -53,6 +53,7 @@
 #include "surfaces/normalcoords.h"
 #include "utilities/nbooleans.h"
 #include "utilities/nproperty.h"
+#include "dim2/dim2triangulation.h"
 
 namespace regina {
 
@@ -700,7 +701,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          */
         #ifdef __DOXYGEN
             static NNormalSurfaceVector* makeZeroVector(
-                const NTriangulation* triangulation);
+                NTriangulation* triangulation);
         #endif
         /**
          * Creates a new set of normal surface matching equations for
@@ -1473,6 +1474,25 @@ class REGINA_API NNormalSurface : public ShareableObject {
         NTriangulation* crush() const;
 
         /**
+         * Returns a 2-manifold triangulation describing this normal
+         * surface.
+         *
+         * The 2-manifold triangulation will be newly allocated, and
+         * destroying it is the responsibility of the caller of this routine.
+         *
+         * \pre Requires this to represent an actual compact surface, i.e. 
+         *  must pass the isCompact() test. If the surface is not compact, 
+         *  routine will return a null pointer. It also requires the 
+         *  number of facets in the normal surface is representable by an
+         *  unsigned long, i.e. that it is a small NLargeInteger.  You
+         *  would likely run into memory issues even for large unsigned longs,
+         *  so this isn't a serious restriction on the routine.
+         *
+         * @return a triangulation of this normal hypersurface.
+         */
+        Dim2Triangulation* triangulate() const;
+
+        /**
          * Determines whether this and the given surface in fact
          * represent the same normal (or almost normal) surface.
          *
@@ -1566,9 +1586,20 @@ class REGINA_API NNormalSurface : public ShareableObject {
 
 #ifndef EXCLUDE_SNAPPEA
         /**
-         * Computes the boundary slopes of this surface at each cusp of
-         * the triangulation.  This is for use with spun-normal surfaces
-         * (for closed surfaces all boundary slopes are zero).
+         * Computes the information about the boundary slopes of this surface
+         * at each cusp of the triangulation.  This is for use with spun-normal
+         * surfaces (since for closed surfaces all boundary slopes are zero).
+         *
+         * This routine is only available for use with SnapPea triangulations,
+         * since it needs to know the specific meridian and longitude on each
+         * cusp.  This information is \e only available through the SnapPea
+         * kernel, since Regina does not use or store peripheral curves for
+         * its own NTriangulation class.  Therefore, if the underlying
+         * triangulation (as returned by getTriangulation()) is not of the
+         * subclass NSnapPeaTriangulation, this routine will simply return 0.
+         *
+         * All cusps are treated as complete.  That is, any Dehn fillings
+         * stored in the SnapPea triangulation will be ignored.
          *
          * The results are returned in a matrix with \a V rows and two
          * columns, where \a V is the number of vertices in the triangulation.
@@ -1581,12 +1612,6 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * The rational boundary slope is therefore <tt>-L/M</tt>, and
          * there are <tt>gcd(L,M)</tt> boundary curves with this slope.
          *
-         * The meridian and longitude are chosen to be the shortest and
-         * second shortest basis on each cusp, and their orientations
-         * follow the convention used by the \e SnapPy kernel.  Be warned,
-         * however, that this choice might not be unique for some cusp shapes,
-         * and the resolution of such ambiguities might be machine-dependent.
-         *
          * The orientations of the boundary curves of a
          * spun-normal surface are chosen so that \e if meridian and
          * longitude are a positive basis as vieved from the cusp, then
@@ -1594,30 +1619,26 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * spun-normal surface spirals into the cusp to one's right and
          * down into the manifold to one's left.
          *
-         * If this triangulation contains more than one vertex, the
-         * rows in the resulting matrix are ordered by vertex number in the
-         * triangulation.
-         * 
+         * If the triangulation contains more than one vertex, the rows
+         * in the resulting matrix are ordered by cusp index (as stored by
+         * SnapPea).  You can call NSnapPeaTriangulation::cuspVertex() to
+         * map these to Regina's vertex indices if needed.
+         *
          * At present, Regina can only compute boundary slopes if the
          * triangulation is oriented, if every vertex link in the
          * triangulation is a torus, and if the underlying coordinate system
          * is for normal surfaces (not almost normal surfaces).  If these
          * conditions are not met, this routine will return 0.
          *
-         * \warning If this triangulation originated from SnapPea, Regina
-         * cannot tell what meridian and longitude SnapPea was originally using
-         * (since Regina does not keep track of peripheral curves on cusps).
-         * Therefore Regina will always give boundary slopes relative to the
-         * shortest and second-shortest basis, as described above, which
-         * might not be what you expect.
-         *
          * @author William Pettersson and Stephan Tillmann
          *
          * @return a newly allocated matrix with \a number_of_vertices
          * rows and two columns as described above, or 0 if the boundary
-         * slopes cannot be computed.
+         * slopes cannot be computed (e.g., if the underlying triangulation
+         * is not of type NSnapPeaTriangulation, or if it fails to meet the
+         * preconditions outlined above).
          */
-        NMatrixInt* boundarySlopes() const;
+        NMatrixInt* boundaryIntersections() const;
 #endif // EXCLUDE_SNAPPEA
 
         /**

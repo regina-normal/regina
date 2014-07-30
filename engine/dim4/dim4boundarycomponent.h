@@ -115,6 +115,15 @@ class REGINA_API Dim4BoundaryComponent :
         virtual ~Dim4BoundaryComponent();
 
         /**
+         * Returns the index of this boundary component in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->boundaryComponentIndex(this)</tt>.
+         *
+         * @return the index of this boundary component tetrahedron.
+         */
+        unsigned long index() const;
+
+        /**
          * Returns the number of tetrahedra in this boundary component.
          *
          * @return the number of tetrahedra.
@@ -336,6 +345,10 @@ inline Dim4BoundaryComponent::Dim4BoundaryComponent() :
 inline Dim4BoundaryComponent::Dim4BoundaryComponent(Dim4Vertex* vertex) :
         boundary_(0) {
     vertices_.push_back(vertex);
+}
+
+inline unsigned long Dim4BoundaryComponent::index() const {
+    return markedIndex();
 }
 
 inline unsigned long Dim4BoundaryComponent::getNumberOfTetrahedra() const {

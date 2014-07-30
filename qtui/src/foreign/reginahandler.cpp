@@ -44,7 +44,7 @@
 
 regina::NPacket* ReginaHandler::importData(const QString& fileName,
         ReginaMain* parentWidget) const {
-    regina::NPacket* ans = regina::readFileMagic(
+    regina::NPacket* ans = regina::open(
         static_cast<const char*>(QFile::encodeName(fileName)));
     if (! ans)
         ReginaSupport::sorry(parentWidget,
@@ -71,7 +71,7 @@ bool ReginaHandler::exportData(regina::NPacket* data,
             arg(Qt::escape(data->getHumanLabel().c_str())));
         return false;
     }
-    if (! regina::writeXMLFile(QFile::encodeName(fileName), data, compressed)) {
+    if (! data->save(QFile::encodeName(fileName), compressed)) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("The export failed."), 
             QObject::tr("<qt>An unknown error occurred, probably related "

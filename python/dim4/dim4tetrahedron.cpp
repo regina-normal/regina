@@ -68,6 +68,7 @@ void addDim4Tetrahedron() {
     scope s = class_<Dim4Tetrahedron, bases<regina::ShareableObject>,
             std::auto_ptr<Dim4Tetrahedron>, boost::noncopyable>
             ("Dim4Tetrahedron", no_init)
+        .def("index", &Dim4Tetrahedron::index)
         .def("getNumberOfEmbeddings", &Dim4Tetrahedron::getNumberOfEmbeddings)
         .def("getEmbedding", &Dim4Tetrahedron::getEmbedding,
             return_internal_reference<>())

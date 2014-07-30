@@ -9,6 +9,7 @@ set (IMGS
   dehydrated
   doublecover
   drilledge
+  fill
   filter_comb
   filter_prop
   finite
@@ -21,11 +22,13 @@ set (IMGS
   packet_filter
   packet_pdf
   packet_script
+  packet_snappea
   packet_surfaces
   packet_text
   packet_triangulation
   packet_view
   python_console
+  randomise
   regina
   snappea
   vtxlinks

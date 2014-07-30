@@ -2,12 +2,10 @@
 
 # Files to compile
 SET ( FILES
-  csvsurfacelist
   dehydration
   isosig
   orb
   pdf
-  recogniser
   snappea
   )
 

@@ -38,44 +38,44 @@
 
 namespace regina {
 
-NTetrahedron::NTetrahedron() : tri(0) {
+NTetrahedron::NTetrahedron() : tri_(0) {
     for (int i=0; i<4; i++)
-        tetrahedra[i] = 0;
+        tetrahedra_[i] = 0;
 }
 
 NTetrahedron::NTetrahedron(const std::string& desc) :
-        description(desc), tri(0) {
+        description_(desc), tri_(0) {
     for (int i=0; i<4; i++)
-        tetrahedra[i] = 0;
+        tetrahedra_[i] = 0;
 }
 
 bool NTetrahedron::hasBoundary() const {
     for (int i=0; i<4; i++)
-        if (tetrahedra[i] == 0)
+        if (tetrahedra_[i] == 0)
             return true;
     return false;
 }
 
 void NTetrahedron::isolate() {
     for (int i=0; i<4; i++)
-        if (tetrahedra[i])
+        if (tetrahedra_[i])
             unjoin(i);
 }
 
 NTetrahedron* NTetrahedron::unjoin(int myFace) {
     // TODO: Make this a stack variable once we know that tri != 0 always.
     std::auto_ptr<NPacket::ChangeEventSpan>
-        span(tri ? new NPacket::ChangeEventSpan(tri) : 0);
+        span(tri_ ? new NPacket::ChangeEventSpan(tri_) : 0);
 
-    NTetrahedron* you = tetrahedra[myFace];
-    int yourFace = tetrahedronPerm[myFace][myFace];
+    NTetrahedron* you = tetrahedra_[myFace];
+    int yourFace = tetrahedronPerm_[myFace][myFace];
     assert(you);
-    assert(you->tetrahedra[yourFace]);
-    you->tetrahedra[yourFace] = 0;
-    tetrahedra[myFace] = 0;
+    assert(you->tetrahedra_[yourFace]);
+    you->tetrahedra_[yourFace] = 0;
+    tetrahedra_[myFace] = 0;
 
-    if (tri)
-        tri->clearAllProperties();
+    if (tri_)
+        tri_->clearAllProperties();
 
     return you;
 }
@@ -83,34 +83,34 @@ NTetrahedron* NTetrahedron::unjoin(int myFace) {
 void NTetrahedron::joinTo(int myFace, NTetrahedron* you, NPerm4 gluing) {
     // TODO: Make this a stack variable once we know that tri != 0 always.
     std::auto_ptr<NPacket::ChangeEventSpan>
-        span(tri ? new NPacket::ChangeEventSpan(tri) :
-        you->tri ? new NPacket::ChangeEventSpan(you->tri) : 0);
+        span(tri_ ? new NPacket::ChangeEventSpan(tri_) :
+        you->tri_ ? new NPacket::ChangeEventSpan(you->tri_) : 0);
 
-    assert((! tetrahedra[myFace]) ||
-        (tetrahedra[myFace] == you &&
-            tetrahedronPerm[myFace] == gluing));
+    assert((! tetrahedra_[myFace]) ||
+        (tetrahedra_[myFace] == you &&
+            tetrahedronPerm_[myFace] == gluing));
 
     // TODO: Temporary measure while we transition from old-style to
     // new-style tetrahedron management.
-    if (tri && ! you->tri)
-        tri->addTetrahedron(you);
-    else if (you->tri && ! tri)
-        you->tri->addTetrahedron(this);
+    if (tri_ && ! you->tri_)
+        tri_->addTetrahedron(you);
+    else if (you->tri_ && ! tri_)
+        you->tri_->addTetrahedron(this);
 
-    assert(tri == you->tri);
+    assert(tri_ == you->tri_);
 
-    tetrahedra[myFace] = you;
-    tetrahedronPerm[myFace] = gluing;
+    tetrahedra_[myFace] = you;
+    tetrahedronPerm_[myFace] = gluing;
     int yourFace = gluing[myFace];
-    assert((! you->tetrahedra[yourFace]) ||
-        (you->tetrahedra[yourFace] == this &&
-            you->tetrahedronPerm[yourFace] == gluing.inverse()));
+    assert((! you->tetrahedra_[yourFace]) ||
+        (you->tetrahedra_[yourFace] == this &&
+            you->tetrahedronPerm_[yourFace] == gluing.inverse()));
     assert(! (you == this && yourFace == myFace));
-    you->tetrahedra[yourFace] = this;
-    you->tetrahedronPerm[yourFace] = gluing.inverse();
+    you->tetrahedra_[yourFace] = this;
+    you->tetrahedronPerm_[yourFace] = gluing.inverse();
 
-    if (tri)
-        tri->clearAllProperties();
+    if (tri_)
+        tri_->clearAllProperties();
 }
 
 void NTetrahedron::writeTextLong(std::ostream& out) const {
@@ -118,11 +118,11 @@ void NTetrahedron::writeTextLong(std::ostream& out) const {
     out << std::endl;
     for (int i = 3; i >= 0; --i) {
         out << NTriangle::ordering[i].trunc3() << " -> ";
-        if (! tetrahedra[i])
+        if (! tetrahedra_[i])
             out << "boundary";
         else
-            out << tetrahedra[i]->markedIndex() << " ("
-                << (tetrahedronPerm[i] * NTriangle::ordering[i]).trunc3()
+            out << tetrahedra_[i]->markedIndex() << " ("
+                << (tetrahedronPerm_[i] * NTriangle::ordering[i]).trunc3()
                 << ')';
         out << std::endl;
     }

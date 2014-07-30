@@ -47,6 +47,7 @@ void addNComponent() {
     class_<NComponent, bases<regina::ShareableObject>,
             std::auto_ptr<NComponent>, boost::noncopyable>
             ("NComponent", no_init)
+        .def("index", &NComponent::index)
         .def("getNumberOfTetrahedra", &NComponent::getNumberOfTetrahedra)
         .def("getNumberOfSimplices", &NComponent::getNumberOfSimplices)
         .def("getNumberOfFaces", &NComponent::getNumberOfFaces)

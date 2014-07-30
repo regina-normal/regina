@@ -224,20 +224,6 @@ void Dim4TriSkelCompUI::refresh() {
         (it.next())->refresh();
 }
 
-void Dim4TriSkelCompUI::editingElsewhere() {
-    nVertices->setText(tr("Editing..."));
-    nEdges->setText(tr("Editing..."));
-    nTriangles->setText(tr("Editing..."));
-    nTetrahedra->setText(tr("Editing..."));
-    nPentachora->setText(tr("Editing..."));
-    nComps->setText(tr("Editing..."));
-    nBdryComps->setText(tr("Editing..."));
-
-    QLinkedListIterator<SkeletonWindow*> it(viewers);
-    while( it.hasNext())
-        (it.next())->editingElsewhere();
-}
-
 void Dim4TriSkelCompUI::viewVertices() {
     // Because we pass this as parent to the new window, we are
     // guaranteed that the window will be closed and deleted

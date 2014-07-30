@@ -145,7 +145,7 @@ int main(int argc, char* argv[]) {
         usage(argv[0], "Precisely one data file must be given.");
 
     // Read the data file.
-    if (! (tree = readXMLFile(argv[i]))) {
+    if (! (tree = open(argv[i]))) {
         std::cerr << "ERROR: Could not read data from " << argv[i] << '.'
             << std::endl;
         return 1;

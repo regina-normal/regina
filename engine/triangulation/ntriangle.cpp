@@ -54,10 +54,10 @@ const NPerm4 NTriangle::ordering[4] = {
 };
 
 int NTriangle::getType() {
-    if (type)
-        return type;
+    if (type_)
+        return type_;
 
-    subtype = -1;
+    subtype_ = -1;
 
     // Determine the triangle type.
     NVertex* v[3];
@@ -71,42 +71,42 @@ int NTriangle::getType() {
     if (e[0] != e[1] && e[1] != e[2] && e[2] != e[0]) {
         // Three distinct edges.
         if (v[0] == v[1] && v[1] == v[2])
-            return (type = PARACHUTE);
+            return (type_ = PARACHUTE);
         for (i = 0; i < 3; i++)
             if (v[(i+1)%3] == v[(i+2)%3]) {
-                subtype = i;
-                return (type = SCARF);
+                subtype_ = i;
+                return (type_ = SCARF);
             }
-        return (type = TRIANGLE);
+        return (type_ = TRIANGLE);
     }
 
     if (e[0] == e[1] && e[1] == e[2]) {
         // All edges identified.
         if (getEdgeMapping(0).sign() == getEdgeMapping(1).sign() &&
                 getEdgeMapping(1).sign() == getEdgeMapping(2).sign())
-            return (type = L31);
+            return (type_ = L31);
 
         for (i = 0; i < 3; i++)
             if (getEdgeMapping((i+1)%3).sign() ==
                     getEdgeMapping((i+2)%3).sign()) {
-                subtype = i;
-                return (type = DUNCEHAT);
+                subtype_ = i;
+                return (type_ = DUNCEHAT);
             }
     }
 
     // Two edges identified.
     for (i = 0; i < 3; i++)
         if (e[(i+1)%3] == e[(i+2)%3]) {
-            subtype = i;
+            subtype_ = i;
 
             if (getEdgeMapping((i+1)%3).sign() ==
                     getEdgeMapping((i+2)%3).sign())
-                return (type = MOBIUS);
+                return (type_ = MOBIUS);
 
             if (v[0] == v[1] && v[1] == v[2])
-                return (type = HORN);
+                return (type_ = HORN);
 
-            return (type = CONE);
+            return (type_ = CONE);
         }
 
     // We should never reach this point.
@@ -114,15 +114,15 @@ int NTriangle::getType() {
 }
 
 NEdge* NTriangle::getEdge(int edge) const {
-    NPerm4 p = embeddings[0]->getVertices();
-    return embeddings[0]->getTetrahedron()->getEdge(
+    NPerm4 p = embeddings_[0]->getVertices();
+    return embeddings_[0]->getTetrahedron()->getEdge(
         NEdge::edgeNumber[p[(edge + 1) % 3]][p[(edge + 2) % 3]]);
 }
 
 NPerm4 NTriangle::getEdgeMapping(int edge) const {
-    NPerm4 triPerm = embeddings[0]->getVertices();
+    NPerm4 triPerm = embeddings_[0]->getVertices();
         // Maps triangle -> tetrahedron
-    NPerm4 edgePerm = embeddings[0]->getTetrahedron()->getEdgeMapping(
+    NPerm4 edgePerm = embeddings_[0]->getTetrahedron()->getEdgeMapping(
         NEdge::edgeNumber[triPerm[(edge + 1) % 3]][triPerm[(edge + 2) % 3]]);
         // Maps edge -> tetrahedron
     return NPerm4(triPerm.preImageOf(edgePerm[0]),
@@ -134,9 +134,9 @@ void NTriangle::writeTextLong(std::ostream& out) const {
     out << std::endl;
 
     out << "Appears as:" << std::endl;
-    for (int i = 0; i < nEmbeddings; ++i)
-        out << "  " << embeddings[i]->getTetrahedron()->markedIndex()
-            << " (" << embeddings[i]->getVertices().trunc3() << ')'
+    for (int i = 0; i < nEmbeddings_; ++i)
+        out << "  " << embeddings_[i]->getTetrahedron()->markedIndex()
+            << " (" << embeddings_[i]->getVertices().trunc3() << ')'
             << std::endl;
 }
 
