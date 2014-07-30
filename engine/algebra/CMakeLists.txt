@@ -7,6 +7,7 @@ SET ( FILES
   nhomgrouppresentation
   nmarkedabeliangroup
   nxmlalgebrareader
+  nfibring
   )
 
 # Prepend folder name
@@ -22,5 +23,6 @@ if (${REGINA_INSTALL_DEV})
     nhomgrouppresentation.h
     nmarkedabeliangroup.h
     nxmlalgebrareader.h
+    nfibring.h
     DESTINATION ${INCLUDEDIR}/algebra COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

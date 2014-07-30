@@ -1439,6 +1439,20 @@ class REGINA_API Dim4Triangulation : public NPacket,
          */
         bool collapseEdge(Dim4Edge* e, bool check = true, bool perform = true);
 
+        /**
+         * This routine divides an edge into two edges.  In the process, 
+         * every pentachoron that is incident to this edge will be subdivided,
+         * as many times as they are incident to the edge.  This move can
+         * be performed on any triangulation, and increases the number of 
+         * vertices by precisely one.  It increases the number of pentachora
+         * by the sum total of pentachora incident to the edge. 
+         *
+		 * Warning -- not yet implemented. 
+		 *
+         * @param e the edge to cut in two.
+         */
+        void divideEdge(Dim4Edge* e);
+
         /*@}*/
         /**
          * \name Subdivisions and Covers
