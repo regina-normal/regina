@@ -89,6 +89,7 @@ void addDim4Vertex() {
     scope s = class_<Dim4Vertex, bases<regina::ShareableObject>,
             std::auto_ptr<Dim4Vertex>, boost::noncopyable>
             ("Dim4Vertex", no_init)
+        .def("index", &Dim4Vertex::index)
         .def("getEmbeddings", Dim4Vertex_getEmbeddings_list)
         .def("getNumberOfEmbeddings", &Dim4Vertex::getNumberOfEmbeddings)
         .def("getEmbedding", &Dim4Vertex::getEmbedding,

@@ -147,11 +147,17 @@ inline const std::string& NText::getText() const {
 }
 
 inline void NText::setText(const std::string& newText) {
+    if (text == newText)
+        return; // No change event fired.
+
     ChangeEventSpan span(this);
     text = newText;
 }
 
 inline void NText::setText(const char* newText) {
+    if (text == newText)
+        return; // No change event fired.
+
     ChangeEventSpan span(this);
     text = newText;
 }

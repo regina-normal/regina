@@ -39,6 +39,8 @@
 
 // UI includes:
 #include "bigwidget.h"
+#include "docwidget.h"
+#include "edittableview.h"
 #include "nscriptui.h"
 #include "packetchooser.h"
 #include "packeteditiface.h"
@@ -60,7 +62,6 @@
 #include <QMessageBox>
 #include <QPlainTextEdit>
 #include <QSplitter>
-#include <QTableWidget>
 #include <QToolBar>
 #include <set>
 
@@ -71,134 +72,9 @@ namespace {
     QRegExp rePythonIdentifier("^[A-Za-z_][A-Za-z0-9_]*$");
 }
 
-ScriptVarValueItem::ScriptVarValueItem(regina::NPacket* packet) :
-        packet_(packet) {
-    if (packet_)
-        packet_->listen(this);
-
-    updateData();
-}
-
-void ScriptVarValueItem::setPacket(regina::NPacket* p) {
-    if (packet_)
-        packet_->unlisten(this);
-
-    packet_ = p;
-
-    if (p)
-        p->listen(this);
-
-    updateData();
-}
-
-void ScriptVarValueItem::packetWasRenamed(regina::NPacket* p) {
-    if (p == packet_)
-        updateData();
-}
-
-void ScriptVarValueItem::packetToBeDestroyed(regina::NPacket* p) {
-    if (p == packet_) {
-        packet_->unlisten(this);
-        packet_ = 0;
-        updateData();
-    }
-}
-
-void ScriptVarValueItem::updateData() {
-    if (packet_) {
-        if (packet_->getPacketLabel().empty())
-            setText("(no label)");
-        else
-            setText(packet_->getPacketLabel().c_str());
-        setIcon(PacketManager::icon(packet_));
-    } else {
-        setText("<None>");
-        setIcon(QIcon());
-    }
-}
-
-QWidget* ScriptNameDelegate::createEditor(QWidget* parent,
-        const QStyleOptionViewItem&, const QModelIndex&) const {
-    QLineEdit* e = new QLineEdit(parent);
-    e->setValidator(new QRegExpValidator(rePythonIdentifier, e));
-    return e;
-}
-
-void ScriptNameDelegate::setEditorData(QWidget* editor,
-        const QModelIndex& index) const {
-    QString data = index.model()->data(index, Qt::EditRole).toString();
-
-    QLineEdit* e = static_cast<QLineEdit*>(editor);
-    e->setText(data);
-}
-
-void ScriptNameDelegate::setModelData(QWidget* editor,
-        QAbstractItemModel* model, const QModelIndex& index) const {
-    QLineEdit* e = static_cast<QLineEdit*>(editor);
-    QString data = e->text().trimmed();
-
-    if (data.isEmpty()) {
-        ReginaSupport::info(e,
-            tr("Variable names cannot be empty."));
-        return;
-    }
-    if (! rePythonIdentifier.exactMatch(data)) {
-        QString oldData(data);
-
-        // Construct a better variable name.
-        data.replace(QRegExp("[^A-Za-z0-9_]"), "");
-        if (data.isEmpty())
-            return;
-        if (! rePythonIdentifier.exactMatch(data))
-            data.prepend('_');
-
-        ReginaSupport::info(e,
-            tr("<qt><tt>%1</tt> is not a valid Python variable name.</qt>").
-                arg(Qt::escape(oldData)),
-            tr("<qt>I have changed it to <tt>%1</tt> instead.</qt>").
-                arg(Qt::escape(data)));
-
-    }
-    if (nameUsedElsewhere(data, index.row(), model)) {
-        QString oldData(data);
-
-        // Construct a unique variable name.
-        int which;
-        for (which = 0; nameUsedElsewhere(data + QString::number(which),
-                index.row(), model); which++)
-            ;
-        data.append(QString::number(which));
-
-        ReginaSupport::info(e,
-            tr("<qt>Another variable is already using the "
-                "name <tt>%1</tt>.</qt>").arg(Qt::escape(oldData)),
-            tr("<qt>I will use <tt>%1</tt> instead.</qt>").
-                arg(Qt::escape(data)));
-    }
-
-    model->setData(index, data, Qt::EditRole);
-}
-
-void ScriptNameDelegate::updateEditorGeometry(QWidget* editor,
-        const QStyleOptionViewItem& option, const QModelIndex&) const {
-    editor->setGeometry(option.rect);
-}
-
-bool ScriptNameDelegate::nameUsedElsewhere(const QString& name, int currRow,
-        QAbstractItemModel* model) {
-    int rows = model->rowCount();
-    for (int i = 0; i < rows; i++) {
-        if (i == currRow)
-            continue;
-        if (model->data(model->index(i, 0)).toString() == name)
-            return true;
-    }
-    return false;
-}
-
 QWidget* ScriptValueDelegate::createEditor(QWidget* parent,
         const QStyleOptionViewItem&, const QModelIndex&) const {
-    PacketChooser* e = new PacketChooser(matriarch_,
+    PacketChooser* e = new PacketChooser(script_->getTreeMatriarch(),
         0 /* filter */, PacketChooser::ROOT_AS_SUBTREE,
         true /* allow "none" */, 0 /* initial selection */, parent);
     e->setAutoUpdate(true);
@@ -208,24 +84,163 @@ QWidget* ScriptValueDelegate::createEditor(QWidget* parent,
 void ScriptValueDelegate::setEditorData(QWidget* editor,
         const QModelIndex& index) const {
     PacketChooser* e = static_cast<PacketChooser*>(editor);
-    e->selectPacket(static_cast<ScriptVarValueItem*>(
-        table_->item(index.row(), index.column()))->getPacket());
+    e->selectPacket(script_->getVariableValue(index.row()));
 }
 
 void ScriptValueDelegate::setModelData(QWidget* editor,
         QAbstractItemModel*, const QModelIndex& index) const {
     PacketChooser* e = static_cast<PacketChooser*>(editor);
-    NPacket* p = e->selectedPacket();
-    ScriptVarValueItem* item = static_cast<ScriptVarValueItem*>(table_->item(
-        index.row(), index.column()));
-
-    if (item->getPacket() != p)
-        item->setPacket(p);
+    script_->setVariableValue(index.row(), e->selectedPacket());
 }
 
 void ScriptValueDelegate::updateEditorGeometry(QWidget* editor,
         const QStyleOptionViewItem& option, const QModelIndex&) const {
     editor->setGeometry(option.rect);
+}
+
+ScriptVarModel::ScriptVarModel(NScript* script, bool readWrite) :
+        script_(script), isReadWrite_(readWrite) {
+}
+
+void ScriptVarModel::rebuild() {
+    beginResetModel();
+    endResetModel();
+}
+
+QModelIndex ScriptVarModel::index(int row, int column,
+        const QModelIndex& /* unused parent */) const {
+    return createIndex(row, column, quint32(2 * row + column));
+}
+
+int ScriptVarModel::rowCount(const QModelIndex&) const {
+    return script_->getNumberOfVariables();
+}
+
+int ScriptVarModel::columnCount(const QModelIndex&) const {
+    return 2;
+}
+
+QVariant ScriptVarModel::data(const QModelIndex& index, int role) const {
+    if (role == Qt::DisplayRole) {
+        if (index.column() == 0)
+            return script_->getVariableName(index.row()).c_str();
+        else if (index.column() == 1) {
+            NPacket* p = script_->getVariableValue(index.row());
+            if (! p)
+                return tr("<None>");
+            else if (p->getPacketLabel().empty())
+                return tr("(no label)");
+            else
+                return p->getPacketLabel().c_str();
+        } else
+            return QVariant();
+    } else if (role == Qt::DecorationRole) {
+        if (index.column() == 1) {
+            NPacket* p = script_->getVariableValue(index.row());
+            if (! p)
+                return QIcon();
+            else
+                return PacketManager::icon(p);
+        } else
+            return QVariant();
+    } else if (role == Qt::EditRole) {
+        if (index.column() == 0)
+            return script_->getVariableName(index.row()).c_str();
+        else if (index.column() == 1) {
+            // This is handled by the delegate class.
+            return QVariant();
+        } else
+            return QVariant();
+    } else
+        return QVariant();
+}
+
+QVariant ScriptVarModel::headerData(int section, Qt::Orientation orientation,
+        int role) const {
+    if (orientation != Qt::Horizontal)
+        return QVariant();
+    if (role != Qt::DisplayRole)
+        return QVariant();
+
+    switch (section) {
+        case 0: return tr("Variable");
+        case 1: return tr("Value");
+    }
+    return QVariant();
+}
+
+Qt::ItemFlags ScriptVarModel::flags(const QModelIndex&) const {
+    if (isReadWrite_)
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+    else
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+}
+
+bool ScriptVarModel::setData(const QModelIndex& index, const QVariant& value,
+        int) {
+    if (index.column() == 0) {
+        QString data = value.toString().trimmed();
+
+        if (data.isEmpty()) {
+            ReginaSupport::info(0,
+                tr("Variable names cannot be empty."));
+            return false;
+        }
+        if (! rePythonIdentifier.exactMatch(data)) {
+            QString oldData(data);
+
+            // Construct a better variable name.
+            data.replace(QRegExp("[^A-Za-z0-9_]"), "");
+            if (data.isEmpty()) {
+                ReginaSupport::info(0,
+                    tr("<qt><tt>%1</tt> is not a valid Python "
+                        "variable name.</qt>").arg(Qt::escape(oldData)));
+                return false;
+            }
+            if (! rePythonIdentifier.exactMatch(data))
+                data.prepend('_');
+
+            ReginaSupport::info(0,
+                tr("<qt><tt>%1</tt> is not a valid Python variable name.</qt>").
+                    arg(Qt::escape(oldData)),
+                tr("<qt>I have changed it to <tt>%1</tt> instead.</qt>").
+                    arg(Qt::escape(data)));
+        }
+        if (nameUsedElsewhere(data, index.row())) {
+            QString oldData(data);
+
+            // Construct a unique variable name.
+            int which;
+            for (which = 0; nameUsedElsewhere(data + QString::number(which),
+                    index.row()); ++which)
+                ;
+            data.append(QString::number(which));
+
+            ReginaSupport::info(0,
+                tr("<qt>Another variable is already using the "
+                    "name <tt>%1</tt>.</qt>").arg(Qt::escape(oldData)),
+                tr("<qt>I will use <tt>%1</tt> instead.</qt>").
+                    arg(Qt::escape(data)));
+        }
+
+        script_->setVariableName(index.row(), data.toAscii().constData());
+        return true;
+    } else if (index.column() == 1) {
+        // This is handled by the delegate class.
+        return false;
+    } else
+        return false;
+}
+
+bool ScriptVarModel::nameUsedElsewhere(const QString& name, int exclude) const {
+    int n = script_->getNumberOfVariables();
+    for (int i = 0; i < n; ++i) {
+        if (i == exclude)
+            continue;
+        if (name == script_->getVariableName(i).c_str())
+            return true;
+    }
+    return false;
 }
 
 NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
@@ -249,8 +264,10 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
     QSplitter* splitter = new QSplitter(Qt::Vertical);
     layout->addWidget(splitter, 1);
 
-    varTable = new ScriptVarTable(0, 2);
+    model = new ScriptVarModel(packet, readWrite);
+    varTable = new EditTableView();
     varTable->setSelectionMode(QAbstractItemView::ContiguousSelection);
+    varTable->setModel(model);
 
     if (readWrite )
         varTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
@@ -264,45 +281,39 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
         "this data file.</qt>"));
 
     varTable->verticalHeader()->hide();
-
-    varTable->setHorizontalHeaderLabels(
-        QStringList() << tr("Variable") << tr("Value"));
     varTable->horizontalHeader()->setStretchLastSection(true);
 
-    nameDelegate = new ScriptNameDelegate();
-    valueDelegate = new ScriptValueDelegate(varTable,
-        packet->getTreeMatriarch());
-    varTable->setItemDelegateForColumn(0, nameDelegate);
+    valueDelegate = new ScriptValueDelegate(packet);
     varTable->setItemDelegateForColumn(1, valueDelegate);
 
     splitter->addWidget(varTable);
-   
+
     // --- Text Editor ---
 
-    document = new QPlainTextEdit(splitter);
-    // Prepare the components.
-    document->setReadOnly(!readWrite);
-    document->setLineWrapMode(QPlainTextEdit::NoWrap);
-    document->setFont(ReginaPrefSet::fixedWidthFont());
+    editWidget = new DocWidget<NScript, DocWidgetFinalNewline>(
+        packet, splitter);
+    editWidget->setReadOnly(!readWrite);
+    editWidget->setLineWrapMode(QPlainTextEdit::NoWrap);
+    editWidget->setFont(ReginaPrefSet::fixedWidthFont());
     updateTabWidth();
 
 #if ! (NO_SRCHILITE)
     srchiliteqt::Qt4SyntaxHighlighter* highlighter =
-        new srchiliteqt::Qt4SyntaxHighlighter(document->document());
+        new srchiliteqt::Qt4SyntaxHighlighter(editWidget->document());
     highlighter->init("python.lang", "default.style");
 #endif
 
-    document->setFocus();
-    document->setWhatsThis(tr("Type the Python script into this "
+    editWidget->setFocus();
+    editWidget->setWhatsThis(tr("Type the Python script into this "
         "area.  Any variables listed in the table above will be "
         "set before the script is run."));
 
-    editIface = new PacketEditTextEditor(document);
+    editIface = new PacketEditTextEditor(editWidget);
 
-    splitter->addWidget(document);
+    splitter->addWidget(editWidget);
 
-    splitter->setTabOrder(document, varTable);
-    ui->setFocusProxy(document);
+    splitter->setTabOrder(editWidget, varTable);
+    ui->setFocusProxy(editWidget);
 
     // --- Script Actions ---
 
@@ -375,19 +386,13 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
     // --- Finalising ---
 
     // Make the editor get most of the space.
-    splitter->setStretchFactor(0 /* index */, 0 /* weight */);
-    splitter->setStretchFactor(1 /* index */, 1 /* weight */);
+    splitter->setStretchFactor(0 /* index */, 1 /* weight */);
+    splitter->setStretchFactor(1 /* index */, 2 /* weight */);
 
     // Fill the components with data.
     refresh();
     // varTable->horizontalHeader()->resizeSections(
     //     QHeaderView::ResizeToContents);
-
-    // Notify us of any changes.
-    connect(varTable, SIGNAL(itemChanged(QTableWidgetItem*)),
-        this, SLOT(notifyScriptChanged()));
-    connect(document, SIGNAL(textChanged()),
-        this, SLOT(notifyScriptChanged()));
 
     // Notify us if the preferences (e.g., the default fixed-width font)
     // change.
@@ -401,12 +406,11 @@ NScriptUI::~NScriptUI() {
             it != scriptActionList.end(); it++ )
         delete *it;
 
-
     // Clean up.
-    delete nameDelegate;
     delete valueDelegate;
+    delete model;
     delete editIface;
-    delete document;
+    delete editWidget;
 }
 
 NPacket* NScriptUI::getPacket() {
@@ -425,136 +429,93 @@ QString NScriptUI::getPacketMenuText() const {
     return tr("S&cript");
 }
 
-void NScriptUI::commit() {
-    // Finish whatever edit was going on in the table.
-    varTable->endEdit();
-
-    // Update the lines.
-    script->removeAllLines();
-    QStringList lines = document->toPlainText().split("\n");
-    for( QStringList::iterator it = lines.begin(); it != lines.end(); ++it) 
-        script->addLast((*it).isNull() ? "" : (*it).toAscii().constData());
-
-
-    // Update the variables.
-    script->removeAllVariables();
-    unsigned nVars = varTable->rowCount();
-    regina::NPacket* value;
-    for (unsigned i = 0; i < nVars; i++) {
-        value = dynamic_cast<ScriptVarValueItem*>(varTable->item(i, 1))->
-            getPacket();
-        script->addVariable(
-            varTable->item(i, 0)->text().toAscii().constData(), value);
-    }
-
-    setDirty(false);
-}
-
 void NScriptUI::refresh() {
     // Refresh the variables.
-    unsigned long nVars = script->getNumberOfVariables();
-    varTable->setRowCount(nVars);
+    model->rebuild();
 
-    regina::NPacket* matriarch = script->getTreeMatriarch();
-    for (unsigned long i = 0; i < nVars; i++) {
-        varTable->setItem(i, 0, new QTableWidgetItem(
-            script->getVariableName(i).c_str()));
-        varTable->setItem(i, 1, new ScriptVarValueItem(
-            script->getVariableValue(i)));
-    }
+    // Refresh the text.
+    editWidget->refresh();
 
-    // Refresh the lines.
-    // The first line is handled separately to avoid an additional blank
-    // line from being appended.
-    unsigned long nLines = script->getNumberOfLines();
-    if (nLines == 0)
-        document->clear();
-    else {
-        // Bloody hell.
-        // Trying to support both kate and vimpart with line-by-line
-        // insertion is just too much drama, especially with vimpart's
-        // continually changing behaviour.
-        // Just use setText() and be done with it.
-        QString allLines;
-        for (unsigned long i = 0; i < nLines; i++) {
-            allLines += script->getLine(i).c_str();
-            if (i + 1 < nLines)
-                allLines += '\n';
-        }
-        document->setPlainText(allLines);
-        document->moveCursor(QTextCursor::Start);
-    }
+    // Update any actions as necessary.
+    updateRemoveState();
+}
 
-    setDirty(false);
+void NScriptUI::endEdit() {
+    varTable->endEdit();
+    editWidget->commit();
 }
 
 void NScriptUI::setReadWrite(bool readWrite) {
+    model->setReadWrite(readWrite);
+
     if (readWrite)
         varTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
     else
         varTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    document->setReadOnly(!readWrite);
+    editWidget->setReadOnly(!readWrite);
     actAdd->setEnabled(readWrite);
     updateRemoveState();
 }
 
 void NScriptUI::addVariable() {
+    endEdit();
+
     // Find a suitable variable name.
     QString varName;
 
-    unsigned rows = varTable->rowCount();
+    unsigned n = script->getNumberOfVariables();
     unsigned which = 0;
     unsigned i;
 
     while (true) {
         varName = QString("var") + QString::number(which);
-        for (i = 0; i < rows; i++)
-            if (varTable->item(i, 0)->text() == varName)
+        for (i = 0; i < n; ++i)
+            if (varName == script->getVariableName(i).c_str())
                 break;
-        if (i == rows)
+        if (i == n)
             break;
-        which++;
+        ++which;
     }
 
     // Add the new variable.
-    varTable->insertRow(rows);
-    QTableWidgetItem* nameItem = new QTableWidgetItem(varName);
-    varTable->setItem(rows, 0, nameItem);
-    varTable->setItem(rows, 1, new ScriptVarValueItem(0));
-    varTable->scrollToItem(nameItem);
-
-    // Done!
-    setDirty(true);
+    // TODO: Alter addVariable() to return the index immediately, so we
+    // don't need to fetch it again.
+    script->addVariable(varName.toAscii().constData(), 0);
+    varTable->scrollTo(model->index(
+        script->getVariableIndex(varName.toAscii().constData()),
+        0, QModelIndex()));
 }
 
 void NScriptUI::removeSelectedVariables() {
-    // Gather together all the rows to be deleted.
-    std::set<int> rows;
+    endEdit();
 
     // Note that selections are contiguous.
-    if (varTable->selectedRanges().empty()) {
+    if (! varTable->selectionModel()->hasSelection()) {
         ReginaSupport::info(ui,
             tr("No variables are selected."),
             tr("Please select one or more variables to remove, "
             "then press <i>Remove Var</i> again."));
         return;
     }
-    QTableWidgetSelectionRange range = varTable->selectedRanges().front();
-    std::cerr << "REMOVING: " << range.topRow() << "--" <<
-        range.bottomRow() << std::endl;
+
+    // Gather together all the rows to be deleted.
+    std::set<int> rows;
+    QModelIndexList indices = varTable->selectionModel()->selectedIndexes();
+    for (QModelIndexList::Iterator it = indices.begin(); it != indices.end();
+            ++it)
+        rows.insert(it->row());
 
     // Notify the user that variables will be removed.
     QMessageBox msgBox(ui);
     msgBox.setWindowTitle(tr("Question"));
     msgBox.setIcon(QMessageBox::Question);
-    if (range.bottomRow() == range.topRow()) {
+    if (rows.size() == 1) {
         msgBox.setText(tr("<qt>The variable <tt>%1</tt> will be removed.</qt>").
-            arg(Qt::escape(varTable->item(range.topRow(), 0)->text())));
+            arg(Qt::escape(script->getVariableName(*rows.begin()).c_str())));
         msgBox.setInformativeText(tr("Are you sure?"));
     } else {
-        msgBox.setText(tr("%1 variables will be removed.").
-            arg(range.bottomRow() - range.topRow() + 1));
+        msgBox.setText(tr("%1 variables will be removed.").arg(rows.size()));
         msgBox.setInformativeText(tr("Are you sure?"));
     }
 
@@ -564,23 +525,26 @@ void NScriptUI::removeSelectedVariables() {
         return;
 
     // Remove the variables!
-    for (int i = range.bottomRow(); i >= range.topRow(); --i)
-        varTable->removeRow(i);
-
-    setDirty(true);
+    // Since std::set uses sorted order, we can delete from the bottom
+    // up without affecting the indices of the rows yet to be removed.
+    for (std::set<int>::reverse_iterator rit = rows.rbegin();
+            rit != rows.rend(); ++rit)
+        script->removeVariable(*rit);
 }
 
 void NScriptUI::updateRemoveState() {
     // Are we read-write?
     if (actAdd->isEnabled())
-        actRemove->setEnabled(varTable->selectedItems().count() > 0);
+        actRemove->setEnabled(script->getNumberOfVariables() > 0);
     else
         actRemove->setEnabled(false);
 }
 
 void NScriptUI::compile() {
+    endEdit();
+
     if (enclosingPane->getMainWindow()->getPythonManager().compileScript(ui,
-            document->toPlainText() + "\n\n") == 0) {
+            editWidget->toPlainText() + "\n\n") == 0) {
         #ifdef BOOST_PYTHON_FOUND
         ReginaSupport::success(ui,
             tr("The script compiles successfully."));
@@ -593,34 +557,28 @@ void NScriptUI::compile() {
 }
 
 void NScriptUI::execute() {
-    // Finish whatever edit was going on in the table.
-    varTable->endEdit();
+    endEdit();
 
     // Set up the variable list.
     PythonVariableList vars;
 
-    unsigned nVars = varTable->rowCount();
+    unsigned nVars = script->getNumberOfVariables();
     for (unsigned i = 0; i < nVars; i++)
-        vars.push_back(PythonVariable(varTable->item(i, 0)->text(),
-            dynamic_cast<ScriptVarValueItem*>(varTable->item(i, 1))->
-                getPacket()));
+        vars.push_back(PythonVariable(script->getVariableName(i).c_str(),
+            script->getVariableValue(i)));
 
     // Run the script.
     enclosingPane->getMainWindow()->getPythonManager().launchPythonConsole(ui,
-            document->toPlainText() + "\n\n", vars);
-}
-
-void NScriptUI::notifyScriptChanged() {
-    setDirty(true);
+            editWidget->toPlainText() + "\n\n", vars);
 }
 
 void NScriptUI::updatePreferences() {
-    document->setFont(ReginaPrefSet::fixedWidthFont());
+    editWidget->setFont(ReginaPrefSet::fixedWidthFont());
     updateTabWidth();
 }
 
 void NScriptUI::updateTabWidth() {
-    document->setTabStopWidth(
-        QFontMetrics(document->font()).width('x') *
+    editWidget->setTabStopWidth(
+        QFontMetrics(editWidget->font()).width('x') *
         ReginaPrefSet::global().pythonSpacesPerTab);
 }

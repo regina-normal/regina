@@ -106,6 +106,8 @@ ShareAlike 3.0 License or the GNU Library General Public License.
 The python icons are based on applications-python.svg as shipped with the
 humanity-icon-theme package in Ubuntu 11.04, the contents of which
 are licensed under the GNU General Public License version 2.
+The die icon is based on an image from openclipart.org, which has been
+released into the public domain.
 
 
 

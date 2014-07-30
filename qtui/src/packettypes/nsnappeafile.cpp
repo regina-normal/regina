@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  KDE User Interface                                                    *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,71 +32,49 @@
 
 /* end stub */
 
-#include <fstream>
+// Regina core includes:
+#include "snappea/nsnappeatriangulation.h"
 
-#include "foreign/recogniser.h"
-#include "triangulation/ntriangulation.h"
+// UI includes:
+#include "nsnappeafile.h"
 
-namespace regina {
+#include <QLabel>
+#include <QLayout>
+#include <QTextEdit>
 
-namespace {
-    // Anonymous routine to write to the given output stream.
-    //
-    // PRE: All preconditions for writeRecogniser() have already been
-    // tested, and are known to be met.
-    bool writeRecogniser(std::ostream& out, NTriangulation& tri) {
-        // Write the header.
-        out << "triangulation" << std::endl;
+using regina::NPacket;
+using regina::NSnapPeaTriangulation;
 
-        // Write face gluings.
-        NTriangle* f;
-        NTetrahedron* tet;
-        NPerm4 vert;
-        for (unsigned i = 0; i < tri.getNumberOfTriangles(); ++i) {
-            f = tri.getTriangle(i);
+NSnapPeaFileUI::NSnapPeaFileUI(regina::NSnapPeaTriangulation* packet,
+        PacketTabbedUI* useParentUI) :
+        PacketViewerTab(useParentUI), tri(packet) {
+    ui = new QWidget();
+    QBoxLayout* layout = new QVBoxLayout(ui);
 
-            tet = f->getEmbedding(0).getTetrahedron();
-            vert = f->getEmbedding(0).getVertices();
-            out << 't' << (tri.tetrahedronIndex(tet) + 1)
-                << '(' << (vert[0] + 1)
-                << ',' << (vert[1] + 1)
-                << ',' << (vert[2] + 1) << ") - ";
-
-            tet = f->getEmbedding(1).getTetrahedron();
-            vert = f->getEmbedding(1).getVertices();
-            out << 't' << (tri.tetrahedronIndex(tet) + 1)
-                << '(' << (vert[0] + 1)
-                << ',' << (vert[1] + 1)
-                << ',' << (vert[2] + 1) << ')';
-
-            if (i != tri.getNumberOfTriangles() - 1)
-                out << ',';
-            out << std::endl;
-        }
-
-        // Write the footer.
-        out << "end" << std::endl;
-
-        return true;
-    }
+    file = new QTextEdit();
+    file->setReadOnly(true);
+    file->setAcceptRichText(false);
+    file->setLineWrapMode(QTextEdit::NoWrap);
+    file->setWordWrapMode(QTextOption::NoWrap);
+    file->setWhatsThis("The full contents of a SnapPea data file "
+        "representing this SnapPea triangulation.  You can copy this "
+        "to the clipboard if you need to send it to some other application.");
+    layout->addWidget(file, 1);
 }
 
-bool writeRecogniser(const char* filename, NTriangulation& tri) {
-    // Sanity checks.
-    if (! tri.isValid())
-        return false;
-    if (tri.hasBoundaryTriangles())
-        return false;
+regina::NPacket* NSnapPeaFileUI::getPacket() {
+    return tri;
+}
 
-    // Write to file or stdout as appropriate.
-    if (filename && *filename) {
-        std::ofstream out(filename);
-        if (! out)
-            return 0;
-        return writeRecogniser(out, tri);
+QWidget* NSnapPeaFileUI::getInterface() {
+    return ui;
+}
+
+void NSnapPeaFileUI::refresh() {
+    if (tri->isNull()) {
+        file->setPlainText(tr("Null triangulation"));
     } else {
-        return writeRecogniser(std::cout, tri);
+        file->setPlainText(tri->snapPea().c_str());
     }
 }
 
-} // namespace regina

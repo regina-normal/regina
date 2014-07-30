@@ -4,6 +4,7 @@
 SET ( FILES
   components
   crushandcut
+  csv
   enumerator
   enumfilter
   links

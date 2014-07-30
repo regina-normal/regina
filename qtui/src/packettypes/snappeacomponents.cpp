@@ -44,6 +44,7 @@
 NoSnapPea::NoSnapPea(regina::NTriangulation* useTri, QWidget* parent,
         bool delayedRefresh) :
         QLabel(parent), tri(useTri) {
+    setWordWrap(true);
     if (! delayedRefresh)
         refresh();
 }
@@ -64,16 +65,6 @@ void NoSnapPea::refresh() {
         msg += tr("This is because the triangulation contains non-standard "
             "vertices (vertices whose links are not spheres, tori or Klein "
             "bottles).");
-    else if ((! tri->isIdeal()) && (! ReginaPrefSet::global().snapPeaClosed))
-        msg += tr("This is because the triangulation does not contain any "
-            "ideal vertices.");
-    else if (tri->isIdeal() &&
-            tri->getNumberOfBoundaryComponents() < tri->getNumberOfVertices())
-        msg += tr("This is because the triangulation contains a mix of "
-            "finite and ideal vertices.");
-    else if ((! tri->isIdeal()) && 1 != tri->getNumberOfVertices())
-        msg += tr("This is because the triangulation is closed but has "
-            "more than one vertex.");
     else if (tri->getNumberOfTetrahedra() >= INT_MAX)
         msg += tr("This is because the triangulation has too many "
             "tetrahedra.");

@@ -276,16 +276,22 @@ inline void NSurfaceFilterProperties::removeAllECs() {
     eulerChar.clear();
 }
 inline void NSurfaceFilterProperties::setOrientability(const NBoolSet& value) {
-    ChangeEventSpan span(this);
-    orientability = value;
+    if (orientability != value) {
+        ChangeEventSpan span(this);
+        orientability = value;
+    }
 }
 inline void NSurfaceFilterProperties::setCompactness(const NBoolSet& value) {
-    ChangeEventSpan span(this);
-    compactness = value;
+    if (compactness != value) {
+        ChangeEventSpan span(this);
+        compactness = value;
+    }
 }
 inline void NSurfaceFilterProperties::setRealBoundary(const NBoolSet& value) {
-    ChangeEventSpan span(this);
-    realBoundary = value;
+    if (realBoundary != value) {
+        ChangeEventSpan span(this);
+        realBoundary = value;
+    }
 }
 
 inline NPacket* NSurfaceFilterProperties::internalClonePacket(NPacket*) const {

@@ -74,7 +74,8 @@ struct PacketInfo<PACKET_PDF> {
  * A packet that can hold a PDF document.
  *
  * This packet may or may not contain a PDF document at any given time.
- * This state can be changed by calling reset().
+ * This can be tested by calling isNull(), and can be changed by calling
+ * reset().
  */
 class REGINA_API NPDF : public NPacket {
     REGINA_PACKET(NPDF, PACKET_PDF)
@@ -122,6 +123,24 @@ class REGINA_API NPDF : public NPacket {
         NPDF();
 
         /**
+         * Creates a PDF packet with data read from the given PDF file.
+         *
+         * This routine does not check whether the given file \e looks
+         * like a PDF document; it simply loads the file contents blindly.
+         *
+         * If the file could not be read or is empty, then no PDF document will
+         * be stored in this packet.  You can test this by calling isNull().
+         *
+         * \i18n This routine makes no assumptions about the
+         * \ref i18n "character encoding" used in the given file \e name, and
+         * simply passes it through unchanged to low-level C/C++ file I/O
+         * routines.
+         *
+         * @param filename the filename of the PDF document to read.
+         */
+        NPDF(const char* filename);
+
+        /**
          * Creates a packet to store the given PDF data.
          *
          * The \a data array must contain a full PDF document as a
@@ -135,7 +154,8 @@ class REGINA_API NPDF : public NPacket {
          * any way.
          *
          * It is possible to pass a null pointer as the data array, in
-         * which case the new packet will have no PDF document stored.
+         * which case the new packet will have no PDF document stored
+         * (so isNull() will return \c true).
          *
          * \ifacespython Not present.
          *
@@ -155,12 +175,21 @@ class REGINA_API NPDF : public NPacket {
         ~NPDF();
 
         /**
+         * Determines whether this packet is currently holding a PDF
+         * document.
+         *
+         * @return \c true if and only if this packet is holding a
+         * PDF document.
+         */
+        bool isNull() const;
+
+        /**
          * Returns a pointer to the block of raw data that forms this
          * PDF document.  The number of bytes in this block can be found
          * by calling size().
          *
-         * If no PDF document is currently stored, this routine will
-         * return a null pointer.
+         * If no PDF document is currently stored (i.e., isNull()
+         * returns \c true), then this routine will return a null pointer.
          *
          * \ifacespython Not present.
          *
@@ -171,8 +200,8 @@ class REGINA_API NPDF : public NPacket {
         /**
          * Returns the size of this PDF document in bytes.
          *
-         * If no PDF document is currently stored, this routine will
-         * return zero.
+         * If no PDF document is currently stored (i.e., isNull()
+         * returns \c true), then this routine will return zero.
          *
          * @return the number of bytes.
          */
@@ -180,6 +209,7 @@ class REGINA_API NPDF : public NPacket {
 
         /**
          * Empties this PDF packet so that no document is stored.
+         * After calling this routine, isNull() will return \c true.
          *
          * The old data will be deallocated if required.
          */
@@ -203,6 +233,27 @@ class REGINA_API NPDF : public NPacket {
          * of the given block of data; see the notes above for details.
          */
         void reset(char* data, size_t size, OwnershipPolicy alloc);
+
+        /**
+         * Saves this PDF document to the given file in PDF format.
+         *
+         * This routine does not check whether the contents of this
+         * packet \e look like a PDF document; it simply writes them
+         * blindly to the filesystem.
+         *
+         * If no PDF document is currently stored in this PDF packet
+         * (i.e., isNull() returns \c true), then this routine will do
+         * nothing and simply return \c false.
+         *
+         * \i18n This routine makes no assumptions about the
+         * \ref i18n "character encoding" used in the given file \e name, and
+         * simply passes it unchanged to low-level C/C++ file I/O routines.
+         *
+         * @param filename the name of the PDF file to write.
+         * @return \c true if the file was successfully written, or
+         * \c false otherwise.
+         */
+        bool savePDF(const char* filename) const;
 
         virtual void writeTextShort(std::ostream& out) const;
         static NXMLPacketReader* getXMLReader(NPacket* parent,
@@ -244,6 +295,10 @@ inline NPDF::~NPDF() {
 
 inline const char* NPDF::data() const {
     return data_;
+}
+
+inline bool NPDF::isNull() const {
+    return ! data_;
 }
 
 inline size_t NPDF::size() const {

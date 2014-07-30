@@ -10,6 +10,7 @@ SET ( FILES
   ntext
   nxmlpacketreader
   nxmlpacketreaders
+  open
   )
 
 # Prepend folder name

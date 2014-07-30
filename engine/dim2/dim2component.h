@@ -84,6 +84,15 @@ class REGINA_API Dim2Component : public ShareableObject, public NMarkedElement {
         virtual ~Dim2Component();
 
         /**
+         * Returns the index of this component in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->componentIndex(this)</tt>.
+         *
+         * @return the index of this component vertex.
+         */
+        unsigned long index() const;
+
+        /**
          * Returns the number of triangles in this component.
          *
          * @return the number of triangles.
@@ -263,6 +272,10 @@ inline Dim2Component::Dim2Component() : orientable_(true) {
 }
 
 inline Dim2Component::~Dim2Component() {
+}
+
+inline unsigned long Dim2Component::index() const {
+    return markedIndex();
 }
 
 inline unsigned long Dim2Component::getNumberOfTriangles() const {

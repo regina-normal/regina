@@ -153,6 +153,18 @@ void runCensusAllIdeal(NTriangulationTestFunction testFunction, bool small_) {
         &testCensusTriangulation<3>, &f);
 }
 
+void runCensusAllNoBdry(NTriangulationTestFunction testFunction, bool small_) {
+    regina::NContainer parent;
+    TestFunctionHolder<3> f(testFunction);
+    NCensus::formCensus(&parent,
+        (small_ ? DIM3_SMALL_IDEAL_CENSUS_SIZE : DIM3_IDEAL_CENSUS_SIZE),
+        NBoolSet::sBoth /* finite */,
+        NBoolSet::sBoth /* orientable */,
+        NBoolSet::sFalse /* bounded */,
+        -1 /* bdry faces */, 0 /* purge */,
+        &testCensusTriangulation<3>, &f);
+}
+
 void runCensusAllClosed(Dim4TriangulationTestFunction testFunction) {
     regina::NContainer parent;
     TestFunctionHolder<4> f(testFunction);

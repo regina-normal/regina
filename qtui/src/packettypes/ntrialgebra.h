@@ -41,10 +41,9 @@
 
 #include "../packettabui.h"
 
-class NTriFundGroupUI;
+class GroupWidget;
 class QLabel;
 class QLineEdit;
-class QListWidget;
 class QTreeWidget;
 class QPushButton;
 
@@ -57,12 +56,6 @@ namespace regina {
  * A triangulation page for viewing algebraic properties.
  */
 class NTriAlgebraUI : public PacketTabbedViewerTab {
-    private:
-        /**
-         * Internal components
-         */
-        NTriFundGroupUI* fundGroup;
-
     public:
         /**
          * Constructor.
@@ -72,9 +65,11 @@ class NTriAlgebraUI : public PacketTabbedViewerTab {
 };
 
 /**
- * A triangulation page for viewing homology groups.
+ * A triangulation page for viewing homology and the fundamental group.
  */
-class NTriHomologyUI : public PacketViewerTab {
+class NTriHomologyFundUI : public QObject, public PacketViewerTab {
+    Q_OBJECT
+
     private:
         /**
          * Packet details
@@ -90,12 +85,14 @@ class NTriHomologyUI : public PacketViewerTab {
         QLabel* H1Bdry;
         QLabel* H2;
         QLabel* H2Z2;
+        QLabel* fgMsg;
+        GroupWidget* fgGroup;
 
     public:
         /**
          * Constructor.
          */
-        NTriHomologyUI(regina::NTriangulation* packet,
+        NTriHomologyFundUI(regina::NTriangulation* packet,
                 PacketTabbedViewerTab* useParentUI);
 
         /**
@@ -104,64 +101,12 @@ class NTriHomologyUI : public PacketViewerTab {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         void refresh();
-        void editingElsewhere();
-};
-
-/**
- * A triangulation page for viewing the fundamental group.
- */
-class NTriFundGroupUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
-    private:
-        /**
-         * Packet details
-         */
-        regina::NTriangulation* tri;
-
-        /**
-         * Internal components
-         */
-        QWidget* ui;
-        QLabel* fundName;
-        QLabel* fundGens;
-        QLabel* fundRelCount;
-        QListWidget* fundRels;
-        QPushButton* btnGAP;
-        QPushButton* btnSimp;
-        unsigned simpDepth;
-
-    public:
-        /**
-         * Constructor.
-         */
-        NTriFundGroupUI(regina::NTriangulation* packet,
-                PacketTabbedViewerTab* useParentUI);
-
-        /**
-         * PacketViewerTab overrides.
-         */
-        regina::NPacket* getPacket();
-        QWidget* getInterface();
-        void refresh();
-        void editingElsewhere();
 
     public slots:
         /**
-         * Group simplification actions.
+         * Notify us that the presentation has been simplified.
          */
-        void simplifyGAP();
-        /**
-         * Our internal pi1 simplification code.
-         */
-        void simplifyPi1();
-
-    private:
-        /**
-         * Returns the full path to the GAP executable, or QString::null
-         * if the GAP executable does not appear to be valid.
-         */
-        QString verifyGAPExec();
+        void fundGroupSimplified();
 };
 
 /**
@@ -198,7 +143,6 @@ class NTriTuraevViroUI : public QObject, public PacketViewerTab {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         void refresh();
-        void editingElsewhere();
 
     public slots:
         /**
@@ -249,7 +193,6 @@ class NTriCellularInfoUI: public PacketViewerTab {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         void refresh();
-        void editingElsewhere();
 };
 
 #endif

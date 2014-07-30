@@ -92,6 +92,15 @@ class REGINA_API Dim4Component : public ShareableObject, public NMarkedElement {
         virtual ~Dim4Component();
 
         /**
+         * Returns the index of this component in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->componentIndex(this)</tt>.
+         *
+         * @return the index of this component tetrahedron.
+         */
+        unsigned long index() const;
+
+        /**
          * Returns the number of pentachora in this component.
          *
          * @return the number of pentachora.
@@ -291,6 +300,10 @@ inline Dim4Component::Dim4Component() : ideal_(false), orientable_(true) {
 }
 
 inline Dim4Component::~Dim4Component() {
+}
+
+inline unsigned long Dim4Component::index() const {
+    return markedIndex();
 }
 
 inline unsigned long Dim4Component::getNumberOfPentachora() const {

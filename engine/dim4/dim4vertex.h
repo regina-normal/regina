@@ -188,6 +188,15 @@ class REGINA_API Dim4Vertex : public ShareableObject, public NMarkedElement {
         virtual ~Dim4Vertex();
 
         /**
+         * Returns the index of this vertex in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->vertexIndex(this)</tt>.
+         *
+         * @return the index of this vertex.
+         */
+        unsigned long index() const;
+
+        /**
          * Returns the list of descriptors detailing how this vertex forms
          * a part of various pentachora in the triangulation.
          * Note that if this vertex represents multiple vertices of a
@@ -483,6 +492,10 @@ inline bool Dim4VertexEmbedding::operator != (const Dim4VertexEmbedding& other)
 inline Dim4Vertex::Dim4Vertex(Dim4Component* component) :
         component_(component), boundaryComponent_(0), link_(0),
         valid_(true), ideal_(false) {
+}
+
+inline unsigned long Dim4Vertex::index() const {
+    return markedIndex();
 }
 
 inline const std::vector<Dim4VertexEmbedding>& Dim4Vertex::getEmbeddings()

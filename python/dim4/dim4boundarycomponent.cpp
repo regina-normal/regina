@@ -47,6 +47,7 @@ void addDim4BoundaryComponent() {
     class_<Dim4BoundaryComponent, bases<regina::ShareableObject>,
             std::auto_ptr<Dim4BoundaryComponent>, boost::noncopyable>
             ("Dim4BoundaryComponent", no_init)
+        .def("index", &Dim4BoundaryComponent::index)
         .def("getNumberOfTetrahedra",
             &Dim4BoundaryComponent::getNumberOfTetrahedra)
         .def("getNumberOfTriangles",

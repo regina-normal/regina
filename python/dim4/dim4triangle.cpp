@@ -82,6 +82,7 @@ void addDim4Triangle() {
     scope s = class_<Dim4Triangle, bases<regina::ShareableObject>,
             std::auto_ptr<Dim4Triangle>, boost::noncopyable>("Dim4Triangle",
             no_init)
+        .def("index", &Dim4Triangle::index)
         .def("getEmbeddings", Dim4Triangle_getEmbeddings_list)
         .def("getNumberOfEmbeddings", &Dim4Triangle::getNumberOfEmbeddings)
         .def("getEmbedding", &Dim4Triangle::getEmbedding,

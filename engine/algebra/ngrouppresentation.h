@@ -45,6 +45,7 @@
 #include <list>
 #include <vector>
 #include <set>
+#include <map>
 
 #include "regina-core.h"
 #include "shareableobject.h"
@@ -106,6 +107,16 @@ struct REGINA_API NGroupExpressionTerm {
      * same generator and exponent.
      */
     bool operator == (const NGroupExpressionTerm& other) const;
+
+    /**
+     * Lexicographical order on NGroupExpressionTerms, with the generator
+     * being the first index and the exponent being the second.  
+     *
+     * @return true if and only if either this->generator < other.generator
+     *  or this->generator == other->generator and 
+     *     this->exponent < other->exponent.
+     */
+    bool operator<(const NGroupExpressionTerm& other) const;
 
     /**
      * Returns the inverse of this term.  The inverse has the same
@@ -459,6 +470,24 @@ class REGINA_API NGroupExpression : public ShareableObject {
          */
         bool substitute(unsigned long generator,
             const NGroupExpression& expansion, bool cyclic = false);
+
+        /**
+         * This routine takes two words as input, *this and other, and
+         * determines whether or not one can re-label the generators in
+         * this word to get the other word. If so, it returns a non-empty
+         * list of such re-labellings. Re-labellings are partially-defined
+         * permutations (with possible inversions if cyclic=true) on the 
+         * generator set.
+         *
+         * @param other is what the return permutation turn 
+         * @param cyclic, if false we get a list of exact relabellings from
+         *  *this to other.  If true, it can be up to cyclic permutation and
+         *  inversion. If cyclic is true, the routine demands both words 
+         *  are cyclically-reduced.
+         */
+        std::list< std::map< unsigned long, NGroupExpressionTerm > >
+          relabellingsThisToOther( const NGroupExpression &other, 
+           bool cyclic=false ) const;
 
         /**
          * Writes a chunk of XML containing this expression.
@@ -974,10 +1003,33 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * of a circle bundle over a surface.  Returns a string description of
          * the bundle if it succeeds, and an empty string if it fails. 
          *
+         * @orientable is a flag that allows the algorithm to distinguish 
+         *  between S2 x S1 and S2 x~ S1, as they have the same fundamental
+         *  group.
+         *
          * \apinotfinal TODO - incomplete.  Should consider making this and
          *  perhaps all the identify routines private?  
          */
-        std::string identify_circle_bundle_over_surface();
+        std::string identify_circle_bundle_over_surface(bool orientable=true);
+
+        /**
+         * This routine takes two NGroupPresentations as arguments and
+         * returns true if it can determine they are simply-isomorphic, and 
+         * false if it can not determine they are simply isomorphic.  
+         *
+         * A simple isomorphism is one where the generators gi of this 
+         * presentation are sent to gj^+-1 of the other presentation. 
+         *
+         * @return true if it can confirm the groups are simply isomorphic, 
+         *  false means they may be isomorphic, only this routine could not
+         *  confirm it. So it could return false for a variety of reasons
+         *  1) The groups are not isomorphic.
+         *  2) The groups are isomorphic, but not simply isomorphic. 
+         *  3) The routine could not see the existence of a simple isomorphism
+         *     of this restricted type, due to difficulties with the word
+         *     problem. 
+         */
+        bool isSimpleIsomorphicTo( const NGroupPresentation& other ) const;
 
         /**
          * Routine attempts to determine if this groups is clearly a free
@@ -1196,6 +1248,12 @@ inline bool NGroupExpressionTerm::operator += (
         return true;
     } else
         return false;
+}
+
+inline bool NGroupExpressionTerm::operator<(const NGroupExpressionTerm& other) 
+const { return ( (generator < other.generator) || 
+                 ( (generator == other.generator) &&
+                   ( exponent < other.exponent ) ) );
 }
 
 // Inline functions for NGroupExpression
