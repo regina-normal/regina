@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
     bool found = false;
     std::string dehydration;
     for ( ; i < argc; i++) {
-        NPacket* tree = readXMLFile(argv[i]);
+        NPacket* tree = open(argv[i]);
         if (tree == 0) {
             std::cerr << "ERROR: Could not read data from " << argv[i] << '.'
                 << std::endl;

@@ -38,7 +38,7 @@
 #include "snappea/nsnappeatriangulation.h"
 #include "snappea/kernel/SnapPea.h"
 
-bool regina::NSnapPeaTriangulation::kernelMessages = false;
+bool regina::NSnapPeaTriangulation::kernelMessages_ = false;
 
 namespace regina { namespace snappea {
 

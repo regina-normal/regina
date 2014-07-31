@@ -112,7 +112,6 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
         QWidget* getInterface();
         PacketEditIface* getEditIface();
         void refresh();
-        void editingElsewhere();
 
         /**
          * NPacketListener overrides.

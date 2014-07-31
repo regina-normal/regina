@@ -44,7 +44,7 @@
 #include "regina-core.h"
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
-#include "file/nxmlelementreader.h"
+#include "utilities/nxmlelementreader.h"
 
 namespace regina {
 

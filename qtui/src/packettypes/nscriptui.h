@@ -44,8 +44,12 @@
 #include "../packetui.h"
 
 #include <QStyledItemDelegate>
-#include <QTableWidget>
 
+template <class PacketType, class Sanitise>
+class DocWidget;
+
+class DocWidgetFinalNewline;
+class EditTableView;
 class QAction;
 class QSplitter;
 class QPlainTextEdit;
@@ -55,64 +59,64 @@ namespace regina {
     class NScript;
 };
 
-class ScriptVarValueItem : public QTableWidgetItem,
-        public regina::NPacketListener {
-    private:
+class ScriptVarModel : public QAbstractItemModel {
+    protected:
         /**
-         * The currently selected packet, or 0 for none.
+         * Details of the script.
          */
-        regina::NPacket* packet_;
+        regina::NScript* script_;
+
+        /**
+         * Current state.
+         */
+        bool isReadWrite_;
 
     public:
         /**
          * Constructor.
          */
-        ScriptVarValueItem(regina::NPacket* packet);
+        ScriptVarModel(regina::NScript* script, bool readWrite);
 
         /**
-         * Access the currently selected packet.
+         * Read-write state.
          */
-        regina::NPacket* getPacket() const;
-        void setPacket(regina::NPacket* packet);
+        bool isReadWrite() const;
+        void setReadWrite(bool readWrite);
 
         /**
-         * NPacketListener overrides.
+         * Force a complete refresh.
          */
-        virtual void packetWasRenamed(regina::NPacket* p);
-        virtual void packetToBeDestroyed(regina::NPacket* p);
+        void rebuild();
+
+        /**
+         * Overrides for describing and editing data in the model.
+         */
+        QModelIndex index(int row, int column,
+                const QModelIndex& parent) const;
+        QModelIndex parent(const QModelIndex& index) const;
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
+        Qt::ItemFlags flags(const QModelIndex& index) const;
+        bool setData(const QModelIndex& index, const QVariant& value, int role);
 
     private:
         /**
-         * Update the text and pixmap according to the currently
-         * selected packet.
+         * Is the given variable name already used?  We are allowed to
+         * exclude a specific variable (e.g., the one currently being
+         * renamed) from our search.
          */
-        void updateData();
-};
-
-class ScriptNameDelegate : public QStyledItemDelegate {
-    public:
-        virtual QWidget* createEditor(QWidget* parent,
-            const QStyleOptionViewItem& option, const QModelIndex& index) const;
-        virtual void setEditorData(QWidget* editor,
-            const QModelIndex& index) const;
-        virtual void setModelData(QWidget* editor,
-            QAbstractItemModel* model, const QModelIndex& index) const;
-        virtual void updateEditorGeometry(QWidget* editor,
-            const QStyleOptionViewItem& option, const QModelIndex& index) const;
-
-    private:
-        static bool nameUsedElsewhere(const QString& name, int currRow,
-            QAbstractItemModel* model);
+        bool nameUsedElsewhere(const QString& name, int exclude) const;
 };
 
 class ScriptValueDelegate : public QStyledItemDelegate {
     private:
-        QTableWidget* table_;
-        regina::NPacket* matriarch_;
+        regina::NScript* script_;
 
     public:
-        ScriptValueDelegate(QTableWidget* table,
-            regina::NPacket* treeMatriatch);
+        ScriptValueDelegate(regina::NScript* script);
 
         virtual QWidget* createEditor(QWidget* parent,
             const QStyleOptionViewItem& option, const QModelIndex& index) const;
@@ -122,30 +126,6 @@ class ScriptValueDelegate : public QStyledItemDelegate {
             QAbstractItemModel* model, const QModelIndex& index) const;
         virtual void updateEditorGeometry(QWidget* editor,
             const QStyleOptionViewItem& option, const QModelIndex& index) const;
-};
-
-/**
- * Sigh.  We need to subclass QTableWidget in order to gain access to the
- * protected function currentChanged(), which allows us to forcibly close
- * any open editor and send changes back to the model.
- */
-class ScriptVarTable : public QTableWidget {
-    public:
-        ScriptVarTable(int rows, int cols);
-
-        /**
-         * Forcibly close any open editor and commit changes to the
-         * internal model.  This is good to do before performing any
-         * global action on the user's current data (such as executing
-         * the script, or commiting changes to the calculation engine).
-         */
-        void endEdit();
-
-        /**
-         * Reimplemented to request less space than a normal table,
-         * which gives the editor more room to breathe.
-         */
-        virtual QSize sizeHint() const;
 };
 
 /**
@@ -164,10 +144,10 @@ class NScriptUI : public QObject, public PacketUI {
          * Internal components
          */
         QWidget* ui;
-        ScriptVarTable* varTable;
-        QStyledItemDelegate* nameDelegate;
+        ScriptVarModel* model;
+        EditTableView* varTable;
         QStyledItemDelegate* valueDelegate;
-        QPlainTextEdit* document;
+        DocWidget<regina::NScript, DocWidgetFinalNewline>* editWidget;
         PacketEditIface* editIface;
 
         /**
@@ -192,8 +172,8 @@ class NScriptUI : public QObject, public PacketUI {
         PacketEditIface* getEditIface();
         const QLinkedList<QAction*>& getPacketTypeActions();
         QString getPacketMenuText() const;
-        void commit();
         void refresh();
+        void endEdit();
         void setReadWrite(bool readWrite);
 
     public slots:
@@ -216,12 +196,6 @@ class NScriptUI : public QObject, public PacketUI {
         void execute();
 
         /**
-         * Called whenever the script or its variables within the interface
-         * changes.
-         */
-        void notifyScriptChanged();
-
-        /**
          * Notify this interface that the global preferences have been
          * updated.
          */
@@ -239,28 +213,27 @@ class NScriptUI : public QObject, public PacketUI {
         void updateTabWidth();
 };
 
-inline regina::NPacket* ScriptVarValueItem::getPacket() const {
-    return packet_;
+inline bool ScriptVarModel::isReadWrite() const {
+    return isReadWrite_;
 }
 
-inline ScriptValueDelegate::ScriptValueDelegate(QTableWidget* table,
-        regina::NPacket* treeMatriarch) :
-        table_(table), matriarch_(treeMatriarch) {
+inline void ScriptVarModel::setReadWrite(bool readWrite) {
+    if (isReadWrite_ != readWrite) {
+        // Edit flags will all change.
+        // A full model reset is probably too severe, but.. *shrug*
+        beginResetModel();
+        isReadWrite_ = readWrite;
+        endResetModel();
+    }
 }
 
-inline ScriptVarTable::ScriptVarTable(int rows, int cols) :
-        QTableWidget(rows, cols) {
+inline QModelIndex ScriptVarModel::parent(const QModelIndex&) const {
+    // All items are top-level.
+    return QModelIndex();
 }
 
-inline void ScriptVarTable::endEdit() {
-    // This will close any editor that might currently be open.
-    QModelIndex index(currentIndex());
-    currentChanged(index, index);
-}
-
-inline QSize ScriptVarTable::sizeHint() const {
-    QSize s = QTableWidget::sizeHint();
-    return QSize(s.width(), s.height() / 3 * 2);
+inline ScriptValueDelegate::ScriptValueDelegate(regina::NScript* script) :
+        script_(script) {
 }
 
 inline PacketEditIface* NScriptUI::getEditIface() {
