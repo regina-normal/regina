@@ -67,7 +67,7 @@ long NScript::getVariableIndex(const std::string& name) const {
 }
 
 void NScript::setVariableName(unsigned long index, const std::string& name) {
-    std::map<std::string, NPacket*>::const_iterator it = variables.begin();
+    std::map<std::string, NPacket*>::iterator it = variables.begin();
     advance(it, index);
 
     if (name == it->first)

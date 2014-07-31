@@ -91,7 +91,7 @@ void NHomGroupPresentation::writeTextLong(std::ostream& out) const
         out<<"g"<<i<<" --> "; 
         map_[i]->writeTextShort(out);
     }
-    out<<"]";
+    out<<"] ";
 
     out<<"Range ";
     range_.writeTextCompact(out);
