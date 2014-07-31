@@ -34,7 +34,7 @@
 
 #include "foreign/pdf.h"
 #include "packet/npdf.h"
-#include <cstdio> // Ryan added this as the algebra-v3 branch would not compile without it.
+#include <cstdio>
 
 namespace regina {
 
