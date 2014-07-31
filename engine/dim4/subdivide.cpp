@@ -758,16 +758,4 @@ bool Dim4Triangulation::idealToFinite() {
     return true;
 }
 
-void Dim4Triangulation::divideEdge(Dim4Edge* e)
-{
- // TODO:
- //  list all the embeddings of edge e into the triangulation. 
- //  keep the pentachora that are untouched, and create n+1 pentachora
- //  for every pentachoron the edge is incident to n times (n >= 1).  
- //  we then have to systematically subdivide...
-
- return;
-}
-
-
 } // namespace regina

@@ -53,7 +53,6 @@
 #include "surfaces/normalcoords.h"
 #include "utilities/nbooleans.h"
 #include "utilities/nproperty.h"
-#include "dim2/dim2triangulation.h"
 
 namespace regina {
 
@@ -701,7 +700,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          */
         #ifdef __DOXYGEN
             static NNormalSurfaceVector* makeZeroVector(
-                NTriangulation* triangulation);
+                const NTriangulation* triangulation);
         #endif
         /**
          * Creates a new set of normal surface matching equations for
@@ -1472,25 +1471,6 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * triangulation.
          */
         NTriangulation* crush() const;
-
-        /**
-         * Returns a 2-manifold triangulation describing this normal
-         * surface.
-         *
-         * The 2-manifold triangulation will be newly allocated, and
-         * destroying it is the responsibility of the caller of this routine.
-         *
-         * \pre Requires this to represent an actual compact surface, i.e. 
-         *  must pass the isCompact() test. If the surface is not compact, 
-         *  routine will return a null pointer. It also requires the 
-         *  number of facets in the normal surface is representable by an
-         *  unsigned long, i.e. that it is a small NLargeInteger.  You
-         *  would likely run into memory issues even for large unsigned longs,
-         *  so this isn't a serious restriction on the routine.
-         *
-         * @return a triangulation of this normal hypersurface.
-         */
-        Dim2Triangulation* triangulate() const;
 
         /**
          * Determines whether this and the given surface in fact
