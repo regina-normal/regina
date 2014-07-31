@@ -104,20 +104,22 @@ class REGINA_API NSimplicialAutGrp : public ShareableObject {
   *  At present we'll just enable it for STD_coord, all dimensions in both 
   * homology and cohomology.
   */
- std::vector<NHomMarkedAbelianGroup*> homologyAction( const NCellularData::GroupLocator &gloc ) const;
+ std::vector<NHomMarkedAbelianGroup*> homologyAction( 
+            const NCellularData::GroupLocator &gloc ) const;
 
  /**
-  * Gives the action of the group on the orientation of the manifold.  Assumes manifold has
-  * an orientation. 
+  * Gives the action of the group on the orientation of the manifold.  
+  * Assumes manifold has an orientation. 
   */
  std::vector< int > orientationAction() const;
 
 /**
- * Algorithm gives a description of the fixed point sets of all the automorphisms
- * in the automorphism group.  
+ * Algorithm gives a description of the fixed point sets of all the 
+ * automorphisms in the automorphism group.  
  *
- * The vector indexing corresponds to the internal indexing of fullMap.  This procedure
- * allocates the return value, so it is up to the user to deallocate. 
+ * The vector indexing corresponds to the internal indexing of fullMap.  
+ * This procedure allocates the return value, so it is up to the user 
+ * to deallocate. 
  *
  * TODO: triangulation routine!  really only need the 3dim'l one now...
  */
@@ -183,10 +185,10 @@ inline centroid::centroid( const std::set< unsigned long > &input ) :
  *  Internally this stores the dimension of the facet, the dimension (sdim) of
  * the minimal simplex it lives in, the nicIx index of that simplex and then
  * a set of centroids.  This would look like { {a, b, c}, {e, f}, {g} } i.e. 
- * an element of the power set on {0,1,2,...,dim} which forms a partition indicating
- * the facet is the convex hull of the barycentres of the sets in the partition. 
- * So a standard edge would be represented by { {0}, {1} }, but an edge separating
- * a triangle would be { {0}, {1,2} } for example. 
+ * an element of the power set on {0,1,2,...,dim} which forms a partition 
+ * indicating the facet is the convex hull of the barycentres of the sets in 
+ * the partition.  So a standard edge would be represented by { {0}, {1} }, 
+ * but an edge separating a triangle would be { {0}, {1,2} } for example. 
  */
 struct linearFacet {
  /** copy constructor */
@@ -210,8 +212,8 @@ struct linearFacet {
  /** order operator */
  bool operator<(const linearFacet &rhs) const;
 
- /** does what it can to check the facet definition makes sense. This is only for 
-    debugging purposes. */
+ /** does what it can to check the facet definition makes sense. This is only 
+    for debugging purposes. */
  bool isValid() const;
  /** Returns true if the facet runs through any ideal vertices. */
  bool isIdeal(const NTriangulation *tri3, const Dim4Triangulation* tri4) const;
@@ -221,21 +223,26 @@ struct linearFacet {
 
  /** List the vertices used among all centroids. If a non-ideal facet we return  
      elements between 0..sdim.  If ideal, we similarly list numbers in 0..sdim but
-     these are the macroscopic vertices + the short form of the microscopic vertices. */
+     these are the macroscopic vertices + the short form of the microscopic
+     vertices. */
  std::set< unsigned long > verticesUsed() const;
- /** List the vertices unused among all centroids, in the simplex indexed by sindx. */
+ /** List the vertices unused among all centroids, in the simplex indexed by 
+     sindx. */
  std::set< unsigned long > verticesUnUsed() const;
 
  /** List the boundaries of this facet, subject to the ambient triangulation. 
-     One of the triangulations must be a non-null pointer, the other must be null. */
- std::set< linearFacet > bdryFacets(const NTriangulation *tri3, const Dim4Triangulation* tri4) const;
+     One of the triangulations must be a non-null pointer, the other must be 
+     null. */
+ std::set< linearFacet > bdryFacets(const NTriangulation *tri3, 
+    const Dim4Triangulation* tri4) const;
 };
 
 inline linearFacet::linearFacet( const linearFacet &cloneMe ) :
  dim( cloneMe.dim ), sdim( cloneMe.sdim ), 
  sindx( cloneMe.sindx ), vCentres( cloneMe.vCentres ) {}
 
-inline linearFacet::linearFacet( unsigned long DIM, unsigned long SDIM, unsigned long SIDX ) :
+inline linearFacet::linearFacet( unsigned long DIM, unsigned long SDIM, 
+                                 unsigned long SIDX ) :
  dim( DIM ), sdim( SDIM ), sindx( SIDX )
 { }
 
