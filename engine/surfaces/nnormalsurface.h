@@ -53,7 +53,6 @@
 #include "surfaces/normalcoords.h"
 #include "utilities/nbooleans.h"
 #include "utilities/nproperty.h"
-#include "dim2/dim2triangulation.h"
 
 namespace regina {
 
@@ -191,6 +190,7 @@ REGINA_API extern const NPerm4 __octDiscArcs[24];
 #define octDiscArcs(i, j) __octDiscArcs[(8 * (i)) + (j)]
 #endif
 
+class Dim2Triangulation;
 class NEnumConstraintList;
 class NTriangulation;
 class NEdge;
@@ -701,7 +701,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          */
         #ifdef __DOXYGEN
             static NNormalSurfaceVector* makeZeroVector(
-                NTriangulation* triangulation);
+                const NTriangulation* triangulation);
         #endif
         /**
          * Creates a new set of normal surface matching equations for

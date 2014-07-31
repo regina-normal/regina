@@ -33,6 +33,7 @@
 /* end stub */
 
 #include <algorithm>
+#include "dim2/dim2triangulation.h"
 #include "maths/nmatrixint.h"
 #ifndef EXCLUDE_SNAPPEA
 #include "snappea/nsnappeatriangulation.h"
