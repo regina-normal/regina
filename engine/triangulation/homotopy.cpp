@@ -36,14 +36,12 @@
 
 namespace regina {
 
-const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
-    if (fundamentalGroup_.known())
-        return *fundamentalGroup_.value();
+NGroupPresentation* NTriangulation::computeFundamentalGroup() const {
 
     NGroupPresentation* ans = new NGroupPresentation();
 
     if (getNumberOfTetrahedra() == 0)
-        return *(fundamentalGroup_ = ans);
+        return ans;
 
     // Find a maximal forest in the dual 1-skeleton.
     // Note that this will ensure the skeleton has been calculated.
@@ -100,9 +98,31 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
 
     // Tidy up.
     delete[] genIndex;
-    ans->intelligentSimplify();
 
-    return *(fundamentalGroup_ = ans);
+    return ans;
+}
+
+
+const NGroupPresentation& NTriangulation::getFundamentalGroup(
+                                                         bool simplify) const {
+
+    if (simplify) {
+	if (fundamentalGroup_.known())
+	    return *fundamentalGroup_.value();
+    } else {
+	if (unsimplifiedFundamentalGroup_.known())
+	    return *unsimplifiedFundamentalGroup_.value();
+    }
+
+    NGroupPresentation* ans = computeFundamentalGroup();
+
+    if (simplify)
+	ans->intelligentSimplify();
+
+    if (simplify)
+	return *(fundamentalGroup_ = ans);
+    else
+	return *(unsimplifiedFundamentalGroup_ = ans);
 }
 
 } // namespace regina

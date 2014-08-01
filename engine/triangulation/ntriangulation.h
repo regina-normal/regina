@@ -190,6 +190,8 @@ class REGINA_API NTriangulation : public NPacket,
         mutable NProperty<NGroupPresentation, StoreManagedPtr>
                 fundamentalGroup_;
             /**< Fundamental group of the triangulation. */
+	mutable NProperty<NGroupPresentation, StoreManagedPtr>
+                unsimplifiedFundamentalGroup_;
         mutable NProperty<NAbelianGroup, StoreManagedPtr> H1_;
             /**< First homology group of the triangulation. */
         mutable NProperty<NAbelianGroup, StoreManagedPtr> H1Rel_;
@@ -1222,9 +1224,14 @@ class REGINA_API NTriangulation : public NPacket,
          * fillings, call NSnapPeaTriangulation::fundamentalGroupFilled()
          * instead.
          *
+	 * @param simplify \c true Returns unsimplified fundamental group
+	 * when false, otherwise simplified fundamental group that can
+	 * also be set with simplifiedFundamentalGroup(...).
+	 *
          * @return the fundamental group.
          */
-        const NGroupPresentation& getFundamentalGroup() const;
+        const NGroupPresentation& getFundamentalGroup(
+	    bool simplify = true) const;
         /**
          * Notifies the triangulation that you have simplified the
          * presentation of its fundamental group.  The old group
@@ -3543,6 +3550,15 @@ class REGINA_API NTriangulation : public NPacket,
          * its boundary components.
          */
         void calculateBoundaryProperties() const;
+
+	/**
+	 * Returns the fundamental group of this triangulation.
+	 * This is internal to getFundamentalGroup, it always computes the 
+	 * unsimplified group presentation. getFundamentalGroup implements
+	 * the simplification and the caching. The callee also takes
+	 * ownership of the group presentation.
+	 */
+	NGroupPresentation* computeFundamentalGroup() const;
 
         /**
          * Determines if an isomorphic copy of this triangulation is

@@ -150,6 +150,7 @@ void NTriangulation::clearAllProperties() {
         deleteSkeleton();
 
     fundamentalGroup_.clear();
+    unsimplifiedFundamentalGroup_.clear();
     H1_.clear();
     H1Rel_.clear();
     H1Bdry_.clear();
@@ -528,6 +529,9 @@ void NTriangulation::cloneFrom(const NTriangulation& X) {
     // Properties:
     if (X.fundamentalGroup_.known())
         fundamentalGroup_= new NGroupPresentation(*X.fundamentalGroup_.value());
+    if (X.unsimplifiedFundamentalGroup_.known())
+	unsimplifiedFundamentalGroup_ = new NGroupPresentation(
+	    *X.unsimplifiedFundamentalGroup_.value());
     if (X.H1_.known())
         H1_ = new NAbelianGroup(*(X.H1_.value()));
     if (X.H1Rel_.known())

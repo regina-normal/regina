@@ -94,6 +94,8 @@ namespace {
         NTriangulation::idealToFinite, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_puncture,
         NTriangulation::puncture, 0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_getFundamentalGroup,
+        NTriangulation::getFundamentalGroup, 0, 1);
 
     void simplifiedFundamentalGroup_own(NTriangulation& tri,
             std::auto_ptr<regina::NGroupPresentation> group) {
@@ -292,7 +294,7 @@ void addNTriangulation() {
         .def("isOrdered", &NTriangulation::isOrdered)
         .def("isConnected", &NTriangulation::isConnected)
         .def("getFundamentalGroup", &NTriangulation::getFundamentalGroup,
-            return_internal_reference<>())
+	     OL_getFundamentalGroup()[return_internal_reference<>()])
         .def("simplifiedFundamentalGroup", simplifiedFundamentalGroup_own)
         .def("getHomologyH1", &NTriangulation::getHomologyH1,
             return_internal_reference<>())
