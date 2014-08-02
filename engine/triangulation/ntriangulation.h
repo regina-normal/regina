@@ -1585,7 +1585,9 @@ class REGINA_API NTriangulation : public NPacket,
          * Note that the triangle pointers returned will become invalid once
          * the triangulation has changed.
          *
-         * \ifacespython Not present.
+         * \ifacespython This routine takes no arguments.  Instead it
+         * returns the maximal forest as a Python list of NTriangle
+         * objects, sorted by triangle index.
          *
          * @param triangleSet the set to be emptied and into which the
          * triangles representing the maximal forest will be placed.
