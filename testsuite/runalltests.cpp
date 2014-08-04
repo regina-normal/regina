@@ -151,6 +151,7 @@ bool runAllTests() {
     // addNMVPolynomialRing(runner); <-- NMVPolynomialRing class not ready yet.
     addNSVPolynomialRing(runner);
     addNCellularData(runner);
+    addNFibring(runner);
 
     // Dim2Triangulation:
     addDim2Triangulation(runner);

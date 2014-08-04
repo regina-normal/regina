@@ -10,6 +10,8 @@ SET ( FILES
   nmarkedabeliangroup
   nmvpolynomialring
   nsvpolynomialring
+  ngrouppresentation
+  fibring
   )
 
 # Prepend folder name
