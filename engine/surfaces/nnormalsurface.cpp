@@ -444,13 +444,15 @@ normal_facet_data::normal_facet_data(const unsigned long &TN, const bool &TI,
                              const unsigned long &TY, const unsigned long &NU)
 { tetNum = TN; TRI=TI; TYPE=TY; NUM=NU; }
 
-normal_facet_data::normal_facet_data(const normal_facet_data &other) // copy constructor
+// copy constructor
+normal_facet_data::normal_facet_data(const normal_facet_data &other) 
 {
  tetNum = other.tetNum; TRI = other.TRI;
  TYPE = other.TYPE;     NUM = other.NUM;
 }
 
-bool normal_facet_data::operator<(const normal_facet_data &other) const // comparison
+// comparison for sorting
+bool normal_facet_data::operator<(const normal_facet_data &other) const
 {
  if (tetNum < other.tetNum) return true; if (tetNum > other.tetNum) return false;
  if (TRI && (!other.TRI)) return true;   if ((!TRI) && other.TRI) return false;
@@ -459,7 +461,8 @@ bool normal_facet_data::operator<(const normal_facet_data &other) const // compa
  return false;
 }
 
-normal_facet_data normal_facet_data::operator=(const normal_facet_data &other) // assignment
+// asst operator
+normal_facet_data normal_facet_data::operator=(const normal_facet_data &other)
 {
  tetNum = other.tetNum; TRI=other.TRI; TYPE=other.TYPE; NUM=other.NUM;
  return (*this);
@@ -561,7 +564,8 @@ Dim2Triangulation* NNormalSurface::triangulate() const
          (k<tricount1) ? k : k-tricount1 );
 
         // facet0 and facet1 represent the far vertex of the glued triangles, in
-        //  tri0 and tri1 respectively.  This covers both the triangle and quad case.
+        //  tri0 and tri1 respectively.  This covers both the triangle and quad
+        //  case.
         unsigned long facet0( (k<tricount0) ? // triangle case
             ( (tetinc0[j] < tetinc0[3]) ? tetinc0[3]-1 : tetinc0[3] ) : 
             (vertexSplitDefn[qtype0][0]==tetinc0[3] ||
@@ -573,47 +577,49 @@ Dim2Triangulation* NNormalSurface::triangulate() const
 
         unsigned long triEndpt0, triEndpt0S;
         if (k<tricount0)
-         { // triangle case. Triangles are parametrized by the linear order of {0,1,2,3},
-           // the vertices of the tetrahedra.
+         { // triangle case. Triangles are parametrized by the linear 
+           // order of {0,1,2,3}, the vertices of the tetrahedra.
           triEndpt0 = (tetinc0[3] + 1) % 4;
-          if (triEndpt0 == tetinc0[j]) triEndpt0 = (triEndpt0 + 1) % 4; // corresponding pt in simplex.
+          if (triEndpt0 == tetinc0[j]) triEndpt0 = (triEndpt0 + 1) % 4; 
           triEndpt0S = triEndpt0; 
           if (triEndpt0 > tetinc0[j]) triEndpt0--; // triangle coord
          }
         else
-         { // quad case. Quads are parametrized by vertexSplitDefn. 
-           // we need to move in the positive orientation of the triangle from facet0. 
+         { // quad case. Quads are parametrized by vertexSplitDefn. we need to
+           // move in the positive orientation of the triangle from facet0. 
            // this can be determined by how vertexSplitDefn[qtype0] relates to 
-           // tetinc0[3] and tetinc0[j]. facet0 is the opp index. So (facet0+1) % 3 is
-           // the next in the triangle's coordinates.  We need the projection of this 
-           // point to the one opposite tetinc0[j] in the tetrahedron, and we call it triEndpt0S 
+           // tetinc0[3] and tetinc0[j]. facet0 is the opp index. 
+           // (facet0+1) % 3 is the next in the triangle's coordinates.  We 
+           // need the projection of this point to the one opposite tetinc0[j] 
+           // in the tetrahedron, and we call it triEndpt0S 
            // 0 triangle vtx 0 -- vsd1 and vsd3
            //            vtx 1 -- vsd3 and vsd0
            //            vtx 2 -- vsd0 and vsd2
            // 1 triangle vtx 0 -- vsd0 and vsd2
            //            vtx 1 -- vsd1 and vsd2
            //            vtx 2 -- vsd1 and vsd3
-           // compute (facet0+1)%3, this is the vtx number.  it corresponds to two vertices as above, 
+           // compute (facet0+1)%3, this is the vtx number.  it corresponds to 
+           // two vertices as above, 
            // and one of them must be tetinc0[j], then take the other one. 
            triEndpt0 = (facet0 + 1) % 3;
 // TODO: rewrite using vertexSplitPartner
            triEndpt0S = (sdt0==0) ? // sdt0==0 
                 ( (facet0==0) ? ( (tetinc0[j] == vertexSplitDefn[qtype0][3]) ?
-                    vertexSplitDefn[qtype0][0] : vertexSplitDefn[qtype0][3] ) : // facet0==2
+                    vertexSplitDefn[qtype0][0] : vertexSplitDefn[qtype0][3] ) : 
                                 ( (tetinc0[j] == vertexSplitDefn[qtype0][3]) ?
-                    vertexSplitDefn[qtype0][1] : vertexSplitDefn[qtype0][3] ) ) : // end sdt0==0 
+                    vertexSplitDefn[qtype0][1] : vertexSplitDefn[qtype0][3] ) ): 
                 ( (facet0==0) ? ( (tetinc0[j] == vertexSplitDefn[qtype0][1]) ?
-                    vertexSplitDefn[qtype0][2] : vertexSplitDefn[qtype0][1]) : // facet0==2
+                    vertexSplitDefn[qtype0][2] : vertexSplitDefn[qtype0][1]) : 
                                 ( (tetinc0[j] == vertexSplitDefn[qtype0][2]) ?
-                    vertexSplitDefn[qtype0][0] : vertexSplitDefn[qtype0][2]) );// end sdt0==1
+                    vertexSplitDefn[qtype0][0] : vertexSplitDefn[qtype0][2]) );
          } // end the triEndpt0(S) branch
 
         unsigned long triEndpt1, triEndpt1S;
         if (k<tricount1)
-         { // triangle case. Triangles are parametrized by the linear order of {0,1,2,3},
-           // the vertices of the tetrahedra.
+         { // triangle case. Triangles are parametrized by the linear order 
+           // of {0,1,2,3}, the vertices of the tetrahedra.
           triEndpt1 = (tetinc1[3] + 1) % 4;
-          if (triEndpt1 == tetinc1[j])  triEndpt1 = (triEndpt1 + 1) % 4; // corresponding pt in simplex.
+          if (triEndpt1 == tetinc1[j])  triEndpt1 = (triEndpt1 + 1) % 4; 
           triEndpt1S = triEndpt1; 
           if (triEndpt1 > tetinc1[j]) triEndpt1--; // triangle coord
          }
@@ -624,41 +630,48 @@ Dim2Triangulation* NNormalSurface::triangulate() const
 // TODO: rewrite using vertexSplitPartner
            triEndpt1S = (sdt1==0) ? // sdt1==0 
                 ( (facet1==0) ? ( (tetinc1[j] == vertexSplitDefn[qtype1][3]) ?
-                    vertexSplitDefn[qtype1][0] : vertexSplitDefn[qtype1][3] ) : // facet1==2
+                    vertexSplitDefn[qtype1][0] : vertexSplitDefn[qtype1][3] ) : 
                                 ( (tetinc1[j] == vertexSplitDefn[qtype1][3]) ?
-                    vertexSplitDefn[qtype1][1] : vertexSplitDefn[qtype1][3] ) ) : // end sdt1==0 
+                    vertexSplitDefn[qtype1][1] : vertexSplitDefn[qtype1][3] ) ): 
                 ( (facet1==0) ? ( (tetinc1[j] == vertexSplitDefn[qtype1][1]) ?
-                    vertexSplitDefn[qtype1][2] : vertexSplitDefn[qtype1][1]) : // facet1==2
+                    vertexSplitDefn[qtype1][2] : vertexSplitDefn[qtype1][1]) : 
                                 ( (tetinc1[j] == vertexSplitDefn[qtype1][2]) ?
-                    vertexSplitDefn[qtype1][0] : vertexSplitDefn[qtype1][2]) );// end sdt1==1
+                    vertexSplitDefn[qtype1][0] : vertexSplitDefn[qtype1][2]) );
          }
 
-        std::map<unsigned long, unsigned long> permGen; // used to define gluing between triangles
-        std::set<unsigned long> domUnused, ranUnused;
-        for (unsigned long X=0; X<3; X++) { domUnused.insert(X); ranUnused.insert(X); }
+        std::map<unsigned long, unsigned long> permGen;// used to define 
+        std::set<unsigned long> domUnused, ranUnused; //gluing between triangles
+        for (unsigned long X=0; X<3; X++) 
+         { domUnused.insert(X); ranUnused.insert(X); }
         domUnused.erase(facet0);    ranUnused.erase(facet1);
         domUnused.erase(triEndpt0); ranUnused.erase(triEndpt1);
 
-        bool switchEnds( tetinc0.preImageOf( triEndpt0S )!=tetinc1.preImageOf( triEndpt1S ) );
-        permGen.insert( std::pair< unsigned long, unsigned long >(facet0, facet1) );
+        bool switchEnds( tetinc0.preImageOf( triEndpt0S )!=
+                         tetinc1.preImageOf( triEndpt1S ) );
+        permGen.insert( std::pair< unsigned long, unsigned long >
+                        (facet0, facet1) );
         permGen.insert( std::pair< unsigned long, unsigned long >(triEndpt0,
           (switchEnds) ? *ranUnused.begin() : triEndpt1 ) );
-        permGen.insert( std::pair< unsigned long, unsigned long >(*domUnused.begin(), 
-          (switchEnds) ? triEndpt1 : *ranUnused.begin() ) );
+        permGen.insert( std::pair< unsigned long, unsigned long >
+          (*domUnused.begin(),(switchEnds) ? triEndpt1 : *ranUnused.begin() ) );
 
         #ifdef DEBUG
         if ( (domUnused.size() != 1) || (ranUnused.size() != 1) )
          { std::cout<<"NNormalSurface::triangulate() Error! 2."<<std::endl;  
            std::cout<<"permGen == {";
-           for (std::map<unsigned long, unsigned long>::iterator A=permGen.begin(); 
-                A!=permGen.end(); A++) std::cout<<"("<<A->first<<","<<A->second<<")";
+           for (std::map<unsigned long, unsigned long>::iterator 
+                A=permGen.begin(); 
+                A!=permGen.end(); A++) std::cout<<"("<<A->first<<","<<
+                A->second<<")";
            std::cout<<"}\n";
            std::cout<<"domUnused == {";
-           for (std::set<unsigned long>::iterator A=domUnused.begin(); A!=domUnused.end(); A++)
+           for (std::set<unsigned long>::iterator A=domUnused.begin(); 
+            A!=domUnused.end(); A++)
             std::cout<<(*A)<<" ";
            std::cout<<"} ";
            std::cout<<"ranUnused == {";
-           for (std::set<unsigned long>::iterator A=ranUnused.begin(); A!=ranUnused.end(); A++)
+           for (std::set<unsigned long>::iterator A=ranUnused.begin(); 
+            A!=ranUnused.end(); A++)
             std::cout<<(*A)<<" ";
            std::cout<<"} "<<std::endl;
            exit(1); }
@@ -667,9 +680,11 @@ Dim2Triangulation* NNormalSurface::triangulate() const
         NPerm3 glueMap( permGen[0], permGen[1], permGen[2] );
         #ifdef DEBUG
         if (triMapR.find(tri0)==triMapR.end()) {
-          std::cout<<"NNormalSurface::triangulate() Error! triMapR[tri0] undefined!"<<std::endl; exit(1); }
+          std::cout<<"NNormalSurface::triangulate() Error! triMapR[tri0] "<<
+          "undefined!"<<std::endl; exit(1); }
         if (triMapR.find(tri1)==triMapR.end()) { 
-          std::cout<<"NNormalSurface::triangulate() Error! triMapR[tri1] undefined!"<<std::endl; exit(1); }
+          std::cout<<"NNormalSurface::triangulate() Error! triMapR[tri1] "<<
+          "undefined!"<<std::endl; exit(1); }
         #endif
         triMapR[tri0]->joinTo( facet0, triMapR[tri1], glueMap );
        } // layers loop k.
@@ -714,13 +729,13 @@ NMatrixInt* NNormalSurface::boundaryIntersections() const {
         NLargeInteger longitude; // constructor sets this to 0
         for(unsigned int j=0; j < numTet; j++) {
             meridian += 
-                equations->entry(2*i, 3*j)*getQuadCoord(j,vertexSplit[0][1]) +
-                equations->entry(2*i, 3*j+1)*getQuadCoord(j,vertexSplit[0][2]) +
-                equations->entry(2*i, 3*j+2)*getQuadCoord(j,vertexSplit[0][3]); 
+              equations->entry(2*i, 3*j)*getQuadCoord(j,vertexSplit[0][1]) +
+              equations->entry(2*i, 3*j+1)*getQuadCoord(j,vertexSplit[0][2]) +
+              equations->entry(2*i, 3*j+2)*getQuadCoord(j,vertexSplit[0][3]); 
             longitude += 
-                equations->entry(2*i+1, 3*j)*getQuadCoord(j,vertexSplit[0][1]) +
-                equations->entry(2*i+1, 3*j+1)*getQuadCoord(j,vertexSplit[0][2]) +
-                equations->entry(2*i+1, 3*j+2)*getQuadCoord(j,vertexSplit[0][3]); 
+              equations->entry(2*i+1, 3*j)*getQuadCoord(j,vertexSplit[0][1]) +
+              equations->entry(2*i+1, 3*j+1)*getQuadCoord(j,vertexSplit[0][2]) +
+              equations->entry(2*i+1, 3*j+2)*getQuadCoord(j,vertexSplit[0][3]); 
         }
         slopes->entry(i,0) = meridian;
         slopes->entry(i,1) = longitude;
