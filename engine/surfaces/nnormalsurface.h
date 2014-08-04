@@ -1475,7 +1475,16 @@ class REGINA_API NNormalSurface : public ShareableObject {
 
         /**
          * Returns a 2-manifold triangulation describing this normal
-         * surface.
+         * surface. The triangulation will consist of one triangle for
+         * every normal triangle, and two triangles for every quad.  So 
+         * each quad type is cut into two triangles. If the quad is of 
+         * quad-type i, recall vertexSplittingDefinition[i] as a labelling
+         * of the vertices of the tetrahedron. The quad separates the edge
+         * with vertices vertexSplittingDefinition[i][0,1] from 
+         * the edge with vertices vertexSplittingDefinition[i][2,3].  We cut
+         * this quad along the edge from the vertex the barycentre of the 
+         * edge vertexSplittingDefinition[i][0,2] to the vertex that is the
+         * barycentre of the edge vertexSplittingDefinition[i][1,3]. 
          *
          * The 2-manifold triangulation will be newly allocated, and
          * destroying it is the responsibility of the caller of this routine.
