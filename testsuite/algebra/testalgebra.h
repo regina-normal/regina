@@ -52,4 +52,5 @@ void addNMarkedAbelianGroup(CppUnit::TextUi::TestRunner& runner);
 void addNMVPolynomialRing(CppUnit::TextUi::TestRunner& runner);
 void addNSVPolynomialRing(CppUnit::TextUi::TestRunner& runner);
 void addNGroupPresentation(CppUnit::TextUi::TestRunner& runner);
+void addNFibring(CppUnit::TextUi::TestRunner& runner);
 

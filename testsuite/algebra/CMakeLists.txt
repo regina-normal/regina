@@ -10,6 +10,7 @@ SET ( FILES
   nmvpolynomialring
   nsvpolynomialring
   ngrouppresentation
+  fibring
   )
 
 # Prepend folder name
