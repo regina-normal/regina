@@ -95,6 +95,9 @@ class CuspChooser : public QComboBox, public regina::NPacketListener {
          * when using this setting, since if the triangulation changes
          * but the chooser is \e not refreshed, then selected() may end
          * up returning an invalid pointer.
+         *
+         * The given filter may be 0, in which case every cusp
+         * will be offered.
          */
         CuspChooser(regina::NSnapPeaTriangulation* tri,
                 CuspFilterFunc filter, QWidget* parent,
