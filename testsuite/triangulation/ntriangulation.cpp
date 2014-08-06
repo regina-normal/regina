@@ -107,6 +107,7 @@ class NTriangulationTest : public TriangulationTest<3> {
     CPPUNIT_TEST(finiteToIdeal);
     CPPUNIT_TEST(drillEdge);
     CPPUNIT_TEST(puncture);
+    CPPUNIT_TEST(connectedSumWithSelf);
     CPPUNIT_TEST(dehydration);
     CPPUNIT_TEST(simplification);
     CPPUNIT_TEST(reordering);
@@ -3676,6 +3677,69 @@ class NTriangulationTest : public TriangulationTest<3> {
             runCensusAllClosed(verifyPuncture, true);
             runCensusAllBounded(verifyPuncture, true);
             runCensusAllIdeal(verifyPuncture, true);
+        }
+
+        static void verifyConnectedSumWithSelf(NTriangulation* tri) {
+            if (tri->getNumberOfComponents() != 1)
+                return;
+
+            NTriangulation t(*tri);
+            t.connectedSumWith(t);
+
+            // TODO: Check that homology doubles.
+
+            // All of our remaining tests are for closed manifolds.
+            if (! tri->isClosed())
+                return;
+
+            if (! t.isClosed()) {
+                std::ostringstream msg;
+                msg << tri->getPacketLabel()
+                    << ": tri # tri is not closed.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // We are about to start running exponential-time algorithms.
+            if (tri->getNumberOfTetrahedra() > 10)
+                return;
+
+            long nOld = tri->connectedSumDecomposition();
+            if (nOld < 0 && ! tri->isOrientable()) {
+                // One of those cases where connected sum decomposition
+                // legitimately fails.  The following tests are no use
+                // for us here.
+                return;
+            }
+
+            long nNew = t.connectedSumDecomposition();
+            if (nNew >= 0 || tri->isOrientable()) {
+                if (nNew != 2 * nOld) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ": tri # tri has "
+                        << nNew << " summands, not " << (2 * nOld) << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (nOld == 1) {
+                    // There should be two summands, each homeomorphic
+                    // to the original.
+                    NTriangulation* c1 = static_cast<NTriangulation*>(
+                        t.getFirstTreeChild());
+                    NTriangulation* c2 = static_cast<NTriangulation*>(
+                        c1->getNextTreeSibling());
+                    if (c1->getHomologyH1() != tri->getHomologyH1() ||
+                            c2->getHomologyH1() != tri->getHomologyH1()) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ": tri # tri has "
+                            "summands with the wrong homology.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
+        }
+
+        void connectedSumWithSelf() {
+            testManualSmall(verifyConnectedSumWithSelf);
         }
 
         void verifyDehydration(const NTriangulation& tri) {
