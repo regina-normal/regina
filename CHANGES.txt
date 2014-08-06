@@ -30,6 +30,7 @@ Version 4.96  [ (under development) ]
             - New routine isIdenticalTo().
             - New local modification oneThreeMove().
             - New routine findAllIsomorphisms().
+            - New routine isEmpty().
             - Several isomorphism-related routines have been moved into
               the dimension-agnostic NGenericTriangulation template, and
               isomorphism signature routines now inherit directly from
@@ -85,6 +86,7 @@ Version 4.96  [ (under development) ]
               findAllSubcomplexesIn() and makeCanonical() from
               Dim2Triangulation and NTriangulation into this class.
             - New routine findAllIsomorphisms().
+            - New routine isEmpty().
             - Made isoSig(), fromIsoSig() and isoSigComponentSize() public.
         Class NGluingPermSearcher:
             - Removed protected routine mayPurge(), since this behaviour is
@@ -232,6 +234,7 @@ Version 4.96  [ (under development) ]
               signed long to allow for error conditions to be returned.
             - New routine connectedSumWith() for building connected sums.
             - New routine isIdenticalTo().
+            - New routine isEmpty().
             - New local modification oneFourMove().
             - New routines findAllIsomorphisms() and makeCanonical().
             - Several isomorphism-related routines have been moved into

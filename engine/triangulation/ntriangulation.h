@@ -1005,6 +1005,8 @@ class REGINA_API NTriangulation : public NPacket,
          */
         /*@{*/
 
+        using NGenericTriangulation<3>::isEmpty;
+
         /**
          * Returns the Euler characteristic of this triangulation.
          * This will be evaluated strictly as \a V-E+F-T.

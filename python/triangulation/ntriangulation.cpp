@@ -276,6 +276,7 @@ void addNTriangulation() {
             &NTriangulation::hasTwoSphereBoundaryComponents)
         .def("hasNegativeIdealBoundaryComponents",
             &NTriangulation::hasNegativeIdealBoundaryComponents)
+        .def("isEmpty", &NTriangulation::isEmpty)
         .def("getEulerCharTri", &NTriangulation::getEulerCharTri)
         .def("getEulerCharManifold", &NTriangulation::getEulerCharManifold)
         .def("getEulerCharacteristic", &NTriangulation::getEulerCharacteristic)
