@@ -76,6 +76,7 @@ class EltMoveDialog : public QDialog, public regina::NPacketListener {
 
         EdgeChooser* box32;
         TriangleChooser* box23;
+        TetrahedronChooser* box14;
         EdgeIntChooser* box44;
         EdgeChooser* box20e;
         VertexChooser* box20v;
@@ -86,6 +87,7 @@ class EltMoveDialog : public QDialog, public regina::NPacketListener {
         EdgeChooser* boxCollapseEdge;
         QRadioButton* use32;
         QRadioButton* use23;
+        QRadioButton* use14;
         QRadioButton* use44;
         QRadioButton* use20e;
         QRadioButton* use20v;
