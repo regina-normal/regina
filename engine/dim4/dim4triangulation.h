@@ -816,6 +816,8 @@ class REGINA_API Dim4Triangulation : public NPacket,
          */
         /*@{*/
 
+        using NGenericTriangulation<4>::isEmpty;
+
         /**
          * Returns the Euler characteristic of this triangulation.
          * This will be evaluated strictly as \a V-E+F-T+P.

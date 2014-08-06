@@ -228,6 +228,7 @@ void addDim4Triangulation() {
         .def("makeCanonical", &Dim4Triangulation::makeCanonical)
         .def("isContainedIn", isContainedIn_ptr,
             return_value_policy<manage_new_object>())
+        .def("isEmpty", &Dim4Triangulation::isEmpty)
         .def("getEulerCharTri", &Dim4Triangulation::getEulerCharTri)
         .def("getEulerCharManifold", &Dim4Triangulation::getEulerCharManifold)
         .def("isValid", &Dim4Triangulation::isValid)
