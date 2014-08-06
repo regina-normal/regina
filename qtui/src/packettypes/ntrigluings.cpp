@@ -521,7 +521,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     connect(actDoubleCover, SIGNAL(triggered()), this, SLOT(doubleCover()));
 
     QAction* actDrillEdge = new QAction(this);
-    actDrillEdge->setText(tr("Drill ed&ge..."));
+    actDrillEdge->setText(tr("Drill Ed&ge..."));
     actDrillEdge->setIcon(ReginaSupport::regIcon("drilledge"));
     actDrillEdge->setToolTip(tr(
         "Drill out a regular neighbourhood of an edge"));
