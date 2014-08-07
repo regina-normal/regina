@@ -45,6 +45,8 @@
 #include "edittableview.h"
 #include "eltmovedialog.h"
 #include "ntrigluings.h"
+#include "packetchooser.h"
+#include "packetfilter.h"
 #include "patiencedialog.h"
 #include "reginamain.h"
 #include "reginaprefset.h"
@@ -547,10 +549,10 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     connect(actDrillEdge, SIGNAL(triggered()), this, SLOT(drillEdge()));
 
     QAction* actConnectedSumWith = new QAction(this);
-    actConnectedSumWith->setText(tr("Connect Sum With..."));
+    actConnectedSumWith->setText(tr("Connected Sum With..."));
     actConnectedSumWith->setIcon(ReginaSupport::regIcon("connectsumwith"));
     actConnectedSumWith->setToolTip(tr(
-        "Connect sum this with another triangulation"));
+        "Make this into a connected sum with another triangulation"));
     actConnectedSumWith->setEnabled(readWrite);
     actConnectedSumWith->setWhatsThis(tr("Forms the connected sum "
         "of this triangulation with some other triangulation.  "
@@ -896,6 +898,30 @@ void NTriGluingsUI::drillEdge() {
             tri->drillEdge(chosen);
         }
     }
+}
+
+void NTriGluingsUI::connectedSumWith() {
+    endEdit();
+
+    if (tri->isEmpty() || ! tri->isConnected()) {
+        ReginaSupport::info(ui,
+            tr("I can only make connected sums with "
+                "non-empty, connected triangulations."));
+        return;
+    }
+
+    regina::NTriangulation* other = static_cast<regina::NTriangulation*>(
+        PacketDialog::choose(ui,
+            tri->getTreeMatriarch(),
+            new SubclassFilter<regina::NTriangulation>(),
+            tr("Connected Sum"),
+            tr("Sum this with which other triangulation?"),
+            tr("Regina will form a connected sum of this triangulation "
+                "with whatever triangulation you choose here.  "
+                "The current triangulation will be modified directly.")));
+
+    if (other)
+        tri->connectedSumWith(*other);
 }
 
 void NTriGluingsUI::boundaryComponents() {
