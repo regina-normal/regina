@@ -41,6 +41,7 @@
 
 #include "packet/npacketlistener.h"
 
+#include <QDialog>
 #include <QComboBox>
 #include <vector>
 
@@ -123,7 +124,7 @@ class PacketChooser : public QComboBox, public regina::NPacketListener {
         PacketChooser(regina::NPacket* newSubtree, PacketFilter* newFilter,
                 RootRole useRootRole, QWidget* parent);
         PacketChooser(regina::NPacket* newSubtree, PacketFilter* newFilter,
-                RootRole useRootRole, bool allowNone = false,
+                RootRole useRootRole = ROOT_AS_SUBTREE, bool allowNone = false,
                 regina::NPacket* initialSelection = 0, QWidget* parent = 0);
         ~PacketChooser();
 
@@ -200,6 +201,43 @@ class PacketChooser : public QComboBox, public regina::NPacketListener {
          * chooser matches the current state of the packet tree.
          */
         bool verify();
+};
+
+/**
+ * A dialog used to select a single packet.
+ */
+class PacketDialog : public QDialog {
+    Q_OBJECT
+
+    private:
+        /**
+         * Internal components:
+         */
+        PacketChooser* chooser;
+
+    public:
+        /**
+         * Constructor and destructor.
+         */
+        PacketDialog(QWidget* parent,
+            regina::NPacket* subtree,
+            PacketFilter* filter,
+            const QString& title,
+            const QString& message,
+            const QString& whatsThis,
+            PacketChooser::RootRole rootRole = PacketChooser::ROOT_AS_SUBTREE,
+            bool allowNone = false,
+            regina::NPacket* initialSelection = 0);
+
+        static regina::NPacket* choose(QWidget* parent,
+            regina::NPacket* subtree,
+            PacketFilter* filter,
+            const QString& title,
+            const QString& message,
+            const QString& whatsThis,
+            PacketChooser::RootRole rootRole = PacketChooser::ROOT_AS_SUBTREE,
+            bool allowNone = false,
+            regina::NPacket* initialSelection = 0);
 };
 
 inline PacketFilter* PacketChooser::getFilter() {
