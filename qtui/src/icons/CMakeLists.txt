@@ -5,6 +5,7 @@ set (IMGS
   components
   cone
   connsum
+  connectedsumwith
   csvexport
   dehydrated
   doublecover
@@ -26,6 +27,7 @@ set (IMGS
   packet_text
   packet_triangulation
   packet_view
+  puncture
   python_console
   randomise
   regina
