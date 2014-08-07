@@ -550,7 +550,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     QAction* actConnectedSumWith = new QAction(this);
     actConnectedSumWith->setText(tr("Connected Sum With..."));
-    actConnectedSumWith->setIcon(ReginaSupport::regIcon("connectsumwith"));
+    actConnectedSumWith->setIcon(ReginaSupport::regIcon("connectedsumwith"));
     actConnectedSumWith->setToolTip(tr(
         "Make this into a connected sum with another triangulation"));
     actConnectedSumWith->setEnabled(readWrite);
