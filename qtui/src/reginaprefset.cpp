@@ -240,19 +240,19 @@ ReginaPrefSet::ReginaPrefSet() :
         pythonAutoIndent(true),
         pythonSpacesPerTab(4),
         pythonWordWrap(false),
-        snapPeaClosed(false),
         surfacesCompatThreshold(100),
         surfacesCreationCoords(regina::NS_STANDARD),
         surfacesCreationList(regina::NS_LIST_DEFAULT),
         surfacesInitialCompat(LocalCompat),
         surfacesSupportOriented(false),
-        surfacesSupportSpunBdry(false),
         treeJumpSize(10),
         tabDim2Tri(0),
         tabDim2TriSkeleton(0),
         tabDim3Tri(0),
         tabDim3TriAlgebra(0),
         tabDim3TriSkeleton(0),
+        tabSnapPeaTri(0),
+        tabSnapPeaTriAlgebra(0),
         tabSurfaceList(0),
         triGAPExec(defaultGAPExec),
         triGraphvizExec(defaultGraphvizExec),
@@ -485,7 +485,6 @@ void ReginaPrefSet::readInternal() {
     settings.endGroup();
 
     settings.beginGroup("SnapPea");
-    snapPeaClosed = settings.value("AllowClosed", false).toBool();
 #ifndef EXCLUDE_SNAPPEA
     regina::NSnapPeaTriangulation::enableKernelMessages(
         settings.value("KernelMessages", false).toBool());
@@ -507,7 +506,6 @@ void ReginaPrefSet::readInternal() {
         surfacesInitialCompat = ReginaPrefSet::LocalCompat; /* default */
 
     surfacesSupportOriented = settings.value("SupportOriented", false).toBool();
-    surfacesSupportSpunBdry = settings.value("SupportSpunBdry", false).toBool();
     settings.endGroup();
 
     settings.beginGroup("Tree");
@@ -520,6 +518,8 @@ void ReginaPrefSet::readInternal() {
     tabDim3Tri = settings.value("Dim3Tri", 0).toUInt();
     tabDim3TriAlgebra = settings.value("Dim3TriAlgebra", 0).toUInt();
     tabDim3TriSkeleton = settings.value("Dim3TriSkeleton", 0).toUInt();
+    tabSnapPeaTri = settings.value("SnapPeaTri", 0).toUInt();
+    tabSnapPeaTriAlgebra = settings.value("SnapPeaTriAlgebra", 0).toUInt();
     tabSurfaceList = settings.value("SurfaceList", 0).toUInt();
     settings.endGroup();
 
@@ -591,7 +591,6 @@ void ReginaPrefSet::saveInternal() const {
     settings.endGroup();
 
     settings.beginGroup("SnapPea");
-    settings.setValue("AllowClosed", snapPeaClosed);
 #ifndef EXCLUDE_SNAPPEA
     settings.setValue("KernelMessages",
         regina::NSnapPeaTriangulation::kernelMessagesEnabled());
@@ -613,7 +612,6 @@ void ReginaPrefSet::saveInternal() const {
     }
 
     settings.setValue("SupportOriented", surfacesSupportOriented);
-    settings.setValue("SupportSpunBdry", surfacesSupportSpunBdry);
     settings.endGroup();
 
     settings.beginGroup("Tabs");
@@ -622,6 +620,8 @@ void ReginaPrefSet::saveInternal() const {
     settings.setValue("Dim3Tri", tabDim3Tri);
     settings.setValue("Dim3TriAlgebra", tabDim3TriAlgebra);
     settings.setValue("Dim3TriSkeleton", tabDim3TriSkeleton);
+    settings.setValue("SnapPeaTri", tabSnapPeaTri);
+    settings.setValue("SnapPeaTriAlgebra", tabSnapPeaTriAlgebra);
     settings.setValue("SurfaceList", tabSurfaceList);
     settings.endGroup();
 

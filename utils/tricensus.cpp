@@ -709,7 +709,7 @@ int runCensus() {
     if (sigs) {
         sigStream.close();
     } else {
-        if (! regina::writeXMLFile(outFile.c_str(), parent)) {
+        if (! parent->save(outFile.c_str())) {
             std::cerr << "Output file " << outFile
                 << " could not be written.\n";
             return 1;

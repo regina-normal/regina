@@ -117,7 +117,7 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
     label->setWhatsThis(msg);
     isoSelectArea->addWidget(label);
     isoTest = new PacketChooser(tri->getTreeMatriarch(),
-        new SingleTypeFilter<NTriangulation>(),
+        new SubclassFilter<NTriangulation>(),
         PacketChooser::ROOT_AS_PACKET, true, 0, ui);
     isoTest->setAutoUpdate(true);
     isoTest->setWhatsThis(msg);
@@ -245,12 +245,6 @@ void NTriCompositionUI::refresh() {
         }
     }
     details->setRootIsDecorated(foundInnerChildren);
-}
-
-void NTriCompositionUI::editingElsewhere() {
-    details->clear();
-    (new QTreeWidgetItem(details))->setText(0,tr("Editing..."));
-    details->setRootIsDecorated(false);
 }
 
 void NTriCompositionUI::packetToBeDestroyed(regina::NPacket*) {

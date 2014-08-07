@@ -6,6 +6,7 @@ SET ( FILES
   eltmovedialog
   facetgraphtab
   gaprunner
+  groupwidget
   nanglestructurecreator
   nanglestructureui
   ncompatcanvas
@@ -14,6 +15,12 @@ SET ( FILES
   nnormalsurfaceui
   npdfui
   nscriptui
+  nsnappeaalgebra
+  nsnappeacreator
+  nsnappeafile
+  nsnappeagluings
+  nsnappeashapes
+  nsnappeaui
   nsurfacecompatui
   nsurfacecoordinateui
   nsurfacefiltercomb
@@ -36,13 +43,19 @@ SET ( MOC_FILES
   dim2trigluings.h
   dim2triskeleton.h
   dim2triui.h
-  facetgraphtab.h
-  nanglestructureui.h
-  gaprunner.h
   eltmovedialog.h
+  facetgraphtab.h
+  gaprunner.h
+  groupwidget.h
+  nanglestructureui.h
   ncompatcanvas.h
   nnormalsurfaceui.h
   nscriptui.h
+  nsnappeacreator.h
+  nsnappeafile.h
+  nsnappeagluings.h
+  nsnappeashapes.h
+  nsnappeaui.h
   nsurfacecompatui.h
   nsurfacecoordinateui.h
   nsurfacefiltercomb.h

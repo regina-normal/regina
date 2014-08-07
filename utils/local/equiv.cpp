@@ -505,7 +505,7 @@ int main(int argc, const char* argv[]) {
     poptFreeContext(optCon);
 
     // Read the data file.
-    if (! (tree = readXMLFile(filename.c_str()))) {
+    if (! (tree = open(filename.c_str()))) {
         fprintf(stderr, "ERROR: Could not read data from %s.\n",
             filename.c_str());
         return 1;
@@ -517,7 +517,7 @@ int main(int argc, const char* argv[]) {
     // Are we saving results?
     if (outFile && newTree) {
         fprintf(stderr, "\nSaving results to %s...\n", outFile);
-        writeXMLFile(outFile, newTree);
+        newTree->save(outFile);
     } else
         fprintf(stderr, "\nNot saving results.\n");
 

@@ -47,6 +47,7 @@
 #include "packettypes/nnormalsurfaceui.h"
 #include "packettypes/npdfui.h"
 #include "packettypes/nscriptui.h"
+#include "packettypes/nsnappeaui.h"
 #include "packettypes/nsurfacefiltercomb.h"
 #include "packettypes/nsurfacefilterprop.h"
 #include "packettypes/ntextui.h"
@@ -80,6 +81,8 @@ QIcon PacketManager::icon(NPacket* packet, bool allowLock) {
     }
     else if (packet->getPacketType() == NScript::packetType)
         id = IconCache::packet_script;
+    else if (packet->getPacketType() == NSnapPeaTriangulation::packetType)
+        id = IconCache::packet_snappea;
     else if (packet->getPacketType() == NNormalSurfaceList::packetType)
         id = IconCache::packet_surfaces;
     else if (packet->getPacketType() == NText::packetType)
@@ -113,6 +116,10 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
             enclosingPane);
     if (packet->getPacketType() == NScript::packetType) {
         return new NScriptUI(dynamic_cast<NScript*>(packet), enclosingPane);
+    }
+    if (packet->getPacketType() == NSnapPeaTriangulation::packetType) {
+        return new NSnapPeaUI(dynamic_cast<NSnapPeaTriangulation*>(packet),
+            enclosingPane);
     }
     if (packet->getPacketType() == NSurfaceFilter::packetType) {
         if (((NSurfaceFilter*)packet)->getFilterType() ==

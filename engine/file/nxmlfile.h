@@ -35,6 +35,9 @@
 /*! \file file/nxmlfile.h
  *  \brief Deals with storing program data (including packet trees)
  *  in XML data files.
+ *
+ *  \deprecated The global functions that were once declared in this file have
+ *  been renamed, and are now declared in npacket.h.
  */
 
 #ifndef __NXMLFILE_H
@@ -44,6 +47,7 @@
 
 #include <string>
 #include "regina-core.h"
+#include "packet/npacket.h"
 
 namespace regina {
 
@@ -56,69 +60,51 @@ class NPacket;
  */
 
 /**
- * Writes the subtree with the given packet as matriarch to disk as a
- * complete XML file.  The XML file may be optionally compressed.
+ * Deprecated routine that writes a packet tree (or subtree) to a Regina
+ * data file using Regina's native XML file format.
  *
- * This is the preferred way of writing a packet tree to file.
- *
- * \pre The given packet does not depend on its parent.
- *
- * \i18n This routine makes no assumptions about the
- * \ref i18n "character encoding" used in the given file \e name, and simply
- * passes it through unchanged to low-level C/C++ file I/O routines.
- *
- * @param fileName the pathname of the file to write to.
- * @param subtree the matriarch of the packet tree that should be written.
- * @param compressed \c true if the XML file should be compressed or
- * \c false if it should be stored as plain text.
- * @return \c true if and only if the packet subtree was successfully
- * written.
+ * \deprecated This routine has been renamed as NPacket::save().
+ * See the documentation of NPacket::save() for further details.
  */
-REGINA_API bool writeXMLFile(const char* fileName, NPacket* subtree,
+REGINA_API bool writeXMLFile(const char* filename, NPacket* subtree,
     bool compressed = true);
 
 /**
- * Reads the packet tree stored in the given XML file.  It does not
- * matter whether the XML file is compressed.
+ * Deprecated routine that reads a packet tree from the given Regina
+ * data file using Regina's native XML file format.
  *
- * If the matriarch of the packet tree could not be read, this routine
- * will return 0.  If a lower-level packet could not be read, it (and
- * its descendants) will simply be ignored.
- *
- * \i18n This routine makes no assumptions about the
- * \ref i18n "character encoding" used in the given file \e name, and simply
- * passes it through unchanged to low-level C/C++ file I/O routines.
- *
- * @param fileName the pathname of the file to read from.
- * @return the packet tree read from file, or 0 if problems were
- * encountered or the file could not be opened.
+ * \deprecated This routine has been renamed as regina::open(), and is
+ * now declared in npacket.h.  See the documentation for regina::open()
+ * for further details.
  */
-REGINA_API NPacket* readXMLFile(const char* fileName);
+REGINA_API NPacket* readXMLFile(const char* filename);
 
 /**
- * Reads a packet tree from a file whose format is unknown.
+ * Deprecated routine that reads a packet tree from the given Regina
+ * data file using Regina's native XML file format.
  *
- * As of Regina 4.94, old-style binary files are no longer supported.
- * This means that the file must be in XML format (optionally compressed).
- * In other words, this routine now behaves identically to readXMLFile().
- *
- * If the matriarch of the packet tree could not be read, this routine
- * will return 0.  If a lower-level packet could not be read, it (and
- * its descendants) will simply be ignored.
- *
- * The given file might be opened and closed multiple times during this routine.
- *
- * \i18n This routine makes no assumptions about the
- * \ref i18n "character encoding" used in the given file \e name, and simply
- * passes it through unchanged to low-level C/C++ file I/O routines.
- *
- * @param fileName the pathname of the file to read from.
- * @return the packet tree read from file, or 0 if problems were
- * encountered or the file could not be opened.
+ * \deprecated This routine has been renamed as regina::open(), and is
+ * now declared in npacket.h.  See the documentation for regina::open()
+ * for further details.
  */
-REGINA_API NPacket* readFileMagic(const std::string& fileName);
+REGINA_API NPacket* readFileMagic(const std::string& filename);
 
 /*@}*/
+
+// Inline functions:
+
+inline bool writeXMLFile(const char* filename, NPacket* subtree,
+        bool compressed) {
+    return subtree->save(filename, compressed);
+}
+
+inline NPacket* readXMLFile(const char* filename) {
+    return regina::open(filename);
+}
+
+inline NPacket* readFileMagic(const std::string& filename) {
+    return regina::open(filename.c_str());
+}
 
 } // namespace regina
 

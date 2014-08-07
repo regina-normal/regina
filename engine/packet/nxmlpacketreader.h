@@ -42,7 +42,7 @@
 #endif
 
 #include "regina-core.h"
-#include "file/nxmlelementreader.h"
+#include "utilities/nxmlelementreader.h"
 
 namespace regina {
 

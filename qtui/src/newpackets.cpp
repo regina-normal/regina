@@ -35,7 +35,7 @@
 #include "packet/ncontainer.h"
 #include "packet/nscript.h"
 #include "packet/ntext.h"
-#include "triangulation/ntriangulation.h"
+#include "snappea/nsnappeatriangulation.h"
 
 #include "newpacketdialog.h"
 #include "packetcreator.h"
@@ -47,10 +47,11 @@
 #include "packettypes/nnormalsurfacecreator.h"
 #include "packettypes/nsurfacefiltercreator.h"
 #include "packettypes/ntriangulationcreator.h"
+#include "packettypes/nsnappeacreator.h"
 
 void ReginaMain::newAngleStructures() {
     newPacket(new NAngleStructureCreator(),
-        new SingleTypeFilter<regina::NTriangulation>(),
+        new SubclassFilter<regina::NTriangulation>(),
         tr("New Angle Structure Solutions"), tr("Angle Structures"));
 }
 
@@ -71,7 +72,7 @@ void ReginaMain::newFilter() {
 
 void ReginaMain::newNormalSurfaces() {
     newPacket(new NNormalSurfaceCreator(),
-        new SingleTypeFilter<regina::NTriangulation>(),
+        new SubclassFilter<regina::NTriangulation>(),
         tr("New Normal Surface List"), tr("Normal Surfaces"));
 }
 
@@ -83,6 +84,11 @@ void ReginaMain::newPDF() {
 void ReginaMain::newScript() {
     newPacket(new BasicPacketCreator<regina::NScript>(), 0,
         tr("New Script"), tr("Script"));
+}
+
+void ReginaMain::newSnapPeaTriangulation() {
+    newPacket(new NSnapPeaTriangulationCreator(this), 0,
+        tr("New SnapPea Triangulation"), tr("SnapPea Triangulation"));
 }
 
 void ReginaMain::newText() {

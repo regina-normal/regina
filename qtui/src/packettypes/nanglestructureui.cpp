@@ -230,9 +230,6 @@ void NAngleStructureUI::refresh() {
 
     // Rebuild the table.
     model->rebuild();
-
-    // Tidy up.
-    setDirty(false);
 }
 
 void NAngleStructureUI::refreshHeader() {

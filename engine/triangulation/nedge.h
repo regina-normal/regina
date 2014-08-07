@@ -117,9 +117,9 @@ REGINA_API extern const int edgeEnd[6];
  */
 class REGINA_API NEdgeEmbedding {
     private:
-        NTetrahedron* tetrahedron;
+        NTetrahedron* tetrahedron_;
             /**< The tetrahedron in which this edge is contained. */
-        int edge;
+        int edge_;
             /**< The edge number of the tetrahedron that is this edge. */
 
     public:
@@ -283,15 +283,15 @@ class REGINA_API NEdge : public ShareableObject, public NMarkedElement {
         static const NPerm4 ordering[6];
 
     private:
-        std::deque<NEdgeEmbedding> embeddings;
+        std::deque<NEdgeEmbedding> embeddings_;
             /**< A list of descriptors telling how this edge forms a part of
                  each individual tetrahedron that it belongs to. */
-        NComponent* component;
+        NComponent* component_;
             /**< The component that this edge is a part of. */
-        NBoundaryComponent* boundaryComponent;
+        NBoundaryComponent* boundaryComponent_;
             /**< The boundary component that this edge is a part of,
                  or 0 if this edge is internal. */
-        bool valid;
+        bool valid_;
             /**< Is this edge valid? */
 
     public:
@@ -299,6 +299,15 @@ class REGINA_API NEdge : public ShareableObject, public NMarkedElement {
          * Default destructor.
          */
         ~NEdge();
+
+        /**
+         * Returns the index of this edge in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->edgeIndex(this)</tt>.
+         *
+         * @return the index of this edge.
+         */
+        unsigned long index() const;
 
         /**
          * Returns the list of descriptors detailing how this edge forms a
@@ -423,52 +432,56 @@ namespace regina {
 
 // Inline functions for NEdge
 
-inline NEdge::NEdge(NComponent* myComponent) : component(myComponent),
-        boundaryComponent(0), valid(true) {
+inline NEdge::NEdge(NComponent* myComponent) : component_(myComponent),
+        boundaryComponent_(0), valid_(true) {
 }
 
 inline NEdge::~NEdge() {
 }
 
+inline unsigned long NEdge::index() const {
+    return markedIndex();
+}
+
 inline NTriangulation* NEdge::getTriangulation() const {
-    return embeddings.front().getTetrahedron()->getTriangulation();
+    return embeddings_.front().getTetrahedron()->getTriangulation();
 }
 
 inline NComponent* NEdge::getComponent() const {
-    return component;
+    return component_;
 }
 
 inline NBoundaryComponent* NEdge::getBoundaryComponent() const {
-    return boundaryComponent;
+    return boundaryComponent_;
 }
 
 inline NVertex* NEdge::getVertex(int vertex) const {
-    return embeddings.front().getTetrahedron()->getVertex(
-        embeddings.front().getVertices()[vertex]);
+    return embeddings_.front().getTetrahedron()->getVertex(
+        embeddings_.front().getVertices()[vertex]);
 }
 
 inline unsigned long NEdge::getDegree() const {
-    return embeddings.size();
+    return embeddings_.size();
 }
 
 inline bool NEdge::isBoundary() const {
-    return (boundaryComponent != 0);
+    return (boundaryComponent_ != 0);
 }
 
 inline bool NEdge::isValid() const {
-    return valid;
+    return valid_;
 }
 
 inline const std::deque<NEdgeEmbedding> & NEdge::getEmbeddings() const {
-    return embeddings;
+    return embeddings_;
 }
 
 inline unsigned long NEdge::getNumberOfEmbeddings() const {
-    return embeddings.size();
+    return embeddings_.size();
 }
 
 inline const NEdgeEmbedding& NEdge::getEmbedding(unsigned long index) const {
-    return embeddings[index];
+    return embeddings_[index];
 }
 
 inline void NEdge::writeTextShort(std::ostream& out) const {
@@ -476,42 +489,42 @@ inline void NEdge::writeTextShort(std::ostream& out) const {
         << "edge of degree " << getNumberOfEmbeddings();
 }
 
-inline NEdgeEmbedding::NEdgeEmbedding() : tetrahedron(0) {
+inline NEdgeEmbedding::NEdgeEmbedding() : tetrahedron_(0) {
 }
 
 inline NEdgeEmbedding::NEdgeEmbedding(const NEdgeEmbedding& cloneMe) :
-        tetrahedron(cloneMe.tetrahedron), edge(cloneMe.edge) {
+        tetrahedron_(cloneMe.tetrahedron_), edge_(cloneMe.edge_) {
 }
 
 inline NEdgeEmbedding::NEdgeEmbedding(NTetrahedron* newTet, int newEdge) :
-        tetrahedron(newTet), edge(newEdge) {
+        tetrahedron_(newTet), edge_(newEdge) {
 }
 
 inline NEdgeEmbedding& NEdgeEmbedding::operator =
         (const NEdgeEmbedding& cloneMe) {
-    tetrahedron = cloneMe.tetrahedron;
-    edge = cloneMe.edge;
+    tetrahedron_ = cloneMe.tetrahedron_;
+    edge_ = cloneMe.edge_;
     return *this;
 }
 
 inline NTetrahedron* NEdgeEmbedding::getTetrahedron() const {
-    return tetrahedron;
+    return tetrahedron_;
 }
 
 inline int NEdgeEmbedding::getEdge() const {
-    return edge;
+    return edge_;
 }
 
 inline NPerm4 NEdgeEmbedding::getVertices() const {
-    return tetrahedron->getEdgeMapping(edge);
+    return tetrahedron_->getEdgeMapping(edge_);
 }
 
 inline bool NEdgeEmbedding::operator == (const NEdgeEmbedding& other) const {
-    return ((tetrahedron == other.tetrahedron) && (edge == other.edge));
+    return ((tetrahedron_ == other.tetrahedron_) && (edge_ == other.edge_));
 }
 
 inline bool NEdgeEmbedding::operator != (const NEdgeEmbedding& other) const {
-    return ((tetrahedron != other.tetrahedron) || (edge != other.edge));
+    return ((tetrahedron_ != other.tetrahedron_) || (edge_ != other.edge_));
 }
 
 } // namespace regina

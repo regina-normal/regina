@@ -44,6 +44,7 @@ void addDim2BoundaryComponent() {
     class_<Dim2BoundaryComponent, bases<regina::ShareableObject>,
             std::auto_ptr<Dim2BoundaryComponent>, boost::noncopyable>
             ("Dim2BoundaryComponent", no_init)
+        .def("index", &Dim2BoundaryComponent::index)
         .def("getNumberOfEdges", &Dim2BoundaryComponent::getNumberOfEdges)
         .def("getNumberOfVertices", &Dim2BoundaryComponent::getNumberOfVertices)
         .def("getEdge", &Dim2BoundaryComponent::getEdge,

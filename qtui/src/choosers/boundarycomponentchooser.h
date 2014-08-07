@@ -94,6 +94,9 @@ class BoundaryComponentChooser :
          * when using this setting, since if the triangulation changes
          * but the chooser is \e not refreshed, then selected() may end
          * up returning an invalid pointer.
+         *
+         * The given filter may be 0, in which case every boundary component
+         * will be offered.
          */
         BoundaryComponentChooser(regina::NTriangulation* tri,
                 BoundaryComponentFilterFunc filter, QWidget* parent,

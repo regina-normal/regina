@@ -679,6 +679,8 @@ class REGINA_API Dim2Triangulation : public NPacket,
          */
         /*@{*/
 
+        using NGenericTriangulation<2>::isEmpty;
+
         /**
          * Always returns \c true.
          *

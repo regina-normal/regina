@@ -125,7 +125,7 @@ void NHomGroupPresentation::writeTextLong(std::ostream& out) const
         if (range_->getNumberOfGenerators()<=26) map_[i]->writeText(out, true);
         else map_[i]->writeText(out, false);
     }
-    out<<"]";
+    out<<"] ";
 
     out<<"range ";
     range_->writeTextCompact(out);

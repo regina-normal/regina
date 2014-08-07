@@ -161,73 +161,74 @@ class REGINA_API NTriangulation : public NPacket,
             /**< A map from (r, whichRoot) pairs to Turaev-Viro invariants. */
 
     private:
-        mutable bool calculatedSkeleton;
+        mutable bool calculatedSkeleton_;
             /**< Has the skeleton been calculated? */
 
-        NMarkedVector<NTetrahedron> tetrahedra;
+        NMarkedVector<NTetrahedron> tetrahedra_;
             /**< The tetrahedra that form the triangulation. */
-        mutable NMarkedVector<NTriangle> triangles;
+        mutable NMarkedVector<NTriangle> triangles_;
             /**< The triangles in the triangulation skeleton. */
-        mutable NMarkedVector<NEdge> edges;
+        mutable NMarkedVector<NEdge> edges_;
             /**< The edges in the triangulation skeleton. */
-        mutable NMarkedVector<NVertex> vertices;
+        mutable NMarkedVector<NVertex> vertices_;
             /**< The vertices in the triangulation skeleton. */
-        mutable NMarkedVector<NComponent> components;
+        mutable NMarkedVector<NComponent> components_;
             /**< The components that form the triangulation. */
-        mutable NMarkedVector<NBoundaryComponent> boundaryComponents;
+        mutable NMarkedVector<NBoundaryComponent> boundaryComponents_;
             /**< The components that form the boundary of the
                  triangulation. */
 
-        mutable bool valid;
+        mutable bool valid_;
             /**< Is the triangulation valid? */
-        mutable bool ideal;
+        mutable bool ideal_;
             /**< Is the triangulation ideal? */
-        mutable bool standard;
+        mutable bool standard_;
             /**< Is the triangulation standard? */
-        mutable bool orientable;
+        mutable bool orientable_;
             /**< Is the triangulation orientable? */
 
-        mutable NProperty<NGroupPresentation, StoreManagedPtr> fundamentalGroup;
+        mutable NProperty<NGroupPresentation, StoreManagedPtr>
+                fundamentalGroup_;
             /**< Fundamental group of the triangulation. */
-        mutable NProperty<NAbelianGroup, StoreManagedPtr> H1;
+        mutable NProperty<NAbelianGroup, StoreManagedPtr> H1_;
             /**< First homology group of the triangulation. */
-        mutable NProperty<NAbelianGroup, StoreManagedPtr> H1Rel;
+        mutable NProperty<NAbelianGroup, StoreManagedPtr> H1Rel_;
             /**< Relative first homology group of the triangulation
              *   with respect to the boundary. */
-        mutable NProperty<NAbelianGroup, StoreManagedPtr> H1Bdry;
+        mutable NProperty<NAbelianGroup, StoreManagedPtr> H1Bdry_;
             /**< First homology group of the boundary. */
-        mutable NProperty<NAbelianGroup, StoreManagedPtr> H2;
+        mutable NProperty<NAbelianGroup, StoreManagedPtr> H2_;
             /**< Second homology group of the triangulation. */
 
-        mutable NProperty<bool> twoSphereBoundaryComponents;
+        mutable NProperty<bool> twoSphereBoundaryComponents_;
             /**< Does the triangulation contain any 2-sphere boundary
                  components? */
-        mutable NProperty<bool> negativeIdealBoundaryComponents;
+        mutable NProperty<bool> negativeIdealBoundaryComponents_;
             /**< Does the triangulation contain any boundary components
                  that are ideal and have negative Euler characteristic? */
 
-        mutable NProperty<bool> zeroEfficient;
+        mutable NProperty<bool> zeroEfficient_;
             /**< Is the triangulation zero-efficient? */
-        mutable NProperty<bool> splittingSurface;
+        mutable NProperty<bool> splittingSurface_;
             /**< Does the triangulation have a normal splitting surface? */
 
-        mutable NProperty<bool> threeSphere;
+        mutable NProperty<bool> threeSphere_;
             /**< Is this a triangulation of a 3-sphere? */
-        mutable NProperty<bool> threeBall;
+        mutable NProperty<bool> threeBall_;
             /**< Is this a triangulation of a 3-dimensional ball? */
-        mutable NProperty<bool> solidTorus;
+        mutable NProperty<bool> solidTorus_;
             /**< Is this a triangulation of the solid torus? */
-        mutable NProperty<bool> irreducible;
+        mutable NProperty<bool> irreducible_;
             /**< Is this 3-manifold irreducible? */
-        mutable NProperty<bool> compressingDisc;
+        mutable NProperty<bool> compressingDisc_;
             /**< Does this 3-manifold contain a compressing disc? */
-        mutable NProperty<bool> haken;
+        mutable NProperty<bool> haken_;
             /**< Is this 3-manifold Haken?
                  This property must only be stored for triangulations
                  that are known to represent closed, connected,
                  orientable, irreducible 3-manifolds. */
 
-        mutable TuraevViroSet turaevViroCache;
+        mutable TuraevViroSet turaevViroCache_;
             /**< The set of Turaev-Viro invariants that have already
                  been calculated. */
 
@@ -269,6 +270,12 @@ class REGINA_API NTriangulation : public NPacket,
          *
          * If Regina cannot interpret the given string, this will be
          * left as the empty triangulation.
+         *
+         * \warning If you pass the contents of a SnapPea data file,
+         * then only the tetrahedron gluings will be read; all other
+         * SnapPea-specific information (such as peripheral curves) will
+         * be lost.  See fromSnapPea() for details, and for other
+         * alternatives that preserve SnapPea-specific data.
          *
          * @param description a string that describes a 3-manifold
          * triangulation.
@@ -998,6 +1005,8 @@ class REGINA_API NTriangulation : public NPacket,
          */
         /*@{*/
 
+        using NGenericTriangulation<3>::isEmpty;
+
         /**
          * Returns the Euler characteristic of this triangulation.
          * This will be evaluated strictly as \a V-E+F-T.
@@ -1208,6 +1217,13 @@ class REGINA_API NTriangulation : public NPacket,
          *
          * \pre This triangulation has at most one component.
          *
+         * \warning As with every routine implemented by Regina's
+         * NTriangulation class, if you are calling this from the subclass
+         * NSnapPeaTriangulation then <b>any fillings on the cusps will be
+         * ignored</b>.  If you wish to compute the fundamental group with
+         * fillings, call NSnapPeaTriangulation::fundamentalGroupFilled()
+         * instead.
+         *
          * @return the fundamental group.
          */
         const NGroupPresentation& getFundamentalGroup() const;
@@ -1257,6 +1273,12 @@ class REGINA_API NTriangulation : public NPacket,
          *
          * Note that this triangulation is not required to be valid
          * (see isValid()).
+         *
+         * \warning As with every routine implemented by Regina's
+         * NTriangulation class, if you are calling this from the subclass
+         * NSnapPeaTriangulation then <b>any fillings on the cusps will
+         * be ignored</b>.  If you wish to compute homology with fillings,
+         * call NSnapPeaTriangulation::homologyFilled() instead.
          *
          * @return the first homology group.
          */
@@ -1565,7 +1587,9 @@ class REGINA_API NTriangulation : public NPacket,
          * Note that the triangle pointers returned will become invalid once
          * the triangulation has changed.
          *
-         * \ifacespython Not present.
+         * \ifacespython This routine takes no arguments.  Instead it
+         * returns the maximal forest as a Python list of NTriangle
+         * objects, sorted by triangle index.
          *
          * @param triangleSet the set to be emptied and into which the
          * triangles representing the maximal forest will be placed.
@@ -3119,26 +3143,195 @@ class REGINA_API NTriangulation : public NPacket,
         std::string dumpConstruction() const;
 
         /**
-         * Returns a string containing the full contents of a SnapPea
-         * data file that describes this triangulation.  This string
-         * can, for instance, be used to pass the triangulation to SnapPy
-         * without writing to the filesystem.
+         * Returns a string containing the full contents of a SnapPea data
+         * file that describes this triangulation.  In particular, this string
+         * can be used in a Python session to pass the triangulation directly
+         * to SnapPy (without writing to the filesystem).
          *
-         * If you wish to export a triangulation to a SnapPea \e file,
-         * you should use the global function writeSnapPea() instead
-         * (which has better performance, and does not require you to
-         * construct an enormous intermediate string).
+         * Regarding what gets stored in the SnapPea data file:
          *
-         * For details on how the SnapPea file will be constructed and
-         * what will be included, see the documentation for writeSnapPea().
+         * - If you are calling this from one of Regina's own NTriangulation
+         *   objects, then only the tetrahedron gluings and the manifold name
+         *   will be stored (the name will be derived from the packet label).
+         *   All other SnapPea-specific information (such as peripheral curves)
+         *   will be marked as unknown (since Regina does not track such
+         *   information itself), and of course other Regina-specific
+         *   information (such as the Turaev-Viro invariants) will not
+         *   be written to the SnapPea file at all.
          *
-         * \pre This triangulation is not invalid, and does not contain
-         * any boundary triangles.
+         * - If you are calling this from the subclass NSnapPeaTriangulation,
+         *   then all additional SnapPea-specific information will be written
+         *   to the file (indeed, the SnapPea kernel itself will be used to
+         *   produce the file contents).
+         *
+         * If you wish to export a triangulation to a SnapPea \e file, you
+         * should call saveSnapPea() instead (which has better performance, and
+         * does not require you to construct an enormous intermediate string).
+         *
+         * If this triangulation is empty, invalid, or contains boundary
+         * triangles (which SnapPea cannot represent), then the resulting
+         * string will be empty.
          *
          * @return a string containing the contents of the corresponding
          * SnapPea data file.
          */
-        std::string snapPea() const;
+        virtual std::string snapPea() const;
+
+        /**
+         * Writes the full contents of a SnapPea data file describing this
+         * triangulation to the given output stream.
+         *
+         * Regarding what gets stored in the SnapPea data file:
+         *
+         * - If you are calling this from one of Regina's own NTriangulation
+         *   objects, then only the tetrahedron gluings and the manifold name
+         *   will be stored (the name will be derived from the packet label).
+         *   All other SnapPea-specific information (such as peripheral curves)
+         *   will be marked as unknown (since Regina does not track such
+         *   information itself), and of course other Regina-specific
+         *   information (such as the Turaev-Viro invariants) will not
+         *   be written to the SnapPea file at all.
+         *
+         * - If you are calling this from the subclass NSnapPeaTriangulation,
+         *   then all additional SnapPea-specific information will be written
+         *   to the file (indeed, the SnapPea kernel itself will be used to
+         *   produce the file contents).
+         *
+         * If you wish to extract the SnapPea data file as a string, you should
+         * call the zero-argument routine snapPea() instead.  If you wish to
+         * write to a real SnapPea data file on the filesystem, you should call
+         * saveSnapPea() (which is also available in Python).
+         *
+         * If this triangulation is empty, invalid, or contains boundary
+         * triangles (which SnapPea cannot represent), then nothing will
+         * be written to the output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which the SnapPea data file
+         * will be written.
+         */
+        virtual void snapPea(std::ostream& out) const;
+
+        /**
+         * Writes this triangulation to the given file using SnapPea's
+         * native file format.
+         *
+         * Regarding what gets stored in the SnapPea data file:
+         *
+         * - If you are calling this from one of Regina's own NTriangulation
+         *   objects, then only the tetrahedron gluings and the manifold name
+         *   will be stored (the name will be derived from the packet label).
+         *   All other SnapPea-specific information (such as peripheral curves)
+         *   will be marked as unknown (since Regina does not track such
+         *   information itself), and of course other Regina-specific
+         *   information (such as the Turaev-Viro invariants) will not
+         *   be written to the SnapPea file at all.
+         *
+         * - If you are calling this from the subclass NSnapPeaTriangulation,
+         *   then all additional SnapPea-specific information will be written
+         *   to the file (indeed, the SnapPea kernel itself will be used to
+         *   produce the file contents).
+         *
+         * If this triangulation is empty, invalid, or contains boundary
+         * triangles (which SnapPea cannot represent), then the file
+         * will not be written and this routine will return \c false.
+         *
+         * \i18n This routine makes no assumptions about the
+         * \ref i18n "character encoding" used in the given file \e name, and
+         * simply passes it through unchanged to low-level C/C++ file I/O
+         * routines.  The \e contents of the file will be written using UTF-8.
+         *
+         * @param filename the name of the SnapPea file to which to write.
+         * @return \c true if and only if the file was successfully written.
+         */
+        virtual bool saveSnapPea(const char* filename) const;
+
+        /**
+         * Returns a string that expresses this triangulation in
+         * Matveev's 3-manifold recogniser format.
+         *
+         * \pre This triangulation is not invalid, and does not contain
+         * any boundary triangles.
+         *
+         * @return a string containing the 3-manifold recogniser data.
+         */
+        std::string recogniser() const;
+
+        /**
+         * A synonym for recogniser().  This returns a string that
+         * expresses this triangulation in Matveev's 3-manifold
+         * recogniser format.
+         *
+         * \pre This triangulation is not invalid, and does not contain
+         * any boundary triangles.
+         *
+         * @return a string containing the 3-manifold recogniser data.
+         */
+        std::string recognizer() const;
+
+        /**
+         * Writes a string expressing this triangulation in Matveev's
+         * 3-manifold recogniser format to the given output stream.
+         *
+         * \pre This triangulation is not invalid, and does not contain
+         * any boundary triangles.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which the recogniser data file
+         * will be written.
+         */
+        void recogniser(std::ostream& out) const;
+
+        /**
+         * A synonym for recognizer(std::ostream&).  This writes
+         * a string expressing this triangulation in Matveev's
+         * 3-manifold recogniser format to the given output stream.
+         *
+         * \pre This triangulation is not invalid, and does not contain
+         * any boundary triangles.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which the recogniser data file
+         * will be written.
+         */
+        void recognizer(std::ostream& out) const;
+
+        /**
+         * Writes this triangulation to the given file in Matveev's
+         * 3-manifold recogniser format.
+         *
+         * \pre This triangulation is not invalid, and does not contain
+         * any boundary triangles.
+         *
+         * \i18n This routine makes no assumptions about the
+         * \ref i18n "character encoding" used in the given file \e name, and
+         * simply passes it through unchanged to low-level C/C++ file I/O
+         * routines.  The \e contents of the file will be written using UTF-8.
+         *
+         * @param filename the name of the Recogniser file to which to write.
+         * @return \c true if and only if the file was successfully written.
+         */
+        bool saveRecogniser(const char* filename) const;
+
+        /**
+         * A synonym for saveRecogniser().  This writes this triangulation to
+         * the given file in Matveev's 3-manifold recogniser format.
+         *
+         * \pre This triangulation is not invalid, and does not contain
+         * any boundary triangles.
+         *
+         * \i18n This routine makes no assumptions about the
+         * \ref i18n "character encoding" used in the given file \e name, and
+         * simply passes it through unchanged to low-level C/C++ file I/O
+         * routines.  The \e contents of the file will be written using UTF-8.
+         *
+         * @param filename the name of the Recogniser file to which to write.
+         * @return \c true if and only if the file was successfully written.
+         */
+        bool saveRecognizer(const char* filename) const;
 
         /*@}*/
         /**
@@ -3195,25 +3388,33 @@ class REGINA_API NTriangulation : public NPacket,
         using NGenericTriangulation<3>::isoSigComponentSize;
 
         /**
-         * Extracts a triangulation from a string that contains the
-         * full contents of a SnapPea data file.  This routine could,
-         * for instance, be used to receive a triangulation from SnapPy
-         * without writing to the filesystem.
+         * Extracts the tetrahedron gluings from a string that contains the
+         * full contents of a SnapPea data file.  All other SnapPea-specific
+         * information (such as peripheral curves) will be ignored, since
+         * Regina's NTriangulation class does not track such information itself.
          *
-         * If you wish to read a triangulation from a SnapPea \e file,
-         * you should use the global function readSnapPea() instead
-         * (which has better performance, and does not require you to
-         * construct an enormous intermediate string).
+         * If you wish to preserve all SnapPea-specific information from the
+         * data file, you should work with the NSnapPeaTriangulation class
+         * instead (which uses the SnapPea kernel directly, and can therefore
+         * store anything that SnapPea can).
          *
-         * For details on how the triangulation will be extracted,
-         * see the documentation for readSnapPea().
+         * If you wish to read a triangulation from a SnapPea \e file, you
+         * should likewise call the NSnapPeaTriangulation constructor, giving
+         * the filename as argument.  This will read all SnapPea-specific
+         * information (as described above), and also avoids constructing an
+         * enormous intermediate string.
          *
          * The triangulation that is returned will be newly created.
          * If the SnapPea data is not in the correct format, this
          * routine will return 0 instead.
          *
-         * \pre The first two lines of the SnapPea file each contain at
-         * most 1000 characters.
+         * \warning This routine is "lossy", in that drops SnapPea-specific
+         * information (as described above).  Unless you specifically need an
+         * NTriangulation (not an NSnapPeaTriangulation) or you need to avoid
+         * calling routines from the SnapPea kernel, it is highly recommended
+         * that you create an NSnapPeaTriangulation from the given file
+         * contents instead.  See the string-based NSnapPeaTriangulation
+         * constructor for how to do this.
          *
          * @param snapPeaData a string containing the full contents of a
          * SnapPea data file.
@@ -3221,7 +3422,6 @@ class REGINA_API NTriangulation : public NPacket,
          * or 0 on error.
          */
         static NTriangulation* fromSnapPea(const std::string& snapPeaData);
-
 
         /*@}*/
 
@@ -3446,11 +3646,11 @@ namespace regina {
 
 // Inline functions for NTriangulation
 
-inline NTriangulation::NTriangulation() : calculatedSkeleton(false) {
+inline NTriangulation::NTriangulation() : calculatedSkeleton_(false) {
 }
 
 inline NTriangulation::NTriangulation(const NTriangulation& cloneMe) :
-        NPacket(), calculatedSkeleton(false) {
+        NPacket(), calculatedSkeleton_(false) {
     cloneFrom(cloneMe);
 }
 
@@ -3468,29 +3668,29 @@ inline bool NTriangulation::dependsOnParent() const {
 }
 
 inline unsigned long NTriangulation::getNumberOfTetrahedra() const {
-    return tetrahedra.size();
+    return tetrahedra_.size();
 }
 
 inline unsigned long NTriangulation::getNumberOfSimplices() const {
-    return tetrahedra.size();
+    return tetrahedra_.size();
 }
 
 inline NTetrahedron* NTriangulation::getTetrahedron(unsigned long index) {
-    return tetrahedra[index];
+    return tetrahedra_[index];
 }
 
 inline NTetrahedron* NTriangulation::getSimplex(unsigned long index) {
-    return tetrahedra[index];
+    return tetrahedra_[index];
 }
 
 inline const NTetrahedron* NTriangulation::getTetrahedron(unsigned long index)
         const {
-    return tetrahedra[index];
+    return tetrahedra_[index];
 }
 
 inline const NTetrahedron* NTriangulation::getSimplex(unsigned long index)
         const {
-    return tetrahedra[index];
+    return tetrahedra_[index];
 }
 
 inline long NTriangulation::tetrahedronIndex(const NTetrahedron* tet) const {
@@ -3505,8 +3705,8 @@ inline NTetrahedron* NTriangulation::newTetrahedron() {
     ChangeEventSpan span(this);
 
     NTetrahedron* tet = new NTetrahedron();
-    tet->tri = this;
-    tetrahedra.push_back(tet);
+    tet->tri_ = this;
+    tetrahedra_.push_back(tet);
     clearAllProperties();
 
     return tet;
@@ -3520,8 +3720,8 @@ inline NTetrahedron* NTriangulation::newTetrahedron(const std::string& desc) {
     ChangeEventSpan span(this);
 
     NTetrahedron* tet = new NTetrahedron(desc);
-    tet->tri = this;
-    tetrahedra.push_back(tet);
+    tet->tri_ = this;
+    tetrahedra_.push_back(tet);
     clearAllProperties();
 
     return tet;
@@ -3534,9 +3734,9 @@ inline NTetrahedron* NTriangulation::newSimplex(const std::string& desc) {
 inline void NTriangulation::removeTetrahedronAt(unsigned long index) {
     ChangeEventSpan span(this);
 
-    NTetrahedron* ans = tetrahedra[index];
+    NTetrahedron* ans = tetrahedra_[index];
     ans->isolate();
-    tetrahedra.erase(tetrahedra.begin() + index);
+    tetrahedra_.erase(tetrahedra_.begin() + index);
     delete ans;
 
     clearAllProperties();
@@ -3550,7 +3750,7 @@ inline void NTriangulation::removeTetrahedron(NTetrahedron* tet) {
     ChangeEventSpan span(this);
 
     tet->isolate();
-    tetrahedra.erase(tetrahedra.begin() + tetrahedronIndex(tet));
+    tetrahedra_.erase(tetrahedra_.begin() + tetrahedronIndex(tet));
     delete tet;
 
     clearAllProperties();
@@ -3574,33 +3774,33 @@ inline void NTriangulation::gluingsHaveChanged() {
 }
 
 inline unsigned long NTriangulation::getNumberOfBoundaryComponents() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return boundaryComponents.size();
+    return boundaryComponents_.size();
 }
 
 inline unsigned long NTriangulation::getNumberOfComponents() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return components.size();
+    return components_.size();
 }
 
 inline unsigned long NTriangulation::getNumberOfVertices() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return vertices.size();
+    return vertices_.size();
 }
 
 inline unsigned long NTriangulation::getNumberOfEdges() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return edges.size();
+    return edges_.size();
 }
 
 inline unsigned long NTriangulation::getNumberOfTriangles() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return triangles.size();
+    return triangles_.size();
 }
 
 inline unsigned long NTriangulation::getNumberOfFaces() const {
@@ -3628,14 +3828,14 @@ inline unsigned long NTriangulation::getNumberOfFaces<3>() const {
 }
 
 inline long NTriangulation::getEulerCharTri() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
 
     // Cast away the unsignedness of std::vector::size().
-    return static_cast<long>(vertices.size())
-        - static_cast<long>(edges.size())
-        + static_cast<long>(triangles.size())
-        - static_cast<long>(tetrahedra.size());
+    return static_cast<long>(vertices_.size())
+        - static_cast<long>(edges_.size())
+        + static_cast<long>(triangles_.size())
+        - static_cast<long>(tetrahedra_.size());
 }
 
 inline long NTriangulation::getEulerCharacteristic() const {
@@ -3643,44 +3843,44 @@ inline long NTriangulation::getEulerCharacteristic() const {
 }
 
 inline const std::vector<NTetrahedron*>& NTriangulation::getTetrahedra() const {
-    return (const std::vector<NTetrahedron*>&)(tetrahedra);
+    return (const std::vector<NTetrahedron*>&)(tetrahedra_);
 }
 
 inline const std::vector<NTetrahedron*>& NTriangulation::getSimplices() const {
-    return (const std::vector<NTetrahedron*>&)(tetrahedra);
+    return (const std::vector<NTetrahedron*>&)(tetrahedra_);
 }
 
 inline const std::vector<NBoundaryComponent*>&
         NTriangulation::getBoundaryComponents() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return (const std::vector<NBoundaryComponent*>&)(boundaryComponents);
+    return (const std::vector<NBoundaryComponent*>&)(boundaryComponents_);
 }
 
 inline const std::vector<NComponent*>& NTriangulation::getComponents() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return (const std::vector<NComponent*>&)(components);
+    return (const std::vector<NComponent*>&)(components_);
 }
 
 inline const std::vector<NVertex*>& NTriangulation::getVertices() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return (const std::vector<NVertex*>&)(vertices);
+    return (const std::vector<NVertex*>&)(vertices_);
 }
 
 inline const std::vector<NEdge*>& NTriangulation::getEdges()
         const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return (const std::vector<NEdge*>&)(edges);
+    return (const std::vector<NEdge*>&)(edges_);
 }
 
 inline const std::vector<NTriangle*>& NTriangulation::getTriangles()
         const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return (const std::vector<NTriangle*>&)(triangles);
+    return (const std::vector<NTriangle*>&)(triangles_);
 }
 
 inline const std::vector<NTriangle*>& NTriangulation::getFaces() const {
@@ -3688,34 +3888,34 @@ inline const std::vector<NTriangle*>& NTriangulation::getFaces() const {
 }
 
 inline NComponent* NTriangulation::getComponent(unsigned long index) const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return components[index];
+    return components_[index];
 }
 
 inline NBoundaryComponent* NTriangulation::getBoundaryComponent(
         unsigned long index) const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return boundaryComponents[index];
+    return boundaryComponents_[index];
 }
 
 inline NVertex* NTriangulation::getVertex(unsigned long index) const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return vertices[index];
+    return vertices_[index];
 }
 
 inline NEdge* NTriangulation::getEdge(unsigned long index) const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return edges[index];
+    return edges_[index];
 }
 
 inline NTriangle* NTriangulation::getTriangle(unsigned long index) const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return triangles[index];
+    return triangles_[index];
 }
 
 inline NTriangle* NTriangulation::getFace(unsigned long index) const {
@@ -3748,39 +3948,39 @@ inline long NTriangulation::faceIndex(const NTriangle* tri) const {
 }
 
 inline bool NTriangulation::hasTwoSphereBoundaryComponents() const {
-    if (! twoSphereBoundaryComponents.known())
+    if (! twoSphereBoundaryComponents_.known())
         calculateBoundaryProperties();
-    return twoSphereBoundaryComponents.value();
+    return twoSphereBoundaryComponents_.value();
 }
 
 inline bool NTriangulation::hasNegativeIdealBoundaryComponents() const {
-    if (! negativeIdealBoundaryComponents.known())
+    if (! negativeIdealBoundaryComponents_.known())
         calculateBoundaryProperties();
-    return negativeIdealBoundaryComponents.value();
+    return negativeIdealBoundaryComponents_.value();
 }
 
 inline bool NTriangulation::isValid() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return valid;
+    return valid_;
 }
 
 inline bool NTriangulation::isIdeal() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return ideal;
+    return ideal_;
 }
 
 inline bool NTriangulation::isStandard() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return standard;
+    return standard_;
 }
 
 inline bool NTriangulation::hasBoundaryTriangles() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return (triangles.size() > 2 * tetrahedra.size());
+    return (triangles_.size() > 2 * tetrahedra_.size());
 }
 
 inline bool NTriangulation::hasBoundaryFaces() const {
@@ -3788,40 +3988,40 @@ inline bool NTriangulation::hasBoundaryFaces() const {
 }
 
 inline unsigned long NTriangulation::getNumberOfBoundaryTriangles() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return 2 * triangles.size() - 4 * tetrahedra.size();
+    return 2 * triangles_.size() - 4 * tetrahedra_.size();
 }
 
 inline bool NTriangulation::isClosed() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return boundaryComponents.empty();
+    return boundaryComponents_.empty();
 }
 
 inline bool NTriangulation::isOrientable() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return orientable;
+    return orientable_;
 }
 
 inline bool NTriangulation::isConnected() const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    return (components.size() <= 1);
+    return (components_.size() <= 1);
 }
 
 inline void NTriangulation::simplifiedFundamentalGroup(
         NGroupPresentation* newGroup) {
-    fundamentalGroup = newGroup;
+    fundamentalGroup_ = newGroup;
 }
 
 inline bool NTriangulation::knowsZeroEfficient() const {
-    return zeroEfficient.known();
+    return zeroEfficient_.known();
 }
 
 inline bool NTriangulation::knowsSplittingSurface() const {
-    return splittingSurface.known();
+    return splittingSurface_.known();
 }
 
 inline unsigned long NTriangulation::getHomologyH2Z2() const {
@@ -3830,12 +4030,20 @@ inline unsigned long NTriangulation::getHomologyH2Z2() const {
 
 inline const NTriangulation::TuraevViroSet&
         NTriangulation::allCalculatedTuraevViro() const {
-    return turaevViroCache;
+    return turaevViroCache_;
 }
 
 inline void NTriangulation::writeTextShort(std::ostream& out) const {
-    out << "Triangulation with " << tetrahedra.size()
-        << (tetrahedra.size() == 1 ? " tetrahedron" : " tetrahedra");
+    out << "Triangulation with " << tetrahedra_.size()
+        << (tetrahedra_.size() == 1 ? " tetrahedron" : " tetrahedra");
+}
+
+inline void NTriangulation::recognizer(std::ostream& out) const {
+    recogniser(out);
+}
+
+inline bool NTriangulation::saveRecognizer(const char* filename) const {
+    return saveRecogniser(filename);
 }
 
 } // namespace regina

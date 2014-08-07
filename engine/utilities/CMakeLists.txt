@@ -6,6 +6,7 @@ SET ( FILES
   i18nutils
   nbooleans
   nthread
+  nxmlcallback
   osutils
   stringutils
   xmlutils
@@ -41,6 +42,8 @@ if (${REGINA_INSTALL_DEV})
     nthread.h
     ntrieset.h
     ntritmask.h
+    nxmlcallback.h
+    nxmlelementreader.h
     osutils.h
     ptrutils.h
     registryutils.h

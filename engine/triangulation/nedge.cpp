@@ -77,7 +77,7 @@ void NEdge::writeTextLong(std::ostream& out) const {
 
     out << "Appears as:" << std::endl;
     std::deque<NEdgeEmbedding>::const_iterator it;
-    for (it = embeddings.begin(); it != embeddings.end(); ++it)
+    for (it = embeddings_.begin(); it != embeddings_.end(); ++it)
         out << "  " << it->getTetrahedron()->markedIndex()
             << " (" << it->getVertices().trunc2() << ')' << std::endl;
 }

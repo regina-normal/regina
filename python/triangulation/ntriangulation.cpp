@@ -53,6 +53,12 @@ namespace {
         &NTriangulation::twoZeroMove;
     bool (NTriangulation::*twoZeroMove_edge)(regina::NEdge*, bool, bool) =
         &NTriangulation::twoZeroMove;
+    std::string (NTriangulation::*snapPea_void)() const =
+        &NTriangulation::snapPea;
+    std::string (NTriangulation::*recogniser_void)() const =
+        &NTriangulation::recogniser;
+    std::string (NTriangulation::*recognizer_void)() const =
+        &NTriangulation::recognizer;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
         NTriangulation::simplifyToLocalMinimum, 0, 1);
@@ -163,6 +169,22 @@ namespace {
         return ans;
     }
 
+    boost::python::list maximalForestInDualSkeleton_list(NTriangulation& t) {
+        std::set<regina::NTriangle*> triangleSet;
+        t.maximalForestInDualSkeleton(triangleSet);
+
+        // boost::python does not contain python sets. We use a python list
+        // here instead which needs a well-defined order, thus we iterate
+        // through getTriangles().
+
+        boost::python::list ans;
+        for (NTriangulation::TriangleIterator it =
+                t.getTriangles().begin(); it != t.getTriangles().end(); it++)
+            if (triangleSet.count(*it) > 0)
+                ans.append(boost::python::ptr(*it));
+        return ans;
+    }
+
     std::string isoSig_void(const NTriangulation& t) {
         return t.isoSig();
     }
@@ -254,6 +276,7 @@ void addNTriangulation() {
             &NTriangulation::hasTwoSphereBoundaryComponents)
         .def("hasNegativeIdealBoundaryComponents",
             &NTriangulation::hasNegativeIdealBoundaryComponents)
+        .def("isEmpty", &NTriangulation::isEmpty)
         .def("getEulerCharTri", &NTriangulation::getEulerCharTri)
         .def("getEulerCharManifold", &NTriangulation::getEulerCharManifold)
         .def("getEulerCharacteristic", &NTriangulation::getEulerCharacteristic)
@@ -295,6 +318,7 @@ void addNTriangulation() {
         .def("hasStrictAngleStructure",
             &NTriangulation::hasStrictAngleStructure,
             return_value_policy<manage_new_object>())
+        .def("maximalForestInDualSkeleton", maximalForestInDualSkeleton_list)
         .def("intelligentSimplify", &NTriangulation::intelligentSimplify)
         .def("simplifyToLocalMinimum", &NTriangulation::simplifyToLocalMinimum,
             OL_simplifyToLocalMinimum())
@@ -362,7 +386,12 @@ void addNTriangulation() {
             return_value_policy<manage_new_object>())
         .def("isoSigComponentSize", &NTriangulation::isoSigComponentSize)
         .def("dumpConstruction", &NTriangulation::dumpConstruction)
-        .def("snapPea", &NTriangulation::snapPea)
+        .def("snapPea", snapPea_void)
+        .def("saveSnapPea", &NTriangulation::saveSnapPea)
+        .def("recogniser", recogniser_void)
+        .def("recognizer", recognizer_void)
+        .def("saveRecogniser", &NTriangulation::saveRecogniser)
+        .def("saveRecognizer", &NTriangulation::saveRecognizer)
         .def("fromSnapPea", &NTriangulation::fromSnapPea,
             return_value_policy<manage_new_object>())
         .def("enterTextTriangulation", enterTextTriangulation_stdio,

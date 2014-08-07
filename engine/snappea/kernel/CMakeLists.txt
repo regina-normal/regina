@@ -3,6 +3,8 @@
 # Files to compile
 SET ( FILES
   Dehn_coefficients
+  Moebius_transformations
+  abelian_group
   canonize
   canonize_part_1
   canonize_part_2
@@ -22,13 +24,17 @@ SET ( FILES
   filling
   find_cusp
   finite_vertices
+  fundamental_group
   gcd
   gluing_equations
   holonomy
+  homology
   hyperbolic_structure
   identify_solution_type
   interface
   intersection_numbers
+  matrix_conversion
+  matrix_generators
   my_malloc
   o31_matrices
   orient
@@ -37,6 +43,7 @@ SET ( FILES
   precision
   shortest_cusp_basis
   simplify_triangulation
+  sl2c_matrices
   solve_equations
   subdivide
   tables

@@ -185,7 +185,7 @@ int main(int argc, char* argv[]) {
 
     freopen(statsFile.c_str(), "w", stdout);
 
-    NPacket* tree = readFileMagic(dataFile);
+    NPacket* tree = open(dataFile);
     if (! tree) {
         fprintf(stderr, "Could not open data file %s.\n", dataFile.c_str());
         return 1;
