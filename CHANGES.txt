@@ -52,6 +52,10 @@ Version 4.96  [ (under development) ]
             - New convenience operator !=.
         Class NAngleStructure:
             - New convenience routine rawVector().
+            - Routine getTriangulation() now returns a const NTriangulation*
+              (previously this was non-const).  Likewise, many routines in
+              this and related classes have NTriangulation* arguments changed
+              from non-const to const.
         Class NAngleStructureList:
             - Enumeration of taut angle strutures now uses Regina's tree
               traversal / linear programming machinery, which is *much*
@@ -220,6 +224,8 @@ Version 4.96  [ (under development) ]
             - Extended the tree traversal / linear programming machinery to
               work with angle structures.  This is used for enumerating all
               taut angle structures, or finding a single strict angle structure.
+            - Changed all NTriangulation types in this and related
+              classes from non-const to const.
         Class NTriangle:
             - New routine index().
         Class NTriangleEmbedding:
