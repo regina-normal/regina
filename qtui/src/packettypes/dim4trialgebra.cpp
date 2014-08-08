@@ -130,7 +130,7 @@ void Dim4TriHomologyFundUI::refresh() {
         H2->setText(msg);
     }
 
-    if (! tri->isValid()) {
+    if (!tri->isValid()) {
         fgGroup->hide();
         fgMsg->setText(tr("<qt>Cannot calculate<p>"
             "(invalid triangulation)</qt>"));
@@ -152,4 +152,5 @@ void Dim4TriHomologyFundUI::fundGroupSimplified() {
     if (simp)
         tri->simplifiedFundamentalGroup(simp);
 }
+
 

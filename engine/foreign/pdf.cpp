@@ -34,6 +34,7 @@
 
 #include "foreign/pdf.h"
 #include "packet/npdf.h"
+#include <cstdio>
 
 namespace regina {
 

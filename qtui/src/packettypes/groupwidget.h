@@ -64,7 +64,6 @@ class GroupWidget : public QWidget {
         QLabel* fundGens_;
         QLabel* fundRelCount_;
         QListWidget* fundRels_;
-        unsigned simpDepth_;
 
     public:
         /**
@@ -102,6 +101,10 @@ class GroupWidget : public QWidget {
          * Our internal pi1 simplification code.
          */
         void simplifyPi1();
+        /**
+         * Our internal routine for searching for more relevant relators.
+         */
+        void proliferateRelatorsPi1();
 
     private:
         /**

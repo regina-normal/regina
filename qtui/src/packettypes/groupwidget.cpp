@@ -53,7 +53,6 @@
 GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) :
         QWidget(), group_(0), simplified_(0) {
     QBoxLayout* layout = new QVBoxLayout(this);
-    simpDepth_ = 1;
 
     if (paddingStretch)
         layout->addStretch(1);
@@ -84,12 +83,12 @@ GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) :
         QBoxLayout* hLayout;
         QPushButton* btn;
 
-        btn = new QPushButton(tr("By proliferation"));
+        btn = new QPushButton(tr("Internally"));
         btn->setToolTip(tr("Simplify the group presentation by "
-            "recursively exploring the consequences of the relations."));
+            "internal usage of small cancellation theory."));
         btn->setWhatsThis(tr("<qt>Simplify the group presentation by "
-            "recursively exploring the consequences of the relations.  "
-            "Doing this more than once may produce better results.</qt>"));
+            "internal usage of small cancellation theory.  Application "
+            "twice should do nothing.</qt>"));
         connect(btn, SIGNAL(clicked()), this, SLOT(simplifyPi1()));
         hLayout = new QHBoxLayout();
         hLayout->addStretch(1);
@@ -105,6 +104,26 @@ GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) :
             "Programming).<p>Note that GAP will need to be installed "
             "separately on your system.</qt>"));
         connect(btn, SIGNAL(clicked()), this, SLOT(simplifyGAP()));
+        hLayout = new QHBoxLayout();
+        hLayout->addStretch(1);
+        hLayout->addWidget(btn);
+        hLayout->addStretch(1);
+        buttonBox->addLayout(hLayout);
+
+        // Ryan's new button
+        btn = new QPushButton(tr("Relator explosion"));
+        btn->setToolTip(tr("Generate new relators from old. "
+          "Can be memory intensive. Will call proliferateRelators(1)"
+          " internally." ));
+        btn->setWhatsThis(tr("Generate new relators from old. Be careful, "
+        "this routine attempts to intelligently multiply all the relators "
+        "together in a moderately intelligent way to create new, hopefully "
+        "useful relators.  This routine is useful for trying to prove a group "
+        "is trivial.  But beware, if the presentation is already large the "
+        "computation might easily exceed the memory capacity of your "
+        "computer. You should alternative this routine with a simplification "
+        "routine.</qt>"));
+        connect(btn, SIGNAL(clicked()), this, SLOT(proliferateRelatatorsPi1()));
         hLayout = new QHBoxLayout();
         hLayout->addStretch(1);
         hLayout->addWidget(btn);
@@ -190,7 +209,6 @@ void GroupWidget::refresh(const regina::NGroupPresentation* group) {
                 fundRels_);
     }
 
-    simpDepth_ = 1;
 }
 
 void GroupWidget::simplifyPi1() {
@@ -200,21 +218,28 @@ void GroupWidget::simplifyPi1() {
     // Note: We might have group_ == simplified_, so we cannot delete
     // simplified_ just yet.
     regina::NGroupPresentation* ans = new regina::NGroupPresentation(*group_);
-    ans->proliferateRelators(simpDepth_);
     ans->intelligentSimplify();
 
     delete simplified_;
     simplified_ = ans;
 
-    unsigned oldDepth = simpDepth_;
     refresh(simplified_); // This will reset simpDepth_ by default...
-    simpDepth_ = oldDepth;
-
-    // Let's not let the end-user go beyond too many iterates for now.
-    if (simpDepth_ < 4)
-        simpDepth_++;
 
     emit simplified();
+}
+
+void GroupWidget::proliferateRelatorsPi1() {
+ if (!group_) return;
+
+ regina::NGroupPresentation* group =
+     new regina::NGroupPresentation(*group_);
+
+ if (group->getNumberOfRelations() > 8) { delete group; return; }
+
+ group->proliferateRelators(1);
+ simplified_ = group;
+
+ emit simplified();
 }
 
 void GroupWidget::simplifyGAP() {

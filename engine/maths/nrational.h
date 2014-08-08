@@ -67,8 +67,8 @@ namespace regina {
  * infinity is the largest.  Undefined is always equal to itself, and
  * infinity is always equal to itself.
  *
- * Rationals will always be stored in lowest terms with non-negative
- * denominator.
+ * Rationals will always be stored in lowest terms (i.e., with relatively
+ * prime numerator and denominator), and with a non-negative denominator.
  *
  * \testpart
  */

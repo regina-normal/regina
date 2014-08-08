@@ -125,7 +125,7 @@ void NHomGroupPresentation::writeTextLong(std::ostream& out) const
         if (range_->getNumberOfGenerators()<=26) map_[i]->writeText(out, true);
         else map_[i]->writeText(out, false);
     }
-    out<<"]";
+    out<<"] ";
 
     out<<"range ";
     range_->writeTextCompact(out);
@@ -302,6 +302,18 @@ bool NHomGroupPresentation::invert()
    return true;
   }
  return false; 
+}
+
+bool NHomGroupPresentation::verifyHom() const
+{
+ for (unsigned long i=0; i<domain_->getNumberOfRelations(); i++)
+  {
+   const NGroupExpression& reli( domain_->getRelation(i) );
+   NGroupExpression imgRel( evaluate(reli) );
+   range_->simplifyWord(imgRel);
+   if (!imgRel.isTrivial()) return false;
+  }
+ return true;
 }
 
 bool NHomGroupPresentation::isAutomorphism() const
