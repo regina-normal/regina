@@ -82,6 +82,20 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
 
     public:
         /**
+         * \name Basic Properties
+         */
+        /*@{*/
+
+        /**
+         * Determines whether this triangulation is empty.
+         * An empty triangulation is one with no simplices at all.
+         *
+         * @return \c true if and only if this triangulation is empty.
+         */
+        bool isEmpty() const;
+
+        /*@}*/
+        /**
          * \name Isomorphism Testing
          */
         /*@{*/
@@ -463,6 +477,14 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
 };
 
 /*@}*/
+
+// Inline functions:
+
+template <int dim>
+inline bool NGenericTriangulation<dim>::isEmpty() const {
+    return (static_cast<const typename DimTraits<dim>::Triangulation*>(this)->
+        getNumberOfSimplices() == 0);
+}
 
 } // namespace regina
 

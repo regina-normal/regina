@@ -103,6 +103,9 @@ class EdgeIntChooser : public QComboBox, public regina::NPacketListener {
          * when using this setting, since if the triangulation changes
          * but the chooser is \e not refreshed, then selected() may end
          * up returning an invalid pointer.
+         *
+         * The given filter may be 0, in which case every edge/integer
+         * combination will be offered.
          */
         EdgeIntChooser(regina::NTriangulation* tri,
                 int argMin, int argMax, const QString& argDesc,

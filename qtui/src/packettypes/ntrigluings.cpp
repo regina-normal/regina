@@ -45,6 +45,8 @@
 #include "edittableview.h"
 #include "eltmovedialog.h"
 #include "ntrigluings.h"
+#include "packetchooser.h"
+#include "packetfilter.h"
 #include "patiencedialog.h"
 #include "reginamain.h"
 #include "reginaprefset.h"
@@ -520,8 +522,21 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     triActionList.append(actDoubleCover);
     connect(actDoubleCover, SIGNAL(triggered()), this, SLOT(doubleCover()));
 
+    QAction* actPuncture = new QAction(this);
+    actPuncture->setText(tr("Puncture"));
+    actPuncture->setIcon(ReginaSupport::regIcon("puncture"));
+    actPuncture->setToolTip(tr(
+        "Remove a ball from the interior of the triangulation"));
+    actPuncture->setEnabled(readWrite);
+    actPuncture->setWhatsThis(tr("Removes a ball from the interior of "
+        "this triangulation.  "
+        "This triangulation will be modified directly."));
+    enableWhenWritable.append(actPuncture);
+    triActionList.append(actPuncture);
+    connect(actPuncture, SIGNAL(triggered()), this, SLOT(puncture()));
+
     QAction* actDrillEdge = new QAction(this);
-    actDrillEdge->setText(tr("Drill ed&ge..."));
+    actDrillEdge->setText(tr("Drill Ed&ge..."));
     actDrillEdge->setIcon(ReginaSupport::regIcon("drilledge"));
     actDrillEdge->setToolTip(tr(
         "Drill out a regular neighbourhood of an edge"));
@@ -532,6 +547,20 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     enableWhenWritable.append(actDrillEdge);
     triActionList.append(actDrillEdge);
     connect(actDrillEdge, SIGNAL(triggered()), this, SLOT(drillEdge()));
+
+    QAction* actConnectedSumWith = new QAction(this);
+    actConnectedSumWith->setText(tr("Connected Sum With..."));
+    actConnectedSumWith->setIcon(ReginaSupport::regIcon("connectedsumwith"));
+    actConnectedSumWith->setToolTip(tr(
+        "Make this into a connected sum with another triangulation"));
+    actConnectedSumWith->setEnabled(readWrite);
+    actConnectedSumWith->setWhatsThis(tr("Forms the connected sum "
+        "of this triangulation with some other triangulation.  "
+        "This triangulation will be modified directly."));
+    enableWhenWritable.append(actConnectedSumWith);
+    triActionList.append(actConnectedSumWith);
+    connect(actConnectedSumWith, SIGNAL(triggered()), this,
+        SLOT(connectedSumWith()));
 
     sep = new QAction(this);
     sep->setSeparator(true);
@@ -838,6 +867,16 @@ void NTriGluingsUI::doubleCover() {
     tri->makeDoubleCover();
 }
 
+void NTriGluingsUI::puncture() {
+    endEdit();
+
+    if (tri->isEmpty())
+        ReginaSupport::info(ui,
+            tr("I cannot puncture an empty triangulation."));
+    else
+        tri->puncture();
+}
+
 void NTriGluingsUI::drillEdge() {
     endEdit();
 
@@ -859,6 +898,30 @@ void NTriGluingsUI::drillEdge() {
             tri->drillEdge(chosen);
         }
     }
+}
+
+void NTriGluingsUI::connectedSumWith() {
+    endEdit();
+
+    if (tri->isEmpty() || ! tri->isConnected()) {
+        ReginaSupport::info(ui,
+            tr("I can only make connected sums with "
+                "non-empty, connected triangulations."));
+        return;
+    }
+
+    regina::NTriangulation* other = static_cast<regina::NTriangulation*>(
+        PacketDialog::choose(ui,
+            tri->getTreeMatriarch(),
+            new SubclassFilter<regina::NTriangulation>(),
+            tr("Connected Sum"),
+            tr("Sum this with which other triangulation?"),
+            tr("Regina will form a connected sum of this triangulation "
+                "with whatever triangulation you choose here.  "
+                "The current triangulation will be modified directly.")));
+
+    if (other)
+        tri->connectedSumWith(*other);
 }
 
 void NTriGluingsUI::boundaryComponents() {
