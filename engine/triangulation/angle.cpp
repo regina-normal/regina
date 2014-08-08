@@ -39,10 +39,13 @@
 
 namespace regina {
 
-NAngleStructure* NTriangulation::hasStrictAngleStructure() {
+const NAngleStructure* NTriangulation::findStrictAngleStructure() const {
+    if (strictAngleStructure_.known())
+        return strictAngleStructure_.value();
+
     // Knock off the empty triangulation first.
     if (tetrahedra_.empty())
-        return 0;
+        return (strictAngleStructure_ = 0);
 
     LPInitialTableaux<LPConstraintNone> eqns(this, NS_ANGLE, false);
 
@@ -59,13 +62,13 @@ NAngleStructure* NTriangulation::hasStrictAngleStructure() {
 
     // Test for a solution!
     if (! lp.isFeasible())
-        return 0;
+        return (strictAngleStructure_ = 0);
 
     // We have a strict angle structure: reconstruct it.
     unsigned long len = 3 * tetrahedra_.size() + 1;
     NAngleStructureVector* v = new NAngleStructureVector(len);
     lp.extractSolution(*v, 0 /* type vector */);
-    return new NAngleStructure(this, v);
+    return (strictAngleStructure_ = new NAngleStructure(this, v));
 }
 
 } // namespace regina

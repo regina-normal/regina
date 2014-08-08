@@ -225,8 +225,9 @@ Version 4.96  [ (under development) ]
         Class NTriangleEmbedding:
             - New convenience operators == and !=.
         Class NTriangulation:
-            - New routine hasStrictAngleStructure(), which uses fast
-              linear programming machinery.
+            - New routines hasStrictAngleStructure(),
+              findStrictAngleStructure() and knowsStrictAngleStructure(),
+              which use fast linear programming machinery.
             - Routine connectedSumDecomposition() now works for non-orientable
               triangulations also (arXiv:1212.1441).  There is a caveat if
               there are embedded two-sided projective planes (see the
