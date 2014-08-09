@@ -50,6 +50,7 @@
 #include <QWhatsThis>
 
 #define HAKEN_AUTO_CALC_ADJUSTMENT 2
+#define STRICT_AUTO_CALC_THRESHOLD 50
 
 using regina::NPacket;
 using regina::NTriangulation;
@@ -147,6 +148,28 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     titleHaken->setWhatsThis(msg);
     haken->setWhatsThis(msg);
 
+    titleStrict = new QLabel(tr("Strict angle structure?"), ui);
+    grid->addWidget(titleStrict, 7, 1);
+    strict = new QLabel(ui);
+    grid->addWidget(strict, 7, 3);
+    msg = tr("<qt>Does this triangulation support a strict angle structure?  "
+        "A <i>strict</i> angle structure is one in which all angles "
+        "are strictly positive.<p>"
+        "An ideal triangulation that supports a strict angle structure "
+        "must be hyperbolic, and an ideal triangulation that does not "
+        "support a strict angle structure cannot be geometric.</qt>");
+    titleStrict->setWhatsThis(msg);
+    strict->setWhatsThis(msg);
+
+    label = new QLabel(tr("Hyperbolic?"), ui);
+    grid->addWidget(label, 8, 1);
+    hyperbolic = new QLabel(ui);
+    grid->addWidget(hyperbolic, 8, 3);
+    msg = tr("<qt>Does this triangulation represent a finite-volume "
+        "hyperbolic 3-manifold?");
+    label->setWhatsThis(msg);
+    hyperbolic->setWhatsThis(msg);
+
     btnThreeSphere = new QPushButton(ReginaSupport::themeIcon("system-run"),
         tr("Calculate"), ui);
     btnThreeSphere->setToolTip(tr("Calculate whether this is a 3-sphere"));
@@ -235,6 +258,19 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     grid->addWidget(btnHaken, 6, 5);
     connect(btnHaken, SIGNAL(clicked()), this, SLOT(calculateHaken()));
 
+    btnStrict = new QPushButton(ReginaSupport::themeIcon("system-run"),
+        tr("Calculate"), ui);
+    btnStrict->setToolTip(tr("Calculate whether this triangulation "
+        "supports a strict angle structure"));
+    btnStrict->setWhatsThis(tr("<qt>Calculate whether this "
+        "triangulation supports a strict angle structure.<p>"
+        "<b>Warning:</b> This calculation is fast for moderate-sized "
+        "triangulations, but can become slow if the triangulation "
+        "is extremely large (which is why this property is not always "
+        "tested automatically).</qt>"));
+    grid->addWidget(btnStrict, 7, 5);
+    connect(btnStrict, SIGNAL(clicked()), this, SLOT(calculateStrict()));
+
     layout->addStretch(1);
 
     QBoxLayout* mfdArea = new QHBoxLayout();
@@ -265,6 +301,8 @@ QWidget* NTriSurfacesUI::getInterface() {
 
 void NTriSurfacesUI::refresh() {
     int autoCalcThreshold = ReginaPrefSet::global().triSurfacePropsThreshold;
+
+    regina::NProperty<bool> isHyp;
 
     // Begin with the combinatorial recognition.
     std::string name;
@@ -339,6 +377,7 @@ void NTriSurfacesUI::refresh() {
             pal.setColor(threeSphere->foregroundRole(), Qt::darkGreen);
             threeSphere->setPalette(pal);
 
+            isHyp = false;
             if (name.empty())
                 name = "S3";
         } else {
@@ -362,6 +401,7 @@ void NTriSurfacesUI::refresh() {
             pal.setColor(threeBall->foregroundRole(), Qt::darkGreen);
             threeBall->setPalette(pal);
 
+            isHyp = false;
             if (name.empty())
                 name = "B3";
         } else {
@@ -385,6 +425,7 @@ void NTriSurfacesUI::refresh() {
             pal.setColor(solidTorus->foregroundRole(), Qt::darkGreen);
             solidTorus->setPalette(pal);
 
+            isHyp = false;
             if (name.empty())
                 name = "B2 x S1";
         } else {
@@ -418,6 +459,8 @@ void NTriSurfacesUI::refresh() {
                 QPalette pal = irreducible->palette();
                 pal.setColor(irreducible->foregroundRole(), Qt::darkRed);
                 irreducible->setPalette(pal);
+
+                isHyp = false;
             }
             btnIrreducible->setEnabled(false);
         } else {
@@ -472,6 +515,56 @@ void NTriSurfacesUI::refresh() {
         titleHaken->setVisible(false);
         haken->setVisible(false);
         btnHaken->setVisible(false);
+    }
+
+    if (tri->isIdeal() && ! tri->hasBoundaryFaces()) {
+        titleStrict->setVisible(true);
+        strict->setVisible(true);
+        btnStrict->setVisible(true);
+
+        if (tri->knowsStrictAngleStructure() ||
+                tri->getNumberOfTetrahedra() <= STRICT_AUTO_CALC_THRESHOLD) {
+            if (tri->hasStrictAngleStructure()) {
+                strict->setText("Yes");
+                QPalette pal = strict->palette();
+                pal.setColor(strict->foregroundRole(), Qt::darkGreen);
+                strict->setPalette(pal);
+
+                if (tri->isValid() && tri->isStandard())
+                    isHyp = true;
+            } else {
+                strict->setText("No");
+                QPalette pal = strict->palette();
+                pal.setColor(strict->foregroundRole(), Qt::darkRed);
+                strict->setPalette(pal);
+            }
+            btnStrict->setEnabled(false);
+        } else {
+            strict->setText(tr("Unknown"));
+            strict->setPalette(QPalette());
+            btnStrict->setEnabled(true);
+        }
+    } else {
+        titleStrict->setVisible(false);
+        strict->setVisible(false);
+        btnStrict->setVisible(false);
+    }
+
+    if (isHyp.known()) {
+        if (isHyp.value()) {
+            hyperbolic->setText("Yes");
+            QPalette pal = hyperbolic->palette();
+            pal.setColor(hyperbolic->foregroundRole(), Qt::darkGreen);
+            hyperbolic->setPalette(pal);
+        } else {
+            hyperbolic->setText("No");
+            QPalette pal = hyperbolic->palette();
+            pal.setColor(hyperbolic->foregroundRole(), Qt::darkRed);
+            hyperbolic->setPalette(pal);
+        }
+    } else {
+            hyperbolic->setText("Unknown");
+            hyperbolic->setPalette(QPalette());
     }
 
     if (! name.empty()) {
@@ -553,6 +646,17 @@ void NTriSurfacesUI::calculateHaken() {
         "for larger triangulations.\n\n"
         "Please be patient."), ui);
     tri->isHaken();
+    delete dlg;
+
+    refresh();
+}
+
+void NTriSurfacesUI::calculateStrict() {
+    PatienceDialog* dlg = PatienceDialog::warn(tr(
+        "Testing for a strict angle structure may be slow\n"
+        "for extremely large triangulations.\n\n"
+        "Please be patient."), ui);
+    tri->hasStrictAngleStructure();
     delete dlg;
 
     refresh();
