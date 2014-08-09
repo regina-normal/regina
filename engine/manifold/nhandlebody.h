@@ -108,6 +108,7 @@ class REGINA_API NHandlebody : public NManifold {
         bool operator == (const NHandlebody& compare) const;
 
         NAbelianGroup* getHomologyH1() const;
+        bool isHyperbolic() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
 };
@@ -136,6 +137,10 @@ inline bool NHandlebody::operator == (const NHandlebody& compare) const {
     if (compare.orientable && ! orientable)
         return false;
     return (nHandles == compare.nHandles);
+}
+
+inline bool NHandlebody::isHyperbolic() const {
+    return false;
 }
 
 } // namespace regina

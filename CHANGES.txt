@@ -100,6 +100,8 @@ Version 4.96  [ (under development) ]
               triangulations of cusped finite-volume hyperbolic 3-manifolds.
         Class NCusp:
             - New class to support NSnapPeaTriangulation.
+        Class NManifold:
+            - New routine isHyperbolic().
         Class NNormalSurface:
             - Renamed boundarySlopes() to boundaryIntersections(), to make it
               clear that it returns algebraic intersection numbers and not the

@@ -115,6 +115,7 @@ class REGINA_API NSimpleSurfaceBundle : public NManifold {
 
         virtual NTriangulation* construct() const;
         NAbelianGroup* getHomologyH1() const;
+        bool isHyperbolic() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
 };
@@ -136,6 +137,10 @@ inline int NSimpleSurfaceBundle::getType() const {
 inline bool NSimpleSurfaceBundle::operator ==
         (const NSimpleSurfaceBundle& compare) const {
     return (type == compare.type);
+}
+
+inline bool NSimpleSurfaceBundle::isHyperbolic() const {
+    return false;
 }
 
 } // namespace regina

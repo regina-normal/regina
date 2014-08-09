@@ -311,6 +311,7 @@ void NTriSurfacesUI::refresh() {
     if (std) {
         regina::NManifold* mfd = std->getManifold();
         if (mfd) {
+            isHyp = mfd->isHyperbolic();
             name = mfd->getName();
             delete mfd;
 

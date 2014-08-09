@@ -744,6 +744,7 @@ class REGINA_API NSFSpace : public NManifold {
 
         NTriangulation* construct() const;
         NAbelianGroup* getHomologyH1() const;
+        bool isHyperbolic() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         std::ostream& writeStructure(std::ostream& out) const;
@@ -920,6 +921,10 @@ inline void NSFSpace::insertFibre(const NSFSFibre& fibre) {
 inline void NSFSpace::reflect() {
     complementAllFibres();
     b_ = -b_ - static_cast<long>(nFibres_);
+}
+
+inline bool NSFSpace::isHyperbolic() const {
+    return false;
 }
 
 inline std::ostream& NSFSpace::writeName(std::ostream& out) const {

@@ -138,6 +138,7 @@ class REGINA_API NTorusBundle : public NManifold {
         const NMatrix2& getMonodromy() const;
 
         NAbelianGroup* getHomologyH1() const;
+        bool isHyperbolic() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
 
@@ -276,6 +277,10 @@ inline void NTorusBundle::subtractRCUp() {
     monodromy[0][1] -= monodromy[1][1];
     monodromy[0][1] += monodromy[0][0];
     monodromy[1][1] += monodromy[1][0];
+}
+
+inline bool NTorusBundle::isHyperbolic() const {
+    return false;
 }
 
 } // namespace regina
