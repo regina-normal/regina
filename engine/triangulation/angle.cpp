@@ -39,13 +39,26 @@
 
 namespace regina {
 
-const NAngleStructure* NTriangulation::findStrictAngleStructure() const {
-    if (strictAngleStructure_.known())
-        return strictAngleStructure_.value();
-
-    // Knock off the empty triangulation first.
+bool NTriangulation::knowsStrictAngleStructure() const {
+    // There are some simple cases for which we can deduce the answer
+    // automatically.
     if (tetrahedra_.empty())
         return (strictAngleStructure_ = 0);
+
+    if (! hasBoundaryTriangles()) {
+        // It is easy to prove that, if an angle structure exists,
+        // then we must have #edges = #tetrahedra.
+        if (edges_.size() != tetrahedra_.size())
+            return (strictAngleStructure_ = 0);
+    }
+
+    return strictAngleStructure_.known();
+}
+
+const NAngleStructure* NTriangulation::findStrictAngleStructure() const {
+    // The following test also catches any easy cases.
+    if (knowsStrictAngleStructure())
+        return strictAngleStructure_.value();
 
     LPInitialTableaux<LPConstraintNone> eqns(this, NS_ANGLE, false);
 

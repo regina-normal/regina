@@ -4081,10 +4081,6 @@ inline bool NTriangulation::hasStrictAngleStructure() const {
     return (strictAngleStructure_.value() != 0);
 }
 
-inline bool NTriangulation::knowsStrictAngleStructure() const {
-    return strictAngleStructure_.known();
-}
-
 inline unsigned long NTriangulation::getHomologyH2Z2() const {
     return getHomologyH1Rel().getRank() + getHomologyH1Rel().getTorsionRank(2);
 }
