@@ -154,20 +154,17 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     grid->addWidget(strict, 7, 3);
     msg = tr("<qt>Does this triangulation support a strict angle structure?  "
         "A <i>strict</i> angle structure is one in which all angles "
-        "are strictly positive.<p>"
-        "An ideal triangulation that supports a strict angle structure "
-        "must be hyperbolic, and an ideal triangulation that does not "
-        "support a strict angle structure cannot be geometric.</qt>");
+        "are strictly positive.</qt>");
     titleStrict->setWhatsThis(msg);
     strict->setWhatsThis(msg);
 
-    label = new QLabel(tr("Hyperbolic?"), ui);
-    grid->addWidget(label, 8, 1);
+    titleHyperbolic = new QLabel(tr("Hyperbolic?"), ui);
+    grid->addWidget(titleHyperbolic, 8, 1);
     hyperbolic = new QLabel(ui);
     grid->addWidget(hyperbolic, 8, 3);
     msg = tr("<qt>Does this triangulation represent a finite-volume "
         "hyperbolic 3-manifold?");
-    label->setWhatsThis(msg);
+    titleHyperbolic->setWhatsThis(msg);
     hyperbolic->setWhatsThis(msg);
 
     btnThreeSphere = new QPushButton(ReginaSupport::themeIcon("system-run"),
@@ -303,6 +300,8 @@ void NTriSurfacesUI::refresh() {
     int autoCalcThreshold = ReginaPrefSet::global().triSurfacePropsThreshold;
 
     regina::NProperty<bool> isHyp;
+    if (! tri->isValid())
+        isHyp = false;
 
     // Begin with the combinatorial recognition.
     std::string name;
@@ -523,6 +522,9 @@ void NTriSurfacesUI::refresh() {
         strict->setVisible(true);
         btnStrict->setVisible(true);
 
+        titleHyperbolic->setVisible(true);
+        hyperbolic->setVisible(true);
+
         if (tri->knowsStrictAngleStructure() ||
                 tri->getNumberOfTetrahedra() <= STRICT_AUTO_CALC_THRESHOLD) {
             if (tri->hasStrictAngleStructure()) {
@@ -545,27 +547,30 @@ void NTriSurfacesUI::refresh() {
             strict->setPalette(QPalette());
             btnStrict->setEnabled(true);
         }
+
+        if (isHyp.known()) {
+            if (isHyp.value()) {
+                hyperbolic->setText("Yes");
+                QPalette pal = hyperbolic->palette();
+                pal.setColor(hyperbolic->foregroundRole(), Qt::darkGreen);
+                hyperbolic->setPalette(pal);
+            } else {
+                hyperbolic->setText("No");
+                QPalette pal = hyperbolic->palette();
+                pal.setColor(hyperbolic->foregroundRole(), Qt::darkRed);
+                hyperbolic->setPalette(pal);
+            }
+        } else {
+                hyperbolic->setText("Unknown");
+                hyperbolic->setPalette(QPalette());
+        }
     } else {
         titleStrict->setVisible(false);
         strict->setVisible(false);
         btnStrict->setVisible(false);
-    }
 
-    if (isHyp.known()) {
-        if (isHyp.value()) {
-            hyperbolic->setText("Yes");
-            QPalette pal = hyperbolic->palette();
-            pal.setColor(hyperbolic->foregroundRole(), Qt::darkGreen);
-            hyperbolic->setPalette(pal);
-        } else {
-            hyperbolic->setText("No");
-            QPalette pal = hyperbolic->palette();
-            pal.setColor(hyperbolic->foregroundRole(), Qt::darkRed);
-            hyperbolic->setPalette(pal);
-        }
-    } else {
-            hyperbolic->setText("Unknown");
-            hyperbolic->setPalette(QPalette());
+        titleHyperbolic->setVisible(false);
+        hyperbolic->setVisible(false);
     }
 
     if (! name.empty()) {

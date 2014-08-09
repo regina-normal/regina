@@ -77,6 +77,7 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
         QLabel* strict;
         QLabel* titleStrict;
         QLabel* hyperbolic;
+        QLabel* titleHyperbolic;
         QAbstractButton* btnZeroEff;
         QAbstractButton* btnSplitting;
         QAbstractButton* btnThreeSphere;
