@@ -287,6 +287,20 @@ MACRO_LOG_FEATURE(Boost_FOUND
   "http://www.boost.org/"
   TRUE)
 
+FIND_PACKAGE(PkgConfig)
+IF(NOT PKGCONFIG_FOUND)
+  MESSAGE(FATAL_ERROR "Regina requires pkgconfig.")
+ENDIF(NOT PKGCONFIG_FOUND)
+
+PKG_CHECK_MODULES(TOKYOCABINET tokyocabinet)
+INCLUDE_DIRECTORIES(${TOKYOCABINET_INCLUDE_DIRS})
+LINK_DIRECTORIES(${TOKYOCABINET_LIBRARY_DIRS})
+MACRO_LOG_FEATURE(TOKYOCABINET_FOUND
+  "Tokyo Cabinet"
+  "Essential: database library for accessing census data"
+  "http://fallabs.com/tokyocabinet/"
+  TRUE)
+
 FIND_PACKAGE(Threads REQUIRED)
 IF(NOT CMAKE_USE_PTHREADS_INIT)
   MESSAGE(FATAL_ERROR "Regina requires pthread support.")
