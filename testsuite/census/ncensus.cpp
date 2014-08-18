@@ -36,6 +36,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "census/ncensus.h"
 #include "packet/ncontainer.h"
+#include "triangulation/ntriangulation.h"
 #include "testsuite/census/testcensus.h"
 
 using regina::NBoolSet;
