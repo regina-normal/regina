@@ -17,6 +17,9 @@ Version 4.96  [ (under development) ]
         Class Dim2BoundaryComponent:
             - New convenience routine getComponent().
             - New routine index().
+        Class Dim2Census:
+            - Routine formPartialCensus() is deprecated; you should call
+              NGluingPermSearcher::findAllPerms() directly.
         Class Dim2Component:
             - New routine getNumberOfBoundaryEdges().
             - New routine index().
@@ -76,6 +79,8 @@ Version 4.96  [ (under development) ]
               census of cusped finite volume hyperbolic 3-manifolds.
             - Routine mightBeMinimal() is deprecated; you should call
               NTriangulation::simplifyToLocalMinimum(false) instead.
+            - Routine formPartialCensus() is deprecated; you should call
+              NGluingPermSearcher::findAllPerms() directly.
         Class NComponent:
             - New routine getNumberOfBoundaryTriangles().
             - New routine index().
