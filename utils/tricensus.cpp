@@ -142,7 +142,7 @@ struct Dim3Params {
     }
 
     inline static bool mightBeMinimal(Triangulation* tri) {
-        return regina::NCensus::mightBeMinimal(tri, 0);
+        return ! tri->simplifyToLocalMinimum(false);
     }
 
     inline static const Pairing* pairingFor(const GluingPermSearcher* s) {

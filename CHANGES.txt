@@ -74,9 +74,13 @@ Version 4.96  [ (under development) ]
         Class NCensus:
             - New constant PURGE_NON_MINIMAL_HYP, for use in building a
               census of cusped finite volume hyperbolic 3-manifolds.
+            - Routine mightBeMinimal() is deprecated; you should call
+              NTriangulation::simplifyToLocalMinimum(false) instead.
         Class NComponent:
             - New routine getNumberOfBoundaryTriangles().
             - New routine index().
+        Class NCusp:
+            - New class to support NSnapPeaTriangulation.
         Class NEdge:
             - New routine index().
         Class NExampleTriangulation:
@@ -98,8 +102,6 @@ Version 4.96  [ (under development) ]
         Class NHyperbolicMinSearcher:
             - New enumeration class for building a census of minimal ideal
               triangulations of cusped finite-volume hyperbolic 3-manifolds.
-        Class NCusp:
-            - New class to support NSnapPeaTriangulation.
         Class NManifold:
             - New routine isHyperbolic().
         Class NNormalSurface:

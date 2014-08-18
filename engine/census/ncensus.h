@@ -337,10 +337,10 @@ class REGINA_API NCensus {
             int whichPurge, AcceptTriangulation sieve = 0, void* sieveArgs = 0);
 
         /**
-         * Determines whether the given triangulation even has a chance
-         * at being minimal.  This routine can be passed as parameter
-         * \a sieve to routine NCensus::formCensus() to exclude obviously
-         * non-minimal triangulations from a census.
+         * Deprecated routine to determine whether the given triangulation
+         * even has a chance at being minimal.  This routine can be passed as
+         * parameter \a sieve to routine NCensus::formCensus() to exclude
+         * obviously non-minimal triangulations from a census.
          *
          * A variety of tests will be performed; these tests are subject
          * to change between Regina releases.  Currently this routine
@@ -350,6 +350,11 @@ class REGINA_API NCensus {
          * Currently this routine is only useful for triangulations whose
          * triangles are all internal; if the given triangulation has
          * boundary triangles then this routine will simply return \c true.
+         *
+         * \deprecated The NCensus enumeration structure is on its way
+         * out of Regina, and so this routine is no longer necessary.
+         * For a fast test as to whether a triangulation might be minimal,
+         * you should simply call NTriangulation::simplifyToLocalMinimum(false).
          *
          * \ifacespython Parameter \a ignore is not present.
          *
