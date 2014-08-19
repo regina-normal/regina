@@ -135,10 +135,10 @@ class REGINA_API NCensus {
 
     public:
         /**
-         * Fills the given packet with all triangulations in a census of
-         * 3-manifold triangulations satisfying the given constraints.
-         * Each triangulation in the census will appear as a child of the
-         * given packet.
+         * Deprecated routine that fills the given packet with all
+         * triangulations in a census of 3-manifold triangulations satisfying
+         * the given constraints.  Each triangulation in the census will
+         * appear as a child of the given packet.
          *
          * This routine will conduct a census of all valid triangulations
          * containing a given number of tetrahedra.  All such triangulations
@@ -175,6 +175,13 @@ class REGINA_API NCensus {
          * Note that this routine should only be used if the census
          * contains a small enough total number of triangulations to
          * avoid any memory disasters.
+         *
+         * \deprecated The NCensus enumeration facilities are on their
+         * way out of Regina, and in the future the NCensus class will be
+         * used purely for census lookups.  To perform the kind of
+         * enumeration that is described here, you should call
+         * NFacePairing::findAllPairings() and
+         * NGluingPermSearcher::findAllPerms() directly.
          *
          * \ifacespython Parameters \a sieve and \a sieveArgs
          * are not present (and will be treated as 0).
