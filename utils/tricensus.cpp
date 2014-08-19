@@ -44,7 +44,6 @@
 #include "census/dim2edgepairing.h"
 #include "census/dim2gluingpermsearcher.h"
 #if SUPPORT_DIM4
-#include "census/dim4census.h"
 #include "census/dim4facetpairing.h"
 #include "census/dim4gluingpermsearcher.h"
 #endif

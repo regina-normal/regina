@@ -34,7 +34,6 @@
 
 #include "exhaustive.h"
 #include "dim4/dim4triangulation.h"
-#include "census/dim4census.h"
 #include "census/dim4gluingpermsearcher.h"
 #include "census/ncensus.h"
 #include "census/ngluingpermsearcher.h"
@@ -71,7 +70,6 @@
 #define DIM4_BOUNDED_CENSUS_SIZE 2
 #define DIM4_IDEAL_CENSUS_SIZE 2
 
-using regina::Dim4Census;
 using regina::Dim4FacetPairing;
 using regina::Dim4GluingPermSearcher;
 using regina::Dim4Triangulation;
