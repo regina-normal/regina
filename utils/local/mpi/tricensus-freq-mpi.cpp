@@ -69,7 +69,6 @@
 #include <memory>
 #include <sstream>
 #include <popt.h>
-#include "census/ncensus.h"
 #include "census/ngluingpermsearcher.h"
 #include "file/nxmlfile.h"
 #include "packet/ncontainer.h"

@@ -85,6 +85,9 @@ Version 4.96  [ (under development) ]
               AcceptTriangulation are now deprecated.  To build a census
               you should call NFacePairing::findAllPairings() and
               NGluingPermSearcher::findAllPerms() directly.
+            - The PURGE_... constants have been moved to the
+              NGluingPermSearcher class.  The old flags in NCensus
+              are deprecated, but have been kept for backward compatibility.
         Class NComponent:
             - New routine getNumberOfBoundaryTriangles().
             - New routine index().
@@ -106,6 +109,8 @@ Version 4.96  [ (under development) ]
             - New routine isEmpty().
             - Made isoSig(), fromIsoSig() and isoSigComponentSize() public.
         Class NGluingPermSearcher:
+            - New PurgeFlags enumeration, which is the new home for the
+              PURGE_... constants that used to live in the NCensus class.
             - Removed protected routine mayPurge(), since this behaviour is
               already provided by specialised subclasses of NGluingPermSearcher.
         Class NHyperbolicMinSearcher:

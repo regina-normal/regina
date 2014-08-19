@@ -43,13 +43,10 @@
 #include <memory>
 #include <sstream>
 #include <popt.h>
-#include "census/dim2census.h"
 #include "census/dim2gluingpermsearcher.h"
 #if SUPPORT_DIM4
-#include "census/dim4census.h"
 #include "census/dim4gluingpermsearcher.h"
 #endif
-#include "census/ncensus.h"
 #include "census/ngluingpermsearcher.h"
 #include "dim2/dim2triangulation.h"
 #if SUPPORT_DIM4
@@ -377,14 +374,14 @@ int parseCmdLine(int argc, const char* argv[], bool isController) {
     orientability = regina::NBoolSet(! argNor, ! argOr);
 
     if (minimalPrimeP2)
-        whichPurge = regina::NCensus::PURGE_NON_MINIMAL_PRIME |
-            regina::NCensus::PURGE_P2_REDUCIBLE;
+        whichPurge = regina::NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME |
+            regina::NGluingPermSearcher::PURGE_P2_REDUCIBLE;
     else if (minimalPrime)
-        whichPurge = regina::NCensus::PURGE_NON_MINIMAL_PRIME;
+        whichPurge = regina::NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME;
     else if (minimalHyp)
-        whichPurge = regina::NCensus::PURGE_NON_MINIMAL_HYP;
+        whichPurge = regina::NGluingPermSearcher::PURGE_NON_MINIMAL_HYP;
     else if (minimal)
-        whichPurge = regina::NCensus::PURGE_NON_MINIMAL;
+        whichPurge = regina::NGluingPermSearcher::PURGE_NON_MINIMAL;
     else
         whichPurge = 0;
 

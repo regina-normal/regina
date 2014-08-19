@@ -34,14 +34,12 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "census/ncensus.h"
 #include "census/ngluingpermsearcher.h"
 #include "packet/ncontainer.h"
 #include "triangulation/ntriangulation.h"
 #include "testsuite/census/testcensus.h"
 
 using regina::NBoolSet;
-using regina::NCensus;
 using regina::NFacePairing;
 using regina::NGluingPermSearcher;
 using regina::NTriangulation;
@@ -93,7 +91,7 @@ class NCensusTest : public CppUnit::TestFixture {
             unsigned nOrientable[] = { 1, 4, 11, 7, 17, 50 };
             rawCountsCompare(1, 4, nOrientable, "closed orbl prime minimal",
                 NBoolSet::sTrue, NBoolSet::sTrue, NBoolSet::sFalse, 0,
-                NCensus::PURGE_NON_MINIMAL_PRIME, true);
+                NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME, true);
         }
 
         void rawCountsPrimeMinimalNor() {
@@ -101,8 +99,8 @@ class NCensusTest : public CppUnit::TestFixture {
             rawCountsCompare(1, 4, nNonOrientable,
                 "closed non-orbl prime minimal P2-irreducible",
                 NBoolSet::sTrue, NBoolSet::sFalse, NBoolSet::sFalse, 0,
-                NCensus::PURGE_NON_MINIMAL_PRIME |
-                NCensus::PURGE_P2_REDUCIBLE, true);
+                NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME |
+                NGluingPermSearcher::PURGE_P2_REDUCIBLE, true);
         }
 
         void rawCountsBounded() {
@@ -122,13 +120,13 @@ class NCensusTest : public CppUnit::TestFixture {
             unsigned nAll[] = { 1, 1, 7, 31, 224, 1075, 6348 };
             rawCountsCompare(1, 4, nAll, "candidate minimal cusped hyperbolic",
                 NBoolSet::sFalse, NBoolSet::sBoth, NBoolSet::sFalse, -1,
-                NCensus::PURGE_NON_MINIMAL_HYP, false);
+                NGluingPermSearcher::PURGE_NON_MINIMAL_HYP, false);
 
             unsigned nOrientable[] = { 1, 0, 3, 14, 113, 590, 3481 };
             rawCountsCompare(1, 5, nOrientable,
                 "candidate minimal cusped hyperbolic orbl",
                 NBoolSet::sFalse, NBoolSet::sTrue, NBoolSet::sFalse, -1,
-                NCensus::PURGE_NON_MINIMAL_HYP, false);
+                NGluingPermSearcher::PURGE_NON_MINIMAL_HYP, false);
         }
 
         struct CensusSpec {

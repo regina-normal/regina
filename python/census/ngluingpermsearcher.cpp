@@ -32,15 +32,62 @@
 
 /* end stub */
 
-void addNCensus();
-void addNFacePairing();
-void addNGluingPermSearcher();
-void addDim2EdgePairing();
+#include <boost/python.hpp>
+#include "census/ngluingpermsearcher.h"
+#include "triangulation/ntriangulation.h"
 
-void addCensus() {
-    addNCensus();
-    addNFacePairing();
-    addNGluingPermSearcher();
-    addDim2EdgePairing();
+using namespace boost::python;
+using regina::NGluingPermSearcher;
+
+void addNGluingPermSearcher() {
+    {
+        scope s = class_<NGluingPermSearcher,
+                std::auto_ptr<NGluingPermSearcher>,
+                boost::noncopyable>("NGluingPermSearcher", no_init)
+        ;
+
+        enum_<regina::NGluingPermSearcher::PurgeFlags>("PurgeFlags")
+            .value("PURGE_NONE",
+                regina::NGluingPermSearcher::PURGE_NONE)
+            .value("PURGE_NON_MINIMAL",
+                regina::NGluingPermSearcher::PURGE_NON_MINIMAL)
+            .value("PURGE_NON_PRIME",
+                regina::NGluingPermSearcher::PURGE_NON_PRIME)
+            .value("PURGE_NON_MINIMAL_PRIME",
+                regina::NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME)
+            .value("PURGE_NON_MINIMAL_HYP",
+                regina::NGluingPermSearcher::PURGE_NON_MINIMAL_HYP)
+            .value("PURGE_P2_REDUCIBLE",
+                regina::NGluingPermSearcher::PURGE_P2_REDUCIBLE)
+            ;
+
+        s.attr("PURGE_NONE") =
+            NGluingPermSearcher::PURGE_NONE;
+        s.attr("PURGE_NON_MINIMAL") =
+            NGluingPermSearcher::PURGE_NON_MINIMAL;
+        s.attr("PURGE_NON_PRIME") =
+            NGluingPermSearcher::PURGE_NON_PRIME;
+        s.attr("PURGE_NON_MINIMAL_PRIME") =
+            NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME;
+        s.attr("PURGE_NON_MINIMAL_HYP") =
+            NGluingPermSearcher::PURGE_NON_MINIMAL_HYP;
+        s.attr("PURGE_P2_REDUCIBLE") =
+            NGluingPermSearcher::PURGE_P2_REDUCIBLE;
+    }
+
+    scope global;
+
+    global.attr("PURGE_NONE") =
+        NGluingPermSearcher::PURGE_NONE;
+    global.attr("PURGE_NON_MINIMAL") =
+        NGluingPermSearcher::PURGE_NON_MINIMAL;
+    global.attr("PURGE_NON_PRIME") =
+        NGluingPermSearcher::PURGE_NON_PRIME;
+    global.attr("PURGE_NON_MINIMAL_PRIME") =
+        NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME;
+    global.attr("PURGE_NON_MINIMAL_HYP") =
+        NGluingPermSearcher::PURGE_NON_MINIMAL_HYP;
+    global.attr("PURGE_P2_REDUCIBLE") =
+        NGluingPermSearcher::PURGE_P2_REDUCIBLE;
 }
 

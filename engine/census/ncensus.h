@@ -55,7 +55,7 @@ class NTriangulation;
 
 /**
  * \addtogroup census Census of Triangulations
- * Census building for triangulations of various dimensions.
+ * Census lookup and enumeration for triangulations of various dimensions.
  * @{
  */
 
@@ -82,26 +82,37 @@ typedef bool (*AcceptTriangulation)(NTriangulation*, void*);
 class REGINA_API NCensus {
     public:
         static const int PURGE_NON_MINIMAL;
-            /**< Indicates that non-minimal triangulations may be ignored. */
+            /**< Deprecated constant; please use
+                 NGluingPermSearcher::PURGE_NON_MINIMAL instead.
+                 This constant indicates that non-minimal triangulations
+                 may be ignored. */
         static const int PURGE_NON_PRIME;
-            /**< Indicates that any triangulation that is not prime (i.e.,
-                 can be written as a non-trivial connected sum) and any
-                 bounded triangulation that is reducible over a disc may be
-                 ignored. */
+            /**< Deprecated constant; please use
+                 NGluingPermSearcher::PURGE_NON_PRIME instead.
+                 This constant indicates that any triangulation that is not
+                 prime (i.e., can be written as a non-trivial connected sum)
+                 and any bounded triangulation that is reducible over a disc
+                 may be ignored. */
         static const int PURGE_NON_MINIMAL_PRIME;
-            /**< Indicates that any triangulation that is not prime (i.e.,
-                 can be written as a non-trivial connected sum), any
-                 bounded triangulation that is reducible over a disc and
+            /**< Deprecated constant; please use
+                 NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME instead.
+                 This constant indicates that any triangulation that is not
+                 prime (i.e., can be written as a non-trivial connected sum),
+                 any bounded triangulation that is reducible over a disc and
                  any triangulation that is non-minimal may be ignored.
                  Note that this is simply a combination of the constants
                  \a PURGE_NON_MINIMAL and \a PURGE_NON_PRIME. */
         static const int PURGE_NON_MINIMAL_HYP;
-            /**< Indicates that any triangulation that is not a minimal ideal
-                 triangulation of a cusped finite-volume hyperbolic 3-manifold
-                 may be ignored. */
+            /**< Deprecated constant; please use
+                 NGluingPermSearcher::PURGE_NON_MINIMAL_HYP instead.
+                 This constant indicates that any triangulation that is not a
+                 minimal ideal triangulation of a cusped finite-volume
+                 hyperbolic 3-manifold may be ignored. */
         static const int PURGE_P2_REDUCIBLE;
-            /**< Indicates that any triangulation containing an embedded
-                 two-sided projective plane may be ignored. */
+            /**< Deprecated constant; please use
+                 NGluingPermSearcher::PURGE_NON_MINIMAL instead.
+                 This constant indicates that any triangulation containing an
+                 embedded two-sided projective plane may be ignored. */
 
         /**
          * A routine used to determine whether a particular triangulation

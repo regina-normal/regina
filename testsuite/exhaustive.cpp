@@ -33,7 +33,6 @@
 /* end stub */
 
 #include "exhaustive.h"
-#include "census/ncensus.h"
 #include "census/ngluingpermsearcher.h"
 #include "packet/ncontainer.h"
 #include "triangulation/ntriangulation.h"
@@ -65,7 +64,6 @@
 #endif
 
 using regina::NBoolSet;
-using regina::NCensus;
 using regina::NFacePairing;
 using regina::NGluingPermSearcher;
 using regina::NTriangulation;
@@ -103,8 +101,8 @@ namespace {
                 false /* orientable only */,
                 ! h->finite_.hasFalse() /* finite only */,
                 (h->minimal_ ?
-                    NCensus::PURGE_NON_MINIMAL_PRIME |
-                    NCensus::PURGE_P2_REDUCIBLE : 0) /* purge */,
+                    NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME |
+                    NGluingPermSearcher::PURGE_P2_REDUCIBLE : 0) /* purge */,
                 &foundGluingPerms3, holder);
         }
     }
