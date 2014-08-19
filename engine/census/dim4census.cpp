@@ -63,28 +63,6 @@ unsigned long Dim4Census::formCensus(NPacket* parent, unsigned nPentachora,
     return ans;
 }
 
-unsigned long Dim4Census::formPartialCensus(const Dim4FacetPairing* pairing,
-        NPacket* parent, NBoolSet finiteness, NBoolSet orientability,
-        AcceptTriangulation sieve, void* sieveArgs) {
-    // Is it obvious that nothing will happen?
-    if (finiteness == NBoolSet::sNone || orientability == NBoolSet::sNone)
-        return 0;
-
-    // Make a list of automorphisms.
-    Dim4FacetPairing::IsoList autos;
-    pairing->findAutomorphisms(autos);
-
-    // Select the individual gluing permutations.
-    Dim4Census census(parent, finiteness, orientability, sieve, sieveArgs);
-    Dim4GluingPermSearcher::findAllPerms(pairing, &autos,
-        ! census.orientability_.hasFalse(), ! census.finiteness_.hasFalse(),
-        Dim4Census::foundGluingPerms, &census);
-
-    // Clean up.
-    std::for_each(autos.begin(), autos.end(), FuncDelete<Dim4Isomorphism>());
-    return census.whichSoln_ - 1;
-}
-
 Dim4Census::Dim4Census(NPacket* parent, const NBoolSet& finiteness,
         const NBoolSet& orientability, AcceptTriangulation sieve,
         void* sieveArgs) :

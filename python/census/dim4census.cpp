@@ -45,19 +45,13 @@ namespace {
             int bf) {
         return Dim4Census::formCensus(p, n, fin, orb, bdr, bf);
     }
-    unsigned long formPartialCensus(const regina::Dim4FacetPairing* fp,
-            regina::NPacket* p, regina::NBoolSet fin, regina::NBoolSet orb) {
-        return Dim4Census::formPartialCensus(fp, p, fin, orb);
-    }
 }
 
 void addDim4Census() {
     scope s = class_<Dim4Census, std::auto_ptr<Dim4Census>,
             boost::noncopyable>("Dim4Census", no_init)
         .def("formCensus", formCensus)
-        .def("formPartialCensus", formPartialCensus)
         .staticmethod("formCensus")
-        .staticmethod("formPartialCensus")
     ;
 }
 
