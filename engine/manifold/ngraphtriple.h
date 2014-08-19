@@ -251,6 +251,7 @@ class REGINA_API NGraphTriple : public NManifold {
         bool operator < (const NGraphTriple& compare) const;
 
         NAbelianGroup* getHomologyH1() const;
+        bool isHyperbolic() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
 
@@ -310,6 +311,10 @@ inline const NSFSpace& NGraphTriple::centre() const {
 
 inline const NMatrix2& NGraphTriple::matchingReln(unsigned which) const {
     return matchingReln_[which];
+}
+
+inline bool NGraphTriple::isHyperbolic() const {
+    return false;
 }
 
 } // namespace regina

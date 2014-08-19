@@ -210,7 +210,7 @@ bool NTreeTraversal<LPConstraint, BanConstraint, Integer>::verify(
 
 template <class LPConstraint, typename BanConstraint, typename Integer>
 NTreeTraversal<LPConstraint, BanConstraint, Integer>::NTreeTraversal(
-        NTriangulation* tri, NormalCoords coords,
+        const NTriangulation* tri, NormalCoords coords,
         int branchesPerQuad, int branchesPerTri, bool enumeration) :
         BanConstraint(tri, coords),
         origTableaux_(tri,

@@ -115,7 +115,7 @@ void LPMatrix<Integer>::dump(std::ostream& out) const {
 
 template <class LPConstraint>
 LPInitialTableaux<LPConstraint>::LPInitialTableaux(
-        NTriangulation* tri, NormalCoords coords, bool enumeration) :
+        const NTriangulation* tri, NormalCoords coords, bool enumeration) :
         tri_(tri), coords_(coords) {
     unsigned r, c;
 

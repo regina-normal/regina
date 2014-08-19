@@ -235,7 +235,8 @@ class REGINA_API NCensus {
             void* sieveArgs = 0);
 
         /**
-         * Fills the given packet with all triangulations in a partial census
+         * Deprecated routine that fills the given packet with all
+         * triangulations in a partial census
          * of 3-manifold triangulations satisfying the given constraints.
          * Each triangulation in the partial census will appear as a child of
          * the given packet.
@@ -282,6 +283,12 @@ class REGINA_API NCensus {
          *
          * The partial census will run in the current thread.  This
          * routine will only return once the partial census is complete.
+         *
+         * \deprecated The NCensus enumeration facilities are on their
+         * way out of Regina, and in the future the NCensus class will be
+         * used purely for census lookups.  To perform the kind of
+         * enumeration that is described here, you should call
+         * NGluingPermSearcher::findAllPerms() directly.
          *
          * \pre The given face pairing is connected, i.e., it is possible
          * to reach any tetrahedron from any other tetrahedron via a
@@ -337,10 +344,10 @@ class REGINA_API NCensus {
             int whichPurge, AcceptTriangulation sieve = 0, void* sieveArgs = 0);
 
         /**
-         * Determines whether the given triangulation even has a chance
-         * at being minimal.  This routine can be passed as parameter
-         * \a sieve to routine NCensus::formCensus() to exclude obviously
-         * non-minimal triangulations from a census.
+         * Deprecated routine to determine whether the given triangulation
+         * even has a chance at being minimal.  This routine can be passed as
+         * parameter \a sieve to routine NCensus::formCensus() to exclude
+         * obviously non-minimal triangulations from a census.
          *
          * A variety of tests will be performed; these tests are subject
          * to change between Regina releases.  Currently this routine
@@ -350,6 +357,11 @@ class REGINA_API NCensus {
          * Currently this routine is only useful for triangulations whose
          * triangles are all internal; if the given triangulation has
          * boundary triangles then this routine will simply return \c true.
+         *
+         * \deprecated The NCensus enumeration facilities are on their way
+         * out of Regina, and so this routine is no longer necessary.
+         * For a fast test as to whether a triangulation might be minimal,
+         * you should simply call NTriangulation::simplifyToLocalMinimum(false).
          *
          * \ifacespython Parameter \a ignore is not present.
          *

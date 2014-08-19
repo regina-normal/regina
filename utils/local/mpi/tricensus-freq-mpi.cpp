@@ -574,7 +574,7 @@ void slaveFoundGluingPerms(const regina::NGluingPermSearcher* perms, void*) {
         else if ((! orientability.hasTrue()) && tri->isOrientable())
             ok = false;
         else if ((minimal || minimalPrime || minimalPrimeP2) &&
-                ! regina::NCensus::mightBeMinimal(tri, 0))
+                tri->simplifyToLocalMinimum(false))
             ok = false;
 
         if (ok) {

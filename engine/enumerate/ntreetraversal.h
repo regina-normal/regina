@@ -507,7 +507,7 @@ class REGINA_API NTreeTraversal : public BanConstraint {
          * or \c false if we should optimise the tableaux for an existence test
          * (such as searching for a non-trivial normal disc or sphere).
          */
-        NTreeTraversal(NTriangulation* tri, NormalCoords coords,
+        NTreeTraversal(const NTriangulation* tri, NormalCoords coords,
                 int branchesPerQuad, int branchesPerTri, bool enumeration);
 
         /**
@@ -747,7 +747,7 @@ class REGINA_API NTreeEnumeration :
          * vertex surfaces.  This must be one of NS_QUAD, NS_STANDARD,
          * NS_AN_QUAD_OCT, or NS_AN_STANDARD.
          */
-        NTreeEnumeration(NTriangulation* tri, NormalCoords coords);
+        NTreeEnumeration(const NTriangulation* tri, NormalCoords coords);
 
         /**
          * Returns the total number of vertex normal or almost normal surfaces
@@ -1009,7 +1009,7 @@ class REGINA_API NTautEnumeration :
          * @param tri the triangulation in which we wish to enumerate
          * taut angle structures.
          */
-        NTautEnumeration(NTriangulation* tri);
+        NTautEnumeration(const NTriangulation* tri);
 
         /**
          * Returns the total number of taut angle structures
@@ -1332,7 +1332,7 @@ class REGINA_API NTreeSingleSoln :
          * which to work.  This must be one of NS_QUAD, NS_STANDARD,
          * NS_AN_QUAD_OCT, or NS_AN_STANDARD.
          */
-        NTreeSingleSoln(NTriangulation* tri, NormalCoords coords);
+        NTreeSingleSoln(const NTriangulation* tri, NormalCoords coords);
 
         /**
          * Runs the tree traversal algorithm until it finds some non-trivial
@@ -1423,7 +1423,7 @@ inline int NTreeTraversal<LPConstraint, BanConstraint, Integer>::
 
 template <class LPConstraint, typename BanConstraint, typename Integer>
 inline NTreeEnumeration<LPConstraint, BanConstraint, Integer>::NTreeEnumeration(
-        NTriangulation* tri, NormalCoords coords) :
+        const NTriangulation* tri, NormalCoords coords) :
         NTreeTraversal<LPConstraint, BanConstraint, Integer>(tri, coords,
             (coords == NS_AN_QUAD_OCT || coords == NS_AN_STANDARD ?
              7 : 4) /* branches per quad */,
@@ -1468,7 +1468,7 @@ inline bool NTreeEnumeration<LPConstraint, BanConstraint, Integer>::
 
 template <class LPConstraint, typename BanConstraint, typename Integer>
 inline NTautEnumeration<LPConstraint, BanConstraint, Integer>::NTautEnumeration(
-        NTriangulation* tri) :
+        const NTriangulation* tri) :
         NTreeTraversal<LPConstraint, BanConstraint, Integer>(tri, NS_ANGLE,
             3 /* branches per quad */,
             0 /* branches per triangle; irrelevant here */,
@@ -1501,7 +1501,7 @@ inline bool NTautEnumeration<LPConstraint, BanConstraint, Integer>::writeTypes(
 
 template <class LPConstraint, typename BanConstraint, typename Integer>
 inline NTreeSingleSoln<LPConstraint, BanConstraint, Integer>::NTreeSingleSoln(
-        NTriangulation* tri, NormalCoords coords) :
+        const NTriangulation* tri, NormalCoords coords) :
         NTreeTraversal<LPConstraint, BanConstraint, Integer>(tri, coords,
             (coords == NS_AN_QUAD_OCT || coords == NS_AN_STANDARD ?
              6 : 3) /* branches per quad */,

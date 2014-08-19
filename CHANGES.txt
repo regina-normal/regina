@@ -35,6 +35,9 @@ Version 4.96  [ (under development) ]
         Class Dim2BoundaryComponent:
             - New convenience routine getComponent().
             - New routine index().
+        Class Dim2Census:
+            - Routine formPartialCensus() is deprecated; you should call
+              NGluingPermSearcher::findAllPerms() directly.
         Class Dim2Component:
             - New routine getNumberOfBoundaryEdges().
             - New routine index().
@@ -70,6 +73,10 @@ Version 4.96  [ (under development) ]
             - New convenience operator !=.
         Class NAngleStructure:
             - New convenience routine rawVector().
+            - Routine getTriangulation() now returns a const NTriangulation*
+              (previously this was non-const).  Likewise, many routines in
+              this and related classes have NTriangulation* arguments changed
+              from non-const to const.
         Class NAngleStructureList:
             - Enumeration of taut angle strutures now uses Regina's tree
               traversal / linear programming machinery, which is *much*
@@ -88,9 +95,15 @@ Version 4.96  [ (under development) ]
         Class NCensus:
             - New constant PURGE_NON_MINIMAL_HYP, for use in building a
               census of cusped finite volume hyperbolic 3-manifolds.
+            - Routine mightBeMinimal() is deprecated; you should call
+              NTriangulation::simplifyToLocalMinimum(false) instead.
+            - Routine formPartialCensus() is deprecated; you should call
+              NGluingPermSearcher::findAllPerms() directly.
         Class NComponent:
             - New routine getNumberOfBoundaryTriangles().
             - New routine index().
+        Class NCusp:
+            - New class to support NSnapPeaTriangulation.
         Class NEdge:
             - New routine index().
         Class NExampleTriangulation:
@@ -112,8 +125,8 @@ Version 4.96  [ (under development) ]
         Class NHyperbolicMinSearcher:
             - New enumeration class for building a census of minimal ideal
               triangulations of cusped finite-volume hyperbolic 3-manifolds.
-        Class NCusp:
-            - New class to support NSnapPeaTriangulation.
+        Class NManifold:
+            - New routine isHyperbolic().
         Class NNormalSurface:
             - Renamed boundarySlopes() to boundaryIntersections(), to make it
               clear that it returns algebraic intersection numbers and not the
@@ -238,13 +251,16 @@ Version 4.96  [ (under development) ]
             - Extended the tree traversal / linear programming machinery to
               work with angle structures.  This is used for enumerating all
               taut angle structures, or finding a single strict angle structure.
+            - Changed all NTriangulation types in this and related
+              classes from non-const to const.
         Class NTriangle:
             - New routine index().
         Class NTriangleEmbedding:
             - New convenience operators == and !=.
         Class NTriangulation:
-            - New routine hasStrictAngleStructure(), which uses fast
-              linear programming machinery.
+            - New routines hasStrictAngleStructure(),
+              findStrictAngleStructure() and knowsStrictAngleStructure(),
+              which use fast linear programming machinery.
             - Routine connectedSumDecomposition() now works for non-orientable
               triangulations also (arXiv:1212.1441).  There is a caveat if
               there are embedded two-sided projective planes (see the

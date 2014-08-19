@@ -162,6 +162,7 @@ class REGINA_API NSnapPeaCensusManifold : public NManifold {
 
         NTriangulation* construct() const;
         NAbelianGroup* getHomologyH1() const;
+        bool isHyperbolic() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         std::ostream& writeStructure(std::ostream& out) const;
@@ -190,6 +191,9 @@ inline unsigned long NSnapPeaCensusManifold::getIndex() const {
 inline bool NSnapPeaCensusManifold::operator == (
         const NSnapPeaCensusManifold& compare) const {
     return (section == compare.section && index == compare.index);
+}
+inline bool NSnapPeaCensusManifold::isHyperbolic() const {
+    return true;
 }
 
 } // namespace regina

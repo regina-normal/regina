@@ -131,7 +131,7 @@ class REGINA_API NAngleStructure : public ShareableObject {
         NAngleStructureVector* vector;
             /**< Stores (indirectly) the individual angles in this angle
              *   structure. */
-        NTriangulation* triangulation;
+        const NTriangulation* triangulation;
             /**< The triangulation on which this angle structure is placed. */
 
         mutable unsigned long flags;
@@ -162,7 +162,7 @@ class REGINA_API NAngleStructure : public ShareableObject {
          * @param newVector a vector containing the individual angles in the
          * angle structure.
          */
-        NAngleStructure(NTriangulation* triang,
+        NAngleStructure(const NTriangulation* triang,
             NAngleStructureVector* newVector);
         /**
          * Destroys this angle structure.
@@ -199,7 +199,7 @@ class REGINA_API NAngleStructure : public ShareableObject {
          *
          * @return the underlying triangulation.
          */
-        NTriangulation* getTriangulation() const;
+        const NTriangulation* getTriangulation() const;
 
         /**
          * Determines whether this is a strict angle structure.
@@ -308,7 +308,7 @@ inline NAngleStructureVector::NAngleStructureVector(
 
 // Inline functions for NAngleStructure
 
-inline NAngleStructure::NAngleStructure(NTriangulation* triang,
+inline NAngleStructure::NAngleStructure(const NTriangulation* triang,
         NAngleStructureVector* newVector) : vector(newVector),
         triangulation(triang), flags(0) {
 }
@@ -317,7 +317,7 @@ inline NAngleStructure::~NAngleStructure() {
     delete vector;
 }
 
-inline NTriangulation* NAngleStructure::getTriangulation() const {
+inline const NTriangulation* NAngleStructure::getTriangulation() const {
     return triangulation;
 }
 

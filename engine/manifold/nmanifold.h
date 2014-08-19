@@ -60,7 +60,7 @@ class NTriangulation;
  * 3-manifold that may be in use is not of interest.
  *
  * Subclasses corresponding to the different types of 3-manifold must
- * override at least the virtual functions writeName() and writeTeXName().
+ * (of course) override all pure virtual functions.
  * They do not need to override writeTextShort() or writeTextLong()
  * since these routines are properly implemented in the base class
  * NManifold.
@@ -137,6 +137,14 @@ class REGINA_API NManifold : public ShareableObject {
          * the appropriate calculation routine has not yet been implemented.
          */
         virtual NAbelianGroup* getHomologyH1() const;
+
+        /**
+         * Returns whether or not this is a finite-volume hyperbolic manifold.
+         *
+         * @return \c true if this is a finite-volume hyperbolic
+         * manifold, or \c false if not.
+         */
+        virtual bool isHyperbolic() const = 0;
 
         /**
          * Determines in a fairly ad-hoc fashion whether this representation

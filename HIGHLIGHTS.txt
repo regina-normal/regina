@@ -9,14 +9,28 @@ Regina - A Normal Surface Theory Calculator
 Version 4.96  [ (under development) ]
 
     Features:
+        - Regina can in many cases certify rigorously and quickly that cusped
+          manifolds are hyperbolic, using strict angle structures and linear
+          programming.  See the Recognition tab in the triangulation viewer.
+        - SnapPea triangulations are now a separate type of packet.
+          They maintain both Regina's and SnapPea's internal data structures,
+          which means that all of SnapPea's own internal information (such as
+          fillings and peripheral curves) will be preserved when you import
+          from a SnapPea file.  More of SnapPea's functionality is now
+          available directly in Regina for such triangluations.
         - Connected sum decomposition is now available for non-orientable
           manifolds (arXiv:1212.1441).
         - Elementary 1-4 moves on triangulations are now available.
         - You can now puncture 3-manifolds and build connected sums.
-        - Several more conveniences for Python and C++ users.
+        - Several more API conveniences for Python and C++ users.
         - Many structural changes under the hood, to prepare Regina for
           the coming 4-manifolds release.
+    Optimisations:
+        - Enumeration of taut angle structures is now much faster,
+          thanks to Regina's tree traversal / linear programming machinery.
     Behaviour changes:
+        - The commit / refresh buttons are gone from the user interface
+          (now all changes are applied as soon as you make them).
         - Boundary slopes for spun-normal surfaces must now be explicitly
           enabled in preferences, since they rely on SnapPea's default choice
           of peripheral curves (which might not be what the user expects).

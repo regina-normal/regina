@@ -36,6 +36,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "census/ncensus.h"
 #include "packet/ncontainer.h"
+#include "triangulation/ntriangulation.h"
 #include "testsuite/census/testcensus.h"
 
 using regina::NBoolSet;
@@ -64,28 +65,32 @@ class NCensusTest : public CppUnit::TestFixture {
         void rawCounts() {
             unsigned nAll[] = { 1, 5, 61, 1581 };
             rawCountsCompare(1, 3, nAll, "closed/ideal",
-                NBoolSet::sBoth, NBoolSet::sBoth, NBoolSet::sFalse, 0, 0, 0);
+                NBoolSet::sBoth, NBoolSet::sBoth, NBoolSet::sFalse,
+                0, 0, false);
 
             unsigned nOrientable[] = { 1, 4, 35, 454, 13776 };
             rawCountsCompare(1, 3, nOrientable, "closed/ideal orbl",
-                NBoolSet::sBoth, NBoolSet::sTrue, NBoolSet::sFalse, 0, 0, 0);
+                NBoolSet::sBoth, NBoolSet::sTrue, NBoolSet::sFalse,
+                0, 0, false);
         }
 
         void rawCountsCompact() {
             unsigned nAll[] = { 1, 4, 17, 81, 577, 5184, 57753 };
             rawCountsCompare(1, 4, nAll, "closed compact",
-                NBoolSet::sTrue, NBoolSet::sBoth, NBoolSet::sFalse, 0, 0, 0);
+                NBoolSet::sTrue, NBoolSet::sBoth, NBoolSet::sFalse,
+                0, 0, false);
 
             unsigned nOrientable[] = { 1, 4, 16, 76, 532, 4807, 52946 };
             rawCountsCompare(1, 4, nOrientable, "closed compact orbl",
-                NBoolSet::sTrue, NBoolSet::sTrue, NBoolSet::sFalse, 0, 0, 0);
+                NBoolSet::sTrue, NBoolSet::sTrue, NBoolSet::sFalse,
+                0, 0, false);
         }
 
         void rawCountsPrimeMinimalOr() {
             unsigned nOrientable[] = { 1, 4, 11, 7, 17, 50 };
             rawCountsCompare(1, 4, nOrientable, "closed orbl prime minimal",
                 NBoolSet::sTrue, NBoolSet::sTrue, NBoolSet::sFalse, 0,
-                NCensus::PURGE_NON_MINIMAL_PRIME, NCensus::mightBeMinimal);
+                NCensus::PURGE_NON_MINIMAL_PRIME, true);
         }
 
         void rawCountsPrimeMinimalNor() {
@@ -94,17 +99,19 @@ class NCensusTest : public CppUnit::TestFixture {
                 "closed non-orbl prime minimal P2-irreducible",
                 NBoolSet::sTrue, NBoolSet::sFalse, NBoolSet::sFalse, 0,
                 NCensus::PURGE_NON_MINIMAL_PRIME |
-                NCensus::PURGE_P2_REDUCIBLE, NCensus::mightBeMinimal);
+                NCensus::PURGE_P2_REDUCIBLE, true);
         }
 
         void rawCountsBounded() {
             unsigned nAll[] = { 1, 3, 17, 156, 2308 };
             rawCountsCompare(1, 3, nAll, "bounded compact",
-                NBoolSet::sTrue, NBoolSet::sBoth, NBoolSet::sTrue, -1, 0, 0);
+                NBoolSet::sTrue, NBoolSet::sBoth, NBoolSet::sTrue,
+                -1, 0, false);
 
             unsigned nOrientable[] = { 1, 3, 14, 120, 1531 };
             rawCountsCompare(1, 3, nOrientable, "bounded compact orbl",
-                NBoolSet::sTrue, NBoolSet::sTrue, NBoolSet::sTrue, -1, 0, 0);
+                NBoolSet::sTrue, NBoolSet::sTrue, NBoolSet::sTrue,
+                -1, 0, false);
         }
 
         void rawCountsHypMin() {
@@ -112,26 +119,31 @@ class NCensusTest : public CppUnit::TestFixture {
             unsigned nAll[] = { 1, 1, 7, 31, 224, 1075, 6348 };
             rawCountsCompare(1, 4, nAll, "candidate minimal cusped hyperbolic",
                 NBoolSet::sFalse, NBoolSet::sBoth, NBoolSet::sFalse, -1,
-                NCensus::PURGE_NON_MINIMAL_HYP, 0);
+                NCensus::PURGE_NON_MINIMAL_HYP, false);
 
             unsigned nOrientable[] = { 1, 0, 3, 14, 113, 590, 3481 };
             rawCountsCompare(1, 5, nOrientable,
                 "candidate minimal cusped hyperbolic orbl",
                 NBoolSet::sFalse, NBoolSet::sTrue, NBoolSet::sFalse, -1,
-                NCensus::PURGE_NON_MINIMAL_HYP, 0);
+                NCensus::PURGE_NON_MINIMAL_HYP, false);
+        }
+
+        static bool mightBeMinimal(regina::NTriangulation* tri, void*) {
+            return ! tri->simplifyToLocalMinimum(false);
         }
 
         static void rawCountsCompare(unsigned minTets, unsigned maxTets,
                 const unsigned* realAns, const char* censusType,
                 NBoolSet finiteness, NBoolSet orientability,
                 NBoolSet boundary, int nBdryFaces, int whichPurge,
-                NCensus::AcceptTriangulation sieve) {
+                bool testNonMinimality) {
             NContainer* census;
 
             for (unsigned nTets = minTets; nTets <= maxTets; nTets++) {
                 census = new NContainer();
                 NCensus::formCensus(census, nTets, finiteness, orientability,
-                    boundary, nBdryFaces, whichPurge, sieve);
+                    boundary, nBdryFaces, whichPurge,
+                    testNonMinimality ? &mightBeMinimal : 0);
 
                 std::ostringstream msg;
                 msg << "Census count for " << nTets << " tetrahedra ("

@@ -207,6 +207,12 @@ class REGINA_API Dim2Census {
          * The partial census will run in the current thread.  This
          * routine will only return once the partial census is complete.
          *
+         * \deprecated The Dim2Census enumeration facilities are on their
+         * way out of Regina, and in the future the Dim2Census class will be
+         * used purely for census lookups (if at all).  To perform the kind of
+         * enumeration that is described here, you should call
+         * Dim2GluingPermSearcher::findAllPerms() directly.
+         *
          * \pre The given edge pairing is connected, i.e., it is possible
          * to reach any triangle from any other triangle via a
          * series of matched edge pairs.

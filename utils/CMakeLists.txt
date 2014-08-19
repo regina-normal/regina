@@ -13,7 +13,17 @@ set(UTILS
   trisetcmp
   )
 
+set(PRIVATE_UTILS
+  mkcensusdb
+  )
+
 foreach(UTIL ${UTILS})
+  string(REGEX REPLACE _ - SOURCE_FILE ${UTIL})
+  add_executable(${UTIL} ${SOURCE_FILE})
+  target_link_libraries(${UTIL} ${ENGINE_LIBRARY} ${POPT_LIBRARY})
+endforeach(UTIL)
+
+foreach(UTIL ${PRIVATE_UTILS})
   string(REGEX REPLACE _ - SOURCE_FILE ${UTIL})
   add_executable(${UTIL} ${SOURCE_FILE})
   target_link_libraries(${UTIL} ${ENGINE_LIBRARY} ${POPT_LIBRARY})

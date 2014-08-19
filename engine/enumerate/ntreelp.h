@@ -467,7 +467,7 @@ class LPInitialTableaux {
         };
 
     private:
-        NTriangulation* tri_;
+        const NTriangulation* tri_;
             /**< The underlying triangulation. */
         NormalCoords coords_;
             /**< The coordinate system used for the matrix of matching
@@ -530,7 +530,7 @@ class LPInitialTableaux {
          * (such as searching for a non-trivial normal disc or sphere, or
          * a strict angle structure).
          */
-        LPInitialTableaux(NTriangulation* tri,
+        LPInitialTableaux(const NTriangulation* tri,
             NormalCoords coords, bool enumeration);
 
         /**
@@ -544,7 +544,7 @@ class LPInitialTableaux {
          *
          * @return the underlying triangulation.
          */
-        inline NTriangulation* tri() const;
+        inline const NTriangulation* tri() const;
 
         /**
          * Returns the coordinate system that is used for the matrix of
@@ -1492,7 +1492,7 @@ inline LPInitialTableaux<LPConstraint>::~LPInitialTableaux() {
 }
 
 template <class LPConstraint>
-inline NTriangulation* LPInitialTableaux<LPConstraint>::tri() const {
+inline const NTriangulation* LPInitialTableaux<LPConstraint>::tri() const {
     return tri_;
 }
 
