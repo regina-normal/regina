@@ -59,8 +59,8 @@ class NPacket;
  */
 
 /**
- * A utility class used to form a complete census of 2-manifold
- * triangulations satisfying certain constraints.
+ * A utility class used to search for triangulations across one or more
+ * 2-manifold census databases.
  *
  * \testpart
  */
@@ -78,6 +78,12 @@ class REGINA_API Dim2Census {
          *
          * The return value should be \c true if the triangulation passed
          * should be included in the census, or \c false otherwise.
+         *
+         * \deprecated The Dim2Census enumeration facilities are on their
+         * way out of Regina, and in the future the Dim2Census class will be
+         * used purely for census lookups.  If you wish to build a census
+         * yourself, you should call Dim2EdgePairing::findAllPairings() and
+         * Dim2GluingPermSearcher::findAllPerms() directly.
          */
         typedef bool (*AcceptTriangulation)(Dim2Triangulation*, void*);
 

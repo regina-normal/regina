@@ -18,7 +18,8 @@ Version 4.96  [ (under development) ]
             - New convenience routine getComponent().
             - New routine index().
         Class Dim2Census:
-            - Routines formCensus() and formPartialCensus() are deprecated;
+            - Routines formCensus() and formPartialCensus() and the typedef
+              AcceptTriangulation are now deprecated.  To build a census
               you should call Dim2EdgePairing::findAllPairings() and
               Dim2GluingPermSearcher::findAllPerms() directly.
         Class Dim2Component:
@@ -80,7 +81,8 @@ Version 4.96  [ (under development) ]
               census of cusped finite volume hyperbolic 3-manifolds.
             - Routine mightBeMinimal() is deprecated; you should call
               NTriangulation::simplifyToLocalMinimum(false) instead.
-            - Routines formCensus() and formPartialCensus() are deprecated;
+            - Routines formCensus() and formPartialCensus() and the typedef
+              AcceptTriangulation are now deprecated.  To build a census
               you should call NFacePairing::findAllPairings() and
               NGluingPermSearcher::findAllPerms() directly.
         Class NComponent:

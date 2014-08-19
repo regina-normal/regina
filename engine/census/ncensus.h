@@ -64,13 +64,18 @@ class NTriangulation;
  * See NCensus::AcceptTriangulation for further details.
  *
  * \deprecated This global typedef is now deprecated.  Please use the
- * identical class typedef NCensus::AcceptTriangulation instead.
+ * identical class typedef NCensus::AcceptTriangulation instead.  However,
+ * be aware that the NCensus enumeration facilities are on their
+ * way out of Regina, and in the future the NCensus class will be
+ * used purely for census lookups.  If you wish to build a census
+ * yourself, you should call NFacePairing::findAllPairings() and
+ * NGluingPermSearcher::findAllPerms() directly.
  */
 typedef bool (*AcceptTriangulation)(NTriangulation*, void*);
 
 /**
- * A utility class used to form a complete census of 3-manifold
- * triangulations satisfying certain constraints.
+ * A utility class used to search for triangulations across one or more
+ * 3-manifold census databases.
  *
  * \testpart
  */
@@ -110,6 +115,12 @@ class REGINA_API NCensus {
          *
          * The return value should be \c true if the triangulation passed
          * should be included in the census, or \c false otherwise.
+         *
+         * \deprecated The NCensus enumeration facilities are on their
+         * way out of Regina, and in the future the NCensus class will be
+         * used purely for census lookups.  If you wish to build a census
+         * yourself, you should call NFacePairing::findAllPairings() and
+         * NGluingPermSearcher::findAllPerms() directly.
          */
         typedef bool (*AcceptTriangulation)(NTriangulation*, void*);
 
