@@ -450,27 +450,6 @@ void ReginaPrefSet::readInternal() {
     displayTagsInTree = settings.value("DisplayTagsInTree", false).toBool();
     settings.endGroup();
 
-    settings.beginGroup("Census");
-    censusFiles.clear();
-    // System census files:
-    QString exDir = QFile::decodeName(regina::NGlobalDirs::examples().c_str());
-    censusFiles.push_back(ReginaFilePref(exDir + "/closed-or-census.rga",
-        tr("Closed census (orientable)"), "ClosedOr", settings));
-    censusFiles.push_back(ReginaFilePref(exDir + "/closed-nor-census.rga",
-        tr("Closed census (non-orientable)"), "ClosedNor", settings));
-    censusFiles.push_back(ReginaFilePref(exDir + "/cusped-hyp-or-census.rga",
-        tr("Cusped hyperbolic census (orientable)"), "CuspedHypOr", settings));
-    censusFiles.push_back(ReginaFilePref(exDir + "/cusped-hyp-nor-census.rga",
-        tr("Cusped hyperbolic census (non-orientable)"), "CuspedHypNor",
-        settings));
-    censusFiles.push_back(ReginaFilePref(exDir + "/closed-hyp-census.rga",
-        tr("Hodgson-Weeks closed hyperbolic census"), "ClosedHyp", settings));
-    censusFiles.push_back(ReginaFilePref(exDir + "/hyp-knot-link-census.rga",
-        tr("Hyperbolic knot and link complements"), "HypKnotLink", settings));
-    // Additional user census files:
-    ReginaFilePref::readUserKey(censusFiles, settings);
-    settings.endGroup();
-
     settings.beginGroup("File");
     fileRecentMax = settings.value("RecentMax", 10).toInt();
     fileImportExportCodec = settings.value("ImportExportCodec",
@@ -572,10 +551,6 @@ void ReginaPrefSet::saveInternal() const {
     settings.beginGroup("Display");
     settings.setValue("UseDock", useDock);
     settings.setValue("DisplayTagsInTree", displayTagsInTree);
-    settings.endGroup();
-
-    settings.beginGroup("Census");
-    ReginaFilePref::writeKeys(censusFiles, settings);
     settings.endGroup();
 
     settings.beginGroup("File");

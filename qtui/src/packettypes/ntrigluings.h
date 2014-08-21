@@ -214,7 +214,6 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         void splitIntoComponents();
         void connectedSumDecomposition();
         void makeZeroEfficient();
-        void censusLookup();
         void toSnapPea();
 
         /**

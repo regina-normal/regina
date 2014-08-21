@@ -351,8 +351,6 @@ class ReginaPrefSet : public QObject {
         bool anglesCreationTaut;
             /**< When enumerating angle structures, should the taut
                  structures option be enabled by default? */
-        QList<ReginaFilePref> censusFiles;
-            /**< The list of data files to use for census lookups. */
         bool displayTagsInTree;
             /**< Should we display packet tags in the visual tree? */
         QByteArray fileImportExportCodec;
