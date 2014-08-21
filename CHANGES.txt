@@ -77,8 +77,10 @@ Version 4.96  [ (under development) ]
               is easier on the fingers.  The old name has been kept as a
               deprecated alias for backward compatibility.
         Class NCensus:
-            - New constant PURGE_NON_MINIMAL_HYP, for use in building a
-              census of cusped finite volume hyperbolic 3-manifolds.
+            - New routine lookup() (in two variants) to quickly search for a
+              given triangulation in Regina's various census databases.
+              The databases themselves are now installed alongside the
+              mathematical engine, and are much larger and richer than before.
             - Routine mightBeMinimal() is deprecated; you should call
               NTriangulation::simplifyToLocalMinimum(false) instead.
             - Routines formCensus() and formPartialCensus() and the typedef
@@ -88,6 +90,8 @@ Version 4.96  [ (under development) ]
             - The PURGE_... constants have been moved to the
               NGluingPermSearcher class.  The old flags in NCensus
               are deprecated, but have been kept for backward compatibility.
+        Class NCensusDB, NCensusHit, NCensusHits:
+            - New classes to support the new NCensus::lookup() routines.
         Class NComponent:
             - New routine getNumberOfBoundaryTriangles().
             - New routine index().
@@ -111,6 +115,9 @@ Version 4.96  [ (under development) ]
         Class NGluingPermSearcher:
             - New PurgeFlags enumeration, which is the new home for the
               PURGE_... constants that used to live in the NCensus class.
+              This enumeration also contains new flags PURGE_NON_MINIMAL_HYP
+              (for use in building a census of cusped finite volume hyperbolic
+              3-manifolds), and PURGE_NONE.
             - Removed protected routine mayPurge(), since this behaviour is
               already provided by specialised subclasses of NGluingPermSearcher.
         Class NHyperbolicMinSearcher:
@@ -346,6 +353,9 @@ Version 4.96  [ (under development) ]
           automatically.
         - Many other changes that implement the engine updates listed above.
     UTILITIES:
+        censuslookup:
+            - New command-line utility for looking up triangulations in
+              Regina's census databases.
         tricensus:
             - New argument -h/--minhyp for enumerating minimal ideal
               triangulations of cusped finite-volume hyperbolic 3-manifolds.

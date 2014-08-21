@@ -33,21 +33,91 @@
 /* end stub */
 
 #include <algorithm>
+#include <cstdlib>
+#include <cstdbool>
+#include <cstdint>
 #include <sstream>
+#include <tcbdb.h>
+#include <tcutil.h>
 #include "census/ncensus.h"
 #include "census/ngluingpermsearcher.h"
+#include "file/nglobaldirs.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/memutils.h"
 
 namespace regina {
+
+NCensusDB* NCensus::closedOr_ = 0;
+NCensusDB* NCensus::closedNor_ = 0;
+NCensusDB* NCensus::closedHyp_ = 0;
+NCensusDB* NCensus::cuspedHypOr_ = 0;
+NCensusDB* NCensus::cuspedHypNor_ = 0;
+NCensusDB* NCensus::hypKnotLink_ = 0;
+bool NCensus::dbInit_ = false;
+
+bool NCensusDB::lookup(const std::string& isoSig, NCensusHits* hits) const {
+    TCBDB* db = tcbdbnew();
+    if (! tcbdbopen(db, filename_.c_str(), BDBOREADER)) {
+        std::cerr << "ERROR: Could not open census database: "
+            << filename_ << std::endl;
+        return false;
+    }
+
+    TCLIST* records = tcbdbget4(db, isoSig.c_str(), isoSig.length());
+    if (records) {
+        int n = tclistnum(records);
+        for (int i = 0; i < n; ++i)
+            hits->append(new NCensusHit(tclistval2(records, i), this));
+        tclistdel(records);
+    }
+
+    tcbdbclose(db);
+    tcbdbdel(db);
+    return true;
+}
+
+NCensusHits* NCensus::lookup(const NTriangulation& tri) {
+    return lookup(tri.isoSig());
+}
+
+NCensusHits* NCensus::lookup(const std::string& isoSig) {
+    if (! dbInit_) {
+        closedOr_ = standardDB("closed-or-census-11.tdb",
+            "Closed census (orientable)");
+        closedNor_ = standardDB("closed-nor-census-11.tdb",
+            "Closed census (non-orientable)");
+        closedHyp_ = standardDB("closed-hyp-census-full.tdb",
+            "Hodgson-Weeks closed hyperbolic census");
+        cuspedHypOr_ = standardDB("cusped-hyp-or-census-9.tdb",
+            "Cusped hyperbolic census (orientable)");
+        cuspedHypNor_ = standardDB("cusped-hyp-nor-census-9.tdb",
+            "Cusped hyperbolic census (non-orientable)");
+        hypKnotLink_ = standardDB("hyp-knot-link-census.tdb",
+            "Hyperbolic knot and link complements");
+        dbInit_ = true;
+    }
+
+    NCensusHits* hits = new NCensusHits;
+
+    closedOr_->lookup(isoSig, hits);
+    closedNor_->lookup(isoSig, hits);
+    closedHyp_->lookup(isoSig, hits);
+    cuspedHypOr_->lookup(isoSig, hits);
+    cuspedHypNor_->lookup(isoSig, hits);
+    hypKnotLink_->lookup(isoSig, hits);
+
+    return hits;
+}
+
+NCensusDB* NCensus::standardDB(const char* filename, const char* desc) {
+    return new NCensusDB(NGlobalDirs::data() + "/census/" + filename, desc);
+}
 
 const int NCensus::PURGE_NON_MINIMAL = NGluingPermSearcher::PURGE_NON_MINIMAL;
 const int NCensus::PURGE_NON_PRIME = NGluingPermSearcher::PURGE_NON_PRIME;
 const int NCensus::PURGE_NON_MINIMAL_PRIME =
     NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME;
 const int NCensus::PURGE_P2_REDUCIBLE = NGluingPermSearcher::PURGE_P2_REDUCIBLE;
-const int NCensus::PURGE_NON_MINIMAL_HYP =
-    NGluingPermSearcher::PURGE_NON_MINIMAL_HYP;
 
 unsigned long NCensus::formCensus(NPacket* parent, unsigned nTetrahedra,
         NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,

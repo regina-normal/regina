@@ -26,6 +26,8 @@ Version 4.96  [ (under development) ]
         - Many structural changes under the hood, to prepare Regina for
           the coming 4-manifolds release.
     Optimisations:
+        - Census lookup is now extremely fast, uses much larger and richer
+          databases, and is done automatically (see the Recognition panel).
         - Enumeration of taut angle structures is now much faster,
           thanks to Regina's tree traversal / linear programming machinery.
     Behaviour changes:

@@ -4,6 +4,7 @@ include_directories(${CMAKE_BINARY_DIR}/engine)
 include_directories(${POPT_INCLUDE_DIR})
 
 set(UTILS
+  censuslookup
   regconcat
   regconvert
   regfiledump
