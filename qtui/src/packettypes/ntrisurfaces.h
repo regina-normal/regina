@@ -66,7 +66,9 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
          */
         QWidget* ui;
         QLabel* zeroEff;
+        QLabel* titleZeroEff;
         QLabel* splitting;
+        QLabel* titleSplitting;
         QLabel* threeSphere;
         QLabel* titleThreeSphere;
         QLabel* threeBall;

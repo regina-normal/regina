@@ -35,6 +35,7 @@
 // Regina core includes:
 #include "census/ncensus.h"
 #include "manifold/nmanifold.h"
+#include "snappea/nsnappeatriangulation.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/ntriangulation.h"
 
@@ -105,26 +106,26 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     titleSolidTorus->setWhatsThis(msg);
     solidTorus->setWhatsThis(msg);
 
-    label = new QLabel(tr("Zero-efficient?"), ui);
-    grid->addWidget(label, 3, 1);
+    titleZeroEff = new QLabel(tr("Zero-efficient?"), ui);
+    grid->addWidget(titleZeroEff, 3, 1);
     zeroEff = new QLabel(ui);
     grid->addWidget(zeroEff, 3, 3);
     msg = tr("<qt>Is this a 0-efficient triangulation?  "
         "A <i>0-efficient triangulation</i> is one whose only normal "
         "spheres or discs are vertex linking, and which has no 2-sphere "
         "boundary components.</qt>");
-    label->setWhatsThis(msg);
+    titleZeroEff->setWhatsThis(msg);
     zeroEff->setWhatsThis(msg);
 
-    label = new QLabel(tr("Splitting surface?"), ui);
-    grid->addWidget(label, 4, 1);
+    titleSplitting = new QLabel(tr("Splitting surface?"), ui);
+    grid->addWidget(titleSplitting, 4, 1);
     splitting = new QLabel(ui);
     grid->addWidget(splitting, 4, 3);
     msg = tr("<qt>Does this triangulation contain a splitting surface?  "
         "A <i>splitting surface</i> is a normal surface containing precisely "
         "one quadrilateral per tetrahedron and no other normal (or "
         "almost normal) discs.</qt>");
-    label->setWhatsThis(msg);
+    titleSplitting->setWhatsThis(msg);
     splitting->setWhatsThis(msg);
 
     titleIrreducible = new QLabel(tr("Irreducible?"), ui);
@@ -341,44 +342,62 @@ void NTriSurfacesUI::refresh() {
         delete std;
     }
 
-    if (tri->knowsZeroEfficient() ||
-            tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
-        if (tri->isZeroEfficient()) {
-            zeroEff->setText(tr("True"));
-            QPalette pal = zeroEff->palette();
-            pal.setColor(zeroEff->foregroundRole(), Qt::darkGreen);
-            zeroEff->setPalette(pal);
-        } else {
-            zeroEff->setText(tr("False"));
-            QPalette pal = zeroEff->palette();
-            pal.setColor(zeroEff->foregroundRole(), Qt::darkRed);
-            zeroEff->setPalette(pal);
-        }
-        btnZeroEff->setEnabled(false);
-    } else {
-        zeroEff->setText(tr("Unknown"));
-        zeroEff->setPalette(QPalette());
-        btnZeroEff->setEnabled(true);
-    }
+    if (! dynamic_cast<regina::NSnapPeaTriangulation*>(tri)) {
+        titleZeroEff->setVisible(true);
+        zeroEff->setVisible(true);
+        btnZeroEff->setVisible(true);
 
-    if (tri->knowsSplittingSurface() ||
-            tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
-        if (tri->hasSplittingSurface()) {
-            splitting->setText(tr("True"));
-            QPalette pal = splitting->palette();
-            pal.setColor(splitting->foregroundRole(), Qt::darkGreen);
-            splitting->setPalette(pal);
+        titleSplitting->setVisible(true);
+        splitting->setVisible(true);
+        btnSplitting->setVisible(true);
+
+        if (tri->knowsZeroEfficient() ||
+                tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
+            if (tri->isZeroEfficient()) {
+                zeroEff->setText(tr("True"));
+                QPalette pal = zeroEff->palette();
+                pal.setColor(zeroEff->foregroundRole(), Qt::darkGreen);
+                zeroEff->setPalette(pal);
+            } else {
+                zeroEff->setText(tr("False"));
+                QPalette pal = zeroEff->palette();
+                pal.setColor(zeroEff->foregroundRole(), Qt::darkRed);
+                zeroEff->setPalette(pal);
+            }
+            btnZeroEff->setEnabled(false);
         } else {
-            splitting->setText(tr("False"));
-            QPalette pal = splitting->palette();
-            pal.setColor(splitting->foregroundRole(), Qt::darkRed);
-            splitting->setPalette(pal);
+            zeroEff->setText(tr("Unknown"));
+            zeroEff->setPalette(QPalette());
+            btnZeroEff->setEnabled(true);
         }
-        btnSplitting->setEnabled(false);
+
+        if (tri->knowsSplittingSurface() ||
+                tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
+            if (tri->hasSplittingSurface()) {
+                splitting->setText(tr("True"));
+                QPalette pal = splitting->palette();
+                pal.setColor(splitting->foregroundRole(), Qt::darkGreen);
+                splitting->setPalette(pal);
+            } else {
+                splitting->setText(tr("False"));
+                QPalette pal = splitting->palette();
+                pal.setColor(splitting->foregroundRole(), Qt::darkRed);
+                splitting->setPalette(pal);
+            }
+            btnSplitting->setEnabled(false);
+        } else {
+            splitting->setText(tr("Unknown"));
+            splitting->setPalette(QPalette());
+            btnSplitting->setEnabled(true);
+        }
     } else {
-        splitting->setText(tr("Unknown"));
-        splitting->setPalette(QPalette());
-        btnSplitting->setEnabled(true);
+        titleZeroEff->setVisible(false);
+        zeroEff->setVisible(false);
+        btnZeroEff->setVisible(false);
+
+        titleSplitting->setVisible(false);
+        splitting->setVisible(false);
+        btnSplitting->setVisible(false);
     }
 
     if (tri->isClosed()) {
