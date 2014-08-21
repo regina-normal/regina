@@ -79,28 +79,28 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
 
     QString msg;
 
-    label = new QLabel(tr("3-sphere?"), ui);
-    grid->addWidget(label, 0, 1);
+    titleThreeSphere = new QLabel(tr("3-sphere?"), ui);
+    grid->addWidget(titleThreeSphere, 0, 1);
     threeSphere = new QLabel(ui);
     grid->addWidget(threeSphere, 0, 3);
     msg = tr("Is this a triangulation of the 3-sphere?");
-    label->setWhatsThis(msg);
+    titleThreeSphere->setWhatsThis(msg);
     threeSphere->setWhatsThis(msg);
 
-    label = new QLabel(tr("3-ball?"), ui);
-    grid->addWidget(label, 1, 1);
+    titleThreeBall = new QLabel(tr("3-ball?"), ui);
+    grid->addWidget(titleThreeBall, 1, 1);
     threeBall= new QLabel(ui);
     grid->addWidget(threeBall, 1, 3);
     msg = tr("Is this a triangulation of the 3-dimensional ball?");
-    label->setWhatsThis(msg);
+    titleThreeBall->setWhatsThis(msg);
     threeBall->setWhatsThis(msg);
 
-    label = new QLabel(tr("Solid torus?"), ui);
-    grid->addWidget(label, 2, 1);
+    titleSolidTorus = new QLabel(tr("Solid torus?"), ui);
+    grid->addWidget(titleSolidTorus, 2, 1);
     solidTorus = new QLabel(ui);
     grid->addWidget(solidTorus, 2, 3);
     msg = tr("Is this a triangulation of the solid torus?");
-    label->setWhatsThis(msg);
+    titleSolidTorus->setWhatsThis(msg);
     solidTorus->setWhatsThis(msg);
 
     label = new QLabel(tr("Zero-efficient?"), ui);
@@ -369,76 +369,106 @@ void NTriSurfacesUI::refresh() {
         btnSplitting->setEnabled(true);
     }
 
-    if (tri->knowsThreeSphere() ||
-            tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
-        if (tri->isThreeSphere()) {
-            threeSphere->setText(tr("True"));
-            QPalette pal = threeSphere->palette();
-            pal.setColor(threeSphere->foregroundRole(), Qt::darkGreen);
-            threeSphere->setPalette(pal);
+    if (tri->isClosed()) {
+        titleThreeSphere->setVisible(true);
+        threeSphere->setVisible(true);
+        btnThreeSphere->setVisible(true);
 
-            isHyp = false;
-            if (name.empty())
-                name = "S3";
+        if (tri->knowsThreeSphere() ||
+                tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
+            if (tri->isThreeSphere()) {
+                threeSphere->setText(tr("True"));
+                QPalette pal = threeSphere->palette();
+                pal.setColor(threeSphere->foregroundRole(), Qt::darkGreen);
+                threeSphere->setPalette(pal);
+
+                isHyp = false;
+                if (name.empty())
+                    name = "S3";
+            } else {
+                threeSphere->setText(tr("False"));
+                QPalette pal = threeSphere->palette();
+                pal.setColor(threeSphere->foregroundRole(), Qt::darkRed);
+                threeSphere->setPalette(pal);
+            }
+            btnThreeSphere->setEnabled(false);
         } else {
-            threeSphere->setText(tr("False"));
-            QPalette pal = threeSphere->palette();
-            pal.setColor(threeSphere->foregroundRole(), Qt::darkRed);
-            threeSphere->setPalette(pal);
+            threeSphere->setText(tr("Unknown"));
+            threeSphere->setPalette(QPalette());
+            btnThreeSphere->setEnabled(true);
         }
-        btnThreeSphere->setEnabled(false);
     } else {
-        threeSphere->setText(tr("Unknown"));
-        threeSphere->setPalette(QPalette());
-        btnThreeSphere->setEnabled(true);
+        titleThreeSphere->setVisible(false);
+        threeSphere->setVisible(false);
+        btnThreeSphere->setVisible(false);
     }
 
-    if (tri->knowsBall() ||
-            tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
-        if (tri->isBall()) {
-            threeBall->setText(tr("True"));
-            QPalette pal = threeBall->palette();
-            pal.setColor(threeBall->foregroundRole(), Qt::darkGreen);
-            threeBall->setPalette(pal);
+    if (tri->hasBoundaryTriangles()) {
+        titleThreeBall->setVisible(true);
+        threeBall->setVisible(true);
+        btnThreeBall->setVisible(true);
 
-            isHyp = false;
-            if (name.empty())
-                name = "B3";
+        if (tri->knowsBall() ||
+                tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
+            if (tri->isBall()) {
+                threeBall->setText(tr("True"));
+                QPalette pal = threeBall->palette();
+                pal.setColor(threeBall->foregroundRole(), Qt::darkGreen);
+                threeBall->setPalette(pal);
+
+                isHyp = false;
+                if (name.empty())
+                    name = "B3";
+            } else {
+                threeBall->setText(tr("False"));
+                QPalette pal = threeBall->palette();
+                pal.setColor(threeBall->foregroundRole(), Qt::darkRed);
+                threeBall->setPalette(pal);
+            }
+            btnThreeBall->setEnabled(false);
         } else {
-            threeBall->setText(tr("False"));
-            QPalette pal = threeBall->palette();
-            pal.setColor(threeBall->foregroundRole(), Qt::darkRed);
-            threeBall->setPalette(pal);
+            threeBall->setText(tr("Unknown"));
+            threeBall->setPalette(QPalette());
+            btnThreeBall->setEnabled(true);
         }
-        btnThreeBall->setEnabled(false);
     } else {
-        threeBall->setText(tr("Unknown"));
-        threeBall->setPalette(QPalette());
-        btnThreeBall->setEnabled(true);
+        titleThreeBall->setVisible(false);
+        threeBall->setVisible(false);
+        btnThreeBall->setVisible(false);
     }
 
-    if (tri->knowsSolidTorus() ||
-            tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
-        if (tri->isSolidTorus()) {
-            solidTorus->setText(tr("True"));
-            QPalette pal = solidTorus->palette();
-            pal.setColor(solidTorus->foregroundRole(), Qt::darkGreen);
-            solidTorus->setPalette(pal);
+    if (tri->getNumberOfBoundaryComponents() > 0) {
+        titleSolidTorus->setVisible(true);
+        solidTorus->setVisible(true);
+        btnSolidTorus->setVisible(true);
 
-            isHyp = false;
-            if (name.empty())
-                name = "B2 x S1";
+        if (tri->knowsSolidTorus() ||
+                tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
+            if (tri->isSolidTorus()) {
+                solidTorus->setText(tr("True"));
+                QPalette pal = solidTorus->palette();
+                pal.setColor(solidTorus->foregroundRole(), Qt::darkGreen);
+                solidTorus->setPalette(pal);
+
+                isHyp = false;
+                if (name.empty())
+                    name = "B2 x S1";
+            } else {
+                solidTorus->setText(tr("False"));
+                QPalette pal = solidTorus->palette();
+                pal.setColor(solidTorus->foregroundRole(), Qt::darkRed);
+                solidTorus->setPalette(pal);
+            }
+            btnSolidTorus->setEnabled(false);
         } else {
-            solidTorus->setText(tr("False"));
-            QPalette pal = solidTorus->palette();
-            pal.setColor(solidTorus->foregroundRole(), Qt::darkRed);
-            solidTorus->setPalette(pal);
+            solidTorus->setText(tr("Unknown"));
+            solidTorus->setPalette(QPalette());
+            btnSolidTorus->setEnabled(true);
         }
-        btnSolidTorus->setEnabled(false);
     } else {
-        solidTorus->setText(tr("Unknown"));
-        solidTorus->setPalette(QPalette());
-        btnSolidTorus->setEnabled(true);
+        titleSolidTorus->setVisible(false);
+        solidTorus->setVisible(false);
+        btnSolidTorus->setVisible(false);
     }
 
     if (tri->isOrientable() && tri->isClosed() && tri->isValid() &&

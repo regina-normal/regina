@@ -68,8 +68,11 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
         QLabel* zeroEff;
         QLabel* splitting;
         QLabel* threeSphere;
+        QLabel* titleThreeSphere;
         QLabel* threeBall;
+        QLabel* titleThreeBall;
         QLabel* solidTorus;
+        QLabel* titleSolidTorus;
         QLabel* irreducible;
         QLabel* titleIrreducible;
         QLabel* haken;
