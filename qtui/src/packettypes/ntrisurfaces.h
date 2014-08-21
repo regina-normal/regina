@@ -90,6 +90,7 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
         QAbstractButton* btnHaken;
         QAbstractButton* btnStrict;
         QLabel* manifold;
+        QLabel* census;
 
     public:
         /**

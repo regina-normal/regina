@@ -33,6 +33,7 @@
 /* end stub */
 
 // Regina core includes:
+#include "census/ncensus.h"
 #include "manifold/nmanifold.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/ntriangulation.h"
@@ -46,6 +47,7 @@
 #include <QLabel>
 #include <QLayout>
 #include <QPushButton>
+#include <QTextDocument> // For Qt::escape
 #include <QToolTip>
 #include <QWhatsThis>
 
@@ -273,7 +275,6 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     QBoxLayout* mfdArea = new QHBoxLayout();
     manifold = new QLabel();
     manifold->setAlignment(Qt::AlignCenter);
-    manifold->setTextFormat(Qt::PlainText);
     manifold->setWordWrap(true);
     mfdArea->addWidget(manifold, 1);
     msg = tr("<qt>Displays the name of the underlying 3-manifold if "
@@ -281,6 +282,17 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
         "structure of the triangulation.</qt>");
     manifold->setWhatsThis(msg);
     layout->addLayout(mfdArea);
+
+    QBoxLayout* censusArea = new QHBoxLayout();
+    census = new QLabel();
+    census->setAlignment(Qt::AlignCenter);
+    census->setWordWrap(true);
+    censusArea->addWidget(census, 1);
+    msg = tr("<qt>Indicates whether this triangulation appears in any of "
+        "Regina's in-built census databases.  If so, the name of the "
+        "triangulation and/or the underlying 3-manifold will be shown.</qt>");
+    census->setWhatsThis(msg);
+    layout->addLayout(censusArea);
 
     layout->addStretch(2);
 
@@ -604,10 +616,31 @@ void NTriSurfacesUI::refresh() {
     }
 
     if (! name.empty()) {
-        manifold->setText(tr("Manifold:  %1").arg(name.c_str()));
+        manifold->setText(tr("<qt><b>Manifold:</b>&nbsp;&nbsp;%1</qt>")
+            .arg(Qt::escape(name.c_str())));
     } else {
-        manifold->setText(tr("Manifold:  Not recognised"));
+        manifold->setText(tr("<qt><b>Manifold:</b>&nbsp;&nbsp;"
+            "Not recognised</qt>"));
     }
+
+    regina::NCensusHits* hits = regina::NCensus::lookup(tri->isoSig());
+    if (hits->empty()) {
+        census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;Not found</qt>"));
+    } else if (hits->count() == 1) {
+        census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;%1</qt>")
+            .arg(Qt::escape(hits->first()->name().c_str())));
+    } else {
+        QString ans = tr("<qt><b>Census:</b>&nbsp;&nbsp;%1 matches")
+            .arg(hits->count());
+        const regina::NCensusHit* hit = hits->first();
+        for ( ; hit; hit = hit->next()) {
+            ans += "<br>";
+            ans += Qt::escape(hit->name().c_str());
+        }
+        ans += "</qt>";
+        census->setText(ans);
+    }
+    delete hits;
 }
 
 void NTriSurfacesUI::calculateZeroEff() {
