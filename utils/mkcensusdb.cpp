@@ -100,7 +100,7 @@ int main(int argc, char* argv[]) {
             usage(argv[0]);
         }
 
-        if (! tcbdbputdup2(db, sig.c_str(), name.c_str())) {
+        if (! tcbdbputdup2(db, sig.c_str(), pos)) {
             std::cerr << "ERROR: Could not store the record for "
                 << sig << " in the database." << std::endl;
             tcbdbclose(db);
