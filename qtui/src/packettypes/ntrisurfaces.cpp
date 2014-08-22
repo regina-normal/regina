@@ -165,8 +165,9 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     grid->addWidget(titleHyperbolic, 8, 1);
     hyperbolic = new QLabel(ui);
     grid->addWidget(hyperbolic, 8, 3);
-    msg = tr("<qt>Does this triangulation represent a finite-volume "
-        "hyperbolic 3-manifold?");
+    msg = tr("<qt>Does this triangulation "
+        "represent a finite-volume hyperbolic 3-manifold?<p>"
+        "Any answer shown here will be rigorously certified.</qt>");
     titleHyperbolic->setWhatsThis(msg);
     hyperbolic->setWhatsThis(msg);
 
