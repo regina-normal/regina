@@ -432,8 +432,8 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * in the given triangulation using the primal Hilbert basis algorithm.
          * For details of the algorithm, see B. A. Burton, "Enumerating
          * fundamental normal surfaces: Algorithms, experiments and invariants",
-         * to appear in ALENEX 2014: Proceedings of the Meeting on
-         * Algorithm Engineering & Experiments, arXiv:1111.7055.
+         * ALENEX 2014: Proceedings of the Meeting on Algorithm
+         * Engineering & Experiments, SIAM, 2014, pp. 112-124.
          *
          * Users can still access this procedure if they need to;
          * however, they should do this via enumerate(NTriangulation*,
@@ -479,8 +479,8 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * in the given triangulation using the dual Hilbert basis algorithm.
          * For details of the algorithm, see B. A. Burton, "Enumerating
          * fundamental normal surfaces: Algorithms, experiments and invariants",
-         * to appear in ALENEX 2014: Proceedings of the Meeting on
-         * Algorithm Engineering & Experiments, arXiv:1111.7055.
+         * ALENEX 2014: Proceedings of the Meeting on Algorithm
+         * Engineering & Experiments, SIAM, 2014, pp. 112-124.
          *
          * Users can still access this procedure if they need to;
          * however, they should do this via enumerate(NTriangulation*,

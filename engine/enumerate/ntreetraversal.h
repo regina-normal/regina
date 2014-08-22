@@ -68,10 +68,9 @@ class NTriangulation;
  *
  * For normal surfaces, the full algorithms are described respectively in
  * "A tree traversal algorithm for decision problems in knot theory and
- * 3-manifold topology", Burton and Ozlen, Algorithmica (to appear),
- * DOI 10.1007/s00453-012-9645-3, and "A fast branching algorithm for unknot
- * recognition with experimental polynomial-time behaviour", Burton and Ozlen,
- * arXiv:1211.1079.
+ * 3-manifold topology", Burton and Ozlen, Algorithmica 65:4 (2013),
+ * pp. 772-801, and "A fast branching algorithm for unknot recognition with
+ * experimental polynomial-time behaviour", Burton and Ozlen, arXiv:1211.1079.
  *
  * This base class provides the infrastructure for the search tree, and the
  * subclasses handle the mechanics of the moving through the tree according
@@ -610,7 +609,7 @@ class REGINA_API NTreeTraversal : public BanConstraint {
  *
  * This class essentially implements the algorithm from "A tree traversal
  * algorithm for decision problems in knot theory and 3-manifold topology",
- * Burton and Ozlen, Algorithmica (to appear), DOI 10.1007/s00453-012-9645-3.
+ * Burton and Ozlen, Algorithmica 65:4 (2013), pp. 772-801.
  *
  * To enumerate all vertex surfaces for a given 3-manifold
  * triangulation, simply construct a NTreeEnumeration object and call run().
@@ -920,7 +919,7 @@ class REGINA_API NTreeEnumeration :
  * This class follows a similar structure to the enumeration of vertex
  * normal surfaces, as described in "A tree traversal algorithm for decision
  * problems in knot theory and 3-manifold topology", Burton and Ozlen,
- * Algorithmica (to appear), DOI 10.1007/s00453-012-9645-3.
+ * Algorithmica 65:4 (2013), pp. 772-801.
  *
  * To enumerate all taut angle structures on a given 3-manifold
  * triangulation, simply construct an NTautEnumeration object and call run().
@@ -1212,8 +1211,8 @@ class REGINA_API NTautEnumeration :
  * unknot recognition with experimental polynomial-time behaviour",
  * Burton and Ozlen, arXiv:1211.1079, and uses significant material from
  * "A tree traversal algorithm for decision problems in knot theory and
- * 3-manifold topology", Burton and Ozlen, Algorithmica (to appear),
- * DOI 10.1007/s00453-012-9645-3.
+ * 3-manifold topology", Burton and Ozlen, Algorithmica 65:4 (2013),
+ * pp. 772-801.
  *
  * To use this class, i.e., to locate a non-trivial normal or almost normal
  * surface under the given constraints or to prove that no such surface exists,

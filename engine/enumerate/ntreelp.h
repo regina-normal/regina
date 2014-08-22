@@ -69,7 +69,7 @@ class NTriangulation;
  * This class is used in the tree traversal algorithms for enumerating
  * and locating vertex normal surfaces, as described in "A tree traversal
  * algorithm for decision problems in knot theory and 3-manifold topology",
- * Burton and Ozlen, Algorithmica (to appear), DOI 10.1007/s00453-012-9645-3,
+ * Burton and Ozlen, Algorithmica 65:4 (2013), pp. 772-801,
  * and "A fast branching algorithm for unknot recognition with
  * experimental polynomial-time behaviour", Burton and Ozlen, arXiv:1211.1079.
  * It is also used for locating a single strict angle structure, and for
@@ -361,7 +361,7 @@ class LPMatrix {
  * This class forms part of the tree traversal algorithms for enumerating
  * and locating normal surfaces, as described in "A tree traversal algorithm
  * for decision problems in knot theory and 3-manifold topology",
- * Burton and Ozlen, Algorithmica (to appear), DOI 10.1007/s00453-012-9645-3,
+ * Burton and Ozlen, Algorithmica 65:4 (2013), pp. 772-801,
  * and "A fast branching algorithm for unknot recognition with
  * experimental polynomial-time behaviour", Burton and Ozlen, arXiv:1211.1079.
  * It is also used for locating a single strict angle structure, and for
@@ -781,7 +781,7 @@ class LPInitialTableaux {
  * This class forms part of the tree traversal algorithms for enumerating
  * and locating normal surfaces, as described in "A tree traversal algorithm
  * for decision problems in knot theory and 3-manifold topology",
- * Burton and Ozlen, Algorithmica (to appear), DOI 10.1007/s00453-012-9645-3,
+ * Burton and Ozlen, Algorithmica 65:4 (2013), pp. 772-801,
  * and "A fast branching algorithm for unknot recognition with
  * experimental polynomial-time behaviour", Burton and Ozlen, arXiv:1211.1079.
  * It is also used for locating a single strict angle structure, and for
