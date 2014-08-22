@@ -34,12 +34,17 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
+#include "census/ncensus.h"
 #include "census/ngluingpermsearcher.h"
+#include "file/nglobaldirs.h"
 #include "packet/ncontainer.h"
 #include "triangulation/ntriangulation.h"
 #include "testsuite/census/testcensus.h"
 
 using regina::NBoolSet;
+using regina::NCensus;
+using regina::NCensusHit;
+using regina::NCensusHits;
 using regina::NFacePairing;
 using regina::NGluingPermSearcher;
 using regina::NTriangulation;
@@ -47,6 +52,7 @@ using regina::NTriangulation;
 class NCensusTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NCensusTest);
 
+    CPPUNIT_TEST(lookup);
     CPPUNIT_TEST(rawCounts);
     CPPUNIT_TEST(rawCountsCompact);
     CPPUNIT_TEST(rawCountsPrimeMinimalOr);
@@ -61,6 +67,91 @@ class NCensusTest : public CppUnit::TestFixture {
         }
 
         void tearDown() {
+        }
+
+        void verifyLookupNone(const char* isoSig) {
+            NCensusHits* hits = NCensus::lookup(isoSig);
+            if (! (hits->empty() && hits->count() == 0 && ! hits->first())) {
+                std::ostringstream msg;
+                msg << "Census lookup for " << isoSig
+                    << " should return no matches.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            delete hits;
+        }
+
+        void verifyLookup(const char* isoSig, const char* name) {
+            NCensusHits* hits = NCensus::lookup(isoSig);
+            if (hits->empty() || hits->count() != 1 || (! hits->first()) ||
+                    hits->first()->next()) {
+                std::ostringstream msg;
+                msg << "Census lookup for " << isoSig
+                    << " should return exactly one match.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (hits->first()->name() != name) {
+                std::ostringstream msg;
+                msg << "Census lookup for " << isoSig << " returned "
+                    << hits->first()->name() << " instead of " << name << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+            delete hits;
+        }
+
+        void verifyLookup(const char* isoSig, const char* name1,
+                const char* name2) {
+            NCensusHits* hits = NCensus::lookup(isoSig);
+            if (hits->empty() || hits->count() != 2 || (! hits->first()) ||
+                    (! hits->first()->next()) ||
+                    hits->first()->next()->next()) {
+                std::ostringstream msg;
+                msg << "Census lookup for " << isoSig
+                    << " should return exactly two matches.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (hits->first()->name() != name1) {
+                std::ostringstream msg;
+                msg << "Census lookup for " << isoSig << " returned "
+                    << hits->first()->name() << " instead of " << name1
+                    << " for hit #1.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (hits->first()->next()->name() != name2) {
+                std::ostringstream msg;
+                msg << "Census lookup for " << isoSig << " returned "
+                    << hits->first()->name() << " instead of " << name2
+                    << " for hit #2.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            delete hits;
+        }
+
+        void lookup() {
+            // Make sure that the database library is working, and that
+            // we can access all censuses.
+
+            // Temporarily redirect the home directory so that Regina
+            // finds the census data files in the source tree.
+            std::string home = regina::NGlobalDirs::home();
+            std::string python = regina::NGlobalDirs::pythonModule();
+            regina::NGlobalDirs::setDirs(TESTSUITE_DATA_HOME, python);
+
+            verifyLookupNone("");
+            verifyLookupNone("abcdefg");
+            verifyLookup("fvPQcdecedekrsnrs",
+                "SFS [S2: (2,1) (3,1) (5,-4)] : #1"); // closed or
+            verifyLookup("kLLvLQQkcdjgjijhihihsfrovojgng",
+                "Hyp_1.28448530 (Z_6) : #12",
+                "1.2844853004683544 : m004(6, 1)"); // closed or, closed hyp
+            verifyLookup("gvLQQcdefeffdwnplhe",
+                "T x I / [ 1,1 | 1,0 ] : #1"); // closed nor
+            verifyLookup("cPcbbbiht",
+                "m004 : #1", "L104001"); // cusped or, hyp knots & links
+            verifyLookup("bkaaid", "m000 : #1"); // cusped nor
+            verifyLookup("kLLPLLQkceefejjiijiiiatdmpamxt",
+                "L408001", "L410005"); // hyp knots & links, multiple times
+
+            regina::NGlobalDirs::setDirs(home, python);
         }
 
         void rawCounts() {
