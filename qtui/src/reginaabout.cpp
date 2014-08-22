@@ -161,7 +161,7 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
 
     thanksInstitutions << "The American Institute of Mathematics";
     thanksInstitutions << "The Australian Research Council "
-        "(grants DP0208490, DP1094516 and DP110101104)";
+        "(grants DP0208490, DP1094516, DP110101104 and DP140104246)";
     thanksInstitutions << "The Institute for Computational and "
         "Experimental Research in Mathematics, Brown University";
     thanksInstitutions << "The Institute for the Physics and "
