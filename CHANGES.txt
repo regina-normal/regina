@@ -103,8 +103,6 @@ Version 4.96  [ 29 August, 2014 ]
             - New example trefoilKnotComplement().
             - New example sphere600() (sourced from the 600-cell in the
               Benedetti-Lutz library of triangulations).
-        Class NFaceEmbedding:
-            - New convenience operators == and !=.
         Class NGenericTriangulation:
             - Moved isIdenticalTo(), isIsomorphicTo(), isContainedIn(),
               findAllSubcomplexesIn() and makeCanonical() from
