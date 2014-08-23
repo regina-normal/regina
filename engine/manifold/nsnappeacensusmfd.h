@@ -80,8 +80,6 @@ namespace regina {
  * are identical to those of its corresponding NSnapPeaCensusManifold.
  *
  * All of the optional NManifold routines are implemented for this class.
- *
- * \testpart
  */
 class REGINA_API NSnapPeaCensusManifold : public NManifold {
     public:

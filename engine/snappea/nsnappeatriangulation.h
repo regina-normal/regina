@@ -309,8 +309,6 @@ class REGINA_API NCusp : public ShareableObject {
  *
  * See http://snappy.computop.org/ for further information on
  * SnapPea and its successor SnapPy.
- *
- * \testpart
  */
 class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         public NPacketListener {

@@ -81,8 +81,6 @@ namespace regina {
  *
  * All of the optional NStandardTriangulation routines are implemented
  * for this class.
- *
- * \testpart
  */
 class REGINA_API NSnapPeaCensusTri: public NStandardTriangulation {
     public:

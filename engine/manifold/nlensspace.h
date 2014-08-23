@@ -63,8 +63,6 @@ namespace regina {
  * integer.
  *
  * All optional NManifold routines are implemented for this class.
- *
- * \testpart
  */
 class REGINA_API NLensSpace : public NManifold {
     private:

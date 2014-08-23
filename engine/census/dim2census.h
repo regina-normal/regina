@@ -61,8 +61,6 @@ class NPacket;
 /**
  * A utility class used to search for triangulations across one or more
  * 2-manifold census databases.
- *
- * \testpart
  */
 class REGINA_API Dim2Census {
     public:

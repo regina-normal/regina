@@ -45,7 +45,6 @@ Don't forget:
     check that all headers are installed correctly
     check for doxygen warnings
     check for docbook warnings/errors
-    update \test... notes in API docs
     python bindings for new routines
     rebuild manpages
     website, including updated news, what's new and deprecation guide

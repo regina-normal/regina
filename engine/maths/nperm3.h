@@ -68,8 +68,6 @@ namespace regina {
  * This class is faster and sleeker than related classes such as NPerm4 and
  * NPerm5.  On the other hand, this class does not offer quite as rich an
  * interface as the others.
- *
- * \testfull
  */
 class REGINA_API NPerm3 {
     public:

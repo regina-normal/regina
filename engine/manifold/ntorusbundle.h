@@ -73,8 +73,6 @@ namespace regina {
  * All optional NManifold routines except for construct() are implemented
  * for this class.
  *
- * \testpart
- *
  * \todo \feature Implement the == operator for finding conjugate and
  * inverse matrices.
  */

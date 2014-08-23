@@ -80,8 +80,6 @@ class NXMLAngleStructureReader;
  * The final element of the vector is the scaling member as described
  * above.
  *
- * \testpart
- *
  * \ifacespython Not present.
  */
 class REGINA_API NAngleStructureVector : public NRay {
@@ -123,8 +121,6 @@ class REGINA_API NAngleStructureVector : public NRay {
  * Represents an angle structure on a triangulation.
  * Once the underlying triangulation changes, this angle structure
  * is no longer valid.
- *
- * \testpart
  */
 class REGINA_API NAngleStructure : public ShareableObject {
     private:

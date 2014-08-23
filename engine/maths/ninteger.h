@@ -146,9 +146,6 @@ struct InfinityBase<false> {
  * \ifacespython Both variants of this template are available through Python.
  * For \a supportInfinity = \c false (the default), simply use NIntegerBase.
  * For \a supportInfinity = \c true, use NLargeInteger.
- *
- * \testfull At present, the only routines not thoroughly tested in the
- * test suite are legendre() and the random number generation routines.
  */
 template <bool supportInfinity = false>
 class REGINA_API NIntegerBase : private InfinityBase<supportInfinity> {

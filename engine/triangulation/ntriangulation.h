@@ -123,8 +123,6 @@ struct PacketInfo<PACKET_TRIANGULATION> {
  * (all designed to help the user avoid inconsistent states and accidental
  * crashes); see the NTetrahedron class notes for further details.
  *
- * \testpart
- *
  * \todo \feature Is the boundary incompressible?
  * \todo \featurelong Am I obviously a handlebody?  (Simplify and see
  * if there is nothing left).  Am I obviously not a handlebody?

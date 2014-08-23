@@ -163,8 +163,6 @@ struct PacketInfo<PACKET_NORMALSURFACELIST> {
  * Normal surface lists should be created using the routine enumerate(),
  * which is new as of Regina 3.95.
  *
- * \testpart
- *
  * \todo \feature Allow custom matching equations.
  * \todo \feature Allow enumeration with some coordinates explicitly set
  * to zero.

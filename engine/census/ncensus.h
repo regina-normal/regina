@@ -287,8 +287,6 @@ class NCensusHits : public regina::boost::noncopyable {
 /**
  * A utility class used to search for triangulations across one or more
  * 3-manifold census databases.
- *
- * \testpart
  */
 class REGINA_API NCensus {
     public:
