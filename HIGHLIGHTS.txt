@@ -6,7 +6,7 @@ Regina - A Normal Surface Theory Calculator
     For a full list of changes, including all changes to the C++/Python API,
     see the file CHANGES.txt.
 
-Version 4.96  [ (under development) ]
+Version 4.96  [ 29 August, 2014 ]
 
     Features:
         - Regina can now certify hyperbolicity rigorously and quickly, using

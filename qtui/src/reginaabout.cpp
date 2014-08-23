@@ -2,9 +2,9 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Qt User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -53,24 +53,24 @@
 
 
 const QString ReginaAbout::regCopyright(
-    tr("Copyright (c) 1999-2013, The Regina development team"));
+    tr("Copyright (c) 1999-2014, The Regina development team"));
 
 const QString ReginaAbout::regDescription(
     tr("Software for 3-manifold topology and normal surface theory"));
 
 const QString ReginaAbout::regReleased(
-    tr("Released %1").arg(QDate(2013, 11, 12).toString(Qt::TextDate)));
+    tr("Released %1").arg(QDate(2014, 8, 29).toString(Qt::TextDate)));
 
 const QString ReginaAbout::regWebsite("http://regina.sourceforge.net/");
 
 const QString ReginaAbout::regLicense( tr( 
-    "Copyright (c) 1999-2013, The Regina development team\n\n"
+    "Copyright (c) 1999-2014, The Regina development team\n\n"
     "CITATION:\n\n"
     "If you find Regina useful in your research, please consider citing it as\n"
     "you would any other paper that you use.  A suggested form of reference is:\n\n"
     "  Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,\n"
     "  \"Regina: Software for 3-manifold topology and normal surface theory\",\n"
-    "  http://regina.sourceforge.net/, 1999-2013.\n\n"
+    "  http://regina.sourceforge.net/, 1999-2014.\n\n"
     "COPYING AND MODIFICATION:\n\n"
     "This program is free software; you can redistribute it and/or modify it\n"
     "under the terms of the GNU General Public License as published by the\n"

@@ -7,7 +7,7 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
-Version 4.96  [ (under development) ]
+Version 4.96  [ 29 August, 2014 ]
 
     ENGINE:
         Class BanConstraintBase (and subclasses):

@@ -14,6 +14,7 @@ Program version:
     www/index.html (last updated, current version, contents, news,
                     filenames, what's new)
     www/source.html (unpacking instructions: filename, directory)
+    Plus copyright years in license (see below)
 
 Full license details:
     LICENSE.txt
