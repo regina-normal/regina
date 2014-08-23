@@ -30,59 +30,24 @@
     </imageobject>
    </inlinemediaobject>
   </para>
- </sect1>
- <sect1 id="packet-view">
-  <title>Viewing and Editing Packets</title>
-  <para>
-   Each time you open a packet, you will see three buttons at the bottom
-   of the window: <guibutton>Commit</guibutton>,
-   <guibutton>Refresh</guibutton> and <guibutton>Close</guibutton>
-   (all illustrated below).
-   Pressing <guibutton>Close</guibutton> will simply close the packet
-   again.  Pressing <guibutton>Refresh</guibutton> will reload the
-   contents of the packet from &regina;'s mathematical engine (this
-   should rarely be necessary, but the button is provided just in case).
-   <guibutton>Commit</guibutton> should be disabled until you start
-   making changes.
-  </para>
-  <para>
-   <inlinemediaobject>
-    <imageobject>
-     <imagedata fileref="textview.png"/>
-    </imageobject>
-   </inlinemediaobject>
-  </para>
-  <para>
-   Once you begin to edit the packet, the buttons will change to
-   <guibutton>Commit</guibutton>, <guibutton>Discard</guibutton> and
-   <guibutton>Close</guibutton> (again illustrated below).
-   Your changes will not <emphasis>not take effect</emphasis>
-   until you press <guibutton>Commit</guibutton> (after which you
-   will not be able to undo them).
-   Alternatively, you can undo your changes and revert to the original
-   state of the packet by pressing <guibutton>Discard</guibutton>.
-  </para>
-  <para>
-   <inlinemediaobject>
-    <imageobject>
-     <imagedata fileref="textedit.png"/>
-    </imageobject>
-   </inlinemediaobject>
-  </para>
   <sect2 id="packet-uneditable">
    <title>Uneditable Packets</title>
 
    <para>
-    Sometimes you will find that you cannot make changes to a packet
-    at all.  This often happens when a packet is constrained by its
-    children.  For instance, if a triangulation is parent to a
-    normal surface list or an angle structure list
-    then &regina; will insist that the triangulation does not change
-    (so that normal coordinates and angle structure coordinates
-    cannot be invalidated).
-    Uneditable packets like this
-    will be marked with a small padlock in the tree: see the
-    Figure&nbsp;8 Knot Complement in the illustration below.
+    Sometimes you will find that &regina; does not let you make changes
+    to a packet.  This typically means that the packet is constrained by its
+    children.
+   </para>
+   <para>
+    For example, if a triangulation has normal surfaces or angle structures
+    beneath it, then &regina; will not let you change the triangulation
+    because this would invalidate the normal coordinates or angle structure
+    coordinates.
+   </para>
+   <para>
+    Uneditable packets such as this will be marked with a small padlock
+    in the tree: see the Figure&nbsp;8 Knot Complement in the
+    illustration below.
    </para>
    <para>
     <inlinemediaobject>
@@ -427,7 +392,7 @@
  </sect1>
 
  <sect1 id="packet-operations">
-  <title>Other Operations on Packets</title>
+  <title>General Operations on Packets</title>
   <para>
    The <guimenu>Packet Tree</guimenu> menu contains
    operations that can be applied to any packet in &regina;.  Most of
