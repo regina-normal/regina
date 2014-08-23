@@ -495,7 +495,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="packet-view">editing packets</link></primaryie>
+  <primaryie><link linkend="packet-tree">editing packets</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1041,7 +1041,7 @@
    windows</link></secondaryie>
   <secondaryie><link linkend="packet-move">moving within the
    tree</link></secondaryie>
-  <secondaryie><link linkend="packet-view">viewing and
+  <secondaryie><link linkend="packet-tree">viewing and
    editing</link></secondaryie>
  </indexentry>
 
@@ -1602,7 +1602,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="packet-view">viewing packets</link></primaryie>
+  <primaryie><link linkend="packet-tree">viewing packets</link></primaryie>
  </indexentry>
 
  <indexentry>
