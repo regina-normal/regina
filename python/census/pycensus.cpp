@@ -35,12 +35,14 @@
 void addNCensus();
 void addNFacePairing();
 void addNGluingPermSearcher();
+void addDim2Census();
 void addDim2EdgePairing();
 
 void addCensus() {
     addNCensus();
     addNFacePairing();
     addNGluingPermSearcher();
+    addDim2Census();
     addDim2EdgePairing();
 }
 
