@@ -219,9 +219,9 @@
   <secondaryie><link linkend="man-tricensus-mpi">distributing census
    creation across several machines</link></secondaryie>
   <secondaryie><link linkend="tri-censuslookup">searching for a
-   triangulation in the available censuses</link></secondaryie>
-  <secondaryie><link linkend="options-census">searching for a
-   triangulation, configuration</link></secondaryie>
+   triangulation in the census databases (&gui;)</link></secondaryie>
+  <secondaryie><link linkend="man-censuslookup">searching for a
+   triangulation in the census databases (command line)</link></secondaryie>
  </indexentry>
 
  <indexentry>
