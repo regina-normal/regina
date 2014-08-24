@@ -37,13 +37,6 @@
     <filename>/usr/include/regina-normal/</filename>.
    </para></listitem>
    <listitem><para>
-    If you built a &fink; package on &macosx;,
-    you will need to install the separate package
-    <literal>regina-normal&regversion;-dev</literal>.
-    Check that the headers are present in
-    <filename>/sw/include/regina-normal/</filename>.
-   </para></listitem>
-   <listitem><para>
     If you built &regina; yourself, you should already have the &cpp; headers
     and development libraries installed.
     Check that the headers are present in
@@ -107,6 +100,16 @@
       <literal>boost-devel</literal>.
       You only need the headers (there is no need for pre-built libraries
       such as Boost.Regex or Boost.Python).
+     </para></listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>Tokyo Cabinet library
+      (<firstterm>libtokyocabinet</firstterm>)</term>
+     <listitem><para>
+      Look for a package named
+      <literal>libtokyocabinet-dev</literal>,
+      <literal>libtokyocabinet-devel</literal> or
+      <literal>tokyocabinet-devel</literal>.
      </para></listitem>
     </varlistentry>
    </variablelist>
