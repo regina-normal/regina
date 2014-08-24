@@ -66,8 +66,14 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
 
     layout->addStretch(2);
 
-    QLabel* label = new QLabel(tr(
-        "<qt><b>High-level Recognition Routines</b></qt>"), ui);
+    QLabel* label;
+    if (dynamic_cast<regina::NSnapPeaTriangulation*>(packet))
+        label = new QLabel(tr(
+            "<qt><b>Unfilled Manifold:<br>"
+            "High-level Recognition Routines</b></qt>"), ui);
+    else
+        label = new QLabel(tr(
+            "<qt><b>High-level Recognition Routines</b></qt>"), ui);
     label->setAlignment(Qt::AlignCenter);
     layout->addWidget(label);
 
