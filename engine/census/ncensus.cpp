@@ -34,9 +34,9 @@
 
 #include <algorithm>
 #include <cstdlib>
-#include <cstdbool>
-#include <cstdint>
 #include <sstream>
+#include <stdbool.h> // cstdbool needs c++11
+#include <stdint.h> // cstdint needs c++11
 #include <tcbdb.h>
 #include <tcutil.h>
 #include "census/ncensus.h"
