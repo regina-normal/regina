@@ -284,77 +284,6 @@
   </glosslist>
  </sect1>
 
- <sect1 id="options-snappea">
-  <title>&snappea; Options</title>
-
-  <para>
-   The <guilabel>&snappea;</guilabel> options panel controls how &regina;
-   interacts with the &snappea; kernel.
-   &regina; includes part of the &snappea; kernel for certain geometric
-   computations in the
-   <link linkend="tri-snappea">triangulation &snappea; tab</link>.
-  </para>
-  <para>
-   <inlinemediaobject>
-    <imageobject>
-     <imagedata fileref="options-snappea.png"/>
-    </imageobject>
-   </inlinemediaobject>
-  </para>
-  <para>
-   The settings here are:
-  </para>
-  <glosslist>
-   <glossentry>
-    <glossterm><guilabel>Diagnostic messages</guilabel></glossterm>
-    <glossdef>
-     <para>
-      Specifies whether the &snappea; kernel should write
-      diagnostic messages to the terminal.
-     </para>
-     <para>
-      The &snappea; kernel sometimes sends out messages indicating what
-      it is doing (such as
-      &ldquo;<emphasis>Computing hyperbolic structure
-      .&nbsp;.&nbsp;.</emphasis>&rdquo;).
-      If this option is checked, all such messages will be written to
-      the terminal from which you started &regina;.
-      If this is unchecked (or if you started &regina; some other way,
-      such as from a menu or taskbar), these messages will be suppressed.
-     </para>
-    </glossdef>
-   </glossentry>
-   <glossentry>
-    <glossterm><guilabel>Allow closed triangulations</guilabel></glossterm>
-    <glossdef>
-     <para>
-      Specifies whether &regina; is allowed to pass closed
-      triangulations to the &snappea; kernel.
-     </para>
-     <para>
-      This is disabled by default, since &snappea; is mainly designed
-      to work with ideal triangulations only.  However, if you
-      know what you are doing then you can enable this option.
-     </para>
-     <para>
-      Enabling this option does not mean that
-      <emphasis>all</emphasis> closed triangulations will be passed to
-      the &snappea; kernel.  There are other constraints that must be
-      satisfied&mdash;for instance, &regina; will not send &snappea;
-      a closed triangulation with more than one vertex.
-     </para>
-     <para><caution><para>
-      Enabling this option might cause the &snappea; kernel to crash,
-      which means you may lose unsaved work.
-      This is because you are asking &snappea; to do something that it
-      was not originally designed for.  Please be sure that you know
-      what you are doing, and please save regularly!
-     </para></caution></para>
-    </glossdef>
-   </glossentry>
-  </glosslist>
- </sect1>
-
  <sect1 id="options-tools">
   <title>Tools Options</title>
 
@@ -373,6 +302,30 @@
    The settings here are:
   </para>
   <glosslist>
+   <glossentry>
+    <glossterm><guilabel>Diagnostic messages</guilabel></glossterm>
+    <glossdef>
+     <para>
+      Specifies whether the &snappea; kernel should write
+      diagnostic messages to the terminal.
+     </para>
+     <para>
+      When you are working with the &snappea; kernel (for instance, if
+      you are using a <link linkend="snappea">&snappea; triangulation</link>
+      or visiting &regina;'s <link linkend="tri-snappea">&snappea; tab</link>,
+      the &snappea; kernel sometimes sends out messages indicating what
+      it is doing (such as
+      &ldquo;<emphasis>Computing hyperbolic structure
+      .&nbsp;.&nbsp;.</emphasis>&rdquo;).
+     </para>
+     <para>
+      If this option is checked, all such messages will be written to
+      the terminal from which you started &regina;.
+      If this is unchecked (or if you started &regina; some other way,
+      such as from a menu or taskbar), these messages will be suppressed.
+     </para>
+    </glossdef>
+   </glossentry>
    <glossentry>
     <glossterm><guilabel>Use default &pdf; viewer</guilabel></glossterm>
     <glossdef>

@@ -1910,13 +1910,6 @@
     least one reason why.
    </para>
    <para>
-    It is possible to bypass some of these constraints and
-    allow &snappea; to work with closed triangulations.
-    You do this <emphasis>at your own risk</emphasis>:
-    see &regina;'s <link linkend="options-snappea">&snappea; options</link>
-    for details and the necessary warnings.
-   </para>
-   <para>
     When you open the <guilabel>&snappea;</guilabel> tab,
     &regina; will ask &snappea; to solve for a complete hyperbolic
     structure.  The following information is then presented:
