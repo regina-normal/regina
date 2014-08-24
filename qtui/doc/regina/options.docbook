@@ -83,24 +83,6 @@
     </para></glossdef>
    </glossentry>
    <glossentry>
-    <glossterm><guilabel>Support boundary slopes for spun-normal
-    surfaces</guilabel></glossterm>
-    <glossdef><para>
-     &regina; can compute boundary slopes for spun-normal surfaces,
-     but this feature must be explicitly enabled here.
-    </para><para>
-     It is disabled by default because the meridian and longitude are
-     always chosen to be the shortest and second-shortest basis on each cusp.
-     This might not be what you expect&mdash;&regina; cannot
-     tell what basis you might have been using elsewhere, such as in
-     &snappy;.
-    </para><para>
-     If you check this box, &regina; will
-     <link linkend="surfaces-spun">show boundary slopes</link>
-     where it is able to compute them.
-    </para></glossdef>
-   </glossentry>
-   <glossentry>
     <glossterm><guilabel>Support transversely oriented normal
     surfaces</guilabel></glossterm>
     <glossdef><para>
@@ -303,7 +285,7 @@
   </para>
   <glosslist>
    <glossentry>
-    <glossterm><guilabel>Diagnostic messages</guilabel></glossterm>
+    <glossterm><guilabel>Diagnostic messages from &snappea;</guilabel></glossterm>
     <glossdef>
      <para>
       Specifies whether the &snappea; kernel should write
@@ -311,18 +293,18 @@
      </para>
      <para>
       When you are working with the &snappea; kernel (for instance, if
-      you are using a <link linkend="snappea">&snappea; triangulation</link>
-      or visiting &regina;'s <link linkend="tri-snappea">&snappea; tab</link>,
+      you are using a <link linkend="snappea">&snappea; triangulation</link>,
+      or visiting &regina;'s <link linkend="tri-snappea">&snappea; tab</link>),
       the &snappea; kernel sometimes sends out messages indicating what
-      it is doing (such as
+      it is doing.  An example of such a message might be
       &ldquo;<emphasis>Computing hyperbolic structure
-      .&nbsp;.&nbsp;.</emphasis>&rdquo;).
+      .&nbsp;.&nbsp;.</emphasis>&rdquo;.
      </para>
      <para>
-      If this option is checked, all such messages will be written to
+      If this option is checked, then all such messages will be written to
       the terminal from which you started &regina;.
       If this is unchecked (or if you started &regina; some other way,
-      such as from a menu or taskbar), these messages will be suppressed.
+      such as from a menu or taskbar), then these messages will be suppressed.
      </para>
     </glossdef>
    </glossentry>
