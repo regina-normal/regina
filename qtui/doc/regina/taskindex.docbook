@@ -324,8 +324,6 @@
 
  <indexentry id="idx-configuration">
   <primaryie>configuration</primaryie>
-  <secondaryie><link linkend="options-census">census
-   lookup</link></secondaryie>
   <secondaryie><link linkend="options-tools">&gaplong;</link></secondaryie>
   <secondaryie><link linkend="options-general">general</link></secondaryie>
   <secondaryie><link linkend="options-tools">&graphviz;</link></secondaryie>

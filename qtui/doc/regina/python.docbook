@@ -65,13 +65,6 @@
     variables for you:
     <glosslist>
      <glossentry>
-      <glossterm><varname>root</varname></glossterm>
-      <glossdef><para>
-       The variable <varname>root</varname> will refer to the packet
-       at the top of your packet tree.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
       <glossterm><varname>item</varname></glossterm>
       <glossdef>
        <para>
@@ -85,6 +78,14 @@
         the <varname>item</varname> variable will not change as a result.
        </para>
       </glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><varname>root</varname></glossterm>
+      <glossdef><para>
+       The variable <varname>root</varname> will refer to the hidden
+       root at the top of your packet tree (this root is not visible in the
+       user interface, but its top-level children are).
+      </para></glossdef>
      </glossentry>
     </glosslist>
    </para>

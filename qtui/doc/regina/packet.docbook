@@ -5,7 +5,7 @@
   <title>The Packet Tree</title>
 
   <para>
-   A single Regina data file can store a range of objects, from
+   A single Regina data file can store a rich variety of objects, from
    3-manifold triangulations and normal surfaces to &python; scripts,
    &pdf; documents and text notes.
    All of these objects are called <firstterm>packets</firstterm>,
@@ -158,6 +158,44 @@
     <inlinemediaobject>
      <imageobject>
       <imagedata fileref="triangulation.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+
+  <sect2 id="packet-snappea">
+   <title>&snappea; Triangulations</title>
+   <para>
+    A <firstterm>&snappea; triangulation</firstterm> packet stores a
+    3-manifold using &snappea;'s internal data structures
+    (in contrast, the usual <link linkend="packet-triangulation">triangulation
+    packet</link> uses &regina;'s own structures, which are independent
+    of &snappea;).
+    You can learn more about using &snappea; triangluations in the
+    <link linkend="snappea">chapter on &snappea; triangulations</link>
+    later in this handbook.
+   </para>
+   <para>
+    The advantages of using a &snappea; triangulation is that it stores
+    additional information that &regina; does not (such as fillings and
+    peripheral curves), and it offers more direct access to the &snappea;
+    kernel.  The main disadvantage is that you do not have the
+    fine-grained control over the triangulation that &regina; offers you
+    (in particular, you cannot manipulate the triangulation as freely).
+    Of course &regina; offers you facilities to convert one into the other.
+   </para>
+   <para>
+    &snappea; triangulations are marked by the following icon:
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="icon-snappea.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="snappea.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -478,7 +516,6 @@
     menu item.  &regina; will clone whatever packet is
     currently selected, and the clone will be added adjacent to it
     in the tree.
-    The top-level packet at the root of the tree cannot be cloned.
    </para>
    <para>
     <inlinemediaobject>
@@ -606,15 +643,15 @@
   </sect2>
 
   <sect2 id="packet-refresh">
-   <title>Refreshing Subtrees</title>
+   <title>Refreshing the Tree</title>
 
    <para>
     The
     <menuchoice>
      <guimenu>Packet Tree</guimenu>
-     <guimenuitem>Refresh Subtree</guimenuitem>
+     <guimenuitem>Refresh Tree</guimenuitem>
     </menuchoice>
-    menu item will reload a section of the packet tree from &regina;'s
+    menu item will reload the entire packet tree from &regina;'s
     mathematical engine.  This should never be necessary, but the
     operation is provided in case the user interface gets out of sync.
     If this does happen, please <link linkend="services">let us know</link>
@@ -626,12 +663,6 @@
       <imagedata fileref="menurefresh.png"/>
      </imageobject>
     </inlinemediaobject>
-   </para>
-   <para>
-    Only the section of the tree beneath the selected packet will be
-    reloaded (i.e., the selected packet, its children, their children
-    and so on).  To refresh the entire tree, you should have the root
-    packet selected.
    </para>
   </sect2>
  </sect1>

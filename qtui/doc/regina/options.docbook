@@ -201,61 +201,6 @@
   </glosslist>
  </sect1>
 
- <sect1 id="options-census">
-  <title>Census Options</title>
-
-  <para>
-   The <guilabel>Census</guilabel> options panel lets you configure which
-   files &regina; searches in the
-   <link linkend="tri-censuslookup">census lookup facility</link>.
-  </para>
-
-  <para>
-   <inlinemediaobject>
-    <imageobject>
-     <imagedata fileref="options-census.png"/>
-    </imageobject>
-   </inlinemediaobject>
-  </para>
-
-  <para>
-   The <link linkend="tri-censuslookup">census lookup facility</link>
-   allows you to select a 3-manifold triangulation and search for it within a
-   list of ready-made census files.
-   Through the settings here, you can add additional census files to this list,
-   or disable the files that &regina; uses by default.
-  </para>
-  <para>
-   Any additional files that you add must be &regina; data files,
-   but beyond this they do not need to be in any special format.
-   When you perform a census lookup,
-   &regina; will simply search through every triangulation in all of the
-   files listed here.
-  </para>
-  <para>
-   Instead of removing files, you can simply
-   <emphasis>deactivate</emphasis> them.  This means they will
-   not be searched, but they will remain here in
-   the list so that you can easily activate them again.
-   Active files are marked with a tick, and deactivated files are
-   marked with a no-entry sign.
-  </para>
-  <para>
-   <inlinemediaobject>
-    <imageobject>
-     <imagedata fileref="census-deactivate.png"/>
-    </imageobject>
-   </inlinemediaobject>
-  </para>
-  <para>
-   You can never remove &regina;'s own prepackaged census files
-   (these are the ones with plain English names, like
-   <emphasis>Closed orientable census</emphasis> and
-   <emphasis>Cusped hyperbolic census</emphasis>).
-   However, you can still deactivate them if you do not wish to search them.
-  </para>
- </sect1>
-
  <sect1 id="options-python">
   <title>&python; Options</title>
 
