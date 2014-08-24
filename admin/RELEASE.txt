@@ -5,6 +5,7 @@ All locations are relative to the primary source directory.
 Program version:
     CHANGES.txt, HIGHLIGHTS.txt (version, date)
     CMakeLists.txt (PACKAGE_VERSION)
+    qtui/doc/regina/about.docbook (plain citation, bibTeX citation)
     qtui/doc/regina/index.docbook (&regversion;, &regdate;,
                                    date, releaseinfo, copyrightyears)
     qtui/doc/regina/manonly.docbook (&regversion;)
