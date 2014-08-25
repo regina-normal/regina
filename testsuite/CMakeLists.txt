@@ -1,3 +1,10 @@
+# Give the test suite a way to locate the data files shipped with
+# Regina's calculation engine.
+SET_PROPERTY ( DIRECTORY
+  PROPERTY COMPILE_DEFINITIONS
+    TESTSUITE_DATA_HOME=\"${PROJECT_SOURCE_DIR}/engine\"
+)
+
 SET ( SOURCES
   exhaustive
   runalltests

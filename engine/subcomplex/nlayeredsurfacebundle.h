@@ -79,8 +79,6 @@ class NTxICore;
  *
  * All optional NStandardTriangulation routines are implemented for this
  * class.
- *
- * \testpart
  */
 class REGINA_API NLayeredTorusBundle : public NStandardTriangulation {
     private:

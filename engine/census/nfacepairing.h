@@ -90,8 +90,6 @@ typedef void (*UseFacePairing)(const NFacePairing*, const NFacePairingIsoList*,
  * Note that if this pairing is used to construct an actual
  * triangulation, the individual gluing permutations will still need to
  * be specified; they are not a part of this structure.
- *
- * \testpart
  */
 class REGINA_API NFacePairing : public NGenericFacetPairing<3> {
     public:

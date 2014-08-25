@@ -34,7 +34,6 @@
 
 #include <algorithm>
 #include <sstream>
-#include "census/ncensus.h"
 #include "census/ngluingpermsearcher.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/memutils.h"
@@ -98,10 +97,9 @@ NGluingPermSearcher* NGluingPermSearcher::bestSearcher(
     // Use an optimised algorithm if possible.
     if (finiteOnly) {
         if (pairing->isClosed() && pairing->getNumberOfTetrahedra() >= 3 &&
-                (whichPurge & NCensus::PURGE_NON_MINIMAL) &&
-                (whichPurge & NCensus::PURGE_NON_PRIME) &&
-                (orientableOnly ||
-                    (whichPurge & NCensus::PURGE_P2_REDUCIBLE))) {
+                (whichPurge & PURGE_NON_MINIMAL) &&
+                (whichPurge & PURGE_NON_PRIME) &&
+                (orientableOnly || (whichPurge & PURGE_P2_REDUCIBLE))) {
                 // Closed prime minimal P2-irreducible triangulations with >= 3
                 // tetrahedra.
                 return new NClosedPrimeMinSearcher(pairing, autos,
@@ -111,8 +109,8 @@ NGluingPermSearcher* NGluingPermSearcher::bestSearcher(
             whichPurge, use, useArgs);
     }
 
-    if (pairing->isClosed() && ((whichPurge & NCensus::PURGE_NON_MINIMAL_HYP) ==
-            NCensus::PURGE_NON_MINIMAL_HYP))
+    if (pairing->isClosed() && ((whichPurge & PURGE_NON_MINIMAL_HYP) ==
+            PURGE_NON_MINIMAL_HYP))
         return new NHyperbolicMinSearcher(pairing, autos, orientableOnly,
             use, useArgs);
 
@@ -201,7 +199,7 @@ void NGluingPermSearcher::runSearch(long maxDepth) {
         // subclass of NGluingPermSearcher with its own custom
         // implementation of runSearch().
         if (lowDegreeEdge(face, false /* degree 1,2 */,
-                whichPurge_ & NCensus::PURGE_NON_MINIMAL))
+                whichPurge_ & PURGE_NON_MINIMAL))
             continue;
         if (! orientableOnly_)
             if (badEdgeLink(face))

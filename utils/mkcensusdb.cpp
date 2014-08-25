@@ -34,8 +34,8 @@
 
 #include <cctype>
 #include <cstdlib>
-#include <cstdbool>
-#include <cstdint>
+#include <stdbool.h> // cstdbool needs c++11
+#include <stdint.h> // cstdint needs c++11
 #include <tcbdb.h>
 #include <tcutil.h>
 #include "packet/ncontainer.h"
@@ -100,7 +100,7 @@ int main(int argc, char* argv[]) {
             usage(argv[0]);
         }
 
-        if (! tcbdbputdup2(db, sig.c_str(), name.c_str())) {
+        if (! tcbdbputdup2(db, sig.c_str(), pos)) {
             std::cerr << "ERROR: Could not store the record for "
                 << sig << " in the database." << std::endl;
             tcbdbclose(db);

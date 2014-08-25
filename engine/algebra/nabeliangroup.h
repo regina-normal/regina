@@ -68,8 +68,6 @@ class NMatrixInt;
  * <i>d0</i>|<i>d1</i>|...|<i>dn</i>.  Note that this representation is
  * unique.
  *
- * \testpart
- *
  * \todo \optlong Look at using sparse matrices for storage of SNF and
  * the like.
  */

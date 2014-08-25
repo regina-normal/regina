@@ -35,17 +35,24 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "census/ncensus.h"
+#include "census/ngluingpermsearcher.h"
+#include "file/nglobaldirs.h"
 #include "packet/ncontainer.h"
 #include "triangulation/ntriangulation.h"
 #include "testsuite/census/testcensus.h"
 
 using regina::NBoolSet;
 using regina::NCensus;
-using regina::NContainer;
+using regina::NCensusHit;
+using regina::NCensusHits;
+using regina::NFacePairing;
+using regina::NGluingPermSearcher;
+using regina::NTriangulation;
 
 class NCensusTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NCensusTest);
 
+    CPPUNIT_TEST(lookup);
     CPPUNIT_TEST(rawCounts);
     CPPUNIT_TEST(rawCountsCompact);
     CPPUNIT_TEST(rawCountsPrimeMinimalOr);
@@ -60,6 +67,91 @@ class NCensusTest : public CppUnit::TestFixture {
         }
 
         void tearDown() {
+        }
+
+        void verifyLookupNone(const char* isoSig) {
+            NCensusHits* hits = NCensus::lookup(isoSig);
+            if (! (hits->empty() && hits->count() == 0 && ! hits->first())) {
+                std::ostringstream msg;
+                msg << "Census lookup for " << isoSig
+                    << " should return no matches.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            delete hits;
+        }
+
+        void verifyLookup(const char* isoSig, const char* name) {
+            NCensusHits* hits = NCensus::lookup(isoSig);
+            if (hits->empty() || hits->count() != 1 || (! hits->first()) ||
+                    hits->first()->next()) {
+                std::ostringstream msg;
+                msg << "Census lookup for " << isoSig
+                    << " should return exactly one match.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (hits->first()->name() != name) {
+                std::ostringstream msg;
+                msg << "Census lookup for " << isoSig << " returned "
+                    << hits->first()->name() << " instead of " << name << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+            delete hits;
+        }
+
+        void verifyLookup(const char* isoSig, const char* name1,
+                const char* name2) {
+            NCensusHits* hits = NCensus::lookup(isoSig);
+            if (hits->empty() || hits->count() != 2 || (! hits->first()) ||
+                    (! hits->first()->next()) ||
+                    hits->first()->next()->next()) {
+                std::ostringstream msg;
+                msg << "Census lookup for " << isoSig
+                    << " should return exactly two matches.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (hits->first()->name() != name1) {
+                std::ostringstream msg;
+                msg << "Census lookup for " << isoSig << " returned "
+                    << hits->first()->name() << " instead of " << name1
+                    << " for hit #1.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (hits->first()->next()->name() != name2) {
+                std::ostringstream msg;
+                msg << "Census lookup for " << isoSig << " returned "
+                    << hits->first()->name() << " instead of " << name2
+                    << " for hit #2.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            delete hits;
+        }
+
+        void lookup() {
+            // Make sure that the database library is working, and that
+            // we can access all censuses.
+
+            // Temporarily redirect the home directory so that Regina
+            // finds the census data files in the source tree.
+            std::string home = regina::NGlobalDirs::home();
+            std::string python = regina::NGlobalDirs::pythonModule();
+            regina::NGlobalDirs::setDirs(TESTSUITE_DATA_HOME, python);
+
+            verifyLookupNone("");
+            verifyLookupNone("abcdefg");
+            verifyLookup("fvPQcdecedekrsnrs",
+                "SFS [S2: (2,1) (3,1) (5,-4)] : #1"); // closed or
+            verifyLookup("kLLvLQQkcdjgjijhihihsfrovojgng",
+                "Hyp_1.28448530 (Z_6) : #12",
+                "1.2844853004683544 : m004(6, 1)"); // closed or, closed hyp
+            verifyLookup("gvLQQcdefeffdwnplhe",
+                "T x I / [ 1,1 | 1,0 ] : #1"); // closed nor
+            verifyLookup("cPcbbbiht",
+                "m004 : #1", "L104001"); // cusped or, hyp knots & links
+            verifyLookup("bkaaid", "m000 : #1"); // cusped nor
+            verifyLookup("kLLPLLQkceefejjiijiiiatdmpamxt",
+                "L408001", "L410005"); // hyp knots & links, multiple times
+
+            regina::NGlobalDirs::setDirs(home, python);
         }
 
         void rawCounts() {
@@ -90,7 +182,7 @@ class NCensusTest : public CppUnit::TestFixture {
             unsigned nOrientable[] = { 1, 4, 11, 7, 17, 50 };
             rawCountsCompare(1, 4, nOrientable, "closed orbl prime minimal",
                 NBoolSet::sTrue, NBoolSet::sTrue, NBoolSet::sFalse, 0,
-                NCensus::PURGE_NON_MINIMAL_PRIME, true);
+                NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME, true);
         }
 
         void rawCountsPrimeMinimalNor() {
@@ -98,8 +190,8 @@ class NCensusTest : public CppUnit::TestFixture {
             rawCountsCompare(1, 4, nNonOrientable,
                 "closed non-orbl prime minimal P2-irreducible",
                 NBoolSet::sTrue, NBoolSet::sFalse, NBoolSet::sFalse, 0,
-                NCensus::PURGE_NON_MINIMAL_PRIME |
-                NCensus::PURGE_P2_REDUCIBLE, true);
+                NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME |
+                NGluingPermSearcher::PURGE_P2_REDUCIBLE, true);
         }
 
         void rawCountsBounded() {
@@ -119,40 +211,77 @@ class NCensusTest : public CppUnit::TestFixture {
             unsigned nAll[] = { 1, 1, 7, 31, 224, 1075, 6348 };
             rawCountsCompare(1, 4, nAll, "candidate minimal cusped hyperbolic",
                 NBoolSet::sFalse, NBoolSet::sBoth, NBoolSet::sFalse, -1,
-                NCensus::PURGE_NON_MINIMAL_HYP, false);
+                NGluingPermSearcher::PURGE_NON_MINIMAL_HYP, false);
 
             unsigned nOrientable[] = { 1, 0, 3, 14, 113, 590, 3481 };
             rawCountsCompare(1, 5, nOrientable,
                 "candidate minimal cusped hyperbolic orbl",
                 NBoolSet::sFalse, NBoolSet::sTrue, NBoolSet::sFalse, -1,
-                NCensus::PURGE_NON_MINIMAL_HYP, false);
+                NGluingPermSearcher::PURGE_NON_MINIMAL_HYP, false);
         }
 
-        static bool mightBeMinimal(regina::NTriangulation* tri, void*) {
-            return ! tri->simplifyToLocalMinimum(false);
+        struct CensusSpec {
+            NBoolSet finite_;
+            NBoolSet orbl_;
+            int purge_;
+            bool minimal_;
+
+            unsigned long count_;
+
+            CensusSpec(NBoolSet finite, NBoolSet orbl,
+                    int purge, bool minimal) :
+                    finite_(finite), orbl_(orbl),
+                    purge_(purge), minimal_(minimal), count_(0) {}
+        };
+
+        static void foundPerms(const NGluingPermSearcher* perms, void* spec) {
+            if (perms) {
+                CensusSpec* s = static_cast<CensusSpec*>(spec);
+                NTriangulation* tri = perms->triangulate();
+                if (tri->isValid() &&
+                        (! (s->minimal_ &&
+                            tri->simplifyToLocalMinimum(false))) &&
+                        (! (s->orbl_ == NBoolSet::sTrue &&
+                            ! tri->isOrientable())) &&
+                        (! (s->orbl_ == NBoolSet::sFalse &&
+                            tri->isOrientable())) &&
+                        (! (s->finite_ == NBoolSet::sTrue &&
+                            tri->isIdeal())) &&
+                        (! (s->finite_ == NBoolSet::sFalse &&
+                            ! tri->isIdeal())))
+                    ++s->count_;
+                delete tri;
+            }
+        }
+
+        static void foundPairing(const NFacePairing* pairing,
+                const NFacePairing::IsoList* autos, void* spec) {
+            if (pairing) {
+                CensusSpec* s = static_cast<CensusSpec*>(spec);
+                NGluingPermSearcher::findAllPerms(pairing, autos,
+                    ! s->orbl_.hasFalse(), ! s->finite_.hasFalse(),
+                    s->purge_, foundPerms, spec);
+            }
         }
 
         static void rawCountsCompare(unsigned minTets, unsigned maxTets,
                 const unsigned* realAns, const char* censusType,
                 NBoolSet finiteness, NBoolSet orientability,
                 NBoolSet boundary, int nBdryFaces, int whichPurge,
-                bool testNonMinimality) {
-            NContainer* census;
-
+                bool minimal) {
             for (unsigned nTets = minTets; nTets <= maxTets; nTets++) {
-                census = new NContainer();
-                NCensus::formCensus(census, nTets, finiteness, orientability,
-                    boundary, nBdryFaces, whichPurge,
-                    testNonMinimality ? &mightBeMinimal : 0);
+                CensusSpec spec(finiteness, orientability, whichPurge, minimal);
+
+                NFacePairing::findAllPairings(nTets, boundary, nBdryFaces,
+                    foundPairing, &spec);
 
                 std::ostringstream msg;
                 msg << "Census count for " << nTets << " tetrahedra ("
                     << censusType << ") should be " << realAns[nTets]
-                    << ", not " << census->getNumberOfChildren() << '.';
+                    << ", not " << spec.count_ << '.';
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    census->getNumberOfChildren() == realAns[nTets]);
-                delete census;
+                    spec.count_ == realAns[nTets]);
             }
         }
 };

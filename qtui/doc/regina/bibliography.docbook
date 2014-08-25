@@ -211,21 +211,6 @@
   <date>October 2011</date>
  </biblioentry>
 
- <biblioentry id="bib-burton-fund">
-  <abbrev>Bur14</abbrev>
-  <authorgroup><author>
-   <firstname>Benjamin</firstname>
-   <othername>A.</othername>
-   <surname>Burton</surname>
-  </author></authorgroup>
-  <title>Enumerating fundamental normal surfaces:
-   Algorithms, experiments and invariants</title>
-  <edition>ALENEX 2014: Proceedings of the Meeting on
-   Algorithm Engineering &amp; Experiments</edition>
-  <issuenum>arXiv:1111.7055</issuenum>
-  <date>To appear</date>
- </biblioentry>
-
  <biblioentry id="bib-burton-hyamfest">
   <abbrev>Bur13</abbrev>
   <authorgroup><author>
@@ -241,6 +226,35 @@
   <publishername>Amer. Math. Soc.</publishername>
   <address>Providence, RI</address>
   <date>2013</date>
+ </biblioentry>
+
+ <biblioentry id="bib-burton-fund">
+  <abbrev>Bur14a</abbrev>
+  <authorgroup><author>
+   <firstname>Benjamin</firstname>
+   <othername>A.</othername>
+   <surname>Burton</surname>
+  </author></authorgroup>
+  <title>Enumerating fundamental normal surfaces:
+   Algorithms, experiments and invariants</title>
+  <edition>ALENEX 2014: Proceedings of the Meeting on
+   Algorithm Engineering &amp; Experiments</edition>
+  <artpagenums>pp. 112&ndash;124</artpagenums>
+  <publishername>SIAM</publishername>
+  <date>2014</date>
+ </biblioentry>
+
+ <biblioentry id="bib-burton-complete">
+  <abbrev>Bur14b</abbrev>
+  <authorgroup><author>
+   <firstname>Benjamin</firstname>
+   <othername>A.</othername>
+   <surname>Burton</surname>
+  </author></authorgroup>
+  <title>The cusped hyperbolic census is complete</title>
+  <edition>Preprint</edition>
+  <issuenum>arXiv:1405.2695</issuenum>
+  <date>May 2014</date>
  </biblioentry>
 
  <biblioentry id="bib-bo-branching">

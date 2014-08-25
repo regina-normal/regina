@@ -72,8 +72,6 @@ class NProgressTracker;
  * this class should ever be created.
  *
  * \ifacespython Not present.
- *
- * \testpart
  */
 class REGINA_API NDoubleDescription {
     public:

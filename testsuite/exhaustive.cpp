@@ -74,7 +74,6 @@ using regina::Dim4FacetPairing;
 using regina::Dim4GluingPermSearcher;
 using regina::Dim4Triangulation;
 using regina::NBoolSet;
-using regina::NCensus;
 using regina::NFacePairing;
 using regina::NGluingPermSearcher;
 using regina::NTriangulation;
@@ -112,8 +111,8 @@ namespace {
                 false /* orientable only */,
                 ! h->finite_.hasFalse() /* finite only */,
                 (h->minimal_ ?
-                    NCensus::PURGE_NON_MINIMAL_PRIME |
-                    NCensus::PURGE_P2_REDUCIBLE : 0) /* purge */,
+                    NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME |
+                    NGluingPermSearcher::PURGE_P2_REDUCIBLE : 0) /* purge */,
                 &foundGluingPerms3, holder);
         }
     }

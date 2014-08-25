@@ -73,21 +73,6 @@ using regina::NTriangulation;
 
 namespace {
     /**
-     * A structure for storing a single hit in a census lookup.
-     */
-    struct CensusHit {
-        QString triName;
-        QString censusFile;
-
-        CensusHit() {
-        }
-
-        CensusHit(const QString& newTriName, const QString& newCensusFile) :
-                triName(newTriName), censusFile(newCensusFile) {
-        }
-    };
-
-    /**
      * Represents a destination for a single face gluing.
      */
     QRegExp reFaceGluing(
@@ -647,19 +632,6 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     sep = new QAction(this);
     sep->setSeparator(true);
     triActionList.append(sep);
-
-    QAction* actCensusLookup = new QAction(this);
-    actCensusLookup->setText(tr("Census &Lookup"));
-    actCensusLookup->setIcon(ReginaSupport::themeIcon("edit-find"));
-    actCensusLookup->setToolTip(tr(
-        "Search for this triangulation in the configured list of censuses"));
-    actCensusLookup->setWhatsThis(tr("Attempt to locate this "
-        "triangulation within the prepackaged censuses of 3-manifold "
-        "triangulations that are shipped with Regina.<p>"
-        "The list of censuses that are searched can be customised through "
-        "Regina's settings."));
-    triActionList.append(actCensusLookup);
-    connect(actCensusLookup, SIGNAL(triggered()), this, SLOT(censusLookup()));
 
     QAction* actToSnapPea = new QAction(this);
     actToSnapPea->setText(tr("Convert to SnapPea"));
@@ -1231,137 +1203,6 @@ void NTriGluingsUI::makeZeroEfficient() {
             ReginaSupport::info(ui,
                 tr("This triangulation is already 0-efficient."),
                 tr("No changes are necessary."));
-    }
-}
-
-void NTriGluingsUI::censusLookup() {
-    endEdit();
-
-    // Copy the list of census files for processing.
-    // This is cheap (Qt uses copy-on-write).
-    QList<ReginaFilePref> censusFiles = ReginaPrefSet::global().censusFiles;
-
-    // Run through each census file.
-    QProgressDialog *progress = new QProgressDialog(ui);
-    progress->setWindowTitle(tr("Census Lookup"));
-    progress->setLabelText(tr("Initialising"));
-    
-    progress->setMinimum(0);
-    progress->setMaximum(censusFiles.size() + 1);
-    progress->show();
-    
-    QCoreApplication::instance()->processEvents();
-
-    QVector<CensusHit> results;
-    QString searched = tr("The following censuses were searched:\n");
-    NPacket* census;
-    NPacket* p;
-    bool hasActiveFiles = false;
-    bool adjustedSettings = false;
-    foreach (const ReginaFilePref& f, censusFiles) {
-        progress->setValue(progress->value()+1);
-        QCoreApplication::instance()->processEvents();
-
-        // Check for cancellation.
-        if (progress->wasCanceled()) {
-            delete progress;
-            ReginaSupport::info(ui, tr("The census lookup was cancelled."));
-            return;
-        }
-
-        if (! (f.isActive()))
-            continue;
-
-        hasActiveFiles = true;
-
-        // Process this census file.
-        progress->setLabelText(tr("Searching: %1").
-            arg(Qt::escape(f.shortDisplayName())));
-        QCoreApplication::instance()->processEvents();
-
-        census = regina::open(static_cast<const char*>(f.encodeFilename()));
-        if (! census) {
-            // Disable the file automatically: it didn't work this time,
-            // it won't work next time.
-            // Since we're using a copy of the original list, we must
-            // hunt for the file in the original list.  This is okay;
-            // the lists are small and this case should rarely happen anyway.
-            for (QList<ReginaFilePref>::iterator tmpit =
-                    ReginaPrefSet::global().censusFiles.begin();
-                    tmpit != ReginaPrefSet::global().censusFiles.end();
-                    ++tmpit)
-                if (f == *tmpit) {
-                    tmpit->deactivate();
-                    adjustedSettings = true;
-                    break;
-                }
-            ReginaSupport::warn(ui,
-                tr("<qt>I could not read the census data file <i>%1</i>.</qt>")
-                .arg(Qt::escape(f.longDisplayName())),
-                tr("I have disabled this file in Regina's census settings.  "
-                "You can re-enable it once the problem is fixed."));
-            continue;
-        }
-
-        // Search for the triangulation!
-        for (p = census; p; p = p->nextTreePacket())
-            if (p->getPacketType() == NTriangulation::packetType)
-                if (tri->isIsomorphicTo(
-                        *dynamic_cast<NTriangulation*>(p)).get())
-                    results.push_back(CensusHit(p->getPacketLabel().c_str(),
-                        f.shortDisplayName()));
-        delete census;
-        searched = searched + '\n' + f.shortDisplayName();
-    }
-
-    progress->setValue(progress->value()+1);
-    delete progress;
-    QCoreApplication::instance()->processEvents();
-
-    if (adjustedSettings) {
-        ReginaPrefSet::save();
-        ReginaPrefSet::propagate();
-    }
-
-    // Were there any hits?
-    if (! hasActiveFiles) {
-        ReginaSupport::info(ui,
-            tr("I have no census files to search through."),
-            tr("This is probably because you deactivated Regina's "
-                "standard censuses at some time in the past.  "
-                "You can reactivate them through Regina's census settings."));
-    } else if (results.empty()) {
-        ReginaSupport::info(ui,
-            tr("The triangulation was not located in any census files."),
-            tr("You can add more censuses to this search through "
-            "Regina's census settings."),
-            searched);
-    } else {
-        QString detailsText = tr("Identified by census lookup:");
-        QString detailsHTML = tr("<qt>");
-        QString censusName;
-        for (QVector<CensusHit>::const_iterator it = results.begin();
-                it != results.end(); it++) {
-            censusName = QFileInfo((*it).censusFile).fileName();
-            if (it != results.begin())
-                detailsHTML += "<p>";
-            detailsHTML += tr("Name: %1<br>Census: %2").
-                arg(Qt::escape((*it).triName)).arg(Qt::escape(censusName));
-            detailsText += tr("\n\nName: %1\nCensus: %2").
-                arg((*it).triName).arg(censusName);
-        }
-        detailsHTML += "</qt>";
-
-        // Show the hits to the user.
-        ReginaSupport::info(ui,
-            tr("The triangulation was identified:"),
-            detailsHTML, searched);
-
-        // Store the hits as a text packet also.
-        regina::NText* text =
-            new regina::NText(detailsText.toAscii().constData());
-        text->setPacketLabel("ID: " + tri->getHumanLabel());
-        tri->insertChildLast(text);
     }
 }
 

@@ -86,8 +86,6 @@ struct PacketInfo<PACKET_ANGLESTRUCTURELIST> {
  *
  * Angle structure lists should be created using the routine enumerate(),
  * which is new as of Regina 3.95.
- *
- * \testpart
  */
 class REGINA_API NAngleStructureList : public NPacket {
     REGINA_PACKET(NAngleStructureList, PACKET_ANGLESTRUCTURELIST)

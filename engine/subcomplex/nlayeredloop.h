@@ -80,8 +80,6 @@ class NEdge;
  *
  * All optional NStandardTriangulation routines are implemented for this
  * class.
- *
- * \testpart
  */
 class REGINA_API NLayeredLoop : public NStandardTriangulation {
     private:

@@ -7,6 +7,7 @@ SET ( FILES
   dim4facetpairing
   ncensus
   nfacepairing
+  ngluingpermsearcher
   pycensus
   )
 

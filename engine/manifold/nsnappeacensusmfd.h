@@ -59,6 +59,12 @@ namespace regina {
  * Callahan, Hildebrand and Weeks, and is shipped with SnapPea 3.0d3
  * (and also with Regina).
  *
+ * \note The modern cusped hyperbolic census now extends to nine tetrahedra,
+ * and indeed the 9-tetrahedron database is accessible through the
+ * NCensus lookup routines.  However, for the time being, the scope of these
+ * NSnapPeaCensusManifold and NSnapPeaCensusTri classes is restricted to the
+ * original Callahan-Hildebrand-Weeks 7-tetrahedron census only.
+ *
  * The census is split into five different sections according to number
  * of tetrahedra and orientability.  Each of these sections corresponds
  * to one of the section constants defined in this class.
@@ -74,8 +80,6 @@ namespace regina {
  * are identical to those of its corresponding NSnapPeaCensusManifold.
  *
  * All of the optional NManifold routines are implemented for this class.
- *
- * \testpart
  */
 class REGINA_API NSnapPeaCensusManifold : public NManifold {
     public:

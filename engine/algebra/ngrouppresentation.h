@@ -477,8 +477,6 @@ class REGINA_API NGroupExpression : public ShareableObject {
  * parameters to ensure it won't crash the computer.  Also look at the FPGroup
  * package.
  *
- * \testpart
- *
  * \todo Implement a procedure to attempt Reidemeister-Schreir, perhaps with
  *  respect to a homomorphism to a known group.  Something good-enough to
  *  detect if the group is a semi-direct product, for 2 and 3-manifold groups.

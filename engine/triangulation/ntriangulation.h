@@ -123,8 +123,6 @@ struct PacketInfo<PACKET_TRIANGULATION> {
  * (all designed to help the user avoid inconsistent states and accidental
  * crashes); see the NTetrahedron class notes for further details.
  *
- * \testpart
- *
  * \todo \feature Is the boundary incompressible?
  * \todo \featurelong Am I obviously a handlebody?  (Simplify and see
  * if there is nothing left).  Am I obviously not a handlebody?
@@ -2292,8 +2290,8 @@ class REGINA_API NTriangulation : public NPacket,
          * return 0.
          *
          * The underlying algorithm appears in "A new approach to crushing
-         * 3-manifold triangulations", Discrete and Computational Geometry,
-         * to appear, arXiv:1212.1441.  This algorithm is based on the
+         * 3-manifold triangulations", Discrete and Computational
+         * Geometry 52:1 (2014), pp. 116-139.  This algorithm is based on the
          * Jaco-Rubinstein 0-efficiency algorithm, and works in both
          * orientable and non-orientable settings.
          *

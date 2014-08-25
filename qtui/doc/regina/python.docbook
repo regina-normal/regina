@@ -65,13 +65,6 @@
     variables for you:
     <glosslist>
      <glossentry>
-      <glossterm><varname>root</varname></glossterm>
-      <glossdef><para>
-       The variable <varname>root</varname> will refer to the packet
-       at the top of your packet tree.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
       <glossterm><varname>item</varname></glossterm>
       <glossdef>
        <para>
@@ -85,6 +78,14 @@
         the <varname>item</varname> variable will not change as a result.
        </para>
       </glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><varname>root</varname></glossterm>
+      <glossdef><para>
+       The variable <varname>root</varname> will refer to the hidden
+       root at the top of your packet tree (this root is not visible in the
+       user interface, but its top-level children are).
+      </para></glossdef>
      </glossentry>
     </glosslist>
    </para>
@@ -196,7 +197,7 @@
    module called <parameter>regina</parameter>.
    For instance, the main 3-manifold triangulation class is
    <literal>regina.NTriangulation</literal>, and the main routine to
-   read a data file is <literal>regina.readFileMagic</literal>.
+   read a data file is <literal>regina.open</literal>.
   </para>
   <para>
    Whenever &regina; gives you access to &python; (either through a
@@ -212,13 +213,13 @@
   <para>
    This means, for instance, that you create a new triangulation by just
    calling <literal>NTriangulation()</literal>, and you can read a data file
-   by calling <literal>readFileMagic(filename)</literal>.
+   by calling <literal>open(filename)</literal>.
    For command-line sessions, if you wish to avoid the heavy-handed
    &ldquo;<literal>from regina import&nbsp;*</literal>&rdquo;, you can pass
    the option <option>--noautoimport</option> (in which case you will need to
    use fully qualified names such as
    <literal>regina.NTriangulation()</literal> and
-   <literal>regina.readFileMagic(filename)</literal>).
+   <literal>regina.open(filename)</literal>).
   </para>
   <tip>
    <para>
