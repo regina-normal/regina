@@ -525,7 +525,7 @@ void ReginaPrefSet::readInternal() {
     readPythonLibraries();
 
     settings.beginGroup("Window");
-    windowMainSize = settings.value("MainSizeV2", QSize()).toSize();
+    windowMainSize = settings.value("MainSizeV3", QSize()).toSize();
     windowPythonSize = settings.value("PythonSize", QSize()).toSize();
     settings.endGroup();
 
@@ -627,7 +627,7 @@ void ReginaPrefSet::saveInternal() const {
     savePythonLibraries();
 
     settings.beginGroup("Window");
-    settings.setValue("MainSizeV2", windowMainSize);
+    settings.setValue("MainSizeV3", windowMainSize);
     settings.setValue("PythonSize", windowPythonSize);
     settings.endGroup();
 
