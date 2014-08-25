@@ -12,9 +12,9 @@
   <!ENTITY reguserlist "<email>regina-user@lists.sourceforge.net</email>">
   <!ENTITY regabstract
    "<para>
-     &regina; is a software package for studying 3-manifold triangulations
-     and normal surfaces.  Other key features include
-     angle structures, census enumeration, combinatorial
+     &regina; is a software package for studying 3-manifold triangulations,
+     normal surfaces and angle structures.  Other key features include
+     census enumeration, combinatorial
      recognition of triangulations, and high-level tasks such as
      3-sphere recognition and connected sum decomposition.
      &regina; comes with a full graphical user interface, and also offers

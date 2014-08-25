@@ -439,7 +439,11 @@ class ReginaPrefSet : public QObject {
                  that are not embedded */
 
         QSize windowMainSize;
-            /**< The initial size of a new main topology data window. */
+            /**< The initial size of a new main topology data window.
+                 Note: as of Regina 4.96, the key for this option in the
+                 configuration file has changed from \c MainSize to
+                 \c MainSizeV2 (since a new packet type was added, and
+                 so the window needs to be a little wider). */
         QSize windowPythonSize;
             /**< The initial size of a new python console. */
 

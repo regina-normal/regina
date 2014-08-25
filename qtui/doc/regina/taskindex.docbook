@@ -247,11 +247,6 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="options-snappea">closed triangulations
-   in &snappea;</link></primaryie>
- </indexentry>
-
- <indexentry>
   <primaryie>code</primaryie>
   <seeie>See: libraries</seeie>
  </indexentry>
@@ -324,8 +319,6 @@
 
  <indexentry id="idx-configuration">
   <primaryie>configuration</primaryie>
-  <secondaryie><link linkend="options-census">census
-   lookup</link></secondaryie>
   <secondaryie><link linkend="options-tools">&gaplong;</link></secondaryie>
   <secondaryie><link linkend="options-general">general</link></secondaryie>
   <secondaryie><link linkend="options-tools">&graphviz;</link></secondaryie>
@@ -333,7 +326,7 @@
    viewing</link></secondaryie>
   <secondaryie><link linkend="options-python">&python;
    scripting</link></secondaryie>
-  <secondaryie><link linkend="options-snappea">&snappea;
+  <secondaryie><link linkend="options-tools">&snappea;
    interaction</link></secondaryie>
   <secondaryie><link linkend="options-tools">tools,
    third-party</link></secondaryie>
@@ -1256,9 +1249,7 @@
  <indexentry>
   <primaryie>&snappea;</primaryie>
   <secondaryie><link linkend="tri-snappea">calculations</link></secondaryie>
-  <secondaryie><link linkend="options-snappea">closed triangulations,
-   allowing</link></secondaryie>
-  <secondaryie><link linkend="options-snappea">diagnostic messages,
+  <secondaryie><link linkend="options-tools">diagnostic messages,
    enabling</link></secondaryie>
   <secondaryie><link linkend="export-snappea">exporting to</link></secondaryie>
   <secondaryie><link linkend="import-snappea">importing
@@ -1438,8 +1429,6 @@
    converting real to ideal</link></secondaryie>
   <secondaryie><link linkend="tri-propbdry">boundary,
    testing for</link></secondaryie>
-  <secondaryie><link linkend="options-snappea">closed,
-   allowing in &snappea;</link></secondaryie>
   <secondaryie><link linkend="tri-composition-composition">combinatorial
    composition</link></secondaryie>
   <secondaryie><link linkend="tri-decomposition-component">component
