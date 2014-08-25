@@ -43,10 +43,12 @@ ADD_LIBRARY("regina-engine" SHARED ${SOURCES} )
 # All of the libraries that appear in ENGINE_LINK_LIBRARIES feature in
 # the engine headers, which means they may be expose to third-party apps
 # that build against libregina-engine.
+# Note: PUBLIC and PRIVATE only appeard in CMake 2.8.12.
+# For compatibility back to 2.8.9 we use LINK_PUBLIC and LINK_PRIVATE instead.
 SET(ENGINE_LINK_LIBRARIES ${LIBXML2_LIBRARIES} ${GMP_LIBRARIES} ${GMPXX_LIBRARIES} ${ZLIB_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 TARGET_LINK_LIBRARIES(regina-engine
-  PUBLIC ${ENGINE_LINK_LIBRARIES}
-  PRIVATE ${ICONV_LIBRARY} ${TOKYOCABINET_LIBRARIES})
+  LINK_PUBLIC ${ENGINE_LINK_LIBRARIES}
+  LINK_PRIVATE ${ICONV_LIBRARY} ${TOKYOCABINET_LIBRARIES})
 SET_TARGET_PROPERTIES(regina-engine PROPERTIES VERSION ${PACKAGE_VERSION})
 SET_TARGET_PROPERTIES(regina-engine PROPERTIES SOVERSION ${PACKAGE_VERSION})
 
