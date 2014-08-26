@@ -629,7 +629,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-algebra-fundgroup">fundamental
+  <primaryie><link linkend="tri-algebra-homfund">fundamental
    group</link></primaryie>
  </indexentry>
 
@@ -643,7 +643,7 @@
  <indexentry>
   <primaryie>&gaplong;</primaryie>
   <secondaryie><link linkend="options-tools">configuration</link></secondaryie>
-  <secondaryie><link linkend="tri-algebra-fundgroup">using to
+  <secondaryie><link linkend="tri-algebra-homfund">using to
    simplify group presentations</link></secondaryie>
  </indexentry>
 
@@ -677,11 +677,11 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-algebra-homology">homology
+  <primaryie><link linkend="tri-algebra-homfund">homology
    groups</link></primaryie>
   <secondaryie><link linkend="tri-algebra-cellular">all homology
    groups</link></secondaryie>
-  <secondaryie><link linkend="tri-algebra-homology">first homology
+  <secondaryie><link linkend="tri-algebra-homfund">first homology
    group</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-cellular">induced map from
    manifold to boundary</link></secondaryie>
@@ -1452,9 +1452,9 @@
    graphs</link></secondaryie>
   <secondaryie><link linkend="tri-triangles">faces,
    viewing shapes</link></secondaryie>
-  <secondaryie><link linkend="tri-algebra-fundgroup">fundamental
+  <secondaryie><link linkend="tri-algebra-homfund">fundamental
    group</link></secondaryie>
-  <secondaryie><link linkend="tri-algebra-homology">homology
+  <secondaryie><link linkend="tri-algebra-homfund">homology
    groups</link></secondaryie>
   <secondaryie><link linkend="tri-snappea">hyperbolic solution
    type</link></secondaryie>

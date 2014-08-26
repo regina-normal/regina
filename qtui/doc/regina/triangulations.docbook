@@ -459,8 +459,8 @@
       <glossdef>
        <para>
         Signifies that at least one vertex of the triangulation is
-        <firstterm>ideal</firstterm>.  That is, the vertex link is
-        a closed surface but not a 2-sphere.
+        <firstterm>ideal</firstterm>.  That is, there is some vertex
+        whose link is a closed surface but not a 2-sphere.
        </para>
        <para>
         You can locate any ideal vertices using the
@@ -562,24 +562,24 @@
    <para>
     Each cell of this table represents a single face of a single
     tetrahedron.  For instance, the cell circled in red
-    above represents face&nbsp;123 of tetrahedron&nbsp;5 (that is, the face
-    formed from vertices 1,2,3 of tetrahedron&nbsp;5).
+    above represents face&nbsp;123 of tetrahedron&nbsp;1 (that is, the face
+    formed from vertices 1,2,3 of tetrahedron&nbsp;1).
    </para>
    <para>
     The contents of the cell show how the face is glued.  In the example
-    above, the circled cell contains <literal>0&nbsp;(230)</literal>,
-    indicating that face&nbsp;123 of tetrahedron&nbsp;5 is glued to
-    face&nbsp;230 of tetrahedron&nbsp;0 using the affine map that
-    matches vertices 1,2,3 of tetrahedron&nbsp;5 with vertices
-    2,3,0 of tetrahedron&nbsp;0 respectively.
+    above, the circled cell contains <literal>8&nbsp;(312)</literal>,
+    indicating that face&nbsp;123 of tetrahedron&nbsp;1 is glued to
+    face&nbsp;312 of tetrahedron&nbsp;8 using the affine map that
+    matches vertices 1,2,3 of tetrahedron&nbsp;1 with vertices
+    3,1,2 of tetrahedron&nbsp;8 respectively.
     The same gluing can be seen from the opposite direction in the row
-    for tetrahedron&nbsp;0.
+    for tetrahedron&nbsp;8.
    </para>
    <para>
     An empty cell indicates that a face is not glued to anything at all;
     that is, the face forms part of the <emphasis>boundary</emphasis> of
     the 3-manifold.  In the table above there are two boundary triangles:
-    face&nbsp;123 of tetrahedron&nbsp;0, and face&nbsp;123 of
+    face&nbsp;013 of tetrahedron&nbsp;0, and face&nbsp;123 of
     tetrahedron&nbsp;4.  In our example these join together to form the torus
     boundary of the figure eight knot complement.
    </para>
@@ -1079,9 +1079,9 @@
          </para>
          <para>
           Triangles and vertices are described in the same manner as
-          in the the individual
+          in the individual
           <link linkend="tri-triangles">triangle</link> and
-          for <link linkend="tri-vertices">vertex</link> viewers.
+          <link linkend="tri-vertices">vertex</link> viewers.
          </para>
         </glossdef>
        </glossentry>
@@ -1153,13 +1153,18 @@
     ignored.
    </para></caution>
 
-   <sect3 id="tri-algebra-homology">
-    <title>Homology Groups</title>
+   <sect3 id="tri-algebra-homfund">
+    <title>Homology and Fundamental Group</title>
     <para>
-     The <guilabel>Algebra</guilabel>&rarr;<guilabel>Homology</guilabel>
-     tab presents several homology groups of the triangulation.
-     These include:
-     H1(M), (the first homology group);
+     The <guilabel>Algebra</guilabel>&rarr;<guilabel>Homology &amp;
+     Fund. Group</guilabel>
+     tab presents several homology groups of the triangulation
+     (on the left side of the panel),
+     as well as the fundamental group (on the right side of the panel).
+    </para>
+    <para>
+     The homology groups on the left include:
+     H1(M), the first homology group;
      H1(M,&nbsp;&#x2202;M),
       the relative first homology group with respect to the boundary;
      H1(&#x2202;M),
@@ -1167,8 +1172,6 @@
      H2(M), the second homology group; and
      H2(M&nbsp;;&nbsp;Z<subscript>2</subscript>), the second homology group
       with coefficients in Z<subscript>2</subscript>.
-    </para>
-    <para>
      All finite cyclic groups
      Z<subscript><replaceable>k</replaceable></subscript>
      will be written in the &ldquo;pidgin &tex;&rdquo; form
@@ -1176,61 +1179,64 @@
      so that the order of each group is easier to read.
     </para>
     <para>
-     <inlinemediaobject>
-      <imageobject>
-       <imagedata fileref="tri-homology.png"/>
-      </imageobject>
-     </inlinemediaobject>
-    </para>
-   </sect3>
-
-   <sect3 id="tri-algebra-fundgroup">
-    <title>Fundamental Group</title>
-    <para>
-     The <guilabel>Algebra</guilabel>&rarr;<guilabel>Fund.&nbsp;Group</guilabel>
-     tab displays the fundamental group of the triangulation,
+     The fundamental group on the right will be
      presented as a set of generators and
      relations.
-    </para>
-    <para>
-     &regina; will try to recognise the common name of this
-     group (though the recognition code is fairly na&iuml;ve).
-     If it can, the name will be displayed above
-     the generators and relations.  Otherwise the text
-     <guilabel>Not recognised</guilabel> will be displayed instead.
+     &regina; will also try to recognise the common name of this
+     group (though the recognition code is fairly na&iuml;ve);
+     if it can then the common name (such as &ldquo;Z_2&rdquo;)
+     will be displayed above the generators and relations.
     </para>
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="tri-fundgroup.png"/>
+       <imagedata fileref="tri-homfund.png"/>
       </imageobject>
      </inlinemediaobject>
     </para>
     <para>
-     If you have &gaplongurl; installed on your system, you can use &gap;
-     to simplify the group presentation.  &regina; does
-     try to simplify the presentation on its own, but &gap; will
-     typically do a better job.
+     &regina; does attempt to simplify the presentation automatically, but
+     if this is not satisfactory then there are further things you can try:
+     <itemizedlist>
+      <listitem>
+       <para>
+        If you have &gaplongurl; installed on your system, you can use &gap;
+        to simplify the group presentation.
+        Simply press the <guibutton>Using GAP</guibutton> button
+        at the bottom of the panel.
+        You can try this more than once if you like: sometimes
+        &gap; finds a better presentation when run a second or third time.
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        You can also press the <guibutton>By proliferation</guibutton>
+        button, which will build new relators from old and append
+        these to the presentation (in the hope of finding new ways to
+        simplify what is already present).  This may make your
+        presentation larger, but it may also help climb out of a local
+        &ldquo;well&rdquo; from which it is difficult to escape.
+        Pressing this button repeatedly
+        will make &regina; try increasingly large combinations,
+        and may therefore become increasingly slow.
+       </para>
+      </listitem>
+     </itemizedlist>
     </para>
-    <para>
-     To simplify the presentation using &gap;,
-     press the <guibutton>Simplify using GAP</guibutton> button
-     at the bottom of the panel.
-     You can try this more than once if you like: sometimes
-     &gap; finds a better presentation when run a second or third time.
-    </para>
-    <para>
-     If &regina; is having trouble starting &gap;, you can tell it how
-     to start &gap; in the
-     <link linkend="options-tools">tools options</link>.
-    </para>
-    <tip><para>
-     If you wish to see a full transcript of the conversation between
-     &regina; and &gap;, start &regina; from the command-line by running
-     <command>regina-gui</command>.  The entire conversation
-     will be shown in the text console where you ran
-     <command>regina-gui</command> command.
-    </para></tip>
+    <tip>
+     <para>
+      If &regina; is having trouble starting &gap;, you can tell it how
+      to start &gap; in the
+      <link linkend="options-tools">tools options</link>.
+     </para>
+     <para>
+      If you wish to see a full transcript of the conversation between
+      &regina; and &gap;, start &regina; from the command-line by running
+      <command>regina-gui</command>.  The entire conversation
+      will be shown in the text console where you ran
+      <command>regina-gui</command> command.
+     </para>
+    </tip>
    </sect3>
    <sect3 id="tri-algebra-turaevviro">
     <title>Turaev-Viro Invariants</title>
