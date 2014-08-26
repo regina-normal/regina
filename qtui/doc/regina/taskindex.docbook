@@ -122,12 +122,14 @@
    angle structures</link></secondaryie>
   <secondaryie><link linkend="angles-viewstructurecoords">individual
    angles</link></secondaryie>
+  <secondaryie><link linkend="tri-strict">strict,
+   testing for existence</link></secondaryie>
   <secondaryie><link linkend="angles-propstrict">strict,
-   testing</link></secondaryie>
+   type of angle structure</link></secondaryie>
   <secondaryie><link linkend="angles-proptaut">taut,
-   testing</link></secondaryie>
+   type of angle structure</link></secondaryie>
   <secondaryie><link linkend="angles-propveering">veering,
-   testing</link></secondaryie>
+   type of angle structure</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -219,14 +221,19 @@
   <secondaryie><link linkend="man-tricensus-mpi">distributing census
    creation across several machines</link></secondaryie>
   <secondaryie><link linkend="tri-censuslookup">searching for a
-   triangulation in the census databases (&gui;)</link></secondaryie>
+   triangulation across the census databases (&gui;)</link></secondaryie>
   <secondaryie><link linkend="man-censuslookup">searching for a
-   triangulation in the census databases (command line)</link></secondaryie>
+   triangulation across the census databases (command line)</link></secondaryie>
  </indexentry>
 
  <indexentry>
   <primaryie><link linkend="surfaces-proptype">central surfaces,
    recognising</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>certifying hyperbolicity</primaryie>
+  <seeie>See: hyperbolic manifolds, certifying hyperbolicity</seeie>
  </indexentry>
 
  <indexentry>
@@ -350,6 +357,11 @@
  <indexentry>
   <primaryie><link linkend="man-regconvert">conversion between file
    formats</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-snappea-convert">conversion from
+   native to &snappea; triangulations</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -688,7 +700,9 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>hyperbolic</primaryie>
+  <primaryie>hyperbolic manifolds</primaryie>
+  <secondaryie><link linkend="tri-hyperbolic">certifying
+   hyperbolicity</link></secondaryie>
   <secondaryie><link linkend="tri-snappea">solution
    type</link></secondaryie>
   <secondaryie><link linkend="tri-snappea">volume</link></secondaryie>
@@ -1190,8 +1204,8 @@
 
  <indexentry>
   <primaryie>search</primaryie>
-  <secondaryie><link linkend="tri-censuslookup">for a triangulation in
-   the available censuses</link></secondaryie>
+  <secondaryie><link linkend="tri-censuslookup">for a triangulation
+   across the census databases</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1249,6 +1263,8 @@
  <indexentry>
   <primaryie>&snappea;</primaryie>
   <secondaryie><link linkend="tri-snappea">calculations</link></secondaryie>
+  <secondaryie><link linkend="tri-snappea-convert">converting from
+   native to &snappea; triangulations</link></secondaryie>
   <secondaryie><link linkend="options-tools">diagnostic messages,
    enabling</link></secondaryie>
   <secondaryie><link linkend="export-snappea">exporting to</link></secondaryie>
@@ -1263,7 +1279,7 @@
 
  <indexentry>
   <primaryie>solution type</primaryie>
-  <seeie>See: hyperbolic solution type</seeie>
+  <seeie>See: hyperbolic manifolds, solution type</seeie>
  </indexentry>
 
  <indexentry>
@@ -1308,8 +1324,11 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="angles-propstrict">strict angle
-   structures</link></primaryie>
+  <primaryie>strict angle structures</primaryie>
+  <secondaryie><link linkend="tri-strict">testing for
+   existence</link></secondaryie>
+  <secondaryie><link linkend="angles-propstrict">type of angle
+   structure</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1438,6 +1457,8 @@
   <secondaryie><link linkend="tri-decomposition-connsum">connected
    sum decomposition</link></secondaryie>
   <secondaryie><link linkend="tri-propconn">connectedness</link></secondaryie>
+  <secondaryie><link linkend="tri-snappea-convert">converting to a
+   &snappea; triangulation</link></secondaryie>
   <secondaryie><link linkend="tri-creation">creation</link></secondaryie>
   <secondaryie><link linkend="tri-vertices">cusps</link></secondaryie>
   <secondaryie><link linkend="tri-new-dehydration">dehydration
@@ -1458,6 +1479,8 @@
    groups</link></secondaryie>
   <secondaryie><link linkend="tri-snappea">hyperbolic solution
    type</link></secondaryie>
+  <secondaryie><link linkend="tri-hyperbolic">hyperbolicity,
+   certifying</link></secondaryie>
   <secondaryie><link linkend="tri-real-ideal">ideal vertices,
    creation</link></secondaryie>
   <secondaryie><link linkend="tri-propideal">ideal vertices,
@@ -1476,7 +1499,7 @@
   <secondaryie><link linkend="tri-recognition">recognising the
    underlying 3-manifold</link></secondaryie>
   <secondaryie><link linkend="tri-censuslookup">searching for a
-   triangulation in the available censuses</link></secondaryie>
+   triangulation across the census databases</link></secondaryie>
   <secondaryie><link linkend="tri-simplification">simplification</link></secondaryie>
   <secondaryie><link linkend="tri-skeleton">skeleton,
    viewing details</link></secondaryie>
@@ -1596,7 +1619,7 @@
 
  <indexentry>
   <primaryie>volume</primaryie>
-  <seeie>See: hyperbolic volume</seeie>
+  <seeie>See: hyperbolic manifolds, volume</seeie>
  </indexentry>
 
  </indexdiv><indexdiv id='taskindex-W'><title>&mdash; W &mdash;</title>

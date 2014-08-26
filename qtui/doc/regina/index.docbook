@@ -117,9 +117,11 @@
   <!ENTITY sfslong "Seifert fibred space">
   <!ENTITY snappea "<application>SnapPea</application>">
   <!ENTITY snappeapylink "<ulink url='http://www.math.uic.edu/t3m/SnapPy/'>&snappea;&nbsp;/&nbsp;&snappy;</ulink>">
+  <!ENTITY snappy "<application>SnapPy</application>">
+  <!ENTITY snappylink
+   "<ulink url='http://www.math.uic.edu/t3m/SnapPy/'>&snappy;</ulink>">
   <!ENTITY snappywebsite
    "<ulink url='http://www.math.uic.edu/t3m/SnapPy/'>&snappy; website</ulink>">
-  <!ENTITY snappy "<application>SnapPy</application>">
   <!ENTITY sourceforge "<application>SourceForge</application>">
   <!ENTITY sss "S<superscript>3</superscript>">
   <!ENTITY suse "<application>SUSE</application>">
