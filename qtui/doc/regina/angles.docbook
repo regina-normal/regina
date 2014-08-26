@@ -4,13 +4,15 @@
  <para>
   An <firstterm>angle structure</firstterm> on a triangulation is a
   simple algebraic generalisation of a hyperbolic structure.
-  It contains some but not all
-  of the properties required to produce a hyperbolic metric.  Angle
-  structures were studied by Casson and developed by
-  Lackenby <xref linkend="bib-lackenby-taut"/>,
-  <xref linkend="bib-lackenby-anglestruct"/> and
-  Rivin <xref linkend="bib-rivin-structures"/>,
-  <xref linkend="bib-rivin-combopt"/>.
+  It contains some but not all of the properties required to produce a
+  hyperbolic metric&mdash;in essence, it extracts the only linear parts
+  of the hyperbolic gluing equations.
+  Angle structures were introduced by
+  Rivin <xref linkend="bib-rivin-structures"/>
+  <xref linkend="bib-rivin-combopt"/> and Casson,
+  and further developed by
+  Lackenby <xref linkend="bib-lackenby-taut"/>
+  <xref linkend="bib-lackenby-anglestruct"/>.
  </para>
  <para>
   An angle structure assigns an angle to every edge of every tetrahedron
@@ -35,27 +37,62 @@
   </itemizedlist>
  </para>
 
+ <sect1>
+  <title>Strict Angle Structures</title>
+
+  <para>
+   If you can find a <firstterm>strict angle
+   structure</firstterm>&mdash;that is, one in which every angle is
+   strictly positive&mdash;then this is extremely powerful.  In
+   particular, under some simple assumptions, it is enough to certify
+   that the underlying 3-manifold is hyperbolic
+   <xref linkend="bib-futer-angled"/>.
+  </para>
+  <para>
+   If you simply wish to test whether a strict angle structure
+   <emphasis>exists</emphasis>,
+   you should visit the <link linkend="tri-hyperbolic">recognition tab</link>
+   in the triangulation viewer (this is available for both &regina;'s native
+   <link linkend="packet-triangulation">triangulation packets</link>
+   and its hybrid
+   <link linkend="packet-snappea">&snappea; triangulation packets</link>).
+   For this &regina; uses fast and exact linear programming techniques.
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="snappea-recognition.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
+   If you wish to enumerate the space of <emphasis>all</emphasis>
+   angle structures, then you should build an angle structure list
+   as <link linkend="angles-creation">described below</link>.
+  </para>
+ </sect1>
+
  <sect1 id="angles-creation">
   <title>Enumerating Angle Structures</title>
 
   <para>
    Angle structures are stored in lists, which typically hold all
    vertex angle structures on a particular triangulation.
-   Here <emphasis>vertex</emphasis> angle structures
-   correspond to the vertices of the solution space to the
-   equations and inequalities <link linkend="angles">described above</link>:
-   this means that every possible angle structure
-   can be expressed as a convex combination of these vertex strutures.
+   Here <firstterm>vertex angle structures</firstterm>
+   correspond to the vertices of the solution polytope for the
+   equations and inequalities <link linkend="angles">described earlier</link>.
+   This means that every possible angle structure on the triangulation
+   can be expressed as a convex combination of the vertex angle strutures.
   </para>
   <para>
-   Like normal surfaces, an angle structure list
-   must remain &ldquo;connected&rdquo; to the
-   corresponding triangulation.  It always lives immediately beneath the
-   triangulation in the packet tree, and the triangulation
-   <link linkend="packet-uneditable">cannot be modified</link>
-   unless all of its angle structure lists are deleted.
-   The triangulation will be marked with a small padlock to remind you
-   of this.
+   Like normal surfaces, &regina; insists on keeping angle structure lists
+   tied to their corresponding triangulations.
+   An angle structure list always lives immediately beneath the
+   corresponding triangulation in the packet tree, and &regina; will
+   <link linkend="packet-uneditable">not let you modify</link>
+   the triangulation as long as it has any angle structure or normal surface
+   lists beneath it.
+   The triangulation will be marked with a small padlock to remind you of this.
   </para>
   <para>
    To create a new angle structure list, select
@@ -91,6 +128,10 @@
      <glossdef>
       <para>
        This is the triangulation that will contain your angle structures.
+       You may chose either one of &regina;'s native
+       <link linkend="packet-triangulation">triangulation packets</link>
+       or one of its hybrid
+       <link linkend="packet-snappea">&snappea; triangulation packets</link>.
        The new angle structure list will appear as a child of this
        triangulation in the packet tree.
       </para>
@@ -110,6 +151,8 @@
        There are only ever finitely many taut structures (possibly
        none at all), and if you check this box then &regina; will enumerate
        them all.
+       This is generally much faster
+       than enumerating all vertex angle structures.
       </para>
       <para>
        Note that we use the Kang-Rubinstein definition of taut angle
