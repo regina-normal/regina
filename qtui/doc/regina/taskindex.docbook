@@ -490,7 +490,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-drilledge">edges, drilling out of a
+  <primaryie><link linkend="tri-puncturedrill">edges, drilling out of a
    triangulation</link></primaryie>
  </indexentry>
 
@@ -1007,7 +1007,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-cover">orientable double
+  <primaryie><link linkend="tri-orient">orientable double
    cover</link></primaryie>
  </indexentry>
 
@@ -1088,6 +1088,11 @@
  <indexentry>
   <primaryie>preferences</primaryie>
   <seeie>See: configuration</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-puncturedrill">puncturing a
+   triangulation</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1463,6 +1468,8 @@
   <secondaryie><link linkend="tri-vertices">cusps</link></secondaryie>
   <secondaryie><link linkend="tri-new-dehydration">dehydration
    string, rehydrating</link></secondaryie>
+  <secondaryie><link linkend="tri-puncturedrill">drilling
+   edges</link></secondaryie>
   <secondaryie><link linkend="tri-elementarymove">elementary
    moves (3-2, 4-4, open book, etc.)</link></secondaryie>
   <secondaryie><link linkend="tri-new-example">examples,
@@ -1494,8 +1501,9 @@
   <secondaryie><link linkend="tri-new-isosig">isomorphism signature,
    recreating from</link></secondaryie>
   <secondaryie><link linkend="tri-proporient">orientability</link></secondaryie>
-  <secondaryie><link linkend="tri-cover">orientable double
+  <secondaryie><link linkend="tri-orient">orientable double
    cover</link></secondaryie>
+  <secondaryie><link linkend="tri-puncturedrill">puncturing</link></secondaryie>
   <secondaryie><link linkend="tri-recognition">recognising the
    underlying 3-manifold</link></secondaryie>
   <secondaryie><link linkend="tri-censuslookup">searching for a

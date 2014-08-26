@@ -1497,7 +1497,7 @@
          These comments are provided for both orientable and
          non-orientable manifolds.  In the non-orientable case they may
          provide additional information about the embeddability of the
-         <link linkend="tri-cover">orientable double cover</link>.  
+         <link linkend="tri-orient">orientable double cover</link>.
         </para>
        </glossdef>
       </glossentry>
@@ -2681,7 +2681,7 @@
   </sect2>
 
   <sect2 id="tri-orient">
-   <title>Orienting the Triangulation</title>
+   <title>Orienting Triangulations and Double Covers</title>
 
    <para>
     If your triangulation is
@@ -2702,11 +2702,6 @@
      </imageobject>
     </inlinemediaobject>
    </para>
-  </sect2>
-
-  <sect2 id="tri-cover">
-   <title>Double Cover</title>
-
    <para>
     To convert a non-orientable triangulation into its orientable double cover,
     select
@@ -2714,6 +2709,8 @@
      <guimenu>3-D&nbsp;Triangulation</guimenu>
      <guimenuitem>Double Cover</guimenuitem>
     </menuchoice>.
+    If your triangulation has any orientable components, they will
+    simply be duplicated.
    </para>
    <para>
     <inlinemediaobject>
@@ -2722,23 +2719,39 @@
      </imageobject>
     </inlinemediaobject>
    </para>
-   <para>
-    If your triangulation has any orientable components, they will
-    simply be duplicated.
-   </para>
   </sect2>
 
-  <sect2 id="tri-drilledge">
-   <title>Drilling Edges</title>
+  <sect2 id="tri-puncturedrill">
+   <title>Puncturing and Drilling</title>
 
    <para>
-    You can drill out an edge of your triangulation by selecting
+    You can puncture a 3-manifold triangulation; that is, remove a small ball
+    from its interior and retriangulate.
+    To do this, select
+    <menuchoice>
+     <guimenu>3-D&nbsp;Triangulation</guimenu>
+     <guimenuitem>Puncture</guimenuitem>
+    </menuchoice>.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-puncture.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    This will work correctly regardless of whether the triangulation is
+    closed, ideal, and/or has real boundary triangles.  There will be
+    a new 2-sphere boundary, formed from two new boundary triangles.
+   </para>
+   <para>
+    You can also drill out a small regular neighbourhood of an edge
+    of your triangulation.  To do this, select
     <menuchoice>
      <guimenu>3-D&nbsp;Triangulation</guimenu>
      <guimenuitem>Drill Edge</guimenuitem>
     </menuchoice>.
-    This effectively removes a small regular neighbourhood of the edge
-    from the triangulation.
    </para>
    <para>
     <inlinemediaobject>
@@ -2758,6 +2771,27 @@
     <inlinemediaobject>
      <imageobject>
       <imagedata fileref="tri-drilledgebox.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+
+  <sect2 id="tri-connsumwith">
+   <title>Building Connected Sums</title>
+   <para>
+    TODO.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-connsumwith.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-connsumwith-tri.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
