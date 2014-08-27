@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED (VERSION 2.8.9)
+CMAKE_MINIMUM_REQUIRED (VERSION 2.8.7)
 PROJECT (regina)
 
 # Let the user override the package name.
