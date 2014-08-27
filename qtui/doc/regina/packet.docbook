@@ -171,7 +171,7 @@
     (in contrast, the usual <link linkend="packet-triangulation">triangulation
     packet</link> uses &regina;'s own structures, which are independent
     of &snappea;).
-    You can learn more about using &snappea; triangluations in the
+    You can learn more about using &snappea; triangulations in the
     <link linkend="snappea">chapter on &snappea; triangulations</link>
     later in this handbook.
    </para>

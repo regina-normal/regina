@@ -32,6 +32,7 @@
 
 /* end stub */
 
+#include <cstdlib>
 #include <iostream>
 #include "census/ncensus.h"
 

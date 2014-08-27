@@ -47,6 +47,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>1-4 move</primaryie>
+  <seeie>See: elementary moves</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>2-0 edge move</primaryie>
   <seeie>See: elementary moves</seeie>
  </indexentry>
@@ -122,12 +127,14 @@
    angle structures</link></secondaryie>
   <secondaryie><link linkend="angles-viewstructurecoords">individual
    angles</link></secondaryie>
+  <secondaryie><link linkend="tri-strict">strict,
+   testing for existence</link></secondaryie>
   <secondaryie><link linkend="angles-propstrict">strict,
-   testing</link></secondaryie>
+   type of angle structure</link></secondaryie>
   <secondaryie><link linkend="angles-proptaut">taut,
-   testing</link></secondaryie>
+   type of angle structure</link></secondaryie>
   <secondaryie><link linkend="angles-propveering">veering,
-   testing</link></secondaryie>
+   type of angle structure</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -204,6 +211,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="snappea-canonical">canonical
+   retriangulation</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>&casson;</primaryie>
   <seeie>See: &orb;</seeie>
  </indexentry>
@@ -219,14 +231,19 @@
   <secondaryie><link linkend="man-tricensus-mpi">distributing census
    creation across several machines</link></secondaryie>
   <secondaryie><link linkend="tri-censuslookup">searching for a
-   triangulation in the census databases (&gui;)</link></secondaryie>
+   triangulation across the census databases (&gui;)</link></secondaryie>
   <secondaryie><link linkend="man-censuslookup">searching for a
-   triangulation in the census databases (command line)</link></secondaryie>
+   triangulation across the census databases (command line)</link></secondaryie>
  </indexentry>
 
  <indexentry>
   <primaryie><link linkend="surfaces-proptype">central surfaces,
    recognising</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>certifying hyperbolicity</primaryie>
+  <seeie>See: hyperbolic manifolds, certifying hyperbolicity</seeie>
  </indexentry>
 
  <indexentry>
@@ -333,8 +350,9 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-decomposition-connsum">connected
-   sum decomposition</link></primaryie>
+  <primaryie>connected sum</primaryie>
+  <secondaryie><link linkend="tri-connsumwith">building</link></secondaryie>
+  <secondaryie><link linkend="tri-decomposition-connsum">decomposition</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -348,8 +366,13 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="man-regconvert">conversion between file
-   formats</link></primaryie>
+  <primaryie>conversion</primaryie>
+  <secondaryie><link linkend="man-regconvert">between file
+   formats</link></secondaryie>
+  <secondaryie><link linkend="snappea-fromregina">from
+   native &regina; to &snappea; triangulations</link></secondaryie>
+  <secondaryie><link linkend="snappea-toregina">from
+   &snappea; to native &regina; triangulations</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -378,8 +401,11 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-vertices">cusps, identifying
-   in a triangulation</link></primaryie>
+  <primaryie>cusps</primaryie>
+  <secondaryie><link linkend="tri-vertices">identifying
+   in a native triangulation</link></secondaryie>
+  <secondaryie><link linkend="snappea-shapes-cusps">viewing and filling
+   in a &snappea; triangulation</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -409,6 +435,11 @@
    components</link></secondaryie>
   <secondaryie><link linkend="tri-decomposition-connsum">by
    connected sum</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>Dehn fillings</primaryie>
+  <seeie>See: fillings on cusps</seeie>
  </indexentry>
 
  <indexentry>
@@ -478,7 +509,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-drilledge">edges, drilling out of a
+  <primaryie><link linkend="tri-puncturedrill">edges, drilling out of a
    triangulation</link></primaryie>
  </indexentry>
 
@@ -522,6 +553,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>Epstein-Penner cell decomposition</primaryie>
+  <seeie>See: canonical retriangulation</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="troubleshooting">errors, fixing</link></primaryie>
  </indexentry>
 
@@ -537,9 +573,12 @@
 
  <indexentry>
   <primaryie>examples</primaryie>
+  <secondaryie><link linkend="tri-new-example">3-manifold
+   triangulations</link></secondaryie>
   <secondaryie><link linkend="sessions">&python; scripting</link></secondaryie>
   <secondaryie><link linkend="tutorial">sample data files</link></secondaryie>
-  <secondaryie><link linkend="tri-new-example">triangulations</link></secondaryie>
+  <secondaryie><link linkend="snappea-new-example">&snappea;
+   triangulations</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -609,6 +648,14 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>fillings on cusps</primaryie>
+  <secondaryie><link linkend="snappea-cusps">viewing and changing
+   filling coefficients</link></secondaryie>
+  <secondaryie><link linkend="snappea-fill-permanent">permanently filling
+   cusps</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>filtering normal surface lists</primaryie>
   <seeie>See: surface filters</seeie>
  </indexentry>
@@ -629,7 +676,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-algebra-fundgroup">fundamental
+  <primaryie><link linkend="tri-algebra-homfund">fundamental
    group</link></primaryie>
  </indexentry>
 
@@ -643,13 +690,18 @@
  <indexentry>
   <primaryie>&gaplong;</primaryie>
   <secondaryie><link linkend="options-tools">configuration</link></secondaryie>
-  <secondaryie><link linkend="tri-algebra-fundgroup">using to
+  <secondaryie><link linkend="tri-algebra-homfund">using to
    simplify group presentations</link></secondaryie>
  </indexentry>
 
  <indexentry>
   <primaryie>globally compatible normal surfaces</primaryie>
   <seeie>See: compatibility matrices for normal surfaces</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="snappea-shapes">gluing equations,
+   hyperbolic</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -677,21 +729,32 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-algebra-homology">homology
+  <primaryie><link linkend="tri-algebra-homfund">homology
    groups</link></primaryie>
   <secondaryie><link linkend="tri-algebra-cellular">all homology
    groups</link></secondaryie>
-  <secondaryie><link linkend="tri-algebra-homology">first homology
-   group</link></secondaryie>
+  <secondaryie><link linkend="tri-algebra-homfund">first homology
+   group for native triangulations</link></secondaryie>
+  <secondaryie><link linkend="snappea-algebra">first homology
+   group for &snappea; triangulations</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-cellular">induced map from
    manifold to boundary</link></secondaryie>
  </indexentry>
 
  <indexentry>
-  <primaryie>hyperbolic</primaryie>
+  <primaryie>hyperbolic manifolds</primaryie>
+  <secondaryie><link linkend="tri-hyperbolic">certifying
+   hyperbolicity</link></secondaryie>
+  <secondaryie><link linkend="snappea-shapes">gluing equations,
+   solutions to</link></secondaryie>
   <secondaryie><link linkend="tri-snappea">solution
-   type</link></secondaryie>
-  <secondaryie><link linkend="tri-snappea">volume</link></secondaryie>
+   type for native triangulations</link></secondaryie>
+  <secondaryie><link linkend="snappea-volumetype">solution
+   type for &snappea; triangulations</link></secondaryie>
+  <secondaryie><link linkend="tri-snappea">volume for
+   native triangulations</link></secondaryie>
+  <secondaryie><link linkend="snappea-volumetype">volume for
+   &snappea; triangulations</link></secondaryie>
  </indexentry>
 
  </indexdiv><indexdiv id='taskindex-I'><title>&mdash; I &mdash;</title>
@@ -989,11 +1052,13 @@
   <secondaryie><link linkend="surfaces-proporient">of a normal
    surface</link></secondaryie>
   <secondaryie><link linkend="tri-proporient">of a
-   triangulation</link></secondaryie>
+   native triangulation</link></secondaryie>
+  <secondaryie><link linkend="snappea-proporbl">of a
+   &snappea; triangulation</link></secondaryie>
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-cover">orientable double
+  <primaryie><link linkend="tri-orient">orientable double
    cover</link></primaryie>
  </indexentry>
 
@@ -1067,6 +1132,16 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="snappea">peripheral curves
+   on cusps</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="snappea-fill-permanent">permanently
+   fill cusps</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="tri-new-example">&poincare;
    homology sphere</link></primaryie>
  </indexentry>
@@ -1074,6 +1149,11 @@
  <indexentry>
   <primaryie>preferences</primaryie>
   <seeie>See: configuration</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-puncturedrill">puncturing a
+   triangulation</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1099,6 +1179,11 @@
  </indexentry>
 
  </indexdiv><indexdiv id='taskindex-R'><title>&mdash; R &mdash;</title>
+
+ <indexentry>
+  <primaryie><link linkend="snappea-randomise">randomising
+   triangulations</link></primaryie>
+ </indexentry>
 
  <indexentry>
   <primaryie>rank vector</primaryie>
@@ -1190,8 +1275,8 @@
 
  <indexentry>
   <primaryie>search</primaryie>
-  <secondaryie><link linkend="tri-censuslookup">for a triangulation in
-   the available censuses</link></secondaryie>
+  <secondaryie><link linkend="tri-censuslookup">for a triangulation
+   across the census databases</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1211,6 +1296,11 @@
  <indexentry>
   <primaryie>shell boundary</primaryie>
   <seeie>See: elementary moves</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="snappea-shapes">shapes of
+   tetrahedra</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1248,12 +1338,52 @@
 
  <indexentry>
   <primaryie>&snappea;</primaryie>
-  <secondaryie><link linkend="tri-snappea">calculations</link></secondaryie>
+  <secondaryie><link linkend="tri-snappea">calculations for
+   &regina; triangulations</link></secondaryie>
   <secondaryie><link linkend="options-tools">diagnostic messages,
    enabling</link></secondaryie>
-  <secondaryie><link linkend="export-snappea">exporting to</link></secondaryie>
-  <secondaryie><link linkend="import-snappea">importing
+  <secondaryie><link linkend="export-snappea">exporting files
+   to</link></secondaryie>
+  <secondaryie><link linkend="snappea-file">exporting &snappea; file
+   contents</link></secondaryie>
+  <secondaryie><link linkend="import-snappea">importing files
    from</link></secondaryie>
+  <secondaryie><link linkend="snappea-new-paste">importing &snappea; file
+   contents</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>&snappea; triangulation</primaryie>
+  <secondaryie><link linkend="snappea-canonical">canonical
+   retriangulation</link></secondaryie>
+  <secondaryie><link linkend="snappea-fromregina">converting from
+   native &regina; triangulations</link></secondaryie>
+  <secondaryie><link linkend="snappea-toregina">converting to
+   native &regina; triangulations</link></secondaryie>
+  <secondaryie><link linkend="snappea-cusps">cusps,
+   viewing and filling</link></secondaryie>
+  <secondaryie><link linkend="snappea-new-example">examples,
+   creating</link></secondaryie>
+  <secondaryie><link linkend="snappea-cusps">filling
+   coefficients</link></secondaryie>
+  <secondaryie><link linkend="snappea-algebra">fundamental
+   group</link></secondaryie>
+  <secondaryie><link linkend="snappea-algebra">homology</link></secondaryie>
+  <secondaryie><link linkend="snappea-proporbl">orientability</link></secondaryie>
+  <secondaryie><link linkend="snappea-fill-permanent">permanently
+   filling cusps</link></secondaryie>
+  <secondaryie><link linkend="snappea-randomise">randomising</link></secondaryie>
+  <secondaryie><link linkend="snappea-new-paste">&snappea; file contents,
+   creating from</link></secondaryie>
+  <secondaryie><link linkend="snappea-file">&snappea; file contents,
+   exporting to</link></secondaryie>
+  <secondaryie><link linkend="snappea-volumetype">solution
+   type</link></secondaryie>
+  <secondaryie><link linkend="snappea-shapes">tetrahedron
+   shapes</link></secondaryie>
+  <secondaryie><link linkend="snappea-vertexlinks">vertex
+   links</link></secondaryie>
+  <secondaryie><link linkend="snappea-volumetype">volume</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1263,7 +1393,7 @@
 
  <indexentry>
   <primaryie>solution type</primaryie>
-  <seeie>See: hyperbolic solution type</seeie>
+  <seeie>See: hyperbolic manifolds, solution type</seeie>
  </indexentry>
 
  <indexentry>
@@ -1308,8 +1438,11 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="angles-propstrict">strict angle
-   structures</link></primaryie>
+  <primaryie>strict angle structures</primaryie>
+  <secondaryie><link linkend="tri-strict">testing for
+   existence</link></secondaryie>
+  <secondaryie><link linkend="angles-propstrict">type of angle
+   structure</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1368,6 +1501,8 @@
    editing</link></secondaryie>
   <secondaryie><link linkend="tri-proporient">orientation, testing for
    consistency</link></secondaryie>
+  <secondaryie><link linkend="snappea-shapes">shapes from hyperbolic
+   gluing equations</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1435,13 +1570,21 @@
    decomposition</link></secondaryie>
   <secondaryie><link linkend="tri-components">components,
    viewing</link></secondaryie>
+  <secondaryie><link linkend="tri-connsumwith">connected
+   sum, building</link></secondaryie>
   <secondaryie><link linkend="tri-decomposition-connsum">connected
-   sum decomposition</link></secondaryie>
+   sum, decomposition</link></secondaryie>
   <secondaryie><link linkend="tri-propconn">connectedness</link></secondaryie>
+  <secondaryie><link linkend="snappea-toregina">converting from a
+   &snappea; triangulations</link></secondaryie>
+  <secondaryie><link linkend="snappea-fromregina">converting to a
+   &snappea; triangulation</link></secondaryie>
   <secondaryie><link linkend="tri-creation">creation</link></secondaryie>
   <secondaryie><link linkend="tri-vertices">cusps</link></secondaryie>
   <secondaryie><link linkend="tri-new-dehydration">dehydration
    string, rehydrating</link></secondaryie>
+  <secondaryie><link linkend="tri-puncturedrill">drilling
+   edges</link></secondaryie>
   <secondaryie><link linkend="tri-elementarymove">elementary
    moves (3-2, 4-4, open book, etc.)</link></secondaryie>
   <secondaryie><link linkend="tri-new-example">examples,
@@ -1452,12 +1595,14 @@
    graphs</link></secondaryie>
   <secondaryie><link linkend="tri-triangles">faces,
    viewing shapes</link></secondaryie>
-  <secondaryie><link linkend="tri-algebra-fundgroup">fundamental
+  <secondaryie><link linkend="tri-algebra-homfund">fundamental
    group</link></secondaryie>
-  <secondaryie><link linkend="tri-algebra-homology">homology
+  <secondaryie><link linkend="tri-algebra-homfund">homology
    groups</link></secondaryie>
   <secondaryie><link linkend="tri-snappea">hyperbolic solution
    type</link></secondaryie>
+  <secondaryie><link linkend="tri-hyperbolic">hyperbolicity,
+   certifying</link></secondaryie>
   <secondaryie><link linkend="tri-real-ideal">ideal vertices,
    creation</link></secondaryie>
   <secondaryie><link linkend="tri-propideal">ideal vertices,
@@ -1471,15 +1616,18 @@
   <secondaryie><link linkend="tri-new-isosig">isomorphism signature,
    recreating from</link></secondaryie>
   <secondaryie><link linkend="tri-proporient">orientability</link></secondaryie>
-  <secondaryie><link linkend="tri-cover">orientable double
+  <secondaryie><link linkend="tri-orient">orientable double
    cover</link></secondaryie>
+  <secondaryie><link linkend="tri-puncturedrill">puncturing</link></secondaryie>
   <secondaryie><link linkend="tri-recognition">recognising the
    underlying 3-manifold</link></secondaryie>
   <secondaryie><link linkend="tri-censuslookup">searching for a
-   triangulation in the available censuses</link></secondaryie>
+   triangulation across the census databases</link></secondaryie>
   <secondaryie><link linkend="tri-simplification">simplification</link></secondaryie>
   <secondaryie><link linkend="tri-skeleton">skeleton,
    viewing details</link></secondaryie>
+  <secondaryie><link linkend="snappea">&snappea;
+   triangulations</link></secondaryie>
   <secondaryie><link linkend="tri-propsolidtorus">solid torus
    recognition</link></secondaryie>
   <secondaryie><link linkend="tri-new-splitting">splitting surface,
@@ -1576,8 +1724,11 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-vertexlinks">vertex links,
-   constructing</link></primaryie>
+  <primaryie>vertex links</primaryie>
+  <primaryie><link linkend="tri-vertexlinks">triangulating for native
+   triangulations</link></primaryie>
+  <primaryie><link linkend="snappea-vertexlinks">triangulating for &snappea;
+   triangulations</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1596,7 +1747,7 @@
 
  <indexentry>
   <primaryie>volume</primaryie>
-  <seeie>See: hyperbolic volume</seeie>
+  <seeie>See: hyperbolic manifolds, volume</seeie>
  </indexentry>
 
  </indexdiv><indexdiv id='taskindex-W'><title>&mdash; W &mdash;</title>

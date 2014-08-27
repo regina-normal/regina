@@ -140,7 +140,7 @@
   </para>
 <screen>
     <prompt>example$</prompt> <userinput>regina-engine-config --libs</userinput>
-    -L/usr/lib -lregina-engine /usr/lib/libxml2.so /usr/lib/libgmp.so /usr/lib/libz.so -lpthread
+    -L/usr/lib -lregina-engine /usr/lib/libxml2.so /usr/lib/libgmp.so /usr/lib/libgmpxx.so /usr/lib/libz.so -lpthread
     <prompt>example$</prompt>
 </screen>
   <para>
@@ -148,7 +148,7 @@
    link a final executable in one simple step:
   </para>
 <screen>
-    <prompt>example$</prompt> <userinput>g++ `regina-engine-config --cflags --libs` mycode.cc</userinput>
+    <prompt>example$</prompt> <userinput>g++ mycode.cc `regina-engine-config --cflags --libs`</userinput>
     <prompt>example$</prompt>
 </screen>
   <para>

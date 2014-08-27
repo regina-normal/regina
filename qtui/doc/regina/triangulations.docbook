@@ -459,8 +459,8 @@
       <glossdef>
        <para>
         Signifies that at least one vertex of the triangulation is
-        <firstterm>ideal</firstterm>.  That is, the vertex link is
-        a closed surface but not a 2-sphere.
+        <firstterm>ideal</firstterm>.  That is, there is some vertex
+        whose link is a closed surface but not a 2-sphere.
        </para>
        <para>
         You can locate any ideal vertices using the
@@ -562,24 +562,24 @@
    <para>
     Each cell of this table represents a single face of a single
     tetrahedron.  For instance, the cell circled in red
-    above represents face&nbsp;123 of tetrahedron&nbsp;5 (that is, the face
-    formed from vertices 1,2,3 of tetrahedron&nbsp;5).
+    above represents face&nbsp;123 of tetrahedron&nbsp;1 (that is, the face
+    formed from vertices 1,2,3 of tetrahedron&nbsp;1).
    </para>
    <para>
     The contents of the cell show how the face is glued.  In the example
-    above, the circled cell contains <literal>0&nbsp;(230)</literal>,
-    indicating that face&nbsp;123 of tetrahedron&nbsp;5 is glued to
-    face&nbsp;230 of tetrahedron&nbsp;0 using the affine map that
-    matches vertices 1,2,3 of tetrahedron&nbsp;5 with vertices
-    2,3,0 of tetrahedron&nbsp;0 respectively.
+    above, the circled cell contains <literal>8&nbsp;(312)</literal>,
+    indicating that face&nbsp;123 of tetrahedron&nbsp;1 is glued to
+    face&nbsp;312 of tetrahedron&nbsp;8 using the affine map that
+    matches vertices 1,2,3 of tetrahedron&nbsp;1 with vertices
+    3,1,2 of tetrahedron&nbsp;8 respectively.
     The same gluing can be seen from the opposite direction in the row
-    for tetrahedron&nbsp;0.
+    for tetrahedron&nbsp;8.
    </para>
    <para>
     An empty cell indicates that a face is not glued to anything at all;
     that is, the face forms part of the <emphasis>boundary</emphasis> of
     the 3-manifold.  In the table above there are two boundary triangles:
-    face&nbsp;123 of tetrahedron&nbsp;0, and face&nbsp;123 of
+    face&nbsp;013 of tetrahedron&nbsp;0, and face&nbsp;123 of
     tetrahedron&nbsp;4.  In our example these join together to form the torus
     boundary of the figure eight knot complement.
    </para>
@@ -1079,9 +1079,9 @@
          </para>
          <para>
           Triangles and vertices are described in the same manner as
-          in the the individual
+          in the individual
           <link linkend="tri-triangles">triangle</link> and
-          for <link linkend="tri-vertices">vertex</link> viewers.
+          <link linkend="tri-vertices">vertex</link> viewers.
          </para>
         </glossdef>
        </glossentry>
@@ -1153,13 +1153,18 @@
     ignored.
    </para></caution>
 
-   <sect3 id="tri-algebra-homology">
-    <title>Homology Groups</title>
+   <sect3 id="tri-algebra-homfund">
+    <title>Homology and Fundamental Group</title>
     <para>
-     The <guilabel>Algebra</guilabel>&rarr;<guilabel>Homology</guilabel>
-     tab presents several homology groups of the triangulation.
-     These include:
-     H1(M), (the first homology group);
+     The <guilabel>Algebra</guilabel>&rarr;<guilabel>Homology &amp;
+     Fund. Group</guilabel>
+     tab presents several homology groups of the triangulation
+     (on the left side of the panel),
+     as well as the fundamental group (on the right side of the panel).
+    </para>
+    <para>
+     The homology groups on the left include:
+     H1(M), the first homology group;
      H1(M,&nbsp;&#x2202;M),
       the relative first homology group with respect to the boundary;
      H1(&#x2202;M),
@@ -1167,8 +1172,6 @@
      H2(M), the second homology group; and
      H2(M&nbsp;;&nbsp;Z<subscript>2</subscript>), the second homology group
       with coefficients in Z<subscript>2</subscript>.
-    </para>
-    <para>
      All finite cyclic groups
      Z<subscript><replaceable>k</replaceable></subscript>
      will be written in the &ldquo;pidgin &tex;&rdquo; form
@@ -1176,61 +1179,64 @@
      so that the order of each group is easier to read.
     </para>
     <para>
-     <inlinemediaobject>
-      <imageobject>
-       <imagedata fileref="tri-homology.png"/>
-      </imageobject>
-     </inlinemediaobject>
-    </para>
-   </sect3>
-
-   <sect3 id="tri-algebra-fundgroup">
-    <title>Fundamental Group</title>
-    <para>
-     The <guilabel>Algebra</guilabel>&rarr;<guilabel>Fund.&nbsp;Group</guilabel>
-     tab displays the fundamental group of the triangulation,
+     The fundamental group on the right will be
      presented as a set of generators and
      relations.
-    </para>
-    <para>
-     &regina; will try to recognise the common name of this
-     group (though the recognition code is fairly na&iuml;ve).
-     If it can, the name will be displayed above
-     the generators and relations.  Otherwise the text
-     <guilabel>Not recognised</guilabel> will be displayed instead.
+     &regina; will also try to recognise the common name of this
+     group (though the recognition code is fairly na&iuml;ve);
+     if it can then the common name (such as &ldquo;Z_2&rdquo;)
+     will be displayed above the generators and relations.
     </para>
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="tri-fundgroup.png"/>
+       <imagedata fileref="tri-homfund.png"/>
       </imageobject>
      </inlinemediaobject>
     </para>
     <para>
-     If you have &gaplongurl; installed on your system, you can use &gap;
-     to simplify the group presentation.  &regina; does
-     try to simplify the presentation on its own, but &gap; will
-     typically do a better job.
+     &regina; does attempt to simplify the presentation automatically, but
+     if this is not satisfactory then there are further things you can try:
+     <itemizedlist>
+      <listitem>
+       <para>
+        If you have &gaplongurl; installed on your system, you can use &gap;
+        to simplify the group presentation.
+        Simply press the <guibutton>Using GAP</guibutton> button
+        at the bottom of the panel.
+        You can try this more than once if you like: sometimes
+        &gap; finds a better presentation when run a second or third time.
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        You can also press the <guibutton>By proliferation</guibutton>
+        button, which will build new relators from old and append
+        these to the presentation (in the hope of finding new ways to
+        simplify what is already present).  This may make your
+        presentation larger, but it may also help climb out of a local
+        &ldquo;well&rdquo; from which it is difficult to escape.
+        Pressing this button repeatedly
+        will make &regina; try increasingly large combinations,
+        and may therefore become increasingly slow.
+       </para>
+      </listitem>
+     </itemizedlist>
     </para>
-    <para>
-     To simplify the presentation using &gap;,
-     press the <guibutton>Simplify using GAP</guibutton> button
-     at the bottom of the panel.
-     You can try this more than once if you like: sometimes
-     &gap; finds a better presentation when run a second or third time.
-    </para>
-    <para>
-     If &regina; is having trouble starting &gap;, you can tell it how
-     to start &gap; in the
-     <link linkend="options-tools">tools options</link>.
-    </para>
-    <tip><para>
-     If you wish to see a full transcript of the conversation between
-     &regina; and &gap;, start &regina; from the command-line by running
-     <command>regina-gui</command>.  The entire conversation
-     will be shown in the text console where you ran
-     <command>regina-gui</command> command.
-    </para></tip>
+    <tip>
+     <para>
+      If &regina; is having trouble starting &gap;, you can tell it how
+      to start &gap; in the
+      <link linkend="options-tools">tools options</link>.
+     </para>
+     <para>
+      If you wish to see a full transcript of the conversation between
+      &regina; and &gap;, start &regina; from the command-line by running
+      <command>regina-gui</command>.  The entire conversation
+      will be shown in the text console where you ran
+      <command>regina-gui</command> command.
+     </para>
+    </tip>
    </sect3>
    <sect3 id="tri-algebra-turaevviro">
     <title>Turaev-Viro Invariants</title>
@@ -1491,7 +1497,7 @@
          These comments are provided for both orientable and
          non-orientable manifolds.  In the non-orientable case they may
          provide additional information about the embeddability of the
-         <link linkend="tri-cover">orientable double cover</link>.  
+         <link linkend="tri-orient">orientable double cover</link>.
         </para>
        </glossdef>
       </glossentry>
@@ -1585,6 +1591,15 @@
      both the triangulation and the underlying 3-manifold; other times
      it yields little or no useful information.
     </para>
+     <tip><para>
+      If your aim is just to determine the underlying 3-manifold by any means
+      possible, see the
+      <link linkend="tri-recognition">recognition tab</link> instead.
+      The recognition tab combines the results of this combinatorial
+      recognition with slower but stronger routines, including
+      3-sphere, 3-ball and solid torus recognition, census lookup,
+      and more.
+     </para></tip>
     <para>
      <inlinemediaobject>
       <imageobject>
@@ -1596,7 +1611,7 @@
      In this composition box you will find the following information:
     </para>
     <sect4 id="tri-composition-name">
-     <title>Recognising the Triangulation and the 3-Manifold</title>
+     <title>Recognising Families of Triangulations and 3-Manifolds</title>
      <para>
       &regina; knows about many infinite families of triangulations.
       If your triangulation belongs to one of these families then
@@ -1615,16 +1630,9 @@
       If it does recognise your triangulation, &regina; will name the
       3-manifold and also the triangulation itself.  See
       <xref linkend="bib-burton-phd"/> and <xref linkend="bib-burton-nor7"/>
-      for details on the families of triangulations and what their names
+      for details on the various families of triangulations and what their names
       and parameters mean.
      </para>
-     <tip><para>
-      If your aim is to determine the underlying 3-manifold, see the
-      <link linkend="tri-recognition">recognition tab</link> instead.
-      The recognition tab combines the results of this combinatorial
-      recognition with slower but stronger routines such as
-      3-sphere, 3-ball and solid torus recognition.
-     </para></tip>
     </sect4>
     <sect4 id="tri-composition-isosig">
      <title>Isomorphism Signature</title>
@@ -1739,11 +1747,13 @@
 
    <para>
     The <guilabel>Recognition</guilabel> tab
-    attempts to identify the underlying 3-manifold,
+    attempts to identify the underlying 3-manifold through a variety of
+    techniques,
     and also computes other high-level properties of the triangulation.
     It offers a combination of slow but exact procedures
     (such as 3-sphere, 3-ball and solid torus recognition),
-    and fast "opportunistic" combinatorial recognition procedures.
+    and fast "opportunistic" procedures such as combinatorial recognition
+    and census lookup.
    </para>
    <para>
     <inlinemediaobject>
@@ -1754,7 +1764,7 @@
    </para>
    <para>
     For large triangulations, many of these properties are
-    not automatically calculated (since the algorithms run in
+    not automatically calculated (since some algorithms require
     worst-case exponential time).
     If a property is listed as <literal>Unknown</literal>, press
     the corresponding <guibutton>Calculate</guibutton> button
@@ -1778,13 +1788,15 @@
     </inlinemediaobject>
    </para>
    <para>
-    The following properties are listed on the
-    <guilabel>Recognition</guilabel> tab.
+    You might see different properties appear on the
+    <guilabel>Recognition</guilabel> tab, according to whether your
+    triangulation is closed, ideal, or has real boundary.
+    The different properties that you might see include:
    </para>
    <para>
     <glosslist>
      <glossentry id="tri-prop3sphere">
-      <glossterm><guilabel>3-Sphere</guilabel></glossterm>
+      <glossterm><guilabel>3-sphere</guilabel></glossterm>
       <glossdef><para>
        Determines whether this is a triangulation
        of the 3-sphere.
@@ -1797,33 +1809,39 @@
        <xref linkend="bib-0-efficiency"/>,
        <xref linkend="bib-burton-quadoct"/>, and
        <xref linkend="bib-bo-branching"/>.
+      </para><para>
+       This property is only shown for closed manifolds.
       </para></glossdef>
      </glossentry>
      <glossentry id="tri-prop3ball">
-      <glossterm><guilabel>3-Ball</guilabel></glossterm>
+      <glossterm><guilabel>3-ball</guilabel></glossterm>
       <glossdef><para>
        Determines whether this is a triangulation of the 3-dimensional ball.
        Again this uses a complete, exact algorithm that guarantees to
        terminate with the correct result.
        The algorithm is a simple modification of the 3-sphere recognition
        algorithm as described above.
+      </para><para>
+       This property is only shown for manifolds with real boundary
+       triangles and no ideal vertices.
       </para></glossdef>
      </glossentry>
      <glossentry id="tri-propsolidtorus">
-      <glossterm><guilabel>Solid Torus</guilabel></glossterm>
+      <glossterm><guilabel>Solid torus</guilabel></glossterm>
       <glossdef><para>
        Determines whether this is a triangulation of the solid torus,
        or equivalently, the unknot complement.
-       This will work with ideal triangulations as well as
-       triangulations with real boundary triangles (if the
-       triangulation is ideal, any ideal vertices will be treated as
-       though they were truncated).
        Once again this uses a complete, exact algorithm that guarantees to
-       terminate with the correct result.
+       terminate with the correct result <xref linkend="bib-bo-branching"/>.
+      </para><para>
+       This property is shown for ideal triangulations as well as
+       manifolds with real boundary triangles.
+       For ideal triangulations, the ideal vertices will be treated as
+       though they were truncated.
       </para></glossdef>
      </glossentry>
      <glossentry id="tri-prop0eff">
-      <glossterm><guilabel>Zero-Efficient</guilabel></glossterm>
+      <glossterm><guilabel>Zero-efficient</guilabel></glossterm>
       <glossdef><para>
        Indicates whether the triangulation is 0-efficient.  A
        triangulation is <firstterm>0-efficient</firstterm> if its only
@@ -1833,16 +1851,26 @@
        more than two tetrahedra), this indicates that either the
        triangulation is non-minimal or the underlying 3-manifold is non-prime.
        See <xref linkend="bib-0-efficiency"/> for details on 0-efficiency.
+      </para><para>
+       This property is only shown for
+       &regina;'s native <link linkend="packet-triangulation">triangulation
+       packets</link>, not its hybrid
+       <link linkend="packet-snappea">&snappea; triangulation packets</link>.
       </para></glossdef>
      </glossentry>
      <glossentry id="tri-propsplitting">
-      <glossterm><guilabel>Splitting Surface</guilabel></glossterm>
+      <glossterm><guilabel>Splitting surface</guilabel></glossterm>
       <glossdef><para>
        Determines whether the triangulation has a splitting
        surface.  A <firstterm>splitting surface</firstterm> is a compact
        normal surface consisting of precisely one quad per tetrahedron
        and no other normal (or almost normal) discs.
        See <xref linkend="bib-burton-phd"/> for details.
+      </para><para>
+       This property is only shown for
+       &regina;'s native <link linkend="packet-triangulation">triangulation
+       packets</link>, not its hybrid
+       <link linkend="packet-snappea">&snappea; triangulation packets</link>.
       </para></glossdef>
      </glossentry>
      <glossentry id="tri-irreducible">
@@ -1853,7 +1881,7 @@
        A closed 3-manifold is <firstterm>irreducible</firstterm> if every
        embedded sphere bounds a ball.
       </para><para>
-       This test is only available for valid triangulations of closed,
+       This property is only shown for valid triangulations of closed,
        orientable and connected 3-manifolds.
       </para></glossdef>
      </glossentry>
@@ -1866,15 +1894,47 @@
        <firstterm>Haken</firstterm> if it contains an embedded closed
        two-sided incompressible surface.
       </para><para>
-       This test is only available for valid triangulations of closed,
+       This property is only shown for valid triangulations of closed,
        orientable, connected and irreducible 3-manifolds.
+      </para></glossdef>
+     </glossentry>
+     <glossentry id="tri-strict">
+      <glossterm><guilabel>Strict angle structure</guilabel></glossterm>
+      <glossdef><para>
+       Determines whether the triangulation supports a strict angle
+       structure.  This is an angle structure in which all angles are
+       strictly positive; see the
+       <link linkend="angles-propstrict">chapter on angle structures</link>
+       for details.
+      </para><para>
+       This property is only shown for ideal triangulations with no real
+       boundary triangles.
+      </para></glossdef>
+     </glossentry>
+     <glossentry id="tri-hyperbolic">
+      <glossterm><guilabel>Hyperbolic</guilabel></glossterm>
+      <glossdef><para>
+       Attempts to certify that the underlying 3-manifold is hyperbolic
+       or non-hyperbolic.  Any result that is shown here will be rigorous
+       (i.e., based on exact arithmetic, and not subject to floating
+       point error).
+      </para><para>
+       For example, &regina; might certify that a 3-manifold is
+       hyperbolic because it finds a strict angle stucture
+       <xref linkend="bib-futer-angled"/>, or &regina; might certify that a
+       3-manifold is non-hyperbolic because it passes
+       solid torus recognition as described above.
+      </para><para>
+       This property is only shown for ideal triangulations with no real
+       boundary triangles.
       </para></glossdef>
      </glossentry>
      <glossentry id="tri-manifold">
       <glossterm><guilabel>Manifold</guilabel></glossterm>
       <glossdef>
        <para>
-        This last field combines the exact algorithms above with the
+        This field, which is always shown at the bottom of the panel,
+        combines the exact algorithms above with the
         combinatorial recognition routines from the
         <link linkend="tri-composition-name">composition tab</link>,
         in a multi-pronged attempt
@@ -1882,40 +1942,110 @@
         If the 3-manifold can be determined by any of these methods,
         it will be listed here.
        </para>
-       <tip><para>
-        This will <emphasis>not</emphasis> attempt a
-        connected sum decomposition: if the manifold is non-prime then
-        it will probably not be recognised.  Try running a
-        <link linkend="tri-decomposition-connsum">connected sum
-        decomposition</link> first, and then recognising each of the
-        prime summands.
-       </para></tip>
-       <tip><para>
-        Unlike the exact algorithms above (which may be slow but will
-        work in all settings), the "opportunistic"
-        combinatorial recognition benefits from a well-structured
-        triangulation.  If the 3-manifold is not recognised,
-        try <link linkend="tri-simplification">simplifying</link>
-        the triangulation, or performing
-        <link linkend="tri-elementarymove">elementary moves</link>.
-       </para></tip>
+      </glossdef>
+     </glossentry>
+     <glossentry id="tri-censuslookup">
+      <glossterm><guilabel>Census</guilabel></glossterm>
+      <glossdef>
+       <para>
+        &regina; ships with several large census databases,
+        containing hundreds of thousands of 3-manifold triangulations.
+        This field, also shown at the
+        bottom of the panel, will search for your triangulation across all of
+        these databases.  &regina; will search for any isomorphic copy
+        (i.e., it does not matter if your tetrahedra and/or vertices
+        have been relabelled).
+       </para>
+       <para>
+        Currently these databases include:
+        closed prime &ppirr; 3-manifold triangulations
+        (&le; 11 tetrahedra, both orientable and non-orientable)
+        <xref linkend="bib-burton-genus"/>;
+        cusped hyperbolic 3-manifold triangulations
+        (&le; 9 tetrahedra, both orientable and non-orientable)
+        <xref linkend="bib-burton-complete"/>;
+        closed hyperbolic 3-manifold triangulations
+        (the Hodgson-Weeks census)
+        <xref linkend="bib-closedhypcensus"/>;
+        plus hyperbolic knot and link complements (as tabulated by Joe Christy).
+       </para>
       </glossdef>
      </glossentry>
     </glosslist>
    </para>
+   <tip><para>
+    None of the tests on this tab will attempt a
+    connected sum decomposition, so if the manifold is non-prime then
+    it will probably not be recognised.  Try running a
+    <link linkend="tri-decomposition-connsum">connected sum
+    decomposition</link> first, and then recognising each of the
+    prime summands.
+   </para></tip>
+   <tip><para>
+    Unlike the exact algorithms such as 3-sphere recognition and
+    solid torus recognition (which may be slow but will
+    work in all settings), the "opportunistic"
+    combinatorial recognition and census lookup will benefit from a
+    well-structured triangulation.  If &regina; does not recognise
+    the 3-manifold, try <link linkend="tri-simplification">simplifying</link>
+    the triangulation, or performing
+    <link linkend="tri-elementarymove">elementary moves</link>.
+   </para></tip>
   </sect2>
 
   <sect2 id="tri-snappea">
    <title>&snappea; Calculations</title>
 
    <para>
-    &snappea; is an excellent piece of software written by Jeffrey Weeks
-    with a strong focus on hyperbolic 3-manifolds; for more information,
-    see the &snappywebsite;.
+    &snappea; is an excellent piece of software with a strong focus
+    on hyperbolic 3-manifolds, originally by Jeffrey Weeks
+    and now maintained by Marc Culler and Nathan Dunfield as the
+    &python;-based &snappylink;.
     Portions of the &snappea; kernel are built into &regina;, which
-    allows &regina; to compute information about geometries on
-    triangulations.  The results are presented in the
-    <guilabel>&snappea;</guilabel> tab.
+    allows &regina; to compute information related to hyperbolic
+    structures.
+   </para>
+   <warning>
+    <para>
+     Be aware that much of the information gained through the &snappea; kernel
+     is inexact.  In particular, it may be subject to numerical instability
+     or floating point error.
+     If you wish to rigorously certify that a manifold is hyperbolic, see the
+     <link linkend="tri-hyperbolic">recognition tab</link>.
+    </para>
+   </warning>
+   <para>
+    There are two ways in which you can use &snappea; within &regina;:
+    <itemizedlist>
+     <listitem><para>
+      If you are working with one of &regina;'s native
+      <link linkend="packet-triangulation">triangulation packets</link>,
+      you can view some basic information (the solution type and the
+      hyperbolic volume) through the triangulation
+      <guilabel>&snappea;</guilabel> tab, as described below.
+     </para></listitem>
+     <listitem><para>
+      If you are working with one of &regina;'s hybrid
+      <link linkend="packet-snappea">&snappea; triangulation packets</link>,
+      you can view richer information on hyperbolic structures
+      (including tetrahedron shapes), and you can perform Dehn
+      fillings on the cusps.  See the
+      <link linkend="snappea">chapter on &snappea; triangulations</link>
+      for details.
+     </para><para>
+      If you have one of &regina;'s native triangulations but you want
+      this richer interface with &snappea;, it is easy to convert to a
+      &snappea; triangulation; again see the
+      <link linkend="snappea-fromregina">&snappea; triangulations
+      chapter</link> for details.
+     </para></listitem>
+    </itemizedlist>
+   </para>
+   <para>
+    For &regina;'s native triangulations, the
+    <guilabel>&snappea;</guilabel> tab will ask &snappea; to solve for a
+    complete hyperbolic structure, and will then display the following
+    summary information:
    </para>
    <para>
     <inlinemediaobject>
@@ -1925,67 +2055,15 @@
     </inlinemediaobject>
    </para>
    <para>
-    &snappea; calculations are not available for all triangulations.
-    Amongst other constraints, your triangulation
-    must be connected with no boundary
-    triangles, and every vertex must have a torus or Klein bottle link.
-    If your triangulation is unsuitable, the
-    <guilabel>&snappea;</guilabel> tab will give you at
-    least one reason why.
-   </para>
-   <para>
-    When you open the <guilabel>&snappea;</guilabel> tab,
-    &regina; will ask &snappea; to solve for a complete hyperbolic
-    structure.  The following information is then presented:
     <glosslist>
      <glossentry>
       <glossterm><guilabel>Solution Type</guilabel></glossterm>
       <glossdef><para>
-       This describes the type of solution that &snappea; found.
-       Possible types are:
-       <glosslist>
-        <glossentry>
-         <glossterm><guilabel>Tetrahedra positively
-          oriented</guilabel></glossterm>
-         <glossdef><para>
-          All tetrahedra are either positively oriented or flat, though the
-          entire solution is not flat and no tetrahedra are degenerate.
-         </para></glossdef>
-        </glossentry>
-        <glossentry>
-         <glossterm><guilabel>Contains negatively oriented
-          tetrahedra</guilabel></glossterm>
-         <glossdef><para>
-          The volume is positive, but some tetrahedra are negatively oriented.
-         </para></glossdef>
-        </glossentry>
-        <glossentry>
-         <glossterm><guilabel>All tetrahedra flat</guilabel></glossterm>
-         <glossdef><para>
-          All tetrahedra are flat, but none have shape 0, 1 or infinity.
-         </para></glossdef>
-        </glossentry>
-        <glossentry>
-         <glossterm><guilabel>Contains degenerate
-          tetrahedra</guilabel></glossterm>
-         <glossdef><para>
-          At least one tetrahedron has shape 0, 1 or infinity.
-         </para></glossdef>
-        </glossentry>
-        <glossentry>
-         <glossterm><guilabel>Unrecognised solution type</guilabel></glossterm>
-         <glossdef><para>
-          The volume is zero or negative, but the solution is
-          neither flat nor degenerate.
-         </para></glossdef>
-        </glossentry>
-        <glossentry>
-         <glossterm><guilabel>No solution found</guilabel></glossterm>
-         <glossdef><para>
-          The gluing equations could not be solved.
-         </para></glossdef>
-        </glossentry>
-       </glosslist>
+       This describes the type of solution that &snappea; found
+       to the hyperbolic gluing equations.
+       For explanations of the possible solution types,
+       see the <link linkend="snappea-volumetype">chapter on &snappea;
+       triangulations</link>.
       </para></glossdef>
      </glossentry>
      <glossentry>
@@ -2047,8 +2125,8 @@
    <sect3 id="tri-decomposition-connsum">
     <title>Connected Sum Decomposition</title>
     <para>
-     If your triangulation is <link linkend="tri-basicprops">closed,
-     orientable and connected</link>, &regina; can decompose it into a
+     If your triangulation is <link linkend="tri-basicprops">closed
+     and connected</link>, &regina; can decompose it into a
      connected sum of prime 3-manifolds (none of which are 3-spheres).
      To do this, select
      <menuchoice>
@@ -2079,15 +2157,32 @@
      </inlinemediaobject>
     </para>
     <para>
-     With two exceptions (RP<superscript>3</superscript> and
+     With a few exceptions (RP<superscript>3</superscript> and
+     the twisted and non-twisted products
      S<superscript>2</superscript>&times;S<superscript>1</superscript>),
      each of the new triangulations is guaranteed to be
      <link linkend="tri-prop0eff">0-efficient</link> (i.e., they will
      have no non-vertex-linking normal spheres).
-     The underlying algorithm is based on the 0-efficiency results
-     of Jaco and Rubinstein <xref linkend="bib-0-efficiency"/>,
+     The underlying algorithm is based on
+     Jaco-Rubinstein crushing
+     <xref linkend="bib-crushing-dcg"/>
+     <xref linkend="bib-0-efficiency"/>,
      and uses <link linkend="tri-prop3sphere">3-sphere recognition</link>
      to ensure that none of the summands are trivial.
+    </para>
+    <para>
+     If your triangulation is non-orientable and contains an embedded
+     two-sided projective plane, then the connected sum decomposition algorithm
+     <emphasis>might</emphasis> fail (but it might still succeed)
+     <xref linkend="bib-crushing-dcg"/>.
+     If it does fail then &regina; will detect this and inform you.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="tri-connsum-rp2.png"/>
+      </imageobject>
+     </inlinemediaobject>
     </para>
     <caution><para>
      Connected sum decomposition can be very slow for larger
@@ -2144,61 +2239,6 @@
     </inlinemediaobject>
    </para>
   </sect2>
-
-  <sect2 id="tri-censuslookup">
-   <title>Census Lookup</title>
-
-   <para>
-    &regina; ships with several prepackaged censuses of 3-manifold
-    triangulations.
-    To search for your triangulation within these censuses, select
-    <menuchoice>
-     <guimenu>3-D&nbsp;Triangulation</guimenu>
-     <guimenuitem>Census Lookup</guimenuitem>
-    </menuchoice>.
-     You must open the triangulation for viewing before you can do this.
-   </para>
-   <para>
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata fileref="menucensuslookup.png"/>
-     </imageobject>
-    </inlinemediaobject>
-   </para>
-   <para>
-    Your triangulation may use different tetrahedron and
-    vertex labels; &regina; will search for any isomorphic copy.
-    Any matches will be reported:
-   </para>
-   <para>
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata fileref="tri-census-found-box.png"/>
-     </imageobject>
-    </inlinemediaobject>
-   </para>
-   <para>
-    The matches will also be stored in a new text packet
-    beneath your triangulation:
-   </para>
-   <para>
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata fileref="tri-census-found-text.png"/>
-     </imageobject>
-    </inlinemediaobject>
-   </para>
-   <para>
-    &regina; will search censuses of
-    closed orientable and non-orientable 3-manifold triangulations
-    <xref linkend="bib-burton-nor8"/> <xref linkend="bib-burton-nor10"/>
-    <xref linkend="bib-burton-genus"/>,
-    cusped and closed hyperbolic 3-manifold triangulations
-    <xref linkend="bib-burton-complete"/>
-    <xref linkend="bib-cuspedcensus"/> <xref linkend="bib-closedhypcensus"/>,
-    and knot and link complements (tabulated by Joe Christy).
-   </para>
-  </sect2>
  </sect1>
 
  <sect1 id="tri-modification">
@@ -2218,8 +2258,8 @@
   </para>
   <caution><para>
    If you open one triangulation for viewing but then select another in
-   the packet tree, all modifications will apply to the triangulation that
-   you have open for viewing.
+   the packet tree, all modifications will apply to
+   <emphasis>the triangulation that you have open</emphasis> for viewing.
   </para></caution>
 
   <sect2 id="tri-editgluings">
@@ -2273,11 +2313,13 @@
      <guimenuitem>Simplify</guimenuitem>
     </menuchoice>),
     then &regina; will use a combination of these moves to reduce the
-    triangulation to as few tetrahedra as it can.
+    triangulation to as few tetrahedra as it can
+    <xref linkend="bib-burton-hyamfest"/>.
     This is often very effective, but there is
     <emphasis>no guarantee</emphasis> that this will produce the fewest
     possible tetrahedra:
-    &regina; might get stuck at a local minimum from which it cannot escape.
+    &regina; might get stuck at a local minimum from which it cannot
+    see how to escape.
    </para>
    <para>
     <inlinemediaobject>
@@ -2360,6 +2402,13 @@
       <glossdef><para>
        Replaces two tetrahedra joined along a triangle
        with three tetrahedra joined along a degree&nbsp;3 edge.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>1-4 Move</guilabel></glossterm>
+      <glossdef><para>
+       Replaces one tetrahedron
+       with four tetrahedra that meet at a new internal degree&nbsp;4 vertex.
       </para></glossdef>
      </glossentry>
      <glossentry>
@@ -2466,19 +2515,22 @@
     </inlinemediaobject>
    </para>
    <para>
-    There are also two exceptional prime manifolds that cannot be made
-    0-efficient: RP<superscript>3</superscript> and
+    There are also two exceptional prime orientable manifolds that cannot be
+    made 0-efficient: RP<superscript>3</superscript> and
     S<superscript>2</superscript>&times;S<superscript>1</superscript>.
     &regina; will notify you if your triangulation represents one of
     these manifolds.
    </para>
    <caution><para>
     The algorithm to make a triangulation 0-efficient
-    runs in worst-case exponential time.
+    runs in worst-case exponential time, though it is often still
+    extremely fast in practice.
     If your triangulation is large, you should consider whether
     <link linkend="tri-simplification">automatic simplification</link>
-    will suffice (which is much faster at reducing the number of
-    tetrahedra, but which does not guarantee a 0-efficient result).
+    will suffice: this is much faster at reducing the number of
+    tetrahedra, and often produces a 0-efficient result.
+    You can <emphasis>test</emphasis> the result for 0-efficiency via the
+    <link linkend="tri-recognition">recognition tab</link>.
    </para></caution>
   </sect2>
 
@@ -2498,7 +2550,7 @@
      <guimenuitem>Truncate Ideal Vertices</guimenuitem>
     </menuchoice>
     to convert your ideal vertices into real boundary components.
-    &regina; will subdivide the triangulation and slide off a small
+    &regina; will subdivide the triangulation and delete a small
     neighbourhood of each ideal vertex.
     Any <link linkend="tri-vertices-nonstdbdry">non-standard boundary
     vertices</link> will be truncated also.
@@ -2575,7 +2627,7 @@
   </sect2>
 
   <sect2 id="tri-orient">
-   <title>Orienting the Triangulation</title>
+   <title>Orienting Triangulations and Double Covers</title>
 
    <para>
     If your triangulation is
@@ -2596,11 +2648,6 @@
      </imageobject>
     </inlinemediaobject>
    </para>
-  </sect2>
-
-  <sect2 id="tri-cover">
-   <title>Double Cover</title>
-
    <para>
     To convert a non-orientable triangulation into its orientable double cover,
     select
@@ -2608,6 +2655,8 @@
      <guimenu>3-D&nbsp;Triangulation</guimenu>
      <guimenuitem>Double Cover</guimenuitem>
     </menuchoice>.
+    If your triangulation has any orientable components, they will
+    simply be duplicated.
    </para>
    <para>
     <inlinemediaobject>
@@ -2616,23 +2665,39 @@
      </imageobject>
     </inlinemediaobject>
    </para>
-   <para>
-    If your triangulation has any orientable components, they will
-    simply be duplicated.
-   </para>
   </sect2>
 
-  <sect2 id="tri-drilledge">
-   <title>Drilling Edges</title>
+  <sect2 id="tri-puncturedrill">
+   <title>Puncturing and Drilling</title>
 
    <para>
-    You can drill out an edge of your triangulation by selecting
+    You can puncture a 3-manifold triangulation; that is, remove a small ball
+    from its interior and retriangulate.
+    To do this, select
+    <menuchoice>
+     <guimenu>3-D&nbsp;Triangulation</guimenu>
+     <guimenuitem>Puncture</guimenuitem>
+    </menuchoice>.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-puncture.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    This will work correctly regardless of whether the triangulation is
+    closed, ideal, and/or has real boundary triangles.  There will be
+    a new 2-sphere boundary, formed from two new boundary triangles.
+   </para>
+   <para>
+    You can also drill out a small regular neighbourhood of an edge
+    of your triangulation.  To do this, select
     <menuchoice>
      <guimenu>3-D&nbsp;Triangulation</guimenu>
      <guimenuitem>Drill Edge</guimenuitem>
     </menuchoice>.
-    This effectively removes a small regular neighbourhood of the edge
-    from the triangulation.
    </para>
    <para>
     <inlinemediaobject>
@@ -2657,6 +2722,69 @@
    </para>
   </sect2>
 
+  <sect2 id="tri-connsumwith">
+   <title>Building Connected Sums</title>
+   <para>
+    You can combine two triangulations by forming their connected sum.
+    This will convert some triangulation <replaceable>X</replaceable>
+    into the connected sum
+    <replaceable>X</replaceable>&nbsp;#&nbsp;<replaceable>Y</replaceable>
+    for some other triangulation <replaceable>Y</replaceable>
+    (note that
+    <replaceable>Y</replaceable> is allowed to be the same as
+    <replaceable>X</replaceable>).
+    If both <replaceable>X</replaceable> and <replaceable>Y</replaceable>
+    are <link linkend="tri-proporient">oriented</link> triangulations then
+    the connected sum will respect these orientations, and will be
+    oriented also.
+   </para>
+   <para>
+    The triangulation <replaceable>X</replaceable> must be one of
+    &regina;'s native <link linkend="packet-triangulation">triangulation
+    packets</link>, since
+    <replaceable>X</replaceable> will be modified directly.
+    The triangulation <replaceable>Y</replaceable> may be either a
+    native triangulation packet or a hybrid
+    <link linkend="packet-snappea">&snappea; triangulation</link>,
+    since <replaceable>Y</replaceable> will not be modified.
+   </para>
+   <para>
+    To form this connected sum, first open the the triangulation
+    <replaceable>X</replaceable> for viewing, and then select
+    <menuchoice>
+     <guimenu>3-D&nbsp;Triangulation</guimenu>
+     <guimenuitem>Connected Sum With</guimenuitem>
+    </menuchoice>
+    from the menu.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-connsumwith.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    &regina; will ask you which other triangulation to sum with;
+    in other words, &regina; will ask you for the triangulation
+    <replaceable>Y</replaceable>.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-connsumwith-tri.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    The triangulation <replaceable>X</replaceable> will be changed directly
+    into the connected sum.  The result will most likely contain multiple
+    vertices, and you may wish to
+    <link linkend="tri-simplification">simplify the resulting
+    triangulation</link> before proceeding further.
+   </para>
+  </sect2>
+
   <sect2 id="tri-cutcrush">
    <title>Cutting Along and Crushing Normal Surfaces</title>
 
@@ -2668,17 +2796,18 @@
       <para>
        <emphasis>Cutting along</emphasis> a surface involves carefully
        slicing along the surface and retriangulating the resulting
-       polyhedra, so that the original
-       surface becomes one or more real boundary components.
+       polyhedra.  The resulting triangulation will have new real
+       boundary component(s) corresponding to the original surface.
       </para>
       <para>
-       This has the advantages that it will never change the topology of the
+       This operation has the advantages that it will never change the
+       topology of the
        3-manifold beyond the simple act of slicing along the surface,
        and it will never introduce ideal vertices or invalid edges.
       </para>
       <para>
        The main drawback is that it can
-       <emphasis>vastly</emphasis> increase the total number of tetrahedra.
+       vastly increase the total number of tetrahedra.
        This has severe implications if you need to do anything
        computationally intensive with the resulting triangulation.
       </para>
@@ -2687,10 +2816,12 @@
       <para>
        <emphasis>Crushing a surface</emphasis> is a potentially destructive
        operation, but when used carefully can be extremely powerful.
-       The crushing operation is described by
-       Jaco and Rubinstein <xref linkend="bib-0-efficiency"/>:
-       in essence, the surface is crushed to a point and any tetrahedron
-       that contains a quadrilateral disc is &ldquo;flattened away&rdquo;.
+       The crushing operation was originally described by
+       Jaco and Rubinstein <xref linkend="bib-0-efficiency"/>;
+       see <xref linkend="bib-crushing-dcg"/> for a simplified treatment.
+       In essence, the surface is first collapsed to a point,
+       and then any non-tetrahedron pieces that remain are
+       &ldquo;flattened away&rdquo;.
       </para>
       <para>
        One key advantage of crushing is that it always
@@ -2699,7 +2830,7 @@
        stays the same).
       </para>
       <para>
-       The main disadvantage is that will typically change the topology
+       The main disadvantage is that it can change the topology
        of your triangulation, sometimes dramatically.
        For example, it can create ideal vertices, undo connected sums,
        change the genus of boundary components, and delete entire summands.
@@ -2744,18 +2875,18 @@
     Your original triangulation will not be changed.
    </para>
    <para>
+    Note that you could end up with a disconnected triangulation.
+    If so, you can
+    <link linkend="tri-decomposition-component">extract connected
+    components</link> to work with one at a time.
+   </para>
+   <para>
     <inlinemediaobject>
      <imageobject>
       <imagedata fileref="tri-cutcrush-results.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
-   <tip><para>
-    When cutting along or crushing a normal surface, you might end up
-    with a disconnected triangulation.  You can
-    <link linkend="tri-decomposition-component">extract connected
-    components</link> to work with one at a time.
-   </para></tip>
   </sect2>
  </sect1>
 </chapter>

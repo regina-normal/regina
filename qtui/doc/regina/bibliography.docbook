@@ -244,8 +244,23 @@
   <date>2014</date>
  </biblioentry>
 
- <biblioentry id="bib-burton-complete">
+ <biblioentry id="bib-crushing-dcg">
   <abbrev>Bur14b</abbrev>
+  <authorgroup><author>
+   <firstname>Benjamin</firstname>
+   <othername>A.</othername>
+   <surname>Burton</surname>
+  </author></authorgroup>
+  <title>A new approach to crushing 3-manifold triangulations</title>
+  <edition>Discrete Comput. Geom.</edition>
+  <volumenum>vol. 52</volumenum>
+  <issuenum>no. 1</issuenum>
+  <artpagenums>pp. 116&ndash;139</artpagenums>
+  <date>2014</date>
+ </biblioentry>
+
+ <biblioentry id="bib-burton-complete">
+  <abbrev>Bur14c</abbrev>
   <authorgroup><author>
    <firstname>Benjamin</firstname>
    <othername>A.</othername>
@@ -369,6 +384,25 @@
   <volumenum>vol. 239</volumenum>
   <artpagenums>pp. 1&ndash;15</artpagenums>
   <date>2009</date>
+ </biblioentry>
+
+ <biblioentry id="bib-futer-angled">
+  <abbrev>FG11</abbrev>
+  <authorgroup><author>
+   <firstname>David</firstname>
+   <surname>Futer</surname>
+  </author><author>
+   <firstname>Fran&ccedil;ois</firstname>
+   <surname>Gu&eacute;ritaud</surname>
+  </author></authorgroup>
+  <title>From angled triangulations to hyperbolic structures</title>
+  <edition>Interactions Between Hyperbolic Geometry, Quantum Topology
+   and Number Theory</edition>
+  <volumenum>vol. 541 of Contemp. Math.</volumenum>
+  <artpagenums>pp. 159&ndash;182</artpagenums>
+  <publishername>Amer. Math. Soc.</publishername>
+  <address>Providence, RI</address>
+  <date>2011</date>
  </biblioentry>
 
  <biblioentry id="bib-gap">
@@ -761,6 +795,22 @@
   <issuenum>no. 4</issuenum>
   <artpagenums>pp. 865&ndash;902</artpagenums>
   <date>1992</date>
+ </biblioentry>
+
+ <biblioentry id="bib-weeks-canonical">
+  <abbrev>Wee93</abbrev>
+  <authorgroup>
+   <author>
+    <firstname>Jeffrey</firstname>
+    <othername>R.</othername>
+    <surname>Weeks</surname>
+   </author>
+  </authorgroup>
+  <title>Convex hulls and isometries of cusped hyperbolic 3-manifolds</title>
+  <edition>Topology Appl.</edition>
+  <volumenum>vol. 52</volumenum>
+  <artpagenums>pp. 127&ndash;149</artpagenums>
+  <date>1993</date>
  </biblioentry>
 
 </bibliography>

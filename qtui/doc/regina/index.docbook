@@ -116,10 +116,13 @@
   <!ENTITY SFSLong "Seifert Fibred Space">
   <!ENTITY sfslong "Seifert fibred space">
   <!ENTITY snappea "<application>SnapPea</application>">
-  <!ENTITY snappeapylink "<ulink url='http://www.math.uic.edu/t3m/SnapPy/'>&snappea;&nbsp;/&nbsp;&snappy;</ulink>">
+  <!ENTITY snappeapy "&snappea;&nbsp;/&nbsp;&snappy;">
+  <!ENTITY snappeapylink "<ulink url='http://www.math.uic.edu/t3m/SnapPy/'>&snappeapy;</ulink>">
+  <!ENTITY snappy "<application>SnapPy</application>">
+  <!ENTITY snappylink
+   "<ulink url='http://www.math.uic.edu/t3m/SnapPy/'>&snappy;</ulink>">
   <!ENTITY snappywebsite
    "<ulink url='http://www.math.uic.edu/t3m/SnapPy/'>&snappy; website</ulink>">
-  <!ENTITY snappy "<application>SnapPy</application>">
   <!ENTITY sourceforge "<application>SourceForge</application>">
   <!ENTITY sss "S<superscript>3</superscript>">
   <!ENTITY suse "<application>SUSE</application>">
@@ -149,6 +152,7 @@
   <!ENTITY reginafeatureset SYSTEM "featureset.docbook">
   <!ENTITY reginapacket SYSTEM "packet.docbook">
   <!ENTITY reginatriangulations SYSTEM "triangulations.docbook">
+  <!ENTITY reginasnappea SYSTEM "snappea.docbook">
   <!ENTITY reginadim2tri SYSTEM "dim2tri.docbook">
   <!ENTITY reginasurfaces SYSTEM "surfaces.docbook">
   <!ENTITY reginaangles SYSTEM "angles.docbook">
@@ -227,6 +231,7 @@
  &reginaabout;
  &reginapacket;
  &reginatriangulations;
+ &reginasnappea;
  &reginadim2tri;
  &reginasurfaces;
  &reginaangles;
