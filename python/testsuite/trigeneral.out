@@ -278,7 +278,7 @@ Closed: True
 Orientable: False
 Connected: True
 
-Fundamental group: 
+Fundamental group: Z + Z_2
 Generators: a, b
 Relations:
     a^2 b^-2
@@ -1001,7 +1001,7 @@ Closed: False
 Orientable: True
 Connected: True
 
-Fundamental group: 
+Fundamental group: Z~Free(2) w/monodromy a --> b, b --> b a^-1 b^2
 Generators: a, b
 Relations:
     a b a b^-1 a^-1 b^2 a^-1 b^-1
@@ -1161,7 +1161,7 @@ Closed: False
 Orientable: False
 Connected: True
 
-Fundamental group: 
+Fundamental group: Z~Free(2) w/monodromy a --> b, b --> b^-1 a
 Generators: a, b
 Relations:
     a^-1 b^-1 a^2 b^2
@@ -1271,7 +1271,7 @@ Closed: False
 Orientable: True
 Connected: True
 
-Fundamental group: Free (2 generators)
+Fundamental group: Free(2)
 Generators: a, b
 Relations:
     (none)

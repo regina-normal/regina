@@ -1998,10 +1998,11 @@ class NTriangulationTest : public TriangulationTest<3> {
                 "Fund(3-tetrahedron snapped ball)", "0");
             verifyFundGroup(lst3_4_7.getFundamentalGroup(),
                 "Fund(LST(3,4,7))", "Z");
-            //verifyFundGroup(figure8.getFundamentalGroup(),
-            //    "Fund(figure eight knot complement)", 1);
-            //verifyFundGroup(rp2xs1.getFundamentalGroup(),
-            //    "Fund(RP^2 x S^1)", 1, 2);
+            verifyFundGroup(figure8.getFundamentalGroup(),
+                "Fund(figure eight knot complement)", "Z~Free(2)"
+            " w/monodromy a --> b, b --> b a^-1 b^2");
+            verifyFundGroup(rp2xs1.getFundamentalGroup(),
+                "Fund(RP^2 x S^1)", "Z + Z_2");
             verifyFundGroup(solidKB.getFundamentalGroup(),
                 "Fund(solid Klein bottle)", "Z");
             //verifyFundGroup(gieseking.getFundamentalGroup(),
@@ -2011,7 +2012,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             verifyFundGroup(twoProjPlaneCusps.getFundamentalGroup(),
                 "Fund(tri with projective plane cusps)", "Z_2");
             verifyFundGroup(cuspedGenusTwoTorus.getFundamentalGroup(),
-                "Fund(cusped solid genus two torus)", "Free (2 generators)");
+                "Fund(cusped solid genus two torus)", "Free(2)");
             verifyFundGroup(pinchedSolidTorus.getFundamentalGroup(),
                 "Fund(pinched solid torus)", "Z");
             verifyFundGroup(pinchedSolidKB.getFundamentalGroup(),
