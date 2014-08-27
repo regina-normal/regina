@@ -47,6 +47,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>1-4 move</primaryie>
+  <seeie>See: elementary moves</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>2-0 edge move</primaryie>
   <seeie>See: elementary moves</seeie>
  </indexentry>
@@ -345,8 +350,9 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-decomposition-connsum">connected
-   sum decomposition</link></primaryie>
+  <primaryie>connected sum</primaryie>
+  <secondaryie><link linkend="tri-connsumwith">building</link></secondaryie>
+  <secondaryie><link linkend="tri-decomposition-connsum">decomposition</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1564,8 +1570,10 @@
    decomposition</link></secondaryie>
   <secondaryie><link linkend="tri-components">components,
    viewing</link></secondaryie>
+  <secondaryie><link linkend="tri-connsumwith">connected
+   sum, building</link></secondaryie>
   <secondaryie><link linkend="tri-decomposition-connsum">connected
-   sum decomposition</link></secondaryie>
+   sum, decomposition</link></secondaryie>
   <secondaryie><link linkend="tri-propconn">connectedness</link></secondaryie>
   <secondaryie><link linkend="snappea-toregina">converting from a
    &snappea; triangulations</link></secondaryie>

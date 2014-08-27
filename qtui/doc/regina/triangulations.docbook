@@ -2258,8 +2258,8 @@
   </para>
   <caution><para>
    If you open one triangulation for viewing but then select another in
-   the packet tree, all modifications will apply to the triangulation that
-   you have open for viewing.
+   the packet tree, all modifications will apply to
+   <emphasis>the triangulation that you have open</emphasis> for viewing.
   </para></caution>
 
   <sect2 id="tri-editgluings">
@@ -2313,11 +2313,13 @@
      <guimenuitem>Simplify</guimenuitem>
     </menuchoice>),
     then &regina; will use a combination of these moves to reduce the
-    triangulation to as few tetrahedra as it can.
+    triangulation to as few tetrahedra as it can
+    <xref linkend="bib-burton-hyamfest"/>.
     This is often very effective, but there is
     <emphasis>no guarantee</emphasis> that this will produce the fewest
     possible tetrahedra:
-    &regina; might get stuck at a local minimum from which it cannot escape.
+    &regina; might get stuck at a local minimum from which it cannot
+    see how to escape.
    </para>
    <para>
     <inlinemediaobject>
@@ -2400,6 +2402,13 @@
       <glossdef><para>
        Replaces two tetrahedra joined along a triangle
        with three tetrahedra joined along a degree&nbsp;3 edge.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>1-4 Move</guilabel></glossterm>
+      <glossdef><para>
+       Replaces one tetrahedron
+       with four tetrahedra that meet at a new internal degree&nbsp;4 vertex.
       </para></glossdef>
      </glossentry>
      <glossentry>
@@ -2506,19 +2515,22 @@
     </inlinemediaobject>
    </para>
    <para>
-    There are also two exceptional prime manifolds that cannot be made
-    0-efficient: RP<superscript>3</superscript> and
+    There are also two exceptional prime orientable manifolds that cannot be
+    made 0-efficient: RP<superscript>3</superscript> and
     S<superscript>2</superscript>&times;S<superscript>1</superscript>.
     &regina; will notify you if your triangulation represents one of
     these manifolds.
    </para>
    <caution><para>
     The algorithm to make a triangulation 0-efficient
-    runs in worst-case exponential time.
+    runs in worst-case exponential time, though it is often still
+    extremely fast in practice.
     If your triangulation is large, you should consider whether
     <link linkend="tri-simplification">automatic simplification</link>
-    will suffice (which is much faster at reducing the number of
-    tetrahedra, but which does not guarantee a 0-efficient result).
+    will suffice: this is much faster at reducing the number of
+    tetrahedra, and often produces a 0-efficient result.
+    You can <emphasis>test</emphasis> the result for 0-efficiency via the
+    <link linkend="tri-recognition">recognition tab</link>.
    </para></caution>
   </sect2>
 
@@ -2538,7 +2550,7 @@
      <guimenuitem>Truncate Ideal Vertices</guimenuitem>
     </menuchoice>
     to convert your ideal vertices into real boundary components.
-    &regina; will subdivide the triangulation and slide off a small
+    &regina; will subdivide the triangulation and delete a small
     neighbourhood of each ideal vertex.
     Any <link linkend="tri-vertices-nonstdbdry">non-standard boundary
     vertices</link> will be truncated also.
@@ -2713,7 +2725,37 @@
   <sect2 id="tri-connsumwith">
    <title>Building Connected Sums</title>
    <para>
-    TODO.
+    You can combine two triangulations by forming their connected sum.
+    This will convert some triangulation <replaceable>X</replaceable>
+    into the connected sum
+    <replaceable>X</replaceable>&nbsp;#&nbsp;<replaceable>Y</replaceable>
+    for some other triangulation <replaceable>Y</replaceable>
+    (note that
+    <replaceable>Y</replaceable> is allowed to be the same as
+    <replaceable>X</replaceable>).
+    If both <replaceable>X</replaceable> and <replaceable>Y</replaceable>
+    are <link linkend="tri-proporient">oriented</link> triangulations then
+    the connected sum will respect these orientations, and will be
+    oriented also.
+   </para>
+   <para>
+    The triangulation <replaceable>X</replaceable> must be one of
+    &regina;'s native <link linkend="packet-triangulation">triangulation
+    packets</link>, since
+    <replaceable>X</replaceable> will be modified directly.
+    The triangulation <replaceable>Y</replaceable> may be either a
+    native triangulation packet or a hybrid
+    <link linkend="packet-snappea">&snappea; triangulation</link>,
+    since <replaceable>Y</replaceable> will not be modified.
+   </para>
+   <para>
+    To form this connected sum, first open the the triangulation
+    <replaceable>X</replaceable> for viewing, and then select
+    <menuchoice>
+     <guimenu>3-D&nbsp;Triangulation</guimenu>
+     <guimenuitem>Connected Sum With</guimenuitem>
+    </menuchoice>
+    from the menu.
    </para>
    <para>
     <inlinemediaobject>
@@ -2723,11 +2765,23 @@
     </inlinemediaobject>
    </para>
    <para>
+    &regina; will ask you which other triangulation to sum with;
+    in other words, &regina; will ask you for the triangulation
+    <replaceable>Y</replaceable>.
+   </para>
+   <para>
     <inlinemediaobject>
      <imageobject>
       <imagedata fileref="tri-connsumwith-tri.png"/>
      </imageobject>
     </inlinemediaobject>
+   </para>
+   <para>
+    The triangulation <replaceable>X</replaceable> will be changed directly
+    into the connected sum.  The result will most likely contain multiple
+    vertices, and you may wish to
+    <link linkend="tri-simplification">simplify the resulting
+    triangulation</link> before proceeding further.
    </para>
   </sect2>
 
@@ -2742,17 +2796,18 @@
       <para>
        <emphasis>Cutting along</emphasis> a surface involves carefully
        slicing along the surface and retriangulating the resulting
-       polyhedra, so that the original
-       surface becomes one or more real boundary components.
+       polyhedra.  The resulting triangulation will have new real
+       boundary component(s) corresponding to the original surface.
       </para>
       <para>
-       This has the advantages that it will never change the topology of the
+       This operation has the advantages that it will never change the
+       topology of the
        3-manifold beyond the simple act of slicing along the surface,
        and it will never introduce ideal vertices or invalid edges.
       </para>
       <para>
        The main drawback is that it can
-       <emphasis>vastly</emphasis> increase the total number of tetrahedra.
+       vastly increase the total number of tetrahedra.
        This has severe implications if you need to do anything
        computationally intensive with the resulting triangulation.
       </para>
@@ -2761,10 +2816,12 @@
       <para>
        <emphasis>Crushing a surface</emphasis> is a potentially destructive
        operation, but when used carefully can be extremely powerful.
-       The crushing operation is described by
-       Jaco and Rubinstein <xref linkend="bib-0-efficiency"/>:
-       in essence, the surface is crushed to a point and any tetrahedron
-       that contains a quadrilateral disc is &ldquo;flattened away&rdquo;.
+       The crushing operation was originally described by
+       Jaco and Rubinstein <xref linkend="bib-0-efficiency"/>;
+       see <xref linkend="bib-crushing-dcg"/> for a simplified treatment.
+       In essence, the surface is first collapsed to a point,
+       and then any non-tetrahedron pieces that remain are
+       &ldquo;flattened away&rdquo;.
       </para>
       <para>
        One key advantage of crushing is that it always
@@ -2773,7 +2830,7 @@
        stays the same).
       </para>
       <para>
-       The main disadvantage is that will typically change the topology
+       The main disadvantage is that it can change the topology
        of your triangulation, sometimes dramatically.
        For example, it can create ideal vertices, undo connected sums,
        change the genus of boundary components, and delete entire summands.
@@ -2818,18 +2875,18 @@
     Your original triangulation will not be changed.
    </para>
    <para>
+    Note that you could end up with a disconnected triangulation.
+    If so, you can
+    <link linkend="tri-decomposition-component">extract connected
+    components</link> to work with one at a time.
+   </para>
+   <para>
     <inlinemediaobject>
      <imageobject>
       <imagedata fileref="tri-cutcrush-results.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
-   <tip><para>
-    When cutting along or crushing a normal surface, you might end up
-    with a disconnected triangulation.  You can
-    <link linkend="tri-decomposition-component">extract connected
-    components</link> to work with one at a time.
-   </para></tip>
   </sect2>
  </sect1>
 </chapter>
