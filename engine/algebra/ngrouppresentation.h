@@ -1210,7 +1210,7 @@ inline NGroupExpression::NGroupExpression(const NGroupExpression& cloneMe) :
 }
 
 inline bool NGroupExpression::operator==(const NGroupExpression& comp) const {
-    return terms == cloneMe.terms;
+    return terms == comp.terms;
 }
 
 inline NGroupExpression& NGroupExpression::operator=(
