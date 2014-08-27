@@ -188,19 +188,19 @@ class REGINA_API NGroupExpression : public ShareableObject {
         NGroupExpression(const NGroupExpression& cloneMe);
 
         /**
-         *  Copy assignment constructor. 
+         * Makes this expression a clone of the given expression.
          *
-         * @param copyMe is the object to copy to this. 
-         * 
-         * @returns this. 
+         * @param cloneMe the expression to clone.
+         * @return a reference to this expression.
          */
-        NGroupExpression& operator=(const NGroupExpression& copyMe);
+        NGroupExpression& operator=(const NGroupExpression& cloneMe);
 
         /**
-         * Equality operator. Checks to see if these two words represent
-         * the same literal string, or not.
+         * Equality operator. Checks to see whether or not these two words
+         * represent the same literal string.
          *
-         * &returns true if the string literals are identical.
+         * @param comp the expression to compare against this.
+         * @return \c true if this and the given string literal are identical.
          */
         bool operator==(const NGroupExpression& comp) const;
 
@@ -240,7 +240,7 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * Returns the number of terms in this expression.
          *
          * For instance, the expression <tt>g1^2 g3^-1 g6</tt> contains three
-         *  terms.  See also getWordLength().
+         * terms.  See also getWordLength().
          *
          * @return the number of terms.
          */
@@ -259,17 +259,21 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * @return the length of the word.
          */
         unsigned long wordLength() const;
+        /**
+         * Tests whether this is the trivial (unit) word.
+         *
+         * No attempt is made to remove redundant terms (so the word
+         * <tt>g g^-1</tt> will be treated as non-trivial).
+         *
+         * @return \c true if and only if this is the trivial word.
+         */
+        bool isTrivial() const;
 
         /**
          * Erases all terms from this this word.
          * This effectively turns this word into the identity element.
          */
         void erase();
-
-        /**
-         * @return true if and only if this is the unit, i.e. trivial word.
-         */   
-        bool isTrivial() const;
 
         /**
          * Returns the term at the given index in this expression.
@@ -594,11 +598,11 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         /**
          * Assignment operator.
          *
-         * @param copyMe the group presentation that this will become a
+         * @param cloneMe the group presentation that this will become a
          * copy of.
          * @return a reference to this group presentation.
          */
-        NGroupPresentation& operator=(const NGroupPresentation& copyMe);
+        NGroupPresentation& operator=(const NGroupPresentation& cloneMe);
 
         /**
          * Constructor that allows arbitrary number of relators. One calls
@@ -1263,13 +1267,14 @@ inline NGroupExpression::NGroupExpression(const NGroupExpression& cloneMe) :
         ShareableObject(), terms(cloneMe.terms) {
 }
 
+inline bool NGroupExpression::operator==(const NGroupExpression& comp) const {
+    return terms == comp.terms;
+}
+
 inline NGroupExpression& NGroupExpression::operator=(
-    const NGroupExpression& copyMe)
-{
- for (std::list<NGroupExpressionTerm>::const_iterator I=copyMe.terms.begin();
-      I!=copyMe.terms.end(); I++)
-  terms.push_back(*I);
- return *this;
+        const NGroupExpression& cloneMe) {
+    terms = cloneMe.terms;
+    return *this;
 }
 
 inline std::list<NGroupExpressionTerm>& NGroupExpression::getTerms() {
@@ -1283,6 +1288,10 @@ inline const std::list<NGroupExpressionTerm>& NGroupExpression::getTerms()
 
 inline unsigned long NGroupExpression::getNumberOfTerms() const {
     return terms.size();
+}
+
+inline bool NGroupExpression::isTrivial() const {
+    return terms.empty();
 }
 
 inline unsigned long NGroupExpression::wordLength() const {

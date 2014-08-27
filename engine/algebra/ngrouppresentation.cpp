@@ -79,19 +79,6 @@ const NGroupExpressionTerm& NGroupExpression::getTerm(
     return *pos;
 }
 
-bool NGroupExpression::operator==(const NGroupExpression& comp) const
-{
-    std::list< NGroupExpressionTerm >::const_iterator i1=terms.begin();
-    std::list< NGroupExpressionTerm >::const_iterator i2=comp.terms.begin();
-    while ( (i1!=terms.end()) && (i2!=comp.terms.end()) )
-     {
-      if (!((*i1) == (*i2))) return false;
-      i1++; i2++;
-     }
-    if ( (i1!=terms.end()) || (i2!=comp.terms.end()) ) return false;
-    return true;
-}
-
 NGroupExpression* NGroupExpression::inverse() const {
     NGroupExpression* ans = new NGroupExpression();
     transform(terms.begin(), terms.end(), front_inserter(ans->terms),
@@ -1176,9 +1163,6 @@ std::auto_ptr<NHomGroupPresentation>
 
  return std::auto_ptr<NHomGroupPresentation>( retval.release() );
 }
-
-bool NGroupExpression::isTrivial() const
-{    return terms.empty(); }
 
 // This algorithm has to be at least moderately sophisticated to ensure it
 // recognises that < a, b, a^2, abaB > is abelian. 
