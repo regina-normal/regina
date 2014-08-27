@@ -536,8 +536,6 @@ class REGINA_API NGroupExpression : public ShareableObject {
  * objects directly from text strings.  We would like to have something like
  * NGroupPresentation( numGens, "abAAB", "bccd" ) etc. with arbitrary 
  * numbers of relators. Maybe std::tuple.  Or "variadic templates"?
- *
- * \testpart
  */
 class REGINA_API NGroupPresentation : public ShareableObject {
     protected:

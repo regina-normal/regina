@@ -104,7 +104,7 @@ NTriangulation* NSnapPeaCensusManifold::construct() const {
         return ans;
 
     // Fetch the relevant data from the census dehydration files.
-    std::string file = NGlobalDirs::data();
+    std::string file = NGlobalDirs::data() + "/snappea";
     switch (section) {
         case SEC_5:
             file += "/snappea-census-sec5.dat"; break;
@@ -145,7 +145,7 @@ NTriangulation* NSnapPeaCensusManifold::construct() const {
 
 NAbelianGroup* NSnapPeaCensusManifold::getHomologyH1() const {
     // Fetch the relevant data from the census dehydration files.
-    std::string file = NGlobalDirs::data();
+    std::string file = NGlobalDirs::data() + "/snappea";
     switch (section) {
         case SEC_5:
             file += "/snappea-census-sec5.dat"; break;

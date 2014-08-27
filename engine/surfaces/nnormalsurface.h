@@ -332,8 +332,6 @@ struct NormalInfo;
  *   declared and implemented.</li>
  * </ul>
  *
- * \testpart
- *
  * \todo \optlong Investigate using sparse vectors for storage.
  *
  * \ifacespython Not present.
@@ -749,8 +747,6 @@ class REGINA_API NNormalSurfaceVector : public NRay {
  * such as spun-normal surfaces) are allowed; in these cases, the
  * corresponding coordinate lookup routines will return
  * NLargeInteger::infinity where appropriate.
- *
- * \testpart
  *
  * \todo \feature Calculation of Euler characteristic and orientability
  * for non-compact surfaces.

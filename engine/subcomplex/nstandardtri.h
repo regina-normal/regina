@@ -72,8 +72,6 @@ class NTriangulation;
  * Subclasses corresponding to different families of triangulations do
  * not need to override writeTextShort() since this routine is
  * properly implemented in the base class NStandardTriangulation.
- *
- * \testpart
  */
 class REGINA_API NStandardTriangulation : public ShareableObject {
     public:

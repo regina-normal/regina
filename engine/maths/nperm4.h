@@ -84,8 +84,6 @@ namespace regina {
  * is because the first-generation routines incur additional overhead
  * in converting back and forth between the second-generation codes
  * (which are used internally by NPerm4).
- *
- * \testfull
  */
 class REGINA_API NPerm4 {
     public:

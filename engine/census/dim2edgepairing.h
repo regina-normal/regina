@@ -66,8 +66,6 @@ namespace regina {
  * Note that if this pairing is used to construct an actual 2-manifold
  * triangulation, the individual gluing orientations will still need to
  * be specified; they are not a part of this structure.
- *
- * \testpart
  */
 class REGINA_API Dim2EdgePairing : public NGenericFacetPairing<2> {
     public:

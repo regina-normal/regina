@@ -117,13 +117,64 @@ typedef void (*UseGluingPerms)(const NGluingPermSearcher*, void*);
  * involve building and repeatedly modifying the inherited NGluingPerms
  * data in-place.
  *
- * \ifacespython Not present.
+ * \ifacespython Only the PurgeFlags enumeration from this class is
+ * present, and the PurgeFlags constants are also made directly
+ * available through the regina namespace.  Therefore there is no need
+ * to explicitly access the NGluingPermSearcher through Python.
  */
 class REGINA_API NGluingPermSearcher : public NGluingPerms {
     public:
         static const char dataTag_;
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
+
+        /**
+         * Flags to indicate that our enumeration may (at the discretion of
+         * the enumeration algorithm) ignore certain classes of triangulations.
+         * These flags can be combined using bitwise OR.
+         *
+         * See the NGluingPermSearcher constructor documentation for further
+         * details on how these flags are used.
+         *
+         * \ifacespython For convenience, these constants are also made
+         * available directly in Python's regina namespace.
+         */
+        enum PurgeFlags {
+            /**
+             * Indicates that no triangulations should be ignored.
+             */
+            PURGE_NONE = 0,
+            /**
+             * Indicates that non-minimal triangulations may be ignored.
+             */
+            PURGE_NON_MINIMAL = 1,
+            /**
+             * Indicates that any triangulation that is not prime (i.e.,
+             * can be written as a non-trivial connected sum) and any bounded
+             * triangulation that is reducible over a disc may be ignored.
+             */
+            PURGE_NON_PRIME = 2,
+            /**
+             * Indicates that any triangulation that is not prime (i.e.,
+             * can be written as a non-trivial connected sum), any
+             * bounded triangulation that is reducible over a disc and
+             * any triangulation that is non-minimal may be ignored.
+             * Note that this is simply a combination of the constants
+             * \a PURGE_NON_MINIMAL and \a PURGE_NON_PRIME.
+             */
+            PURGE_NON_MINIMAL_PRIME = 3,
+            /**
+             * Indicates that any triangulation that is not a minimal ideal
+             * triangulation of a cusped finite-volume hyperbolic 3-manifold
+             * may be ignored.
+             */
+            PURGE_NON_MINIMAL_HYP = 9,
+            /**
+             * Indicates that any triangulation containing an embedded
+             * two-sided projective plane may be ignored.
+             */
+            PURGE_P2_REDUCIBLE = 4
+        };
 
     protected:
         const NFacePairing::IsoList* autos_;
@@ -141,8 +192,9 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
                  correspond to finite triangulations? */
         int whichPurge_;
             /**< Are there any types of triangulation that we may optionally
-                 avoid constructing?  See the constructor documentation for
-                 further details on this search parameter. */
+                 avoid constructing?  This should be a bitwise OR of constants
+                 from the PurgeFlags enumeration.  See the constructor
+                 documentation for further details on this search parameter. */
         UseGluingPerms use_;
             /**< A routine to call each time a gluing permutation set is
                  found during the search. */
@@ -243,9 +295,9 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
          * \c false if there is no such requirement.  Note that
          * regardless of this value, some non-finite triangulations
          * might still be produced; see the notes above for details.
-         * @param whichPurge specifies which permutation sets we may
-         * avoid constructing (see the function notes above for details).
-         * This should be a bitwise OR of purge constants from class NCensus,
+         * @param whichPurge specifies which permutation sets we may avoid
+         * constructing (see the function notes above for details).  This
+         * should be a bitwise OR of constants from the PurgeFlags enumeration,
          * or 0 if we should simply generate every possible permutation set.
          * If a variety of purge constants are bitwise ORed together, a
          * permutation set whose triangulation satisfies \e any of these

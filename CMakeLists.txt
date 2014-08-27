@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
+CMAKE_MINIMUM_REQUIRED (VERSION 2.8.7)
 PROJECT (regina)
 
 # Let the user override the package name.
@@ -285,6 +285,18 @@ MACRO_LOG_FEATURE(Boost_FOUND
   "Boost"
   "Essential: C++ components (including Boost.Python and Boost.Regex)"
   "http://www.boost.org/"
+  TRUE)
+
+FIND_PACKAGE(PkgConfig)
+IF(NOT PKG_CONFIG_FOUND)
+  MESSAGE(FATAL_ERROR "Regina requires pkgconfig.")
+ENDIF(NOT PKG_CONFIG_FOUND)
+
+PKG_CHECK_MODULES(TOKYOCABINET tokyocabinet)
+MACRO_LOG_FEATURE(TOKYOCABINET_FOUND
+  "Tokyo Cabinet"
+  "Essential: database library for accessing census data"
+  "http://fallabs.com/tokyocabinet/"
   TRUE)
 
 FIND_PACKAGE(Threads REQUIRED)

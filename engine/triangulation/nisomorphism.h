@@ -94,8 +94,6 @@ class NTriangulation;
  * Note that in all cases triangulation U may contain more tetrahedra
  * than triangulation T.
  *
- * \testpart
- *
  * \todo \feature Composition of isomorphisms.
  */
 class REGINA_API NIsomorphism : public NGenericIsomorphism<3> {

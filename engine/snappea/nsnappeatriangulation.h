@@ -69,6 +69,8 @@ class NXMLSnapPeaReader;
 /**
  * A base class for all exceptions that are thrown from within the
  * SnapPea kernel.
+ *
+ * \ifacespython Not present.
  */
 struct SnapPeaException {
 };
@@ -76,6 +78,8 @@ struct SnapPeaException {
 /**
  * An exception that is thrown when the SnapPea kernel encounters a
  * fatal error.
+ *
+ * \ifacespython Not present.
  */
 struct SnapPeaFatalError : public SnapPeaException {
     std::string function;
@@ -100,6 +104,8 @@ struct SnapPeaFatalError : public SnapPeaException {
 /**
  * An exception that is thrown when the SnapPea kernel finds that all
  * available memory has been exhausted.
+ *
+ * \ifacespython Not present.
  */
 struct SnapPeaMemoryFull : public SnapPeaException {
 };
@@ -303,8 +309,6 @@ class REGINA_API NCusp : public ShareableObject {
  *
  * See http://snappy.computop.org/ for further information on
  * SnapPea and its successor SnapPy.
- *
- * \testpart
  */
 class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         public NPacketListener {

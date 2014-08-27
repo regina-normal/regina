@@ -33,7 +33,7 @@
 /* end stub */
 
 #include "exhaustive.h"
-#include "census/ncensus.h"
+#include "census/ngluingpermsearcher.h"
 #include "packet/ncontainer.h"
 #include "triangulation/ntriangulation.h"
 
@@ -64,89 +64,88 @@
 #endif
 
 using regina::NBoolSet;
-using regina::NCensus;
+using regina::NFacePairing;
+using regina::NGluingPermSearcher;
+using regina::NTriangulation;
 
 namespace {
-    template <int dim>
-    struct TestFunctionHolder;
-
-    template <>
-    struct TestFunctionHolder<3> {
-        // Work around the fact that we cannot cast between function
-        // pointers and void*.
-        typedef regina::NTriangulation Triangulation;
+    struct TestFunctionHolder3 {
         NTriangulationTestFunction f_;
-        TestFunctionHolder(NTriangulationTestFunction f) : f_(f) {}
+        regina::NBoolSet finite_;
+        bool minimal_;
+
+        TestFunctionHolder3(NTriangulationTestFunction f,
+                regina::NBoolSet finite, bool minimal = false) :
+                f_(f), finite_(finite), minimal_(minimal) {}
     };
 
-    template <int dim>
-    bool testCensusTriangulation(
-            typename TestFunctionHolder<dim>::Triangulation* tri,
-            void* testFunctionHolder) {
-        tri->setPacketLabel(tri->isoSig());
-        (*(static_cast<TestFunctionHolder<dim>*>(testFunctionHolder)->f_))(tri);
-        return false;
+    void foundGluingPerms3(const NGluingPermSearcher* perms, void* holder) {
+        if (perms) {
+            TestFunctionHolder3* h = static_cast<TestFunctionHolder3*>(holder);
+            NTriangulation* tri = perms->triangulate();
+            if (tri->isValid() &&
+                    (! (h->finite_ == NBoolSet::sTrue && tri->isIdeal())) &&
+                    (! (h->finite_ == NBoolSet::sFalse && ! tri->isIdeal()))) {
+                tri->setPacketLabel(tri->isoSig());
+                (*(h->f_))(tri);
+            }
+            delete tri;
+        }
+    }
+
+    void foundFacetPairing3(const NFacePairing* pairing,
+            const NFacePairing::IsoList* autos, void* holder) {
+        if (pairing) {
+            TestFunctionHolder3* h = static_cast<TestFunctionHolder3*>(holder);
+            NGluingPermSearcher::findAllPerms(pairing, autos,
+                false /* orientable only */,
+                ! h->finite_.hasFalse() /* finite only */,
+                (h->minimal_ ?
+                    NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME |
+                    NGluingPermSearcher::PURGE_P2_REDUCIBLE : 0) /* purge */,
+                &foundGluingPerms3, holder);
+        }
     }
 }
 
 void runCensusMinClosed(NTriangulationTestFunction testFunction, bool small_) {
-    regina::NContainer parent;
-    TestFunctionHolder<3> f(testFunction);
-    NCensus::formCensus(&parent,
+    TestFunctionHolder3 f(testFunction, NBoolSet::sTrue /* finite */,
+        true /* minimal */);
+    NFacePairing::findAllPairings(
         (small_ ? DIM3_SMALL_MIN_CLOSED_CENSUS_SIZE :
             DIM3_MIN_CLOSED_CENSUS_SIZE),
-        NBoolSet::sTrue /* finite */,
-        NBoolSet::sBoth /* orientable */,
-        NBoolSet::sFalse /* bounded */,
-        -1, /* bdry faces */
-        NCensus::PURGE_NON_MINIMAL_PRIME | NCensus::PURGE_P2_REDUCIBLE,
-        &testCensusTriangulation<3>, &f);
+        NBoolSet::sFalse /* bounded */, -1, /* bdry faces */
+        &foundFacetPairing3, &f);
 }
 
 void runCensusAllClosed(NTriangulationTestFunction testFunction, bool small_) {
-    regina::NContainer parent;
-    TestFunctionHolder<3> f(testFunction);
-    NCensus::formCensus(&parent,
+    TestFunctionHolder3 f(testFunction, NBoolSet::sTrue /* finite */);
+    NFacePairing::findAllPairings(
         (small_ ? DIM3_SMALL_CLOSED_CENSUS_SIZE : DIM3_CLOSED_CENSUS_SIZE),
-        NBoolSet::sTrue /* finite */,
-        NBoolSet::sBoth /* orientable */,
-        NBoolSet::sFalse /* bounded */,
-        -1 /* bdry faces */, 0 /* purge */,
-        &testCensusTriangulation<3>, &f);
+        NBoolSet::sFalse /* bounded */, -1 /* bdry faces */,
+        &foundFacetPairing3, &f);
 }
 
 void runCensusAllBounded(NTriangulationTestFunction testFunction, bool small_) {
-    regina::NContainer parent;
-    TestFunctionHolder<3> f(testFunction);
-    NCensus::formCensus(&parent,
+    TestFunctionHolder3 f(testFunction, NBoolSet::sTrue /* finite */);
+    NFacePairing::findAllPairings(
         (small_ ? DIM3_SMALL_BOUNDED_CENSUS_SIZE : DIM3_BOUNDED_CENSUS_SIZE),
-        NBoolSet::sTrue /* finite */,
-        NBoolSet::sBoth /* orientable */,
-        NBoolSet::sTrue /* bounded */,
-        -1 /* bdry faces */, 0 /* purge */,
-        &testCensusTriangulation<3>, &f);
+        NBoolSet::sTrue /* bounded */, -1 /* bdry faces */,
+        &foundFacetPairing3, &f);
 }
 
 void runCensusAllIdeal(NTriangulationTestFunction testFunction, bool small_) {
-    regina::NContainer parent;
-    TestFunctionHolder<3> f(testFunction);
-    NCensus::formCensus(&parent,
+    TestFunctionHolder3 f(testFunction, NBoolSet::sFalse /* finite */);
+    NFacePairing::findAllPairings(
         (small_ ? DIM3_SMALL_IDEAL_CENSUS_SIZE : DIM3_IDEAL_CENSUS_SIZE),
-        NBoolSet::sFalse /* finite */,
-        NBoolSet::sBoth /* orientable */,
-        NBoolSet::sFalse /* bounded */,
-        -1 /* bdry faces */, 0 /* purge */,
-        &testCensusTriangulation<3>, &f);
+        NBoolSet::sFalse /* bounded */, -1 /* bdry faces */,
+        &foundFacetPairing3, &f);
 }
 
 void runCensusAllNoBdry(NTriangulationTestFunction testFunction, bool small_) {
-    regina::NContainer parent;
-    TestFunctionHolder<3> f(testFunction);
-    NCensus::formCensus(&parent,
+    TestFunctionHolder3 f(testFunction, NBoolSet::sBoth /* finite */);
+    NFacePairing::findAllPairings(
         (small_ ? DIM3_SMALL_IDEAL_CENSUS_SIZE : DIM3_IDEAL_CENSUS_SIZE),
-        NBoolSet::sBoth /* finite */,
-        NBoolSet::sBoth /* orientable */,
-        NBoolSet::sFalse /* bounded */,
-        -1 /* bdry faces */, 0 /* purge */,
-        &testCensusTriangulation<3>, &f);
+        NBoolSet::sFalse /* bounded */, -1 /* bdry faces */,
+        &foundFacetPairing3, &f);
 }

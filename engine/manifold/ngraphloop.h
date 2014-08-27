@@ -191,6 +191,7 @@ class REGINA_API NGraphLoop : public NManifold {
         bool operator < (const NGraphLoop& compare) const;
 
         NAbelianGroup* getHomologyH1() const;
+        bool isHyperbolic() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
 
@@ -243,6 +244,10 @@ inline const NSFSpace& NGraphLoop::sfs() const {
 
 inline const NMatrix2& NGraphLoop::matchingReln() const {
     return matchingReln_;
+}
+
+inline bool NGraphLoop::isHyperbolic() const {
+    return false;
 }
 
 } // namespace regina

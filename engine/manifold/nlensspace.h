@@ -63,8 +63,6 @@ namespace regina {
  * integer.
  *
  * All optional NManifold routines are implemented for this class.
- *
- * \testpart
  */
 class REGINA_API NLensSpace : public NManifold {
     private:
@@ -127,6 +125,7 @@ class REGINA_API NLensSpace : public NManifold {
 
         NTriangulation* construct() const;
         NAbelianGroup* getHomologyH1() const;
+        bool isHyperbolic() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
 
@@ -159,6 +158,10 @@ inline unsigned long NLensSpace::getQ() const {
 }
 inline bool NLensSpace::operator == (const NLensSpace& compare) const {
     return (p == compare.p && q == compare.q);
+}
+
+inline bool NLensSpace::isHyperbolic() const {
+    return false;
 }
 
 } // namespace regina

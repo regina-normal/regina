@@ -65,13 +65,6 @@
     variables for you:
     <glosslist>
      <glossentry>
-      <glossterm><varname>root</varname></glossterm>
-      <glossdef><para>
-       The variable <varname>root</varname> will refer to the packet
-       at the top of your packet tree.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
       <glossterm><varname>item</varname></glossterm>
       <glossdef>
        <para>
@@ -85,6 +78,14 @@
         the <varname>item</varname> variable will not change as a result.
        </para>
       </glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><varname>root</varname></glossterm>
+      <glossdef><para>
+       The variable <varname>root</varname> will refer to the hidden
+       root at the top of your packet tree (this root is not visible in the
+       user interface, but its top-level children are).
+      </para></glossdef>
      </glossentry>
     </glosslist>
    </para>
@@ -196,7 +197,7 @@
    module called <parameter>regina</parameter>.
    For instance, the main 3-manifold triangulation class is
    <literal>regina.NTriangulation</literal>, and the main routine to
-   read a data file is <literal>regina.readFileMagic</literal>.
+   read a data file is <literal>regina.open</literal>.
   </para>
   <para>
    Whenever &regina; gives you access to &python; (either through a
@@ -212,13 +213,13 @@
   <para>
    This means, for instance, that you create a new triangulation by just
    calling <literal>NTriangulation()</literal>, and you can read a data file
-   by calling <literal>readFileMagic(filename)</literal>.
+   by calling <literal>open(filename)</literal>.
    For command-line sessions, if you wish to avoid the heavy-handed
    &ldquo;<literal>from regina import&nbsp;*</literal>&rdquo;, you can pass
    the option <option>--noautoimport</option> (in which case you will need to
    use fully qualified names such as
    <literal>regina.NTriangulation()</literal> and
-   <literal>regina.readFileMagic(filename)</literal>).
+   <literal>regina.open(filename)</literal>).
   </para>
   <tip>
    <para>
@@ -429,15 +430,78 @@ TypeError: bad argument type for built-in operation
   </para>
   <para>
    Simply type <userinput>import snappy</userinput> from within any of
-   &regina;'s &python; environments.  You can use
-   &regina;'s functions
-   <function>NTriangulation.snapPea()</function> and
-   <function>NTriangulation()</function>
-   to get information out of and into
-   &regina; as strings, and you can hook these up to &snappy;'s functions
-   <function>Manifold()</function> and
-   <function>Manifold._to_string()</function> at the other end.
-   See the example below.
+   &regina;'s &python; environments.  To send information back and forth
+   between &regina; and &snappy;:
+   <itemizedlist>
+    <listitem><para>
+     &regina;'s triangulation classes
+     <classname>NTriangulation</classname> and
+     <classname>NSnapPeaTriangulation</classname> both have a
+     <function>snapPea()</function> function, which gives a string that
+     you can pass to &snappy;'s <classname>Manifold</classname> constructor.
+    </para></listitem>
+    <listitem><para>
+     &snappy;'s <classname>Manifold</classname> class has a
+     <function>_to_string()</function> function, which gives a string
+     that you can pass to &regina;'s
+     <classname>NTriangulation</classname> or
+     <classname>NSnapPeaTriangulation</classname> constructor.
+    </para></listitem>
+   </itemizedlist>
+  </para>
+  <para>
+   Regarding fillings and peripheral curves:
+   &regina; does not store fillings or peripheral curves for its own native
+   <link linkend="packet-triangulation">triangulation packets</link>,
+   as represented by the <classname>NTriangulation</classname> class.
+   However, it does store fillings and peripheral curves for its hybrid
+   <link linkend="packet-snappea">&snappea; triangulation packets</link>,
+   as represented by the <classname>NSnapPeaTriangulation</classname> class.
+   The trade-off is that the native <classname>NTriangulation</classname>
+   class offers &regina;'s full fine-grained control over the triangulation,
+   whereas the hybrid <classname>NSnapPeaTriangulation</classname> class
+   has a more limited (largely read-only) interface.
+   <itemizedlist>
+    <listitem><para>
+     When sending data from &regina; to &snappy;,
+     if your triangulation is of the class
+     <classname>NTriangulation</classname>,
+     then <function>NTriangulation.snapPea()</function> will
+     create a &snappy; manifold in which all fillings and peripheral
+     curves are marked as unknown.
+     If your triangulation is of the class
+     <classname>NSnapPeaTriangulation</classname>,
+     and if you already have fillings and peripheral curves stored on
+     each cusp, then <function>NSnapPeaTriangulation.snapPea()</function> will
+     create a &snappy; manifold that preserves these.
+    </para></listitem>
+    <listitem><para>
+     Conversely, when sending data from &snappy; to &regina;, you
+     can choose to instantiate a triangulation using either the
+     <classname>NTriangulation</classname> class or the
+     <classname>NSnapPeaTriangulation</classname> class.
+     If you use the <classname>NTriangulation</classname> class then all
+     fillings and peripheral curves will be lost.
+     If you use the <classname>NSnapPeaTriangulation</classname> class then
+     fillings and peripheral curves will be preserved (but your interface
+     will be more restricted).
+    </para></listitem>
+   </itemizedlist>
+  </para>
+  <para>
+   Regarding the interface:
+   the <classname>NSnapPeaTriangulation</classname> class
+   inherits from <classname>NTriangulation</classname>, and so you can
+   use it anywhere that a read-only triangulation is expected (in particular,
+   you can use it for enumerating vertex normal surfaces or angle structures).
+   However, because <classname>NSnapPeaTriangulation</classname> must
+   maintain two synchronised copies of the triangulation (&regina;'s and
+   &snappea;'s), it is essentially read-only: any attempt to modify the
+   triangulation using &regina;'s native routines (e.g.,
+   <function>twoThreeMove()</function> or
+   <function>barycentricSubdivision()</function>) will cause the
+   &snappea; triangulation to delete itself and become a
+   &ldquo;null triangulation&rdquo; instead.
   </para>
   <warning><para>
    At present, &snappy; (version&nbsp;2.0.3) is not compatible with
@@ -447,14 +511,18 @@ TypeError: bad argument type for built-in operation
    See <link linkend="trouble-python-snappy">this troubleshooting entry</link>
    for details.
   </para></warning>
+  <para>
+   The following &python; session illustrates several of the concepts
+   discussed above.
+  </para>
   <programlisting>
 bab@ember:~$ regina-python 
-Regina 4.95
+Regina 4.96
 Software for 3-manifold topology and normal surface theory
 Copyright (c) 1999-2013, The Regina development team
 &gt;&gt;&gt; import snappy
 &gt;&gt;&gt; m = snappy.Manifold('m001')
-&gt;&gt;&gt; t = NTriangulation(m._to_string())
+&gt;&gt;&gt; t = NSnapPeaTriangulation(m._to_string())
 &gt;&gt;&gt; print t.detail()
 Size of the skeleton:
   Tetrahedra: 2
@@ -486,6 +554,21 @@ Triangles:
     0  |           0   1   2   3
     1  |           2   0   1   3
 
+Tetrahedron shapes:
+  0: ( -1.60812e-16, 1 )
+  1: ( -1.60812e-16, 1 )
+
+Cusps:
+  0: Vertex 0, complete
+
+&gt;&gt;&gt; print t.hasStrictAngleStructure()
+True
+&gt;&gt;&gt; print NAngleStructureList.enumerate(t).detail()
+4 vertex angle structures (no restrictions):
+0 1 0 ; 1 0 0
+0 0 1 ; 1 0 0
+1 0 0 ; 0 1 0
+1 0 0 ; 0 0 1
 
 &gt;&gt;&gt; t2 = NExampleTriangulation.figureEightKnotComplement()
 &gt;&gt;&gt; m2 = snappy.Manifold(t2.snapPea())

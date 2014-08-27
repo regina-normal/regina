@@ -3,10 +3,10 @@
   <!ENTITY regina "<application>Regina</application>">
   <!ENTITY kappname "&regina;">
 
-  <!ENTITY regversion "4.95">
-  <!ENTITY regdate "12 November 2013">
+  <!ENTITY regversion "4.96">
+  <!ENTITY regdate "29 August 2014">
   <!ENTITY utf8intro "4.5 (May 2008)">
-  <!ENTITY copyrightyears "1999&ndash;2013">
+  <!ENTITY copyrightyears "1999&ndash;2014">
   <!ENTITY copyrightholder "The Regina development team">
   <!ENTITY copyrightnotice
    "Copyright &copy; &copyrightyears;, &copyrightholder;">
@@ -15,6 +15,8 @@
   <!ENTITY latin1 "<acronym>LATIN1</acronym>">
   <!ENTITY pdf "<acronym>PDF</acronym>">
   <!ENTITY python "<application>Python</application>">
+  <!ENTITY snappea "<application>SnapPea</application>">
+  <!ENTITY snappy "<application>SnapPy</application>">
   <!ENTITY utf8 "<acronym>UTF-8</acronym>">
   <!ENTITY xml "<acronym>XML</acronym>">
 
@@ -51,8 +53,8 @@
    </para>
   </legalnotice>
 
-  <date>2013-11-12</date>
-  <releaseinfo>4.95</releaseinfo>
+  <date>2014-08-29</date>
+  <releaseinfo>4.96</releaseinfo>
 
   <abstract>
    <para>

@@ -872,11 +872,3 @@ void ReginaMain::updatePreferences() {
         (*it)->supportDock(supportingDock);
 }
 
-void ReginaMain::newCensus() {
-    ReginaSupport::info(this,
-        tr("Census creation is only available from the command line."), 
-        tr("<qt>See the command-line program <i>tricensus</i>, which "
-        "supports a rich set of features and is suitable for "
-        "long census calculations.</qt>"));
-}
-

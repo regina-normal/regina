@@ -74,8 +74,6 @@ namespace regina {
  *
  * \pre Type \a T is an unsigned integral numeric type.
  *
- * \testpart
- *
  * \ifacespython Not present.
  */
 template <typename T>
@@ -309,8 +307,6 @@ std::ostream& operator << (std::ostream& out, const NTritmask1<T>& mask) {
  * in Regina that can store arbitrarily many trits.
  *
  * \pre Types \a T and \a U are unsigned integral numeric types.
- *
- * \testpart
  *
  * \ifacespython Not present.
  */

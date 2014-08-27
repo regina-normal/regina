@@ -315,9 +315,13 @@ void addNTriangulation() {
         .def("hasOctagonalAlmostNormalSphere",
             &NTriangulation::hasOctagonalAlmostNormalSphere,
             return_value_policy<manage_new_object>())
+        .def("findStrictAngleStructure",
+            &NTriangulation::findStrictAngleStructure,
+            return_internal_reference<>())
         .def("hasStrictAngleStructure",
-            &NTriangulation::hasStrictAngleStructure,
-            return_value_policy<manage_new_object>())
+            &NTriangulation::hasStrictAngleStructure)
+        .def("knowsStrictAngleStructure",
+            &NTriangulation::knowsStrictAngleStructure)
         .def("maximalForestInDualSkeleton", maximalForestInDualSkeleton_list)
         .def("intelligentSimplify", &NTriangulation::intelligentSimplify)
         .def("simplifyToLocalMinimum", &NTriangulation::simplifyToLocalMinimum,

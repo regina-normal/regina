@@ -40,7 +40,7 @@ namespace regina {
 
 bool LPConstraintEuler::addRows(
         LPInitialTableaux<regina::LPConstraintEuler>::Col* col,
-        const int* columnPerm, NTriangulation* tri) {
+        const int* columnPerm, const NTriangulation* tri) {
     int* obj = new int[7 * tri->getNumberOfTetrahedra()];
     unsigned tet, i;
     NPerm4 p;
@@ -79,7 +79,7 @@ bool LPConstraintEuler::addRows(
 #ifndef EXCLUDE_SNAPPEA
 bool LPConstraintNonSpun::addRows(
         LPInitialTableaux<regina::LPConstraintNonSpun>::Col* col,
-        const int* columnPerm, NTriangulation* tri) {
+        const int* columnPerm, const NTriangulation* tri) {
     // Regardless of whether the constraints are broken,
     // we need to ensure that the matrix has full rank.
     // Therefore add the coefficients for the two new variables now.
@@ -123,7 +123,7 @@ bool LPConstraintNonSpun::addRows(
 }
 #endif // EXCLUDE_SNAPPEA
 
-BanConstraintBase::BanConstraintBase(NTriangulation* tri, int coords) :
+BanConstraintBase::BanConstraintBase(const NTriangulation* tri, int coords) :
         tri_(tri), coords_(coords) {
     unsigned nCols = (coords == NS_QUAD || coords == NS_AN_QUAD_OCT ?
             3 * tri->getNumberOfTetrahedra() :

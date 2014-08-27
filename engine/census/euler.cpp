@@ -33,7 +33,6 @@
 /* end stub */
 
 #include <sstream>
-#include "census/ncensus.h"
 #include "census/ngluingpermsearcher.h"
 #include "triangulation/nedge.h"
 #include "triangulation/nfacepair.h"

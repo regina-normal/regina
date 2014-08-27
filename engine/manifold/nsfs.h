@@ -74,8 +74,6 @@ class NLensSpace;
  * to work with the old NExceptionalFibre class should be looked at closely
  * before being adapted to the new NSFSFibre class (i.e., it may require
  * more than just substituting class names).
- *
- * \testpart
  */
 struct REGINA_API NSFSFibre {
     long alpha;
@@ -190,8 +188,6 @@ REGINA_API std::ostream& operator << (std::ostream& out, const NSFSFibre& f);
  * to work with the old NSFS class should be looked at closely before
  * being adapted to the new NSFSpace class (i.e., it may require more
  * than just substituting class names).
- *
- * \testpart
  *
  * \todo \featurelong Implement recognition of more common names.
  * \todo \featurelong Implement triangulation construction and homology
@@ -744,6 +740,7 @@ class REGINA_API NSFSpace : public NManifold {
 
         NTriangulation* construct() const;
         NAbelianGroup* getHomologyH1() const;
+        bool isHyperbolic() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         std::ostream& writeStructure(std::ostream& out) const;
@@ -920,6 +917,10 @@ inline void NSFSpace::insertFibre(const NSFSFibre& fibre) {
 inline void NSFSpace::reflect() {
     complementAllFibres();
     b_ = -b_ - static_cast<long>(nFibres_);
+}
+
+inline bool NSFSpace::isHyperbolic() const {
+    return false;
 }
 
 inline std::ostream& NSFSpace::writeName(std::ostream& out) const {

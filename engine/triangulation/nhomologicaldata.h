@@ -118,8 +118,6 @@ class NTriangulation;
  * \deprecated This class will be removed in Regina 5.0.  A new and more
  * flexible class called NCellularData will take its place.
  *
- * \testpart
- *
  * @author Ryan Budney
  */
 class REGINA_API NHomologicalData : public ShareableObject {

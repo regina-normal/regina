@@ -45,6 +45,7 @@
 #include "nsnappeashapes.h"
 #include "ntricomposition.h"
 #include "ntriskeleton.h"
+#include "ntrisurfaces.h"
 #include "packeteditiface.h"
 #include "reginamain.h"
 
@@ -74,6 +75,7 @@ NSnapPeaUI::NSnapPeaUI(regina::NSnapPeaTriangulation* packet,
     addTab(skeleton, QObject::tr("&Skeleton"));
     addTab(algebra, QObject::tr("&Algebra"));
     addTab(new NTriCompositionUI(packet, this), QObject::tr("&Composition"));
+    addTab(new NTriSurfacesUI(packet, this), QObject::tr("&Recognition"));
     addTab(new NSnapPeaFileUI(packet, this), QObject::tr("&File"));
 
     editIface = new PacketEditTabbedUI(this);

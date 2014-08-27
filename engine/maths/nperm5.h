@@ -65,8 +65,6 @@ namespace regina {
  * The internal code is an unsigned integer.  The lowest three bits represent
  * the image of 0, the next lowest three bits represent the image of 1 and so
  * on.
- *
- * \testfull
  */
 class REGINA_API NPerm5 {
     public:

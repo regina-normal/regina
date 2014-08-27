@@ -450,24 +450,6 @@ void ReginaPrefSet::readInternal() {
     displayTagsInTree = settings.value("DisplayTagsInTree", false).toBool();
     settings.endGroup();
 
-    settings.beginGroup("Census");
-    censusFiles.clear();
-    // System census files:
-    QString exDir = QFile::decodeName(regina::NGlobalDirs::examples().c_str());
-    censusFiles.push_back(ReginaFilePref(exDir + "/closed-or-census.rga",
-        tr("Closed orientable census"), "ClosedOr", settings));
-    censusFiles.push_back(ReginaFilePref(exDir + "/closed-nor-census.rga",
-        tr("Closed non-orientable census"), "ClosedNor", settings));
-    censusFiles.push_back(ReginaFilePref(exDir + "/knot-link-census.rga",
-        tr("Hyperbolic knot/link census"), "KnotLink", settings));
-    censusFiles.push_back(ReginaFilePref(exDir + "/snappea-census.rga",
-        tr("Cusped hyperbolic census"), "CuspedHyp", settings));
-    censusFiles.push_back(ReginaFilePref(exDir + "/closed-hyp-census.rga",
-        tr("Closed hyperbolic census"), "ClosedHyp", settings));
-    // Additional user census files:
-    ReginaFilePref::readUserKey(censusFiles, settings);
-    settings.endGroup();
-
     settings.beginGroup("File");
     fileRecentMax = settings.value("RecentMax", 10).toInt();
     fileImportExportCodec = settings.value("ImportExportCodec",
@@ -539,7 +521,7 @@ void ReginaPrefSet::readInternal() {
     readPythonLibraries();
 
     settings.beginGroup("Window");
-    windowMainSize = settings.value("MainSize", QSize()).toSize();
+    windowMainSize = settings.value("MainSizeV2", QSize()).toSize();
     windowPythonSize = settings.value("PythonSize", QSize()).toSize();
     settings.endGroup();
 
@@ -569,10 +551,6 @@ void ReginaPrefSet::saveInternal() const {
     settings.beginGroup("Display");
     settings.setValue("UseDock", useDock);
     settings.setValue("DisplayTagsInTree", displayTagsInTree);
-    settings.endGroup();
-
-    settings.beginGroup("Census");
-    ReginaFilePref::writeKeys(censusFiles, settings);
     settings.endGroup();
 
     settings.beginGroup("File");
@@ -643,7 +621,7 @@ void ReginaPrefSet::saveInternal() const {
     savePythonLibraries();
 
     settings.beginGroup("Window");
-    settings.setValue("MainSize", windowMainSize);
+    settings.setValue("MainSizeV2", windowMainSize);
     settings.setValue("PythonSize", windowPythonSize);
     settings.endGroup();
 

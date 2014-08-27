@@ -58,8 +58,6 @@ class NGroupPresentation;
  * Represents a homomorphism between groups which are described via finite
  * presentations.
  *
- * \testpart
- *
  * \todo add routine to attempt to verify validity of homomorphism.
  */
 class REGINA_API NHomGroupPresentation : public ShareableObject {

@@ -486,7 +486,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
                 tri, true);
             NAngleStructureList* tautDD = NAngleStructureList::enumerateTautDD(
                 tri);
-            NAngleStructure* strictTree = tri->hasStrictAngleStructure();
+            bool strictTree = tri->hasStrictAngleStructure();
 
             if (all->isTautOnly()) {
                 std::ostringstream msg;
@@ -552,7 +552,6 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
             delete all;
             delete tautTree;
             delete tautDD;
-            delete strictTree;
         }
 
         void tautStrictTreeVsDD() {

@@ -62,6 +62,7 @@ void addNManifold() {
             return_value_policy<manage_new_object>())
         .def("getHomologyH1", &NManifold::getHomologyH1,
             return_value_policy<manage_new_object>())
+        .def("isHyperbolic", &NManifold::isHyperbolic)
         .def("writeName", writeName_stdio)
         .def("writeTeXName", writeTeXName_stdio)
         .def("writeStructure", writeStructure_stdio)

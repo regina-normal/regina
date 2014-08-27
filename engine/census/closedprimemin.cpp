@@ -33,7 +33,6 @@
 /* end stub */
 
 #include <sstream>
-#include "census/ncensus.h"
 #include "census/ngluingpermsearcher.h"
 #include "triangulation/nedge.h"
 #include "triangulation/nfacepair.h"
@@ -71,7 +70,7 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
         const NFacePairing::IsoList* autos, bool orientableOnly,
         UseGluingPerms use, void* useArgs) :
         NCompactSearcher(pairing, autos, orientableOnly,
-            NCensus::PURGE_NON_MINIMAL_PRIME | NCensus::PURGE_P2_REDUCIBLE,
+            PURGE_NON_MINIMAL_PRIME | PURGE_P2_REDUCIBLE,
             use, useArgs) {
     // Initialise internal arrays, specifically those relating to face
     // orderings and properties of chains, to accurately reflect the

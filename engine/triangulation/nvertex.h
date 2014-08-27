@@ -161,8 +161,6 @@ class REGINA_API NVertexEmbedding {
  * Represents a vertex in the skeleton of a triangulation.
  * Vertices are highly temporary; once a triangulation changes, all its
  * vertex objects will be deleted and new ones will be created.
- *
- * \testpart
  */
 class REGINA_API NVertex : public ShareableObject, public NMarkedElement {
     public:
