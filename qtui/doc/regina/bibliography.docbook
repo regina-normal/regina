@@ -797,4 +797,20 @@
   <date>1992</date>
  </biblioentry>
 
+ <biblioentry id="bib-weeks-canonical">
+  <abbrev>Wee93</abbrev>
+  <authorgroup>
+   <author>
+    <firstname>Jeffrey</firstname>
+    <othername>R.</othername>
+    <surname>Weeks</surname>
+   </author>
+  </authorgroup>
+  <title>Convex hulls and isometries of cusped hyperbolic 3-manifolds</title>
+  <edition>Topology Appl.</edition>
+  <volumenum>vol. 52</volumenum>
+  <artpagenums>pp. 127&ndash;149</artpagenums>
+  <date>1993</date>
+ </biblioentry>
+
 </bibliography>

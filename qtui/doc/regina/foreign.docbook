@@ -505,8 +505,8 @@
     (such as fillings or peripheral curves) as unknown.
     If you are exporting one of &regina;'s hybrid
     <link linkend="packet-snappea">&snappea; triangulations</link>,
-    and if it contains such &snappea;-specific information, then
-    &regina; will write this extra information to the exported file.
+    then &regina; will write this extra &snappea;-specific
+    information to the exported file.
    </para>
    <para>
     Any international characters in the exported &snappea; file will be

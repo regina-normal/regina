@@ -500,7 +500,7 @@
            <para>
             If you have a native &regina; triangulation and you wish to view
             boundary slopes for spun-normal surfaces, you must first
-            <link linkend="tri-snappea-convert">convert it</link>
+            <link linkend="snappea-fromregina">convert it</link>
             to a &snappea; triangulation, which will install a default
             (shortest, second shortest) basis on each cusp.  After this
             you can enumerate vertex or fundamental surfaces relative to
