@@ -254,8 +254,8 @@ enum NormalAlgFlags {
      * For details and comparisons of the various options for enumerating
      * fundamental normal surfaces, see B. A. Burton, "Enumerating
      * fundamental normal surfaces: Algorithms, experiments and invariants",
-     * to appear in ALENEX 2014: Proceedings of the Meeting on
-     * Algorithm Engineering & Experiments, arXiv:1111.7055.
+     * ALENEX 2014: Proceedings of the Meeting on Algorithm
+     * Engineering & Experiments, SIAM, 2014, pp. 112-124.
      *
      * This flag is incompatible with NS_HILBERT_DUAL,
      * NS_HILBERT_CD and NS_HILBERT_FULLCONE.
@@ -276,8 +276,8 @@ enum NormalAlgFlags {
      * For details and comparisons of the various options for enumerating
      * fundamental normal surfaces, see B. A. Burton, "Enumerating
      * fundamental normal surfaces: Algorithms, experiments and invariants",
-     * to appear in ALENEX 2014: Proceedings of the Meeting on
-     * Algorithm Engineering & Experiments, arXiv:1111.7055.
+     * ALENEX 2014: Proceedings of the Meeting on Algorithm
+     * Engineering & Experiments, SIAM, 2014, pp. 112-124.
      *
      * This flag is incompatible with NS_HILBERT_PRIMAL,
      * NS_HILBERT_CD and NS_HILBERT_FULLCONE.
@@ -295,8 +295,8 @@ enum NormalAlgFlags {
      * For details and comparisons of the various options for enumerating
      * fundamental normal surfaces, see B. A. Burton, "Enumerating
      * fundamental normal surfaces: Algorithms, experiments and invariants",
-     * to appear in ALENEX 2014: Proceedings of the Meeting on
-     * Algorithm Engineering & Experiments, arXiv:1111.7055.
+     * ALENEX 2014: Proceedings of the Meeting on Algorithm
+     * Engineering & Experiments, SIAM, 2014, pp. 112-124.
      *
      * This flag is incompatible with NS_HILBERT_PRIMAL,
      * NS_HILBERT_DUAL and NS_HILBERT_FULLCONE.
@@ -316,8 +316,8 @@ enum NormalAlgFlags {
      * For details and comparisons of the various options for enumerating
      * fundamental normal surfaces, see B. A. Burton, "Enumerating
      * fundamental normal surfaces: Algorithms, experiments and invariants",
-     * to appear in ALENEX 2014: Proceedings of the Meeting on
-     * Algorithm Engineering & Experiments, arXiv:1111.7055.
+     * ALENEX 2014: Proceedings of the Meeting on Algorithm
+     * Engineering & Experiments, SIAM, 2014, pp. 112-124.
      *
      * This flag is incompatible with NS_HILBERT_PRIMAL,
      * NS_HILBERT_DUAL and NS_HILBERT_CD.

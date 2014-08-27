@@ -1,0 +1,670 @@
+<chapter id="snappea">
+ <title>&snappea; Triangulations</title>
+
+ <para>
+  &regina;'s native triangulation structure is the
+  <link linkend="packet-triangulation">triangulation packet</link>,
+  as described in the
+  <link linkend="triangulations">previous chapter</link>.
+  This structure is best suited for fine-grained analysis and
+  manipulation of the triangulation, and gives you full access to
+  all of &regina;'s topological algorithms.
+ </para>
+ <para>
+  However, if you are working with hyperbolic manifolds then it is
+  sometimes desirable to work with both &regina; and &snappeapylink;
+  simultaneously, and to preserve data that only
+  &snappea; knows about (such as fillings and peripheral curves)
+  as it passes through &regina;.
+ </para>
+ <para>
+  The solution is the <firstterm>&snappea; triangulation</firstterm> packet.
+  This is a hybrid structure that maintains two synchronised copies of a
+  triangulation, one using &regina;'s internal structures and one using
+  &snappea;'s internal structures.
+ </para>
+ <para>
+  The advantages of using a &snappea; triangulation are:
+  <itemizedlist>
+   <listitem><para>
+    For read-only routines, you have direct internal access to both
+    &regina;'s and &snappea;'s mathematical engines.
+    For instance, you can enumerate normal surfaces or angle structures
+    (using &regina;'s engine), and you can search for a complete hyperbolic
+    structure using given filling coefficients (using &snappea;'s engine).
+    All of this is available directly in &regina;'s user interface.
+   </para></listitem>
+   <listitem><para>
+    As noted above, &snappea;-specific information (such as peripheral
+    curves or filling coefficients) will <emphasis>never be lost</emphasis>.
+    You can <link linkend="import-snappea">import from a &snappeapy;
+    data file</link>, work with it in &regina;'s user interface, and
+    then <link linkend="export-snappea">export it back to &snappeapy;</link>.
+    Throughout this process, all of &snappea;'s own data
+    such as filling coefficients and peripheral curves will be preserved.
+   </para></listitem>
+  </itemizedlist>
+ </para>
+ <para>
+  The disadvantages are:
+  <itemizedlist>
+   <listitem><para>
+    For read-write routines, your access to &regina; is much more
+    restricted.  Specifically, you <emphasis>cannot modify the
+    triangulation</emphasis> using &regina;'s mathematical engine
+    (e.g., you cannot perform a 2-0 edge move or a barycentric subdivision).
+    You can still modify the triangulation using &snappea;'s
+    engine (so, for instance, you can permanently fill cusps,
+    or use &snappea; to randomise the triangulation).
+   </para><para>
+    This restriction is enforced by the user interface,
+    and also at the &python; level.  In &python; you can of course still call
+    &regina;'s modification functions, but if you do so then the
+    triangulation will delete itself and become a &ldquo;null
+    triangulation&rdquo; instead.
+   </para></listitem>
+   <listitem><para>
+    There is extra overhead, both in memory and running time.
+    This is because each &snappea; triangulation maintains two internal
+    copies of the triangulation using two independent pieces of
+    mathematical software.
+   </para></listitem>
+  </itemizedlist>
+ </para>
+ <warning>
+  <para>
+   Be aware that much of the information gained through the &snappea; kernel
+   is inexact.  In particular, it may be subject to numerical instability
+   or floating point error.
+   If you wish to rigorously certify that a manifold is hyperbolic, see the
+   <link linkend="tri-hyperbolic">recognition tab</link> (which is
+   available for &regina;'s native triangulations and
+   also &snappea; triangulations).
+  </para>
+ </warning>
+
+ <sect1 id="snappea-creation">
+  <title>Creation</title>
+
+  <sect2 id="snappea-fromregina">
+   <title>Converting from a &regina; Triangulation</title>
+   <para>
+    It is easy to convert one of &regina;'s native
+    <link linkend="packet-triangulation">triangulation packets</link>
+    into a &snappea; triangulation.  To do this, open the &regina;
+    triangulation and then either:
+    <itemizedlist>
+     <listitem>
+      <para>
+       select
+       <menuchoice>
+        <guimenu>3-D&nbsp;Triangulation</guimenu>
+        <guimenuitem>Convert to &snappea;</guimenuitem>
+       </menuchoice> from the menu, or
+      </para>
+      <para>
+       <inlinemediaobject>
+        <imageobject>
+         <imagedata fileref="menutosnappea.png"/>
+        </imageobject>
+       </inlinemediaobject>
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       switch to the <link linkend="tri-snappea">&snappea; tab</link>
+       in the triangulation viewer, and press the button marked
+       <guilabel>Convert to a &snappea; triangulation</guilabel>.
+      </para>
+     </listitem>
+    </itemizedlist>
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-snappea-convert.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    This will create a new &snappea; triangulation immediately beneath
+    the original (native) triangulation in the packet tree; the original
+    will be left untouched.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-snappea-converted.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    If your original triangulation is a closed manifold, then &snappea;
+    will drill out a curve and present the &snappea; triangulation as a
+    cusped manifold with a Dehn filling.
+   </para>
+   <para>
+    Regarding peripheral curves: during the conversion process,
+    &regina; will ask &snappea; to install
+    the (shortest, second shortest) basis on each cusp.
+    Note however that this is only possible if &snappea; finds a
+    sufficiently good solution to the gluing equations
+    (either
+    <link linkend="snappea-geometric">tetrahedra positively oriented</link>, or
+    <link linkend="snappea-nongeometric">contains negatively oriented
+    tetrahedra</link>).
+    Even then, this choice might not be
+    unique for some cusp shapes, and the resolution of such ambiguities
+    might be machine-dependent.
+    If &snappea; cannot find a sufficiently good solution then it will
+    install a default basis (which may change across different versions
+    of the &snappea; kernel).
+   </para>
+  </sect2>
+
+  <sect2 id="snappea-new">
+   <title>New &snappea; Triangulations</title>
+   <para>
+    To create a new &snappea; triangulation, select
+    <menuchoice>
+     <guimenu>Packet Tree</guimenu>
+     <guimenuitem>New &snappea; Triangulation</guimenuitem>
+    </menuchoice>
+    from the menu (or the corresponding toolbar button).
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="menu-newsnappea.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    In addition to the usual information, you are asked
+    <emphasis>how</emphasis> you wish to
+    create the &snappea; triangulation (see the
+    drop-down box below).
+    Here we walk through the various options.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="newsnappea.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+
+   <sect3 id="snappea-new-paste">
+    <title>Paste a &snappea; file</title>
+
+    <para>
+     Here you can paste the entire contents of a &snappeapy; data file
+     into the given box, and &regina; will build the corresponding
+     triangulation.  You might, for instance, have obtained these file
+     contents by opening a &snappea; data file in a text editor, or by
+     calling <function>Manifold._to_string()</function> in &snappy;.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="newsnappea-file.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
+     If you simply wish to use a &snappeapy; data file on your hard
+     drive, you might find it easier to
+     <link linkend="import-snappea">import the &snappea; file</link>
+     directly.  This will have the same effect: it will create a
+     &snappea; triangulation, and none of &snappea;'s own data will be lost.
+    </para>
+   </sect3>
+
+   <sect3 id="snappea-new-convert">
+    <title>Convert a &regina; triangulation</title>
+
+    <para>
+     This allows you to select one of &regina;'s native triangulations from
+     your current file and convert it into a &snappea; triangulation.
+     This is exactly the same as opening the &regina; triangulation and
+     converting it through the &snappea; tab,
+     as <link linkend="snappea-fromregina">discussed earlier</link>.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="newsnappea-convert.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
+     If you simply wish to use a &snappeapy; data file on your hard
+     drive, you might find it easier to
+     <link linkend="import-snappea">import the &snappea; file</link>
+     directly.  This will have the same effect: it will create a
+     &snappea; triangulation, and none of &snappea;'s own data will be lost.
+    </para>
+   </sect3>
+
+   <sect3 id="snappea-new-example">
+    <title>Example Triangulation</title>
+
+    <para>
+     As with the native triangulation class,
+     &regina; offers a small selection of ready-made sample triangulations.
+     Simply select one from the list provided and &regina; will build the
+     corresponding triangulation for you.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="newsnappea-example.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+   </sect3>
+  </sect2>
+
+  <sect2 id="snappea-imported">
+   <title>Importing Triangulations</title>
+
+   <para>
+    As already noted, you can import a &snappeapy; data file into &regina;;
+    this will automatically create a &snappea; triangulation for you.
+    See the chapter on <link linkend="import-snappea">imports and
+    exports</link> for details.
+   </para>
+  </sect2>
+ </sect1>
+
+ <sect1 id="snappea-analysis">
+  <title>Analysis and Modification</title>
+
+  <para>
+   &snappea; triangulations inherit a great deal of functionality
+   from &regina;'s native triangulations.  If you open the &snappea;
+   triangulation viewer, you will see several familiar tabs:
+   <link linkend="tri-viewgluings">gluings</link>,
+   <link linkend="tri-skeleton">skeleton</link>,
+   <link linkend="tri-composition">composition</link>, and
+   <link linkend="tri-recognition">recognition</link>.
+   These behave much like their counterparts for native
+   triangulations; you can read more details by following any of
+   the links above.  Note that these &ldquo;inherited&rdquo; tabs
+   describe the unfilled triangulation only (i.e., any fillings on
+   the cusps are ignored).
+  </para>
+  <para>
+   In the remainder of this chapter we discuss the extra functionality that is
+   specific to &snappea; triangulations.
+  </para>
+
+  <sect2 id="snappea-basicprops">
+   <title>Volume, Solution Type and Other Basic Properties</title>
+
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="snappeaheader.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    At the top of the &snappea; triangulation viewer is a banner listing some
+    basic properties of the manifold (circled in red above).
+    These include:
+   </para>
+   <para>
+    <glosslist>
+     <glossentry id="snappea-proporbl">
+      <glossterm><guilabel>Orientable / Non-orientable</guilabel></glossterm>
+      <glossdef><para>
+       Indicates whether or not the manifold is orientable.
+       Note that an orientable &snappea; triangulation will automatically
+       be <firstterm>oriented</firstterm>
+       (i.e., the vertex labels 0, 1, 2 and 3 on each
+       tetrahedron will induce a consistent orientation for all tetrahedra).
+      </para></glossdef>
+     </glossentry>
+     <glossentry id="snappea-propcusps">
+      <glossterm><guilabel>Cusps</guilabel></glossterm>
+      <glossdef>
+       <para>
+        &regina; will tell you how many cusps the manifold has, as well
+        as how many of these cusps are filled and how many are complete
+        (unfilled).
+       </para>
+       <para>
+        You can view, change, add or remove fillings on cusps through the
+        <link linkend="snappea-shapes-cusps">Shapes &amp; Cusps</link> tab.
+       </para>
+      </glossdef>
+     </glossentry>
+     <glossentry id="snappea-volumetype">
+      <glossterm><guilabel>Volume and solution type</guilabel></glossterm>
+      <glossdef><para>
+       Gives &snappea;'s estimate of the hyperbolic volume, as well as
+       the type of solution that &snappea; found to the hyperbolic
+       gluing equations.
+      </para><para>
+       If you have filling coefficients on some or all of the cusps,
+       then the volume and solution type will be with respect to the
+       <emphasis>filled manifold</emphasis>.
+      </para><para>
+       The solution type will be one of the following:
+       <glosslist>
+        <glossentry id="snappea-geometric">
+         <glossterm><guilabel>Tetrahedra positively
+          oriented</guilabel></glossterm>
+         <glossdef><para>
+          All tetrahedra are either positively oriented or flat, though the
+          entire solution is not flat and no tetrahedra are degenerate.
+         </para></glossdef>
+        </glossentry>
+        <glossentry id="snappea-nongeometric">
+         <glossterm><guilabel>Contains negatively oriented
+          tetrahedra</guilabel></glossterm>
+         <glossdef><para>
+          The volume is positive, but some tetrahedra are negatively oriented.
+         </para></glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm><guilabel>All tetrahedra flat</guilabel></glossterm>
+         <glossdef><para>
+          All tetrahedra are flat, but none have shape 0, 1 or infinity.
+         </para></glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm><guilabel>Contains degenerate
+          tetrahedra</guilabel></glossterm>
+         <glossdef><para>
+          At least one tetrahedron has shape 0, 1 or infinity.
+         </para></glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm><guilabel>Unrecognised solution type</guilabel></glossterm>
+         <glossdef><para>
+          The volume is zero or negative, but the solution is
+          neither flat nor degenerate.
+         </para></glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm><guilabel>No solution found</guilabel></glossterm>
+         <glossdef><para>
+          The gluing equations could not be solved.
+         </para></glossdef>
+        </glossentry>
+       </glosslist>
+      </para></glossdef>
+     </glossentry>
+    </glosslist>
+   </para>
+  </sect2>
+
+  <sect2 id="snappea-shapes-cusps">
+   <title>Cusps, Fillings and Tetrahedron Shapes</title>
+   <para>
+    The <guilabel>Shapes &amp; Cusps</guilabel> tab shows information on
+    each of the cusps, and also shows the individual tetrahedron shapes
+    for &snappea;'s solution to the hyperbolic gluing equations.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="snappea-cusps.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <sect3 id="snappea-cusps">
+    <title>Cusps and Filling Coefficients</title>
+    <para>
+     The individual cusps are numbered by the &snappea; kernel
+     (0, 1, 2, &hellip;).  Beside each cusp is the corresponding vertex number
+     given by &regina;; this is the vertex number that you see in the
+     <link linkend="tri-vertices">skeleton viewer</link>.
+     Note that &regina;'s vertex numbers and &snappea;'s cusp numbers are
+     often, but not always, the same.
+    </para>
+    <para>
+     Also beside each cusp you will see the current filling
+     coefficients, if any.  You can change the filling coefficients by
+     typing new values directly into the table.  To remove the filling
+     from a cusp (i.e., to make it complete), simply delete the contents
+     of the table cell.
+    </para>
+   </sect3>
+   <sect3 id="snappea-vertexlinks">
+    <title>Triangulating Vertex Links</title>
+    <para>
+     If you wish to see the explicit trianglation of some cusp (i.e., the
+     triangulated vertex link), you can select
+     <menuchoice>
+      <guimenu>&snappea;&nbsp;Triangulation</guimenu>
+      <guimenuitem>Vertex Links</guimenuitem>
+     </menuchoice>
+     from the menu.
+     This will explicitly build the chosen vertex link as a new
+     <link linkend="dim2triangulations">2-manifold triangulation</link>.
+     This operation is the same as for &regina;'s native triangulations,
+     and you can read more details in the
+     <link linkend="tri-vertexlinks">triangulations chapter</link>.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="tri-vertexlinks.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+   </sect3>
+   <sect3 id="snappea-fill-permanent">
+    <title>Permanently Filling Cusps</title>
+    <para>
+     You can also make your fillings permanent, by selecting
+     <menuchoice>
+      <guimenu>&snappea;&nbsp;Triangulation</guimenu>
+      <guimenuitem>Permanently Fill Cusps</guimenuitem>
+     </menuchoice>
+     from the menu, or by pressing the corresponding toolbar button
+     (as circled in the picture below).
+     If some of your cusps are complete (i.e., unfilled) then
+     this will create a new &snappea; triangulation with only those
+     unfilled cusps remaining.  If all of your cusps have fillings then
+     this will create a new native &regina; triangulation describing a
+     closed 3-manifold.  Either way, the result will be added to the
+     packet tree beneath your original &snappea; triangulation, and
+     the original will be left untouched.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="snappea-fill.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+   </sect3>
+   <sect3 id="snappea-shapes">
+    <title>Tetrahedron Shapes</title>
+    <para>
+     At the bottom of the <guilabel>Shapes &amp; Cusps</guilabel> tab you
+     will see the full details of &snappea;'s solution to the hyperbolic
+     gluing equations.  This solution is with respect to the Dehn filled
+     hyperbolic structure (i.e., your filling coefficients will be taken into
+     account).
+    </para>
+    <para>
+     In particular, you will see a table listing the individual tetrahedron
+     shapes.  These are given as the complex numbers
+     <replaceable>z</replaceable><subscript>0</subscript>,
+     <replaceable>z</replaceable><subscript>1</subscript>,
+     &hellip; in rectangular form,
+     and using a fixed coordinate system (&ldquo;fixed alignment&rdquo;
+     in &snappea;'s terminology).
+    </para>
+   </sect3>
+  </sect2>
+
+  <sect2 id="snappea-algebra">
+   <title>Homology and Fundamental Group</title>
+   <para>
+    The <guilabel>Algebra</guilabel> tab shows the first homology and
+    the fundamental group, for both the filled manifold (respecting your
+    filling coefficients), and also the unfilled manifold (ignoring your
+    filling coefficients and instead treating every cusp as complete).
+   </para>
+   <para>
+    As with &regina;'s native triangulations, complete (i.e., unfilled)
+    cusps will be
+    treated as though they had been truncated.  In other words, each unfilled
+    ideal vertex will be treated as a torus or Klein bottle boundary component
+    for the underlying 3-manifold.
+   </para>
+   <para>
+    Each fundamental group will be presented as a set of generators and
+    relations, just as you would see in
+    the <link linkend="tri-algebra-homfund">algebra viewer for
+    &regina;'s native triangulations</link>.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="snappea-algebra.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+
+  <sect2 id="snappea-file">
+   <title>Exporting to Other Formats</title>
+   <para>
+    The <guilabel>File</guilabel> tab shows the triangulation in
+    &snappeapy;'s own file format.  You can copy this to the clipboard
+    and paste it into other applications if you wish.
+   </para>
+   <para>
+    If you simply wish to save the triangulation as a &snappeapy; data file
+    on your hard drive, you might find it easier to
+    <link linkend="export-snappea">export the &snappea; triangulation</link>
+    directly instead.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="snappea-file.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <sect3 id="snappea-toregina">
+    <title>Converting from a &regina; Triangulation</title>
+    <para>
+     If you want access to &regina;'s full functionality and
+     fine-grained access to the triangulation, you can convert your
+     &snappea; triangulation packet into one of &regina;'s
+     native <link linkend="packet-triangulation">triangulation packets</link>.
+     To do this, select
+     <menuchoice>
+      <guimenu>&snappea;&nbsp;Triangulation</guimenu>
+      <guimenuitem>Convert to &regina;</guimenuitem>
+     </menuchoice>
+     from the menu, or press the corresponding toolbar button
+     (as circled in the picture below).
+     This will create a new &regina; triangulation immediately beneath
+     the original &snappea; triangulation in the packet tree;
+     the original will be left untouched.
+    </para>
+    <warning><para>
+     Be aware that, when you convert to a &regina; triangulation,
+     all &snappea;-specific information such as fillings and peripheral
+     curves <emphasis>will be lost</emphasis>.
+     If you want the new &regina; triangulation to include your fillings,
+     then you should first
+     <link linkend="snappea-fill-permanent">make your fillings
+     permanent</link>.
+    </para></warning>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="snappea-toregina.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+   </sect3>
+  </sect2>
+
+  <sect2 id="snappea-other">
+   <title>Other Operations</title>
+   <sect3 id="snappea-randomise">
+    <title>Randomisation</title>
+    <para>
+     &snappea; has a feature where it &ldquo;randomises&rdquo; a
+     triangulation by applying a series of random Pachner moves
+     (e.g., 2-3 and 3-2 moves).
+     You can do this by selecting
+     <menuchoice>
+      <guimenu>&snappea;&nbsp;Triangulation</guimenu>
+      <guimenuitem>Randomise;</guimenuitem>
+     </menuchoice>
+     from the menu, or pressing the corresponding toolbar button
+     (circled in the picture below).
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="snappea-randomise.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+   </sect3>
+   <sect3 id="snappea-canonical">
+    <title>Canonical Retriangulation</title>
+    <para>
+     &snappea; can attempt to compute the canonical retriangulation of a
+     manifold.  In theory, two hyperbolic manifolds are homeomorphic if
+     and only if their canonical triangulations are isomorphic
+     (i.e., identical up to a relabelling of the tetrahedra and/or their
+     vertices).
+    </para>
+    <para>
+     Note that you can test for isomorphism in the
+     <link linkend="tri-composition-isomorphism">composition tab</link>,
+     which is available for &snappea; triangulations as well as
+     &regina;'s own native triangulations.
+     You can also test for isomorphism by comparing the
+     <link linkend="tri-composition-isosig">isomorphism signatures</link>
+     of triangulations.
+    </para>
+    <para>
+     The canonical retriangulation is based on the canonical
+     Epstein-Penner cell decomposition;
+     see <xref linkend="bib-weeks-canonical"/> for a description of the
+     main ideas.
+     If the Epstein-Penner decomposition is already a triangulation then
+     the canonical retriangulation is the same;
+     otherwise it retriangulates the Epstein-Penner decomposition in a
+     canonical way by introducing new internal vertices.
+     Because of this latter possibility, the result will be one of &regina;'s
+     more flexible <link linkend="packet-triangulation">triangulation
+     packets</link>, and not a &snappea; triangulation.
+    </para>
+    <warning><para>
+     This is one of &snappea;'s more fragile operations: it will often
+     compute the canonical retriangulation incorrectly due to floating
+     point errors.  Regardless, it is guaranteed that whatever
+     triangulation &snappea; <emphasis>does</emphasis> produce will
+     be homeomorphic to the original.
+    </para></warning>
+    <para>
+     To compute the canonical retriangulation, select
+     <menuchoice>
+      <guimenu>&snappea;&nbsp;Triangulation</guimenu>
+      <guimenuitem>Canonical Retriangulation</guimenuitem>
+     </menuchoice>
+     from the menu.
+     This will create a new &regina; triangulation immediately beneath
+     the original &snappea; triangulation in the packet tree;
+     the original will be left untouched.
+    </para>
+   </sect3>
+  </sect2>
+ </sect1>
+</chapter>

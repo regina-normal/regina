@@ -34,7 +34,6 @@
 
 #include <algorithm>
 #include <sstream>
-#include "census/dim2census.h"
 #include "census/dim2gluingpermsearcher.h"
 #include "dim2/dim2triangulation.h"
 #include "utilities/memutils.h"

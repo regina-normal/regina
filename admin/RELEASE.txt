@@ -5,6 +5,7 @@ All locations are relative to the primary source directory.
 Program version:
     CHANGES.txt, HIGHLIGHTS.txt (version, date)
     CMakeLists.txt (PACKAGE_VERSION)
+    qtui/doc/regina/about.docbook (plain citation, bibTeX citation)
     qtui/doc/regina/index.docbook (&regversion;, &regdate;,
                                    date, releaseinfo, copyrightyears)
     qtui/doc/regina/manonly.docbook (&regversion;)
@@ -14,6 +15,7 @@ Program version:
     www/index.html (last updated, current version, contents, news,
                     filenames, what's new)
     www/source.html (unpacking instructions: filename, directory)
+    Plus copyright years in license (see below)
 
 Full license details:
     LICENSE.txt
@@ -24,6 +26,7 @@ Full license details:
 
 SnapPy version:
     engine/snappea/nsnappeatriangulation.h (class docs)
+    qtui/doc/regina/trouble.docbook (SnapPy multiple interpreters)
 
 SnapPea / SnapPy copyright (in addition to full license locations above):
     engine/snappea/kernel/README.txt
@@ -44,7 +47,6 @@ Don't forget:
     check that all headers are installed correctly
     check for doxygen warnings
     check for docbook warnings/errors
-    update \test... notes in API docs
     python bindings for new routines
     rebuild manpages
     website, including updated news, what's new and deprecation guide

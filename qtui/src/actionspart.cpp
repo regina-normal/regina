@@ -474,18 +474,6 @@ void ReginaMain::setupActions() {
 
     treeMenu->addSeparator();
 
-    act = new QAction(this);
-    act->setText(tr("Form &Census"));
-    act->setIcon(ReginaSupport::themeIcon("view-list-text"));
-    act->setToolTip(tr("Form a new census of triangulations"));
-    act->setWhatsThis(tr("Create a new census of 3-manifold "
-        "triangulations according to some set of census constraints."));
-    connect(act, SIGNAL(triggered()), this, SLOT(newCensus()) );
-    treeGeneralEditActions.append(act);
-    treeMenu->addAction(act);
-
-    treeMenu->addSeparator();
-
     // Basic packet actions:
     QAction* actView = new QAction(this);
     actView->setText(tr("&View/Edit"));

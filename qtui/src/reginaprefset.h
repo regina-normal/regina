@@ -351,8 +351,6 @@ class ReginaPrefSet : public QObject {
         bool anglesCreationTaut;
             /**< When enumerating angle structures, should the taut
                  structures option be enabled by default? */
-        QList<ReginaFilePref> censusFiles;
-            /**< The list of data files to use for census lookups. */
         bool displayTagsInTree;
             /**< Should we display packet tags in the visual tree? */
         QByteArray fileImportExportCodec;
@@ -450,7 +448,11 @@ class ReginaPrefSet : public QObject {
                  that are not embedded */
 
         QSize windowMainSize;
-            /**< The initial size of a new main topology data window. */
+            /**< The initial size of a new main topology data window.
+                 Note: as of Regina 5.0, the key for this option in the
+                 configuration file has changed from \c MainSizeV2 to
+                 \c MainSizeV3 (since another packet type was added, and
+                 so again the window needs to be a little wider). */
         QSize windowPythonSize;
             /**< The initial size of a new python console. */
 

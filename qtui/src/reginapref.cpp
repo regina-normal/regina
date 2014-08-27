@@ -147,10 +147,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     item->addTab(generalPrefs, IconCache::icon(IconCache::regina),
         tr("General"));
 
-    censusPrefs = new ReginaPrefCensus(this);
-    item->addTab(censusPrefs, ReginaSupport::themeIcon("view-list-text"),
-        tr("Census"));
-
     pythonPrefs = new ReginaPrefPython(this);
     item->addTab(pythonPrefs, ReginaSupport::themeIcon("utilities-terminal"),
         tr("Python"));
@@ -176,11 +172,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
     generalPrefs->cbSupportOriented->setChecked(
         prefSet.surfacesSupportOriented);
-
-    foreach (const ReginaFilePref& f, prefSet.censusFiles) {
-        new ReginaFilePrefItem(censusPrefs->listFiles, f);
-    }
-    censusPrefs->updateActiveCount();
 
     pythonPrefs->cbAutoIndent->setChecked(prefSet.pythonAutoIndent);
     pythonPrefs->editSpacesPerTab->setText(
@@ -281,13 +272,6 @@ void ReginaPreferences::slotApply() {
 
     prefSet.surfacesSupportOriented =
         generalPrefs->cbSupportOriented->isChecked();
-
-    prefSet.censusFiles.clear();
-    for (int i=0; i < censusPrefs->listFiles->count();i++) {
-        QListWidgetItem* item = censusPrefs->listFiles->item(i);
-        prefSet.censusFiles.push_back(
-            dynamic_cast<ReginaFilePrefItem*>(item)->getData());
-    }
 
     prefSet.pythonAutoIndent = pythonPrefs->cbAutoIndent->isChecked();
     uintVal = pythonPrefs->editSpacesPerTab->text().toUInt(&ok);
@@ -729,233 +713,6 @@ ReginaPrefTools::ReginaPrefTools(QWidget* parent) : QWidget(parent) {
 void ReginaPrefTools::defaultPDFViewerChanged(int state) {
     editPDFViewer->setEnabled(state != Qt::Checked);
     labelPDFViewer->setEnabled(state != Qt::Checked);
-}
-
-ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QWidget(parent) {
-    QBoxLayout* layout = new QVBoxLayout(this);
-
-    // Set up the active file count.
-    activeCount = new QLabel();
-    layout->addWidget(activeCount);
-
-    // Prepare the main area.
-    QBoxLayout* box = new QHBoxLayout();
-
-    // Set up the list view.
-    listFiles = new QListWidget();
-    listFiles->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    box->addWidget(listFiles, 1);
-    QString msg = tr("The list of census files to be searched "
-        "when asked to locate an arbitrary triangulation in all available "
-        "censuses.  Note that census files in this list may be deactivated, "
-        "which means that they will not be searched during a census lookup.");
-    listFiles->setWhatsThis(msg);
-    activeCount->setWhatsThis(msg);
-    connect(listFiles, SIGNAL(itemSelectionChanged()),
-        this, SLOT(updateButtons()));
-
-    // Set up the button panel.
-    QBoxLayout* vBox = new QVBoxLayout();
-
-    QPushButton* btnAdd = new QPushButton(ReginaSupport::themeIcon("list-add"),
-        tr("Add..."));
-    // btnAdd->setFlat(true);
-    vBox->addWidget(btnAdd);
-    connect(btnAdd, SIGNAL(clicked()), this, SLOT(add()));
-    btnAdd->setToolTip(tr("Add a new census file"));
-    btnAdd->setWhatsThis(tr("Add a new census file.  "
-        "This list contains the census files that are searched when asked "
-        "to locate an arbitrary triangulation in all available censuses."));
-
-    btnRemove = new QPushButton(ReginaSupport::themeIcon("list-remove"),
-        tr("Remove"));
-    // btnRemove->setFlat(true);
-    vBox->addWidget(btnRemove);
-    connect(btnRemove, SIGNAL(clicked()), this, SLOT(remove()));
-    btnRemove->setToolTip(tr("Remove selected census file(s)"));
-    btnRemove->setWhatsThis(tr("Remove the selected census file(s).  "
-        "This list contains the census files that are searched when asked "
-        "to locate an arbitrary triangulation in all available censuses."));
-
-    btnActivate = new QPushButton(ReginaSupport::themeIcon("dialog-ok"),
-        tr("Activate"));
-    // btnActivate->setFlat(true);
-    vBox->addWidget(btnActivate);
-    connect(btnActivate, SIGNAL(clicked()), this, SLOT(activate()));
-    btnActivate->setToolTip(tr("Activate selected census file(s)"));
-    btnActivate->setWhatsThis(tr("Activate the selected census "
-        "file(s).  When asked to locate an arbitrary triangulation in all "
-        "available censuses, only the activated census files in this list "
-        "are searched."));
-
-    btnDeactivate = new QPushButton(ReginaSupport::themeIcon("dialog-cancel"),
-        tr("Deactivate"));
-    // btnDeactivate->setFlat(true);
-    vBox->addWidget(btnDeactivate);
-    connect(btnDeactivate, SIGNAL(clicked()), this, SLOT(deactivate()));
-    btnDeactivate->setToolTip(tr("Deactivate selected census file(s)"));
-    btnDeactivate->setWhatsThis(tr("Deactivate the selected census "
-        "file(s).  When asked to locate an arbitrary triangulation in all "
-        "available censuses, only the activated census files in this list "
-        "are searched."));
-
-    vBox->addStretch(1);
-
-    box->addLayout(vBox);
-    layout->addLayout(box, 1);
-
-    updateButtons();
-}
-
-void ReginaPrefCensus::updateActiveCount() {
-    long count = 0;
-    for (int i = 0; i < listFiles->count(); i++) {
-        QListWidgetItem* item = listFiles->item(i);
-        if (dynamic_cast<ReginaFilePrefItem*>(item)->getData().isActive())
-            count++;
-    }
-
-    if (count == 0)
-        activeCount->setText(tr("No active census data files:"));
-    else if (count == 1)
-        activeCount->setText(tr("1 active census data file:"));
-    else
-        activeCount->setText(tr("%1 active census data files:").arg(count));
-}
-
-void ReginaPrefCensus::updateButtons() {
-    bool hasSelection = ! (listFiles->selectedItems().isEmpty());
-    btnRemove->setEnabled(hasSelection);
-    btnActivate->setEnabled(hasSelection);
-    btnDeactivate->setEnabled(hasSelection);
-}
-
-void ReginaPrefCensus::add() {
-    QStringList files = QFileDialog::getOpenFileNames(this, 
-        tr("Add Census File(s)"), QString(), FILTER_REGINA);
-    if (! files.isEmpty()) {
-        for (QStringList::const_iterator it = files.begin();
-                it != files.end(); it++) {
-            // Run a basic check over the file.
-            bool active = true;
-            regina::NFileInfo* info = regina::NFileInfo::identify(
-                static_cast<const char*>(QFile::encodeName(*it)));
-            if (! info) {
-                QMessageBox box(QMessageBox::Information,
-                    tr("Information"),
-                    tr("<qt>The census file <i>%1</i> does not appear to be "
-                    "a Regina data file.</qt>").
-                    arg(Qt::escape(QFileInfo(*it).fileName())),
-                    QMessageBox::Yes | QMessageBox::No, this);
-                box.setInformativeText(
-                        tr("Only Regina data files can be used for "
-                        "census lookups.  Are you sure you wish "
-                        "to add this file?"));
-                box.setDefaultButton(QMessageBox::No);
-                if (box.exec() != QMessageBox::Yes)
-                    continue;
-                active = false;
-            } else if (info->isInvalid()) {
-                ReginaSupport::info(this,
-                    tr("<qt>The census file <i>%1</i> contains unusual "
-                    "header data.</qt>").
-                    arg(Qt::escape(QFileInfo(*it).fileName())),
-                    tr("I am deactivating it for now; "
-                    "you may wish to examine it more closely."));
-                active = false;
-            }
-
-            // Add the new item.
-            new ReginaFilePrefItem(listFiles, ReginaFilePref(*it, active));
-        }
-        updateActiveCount();
-    }
-}
-
-void ReginaPrefCensus::remove() {
-    if (! listFiles->selectionModel()->hasSelection()) {
-        ReginaSupport::sorry(this,
-            tr("No files are selected."),
-            tr("<qt>Please select one or more files to remove, then "
-            "press <i>Remove</i> again."));
-    } else {
-        bool removeSys = false;
-        bool deactivated = false;
-        ReginaFilePrefItem* p;
-        foreach (QListWidgetItem* item, listFiles->selectedItems()) {
-            p = static_cast<ReginaFilePrefItem*>(item);
-            if (p->getData().isSystem()) {
-                removeSys = true;
-                deactivated |= p->deactivateFile();
-            } else {
-                delete p;
-            }
-        }
-        if (removeSys) {
-            if (deactivated) {
-                ReginaSupport::info(this,
-                    tr("You cannot remove Regina's own census files "
-                        "from this list."),
-                    tr("I have deactivated the files you selected instead, "
-                        "which will exclude them from census lookups."));
-            } else {
-                ReginaSupport::info(this,
-                    tr("You cannot remove Regina's own census files "
-                        "from this list."),
-                    tr("However, you can deactivate them if you wish to "
-                        "exclude them from census lookups."));
-            }
-        }
-        updateActiveCount();
-    }
-}
-
-void ReginaPrefCensus::activate() {
-    QList<QListWidgetItem*> selection = listFiles->selectedItems();
-    if (selection.isEmpty())
-        ReginaSupport::sorry(this,
-            tr("No files are selected."),
-            tr("<qt>Please select one or more files to activate, then "
-            "press <i>Activate</i> again."));
-    else {
-        bool done = false;
-        QListIterator<QListWidgetItem*> it(selection);
-        while(it.hasNext())
-            done |= dynamic_cast<ReginaFilePrefItem*>(it.next())->
-              activateFile();
-        if (done)
-            updateActiveCount();
-        else if (selection.count() == 1)
-            ReginaSupport::sorry(this,
-                tr("The selected file is already active."));
-        else
-            ReginaSupport::sorry(this,
-                tr("The selected files are already active."));
-    }
-}
-
-void ReginaPrefCensus::deactivate() {
-    QList<QListWidgetItem*> selection = listFiles->selectedItems();
-    if (selection.isEmpty())
-        ReginaSupport::sorry(this,
-            tr("No files are selected."),
-            tr("<qt>Please select one or more files to deactivate, then "
-            "press <i>Deactivate</i> again."));
-    else {
-        bool done = false;
-        QListIterator<QListWidgetItem*> it(selection);
-        while(it.hasNext())
-            done |= dynamic_cast<ReginaFilePrefItem*>(it.next())->
-              deactivateFile();
-        if (done)
-            updateActiveCount();
-        else if (selection.count() == 1)
-            ReginaSupport::sorry(this,
-                tr("The selected file is already inactive."));
-        else
-            ReginaSupport::sorry(this,
-                tr("The selected files are already inactive."));
-    }
 }
 
 ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QWidget(parent) {

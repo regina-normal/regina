@@ -80,8 +80,6 @@ namespace regina {
  * about the size of the list; the high-level routines will extend it if
  * necessary.
  *
- * \testfull
- *
  * @author Ryan Budney, B.B.
  */
 class REGINA_API NPrimes {

@@ -66,14 +66,23 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
          */
         QWidget* ui;
         QLabel* zeroEff;
+        QLabel* titleZeroEff;
         QLabel* splitting;
+        QLabel* titleSplitting;
         QLabel* threeSphere;
+        QLabel* titleThreeSphere;
         QLabel* threeBall;
+        QLabel* titleThreeBall;
         QLabel* solidTorus;
+        QLabel* titleSolidTorus;
         QLabel* irreducible;
         QLabel* titleIrreducible;
         QLabel* haken;
         QLabel* titleHaken;
+        QLabel* strict;
+        QLabel* titleStrict;
+        QLabel* hyperbolic;
+        QLabel* titleHyperbolic;
         QAbstractButton* btnZeroEff;
         QAbstractButton* btnSplitting;
         QAbstractButton* btnThreeSphere;
@@ -81,7 +90,9 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
         QAbstractButton* btnSolidTorus;
         QAbstractButton* btnIrreducible;
         QAbstractButton* btnHaken;
+        QAbstractButton* btnStrict;
         QLabel* manifold;
+        QLabel* census;
 
     public:
         /**
@@ -108,6 +119,7 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
         void calculateSolidTorus();
         void calculateIrreducible();
         void calculateHaken();
+        void calculateStrict();
 
         /**
          * Notify that preferences have changed.

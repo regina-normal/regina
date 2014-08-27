@@ -312,7 +312,6 @@ class ReginaMain : public QMainWindow {
          * New packet routines.
          */
         void newAngleStructures();
-        void newCensus();
         void newContainer();
         void newDim2Triangulation();
         void newDim4Triangulation();

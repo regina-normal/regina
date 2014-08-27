@@ -100,8 +100,6 @@ namespace regina {
  *
  * \ifacespython Not present, though the dimension-specific subclasses
  * (such as NIsomorphism and Dim4Isomorphism) are available for Python users.
- *
- * \testpart
  */
 template <int dim>
 class REGINA_API NGenericIsomorphism : public ShareableObject {

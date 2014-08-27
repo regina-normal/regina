@@ -49,6 +49,7 @@
 #include "regina-core.h"
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
+#include "angle/nanglestructure.h"
 #include "generic/ngenerictriangulation.h"
 #include "packet/npacket.h"
 #include "utilities/nbooleans.h"
@@ -121,8 +122,6 @@ struct PacketInfo<PACKET_TRIANGULATION> {
  * triangulation automatically.  These are part of a larger suite of changes
  * (all designed to help the user avoid inconsistent states and accidental
  * crashes); see the NTetrahedron class notes for further details.
- *
- * \testpart
  *
  * \todo \feature Is the boundary incompressible?
  * \todo \featurelong Am I obviously a handlebody?  (Simplify and see
@@ -227,6 +226,11 @@ class REGINA_API NTriangulation : public NPacket,
                  This property must only be stored for triangulations
                  that are known to represent closed, connected,
                  orientable, irreducible 3-manifolds. */
+
+        mutable NProperty<NAngleStructure, StoreManagedPtr>
+                strictAngleStructure_;
+            /**< A strict angle structure on this triangulation, or the
+                 null pointer if none exists. */
 
         mutable TuraevViroSet turaevViroCache_;
             /**< The set of Turaev-Viro invariants that have already
@@ -1412,7 +1416,7 @@ class REGINA_API NTriangulation : public NPacket,
 
         /*@}*/
         /**
-         * \name Normal Surface Properties
+         * \name Normal Surfaces and Angle Structures
          */
         /*@{*/
 
@@ -1511,20 +1515,65 @@ class REGINA_API NTriangulation : public NPacket,
          * Searches for a strict angle structure on this triangulation.
          * Recall that a \e strict angle structure is one in which every
          * angle is strictly between 0 and &pi;.  If a strict angle structure
-         * exists, then this routine is guaranteed to find one.
+         * does exist, then this routine is guaranteed to find one.
          *
          * The underlying algorithm runs a single linear program (it does
          * \e not enumerate all vertex angle structures).  This means
          * that it is likely to be fast even for large triangulations.
          *
-         * The angle structure returned (if any) depends upon this
-         * triangulation, and so the angle structure must be destroyed
-         * before this triangulation is destroyed.
+         * If you are only interested in \e whether a strict angle structure
+         * exists (i.e., you are not interested in the specific angles
+         * themselves), then you may call hasStrictAngleStructure() instead.
          *
-         * @return a newly allocated strict angle structure, or 0 if none
-         * exists.
+         * The angle structure returned (if any) is cached internally
+         * alongside this triangulation.  This means that, as long as
+         * the triangulation does not change, subsequent calls to
+         * findStrictAngleStructure() will return identical pointers
+         * and will be essentially instantaneous.
+         *
+         * If the triangulation changes however, then the cached angle
+         * structure will be deleted.  This means that you should not
+         * store the returned pointer for later use; instead you should
+         * just call findStrictAngleStructure() again.
+         *
+         * @return a strict angle structure on this triangulation, or 0 if
+         * none exists.
          */
-        NAngleStructure* hasStrictAngleStructure();
+        const NAngleStructure* findStrictAngleStructure() const;
+        /**
+         * Determines whether this triangulation supports a strict angle
+         * structure.  Recall that a \e strict angle structure is one
+         * in which every angle is strictly between 0 and &pi;.
+         *
+         * This routine is equivalent to calling findStrictAngleStructure()
+         * and testing whether the return value is non-null.
+         *
+         * The underlying algorithm runs a single linear program (it does
+         * \e not enumerate all vertex angle structures).  This means
+         * that it is likely to be fast even for large triangulations.
+         *
+         * @return \c true if a strict angle structure exists on this
+         * triangulation, or 0 if not.
+         */
+        bool hasStrictAngleStructure() const;
+        /**
+         * Is it already known (or trivial to determine) whether or not
+         * this triangulation supports a strict angle structure?
+         * See hasStrictAngleStructure() for further details.
+         *
+         * If this property is indeed already known, future calls to
+         * findStrictAngleStructure() and hasStrictAngleStructure() will be
+         * very fast (simply returning the precalculated solution).
+         *
+         * \warning This routine does not actually tell you \e whether
+         * the triangulation supports a strict angle structure; it merely
+         * tells you whether the answer has already been computed (or is
+         * very easily computed).
+         *
+         * @return \c true if and only if this property is already known
+         * or trivial to calculate.
+         */
+        bool knowsStrictAngleStructure() const;
 
         /*@}*/
         /**
@@ -2241,8 +2290,8 @@ class REGINA_API NTriangulation : public NPacket,
          * return 0.
          *
          * The underlying algorithm appears in "A new approach to crushing
-         * 3-manifold triangulations", Discrete and Computational Geometry,
-         * to appear, arXiv:1212.1441.  This algorithm is based on the
+         * 3-manifold triangulations", Discrete and Computational
+         * Geometry 52:1 (2014), pp. 116-139.  This algorithm is based on the
          * Jaco-Rubinstein 0-efficiency algorithm, and works in both
          * orientable and non-orientable settings.
          *
@@ -4022,6 +4071,12 @@ inline bool NTriangulation::knowsZeroEfficient() const {
 
 inline bool NTriangulation::knowsSplittingSurface() const {
     return splittingSurface_.known();
+}
+
+inline bool NTriangulation::hasStrictAngleStructure() const {
+    if (! strictAngleStructure_.known())
+        findStrictAngleStructure();
+    return (strictAngleStructure_.value() != 0);
 }
 
 inline unsigned long NTriangulation::getHomologyH2Z2() const {
