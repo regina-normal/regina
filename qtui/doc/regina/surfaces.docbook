@@ -519,7 +519,8 @@
             <replaceable>p</replaceable> times around the meridian and
             <replaceable>q</replaceable> times around the longitude.
             If there are multiple cusps, these pairs
-            will be ordered by <link linkend="TODO">cusp number</link>.
+            will be ordered by
+            <link linkend="snappea-shapes-cusps">cusp number</link>.
            </para>
            <para>
             <inlinemediaobject>

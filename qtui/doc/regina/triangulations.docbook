@@ -2007,7 +2007,7 @@
    </para>
    <warning>
     <para>
-     Be aware that any information gained through the &snappea; kernel
+     Be aware that much of the information gained through the &snappea; kernel
      is inexact.  In particular, it may be subject to numerical instability
      or floating point error.
      If you wish to rigorously certify that a manifold is hyperbolic, see the
@@ -2032,25 +2032,20 @@
       fillings on the cusps.  See the
       <link linkend="snappea">chapter on &snappea; triangulations</link>
       for details.
+     </para><para>
+      If you have one of &regina;'s native triangulations but you want
+      this richer interface with &snappea;, it is easy to convert to a
+      &snappea; triangulation; again see the
+      <link linkend="snappea-fromregina">&snappea; triangulations
+      chapter</link> for details.
      </para></listitem>
     </itemizedlist>
    </para>
    <para>
     For &regina;'s native triangulations, the
-    <guilabel>&snappea;</guilabel> tab will
-    show results only for some kinds of triangulations.
-    For instance, the triangulation
-    must be connected with no boundary
-    triangles, and every vertex must have a torus or Klein bottle link.
-    If your triangulation is unsuitable, the
-    <guilabel>&snappea;</guilabel> tab will give you at
-    least one reason why.
-   </para>
-   <para>
-    If your triangulation is indeed suitable,
-    then the <guilabel>&snappea;</guilabel> tab will display the
-    following information (after asking &snappea; to solve for a
-    complete hyperbolic structure):
+    <guilabel>&snappea;</guilabel> tab will ask &snappea; to solve for a
+    complete hyperbolic structure, and will then display the following
+    summary information:
    </para>
    <para>
     <inlinemediaobject>
@@ -2066,50 +2061,9 @@
       <glossdef><para>
        This describes the type of solution that &snappea; found
        to the hyperbolic gluing equations.
-       Possible types are:
-       <glosslist>
-        <glossentry>
-         <glossterm><guilabel>Tetrahedra positively
-          oriented</guilabel></glossterm>
-         <glossdef><para>
-          All tetrahedra are either positively oriented or flat, though the
-          entire solution is not flat and no tetrahedra are degenerate.
-         </para></glossdef>
-        </glossentry>
-        <glossentry>
-         <glossterm><guilabel>Contains negatively oriented
-          tetrahedra</guilabel></glossterm>
-         <glossdef><para>
-          The volume is positive, but some tetrahedra are negatively oriented.
-         </para></glossdef>
-        </glossentry>
-        <glossentry>
-         <glossterm><guilabel>All tetrahedra flat</guilabel></glossterm>
-         <glossdef><para>
-          All tetrahedra are flat, but none have shape 0, 1 or infinity.
-         </para></glossdef>
-        </glossentry>
-        <glossentry>
-         <glossterm><guilabel>Contains degenerate
-          tetrahedra</guilabel></glossterm>
-         <glossdef><para>
-          At least one tetrahedron has shape 0, 1 or infinity.
-         </para></glossdef>
-        </glossentry>
-        <glossentry>
-         <glossterm><guilabel>Unrecognised solution type</guilabel></glossterm>
-         <glossdef><para>
-          The volume is zero or negative, but the solution is
-          neither flat nor degenerate.
-         </para></glossdef>
-        </glossentry>
-        <glossentry>
-         <glossterm><guilabel>No solution found</guilabel></glossterm>
-         <glossdef><para>
-          The gluing equations could not be solved.
-         </para></glossdef>
-        </glossentry>
-       </glosslist>
+       For explanations of the possible solution types,
+       see the <link linkend="snappea-volumetype">chapter on &snappea;
+       triangulations</link>.
       </para></glossdef>
      </glossentry>
      <glossentry>
@@ -2122,26 +2076,6 @@
       </para></glossdef>
      </glossentry>
     </glosslist>
-   </para>
-   <para id="tri-snappea-convert">
-    If you wish to view richer information on the hyperbolic
-    structure, you can press <guilabel>Convert to a &snappea;
-    triangulation</guilabel> (or equivalently, from the menu select
-    <menuchoice>
-     <guimenu>3-D&nbsp;Triangulation</guimenu>
-     <guimenuitem>Convert to &snappea;</guimenuitem>
-    </menuchoice>).
-    This will build a new hybrid &snappea; triangulation packet,
-    which will offer you a
-    <link linkend="snappea">richer interface to the &snappea; kernel</link>.
-    Your original native triangulation packet will be left unchanged.
-   </para>
-   <para>
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata fileref="tri-snappea-convert.png"/>
-     </imageobject>
-    </inlinemediaobject>
    </para>
   </sect2>
 
