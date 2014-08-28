@@ -654,34 +654,32 @@ NGroupExpression::NGroupExpression( const std::string &input, bool* valid )
         } // end case 3
 
         // case 4: it is a number
-        if ( (int(*i) >= int('0')) && (int(*i) <= int('9')) ) {
+        if ( ::isdigit(*i) ) {
             //  subcase (a) this is to build a variable
             // buildTerm.generator == 'g'
-            if ( (WS==WSVARLET) && (buildTerm.generator ==
-                                    (unsigned long)('g') - (unsigned long)('a') ) ) {
-                buildTerm.generator=(unsigned long)(*i)-(unsigned long)('0');
+            if ( (WS==WSVARLET) && (buildTerm.generator == ('g' - 'a') ) ) {
+                buildTerm.generator=(*i - '0');
                 WS=WSVARNUM;
                 continue;
             } else // we've already started building the variable number
                 if ( WS==WSVARNUM ) {
-                    buildTerm.generator=10*buildTerm.generator +
-                                        ( (unsigned long)(*i)-(unsigned long)('0') );
+                    buildTerm.generator=10*buildTerm.generator + (*i - '0');
                     continue;
                 } else //  subcase (b) this is to build an exponent.
                     if ( (WS==WSEXP) || (WS==WSEXPSIG) ) { // ^num or ^-num
                         if (buildTerm.exponent<0)
-                            buildTerm.exponent = -( (unsigned long)(*i) - (unsigned long)('0') );
+                            buildTerm.exponent = - static_cast<long>(*i - '0');
                         else
-                            buildTerm.exponent = (unsigned long)(*i) - (unsigned long)('0');
+                            buildTerm.exponent = (*i - '0');
                         WS=WSEXPNUM;
                         continue;
                     } else if (WS==WSEXPNUM) { // blah[num] previously dealt with numbers
                         if (buildTerm.exponent<0)
                             buildTerm.exponent = 10*buildTerm.exponent -
-                                                 ( (unsigned long)(*i) - (unsigned long)('0') );
+                                                 (*i - '0');
                         else
                             buildTerm.exponent = 10*buildTerm.exponent +
-                                                 ( (unsigned long)(*i) - (unsigned long)('0') );
+                                                 (*i - '0');
                         continue;
                     } else {
                         WS=WSERR;
