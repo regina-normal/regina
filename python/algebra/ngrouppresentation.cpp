@@ -182,7 +182,8 @@ void addNGroupPresentation() {
         .def("nielsenCombine", &NGroupPresentation::nielsenCombine)
         .def("homologicalAlignment", &NGroupPresentation::homologicalAlignment)
         .def("prettyRewriting", &NGroupPresentation::prettyRewriting)
-        .def("identify_extension_over_Z", &NGroupPresentation::identify_extension_over_Z)
+        .def("identifyExtensionOverZ",
+            &NGroupPresentation::identifyExtensionOverZ)
         .def("isAbelian", &NGroupPresentation::isAbelian)
         .def("recogniseGroup", &NGroupPresentation::recogniseGroup)
         .def("relatorLength", &NGroupPresentation::relatorLength)

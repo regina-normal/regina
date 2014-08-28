@@ -248,7 +248,7 @@ std::string NGroupPresentation::recogniseGroup() const {
     if (ab.get()->getRank()==1) {
         NGroupPresentation presCopy( *this );
         std::auto_ptr< NHomGroupPresentation > AUT( 
-            presCopy.identify_extension_over_Z() );
+            presCopy.identifyExtensionOverZ() );
         if (AUT.get() != NULL) {
            // Let's try to identify the fibre. 
             std::string domStr( AUT.get()->getDomain().recogniseGroup() );
@@ -269,7 +269,7 @@ std::string NGroupPresentation::recogniseGroup() const {
         }
     }         
 
-    std::list< NGroupPresentation* > fpDecomp( identify_free_product() );
+    std::list< NGroupPresentation* > fpDecomp( identifyFreeProduct() );
     if (fpDecomp.size()>1) {
       out<<"FreeProduct( ";
       for (std::list< NGroupPresentation* >::iterator i=fpDecomp.begin(); 
@@ -1262,7 +1262,7 @@ std::list< std::map< unsigned long, NGroupExpressionTerm > >
 }
 
 std::list< NGroupPresentation* > 
-    NGroupPresentation::identify_free_product() const
+    NGroupPresentation::identifyFreeProduct() const
 {
  // let's create a list of generators not used in the relators, then 
  // generators that appear in a common generator, or recursively related 
@@ -1352,7 +1352,7 @@ std::list< NGroupPresentation* >
     retval.push_back( newGrp );
  }
  return retval;
-} // end identify_free_product()
+} // end identifyFreeProduct()
 
 /**
  *  This algorithm is to recognise the fundamental groups of circle bundles
@@ -1384,7 +1384,7 @@ std::list< NGroupPresentation* >
  * Will return an empty string if could not identify fundamental group in this
  * class. 
  */
-std::string NGroupPresentation::identify_circle_bundle_over_surface(bool orientable)
+std::string NGroupPresentation::identifyCircleBundleOverSurface(bool orientable)
 {
  std::auto_ptr< NAbelianGroup > ab( abelianisation() );
  std::stringstream retval;
@@ -1658,7 +1658,7 @@ bool NGroupPresentation::nielsenCombine(const unsigned long &i,
 }
 
 
-// these macros are used only in the identify_extension_over_Z routine below.
+// these macros are used only in the identifyExtensionOverZ routine below.
 namespace { // anonymous namespace to ensure not put in the library
 #define idx(gen, cov) ((unsigned long)(gen-1)+nGm1*cov)
 #define unidx(dat) std::pair<unsigned long, unsigned long>((dat % nGm1)+1, dat/nGm1)
@@ -1678,7 +1678,7 @@ namespace { // anonymous namespace to ensure not put in the library
 // invertibility using HomMarkedAbelianGroup routines.
 //
 std::auto_ptr< NHomGroupPresentation > 
-    NGroupPresentation::identify_extension_over_Z()
+    NGroupPresentation::identifyExtensionOverZ()
 {
  // step 1: let's build the abelianization homomorphism. 
  homologicalAlignment();
@@ -1878,7 +1878,7 @@ std::auto_ptr< NHomGroupPresentation >
     }
  }
  if (!kerPres.isValid()) 
-  { std::cout<<"identify_extension_over_Z() error:"<<
+  { std::cout<<"identifyExtensionOverZ() error:"<<
      " out of bounds relator in kerPres.\n";
      std::cout.flush();   exit(1); }
  // build the reductions of the {0,1,...,liftCount-1} translates of **all**

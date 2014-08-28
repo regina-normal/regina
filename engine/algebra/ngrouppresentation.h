@@ -998,7 +998,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          *   it will be an automorphism of a presentation of the kernel of the
          *   map this to the integers. 
          */
-        std::auto_ptr< NHomGroupPresentation > identify_extension_over_Z();
+        std::auto_ptr< NHomGroupPresentation > identifyExtensionOverZ();
 
         /**
          *  This routine attempts to identify the current presentation as that
@@ -1012,7 +1012,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * \apinotfinal TODO - incomplete.  Should consider making this and
          *  perhaps all the identify routines private?  
          */
-        std::string identify_circle_bundle_over_surface(bool orientable=true);
+        std::string identifyCircleBundleOverSurface(bool orientable=true);
 
         /**
          * This routine takes two NGroupPresentations as arguments and
@@ -1046,7 +1046,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * \apinotfinal Reconsider how the end-user should see this 
          *  routine. 
          */
-        std::list< NGroupPresentation* > identify_free_product() const;
+        std::list< NGroupPresentation* > identifyFreeProduct() const;
 
         /**
          * Returns a TeX representation of this group presentation.
