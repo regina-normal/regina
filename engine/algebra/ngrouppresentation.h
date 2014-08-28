@@ -516,22 +516,32 @@ class REGINA_API NGroupExpression : public ShareableObject {
             const NGroupExpression& expansion, bool cyclic = false);
 
         /**
-         * This routine takes two words as input, *this and other, and
-         * determines whether or not one can re-label the generators in
-         * this word to get the other word. If so, it returns a non-empty
-         * list of such re-labellings. Re-labellings are partially-defined
-         * permutations (with possible inversions if cyclic=true) on the 
-         * generator set.
+         * Determines whether or not one can relabel the generators in
+         * this word to obtain the given other word. If so, returns a non-empty
+         * list of all such relabellings.  If not, returns an empty list.
          *
-         * @param other is what the return permutation turn 
-         * @param cyclic, if false we get a list of exact relabellings from
-         *  *this to other.  If true, it can be up to cyclic permutation and
-         *  inversion. If cyclic is true, the routine demands both words 
-         *  are cyclically-reduced.
+         * Relabellings are partially-defined permutations on the
+         * generator set, also allowing for possible inversions if
+         * cyclic is \c true.
+         *
+         * \apinotfinal
+         *
+         * \todo Change this to use less heavyweight types and less deep
+         * copying.
+         *
+         * \pre If \a cyclic is \c true, then both this word and \a other
+         * have been cyclically reduced.
+         *
+         * @param other the word to compare against this.
+         * @param cyclic if \c false we get a list of exact relabellings from
+         * this word to \a other.  If \c true, it can be up to cyclic
+         * permutation and inversion.
+         * @return a list of permutations, implemented as maps from
+         * generator indices of this word to generator indices of \a other.
          */
         std::list< std::map< unsigned long, NGroupExpressionTerm > >
-          relabellingsThisToOther( const NGroupExpression &other, 
-           bool cyclic=false ) const;
+            relabellingsThisToOther( const NGroupExpression &other,
+            bool cyclic=false ) const;
 
         /**
          * Writes a chunk of XML containing this expression.
