@@ -1999,8 +1999,9 @@ class NTriangulationTest : public TriangulationTest<3> {
             verifyFundGroup(lst3_4_7.getFundamentalGroup(),
                 "Fund(LST(3,4,7))", "Z");
             verifyFundGroup(figure8.getFundamentalGroup(),
-                "Fund(figure eight knot complement)", "Z~Free(2)"
-            " w/monodromy a --> b, b --> b a^-1 b^2");
+                "Fund(figure eight knot complement)",
+                "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b a^-1 b^2");
+                // Note: \u21A6 is the unicode mapsto symbol.
             verifyFundGroup(rp2xs1.getFundamentalGroup(),
                 "Fund(RP^2 x S^1)", "Z + Z_2");
             verifyFundGroup(solidKB.getFundamentalGroup(),
