@@ -640,6 +640,27 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          */
         NGroupPresentation(const NGroupPresentation& cloneMe);
         /**
+         * Constructor that allows you to directly pass an arbitrary number
+         * of relators in string format.
+         *
+         * The first argument \a nGens is the number of generators one wants
+         * the group to have. The second argument \a rels is a vector
+         * of strings, where each string gives a single relator.  See
+         * the NGroupExpression::NGroupExpression(const std::string&, bool*)
+         * constructor notes for information on what format these strings
+         * can take.
+         *
+         * If you are compiling Regina against C++11, you can use the
+         * C++11 initializer_list construction to construct an
+         * NGroupPresentation directly using syntax of the form
+         * <tt>NGroupPresentation(nGens, { "rel1", "rel2", ... })</tt>.
+         *
+         * @param nGens the number of generators.
+         * @param rels a vector of relations each given in string form,
+         * as outlined above.
+         */
+        NGroupPresentation(unsigned long nGens, std::vector<std::string> &rels);
+        /**
          * Destroys the group presentation.
          * All relations that are stored will be deallocated.
          */
@@ -653,19 +674,6 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * @return a reference to this group presentation.
          */
         NGroupPresentation& operator=(const NGroupPresentation& cloneMe);
-
-        /**
-         * Constructor that allows arbitrary number of relators. One calls
-         * this with arbitrarily-many arguments.  The first argument nGens
-         * is the number of generators one wants the group to have. The
-         * remaining arguments are all of type std::string and are the
-         * relators. If you are compiling the Regina library against 
-         * c++11, you can initialize an NGroupPresentation via
-         * NGroupPresentation( nGens, { "rel1", "rel2", ... } ) via the
-         * C++11 initializer_list construction. 
-         */
-        NGroupPresentation(unsigned long nGens,  
-            std::vector<std::string> &rels);
 
         /**
          * Adds one or more generators to the group presentation.
@@ -684,6 +692,11 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * expression, may change it and will be responsible for its
          * deallocation.
          *
+         * \warning This routine does not check whether or not your relation
+         * is a word only in the generators of this group.  In other
+         * words, it does not stop you from using generators beyond the
+         * getNumberOfGenerators() bound.
+         *
          * \ifacespython Since this group presentation takes ownership
          * of the given expression, the python object containing the
          * given expression becomes a null object and should no longer
@@ -692,10 +705,6 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * @param rel the expression that the relation sets to 1; for
          * instance, if the relation is <tt>g1^2 g2 = 1</tt> then this
          * parameter should be the expression <tt>g1^2 g2</tt>. 
-         *
-         * Note this routine does not check whether or not your relation
-         * is a word in the generators of this group, i.e. you can use
-         * generators beyond the getNumberOfGenerators() bound. 
          */
         void addRelation(NGroupExpression* rel);
 
@@ -986,7 +995,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * to the presentation to ensure that under the markedAbelianisation
          * routine, generators 0 through M-1 are mapped to generators of the
          * relevant Z_di group.  Similarly, generators M through M+N-1 are
-         * mapped to +-1 in the appropriate factor. All further generators 
+         * mapped to +/-1 in the appropriate factor. All further generators 
          * will be mapped to zero. 
          *
          * @returns true if presentation has changed
@@ -1050,23 +1059,35 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         std::auto_ptr< NHomGroupPresentation > identifyExtensionOverZ();
 
         /**
-         * This routine takes two NGroupPresentations as arguments and
-         * returns true if it can determine they are simply-isomorphic, and 
-         * false if it can not determine they are simply isomorphic.  
+         * Attempts to prove that this and the given group presentation are
+         * <i>simply isomorphic</i>.
          *
-         * A simple isomorphism is one where the generators gi of this 
-         * presentation are sent to gj^+-1 of the other presentation. 
+         * A <i>simple isomorphism</i> is an isomorphism where each generator
+         * <i>g<sub>i</sub></i> of this presentation is sent to
+         * some generator <i>g<sub>j</sub></i><sup>+/-1</sup> of the
+         * other presentation.  Moreover, at present this routine only
+         * looks for maps where both presentations have the same number
+         * of generators, and where distinct generators <i>g<sub>i</sub></i>
+         * of this presentation correspond to distinct generators
+         * <i>g<sub>j</sub></i> of the other presentation (possibly with
+         * inversion, as noted above).
          *
-         * @return true if it can confirm the groups are simply isomorphic, 
-         *  false means they may be isomorphic, only this routine could not
-         *  confirm it. So it could return false for a variety of reasons
-         *  1) The groups are not isomorphic.
-         *  2) The groups are isomorphic, but not simply isomorphic. 
-         *  3) The routine could not see the existence of a simple isomorphism
-         *     of this restricted type, due to difficulties with the word
-         *     problem. 
+         * If this routine returns \c true, it means that the two
+         * presentations are indeed simply isomorphic.
+         *
+         * If this routine returns \c false, it could mean one of many
+         * things:
+         *
+         * - The groups are not isomorphic;
+         * - The groups are isomorphic, but not simply isomorphic;
+         * - The groups are simply isomorphic but this routine could not
+         *   prove it, due to difficulties with the word problem. 
+         *
+         * @param other the group presentation to compare with this.
+         * @return \c true if this routine could certify that the two group
+         * presentations are simply isomorphic, or \c false if it could not.
          */
-        bool identifySimpleIsomorphicTo(const NGroupPresentation& other) const;
+        bool identifySimplyIsomorphicTo(const NGroupPresentation& other) const;
 
         /**
          * Routine attempts to determine if this groups is clearly a free

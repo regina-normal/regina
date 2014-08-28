@@ -1465,7 +1465,7 @@ NGroupPresentation::identifyFreeProduct() const
 // TODO: we can modify this to be a findHom routine. And if the target is 
 // a finite group, find *all* homs up to conjugacy, etc. 
 //
-bool NGroupPresentation::identifySimpleIsomorphicTo(
+bool NGroupPresentation::identifySimplyIsomorphicTo(
         const NGroupPresentation& other) const
 {
     // Check if presentations have the same number of generators.
