@@ -659,7 +659,8 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * @param rels a vector of relations each given in string form,
          * as outlined above.
          */
-        NGroupPresentation(unsigned long nGens, std::vector<std::string> &rels);
+        NGroupPresentation(unsigned long nGens,
+                const std::vector<std::string> &rels);
         /**
          * Destroys the group presentation.
          * All relations that are stored will be deallocated.

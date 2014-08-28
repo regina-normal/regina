@@ -729,10 +729,10 @@ bool NGroupExpression::addStringLast( const std::string& input)
 //             **********  NGroupPresentation below **************
 
 NGroupPresentation::NGroupPresentation(unsigned long nGens,
-            std::vector<std::string> &rels)
+            const std::vector<std::string> &rels)
 {
     nGenerators = nGens;
-    for (std::vector<std::string>::iterator i=rels.begin();
+    for (std::vector<std::string>::const_iterator i=rels.begin();
          i!=rels.end(); i++)
     relations.push_back( new NGroupExpression(*i) );
 }
