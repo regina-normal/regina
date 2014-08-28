@@ -109,14 +109,14 @@ struct REGINA_API NGroupExpressionTerm {
     bool operator == (const NGroupExpressionTerm& other) const;
 
     /**
-     * Lexicographical order on NGroupExpressionTerms, with the generator
-     * being the first index and the exponent being the second.  
+     * Imposes an ordering on terms.
+     * Terms are ordered lexigraphically as (generator, exponent) pairs.
      *
-     * @return true if and only if either this->generator < other.generator
-     *  or this->generator == other->generator and 
-     *     this->exponent < other->exponent.
+     * @param other the term to compare with this.
+     * @return true if and only if this term is lexicographically
+     * smaller than \a other.
      */
-    bool operator<(const NGroupExpressionTerm& other) const;
+    bool operator < (const NGroupExpressionTerm& other) const;
 
     /**
      * Returns the inverse of this term.  The inverse has the same
@@ -1238,10 +1238,11 @@ inline bool NGroupExpressionTerm::operator += (
         return false;
 }
 
-inline bool NGroupExpressionTerm::operator<(const NGroupExpressionTerm& other) 
-const { return ( (generator < other.generator) || 
-                 ( (generator == other.generator) &&
-                   ( exponent < other.exponent ) ) );
+inline bool NGroupExpressionTerm::operator < (
+        const NGroupExpressionTerm& other) const {
+    return ( (generator < other.generator) ||
+             ( (generator == other.generator) &&
+               ( exponent < other.exponent ) ) );
 }
 
 // Inline functions for NGroupExpression
