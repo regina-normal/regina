@@ -250,7 +250,7 @@ std::string NGroupPresentation::recogniseGroup() const {
         std::auto_ptr< NHomGroupPresentation > AUT( 
             presCopy.identifyExtensionOverZ() );
         if (AUT.get() != NULL) {
-           // Let's try to identify the fibre. 
+            // Let's try to identify the fibre. 
             std::string domStr( AUT.get()->getDomain().recogniseGroup() );
             if (domStr.length()>0) {
                 out<<"Z~"<<domStr<<" w/monodromy ";
