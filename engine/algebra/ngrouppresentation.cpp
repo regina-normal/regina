@@ -980,7 +980,7 @@ NGroupPresentation& NGroupPresentation::operator=(
 
 bool NGroupPresentation::intelligentNielsen()
 {
-    return intelligentSimplifyDetail().get();
+    return intelligentNielsenDetail().get();
 }
 
 std::auto_ptr<NHomGroupPresentation>
@@ -1603,8 +1603,7 @@ get_out_of_while_loop_goto_tag: { // this skips insertion
 }
 
 
-bool NGroupPresentation::nielsenTransposition(const unsigned long &i,
-        const unsigned long &j)
+bool NGroupPresentation::nielsenTransposition(unsigned long i, unsigned long j)
 {
     if (i==j) return false;
     bool retval=false;
@@ -1624,7 +1623,7 @@ bool NGroupPresentation::nielsenTransposition(const unsigned long &i,
     return retval;
 }
 
-bool NGroupPresentation::nielsenInvert(const unsigned long &i)
+bool NGroupPresentation::nielsenInvert(unsigned long i)
 {
     bool retval=false;
     for (unsigned long l=0; l<relations.size(); l++) {
@@ -1640,23 +1639,22 @@ bool NGroupPresentation::nielsenInvert(const unsigned long &i)
     return retval;
 }
 
-bool NGroupPresentation::nielsenCombine(const unsigned long &i,
-                                        const unsigned long &j,
-                                        const signed long &k,
-                                        const bool &flag)
+bool NGroupPresentation::nielsenCombine(unsigned long i, unsigned long j,
+                                        long k, bool rightMult)
 {
+    if (k == 0) return false;
     // replace ri with (ri)(rj)^(-k)
     bool retval(false);
     NGroupExpression let;
-    if (flag) {
+    if (rightMult) {
         let.addTermFirst(i, 1);
         let.addTermLast(j, -k);
     } else {
         let.addTermLast(i, 1);
         let.addTermFirst(j, -k);
     }
-    for (unsigned long k=0; k<relations.size(); k++)
-        if (relations[k]->substitute(i, let, true)) retval = true;
+    for (unsigned long q=0; q<relations.size(); q++)
+        if (relations[q]->substitute(i, let, true)) retval = true;
     return retval;
 }
 

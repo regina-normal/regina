@@ -750,9 +750,15 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         const NGroupExpression& getRelation(unsigned long index) const;
 
         /**
-         *  Returns true if and only if the relations for the group are words
-         * in the generators.  Returns false if at least one relator uses an
-         * out of bound generator.
+         * Tests whether all of the relations for the group are indeed words
+         * in the generators.  This routine returns \c false if at least
+         * one relator uses an out-of-bound generator, and \c true otherwise.
+         *
+         * This routine is intended only for sanity checking: you should
+         * never have an invalid group presentation in the first place.
+         *
+         * @return \c true if and only if all of the relations are words
+         * in the generators.
          */
         bool isValid() const;
 
@@ -771,17 +777,8 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * Attempts to simplify the group presentation as intelligently
          * as possible without further input.
          *
-         * The current simplification method is based on the Dehn algorithm
-         * for hyperbolic groups, i.e. small cancellation theory.   This means
-         * we look to see if part of one relator can be used to simplify
-         * others.  If so, make the substitution and simplify.  We continue
-         * until no more presentation-shortening substitutions are available.
-         * We follow that by killing any available generators using words
-         * where generators appear a single time.
-         *
-         * \todo \optlong This routine could use some small tweaks --
-         * recognition of utility of some score==0 moves, such as
-         * commutators, for example.
+         * The current simplification method uses a combination of small
+         * cancellation theory and Nielsen moves.
          *
          * @return a newly allocated homomorphism describing the
          * reduction map from the original presentation to the new
@@ -800,6 +797,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * @return \c true if and only if the group presentation was changed.
          */
         bool smallCancellation();
+
         /**
          * Attempts to simplify the group presentation using small cancellation
          * theory. The simplification method is based on the Dehn algorithm
@@ -810,7 +808,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * We follow that by killing any available generators using words
          * where generators appear a single time.
          *
-         * \todo \optlong This routine could use some small tweaks --
+         * \todo \optlong This routine could use some small tweaks -
          * recognition of utility of some score==0 moves, such as
          * commutators, for example.
          *
@@ -945,57 +943,76 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         bool identifyAbelian() const;
 
         /**
-         *  This switches the generators in the presentation indexed by i
-         * and j respectively, and recompute the appropriate presentation.
+         * Switches the generators in the presentation indexed by \a i
+         * and \a j respectively, and recomputes the appropriate presentation.
          * It is one of the standard Nielsen moves, which is the first of
-         * three generator types of the automorphism group of a
-         * free group.
+         * three generator types of the automorphism group of a free group.
          *
-         * @returns true if and only if the nielsen automorphism had an effect
-         *  on at least one relation.
+         * \pre Both \a i and \a j are strictly less than
+         * getNumberOfGenerators().
+         *
+         * @param i indicates the first of the two generators to switch.
+         * @param j indicates the second of the two generators to switch.
+         * @return \c true if and only if the Nielsen automorphism had an
+         * effect on at least one relation.
          */
-        bool nielsenTransposition(const unsigned long &i,
-                                  const unsigned long &j);
+        bool nielsenTransposition(unsigned long i, unsigned long j);
 
         /**
-         *  This replaces a generator in a presentation by its inverse, and
+         * Replaces a generator in a presentation by its inverse, and
          * recomputes the appropriate presentation. This is the second
          * generator type of the automorphism group of a free group.
          *
-         * @returns true if and only if the nielsen automorphism had an effect
-         *  on at least one relation.
+         * \pre \a i is strictly less than getNumberOfGenerators().
+         *
+         * @param i indicates the generator to invert.
+         * @return \c true if and only if the Nielsen automorphism had an
+         * effect on at least one relation.
          */
-        bool nielsenInvert(const unsigned long &i);
+        bool nielsenInvert(unsigned long i);
 
         /**
-         *  This replaces a generator gi by (gi)(gj)^k in the presentation. It
+         * Replaces a generator \c gi by either
+         * <tt>(gi)(gj)^k</tt> or <tt>(gj)^k(gi)</tt> in the presentation. It
          * it is the third type of Nielsen move one can apply to a presentation.
-         * If the flag is set false, it uses left multiplication, replacing
-         * gi by (gj)^k(gi). So if the new generator Gi is the old (gi)(gj)^k,
-         * this means we  construct the new presentation from the old by
-         * replacing occurances of gi by (Gi)(gj)^(-k).
          *
-         * @returns true if and only if the nielsen automorphism had an effect
-         *  on at least one relation.
+         * This means that, if the new generator \c Gi is the old
+         * <tt>(gi)(gj)^k</tt> or <tt>(gj)^k(gi)</tt>, then we can construct
+         * the new presentation from the old by replacing occurrences of \c Gi
+         * by <tt>(Gi)(gj)^(-k)</tt> or <tt>(gj)^(-k)(Gi)</tt> respectively.
+         *
+         * \pre Both \a i and \a j are strictly less than
+         * getNumberOfGenerators().
+         *
+         * @param i indicates the generator to replace.
+         * @param j indicates the generator to combine with \c gi.
+         * @param k indicates the power to which we raise \c gj when
+         * performing the replacement; this may be positive or negative
+         * (or zero, but this will have no effect).
+         * @param rightMult \c true if we should replace \c gi by
+         * <tt>(gi)(gj)^k</tt>, or \c false if we should replace \c gi by
+         * <tt>(gj)^k(gi)</tt>.
+         * @return \c true if and only if the nielsen automorphism had an
+         * effect on at least one relation.
          */
-        bool nielsenCombine(const unsigned long &i, const unsigned long &j,
-                const signed long &k, const bool &flag=true);
+        bool nielsenCombine(unsigned long i, unsigned long j,
+                long k, bool rightMult=true);
 
         /**
-         *  Looks for Nielsen moves that will simplify the presentation.
-         * Performs one of the most-effective ones, if it can find any.
+         * Looks for Nielsen moves that will simplify the presentation.
+         * Performs one of the most-effective moves, if it can find any.
          *
-         * @returns true if and only if it performed a Nielsen move.
+         * @return \c true if and only if it performed a Nielsen move.
          */
         bool intelligentNielsen();
 
         /**
-         *  Looks for Nielsen moves that will simplify the presentation.
-         * Performs one of the most-effective ones, if it can find any.
+         * Looks for Nielsen moves that will simplify the presentation.
+         * Performs one of the most-effective moves, if it can find any.
          *
-         * @returns the allocated NHomGroupPresentation auto pointer
-         *  which is the isomorphism from the old presentation to the
-         *  new one.
+         * @return a newly allocated homomorphism describing the
+         * map from the original presentation to the new presentation,
+         * or a null pointer if no move was performed.
          */
         std::auto_ptr<NHomGroupPresentation> intelligentNielsenDetail();
 
@@ -1013,7 +1030,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * mapped to +/-1 in the appropriate factor. All further generators
          * will be mapped to zero.
          *
-         * @returns true if presentation has changed
+         * @return true if presentation has changed
          */
         bool homologicalAlignment();
 
@@ -1022,7 +1039,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * allocated NHomGroupPresentation auto_ptr giving the reduction map
          * from the old presentation to the new, if any change is detected.
          *
-         * @returns allocated auto_ptr if presentation has changed.
+         * @return allocated auto_ptr if presentation has changed.
          */
         std::auto_ptr<NHomGroupPresentation> homologicalAlignmentDetail();
 
@@ -1042,7 +1059,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          *  6) TODO: Makes elementary simplifications to aid in seeing standard
          *     relators like commutators.
          *
-         * @returns true if and only if the choice of generators for the group
+         * @return true if and only if the choice of generators for the group
          *  has changed.  You can call prettyRewritingDetail to get the
          *  the isomorphism.
          */

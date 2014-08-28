@@ -335,12 +335,14 @@ inline const NGroupPresentation& NHomGroupPresentation::getRange() const {
     return *range_;
 }
 
-inline NGroupExpression NHomGroupPresentation::evaluate(unsigned long i)
- const { return (*(map_[i])); }
+inline NGroupExpression NHomGroupPresentation::evaluate(unsigned long i) const {
+    return *(map_[i]);
+}
 
 inline NGroupExpression NHomGroupPresentation::invEvaluate(unsigned long i)
- const { return (*(map2_[i])); }
-
+        const {
+    return *(map2_[i]);
+}
 
 } // namespace regina
 
