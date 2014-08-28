@@ -89,7 +89,7 @@ NGroupExpression* NGroupExpression::inverse() const {
 
 void NGroupExpression::invert() {
 	reverse(terms.begin(), terms.end());
-	std::list< NGroupExpressionTerm >::iterator it; 
+	std::list< NGroupExpressionTerm >::iterator it;
 	for (it = terms.begin(); it != terms.end(); it++)
 		(*it).exponent = -(*it).exponent;
 }
@@ -216,10 +216,10 @@ NGroupPresentation::NGroupPresentation(const NGroupPresentation& cloneMe) :
 }
 
 // TODO: To add: platonic groups, octahedral/cubical, dihedral,
-//       icosahedral/dodecahedral, tetrahedral and binary versions of them.  
-//       Also need to recognise circle bundles over surfaces. 
-//       Free products with amalgamation. Currently intelligentSimplify() 
-//       isn't smart enough for this. 
+//       icosahedral/dodecahedral, tetrahedral and binary versions of them.
+//       Also need to recognise circle bundles over surfaces.
+//       Free products with amalgamation. Currently intelligentSimplify()
+//       isn't smart enough for this.
 std::string NGroupPresentation::recogniseGroup() const {
     std::ostringstream out;
 
@@ -231,67 +231,67 @@ std::string NGroupPresentation::recogniseGroup() const {
     std::auto_ptr< NAbelianGroup > ab( abelianisation() );
 
     // abelian test
-    if (identifyAbelian()) { 
+    if (identifyAbelian()) {
         out << ab.get()->str();
         return out.str();
     }
 
     // not (clearly) abelian.  Check if free.
-    if (relations.size() == 0) { 
-        out << "Free(" << nGenerators << ")"; 
+    if (relations.size() == 0) {
+        out << "Free(" << nGenerators << ")";
         return out.str();
     }
 
-    // Check if its an extension over Z. 
-    // TODO: eventually look for extensions over at least fg abelian groups. 
-    //   ??maybe?? some other finite groups but it's not clear how to look 
-    //   for those. 
+    // Check if its an extension over Z.
+    // TODO: eventually look for extensions over at least fg abelian groups.
+    //   ??maybe?? some other finite groups but it's not clear how to look
+    //   for those.
     if (ab.get()->getRank()==1) {
         NGroupPresentation presCopy( *this );
-        std::auto_ptr< NHomGroupPresentation > AUT( 
+        std::auto_ptr< NHomGroupPresentation > AUT(
             presCopy.identifyExtensionOverZ() );
         if (AUT.get() != NULL) {
-            // Let's try to identify the fibre. 
+            // Let's try to identify the fibre.
             std::string domStr( AUT.get()->getDomain().recogniseGroup() );
             if (domStr.length()>0) {
                 out<<"Z~"<<domStr<<" w/monodromy ";
-            unsigned long numGen( 
+            unsigned long numGen(
                 AUT.get()->getDomain().getNumberOfGenerators() );
             for (unsigned long i=0; i<numGen; i++) {
               if (i!=0) out<<", ";
-              if (numGen<27) out<<( (char) (i+97) ); 
+              if (numGen<27) out<<( (char) (i+97) );
               else out<<"g"<<i;
-              out<<" ↦ ";     
+              out<<" ↦ ";
               AUT.get()->evaluate(i).writeText(out, (numGen<27) ? true : false);
               }
              return out.str();
             } // domain not recognised, but it is an extension
-          // TODO: put in something here for this case. 
+          // TODO: put in something here for this case.
         }
-    }         
+    }
 
     std::list< NGroupPresentation* > fpDecomp( identifyFreeProduct() );
     if (fpDecomp.size()>1) {
       out<<"FreeProduct( ";
-      for (std::list< NGroupPresentation* >::iterator i=fpDecomp.begin(); 
+      for (std::list< NGroupPresentation* >::iterator i=fpDecomp.begin();
             i!=fpDecomp.end(); i++) {
         std::string facStr( (*i)->recogniseGroup() );
         if (facStr.length()>0) {
          if (i!=fpDecomp.begin()) out<<", ";
          out<<facStr;
-         } 
-        else { // TODO: put in something here for this case. 
+         }
+        else { // TODO: put in something here for this case.
         }
         delete (*i);
      }
      out<<" )";
-     return out.str(); 
+     return out.str();
     }
 
     // TODO: let's put in the undergraduate test for finiteness, that every
     //  word can be written as a product of generators a^xb^yc^z with xyz
     //  in a finite interval. Look for the relators that would allow for this
-    //  kind of conclusion. 
+    //  kind of conclusion.
 
     return std::string(); // returns empty string if not recognised.
 }
@@ -467,23 +467,23 @@ void NGroupPresentation::applySubstitution( NGroupExpression& this_word,
 
 
 namespace { // anonymous namespace
-    bool compare_length( const NGroupExpression* first, 
-             const NGroupExpression* second ) 
+    bool compare_length( const NGroupExpression* first,
+             const NGroupExpression* second )
      {  return ( first->wordLength() < second->wordLength() ); }
 
     /**
      *  This routine takes a list of words, together with expVec. It's assumed
-     * expVec is initialized to be zero and as long as the number of generators 
-     * in the group.  What this routine does is, for each generator of the 
+     * expVec is initialized to be zero and as long as the number of generators
+     * in the group.  What this routine does is, for each generator of the
      * group, it records the sum of the absolute value of the exponents of that
      * generator in word.  For the i-th generator this number is recorded in
-     * expVec[i]. 
+     * expVec[i].
      */
-    void build_exponent_vec( const std::list< NGroupExpressionTerm > & word, 
-                              std::vector<unsigned long> &expVec ) 
+    void build_exponent_vec( const std::list< NGroupExpressionTerm > & word,
+                              std::vector<unsigned long> &expVec )
     {
      std::list<NGroupExpressionTerm>::const_iterator tit;
-     for ( tit = word.begin(); tit != word.end(); tit++) 
+     for ( tit = word.begin(); tit != word.end(); tit++)
          expVec[ (*tit).generator ] += abs( (*tit).exponent );
     }
 
@@ -493,35 +493,35 @@ namespace { // anonymous namespace
      * be a member function of NWordSubstitutionData. - bab
      *
     // gives a string that describes the substitution
-    std::string substitutionString( const NGroupExpression &word, 
+    std::string substitutionString( const NGroupExpression &word,
                     const NGroupPresentation::NWordSubstitutionData &subData )
     {
      std::string retval;
-     // cut subData into bits, assemble what we're cutting 
-     //  out and what we're pasting in. 
+     // cut subData into bits, assemble what we're cutting
+     //  out and what we're pasting in.
      unsigned long word_length ( word.wordLength() );
-     std::vector< NGroupExpressionTerm > reducer( 0 ); 
+     std::vector< NGroupExpressionTerm > reducer( 0 );
      reducer.reserve( word_length );
-     std::list<NGroupExpressionTerm>::const_iterator it; 
+     std::list<NGroupExpressionTerm>::const_iterator it;
       // splay word
      for (it = word.getTerms().begin(); it!=word.getTerms().end(); it++)
       { for (unsigned long i=0; i<abs((*it).exponent); i++)
-         reducer.push_back( NGroupExpressionTerm( (*it).generator, 
+         reducer.push_back( NGroupExpressionTerm( (*it).generator,
                           ((*it).exponent>0) ? 1 : -1 ) );    }
      // done splaying, produce inv_reducer
      std::vector< NGroupExpressionTerm > inv_reducer( word_length );
      for (unsigned long i=0; i<word_length; i++)
-        inv_reducer[word_length-(i+1)] = reducer[i].inverse(); 
-     NGroupExpression del_word, rep_word; 
+        inv_reducer[word_length-(i+1)] = reducer[i].inverse();
+     NGroupExpression del_word, rep_word;
             // produce word to delete, and word to replace with.
 
      for (unsigned long i=0; i<(word_length - subData.sub_length); i++)
-      rep_word.addTermLast( subData.invertB ?     
-            reducer[(word_length - subData.start_from + i) % word_length] : 
+      rep_word.addTermLast( subData.invertB ?
+            reducer[(word_length - subData.start_from + i) % word_length] :
         inv_reducer[(word_length - subData.start_from + i) % word_length] );
      for (unsigned long i=0; i<subData.sub_length; i++)
-      del_word.addTermLast( subData.invertB ? 
-            inv_reducer[(subData.start_from + i) % word_length] : 
+      del_word.addTermLast( subData.invertB ?
+            inv_reducer[(subData.start_from + i) % word_length] :
                 reducer[(subData.start_from + i) % word_length] );
      rep_word.simplify(); del_word.simplify();
      retval = del_word.toString()+" -> "+rep_word.toString();
@@ -728,7 +728,7 @@ bool NGroupExpression::addStringLast( const std::string& input)
 
 //             **********  NGroupPresentation below **************
 
-NGroupPresentation::NGroupPresentation(unsigned long nGens,  
+NGroupPresentation::NGroupPresentation(unsigned long nGens,
             std::vector<std::string> &rels)
 {
     nGenerators = nGens;
@@ -1449,21 +1449,21 @@ NGroupPresentation::identifyFreeProduct() const
 //
 // We do this by creating a routine that runs through the relators of this
 // group and checks if there are any partial permutations sigma that allow
-// that relator to be respected by a map.  It builds up a big list of all 
+// that relator to be respected by a map.  It builds up a big list of all
 // these partial subs, one list for every relator in *this group.  As we
 // iterate through the relators we iteratively check compatibility of these
 // subsititions lists, winnowing-down the list of substitions as we go.
 // Once done, if non-empty that would define the map
 // on all generators other than free factors, so then we have to similarly
 // check for free factors in other.  Then we check the inverse (in the free
-// group) descends to a map, if so we're done. 
+// group) descends to a map, if so we're done.
 //
 // To enable this we should probably carefully index the relations. And we
-// should handle 1-gen relations differently than multiple-gen relations, 
-// otherwise there's a potential memory explosion.  
+// should handle 1-gen relations differently than multiple-gen relations,
+// otherwise there's a potential memory explosion.
 //
-// TODO: we can modify this to be a findHom routine. And if the target is 
-// a finite group, find *all* homs up to conjugacy, etc. 
+// TODO: we can modify this to be a findHom routine. And if the target is
+// a finite group, find *all* homs up to conjugacy, etc.
 //
 bool NGroupPresentation::identifySimplyIsomorphicTo(
         const NGroupPresentation& other) const
@@ -1668,11 +1668,11 @@ namespace { // anonymous namespace to ensure not put in the library
 // if presentation is of a group that can bet written as an extension
 //  0 --> A --> G --> Z --> 0
 // this routine is to change the presentation to appear to be such a split
-//  extension. 
+//  extension.
 //
 // TODO: at present it will not declare presentations of the form:
-//  < a, b | a^5, bab^-1=a^2 > extensions over Z, because of the 
-// a^2 term.  Should fix this.  But how to do it in any generality? 
+//  < a, b | a^5, bab^-1=a^2 > extensions over Z, because of the
+// a^2 term.  Should fix this.  But how to do it in any generality?
 // Perhaps multiply conjugating automorphisms, to deduce
 //  < a, b | a^5, bab^-1=a^2, ba^2b^-1=a^4=a^-1 > etc...
 // Short-term we can recognise the fibre as being abelian and check
@@ -1949,8 +1949,8 @@ NGroupPresentation::identifyExtensionOverZ()
 bool NGroupPresentation::isValid() const
 {
     for (unsigned long i=0; i<relations.size(); i++)
-     for (std::list<NGroupExpressionTerm>::const_iterator 
-            j=relations[i]->getTerms().begin(); 
+     for (std::list<NGroupExpressionTerm>::const_iterator
+            j=relations[i]->getTerms().begin();
             j!=relations[i]->getTerms().end(); j++)
       if (j->generator >= nGenerators) return false;
     return true;
@@ -1959,14 +1959,14 @@ bool NGroupPresentation::isValid() const
 
 /*
  * This is an entirely cosmetic re-writing of the presentation, is
- * fast and superficial.   
+ * fast and superficial.
  *  1) It inverts relators if net sign of the generators is negative.
  *  2) It cyclically permutes relators to start with smallest gen.
  *  3) It sorts the relators by number of generator indices that
- *     appear, followed by relator numbers (lexico) followed by 
- *     relator length. 
+ *     appear, followed by relator numbers (lexico) followed by
+ *     relator length.
  *  4) Makes elementary simplifications to aid in seeing standard
- *     relators like commutators. 
+ *     relators like commutators.
  */
 namespace { // anonymous namespace
     bool compare_words(const NGroupExpression* first,
@@ -2030,7 +2030,7 @@ bool NGroupPresentation::prettyRewriting()
 { return prettyRewritingDetail().get(); }
 
 // this routine iteratively finds length 1 relators, and uses them to simplify
-// other relators.  In the end it deletes all length 0 relators and re-indexes. 
+// other relators.  In the end it deletes all length 0 relators and re-indexes.
 std::auto_ptr<NHomGroupPresentation> NGroupPresentation::prettyRewritingDetail()
 {
     // keep the relators in a list for now.
@@ -2315,10 +2315,10 @@ void NGroupPresentation::writeTextCompact(std::ostream& out) const {
 }
 
 
-// We will go through, apply dehnAlgSubMetric look for substitutions, 
-//  then apply all of them within a reasonable length. 
+// We will go through, apply dehnAlgSubMetric look for substitutions,
+//  then apply all of them within a reasonable length.
 // if user requests we will go further and do a 2nd iteration with more care...
-// depth==1 by default. 
+// depth==1 by default.
 
 void NGroupPresentation::proliferateRelators(unsigned long depth)
 {
