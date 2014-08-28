@@ -74,7 +74,6 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
                  of the ith generator from the range. Allocated only
                  if user claims map invertible. */
    
-
     public:
         /**
          * Creates a new homomorphism from the given data.
@@ -116,7 +115,6 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
                 const std::vector<NGroupExpression> &map,
                 const std::vector<NGroupExpression> &map2);
 
-
         /**
          * Creates a new identity homomorphism for the given group.
          *
@@ -149,7 +147,6 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
          * @return a reference to the range.
          */
         const NGroupPresentation& getRange() const;
-
 
         /**
          * Evaluate the homomorphism at an element.
@@ -225,10 +222,51 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
          *
          * @return an auto_ptr<NHomGroupPresentation> to the composition. 
          *  evaluating the return on an element is the same as evaluating
-         *  this out the evalution of input. 
+         *  this on the evalution of input. i.e. in this composition input
+         *  is evaluated first, and the output of that is evaluated by this,
+         *  then returned.  
          */
         std::auto_ptr<NHomGroupPresentation> composeWith(
             const NHomGroupPresentation& input) const;
+
+        /**
+         * Inverts the homomorphism, if it was defined as an isomorphism. 
+         * This is an almost instantaneous operation, as it only involves
+         * switching pointers. 
+         *
+         * @pre assumes you called the constructor which defines this map 
+         *  in both directions. 
+         *
+         * @return true if the inversion operation was successful. 
+         */
+        bool invert();
+
+        /**
+         * Verifies the map is a valid homomorphism.  Specifically, this
+         * routine runs through all the relators in the domain, evaluates
+         * the homomorphism on the relators and check they simplify to 1
+         * in the range.
+         *
+         * @return true if the code can verify this is a homomorphism. This
+         *  routine can return false even if this is a well-defined
+         *  homomorphism, the trouble occurs if small cancellation theory
+         *  does not suffice.  
+         */
+        bool verifyHom() const;
+
+        /**
+         *  Attempts to determine if this map is actually an isomorphism. 
+         * You probably only want to run this on good presentation for small
+         * cancellation theory -- an automorphism of a poorly-presented group
+         * likely will not be noticed. 
+         *  
+         * @pre the homomorphism must have been defined bi-directionally, i.e.
+         *  evaluate and invEvaluate must both be callable. 
+         *
+         * @return true if it is verified if f^-1(f(x))x^-1 simplifes to 1 for all
+         *  generators x. 
+         */
+        bool isAutomorphism() const;
 
         /**
          *  Computes the induced map on the abelianizations.
