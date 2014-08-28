@@ -73,7 +73,7 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
             /**< A map whose ith element is the image in the domain
                  of the ith generator from the range. Allocated only
                  if user claims map invertible. */
-   
+
     public:
         /**
          * Creates a new homomorphism from the given data.
@@ -94,9 +94,9 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
         /**
          * Creates a new homomorphism from the given data.
          * If called using this constructor, one is declaring a map both
-         * from the domain to range, and a map from the range to domain. 
+         * from the domain to range, and a map from the range to domain.
          * Usually one would want this second map to be the inverse of
-         * the first.  
+         * the first.
          *
          * @param domain the domain of the homomorphism.
          * @param range the range of the homomorphism.
@@ -165,10 +165,10 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
         NGroupExpression evaluate(unsigned long i) const;
 
         /**
-         * Evaluate the isomorphisms's inverse at an element.  
+         * Evaluate the isomorphisms's inverse at an element.
          *
          * \warning this homomorphism must be known to be an isomorphism for
-         *  this procedure to work. 
+         *  this procedure to work.
          *
          * @param arg an element of the range.
          * @return the image of this element in the domain.
@@ -178,11 +178,11 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
          * Evaluate the isomorphism at a generator of the range.
          *
          * \warning this homomorphism must be known to be an isomorphism for
-         *  this procedure to work. 
+         *  this procedure to work.
          *
          * @param i the index of a generator in the domain.
          * @return the image of the <i>i</i>th generator in the range.
-         */        
+         */
         NGroupExpression invEvaluate(unsigned long i) const;
 
         /**
@@ -203,41 +203,41 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
          * Simplifies the domain and range using only nielsen moves, keeping
          * track of the resulting map in the progress.
          *
-         * @return true if and only if the presentations have changed. 
+         * @return true if and only if the presentations have changed.
          */
         bool intelligentNielsen();
 
         /**
-         *  Simplifies the domain and range using only small cancellation
-         * theory. 
+         * Simplifies the domain and range using only small cancellation
+         * theory.
          *
-         * @return true if and only if the presentations have changed. 
+         * @return true if and only if the presentations have changed.
          */
         bool smallCancellation();
 
         /**
-         * Composes the current homomorphism with the input homomorphism.  
-         * 
-         * @pre the range of the input must equal the domain of this. 
+         * Composes the current homomorphism with the input homomorphism.
          *
-         * @return an auto_ptr<NHomGroupPresentation> to the composition. 
-         *  evaluating the return on an element is the same as evaluating
-         *  this on the evalution of input. i.e. in this composition input
-         *  is evaluated first, and the output of that is evaluated by this,
-         *  then returned.  
+         * @pre the range of the input must equal the domain of this.
+         *
+         * @return an auto_ptr<NHomGroupPresentation> to the composition.
+         * evaluating the return on an element is the same as evaluating
+         * this on the evalution of input. i.e. in this composition input
+         * is evaluated first, and the output of that is evaluated by this,
+         * then returned.
          */
         std::auto_ptr<NHomGroupPresentation> composeWith(
             const NHomGroupPresentation& input) const;
 
         /**
-         * Inverts the homomorphism, if it was defined as an isomorphism. 
+         * Inverts the homomorphism, if it was defined as an isomorphism.
          * This is an almost instantaneous operation, as it only involves
-         * switching pointers. 
+         * switching pointers.
          *
-         * @pre assumes you called the constructor which defines this map 
-         *  in both directions. 
+         * @pre assumes you called the constructor which defines this map
+         * in both directions.
          *
-         * @return true if the inversion operation was successful. 
+         * @return true if the inversion operation was successful.
          */
         bool invert();
 
@@ -248,23 +248,23 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
          * in the range.
          *
          * @return true if the code can verify this is a homomorphism. This
-         *  routine can return false even if this is a well-defined
-         *  homomorphism, the trouble occurs if small cancellation theory
-         *  does not suffice.  
+         * routine can return false even if this is a well-defined
+         * homomorphism, the trouble occurs if small cancellation theory
+         * does not suffice.
          */
         bool verifyHom() const;
 
         /**
-         *  Attempts to determine if this map is actually an isomorphism. 
+         * Attempts to determine if this map is actually an isomorphism.
          * You probably only want to run this on good presentation for small
          * cancellation theory -- an automorphism of a poorly-presented group
-         * likely will not be noticed. 
-         *  
+         * likely will not be noticed.
+         *
          * @pre the homomorphism must have been defined bi-directionally, i.e.
-         *  evaluate and invEvaluate must both be callable. 
+         * evaluate and invEvaluate must both be callable.
          *
          * @return true if it is verified if f^-1(f(x))x^-1 simplifes to 1 for all
-         *  generators x. 
+         * generators x.
          */
         bool isAutomorphism() const;
 
@@ -285,7 +285,7 @@ inline NHomGroupPresentation::NHomGroupPresentation(
             const NGroupPresentation &domain,
             const NGroupPresentation &range,
             const std::vector<NGroupExpression> &map ) :
-        domain_(new NGroupPresentation(domain)), 
+        domain_(new NGroupPresentation(domain)),
         range_(new NGroupPresentation(range)) {
     map_.resize(map.size());
     for (unsigned long i=0; i<map_.size(); i++)
@@ -297,7 +297,7 @@ inline NHomGroupPresentation::NHomGroupPresentation(
             const NGroupPresentation &range,
             const std::vector<NGroupExpression> &map,
             const std::vector<NGroupExpression> &map2 ) :
-        domain_(new NGroupPresentation(domain)), 
+        domain_(new NGroupPresentation(domain)),
         range_(new NGroupPresentation(range)) {
     map_.resize(map.size());
     map2_.resize(map2.size());
@@ -335,10 +335,10 @@ inline const NGroupPresentation& NHomGroupPresentation::getRange() const {
     return *range_;
 }
 
-inline NGroupExpression NHomGroupPresentation::evaluate(unsigned long i) 
+inline NGroupExpression NHomGroupPresentation::evaluate(unsigned long i)
  const { return (*(map_[i])); }
 
-inline NGroupExpression NHomGroupPresentation::invEvaluate(unsigned long i) 
+inline NGroupExpression NHomGroupPresentation::invEvaluate(unsigned long i)
  const { return (*(map2_[i])); }
 
 
