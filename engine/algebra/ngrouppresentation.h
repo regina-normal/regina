@@ -447,14 +447,24 @@ class REGINA_API NGroupExpression : public ShareableObject {
         bool addStringLast(const std::string& input);
 
         /**
-         *  Given a word of the form g_i1^j1 g_i2^j2 ... g_in^jn
-         * converts the word into g_i2^j2 ... g_in^jn g_i1^j1
+         * Cycles this word by moving the leftmost term around to the rightmost.
+         * All other terms shift one step to the left.
+         *
+         * If the word is of the form
+         * <tt>g_i1^j1 g_i2^j2 ... g_in^jn</tt>,
+         * this converts it into the word
+         * <tt>g_i2^j2 ... g_in^jn g_i1^j1</tt>.
          */
         void cycleRight();
 
         /**
-         *  Given a word of the form g_i1^j1 g_i2^j2 ... g_in^jn
-         * converts the word into g_in^jn g_i1^j1 g_i1^j1 ... g_in-1^jn-1
+         * Cycles this word by moving the rightmost term around to the leftmost.
+         * All other terms shift one step to the right.
+         *
+         * If the word is of the form
+         * <tt>g_i1^j1 g_i2^j2 ... g_in^jn</tt>,
+         * this converts it into the word
+         * <tt>g_in^jn g_i1^j1 g_i1^j1 ... g_in-1^jn-1</tt>.
          */
         void cycleLeft();
 
@@ -649,6 +659,10 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * the NGroupExpression::NGroupExpression(const std::string&, bool*)
          * constructor notes for information on what format these strings
          * can take.
+         *
+         * If any of the given strings could not be interpreted as
+         * words, this routine will insert the trivial (unit) word in
+         * its place.
          *
          * If you are compiling Regina against C++11, you can use the
          * C++11 initializer_list construction to construct an
