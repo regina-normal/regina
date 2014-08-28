@@ -1047,12 +1047,6 @@ jZdNkm4pXQo+PgpzdGFydHhyZWYKMzUwNjYKJSVFT0YK
     <tet desc=""> 0 78 1 57 2 99 4 201 </tet>
     <tet desc=""> 0 39 1 78 2 57 3 210 </tet>
   </tetrahedra>
-  <fundgroup>
-<group generators="2">
-  <reln> 0^-1 1^1 0^1 1^1 0^-1 1^-1 </reln>
-  <reln> 0^-1 1^1 0^1 1^-2 0^1 1^1 </reln>
-</group>
-  </fundgroup>
   <H1><abeliangroup rank="0"> </abeliangroup></H1>
   <H1Rel><abeliangroup rank="0"> </abeliangroup></H1Rel>
   <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
@@ -1068,12 +1062,6 @@ jZdNkm4pXQo+PgpzdGFydHhyZWYKMzUwNjYKJSVFT0YK
     <tet desc=""> 0 228 0 228 2 39 2 210 </tet>
     <tet desc=""> 0 114 0 156 1 39 1 201 </tet>
   </tetrahedra>
-  <fundgroup>
-<group generators="2">
-  <reln> 0^1 1^-1 0^1 1^1 </reln>
-  <reln> 0^1 1^-1 0^-1 1^1 </reln>
-</group>
-  </fundgroup>
   <H1><abeliangroup rank="1"> 2 </abeliangroup></H1>
   <H1Rel><abeliangroup rank="1"> 2 </abeliangroup></H1Rel>
   <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
