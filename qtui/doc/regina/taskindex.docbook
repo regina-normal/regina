@@ -1320,7 +1320,12 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-simplification">simplification of
+  <primaryie><link linkend="tri-algebra-homfund">simplifying
+   group presentations</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-simplification">simplifying
    triangulations</link></primaryie>
  </indexentry>
 

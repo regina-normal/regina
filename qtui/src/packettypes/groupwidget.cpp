@@ -115,12 +115,12 @@ GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) :
         btn->setToolTip(tr("Generate new relators from old (can be "
             "memory-intensive)"));
         btn->setWhatsThis(tr("<qt>Generate new relators from old.  "
-            "This attempts to intelligently multiply all the relators "
+            "This attempts to multiply all the relators "
             "together in a moderately intelligent way to create new, hopefully "
             "useful relators.  You should alternate this "
             "with one of the simplification buttons above.<p>"
-            "This routine is often useful when trying to prove that a "
-            "group is trivial.<p>"
+            "This routine has been found particularly useful when trying to "
+            "prove that a group is trivial.<p>"
             "<b>Warning:</b> If the presentation is already large then "
             "this computation might easily exceed the memory of your "
             "computer.</qt>"));
