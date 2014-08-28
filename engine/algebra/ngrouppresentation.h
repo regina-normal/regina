@@ -217,7 +217,7 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * @param cloneMe the expression to clone.
          * @return a reference to this expression.
          */
-        NGroupExpression& operator=(const NGroupExpression& cloneMe);
+        NGroupExpression& operator = (const NGroupExpression& cloneMe);
 
         /**
          * Equality operator. Checks to see whether or not these two words
@@ -226,7 +226,7 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * @param comp the expression to compare against this.
          * @return \c true if this and the given string literal are identical.
          */
-        bool operator==(const NGroupExpression& comp) const;
+        bool operator == (const NGroupExpression& comp) const;
 
         /**
          * Returns the list of terms in this expression.
