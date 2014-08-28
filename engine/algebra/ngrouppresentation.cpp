@@ -261,7 +261,7 @@ std::string NGroupPresentation::recogniseGroup() const {
               if (i!=0) out<<", ";
               if (numGen<27) out<<( (char) (i+97) ); 
               else out<<"g"<<i;
-              out<<" --> ";     
+              out<<" ↦ ";     
               AUT.get()->evaluate(i).writeText(out, (numGen<27) ? true : false);
               }
              return out.str();
