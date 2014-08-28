@@ -775,16 +775,16 @@ NGroupPresentation::intelligentSimplifyDetail()
         doRep = false;
         bool1 = false;
         bool2 = false;
-        std::auto_ptr<NHomGroupPresentation>
-        tempHom( smallCancellationDetail() );
+        std::auto_ptr<NHomGroupPresentation> tempHom(
+            smallCancellationDetail() );
         if (tempHom.get()) {
             bool1 = true;
             if (!redHom.get()) redHom.reset( tempHom.release() );
             else redHom.reset( tempHom->composeWith( *redHom.get() ).release() );
         }
 
-        std::auto_ptr<NHomGroupPresentation>
-        temp2Hom( intelligentNielsenDetail() );
+        std::auto_ptr<NHomGroupPresentation> temp2Hom(
+            intelligentNielsenDetail() );
         if (temp2Hom.get()) {
             bool2 = true;
             if (!redHom.get()) redHom.reset( temp2Hom.release() );
@@ -793,7 +793,8 @@ NGroupPresentation::intelligentSimplifyDetail()
         if ( bool2 ) doRep = true;
     }
 
-    std::auto_ptr<NHomGroupPresentation> temp3Hom( prettyRewritingDetail() );
+    std::auto_ptr<NHomGroupPresentation> temp3Hom(
+        prettyRewritingDetail() );
     if (temp3Hom.get()) {
         if (!redHom.get()) redHom.reset( temp3Hom.release() );
         else redHom.reset( temp3Hom->composeWith( *redHom.get() ).release() );
