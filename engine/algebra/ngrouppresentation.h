@@ -1102,29 +1102,6 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         std::auto_ptr<NHomGroupPresentation> prettyRewritingDetail();
 
         /**
-         *  This routine attempts to re-write the presentation as a group
-         *  extension of the form: < a, r1,...,rn | R1,...,RM, ar1a^-1 = w1,
-         *    ... arna^-1 = wn > i.e. as a semi-direct product of the integers
-         *  and another finitely-presented group.  This is an algorithmic
-         *  implementation of the Reidemeister-Schrier algorithm, which isn't
-         *  actually an algorithm.  So sometimes this procedure works, and
-         *  sometimes it does not.  The return value is an allocated auto_ptr
-         *  if and only if the algorithm is successful.  Even if the algorithm
-         *  is unsuccessful, its application will likely result in a
-         *  modification of the presentation.
-         *
-         *  \apinotfinal - this routine may very well either be eliminated
-         *   in future versions of this software, perhaps incorporated into a
-         *   bigger-and-better future algorithm.
-         *
-         *  @return an allocated auto_ptr< NHomGroupPresentation > if and only
-         *   if the algorithm is successful.  When this pointer is allocated
-         *   it will be an automorphism of a presentation of the kernel of the
-         *   map this to the integers.
-         */
-        std::auto_ptr< NHomGroupPresentation > identifyExtensionOverZ();
-
-        /**
          * Attempts to prove that this and the given group presentation are
          * <i>simply isomorphic</i>.
          *
@@ -1154,21 +1131,6 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * presentations are simply isomorphic, or \c false if it could not.
          */
         bool identifySimplyIsomorphicTo(const NGroupPresentation& other) const;
-
-        /**
-         * Routine attempts to determine if this groups is clearly a free
-         * product of other groups.  This is an unsophisticated algorithm
-         * and will likely only have success if one has pre-processed the
-         * presentation with simplification routines beforehand.
-         *
-         * @return a list of NGroupPresentation's.  This will be an empty
-         *  list if the routine fails, and a list of allocated pointers
-         *  otherwise.
-         *
-         * \apinotfinal Reconsider how the end-user should see this
-         *  routine.
-         */
-        std::list< NGroupPresentation* > identifyFreeProduct() const;
 
         /**
          * Returns a TeX representation of this group presentation.
@@ -1231,6 +1193,43 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         virtual void writeTextLong(std::ostream& out) const;
 
     private:
+        /**
+         * This routine attempts to re-write the presentation as a group
+         * extension of the form: < a, r1,...,rn | R1,...,RM, ar1a^-1 = w1,
+         *   ... arna^-1 = wn >, i.e., as a semi-direct product of the integers
+         * and another finitely-presented group.  This is an algorithmic
+         * implementation of the Reidemeister-Schrier algorithm, which isn't
+         * actually an algorithm.  So sometimes this procedure works, and
+         * sometimes it does not.  The return value is an allocated auto_ptr
+         * if and only if the algorithm is successful.  Even if the algorithm
+         * is unsuccessful, its application will likely result in a
+         * modification of the presentation.
+         *
+         * \apinotfinal This routine may very well either be eliminated
+         * in future versions of this software, perhaps incorporated into a
+         * bigger-and-better future algorithm.
+         *
+         * @return a newly allocated homomorphism if and only
+         * if the algorithm is successful.  When this pointer is allocated
+         * it will be an automorphism of a presentation of the kernel of the
+         * map this to the integers.
+         */
+        std::auto_ptr< NHomGroupPresentation > identifyExtensionOverZ();
+
+        /**
+         * Routine attempts to determine if this groups is clearly a free
+         * product of other groups.  This is an unsophisticated algorithm
+         * and will likely only have success if one has pre-processed the
+         * presentation with simplification routines beforehand.
+         *
+         * \apinotfinal Reconsider how the end-user should see this routine.
+         *
+         * @return a list of NGroupPresentation's.  This will be an empty
+         * list if the routine fails, and a list of allocated pointers
+         * otherwise.
+         */
+        std::list< NGroupPresentation* > identifyFreeProduct() const;
+
         /**
          * A structure internal to the small cancellation simplification
          * algorithm.
