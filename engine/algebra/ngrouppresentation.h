@@ -207,6 +207,9 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * could not be interpreted then this expression will be initialised
          * to the trivial word.
          *
+         * \ifacespython The second argument \a valid is not present,
+         * and will be assumed to be \c null.
+         *
          * @param input the input string that is to be interpreted.
          * @param valid used for error reporting as described above, or
          * \c null if no error reporting is required.
@@ -542,6 +545,8 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * \pre If \a cyclic is \c true, then both this word and \a other
          * have been cyclically reduced.
          *
+         * \ifacespython Not present.
+         *
          * @param other the word to compare against this.
          * @param cyclic if \c false we get a list of exact relabellings from
          * this word to \a other.  If \c true, it can be up to cyclic
@@ -668,6 +673,8 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * C++11 initializer_list construction to construct an
          * NGroupPresentation directly using syntax of the form
          * <tt>NGroupPresentation(nGens, { "rel1", "rel2", ... })</tt>.
+         *
+         * \ifacespython Not present.
          *
          * @param nGens the number of generators.
          * @param rels a vector of relations each given in string form,
