@@ -795,8 +795,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * presentation, or a null pointer if this presentation was not
          * changed.
          */
-        std::auto_ptr<NHomGroupPresentation> 
-            smallCancellationDetail();
+        std::auto_ptr<NHomGroupPresentation> smallCancellationDetail();
 
         /**
          * Using the current presentation of the group, this routine uses
@@ -815,9 +814,9 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         bool simplifyWord( NGroupExpression &input ) const;
 
         /**
-         * A routine that attempts to simplify presentations, which can
-         * help when small cancellation theory can't find the simplest
-         * relators.
+         * A routine to help escape local wells when simplifying
+         * presentations, which may be useful when small cancellation theory
+         * can't find the simplest relators.
          *
          * Given a presentation &lt;g_i | r_i&gt;, this routine appends
          * consequences of the relators {r_i} to the presentation that
@@ -1005,7 +1004,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
 
         /**
          * This is an entirely cosmetic re-writing of the presentation, is
-         * fast and superficial.   
+         * fast and superficial.
          *  1) If there are any length 1 relators, those generators are
          *     deleted, and the remaining relators simplified. 
          *  2) It sorts the relators by number of generator indices that
