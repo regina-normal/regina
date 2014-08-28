@@ -770,6 +770,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * the simplification is done.
          *
          * @return \c true if and only if the group presentation was changed.
+         * You can call intelligentSimplifyDetail() to get the isomorphism.
          */
         bool intelligentSimplify();
 
@@ -795,6 +796,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * the simplification is done.
          *
          * @return \c true if and only if the group presentation was changed.
+         * You can call smallCancellationDetail() to get the isomorphism.
          */
         bool smallCancellation();
 
@@ -820,20 +822,20 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         std::auto_ptr<NHomGroupPresentation> smallCancellationDetail();
 
         /**
-         * Using the current presentation of the group, this routine uses
-         * small cancellation theory to reduce the input word.
+         * Uses small cancellation theory to reduce the input word,
+         * using the current presentation of the group.  The input word
+         * will be modified directly.
          *
-         * @input is the word you would like to simplify.  It must be a word
-         *  in the generators of this group.
+         * \warning This routine is only as good as the relator table for the
+         * group.  You might want to consider running intelligentSimplify(),
+         * possibly in concert with proliferateRelators(), before using this
+         * routine for any significant tasks.
          *
-         * \warning this routine is only as good as the relator table for the
-         *  group.  You might want to consider running intelligentSimplify()
-         *  and possibly proliferateRelators() before using this routine for
-         *  any significant tasks.
-         *
-         * @return true if the input word has been modified, false otherwise.
+         * @param input is the word you would like to simplify.
+         * This must be a word in the generators of this group.
+         * @return \c true if and only if the input word was modified.
          */
-        bool simplifyWord( NGroupExpression &input ) const;
+        bool simplifyWord(NGroupExpression &input) const;
 
         /**
          * A routine to help escape local wells when simplifying
@@ -924,21 +926,30 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         std::auto_ptr<NMarkedAbelianGroup> markedAbelianisation() const;
 
         /**
-         * Attempts to determine if the group is abelian.   If the group is
-         * abelian, markedAbelianization() is the easiest way to see precisely
+         * Attempts to determine if the group is abelian.
+         *
+         * A return value of \c true indicates that this routine
+         * successfully certified that the group is abelian.
+         * A return value of \c false indicates an inconclusive result:
+         * either the group is non-abelian, or the group
+         * is abelian but this routine could not prove so.
+         *
+         * If the group is abelian, then markedAbelianization() is the easiest
+         * way to see precisely
          * which abelian group it is, and how the generators sit in that group.
-         * You will have better luck using this algorithm provided the
-         * presentation has been simplified, as this algorithm uses small
+         *
+         * You will have better results from this algorithm if the
+         * presentation has been simplified, since this algorithm uses small
          * cancellation theory in an attempt to reduce the commutators of all
          * pairs of generators.
          *
-         * \warning if one has not adequately simplified this presentation this
-         *  routine will return false.  Consider running intelligentSimplify
-         *  and perhaps even proliferateRelators in order to discover adequately
-         *  many commutators.
+         * \warning If you have not adequately simplified this presentation
+         * this routine will most likely return \c false.  Consider running
+         * intelligentSimplify, possibly in concert with proliferateRelators(),
+         * in order to discover adequately many commutators.
          *
-         * @return true if the group is shown to be abelian.  False if either
-         *  the group is not abelian, or the algorithm fails.
+         * @return \c true if the group is shown to be abelian, or
+         * \c false if the result is inconclusive.
          */
         bool identifyAbelian() const;
 
@@ -1003,6 +1014,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * Performs one of the most-effective moves, if it can find any.
          *
          * @return \c true if and only if it performed a Nielsen move.
+         * You can call intelligentNielsen() to get the isomorphism.
          */
         bool intelligentNielsen();
 
@@ -1017,54 +1029,76 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         std::auto_ptr<NHomGroupPresentation> intelligentNielsenDetail();
 
         /**
-         * This routine attempts to rewrite the presentation so that generators
+         * Rewrites the presentation so that generators
          * of the group map to generators of the abelianisation, with any
          * left-over generators mapping to zero (if possible).  Consider this a
-         * homological-alignment of the presentation.
+         * \e homological-alignment of the presentation.
          *
-         * If the abelianisation of this group has rank N and M invariant
-         * factors d0 | d2 | ... | d(M-1), this routine applies Nielsen moves
-         * to the presentation to ensure that under the markedAbelianisation
-         * routine, generators 0 through M-1 are mapped to generators of the
-         * relevant Z_di group.  Similarly, generators M through M+N-1 are
-         * mapped to +/-1 in the appropriate factor. All further generators
-         * will be mapped to zero.
+         * See homologicalAlignmentDetail() for further details on what
+         * this routine does.
          *
-         * @return true if presentation has changed
+         * @return \c true if presentation was changed, or \c false if
+         * the presentation was already homologically aligned.
+         * See homologicalAlignmentDetail() if you wish to get the isomorphism.
          */
         bool homologicalAlignment();
 
         /**
-         * Same a the previous homologicalAlignment() routine but returns an
-         * allocated NHomGroupPresentation auto_ptr giving the reduction map
-         * from the old presentation to the new, if any change is detected.
+         * Rewrites the presentation so that generators
+         * of the group map to generators of the abelianisation, with any
+         * left-over generators mapping to zero (if possible).  Consider this a
+         * \e homological-alignment of the presentation.
          *
-         * @return allocated auto_ptr if presentation has changed.
+         * If the abelianisation of this group has rank \a N and \a M invariant
+         * factors <tt>d0 | d2 | ... | d(M-1)</tt>,
+         * this routine applies Nielsen moves
+         * to the presentation to ensure that under the markedAbelianisation()
+         * routine, generators 0 through \a M-1 are mapped to generators of the
+         * relevant \c Z_di group.  Similarly, generators \a M through
+         * <i>M</i>+<i>N</i>-1 are mapped to +/-1 in the appropriate factor.
+         * All further generators will be mapped to zero.
+         *
+         * @return a newly allocated homomorphism giving the reduction map
+         * from the old presentation to the new, or a null pointer if
+         * this presentation was not changed.
          */
         std::auto_ptr<NHomGroupPresentation> homologicalAlignmentDetail();
 
         /**
-         * This is an entirely cosmetic re-writing of the presentation, is
+         * An entirely cosmetic re-writing of the presentation, which is
          * fast and superficial.
-         *  1) If there are any length 1 relators, those generators are
-         *     deleted, and the remaining relators simplified.
-         *  2) It sorts the relators by number of generator indices that
-         *     appear, followed by relator numbers (lexico) followed by
-         *     relator length.
-         *  3) inverts relators if net sign of the generators is negative.
-         *  4) Given each generator, it looks for the smallest word where that
-         *     generator appears with non-zero weight.  If negative weight,
-         *     it inverts that generator.
-         *  5) It cyclically permutes relators to start with smallest gen.
-         *  6) TODO: Makes elementary simplifications to aid in seeing standard
-         *     relators like commutators.
          *
-         * @return true if and only if the choice of generators for the group
-         *  has changed.  You can call prettyRewritingDetail to get the
-         *  the isomorphism.
+         * See prettyRewritingDetail() for further details on what
+         * this routine does.
+         *
+         * @return \c true if and only if the choice of generators for the
+         * group has changed.  You can call prettyRewritingDetail() to get the
+         * the isomorphism.
          */
         bool prettyRewriting();
 
+        /**
+         * An entirely cosmetic re-writing of the presentation, which is
+         * fast and superficial.
+         *
+         *  1. If there are any length 1 relators, those generators are
+         *     deleted, and the remaining relators simplified.
+         *  2. It sorts the relators by number of generator indices that
+         *     appear, followed by relator numbers (lexico) followed by
+         *     relator length.
+         *  3. inverts relators if net sign of the generators is negative.
+         *  4. Given each generator, it looks for the smallest word where that
+         *     generator appears with non-zero weight.  If negative weight,
+         *     it inverts that generator.
+         *  5. It cyclically permutes relators to start with smallest gen.
+         *
+         * \todo As a final step, make elementary simplifications to aid in
+         * seeing standard relators like commutators.
+         *
+         * @return a newly allocated homomorphism describing the
+         * map from the original presentation to the new presentation,
+         * or a null pointer if the choice of generators did not change.
+         */
         std::auto_ptr<NHomGroupPresentation> prettyRewritingDetail();
 
         /**
