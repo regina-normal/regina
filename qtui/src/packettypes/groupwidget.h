@@ -94,17 +94,17 @@ class GroupWidget : public QWidget {
 
     public slots:
         /**
-         * Group simplification actions.
+         * Group simplification via GAP.
          */
         void simplifyGAP();
         /**
-         * Our internal pi1 simplification code.
+         * Regina's own simplification code.
          */
-        void simplifyPi1();
+        void simplifyInternal();
         /**
-         * Our internal routine for searching for more relevant relators.
+         * Search for more potentially useful relators.
          */
-        void proliferateRelatorsPi1();
+        void proliferateRelators();
 
     private:
         /**
