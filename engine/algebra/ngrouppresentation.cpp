@@ -530,14 +530,14 @@ namespace { // anonymous namespace
     */
 }
 
-void NGroupExpression::addTermsLast( const NGroupExpression& word)
+void NGroupExpression::addTermsLast(const NGroupExpression& word)
 {
     std::list< NGroupExpressionTerm >::const_iterator it;
     for (it = word.terms.begin(); it != word.terms.end(); it++)
         addTermLast( *it );
 }
 
-void NGroupExpression::addTermsFirst( const NGroupExpression& word)
+void NGroupExpression::addTermsFirst(const NGroupExpression& word)
 {
     // traverse word's terms in reverse order.
     std::list< NGroupExpressionTerm >::const_reverse_iterator it;
@@ -708,22 +708,23 @@ NGroupExpression::NGroupExpression( const std::string &input, bool* valid )
 
 bool NGroupExpression::addStringFirst( const std::string& input)
 {
-    bool temp(false);
-    NGroupExpression tword( NGroupExpression(input, &temp) );
-    if (!temp) return false;
-    else addTermsFirst(tword);
+    bool temp;
+    NGroupExpression tword( input, &temp );
+    if (!temp)
+        return false;
+    addTermsFirst(tword);
     return true;
 }
 
 bool NGroupExpression::addStringLast( const std::string& input)
 {
-    bool temp(false);
-    NGroupExpression tword( NGroupExpression(input, &temp) );
-    if (!temp) return false;
-    else addTermsLast(tword);
+    bool temp;
+    NGroupExpression tword( input, &temp );
+    if (!temp)
+        return false;
+    addTermsLast(tword);
     return true;
 }
-
 
 //             **********  NGroupPresentation below **************
 

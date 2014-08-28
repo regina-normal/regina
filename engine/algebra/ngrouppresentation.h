@@ -392,29 +392,59 @@ class REGINA_API NGroupExpression : public ShareableObject {
         void addTermLast(unsigned long generator, long exponent);
 
         /**
-         * Multiplies *this on the right by word.
-         */
-        void addTermsLast( const NGroupExpression& word);
-        /**
-         * Multiplies *this on the left by word.
-         */
-        void addTermsFirst( const NGroupExpression& word);
-
-        /**
-         * Multiplies *this on the left by the word interpretation of the
-         * string input.  See NGroupExpression( std::string, bool ) for
-         * valid input forms. 
+         * Multiplies this expression on the left by the given word.
+         * This expression will be modified directly.
          *
-         * @return true if the string is interpreted and the completes 
-         *  successfully. false if the algorithm has any trouble interpreting 
-         *  the input, in which case *this is untouched.
-         */ 
-        bool addStringFirst( const std::string& input);
+         * @param word the word to multiply with this expression.
+         */
+        void addTermsFirst(const NGroupExpression& word);
+        /**
+         * Multiplies this expression on the right by the given word.
+         * This expression will be modified directly.
+         *
+         * @param word the word to multiply with this expression.
+         */
+        void addTermsLast(const NGroupExpression& word);
 
         /**
-         * Same as addStringFirst, except this algorithm appends on the right.
+         * Multiplies this expression on the left by the word
+         * respresented by the given string.
+         *
+         * See the string-based constructor
+         * NGroupExpression(const std::string&, bool*) for further
+         * information on how this string should be formatted.
+         *
+         * If the given string cannot be interpreted as a word in a group,
+         * then this expression will be left untouched.
+         *
+         * @param a string representation of the word to multiply with
+         * this expression.
+         * @return \c true if the given string could interpreted
+         * (and therefore the multiplication was completed successfully), or
+         * \c false if the given string could not be interpreted
+         * (in which case this expression will be left untouched).
          */
-        bool addStringLast( const std::string& input);
+        bool addStringFirst(const std::string& input);
+
+        /**
+         * Multiplies this expression on the right by the word
+         * respresented by the given string.
+         *
+         * See the string-based constructor
+         * NGroupExpression(const std::string&, bool*) for further
+         * information on how this string should be formatted.
+         *
+         * If the given string cannot be interpreted as a word in a group,
+         * then this expression will be left untouched.
+         *
+         * @param a string representation of the word to multiply with
+         * this expression.
+         * @return \c true if the given string could interpreted
+         * (and therefore the multiplication was completed successfully), or
+         * \c false if the given string could not be interpreted
+         * (in which case this expression will be left untouched).
+         */
+        bool addStringLast(const std::string& input);
 
         /**
          *  Given a word of the form g_i1^j1 g_i2^j2 ... g_in^jn
@@ -572,12 +602,12 @@ class REGINA_API NGroupExpression : public ShareableObject {
  *
  * If there are \a g generators, they will be numbered 0, 1, ..., <i>g</i>-1.
  *
- * \todo let's make intelligent simplify a tad more intelligent, and the GUI
+ * \todo Let's make intelligent simplify a tad more intelligent, and the GUI
  * call a bit more safe.  Perhaps parallelize the GUI call, and give users
  * parameters to ensure it won't crash the computer.  Also look at the FPGroup
  * package. We should also have a simple way of creating NGroupPresentation
  * objects directly from text strings.  We would like to have something like
- * NGroupPresentation( numGens, "abAAB", "bccd" ) etc. with arbitrary 
+ * NGroupPresentation( numGens, "abAAB", "bccd" ) etc., with arbitrary
  * numbers of relators. Maybe std::tuple.  Or "variadic templates"?
  */
 class REGINA_API NGroupPresentation : public ShareableObject {
