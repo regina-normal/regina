@@ -524,7 +524,7 @@ namespace { // anonymous namespace
             inv_reducer[(subData.start_from + i) % word_length] :
                 reducer[(subData.start_from + i) % word_length] );
      rep_word.simplify(); del_word.simplify();
-     retval = del_word.toString()+" -> "+rep_word.toString();
+     retval = del_word.str()+" -> "+rep_word.str();
      return retval;
     }
     */
