@@ -1659,10 +1659,8 @@ bool NGroupPresentation::nielsenCombine(unsigned long i, unsigned long j,
 }
 
 // these macros are used only in the identifyExtensionOverZ routine below.
-namespace { // anonymous namespace to ensure not put in the library
-#define idx(gen, cov) ((unsigned long)(gen-1)+nGm1*cov)
-#define unidx(dat) std::pair<unsigned long, unsigned long>((dat % nGm1)+1, dat/nGm1)
-}
+#define idx(gen, cov) ((unsigned long)((gen)-1)+nGm1*(cov))
+#define unidx(dat) std::pair<unsigned long, unsigned long>(((dat) % nGm1)+1, (dat)/nGm1)
 
 // if presentation is of a group that can bet written as an extension
 //  0 --> A --> G --> Z --> 0
