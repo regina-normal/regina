@@ -186,6 +186,30 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * @param cloneMe the expression to clone.
          */
         NGroupExpression(const NGroupExpression& cloneMe);
+        /**
+         * Attempts to interpret the given input string as a word in a group.
+         * Regina can recognise strings in the following four basic forms:
+         *
+         *  - \c a^7b^-2
+         *  - \c aaaaaaaBB
+         *  - \c a^7B^2
+         *  - \c g0^7g1^-2
+         *
+         * The argument \a valid may be \c null, but if it is non-null
+         * then the boolean it points to will be used for error reporting.
+         * This routine sets valid to \c true if the string was successfully
+         * interpreted, or \c false if the algorithm failed to interpret the
+         * string.
+         *
+         * Regardless of whether \a valid is \c null, if the string
+         * could not be interpreted then this expression will be initialised
+         * to the trivial word.
+         *
+         * @param input the input string that is to be interpreted.
+         * @param valid used for error reporting as described above, or
+         * \c null if no error reporting is required.
+         */
+        NGroupExpression(const std::string &input, bool* valid=NULL);
 
         /**
          * Makes this expression a clone of the given expression.
@@ -373,22 +397,6 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * Multiplies *this on the left by word.
          */
         void addTermsFirst( const NGroupExpression& word);
-
-        /**
-         * Attempts to interpret input as a string form of an NGroupExpression.
-         * Valid input must be in one of the four basic forms:
-         *
-         *  (1) a^7b^-2, 
-         *  (2) aaaaaaaBB,
-         *  (3) a^7B^2, 
-         *  (4) g0^7g1^-2.
-         * 
-         * Sets valid to true if string successfully interpreted and algorithm
-         * completed successfully.  Sets to false if the algorithm failed to 
-         * interpret the string, in which case this NGroupExpression is 
-         * uninitialized (triv word). 
-         */ 
-        NGroupExpression( const std::string &input, bool* valid=NULL );
 
         /**
          * Multiplies *this on the left by the word interpretation of the
