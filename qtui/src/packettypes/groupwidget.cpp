@@ -61,6 +61,7 @@ GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) :
 
     fundName_ = new QLabel();
     // fundName_->setAlignment(Qt::AlignCenter);
+    fundName_->setWordWrap(true);
     layout->addWidget(fundName_);
 
     fundGens_ = new QLabel();
