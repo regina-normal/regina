@@ -81,6 +81,15 @@ class ReginaSupport {
             const QString& detailedText = QString());
 
         /**
+         * Produces a platform-agnostic warning message that informs the
+         * user that they are about to do something dangerous, and asks
+         * if they wish to proceed.
+         */
+        static bool warnYesNo(QWidget* parent, const QString& text,
+            const QString& informativeText = QString(),
+            const QString& detailedText = QString());
+
+        /**
          * Produces a platform-agnostic warning message indicating some
          * kind of success.
          */
