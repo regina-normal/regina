@@ -140,7 +140,7 @@ class NGroupPresentationTest : public CppUnit::TestFixture {
                 i!=presList.end(); i++) {
             (*i)->intelligentSimplify();
             std::auto_ptr< NHomGroupPresentation >
-                homPtr( (*i)->identify_extension_over_Z() );
+                homPtr( (*i)->identifyExtensionOverZ() );
             // We know which cases this should fail for:
             if (homPtr.get()==NULL &&
                     (*i != &Z6_pres) &&
