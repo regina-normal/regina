@@ -231,16 +231,13 @@ void GroupWidget::proliferateRelators() {
     if (! group_)
         return;
 
-    if (group_->getNumberOfRelations() > MAX_RELATIONS_FOR_PROLIFERATION) {
-        ReginaSupport::sorry(this,
-            tr("This group presentation is already too large."),
-            tr("A relator explosion on a large group "
-                "could easily exceed the memory of your machine.  "
-                "I will therefore be cowardly and refuse to do this "
-                "for groups with more than %1 relators.")
-                .arg(MAX_RELATIONS_FOR_PROLIFERATION));
-        return;
-    }
+    if (group_->getNumberOfRelations() > MAX_RELATIONS_FOR_PROLIFERATION)
+        if (! ReginaSupport::warnYesNo(this,
+                tr("This group presentation is already large."),
+                tr("A relator explosion on a large group presentation "
+                    "could easily exceed the memory of your machine.  "
+                    "Are you sure you wish to do this?")))
+            return;
 
     // Note: We might have group_ == simplified_, so we cannot delete
     // simplified_ just yet.
