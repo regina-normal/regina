@@ -195,6 +195,8 @@ class REGINA_API NGroupExpression : public ShareableObject {
          *  - \c a^7B^2
          *  - \c g0^7g1^-2
          *
+         * The string may contain whitespace, which will simply be ignored.
+         *
          * The argument \a valid may be \c null, but if it is non-null
          * then the boolean it points to will be used for error reporting.
          * This routine sets valid to \c true if the string was successfully

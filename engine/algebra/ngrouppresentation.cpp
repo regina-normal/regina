@@ -32,9 +32,10 @@
 
 /* end stub */
 
+#include <cctype>
 #include <iterator>
-#include <map>
 #include <list>
+#include <map>
 #include <sstream>
 #include <algorithm>
 
@@ -665,7 +666,7 @@ NGroupExpression::NGroupExpression( const std::string &input, bool* valid )
      } // end case 4
     // now we've dealt will all important input.  Let's deal with spaces next,
     //  and any other input will fail. 
-    if ( int(*i)==int(' ') ) continue;
+    if ( ::isspace(*i) ) continue;
     else { WS=WSERR; break; }
    } // end i loop
  // did we reach the end of input without any errors? if so, append buildTerm

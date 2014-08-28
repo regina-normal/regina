@@ -62,6 +62,10 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addGenerator,
         NGroupPresentation::addGenerator, 0, 1);
 
+    std::auto_ptr<NGroupExpression> newExpression_str(const std::string& str) {
+        return std::auto_ptr<NGroupExpression>(new NGroupExpression(str, 0));
+    }
+
     object getTerms_list(const NGroupExpression& e) {
         boost::python::list ans;
         for (std::list<NGroupExpressionTerm>::const_iterator it =
@@ -129,6 +133,7 @@ void addNGroupPresentation() {
             std::auto_ptr<NGroupExpression>, boost::noncopyable>
             ("NGroupExpression")
         .def(init<const NGroupExpression&>())
+        .def("__init__", boost::python::make_constructor(newExpression_str))
         .def("getTerms", getTerms_list)
         .def("getNumberOfTerms", &NGroupExpression::getNumberOfTerms)
         .def("wordLength", &NGroupExpression::wordLength)
