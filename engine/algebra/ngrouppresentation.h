@@ -109,14 +109,14 @@ struct REGINA_API NGroupExpressionTerm {
     bool operator == (const NGroupExpressionTerm& other) const;
 
     /**
-     * Lexicographical order on NGroupExpressionTerms, with the generator
-     * being the first index and the exponent being the second.  
+     * Imposes an ordering on terms.
+     * Terms are ordered lexigraphically as (generator, exponent) pairs.
      *
-     * @return true if and only if either this->generator < other.generator
-     *  or this->generator == other->generator and 
-     *     this->exponent < other->exponent.
+     * @param other the term to compare with this.
+     * @return true if and only if this term is lexicographically
+     * smaller than \a other.
      */
-    bool operator<(const NGroupExpressionTerm& other) const;
+    bool operator < (const NGroupExpressionTerm& other) const;
 
     /**
      * Returns the inverse of this term.  The inverse has the same
@@ -186,6 +186,32 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * @param cloneMe the expression to clone.
          */
         NGroupExpression(const NGroupExpression& cloneMe);
+        /**
+         * Attempts to interpret the given input string as a word in a group.
+         * Regina can recognise strings in the following four basic forms:
+         *
+         *  - \c a^7b^-2
+         *  - \c aaaaaaaBB
+         *  - \c a^7B^2
+         *  - \c g0^7g1^-2
+         *
+         * The string may contain whitespace, which will simply be ignored.
+         *
+         * The argument \a valid may be \c null, but if it is non-null
+         * then the boolean it points to will be used for error reporting.
+         * This routine sets valid to \c true if the string was successfully
+         * interpreted, or \c false if the algorithm failed to interpret the
+         * string.
+         *
+         * Regardless of whether \a valid is \c null, if the string
+         * could not be interpreted then this expression will be initialised
+         * to the trivial word.
+         *
+         * @param input the input string that is to be interpreted.
+         * @param valid used for error reporting as described above, or
+         * \c null if no error reporting is required.
+         */
+        NGroupExpression(const std::string &input, bool* valid=NULL);
 
         /**
          * Makes this expression a clone of the given expression.
@@ -193,7 +219,7 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * @param cloneMe the expression to clone.
          * @return a reference to this expression.
          */
-        NGroupExpression& operator=(const NGroupExpression& cloneMe);
+        NGroupExpression& operator = (const NGroupExpression& cloneMe);
 
         /**
          * Equality operator. Checks to see whether or not these two words
@@ -202,7 +228,7 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * @param comp the expression to compare against this.
          * @return \c true if this and the given string literal are identical.
          */
-        bool operator==(const NGroupExpression& comp) const;
+        bool operator == (const NGroupExpression& comp) const;
 
         /**
          * Returns the list of terms in this expression.
@@ -366,45 +392,59 @@ class REGINA_API NGroupExpression : public ShareableObject {
         void addTermLast(unsigned long generator, long exponent);
 
         /**
-         * Multiplies *this on the right by word.
-         */
-        void addTermsLast( const NGroupExpression& word);
-        /**
-         * Multiplies *this on the left by word.
-         */
-        void addTermsFirst( const NGroupExpression& word);
-
-        /**
-         * Attempts to interpret input as a string form of an NGroupExpression.
-         * Valid input must be in one of the four basic forms:
+         * Multiplies this expression on the left by the given word.
+         * This expression will be modified directly.
          *
-         *  (1) a^7b^-2, 
-         *  (2) aaaaaaaBB,
-         *  (3) a^7B^2, 
-         *  (4) g0^7g1^-2.
-         * 
-         * Sets valid to true if string successfully interpreted and algorithm
-         * completed successfully.  Sets to false if the algorithm failed to 
-         * interpret the string, in which case this NGroupExpression is 
-         * uninitialized (triv word). 
-         */ 
-        NGroupExpression( const std::string &input, bool* valid=NULL );
-
-        /**
-         * Multiplies *this on the left by the word interpretation of the
-         * string input.  See NGroupExpression( std::string, bool ) for
-         * valid input forms. 
-         *
-         * @return true if the string is interpreted and the completes 
-         *  successfully. false if the algorithm has any trouble interpreting 
-         *  the input, in which case *this is untouched.
-         */ 
-        bool addStringFirst( const std::string& input);
-
-        /**
-         * Same as addStringFirst, except this algorithm appends on the right.
+         * @param word the word to multiply with this expression.
          */
-        bool addStringLast( const std::string& input);
+        void addTermsFirst(const NGroupExpression& word);
+        /**
+         * Multiplies this expression on the right by the given word.
+         * This expression will be modified directly.
+         *
+         * @param word the word to multiply with this expression.
+         */
+        void addTermsLast(const NGroupExpression& word);
+
+        /**
+         * Multiplies this expression on the left by the word
+         * respresented by the given string.
+         *
+         * See the string-based constructor
+         * NGroupExpression(const std::string&, bool*) for further
+         * information on how this string should be formatted.
+         *
+         * If the given string cannot be interpreted as a word in a group,
+         * then this expression will be left untouched.
+         *
+         * @param a string representation of the word to multiply with
+         * this expression.
+         * @return \c true if the given string could interpreted
+         * (and therefore the multiplication was completed successfully), or
+         * \c false if the given string could not be interpreted
+         * (in which case this expression will be left untouched).
+         */
+        bool addStringFirst(const std::string& input);
+
+        /**
+         * Multiplies this expression on the right by the word
+         * respresented by the given string.
+         *
+         * See the string-based constructor
+         * NGroupExpression(const std::string&, bool*) for further
+         * information on how this string should be formatted.
+         *
+         * If the given string cannot be interpreted as a word in a group,
+         * then this expression will be left untouched.
+         *
+         * @param a string representation of the word to multiply with
+         * this expression.
+         * @return \c true if the given string could interpreted
+         * (and therefore the multiplication was completed successfully), or
+         * \c false if the given string could not be interpreted
+         * (in which case this expression will be left untouched).
+         */
+        bool addStringLast(const std::string& input);
 
         /**
          *  Given a word of the form g_i1^j1 g_i2^j2 ... g_in^jn
@@ -476,22 +516,32 @@ class REGINA_API NGroupExpression : public ShareableObject {
             const NGroupExpression& expansion, bool cyclic = false);
 
         /**
-         * This routine takes two words as input, *this and other, and
-         * determines whether or not one can re-label the generators in
-         * this word to get the other word. If so, it returns a non-empty
-         * list of such re-labellings. Re-labellings are partially-defined
-         * permutations (with possible inversions if cyclic=true) on the 
-         * generator set.
+         * Determines whether or not one can relabel the generators in
+         * this word to obtain the given other word. If so, returns a non-empty
+         * list of all such relabellings.  If not, returns an empty list.
          *
-         * @param other is what the return permutation turn 
-         * @param cyclic, if false we get a list of exact relabellings from
-         *  *this to other.  If true, it can be up to cyclic permutation and
-         *  inversion. If cyclic is true, the routine demands both words 
-         *  are cyclically-reduced.
+         * Relabellings are partially-defined permutations on the
+         * generator set, also allowing for possible inversions if
+         * cyclic is \c true.
+         *
+         * \apinotfinal
+         *
+         * \todo Change this to use less heavyweight types and less deep
+         * copying.
+         *
+         * \pre If \a cyclic is \c true, then both this word and \a other
+         * have been cyclically reduced.
+         *
+         * @param other the word to compare against this.
+         * @param cyclic if \c false we get a list of exact relabellings from
+         * this word to \a other.  If \c true, it can be up to cyclic
+         * permutation and inversion.
+         * @return a list of permutations, implemented as maps from
+         * generator indices of this word to generator indices of \a other.
          */
         std::list< std::map< unsigned long, NGroupExpressionTerm > >
-          relabellingsThisToOther( const NGroupExpression &other, 
-           bool cyclic=false ) const;
+            relabellingsThisToOther( const NGroupExpression &other,
+            bool cyclic=false ) const;
 
         /**
          * Writes a chunk of XML containing this expression.
@@ -562,12 +612,12 @@ class REGINA_API NGroupExpression : public ShareableObject {
  *
  * If there are \a g generators, they will be numbered 0, 1, ..., <i>g</i>-1.
  *
- * \todo let's make intelligent simplify a tad more intelligent, and the GUI
+ * \todo Let's make intelligent simplify a tad more intelligent, and the GUI
  * call a bit more safe.  Perhaps parallelize the GUI call, and give users
  * parameters to ensure it won't crash the computer.  Also look at the FPGroup
  * package. We should also have a simple way of creating NGroupPresentation
  * objects directly from text strings.  We would like to have something like
- * NGroupPresentation( numGens, "abAAB", "bccd" ) etc. with arbitrary 
+ * NGroupPresentation( numGens, "abAAB", "bccd" ) etc., with arbitrary
  * numbers of relators. Maybe std::tuple.  Or "variadic templates"?
  */
 class REGINA_API NGroupPresentation : public ShareableObject {
@@ -745,8 +795,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * presentation, or a null pointer if this presentation was not
          * changed.
          */
-        std::auto_ptr<NHomGroupPresentation> 
-            smallCancellationDetail();
+        std::auto_ptr<NHomGroupPresentation> smallCancellationDetail();
 
         /**
          * Using the current presentation of the group, this routine uses
@@ -765,9 +814,9 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         bool simplifyWord( NGroupExpression &input ) const;
 
         /**
-         * A routine that attempts to simplify presentations, which can
-         * help when small cancellation theory can't find the simplest
-         * relators.
+         * A routine to help escape local wells when simplifying
+         * presentations, which may be useful when small cancellation theory
+         * can't find the simplest relators.
          *
          * Given a presentation &lt;g_i | r_i&gt;, this routine appends
          * consequences of the relators {r_i} to the presentation that
@@ -955,7 +1004,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
 
         /**
          * This is an entirely cosmetic re-writing of the presentation, is
-         * fast and superficial.   
+         * fast and superficial.
          *  1) If there are any length 1 relators, those generators are
          *     deleted, and the remaining relators simplified. 
          *  2) It sorts the relators by number of generator indices that
@@ -1252,10 +1301,11 @@ inline bool NGroupExpressionTerm::operator += (
         return false;
 }
 
-inline bool NGroupExpressionTerm::operator<(const NGroupExpressionTerm& other) 
-const { return ( (generator < other.generator) || 
-                 ( (generator == other.generator) &&
-                   ( exponent < other.exponent ) ) );
+inline bool NGroupExpressionTerm::operator < (
+        const NGroupExpressionTerm& other) const {
+    return ( (generator < other.generator) ||
+             ( (generator == other.generator) &&
+               ( exponent < other.exponent ) ) );
 }
 
 // Inline functions for NGroupExpression
