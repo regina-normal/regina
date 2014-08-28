@@ -1473,74 +1473,76 @@ NGroupPresentation::identifyFreeProduct() const
  */
 std::string NGroupPresentation::identifyCircleBundleOverSurface(bool orientable)
 {
- std::auto_ptr< NAbelianGroup > ab( abelianisation() );
- std::stringstream retval;
+    std::auto_ptr< NAbelianGroup > ab( abelianisation() );
+    std::stringstream retval;
 
- // The simplest fundamental groups to recognise: S3, RP3, Lens.
- if (ab.get()->getRank()==0)
-  {
-   if (nGenerators==0) return std::string("S3");
-   if (nGenerators==1) { // Lens space
-     unsigned long ord( ab.get()->getInvariantFactor(0).longValue() );
-     if (ord==2) return std::string("RP3");
-     retval<<"L("<<ord<<",";
-     if (ord<5) retval<<"1"; else retval<<"?";
-     retval<<")";
-     return retval.str();
+    // The simplest fundamental groups to recognise: S3, RP3, Lens.
+    if (ab.get()->getRank()==0) {
+        if (nGenerators==0) return std::string("S3");
+        if (nGenerators==1) { // Lens space
+            unsigned long ord( ab.get()->getInvariantFactor(0).longValue() );
+            if (ord==2) return std::string("RP3");
+            retval<<"L("<<ord<<",";
+            if (ord<5) retval<<"1";
+            else retval<<"?";
+            retval<<")";
+            return retval.str();
+        }
     }
-  }
 
- // next simplest: S2 x S1 and S2 x~ S1 (is bundle over RP2)
- if ( (ab.get()->getRank()==1) && (ab.get()->getNumberOfInvariantFactors()==0) )
-  {
-   if ( (nGenerators==1) && orientable ) return std::string("S2 x S1");
-   if ( (nGenerators==1) && !orientable ) return std::string("S2 x~ S1");
-  }
+    // next simplest: S2 x S1 and S2 x~ S1 (is bundle over RP2)
+    if ( (ab.get()->getRank()==1)
+            && (ab.get()->getNumberOfInvariantFactors()==0) ) {
+        if ( (nGenerators==1) && orientable ) return std::string("S2 x S1");
+        if ( (nGenerators==1) && !orientable ) return std::string("S2 x~ S1");
+    }
 
- // next, let's identify the bundles over RP2.  The non-orientable list
- // is just S2 x~ S1 non-orientable odd euler class (above)
- //     and S1 x RP2 non-orientable even euler class
- // the orientable list is more interesting, see next bracket
- if ( (ab.get()->getRank()==1) && (ab.get()->getNumberOfInvariantFactors()==1) )
-  { // ab Z+Z_k
-   if ( (ab.get()->getInvariantFactor(0).longValue()==2) && 
-        isAbelian() ) return std::string("RP2 x S1");
-  }
+    // next, let's identify the bundles over RP2.  The non-orientable list
+    // is just S2 x~ S1 non-orientable odd euler class (above)
+    //     and S1 x RP2 non-orientable even euler class
+    // the orientable list is more interesting, see next bracket
+    if ( (ab.get()->getRank()==1)
+            && (ab.get()->getNumberOfInvariantFactors()==1) ) {
+        // ab Z+Z_k
+        if ( (ab.get()->getInvariantFactor(0).longValue()==2) &&
+                isAbelian() ) return std::string("RP2 x S1");
+    }
 
- // remaining non-or total space for S^1 bundles over RP2. 
- //       SFS(S^2 : 1/2, -1/2, 1/k) manifolds where k is the euler class, k>1 
- // equivalently SFS(RP^2 : k).  These have presentations
- //  < b, f : bfb^-1 = f^-1, b^2f^k=1 >.  These have abelianizations
- // Z_2 or Z_2^2 depending on whether or not k is odd or even, respectively
- if ( ( ab.get()->getRank()==0 ) && orientable ) {
-  if ( ( ( ab.get()->getNumberOfInvariantFactors()==1 ) ?
-       ( ab.get()->getInvariantFactor(0).longValue()==2 ) : false ) || 
-       ( ( ab.get()->getNumberOfInvariantFactors()==2 ) ?
-       ( ( ab.get()->getInvariantFactor(0).longValue()==2 ) &&
-         ( ab.get()->getInvariantFactor(1).longValue()==2 ) ) : false ) )
-   {
-    for (unsigned long k=2; k<6; k++)
-     { // TODO: this is very primitive and limited to euler char < 7. 
-      std::stringstream tempstr; 
-      std::vector<std::string> relVec; relVec.push_back("abAb");
-      tempstr<<"aab^"<<k; relVec.push_back(tempstr.str());
-      NGroupPresentation target(2, relVec);
-      target.intelligentSimplify();
-      target.proliferateRelators();
-      tempstr.flush();
-      if (k==2) tempstr<<"S3 / Q8";
-      else      tempstr<<"S1 x~"<<k<<" RP2";
-      if (isSimpleIsomorphicTo(target)) return tempstr.str();
-     }
-   }
- }
+    // remaining non-or total space for S^1 bundles over RP2.
+    //       SFS(S^2 : 1/2, -1/2, 1/k) manifolds where k is the euler class, k>1
+    // equivalently SFS(RP^2 : k).  These have presentations
+    //  < b, f : bfb^-1 = f^-1, b^2f^k=1 >.  These have abelianizations
+    // Z_2 or Z_2^2 depending on whether or not k is odd or even, respectively
+    if ( ( ab.get()->getRank()==0 ) && orientable ) {
+        if ( ( ( ab.get()->getNumberOfInvariantFactors()==1 ) ?
+                ( ab.get()->getInvariantFactor(0).longValue()==2 ) : false ) ||
+                ( ( ab.get()->getNumberOfInvariantFactors()==2 ) ?
+                  ( ( ab.get()->getInvariantFactor(0).longValue()==2 ) &&
+                    ( ab.get()->getInvariantFactor(1).longValue()==2 ) ) : false ) ) {
+            for (unsigned long k=2; k<6; k++) {
+                // TODO: this is very primitive and limited to euler char < 7.
+                std::stringstream tempstr;
+                std::vector<std::string> relVec;
+                relVec.push_back("abAb");
+                tempstr<<"aab^"<<k;
+                relVec.push_back(tempstr.str());
+                NGroupPresentation target(2, relVec);
+                target.intelligentSimplify();
+                target.proliferateRelators();
+                tempstr.flush();
+                if (k==2) tempstr<<"S3 / Q8";
+                else      tempstr<<"S1 x~"<<k<<" RP2";
+                if (isSimpleIsomorphicTo(target)) return tempstr.str();
+            }
+        }
+    }
 
- // bundles over S1 x S1, and S1 x~ S1
- if ( isAbelian() && (ab.get()->getRank()==3) && 
-                     (ab.get()->getNumberOfInvariantFactors()==0) )
-   return std::string("S1 x S1 x S1");
+    // bundles over S1 x S1, and S1 x~ S1
+    if ( isAbelian() && (ab.get()->getRank()==3) &&
+            (ab.get()->getNumberOfInvariantFactors()==0) )
+        return std::string("S1 x S1 x S1");
 
- return std::string();
+    return std::string();
 }
 
 // Routine (at present) looks for isomorphism between *this group and other,
