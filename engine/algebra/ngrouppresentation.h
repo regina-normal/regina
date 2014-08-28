@@ -1001,6 +1001,20 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         std::auto_ptr< NHomGroupPresentation > identifyExtensionOverZ();
 
         /**
+         *  This routine attempts to identify the current presentation as that
+         * of a circle bundle over a surface.  Returns a string description of
+         * the bundle if it succeeds, and an empty string if it fails. 
+         *
+         * @orientable is a flag that allows the algorithm to distinguish 
+         *  between S2 x S1 and S2 x~ S1, as they have the same fundamental
+         *  group.
+         *
+         * \apinotfinal TODO - incomplete.  Should consider making this and
+         *  perhaps all the identify routines private?  
+         */
+        std::string identifyCircleBundleOverSurface(bool orientable=true);
+
+        /**
          * This routine takes two NGroupPresentations as arguments and
          * returns true if it can determine they are simply-isomorphic, and 
          * false if it can not determine they are simply isomorphic.  
