@@ -595,7 +595,7 @@ NGroupExpression::NGroupExpression( const std::string &input, bool* valid )
         // read *i, see what to do next.
         // case 1: it is a letter a..z or A..Z
         if ( ( (int(*i) >= int('a') ) && ( int(*i) <= int('z') ) ) ||
-                ( (int(*i) >= int('A') ) && ( int(*i) <= int('Z') ) ) )
+                ( (int(*i) >= int('A') ) && ( int(*i) <= int('Z') ) ) ) {
             if (WS==WSNULL) { // fresh letter
                 // build buildTerm.
                 if ( (int(*i) >= int('a') ) && ( int(*i) <= int('z') ) ) {
@@ -625,11 +625,12 @@ NGroupExpression::NGroupExpression( const std::string &input, bool* valid )
                 }
                 WS=WSVARLET;
                 continue;
-            } // anything else is a mistake.
-            else {
+            } else {
+                // anything else is a mistake.
                 WS=WSERR;    // end case 1
                 break;
             }
+        }
 
         // case 2: it is a ^, can only occur after a generator
         if ( (*i) == '^' ) {
