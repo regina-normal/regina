@@ -918,7 +918,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * @return true if the group is shown to be abelian.  False if either
          *  the group is not abelian, or the algorithm fails. 
          */
-        bool isAbelian() const;
+        bool identifyAbelian() const;
 
         /**
          *  This switches the generators in the presentation indexed by i
@@ -1066,7 +1066,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          *     of this restricted type, due to difficulties with the word
          *     problem. 
          */
-        bool isSimpleIsomorphicTo( const NGroupPresentation& other ) const;
+        bool identifySimpleIsomorphicTo(const NGroupPresentation& other) const;
 
         /**
          * Routine attempts to determine if this groups is clearly a free

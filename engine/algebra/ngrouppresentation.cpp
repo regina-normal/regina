@@ -231,7 +231,7 @@ std::string NGroupPresentation::recogniseGroup() const {
     std::auto_ptr< NAbelianGroup > ab( abelianisation() );
 
     // abelian test
-    if (isAbelian()) { 
+    if (identifyAbelian()) { 
         out << ab.get()->str();
         return out.str();
     }
@@ -1256,7 +1256,7 @@ NGroupPresentation::homologicalAlignmentDetail()
 
 // This algorithm has to be at least moderately sophisticated to ensure it
 // recognises that < a, b, a^2, abaB > is abelian.
-bool NGroupPresentation::isAbelian() const
+bool NGroupPresentation::identifyAbelian() const
 {
 // The idea will be to take all commutators of the generators, and see if
 //  the relators can kill them.
@@ -1465,8 +1465,8 @@ NGroupPresentation::identifyFreeProduct() const
 // TODO: we can modify this to be a findHom routine. And if the target is 
 // a finite group, find *all* homs up to conjugacy, etc. 
 //
-bool NGroupPresentation::isSimpleIsomorphicTo( const NGroupPresentation& other )
-const
+bool NGroupPresentation::identifySimpleIsomorphicTo(
+        const NGroupPresentation& other) const
 {
 // Check if presentations have the same number of generators.
     if (nGenerators != other.nGenerators) return false;

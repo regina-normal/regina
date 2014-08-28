@@ -266,7 +266,7 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
          * @return true if it is verified if f^-1(f(x))x^-1 simplifes to 1 for all
          * generators x.
          */
-        bool isAutomorphism() const;
+        bool verifyIsomorphism() const;
 
         /**
          *  Computes the induced map on the abelianizations.
