@@ -25,6 +25,8 @@ Version 4.96  [ 29 August, 2014 ]
           some structural changes under the hood in preparation for the
           coming 4-manifolds release.
     Other optimisations:
+        - Simplification and recognition of fundamental groups is now much
+          stronger, thanks to Nielsen moves and new recognition heuristics.
         - Enumeration of taut angle structures is now much faster, thanks to
           new tree traversal / linear programming machinery.
         - The commit / refresh buttons are gone from the user interface

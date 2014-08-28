@@ -189,7 +189,7 @@ void addNGroupPresentation() {
         .def("prettyRewriting", &NGroupPresentation::prettyRewriting)
         .def("identifyExtensionOverZ",
             &NGroupPresentation::identifyExtensionOverZ)
-        .def("isAbelian", &NGroupPresentation::isAbelian)
+        .def("identifyAbelian", &NGroupPresentation::identifyAbelian)
         .def("recogniseGroup", &NGroupPresentation::recogniseGroup)
         .def("relatorLength", &NGroupPresentation::relatorLength)
         .def("abelianisation", abelianisation_ptr,

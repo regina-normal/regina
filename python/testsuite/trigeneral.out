@@ -474,7 +474,7 @@ Dehydration: cabbabakn
 Isomorphism signature: cMcabbjqs
 
 -------------------------------
-Poincare homology sphere
+Poincaré homology sphere
 -------------------------------
 
 Size of the skeleton:
@@ -1001,7 +1001,7 @@ Closed: False
 Orientable: True
 Connected: True
 
-Fundamental group: Z~Free(2) w/monodromy a --> b, b --> b a^-1 b^2
+Fundamental group: Z~Free(2) w/monodromy a ↦ b, b ↦ b a^-1 b^2
 Generators: a, b
 Relations:
     a b a b^-1 a^-1 b^2 a^-1 b^-1
@@ -1161,7 +1161,7 @@ Closed: False
 Orientable: False
 Connected: True
 
-Fundamental group: Z~Free(2) w/monodromy a --> b, b --> b^-1 a
+Fundamental group: Z~Free(2) w/monodromy a ↦ b, b ↦ b^-1 a
 Generators: a, b
 Relations:
     a^-1 b^-1 a^2 b^2

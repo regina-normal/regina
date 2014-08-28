@@ -316,7 +316,7 @@ bool NHomGroupPresentation::verifyHom() const
  return true;
 }
 
-bool NHomGroupPresentation::isAutomorphism() const
+bool NHomGroupPresentation::verifyIsomorphism() const
 {
  if (map2_.size() != range_->getNumberOfGenerators()) return false;
  // for every generator in the domain compute f^-1(f(x))x^-1 and reduce

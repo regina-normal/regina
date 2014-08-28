@@ -447,14 +447,24 @@ class REGINA_API NGroupExpression : public ShareableObject {
         bool addStringLast(const std::string& input);
 
         /**
-         *  Given a word of the form g_i1^j1 g_i2^j2 ... g_in^jn
-         * converts the word into g_i2^j2 ... g_in^jn g_i1^j1
+         * Cycles this word by moving the leftmost term around to the rightmost.
+         * All other terms shift one step to the left.
+         *
+         * If the word is of the form
+         * <tt>g_i1^j1 g_i2^j2 ... g_in^jn</tt>,
+         * this converts it into the word
+         * <tt>g_i2^j2 ... g_in^jn g_i1^j1</tt>.
          */
         void cycleRight();
 
         /**
-         *  Given a word of the form g_i1^j1 g_i2^j2 ... g_in^jn
-         * converts the word into g_in^jn g_i1^j1 g_i1^j1 ... g_in-1^jn-1
+         * Cycles this word by moving the rightmost term around to the leftmost.
+         * All other terms shift one step to the right.
+         *
+         * If the word is of the form
+         * <tt>g_i1^j1 g_i2^j2 ... g_in^jn</tt>,
+         * this converts it into the word
+         * <tt>g_in^jn g_i1^j1 g_i1^j1 ... g_in-1^jn-1</tt>.
          */
         void cycleLeft();
 
@@ -640,6 +650,32 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          */
         NGroupPresentation(const NGroupPresentation& cloneMe);
         /**
+         * Constructor that allows you to directly pass an arbitrary number
+         * of relators in string format.
+         *
+         * The first argument \a nGens is the number of generators one wants
+         * the group to have. The second argument \a rels is a vector
+         * of strings, where each string gives a single relator.  See
+         * the NGroupExpression::NGroupExpression(const std::string&, bool*)
+         * constructor notes for information on what format these strings
+         * can take.
+         *
+         * If any of the given strings could not be interpreted as
+         * words, this routine will insert the trivial (unit) word in
+         * its place.
+         *
+         * If you are compiling Regina against C++11, you can use the
+         * C++11 initializer_list construction to construct an
+         * NGroupPresentation directly using syntax of the form
+         * <tt>NGroupPresentation(nGens, { "rel1", "rel2", ... })</tt>.
+         *
+         * @param nGens the number of generators.
+         * @param rels a vector of relations each given in string form,
+         * as outlined above.
+         */
+        NGroupPresentation(unsigned long nGens,
+                const std::vector<std::string> &rels);
+        /**
          * Destroys the group presentation.
          * All relations that are stored will be deallocated.
          */
@@ -653,19 +689,6 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * @return a reference to this group presentation.
          */
         NGroupPresentation& operator=(const NGroupPresentation& cloneMe);
-
-        /**
-         * Constructor that allows arbitrary number of relators. One calls
-         * this with arbitrarily-many arguments.  The first argument nGens
-         * is the number of generators one wants the group to have. The
-         * remaining arguments are all of type std::string and are the
-         * relators. If you are compiling the Regina library against 
-         * c++11, you can initialize an NGroupPresentation via
-         * NGroupPresentation( nGens, { "rel1", "rel2", ... } ) via the
-         * C++11 initializer_list construction. 
-         */
-        NGroupPresentation(unsigned long nGens,  
-            std::vector<std::string> &rels);
 
         /**
          * Adds one or more generators to the group presentation.
@@ -684,6 +707,11 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * expression, may change it and will be responsible for its
          * deallocation.
          *
+         * \warning This routine does not check whether or not your relation
+         * is a word only in the generators of this group.  In other
+         * words, it does not stop you from using generators beyond the
+         * getNumberOfGenerators() bound.
+         *
          * \ifacespython Since this group presentation takes ownership
          * of the given expression, the python object containing the
          * given expression becomes a null object and should no longer
@@ -691,11 +719,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          *
          * @param rel the expression that the relation sets to 1; for
          * instance, if the relation is <tt>g1^2 g2 = 1</tt> then this
-         * parameter should be the expression <tt>g1^2 g2</tt>. 
-         *
-         * Note this routine does not check whether or not your relation
-         * is a word in the generators of this group, i.e. you can use
-         * generators beyond the getNumberOfGenerators() bound. 
+         * parameter should be the expression <tt>g1^2 g2</tt>.
          */
         void addRelation(NGroupExpression* rel);
 
@@ -726,9 +750,15 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         const NGroupExpression& getRelation(unsigned long index) const;
 
         /**
-         *  Returns true if and only if the relations for the group are words
-         * in the generators.  Returns false if at least one relator uses an
-         * out of bound generator.
+         * Tests whether all of the relations for the group are indeed words
+         * in the generators.  This routine returns \c false if at least
+         * one relator uses an out-of-bound generator, and \c true otherwise.
+         *
+         * This routine is intended only for sanity checking: you should
+         * never have an invalid group presentation in the first place.
+         *
+         * @return \c true if and only if all of the relations are words
+         * in the generators.
          */
         bool isValid() const;
 
@@ -740,6 +770,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * the simplification is done.
          *
          * @return \c true if and only if the group presentation was changed.
+         * You can call intelligentSimplifyDetail() to get the isomorphism.
          */
         bool intelligentSimplify();
 
@@ -747,17 +778,8 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * Attempts to simplify the group presentation as intelligently
          * as possible without further input.
          *
-         * The current simplification method is based on the Dehn algorithm
-         * for hyperbolic groups, i.e. small cancellation theory.   This means
-         * we look to see if part of one relator can be used to simplify
-         * others.  If so, make the substitution and simplify.  We continue
-         * until no more presentation-shortening substitutions are available.
-         * We follow that by killing any available generators using words
-         * where generators appear a single time.
-         *
-         * \todo \optlong This routine could use some small tweaks --
-         * recognition of utility of some score==0 moves, such as
-         * commutators, for example.
+         * The current simplification method uses a combination of small
+         * cancellation theory and Nielsen moves.
          *
          * @return a newly allocated homomorphism describing the
          * reduction map from the original presentation to the new
@@ -767,15 +789,17 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         std::auto_ptr<NHomGroupPresentation> intelligentSimplifyDetail();
 
         /**
-         * Attempts to simplify the group presentation using only small 
-         * cancellation theory. 
+         * Attempts to simplify the group presentation using only small
+         * cancellation theory.
          *
          * See smallCancellationDetail() for further details on how
          * the simplification is done.
          *
          * @return \c true if and only if the group presentation was changed.
+         * You can call smallCancellationDetail() to get the isomorphism.
          */
         bool smallCancellation();
+
         /**
          * Attempts to simplify the group presentation using small cancellation
          * theory. The simplification method is based on the Dehn algorithm
@@ -786,7 +810,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * We follow that by killing any available generators using words
          * where generators appear a single time.
          *
-         * \todo \optlong This routine could use some small tweaks --
+         * \todo \optlong This routine could use some small tweaks -
          * recognition of utility of some score==0 moves, such as
          * commutators, for example.
          *
@@ -798,20 +822,20 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         std::auto_ptr<NHomGroupPresentation> smallCancellationDetail();
 
         /**
-         * Using the current presentation of the group, this routine uses
-         * small cancellation theory to reduce the input word. 
+         * Uses small cancellation theory to reduce the input word,
+         * using the current presentation of the group.  The input word
+         * will be modified directly.
          *
-         * @input is the word you would like to simplify.  It must be a word
-         *  in the generators of this group.
+         * \warning This routine is only as good as the relator table for the
+         * group.  You might want to consider running intelligentSimplify(),
+         * possibly in concert with proliferateRelators(), before using this
+         * routine for any significant tasks.
          *
-         * \warning this routine is only as good as the relator table for the
-         *  group.  You might want to consider running intelligentSimplify()
-         *  and possibly proliferateRelators() before using this routine for
-         *  any significant tasks. 
-         * 
-         * @return true if the input word has been modified, false otherwise.
+         * @param input is the word you would like to simplify.
+         * This must be a word in the generators of this group.
+         * @return \c true if and only if the input word was modified.
          */
-        bool simplifyWord( NGroupExpression &input ) const;
+        bool simplifyWord(NGroupExpression &input) const;
 
         /**
          * A routine to help escape local wells when simplifying
@@ -902,200 +926,211 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         std::auto_ptr<NMarkedAbelianGroup> markedAbelianisation() const;
 
         /**
-         * Attempts to determine if the group is abelian.   If the group is
-         * abelian, markedAbelianization() is the easiest way to see precisely
+         * Attempts to determine if the group is abelian.
+         *
+         * A return value of \c true indicates that this routine
+         * successfully certified that the group is abelian.
+         * A return value of \c false indicates an inconclusive result:
+         * either the group is non-abelian, or the group
+         * is abelian but this routine could not prove so.
+         *
+         * If the group is abelian, then markedAbelianization() is the easiest
+         * way to see precisely
          * which abelian group it is, and how the generators sit in that group.
-         * You will have better luck using this algorithm provided the 
-         * presentation has been simplified, as this algorithm uses small 
+         *
+         * You will have better results from this algorithm if the
+         * presentation has been simplified, since this algorithm uses small
          * cancellation theory in an attempt to reduce the commutators of all
-         * pairs of generators.  
+         * pairs of generators.
          *
-         * \warning if one has not adequately simplified this presentation this
-         *  routine will return false.  Consider running intelligentSimplify
-         *  and perhaps even proliferateRelators in order to discover adequately
-         *  many commutators. 
+         * \warning If you have not adequately simplified this presentation
+         * this routine will most likely return \c false.  Consider running
+         * intelligentSimplify, possibly in concert with proliferateRelators(),
+         * in order to discover adequately many commutators.
          *
-         * @return true if the group is shown to be abelian.  False if either
-         *  the group is not abelian, or the algorithm fails. 
+         * @return \c true if the group is shown to be abelian, or
+         * \c false if the result is inconclusive.
          */
-        bool isAbelian() const;
+        bool identifyAbelian() const;
 
         /**
-         *  This switches the generators in the presentation indexed by i
-         * and j respectively, and recompute the appropriate presentation. 
-         * It is one of the standard Nielsen moves, which is the first of 
-         * three generator types of the automorphism group of a 
-         * free group. 
+         * Switches the generators in the presentation indexed by \a i
+         * and \a j respectively, and recomputes the appropriate presentation.
+         * It is one of the standard Nielsen moves, which is the first of
+         * three generator types of the automorphism group of a free group.
          *
-         * @returns true if and only if the nielsen automorphism had an effect
-         *  on at least one relation.
+         * \pre Both \a i and \a j are strictly less than
+         * getNumberOfGenerators().
+         *
+         * @param i indicates the first of the two generators to switch.
+         * @param j indicates the second of the two generators to switch.
+         * @return \c true if and only if the Nielsen automorphism had an
+         * effect on at least one relation.
          */
-        bool nielsenTransposition(const unsigned long &i, 
-                                  const unsigned long &j);
+        bool nielsenTransposition(unsigned long i, unsigned long j);
 
         /**
-         *  This replaces a generator in a presentation by its inverse, and
-         * recomputes the appropriate presentation. This is the second 
+         * Replaces a generator in a presentation by its inverse, and
+         * recomputes the appropriate presentation. This is the second
          * generator type of the automorphism group of a free group.
          *
-         * @returns true if and only if the nielsen automorphism had an effect
-         *  on at least one relation.
+         * \pre \a i is strictly less than getNumberOfGenerators().
+         *
+         * @param i indicates the generator to invert.
+         * @return \c true if and only if the Nielsen automorphism had an
+         * effect on at least one relation.
          */
-        bool nielsenInvert(const unsigned long &i);
+        bool nielsenInvert(unsigned long i);
 
         /**
-         *  This replaces a generator gi by (gi)(gj)^k in the presentation. It
+         * Replaces a generator \c gi by either
+         * <tt>(gi)(gj)^k</tt> or <tt>(gj)^k(gi)</tt> in the presentation. It
          * it is the third type of Nielsen move one can apply to a presentation.
-         * If the flag is set false, it uses left multiplication, replacing 
-         * gi by (gj)^k(gi). So if the new generator Gi is the old (gi)(gj)^k, 
-         * this means we  construct the new presentation from the old by 
-         * replacing occurances of gi by (Gi)(gj)^(-k). 
          *
-         * @returns true if and only if the nielsen automorphism had an effect
-         *  on at least one relation.
+         * This means that, if the new generator \c Gi is the old
+         * <tt>(gi)(gj)^k</tt> or <tt>(gj)^k(gi)</tt>, then we can construct
+         * the new presentation from the old by replacing occurrences of \c Gi
+         * by <tt>(Gi)(gj)^(-k)</tt> or <tt>(gj)^(-k)(Gi)</tt> respectively.
+         *
+         * \pre Both \a i and \a j are strictly less than
+         * getNumberOfGenerators().
+         *
+         * @param i indicates the generator to replace.
+         * @param j indicates the generator to combine with \c gi.
+         * @param k indicates the power to which we raise \c gj when
+         * performing the replacement; this may be positive or negative
+         * (or zero, but this will have no effect).
+         * @param rightMult \c true if we should replace \c gi by
+         * <tt>(gi)(gj)^k</tt>, or \c false if we should replace \c gi by
+         * <tt>(gj)^k(gi)</tt>.
+         * @return \c true if and only if the nielsen automorphism had an
+         * effect on at least one relation.
          */
-        bool nielsenCombine(const unsigned long &i, const unsigned long &j, 
-                const signed long &k, const bool &flag=true);
+        bool nielsenCombine(unsigned long i, unsigned long j,
+                long k, bool rightMult=true);
 
         /**
-         *  Looks for Nielsen moves that will simplify the presentation.  
-         * Performs one of the most-effective ones, if it can find any.  
+         * Looks for Nielsen moves that will simplify the presentation.
+         * Performs one of the most-effective moves, if it can find any.
          *
-         * @returns true if and only if it performed a Nielsen move. 
+         * @return \c true if and only if it performed a Nielsen move.
+         * You can call intelligentNielsen() to get the isomorphism.
          */
         bool intelligentNielsen();
 
         /**
-         *  Looks for Nielsen moves that will simplify the presentation.  
-         * Performs one of the most-effective ones, if it can find any.  
+         * Looks for Nielsen moves that will simplify the presentation.
+         * Performs one of the most-effective moves, if it can find any.
          *
-         * @returns the allocated NHomGroupPresentation auto pointer 
-         *  which is the isomorphism from the old presentation to the 
-         *  new one. 
+         * @return a newly allocated homomorphism describing the
+         * map from the original presentation to the new presentation,
+         * or a null pointer if no move was performed.
          */
         std::auto_ptr<NHomGroupPresentation> intelligentNielsenDetail();
 
         /**
-         * This routine attempts to rewrite the presentation so that generators
+         * Rewrites the presentation so that generators
          * of the group map to generators of the abelianisation, with any
          * left-over generators mapping to zero (if possible).  Consider this a
-         * homological-alignment of the presentation. 
+         * \e homological-alignment of the presentation.
          *
-         * If the abelianisation of this group has rank N and M invariant
-         * factors d0 | d2 | ... | d(M-1), this routine applies Nielsen moves
-         * to the presentation to ensure that under the markedAbelianisation
-         * routine, generators 0 through M-1 are mapped to generators of the
-         * relevant Z_di group.  Similarly, generators M through M+N-1 are
-         * mapped to +-1 in the appropriate factor. All further generators 
-         * will be mapped to zero. 
+         * See homologicalAlignmentDetail() for further details on what
+         * this routine does.
          *
-         * @returns true if presentation has changed
+         * @return \c true if presentation was changed, or \c false if
+         * the presentation was already homologically aligned.
+         * See homologicalAlignmentDetail() if you wish to get the isomorphism.
          */
         bool homologicalAlignment();
 
         /**
-         * Same a the previous homologicalAlignment() routine but returns an
-         * allocated NHomGroupPresentation auto_ptr giving the reduction map
-         * from the old presentation to the new, if any change is detected.
+         * Rewrites the presentation so that generators
+         * of the group map to generators of the abelianisation, with any
+         * left-over generators mapping to zero (if possible).  Consider this a
+         * \e homological-alignment of the presentation.
          *
-         * @returns allocated auto_ptr if presentation has changed. 
+         * If the abelianisation of this group has rank \a N and \a M invariant
+         * factors <tt>d0 | d2 | ... | d(M-1)</tt>,
+         * this routine applies Nielsen moves
+         * to the presentation to ensure that under the markedAbelianisation()
+         * routine, generators 0 through \a M-1 are mapped to generators of the
+         * relevant \c Z_di group.  Similarly, generators \a M through
+         * <i>M</i>+<i>N</i>-1 are mapped to +/-1 in the appropriate factor.
+         * All further generators will be mapped to zero.
+         *
+         * @return a newly allocated homomorphism giving the reduction map
+         * from the old presentation to the new, or a null pointer if
+         * this presentation was not changed.
          */
         std::auto_ptr<NHomGroupPresentation> homologicalAlignmentDetail();
 
         /**
-         * This is an entirely cosmetic re-writing of the presentation, is
+         * An entirely cosmetic re-writing of the presentation, which is
          * fast and superficial.
-         *  1) If there are any length 1 relators, those generators are
-         *     deleted, and the remaining relators simplified. 
-         *  2) It sorts the relators by number of generator indices that
-         *     appear, followed by relator numbers (lexico) followed by 
-         *     relator length. 
-         *  3) inverts relators if net sign of the generators is negative.
-         *  4) Given each generator, it looks for the smallest word where that
-         *     generator appears with non-zero weight.  If negative weight,
-         *     it inverts that generator. 
-         *  5) It cyclically permutes relators to start with smallest gen.
-         *  6) TODO: Makes elementary simplifications to aid in seeing standard
-         *     relators like commutators. 
          *
-         * @returns true if and only if the choice of generators for the group
-         *  has changed.  You can call prettyRewritingDetail to get the
-         *  the isomorphism.
+         * See prettyRewritingDetail() for further details on what
+         * this routine does.
+         *
+         * @return \c true if and only if the choice of generators for the
+         * group has changed.  You can call prettyRewritingDetail() to get the
+         * the isomorphism.
          */
         bool prettyRewriting();
 
+        /**
+         * An entirely cosmetic re-writing of the presentation, which is
+         * fast and superficial.
+         *
+         *  1. If there are any length 1 relators, those generators are
+         *     deleted, and the remaining relators simplified.
+         *  2. It sorts the relators by number of generator indices that
+         *     appear, followed by relator numbers (lexico) followed by
+         *     relator length.
+         *  3. inverts relators if net sign of the generators is negative.
+         *  4. Given each generator, it looks for the smallest word where that
+         *     generator appears with non-zero weight.  If negative weight,
+         *     it inverts that generator.
+         *  5. It cyclically permutes relators to start with smallest gen.
+         *
+         * \todo As a final step, make elementary simplifications to aid in
+         * seeing standard relators like commutators.
+         *
+         * @return a newly allocated homomorphism describing the
+         * map from the original presentation to the new presentation,
+         * or a null pointer if the choice of generators did not change.
+         */
         std::auto_ptr<NHomGroupPresentation> prettyRewritingDetail();
 
         /**
-         *  This routine attempts to re-write the presentation as a group
-         *  extension of the form: < a, r1,...,rn | R1,...,RM, ar1a^-1 = w1, 
-         *    ... arna^-1 = wn > i.e. as a semi-direct product of the integers
-         *  and another finitely-presented group.  This is an algorithmic
-         *  implementation of the Reidemeister-Schrier algorithm, which isn't
-         *  actually an algorithm.  So sometimes this procedure works, and
-         *  sometimes it does not.  The return value is an allocated auto_ptr
-         *  if and only if the algorithm is successful.  Even if the algorithm
-         *  is unsuccessful, its application will likely result in a
-         *  modification of the presentation. 
-         *  
-         *  \apinotfinal - this routine may very well either be eliminated 
-         *   in future versions of this software, perhaps incorporated into a 
-         *   bigger-and-better future algorithm.  
+         * Attempts to prove that this and the given group presentation are
+         * <i>simply isomorphic</i>.
          *
-         *  @return an allocated auto_ptr< NHomGroupPresentation > if and only
-         *   if the algorithm is successful.  When this pointer is allocated
-         *   it will be an automorphism of a presentation of the kernel of the
-         *   map this to the integers. 
+         * A <i>simple isomorphism</i> is an isomorphism where each generator
+         * <i>g<sub>i</sub></i> of this presentation is sent to
+         * some generator <i>g<sub>j</sub></i><sup>+/-1</sup> of the
+         * other presentation.  Moreover, at present this routine only
+         * looks for maps where both presentations have the same number
+         * of generators, and where distinct generators <i>g<sub>i</sub></i>
+         * of this presentation correspond to distinct generators
+         * <i>g<sub>j</sub></i> of the other presentation (possibly with
+         * inversion, as noted above).
+         *
+         * If this routine returns \c true, it means that the two
+         * presentations are indeed simply isomorphic.
+         *
+         * If this routine returns \c false, it could mean one of many
+         * things:
+         *
+         * - The groups are not isomorphic;
+         * - The groups are isomorphic, but not simply isomorphic;
+         * - The groups are simply isomorphic but this routine could not
+         *   prove it, due to difficulties with the word problem.
+         *
+         * @param other the group presentation to compare with this.
+         * @return \c true if this routine could certify that the two group
+         * presentations are simply isomorphic, or \c false if it could not.
          */
-        std::auto_ptr< NHomGroupPresentation > identifyExtensionOverZ();
-
-        /**
-         *  This routine attempts to identify the current presentation as that
-         * of a circle bundle over a surface.  Returns a string description of
-         * the bundle if it succeeds, and an empty string if it fails. 
-         *
-         * @orientable is a flag that allows the algorithm to distinguish 
-         *  between S2 x S1 and S2 x~ S1, as they have the same fundamental
-         *  group.
-         *
-         * \apinotfinal TODO - incomplete.  Should consider making this and
-         *  perhaps all the identify routines private?  
-         */
-        std::string identifyCircleBundleOverSurface(bool orientable=true);
-
-        /**
-         * This routine takes two NGroupPresentations as arguments and
-         * returns true if it can determine they are simply-isomorphic, and 
-         * false if it can not determine they are simply isomorphic.  
-         *
-         * A simple isomorphism is one where the generators gi of this 
-         * presentation are sent to gj^+-1 of the other presentation. 
-         *
-         * @return true if it can confirm the groups are simply isomorphic, 
-         *  false means they may be isomorphic, only this routine could not
-         *  confirm it. So it could return false for a variety of reasons
-         *  1) The groups are not isomorphic.
-         *  2) The groups are isomorphic, but not simply isomorphic. 
-         *  3) The routine could not see the existence of a simple isomorphism
-         *     of this restricted type, due to difficulties with the word
-         *     problem. 
-         */
-        bool isSimpleIsomorphicTo( const NGroupPresentation& other ) const;
-
-        /**
-         * Routine attempts to determine if this groups is clearly a free
-         * product of other groups.  This is an unsophisticated algorithm
-         * and will likely only have success if one has pre-processed the
-         * presentation with simplification routines beforehand. 
-         *
-         * @return a list of NGroupPresentation's.  This will be an empty
-         *  list if the routine fails, and a list of allocated pointers
-         *  otherwise.
-         *
-         * \apinotfinal Reconsider how the end-user should see this 
-         *  routine. 
-         */
-        std::list< NGroupPresentation* > identifyFreeProduct() const;
+        bool identifySimplyIsomorphicTo(const NGroupPresentation& other) const;
 
         /**
          * Returns a TeX representation of this group presentation.
@@ -1158,6 +1193,57 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         virtual void writeTextLong(std::ostream& out) const;
 
     private:
+        /**
+         * This routine attempts to re-write the presentation as a group
+         * extension of the form: < a, r1,...,rn | R1,...,RM, ar1a^-1 = w1,
+         *   ... arna^-1 = wn >, i.e., as a semi-direct product of the integers
+         * and another finitely-presented group.  This is an algorithmic
+         * implementation of the Reidemeister-Schrier algorithm, which isn't
+         * actually an algorithm.  So sometimes this procedure works, and
+         * sometimes it does not.  The return value is an allocated auto_ptr
+         * if and only if the algorithm is successful.  Even if the algorithm
+         * is unsuccessful, its application will likely result in a
+         * modification of the presentation.
+         *
+         * \apinotfinal This routine may very well either be eliminated
+         * in future versions of this software, perhaps incorporated into a
+         * bigger-and-better future algorithm.
+         *
+         * @return a newly allocated homomorphism if and only
+         * if the algorithm is successful.  When this pointer is allocated
+         * it will be an automorphism of a presentation of the kernel of the
+         * map this to the integers.
+         */
+        std::auto_ptr< NHomGroupPresentation > identifyExtensionOverZ();
+
+        /**
+         * Routine attempts to determine if this groups is clearly a free
+         * product of other groups.  This is an unsophisticated algorithm
+         * and will likely only have success if one has pre-processed the
+         * presentation with simplification routines beforehand.
+         *
+         * \apinotfinal Reconsider how the end-user should see this routine.
+         *
+         * @return a list of NGroupPresentation's.  This will be an empty
+         * list if the routine fails, and a list of allocated pointers
+         * otherwise.
+         */
+        std::list< NGroupPresentation* > identifyFreeProduct() const;
+
+        /**
+         *  This routine attempts to identify the current presentation as that
+         * of a circle bundle over a surface.  Returns a string description of
+         * the bundle if it succeeds, and an empty string if it fails. 
+         *
+         * @orientable is a flag that allows the algorithm to distinguish 
+         *  between S2 x S1 and S2 x~ S1, as they have the same fundamental
+         *  group.
+         *
+         * \apinotfinal TODO - incomplete.  Should consider making this and
+         *  perhaps all the identify routines private?  
+         */
+        std::string identifyCircleBundleOverSurface(bool orientable=true);
+
         /**
          * A structure internal to the small cancellation simplification
          * algorithm.

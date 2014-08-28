@@ -192,18 +192,18 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
          * - the presentation of the range;
          * - the description of the map.
          *
-         * Uses the underlying NGroupPresentation::intelligentSimplify.
-         * See those routines for details.
+         * Uses the underlying NGroupPresentation::intelligentSimplify().
+         * See that routine for details.
          *
-         * @return true if the presentations or map have changed.
+         * @return \c true if the presentations or map have changed.
          */
         bool intelligentSimplify();
 
         /**
-         * Simplifies the domain and range using only nielsen moves, keeping
+         * Simplifies the domain and range using only Nielsen moves, keeping
          * track of the resulting map in the progress.
          *
-         * @return true if and only if the presentations have changed.
+         * @return \c true if and only if either presentation was changed.
          */
         bool intelligentNielsen();
 
@@ -211,20 +211,23 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
          * Simplifies the domain and range using only small cancellation
          * theory.
          *
-         * @return true if and only if the presentations have changed.
+         * @return \c true if and only if either presentation was changed.
          */
         bool smallCancellation();
 
         /**
-         * Composes the current homomorphism with the input homomorphism.
+         * Composes this homomorphism with the given input homomorphism.
          *
-         * @pre the range of the input must equal the domain of this.
+         * Evaluating the composition on some group element \a x is the
+         * same as evaluating <tt>this(input(x))</tt>.
+         * In other words, in this composition, \a input is evaluated first
+         * and then the output of that is evaluated by this homomorphism.
          *
-         * @return an auto_ptr<NHomGroupPresentation> to the composition.
-         * evaluating the return on an element is the same as evaluating
-         * this on the evalution of input. i.e. in this composition input
-         * is evaluated first, and the output of that is evaluated by this,
-         * then returned.
+         * \pre the range of \a input must be the same as the domain of this
+         * homomorphism.
+         *
+         * @param input the homomorphism to compose with this.
+         * @return the composition of both homomorphisms.
          */
         std::auto_ptr<NHomGroupPresentation> composeWith(
             const NHomGroupPresentation& input) const;
@@ -266,10 +269,11 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
          * @return true if it is verified if f^-1(f(x))x^-1 simplifes to 1 for all
          * generators x.
          */
-        bool isAutomorphism() const;
+        bool verifyIsomorphism() const;
 
         /**
-         *  Computes the induced map on the abelianizations.
+         * Computes the induced map on the abelianizations of the domain
+         * and range.
          *
          * @return the induced map on the abelianizations.
          */
@@ -335,12 +339,14 @@ inline const NGroupPresentation& NHomGroupPresentation::getRange() const {
     return *range_;
 }
 
-inline NGroupExpression NHomGroupPresentation::evaluate(unsigned long i)
- const { return (*(map_[i])); }
+inline NGroupExpression NHomGroupPresentation::evaluate(unsigned long i) const {
+    return *(map_[i]);
+}
 
 inline NGroupExpression NHomGroupPresentation::invEvaluate(unsigned long i)
- const { return (*(map2_[i])); }
-
+        const {
+    return *(map2_[i]);
+}
 
 } // namespace regina
 
