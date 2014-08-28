@@ -89,7 +89,8 @@ GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) :
         btn = new QPushButton(tr("Using Regina"));
         btn->setToolTip(tr("Simplify the group presentation using Regina"));
         btn->setWhatsThis(tr("<qt>Simplify the group presentation using "
-            "Regina's own code, which is based on small cancellation theory.<p>"
+            "Regina's own code, which is based on small cancellation theory "
+            "and Nielsen moves.<p>"
             "Pressing this button a second time should have no effect.</qt>"));
         connect(btn, SIGNAL(clicked()), this, SLOT(simplifyInternal()));
         hLayout = new QHBoxLayout();

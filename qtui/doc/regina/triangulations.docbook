@@ -1204,7 +1204,8 @@
         by pressing <guibutton>Relator explosion</guibutton> as described
         below), then you can rerun &regina;'s simplification code by
         pressing the <guibutton>Using Regina</guibutton> button.
-        &regina;'s simplification code is based on small cancellation theory.
+        &regina;'s simplification code is based on small cancellation theory
+        and Nielsen moves.
         If you press <guibutton>Using Regina</guibutton>
         twice in a row then the second press should have no effect.
        </para>
