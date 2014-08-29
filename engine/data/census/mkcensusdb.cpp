@@ -34,20 +34,22 @@
 
 #include <cctype>
 #include <cstdlib>
+#include <iostream>
 #include <stdbool.h> // cstdbool needs c++11
 #include <stdint.h> // cstdint needs c++11
+#include <string>
 #include <tcbdb.h>
 #include <tcutil.h>
-#include "packet/ncontainer.h"
+#include "utilities/zstream.h"
 
 void usage(const char* progName, const std::string& error = std::string()) {
     if (! error.empty())
         std::cerr << error << "\n\n";
 
     std::cerr << "Usage:\n";
-    std::cerr << "    " << progName << " <output-file>\n";
+    std::cerr << "    " << progName << " <input-file> <output-file>\n";
     std::cerr << std::endl;
-    std::cerr << "You should provide key-value data via standard input:\n";
+    std::cerr << "Key-value data will be read from the input file:\n";
     std::cerr << "<isosig> <name>\n";
     std::cerr << "<isosig> <name>\n";
     std::cerr << "...\n";
@@ -56,9 +58,18 @@ void usage(const char* progName, const std::string& error = std::string()) {
 
 int main(int argc, char* argv[]) {
     // Parse the command line.
-    if (argc != 2)
+    if (argc != 3)
         usage(argv[0]);
-    std::string outputFile = argv[1];
+    std::string outputFile = argv[2];
+
+    // Open the input file.
+    std::cout << "Processing: " << argv[1] << std::endl;
+    regina::DecompressionStream in(argv[1]);
+    if (! in) {
+        std::cerr << "ERROR: Could not open input file: " << argv[1]
+            << std::endl;
+        std::exit(1);
+    }
 
     // Initialise the database.
     TCBDB* db = tcbdbnew();
@@ -72,13 +83,14 @@ int main(int argc, char* argv[]) {
     // Fill the database with the user-supplied key-value pairs.
     std::string sig, name;
     const char* pos;
+    unsigned long tot = 0;
     while (true) {
-        std::cin >> sig;
-        if (std::cin.eof())
+        in >> sig;
+        if (in.eof())
             break;
 
-        std::getline(std::cin, name);
-        if (std::cin.eof()) {
+        std::getline(in, name);
+        if (in.eof()) {
             std::cerr << "ERROR: Signature " << sig
                 << " is missing a corresponding name.\n\n";
             tcbdbclose(db);
@@ -87,7 +99,7 @@ int main(int argc, char* argv[]) {
         }
 
         // Skip initial whitespace in the manifold name (which will
-        // always be present, since the previous std::cin >> sig
+        // always be present, since the previous in >> sig
         // does not eat the separating whitespace).
         const char* pos = name.c_str();
         while (*pos && std::isspace(*pos))
@@ -107,9 +119,12 @@ int main(int argc, char* argv[]) {
             tcbdbdel(db);
             std::exit(1);
         }
+        ++tot;
     }
 
     // Close and tidy up.
+    in.close();
+
     // The following call to tcbdboptimise() does not change any options
     // other than the bitwise compression option given in the final argument.
     if (! tcbdboptimize(db, 0, 0, 0, -1, -1, BDBTBZIP)) {
@@ -126,7 +141,8 @@ int main(int argc, char* argv[]) {
         tcbdbdel(db);
         std::exit(1);
     }
-
     tcbdbdel(db);
+
+    std::cout << "Success: " << tot << " records." << std::endl;
     return 0;
 }

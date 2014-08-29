@@ -134,7 +134,7 @@ class NCensusTest : public CppUnit::TestFixture {
             // finds the census data files in the source tree.
             std::string home = regina::NGlobalDirs::home();
             std::string python = regina::NGlobalDirs::pythonModule();
-            regina::NGlobalDirs::setDirs(TESTSUITE_DATA_HOME, python);
+            regina::NGlobalDirs::setDirs(TESTSUITE_DATA_HOME_BINARY, python);
 
             verifyLookupNone("");
             verifyLookupNone("abcdefg");
