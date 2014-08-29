@@ -15,7 +15,11 @@ Program version:
     www/index.html (last updated, current version, contents, news,
                     filenames, what's new)
     www/source.html (unpacking instructions: filename, directory)
-    Plus copyright years in license (see below)
+
+Plus copyright years in:
+    engine/doxygen/doc-footer.html
+    python/modulemain.cpp
+    ... and the copyright statement in the license (see below)
 
 Full license details:
     LICENSE.txt
@@ -27,6 +31,8 @@ Full license details:
 SnapPy version:
     engine/snappea/nsnappeatriangulation.h (class docs)
     qtui/doc/regina/trouble.docbook (SnapPy multiple interpreters)
+    engine/snappea/kernel/README.txt
+    engine/snappea/snappy/README.txt
 
 SnapPea / SnapPy copyright (in addition to full license locations above):
     engine/snappea/kernel/README.txt
