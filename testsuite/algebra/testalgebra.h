@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Test Suite                                                            *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,92 +32,17 @@
 
 /* end stub */
 
-/*! \file ntrialgebra.h
- *  \brief Provides an algebra viewer for triangulations.
- */
-
-#ifndef __GROUPWIDGET_H
-#define __GROUPWIDGET_H
-
-#include <QWidget>
-
-class QLabel;
-class QListWidget;
-
-namespace regina {
-    class NPacket;
-    class NGroupPresentation;
-};
-
 /**
- * A triangulation page for viewing the fundamental group.
+ * This file allows all tests from this directory to be added to
+ * the overall test runner, without requiring any further inclusion
+ * of headers that define the specific corresponding test fixtures.
+ *
+ * The routines declared below (which should add tests to the given
+ * test runner) should be implemented in this directory and then called
+ * from the top-level test suite directory.
  */
-class GroupWidget : public QWidget {
-    Q_OBJECT
 
-    private:
-        const regina::NGroupPresentation* group_;
-        regina::NGroupPresentation* simplified_;
+#include <cppunit/ui/text/TestRunner.h>
 
-        QWidget* ui_;
-        QLabel* fundName_;
-        QLabel* fundGens_;
-        QLabel* fundRelCount_;
-        QListWidget* fundRels_;
+void addNGroupPresentation(CppUnit::TextUi::TestRunner& runner);
 
-    public:
-        /**
-         * Constructor.
-         */
-        GroupWidget(bool allowSimplify, bool paddingStretch);
-        ~GroupWidget();
-
-        /**
-         * Refresh the contents of the widget.
-         */
-        void refresh(const regina::NGroupPresentation* group);
-
-        /**
-         * The following routine drops ownership of simplified_ (it is
-         * assumed that the caller will claim ownership instead), and
-         * sets simplified_ to null.
-         */
-        regina::NGroupPresentation* takeSimplifiedGroup();
-
-    signals:
-        /**
-         * Indicates that the group presentation has been simplified.
-         * Other elements of the UI can use this signal to pass the
-         * simplified group presentation back to Regina's calculation engine.
-         */
-        void simplified();
-
-    public slots:
-        /**
-         * Group simplification via GAP.
-         */
-        void simplifyGAP();
-        /**
-         * Regina's own simplification code.
-         */
-        void simplifyInternal();
-        /**
-         * Search for more potentially useful relators.
-         */
-        void proliferateRelators();
-
-    private:
-        /**
-         * Returns the full path to the GAP executable, or QString::null
-         * if the GAP executable does not appear to be valid.
-         */
-        QString verifyGAPExec();
-};
-
-inline regina::NGroupPresentation* GroupWidget::takeSimplifiedGroup() {
-    regina::NGroupPresentation* ans = simplified_;
-    simplified_ = 0;
-    return ans;
-}
-
-#endif

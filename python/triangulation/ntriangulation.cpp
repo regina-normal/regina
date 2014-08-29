@@ -110,16 +110,6 @@ namespace {
         tet.release();
     }
 
-    regina::NIsomorphism* isIsomorphicTo_ptr(NTriangulation& t,
-            NTriangulation& s) {
-        return t.isIsomorphicTo(s).release();
-    }
-
-    regina::NIsomorphism* isContainedIn_ptr(NTriangulation& t,
-            NTriangulation& s) {
-        return t.isContainedIn(s).release();
-    }
-
     boost::python::list getTetrahedra_list(NTriangulation& t) {
         boost::python::list ans;
         for (NTriangulation::TetrahedronIterator it =
@@ -267,11 +257,9 @@ void addNTriangulation() {
         .def("faceIndex", &NTriangulation::faceIndex)
         .def("triangleIndex", &NTriangulation::triangleIndex)
         .def("isIdenticalTo", &NTriangulation::isIdenticalTo)
-        .def("isIsomorphicTo", isIsomorphicTo_ptr,
-            return_value_policy<manage_new_object>())
+        .def("isIsomorphicTo", &NTriangulation::isIsomorphicTo)
         .def("makeCanonical", &NTriangulation::makeCanonical)
-        .def("isContainedIn", isContainedIn_ptr,
-            return_value_policy<manage_new_object>())
+        .def("isContainedIn", &NTriangulation::isContainedIn)
         .def("hasTwoSphereBoundaryComponents",
             &NTriangulation::hasTwoSphereBoundaryComponents)
         .def("hasNegativeIdealBoundaryComponents",

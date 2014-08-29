@@ -1200,29 +1200,47 @@
      <itemizedlist>
       <listitem>
        <para>
-        If you have &gaplongurl; installed on your system, you can use &gap;
-        to simplify the group presentation.
-        Simply press the <guibutton>Using GAP</guibutton> button
-        at the bottom of the panel.
+        If you have subsequently modified the group presentation (for instance,
+        by pressing <guibutton>Relator explosion</guibutton> as described
+        below), then you can rerun &regina;'s simplification code by
+        pressing the <guibutton>Using Regina</guibutton> button.
+        &regina;'s simplification code is based on small cancellation theory
+        and Nielsen moves.
+        If you press <guibutton>Using Regina</guibutton>
+        twice in a row then the second press should have no effect.
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        If you have &gaplongurl; installed on your system,
+        then you can use &gap; to simplify the group presentation
+        by pressing the <guibutton>Using GAP</guibutton> button.
         You can try this more than once if you like: sometimes
         &gap; finds a better presentation when run a second or third time.
        </para>
       </listitem>
       <listitem>
        <para>
-        You can also press the <guibutton>By proliferation</guibutton>
-        button, which will build new relators from old and append
-        these to the presentation (in the hope of finding new ways to
-        simplify what is already present).  This may make your
-        presentation larger, but it may also help climb out of a local
-        &ldquo;well&rdquo; from which it is difficult to escape.
-        Pressing this button repeatedly
-        will make &regina; try increasingly large combinations,
-        and may therefore become increasingly slow.
+        If you seem to be stuck in a local &ldquo;well&rdquo;, you can
+        try to escape by pressing the
+        <guibutton>Relator explosion</guibutton> button.
+        This will attempt to multiply old relators together in a
+        moderately intelligent way to build new relators, which might be
+        more useful for later simplifications.
+        You should alternate this with one of the simplification buttons
+        described above.
+        This process has been found particularly useful when trying
+        to prove that a group is trivial.
        </para>
       </listitem>
      </itemizedlist>
     </para>
+    <warning><para>
+     Pressing <guibutton>Relator explosion</guibutton> will make your
+     presentation larger&mdash;possibly <emphasis>much</emphasis>
+     larger.  If you try this on a group presentation that is already
+     large then it could easily exceed the memory of your computer.
+    </para></warning>
     <tip>
      <para>
       If &regina; is having trouble starting &gap;, you can tell it how
