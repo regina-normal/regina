@@ -320,7 +320,7 @@ bool NHomGroupPresentation::invert()
  return false;
 }
 
-bool NHomGroupPresentation::verifyHom() const
+bool NHomGroupPresentation::verify() const
 {
  for (unsigned long i=0; i<domain_->getNumberOfRelations(); i++)
   {

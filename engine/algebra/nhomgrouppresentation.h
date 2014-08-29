@@ -305,7 +305,7 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
          * @return \c true if Regina is able to verify that this is a
          * homomorphism, or \c false if the result is inconclusive.
          */
-        bool verifyHom() const;
+        bool verify() const;
 
         /**
          * Attempts to verify that a declared isomorphism is, indeed,
