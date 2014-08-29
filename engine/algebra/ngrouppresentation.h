@@ -788,6 +788,11 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * The current simplification method uses a combination of small
          * cancellation theory and Nielsen moves.
          *
+         * If this routine does return a homomorphism (because the
+         * presentation was changed), then this homomorphsm will in fact be
+         * a declared isomorphism.  See the NHomGroupPresentation class
+         * notes for details on what this means.
+         *
          * @return a newly allocated homomorphism describing the
          * reduction map from the original presentation to the new
          * presentation, or a null pointer if this presentation was not
@@ -816,6 +821,11 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * until no more presentation-shortening substitutions are available.
          * We follow that by killing any available generators using words
          * where generators appear a single time.
+         *
+         * If this routine does return a homomorphism (because the
+         * presentation was changed), then this homomorphsm will in fact be
+         * a declared isomorphism.  See the NHomGroupPresentation class
+         * notes for details on what this means.
          *
          * \todo \optlong This routine could use some small tweaks -
          * recognition of utility of some score==0 moves, such as
@@ -1029,6 +1039,11 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * Looks for Nielsen moves that will simplify the presentation.
          * Performs one of the most-effective moves, if it can find any.
          *
+         * If this routine does return a homomorphism (because some
+         * move was performed), then this homomorphsm will in fact be
+         * a declared isomorphism.  See the NHomGroupPresentation class
+         * notes for details on what this means.
+         *
          * @return a newly allocated homomorphism describing the
          * map from the original presentation to the new presentation,
          * or a null pointer if no move was performed.
@@ -1065,6 +1080,11 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * <i>M</i>+<i>N</i>-1 are mapped to +/-1 in the appropriate factor.
          * All further generators will be mapped to zero.
          *
+         * If this routine does return a homomorphism (because the
+         * presentation was changed), then this homomorphsm will in fact be
+         * a declared isomorphism.  See the NHomGroupPresentation class
+         * notes for details on what this means.
+         *
          * @return a newly allocated homomorphism giving the reduction map
          * from the old presentation to the new, or a null pointer if
          * this presentation was not changed.
@@ -1098,6 +1118,11 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          *     generator appears with non-zero weight.  If negative weight,
          *     it inverts that generator.
          *  5. It cyclically permutes relators to start with smallest gen.
+         *
+         * If this routine does return a homomorphism (because the choice of
+         * generators was changed), then this homomorphsm will in fact be
+         * a declared isomorphism.  See the NHomGroupPresentation class
+         * notes for details on what this means.
          *
          * \todo As a final step, make elementary simplifications to aid in
          * seeing standard relators like commutators.
