@@ -1696,7 +1696,7 @@ get_out_of_while_loop_goto_tag: { // this skips insertion
                 map[GI->second.generator] = let;
             }
             NHomGroupPresentation invMap( other, *this, map );
-            if (invMap.verifyHom()) { //std::cout<<invMap.detail()<<"\n";
+            if (invMap.verify()) { //std::cout<<invMap.detail()<<"\n";
                 return true;
             }
         }
