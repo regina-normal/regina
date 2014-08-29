@@ -21,9 +21,11 @@ FOREACH(db ${censusdata_DATA})
       ${PROJECT_SOURCE_DIR}/engine/data/census/${siglist}
       ${PROJECT_BINARY_DIR}/engine/data/census/${db}
   )
+  INSTALL(
+    FILES ${PROJECT_BINARY_DIR}/engine/data/census/${db}
+    DESTINATION ${CENSUSDATADIR}
+    COMPONENT Runtime)
 ENDFOREACH(db)
 
 ADD_CUSTOM_TARGET(censusdata ALL DEPENDS ${censusdata_DATA})
-
-INSTALL(FILES ${censusdata_DATA} DESTINATION ${CENSUSDATADIR} COMPONENT Runtime)
 
