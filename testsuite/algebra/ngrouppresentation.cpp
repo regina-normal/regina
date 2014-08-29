@@ -37,6 +37,7 @@
 
 #include "algebra/ngrouppresentation.h"
 #include "algebra/nmarkedabeliangroup.h"
+#include "utilities/stringutils.h"
 
 #include "testsuite/utilities/testutilities.h"
 
@@ -139,15 +140,23 @@ class NGroupPresentationTest : public CppUnit::TestFixture {
         for (std::list<NGroupPresentation*>::iterator i=presList.begin(); 
                 i!=presList.end(); i++) {
             (*i)->intelligentSimplify();
-            std::auto_ptr< NHomGroupPresentation >
-                homPtr( (*i)->identifyExtensionOverZ() );
-            // We know which cases this should fail for:
-            if (homPtr.get()==NULL &&
-                    (*i != &Z6_pres) &&
-                    (*i != &D8_pres) &&
-                    (*i != &FOX_pres) &&
-                    (*i != &Z2Z3Z8_pres) )
-                CPPUNIT_FAIL("Reidemeister-Schreir failure.");
+            // Currently identifyExtensionOverZ() is private, so we
+            // cannot call it.  Examine the name from recogniseGroup()
+            // instead to see if R-S worked.
+            std::string name = (*i)->recogniseGroup();
+            if (! regina::startsWith(name, "Z~")) {
+                // We know which cases this should fail for.
+                // Note that Reidemeister-Schreir should work for Z and KPDS,
+                // but their recognised names are Z and (unknown)
+                // respectively and so we exclude them here.
+                if ( (*i != &Z_pres) &&
+                        (*i != &Z6_pres) &&
+                        (*i != &D8_pres) &&
+                        (*i != &FOX_pres) &&
+                        (*i != &KPDS_pres) &&
+                        (*i != &Z2Z3Z8_pres) )
+                    CPPUNIT_FAIL("Reidemeister-Schreir failure.");
+            }
         }
     }; // end RS_test
 

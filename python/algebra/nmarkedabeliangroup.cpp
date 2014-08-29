@@ -134,19 +134,6 @@ namespace {
             const NHomMarkedAbelianGroup& h2) {
         return h1 * h2;
     }
-
-    NMarkedAbelianGroup* torsionSubgroup_ptr(const NMarkedAbelianGroup& g) {
-        return g.torsionSubgroup().release();
-    }
-
-    NHomMarkedAbelianGroup* torsionInclusion_ptr(const NMarkedAbelianGroup& g) {
-        return g.torsionInclusion().release();
-    }
-
-    NHomMarkedAbelianGroup* hom_torsionSubgroup_ptr(
-            const NHomMarkedAbelianGroup& g) {
-        return g.torsionSubgroup().release();
-    }
 }
 
 void addNMarkedAbelianGroup() {
@@ -203,10 +190,8 @@ void addNMarkedAbelianGroup() {
             return_internal_reference<>())
         .def("coefficients", &NMarkedAbelianGroup::coefficients,
             return_value_policy<return_by_value>())
-        .def("torsionSubgroup", torsionSubgroup_ptr,
-            return_value_policy<manage_new_object>())
-        .def("torsionInclusion", torsionInclusion_ptr,
-            return_value_policy<manage_new_object>())
+        .def("torsionSubgroup", &NMarkedAbelianGroup::torsionSubgroup)
+        .def("torsionInclusion", &NMarkedAbelianGroup::torsionInclusion)
         .def(self == self)
     ;
 
@@ -238,8 +223,7 @@ void addNMarkedAbelianGroup() {
             return_internal_reference<>())
         .def("getReducedMatrix", &NHomMarkedAbelianGroup::getReducedMatrix,
             return_internal_reference<>())
-        .def("torsionSubgroup", hom_torsionSubgroup_ptr,
-            return_value_policy<manage_new_object>())
+        .def("torsionSubgroup", &NHomMarkedAbelianGroup::torsionSubgroup)
         .def("writeReducedMatrix", writeReducedMatrix_stdout)
         // TODO: evalCC, evalSNF
         .def("inverseHom", &NHomMarkedAbelianGroup::inverseHom)
