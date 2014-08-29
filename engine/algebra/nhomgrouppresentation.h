@@ -168,6 +168,18 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
         const NGroupPresentation& getRange() const;
 
         /**
+         * Returns whether or not this is a declared isomorphism.
+         *
+         * A <i>declared isomorphism</i> is a isomorphism for which the
+         * user has explicitly provided the inverse map.  See the
+         * NHomGroupPresentation class notes for details.
+         *
+         * @return \c true if and only if this is a declared
+         * isomorphism, i.e, the inverse map was explicitly provided.
+         */
+        bool knowsInverse() const;
+
+        /**
          * Evaluate the homomorphism at an element of the domain.
          *
          * @param arg an element of the domain.
@@ -401,6 +413,10 @@ inline const NGroupPresentation& NHomGroupPresentation::getDomain() const {
 
 inline const NGroupPresentation& NHomGroupPresentation::getRange() const {
     return *range_;
+}
+
+inline bool NHomGroupPresentation::knowsInverse() const {
+    return inv_;
 }
 
 inline NGroupExpression NHomGroupPresentation::evaluate(unsigned long i) const {
