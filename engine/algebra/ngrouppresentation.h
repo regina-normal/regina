@@ -1201,10 +1201,14 @@ class REGINA_API NGroupPresentation : public ShareableObject {
 
     private:
         /**
-         * This routine attempts to re-write the presentation as a group
-         * extension of the form: < a, r1,...,rn | R1,...,RM, ar1a^-1 = w1,
-         *   ... arna^-1 = wn >, i.e., as a semi-direct product of the integers
-         * and another finitely-presented group.  This is an algorithmic
+         * Attempts to rewrite the presentation as a group extension.
+         * In particular, this routine attempts to rewrite this group
+         * as a semi-direct product of the integers and another
+         * finitely-presented group, i.e., an extension of the form:
+         *
+         *   < a, r1,...,rn | R1,...,RM, ar1a^-1 = w1, ... arna^-1 = wn >
+         *
+         * This is an algorithmic
          * implementation of the Reidemeister-Schrier algorithm, which isn't
          * actually an algorithm.  So sometimes this procedure works, and
          * sometimes it does not.  The return value is an allocated auto_ptr
@@ -1224,16 +1228,22 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         std::auto_ptr< NHomGroupPresentation > identifyExtensionOverZ();
 
         /**
-         * Routine attempts to determine if this groups is clearly a free
+         * Attempts to determine if this group is clearly a free
          * product of other groups.  This is an unsophisticated algorithm
          * and will likely only have success if one has pre-processed the
          * presentation with simplification routines beforehand.
          *
+         * If this routine succeeds then the group is definitely a free
+         * product.  If this routine fails (by returning an empty list)
+         * then the result is inconclusive: the group might not be a
+         * free product, or it might be a free product but this routine
+         * could not prove so.
+         *
          * \apinotfinal Reconsider how the end-user should see this routine.
          *
-         * @return a list of NGroupPresentation's.  This will be an empty
-         * list if the routine fails, and a list of allocated pointers
-         * otherwise.
+         * @return a list of newly allocated group presentations giving
+         * the factors of this free product, or an empty list if this
+         * routine fails (i.e., the result is inconclusive).
          */
         std::list< NGroupPresentation* > identifyFreeProduct() const;
 
