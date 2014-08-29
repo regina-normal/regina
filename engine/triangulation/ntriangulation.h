@@ -1774,10 +1774,6 @@ class REGINA_API NTriangulation : public NPacket,
          * any pointers to old skeletal objects (such as the argument \a t)
          * can no longer be used.
          *
-         * See the page on \ref pachner for definitions and terminology
-         * relating to Pachner moves.  After the move, the new belt face will be
-         * <tt>getTetrahedra().back()->getVertex(3)</tt>.
-         *
          * \pre The given tetrahedron is a tetrahedron of this triangulation.
          *
          * @param t the tetrahedron about which to perform the move.

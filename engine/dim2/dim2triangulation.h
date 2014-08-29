@@ -804,10 +804,6 @@ class REGINA_API Dim2Triangulation : public NPacket,
          * any pointers to old skeletal objects (such as the argument \a t)
          * can no longer be used.
          *
-         * See the page on \ref pachner for definitions and terminology
-         * relating to Pachner moves.  After the move, the new belt face will be
-         * <tt>getTriangles().back()->getVertex(2)</tt>.
-         *
          * \pre The given triangle is a triangle of this triangulation.
          *
          * @param t the triangle about which to perform the move.
