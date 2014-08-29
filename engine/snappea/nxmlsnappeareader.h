@@ -32,7 +32,7 @@
 
 /* end stub */
 
-/*! \file packet/nxmlsnappeareader.h
+/*! \file snappea/nxmlsnappeareader.h
  *  \brief Deals with parsing XML data for SnapPea triangulations.
  */
 

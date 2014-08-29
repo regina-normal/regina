@@ -420,7 +420,7 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * If the given string cannot be interpreted as a word in a group,
          * then this expression will be left untouched.
          *
-         * @param a string representation of the word to multiply with
+         * @param input a string representation of the word to multiply with
          * this expression.
          * @return \c true if the given string could interpreted
          * (and therefore the multiplication was completed successfully), or
@@ -440,7 +440,7 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * If the given string cannot be interpreted as a word in a group,
          * then this expression will be left untouched.
          *
-         * @param a string representation of the word to multiply with
+         * @param input a string representation of the word to multiply with
          * this expression.
          * @return \c true if the given string could interpreted
          * (and therefore the multiplication was completed successfully), or

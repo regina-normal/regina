@@ -1048,7 +1048,6 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * in UTF-8.
          *
          * @param filename the name of the CSV file to export to.
-         * @param surfaces the list of normal surfaces to export.
          * @param additionalFields a bitwise combination of constants from
          * regina::SurfaceExportFields indicating which additional properties
          * of surfaces should be included in the export.
@@ -1089,7 +1088,6 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * in UTF-8.
          *
          * @param filename the name of the CSV file to export to.
-         * @param surfaces the list of normal surfaces to export.
          * @param additionalFields a bitwise combination of constants from
          * regina::SurfaceExportFields indicating which additional properties
          * of surfaces should be included in the export.

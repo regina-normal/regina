@@ -866,7 +866,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * @param l the second (longitudinal) filling coefficient.
          * @param whichCusp the index of the cusp to fill according to
          * SnapPea; this must be between 0 and countCusps()-1 inclusive.
-         * @param \c true if and only if the filling coefficients were
+         * @return \c true if and only if the filling coefficients were
          * accepted (according to the conditions outlined above).
          */
         bool fill(int m, int l, unsigned whichCusp = 0);
