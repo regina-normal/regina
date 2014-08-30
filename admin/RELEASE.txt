@@ -64,7 +64,6 @@ Don't forget:
     update debian/ubuntu/fink READMEs as required (both text and html)
     update census download file sizes if there have been changes
     tag the git repository
-    upload new data files, both from examples/ and the large data repository
     update docs/ and engine-docs/ on the website
     update the citation years if necessary in private BibTeX databases
     mail regina-announce
