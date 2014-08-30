@@ -130,6 +130,8 @@ int main(int argc, char* argv[]) {
     if (! tcbdboptimize(db, 0, 0, 0, -1, -1, BDBTBZIP)) {
         std::cerr << "ERROR: Could not optimise database: " << outputFile
             << std::endl;
+        std::cerr << "Tokyo cabinet error: " << tcerrmsg(tcbdbecode(db))
+            << std::endl;
         tcbdbclose(db);
         tcbdbdel(db);
         std::exit(1);
