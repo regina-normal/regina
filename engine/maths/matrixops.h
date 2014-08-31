@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -68,8 +68,6 @@ namespace regina {
  * It does not use modular arithmetic to control the intermediate
  * coefficient explosion.
  *
- * \testpart
- *
  * @param matrix the matrix to transform.
  */
 REGINA_API void smithNormalForm(NMatrixInt& matrix);
@@ -103,8 +101,6 @@ REGINA_API void smithNormalForm(NMatrixInt& matrix);
  * passed are square, with side length matrix.columns().
  * \pre The matrices \a colSpaceBasis and \a colSpaceBasisInv that are
  * passed are square, with side length matrix.rows().
- *
- * \testpart
  *
  * @param matrix the original matrix to put into Smith Normal Form (this
  * need not be square).  When the algorithm terminates, this matrix \e is
@@ -149,8 +145,6 @@ REGINA_API void smithNormalForm(NMatrixInt& matrix,
  *  must be square with side length matrix.columns().
  * \pre The matrices \a colSpaceBasis and \a colSpaceBasisInv, if passed,
  *  must be square, with side length matrix.rows().
- *
- * \testpart
  *
  * @param matrix the original matrix to put into Smith Normal Form (this
  * need not be square).  When the algorithm terminates, this matrix \e is

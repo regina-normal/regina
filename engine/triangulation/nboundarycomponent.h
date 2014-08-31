@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -85,14 +85,14 @@ class NVertex;
 class REGINA_API NBoundaryComponent :
         public ShareableObject, public NMarkedElement {
     private:
-        std::vector<NTriangle*> triangles;
+        std::vector<NTriangle*> triangles_;
             /**< List of triangles in the component. */
-        std::vector<NEdge*> edges;
+        std::vector<NEdge*> edges_;
             /**< List of edges in the component. */
-        std::vector<NVertex*> vertices;
+        std::vector<NVertex*> vertices_;
             /**< List of vertices in the component. */
 
-        bool orientable;
+        bool orientable_;
             /**< Is this boundary component orientable? */
 
     public:
@@ -100,6 +100,15 @@ class REGINA_API NBoundaryComponent :
          * Default destructor.
          */
         virtual ~NBoundaryComponent();
+
+        /**
+         * Returns the index of this boundary component in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->boundaryComponentIndex(this)</tt>.
+         *
+         * @return the index of this boundary component vertex.
+         */
+        unsigned long index() const;
 
         /**
          * Returns the number of triangles in this boundary component.
@@ -287,53 +296,57 @@ inline NBoundaryComponent::NBoundaryComponent() {
 }
 
 inline NBoundaryComponent::NBoundaryComponent(NVertex* idealVertex) {
-    vertices.push_back(idealVertex);
+    vertices_.push_back(idealVertex);
 }
 
 inline NBoundaryComponent::~NBoundaryComponent() {
 }
 
+inline unsigned long NBoundaryComponent::index() const {
+    return markedIndex();
+}
+
 inline unsigned long NBoundaryComponent::getNumberOfTriangles() const {
-    return triangles.size();
+    return triangles_.size();
 }
 
 inline unsigned long NBoundaryComponent::getNumberOfFaces() const {
-    return triangles.size();
+    return triangles_.size();
 }
 
 inline unsigned long NBoundaryComponent::getNumberOfEdges() const {
-    return edges.size();
+    return edges_.size();
 }
 
 inline unsigned long NBoundaryComponent::getNumberOfVertices() const {
-    return vertices.size();
+    return vertices_.size();
 }
 
 inline NTriangle* NBoundaryComponent::getTriangle(unsigned long index) const {
-    return triangles[index];
+    return triangles_[index];
 }
 
 inline NTriangle* NBoundaryComponent::getFace(unsigned long index) const {
-    return triangles[index];
+    return triangles_[index];
 }
 
 inline NEdge* NBoundaryComponent::getEdge(unsigned long index) const {
-    return edges[index];
+    return edges_[index];
 }
 
 inline NVertex* NBoundaryComponent::getVertex(unsigned long index) const {
-    return vertices[index];
+    return vertices_[index];
 }
 
 inline NComponent* NBoundaryComponent::getComponent() const {
     // There may be no triangles, but there is always a vertex.
-    return vertices.front()->getComponent();
+    return vertices_.front()->getComponent();
 }
 
 inline long NBoundaryComponent::getEulerChar() const {
     return (isIdeal() ?
-        vertices.front()->getLinkEulerChar() :
-        long(vertices.size()) - long(edges.size()) + long(triangles.size()));
+        vertices_.front()->getLinkEulerChar() :
+        long(vertices_.size()) - long(edges_.size()) + long(triangles_.size()));
 }
 
 inline long NBoundaryComponent::getEulerCharacteristic() const {
@@ -341,11 +354,11 @@ inline long NBoundaryComponent::getEulerCharacteristic() const {
 }
 
 inline bool NBoundaryComponent::isIdeal() const {
-    return triangles.empty();
+    return triangles_.empty();
 }
 
 inline bool NBoundaryComponent::isOrientable() const {
-    return orientable;
+    return orientable_;
 }
 
 inline void NBoundaryComponent::writeTextShort(std::ostream& out) const {

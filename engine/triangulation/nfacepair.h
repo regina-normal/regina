@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -70,9 +70,9 @@ namespace regina {
  */
 class REGINA_API NFacePair {
     private:
-        unsigned first;
+        unsigned first_;
             /**< The smaller of the two faces in this pair. */
-        unsigned second;
+        unsigned second_;
             /**< The larger of the two faces in this pair. */
 
     public:
@@ -214,45 +214,45 @@ class REGINA_API NFacePair {
 
 // Inline functions for NFacePair
 
-inline NFacePair::NFacePair() : first(0), second(1) {
+inline NFacePair::NFacePair() : first_(0), second_(1) {
 }
 
 inline NFacePair::NFacePair(const NFacePair& cloneMe) :
-        first(cloneMe.first), second(cloneMe.second) {
+        first_(cloneMe.first_), second_(cloneMe.second_) {
 }
 
 inline unsigned NFacePair::lower() const {
-    return first;
+    return first_;
 }
 
 inline unsigned NFacePair::upper() const {
-    return second;
+    return second_;
 }
 
 inline bool NFacePair::isBeforeStart() const {
-    return (second <= 0);
+    return (second_ <= 0);
 }
 
 inline bool NFacePair::isPastEnd() const {
-    return (first >= 3);
+    return (first_ >= 3);
 }
 
 inline NFacePair& NFacePair::operator = (const NFacePair& cloneMe) {
-    first = cloneMe.first;
-    second = cloneMe.second;
+    first_ = cloneMe.first_;
+    second_ = cloneMe.second_;
     return *this;
 }
 
 inline bool NFacePair::operator == (const NFacePair& other) const {
-    return (first == other.first && second == other.second);
+    return (first_ == other.first_ && second_ == other.second_);
 }
 
 inline bool NFacePair::operator < (const NFacePair& other) const {
-    if (first < other.first)
+    if (first_ < other.first_)
         return true;
-    if (first > other.first)
+    if (first_ > other.first_)
         return false;
-    return (second < other.second);
+    return (second_ < other.second_);
 }
 
 inline bool NFacePair::operator > (const NFacePair& other) const {
@@ -260,11 +260,11 @@ inline bool NFacePair::operator > (const NFacePair& other) const {
 }
 
 inline bool NFacePair::operator <= (const NFacePair& other) const {
-    if (first < other.first)
+    if (first_ < other.first_)
         return true;
-    if (first > other.first)
+    if (first_ > other.first_)
         return false;
-    return (second <= other.second);
+    return (second_ <= other.second_);
 }
 
 inline bool NFacePair::operator >= (const NFacePair& other) const {

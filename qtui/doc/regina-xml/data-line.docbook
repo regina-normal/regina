@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>line</refname>
-  <refpurpose>A single line of text</refpurpose>
+  <refpurpose>Deprecated: see &xml-packet-script; for details</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -34,8 +34,15 @@ line ::= (#PCDATA)</synopsis>
  <refsect1>
   <title>Description</title>
   <para>
-   A &xml-line; element contains a single line of text.
-   Whitespace is relevant and is considered a part of this text.
+   This element (used to store a &python; script one line at a time) has
+   been replaced with &xml-text; (which stores the entire script at once).
+   The old &xml-line; element has been kept for backward compatibility,
+   but any new code that writes data files should use a single &xml-text;
+   element instead.
+  </para>
+  <para>
+   A &xml-line; element contains a single line of a &python; script.
+   Whitespace is relevant and is considered a part of this line.
    Line breaks are relevant and should not exist within this element.
   </para>
 

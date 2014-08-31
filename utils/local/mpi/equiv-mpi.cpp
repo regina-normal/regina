@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Attempt to find triangulations related by few elementary moves        *
  *                                                                        *
- *  Copyright (c) 2005-2013, Ben Burton                                   *
+ *  Copyright (c) 2005-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -583,7 +583,7 @@ int mainController() {
     // Are we saving results?
     if (outFile && newTree) {
         ctrlLogStamp() << "Saving results to " << outFile << "." << std::endl;
-        writeXMLFile(outFile, newTree);
+        newTree->save(outFile);
     } else
         ctrlLogStamp() << "Not saving results." << std::endl;
 
@@ -943,7 +943,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Read the input file.
-    if (! (tree = readXMLFile(inFile.c_str()))) {
+    if (! (tree = open(inFile.c_str()))) {
         fprintf(stderr, "ERROR: Could not read data from %s.\n",
             inFile.c_str());
         MPI_Finalize();

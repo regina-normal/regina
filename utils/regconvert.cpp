@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Convert old-style binary data files to new-style XML                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -101,7 +101,7 @@ int main(int argc, char* argv[]) {
             "Only uncompressed XML can be written to standard output.");
 
     // Read the old file.
-    regina::NPacket* tree = regina::readFileMagic(oldFile);
+    regina::NPacket* tree = regina::open(oldFile.c_str());
     if (! tree) {
         std::cerr << "File " << oldFile << " could not be read.\n";
         return 1;
@@ -120,7 +120,7 @@ int main(int argc, char* argv[]) {
     } else {
         // Real output file.
         // Use compressed / uncompressed XML
-        result = regina::writeXMLFile(newFile.c_str(), tree, typeOpt == 'x');
+        result = tree->save(newFile.c_str(), typeOpt == 'x');
     }
 
     if (! result) {

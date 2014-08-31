@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -82,6 +82,7 @@ namespace {
     enum {
         EXAMPLE_S3_ONETET,
         EXAMPLE_S3_BING,
+        EXAMPLE_S3_600CELL,
         EXAMPLE_RP3RP3,
         EXAMPLE_FIGURE8,
         EXAMPLE_GIESEKING,
@@ -90,6 +91,7 @@ namespace {
         EXAMPLE_RP2xS1,
         EXAMPLE_S2xS1,
         EXAMPLE_SOLIDKLEIN,
+        EXAMPLE_TREFOIL,
         EXAMPLE_WEEKS,
         EXAMPLE_WEBERSEIFERT,
         EXAMPLE_WHITEHEAD
@@ -340,17 +342,19 @@ NTriangulationCreator::NTriangulationCreator() {
     exampleWhich = new QComboBox(hArea);
     exampleWhich->insertItem(0, QObject::tr("3-sphere (1 tetrahedron)"));
     exampleWhich->insertItem(1, QObject::tr("3-sphere (dual to Bing's house)"));
-    exampleWhich->insertItem(2, QObject::tr("Connected sum RP3 # RP3"));
-    exampleWhich->insertItem(3, QObject::tr("Figure eight knot complement"));
-    exampleWhich->insertItem(4, QObject::tr("Gieseking manifold"));
-    exampleWhich->insertItem(5, QObject::tr("Lens space L(8,3)"));
-    exampleWhich->insertItem(6, QObject::trUtf8("Poincaré homology sphere"));
-    exampleWhich->insertItem(7, QObject::tr("Product RP2 x S1"));
-    exampleWhich->insertItem(8, QObject::tr("Product S2 x S1"));
-    exampleWhich->insertItem(9, QObject::tr("Solid Klein bottle"));
-    exampleWhich->insertItem(10, QObject::tr("Weeks manifold"));
-    exampleWhich->insertItem(11, QObject::tr("Weber-Seifert dodecahedral space"));
-    exampleWhich->insertItem(12, QObject::tr("Whitehead link complement"));
+    exampleWhich->insertItem(2, QObject::tr("3-sphere (600-cell)"));
+    exampleWhich->insertItem(3, QObject::tr("Connected sum RP3 # RP3"));
+    exampleWhich->insertItem(4, QObject::tr("Figure eight knot complement"));
+    exampleWhich->insertItem(5, QObject::tr("Gieseking manifold"));
+    exampleWhich->insertItem(6, QObject::tr("Lens space L(8,3)"));
+    exampleWhich->insertItem(7, QObject::trUtf8("Poincaré homology sphere"));
+    exampleWhich->insertItem(8, QObject::tr("Product RP2 x S1"));
+    exampleWhich->insertItem(9, QObject::tr("Product S2 x S1"));
+    exampleWhich->insertItem(10, QObject::tr("Solid Klein bottle"));
+    exampleWhich->insertItem(11, QObject::tr("Trefoil knot complement"));
+    exampleWhich->insertItem(12, QObject::tr("Weeks manifold"));
+    exampleWhich->insertItem(13, QObject::tr("Weber-Seifert dodecahedral space"));
+    exampleWhich->insertItem(14, QObject::tr("Whitehead link complement"));
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
     hLayout->addWidget(exampleWhich, 1);
@@ -703,6 +707,8 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
                 return NExampleTriangulation::threeSphere();
             case EXAMPLE_S3_BING:
                 return NExampleTriangulation::bingsHouse();
+            case EXAMPLE_S3_600CELL:
+                return NExampleTriangulation::sphere600();
             case EXAMPLE_RP3RP3:
                 return NExampleTriangulation::rp3rp3();
             case EXAMPLE_FIGURE8:
@@ -719,6 +725,8 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
                 return NExampleTriangulation::s2xs1();
             case EXAMPLE_SOLIDKLEIN:
                 return NExampleTriangulation::solidKleinBottle();
+            case EXAMPLE_TREFOIL:
+                return NExampleTriangulation::trefoilKnotComplement();
             case EXAMPLE_WEEKS:
                 return NExampleTriangulation::weeks();
             case EXAMPLE_WEBERSEIFERT:

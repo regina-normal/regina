@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -679,6 +679,8 @@ class REGINA_API Dim2Triangulation : public NPacket,
          */
         /*@{*/
 
+        using NGenericTriangulation<2>::isEmpty;
+
         /**
          * Always returns \c true.
          *
@@ -801,10 +803,6 @@ class REGINA_API Dim2Triangulation : public NPacket,
          * (edges, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a t)
          * can no longer be used.
-         *
-         * See the page on \ref pachner for definitions and terminology
-         * relating to Pachner moves.  After the move, the new belt face will be
-         * <tt>getTriangles().back()->getVertex(2)</tt>.
          *
          * \pre The given triangle is a triangle of this triangulation.
          *

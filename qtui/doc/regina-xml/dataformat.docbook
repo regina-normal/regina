@@ -60,6 +60,7 @@
  &data-packet-normalsurfacelist;
  &data-packet-pdf;
  &data-packet-script;
+ &data-packet-snappea;
  &data-packet-surfacefilter;
  &data-packet-text;
  &data-params;
@@ -68,6 +69,7 @@
  &data-realbdry-surface;
  &data-reginadata;
  &data-reln;
+ &data-snappea;
  &data-solidtorus;
  &data-spanstrict;
  &data-spantaut;

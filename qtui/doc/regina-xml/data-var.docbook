@@ -43,7 +43,7 @@ var ::=</synopsis>
      </row>
      <row>
       <entry><sgmltag>value</sgmltag></entry>
-      <entry><type>CDATA</type> (required)</entry>
+      <entry><type>CDATA</type> (deprecated)</entry>
      </row>
     </tbody>
    </tgroup>

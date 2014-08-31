@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -1264,11 +1264,13 @@ class REGINA_API NHomMarkedAbelianGroup : public ShareableObject {
 
     private:
         /**
-         * For those situations where you want to define an NHomMarkedAbelianGroup
-         * from its reduced matrix, not from a chain map.  This is in the situation where
-         * the SNF coordinates have particular meaning to the user.  At present I only use this
-         * for NHomMarkedAbelianGroup::inverseHom().  Moreover, this routine assumes tebeRedMat
-         * actually can be the reduced matrix of some chain map -- this is not a restriction in
+         * For those situations where you want to define an 
+         * NHomMarkedAbelianGroup from its reduced matrix, not from a chain
+         * map.  This is in the situation where the SNF coordinates have 
+         * particular meaning to the user.  At present I only use this
+         * for NHomMarkedAbelianGroup::inverseHom().  Moreover, this routine 
+         * assumes tebeRedMat actually can be the reduced matrix of some 
+         * chain map -- this is not a restriction in
          * the coeff==0 case, but it is if coeff > 0. 
          *
          * \todo Erase completely once made obsolete by right/left inverse.

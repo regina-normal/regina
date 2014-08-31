@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -962,22 +962,52 @@ class REGINA_API NPacket : public ShareableObject {
         /*@{*/
 
         /**
-         * Writes a complete XML file containing the subtree with this
-         * packet as matriarch.  This is the preferred way of writing
-         * a packet tree to file.
+         * Saves the subtree rooted at this packet to the given Regina
+         * data file, using Regina's native XML file format.  The XML
+         * file may be optionally compressed (Regina can happily read both
+         * compressed and uncompressed XML).
+         *
+         * This is the preferred way of saving a Regina data file.
+         * Typically this will be called from the root of the packet
+         * tree, which will save the entire packet tree to file.
+         *
+         * \pre The given packet does not depend on its parent.
+         *
+         * \i18n This routine makes no assumptions about the
+         * \ref i18n "character encoding" used in the given file \e name,
+         * and simply passes it through unchanged to low-level C/C++ file I/O
+         * routines.  The \e contents of the file will be written usign UTF-8.
+         *
+         * @param filename the pathname of the file to write to.
+         * @param compressed \c true if the XML data should be compressed,
+         * or \c false if it should be written as plain text.
+         * @return \c true if and only if the file was successfully written.
+         */
+        bool save(const char* filename, bool compressed = true) const;
+
+        /**
+         * Writes the subtree rooted at this packet to the given output
+         * stream in Regina's native XML file format.  Ths is similar to
+         * calling save(), except that (i) the user has a more flexible
+         * choice of output stream, and (ii) the XML will always be
+         * written in plain text (i.e., it will not be compressed).
+         *
+         * If you simply wish to save your data to a file on the
+         * filesystem, you should call save() instead.
+         *
+         * Typically this will be called from the root of the packet tree,
+         * which will write the entire packet tree to the output stream.
          *
          * The output from this routine cannot be used as a piece of an
          * XML file; it must be the entire XML file.  For a piece of an
          * XML file, see routine writeXMLPacketTree() instead.
          *
-         * For a handy wrapper to this routine that handles file I/O and
-         * compression, see regina::writeXMLFile().
-         *
          * \pre This packet does not depend upon its parent.
          *
          * \ifacespython Not present.
          *
-         * @param out the output stream to which the XML should be written.
+         * @param out the output stream to which the XML data file should
+         * be written.
          */
         void writeXMLFile(std::ostream& out) const;
 
@@ -1240,6 +1270,25 @@ class REGINA_API NPacket : public ShareableObject {
          */
         void fireDestructionEvent();
 };
+
+/**
+ * Reads a Regina data file, and returns the corresponding packet tree.
+ * This uses Regina's native XML file format; it does not matter whether
+ * the XML file is compressed or uncompressed.
+ *
+ * If the file could not be opened or the top-level packet in the tree
+ * could not be read, this routine will return 0.  If some packet deeper
+ * within the tree could not be read then that particular packet (and
+ * its descendants, if any) will simply be ignored.
+ *
+ * \i18n This routine makes no assumptions about the
+ * \ref i18n "character encoding" used in the given file \e name, and simply
+ * passes it through unchanged to low-level C/C++ file I/O routines.
+ *
+ * @param filename the pathname of the file to read from.
+ * @return the packet tree read from file, or 0 on error (as explained above).
+ */
+REGINA_API NPacket* open(const char* filename);
 
 /*@}*/
 

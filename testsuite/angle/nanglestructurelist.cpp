@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -486,7 +486,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
                 tri, true);
             NAngleStructureList* tautDD = NAngleStructureList::enumerateTautDD(
                 tri);
-            NAngleStructure* strictTree = tri->hasStrictAngleStructure();
+            bool strictTree = tri->hasStrictAngleStructure();
 
             if (all->isTautOnly()) {
                 std::ostringstream msg;
@@ -552,7 +552,6 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
             delete all;
             delete tautTree;
             delete tautDD;
-            delete strictTree;
         }
 
         void tautStrictTreeVsDD() {

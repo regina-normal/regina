@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -103,7 +103,8 @@ regina::NPacket* PythonHandler::importData(const QString& fileName,
                 } else {
                     // Hmm, it wasn't a script variable after all.
                     readingMetadata = false;
-                    ans->addLast(line.toAscii().constData());
+                    ans->append(line.toAscii().constData());
+                    ans->append("\n");
                 }
             } else if (metadata == endMetadataMarker) {
                 // It's the end of the metadata.
@@ -111,12 +112,14 @@ regina::NPacket* PythonHandler::importData(const QString& fileName,
             } else {
                 // It's not metadata at all.
                 readingMetadata = false;
-                ans->addLast(line.toAscii().constData());
+                ans->append(line.toAscii().constData());
+                ans->append("\n");
             }
         } else {
             // We're out of the metadata.
             readingMetadata = false;
-            ans->addLast(line.toAscii().constData());
+            ans->append(line.toAscii().constData());
+            ans->append("\n");
         }
 
         line = in.readLine();
@@ -167,11 +170,7 @@ bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
     endl(out);
     out << "### " << endMetadataMarker;
     endl(out);
-
-    for (i = 0; i < script->getNumberOfLines(); i++) {
-        out << QString(script->getLine(i).c_str());
-        endl(out);
-    }
+    out << script->getText().c_str();
 
     // All done!
     return true;

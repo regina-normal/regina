@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -276,16 +276,22 @@ inline void NSurfaceFilterProperties::removeAllECs() {
     eulerChar.clear();
 }
 inline void NSurfaceFilterProperties::setOrientability(const NBoolSet& value) {
-    ChangeEventSpan span(this);
-    orientability = value;
+    if (orientability != value) {
+        ChangeEventSpan span(this);
+        orientability = value;
+    }
 }
 inline void NSurfaceFilterProperties::setCompactness(const NBoolSet& value) {
-    ChangeEventSpan span(this);
-    compactness = value;
+    if (compactness != value) {
+        ChangeEventSpan span(this);
+        compactness = value;
+    }
 }
 inline void NSurfaceFilterProperties::setRealBoundary(const NBoolSet& value) {
-    ChangeEventSpan span(this);
-    realBoundary = value;
+    if (realBoundary != value) {
+        ChangeEventSpan span(this);
+        realBoundary = value;
+    }
 }
 
 inline NPacket* NSurfaceFilterProperties::internalClonePacket(NPacket*) const {

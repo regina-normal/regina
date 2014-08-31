@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Analyse invariants of 3-manifolds in a census                         *
  *                                                                        *
- *  Copyright (c) 2005-2013, Ben Burton                                   *
+ *  Copyright (c) 2005-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -293,7 +293,7 @@ int main(int argc, const char* argv[]) {
     initTVParams();
 
     // Read the data file.
-    if (! (tree = readXMLFile(filename.c_str()))) {
+    if (! (tree = open(filename.c_str()))) {
         fprintf(stderr, "ERROR: Could not read data from %s.\n",
             filename.c_str());
         return 1;

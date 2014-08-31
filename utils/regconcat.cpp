@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Combine several data files into a single larger data file             *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -93,7 +93,7 @@ int main(int argc, char* argv[]) {
     regina::NPacket* data;
     for(std::list<std::string>::const_iterator it = files.begin();
             it != files.end(); it++) {
-        data = regina::readFileMagic(*it);
+        data = regina::open(it->c_str());
         if (!data) {
             std::cerr << "File " << *it << " could not be read.\n";
             error = true;
@@ -106,7 +106,7 @@ int main(int argc, char* argv[]) {
     // Tidy up the final data file and write it.
     if (outputFile.empty())
         ans->writeXMLFile(std::cout);
-    else if (! regina::writeXMLFile(outputFile.c_str(), ans))
+    else if (! ans->save(outputFile.c_str()))
         std::cerr << "File " << outputFile << " could not be written.\n";
 
     delete ans;

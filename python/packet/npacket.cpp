@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -54,6 +54,8 @@ namespace {
         NPacket::nextTreePacket, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_clone,
         NPacket::clone, 0, 2);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_save,
+        NPacket::save, 1, 2);
 
     void reparent_check(NPacket& child, NPacket* newParent,
             bool first = false) {
@@ -157,7 +159,10 @@ void addNPacket() {
         .def("isPacketEditable", &NPacket::isPacketEditable)
         .def("clone", &NPacket::clone, OL_clone()[
             return_value_policy<reference_existing_object>()])
+        .def("save", &NPacket::save, OL_save())
         .def("internalID", &NPacket::internalID);
     ;
+
+    def("open", regina::open, return_value_policy<manage_new_object>());
 }
 

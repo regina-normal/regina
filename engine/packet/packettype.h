@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -93,7 +93,12 @@ enum PacketType {
     /**
      * Represents a 2-manifold triangulation, of class Dim2Triangulation.
      */
-    PACKET_DIM2TRIANGULATION = 15
+    PACKET_DIM2TRIANGULATION = 15,
+    /**
+     * Represents a triangulation in the embedded SnapPea kernel, of
+     * class NSnapPeaTriangulation.
+     */
+    PACKET_SNAPPEATRIANGULATION = 16
 };
 
 /*@}*/

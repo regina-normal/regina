@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -103,10 +103,21 @@ class REGINA_API NPacketListener {
 
     public:
         /**
+         * \name Constructors and Destructors
+         */
+        /*@{*/
+
+        /**
          * Destroys this listener.  This listener will be unregistered
          * from any packets to which it is currently listening.
          */
         virtual ~NPacketListener();
+
+        /*@}*/
+        /**
+         * \name Packet Listener Interface
+         */
+        /*@{*/
 
         /**
          * Unregisters this listener from any packets to which it is
@@ -270,6 +281,8 @@ class REGINA_API NPacketListener {
          * @param packet the packet being listened to.
          */
         virtual void childrenWereReordered(NPacket* packet);
+
+        /*@}*/
 
     /**
      * Allow packets to automatically deregister listeners as they are

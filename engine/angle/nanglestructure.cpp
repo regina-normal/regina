@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,9 +37,6 @@
 #include "surfaces/nnormalsurface.h" // For vertexSplit.
 #include "triangulation/ntriangulation.h"
 #include "utilities/xmlutils.h"
-
-// Property IDs:
-#define PROPID_FLAGS 1
 
 namespace regina {
 
@@ -196,7 +193,7 @@ void NAngleStructure::calculateType() const {
             long nEdges = triangulation->getNumberOfEdges();
             int* edgeColour = new int[nEdges];
             std::fill(edgeColour, edgeColour + nEdges, (int)0);
-            NTetrahedron* tet;
+            const NTetrahedron* tet;
             int orient;
             long e;
             for (unsigned i = 0; i < triangulation->getNumberOfTetrahedra();

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -68,6 +68,7 @@ void addNTriangle() {
         scope s = class_<NTriangle, bases<regina::ShareableObject>,
                 std::auto_ptr<NTriangle>,
                 boost::noncopyable>("NTriangle", no_init)
+            .def("index", &NTriangle::index)
             .def("isBoundary", &NTriangle::isBoundary)
             .def("getType", &NTriangle::getType)
             .def("getSubtype", &NTriangle::getSubtype)

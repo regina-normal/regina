@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -59,10 +59,58 @@ NPacket* NScript::getVariableValue(const std::string& name) const {
     return (*it).second;
 }
 
+long NScript::getVariableIndex(const std::string& name) const {
+    std::map<std::string, NPacket*>::const_iterator it = variables.find(name);
+    if (it == variables.end())
+        return -1;
+    return distance(variables.begin(), it);
+}
+
+void NScript::setVariableName(unsigned long index, const std::string& name) {
+    std::map<std::string, NPacket*>::iterator it = variables.begin();
+    advance(it, index);
+
+    if (name == it->first)
+        return;
+
+    ChangeEventSpan span(this);
+
+    NPacket* value = it->second;
+    variables.erase(it);
+    variables.insert(std::make_pair(name, value));
+}
+
+void NScript::setVariableValue(unsigned long index, NPacket* value) {
+    std::map<std::string, NPacket*>::iterator it = variables.begin();
+    advance(it, index);
+
+    if (it->second == value)
+        return;
+
+    ChangeEventSpan span(this);
+
+    if (it->second)
+        it->second->unlisten(this);
+    it->second = value;
+    if (it->second)
+        it->second->listen(this);
+}
+
 void NScript::removeVariable(const std::string& name) {
     std::map<std::string, NPacket*>::iterator it = variables.find(name);
     if (it == variables.end())
         return;
+
+    if (it->second)
+        it->second->unlisten(this);
+
+    ChangeEventSpan span(this);
+    variables.erase(it);
+}
+
+void NScript::removeVariable(unsigned long index) {
+    std::map<std::string, NPacket*>::iterator it = variables.begin();
+    advance(it, index);
 
     if (it->second)
         it->second->unlisten(this);
@@ -84,14 +132,12 @@ void NScript::writeTextLong(std::ostream& o) const {
                 o << "(null)" << '\n';
         }
     }
-    o << '\n';
-    copy(lines.begin(), lines.end(),
-        std::ostream_iterator<std::string>(o, "\n"));
+    o << '\n' << text;
 }
 
 NPacket* NScript::internalClonePacket(NPacket*) const {
     NScript* ans = new NScript();
-    ans->lines = lines;
+    ans->text = text;
     ans->variables = variables;
     return ans;
 }
@@ -111,9 +157,14 @@ void NScript::writeXMLPacketData(std::ostream& out) const {
         out << "\"/>\n";
     }
 
-    for (std::vector<std::string>::const_iterator it = lines.begin();
-            it != lines.end(); it++)
-        out << "  <line>" << xmlEncodeSpecialChars(*it) << "</line>\n";
+    out << "  <text>" << xmlEncodeSpecialChars(text) << "</text>\n";
+}
+
+void NScript::packetWasRenamed(NPacket*) {
+    // We assume that the packet that was renamed is one of the
+    // variables for this packet.
+    // There is nothing to update here; just fire the update.
+    ChangeEventSpan span(this);
 }
 
 void NScript::packetToBeDestroyed(NPacket* packet) {
