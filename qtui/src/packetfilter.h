@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -117,6 +117,25 @@ class TwoTypeFilter : public PacketFilter {
         virtual bool accept(regina::NPacket* packet) {
             int type = packet->getPacketType();
             return (type == S::packetType || type == T::packetType);
+        }
+};
+
+/**
+ * A packet filter that only accepts packets of either a given packet type
+ * or any of its subclasses.
+ *
+ * The template argument T must be one of the available packet types.
+ * The acceptance test will be performed by calling dynamic_cast<T*>
+ * upon each packet being questioned.
+ */
+template <class T>
+class SubclassFilter : public PacketFilter {
+    public:
+        /**
+         * PacketFilter overrides.
+         */
+        virtual bool accept(regina::NPacket* packet) {
+            return dynamic_cast<T*>(packet);
         }
 };
 

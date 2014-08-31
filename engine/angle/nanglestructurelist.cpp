@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,10 +40,6 @@
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/xmlutils.h"
-
-// Property IDs:
-#define PROPID_ALLOWSTRICT 1
-#define PROPID_ALLOWTAUT 2
 
 namespace regina {
 

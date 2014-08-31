@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -42,14 +42,14 @@ namespace regina {
 unsigned long NTriangulation::findIsomorphisms(
         const NTriangulation& other, std::list<NIsomorphism*>& results,
         bool completeIsomorphism, bool firstOnly) const {
-    if (! calculatedSkeleton)
+    if (! calculatedSkeleton_)
         calculateSkeleton();
-    if (! other.calculatedSkeleton)
+    if (! other.calculatedSkeleton_)
         other.calculateSkeleton();
 
     // Deal with the empty triangulation first.
-    if (tetrahedra.empty()) {
-        if (completeIsomorphism && ! other.tetrahedra.empty())
+    if (tetrahedra_.empty()) {
+        if (completeIsomorphism && ! other.tetrahedra_.empty())
             return 0;
         results.push_back(new NIsomorphism(0));
         return 1;
@@ -61,19 +61,19 @@ unsigned long NTriangulation::findIsomorphisms(
         // Must be boundary complete, 1-to-1 and onto.
         // That is, combinatorially the two triangulations must be
         // identical.
-        if (tetrahedra.size() != other.tetrahedra.size())
+        if (tetrahedra_.size() != other.tetrahedra_.size())
             return 0;
-        if (triangles.size() != other.triangles.size())
+        if (triangles_.size() != other.triangles_.size())
             return 0;
-        if (edges.size() != other.edges.size())
+        if (edges_.size() != other.edges_.size())
             return 0;
-        if (vertices.size() != other.vertices.size())
+        if (vertices_.size() != other.vertices_.size())
             return 0;
-        if (components.size() != other.components.size())
+        if (components_.size() != other.components_.size())
             return 0;
-        if (boundaryComponents.size() != other.boundaryComponents.size())
+        if (boundaryComponents_.size() != other.boundaryComponents_.size())
             return 0;
-        if (orientable ^ other.orientable)
+        if (orientable_ ^ other.orientable_)
             return 0;
 
         // Test degree sequences and the like.
@@ -83,14 +83,14 @@ unsigned long NTriangulation::findIsomorphisms(
 
         {
             EdgeIterator it;
-            for (it = edges.begin(); it != edges.end(); it++) {
+            for (it = edges_.begin(); it != edges_.end(); it++) {
                 // Find this degree, or insert it with frequency 0 if it's
                 // not already present.
                 mapIt = map1.insert(
                     std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
                 (*mapIt).second++;
             }
-            for (it = other.edges.begin(); it != other.edges.end(); it++) {
+            for (it = other.edges_.begin(); it != other.edges_.end(); it++) {
                 mapIt = map2.insert(
                     std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
                 (*mapIt).second++;
@@ -102,13 +102,13 @@ unsigned long NTriangulation::findIsomorphisms(
         }
         {
             VertexIterator it;
-            for (it = vertices.begin(); it != vertices.end(); it++) {
+            for (it = vertices_.begin(); it != vertices_.end(); it++) {
                 mapIt = map1.insert(
                     std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
                 (*mapIt).second++;
             }
-            for (it = other.vertices.begin();
-                    it != other.vertices.end(); it++) {
+            for (it = other.vertices_.begin();
+                    it != other.vertices_.end(); it++) {
                 mapIt = map2.insert(
                     std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
                 (*mapIt).second++;
@@ -120,13 +120,13 @@ unsigned long NTriangulation::findIsomorphisms(
         }
         {
             ComponentIterator it;
-            for (it = components.begin(); it != components.end(); it++) {
+            for (it = components_.begin(); it != components_.end(); it++) {
                 mapIt = map1.insert(
                     std::make_pair((*it)->getNumberOfTetrahedra(), 0)).first;
                 (*mapIt).second++;
             }
-            for (it = other.components.begin();
-                    it != other.components.end(); it++) {
+            for (it = other.components_.begin();
+                    it != other.components_.end(); it++) {
                 mapIt = map2.insert(
                     std::make_pair((*it)->getNumberOfTetrahedra(), 0)).first;
                 (*mapIt).second++;
@@ -138,14 +138,14 @@ unsigned long NTriangulation::findIsomorphisms(
         }
         {
             BoundaryComponentIterator it;
-            for (it = boundaryComponents.begin();
-                    it != boundaryComponents.end(); it++) {
+            for (it = boundaryComponents_.begin();
+                    it != boundaryComponents_.end(); it++) {
                 mapIt = map1.insert(
                     std::make_pair((*it)->getNumberOfTriangles(), 0)).first;
                 (*mapIt).second++;
             }
-            for (it = other.boundaryComponents.begin();
-                    it != other.boundaryComponents.end(); it++) {
+            for (it = other.boundaryComponents_.begin();
+                    it != other.boundaryComponents_.end(); it++) {
                 mapIt = map2.insert(
                     std::make_pair((*it)->getNumberOfTriangles(), 0)).first;
                 (*mapIt).second++;
@@ -158,9 +158,9 @@ unsigned long NTriangulation::findIsomorphisms(
     } else {
         // May be boundary incomplete, and need not be onto.
         // Not much we can test for unfortunately.
-        if (tetrahedra.size() > other.tetrahedra.size())
+        if (tetrahedra_.size() > other.tetrahedra_.size())
             return 0;
-        if ((! orientable) && other.orientable)
+        if ((! orientable_) && other.orientable_)
             return 0;
     }
 
@@ -168,9 +168,9 @@ unsigned long NTriangulation::findIsomorphisms(
     // From the tests above, we are guaranteed that both triangulations
     // have at least one tetrahedron.
     unsigned long nResults = 0;
-    unsigned long nTetrahedra = tetrahedra.size();
-    unsigned long nDestTetrahedra = other.tetrahedra.size();
-    unsigned long nComponents = components.size();
+    unsigned long nTetrahedra = tetrahedra_.size();
+    unsigned long nDestTetrahedra = other.tetrahedra_.size();
+    unsigned long nComponents = components_.size();
     unsigned i;
 
     NIsomorphism iso(nTetrahedra);
@@ -247,14 +247,14 @@ unsigned long NTriangulation::findIsomorphisms(
         }
 
         // Be sure we're looking at a tetrahedron we can use.
-        compSize = components[comp]->getNumberOfTetrahedra();
+        compSize = components_[comp]->getNumberOfTetrahedra();
         if (completeIsomorphism) {
             // Conditions:
             // 1) The destination tetrahedron is unused.
             // 2) The component sizes match precisely.
             while (startTet[comp] < nDestTetrahedra &&
                     (whichComp[startTet[comp]] >= 0 ||
-                     other.tetrahedra[startTet[comp]]->getComponent()->
+                     other.tetrahedra_[startTet[comp]]->getComponent()->
                      getNumberOfTetrahedra() != compSize))
                 startTet[comp]++;
         } else {
@@ -264,7 +264,7 @@ unsigned long NTriangulation::findIsomorphisms(
             // the source component.
             while (startTet[comp] < nDestTetrahedra &&
                     (whichComp[startTet[comp]] >= 0 ||
-                     other.tetrahedra[startTet[comp]]->getComponent()->
+                     other.tetrahedra_[startTet[comp]]->getComponent()->
                      getNumberOfTetrahedra() < compSize))
                 startTet[comp]++;
         }
@@ -296,7 +296,7 @@ unsigned long NTriangulation::findIsomorphisms(
         // Note that there is only one way of doing this (as seen by
         // following adjacent tetrahedron gluings).  It either works or
         // it doesn't.
-        tetIndex = tetrahedronIndex(components[comp]->getTetrahedron(0));
+        tetIndex = tetrahedronIndex(components_[comp]->getTetrahedron(0));
 
         whichComp[startTet[comp]] = comp;
         iso.tetImage(tetIndex) = startTet[comp];
@@ -307,10 +307,10 @@ unsigned long NTriangulation::findIsomorphisms(
         while ((! broken) && (! toProcess.empty())) {
             tetIndex = toProcess.front();
             toProcess.pop();
-            tet = tetrahedra[tetIndex];
+            tet = tetrahedra_[tetIndex];
             tetPerm = iso.facePerm(tetIndex);
             destTetIndex = iso.tetImage(tetIndex);
-            destTet = other.tetrahedra[destTetIndex];
+            destTet = other.tetrahedra_[destTetIndex];
 
             // If we are after a complete isomorphism, we might as well
             // test whether the edge and vertex degrees match.

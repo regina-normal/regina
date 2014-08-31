@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -150,11 +150,6 @@ void SkeletonWindow::refresh() {
     updateCaption();
     model->rebuild();
     table->header()->resizeSections(QHeaderView::ResizeToContents);
-}
-
-void SkeletonWindow::editingElsewhere() {
-    setWindowTitle(tr("Editing triangulation..."));
-    model->makeEmpty();
 }
 
 void SkeletonWindow::packetWasChanged(regina::NPacket*) {

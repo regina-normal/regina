@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -64,6 +64,9 @@ void IconCache::load(IconID id) {
             return;
         case packet_script:
             cache_[id] = ReginaSupport::regIcon("packet_script");
+            return;
+        case packet_snappea:
+            cache_[id] = ReginaSupport::regIcon("packet_snappea");
             return;
         case packet_surfaces:
             cache_[id] = ReginaSupport::regIcon("packet_surfaces");

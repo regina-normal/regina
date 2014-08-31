@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -86,8 +86,6 @@ class NSFSpace;
  *
  * The optional NManifold routine getHomologyH1() is implemented, but
  * the optional routine construct() is not.
- *
- * \testpart
  *
  * \todo \opt Speed up homology calculations involving orientable base
  * spaces by adding rank afterwards, instead of adding generators for
@@ -197,6 +195,7 @@ class REGINA_API NGraphPair : public NManifold {
         bool operator < (const NGraphPair& compare) const;
 
         NAbelianGroup* getHomologyH1() const;
+        bool isHyperbolic() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
 
@@ -245,6 +244,10 @@ inline const NSFSpace& NGraphPair::sfs(unsigned which) const {
 
 inline const NMatrix2& NGraphPair::matchingReln() const {
     return matchingReln_;
+}
+
+inline bool NGraphPair::isHyperbolic() const {
+    return false;
 }
 
 } // namespace regina

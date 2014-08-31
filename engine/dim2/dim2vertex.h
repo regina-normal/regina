@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -170,6 +170,15 @@ class REGINA_API Dim2Vertex : public ShareableObject, public NMarkedElement {
 
     public:
         /**
+         * Returns the index of this vertex in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->vertexIndex(this)</tt>.
+         *
+         * @return the index of this vertex.
+         */
+        unsigned long index() const;
+
+        /**
          * Returns the list of descriptors detailing how this vertex forms
          * a part of various triangles in the triangulation.
          * Note that if this vertex represents multiple vertices of a
@@ -309,6 +318,10 @@ inline bool Dim2VertexEmbedding::operator != (const Dim2VertexEmbedding& other)
 
 inline Dim2Vertex::Dim2Vertex(Dim2Component* component) :
         component_(component), boundaryComponent_(0) {
+}
+
+inline unsigned long Dim2Vertex::index() const {
+    return markedIndex();
 }
 
 inline const std::deque<Dim2VertexEmbedding>& Dim2Vertex::getEmbeddings()

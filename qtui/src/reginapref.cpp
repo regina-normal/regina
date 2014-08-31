@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -147,21 +147,9 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     item->addTab(generalPrefs, IconCache::icon(IconCache::regina),
         tr("General"));
 
-    censusPrefs = new ReginaPrefCensus(this);
-    item->addTab(censusPrefs, ReginaSupport::themeIcon("view-list-text"),
-        tr("Census"));
-
     pythonPrefs = new ReginaPrefPython(this);
     item->addTab(pythonPrefs, ReginaSupport::themeIcon("utilities-terminal"),
         tr("Python"));
-
-#ifndef EXCLUDE_SNAPPEA
-    snapPeaPrefs = new ReginaPrefSnapPea(this);
-    item->addTab(snapPeaPrefs, ReginaSupport::regIcon("snappea"),
-        tr("SnapPea"));
-#else
-    snapPeaPrefs = 0;
-#endif
 
     toolsPrefs = new ReginaPrefTools(this);
     item->addTab(toolsPrefs, ReginaSupport::themeIcon("configure"),
@@ -184,13 +172,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
     generalPrefs->cbSupportOriented->setChecked(
         prefSet.surfacesSupportOriented);
-    generalPrefs->cbSupportSpunBdry->setChecked(
-        prefSet.surfacesSupportSpunBdry);
-
-    foreach (const ReginaFilePref& f, prefSet.censusFiles) {
-        new ReginaFilePrefItem(censusPrefs->listFiles, f);
-    }
-    censusPrefs->updateActiveCount();
 
     pythonPrefs->cbAutoIndent->setChecked(prefSet.pythonAutoIndent);
     pythonPrefs->editSpacesPerTab->setText(
@@ -203,11 +184,9 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     pythonPrefs->updateActiveCount();
 
 #ifndef EXCLUDE_SNAPPEA
-    snapPeaPrefs->cbClosed->setChecked(prefSet.snapPeaClosed);
-    snapPeaPrefs->cbMessages->setChecked(
+    toolsPrefs->cbSnapPeaMessages->setChecked(
         regina::NSnapPeaTriangulation::kernelMessagesEnabled());
 #endif
-
     if (prefSet.pdfExternalViewer.isEmpty()) {
         toolsPrefs->cbDefaultPDFViewer->setChecked(true);
         toolsPrefs->editPDFViewer->setEnabled(false);
@@ -224,8 +203,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     // Finish off.
     connect(generalPrefs->cbSupportOriented, SIGNAL(stateChanged(int)),
         generalPrefs, SLOT(orientedChecked(int)));
-    connect(generalPrefs->cbSupportSpunBdry, SIGNAL(stateChanged(int)),
-        generalPrefs, SLOT(spunBdryChecked(int)));
     connect(buttonBox, SIGNAL(clicked(QAbstractButton *)), this, SLOT(clicked(QAbstractButton *)));
 }
 
@@ -295,15 +272,6 @@ void ReginaPreferences::slotApply() {
 
     prefSet.surfacesSupportOriented =
         generalPrefs->cbSupportOriented->isChecked();
-    prefSet.surfacesSupportSpunBdry =
-        generalPrefs->cbSupportSpunBdry->isChecked();
-
-    prefSet.censusFiles.clear();
-    for (int i=0; i < censusPrefs->listFiles->count();i++) {
-        QListWidgetItem* item = censusPrefs->listFiles->item(i);
-        prefSet.censusFiles.push_back(
-            dynamic_cast<ReginaFilePrefItem*>(item)->getData());
-    }
 
     prefSet.pythonAutoIndent = pythonPrefs->cbAutoIndent->isChecked();
     uintVal = pythonPrefs->editSpacesPerTab->text().toUInt(&ok);
@@ -327,11 +295,9 @@ void ReginaPreferences::slotApply() {
     }
 
 #ifndef EXCLUDE_SNAPPEA
-    prefSet.snapPeaClosed = snapPeaPrefs->cbClosed->isChecked();
     regina::NSnapPeaTriangulation::enableKernelMessages(
-        snapPeaPrefs->cbMessages->isChecked());
+        toolsPrefs->cbSnapPeaMessages->isChecked());
 #endif
-
     // Don't be too fussy about what they put in the PDF viewer field, since
     // Regina tries hard to find a suitable PDF viewer regardless.
     if (toolsPrefs->cbDefaultPDFViewer->isChecked())
@@ -564,17 +530,6 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
         "is not checked in the dialog for a new normal surface list.</qt>"));
     layout->addWidget(cbWarnOnNonEmbedded);
 
-    cbSupportSpunBdry = new QCheckBox(tr("Support boundary slopes for "
-        "spun-normal surfaces"));
-    cbSupportSpunBdry->setWhatsThis(tr("<qt>Show boundary slopes where "
-        "possible for spun-normal surfaces.<p>"
-        "This feature is disabled by default, because the meridian and "
-        "longitude are always chosen to be the <b>shortest and second-shortest "
-        "basis</b> on each cusp.  This might not be what you expect&mdash;"
-        "Regina cannot tell what basis you might have "
-        "been using elsewhere, such as in SnapPy.</qt>"));
-    layout->addWidget(cbSupportSpunBdry);
-
     cbSupportOriented = new QCheckBox(tr("Support transversely oriented "
         "normal surfaces (highly experimental)"));
     cbSupportOriented->setWhatsThis(tr("<qt>Allow the enumeration of "
@@ -643,26 +598,6 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
     setLayout(layout);
 }
 
-void ReginaPrefGeneral::spunBdryChecked(int state) {
-    if (state == Qt::Checked) {
-        QMessageBox box(QMessageBox::Warning,
-            tr("Warning"),
-            tr("Boundary slopes are always relative to shortest bases."),
-            QMessageBox::Yes | QMessageBox::No, this);
-        box.setInformativeText(
-            tr("When computing boundary slopes, the meridian and "
-            "longitude are always chosen to be the <b>shortest and "
-            "second-shortest basis</b> on each cusp.  This might not "
-            "be what you expect&mdash;Regina cannot tell "
-            "what basis you might have been using elsewhere, "
-            "such as in SnapPy.<p>"
-            "Are you sure you wish to enable this feature?</qt>"));
-        box.setDefaultButton(QMessageBox::No);
-        if (box.exec() != QMessageBox::Yes)
-            cbSupportSpunBdry->setChecked(false);
-    }
-}
-
 void ReginaPrefGeneral::orientedChecked(int state) {
     if (state == Qt::Checked) {
         QMessageBox box(QMessageBox::Warning,
@@ -681,6 +616,21 @@ void ReginaPrefGeneral::orientedChecked(int state) {
 
 ReginaPrefTools::ReginaPrefTools(QWidget* parent) : QWidget(parent) {
     QBoxLayout* layout = new QVBoxLayout(this);
+
+    cbSnapPeaMessages = new QCheckBox(
+        tr("Diagnostic messages from SnapPea"));
+    cbSnapPeaMessages->setWhatsThis(tr("<qt>Should the SnapPea kernel write "
+        "diagnostic messages to the console?<p>"
+        "These diagnostic messages are emitted by the SnapPea kernel "
+        "embedded within Regina (not from Regina itself).  If you do not "
+        "know what this is all about, you can safely leave this option "
+        "switched off.<p>"
+        "When this option is switched on, if you start Regina from the "
+        "command line then you will see diagnostic messages appear on the "
+        "same console from which you started Regina.  "
+        "If you start Regina from a menu, you will "
+        "not see these messages at all.</qt>"));
+    layout->addWidget(cbSnapPeaMessages);
 
     // Set up the PDF viewer.
     cbDefaultPDFViewer = new QCheckBox(tr("Use default PDF viewer"));
@@ -763,233 +713,6 @@ ReginaPrefTools::ReginaPrefTools(QWidget* parent) : QWidget(parent) {
 void ReginaPrefTools::defaultPDFViewerChanged(int state) {
     editPDFViewer->setEnabled(state != Qt::Checked);
     labelPDFViewer->setEnabled(state != Qt::Checked);
-}
-
-ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QWidget(parent) {
-    QBoxLayout* layout = new QVBoxLayout(this);
-
-    // Set up the active file count.
-    activeCount = new QLabel();
-    layout->addWidget(activeCount);
-
-    // Prepare the main area.
-    QBoxLayout* box = new QHBoxLayout();
-
-    // Set up the list view.
-    listFiles = new QListWidget();
-    listFiles->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    box->addWidget(listFiles, 1);
-    QString msg = tr("The list of census files to be searched "
-        "when asked to locate an arbitrary triangulation in all available "
-        "censuses.  Note that census files in this list may be deactivated, "
-        "which means that they will not be searched during a census lookup.");
-    listFiles->setWhatsThis(msg);
-    activeCount->setWhatsThis(msg);
-    connect(listFiles, SIGNAL(itemSelectionChanged()),
-        this, SLOT(updateButtons()));
-
-    // Set up the button panel.
-    QBoxLayout* vBox = new QVBoxLayout();
-
-    QPushButton* btnAdd = new QPushButton(ReginaSupport::themeIcon("list-add"),
-        tr("Add..."));
-    // btnAdd->setFlat(true);
-    vBox->addWidget(btnAdd);
-    connect(btnAdd, SIGNAL(clicked()), this, SLOT(add()));
-    btnAdd->setToolTip(tr("Add a new census file"));
-    btnAdd->setWhatsThis(tr("Add a new census file.  "
-        "This list contains the census files that are searched when asked "
-        "to locate an arbitrary triangulation in all available censuses."));
-
-    btnRemove = new QPushButton(ReginaSupport::themeIcon("list-remove"),
-        tr("Remove"));
-    // btnRemove->setFlat(true);
-    vBox->addWidget(btnRemove);
-    connect(btnRemove, SIGNAL(clicked()), this, SLOT(remove()));
-    btnRemove->setToolTip(tr("Remove selected census file(s)"));
-    btnRemove->setWhatsThis(tr("Remove the selected census file(s).  "
-        "This list contains the census files that are searched when asked "
-        "to locate an arbitrary triangulation in all available censuses."));
-
-    btnActivate = new QPushButton(ReginaSupport::themeIcon("dialog-ok"),
-        tr("Activate"));
-    // btnActivate->setFlat(true);
-    vBox->addWidget(btnActivate);
-    connect(btnActivate, SIGNAL(clicked()), this, SLOT(activate()));
-    btnActivate->setToolTip(tr("Activate selected census file(s)"));
-    btnActivate->setWhatsThis(tr("Activate the selected census "
-        "file(s).  When asked to locate an arbitrary triangulation in all "
-        "available censuses, only the activated census files in this list "
-        "are searched."));
-
-    btnDeactivate = new QPushButton(ReginaSupport::themeIcon("dialog-cancel"),
-        tr("Deactivate"));
-    // btnDeactivate->setFlat(true);
-    vBox->addWidget(btnDeactivate);
-    connect(btnDeactivate, SIGNAL(clicked()), this, SLOT(deactivate()));
-    btnDeactivate->setToolTip(tr("Deactivate selected census file(s)"));
-    btnDeactivate->setWhatsThis(tr("Deactivate the selected census "
-        "file(s).  When asked to locate an arbitrary triangulation in all "
-        "available censuses, only the activated census files in this list "
-        "are searched."));
-
-    vBox->addStretch(1);
-
-    box->addLayout(vBox);
-    layout->addLayout(box, 1);
-
-    updateButtons();
-}
-
-void ReginaPrefCensus::updateActiveCount() {
-    long count = 0;
-    for (int i = 0; i < listFiles->count(); i++) {
-        QListWidgetItem* item = listFiles->item(i);
-        if (dynamic_cast<ReginaFilePrefItem*>(item)->getData().isActive())
-            count++;
-    }
-
-    if (count == 0)
-        activeCount->setText(tr("No active census data files:"));
-    else if (count == 1)
-        activeCount->setText(tr("1 active census data file:"));
-    else
-        activeCount->setText(tr("%1 active census data files:").arg(count));
-}
-
-void ReginaPrefCensus::updateButtons() {
-    bool hasSelection = ! (listFiles->selectedItems().isEmpty());
-    btnRemove->setEnabled(hasSelection);
-    btnActivate->setEnabled(hasSelection);
-    btnDeactivate->setEnabled(hasSelection);
-}
-
-void ReginaPrefCensus::add() {
-    QStringList files = QFileDialog::getOpenFileNames(this, 
-        tr("Add Census File(s)"), QString(), FILTER_REGINA);
-    if (! files.isEmpty()) {
-        for (QStringList::const_iterator it = files.begin();
-                it != files.end(); it++) {
-            // Run a basic check over the file.
-            bool active = true;
-            regina::NFileInfo* info = regina::NFileInfo::identify(
-                static_cast<const char*>(QFile::encodeName(*it)));
-            if (! info) {
-                QMessageBox box(QMessageBox::Information,
-                    tr("Information"),
-                    tr("<qt>The census file <i>%1</i> does not appear to be "
-                    "a Regina data file.</qt>").
-                    arg(Qt::escape(QFileInfo(*it).fileName())),
-                    QMessageBox::Yes | QMessageBox::No, this);
-                box.setInformativeText(
-                        tr("Only Regina data files can be used for "
-                        "census lookups.  Are you sure you wish "
-                        "to add this file?"));
-                box.setDefaultButton(QMessageBox::No);
-                if (box.exec() != QMessageBox::Yes)
-                    continue;
-                active = false;
-            } else if (info->isInvalid()) {
-                ReginaSupport::info(this,
-                    tr("<qt>The census file <i>%1</i> contains unusual "
-                    "header data.</qt>").
-                    arg(Qt::escape(QFileInfo(*it).fileName())),
-                    tr("I am deactivating it for now; "
-                    "you may wish to examine it more closely."));
-                active = false;
-            }
-
-            // Add the new item.
-            new ReginaFilePrefItem(listFiles, ReginaFilePref(*it, active));
-        }
-        updateActiveCount();
-    }
-}
-
-void ReginaPrefCensus::remove() {
-    if (! listFiles->selectionModel()->hasSelection()) {
-        ReginaSupport::sorry(this,
-            tr("No files are selected."),
-            tr("<qt>Please select one or more files to remove, then "
-            "press <i>Remove</i> again."));
-    } else {
-        bool removeSys = false;
-        bool deactivated = false;
-        ReginaFilePrefItem* p;
-        foreach (QListWidgetItem* item, listFiles->selectedItems()) {
-            p = static_cast<ReginaFilePrefItem*>(item);
-            if (p->getData().isSystem()) {
-                removeSys = true;
-                deactivated |= p->deactivateFile();
-            } else {
-                delete p;
-            }
-        }
-        if (removeSys) {
-            if (deactivated) {
-                ReginaSupport::info(this,
-                    tr("You cannot remove Regina's own census files "
-                        "from this list."),
-                    tr("I have deactivated the files you selected instead, "
-                        "which will exclude them from census lookups."));
-            } else {
-                ReginaSupport::info(this,
-                    tr("You cannot remove Regina's own census files "
-                        "from this list."),
-                    tr("However, you can deactivate them if you wish to "
-                        "exclude them from census lookups."));
-            }
-        }
-        updateActiveCount();
-    }
-}
-
-void ReginaPrefCensus::activate() {
-    QList<QListWidgetItem*> selection = listFiles->selectedItems();
-    if (selection.isEmpty())
-        ReginaSupport::sorry(this,
-            tr("No files are selected."),
-            tr("<qt>Please select one or more files to activate, then "
-            "press <i>Activate</i> again."));
-    else {
-        bool done = false;
-        QListIterator<QListWidgetItem*> it(selection);
-        while(it.hasNext())
-            done |= dynamic_cast<ReginaFilePrefItem*>(it.next())->
-              activateFile();
-        if (done)
-            updateActiveCount();
-        else if (selection.count() == 1)
-            ReginaSupport::sorry(this,
-                tr("The selected file is already active."));
-        else
-            ReginaSupport::sorry(this,
-                tr("The selected files are already active."));
-    }
-}
-
-void ReginaPrefCensus::deactivate() {
-    QList<QListWidgetItem*> selection = listFiles->selectedItems();
-    if (selection.isEmpty())
-        ReginaSupport::sorry(this,
-            tr("No files are selected."),
-            tr("<qt>Please select one or more files to deactivate, then "
-            "press <i>Deactivate</i> again."));
-    else {
-        bool done = false;
-        QListIterator<QListWidgetItem*> it(selection);
-        while(it.hasNext())
-            done |= dynamic_cast<ReginaFilePrefItem*>(it.next())->
-              deactivateFile();
-        if (done)
-            updateActiveCount();
-        else if (selection.count() == 1)
-            ReginaSupport::sorry(this,
-                tr("The selected file is already inactive."));
-        else
-            ReginaSupport::sorry(this,
-                tr("The selected files are already inactive."));
-    }
 }
 
 ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QWidget(parent) {
@@ -1192,55 +915,5 @@ void ReginaPrefPython::deactivate() {
             ReginaSupport::sorry(this,
                 tr("The selected libraries are already inactive."));
     }
-}
-
-ReginaPrefSnapPea::ReginaPrefSnapPea(QWidget* parent) : QWidget(parent) {
-    QBoxLayout* layout = new QVBoxLayout(this);
-
-    cbMessages = new QCheckBox(tr("Diagnostic messages"));
-    cbMessages->setWhatsThis(tr("<qt>Should the SnapPea kernel write "
-        "diagnostic messages to the console?<p>"
-        "These diagnostic messages are emitted by the SnapPea kernel "
-        "embedded within Regina (not from Regina itself).  If you do not "
-        "know what this is all about, you can safely leave this option "
-        "switched off.<p>"
-        "When this option is switched on, if you start Regina from the "
-        "command line then you will see diagnostic messages appear on the "
-        "same console from which you started Regina.  "
-        "If you start Regina from a menu, you will "
-        "not see these messages at all.</qt>"));
-    layout->addWidget(cbMessages);
-
-    cbClosed = new QCheckBox(tr("Allow closed triangulations"));
-    cbClosed->setWhatsThis(tr("<qt>Allow the SnapPea kernel to work with "
-        "closed triangulations.  By default it is only allowed to work with "
-        "ideal triangulations.<p>"
-        "<b>Warning:</b> SnapPea is primarily designed to work with ideal "
-        "triangulations only.  Allowing closed triangulations may "
-        "occasionally cause the SnapPea kernel to raise a fatal error "
-        "and crash Regina completely.  You might lose unsaved work "
-        "as a result.</qt>"));
-    layout->addWidget(cbClosed);
-
-    QBoxLayout* box = new QHBoxLayout();
-    QLabel* label;
-
-    label = new QLabel(tr("<qt><b>Warning:</b></qt>"));
-    label->setAlignment(Qt::AlignTop);
-    box->addWidget(label, 0);
-
-    QLabel* snapPeaWarning = new QLabel(tr(
-        "<qt>SnapPea is primarily designed "
-        "to work with ideal triangulations only!  Allowing it to work "
-        "with closed triangulations may occasionally cause the "
-        "SnapPea kernel to raise a fatal error, and you may lose "
-        "unsaved work as a result.</qt>"));
-    snapPeaWarning->setWordWrap(true);
-    box->addWidget(snapPeaWarning, 1);
-    layout->addLayout(box);
-
-    // Add some space at the end.
-    layout->addStretch(1);
-    setLayout(layout);
 }
 

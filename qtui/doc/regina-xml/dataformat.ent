@@ -35,6 +35,7 @@
 <!ENTITY data-packet-normalsurfacelist SYSTEM "data-packet-normalsurfacelist.docbook">
 <!ENTITY data-packet-pdf SYSTEM "data-packet-pdf.docbook">
 <!ENTITY data-packet-script SYSTEM "data-packet-script.docbook">
+<!ENTITY data-packet-snappea SYSTEM "data-packet-snappea.docbook">
 <!ENTITY data-packet-surfacefilter SYSTEM "data-packet-surfacefilter.docbook">
 <!ENTITY data-packet-text SYSTEM "data-packet-text.docbook">
 <!ENTITY data-packet-triangulation SYSTEM "data-packet-triangulation.docbook">
@@ -44,6 +45,7 @@
 <!ENTITY data-realbdry-surface SYSTEM "data-realbdry-surface.docbook">
 <!ENTITY data-reginadata SYSTEM "data-reginadata.docbook">
 <!ENTITY data-reln SYSTEM "data-reln.docbook">
+<!ENTITY data-snappea SYSTEM "data-snappea.docbook">
 <!ENTITY data-solidtorus SYSTEM "data-solidtorus.docbook">
 <!ENTITY data-spanstrict SYSTEM "data-spanstrict.docbook">
 <!ENTITY data-spantaut SYSTEM "data-spantaut.docbook">
@@ -132,6 +134,8 @@
  '<link linkend="data-packet-pdf"><sgmltag>packet</sgmltag> (&pdf;)</link>'>
 <!ENTITY xml-packet-script
  '<link linkend="data-packet-script"><sgmltag>packet</sgmltag> (script)</link>'>
+<!ENTITY xml-packet-snappea
+ '<link linkend="data-packet-snappea"><sgmltag>packet</sgmltag> (&snappea; triangulation)</link>'>
 <!ENTITY xml-packet-surfacefilter
  '<link linkend="data-packet-surfacefilter"><sgmltag>packet</sgmltag> (surface filter)</link>'>
 <!ENTITY xml-packet-text
@@ -148,6 +152,8 @@
  '<link linkend="data-reginadata"><sgmltag>reginadata</sgmltag></link>'>
 <!ENTITY xml-reln
  '<link linkend="data-reln"><sgmltag>reln</sgmltag></link>'>
+<!ENTITY xml-snappea
+ '<link linkend="data-snappea"><sgmltag>snappea</sgmltag></link>'>
 <!ENTITY xml-solidtorus
  '<link linkend="data-solidtorus"><sgmltag>solidtorus</sgmltag></link>'>
 <!ENTITY xml-spanstrict

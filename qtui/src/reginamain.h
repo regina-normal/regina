@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -177,6 +177,12 @@ class ReginaMain : public QMainWindow {
         regina::NPacket* getPacketTree();
 
         /**
+         * Return the currently selected packet in the packet tree,
+         * or 0 if nothing is selected.
+         */
+        regina::NPacket* selectedPacket();
+
+        /**
          * Indicate that the file is dirty.
          */
         virtual void setModified(bool modified);
@@ -306,13 +312,13 @@ class ReginaMain : public QMainWindow {
          * New packet routines.
          */
         void newAngleStructures();
-        void newCensus();
         void newContainer();
         void newDim2Triangulation();
         void newDim4Triangulation();
         void newFilter();
         void newNormalSurfaces();
         void newPDF();
+        void newSnapPeaTriangulation();
         void newScript();
         void newText();
         void newTriangulation();
@@ -378,21 +384,16 @@ class ReginaMain : public QMainWindow {
         bool closeAllPanes();
 
         /**
-         * Tests whether there is some open pane with uncommitted changes.
+         * Ensure that all panes have committed any edits-in-progress
+         * to the calculation engine.
          */
-        bool hasUncommittedChanges();
-
-        /**
-         * Commit or discard changes in all open panes.
-         */
-        void commitAllChanges();
-        void discardAllChanges();
+        void endEdit();
 
         /**
          * Various UI updates.
          */
         void updateTreeActions();
-        
+
     private:
         /**
          * Initial setup.

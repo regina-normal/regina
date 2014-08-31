@@ -3,9 +3,7 @@
 # Files to compile
 SET ( FILES
   nfileinfo
-  nglobaldirs
-  nxmlcallback
-  nxmlfile)
+  nglobaldirs)
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

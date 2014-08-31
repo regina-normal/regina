@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2011-2013, Ben Burton                                   *
+ *  Copyright (c) 2011-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -210,7 +210,7 @@ bool NTreeTraversal<LPConstraint, BanConstraint, Integer>::verify(
 
 template <class LPConstraint, typename BanConstraint, typename Integer>
 NTreeTraversal<LPConstraint, BanConstraint, Integer>::NTreeTraversal(
-        NTriangulation* tri, NormalCoords coords,
+        const NTriangulation* tri, NormalCoords coords,
         int branchesPerQuad, int branchesPerTri, bool enumeration) :
         BanConstraint(tri, coords),
         origTableaux_(tri,

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -140,8 +140,10 @@ inline bool NSurfaceFilterCombination::getUsesAnd() const {
     return usesAnd;
 }
 inline void NSurfaceFilterCombination::setUsesAnd(bool value) {
-    ChangeEventSpan span(this);
-    usesAnd = value;
+    if (usesAnd != value) {
+        ChangeEventSpan span(this);
+        usesAnd = value;
+    }
 }
 
 inline void NSurfaceFilterCombination::writeTextLong(std::ostream& o) const {

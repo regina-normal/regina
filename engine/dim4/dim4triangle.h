@@ -241,6 +241,15 @@ class REGINA_API Dim4Triangle : public ShareableObject, public NMarkedElement {
         ~Dim4Triangle();
 
         /**
+         * Returns the index of this triangle in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->triangleIndex(this)</tt>.
+         *
+         * @return the index of this triangle.
+         */
+        unsigned long index() const;
+
+        /**
          * Returns the list of descriptors detailing how this triangle forms a
          * part of various pentachora in the 4-manifold triangulation.
          * Note that if this triangle represents multiple triangles of a
@@ -453,6 +462,10 @@ inline Dim4Triangle::Dim4Triangle(Dim4Component* component) :
 }
 
 inline Dim4Triangle::~Dim4Triangle() {
+}
+
+inline unsigned long Dim4Triangle::index() const {
+    return markedIndex();
 }
 
 inline const std::deque<Dim4TriangleEmbedding>& Dim4Triangle::getEmbeddings()

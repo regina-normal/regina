@@ -38,6 +38,7 @@
 
 // UI includes:
 #include "dim4trigluings.h"
+#include "edittableview.h"
 #include "reginamain.h"
 #include "reginasupport.h"
 
@@ -47,7 +48,6 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <QRegExp>
-#include <QTableView>
 #include <QToolBar>
 
 using regina::NPacket;
@@ -70,173 +70,13 @@ namespace {
     QRegExp reFacet("^[0-4][0-4][0-4][0-4]$");
 }
 
-Dim4GluingsModel::Dim4GluingsModel(bool readWrite) :
-        nPent(0), name(0), adjPent(0), adjPerm(0), isReadWrite_(readWrite) {
+Dim4GluingsModel::Dim4GluingsModel(Dim4Triangulation* tri, bool readWrite) :
+        tri_(tri), isReadWrite_(readWrite) {
 }
 
-void Dim4GluingsModel::refreshData(regina::Dim4Triangulation* tri) {
+void Dim4GluingsModel::rebuild() {
     beginResetModel();
-
-    delete[] name;
-    delete[] adjPent;
-    delete[] adjPerm;
-
-    nPent = tri->getNumberOfPentachora();
-    if (nPent == 0) {
-        name = 0;
-        adjPent = 0;
-        adjPerm = 0;
-
-        endResetModel();
-        return;
-    }
-
-    name = new QString[nPent];
-    adjPent = new int[5 * nPent];
-    adjPerm = new regina::NPerm5[5 * nPent];
-
-    int pentNum, facet;
-    regina::Dim4Pentachoron* pent;
-    regina::Dim4Pentachoron* adj;
-    for (pentNum = 0; pentNum < nPent; pentNum++) {
-        pent = tri->getPentachoron(pentNum);
-        name[pentNum] = pent->getDescription().c_str();
-        for (facet = 0; facet < 5; facet++) {
-            adj = pent->adjacentPentachoron(facet);
-            if (adj) {
-                adjPent[pentNum * 5 + facet] = tri->pentachoronIndex(adj);
-                adjPerm[pentNum * 5 + facet] = pent->adjacentGluing(facet);
-            } else
-                adjPent[pentNum * 5 + facet] = -1;
-        }
-    }
-
     endResetModel();
-}
-
-void Dim4GluingsModel::addPent() {
-    beginInsertRows(QModelIndex(), nPent, nPent);
-
-    QString* newName = new QString[nPent + 1];
-    int* newPent = new int[5 * (nPent + 1)];
-    regina::NPerm5* newPerm = new regina::NPerm5[5 * (nPent + 1)];
-
-    std::copy(name, name + nPent, newName);
-    std::copy(adjPent, adjPent + 5 * nPent, newPent);
-    std::copy(adjPerm, adjPerm + 5 * nPent, newPerm);
-
-    for (int facet = 0; facet < 5; ++facet)
-        newPent[5 * nPent + facet] = -1;
-
-    delete[] name;
-    delete[] adjPent;
-    delete[] adjPerm;
-
-    name = newName;
-    adjPent = newPent;
-    adjPerm = newPerm;
-
-    ++nPent;
-
-    endInsertRows();
-}
-
-void Dim4GluingsModel::removePent(int first, int last) {
-    beginResetModel();
-
-    if (first == 0 && last == nPent - 1) {
-        delete[] name;
-        delete[] adjPent;
-        delete[] adjPerm;
-
-        name = 0;
-        adjPent = 0;
-        adjPerm = 0;
-
-        nPent = 0;
-
-        endResetModel();
-        return;
-    }
-
-    // Adjust other pentachoron numbers.
-    int nCut = last - first + 1;
-
-    QString* newName = new QString[nPent - nCut];
-    int* newPent = new int[5 * (nPent - nCut)];
-    regina::NPerm5* newPerm = new regina::NPerm5[5 * (nPent - nCut)];
-
-    int row, facet, i;
-    for (row = 0; row < first; ++row) {
-        newName[row] = name[row];
-        for (facet = 0; facet < 5; ++facet) {
-            newPent[5 * row + facet] = adjPent[5 * row + facet];
-            newPerm[5 * row + facet] = adjPerm[5 * row + facet];
-        }
-    }
-
-    for (row = first; row < nPent - nCut; ++row) {
-        newName[row] = name[row + nCut];
-        for (facet = 0; facet < 5; ++facet) {
-            newPent[5 * row + facet] = adjPent[5 * (row + nCut) + facet];
-            newPerm[5 * row + facet] = adjPerm[5 * (row + nCut) + facet];
-        }
-    }
-
-    for (i = 0; i < 5 * (nPent - nCut); ++i)
-        if (newPent[i] >= first && newPent[i] <= last)
-            newPent[i] = -1;
-        else if (newPent[i] > last)
-            newPent[i] -= nCut;
-
-    delete[] name;
-    delete[] adjPent;
-    delete[] adjPerm;
-
-    name = newName;
-    adjPent = newPent;
-    adjPerm = newPerm;
-
-    nPent -= nCut;
-
-    // Done!
-    endResetModel();
-}
-
-void Dim4GluingsModel::commitData(regina::Dim4Triangulation* tri) {
-    tri->removeAllPentachora();
-
-    if (nPent == 0)
-        return;
-
-    regina::NPacket::ChangeEventSpan span(tri);
-
-    regina::Dim4Pentachoron** pents = new regina::Dim4Pentachoron*[nPent];
-    int pentNum, adjPentNum;
-    int facet, adjFacet;
-
-    // Create the pentachora.
-    for (pentNum = 0; pentNum < nPent; pentNum++)
-        pents[pentNum] = tri->newPentachoron(
-            name[pentNum].toAscii().constData());
-
-    // Glue the pentachora together.
-    for (pentNum = 0; pentNum < nPent; pentNum++)
-        for (facet = 0; facet < 5; facet++) {
-            adjPentNum = adjPent[5 * pentNum + facet];
-            if (adjPentNum < pentNum) // includes adjPentNum == -1
-                continue;
-            adjFacet = adjPerm[5 * pentNum + facet][facet];
-            if (adjPentNum == pentNum && adjFacet < facet)
-                continue;
-
-            // It's a forward gluing.
-            pents[pentNum]->joinTo(facet, pents[adjPentNum],
-                adjPerm[5 * pentNum + facet]);
-        }
-
-    // Tidy up.
-    delete[] pents;
 }
 
 QModelIndex Dim4GluingsModel::index(int row, int column,
@@ -245,7 +85,7 @@ QModelIndex Dim4GluingsModel::index(int row, int column,
 }
 
 int Dim4GluingsModel::rowCount(const QModelIndex& parent) const {
-    return nPent;
+    return tri_->getNumberOfSimplices();
 }
 
 int Dim4GluingsModel::columnCount(const QModelIndex& parent) const {
@@ -253,29 +93,32 @@ int Dim4GluingsModel::columnCount(const QModelIndex& parent) const {
 }
 
 QVariant Dim4GluingsModel::data(const QModelIndex& index, int role) const {
-    int pent = index.row();
+    regina::Dim4Pentachoron* p = tri_->getSimplex(index.row());
     if (role == Qt::DisplayRole) {
         // Pentachoron name?
         if (index.column() == 0)
-            return (name[pent].isEmpty() ? QString::number(pent) :
-                (QString::number(pent) + " (" + name[pent] + ')'));
+            return (p->getDescription().empty() ? QString::number(index.row()) :
+                (QString::number(index.row()) + " (" +
+                p->getDescription().c_str() + ')'));
 
         // Facet gluing?
         int facet = 5 - index.column();
         if (facet >= 0)
-            return destString(facet, adjPent[5 * pent + facet],
-                adjPerm[5 * pent + facet]);
+            return destString(facet,
+                p->adjacentSimplex(facet),
+                p->adjacentGluing(facet));
         return QVariant();
     } else if (role == Qt::EditRole) {
         // Pentachoron name?
         if (index.column() == 0)
-            return name[pent];
+            return p->getDescription().c_str();
 
         // Facet gluing?
         int facet = 5 - index.column();
         if (facet >= 0)
-            return destString(facet, adjPent[5 * pent + facet],
-                adjPerm[5 * pent + facet]);
+            return destString(facet,
+                p->adjacentSimplex(facet),
+                p->adjacentGluing(facet));
         return QVariant();
     } else
         return QVariant();
@@ -308,14 +151,13 @@ Qt::ItemFlags Dim4GluingsModel::flags(const QModelIndex& index) const {
 
 bool Dim4GluingsModel::setData(const QModelIndex& index, const QVariant& value,
         int role) {
-    int pent = index.row();
+    regina::Dim4Pentachoron* p = tri_->getSimplex(index.row());
     if (index.column() == 0) {
         QString newName = value.toString().trimmed();
-        if (newName == name[pent])
+        if (newName == p->getDescription().c_str())
             return false;
 
-        name[pent] = newName;
-        emit dataChanged(index, index);
+        p->setDescription(newName.toAscii().constData());
         return true;
     }
 
@@ -345,15 +187,15 @@ bool Dim4GluingsModel::setData(const QModelIndex& index, const QVariant& value,
 
         // Check explicitly for a negative pentachoron number
         // since isFacetStringValid() takes an unsigned integer.
-        if (newAdjPent < 0 || newAdjPent >= nPent) {
+        if (newAdjPent < 0 || newAdjPent >= tri_->getNumberOfSimplices()) {
             showError(tr("There is no pentachoron number %1.").
                 arg(newAdjPent));
             return false;
         }
 
         // Do we have a valid gluing?
-        QString err = isFacetStringValid(pent, facet, newAdjPent, pentFacet,
-            &newAdjPerm);
+        QString err = isFacetStringValid(index.row(), facet, newAdjPent,
+            pentFacet, &newAdjPerm);
         if (! err.isNull()) {
             showError(err);
             return false;
@@ -361,71 +203,43 @@ bool Dim4GluingsModel::setData(const QModelIndex& index, const QVariant& value,
     }
 
     // Yes, looks valid.
-    int oldAdjPent = adjPent[5 * pent + facet];
-    regina::NPerm5 oldAdjPerm = adjPerm[5 * pent + facet];
-    int oldAdjFacet = oldAdjPerm[facet];
-
     // Have we even made a change?
-    if (oldAdjPent < 0 && newAdjPent < 0)
+    if (newAdjPent < 0 && ! p->adjacentSimplex(facet))
         return false;
-    if (oldAdjPent == newAdjPent && oldAdjPerm == newAdjPerm)
+    if (p->adjacentSimplex(facet) &&
+            p->adjacentSimplex(facet)->markedIndex() == newAdjPent &&
+            newAdjPerm == p->adjacentGluing(facet))
         return false;
 
     // Yes!  Go ahead and make the change.
+    regina::NPacket::ChangeEventSpan span(tri_);
 
     // First unglue from the old partner if it exists.
-    if (oldAdjPent >= 0) {
-        adjPent[5 * oldAdjPent + oldAdjFacet] = -1;
-
-        QModelIndex oldAdjIndex = this->index(oldAdjPent, 5 - oldAdjFacet,
-            QModelIndex());
-        emit dataChanged(oldAdjIndex, oldAdjIndex);
-    }
+    if (p->adjacentSimplex(facet))
+        p->unjoin(facet);
 
     // Are we making the facet boundary?
-    if (newAdjPent < 0) {
-        adjPent[5 * pent + facet] = -1;
-
-        emit dataChanged(index, index);
+    if (newAdjPent < 0)
         return true;
-    }
 
     // We are gluing the facet to a new partner.
     int newAdjFacet = newAdjPerm[facet];
 
     // Does this new partner already have its own partner?
-    if (adjPent[5 * newAdjPent + newAdjFacet] >= 0) {
-        // Yes.. better unglue it.
-        int extraPent = adjPent[5 * newAdjPent + newAdjFacet];
-        int extraFacet = adjPerm[5 * newAdjPent + newAdjFacet][newAdjFacet];
-
-        adjPent[5 * extraPent + extraFacet] = -1;
-
-        QModelIndex extraIndex = this->index(extraPent, 5 - extraFacet,
-            QModelIndex());
-        emit dataChanged(extraIndex, extraIndex);
-    }
+    // If so, better unglue it.
+    regina::Dim4Pentachoron* adj = tri_->getSimplex(newAdjPent);
+    if (adj->adjacentSimplex(newAdjFacet))
+        adj->unjoin(newAdjFacet);
 
     // Glue the two facets together.
-    adjPent[5 * pent + facet] = newAdjPent;
-    adjPent[5 * newAdjPent + newAdjFacet] = pent;
-
-    adjPerm[5 * pent + facet] = newAdjPerm;
-    adjPerm[5 * newAdjPent + newAdjFacet] = newAdjPerm.inverse();
-
-    emit dataChanged(index, index);
-
-    QModelIndex newAdjIndex = this->index(newAdjPent, 5 - newAdjFacet,
-        QModelIndex());
-    emit dataChanged(newAdjIndex, newAdjIndex);
-
+    p->joinTo(facet, adj, newAdjPerm);
     return true;
 }
 
 QString Dim4GluingsModel::isFacetStringValid(unsigned long srcPent,
         int srcFacet, unsigned long destPent, const QString& destFacet,
         regina::NPerm5* gluing) {
-    if (destPent >= nPent)
+    if (destPent >= tri_->getNumberOfSimplices())
         return tr("There is no pentachoron number %1.").arg(destPent);
 
     if (! reFacet.exactMatch(destFacet))
@@ -458,12 +272,13 @@ void Dim4GluingsModel::showError(const QString& message) {
         tr("This is not a valid gluing."), message);
 }
 
-QString Dim4GluingsModel::destString(int srcFacet, int destPent,
+QString Dim4GluingsModel::destString(int srcFacet,
+        regina::Dim4Pentachoron* destPent,
         const regina::NPerm5& gluing) {
-    if (destPent < 0)
+    if (! destPent)
         return "";
     else
-        return QString::number(destPent) + " (" +
+        return QString::number(destPent->markedIndex()) + " (" +
             (gluing * regina::Dim4Tetrahedron::ordering[srcFacet]).
             trunc4().c_str() + ')';
 }
@@ -489,8 +304,8 @@ Dim4TriGluingsUI::Dim4TriGluingsUI(regina::Dim4Triangulation* packet,
         PacketTabbedUI* useParentUI, bool readWrite) :
         PacketEditorTab(useParentUI), tri(packet) {
     // Set up the table of facet gluings.
-    model = new Dim4GluingsModel(readWrite);
-    facetTable = new QTableView();
+    model = new Dim4GluingsModel(packet, readWrite);
+    facetTable = new EditTableView();
     facetTable->setSelectionMode(QAbstractItemView::ContiguousSelection);
     facetTable->setModel(model);
 
@@ -524,9 +339,6 @@ Dim4TriGluingsUI::Dim4TriGluingsUI(regina::Dim4Triangulation* packet,
     //facetTable->setColumnStretchable(3, true);
     //facetTable->setColumnStretchable(4, true);
     //facetTable->setColumnStretchable(5, true);
-
-    connect(model, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
-        this, SLOT(notifyDataChanged()));
 
     ui = facetTable;
 
@@ -608,14 +420,12 @@ QWidget* Dim4TriGluingsUI::getInterface() {
     return ui;
 }
 
-void Dim4TriGluingsUI::commit() {
-    model->commitData(tri);
-    setDirty(false);
+void Dim4TriGluingsUI::refresh() {
+    model->rebuild();
 }
 
-void Dim4TriGluingsUI::refresh() {
-    model->refreshData(tri);
-    setDirty(false);
+void Dim4TriGluingsUI::endEdit() {
+    facetTable->endEdit();
 }
 
 void Dim4TriGluingsUI::setReadWrite(bool readWrite) {
@@ -637,11 +447,14 @@ void Dim4TriGluingsUI::setReadWrite(bool readWrite) {
 }
 
 void Dim4TriGluingsUI::addPent() {
-    model->addPent();
-    setDirty(true);
+    endEdit();
+
+    tri->newPentachoron();
 }
 
 void Dim4TriGluingsUI::removeSelectedPents() {
+    endEdit();
+
     // Gather together all the pentachora to be deleted.
     QModelIndexList sel = facetTable->selectionModel()->selectedIndexes();
     if (sel.empty()) {
@@ -681,13 +494,17 @@ void Dim4TriGluingsUI::removeSelectedPents() {
         return;
 
     // Off we go!
-    model->removePent(first, last);
-    setDirty(true);
+    if (first == 0 && last == tri->getNumberOfPentachora() - 1)
+        tri->removeAllSimplices();
+    else {
+        regina::NPacket::ChangeEventSpan span(tri);
+        for (int i = last; i >= first; --i)
+            tri->removeSimplexAt(i);
+    }
 }
 
 void Dim4TriGluingsUI::simplify() {
-    if (! enclosingPane->commitToModify())
-        return;
+    endEdit();
 
     if (! tri->intelligentSimplify())
         ReginaSupport::info(ui,
@@ -705,6 +522,3 @@ void Dim4TriGluingsUI::updateRemoveState() {
         actRemovePent->setEnabled(false);
 }
 
-void Dim4TriGluingsUI::notifyDataChanged() {
-    setDirty(true);
-}

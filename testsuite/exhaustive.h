@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -59,6 +59,7 @@ void runCensusMinClosed(NTriangulationTestFunction f, bool small_ = false);
 void runCensusAllClosed(NTriangulationTestFunction f, bool small_ = false);
 void runCensusAllBounded(NTriangulationTestFunction f, bool small_ = false);
 void runCensusAllIdeal(NTriangulationTestFunction f, bool small_ = false);
+void runCensusAllNoBdry(NTriangulationTestFunction f, bool small_ = false);
 
 void runCensusAllClosed(Dim4TriangulationTestFunction f);
 void runCensusAllBounded(Dim4TriangulationTestFunction f);

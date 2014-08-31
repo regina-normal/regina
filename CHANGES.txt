@@ -25,7 +25,7 @@ Version 5.0  [ (under development) ]
               it does not identify when a 3-manifold triangulation
               appears as a subcomplex of a 4-manifold triangulation).
 
-Version 4.96  [ (under development) ]
+Version 4.96  [ 29 August, 2014 ]
 
     ENGINE:
         Class BanConstraintBase (and subclasses):
@@ -34,14 +34,26 @@ Version 4.96  [ (under development) ]
               taut angle structures, or finding a single strict angle structure.
         Class Dim2BoundaryComponent:
             - New convenience routine getComponent().
+            - New routine index().
+        Class Dim2Census:
+            - Routines formCensus() and formPartialCensus() and the typedef
+              AcceptTriangulation are now deprecated.  To build a census
+              you should call Dim2EdgePairing::findAllPairings() and
+              Dim2GluingPermSearcher::findAllPerms() directly.
         Class Dim2Component:
             - New routine getNumberOfBoundaryEdges().
+            - New routine index().
+        Class Dim2Edge:
+            - New routine index().
         Class Dim2EdgeEmbedding:
             - New convenience operators == and !=.
+        Class Dim2Triangle:
+            - New routine index().
         Class Dim2Triangulation:
             - New routine isIdenticalTo().
             - New local modification oneThreeMove().
             - New routine findAllIsomorphisms().
+            - New routine isEmpty().
             - Several isomorphism-related routines have been moved into
               the dimension-agnostic NGenericTriangulation template, and
               isomorphism signature routines now inherit directly from
@@ -50,6 +62,8 @@ Version 4.96  [ (under development) ]
             - New routines getNumberOfBoundaryEdges() and hasBoundaryEdges().
               The latter is redundant, but is provided for compatibility with
               NTriangulation.
+        Class Dim2Vertex:
+            - New routine index().
         Class Dim2VertexEmbedding:
             - New convenience operators == and !=.
         Class LPConstraintBase (and subclasses), LPData, LPInitialTableaux,
@@ -61,6 +75,10 @@ Version 4.96  [ (under development) ]
             - New convenience operator !=.
         Class NAngleStructure:
             - New convenience routine rawVector().
+            - Routine getTriangulation() now returns a const NTriangulation*
+              (previously this was non-const).  Likewise, many routines in
+              this and related classes have NTriangulation* arguments changed
+              from non-const to const.
         Class NAngleStructureList:
             - Enumeration of taut angle strutures now uses Regina's tree
               traversal / linear programming machinery, which is *much*
@@ -72,37 +90,70 @@ Version 4.96  [ (under development) ]
               equations independently of an angle structure list.
         Class NBoundaryComponent:
             - New convenience routine getComponent().
+            - New routine index().
             - Renamed getEulerCharacteristic() to getEulerChar(), which
               is easier on the fingers.  The old name has been kept as a
               deprecated alias for backward compatibility.
         Class NCensus:
-            - New constant PURGE_NON_MINIMAL_HYP, for use in building a
-              census of cusped finite volume hyperbolic 3-manifolds.
+            - New routine lookup() (in two variants) to quickly search for a
+              given triangulation in Regina's various census databases.
+              The databases themselves are now installed alongside the
+              mathematical engine, and are much larger and richer than before.
+            - Routine mightBeMinimal() is deprecated; you should call
+              NTriangulation::simplifyToLocalMinimum(false) instead.
+            - Routines formCensus() and formPartialCensus() and the typedef
+              AcceptTriangulation are now deprecated.  To build a census
+              you should call NFacePairing::findAllPairings() and
+              NGluingPermSearcher::findAllPerms() directly.
+            - The PURGE_... constants have been moved to the
+              NGluingPermSearcher class.  The old flags in NCensus
+              are deprecated, but have been kept for backward compatibility.
+        Class NCensusDB, NCensusHit, NCensusHits:
+            - New classes to support the new NCensus::lookup() routines.
         Class NComponent:
             - New routine getNumberOfBoundaryTriangles().
+            - New routine index().
+        Class NCusp:
+            - New class to support NSnapPeaTriangulation.
+        Class NEdge:
+            - New routine index().
         Class NExampleTriangulation:
             - New example trefoilKnotComplement().
             - New example sphere600() (sourced from the 600-cell in the
               Benedetti-Lutz library of triangulations).
-        Class NFaceEmbedding:
-            - New convenience operators == and !=.
         Class NGenericTriangulation:
             - Moved isIdenticalTo(), isIsomorphicTo(), isContainedIn(),
               findAllSubcomplexesIn() and makeCanonical() from
               Dim2Triangulation and NTriangulation into this class.
             - New routine findAllIsomorphisms().
+            - New routine isEmpty().
             - Made isoSig(), fromIsoSig() and isoSigComponentSize() public.
         Class NGluingPermSearcher:
+            - New PurgeFlags enumeration, which is the new home for the
+              PURGE_... constants that used to live in the NCensus class.
+              This enumeration also contains new flags PURGE_NON_MINIMAL_HYP
+              (for use in building a census of cusped finite volume hyperbolic
+              3-manifolds), and PURGE_NONE.
             - Removed protected routine mayPurge(), since this behaviour is
               already provided by specialised subclasses of NGluingPermSearcher.
         Class NHyperbolicMinSearcher:
             - New enumeration class for building a census of minimal ideal
               triangulations of cusped finite-volume hyperbolic 3-manifolds.
+        Class NManifold:
+            - New routine isHyperbolic().
         Class NNormalSurface:
-            - Routine boundarySlopes() now uses (shortest, second-shortest)
-              curves on the cusp as its (meridian, longitude) basis.
-              This reverts a change in behaviour from the previous release
-              caused by the recent sync with the SnapPy 2.0.3 kernel.
+            - Renamed boundarySlopes() to boundaryIntersections(), to make it
+              clear that it returns algebraic intersection numbers and not the
+              usual (m, l) pairs.  The old name has *not* been deprecated,
+              but removed completely.
+            - Furthermore, boundaryIntersections() now requires the underlying
+              triangulation to be of type NSnapPeaTriangulation, and it takes
+              the meridian and longitude directly from the SnapPea kernel.
+              It also now orders its rows by SnapPea cusp indices (not Regina's
+              vertex indices); this is identical to past behaviour, but now
+              that SnapPea triangulations can be modified through the SnapPea
+              kernel, it is possible for the numbering schemes to differ
+              and so this distinction now matters.
             - Renamed getEulerCharacteristic() to getEulerChar(), which
               is easier on the fingers.  The old name has been kept as a
               deprecated alias for backward compatibility.
@@ -113,40 +164,117 @@ Version 4.96  [ (under development) ]
               this and related classes have NTriangulation* arguments changed
               from non-const to const.
         Class NNormalSurfaceList:
+            - New routines saveCSVStandard() and saveCSVEdgeWeight().
+              These are now the preferred ways of exporting a normal surface
+              list to CSV format.
             - Many routines in this and related classes have NTriangulation*
               arguments changed from non-const to const.  This also applies to
               related global routines, such as makeMatchingEquations().
         Enum NormalCoords:
             - New coordinate system NS_ANGLE for use with angle structures.
+        Class NPacket:
+            - New routine save(), which is now the preferred way of saving
+              Regina data files.
+        Class NPDF:
+            - New constructor that reads a PDF document from a given file.
+            - New routine isNull() to test if a PDF document is stored.
+            - New routine savePDF(), which is now the preferred way of
+              exporting a PDF packet to a PDF file.
         Class NPerm3, NPerm4, NPerm5:
             - New dimension-agnostic alias invSn.
             - Changed the type of NPerm3::invS3 from int to unsigned,
               for consistenty with NPerm4 and NPerm5.
+        Class NScript:
+            - Scripts are now stored as complete strings, not sequences
+              of individual lines.  This affects the member functions
+              (see below) and also the XML file format.  Whilst Regina
+              has removed much of the functionality for working line-by-line,
+              it can still read older files that were stored that way.
+            - A script now fires a change event if one of its variables
+              changes its packet label.
+            - New routines getText(), setText() and append().
+            - New routine getVariableIndex(), setVariableName(),
+              setVariableValue() and removeVariable(unsigned long).
+            - Removed routines getLine(), getNumberOfLines(), addFirst(),
+              addLast(), insertAtPosition(), replaceAtPosition(),
+              removeLineAt(), and removeAllLines().  These are not deprecated,
+              but removed entirely.
         Class NSnapPeaTriangulation:
-            - Updated the SnapPea kernel to the one shipped with SnapPy 2.1.
+            - Updated the SnapPea kernel to the one shipped with SnapPy 2.2
+              (standard precision).
+            - NSnapPeaTriangulation is now a fully-fledged packet type, and
+              derives from NTriangulation.  The inherited NTriangulation
+              must not be modified directly; instead this is automatically
+              kept in sync with the SnapPea data.
+            - Closed triangulations are now supported always by default
+              (i.e., you do not need to explicitly pass allowClosed=true).
+              The second argument (allowClosed) for the constructor
+              NSnapPeaTriangulation(const NTriangulation&, bool) is
+              deprecated, and is now ignored.
+            - Many new routines: countCompleteCusps(), countCusps(),
+              countFilledCusps(), cusp(), fill(), filledTriangulation(),
+              fundamentalGroupFilled(), gluingEquations(),
+              gluingEquationsRect(), homologyFilled(), minImaginaryShape(),
+              name(), protoCanonize() and protoCanonise(), shape(), unfill(),
+              volumeZero(), plus others (listed individually below).
+            - Two new constructors: a default constructor that builds a null
+              triangulation, and a string constructor that takes either the
+              name or the contents of a native SnapPea data file.
+            - The Regina-to-SnapPea constructor now doubles as another copy
+              constructor: which behaviour you get now depends on whether
+              you pass an object of Regina's own NTriangulation type or
+              of the subclass NSnapPeaTriangulation.
+            - If one of Regina's own NTriangulation objects is passed to
+              the constructor, then the constructor now installs the (shortest,
+              second-shortest) curves on each cusp as its (meridian, longitude)
+              basis.  This reverts a change in behaviour from the previous
+              release caused by the recent sync with the SnapPy 2.0.3 kernel.
+            - New output routines snapPea() and saveSnapPea().  These override
+              the "lossy" conversion routines NTriangulation::snapPea() and
+              NTriangulation::saveSnapPea() so that they output all
+              SnapPea-specific data.
+            - Renamed saveAsSnapPea() to saveSnapPea() (see above).  The new
+              routine now returns a boolean, and requires a non-empty filename.
+              The old name is deprecated but kept for backward compatibility.
+            - Routine dump() is deprecated.  Instead, simply call snapPea() and
+              write the resulting string to standard output.
+            - Added synonym canonise() for canonize().
+            - Routine solutionType() now returns the filled solution type
+              (not the complete solution type).
+            - Routine slopeEquations() now orders rows by SnapPea cusp indices
+              (not Regina's vertex indices).  This is identical to past
+              behaviour, but now that SnapPea triangulations can be modified
+              through the SnapPea kernel, it is possible for the numbering
+              schemes to differ and so this distinction now matters.
+            - Routines toRegina() and verifyTriangulation() are deprecated,
+              since they are obsolete now that NSnapPeaTriangulation inherits
+              from NTriangulation.
             - The entire SnapPea kernel now lives within the namespace
               regina::snappea, which should ensure safety even if a
               conflicting SnapPy kernel is simultaneously loaded via Python.
               The SnapPea kernel is also linked as C++ now (no 'extern "C"').
             - Fatal errors in the SnapPea kernel are now handled by throwing
               exceptions, instead of quitting abruptly.
-            - Routine slopeEquations() now uses (shortest, second-shortest)
-              curves on the cusp as its (meridian, longitude) basis.
-              This reverts a change in behaviour from the previous release
-              caused by the recent sync with the SnapPy 2.0.3 kernel.
         Class NTautEnumeration:
             - New class for enumerating taut angle structures that uses
               Regina's tree traversal / linear programming machinery.
               This is *much* faster than the old double description method.
+        Class NTetrahedron:
+            - New routine index().
         Class NTreeTraversal:
             - Extended the tree traversal / linear programming machinery to
               work with angle structures.  This is used for enumerating all
               taut angle structures, or finding a single strict angle structure.
+            - Changed all NTriangulation types in this and related
+              classes from non-const to const.
+        Class NTriangle:
+            - New routine index().
         Class NTriangleEmbedding:
             - New convenience operators == and !=.
         Class NTriangulation:
-            - New routine hasStrictAngleStructure(), which uses fast
-              linear programming machinery.
+            - New routines hasStrictAngleStructure(),
+              findStrictAngleStructure() and knowsStrictAngleStructure(),
+              which use fast linear programming machinery.
             - Routine connectedSumDecomposition() now works for non-orientable
               triangulations also (arXiv:1212.1441).  There is a caveat if
               there are embedded two-sided projective planes (see the
@@ -154,6 +282,7 @@ Version 4.96  [ (under development) ]
               signed long to allow for error conditions to be returned.
             - New routine connectedSumWith() for building connected sums.
             - New routine isIdenticalTo().
+            - New routine isEmpty().
             - New local modification oneFourMove().
             - New routines findAllIsomorphisms() and makeCanonical().
             - Several isomorphism-related routines have been moved into
@@ -163,30 +292,96 @@ Version 4.96  [ (under development) ]
               See the NGenericTriangulation notes above for details.
             - New routine getNumberOfBoundaryTriangles().
             - New routine puncture().
+            - New routines snapPea(std::ostream&) and saveSnapPea().
+              These (and the existing snapPea()) are now the preferred ways
+              of exporting an NTriangulation to SnapPea's native file format.
+            - New routines recogniser(), recogniser(std::ostream&),
+              saveRecogniser(), plus US-spelled variants recognizer(), etc.
+              These are now the preferred ways of exporting data for
+              Matveev's 3-manifold recogniser.
+            - Routines snapPea() and saveSnapPea() now do nothing if the
+              triangulation is empty.
         Class NVertex:
             - Renamed getLinkEulerCharacteristic() to getLinkEulerChar(), which
               is easier on the fingers.  The old name has been kept as a
               deprecated alias for backward compatibility.
+            - New routine index().
         Class NVertexEmbedding:
             - New convenience operators == and !=.
+        Class NXMLSnapPeaReader:
+            - New I/O class for the new SnapPea triangulation packet type.
         Class SnapPeaException, SnapPeaFatalError, SnapPeaMemoryFull:
             - New exceptions to be thrown by the SnapPea kernel.
+        Enum SurfaceExportFields:
+            - Moved from foreign/csvsurfacelist.h to
+              surfaces/nnormalsurfacelist.h.
+        Routine open():
+            - New routine which is now the preferred way to read a
+              native Regina data file.
+        Routine readFileMagic(), readXMLFile():
+            - Renamed to regina::open(), and now declared in npacket.h.
+              The old names are deprecated but kept for backward compatibility.
+        Routine readPDF():
+            - Deprecated, in favour of the new filename-based NPDF constructor.
+            - Explicitly return 0 if the given file exists but is empty.
+        Routine readSnapPea():
+            - Both variants of this routine are now deprecated, in favour of the
+              new NSnapPeaTriangulation constructor which preserves additional
+              SnapPea-specific data.  The old routines have been kept for
+              backward compatibility, and (unlike the new routines) retain
+              their old "lossy" behaviour (i.e., returning an NTriangulation
+              that drops any SnapPea-specific data, such as peripheral curves).
+        Routine writeCSVStandard(), writeCSVEdgeWeight():
+            - Renamed to NNormalSurfaceList::saveCSVStandard() and
+              NNormalSurfaceList::saveCSVEdgeWeight().  The old names
+              are deprecated but have been kept for backward compatibility.
+        Routine writePDF():
+            - Renamed to NPDF::savePDF().  The old name is deprecated but has
+              been kept for backward compatibility.  The new NPDF::savePDF()
+              has a slight change in behaviour: if the PDF packet contains
+              no data then the old routine created an empty file and returned
+              true, whereas the new routine does nothing and returns false.
+        Routine writeRecogniser(), writeRecognizer():
+            - Renamed to NTriangulation::saveRecogniser() / saveRecognizer().
+              The old names are deprecated but kept for backward compatibility.
+              The new versions have a change in behaviour, in that they now
+              require a non-empty filename (the old behaviour can be recreated
+              by calling NTriangulation::recogniser() instead).
+        Routine writeSnapPea():
+            - The two variants of this routine have been renamed as
+              NTriangulation::snapPea(std::ostream&) and
+              NTriangulation::saveSnapPea(const char*).  The old names
+              are deprecated but have been kept for backward compatibility.
+        Routine writeXMLFile():
+            - Renamed to NPacket::save().  The old name is deprecated but
+              has been kept for backward compatibility.
+        Header csvsurfacelist.h:
+            - Deprecated.  The declaration of SurfaceExportFields is now
+              in surfaces/nnormalsurfacelist.h instead.  The old header
+              now includes surfaces/nnormalsurfacelist.h automatically.
+        Header nxmlcallback.h, nxmlelementreader.h:
+            - Moved from file/ into utilities/.  The old headers have
+              been kept for backward compatibility.
         Header permconv.h:
             - New conversion routines perm3to5() and perm5to3().
     USER INTERFACE:
-        - Boundary slopes for spun-normal surfaces must now be explicitly
-          enabled in preferences, since the (meridian, longitude) basis might
-          not be what the user expects.
+        - The commit/refresh buttons are gone: changes are now committed
+          automatically.
+        - Many other changes that implement the engine updates listed above.
     UTILITIES:
+        censuslookup:
+            - New command-line utility for looking up triangulations in
+              Regina's census databases.
         tricensus:
             - New argument -h/--minhyp for enumerating minimal ideal
               triangulations of cusped finite-volume hyperbolic 3-manifolds.
     TEST SUITE:
-        - New tests for makeCanonical() in dimensions 2 and 3.
-        - New tests for isoSig() in dimension 2.
-        - The test suite framework now contains more systematic, automated and
-          dimension-agnostic tools for making tests on triangulations as
-          comprehensive as possible.
+        - The test suite will no longer be covered by this changelog, since
+          changes to the test suite have not been logged thoroughly for some
+          years now (i.e., releases typically have many more new tests than are
+          being listed here).  If you ever want to see what is currently
+          covered by the test suite, you can always run "make test ARGS=-V"
+          and watch the tests scroll by.
 
 Version 4.95  [ 12 November, 2013 ]
 
@@ -354,7 +549,7 @@ Version 4.95  [ 12 November, 2013 ]
               reference them).
         Class NSnapPeaTriangulation:
             - Updated the SnapPea kernel to the one shipped with SnapPy 2.0.3.
-            - New routine randomize() to randomly retriangulate.
+            - New routines randomize() / randomise() to randomly retriangulate.
         Class NSurfaceFilter:
             - The requirements for new subclasses have changed, since the old
               macro-based registry was replaced with the new template-based

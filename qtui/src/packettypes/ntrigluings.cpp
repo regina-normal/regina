@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,15 +37,19 @@
 #include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
+#include "snappea/nsnappeatriangulation.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangle.h"
-#include "triangulation/ntriangulation.h"
 
 // UI includes:
+#include "edittableview.h"
 #include "eltmovedialog.h"
 #include "ntrigluings.h"
+#include "packetchooser.h"
+#include "packetfilter.h"
 #include "patiencedialog.h"
 #include "reginamain.h"
+#include "reginaprefset.h"
 #include "reginasupport.h"
 #include "choosers/boundarycomponentchooser.h"
 #include "choosers/edgechooser.h"
@@ -60,7 +64,6 @@
 #include <QLabel>
 #include <QProgressDialog>
 #include <QRegExp>
-#include <QTableView>
 #include <QTextDocument>
 #include <QToolBar>
 #include <set>
@@ -69,21 +72,6 @@ using regina::NPacket;
 using regina::NTriangulation;
 
 namespace {
-    /**
-     * A structure for storing a single hit in a census lookup.
-     */
-    struct CensusHit {
-        QString triName;
-        QString censusFile;
-
-        CensusHit() {
-        }
-
-        CensusHit(const QString& newTriName, const QString& newCensusFile) :
-                triName(newTriName), censusFile(newCensusFile) {
-        }
-    };
-
     /**
      * Represents a destination for a single face gluing.
      */
@@ -100,172 +88,13 @@ namespace {
     QRegExp reFace("^[0-3][0-3][0-3]$");
 }
 
-GluingsModel::GluingsModel(bool readWrite) :
-        nTet(0), name(0), adjTet(0), adjPerm(0), isReadWrite_(readWrite) {
+GluingsModel::GluingsModel(regina::NTriangulation* tri, bool readWrite) :
+        tri_(tri), isReadWrite_(readWrite) {
 }
 
-void GluingsModel::refreshData(regina::NTriangulation* tri) {
+void GluingsModel::rebuild() {
     beginResetModel();
-
-    delete[] name;
-    delete[] adjTet;
-    delete[] adjPerm;
-
-    nTet = tri->getNumberOfTetrahedra();
-    if (nTet == 0) {
-        name = 0;
-        adjTet = 0;
-        adjPerm = 0;
-
-        endResetModel();
-        return;
-    }
-
-    name = new QString[nTet];
-    adjTet = new int[4 * nTet];
-    adjPerm = new regina::NPerm4[4 * nTet];
-
-    int tetNum, face;
-    regina::NTetrahedron* tet;
-    regina::NTetrahedron* adj;
-    for (tetNum = 0; tetNum < nTet; tetNum++) {
-        tet = tri->getTetrahedron(tetNum);
-        name[tetNum] = tet->getDescription().c_str();
-        for (face = 0; face < 4; face++) {
-            adj = tet->adjacentTetrahedron(face);
-            if (adj) {
-                adjTet[tetNum * 4 + face] = tri->tetrahedronIndex(adj);
-                adjPerm[tetNum * 4 + face] = tet->adjacentGluing(face);
-            } else
-                adjTet[tetNum * 4 + face] = -1;
-        }
-    }
-
     endResetModel();
-}
-
-void GluingsModel::addTet() {
-    beginInsertRows(QModelIndex(), nTet, nTet);
-
-    QString* newName = new QString[nTet + 1];
-    int* newTet = new int[4 * (nTet + 1)];
-    regina::NPerm4* newPerm = new regina::NPerm4[4 * (nTet + 1)];
-
-    std::copy(name, name + nTet, newName);
-    std::copy(adjTet, adjTet + 4 * nTet, newTet);
-    std::copy(adjPerm, adjPerm + 4 * nTet, newPerm);
-
-    for (int face = 0; face < 4; ++face)
-        newTet[4 * nTet + face] = -1;
-
-    delete[] name;
-    delete[] adjTet;
-    delete[] adjPerm;
-
-    name = newName;
-    adjTet = newTet;
-    adjPerm = newPerm;
-
-    ++nTet;
-
-    endInsertRows();
-}
-
-void GluingsModel::removeTet(int first, int last) {
-    beginResetModel();
-
-    if (first == 0 && last == nTet - 1) {
-        delete[] name;
-        delete[] adjTet;
-        delete[] adjPerm;
-
-        name = 0;
-        adjTet = 0;
-        adjPerm = 0;
-
-        nTet = 0;
-
-        endResetModel();
-        return;
-    }
-
-    // Adjust other tetrahedron numbers.
-    int nCut = last - first + 1;
-
-    QString* newName = new QString[nTet - nCut];
-    int* newTet = new int[4 * (nTet - nCut)];
-    regina::NPerm4* newPerm = new regina::NPerm4[4 * (nTet - nCut)];
-
-    int row, face, i;
-    for (row = 0; row < first; ++row) {
-        newName[row] = name[row];
-        for (face = 0; face < 4; ++face) {
-            newTet[4 * row + face] = adjTet[4 * row + face];
-            newPerm[4 * row + face] = adjPerm[4 * row + face];
-        }
-    }
-
-    for (row = first; row < nTet - nCut; ++row) {
-        newName[row] = name[row + nCut];
-        for (face = 0; face < 4; ++face) {
-            newTet[4 * row + face] = adjTet[4 * (row + nCut) + face];
-            newPerm[4 * row + face] = adjPerm[4 * (row + nCut) + face];
-        }
-    }
-
-    for (i = 0; i < 4 * (nTet - nCut); ++i)
-        if (newTet[i] >= first && newTet[i] <= last)
-            newTet[i] = -1;
-        else if (newTet[i] > last)
-            newTet[i] -= nCut;
-
-    delete[] name;
-    delete[] adjTet;
-    delete[] adjPerm;
-
-    name = newName;
-    adjTet = newTet;
-    adjPerm = newPerm;
-
-    nTet -= nCut;
-
-    // Done!
-    endResetModel();
-}
-
-void GluingsModel::commitData(regina::NTriangulation* tri) {
-    tri->removeAllTetrahedra();
-
-    if (nTet == 0)
-        return;
-
-    regina::NPacket::ChangeEventSpan span(tri);
-
-    regina::NTetrahedron** tets = new regina::NTetrahedron*[nTet];
-    int tetNum, adjTetNum;
-    int face, adjFace;
-
-    // Create the tetrahedra.
-    for (tetNum = 0; tetNum < nTet; tetNum++)
-        tets[tetNum] = tri->newTetrahedron(name[tetNum].toAscii().constData());
-
-    // Glue the tetrahedra together.
-    for (tetNum = 0; tetNum < nTet; tetNum++)
-        for (face = 0; face < 4; face++) {
-            adjTetNum = adjTet[4 * tetNum + face];
-            if (adjTetNum < tetNum) // includes adjTetNum == -1
-                continue;
-            adjFace = adjPerm[4 * tetNum + face][face];
-            if (adjTetNum == tetNum && adjFace < face)
-                continue;
-
-            // It's a forward gluing.
-            tets[tetNum]->joinTo(face, tets[adjTetNum],
-                adjPerm[4 * tetNum + face]);
-        }
-
-    // Tidy up.
-    delete[] tets;
 }
 
 QModelIndex GluingsModel::index(int row, int column,
@@ -274,7 +103,7 @@ QModelIndex GluingsModel::index(int row, int column,
 }
 
 int GluingsModel::rowCount(const QModelIndex& /* unused parent*/) const {
-    return nTet;
+    return tri_->getNumberOfSimplices();
 }
 
 int GluingsModel::columnCount(const QModelIndex& /* unused parent*/) const {
@@ -282,29 +111,32 @@ int GluingsModel::columnCount(const QModelIndex& /* unused parent*/) const {
 }
 
 QVariant GluingsModel::data(const QModelIndex& index, int role) const {
-    int tet = index.row();
+    regina::NTetrahedron* t = tri_->getSimplex(index.row());
     if (role == Qt::DisplayRole) {
         // Tetrahedron name?
         if (index.column() == 0)
-            return (name[tet].isEmpty() ? QString::number(tet) :
-                (QString::number(tet) + " (" + name[tet] + ')'));
+            return (t->getDescription().empty() ? QString::number(index.row()) :
+                (QString::number(index.row()) + " (" +
+                t->getDescription().c_str() + ')'));
 
         // Face gluing?
         int face = 4 - index.column();
         if (face >= 0)
-            return destString(face, adjTet[4 * tet + face],
-                adjPerm[4 * tet + face]);
+            return destString(face,
+                t->adjacentSimplex(face),
+                t->adjacentGluing(face));
         return QVariant();
     } else if (role == Qt::EditRole) {
         // Tetrahedron name?
         if (index.column() == 0)
-            return name[tet];
+            return t->getDescription().c_str();
 
         // Face gluing?
         int face = 4 - index.column();
         if (face >= 0)
-            return destString(face, adjTet[4 * tet + face],
-                adjPerm[4 * tet + face]);
+            return destString(face,
+                t->adjacentSimplex(face),
+                t->adjacentGluing(face));
         return QVariant();
     } else
         return QVariant();
@@ -336,14 +168,13 @@ Qt::ItemFlags GluingsModel::flags(const QModelIndex& /* unused index*/) const {
 
 bool GluingsModel::setData(const QModelIndex& index, const QVariant& value,
         int /* unused role*/) {
-    int tet = index.row();
+    regina::NTetrahedron* t = tri_->getSimplex(index.row());
     if (index.column() == 0) {
         QString newName = value.toString().trimmed();
-        if (newName == name[tet])
+        if (newName == t->getDescription().c_str())
             return false;
 
-        name[tet] = newName;
-        emit dataChanged(index, index);
+        t->setDescription(newName.toAscii().constData());
         return true;
     }
 
@@ -373,14 +204,14 @@ bool GluingsModel::setData(const QModelIndex& index, const QVariant& value,
 
         // Check explicitly for a negative tetrahedron number
         // since isFaceStringValid() takes an unsigned integer.
-        if (newAdjTet < 0 || newAdjTet >= nTet) {
+        if (newAdjTet < 0 || newAdjTet >= tri_->getNumberOfSimplices()) {
             showError(tr("There is no tetrahedron number %1.").
                 arg(newAdjTet));
             return false;
         }
 
         // Do we have a valid gluing?
-        QString err = isFaceStringValid(tet, face, newAdjTet, tetFace,
+        QString err = isFaceStringValid(index.row(), face, newAdjTet, tetFace,
             &newAdjPerm);
         if (! err.isNull()) {
             showError(err);
@@ -389,71 +220,43 @@ bool GluingsModel::setData(const QModelIndex& index, const QVariant& value,
     }
 
     // Yes, looks valid.
-    int oldAdjTet = adjTet[4 * tet + face];
-    regina::NPerm4 oldAdjPerm = adjPerm[4 * tet + face];
-    int oldAdjFace = oldAdjPerm[face];
-
     // Have we even made a change?
-    if (oldAdjTet < 0 && newAdjTet < 0)
+    if (newAdjTet < 0 && ! t->adjacentSimplex(face))
         return false;
-    if (oldAdjTet == newAdjTet && oldAdjPerm == newAdjPerm)
+    if (t->adjacentSimplex(face) &&
+            t->adjacentSimplex(face)->markedIndex() == newAdjTet &&
+            newAdjPerm == t->adjacentGluing(face))
         return false;
 
     // Yes!  Go ahead and make the change.
+    regina::NPacket::ChangeEventSpan span(tri_);
 
     // First unglue from the old partner if it exists.
-    if (oldAdjTet >= 0) {
-        adjTet[4 * oldAdjTet + oldAdjFace] = -1;
-
-        QModelIndex oldAdjIndex = this->index(oldAdjTet, 4 - oldAdjFace,
-            QModelIndex());
-        emit dataChanged(oldAdjIndex, oldAdjIndex);
-    }
+    if (t->adjacentSimplex(face))
+        t->unjoin(face);
 
     // Are we making the face boundary?
-    if (newAdjTet < 0) {
-        adjTet[4 * tet + face] = -1;
-
-        emit dataChanged(index, index);
+    if (newAdjTet < 0)
         return true;
-    }
 
     // We are gluing the face to a new partner.
     int newAdjFace = newAdjPerm[face];
 
     // Does this new partner already have its own partner?
-    if (adjTet[4 * newAdjTet + newAdjFace] >= 0) {
-        // Yes.. better unglue it.
-        int extraTet = adjTet[4 * newAdjTet + newAdjFace];
-        int extraFace = adjPerm[4 * newAdjTet + newAdjFace][newAdjFace];
-
-        adjTet[4 * extraTet + extraFace] = -1;
-
-        QModelIndex extraIndex = this->index(extraTet, 4 - extraFace,
-            QModelIndex());
-        emit dataChanged(extraIndex, extraIndex);
-    }
+    // If so, better unglue it.
+    regina::NTetrahedron* adj = tri_->getSimplex(newAdjTet);
+    if (adj->adjacentSimplex(newAdjFace))
+        adj->unjoin(newAdjFace);
 
     // Glue the two faces together.
-    adjTet[4 * tet + face] = newAdjTet;
-    adjTet[4 * newAdjTet + newAdjFace] = tet;
-
-    adjPerm[4 * tet + face] = newAdjPerm;
-    adjPerm[4 * newAdjTet + newAdjFace] = newAdjPerm.inverse();
-
-    emit dataChanged(index, index);
-
-    QModelIndex newAdjIndex = this->index(newAdjTet, 4 - newAdjFace,
-        QModelIndex());
-    emit dataChanged(newAdjIndex, newAdjIndex);
-
+    t->joinTo(face, adj, newAdjPerm);
     return true;
 }
 
 QString GluingsModel::isFaceStringValid(unsigned long srcTet, int srcFace,
         unsigned long destTet, const QString& destFace,
         regina::NPerm4* gluing) {
-    if (destTet >= nTet)
+    if (destTet >= tri_->getNumberOfSimplices())
         return tr("There is no tetrahedron number %1.").arg(destTet);
 
     if (! reFace.exactMatch(destFace))
@@ -485,12 +288,12 @@ void GluingsModel::showError(const QString& message) {
         tr("This is not a valid gluing."), message);
 }
 
-QString GluingsModel::destString(int srcFace, int destTet,
+QString GluingsModel::destString(int srcFace, regina::NTetrahedron* destTet,
         const regina::NPerm4& gluing) {
-    if (destTet < 0)
+    if (! destTet)
         return "";
     else
-        return QString::number(destTet) + " (" +
+        return QString::number(destTet->markedIndex()) + " (" +
             (gluing * regina::NTriangle::ordering[srcFace]).trunc3().c_str() +
             ')';
 }
@@ -514,11 +317,11 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         PacketTabbedUI* useParentUI, bool readWrite) :
         PacketEditorTab(useParentUI), tri(packet) {
     // Set up the table of face gluings.
-    model = new GluingsModel(readWrite);
-    faceTable = new QTableView();
+    model = new GluingsModel(packet, readWrite);
+    faceTable = new EditTableView();
     faceTable->setSelectionMode(QAbstractItemView::ContiguousSelection);
     faceTable->setModel(model);
-    
+
     if (readWrite) {
         QAbstractItemView::EditTriggers flags(
             QAbstractItemView::AllEditTriggers);
@@ -549,9 +352,6 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     //faceTable->setColumnStretchable(2, true);
     //faceTable->setColumnStretchable(3, true);
     //faceTable->setColumnStretchable(4, true);
-
-    connect(model, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
-        this, SLOT(notifyDataChanged()));
 
     ui = faceTable;
 
@@ -707,8 +507,21 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     triActionList.append(actDoubleCover);
     connect(actDoubleCover, SIGNAL(triggered()), this, SLOT(doubleCover()));
 
+    QAction* actPuncture = new QAction(this);
+    actPuncture->setText(tr("Puncture"));
+    actPuncture->setIcon(ReginaSupport::regIcon("puncture"));
+    actPuncture->setToolTip(tr(
+        "Remove a ball from the interior of the triangulation"));
+    actPuncture->setEnabled(readWrite);
+    actPuncture->setWhatsThis(tr("Removes a ball from the interior of "
+        "this triangulation.  "
+        "This triangulation will be modified directly."));
+    enableWhenWritable.append(actPuncture);
+    triActionList.append(actPuncture);
+    connect(actPuncture, SIGNAL(triggered()), this, SLOT(puncture()));
+
     QAction* actDrillEdge = new QAction(this);
-    actDrillEdge->setText(tr("Drill ed&ge..."));
+    actDrillEdge->setText(tr("Drill Ed&ge..."));
     actDrillEdge->setIcon(ReginaSupport::regIcon("drilledge"));
     actDrillEdge->setToolTip(tr(
         "Drill out a regular neighbourhood of an edge"));
@@ -719,6 +532,20 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     enableWhenWritable.append(actDrillEdge);
     triActionList.append(actDrillEdge);
     connect(actDrillEdge, SIGNAL(triggered()), this, SLOT(drillEdge()));
+
+    QAction* actConnectedSumWith = new QAction(this);
+    actConnectedSumWith->setText(tr("Connected Sum With..."));
+    actConnectedSumWith->setIcon(ReginaSupport::regIcon("connectedsumwith"));
+    actConnectedSumWith->setToolTip(tr(
+        "Make this into a connected sum with another triangulation"));
+    actConnectedSumWith->setEnabled(readWrite);
+    actConnectedSumWith->setWhatsThis(tr("Forms the connected sum "
+        "of this triangulation with some other triangulation.  "
+        "This triangulation will be modified directly."));
+    enableWhenWritable.append(actConnectedSumWith);
+    triActionList.append(actConnectedSumWith);
+    connect(actConnectedSumWith, SIGNAL(triggered()), this,
+        SLOT(connectedSumWith()));
 
     sep = new QAction(this);
     sep->setSeparator(true);
@@ -806,18 +633,18 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     sep->setSeparator(true);
     triActionList.append(sep);
 
-    QAction* actCensusLookup = new QAction(this);
-    actCensusLookup->setText(tr("Census &Lookup"));
-    actCensusLookup->setIcon(ReginaSupport::themeIcon("edit-find"));
-    actCensusLookup->setToolTip(tr(
-        "Search for this triangulation in the configured list of censuses"));
-    actCensusLookup->setWhatsThis(tr("Attempt to locate this "
-        "triangulation within the prepackaged censuses of 3-manifold "
-        "triangulations that are shipped with Regina.<p>"
-        "The list of censuses that are searched can be customised through "
-        "Regina's settings."));
-    triActionList.append(actCensusLookup);
-    connect(actCensusLookup, SIGNAL(triggered()), this, SLOT(censusLookup()));
+    QAction* actToSnapPea = new QAction(this);
+    actToSnapPea->setText(tr("Convert to SnapPea"));
+    actToSnapPea->setIcon(ReginaSupport::regIcon("packet_snappea"));
+    actToSnapPea->setToolTip(tr("Convert this to a SnapPea triangulation"));
+    actToSnapPea->setWhatsThis(tr("<qt>Convert this to a SnapPea "
+        "triangulation.  The original Regina triangulation will be "
+        "kept and left untouched.<p>"
+        "Using a SnapPea triangulation will give you richer access to the "
+        "SnapPea kernel.  For peripheral curves, Regina will attempt "
+        "to install the (shortest, second shortest) basis on each cusp.</qt>"));
+    triActionList.append(actToSnapPea);
+    connect(actToSnapPea, SIGNAL(triggered()), this, SLOT(toSnapPea()));
 
     // Tidy up.
 
@@ -850,16 +677,13 @@ QWidget* NTriGluingsUI::getInterface() {
     return ui;
 }
 
-void NTriGluingsUI::commit() {
-    model->commitData(tri);
+void NTriGluingsUI::refresh() {
+    model->rebuild();
     updateActionStates();
-    setDirty(false);
 }
 
-void NTriGluingsUI::refresh() {
-    model->refreshData(tri);
-    updateActionStates();
-    setDirty(false);
+void NTriGluingsUI::endEdit() {
+    faceTable->endEdit();
 }
 
 void NTriGluingsUI::setReadWrite(bool readWrite) {
@@ -882,11 +706,14 @@ void NTriGluingsUI::setReadWrite(bool readWrite) {
 }
 
 void NTriGluingsUI::addTet() {
-    model->addTet();
-    setDirty(true);
+    endEdit();
+
+    tri->newTetrahedron();
 }
 
 void NTriGluingsUI::removeSelectedTets() {
+    endEdit();
+
     // Gather together all the tetrahedra to be deleted.
     QModelIndexList sel = faceTable->selectionModel()->selectedIndexes();
     if (sel.empty()) {
@@ -926,13 +753,17 @@ void NTriGluingsUI::removeSelectedTets() {
         return;
 
     // Off we go!
-    model->removeTet(first, last);
-    setDirty(true);
+    if (first == 0 && last == tri->getNumberOfTetrahedra() - 1)
+        tri->removeAllSimplices();
+    else {
+        regina::NPacket::ChangeEventSpan span(tri);
+        for (int i = last; i >= first; --i)
+            tri->removeSimplexAt(i);
+    }
 }
 
 void NTriGluingsUI::simplify() {
-    if (! enclosingPane->commitToModify())
-        return;
+    endEdit();
 
     if (! tri->intelligentSimplify())
         ReginaSupport::info(ui,
@@ -942,6 +773,8 @@ void NTriGluingsUI::simplify() {
 }
 
 void NTriGluingsUI::orient() {
+    endEdit();
+
     if (tri->isOriented()) {
         ReginaSupport::info(ui, tr("This triangulation is already oriented."));
         return;
@@ -966,15 +799,13 @@ void NTriGluingsUI::orient() {
 }
 
 void NTriGluingsUI::barycentricSubdivide() {
-    if (! enclosingPane->commitToModify())
-        return;
+    endEdit();
 
     tri->barycentricSubdivision();
 }
 
 void NTriGluingsUI::idealToFinite() {
-    if (! enclosingPane->commitToModify())
-        return;
+    endEdit();
 
     if (tri->isValid() && ! tri->isIdeal())
         ReginaSupport::info(ui,
@@ -985,8 +816,7 @@ void NTriGluingsUI::idealToFinite() {
 }
 
 void NTriGluingsUI::finiteToIdeal() {
-    if (! enclosingPane->commitToModify())
-        return;
+    endEdit();
 
     if (! tri->hasBoundaryTriangles())
         ReginaSupport::info(ui,
@@ -998,24 +828,29 @@ void NTriGluingsUI::finiteToIdeal() {
 }
 
 void NTriGluingsUI::elementaryMove() {
-    if (! enclosingPane->commitToModify())
-        return;
+    endEdit();
 
     (new EltMoveDialog(ui, tri))->show();
 }
 
 void NTriGluingsUI::doubleCover() {
-    if (! enclosingPane->commitToModify())
-        return;
+    endEdit();
 
     tri->makeDoubleCover();
 }
 
+void NTriGluingsUI::puncture() {
+    endEdit();
+
+    if (tri->isEmpty())
+        ReginaSupport::info(ui,
+            tr("I cannot puncture an empty triangulation."));
+    else
+        tri->puncture();
+}
+
 void NTriGluingsUI::drillEdge() {
-    // We assume the part hasn't become read-only, even though the
-    // packet might have changed its editable property.
-    if (! enclosingPane->tryCommit())
-        return;
+    endEdit();
 
     if (tri->getEdges().empty())
         ReginaSupport::sorry(ui,
@@ -1037,11 +872,32 @@ void NTriGluingsUI::drillEdge() {
     }
 }
 
-void NTriGluingsUI::boundaryComponents() {
-    // We assume the part hasn't become read-only, even though the
-    // packet might have changed its editable property.
-    if (! enclosingPane->tryCommit())
+void NTriGluingsUI::connectedSumWith() {
+    endEdit();
+
+    if (tri->isEmpty() || ! tri->isConnected()) {
+        ReginaSupport::info(ui,
+            tr("I can only make connected sums with "
+                "non-empty, connected triangulations."));
         return;
+    }
+
+    regina::NTriangulation* other = static_cast<regina::NTriangulation*>(
+        PacketDialog::choose(ui,
+            tri->getTreeMatriarch(),
+            new SubclassFilter<regina::NTriangulation>(),
+            tr("Connected Sum"),
+            tr("Sum this with which other triangulation?"),
+            tr("Regina will form a connected sum of this triangulation "
+                "with whatever triangulation you choose here.  "
+                "The current triangulation will be modified directly.")));
+
+    if (other)
+        tri->connectedSumWith(*other);
+}
+
+void NTriGluingsUI::boundaryComponents() {
+    endEdit();
 
     if (tri->getBoundaryComponents().empty())
         ReginaSupport::sorry(ui,
@@ -1066,10 +922,7 @@ void NTriGluingsUI::boundaryComponents() {
 }
 
 void NTriGluingsUI::vertexLinks() {
-    // We assume the part hasn't become read-only, even though the
-    // packet might have changed its editable property.
-    if (! enclosingPane->tryCommit())
-        return;
+    endEdit();
 
     if (tri->getVertices().empty())
         ReginaSupport::sorry(ui,
@@ -1093,16 +946,13 @@ void NTriGluingsUI::vertexLinks() {
             ans->setPacketLabel(tr("Link of vertex %1").arg(
                 tri->vertexIndex(chosen)).toAscii().constData());
             tri->insertChildLast(ans);
-            enclosingPane->getMainWindow()->ensureVisibleInTree(ans);
+            enclosingPane->getMainWindow()->packetView(ans, true, true);
         }
     }
 }
 
 void NTriGluingsUI::splitIntoComponents() {
-    // We assume the part hasn't become read-only, even though the
-    // packet might have changed its editable property.
-    if (! enclosingPane->tryCommit())
-        return;
+    endEdit();
 
     if (tri->getNumberOfComponents() == 0)
         ReginaSupport::info(ui,
@@ -1140,10 +990,7 @@ void NTriGluingsUI::splitIntoComponents() {
 }
 
 void NTriGluingsUI::connectedSumDecomposition() {
-    // We assume the part hasn't become read-only, even though the
-    // packet might have changed its editable property.
-    if (! enclosingPane->tryCommit())
-        return;
+    endEdit();
 
     if (tri->getNumberOfTetrahedra() == 0)
         ReginaSupport::info(ui,
@@ -1249,8 +1096,7 @@ void NTriGluingsUI::connectedSumDecomposition() {
 }
 
 void NTriGluingsUI::makeZeroEfficient() {
-    if (! enclosingPane->commitToModify())
-        return;
+    endEdit();
 
     unsigned long initTets = tri->getNumberOfTetrahedra();
     if (initTets == 0) {
@@ -1360,139 +1206,43 @@ void NTriGluingsUI::makeZeroEfficient() {
     }
 }
 
-void NTriGluingsUI::censusLookup() {
-    // We assume the part hasn't become read-only, even though the
-    // packet might have changed its editable property.
-    if (! enclosingPane->tryCommit())
+void NTriGluingsUI::toSnapPea() {
+    endEdit();
+
+    if (tri->getNumberOfTetrahedra() == 0 || tri->hasBoundaryTriangles() ||
+            (! tri->isValid()) || (! tri->isStandard()) ||
+            (! tri->isConnected())) {
+        ReginaSupport::sorry(ui,
+            tr("I could not create a SnapPea triangulation."),
+            tr("SnapPea can only work with triangulations that are "
+                "(i) valid, non-empty and connected; "
+                "(ii) have no boundary triangles; and "
+                "(iii) where every ideal vertex has a torus or "
+                "Klein bottle link."));
         return;
-
-    // Copy the list of census files for processing.
-    // This is cheap (Qt uses copy-on-write).
-    QList<ReginaFilePref> censusFiles = ReginaPrefSet::global().censusFiles;
-
-    // Run through each census file.
-    QProgressDialog *progress = new QProgressDialog(ui);
-    progress->setWindowTitle(tr("Census Lookup"));
-    progress->setLabelText(tr("Initialising"));
-    
-    progress->setMinimum(0);
-    progress->setMaximum(censusFiles.size() + 1);
-    progress->show();
-    
-    QCoreApplication::instance()->processEvents();
-
-    QVector<CensusHit> results;
-    QString searched = tr("The following censuses were searched:\n");
-    NPacket* census;
-    NPacket* p;
-    bool hasActiveFiles = false;
-    bool adjustedSettings = false;
-    foreach (const ReginaFilePref& f, censusFiles) {
-        progress->setValue(progress->value()+1);
-        QCoreApplication::instance()->processEvents();
-
-        // Check for cancellation.
-        if (progress->wasCanceled()) {
-            delete progress;
-            ReginaSupport::info(ui, tr("The census lookup was cancelled."));
-            return;
-        }
-
-        if (! (f.isActive()))
-            continue;
-
-        hasActiveFiles = true;
-
-        // Process this census file.
-        progress->setLabelText(tr("Searching: %1").
-            arg(Qt::escape(f.shortDisplayName())));
-        QCoreApplication::instance()->processEvents();
-
-        census = regina::readFileMagic(
-            static_cast<const char*>(f.encodeFilename()));
-        if (! census) {
-            // Disable the file automatically: it didn't work this time,
-            // it won't work next time.
-            // Since we're using a copy of the original list, we must
-            // hunt for the file in the original list.  This is okay;
-            // the lists are small and this case should rarely happen anyway.
-            for (QList<ReginaFilePref>::iterator tmpit =
-                    ReginaPrefSet::global().censusFiles.begin();
-                    tmpit != ReginaPrefSet::global().censusFiles.end();
-                    ++tmpit)
-                if (f == *tmpit) {
-                    tmpit->deactivate();
-                    adjustedSettings = true;
-                    break;
-                }
-            ReginaSupport::warn(ui,
-                tr("<qt>I could not read the census data file <i>%1</i>.</qt>")
-                .arg(Qt::escape(f.longDisplayName())),
-                tr("I have disabled this file in Regina's census settings.  "
-                "You can re-enable it once the problem is fixed."));
-            continue;
-        }
-
-        // Search for the triangulation!
-        for (p = census; p; p = p->nextTreePacket())
-            if (p->getPacketType() == NTriangulation::packetType)
-                if (tri->isIsomorphicTo(
-                        *dynamic_cast<NTriangulation*>(p)).get())
-                    results.push_back(CensusHit(p->getPacketLabel().c_str(),
-                        f.shortDisplayName()));
-        delete census;
-        searched = searched + '\n' + f.shortDisplayName();
     }
 
-    progress->setValue(progress->value()+1);
-    delete progress;
-    QCoreApplication::instance()->processEvents();
-
-    if (adjustedSettings) {
-        ReginaPrefSet::save();
-        ReginaPrefSet::propagate();
+    regina::NSnapPeaTriangulation* ans = new regina::NSnapPeaTriangulation(*tri,
+        true /* allow closed, since we have already check this */);
+    if (ans->isNull()) {
+        ReginaSupport::sorry(ui,
+            tr("I could not create a SnapPea triangulation."),
+            tr("The SnapPea kernel would not accept the "
+                "triangulation, and I'm not sure why.  "
+                "Please report this to the Regina developers."));
+        return;
     }
 
-    // Were there any hits?
-    if (! hasActiveFiles) {
-        ReginaSupport::info(ui,
-            tr("I have no census files to search through."),
-            tr("This is probably because you deactivated Regina's "
-                "standard censuses at some time in the past.  "
-                "You can reactivate them through Regina's census settings."));
-    } else if (results.empty()) {
-        ReginaSupport::info(ui,
-            tr("The triangulation was not located in any census files."),
-            tr("You can add more censuses to this search through "
-            "Regina's census settings."),
-            searched);
-    } else {
-        QString detailsText = tr("Identified by census lookup:");
-        QString detailsHTML = tr("<qt>");
-        QString censusName;
-        for (QVector<CensusHit>::const_iterator it = results.begin();
-                it != results.end(); it++) {
-            censusName = QFileInfo((*it).censusFile).fileName();
-            if (it != results.begin())
-                detailsHTML += "<p>";
-            detailsHTML += tr("Name: %1<br>Census: %2").
-                arg(Qt::escape((*it).triName)).arg(Qt::escape(censusName));
-            detailsText += tr("\n\nName: %1\nCensus: %2").
-                arg((*it).triName).arg(censusName);
-        }
-        detailsHTML += "</qt>";
+    ReginaSupport::info(ui,
+        tr("I have created a new SnapPea triangulation."),
+        tr("<qt>The new SnapPea triangulation appears beneath this "
+            "Regina triangulation in the packet tree.<p>"
+            "For peripheral curves, I have attempted to install the "
+            "(shortest, second shortest) basis on each cusp.</qt>"));
 
-        // Show the hits to the user.
-        ReginaSupport::info(ui,
-            tr("The triangulation was identified:"),
-            detailsHTML, searched);
-
-        // Store the hits as a text packet also.
-        regina::NText* text =
-            new regina::NText(detailsText.toAscii().constData());
-        text->setPacketLabel("ID: " + tri->getHumanLabel());
-        tri->insertChildLast(text);
-    }
+    ans->setPacketLabel(tri->getPacketLabel());
+    tri->insertChildLast(ans);
+    enclosingPane->getMainWindow()->packetView(ans, true, true);
 }
 
 void NTriGluingsUI::updateRemoveState() {
@@ -1512,9 +1262,5 @@ void NTriGluingsUI::updateActionStates() {
         actOrient->setEnabled(! tri->isOriented());
 
     actBoundaryComponents->setEnabled(! tri->getBoundaryComponents().empty());
-}
-
-void NTriGluingsUI::notifyDataChanged() {
-    setDirty(true);
 }
 

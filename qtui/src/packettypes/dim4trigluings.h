@@ -45,23 +45,21 @@
 
 #include <QAbstractItemModel>
 
-class QTableView;
+class EditTableView;
 class QToolBar;
 
 namespace regina {
     class NPacket;
+    class Dim4Pentachoron;
     class Dim4Triangulation;
 };
 
 class Dim4GluingsModel : public QAbstractItemModel {
     protected:
         /**
-         * Details of the working (non-committed) triangulation
+         * Details of the triangulation
          */
-        int nPent;
-        QString* name;
-        int* adjPent;
-        regina::NPerm5* adjPerm;
+        regina::Dim4Triangulation* tri_;
 
         /**
          * Internal status
@@ -70,10 +68,9 @@ class Dim4GluingsModel : public QAbstractItemModel {
 
     public:
         /**
-         * Constructor and destructor.
+         * Constructor.
          */
-        Dim4GluingsModel(bool readWrite);
-        ~Dim4GluingsModel();
+        Dim4GluingsModel(regina::Dim4Triangulation* tri, bool readWrite);
 
         /**
          * Read-write state.
@@ -82,10 +79,9 @@ class Dim4GluingsModel : public QAbstractItemModel {
         void setReadWrite(bool readWrite);
 
         /**
-         * Loading and saving local data from/to the packet.
+         * Force a complete refresh.
          */
-        void refreshData(regina::Dim4Triangulation* tri);
-        void commitData(regina::Dim4Triangulation* tri);
+        void rebuild();
 
         /**
          * Overrides for describing and editing data in the model.
@@ -100,12 +96,6 @@ class Dim4GluingsModel : public QAbstractItemModel {
             int role) const;
         Qt::ItemFlags flags(const QModelIndex& index) const;
         bool setData(const QModelIndex& index, const QVariant& value, int role);
-
-        /**
-         * Gluing edit actions.
-         */
-        void addPent();
-        void removePent(int first, int last);
 
     private:
         /**
@@ -125,7 +115,8 @@ class Dim4GluingsModel : public QAbstractItemModel {
          * facet gluing.  This routine handles both boundary and
          * non-boundary facets.
          */
-        static QString destString(int srcFacet, int destPent,
+        static QString destString(int srcFacet,
+            regina::Dim4Pentachoron* destPent,
             const regina::NPerm5& gluing);
 
         /**
@@ -159,7 +150,7 @@ class Dim4TriGluingsUI : public QObject, public PacketEditorTab {
          * Internal components
          */
         QWidget* ui;
-        QTableView* facetTable;
+        EditTableView* facetTable;
         Dim4GluingsModel* model;
 
         /**
@@ -194,8 +185,8 @@ class Dim4TriGluingsUI : public QObject, public PacketEditorTab {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         const QLinkedList<QAction*>& getPacketTypeActions();
-        void commit();
         void refresh();
+        void endEdit();
         void setReadWrite(bool readWrite);
 
     public slots:
@@ -214,18 +205,7 @@ class Dim4TriGluingsUI : public QObject, public PacketEditorTab {
          * Update the states of internal components.
          */
         void updateRemoveState();
-
-        /**
-         * Notify us of the fact that an edit has been made.
-         */
-        void notifyDataChanged();
 };
-
-inline Dim4GluingsModel::~Dim4GluingsModel() {
-    delete[] name;
-    delete[] adjPent;
-    delete[] adjPerm;
-}
 
 inline bool Dim4GluingsModel::isReadWrite() const {
     return isReadWrite_;

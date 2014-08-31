@@ -359,7 +359,7 @@
     If you downloaded a drag-and-drop app bundle, this utility is
     shipped inside it.  If you dragged &regina; to the main
     <guilabel>Applications</guilabel> folder, you can run it as
-    <literal>/Applications/Regina.app/Contents/MacOS/regconcat</literal>.
+    <literal>/Applications/Regina.app/Contents/MacOS/regina-python</literal>.
    </para>
   </refsect1>
 

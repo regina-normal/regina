@@ -207,6 +207,15 @@ class REGINA_API Dim4Tetrahedron :
         ~Dim4Tetrahedron();
 
         /**
+         * Returns the index of this tetrahedron in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->tetrahedronIndex(this)</tt>.
+         *
+         * @return the index of this tetrahedron.
+         */
+        unsigned long index() const;
+
+        /**
          * Returns the number of descriptors available through getEmbedding().
          * Note that this number will never be greater than two.
          *
@@ -440,6 +449,10 @@ inline Dim4Tetrahedron::Dim4Tetrahedron(Dim4Component* component) :
 }
 
 inline Dim4Tetrahedron::~Dim4Tetrahedron() {
+}
+
+inline unsigned long Dim4Tetrahedron::index() const {
+    return markedIndex();
 }
 
 inline unsigned Dim4Tetrahedron::getNumberOfEmbeddings() const {

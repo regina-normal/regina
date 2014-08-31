@@ -1,3 +1,11 @@
+# Give the test suite a way to locate the data files shipped with
+# Regina's calculation engine.
+SET_PROPERTY ( DIRECTORY
+  PROPERTY COMPILE_DEFINITIONS
+    TESTSUITE_DATA_HOME_SOURCE=\"${PROJECT_SOURCE_DIR}/engine\"
+    TESTSUITE_DATA_HOME_BINARY=\"${PROJECT_BINARY_DIR}/engine\"
+)
+
 SET ( SOURCES
   exhaustive
   runalltests
@@ -5,6 +13,7 @@ SET ( SOURCES
   )
 # Each of these subdirectories modifies the SOURCES variable,
 # adding more source files
+ADD_SUBDIRECTORY("algebra")
 ADD_SUBDIRECTORY("angle")
 ADD_SUBDIRECTORY("census")
 ADD_SUBDIRECTORY("dim2")

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -59,6 +59,7 @@
 #include "dim2/dim2triangulation.h"
 #include "dim4/dim4triangulation.h"
 #include "hypersurface/nnormalhypersurfacelist.h"
+#include "snappea/nsnappeatriangulation.h"
 
 namespace regina {
 
@@ -89,6 +90,8 @@ inline typename FunctionObject::ReturnType forPacket(
             return func(PacketInfo<PACKET_DIM4TRIANGULATION>());
         case PACKET_NORMALHYPERSURFACELIST :
             return func(PacketInfo<PACKET_NORMALHYPERSURFACELIST>());
+        case PACKET_SNAPPEATRIANGULATION :
+            return func(PacketInfo<PACKET_SNAPPEATRIANGULATION>());
         default: return defaultReturn;
     }
 }
@@ -118,6 +121,8 @@ inline void forPacket(PacketType packetType, VoidFunctionObject func) {
             func(PacketInfo<PACKET_DIM4TRIANGULATION>()); break;
         case PACKET_NORMALHYPERSURFACELIST :
             func(PacketInfo<PACKET_NORMALHYPERSURFACELIST>()); break;
+        case PACKET_SNAPPEATRIANGULATION :
+            func(PacketInfo<PACKET_SNAPPEATRIANGULATION>()); break;
         default: break;
     }
 }

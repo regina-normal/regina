@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -415,6 +415,18 @@ void ReginaMain::setupActions() {
     treeGeneralEditActions.append(actAngleStructure);
     treeMenu->addAction(actAngleStructure);
 
+    QAction* actSnapPeaTriangulation = new QAction(this);
+    actSnapPeaTriangulation->setText(tr("New SnapP&ea Triangulation"));
+    actSnapPeaTriangulation->setIcon(IconCache::icon(IconCache::packet_snappea));
+    actSnapPeaTriangulation->setShortcut(tr("Alt+e"));
+    actSnapPeaTriangulation->setToolTip(tr("New SnapPea triangulation"));
+    actSnapPeaTriangulation->setWhatsThis(
+        tr("Create a new SnapPea triangulation."));
+    connect(actSnapPeaTriangulation, SIGNAL(triggered()), this,
+        SLOT(newSnapPeaTriangulation()) );
+    treeGeneralEditActions.append(actSnapPeaTriangulation);
+    treeMenu->addAction(actSnapPeaTriangulation);
+
     QAction* actFilter = new QAction(this);
     actFilter->setText(tr("New &Filter"));
     actFilter->setIcon(IconCache::icon(IconCache::packet_filter));
@@ -459,18 +471,6 @@ void ReginaMain::setupActions() {
     connect(actPDF, SIGNAL(triggered()), this, SLOT(newPDF()) );
     treeGeneralEditActions.append(actPDF);
     treeMenu->addAction(actPDF);
-
-    treeMenu->addSeparator();
-
-    act = new QAction(this);
-    act->setText(tr("Form &Census"));
-    act->setIcon(ReginaSupport::themeIcon("view-list-text"));
-    act->setToolTip(tr("Form a new census of triangulations"));
-    act->setWhatsThis(tr("Create a new census of 3-manifold "
-        "triangulations according to some set of census constraints."));
-    connect(act, SIGNAL(triggered()), this, SLOT(newCensus()) );
-    treeGeneralEditActions.append(act);
-    treeMenu->addAction(act);
 
     treeMenu->addSeparator();
 
@@ -781,6 +781,7 @@ void ReginaMain::setupActions() {
     toolBarPacket->addAction(actDim4Triangulation);
     toolBarPacket->addAction(actSurfaces);
     toolBarPacket->addAction(actAngleStructure);
+    toolBarPacket->addAction(actSnapPeaTriangulation);
     toolBarPacket->addAction(actFilter);
     toolBarPacket->addAction(actText);
     toolBarPacket->addAction(actScript);

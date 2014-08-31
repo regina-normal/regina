@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -215,7 +215,7 @@ NTriangulation* NExampleTriangulation::lens8_3() {
 
 NTriangulation* NExampleTriangulation::poincareHomologySphere() {
     NTriangulation* ans = new NTriangulation();
-    ans->setPacketLabel("Poincare homology sphere");
+    ans->setPacketLabel("Poincar\u00E9 homology sphere");
 
     ans->insertConstruction(5, poincareAdj, poincareGluings);
 

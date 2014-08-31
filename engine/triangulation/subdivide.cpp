@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -49,7 +49,7 @@ void NTriangulation::barycentricSubdivision() {
     // drillEdge() code must be rewritten as well (since it relies on
     // the specific labelling scheme that we use here).
 
-    unsigned long nOldTet = tetrahedra.size();
+    unsigned long nOldTet = tetrahedra_.size();
     if (nOldTet == 0)
         return;
 
@@ -160,7 +160,7 @@ void NTriangulation::drillEdge(NEdge* e) {
             // Remove all tetrahedra that touch each endpoint of the
             // resulting edge in the second barycentric subdivision.
             for (k = 0; k < 2; ++k) {
-                finalVertex = tetrahedra[finalTet]->getEdge(edgeNum)->
+                finalVertex = tetrahedra_[finalTet]->getEdge(edgeNum)->
                     getVertex(k);
                 for (it = finalVertex->getEmbeddings().begin();
                         it != finalVertex->getEmbeddings().end(); ++it)
@@ -185,7 +185,7 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
             return false;
 
     int i,j,k,l;
-    long numOldTet = tetrahedra.size();
+    long numOldTet = tetrahedra_.size();
     if (! numOldTet)
         return false;
 
@@ -287,8 +287,8 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
     // First we make a list of the tetrahedra.
     std::vector<NTetrahedron*> tetList;
     std::vector<NVertexEmbedding>::const_iterator vembit;
-    for (VertexIterator vIter = vertices.begin();
-            vIter != vertices.end(); vIter++)
+    for (VertexIterator vIter = vertices_.begin();
+            vIter != vertices_.end(); vIter++)
         if ((*vIter)->isIdeal() || ! (*vIter)->isStandard())
             for (vembit = (*vIter)->getEmbeddings().begin();
                     vembit != (*vIter)->getEmbeddings().end(); vembit++)
@@ -320,7 +320,7 @@ bool NTriangulation::finiteToIdeal() {
 
     TriangleIterator fit;
     unsigned i;
-    for (i = 0, fit = triangles.begin(); fit != triangles.end(); ++i, ++fit) {
+    for (i = 0, fit = triangles_.begin(); fit != triangles_.end(); ++i, ++fit) {
         if (! (*fit)->isBoundary()) {
             bdry[i] = newTet[i] = 0;
             continue;
@@ -334,8 +334,8 @@ bool NTriangulation::finiteToIdeal() {
     // the tetrahedron labels are compatible with previous versions of
     // regina (<= 4.6).
     BoundaryComponentIterator bit;
-    for (bit = boundaryComponents.begin();
-            bit != boundaryComponents.end(); bit++)
+    for (bit = boundaryComponents_.begin();
+            bit != boundaryComponents_.end(); bit++)
         for (i = 0; i < (*bit)->getNumberOfTriangles(); ++i)
             newTet[(*bit)->getTriangle(i)->markedIndex()] =
                 staging.newTetrahedron();
@@ -344,8 +344,8 @@ bool NTriangulation::finiteToIdeal() {
     NEdge* edge;
     unsigned long tetTriangle1, tetTriangle2;
     NPerm4 t1Perm, t2Perm;
-    for (bit = boundaryComponents.begin();
-            bit != boundaryComponents.end(); bit++)
+    for (bit = boundaryComponents_.begin();
+            bit != boundaryComponents_.end(); bit++)
         for (i = 0; i < (*bit)->getNumberOfEdges(); i++) {
             edge = (*bit)->getEdge(i);
 
@@ -390,10 +390,10 @@ bool NTriangulation::finiteToIdeal() {
 void NTriangulation::puncture(NTetrahedron* tet) {
     if (! tet) {
         // Preconditions disallow empty triangulations, but anyway:
-        if (tetrahedra.empty())
+        if (tetrahedra_.empty())
             return;
 
-        tet = tetrahedra.front();
+        tet = tetrahedra_.front();
     }
 
     ChangeEventSpan span(this);
@@ -435,26 +435,29 @@ void NTriangulation::puncture(NTetrahedron* tet) {
 
 void NTriangulation::connectedSumWith(const NTriangulation& other) {
     // Precondition check.
-    if (tetrahedra.empty() || ! isConnected())
+    if (tetrahedra_.empty() || ! isConnected())
         return;
 
     ChangeEventSpan span(this);
 
-    NTetrahedron* bdry[2][2];
-    unsigned long n;
+    NTetrahedron* toPuncture[2];
 
-    puncture();
-
-    n = tetrahedra.size();
-    bdry[0][0] = tetrahedra[n - 2];
-    bdry[0][1] = tetrahedra[n - 1];
-
+    // Insert the other triangulation *before* puncturing, so that
+    // things work in the case where we sum a triangulation with itself.
+    unsigned long n = tetrahedra_.size();
     insertTriangulation(other);
-    puncture(tetrahedra[n]);
+    toPuncture[0] = tetrahedra_[0];
+    toPuncture[1] = tetrahedra_[n];
 
-    n = tetrahedra.size();
-    bdry[1][0] = tetrahedra[n - 2];
-    bdry[1][1] = tetrahedra[n - 1];
+    NTetrahedron* bdry[2][2];
+
+    puncture(toPuncture[0]);
+    bdry[0][0] = tetrahedra_[tetrahedra_.size() - 2];
+    bdry[0][1] = tetrahedra_[tetrahedra_.size() - 1];
+
+    puncture(toPuncture[1]);
+    bdry[1][0] = tetrahedra_[tetrahedra_.size() - 2];
+    bdry[1][1] = tetrahedra_[tetrahedra_.size() - 1];
 
     bdry[0][0]->joinTo(0, bdry[1][0], NPerm4(2, 3));
     bdry[0][1]->joinTo(0, bdry[1][1], NPerm4(2, 3));

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -240,13 +240,11 @@ ReginaPrefSet::ReginaPrefSet() :
         pythonAutoIndent(true),
         pythonSpacesPerTab(4),
         pythonWordWrap(false),
-        snapPeaClosed(false),
         surfacesCompatThreshold(100),
         surfacesCreationCoords(regina::NS_STANDARD),
         surfacesCreationList(regina::NS_LIST_DEFAULT),
         surfacesInitialCompat(LocalCompat),
         surfacesSupportOriented(false),
-        surfacesSupportSpunBdry(false),
         treeJumpSize(10),
         tabDim2Tri(0),
         tabDim2TriSkeleton(0),
@@ -255,6 +253,8 @@ ReginaPrefSet::ReginaPrefSet() :
         tabDim3TriSkeleton(0),
         tabDim4Tri(0),
         tabDim4TriAlgebra(0),
+        tabSnapPeaTri(0),
+        tabSnapPeaTriAlgebra(0),
         tabSurfaceList(0),
         triGAPExec(defaultGAPExec),
         triGraphvizExec(defaultGraphvizExec),
@@ -452,24 +452,6 @@ void ReginaPrefSet::readInternal() {
     displayTagsInTree = settings.value("DisplayTagsInTree", false).toBool();
     settings.endGroup();
 
-    settings.beginGroup("Census");
-    censusFiles.clear();
-    // System census files:
-    QString exDir = QFile::decodeName(regina::NGlobalDirs::examples().c_str());
-    censusFiles.push_back(ReginaFilePref(exDir + "/closed-or-census.rga",
-        tr("Closed orientable census"), "ClosedOr", settings));
-    censusFiles.push_back(ReginaFilePref(exDir + "/closed-nor-census.rga",
-        tr("Closed non-orientable census"), "ClosedNor", settings));
-    censusFiles.push_back(ReginaFilePref(exDir + "/knot-link-census.rga",
-        tr("Hyperbolic knot/link census"), "KnotLink", settings));
-    censusFiles.push_back(ReginaFilePref(exDir + "/snappea-census.rga",
-        tr("Cusped hyperbolic census"), "CuspedHyp", settings));
-    censusFiles.push_back(ReginaFilePref(exDir + "/closed-hyp-census.rga",
-        tr("Closed hyperbolic census"), "ClosedHyp", settings));
-    // Additional user census files:
-    ReginaFilePref::readUserKey(censusFiles, settings);
-    settings.endGroup();
-
     settings.beginGroup("File");
     fileRecentMax = settings.value("RecentMax", 10).toInt();
     fileImportExportCodec = settings.value("ImportExportCodec",
@@ -487,7 +469,6 @@ void ReginaPrefSet::readInternal() {
     settings.endGroup();
 
     settings.beginGroup("SnapPea");
-    snapPeaClosed = settings.value("AllowClosed", false).toBool();
 #ifndef EXCLUDE_SNAPPEA
     regina::NSnapPeaTriangulation::enableKernelMessages(
         settings.value("KernelMessages", false).toBool());
@@ -509,7 +490,6 @@ void ReginaPrefSet::readInternal() {
         surfacesInitialCompat = ReginaPrefSet::LocalCompat; /* default */
 
     surfacesSupportOriented = settings.value("SupportOriented", false).toBool();
-    surfacesSupportSpunBdry = settings.value("SupportSpunBdry", false).toBool();
     settings.endGroup();
 
     settings.beginGroup("Tree");
@@ -524,6 +504,8 @@ void ReginaPrefSet::readInternal() {
     tabDim3TriSkeleton = settings.value("Dim3TriSkeleton", 0).toUInt();
     tabDim4Tri = settings.value("Dim4Tri", 0).toUInt();
     tabDim4TriAlgebra = settings.value("Dim4TriAlgebra", 0).toUInt();
+    tabSnapPeaTri = settings.value("SnapPeaTri", 0).toUInt();
+    tabSnapPeaTriAlgebra = settings.value("SnapPeaTriAlgebra", 0).toUInt();
     tabSurfaceList = settings.value("SurfaceList", 0).toUInt();
     settings.endGroup();
 
@@ -543,7 +525,7 @@ void ReginaPrefSet::readInternal() {
     readPythonLibraries();
 
     settings.beginGroup("Window");
-    windowMainSize = settings.value("MainSize", QSize()).toSize();
+    windowMainSize = settings.value("MainSizeV3", QSize()).toSize();
     windowPythonSize = settings.value("PythonSize", QSize()).toSize();
     settings.endGroup();
 
@@ -575,10 +557,6 @@ void ReginaPrefSet::saveInternal() const {
     settings.setValue("DisplayTagsInTree", displayTagsInTree);
     settings.endGroup();
 
-    settings.beginGroup("Census");
-    ReginaFilePref::writeKeys(censusFiles, settings);
-    settings.endGroup();
-
     settings.beginGroup("File");
     settings.setValue("RecentMax", fileRecentMax);
     settings.setValue("ImportExportCodec", fileImportExportCodec);
@@ -595,7 +573,6 @@ void ReginaPrefSet::saveInternal() const {
     settings.endGroup();
 
     settings.beginGroup("SnapPea");
-    settings.setValue("AllowClosed", snapPeaClosed);
 #ifndef EXCLUDE_SNAPPEA
     settings.setValue("KernelMessages",
         regina::NSnapPeaTriangulation::kernelMessagesEnabled());
@@ -617,7 +594,6 @@ void ReginaPrefSet::saveInternal() const {
     }
 
     settings.setValue("SupportOriented", surfacesSupportOriented);
-    settings.setValue("SupportSpunBdry", surfacesSupportSpunBdry);
     settings.endGroup();
 
     settings.beginGroup("Tabs");
@@ -628,6 +604,8 @@ void ReginaPrefSet::saveInternal() const {
     settings.setValue("Dim3TriSkeleton", tabDim3TriSkeleton);
     settings.setValue("Dim4Tri", tabDim4Tri);
     settings.setValue("Dim4TriAlgebra", tabDim4TriAlgebra);
+    settings.setValue("SnapPeaTri", tabSnapPeaTri);
+    settings.setValue("SnapPeaTriAlgebra", tabSnapPeaTriAlgebra);
     settings.setValue("SurfaceList", tabSurfaceList);
     settings.endGroup();
 
@@ -649,7 +627,7 @@ void ReginaPrefSet::saveInternal() const {
     savePythonLibraries();
 
     settings.beginGroup("Window");
-    settings.setValue("MainSize", windowMainSize);
+    settings.setValue("MainSizeV3", windowMainSize);
     settings.setValue("PythonSize", windowPythonSize);
     settings.endGroup();
 

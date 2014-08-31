@@ -1,5 +1,6 @@
 SET ( FILES
   boundarycomponentchooser
+  cuspchooser
   edgechooser
   edgeintchooser
   tetrahedronchooser
@@ -9,6 +10,7 @@ SET ( FILES
 
 SET ( MOC_FILES
   boundarycomponentchooser.h
+  cuspchooser.h
   edgechooser.h
   edgeintchooser.h
   tetrahedronchooser.h

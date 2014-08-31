@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,6 +40,7 @@
 #include <cppunit/TestResult.h>
 #include <cppunit/TextTestProgressListener.h>
 #include "testsuite/testparams.h"
+#include "testsuite/algebra/testalgebra.h"
 #include "testsuite/angle/testangle.h"
 #include "testsuite/census/testcensus.h"
 #include "testsuite/dim2/testdim2.h"
@@ -139,6 +140,9 @@ bool runAllTests() {
     addNumberTheory(runner);
     addMatrixOps(runner);
     addPermConv(runner);
+
+    // Algebra:
+    addNGroupPresentation(runner);
 
     // Dim2Triangulation:
     addDim2Triangulation(runner);

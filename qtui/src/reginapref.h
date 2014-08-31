@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -54,10 +54,8 @@ class QLineEdit;
 class QListWidget;
 class QPushButton;
 class ReginaMain;
-class ReginaPrefCensus;
 class ReginaPrefGeneral;
 class ReginaPrefPython;
-class ReginaPrefSnapPea;
 class ReginaPrefSurfaces;
 class ReginaPrefTools;
 class ReginaPrefTri;
@@ -74,9 +72,7 @@ class ReginaPreferences : public QDialog {
 
         ReginaPrefGeneral* generalPrefs;
         ReginaPrefSurfaces* surfacePrefs;
-        ReginaPrefCensus* censusPrefs;
         ReginaPrefPython* pythonPrefs;
-        ReginaPrefSnapPea* snapPeaPrefs;
         ReginaPrefTools* toolsPrefs;
 
         // Needed for clicked() slot
@@ -108,7 +104,6 @@ class ReginaPrefGeneral : public QWidget {
         // QCheckBox* cbDisplayTagsInTree;
         QCheckBox* cbWarnOnNonEmbedded;
         QCheckBox* cbSupportOriented;
-        QCheckBox* cbSupportSpunBdry;
         QCheckBox* cbGraphvizLabels;
         QLineEdit* editTreeJumpSize;
         QCheckBox* cbTipOfDay;
@@ -120,36 +115,7 @@ class ReginaPrefGeneral : public QWidget {
 
     private slots:
         void orientedChecked(int);
-        void spunBdryChecked(int);
 
-    friend class ReginaPreferences;
-};
-
-/**
- * The page of the Regina configuration dialog for census preferences.
- */
-class ReginaPrefCensus : public QWidget {
-    Q_OBJECT
-
-    private:
-        QLabel* activeCount;
-        QListWidget* listFiles;
-        QPushButton* btnRemove;
-        QPushButton* btnActivate;
-        QPushButton* btnDeactivate;
-
-    public:
-        ReginaPrefCensus(QWidget* parent = 0);
-        void updateActiveCount();
-
-    public slots:
-        void updateButtons();
-        void add();
-        void remove();
-        void activate();
-        void deactivate();
-
-    public:
     friend class ReginaPreferences;
 };
 
@@ -186,23 +152,6 @@ class ReginaPrefPython : public QWidget {
 };
 
 /**
- * The page of the Regina configuration dialog that controls interaction
- * with the SnapPea kernel.
- */
-class ReginaPrefSnapPea : public QWidget {
-    Q_OBJECT
-
-    private:
-        QCheckBox* cbClosed;
-        QCheckBox* cbMessages;
-
-    public:
-        ReginaPrefSnapPea(QWidget* parent = 0);
-
-    friend class ReginaPreferences;
-};
-
-/**
  * The page of the Regina configuration dialog for configuring
  * third-party tools.
  */
@@ -210,6 +159,7 @@ class ReginaPrefTools: public QWidget {
     Q_OBJECT
 
     private:
+        QCheckBox* cbSnapPeaMessages;
         QCheckBox* cbDefaultPDFViewer;
         QLineEdit* editPDFViewer;
         QLabel* labelPDFViewer;
