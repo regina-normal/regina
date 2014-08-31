@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -92,6 +92,23 @@ void ReginaSupport::warn(QWidget* parent, const QString& text,
     if (! detailedText.isNull())
         msg.setDetailedText(detailedText);
     msg.exec();
+}
+
+bool ReginaSupport::warnYesNo(QWidget* parent, const QString& text,
+        const QString& informativeText, const QString& detailedText) {
+    // Make sure that the window title is ignorable, since it does not
+    // appear on MacOSX.
+    // The tr() call needs a QObject subclass as context; here we use
+    // ReginaMain.
+    QMessageBox msg(QMessageBox::Information,
+        ReginaMain::tr("Warning"), text,
+        QMessageBox::Yes | QMessageBox::Cancel, parent);
+    if (! informativeText.isNull())
+        msg.setInformativeText(informativeText);
+    if (! detailedText.isNull())
+        msg.setDetailedText(detailedText);
+    msg.setDefaultButton(QMessageBox::Cancel);
+    return (msg.exec() == QMessageBox::Yes);
 }
 
 void ReginaSupport::success(QWidget* parent, const QString& text,

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -76,6 +76,7 @@ class EltMoveDialog : public QDialog, public regina::NPacketListener {
 
         EdgeChooser* box32;
         TriangleChooser* box23;
+        TetrahedronChooser* box14;
         EdgeIntChooser* box44;
         EdgeChooser* box20e;
         VertexChooser* box20v;
@@ -86,6 +87,7 @@ class EltMoveDialog : public QDialog, public regina::NPacketListener {
         EdgeChooser* boxCollapseEdge;
         QRadioButton* use32;
         QRadioButton* use23;
+        QRadioButton* use14;
         QRadioButton* use44;
         QRadioButton* use20e;
         QRadioButton* use20v;

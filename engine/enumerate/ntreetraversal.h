@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2011-2013, Ben Burton                                   *
+ *  Copyright (c) 2011-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -68,10 +68,9 @@ class NTriangulation;
  *
  * For normal surfaces, the full algorithms are described respectively in
  * "A tree traversal algorithm for decision problems in knot theory and
- * 3-manifold topology", Burton and Ozlen, Algorithmica (to appear),
- * DOI 10.1007/s00453-012-9645-3, and "A fast branching algorithm for unknot
- * recognition with experimental polynomial-time behaviour", Burton and Ozlen,
- * arXiv:1211.1079.
+ * 3-manifold topology", Burton and Ozlen, Algorithmica 65:4 (2013),
+ * pp. 772-801, and "A fast branching algorithm for unknot recognition with
+ * experimental polynomial-time behaviour", Burton and Ozlen, arXiv:1211.1079.
  *
  * This base class provides the infrastructure for the search tree, and the
  * subclasses handle the mechanics of the moving through the tree according
@@ -507,7 +506,7 @@ class REGINA_API NTreeTraversal : public BanConstraint {
          * or \c false if we should optimise the tableaux for an existence test
          * (such as searching for a non-trivial normal disc or sphere).
          */
-        NTreeTraversal(NTriangulation* tri, NormalCoords coords,
+        NTreeTraversal(const NTriangulation* tri, NormalCoords coords,
                 int branchesPerQuad, int branchesPerTri, bool enumeration);
 
         /**
@@ -610,7 +609,7 @@ class REGINA_API NTreeTraversal : public BanConstraint {
  *
  * This class essentially implements the algorithm from "A tree traversal
  * algorithm for decision problems in knot theory and 3-manifold topology",
- * Burton and Ozlen, Algorithmica (to appear), DOI 10.1007/s00453-012-9645-3.
+ * Burton and Ozlen, Algorithmica 65:4 (2013), pp. 772-801.
  *
  * To enumerate all vertex surfaces for a given 3-manifold
  * triangulation, simply construct a NTreeEnumeration object and call run().
@@ -747,7 +746,7 @@ class REGINA_API NTreeEnumeration :
          * vertex surfaces.  This must be one of NS_QUAD, NS_STANDARD,
          * NS_AN_QUAD_OCT, or NS_AN_STANDARD.
          */
-        NTreeEnumeration(NTriangulation* tri, NormalCoords coords);
+        NTreeEnumeration(const NTriangulation* tri, NormalCoords coords);
 
         /**
          * Returns the total number of vertex normal or almost normal surfaces
@@ -920,7 +919,7 @@ class REGINA_API NTreeEnumeration :
  * This class follows a similar structure to the enumeration of vertex
  * normal surfaces, as described in "A tree traversal algorithm for decision
  * problems in knot theory and 3-manifold topology", Burton and Ozlen,
- * Algorithmica (to appear), DOI 10.1007/s00453-012-9645-3.
+ * Algorithmica 65:4 (2013), pp. 772-801.
  *
  * To enumerate all taut angle structures on a given 3-manifold
  * triangulation, simply construct an NTautEnumeration object and call run().
@@ -1009,7 +1008,7 @@ class REGINA_API NTautEnumeration :
          * @param tri the triangulation in which we wish to enumerate
          * taut angle structures.
          */
-        NTautEnumeration(NTriangulation* tri);
+        NTautEnumeration(const NTriangulation* tri);
 
         /**
          * Returns the total number of taut angle structures
@@ -1212,8 +1211,8 @@ class REGINA_API NTautEnumeration :
  * unknot recognition with experimental polynomial-time behaviour",
  * Burton and Ozlen, arXiv:1211.1079, and uses significant material from
  * "A tree traversal algorithm for decision problems in knot theory and
- * 3-manifold topology", Burton and Ozlen, Algorithmica (to appear),
- * DOI 10.1007/s00453-012-9645-3.
+ * 3-manifold topology", Burton and Ozlen, Algorithmica 65:4 (2013),
+ * pp. 772-801.
  *
  * To use this class, i.e., to locate a non-trivial normal or almost normal
  * surface under the given constraints or to prove that no such surface exists,
@@ -1332,7 +1331,7 @@ class REGINA_API NTreeSingleSoln :
          * which to work.  This must be one of NS_QUAD, NS_STANDARD,
          * NS_AN_QUAD_OCT, or NS_AN_STANDARD.
          */
-        NTreeSingleSoln(NTriangulation* tri, NormalCoords coords);
+        NTreeSingleSoln(const NTriangulation* tri, NormalCoords coords);
 
         /**
          * Runs the tree traversal algorithm until it finds some non-trivial
@@ -1423,7 +1422,7 @@ inline int NTreeTraversal<LPConstraint, BanConstraint, Integer>::
 
 template <class LPConstraint, typename BanConstraint, typename Integer>
 inline NTreeEnumeration<LPConstraint, BanConstraint, Integer>::NTreeEnumeration(
-        NTriangulation* tri, NormalCoords coords) :
+        const NTriangulation* tri, NormalCoords coords) :
         NTreeTraversal<LPConstraint, BanConstraint, Integer>(tri, coords,
             (coords == NS_AN_QUAD_OCT || coords == NS_AN_STANDARD ?
              7 : 4) /* branches per quad */,
@@ -1468,7 +1467,7 @@ inline bool NTreeEnumeration<LPConstraint, BanConstraint, Integer>::
 
 template <class LPConstraint, typename BanConstraint, typename Integer>
 inline NTautEnumeration<LPConstraint, BanConstraint, Integer>::NTautEnumeration(
-        NTriangulation* tri) :
+        const NTriangulation* tri) :
         NTreeTraversal<LPConstraint, BanConstraint, Integer>(tri, NS_ANGLE,
             3 /* branches per quad */,
             0 /* branches per triangle; irrelevant here */,
@@ -1501,7 +1500,7 @@ inline bool NTautEnumeration<LPConstraint, BanConstraint, Integer>::writeTypes(
 
 template <class LPConstraint, typename BanConstraint, typename Integer>
 inline NTreeSingleSoln<LPConstraint, BanConstraint, Integer>::NTreeSingleSoln(
-        NTriangulation* tri, NormalCoords coords) :
+        const NTriangulation* tri, NormalCoords coords) :
         NTreeTraversal<LPConstraint, BanConstraint, Integer>(tri, coords,
             (coords == NS_AN_QUAD_OCT || coords == NS_AN_STANDARD ?
              6 : 3) /* branches per quad */,

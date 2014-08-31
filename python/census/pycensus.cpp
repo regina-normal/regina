@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,15 +34,17 @@
 
 void addNCensus();
 void addNFacePairing();
+void addNGluingPermSearcher();
+void addDim2Census();
 void addDim2EdgePairing();
-void addDim4Census();
 void addDim4FacetPairing();
 
 void addCensus() {
     addNCensus();
     addNFacePairing();
+    addNGluingPermSearcher();
+    addDim2Census();
     addDim2EdgePairing();
-    addDim4Census();
     addDim4FacetPairing();
 }
 

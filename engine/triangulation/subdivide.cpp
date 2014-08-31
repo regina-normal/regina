@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -440,21 +440,24 @@ void NTriangulation::connectedSumWith(const NTriangulation& other) {
 
     ChangeEventSpan span(this);
 
-    NTetrahedron* bdry[2][2];
-    unsigned long n;
+    NTetrahedron* toPuncture[2];
 
-    puncture();
-
-    n = tetrahedra_.size();
-    bdry[0][0] = tetrahedra_[n - 2];
-    bdry[0][1] = tetrahedra_[n - 1];
-
+    // Insert the other triangulation *before* puncturing, so that
+    // things work in the case where we sum a triangulation with itself.
+    unsigned long n = tetrahedra_.size();
     insertTriangulation(other);
-    puncture(tetrahedra_[n]);
+    toPuncture[0] = tetrahedra_[0];
+    toPuncture[1] = tetrahedra_[n];
 
-    n = tetrahedra_.size();
-    bdry[1][0] = tetrahedra_[n - 2];
-    bdry[1][1] = tetrahedra_[n - 1];
+    NTetrahedron* bdry[2][2];
+
+    puncture(toPuncture[0]);
+    bdry[0][0] = tetrahedra_[tetrahedra_.size() - 2];
+    bdry[0][1] = tetrahedra_[tetrahedra_.size() - 1];
+
+    puncture(toPuncture[1]);
+    bdry[1][0] = tetrahedra_[tetrahedra_.size() - 2];
+    bdry[1][1] = tetrahedra_[tetrahedra_.size() - 1];
 
     bdry[0][0]->joinTo(0, bdry[1][0], NPerm4(2, 3));
     bdry[0][1]->joinTo(0, bdry[1][1], NPerm4(2, 3));

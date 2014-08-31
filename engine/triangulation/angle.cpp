@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,10 +39,26 @@
 
 namespace regina {
 
-NAngleStructure* NTriangulation::hasStrictAngleStructure() {
-    // Knock off the empty triangulation first.
+bool NTriangulation::knowsStrictAngleStructure() const {
+    // There are some simple cases for which we can deduce the answer
+    // automatically.
     if (tetrahedra_.empty())
-        return 0;
+        return (strictAngleStructure_ = 0);
+
+    if (! hasBoundaryTriangles()) {
+        // It is easy to prove that, if an angle structure exists,
+        // then we must have #edges = #tetrahedra.
+        if (edges_.size() != tetrahedra_.size())
+            return (strictAngleStructure_ = 0);
+    }
+
+    return strictAngleStructure_.known();
+}
+
+const NAngleStructure* NTriangulation::findStrictAngleStructure() const {
+    // The following test also catches any easy cases.
+    if (knowsStrictAngleStructure())
+        return strictAngleStructure_.value();
 
     LPInitialTableaux<LPConstraintNone> eqns(this, NS_ANGLE, false);
 
@@ -59,13 +75,13 @@ NAngleStructure* NTriangulation::hasStrictAngleStructure() {
 
     // Test for a solution!
     if (! lp.isFeasible())
-        return 0;
+        return (strictAngleStructure_ = 0);
 
     // We have a strict angle structure: reconstruct it.
     unsigned long len = 3 * tetrahedra_.size() + 1;
     NAngleStructureVector* v = new NAngleStructureVector(len);
     lp.extractSolution(*v, 0 /* type vector */);
-    return new NAngleStructure(this, v);
+    return (strictAngleStructure_ = new NAngleStructure(this, v));
 }
 
 } // namespace regina

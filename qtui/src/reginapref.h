@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -54,7 +54,6 @@ class QLineEdit;
 class QListWidget;
 class QPushButton;
 class ReginaMain;
-class ReginaPrefCensus;
 class ReginaPrefGeneral;
 class ReginaPrefPython;
 class ReginaPrefSurfaces;
@@ -73,7 +72,6 @@ class ReginaPreferences : public QDialog {
 
         ReginaPrefGeneral* generalPrefs;
         ReginaPrefSurfaces* surfacePrefs;
-        ReginaPrefCensus* censusPrefs;
         ReginaPrefPython* pythonPrefs;
         ReginaPrefTools* toolsPrefs;
 
@@ -118,34 +116,6 @@ class ReginaPrefGeneral : public QWidget {
     private slots:
         void orientedChecked(int);
 
-    friend class ReginaPreferences;
-};
-
-/**
- * The page of the Regina configuration dialog for census preferences.
- */
-class ReginaPrefCensus : public QWidget {
-    Q_OBJECT
-
-    private:
-        QLabel* activeCount;
-        QListWidget* listFiles;
-        QPushButton* btnRemove;
-        QPushButton* btnActivate;
-        QPushButton* btnDeactivate;
-
-    public:
-        ReginaPrefCensus(QWidget* parent = 0);
-        void updateActiveCount();
-
-    public slots:
-        void updateButtons();
-        void add();
-        void remove();
-        void activate();
-        void deactivate();
-
-    public:
     friend class ReginaPreferences;
 };
 

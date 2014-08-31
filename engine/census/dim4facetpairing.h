@@ -67,8 +67,6 @@ namespace regina {
  * Note that if this pairing is used to construct an actual 4-manifold
  * triangulation, the individual gluing permutations will still need to
  * be specified; they are not a part of this structure.
- *
- * \testpart
  */
 class REGINA_API Dim4FacetPairing : public NGenericFacetPairing<4> {
     public:

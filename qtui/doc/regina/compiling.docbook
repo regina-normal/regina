@@ -37,13 +37,6 @@
     <filename>/usr/include/regina-normal/</filename>.
    </para></listitem>
    <listitem><para>
-    If you built a &fink; package on &macosx;,
-    you will need to install the separate package
-    <literal>regina-normal&regversion;-dev</literal>.
-    Check that the headers are present in
-    <filename>/sw/include/regina-normal/</filename>.
-   </para></listitem>
-   <listitem><para>
     If you built &regina; yourself, you should already have the &cpp; headers
     and development libraries installed.
     Check that the headers are present in
@@ -109,6 +102,16 @@
       such as Boost.Regex or Boost.Python).
      </para></listitem>
     </varlistentry>
+    <varlistentry>
+     <term>Tokyo Cabinet library
+      (<firstterm>libtokyocabinet</firstterm>)</term>
+     <listitem><para>
+      Look for a package named
+      <literal>libtokyocabinet-dev</literal>,
+      <literal>libtokyocabinet-devel</literal> or
+      <literal>tokyocabinet-devel</literal>.
+     </para></listitem>
+    </varlistentry>
    </variablelist>
   </para>
  </sect1>
@@ -137,7 +140,7 @@
   </para>
 <screen>
     <prompt>example$</prompt> <userinput>regina-engine-config --libs</userinput>
-    -L/usr/lib -lregina-engine /usr/lib/libxml2.so /usr/lib/libgmp.so /usr/lib/libz.so -lpthread
+    -L/usr/lib -lregina-engine /usr/lib/libxml2.so /usr/lib/libgmp.so /usr/lib/libgmpxx.so /usr/lib/libz.so -lpthread
     <prompt>example$</prompt>
 </screen>
   <para>
@@ -145,7 +148,7 @@
    link a final executable in one simple step:
   </para>
 <screen>
-    <prompt>example$</prompt> <userinput>g++ `regina-engine-config --cflags --libs` mycode.cc</userinput>
+    <prompt>example$</prompt> <userinput>g++ mycode.cc `regina-engine-config --cflags --libs`</userinput>
     <prompt>example$</prompt>
 </screen>
   <para>

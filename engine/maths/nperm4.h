@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -84,8 +84,6 @@ namespace regina {
  * is because the first-generation routines incur additional overhead
  * in converting back and forth between the second-generation codes
  * (which are used internally by NPerm4).
- *
- * \testfull
  */
 class REGINA_API NPerm4 {
     public:

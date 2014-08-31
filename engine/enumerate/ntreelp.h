@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2011-2013, Ben Burton                                   *
+ *  Copyright (c) 2011-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -69,7 +69,7 @@ class NTriangulation;
  * This class is used in the tree traversal algorithms for enumerating
  * and locating vertex normal surfaces, as described in "A tree traversal
  * algorithm for decision problems in knot theory and 3-manifold topology",
- * Burton and Ozlen, Algorithmica (to appear), DOI 10.1007/s00453-012-9645-3,
+ * Burton and Ozlen, Algorithmica 65:4 (2013), pp. 772-801,
  * and "A fast branching algorithm for unknot recognition with
  * experimental polynomial-time behaviour", Burton and Ozlen, arXiv:1211.1079.
  * It is also used for locating a single strict angle structure, and for
@@ -361,7 +361,7 @@ class LPMatrix {
  * This class forms part of the tree traversal algorithms for enumerating
  * and locating normal surfaces, as described in "A tree traversal algorithm
  * for decision problems in knot theory and 3-manifold topology",
- * Burton and Ozlen, Algorithmica (to appear), DOI 10.1007/s00453-012-9645-3,
+ * Burton and Ozlen, Algorithmica 65:4 (2013), pp. 772-801,
  * and "A fast branching algorithm for unknot recognition with
  * experimental polynomial-time behaviour", Burton and Ozlen, arXiv:1211.1079.
  * It is also used for locating a single strict angle structure, and for
@@ -467,7 +467,7 @@ class LPInitialTableaux {
         };
 
     private:
-        NTriangulation* tri_;
+        const NTriangulation* tri_;
             /**< The underlying triangulation. */
         NormalCoords coords_;
             /**< The coordinate system used for the matrix of matching
@@ -530,7 +530,7 @@ class LPInitialTableaux {
          * (such as searching for a non-trivial normal disc or sphere, or
          * a strict angle structure).
          */
-        LPInitialTableaux(NTriangulation* tri,
+        LPInitialTableaux(const NTriangulation* tri,
             NormalCoords coords, bool enumeration);
 
         /**
@@ -544,7 +544,7 @@ class LPInitialTableaux {
          *
          * @return the underlying triangulation.
          */
-        inline NTriangulation* tri() const;
+        inline const NTriangulation* tri() const;
 
         /**
          * Returns the coordinate system that is used for the matrix of
@@ -781,7 +781,7 @@ class LPInitialTableaux {
  * This class forms part of the tree traversal algorithms for enumerating
  * and locating normal surfaces, as described in "A tree traversal algorithm
  * for decision problems in knot theory and 3-manifold topology",
- * Burton and Ozlen, Algorithmica (to appear), DOI 10.1007/s00453-012-9645-3,
+ * Burton and Ozlen, Algorithmica 65:4 (2013), pp. 772-801,
  * and "A fast branching algorithm for unknot recognition with
  * experimental polynomial-time behaviour", Burton and Ozlen, arXiv:1211.1079.
  * It is also used for locating a single strict angle structure, and for
@@ -1492,7 +1492,7 @@ inline LPInitialTableaux<LPConstraint>::~LPInitialTableaux() {
 }
 
 template <class LPConstraint>
-inline NTriangulation* LPInitialTableaux<LPConstraint>::tri() const {
+inline const NTriangulation* LPInitialTableaux<LPConstraint>::tri() const {
     return tri_;
 }
 

@@ -11,6 +11,109 @@
 
  <!-- File Concatenator -->
 
+ <refentry id="man-censuslookup">
+  <refmeta>
+   <refentrytitle>censuslookup</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>censuslookup</refname>
+   <refpurpose>Search for triangulations in &regina;'s census databases</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>censuslookup</command>
+    <arg rep="repeat" choice="req"><replaceable>isosig</replaceable></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   <para>
+    This utility searches for the given 3-manifold triangulations in the various
+    census databases that are shipped with&regina;.
+   </para>
+   <para>
+    You should present the trianguations using their <firstterm>isomorphism
+    signatures</firstterm>.  These are short text strings that identify
+    the triangulation uniquely up to combinatorial isomorphism
+    (i.e., up to relabellings of the tetrahedra and/or their vertices).
+   </para>
+   <para>
+    From the graphical user interface, you can view the isomorphism signature
+    of a triangulation by switching to the <guilabel>Composition</guilabel>
+    tab in the triangulation viewer.  From &python; you can fetch the
+    isomorphism signature of the triangulation <userinput>x</userinput>
+    by calling <userinput>x.isoSig()</userinput>.
+    For a full and precise specification of isomorphism signatures, see
+    <emphasis>Simplification paths in the Pachner graphs of closed
+    orientable 3-manifold triangulations</emphasis>, Burton, 2011,
+    arXiv:1110.6080.
+   </para>
+   <para>
+    All database matches (if any) will be written to standard output.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Example</title>
+
+<screen>
+    <prompt>example$</prompt> <userinput>censuslookup fvPQcdecedekrsnrs dLQbcccajqs cPcbbbiht</userinput>
+    fvPQcdecedekrsnrs: 1 hit
+        SFS [S2: (2,1) (3,1) (5,-4)] : #1 -- Closed census (orientable)
+
+    dLQbcccajqs: 0 hits
+
+    cPcbbbiht: 2 hits
+        m004 : #1 -- Cusped hyperbolic census (orientable)
+        L104001 -- Hyperbolic knot and link complements
+
+    <prompt>example$</prompt>
+</screen>
+  </refsect1>
+
+  <refsect1>
+   <title>&macosx; Users</title>
+   <para>
+    If you downloaded a drag-and-drop app bundle, this utility is
+    shipped inside it.  If you dragged &regina; to the main
+    <guilabel>Applications</guilabel> folder, you can run it as
+    <literal>/Applications/Regina.app/Contents/MacOS/censuslookup</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>&windows; Users</title>
+   <para>
+    The command-line utilities are installed beneath the
+    <filename>Program&nbsp;Files</filename> directory; on some
+    machines this directory is called
+    <filename>Program&nbsp;Files&nbsp;(x86)</filename>.
+    You can start this utility by running
+    <literal>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\censuslookup.exe</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-regina-gui">regina-gui</link>.
+    <link linkend="man-trisetcmp">trisetcmp</link>,
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    This utility was written by Benjamin Burton <email>bab@debian.org</email>.
+    &manpageack;
+   </para>
+  </refsect1>
+ </refentry>
+
  <refentry id="man-regconcat">
   <refmeta>
    <refentrytitle>regconcat</refentrytitle>
@@ -490,6 +593,7 @@
   <refsect1>
    <title>See Also</title>
    <para>
+    <link linkend="man-censuslookup">censuslookup</link>,
     <link linkend="man-tricensus">tricensus</link>,
     <link linkend="man-tricensus-mpi">tricensus-mpi</link>,
     <link linkend="man-regina-gui">regina-gui</link>.
@@ -540,6 +644,7 @@
      <arg><option>-m, --minimal</option></arg>
      <arg><option>-M, --minprime</option></arg>
      <arg><option>-N, --minprimep2</option></arg>
+     <arg><option>-h, --minhyp</option></arg>
     </group>
     <group>
      <arg><option>-s, --sigs</option></arg>
@@ -782,6 +887,35 @@
      </listitem>
     </varlistentry>
     <varlistentry>
+     <term><option>-h, --minhyp</option></term>
+     <listitem>
+      <para>
+       Do not include triangulations that are obviously not
+       minimal ideal triangulations of cusped finite-volume hyperbolic
+       3-manifolds.
+      </para>
+      <para>
+       This can significantly speed up the census and vastly
+       reduce the final number of triangulations produced.
+      </para>
+      <para>
+       As above, this option uses a series of fast tests that are not
+       always conclusive.
+       If &regina; cannot quickly tell whether a triangulation is a
+       minimal ideal triangulation of a cusped finite-volume hyperbolic
+       3-manifold,
+       it will place the triangulation in the census regardless.
+      </para>
+      <para>
+       This option is designed for use with ideal triangulations only
+       (so, for instance, combining it with
+       <option>--finite</option> or <option>--boundary</option>
+       will produce an error message).
+       This option also cannot be used with <option>--dim2</option>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
      <term><option>-s, --sigs</option></term>
      <listitem>
       <para>
@@ -1018,6 +1152,7 @@
   <refsect1>
    <title>See Also</title>
    <para>
+    <link linkend="man-censuslookup">censuslookup</link>,
     <link linkend="man-sigcensus">sigcensus</link>,
     <link linkend="man-tricensus-mpi">tricensus-mpi</link>,
     <link linkend="man-regina-gui">regina-gui</link>.
@@ -1064,6 +1199,7 @@
      <arg><option>-m, --minimal</option></arg>
      <arg><option>-M, --minprime</option></arg>
      <arg><option>-N, --minprimep2</option></arg>
+     <arg><option>-h, --minhyp</option></arg>
     </group>
     <arg><option>-s, --sigs</option></arg>
     <arg choice="req"><replaceable>pairs-file</replaceable></arg>
@@ -1379,6 +1515,7 @@
   <refsect1>
    <title>See Also</title>
    <para>
+    <link linkend="man-censuslookup">censuslookup</link>,
     <link linkend="man-regconcat">regconcat</link>,
     <link linkend="man-sigcensus">sigcensus</link>,
     <link linkend="man-tricensus">tricensus</link>,
@@ -1480,6 +1617,7 @@
   <refsect1>
    <title>See Also</title>
    <para>
+    <link linkend="man-censuslookup">censuslookup</link>,
     <link linkend="man-tricensus-mpi">tricensus-mpi</link>,
     <link linkend="man-regina-gui">regina-gui</link>.
    </para>
@@ -1622,6 +1760,7 @@
   <refsect1>
    <title>See Also</title>
    <para>
+    <link linkend="man-censuslookup">censuslookup</link>,
     <link linkend="man-regina-gui">regina-gui</link>.
    </para>
   </refsect1>

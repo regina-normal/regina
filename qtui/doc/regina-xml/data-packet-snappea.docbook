@@ -1,0 +1,85 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-packet-snappea">
+ <refmeta>
+  <refentrytitle>packet (&snappea; triangulation)</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>packet (&snappea; triangulation)</refname>
+  <refpurpose>A &snappea; triangulation packet</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+packet ::= (&xml-snappea;,
+            &xml-tag;*, &xml-packet;*)</synopsis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      See the general &xml-packet; element documentation.
+     </entry></row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   A <emphasis>&snappea; triangulation</emphasis>
+   packet stores a 3-manifold triangulation using &snappea;'s text-based
+   file format (instead of &regina;'s own native format).
+   This is useful when working with a triangulation that originated
+   from &snappea; or &snappy;, since it will preserve all of &snappea;'s own
+   internal data (e.g., peripheral curves and fillings).
+  </para>
+  <para>
+   This packet contains a single &xml-snappea; element, which contains the
+   full contents of a &snappea; data file (using &snappea;'s
+   text-based file format).
+  </para>
+  <para>
+   The roles played by the child &xml-tag; and &xml-packet; elements are
+   described in the general &xml-packet; element documentation.
+  </para>
+
+  <refsect2>
+   <title>Parents</title>
+   <para>
+    The following elements contain <sgmltag>packet</sgmltag>:
+    <simplelist type="inline">
+     <member>&xml-packet;</member>
+     <member>&xml-reginadata;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    The following elements occur in <sgmltag>packet</sgmltag> for
+    a &snappea; triangulation packet:
+    <simplelist type="inline">
+     <member>&xml-packet;</member>
+     <member>&xml-snappea;</member>
+     <member>&xml-tag;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+ </refsect1>
+</refentry>

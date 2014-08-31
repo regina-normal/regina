@@ -6,23 +6,31 @@ Regina - A Normal Surface Theory Calculator
     For a full list of changes, including all changes to the C++/Python API,
     see the file CHANGES.txt.
 
-Version 4.96  [ (under development) ]
+Version 4.96  [ 29 August, 2014 ]
 
     Features:
-        - Connected sum decomposition is now available for non-orientable
-          manifolds (arXiv:1212.1441).
-        - Elementary 1-4 moves on triangulations are now available.
-        - You can now puncture 3-manifolds and build connected sums.
-        - Several more conveniences for Python and C++ users.
-        - Many structural changes under the hood, to prepare Regina for
-          the coming 4-manifolds release.
-    Behaviour changes:
-        - Boundary slopes for spun-normal surfaces must now be explicitly
-          enabled in preferences, since they rely on SnapPea's default choice
-          of peripheral curves (which might not be what the user expects).
-    Command-line utilities:
-        - tricensus now has options to work with cusped hyperbolic manifolds.
-
+        - Regina can now certify hyperbolicity rigorously and quickly, using
+          angle structures and linear programming.  See the Recognition tab
+          in the triangulation viewer.
+        - SnapPea triangulations are now a separate type of packet.  They
+          use both Regina's and SnapPea's internal data structures, so all of
+          SnapPea's internal information (e.g., fillings and peripheral curves)
+          will be preserved when you import from SnapPea/SnapPy.  SnapPea's
+          filling routines are also made available directly through Regina.
+        - Census lookup is now automatic (see the Recognition tab), extremely
+          fast, and draws on a much larger database of 296,862 triangulations.
+        - You can now puncture manifolds, build connected sums, make 1-4 moves,
+          and decompose non-orientable manifolds into prime pieces.
+        - The API has many more conveniences for Python and C++ users, plus
+          some structural changes under the hood in preparation for the
+          coming 4-manifolds release.
+    Other optimisations:
+        - Simplification and recognition of fundamental groups is now much
+          stronger, thanks to Nielsen moves and new recognition heuristics.
+        - Enumeration of taut angle structures is now much faster, thanks to
+          new tree traversal / linear programming machinery.
+        - The commit / refresh buttons are gone from the user interface
+          (all changes now take effect immediately).
 
 Version 4.95  [ 12 November, 2013 ]
 

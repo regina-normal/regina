@@ -23,6 +23,9 @@
 /* Define if langinfo.h and nl_langinfo() are available. */
 #define LANGINFO_FOUND
 
+/* Define if we are replacing Tokyo Cabinet with the older QDBM. */
+/* #undef QDBM_AS_TOKYOCABINET */
+
 /* Define if we are excluding Normaliz from the build. */
 /* #undef EXCLUDE_NORMALIZ */
 
@@ -39,6 +42,9 @@
 /* Define to the directory on the system in which Regina's python module is
    installed.  can always be changed at runtime vi NGlobalDirs::setDirs(). */
 #define REGINA_PYLIBDIR "/usr/local/lib/regina/python"
+
+/* Define to the filename extension that we use for census databases. */
+#define REGINA_DB_EXT "tdb"
 
 /* Define to the address where bug reports for this package should be sent. */
 #define PACKAGE_BUGREPORT "regina-user@lists.sourceforge.net"

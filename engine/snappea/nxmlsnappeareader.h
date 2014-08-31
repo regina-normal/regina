@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,7 +32,7 @@
 
 /* end stub */
 
-/*! \file packet/nxmlsnappeareader.h
+/*! \file snappea/nxmlsnappeareader.h
  *  \brief Deals with parsing XML data for SnapPea triangulations.
  */
 

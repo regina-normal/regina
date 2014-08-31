@@ -45,7 +45,7 @@ print surfaces.detail()
 # Print the Euler characteristic and orientability of each surface.
 for i in range(surfaces.getNumberOfSurfaces()):
     s = surfaces.getSurface(i)
-    print "Chi =", s.getEulerCharacteristic(), "; Or =", s.isOrientable()
+    print "Chi =", s.getEulerChar(), "; Or =", s.isOrientable()
 
 
 # List all surfaces with more than one quad in the first tetrahedron.

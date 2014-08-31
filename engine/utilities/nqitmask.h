@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -73,8 +73,6 @@ namespace regina {
  * in Regina that can store arbitrarily many qits.
  *
  * \pre Type \a T is an unsigned integral numeric type.
- *
- * \testpart
  *
  * \ifacespython Not present.
  */
@@ -284,8 +282,6 @@ std::ostream& operator << (std::ostream& out, const NQitmask1<T>& mask) {
  * in Regina that can store arbitrarily many qits.
  *
  * \pre Types \a T and \a U are unsigned integral numeric types.
- *
- * \testpart
  *
  * \ifacespython Not present.
  */
