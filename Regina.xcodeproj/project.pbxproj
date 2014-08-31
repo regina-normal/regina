@@ -927,6 +927,9 @@
 		057118D219B30BC0009FEDC5 /* snappea-census-sec6o.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B519B308F8009FEDC5 /* snappea-census-sec6o.dat */; };
 		057118D319B30BC0009FEDC5 /* snappea-census-sec7n.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B619B308F8009FEDC5 /* snappea-census-sec7n.dat */; };
 		057118D419B30BC0009FEDC5 /* snappea-census-sec7o.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B719B308F8009FEDC5 /* snappea-census-sec7o.dat */; };
+		057118D519B30C74009FEDC5 /* cusped-hyp-nor-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A73CD919B2F24A0099C617 /* cusped-hyp-nor-census.rga */; };
+		057118D619B30C74009FEDC5 /* cusped-hyp-or-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A73CDA19B2F24A0099C617 /* cusped-hyp-or-census.rga */; };
+		057118D719B30C74009FEDC5 /* hyp-knot-link-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A73CDB19B2F24A0099C617 /* hyp-knot-link-census.rga */; };
 		057FA752180615F6008E25F6 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA74F180615F5008E25F6 /* libiconv.dylib */; };
 		057FA753180615F6008E25F6 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA750180615F5008E25F6 /* libxml2.dylib */; };
 		057FA754180615F6008E25F6 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA751180615F5008E25F6 /* libz.dylib */; };
@@ -1081,6 +1084,9 @@
 			dstPath = examples;
 			dstSubfolderSpec = 7;
 			files = (
+				057118D519B30C74009FEDC5 /* cusped-hyp-nor-census.rga in CopyFiles */,
+				057118D619B30C74009FEDC5 /* cusped-hyp-or-census.rga in CopyFiles */,
+				057118D719B30C74009FEDC5 /* hyp-knot-link-census.rga in CopyFiles */,
 				0589FAC918148FFC0064CD57 /* sample-ios.rga in CopyFiles */,
 				05A47FBE1809D11900F86BFD /* closed-hyp-census.rga in CopyFiles */,
 				05A47FBF1809D11900F86BFD /* closed-nor-census.rga in CopyFiles */,
