@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,13 +32,21 @@
 
 /* end stub */
 
+#include "regina-config.h" // For QDBM-related macros
+
 #include <algorithm>
 #include <cstdlib>
 #include <sstream>
-#include <stdbool.h> // cstdbool needs c++11
-#include <stdint.h> // cstdint needs c++11
+#ifdef QDBM_AS_TOKYOCABINET
+#include <depot.h>
+#include <cabin.h>
+#include <villa.h>
+#else
+#include <stdbool.h> // cstdbool only works for c++11
+#include <stdint.h> // cstdint only works for c++11
 #include <tcbdb.h>
 #include <tcutil.h>
+#endif
 #include "census/ncensus.h"
 #include "census/ngluingpermsearcher.h"
 #include "file/nglobaldirs.h"
@@ -56,9 +64,27 @@ NCensusDB* NCensus::hypKnotLink_ = 0;
 bool NCensus::dbInit_ = false;
 
 bool NCensusDB::lookup(const std::string& isoSig, NCensusHits* hits) const {
+#ifdef QDBM_AS_TOKYOCABINET
+    VILLA* db;
+    if (! (db = vlopen(filename_.c_str(), VL_OREADER, VL_CMPLEX))) {
+        std::cerr << "ERROR: Could not open QDBM database: "
+            << filename_ << std::endl;
+        return false;
+    }
+
+    CBLIST* records = vlgetlist(db, isoSig.c_str(), isoSig.length());
+    if (records) {
+        int n = cblistnum(records);
+        for (int i = 0; i < n; ++i)
+            hits->append(new NCensusHit(cblistval(records, i, 0), this));
+        cblistclose(records);
+    }
+
+    vlclose(db);
+#else
     TCBDB* db = tcbdbnew();
     if (! tcbdbopen(db, filename_.c_str(), BDBOREADER)) {
-        std::cerr << "ERROR: Could not open census database: "
+        std::cerr << "ERROR: Could not open Tokyo Cabinet database: "
             << filename_ << std::endl;
         return false;
     }
@@ -73,6 +99,8 @@ bool NCensusDB::lookup(const std::string& isoSig, NCensusHits* hits) const {
 
     tcbdbclose(db);
     tcbdbdel(db);
+#endif
+
     return true;
 }
 
@@ -82,17 +110,17 @@ NCensusHits* NCensus::lookup(const NTriangulation& tri) {
 
 NCensusHits* NCensus::lookup(const std::string& isoSig) {
     if (! dbInit_) {
-        closedOr_ = standardDB("closed-or-census-11.tdb",
+        closedOr_ = standardDB("closed-or-census-11." REGINA_DB_EXT,
             "Closed census (orientable)");
-        closedNor_ = standardDB("closed-nor-census-11.tdb",
+        closedNor_ = standardDB("closed-nor-census-11." REGINA_DB_EXT,
             "Closed census (non-orientable)");
-        closedHyp_ = standardDB("closed-hyp-census-full.tdb",
+        closedHyp_ = standardDB("closed-hyp-census-full." REGINA_DB_EXT,
             "Hodgson-Weeks closed hyperbolic census");
-        cuspedHypOr_ = standardDB("cusped-hyp-or-census-9.tdb",
+        cuspedHypOr_ = standardDB("cusped-hyp-or-census-9." REGINA_DB_EXT,
             "Cusped hyperbolic census (orientable)");
-        cuspedHypNor_ = standardDB("cusped-hyp-nor-census-9.tdb",
+        cuspedHypNor_ = standardDB("cusped-hyp-nor-census-9." REGINA_DB_EXT,
             "Cusped hyperbolic census (non-orientable)");
-        hypKnotLink_ = standardDB("hyp-knot-link-census.tdb",
+        hypKnotLink_ = standardDB("hyp-knot-link-census." REGINA_DB_EXT,
             "Hyperbolic knot and link complements");
         dbInit_ = true;
     }

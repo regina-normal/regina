@@ -32,22 +32,38 @@
 
 /* end stub */
 
+#include "regina-config.h" // For QDBM-related macros
+
 #include <cctype>
 #include <cstdlib>
-#include <stdbool.h> // cstdbool needs c++11
-#include <stdint.h> // cstdint needs c++11
+#include <iostream>
+#include <string>
+#ifdef QDBM_AS_TOKYOCABINET
+#include <depot.h>
+#include <cabin.h>
+#include <villa.h>
+#else
+#include <stdbool.h> // cstdbool only works for c++11
+#include <stdint.h> // cstdint only works for c++11
 #include <tcbdb.h>
 #include <tcutil.h>
-#include "packet/ncontainer.h"
+#endif
+#include "utilities/zstream.h"
+
+#ifdef QDBM_AS_TOKYOCABINET
+  #define DB_CLOSE(x) vlclose(x);
+#else
+  #define DB_CLOSE(x) { tcbdbclose(x); tcbdbdel(x); }
+#endif
 
 void usage(const char* progName, const std::string& error = std::string()) {
     if (! error.empty())
         std::cerr << error << "\n\n";
 
     std::cerr << "Usage:\n";
-    std::cerr << "    " << progName << " <output-file>\n";
+    std::cerr << "    " << progName << " <input-file> <output-file>\n";
     std::cerr << std::endl;
-    std::cerr << "You should provide key-value data via standard input:\n";
+    std::cerr << "Key-value data will be read from the input file:\n";
     std::cerr << "<isosig> <name>\n";
     std::cerr << "<isosig> <name>\n";
     std::cerr << "...\n";
@@ -56,38 +72,57 @@ void usage(const char* progName, const std::string& error = std::string()) {
 
 int main(int argc, char* argv[]) {
     // Parse the command line.
-    if (argc != 2)
+    if (argc != 3)
         usage(argv[0]);
-    std::string outputFile = argv[1];
+    std::string outputFile = argv[2];
 
-    // Initialise the database.
-    TCBDB* db = tcbdbnew();
-    if (! tcbdbopen(db, outputFile.c_str(),
-            BDBOWRITER | BDBOCREAT | BDBOTRUNC)) {
-        std::cerr << "ERROR: Could not open database: " << outputFile
+    // Open the input file.
+    std::cout << "Processing: " << argv[1] << std::endl;
+    regina::DecompressionStream in(argv[1]);
+    if (! in) {
+        std::cerr << "ERROR: Could not open input file: " << argv[1]
             << std::endl;
         std::exit(1);
     }
 
+    // Initialise the database.
+#ifdef QDBM_AS_TOKYOCABINET
+    VILLA* db;
+    if (! (db = vlopen(outputFile.c_str(),
+            VL_OWRITER | VL_OCREAT | VL_OTRUNC | VL_OZCOMP, VL_CMPLEX))) {
+        std::cerr << "ERROR: Could not open QDBM database: "
+            << outputFile << std::endl;
+        std::exit(1);
+    }
+#else
+    TCBDB* db = tcbdbnew();
+    if (! tcbdbopen(db, outputFile.c_str(),
+            BDBOWRITER | BDBOCREAT | BDBOTRUNC)) {
+        std::cerr << "ERROR: Could not open Tokyo Cabinet database: "
+            << outputFile << std::endl;
+        std::exit(1);
+    }
+#endif
+
     // Fill the database with the user-supplied key-value pairs.
     std::string sig, name;
     const char* pos;
+    unsigned long tot = 0;
     while (true) {
-        std::cin >> sig;
-        if (std::cin.eof())
+        in >> sig;
+        if (in.eof())
             break;
 
-        std::getline(std::cin, name);
-        if (std::cin.eof()) {
+        std::getline(in, name);
+        if (in.eof()) {
             std::cerr << "ERROR: Signature " << sig
                 << " is missing a corresponding name.\n\n";
-            tcbdbclose(db);
-            tcbdbdel(db);
+            DB_CLOSE(db);
             usage(argv[0]);
         }
 
         // Skip initial whitespace in the manifold name (which will
-        // always be present, since the previous std::cin >> sig
+        // always be present, since the previous in >> sig
         // does not eat the separating whitespace).
         const char* pos = name.c_str();
         while (*pos && std::isspace(*pos))
@@ -95,38 +130,61 @@ int main(int argc, char* argv[]) {
         if (! *pos) {
             std::cerr << "ERROR: Signature " << sig
                 << " has an empty name.\n\n";
-            tcbdbclose(db);
-            tcbdbdel(db);
+            DB_CLOSE(db);
             usage(argv[0]);
         }
 
+#ifdef QDBM_AS_TOKYOCABINET
+        if (! vlput(db, sig.c_str(), sig.length(),
+                pos, -1 /* strlen */, VL_DDUP)) {
+#else
         if (! tcbdbputdup2(db, sig.c_str(), pos)) {
+#endif
             std::cerr << "ERROR: Could not store the record for "
                 << sig << " in the database." << std::endl;
-            tcbdbclose(db);
-            tcbdbdel(db);
+            DB_CLOSE(db);
             std::exit(1);
         }
+        ++tot;
     }
 
     // Close and tidy up.
+    in.close();
+
+#ifdef QDBM_AS_TOKYOCABINET
+    if (! vloptimize(db)) {
+        std::cerr << "ERROR: Could not optimise QDBM database: "
+            << outputFile << std::endl;
+        DB_CLOSE(db);
+        std::exit(1);
+    }
+
+    if (! vlclose(db)) {
+        std::cerr << "ERROR: Could not close QDBM database: "
+            << outputFile << std::endl;
+        std::exit(1);
+    }
+#else
     // The following call to tcbdboptimise() does not change any options
     // other than the bitwise compression option given in the final argument.
     if (! tcbdboptimize(db, 0, 0, 0, -1, -1, BDBTBZIP)) {
-        std::cerr << "ERROR: Could not optimise database: " << outputFile
+        std::cerr << "ERROR: Could not optimise Tokyo Cabinet database: "
+            << outputFile << std::endl;
+        std::cerr << "Tokyo cabinet error: " << tcerrmsg(tcbdbecode(db))
             << std::endl;
-        tcbdbclose(db);
-        tcbdbdel(db);
+        DB_CLOSE(db);
         std::exit(1);
     }
 
     if (! tcbdbclose(db)) {
-        std::cerr << "ERROR: Could not close database: " << outputFile
-            << std::endl;
+        std::cerr << "ERROR: Could not close Tokyo Cabinet database: "
+            << outputFile << std::endl;
         tcbdbdel(db);
         std::exit(1);
     }
-
     tcbdbdel(db);
+#endif
+
+    std::cout << "Success: " << tot << " records." << std::endl;
     return 0;
 }
