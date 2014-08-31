@@ -502,8 +502,6 @@
 		052FA0A3180600FB00FAE4DF /* zstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E81180600FB00FAE4DF /* zstream.cpp */; };
 		052FA0A4180600FB00FAE4DF /* zstream.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E82180600FB00FAE4DF /* zstream.h */; };
 		052FA0A61806047E00FAE4DF /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A51806047E00FAE4DF /* libz.dylib */; };
-		052FA0AB180604A100FAE4DF /* libgmp.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A7180604A100FAE4DF /* libgmp.10.dylib */; };
-		052FA0AC180604A100FAE4DF /* libgmpxx.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A8180604A100FAE4DF /* libgmpxx.4.dylib */; };
 		052FA1031806088B00FAE4DF /* nanglestructurelist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0CD1806088B00FAE4DF /* nanglestructurelist.cpp */; };
 		052FA1041806088B00FAE4DF /* dim2census.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D11806088B00FAE4DF /* dim2census.cpp */; };
 		052FA1051806088B00FAE4DF /* dim2edgepairing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D21806088B00FAE4DF /* dim2edgepairing.cpp */; };
@@ -533,9 +531,6 @@
 		052FA11D1806088B00FAE4DF /* base64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0FF1806088B00FAE4DF /* base64.cpp */; };
 		052FA11E1806088B00FAE4DF /* nbitmask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1011806088B00FAE4DF /* nbitmask.cpp */; };
 		052FA11F18060A4C00FAE4DF /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
-		052FA12018060A6C00FAE4DF /* libgmp.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A7180604A100FAE4DF /* libgmp.10.dylib */; };
-		052FA12118060A6C00FAE4DF /* libgmpxx.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A8180604A100FAE4DF /* libgmpxx.4.dylib */; };
-		052FA12318060AA700FAE4DF /* libcppunit-1.12.1.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA12218060AA700FAE4DF /* libcppunit-1.12.1.0.0.dylib */; };
 		052FA12A1806102F00FAE4DF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA1291806102F00FAE4DF /* Foundation.framework */; };
 		052FA12C1806102F00FAE4DF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA12B1806102F00FAE4DF /* CoreGraphics.framework */; };
 		052FA1341806102F00FAE4DF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 052FA1321806102F00FAE4DF /* InfoPlist.strings */; };
@@ -762,6 +757,10 @@
 		052FA241180613A900FAE4DF /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA23E180613A900FAE4DF /* boost.framework */; };
 		052FA242180613A900FAE4DF /* libgmp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA23F180613A900FAE4DF /* libgmp.framework */; };
 		052FA243180613A900FAE4DF /* libgmpxx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA240180613A900FAE4DF /* libgmpxx.framework */; };
+		053E5B5219B3D45B00166778 /* libgmp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA23F180613A900FAE4DF /* libgmp.framework */; };
+		053E5B5319B3D46000166778 /* libgmpxx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA240180613A900FAE4DF /* libgmpxx.framework */; };
+		053E5B5419B3D46D00166778 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0569F92F19B3655C00051091 /* libtokyocabinet.framework */; };
+		053E5B5619B3D79200166778 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
 		0543AE911811DE79002758F8 /* packetui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5CB1811D920002CC2AE /* packetui.h */; };
 		0543AE931811E12A002758F8 /* boundarycomponentchooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A40E1811D91E002CC2AE /* boundarycomponentchooser.h */; };
 		0543AE941811E12A002758F8 /* edgechooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4111811D91E002CC2AE /* edgechooser.h */; };
@@ -1009,7 +1008,6 @@
 		05A73CDC19B2F24A0099C617 /* cusped-hyp-nor-census.rga in Resources */ = {isa = PBXBuildFile; fileRef = 05A73CD919B2F24A0099C617 /* cusped-hyp-nor-census.rga */; };
 		05A73CDD19B2F24A0099C617 /* cusped-hyp-or-census.rga in Resources */ = {isa = PBXBuildFile; fileRef = 05A73CDA19B2F24A0099C617 /* cusped-hyp-or-census.rga */; };
 		05A73CDE19B2F24A0099C617 /* hyp-knot-link-census.rga in Resources */ = {isa = PBXBuildFile; fileRef = 05A73CDB19B2F24A0099C617 /* hyp-knot-link-census.rga */; };
-		05A73CE019B2F3A70099C617 /* libtokyocabinet.9.10.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 05A73CDF19B2F3A60099C617 /* libtokyocabinet.9.10.0.dylib */; };
 		05A73CE119B2F97B0099C617 /* cuspchooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CD719B2F2180099C617 /* cuspchooser.h */; };
 		05A73CE219B2F99B0099C617 /* groupwidget.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CBD19B2F1AB0099C617 /* groupwidget.h */; };
 		05A73CE319B2F9DC0099C617 /* nsnappeafile.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CC319B2F1AB0099C617 /* nsnappeafile.h */; };
@@ -1022,8 +1020,6 @@
 		05BC538F1812BEB000FE9217 /* SwitchableSubcontroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.m */; };
 		05CA99E618078466006161DC /* registryutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CA99E518078465006161DC /* registryutils.h */; };
 		05D0A1101812F0BE005ED097 /* TriangulationViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D0A10F1812F0BE005ED097 /* TriangulationViewController.mm */; };
-		05EDF7E71811DCAE00A1618E /* libgmp.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A7180604A100FAE4DF /* libgmp.10.dylib */; };
-		05EDF7E81811DCAE00A1618E /* libgmpxx.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A8180604A100FAE4DF /* libgmpxx.4.dylib */; };
 		05F96C131809F59600C99F96 /* PacketTreeController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F96C121809F59600C99F96 /* PacketTreeController.mm */; };
 		05F96C17180A153A00C99F96 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F96C16180A153A00C99F96 /* MBProgressHUD.m */; };
 /* End PBXBuildFile section */
@@ -1670,8 +1666,6 @@
 		052F9E81180600FB00FAE4DF /* zstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = zstream.cpp; sourceTree = "<group>"; };
 		052F9E82180600FB00FAE4DF /* zstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zstream.h; sourceTree = "<group>"; };
 		052FA0A51806047E00FAE4DF /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
-		052FA0A7180604A100FAE4DF /* libgmp.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgmp.10.dylib; path = /sw/lib/gmp5/libgmp.10.dylib; sourceTree = "<absolute>"; };
-		052FA0A8180604A100FAE4DF /* libgmpxx.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgmpxx.4.dylib; path = /sw/lib/gmp5/libgmpxx.4.dylib; sourceTree = "<absolute>"; };
 		052FA0C11806072900FAE4DF /* regtestsuite */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = regtestsuite; sourceTree = BUILT_PRODUCTS_DIR; };
 		052FA0CC1806088B00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052FA0CD1806088B00FAE4DF /* nanglestructurelist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nanglestructurelist.cpp; sourceTree = "<group>"; };
@@ -1721,7 +1715,6 @@
 		052FA1001806088B00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052FA1011806088B00FAE4DF /* nbitmask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nbitmask.cpp; sourceTree = "<group>"; };
 		052FA1021806088B00FAE4DF /* testutilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testutilities.h; sourceTree = "<group>"; };
-		052FA12218060AA700FAE4DF /* libcppunit-1.12.1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libcppunit-1.12.1.0.0.dylib"; path = "../../../../sw/lib/libcppunit-1.12.1.0.0.dylib"; sourceTree = "<group>"; };
 		052FA1281806102F00FAE4DF /* Regina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Regina.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		052FA1291806102F00FAE4DF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		052FA12B1806102F00FAE4DF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -1738,6 +1731,7 @@
 		052FA23E180613A900FAE4DF /* boost.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = boost.framework; path = ../../Library/Frameworks/boost.framework; sourceTree = "<group>"; };
 		052FA23F180613A900FAE4DF /* libgmp.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmp.framework; path = ../../Library/Frameworks/libgmp.framework; sourceTree = "<group>"; };
 		052FA240180613A900FAE4DF /* libgmpxx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmpxx.framework; path = ../../Library/Frameworks/libgmpxx.framework; sourceTree = "<group>"; };
+		053E5B5519B3D79100166778 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
 		0543AEC71811E2AD002758F8 /* Regina.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Regina.entitlements; sourceTree = "<group>"; };
 		054F7E27180B93770090B1F3 /* WelcomePopupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomePopupController.h; sourceTree = "<group>"; };
 		054F7E28180B93770090B1F3 /* WelcomePopupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomePopupController.m; sourceTree = "<group>"; };
@@ -2062,7 +2056,6 @@
 		05A73CD919B2F24A0099C617 /* cusped-hyp-nor-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-nor-census.rga"; sourceTree = "<group>"; };
 		05A73CDA19B2F24A0099C617 /* cusped-hyp-or-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-or-census.rga"; sourceTree = "<group>"; };
 		05A73CDB19B2F24A0099C617 /* hyp-knot-link-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "hyp-knot-link-census.rga"; sourceTree = "<group>"; };
-		05A73CDF19B2F3A60099C617 /* libtokyocabinet.9.10.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtokyocabinet.9.10.0.dylib; path = ../../../../sw/lib/libtokyocabinet.9.10.0.dylib; sourceTree = "<group>"; };
 		05B62165180B9D7300CCB90B /* title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = title.png; sourceTree = "<group>"; };
 		05B9EC1A18245F2100DCACF3 /* euler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = euler.cpp; sourceTree = "<group>"; };
 		05BC538D1812BEB000FE9217 /* SwitchableSubcontroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwitchableSubcontroller.h; sourceTree = "<group>"; };
@@ -2081,9 +2074,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				052FA12318060AA700FAE4DF /* libcppunit-1.12.1.0.0.dylib in Frameworks */,
-				052FA12018060A6C00FAE4DF /* libgmp.10.dylib in Frameworks */,
-				052FA12118060A6C00FAE4DF /* libgmpxx.4.dylib in Frameworks */,
 				052FA11F18060A4C00FAE4DF /* libregina-engine.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2110,8 +2100,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				05EDF7E71811DCAE00A1618E /* libgmp.10.dylib in Frameworks */,
-				05EDF7E81811DCAE00A1618E /* libgmpxx.4.dylib in Frameworks */,
 				0564A9A21811DB2F002CC2AE /* libregina-engine.dylib in Frameworks */,
 				0564A9A01811DB02002CC2AE /* QtCore.framework in Frameworks */,
 				0564A9A11811DB02002CC2AE /* QtGui.framework in Frameworks */,
@@ -2122,12 +2110,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				052FA0AB180604A100FAE4DF /* libgmp.10.dylib in Frameworks */,
-				052FA0AC180604A100FAE4DF /* libgmpxx.4.dylib in Frameworks */,
+				053E5B5619B3D79200166778 /* libbz2.dylib in Frameworks */,
 				055B7318181D7F2500449D14 /* libiconv.dylib in Frameworks */,
-				05A73CE019B2F3A70099C617 /* libtokyocabinet.9.10.0.dylib in Frameworks */,
 				055B731A181D7F2C00449D14 /* libxml2.dylib in Frameworks */,
 				052FA0A61806047E00FAE4DF /* libz.dylib in Frameworks */,
+				053E5B5219B3D45B00166778 /* libgmp.framework in Frameworks */,
+				053E5B5319B3D46000166778 /* libgmpxx.framework in Frameworks */,
+				053E5B5419B3D46D00166778 /* libtokyocabinet.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2934,7 +2923,6 @@
 		052FA0AF180604A900FAE4DF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				05A73CDF19B2F3A60099C617 /* libtokyocabinet.9.10.0.dylib */,
 				0564A99E1811DB01002CC2AE /* QtCore.framework */,
 				0564A99F1811DB02002CC2AE /* QtGui.framework */,
 				0569F93119B3658200051091 /* libbz2.dylib */,
@@ -2945,9 +2933,7 @@
 				052FA23F180613A900FAE4DF /* libgmp.framework */,
 				052FA240180613A900FAE4DF /* libgmpxx.framework */,
 				0569F92F19B3655C00051091 /* libtokyocabinet.framework */,
-				052FA12218060AA700FAE4DF /* libcppunit-1.12.1.0.0.dylib */,
-				052FA0A7180604A100FAE4DF /* libgmp.10.dylib */,
-				052FA0A8180604A100FAE4DF /* libgmpxx.4.dylib */,
+				053E5B5519B3D79100166778 /* libbz2.dylib */,
 				055B7317181D7F2400449D14 /* libiconv.dylib */,
 				055B7319181D7F2B00449D14 /* libxml2.dylib */,
 				052FA0A51806047E00FAE4DF /* libz.dylib */,
@@ -4710,15 +4696,10 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
-					/sw/include,
 					/usr/include/libxml2,
 					"\"$(SRCROOT)\"",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/sw/lib/gmp5,
-					/sw/lib,
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = regtestsuite;
 			};
 			name = Debug;
@@ -4734,15 +4715,10 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
-					/sw/include,
 					/usr/include/libxml2,
 					"\"$(SRCROOT)\"",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/sw/lib/gmp5,
-					/sw/lib,
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = regtestsuite;
 			};
 			name = Release;
@@ -4773,7 +4749,6 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"\"$(SRCROOT)/engine\"",
-					/sw/include,
 					/usr/include/libxml2,
 				);
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
@@ -4808,7 +4783,6 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"\"$(SRCROOT)/engine\"",
-					/sw/include,
 					/usr/include/libxml2,
 				);
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
@@ -4849,7 +4823,6 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
-					/sw/include,
 					/usr/include/libxml2,
 					"\"$(SRCROOT)/qtui/src\"",
 					/Library/Frameworks/QtCore.framework/Headers,
@@ -4858,10 +4831,7 @@
 				INFOPLIST_FILE = qtui/src/regina.plist;
 				INFOPLIST_PREFIX_HEADER = "preconfig/osx-xcode5/regina-config.h";
 				INFOPLIST_PREPROCESS = YES;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/sw/lib/gmp5,
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = Regina;
 				WRAPPER_EXTENSION = app;
 			};
@@ -4892,7 +4862,6 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
-					/sw/include,
 					/usr/include/libxml2,
 					"\"$(SRCROOT)/qtui/src\"",
 					/Library/Frameworks/QtCore.framework/Headers,
@@ -4901,10 +4870,7 @@
 				INFOPLIST_FILE = qtui/src/regina.plist;
 				INFOPLIST_PREFIX_HEADER = "preconfig/osx-xcode5/regina-config.h";
 				INFOPLIST_PREPROCESS = YES;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/sw/lib/gmp5,
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = Regina;
 				WRAPPER_EXTENSION = app;
 			};
@@ -4946,8 +4912,10 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
-					/sw/include,
 					/usr/include/libxml2,
+					/Users/bab/Library/Frameworks/libgmp.framework/Headers,
+					/Users/bab/Library/Frameworks/libgmpxx.framework/Headers,
+					/Users/bab/Library/Frameworks/libtokyocabinet.framework/Headers,
 				);
 				MACOSX_DEPLOYMENT_TARGET = "";
 				ONLY_ACTIVE_ARCH = YES;
@@ -4986,8 +4954,10 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
-					/sw/include,
 					/usr/include/libxml2,
+					/Users/bab/Library/Frameworks/libgmp.framework/Headers,
+					/Users/bab/Library/Frameworks/libgmpxx.framework/Headers,
+					/Users/bab/Library/Frameworks/libtokyocabinet.framework/Headers,
 				);
 				MACOSX_DEPLOYMENT_TARGET = "";
 				SDKROOT = macosx;
@@ -5000,12 +4970,12 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				EXECUTABLE_PREFIX = lib;
-				GCC_C_LANGUAGE_STANDARD = "compiler-default";
-				LIBRARY_SEARCH_PATHS = (
+				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/sw/lib/gmp5,
-					/sw/lib,
+					"$(USER_LIBRARY_DIR)/Frameworks",
 				);
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "regina-engine";
 			};
 			name = Debug;
@@ -5016,12 +4986,12 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				EXECUTABLE_PREFIX = lib;
-				GCC_C_LANGUAGE_STANDARD = "compiler-default";
-				LIBRARY_SEARCH_PATHS = (
+				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/sw/lib/gmp5,
-					/sw/lib,
+					"$(USER_LIBRARY_DIR)/Frameworks",
 				);
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "regina-engine";
 			};
 			name = Release;
