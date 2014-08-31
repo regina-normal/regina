@@ -1894,8 +1894,8 @@ NGroupPresentation::identifyExtensionOverZ()
                 I->first.exponent = -I->first.exponent;
         }
     }
-// this is the test for whether or not we can find a finite collection of
-// generators
+    // this is the test for whether or not we can find a finite collection of
+    // generators
     unsigned long nGm1( nGenerators - 1 );
     if ( (maxKiller.size() != nGm1) || (minKiller.size() != nGm1) )
         return std::auto_ptr< NHomGroupPresentation >(NULL);
@@ -1909,15 +1909,15 @@ NGroupPresentation::identifyExtensionOverZ()
     for (std::map< unsigned long, unsigned long>::iterator I=cellWidth.begin();
             I!=cellWidth.end(); I++)
         if (I->second > maxWidth) maxWidth = I->second;
-// we need liftCount lifts of our generators and relators.  Perhaps we should
-// either cite something in Magnus-Karass-Solitar for this or put in a proof.
-// let's build a vector that describes the relationa a(gi)a^-1 = ...
+    // we need liftCount lifts of our generators and relators.  Perhaps we should
+    // either cite something in Magnus-Karass-Solitar for this or put in a proof.
+    // let's build a vector that describes the relationa a(gi)a^-1 = ...
 
-// build table of reductions of the liftCount==M lift of generators.
-// the indexing of the generators of the kernel of G --> Z will be handled
-// by the above idx and unidx macros.
+    // build table of reductions of the liftCount==M lift of generators.
+    // the indexing of the generators of the kernel of G --> Z will be handled
+    // by the above idx and unidx macros.
     std::map<unsigned long, NGroupExpression> genKiller;
-// start with the liftCount lift, i.e. the first order reducers a^-Mg_ia^M =...
+    // start with the liftCount lift, i.e. the first order reducers a^-Mg_ia^M =...
     for (unsigned long i=1; i<getNumberOfGenerators(); i++) {
         NGroupExpression temp;
         // maxKiller[i] is the index in lifts of the relator that kills generator gi
