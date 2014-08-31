@@ -917,6 +917,16 @@
 		0564A9A01811DB02002CC2AE /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0564A99E1811DB01002CC2AE /* QtCore.framework */; };
 		0564A9A11811DB02002CC2AE /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0564A99F1811DB02002CC2AE /* QtGui.framework */; };
 		0564A9A21811DB2F002CC2AE /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
+		057118CA19B30A2D009FEDC5 /* snappea-census-sec5.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B319B308F8009FEDC5 /* snappea-census-sec5.dat */; };
+		057118CB19B30A2D009FEDC5 /* snappea-census-sec6n.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B419B308F8009FEDC5 /* snappea-census-sec6n.dat */; };
+		057118CC19B30A2D009FEDC5 /* snappea-census-sec6o.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B519B308F8009FEDC5 /* snappea-census-sec6o.dat */; };
+		057118CD19B30A2D009FEDC5 /* snappea-census-sec7n.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B619B308F8009FEDC5 /* snappea-census-sec7n.dat */; };
+		057118CE19B30A2D009FEDC5 /* snappea-census-sec7o.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B719B308F8009FEDC5 /* snappea-census-sec7o.dat */; };
+		057118D019B30BC0009FEDC5 /* snappea-census-sec5.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B319B308F8009FEDC5 /* snappea-census-sec5.dat */; };
+		057118D119B30BC0009FEDC5 /* snappea-census-sec6n.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B419B308F8009FEDC5 /* snappea-census-sec6n.dat */; };
+		057118D219B30BC0009FEDC5 /* snappea-census-sec6o.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B519B308F8009FEDC5 /* snappea-census-sec6o.dat */; };
+		057118D319B30BC0009FEDC5 /* snappea-census-sec7n.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B619B308F8009FEDC5 /* snappea-census-sec7n.dat */; };
+		057118D419B30BC0009FEDC5 /* snappea-census-sec7o.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B719B308F8009FEDC5 /* snappea-census-sec7o.dat */; };
 		057FA752180615F6008E25F6 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA74F180615F5008E25F6 /* libiconv.dylib */; };
 		057FA753180615F6008E25F6 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA750180615F5008E25F6 /* libxml2.dylib */; };
 		057FA754180615F6008E25F6 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA751180615F5008E25F6 /* libz.dylib */; };
@@ -927,10 +937,8 @@
 		0583656518DB8876008B08D9 /* real_type.h in Headers */ = {isa = PBXBuildFile; fileRef = 0583656118DB8876008B08D9 /* real_type.h */; };
 		0583656C18DB88E8008B08D9 /* dim2triangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0583656818DB88D9008B08D9 /* dim2triangulation.cpp */; };
 		0583656D18DB8B68008B08D9 /* kernel_namespace.h in Headers */ = {isa = PBXBuildFile; fileRef = 0583656018DB8876008B08D9 /* kernel_namespace.h */; };
-		058637F1181DBC3E00E95307 /* data in Resources */ = {isa = PBXBuildFile; fileRef = 058637F0181DBC3E00E95307 /* data */; };
 		058637F3181DBC5900E95307 /* syntax in Resources */ = {isa = PBXBuildFile; fileRef = 058637F2181DBC5800E95307 /* syntax */; };
 		058637F5181DBCE100E95307 /* pylib in Resources */ = {isa = PBXBuildFile; fileRef = 058637F4181DBCE100E95307 /* pylib */; };
-		058637F6181DBD7000E95307 /* data in Resources */ = {isa = PBXBuildFile; fileRef = 058637F0181DBC3E00E95307 /* data */; };
 		0588F1181808D43B006BDC79 /* packetregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0588F1161808D43B006BDC79 /* packetregistry-impl.h */; };
 		0588F1191808D43B006BDC79 /* packettype.h in Headers */ = {isa = PBXBuildFile; fileRef = 0588F1171808D43B006BDC79 /* packettype.h */; };
 		0589FAC3181484860064CD57 /* TriGluingsViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0589FAC2181484860064CD57 /* TriGluingsViewController.mm */; };
@@ -1038,6 +1046,34 @@
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 1;
+		};
+		057118C919B30A13009FEDC5 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = data/snappea;
+			dstSubfolderSpec = 7;
+			files = (
+				057118CA19B30A2D009FEDC5 /* snappea-census-sec5.dat in CopyFiles */,
+				057118CB19B30A2D009FEDC5 /* snappea-census-sec6n.dat in CopyFiles */,
+				057118CC19B30A2D009FEDC5 /* snappea-census-sec6o.dat in CopyFiles */,
+				057118CD19B30A2D009FEDC5 /* snappea-census-sec7n.dat in CopyFiles */,
+				057118CE19B30A2D009FEDC5 /* snappea-census-sec7o.dat in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		057118CF19B30BAF009FEDC5 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = data/snappea;
+			dstSubfolderSpec = 7;
+			files = (
+				057118D019B30BC0009FEDC5 /* snappea-census-sec5.dat in CopyFiles */,
+				057118D119B30BC0009FEDC5 /* snappea-census-sec6n.dat in CopyFiles */,
+				057118D219B30BC0009FEDC5 /* snappea-census-sec6o.dat in CopyFiles */,
+				057118D319B30BC0009FEDC5 /* snappea-census-sec7n.dat in CopyFiles */,
+				057118D419B30BC0009FEDC5 /* snappea-census-sec7o.dat in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		05A47FBD1809D00D00F86BFD /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -1906,6 +1942,14 @@
 		0564A6181811D921002CC2AE /* TODO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO.txt; sourceTree = "<group>"; };
 		0564A99E1811DB01002CC2AE /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = ../../../../Library/Frameworks/QtCore.framework; sourceTree = "<group>"; };
 		0564A99F1811DB02002CC2AE /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = ../../../../Library/Frameworks/QtGui.framework; sourceTree = "<group>"; };
+		057118B119B308F8009FEDC5 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		057118B219B308F8009FEDC5 /* create-snappea-census-data.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = "create-snappea-census-data.py"; sourceTree = "<group>"; };
+		057118B319B308F8009FEDC5 /* snappea-census-sec5.dat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "snappea-census-sec5.dat"; sourceTree = "<group>"; };
+		057118B419B308F8009FEDC5 /* snappea-census-sec6n.dat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "snappea-census-sec6n.dat"; sourceTree = "<group>"; };
+		057118B519B308F8009FEDC5 /* snappea-census-sec6o.dat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "snappea-census-sec6o.dat"; sourceTree = "<group>"; };
+		057118B619B308F8009FEDC5 /* snappea-census-sec7n.dat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "snappea-census-sec7n.dat"; sourceTree = "<group>"; };
+		057118B719B308F8009FEDC5 /* snappea-census-sec7o.dat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "snappea-census-sec7o.dat"; sourceTree = "<group>"; };
+		057118B819B308F8009FEDC5 /* verify-snappea-census-data.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = "verify-snappea-census-data.py"; sourceTree = "<group>"; };
 		0575E6591805F36D009E3FC4 /* libregina-engine.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libregina-engine.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		057FA74F180615F5008E25F6 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/usr/lib/libiconv.dylib; sourceTree = DEVELOPER_DIR; };
 		057FA750180615F5008E25F6 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/usr/lib/libxml2.dylib; sourceTree = DEVELOPER_DIR; };
@@ -1919,7 +1963,6 @@
 		0583656718DB88D9008B08D9 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		0583656818DB88D9008B08D9 /* dim2triangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2triangulation.cpp; sourceTree = "<group>"; };
 		0583656918DB88D9008B08D9 /* testdim2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testdim2.h; sourceTree = "<group>"; };
-		058637F0181DBC3E00E95307 /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = data; path = engine/data; sourceTree = "<group>"; };
 		058637F2181DBC5800E95307 /* syntax */ = {isa = PBXFileReference; lastKnownFileType = folder; name = syntax; path = src/syntax; sourceTree = "<group>"; };
 		058637F4181DBCE100E95307 /* pylib */ = {isa = PBXFileReference; lastKnownFileType = folder; path = pylib; sourceTree = SOURCE_ROOT; };
 		0588F1161808D43B006BDC79 /* packetregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "packetregistry-impl.h"; sourceTree = "<group>"; };
@@ -3356,15 +3399,39 @@
 			path = syntax;
 			sourceTree = "<group>";
 		};
+		057118AF19B307A3009FEDC5 /* data */ = {
+			isa = PBXGroup;
+			children = (
+				057118B019B308F8009FEDC5 /* snappea */,
+			);
+			name = data;
+			path = engine/data;
+			sourceTree = "<group>";
+		};
+		057118B019B308F8009FEDC5 /* snappea */ = {
+			isa = PBXGroup;
+			children = (
+				057118B119B308F8009FEDC5 /* CMakeLists.txt */,
+				057118B219B308F8009FEDC5 /* create-snappea-census-data.py */,
+				057118B319B308F8009FEDC5 /* snappea-census-sec5.dat */,
+				057118B419B308F8009FEDC5 /* snappea-census-sec6n.dat */,
+				057118B519B308F8009FEDC5 /* snappea-census-sec6o.dat */,
+				057118B619B308F8009FEDC5 /* snappea-census-sec7n.dat */,
+				057118B719B308F8009FEDC5 /* snappea-census-sec7o.dat */,
+				057118B819B308F8009FEDC5 /* verify-snappea-census-data.py */,
+			);
+			path = snappea;
+			sourceTree = "<group>";
+		};
 		0575E6501805F36D009E3FC4 = {
 			isa = PBXGroup;
 			children = (
 				052F9BFD180600FA00FAE4DF /* engine */,
+				057118AF19B307A3009FEDC5 /* data */,
 				052FA0CA1806088B00FAE4DF /* testsuite */,
 				0564A2151811D91C002CC2AE /* qtui */,
 				052FA12F1806102F00FAE4DF /* ios */,
 				05A47F961809CB7500F86BFD /* examples */,
-				058637F0181DBC3E00E95307 /* data */,
 				0575E65A1805F36D009E3FC4 /* Products */,
 				052FA0AF180604A900FAE4DF /* Frameworks */,
 			);
@@ -3748,6 +3815,7 @@
 				052FA1251806102F00FAE4DF /* Frameworks */,
 				052FA1261806102F00FAE4DF /* Resources */,
 				05A47FBD1809D00D00F86BFD /* CopyFiles */,
+				057118CF19B30BAF009FEDC5 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -3765,6 +3833,7 @@
 				0564A1DB1811D6F8002CC2AE /* Sources */,
 				0564A1DC1811D6F8002CC2AE /* Frameworks */,
 				0564A1DD1811D6F8002CC2AE /* Resources */,
+				057118C919B30A13009FEDC5 /* CopyFiles */,
 			);
 			buildRules = (
 				0543AE921811DE96002758F8 /* PBXBuildRule */,
@@ -3845,7 +3914,6 @@
 				051E5F7D180C636000C9EF04 /* Settings.bundle in Resources */,
 				052FA1451806103000FAE4DF /* Images.xcassets in Resources */,
 				05B62166180B9D7300CCB90B /* title.png in Resources */,
-				058637F6181DBD7000E95307 /* data in Resources */,
 				054F7E2B180B96AC0090B1F3 /* welcome.html in Resources */,
 				052FA1341806102F00FAE4DF /* InfoPlist.strings in Resources */,
 				052FA13D1806103000FAE4DF /* Main.storyboard in Resources */,
@@ -3865,7 +3933,6 @@
 				058637F5181DBCE100E95307 /* pylib in Resources */,
 				051806D7181203BB008EBB01 /* regina.icns in Resources */,
 				051806D8181203BB008EBB01 /* x-regina.icns in Resources */,
-				058637F1181DBC3E00E95307 /* data in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
