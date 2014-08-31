@@ -4913,9 +4913,9 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					/Users/bab/Library/Frameworks/libgmp.framework/Headers,
-					/Users/bab/Library/Frameworks/libgmpxx.framework/Headers,
-					/Users/bab/Library/Frameworks/libtokyocabinet.framework/Headers,
+					"$(USER_LIBRARY_DIR)/Frameworks/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/libtokyocabinet.framework/Headers",
 				);
 				MACOSX_DEPLOYMENT_TARGET = "";
 				ONLY_ACTIVE_ARCH = YES;
@@ -4955,9 +4955,9 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					/Users/bab/Library/Frameworks/libgmp.framework/Headers,
-					/Users/bab/Library/Frameworks/libgmpxx.framework/Headers,
-					/Users/bab/Library/Frameworks/libtokyocabinet.framework/Headers,
+					"$(USER_LIBRARY_DIR)/Frameworks/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/libtokyocabinet.framework/Headers",
 				);
 				MACOSX_DEPLOYMENT_TARGET = "";
 				SDKROOT = macosx;
