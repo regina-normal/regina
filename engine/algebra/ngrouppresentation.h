@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -420,7 +420,7 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * If the given string cannot be interpreted as a word in a group,
          * then this expression will be left untouched.
          *
-         * @param a string representation of the word to multiply with
+         * @param input a string representation of the word to multiply with
          * this expression.
          * @return \c true if the given string could interpreted
          * (and therefore the multiplication was completed successfully), or
@@ -440,7 +440,7 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * If the given string cannot be interpreted as a word in a group,
          * then this expression will be left untouched.
          *
-         * @param a string representation of the word to multiply with
+         * @param input a string representation of the word to multiply with
          * this expression.
          * @return \c true if the given string could interpreted
          * (and therefore the multiplication was completed successfully), or
@@ -887,18 +887,25 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * presentation.  This routine is much more likely to be
          * successful if you have already called intelligentSimplify().
          *
-         * Note that the presentation might be simplified a little
-         * during the execution of this routine, although not nearly as
-         * much as would be done by intelligentSimplify().
-         *
          * Currently, if successful the only groups this routine
-         * recognises is the trivial group, cyclic groups, free groups,
-         * and the free abelian group of rank two.
+         * recognises is: the trivial group, abelian groups, free groups,
+         * extensions over the integers, and free products of any group
+         * the algorithm can recognise (inductively).
          *
-         * Return strings have the form "0" for the trivial
-         * group, "Z_n" for cyclic groups with n > 1, "Free(n generators)"
-         * for free groups with n>1, and "Z" and "Z + Z (abelian)"
-         * are the only two free abelian groups supported at present.
+         * Return strings have the form:
+         *
+         * - <tt>0</tt> for the trivial group;
+         * - <tt>Z_n</tt> for cyclic groups with \a n > 1;
+         * - <tt>Free(n)</tt> for free groups with \a n > 1 generators - see
+         *   NAbelianGroup::str() for how abelian groups are presented;
+         * - <tt>FreeProduct(G1, G2, ... , Gk)</tt> for free products, where
+         *   one replaces \a G1 through \a Gk by text strings representing the
+         *   free summands;
+         * - <tt>Z~G w/ monodromy H</tt> for extensions over Z,
+         *   where \a G is a description of the kernel of the homomorphism
+         *   to the integers, and \a H is a text string representing the
+         *   monodromy - see NHomMarkedAbelianGroup.str() for details on
+         *   how these are presented.
          *
          * \todo \featurelong Make this recognition more effective.
          *

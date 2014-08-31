@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -134,7 +134,7 @@ class NCensusTest : public CppUnit::TestFixture {
             // finds the census data files in the source tree.
             std::string home = regina::NGlobalDirs::home();
             std::string python = regina::NGlobalDirs::pythonModule();
-            regina::NGlobalDirs::setDirs(TESTSUITE_DATA_HOME, python);
+            regina::NGlobalDirs::setDirs(TESTSUITE_DATA_HOME_BINARY, python);
 
             verifyLookupNone("");
             verifyLookupNone("abcdefg");
