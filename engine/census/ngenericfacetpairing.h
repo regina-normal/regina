@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -82,8 +82,6 @@ namespace regina {
  *
  * \ifacespython Not present, though the dimension-specific subclasses
  * (such as NFacePairing and Dim4FacetPairing) are available for Python users.
- *
- * \testpart
  */
 template <int dim>
 class REGINA_API NGenericFacetPairing : public NThread {

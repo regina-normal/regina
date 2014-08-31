@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -108,6 +108,7 @@ class REGINA_API NHandlebody : public NManifold {
         bool operator == (const NHandlebody& compare) const;
 
         NAbelianGroup* getHomologyH1() const;
+        bool isHyperbolic() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
 };
@@ -136,6 +137,10 @@ inline bool NHandlebody::operator == (const NHandlebody& compare) const {
     if (compare.orientable && ! orientable)
         return false;
     return (nHandles == compare.nHandles);
+}
+
+inline bool NHandlebody::isHyperbolic() const {
+    return false;
 }
 
 } // namespace regina

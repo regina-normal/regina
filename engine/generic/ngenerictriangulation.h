@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -81,6 +81,20 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
         using typename DimTraits<dim>::Triangulation;
 
     public:
+        /**
+         * \name Basic Properties
+         */
+        /*@{*/
+
+        /**
+         * Determines whether this triangulation is empty.
+         * An empty triangulation is one with no simplices at all.
+         *
+         * @return \c true if and only if this triangulation is empty.
+         */
+        bool isEmpty() const;
+
+        /*@}*/
         /**
          * \name Isomorphism Testing
          */
@@ -463,6 +477,14 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
 };
 
 /*@}*/
+
+// Inline functions:
+
+template <int dim>
+inline bool NGenericTriangulation<dim>::isEmpty() const {
+    return (static_cast<const typename DimTraits<dim>::Triangulation*>(this)->
+        getNumberOfSimplices() == 0);
+}
 
 } // namespace regina
 

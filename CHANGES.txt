@@ -34,7 +34,7 @@ Version 5.0  [ (under development) ]
               it does not identify when a 3-manifold triangulation
               appears as a subcomplex of a 4-manifold triangulation).
 
-Version 4.96  [ (under development) ]
+Version 4.96  [ 29 August, 2014 ]
 
     ENGINE:
         Class NAbelianGroup:
@@ -46,6 +46,11 @@ Version 4.96  [ (under development) ]
         Class Dim2BoundaryComponent:
             - New convenience routine getComponent().
             - New routine index().
+        Class Dim2Census:
+            - Routines formCensus() and formPartialCensus() and the typedef
+              AcceptTriangulation are now deprecated.  To build a census
+              you should call Dim2EdgePairing::findAllPairings() and
+              Dim2GluingPermSearcher::findAllPerms() directly.
         Class Dim2Component:
             - New routine getNumberOfBoundaryEdges().
             - New routine index().
@@ -59,6 +64,7 @@ Version 4.96  [ (under development) ]
             - New routine isIdenticalTo().
             - New local modification oneThreeMove().
             - New routine findAllIsomorphisms().
+            - New routine isEmpty().
             - Several isomorphism-related routines have been moved into
               the dimension-agnostic NGenericTriangulation template, and
               isomorphism signature routines now inherit directly from
@@ -80,6 +86,10 @@ Version 4.96  [ (under development) ]
             - New convenience operator !=.
         Class NAngleStructure:
             - New convenience routine rawVector().
+            - Routine getTriangulation() now returns a const NTriangulation*
+              (previously this was non-const).  Likewise, many routines in
+              this and related classes have NTriangulation* arguments changed
+              from non-const to const.
         Class NAngleStructureList:
             - Enumeration of taut angle strutures now uses Regina's tree
               traversal / linear programming machinery, which is *much*
@@ -96,33 +106,52 @@ Version 4.96  [ (under development) ]
               is easier on the fingers.  The old name has been kept as a
               deprecated alias for backward compatibility.
         Class NCensus:
-            - New constant PURGE_NON_MINIMAL_HYP, for use in building a
-              census of cusped finite volume hyperbolic 3-manifolds.
+            - New routine lookup() (in two variants) to quickly search for a
+              given triangulation in Regina's various census databases.
+              The databases themselves are now installed alongside the
+              mathematical engine, and are much larger and richer than before.
+            - Routine mightBeMinimal() is deprecated; you should call
+              NTriangulation::simplifyToLocalMinimum(false) instead.
+            - Routines formCensus() and formPartialCensus() and the typedef
+              AcceptTriangulation are now deprecated.  To build a census
+              you should call NFacePairing::findAllPairings() and
+              NGluingPermSearcher::findAllPerms() directly.
+            - The PURGE_... constants have been moved to the
+              NGluingPermSearcher class.  The old flags in NCensus
+              are deprecated, but have been kept for backward compatibility.
+        Class NCensusDB, NCensusHit, NCensusHits:
+            - New classes to support the new NCensus::lookup() routines.
         Class NComponent:
             - New routine getNumberOfBoundaryTriangles().
             - New routine index().
+        Class NCusp:
+            - New class to support NSnapPeaTriangulation.
         Class NEdge:
             - New routine index().
         Class NExampleTriangulation:
             - New example trefoilKnotComplement().
             - New example sphere600() (sourced from the 600-cell in the
               Benedetti-Lutz library of triangulations).
-        Class NFaceEmbedding:
-            - New convenience operators == and !=.
         Class NGenericTriangulation:
             - Moved isIdenticalTo(), isIsomorphicTo(), isContainedIn(),
               findAllSubcomplexesIn() and makeCanonical() from
               Dim2Triangulation and NTriangulation into this class.
             - New routine findAllIsomorphisms().
+            - New routine isEmpty().
             - Made isoSig(), fromIsoSig() and isoSigComponentSize() public.
         Class NGluingPermSearcher:
+            - New PurgeFlags enumeration, which is the new home for the
+              PURGE_... constants that used to live in the NCensus class.
+              This enumeration also contains new flags PURGE_NON_MINIMAL_HYP
+              (for use in building a census of cusped finite volume hyperbolic
+              3-manifolds), and PURGE_NONE.
             - Removed protected routine mayPurge(), since this behaviour is
               already provided by specialised subclasses of NGluingPermSearcher.
         Class NHyperbolicMinSearcher:
             - New enumeration class for building a census of minimal ideal
               triangulations of cusped finite-volume hyperbolic 3-manifolds.
-        Class NCusp:
-            - New class to support NSnapPeaTriangulation.
+        Class NManifold:
+            - New routine isHyperbolic().
         Class NNormalSurface:
             - Renamed boundarySlopes() to boundaryIntersections(), to make it
               clear that it returns algebraic intersection numbers and not the
@@ -247,13 +276,16 @@ Version 4.96  [ (under development) ]
             - Extended the tree traversal / linear programming machinery to
               work with angle structures.  This is used for enumerating all
               taut angle structures, or finding a single strict angle structure.
+            - Changed all NTriangulation types in this and related
+              classes from non-const to const.
         Class NTriangle:
             - New routine index().
         Class NTriangleEmbedding:
             - New convenience operators == and !=.
         Class NTriangulation:
-            - New routine hasStrictAngleStructure(), which uses fast
-              linear programming machinery.
+            - New routines hasStrictAngleStructure(),
+              findStrictAngleStructure() and knowsStrictAngleStructure(),
+              which use fast linear programming machinery.
             - Routine connectedSumDecomposition() now works for non-orientable
               triangulations also (arXiv:1212.1441).  There is a caveat if
               there are embedded two-sided projective planes (see the
@@ -261,6 +293,7 @@ Version 4.96  [ (under development) ]
               signed long to allow for error conditions to be returned.
             - New routine connectedSumWith() for building connected sums.
             - New routine isIdenticalTo().
+            - New routine isEmpty().
             - New local modification oneFourMove().
             - New routines findAllIsomorphisms() and makeCanonical().
             - Several isomorphism-related routines have been moved into
@@ -347,15 +380,19 @@ Version 4.96  [ (under development) ]
           automatically.
         - Many other changes that implement the engine updates listed above.
     UTILITIES:
+        censuslookup:
+            - New command-line utility for looking up triangulations in
+              Regina's census databases.
         tricensus:
             - New argument -h/--minhyp for enumerating minimal ideal
               triangulations of cusped finite-volume hyperbolic 3-manifolds.
     TEST SUITE:
-        - New tests for makeCanonical() in dimensions 2 and 3.
-        - New tests for isoSig() in dimension 2.
-        - The test suite framework now contains more systematic, automated and
-          dimension-agnostic tools for making tests on triangulations as
-          comprehensive as possible.
+        - The test suite will no longer be covered by this changelog, since
+          changes to the test suite have not been logged thoroughly for some
+          years now (i.e., releases typically have many more new tests than are
+          being listed here).  If you ever want to see what is currently
+          covered by the test suite, you can always run "make test ARGS=-V"
+          and watch the tests scroll by.
 
 Version 4.95  [ 12 November, 2013 ]
 

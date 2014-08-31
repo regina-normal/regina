@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -50,6 +50,8 @@
 #include <QPushButton>
 #include <QTextDocument> // For Qt::escape()
 
+#define MAX_RELATIONS_FOR_PROLIFERATION 8
+
 GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) :
         QWidget(), group_(0), simplified_(0) {
     QBoxLayout* layout = new QVBoxLayout(this);
@@ -59,6 +61,7 @@ GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) :
 
     fundName_ = new QLabel();
     // fundName_->setAlignment(Qt::AlignCenter);
+    fundName_->setWordWrap(true);
     layout->addWidget(fundName_);
 
     fundGens_ = new QLabel();
@@ -83,13 +86,13 @@ GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) :
         QBoxLayout* hLayout;
         QPushButton* btn;
 
-        btn = new QPushButton(tr("Internally"));
-        btn->setToolTip(tr("Simplify the group presentation by "
-            "internal usage of small cancellation theory."));
-        btn->setWhatsThis(tr("<qt>Simplify the group presentation by "
-            "internal usage of small cancellation theory.  Application "
-            "twice should do nothing.</qt>"));
-        connect(btn, SIGNAL(clicked()), this, SLOT(simplifyPi1()));
+        btn = new QPushButton(tr("Using Regina"));
+        btn->setToolTip(tr("Simplify the group presentation using Regina"));
+        btn->setWhatsThis(tr("<qt>Simplify the group presentation using "
+            "Regina's own code, which is based on small cancellation theory "
+            "and Nielsen moves.<p>"
+            "Pressing this button a second time should have no effect.</qt>"));
+        connect(btn, SIGNAL(clicked()), this, SLOT(simplifyInternal()));
         hLayout = new QHBoxLayout();
         hLayout->addStretch(1);
         hLayout->addWidget(btn);
@@ -110,20 +113,20 @@ GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) :
         hLayout->addStretch(1);
         buttonBox->addLayout(hLayout);
 
-        // Ryan's new button
         btn = new QPushButton(tr("Relator explosion"));
-        btn->setToolTip(tr("Generate new relators from old. "
-          "Can be memory intensive. Will call proliferateRelators(1)"
-          " internally." ));
-        btn->setWhatsThis(tr("Generate new relators from old. Be careful, "
-        "this routine attempts to intelligently multiply all the relators "
-        "together in a moderately intelligent way to create new, hopefully "
-        "useful relators.  This routine is useful for trying to prove a group "
-        "is trivial.  But beware, if the presentation is already large the "
-        "computation might easily exceed the memory capacity of your "
-        "computer. You should alternative this routine with a simplification "
-        "routine.</qt>"));
-        connect(btn, SIGNAL(clicked()), this, SLOT(proliferateRelatatorsPi1()));
+        btn->setToolTip(tr("Generate new relators from old (can be "
+            "memory-intensive)"));
+        btn->setWhatsThis(tr("<qt>Generate new relators from old.  "
+            "This attempts to multiply all the relators "
+            "together in a moderately intelligent way to create new, hopefully "
+            "useful relators.  You should alternate this "
+            "with one of the simplification buttons above.<p>"
+            "This routine has been found particularly useful when trying to "
+            "prove that a group is trivial.<p>"
+            "<b>Warning:</b> If the presentation is already large then "
+            "this computation might easily exceed the memory of your "
+            "computer.</qt>"));
+        connect(btn, SIGNAL(clicked()), this, SLOT(proliferateRelators()));
         hLayout = new QHBoxLayout();
         hLayout->addStretch(1);
         hLayout->addWidget(btn);
@@ -208,10 +211,9 @@ void GroupWidget::refresh(const regina::NGroupPresentation* group) {
             new QListWidgetItem(QString(group_->getRelation(i).str().c_str()),
                 fundRels_);
     }
-
 }
 
-void GroupWidget::simplifyPi1() {
+void GroupWidget::simplifyInternal() {
     if (! group_)
         return;
 
@@ -223,23 +225,32 @@ void GroupWidget::simplifyPi1() {
     delete simplified_;
     simplified_ = ans;
 
-    refresh(simplified_); // This will reset simpDepth_ by default...
-
+    refresh(simplified_);
     emit simplified();
 }
 
-void GroupWidget::proliferateRelatorsPi1() {
- if (!group_) return;
+void GroupWidget::proliferateRelators() {
+    if (! group_)
+        return;
 
- regina::NGroupPresentation* group =
-     new regina::NGroupPresentation(*group_);
+    if (group_->getNumberOfRelations() > MAX_RELATIONS_FOR_PROLIFERATION)
+        if (! ReginaSupport::warnYesNo(this,
+                tr("This group presentation is already large."),
+                tr("A relator explosion on a large group presentation "
+                    "could easily exceed the memory of your machine.  "
+                    "Are you sure you wish to do this?")))
+            return;
 
- if (group->getNumberOfRelations() > 8) { delete group; return; }
+    // Note: We might have group_ == simplified_, so we cannot delete
+    // simplified_ just yet.
+    regina::NGroupPresentation* ans = new regina::NGroupPresentation(*group_);
+    ans->proliferateRelators(1);
 
- group->proliferateRelators(1);
- simplified_ = group;
+    delete simplified_;
+    simplified_ = ans;
 
- emit simplified();
+    refresh(simplified_);
+    emit simplified();
 }
 
 void GroupWidget::simplifyGAP() {

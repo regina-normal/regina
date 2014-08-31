@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -159,7 +159,7 @@ void NPacket::makeOrphan() {
     NPacket* oldParent = treeParent;
 
     oldParent->fireEvent(&NPacketListener::childToBeRemoved,
-        this, inDestructor);
+        this, oldParent->inDestructor);
 
     if (treeParent->firstTreeChild == this)
         treeParent->firstTreeChild = nextTreeSibling;
@@ -174,7 +174,7 @@ void NPacket::makeOrphan() {
     treeParent = 0;
 
     oldParent->fireEvent(&NPacketListener::childWasRemoved,
-        this, inDestructor);
+        this, oldParent->inDestructor);
 }
 
 void NPacket::reparent(NPacket* newParent, bool first) {

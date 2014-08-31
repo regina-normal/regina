@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -45,6 +45,7 @@
 #include "nsnappeashapes.h"
 #include "ntricomposition.h"
 #include "ntriskeleton.h"
+#include "ntrisurfaces.h"
 #include "packeteditiface.h"
 #include "reginamain.h"
 
@@ -74,6 +75,7 @@ NSnapPeaUI::NSnapPeaUI(regina::NSnapPeaTriangulation* packet,
     addTab(skeleton, QObject::tr("&Skeleton"));
     addTab(algebra, QObject::tr("&Algebra"));
     addTab(new NTriCompositionUI(packet, this), QObject::tr("&Composition"));
+    addTab(new NTriSurfacesUI(packet, this), QObject::tr("&Recognition"));
     addTab(new NSnapPeaFileUI(packet, this), QObject::tr("&File"));
 
     editIface = new PacketEditTabbedUI(this);

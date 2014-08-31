@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
+CMAKE_MINIMUM_REQUIRED (VERSION 2.8.7)
 PROJECT (regina)
 
 # Let the user override the package name.
@@ -286,6 +286,35 @@ MACRO_LOG_FEATURE(Boost_FOUND
   "Essential: C++ components (including Boost.Python and Boost.Regex)"
   "http://www.boost.org/"
   TRUE)
+
+FIND_PACKAGE(PkgConfig)
+IF(NOT PKG_CONFIG_FOUND)
+  MESSAGE(FATAL_ERROR "Regina requires pkgconfig.")
+ENDIF(NOT PKG_CONFIG_FOUND)
+
+IF(NOT QDBM)
+  SET (QDBM OFF CACHE STRING
+    "Makes Regina build against the older QDBM library, instead of the newer Tokyo Cabinet.  This should only be used on systems (e.g., MinGW) to which Tokyo Cabinet cannot be reliably ported."
+    FORCE)
+ENDIF(NOT QDBM)
+IF (QDBM)
+  PKG_CHECK_MODULES(TOKYOCABINET qdbm)
+  MACRO_LOG_FEATURE(TOKYOCABINET_FOUND
+    "QDBM"
+    "Essential: lighweight database library for accessing census data"
+    "http://fallabs.com/qdbm/"
+    TRUE)
+  SET (QDBM_AS_TOKYOCABINET TRUE)
+  SET (DB_EXT "qdb")
+ELSE (QDBM)
+  PKG_CHECK_MODULES(TOKYOCABINET tokyocabinet)
+  MACRO_LOG_FEATURE(TOKYOCABINET_FOUND
+    "Tokyo Cabinet"
+    "Essential: lighweight database library for accessing census data"
+    "http://fallabs.com/tokyocabinet/"
+    TRUE)
+  SET (DB_EXT "tdb")
+ENDIF (QDBM)
 
 FIND_PACKAGE(Threads REQUIRED)
 IF(NOT CMAKE_USE_PTHREADS_INIT)

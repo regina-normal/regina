@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -870,13 +870,5 @@ void ReginaMain::updatePreferences() {
     for (QLinkedList<PacketPane *>::iterator it = allPanes.begin();
             it != allPanes.end(); it++)
         (*it)->supportDock(supportingDock);
-}
-
-void ReginaMain::newCensus() {
-    ReginaSupport::info(this,
-        tr("Census creation is only available from the command line."), 
-        tr("<qt>See the command-line program <i>tricensus</i>, which "
-        "supports a rich set of features and is suitable for "
-        "long census calculations.</qt>"));
 }
 

@@ -1,5 +1,5 @@
 example$ regina-python
-Regina 4.95
+Regina 4.96
 Software for 3-manifold topology and normal surface theory
 Copyright (c) 1999-2013, The Regina development team
 >>> ################################
@@ -20,7 +20,7 @@ Copyright (c) 1999-2013, The Regina development team
 >>> t.insertLayeredSolidTorus(3,4)
 <regina.engine.NTetrahedron object at 0x10c5221a0>
 >>> print t
-Triangulation with 3 tetrahedra.
+Triangulation with 3 tetrahedra
 >>> 
 >>> # Print the full skeleton of the triangulation.
 ... print t.detail()
@@ -103,7 +103,7 @@ Number of surfaces is 9
 >>> # Print the Euler characteristic and orientability of each surface.
 ... for i in range(surfaces.getNumberOfSurfaces()):
 ...     s = surfaces.getSurface(i)
-...     print "Chi =", s.getEulerCharacteristic(), "; Or =", s.isOrientable()
+...     print "Chi =", s.getEulerChar(), "; Or =", s.isOrientable()
 ... 
 Chi = -1 ; Or = True
 Chi = 0 ; Or = True

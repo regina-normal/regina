@@ -2,9 +2,9 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Qt User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -77,6 +77,15 @@ class ReginaSupport {
          * user that something non-critical has gone wrong.
          */
         static void warn(QWidget* parent, const QString& text,
+            const QString& informativeText = QString(),
+            const QString& detailedText = QString());
+
+        /**
+         * Produces a platform-agnostic warning message that informs the
+         * user that they are about to do something dangerous, and asks
+         * if they wish to proceed.
+         */
+        static bool warnYesNo(QWidget* parent, const QString& text,
             const QString& informativeText = QString(),
             const QString& detailedText = QString());
 

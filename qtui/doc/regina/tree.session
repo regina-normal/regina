@@ -12,7 +12,7 @@ Copyright (c) 1999-2013, The Regina development team
 ... #
 ... ################################
 ... 
-&gt;&gt;&gt; # Create a new census of finite orientable closed 3-manifold
+&gt;&gt;&gt; # Create a new census of all closed orientable 3-manifold
 ... # triangulations with two tetrahedra.
 ... census = NContainer()
 &gt;&gt;&gt; NCensus.formCensus(census, 2, NBoolSet.sTrue,
