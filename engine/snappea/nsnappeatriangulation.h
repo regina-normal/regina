@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -69,6 +69,8 @@ class NXMLSnapPeaReader;
 /**
  * A base class for all exceptions that are thrown from within the
  * SnapPea kernel.
+ *
+ * \ifacespython Not present.
  */
 struct SnapPeaException {
 };
@@ -76,6 +78,8 @@ struct SnapPeaException {
 /**
  * An exception that is thrown when the SnapPea kernel encounters a
  * fatal error.
+ *
+ * \ifacespython Not present.
  */
 struct SnapPeaFatalError : public SnapPeaException {
     std::string function;
@@ -100,6 +104,8 @@ struct SnapPeaFatalError : public SnapPeaException {
 /**
  * An exception that is thrown when the SnapPea kernel finds that all
  * available memory has been exhausted.
+ *
+ * \ifacespython Not present.
  */
 struct SnapPeaMemoryFull : public SnapPeaException {
 };
@@ -303,8 +309,6 @@ class REGINA_API NCusp : public ShareableObject {
  *
  * See http://snappy.computop.org/ for further information on
  * SnapPea and its successor SnapPy.
- *
- * \testpart
  */
 class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         public NPacketListener {
@@ -867,7 +871,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * @param l the second (longitudinal) filling coefficient.
          * @param whichCusp the index of the cusp to fill according to
          * SnapPea; this must be between 0 and countCusps()-1 inclusive.
-         * @param \c true if and only if the filling coefficients were
+         * @return \c true if and only if the filling coefficients were
          * accepted (according to the conditions outlined above).
          */
         bool fill(int m, int l, unsigned whichCusp = 0);

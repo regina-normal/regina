@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,6 +36,7 @@
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "algebra/nhomgrouppresentation.h"
+#include "algebra/nmarkedabeliangroup.h"
 
 using namespace boost::python;
 using regina::NGroupExpression;
@@ -47,6 +48,10 @@ namespace {
         unsigned long) const = &NHomGroupPresentation::evaluate;
     NGroupExpression (NHomGroupPresentation::*evaluate_exp)(
         const NGroupExpression&) const = &NHomGroupPresentation::evaluate;
+    NGroupExpression (NHomGroupPresentation::*invEvaluate_ulong)(
+        unsigned long) const = &NHomGroupPresentation::invEvaluate;
+    NGroupExpression (NHomGroupPresentation::*invEvaluate_exp)(
+        const NGroupExpression&) const = &NHomGroupPresentation::invEvaluate;
 }
 
 void addNHomGroupPresentation() {
@@ -58,10 +63,24 @@ void addNHomGroupPresentation() {
             return_internal_reference<>())
         .def("getRange", &NHomGroupPresentation::getRange,
             return_internal_reference<>())
+        .def("knowsInverse", &NHomGroupPresentation::knowsInverse)
         .def("evaluate", evaluate_exp)
         .def("evaluate", evaluate_ulong)
+        .def("invEvaluate", invEvaluate_exp)
+        .def("invEvaluate", invEvaluate_ulong)
         .def("intelligentSimplify",
             &NHomGroupPresentation::intelligentSimplify)
+        .def("intelligentNielsen",
+            &NHomGroupPresentation::intelligentNielsen)
+        .def("smallCancellation",
+            &NHomGroupPresentation::smallCancellation)
+        .def("composeWith",
+            &NHomGroupPresentation::composeWith)
+        .def("invert", &NHomGroupPresentation::invert)
+        .def("verify", &NHomGroupPresentation::verify)
+        .def("verifyIsomorphism", &NHomGroupPresentation::verifyIsomorphism)
+        .def("markedAbelianisation",
+            &NHomGroupPresentation::markedAbelianisation)
     ;
 }
 

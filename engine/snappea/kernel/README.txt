@@ -3,7 +3,7 @@ SnapPea Kernel
 
 This directory contains portions of the SnapPea kernel, as downloaded
 from http://www.math.uic.edu/t3m/.  This is currently synced with the
-variant of the SnapPea kernel bundled with SnapPy 2.0.3 (23 Oct 2013).
+variant of the SnapPea kernel bundled with SnapPy 2.2 (26 Jun 2014).
 This variant includes additional patches not included in the original
 SnapPea kernel.
 

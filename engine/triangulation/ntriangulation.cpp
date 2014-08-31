@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -164,6 +164,7 @@ void NTriangulation::clearAllProperties() {
     irreducible_.clear();
     compressingDisc_.clear();
     haken_.clear();
+    strictAngleStructure_.clear();
 
     turaevViroCache_.clear();
 }
@@ -547,6 +548,15 @@ void NTriangulation::cloneFrom(const NTriangulation& X) {
     irreducible_ = X.irreducible_;
     compressingDisc_ = X.compressingDisc_;
     haken_ = X.haken_;
+
+    if (X.strictAngleStructure_.known()) {
+        if (X.strictAngleStructure_.value())
+            strictAngleStructure_ = new NAngleStructure(this,
+                new NAngleStructureVector(
+                *X.strictAngleStructure_.value()->rawVector()));
+        else
+            strictAngleStructure_ = 0;
+    }
 
     turaevViroCache_ = X.turaevViroCache_;
 }

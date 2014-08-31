@@ -23,6 +23,9 @@
 /* Define if langinfo.h and nl_langinfo() are available. */
 #cmakedefine LANGINFO_FOUND
 
+/* Define if we are replacing Tokyo Cabinet with the older QDBM. */
+#cmakedefine QDBM_AS_TOKYOCABINET
+
 /* Define if we are excluding Normaliz from the build. */
 #cmakedefine EXCLUDE_NORMALIZ
 
@@ -41,6 +44,9 @@
    python location (i.e., it can be found automatically on python's sys.path).
    This can always be changed at runtime vi NGlobalDirs::setDirs(). */
 #define REGINA_PYLIBDIR "@PYLIBDIR@"
+
+/* Define to the filename extension that we use for census databases. */
+#define REGINA_DB_EXT "@DB_EXT@"
 
 /* Define to the address where bug reports for this package should be sent. */
 #define PACKAGE_BUGREPORT "@PACKAGE_BUGREPORT@"

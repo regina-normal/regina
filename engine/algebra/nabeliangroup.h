@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -67,8 +67,6 @@ class NMatrixInt;
  * where the invariant factors <i>di</i> are all greater than 1 and satisfy
  * <i>d0</i>|<i>d1</i>|...|<i>dn</i>.  Note that this representation is
  * unique.
- *
- * \testpart
  *
  * \todo \optlong Look at using sparse matrices for storage of SNF and
  * the like.

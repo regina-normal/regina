@@ -3,7 +3,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Source Distribution Verification
 #
-# Copyright (c) 2003-2013, Ben Burton
+# Copyright (c) 2003-2014, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Usage: distcheck <dist-tarball>
@@ -129,8 +129,8 @@ echo "Analysing git source tree..."
 
 if ! find "$gittree" -type f | sed -e 's%^[^/]*/%%' | \
     grep -v "$grep_builddirs" | \
-    grep -v '\.git/' | \
-    grep -v '\.DS_Store$' | \
+    grep -v '^\.' | \
+    grep -v '/\.' | \
     grep -v '^engine/snappea/kernel/unused\(/\|$\)' | \
     grep -v '^regina-[0-9.]\+\.tar\.gz$' | \
     grep -v '^sfdist\(/\|$\)' | \
@@ -142,7 +142,7 @@ if ! find "$gittree" -type f | sed -e 's%^[^/]*/%%' | \
 fi
 
 # Output the differences.
-diff -B "$gitlist" "$distlist" | grep -v '^[0-9]'
+diff -B "$distlist" "$gitlist" | grep -v '^[0-9]'
 
 # Clean up.
 rm "$gitlist" "$distlist"

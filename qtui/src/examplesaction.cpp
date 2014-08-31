@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -86,21 +86,17 @@ void ExamplesAction::exampleActivated(QAction* action) {
 void ExamplesAction::fillStandard() {
     addUrl("sample-misc.rga",
         tr("Introductory Examples"));
-    addUrl("closed-hyp-census.rga",
-        tr("Closed Hyperbolic Census"));
     addUrl("closed-or-census.rga",
-        tr("Closed Orientable Census (Small)"));
-    addUrl("closed-or-census-large.rga",
-        tr("Closed Orientable Census (Large)"));
+        tr("Closed Census (Orientable)"));
     addUrl("closed-nor-census.rga",
-        tr("Closed Non-Orientable Census"));
-    addUrl("snappea-census.rga",
-        tr("Cusped Hyperbolic Census"));
-    addUrl("knot-link-census.rga",
+        tr("Closed Census (Non-Orientable)"));
+    addUrl("cusped-hyp-or-census.rga",
+        tr("Cusped Hyperbolic Census (Orientable)"));
+    addUrl("cusped-hyp-nor-census.rga",
+        tr("Cusped Hyperbolic Census (Non-Orientable)"));
+    addUrl("closed-hyp-census.rga",
+        tr("Hodgson-Weeks Closed Hyperbolic Census"));
+    addUrl("hyp-knot-link-census.rga",
         tr("Hyperbolic Knot / Link Complements"));
-    addUrl("sig-3mfd-census.rga",
-        tr("Splitting Surface Sigs (General)"));
-    addUrl("sig-prime-min-census.rga",
-        tr("Splitting Surface Sigs (Prime, Minimal)"));
 }
 

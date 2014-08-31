@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -67,10 +67,8 @@ namespace regina {
  * infinity is the largest.  Undefined is always equal to itself, and
  * infinity is always equal to itself.
  *
- * Rationals will always be stored in lowest terms with non-negative
- * denominator.
- *
- * \testpart
+ * Rationals will always be stored in lowest terms (i.e., with relatively
+ * prime numerator and denominator), and with a non-negative denominator.
  */
 class REGINA_API NRational {
     public:
