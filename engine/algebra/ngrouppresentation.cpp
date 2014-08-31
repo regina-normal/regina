@@ -1937,90 +1937,6 @@ NGroupPresentation::identifyExtensionOverZ()
                           (idx(i,liftCount),temp) );
     }
 
-// extra genKillers -- sometimes there are wider words than the killing words.
-//  like with presentations such as:
-//   < a b | b a^-1 b a^-1 b^-1 a^2, a^-3 b^2 a^3 b^2 >
-// We could alternatively use the genKiller to reduce the width of the other
-// relators.  But for now we use this less-sophisticated work-around.
-    for (unsigned long j=liftCount; j<maxWidth; j++) {
-        for (unsigned long i=1; i<getNumberOfGenerators(); i++) {
-            // bump-up lift of each genKiller then apply previous genKillers to them
-            // to create word in the fibre group.
-            NGroupExpression tempW( genKiller[idx(i, j)] );
-            for (std::list<NGroupExpressionTerm>::iterator I=tempW.getTerms().begin();
-                    I!=tempW.getTerms().end(); I++) I->generator += nGm1;
-            for (std::map<unsigned long, NGroupExpression>::iterator
-                    J=genKiller.begin(); J!=genKiller.end(); J++)
-                tempW.substitute( J->first, J->second, false );
-            genKiller.insert( std::pair< unsigned long, NGroupExpression >
-                              (idx(i,j+1), tempW) );
-        }
-    }
-
-//  initialize tempTable with the 0-th lifts of the relators.
-    std::list< NGroupExpression > tempTable;
-    NGroupPresentation kerPres;
-    kerPres.addGenerator( liftCount * nGm1 );
-
-    for (unsigned long i=0; i<lifts.size(); i++) {
-        NGroupExpression temp;
-        for (std::list< std::pair< NGroupExpressionTerm, signed long >
-                >::iterator I=lifts[i].begin(); I!=lifts[i].end(); I++)
-            temp.addTermFirst( NGroupExpressionTerm(
-                                   idx( I->first.generator, I->second ), I->first.exponent ) );
-        for (std::map<unsigned long, NGroupExpression>::iterator J=genKiller.begin();
-                J!=genKiller.end(); J++)
-            temp.substitute( J->first, J->second, false );
-        temp.simplify();
-        if (temp.wordLength()>0) {
-            tempTable.push_back(temp);
-            kerPres.addRelation( new NGroupExpression(temp) );
-        }
-    }
-    if (!kerPres.isValid()) {
-        std::cout<<"identify_extension_over_Z() error (1):"<<
-                 " out of bounds relator in kerPres.\n";
-        std::cout.flush();
-        exit(1);
-    }
-// build the reductions of the {0,1,...,liftCount-1} translates of **all**
-// the relators from the group, and assemble them into the relators of the
-// kernel.
-    for (unsigned long M=0; M<liftCount; M++) {
-        // increment the words in tempTable
-        for ( std::list< NGroupExpression >::iterator I=tempTable.begin();
-                I != tempTable.end(); I++) {
-            std::list< NGroupExpressionTerm >& It(I->getTerms() );
-            for (std::list<NGroupExpressionTerm>::iterator J=It.begin();
-                    J!=It.end(); J++)
-                J->generator += nGm1; // this depends on choice of idx function
-            for (std::map<unsigned long, NGroupExpression>::iterator
-                    J=genKiller.begin(); J!=genKiller.end(); J++)
-                I->substitute( J->first, J->second, false );
-            // apply genKiller to reduce the words, and push to presentation
-            kerPres.addRelation( new NGroupExpression( *I ) );
-        }
-    }
-    if (!kerPres.isValid()) {
-        std::cout<<"identify_extension_over_Z() error (2):"<<
-                 " out of bounds relator in kerPres.\n";
-        std::cout.flush();
-        exit(1);
-    }
-
-    // replace this presentation by the semi-direct product presentation.
-    std::vector<NGroupExpression> autVec;
-
-    autVec.resize( nGm1*liftCount );
-    for (unsigned long i=0; i<autVec.size(); i++) // this part depends on idx
-        if ( i >= nGm1*(liftCount-1) )
-            autVec[i] = genKiller[i+nGm1];
-        else {
-            NGroupExpression temp;
-            temp.addTermFirst( i+nGm1, 1 );
-            autVec[i] = temp;
-        }
-
     // extra genKillers -- sometimes there are wider words than the killing words.
     //  like with presentations such as:
     //   < a b | b a^-1 b a^-1 b^-1 a^2, a^-3 b^2 a^3 b^2 >
@@ -2085,6 +2001,13 @@ NGroupPresentation::identifyExtensionOverZ()
             kerPres.addRelation( new NGroupExpression( *I ) );
         }
     }
+    if (!kerPres.isValid()) {
+        std::cout<<"identify_extension_over_Z() error (2):"<<
+                 " out of bounds relator in kerPres.\n";
+        std::cout.flush();
+        exit(1);
+    }
+
     // replace this presentation by the semi-direct product presentation.
     std::vector<NGroupExpression> autVec;
 
