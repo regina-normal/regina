@@ -32,15 +32,29 @@
 
 /* end stub */
 
+#include "regina-config.h" // For QDBM-related macros
+
 #include <cctype>
 #include <cstdlib>
 #include <iostream>
-#include <stdbool.h> // cstdbool needs c++11
-#include <stdint.h> // cstdint needs c++11
 #include <string>
+#ifdef QDBM_AS_TOKYOCABINET
+#include <depot.h>
+#include <cabin.h>
+#include <villa.h>
+#else
+#include <stdbool.h> // cstdbool only works for c++11
+#include <stdint.h> // cstdint only works for c++11
 #include <tcbdb.h>
 #include <tcutil.h>
+#endif
 #include "utilities/zstream.h"
+
+#ifdef QDBM_AS_TOKYOCABINET
+  #define DB_CLOSE(x) vlclose(x);
+#else
+  #define DB_CLOSE(x) { tcbdbclose(x); tcbdbdel(x); }
+#endif
 
 void usage(const char* progName, const std::string& error = std::string()) {
     if (! error.empty())
@@ -72,13 +86,23 @@ int main(int argc, char* argv[]) {
     }
 
     // Initialise the database.
+#ifdef QDBM_AS_TOKYOCABINET
+    VILLA* db;
+    if (! (db = vlopen(outputFile.c_str(),
+            VL_OWRITER | VL_OCREAT | VL_OTRUNC | VL_OZCOMP, VL_CMPLEX))) {
+        std::cerr << "ERROR: Could not open QDBM database: "
+            << outputFile << std::endl;
+        std::exit(1);
+    }
+#else
     TCBDB* db = tcbdbnew();
     if (! tcbdbopen(db, outputFile.c_str(),
             BDBOWRITER | BDBOCREAT | BDBOTRUNC)) {
-        std::cerr << "ERROR: Could not open database: " << outputFile
-            << std::endl;
+        std::cerr << "ERROR: Could not open Tokyo Cabinet database: "
+            << outputFile << std::endl;
         std::exit(1);
     }
+#endif
 
     // Fill the database with the user-supplied key-value pairs.
     std::string sig, name;
@@ -93,8 +117,7 @@ int main(int argc, char* argv[]) {
         if (in.eof()) {
             std::cerr << "ERROR: Signature " << sig
                 << " is missing a corresponding name.\n\n";
-            tcbdbclose(db);
-            tcbdbdel(db);
+            DB_CLOSE(db);
             usage(argv[0]);
         }
 
@@ -107,16 +130,19 @@ int main(int argc, char* argv[]) {
         if (! *pos) {
             std::cerr << "ERROR: Signature " << sig
                 << " has an empty name.\n\n";
-            tcbdbclose(db);
-            tcbdbdel(db);
+            DB_CLOSE(db);
             usage(argv[0]);
         }
 
+#ifdef QDBM_AS_TOKYOCABINET
+        if (! vlput(db, sig.c_str(), sig.length(),
+                pos, -1 /* strlen */, VL_DDUP)) {
+#else
         if (! tcbdbputdup2(db, sig.c_str(), pos)) {
+#endif
             std::cerr << "ERROR: Could not store the record for "
                 << sig << " in the database." << std::endl;
-            tcbdbclose(db);
-            tcbdbdel(db);
+            DB_CLOSE(db);
             std::exit(1);
         }
         ++tot;
@@ -125,25 +151,39 @@ int main(int argc, char* argv[]) {
     // Close and tidy up.
     in.close();
 
+#ifdef QDBM_AS_TOKYOCABINET
+    if (! vloptimize(db)) {
+        std::cerr << "ERROR: Could not optimise QDBM database: "
+            << outputFile << std::endl;
+        DB_CLOSE(db);
+        std::exit(1);
+    }
+
+    if (! vlclose(db)) {
+        std::cerr << "ERROR: Could not close QDBM database: "
+            << outputFile << std::endl;
+        std::exit(1);
+    }
+#else
     // The following call to tcbdboptimise() does not change any options
     // other than the bitwise compression option given in the final argument.
     if (! tcbdboptimize(db, 0, 0, 0, -1, -1, BDBTBZIP)) {
-        std::cerr << "ERROR: Could not optimise database: " << outputFile
-            << std::endl;
+        std::cerr << "ERROR: Could not optimise Tokyo Cabinet database: "
+            << outputFile << std::endl;
         std::cerr << "Tokyo cabinet error: " << tcerrmsg(tcbdbecode(db))
             << std::endl;
-        tcbdbclose(db);
-        tcbdbdel(db);
+        DB_CLOSE(db);
         std::exit(1);
     }
 
     if (! tcbdbclose(db)) {
-        std::cerr << "ERROR: Could not close database: " << outputFile
-            << std::endl;
+        std::cerr << "ERROR: Could not close Tokyo Cabinet database: "
+            << outputFile << std::endl;
         tcbdbdel(db);
         std::exit(1);
     }
     tcbdbdel(db);
+#endif
 
     std::cout << "Success: " << tot << " records." << std::endl;
     return 0;

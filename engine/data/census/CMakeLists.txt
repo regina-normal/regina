@@ -6,16 +6,16 @@ ADD_EXECUTABLE(mkcensusdb mkcensusdb.cpp ../../utilities/zstream.cpp)
 TARGET_LINK_LIBRARIES(mkcensusdb ${ZLIB_LIBRARIES} ${TOKYOCABINET_LIBRARIES})
 
 SET(censusdata_DATA
-  closed-hyp-census-full.tdb
-  closed-nor-census-11.tdb
-  closed-or-census-11.tdb
-  cusped-hyp-nor-census-9.tdb
-  cusped-hyp-or-census-9.tdb
-  hyp-knot-link-census.tdb
+  closed-hyp-census-full.${DB_EXT}
+  closed-nor-census-11.${DB_EXT}
+  closed-or-census-11.${DB_EXT}
+  cusped-hyp-nor-census-9.${DB_EXT}
+  cusped-hyp-or-census-9.${DB_EXT}
+  hyp-knot-link-census.${DB_EXT}
   )
 
 FOREACH(db ${censusdata_DATA})
-  STRING(REGEX REPLACE [.]tdb$ .dat.gz siglist ${db})
+  STRING(REGEX REPLACE [.]${DB_EXT}$ .dat.gz siglist ${db})
   ADD_CUSTOM_COMMAND(OUTPUT ${db} DEPENDS mkcensusdb ${siglist}
     COMMAND mkcensusdb
       ${PROJECT_SOURCE_DIR}/engine/data/census/${siglist}

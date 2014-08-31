@@ -1,5 +1,13 @@
 # Engine
 
+# Note: Any flags that need to be picked up by internal compiled engine tools
+# (such as mkcensusdb) need to appear *before* the list of subdirectories.
+
+# Pick up generated engine headers (e.g., regina-config.h) as well as
+# Regina's standard engine headers.
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/engine)
+INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/engine)
+
 # The tokyocabinet library is only used internally by the engine (i.e., it
 # never appears in the engine headers, only the .cpp sources).
 # Therefore we include it only here within engine/, not globally.
@@ -37,8 +45,6 @@ SET_SOURCE_FILES_PROPERTIES( ${SOURCES_C_AS_CPP} PROPERTIES LANGUAGE CXX )
 
 ADD_DEFINITIONS(-DREGINA_DLL_EXPORTS=1)
 
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/engine)
-INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/engine)
 ADD_LIBRARY("regina-engine" SHARED ${SOURCES} )
 # All of the libraries that appear in ENGINE_LINK_LIBRARIES feature in
 # the engine headers, which means they may be expose to third-party apps
