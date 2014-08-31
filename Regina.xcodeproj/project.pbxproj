@@ -997,6 +997,12 @@
 		05A73CDD19B2F24A0099C617 /* cusped-hyp-or-census.rga in Resources */ = {isa = PBXBuildFile; fileRef = 05A73CDA19B2F24A0099C617 /* cusped-hyp-or-census.rga */; };
 		05A73CDE19B2F24A0099C617 /* hyp-knot-link-census.rga in Resources */ = {isa = PBXBuildFile; fileRef = 05A73CDB19B2F24A0099C617 /* hyp-knot-link-census.rga */; };
 		05A73CE019B2F3A70099C617 /* libtokyocabinet.9.10.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 05A73CDF19B2F3A60099C617 /* libtokyocabinet.9.10.0.dylib */; };
+		05A73CE119B2F97B0099C617 /* cuspchooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CD719B2F2180099C617 /* cuspchooser.h */; };
+		05A73CE219B2F99B0099C617 /* groupwidget.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CBD19B2F1AB0099C617 /* groupwidget.h */; };
+		05A73CE319B2F9DC0099C617 /* nsnappeafile.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CC319B2F1AB0099C617 /* nsnappeafile.h */; };
+		05A73CE419B2F9DC0099C617 /* nsnappeagluings.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CC519B2F1AB0099C617 /* nsnappeagluings.h */; };
+		05A73CE519B2F9DC0099C617 /* nsnappeashapes.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CC719B2F1AB0099C617 /* nsnappeashapes.h */; };
+		05A73CE619B2F9DC0099C617 /* nsnappeaui.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CC919B2F1AB0099C617 /* nsnappeaui.h */; };
 		05B62166180B9D7300CCB90B /* title.png in Resources */ = {isa = PBXBuildFile; fileRef = 05B62165180B9D7300CCB90B /* title.png */; };
 		05B9EC1B18245F2100DCACF3 /* euler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B9EC1A18245F2100DCACF3 /* euler.cpp */; };
 		05B9EC1C18245F2100DCACF3 /* euler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B9EC1A18245F2100DCACF3 /* euler.cpp */; };
@@ -4173,6 +4179,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0543AE931811E12A002758F8 /* boundarycomponentchooser.h in Sources */,
+				05A73CE119B2F97B0099C617 /* cuspchooser.h in Sources */,
 				0543AE941811E12A002758F8 /* edgechooser.h in Sources */,
 				0543AE951811E12A002758F8 /* edgeintchooser.h in Sources */,
 				0543AE961811E12A002758F8 /* tetrahedronchooser.h in Sources */,
@@ -4195,10 +4202,15 @@
 				0543AEA61811E12A002758F8 /* eltmovedialog.h in Sources */,
 				0543AEA71811E12A002758F8 /* facetgraphtab.h in Sources */,
 				0543AEA81811E12A002758F8 /* gaprunner.h in Sources */,
+				05A73CE219B2F99B0099C617 /* groupwidget.h in Sources */,
 				0543AEA91811E12A002758F8 /* nanglestructureui.h in Sources */,
 				0543AEAA1811E12A002758F8 /* ncompatcanvas.h in Sources */,
 				0543AEAB1811E12A002758F8 /* nnormalsurfaceui.h in Sources */,
 				0543AEAC1811E12A002758F8 /* nscriptui.h in Sources */,
+				05A73CE319B2F9DC0099C617 /* nsnappeafile.h in Sources */,
+				05A73CE419B2F9DC0099C617 /* nsnappeagluings.h in Sources */,
+				05A73CE519B2F9DC0099C617 /* nsnappeashapes.h in Sources */,
+				05A73CE619B2F9DC0099C617 /* nsnappeaui.h in Sources */,
 				0543AEAD1811E12A002758F8 /* nsurfacecompatui.h in Sources */,
 				0543AEAE1811E12A002758F8 /* nsurfacecoordinateui.h in Sources */,
 				0543AEAF1811E12A002758F8 /* nsurfacefiltercomb.h in Sources */,
