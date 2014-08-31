@@ -5,6 +5,7 @@ All locations are relative to the primary source directory.
 Program version:
     CHANGES.txt, HIGHLIGHTS.txt (version, date)
     CMakeLists.txt (PACKAGE_VERSION)
+    qtui/doc/regina/about.docbook (plain citation, bibTeX citation)
     qtui/doc/regina/index.docbook (&regversion;, &regdate;,
                                    date, releaseinfo, copyrightyears)
     qtui/doc/regina/manonly.docbook (&regversion;)
@@ -15,12 +16,23 @@ Program version:
                     filenames, what's new)
     www/source.html (unpacking instructions: filename, directory)
 
+Plus copyright years in:
+    engine/doxygen/doc-footer.html
+    python/modulemain.cpp
+    ... and the copyright statement in the license (see below)
+
 Full license details:
     LICENSE.txt
     engine/docs.h
     qtui/doc/regina/credits.docbook
     qtui/src/reginaabout.cpp (ReginaAbout constructor)
     www/index.html
+
+SnapPy version:
+    engine/snappea/nsnappeatriangulation.h (class docs)
+    qtui/doc/regina/trouble.docbook (SnapPy multiple interpreters)
+    engine/snappea/kernel/README.txt
+    engine/snappea/snappy/README.txt
 
 SnapPea / SnapPy copyright (in addition to full license locations above):
     engine/snappea/kernel/README.txt
@@ -41,7 +53,6 @@ Don't forget:
     check that all headers are installed correctly
     check for doxygen warnings
     check for docbook warnings/errors
-    update \test... notes in API docs
     python bindings for new routines
     rebuild manpages
     website, including updated news, what's new and deprecation guide
@@ -51,10 +62,8 @@ Don't forget:
     macos DMG (purge libiconv-dev, libxml2 from fink first)
     update tips for building on different platforms
     update debian/ubuntu/fink READMEs as required (both text and html)
-    copy fink info file(s) beneath www/
     update census download file sizes if there have been changes
     tag the git repository
-    upload new data files, both from examples/ and the large data repository
     update docs/ and engine-docs/ on the website
     update the citation years if necessary in private BibTeX databases
     mail regina-announce

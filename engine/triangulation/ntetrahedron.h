@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -103,7 +103,7 @@ class NTriangulation;
  */
 class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
     private:
-        NTetrahedron* tetrahedra[4];
+        NTetrahedron* tetrahedra_[4];
             /**< Stores the tetrahedra glued to each face of this
                  tetrahedron.  Specifically, <tt>tetrahedra[f]</tt>
                  represents the tetrahedron joined to triangular face \c f
@@ -111,28 +111,28 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
                  if face \c f lies on the triangulation boundary.  Faces are
                  numbered from 0 to 3 inclusive, where face \c i is opposite
                  vertex \c i. */
-        NPerm4 tetrahedronPerm[4];
+        NPerm4 tetrahedronPerm_[4];
             /**< Stores the corresponence between vertices of this
                  tetrahedron and adjacent tetrahedra.  If face \c f is
                  joined to another tetrahedron, <tt>tetrahedronPerm[f]</tt>
                  represents the permutation \c p whereby vertex \c v of
                  this tetrahedron is identified with vertex <tt>p[v]</tt> of
                  the adjacent tetrahedron along face \c f. */
-        std::string description;
+        std::string description_;
             /**< A text description of this tetrahedron.
                  Descriptions are not mandatory and need not be unique. */
 
-        NVertex* vertices[4];
+        NVertex* vertices_[4];
             /**< Vertices in the triangulation skeleton that are
                  vertices of this tetrahedron. */
-        NEdge* edges[6];
+        NEdge* edges_[6];
             /**< Edges in the triangulation skeleton that are
                  edges of this tetrahedron. */
-        NTriangle* triangles[4];
+        NTriangle* triangles_[4];
             /**< Triangles in the triangulation skeleton that are
                  faces of this tetrahedron. */
 
-        int tmpOrientation[4];
+        int tmpOrientation_[4];
             /**< Temporary array used to represent orientations
                  of triangles and vertex link triangles when calculating
                  orientability of boundary components and vertex links.
@@ -140,23 +140,23 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
                  The array should only be used within these
                  orientability routines, and its contents afterwards are
                  unpredictable. */
-        NPerm4 vertexMapping[4];
+        NPerm4 vertexMapping_[4];
             /**< Maps 0 to each vertex of this tetrahedron in turn whilst
                  mapping (1,2,3) in a suitably "orientation-preserving" way,
                  as described in getVertexMapping(). */
-        NPerm4 edgeMapping[6];
+        NPerm4 edgeMapping_[6];
             /**< Maps (0,1) to the vertices of this tetrahedron that form
                  each edge whilst mapping (2,3) in a suitably "orientation-
                  preserving" way, as described in getEdgeMapping(). */
-        NPerm4 triMapping[4];
+        NPerm4 triMapping_[4];
             /**< Maps (0,1,2) to the vertices of this tetrahedron that form
                  each triangular face, as described in getTriangleMapping(). */
-        int tetOrientation;
+        int tetOrientation_;
             /**< The orientation of this tetrahedron in the triangulation.
                  This will either be 1 or -1. */
-        NTriangulation* tri;
+        NTriangulation* tri_;
             /**< The triangulation to which this tetrahedron belongs. */
-        NComponent* component;
+        NComponent* component_;
             /**< The component to which this tetrahedron belongs in the
                  triangulation. */
 
@@ -205,6 +205,18 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
          * tetrahedron.
          */
         void setDescription(const std::string& desc);
+
+        /**
+         * Returns the index of this tetrahedron in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->tetrahedronIndex(this)</tt>.
+         *
+         * Note that tetrahedron indexing may change when a tetrahedron is
+         * added or removed from the underlying triangulation.
+         *
+         * @return the index of this tetrahedron.
+         */
+        unsigned long index() const;
 
         /**
          * Returns the adjacent tetrahedron glued to the given face of this
@@ -696,74 +708,79 @@ inline NTetrahedron::~NTetrahedron() {
 }
 
 inline const std::string& NTetrahedron::getDescription() const {
-    return description;
+    return description_;
 }
 
 inline void NTetrahedron::setDescription(const std::string& desc) {
-    description = desc;
+    NPacket::ChangeEventSpan span(tri_);
+    description_ = desc;
+}
+
+inline unsigned long NTetrahedron::index() const {
+    return markedIndex();
 }
 
 inline NTetrahedron* NTetrahedron::adjacentTetrahedron(int face) const {
-    return tetrahedra[face];
+    return tetrahedra_[face];
 }
 
 inline NTetrahedron* NTetrahedron::adjacentSimplex(int face) const {
-    return tetrahedra[face];
+    return tetrahedra_[face];
 }
 
 inline NTetrahedron* NTetrahedron::getAdjacentTetrahedron(int face) const {
     // Deprecated.
-    return tetrahedra[face];
+    return tetrahedra_[face];
 }
 
 inline int NTetrahedron::adjacentFace(int face) const {
-    return tetrahedronPerm[face][face];
+    return tetrahedronPerm_[face][face];
 }
 
 inline int NTetrahedron::adjacentFacet(int facet) const {
-    return tetrahedronPerm[facet][facet];
+    return tetrahedronPerm_[facet][facet];
 }
 
 inline int NTetrahedron::getAdjacentFace(int face) const {
     // Deprecated.
-    return tetrahedronPerm[face][face];
+    return tetrahedronPerm_[face][face];
 }
 
 inline NPerm4 NTetrahedron::adjacentGluing(int face) const {
-    return tetrahedronPerm[face];
+    return tetrahedronPerm_[face];
 }
 
 inline NPerm4 NTetrahedron::getAdjacentTetrahedronGluing(int face) const {
     // Deprecated!  Finally.
-    return tetrahedronPerm[face];
+    return tetrahedronPerm_[face];
 }
 
 inline NTriangulation* NTetrahedron::getTriangulation() const {
-    return tri;
+    return tri_;
 }
 
 inline NComponent* NTetrahedron::getComponent() const {
-    if (! tri->calculatedSkeleton)
-        tri->calculateSkeleton();
-    return component;
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return component_;
 }
 
 inline NVertex* NTetrahedron::getVertex(int vertex) const {
-    if (! tri->calculatedSkeleton)
-        tri->calculateSkeleton();
-    return vertices[vertex];
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return vertices_[vertex];
 }
 
 inline NEdge* NTetrahedron::getEdge(int edge) const {
-    if (! tri->calculatedSkeleton)
-        tri->calculateSkeleton();
-    return edges[edge];
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return edges_[edge];
 }
 
 inline NTriangle* NTetrahedron::getTriangle(int face) const {
-    if (! tri->calculatedSkeleton)
-        tri->calculateSkeleton();
-    return triangles[face];
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return triangles_[face];
 }
 
 inline NTriangle* NTetrahedron::getFace(int face) const {
@@ -771,21 +788,21 @@ inline NTriangle* NTetrahedron::getFace(int face) const {
 }
 
 inline NPerm4 NTetrahedron::getVertexMapping(int vertex) const {
-    if (! tri->calculatedSkeleton)
-        tri->calculateSkeleton();
-    return vertexMapping[vertex];
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return vertexMapping_[vertex];
 }
 
 inline NPerm4 NTetrahedron::getEdgeMapping(int edge) const {
-    if (! tri->calculatedSkeleton)
-        tri->calculateSkeleton();
-    return edgeMapping[edge];
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return edgeMapping_[edge];
 }
 
 inline NPerm4 NTetrahedron::getTriangleMapping(int face) const {
-    if (! tri->calculatedSkeleton)
-        tri->calculateSkeleton();
-    return triMapping[face];
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return triMapping_[face];
 }
 
 inline NPerm4 NTetrahedron::getFaceMapping(int face) const {
@@ -793,15 +810,15 @@ inline NPerm4 NTetrahedron::getFaceMapping(int face) const {
 }
 
 inline int NTetrahedron::orientation() const {
-    if (! tri->calculatedSkeleton)
-        tri->calculateSkeleton();
-    return tetOrientation;
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return tetOrientation_;
 }
 
 inline void NTetrahedron::writeTextShort(std::ostream& out) const {
     out << "Tetrahedron";
-    if (description.length() > 0)
-        out << ": " << description;
+    if (description_.length() > 0)
+        out << ": " << description_;
 }
 
 } // namespace regina

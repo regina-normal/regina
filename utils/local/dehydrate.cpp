@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Dehydrate a collection of triangulations                              *
  *                                                                        *
- *  Copyright (c) 2005-2013, Ben Burton                                   *
+ *  Copyright (c) 2005-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
     bool found = false;
     std::string dehydration;
     for ( ; i < argc; i++) {
-        NPacket* tree = readXMLFile(argv[i]);
+        NPacket* tree = open(argv[i]);
         if (tree == 0) {
             std::cerr << "ERROR: Could not read data from " << argv[i] << '.'
                 << std::endl;

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,6 +39,9 @@
 #include "packetchooser.h"
 #include "packetfilter.h"
 #include "packetmanager.h"
+#include <QDialogButtonBox>
+#include <QLabel>
+#include <QBoxLayout>
 
 #include <algorithm>
 
@@ -262,5 +265,50 @@ bool PacketChooser::verify() {
     }
 
     return true;
+}
+
+PacketDialog::PacketDialog(QWidget* parent,
+        regina::NPacket* subtree,
+        PacketFilter* filter,
+        const QString& title,
+        const QString& message,
+        const QString& whatsThis,
+        PacketChooser::RootRole rootRole,
+        bool allowNone,
+        regina::NPacket* initialSelection) {
+    setWindowTitle(title);
+    setWhatsThis(whatsThis);
+    QVBoxLayout* layout = new QVBoxLayout(this);
+
+    QLabel* label = new QLabel(message);
+    layout->addWidget(label);
+
+    chooser = new PacketChooser(subtree, filter, rootRole, allowNone,
+        initialSelection, this);
+    layout->addWidget(chooser);
+
+    QDialogButtonBox* buttonBox = new QDialogButtonBox(
+        QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    layout->addWidget(buttonBox);
+
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+}
+
+regina::NPacket* PacketDialog::choose(QWidget* parent,
+        regina::NPacket* subtree,
+        PacketFilter* filter,
+        const QString& title,
+        const QString& message,
+        const QString& whatsThis,
+        PacketChooser::RootRole rootRole,
+        bool allowNone,
+        regina::NPacket* initialSelection) {
+    PacketDialog dlg(parent, subtree, filter, title, message, whatsThis,
+        rootRole, allowNone, initialSelection);
+    if (dlg.exec())
+        return dlg.chooser->selectedPacket();
+    else
+        return 0;
 }
 

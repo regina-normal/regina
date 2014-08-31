@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -44,6 +44,7 @@ void addDim2BoundaryComponent() {
     class_<Dim2BoundaryComponent, bases<regina::ShareableObject>,
             std::auto_ptr<Dim2BoundaryComponent>, boost::noncopyable>
             ("Dim2BoundaryComponent", no_init)
+        .def("index", &Dim2BoundaryComponent::index)
         .def("getNumberOfEdges", &Dim2BoundaryComponent::getNumberOfEdges)
         .def("getNumberOfVertices", &Dim2BoundaryComponent::getNumberOfVertices)
         .def("getEdge", &Dim2BoundaryComponent::getEdge,

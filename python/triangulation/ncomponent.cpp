@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -47,6 +47,7 @@ void addNComponent() {
     class_<NComponent, bases<regina::ShareableObject>,
             std::auto_ptr<NComponent>, boost::noncopyable>
             ("NComponent", no_init)
+        .def("index", &NComponent::index)
         .def("getNumberOfTetrahedra", &NComponent::getNumberOfTetrahedra)
         .def("getNumberOfSimplices", &NComponent::getNumberOfSimplices)
         .def("getNumberOfFaces", &NComponent::getNumberOfFaces)

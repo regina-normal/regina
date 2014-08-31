@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Count vertex normal surfaces for a set of data files                  *
  *                                                                        *
- *  Copyright (c) 2005-2013, Ben Burton                                   *
+ *  Copyright (c) 2005-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -380,7 +380,7 @@ int mainSlave() {
             break;
         }
 
-        tree = readFileMagic(filename);
+        tree = open(filename);
         if (! tree) {
             slaveSendResult(RESULT_ERR_INPUT);
             continue;

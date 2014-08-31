@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -68,6 +68,76 @@ class NXMLNormalSurfaceListReader;
  */
 
 /**
+ * Used to describe a field, or a set of fields, that can be exported
+ * alongside a normal surface list.  This enumeration type is used with
+ * export routines such as NNormalSurfaceList::saveCSVStandard() or
+ * NNormalSurfaceList::saveCSVEdgeWeight().
+ *
+ * This type describes fields in addition to normal coordinates, not the
+ * normal coordinates themselves (which are always exported).  Each field
+ * describes some property of a single normal surface, and corresponds to a
+ * single column in a table of normal surfaces.
+ *
+ * This type should be treated as a bitmask: you can describe a set of fields
+ * by combining the values for individual fields using bitwise \e or.
+ *
+ * The list of available fields may grow with future releases of Regina.
+ */
+enum SurfaceExportFields {
+    surfaceExportName = 0x0001,
+        /**< Represents the user-assigned surface name. */
+    surfaceExportEuler = 0x0002,
+        /**< Represents the calculated Euler characteristic of a
+             surface.  This will be an integer, and will be left empty
+             if the Euler characteristic cannot be computed. */
+    surfaceExportOrient = 0x0004,
+        /**< Represents the calculated property of whether a surface is
+             orientable.  This will be the string \c TRUE or \c FALSE, or
+             will be left empty if the orientability cannot be computed. */
+    surfaceExportSides = 0x0008,
+        /**< Represents the calculated property of whether a surface is
+             one-sided or two-sided.  This will be the integer 1 or 2,
+             or will be left empty if the "sidedness" cannot be computed. */
+    surfaceExportBdry = 0x0010,
+        /**< Represents the calculated property of whether a surface is
+             bounded.  In most cases, this will be one of the strings "closed",
+             "real bdry" or "infinite" (where "infinite" indicates a
+             surface with infinitely many discs).  For spun-normal
+             surfaces in certain ideal triangulations, this string will
+             be followed by the boundary slopes of the surface at the
+             cusps: these written as a list of pairs (\a p, \a q),
+             one for each cusp, indicating that the boundary curves of
+             the surface run \a p times around the meridian and \a q times
+             around the longitude.  See NNormalSurface::boundaryIntersections()
+             for further information on interpreting these values. */
+    surfaceExportLink = 0x0020,
+        /**< Represents whether a surface is a single vertex link or a
+             thin edge link.  See NNormalSurface::isVertexLink() and
+             NNormalSurface::isThinEdgeLink() for details.  This will be
+             written as a human-readable string. */
+    surfaceExportType = 0x0040,
+        /**< Represents any additional high-level properties of a
+             surface, such as whether it is a splitting surface or a
+             central surface.  This will be written as a human-readable
+             string.  This field is somewhat arbitrary, and the precise
+             properties it describes are subject to change in future
+             releases of Regina. */
+
+    surfaceExportNone = 0,
+        /**< Indicates that no additional fields should be exported. */
+    surfaceExportAllButName = 0x007e,
+        /**< Indicates that all available fields should be exported,
+             except for the user-assigned surface name.  Since the list
+             of available fields may grow with future releases, the numerical
+             value of this constant may change as a result. */
+    surfaceExportAll = 0x007f
+        /**< Indicates that all available fields should be exported,
+             including the user-assigned surface name.  Since the list
+             of available fields may grow with future releases, the numerical
+             value of this constant may change as a result. */
+};
+
+/**
  * Stores information about the normal surface list packet.
  * See the general PacketInfo template notes for further details.
  *
@@ -92,8 +162,6 @@ struct PacketInfo<PACKET_NORMALSURFACELIST> {
  *
  * Normal surface lists should be created using the routine enumerate(),
  * which is new as of Regina 3.95.
- *
- * \testpart
  *
  * \todo \feature Allow custom matching equations.
  * \todo \feature Allow enumeration with some coordinates explicitly set
@@ -362,8 +430,8 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * in the given triangulation using the primal Hilbert basis algorithm.
          * For details of the algorithm, see B. A. Burton, "Enumerating
          * fundamental normal surfaces: Algorithms, experiments and invariants",
-         * to appear in ALENEX 2014: Proceedings of the Meeting on
-         * Algorithm Engineering & Experiments, arXiv:1111.7055.
+         * ALENEX 2014: Proceedings of the Meeting on Algorithm
+         * Engineering & Experiments, SIAM, 2014, pp. 112-124.
          *
          * Users can still access this procedure if they need to;
          * however, they should do this via enumerate(NTriangulation*,
@@ -409,8 +477,8 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * in the given triangulation using the dual Hilbert basis algorithm.
          * For details of the algorithm, see B. A. Burton, "Enumerating
          * fundamental normal surfaces: Algorithms, experiments and invariants",
-         * to appear in ALENEX 2014: Proceedings of the Meeting on
-         * Algorithm Engineering & Experiments, arXiv:1111.7055.
+         * ALENEX 2014: Proceedings of the Meeting on Algorithm
+         * Engineering & Experiments, SIAM, 2014, pp. 112-124.
          *
          * Users can still access this procedure if they need to;
          * however, they should do this via enumerate(NTriangulation*,
@@ -947,6 +1015,86 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * surface list.
          */
         NMatrixInt* recreateMatchingEquations() const;
+
+        /**
+         * Exports this list of normal surfaces as a plain text CSV
+         * (comma-separated value) file, using standard coordinates.
+         * CSV files are human-readable and human-editable, and are
+         * suitable for importing into spreadsheets and databases.
+         *
+         * The surfaces will be exported in standard coordinates (tri-quad
+         * coordinates for normal surfaces, or tri-quad-oct coordinates for
+         * almost normal surfaces).  Each coordinate will become a separate
+         * field in the CSV file.
+         *
+         * As well as the normal surface coordinates, additional properties
+         * of the normal surfaces (such as Euler characteristic, orientability,
+         * and so on) can be included as extra fields in the export.  Users can
+         * select precisely which properties to include by passing a bitmask,
+         * formed as a bitwise \e or combination of constants from
+         * the regina::SurfaceExportFields enumeration type.
+         *
+         * The CSV format used here begins with a header row, and uses commas
+         * as field separators.  Text fields with arbitrary contents are
+         * placed inside double quotes, and the double quote character itself
+         * is represented by a pair of double quotes.  Thus the string
+         * <tt>my "normal" surface's name</tt> would be stored as
+         * <tt>"my ""normal"" surface's name"</tt>.
+         *
+         * \i18n This routine makes no assumptions about the
+         * \ref i18n "character encoding" used in the given file \e name, and
+         * simply passes it through unchanged to low-level C/C++ file I/O
+         * routines.  Any user strings such as surface names will be written
+         * in UTF-8.
+         *
+         * @param filename the name of the CSV file to export to.
+         * @param additionalFields a bitwise combination of constants from
+         * regina::SurfaceExportFields indicating which additional properties
+         * of surfaces should be included in the export.
+         * @return \c true if the export was successful, or \c false otherwise.
+         */
+        bool saveCSVStandard(const char* filename,
+            int additionalFields = regina::surfaceExportAll);
+
+        /**
+         * Exports the given list of normal surfaces as a plain text CSV
+         * (comma-separated value) file, using edge weight coordinates.
+         * CSV files are human-readable and human-editable, and are
+         * suitable for importing into spreadsheets and databases.
+         *
+         * The surfaces will be exported in edge weight coordinates.  Thus
+         * there will be one coordinate for each edge of the underlying
+         * triangulation; each such coordinate will become a separate field
+         * in the CSV file.
+         *
+         * As well as the normal surface coordinates, additional properties
+         * of the normal surfaces (such as Euler characteristic, orientability,
+         * and so on) can be included as extra fields in the export.  Users can
+         * select precisely which properties to include by passing a bitmask,
+         * formed as a bitwise \e or combination of constants from
+         * the regina::SurfaceExportFields enumeration type.
+         *
+         * The CSV format used here begins with a header row, and uses commas
+         * as field separators.  Text fields with arbitrary contents are
+         * placed inside double quotes, and the double quote character itself
+         * is represented by a pair of double quotes.  Thus the string
+         * <tt>my "normal" surface's name</tt> would be stored as
+         * <tt>"my ""normal"" surface's name"</tt>.
+         *
+         * \i18n This routine makes no assumptions about the
+         * \ref i18n "character encoding" used in the given file \e name, and
+         * simply passes it through unchanged to low-level C/C++ file I/O
+         * routines.  Any user strings such as surface names will be written
+         * in UTF-8.
+         *
+         * @param filename the name of the CSV file to export to.
+         * @param additionalFields a bitwise combination of constants from
+         * regina::SurfaceExportFields indicating which additional properties
+         * of surfaces should be included in the export.
+         * @return \c true if the export was successful, or \c false otherwise.
+         */
+        bool saveCSVEdgeWeight(const char* filename,
+            int additionalFields = regina::surfaceExportAll);
 
         /**
          * An iterator that gives access to the raw vectors for surfaces in
@@ -1831,4 +1979,3 @@ inline NNormalSurfaceList::Enumerator::Enumerator(NNormalSurfaceList* list,
 } // namespace regina
 
 #endif
-

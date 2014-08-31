@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -59,10 +59,8 @@ class NPacket;
  */
 
 /**
- * A utility class used to form a complete census of 2-manifold
- * triangulations satisfying certain constraints.
- *
- * \testpart
+ * A utility class used to search for triangulations across one or more
+ * 2-manifold census databases.
  */
 class REGINA_API Dim2Census {
     public:
@@ -78,6 +76,12 @@ class REGINA_API Dim2Census {
          *
          * The return value should be \c true if the triangulation passed
          * should be included in the census, or \c false otherwise.
+         *
+         * \deprecated The Dim2Census enumeration facilities are on their
+         * way out of Regina, and in the future the Dim2Census class will be
+         * used purely for census lookups.  If you wish to build a census
+         * yourself, you should call Dim2EdgePairing::findAllPairings() and
+         * Dim2GluingPermSearcher::findAllPerms() directly.
          */
         typedef bool (*AcceptTriangulation)(Dim2Triangulation*, void*);
 
@@ -98,10 +102,10 @@ class REGINA_API Dim2Census {
 
     public:
         /**
-         * Fills the given packet with all triangulations in a census of
-         * 2-manifold triangulations satisfying the given constraints.
-         * Each triangulation in the census will appear as a child of the
-         * given packet.
+         * Deprecated routine that fills the given packet with all
+         * triangulations in a census of 2-manifold triangulations satisfying
+         * the given constraints.  Each triangulation in the census will
+         * appear as a child of the given packet.
          *
          * This routine will conduct a census of all valid triangulations
          * containing a given number of triangles.  All such triangulations
@@ -127,6 +131,13 @@ class REGINA_API Dim2Census {
          * Note that this routine should only be used if the census
          * contains a small enough total number of triangulations to
          * avoid any memory disasters.
+         *
+         * \deprecated The Dim2Census enumeration facilities are on their
+         * way out of Regina, and in the future the Dim2Census class will be
+         * used purely for census lookups.  To perform the kind of
+         * enumeration that is described here, you should call
+         * Dim2EdgePairing::findAllPairings() and
+         * Dim2GluingPermSearcher::findAllPerms() directly.
          *
          * \ifacespython Parameters \a sieve and \a sieveArgs
          * are not present (and will be treated as 0).
@@ -174,10 +185,10 @@ class REGINA_API Dim2Census {
             void* sieveArgs = 0);
 
         /**
-         * Fills the given packet with all triangulations in a partial census
-         * of 2-manifold triangulations satisfying the given constraints.
-         * Each triangulation in the partial census will appear as a child of
-         * the given packet.
+         * Deprecated routine that fills the given packet with all
+         * triangulations in a partial census of 2-manifold triangulations
+         * satisfying the given constraints.  Each triangulation in the
+         * partial census will appear as a child of the given packet.
          *
          * This routine will conduct a census of all valid 2-manifold
          * triangulations that are modelled by the given triangle edge
@@ -206,6 +217,12 @@ class REGINA_API Dim2Census {
          *
          * The partial census will run in the current thread.  This
          * routine will only return once the partial census is complete.
+         *
+         * \deprecated The Dim2Census enumeration facilities are on their
+         * way out of Regina, and in the future the Dim2Census class will be
+         * used purely for census lookups (if at all).  To perform the kind of
+         * enumeration that is described here, you should call
+         * Dim2GluingPermSearcher::findAllPerms() directly.
          *
          * \pre The given edge pairing is connected, i.e., it is possible
          * to reach any triangle from any other triangle via a

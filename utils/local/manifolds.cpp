@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Attempt to recognise the underlying 3-manifolds in a census           *
  *                                                                        *
- *  Copyright (c) 2005-2013, Ben Burton                                   *
+ *  Copyright (c) 2005-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -274,7 +274,7 @@ int main(int argc, char* argv[]) {
         usage(argv[0], "Precisely one data file must be given.");
 
     // Read the data file.
-    if (! (tree = readXMLFile(argv[i]))) {
+    if (! (tree = open(argv[i]))) {
         std::cerr << "ERROR: Could not read data from " << argv[i] << '.'
             << std::endl;
         return 1;
@@ -352,7 +352,7 @@ int main(int argc, char* argv[]) {
             if (line != "y") {
                 std::cerr << "Not saving data file.\n";
                 renameMfds = false;
-            } else if (writeXMLFile(argv[i], tree))
+            } else if (tree->save(argv[i]))
                 std::cerr << "Data saved to " << argv[i] << ".\n";
             else
                 std::cerr << "ERROR: The data file could not be saved.\n";

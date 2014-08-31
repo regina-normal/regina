@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -47,6 +47,11 @@ namespace {
     void writeAllSurfaces_stdio(const NNormalSurfaceList& s) {
         s.writeAllSurfaces(std::cout);
     }
+
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_saveCSVStandard,
+        NNormalSurfaceList::saveCSVStandard, 1, 2);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_saveCSVEdgeWeight,
+        NNormalSurfaceList::saveCSVEdgeWeight, 1, 2);
 
     // Write manual overload wrappers since these are static member functions.
     NNormalSurfaceList* unified_2(regina::NTriangulation* owner,
@@ -230,6 +235,10 @@ void addNNormalSurfaceList() {
         .def("recreateMatchingEquations",
             &NNormalSurfaceList::recreateMatchingEquations,
             return_value_policy<manage_new_object>())
+        .def("saveCSVStandard", &NNormalSurfaceList::saveCSVStandard,
+            OL_saveCSVStandard())
+        .def("saveCSVEdgeWeight", &NNormalSurfaceList::saveCSVEdgeWeight,
+            OL_saveCSVEdgeWeight())
         .staticmethod("enumerate")
         .staticmethod("enumerateStandardDirect")
         .staticmethod("enumerateStandardANDirect")

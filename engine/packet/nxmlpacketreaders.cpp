@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -159,7 +159,9 @@ void NXMLPDFReader::endContentSubElement(const std::string& subTagName,
 NXMLElementReader* NXMLScriptReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict&) {
-    if (subTagName == "line")
+    if (subTagName == "text")
+        return new NXMLCharsReader();
+    else if (subTagName == "line") // Old-style
         return new NXMLCharsReader();
     else if (subTagName == "var")
         return new NScriptVarReader();
@@ -169,9 +171,12 @@ NXMLElementReader* NXMLScriptReader::startContentSubElement(
 
 void NXMLScriptReader::endContentSubElement(const std::string& subTagName,
         NXMLElementReader* subReader) {
-    if (subTagName == "line")
-        script->addLast(dynamic_cast<NXMLCharsReader*>(subReader)->getChars());
-    else if (subTagName == "var") {
+    if (subTagName == "text")
+        script->setText(dynamic_cast<NXMLCharsReader*>(subReader)->getChars());
+    else if (subTagName == "line") { // Old-style
+        script->append(dynamic_cast<NXMLCharsReader*>(subReader)->getChars());
+        script->append("\n");
+    } else if (subTagName == "var") {
         NScriptVarReader* var = dynamic_cast<NScriptVarReader*>(subReader);
         if (! var->getName().empty())
             resolver_.queueTask(new VariableResolutionTask(

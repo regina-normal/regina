@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,7 +38,7 @@
 namespace regina {
 
 void NTriangulation::makeDoubleCover() {
-    unsigned long sheetSize = tetrahedra.size();
+    unsigned long sheetSize = tetrahedra_.size();
     if (sheetSize == 0)
         return;
 
@@ -48,13 +48,13 @@ void NTriangulation::makeDoubleCover() {
     NTetrahedron** upper = new NTetrahedron*[sheetSize];
     unsigned long i;
     for (i = 0; i < sheetSize; i++)
-        upper[i] = newTetrahedron(tetrahedra[i]->getDescription());
+        upper[i] = newTetrahedron(tetrahedra_[i]->getDescription());
 
     // Reset each tetrahedron orientation.
-    TetrahedronIterator tit = tetrahedra.begin();
+    TetrahedronIterator tit = tetrahedra_.begin();
     for (i = 0; i < sheetSize; i++) {
-        (*tit++)->tetOrientation = 0;
-        upper[i]->tetOrientation = 0;
+        (*tit++)->tetOrientation_ = 0;
+        upper[i]->tetOrientation_ = 0;
     }
 
     // Run through the upper sheet and recreate the gluings as we
@@ -69,17 +69,17 @@ void NTriangulation::makeDoubleCover() {
     int lowerAdjOrientation;
     NPerm4 gluing;
     for (i = 0; i < sheetSize; i++)
-        if (upper[i]->tetOrientation == 0) {
+        if (upper[i]->tetOrientation_ == 0) {
             // We've found a new component.
             // Completely recreate the gluings for this component.
-            upper[i]->tetOrientation = 1;
-            tetrahedra[i]->tetOrientation = -1;
+            upper[i]->tetOrientation_ = 1;
+            tetrahedra_[i]->tetOrientation_ = -1;
             tetQueue.push(i);
 
             while (! tetQueue.empty()) {
                 upperTet = tetQueue.front();
                 tetQueue.pop();
-                lowerTet = tetrahedra[upperTet];
+                lowerTet = tetrahedra_[upperTet];
 
                 for (face = 0; face < 4; face++) {
                     lowerAdj = lowerTet->adjacentTetrahedron(face);
@@ -98,16 +98,16 @@ void NTriangulation::makeDoubleCover() {
                     // adjacent tetrahedron in the lower sheet.
                     gluing = lowerTet->adjacentGluing(face);
                     lowerAdjOrientation = (gluing.sign() == 1 ?
-                        -lowerTet->tetOrientation : lowerTet->tetOrientation);
+                        -lowerTet->tetOrientation_ : lowerTet->tetOrientation_);
 
                     upperAdj = tetrahedronIndex(lowerAdj);
-                    if (lowerAdj->tetOrientation == 0) {
+                    if (lowerAdj->tetOrientation_ == 0) {
                         // We haven't seen the adjacent tetrahedron yet.
-                        lowerAdj->tetOrientation = lowerAdjOrientation;
-                        upper[upperAdj]->tetOrientation = -lowerAdjOrientation;
+                        lowerAdj->tetOrientation_ = lowerAdjOrientation;
+                        upper[upperAdj]->tetOrientation_ = -lowerAdjOrientation;
                         upper[upperTet]->joinTo(face, upper[upperAdj], gluing);
                         tetQueue.push(upperAdj);
-                    } else if (lowerAdj->tetOrientation ==
+                    } else if (lowerAdj->tetOrientation_ ==
                             lowerAdjOrientation) {
                         // The adjacent tetrahedron already has the
                         // correct orientation.

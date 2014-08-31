@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -225,14 +225,14 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
 
         while (changedNow) {
             changedNow = false;
-            if (! calculatedSkeleton) {
+            if (! calculatedSkeleton_) {
                 calculateSkeleton();
             }
 
             // Crush edges if we can.
-            if (vertices.size() > components.size() &&
-                    vertices.size() > boundaryComponents.size()) {
-                for (eit = edges.begin(); eit != edges.end(); ++eit) {
+            if (vertices_.size() > components_.size() &&
+                    vertices_.size() > boundaryComponents_.size()) {
+                for (eit = edges_.begin(); eit != edges_.end(); ++eit) {
                     edge = *eit;
                     if (collapseEdge(edge, true, perform)) {
                         changedNow = changed = true;
@@ -248,7 +248,7 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
             }
 
             // Look for internal simplifications.
-            for (eit = edges.begin(); eit != edges.end(); eit++) {
+            for (eit = edges_.begin(); eit != edges_.end(); eit++) {
                 edge = *eit;
                 if (threeTwoMove(edge, true, perform)) {
                     changedNow = changed = true;
@@ -273,7 +273,7 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
                 else
                     return true;
             }
-            for (vit = vertices.begin(); vit != vertices.end(); vit++) {
+            for (vit = vertices_.begin(); vit != vertices_.end(); vit++) {
                 if (twoZeroMove(*vit, true, perform)) {
                     changedNow = changed = true;
                     break;
@@ -288,8 +288,8 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
 
             // Look for boundary simplifications.
             if (hasBoundaryTriangles()) {
-                for (bit = boundaryComponents.begin();
-                        bit != boundaryComponents.end(); bit++) {
+                for (bit = boundaryComponents_.begin();
+                        bit != boundaryComponents_.end(); bit++) {
                     // Run through triangles of this boundary component looking
                     // for shell boundary moves.
                     nTriangles = (*bit)->getNumberOfTriangles();

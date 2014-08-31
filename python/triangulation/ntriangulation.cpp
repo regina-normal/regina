@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -53,6 +53,12 @@ namespace {
         &NTriangulation::twoZeroMove;
     bool (NTriangulation::*twoZeroMove_edge)(regina::NEdge*, bool, bool) =
         &NTriangulation::twoZeroMove;
+    std::string (NTriangulation::*snapPea_void)() const =
+        &NTriangulation::snapPea;
+    std::string (NTriangulation::*recogniser_void)() const =
+        &NTriangulation::recogniser;
+    std::string (NTriangulation::*recognizer_void)() const =
+        &NTriangulation::recognizer;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
         NTriangulation::simplifyToLocalMinimum, 0, 1);
@@ -104,16 +110,6 @@ namespace {
         tet.release();
     }
 
-    regina::NIsomorphism* isIsomorphicTo_ptr(NTriangulation& t,
-            NTriangulation& s) {
-        return t.isIsomorphicTo(s).release();
-    }
-
-    regina::NIsomorphism* isContainedIn_ptr(NTriangulation& t,
-            NTriangulation& s) {
-        return t.isContainedIn(s).release();
-    }
-
     boost::python::list getTetrahedra_list(NTriangulation& t) {
         boost::python::list ans;
         for (NTriangulation::TetrahedronIterator it =
@@ -160,6 +156,22 @@ namespace {
         for (NTriangulation::TriangleIterator it =
                 t.getTriangles().begin(); it != t.getTriangles().end(); it++)
             ans.append(boost::python::ptr(*it));
+        return ans;
+    }
+
+    boost::python::list maximalForestInDualSkeleton_list(NTriangulation& t) {
+        std::set<regina::NTriangle*> triangleSet;
+        t.maximalForestInDualSkeleton(triangleSet);
+
+        // boost::python does not contain python sets. We use a python list
+        // here instead which needs a well-defined order, thus we iterate
+        // through getTriangles().
+
+        boost::python::list ans;
+        for (NTriangulation::TriangleIterator it =
+                t.getTriangles().begin(); it != t.getTriangles().end(); it++)
+            if (triangleSet.count(*it) > 0)
+                ans.append(boost::python::ptr(*it));
         return ans;
     }
 
@@ -245,15 +257,14 @@ void addNTriangulation() {
         .def("faceIndex", &NTriangulation::faceIndex)
         .def("triangleIndex", &NTriangulation::triangleIndex)
         .def("isIdenticalTo", &NTriangulation::isIdenticalTo)
-        .def("isIsomorphicTo", isIsomorphicTo_ptr,
-            return_value_policy<manage_new_object>())
+        .def("isIsomorphicTo", &NTriangulation::isIsomorphicTo)
         .def("makeCanonical", &NTriangulation::makeCanonical)
-        .def("isContainedIn", isContainedIn_ptr,
-            return_value_policy<manage_new_object>())
+        .def("isContainedIn", &NTriangulation::isContainedIn)
         .def("hasTwoSphereBoundaryComponents",
             &NTriangulation::hasTwoSphereBoundaryComponents)
         .def("hasNegativeIdealBoundaryComponents",
             &NTriangulation::hasNegativeIdealBoundaryComponents)
+        .def("isEmpty", &NTriangulation::isEmpty)
         .def("getEulerCharTri", &NTriangulation::getEulerCharTri)
         .def("getEulerCharManifold", &NTriangulation::getEulerCharManifold)
         .def("getEulerCharacteristic", &NTriangulation::getEulerCharacteristic)
@@ -292,9 +303,14 @@ void addNTriangulation() {
         .def("hasOctagonalAlmostNormalSphere",
             &NTriangulation::hasOctagonalAlmostNormalSphere,
             return_value_policy<manage_new_object>())
+        .def("findStrictAngleStructure",
+            &NTriangulation::findStrictAngleStructure,
+            return_internal_reference<>())
         .def("hasStrictAngleStructure",
-            &NTriangulation::hasStrictAngleStructure,
-            return_value_policy<manage_new_object>())
+            &NTriangulation::hasStrictAngleStructure)
+        .def("knowsStrictAngleStructure",
+            &NTriangulation::knowsStrictAngleStructure)
+        .def("maximalForestInDualSkeleton", maximalForestInDualSkeleton_list)
         .def("intelligentSimplify", &NTriangulation::intelligentSimplify)
         .def("simplifyToLocalMinimum", &NTriangulation::simplifyToLocalMinimum,
             OL_simplifyToLocalMinimum())
@@ -362,7 +378,12 @@ void addNTriangulation() {
             return_value_policy<manage_new_object>())
         .def("isoSigComponentSize", &NTriangulation::isoSigComponentSize)
         .def("dumpConstruction", &NTriangulation::dumpConstruction)
-        .def("snapPea", &NTriangulation::snapPea)
+        .def("snapPea", snapPea_void)
+        .def("saveSnapPea", &NTriangulation::saveSnapPea)
+        .def("recogniser", recogniser_void)
+        .def("recognizer", recognizer_void)
+        .def("saveRecogniser", &NTriangulation::saveRecogniser)
+        .def("saveRecognizer", &NTriangulation::saveRecognizer)
         .def("fromSnapPea", &NTriangulation::fromSnapPea,
             return_value_policy<manage_new_object>())
         .def("enterTextTriangulation", enterTextTriangulation_stdio,

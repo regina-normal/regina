@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -165,15 +165,9 @@ class PacketTabbedUI : public QObject, public PacketUI {
          */
         virtual regina::NPacket* getPacket();
         virtual QWidget* getInterface();
-        virtual void commit();
         virtual void refresh();
+        virtual void endEdit();
         virtual void setReadWrite(bool readWrite);
-
-        /**
-         * Notify all viewer pages that the packet is currently being
-         * edited.
-         */
-        void notifyEditing();
 
     public slots:
         /**
@@ -191,16 +185,11 @@ class PacketTabbedUI : public QObject, public PacketUI {
  * A single read-only page within a tabbed packet interface.  See the
  * PacketTabbedUI class notes for further details.
  *
- * When the underlying packet starts being edited within another page of
- * the tabbed packet interface, the routine editingElsewhere() will be
- * called for each viewer tab.  This allows viewer tabs to replace their
- * usual displays with "under construction" notices if necessary.
+ * If the underlying packet is modified (either through the editor page
+ * or from elsewhere), then refresh() will be called for each viewer tab,
+ * at which point tabs can update their displays in the usual fashion.
  *
- * Once these changes are committed within the editor page, refresh()
- * will be called for each viewer tab, at which point tabs can update
- * their displays in the usual fashion.
- *
- * Calls to refresh() and editingElsewhere() will, where possible, be
+ * Calls to refresh() will, where possible, be
  * delayed until just before a viewer is made visible.  In all cases, a
  * viewer page will be refreshed at some point in time before being made
  * visible.  Thus it is not necessary to fill the interface items with
@@ -210,7 +199,7 @@ class PacketTabbedUI : public QObject, public PacketUI {
  * case where it is never made visible).
  *
  * Subclasses should only need to reimplement the virtual routines
- * getPacket(), getInterface(), refresh() and perhaps editingElsewhere().
+ * getPacket(), getInterface(), and refresh().
  */
 class PacketViewerTab : public PacketReadOnlyUI {
     private:
@@ -218,7 +207,7 @@ class PacketViewerTab : public PacketReadOnlyUI {
          * Events that can be delayed until just before the viewer
          * is made visible.
          */
-        enum Action { None = 0, Refresh, EditingElsewhere };
+        enum Action { None = 0, Refresh };
 
         /**
          * External components
@@ -239,16 +228,6 @@ class PacketViewerTab : public PacketReadOnlyUI {
         PacketViewerTab(PacketTabbedViewerTab* useParentUI);
 
         /**
-         * Updates the interface components in this page to reflect the
-         * fact that the packet is currently being edited from another
-         * page, and that these changes have not yet been committed.
-         *
-         * The default implementation does nothing, i.e., leaves the
-         * display for this page unchanged.
-         */
-        virtual void editingElsewhere();
-
-        /**
          * PacketUI overrides.
          */
         QString getPacketMenuText() const;
@@ -265,11 +244,6 @@ class PacketViewerTab : public PacketReadOnlyUI {
  *
  * Only one read-write page is allowed within each tabbed packet
  * interface.
- *
- * Like any read-write subclass of PacketUI, subclasses of PacketEditorTab
- * should call setDirty(true) whenever changes are made in the interface.
- * Likewise, they should call setDirty(false) at the end of their
- * implementations of commit() and refresh().
  */
 class PacketEditorTab : public PacketUI {
     protected:
@@ -288,7 +262,6 @@ class PacketEditorTab : public PacketUI {
          * PacketUI overrides.
          */
         QString getPacketMenuText() const;
-        void setDirty(bool newDirty);
 };
 
 /**
@@ -387,7 +360,6 @@ class PacketTabbedViewerTab : public QObject, public PacketViewerTab {
         virtual regina::NPacket* getPacket();
         virtual QWidget* getInterface();
         virtual void refresh();
-        virtual void editingElsewhere();
 
     public slots:
         /**
@@ -404,6 +376,13 @@ inline unsigned PacketTabbedUI::tabCount() {
     return tabs->count();
 }
 
+inline void PacketTabbedUI::endEdit() {
+    if (editorTab)
+        editorTab->endEdit();
+
+    // There should be no need to call endEdit() on viewer tabs.
+}
+
 inline PacketViewerTab::PacketViewerTab(PacketTabbedUI* useParentUI) :
         PacketReadOnlyUI(useParentUI->getEnclosingPane()),
         parentUI(useParentUI), queuedAction(None) {
@@ -412,9 +391,6 @@ inline PacketViewerTab::PacketViewerTab(PacketTabbedUI* useParentUI) :
 inline PacketViewerTab::PacketViewerTab(PacketTabbedViewerTab* useParentUI) :
         PacketReadOnlyUI(useParentUI->getEnclosingPane()),
         parentUI(useParentUI), queuedAction(None) {
-}
-
-inline void PacketViewerTab::editingElsewhere() {
 }
 
 inline QString PacketViewerTab::getPacketMenuText() const {

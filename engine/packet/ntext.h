@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -147,11 +147,17 @@ inline const std::string& NText::getText() const {
 }
 
 inline void NText::setText(const std::string& newText) {
+    if (text == newText)
+        return; // No change event fired.
+
     ChangeEventSpan span(this);
     text = newText;
 }
 
 inline void NText::setText(const char* newText) {
+    if (text == newText)
+        return; // No change event fired.
+
     ChangeEventSpan span(this);
     text = newText;
 }

@@ -6,6 +6,7 @@ SET ( FILES
   dim2edgepairing
   ncensus
   nfacepairing
+  ngluingpermsearcher
   pycensus
   )
 

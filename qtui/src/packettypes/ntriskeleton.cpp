@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -207,19 +207,6 @@ void NTriSkelCompUI::refresh() {
     QLinkedListIterator<SkeletonWindow*> it(viewers);
     while( it.hasNext())
         (it.next())->refresh();
-}
-
-void NTriSkelCompUI::editingElsewhere() {
-    nVertices->setText(tr("Editing..."));
-    nEdges->setText(tr("Editing..."));
-    nTriangles->setText(tr("Editing..."));
-    nTets->setText(tr("Editing..."));
-    nComps->setText(tr("Editing..."));
-    nBdryComps->setText(tr("Editing..."));
-
-    QLinkedListIterator<SkeletonWindow*> it(viewers);
-    while( it.hasNext())
-        (it.next())->editingElsewhere();
 }
 
 void NTriSkelCompUI::viewVertices() {

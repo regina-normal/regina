@@ -42,7 +42,8 @@
       dehydration strings <xref linkend="bib-cuspedcensus"/>;
      </para></listitem>
      <listitem><para>
-      importing triangulations from &snappeapylink; and &orburl;;
+      importing triangulations from &snappeapylink; (which now preserves
+      fillings and peripheral curves), and also from &orburl;;
      </para></listitem>
      <listitem><para>
       automatic construction of several ready-made example triangulations.
@@ -87,7 +88,12 @@
       (described <link linkend="features-splitting">below</link>);
      </para></listitem>
      <listitem><para>
-      geometric properties, courtesy of the &snappea; kernel;
+      fast and rigorous certification of hyperbolicity (using strict
+      angle structures and linear programming);
+     </para></listitem>
+     <listitem><para>
+      a richer but non-rigorous collection of hyperbolic invariants computed
+      by the &snappea; kernel;
      </para></listitem>
      <listitem><para>
       a visual representation of the face pairing graph
@@ -133,8 +139,7 @@
      <listitem><para>
       elementary moves (transformations local to a small
       number of tetrahedra), such as Pachner moves and other
-      transformations described in <xref linkend="bib-burton-nor7"/>,
-      many of which were suggested by Letscher;
+      transformations described in <xref linkend="bib-burton-nor7"/>;
      </para></listitem>
      <listitem><para>
       automated simplification in which the software attempts to use
@@ -148,12 +153,10 @@
       for closed orientable 3-manifolds <xref linkend="bib-0-efficiency"/>;
      </para></listitem>
      <listitem><para>
-      barycentric subdivision and the truncation of ideal vertices
-      (vertices whose links are neither 2-spheres nor discs);
-     </para></listitem>
-     <listitem><para>
-      extension of the boundary to convert real boundary components into
-      ideal vertices;
+      barycentric subdivision, truncating ideal vertices
+      (whose links are neither 2-spheres nor discs) to give real
+      boundary components, and conversely coning real
+      boundary components to give ideal vertices;
      </para></listitem>
      <listitem><para>
       conversion of a non-orientable triangulation to an orientable
@@ -165,7 +168,11 @@
       described <link linkend="features-surfaces">below</link>;
      </para></listitem>
      <listitem><para>
-      drilling out neighbourhoods of edges within the triangulation.
+      puncturing manifolds,
+      drilling out neighbourhoods of edges, and building connected sums;
+     </para></listitem>
+     <listitem><para>
+      Dehn fillings for &snappea; triangulations (via the &snappea; kernel).
      </para></listitem>
     </itemizedlist>
    </para>
@@ -173,13 +180,11 @@
  </sect2>
 
  <sect2 id="features-census">
-  <title>Census Creation</title>
+  <title>Census Creation and Lookup</title>
   <para>
-   &regina; can be used to form a census of all 3-manifold triangulations
-   satisfying a particular set of census constraints.
-   The command-line tool
-   <link linkend="man-tricensus"><command>tricensus</command></link>
-   is particularly well suited for this task.
+   &regina; can be used to form censuses of all 3-manifold triangulations
+   that satisfy various constraints, through the command-line tool
+   <link linkend="man-tricensus"><command>tricensus</command></link>.
   </para>
   <para>
    The census algorithm is heavily optimised; see
@@ -191,13 +196,19 @@
    use on high-performance clusters.
   </para>
   <para>
-   &regina; ships with a number of
-   prepackaged censuses, including closed 3-manifold triangulations
+   &regina; ships with a several
+   census databases, including closed 3-manifold triangulations
    <xref linkend="bib-burton-nor8"/>, <xref linkend="bib-burton-nor10"/>,
    <xref linkend="bib-burton-genus"/>, hyperbolic 3-manifolds
+   <xref linkend="bib-burton-complete"/>,
    <xref linkend="bib-cuspedcensus"/>, <xref linkend="bib-closedhypcensus"/>,
    and knot and link complements (tabulated by Joe Christy).
-   A census lookup facility for arbitrary triangulations is provided.
+  </para>
+  <para>
+   &regina; can also search for a given triangulation across these databases
+   (and indeed across much larger extensions of these databases),
+   using isomorphism signatures <xref linkend="bib-burton-pachner-orprime"/>,
+   and fast hashing techniques.
   </para>
  </sect2>
 
@@ -309,6 +320,12 @@
    structures that induce a specific type of combinatorial structure on
    the underlying triangulation
    <xref linkend="bib-agol-ideal"/>, <xref linkend="bib-hodgson-veering"/>.
+  </para>
+  <para>
+   For <firstterm>strict</firstterm> angle structures (in which all angles
+   are strictly positive), &regina; can test for existence very quickly
+   (and find an explicit example if one exists),
+   using linear programming techniques.
   </para>
  </sect2>
 
