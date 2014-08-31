@@ -26,7 +26,7 @@ STRIP_FROM_INC_PATH  = @PROJECT_SOURCE_DIR@/engine @PROJECT_SOURCE_DIR@
 CLASS_DIAGRAMS       = YES
 SOURCE_BROWSER       = NO
 GENERATE_TODOLIST    = YES
-GENERATE_TESTLIST    = YES
+GENERATE_TESTLIST    = NO
 
 CASE_SENSE_NAMES     = YES
 VERBATIM_HEADERS     = NO
@@ -36,6 +36,7 @@ ALIASES = \
     "ifaces=\par Interfaces:\n" \
     "ifacescpp=\par C++:\n" \
     "ifacespython=\par Python:\n" \
+    "snappy=\par SnapPy:\n" \
     "i18n=\par Internationalisation:\n" \
     "proburgent=<i><b>Bug (urgent):</b></i>" \
     "prob=<i>Bug:</i>" \
@@ -49,8 +50,6 @@ ALIASES = \
     "tidyurgent=<i><b>Tidy (urgent):</b></i>" \
     "tidy=<i>Tidy:</i>" \
     "tidylong=<i>Tidy (long-term):</i>" \
-    "testfull=\test Exhaustively tested in the test suite." \
-    "testpart=\test Included in the test suite." \
     "apinotfinal=\warning The API for this class has not yet been finalised.  This means that the class interface may change in new versions of Regina, without maintaining backward compatibility.  If you use this class directly in your own code, please watch the detailed changelogs upon new releases to see if you need to make changes to your code."
 
 # Warning and progress related options:

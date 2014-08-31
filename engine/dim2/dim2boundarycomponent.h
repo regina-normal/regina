@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -78,6 +78,15 @@ class REGINA_API Dim2BoundaryComponent :
          * Default destructor.
          */
         virtual ~Dim2BoundaryComponent();
+
+        /**
+         * Returns the index of this boundary component in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->boundaryComponentIndex(this)</tt>.
+         *
+         * @return the index of this boundary component vertex.
+         */
+        unsigned long index() const;
 
         /**
          * Returns the number of edges in this boundary component.
@@ -155,6 +164,10 @@ inline Dim2BoundaryComponent::Dim2BoundaryComponent() {
 }
 
 inline Dim2BoundaryComponent::~Dim2BoundaryComponent() {
+}
+
+inline unsigned long Dim2BoundaryComponent::index() const {
+    return markedIndex();
 }
 
 inline unsigned long Dim2BoundaryComponent::getNumberOfEdges() const {

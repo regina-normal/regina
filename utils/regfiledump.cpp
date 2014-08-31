@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Dump packets from the given file to standard output                   *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -170,7 +170,7 @@ int main(int argc, char* argv[]) {
         "UTF-8", regina::i18n::Locale::codeset());
 
     // Do the actual work.
-    NPacket* tree = regina::readFileMagic(file);
+    NPacket* tree = regina::open(file.c_str());
     if (! tree) {
         std::cerr << "File " << file << " could not be read.\n";
         return 1;

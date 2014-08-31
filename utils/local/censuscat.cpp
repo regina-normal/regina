@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Combine a set of data files as a first draft for a census             *
  *                                                                        *
- *  Copyright (c) 2005-2013, Ben Burton                                   *
+ *  Copyright (c) 2005-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -111,7 +111,7 @@ void insertTri(const NTriangulation& source) {
 }
 
 void process(const char* filename) {
-    NPacket* tree = readXMLFile(filename);
+    NPacket* tree = open(filename);
     if (tree == 0) {
         std::cerr << "ERROR: Could not read data from " << filename << '.'
             << std::endl;

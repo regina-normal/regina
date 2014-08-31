@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -82,6 +82,15 @@ class REGINA_API Dim2Component : public ShareableObject, public NMarkedElement {
          * Default destructor.
          */
         virtual ~Dim2Component();
+
+        /**
+         * Returns the index of this component in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->componentIndex(this)</tt>.
+         *
+         * @return the index of this component vertex.
+         */
+        unsigned long index() const;
 
         /**
          * Returns the number of triangles in this component.
@@ -263,6 +272,10 @@ inline Dim2Component::Dim2Component() : orientable_(true) {
 }
 
 inline Dim2Component::~Dim2Component() {
+}
+
+inline unsigned long Dim2Component::index() const {
+    return markedIndex();
 }
 
 inline unsigned long Dim2Component::getNumberOfTriangles() const {

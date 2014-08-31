@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -66,7 +66,7 @@ namespace {
     std::string welcome() {
         return std::string(PACKAGE_STRING) +
             "\nSoftware for 3-manifold topology and normal surface theory" +
-            "\nCopyright (c) 1999-2013, The Regina development team";
+            "\nCopyright (c) 1999-2014, The Regina development team";
     }
 
     void shareableWriteTextShort(const ShareableObject& obj) {

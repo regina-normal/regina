@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -47,7 +47,6 @@ enum {
     EVT_PANE_SET_READONLY = 2100,
     EVT_PANE_SET_READWRITE = 2101,
     EVT_TREE_CHILD_ADDED = 2200,
-    EVT_COMMIT_PACKET = 2300,
 
     // ReginaMain:
     EVT_PLUG_PACKET_MENU = 3001

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -70,8 +70,9 @@ namespace {
 }
 
 NSurfaceFilterPropUI::NSurfaceFilterPropUI(NSurfaceFilterProperties* packet,
-        PacketPane* enclosingPane) : PacketUI(enclosingPane),
-        filter(packet), allowReadWrite(enclosingPane->isReadWrite()) {
+        PacketPane* enclosingPane) :
+        PacketUI(enclosingPane), filter(packet),
+        allowReadWrite(enclosingPane->isReadWrite()), inNotify(false) {
     ui = new QWidget();
     ui->setWhatsThis(tr("Specify on this page which properties "
         "a normal surface must satisfy in order to be displayed by this "
@@ -100,10 +101,10 @@ NSurfaceFilterPropUI::NSurfaceFilterPropUI(NSurfaceFilterProperties* packet,
     useBdry->setWhatsThis(tr("Filter surfaces according to whether "
         "or not they meet the boundary of the 3-manifold triangulation."));
     layout->addWidget(useBdry, 3, 1, Qt::AlignLeft);
-    useEuler = new QCheckBox(tr("Euler char."), ui);
-    useEuler->setWhatsThis(tr("Filter surfaces according to "
+    label = new QLabel(tr("Allow Euler\ncharacteristics:"));
+    label->setWhatsThis(tr("Filter surfaces according to "
         "their Euler characteristic."));
-    layout->addWidget(useEuler, 4, 1, Qt::AlignLeft);
+    layout->addWidget(label, 4, 1, Qt::AlignLeft);
 
     // Focus goes by default to the first checkbox.
     ui->setFocusProxy(useOrient);
@@ -145,25 +146,22 @@ NSurfaceFilterPropUI::NSurfaceFilterPropUI(NSurfaceFilterProperties* packet,
     layout->addLayout(ecBox, 4, 2);
 
     ecBox->addSpacing(5);
-    eulerExpln1 = new QLabel(tr("Allowable Euler characteristics:"), ui);
-    ecBox->addWidget(eulerExpln1);
-
     eulerList = new QLineEdit(ui);
     eulerList->setValidator(new QRegExpValidator(reECChars, eulerList));
     ecBox->addWidget(eulerList);
 
-    eulerExpln2 = new QLabel(tr(
+    eulerExpln = new QLabel(tr(
         "(separate with spaces or commas)"), ui);
-    ecBox->addWidget(eulerExpln2);
+    ecBox->addWidget(eulerExpln);
     ecBox->addSpacing(5);
 
-    QString msg = tr("Fill this box with a list of the allowable Euler "
+    QString msg = tr("<qt>Fill this box with a list of the allowable Euler "
         "characteristics, separated by "
         "spaces or commas.  This filter will only display a surface "
-        "if its Euler characteristic is equal to one of these values.");
-    eulerExpln1->setWhatsThis(msg);
+        "if its Euler characteristic is equal to one of these values.<p>"
+        "An empty list means that any Euler characteristic is allowed.</qt>");
     eulerList->setWhatsThis(msg);
-    eulerExpln2->setWhatsThis(msg);
+    eulerExpln->setWhatsThis(msg);
 
     // Fill the components with data.
     refresh();
@@ -175,27 +173,27 @@ NSurfaceFilterPropUI::NSurfaceFilterPropUI(NSurfaceFilterProperties* packet,
         this, SLOT(enableDisableCompact()));
     connect(useBdry, SIGNAL(toggled(bool)),
         this, SLOT(enableDisableBdry()));
-    connect(useEuler, SIGNAL(toggled(bool)),
-        this, SLOT(enableDisableEuler()));
 
     // Notify us of any changes.
-    connect(useOrient, SIGNAL(toggled(bool)),
-        this, SLOT(notifyFilterChanged()));
-    connect(useCompact, SIGNAL(toggled(bool)),
-        this, SLOT(notifyFilterChanged()));
-    connect(useBdry, SIGNAL(toggled(bool)),
-        this, SLOT(notifyFilterChanged()));
-    connect(useEuler, SIGNAL(toggled(bool)),
-        this, SLOT(notifyFilterChanged()));
+    // Note that clicked() is *not* triggered when calling setChecked(),
+    // so we should not accidentally call notifyOptionsChanged() in the
+    // middle of a refresh.
+    connect(useOrient, SIGNAL(clicked(bool)),
+        this, SLOT(notifyOptionsChanged()));
+    connect(useCompact, SIGNAL(clicked(bool)),
+        this, SLOT(notifyOptionsChanged()));
+    connect(useBdry, SIGNAL(clicked(bool)),
+        this, SLOT(notifyOptionsChanged()));
 
     connect(optOrient, SIGNAL(activated(int)),
-        this, SLOT(notifyFilterChanged()));
+        this, SLOT(notifyOptionsChanged()));
     connect(optCompact, SIGNAL(activated(int)),
-        this, SLOT(notifyFilterChanged()));
+        this, SLOT(notifyOptionsChanged()));
     connect(optBdry, SIGNAL(activated(int)),
-        this, SLOT(notifyFilterChanged()));
-    connect(eulerList, SIGNAL(textChanged(const QString&)),
-        this, SLOT(notifyFilterChanged()));
+        this, SLOT(notifyOptionsChanged()));
+
+    connect(eulerList, SIGNAL(editingFinished()),
+        this, SLOT(notifyOptionsChanged()));
 }
 
 regina::NPacket* NSurfaceFilterPropUI::getPacket() {
@@ -210,46 +208,11 @@ QString NSurfaceFilterPropUI::getPacketMenuText() const {
     return tr("Surface F&ilter");
 }
 
-void NSurfaceFilterPropUI::commit() {
-    filter->setOrientability(getBoolSet(useOrient, optOrient));
-    filter->setCompactness(getBoolSet(useCompact, optCompact));
-    filter->setRealBoundary(getBoolSet(useBdry, optBdry));
-
-    filter->removeAllECs();
-    QString ecText = eulerList->text().trimmed();
-    if (useEuler->isChecked()) {
-        if (ecText.isEmpty()) {
-            // No Euler characteristics have been entered.
-            useEuler->setChecked(false);
-        } else if (! reECList.exactMatch(ecText)) {
-            ReginaSupport::info(eulerList,
-                tr("The list of Euler characteristics is invalid."),
-                tr("This should be a sequence of integers, separated by "
-                "spaces or commas."));
-            useEuler->setChecked(false);
-        } else {
-            // We have a valid list of Euler characteristics.
-            QStringList list = ecText.split(reECSeps);
-            for (QStringList::Iterator it = list.begin(); it != list.end();
-                    it++)
-                filter->addEC((*it).toAscii().constData());
-
-            // Refill the text box so that it looks nice.
-            refreshECList();
-        }
-    }
-
-    setDirty(false);
-}
-
 void NSurfaceFilterPropUI::refresh() {
     setBoolSet(useOrient, optOrient, filter->getOrientability());
     setBoolSet(useCompact, optCompact, filter->getCompactness());
     setBoolSet(useBdry, optBdry, filter->getRealBoundary());
-
-    refreshECList();
-
-    setDirty(false);
+    eulerList->setText(filterECList());
 }
 
 void NSurfaceFilterPropUI::setReadWrite(bool readWrite) {
@@ -258,16 +221,63 @@ void NSurfaceFilterPropUI::setReadWrite(bool readWrite) {
     useOrient->setEnabled(readWrite);
     useCompact->setEnabled(readWrite);
     useBdry->setEnabled(readWrite);
-    useEuler->setEnabled(readWrite);
 
     enableDisableOrient();
     enableDisableCompact();
     enableDisableBdry();
-    enableDisableEuler();
+
+    eulerList->setEnabled(allowReadWrite);
+    eulerExpln->setEnabled(allowReadWrite);
 }
 
-void NSurfaceFilterPropUI::notifyFilterChanged() {
-    setDirty(true);
+bool NSurfaceFilterPropUI::notifyOptionsChanged() {
+    // Sometimes notifyOptionsChanged() calls itself; this seems to be a
+    // side-effect of the message box from ReginaSupport::info()
+    // interacting with the signal QLineEdit::editingFinished().
+    if (inNotify)
+        return true;
+
+    // There may be *multiple* changes in the dialog that must be enacted
+    // (e.g., this can happen when editing the list of Euler
+    // characteristics and then jumping directly to toggle some other
+    // checkbox).  We therefore wrap everything in a ChangeEventSpan, to
+    // avoid refresh() being automatically called partway through.
+    regina::NPacket::ChangeEventSpan span(filter);
+
+    inNotify = true;
+    bool success = true;
+
+    filter->setOrientability(getBoolSet(useOrient, optOrient));
+    filter->setCompactness(getBoolSet(useCompact, optCompact));
+    filter->setRealBoundary(getBoolSet(useBdry, optBdry));
+
+    QString ecText = eulerList->text().trimmed();
+    if (ecText.isEmpty()) {
+        // No Euler characteristics have been entered.
+        filter->removeAllECs();
+    } else if (! reECList.exactMatch(ecText)) {
+        ReginaSupport::info(eulerList,
+            tr("The list of Euler characteristics is invalid."),
+            tr("This should be a sequence of integers, separated by "
+            "spaces or commas."));
+
+        eulerList->setText(filterECList());
+        success = false;
+    } else {
+        // We have a valid and non-empty list of Euler characteristics.
+        filter->removeAllECs();
+
+        QStringList list = ecText.split(reECSeps);
+        for (QStringList::Iterator it = list.begin(); it != list.end();
+                it++)
+            filter->addEC((*it).toAscii().constData());
+
+        // Refill the text box so that it looks nice.
+        eulerList->setText(filterECList());
+    }
+
+    inNotify = false;
+    return success;
 }
 
 void NSurfaceFilterPropUI::enableDisableOrient() {
@@ -280,13 +290,6 @@ void NSurfaceFilterPropUI::enableDisableCompact() {
 
 void NSurfaceFilterPropUI::enableDisableBdry() {
     optBdry->setEnabled(allowReadWrite && useBdry->isChecked());
-}
-
-void NSurfaceFilterPropUI::enableDisableEuler() {
-    bool shouldEnable = allowReadWrite && useEuler->isChecked();
-    eulerList->setEnabled(shouldEnable);
-    eulerExpln1->setEnabled(shouldEnable);
-    eulerExpln2->setEnabled(shouldEnable);
 }
 
 NBoolSet NSurfaceFilterPropUI::getBoolSet(QCheckBox* use, QComboBox* opt) {
@@ -315,26 +318,17 @@ void NSurfaceFilterPropUI::setBoolSet(QCheckBox* use, QComboBox* opt,
     }
 }
 
-void NSurfaceFilterPropUI::refreshECList() {
+QString NSurfaceFilterPropUI::filterECList() {
     const std::set<regina::NLargeInteger>& ecs(filter->getECs());
-    if (ecs.empty()) {
-        useEuler->setChecked(false);
-        // Don't clear the text box; leave it as is in case the user
-        // wants their own edits back later on.
-    } else {
-        useEuler->setChecked(true);
+    if (ecs.empty())
+        return QString();
 
-        std::set<regina::NLargeInteger>::reverse_iterator it = ecs.rbegin();
-        QString newText = (*it).stringValue().c_str();
-        it++;
-        while (it != ecs.rend()) {
-            newText.append(", ");
-            newText.append((*it).stringValue().c_str());
-            it++;
-        }
-
-        eulerList->setText(newText);
+    std::set<regina::NLargeInteger>::reverse_iterator it = ecs.rbegin();
+    QString ans = (*it).stringValue().c_str();
+    for (++it; it != ecs.rend(); ++it) {
+        ans.append(", ");
+        ans.append(it->stringValue().c_str());
     }
-    enableDisableEuler();
+    return ans;
 }
 

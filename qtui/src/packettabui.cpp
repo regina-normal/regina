@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -162,25 +162,6 @@ QWidget* PacketTabbedUI::getInterface() {
     return ui;
 }
 
-void PacketTabbedUI::commit() {
-    if (editorTab)
-        editorTab->commit();
-
-    if (header)
-        header->refresh();
-
-    for (ViewerIterator it = viewerTabs.begin(); it != viewerTabs.end(); it++)
-        if (*it) {
-            if (*it == visibleViewer) {
-                (*it)->refresh();
-                (*it)->queuedAction = PacketViewerTab::None;
-            } else
-                (*it)->queuedAction = PacketViewerTab::Refresh;
-        }
-
-    setDirty(false);
-}
-
 void PacketTabbedUI::refresh() {
     if (editorTab)
         editorTab->refresh();
@@ -196,8 +177,6 @@ void PacketTabbedUI::refresh() {
             } else
                 (*it)->queuedAction = PacketViewerTab::Refresh;
         }
-
-    setDirty(false);
 }
 
 PacketUI* PacketTabbedUI::interfaceAtIndex(int tabIndex) {
@@ -219,20 +198,6 @@ void PacketTabbedUI::setReadWrite(bool readWrite) {
         editorTab->setReadWrite(readWrite);
 }
 
-void PacketTabbedUI::notifyEditing() {
-    if (header)
-        header->editingElsewhere();
-
-    for (ViewerIterator it = viewerTabs.begin(); it != viewerTabs.end(); it++)
-        if (*it) {
-            if (*it == visibleViewer) {
-                (*it)->editingElsewhere();
-                (*it)->queuedAction = PacketViewerTab::None;
-            } else
-                (*it)->queuedAction = PacketViewerTab::EditingElsewhere;
-        }
-}
-
 void PacketTabbedUI::notifyTabSelected(int newTab) {
     // Remember this tab for next time.
     if (rememberTabSelection_)
@@ -249,18 +214,8 @@ void PacketTabbedUI::notifyTabSelected(int newTab) {
     if (visibleViewer) {
         if (visibleViewer->queuedAction == PacketViewerTab::Refresh)
             visibleViewer->refresh();
-        else if (visibleViewer->queuedAction ==
-                PacketViewerTab::EditingElsewhere)
-            visibleViewer->editingElsewhere();
         visibleViewer->queuedAction = PacketViewerTab::None;
     }
-}
-
-void PacketEditorTab::setDirty(bool newDirty) {
-    if (newDirty)
-        parentUI->notifyEditing();
-
-    PacketUI::setDirty(newDirty);
 }
 
 PacketTabbedViewerTab::PacketTabbedViewerTab(PacketTabbedUI* useParentUI,
@@ -342,20 +297,6 @@ void PacketTabbedViewerTab::refresh() {
             (*it)->queuedAction = PacketViewerTab::None;
         } else
             (*it)->queuedAction = PacketViewerTab::Refresh;
-
-    setDirty(false);
-}
-
-void PacketTabbedViewerTab::editingElsewhere() {
-    if (header)
-        header->editingElsewhere();
-
-    for (ViewerIterator it = viewerTabs.begin(); it != viewerTabs.end(); it++)
-        if (*it == visibleViewer) {
-            (*it)->editingElsewhere();
-            (*it)->queuedAction = PacketViewerTab::None;
-        } else
-            (*it)->queuedAction = PacketViewerTab::EditingElsewhere;
 }
 
 void PacketTabbedViewerTab::notifyTabSelected(int newTab) {
@@ -373,8 +314,6 @@ void PacketTabbedViewerTab::notifyTabSelected(int newTab) {
     // Perform any pending actions.
     if (visibleViewer->queuedAction == PacketViewerTab::Refresh)
         visibleViewer->refresh();
-    else if (visibleViewer->queuedAction == PacketViewerTab::EditingElsewhere)
-        visibleViewer->editingElsewhere();
     visibleViewer->queuedAction = PacketViewerTab::None;
 }
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -95,8 +95,6 @@ class NComponent;
  * Of the optional NStandardTriangulation routines, getManifold() is
  * implemented for most plugged triangular solid tori and
  * getHomologyH1() is not implemented at all.
- *
- * \testpart
  */
 class REGINA_API NPlugTriSolidTorus : public NStandardTriangulation {
     public:

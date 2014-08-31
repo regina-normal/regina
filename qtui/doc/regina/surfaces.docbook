@@ -10,11 +10,12 @@
   A <firstterm>normal surface</firstterm> is a surface within a
   3-manifold triangulation that meets each tetrahedron in a collection
   of triangles and/or quadrilaterals, as illustrated to the right.
-  For a nice overview of normal surface theory, see
+  For an overview of normal surface theory, see
   <xref linkend="bib-hass-knotnp"/>.
  </para>
  <para>
-  &regina; typically works with embedded normal surfaces, but it also offers
+  &regina; typically works with properly embedded normal surfaces,
+  but it also offers
   basic support for immersed and singular surfaces.  In addition, it can
   work with <firstterm>almost normal surfaces</firstterm>
   (which are like normal surfaces but with an extra
@@ -25,9 +26,9 @@
  <para>
   For almost normal surfaces, &regina; uses the restricted definition
   of Thompson <xref linkend="bib-thinposition"/>
-  where the exceptional piece is an octagon>.
+  where the exceptional piece is an octagon.
   &regina; does not currently support the more general definition
-  of Rubinstein <xref linkend="bib-rubin-3sphere1"/> where the exception
+  of Rubinstein <xref linkend="bib-rubin-3sphere1"/> in which the exceptional
   piece may be either an octagon or a tube.
  </para>
 
@@ -37,15 +38,17 @@
   <para>
    Normal surfaces are stored in lists, which typically represent all
    vertex or fundamental normal surfaces within a
-   triangulation in some normal coordinate system.
-   &regina; also supports octagonal almost normal surfaces.
+   triangulation in some normal (or almost normal) coordinate system.
   </para>
   <para>
-   A normal surface list must remain &ldquo;connected&rdquo; to the
-   corresponding triangulation.  It always lives immediately beneath the
-   triangulation in the packet tree, and the triangulation
-   <link linkend="packet-uneditable">cannot be modified</link>
-   unless all of its normal surface lists are deleted.
+   &regina; insists on keeping normal surface lists tied to their
+   corresponding triangulations (this is because normal surfaces are
+   expressed using coordinates relative to these triangulations).
+   A normal surface list will alway live immediately beneath the
+   corresponding triangulation in the packet tree, and
+   &regina; will <link linkend="packet-uneditable">not let you modify</link>
+   the triangulation as long as it has any normal surface lists
+   (or <link linkend="angles">angle structure lists</link>) beneath it.
    The triangulation will be marked with a small padlock to remind you
    of this.
   </para>
@@ -91,6 +94,10 @@
      <glossdef>
       <para>
        This is the triangulation that will contain your normal surfaces.
+       You may chose either one of &regina;'s native
+       <link linkend="packet-triangulation">triangulation packets</link>
+       or one of its hybrid
+       <link linkend="packet-snappea">&snappea; triangulation packets</link>.
        The new normal surface list will appear as a child of this
        triangulation in the packet tree.
       </para>
@@ -104,7 +111,7 @@
        normal surfaces.
       </para>
       <para>
-       Your choice of coordinate system will affect which surfaces
+       Your choice of coordinate system will affect which kinds of surfaces
        appear in the final solution set.  For instance, spun-normal
        surfaces only appear in quadrilateral and quadrilateral-octagon
        coordinates; other surfaces (such as vertex links) only appear in
@@ -130,8 +137,8 @@
           (tri-quad-oct)</guilabel></glossterm>
          <glossdef>
           <para>
-           This is a 10<replaceable>n</replaceable>-dimensional system,
-           obtained from standard normal coordinates by adding three
+           This is a 10<replaceable>n</replaceable>-dimensional system
+           that extends standard normal coordinates by also adding three
            octagon coordinates per tetrahedron.
           </para>
           <para>
@@ -199,8 +206,8 @@
           </para>
           <para>
            &regina; will only compute one surface for each
-           extreme ray: specifically, the smallest integer vector along
-           that ray.  In other words, the coordinates of each surface
+           extreme ray&mdash;specifically, the smallest integer vector along
+           each ray.  This means that the coordinates of each vertex surface
            will have greatest common divisor one.
           </para>
          </glossdef>
@@ -310,15 +317,16 @@
    </inlinemediaobject>
   </para>
   <para>
-   You might see some special types of surface lists:
+   There are some unusual comments that you might see in this header if
+   you are using old data files and/or customised software:
    <glosslist>
     <glossentry id="surfaces-header-legacy">
      <glossterm><guilabel>Legacy surfaces</guilabel></glossterm>
      <glossdef><para>
       You might see this instead of vertex or fundamental surfaces.
       This means that the list of surfaces was created using
-      &regina; 4.93 or earlier (which did not save information on
-      whether the surfaces were vertex or fundamental).
+      &regina; 4.93 or earlier (which did not save information on whether
+      the surfaces you enumerated were vertex or fundamental).
      </para></glossdef>
     </glossentry>
     <glossentry id="surfaces-header-custom">
@@ -354,7 +362,8 @@
    <title>Summary of Surfaces</title>
 
    <para>
-    The <guilabel>Summary</guilabel> tab breaks the total count
+    The <guilabel>Summary</guilabel> tab breaks down the
+    total number of surfaces
     into sub-counts for different types of surfaces, as illustrated below.
     At a broad level, the total is divided into
     <emphasis>closed</emphasis> surfaces,
@@ -373,9 +382,9 @@
     </inlinemediaobject>
    </para>
    <para>
-    If the coordinate system that you used for enumeration does not support
-    spun-normal surfaces, they will not be listed here in the
-    <guilabel>Summary</guilabel> tab.
+    Spun-normal surfaces will only be listed here in the
+    <guilabel>Summary</guilabel> tab if your chosen coordinate system
+    supports them.
    </para>
   </sect2>
 
@@ -480,40 +489,46 @@
            </para>
            <para>
             &regina; can compute boundary slopes for spun-normal surfaces,
-            but this feature
-            <link linkend="options-general">must be explicitly enabled</link>
-            in &regina;'s preferences.  The details are as follows.
+            but only for quadrilateral coordinates (not
+            quadrilateral-octagon coordinates), only for orientable
+            3-manifolds, and only for
+            <link linkend="packet-snappea">&snappea; triangulation
+            packets</link> (because &regina;'s native
+            <link linkend="packet-triangulation">triangulation packets</link>
+            do not provide a meridian and longitude on each cusp).
            </para>
            <para>
-            If the triangulation is oriented,
-            the vertex links are all tori and the underlying
-            coordinate system is normal (not almost normal), then
-            &regina; will also show the boundary slopes for each
-            spun-normal surface.  These are presented as a pair
+            If you have a native &regina; triangulation and you wish to view
+            boundary slopes for spun-normal surfaces, you must first
+            <link linkend="snappea-fromregina">convert it</link>
+            to a &snappea; triangulation, which will install a default
+            (shortest, second shortest) basis on each cusp.  After this
+            you can enumerate vertex or fundamental surfaces relative to
+            the new &snappea; triangulation, and &regina; will show you
+            the boundary slopes.
+            If you already began with a &snappea; triangulation
+            (for instance, one that you
+            <link linkend="import-snappea">imported from &snappy;</link>),
+            then &regina; will work with whatever basis &snappea; was already
+            using for that triangulation.
+           </para>
+           <para>
+            Each boundary slope is presented as a pair
             (<replaceable>p</replaceable>,&nbsp;<replaceable>q</replaceable>)
-            for each cusp, indicating that the boundary curves pass
+            for each cusp, indicating that the boundary curve passes
             <replaceable>p</replaceable> times around the meridian and
             <replaceable>q</replaceable> times around the longitude.
+            If there are multiple cusps, these pairs
+            will be ordered by
+            <link linkend="snappea-shapes-cusps">cusp number</link>.
            </para>
            <para>
-            The meridian and longitude are chosen to be the shortest and
-            second shortest basis on each cusp, and their orientations
-            follow the convention used by the &snappy; kernel.  Be warned,
-            however, that this choice might not be unique for some cusp shapes,
-            and the resolution of such ambiguities might be machine-dependent.
+            <inlinemediaobject>
+             <imageobject>
+              <imagedata fileref="surfaces-slopes.png"/>
+             </imageobject>
+            </inlinemediaobject>
            </para>
-           <para>
-            If there are multiple cusps, these boundary slopes
-            will be ordered by vertex number.
-           </para>
-           <warning><para>
-            If this triangulation originated from &snappea;, &regina; cannot
-            tell what meridian and longitude &snappea; was originally using
-            (since &regina; does not keep track of peripheral curves on cusps).
-            Therefore &regina; will always give boundary slopes relative to the
-            shortest and second-shortest basis, as described above,
-            which might not be what you expect.
-           </para></warning>
           </glossdef>
          </glossentry>
         </glosslist>
@@ -598,7 +613,7 @@
         <para>
          If this cell is empty, it means
          the surface does not contain any octagons at all
-         (i.e., you have normal surface, not an almost normal surface).
+         (i.e., you have a normal surface, not an almost normal surface).
          Otherwise it will state which coordinate position
          contains the octagons and how many octagons there are
          (for example, <guilabel>K2:&nbsp;03/12 (3&nbsp;octs)</guilabel>).

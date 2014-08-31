@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Form a census of triangulations that satisfy given properties         *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,15 +40,12 @@
 #include <sstream>
 #include <popt.h>
 #include <unistd.h>
-#include "census/dim2census.h"
 #include "census/dim2edgepairing.h"
 #include "census/dim2gluingpermsearcher.h"
 #if SUPPORT_DIM4
-#include "census/dim4census.h"
 #include "census/dim4facetpairing.h"
 #include "census/dim4gluingpermsearcher.h"
 #endif
-#include "census/ncensus.h"
 #include "census/nfacepairing.h"
 #include "census/ngluingpermsearcher.h"
 #include "dim2/dim2triangulation.h"
@@ -142,7 +139,7 @@ struct Dim3Params {
     }
 
     inline static bool mightBeMinimal(Triangulation* tri) {
-        return regina::NCensus::mightBeMinimal(tri, 0);
+        return ! tri->simplifyToLocalMinimum(false);
     }
 
     inline static const Pairing* pairingFor(const GluingPermSearcher* s) {
@@ -639,14 +636,14 @@ int runCensus() {
 
     // Start the census running.
     if (minimalPrimeP2)
-        whichPurge = regina::NCensus::PURGE_NON_MINIMAL_PRIME |
-            regina::NCensus::PURGE_P2_REDUCIBLE;
+        whichPurge = regina::NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME |
+            regina::NGluingPermSearcher::PURGE_P2_REDUCIBLE;
     else if (minimalPrime)
-        whichPurge = regina::NCensus::PURGE_NON_MINIMAL_PRIME;
+        whichPurge = regina::NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME;
     else if (minimalHyp)
-        whichPurge = regina::NCensus::PURGE_NON_MINIMAL_HYP;
+        whichPurge = regina::NGluingPermSearcher::PURGE_NON_MINIMAL_HYP;
     else if (minimal)
-        whichPurge = regina::NCensus::PURGE_NON_MINIMAL;
+        whichPurge = regina::NGluingPermSearcher::PURGE_NON_MINIMAL;
 
     if (usePairs) {
         // Only use the face pairings read from standard input.
@@ -709,7 +706,7 @@ int runCensus() {
     if (sigs) {
         sigStream.close();
     } else {
-        if (! regina::writeXMLFile(outFile.c_str(), parent)) {
+        if (! parent->save(outFile.c_str())) {
             std::cerr << "Output file " << outFile
                 << " could not be written.\n";
             return 1;

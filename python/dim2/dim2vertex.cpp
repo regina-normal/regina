@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -71,6 +71,7 @@ void addDim2Vertex() {
     scope s = class_<Dim2Vertex, bases<regina::ShareableObject>,
             std::auto_ptr<Dim2Vertex>, boost::noncopyable>
             ("Dim2Vertex", no_init)
+        .def("index", &Dim2Vertex::index)
         .def("getEmbeddings", Dim2Vertex_getEmbeddings_list)
         .def("getNumberOfEmbeddings", &Dim2Vertex::getNumberOfEmbeddings)
         .def("getEmbedding", &Dim2Vertex::getEmbedding,

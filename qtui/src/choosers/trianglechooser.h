@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -93,6 +93,9 @@ class TriangleChooser : public QComboBox, public regina::NPacketListener {
          * when using this setting, since if the triangulation changes
          * but the chooser is \e not refreshed, then selected() may end
          * up returning an invalid pointer.
+         *
+         * The given filter may be 0, in which case every triangle
+         * will be offered.
          */
         TriangleChooser(regina::NTriangulation* tri,
                 TriangleFilterFunc filter, QWidget* parent,

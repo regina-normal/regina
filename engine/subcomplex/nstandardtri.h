@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -72,8 +72,6 @@ class NTriangulation;
  * Subclasses corresponding to different families of triangulations do
  * not need to override writeTextShort() since this routine is
  * properly implemented in the base class NStandardTriangulation.
- *
- * \testpart
  */
 class REGINA_API NStandardTriangulation : public ShareableObject {
     public:

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -61,8 +61,6 @@ namespace regina {
  *
  * \pre \a modBase is strictly positive.
  *
- * \testfull
- *
  * @param k the number to reduce modulo \a modBase.
  * @param modBase the modular base in which to work.
  */
@@ -74,8 +72,6 @@ REGINA_API long reducedMod(long k, long modBase);
  *
  * Although the arguments may be negative, the result is guaranteed to
  * be non-negative.  As a special case, gcd(0,0) is considered to be zero.
- *
- * \testfull
  *
  * @param a one of the two integers to work with.
  * @param b the other integer with which to work.
@@ -102,8 +98,6 @@ REGINA_API long gcd(long a, long b);
  * corresponding coefficient will also be zero and the other coefficient
  * will be 1 or -1 so that <tt>u*a + v*b = d</tt> still holds.  If both
  * given integers are zero, both of the coefficients will be set to zero.
- *
- * \testfull
  *
  * @param a one of the integers to work with.
  * @param b the other integer with which to work.
@@ -137,8 +131,6 @@ REGINA_API long lcm(long a, long b);
  *
  * \pre \a n and \a k are both strictly positive;
  * \pre \a n and \a k have no common factors.
- *
- * \testfull
  *
  * @param n the modular base in which to work.
  * @param k the number whose multiplicative inverse should be found.

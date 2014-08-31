@@ -44,6 +44,7 @@ text ::= (#PCDATA)</synopsis>
    <para>
     The following elements contain <sgmltag>text</sgmltag>:
     <simplelist type="inline">
+     <member>&xml-packet-script;</member>
      <member>&xml-packet-text;</member>
     </simplelist>.
    </para>

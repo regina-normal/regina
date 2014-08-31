@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -88,6 +88,7 @@ void addNVertex() {
 
     scope s = class_<NVertex, bases<regina::ShareableObject>,
             std::auto_ptr<NVertex>, boost::noncopyable>("NVertex", no_init)
+        .def("index", &NVertex::index)
         .def("getEmbeddings", vertex_getEmbeddings_list)
         .def("getNumberOfEmbeddings", &NVertex::getNumberOfEmbeddings)
         .def("getEmbedding", &NVertex::getEmbedding,

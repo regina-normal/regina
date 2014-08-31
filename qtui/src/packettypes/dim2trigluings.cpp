@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,6 +39,7 @@
 
 // UI includes:
 #include "dim2trigluings.h"
+#include "edittableview.h"
 #include "reginamain.h"
 #include "reginasupport.h"
 
@@ -51,7 +52,6 @@
 #include <QLabel>
 #include <QProgressDialog>
 #include <QRegExp>
-#include <QTableView>
 #include <QTextDocument>
 #include <QToolBar>
 #include <set>
@@ -76,172 +76,13 @@ namespace {
     QRegExp reEdge("^[0-2][0-2]$");
 }
 
-Dim2GluingsModel::Dim2GluingsModel(bool readWrite) :
-        nTri(0), name(0), adjTri(0), adjPerm(0), isReadWrite_(readWrite) {
+Dim2GluingsModel::Dim2GluingsModel(regina::Dim2Triangulation* tri,
+        bool readWrite) : tri_(tri), isReadWrite_(readWrite) {
 }
 
-void Dim2GluingsModel::refreshData(regina::Dim2Triangulation* triangulation) {
+void Dim2GluingsModel::rebuild() {
     beginResetModel();
-
-    delete[] name;
-    delete[] adjTri;
-    delete[] adjPerm;
-
-    nTri = triangulation->getNumberOfTriangles();
-    if (nTri == 0) {
-        name = 0;
-        adjTri = 0;
-        adjPerm = 0;
-
-        endResetModel();
-        return;
-    }
-
-    name = new QString[nTri];
-    adjTri = new int[3 * nTri];
-    adjPerm = new regina::NPerm3[3 * nTri];
-
-    int triNum, edge;
-    regina::Dim2Triangle* tri;
-    regina::Dim2Triangle* adj;
-    for (triNum = 0; triNum < nTri; triNum++) {
-        tri = triangulation->getTriangle(triNum);
-        name[triNum] = tri->getDescription().c_str();
-        for (edge = 0; edge < 3; ++edge) {
-            adj = tri->adjacentTriangle(edge);
-            if (adj) {
-                adjTri[triNum * 3 + edge] = triangulation->triangleIndex(adj);
-                adjPerm[triNum * 3 + edge] = tri->adjacentGluing(edge);
-            } else
-                adjTri[triNum * 3 + edge] = -1;
-        }
-    }
-
     endResetModel();
-}
-
-void Dim2GluingsModel::addTri() {
-    beginInsertRows(QModelIndex(), nTri, nTri);
-
-    QString* newName = new QString[nTri + 1];
-    int* newTri = new int[3 * (nTri + 1)];
-    regina::NPerm3* newPerm = new regina::NPerm3[3 * (nTri + 1)];
-
-    std::copy(name, name + nTri, newName);
-    std::copy(adjTri, adjTri + 3 * nTri, newTri);
-    std::copy(adjPerm, adjPerm + 3 * nTri, newPerm);
-
-    for (int edge = 0; edge < 3; ++edge)
-        newTri[3 * nTri + edge] = -1;
-
-    delete[] name;
-    delete[] adjTri;
-    delete[] adjPerm;
-
-    name = newName;
-    adjTri = newTri;
-    adjPerm = newPerm;
-
-    ++nTri;
-
-    endInsertRows();
-}
-
-void Dim2GluingsModel::removeTri(int first, int last) {
-    beginResetModel();
-
-    if (first == 0 && last == nTri - 1) {
-        delete[] name;
-        delete[] adjTri;
-        delete[] adjPerm;
-
-        name = 0;
-        adjTri = 0;
-        adjPerm = 0;
-
-        nTri = 0;
-
-        endResetModel();
-        return;
-    }
-
-    // Adjust other triangle numbers.
-    int nCut = last - first + 1;
-
-    QString* newName = new QString[nTri - nCut];
-    int* newTri = new int[3 * (nTri - nCut)];
-    regina::NPerm3* newPerm = new regina::NPerm3[3 * (nTri - nCut)];
-
-    int row, edge, i;
-    for (row = 0; row < first; ++row) {
-        newName[row] = name[row];
-        for (edge = 0; edge < 3; ++edge) {
-            newTri[3 * row + edge] = adjTri[3 * row + edge];
-            newPerm[3 * row + edge] = adjPerm[3 * row + edge];
-        }
-    }
-
-    for (row = first; row < nTri - nCut; ++row) {
-        newName[row] = name[row + nCut];
-        for (edge = 0; edge < 3; ++edge) {
-            newTri[3 * row + edge] = adjTri[3 * (row + nCut) + edge];
-            newPerm[3 * row + edge] = adjPerm[3 * (row + nCut) + edge];
-        }
-    }
-
-    for (i = 0; i < 3 * (nTri - nCut); ++i)
-        if (newTri[i] >= first && newTri[i] <= last)
-            newTri[i] = -1;
-        else if (newTri[i] > last)
-            newTri[i] -= nCut;
-
-    delete[] name;
-    delete[] adjTri;
-    delete[] adjPerm;
-
-    name = newName;
-    adjTri = newTri;
-    adjPerm = newPerm;
-
-    nTri -= nCut;
-
-    // Done!
-    endResetModel();
-}
-
-void Dim2GluingsModel::commitData(regina::Dim2Triangulation* tri) {
-    tri->removeAllTriangles();
-
-    if (nTri == 0)
-        return;
-
-    regina::NPacket::ChangeEventSpan span(tri);
-
-    regina::Dim2Triangle** tris = new regina::Dim2Triangle*[nTri];
-    int triNum, adjTriNum;
-    int edge, adjEdge;
-
-    // Create the triangles.
-    for (triNum = 0; triNum < nTri; triNum++)
-        tris[triNum] = tri->newTriangle(name[triNum].toAscii().constData());
-
-    // Glue the triangles together.
-    for (triNum = 0; triNum < nTri; triNum++)
-        for (edge = 0; edge < 3; ++edge) {
-            adjTriNum = adjTri[3 * triNum + edge];
-            if (adjTriNum < triNum) // includes adjTriNum == -1
-                continue;
-            adjEdge = adjPerm[3 * triNum + edge][edge];
-            if (adjTriNum == triNum && adjEdge < edge)
-                continue;
-
-            // It's a forward gluing.
-            tris[triNum]->joinTo(edge, tris[adjTriNum],
-                adjPerm[3 * triNum + edge]);
-        }
-
-    // Tidy up.
-    delete[] tris;
 }
 
 QModelIndex Dim2GluingsModel::index(int row, int column,
@@ -250,7 +91,7 @@ QModelIndex Dim2GluingsModel::index(int row, int column,
 }
 
 int Dim2GluingsModel::rowCount(const QModelIndex& /* unused parent*/) const {
-    return nTri;
+    return tri_->getNumberOfSimplices();
 }
 
 int Dim2GluingsModel::columnCount(const QModelIndex& /* unused parent*/) const {
@@ -258,29 +99,32 @@ int Dim2GluingsModel::columnCount(const QModelIndex& /* unused parent*/) const {
 }
 
 QVariant Dim2GluingsModel::data(const QModelIndex& index, int role) const {
-    int tri = index.row();
+    regina::Dim2Triangle* t = tri_->getSimplex(index.row());
     if (role == Qt::DisplayRole) {
         // Triangle name?
         if (index.column() == 0)
-            return (name[tri].isEmpty() ? QString::number(tri) :
-                (QString::number(tri) + " (" + name[tri] + ')'));
+            return (t->getDescription().empty() ? QString::number(index.row()) :
+                (QString::number(index.row()) + " (" +
+                t->getDescription().c_str() + ')'));
 
         // Edge gluing?
         int edge = 3 - index.column();
         if (edge >= 0)
-            return destString(edge, adjTri[3 * tri + edge],
-                adjPerm[3 * tri + edge]);
+            return destString(edge,
+                t->adjacentSimplex(edge),
+                t->adjacentGluing(edge));
         return QVariant();
     } else if (role == Qt::EditRole) {
         // Triangle name?
         if (index.column() == 0)
-            return name[tri];
+            return t->getDescription().c_str();
 
         // Edge gluing?
         int edge = 3 - index.column();
         if (edge >= 0)
-            return destString(edge, adjTri[3 * tri + edge],
-                adjPerm[3 * tri + edge]);
+            return destString(edge,
+                t->adjacentSimplex(edge),
+                t->adjacentGluing(edge));
         return QVariant();
     } else
         return QVariant();
@@ -311,14 +155,13 @@ Qt::ItemFlags Dim2GluingsModel::flags(const QModelIndex& /* unused index*/) cons
 
 bool Dim2GluingsModel::setData(const QModelIndex& index, const QVariant& value,
         int /* unused role*/) {
-    int tri = index.row();
+    regina::Dim2Triangle* t = tri_->getSimplex(index.row());
     if (index.column() == 0) {
         QString newName = value.toString().trimmed();
-        if (newName == name[tri])
+        if (newName == t->getDescription().c_str())
             return false;
 
-        name[tri] = newName;
-        emit dataChanged(index, index);
+        t->setDescription(newName.toAscii().constData());
         return true;
     }
 
@@ -348,13 +191,13 @@ bool Dim2GluingsModel::setData(const QModelIndex& index, const QVariant& value,
 
         // Check explicitly for a negative triangle number
         // since isEdgeStringValid() takes an unsigned integer.
-        if (newAdjTri < 0 || newAdjTri >= nTri) {
+        if (newAdjTri < 0 || newAdjTri >= tri_->getNumberOfSimplices()) {
             showError(tr("There is no triangle number %1.").arg(newAdjTri));
             return false;
         }
 
         // Do we have a valid gluing?
-        QString err = isEdgeStringValid(tri, edge, newAdjTri, triEdge,
+        QString err = isEdgeStringValid(index.row(), edge, newAdjTri, triEdge,
             &newAdjPerm);
         if (! err.isNull()) {
             showError(err);
@@ -363,71 +206,43 @@ bool Dim2GluingsModel::setData(const QModelIndex& index, const QVariant& value,
     }
 
     // Yes, looks valid.
-    int oldAdjTri = adjTri[3 * tri + edge];
-    regina::NPerm3 oldAdjPerm = adjPerm[3 * tri + edge];
-    int oldAdjEdge = oldAdjPerm[edge];
-
     // Have we even made a change?
-    if (oldAdjTri < 0 && newAdjTri < 0)
+    if (newAdjTri < 0 && ! t->adjacentSimplex(edge))
         return false;
-    if (oldAdjTri == newAdjTri && oldAdjPerm == newAdjPerm)
+    if (t->adjacentSimplex(edge) &&
+            t->adjacentSimplex(edge)->markedIndex() == newAdjTri &&
+            newAdjPerm == t->adjacentGluing(edge))
         return false;
 
     // Yes!  Go ahead and make the change.
+    regina::NPacket::ChangeEventSpan span(tri_);
 
     // First unglue from the old partner if it exists.
-    if (oldAdjTri >= 0) {
-        adjTri[3 * oldAdjTri + oldAdjEdge] = -1;
-
-        QModelIndex oldAdjIndex = this->index(oldAdjTri, 3 - oldAdjEdge,
-            QModelIndex());
-        emit dataChanged(oldAdjIndex, oldAdjIndex);
-    }
+    if (t->adjacentSimplex(edge))
+        t->unjoin(edge);
 
     // Are we making the edge boundary?
-    if (newAdjTri < 0) {
-        adjTri[3 * tri + edge] = -1;
-
-        emit dataChanged(index, index);
+    if (newAdjTri < 0)
         return true;
-    }
 
     // We are gluing the edge to a new partner.
     int newAdjEdge = newAdjPerm[edge];
 
     // Does this new partner already have its own partner?
-    if (adjTri[3 * newAdjTri + newAdjEdge] >= 0) {
-        // Yes.. better unglue it.
-        int extraTri = adjTri[3 * newAdjTri + newAdjEdge];
-        int extraEdge = adjPerm[3 * newAdjTri + newAdjEdge][newAdjEdge];
-
-        adjTri[3 * extraTri + extraEdge] = -1;
-
-        QModelIndex extraIndex = this->index(extraTri, 3 - extraEdge,
-            QModelIndex());
-        emit dataChanged(extraIndex, extraIndex);
-    }
+    // If so, better unglue it.
+    regina::Dim2Triangle* adj = tri_->getSimplex(newAdjTri);
+    if (adj->adjacentSimplex(newAdjEdge))
+        adj->unjoin(newAdjEdge);
 
     // Glue the two edges together.
-    adjTri[3 * tri + edge] = newAdjTri;
-    adjTri[3 * newAdjTri + newAdjEdge] = tri;
-
-    adjPerm[3 * tri + edge] = newAdjPerm;
-    adjPerm[3 * newAdjTri + newAdjEdge] = newAdjPerm.inverse();
-
-    emit dataChanged(index, index);
-
-    QModelIndex newAdjIndex = this->index(newAdjTri, 3 - newAdjEdge,
-        QModelIndex());
-    emit dataChanged(newAdjIndex, newAdjIndex);
-
+    t->joinTo(edge, adj, newAdjPerm);
     return true;
 }
 
 QString Dim2GluingsModel::isEdgeStringValid(unsigned long srcTri, int srcEdge,
         unsigned long destTri, const QString& destEdge,
         regina::NPerm3* gluing) {
-    if (destTri >= nTri)
+    if (destTri >= tri_->getNumberOfSimplices())
         return tr("There is no triangle number %1.").arg(destTri);
 
     if (! reEdge.exactMatch(destEdge))
@@ -458,12 +273,12 @@ void Dim2GluingsModel::showError(const QString& message) {
         tr("This is not a valid gluing."), message);
 }
 
-QString Dim2GluingsModel::destString(int srcEdge, int destTri,
+QString Dim2GluingsModel::destString(int srcEdge, regina::Dim2Triangle* destTri,
         const regina::NPerm3& gluing) {
-    if (destTri < 0)
+    if (! destTri)
         return "";
     else
-        return QString::number(destTri) + " (" + (gluing *
+        return QString::number(destTri->markedIndex()) + " (" + (gluing *
             regina::Dim2Edge::ordering[srcEdge]).trunc2().c_str() + ')';
 }
 
@@ -485,10 +300,10 @@ regina::NPerm3 Dim2GluingsModel::edgeStringToPerm(int srcEdge,
 
 Dim2TriGluingsUI::Dim2TriGluingsUI(regina::Dim2Triangulation* packet,
         PacketTabbedUI* useParentUI, bool readWrite) :
-        PacketEditorTab(useParentUI), triangulation(packet) {
+        PacketEditorTab(useParentUI), tri(packet) {
     // Set up the table of edge gluings.
-    model = new Dim2GluingsModel(readWrite);
-    edgeTable = new QTableView();
+    model = new Dim2GluingsModel(packet, readWrite);
+    edgeTable = new EditTableView();
     edgeTable->setSelectionMode(QAbstractItemView::ContiguousSelection);
     edgeTable->setModel(model);
     
@@ -521,9 +336,6 @@ Dim2TriGluingsUI::Dim2TriGluingsUI(regina::Dim2Triangulation* packet,
     //edgeTable->setColumnStretchable(1, true);
     //edgeTable->setColumnStretchable(2, true);
     //edgeTable->setColumnStretchable(3, true);
-
-    connect(model, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
-        this, SLOT(notifyDataChanged()));
 
     ui = edgeTable;
 
@@ -578,21 +390,19 @@ void Dim2TriGluingsUI::fillToolBar(QToolBar* bar) {
 }
 
 regina::NPacket* Dim2TriGluingsUI::getPacket() {
-    return triangulation;
+    return tri;
 }
 
 QWidget* Dim2TriGluingsUI::getInterface() {
     return ui;
 }
 
-void Dim2TriGluingsUI::commit() {
-    model->commitData(triangulation);
-    setDirty(false);
+void Dim2TriGluingsUI::refresh() {
+    model->rebuild();
 }
 
-void Dim2TriGluingsUI::refresh() {
-    model->refreshData(triangulation);
-    setDirty(false);
+void Dim2TriGluingsUI::endEdit() {
+    edgeTable->endEdit();
 }
 
 void Dim2TriGluingsUI::setReadWrite(bool readWrite) {
@@ -614,11 +424,14 @@ void Dim2TriGluingsUI::setReadWrite(bool readWrite) {
 }
 
 void Dim2TriGluingsUI::addTri() {
-    model->addTri();
-    setDirty(true);
+    endEdit();
+
+    tri->newTriangle();
 }
 
 void Dim2TriGluingsUI::removeSelectedTris() {
+    endEdit();
+
     // Gather together all the triangles to be deleted.
     QModelIndexList sel = edgeTable->selectionModel()->selectedIndexes();
     if (sel.empty()) {
@@ -658,8 +471,13 @@ void Dim2TriGluingsUI::removeSelectedTris() {
         return;
 
     // Off we go!
-    model->removeTri(first, last);
-    setDirty(true);
+    if (first == 0 && last == tri->getNumberOfSimplices() - 1)
+        tri->removeAllSimplices();
+    else {
+        regina::NPacket::ChangeEventSpan span(tri);
+        for (int i = last; i >= first; --i)
+            tri->removeSimplexAt(i);
+    }
 }
 
 void Dim2TriGluingsUI::updateRemoveState() {
@@ -668,9 +486,5 @@ void Dim2TriGluingsUI::updateRemoveState() {
             ! edgeTable->selectionModel()->selectedIndexes().empty());
     else
         actRemoveTri->setEnabled(false);
-}
-
-void Dim2TriGluingsUI::notifyDataChanged() {
-    setDirty(true);
 }
 

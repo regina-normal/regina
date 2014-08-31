@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -217,52 +217,52 @@ NXMLElementReader* NXMLTriangulationReader::startContentSubElement(
     else if (subTagName == "zeroeff") {
         bool b;
         if (valueOf(props.lookup("value"), b))
-            tri->zeroEfficient = b;
+            tri->zeroEfficient_ = b;
     } else if (subTagName == "splitsfce") {
         bool b;
         if (valueOf(props.lookup("value"), b))
-            tri->splittingSurface = b;
+            tri->splittingSurface_ = b;
     } else if (subTagName == "threesphere") {
         bool b;
         if (valueOf(props.lookup("value"), b))
-            tri->threeSphere = b;
+            tri->threeSphere_ = b;
     } else if (subTagName == "threeball") {
         bool b;
         if (valueOf(props.lookup("value"), b))
-            tri->threeBall = b;
+            tri->threeBall_ = b;
     } else if (subTagName == "solidtorus") {
         bool b;
         if (valueOf(props.lookup("value"), b))
-            tri->solidTorus = b;
+            tri->solidTorus_ = b;
     } else if (subTagName == "irreducible") {
         bool b;
         if (valueOf(props.lookup("value"), b))
-            tri->irreducible = b;
+            tri->irreducible_ = b;
     } else if (subTagName == "compressingdisc") {
         bool b;
         if (valueOf(props.lookup("compressingdisc"), b))
-            tri->compressingDisc = b;
+            tri->compressingDisc_ = b;
     } else if (subTagName == "haken") {
         bool b;
         if (valueOf(props.lookup("haken"), b))
-            tri->haken = b;
+            tri->haken_ = b;
     } else if (subTagName == "H1")
-        return new NAbelianGroupPropertyReader(tri->H1);
+        return new NAbelianGroupPropertyReader(tri->H1_);
     else if (subTagName == "H1Rel")
-        return new NAbelianGroupPropertyReader(tri->H1Rel);
+        return new NAbelianGroupPropertyReader(tri->H1Rel_);
     else if (subTagName == "H1Bdry")
-        return new NAbelianGroupPropertyReader(tri->H1Bdry);
+        return new NAbelianGroupPropertyReader(tri->H1Bdry_);
     else if (subTagName == "H2")
-        return new NAbelianGroupPropertyReader(tri->H2);
+        return new NAbelianGroupPropertyReader(tri->H2_);
     else if (subTagName == "fundgroup")
-        return new NGroupPresentationPropertyReader(tri->fundamentalGroup);
+        return new NGroupPresentationPropertyReader(tri->fundamentalGroup_);
     else if (subTagName == "turaevviro") {
         unsigned long r, root;
         double value;
         if (valueOf(props.lookup("r"), r) &&
                 valueOf(props.lookup("root"), root) &&
                 valueOf(props.lookup("value"), value))
-            tri->turaevViroCache[std::make_pair(r, root)] = value;
+            tri->turaevViroCache_[std::make_pair(r, root)] = value;
     }
     return new NXMLElementReader();
 }
