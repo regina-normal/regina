@@ -917,6 +917,8 @@
 		0564A9A01811DB02002CC2AE /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0564A99E1811DB01002CC2AE /* QtCore.framework */; };
 		0564A9A11811DB02002CC2AE /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0564A99F1811DB02002CC2AE /* QtGui.framework */; };
 		0564A9A21811DB2F002CC2AE /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
+		0569F93019B3655C00051091 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0569F92F19B3655C00051091 /* libtokyocabinet.framework */; };
+		0569F93219B3658200051091 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0569F93119B3658200051091 /* libbz2.dylib */; };
 		057118CA19B30A2D009FEDC5 /* snappea-census-sec5.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B319B308F8009FEDC5 /* snappea-census-sec5.dat */; };
 		057118CB19B30A2D009FEDC5 /* snappea-census-sec6n.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B419B308F8009FEDC5 /* snappea-census-sec6n.dat */; };
 		057118CC19B30A2D009FEDC5 /* snappea-census-sec6o.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B519B308F8009FEDC5 /* snappea-census-sec6o.dat */; };
@@ -1948,6 +1950,8 @@
 		0564A6181811D921002CC2AE /* TODO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO.txt; sourceTree = "<group>"; };
 		0564A99E1811DB01002CC2AE /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = ../../../../Library/Frameworks/QtCore.framework; sourceTree = "<group>"; };
 		0564A99F1811DB02002CC2AE /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = ../../../../Library/Frameworks/QtGui.framework; sourceTree = "<group>"; };
+		0569F92F19B3655C00051091 /* libtokyocabinet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libtokyocabinet.framework; path = ../../Library/Frameworks/libtokyocabinet.framework; sourceTree = "<group>"; };
+		0569F93119B3658200051091 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/usr/lib/libbz2.dylib; sourceTree = DEVELOPER_DIR; };
 		057118B119B308F8009FEDC5 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		057118B219B308F8009FEDC5 /* create-snappea-census-data.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = "create-snappea-census-data.py"; sourceTree = "<group>"; };
 		057118B319B308F8009FEDC5 /* snappea-census-sec5.dat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "snappea-census-sec5.dat"; sourceTree = "<group>"; };
@@ -2088,12 +2092,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0569F93219B3658200051091 /* libbz2.dylib in Frameworks */,
 				057FA752180615F6008E25F6 /* libiconv.dylib in Frameworks */,
 				057FA753180615F6008E25F6 /* libxml2.dylib in Frameworks */,
 				057FA754180615F6008E25F6 /* libz.dylib in Frameworks */,
 				052FA241180613A900FAE4DF /* boost.framework in Frameworks */,
 				052FA242180613A900FAE4DF /* libgmp.framework in Frameworks */,
 				052FA243180613A900FAE4DF /* libgmpxx.framework in Frameworks */,
+				0569F93019B3655C00051091 /* libtokyocabinet.framework in Frameworks */,
 				052FA12C1806102F00FAE4DF /* CoreGraphics.framework in Frameworks */,
 				057FA7561806184B008E25F6 /* UIKit.framework in Frameworks */,
 				052FA12A1806102F00FAE4DF /* Foundation.framework in Frameworks */,
@@ -2931,12 +2937,14 @@
 				05A73CDF19B2F3A60099C617 /* libtokyocabinet.9.10.0.dylib */,
 				0564A99E1811DB01002CC2AE /* QtCore.framework */,
 				0564A99F1811DB02002CC2AE /* QtGui.framework */,
+				0569F93119B3658200051091 /* libbz2.dylib */,
 				057FA74F180615F5008E25F6 /* libiconv.dylib */,
 				057FA750180615F5008E25F6 /* libxml2.dylib */,
 				057FA751180615F5008E25F6 /* libz.dylib */,
 				052FA23E180613A900FAE4DF /* boost.framework */,
 				052FA23F180613A900FAE4DF /* libgmp.framework */,
 				052FA240180613A900FAE4DF /* libgmpxx.framework */,
+				0569F92F19B3655C00051091 /* libtokyocabinet.framework */,
 				052FA12218060AA700FAE4DF /* libcppunit-1.12.1.0.0.dylib */,
 				052FA0A7180604A100FAE4DF /* libgmp.10.dylib */,
 				052FA0A8180604A100FAE4DF /* libgmpxx.4.dylib */,
