@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,6 +37,7 @@
 
 // UI includes:
 #include "bigwidget.h"
+#include "docwidget.h"
 #include "packeteditiface.h"
 #include "ntextui.h"
 
@@ -54,16 +55,13 @@ NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane) :
     QBoxLayout* layout = new QVBoxLayout(ui);
     layout->setContentsMargins(0, 0, 0, 0);
 
-    document = new QPlainTextEdit(enclosingPane);
-    document->setReadOnly(!enclosingPane->isReadWrite());
-    document->setLineWrapMode(QPlainTextEdit::WidgetWidth);
-    editIface = new PacketEditTextEditor(document);
-    layout->addWidget(document, 1);
+    editWidget = new DocWidget<NText>(text, enclosingPane);
+    editWidget->setReadOnly(!enclosingPane->isReadWrite());
+    editWidget->setLineWrapMode(QPlainTextEdit::WidgetWidth);
+    editIface = new PacketEditTextEditor(editWidget);
+    layout->addWidget(editWidget, 1);
 
     refresh();
-
-    connect(document, SIGNAL(textChanged()),
-        this, SLOT(notifyTextChanged()));
 }
 
 NTextUI::~NTextUI() {
@@ -83,44 +81,11 @@ QString NTextUI::getPacketMenuText() const {
     return tr("Te&xt");
 }
 
-void NTextUI::commit() {
-    text->setText(document->toPlainText().toAscii().constData());
-    setDirty(false);
-}
-
 void NTextUI::refresh() {
-    // A kate part needs to be in read-write mode before we can alter its
-    // contents.
-//    bool wasReadWrite = document->isReadWrite();
-//    if (! wasReadWrite)
-//        document->setReadWrite(true);
-
-    document->clear();
-
-    // Back to all-at-once insertion instead of line-by-line insertion.
-    // Grrr vimpart.
-    if (! text->getText().empty()) {
-        QString data = text->getText().c_str();
-
-        // We are guaranteed that data.length() >= 1.
-        if (data[data.length() - 1] == '\n')
-            data.truncate(data.length() - 1);
-
-        document->setPlainText(data);
-        document->moveCursor(QTextCursor::Start);
-    }
-
-//    if (! wasReadWrite)
-//        document->setReadWrite(false);
-
-    setDirty(false);
+    editWidget->refresh();
 }
 
 void NTextUI::setReadWrite(bool readWrite) {
-    document->setReadOnly(!readWrite);
-}
-
-void NTextUI::notifyTextChanged() {
-    setDirty(true);
+    editWidget->setReadOnly(!readWrite);
 }
 

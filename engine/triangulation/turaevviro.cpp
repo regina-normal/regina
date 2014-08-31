@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -222,8 +222,8 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
         const {
     // Have we already calculated this invariant?
     std::pair<unsigned long, unsigned long> tvParams(r, whichRoot);
-    TuraevViroSet::const_iterator it = turaevViroCache.find(tvParams);
-    if (it != turaevViroCache.end())
+    TuraevViroSet::const_iterator it = turaevViroCache_.find(tvParams);
+    if (it != turaevViroCache_.end())
         return (*it).second;
 
     // Do some basic parameter checks.
@@ -257,23 +257,23 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
         if (curr >= static_cast<long>(nEdges)) {
             // Increment ans appropriately.
             valColour = 1.0;
-            for (i = 0; i < vertices.size(); i++)
+            for (i = 0; i < vertices_.size(); i++)
                 valColour *= init.vertexContrib;
             for (i = 0; i < nEdges; i++)
                 valColour *= init.edgeContrib(colour[i]);
             for (i = 0; i < nTriangles; i++)
                 valColour *= init.triContrib(
-                    colour[edgeIndex(triangles[i]->getEdge(0))],
-                    colour[edgeIndex(triangles[i]->getEdge(1))],
-                    colour[edgeIndex(triangles[i]->getEdge(2))]);
-            for (i = 0; i < tetrahedra.size(); i++)
+                    colour[edgeIndex(triangles_[i]->getEdge(0))],
+                    colour[edgeIndex(triangles_[i]->getEdge(1))],
+                    colour[edgeIndex(triangles_[i]->getEdge(2))]);
+            for (i = 0; i < tetrahedra_.size(); i++)
                 valColour *= init.tetContrib(
-                    colour[edgeIndex(tetrahedra[i]->getEdge(0))],
-                    colour[edgeIndex(tetrahedra[i]->getEdge(1))],
-                    colour[edgeIndex(tetrahedra[i]->getEdge(3))],
-                    colour[edgeIndex(tetrahedra[i]->getEdge(5))],
-                    colour[edgeIndex(tetrahedra[i]->getEdge(4))],
-                    colour[edgeIndex(tetrahedra[i]->getEdge(2))]
+                    colour[edgeIndex(tetrahedra_[i]->getEdge(0))],
+                    colour[edgeIndex(tetrahedra_[i]->getEdge(1))],
+                    colour[edgeIndex(tetrahedra_[i]->getEdge(3))],
+                    colour[edgeIndex(tetrahedra_[i]->getEdge(5))],
+                    colour[edgeIndex(tetrahedra_[i]->getEdge(4))],
+                    colour[edgeIndex(tetrahedra_[i]->getEdge(2))]
                     );
 
             ans += valColour;
@@ -296,7 +296,7 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
 
         // Does the current value for colour[curr] preserve admissibility?
         admissible = true;
-        const std::deque<NEdgeEmbedding>& embs(edges[curr]->getEmbeddings());
+        const std::deque<NEdgeEmbedding>& embs(edges_[curr]->getEmbeddings());
         for (embit = embs.begin(); embit != embs.end(); embit++) {
             index1 = edgeIndex((*embit).getTetrahedron()->getEdge(
                 NEdge::edgeNumber[(*embit).getVertices()[0]]
@@ -334,7 +334,7 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
             "         Please report this (along with the 3-manifold that"
             "         was used) to " << PACKAGE_BUGREPORT << "." << std::endl;
     }
-    turaevViroCache[tvParams] = ans.real();
+    turaevViroCache_[tvParams] = ans.real();
     return ans.real();
 }
 

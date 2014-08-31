@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -59,6 +59,12 @@ namespace regina {
  * Callahan, Hildebrand and Weeks, and is shipped with SnapPea 3.0d3
  * (and also with Regina).
  *
+ * \note The modern cusped hyperbolic census now extends to nine tetrahedra,
+ * and indeed the 9-tetrahedron database is accessible through the
+ * NCensus lookup routines.  However, for the time being, the scope of these
+ * NSnapPeaCensusManifold and NSnapPeaCensusTri classes is restricted to the
+ * original Callahan-Hildebrand-Weeks 7-tetrahedron census only.
+ *
  * The census is split into five different sections according to number
  * of tetrahedra and orientability.  Each of these sections corresponds
  * to one of the section constants defined in this class.
@@ -75,8 +81,6 @@ namespace regina {
  *
  * All of the optional NStandardTriangulation routines are implemented
  * for this class.
- *
- * \testpart
  */
 class REGINA_API NSnapPeaCensusTri: public NStandardTriangulation {
     public:

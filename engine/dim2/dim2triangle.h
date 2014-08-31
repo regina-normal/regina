@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -142,6 +142,18 @@ class REGINA_API Dim2Triangle : public ShareableObject, public NMarkedElement {
          * triangle.
          */
         void setDescription(const std::string& desc);
+
+        /**
+         * Returns the index of this triangle in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->triangleIndex(this)</tt>.
+         *
+         * Note that triangle indexing may change when a triangle is
+         * added or removed from the underlying triangulation.
+         *
+         * @return the index of this triangle.
+         */
+        unsigned long index() const;
 
         /**
          * Returns the adjacent triangle glued to the given edge of this
@@ -419,7 +431,12 @@ inline const std::string& Dim2Triangle::getDescription() const {
 }
 
 inline void Dim2Triangle::setDescription(const std::string& desc) {
+    NPacket::ChangeEventSpan span(tri_);
     desc_ = desc;
+}
+
+inline unsigned long Dim2Triangle::index() const {
+    return markedIndex();
 }
 
 inline Dim2Triangle* Dim2Triangle::adjacentTriangle(int edge) const {

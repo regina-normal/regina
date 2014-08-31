@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,7 +33,9 @@
 /* end stub */
 
 // Regina core includes:
+#include "census/ncensus.h"
 #include "manifold/nmanifold.h"
+#include "snappea/nsnappeatriangulation.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/ntriangulation.h"
 
@@ -46,10 +48,12 @@
 #include <QLabel>
 #include <QLayout>
 #include <QPushButton>
+#include <QTextDocument> // For Qt::escape
 #include <QToolTip>
 #include <QWhatsThis>
 
 #define HAKEN_AUTO_CALC_ADJUSTMENT 2
+#define STRICT_AUTO_CALC_THRESHOLD 50
 
 using regina::NPacket;
 using regina::NTriangulation;
@@ -62,8 +66,14 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
 
     layout->addStretch(2);
 
-    QLabel* label = new QLabel(tr(
-        "<qt><b>High-level Recognition Routines</b></qt>"), ui);
+    QLabel* label;
+    if (dynamic_cast<regina::NSnapPeaTriangulation*>(packet))
+        label = new QLabel(tr(
+            "<qt><b>Unfilled Manifold:<br>"
+            "High-level Recognition Routines</b></qt>"), ui);
+    else
+        label = new QLabel(tr(
+            "<qt><b>High-level Recognition Routines</b></qt>"), ui);
     label->setAlignment(Qt::AlignCenter);
     layout->addWidget(label);
 
@@ -78,50 +88,50 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
 
     QString msg;
 
-    label = new QLabel(tr("3-sphere?"), ui);
-    grid->addWidget(label, 0, 1);
+    titleThreeSphere = new QLabel(tr("3-sphere?"), ui);
+    grid->addWidget(titleThreeSphere, 0, 1);
     threeSphere = new QLabel(ui);
     grid->addWidget(threeSphere, 0, 3);
     msg = tr("Is this a triangulation of the 3-sphere?");
-    label->setWhatsThis(msg);
+    titleThreeSphere->setWhatsThis(msg);
     threeSphere->setWhatsThis(msg);
 
-    label = new QLabel(tr("3-ball?"), ui);
-    grid->addWidget(label, 1, 1);
+    titleThreeBall = new QLabel(tr("3-ball?"), ui);
+    grid->addWidget(titleThreeBall, 1, 1);
     threeBall= new QLabel(ui);
     grid->addWidget(threeBall, 1, 3);
     msg = tr("Is this a triangulation of the 3-dimensional ball?");
-    label->setWhatsThis(msg);
+    titleThreeBall->setWhatsThis(msg);
     threeBall->setWhatsThis(msg);
 
-    label = new QLabel(tr("Solid torus?"), ui);
-    grid->addWidget(label, 2, 1);
+    titleSolidTorus = new QLabel(tr("Solid torus?"), ui);
+    grid->addWidget(titleSolidTorus, 2, 1);
     solidTorus = new QLabel(ui);
     grid->addWidget(solidTorus, 2, 3);
     msg = tr("Is this a triangulation of the solid torus?");
-    label->setWhatsThis(msg);
+    titleSolidTorus->setWhatsThis(msg);
     solidTorus->setWhatsThis(msg);
 
-    label = new QLabel(tr("Zero-efficient?"), ui);
-    grid->addWidget(label, 3, 1);
+    titleZeroEff = new QLabel(tr("Zero-efficient?"), ui);
+    grid->addWidget(titleZeroEff, 3, 1);
     zeroEff = new QLabel(ui);
     grid->addWidget(zeroEff, 3, 3);
     msg = tr("<qt>Is this a 0-efficient triangulation?  "
         "A <i>0-efficient triangulation</i> is one whose only normal "
         "spheres or discs are vertex linking, and which has no 2-sphere "
         "boundary components.</qt>");
-    label->setWhatsThis(msg);
+    titleZeroEff->setWhatsThis(msg);
     zeroEff->setWhatsThis(msg);
 
-    label = new QLabel(tr("Splitting surface?"), ui);
-    grid->addWidget(label, 4, 1);
+    titleSplitting = new QLabel(tr("Splitting surface?"), ui);
+    grid->addWidget(titleSplitting, 4, 1);
     splitting = new QLabel(ui);
     grid->addWidget(splitting, 4, 3);
     msg = tr("<qt>Does this triangulation contain a splitting surface?  "
         "A <i>splitting surface</i> is a normal surface containing precisely "
         "one quadrilateral per tetrahedron and no other normal (or "
         "almost normal) discs.</qt>");
-    label->setWhatsThis(msg);
+    titleSplitting->setWhatsThis(msg);
     splitting->setWhatsThis(msg);
 
     titleIrreducible = new QLabel(tr("Irreducible?"), ui);
@@ -146,6 +156,26 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
         "3-manifolds.</qt>");
     titleHaken->setWhatsThis(msg);
     haken->setWhatsThis(msg);
+
+    titleStrict = new QLabel(tr("Strict angle structure?"), ui);
+    grid->addWidget(titleStrict, 7, 1);
+    strict = new QLabel(ui);
+    grid->addWidget(strict, 7, 3);
+    msg = tr("<qt>Does this triangulation support a strict angle structure?  "
+        "A <i>strict</i> angle structure is one in which all angles "
+        "are strictly positive.</qt>");
+    titleStrict->setWhatsThis(msg);
+    strict->setWhatsThis(msg);
+
+    titleHyperbolic = new QLabel(tr("Hyperbolic?"), ui);
+    grid->addWidget(titleHyperbolic, 8, 1);
+    hyperbolic = new QLabel(ui);
+    grid->addWidget(hyperbolic, 8, 3);
+    msg = tr("<qt>Does this triangulation "
+        "represent a finite-volume hyperbolic 3-manifold?<p>"
+        "Any answer shown here will be rigorously certified.</qt>");
+    titleHyperbolic->setWhatsThis(msg);
+    hyperbolic->setWhatsThis(msg);
 
     btnThreeSphere = new QPushButton(ReginaSupport::themeIcon("system-run"),
         tr("Calculate"), ui);
@@ -235,12 +265,24 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     grid->addWidget(btnHaken, 6, 5);
     connect(btnHaken, SIGNAL(clicked()), this, SLOT(calculateHaken()));
 
+    btnStrict = new QPushButton(ReginaSupport::themeIcon("system-run"),
+        tr("Calculate"), ui);
+    btnStrict->setToolTip(tr("Calculate whether this triangulation "
+        "supports a strict angle structure"));
+    btnStrict->setWhatsThis(tr("<qt>Calculate whether this "
+        "triangulation supports a strict angle structure.<p>"
+        "<b>Warning:</b> This calculation is fast for moderate-sized "
+        "triangulations, but can become slow if the triangulation "
+        "is extremely large (which is why this property is not always "
+        "tested automatically).</qt>"));
+    grid->addWidget(btnStrict, 7, 5);
+    connect(btnStrict, SIGNAL(clicked()), this, SLOT(calculateStrict()));
+
     layout->addStretch(1);
 
     QBoxLayout* mfdArea = new QHBoxLayout();
     manifold = new QLabel();
     manifold->setAlignment(Qt::AlignCenter);
-    manifold->setTextFormat(Qt::PlainText);
     manifold->setWordWrap(true);
     mfdArea->addWidget(manifold, 1);
     msg = tr("<qt>Displays the name of the underlying 3-manifold if "
@@ -248,6 +290,17 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
         "structure of the triangulation.</qt>");
     manifold->setWhatsThis(msg);
     layout->addLayout(mfdArea);
+
+    QBoxLayout* censusArea = new QHBoxLayout();
+    census = new QLabel();
+    census->setAlignment(Qt::AlignCenter);
+    census->setWordWrap(true);
+    censusArea->addWidget(census, 1);
+    msg = tr("<qt>Indicates whether this triangulation appears in any of "
+        "Regina's in-built census databases.  If so, the name of the "
+        "triangulation and/or the underlying 3-manifold will be shown.</qt>");
+    census->setWhatsThis(msg);
+    layout->addLayout(censusArea);
 
     layout->addStretch(2);
 
@@ -266,6 +319,10 @@ QWidget* NTriSurfacesUI::getInterface() {
 void NTriSurfacesUI::refresh() {
     int autoCalcThreshold = ReginaPrefSet::global().triSurfacePropsThreshold;
 
+    regina::NProperty<bool> isHyp;
+    if (! tri->isValid())
+        isHyp = false;
+
     // Begin with the combinatorial recognition.
     std::string name;
     regina::NStandardTriangulation* std =
@@ -273,6 +330,7 @@ void NTriSurfacesUI::refresh() {
     if (std) {
         regina::NManifold* mfd = std->getManifold();
         if (mfd) {
+            isHyp = mfd->isHyperbolic();
             name = mfd->getName();
             delete mfd;
 
@@ -291,113 +349,164 @@ void NTriSurfacesUI::refresh() {
         delete std;
     }
 
-    if (tri->knowsZeroEfficient() ||
-            tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
-        if (tri->isZeroEfficient()) {
-            zeroEff->setText(tr("True"));
-            QPalette pal = zeroEff->palette();
-            pal.setColor(zeroEff->foregroundRole(), Qt::darkGreen);
-            zeroEff->setPalette(pal);
+    if (! dynamic_cast<regina::NSnapPeaTriangulation*>(tri)) {
+        titleZeroEff->setVisible(true);
+        zeroEff->setVisible(true);
+        btnZeroEff->setVisible(true);
+
+        titleSplitting->setVisible(true);
+        splitting->setVisible(true);
+        btnSplitting->setVisible(true);
+
+        if (tri->knowsZeroEfficient() ||
+                tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
+            if (tri->isZeroEfficient()) {
+                zeroEff->setText(tr("True"));
+                QPalette pal = zeroEff->palette();
+                pal.setColor(zeroEff->foregroundRole(), Qt::darkGreen);
+                zeroEff->setPalette(pal);
+            } else {
+                zeroEff->setText(tr("False"));
+                QPalette pal = zeroEff->palette();
+                pal.setColor(zeroEff->foregroundRole(), Qt::darkRed);
+                zeroEff->setPalette(pal);
+            }
+            btnZeroEff->setEnabled(false);
         } else {
-            zeroEff->setText(tr("False"));
-            QPalette pal = zeroEff->palette();
-            pal.setColor(zeroEff->foregroundRole(), Qt::darkRed);
-            zeroEff->setPalette(pal);
+            zeroEff->setText(tr("Unknown"));
+            zeroEff->setPalette(QPalette());
+            btnZeroEff->setEnabled(true);
         }
-        btnZeroEff->setEnabled(false);
+
+        if (tri->knowsSplittingSurface() ||
+                tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
+            if (tri->hasSplittingSurface()) {
+                splitting->setText(tr("True"));
+                QPalette pal = splitting->palette();
+                pal.setColor(splitting->foregroundRole(), Qt::darkGreen);
+                splitting->setPalette(pal);
+            } else {
+                splitting->setText(tr("False"));
+                QPalette pal = splitting->palette();
+                pal.setColor(splitting->foregroundRole(), Qt::darkRed);
+                splitting->setPalette(pal);
+            }
+            btnSplitting->setEnabled(false);
+        } else {
+            splitting->setText(tr("Unknown"));
+            splitting->setPalette(QPalette());
+            btnSplitting->setEnabled(true);
+        }
     } else {
-        zeroEff->setText(tr("Unknown"));
-        zeroEff->setPalette(QPalette());
-        btnZeroEff->setEnabled(true);
+        titleZeroEff->setVisible(false);
+        zeroEff->setVisible(false);
+        btnZeroEff->setVisible(false);
+
+        titleSplitting->setVisible(false);
+        splitting->setVisible(false);
+        btnSplitting->setVisible(false);
     }
 
-    if (tri->knowsSplittingSurface() ||
-            tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
-        if (tri->hasSplittingSurface()) {
-            splitting->setText(tr("True"));
-            QPalette pal = splitting->palette();
-            pal.setColor(splitting->foregroundRole(), Qt::darkGreen);
-            splitting->setPalette(pal);
+    if (tri->isClosed()) {
+        titleThreeSphere->setVisible(true);
+        threeSphere->setVisible(true);
+        btnThreeSphere->setVisible(true);
+
+        if (tri->knowsThreeSphere() ||
+                tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
+            if (tri->isThreeSphere()) {
+                threeSphere->setText(tr("True"));
+                QPalette pal = threeSphere->palette();
+                pal.setColor(threeSphere->foregroundRole(), Qt::darkGreen);
+                threeSphere->setPalette(pal);
+
+                isHyp = false;
+                if (name.empty())
+                    name = "S3";
+            } else {
+                threeSphere->setText(tr("False"));
+                QPalette pal = threeSphere->palette();
+                pal.setColor(threeSphere->foregroundRole(), Qt::darkRed);
+                threeSphere->setPalette(pal);
+            }
+            btnThreeSphere->setEnabled(false);
         } else {
-            splitting->setText(tr("False"));
-            QPalette pal = splitting->palette();
-            pal.setColor(splitting->foregroundRole(), Qt::darkRed);
-            splitting->setPalette(pal);
+            threeSphere->setText(tr("Unknown"));
+            threeSphere->setPalette(QPalette());
+            btnThreeSphere->setEnabled(true);
         }
-        btnSplitting->setEnabled(false);
     } else {
-        splitting->setText(tr("Unknown"));
-        splitting->setPalette(QPalette());
-        btnSplitting->setEnabled(true);
+        titleThreeSphere->setVisible(false);
+        threeSphere->setVisible(false);
+        btnThreeSphere->setVisible(false);
     }
 
-    if (tri->knowsThreeSphere() ||
-            tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
-        if (tri->isThreeSphere()) {
-            threeSphere->setText(tr("True"));
-            QPalette pal = threeSphere->palette();
-            pal.setColor(threeSphere->foregroundRole(), Qt::darkGreen);
-            threeSphere->setPalette(pal);
+    if (tri->hasBoundaryTriangles()) {
+        titleThreeBall->setVisible(true);
+        threeBall->setVisible(true);
+        btnThreeBall->setVisible(true);
 
-            if (name.empty())
-                name = "S3";
+        if (tri->knowsBall() ||
+                tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
+            if (tri->isBall()) {
+                threeBall->setText(tr("True"));
+                QPalette pal = threeBall->palette();
+                pal.setColor(threeBall->foregroundRole(), Qt::darkGreen);
+                threeBall->setPalette(pal);
+
+                isHyp = false;
+                if (name.empty())
+                    name = "B3";
+            } else {
+                threeBall->setText(tr("False"));
+                QPalette pal = threeBall->palette();
+                pal.setColor(threeBall->foregroundRole(), Qt::darkRed);
+                threeBall->setPalette(pal);
+            }
+            btnThreeBall->setEnabled(false);
         } else {
-            threeSphere->setText(tr("False"));
-            QPalette pal = threeSphere->palette();
-            pal.setColor(threeSphere->foregroundRole(), Qt::darkRed);
-            threeSphere->setPalette(pal);
+            threeBall->setText(tr("Unknown"));
+            threeBall->setPalette(QPalette());
+            btnThreeBall->setEnabled(true);
         }
-        btnThreeSphere->setEnabled(false);
     } else {
-        threeSphere->setText(tr("Unknown"));
-        threeSphere->setPalette(QPalette());
-        btnThreeSphere->setEnabled(true);
+        titleThreeBall->setVisible(false);
+        threeBall->setVisible(false);
+        btnThreeBall->setVisible(false);
     }
 
-    if (tri->knowsBall() ||
-            tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
-        if (tri->isBall()) {
-            threeBall->setText(tr("True"));
-            QPalette pal = threeBall->palette();
-            pal.setColor(threeBall->foregroundRole(), Qt::darkGreen);
-            threeBall->setPalette(pal);
+    if (tri->getNumberOfBoundaryComponents() > 0) {
+        titleSolidTorus->setVisible(true);
+        solidTorus->setVisible(true);
+        btnSolidTorus->setVisible(true);
 
-            if (name.empty())
-                name = "B3";
+        if (tri->knowsSolidTorus() ||
+                tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
+            if (tri->isSolidTorus()) {
+                solidTorus->setText(tr("True"));
+                QPalette pal = solidTorus->palette();
+                pal.setColor(solidTorus->foregroundRole(), Qt::darkGreen);
+                solidTorus->setPalette(pal);
+
+                isHyp = false;
+                if (name.empty())
+                    name = "B2 x S1";
+            } else {
+                solidTorus->setText(tr("False"));
+                QPalette pal = solidTorus->palette();
+                pal.setColor(solidTorus->foregroundRole(), Qt::darkRed);
+                solidTorus->setPalette(pal);
+            }
+            btnSolidTorus->setEnabled(false);
         } else {
-            threeBall->setText(tr("False"));
-            QPalette pal = threeBall->palette();
-            pal.setColor(threeBall->foregroundRole(), Qt::darkRed);
-            threeBall->setPalette(pal);
+            solidTorus->setText(tr("Unknown"));
+            solidTorus->setPalette(QPalette());
+            btnSolidTorus->setEnabled(true);
         }
-        btnThreeBall->setEnabled(false);
     } else {
-        threeBall->setText(tr("Unknown"));
-        threeBall->setPalette(QPalette());
-        btnThreeBall->setEnabled(true);
-    }
-
-    if (tri->knowsSolidTorus() ||
-            tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
-        if (tri->isSolidTorus()) {
-            solidTorus->setText(tr("True"));
-            QPalette pal = solidTorus->palette();
-            pal.setColor(solidTorus->foregroundRole(), Qt::darkGreen);
-            solidTorus->setPalette(pal);
-
-            if (name.empty())
-                name = "B2 x S1";
-        } else {
-            solidTorus->setText(tr("False"));
-            QPalette pal = solidTorus->palette();
-            pal.setColor(solidTorus->foregroundRole(), Qt::darkRed);
-            solidTorus->setPalette(pal);
-        }
-        btnSolidTorus->setEnabled(false);
-    } else {
-        solidTorus->setText(tr("Unknown"));
-        solidTorus->setPalette(QPalette());
-        btnSolidTorus->setEnabled(true);
+        titleSolidTorus->setVisible(false);
+        solidTorus->setVisible(false);
+        btnSolidTorus->setVisible(false);
     }
 
     if (tri->isOrientable() && tri->isClosed() && tri->isValid() &&
@@ -418,6 +527,8 @@ void NTriSurfacesUI::refresh() {
                 QPalette pal = irreducible->palette();
                 pal.setColor(irreducible->foregroundRole(), Qt::darkRed);
                 irreducible->setPalette(pal);
+
+                isHyp = false;
             }
             btnIrreducible->setEnabled(false);
         } else {
@@ -474,38 +585,88 @@ void NTriSurfacesUI::refresh() {
         btnHaken->setVisible(false);
     }
 
-    if (! name.empty()) {
-        manifold->setText(tr("Manifold:  %1").arg(name.c_str()));
+    if (tri->isIdeal() && ! tri->hasBoundaryFaces()) {
+        titleStrict->setVisible(true);
+        strict->setVisible(true);
+        btnStrict->setVisible(true);
+
+        titleHyperbolic->setVisible(true);
+        hyperbolic->setVisible(true);
+
+        if (tri->knowsStrictAngleStructure() ||
+                tri->getNumberOfTetrahedra() <= STRICT_AUTO_CALC_THRESHOLD) {
+            if (tri->hasStrictAngleStructure()) {
+                strict->setText("Yes");
+                QPalette pal = strict->palette();
+                pal.setColor(strict->foregroundRole(), Qt::darkGreen);
+                strict->setPalette(pal);
+
+                if (tri->isValid() && tri->isStandard())
+                    isHyp = true;
+            } else {
+                strict->setText("No");
+                QPalette pal = strict->palette();
+                pal.setColor(strict->foregroundRole(), Qt::darkRed);
+                strict->setPalette(pal);
+            }
+            btnStrict->setEnabled(false);
+        } else {
+            strict->setText(tr("Unknown"));
+            strict->setPalette(QPalette());
+            btnStrict->setEnabled(true);
+        }
+
+        if (isHyp.known()) {
+            if (isHyp.value()) {
+                hyperbolic->setText("Yes");
+                QPalette pal = hyperbolic->palette();
+                pal.setColor(hyperbolic->foregroundRole(), Qt::darkGreen);
+                hyperbolic->setPalette(pal);
+            } else {
+                hyperbolic->setText("No");
+                QPalette pal = hyperbolic->palette();
+                pal.setColor(hyperbolic->foregroundRole(), Qt::darkRed);
+                hyperbolic->setPalette(pal);
+            }
+        } else {
+                hyperbolic->setText("Unknown");
+                hyperbolic->setPalette(QPalette());
+        }
     } else {
-        manifold->setText(tr("Manifold:  Not recognised"));
+        titleStrict->setVisible(false);
+        strict->setVisible(false);
+        btnStrict->setVisible(false);
+
+        titleHyperbolic->setVisible(false);
+        hyperbolic->setVisible(false);
     }
-}
 
-void NTriSurfacesUI::editingElsewhere() {
-    QString msg(tr("Editing..."));
-    zeroEff->setText(msg);
-    zeroEff->setPalette(QPalette());
-    splitting->setText(msg);
-    splitting->setPalette(QPalette());
-    threeSphere->setText(msg);
-    threeSphere->setPalette(QPalette());
-    threeBall->setText(msg);
-    threeBall->setPalette(QPalette());
-    solidTorus->setText(msg);
-    solidTorus->setPalette(QPalette());
-    irreducible->setText(msg);
-    irreducible->setPalette(QPalette());
-    haken->setText(msg);
-    haken->setPalette(QPalette());
-    manifold->setText(msg);
+    if (! name.empty()) {
+        manifold->setText(tr("<qt><b>Manifold:</b>&nbsp;&nbsp;%1</qt>")
+            .arg(Qt::escape(name.c_str())));
+    } else {
+        manifold->setText(tr("<qt><b>Manifold:</b>&nbsp;&nbsp;"
+            "Not recognised</qt>"));
+    }
 
-    btnZeroEff->setEnabled(false);
-    btnSplitting->setEnabled(false);
-    btnThreeSphere->setEnabled(false);
-    btnThreeBall->setEnabled(false);
-    btnSolidTorus->setEnabled(false);
-    btnIrreducible->setEnabled(false);
-    btnHaken->setEnabled(false);
+    regina::NCensusHits* hits = regina::NCensus::lookup(tri->isoSig());
+    if (hits->empty()) {
+        census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;Not found</qt>"));
+    } else if (hits->count() == 1) {
+        census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;%1</qt>")
+            .arg(Qt::escape(hits->first()->name().c_str())));
+    } else {
+        QString ans = tr("<qt><b>Census:</b>&nbsp;&nbsp;%1 matches")
+            .arg(hits->count());
+        const regina::NCensusHit* hit = hits->first();
+        for ( ; hit; hit = hit->next()) {
+            ans += "<br>";
+            ans += Qt::escape(hit->name().c_str());
+        }
+        ans += "</qt>";
+        census->setText(ans);
+    }
+    delete hits;
 }
 
 void NTriSurfacesUI::calculateZeroEff() {
@@ -580,6 +741,17 @@ void NTriSurfacesUI::calculateHaken() {
         "for larger triangulations.\n\n"
         "Please be patient."), ui);
     tri->isHaken();
+    delete dlg;
+
+    refresh();
+}
+
+void NTriSurfacesUI::calculateStrict() {
+    PatienceDialog* dlg = PatienceDialog::warn(tr(
+        "Testing for a strict angle structure may be slow\n"
+        "for extremely large triangulations.\n\n"
+        "Please be patient."), ui);
+    tri->hasStrictAngleStructure();
     delete dlg;
 
     refresh();

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -104,7 +104,7 @@ NTriangulation* NSnapPeaCensusManifold::construct() const {
         return ans;
 
     // Fetch the relevant data from the census dehydration files.
-    std::string file = NGlobalDirs::data();
+    std::string file = NGlobalDirs::data() + "/snappea";
     switch (section) {
         case SEC_5:
             file += "/snappea-census-sec5.dat"; break;
@@ -145,7 +145,7 @@ NTriangulation* NSnapPeaCensusManifold::construct() const {
 
 NAbelianGroup* NSnapPeaCensusManifold::getHomologyH1() const {
     // Fetch the relevant data from the census dehydration files.
-    std::string file = NGlobalDirs::data();
+    std::string file = NGlobalDirs::data() + "/snappea";
     switch (section) {
         case SEC_5:
             file += "/snappea-census-sec5.dat"; break;

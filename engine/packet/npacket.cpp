@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,6 +33,7 @@
 /* end stub */
 
 #include <set>
+#include <fstream>
 #include <sstream>
 #include "engine.h"
 #include "packet/npacket.h"
@@ -40,6 +41,7 @@
 #include "packet/nscript.h"
 #include "utilities/base64.h"
 #include "utilities/xmlutils.h"
+#include "utilities/zstream.h"
 
 namespace regina {
 
@@ -157,7 +159,7 @@ void NPacket::makeOrphan() {
     NPacket* oldParent = treeParent;
 
     oldParent->fireEvent(&NPacketListener::childToBeRemoved,
-        this, inDestructor);
+        this, oldParent->inDestructor);
 
     if (treeParent->firstTreeChild == this)
         treeParent->firstTreeChild = nextTreeSibling;
@@ -172,7 +174,7 @@ void NPacket::makeOrphan() {
     treeParent = 0;
 
     oldParent->fireEvent(&NPacketListener::childWasRemoved,
-        this, inDestructor);
+        this, oldParent->inDestructor);
 }
 
 void NPacket::reparent(NPacket* newParent, bool first) {
@@ -520,6 +522,21 @@ NPacket* NPacket::clone(bool cloneDescendants, bool end) const {
     if (cloneDescendants)
         internalCloneDescendants(ans);
     return ans;
+}
+
+bool NPacket::save(const char* filename, bool compressed) const {
+    if (compressed) {
+        CompressionStream out(filename);
+        if (! out)
+            return false;
+        writeXMLFile(out);
+    } else {
+        std::ofstream out(filename);
+        if (! out)
+            return false;
+        writeXMLFile(out);
+    }
+    return true;
 }
 
 void NPacket::internalCloneDescendants(NPacket* parent) const {

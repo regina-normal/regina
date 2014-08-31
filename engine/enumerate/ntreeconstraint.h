@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2011-2013, Ben Burton                                   *
+ *  Copyright (c) 2011-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -270,7 +270,7 @@ class LPConstraintBase {
          * replaced with the zero functions instead).
          */
         static bool addRows(LPInitialTableaux<LPConstraintBase>::Col* col,
-            const int* columnPerm, NTriangulation* tri);
+            const int* columnPerm, const NTriangulation* tri);
 
         /**
          * Explicitly constraints each of these linear functions to an
@@ -408,7 +408,7 @@ class LPConstraintNone : public LPConstraintSubspace {
         };
 
         static bool addRows(LPInitialTableaux<regina::LPConstraintNone>::Col*,
-            const int*, NTriangulation*);
+            const int*, const NTriangulation*);
         template<typename Integer>
         static void constrain(
             LPData<regina::LPConstraintNone, Integer>&, unsigned);
@@ -473,7 +473,7 @@ class LPConstraintEuler : public LPConstraintBase {
 
         static bool addRows(
             LPInitialTableaux<regina::LPConstraintEuler>::Col* col,
-            const int* columnPerm, NTriangulation* tri);
+            const int* columnPerm, const NTriangulation* tri);
         template<typename Integer>
         static void constrain(
             LPData<regina::LPConstraintEuler, Integer>& lp,
@@ -547,7 +547,7 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
 
         static bool addRows(
             LPInitialTableaux<regina::LPConstraintNonSpun>::Col* col,
-            const int* columnPerm, NTriangulation* tri);
+            const int* columnPerm, const NTriangulation* tri);
         template <typename Integer>
         static void constrain(
             LPData<regina::LPConstraintNonSpun, Integer>& lp,
@@ -615,7 +615,7 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
  */
 class BanConstraintBase {
     protected:
-        NTriangulation* tri_;
+        const NTriangulation* tri_;
             /**< The triangulation with which we are working. */
         int coords_;
             /**< The normal or almost normal coordinate system in which
@@ -651,7 +651,7 @@ class BanConstraintBase {
          * which we are working.  This must be one of NS_QUAD,
          * NS_STANDARD, NS_AN_QUAD_OCT, NS_AN_STANDARD, or NS_ANGLE.
          */
-        BanConstraintBase(NTriangulation* tri, int coords);
+        BanConstraintBase(const NTriangulation* tri, int coords);
 
         /**
          * Destroys this object and all associated data.
@@ -731,7 +731,7 @@ class BanNone : public BanConstraintBase {
          * which we are working.  This must be one of NS_QUAD,
          * NS_STANDARD, NS_AN_QUAD_OCT, NS_AN_STANDARD, or NS_ANGLE.
          */
-        BanNone(NTriangulation* tri, int coords);
+        BanNone(const NTriangulation* tri, int coords);
 
         void init(const int*);
         static bool supported(NormalCoords coords);
@@ -776,7 +776,7 @@ class BanBoundary : public BanConstraintBase {
          * which we are working.  This must be one of NS_QUAD,
          * NS_STANDARD, NS_AN_QUAD_OCT, or NS_AN_STANDARD.
          */
-        BanBoundary(NTriangulation* tri, int coords);
+        BanBoundary(const NTriangulation* tri, int coords);
 
         void init(const int* columnPerm);
         static bool supported(NormalCoords coords);
@@ -828,7 +828,7 @@ class BanTorusBoundary : public BanConstraintBase {
          * which we are working.  This must be one of NS_QUAD,
          * NS_STANDARD, NS_AN_QUAD_OCT, or NS_AN_STANDARD.
          */
-        BanTorusBoundary(NTriangulation* tri, int coords);
+        BanTorusBoundary(const NTriangulation* tri, int coords);
 
         void init(const int* columnPerm);
         static bool supported(NormalCoords coords);
@@ -858,7 +858,7 @@ inline Integer LPConstraintNone::Coefficients::innerProductOct(
 
 inline bool LPConstraintNone::addRows(
         LPInitialTableaux<regina::LPConstraintNone>::Col*,
-        const int*, NTriangulation*) {
+        const int*, const NTriangulation*) {
     return true;
 }
 
@@ -999,7 +999,7 @@ inline void BanConstraintBase::enforceBans(LPData<LPConstraint, Integer>& lp)
             lp.constrainZero(i);
 }
 
-inline BanNone::BanNone(NTriangulation* tri, int coords) :
+inline BanNone::BanNone(const NTriangulation* tri, int coords) :
         BanConstraintBase(tri, coords) {
 }
 
@@ -1010,7 +1010,7 @@ inline bool BanNone::supported(NormalCoords) {
     return true;
 }
 
-inline BanBoundary::BanBoundary(NTriangulation* tri, int coords) :
+inline BanBoundary::BanBoundary(const NTriangulation* tri, int coords) :
         BanConstraintBase(tri, coords) {
 }
 
@@ -1018,7 +1018,8 @@ inline bool BanBoundary::supported(NormalCoords coords) {
     return (coords == NS_STANDARD || NS_AN_STANDARD);
 }
 
-inline BanTorusBoundary::BanTorusBoundary(NTriangulation* tri, int coords) :
+inline BanTorusBoundary::BanTorusBoundary(
+        const NTriangulation* tri, int coords) :
         BanConstraintBase(tri, coords) {
 }
 

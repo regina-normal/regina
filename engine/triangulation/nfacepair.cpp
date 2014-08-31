@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,45 +38,45 @@ namespace regina {
 
 NFacePair::NFacePair(int newFirst, int newSecond) {
     if (newFirst < newSecond) {
-        first = newFirst;
-        second = newSecond;
+        first_ = newFirst;
+        second_ = newSecond;
     } else {
-        first = newSecond;
-        second = newFirst;
+        first_ = newSecond;
+        second_ = newFirst;
     }
 }
 
 NFacePair NFacePair::complement() const {
-    if (first > 1)
+    if (first_ > 1)
         return NFacePair(0, 1);
-    else if (first == 1)
-        return (second == 2 ? NFacePair(0, 3) : NFacePair(0, 2));
-    else if (second == 1)
+    else if (first_ == 1)
+        return (second_ == 2 ? NFacePair(0, 3) : NFacePair(0, 2));
+    else if (second_ == 1)
         return NFacePair(2, 3);
-    else if (second == 2)
+    else if (second_ == 2)
         return NFacePair(1, 3);
     else
         return NFacePair(1, 2);
 }
 
 void NFacePair::operator ++ (int) {
-    if (second < 3)
-        second++;
-    else if (first < 3) {
-        first++;
-        if (first < 3)
-            second = first + 1;
+    if (second_ < 3)
+        second_++;
+    else if (first_ < 3) {
+        first_++;
+        if (first_ < 3)
+            second_ = first_ + 1;
     }
 }
 
 void NFacePair::operator -- (int) {
-    if (second > first + 1)
-        second--;
-    else if (first > 0) {
-        first--;
-        second = 3;
+    if (second_ > first_ + 1)
+        second_--;
+    else if (first_ > 0) {
+        first_--;
+        second_ = 3;
     } else
-        second = 0;
+        second_ = 0;
 }
 
 } // namespace regina

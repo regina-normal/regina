@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -45,6 +45,7 @@ void addNBoundaryComponent() {
     class_<NBoundaryComponent, bases<regina::ShareableObject>,
             std::auto_ptr<NBoundaryComponent>, boost::noncopyable>
             ("NBoundaryComponent", no_init)
+        .def("index", &NBoundaryComponent::index)
         .def("getNumberOfFaces", &NBoundaryComponent::getNumberOfFaces)
         .def("getNumberOfTriangles", &NBoundaryComponent::getNumberOfTriangles)
         .def("getNumberOfEdges", &NBoundaryComponent::getNumberOfEdges)

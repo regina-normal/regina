@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -62,6 +62,7 @@ void addNManifold() {
             return_value_policy<manage_new_object>())
         .def("getHomologyH1", &NManifold::getHomologyH1,
             return_value_policy<manage_new_object>())
+        .def("isHyperbolic", &NManifold::isHyperbolic)
         .def("writeName", writeName_stdio)
         .def("writeTeXName", writeTeXName_stdio)
         .def("writeStructure", writeStructure_stdio)

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -64,6 +64,7 @@ void addDim2Edge() {
 
     scope s = class_<Dim2Edge, bases<regina::ShareableObject>,
             std::auto_ptr<Dim2Edge>, boost::noncopyable>("Dim2Edge", no_init)
+        .def("index", &Dim2Edge::index)
         .def("getNumberOfEmbeddings", &Dim2Edge::getNumberOfEmbeddings)
         .def("getEmbedding", &Dim2Edge::getEmbedding,
             return_internal_reference<>())

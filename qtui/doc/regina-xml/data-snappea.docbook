@@ -1,0 +1,60 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-snappea">
+ <refmeta>
+  <refentrytitle>snappea</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>snappea</refname>
+  <refpurpose>The full contents of a &snappea; data file</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+snappea ::= (#PCDATA)</synopsis>
+     </entry></row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   A &xml-snappea; element contains the full contents of a &snappea;
+   data file, using &snappea;'s own text-based file format.
+   Whitespace and line breaks are relevant and are considered
+   a part of the data file.
+  </para>
+
+  <refsect2>
+   <title>Parents</title>
+   <para>
+    The following elements contain <sgmltag>snappea</sgmltag>:
+    <simplelist type="inline">
+     <member>&xml-packet-snappea;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    Element <sgmltag>snappea</sgmltag> has no children.
+   </para>
+  </refsect2>
+ </refsect1>
+</refentry>

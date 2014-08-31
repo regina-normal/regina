@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -201,24 +201,24 @@ class REGINA_API NTriangle : public ShareableObject, public NMarkedElement {
         static const NPerm4 ordering[4];
 
     private:
-        NTriangleEmbedding* embeddings[2];
+        NTriangleEmbedding* embeddings_[2];
             /**< An array of descriptors telling how this triangle forms a
                  part of each individual tetrahedron that it belongs to.
                  These embeddings will be automatically deleted when the
                  triangle itself is deleted. */
-        int nEmbeddings;
+        int nEmbeddings_;
             /**< The number of embedding descriptors stored in
                  the embeddings array. */
-        NComponent* component;
+        NComponent* component_;
             /**< The component that this triangle is a part of. */
-        NBoundaryComponent* boundaryComponent;
+        NBoundaryComponent* boundaryComponent_;
             /**< The boundary component that this triangle is a part of,
                  or 0 if this triangle is internal. */
-        int type;
+        int type_;
             /**< Specifies the triangle type according to one of the
                  predefined triangle type constants in NTriangle, or 0 if
                  type has not yet been determined. */
-        int subtype;
+        int subtype_;
             /**< Specifies the vertex or edge that plays a special role
                  for the triangle type specified by \a type.  This is only
                  relevant for some triangle types. */
@@ -230,6 +230,15 @@ class REGINA_API NTriangle : public ShareableObject, public NMarkedElement {
          * automatically deleted.
          */
         virtual ~NTriangle();
+
+        /**
+         * Returns the index of this triangle in the underlying
+         * triangulation.  This is identical to calling
+         * <tt>getTriangulation()->triangleIndex(this)</tt>.
+         *
+         * @return the index of this triangle.
+         */
+        unsigned long index() const;
 
         /**
          * Determines if this triangle lies entirely on the boundary of the
@@ -401,59 +410,63 @@ namespace regina {
 
 // Inline functions for NTriangle
 
-inline NTriangle::NTriangle(NComponent* myComponent) : nEmbeddings(0),
-        component(myComponent), boundaryComponent(0), type(0) {
+inline NTriangle::NTriangle(NComponent* myComponent) : nEmbeddings_(0),
+        component_(myComponent), boundaryComponent_(0), type_(0) {
 }
 
 inline NTriangle::~NTriangle() {
-    if (nEmbeddings > 0)
-        delete embeddings[0];
-    if (nEmbeddings > 1)
-        delete embeddings[1];
+    if (nEmbeddings_ > 0)
+        delete embeddings_[0];
+    if (nEmbeddings_ > 1)
+        delete embeddings_[1];
+}
+
+inline unsigned long NTriangle::index() const {
+    return markedIndex();
 }
 
 inline NTriangulation* NTriangle::getTriangulation() const {
-    return embeddings[0]->getTetrahedron()->getTriangulation();
+    return embeddings_[0]->getTetrahedron()->getTriangulation();
 }
 
 inline NComponent* NTriangle::getComponent() const {
-    return component;
+    return component_;
 }
 
 inline NBoundaryComponent* NTriangle::getBoundaryComponent() const {
-    return boundaryComponent;
+    return boundaryComponent_;
 }
 
 inline NVertex* NTriangle::getVertex(int vertex) const {
-    return embeddings[0]->getTetrahedron()->getVertex(
-        embeddings[0]->getVertices()[vertex]);
+    return embeddings_[0]->getTetrahedron()->getVertex(
+        embeddings_[0]->getVertices()[vertex]);
 }
 
 inline bool NTriangle::isBoundary() const {
-    return (boundaryComponent != 0);
+    return (boundaryComponent_ != 0);
 }
 
 inline int NTriangle::getSubtype() {
     getType();
-    return subtype;
+    return subtype_;
 }
 
 inline bool NTriangle::isMobiusBand() {
     getType();
-    return (type == L31 || type == DUNCEHAT || type == MOBIUS);
+    return (type_ == L31 || type_ == DUNCEHAT || type_ == MOBIUS);
 }
 
 inline bool NTriangle::isCone() {
     getType();
-    return (type == DUNCEHAT || type == CONE || type == HORN);
+    return (type_ == DUNCEHAT || type_ == CONE || type_ == HORN);
 }
 
 inline unsigned NTriangle::getNumberOfEmbeddings() const {
-    return nEmbeddings;
+    return nEmbeddings_;
 }
 
 inline const NTriangleEmbedding& NTriangle::getEmbedding(unsigned index) const {
-    return *(embeddings[index]);
+    return *(embeddings_[index]);
 }
 
 inline void NTriangle::writeTextShort(std::ostream& out) const {

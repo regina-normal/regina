@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2011-2013, Ben Burton                                   *
+ *  Copyright (c) 2011-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -56,7 +56,7 @@ namespace regina {
  * This class forms part of the tree traversal algorithm for enumerating
  * vertex normal surfaces, as described in "A tree traversal algorithm
  * for decision problems in knot theory and 3-manifold topology",
- * Burton and Ozlen, Algorithmica (to appear), DOI 10.1007/s00453-012-9645-3.
+ * Burton and Ozlen, Algorithmica 65:4 (2013), pp. 772-801.
  *
  * A type vector is a sequence of digits, each between 0 and \a nTypes-1
  * inclusive.  Type vectors are represented as arrays of characters:
