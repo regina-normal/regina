@@ -817,6 +817,7 @@
 		054F7E29180B93770090B1F3 /* WelcomePopupController.m in Sources */ = {isa = PBXBuildFile; fileRef = 054F7E28180B93770090B1F3 /* WelcomePopupController.m */; };
 		054F7E2B180B96AC0090B1F3 /* welcome.html in Resources */ = {isa = PBXBuildFile; fileRef = 054F7E2A180B96AC0090B1F3 /* welcome.html */; };
 		054F7E2D180B99270090B1F3 /* regina.css in Resources */ = {isa = PBXBuildFile; fileRef = 054F7E2C180B99270090B1F3 /* regina.css */; };
+		05500A1119B422370074CE5D /* cppunit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05500A1019B422360074CE5D /* cppunit.framework */; };
 		055B7311181D7CF800449D14 /* dim2boundarycomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055B730E181D7CF800449D14 /* dim2boundarycomponent.cpp */; };
 		055B7312181D7CF800449D14 /* dim2boundarycomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055B730E181D7CF800449D14 /* dim2boundarycomponent.cpp */; };
 		055B7313181D7CF800449D14 /* dim2component.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055B730F181D7CF800449D14 /* dim2component.cpp */; };
@@ -1737,6 +1738,7 @@
 		054F7E28180B93770090B1F3 /* WelcomePopupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomePopupController.m; sourceTree = "<group>"; };
 		054F7E2A180B96AC0090B1F3 /* welcome.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = welcome.html; sourceTree = "<group>"; };
 		054F7E2C180B99270090B1F3 /* regina.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = regina.css; sourceTree = "<group>"; };
+		05500A1019B422360074CE5D /* cppunit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = cppunit.framework; path = ../../Library/Frameworks/cppunit.framework; sourceTree = "<group>"; };
 		05561D181811F27A00FD6E2E /* regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = regina.icns; path = icons/regina.icns; sourceTree = SOURCE_ROOT; };
 		05561D191811F27A00FD6E2E /* x-regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "x-regina.icns"; path = "icons/x-regina.icns"; sourceTree = SOURCE_ROOT; };
 		055B730E181D7CF800449D14 /* dim2boundarycomponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2boundarycomponent.cpp; sourceTree = "<group>"; };
@@ -2075,6 +2077,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				052FA11F18060A4C00FAE4DF /* libregina-engine.dylib in Frameworks */,
+				05500A1119B422370074CE5D /* cppunit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2930,6 +2933,7 @@
 				057FA750180615F5008E25F6 /* libxml2.dylib */,
 				057FA751180615F5008E25F6 /* libz.dylib */,
 				052FA23E180613A900FAE4DF /* boost.framework */,
+				05500A1019B422360074CE5D /* cppunit.framework */,
 				052FA23F180613A900FAE4DF /* libgmp.framework */,
 				052FA240180613A900FAE4DF /* libgmpxx.framework */,
 				0569F92F19B3655C00051091 /* libtokyocabinet.framework */,
@@ -4686,6 +4690,10 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -4709,6 +4717,10 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4808,6 +4820,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+					"$(USER_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -4849,6 +4862,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+					"$(USER_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
