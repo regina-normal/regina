@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<reginadata engine="4.95">
+<reginadata engine="4.96">
 <packet label="Sample Data File"
 	type="Container" typeid="1"
 	parent="">
@@ -668,69 +668,8 @@ jZdNkm4pXQo+PgpzdGFydHhyZWYKMzUwNjYKJSVFT0YK
 </packet> <!-- LaTeX Document (PDF) -->
 <packet label="3-Manifolds"
 	type="Container" typeid="1"
+	id="oKkLAIBgAAA="
 	parent="Sample Data File">
-<packet label="Figure 8 Knot Complement"
-	type="3-Manifold Triangulation" typeid="3"
-	parent="3-Manifolds">
-  <tetrahedra ntet="2">
-    <tet desc=""> 1 108 1 75 1 30 1 198 </tet>
-    <tet desc=""> 0 108 0 75 0 30 0 198 </tet>
-  </tetrahedra>
-  <H1><abeliangroup rank="1"> </abeliangroup></H1>
-<packet label="Vertex Link"
-	type="2-Manifold Triangulation" typeid="15"
-	parent="Figure 8 Knot Complement">
-  <triangles ntriangles="8">
-    <triangle desc=""> 1 1 2 1 2 5 </triangle>
-    <triangle desc=""> 0 1 3 0 3 2 </triangle>
-    <triangle desc=""> 0 5 4 3 0 1 </triangle>
-    <triangle desc=""> 1 4 1 0 5 1 </triangle>
-    <triangle desc=""> 2 3 6 0 6 2 </triangle>
-    <triangle desc=""> 7 3 3 1 7 5 </triangle>
-    <triangle desc=""> 4 4 4 0 7 3 </triangle>
-    <triangle desc=""> 5 5 5 3 6 3 </triangle>
-  </triangles>
-</packet> <!-- Vertex Link (2_Manifold Triangulation) -->
-<packet label="Tri-Quad Normal Surfaces"
-	type="Normal Surface List" typeid="6"
-	parent="Figure 8 Knot Complement">
-  <params type="5" algorithm="18" flavourid="0"
-	flavour="Standard normal (tri-quad)"/>
-  <surface len="14" name=""> 0 1 1 1 2 1 3 1 7 1 8 1 9 1 10 1
-	<euler value="0"/>
-	<orbl value="T"/>
-	<twosided value="T"/>
-	<connected value="T"/>
-	<realbdry value="F"/>
-	<compact value="T"/> </surface>
-</packet> <!-- Tri_Quad Normal Surfaces (Normal Surface List) -->
-<packet label="Quad Normal Surfaces"
-	type="Normal Surface List" typeid="6"
-	parent="Figure 8 Knot Complement">
-  <params type="5" algorithm="16" flavourid="1"
-	flavour="Quad normal"/>
-  <surface len="6" name=""> 2 1 3 2
-	<compact value="F"/> </surface>
-  <surface len="6" name=""> 2 1 4 2
-	<compact value="F"/> </surface>
-  <surface len="6" name=""> 0 2 5 1
-	<compact value="F"/> </surface>
-  <surface len="6" name=""> 1 2 5 1
-	<compact value="F"/> </surface>
-</packet> <!-- Quad Normal Surfaces (Normal Surface List) -->
-<packet label="Angle Structures"
-	type="Angle Structure List" typeid="9"
-	parent="Figure 8 Knot Complement">
-  <angleparams tautonly="F"/>
-  <struct len="7"> 0 1 4 1 6 1 </struct>
-  <struct len="7"> 1 1 3 1 6 1 </struct>
-  <struct len="7"> 2 1 5 1 6 1 </struct>
-  <struct len="7"> 2 2 3 1 4 1 6 2 </struct>
-  <struct len="7"> 0 1 1 1 5 2 6 2 </struct>
-  <spanstrict value="T"/>
-  <spantaut value="T"/>
-</packet> <!-- Angle Structures (Angle Structure List) -->
-</packet> <!-- Figure 8 Knot Complement (3_Manifold Triangulation) -->
 <packet label="Layered Solid Torus"
 	type="3-Manifold Triangulation" typeid="3"
 	parent="3-Manifolds">
@@ -741,6 +680,28 @@ jZdNkm4pXQo+PgpzdGFydHhyZWYKMzUwNjYKJSVFT0YK
     <tet desc=""> 3 57 3 147 2 216 2 39 </tet>
   </tetrahedra>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
+<packet label="Vertex Link"
+	type="2-Manifold Triangulation" typeid="15"
+	parent="Layered Solid Torus">
+  <triangles ntriangles="16">
+    <triangle desc=""> 1 4 -1 -1 -1 -1 </triangle>
+    <triangle desc=""> 2 4 3 3 0 2 </triangle>
+    <triangle desc=""> 4 5 5 3 1 2 </triangle>
+    <triangle desc=""> 1 3 6 5 -1 -1 </triangle>
+    <triangle desc=""> 8 0 7 2 2 5 </triangle>
+    <triangle desc=""> 2 3 9 5 10 5 </triangle>
+    <triangle desc=""> 11 5 3 5 8 3 </triangle>
+    <triangle desc=""> 12 0 8 5 4 4 </triangle>
+    <triangle desc=""> 4 0 7 5 6 3 </triangle>
+    <triangle desc=""> 13 2 5 5 12 3 </triangle>
+    <triangle desc=""> 5 5 14 1 -1 -1 </triangle>
+    <triangle desc=""> 13 5 14 4 6 5 </triangle>
+    <triangle desc=""> 7 0 13 4 9 3 </triangle>
+    <triangle desc=""> 12 2 9 4 11 5 </triangle>
+    <triangle desc=""> 11 2 15 4 10 1 </triangle>
+    <triangle desc=""> 14 2 -1 -1 -1 -1 </triangle>
+  </triangles>
+</packet> <!-- Vertex Link (2_Manifold Triangulation) -->
 <packet label="Almost Normal Surfaces"
 	type="Normal Surface List" typeid="6"
 	parent="Layered Solid Torus">
@@ -1086,12 +1047,6 @@ jZdNkm4pXQo+PgpzdGFydHhyZWYKMzUwNjYKJSVFT0YK
     <tet desc=""> 0 78 1 57 2 99 4 201 </tet>
     <tet desc=""> 0 39 1 78 2 57 3 210 </tet>
   </tetrahedra>
-  <fundgroup>
-<group generators="2">
-  <reln> 0^-1 1^1 0^1 1^1 0^-1 1^-1 </reln>
-  <reln> 0^-1 1^1 0^1 1^-2 0^1 1^1 </reln>
-</group>
-  </fundgroup>
   <H1><abeliangroup rank="0"> </abeliangroup></H1>
   <H1Rel><abeliangroup rank="0"> </abeliangroup></H1Rel>
   <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
@@ -1107,12 +1062,6 @@ jZdNkm4pXQo+PgpzdGFydHhyZWYKMzUwNjYKJSVFT0YK
     <tet desc=""> 0 228 0 228 2 39 2 210 </tet>
     <tet desc=""> 0 114 0 156 1 39 1 201 </tet>
   </tetrahedra>
-  <fundgroup>
-<group generators="2">
-  <reln> 0^1 1^-1 0^1 1^1 </reln>
-  <reln> 0^1 1^-1 0^-1 1^1 </reln>
-</group>
-  </fundgroup>
   <H1><abeliangroup rank="1"> 2 </abeliangroup></H1>
   <H1Rel><abeliangroup rank="1"> 2 </abeliangroup></H1Rel>
   <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
@@ -13415,6 +13364,144 @@ jZdNkm4pXQo+PgpzdGFydHhyZWYKMzUwNjYKJSVFT0YK
 	<compact value="T"/> </surface>
 </packet> <!-- Vertex Normal Surfaces (Normal Surface List) -->
 </packet> <!-- Weber_Seifert Dodecahedral Space (3_Manifold Triangulation) -->
+<packet label="Whitehead Link Complement"
+	type="SnapPea Triangulation" typeid="16"
+	parent="3-Manifolds">
+  <snappea>% Triangulation
+m129
+geometric_solution  3.66386238
+oriented_manifold
+CS_unknown
+
+2 0
+    torus   0.000000000000   0.000000000000
+    torus   0.000000000000   0.000000000000
+
+4
+   1    2    3    1 
+ 0132 0132 0132 3201
+   0    1    0    1 
+  0  1 -1  0 -1  0  1  0  0  0  0  0  0  0  0  0
+  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  0 -1  0  1  0  0 -1  1 -1  0  0  1  0  0  0  0
+  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  1.000000000000   1.000000000000
+
+   0    0    3    2 
+ 0132 2310 3120 3120
+   0    1    1    0 
+  0  0  0  0  1  0 -1  0  0  0  0  0  0  0  0  0
+  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  0 -1  1  0  0  0  0  0  0 -1  0  1  1 -1  0  0
+  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  0.500000000000   0.500000000000
+
+   1    0    3    3 
+ 3120 0132 0213 3120
+   0    1    1    0 
+  0 -1  1  0  0  0  0  0  0  0  0  0  0  0  0  0
+  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  0  1  0 -1  0  0 -1  1 -1  0  0  1  0  0  0  0
+  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  0.500000000000   0.500000000000
+
+   2    2    1    0 
+ 3120 0213 3120 0132
+   0    1    1    0 
+  0 -1  0  1  0  0  1 -1  0  0  0  0  0  0  0  0
+  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  0  0  0  0 -1  0  0  1 -1  1  0  0  1  0 -1  0
+  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  0.500000000000   0.500000000000
+
+</snappea>
+</packet> <!-- Whitehead Link Complement (SnapPea Triangulation) -->
+<packet label="Figure 8 Knot Complement"
+	type="SnapPea Triangulation" typeid="16"
+	parent="3-Manifolds">
+  <snappea>% Triangulation
+m004
+geometric_solution  2.02988321
+oriented_manifold
+CS_unknown
+
+1 0
+    torus   0.000000000000   0.000000000000
+
+2
+   1    1    1    1 
+ 0132 1230 2310 2103
+   0    0    0    0 
+  0  0  0  0  0  0  0  0 -1  1  0  0  0  0  0  0
+  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  0 -1  0  1  1  0 -1  0  0  1  0 -1 -1  0  1  0
+  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  0.500000000000   0.866025403784
+
+   0    0    0    0 
+ 0132 3201 3012 2103
+   0    0    0    0 
+  0  0  0  0  0  0  0  0  0  0  0  0  1  0 -1  0
+  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  0 -1  0  1 -1  0  1  0  1  0  0 -1  0  1 -1  0
+  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  0.500000000000   0.866025403784
+
+</snappea>
+<packet label="Vertex Link"
+	type="2-Manifold Triangulation" typeid="15"
+	parent="Figure 8 Knot Complement">
+  <triangles ntriangles="8">
+    <triangle desc=""> 1 0 2 3 2 1 </triangle>
+    <triangle desc=""> 0 0 3 1 3 5 </triangle>
+    <triangle desc=""> 0 3 0 1 4 2 </triangle>
+    <triangle desc=""> 1 5 5 0 1 1 </triangle>
+    <triangle desc=""> 2 4 6 1 6 5 </triangle>
+    <triangle desc=""> 7 3 3 0 7 5 </triangle>
+    <triangle desc=""> 4 5 7 2 4 1 </triangle>
+    <triangle desc=""> 5 5 5 3 6 4 </triangle>
+  </triangles>
+</packet> <!-- Vertex Link (2_Manifold Triangulation) -->
+<packet label="Tri-Quad Normal Surfaces"
+	type="Normal Surface List" typeid="6"
+	parent="Figure 8 Knot Complement">
+  <params type="5" algorithm="34" flavourid="0"
+	flavour="Standard normal (tri-quad)"/>
+  <surface len="14" name=""> 0 1 1 1 2 1 3 1 7 1 8 1 9 1 10 1
+	<euler value="0"/>
+	<orbl value="T"/>
+	<twosided value="T"/>
+	<connected value="T"/>
+	<realbdry value="F"/>
+	<compact value="T"/> </surface>
+</packet> <!-- Tri_Quad Normal Surfaces (Normal Surface List) -->
+<packet label="Quad Normal Surfaces"
+	type="Normal Surface List" typeid="6"
+	parent="Figure 8 Knot Complement">
+  <params type="5" algorithm="16" flavourid="1"
+	flavour="Quad normal"/>
+  <surface len="6" name=""> 0 2 3 1
+	<compact value="F"/> </surface>
+  <surface len="6" name=""> 2 2 3 1
+	<compact value="F"/> </surface>
+  <surface len="6" name=""> 1 1 4 2
+	<compact value="F"/> </surface>
+  <surface len="6" name=""> 1 1 5 2
+	<compact value="F"/> </surface>
+</packet> <!-- Quad Normal Surfaces (Normal Surface List) -->
+<packet label="Angle Structures"
+	type="Angle Structure List" typeid="9"
+	parent="Figure 8 Knot Complement">
+  <angleparams tautonly="F"/>
+  <struct len="7"> 1 1 3 1 6 1 </struct>
+  <struct len="7"> 2 1 5 1 6 1 </struct>
+  <struct len="7"> 0 1 4 1 6 1 </struct>
+  <struct len="7"> 0 1 2 1 3 2 6 2 </struct>
+  <struct len="7"> 1 2 4 1 5 1 6 2 </struct>
+  <spanstrict value="T"/>
+  <spantaut value="T"/>
+</packet> <!-- Angle Structures (Angle Structure List) -->
+</packet> <!-- Figure 8 Knot Complement (SnapPea Triangulation) -->
 </packet> <!-- 3_Manifolds (Container) -->
 <packet label="2-Manifolds"
 	type="Container" typeid="1"
@@ -13483,17 +13570,18 @@ jZdNkm4pXQo+PgpzdGFydHhyZWYKMzUwNjYKJSVFT0YK
 <packet label="Python Script"
 	type="Script" typeid="7"
 	parent="Sample Data File">
-  <var name="tri" value="3-Manifolds"/>
-  <line># This Python script runs through all 3-manifold triangulations in this file</line>
-  <line># and prints the first homology of each.</line>
-  <line>#</line>
-  <line># See the Regina handbook for more elaborate sample Python sessions.</line>
-  <line></line>
-  <line># Output the homology of each triangulation.</line>
-  <line>t = tri.getFirstTreeChild()</line>
-  <line>while t != None:</line>
-  <line>	print t.getPacketLabel() + &quot;:&quot;, t.getHomologyH1()</line>
-  <line>	t = t.getNextTreeSibling()</line>
+  <var name="tri" valueid="oKkLAIBgAAA=" value="3-Manifolds"/>
+  <text># This Python script runs through all 3-manifold triangulations in this file
+# and prints the first homology of each.
+#
+# See the Regina handbook for more elaborate sample Python sessions.
+
+# Output the homology of each triangulation.
+t = tri.getFirstTreeChild()
+while t != None:
+	print t.getPacketLabel() + &quot;:&quot;, t.getHomologyH1()
+	t = t.getNextTreeSibling()
+</text>
 </packet> <!-- Python Script (Script) -->
 </packet> <!-- Sample Data File (Container) -->
 </reginadata>
