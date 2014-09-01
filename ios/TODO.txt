@@ -1,0 +1,10 @@
+SHORT-TERM:
+
+Open in portrait: Documents link is missing.
+
+
+LONG-TERM:
+
+Restore arm64 build (0ed85f0).
+Find a way to install *.tdb in a subdirectory beneath Resources/.
+
