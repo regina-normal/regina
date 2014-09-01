@@ -1020,6 +1020,12 @@
 		05B14EB719B424D8002138C0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A51806047E00FAE4DF /* libz.dylib */; };
 		05B14EB819B424E6002138C0 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0569F92F19B3655C00051091 /* libtokyocabinet.framework */; };
 		05B14EB919B424F9002138C0 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
+		05B14EBD19B42967002138C0 /* closed-hyp-census-full.dat.gz in Sources */ = {isa = PBXBuildFile; fileRef = 05B14EAD19B4240D002138C0 /* closed-hyp-census-full.dat.gz */; };
+		05B14EBE19B42967002138C0 /* closed-nor-census-11.dat.gz in Sources */ = {isa = PBXBuildFile; fileRef = 05B14EAE19B4240D002138C0 /* closed-nor-census-11.dat.gz */; };
+		05B14EBF19B42967002138C0 /* closed-or-census-11.dat.gz in Sources */ = {isa = PBXBuildFile; fileRef = 05B14EAF19B4240D002138C0 /* closed-or-census-11.dat.gz */; };
+		05B14EC019B42967002138C0 /* cusped-hyp-nor-census-9.dat.gz in Sources */ = {isa = PBXBuildFile; fileRef = 05B14EB119B4240D002138C0 /* cusped-hyp-nor-census-9.dat.gz */; };
+		05B14EC119B42967002138C0 /* cusped-hyp-or-census-9.dat.gz in Sources */ = {isa = PBXBuildFile; fileRef = 05B14EB219B4240D002138C0 /* cusped-hyp-or-census-9.dat.gz */; };
+		05B14EC219B42967002138C0 /* hyp-knot-link-census.dat.gz in Sources */ = {isa = PBXBuildFile; fileRef = 05B14EB319B4240D002138C0 /* hyp-knot-link-census.dat.gz */; };
 		05B62166180B9D7300CCB90B /* title.png in Resources */ = {isa = PBXBuildFile; fileRef = 05B62165180B9D7300CCB90B /* title.png */; };
 		05B9EC1B18245F2100DCACF3 /* euler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B9EC1A18245F2100DCACF3 /* euler.cpp */; };
 		05B9EC1C18245F2100DCACF3 /* euler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B9EC1A18245F2100DCACF3 /* euler.cpp */; };
@@ -1041,6 +1047,17 @@
 				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_moc.cxx",
 			);
 			script = "/Developer/Tools/Qt/moc \\\n-I/Library/Frameworks/QtGui.framework/Headers \\\n-I/Library/Frameworks/QtCore.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx ${INPUT_FILE_PATH}";
+		};
+		05B14EBC19B428EA002138C0 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.dat.gz";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(DERIVED_FILE_DIR)/${INPUT_FILE_BASE}.tdb",
+			);
+			script = "${CONFIGURATION_BUILD_DIR}/mkcensusdb ${INPUT_FILE_PATH} ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}.tdb";
 		};
 /* End PBXBuildRule section */
 
@@ -3909,6 +3926,7 @@
 				0575E6571805F36D009E3FC4 /* Headers */,
 			);
 			buildRules = (
+				05B14EBC19B428EA002138C0 /* PBXBuildRule */,
 			);
 			dependencies = (
 				05B14EBB19B427AC002138C0 /* PBXTargetDependency */,
@@ -4479,6 +4497,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05B14EBD19B42967002138C0 /* closed-hyp-census-full.dat.gz in Sources */,
+				05B14EBE19B42967002138C0 /* closed-nor-census-11.dat.gz in Sources */,
+				05B14EBF19B42967002138C0 /* closed-or-census-11.dat.gz in Sources */,
+				05B14EC019B42967002138C0 /* cusped-hyp-nor-census-9.dat.gz in Sources */,
+				05B14EC119B42967002138C0 /* cusped-hyp-or-census-9.dat.gz in Sources */,
+				05B14EC219B42967002138C0 /* hyp-knot-link-census.dat.gz in Sources */,
 				052FA044180600FB00FAE4DF /* nsurfacefilter.cpp in Sources */,
 				052F9EAE180600FB00FAE4DF /* dim2edge.cpp in Sources */,
 				052F9EBE180600FB00FAE4DF /* engine.cpp in Sources */,
