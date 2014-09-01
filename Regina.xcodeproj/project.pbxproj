@@ -1015,6 +1015,11 @@
 		05A73CE419B2F9DC0099C617 /* nsnappeagluings.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CC519B2F1AB0099C617 /* nsnappeagluings.h */; };
 		05A73CE519B2F9DC0099C617 /* nsnappeashapes.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CC719B2F1AB0099C617 /* nsnappeashapes.h */; };
 		05A73CE619B2F9DC0099C617 /* nsnappeaui.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CC919B2F1AB0099C617 /* nsnappeaui.h */; };
+		05B14EB519B4240D002138C0 /* mkcensusdb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B14EB419B4240D002138C0 /* mkcensusdb.cpp */; };
+		05B14EB619B4242E002138C0 /* zstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E81180600FB00FAE4DF /* zstream.cpp */; };
+		05B14EB719B424D8002138C0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A51806047E00FAE4DF /* libz.dylib */; };
+		05B14EB819B424E6002138C0 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0569F92F19B3655C00051091 /* libtokyocabinet.framework */; };
+		05B14EB919B424F9002138C0 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
 		05B62166180B9D7300CCB90B /* title.png in Resources */ = {isa = PBXBuildFile; fileRef = 05B62165180B9D7300CCB90B /* title.png */; };
 		05B9EC1B18245F2100DCACF3 /* euler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B9EC1A18245F2100DCACF3 /* euler.cpp */; };
 		05B9EC1C18245F2100DCACF3 /* euler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B9EC1A18245F2100DCACF3 /* euler.cpp */; };
@@ -1038,6 +1043,16 @@
 			script = "/Developer/Tools/Qt/moc \\\n-I/Library/Frameworks/QtGui.framework/Headers \\\n-I/Library/Frameworks/QtCore.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx ${INPUT_FILE_PATH}";
 		};
 /* End PBXBuildRule section */
+
+/* Begin PBXContainerItemProxy section */
+		05B14EBA19B427AC002138C0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05B14EA219B423A0002138C0;
+			remoteInfo = Census;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		052FA0BF1806072900FAE4DF /* CopyFiles */ = {
@@ -2058,6 +2073,15 @@
 		05A73CD919B2F24A0099C617 /* cusped-hyp-nor-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-nor-census.rga"; sourceTree = "<group>"; };
 		05A73CDA19B2F24A0099C617 /* cusped-hyp-or-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-or-census.rga"; sourceTree = "<group>"; };
 		05A73CDB19B2F24A0099C617 /* hyp-knot-link-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "hyp-knot-link-census.rga"; sourceTree = "<group>"; };
+		05B14EA319B423A0002138C0 /* mkcensusdb */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mkcensusdb; sourceTree = BUILT_PRODUCTS_DIR; };
+		05B14EAD19B4240D002138C0 /* closed-hyp-census-full.dat.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = "closed-hyp-census-full.dat.gz"; sourceTree = "<group>"; };
+		05B14EAE19B4240D002138C0 /* closed-nor-census-11.dat.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = "closed-nor-census-11.dat.gz"; sourceTree = "<group>"; };
+		05B14EAF19B4240D002138C0 /* closed-or-census-11.dat.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = "closed-or-census-11.dat.gz"; sourceTree = "<group>"; };
+		05B14EB019B4240D002138C0 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		05B14EB119B4240D002138C0 /* cusped-hyp-nor-census-9.dat.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = "cusped-hyp-nor-census-9.dat.gz"; sourceTree = "<group>"; };
+		05B14EB219B4240D002138C0 /* cusped-hyp-or-census-9.dat.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = "cusped-hyp-or-census-9.dat.gz"; sourceTree = "<group>"; };
+		05B14EB319B4240D002138C0 /* hyp-knot-link-census.dat.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = "hyp-knot-link-census.dat.gz"; sourceTree = "<group>"; };
+		05B14EB419B4240D002138C0 /* mkcensusdb.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mkcensusdb.cpp; sourceTree = "<group>"; };
 		05B62165180B9D7300CCB90B /* title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = title.png; sourceTree = "<group>"; };
 		05B9EC1A18245F2100DCACF3 /* euler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = euler.cpp; sourceTree = "<group>"; };
 		05BC538D1812BEB000FE9217 /* SwitchableSubcontroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwitchableSubcontroller.h; sourceTree = "<group>"; };
@@ -2120,6 +2144,16 @@
 				053E5B5219B3D45B00166778 /* libgmp.framework in Frameworks */,
 				053E5B5319B3D46000166778 /* libgmpxx.framework in Frameworks */,
 				053E5B5419B3D46D00166778 /* libtokyocabinet.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05B14EA019B423A0002138C0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05B14EB919B424F9002138C0 /* libbz2.dylib in Frameworks */,
+				05B14EB719B424D8002138C0 /* libz.dylib in Frameworks */,
+				05B14EB819B424E6002138C0 /* libtokyocabinet.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3406,6 +3440,7 @@
 		057118AF19B307A3009FEDC5 /* data */ = {
 			isa = PBXGroup;
 			children = (
+				05B14EAC19B4240D002138C0 /* census */,
 				057118B019B308F8009FEDC5 /* snappea */,
 			);
 			name = data;
@@ -3448,6 +3483,7 @@
 				052FA0C11806072900FAE4DF /* regtestsuite */,
 				052FA1281806102F00FAE4DF /* Regina.app */,
 				0564A1DF1811D6F8002CC2AE /* Regina.app */,
+				05B14EA319B423A0002138C0 /* mkcensusdb */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3503,6 +3539,21 @@
 				05A73CB919B2F14B0099C617 /* testalgebra.h */,
 			);
 			path = algebra;
+			sourceTree = "<group>";
+		};
+		05B14EAC19B4240D002138C0 /* census */ = {
+			isa = PBXGroup;
+			children = (
+				05B14EAD19B4240D002138C0 /* closed-hyp-census-full.dat.gz */,
+				05B14EAE19B4240D002138C0 /* closed-nor-census-11.dat.gz */,
+				05B14EAF19B4240D002138C0 /* closed-or-census-11.dat.gz */,
+				05B14EB019B4240D002138C0 /* CMakeLists.txt */,
+				05B14EB119B4240D002138C0 /* cusped-hyp-nor-census-9.dat.gz */,
+				05B14EB219B4240D002138C0 /* cusped-hyp-or-census-9.dat.gz */,
+				05B14EB319B4240D002138C0 /* hyp-knot-link-census.dat.gz */,
+				05B14EB419B4240D002138C0 /* mkcensusdb.cpp */,
+			);
+			path = census;
 			sourceTree = "<group>";
 		};
 		05F96C14180A14E600C99F96 /* MBProgressHUD */ = {
@@ -3860,11 +3911,28 @@
 			buildRules = (
 			);
 			dependencies = (
+				05B14EBB19B427AC002138C0 /* PBXTargetDependency */,
 			);
 			name = Engine;
 			productName = Regina;
 			productReference = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
+		};
+		05B14EA219B423A0002138C0 /* Census */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05B14EAB19B423A0002138C0 /* Build configuration list for PBXNativeTarget "Census" */;
+			buildPhases = (
+				05B14E9F19B423A0002138C0 /* Sources */,
+				05B14EA019B423A0002138C0 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Census;
+			productName = mkcensusdb;
+			productReference = 05B14EA319B423A0002138C0 /* mkcensusdb */;
+			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
@@ -3904,6 +3972,7 @@
 				052FA0C01806072900FAE4DF /* Test Suite */,
 				0564A1DE1811D6F8002CC2AE /* Qt */,
 				052FA1271806102F00FAE4DF /* iOS */,
+				05B14EA219B423A0002138C0 /* Census */,
 			);
 		};
 /* End PBXProject section */
@@ -4663,7 +4732,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		05B14E9F19B423A0002138C0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05B14EB619B4242E002138C0 /* zstream.cpp in Sources */,
+				05B14EB519B4240D002138C0 /* mkcensusdb.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		05B14EBB19B427AC002138C0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05B14EA219B423A0002138C0 /* Census */;
+			targetProxy = 05B14EBA19B427AC002138C0 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		052FA1321806102F00FAE4DF /* InfoPlist.strings */ = {
@@ -5010,6 +5096,38 @@
 			};
 			name = Release;
 		};
+		05B14EA919B423A0002138C0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				MACOSX_DEPLOYMENT_TARGET = "";
+				PRODUCT_NAME = mkcensusdb;
+			};
+			name = Debug;
+		};
+		05B14EAA19B423A0002138C0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				MACOSX_DEPLOYMENT_TARGET = "";
+				PRODUCT_NAME = mkcensusdb;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -5057,6 +5175,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		05B14EAB19B423A0002138C0 /* Build configuration list for PBXNativeTarget "Census" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05B14EA919B423A0002138C0 /* Debug */,
+				05B14EAA19B423A0002138C0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
