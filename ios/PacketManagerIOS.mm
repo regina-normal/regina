@@ -55,6 +55,9 @@
         case regina::PACKET_SCRIPT:
             return [UIImage imageNamed:@"Script"];
             break;
+        case regina::PACKET_SNAPPEATRIANGULATION:
+            return [UIImage imageNamed:@"SnapPea"];
+            break;
         case regina::PACKET_SURFACEFILTER:
             return [UIImage imageNamed:@"Filter"];
             break;
