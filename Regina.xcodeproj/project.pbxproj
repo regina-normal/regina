@@ -4991,6 +4991,7 @@
 					"DEBUG=1",
 					"NO_SRCHILITE=1",
 					"REGINA_INSTALL_BUNDLE=1",
+					"REGINA_XCODE_BUNDLE=1",
 					"$(inherited)",
 				);
 				HEADER_SEARCH_PATHS = (
@@ -5032,6 +5033,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"NO_SRCHILITE=1",
 					"REGINA_INSTALL_BUNDLE=1",
+					"REGINA_XCODE_BUNDLE=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
