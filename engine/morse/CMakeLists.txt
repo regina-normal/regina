@@ -2,7 +2,7 @@
 
 # Files to compile
 SET ( FILES
-  nmorsefunc
+  nmorsefunction
   )
 
 # Prepend folder name
@@ -15,6 +15,6 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
-    nmorsefunc.h
+    nmorsefunction.h
     DESTINATION ${INCLUDEDIR}/morse COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
