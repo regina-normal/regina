@@ -55,9 +55,12 @@ static NSArray* _all = nil;
     if (! _all)
         _all = [NSArray arrayWithObjects:
             [Example exampleWithFile:@"sample-ios.rga" desc:@"Introductory examples"],
-            [Example exampleWithFile:@"closed-or-census.rga" desc:@"Closed orientable census"],
-            [Example exampleWithFile:@"snappea-census.rga" desc:@"Cusped hyperbolic census"],
-            [Example exampleWithFile:@"knot-link-census.rga" desc:@"Hyperbolic knot/link complements"],
+            [Example exampleWithFile:@"closed-or-census.rga" desc:@"Closed census (orientable)"],
+            [Example exampleWithFile:@"closed-nor-census.rga" desc:@"Closed census (non-orientable)"],
+            [Example exampleWithFile:@"cusped-hyp-or-census.rga" desc:@"Cusped hyperbolic census (orientable)"],
+            [Example exampleWithFile:@"cusped-hyp-nor-census.rga" desc:@"Cusped hyperbolic census (non-orientable)"],
+            [Example exampleWithFile:@"closed-hyp-census.rga" desc:@"Hodgson-Weeks closed hyperbolic census"],
+            [Example exampleWithFile:@"hyp-knot-link-census.rga" desc:@"Hyperbolic knot / link complements"],
             nil];
     return _all;
 }
