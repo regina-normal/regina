@@ -21,7 +21,6 @@
 		051806D7181203BB008EBB01 /* regina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 05561D181811F27A00FD6E2E /* regina.icns */; };
 		051806D8181203BB008EBB01 /* x-regina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 05561D191811F27A00FD6E2E /* x-regina.icns */; };
 		051806DB18123057008EBB01 /* EmptySegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 051806DA18123057008EBB01 /* EmptySegue.m */; };
-		051E5F7D180C636000C9EF04 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 051E5F7C180C636000C9EF04 /* Settings.bundle */; };
 		0523D88A180B54850094DAAD /* PacketManagerIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0523D889180B54850094DAAD /* PacketManagerIOS.mm */; };
 		052F9E83180600FB00FAE4DF /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C00180600FA00FAE4DF /* nabeliangroup.cpp */; };
 		052F9E84180600FB00FAE4DF /* nabeliangroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C01180600FA00FAE4DF /* nabeliangroup.h */; };
@@ -1198,7 +1197,6 @@
 		051806D5181202E0008EBB01 /* examples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = examples; sourceTree = SOURCE_ROOT; };
 		051806D918123057008EBB01 /* EmptySegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmptySegue.h; sourceTree = "<group>"; };
 		051806DA18123057008EBB01 /* EmptySegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmptySegue.m; sourceTree = "<group>"; };
-		051E5F7C180C636000C9EF04 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		0523D888180B54850094DAAD /* PacketManagerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketManagerIOS.h; sourceTree = "<group>"; };
 		0523D889180B54850094DAAD /* PacketManagerIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketManagerIOS.mm; sourceTree = "<group>"; };
 		052F9BFF180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
@@ -3215,7 +3213,6 @@
 				052FA1301806102F00FAE4DF /* Supporting Files */,
 				054F7E2E180B99320090B1F3 /* HTML */,
 				05F96C14180A14E600C99F96 /* MBProgressHUD */,
-				051E5F7C180C636000C9EF04 /* Settings.bundle */,
 			);
 			path = ios;
 			sourceTree = "<group>";
@@ -4068,7 +4065,6 @@
 				054BC4CC19B4A73D005E01A0 /* cusped-hyp-nor-census-9.zsig in Resources */,
 				054BC4CD19B4A73D005E01A0 /* cusped-hyp-or-census-9.zsig in Resources */,
 				054BC4CE19B4A73D005E01A0 /* hyp-knot-link-census.zsig in Resources */,
-				051E5F7D180C636000C9EF04 /* Settings.bundle in Resources */,
 				052FA1451806103000FAE4DF /* Images.xcassets in Resources */,
 				05B62166180B9D7300CCB90B /* title.png in Resources */,
 				054F7E2B180B96AC0090B1F3 /* welcome.html in Resources */,
