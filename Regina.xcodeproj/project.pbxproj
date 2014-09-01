@@ -818,6 +818,12 @@
 		054F7E2B180B96AC0090B1F3 /* welcome.html in Resources */ = {isa = PBXBuildFile; fileRef = 054F7E2A180B96AC0090B1F3 /* welcome.html */; };
 		054F7E2D180B99270090B1F3 /* regina.css in Resources */ = {isa = PBXBuildFile; fileRef = 054F7E2C180B99270090B1F3 /* regina.css */; };
 		05500A1119B422370074CE5D /* cppunit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05500A1019B422360074CE5D /* cppunit.framework */; };
+		055ABEA519B49C1900044C1B /* closed-hyp-census-full.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9E19B499DC00044C1B /* closed-hyp-census-full.zsig */; };
+		055ABEA619B49C1900044C1B /* closed-nor-census-11.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9F19B499DC00044C1B /* closed-nor-census-11.zsig */; };
+		055ABEA719B49C1900044C1B /* closed-or-census-11.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABEA019B499DC00044C1B /* closed-or-census-11.zsig */; };
+		055ABEA819B49C1900044C1B /* cusped-hyp-nor-census-9.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABEA119B499DC00044C1B /* cusped-hyp-nor-census-9.zsig */; };
+		055ABEA919B49C1900044C1B /* cusped-hyp-or-census-9.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABEA219B499DC00044C1B /* cusped-hyp-or-census-9.zsig */; };
+		055ABEAA19B49C1900044C1B /* hyp-knot-link-census.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABEA319B499DC00044C1B /* hyp-knot-link-census.zsig */; };
 		055B7311181D7CF800449D14 /* dim2boundarycomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055B730E181D7CF800449D14 /* dim2boundarycomponent.cpp */; };
 		055B7312181D7CF800449D14 /* dim2boundarycomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055B730E181D7CF800449D14 /* dim2boundarycomponent.cpp */; };
 		055B7313181D7CF800449D14 /* dim2component.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055B730F181D7CF800449D14 /* dim2component.cpp */; };
@@ -1020,12 +1026,6 @@
 		05B14EB719B424D8002138C0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A51806047E00FAE4DF /* libz.dylib */; };
 		05B14EB819B424E6002138C0 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0569F92F19B3655C00051091 /* libtokyocabinet.framework */; };
 		05B14EB919B424F9002138C0 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
-		05B14EBD19B42967002138C0 /* closed-hyp-census-full.dat.gz in Sources */ = {isa = PBXBuildFile; fileRef = 05B14EAD19B4240D002138C0 /* closed-hyp-census-full.dat.gz */; };
-		05B14EBE19B42967002138C0 /* closed-nor-census-11.dat.gz in Sources */ = {isa = PBXBuildFile; fileRef = 05B14EAE19B4240D002138C0 /* closed-nor-census-11.dat.gz */; };
-		05B14EBF19B42967002138C0 /* closed-or-census-11.dat.gz in Sources */ = {isa = PBXBuildFile; fileRef = 05B14EAF19B4240D002138C0 /* closed-or-census-11.dat.gz */; };
-		05B14EC019B42967002138C0 /* cusped-hyp-nor-census-9.dat.gz in Sources */ = {isa = PBXBuildFile; fileRef = 05B14EB119B4240D002138C0 /* cusped-hyp-nor-census-9.dat.gz */; };
-		05B14EC119B42967002138C0 /* cusped-hyp-or-census-9.dat.gz in Sources */ = {isa = PBXBuildFile; fileRef = 05B14EB219B4240D002138C0 /* cusped-hyp-or-census-9.dat.gz */; };
-		05B14EC219B42967002138C0 /* hyp-knot-link-census.dat.gz in Sources */ = {isa = PBXBuildFile; fileRef = 05B14EB319B4240D002138C0 /* hyp-knot-link-census.dat.gz */; };
 		05B62166180B9D7300CCB90B /* title.png in Resources */ = {isa = PBXBuildFile; fileRef = 05B62165180B9D7300CCB90B /* title.png */; };
 		05B9EC1B18245F2100DCACF3 /* euler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B9EC1A18245F2100DCACF3 /* euler.cpp */; };
 		05B9EC1C18245F2100DCACF3 /* euler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B9EC1A18245F2100DCACF3 /* euler.cpp */; };
@@ -1051,13 +1051,13 @@
 		05B14EBC19B428EA002138C0 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
 			compilerSpec = com.apple.compilers.proxy.script;
-			filePatterns = "*.dat.gz";
+			filePatterns = "*.zsig";
 			fileType = pattern.proxy;
 			isEditable = 1;
 			outputFiles = (
-				"$(DERIVED_FILE_DIR)/${INPUT_FILE_BASE/.dat/.tdb}",
+				"$(DERIVED_FILE_DIR)/${INPUT_FILE_BASE}.tdb",
 			);
-			script = "#!/bin/bash\noutfile=${INPUT_FILE_BASE/.dat/.tdb}\n${CONFIGURATION_BUILD_DIR}/mkcensusdb ${INPUT_FILE_PATH} ${DERIVED_FILE_DIR}/$outfile";
+			script = "${CONFIGURATION_BUILD_DIR}/mkcensusdb ${INPUT_FILE_PATH} ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}.tdb";
 		};
 /* End PBXBuildRule section */
 
@@ -1773,6 +1773,13 @@
 		05500A1019B422360074CE5D /* cppunit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = cppunit.framework; path = ../../Library/Frameworks/cppunit.framework; sourceTree = "<group>"; };
 		05561D181811F27A00FD6E2E /* regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = regina.icns; path = icons/regina.icns; sourceTree = SOURCE_ROOT; };
 		05561D191811F27A00FD6E2E /* x-regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "x-regina.icns"; path = "icons/x-regina.icns"; sourceTree = SOURCE_ROOT; };
+		055ABE9E19B499DC00044C1B /* closed-hyp-census-full.zsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-hyp-census-full.zsig"; sourceTree = "<group>"; };
+		055ABE9F19B499DC00044C1B /* closed-nor-census-11.zsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-nor-census-11.zsig"; sourceTree = "<group>"; };
+		055ABEA019B499DC00044C1B /* closed-or-census-11.zsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-or-census-11.zsig"; sourceTree = "<group>"; };
+		055ABEA119B499DC00044C1B /* cusped-hyp-nor-census-9.zsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-nor-census-9.zsig"; sourceTree = "<group>"; };
+		055ABEA219B499DC00044C1B /* cusped-hyp-or-census-9.zsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-or-census-9.zsig"; sourceTree = "<group>"; };
+		055ABEA319B499DC00044C1B /* hyp-knot-link-census.zsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "hyp-knot-link-census.zsig"; sourceTree = "<group>"; };
+		055ABEA419B499DC00044C1B /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		055B730E181D7CF800449D14 /* dim2boundarycomponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2boundarycomponent.cpp; sourceTree = "<group>"; };
 		055B730F181D7CF800449D14 /* dim2component.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2component.cpp; sourceTree = "<group>"; };
 		055B7310181D7CF800449D14 /* dim2vertex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2vertex.cpp; sourceTree = "<group>"; };
@@ -2091,13 +2098,7 @@
 		05A73CDA19B2F24A0099C617 /* cusped-hyp-or-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-or-census.rga"; sourceTree = "<group>"; };
 		05A73CDB19B2F24A0099C617 /* hyp-knot-link-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "hyp-knot-link-census.rga"; sourceTree = "<group>"; };
 		05B14EA319B423A0002138C0 /* mkcensusdb */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mkcensusdb; sourceTree = BUILT_PRODUCTS_DIR; };
-		05B14EAD19B4240D002138C0 /* closed-hyp-census-full.dat.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = "closed-hyp-census-full.dat.gz"; sourceTree = "<group>"; };
-		05B14EAE19B4240D002138C0 /* closed-nor-census-11.dat.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = "closed-nor-census-11.dat.gz"; sourceTree = "<group>"; };
-		05B14EAF19B4240D002138C0 /* closed-or-census-11.dat.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = "closed-or-census-11.dat.gz"; sourceTree = "<group>"; };
 		05B14EB019B4240D002138C0 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		05B14EB119B4240D002138C0 /* cusped-hyp-nor-census-9.dat.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = "cusped-hyp-nor-census-9.dat.gz"; sourceTree = "<group>"; };
-		05B14EB219B4240D002138C0 /* cusped-hyp-or-census-9.dat.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = "cusped-hyp-or-census-9.dat.gz"; sourceTree = "<group>"; };
-		05B14EB319B4240D002138C0 /* hyp-knot-link-census.dat.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = "hyp-knot-link-census.dat.gz"; sourceTree = "<group>"; };
 		05B14EB419B4240D002138C0 /* mkcensusdb.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mkcensusdb.cpp; sourceTree = "<group>"; };
 		05B62165180B9D7300CCB90B /* title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = title.png; sourceTree = "<group>"; };
 		05B9EC1A18245F2100DCACF3 /* euler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = euler.cpp; sourceTree = "<group>"; };
@@ -3561,14 +3562,15 @@
 		05B14EAC19B4240D002138C0 /* census */ = {
 			isa = PBXGroup;
 			children = (
-				05B14EAD19B4240D002138C0 /* closed-hyp-census-full.dat.gz */,
-				05B14EAE19B4240D002138C0 /* closed-nor-census-11.dat.gz */,
-				05B14EAF19B4240D002138C0 /* closed-or-census-11.dat.gz */,
+				055ABE9E19B499DC00044C1B /* closed-hyp-census-full.zsig */,
+				055ABE9F19B499DC00044C1B /* closed-nor-census-11.zsig */,
+				055ABEA019B499DC00044C1B /* closed-or-census-11.zsig */,
 				05B14EB019B4240D002138C0 /* CMakeLists.txt */,
-				05B14EB119B4240D002138C0 /* cusped-hyp-nor-census-9.dat.gz */,
-				05B14EB219B4240D002138C0 /* cusped-hyp-or-census-9.dat.gz */,
-				05B14EB319B4240D002138C0 /* hyp-knot-link-census.dat.gz */,
+				055ABEA119B499DC00044C1B /* cusped-hyp-nor-census-9.zsig */,
+				055ABEA219B499DC00044C1B /* cusped-hyp-or-census-9.zsig */,
+				055ABEA319B499DC00044C1B /* hyp-knot-link-census.zsig */,
 				05B14EB419B4240D002138C0 /* mkcensusdb.cpp */,
+				055ABEA419B499DC00044C1B /* README.txt */,
 			);
 			path = census;
 			sourceTree = "<group>";
@@ -4497,12 +4499,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				05B14EBD19B42967002138C0 /* closed-hyp-census-full.dat.gz in Sources */,
-				05B14EBE19B42967002138C0 /* closed-nor-census-11.dat.gz in Sources */,
-				05B14EBF19B42967002138C0 /* closed-or-census-11.dat.gz in Sources */,
-				05B14EC019B42967002138C0 /* cusped-hyp-nor-census-9.dat.gz in Sources */,
-				05B14EC119B42967002138C0 /* cusped-hyp-or-census-9.dat.gz in Sources */,
-				05B14EC219B42967002138C0 /* hyp-knot-link-census.dat.gz in Sources */,
+				055ABEA519B49C1900044C1B /* closed-hyp-census-full.zsig in Sources */,
+				055ABEA619B49C1900044C1B /* closed-nor-census-11.zsig in Sources */,
+				055ABEA719B49C1900044C1B /* closed-or-census-11.zsig in Sources */,
+				055ABEA819B49C1900044C1B /* cusped-hyp-nor-census-9.zsig in Sources */,
+				055ABEA919B49C1900044C1B /* cusped-hyp-or-census-9.zsig in Sources */,
+				055ABEAA19B49C1900044C1B /* hyp-knot-link-census.zsig in Sources */,
 				052FA044180600FB00FAE4DF /* nsurfacefilter.cpp in Sources */,
 				052F9EAE180600FB00FAE4DF /* dim2edge.cpp in Sources */,
 				052F9EBE180600FB00FAE4DF /* engine.cpp in Sources */,
