@@ -138,7 +138,7 @@ NCensusHits* NCensus::lookup(const std::string& isoSig) {
 }
 
 NCensusDB* NCensus::standardDB(const char* filename, const char* desc) {
-    return new NCensusDB(NGlobalDirs::data() + "/census/" + filename, desc);
+    return new NCensusDB(NGlobalDirs::census() + "/" + filename, desc);
 }
 
 const int NCensus::PURGE_NON_MINIMAL = NGluingPermSearcher::PURGE_NON_MINIMAL;

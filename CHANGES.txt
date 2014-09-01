@@ -7,6 +7,16 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
+Version 4.97  [ (under development) ]
+
+    ENGINE:
+        Class NGlobalDirs:
+            - The directory containing the machine-encoded census data is now
+              independent of home().  It can be queried through the new census()
+              routine, and set through an optional third argument to setDirs().
+            - The homeDir argument to setDirs() may now be the empty string,
+              which signals that the directory should not be changed.
+
 Version 4.96  [ 29 August, 2014 ]
 
     ENGINE:
