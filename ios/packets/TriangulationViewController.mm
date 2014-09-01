@@ -51,9 +51,9 @@
 	// Do any additional setup after loading the view.
     // regina::NTriangulation* t = (regina::NTriangulation*)self.packet;
 
-    _gluingTab.selectedImage = [UIImage imageNamed:@"Gluings-Bold"];
-    _skeletonTab.selectedImage = [UIImage imageNamed:@"Skeleton-Bold"];
-    _snapPeaTab.selectedImage = [UIImage imageNamed:@"SnapPea-Bold"];
+    _gluingTab.selectedImage = [UIImage imageNamed:@"Tab-Gluings-Bold"];
+    _skeletonTab.selectedImage = [UIImage imageNamed:@"Tab-Skeleton-Bold"];
+    _snapPeaTab.selectedImage = [UIImage imageNamed:@"Tab-SnapPea-Bold"];
     
     _tabs.selectedItem = _gluingTab;
     
