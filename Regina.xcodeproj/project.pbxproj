@@ -814,6 +814,18 @@
 		0543AEC41811E12A002758F8 /* reginapref.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5EE1811D920002CC2AE /* reginapref.h */; };
 		0543AEC51811E12A002758F8 /* reginaprefset.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5F01811D920002CC2AE /* reginaprefset.h */; };
 		0543AEC61811E12A002758F8 /* shortrunner.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5F61811D920002CC2AE /* shortrunner.h */; };
+		054BC4C319B4A726005E01A0 /* closed-hyp-census-full.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9E19B499DC00044C1B /* closed-hyp-census-full.zsig */; };
+		054BC4C419B4A726005E01A0 /* closed-nor-census-11.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9F19B499DC00044C1B /* closed-nor-census-11.zsig */; };
+		054BC4C519B4A726005E01A0 /* closed-or-census-11.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABEA019B499DC00044C1B /* closed-or-census-11.zsig */; };
+		054BC4C619B4A726005E01A0 /* cusped-hyp-nor-census-9.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABEA119B499DC00044C1B /* cusped-hyp-nor-census-9.zsig */; };
+		054BC4C719B4A726005E01A0 /* cusped-hyp-or-census-9.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABEA219B499DC00044C1B /* cusped-hyp-or-census-9.zsig */; };
+		054BC4C819B4A726005E01A0 /* hyp-knot-link-census.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABEA319B499DC00044C1B /* hyp-knot-link-census.zsig */; };
+		054BC4C919B4A73D005E01A0 /* closed-hyp-census-full.zsig in Resources */ = {isa = PBXBuildFile; fileRef = 055ABE9E19B499DC00044C1B /* closed-hyp-census-full.zsig */; };
+		054BC4CA19B4A73D005E01A0 /* closed-nor-census-11.zsig in Resources */ = {isa = PBXBuildFile; fileRef = 055ABE9F19B499DC00044C1B /* closed-nor-census-11.zsig */; };
+		054BC4CB19B4A73D005E01A0 /* closed-or-census-11.zsig in Resources */ = {isa = PBXBuildFile; fileRef = 055ABEA019B499DC00044C1B /* closed-or-census-11.zsig */; };
+		054BC4CC19B4A73D005E01A0 /* cusped-hyp-nor-census-9.zsig in Resources */ = {isa = PBXBuildFile; fileRef = 055ABEA119B499DC00044C1B /* cusped-hyp-nor-census-9.zsig */; };
+		054BC4CD19B4A73D005E01A0 /* cusped-hyp-or-census-9.zsig in Resources */ = {isa = PBXBuildFile; fileRef = 055ABEA219B499DC00044C1B /* cusped-hyp-or-census-9.zsig */; };
+		054BC4CE19B4A73D005E01A0 /* hyp-knot-link-census.zsig in Resources */ = {isa = PBXBuildFile; fileRef = 055ABEA319B499DC00044C1B /* hyp-knot-link-census.zsig */; };
 		054F7E29180B93770090B1F3 /* WelcomePopupController.m in Sources */ = {isa = PBXBuildFile; fileRef = 054F7E28180B93770090B1F3 /* WelcomePopupController.m */; };
 		054F7E2B180B96AC0090B1F3 /* welcome.html in Resources */ = {isa = PBXBuildFile; fileRef = 054F7E2A180B96AC0090B1F3 /* welcome.html */; };
 		054F7E2D180B99270090B1F3 /* regina.css in Resources */ = {isa = PBXBuildFile; fileRef = 054F7E2C180B99270090B1F3 /* regina.css */; };
@@ -1060,6 +1072,17 @@
 			);
 			script = "/Developer/Tools/Qt/moc \\\n-I/Library/Frameworks/QtGui.framework/Headers \\\n-I/Library/Frameworks/QtCore.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx ${INPUT_FILE_PATH}";
 		};
+		054BC4C219B4A708005E01A0 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.zsig";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(DERIVED_FILE_DIR)/${INPUT_FILE_BASE}.tdb",
+			);
+			script = "${SYMROOT}/${CONFIGURATION}/mkcensusdb ${INPUT_FILE_PATH} ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}.tdb";
+		};
 		055ABEB519B49F4500044C1B /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
 			compilerSpec = com.apple.compilers.proxy.script;
@@ -1085,6 +1108,13 @@
 /* End PBXBuildRule section */
 
 /* Begin PBXContainerItemProxy section */
+		054BC4CF19B4A743005E01A0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05B14EA219B423A0002138C0;
+			remoteInfo = "Census Tools";
+		};
 		055ABEB319B49F1100044C1B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
@@ -3922,8 +3952,10 @@
 				057118CF19B30BAF009FEDC5 /* CopyFiles */,
 			);
 			buildRules = (
+				054BC4C219B4A708005E01A0 /* PBXBuildRule */,
 			);
 			dependencies = (
+				054BC4D019B4A743005E01A0 /* PBXTargetDependency */,
 			);
 			name = iOS;
 			productName = Regina;
@@ -4034,6 +4066,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				054BC4C919B4A73D005E01A0 /* closed-hyp-census-full.zsig in Resources */,
+				054BC4CA19B4A73D005E01A0 /* closed-nor-census-11.zsig in Resources */,
+				054BC4CB19B4A73D005E01A0 /* closed-or-census-11.zsig in Resources */,
+				054BC4CC19B4A73D005E01A0 /* cusped-hyp-nor-census-9.zsig in Resources */,
+				054BC4CD19B4A73D005E01A0 /* cusped-hyp-or-census-9.zsig in Resources */,
+				054BC4CE19B4A73D005E01A0 /* hyp-knot-link-census.zsig in Resources */,
 				0589FAC818148F700064CD57 /* sample-ios.rga in Resources */,
 				05A73CDC19B2F24A0099C617 /* cusped-hyp-nor-census.rga in Resources */,
 				051E5F7D180C636000C9EF04 /* Settings.bundle in Resources */,
@@ -4111,6 +4149,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				054BC4C319B4A726005E01A0 /* closed-hyp-census-full.zsig in Sources */,
+				054BC4C419B4A726005E01A0 /* closed-nor-census-11.zsig in Sources */,
+				054BC4C519B4A726005E01A0 /* closed-or-census-11.zsig in Sources */,
+				054BC4C619B4A726005E01A0 /* cusped-hyp-nor-census-9.zsig in Sources */,
+				054BC4C719B4A726005E01A0 /* cusped-hyp-or-census-9.zsig in Sources */,
+				054BC4C819B4A726005E01A0 /* hyp-knot-link-census.zsig in Sources */,
 				055B7312181D7CF800449D14 /* dim2boundarycomponent.cpp in Sources */,
 				052FA16E1806129B00FAE4DF /* nfacepairing.cpp in Sources */,
 				052FA229180612DD00FAE4DF /* identify_solution_type.c in Sources */,
@@ -4814,6 +4858,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		054BC4D019B4A743005E01A0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05B14EA219B423A0002138C0 /* Census Tools */;
+			targetProxy = 054BC4CF19B4A743005E01A0 /* PBXContainerItemProxy */;
+		};
 		055ABEB419B49F1100044C1B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 05B14EA219B423A0002138C0 /* Census Tools */;
