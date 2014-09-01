@@ -86,6 +86,9 @@ static NSArray* _allRows;
                     [NewPacketRow rowWithType:regina::PACKET_ANGLESTRUCTURELIST
                                         label:@"Angle structures"
                                          icon:@"Angles"],
+                    [NewPacketRow rowWithType:regina::PACKET_SNAPPEATRIANGULATION
+                                        label:@"SnapPea triangulation"
+                                         icon:@"SnapPea"],
                     [NewPacketRow rowWithType:regina::PACKET_SURFACEFILTER
                                         label:@"Surface filter"
                                          icon:@"Filter"],
