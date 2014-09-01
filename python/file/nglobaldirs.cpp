@@ -42,17 +42,31 @@
 using namespace boost::python;
 using regina::NGlobalDirs;
 
+namespace {
+    void setDirs_2(const std::string& x, const std::string& y) {
+        NGlobalDirs::setDirs(x, y);
+    }
+
+    void setDirs_3(const std::string& x, const std::string& y,
+            const std::string& z) {
+        NGlobalDirs::setDirs(x, y, z);
+    }
+}
+
 void addNGlobalDirs() {
     class_<NGlobalDirs>("NGlobalDirs", no_init)
         .def("home", &NGlobalDirs::home)
         .def("pythonModule", &NGlobalDirs::pythonModule)
+        .def("census", &NGlobalDirs::census)
         .def("pythonLibs", &NGlobalDirs::pythonLibs)
         .def("examples", &NGlobalDirs::examples)
         .def("engineDocs", &NGlobalDirs::engineDocs)
         .def("data", &NGlobalDirs::data)
-        .def("setDirs", &NGlobalDirs::setDirs)
+        .def("setDirs", setDirs_2)
+        .def("setDirs", setDirs_3)
         .staticmethod("home")
         .staticmethod("pythonModule")
+        .staticmethod("census")
         .staticmethod("pythonLibs")
         .staticmethod("examples")
         .staticmethod("engineDocs")
