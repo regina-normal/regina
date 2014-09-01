@@ -413,6 +413,7 @@
                     </tableView>
                     <nil key="simulatedStatusBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="250" height="350"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VH4-aJ-vAd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
