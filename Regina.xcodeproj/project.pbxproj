@@ -1055,9 +1055,9 @@
 			fileType = pattern.proxy;
 			isEditable = 1;
 			outputFiles = (
-				"$(DERIVED_FILE_DIR)/${INPUT_FILE_BASE}.tdb",
+				"$(DERIVED_FILE_DIR)/${INPUT_FILE_BASE/.dat/.tdb}",
 			);
-			script = "${CONFIGURATION_BUILD_DIR}/mkcensusdb ${INPUT_FILE_PATH} ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}.tdb";
+			script = "#!/bin/bash\noutfile=${INPUT_FILE_BASE/.dat/.tdb}\n${CONFIGURATION_BUILD_DIR}/mkcensusdb ${INPUT_FILE_PATH} ${DERIVED_FILE_DIR}/$outfile";
 		};
 /* End PBXBuildRule section */
 
