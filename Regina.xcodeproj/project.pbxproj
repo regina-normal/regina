@@ -824,6 +824,18 @@
 		055ABEA819B49C1900044C1B /* cusped-hyp-nor-census-9.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABEA119B499DC00044C1B /* cusped-hyp-nor-census-9.zsig */; };
 		055ABEA919B49C1900044C1B /* cusped-hyp-or-census-9.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABEA219B499DC00044C1B /* cusped-hyp-or-census-9.zsig */; };
 		055ABEAA19B49C1900044C1B /* hyp-knot-link-census.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABEA319B499DC00044C1B /* hyp-knot-link-census.zsig */; };
+		055ABEB619B49F6800044C1B /* closed-hyp-census-full.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9E19B499DC00044C1B /* closed-hyp-census-full.zsig */; };
+		055ABEB719B49F6800044C1B /* closed-nor-census-11.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9F19B499DC00044C1B /* closed-nor-census-11.zsig */; };
+		055ABEB819B49F6800044C1B /* closed-or-census-11.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABEA019B499DC00044C1B /* closed-or-census-11.zsig */; };
+		055ABEB919B49F6800044C1B /* cusped-hyp-nor-census-9.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABEA119B499DC00044C1B /* cusped-hyp-nor-census-9.zsig */; };
+		055ABEBA19B49F6800044C1B /* cusped-hyp-or-census-9.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABEA219B499DC00044C1B /* cusped-hyp-or-census-9.zsig */; };
+		055ABEBB19B49F6800044C1B /* hyp-knot-link-census.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABEA319B499DC00044C1B /* hyp-knot-link-census.zsig */; };
+		055ABEC219B49FC300044C1B /* closed-hyp-census-full.zsig in Resources */ = {isa = PBXBuildFile; fileRef = 055ABE9E19B499DC00044C1B /* closed-hyp-census-full.zsig */; };
+		055ABEC319B49FC300044C1B /* closed-nor-census-11.zsig in Resources */ = {isa = PBXBuildFile; fileRef = 055ABE9F19B499DC00044C1B /* closed-nor-census-11.zsig */; };
+		055ABEC419B49FC300044C1B /* closed-or-census-11.zsig in Resources */ = {isa = PBXBuildFile; fileRef = 055ABEA019B499DC00044C1B /* closed-or-census-11.zsig */; };
+		055ABEC519B49FC300044C1B /* cusped-hyp-nor-census-9.zsig in Resources */ = {isa = PBXBuildFile; fileRef = 055ABEA119B499DC00044C1B /* cusped-hyp-nor-census-9.zsig */; };
+		055ABEC619B49FC300044C1B /* cusped-hyp-or-census-9.zsig in Resources */ = {isa = PBXBuildFile; fileRef = 055ABEA219B499DC00044C1B /* cusped-hyp-or-census-9.zsig */; };
+		055ABEC719B49FC300044C1B /* hyp-knot-link-census.zsig in Resources */ = {isa = PBXBuildFile; fileRef = 055ABEA319B499DC00044C1B /* hyp-knot-link-census.zsig */; };
 		055B7311181D7CF800449D14 /* dim2boundarycomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055B730E181D7CF800449D14 /* dim2boundarycomponent.cpp */; };
 		055B7312181D7CF800449D14 /* dim2boundarycomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055B730E181D7CF800449D14 /* dim2boundarycomponent.cpp */; };
 		055B7313181D7CF800449D14 /* dim2component.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055B730F181D7CF800449D14 /* dim2component.cpp */; };
@@ -1048,6 +1060,17 @@
 			);
 			script = "/Developer/Tools/Qt/moc \\\n-I/Library/Frameworks/QtGui.framework/Headers \\\n-I/Library/Frameworks/QtCore.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx ${INPUT_FILE_PATH}";
 		};
+		055ABEB519B49F4500044C1B /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.zsig";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(DERIVED_FILE_DIR)/${INPUT_FILE_BASE}.tdb",
+			);
+			script = "${CONFIGURATION_BUILD_DIR}/mkcensusdb ${INPUT_FILE_PATH} ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}.tdb";
+		};
 		05B14EBC19B428EA002138C0 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
 			compilerSpec = com.apple.compilers.proxy.script;
@@ -1062,6 +1085,13 @@
 /* End PBXBuildRule section */
 
 /* Begin PBXContainerItemProxy section */
+		055ABEB319B49F1100044C1B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05B14EA219B423A0002138C0;
+			remoteInfo = "Census Tools";
+		};
 		05B14EBA19B427AC002138C0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
@@ -3910,9 +3940,11 @@
 				057118C919B30A13009FEDC5 /* CopyFiles */,
 			);
 			buildRules = (
+				055ABEB519B49F4500044C1B /* PBXBuildRule */,
 				0543AE921811DE96002758F8 /* PBXBuildRule */,
 			);
 			dependencies = (
+				055ABEB419B49F1100044C1B /* PBXTargetDependency */,
 			);
 			name = Qt;
 			productName = Qt;
@@ -4020,6 +4052,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				055ABEC219B49FC300044C1B /* closed-hyp-census-full.zsig in Resources */,
+				055ABEC319B49FC300044C1B /* closed-nor-census-11.zsig in Resources */,
+				055ABEC419B49FC300044C1B /* closed-or-census-11.zsig in Resources */,
+				055ABEC519B49FC300044C1B /* cusped-hyp-nor-census-9.zsig in Resources */,
+				055ABEC619B49FC300044C1B /* cusped-hyp-or-census-9.zsig in Resources */,
+				055ABEC719B49FC300044C1B /* hyp-knot-link-census.zsig in Resources */,
 				051806D4181202BD008EBB01 /* icons in Resources */,
 				058637F3181DBC5900E95307 /* syntax in Resources */,
 				051806D6181202E0008EBB01 /* examples in Resources */,
@@ -4338,6 +4376,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				055ABEB619B49F6800044C1B /* closed-hyp-census-full.zsig in Sources */,
+				055ABEB719B49F6800044C1B /* closed-nor-census-11.zsig in Sources */,
+				055ABEB819B49F6800044C1B /* closed-or-census-11.zsig in Sources */,
+				055ABEB919B49F6800044C1B /* cusped-hyp-nor-census-9.zsig in Sources */,
+				055ABEBA19B49F6800044C1B /* cusped-hyp-or-census-9.zsig in Sources */,
+				055ABEBB19B49F6800044C1B /* hyp-knot-link-census.zsig in Sources */,
 				0543AE931811E12A002758F8 /* boundarycomponentchooser.h in Sources */,
 				05A73CE119B2F97B0099C617 /* cuspchooser.h in Sources */,
 				0543AE941811E12A002758F8 /* edgechooser.h in Sources */,
@@ -4770,6 +4814,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		055ABEB419B49F1100044C1B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05B14EA219B423A0002138C0 /* Census Tools */;
+			targetProxy = 055ABEB319B49F1100044C1B /* PBXContainerItemProxy */;
+		};
 		05B14EBB19B427AC002138C0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 05B14EA219B423A0002138C0 /* Census Tools */;
