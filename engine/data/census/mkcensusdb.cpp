@@ -124,7 +124,7 @@ int main(int argc, char* argv[]) {
         // Skip initial whitespace in the manifold name (which will
         // always be present, since the previous in >> sig
         // does not eat the separating whitespace).
-        const char* pos = name.c_str();
+        pos = name.c_str();
         while (*pos && std::isspace(*pos))
             ++pos;
         if (! *pos) {

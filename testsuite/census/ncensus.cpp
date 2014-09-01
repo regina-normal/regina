@@ -132,9 +132,9 @@ class NCensusTest : public CppUnit::TestFixture {
 
             // Temporarily redirect the home directory so that Regina
             // finds the census data files in the source tree.
-            std::string home = regina::NGlobalDirs::home();
+            std::string census = regina::NGlobalDirs::census();
             std::string python = regina::NGlobalDirs::pythonModule();
-            regina::NGlobalDirs::setDirs(TESTSUITE_DATA_HOME_BINARY, python);
+            regina::NGlobalDirs::setDirs("", python, TESTSUITE_CENSUS_DIR);
 
             verifyLookupNone("");
             verifyLookupNone("abcdefg");
@@ -151,7 +151,7 @@ class NCensusTest : public CppUnit::TestFixture {
             verifyLookup("kLLPLLQkceefejjiijiiiatdmpamxt",
                 "L408001", "L410005"); // hyp knots & links, multiple times
 
-            regina::NGlobalDirs::setDirs(home, python);
+            regina::NGlobalDirs::setDirs("", python, census);
         }
 
         void rawCounts() {
