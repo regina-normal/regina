@@ -3936,9 +3936,9 @@
 			productReference = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
-		05B14EA219B423A0002138C0 /* Census */ = {
+		05B14EA219B423A0002138C0 /* Census Tools */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 05B14EAB19B423A0002138C0 /* Build configuration list for PBXNativeTarget "Census" */;
+			buildConfigurationList = 05B14EAB19B423A0002138C0 /* Build configuration list for PBXNativeTarget "Census Tools" */;
 			buildPhases = (
 				05B14E9F19B423A0002138C0 /* Sources */,
 				05B14EA019B423A0002138C0 /* Frameworks */,
@@ -3947,7 +3947,7 @@
 			);
 			dependencies = (
 			);
-			name = Census;
+			name = "Census Tools";
 			productName = mkcensusdb;
 			productReference = 05B14EA319B423A0002138C0 /* mkcensusdb */;
 			productType = "com.apple.product-type.tool";
@@ -3990,7 +3990,7 @@
 				052FA0C01806072900FAE4DF /* Test Suite */,
 				0564A1DE1811D6F8002CC2AE /* Qt */,
 				052FA1271806102F00FAE4DF /* iOS */,
-				05B14EA219B423A0002138C0 /* Census */,
+				05B14EA219B423A0002138C0 /* Census Tools */,
 			);
 		};
 /* End PBXProject section */
@@ -4770,7 +4770,7 @@
 /* Begin PBXTargetDependency section */
 		05B14EBB19B427AC002138C0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 05B14EA219B423A0002138C0 /* Census */;
+			target = 05B14EA219B423A0002138C0 /* Census Tools */;
 			targetProxy = 05B14EBA19B427AC002138C0 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -5200,7 +5200,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		05B14EAB19B423A0002138C0 /* Build configuration list for PBXNativeTarget "Census" */ = {
+		05B14EAB19B423A0002138C0 /* Build configuration list for PBXNativeTarget "Census Tools" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				05B14EA919B423A0002138C0 /* Debug */,
