@@ -959,9 +959,6 @@
 		057118D219B30BC0009FEDC5 /* snappea-census-sec6o.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B519B308F8009FEDC5 /* snappea-census-sec6o.dat */; };
 		057118D319B30BC0009FEDC5 /* snappea-census-sec7n.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B619B308F8009FEDC5 /* snappea-census-sec7n.dat */; };
 		057118D419B30BC0009FEDC5 /* snappea-census-sec7o.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B719B308F8009FEDC5 /* snappea-census-sec7o.dat */; };
-		057118D519B30C74009FEDC5 /* cusped-hyp-nor-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A73CD919B2F24A0099C617 /* cusped-hyp-nor-census.rga */; };
-		057118D619B30C74009FEDC5 /* cusped-hyp-or-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A73CDA19B2F24A0099C617 /* cusped-hyp-or-census.rga */; };
-		057118D719B30C74009FEDC5 /* hyp-knot-link-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A73CDB19B2F24A0099C617 /* hyp-knot-link-census.rga */; };
 		057FA752180615F6008E25F6 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA74F180615F5008E25F6 /* libiconv.dylib */; };
 		057FA753180615F6008E25F6 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA750180615F5008E25F6 /* libxml2.dylib */; };
 		057FA754180615F6008E25F6 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA751180615F5008E25F6 /* libz.dylib */; };
@@ -978,17 +975,12 @@
 		0588F1191808D43B006BDC79 /* packettype.h in Headers */ = {isa = PBXBuildFile; fileRef = 0588F1171808D43B006BDC79 /* packettype.h */; };
 		0589FAC3181484860064CD57 /* TriGluingsViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0589FAC2181484860064CD57 /* TriGluingsViewController.mm */; };
 		0589FAC61814862B0064CD57 /* TriangulationSubcontroller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0589FAC51814862B0064CD57 /* TriangulationSubcontroller.mm */; };
-		0589FAC818148F700064CD57 /* sample-ios.rga in Resources */ = {isa = PBXBuildFile; fileRef = 0589FAC718148F700064CD57 /* sample-ios.rga */; };
-		0589FAC918148FFC0064CD57 /* sample-ios.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0589FAC718148F700064CD57 /* sample-ios.rga */; };
 		0589FACC1814BECF0064CD57 /* PacketListenerIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0589FACB1814BECF0064CD57 /* PacketListenerIOS.mm */; };
 		059101151812F349000A8D16 /* DetailViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 059101141812F349000A8D16 /* DetailViewController.mm */; };
 		059101181812F4C9000A8D16 /* PacketSubcontroller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 059101171812F4C9000A8D16 /* PacketSubcontroller.mm */; };
 		0591011B1813230A000A8D16 /* NewPacketMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591011A1813230A000A8D16 /* NewPacketMenu.mm */; };
 		0591011E181364BB000A8D16 /* NewSurfacesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591011D181364BB000A8D16 /* NewSurfacesController.mm */; };
 		0591012118141996000A8D16 /* NewPacketController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591012018141996000A8D16 /* NewPacketController.mm */; };
-		05A47FBE1809D11900F86BFD /* closed-hyp-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F971809CB7600F86BFD /* closed-hyp-census.rga */; };
-		05A47FBF1809D11900F86BFD /* closed-nor-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F981809CB7600F86BFD /* closed-nor-census.rga */; };
-		05A47FC11809D11900F86BFD /* closed-or-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F9A1809CB7600F86BFD /* closed-or-census.rga */; };
 		05A47FC71809D1D600F86BFD /* Example.m in Sources */ = {isa = PBXBuildFile; fileRef = 05A47FC61809D1D600F86BFD /* Example.m */; };
 		05A73C7519B2EDBF0099C617 /* hyperbolic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */; };
 		05A73C7619B2EDBF0099C617 /* hyperbolic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */; };
@@ -1036,9 +1028,6 @@
 		05A73CD019B2F1AB0099C617 /* nsnappeaui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CC819B2F1AB0099C617 /* nsnappeaui.cpp */; };
 		05A73CD519B2F2040099C617 /* columnlayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CD119B2F2040099C617 /* columnlayout.cpp */; };
 		05A73CD819B2F2180099C617 /* cuspchooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CD619B2F2180099C617 /* cuspchooser.cpp */; };
-		05A73CDC19B2F24A0099C617 /* cusped-hyp-nor-census.rga in Resources */ = {isa = PBXBuildFile; fileRef = 05A73CD919B2F24A0099C617 /* cusped-hyp-nor-census.rga */; };
-		05A73CDD19B2F24A0099C617 /* cusped-hyp-or-census.rga in Resources */ = {isa = PBXBuildFile; fileRef = 05A73CDA19B2F24A0099C617 /* cusped-hyp-or-census.rga */; };
-		05A73CDE19B2F24A0099C617 /* hyp-knot-link-census.rga in Resources */ = {isa = PBXBuildFile; fileRef = 05A73CDB19B2F24A0099C617 /* hyp-knot-link-census.rga */; };
 		05A73CE119B2F97B0099C617 /* cuspchooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CD719B2F2180099C617 /* cuspchooser.h */; };
 		05A73CE219B2F99B0099C617 /* groupwidget.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CBD19B2F1AB0099C617 /* groupwidget.h */; };
 		05A73CE319B2F9DC0099C617 /* nsnappeafile.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CC319B2F1AB0099C617 /* nsnappeafile.h */; };
@@ -1056,6 +1045,13 @@
 		05BC538F1812BEB000FE9217 /* SwitchableSubcontroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.m */; };
 		05CA99E618078466006161DC /* registryutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CA99E518078465006161DC /* registryutils.h */; };
 		05D0A1101812F0BE005ED097 /* TriangulationViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D0A10F1812F0BE005ED097 /* TriangulationViewController.mm */; };
+		05F9560A19B5298E00377BEC /* closed-hyp-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F971809CB7600F86BFD /* closed-hyp-census.rga */; };
+		05F9560B19B5298E00377BEC /* closed-nor-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F981809CB7600F86BFD /* closed-nor-census.rga */; };
+		05F9560C19B5298E00377BEC /* closed-or-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F9A1809CB7600F86BFD /* closed-or-census.rga */; };
+		05F9560D19B5298E00377BEC /* cusped-hyp-nor-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A73CD919B2F24A0099C617 /* cusped-hyp-nor-census.rga */; };
+		05F9560E19B5298E00377BEC /* cusped-hyp-or-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A73CDA19B2F24A0099C617 /* cusped-hyp-or-census.rga */; };
+		05F9560F19B5298E00377BEC /* hyp-knot-link-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A73CDB19B2F24A0099C617 /* hyp-knot-link-census.rga */; };
+		05F9561019B5298E00377BEC /* sample-ios.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0589FAC718148F700064CD57 /* sample-ios.rga */; };
 		05F96C131809F59600C99F96 /* PacketTreeController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F96C121809F59600C99F96 /* PacketTreeController.mm */; };
 		05F96C17180A153A00C99F96 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F96C16180A153A00C99F96 /* MBProgressHUD.m */; };
 /* End PBXBuildFile section */
@@ -1169,19 +1165,19 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		05A47FBD1809D00D00F86BFD /* CopyFiles */ = {
+		05F9560919B5296D00377BEC /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = examples;
 			dstSubfolderSpec = 7;
 			files = (
-				057118D519B30C74009FEDC5 /* cusped-hyp-nor-census.rga in CopyFiles */,
-				057118D619B30C74009FEDC5 /* cusped-hyp-or-census.rga in CopyFiles */,
-				057118D719B30C74009FEDC5 /* hyp-knot-link-census.rga in CopyFiles */,
-				0589FAC918148FFC0064CD57 /* sample-ios.rga in CopyFiles */,
-				05A47FBE1809D11900F86BFD /* closed-hyp-census.rga in CopyFiles */,
-				05A47FBF1809D11900F86BFD /* closed-nor-census.rga in CopyFiles */,
-				05A47FC11809D11900F86BFD /* closed-or-census.rga in CopyFiles */,
+				05F9560A19B5298E00377BEC /* closed-hyp-census.rga in CopyFiles */,
+				05F9560B19B5298E00377BEC /* closed-nor-census.rga in CopyFiles */,
+				05F9560C19B5298E00377BEC /* closed-or-census.rga in CopyFiles */,
+				05F9560D19B5298E00377BEC /* cusped-hyp-nor-census.rga in CopyFiles */,
+				05F9560E19B5298E00377BEC /* cusped-hyp-or-census.rga in CopyFiles */,
+				05F9560F19B5298E00377BEC /* hyp-knot-link-census.rga in CopyFiles */,
+				05F9561019B5298E00377BEC /* sample-ios.rga in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3948,8 +3944,8 @@
 				052FA1241806102F00FAE4DF /* Sources */,
 				052FA1251806102F00FAE4DF /* Frameworks */,
 				052FA1261806102F00FAE4DF /* Resources */,
-				05A47FBD1809D00D00F86BFD /* CopyFiles */,
 				057118CF19B30BAF009FEDC5 /* CopyFiles */,
+				05F9560919B5296D00377BEC /* CopyFiles */,
 			);
 			buildRules = (
 				054BC4C219B4A708005E01A0 /* PBXBuildRule */,
@@ -4072,17 +4068,13 @@
 				054BC4CC19B4A73D005E01A0 /* cusped-hyp-nor-census-9.zsig in Resources */,
 				054BC4CD19B4A73D005E01A0 /* cusped-hyp-or-census-9.zsig in Resources */,
 				054BC4CE19B4A73D005E01A0 /* hyp-knot-link-census.zsig in Resources */,
-				0589FAC818148F700064CD57 /* sample-ios.rga in Resources */,
-				05A73CDC19B2F24A0099C617 /* cusped-hyp-nor-census.rga in Resources */,
 				051E5F7D180C636000C9EF04 /* Settings.bundle in Resources */,
 				052FA1451806103000FAE4DF /* Images.xcassets in Resources */,
 				05B62166180B9D7300CCB90B /* title.png in Resources */,
 				054F7E2B180B96AC0090B1F3 /* welcome.html in Resources */,
 				052FA1341806102F00FAE4DF /* InfoPlist.strings in Resources */,
 				052FA13D1806103000FAE4DF /* Main.storyboard in Resources */,
-				05A73CDD19B2F24A0099C617 /* cusped-hyp-or-census.rga in Resources */,
 				054F7E2D180B99270090B1F3 /* regina.css in Resources */,
-				05A73CDE19B2F24A0099C617 /* hyp-knot-link-census.rga in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
