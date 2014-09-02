@@ -30,14 +30,14 @@
  *                                                                        *
  **************************************************************************/
 
-#import "DefaultViewController.h"
+#import "DefaultPacketViewController.h"
 #import "packet/npacket.h"
 
-@interface DefaultViewController ()
+@interface DefaultPacketViewController ()
 @property (weak, nonatomic) IBOutlet UITextView *detail;
 @end
 
-@implementation DefaultViewController
+@implementation DefaultPacketViewController
 
 - (void)viewDidLoad
 {

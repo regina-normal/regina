@@ -32,6 +32,6 @@
 
 #import "PacketViewController.h"
 
-@interface DefaultViewController : PacketViewController
+@interface DefaultPacketViewController : PacketViewController
 
 @end

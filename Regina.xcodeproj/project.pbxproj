@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		050313C11812DB06007F0CBE /* TextViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050313C01812DB06007F0CBE /* TextViewController.mm */; };
-		050313C41812DB1E007F0CBE /* DefaultViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050313C31812DB1E007F0CBE /* DefaultViewController.mm */; };
+		050313C41812DB1E007F0CBE /* DefaultPacketViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050313C31812DB1E007F0CBE /* DefaultPacketViewController.mm */; };
 		050313C71812DDF0007F0CBE /* PacketViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050313C61812DDF0007F0CBE /* PacketViewController.mm */; };
 		05062FB618169F06008A20A5 /* nboundarycomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05062FB418169F06008A20A5 /* nboundarycomponent.cpp */; };
 		05062FB718169F06008A20A5 /* nboundarycomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05062FB418169F06008A20A5 /* nboundarycomponent.cpp */; };
@@ -1186,8 +1186,8 @@
 /* Begin PBXFileReference section */
 		050313BF1812DB06007F0CBE /* TextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextViewController.h; sourceTree = "<group>"; };
 		050313C01812DB06007F0CBE /* TextViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TextViewController.mm; sourceTree = "<group>"; };
-		050313C21812DB1E007F0CBE /* DefaultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefaultViewController.h; sourceTree = "<group>"; };
-		050313C31812DB1E007F0CBE /* DefaultViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DefaultViewController.mm; sourceTree = "<group>"; };
+		050313C21812DB1E007F0CBE /* DefaultPacketViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefaultPacketViewController.h; sourceTree = "<group>"; };
+		050313C31812DB1E007F0CBE /* DefaultPacketViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DefaultPacketViewController.mm; sourceTree = "<group>"; };
 		050313C51812DDF0007F0CBE /* PacketViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketViewController.h; sourceTree = "<group>"; };
 		050313C61812DDF0007F0CBE /* PacketViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketViewController.mm; sourceTree = "<group>"; };
 		05062FB418169F06008A20A5 /* nboundarycomponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nboundarycomponent.cpp; sourceTree = "<group>"; };
@@ -2238,8 +2238,8 @@
 		050313BE1812DAC0007F0CBE /* packets */ = {
 			isa = PBXGroup;
 			children = (
-				050313C21812DB1E007F0CBE /* DefaultViewController.h */,
-				050313C31812DB1E007F0CBE /* DefaultViewController.mm */,
+				050313C21812DB1E007F0CBE /* DefaultPacketViewController.h */,
+				050313C31812DB1E007F0CBE /* DefaultPacketViewController.mm */,
 				0591011C181364BB000A8D16 /* NewSurfacesController.h */,
 				0591011D181364BB000A8D16 /* NewSurfacesController.mm */,
 				050313BF1812DB06007F0CBE /* TextViewController.h */,
@@ -4384,7 +4384,7 @@
 				052FA19F1806129B00FAE4DF /* nperm4.cpp in Sources */,
 				052FA1F61806129B00FAE4DF /* isomorphic.cpp in Sources */,
 				052FA1951806129B00FAE4DF /* nsfsaltset.cpp in Sources */,
-				050313C41812DB1E007F0CBE /* DefaultViewController.mm in Sources */,
+				050313C41812DB1E007F0CBE /* DefaultPacketViewController.mm in Sources */,
 				052FA1E11806129B00FAE4DF /* nsquad.cpp in Sources */,
 				052FA223180612DD00FAE4DF /* find_cusp.c in Sources */,
 				0589FAC61814862B0064CD57 /* TriangulationSubcontroller.mm in Sources */,

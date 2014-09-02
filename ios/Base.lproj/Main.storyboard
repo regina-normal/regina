@@ -146,10 +146,10 @@
             </objects>
             <point key="canvasLocation" x="1968" y="1463"/>
         </scene>
-        <!--Default View Controller-->
+        <!--Default Packet View Controller-->
         <scene sceneID="nOM-NO-E76">
             <objects>
-                <viewController id="3X8-bo-Elp" customClass="DefaultViewController" sceneMemberID="viewController">
+                <viewController id="3X8-bo-Elp" customClass="DefaultPacketViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="YTS-FT-Z8M"/>
                         <viewControllerLayoutGuide type="bottom" id="Bie-zH-G9d"/>
