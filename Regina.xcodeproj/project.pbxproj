@@ -534,7 +534,7 @@
 		052FA12C1806102F00FAE4DF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA12B1806102F00FAE4DF /* CoreGraphics.framework */; };
 		052FA1341806102F00FAE4DF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 052FA1321806102F00FAE4DF /* InfoPlist.strings */; };
 		052FA1361806103000FAE4DF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1351806102F00FAE4DF /* main.m */; };
-		052FA13A1806103000FAE4DF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1391806103000FAE4DF /* AppDelegate.m */; };
+		052FA13A1806103000FAE4DF /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1391806103000FAE4DF /* AppDelegate.mm */; };
 		052FA13D1806103000FAE4DF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 052FA13B1806103000FAE4DF /* Main.storyboard */; };
 		052FA1401806103000FAE4DF /* MasterViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 052FA13F1806103000FAE4DF /* MasterViewController.mm */; };
 		052FA1451806103000FAE4DF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 052FA1441806103000FAE4DF /* Images.xcassets */; };
@@ -1811,7 +1811,7 @@
 		052FA1351806102F00FAE4DF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		052FA1371806103000FAE4DF /* Regina-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Regina-Prefix.pch"; sourceTree = "<group>"; };
 		052FA1381806103000FAE4DF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		052FA1391806103000FAE4DF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		052FA1391806103000FAE4DF /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
 		052FA13C1806103000FAE4DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		052FA13E1806103000FAE4DF /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
 		052FA13F1806103000FAE4DF /* MasterViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MasterViewController.mm; sourceTree = "<group>"; };
@@ -3186,7 +3186,7 @@
 			children = (
 				052FA13B1806103000FAE4DF /* Main.storyboard */,
 				052FA1381806103000FAE4DF /* AppDelegate.h */,
-				052FA1391806103000FAE4DF /* AppDelegate.m */,
+				052FA1391806103000FAE4DF /* AppDelegate.mm */,
 				059101131812F349000A8D16 /* DetailViewController.h */,
 				059101141812F349000A8D16 /* DetailViewController.mm */,
 				051806D918123057008EBB01 /* EmptySegue.h */,
@@ -4290,7 +4290,7 @@
 				052FA1D41806129B00FAE4DF /* enumerator.cpp in Sources */,
 				05A73C8F19B2EF130099C617 /* nxmlsnappeareader.cpp in Sources */,
 				052FA18E1806129B00FAE4DF /* ngraphloop.cpp in Sources */,
-				052FA13A1806103000FAE4DF /* AppDelegate.m in Sources */,
+				052FA13A1806103000FAE4DF /* AppDelegate.mm in Sources */,
 				052FA1C31806129B00FAE4DF /* npluggedtorusbundle.cpp in Sources */,
 				052FA1CD1806129B00FAE4DF /* nspiralsolidtorus.cpp in Sources */,
 				052FA230180612DD00FAE4DF /* positioned_tet.c in Sources */,

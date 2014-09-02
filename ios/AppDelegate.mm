@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #import "AppDelegate.h"
+#import "file/nglobaldirs.h"
 
 @implementation AppDelegate
 
@@ -40,6 +41,23 @@
     UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
     UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
     splitViewController.delegate = (id)navigationController.topViewController;
+    
+    // Make sure that Regina knows where to find its internal data files.
+    NSBundle* mainBundle = [NSBundle mainBundle];
+    if (! mainBundle) {
+        NSLog(@"Could not access main bundle.");
+    } else {
+        NSString* path = [mainBundle resourcePath];
+        if (! path) {
+            NSLog(@"Could not access resource path.");
+        } else {
+            NSLog(@"Resource path: %@", path);
+            const char* home = [path UTF8String];
+            regina::NGlobalDirs::setDirs(home, "", home);
+        }
+        return false;
+    }
+    
     return YES;
 }
 							
