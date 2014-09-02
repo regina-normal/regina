@@ -71,7 +71,7 @@
             </objects>
             <point key="canvasLocation" x="1090" y="1389"/>
         </scene>
-        <!--Detail View Controller-->
+        <!--Detail View Controller - Regina-->
         <scene sceneID="jal-4E-LI1">
             <objects>
                 <viewController id="ZiU-Qa-ufv" customClass="DetailViewController" sceneMemberID="viewController">
@@ -101,7 +101,7 @@
                         </constraints>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
-                    <navigationItem key="navigationItem" id="PoR-wv-FMe"/>
+                    <navigationItem key="navigationItem" title="Regina" id="PoR-wv-FMe"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5Uj-1t-low" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
