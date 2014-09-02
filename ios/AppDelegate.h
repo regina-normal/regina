@@ -32,6 +32,10 @@
 
 #import <UIKit/UIKit.h>
 
+/**
+ * Manages transitions between different application states
+ * (such as startup, foreground, background, and so on).
+ */
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;

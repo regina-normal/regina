@@ -33,11 +33,25 @@
 #import "AppDelegate.h"
 #import "file/nglobaldirs.h"
 
+// TODO: Support state preservation and restoration.
+// See: https://developer.apple.com/library/ios/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/StatePreservation/StatePreservation.html
+
+@interface AppDelegate() {
+    UIBackgroundTaskIdentifier bgTask;
+}
+@end
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    //
+    // From the iOS App Programming Guide:
+    // - Assume portrait orientation here.  If the device is in landscape
+    //   then the system will rotate the views later, but before displaying them.
+    // - This routine must be fast.  Long tasks should be run on a secondary thread.
+    //
     UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
     UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
     splitViewController.delegate = (id)navigationController.topViewController;
@@ -54,37 +68,43 @@
             const char* home = [path UTF8String];
             regina::NGlobalDirs::setDirs(home, "", home);
         }
-        return false;
+        return NO;
     }
     
     return YES;
 }
 							
-- (void)applicationWillResignActive:(UIApplication *)application
-{
-    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-    // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-}
-
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
-    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-}
+    // We need to save data, and also remember what we were doing so that
+    // we can restore state later.
+    // This routine *must* return quickly; otherwise the app may simply be killed.
+    bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
+        // We are still running and about to run out of time.
+        // If there is a way to gracefully abort the save, here is the
+        // place to do it.
+        [application endBackgroundTask:bgTask];
+        bgTask = UIBackgroundTaskInvalid;
+    }];
 
-- (void)applicationWillEnterForeground:(UIApplication *)application
-{
-    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-}
-
-- (void)applicationDidBecomeActive:(UIApplication *)application
-{
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    // TODO: Save state.
+    
+    // Start the save in a different thread and return immediately.
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // TODO: Save data.
+        [application endBackgroundTask:bgTask];
+        bgTask = UIBackgroundTaskInvalid;
+    });
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    // We need to save data and state here.
+    // This *must* be fast: it has a strict time limit of ~5s, and there is
+    // no way to request more time.
+
+    // TODO: Save state.
+    // TODO: Save data.
 }
 
 @end

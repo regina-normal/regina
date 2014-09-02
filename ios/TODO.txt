@@ -2,6 +2,16 @@ SHORT-TERM:
 
 Open in portrait: Documents link is missing.
 
+- Call UIApplication::idleTimerDisabled when running long tasks (e.g.,
+  enumerating normal surfaces), to stop the screen from locking.
+
+
+UI TESTS:
+
+Return to the app during facetime (status bar is thicker), and make sure
+the UI is still laid out correctly.
+
+
 
 LONG-TERM:
 
