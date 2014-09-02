@@ -40,6 +40,8 @@
 @property (weak, nonatomic) IBOutlet UITabBarItem *gluingTab;
 @property (weak, nonatomic) IBOutlet UITabBarItem *skeletonTab;
 @property (weak, nonatomic) IBOutlet UITabBarItem *algebraTab;
+@property (weak, nonatomic) IBOutlet UITabBarItem *compositionTab;
+@property (weak, nonatomic) IBOutlet UITabBarItem *recognitionTab;
 @property (weak, nonatomic) IBOutlet UITabBarItem *snapPeaTab;
 @end
 
@@ -53,6 +55,9 @@
 
     _gluingTab.selectedImage = [UIImage imageNamed:@"Tab-Gluings-Bold"];
     _skeletonTab.selectedImage = [UIImage imageNamed:@"Tab-Skeleton-Bold"];
+    _snapPeaTab.selectedImage = [UIImage imageNamed:@"Tab-SnapPea-Bold"];
+    _compositionTab.selectedImage = [UIImage imageNamed:@"Tab-Composition-Bold"];
+    _recognitionTab.selectedImage = [UIImage imageNamed:@"Tab-Recognition-Bold"];
     _snapPeaTab.selectedImage = [UIImage imageNamed:@"Tab-SnapPea-Bold"];
     
     _tabs.selectedItem = _gluingTab;

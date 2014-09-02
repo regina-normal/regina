@@ -667,6 +667,8 @@
                                     <tabBarItem title="Gluings" image="Tab-Gluings" id="mna-Z3-7B5"/>
                                     <tabBarItem title="Skeleton" image="Tab-Skeleton" id="Zpk-LL-Ley"/>
                                     <tabBarItem title="Algebra" image="Tab-Algebra" id="GVu-o4-nMw"/>
+                                    <tabBarItem title="Composition" image="Tab-Composition" id="8ko-Hr-8Vc"/>
+                                    <tabBarItem title="Recognition" image="Tab-Recognition" id="N0X-d1-QQh"/>
                                     <tabBarItem title="SnapPea" image="Tab-SnapPea" id="ckS-BX-sXn"/>
                                 </items>
                             </tabBar>
@@ -688,7 +690,9 @@
                     <splitViewDetailSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="algebraTab" destination="GVu-o4-nMw" id="X5y-hU-gST"/>
+                        <outlet property="compositionTab" destination="8ko-Hr-8Vc" id="zBw-cq-bGT"/>
                         <outlet property="gluingTab" destination="mna-Z3-7B5" id="mVi-Wk-xCD"/>
+                        <outlet property="recognitionTab" destination="N0X-d1-QQh" id="jMK-BD-Vhu"/>
                         <outlet property="skeletonTab" destination="Zpk-LL-Ley" id="vxW-cm-pCc"/>
                         <outlet property="snapPeaTab" destination="ckS-BX-sXn" id="u0K-Ln-9Ew"/>
                         <outlet property="tabs" destination="jF5-Gz-ezP" id="csh-PY-oy5"/>
@@ -856,7 +860,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="703" height="768"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <mutableString key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</mutableString>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
@@ -910,7 +914,9 @@
         <image name="ReginaLarge" width="310" height="310"/>
         <image name="Subtree" width="32" height="32"/>
         <image name="Tab-Algebra" width="25" height="25"/>
+        <image name="Tab-Composition" width="25" height="25"/>
         <image name="Tab-Gluings" width="25" height="25"/>
+        <image name="Tab-Recognition" width="25" height="25"/>
         <image name="Tab-Skeleton" width="25" height="25"/>
         <image name="Tab-SnapPea" width="25" height="25"/>
     </resources>
