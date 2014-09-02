@@ -1,3 +1,24 @@
+CLEAN UP:
+
+- MasterViewController
+- WelcomePopupController
+- PacketTreeController
+- Example
+- NewPacketMenu
+- NewPacketController
+
+- DetailViewController
+- PacketViewController
+- PacketSubcontroller
+- SwitchableSubcontroller
+
+- PacketManagerIOS
+- PacketListenerIOS
+
+- EmptySegue
+
+- packets/
+
 SHORT-TERM:
 
 Open in portrait: Documents link is missing.
