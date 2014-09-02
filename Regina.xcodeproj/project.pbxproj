@@ -1051,6 +1051,7 @@
 		05F9560E19B5298E00377BEC /* cusped-hyp-or-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A73CDA19B2F24A0099C617 /* cusped-hyp-or-census.rga */; };
 		05F9560F19B5298E00377BEC /* hyp-knot-link-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A73CDB19B2F24A0099C617 /* hyp-knot-link-census.rga */; };
 		05F9561019B5298E00377BEC /* sample-ios.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0589FAC718148F700064CD57 /* sample-ios.rga */; };
+		05F9561319B53E7900377BEC /* TriRecognitionViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F9561219B53E7900377BEC /* TriRecognitionViewController.mm */; };
 		05F96C131809F59600C99F96 /* PacketTreeController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F96C121809F59600C99F96 /* PacketTreeController.mm */; };
 		05F96C17180A153A00C99F96 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F96C16180A153A00C99F96 /* MBProgressHUD.m */; };
 /* End PBXBuildFile section */
@@ -2161,6 +2162,8 @@
 		05CA99E518078465006161DC /* registryutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = registryutils.h; sourceTree = "<group>"; };
 		05D0A10E1812F0BE005ED097 /* TriangulationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriangulationViewController.h; sourceTree = "<group>"; };
 		05D0A10F1812F0BE005ED097 /* TriangulationViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TriangulationViewController.mm; sourceTree = "<group>"; };
+		05F9561119B53E7900377BEC /* TriRecognitionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriRecognitionViewController.h; sourceTree = "<group>"; };
+		05F9561219B53E7900377BEC /* TriRecognitionViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TriRecognitionViewController.mm; sourceTree = "<group>"; };
 		05F96C111809F59600C99F96 /* PacketTreeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketTreeController.h; sourceTree = "<group>"; };
 		05F96C121809F59600C99F96 /* PacketTreeController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketTreeController.mm; sourceTree = "<group>"; };
 		05F96C15180A153A00C99F96 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = MBProgressHUD/MBProgressHUD.h; sourceTree = "<group>"; };
@@ -2247,6 +2250,8 @@
 				05D0A10F1812F0BE005ED097 /* TriangulationViewController.mm */,
 				0589FAC1181484860064CD57 /* TriGluingsViewController.h */,
 				0589FAC2181484860064CD57 /* TriGluingsViewController.mm */,
+				05F9561119B53E7900377BEC /* TriRecognitionViewController.h */,
+				05F9561219B53E7900377BEC /* TriRecognitionViewController.mm */,
 			);
 			path = packets;
 			sourceTree = "<group>";
@@ -4392,6 +4397,7 @@
 				052FA1891806129B00FAE4DF /* orb.cpp in Sources */,
 				052FA16F1806129B00FAE4DF /* ngluingperms.cpp in Sources */,
 				051806DB18123057008EBB01 /* EmptySegue.m in Sources */,
+				05F9561319B53E7900377BEC /* TriRecognitionViewController.mm in Sources */,
 				052FA1FA1806129B00FAE4DF /* nhomologicaldata.cpp in Sources */,
 				05A73C9B19B2EF5A0099C617 /* abelian_group.c in Sources */,
 				052FA1BC1806129B00FAE4DF /* nlayeredchainpair.cpp in Sources */,
