@@ -51,7 +51,6 @@
         if (! path) {
             NSLog(@"Could not access resource path.");
         } else {
-            NSLog(@"Resource path: %@", path);
             const char* home = [path UTF8String];
             regina::NGlobalDirs::setDirs(home, "", home);
         }
