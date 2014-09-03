@@ -17,7 +17,6 @@ CLEAN UP:
 
 - EmptySegue
 
-- packets/DefaultPacketViewController
 - packets/TextViewController
 - packets/TriangulationViewController
 - packets/TriangulationSubcontroller
@@ -26,9 +25,40 @@ CLEAN UP:
 
 - packets/NewSurfacesController
 
+WRITE VIEWERS:
+
+- 2-D triangulation
+- 3-D triangulation
+- SnapPea triangulation
+- Normal surfaces
+- Angle structures
+- Filters
+- Script
+
+WRITE EDITORS:
+
+- 2-D triangulation
+- 3-D triangulation
+- SnapPea triangulation
+- Filters
+- Text
+
+WRITE CREATORS:
+
+- 2-D triangulation
+- 3-D triangulation
+- SnapPea triangulation
+- Normal surfaces (check what's there now)
+- Angle structures
+- Filter
+- Text
+
 SHORT-TERM:
 
-Open in portrait: Documents link is missing.
+- Remove W-S from the iOS examples file.  It's too slow to load.
+- Cut down the iOS census examples to a faster-to-load size.
+- Census examples in a separate submenu.
+- Open RGA files from email/etc.
 
 - Call UIApplication::idleTimerDisabled when running long tasks (e.g.,
   enumerating normal surfaces), to stop the screen from locking.
@@ -38,8 +68,6 @@ UI TESTS:
 
 Return to the app during facetime (status bar is thicker), and make sure
 the UI is still laid out correctly.
-
-
 
 LONG-TERM:
 
