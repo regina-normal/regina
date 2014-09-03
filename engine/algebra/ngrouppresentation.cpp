@@ -1506,7 +1506,7 @@ std::string NGroupPresentation::identifyCircleBundleOverSurface(bool orientable)
             && (ab.get()->getNumberOfInvariantFactors()==1) ) {
         // ab Z+Z_k
         if ( (ab.get()->getInvariantFactor(0).longValue()==2) &&
-                isAbelian() ) return std::string("RP2 x S1");
+                identifyAbelian() ) return std::string("RP2 x S1");
     }
 
     // remaining non-or total space for S^1 bundles over RP2.
@@ -1533,13 +1533,13 @@ std::string NGroupPresentation::identifyCircleBundleOverSurface(bool orientable)
                 tempstr.flush();
                 if (k==2) tempstr<<"S3 / Q8";
                 else      tempstr<<"S1 x~"<<k<<" RP2";
-                if (isSimpleIsomorphicTo(target)) return tempstr.str();
+                if (identifySimplyIsomorphicTo(target)) return tempstr.str();
             }
         }
     }
 
     // bundles over S1 x S1, and S1 x~ S1
-    if ( isAbelian() && (ab.get()->getRank()==3) &&
+    if ( identifyAbelian() && (ab.get()->getRank()==3) &&
             (ab.get()->getNumberOfInvariantFactors()==0) )
         return std::string("S1 x S1 x S1");
 
