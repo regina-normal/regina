@@ -30,55 +30,54 @@
  *                                                                        *
  **************************************************************************/
 
-#import "PacketManagerIOS.h"
-#import "packet/npacket.h"
+#import <Foundation/Foundation.h>
 
-@implementation PacketManagerIOS
+/**
+ * Represents a temporary file.  The filename is guaranteed to be unique
+ * for the life of this process (but no longer).
+ *
+ * When this TempFile object is initialised, the filename and URL will be
+ * initialised but the file itself will not be created.
+ *
+ * When this TempFile object is destroyed, the temporary file (if it exists
+ * on the filesystem) will be deleted.
+ */
+@interface TempFile : NSObject
 
-+ (UIImage*)iconFor:(regina::NPacket *)p {
-    switch (p->getPacketType()) {
-        case regina::PACKET_ANGLESTRUCTURELIST:
-            return [UIImage imageNamed:@"Angles"];
-            break;
-        case regina::PACKET_CONTAINER:
-            return [UIImage imageNamed:@"Container"];
-            break;
-        case regina::PACKET_DIM2TRIANGULATION:
-            return [UIImage imageNamed:@"Dim2Triangulation"];
-            break;
-        case regina::PACKET_NORMALSURFACELIST:
-            return [UIImage imageNamed:@"Surfaces"];
-            break;
-        case regina::PACKET_PDF:
-            return [UIImage imageNamed:@"PDF"];
-            break;
-        case regina::PACKET_SCRIPT:
-            return [UIImage imageNamed:@"Script"];
-            break;
-        case regina::PACKET_SNAPPEATRIANGULATION:
-            return [UIImage imageNamed:@"SnapPea"];
-            break;
-        case regina::PACKET_SURFACEFILTER:
-            return [UIImage imageNamed:@"Filter"];
-            break;
-        case regina::PACKET_TEXT:
-            return [UIImage imageNamed:@"Text"];
-            break;
-        case regina::PACKET_TRIANGULATION:
-            return [UIImage imageNamed:@"Triangulation"];
-            break;
-        default:
-            return nil;
-    }
-}
+@property (strong, nonatomic, readonly) NSString *filename;
+@property (strong, nonatomic, readonly) NSURL *url;
 
-+ (NSString *)segueFor:(regina::NPacket *)p {
-    switch (p->getPacketType()) {
-        case regina::PACKET_PDF: return @"embedPDF";
-        case regina::PACKET_TEXT: return @"embedText";
-        case regina::PACKET_TRIANGULATION: return @"embedTriangulation";
-        default: return @"embedDefault";
-    }
-}
+/**
+ * Initialises this to a new temporary filename, which is unique for the life of this process.
+ *
+ * @param ext The extension of the new filename, which should not begin with a period.
+ * An example might be @"pdf".
+ */
+- (id)initWithExtension:(NSString*)ext;
+/**
+ * Creates a new temporary filename, which is unique for the life of this process.
+ *
+ * @param ext The extension of the new filename, which should not begin with a period.
+ * An example might be @"pdf".
+ */
++ (id)tempFileWithExtension:(NSString*)ext;
+
+/**
+ * Deletes this file from the filesystem, if it exists.
+ *
+ * There is typically no need to call removeFile, unless you urgently need the space.
+ * This is because removeFile will be called automatically when this TempFile is
+ * deallocated.  As an exception, it will \e not be called upon deallocation if it
+ * has been called before and it returned \c true.
+ *
+ * You may call this removeFile multiple times (though of course this only makes sense if you
+ * have created the file multiple times).
+ *
+ * @return \c true if and only if the file was removed from the filesystem, or
+ * \c false if an error occured (e.g., if the file was never created in the first place).
+ */
+- (BOOL)removeFile;
+
+- (void)dealloc;
 
 @end

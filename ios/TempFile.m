@@ -30,55 +30,44 @@
  *                                                                        *
  **************************************************************************/
 
-#import "PacketManagerIOS.h"
-#import "packet/npacket.h"
+#import "TempFile.h"
 
-@implementation PacketManagerIOS
+@interface TempFile () {
+    BOOL removed;
+}
+@end
 
-+ (UIImage*)iconFor:(regina::NPacket *)p {
-    switch (p->getPacketType()) {
-        case regina::PACKET_ANGLESTRUCTURELIST:
-            return [UIImage imageNamed:@"Angles"];
-            break;
-        case regina::PACKET_CONTAINER:
-            return [UIImage imageNamed:@"Container"];
-            break;
-        case regina::PACKET_DIM2TRIANGULATION:
-            return [UIImage imageNamed:@"Dim2Triangulation"];
-            break;
-        case regina::PACKET_NORMALSURFACELIST:
-            return [UIImage imageNamed:@"Surfaces"];
-            break;
-        case regina::PACKET_PDF:
-            return [UIImage imageNamed:@"PDF"];
-            break;
-        case regina::PACKET_SCRIPT:
-            return [UIImage imageNamed:@"Script"];
-            break;
-        case regina::PACKET_SNAPPEATRIANGULATION:
-            return [UIImage imageNamed:@"SnapPea"];
-            break;
-        case regina::PACKET_SURFACEFILTER:
-            return [UIImage imageNamed:@"Filter"];
-            break;
-        case regina::PACKET_TEXT:
-            return [UIImage imageNamed:@"Text"];
-            break;
-        case regina::PACKET_TRIANGULATION:
-            return [UIImage imageNamed:@"Triangulation"];
-            break;
-        default:
-            return nil;
+@implementation TempFile
+
+- (id)initWithExtension:(NSString *)ext {
+    self = [super init];
+    if (self) {
+        NSString* guid = [[NSProcessInfo processInfo] globallyUniqueString];
+        NSString* basename = [guid stringByAppendingPathExtension:ext];
+        _filename = [NSTemporaryDirectory() stringByAppendingPathComponent:basename];
+        _url = [NSURL fileURLWithPath:_filename isDirectory:NO];
+        removed = NO;
     }
+    return self;
 }
 
-+ (NSString *)segueFor:(regina::NPacket *)p {
-    switch (p->getPacketType()) {
-        case regina::PACKET_PDF: return @"embedPDF";
-        case regina::PACKET_TEXT: return @"embedText";
-        case regina::PACKET_TRIANGULATION: return @"embedTriangulation";
-        default: return @"embedDefault";
-    }
++ (id)tempFileWithExtension:(NSString *)ext {
+    return [[TempFile alloc] initWithExtension:ext];
+}
+
+- (BOOL)removeFile {
+    BOOL result = [[NSFileManager defaultManager] removeItemAtPath:_filename error:nil];
+    if (! result)
+        NSLog(@"Could not remove temporary file: %@", _filename);
+    else
+        removed = YES;
+    return result;
+}
+
+- (void)dealloc {
+    // Note: ARC forbids us from calling [super dealloc].
+    if (! removed)
+        [self removeFile];
 }
 
 @end
