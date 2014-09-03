@@ -1817,7 +1817,7 @@ NGroupPresentation NSimplicialAutGrp::groupPresentation() const
         fullMap.begin(), fullMap.end(), composite );
     #ifdef DEBUG
     if ( CI == fullMap.end() ) 
-      { std::cout<<"NSimplicialGroup::groupPresentation()"<<"
+      { std::cout<<"NSimplicialGroup::groupPresentation()"<<
                    " ERROR product not found. "<<std::endl; exit(1); }
     #endif
     relij->addTermLast( CI - fullMap.begin(), -1 ); 
