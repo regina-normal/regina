@@ -10,6 +10,8 @@
 		050313C11812DB06007F0CBE /* TextViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050313C01812DB06007F0CBE /* TextViewController.mm */; };
 		050313C41812DB1E007F0CBE /* DefaultPacketViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050313C31812DB1E007F0CBE /* DefaultPacketViewController.mm */; };
 		050313C71812DDF0007F0CBE /* PacketViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050313C61812DDF0007F0CBE /* PacketViewController.mm */; };
+		0503DCD419B7D8AA0085F3CC /* regina-doc-64.png in Resources */ = {isa = PBXBuildFile; fileRef = 0503DCD219B7D8950085F3CC /* regina-doc-64.png */; };
+		0503DCD519B7D8AA0085F3CC /* regina-doc-320.png in Resources */ = {isa = PBXBuildFile; fileRef = 0503DCD319B7D8950085F3CC /* regina-doc-320.png */; };
 		05062FB618169F06008A20A5 /* nboundarycomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05062FB418169F06008A20A5 /* nboundarycomponent.cpp */; };
 		05062FB718169F06008A20A5 /* nboundarycomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05062FB418169F06008A20A5 /* nboundarycomponent.cpp */; };
 		05062FB818169F06008A20A5 /* ncomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05062FB518169F06008A20A5 /* ncomponent.cpp */; };
@@ -1192,6 +1194,8 @@
 		050313C31812DB1E007F0CBE /* DefaultPacketViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DefaultPacketViewController.mm; sourceTree = "<group>"; };
 		050313C51812DDF0007F0CBE /* PacketViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketViewController.h; sourceTree = "<group>"; };
 		050313C61812DDF0007F0CBE /* PacketViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketViewController.mm; sourceTree = "<group>"; };
+		0503DCD219B7D8950085F3CC /* regina-doc-64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "regina-doc-64.png"; sourceTree = "<group>"; };
+		0503DCD319B7D8950085F3CC /* regina-doc-320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "regina-doc-320.png"; sourceTree = "<group>"; };
 		05062FB418169F06008A20A5 /* nboundarycomponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nboundarycomponent.cpp; sourceTree = "<group>"; };
 		05062FB518169F06008A20A5 /* ncomponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ncomponent.cpp; sourceTree = "<group>"; };
 		0513753B1809B8D2002E525B /* coordregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "coordregistry-impl.h"; sourceTree = "<group>"; };
@@ -3236,6 +3240,8 @@
 			isa = PBXGroup;
 			children = (
 				052FA1311806102F00FAE4DF /* Regina-Info.plist */,
+				0503DCD219B7D8950085F3CC /* regina-doc-64.png */,
+				0503DCD319B7D8950085F3CC /* regina-doc-320.png */,
 				052FA1321806102F00FAE4DF /* InfoPlist.strings */,
 				052FA1351806102F00FAE4DF /* main.m */,
 				052FA1371806103000FAE4DF /* Regina-Prefix.pch */,
@@ -4074,6 +4080,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0503DCD419B7D8AA0085F3CC /* regina-doc-64.png in Resources */,
+				0503DCD519B7D8AA0085F3CC /* regina-doc-320.png in Resources */,
 				054BC4C919B4A73D005E01A0 /* closed-hyp-census-full.zsig in Resources */,
 				054BC4CA19B4A73D005E01A0 /* closed-nor-census-11.zsig in Resources */,
 				054BC4CB19B4A73D005E01A0 /* closed-or-census-11.zsig in Resources */,

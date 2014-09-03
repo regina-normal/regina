@@ -6,6 +6,26 @@
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
 	<string>${PRODUCT_NAME}</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeIconFiles</key>
+			<array>
+				<string>regina-doc-320</string>
+				<string>regina-doc-64</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>Regina Data File</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>net.sourceforge.regina.xmldata</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIdentifier</key>
@@ -52,6 +72,30 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Regina Data File</string>
+			<key>UTTypeIdentifier</key>
+			<string>net.sourceforge.regina.xmldata</string>
+			<key>UTTypeSize320IconFile</key>
+			<string>regina-doc-320</string>
+			<key>UTTypeSize64IconFile</key>
+			<string>regina-doc-64</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<string>rga</string>
+				<key>public.mimetype</key>
+				<string>application/x-regina</string>
+			</dict>
+		</dict>
 	</array>
 </dict>
 </plist>
