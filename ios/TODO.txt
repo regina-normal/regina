@@ -15,8 +15,6 @@ CLEAN UP:
 - PacketManagerIOS
 - PacketListenerIOS
 
-- EmptySegue
-
 - packets/TextViewController
 - packets/TriangulationViewController
 - packets/TriangulationSubcontroller
