@@ -121,8 +121,8 @@ void NHomGroupPresentation::writeTextLong(std::ostream& out) const
     out<<"map[";
     for (unsigned long i=0; i<domain_->getNumberOfGenerators(); i++) {
         if (i!=0) out<<", ";
-        if (domain_->getNumberOfGenerators()<=26) out<<char('a' + i)<<" --> ";
-        else  out<<"g"<<i<<" --> ";
+        if (domain_->getNumberOfGenerators()<=26) out<<char('a' + i)<<" \u21A6 ";
+        else  out<<"g"<<i<<" \u21A6 ";
         if (range_->getNumberOfGenerators()<=26) map_[i]->writeText(out, true);
         else map_[i]->writeText(out, false);
     }
