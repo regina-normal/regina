@@ -368,7 +368,8 @@
                                                [NSIndexPath indexPathForRow:oldSubtreeRow inSection:0]]
                              withRowAnimation:UITableViewRowAnimationTop];
     }
-    [self viewPacket:r.packet];
+    if (p->getPacketType() != regina::NContainer::packetType)
+        [self viewPacket:r.packet];
 }
 
 #pragma mark Segues
