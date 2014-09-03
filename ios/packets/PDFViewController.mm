@@ -85,8 +85,10 @@
         self.detail.text = @"Empty PDF document";
         self.size.text = @"";
         
-        self.shareButton.enabled = NO;
         self.previewButton.enabled = NO;
+        
+        // We cannot disable the share button here, since it will not have been created yet.
+        // We disable the share button later, at the point of its creation.
     } else {
         self.detail.text = @"PDF document";
         
@@ -110,6 +112,9 @@
                                         initWithBarButtonSystemItem:UIBarButtonSystemItemAction
                                         target:self
                                         action:@selector(sharePDF:)];
+        if (static_cast<regina::NPDF*>(self.packet)->isNull())
+            self.shareButton.enabled = NO;
+        
         self.detailViewController.navigationItem.rightBarButtonItem = self.shareButton;
     }
 }
