@@ -40,4 +40,10 @@ namespace regina {
 
 @property (assign, nonatomic) regina::NPacket* packet;
 
+/**
+ * Returns the controller for the detail view within which
+ * this packet view has been embedded.
+ */
+- (UIViewController*)detailViewController;
+
 @end
