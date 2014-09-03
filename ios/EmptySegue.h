@@ -32,6 +32,19 @@
 
 #import <UIKit/UIKit.h>
 
+/**
+ * A custom segue class used on the storyboard to identify relationships
+ * between a SwitchableSubcontroller and its various different sub-views that
+ * can be switched in or out.
+ *
+ * A SwitchableSubcontroller should have a segue on the storyboard
+ * to each of its possible sub-views.  Each such segue should use this
+ * custom class EmptySegue, but should have a unique string identifier.
+ * You can then call SwitchableSubcontroller::performSegueWithIdentifier:
+ * to switch in a particular sub-view.
+ *
+ * See SwitchableSubcontroller for further details.
+ */
 @interface EmptySegue : UIStoryboardSegue
 
 @end

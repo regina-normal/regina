@@ -35,7 +35,8 @@
 @implementation EmptySegue
 
 - (void)perform {
-    // This page deliberately left blank.
+    // All the work for switching sub-views in or out
+    // is handled by SwitchableSubcontroller::prepareForSegue.
 }
 
 @end
