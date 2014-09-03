@@ -17,7 +17,14 @@ CLEAN UP:
 
 - EmptySegue
 
-- packets/
+- packets/DefaultPacketViewController
+- packets/TextViewController
+- packets/TriangulationViewController
+- packets/TriangulationSubcontroller
+- packets/TriGluingsViewController
+- packets/TriRecognitionViewController
+
+- packets/NewSurfacesController
 
 SHORT-TERM:
 
