@@ -32,6 +32,12 @@
 
 #import "PacketViewController.h"
 
+/**
+ * The controller for a catch-all packet viewer.
+ *
+ * This is designed to view packet types that the iOS GUI does not yet
+ * know how to handle.  It simply displays the text output from NPacket::detail().
+ */
 @interface DefaultPacketViewController : PacketViewController
 
 @end

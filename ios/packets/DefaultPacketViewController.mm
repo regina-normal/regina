@@ -42,14 +42,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
-    _detail.text = [NSString stringWithUTF8String:self.packet->detail().c_str()];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    
+    // Load the contents of the packet.
+    self.detail.text = [NSString stringWithUTF8String:self.packet->detail().c_str()];
 }
 
 @end
