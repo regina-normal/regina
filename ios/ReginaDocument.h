@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #import <UIKit/UIKit.h>
+#import "Example.h"
 
 // TODO: Viewing and editing a document
 // TODO: Creating a new document
@@ -45,14 +46,30 @@ namespace regina {
     class NPacket;
 }
 
+/**
+ * Regina's main document class.
+ */
 @interface ReginaDocument : UIDocument
 
-@property (assign, nonatomic, readonly) regina::NPacket* tree;
+/**
+ * Is this one of the (read-only) example files shipped with Regina?
+ */
 @property (assign, nonatomic, readonly) BOOL example;
 
-- (id)initWithExampleFile:(NSString*)f desc:(NSString*)d;
-+ (id)documentWithExampleFile:(NSString*)f desc:(NSString*)d;
-+ (ReginaDocument*)intro;
-+ (NSArray*)examples;
+/**
+ * Stores the full packet tree whilst the file is open.
+ *
+ * This is \c nil until the file has been successfully read, and will be
+ * \c nil again after the document has been successfully closed.
+ *
+ * Be warned that opening and closing operations are asynchronous.  So,
+ * for instance, the \a tree property may still be \c nil for a little
+ * time after openWithCompletionHandler returns, and may still be non-null
+ * for a little time after closeWithCompletionHandler returns.
+ */
+@property (assign, nonatomic, readonly) regina::NPacket* tree;
+
+- (id)initWithExample:(Example*)e;
++ (id)documentWithExample:(Example*)e;
 
 @end

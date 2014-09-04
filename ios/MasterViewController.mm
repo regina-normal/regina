@@ -93,7 +93,7 @@
 - (ReginaDocument *)documentForIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0)
-        return (indexPath.row == 0 ? [ReginaDocument intro] : nil);
+        return (indexPath.row == 0 ? [ReginaDocument documentWithExample:[Example intro]] : nil);
     else
         // TODO
         return nil;
@@ -129,7 +129,7 @@
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
             cell = [tableView dequeueReusableCellWithIdentifier:@"Example" forIndexPath:indexPath];
-            cell.textLabel.text = [ReginaDocument intro].localizedName;
+            cell.textLabel.text = [Example intro].desc;
         } else {
             cell = [tableView dequeueReusableCellWithIdentifier:@"Census" forIndexPath:indexPath];
         }

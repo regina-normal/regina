@@ -30,55 +30,53 @@
  *                                                                        *
  **************************************************************************/
 
-#import "CensusListController.h"
-#import "Example.h"
+#import <Foundation/Foundation.h>
 
-@interface CensusListController () {
-    NSArray *_census;
-}
-@end
+/**
+ * Stores the details for one of Regina's ready-made (and read-only)
+ * example data files.
+ */
+@interface Example : NSObject
 
-@implementation CensusListController
+/**
+ * The filename, relative to Regina's internal examples directory.
+ * Typically this filename will not contain any directory component.
+ */
+@property (strong, nonatomic, readonly) NSString* file;
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
+/**
+ * A human-readable description of this example file.
+ */
+@property (strong, nonatomic, readonly) NSString* desc;
 
-    _census = [Example census];
-}
+/**
+ * An initialiser that sets the \a file and \a desc properties
+ * to the given values.
+ */
+- (id)initWithFile:(NSString*)f desc:(NSString*)d;
 
-- (ReginaDocument *)documentForIndexPath:(NSIndexPath *)indexPath
-{
-    return [ReginaDocument documentWithExample:_census[indexPath.row]];
-}
+/**
+ * A constructor that sets the \a file and \a desc properties
+ * to the given values.
+ */
++ (id)exampleWithFile:(NSString*)f desc:(NSString*)d;
 
-#pragma mark - Table View
+/**
+ * The introductory examples file.
+ *
+ * This returns a reference to a global Example object
+ * (thus multiple calls to this method will return the same pointer).
+ */
++ (Example*)intro;
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return [_census count];
-}
-
-- (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-    return @"Census Examples";
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Example" forIndexPath:indexPath];
-    cell.textLabel.text = [_census[indexPath.row] desc];
-    return cell;
-}
-
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return NO;
-}
+/**
+ * The set of all available census data files.
+ *
+ * This returns a reference to a global array of Example objects
+ * (in particular, multiple calls to this method will return a pointer
+ * to the same array).
+ */
++ (NSArray*)census;
 
 @end
+

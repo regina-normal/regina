@@ -36,20 +36,6 @@
 
 // TODO: Perhaps override the hooks disableEditing / enableEditing, to make the UI read-only?
 
-static ReginaDocument* _intro = [ReginaDocument documentWithExampleFile:@"sample-ios.rga" desc:@"Sample document"];
-
-/**
- * The internal global array of all available examples.
- */
-static NSArray* _examples = [NSArray arrayWithObjects:
-                             [ReginaDocument documentWithExampleFile:@"closed-or-census.rga" desc:@"Closed census (orientable)"],
-                             [ReginaDocument documentWithExampleFile:@"closed-nor-census.rga" desc:@"Closed census (non-orientable)"],
-                             [ReginaDocument documentWithExampleFile:@"cusped-hyp-or-census.rga" desc:@"Cusped hyperbolic census (orientable)"],
-                             [ReginaDocument documentWithExampleFile:@"cusped-hyp-nor-census.rga" desc:@"Cusped hyperbolic census (non-orientable)"],
-                             [ReginaDocument documentWithExampleFile:@"closed-hyp-census.rga" desc:@"Hodgson-Weeks closed hyperbolic census"],
-                             [ReginaDocument documentWithExampleFile:@"hyp-knot-link-census.rga" desc:@"Hyperbolic knot / link complements"],
-                             nil];
-
 @interface ReginaDocument () {
     NSString* description;
 }
@@ -57,20 +43,25 @@ static NSArray* _examples = [NSArray arrayWithObjects:
 
 @implementation ReginaDocument
 
-- (id)initWithExampleFile:(NSString *)f desc:(NSString *)d
+- (id)initWithExample:(Example *)e
 {
-    NSString* path = [[NSBundle mainBundle] pathForResource:f ofType:nil inDirectory:@"examples"];
+    NSString* path = [[NSBundle mainBundle] pathForResource:e.file ofType:nil inDirectory:@"examples"];
     if (! path) {
-        NSLog(@"Could not find example resource: %@", f);
+        NSLog(@"Could not find example resource: %@", e.file);
         return nil;
     }
     
     self = [super initWithFileURL:[NSURL fileURLWithPath:path]];
     if (self) {
-        description = d;
+        description = e.desc;
         _example = YES;
     }
     return self;
+}
+
++ (id)documentWithExample:(Example *)e
+{
+    return [[ReginaDocument alloc] initWithExample:e];
 }
 
 - (NSString *)localizedName {
@@ -78,11 +69,6 @@ static NSArray* _examples = [NSArray arrayWithObjects:
         return description;
     else
         return [super localizedName];
-}
-
-+ (id)documentWithExampleFile:(NSString *)f desc:(NSString *)d
-{
-    return [[ReginaDocument alloc] initWithExampleFile:f desc:d];
 }
 
 - (BOOL)loadFromContents:(id)contents ofType:(NSString *)typeName error:(NSError *__autoreleasing *)outError
@@ -106,14 +92,6 @@ static NSArray* _examples = [NSArray arrayWithObjects:
     return data;
      */
     return nil;
-}
-
-+ (ReginaDocument*)intro {
-    return _intro;
-}
-
-+ (NSArray*)examples {
-    return _examples;
 }
 
 @end

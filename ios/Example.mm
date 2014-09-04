@@ -30,55 +30,44 @@
  *                                                                        *
  **************************************************************************/
 
-#import "CensusListController.h"
 #import "Example.h"
 
-@interface CensusListController () {
-    NSArray *_census;
-}
-@end
+static Example* _intro = [Example exampleWithFile:@"sample-ios.rga" desc:@"Introductory examples"];
 
-@implementation CensusListController
+static NSArray* _census = [NSArray arrayWithObjects:
+                           [Example exampleWithFile:@"closed-or-census.rga" desc:@"Closed census (orientable)"],
+                           [Example exampleWithFile:@"closed-nor-census.rga" desc:@"Closed census (non-orientable)"],
+                           [Example exampleWithFile:@"cusped-hyp-or-census.rga" desc:@"Cusped hyperbolic census (orientable)"],
+                           [Example exampleWithFile:@"cusped-hyp-nor-census.rga" desc:@"Cusped hyperbolic census (non-orientable)"],
+                           [Example exampleWithFile:@"closed-hyp-census.rga" desc:@"Hodgson-Weeks closed hyperbolic census"],
+                           [Example exampleWithFile:@"hyp-knot-link-census.rga" desc:@"Hyperbolic knot / link complements"],
+                           nil];
 
-- (void)viewDidLoad
+@implementation Example
+
+- (id)initWithFile:(NSString*)f desc:(NSString*)d
 {
-    [super viewDidLoad];
-
-    _census = [Example census];
-}
-
-- (ReginaDocument *)documentForIndexPath:(NSIndexPath *)indexPath
-{
-    return [ReginaDocument documentWithExample:_census[indexPath.row]];
-}
-
-#pragma mark - Table View
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return 1;
+    self = [super init];
+    if (self) {
+        _file = f;
+        _desc = d;
+    }
+    return self;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
++ (id)exampleWithFile:(NSString *)f desc:(NSString *)d
 {
-    return [_census count];
+    return [[Example alloc] initWithFile:f desc:d];
 }
 
-- (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
++ (Example*)intro
 {
-    return @"Census Examples";
+    return _intro;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
++ (NSArray*)census
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Example" forIndexPath:indexPath];
-    cell.textLabel.text = [_census[indexPath.row] desc];
-    return cell;
-}
-
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return NO;
+    return _census;
 }
 
 @end

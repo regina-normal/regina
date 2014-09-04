@@ -964,6 +964,7 @@
 		057118D219B30BC0009FEDC5 /* snappea-census-sec6o.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B519B308F8009FEDC5 /* snappea-census-sec6o.dat */; };
 		057118D319B30BC0009FEDC5 /* snappea-census-sec7n.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B619B308F8009FEDC5 /* snappea-census-sec7n.dat */; };
 		057118D419B30BC0009FEDC5 /* snappea-census-sec7o.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B719B308F8009FEDC5 /* snappea-census-sec7o.dat */; };
+		057F317419B8935800D30520 /* Example.mm in Sources */ = {isa = PBXBuildFile; fileRef = 057F317319B8935800D30520 /* Example.mm */; };
 		057FA752180615F6008E25F6 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA74F180615F5008E25F6 /* libiconv.dylib */; };
 		057FA753180615F6008E25F6 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA750180615F5008E25F6 /* libxml2.dylib */; };
 		057FA754180615F6008E25F6 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA751180615F5008E25F6 /* libz.dylib */; };
@@ -2067,6 +2068,8 @@
 		057118B719B308F8009FEDC5 /* snappea-census-sec7o.dat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "snappea-census-sec7o.dat"; sourceTree = "<group>"; };
 		057118B819B308F8009FEDC5 /* verify-snappea-census-data.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = "verify-snappea-census-data.py"; sourceTree = "<group>"; };
 		0575E6591805F36D009E3FC4 /* libregina-engine.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libregina-engine.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		057F317219B8935800D30520 /* Example.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Example.h; sourceTree = "<group>"; };
+		057F317319B8935800D30520 /* Example.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Example.mm; sourceTree = "<group>"; };
 		057FA74F180615F5008E25F6 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/usr/lib/libiconv.dylib; sourceTree = DEVELOPER_DIR; };
 		057FA750180615F5008E25F6 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/usr/lib/libxml2.dylib; sourceTree = DEVELOPER_DIR; };
 		057FA751180615F5008E25F6 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/usr/lib/libz.dylib; sourceTree = DEVELOPER_DIR; };
@@ -3213,6 +3216,8 @@
 				0503DCD719B7E3AD0085F3CC /* DocumentListController.mm */,
 				051806D918123057008EBB01 /* EmptySegue.h */,
 				051806DA18123057008EBB01 /* EmptySegue.m */,
+				057F317219B8935800D30520 /* Example.h */,
+				057F317319B8935800D30520 /* Example.mm */,
 				052FA13E1806103000FAE4DF /* MasterViewController.h */,
 				052FA13F1806103000FAE4DF /* MasterViewController.mm */,
 				0591011F18141996000A8D16 /* NewPacketController.h */,
@@ -4366,6 +4371,7 @@
 				052FA220180612DD00FAE4DF /* Dehn_coefficients.c in Sources */,
 				052FA1AC1806129B00FAE4DF /* nxmlpacketreader.cpp in Sources */,
 				052FA18C1806129B00FAE4DF /* snappea.cpp in Sources */,
+				057F317419B8935800D30520 /* Example.mm in Sources */,
 				052FA1991806129B00FAE4DF /* order.cpp in Sources */,
 				055B7316181D7CF800449D14 /* dim2vertex.cpp in Sources */,
 				052FA1E71806129B00FAE4DF /* nxmlfilterreaders.cpp in Sources */,
