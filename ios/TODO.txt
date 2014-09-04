@@ -1,9 +1,9 @@
 CLEAN UP:
 
-- MasterViewController
+- MasterViewController / DocumentListController / CensusListController
 - WelcomePopupController
 - PacketTreeController
-- Example
+- ReginaDocument
 - NewPacketMenu
 - NewPacketController
 

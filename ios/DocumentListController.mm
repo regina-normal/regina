@@ -66,12 +66,12 @@
         [hud setLabelText:@"Loading"];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             // The real work: load the file.
-            Example* e = [Example all][indexPath.row];
+            ReginaDocument* e = [ReginaDocument examples][indexPath.row];
             [[segue destinationViewController] openExample:e];
 
             dispatch_async(dispatch_get_main_queue(), ^{
                 PacketTreeController* c = [segue destinationViewController];
-                [c setTitle:e.desc];
+                [c setTitle:e.localizedName];
                 [c refreshPackets];
                 [MBProgressHUD hideHUDForView:rootView animated:YES];
             });

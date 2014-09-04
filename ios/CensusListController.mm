@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #import "CensusListController.h"
-#import "Example.h"
+#import "ReginaDocument.h"
 
 @interface CensusListController () {
     NSArray *_examples;
@@ -44,7 +44,7 @@
 {
     [super viewDidLoad];
 
-    _examples = [Example all];
+    _examples = [ReginaDocument examples];
 }
 
 #pragma mark - Table View
@@ -67,7 +67,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Example" forIndexPath:indexPath];
-    cell.textLabel.text = [_examples[indexPath.row] desc];
+    cell.textLabel.text = [_examples[indexPath.row] localizedName];
     return cell;
 }
 

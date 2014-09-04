@@ -120,7 +120,6 @@
     __weak UIPopoverController* _newPacketPopover;
 }
 
-- (bool)loadTreeResource:(NSString*)filename;
 - (void)fill;
 
 @end
@@ -160,8 +159,8 @@
     [super viewDidDisappear:animated];
 }
 
-- (void)openExample:(Example*)e {
-    [self loadTreeResource:e.file];
+- (void)openExample:(ReginaDocument*)e {
+    [self loadTreeResource:e.fileURL];
     // TODO: Trap errors.
 
     _listener = [[PacketTreeListener alloc] initWithTree:self];
@@ -175,26 +174,14 @@
     _listener = [[PacketTreeListener alloc] initWithTree:self];
 }
 
-- (bool)loadTreeResource:(NSString*)filename {
-    NSBundle* mainBundle = [NSBundle mainBundle];
-    if (! mainBundle) {
-        NSLog(@"Could not access main bundle.");
-        return false;
-    }
-    
-    NSString* path = [mainBundle pathForResource:filename ofType:nil inDirectory:@"examples"];
-    if (! path) {
-        NSLog(@"Could not find resource: %@", filename);
-        return false;
-    }
-    
-    _tree = regina::readXMLFile([path UTF8String]);
+- (bool)loadTreeResource:(NSURL*)url {
+    _tree = regina::readXMLFile([url fileSystemRepresentation]);
     if (! _tree) {
-        NSLog(@"Failed to read data file: %@", path);
+        NSLog(@"Failed to read data file: %@", url);
         return false;
     }
 
-    NSLog(@"Loaded file: %@", filename);
+    NSLog(@"Loaded file: %@", url);
     _node = _tree;
     return true;
 }

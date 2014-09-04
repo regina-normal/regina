@@ -30,39 +30,28 @@
  *                                                                        *
  **************************************************************************/
 
-#import "Example.h"
+#import <UIKit/UIKit.h>
 
-// The internal global array of all available examples.
-// This will be created the first time it is required.
-static NSArray* _all = nil;
+// TODO: Viewing and editing a document
+// TODO: Creating a new document
+// TODO: Selecting a document from a list of documents owned by the application
+// TODO: Opening, closing, renaming, and deleting a selected document
+// TODO: Putting a selected document in iCloud storage (and removing a selected document from iCloud storage)
+// TODO: Indicating error conditions, including document-version conflicts
 
-@implementation Example
+// TODO: iCloud: all documents, or none. - See https://developer.apple.com/Library/ios/documentation/DataManagement/Conceptual/DocumentBasedAppPGiOS/ManageDocumentLifeCycle/ManageDocumentLifeCycle.html
 
-- (id)initWithFile:(NSString*)f desc:(NSString*)d {
-    self = [super init];
-    if (self) {
-        _file = f;
-        _desc = d;
-    }
-    return self;
+namespace regina {
+    class NPacket;
 }
 
-+ (id)exampleWithFile:(NSString *)f desc:(NSString *)d {
-    return [[Example alloc] initWithFile:f desc:d];
-}
+@interface ReginaDocument : UIDocument
 
-+ (NSArray*)all {
-    if (! _all)
-        _all = [NSArray arrayWithObjects:
-            [Example exampleWithFile:@"sample-ios.rga" desc:@"Introductory examples"],
-            [Example exampleWithFile:@"closed-or-census.rga" desc:@"Closed census (orientable)"],
-            [Example exampleWithFile:@"closed-nor-census.rga" desc:@"Closed census (non-orientable)"],
-            [Example exampleWithFile:@"cusped-hyp-or-census.rga" desc:@"Cusped hyperbolic census (orientable)"],
-            [Example exampleWithFile:@"cusped-hyp-nor-census.rga" desc:@"Cusped hyperbolic census (non-orientable)"],
-            [Example exampleWithFile:@"closed-hyp-census.rga" desc:@"Hodgson-Weeks closed hyperbolic census"],
-            [Example exampleWithFile:@"hyp-knot-link-census.rga" desc:@"Hyperbolic knot / link complements"],
-            nil];
-    return _all;
-}
+@property (assign, nonatomic, readonly) regina::NPacket* tree;
+@property (assign, nonatomic, readonly) BOOL example;
+
+- (id)initWithExampleFile:(NSString*)f desc:(NSString*)d;
++ (id)documentWithExampleFile:(NSString*)f desc:(NSString*)d;
++ (NSArray*)examples;
 
 @end

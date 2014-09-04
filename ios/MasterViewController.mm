@@ -30,7 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-#import "Example.h"
 #import "MasterViewController.h"
 
 // TODO: Support user documents.

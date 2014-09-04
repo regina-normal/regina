@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #import <UIKit/UIKit.h>
-#import "Example.h"
+#import "ReginaDocument.h"
 #import "packet/packettype.h"
 
 namespace regina {
@@ -47,7 +47,7 @@ namespace regina {
 @property (assign, nonatomic, readonly) regina::NPacket* node;
 
 - (DetailViewController *)detail;
-- (void)openExample:(Example*)e;
+- (void)openExample:(ReginaDocument*)e;
 - (void)openSubtree:(regina::NPacket*)p root:(regina::NPacket*)r;
 - (void)refreshPackets;
 - (void)viewPacket:(regina::NPacket*)p;

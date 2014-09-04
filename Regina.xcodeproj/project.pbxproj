@@ -833,6 +833,7 @@
 		054F7E2B180B96AC0090B1F3 /* welcome.html in Resources */ = {isa = PBXBuildFile; fileRef = 054F7E2A180B96AC0090B1F3 /* welcome.html */; };
 		054F7E2D180B99270090B1F3 /* regina.css in Resources */ = {isa = PBXBuildFile; fileRef = 054F7E2C180B99270090B1F3 /* regina.css */; };
 		05500A1119B422370074CE5D /* cppunit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05500A1019B422360074CE5D /* cppunit.framework */; };
+		05583A6219B8041F00076187 /* ReginaDocument.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05583A6119B8041F00076187 /* ReginaDocument.mm */; };
 		055ABEA519B49C1900044C1B /* closed-hyp-census-full.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9E19B499DC00044C1B /* closed-hyp-census-full.zsig */; };
 		055ABEA619B49C1900044C1B /* closed-nor-census-11.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9F19B499DC00044C1B /* closed-nor-census-11.zsig */; };
 		055ABEA719B49C1900044C1B /* closed-or-census-11.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABEA019B499DC00044C1B /* closed-or-census-11.zsig */; };
@@ -986,7 +987,6 @@
 		0591011E181364BB000A8D16 /* NewSurfacesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591011D181364BB000A8D16 /* NewSurfacesController.mm */; };
 		0591012118141996000A8D16 /* NewPacketController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591012018141996000A8D16 /* NewPacketController.mm */; };
 		05943CF419B68C0500E77EF3 /* PDFViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05943CF319B68C0500E77EF3 /* PDFViewController.mm */; };
-		05A47FC71809D1D600F86BFD /* Example.m in Sources */ = {isa = PBXBuildFile; fileRef = 05A47FC61809D1D600F86BFD /* Example.m */; };
 		05A73C7519B2EDBF0099C617 /* hyperbolic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */; };
 		05A73C7619B2EDBF0099C617 /* hyperbolic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */; };
 		05A73C7A19B2EDFC0099C617 /* nxmlcallback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C7719B2EDFC0099C617 /* nxmlcallback.cpp */; };
@@ -1840,6 +1840,8 @@
 		05500A1019B422360074CE5D /* cppunit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = cppunit.framework; path = ../../Library/Frameworks/cppunit.framework; sourceTree = "<group>"; };
 		05561D181811F27A00FD6E2E /* regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = regina.icns; path = icons/regina.icns; sourceTree = SOURCE_ROOT; };
 		05561D191811F27A00FD6E2E /* x-regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "x-regina.icns"; path = "icons/x-regina.icns"; sourceTree = SOURCE_ROOT; };
+		05583A6019B8041F00076187 /* ReginaDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReginaDocument.h; sourceTree = "<group>"; };
+		05583A6119B8041F00076187 /* ReginaDocument.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ReginaDocument.mm; sourceTree = "<group>"; };
 		055ABE9E19B499DC00044C1B /* closed-hyp-census-full.zsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-hyp-census-full.zsig"; sourceTree = "<group>"; };
 		055ABE9F19B499DC00044C1B /* closed-nor-census-11.zsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-nor-census-11.zsig"; sourceTree = "<group>"; };
 		055ABEA019B499DC00044C1B /* closed-or-census-11.zsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-or-census-11.zsig"; sourceTree = "<group>"; };
@@ -2113,8 +2115,6 @@
 		05A47FA61809CB7600F86BFD /* tree.session */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tree.session; sourceTree = "<group>"; };
 		05A47FA71809CB7600F86BFD /* triangulation.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = triangulation.py; sourceTree = "<group>"; };
 		05A47FA81809CB7600F86BFD /* triangulation.session */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = triangulation.session; sourceTree = "<group>"; };
-		05A47FC51809D1D600F86BFD /* Example.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Example.h; sourceTree = "<group>"; };
-		05A47FC61809D1D600F86BFD /* Example.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Example.m; sourceTree = "<group>"; };
 		05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = hyperbolic.cpp; path = engine/census/hyperbolic.cpp; sourceTree = SOURCE_ROOT; };
 		05A73C7719B2EDFC0099C617 /* nxmlcallback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nxmlcallback.cpp; sourceTree = "<group>"; };
 		05A73C7819B2EDFC0099C617 /* nxmlcallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nxmlcallback.h; sourceTree = "<group>"; };
@@ -3213,8 +3213,6 @@
 				0503DCD719B7E3AD0085F3CC /* DocumentListController.mm */,
 				051806D918123057008EBB01 /* EmptySegue.h */,
 				051806DA18123057008EBB01 /* EmptySegue.m */,
-				05A47FC51809D1D600F86BFD /* Example.h */,
-				05A47FC61809D1D600F86BFD /* Example.m */,
 				052FA13E1806103000FAE4DF /* MasterViewController.h */,
 				052FA13F1806103000FAE4DF /* MasterViewController.mm */,
 				0591011F18141996000A8D16 /* NewPacketController.h */,
@@ -3231,6 +3229,8 @@
 				05F96C121809F59600C99F96 /* PacketTreeController.mm */,
 				050313C51812DDF0007F0CBE /* PacketViewController.h */,
 				050313C61812DDF0007F0CBE /* PacketViewController.mm */,
+				05583A6019B8041F00076187 /* ReginaDocument.h */,
+				05583A6119B8041F00076187 /* ReginaDocument.mm */,
 				05BC538D1812BEB000FE9217 /* SwitchableSubcontroller.h */,
 				05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.m */,
 				055D6C6519B6F10F0062F001 /* TempFile.h */,
@@ -4192,6 +4192,7 @@
 				052FA1A21806129B00FAE4DF /* nrational.cpp in Sources */,
 				052FA1A51806129B00FAE4DF /* seedprimes.cpp in Sources */,
 				05A73CA719B2EF5A0099C617 /* sl2c_matrices.c in Sources */,
+				05583A6219B8041F00076187 /* ReginaDocument.mm in Sources */,
 				052FA22B180612DD00FAE4DF /* intersection_numbers.c in Sources */,
 				052FA1EE1806129B00FAE4DF /* stdtoquad.cpp in Sources */,
 				052FA227180612DD00FAE4DF /* holonomy.c in Sources */,
@@ -4385,7 +4386,6 @@
 				052FA23A180612DD00FAE4DF /* triangulations.c in Sources */,
 				052FA1BF1806129B00FAE4DF /* nlayeredsolidtorus.cpp in Sources */,
 				05F96C17180A153A00C99F96 /* MBProgressHUD.m in Sources */,
-				05A47FC71809D1D600F86BFD /* Example.m in Sources */,
 				052FA1FD1806129B00FAE4DF /* ntriangle.cpp in Sources */,
 				052FA1C71806129B00FAE4DF /* nsatblockstarter.cpp in Sources */,
 				052FA1C61806129B00FAE4DF /* nsatblock.cpp in Sources */,
