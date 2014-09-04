@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #import "MasterViewController.h"
+#import "ReginaDocument.h"
 
 // TODO: Support user documents.
 // TODO: Support dropbox documents.
@@ -89,6 +90,15 @@
      */
 }
 
+- (ReginaDocument *)documentForIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 0)
+        return (indexPath.row == 0 ? [ReginaDocument intro] : nil);
+    else
+        // TODO
+        return nil;
+}
+
 #pragma mark - Table View
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -119,7 +129,7 @@
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
             cell = [tableView dequeueReusableCellWithIdentifier:@"Example" forIndexPath:indexPath];
-            cell.textLabel.text = @"Sample document";
+            cell.textLabel.text = [ReginaDocument intro].localizedName;
         } else {
             cell = [tableView dequeueReusableCellWithIdentifier:@"Census" forIndexPath:indexPath];
         }

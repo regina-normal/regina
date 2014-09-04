@@ -47,6 +47,11 @@
     _examples = [ReginaDocument examples];
 }
 
+- (ReginaDocument *)documentForIndexPath:(NSIndexPath *)indexPath
+{
+    return _examples[indexPath.row];
+}
+
 #pragma mark - Table View
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView

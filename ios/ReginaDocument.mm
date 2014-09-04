@@ -36,11 +36,19 @@
 
 // TODO: Perhaps override the hooks disableEditing / enableEditing, to make the UI read-only?
 
+static ReginaDocument* _intro = [ReginaDocument documentWithExampleFile:@"sample-ios.rga" desc:@"Sample document"];
+
 /**
  * The internal global array of all available examples.
- * This will be created the first time it is required.
  */
-static NSArray* _examples = nil;
+static NSArray* _examples = [NSArray arrayWithObjects:
+                             [ReginaDocument documentWithExampleFile:@"closed-or-census.rga" desc:@"Closed census (orientable)"],
+                             [ReginaDocument documentWithExampleFile:@"closed-nor-census.rga" desc:@"Closed census (non-orientable)"],
+                             [ReginaDocument documentWithExampleFile:@"cusped-hyp-or-census.rga" desc:@"Cusped hyperbolic census (orientable)"],
+                             [ReginaDocument documentWithExampleFile:@"cusped-hyp-nor-census.rga" desc:@"Cusped hyperbolic census (non-orientable)"],
+                             [ReginaDocument documentWithExampleFile:@"closed-hyp-census.rga" desc:@"Hodgson-Weeks closed hyperbolic census"],
+                             [ReginaDocument documentWithExampleFile:@"hyp-knot-link-census.rga" desc:@"Hyperbolic knot / link complements"],
+                             nil];
 
 @interface ReginaDocument () {
     NSString* description;
@@ -100,17 +108,11 @@ static NSArray* _examples = nil;
     return nil;
 }
 
++ (ReginaDocument*)intro {
+    return _intro;
+}
+
 + (NSArray*)examples {
-    if (! _examples)
-        _examples = [NSArray arrayWithObjects:
-                [ReginaDocument documentWithExampleFile:@"sample-ios.rga" desc:@"Introductory examples"],
-                [ReginaDocument documentWithExampleFile:@"closed-or-census.rga" desc:@"Closed census (orientable)"],
-                [ReginaDocument documentWithExampleFile:@"closed-nor-census.rga" desc:@"Closed census (non-orientable)"],
-                [ReginaDocument documentWithExampleFile:@"cusped-hyp-or-census.rga" desc:@"Cusped hyperbolic census (orientable)"],
-                [ReginaDocument documentWithExampleFile:@"cusped-hyp-nor-census.rga" desc:@"Cusped hyperbolic census (non-orientable)"],
-                [ReginaDocument documentWithExampleFile:@"closed-hyp-census.rga" desc:@"Hodgson-Weeks closed hyperbolic census"],
-                [ReginaDocument documentWithExampleFile:@"hyp-knot-link-census.rga" desc:@"Hyperbolic knot / link complements"],
-                nil];
     return _examples;
 }
 

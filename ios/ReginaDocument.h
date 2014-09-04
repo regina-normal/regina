@@ -52,6 +52,7 @@ namespace regina {
 
 - (id)initWithExampleFile:(NSString*)f desc:(NSString*)d;
 + (id)documentWithExampleFile:(NSString*)f desc:(NSString*)d;
++ (ReginaDocument*)intro;
 + (NSArray*)examples;
 
 @end
