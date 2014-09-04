@@ -12,6 +12,8 @@
 		050313C71812DDF0007F0CBE /* PacketViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050313C61812DDF0007F0CBE /* PacketViewController.mm */; };
 		0503DCD419B7D8AA0085F3CC /* regina-doc-64.png in Resources */ = {isa = PBXBuildFile; fileRef = 0503DCD219B7D8950085F3CC /* regina-doc-64.png */; };
 		0503DCD519B7D8AA0085F3CC /* regina-doc-320.png in Resources */ = {isa = PBXBuildFile; fileRef = 0503DCD319B7D8950085F3CC /* regina-doc-320.png */; };
+		0503DCD819B7E3AD0085F3CC /* DocumentListController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0503DCD719B7E3AD0085F3CC /* DocumentListController.mm */; };
+		0503DCDB19B7E4F10085F3CC /* CensusListController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0503DCDA19B7E4F10085F3CC /* CensusListController.mm */; };
 		05062FB618169F06008A20A5 /* nboundarycomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05062FB418169F06008A20A5 /* nboundarycomponent.cpp */; };
 		05062FB718169F06008A20A5 /* nboundarycomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05062FB418169F06008A20A5 /* nboundarycomponent.cpp */; };
 		05062FB818169F06008A20A5 /* ncomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05062FB518169F06008A20A5 /* ncomponent.cpp */; };
@@ -1196,6 +1198,10 @@
 		050313C61812DDF0007F0CBE /* PacketViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketViewController.mm; sourceTree = "<group>"; };
 		0503DCD219B7D8950085F3CC /* regina-doc-64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "regina-doc-64.png"; sourceTree = "<group>"; };
 		0503DCD319B7D8950085F3CC /* regina-doc-320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "regina-doc-320.png"; sourceTree = "<group>"; };
+		0503DCD619B7E3AD0085F3CC /* DocumentListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentListController.h; sourceTree = "<group>"; };
+		0503DCD719B7E3AD0085F3CC /* DocumentListController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DocumentListController.mm; sourceTree = "<group>"; };
+		0503DCD919B7E4F10085F3CC /* CensusListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CensusListController.h; sourceTree = "<group>"; };
+		0503DCDA19B7E4F10085F3CC /* CensusListController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CensusListController.mm; sourceTree = "<group>"; };
 		05062FB418169F06008A20A5 /* nboundarycomponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nboundarycomponent.cpp; sourceTree = "<group>"; };
 		05062FB518169F06008A20A5 /* ncomponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ncomponent.cpp; sourceTree = "<group>"; };
 		0513753B1809B8D2002E525B /* coordregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "coordregistry-impl.h"; sourceTree = "<group>"; };
@@ -3199,8 +3205,12 @@
 				052FA13B1806103000FAE4DF /* Main.storyboard */,
 				052FA1381806103000FAE4DF /* AppDelegate.h */,
 				052FA1391806103000FAE4DF /* AppDelegate.mm */,
+				0503DCD919B7E4F10085F3CC /* CensusListController.h */,
+				0503DCDA19B7E4F10085F3CC /* CensusListController.mm */,
 				059101131812F349000A8D16 /* DetailViewController.h */,
 				059101141812F349000A8D16 /* DetailViewController.mm */,
+				0503DCD619B7E3AD0085F3CC /* DocumentListController.h */,
+				0503DCD719B7E3AD0085F3CC /* DocumentListController.mm */,
 				051806D918123057008EBB01 /* EmptySegue.h */,
 				051806DA18123057008EBB01 /* EmptySegue.m */,
 				05A47FC51809D1D600F86BFD /* Example.h */,
@@ -4269,9 +4279,11 @@
 				052FA1D91806129B00FAE4DF /* ndisc.cpp in Sources */,
 				052FA1A91806129B00FAE4DF /* npdf.cpp in Sources */,
 				052FA22D180612DD00FAE4DF /* o31_matrices.c in Sources */,
+				0503DCDB19B7E4F10085F3CC /* CensusListController.mm in Sources */,
 				052FA2001806129B00FAE4DF /* nxmltrireader.cpp in Sources */,
 				052FA2061806129B00FAE4DF /* surfaces.cpp in Sources */,
 				05A73C9F19B2EF5A0099C617 /* homology.c in Sources */,
+				0503DCD819B7E3AD0085F3CC /* DocumentListController.mm in Sources */,
 				052FA1ED1806129B00FAE4DF /* spheres.cpp in Sources */,
 				05A73C8D19B2EF130099C617 /* homology.cpp in Sources */,
 				052FA1721806129B00FAE4DF /* dim2edge.cpp in Sources */,

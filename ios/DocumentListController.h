@@ -30,12 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-#import "DocumentListController.h"
+#import <UIKit/UIKit.h>
 
 /**
  * The view controller for the table of documents, including Regina's
  * example files as well as the user's own data files.
  */
-@interface MasterViewController : DocumentListController
+@interface DocumentListController : UITableViewController
 
 @end

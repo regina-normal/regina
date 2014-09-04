@@ -30,12 +30,55 @@
  *                                                                        *
  **************************************************************************/
 
+#import "DetailViewController.h"
 #import "DocumentListController.h"
+#import "PacketTreeController.h"
+#import "MBProgressHUD.h"
 
-/**
- * The view controller for the table of documents, including Regina's
- * example files as well as the user's own data files.
- */
-@interface MasterViewController : DocumentListController
+@interface DocumentListController () {
+    DetailViewController *_detail;
+}
+@end
+
+@implementation DocumentListController
+
+- (void)awakeFromNib
+{
+    self.clearsSelectionOnViewWillAppear = NO;
+    [super awakeFromNib];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+
+    _detail = (DetailViewController*)
+        [[[[self splitViewController] viewControllers] lastObject] topViewController];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([[segue identifier] isEqualToString:@"openExample"]) {
+        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+        
+        // We use an activity indicator since files could take some time to load.
+        UIView* rootView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
+        MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:rootView animated:YES];
+        [hud setLabelText:@"Loading"];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            // The real work: load the file.
+            Example* e = [Example all][indexPath.row];
+            [[segue destinationViewController] openExample:e];
+
+            dispatch_async(dispatch_get_main_queue(), ^{
+                PacketTreeController* c = [segue destinationViewController];
+                [c setTitle:e.desc];
+                [c refreshPackets];
+                [MBProgressHUD hideHUDForView:rootView animated:YES];
+            });
+        });
+        
+        [_detail viewOpenFile];
+    }
+}
 
 @end

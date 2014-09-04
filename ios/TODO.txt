@@ -55,7 +55,6 @@ SHORT-TERM:
 
 - Remove W-S from the iOS examples file.  It's too slow to load.
 - Cut down the iOS census examples to a faster-to-load size.
-- Census examples in a separate submenu.
 - Open RGA files from email/etc.
 
 - Call UIApplication::idleTimerDisabled when running long tasks (e.g.,

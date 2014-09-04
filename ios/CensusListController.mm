@@ -30,12 +30,50 @@
  *                                                                        *
  **************************************************************************/
 
-#import "DocumentListController.h"
+#import "CensusListController.h"
+#import "Example.h"
 
-/**
- * The view controller for the table of documents, including Regina's
- * example files as well as the user's own data files.
- */
-@interface MasterViewController : DocumentListController
+@interface CensusListController () {
+    NSArray *_examples;
+}
+@end
+
+@implementation CensusListController
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+
+    _examples = [Example all];
+}
+
+#pragma mark - Table View
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [_examples count];
+}
+
+- (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    return @"Census Data";
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Example" forIndexPath:indexPath];
+    cell.textLabel.text = [_examples[indexPath.row] desc];
+    return cell;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return NO;
+}
 
 @end

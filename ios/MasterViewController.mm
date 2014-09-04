@@ -30,11 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#import "DetailViewController.h"
 #import "Example.h"
-#import "PacketTreeController.h"
 #import "MasterViewController.h"
-#import "MBProgressHUD.h"
 
 // TODO: Support user documents.
 // TODO: Support dropbox documents.
@@ -42,8 +39,6 @@
 
 @interface MasterViewController () {
     NSMutableArray *_objects;
-    NSArray *_examples;
-    DetailViewController *_detail;
 }
 @end
 
@@ -51,7 +46,6 @@
 
 - (void)awakeFromNib
 {
-    self.clearsSelectionOnViewWillAppear = NO;
     // Apple tells us that this is how to test for iOS6.x vs iOS 7:
     if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1) {
         NSLog(@"Running in iOS 6.x");
@@ -75,10 +69,6 @@
      
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newDocument:)];
     self.navigationItem.rightBarButtonItem = addButton;
-    
-    _detail = (DetailViewController*)
-        [[[[self splitViewController] viewControllers] lastObject] topViewController];
-    _examples = [Example all];
 }
 
 - (void)didReceiveMemoryWarning
@@ -110,8 +100,8 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (section == 0)
-        return [_examples count];
-    else
+        return 2;
+     else
         return 0; // TODO number of user documents.
 }
 
@@ -128,8 +118,12 @@
     UITableViewCell *cell;
     
     if (indexPath.section == 0) {
-        cell = [tableView dequeueReusableCellWithIdentifier:@"Example" forIndexPath:indexPath];
-        cell.textLabel.text = [_examples[indexPath.row] desc];
+        if (indexPath.row == 0) {
+            cell = [tableView dequeueReusableCellWithIdentifier:@"Example" forIndexPath:indexPath];
+            cell.textLabel.text = @"Introductory examples";
+        } else {
+            cell = [tableView dequeueReusableCellWithIdentifier:@"Census" forIndexPath:indexPath];
+        }
     } else {
         cell = [tableView dequeueReusableCellWithIdentifier:@"Document" forIndexPath:indexPath];
         NSDate *object = _objects[indexPath.row];
@@ -170,30 +164,5 @@
     return YES;
 }
 */
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([[segue identifier] isEqualToString:@"openExample"]) {
-        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        
-        // We use an activity indicator since files could take some time to load.
-        UIView* rootView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
-        MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:rootView animated:YES];
-        [hud setLabelText:@"Loading"];
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            // The real work: load the file.
-            Example* e = _examples[indexPath.row];
-            [[segue destinationViewController] openExample:e];
-
-            dispatch_async(dispatch_get_main_queue(), ^{
-                PacketTreeController* c = [segue destinationViewController];
-                [c setTitle:e.desc];
-                [c refreshPackets];
-                [MBProgressHUD hideHUDForView:rootView animated:YES];
-            });
-        });
-        
-        [_detail viewOpenFile];
-    }
-}
 
 @end
