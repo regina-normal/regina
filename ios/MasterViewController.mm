@@ -120,7 +120,7 @@
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
             cell = [tableView dequeueReusableCellWithIdentifier:@"Example" forIndexPath:indexPath];
-            cell.textLabel.text = @"Introductory examples";
+            cell.textLabel.text = @"Sample document";
         } else {
             cell = [tableView dequeueReusableCellWithIdentifier:@"Census" forIndexPath:indexPath];
         }
