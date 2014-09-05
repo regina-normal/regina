@@ -1046,6 +1046,7 @@
 		05BC538F1812BEB000FE9217 /* SwitchableSubcontroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.m */; };
 		05CA99E618078466006161DC /* registryutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CA99E518078465006161DC /* registryutils.h */; };
 		05D0A1101812F0BE005ED097 /* TriangulationViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D0A10F1812F0BE005ED097 /* TriangulationViewController.mm */; };
+		05EC452F19B99A81002D0633 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA23E180613A900FAE4DF /* boost.framework */; };
 		05F9560A19B5298E00377BEC /* closed-hyp-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F971809CB7600F86BFD /* closed-hyp-census.rga */; };
 		05F9560B19B5298E00377BEC /* closed-nor-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F981809CB7600F86BFD /* closed-nor-census.rga */; };
 		05F9560C19B5298E00377BEC /* closed-or-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F9A1809CB7600F86BFD /* closed-or-census.rga */; };
@@ -2238,6 +2239,7 @@
 			files = (
 				05B14EB919B424F9002138C0 /* libbz2.dylib in Frameworks */,
 				05B14EB719B424D8002138C0 /* libz.dylib in Frameworks */,
+				05EC452F19B99A81002D0633 /* boost.framework in Frameworks */,
 				05B14EB819B424E6002138C0 /* libtokyocabinet.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
