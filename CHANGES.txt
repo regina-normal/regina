@@ -19,6 +19,12 @@ Version 4.97  [ (under development) ]
         Class CompressionBuffer, CompressionStream, DecompressionBuffer,
                 DecompressionStream, ZBuffer:
             - Removed entirely.  Regina now uses boost::iostreams instead.
+        Class NPacket:
+            - Added a variant of save() that takes an output stream (as
+              opposed to a filename).
+        Routine open():
+            - Added a variant that takes an input stream (as opposed to
+              a filename).
         Header zstream.h:
             - Removed entirely.  Regina now uses boost::iostreams instead.
 

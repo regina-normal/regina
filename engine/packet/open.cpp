@@ -120,13 +120,22 @@ namespace {
 
 NPacket* open(const char* filename) {
     std::ifstream file(filename, std::ios_base::in | std::ios_base::binary);
-    if (! file)
+    // We don't test whether the file was opened, since open(std::istream&)
+    // tests this for us as the first thing it does.
+    return regina::open(file);
+}
+
+NPacket* open(std::istream& s) {
+    // Note: open(const char*) relies on us testing here whether s was
+    // successfully opened.  If anyone removes this test, then they
+    // should add a corresponding test to open(const char*) instead.
+    if (! s)
         return 0;
 
     ::boost::iostreams::filtering_istream in;
-    if (file.peek() == 0x1f)
+    if (s.peek() == 0x1f)
         in.push(::boost::iostreams::gzip_decompressor());
-    in.push(file);
+    in.push(s);
 
     NXMLTreeResolver resolver;
 
