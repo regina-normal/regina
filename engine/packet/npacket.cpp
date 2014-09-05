@@ -35,13 +35,15 @@
 #include <set>
 #include <fstream>
 #include <sstream>
+#include <boost/iostreams/device/file.hpp>
+#include <boost/iostreams/filtering_stream.hpp>
+#include <boost/iostreams/filter/gzip.hpp>
 #include "engine.h"
 #include "packet/npacket.h"
 #include "packet/npacketlistener.h"
 #include "packet/nscript.h"
 #include "utilities/base64.h"
 #include "utilities/xmlutils.h"
-#include "utilities/zstream.h"
 
 namespace regina {
 
@@ -525,16 +527,26 @@ NPacket* NPacket::clone(bool cloneDescendants, bool end) const {
 }
 
 bool NPacket::save(const char* filename, bool compressed) const {
+    std::ofstream out(filename);
+    // We don't test whether the file was opened, since
+    // save(std::ostream&, bool) tests this for us as the first thing it does.
+    return save(out, compressed);
+}
+
+bool NPacket::save(std::ostream& s, bool compressed) const {
+    // Note: save(const char*, bool) relies on us testing here whether s
+    // was successfully opened.  If anyone removes this test, then they
+    // should add a corresponding test to save(const char*, bool) instead.
+    if (! s)
+        return false;
+
     if (compressed) {
-        CompressionStream out(filename);
-        if (! out)
-            return false;
+        ::boost::iostreams::filtering_ostream out;
+        out.push(::boost::iostreams::gzip_compressor());
+        out.push(s);
         writeXMLFile(out);
     } else {
-        std::ofstream out(filename);
-        if (! out)
-            return false;
-        writeXMLFile(out);
+        writeXMLFile(s);
     }
     return true;
 }

@@ -48,7 +48,9 @@
 #include <tcbdb.h>
 #include <tcutil.h>
 #endif
-#include "utilities/zstream.h"
+#include <boost/iostreams/device/file.hpp>
+#include <boost/iostreams/filtering_stream.hpp>
+#include <boost/iostreams/filter/gzip.hpp>
 
 #ifdef QDBM_AS_TOKYOCABINET
   #define DB_CLOSE(x) vlclose(x);
@@ -78,12 +80,17 @@ int main(int argc, char* argv[]) {
 
     // Open the input file.
     std::cout << "Processing: " << argv[1] << std::endl;
-    regina::DecompressionStream in(argv[1]);
-    if (! in) {
+    std::ifstream file(argv[1], std::ios_base::in | std::ios_base::binary);
+    if (! file) {
         std::cerr << "ERROR: Could not open input file: " << argv[1]
             << std::endl;
         std::exit(1);
     }
+
+    ::boost::iostreams::filtering_istream in;
+    if (file.peek() == 0x1f)
+        in.push(::boost::iostreams::gzip_decompressor());
+    in.push(file);
 
     // Initialise the database.
 #ifdef QDBM_AS_TOKYOCABINET
@@ -149,8 +156,6 @@ int main(int argc, char* argv[]) {
     }
 
     // Close and tidy up.
-    in.close();
-
 #ifdef QDBM_AS_TOKYOCABINET
     if (! vloptimize(db)) {
         std::cerr << "ERROR: Could not optimise QDBM database: "

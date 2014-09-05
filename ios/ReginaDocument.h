@@ -55,6 +55,7 @@ namespace regina {
  * Is this one of the (read-only) example files shipped with Regina?
  */
 @property (assign, nonatomic, readonly) BOOL example;
+@property (assign, nonatomic, readonly) regina::NPacket* tree;
 
 /**
  * Stores the full packet tree whilst the file is open.

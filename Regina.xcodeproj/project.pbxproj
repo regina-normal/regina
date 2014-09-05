@@ -502,8 +502,6 @@
 		052FA0A0180600FB00FAE4DF /* stringutils.tcc in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E7E180600FB00FAE4DF /* stringutils.tcc */; };
 		052FA0A1180600FB00FAE4DF /* xmlutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E7F180600FB00FAE4DF /* xmlutils.cpp */; };
 		052FA0A2180600FB00FAE4DF /* xmlutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E80180600FB00FAE4DF /* xmlutils.h */; };
-		052FA0A3180600FB00FAE4DF /* zstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E81180600FB00FAE4DF /* zstream.cpp */; };
-		052FA0A4180600FB00FAE4DF /* zstream.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E82180600FB00FAE4DF /* zstream.h */; };
 		052FA0A61806047E00FAE4DF /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A51806047E00FAE4DF /* libz.dylib */; };
 		052FA1031806088B00FAE4DF /* nanglestructurelist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0CD1806088B00FAE4DF /* nanglestructurelist.cpp */; };
 		052FA1041806088B00FAE4DF /* dim2census.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D11806088B00FAE4DF /* dim2census.cpp */; };
@@ -710,7 +708,6 @@
 		052FA20C1806129B00FAE4DF /* osutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E77180600FB00FAE4DF /* osutils.cpp */; };
 		052FA20D1806129B00FAE4DF /* stringutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E7C180600FB00FAE4DF /* stringutils.cpp */; };
 		052FA20E1806129B00FAE4DF /* xmlutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E7F180600FB00FAE4DF /* xmlutils.cpp */; };
-		052FA20F1806129B00FAE4DF /* zstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E81180600FB00FAE4DF /* zstream.cpp */; };
 		052FA210180612C100FAE4DF /* snappy_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D98180600FB00FAE4DF /* snappy_gluing_equations.c */; };
 		052FA211180612DD00FAE4DF /* canonize.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D1F180600FA00FAE4DF /* canonize.c */; };
 		052FA212180612DD00FAE4DF /* canonize_part_1.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D21180600FA00FAE4DF /* canonize_part_1.c */; };
@@ -1041,7 +1038,6 @@
 		05A73CE519B2F9DC0099C617 /* nsnappeashapes.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CC719B2F1AB0099C617 /* nsnappeashapes.h */; };
 		05A73CE619B2F9DC0099C617 /* nsnappeaui.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CC919B2F1AB0099C617 /* nsnappeaui.h */; };
 		05B14EB519B4240D002138C0 /* mkcensusdb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B14EB419B4240D002138C0 /* mkcensusdb.cpp */; };
-		05B14EB619B4242E002138C0 /* zstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E81180600FB00FAE4DF /* zstream.cpp */; };
 		05B14EB719B424D8002138C0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A51806047E00FAE4DF /* libz.dylib */; };
 		05B14EB819B424E6002138C0 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0569F92F19B3655C00051091 /* libtokyocabinet.framework */; };
 		05B14EB919B424F9002138C0 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
@@ -1051,6 +1047,7 @@
 		05BC538F1812BEB000FE9217 /* SwitchableSubcontroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.m */; };
 		05CA99E618078466006161DC /* registryutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CA99E518078465006161DC /* registryutils.h */; };
 		05D0A1101812F0BE005ED097 /* TriangulationViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D0A10F1812F0BE005ED097 /* TriangulationViewController.mm */; };
+		05EC452F19B99A81002D0633 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA23E180613A900FAE4DF /* boost.framework */; };
 		05F9560A19B5298E00377BEC /* closed-hyp-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F971809CB7600F86BFD /* closed-hyp-census.rga */; };
 		05F9560B19B5298E00377BEC /* closed-nor-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F981809CB7600F86BFD /* closed-nor-census.rga */; };
 		05F9560C19B5298E00377BEC /* closed-or-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F9A1809CB7600F86BFD /* closed-or-census.rga */; };
@@ -1764,8 +1761,6 @@
 		052F9E7E180600FB00FAE4DF /* stringutils.tcc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = stringutils.tcc; sourceTree = "<group>"; };
 		052F9E7F180600FB00FAE4DF /* xmlutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlutils.cpp; sourceTree = "<group>"; };
 		052F9E80180600FB00FAE4DF /* xmlutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlutils.h; sourceTree = "<group>"; };
-		052F9E81180600FB00FAE4DF /* zstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = zstream.cpp; sourceTree = "<group>"; };
-		052F9E82180600FB00FAE4DF /* zstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zstream.h; sourceTree = "<group>"; };
 		052FA0A51806047E00FAE4DF /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		052FA0C11806072900FAE4DF /* regtestsuite */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = regtestsuite; sourceTree = BUILT_PRODUCTS_DIR; };
 		052FA0CC1806088B00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
@@ -2247,6 +2242,7 @@
 			files = (
 				05B14EB919B424F9002138C0 /* libbz2.dylib in Frameworks */,
 				05B14EB719B424D8002138C0 /* libz.dylib in Frameworks */,
+				05EC452F19B99A81002D0633 /* boost.framework in Frameworks */,
 				05B14EB819B424E6002138C0 /* libtokyocabinet.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3049,8 +3045,6 @@
 				052F9E7E180600FB00FAE4DF /* stringutils.tcc */,
 				052F9E7F180600FB00FAE4DF /* xmlutils.cpp */,
 				052F9E80180600FB00FAE4DF /* xmlutils.h */,
-				052F9E81180600FB00FAE4DF /* zstream.cpp */,
-				052F9E82180600FB00FAE4DF /* zstream.h */,
 			);
 			path = utilities;
 			sourceTree = "<group>";
@@ -3760,7 +3754,6 @@
 				052F9EE9180600FB00FAE4DF /* my_omp.h in Headers */,
 				052FA009180600FB00FAE4DF /* nsatblock.h in Headers */,
 				052FA098180600FB00FAE4DF /* ntritmask.h in Headers */,
-				052FA0A4180600FB00FAE4DF /* zstream.h in Headers */,
 				052F9EFE180600FB00FAE4DF /* ntypetrie.h in Headers */,
 				052FA04C180600FB00FAE4DF /* nxmlsurfacereader.h in Headers */,
 				052FA031180600FB00FAE4DF /* normalcoords.h in Headers */,
@@ -4376,7 +4369,6 @@
 				055B7316181D7CF800449D14 /* dim2vertex.cpp in Sources */,
 				052FA1E71806129B00FAE4DF /* nxmlfilterreaders.cpp in Sources */,
 				0523D88A180B54850094DAAD /* PacketManagerIOS.mm in Sources */,
-				052FA20F1806129B00FAE4DF /* zstream.cpp in Sources */,
 				052FA1B21806129B00FAE4DF /* nsigcensus.cpp in Sources */,
 				052FA1761806129B00FAE4DF /* dim2triangulation.cpp in Sources */,
 				052FA20E1806129B00FAE4DF /* xmlutils.cpp in Sources */,
@@ -4864,7 +4856,6 @@
 				052FA07D180600FB00FAE4DF /* simplifyglobal.cpp in Sources */,
 				052FA069180600FB00FAE4DF /* ngenericisomorphism.tcc in Sources */,
 				052F9ED6180600FB00FAE4DF /* cone_property.cpp in Sources */,
-				052FA0A3180600FB00FAE4DF /* zstream.cpp in Sources */,
 				052F9F7D180600FB00FAE4DF /* Dehn_coefficients.c in Sources */,
 				052F9EB0180600FB00FAE4DF /* dim2exampletriangulation.cpp in Sources */,
 				052F9F5B180600FB00FAE4DF /* nscript.cpp in Sources */,
@@ -4882,7 +4873,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				05B14EB619B4242E002138C0 /* zstream.cpp in Sources */,
 				05B14EB519B4240D002138C0 /* mkcensusdb.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

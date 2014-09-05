@@ -976,7 +976,7 @@ class REGINA_API NPacket : public ShareableObject {
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given file \e name,
          * and simply passes it through unchanged to low-level C/C++ file I/O
-         * routines.  The \e contents of the file will be written usign UTF-8.
+         * routines.  The \e contents of the file will be written using UTF-8.
          *
          * @param filename the pathname of the file to write to.
          * @param compressed \c true if the XML data should be compressed,
@@ -984,6 +984,28 @@ class REGINA_API NPacket : public ShareableObject {
          * @return \c true if and only if the file was successfully written.
          */
         bool save(const char* filename, bool compressed = true) const;
+
+        /**
+         * Writes the subtree rooted at this packet to the given output
+         * stream, in the format of a Regina XML data file.  The data file
+         * may be optionally compressed (Regina can happily read both
+         * compressed and uncompressed XML).
+         *
+         * Typically this will be called from the root of the packet
+         * tree, which will write the entire packet tree to the given
+         * output stream.
+         *
+         * \pre The given stream is open for writing.
+         * \pre The given packet does not depend on its parent.
+         *
+         * \ifacespython Not present.
+         *
+         * @param s the output stream to which to write.
+         * @param compressed \c true if the XML data should be compressed,
+         * or \c false if it should be written as plain text.
+         * @return \c true if and only if the data was successfully written.
+         */
+        bool save(std::ostream& s, bool compressed = true) const;
 
         /**
          * Writes the subtree rooted at this packet to the given output
@@ -1289,6 +1311,26 @@ class REGINA_API NPacket : public ShareableObject {
  * @return the packet tree read from file, or 0 on error (as explained above).
  */
 REGINA_API NPacket* open(const char* filename);
+
+/**
+ * Reads a Regina data file from the given input stream, and returns the
+ * corresponding packet tree.
+ * This uses Regina's native XML file format; it does not matter whether
+ * the XML file is compressed or uncompressed.
+ *
+ * If the stream could not be read or if the top-level packet in the tree
+ * could not be read, then this routine will return 0.  If some packet deeper
+ * within the tree could not be read then that particular packet (and
+ * its descendants, if any) will simply be ignored.
+ *
+ * \pre The given stream is open for reading.
+ *
+ * \ifacespython Not present.
+ *
+ * @param in the input stream to read from.
+ * @return the packet tree read from file, or 0 on error (as explained above).
+ */
+REGINA_API NPacket* open(std::istream& s);
 
 /*@}*/
 
