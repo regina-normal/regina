@@ -56,6 +56,12 @@
         [[[[self splitViewController] viewControllers] lastObject] topViewController];
 }
 
+- (ReginaDocument *)documentForIndexPath:(NSIndexPath *)indexPath
+{
+    // Implemented by subclasses.
+    return nil;
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"openExample"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
