@@ -134,7 +134,6 @@ void addNSnapPeaTriangulation() {
         .def("randomise", &NSnapPeaTriangulation::randomise)
         .def("dump", &NSnapPeaTriangulation::dump)
         .def("saveAsSnapPea", &NSnapPeaTriangulation::saveAsSnapPea)
-        .def("save", &NSnapPeaTriangulation::save)
         .def("kernelMessagesEnabled",
             &NSnapPeaTriangulation::kernelMessagesEnabled)
         .def("enableKernelMessages",
