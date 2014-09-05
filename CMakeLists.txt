@@ -279,7 +279,7 @@ MACRO_LOG_FEATURE(ICONV_FOUND
   "http://www.gnu.org/s/libiconv/"
   TRUE)
 
-FIND_PACKAGE(Boost COMPONENTS python regex)
+FIND_PACKAGE(Boost COMPONENTS iostreams python regex)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 MACRO_LOG_FEATURE(Boost_FOUND
   "Boost"

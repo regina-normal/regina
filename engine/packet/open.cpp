@@ -34,13 +34,15 @@
 
 #include <cstring>
 #include <fstream>
+#include <boost/iostreams/device/file.hpp>
+#include <boost/iostreams/filtering_stream.hpp>
+#include <boost/iostreams/filter/gzip.hpp>
 #include "engine.h"
 #include "packet/ncontainer.h"
 #include "packet/nxmlpacketreader.h"
 #include "packet/nxmltreeresolver.h"
 #include "utilities/nxmlcallback.h"
 #include "utilities/stringutils.h"
-#include "utilities/zstream.h"
 
 namespace regina {
 
@@ -117,9 +119,14 @@ namespace {
 }
 
 NPacket* open(const char* filename) {
-    DecompressionStream in(filename);
-    if (! in)
+    std::ifstream file(filename, std::ios_base::in | std::ios_base::binary);
+    if (! file)
         return 0;
+
+    ::boost::iostreams::filtering_istream in;
+    if (file.peek() == 0x1f)
+        in.push(::boost::iostreams::gzip_decompressor());
+    in.push(file);
 
     NXMLTreeResolver resolver;
 
@@ -137,7 +144,7 @@ NPacket* open(const char* filename) {
         char* buf = new char[regChunkSize];
         int chunkRead;
         bool seenFirstChunk = false;
-        while (true) {
+        while (callback.getState() != NXMLCallback::ABORTED) {
             // Read in the next chunk.
             for (chunkRead = 0; chunkRead < regChunkSize; chunkRead++) {
                 buf[chunkRead] = static_cast<char>(in.get());

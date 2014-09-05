@@ -35,13 +35,15 @@
 #include <set>
 #include <fstream>
 #include <sstream>
+#include <boost/iostreams/device/file.hpp>
+#include <boost/iostreams/filtering_stream.hpp>
+#include <boost/iostreams/filter/gzip.hpp>
 #include "engine.h"
 #include "packet/npacket.h"
 #include "packet/npacketlistener.h"
 #include "packet/nscript.h"
 #include "utilities/base64.h"
 #include "utilities/xmlutils.h"
-#include "utilities/zstream.h"
 
 namespace regina {
 
@@ -526,7 +528,9 @@ NPacket* NPacket::clone(bool cloneDescendants, bool end) const {
 
 bool NPacket::save(const char* filename, bool compressed) const {
     if (compressed) {
-        CompressionStream out(filename);
+        ::boost::iostreams::filtering_ostream out;
+        out.push(::boost::iostreams::gzip_compressor());
+        out.push(::boost::iostreams::file_sink(filename));
         if (! out)
             return false;
         writeXMLFile(out);

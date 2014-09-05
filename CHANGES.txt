@@ -16,6 +16,11 @@ Version 4.97  [ (under development) ]
               routine, and set through an optional third argument to setDirs().
             - The homeDir argument to setDirs() may now be the empty string,
               which signals that the directory should not be changed.
+        Class CompressionBuffer, CompressionStream, DecompressionBuffer,
+                DecompressionStream, ZBuffer:
+            - Removed entirely.  Regina now uses boost::iostreams instead.
+        Header zstream.h:
+            - Removed entirely.  Regina now uses boost::iostreams instead.
 
 Version 4.96  [ 29 August, 2014 ]
 
