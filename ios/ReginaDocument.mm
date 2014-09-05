@@ -31,6 +31,10 @@
  **************************************************************************/
 
 #import "ReginaDocument.h"
+#import "packet/npacket.h"
+#import <boost/iostreams/device/array.hpp>
+#import <boost/iostreams/stream.hpp>
+#import <sstream>
 
 // TODO: Delete packet when closing the document.
 
@@ -69,6 +73,7 @@ static NSArray* _examples = [NSArray arrayWithObjects:
     if (self) {
         description = d;
         _example = YES;
+        _tree = 0;
     }
     return self;
 }
@@ -87,25 +92,32 @@ static NSArray* _examples = [NSArray arrayWithObjects:
 
 - (BOOL)loadFromContents:(id)contents ofType:(NSString *)typeName error:(NSError *__autoreleasing *)outError
 {
-    /*
-    _tree = TODO;
+    boost::iostreams::stream<boost::iostreams::array_source> s(static_cast<const char*>([contents bytes]), [contents length]);
+    _tree = regina::open(s);
     
-    // TODO.
-    if ([_delegate respondsToSelector:@selector(noteDocumentContentsUpdated:)]) {
-        [_delegate noteDocumentContentsUpdated:self];
+    if (_tree)
+        return YES;
+    else {
+        // TODO: outError = [NSError errorWithDomain:<#(NSString *)#> code:<#(NSInteger)#> userInfo:<#(NSDictionary *)#>]
+        return NO;
     }
-    */
-    return YES;
 }
 
 - (id)contentsForType:(NSString *)typeName error:(NSError *__autoreleasing *)outError
 {
-    // TODO.
-    /*
-    NSData* data = TODO;
-    return data;
-     */
-    return nil;
+    if (! _tree) {
+        // TODO
+        return nil;
+    }
+    
+    std::ostringstream s;
+    if (_tree->save(s)) {
+        const std::string& str = s.str();
+        return [NSData dataWithBytes:str.c_str() length:str.length()];
+    } else {
+        // TODO
+        return nil;
+    }
 }
 
 + (ReginaDocument*)intro {

@@ -47,8 +47,8 @@ namespace regina {
 
 @interface ReginaDocument : UIDocument
 
-@property (assign, nonatomic, readonly) regina::NPacket* tree;
 @property (assign, nonatomic, readonly) BOOL example;
+@property (assign, nonatomic, readonly) regina::NPacket* tree;
 
 - (id)initWithExampleFile:(NSString*)f desc:(NSString*)d;
 + (id)documentWithExampleFile:(NSString*)f desc:(NSString*)d;
