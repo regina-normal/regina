@@ -64,6 +64,13 @@
     return self;
 }
 
+- (void)dealloc {
+    if (_tree) {
+        NSLog(@"Deleting packet tree...");
+        delete _tree;
+    }
+}
+
 + (id)documentWithExample:(Example *)e
 {
     return [[ReginaDocument alloc] initWithExample:e];
