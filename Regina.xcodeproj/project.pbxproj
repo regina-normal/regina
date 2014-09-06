@@ -985,6 +985,7 @@
 		0591011E181364BB000A8D16 /* NewSurfacesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591011D181364BB000A8D16 /* NewSurfacesController.mm */; };
 		0591012118141996000A8D16 /* NewPacketController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591012018141996000A8D16 /* NewPacketController.mm */; };
 		05943CF419B68C0500E77EF3 /* PDFViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05943CF319B68C0500E77EF3 /* PDFViewController.mm */; };
+		05992CB319BA8BB90032CE65 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA23E180613A900FAE4DF /* boost.framework */; };
 		05A73C7519B2EDBF0099C617 /* hyperbolic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */; };
 		05A73C7619B2EDBF0099C617 /* hyperbolic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */; };
 		05A73C7A19B2EDFC0099C617 /* nxmlcallback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C7719B2EDFC0099C617 /* nxmlcallback.cpp */; };
@@ -2230,6 +2231,7 @@
 				055B7318181D7F2500449D14 /* libiconv.dylib in Frameworks */,
 				055B731A181D7F2C00449D14 /* libxml2.dylib in Frameworks */,
 				052FA0A61806047E00FAE4DF /* libz.dylib in Frameworks */,
+				05992CB319BA8BB90032CE65 /* boost.framework in Frameworks */,
 				053E5B5219B3D45B00166778 /* libgmp.framework in Frameworks */,
 				053E5B5319B3D46000166778 /* libgmpxx.framework in Frameworks */,
 				053E5B5419B3D46D00166778 /* libtokyocabinet.framework in Frameworks */,
