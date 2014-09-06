@@ -82,7 +82,7 @@ static NSArray* _allRows;
                                          icon:@"Triangulation"],
                     [NewPacketRow rowWithType:regina::PACKET_NORMALSURFACELIST
                                         label:@"Normal surfaces"
-                                        icon:@"Surfaces"],
+                                         icon:@"Surfaces"],
                     [NewPacketRow rowWithType:regina::PACKET_ANGLESTRUCTURELIST
                                         label:@"Angle structures"
                                          icon:@"Angles"],
