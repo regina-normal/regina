@@ -35,6 +35,9 @@
 /**
  * Stores the details for one of Regina's ready-made (and read-only)
  * example data files.
+ *
+ * These examples can be accessed through class methods such as
+ * intro and census.
  */
 @interface Example : NSObject
 
