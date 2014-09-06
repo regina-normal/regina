@@ -163,7 +163,7 @@
     [super viewDidDisappear:animated];
 }
 
-- (void)openExample:(ReginaDocument*)e {
+- (void)openDocument:(ReginaDocument*)e {
     _doc = e;
     NSLog(@"Loading example...");
     

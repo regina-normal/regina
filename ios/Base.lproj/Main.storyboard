@@ -313,7 +313,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="tA5-Tr-Mbx" kind="push" identifier="openExample" id="NX3-1l-H45"/>
+                                    <segue destination="tA5-Tr-Mbx" kind="push" identifier="openDocument" id="NX3-1l-H45"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="Document" textLabel="VHV-ci-kN5" style="IBUITableViewCellStyleDefault" id="sEd-WI-2nf">
@@ -1040,7 +1040,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="tA5-Tr-Mbx" kind="push" identifier="openExample" id="ocq-B5-7Xt"/>
+                                    <segue destination="tA5-Tr-Mbx" kind="push" identifier="openDocument" id="ocq-B5-7Xt"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>

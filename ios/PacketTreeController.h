@@ -47,7 +47,7 @@ namespace regina {
 @property (assign, nonatomic, readonly) regina::NPacket* node;
 
 - (DetailViewController *)detail;
-- (void)openExample:(ReginaDocument*)e;
+- (void)openDocument:(ReginaDocument*)e;
 - (void)openSubtree:(regina::NPacket*)p root:(regina::NPacket*)r;
 - (void)refreshPackets;
 - (void)viewPacket:(regina::NPacket*)p;

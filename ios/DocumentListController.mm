@@ -62,11 +62,11 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([[segue identifier] isEqualToString:@"openExample"]) {
-        // Note: the real work for openExample happens in a new thread.
+    if ([[segue identifier] isEqualToString:@"openDocument"]) {
+        // Note: the real work for opening files happens in a new thread.
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         ReginaDocument* doc = [self documentForIndexPath:indexPath];
-        [[segue destinationViewController] openExample:doc];
+        [[segue destinationViewController] openDocument:doc];
         
         [_detail viewOpenFile];
     }
