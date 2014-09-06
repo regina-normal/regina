@@ -33,7 +33,6 @@
 #import "DetailViewController.h"
 #import "DocumentListController.h"
 #import "PacketTreeController.h"
-#import "MBProgressHUD.h"
 
 @interface DocumentListController () {
     DetailViewController *_detail;
@@ -64,24 +63,10 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"openExample"]) {
+        // Note: the real work for openExample happens in a new thread.
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         ReginaDocument* doc = [self documentForIndexPath:indexPath];
-        
-        // We use an activity indicator since files could take some time to load.
-        UIView* rootView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
-        MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:rootView animated:YES];
-        [hud setLabelText:@"Loading"];
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            // The real work: load the file.
-            [[segue destinationViewController] openExample:doc];
-
-            dispatch_async(dispatch_get_main_queue(), ^{
-                PacketTreeController* c = [segue destinationViewController];
-                [c setTitle:doc.localizedName];
-                [c refreshPackets];
-                [MBProgressHUD hideHUDForView:rootView animated:YES];
-            });
-        });
+        [[segue destinationViewController] openExample:doc];
         
         [_detail viewOpenFile];
     }

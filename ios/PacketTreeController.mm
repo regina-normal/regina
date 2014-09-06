@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #import "DetailViewController.h"
+#import "MBProgressHUD.h"
 #import "NewPacketController.h"
 #import "NewPacketMenu.h"
 #import "PacketListenerIOS.h"
@@ -151,8 +152,11 @@
 - (void)viewWillDisappear:(BOOL)animated {
     if (_node && ! _node->getTreeParent()) {
         if ([self.navigationController.viewControllers indexOfObject:self] == NSNotFound) {
-            NSLog(@"Closing file and deleting from memory.");
-            delete _tree;
+            NSLog(@"Closing file.");
+            [self.doc closeWithCompletionHandler:^(BOOL success) {
+                NSLog(@"Closed.");
+                _doc = nil;
+            }];
             [self.detail viewWelcome];
         }
     }
@@ -160,30 +164,31 @@
 }
 
 - (void)openExample:(ReginaDocument*)e {
-    [self loadTreeResource:e.fileURL];
+    _doc = e;
+    NSLog(@"Loading example...");
+    
+    // We use an activity indicator since files could take some time to load.
+    UIView* rootView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
+    MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:rootView animated:YES];
+    [hud setLabelText:@"Loading"];
+    
+    [self.doc openWithCompletionHandler:^(BOOL success) {
+        NSLog(@"Loaded example.");
+        _node = self.doc.tree;
+        _listener = [[PacketTreeListener alloc] initWithTree:self];
+        self.title = self.doc.localizedName;
+        [self refreshPackets];
+        [MBProgressHUD hideHUDForView:rootView animated:YES];
+    }];
     // TODO: Trap errors.
-
-    _listener = [[PacketTreeListener alloc] initWithTree:self];
 }
 
-- (void)openSubtree:(regina::NPacket *)p root:(regina::NPacket*)r {
-    _tree = r;
+- (void)openSubtree:(regina::NPacket *)p doc:(ReginaDocument*)d {
+    _doc = d;
     _node = p;
     [self setTitle:[NSString stringWithUTF8String:p->getPacketLabel().c_str()]];
 
     _listener = [[PacketTreeListener alloc] initWithTree:self];
-}
-
-- (bool)loadTreeResource:(NSURL*)url {
-    _tree = regina::readXMLFile([url fileSystemRepresentation]);
-    if (! _tree) {
-        NSLog(@"Failed to read data file: %@", url);
-        return false;
-    }
-
-    NSLog(@"Loaded file: %@", url);
-    _node = _tree;
-    return true;
 }
 
 - (void)fill {
@@ -384,7 +389,7 @@
         else
             packetIndex = indexPath.row;
         
-        [[segue destinationViewController] openSubtree:[_rows[packetIndex] packet] root:_tree];
+        [[segue destinationViewController] openSubtree:[_rows[packetIndex] packet] doc:_doc];
         [[segue destinationViewController] refreshPackets];
     } else if ([[segue identifier] isEqualToString:@"newPacket"]) {
         _newPacketPopover = [(UIStoryboardPopoverSegue*)segue popoverController];
