@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #import "AppDelegate.h"
+#import "MasterViewController.h"
 #import "file/nglobaldirs.h"
 
 // TODO: Support state preservation and restoration.
@@ -38,6 +39,7 @@
 
 @interface AppDelegate() {
     UIBackgroundTaskIdentifier bgTask;
+    MasterViewController* master;
 }
 @end
 
@@ -53,7 +55,12 @@
     // - This routine must be fast.  Long tasks should be run on a secondary thread.
     //
     UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
-    UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
+    UINavigationController *navigationController;
+    
+    navigationController = [splitViewController.viewControllers firstObject];
+    master = (id)navigationController.topViewController;
+    
+    navigationController = [splitViewController.viewControllers lastObject];
     splitViewController.delegate = (id)navigationController.topViewController;
     
     // Make sure that Regina knows where to find its internal data files.
@@ -70,8 +77,13 @@
         }
         return NO;
     }
-    
+
     return YES;
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    return [master openURL:url];
 }
 							
 - (void)applicationDidEnterBackground:(UIApplication *)application

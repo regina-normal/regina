@@ -64,16 +64,37 @@
     return self;
 }
 
-- (void)dealloc {
-    if (_tree) {
-        NSLog(@"Deleting packet tree...");
-        delete _tree;
-    }
-}
-
 + (id)documentWithExample:(Example *)e
 {
     return [[ReginaDocument alloc] initWithExample:e];
+}
+
+- (id)initWithURL:(NSURL *)u
+{
+    if (! [u isFileURL]) {
+        NSLog(@"Attempt to create a non-file document URL: %@", u);
+        return nil;
+    }
+
+    self = [super initWithFileURL:u];
+    if (self) {
+        description = nil;
+        _example = NO;
+        _tree = 0;
+    }
+    return self;
+}
+
++ (id)documentWithURL:(NSURL *)u
+{
+    return [[ReginaDocument alloc] initWithURL:u];
+}
+
+- (void)dealloc {
+    if (_tree) {
+        delete _tree;
+        NSLog(@"Deleted packet tree.");
+    }
 }
 
 - (NSString *)localizedName {

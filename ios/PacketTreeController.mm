@@ -149,42 +149,27 @@
     _detail = (DetailViewController*)nav.topViewController;
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    if (_node && ! _node->getTreeParent()) {
-        if ([self.navigationController.viewControllers indexOfObject:self] == NSNotFound) {
-            NSLog(@"Closing file.");
-            [self.doc closeWithCompletionHandler:^(BOOL success) {
-                NSLog(@"Closed.");
-                _doc = nil;
-            }];
-            [self.detail viewWelcome];
-        }
-    }
-    [super viewDidDisappear:animated];
-}
-
-- (void)openDocument:(ReginaDocument*)e {
-    _doc = e;
-    NSLog(@"Loading example...");
+- (void)openDocument:(ReginaDocument*)doc {
+    NSLog(@"Opening document...");
     
     // We use an activity indicator since files could take some time to load.
     UIView* rootView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
     MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:rootView animated:YES];
     [hud setLabelText:@"Loading"];
     
-    [self.doc openWithCompletionHandler:^(BOOL success) {
-        NSLog(@"Loaded example.");
-        _node = self.doc.tree;
+    [doc openWithCompletionHandler:^(BOOL success) {
+        NSLog(@"Opened.");
+        _node = doc.tree;
         _listener = [[PacketTreeListener alloc] initWithTree:self];
-        self.title = self.doc.localizedName;
+        self.title = doc.localizedName;
         [self refreshPackets];
         [MBProgressHUD hideHUDForView:rootView animated:YES];
+        // TODO: Enable packet + button.
     }];
     // TODO: Trap errors.
 }
 
-- (void)openSubtree:(regina::NPacket *)p doc:(ReginaDocument*)d {
-    _doc = d;
+- (void)openSubtree:(regina::NPacket *)p {
     _node = p;
     [self setTitle:[NSString stringWithUTF8String:p->getPacketLabel().c_str()]];
 
@@ -208,7 +193,7 @@
 }
 
 - (void)viewPacket:(regina::NPacket *)p {
-    [self.detail viewPacket:p];
+    self.detail.packet = p;
 }
 
 - (void)newPacket:(regina::PacketType)type {
@@ -260,7 +245,7 @@
 
 - (void)newPacketCreated:(NewPacketSpec *)spec packet:(regina::NPacket *)p {
     if (p->getPacketType() != regina::PACKET_CONTAINER)
-        [_detail viewPacket:p];
+        _detail.packet = p;
     _newPacketSpec = nil;
 }
 
@@ -389,7 +374,7 @@
         else
             packetIndex = indexPath.row;
         
-        [[segue destinationViewController] openSubtree:[_rows[packetIndex] packet] doc:_doc];
+        [[segue destinationViewController] openSubtree:[_rows[packetIndex] packet]];
         [[segue destinationViewController] refreshPackets];
     } else if ([[segue identifier] isEqualToString:@"newPacket"]) {
         _newPacketPopover = [(UIStoryboardPopoverSegue*)segue popoverController];

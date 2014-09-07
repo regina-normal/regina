@@ -38,4 +38,6 @@
  */
 @interface MasterViewController : DocumentListController
 
+- (BOOL)openURL:(NSURL*)url;
+
 @end

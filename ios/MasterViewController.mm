@@ -77,6 +77,41 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (BOOL)openURL:(NSURL *)url
+{
+    if (! url) {
+        UIAlertView* alert = [[UIAlertView alloc]
+                              initWithTitle:@"Missing URL"
+                              message:@"I have been asked to open a data file, but no URL was given."
+                              delegate:nil
+                              cancelButtonTitle:@"Close"
+                              otherButtonTitles:nil];
+        [alert show];
+        return NO;
+    }
+
+    if (! [url isFileURL]) {
+        UIAlertView* alert = [[UIAlertView alloc]
+                              initWithTitle:@"Not a local file"
+                              message:@"At present, I can only open data files that are stored on this device.  "
+                                "I cannot open network URLs (http, ftp, and so on)."
+                              delegate:nil
+                              cancelButtonTitle:@"Close"
+                              otherButtonTitles:nil];
+        [alert show];
+        return NO;
+    }
+    
+    // Wind back anything that is happening in the app at present.
+    // This will (amongst other things) have the effect of closing any document
+    // that might currently be open.
+    [self.navigationController popToRootViewControllerAnimated:NO];
+    
+    // Open the given document.
+    [self performSegueWithIdentifier:@"openURL" sender:url];
+    return YES;
+}
+
 - (void)newDocument:(id)sender
 {
     // TODO: Implement.

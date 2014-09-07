@@ -364,6 +364,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Documents" id="Zdf-7t-Un8"/>
+                    <connections>
+                        <segue destination="tA5-Tr-Mbx" kind="push" identifier="openURL" id="sZ3-q9-8Px"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rux-fX-hf1" sceneMemberID="firstResponder"/>
             </objects>
@@ -1074,6 +1077,6 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="Rid-hd-J4B"/>
+        <segue reference="sZ3-q9-8Px"/>
     </inferredMetricsTieBreakers>
 </document>

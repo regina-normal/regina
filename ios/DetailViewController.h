@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #import <UIKit/UIKit.h>
+#import "ReginaDocument.h"
 
 namespace regina {
     class NPacket;
@@ -38,10 +39,16 @@ namespace regina {
 
 @interface DetailViewController : UIViewController <UISplitViewControllerDelegate>
 
-@property (readonly, assign, nonatomic) regina::NPacket* packet;
+/**
+ * The current working document.
+ * If you set this to nil then the welcome screen will be displayed.
+ */
+@property (strong, nonatomic) ReginaDocument* doc;
 
-- (void)viewWelcome;
-- (void)viewOpenFile;
-- (void)viewPacket:(regina::NPacket*)p;
+/**
+ * The current working packet.
+ * If you set this to nil (but \a doc is non-nil) then an empty panel will be displayed.
+ */
+@property (assign, nonatomic) regina::NPacket* packet;
 
 @end

@@ -47,6 +47,11 @@
     [super awakeFromNib];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    _detail.doc = nil;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -67,8 +72,12 @@
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         ReginaDocument* doc = [self documentForIndexPath:indexPath];
         [[segue destinationViewController] openDocument:doc];
-        
-        [_detail viewOpenFile];
+        _detail.doc = doc;
+    } else if ([[segue identifier] isEqualToString:@"openURL"]) {
+        // The URL was supplied from elsewhere, not our table of available documents.
+        ReginaDocument* doc = [ReginaDocument documentWithURL:sender];
+        [[segue destinationViewController] openDocument:doc];
+        _detail.doc = doc;
     }
 }
 

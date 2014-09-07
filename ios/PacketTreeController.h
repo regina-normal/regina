@@ -43,12 +43,11 @@ namespace regina {
 
 @interface PacketTreeController : UITableViewController
 
-@property (strong, nonatomic, readonly) ReginaDocument* doc;
 @property (assign, nonatomic, readonly) regina::NPacket* node;
 
 - (DetailViewController *)detail;
 - (void)openDocument:(ReginaDocument*)e;
-- (void)openSubtree:(regina::NPacket*)p root:(regina::NPacket*)r;
+- (void)openSubtree:(regina::NPacket*)p;
 - (void)refreshPackets;
 - (void)viewPacket:(regina::NPacket*)p;
 - (void)newPacket:(regina::PacketType)type;

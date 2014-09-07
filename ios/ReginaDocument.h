@@ -72,4 +72,7 @@ namespace regina {
 - (id)initWithExample:(Example*)e;
 + (id)documentWithExample:(Example*)e;
 
+- (id)initWithURL:(NSURL*)u;
++ (id)documentWithURL:(NSURL*)u;
+
 @end

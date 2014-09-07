@@ -35,6 +35,8 @@
 #import "packet/npacket.h"
 #import "packet/packettype.h"
 
+bool initialised = NO;
+
 @interface DetailViewController () {
     NSString* _menuTitle;
     UIViewController* _sub;
@@ -45,50 +47,54 @@
 
 #pragma mark - Managing the detail item
 
-- (void)viewDidLoad
+- (void)renamePortraitPulloverButton:(NSString*)title
 {
-    [super viewDidLoad];
-	// Do any additional setup after loading the view.
-    [self viewWelcome];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (void)viewWelcome {
-    _packet = nil;
-    
-    [self navigationItem].title = @"";
-    [_sub performSegueWithIdentifier:@"embedWelcome" sender:nil];
-
-    _menuTitle = @"Documents";
+    _menuTitle = title;
     UIBarButtonItem* left = self.navigationItem.leftBarButtonItem;
     if (left)
         left.title = _menuTitle;
 }
 
-- (void)viewOpenFile {
+- (void)setDoc:(ReginaDocument *)doc
+{
+    if (doc == _doc && initialised)
+        return;
+    initialised = YES;
+    
+    if (_doc) {
+        NSLog(@"Closing document...");
+        [_doc closeWithCompletionHandler:^(BOOL success) {
+            NSLog(@"Closed.");
+        }];
+    }
+    
+    _doc = doc;
     _packet = nil;
     
-    [self navigationItem].title = @"";
-    [_sub performSegueWithIdentifier:@"embedEmpty" sender:nil];
-    
-    _menuTitle = @"Packets";
-    UIBarButtonItem* left = self.navigationItem.leftBarButtonItem;
-    if (left)
-        left.title = _menuTitle;
+    if (doc) {
+        // Display an empty panel.
+        [self navigationItem].title = @"";
+        [_sub performSegueWithIdentifier:@"embedEmpty" sender:nil];
+        
+        [self renamePortraitPulloverButton:@"Packets"];
+    } else {
+        // Display the welcome screen.
+        [self navigationItem].title = @"";
+        [_sub performSegueWithIdentifier:@"embedWelcome" sender:nil];
+
+        [self renamePortraitPulloverButton:@"Documents"];
+    }
 }
 
-- (void)viewPacket:(regina::NPacket *)p {
+- (void)setPacket:(regina::NPacket *)p {
     _packet = p;
     
     if (p == nil) {
+        // Display an empty panel.
         [self navigationItem].title = @"";
         [_sub performSegueWithIdentifier:@"embedEmpty" sender:nil];
     } else {
+        // Display the packet viewer / editor.
         [self navigationItem].title = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
         [_sub performSegueWithIdentifier:[PacketManagerIOS segueFor:p] sender:self];
     }
