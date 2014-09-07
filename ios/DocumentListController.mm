@@ -67,15 +67,17 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Note: the real work for loading a data file happens in a new thread.
     if ([[segue identifier] isEqualToString:@"openDocument"]) {
-        // Note: the real work for opening files happens in a new thread.
+        // The user clicked on a table cell that represents a document.
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         ReginaDocument* doc = [self documentForIndexPath:indexPath];
         [[segue destinationViewController] openDocument:doc];
         _detail.doc = doc;
-    } else if ([[segue identifier] isEqualToString:@"openURL"]) {
-        // The URL was supplied from elsewhere, not our table of available documents.
-        ReginaDocument* doc = [ReginaDocument documentWithURL:sender];
+    } else if ([[segue identifier] isEqualToString:@"openInbox"]) {
+        // Some other app sent a document to our inbox.
+        // The URL inside the inbox will be contained in sender.
+        ReginaDocument* doc = [ReginaDocument documentWithInboxURL:sender];
         [[segue destinationViewController] openDocument:doc];
         _detail.doc = doc;
     }

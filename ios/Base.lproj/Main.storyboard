@@ -365,7 +365,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Documents" id="Zdf-7t-Un8"/>
                     <connections>
-                        <segue destination="tA5-Tr-Mbx" kind="push" identifier="openURL" id="sZ3-q9-8Px"/>
+                        <segue destination="tA5-Tr-Mbx" kind="push" identifier="openInbox" id="sZ3-q9-8Px"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rux-fX-hf1" sceneMemberID="firstResponder"/>

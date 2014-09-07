@@ -40,6 +40,7 @@
 
 @interface ReginaDocument () {
     NSString* description;
+    BOOL readOnly;
 }
 @end
 
@@ -56,8 +57,8 @@
     self = [super initWithFileURL:[NSURL fileURLWithPath:path]];
     if (self) {
         description = e.desc;
-        _example = YES;
         _tree = 0;
+        readOnly = YES;
     }
     return self;
 }
@@ -66,6 +67,30 @@
 {
     return [[ReginaDocument alloc] initWithExample:e];
 }
+
+- (id)initWithInboxURL:(NSURL *)u
+{
+    if (! [u isFileURL]) {
+        NSLog(@"Inbox URL is not a file URL: %@", u);
+        return nil;
+    }
+    
+    self = [super initWithFileURL:u];
+    if (self) {
+        description = nil;
+        _tree = 0;
+        readOnly = NO;
+        
+        // TODO: Move to documents folder.
+    }
+    return self;
+}
+
++ (id)documentWithInboxURL:(NSURL *)u
+{
+    return [[ReginaDocument alloc] initWithInboxURL:u];
+}
+
 
 - (id)initWithURL:(NSURL *)u
 {
@@ -77,8 +102,8 @@
     self = [super initWithFileURL:u];
     if (self) {
         description = nil;
-        _example = NO;
         _tree = 0;
+        readOnly = NO;
     }
     return self;
 }

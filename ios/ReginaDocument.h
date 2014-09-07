@@ -52,11 +52,6 @@ namespace regina {
 @interface ReginaDocument : UIDocument
 
 /**
- * Is this one of the (read-only) example files shipped with Regina?
- */
-@property (assign, nonatomic, readonly) BOOL example;
-
-/**
  * Stores the full packet tree whilst the file is open.
  *
  * This is \c nil until the file has been successfully read, and will be
@@ -71,6 +66,9 @@ namespace regina {
 
 - (id)initWithExample:(Example*)e;
 + (id)documentWithExample:(Example*)e;
+
+- (id)initWithInboxURL:(NSURL*)u;
++ (id)documentWithInboxURL:(NSURL*)u;
 
 - (id)initWithURL:(NSURL*)u;
 + (id)documentWithURL:(NSURL*)u;
