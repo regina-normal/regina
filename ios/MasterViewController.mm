@@ -108,7 +108,7 @@
     [self.navigationController popToRootViewControllerAnimated:NO];
     
     // Open the given document.
-    [self performSegueWithIdentifier:@"openURL" sender:url];
+    [self performSegueWithIdentifier:@"openInbox" sender:url];
     return YES;
 }
 
