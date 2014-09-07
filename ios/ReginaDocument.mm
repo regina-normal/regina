@@ -36,8 +36,6 @@
 #import <boost/iostreams/stream.hpp>
 #import <sstream>
 
-// TODO: Delete packet when closing the document.
-
 // TODO: Perhaps override the hooks disableEditing / enableEditing, to make the UI read-only?
 
 @interface ReginaDocument () {
