@@ -38,6 +38,8 @@
 
 // TODO: Perhaps override the hooks disableEditing / enableEditing, to make the UI read-only?
 
+static NSURL* docsDir_ = nil;
+
 @interface ReginaDocument () {
     NSString* description;
     BOOL readOnly;
@@ -74,14 +76,24 @@
         NSLog(@"Inbox URL is not a file URL: %@", u);
         return nil;
     }
-    
+
+    // Move from the inbox into the documents folder.
+    NSLog(@"Moving file out of inbox: %@", u);
+    BOOL moveOk = NO;
+    NSURL* docURL = [ReginaDocument uniqueDocURLFor:u];
+    if (docURL)
+        moveOk = [[NSFileManager defaultManager] moveItemAtURL:u toURL:docURL error:nil];
+    if (moveOk) {
+        NSLog(@"New URL: %@", docURL);
+        u = docURL;
+    } else
+        NSLog(@"Could not move to new URL: %@", docURL);
+
     self = [super initWithFileURL:u];
     if (self) {
         description = nil;
         _tree = 0;
-        readOnly = NO;
-        
-        // TODO: Move to documents folder.
+        readOnly = ! moveOk;
     }
     return self;
 }
@@ -154,6 +166,39 @@
     } else {
         // TODO
         return nil;
+    }
+}
+
++ (NSURL *)docsDir
+{
+    if (! docsDir_)
+        docsDir_ = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:nil];
+    return docsDir_;
+}
+
++ (NSURL *)uniqueDocURLFor:(NSURL *)url
+{
+    // Note: [NSURL URLByAppendingPathComponent] handles all necessary character escaping for us.
+    NSString* filename = [url lastPathComponent];
+
+    NSFileManager* f = [NSFileManager defaultManager];
+    NSURL* dir = [ReginaDocument docsDir];
+
+    url = [dir URLByAppendingPathComponent:filename];
+    if (! [f fileExistsAtPath:url.path])
+        return url;
+    
+    NSString* basename = [filename stringByDeletingPathExtension];
+    NSString* extension = [url pathExtension];
+    
+    int i = 1;
+    while (true) {
+        filename = [NSString stringWithFormat:@"%@ %d.%@", basename, i, extension];
+        url = [dir URLByAppendingPathComponent:filename];
+        if (! [f fileExistsAtPath:url.path])
+            return url;
+        
+        ++i;
     }
 }
 

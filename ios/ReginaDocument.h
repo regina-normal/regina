@@ -73,4 +73,7 @@ namespace regina {
 - (id)initWithURL:(NSURL*)u;
 + (id)documentWithURL:(NSURL*)u;
 
++ (NSURL*)docsDir;
++ (NSURL*)uniqueDocURLFor:(NSURL*)url;
+
 @end
