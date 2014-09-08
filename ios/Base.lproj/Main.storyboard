@@ -366,6 +366,7 @@
                     <navigationItem key="navigationItem" title="Documents" id="Zdf-7t-Un8"/>
                     <connections>
                         <segue destination="tA5-Tr-Mbx" kind="push" identifier="openInbox" id="sZ3-q9-8Px"/>
+                        <segue destination="tA5-Tr-Mbx" kind="push" identifier="openNew" id="PKC-M9-EqR"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rux-fX-hf1" sceneMemberID="firstResponder"/>
@@ -1077,6 +1078,6 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="sZ3-q9-8Px"/>
+        <segue reference="PKC-M9-EqR"/>
     </inferredMetricsTieBreakers>
 </document>

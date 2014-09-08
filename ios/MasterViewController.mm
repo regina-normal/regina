@@ -37,9 +37,10 @@
 // TODO: Support dropbox documents.
 // TODO: Allow adding/reordering/deleting/renaming documents.
 
-@interface MasterViewController () {
-    NSMutableArray *_objects;
-}
+@interface MasterViewController ()
+
+@property (strong, nonatomic) NSMutableArray *docURLs;
+
 @end
 
 @implementation MasterViewController
@@ -66,15 +67,17 @@
      * TODO: Document add/edit/etc. buttons go here.
      self.navigationItem.leftBarButtonItem = self.editButtonItem;
      */
-     
+    
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newDocument:)];
     self.navigationItem.rightBarButtonItem = addButton;
+
+    self.docURLs = [NSMutableArray array];
 }
 
-- (void)didReceiveMemoryWarning
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    [super viewWillAppear:animated];
+    [self refreshDocURLs];
 }
 
 - (BOOL)openURL:(NSURL *)url
@@ -102,7 +105,9 @@
         return NO;
     }
     
-    // Wind back anything that is happening in the app at present.
+    // This request may be coming from some other app, and this app may be
+    // in the middle of something completely different.
+    // Wind back anything that is happening in this app at present.
     // This will (amongst other things) have the effect of closing any document
     // that might currently be open.
     [self.navigationController popToRootViewControllerAnimated:NO];
@@ -114,15 +119,7 @@
 
 - (void)newDocument:(id)sender
 {
-    // TODO: Implement.
-    /*
-    if (!_objects) {
-        _objects = [[NSMutableArray alloc] init];
-    }
-    [_objects insertObject:[NSDate date] atIndex:0];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:1];
-    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-     */
+    [self performSegueWithIdentifier:@"openNew" sender:self];
 }
 
 - (ReginaDocument *)documentForIndexPath:(NSIndexPath *)indexPath
@@ -130,8 +127,20 @@
     if (indexPath.section == 0)
         return (indexPath.row == 0 ? [ReginaDocument documentWithExample:[Example intro]] : nil);
     else
-        // TODO
-        return nil;
+        return [ReginaDocument documentWithURL:self.docURLs[indexPath.row]];
+}
+
+- (void)refreshDocURLs
+{
+    // TODO: Sort, timestamp, etc.
+    [self.docURLs removeAllObjects];
+    
+    NSArray* contents = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:[ReginaDocument docsDir] includingPropertiesForKeys:nil options:nil error:nil];
+    for (NSURL* url in [contents objectEnumerator]) {
+        [self.docURLs addObject:url];
+    }
+    
+    [self.tableView reloadData];
 }
 
 #pragma mark - Table View
@@ -145,8 +154,8 @@
 {
     if (section == 0)
         return 2;
-     else
-        return 0; // TODO number of user documents.
+    else
+        return self.docURLs.count;
 }
 
 - (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -170,8 +179,9 @@
         }
     } else {
         cell = [tableView dequeueReusableCellWithIdentifier:@"Document" forIndexPath:indexPath];
-        NSDate *object = _objects[indexPath.row];
-        cell.textLabel.text = [object description];
+        NSURL* url = self.docURLs[indexPath.row];
+        // TODO: Strip the extension.
+        cell.textLabel.text = url.lastPathComponent;
     }
     return cell;
 }
@@ -185,12 +195,14 @@
 // TODO: Add/remove functionality goes here.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    /* TODO: Implement.
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         [_objects removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
     }
+     */
 }
 
 /*

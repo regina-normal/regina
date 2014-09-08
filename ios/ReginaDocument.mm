@@ -31,7 +31,8 @@
  **************************************************************************/
 
 #import "ReginaDocument.h"
-#import "packet/npacket.h"
+#import "packet/ncontainer.h"
+#import "packet/ntext.h"
 #import <boost/iostreams/device/array.hpp>
 #import <boost/iostreams/stream.hpp>
 #import <sstream>
@@ -125,6 +126,39 @@ static NSURL* docsDir_ = nil;
     return [[ReginaDocument alloc] initWithURL:u];
 }
 
+- (id)initNewWithCompletionHandler:(void (^)(ReginaDocument*))completionHandler
+{
+    NSURL* url = [ReginaDocument uniqueDocURLFor:[NSURL URLWithString:@"Untitled.rga" relativeToURL:[ReginaDocument docsDir]]];
+    if (! url) {
+        completionHandler(nil);
+        return nil;
+    }
+    
+    self = [super initWithFileURL:url];
+    if (self) {
+        _tree = new regina::NContainer();
+        regina::NText* text = new regina::NText("TODO: A welcome.");
+        text->setPacketLabel("Read me");
+        _tree->insertChildLast(text);
+        
+        [self saveToURL:url forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
+            if (success)
+                completionHandler(self);
+            else
+                completionHandler(nil);
+        }];
+        return self;
+    } else {
+        completionHandler(nil);
+        return nil;
+    }
+}
+
++ (id)documentNewWithCompletionHandler:(void (^)(ReginaDocument*))completionHandler
+{
+    return [[ReginaDocument alloc] initNewWithCompletionHandler:completionHandler];
+}
+
 - (void)dealloc {
     if (_tree) {
         delete _tree;
@@ -158,6 +192,8 @@ static NSURL* docsDir_ = nil;
         // TODO
         return nil;
     }
+    
+    NSLog(@"Preparing to save: %@", self.fileURL);
     
     std::ostringstream s;
     if (_tree->save(s)) {

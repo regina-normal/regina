@@ -149,7 +149,25 @@
     _detail = (DetailViewController*)nav.topViewController;
 }
 
-- (void)openDocument:(ReginaDocument*)doc {
+- (void)newDocument
+{
+    NSLog(@"Creating new document...");
+    
+    [self detail].doc = [ReginaDocument documentNewWithCompletionHandler:^(ReginaDocument* doc) {
+        if (! doc) {
+            NSLog(@"Could not create.");
+            return;
+        }
+        NSLog(@"Created.");
+        _node = doc.tree;
+        _listener = [[PacketTreeListener alloc] initWithTree:self];
+        self.title = doc.localizedName;
+        [self refreshPackets];        
+    }];
+}
+
+- (void)openDocument:(ReginaDocument*)doc
+{
     NSLog(@"Opening document...");
     
     // We use an activity indicator since files could take some time to load.
@@ -166,6 +184,8 @@
         [MBProgressHUD hideHUDForView:rootView animated:YES];
         // TODO: Enable packet + button.
     }];
+    
+    [self detail].doc = doc;
     // TODO: Trap errors.
 }
 
@@ -193,7 +213,7 @@
 }
 
 - (void)viewPacket:(regina::NPacket *)p {
-    self.detail.packet = p;
+    [self detail].packet = p;
 }
 
 - (void)newPacket:(regina::PacketType)type {

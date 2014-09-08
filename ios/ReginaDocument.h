@@ -54,11 +54,12 @@ namespace regina {
 /**
  * Stores the full packet tree whilst the file is open.
  *
- * This is \c nil until the file has been successfully read, and will be
- * \c nil again after the document has been successfully closed.
+ * This is \c nil until either the file has been successfully read or a new
+ * file has been created.  It will be \c nil again after the document has been
+ * successfully closed.
  *
- * Be warned that opening and closing operations are asynchronous.  So,
- * for instance, the \a tree property may still be \c nil for a little
+ * Be warned that creation, opening and closing operations are asynchronous.
+ * So, for instance, the \a tree property may still be \c nil for a little
  * time after openWithCompletionHandler returns, and may still be non-null
  * for a little time after closeWithCompletionHandler returns.
  */
@@ -72,6 +73,10 @@ namespace regina {
 
 - (id)initWithURL:(NSURL*)u;
 + (id)documentWithURL:(NSURL*)u;
+
+// Note: these leave the document in an opened state.
+- (id)initNewWithCompletionHandler:(void (^)(ReginaDocument* doc))completionHandler;
++ (id)documentNewWithCompletionHandler:(void (^)(ReginaDocument* doc))completionHandler;
 
 + (NSURL*)docsDir;
 + (NSURL*)uniqueDocURLFor:(NSURL*)url;
