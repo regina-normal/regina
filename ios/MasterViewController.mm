@@ -36,6 +36,12 @@
 // TODO: Support dropbox documents.
 // TODO: Allow renaming documents.
 
+// Action sheet tags;
+enum {
+    sheetNew,
+    sheetDelete
+};
+
 @interface MasterViewController () <UIActionSheetDelegate> {
     UITableView* deleteTableView;
     NSIndexPath* deleteIndexPath;
@@ -116,7 +122,13 @@
 
 - (void)newDocument:(id)sender
 {
-    [self performSegueWithIdentifier:@"openNew" sender:self];
+    UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                       delegate:self
+                                              cancelButtonTitle:@"Cancel"
+                                         destructiveButtonTitle:nil
+                                              otherButtonTitles:@"New document", nil];
+    sheet.tag = sheetNew;
+    [sheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
 }
 
 - (ReginaDocument *)documentForIndexPath:(NSIndexPath *)indexPath
@@ -199,26 +211,35 @@
         deleteTableView = tableView;
         deleteIndexPath = indexPath;
         UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete file" otherButtonTitles:nil];
+        sheet.tag = sheetDelete;
         [sheet showInView:tableView];
     }
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == actionSheet.destructiveButtonIndex) {
-        NSURL* url = self.docURLs[deleteIndexPath.row];
-        NSLog(@"Deleting document: %@", url);
-        if ([[NSFileManager defaultManager] removeItemAtURL:url error:nil]) {
-            [self.docURLs removeObjectAtIndex:deleteIndexPath.row];
-            [deleteTableView deleteRowsAtIndexPaths:@[deleteIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-        } else {
-            UIAlertView* alert = [[UIAlertView alloc]
-                                  initWithTitle:@"Could not delete document"
-                                  message:nil
-                                  delegate:nil
-                                  cancelButtonTitle:@"Close"
-                                  otherButtonTitles:nil];
-            [alert show];
-        }
+    switch (actionSheet.tag) {
+        case sheetNew:
+            if (buttonIndex == 0)
+                [self performSegueWithIdentifier:@"openNew" sender:self];
+            break;
+        case sheetDelete:
+            if (buttonIndex == actionSheet.destructiveButtonIndex) {
+                NSURL* url = self.docURLs[deleteIndexPath.row];
+                NSLog(@"Deleting document: %@", url);
+                if ([[NSFileManager defaultManager] removeItemAtURL:url error:nil]) {
+                    [self.docURLs removeObjectAtIndex:deleteIndexPath.row];
+                    [deleteTableView deleteRowsAtIndexPaths:@[deleteIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+                } else {
+                    UIAlertView* alert = [[UIAlertView alloc]
+                                          initWithTitle:@"Could not delete document"
+                                          message:nil
+                                          delegate:nil
+                                          cancelButtonTitle:@"Close"
+                                          otherButtonTitles:nil];
+                    [alert show];
+                }
+            }
+            break;
     }
 }
 
