@@ -48,10 +48,12 @@ namespace regina {
 - (void)newDocumentWithDetail:(DetailViewController*)d;
 - (void)openDocument:(ReginaDocument*)doc detail:(DetailViewController*)d;
 - (void)openSubtree:(regina::NPacket*)p detail:(DetailViewController*)d;
+
 - (void)refreshPackets;
 - (void)viewPacket:(regina::NPacket*)p;
 - (void)newPacket:(regina::PacketType)type;
 
+- (ReginaDocument*)document;
 - (regina::NPacket*)viewingPacket;
 
 - (void)newPacketCreated:(NewPacketSpec*)spec packet:(regina::NPacket*)p;

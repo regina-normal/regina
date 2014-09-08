@@ -96,16 +96,30 @@
     return self;
 }
 
+- (void)packetWasChanged:(regina::NPacket *)packet {
+    [_tree.document updateChangeCount:UIDocumentChangeDone];
+}
+
+- (void)packetWasRenamed:(regina::NPacket *)packet {
+    // TODO
+    [_tree.document updateChangeCount:UIDocumentChangeDone];
+    [_tree refreshPackets];
+}
+
 - (void)childWasAddedTo:(regina::NPacket*)packet child:(regina::NPacket*)child {
     // TODO
+    [_tree.document updateChangeCount:UIDocumentChangeDone];
     [_tree refreshPackets];
     if (packet == _tree.node)
         [self listen:child];
 }
 
-- (void)packetWasRenamed:(regina::NPacket *)packet {
-    // TODO
-    [_tree refreshPackets];
+- (void)childWasRemovedFrom:(regina::NPacket *)packet child:(regina::NPacket *)child inParentDestructor:(bool)d {
+    [_tree.document updateChangeCount:UIDocumentChangeDone];
+}
+
+- (void)childrenWereReordered:(regina::NPacket *)packet {
+    [_tree.document updateChangeCount:UIDocumentChangeDone];
 }
 
 @end
@@ -243,6 +257,11 @@
             [self newPacketCancelled:_newPacketSpec];
             break;
     }
+}
+
+- (ReginaDocument *)document
+{
+    return _detail.doc;
 }
 
 - (regina::NPacket *)viewingPacket
