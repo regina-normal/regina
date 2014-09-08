@@ -35,8 +35,6 @@
 #import "packet/npacket.h"
 #import "packet/packettype.h"
 
-bool initialised = NO;
-
 @interface DetailViewController () {
     NSString* _menuTitle;
     UIViewController* _sub;
@@ -55,13 +53,12 @@ bool initialised = NO;
         left.title = _menuTitle;
 }
 
-- (void)setDoc:(ReginaDocument *)doc
+- (void)setDoc:(ReginaDocument *)doc forceRefresh:(BOOL)force
 {
-    if (doc == _doc && initialised)
+    if (doc == _doc && ! force)
         return;
-    initialised = YES;
-    
-    if (_doc) {
+
+    if (_doc && _doc != doc) {
         NSLog(@"Closing document...");
         [_doc closeWithCompletionHandler:^(BOOL success) {
             NSLog(@"Closed.");
@@ -81,9 +78,14 @@ bool initialised = NO;
         // Display the welcome screen.
         [self navigationItem].title = @"";
         [_sub performSegueWithIdentifier:@"embedWelcome" sender:nil];
-
+        
         [self renamePortraitPulloverButton:@"Documents"];
     }
+}
+
+- (void)setDoc:(ReginaDocument *)doc
+{
+    [self setDoc:doc forceRefresh:NO];
 }
 
 - (void)setPacket:(regina::NPacket *)p {
@@ -102,7 +104,12 @@ bool initialised = NO;
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // This is the embed segue.
-    _sub = segue.destinationViewController;
+    if (! _sub) {
+        _sub = segue.destinationViewController;
+        
+        // Now that we have identified _sub, refresh the detail view.
+        [self setDoc:_doc forceRefresh:YES];
+    }
 }
 
 #pragma mark - Split view
