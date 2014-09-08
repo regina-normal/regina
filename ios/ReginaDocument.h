@@ -33,6 +33,7 @@
 #import <UIKit/UIKit.h>
 #import "Example.h"
 
+// TODO: When editing an example document, copy into the docs directory.
 // TODO: Editing and saving a document
 // TODO: Putting a selected document in iCloud storage (and removing a selected document from iCloud storage)
 // TODO: Indicating error conditions, including document-version conflicts
