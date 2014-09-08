@@ -18,3 +18,4 @@ if (${REGINA_INSTALL_DEV})
     nmorsefunction.h
     DESTINATION ${INCLUDEDIR}/morse COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
+
