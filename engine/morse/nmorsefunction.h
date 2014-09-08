@@ -195,7 +195,9 @@ add 'const' in the end if this function should not change the data of the object
 // TODO: 
 // 1. replace NTriangle* by data types (template stuff...)
 
-        NTriangle* criticalFace(int d, int i) const;
+        template <int dim>
+        typename DimTraits<3>::Face<dim>::type* criticalFace(int i) const;
+
         /** 
          *
          *

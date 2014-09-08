@@ -95,11 +95,15 @@ struct DimTraits<2> {
     typedef NPerm3 Perm;
 };
 
+class NEdge;
+class NTetrahedron;
+class NTriangle;
 class NTriangulation;
 class NTetrahedron;
 class NIsomorphism;
 class NFacePairing;
 class NPerm4;
+class NVertex;
 
 template <>
 struct DimTraits<3> {
@@ -108,7 +112,32 @@ struct DimTraits<3> {
     typedef NIsomorphism Isomorphism;
     typedef NFacePairing FacetPairing;
     typedef NPerm4 Perm;
+
+    // TODO: Document this mess below.
+    template <int dim>
+    struct Face;
 };
+
+template <>
+struct DimTraits<3>::Face<0> {
+    typedef NVertex type;
+};
+
+template <>
+struct DimTraits<3>::Face<1> {
+    typedef NEdge type;
+};
+
+template <>
+struct DimTraits<3>::Face<2> {
+    typedef NTriangle type;
+};
+
+template <>
+struct DimTraits<3>::Face<3> {
+    typedef NTetrahedron type;
+};
+
 #endif
 
 } // namespace regina
