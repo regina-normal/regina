@@ -33,14 +33,14 @@
 #import "MasterViewController.h"
 #import "ReginaDocument.h"
 
-// TODO: Support user documents.
 // TODO: Support dropbox documents.
-// TODO: Allow adding/reordering/deleting/renaming documents.
+// TODO: Allow renaming documents.
 
-@interface MasterViewController ()
-
+@interface MasterViewController () <UIActionSheetDelegate> {
+    UITableView* deleteTableView;
+    NSIndexPath* deleteIndexPath;
+}
 @property (strong, nonatomic) NSMutableArray *docURLs;
-
 @end
 
 @implementation MasterViewController
@@ -62,11 +62,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-    /**
-     * TODO: Document add/edit/etc. buttons go here.
-     self.navigationItem.leftBarButtonItem = self.editButtonItem;
-     */
+    
+    self.navigationItem.leftBarButtonItem = self.editButtonItem;
     
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newDocument:)];
     self.navigationItem.rightBarButtonItem = addButton;
@@ -188,21 +185,41 @@
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // TODO: Return NO if you do not want the specified item to be editable.
-    return NO;
+    return (indexPath.section == 1);
 }
 
-// TODO: Add/remove functionality goes here.
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return UITableViewCellEditingStyleDelete;
+}
+
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    /* TODO: Implement.
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [_objects removeObjectAtIndex:indexPath.row];
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
+        deleteTableView = tableView;
+        deleteIndexPath = indexPath;
+        UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete file" otherButtonTitles:nil];
+        [sheet showInView:tableView];
     }
-     */
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == actionSheet.destructiveButtonIndex) {
+        NSURL* url = self.docURLs[deleteIndexPath.row];
+        NSLog(@"Deleting document: %@", url);
+        if ([[NSFileManager defaultManager] removeItemAtURL:url error:nil]) {
+            [self.docURLs removeObjectAtIndex:deleteIndexPath.row];
+            [deleteTableView deleteRowsAtIndexPaths:@[deleteIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+        } else {
+            UIAlertView* alert = [[UIAlertView alloc]
+                                  initWithTitle:@"Could not delete document"
+                                  message:nil
+                                  delegate:nil
+                                  cancelButtonTitle:@"Close"
+                                  otherButtonTitles:nil];
+            [alert show];
+        }
+    }
 }
 
 /*

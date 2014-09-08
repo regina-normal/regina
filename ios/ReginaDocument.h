@@ -33,10 +33,7 @@
 #import <UIKit/UIKit.h>
 #import "Example.h"
 
-// TODO: Viewing and editing a document
-// TODO: Creating a new document
-// TODO: Selecting a document from a list of documents owned by the application
-// TODO: Opening, closing, renaming, and deleting a selected document
+// TODO: Editing and saving a document
 // TODO: Putting a selected document in iCloud storage (and removing a selected document from iCloud storage)
 // TODO: Indicating error conditions, including document-version conflicts
 
