@@ -71,7 +71,7 @@ static NSURL* docsDir_ = nil;
     return [[ReginaDocument alloc] initWithExample:e];
 }
 
-- (id)initWithInboxURL:(NSURL *)u
+- (id)initWithInboxURL:(NSURL *)u preferredName:(NSURL *)name
 {
     if (! [u isFileURL]) {
         NSLog(@"Inbox URL is not a file URL: %@", u);
@@ -81,7 +81,7 @@ static NSURL* docsDir_ = nil;
     // Move from the inbox into the documents folder.
     NSLog(@"Moving file out of inbox: %@", u);
     BOOL moveOk = NO;
-    NSURL* docURL = [ReginaDocument uniqueDocURLFor:u];
+    NSURL* docURL = [ReginaDocument uniqueDocURLFor:(name ? name : u)];
     if (docURL)
         moveOk = [[NSFileManager defaultManager] moveItemAtURL:u toURL:docURL error:nil];
     if (moveOk) {
@@ -99,9 +99,9 @@ static NSURL* docsDir_ = nil;
     return self;
 }
 
-+ (id)documentWithInboxURL:(NSURL *)u
++ (id)documentWithInboxURL:(NSURL *)u preferredName:(NSURL *)name
 {
-    return [[ReginaDocument alloc] initWithInboxURL:u];
+    return [[ReginaDocument alloc] initWithInboxURL:u preferredName:name];
 }
 
 

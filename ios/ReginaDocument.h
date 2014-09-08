@@ -65,8 +65,8 @@ namespace regina {
 - (id)initWithExample:(Example*)e;
 + (id)documentWithExample:(Example*)e;
 
-- (id)initWithInboxURL:(NSURL*)u;
-+ (id)documentWithInboxURL:(NSURL*)u;
+- (id)initWithInboxURL:(NSURL*)u preferredName:(NSURL*)name;
++ (id)documentWithInboxURL:(NSURL*)u preferredName:(NSURL*)name;
 
 - (id)initWithURL:(NSURL*)u;
 + (id)documentWithURL:(NSURL*)u;

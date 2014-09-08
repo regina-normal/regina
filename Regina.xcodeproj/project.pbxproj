@@ -1049,6 +1049,7 @@
 		05CA99E618078466006161DC /* registryutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CA99E518078465006161DC /* registryutils.h */; };
 		05D0A1101812F0BE005ED097 /* TriangulationViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D0A10F1812F0BE005ED097 /* TriangulationViewController.mm */; };
 		05EC452F19B99A81002D0633 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA23E180613A900FAE4DF /* boost.framework */; };
+		05F4947C19BDDD5E00CD887C /* DBChooser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F4947B19BDDD5D00CD887C /* DBChooser.framework */; };
 		05F9560A19B5298E00377BEC /* closed-hyp-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F971809CB7600F86BFD /* closed-hyp-census.rga */; };
 		05F9560B19B5298E00377BEC /* closed-nor-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F981809CB7600F86BFD /* closed-nor-census.rga */; };
 		05F9560C19B5298E00377BEC /* closed-or-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F9A1809CB7600F86BFD /* closed-or-census.rga */; };
@@ -2177,6 +2178,7 @@
 		05CA99E518078465006161DC /* registryutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = registryutils.h; sourceTree = "<group>"; };
 		05D0A10E1812F0BE005ED097 /* TriangulationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriangulationViewController.h; sourceTree = "<group>"; };
 		05D0A10F1812F0BE005ED097 /* TriangulationViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TriangulationViewController.mm; sourceTree = "<group>"; };
+		05F4947B19BDDD5D00CD887C /* DBChooser.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DBChooser.framework; path = ../../Library/Frameworks/DBChooser.framework; sourceTree = "<group>"; };
 		05F9561119B53E7900377BEC /* TriRecognitionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriRecognitionViewController.h; sourceTree = "<group>"; };
 		05F9561219B53E7900377BEC /* TriRecognitionViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TriRecognitionViewController.mm; sourceTree = "<group>"; };
 		05F96C111809F59600C99F96 /* PacketTreeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketTreeController.h; sourceTree = "<group>"; };
@@ -2210,6 +2212,7 @@
 				052FA12C1806102F00FAE4DF /* CoreGraphics.framework in Frameworks */,
 				057FA7561806184B008E25F6 /* UIKit.framework in Frameworks */,
 				052FA12A1806102F00FAE4DF /* Foundation.framework in Frameworks */,
+				05F4947C19BDDD5E00CD887C /* DBChooser.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3054,6 +3057,7 @@
 		052FA0AF180604A900FAE4DF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				05F4947B19BDDD5D00CD887C /* DBChooser.framework */,
 				0564A99E1811DB01002CC2AE /* QtCore.framework */,
 				0564A99F1811DB02002CC2AE /* QtGui.framework */,
 				0569F93119B3658200051091 /* libbz2.dylib */,
@@ -5000,7 +5004,7 @@
 					/usr/include/libxml2,
 				);
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = Regina;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
@@ -5035,7 +5039,7 @@
 					/usr/include/libxml2,
 				);
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = Regina;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;

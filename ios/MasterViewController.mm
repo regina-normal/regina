@@ -30,7 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
+#import "DBChooser/DBChooser.h"
 #import "MasterViewController.h"
+#import "MBProgressHUD.h"
 #import "ReginaDocument.h"
 
 // TODO: Support dropbox documents.
@@ -43,9 +45,11 @@ enum {
     sheetDelete
 };
 
-@interface MasterViewController () <UIActionSheetDelegate> {
+@interface MasterViewController () <UIActionSheetDelegate, NSURLSessionDownloadDelegate> {
     UITableView* actionTableView;
     NSIndexPath* actionIndexPath;
+    MBProgressHUD* dropboxHUD;
+    UIView* rootView;
 }
 @property (strong, nonatomic) NSMutableArray *docURLs;
 @end
@@ -54,15 +58,7 @@ enum {
 
 - (void)awakeFromNib
 {
-    // Apple tells us that this is how to test for iOS6.x vs iOS 7:
-    if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1) {
-        NSLog(@"Running in iOS 6.x");
-        self.contentSizeForViewInPopover = CGSizeMake(320.0, 600.0);
-    } else {
-        NSLog(@"Running in iOS 7 or above");
-        // This method crashes in iOS6 (unrecognised selector).
-        self.preferredContentSize = CGSizeMake(320.0, 600.0);
-    }
+    self.preferredContentSize = CGSizeMake(320.0, 600.0);
     [super awakeFromNib];
 }
 
@@ -84,7 +80,7 @@ enum {
     [self refreshDocURLs];
 }
 
-- (BOOL)openURL:(NSURL *)url
+- (BOOL)openURL:(NSURL *)url preferredName:(NSURL *)name
 {
     if (! url) {
         UIAlertView* alert = [[UIAlertView alloc]
@@ -96,17 +92,26 @@ enum {
         [alert show];
         return NO;
     }
-
+    
     if (! [url isFileURL]) {
-        UIAlertView* alert = [[UIAlertView alloc]
-                              initWithTitle:@"Not a local file"
-                              message:@"At present, I can only open data files that are stored on this device.  "
-                                "I cannot open network URLs (http, ftp, and so on)."
-                              delegate:nil
-                              cancelButtonTitle:@"Close"
-                              otherButtonTitles:nil];
-        [alert show];
-        return NO;
+        if ([url.scheme hasPrefix:@"db-"]) {
+            // Looks like a Dropbox URL.
+            return [[DBChooser defaultChooser] handleOpenURL:url];
+        } else {
+            // Download the contents of the URL, and save it to the local documents directory.
+            NSURLSessionConfiguration* config = [NSURLSessionConfiguration defaultSessionConfiguration];
+            NSURLSession* session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
+            NSURLSessionDownloadTask* task = [session downloadTaskWithURL:url];
+            
+            rootView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
+            dropboxHUD = [MBProgressHUD showHUDAddedTo:rootView animated:YES];
+            dropboxHUD.mode = MBProgressHUDModeDeterminateHorizontalBar;
+            dropboxHUD.progress = 0.0;
+            dropboxHUD.labelText = @"Downloading...";
+
+            [task resume];
+            return YES;
+        }
     }
     
     // This request may be coming from some other app, and this app may be
@@ -117,8 +122,25 @@ enum {
     [self.navigationController popToRootViewControllerAnimated:NO];
     
     // Open the given document.
-    [self performSegueWithIdentifier:@"openInbox" sender:url];
-    return YES;
+    ReginaDocument* doc = [ReginaDocument documentWithInboxURL:url preferredName:nil];
+    if (doc) {
+        [self performSegueWithIdentifier:@"openInbox" sender:doc];
+        return YES;
+    } else {
+        UIAlertView* alert = [[UIAlertView alloc]
+                              initWithTitle:@"Could not save"
+                              message:nil
+                              delegate:nil
+                              cancelButtonTitle:@"Close"
+                              otherButtonTitles:nil];
+        [alert show];
+        return NO;
+    }
+}
+
+- (BOOL)openURL:(NSURL *)url
+{
+    return [self openURL:url preferredName:nil];
 }
 
 - (void)newDocument:(id)sender
@@ -127,7 +149,7 @@ enum {
                                                        delegate:self
                                               cancelButtonTitle:@"Cancel"
                                          destructiveButtonTitle:nil
-                                              otherButtonTitles:@"New document", nil];
+                                              otherButtonTitles:@"New document", @"Import from Dropbox", nil];
     sheet.tag = sheetNew;
     [sheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
 }
@@ -151,6 +173,57 @@ enum {
     }
     
     [self.tableView reloadData];
+}
+
+#pragma mark - URL Session
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location
+{
+    NSLog(@"Downloaded to: %@", location);
+ 
+    [MBProgressHUD hideHUDForView:rootView animated:NO];
+    dropboxHUD = nil;
+    
+    ReginaDocument* doc = [ReginaDocument documentWithInboxURL:location preferredName:downloadTask.currentRequest.URL];
+    if (doc)
+        [self performSegueWithIdentifier:@"openInbox" sender:doc];
+    else {
+        UIAlertView* alert = [[UIAlertView alloc]
+                              initWithTitle:@"Could not save"
+                              message:nil
+                              delegate:nil
+                              cancelButtonTitle:@"Close"
+                              otherButtonTitles:nil];
+        [alert show];
+    }
+}
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
+{
+    if (dropboxHUD && totalBytesExpectedToWrite > 0)
+        dropboxHUD.progress = (float(totalBytesWritten)) / (float(totalBytesExpectedToWrite));
+}
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
+{
+    if (error) {
+        NSLog(@"Download error.");
+        [MBProgressHUD hideHUDForView:rootView animated:NO];
+        dropboxHUD = nil;
+        UIAlertView* alert = [[UIAlertView alloc]
+                              initWithTitle:@"Could not download"
+                              message:nil
+                              delegate:nil
+                              cancelButtonTitle:@"Close"
+                              otherButtonTitles:nil];
+        [alert show];
+    }
+}
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didResumeAtOffset:(int64_t)fileOffset expectedTotalBytes:(int64_t)expectedTotalBytes
+{
+    // This should not be called, since we do not provide a way to resume downloads.
+    NSLog(@"Unexpected NSURLSessionDownloadDelegate call to didResumeAtOffset.");
 }
 
 #pragma mark - Table View
@@ -217,11 +290,21 @@ enum {
     }
 }
 
+#pragma mark - Action Sheet
+
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     switch (actionSheet.tag) {
         case sheetNew:
-            if (buttonIndex == 0)
+            if (buttonIndex == 0) {
+                // Create a new document.
                 [self performSegueWithIdentifier:@"openNew" sender:self];
+            } else if (buttonIndex == 1) {
+                // Import from Dropbox.
+                [[DBChooser defaultChooser] openChooserForLinkType:DBChooserLinkTypeDirect fromViewController:self completion:^(NSArray *results) {
+                    if ([results count])
+                        [self openURL:[results.firstObject link]];
+                }];
+            }
             break;
         case sheetDelete:
             if (buttonIndex == actionSheet.destructiveButtonIndex) {

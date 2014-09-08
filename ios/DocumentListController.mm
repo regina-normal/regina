@@ -74,10 +74,9 @@
         ReginaDocument* doc = [self documentForIndexPath:indexPath];
         [[segue destinationViewController] openDocument:doc detail:_detail];
     } else if ([[segue identifier] isEqualToString:@"openInbox"]) {
-        // Some other app sent a document to our inbox.
-        // The URL inside the inbox will be contained in sender.
-        ReginaDocument* doc = [ReginaDocument documentWithInboxURL:sender];
-        [[segue destinationViewController] openDocument:doc detail:_detail];
+        // Some other app sent a document to us.
+        // The corresponding ReginaDocument will be contained in sender.
+        [[segue destinationViewController] openDocument:sender detail:_detail];
     } else if ([[segue identifier] isEqualToString:@"openNew"]) {
         // We are creating a new document from scratch.
         [[segue destinationViewController] newDocumentWithDetail:_detail];

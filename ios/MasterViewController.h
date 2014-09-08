@@ -38,6 +38,12 @@
  */
 @interface MasterViewController : DocumentListController
 
+/**
+ * Opens an URL, typically supplied by some other app.
+ *
+ * If the URL is a local file URL, then the file will be moved
+ * into this app's documents directory.
+ */
 - (BOOL)openURL:(NSURL*)url;
 
 @end
