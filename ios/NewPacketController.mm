@@ -62,7 +62,7 @@
         _type = type;
         _tree = t;
         _subtree = t.node;
-        _viewing = t.detail.packet;
+        _viewing = t.viewingPacket;
     }
     return self;
 }

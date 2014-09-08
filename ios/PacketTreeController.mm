@@ -127,33 +127,12 @@
 
 @implementation PacketTreeController
 
-- (DetailViewController *)detail {
-    // Sometimes this is initialised in viewDidLoad, but sometimes not..
-    // in deeper levels of the tree it seems that viewDidLoad cannot
-    // access the split view controller (in particular
-    // [self splitViewController] returns nil).  Better re-initialise it
-    // here if necessary.
-    if (! _detail) {
-        UISplitViewController* s = [self splitViewController];
-        UINavigationController* nav = [s.viewControllers lastObject];
-        _detail = (DetailViewController*)nav.topViewController;
-    }
-    return _detail;
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-
-    UISplitViewController* s = [self splitViewController];
-    UINavigationController* nav = [s.viewControllers lastObject];
-    _detail = (DetailViewController*)nav.topViewController;
-}
-
-- (void)newDocument
+- (void)newDocumentWithDetail:(DetailViewController *)d
 {
     NSLog(@"Creating new document...");
     
-    [self detail].doc = [ReginaDocument documentNewWithCompletionHandler:^(ReginaDocument* doc) {
+    _detail = d;
+    _detail.doc = [ReginaDocument documentNewWithCompletionHandler:^(ReginaDocument* doc) {
         if (! doc) {
             NSLog(@"Could not create.");
             return;
@@ -166,9 +145,11 @@
     }];
 }
 
-- (void)openDocument:(ReginaDocument*)doc
+- (void)openDocument:(ReginaDocument*)doc detail:(DetailViewController *)d
 {
     NSLog(@"Opening document...");
+    
+    _detail = d;
     
     // We use an activity indicator since files could take some time to load.
     UIView* rootView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
@@ -185,11 +166,12 @@
         // TODO: Enable packet + button.
     }];
     
-    [self detail].doc = doc;
+    _detail.doc = doc;
     // TODO: Trap errors.
 }
 
-- (void)openSubtree:(regina::NPacket *)p {
+- (void)openSubtree:(regina::NPacket *)p detail:(DetailViewController *)d {
+    _detail = d;
     _node = p;
     [self setTitle:[NSString stringWithUTF8String:p->getPacketLabel().c_str()]];
 
@@ -213,7 +195,7 @@
 }
 
 - (void)viewPacket:(regina::NPacket *)p {
-    [self detail].packet = p;
+    _detail.packet = p;
 }
 
 - (void)newPacket:(regina::PacketType)type {
@@ -261,6 +243,11 @@
             [self newPacketCancelled:_newPacketSpec];
             break;
     }
+}
+
+- (regina::NPacket *)viewingPacket
+{
+    return _detail.packet;
 }
 
 - (void)newPacketCreated:(NewPacketSpec *)spec packet:(regina::NPacket *)p {
@@ -394,7 +381,7 @@
         else
             packetIndex = indexPath.row;
         
-        [[segue destinationViewController] openSubtree:[_rows[packetIndex] packet]];
+        [[segue destinationViewController] openSubtree:[_rows[packetIndex] packet] detail:_detail];
         [[segue destinationViewController] refreshPackets];
     } else if ([[segue identifier] isEqualToString:@"newPacket"]) {
         _newPacketPopover = [(UIStoryboardPopoverSegue*)segue popoverController];
