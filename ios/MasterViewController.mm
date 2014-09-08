@@ -35,7 +35,7 @@
 #import "MBProgressHUD.h"
 #import "ReginaDocument.h"
 
-// TODO: Support dropbox documents.
+// TODO: Support uploads (dropbox and email, at least).
 // TODO: Allow renaming documents.
 // TODO: Is there a race condition on closing and re-opening documents?
 
