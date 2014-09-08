@@ -50,11 +50,16 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (UIViewController *)detailViewController
+- (DetailViewController *)detailViewController
 {
     // The parent view controller is a SwitchableSubcontroller.
     // *Its* parent is the detail view controller.
-    return self.parentViewController.parentViewController;
+    return static_cast<DetailViewController*>(self.parentViewController.parentViewController);
+}
+
+- (UIDocument *)document
+{
+    return self.detailViewController.doc;
 }
 
 @end
