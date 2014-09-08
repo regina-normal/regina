@@ -51,6 +51,8 @@
 //#include "regina-config.h" // For EXCLUDE_SNAPPEA
 #include "regina-core.h"
 #include "shareableobject.h"
+#include "generic/dimtraits.h"
+#include "utilities/flags.h"
 
 namespace regina {
 
@@ -61,6 +63,53 @@ namespace regina {
  */
 
 #ifndef EXCLUDE_MORSE
+
+
+/**
+ * Describes which algorithm was used to compute
+ * this Morse function.
+ *
+ * This is important since some algorithms ensure certain
+ * properties of a Morse function (e.g. a single critical face
+ * of maximal index), while others may to do so.
+ */
+enum MorseAlgFlags {
+    /**< Collapsing approach choosing the lexicographically 
+         minimal face in each step. This is the default method. */
+    DMT_BENEDETTILUTZLEX = 0x0000,
+    /**< Collapsing approach choosing the lexicographically 
+         maximal face in each step. */
+    DMT_BENEDETTILUTZREVLEX = 0x0001,
+    /**< Collapsing approach from the Exp. Math. article. */
+    DMT_BENEDETTILUTZ = 0x0002,
+    /**< Collapsing approach choosing a uniformly random 
+         spanning tree in the top-dimensional level. */
+    DMT_UNIFORMSPANNINGTREE = 0x0004,
+    /**< Engstroem approach using minimal link size arguments
+         and standard Morse functions for cones. */
+    DMT_ENGSTROEM = 0x0008,
+    /**< Collapsing approach: combine any of the DMT_BenedettiLutz*
+         with a random permutation of face labels. All other
+         methods will ignore this flag. */
+    DMT_RANDOM = 0x0010,
+};
+
+/**
+ * A combination of flags for algorithms to compute discrete Morse functions.
+ *
+ */
+typedef regina::Flags<MorseAlgFlags> MorseAlg;
+
+/**
+ * Returns the bitwise OR of the two given flags.
+ *
+ * @param lhs the first flag to combine.
+ * @param rhs the second flag to combine.
+ * @return the combination of both flags.
+ */
+inline MorseAlg operator | (MorseAlgFlags lhs, MorseAlgFlags rhs) {
+    return MorseAlg(lhs) | rhs;
+}
 
 
 /**
@@ -77,53 +126,6 @@ namespace regina {
  */
 class REGINA_API NMorseFunction : public ShareableObject {
     public:
-
-        /**
-         * Describes which algorithm was used to compute
-         * this Morse function.
-         *
-         * This is important since some algorithms ensure certain
-         * properties of a Morse function (e.g. a single critical face
-         * of maximal index), while others may to do so.
-         */
-        enum MorseAlgFlags {
-            /**< Collapsing approach choosing the lexicographically 
-                 minimal face in each step. This is the default method. */
-            DMT_BENEDETTILUTZLEX = 0x0000,
-            /**< Collapsing approach choosing the lexicographically 
-                 maximal face in each step. */
-            DMT_BENEDETTILUTZREVLEX = 0x0001,
-            /**< Collapsing approach from the Exp. Math. article. */
-            DMT_BENEDETTILUTZ = 0x0002,
-            /**< Collapsing approach choosing a uniformly random 
-                 spanning tree in the top-dimensional level. */
-            DMT_UNIFORMSPANNINGTREE = 0x0004,
-            /**< Engstroem approach using minimal link size arguments
-                 and standard Morse functions for cones. */
-            DMT_ENGSTROEM = 0x0008
-            /**< Collapsing approach: combine any of the DMT_BenedettiLutz*
-                 with a random permutation of face labels. All other
-                 methods will ignore this flag. */
-            DMT_RANDOM = 0x0010,
-        };
-
-        /**
-         * A combination of flags for algorithms to compute discrete Morse functions.
-         *
-         */
-        typedef regina::Flags<MorseAlgFlags> MorseAlg;
-    
-        /**
-         * Returns the bitwise OR of the two given flags.
-         *
-         * @param lhs the first flag to combine.
-         * @param rhs the second flag to combine.
-         * @return the combination of both flags.
-         */
-        inline MorseAlg operator | (MorseAlgFlags lhs, MorseAlgFlags rhs) {
-            return MorseAlg(lhs) | rhs;
-        }
-
 
 //    private:
 //        regina::snappea::Triangulation* snappeaData;
@@ -187,7 +189,7 @@ add 'const' in the end if this function should not change the data of the object
          *
          * @return the algorithm type.
          */
-        Algorithm algorithm() const;
+        MorseAlg algorithm() const;
 
 
 // TODO: 
