@@ -35,6 +35,7 @@
 
 // TODO: Support dropbox documents.
 // TODO: Allow renaming documents.
+// TODO: Is there a race condition on closing and re-opening documents?
 
 // Action sheet tags;
 enum {
@@ -43,8 +44,8 @@ enum {
 };
 
 @interface MasterViewController () <UIActionSheetDelegate> {
-    UITableView* deleteTableView;
-    NSIndexPath* deleteIndexPath;
+    UITableView* actionTableView;
+    NSIndexPath* actionIndexPath;
 }
 @property (strong, nonatomic) NSMutableArray *docURLs;
 @end
@@ -208,8 +209,8 @@ enum {
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        deleteTableView = tableView;
-        deleteIndexPath = indexPath;
+        actionTableView = tableView;
+        actionIndexPath = indexPath;
         UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete file" otherButtonTitles:nil];
         sheet.tag = sheetDelete;
         [sheet showInView:tableView];
@@ -224,11 +225,11 @@ enum {
             break;
         case sheetDelete:
             if (buttonIndex == actionSheet.destructiveButtonIndex) {
-                NSURL* url = self.docURLs[deleteIndexPath.row];
+                NSURL* url = self.docURLs[actionIndexPath.row];
                 NSLog(@"Deleting document: %@", url);
                 if ([[NSFileManager defaultManager] removeItemAtURL:url error:nil]) {
-                    [self.docURLs removeObjectAtIndex:deleteIndexPath.row];
-                    [deleteTableView deleteRowsAtIndexPaths:@[deleteIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+                    [self.docURLs removeObjectAtIndex:actionIndexPath.row];
+                    [actionTableView deleteRowsAtIndexPaths:@[actionIndexPath] withRowAnimation:UITableViewRowAnimationFade];
                 } else {
                     UIAlertView* alert = [[UIAlertView alloc]
                                           initWithTitle:@"Could not delete document"
