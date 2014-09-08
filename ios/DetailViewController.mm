@@ -31,13 +31,15 @@
  **************************************************************************/
 
 #import "DetailViewController.h"
+#import "MBProgressHUD.h"
 #import "PacketManagerIOS.h"
 #import "packet/npacket.h"
 #import "packet/packettype.h"
 
-@interface DetailViewController () {
+@interface DetailViewController () <UIActionSheetDelegate> {
     NSString* _menuTitle;
     UIViewController* _sub;
+    UIDocumentInteractionController* _interact;
 }
 @end
 
@@ -67,6 +69,7 @@
     
     _doc = doc;
     _packet = nil;
+    _interact = nil;
     
     if (doc) {
         // Display an empty panel.
@@ -74,12 +77,19 @@
         [_sub performSegueWithIdentifier:@"embedEmpty" sender:nil];
         
         [self renamePortraitPulloverButton:@"Packets"];
+        
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
+                                                  initWithBarButtonSystemItem:UIBarButtonSystemItemAction
+                                                  target:self
+                                                  action:@selector(share)];
     } else {
         // Display the welcome screen.
         [self navigationItem].title = @"";
         [_sub performSegueWithIdentifier:@"embedWelcome" sender:nil];
         
         [self renamePortraitPulloverButton:@"Documents"];
+        
+        self.navigationItem.rightBarButtonItem = nil;
     }
 }
 
@@ -110,6 +120,51 @@
         // Now that we have identified _sub, refresh the detail view.
         [self setDoc:_doc forceRefresh:YES];
     }
+}
+
+- (void)shareDocument
+{
+    if (! _interact)
+        _interact = [UIDocumentInteractionController interactionControllerWithURL:self.doc.fileURL];
+
+    if (self.doc.hasUnsavedChanges) {
+        UIView* rootView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
+        MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:rootView animated:YES];
+        [hud setLabelText:@"Saving"];
+
+        [self.doc saveToURL:self.doc.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success){
+            [MBProgressHUD hideHUDForView:rootView animated:NO];
+            if (success)
+                [_interact presentOptionsMenuFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
+        }];
+    } else {
+        [_interact presentOptionsMenuFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
+    }
+}
+
+- (void)share
+{
+    if (! self.sharer)
+        [self shareDocument];
+    else {
+        UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                           delegate:self
+                                                  cancelButtonTitle:@"Cancel"
+                                             destructiveButtonTitle:nil
+                                                  otherButtonTitles:@"Share document", self.sharer.shareText, nil];
+        
+        [sheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
+    }
+}
+
+#pragma mark - Action sheet
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0)
+        [self shareDocument];
+    else if (buttonIndex == 1)
+        [self.sharer shareFromButton:self.navigationItem.rightBarButtonItem];
 }
 
 #pragma mark - Split view

@@ -37,11 +37,10 @@
 // TODO: Give the temporary PDF file a more meaningful filename.
 // TODO: View the PDF natively, instead of relying on Quick Look.
 
-@interface PDFViewController () <UIDocumentInteractionControllerDelegate>
+@interface PDFViewController () <UIDocumentInteractionControllerDelegate, PacketSharer>
 @property (weak, nonatomic) IBOutlet UILabel *detail;
 @property (weak, nonatomic) IBOutlet UILabel *size;
 @property (weak, nonatomic) IBOutlet UIButton *previewButton;
-@property (strong, nonatomic) UIBarButtonItem* shareButton;
 @property (strong, nonatomic) UIDocumentInteractionController *interact;
 @property (strong, nonatomic) TempFile *tempFile;
 @end
@@ -106,25 +105,15 @@
 
 - (void)didMoveToParentViewController:(UIViewController *)parent
 {
-    if (parent) {
-        // Offer a Share button so that we can view the PDF in some other app.
-        self.shareButton = [[UIBarButtonItem alloc]
-                                        initWithBarButtonSystemItem:UIBarButtonSystemItemAction
-                                        target:self
-                                        action:@selector(sharePDF:)];
-        if (static_cast<regina::NPDF*>(self.packet)->isNull())
-            self.shareButton.enabled = NO;
-        
-        self.detailViewController.navigationItem.rightBarButtonItem = self.shareButton;
-    }
+    if (parent)
+        if (! static_cast<regina::NPDF*>(self.packet)->isNull())
+            self.detailViewController.sharer = self;
 }
 
 - (void)willMoveToParentViewController:(UIViewController *)parent
 {
-    if (! parent) {
-        // Remove the Share button now that our view is going away.
-        self.detailViewController.navigationItem.rightBarButtonItem = nil;
-    }
+    if (! parent)
+        self.detailViewController.sharer = nil;
 }
 
 - (UIViewController *) documentInteractionControllerViewControllerForPreview: (UIDocumentInteractionController *) controller {
@@ -140,13 +129,17 @@
     [self.interact presentPreviewAnimated:YES];
 }
 
-/**
- * Offers the user the opportunity to open the PDF document in some different app.
- */
-- (IBAction)sharePDF:(id)sender
+#pragma mark - Packet Sharer
+
+- (NSString *)shareText
+{
+    return @"Share PDF";
+}
+
+- (void)shareFromButton:(UIBarButtonItem *)button
 {
     [self initInteraction];
-    [self.interact presentOptionsMenuFromBarButtonItem:self.shareButton animated:YES];
+    [self.interact presentOptionsMenuFromBarButtonItem:button animated:YES];
 }
 
 @end
