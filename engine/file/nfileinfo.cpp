@@ -35,8 +35,10 @@
 #include <cstdio>
 #include <cstring>
 #include <sstream>
+#include <boost/iostreams/device/file.hpp>
+#include <boost/iostreams/filtering_stream.hpp>
+#include <boost/iostreams/filter/gzip.hpp>
 #include "file/nfileinfo.h"
-#include "utilities/zstream.h"
 
 namespace regina {
 
@@ -73,19 +75,23 @@ namespace {
 }
 
 NFileInfo* NFileInfo::identify(const std::string& idPathname) {
-    // Check for an old-style binary file.
+    // Check for an XML file.
     int starts = fileStartsWith(idPathname.c_str(), "<?xml");
     if (starts == STARTS_COULD_NOT_OPEN)
         return 0;
 
-    // Check for an XML file.
     NFileInfo* ans = 0;
     if (starts == STARTS_TRUE) {
         ans = new NFileInfo();
         ans->compressed = false;
     } else {
-        regina::DecompressionStream in(idPathname.c_str());
-        if (in) {
+        std::ifstream file(idPathname.c_str(),
+            std::ios_base::in | std::ios_base::binary);
+        if (file && file.peek() == 0x1f) {
+            ::boost::iostreams::filtering_istream in;
+            in.push(::boost::iostreams::gzip_decompressor());
+            in.push(file);
+
             std::string s;
             in >> s;
             if ((! in.eof()) && (s == "<?xml")) {
@@ -103,9 +109,15 @@ NFileInfo* NFileInfo::identify(const std::string& idPathname) {
         // Make it an invalid file until we know otherwise.
         ans->invalid = true;
 
-        regina::DecompressionStream in(idPathname.c_str());
-        if (! in)
+        std::ifstream file(idPathname.c_str(),
+            std::ios_base::in | std::ios_base::binary);
+        if (! file)
             return ans;
+
+        ::boost::iostreams::filtering_istream in;
+        if (file.peek() == 0x1f)
+            in.push(::boost::iostreams::gzip_decompressor());
+        in.push(file);
 
         std::string s;
 

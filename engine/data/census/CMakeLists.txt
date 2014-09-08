@@ -2,8 +2,8 @@
 SET(CENSUSDATADIR ${PKGDATADIR}/data/census)
 
 INCLUDE_DIRECTORIES(${ENGINE_INCLUDES})
-ADD_EXECUTABLE(mkcensusdb mkcensusdb.cpp ../../utilities/zstream.cpp)
-TARGET_LINK_LIBRARIES(mkcensusdb ${ZLIB_LIBRARIES} ${TOKYOCABINET_LIBRARIES})
+ADD_EXECUTABLE(mkcensusdb mkcensusdb.cpp)
+TARGET_LINK_LIBRARIES(mkcensusdb ${Boost_IOSTREAMS_LIBRARY} ${TOKYOCABINET_LIBRARIES})
 
 SET(censusdata_DATA
   closed-hyp-census-full.${DB_EXT}
@@ -15,7 +15,7 @@ SET(censusdata_DATA
   )
 
 FOREACH(db ${censusdata_DATA})
-  STRING(REGEX REPLACE [.]${DB_EXT}$ .dat.gz siglist ${db})
+  STRING(REGEX REPLACE [.]${DB_EXT}$ .zsig siglist ${db})
   ADD_CUSTOM_COMMAND(OUTPUT ${db} DEPENDS mkcensusdb ${siglist}
     COMMAND mkcensusdb
       ${PROJECT_SOURCE_DIR}/engine/data/census/${siglist}

@@ -39,35 +39,19 @@ namespace regina {
 
 std::string NGlobalDirs::home_(REGINA_DATADIR);
 std::string NGlobalDirs::pythonModule_(REGINA_PYLIBDIR);
-
-std::string NGlobalDirs::home() {
-    return home_;
-}
-
-std::string NGlobalDirs::pythonModule() {
-    return pythonModule_;
-}
-
-std::string NGlobalDirs::pythonLibs() {
-    return home_ + "/pylib";
-}
-
-std::string NGlobalDirs::examples() {
-    return home_ + "/examples";
-}
-
-std::string NGlobalDirs::engineDocs() {
-    return home_ + "/engine-docs";
-}
-
-std::string NGlobalDirs::data() {
-    return home_ + "/data";
-}
+std::string NGlobalDirs::census_(REGINA_DATADIR "/data/census");
 
 void NGlobalDirs::setDirs(const std::string& homeDir,
-        const std::string& pythonModuleDir) {
-    home_ = homeDir;
+        const std::string& pythonModuleDir,
+        const std::string& censusDir) {
+    if (! home_.empty())
+        home_ = homeDir;
+
+    // The empty string has an explicit meaning for pythonModule_.
     pythonModule_ = pythonModuleDir;
+
+    if (! census_.empty())
+        census_ = censusDir;
 }
 
 } // namespace regina
