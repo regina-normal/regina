@@ -34,9 +34,9 @@
 
 @interface NewTriangulationController ()
 @property (weak, nonatomic) IBOutlet UISegmentedControl *types;
-@property (weak, nonatomic) IBOutlet UILabel *exampleLabel;
+@property (weak, nonatomic) IBOutlet UIView *exampleView;
 @property (weak, nonatomic) IBOutlet UIPickerView *example;
-@property (weak, nonatomic) IBOutlet UILabel *isosigLabel;
+@property (weak, nonatomic) IBOutlet UIView *isosigView;
 @property (weak, nonatomic) IBOutlet UITextField *isosig;
 @end
 
@@ -50,6 +50,8 @@
 }
 
 - (IBAction)typeChanged:(id)sender {
+    self.exampleView.hidden = (self.types.selectedSegmentIndex != 1);
+    self.isosigView.hidden = (self.types.selectedSegmentIndex != 2);
 }
 
 - (IBAction)cancel:(id)sender {
