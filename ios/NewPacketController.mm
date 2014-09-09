@@ -120,12 +120,4 @@
 
 @implementation NewPacketController
 
-- (void)reportCreated:(regina::NPacket *)p {
-    [_spec.tree newPacketCreated:_spec packet:p];
-}
-
-- (void)reportCancelled {
-    [_spec.tree newPacketCancelled:_spec];
-}
-
 @end

@@ -55,7 +55,4 @@ namespace regina {
 
 @property (strong, nonatomic) NewPacketSpec* spec;
 
-- (void)reportCreated:(regina::NPacket*)p;
-- (void)reportCancelled;
-
 @end

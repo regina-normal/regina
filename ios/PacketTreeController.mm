@@ -130,7 +130,6 @@
     NSMutableArray *_rows;
     NSInteger _subtreeRow;
     PacketListenerIOS* _listener;
-    NewPacketSpec *_newPacketSpec;
     __weak DetailViewController* _detail;
     __weak UIPopoverController* _newPacketPopover;
 }
@@ -216,11 +215,9 @@
     if (_newPacketPopover)
         [_newPacketPopover dismissPopoverAnimated:NO];
 
-    _newPacketSpec = [NewPacketSpec specWithType:type tree:self];
-    if (! [_newPacketSpec parentWithAlert:YES]) {
-        [self newPacketCancelled:_newPacketSpec];
+    NewPacketSpec* spec = [NewPacketSpec specWithType:type tree:self];
+    if (! [spec parentWithAlert:YES])
         return;
-    }
 
     // TODO: View the new packet immediately.
     // TODO: Replace calls to refreshPackets with a listener-based mechanism.
@@ -231,7 +228,6 @@
             regina::NContainer* c = new regina::NContainer();
             c->setPacketLabel("Container");
             _node->insertChildLast(c);
-            [self newPacketCreated:_newPacketSpec packet:c];
             break;
         }
         case regina::PACKET_TEXT:
@@ -241,14 +237,14 @@
             t->setPacketLabel("Text");
             t->setText("Type your text here...");
             _node->insertChildLast(t);
-            [self newPacketCreated:_newPacketSpec packet:t];
+            _detail.packet = t;
             break;
         }
         case regina::PACKET_TRIANGULATION:
-            [self performSegueWithIdentifier:@"newTriangulation" sender:self];
+            [self performSegueWithIdentifier:@"newTriangulation" sender:spec];
             break;
         case regina::PACKET_NORMALSURFACELIST:
-            [self performSegueWithIdentifier:@"newSurfaces" sender:self];
+            [self performSegueWithIdentifier:@"newSurfaces" sender:spec];
             break;
         default:
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Not yet implemented."
@@ -257,7 +253,6 @@
                                                   cancelButtonTitle:@"Close"
                                                   otherButtonTitles:nil];
             [alert show];
-            [self newPacketCancelled:_newPacketSpec];
             break;
     }
 }
@@ -270,16 +265,6 @@
 - (regina::NPacket *)viewingPacket
 {
     return _detail.packet;
-}
-
-- (void)newPacketCreated:(NewPacketSpec *)spec packet:(regina::NPacket *)p {
-    if (p->getPacketType() != regina::PACKET_CONTAINER)
-        _detail.packet = p;
-    _newPacketSpec = nil;
-}
-
-- (void)newPacketCancelled:(NewPacketSpec *)spec {
-    _newPacketSpec = nil;
 }
 
 #pragma mark - Table View
@@ -411,7 +396,7 @@
     } else {
         // This must be one of the new packet segues.
         // Pass through the parent packet.
-        ((NewPacketController*)segue.destinationViewController).spec = _newPacketSpec;
+        ((NewPacketController*)segue.destinationViewController).spec = sender;
     }
 }
 

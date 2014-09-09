@@ -56,7 +56,4 @@ namespace regina {
 - (ReginaDocument*)document;
 - (regina::NPacket*)viewingPacket;
 
-- (void)newPacketCreated:(NewPacketSpec*)spec packet:(regina::NPacket*)p;
-- (void)newPacketCancelled:(NewPacketSpec*)spec;
-
 @end

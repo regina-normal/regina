@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #import "NewSurfacesController.h"
+#import "PacketTreeController.h"
 #import "progress/nprogresstracker.h"
 #import "surfaces/nnormalsurfacelist.h"
 
@@ -97,8 +98,6 @@ NSArray* embText;
         _tracker.cancel();
     } else
         [self dismissViewControllerAnimated:YES completion:nil];
-    
-    [self reportCancelled];
 }
 
 - (void)updateProgress {
@@ -183,10 +182,9 @@ NSArray* embText;
                                                       cancelButtonTitle:@"Close"
                                                       otherButtonTitles:nil];
                 [alert show];
-                [self reportCancelled];
             } else {
                 ans->setPacketLabel("Normal surfaces");
-                [self reportCreated:ans];
+                [self.spec.tree viewPacket:ans];
             }
             [self dismissViewControllerAnimated:YES completion:nil];
         });
