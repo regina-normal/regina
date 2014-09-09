@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="H1p-Uh-vWS">
     <dependencies>
-        <deployment defaultVersion="1536" identifier="iOS"/>
+        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <scenes>
@@ -475,6 +475,7 @@
                     </navigationItem>
                     <connections>
                         <segue destination="iJb-vO-RRQ" kind="modal" identifier="newSurfaces" modalPresentationStyle="formSheet" id="TCf-VP-Yq2"/>
+                        <segue destination="iIb-Aw-6vD" kind="modal" identifier="newTriangulation" modalPresentationStyle="formSheet" id="Qxq-v7-TLn"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fjY-rQ-nyG" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -691,6 +692,110 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Ec-eG-cfa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3019" y="-672"/>
+        </scene>
+        <!--New Triangulation Controller-->
+        <scene sceneID="qsA-fH-Xxt">
+            <objects>
+                <viewController id="iIb-Aw-6vD" customClass="NewTriangulationController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Ggn-se-bcK"/>
+                        <viewControllerLayoutGuide type="bottom" id="cSc-NN-F9b"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="RM3-RF-gz7">
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9hw-aN-4PO">
+                                <rect key="frame" x="0.0" y="0.0" width="540" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <items>
+                                    <navigationItem title="New 3-D triangulation" id="jmP-SL-vYT">
+                                        <barButtonItem key="rightBarButtonItem" systemItem="cancel" id="mDc-RD-oVU">
+                                            <connections>
+                                                <action selector="cancel:" destination="iIb-Aw-6vD" id="O1n-CE-K1h"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yu2-VF-FM9">
+                                <rect key="frame" x="0.0" y="576" width="540" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="2eg-ML-GhS"/>
+                                    <barButtonItem title="Create" id="PSy-pG-w7X"/>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="QKb-XN-J8L"/>
+                                </items>
+                            </toolbar>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Gj9-3o-6MF">
+                                <rect key="frame" x="41" y="60" width="458" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="Empty"/>
+                                    <segment title="Example"/>
+                                    <segment title="Isomorphism signature"/>
+                                </segments>
+                                <connections>
+                                    <action selector="typeChanged:" destination="iIb-Aw-6vD" eventType="valueChanged" id="OeV-Pw-37q"/>
+                                </connections>
+                            </segmentedControl>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Isomorphism signature:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UKT-Rq-AMZ">
+                                <rect key="frame" x="20" y="323" width="180" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4v7-3t-W7r">
+                                <rect key="frame" x="208" y="320" width="312" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Example:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Br-Wb-9l4">
+                                <rect key="frame" x="20" y="193" width="72" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zA5-2o-IwH">
+                                <rect key="frame" x="100" y="96" width="420" height="216"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            </pickerView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="yu2-VF-FM9" firstAttribute="leading" secondItem="RM3-RF-gz7" secondAttribute="leading" id="1uh-lb-Deb"/>
+                            <constraint firstItem="Gj9-3o-6MF" firstAttribute="top" secondItem="9hw-aN-4PO" secondAttribute="bottom" constant="16" id="3ZH-4Q-SNx"/>
+                            <constraint firstItem="zA5-2o-IwH" firstAttribute="leading" secondItem="9Br-Wb-9l4" secondAttribute="trailing" constant="8" id="3zQ-Op-Ibr"/>
+                            <constraint firstItem="UKT-Rq-AMZ" firstAttribute="leading" secondItem="RM3-RF-gz7" secondAttribute="leading" constant="20" id="7gZ-2g-WFZ"/>
+                            <constraint firstAttribute="trailing" secondItem="yu2-VF-FM9" secondAttribute="trailing" id="AWr-ne-MYg"/>
+                            <constraint firstItem="9Br-Wb-9l4" firstAttribute="leading" secondItem="RM3-RF-gz7" secondAttribute="leading" constant="20" id="GiK-bR-Qxu"/>
+                            <constraint firstItem="zA5-2o-IwH" firstAttribute="top" secondItem="Gj9-3o-6MF" secondAttribute="bottom" constant="8" id="JNI-1l-44r"/>
+                            <constraint firstItem="9hw-aN-4PO" firstAttribute="leading" secondItem="RM3-RF-gz7" secondAttribute="leading" id="NoU-zc-OfK"/>
+                            <constraint firstAttribute="trailing" secondItem="4v7-3t-W7r" secondAttribute="trailing" constant="20" id="TzU-qw-YBt"/>
+                            <constraint firstItem="cSc-NN-F9b" firstAttribute="top" secondItem="yu2-VF-FM9" secondAttribute="bottom" id="UOk-h7-W1Z"/>
+                            <constraint firstItem="9hw-aN-4PO" firstAttribute="top" secondItem="Ggn-se-bcK" secondAttribute="bottom" id="UcS-0Q-of1"/>
+                            <constraint firstAttribute="trailing" secondItem="9hw-aN-4PO" secondAttribute="trailing" id="Y5t-oW-ghx"/>
+                            <constraint firstAttribute="centerX" secondItem="Gj9-3o-6MF" secondAttribute="centerX" id="bxr-cq-5NZ"/>
+                            <constraint firstItem="zA5-2o-IwH" firstAttribute="centerY" secondItem="9Br-Wb-9l4" secondAttribute="centerY" id="fXf-6v-FwF"/>
+                            <constraint firstItem="4v7-3t-W7r" firstAttribute="top" secondItem="zA5-2o-IwH" secondAttribute="bottom" constant="8" id="rMH-wk-BET"/>
+                            <constraint firstAttribute="trailing" secondItem="zA5-2o-IwH" secondAttribute="trailing" constant="20" id="yQY-k1-rYZ"/>
+                            <constraint firstItem="4v7-3t-W7r" firstAttribute="leading" secondItem="UKT-Rq-AMZ" secondAttribute="trailing" constant="8" id="zHY-Sa-JPb"/>
+                        </constraints>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                    <connections>
+                        <outlet property="example" destination="zA5-2o-IwH" id="i8w-Y4-NrD"/>
+                        <outlet property="exampleLabel" destination="9Br-Wb-9l4" id="vHk-IQ-DAs"/>
+                        <outlet property="isosig" destination="4v7-3t-W7r" id="S5W-sz-GPx"/>
+                        <outlet property="isosigLabel" destination="UKT-Rq-AMZ" id="bN7-3v-8tN"/>
+                        <outlet property="types" destination="Gj9-3o-6MF" id="RZj-YE-Sch"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nDq-q6-fGH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3019" y="120"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="r7l-gg-dq7">

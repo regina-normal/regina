@@ -865,6 +865,7 @@
 		055FF35619BE90E20057462A /* TSMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 055FF35319BE90E20057462A /* TSMessageView.m */; };
 		055FF35A19BE91EB0057462A /* HexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 055FF35919BE91EB0057462A /* HexColor.m */; };
 		055FF37F19BE96660057462A /* TSMessages.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 055FF37E19BE96660057462A /* TSMessages.bundle */; };
+		055FF38219BECF590057462A /* NewTriangulationController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055FF38119BECF590057462A /* NewTriangulationController.mm */; };
 		0564A7F81811D921002CC2AE /* actionspart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4091811D91E002CC2AE /* actionspart.cpp */; };
 		0564A7F91811D921002CC2AE /* bigwidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A40A1811D91E002CC2AE /* bigwidget.cpp */; };
 		0564A7FA1811D921002CC2AE /* boundarycomponentchooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A40D1811D91E002CC2AE /* boundarycomponentchooser.cpp */; };
@@ -1870,6 +1871,8 @@
 		055FF35819BE91EB0057462A /* HexColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HexColor.h; path = HexColors/HexColor.h; sourceTree = "<group>"; };
 		055FF35919BE91EB0057462A /* HexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HexColor.m; path = HexColors/HexColor.m; sourceTree = "<group>"; };
 		055FF37E19BE96660057462A /* TSMessages.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = TSMessages.bundle; path = TSMessages/TSMessages.bundle; sourceTree = "<group>"; };
+		055FF38019BECF590057462A /* NewTriangulationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewTriangulationController.h; sourceTree = "<group>"; };
+		055FF38119BECF590057462A /* NewTriangulationController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewTriangulationController.mm; sourceTree = "<group>"; };
 		0564A1DF1811D6F8002CC2AE /* Regina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Regina.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0564A2161811D91C002CC2AE /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		0564A4071811D91E002CC2AE /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
@@ -2276,6 +2279,8 @@
 				050313C31812DB1E007F0CBE /* DefaultPacketViewController.mm */,
 				0591011C181364BB000A8D16 /* NewSurfacesController.h */,
 				0591011D181364BB000A8D16 /* NewSurfacesController.mm */,
+				055FF38019BECF590057462A /* NewTriangulationController.h */,
+				055FF38119BECF590057462A /* NewTriangulationController.mm */,
 				05943CF219B68C0500E77EF3 /* PDFViewController.h */,
 				05943CF319B68C0500E77EF3 /* PDFViewController.mm */,
 				050313BF1812DB06007F0CBE /* TextViewController.h */,
@@ -4394,6 +4399,7 @@
 				052FA1611806129B00FAE4DF /* nhomgrouppresentation.cpp in Sources */,
 				0591012118141996000A8D16 /* NewPacketController.mm in Sources */,
 				052FA2021806129B00FAE4DF /* simplify.cpp in Sources */,
+				055FF38219BECF590057462A /* NewTriangulationController.mm in Sources */,
 				052FA1731806129B00FAE4DF /* dim2exampletriangulation.cpp in Sources */,
 				052FA1A71806129B00FAE4DF /* npacketlistener.cpp in Sources */,
 				052FA20D1806129B00FAE4DF /* stringutils.cpp in Sources */,

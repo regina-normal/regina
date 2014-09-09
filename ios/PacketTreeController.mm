@@ -244,6 +244,9 @@
             [self newPacketCreated:_newPacketSpec packet:t];
             break;
         }
+        case regina::PACKET_TRIANGULATION:
+            [self performSegueWithIdentifier:@"newTriangulation" sender:self];
+            break;
         case regina::PACKET_NORMALSURFACELIST:
             [self performSegueWithIdentifier:@"newSurfaces" sender:self];
             break;
