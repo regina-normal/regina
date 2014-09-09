@@ -53,9 +53,8 @@ WRITE CREATORS:
 
 SHORT-TERM:
 
-- Remove W-S from the iOS examples file.  It's too slow to load.
+- Delete document: pin the action sheet to the table cell.
 - Cut down the iOS census examples to a faster-to-load size.
-- Open RGA files from email/etc.
 
 - Call UIApplication::idleTimerDisabled when running long tasks (e.g.,
   enumerating normal surfaces), to stop the screen from locking.
