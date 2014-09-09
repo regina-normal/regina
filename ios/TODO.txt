@@ -6,6 +6,7 @@ CLEAN UP:
 - ReginaDocument
 - NewPacketMenu
 - NewPacketController
+- NewPacketPageViewController
 
 - DetailViewController
 - PacketViewController
