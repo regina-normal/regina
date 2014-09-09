@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #import "ReginaDocument.h"
+#import "TSMessage.h"
 #import "packet/ncontainer.h"
 #import "packet/ntext.h"
 #import <boost/iostreams/device/array.hpp>
@@ -212,7 +213,10 @@ static NSURL* docsDir_ = nil;
         NSURL* newURL = [ReginaDocument uniqueDocURLFor:self.fileURL];
         if ([[NSFileManager defaultManager] copyItemAtURL:self.fileURL toURL:newURL error:nil]) {
             [self presentedItemDidMoveToURL:newURL];
-            // TODO: Notification.
+            [TSMessage showNotificationWithTitle:@"Copied to documents folder:"
+                                        subtitle:newURL.lastPathComponent
+                                            type:TSMessageNotificationTypeMessage];
+
             description = nil;
             readOnly = NO;
             
