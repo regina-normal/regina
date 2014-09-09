@@ -80,18 +80,18 @@
 
 - (regina::NPacket*)parentWithAlert:(BOOL)alert {
     if (_type == regina::PACKET_NORMALSURFACELIST || _type == regina::PACKET_ANGLESTRUCTURELIST) {
-        if (_viewing && _viewing->getPacketType() == regina::PACKET_TRIANGULATION)
+        if (_viewing && [NewPacketSpec isTriangulation:_viewing])
             _parent = _viewing;
-        else if (_subtree->getPacketType() == regina::PACKET_TRIANGULATION)
+        else if ([NewPacketSpec isTriangulation:_subtree])
             _parent = _subtree;
         else {
             if (alert) {
                 NSString *title, *msg;
                 if (_type == regina::PACKET_NORMALSURFACELIST) {
-                    title = @"Surfaces need a triangulation.";
+                    title = @"Normal surfaces require a triangulation.";
                     msg = @"Please select the triangulation in which I should enumerate normal surfaces.";
                 } else {
-                    title = @"Angle structures need a triangulation.";
+                    title = @"Angle structures require a triangulation.";
                     msg = @"Please select the triangulation in which I should enumerate angle structures.";
                 }
                 _parent = 0;
@@ -107,6 +107,11 @@
         _parent = _subtree;
     
     return _parent;
+}
+
++ (BOOL)isTriangulation:(regina::NPacket*)p
+{
+    return (p->getPacketType() == regina::PACKET_TRIANGULATION || p->getPacketType() == regina::PACKET_SNAPPEATRIANGULATION);
 }
 
 @end
