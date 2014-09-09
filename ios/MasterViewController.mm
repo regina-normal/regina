@@ -282,11 +282,13 @@ enum {
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
+        CGRect cell = [tableView cellForRowAtIndexPath:indexPath].frame;
+        
         actionTableView = tableView;
         actionIndexPath = indexPath;
-        UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete file" otherButtonTitles:nil];
+        UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete file" otherButtonTitles:nil];
         sheet.tag = sheetDelete;
-        [sheet showInView:tableView];
+        [sheet showFromRect:cell inView:tableView animated:YES];
     }
 }
 
