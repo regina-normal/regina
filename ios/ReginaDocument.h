@@ -76,6 +76,17 @@ namespace regina {
 - (id)initNewWithCompletionHandler:(void (^)(ReginaDocument* doc))completionHandler;
 + (id)documentNewWithCompletionHandler:(void (^)(ReginaDocument* doc))completionHandler;
 
+/**
+ * Notifies the document that the underlying packet tree has been changed in some way.
+ * This could be through changes to the structure of the tree, or to the packets that
+ * it contains.
+ *
+ * If this is a read-only example file, it will be copied into the documents directory.
+ *
+ * Either way, the file will be marked as dirty so that it will be saved when appropriate.
+ */
+- (void)setDirty;
+
 + (NSURL*)docsDir;
 + (NSURL*)uniqueDocURLFor:(NSURL*)url;
 

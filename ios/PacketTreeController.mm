@@ -97,29 +97,29 @@
 }
 
 - (void)packetWasChanged:(regina::NPacket *)packet {
-    [_tree.document updateChangeCount:UIDocumentChangeDone];
+    [_tree.document setDirty];
 }
 
 - (void)packetWasRenamed:(regina::NPacket *)packet {
     // TODO
-    [_tree.document updateChangeCount:UIDocumentChangeDone];
+    [_tree.document setDirty];
     [_tree refreshPackets];
 }
 
 - (void)childWasAddedTo:(regina::NPacket*)packet child:(regina::NPacket*)child {
     // TODO
-    [_tree.document updateChangeCount:UIDocumentChangeDone];
+    [_tree.document setDirty];
     [_tree refreshPackets];
     if (packet == _tree.node)
         [self listen:child];
 }
 
 - (void)childWasRemovedFrom:(regina::NPacket *)packet child:(regina::NPacket *)child inParentDestructor:(bool)d {
-    [_tree.document updateChangeCount:UIDocumentChangeDone];
+    [_tree.document setDirty];
 }
 
 - (void)childrenWereReordered:(regina::NPacket *)packet {
-    [_tree.document updateChangeCount:UIDocumentChangeDone];
+    [_tree.document setDirty];
 }
 
 @end

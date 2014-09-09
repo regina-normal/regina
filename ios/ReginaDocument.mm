@@ -205,6 +205,32 @@ static NSURL* docsDir_ = nil;
     }
 }
 
+- (void)setDirty
+{
+    if (readOnly) {
+        NSLog(@"Copying to documents directory.");
+        NSURL* newURL = [ReginaDocument uniqueDocURLFor:self.fileURL];
+        if ([[NSFileManager defaultManager] copyItemAtURL:self.fileURL toURL:newURL error:nil]) {
+            [self presentedItemDidMoveToURL:newURL];
+            // TODO: Notification.
+            description = nil;
+            readOnly = NO;
+            
+            [self updateChangeCount:UIDocumentChangeDone];
+        } else {
+            UIAlertView* alert = [[UIAlertView alloc]
+                                  initWithTitle:@"Changes will be lost"
+                                  message:@"I was unable to copy this example into your documents folder.  This means that any changes you make here will be lost."
+                                  delegate:nil
+                                  cancelButtonTitle:@"Close"
+                                  otherButtonTitles:nil];
+            [alert show];
+        }
+    } else {
+        [self updateChangeCount:UIDocumentChangeDone];
+    }
+}
+
 + (NSURL *)docsDir
 {
     if (! docsDir_)
