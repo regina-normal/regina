@@ -134,6 +134,7 @@
 
         [self.doc saveToURL:self.doc.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success){
             [MBProgressHUD hideHUDForView:rootView animated:NO];
+            // TODO: Do we want to display an error if the save fails?
             if (success)
                 [_interact presentOptionsMenuFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
         }];
