@@ -476,6 +476,7 @@
                     <connections>
                         <segue destination="iJb-vO-RRQ" kind="modal" identifier="newSurfaces" modalPresentationStyle="formSheet" id="TCf-VP-Yq2"/>
                         <segue destination="iIb-Aw-6vD" kind="modal" identifier="newTriangulation" modalPresentationStyle="formSheet" id="Qxq-v7-TLn"/>
+                        <segue destination="uWV-Yj-5w4" kind="modal" identifier="newDim2Triangulation" modalPresentationStyle="formSheet" id="vRX-aJ-PXY"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fjY-rQ-nyG" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -774,6 +775,318 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nDq-q6-fGH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3019" y="120"/>
+        </scene>
+        <!--New Dim2 Triangulation Controller-->
+        <scene sceneID="kJv-ms-1ie">
+            <objects>
+                <viewController id="uWV-Yj-5w4" customClass="NewDim2TriangulationController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="DD8-iw-Clj"/>
+                        <viewControllerLayoutGuide type="bottom" id="dts-7a-mKv"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="orp-VS-nom">
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dun-u6-7yF">
+                                <rect key="frame" x="0.0" y="0.0" width="540" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <items>
+                                    <navigationItem title="New 2-D triangulation" id="KBa-SJ-LWW">
+                                        <barButtonItem key="rightBarButtonItem" systemItem="cancel" id="xR0-2M-JzD">
+                                            <connections>
+                                                <action selector="cancel:" destination="uWV-Yj-5w4" id="kv6-k0-RBk"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SSN-21-r7E">
+                                <rect key="frame" x="0.0" y="576" width="540" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="JLp-6x-dOO"/>
+                                    <barButtonItem title="Create" id="l5c-jI-Zdb">
+                                        <connections>
+                                            <action selector="create:" destination="uWV-Yj-5w4" id="iEp-qw-Jqu"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="mh3-nw-y8Z"/>
+                                </items>
+                            </toolbar>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Um6-8T-NX6">
+                                <rect key="frame" x="33" y="84" width="475" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="Empty"/>
+                                    <segment title="Example"/>
+                                    <segment title="Surface"/>
+                                    <segment title="Isomorphism sig."/>
+                                </segments>
+                            </segmentedControl>
+                            <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xnv-EE-zIl">
+                                <rect key="frame" x="0.0" y="132" width="540" height="436"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <connections>
+                                    <segue destination="Fyz-3t-93s" kind="embed" id="qXB-Jk-WfT"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="xnv-EE-zIl" firstAttribute="leading" secondItem="orp-VS-nom" secondAttribute="leading" id="D3S-UC-dDz"/>
+                            <constraint firstAttribute="centerX" secondItem="Um6-8T-NX6" secondAttribute="centerX" id="DkP-Cm-beT"/>
+                            <constraint firstAttribute="trailing" secondItem="SSN-21-r7E" secondAttribute="trailing" id="HgG-P8-oWu"/>
+                            <constraint firstItem="xnv-EE-zIl" firstAttribute="top" secondItem="Um6-8T-NX6" secondAttribute="bottom" constant="20" id="JEd-QD-uXm"/>
+                            <constraint firstItem="SSN-21-r7E" firstAttribute="top" secondItem="xnv-EE-zIl" secondAttribute="bottom" constant="8" id="JiW-rM-ETE"/>
+                            <constraint firstItem="dts-7a-mKv" firstAttribute="top" secondItem="SSN-21-r7E" secondAttribute="bottom" id="gKf-J7-Jcd"/>
+                            <constraint firstItem="Dun-u6-7yF" firstAttribute="top" secondItem="DD8-iw-Clj" secondAttribute="bottom" id="hRf-4J-hbw"/>
+                            <constraint firstAttribute="trailing" secondItem="Dun-u6-7yF" secondAttribute="trailing" id="i73-Eo-hho"/>
+                            <constraint firstItem="Dun-u6-7yF" firstAttribute="leading" secondItem="orp-VS-nom" secondAttribute="leading" id="iTC-m6-TNe"/>
+                            <constraint firstItem="Um6-8T-NX6" firstAttribute="top" secondItem="Dun-u6-7yF" secondAttribute="bottom" constant="40" id="l84-dB-La9"/>
+                            <constraint firstItem="SSN-21-r7E" firstAttribute="leading" secondItem="orp-VS-nom" secondAttribute="leading" id="n26-ZU-TiN"/>
+                            <constraint firstAttribute="trailing" secondItem="xnv-EE-zIl" secondAttribute="trailing" id="xyK-9v-tEy"/>
+                        </constraints>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                    <connections>
+                        <outlet property="container" destination="xnv-EE-zIl" id="gKs-Q1-ryR"/>
+                        <outlet property="types" destination="Um6-8T-NX6" id="hE8-Eb-72w"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rch-ln-nk6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3019" y="909"/>
+        </scene>
+        <!--New Packet Page View Controller-->
+        <scene sceneID="vWG-lh-j26">
+            <objects>
+                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="pageCurl" navigationOrientation="horizontal" spineLocation="min" id="Fyz-3t-93s" customClass="NewPacketPageViewController" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zIT-oJ-Mgo" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3680" y="998"/>
+        </scene>
+        <!--New Dim2 Triangulation Empty Page-->
+        <scene sceneID="rfH-qK-rFe">
+            <objects>
+                <viewController storyboardIdentifier="newDim2TriEmpty" id="Cbi-zY-zft" customClass="NewDim2TriangulationEmptyPage" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="CYp-qv-7He"/>
+                        <viewControllerLayoutGuide type="bottom" id="qdY-QX-sNz"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="M8I-fw-p4N">
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="448"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" editable="NO" text="I will create an empty triangulation.  Afterwards, you can manually add triangles and enter edge gluings." selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tev-Zk-UnK">
+                                <rect key="frame" x="20" y="20" width="500" height="408"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="qdY-QX-sNz" firstAttribute="top" secondItem="Tev-Zk-UnK" secondAttribute="bottom" constant="20" id="mHM-EG-B8b"/>
+                            <constraint firstItem="Tev-Zk-UnK" firstAttribute="top" secondItem="CYp-qv-7He" secondAttribute="bottom" constant="20" id="mKn-Px-V1i"/>
+                            <constraint firstAttribute="trailing" secondItem="Tev-Zk-UnK" secondAttribute="trailing" constant="20" id="rbF-XK-0h2"/>
+                            <constraint firstItem="Tev-Zk-UnK" firstAttribute="leading" secondItem="M8I-fw-p4N" secondAttribute="leading" constant="20" id="xwj-oG-Vgh"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="540" height="448"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vJI-oj-vK1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4344" y="998"/>
+        </scene>
+        <!--New Dim2 Triangulation Example Page-->
+        <scene sceneID="u9P-f8-5Rv">
+            <objects>
+                <viewController storyboardIdentifier="newDim2TriExample" id="7LM-XW-9i7" customClass="NewDim2TriangulationExamplePage" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="I2Y-b6-qBy"/>
+                        <viewControllerLayoutGuide type="bottom" id="CDW-0y-g4e"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="pcQ-QC-FqF">
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="448"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sI1-WM-g2y">
+                                <rect key="frame" x="20" y="20" width="500" height="216"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            </pickerView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="sI1-WM-g2y" secondAttribute="trailing" constant="20" id="0eB-ob-6dU"/>
+                            <constraint firstItem="sI1-WM-g2y" firstAttribute="top" secondItem="I2Y-b6-qBy" secondAttribute="bottom" constant="20" id="AZq-5X-DZR"/>
+                            <constraint firstItem="sI1-WM-g2y" firstAttribute="leading" secondItem="pcQ-QC-FqF" secondAttribute="leading" constant="20" id="BtV-oZ-mvv"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="540" height="448"/>
+                    <connections>
+                        <outlet property="example" destination="sI1-WM-g2y" id="2ui-gq-Q6c"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DvY-PL-T4W" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5009" y="998"/>
+        </scene>
+        <!--New Dim2 Triangulation Surface Page-->
+        <scene sceneID="t9M-ia-tWq">
+            <objects>
+                <viewController storyboardIdentifier="newDim2TriSurface" id="aNi-cS-g9e" customClass="NewDim2TriangulationSurfacePage" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="vaS-X0-qaf"/>
+                        <viewControllerLayoutGuide type="bottom" id="FcL-M3-zNE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Wef-Yz-391">
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="448"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="gY6-IN-qXT">
+                                <rect key="frame" x="20" y="20" width="209" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="Orientable"/>
+                                    <segment title="Non-orientable"/>
+                                </segments>
+                            </segmentedControl>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Genus:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sGU-zk-3kV">
+                                <rect key="frame" x="20" y="152" width="55" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Punctures:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2fw-Qt-N6q">
+                                <rect key="frame" x="20" y="222" width="83" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="1" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2bW-Eh-zqJ">
+                                <rect key="frame" x="83" y="149" width="100" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="cQV-tr-bHV"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="0" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qyc-YF-Ujy">
+                                <rect key="frame" x="111" y="219" width="100" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="kB7-JF-pBk"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The orientable genus is the number of torus summands." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uTG-xs-A51">
+                                <rect key="frame" x="20" y="88" width="500" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="2fw-Qt-N6q" firstAttribute="leading" secondItem="Wef-Yz-391" secondAttribute="leading" constant="20" id="2eS-cU-WiE"/>
+                            <constraint firstItem="2bW-Eh-zqJ" firstAttribute="top" secondItem="uTG-xs-A51" secondAttribute="bottom" constant="40" id="2oX-ce-9Qk"/>
+                            <constraint firstItem="sGU-zk-3kV" firstAttribute="leading" secondItem="Wef-Yz-391" secondAttribute="leading" constant="20" id="BUx-MI-O0a"/>
+                            <constraint firstItem="2bW-Eh-zqJ" firstAttribute="leading" secondItem="sGU-zk-3kV" secondAttribute="trailing" constant="8" id="BdD-9F-o4o"/>
+                            <constraint firstItem="qyc-YF-Ujy" firstAttribute="top" secondItem="2bW-Eh-zqJ" secondAttribute="bottom" constant="40" id="Goe-H7-2OP"/>
+                            <constraint firstAttribute="trailing" secondItem="uTG-xs-A51" secondAttribute="trailing" constant="20" id="LIk-du-iW2"/>
+                            <constraint firstItem="qyc-YF-Ujy" firstAttribute="leading" secondItem="2fw-Qt-N6q" secondAttribute="trailing" constant="8" id="NyL-d2-QhI"/>
+                            <constraint firstItem="uTG-xs-A51" firstAttribute="leading" secondItem="Wef-Yz-391" secondAttribute="leading" constant="20" id="X1n-yq-bt8"/>
+                            <constraint firstItem="gY6-IN-qXT" firstAttribute="top" secondItem="vaS-X0-qaf" secondAttribute="bottom" constant="20" id="Zyw-dk-WgQ"/>
+                            <constraint firstItem="qyc-YF-Ujy" firstAttribute="baseline" secondItem="2fw-Qt-N6q" secondAttribute="baseline" id="eeK-sM-cDg"/>
+                            <constraint firstItem="gY6-IN-qXT" firstAttribute="leading" secondItem="Wef-Yz-391" secondAttribute="leading" constant="20" id="iCs-76-rK6"/>
+                            <constraint firstItem="2bW-Eh-zqJ" firstAttribute="baseline" secondItem="sGU-zk-3kV" secondAttribute="baseline" id="rEm-QE-ftO"/>
+                            <constraint firstItem="uTG-xs-A51" firstAttribute="top" secondItem="gY6-IN-qXT" secondAttribute="bottom" constant="40" id="v08-YR-8kQ"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="540" height="448"/>
+                    <connections>
+                        <outlet property="genus" destination="2bW-Eh-zqJ" id="CgH-Ym-VwF"/>
+                        <outlet property="genusExpln" destination="uTG-xs-A51" id="Ls0-ko-yMq"/>
+                        <outlet property="orbl" destination="gY6-IN-qXT" id="LVU-gZ-LkS"/>
+                        <outlet property="punctures" destination="qyc-YF-Ujy" id="pxY-JK-ym3"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5tv-98-O7J" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5668" y="998"/>
+        </scene>
+        <!--New Dim2 Triangulation Isosig Page-->
+        <scene sceneID="God-Fk-f41">
+            <objects>
+                <viewController storyboardIdentifier="newDim2TriIsosig" id="Oaa-5U-dJr" customClass="NewDim2TriangulationIsosigPage" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="osz-pL-aHZ"/>
+                        <viewControllerLayoutGuide type="bottom" id="gz9-Qv-Ish"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Vxn-Ei-Knx">
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="448"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Isomorphism signature:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TZA-vN-U17">
+                                <rect key="frame" x="20" y="20" width="180" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="CgT-A3-DTQ">
+                                <rect key="frame" x="20" y="49" width="500" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="go" enablesReturnKeyAutomatically="YES"/>
+                                <connections>
+                                    <action selector="editingEnded:" destination="Oaa-5U-dJr" eventType="editingDidEndOnExit" id="W9W-wa-fxr"/>
+                                </connections>
+                            </textField>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FQh-jL-EqV">
+                                <rect key="frame" x="20" y="119" width="500" height="309"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <mutableString key="text">Isomorphism signatures are small pieces of text that represent a triangulation, up to relabelling.  An example is cPbbde, which represents the two-triangle torus.  Note that isomorphisms signatures are case-sensitive.  To learn more about isomorphism signatures, see arXiv:1110.6080.</mutableString>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="CgT-A3-DTQ" firstAttribute="top" secondItem="TZA-vN-U17" secondAttribute="bottom" constant="8" id="54f-IS-tf2"/>
+                            <constraint firstItem="FQh-jL-EqV" firstAttribute="top" secondItem="CgT-A3-DTQ" secondAttribute="bottom" constant="40" id="H3e-O0-cNB"/>
+                            <constraint firstItem="TZA-vN-U17" firstAttribute="top" secondItem="osz-pL-aHZ" secondAttribute="bottom" constant="20" id="OOV-yY-A2v"/>
+                            <constraint firstItem="gz9-Qv-Ish" firstAttribute="top" secondItem="FQh-jL-EqV" secondAttribute="bottom" constant="20" id="TEU-c3-ljl"/>
+                            <constraint firstItem="TZA-vN-U17" firstAttribute="leading" secondItem="Vxn-Ei-Knx" secondAttribute="leading" constant="20" id="iJ9-Zf-tW6"/>
+                            <constraint firstAttribute="trailing" secondItem="CgT-A3-DTQ" secondAttribute="trailing" constant="20" id="lqP-Om-uj9"/>
+                            <constraint firstItem="FQh-jL-EqV" firstAttribute="leading" secondItem="Vxn-Ei-Knx" secondAttribute="leading" constant="20" id="tFm-BI-tB6"/>
+                            <constraint firstItem="CgT-A3-DTQ" firstAttribute="leading" secondItem="Vxn-Ei-Knx" secondAttribute="leading" constant="20" id="tJR-g0-FpW"/>
+                            <constraint firstAttribute="trailing" secondItem="FQh-jL-EqV" secondAttribute="trailing" constant="20" id="vgl-PC-Pbq"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="540" height="448"/>
+                    <connections>
+                        <outlet property="isosig" destination="CgT-A3-DTQ" id="CEm-Fi-Fzd"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="AQR-oq-wxk" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="6318" y="998"/>
         </scene>
         <!--New Packet Page View Controller-->
         <scene sceneID="SMR-V2-vxC">

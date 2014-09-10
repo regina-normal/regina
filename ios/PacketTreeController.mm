@@ -243,6 +243,9 @@
         case regina::PACKET_TRIANGULATION:
             [self performSegueWithIdentifier:@"newTriangulation" sender:spec];
             break;
+        case regina::PACKET_DIM2TRIANGULATION:
+            [self performSegueWithIdentifier:@"newDim2Triangulation" sender:spec];
+            break;
         case regina::PACKET_NORMALSURFACELIST:
             [self performSegueWithIdentifier:@"newSurfaces" sender:spec];
             break;

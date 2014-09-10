@@ -867,6 +867,7 @@
 		055FF37F19BE96660057462A /* TSMessages.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 055FF37E19BE96660057462A /* TSMessages.bundle */; };
 		055FF38219BECF590057462A /* NewTriangulationController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055FF38119BECF590057462A /* NewTriangulationController.mm */; };
 		055FF38519BFB3C30057462A /* NewPacketPageViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055FF38419BFB3C30057462A /* NewPacketPageViewController.mm */; };
+		055FF38819C044FB0057462A /* NewDim2TriangulationController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055FF38719C044FB0057462A /* NewDim2TriangulationController.mm */; };
 		0564A7F81811D921002CC2AE /* actionspart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4091811D91E002CC2AE /* actionspart.cpp */; };
 		0564A7F91811D921002CC2AE /* bigwidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A40A1811D91E002CC2AE /* bigwidget.cpp */; };
 		0564A7FA1811D921002CC2AE /* boundarycomponentchooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A40D1811D91E002CC2AE /* boundarycomponentchooser.cpp */; };
@@ -1876,6 +1877,8 @@
 		055FF38119BECF590057462A /* NewTriangulationController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewTriangulationController.mm; sourceTree = "<group>"; };
 		055FF38319BFB3C30057462A /* NewPacketPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewPacketPageViewController.h; sourceTree = "<group>"; };
 		055FF38419BFB3C30057462A /* NewPacketPageViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewPacketPageViewController.mm; sourceTree = "<group>"; };
+		055FF38619C044FB0057462A /* NewDim2TriangulationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewDim2TriangulationController.h; sourceTree = "<group>"; };
+		055FF38719C044FB0057462A /* NewDim2TriangulationController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewDim2TriangulationController.mm; sourceTree = "<group>"; };
 		0564A1DF1811D6F8002CC2AE /* Regina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Regina.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0564A2161811D91C002CC2AE /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		0564A4071811D91E002CC2AE /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
@@ -2282,6 +2285,8 @@
 				050313C31812DB1E007F0CBE /* DefaultPacketViewController.mm */,
 				0591011C181364BB000A8D16 /* NewSurfacesController.h */,
 				0591011D181364BB000A8D16 /* NewSurfacesController.mm */,
+				055FF38619C044FB0057462A /* NewDim2TriangulationController.h */,
+				055FF38719C044FB0057462A /* NewDim2TriangulationController.mm */,
 				055FF38019BECF590057462A /* NewTriangulationController.h */,
 				055FF38119BECF590057462A /* NewTriangulationController.mm */,
 				05943CF219B68C0500E77EF3 /* PDFViewController.h */,
@@ -4230,6 +4235,7 @@
 				054BC4C619B4A726005E01A0 /* cusped-hyp-nor-census-9.zsig in Sources */,
 				054BC4C719B4A726005E01A0 /* cusped-hyp-or-census-9.zsig in Sources */,
 				054BC4C819B4A726005E01A0 /* hyp-knot-link-census.zsig in Sources */,
+				055FF38819C044FB0057462A /* NewDim2TriangulationController.mm in Sources */,
 				055B7312181D7CF800449D14 /* dim2boundarycomponent.cpp in Sources */,
 				052FA16E1806129B00FAE4DF /* nfacepairing.cpp in Sources */,
 				052FA229180612DD00FAE4DF /* identify_solution_type.c in Sources */,
