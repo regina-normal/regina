@@ -120,4 +120,11 @@
 
 @implementation NewPacketController
 
+- (BOOL)disablesAutomaticKeyboardDismissal
+{
+    // In text fields we want the keyboard to be automatically dismissed on [return],
+    // and for a modal form sheet this does not happen automatically.
+    return NO;
+}
+
 @end

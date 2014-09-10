@@ -66,13 +66,6 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (BOOL)disablesAutomaticKeyboardDismissal
-{
-    // In the isosig box we want the keyboard to be automatically dismissed on [return],
-    // and for a model form sheet this does not happen automatically.
-    return NO;
-}
-
 @end
 
 #pragma mark - Empty page
