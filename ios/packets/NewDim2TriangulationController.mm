@@ -187,12 +187,125 @@ typedef regina::Dim2Triangulation* (*Dim2TriangulationCreator)();
 
 @implementation NewDim2TriangulationSurfacePage
 
-// TODO
+- (void)viewDidLoad
+{
+    // Set up the initial genus explanation message.
+    [self orblChanged:nil];
+}
+
+- (int)checkGenus
+{
+    NSString* text = [self.genus.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    if (text.length == 0) {
+        UIAlertView* alert = [[UIAlertView alloc]
+                              initWithTitle:@"Missing genus"
+                              message:@"Please enter the genus of the surface into the box provided."
+                              delegate:nil
+                              cancelButtonTitle:@"Close"
+                              otherButtonTitles:nil];
+        [alert show];
+        return -1;
+    }
+    int val = text.intValue;
+    if (val < 0) {
+        UIAlertView* alert = [[UIAlertView alloc]
+                              initWithTitle:@"Invalid genus"
+                              message:@"The genus should be a non-negative integer."
+                              delegate:nil
+                              cancelButtonTitle:@"Close"
+                              otherButtonTitles:nil];
+        [alert show];
+        return -1;
+    }
+    return val;
+}
+
+- (int)checkPunctures
+{
+    NSString* text = [self.punctures.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    if (text.length == 0) {
+        UIAlertView* alert = [[UIAlertView alloc]
+                              initWithTitle:@"Missing number of punctures"
+                              message:@"Please enter the number of punctures into the box provided."
+                              delegate:nil
+                              cancelButtonTitle:@"Close"
+                              otherButtonTitles:nil];
+        [alert show];
+        return -1;
+    }
+    int val = text.intValue;
+    if (val < 0) {
+        UIAlertView* alert = [[UIAlertView alloc]
+                              initWithTitle:@"Invalid number of punctures"
+                              message:@"The number of punctures should be a non-negative integer."
+                              delegate:nil
+                              cancelButtonTitle:@"Close"
+                              otherButtonTitles:nil];
+        [alert show];
+        return -1;
+    }
+    return val;
+}
+
+- (IBAction)orblChanged:(id)sender {
+    if (self.orbl.selectedSegmentIndex == 0)
+        self.genusExpln.text = @"The orientable genus counts the number of handles.";
+    else
+        self.genusExpln.text = @"The non-orientable genus counts the number of crosscaps.";
+}
+
+- (IBAction)genusEditingEnded:(id)sender
+{
+    [self checkGenus];
+}
+
+- (IBAction)puncturesEditingEnded:(id)sender
+{
+    [self checkPunctures];
+}
 
 - (regina::NPacket*)create
 {
-    regina::NPacket* ans = new regina::Dim2Triangulation();
-    ans->setPacketLabel("2-D Triangulation");
+    int useGenus = [self checkGenus];
+    if (useGenus < 0)
+        return 0;
+    
+    int usePunctures = [self checkPunctures];
+    if (usePunctures < 0)
+        return 0;
+    
+    bool useOrbl = (self.orbl.selectedSegmentIndex == 0);
+    if (useGenus == 0 && ! useOrbl) {
+        UIAlertView* alert = [[UIAlertView alloc]
+                              initWithTitle:@"Invalid non-orientable genus"
+                              message:@"A non-orientable surface must have strictly positive genus."
+                              delegate:nil
+                              cancelButtonTitle:@"Close"
+                              otherButtonTitles:nil];
+        [alert show];
+        return 0;
+    }
+
+    regina::NPacket* ans;
+    NSString* label;
+    if (useOrbl) {
+        ans = regina::Dim2ExampleTriangulation::orientable(useGenus, usePunctures);
+        if (usePunctures == 0)
+            label = [NSString stringWithFormat:@"Orientable, genus %d", useGenus];
+        else if (usePunctures == 1)
+            label = [NSString stringWithFormat:@"Orientable, genus %d, 1 puncture", useGenus];
+        else
+            label = [NSString stringWithFormat:@"Orientable, genus %d, %d punctures", useGenus, usePunctures];
+    } else {
+        ans = regina::Dim2ExampleTriangulation::nonOrientable(useGenus, usePunctures);
+        if (usePunctures == 0)
+            label = [NSString stringWithFormat:@"Non-orientable, genus %d", useGenus];
+        else if (usePunctures == 1)
+            label = [NSString stringWithFormat:@"Non-orientable, genus %d, 1 puncture", useGenus];
+        else
+            label = [NSString stringWithFormat:@"Non-orientable, genus %d, %d punctures", useGenus, usePunctures];
+    }
+    ans->setPacketLabel(label.UTF8String);
     return ans;
 }
 

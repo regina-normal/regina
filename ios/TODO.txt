@@ -44,13 +44,18 @@ WRITE EDITORS:
 
 WRITE CREATORS:
 
-- 2-D triangulation
-- 3-D triangulation
-- SnapPea triangulation
-- Normal surfaces (check what's there now)
-- Angle structures
-- Filter
-- Text
+Instant:
+  - SnapPea triangulation
+  - Filter
+  - Text
+
+Algorithmic:
+  - Normal surfaces (check what's there now)
+  - Angle structures
+
+TEST:
+
+- Dim2 creation from surface page, once we have a proper Dim2 viewer.
 
 SHORT-TERM:
 
