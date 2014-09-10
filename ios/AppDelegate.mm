@@ -100,6 +100,7 @@
     }];
 
     // TODO: Save state.
+    [[NSUserDefaults standardUserDefaults] synchronize];
     
     // Start the save in a different thread and return immediately.
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -116,6 +117,8 @@
     // no way to request more time.
 
     // TODO: Save state.
+    [[NSUserDefaults standardUserDefaults] synchronize];
+
     // TODO: Save data.
 }
 
