@@ -30,8 +30,38 @@
  *                                                                        *
  **************************************************************************/
 
-#import "NewPacketController.h"
+#import "NewPacketPageViewController.h"
 
+/**
+ * The main controller for creating a new triangulation.
+ *
+ * This holds a NewPacketPageViewController; the corresponding pages
+ * are described by separate view controller classes below.
+ */
 @interface NewTriangulationController : NewPacketController
+@end
 
+/**
+ * The controller for creating a new empty triangulation.
+ *
+ * This represents an individual page within the larger NewTriangulationController.
+ */
+@interface NewTriangulationEmptyPage : UIViewController <PacketCreator>
+@end
+
+/**
+ * The controller for creating a ready-made example triangulation.
+ *
+ * This represents an individual page within the larger NewTriangulationController.
+ */
+
+@interface NewTriangulationExamplePage : UIViewController <PacketCreator>
+@end
+
+/**
+ * The controller for creating a new triangulation from an isomorphism signature.
+ *
+ * This represents an individual page within the larger NewTriangulationController.
+ */
+@interface NewTriangulationIsosigPage : UIViewController <PacketCreator>
 @end

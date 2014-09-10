@@ -40,7 +40,8 @@ namespace regina {
 
 // Must set the packet label also.
 // Need not insert it into the tree.
-// May return 0.
+// May return 0, but if so, should explain to
+// the user why.
 - (regina::NPacket*)create;
 
 @end
