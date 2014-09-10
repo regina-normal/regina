@@ -176,7 +176,13 @@ static NSURL* docsDir_ = nil;
 
 - (BOOL)loadFromContents:(id)contents ofType:(NSString *)typeName error:(NSError *__autoreleasing *)outError
 {
-    boost::iostreams::stream<boost::iostreams::array_source> s(static_cast<const char*>([contents bytes]), [contents length]);
+    if (! [contents isKindOfClass:[NSData class]]) {
+        NSLog(@"File data is not of type NSData.  Perhaps you tried to open a directory?");
+        return NO;
+    }
+    NSData* data = static_cast<NSData*>(contents);
+
+    boost::iostreams::stream<boost::iostreams::array_source> s(static_cast<const char*>(data.bytes), data.length);
     _tree = regina::open(s);
     
     if (_tree)

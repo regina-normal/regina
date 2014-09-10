@@ -128,7 +128,7 @@
 
 #pragma mark - Packet tree controller
 
-@interface PacketTreeController () {
+@interface PacketTreeController () <UIAlertViewDelegate> {
     NSMutableArray *_rows;
     NSInteger _subtreeRow;
     PacketListenerIOS* _listener;
@@ -171,16 +171,27 @@
     [hud setLabelText:@"Loading"];
     
     [doc openWithCompletionHandler:^(BOOL success) {
-		// TODO
+        [MBProgressHUD hideHUDForView:rootView animated:YES];
+        if (! success) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could not open document"
+                                                            message:@"I can read Regina's own data files, as well as SnapPea/SnapPy triangulation files.  Please ensure that your document uses one of these file formats."
+                                                           delegate:self
+                                                  cancelButtonTitle:@"Close"
+                                                  otherButtonTitles:nil];
+            
+            // Ensure that this tree controller is popped when the alert is dismissed.
+            alert.delegate = self;
+            
+            [alert show];
+            return;
+        }
         NSLog(@"Opened.");
         _node = doc.tree;
         _listener = [[PacketTreeListener alloc] initWithTree:self];
         self.title = doc.localizedName;
-        [MBProgressHUD hideHUDForView:rootView animated:YES];
     }];
     
     _detail.doc = doc;
-    // TODO: Trap errors.
 }
 
 - (void)openSubtree:(regina::NPacket *)p detail:(DetailViewController *)d {
@@ -398,6 +409,19 @@
         // Pass through the parent packet.
         ((NewPacketController*)segue.destinationViewController).spec = sender;
     }
+}
+
+#pragma mark - Alert view
+
+- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    // This method is hooked up to alerts in which we failed to open a document.
+    // When the alert is dismissed, we roll back to the main documents list.
+    
+    // We put it here in willDismissWithButtonIndex so the forward animation
+    // (in which this packet tree controller is pushed) has time to finish,
+    // and we do not end up in a mess with nested push/pop segues.
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end
