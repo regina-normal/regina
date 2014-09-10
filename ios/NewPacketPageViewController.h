@@ -49,7 +49,8 @@ namespace regina {
 @interface NewPacketPageViewController : UIPageViewController
 
 // Storyboard controllers must all adhere to the PacketCreator protocol.
-- (void)fillWithPages:(NSArray*)storyboardIDs pageSelector:(UISegmentedControl*)s;
+// The defaultKey may be nil.
+- (void)fillWithPages:(NSArray*)storyboardIDs pageSelector:(UISegmentedControl*)s defaultKey:(NSString*)key;
 - (regina::NPacket*)create;
 
 @end

@@ -35,9 +35,6 @@
 #import "triangulation/nexampletriangulation.h"
 #import "triangulation/ntriangulation.h"
 
-// TODO: Remember the last panel that was open.
-// TODO: Remember the last example that was selected.
-
 @interface NewTriangulationController ()
 @property (weak, nonatomic) IBOutlet UISegmentedControl *types;
 @property (weak, nonatomic) IBOutlet UIView *container;
@@ -49,7 +46,9 @@
 - (void)viewDidLoad
 {
     self.pages = static_cast<NewPacketPageViewController*>(self.childViewControllers.lastObject);
-    [self.pages fillWithPages:@[@"newTriEmpty", @"newTriExample", @"newTriIsosig"] pageSelector:self.types];
+    [self.pages fillWithPages:@[@"newTriEmpty", @"newTriExample", @"newTriIsosig"]
+                 pageSelector:self.types
+                   defaultKey:@"NewTriangulationPage"];
 }
 
 - (IBAction)create:(id)sender

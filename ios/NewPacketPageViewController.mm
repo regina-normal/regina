@@ -35,6 +35,7 @@
 
 @interface NewPacketPageViewController() <UIPageViewControllerDataSource, UIPageViewControllerDelegate> {
     int currentPage;
+    NSString* defaultKey;
 }
 
 @property (strong, nonatomic) NSMutableArray *pages;
@@ -44,7 +45,7 @@
 
 @implementation NewPacketPageViewController
 
-- (void)fillWithPages:(NSArray *)storyboardIDs pageSelector:(UISegmentedControl *)s
+- (void)fillWithPages:(NSArray *)storyboardIDs pageSelector:(UISegmentedControl *)s defaultKey:(NSString*)key
 {
     self.pageSelector = s;
     
@@ -61,20 +62,31 @@
         else
             [self.pages addObject:page];
     }
+
+    defaultKey = key;
+    if (defaultKey) {
+        currentPage = [[NSUserDefaults standardUserDefaults] integerForKey:defaultKey];
+    } else
+        currentPage = 0;
     
     self.dataSource = self;
     
-    [self setViewControllers:[NSArray arrayWithObject:self.pages.firstObject]
+    [self setViewControllers:[NSArray arrayWithObject:self.pages[currentPage]]
                    direction:UIPageViewControllerNavigationDirectionForward
                     animated:NO
                   completion:nil];
     
-    currentPage = 0;
-    self.pageSelector.selectedSegmentIndex = 0;
+    self.pageSelector.selectedSegmentIndex = currentPage;
     
     self.delegate = self;
     
     [self.pageSelector addTarget:self action:@selector(updateCurrentPage) forControlEvents:UIControlEventValueChanged];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    if (defaultKey)
+        [[NSUserDefaults standardUserDefaults] setInteger:currentPage forKey:defaultKey];
 }
 
 - (regina::NPacket *)create
