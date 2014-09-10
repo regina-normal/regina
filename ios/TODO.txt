@@ -47,7 +47,6 @@ WRITE CREATORS:
 Instant:
   - SnapPea triangulation
   - Filter
-  - Text
 
 Algorithmic:
   - Normal surfaces (check what's there now)

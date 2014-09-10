@@ -219,8 +219,6 @@
     if (! [spec parentWithAlert:YES])
         return;
 
-    // TODO: View the new packet immediately.
-    // TODO: Replace calls to refreshPackets with a listener-based mechanism.
     switch (type) {
         case regina::PACKET_CONTAINER:
         {
