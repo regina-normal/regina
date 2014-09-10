@@ -35,7 +35,6 @@
 #import "triangulation/nexampletriangulation.h"
 #import "triangulation/ntriangulation.h"
 
-// TODO: Make keyboard [return] work for isosigs.
 // TODO: Remember the last panel that was open.
 // TODO: Remember the last example that was selected.
 
@@ -66,6 +65,13 @@
 - (IBAction)cancel:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (BOOL)disablesAutomaticKeyboardDismissal
+{
+    // In the isosig box we want the keyboard to be automatically dismissed on [return],
+    // and for a model form sheet this does not happen automatically.
+    return NO;
 }
 
 @end
@@ -182,6 +188,11 @@ typedef regina::NTriangulation* (*TriangulationCreator)();
 @end
 
 @implementation NewTriangulationIsosigPage
+
+- (IBAction)editingEnded:(id)sender {
+    NewTriangulationController* c = static_cast<NewTriangulationController*>(self.parentViewController.parentViewController);
+    [c create:sender];
+}
 
 - (regina::NPacket *)create
 {

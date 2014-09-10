@@ -842,13 +842,16 @@
                                 <rect key="frame" x="20" y="49" width="500" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" returnKeyType="go" enablesReturnKeyAutomatically="YES"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="go" enablesReturnKeyAutomatically="YES"/>
+                                <connections>
+                                    <action selector="editingEnded:" destination="Bve-LG-EeH" eventType="editingDidEndOnExit" id="6Ic-Le-bkU"/>
+                                </connections>
                             </textField>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wmp-kT-xhY">
                                 <rect key="frame" x="20" y="119" width="500" height="309"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <string key="text">Isomorphism signatures are small pieces of text that represent a triangulation, up to relabelling.  An example is cPcbbbiht, which represents the figure eight knot complement.  To learn more about isomorphism signatures, see arXiv:1110.6080.</string>
+                                <mutableString key="text">Isomorphism signatures are small pieces of text that represent a triangulation, up to relabelling.  An example is cPcbbbiht, which represents the figure eight knot complement.  Note that isomorphisms signatures are case-sensitive.  To learn more about isomorphism signatures, see arXiv:1110.6080.</mutableString>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
