@@ -233,7 +233,7 @@
             // We can do this immediately, no input required.
             regina::NText* t = new regina::NText();
             t->setPacketLabel("Text");
-            t->setText("Type your text here...");
+            t->setText("Type your text here.");
             _node->insertChildLast(t);
             _detail.packet = t;
             break;
