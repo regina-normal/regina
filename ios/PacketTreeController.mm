@@ -92,6 +92,8 @@
         
         for (regina::NPacket* p = _tree.node->getFirstTreeChild(); p; p = p->getNextTreeSibling())
             [self listen:p];
+        
+        [tree refreshPackets];
     }
     return self;
 }
@@ -154,7 +156,6 @@
         _node = doc.tree;
         _listener = [[PacketTreeListener alloc] initWithTree:self];
         self.title = doc.localizedName;
-        [self refreshPackets];        
     }];
 }
 
@@ -174,7 +175,6 @@
         _node = doc.tree;
         _listener = [[PacketTreeListener alloc] initWithTree:self];
         self.title = doc.localizedName;
-        [self refreshPackets];
         [MBProgressHUD hideHUDForView:rootView animated:YES];
         // TODO: Enable packet + button.
     }];
@@ -390,7 +390,6 @@
             packetIndex = indexPath.row;
         
         [[segue destinationViewController] openSubtree:[_rows[packetIndex] packet] detail:_detail];
-        [[segue destinationViewController] refreshPackets];
     } else if ([[segue identifier] isEqualToString:@"newPacket"]) {
         _newPacketPopover = [(UIStoryboardPopoverSegue*)segue popoverController];
         ((NewPacketMenu*)segue.destinationViewController).packetTree = self;

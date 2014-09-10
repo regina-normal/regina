@@ -49,7 +49,11 @@ namespace regina {
 - (void)openDocument:(ReginaDocument*)doc detail:(DetailViewController*)d;
 - (void)openSubtree:(regina::NPacket*)p detail:(DetailViewController*)d;
 
+/**
+ * Should only need to be called from the internal packet listener.
+ */
 - (void)refreshPackets;
+
 - (void)viewPacket:(regina::NPacket*)p;
 - (void)newPacket:(regina::PacketType)type;
 
