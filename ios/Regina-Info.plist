@@ -25,6 +25,23 @@
 				<string>net.sourceforge.regina.xmldata</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeIconFiles</key>
+			<array>
+				<string>snappea-doc-64</string>
+				<string>snappea-doc-320</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>SnapPea Triangulation</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>net.sourceforge.regina.snappea</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
@@ -105,6 +122,27 @@
 				<string>rga</string>
 				<key>public.mimetype</key>
 				<string>application/x-regina</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>SnapPea Triangulation</string>
+			<key>UTTypeIdentifier</key>
+			<string>net.sourceforge.regina.snappea</string>
+			<key>UTTypeSize320IconFile</key>
+			<string>snappea-doc-320</string>
+			<key>UTTypeSize64IconFile</key>
+			<string>snappea-doc-64</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<string>tri</string>
+				<key>public.mimetype</key>
+				<string>application/x-snappea</string>
 			</dict>
 		</dict>
 	</array>

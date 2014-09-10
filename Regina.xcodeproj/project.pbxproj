@@ -1057,6 +1057,8 @@
 		05CA99E618078466006161DC /* registryutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CA99E518078465006161DC /* registryutils.h */; };
 		05D0A1101812F0BE005ED097 /* TriangulationViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D0A10F1812F0BE005ED097 /* TriangulationViewController.mm */; };
 		05EC452F19B99A81002D0633 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA23E180613A900FAE4DF /* boost.framework */; };
+		05F23E0F19C08834005B53B5 /* snappea-doc-64.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F23E0D19C08834005B53B5 /* snappea-doc-64.png */; };
+		05F23E1019C08834005B53B5 /* snappea-doc-320.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F23E0E19C08834005B53B5 /* snappea-doc-320.png */; };
 		05F4947C19BDDD5E00CD887C /* DBChooser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F4947B19BDDD5D00CD887C /* DBChooser.framework */; };
 		05F9560A19B5298E00377BEC /* closed-hyp-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F971809CB7600F86BFD /* closed-hyp-census.rga */; };
 		05F9560B19B5298E00377BEC /* closed-nor-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F981809CB7600F86BFD /* closed-nor-census.rga */; };
@@ -2201,6 +2203,8 @@
 		05CA99E518078465006161DC /* registryutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = registryutils.h; sourceTree = "<group>"; };
 		05D0A10E1812F0BE005ED097 /* TriangulationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriangulationViewController.h; sourceTree = "<group>"; };
 		05D0A10F1812F0BE005ED097 /* TriangulationViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TriangulationViewController.mm; sourceTree = "<group>"; };
+		05F23E0D19C08834005B53B5 /* snappea-doc-64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "snappea-doc-64.png"; sourceTree = "<group>"; };
+		05F23E0E19C08834005B53B5 /* snappea-doc-320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "snappea-doc-320.png"; sourceTree = "<group>"; };
 		05F4947B19BDDD5D00CD887C /* DBChooser.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DBChooser.framework; path = ../../Library/Frameworks/DBChooser.framework; sourceTree = "<group>"; };
 		05F9561119B53E7900377BEC /* TriRecognitionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriRecognitionViewController.h; sourceTree = "<group>"; };
 		05F9561219B53E7900377BEC /* TriRecognitionViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TriRecognitionViewController.mm; sourceTree = "<group>"; };
@@ -3288,6 +3292,8 @@
 				052FA1311806102F00FAE4DF /* Regina-Info.plist */,
 				0503DCD219B7D8950085F3CC /* regina-doc-64.png */,
 				0503DCD319B7D8950085F3CC /* regina-doc-320.png */,
+				05F23E0D19C08834005B53B5 /* snappea-doc-64.png */,
+				05F23E0E19C08834005B53B5 /* snappea-doc-320.png */,
 				052FA1321806102F00FAE4DF /* InfoPlist.strings */,
 				052FA1351806102F00FAE4DF /* main.m */,
 				052FA1371806103000FAE4DF /* Regina-Prefix.pch */,
@@ -4150,6 +4156,8 @@
 			files = (
 				0503DCD419B7D8AA0085F3CC /* regina-doc-64.png in Resources */,
 				0503DCD519B7D8AA0085F3CC /* regina-doc-320.png in Resources */,
+				05F23E0F19C08834005B53B5 /* snappea-doc-64.png in Resources */,
+				05F23E1019C08834005B53B5 /* snappea-doc-320.png in Resources */,
 				054BC4C919B4A73D005E01A0 /* closed-hyp-census-full.zsig in Resources */,
 				054BC4CA19B4A73D005E01A0 /* closed-nor-census-11.zsig in Resources */,
 				054BC4CB19B4A73D005E01A0 /* closed-or-census-11.zsig in Resources */,
