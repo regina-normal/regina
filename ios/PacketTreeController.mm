@@ -171,12 +171,12 @@
     [hud setLabelText:@"Loading"];
     
     [doc openWithCompletionHandler:^(BOOL success) {
+		// TODO
         NSLog(@"Opened.");
         _node = doc.tree;
         _listener = [[PacketTreeListener alloc] initWithTree:self];
         self.title = doc.localizedName;
         [MBProgressHUD hideHUDForView:rootView animated:YES];
-        // TODO: Enable packet + button.
     }];
     
     _detail.doc = doc;
