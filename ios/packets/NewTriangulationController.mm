@@ -134,6 +134,8 @@ typedef regina::NTriangulation* (*TriangulationCreator)();
 @property (weak, nonatomic) IBOutlet UIPickerView *example;
 @end
 
+#define KEY_LAST_EXAMPLE @"NewTriangulationExample"
+
 @implementation NewTriangulationExamplePage
 
 - (void)viewDidLoad
@@ -156,6 +158,8 @@ typedef regina::NTriangulation* (*TriangulationCreator)();
     
     self.example.dataSource = self;
     self.example.delegate = self;
+    
+    [self.example selectRow:[[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_EXAMPLE] inComponent:0 animated:NO];
 }
 
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
@@ -171,6 +175,11 @@ typedef regina::NTriangulation* (*TriangulationCreator)();
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
     return [options[row] name];
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    [[NSUserDefaults standardUserDefaults] setInteger:[self.example selectedRowInComponent:0] forKey:KEY_LAST_EXAMPLE];
 }
 
 - (regina::NPacket *)create
