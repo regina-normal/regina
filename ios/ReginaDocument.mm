@@ -258,10 +258,10 @@ enum DocError {
     }
     
     NSLog(@"Preparing to save: %@", self.fileURL);
-    
     std::ostringstream s;
     if (_tree->save(s)) {
         const std::string& str = s.str();
+        NSLog(@"Saved to memory, now writing to file.");
         return [NSData dataWithBytes:str.c_str() length:str.length()];
     } else {
         *outError = [NSError errorWithDomain:@"ReginaDocument"
