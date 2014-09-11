@@ -22,6 +22,7 @@ CLEAN UP:
 - packets/TriGluingsViewController
 - packets/TriRecognitionViewController
 
+- packets/NewAnglesController
 - packets/NewSurfacesController
 
 WRITE VIEWERS:
@@ -44,13 +45,7 @@ WRITE EDITORS:
 
 WRITE CREATORS:
 
-Instant:
-  - SnapPea triangulation
-  - Filter
-
-Algorithmic:
-  - Normal surfaces (check what's there now)
-  - Angle structures
+- SnapPea triangulation
 
 TEST:
 
