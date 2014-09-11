@@ -43,7 +43,7 @@ static NSURL* docsDir_ = nil;
 
 enum DocError {
     DOC_ERR_OPEN_FAILED = 100,
-    DOC_ERR_SAVE_FAILED
+    DOC_ERR_SAVE_FAILED = 101
 };
 
 @interface ReginaDocument () {
@@ -203,7 +203,9 @@ enum DocError {
 {
     if (! [contents isKindOfClass:[NSData class]]) {
         NSLog(@"File data is not of type NSData.  Perhaps you tried to open a directory?");
-        *outError = [NSError errorWithDomain:@"ReginaDocument" code:DOC_ERR_OPEN_FAILED userInfo:nil];
+        *outError = [NSError errorWithDomain:@"ReginaDocument"
+                                        code:DOC_ERR_OPEN_FAILED
+                                    userInfo:[NSDictionary dictionaryWithObject:@"File contents not NSData" forKey:NSLocalizedDescriptionKey]];
         return NO;
     }
     NSData* data = static_cast<NSData*>(contents);
@@ -222,7 +224,9 @@ enum DocError {
         regina::NSnapPeaTriangulation* tri = new regina::NSnapPeaTriangulation(str);
         if ((! tri) || tri->isNull()) {
             delete tri;
-            *outError = [NSError errorWithDomain:@"ReginaDocument" code:DOC_ERR_OPEN_FAILED userInfo:nil];
+            *outError = [NSError errorWithDomain:@"ReginaDocument"
+                                            code:DOC_ERR_OPEN_FAILED
+                                        userInfo:[NSDictionary dictionaryWithObject:@"Could not read SnapPea data file" forKey:NSLocalizedDescriptionKey]];
             return NO;
         }
         _tree = new regina::NContainer();
@@ -233,20 +237,23 @@ enum DocError {
     } else {
         boost::iostreams::stream<boost::iostreams::array_source> s(static_cast<const char*>(data.bytes), data.length);
         _tree = regina::open(s);
+        if (! _tree) {
+            *outError = [NSError errorWithDomain:@"ReginaDocument"
+                                            code:DOC_ERR_OPEN_FAILED
+                                        userInfo:[NSDictionary dictionaryWithObject:@"Could not read Regina data file" forKey:NSLocalizedDescriptionKey]];
+            return NO;
+        }
     }
-    
-    if (_tree)
-        return YES;
-    else {
-        *outError = [NSError errorWithDomain:@"ReginaDocument" code:DOC_ERR_OPEN_FAILED userInfo:nil];
-        return NO;
-    }
+
+    return YES;
 }
 
 - (id)contentsForType:(NSString *)typeName error:(NSError *__autoreleasing *)outError
 {
     if (! _tree) {
-        *outError = [NSError errorWithDomain:@"ReginaDocument" code:DOC_ERR_SAVE_FAILED userInfo:nil];
+        *outError = [NSError errorWithDomain:@"ReginaDocument"
+                                        code:DOC_ERR_SAVE_FAILED
+                                    userInfo:[NSDictionary dictionaryWithObject:@"No packet tree to save" forKey:NSLocalizedDescriptionKey]];
         return nil;
     }
     
@@ -257,7 +264,9 @@ enum DocError {
         const std::string& str = s.str();
         return [NSData dataWithBytes:str.c_str() length:str.length()];
     } else {
-        *outError = [NSError errorWithDomain:@"ReginaDocument" code:DOC_ERR_SAVE_FAILED userInfo:nil];
+        *outError = [NSError errorWithDomain:@"ReginaDocument"
+                                        code:DOC_ERR_SAVE_FAILED
+                                    userInfo:[NSDictionary dictionaryWithObject:@"Could not save Regina data file" forKey:NSLocalizedDescriptionKey]];
         return nil;
     }
 }
