@@ -270,14 +270,6 @@
         case regina::PACKET_SURFACEFILTER:
             [self performSegueWithIdentifier:@"newFilter" sender:spec];
             break;
-        default:
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Not yet implemented"
-                                                            message:@"I do not know how to create this type of packet.  The iOS version of Regina is still under development – please be patient!"
-                                                           delegate:self
-                                                  cancelButtonTitle:@"Close"
-                                                  otherButtonTitles:nil];
-            [alert show];
-            break;
     }
 }
 
