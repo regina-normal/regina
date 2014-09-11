@@ -1224,7 +1224,7 @@
                         <outlet property="enumerateButton" destination="agV-qk-uCj" id="9LD-K7-RgD"/>
                         <outlet property="progressControl" destination="OPH-0J-DKv" id="EkB-Xo-Z35"/>
                         <outlet property="progressLabel" destination="6qa-C1-21U" id="wW5-nf-KYQ"/>
-                        <outlet property="triangulation" destination="nNq-ec-aGI" id="fte-87-oxT"/>
+                        <outlet property="triangulation" destination="HPD-IZ-6Hj" id="i59-5s-qy5"/>
                         <outlet property="whichControl" destination="qdd-dU-wmW" id="VKW-mK-RaR"/>
                         <outlet property="whichDesc" destination="m0I-mX-4Zm" id="vef-Fj-gv8"/>
                     </connections>
