@@ -36,7 +36,6 @@
 #import "ReginaDocument.h"
 
 // TODO: Allow renaming documents.
-// TODO: Is there a race condition on closing and re-opening documents?
 // TODO: Update timestamp after a file is saved.
 // TODO: Mark SnapPea files visually.
 
