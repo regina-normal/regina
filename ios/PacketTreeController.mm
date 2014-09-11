@@ -45,7 +45,7 @@
 
 #pragma mark - Packet tree row
 
-// TODO: Delete packets.
+// TODO: Rename packets.
 // TODO: Move packets around the tree.
 
 @interface PacketTreeRow : NSObject
@@ -131,10 +131,11 @@
 
 #pragma mark - Packet tree controller
 
-@interface PacketTreeController () <UIAlertViewDelegate> {
+@interface PacketTreeController () <UIAlertViewDelegate, UIActionSheetDelegate> {
     NSMutableArray *_rows;
     NSInteger _subtreeRow;
     PacketListenerIOS* _listener;
+    NSIndexPath* actionIndexPath;
     __weak UIPopoverController* _newPacketPopover;
 }
 
@@ -220,6 +221,13 @@
     [self.tableView reloadData];
 }
 
+- (int)packetIndexFor:(NSIndexPath*)indexPath {
+    if (_subtreeRow <= indexPath.row && _subtreeRow > 0)
+        return indexPath.row - 1;
+    else
+        return indexPath.row;
+}
+
 - (void)viewPacket:(regina::NPacket *)p {
     self.detail.packet = p;
 }
@@ -257,11 +265,7 @@
     if (_subtreeRow > 0 && indexPath.row == _subtreeRow)
         return [tableView dequeueReusableCellWithIdentifier:@"Subtree" forIndexPath:indexPath];
 
-    NSInteger rowIndex;
-    if (_subtreeRow == 0 || _subtreeRow > indexPath.row)
-        rowIndex = indexPath.row;
-    else
-        rowIndex = indexPath.row - 1;
+    NSInteger rowIndex = [self packetIndexFor:indexPath];
     
     PacketTreeRow* r = _rows[rowIndex];
     regina::NPacket* p = [r packet];
@@ -286,7 +290,38 @@
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return NO;
+    return ! (_subtreeRow > 0 && indexPath.row == _subtreeRow);
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (_subtreeRow > 0 && indexPath.row == _subtreeRow)
+        return UITableViewCellEditingStyleNone;
+    else
+        return UITableViewCellEditingStyleDelete;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        actionIndexPath = indexPath;
+        CGRect cell = [tableView cellForRowAtIndexPath:indexPath].frame;
+        
+        NSString* deleteMsg;
+        regina::NPacket* p = [_rows[[self packetIndexFor:indexPath]] packet];
+        unsigned long totalPackets = p->getNumberOfDescendants();
+        if (totalPackets == 0)
+            deleteMsg = @"Delete packet";
+        else
+            deleteMsg = [NSString stringWithFormat:@"Delete %ld packets", totalPackets + 1];
+
+        UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                           delegate:self
+                                                  cancelButtonTitle:@"Cancel"
+                                             destructiveButtonTitle:deleteMsg
+                                                  otherButtonTitles:nil];
+        [sheet showFromRect:cell inView:tableView animated:YES];
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -304,12 +339,7 @@
         return;
     }
 
-    NSInteger rowIndex;
-    if (_subtreeRow == 0 || _subtreeRow > indexPath.row)
-        rowIndex = indexPath.row;
-    else
-        rowIndex = indexPath.row - 1;
-
+    NSInteger rowIndex = [self packetIndexFor:indexPath];
     NSInteger oldSubtreeRow = _subtreeRow;
     
     PacketTreeRow* r = _rows[rowIndex];
@@ -360,12 +390,7 @@
     if ([[segue identifier] isEqualToString:@"openSubtree"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
 
-        NSInteger packetIndex;
-        if (_subtreeRow <= indexPath.row && _subtreeRow > 0)
-            packetIndex = indexPath.row - 1;
-        else
-            packetIndex = indexPath.row;
-        
+        NSInteger packetIndex = [self packetIndexFor:indexPath];
         [[segue destinationViewController] openSubtree:[_rows[packetIndex] packet] detail:self.detail];
     } else if ([[segue identifier] isEqualToString:@"newPacket"]) {
         _newPacketPopover = [(UIStoryboardPopoverSegue*)segue popoverController];
@@ -375,6 +400,30 @@
         // Pass through the parent packet.
         ((NewPacketController*)segue.destinationViewController).spec = sender;
     }
+}
+
+#pragma mark - Action sheet
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex != actionSheet.destructiveButtonIndex)
+        return;
+
+    int packetIndex = [self packetIndexFor:actionIndexPath];
+    regina::NPacket* packet = [_rows[packetIndex] packet];
+
+    [_rows removeObjectAtIndex:[self packetIndexFor:actionIndexPath]];
+    if (_subtreeRow == actionIndexPath.row + 1) {
+        // We need to remove the subtree cell also.
+        NSIndexPath* subtreePath = [NSIndexPath indexPathForRow:_subtreeRow inSection:0];
+        _subtreeRow = 0;
+        [self.tableView deleteRowsAtIndexPaths:@[actionIndexPath, subtreePath]
+                               withRowAnimation:UITableViewRowAnimationFade];
+    } else {
+        [self.tableView deleteRowsAtIndexPaths:@[actionIndexPath]
+                               withRowAnimation:UITableViewRowAnimationFade];
+    }
+    
+    delete packet;
 }
 
 #pragma mark - Alert view
