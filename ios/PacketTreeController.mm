@@ -45,6 +45,9 @@
 
 #pragma mark - Packet tree row
 
+// TODO: Delete packets.
+// TODO: Move packets around the tree.
+
 @interface PacketTreeRow : NSObject
 
 @property (assign, nonatomic, readonly) regina::NPacket* packet;
@@ -103,13 +106,13 @@
 }
 
 - (void)packetWasRenamed:(regina::NPacket *)packet {
-    // TODO
+    // TODO: listener packetWasRenamed - is this correct?
     [_tree.document setDirty];
     [_tree refreshPackets];
 }
 
 - (void)childWasAddedTo:(regina::NPacket*)packet child:(regina::NPacket*)child {
-    // TODO
+    // TODO: listener childWasAddedTo - is this correct?
     [_tree.document setDirty];
     [_tree refreshPackets];
     if (packet == _tree.node)
