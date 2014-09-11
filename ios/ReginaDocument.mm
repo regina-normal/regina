@@ -34,6 +34,7 @@
 #import "TSMessage.h"
 #import "packet/ncontainer.h"
 #import "packet/ntext.h"
+#import "snappea/nsnappeatriangulation.h"
 #import <boost/iostreams/device/array.hpp>
 #import <boost/iostreams/stream.hpp>
 #import <sstream>
@@ -43,8 +44,28 @@
 static NSURL* docsDir_ = nil;
 
 @interface ReginaDocument () {
+    enum DocType {
+        /**
+         * Indicates a native Regina data file, residing in the usual documents directory.
+         */
+        DOC_NATIVE,
+        /**
+         * Indicates a native Regina data file, residing in a read-only location.  Such a
+         * file might be an example file, or census data.
+         * When modified, a file of this type must be copied into the documents directory
+         * before it can be saved.
+         */
+        DOC_READONLY,
+        /**
+         * Indicates a file in a foreign data format.
+         * When modified, a file of this type must be saved in the documents directory under
+         * a different name, using Regina's native file format.
+         */
+        DOC_FOREIGN
+    };
+    
     NSString* description;
-    BOOL readOnly;
+    DocType type;
 }
 @end
 
@@ -62,7 +83,7 @@ static NSURL* docsDir_ = nil;
     if (self) {
         description = e.desc;
         _tree = 0;
-        readOnly = YES;
+        type = DOC_READONLY;
     }
     return self;
 }
@@ -95,7 +116,7 @@ static NSURL* docsDir_ = nil;
     if (self) {
         description = nil;
         _tree = 0;
-        readOnly = ! moveOk;
+        type = (moveOk ? DOC_NATIVE : DOC_READONLY);
     }
     return self;
 }
@@ -117,7 +138,7 @@ static NSURL* docsDir_ = nil;
     if (self) {
         description = nil;
         _tree = 0;
-        readOnly = NO;
+        type = DOC_NATIVE;
     }
     return self;
 }
@@ -141,6 +162,7 @@ static NSURL* docsDir_ = nil;
         regina::NText* text = new regina::NText("TODO: A welcome.");
         text->setPacketLabel("Read me");
         _tree->insertChildLast(text);
+        type = DOC_NATIVE;
         
         [self saveToURL:url forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
             if (success)
@@ -181,9 +203,32 @@ static NSURL* docsDir_ = nil;
         return NO;
     }
     NSData* data = static_cast<NSData*>(contents);
-
-    boost::iostreams::stream<boost::iostreams::array_source> s(static_cast<const char*>(data.bytes), data.length);
-    _tree = regina::open(s);
+    
+    // We decide on the file type not based on typeName, but by actually examing the file contents.
+    //
+    // Note: Regina data files should start with either:
+    // "\x1f\x8b", for compressed XML, or
+    // "<?xml", for uncompressed XML.
+    
+    char prefix[6];
+    [data getBytes:prefix length:5];
+    if (strncmp(prefix, "% Tri", 5) == 0) {
+        // Looks like it belongs to SnapPea/SnapPy.
+        std::string str(static_cast<const char*>(data.bytes), data.length);
+        regina::NSnapPeaTriangulation* tri = new regina::NSnapPeaTriangulation(str);
+        if ((! tri) || tri->isNull()) {
+            delete tri;
+            return NO;
+        }
+        _tree = new regina::NContainer();
+        _tree->setPacketLabel("SnapPea import");
+        _tree->insertChildLast(tri);
+        
+        type = DOC_FOREIGN;
+    } else {
+        boost::iostreams::stream<boost::iostreams::array_source> s(static_cast<const char*>(data.bytes), data.length);
+        _tree = regina::open(s);
+    }
     
     if (_tree)
         return YES;
@@ -196,7 +241,7 @@ static NSURL* docsDir_ = nil;
 - (id)contentsForType:(NSString *)typeName error:(NSError *__autoreleasing *)outError
 {
     if (! _tree) {
-        // TODO
+        // TODO: outError.
         return nil;
     }
     
@@ -207,14 +252,14 @@ static NSURL* docsDir_ = nil;
         const std::string& str = s.str();
         return [NSData dataWithBytes:str.c_str() length:str.length()];
     } else {
-        // TODO
+        // TODO: outError.
         return nil;
     }
 }
 
 - (void)setDirty
 {
-    if (readOnly) {
+    if (type == DOC_READONLY) {
         NSLog(@"Copying to documents directory.");
         NSURL* newURL = [ReginaDocument uniqueDocURLFor:self.fileURL];
         if ([[NSFileManager defaultManager] copyItemAtURL:self.fileURL toURL:newURL error:nil]) {
@@ -224,7 +269,7 @@ static NSURL* docsDir_ = nil;
                                             type:TSMessageNotificationTypeMessage];
 
             description = nil;
-            readOnly = NO;
+            type = DOC_NATIVE;
             
             [self updateChangeCount:UIDocumentChangeDone];
         } else {
@@ -236,6 +281,28 @@ static NSURL* docsDir_ = nil;
                                   otherButtonTitles:nil];
             [alert show];
         }
+    } else if (type == DOC_FOREIGN) {
+        NSLog(@"Converting to Regina's native format.");
+        NSURL* newURL = [ReginaDocument uniqueRgaURLFor:self.fileURL];
+        [self presentedItemDidMoveToURL:newURL];
+        [self saveToURL:newURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
+            if (success) {
+                [TSMessage showNotificationWithTitle:@"Converted to Regina document:"
+                                            subtitle:newURL.lastPathComponent
+                                                type:TSMessageNotificationTypeMessage];
+            } else {
+                UIAlertView* alert = [[UIAlertView alloc]
+                                      initWithTitle:@"Changes will be lost"
+                                      message:@"I was unable to save this document in Regina's native file format.  This means that any changes you make here will be lost."
+                                      delegate:nil
+                                      cancelButtonTitle:@"Close"
+                                      otherButtonTitles:nil];
+                [alert show];
+            }
+        }];
+        
+        description = nil;
+        type = DOC_NATIVE;
     } else {
         [self updateChangeCount:UIDocumentChangeDone];
     }
@@ -266,6 +333,30 @@ static NSURL* docsDir_ = nil;
     int i = 1;
     while (true) {
         filename = [NSString stringWithFormat:@"%@ %d.%@", basename, i, extension];
+        url = [dir URLByAppendingPathComponent:filename];
+        if (! [f fileExistsAtPath:url.path])
+            return url;
+        
+        ++i;
+    }
+}
+
++ (NSURL *)uniqueRgaURLFor:(NSURL *)url
+{
+    // Note: [NSURL URLByAppendingPathComponent] handles all necessary character escaping for us.
+    NSString* basename = [[url lastPathComponent] stringByDeletingPathExtension];
+    NSString* filename = [basename stringByAppendingString:@".rga"];
+    
+    NSFileManager* f = [NSFileManager defaultManager];
+    NSURL* dir = [ReginaDocument docsDir];
+    
+    url = [dir URLByAppendingPathComponent:filename];
+    if (! [f fileExistsAtPath:url.path])
+        return url;
+    
+    int i = 1;
+    while (true) {
+        filename = [NSString stringWithFormat:@"%@ %d.rga", basename, i];
         url = [dir URLByAppendingPathComponent:filename];
         if (! [f fileExistsAtPath:url.path])
             return url;
