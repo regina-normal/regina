@@ -54,7 +54,6 @@
  *
  * This represents an individual page within the larger NewDim2TriangulationController.
  */
-
 @interface NewDim2TriangulationExamplePage : UIViewController <PacketCreator>
 @end
 
@@ -63,7 +62,6 @@
  *
  * This represents an individual page within the larger NewDim2TriangulationController.
  */
-
 @interface NewDim2TriangulationSurfacePage : UIViewController <PacketCreator>
 @end
 

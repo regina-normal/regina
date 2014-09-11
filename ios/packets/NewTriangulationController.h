@@ -54,7 +54,6 @@
  *
  * This represents an individual page within the larger NewTriangulationController.
  */
-
 @interface NewTriangulationExamplePage : UIViewController <PacketCreator>
 @end
 
