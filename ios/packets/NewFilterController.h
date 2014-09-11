@@ -32,6 +32,8 @@
 
 #import "NewPacketController.h"
 
+/**
+ * The main controller for creating a normal surface filter.
+ */
 @interface NewFilterController : NewPacketController
-
 @end
