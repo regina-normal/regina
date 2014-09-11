@@ -114,7 +114,7 @@ void addNExampleTriangulation() {
         .staticmethod("solidKleinBottle")
         .staticmethod("figureEight")
         .staticmethod("figureEightKnotComplement")
-        .staticmethod("trefoilKnot")
+        .staticmethod("trefoil")
         .staticmethod("trefoilKnotComplement")
         .staticmethod("whiteheadLink")
         .staticmethod("whiteheadLinkComplement")
