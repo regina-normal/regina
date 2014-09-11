@@ -37,12 +37,73 @@
 
 // TODO: Allow renaming documents.
 // TODO: Is there a race condition on closing and re-opening documents?
+// TODO: Update timestamp after a file is saved.
+// TODO: Mark SnapPea files visually.
+// TODO: weak vs assign?
 
 // Action sheet tags;
 enum {
     sheetNew,
     sheetDelete
 };
+
+static NSDateFormatter* dateFormatter;
+
+@interface DocumentSpec : NSObject
+@property (strong, nonatomic) NSURL* url;
+@property (strong, nonatomic, readonly) NSString* name;
+@property (strong, nonatomic, readonly) NSDate* lastModified;
+
+- (id)initWithURL:(NSURL*)url;
++ (id)specWithURL:(NSURL*)url;
+
+- (NSString*)lastModifiedText;
+
+@end
+
+@implementation DocumentSpec
+
+- (id)initWithURL:(NSURL *)url
+{
+    self = [super init];
+    if (self) {
+        _url = url;
+
+        _name = [url lastPathComponent];
+        if ([_name hasSuffix:@".rga"])
+            _name = [_name stringByDeletingPathExtension];
+
+        // TODO: Use NSURLLocalizedNameKey
+
+        NSError* err;
+        NSDate* date;
+        if ([url getResourceValue:&date forKey:NSURLContentModificationDateKey error:&err])
+            _lastModified = date;
+        else {
+            NSLog(@"Error querying file modification time for %@: %@", url, err.localizedDescription);
+            _lastModified = nil;
+        }
+    }
+    return self;
+}
+
++ (id)specWithURL:(NSURL *)url
+{
+    return [[DocumentSpec alloc] initWithURL:url];
+}
+
+- (NSString *)lastModifiedText
+{
+    if (! dateFormatter) {
+        dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.dateStyle = NSDateFormatterMediumStyle;
+        dateFormatter.timeStyle = NSDateFormatterShortStyle;
+        dateFormatter.doesRelativeDateFormatting = YES;
+    }
+    return [dateFormatter stringFromDate:self.lastModified];
+}
+
+@end
 
 @interface MasterViewController () <UIActionSheetDelegate, NSURLSessionDownloadDelegate> {
     UITableView* actionTableView;
@@ -158,19 +219,34 @@ enum {
     if (indexPath.section == 0)
         return (indexPath.row == 0 ? [ReginaDocument documentWithExample:[Example intro]] : nil);
     else
-        return [ReginaDocument documentWithURL:self.docURLs[indexPath.row]];
+        return [ReginaDocument documentWithURL:[self.docURLs[indexPath.row] url]];
 }
 
 - (void)refreshDocURLs
 {
-    // TODO: Sort, timestamp, etc.
     [self.docURLs removeAllObjects];
     
-    NSArray* contents = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:[ReginaDocument docsDir] includingPropertiesForKeys:nil options:nil error:nil];
+    NSArray* contents = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:[ReginaDocument docsDir]
+                                                      includingPropertiesForKeys:@[NSURLLocalizedNameKey,
+                                                                                   NSURLContentModificationDateKey,
+                                                                                   NSURLIsDirectoryKey]
+                                                                         options:nil
+                                                                           error:nil];
+
+    NSError* err;
+    NSNumber* isDir;
     for (NSURL* url in [contents objectEnumerator]) {
-        [self.docURLs addObject:url];
+        if ([url getResourceValue:&isDir forKey:NSURLIsDirectoryKey error:&err]) {
+            if (isDir.boolValue)
+                continue;
+        } else {
+            NSLog(@"Error scanning documents directory: %@", err.localizedDescription);
+        }
+        [self.docURLs addObject:[DocumentSpec specWithURL:url]];
     }
-    
+
+    [self.docURLs sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastModified" ascending:NO],
+                                         [NSSortDescriptor sortDescriptorWithKey:@"url" ascending:YES]]];
     [self.tableView reloadData];
 }
 
@@ -261,9 +337,8 @@ enum {
         }
     } else {
         cell = [tableView dequeueReusableCellWithIdentifier:@"Document" forIndexPath:indexPath];
-        NSURL* url = self.docURLs[indexPath.row];
-        // TODO: Strip the extension.
-        cell.textLabel.text = url.lastPathComponent;
+        cell.textLabel.text = [self.docURLs[indexPath.row] name];
+        cell.detailTextLabel.text = [self.docURLs[indexPath.row] lastModifiedText];
     }
     return cell;
 }
@@ -309,7 +384,7 @@ enum {
             break;
         case sheetDelete:
             if (buttonIndex == actionSheet.destructiveButtonIndex) {
-                NSURL* url = self.docURLs[actionIndexPath.row];
+                NSURL* url = [self.docURLs[actionIndexPath.row] url];
                 NSLog(@"Deleting document: %@", url);
                 if ([[NSFileManager defaultManager] removeItemAtURL:url error:nil]) {
                     [self.docURLs removeObjectAtIndex:actionIndexPath.row];
