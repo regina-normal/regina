@@ -39,6 +39,7 @@
 // TODO: Is there a race condition on closing and re-opening documents?
 // TODO: Update timestamp after a file is saved.
 // TODO: Mark SnapPea files visually.
+// TODO: Fix sorting.
 
 // Action sheet tags;
 enum {
@@ -89,7 +90,7 @@ enum {
         // We don't use the NSURLLocalizedNameKey property, since sometimes this
         // strips the extension and sometimes it does not.
         _name = url.lastPathComponent;
-        if (_type == DOCSPEC_TYPE_RGA || _type == DOCSPEC_TYPE_UNKNOWN)
+        if (_type == DOCSPEC_TYPE_RGA || _type == DOCSPEC_TYPE_TRI)
             _name = [_name stringByDeletingPathExtension];
 
         NSError* err;
@@ -263,8 +264,12 @@ enum {
         [self.docURLs addObject:[DocumentSpec specWithURL:url]];
     }
 
+    /*
     [self.docURLs sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastModified" ascending:NO],
                                          [NSSortDescriptor sortDescriptorWithKey:@"url" ascending:YES]]];
+    */
+    [self.docURLs sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]]];
+
     [self.tableView reloadData];
 }
 
@@ -354,9 +359,12 @@ enum {
             cell = [tableView dequeueReusableCellWithIdentifier:@"Census" forIndexPath:indexPath];
         }
     } else {
+        DocumentSpec* spec = self.docURLs[indexPath.row];
         cell = [tableView dequeueReusableCellWithIdentifier:@"Document" forIndexPath:indexPath];
-        cell.textLabel.text = [self.docURLs[indexPath.row] name];
-        cell.detailTextLabel.text = [self.docURLs[indexPath.row] lastModifiedText];
+        cell.textLabel.text = spec.name;
+        cell.detailTextLabel.text = spec.lastModifiedText;
+        if (spec.type == DOCSPEC_TYPE_TRI)
+            cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"SnapPea"]];
     }
     return cell;
 }
