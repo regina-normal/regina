@@ -53,6 +53,8 @@ TEST:
 
 SHORT-TERM:
 
+- Audit the use of UIAlert (should we use banners instead)?
+
 - Cut down the iOS census examples to a faster-to-load size.
 
 - Call UIApplication::idleTimerDisabled when running long tasks (e.g.,
