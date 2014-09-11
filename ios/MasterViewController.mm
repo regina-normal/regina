@@ -39,7 +39,6 @@
 // TODO: Is there a race condition on closing and re-opening documents?
 // TODO: Update timestamp after a file is saved.
 // TODO: Mark SnapPea files visually.
-// TODO: weak vs assign?
 
 // Action sheet tags;
 enum {

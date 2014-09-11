@@ -58,6 +58,6 @@ namespace regina {
  */
 @property (assign, nonatomic) regina::NPacket* packet;
 
-@property (assign, nonatomic) id <PacketSharer> sharer;
+@property (weak, nonatomic) id <PacketSharer> sharer;
 
 @end
