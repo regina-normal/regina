@@ -39,7 +39,6 @@
 // TODO: Is there a race condition on closing and re-opening documents?
 // TODO: Update timestamp after a file is saved.
 // TODO: Mark SnapPea files visually.
-// TODO: Fix sorting.
 
 // Action sheet tags;
 enum {
@@ -68,6 +67,8 @@ enum {
 + (id)specWithURL:(NSURL*)url;
 
 - (NSString*)lastModifiedText;
+
+- (NSComparisonResult)compare:(DocumentSpec*)rhs;
 
 @end
 
@@ -119,6 +120,11 @@ enum {
         dateFormatter.doesRelativeDateFormatting = YES;
     }
     return [dateFormatter stringFromDate:self.lastModified];
+}
+
+- (NSComparisonResult)compare:(DocumentSpec *)rhs
+{
+    return [self.name caseInsensitiveCompare:rhs.name];
 }
 
 @end
@@ -268,7 +274,7 @@ enum {
     [self.docURLs sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastModified" ascending:NO],
                                          [NSSortDescriptor sortDescriptorWithKey:@"url" ascending:YES]]];
     */
-    [self.docURLs sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]]];
+    [self.docURLs sortUsingSelector:@selector(compare:)];
 
     [self.tableView reloadData];
 }
