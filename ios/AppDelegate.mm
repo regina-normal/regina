@@ -35,9 +35,6 @@
 #import "MasterViewController.h"
 #import "file/nglobaldirs.h"
 
-// TODO: Support state preservation and restoration.
-// See: https://developer.apple.com/library/ios/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/StatePreservation/StatePreservation.html
-
 @interface AppDelegate() {
     UIBackgroundTaskIdentifier bgTask;
     MasterViewController* master;
