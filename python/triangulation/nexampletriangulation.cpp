@@ -77,11 +77,17 @@ void addNExampleTriangulation() {
             return_value_policy<manage_new_object>())
         .def("solidKleinBottle", &NExampleTriangulation::solidKleinBottle,
             return_value_policy<manage_new_object>())
+        .def("figureEight", &NExampleTriangulation::figureEight,
+            return_value_policy<manage_new_object>())
         .def("figureEightKnotComplement",
             &NExampleTriangulation::figureEightKnotComplement,
             return_value_policy<manage_new_object>())
+        .def("trefoil", &NExampleTriangulation::trefoil,
+            return_value_policy<manage_new_object>())
         .def("trefoilKnotComplement",
             &NExampleTriangulation::trefoilKnotComplement,
+            return_value_policy<manage_new_object>())
+        .def("whiteheadLink", &NExampleTriangulation::whiteheadLink,
             return_value_policy<manage_new_object>())
         .def("whiteheadLinkComplement",
             &NExampleTriangulation::whiteheadLinkComplement,
@@ -106,8 +112,11 @@ void addNExampleTriangulation() {
         .staticmethod("sphere600")
         .staticmethod("lst3_4_7")
         .staticmethod("solidKleinBottle")
+        .staticmethod("figureEight")
         .staticmethod("figureEightKnotComplement")
+        .staticmethod("trefoilKnot")
         .staticmethod("trefoilKnotComplement")
+        .staticmethod("whiteheadLink")
         .staticmethod("whiteheadLinkComplement")
         .staticmethod("gieseking")
         .staticmethod("cuspedGenusTwoTorus")
