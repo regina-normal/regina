@@ -37,9 +37,9 @@
 
 using regina::NNormalSurfaceList;
 
-NSArray* whichText;
-NSArray* coordText;
-NSArray* embText;
+static NSArray* whichText;
+static NSArray* coordText;
+static NSArray* embText;
 
 @interface NewSurfacesController () {
     bool _running;
