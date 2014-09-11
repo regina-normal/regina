@@ -147,7 +147,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
             poincare = NExampleTriangulation::poincareHomologySphere();
             weberSeifert = NExampleTriangulation::weberSeifert();
             gieseking = NExampleTriangulation::gieseking();
-            figureEight = NExampleTriangulation::figureEightKnotComplement();
+            figureEight = NExampleTriangulation::figureEight();
 
             // Next deal with triangulations that are easy to build.
             lens3_1.insertLayeredLensSpace(3, 1);

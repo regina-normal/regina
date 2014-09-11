@@ -84,7 +84,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
         void setUp() {
             // Use pre-coded triangulations where we can.
             copyAndDelete(triFigure8,
-                NExampleTriangulation::figureEightKnotComplement());
+                NExampleTriangulation::figureEight());
             copyAndDelete(triGieseking, NExampleTriangulation::gieseking());
 
             // Layered loops can be constructed automatically.
