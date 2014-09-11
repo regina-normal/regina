@@ -310,7 +310,7 @@ NTriangulation* NExampleTriangulation::solidKleinBottle() {
     return ans;
 }
 
-NTriangulation* NExampleTriangulation::figureEightKnotComplement() {
+NTriangulation* NExampleTriangulation::figureEight() {
     NTriangulation* ans = new NTriangulation();
     ans->setPacketLabel("Figure eight knot complement");
 
@@ -326,7 +326,7 @@ NTriangulation* NExampleTriangulation::figureEightKnotComplement() {
     return ans;
 }
 
-NTriangulation* NExampleTriangulation::trefoilKnotComplement() {
+NTriangulation* NExampleTriangulation::trefoil() {
     NTriangulation* ans = new NTriangulation();
     ans->setPacketLabel("Trefoil knot complement");
 
@@ -340,7 +340,7 @@ NTriangulation* NExampleTriangulation::trefoilKnotComplement() {
     return ans;
 }
 
-NTriangulation* NExampleTriangulation::whiteheadLinkComplement() {
+NTriangulation* NExampleTriangulation::whiteheadLink() {
     NTriangulation* ans = new NTriangulation();
     ans->setPacketLabel("Whitehead link complement");
 

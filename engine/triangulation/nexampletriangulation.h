@@ -245,6 +245,17 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
+        static NTriangulation* figureEight();
+
+        /**
+         * Deprecated function that teturns a two-tetrahedron ideal
+         * triangulation of the figure eight knot complement.
+         *
+         * \deprecated This has been renamed to figureEight().
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
         static NTriangulation* figureEightKnotComplement();
 
         /**
@@ -254,11 +265,33 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
+        static NTriangulation* trefoil();
+
+        /**
+         * Deprecated function that returns a two-tetrahedron ideal
+         * triangulation of the trefoil knot complement.
+         *
+         * \deprecated This has been renamed to trefoil().
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
         static NTriangulation* trefoilKnotComplement();
 
         /**
          * Returns a four-tetrahedron ideal triangulation of the
          * Whitehead link complement.
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static NTriangulation* whiteheadLink();
+
+        /**
+         * Deprecated function that returns a four-tetrahedron ideal
+         * triangulation of the Whitehead link complement.
+         *
+         * \deprecated This has been renamed to whiteheadLink().
          *
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
@@ -288,6 +321,20 @@ class REGINA_API NExampleTriangulation {
 };
 
 /*@}*/
+
+// Inline functions:
+
+inline NTriangulation* NExampleTriangulation::figureEightKnotComplement() {
+    return NExampleTriangulation::figureEight();
+}
+
+inline NTriangulation* NExampleTriangulation::trefoilKnotComplement() {
+    return NExampleTriangulation::trefoil();
+}
+
+inline NTriangulation* NExampleTriangulation::whiteheadLinkComplement() {
+    return NExampleTriangulation::whiteheadLink();
+}
 
 } // namespace regina
 

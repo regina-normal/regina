@@ -10,6 +10,13 @@ Regina - A Normal Surface Theory Calculator
 Version 4.97  [ (under development) ]
 
     ENGINE:
+        Class NExampleSnapPeaTriangulation:
+            - New class for building ready-made SnapPea examples.
+        Class NExampleTriangulation:
+            - Renamed figureEightKnotComplement(), trefoilKnotComplement()
+              and whiteheadLinkComplement() to figureEight(), trefoil()
+              and whiteheadLink() respectively.  The old names are kept
+              but deprecated.
         Class NGlobalDirs:
             - The directory containing the machine-encoded census data is now
               independent of home().  It can be queried through the new census()

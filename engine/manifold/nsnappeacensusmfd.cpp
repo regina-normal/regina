@@ -93,10 +93,10 @@ NTriangulation* NSnapPeaCensusManifold::construct() const {
             r->joinTo(2, s, NPerm4(0, 3, 2, 1));
             r->joinTo(3, s, NPerm4(1, 0, 2, 3));
         } else if (index == 4) {
-            ans = NExampleTriangulation::figureEightKnotComplement();
+            ans = NExampleTriangulation::figureEight();
             ans->setPacketLabel("");
         } else if (index == 129) {
-            ans = NExampleTriangulation::whiteheadLinkComplement();
+            ans = NExampleTriangulation::whiteheadLink();
             ans->setPacketLabel("");
         }
     }

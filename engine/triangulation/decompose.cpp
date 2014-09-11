@@ -721,8 +721,6 @@ bool NTriangulation::isIrreducible() const {
     NContainer toProcess;
     toProcess.insertChildLast(working);
 
-    unsigned long whichComp = 0;
-
     NTriangulation* processing;
     NTriangulation* crushed;
     NNormalSurface* sphere;
@@ -1188,8 +1186,6 @@ bool NTriangulation::isHaken() const {
     }
     std::sort(id, id + list->getNumberOfSurfaces());
 
-    const NNormalSurface* f;
-    unsigned long discs;
     for (unsigned i = 0; i < list->getNumberOfSurfaces(); ++i) {
         // std::cout << "Testing surface " << i << "..." << std::endl;
         if (list->getSurface(id[i].index)->isIncompressible()) {

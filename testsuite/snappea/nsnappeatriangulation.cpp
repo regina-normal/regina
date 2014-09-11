@@ -496,7 +496,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
 
         void spunBoundaries() {
             NTriangulation* f8 =
-                NExampleTriangulation::figureEightKnotComplement();
+                NExampleTriangulation::figureEight();
             NSnapPeaTriangulation* t = new NSnapPeaTriangulation(*f8);
 
             regina::NNormalSurfaceList* s =

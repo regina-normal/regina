@@ -32,11 +32,34 @@
 
 /* end stub */
 
-void addNExampleSnapPeaTriangulation();
-void addNSnapPeaTriangulation();
+#include <boost/python.hpp>
+#include "snappea/nexamplesnappeatriangulation.h"
+#include "snappea/nsnappeatriangulation.h"
 
-void addSnapPea() {
-    addNExampleSnapPeaTriangulation();
-    addNSnapPeaTriangulation();
+using namespace boost::python;
+using regina::NExampleSnapPeaTriangulation;
+
+void addNExampleSnapPeaTriangulation() {
+    class_<NExampleSnapPeaTriangulation>("NExampleSnapPeaTriangulation",
+            no_init)
+        .def("figureEight",
+            &NExampleSnapPeaTriangulation::figureEight,
+            return_value_policy<manage_new_object>())
+        .def("trefoil",
+            &NExampleSnapPeaTriangulation::trefoil,
+            return_value_policy<manage_new_object>())
+        .def("whiteheadLink",
+            &NExampleSnapPeaTriangulation::whiteheadLink,
+            return_value_policy<manage_new_object>())
+        .def("gieseking", &NExampleSnapPeaTriangulation::gieseking,
+            return_value_policy<manage_new_object>())
+        .def("x101", &NExampleSnapPeaTriangulation::x101,
+            return_value_policy<manage_new_object>())
+        .staticmethod("figureEight")
+        .staticmethod("trefoil")
+        .staticmethod("whiteheadLink")
+        .staticmethod("gieseking")
+        .staticmethod("x101")
+    ;
 }
 

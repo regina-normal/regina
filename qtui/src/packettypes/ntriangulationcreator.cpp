@@ -712,7 +712,7 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
             case EXAMPLE_RP3RP3:
                 return NExampleTriangulation::rp3rp3();
             case EXAMPLE_FIGURE8:
-                return NExampleTriangulation::figureEightKnotComplement();
+                return NExampleTriangulation::figureEight();
             case EXAMPLE_GIESEKING:
                 return NExampleTriangulation::gieseking();
             case EXAMPLE_LENS8_3:
@@ -726,13 +726,13 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
             case EXAMPLE_SOLIDKLEIN:
                 return NExampleTriangulation::solidKleinBottle();
             case EXAMPLE_TREFOIL:
-                return NExampleTriangulation::trefoilKnotComplement();
+                return NExampleTriangulation::trefoil();
             case EXAMPLE_WEEKS:
                 return NExampleTriangulation::weeks();
             case EXAMPLE_WEBERSEIFERT:
                 return NExampleTriangulation::weberSeifert();
             case EXAMPLE_WHITEHEAD:
-                return NExampleTriangulation::whiteheadLinkComplement();
+                return NExampleTriangulation::whiteheadLink();
         }
 
         ReginaSupport::info(parentWidget,

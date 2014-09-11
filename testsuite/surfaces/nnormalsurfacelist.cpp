@@ -197,7 +197,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
             // Use pre-coded triangulations where we can.
             copyAndDelete(figure8,
-                NExampleTriangulation::figureEightKnotComplement());
+                NExampleTriangulation::figureEight());
             figure8.setPacketLabel("Figure eight knot complement");
 
             copyAndDelete(gieseking, NExampleTriangulation::gieseking());

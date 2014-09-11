@@ -195,7 +195,7 @@ class IncompressibleTest : public CppUnit::TestFixture {
             tet[3]->joinTo(2, tet[3], NPerm4(1,2));
             delete verifyNoCompressingDisc(tri, "4-tetrahedron ball");
 
-            tri = NExampleTriangulation::figureEightKnotComplement();
+            tri = NExampleTriangulation::figureEight();
             tri->idealToFinite();
             tri->intelligentSimplify();
             delete verifyNoCompressingDisc(tri, "Figure 8 Knot Complement");
