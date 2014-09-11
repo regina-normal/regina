@@ -36,9 +36,12 @@ namespace regina {
     class NPacket;
 }
 
+@class NewPacketSpec;
+
 @interface PacketManagerIOS : NSObject
 
 + (UIImage*)iconFor:(regina::NPacket*)p;
 + (NSString*)segueFor:(regina::NPacket*)p;
++ (void)newPacket:(NewPacketSpec*)spec;
 
 @end

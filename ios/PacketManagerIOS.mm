@@ -30,8 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
+#import "DetailViewController.h"
+#import "NewPacketController.h"
 #import "PacketManagerIOS.h"
+#import "PacketTreeController.h"
+#import "packet/ncontainer.h"
 #import "packet/npacket.h"
+#import "packet/ntext.h"
 
 @implementation PacketManagerIOS
 
@@ -78,6 +83,51 @@
         case regina::PACKET_TEXT: return @"embedText";
         case regina::PACKET_TRIANGULATION: return @"embedTriangulation";
         default: return @"embedDefault";
+    }
+}
+
++ (void)newPacket:(NewPacketSpec*)spec {
+    switch (spec.type) {
+        case regina::PACKET_CONTAINER:
+        {
+            // We can do this immediately, no input required.
+            regina::NContainer* c = new regina::NContainer();
+            c->setPacketLabel("Container");
+            spec.tree.node->insertChildLast(c);
+            break;
+        }
+        case regina::PACKET_TEXT:
+        {
+            // We can do this immediately, no input required.
+            regina::NText* t = new regina::NText();
+            t->setPacketLabel("Text");
+            t->setText("Type your text here.");
+            spec.tree.node->insertChildLast(t);
+            spec.tree.detail.packet = t;
+            break;
+        }
+        case regina::PACKET_TRIANGULATION:
+            [spec.tree performSegueWithIdentifier:@"newTriangulation" sender:spec];
+            break;
+        case regina::PACKET_DIM2TRIANGULATION:
+            [spec.tree performSegueWithIdentifier:@"newDim2Triangulation" sender:spec];
+            break;
+        case regina::PACKET_NORMALSURFACELIST:
+            [spec.tree performSegueWithIdentifier:@"newSurfaces" sender:spec];
+            break;
+        case regina::PACKET_ANGLESTRUCTURELIST:
+            [spec.tree performSegueWithIdentifier:@"newAngles" sender:spec];
+            break;
+        case regina::PACKET_SNAPPEATRIANGULATION:
+            [spec.tree performSegueWithIdentifier:@"newSnapPea" sender:spec];
+            break;
+        case regina::PACKET_SURFACEFILTER:
+            [spec.tree performSegueWithIdentifier:@"newFilter" sender:spec];
+            break;
+        case regina::PACKET_PDF:
+        case regina::PACKET_SCRIPT:
+            // We don't create these in the iOS version of Regina.
+            break;
     }
 }
 

@@ -44,6 +44,7 @@ namespace regina {
 @interface PacketTreeController : UITableViewController
 
 @property (assign, nonatomic, readonly) regina::NPacket* node;
+@property (weak, nonatomic, readonly) DetailViewController* detail;
 
 - (void)newDocumentWithDetail:(DetailViewController*)d;
 - (void)openDocument:(ReginaDocument*)doc detail:(DetailViewController*)d;

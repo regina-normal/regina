@@ -135,7 +135,6 @@
     NSMutableArray *_rows;
     NSInteger _subtreeRow;
     PacketListenerIOS* _listener;
-    __weak DetailViewController* _detail;
     __weak UIPopoverController* _newPacketPopover;
 }
 
@@ -222,7 +221,7 @@
 }
 
 - (void)viewPacket:(regina::NPacket *)p {
-    _detail.packet = p;
+    self.detail.packet = p;
 }
 
 - (void)newPacket:(regina::PacketType)type {
@@ -233,54 +232,17 @@
     if (! [spec parentWithAlert:YES])
         return;
 
-    switch (type) {
-        case regina::PACKET_CONTAINER:
-        {
-            // We can do this immediately, no input required.
-            regina::NContainer* c = new regina::NContainer();
-            c->setPacketLabel("Container");
-            _node->insertChildLast(c);
-            break;
-        }
-        case regina::PACKET_TEXT:
-        {
-            // We can do this immediately, no input required.
-            regina::NText* t = new regina::NText();
-            t->setPacketLabel("Text");
-            t->setText("Type your text here.");
-            _node->insertChildLast(t);
-            _detail.packet = t;
-            break;
-        }
-        case regina::PACKET_TRIANGULATION:
-            [self performSegueWithIdentifier:@"newTriangulation" sender:spec];
-            break;
-        case regina::PACKET_DIM2TRIANGULATION:
-            [self performSegueWithIdentifier:@"newDim2Triangulation" sender:spec];
-            break;
-        case regina::PACKET_NORMALSURFACELIST:
-            [self performSegueWithIdentifier:@"newSurfaces" sender:spec];
-            break;
-        case regina::PACKET_ANGLESTRUCTURELIST:
-            [self performSegueWithIdentifier:@"newAngles" sender:spec];
-            break;
-        case regina::PACKET_SNAPPEATRIANGULATION:
-            [self performSegueWithIdentifier:@"newSnapPea" sender:spec];
-            break;
-        case regina::PACKET_SURFACEFILTER:
-            [self performSegueWithIdentifier:@"newFilter" sender:spec];
-            break;
-    }
+    [PacketManagerIOS newPacket:spec];
 }
 
 - (ReginaDocument *)document
 {
-    return _detail.doc;
+    return self.detail.doc;
 }
 
 - (regina::NPacket *)viewingPacket
 {
-    return _detail.packet;
+    return self.detail.packet;
 }
 
 #pragma mark - Table View
@@ -404,7 +366,7 @@
         else
             packetIndex = indexPath.row;
         
-        [[segue destinationViewController] openSubtree:[_rows[packetIndex] packet] detail:_detail];
+        [[segue destinationViewController] openSubtree:[_rows[packetIndex] packet] detail:self.detail];
     } else if ([[segue identifier] isEqualToString:@"newPacket"]) {
         _newPacketPopover = [(UIStoryboardPopoverSegue*)segue popoverController];
         ((NewPacketMenu*)segue.destinationViewController).packetTree = self;
