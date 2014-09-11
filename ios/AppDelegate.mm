@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #import "AppDelegate.h"
+#import "DetailViewController.h"
 #import "MasterViewController.h"
 #import "file/nglobaldirs.h"
 
@@ -40,6 +41,7 @@
 @interface AppDelegate() {
     UIBackgroundTaskIdentifier bgTask;
     MasterViewController* master;
+    DetailViewController* detail;
 }
 @end
 
@@ -61,24 +63,15 @@
     master = (id)navigationController.topViewController;
     
     navigationController = [splitViewController.viewControllers lastObject];
-    splitViewController.delegate = (id)navigationController.topViewController;
+    detail = (id)navigationController.topViewController;
+    splitViewController.delegate = detail;
     
     // Make sure that Regina knows where to find its internal data files.
-    NSBundle* mainBundle = [NSBundle mainBundle];
-    if (! mainBundle) {
-        NSLog(@"Could not access main bundle.");
-    } else {
-        NSString* path = [mainBundle resourcePath];
-        if (! path) {
-            NSLog(@"Could not access resource path.");
-        } else {
-            const char* home = [path UTF8String];
-            regina::NGlobalDirs::setDirs(home, "", home);
-        }
-        return NO;
-    }
-
-    return YES;
+    NSString* path = [[NSBundle mainBundle] resourcePath];
+    const char* home = [path UTF8String];
+    regina::NGlobalDirs::setDirs(home, "", home);
+    
+    return NO;
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
@@ -91,23 +84,40 @@
     // We need to save data, and also remember what we were doing so that
     // we can restore state later.
     // This routine *must* return quickly; otherwise the app may simply be killed.
-    bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
-        // We are still running and about to run out of time.
-        // If there is a way to gracefully abort the save, here is the
-        // place to do it.
-        [application endBackgroundTask:bgTask];
-        bgTask = UIBackgroundTaskInvalid;
-    }];
-
-    // TODO: Save state.
     [[NSUserDefaults standardUserDefaults] synchronize];
     
-    // Start the save in a different thread and return immediately.
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        // TODO: Save data.
-        [application endBackgroundTask:bgTask];
-        bgTask = UIBackgroundTaskInvalid;
-    });
+    // AFAICT, UIDocument seems to be saving on background/termination automatically.
+    // The explicit save code (as commented out below) seems to be unnecessary.
+
+    /*
+    ReginaDocument* doc = detail.doc;
+    if (doc && doc.hasUnsavedChanges) {
+        NSLog(@"Saving in background...");
+        
+        bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
+            // We are still running and about to run out of time.
+            // If there is a way to gracefully abort the save, here is the
+            // place to do it.
+            NSLog(@"Background task timed out.");
+            [application endBackgroundTask:bgTask];
+            bgTask = UIBackgroundTaskInvalid;
+        }];
+
+        // We want to save on a background thread.
+        // Since saveToURL call's Regina's save() synchronously, we need to
+        // explicitly start the new background thread ourselves.
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [doc saveToURL:doc.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+                if (success)
+                    NSLog(@"Saved.");
+                else
+                    NSLog(@"Save failed.");
+                [application endBackgroundTask:bgTask];
+                bgTask = UIBackgroundTaskInvalid;
+            }];
+        });
+    }
+    */
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -115,11 +125,25 @@
     // We need to save data and state here.
     // This *must* be fast: it has a strict time limit of ~5s, and there is
     // no way to request more time.
-
-    // TODO: Save state.
     [[NSUserDefaults standardUserDefaults] synchronize];
-
-    // TODO: Save data.
+    
+    // AFAICT, UIDocument seems to be saving on background/termination automatically.
+    // The explicit save code (as commented out below) seems to be unnecessary.
+    
+    /*
+    // Try to save data, if there is time...
+    ReginaDocument* doc = detail.doc;
+    if (doc && doc.hasUnsavedChanges) {
+        NSLog(@"Attempting to save document upon termination...");
+        
+        [doc saveToURL:doc.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+            if (success)
+                NSLog(@"Saved.");
+            else
+                NSLog(@"Save failed.");
+        }];
+    }
+    */
 }
 
 @end
