@@ -90,7 +90,7 @@ enum {
         // We don't use the NSURLLocalizedNameKey property, since sometimes this
         // strips the extension and sometimes it does not.
         _name = url.lastPathComponent;
-        if (_type == DOCSPEC_TYPE_RGA || _type == DOCSPEC_TYPE_TRI)
+        if (_type == DOCSPEC_TYPE_RGA)
             _name = [_name stringByDeletingPathExtension];
 
         NSError* err;
@@ -386,7 +386,7 @@ enum {
         
         actionTableView = tableView;
         actionIndexPath = indexPath;
-        UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete file" otherButtonTitles:nil];
+        UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete document" otherButtonTitles:nil];
         sheet.tag = sheetDelete;
         [sheet showFromRect:cell inView:tableView animated:YES];
     }
