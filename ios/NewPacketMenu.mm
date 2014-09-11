@@ -125,13 +125,13 @@ static NSArray* _allRows;
     for (NSInteger i = 0; i < nRows; ++i) {
         currCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
         currLabel = currCell.textLabel.text;
-        currWidth = [currLabel sizeWithFont:currCell.textLabel.font].width;
+        currWidth = [currLabel sizeWithAttributes:@{NSFontAttributeName:currCell.textLabel.font}].width;
         if (maxWidth < currWidth)
             maxWidth = currWidth;
     }
     CGFloat width = maxWidth + 80; // Room for 32x32 icon plus some padding.
     
-    self.contentSizeForViewInPopover = CGSizeMake(width, height);
+    self.preferredContentSize = CGSizeMake(width, height);
 }
 
 - (void)didReceiveMemoryWarning
