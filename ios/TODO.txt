@@ -73,4 +73,8 @@ LONG-TERM:
 
 Restore arm64 build (0ed85f0).
 Find a way to install *.tdb in a subdirectory beneath Resources/.
+iCloud:
+- Support, including moving files to/from iCloud storage.
+- Indicate error conditions and handle document-version conflicts.
+- All documents in iCloud or none.  See: https://developer.apple.com/Library/ios/documentation/DataManagement/Conceptual/DocumentBasedAppPGiOS/ManageDocumentLifeCycle/ManageDocumentLifeCycle.html
 

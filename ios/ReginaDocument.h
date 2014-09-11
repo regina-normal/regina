@@ -33,12 +33,6 @@
 #import <UIKit/UIKit.h>
 #import "Example.h"
 
-// TODO: Editing and saving a document
-// TODO: Putting a selected document in iCloud storage (and removing a selected document from iCloud storage)
-// TODO: Indicating error conditions, including document-version conflicts
-
-// TODO: iCloud: all documents, or none. - See https://developer.apple.com/Library/ios/documentation/DataManagement/Conceptual/DocumentBasedAppPGiOS/ManageDocumentLifeCycle/ManageDocumentLifeCycle.html
-
 namespace regina {
     class NPacket;
 }
