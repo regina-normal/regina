@@ -264,6 +264,9 @@
         case regina::PACKET_ANGLESTRUCTURELIST:
             [self performSegueWithIdentifier:@"newAngles" sender:spec];
             break;
+        case regina::PACKET_SNAPPEATRIANGULATION:
+            [self performSegueWithIdentifier:@"newSnapPea" sender:spec];
+            break;
         case regina::PACKET_SURFACEFILTER:
             [self performSegueWithIdentifier:@"newFilter" sender:spec];
             break;

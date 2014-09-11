@@ -479,6 +479,7 @@
                         <segue destination="uWV-Yj-5w4" kind="modal" identifier="newDim2Triangulation" modalPresentationStyle="formSheet" id="vRX-aJ-PXY"/>
                         <segue destination="a63-T1-shL" kind="modal" identifier="newAngles" modalPresentationStyle="formSheet" id="CF5-er-eFD"/>
                         <segue destination="nkC-am-T1c" kind="modal" identifier="newFilter" modalPresentationStyle="formSheet" id="LQ7-o4-zkt"/>
+                        <segue destination="0BX-4R-Ycg" kind="modal" identifier="newSnapPea" modalPresentationStyle="formSheet" id="6aT-f5-AGE"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fjY-rQ-nyG" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -864,6 +865,87 @@
             </objects>
             <point key="canvasLocation" x="3071" y="197"/>
         </scene>
+        <!--New Snap Pea Controller-->
+        <scene sceneID="3Vo-p2-Sl9">
+            <objects>
+                <viewController id="0BX-4R-Ycg" customClass="NewSnapPeaController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="lYk-bE-1KU"/>
+                        <viewControllerLayoutGuide type="bottom" id="qlN-3Y-Dde"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="f9M-ph-sle">
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U8E-gO-OA5">
+                                <rect key="frame" x="0.0" y="576" width="540" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="ggf-vd-MF6"/>
+                                    <barButtonItem title="Create" id="l5E-zf-1dp">
+                                        <connections>
+                                            <action selector="create:" destination="0BX-4R-Ycg" id="W9a-Wn-brT"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="tbD-zU-yR3"/>
+                                </items>
+                            </toolbar>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hAI-7m-HM5">
+                                <rect key="frame" x="0.0" y="0.0" width="540" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <items>
+                                    <navigationItem title="New SnapPea triangulation" id="a8E-G8-g6z">
+                                        <barButtonItem key="rightBarButtonItem" systemItem="cancel" id="h1G-ZY-jgY">
+                                            <connections>
+                                                <action selector="cancel:" destination="0BX-4R-Ycg" id="8cH-dY-N22"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Sn2-zK-RFh">
+                                <rect key="frame" x="73" y="84" width="395" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="Convert a Regina triangulation"/>
+                                    <segment title="Example"/>
+                                </segments>
+                            </segmentedControl>
+                            <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="diu-FA-0KY">
+                                <rect key="frame" x="0.0" y="132" width="540" height="436"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <connections>
+                                    <segue destination="pd6-Je-EML" kind="embed" id="0UF-su-Ru4"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="hAI-7m-HM5" secondAttribute="trailing" id="31Q-7u-V7D"/>
+                            <constraint firstItem="diu-FA-0KY" firstAttribute="top" secondItem="Sn2-zK-RFh" secondAttribute="bottom" constant="20" id="3tF-Yi-jX4"/>
+                            <constraint firstItem="qlN-3Y-Dde" firstAttribute="top" secondItem="U8E-gO-OA5" secondAttribute="bottom" id="7p2-rb-6gh"/>
+                            <constraint firstItem="Sn2-zK-RFh" firstAttribute="top" secondItem="hAI-7m-HM5" secondAttribute="bottom" constant="40" id="OIT-Uc-Nj2"/>
+                            <constraint firstItem="U8E-gO-OA5" firstAttribute="top" secondItem="diu-FA-0KY" secondAttribute="bottom" constant="8" id="OnJ-4p-0C0"/>
+                            <constraint firstItem="U8E-gO-OA5" firstAttribute="leading" secondItem="f9M-ph-sle" secondAttribute="leading" id="SRt-1X-9bI"/>
+                            <constraint firstItem="diu-FA-0KY" firstAttribute="leading" secondItem="f9M-ph-sle" secondAttribute="leading" id="Uc8-BT-Mvs"/>
+                            <constraint firstAttribute="centerX" secondItem="Sn2-zK-RFh" secondAttribute="centerX" id="Uwe-ZY-fKn"/>
+                            <constraint firstAttribute="trailing" secondItem="diu-FA-0KY" secondAttribute="trailing" id="eSX-Lq-lME"/>
+                            <constraint firstItem="hAI-7m-HM5" firstAttribute="top" secondItem="lYk-bE-1KU" secondAttribute="bottom" id="q66-lf-Zyc"/>
+                            <constraint firstItem="hAI-7m-HM5" firstAttribute="leading" secondItem="f9M-ph-sle" secondAttribute="leading" id="tgt-T7-YtZ"/>
+                            <constraint firstAttribute="trailing" secondItem="U8E-gO-OA5" secondAttribute="trailing" id="ubd-I2-w6z"/>
+                        </constraints>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                    <connections>
+                        <outlet property="container" destination="diu-FA-0KY" id="Awo-F7-9mc"/>
+                        <outlet property="types" destination="Sn2-zK-RFh" id="NKV-J1-T1e"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dGl-PN-Tb5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3071" y="945"/>
+        </scene>
         <!--New Packet Page View Controller-->
         <scene sceneID="vWG-lh-j26">
             <objects>
@@ -871,6 +953,97 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zIT-oJ-Mgo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3732" y="286"/>
+        </scene>
+        <!--New Packet Page View Controller-->
+        <scene sceneID="OjT-Y8-Auo">
+            <objects>
+                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="pd6-Je-EML" customClass="NewPacketPageViewController" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7G8-fe-5z6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3732" y="1037"/>
+        </scene>
+        <!--New Snap Pea Convert Page-->
+        <scene sceneID="Kft-E2-TnF">
+            <objects>
+                <viewController storyboardIdentifier="newSnapPeaConvert" id="rjG-bE-HO8" customClass="NewSnapPeaConvertPage" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Gzd-Sp-jJm"/>
+                        <viewControllerLayoutGuide type="bottom" id="G39-xX-R5t"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="qAh-js-thh">
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="448"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rmd-CH-5uo">
+                                <rect key="frame" x="20" y="20" width="500" height="216"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            </pickerView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WIb-oy-Myq">
+                                <rect key="frame" x="20" y="244" width="500" height="184"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <string key="text">Note:  Regina does not store peripheral curves with its own triangulations.  When you convert a Regina triangulation to a SnapPea triangulation, Regina will automatically install the (shortest, second shortest) basis on each cusp.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="Rmd-CH-5uo" secondAttribute="trailing" constant="20" id="2hj-Ef-cuy"/>
+                            <constraint firstItem="Rmd-CH-5uo" firstAttribute="leading" secondItem="qAh-js-thh" secondAttribute="leading" constant="20" id="5J7-Yw-MlS"/>
+                            <constraint firstItem="WIb-oy-Myq" firstAttribute="leading" secondItem="qAh-js-thh" secondAttribute="leading" constant="20" id="G23-n4-FIn"/>
+                            <constraint firstItem="WIb-oy-Myq" firstAttribute="top" secondItem="Rmd-CH-5uo" secondAttribute="bottom" constant="8" id="XVU-n5-YGp"/>
+                            <constraint firstItem="Rmd-CH-5uo" firstAttribute="top" secondItem="Gzd-Sp-jJm" secondAttribute="bottom" constant="20" id="qu1-q7-U9v"/>
+                            <constraint firstAttribute="trailing" secondItem="WIb-oy-Myq" secondAttribute="trailing" constant="20" id="tMS-Qm-gJS"/>
+                            <constraint firstItem="G39-xX-R5t" firstAttribute="top" secondItem="WIb-oy-Myq" secondAttribute="bottom" constant="20" id="xxJ-ys-9iL"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="540" height="448"/>
+                    <connections>
+                        <outlet property="from" destination="Rmd-CH-5uo" id="M0J-jZ-dkY"/>
+                        <outlet property="tip" destination="WIb-oy-Myq" id="o3i-Nd-fjU"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="6D0-KV-cLL" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4396" y="1037"/>
+        </scene>
+        <!--New Snap Pea Example Page-->
+        <scene sceneID="gIg-a0-GKT">
+            <objects>
+                <viewController storyboardIdentifier="newSnapPeaExample" id="HcV-73-4nv" customClass="NewSnapPeaExamplePage" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="AlF-zt-PAK"/>
+                        <viewControllerLayoutGuide type="bottom" id="xSd-2h-qsF"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Bp7-pf-1fl">
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="448"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ma6-Ee-Ra7">
+                                <rect key="frame" x="20" y="20" width="500" height="216"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            </pickerView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="ma6-Ee-Ra7" firstAttribute="top" secondItem="AlF-zt-PAK" secondAttribute="bottom" constant="20" id="Umd-ig-Aef"/>
+                            <constraint firstItem="ma6-Ee-Ra7" firstAttribute="leading" secondItem="Bp7-pf-1fl" secondAttribute="leading" constant="20" id="bXB-77-Sl5"/>
+                            <constraint firstAttribute="trailing" secondItem="ma6-Ee-Ra7" secondAttribute="trailing" constant="20" id="zMd-AD-fPR"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="540" height="448"/>
+                    <connections>
+                        <outlet property="example" destination="ma6-Ee-Ra7" id="eIh-8X-BBV"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="J5d-Wf-Nvv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5061" y="1037"/>
         </scene>
         <!--New Dim2 Triangulation Empty Page-->
         <scene sceneID="rfH-qK-rFe">
