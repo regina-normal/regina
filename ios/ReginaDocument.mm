@@ -41,6 +41,11 @@
 
 static NSURL* docsDir_ = nil;
 
+enum DocError {
+    DOC_ERR_OPEN_FAILED = 100,
+    DOC_ERR_SAVE_FAILED
+};
+
 @interface ReginaDocument () {
     enum DocType {
         /**
@@ -198,6 +203,7 @@ static NSURL* docsDir_ = nil;
 {
     if (! [contents isKindOfClass:[NSData class]]) {
         NSLog(@"File data is not of type NSData.  Perhaps you tried to open a directory?");
+        *outError = [NSError errorWithDomain:@"ReginaDocument" code:DOC_ERR_OPEN_FAILED userInfo:nil];
         return NO;
     }
     NSData* data = static_cast<NSData*>(contents);
@@ -216,6 +222,7 @@ static NSURL* docsDir_ = nil;
         regina::NSnapPeaTriangulation* tri = new regina::NSnapPeaTriangulation(str);
         if ((! tri) || tri->isNull()) {
             delete tri;
+            *outError = [NSError errorWithDomain:@"ReginaDocument" code:DOC_ERR_OPEN_FAILED userInfo:nil];
             return NO;
         }
         _tree = new regina::NContainer();
@@ -231,7 +238,7 @@ static NSURL* docsDir_ = nil;
     if (_tree)
         return YES;
     else {
-        // TODO: outError = [NSError errorWithDomain:<#(NSString *)#> code:<#(NSInteger)#> userInfo:<#(NSDictionary *)#>]
+        *outError = [NSError errorWithDomain:@"ReginaDocument" code:DOC_ERR_OPEN_FAILED userInfo:nil];
         return NO;
     }
 }
@@ -239,7 +246,7 @@ static NSURL* docsDir_ = nil;
 - (id)contentsForType:(NSString *)typeName error:(NSError *__autoreleasing *)outError
 {
     if (! _tree) {
-        // TODO: outError.
+        *outError = [NSError errorWithDomain:@"ReginaDocument" code:DOC_ERR_SAVE_FAILED userInfo:nil];
         return nil;
     }
     
@@ -250,7 +257,7 @@ static NSURL* docsDir_ = nil;
         const std::string& str = s.str();
         return [NSData dataWithBytes:str.c_str() length:str.length()];
     } else {
-        // TODO: outError.
+        *outError = [NSError errorWithDomain:@"ReginaDocument" code:DOC_ERR_SAVE_FAILED userInfo:nil];
         return nil;
     }
 }
