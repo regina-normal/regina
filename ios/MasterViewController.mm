@@ -46,12 +46,22 @@ enum {
     sheetDelete
 };
 
+#pragma mark - Document Spec
+
 static NSDateFormatter* dateFormatter;
 
 @interface DocumentSpec : NSObject
+
+enum {
+    DOCSPEC_TYPE_RGA,
+    DOCSPEC_TYPE_TRI,
+    DOCSPEC_TYPE_UNKNOWN
+};
+
 @property (strong, nonatomic) NSURL* url;
 @property (strong, nonatomic, readonly) NSString* name;
 @property (strong, nonatomic, readonly) NSDate* lastModified;
+@property (assign, nonatomic, readonly) int type;
 
 - (id)initWithURL:(NSURL*)url;
 + (id)specWithURL:(NSURL*)url;
@@ -68,11 +78,19 @@ static NSDateFormatter* dateFormatter;
     if (self) {
         _url = url;
 
-        _name = [url lastPathComponent];
-        if ([_name hasSuffix:@".rga"])
-            _name = [_name stringByDeletingPathExtension];
+        NSString* ext = url.pathExtension;
+        if ([ext isEqualToString:@"rga"])
+            _type = DOCSPEC_TYPE_RGA;
+        else if ([ext isEqualToString:@"tri"])
+            _type = DOCSPEC_TYPE_TRI;
+        else
+            _type = DOCSPEC_TYPE_UNKNOWN;
 
-        // TODO: Use NSURLLocalizedNameKey
+        // We don't use the NSURLLocalizedNameKey property, since sometimes this
+        // strips the extension and sometimes it does not.
+        _name = url.lastPathComponent;
+        if (_type == DOCSPEC_TYPE_RGA || _type == DOCSPEC_TYPE_UNKNOWN)
+            _name = [_name stringByDeletingPathExtension];
 
         NSError* err;
         NSDate* date;
@@ -103,6 +121,8 @@ static NSDateFormatter* dateFormatter;
 }
 
 @end
+
+#pragma mark - Master view controller
 
 @interface MasterViewController () <UIActionSheetDelegate, NSURLSessionDownloadDelegate> {
     UITableView* actionTableView;
@@ -226,8 +246,7 @@ static NSDateFormatter* dateFormatter;
     [self.docURLs removeAllObjects];
     
     NSArray* contents = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:[ReginaDocument docsDir]
-                                                      includingPropertiesForKeys:@[NSURLLocalizedNameKey,
-                                                                                   NSURLContentModificationDateKey,
+                                                      includingPropertiesForKeys:@[NSURLContentModificationDateKey,
                                                                                    NSURLIsDirectoryKey]
                                                                          options:nil
                                                                            error:nil];
