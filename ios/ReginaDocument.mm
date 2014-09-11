@@ -288,7 +288,7 @@ enum DocError {
             [self updateChangeCount:UIDocumentChangeDone];
         } else {
             UIAlertView* alert = [[UIAlertView alloc]
-                                  initWithTitle:@"Changes will be lost"
+                                  initWithTitle:@"Changes Will Be Lost"
                                   message:@"I was unable to copy this example into your documents folder.  This means that any changes you make here will be lost."
                                   delegate:nil
                                   cancelButtonTitle:@"Close"
@@ -306,7 +306,7 @@ enum DocError {
                                                 type:TSMessageNotificationTypeMessage];
             } else {
                 UIAlertView* alert = [[UIAlertView alloc]
-                                      initWithTitle:@"Changes will be lost"
+                                      initWithTitle:@"Changes Will Be Lost"
                                       message:@"I was unable to save this document in Regina's native file format.  This means that any changes you make here will be lost."
                                       delegate:nil
                                       cancelButtonTitle:@"Close"

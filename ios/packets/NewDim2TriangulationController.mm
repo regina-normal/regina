@@ -198,7 +198,7 @@ typedef regina::Dim2Triangulation* (*Dim2TriangulationCreator)();
     NSString* text = [self.genus.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     if (text.length == 0) {
         UIAlertView* alert = [[UIAlertView alloc]
-                              initWithTitle:@"Missing genus"
+                              initWithTitle:@"Which genus?"
                               message:@"Please enter the genus of the surface into the box provided."
                               delegate:nil
                               cancelButtonTitle:@"Close"
@@ -209,7 +209,7 @@ typedef regina::Dim2Triangulation* (*Dim2TriangulationCreator)();
     int val = text.intValue;
     if (val < 0) {
         UIAlertView* alert = [[UIAlertView alloc]
-                              initWithTitle:@"Invalid genus"
+                              initWithTitle:@"Invalid Genus"
                               message:@"The genus should be a non-negative integer."
                               delegate:nil
                               cancelButtonTitle:@"Close"
@@ -225,7 +225,7 @@ typedef regina::Dim2Triangulation* (*Dim2TriangulationCreator)();
     NSString* text = [self.punctures.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     if (text.length == 0) {
         UIAlertView* alert = [[UIAlertView alloc]
-                              initWithTitle:@"Missing number of punctures"
+                              initWithTitle:@"How many punctures?"
                               message:@"Please enter the number of punctures into the box provided."
                               delegate:nil
                               cancelButtonTitle:@"Close"
@@ -236,7 +236,7 @@ typedef regina::Dim2Triangulation* (*Dim2TriangulationCreator)();
     int val = text.intValue;
     if (val < 0) {
         UIAlertView* alert = [[UIAlertView alloc]
-                              initWithTitle:@"Invalid number of punctures"
+                              initWithTitle:@"Invalid Number of Punctures"
                               message:@"The number of punctures should be a non-negative integer."
                               delegate:nil
                               cancelButtonTitle:@"Close"
@@ -277,7 +277,7 @@ typedef regina::Dim2Triangulation* (*Dim2TriangulationCreator)();
     bool useOrbl = (self.orbl.selectedSegmentIndex == 0);
     if (useGenus == 0 && ! useOrbl) {
         UIAlertView* alert = [[UIAlertView alloc]
-                              initWithTitle:@"Invalid non-orientable genus"
+                              initWithTitle:@"Invalid Non-Orientable Genus"
                               message:@"A non-orientable surface must have strictly positive genus."
                               delegate:nil
                               cancelButtonTitle:@"Close"
@@ -329,7 +329,7 @@ typedef regina::Dim2Triangulation* (*Dim2TriangulationCreator)();
     std::string sig = [self.isosig.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].UTF8String;
     if (sig.empty()) {
         UIAlertView* alert = [[UIAlertView alloc]
-                              initWithTitle:@"Empty isomorphism signature"
+                              initWithTitle:@"Empty Isomorphism Signature"
                               message:@"Please type an isomorphism signature into the box provided."
                               delegate:nil
                               cancelButtonTitle:@"Close"
@@ -341,8 +341,8 @@ typedef regina::Dim2Triangulation* (*Dim2TriangulationCreator)();
     regina::Dim2Triangulation* t = regina::Dim2Triangulation::fromIsoSig(sig);
     if (! t) {
         UIAlertView* alert = [[UIAlertView alloc]
-                              initWithTitle:@"Invalid isomorphism signature"
-                              message:@"I could not interpret the given isomorphism signature."
+                              initWithTitle:@"Invalid Isomorphism Signature"
+                              message:nil
                               delegate:nil
                               cancelButtonTitle:@"Close"
                               otherButtonTitles:nil];

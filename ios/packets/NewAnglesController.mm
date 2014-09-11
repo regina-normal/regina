@@ -113,8 +113,8 @@ static NSArray* whichText;
         dispatch_async(dispatch_get_main_queue(), ^{
             if (_tracker.isCancelled()) {
                 delete ans;
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Enumeration cancelled."
-                                                                message:@"The angle structure enumeration was cancelled."
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Enumeration Cancelled"
+                                                                message:nil
                                                                delegate:nil
                                                       cancelButtonTitle:@"Close"
                                                       otherButtonTitles:nil];

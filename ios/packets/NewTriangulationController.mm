@@ -200,7 +200,7 @@ typedef regina::NTriangulation* (*TriangulationCreator)();
     std::string sig = [self.isosig.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].UTF8String;
     if (sig.empty()) {
         UIAlertView* alert = [[UIAlertView alloc]
-                              initWithTitle:@"Empty isomorphism signature"
+                              initWithTitle:@"Empty Isomorphism Signature"
                               message:@"Please type an isomorphism signature into the box provided."
                               delegate:nil
                               cancelButtonTitle:@"Close"
@@ -212,8 +212,8 @@ typedef regina::NTriangulation* (*TriangulationCreator)();
     regina::NTriangulation* t = regina::NTriangulation::fromIsoSig(sig);
     if (! t) {
         UIAlertView* alert = [[UIAlertView alloc]
-                              initWithTitle:@"Invalid isomorphism signature"
-                              message:@"I could not interpret the given isomorphism signature."
+                              initWithTitle:@"Invalid Isomorphism Signature"
+                              message:nil
                               delegate:nil
                               cancelButtonTitle:@"Close"
                               otherButtonTitles:nil];

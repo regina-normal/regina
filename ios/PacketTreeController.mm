@@ -176,7 +176,7 @@
     [doc openWithCompletionHandler:^(BOOL success) {
         [MBProgressHUD hideHUDForView:rootView animated:YES];
         if (! success) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could not open document"
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Open Document"
                                                             message:@"I can read Regina's own data files, as well as SnapPea/SnapPy triangulation files.  Please ensure that your document uses one of these file formats."
                                                            delegate:self
                                                   cancelButtonTitle:@"Close"
@@ -271,7 +271,7 @@
             [self performSegueWithIdentifier:@"newFilter" sender:spec];
             break;
         default:
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Not yet implemented."
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Not yet implemented"
                                                             message:@"I do not know how to create this type of packet.  The iOS version of Regina is still under development – please be patient!"
                                                            delegate:self
                                                   cancelButtonTitle:@"Close"

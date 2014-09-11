@@ -130,7 +130,7 @@ static NSArray* embText;
         default: broken = true; break;
     }
     if (broken) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No selection made."
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Selection Made"
                                                         message:@"Please select an option for each of the three parameters: (i) surface type; (ii) coordinate system; and (iii) embedded vs immersed and/or singular."
                                                        delegate:nil
                                               cancelButtonTitle:@"Close"
@@ -140,7 +140,7 @@ static NSArray* embText;
     }
     
     if (almostNormal && which.has(regina::NS_IMMERSED_SINGULAR)) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Selection not supported."
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Selection Not Supported"
                                                         message:@"At present, I cannot enumerate immersed and/or singular surfaces in an almost normal coordinate system.  Please select a different combination of options."
                                                        delegate:nil
                                               cancelButtonTitle:@"Close"
@@ -176,8 +176,8 @@ static NSArray* embText;
         dispatch_async(dispatch_get_main_queue(), ^{
             if (_tracker.isCancelled()) {
                 delete ans;
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Enumeration cancelled."
-                                                                message:@"The normal surface enumeration was cancelled."
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Enumeration Cancelled"
+                                                                message:nil
                                                                delegate:nil
                                                       cancelButtonTitle:@"Close"
                                                       otherButtonTitles:nil];

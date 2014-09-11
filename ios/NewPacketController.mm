@@ -88,10 +88,10 @@
             if (alert) {
                 NSString *title, *msg;
                 if (_type == regina::PACKET_NORMALSURFACELIST) {
-                    title = @"Normal surfaces require a triangulation.";
+                    title = @"Enumerate in which triangulation?";
                     msg = @"Please select the triangulation in which I should enumerate normal surfaces.";
                 } else {
-                    title = @"Angle structures require a triangulation.";
+                    title = @"Enumerate in which triangulation?";
                     msg = @"Please select the triangulation in which I should enumerate angle structures.";
                 }
                 _parent = 0;

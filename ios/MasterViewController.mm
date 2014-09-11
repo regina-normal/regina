@@ -127,7 +127,7 @@ enum {
         return YES;
     } else {
         UIAlertView* alert = [[UIAlertView alloc]
-                              initWithTitle:@"Could not save"
+                              initWithTitle:@"Could Not Save on Device"
                               message:nil
                               delegate:nil
                               cancelButtonTitle:@"Close"
@@ -188,7 +188,7 @@ enum {
         [self performSegueWithIdentifier:@"openInbox" sender:doc];
     else {
         UIAlertView* alert = [[UIAlertView alloc]
-                              initWithTitle:@"Could not save"
+                              initWithTitle:@"Could Not Save on Device"
                               message:nil
                               delegate:nil
                               cancelButtonTitle:@"Close"
@@ -210,7 +210,7 @@ enum {
         [MBProgressHUD hideHUDForView:rootView animated:NO];
         dropboxHUD = nil;
         UIAlertView* alert = [[UIAlertView alloc]
-                              initWithTitle:@"Could not download"
+                              initWithTitle:@"Could Not Download"
                               message:nil
                               delegate:nil
                               cancelButtonTitle:@"Close"
@@ -316,7 +316,7 @@ enum {
                     [actionTableView deleteRowsAtIndexPaths:@[actionIndexPath] withRowAnimation:UITableViewRowAnimationFade];
                 } else {
                     UIAlertView* alert = [[UIAlertView alloc]
-                                          initWithTitle:@"Could not delete document"
+                                          initWithTitle:@"Could Not Delete Document"
                                           message:nil
                                           delegate:nil
                                           cancelButtonTitle:@"Close"
