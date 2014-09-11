@@ -1073,6 +1073,9 @@
 		05F9561319B53E7900377BEC /* TriRecognitionViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F9561219B53E7900377BEC /* TriRecognitionViewController.mm */; };
 		05F96C131809F59600C99F96 /* PacketTreeController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F96C121809F59600C99F96 /* PacketTreeController.mm */; };
 		05F96C17180A153A00C99F96 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F96C16180A153A00C99F96 /* MBProgressHUD.m */; };
+		05FEA07A19C1890900A31924 /* nexamplesnappeatriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FEA07819C1890900A31924 /* nexamplesnappeatriangulation.cpp */; };
+		05FEA07B19C1890900A31924 /* nexamplesnappeatriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FEA07819C1890900A31924 /* nexamplesnappeatriangulation.cpp */; };
+		05FEA07C19C1890900A31924 /* nexamplesnappeatriangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 05FEA07919C1890900A31924 /* nexamplesnappeatriangulation.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -2221,6 +2224,8 @@
 		05F96C121809F59600C99F96 /* PacketTreeController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketTreeController.mm; sourceTree = "<group>"; };
 		05F96C15180A153A00C99F96 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = MBProgressHUD/MBProgressHUD.h; sourceTree = "<group>"; };
 		05F96C16180A153A00C99F96 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBProgressHUD.m; path = MBProgressHUD/MBProgressHUD.m; sourceTree = "<group>"; };
+		05FEA07819C1890900A31924 /* nexamplesnappeatriangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nexamplesnappeatriangulation.cpp; sourceTree = "<group>"; };
+		05FEA07919C1890900A31924 /* nexamplesnappeatriangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nexamplesnappeatriangulation.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2721,6 +2726,8 @@
 				05A73C8619B2EF130099C617 /* fundgroup.cpp */,
 				05A73C8719B2EF130099C617 /* homology.cpp */,
 				052F9D1E180600FA00FAE4DF /* kernel */,
+				05FEA07819C1890900A31924 /* nexamplesnappeatriangulation.cpp */,
+				05FEA07919C1890900A31924 /* nexamplesnappeatriangulation.h */,
 				052F9D92180600FB00FAE4DF /* nsnappeatriangulation.cpp */,
 				052F9D93180600FB00FAE4DF /* nsnappeatriangulation.h */,
 				05A73C8819B2EF130099C617 /* nxmlsnappeareader.cpp */,
@@ -3961,6 +3968,7 @@
 				052FA02C180600FB00FAE4DF /* ndisctype.h in Headers */,
 				052F9ED7180600FB00FAE4DF /* cone_property.h in Headers */,
 				05A73CAC19B2EFF90099C617 /* nxmltreeresolver.h in Headers */,
+				05FEA07C19C1890900A31924 /* nexamplesnappeatriangulation.h in Headers */,
 				052FA036180600FB00FAE4DF /* nprism.h in Headers */,
 				052FA015180600FB00FAE4DF /* nsnappedtwosphere.h in Headers */,
 				052F9EAA180600FB00FAE4DF /* ngluingpermsearcher.h in Headers */,
@@ -4500,6 +4508,7 @@
 				054F7E29180B93770090B1F3 /* WelcomePopupController.m in Sources */,
 				052FA16A1806129B00FAE4DF /* dim2edgepairing.cpp in Sources */,
 				052FA216180612DD00FAE4DF /* chern_simons.c in Sources */,
+				05FEA07B19C1890900A31924 /* nexamplesnappeatriangulation.cpp in Sources */,
 				052FA238180612DD00FAE4DF /* tidy_peripheral_curves.c in Sources */,
 				052FA235180612DD00FAE4DF /* subdivide.c in Sources */,
 				052FA1941806129B00FAE4DF /* nsfs.cpp in Sources */,
@@ -4873,6 +4882,7 @@
 				052F9F5D180600FB00FAE4DF /* ntext.cpp in Sources */,
 				052F9FF8180600FB00FAE4DF /* nlayeredloop.cpp in Sources */,
 				052F9F9D180600FB00FAE4DF /* tables.c in Sources */,
+				05FEA07A19C1890900A31924 /* nexamplesnappeatriangulation.cpp in Sources */,
 				052F9E9F180600FB00FAE4DF /* nfacepairing.cpp in Sources */,
 				052FA05C180600FB00FAE4DF /* insertlayered.cpp in Sources */,
 				052F9EFA180600FB00FAE4DF /* ntreetraversal.cpp in Sources */,

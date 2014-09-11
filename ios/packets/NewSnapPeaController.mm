@@ -32,6 +32,7 @@
 
 #import "NewSnapPeaController.h"
 #import "PacketTreeController.h"
+#import "snappea/nexamplesnappeatriangulation.h"
 #import "snappea/nsnappeatriangulation.h"
 
 @interface NewSnapPeaController ()
@@ -117,8 +118,7 @@ typedef regina::NSnapPeaTriangulation* (*SnapPeaCreator)();
 
 - (regina::NSnapPeaTriangulation *)create
 {
-    // TODO
-    regina::NSnapPeaTriangulation* ans = new regina::NSnapPeaTriangulation();
+    regina::NSnapPeaTriangulation* ans = (*self.creator)();
     ans->setPacketLabel(self.name.UTF8String);
     return ans;
 }
@@ -139,10 +139,11 @@ typedef regina::NSnapPeaTriangulation* (*SnapPeaCreator)();
 
 - (void)viewDidLoad
 {
-    options = @[[SnapPeaExampleTriangulation exampleWithName:@"Gieseking manifold" creator:nil],
-                [SnapPeaExampleTriangulation exampleWithName:@"Figure eight knot complement" creator:nil],
-                [SnapPeaExampleTriangulation exampleWithName:@"Whitehead link complement" creator:nil],
-                [SnapPeaExampleTriangulation exampleWithName:@"Census manifold x101" creator:nil]];
+    options = @[[SnapPeaExampleTriangulation exampleWithName:@"Gieseking manifold" creator:&regina::NExampleSnapPeaTriangulation::gieseking],
+                [SnapPeaExampleTriangulation exampleWithName:@"Figure eight knot complement" creator:&regina::NExampleSnapPeaTriangulation::figureEight],
+                [SnapPeaExampleTriangulation exampleWithName:@"Trefoil complement" creator:&regina::NExampleSnapPeaTriangulation::trefoil],
+                [SnapPeaExampleTriangulation exampleWithName:@"Whitehead link complement" creator:&regina::NExampleSnapPeaTriangulation::whiteheadLink],
+                [SnapPeaExampleTriangulation exampleWithName:@"Census manifold x101" creator:&regina::NExampleSnapPeaTriangulation::x101]];
    
     self.example.dataSource = self;
     self.example.delegate = self;
