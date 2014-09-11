@@ -39,8 +39,6 @@
 #import <boost/iostreams/stream.hpp>
 #import <sstream>
 
-// TODO: Perhaps override the hooks disableEditing / enableEditing, to make the UI read-only?
-
 static NSURL* docsDir_ = nil;
 
 @interface ReginaDocument () {
