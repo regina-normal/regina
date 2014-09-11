@@ -131,7 +131,6 @@ enum {
 #pragma mark - Master view controller
 
 @interface MasterViewController () <UIActionSheetDelegate, NSURLSessionDownloadDelegate> {
-    UITableView* actionTableView;
     NSIndexPath* actionIndexPath;
     MBProgressHUD* dropboxHUD;
     UIView* rootView;
@@ -389,7 +388,6 @@ enum {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         CGRect cell = [tableView cellForRowAtIndexPath:indexPath].frame;
         
-        actionTableView = tableView;
         actionIndexPath = indexPath;
         UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete document" otherButtonTitles:nil];
         sheet.tag = sheetDelete;
@@ -419,7 +417,7 @@ enum {
                 NSLog(@"Deleting document: %@", url);
                 if ([[NSFileManager defaultManager] removeItemAtURL:url error:nil]) {
                     [self.docURLs removeObjectAtIndex:actionIndexPath.row];
-                    [actionTableView deleteRowsAtIndexPaths:@[actionIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+                    [self.tableView deleteRowsAtIndexPaths:@[actionIndexPath] withRowAnimation:UITableViewRowAnimationFade];
                 } else {
                     UIAlertView* alert = [[UIAlertView alloc]
                                           initWithTitle:@"Could Not Delete Document"
