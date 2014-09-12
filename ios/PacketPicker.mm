@@ -96,10 +96,10 @@
 {
     self.allowNone = allowNone;
 
+    self.choices = [NSMutableArray array];
     if (allowNone)
         [self.choices addObject:[PacketChoice packetChoiceEmptyWithText:noneText]];
 
-    self.choices = [NSMutableArray array];
     regina::NPacket* p;
     for (p = tree; p; p = p->nextTreePacket())
         if (p->getPacketType() == packetType)
