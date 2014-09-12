@@ -109,6 +109,11 @@
     return _parent;
 }
 
+- (regina::NPacket *)packetTree
+{
+    return self.tree.node->getTreeMatriarch();
+}
+
 + (BOOL)isTriangulation:(regina::NPacket*)p
 {
     return (p->getPacketType() == regina::PACKET_TRIANGULATION || p->getPacketType() == regina::PACKET_SNAPPEATRIANGULATION);

@@ -43,10 +43,6 @@ WRITE EDITORS:
 - Filters
 - Text
 
-WRITE CREATORS:
-
-- SnapPea triangulation
-
 TEST:
 
 - Dim2 creation from surface page, once we have a proper Dim2 viewer.

@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #import "NewSnapPeaController.h"
+#import "PacketPicker.h"
 #import "PacketTreeController.h"
 #import "snappea/nexamplesnappeatriangulation.h"
 #import "snappea/nsnappeatriangulation.h"
@@ -71,17 +72,71 @@
 #pragma mark - Convert page
 
 @interface NewSnapPeaConvertPage ()
-@property (weak, nonatomic) IBOutlet UIPickerView *from;
+@property (weak, nonatomic) IBOutlet PacketPicker *from;
 @property (weak, nonatomic) IBOutlet UITextView *tip;
 @end
 
 @implementation NewSnapPeaConvertPage
 
+- (void)viewDidLoad
+{
+    NewSnapPeaController* c = static_cast<NewSnapPeaController*>(self.parentViewController.parentViewController);
+    [self.from fill:[c.spec packetTree] type:regina::PACKET_TRIANGULATION allowNone:NO noneText:@"No Regina triangulations in this document"];
+}
+
 - (regina::NPacket*)create
 {
-    // TODO.
-    regina::NPacket* ans = new regina::NSnapPeaTriangulation();
-    ans->setPacketLabel("SnapPea Triangulation");
+    if ([self.from empty]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Triangulations to Convert"
+                                                        message:@"This document does not contain any triangulations in Regina's native format, and so there is nothing for me to convert.  You can build one by adding a new 3-D triangulation to this document."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return 0;
+    }
+
+    regina::NTriangulation* tri = static_cast<regina::NTriangulation*>([self.from selectedPacket]);
+    if (! tri) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Triangulation Selected"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return 0;
+    }
+
+    if (tri->isEmpty()) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Empty Triangulation"
+                                                        message:@"The selected triangulation does not contain any tetrahedra, and so I cannot convert into SnapPea format."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return 0;
+    }
+    if ((! tri->isConnected()) || tri->hasBoundaryTriangles() || (! tri->isValid()) || (! tri->isStandard())) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Convert Triangulation"
+                                                        message:@"I cannot convert this triangulation into SnapPea format.  SnapPea can only work with triangulations that are (i) valid and connected; (ii) have no boundary triangles; and (iii) where every ideal vertex has a torus or Klein bottle link."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return 0;
+    }
+
+    regina::NSnapPeaTriangulation* ans = new regina::NSnapPeaTriangulation(*tri);
+    if (ans->isNull()) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Convert to SnapPea"
+                                                        message:@"I was unable to convert this into a SnapPea triangulation.  Regina works with more general triangulations than SnapPea does, and not every Regina triangulation can be converted into SnapPea's format."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
+
+    ans->setPacketLabel(tri->getPacketLabel());
     return ans;
 }
 

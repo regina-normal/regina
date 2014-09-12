@@ -30,30 +30,19 @@
  *                                                                        *
  **************************************************************************/
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import "packet/packettype.h"
 
 namespace regina {
     class NPacket;
 }
 
-@class PacketTreeController;
+@interface PacketPicker : UIPickerView
 
-@interface NewPacketSpec : NSObject
+// Must only call once.
+- (void)fill:(regina::NPacket*)tree type:(regina::PacketType)packetType allowNone:(BOOL)allowNone noneText:(NSString*)noneText;
 
-@property (weak, nonatomic, readonly) PacketTreeController* tree;
-@property (assign, nonatomic, readonly) regina::PacketType type;
-
-- (id)initWithType:(regina::PacketType)t tree:(PacketTreeController*)t;
-+ (id)specWithType:(regina::PacketType)t tree:(PacketTreeController*)t;
-- (regina::NPacket*)parent;
-- (regina::NPacket*)parentWithAlert:(BOOL)alert;
-- (regina::NPacket*)packetTree;
-
-@end
-
-@interface NewPacketController : UIViewController
-
-@property (strong, nonatomic) NewPacketSpec* spec;
+- (regina::NPacket*)selectedPacket;
+- (BOOL)empty;
 
 @end

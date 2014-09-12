@@ -1076,6 +1076,7 @@
 		05FEA07A19C1890900A31924 /* nexamplesnappeatriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FEA07819C1890900A31924 /* nexamplesnappeatriangulation.cpp */; };
 		05FEA07B19C1890900A31924 /* nexamplesnappeatriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FEA07819C1890900A31924 /* nexamplesnappeatriangulation.cpp */; };
 		05FEA07C19C1890900A31924 /* nexamplesnappeatriangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 05FEA07919C1890900A31924 /* nexamplesnappeatriangulation.h */; };
+		05FEA07F19C2B96000A31924 /* PacketPicker.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05FEA07E19C2B96000A31924 /* PacketPicker.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -2226,6 +2227,8 @@
 		05F96C16180A153A00C99F96 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBProgressHUD.m; path = MBProgressHUD/MBProgressHUD.m; sourceTree = "<group>"; };
 		05FEA07819C1890900A31924 /* nexamplesnappeatriangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nexamplesnappeatriangulation.cpp; sourceTree = "<group>"; };
 		05FEA07919C1890900A31924 /* nexamplesnappeatriangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nexamplesnappeatriangulation.h; sourceTree = "<group>"; };
+		05FEA07D19C2B96000A31924 /* PacketPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketPicker.h; sourceTree = "<group>"; };
+		05FEA07E19C2B96000A31924 /* PacketPicker.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketPicker.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3291,6 +3294,8 @@
 				050313C61812DDF0007F0CBE /* PacketViewController.mm */,
 				05583A6019B8041F00076187 /* ReginaDocument.h */,
 				05583A6119B8041F00076187 /* ReginaDocument.mm */,
+				05FEA07D19C2B96000A31924 /* PacketPicker.h */,
+				05FEA07E19C2B96000A31924 /* PacketPicker.mm */,
 				05BC538D1812BEB000FE9217 /* SwitchableSubcontroller.h */,
 				05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.m */,
 				055D6C6519B6F10F0062F001 /* TempFile.h */,
@@ -4434,6 +4439,7 @@
 				0589FAC3181484860064CD57 /* TriGluingsViewController.mm in Sources */,
 				052FA17E1806129B00FAE4DF /* ntreeconstraint.cpp in Sources */,
 				050313C11812DB06007F0CBE /* TextViewController.mm in Sources */,
+				05FEA07F19C2B96000A31924 /* PacketPicker.mm in Sources */,
 				052FA1641806129B00FAE4DF /* nanglestructure.cpp in Sources */,
 				052FA2071806129B00FAE4DF /* turaevviro.cpp in Sources */,
 				05D0A1101812F0BE005ED097 /* TriangulationViewController.mm in Sources */,
