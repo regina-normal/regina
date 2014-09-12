@@ -45,6 +45,9 @@ enum {
     sheetDelete
 };
 
+static UIColor* darkGoldenrod = [UIColor colorWithRed:(0xB8 / 256.0) green:(0x86 / 256.0) blue:(0x0B / 256.0) alpha:1.0];
+static UIColor* snapPeaGreen = [UIColor colorWithRed:0.0 green:0.5 blue:0.0 alpha:1.0];
+
 #pragma mark - Document Spec
 
 static NSDateFormatter* dateFormatter;
@@ -59,6 +62,7 @@ enum {
 
 @property (strong, nonatomic) NSURL* url;
 @property (strong, nonatomic, readonly) NSString* name;
+@property (strong, nonatomic, readonly) NSAttributedString* displayName;
 @property (strong, nonatomic, readonly) NSDate* lastModified;
 @property (assign, nonatomic, readonly) int type;
 
@@ -89,9 +93,20 @@ enum {
 
         // We don't use the NSURLLocalizedNameKey property, since sometimes this
         // strips the extension and sometimes it does not.
-        _name = url.lastPathComponent;
-        if (_type == DOCSPEC_TYPE_RGA)
-            _name = [_name stringByDeletingPathExtension];
+        _name = _url.lastPathComponent;
+        switch (_type) {
+            case DOCSPEC_TYPE_RGA:
+                _name = [_name stringByDeletingPathExtension];
+                _displayName = [[NSAttributedString alloc] initWithString:_name];
+                break;
+            case DOCSPEC_TYPE_TRI: {
+                _displayName = [[NSAttributedString alloc] initWithString:_name attributes:@{NSForegroundColorAttributeName: snapPeaGreen}];
+                break;
+            }
+            case DOCSPEC_TYPE_UNKNOWN:
+                _displayName = [[NSAttributedString alloc] initWithString:_name attributes:@{NSForegroundColorAttributeName: darkGoldenrod}];
+                break;
+        }
 
         NSError* err;
         NSDate* date;
@@ -365,10 +380,8 @@ enum {
     } else {
         DocumentSpec* spec = self.docURLs[indexPath.row];
         cell = [tableView dequeueReusableCellWithIdentifier:@"Document" forIndexPath:indexPath];
-        cell.textLabel.text = spec.name;
+        cell.textLabel.attributedText = spec.displayName;
         cell.detailTextLabel.text = spec.lastModifiedText;
-        if (spec.type == DOCSPEC_TYPE_TRI)
-            cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"SnapPea"]];
     }
     return cell;
 }
