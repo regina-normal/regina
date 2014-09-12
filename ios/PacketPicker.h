@@ -37,12 +37,40 @@ namespace regina {
     class NPacket;
 }
 
+/**
+ * A picker view that displays all packets of the given type in the
+ * current document.
+ *
+ * You must call \a fill in order to fill the picker with options.
+ */
 @interface PacketPicker : UIPickerView
 
-// Must only call once.
+/**
+ * Fills the picker with options.  This function must be called before
+ * the picker can be used.
+ *
+ * Note that if (for whatever reason) you call \a fill a second time,
+ * you will need to call \a reloadAllComponents to update the view.
+ *
+ * @param tree The root of the packet tree for the current document.
+ * @param packetType The type of packets that will be offered.
+ * @param allowNone Indicates whether the null packet should be offered
+ * at the top of the list of options.  If there are no packets of the given type,
+ * then the null packet will be offered regardless of what you pass as \a allowNone.
+ * @param noneText The text to display for the null packet.
+ */
 - (void)fill:(regina::NPacket*)tree type:(regina::PacketType)packetType allowNone:(BOOL)allowNone noneText:(NSString*)noneText;
 
+/**
+ * Returns the packet selected in this picker, or 0 if the null packet is selected.
+ */
 - (regina::NPacket*)selectedPacket;
+
+/**
+ * Returns whether this picker contains no valid options at all.
+ * This will only be the case if \a fill was called with \a allowNone = NO,
+ * and the document contains no packets of the given type.
+ */
 - (BOOL)empty;
 
 @end
