@@ -35,9 +35,6 @@
 
 #pragma mark - Packet choice
 
-// TODO: Rename packets.
-// TODO: Move packets around the tree.
-
 @interface PacketChoice : NSObject
 
 @property (assign, nonatomic, readonly) regina::NPacket* packet;
