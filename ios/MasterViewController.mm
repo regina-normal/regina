@@ -116,8 +116,42 @@ enum {
             NSLog(@"Error querying file modification time for %@: %@", url, err.localizedDescription);
             _lastModified = nil;
         }
+
+        // Notify ourselves of changes to the file.
+        // The code uses the technique described at:
+        // http://stackoverflow.com/questions/3181821/notification-of-changes-to-the-iphones-documents-directory
+        int filedes = open(_url.path.UTF8String, O_EVTONLY);
+
+        // Create a dispatch queue - when a file changes the event will be sent to this queue
+        dispatch_queue_t _dispatchQueue = dispatch_queue_create("FileMonitorQueue", 0);
+        dispatch_source_t _source = dispatch_source_create(DISPATCH_SOURCE_TYPE_VNODE,
+                                                           filedes,
+                                                           DISPATCH_VNODE_WRITE,
+                                                           _dispatchQueue);
+
+        dispatch_source_set_event_handler(_source, ^(){
+            // Called when the file changes.
+            NSLog(@"Changed: %@", self.url);
+        });
+
+        dispatch_source_set_cancel_handler(_source, ^() {
+            // Called when we stop monitoring the file.
+            close(filedes);
+        });
+
+        // Start monitoring the file:
+        dispatch_resume(_source);
+
+        // When we want to stop monitoring the file we call this
+        //dispatch_source_cancel(source);
     }
     return self;
+}
+
+- (void)dealloc
+{
+    // Stop monitoring the file.
+    // TODO: dispatch_source_cancel(source);
 }
 
 + (id)specWithURL:(NSURL *)url
