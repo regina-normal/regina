@@ -30,58 +30,33 @@
  *                                                                        *
  **************************************************************************/
 
-#import "AppDelegate.h"
-#import "DetailViewController.h"
-#import "MasterViewController.h"
-#import "ReginaHelper.h"
-#import "file/nglobaldirs.h"
+#import <Foundation/Foundation.h>
 
-@implementation AppDelegate
+@class AppDelegate;
+@class DetailViewController;
+@class MasterViewController;
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-    // Override point for customization after application launch.
-    //
-    // From the iOS App Programming Guide:
-    // - Assume portrait orientation here.  If the device is in landscape
-    //   then the system will rotate the views later, but before displaying them.
-    // - This routine must be fast.  Long tasks should be run on a secondary thread.
-    //
-    [ReginaHelper initWithApp:self];
-    
-    // Make sure that Regina knows where to find its internal data files.
-    NSString* path = [[NSBundle mainBundle] resourcePath];
-    const char* home = [path UTF8String];
-    regina::NGlobalDirs::setDirs(home, "", home);
-    
-    return NO;
-}
+/**
+ * Gives access to some of the core objects in the user interface.
+ */
+@interface ReginaHelper : NSObject
 
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
-{
-    return [[ReginaHelper master] openURL:url];
-}
-							
-- (void)applicationDidEnterBackground:(UIApplication *)application
-{
-    // We need to save data, and also remember what we were doing so that
-    // we can restore state later.
-    // This routine *must* return quickly; otherwise the app may simply be killed.
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    // AFAICT, UIDocument seems to be saving on background/termination automatically.
-    // An explicit save seems to be unnecessary.
-}
+/**
+ * Returns the root-level master view controller.  This contains the
+ * list of documents within the local documents directory.
+ */
++ (MasterViewController*)master;
 
-- (void)applicationWillTerminate:(UIApplication *)application
-{
-    // We need to save data and state here.
-    // This *must* be fast: it has a strict time limit of ~5s, and there is
-    // no way to request more time.
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    // AFAICT, UIDocument seems to be saving on background/termination automatically.
-    // An explicit save seems to be unnecessary.
-}
+/**
+ * Returns the detail view controller.  This is the view into which
+ * packet viewers will be placed.
+ */
++ (DetailViewController*)detail;
+
+/**
+ * Initialises this helper class.  This should be called once at startup.
+ */
++ (void)initWithApp:(AppDelegate*)app;
 
 @end
+

@@ -34,54 +34,35 @@
 #import "DetailViewController.h"
 #import "MasterViewController.h"
 #import "ReginaHelper.h"
-#import "file/nglobaldirs.h"
 
-@implementation AppDelegate
+static MasterViewController* master;
+static DetailViewController* detail;
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+@implementation ReginaHelper
+
++ (MasterViewController *)master
 {
-    // Override point for customization after application launch.
-    //
-    // From the iOS App Programming Guide:
-    // - Assume portrait orientation here.  If the device is in landscape
-    //   then the system will rotate the views later, but before displaying them.
-    // - This routine must be fast.  Long tasks should be run on a secondary thread.
-    //
-    [ReginaHelper initWithApp:self];
-    
-    // Make sure that Regina knows where to find its internal data files.
-    NSString* path = [[NSBundle mainBundle] resourcePath];
-    const char* home = [path UTF8String];
-    regina::NGlobalDirs::setDirs(home, "", home);
-    
-    return NO;
+    return master;
 }
 
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
++ (DetailViewController *)detail
 {
-    return [[ReginaHelper master] openURL:url];
-}
-							
-- (void)applicationDidEnterBackground:(UIApplication *)application
-{
-    // We need to save data, and also remember what we were doing so that
-    // we can restore state later.
-    // This routine *must* return quickly; otherwise the app may simply be killed.
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    // AFAICT, UIDocument seems to be saving on background/termination automatically.
-    // An explicit save seems to be unnecessary.
+    return detail;
 }
 
-- (void)applicationWillTerminate:(UIApplication *)application
++ (void)initWithApp:(AppDelegate *)app
 {
-    // We need to save data and state here.
-    // This *must* be fast: it has a strict time limit of ~5s, and there is
-    // no way to request more time.
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    // AFAICT, UIDocument seems to be saving on background/termination automatically.
-    // An explicit save seems to be unnecessary.
+    UISplitViewController *splitViewController = (UISplitViewController *)app.window.rootViewController;
+    UINavigationController *navigationController;
+
+    navigationController = [splitViewController.viewControllers firstObject];
+    master = (id)navigationController.topViewController;
+
+    navigationController = [splitViewController.viewControllers lastObject];
+    detail = (id)navigationController.topViewController;
+    splitViewController.delegate = detail;
+
 }
 
 @end
+
