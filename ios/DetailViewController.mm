@@ -31,8 +31,10 @@
  **************************************************************************/
 
 #import "DetailViewController.h"
+#import "MasterViewController.h"
 #import "MBProgressHUD.h"
 #import "PacketManagerIOS.h"
+#import "ReginaHelper.h"
 #import "packet/npacket.h"
 #import "packet/packettype.h"
 
@@ -62,8 +64,11 @@
 
     if (_doc && _doc != doc) {
         NSLog(@"Closing document...");
+        ReginaDocument* oldDoc = _doc;
         [_doc closeWithCompletionHandler:^(BOOL success) {
             NSLog(@"Closed.");
+            if (oldDoc.type == DOC_NATIVE)
+                [[ReginaHelper master] refreshURL:oldDoc.fileURL];
         }];
     }
     

@@ -42,6 +42,28 @@ namespace regina {
  */
 @interface ReginaDocument : UIDocument
 
+enum DocType {
+    /**
+     * Indicates a native Regina data file, residing in the usual documents directory.
+     */
+    DOC_NATIVE,
+    /**
+     * Indicates a native Regina data file, residing in a read-only location.  Such a
+     * file might be an example file, or census data.
+     * When modified, a file of this type must be copied into the documents directory
+     * before it can be saved.
+     */
+    DOC_READONLY,
+    /**
+     * Indicates a file in a foreign data format.
+     * When modified, a file of this type must be saved in the documents directory under
+     * a different name, using Regina's native file format.
+     */
+    DOC_FOREIGN
+};
+
+@property (assign, nonatomic, readonly) DocType type;
+
 /**
  * Stores the full packet tree whilst the file is open.
  *

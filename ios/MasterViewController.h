@@ -46,4 +46,12 @@
  */
 - (BOOL)openURL:(NSURL*)url;
 
+/**
+ * Indicates that the table cell for the given URL should be refreshed.
+ *
+ * This might happen (for instance) if the corresponding document was
+ * saved (and thus its last-modified time has changed).
+ */
+- (void)refreshURL:(NSURL*)url;
+
 @end

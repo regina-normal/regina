@@ -36,8 +36,6 @@
 #import "ReginaDocument.h"
 
 // TODO: Allow renaming documents.
-// TODO: Update timestamp after a file is saved.
-// TODO: Mark SnapPea files visually.
 
 // Action sheet tags;
 enum {
@@ -69,6 +67,7 @@ enum {
 - (id)initWithURL:(NSURL*)url;
 + (id)specWithURL:(NSURL*)url;
 
+- (BOOL)refreshLastModified;
 - (NSString*)lastModifiedText;
 
 - (NSComparisonResult)compare:(DocumentSpec*)rhs;
@@ -82,8 +81,6 @@ enum {
     self = [super init];
     if (self) {
         _url = url;
-
-        NSLog(@"DocumentSpec: init: %@", url);
 
         NSString* ext = url.pathExtension;
         if ([ext isEqualToString:@"rga"])
@@ -110,26 +107,30 @@ enum {
                 break;
         }
 
-        NSError* err;
-        NSDate* date;
-        if ([url getResourceValue:&date forKey:NSURLContentModificationDateKey error:&err])
-            _lastModified = date;
-        else {
-            NSLog(@"Error querying file modification time for %@: %@", url, err.localizedDescription);
-            _lastModified = nil;
-        }
+        [self refreshLastModified];
     }
     return self;
-}
-
-- (void)dealloc
-{
-    NSLog(@"DocumentSpec: dealloc: %@", _url);
 }
 
 + (id)specWithURL:(NSURL *)url
 {
     return [[DocumentSpec alloc] initWithURL:url];
+}
+
+- (BOOL)refreshLastModified
+{
+    NSError* err;
+    NSDate* date;
+    if ([_url getResourceValue:&date forKey:NSURLContentModificationDateKey error:&err]) {
+        if (_lastModified && [_lastModified isEqualToDate:date])
+            return NO;
+        _lastModified = date;
+        return YES;
+    } else {
+        NSLog(@"Error querying file modification time for %@: %@", _url, err.localizedDescription);
+        _lastModified = nil;
+        return NO;
+    }
 }
 
 - (NSString *)lastModifiedText
@@ -328,6 +329,24 @@ enum {
     }
 
     [self.tableView reloadData];
+}
+
+- (void)refreshURL:(NSURL *)url
+{
+    DocumentSpec* spec = [self.docsByName objectForKey:url];
+    if (spec) {
+        if ([spec refreshLastModified]) {
+            // There should not be enormously many documents; for now leave this as
+            // a linear-time search for the corresponding table row.
+            NSIndexPath* index = [NSIndexPath indexPathForRow:[self.docURLs indexOfObject:spec] inSection:1];
+            [self.tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationAutomatic];
+        }
+    } else {
+        // Suspicious.  We could not find this document in our list.
+        // Reload everything just to be safe.
+        NSLog(@"Warning: refreshURL could not locate URL: %@", url);
+        [self refreshDocURLs];
+    }
 }
 
 #pragma mark - URL Session

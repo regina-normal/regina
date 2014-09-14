@@ -47,28 +47,7 @@ enum DocError {
 };
 
 @interface ReginaDocument () {
-    enum DocType {
-        /**
-         * Indicates a native Regina data file, residing in the usual documents directory.
-         */
-        DOC_NATIVE,
-        /**
-         * Indicates a native Regina data file, residing in a read-only location.  Such a
-         * file might be an example file, or census data.
-         * When modified, a file of this type must be copied into the documents directory
-         * before it can be saved.
-         */
-        DOC_READONLY,
-        /**
-         * Indicates a file in a foreign data format.
-         * When modified, a file of this type must be saved in the documents directory under
-         * a different name, using Regina's native file format.
-         */
-        DOC_FOREIGN
-    };
-    
     NSString* description;
-    DocType type;
 }
 @end
 
@@ -88,7 +67,7 @@ enum DocError {
     if (self) {
         description = e.desc;
         _tree = 0;
-        type = DOC_READONLY;
+        _type = DOC_READONLY;
     }
     return self;
 }
@@ -121,7 +100,7 @@ enum DocError {
     if (self) {
         description = nil;
         _tree = 0;
-        type = (moveOk ? DOC_NATIVE : DOC_READONLY);
+        _type = (moveOk ? DOC_NATIVE : DOC_READONLY);
     }
     return self;
 }
@@ -143,7 +122,7 @@ enum DocError {
     if (self) {
         description = nil;
         _tree = 0;
-        type = DOC_NATIVE;
+        _type = DOC_NATIVE;
     }
     return self;
 }
@@ -167,7 +146,7 @@ enum DocError {
         regina::NText* text = new regina::NText("TODO: A welcome.");
         text->setPacketLabel("Read me");
         _tree->insertChildLast(text);
-        type = DOC_NATIVE;
+        _type = DOC_NATIVE;
         
         [self saveToURL:url forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
             if (success)
@@ -239,7 +218,7 @@ enum DocError {
         _tree->setPacketLabel("SnapPea import");
         _tree->insertChildLast(tri);
         
-        type = DOC_FOREIGN;
+        _type = DOC_FOREIGN;
     } else {
         boost::iostreams::stream<boost::iostreams::array_source> s(static_cast<const char*>(data.bytes), data.length);
         _tree = regina::open(s);
@@ -279,7 +258,7 @@ enum DocError {
 
 - (void)setDirty
 {
-    if (type == DOC_READONLY) {
+    if (_type == DOC_READONLY) {
         NSLog(@"Copying to documents directory.");
         NSURL* newURL = [ReginaDocument uniqueDocURLFor:self.fileURL];
         if ([[NSFileManager defaultManager] copyItemAtURL:self.fileURL toURL:newURL error:nil]) {
@@ -289,7 +268,7 @@ enum DocError {
                                             type:TSMessageNotificationTypeMessage];
 
             description = nil;
-            type = DOC_NATIVE;
+            _type = DOC_NATIVE;
             
             [self updateChangeCount:UIDocumentChangeDone];
         } else {
@@ -301,7 +280,7 @@ enum DocError {
                                   otherButtonTitles:nil];
             [alert show];
         }
-    } else if (type == DOC_FOREIGN) {
+    } else if (_type == DOC_FOREIGN) {
         NSLog(@"Converting to Regina's native format.");
         NSURL* newURL = [ReginaDocument uniqueRgaURLFor:self.fileURL];
         [self presentedItemDidMoveToURL:newURL];
@@ -322,7 +301,7 @@ enum DocError {
         }];
         
         description = nil;
-        type = DOC_NATIVE;
+        _type = DOC_NATIVE;
     } else {
         [self updateChangeCount:UIDocumentChangeDone];
     }
