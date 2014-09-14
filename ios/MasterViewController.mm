@@ -60,7 +60,7 @@ enum {
     DOCSPEC_TYPE_UNKNOWN
 };
 
-@property (strong, nonatomic) NSURL* url;
+@property (strong, nonatomic, readonly) NSURL* url;
 @property (strong, nonatomic, readonly) NSString* name;
 @property (strong, nonatomic, readonly) NSAttributedString* displayName;
 @property (strong, nonatomic, readonly) NSDate* lastModified;
@@ -82,6 +82,8 @@ enum {
     self = [super init];
     if (self) {
         _url = url;
+
+        NSLog(@"DocumentSpec: init: %@", url);
 
         NSString* ext = url.pathExtension;
         if ([ext isEqualToString:@"rga"])
@@ -120,6 +122,11 @@ enum {
     return self;
 }
 
+- (void)dealloc
+{
+    NSLog(@"DocumentSpec: dealloc: %@", _url);
+}
+
 + (id)specWithURL:(NSURL *)url
 {
     return [[DocumentSpec alloc] initWithURL:url];
@@ -150,7 +157,23 @@ enum {
     MBProgressHUD* dropboxHUD;
     UIView* rootView;
 }
+
+/**
+ * All local documents, sorted in the same order
+ * as the visual table.
+ *
+ * Element type: (DocumentSpec*)
+ */
 @property (strong, nonatomic) NSMutableArray *docURLs;
+
+/**
+ * All local documents, indexed by URL.
+ *
+ * Key type: NSURL (note that keys are copied)
+ * Value type: (DocumentSpec*)
+ */
+@property (strong, nonatomic) NSMutableDictionary* docsByName;
+
 @end
 
 @implementation MasterViewController
@@ -171,6 +194,7 @@ enum {
     self.navigationItem.rightBarButtonItem = addButton;
 
     self.docURLs = [NSMutableArray array];
+    self.docsByName = [NSMutableDictionary dictionary];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -263,6 +287,8 @@ enum {
 
 - (void)refreshDocURLs
 {
+    // Flush out the ordered array of documents.
+    // Any previous DocumentSpec objects will be preserved in docsByName, and reused if possible.
     [self.docURLs removeAllObjects];
     
     NSArray* contents = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:[ReginaDocument docsDir]
@@ -273,6 +299,7 @@ enum {
 
     NSError* err;
     NSNumber* isDir;
+    DocumentSpec* reuse;
     for (NSURL* url in [contents objectEnumerator]) {
         if ([url getResourceValue:&isDir forKey:NSURLIsDirectoryKey error:&err]) {
             if (isDir.boolValue)
@@ -280,7 +307,11 @@ enum {
         } else {
             NSLog(@"Error scanning documents directory: %@", err.localizedDescription);
         }
-        [self.docURLs addObject:[DocumentSpec specWithURL:url]];
+        reuse = [self.docsByName objectForKey:url];
+        if (reuse)
+            [self.docURLs addObject:reuse];
+        else
+            [self.docURLs addObject:[DocumentSpec specWithURL:url]];
     }
 
     /*
@@ -288,6 +319,13 @@ enum {
                                          [NSSortDescriptor sortDescriptorWithKey:@"url" ascending:YES]]];
     */
     [self.docURLs sortUsingSelector:@selector(compare:)];
+
+    // Now flush and refill docsByName.
+    // This will destroy any old DocumentSpec objects that are no longer needed.
+    [self.docsByName removeAllObjects];
+    for (DocumentSpec* spec in [self.docURLs objectEnumerator]) {
+        [self.docsByName setObject:spec forKey:spec.url];
+    }
 
     [self.tableView reloadData];
 }
@@ -430,6 +468,7 @@ enum {
                 NSLog(@"Deleting document: %@", url);
                 if ([[NSFileManager defaultManager] removeItemAtURL:url error:nil]) {
                     [self.docURLs removeObjectAtIndex:actionIndexPath.row];
+                    [self.docsByName removeObjectForKey:url];
                     [self.tableView deleteRowsAtIndexPaths:@[actionIndexPath] withRowAnimation:UITableViewRowAnimationFade];
                 } else {
                     UIAlertView* alert = [[UIAlertView alloc]
