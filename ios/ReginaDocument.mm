@@ -74,6 +74,8 @@ enum DocError {
 
 @implementation ReginaDocument
 
+#pragma mark Initialisation and deallocation
+
 - (id)initWithExample:(Example *)e
 {
     NSString* path = [[NSBundle mainBundle] pathForResource:e.file ofType:nil inDirectory:@"examples"];
@@ -192,12 +194,16 @@ enum DocError {
     }
 }
 
+#pragma mark Properties
+
 - (NSString *)localizedName {
     if (description)
         return description;
     else
         return [super localizedName];
 }
+
+#pragma mark File I/O
 
 - (BOOL)loadFromContents:(id)contents ofType:(NSString *)typeName error:(NSError *__autoreleasing *)outError
 {
@@ -321,6 +327,8 @@ enum DocError {
         [self updateChangeCount:UIDocumentChangeDone];
     }
 }
+
+#pragma mark Filesystem helper methods
 
 + (NSURL *)docsDir
 {
