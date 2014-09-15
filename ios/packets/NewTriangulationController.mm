@@ -197,7 +197,7 @@ typedef regina::NTriangulation* (*TriangulationCreator)();
 
 - (regina::NPacket *)create
 {
-    std::string sig = [self.isosig.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].UTF8String;
+    std::string sig = [self.isosig.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]].UTF8String;
     if (sig.empty()) {
         UIAlertView* alert = [[UIAlertView alloc]
                               initWithTitle:@"Empty Isomorphism Signature"

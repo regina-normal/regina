@@ -134,7 +134,7 @@ enum DocError {
 
 - (id)initNewWithCompletionHandler:(void (^)(ReginaDocument*))completionHandler
 {
-    NSURL* url = [ReginaDocument uniqueDocURLFor:[NSURL URLWithString:@"Untitled.rga" relativeToURL:[ReginaDocument docsDir]]];
+    NSURL* url = [ReginaDocument uniqueDocURLFor:[[ReginaDocument docsDir] URLByAppendingPathComponent:@"Untitled.rga"]];
     if (! url) {
         completionHandler(nil);
         return nil;

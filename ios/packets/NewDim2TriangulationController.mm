@@ -195,7 +195,7 @@ typedef regina::Dim2Triangulation* (*Dim2TriangulationCreator)();
 
 - (int)checkGenus
 {
-    NSString* text = [self.genus.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSString* text = [self.genus.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if (text.length == 0) {
         UIAlertView* alert = [[UIAlertView alloc]
                               initWithTitle:@"Which genus?"
@@ -222,7 +222,7 @@ typedef regina::Dim2Triangulation* (*Dim2TriangulationCreator)();
 
 - (int)checkPunctures
 {
-    NSString* text = [self.punctures.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSString* text = [self.punctures.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if (text.length == 0) {
         UIAlertView* alert = [[UIAlertView alloc]
                               initWithTitle:@"How many punctures?"
@@ -326,7 +326,7 @@ typedef regina::Dim2Triangulation* (*Dim2TriangulationCreator)();
 
 - (regina::NPacket *)create
 {
-    std::string sig = [self.isosig.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].UTF8String;
+    std::string sig = [self.isosig.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]].UTF8String;
     if (sig.empty()) {
         UIAlertView* alert = [[UIAlertView alloc]
                               initWithTitle:@"Empty Isomorphism Signature"
