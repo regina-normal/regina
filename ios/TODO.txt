@@ -49,6 +49,10 @@ TEST:
 
 SHORT-TERM:
 
+- Doucments + : disallow a second press.
+
+- Open bad file in dropbox: fails.
+
 - Audit the use of UIAlert (should we use banners instead)?
 
 - Cut down the iOS census examples to a faster-to-load size.
