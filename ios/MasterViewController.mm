@@ -300,7 +300,17 @@ enum {
             self.actionPath = indexPath;
 
             UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-            CGRect frame = CGRectInset(cell.frame, CGRectGetMinX(cell.textLabel.frame), 6);
+
+            // Create a background sheet to hide the old cell contents.
+            // The inset of dy=1 is so we don't cover the cell dividers.
+            UIView* bg = [[UIView alloc] initWithFrame:CGRectInset(cell.frame, 0, 1)];
+            bg.backgroundColor = cell.backgroundColor;
+
+            // The text field itself will be smaller.
+            // Add a small additional y inset, and an x inset that aligns the text field
+            // with the labels in other cells.
+            CGRect frame = CGRectMake(0, 0, CGRectGetWidth(bg.frame), CGRectGetHeight(bg.frame));
+            frame = CGRectInset(frame, CGRectGetMinX(cell.textLabel.frame), 5);
 
             UITextField* f = [[UITextField alloc] initWithFrame:frame];
             f.backgroundColor = cell.backgroundColor;
@@ -312,8 +322,9 @@ enum {
             f.autocapitalizationType = UITextAutocapitalizationTypeSentences;
             f.autocorrectionType = UITextAutocorrectionTypeNo;
             f.delegate = self;
-            [self.tableView addSubview:f];
 
+            [bg addSubview:f];
+            [self.tableView addSubview:bg];
             [f becomeFirstResponder];
 
             // TODO: Make sure the cell being renamed is visible.
@@ -551,7 +562,9 @@ enum {
     NSIndexPath* renamePath = self.actionPath;
     NSString* text = [textField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 
-    [textField removeFromSuperview];
+    // The superview of the text field is the empty sheet covering up the old cell contents.
+    // Remove that sheet (and the text field it contains) from the table view.
+    [textField.superview removeFromSuperview];
     self.actionPath = nil;
 
     if (text.length == 0) {
