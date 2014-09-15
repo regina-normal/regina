@@ -152,7 +152,6 @@ enum {
 #pragma mark - Master view controller
 
 @interface MasterViewController () <UIActionSheetDelegate, NSURLSessionDownloadDelegate, UITextFieldDelegate> {
-    NSIndexPath* actionIndexPath;
     MBProgressHUD* dropboxHUD;
     UIView* rootView;
 }
@@ -291,9 +290,14 @@ enum {
     CGPoint location = [press locationInView:self.tableView];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
 
+    if (self.actionPath) {
+        // We are in the middle of one action; do not start another.
+        return;
+    }
+
     if (indexPath && indexPath.section == 1) {
         if (state == UIGestureRecognizerStateBegan) {
-            actionIndexPath = indexPath;
+            self.actionPath = indexPath;
 
             UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
             CGRect frame = CGRectInset(cell.frame, CGRectGetMinX(cell.textLabel.frame), 6);
@@ -478,7 +482,7 @@ enum {
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return (indexPath.section == 1);
+    return (! self.actionPath) && (indexPath.section == 1);
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -488,10 +492,13 @@ enum {
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (self.actionPath)
+        return;
+
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         CGRect cell = [tableView cellForRowAtIndexPath:indexPath].frame;
         
-        actionIndexPath = indexPath;
+        self.actionPath = indexPath;
         UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete document" otherButtonTitles:nil];
         sheet.tag = sheetDelete;
         [sheet showFromRect:cell inView:tableView animated:YES];
@@ -516,12 +523,12 @@ enum {
             break;
         case sheetDelete:
             if (buttonIndex == actionSheet.destructiveButtonIndex) {
-                NSURL* url = [self.docURLs[actionIndexPath.row] url];
+                NSURL* url = [self.docURLs[self.actionPath.row] url];
                 NSLog(@"Deleting document: %@", url);
                 if ([[NSFileManager defaultManager] removeItemAtURL:url error:nil]) {
-                    [self.docURLs removeObjectAtIndex:actionIndexPath.row];
+                    [self.docURLs removeObjectAtIndex:self.actionPath.row];
                     [self.docsByName removeObjectForKey:url];
-                    [self.tableView deleteRowsAtIndexPaths:@[actionIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+                    [self.tableView deleteRowsAtIndexPaths:@[self.actionPath] withRowAnimation:UITableViewRowAnimationFade];
                 } else {
                     UIAlertView* alert = [[UIAlertView alloc]
                                           initWithTitle:@"Could Not Delete Document"
@@ -532,6 +539,7 @@ enum {
                     [alert show];
                 }
             }
+            self.actionPath = nil;
             break;
     }
 }
@@ -540,8 +548,11 @@ enum {
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
+    NSIndexPath* renamePath = self.actionPath;
     NSString* text = [textField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+
     [textField removeFromSuperview];
+    self.actionPath = nil;
 
     if (text.length == 0) {
         UIAlertView* alert = [[UIAlertView alloc]
@@ -554,7 +565,7 @@ enum {
         return;
     }
 
-    DocumentSpec* spec = self.docURLs[actionIndexPath.row];
+    DocumentSpec* spec = self.docURLs[renamePath.row];
 
     NSString* filename = [text stringByReplacingOccurrencesOfString:@"/" withString:@":"];
     if ([filename isEqualToString:spec.name])
@@ -607,7 +618,7 @@ enum {
     }
 
     // All good.  Update the internal array and the visual table.
-    [self.docURLs removeObjectAtIndex:actionIndexPath.row];
+    [self.docURLs removeObjectAtIndex:renamePath.row];
     [self.docsByName removeObjectForKey:spec.url];
 
     DocumentSpec* newSpec = [DocumentSpec specWithURL:newURL];
@@ -620,8 +631,8 @@ enum {
     [self.docURLs insertObject:newSpec atIndex:newRow];
     [self.docsByName setObject:newSpec forKey:newURL];
     NSIndexPath* newPath = [NSIndexPath indexPathForRow:newRow inSection:1];
-    if (newRow != actionIndexPath.row)
-        [self.tableView moveRowAtIndexPath:actionIndexPath toIndexPath:newPath];
+    if (newRow != renamePath.row)
+        [self.tableView moveRowAtIndexPath:renamePath toIndexPath:newPath];
     [self.tableView reloadRowsAtIndexPaths:@[newPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 

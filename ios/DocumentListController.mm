@@ -66,6 +66,11 @@
     return nil;
 }
 
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
+{
+    return ! self.actionPath;
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Note: the real work for loading a data file happens in a new thread.
     if ([[segue identifier] isEqualToString:@"openDocument"]) {

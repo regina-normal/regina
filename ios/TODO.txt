@@ -70,6 +70,7 @@ LONG-TERM:
 
 Restore arm64 build (0ed85f0).
 Find a way to install *.tdb in a subdirectory beneath Resources/.
+Rename actions: tap outside the text field -> end edit
 
 Support state preservation and restoration.  See:
   https://developer.apple.com/library/ios/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/StatePreservation/StatePreservation.html

@@ -34,11 +34,30 @@
 #import "ReginaDocument.h"
 
 /**
- * The view controller for the table of documents, including Regina's
- * example files as well as the user's own data files.
+ * The view controller for a table of documents.  These could be
+ * Regina's example files, and/or the user's own data files.
+ *
+ * This must be subclassed before it can be used.
  */
 @interface DocumentListController : UITableViewController
 
+/**
+ * If the user is currently editing a table cell (e.g., renaming
+ * or deleting it), then this stores the corresponding index in the table.
+ * Otherwise this property is \a nil.
+ *
+ * Subclasses should update this property as the user initiates, cancels
+ * and/or completes actions, and should disable appropriate parts of the user
+ * interface whenever it is non-nil.
+ */
+@property (strong, nonatomic) NSIndexPath *actionPath;
+
+/**
+ * Returns a newly created document corresponding to the given
+ * table cell.  The document will be in an unopened state.
+ *
+ * Subclasses must implement this method.
+ */
 - (ReginaDocument*)documentForIndexPath:(NSIndexPath*)indexPath;
 
 @end
