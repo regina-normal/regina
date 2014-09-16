@@ -47,6 +47,7 @@
 
 @interface PacketTreeController () <UIAlertViewDelegate, UIActionSheetDelegate, PacketDelegate> {
     NSPointerArray *_packets;
+    NSMutableDictionary *_packetIndices;
     NSInteger _subtreeRow;
     PacketListenerIOS* _listener;
     __weak UIPopoverController* _newPacketPopover;
@@ -123,10 +124,14 @@
         return;
 
     _packets = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsOpaquePersonality];
+    _packetIndices = [NSMutableDictionary dictionary];
 
     regina::NPacket* p;
-    for (p = _node->getFirstTreeChild(); p; p = p->getNextTreeSibling())
+    int index = 0;
+    for (p = _node->getFirstTreeChild(); p; p = p->getNextTreeSibling(), ++index) {
         [_packets addPointer:p];
+        [_packetIndices setObject:[NSNumber numberWithInt:index] forKey:[NSValue valueWithPointer:p]];
+    }
 
     [self.tableView reloadData];
 }
@@ -144,6 +149,17 @@
         return static_cast<regina::NPacket*>([_packets pointerAtIndex:(indexPath.row - 1)]);
     else
         return static_cast<regina::NPacket*>([_packets pointerAtIndex:indexPath.row]);
+}
+
+- (NSIndexPath*)pathForPacket:(regina::NPacket*)packet {
+    NSNumber *packetIndex = [_packetIndices objectForKey:[NSValue valueWithPointer:packet]];
+    if (packetIndex == nil)
+        return nil;
+    int i = packetIndex.intValue;
+    if (_subtreeRow == 0 || _subtreeRow > i)
+        return [NSIndexPath indexPathForRow:i inSection:0];
+    else
+        return [NSIndexPath indexPathForRow:(i + 1) inSection:0];
 }
 
 - (void)viewPacket:(regina::NPacket *)p {
@@ -212,9 +228,16 @@
 }
 
 - (void)packetWasRenamed:(regina::NPacket *)packet {
-    // TODO: Refresh only the necessary table cell.
     [self.document setDirty];
-    [self refreshPackets];
+    if (packet == self.node) {
+        // Refresh the title, but only if this is not the root of the packet tree.
+        if (packet->getTreeParent())
+            self.title = [NSString stringWithUTF8String:packet->getPacketLabel().c_str()];
+    } else {
+        NSIndexPath* path = [self pathForPacket:packet];
+        if (path)
+            [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:NO];
+    }
 }
 
 - (void)childWasAddedTo:(regina::NPacket*)packet child:(regina::NPacket*)child {
