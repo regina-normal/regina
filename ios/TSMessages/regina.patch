@@ -1,0 +1,13 @@
+diff --git a/ios/TSMessages/Classes/TSMessageView.m b/ios/TSMessages/Classes/TSMessageView.m
+index 7f00fd5..a6d7405 100644
+--- a/ios/TSMessages/Classes/TSMessageView.m
++++ b/ios/TSMessages/Classes/TSMessageView.m
+@@ -14,7 +14,7 @@
+ 
+ #define TSMessageViewPadding 15.0
+ 
+-#define TSDesignFileName @"TSMessagesDefaultDesign.json"
++#define TSDesignFileName @"TSMessages.bundle/TSMessagesDefaultDesign.json"
+ 
+ 
+ static NSMutableDictionary *_notificationDesign;
