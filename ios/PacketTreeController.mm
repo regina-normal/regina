@@ -43,7 +43,6 @@
 #import "packet/ncontainer.h"
 #import "packet/ntext.h"
 
-// TODO: Rename packets.
 // TODO: Move packets around the tree.
 
 @interface PacketTreeController () <UIAlertViewDelegate, UIActionSheetDelegate, PacketDelegate> {
@@ -235,6 +234,23 @@
     // No need to update the table, since this action can only have happened as a result
     // of user interaction with the table.
     [self.document setDirty];
+}
+
+#pragma mark - Editable table view
+
+- (BOOL)renameAllowed:(NSIndexPath *)path
+{
+    return ! (_subtreeRow > 0 && _subtreeRow == path.row);
+}
+
+- (NSString *)renameInit:(NSIndexPath *)path
+{
+    return [NSString stringWithUTF8String:[self packetForPath:path]->getPacketLabel().c_str()];
+}
+
+- (void)renameDone:(NSIndexPath *)path result:(NSString *)result
+{
+    [self packetForPath:path]->setPacketLabel([[result stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] UTF8String]);
 }
 
 #pragma mark - Table view
