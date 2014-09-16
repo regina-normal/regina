@@ -35,6 +35,9 @@
 #import "MBProgressHUD.h"
 #import "ReginaDocument.h"
 
+// TODO: Disallow multiple presses on + (new document)
+// TODO: Opening a bad file from drobox fails
+
 // Action sheet tags;
 enum {
     sheetNew,

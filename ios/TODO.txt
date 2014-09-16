@@ -26,58 +26,38 @@ CLEAN UP:
 
 WRITE VIEWERS:
 
-- 2-D triangulation
-- 3-D triangulation
-- SnapPea triangulation
-- Normal surfaces
-- Angle structures
-- Filters
-- Script
-
-WRITE EDITORS:
-
-- 2-D triangulation
-- 3-D triangulation
-- SnapPea triangulation
-- Filters
-- Text
+- Text:                   one-page, editor
+- PDF:                    one-page
+- Filters:                one-page, editor
+- Script:                 one-page
+- 2-D triangulation:      tabs,     editor
+- 3-D triangulation:      tabs,     editor
+- SnapPea triangulation:  tabs,     editor
+- Angle structures:       one-page
+- Normal surfaces:        tabs
 
 TEST:
 
 - Dim2 creation from surface page, once we have a proper Dim2 viewer.
-
-SHORT-TERM:
-
-- Doucments + : disallow a second press.
-
-- Open bad file in dropbox: fails.
-
-- Audit the use of UIAlert (should we use banners instead)?
-
-- Cut down the iOS census examples to a faster-to-load size.
-
-- Call UIApplication::idleTimerDisabled when running long tasks (e.g.,
-  enumerating normal surfaces), to stop the screen from locking.
-
-
-UI TESTS:
-
-Return to the app during facetime (status bar is thicker), and make sure
-the UI is still laid out correctly.
+- Return to the app during facetime (status bar is thicker), and make sure
+  the UI is still laid out correctly.
 
 LONG-TERM:
 
-Restore arm64 build (0ed85f0).
-Find a way to install *.tdb in a subdirectory beneath Resources/.
-Rename actions: tap outside the text field -> end edit
-Rename actions: ensure table view insets are OK if the device is rotated while the keyboard is shown
+- Call UIApplication::idleTimerDisabled when running long tasks
+  (e.g., enumerating normal surfaces), to stop the screen from locking.
+- Restore arm64 build (0ed85f0).
+- Find a way to install *.tdb in a subdirectory beneath Resources/.
+- Rename actions: tap outside the text field -> end edit
+- Rename actions: ensure table view insets are OK if the device is rotated while the keyboard is shown
+- Audit the use of UIAlert (should we use banners instead)?
 
-Support state preservation and restoration.  See:
+- Support state preservation and restoration.  See:
   https://developer.apple.com/library/ios/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/StatePreservation/StatePreservation.html
 
-iCloud:
-- Support, including moving files to/from iCloud storage.
-- Indicate error conditions and handle document-version conflicts.
-- All documents in iCloud or none.  See: https://developer.apple.com/Library/ios/documentation/DataManagement/Conceptual/DocumentBasedAppPGiOS/ManageDocumentLifeCycle/ManageDocumentLifeCycle.html
+- iCloud:
+  + Support, including moving files to/from iCloud storage.
+  + Indicate error conditions and handle document-version conflicts.
+  + All documents in iCloud or none.  See: https://developer.apple.com/Library/ios/documentation/DataManagement/Conceptual/DocumentBasedAppPGiOS/ManageDocumentLifeCycle/ManageDocumentLifeCycle.html
 
 
