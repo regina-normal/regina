@@ -151,6 +151,11 @@
         return static_cast<regina::NPacket*>([_packets pointerAtIndex:indexPath.row]);
 }
 
+- (int)packetIndexForPacket:(regina::NPacket*)packet {
+    NSNumber *packetIndex = [_packetIndices objectForKey:[NSValue valueWithPointer:packet]];
+    return (packetIndex == nil ? -1 : packetIndex.intValue);
+}
+
 - (NSIndexPath*)pathForPacket:(regina::NPacket*)packet {
     NSNumber *packetIndex = [_packetIndices objectForKey:[NSValue valueWithPointer:packet]];
     if (packetIndex == nil)
@@ -160,6 +165,13 @@
         return [NSIndexPath indexPathForRow:i inSection:0];
     else
         return [NSIndexPath indexPathForRow:(i + 1) inSection:0];
+}
+
+- (NSIndexPath*)pathForPacketIndex:(int)index {
+    if (_subtreeRow == 0 || _subtreeRow > index)
+        return [NSIndexPath indexPathForRow:index inSection:0];
+    else
+        return [NSIndexPath indexPathForRow:(index + 1) inSection:0];
 }
 
 - (void)viewPacket:(regina::NPacket *)p {
@@ -236,15 +248,39 @@
     } else {
         NSIndexPath* path = [self pathForPacket:packet];
         if (path)
-            [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:NO];
+            [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
 }
 
 - (void)childWasAddedTo:(regina::NPacket*)packet child:(regina::NPacket*)child {
-    // TODO: Scroll to the new packet.
-    // TODO: Refresh only the necessary bits of the tree.
     [self.document setDirty];
-    [self refreshPackets];
+
+    NSIndexPath* path;
+    if (packet == self.node) {
+        // We have a new row for our table of children.
+        int childIndex;
+        if (! child->getNextTreeSibling()) {
+            // The new row goes on the end of the list.
+            childIndex = _packets.count;
+            [_packets addPointer:child];
+        } else {
+            childIndex = [self packetIndexForPacket:child->getNextTreeSibling()] - 1;
+            NSAssert(childIndex >= 0, @"childWasAddedTo: childIndex should be non-negative.");
+            [_packets insertPointer:child atIndex:childIndex];
+        }
+        [_packetIndices setObject:[NSNumber numberWithInt:childIndex] forKey:[NSValue valueWithPointer:child]];
+
+        path = [self pathForPacketIndex:childIndex];
+        [self.tableView insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationAutomatic];
+    } else {
+        // One of our children needs a new subtitle (which counts *its* children).
+        path = [self pathForPacket:child->getTreeParent()];
+        if (path)
+            [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
+
+    if (path)
+        [self.tableView scrollToRowAtIndexPath:path atScrollPosition:UITableViewScrollPositionNone animated:YES];
 }
 
 - (void)childWasRemovedFrom:(regina::NPacket *)packet child:(regina::NPacket *)child inParentDestructor:(bool)d {
@@ -400,6 +436,8 @@
         regina::NPacket* packet = static_cast<regina::NPacket*>([_packets pointerAtIndex:packetIndex]);
 
         [_packets removePointerAtIndex:packetIndex];
+        [_packetIndices removeObjectForKey:[NSValue valueWithPointer:packet]];
+
         if (_subtreeRow == self.actionPath.row + 1) {
             // We need to remove the subtree cell also.
             NSIndexPath* subtreePath = [NSIndexPath indexPathForRow:_subtreeRow inSection:0];
