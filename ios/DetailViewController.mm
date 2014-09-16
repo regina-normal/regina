@@ -191,6 +191,12 @@
         self.title = [NSString stringWithUTF8String:packet->getPacketLabel().c_str()];
 }
 
+- (void)packetToBeDestroyed:(regina::NPacket *)packet
+{
+    if (packet == self.packet)
+        self.packet = nil;
+}
+
 #pragma mark - Action sheet
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
