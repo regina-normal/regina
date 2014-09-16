@@ -1,6 +1,6 @@
 CLEAN UP:
 
-- MasterViewController / CensusListController
+- MasterViewController
 - WelcomePopupController
 - PacketTreeController
 - ReginaDocument

@@ -253,6 +253,37 @@
     return self.detail.packet;
 }
 
+#pragma mark - Segues
+
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
+    // Note that _newPacketPopover is a zeroing weak reference, and will
+    // automagically return to nil when the popover is dismissed.
+    if ([identifier isEqualToString:@"newPacket"] && _newPacketPopover) {
+        // The popover is already visible.
+        // Instead of showing it, we should dismiss it (since the button
+        // was pressed a second time).
+        [_newPacketPopover dismissPopoverAnimated:NO];
+        return NO;
+    }
+    return YES;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([[segue identifier] isEqualToString:@"openSubtree"]) {
+        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+
+        NSInteger packetIndex = [self packetIndexFor:indexPath];
+        [[segue destinationViewController] openSubtree:[_rows[packetIndex] packet] detail:self.detail];
+    } else if ([[segue identifier] isEqualToString:@"newPacket"]) {
+        _newPacketPopover = [(UIStoryboardPopoverSegue*)segue popoverController];
+        ((NewPacketMenu*)segue.destinationViewController).packetTree = self;
+    } else {
+        // This must be one of the new packet segues.
+        // Pass through the parent packet.
+        ((NewPacketController*)segue.destinationViewController).spec = sender;
+    }
+}
+
 #pragma mark - Table View
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -369,37 +400,6 @@
     }
     if (p->getPacketType() != regina::NContainer::packetType)
         [self viewPacket:r.packet];
-}
-
-#pragma mark Segues
-
-- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
-    // Note that _newPacketPopover is a zeroing weak reference, and will
-    // automagically return to nil when the popover is dismissed.
-    if ([identifier isEqualToString:@"newPacket"] && _newPacketPopover) {
-        // The popover is already visible.
-        // Instead of showing it, we should dismiss it (since the button
-        // was pressed a second time).
-        [_newPacketPopover dismissPopoverAnimated:NO];
-        return NO;
-    }
-    return YES;
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([[segue identifier] isEqualToString:@"openSubtree"]) {
-        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-
-        NSInteger packetIndex = [self packetIndexFor:indexPath];
-        [[segue destinationViewController] openSubtree:[_rows[packetIndex] packet] detail:self.detail];
-    } else if ([[segue identifier] isEqualToString:@"newPacket"]) {
-        _newPacketPopover = [(UIStoryboardPopoverSegue*)segue popoverController];
-        ((NewPacketMenu*)segue.destinationViewController).packetTree = self;
-    } else {
-        // This must be one of the new packet segues.
-        // Pass through the parent packet.
-        ((NewPacketController*)segue.destinationViewController).spec = sender;
-    }
 }
 
 #pragma mark - Action sheet
