@@ -151,7 +151,7 @@ enum {
 
 #pragma mark - Master view controller
 
-@interface MasterViewController () <UIActionSheetDelegate, NSURLSessionDownloadDelegate, UITextFieldDelegate> {
+@interface MasterViewController () <UIActionSheetDelegate, NSURLSessionDownloadDelegate> {
     MBProgressHUD* dropboxHUD;
     UIView* rootView;
 }
