@@ -47,8 +47,8 @@
 
 @interface PacketTreeController () <UIAlertViewDelegate, UIActionSheetDelegate, PacketDelegate> {
     NSPointerArray *_packets;
-    NSMutableDictionary *_packetIndices;
     NSInteger _subtreeRow;
+    NSInteger _recentPacketIndex;
     PacketListenerIOS* _listener;
     __weak UIPopoverController* _newPacketPopover;
 }
@@ -124,14 +124,9 @@
         return;
 
     _packets = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsOpaquePersonality];
-    _packetIndices = [NSMutableDictionary dictionary];
-
     regina::NPacket* p;
-    int index = 0;
-    for (p = _node->getFirstTreeChild(); p; p = p->getNextTreeSibling(), ++index) {
+    for (p = _node->getFirstTreeChild(); p; p = p->getNextTreeSibling())
         [_packets addPointer:p];
-        [_packetIndices setObject:[NSNumber numberWithInt:index] forKey:[NSValue valueWithPointer:p]];
-    }
 
     [self.tableView reloadData];
 }
@@ -152,19 +147,33 @@
 }
 
 - (int)packetIndexForPacket:(regina::NPacket*)packet {
-    NSNumber *packetIndex = [_packetIndices objectForKey:[NSValue valueWithPointer:packet]];
-    return (packetIndex == nil ? -1 : packetIndex.intValue);
+    if (_recentPacketIndex < _packets.count && [_packets pointerAtIndex:_recentPacketIndex] == packet)
+        return _recentPacketIndex;
+
+    NSLog(@"Performing linear search for packet.");
+    int index = 0;
+    for (regina::NPacket* p = self.node->getFirstTreeChild(); p; p = p->getNextTreeSibling(), ++index) {
+        if (p == packet) {
+            if (index < _packets.count && [_packets pointerAtIndex:index] == packet) {
+                _recentPacketIndex = index;
+                return index;
+            } else {
+                NSLog(@"ERROR: Mismatch between packet indices and the packet tree.");
+                return -1;
+            }
+        }
+    }
+    return -1;
 }
 
 - (NSIndexPath*)pathForPacket:(regina::NPacket*)packet {
-    NSNumber *packetIndex = [_packetIndices objectForKey:[NSValue valueWithPointer:packet]];
-    if (packetIndex == nil)
+    int index = [self packetIndexForPacket:packet];
+    if (index < 0)
         return nil;
-    int i = packetIndex.intValue;
-    if (_subtreeRow == 0 || _subtreeRow > i)
-        return [NSIndexPath indexPathForRow:i inSection:0];
+    if (_subtreeRow == 0 || _subtreeRow > index)
+        return [NSIndexPath indexPathForRow:index inSection:0];
     else
-        return [NSIndexPath indexPathForRow:(i + 1) inSection:0];
+        return [NSIndexPath indexPathForRow:(index + 1) inSection:0];
 }
 
 - (NSIndexPath*)pathForPacketIndex:(int)index {
@@ -276,12 +285,16 @@
             childIndex = _packets.count;
             [_packets addPointer:child];
         } else {
+            // This requires a linear scan to find childIndex, but the good news
+            // is that the linear scan only happens if the insertion is *not* at
+            // the end of the list.  I cannot offhand think of a scenario in which
+            // this can even happen for the iOS version.
             childIndex = [self packetIndexForPacket:child->getNextTreeSibling()] - 1;
             NSAssert(childIndex >= 0, @"childWasAddedTo: childIndex should be non-negative.");
             [_packets insertPointer:child atIndex:childIndex];
         }
-        [_packetIndices setObject:[NSNumber numberWithInt:childIndex] forKey:[NSValue valueWithPointer:child]];
 
+        _recentPacketIndex = childIndex;
         path = [self pathForPacketIndex:childIndex];
         [self.tableView insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationAutomatic];
     } else {
@@ -325,7 +338,9 @@
 
 - (void)renameDone:(NSIndexPath *)path result:(NSString *)result
 {
-    [self packetForPath:path]->setPacketLabel([[result stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] UTF8String]);
+    _recentPacketIndex = [self packetIndexForPath:path];
+    regina::NPacket* p = static_cast<regina::NPacket*>([_packets pointerAtIndex:_recentPacketIndex]);
+    p->setPacketLabel([[result stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] UTF8String]);
 }
 
 #pragma mark - Table view
@@ -382,8 +397,10 @@
         self.actionPath = indexPath;
         CGRect cell = [tableView cellForRowAtIndexPath:indexPath].frame;
         
+        _recentPacketIndex = [self packetIndexForPath:indexPath];
+        regina::NPacket* p = static_cast<regina::NPacket*>([_packets pointerAtIndex:_recentPacketIndex]);
+
         NSString* deleteMsg;
-        regina::NPacket* p = [self packetForPath:indexPath];
         unsigned long totalPackets = p->getNumberOfDescendants();
         if (totalPackets == 0)
             deleteMsg = @"Delete packet";
@@ -406,40 +423,41 @@
         // Nothing more to do here.
         return;
     }
-    if (_subtreeRow == indexPath.row + 1) {
-        // The user has selected the packet whose browse-subtree cell is
-        // already visible.
-        [self viewPacket:[self packetForPath:indexPath]];
-        return;
+
+    _recentPacketIndex = [self packetIndexForPath:indexPath];
+    regina::NPacket* p = static_cast<regina::NPacket*>([_packets pointerAtIndex:_recentPacketIndex]);
+
+    if (_subtreeRow != indexPath.row + 1) {
+        // The subtree row might need to change.
+        NSInteger oldSubtreeRow = _subtreeRow;
+
+        if (p->getPacketType() != regina::NContainer::packetType && p->getFirstTreeChild()) {
+            // The subtree row should appear beneath this packet.
+            _subtreeRow = _recentPacketIndex + 1;
+            if (oldSubtreeRow == 0) {
+                [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:
+                                                   [NSIndexPath indexPathForRow:_subtreeRow inSection:0]]
+                                 withRowAnimation:UITableViewRowAnimationTop];
+            } else {
+                [tableView beginUpdates];
+                [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:
+                                                   [NSIndexPath indexPathForRow:oldSubtreeRow inSection:0]]
+                                 withRowAnimation:UITableViewRowAnimationTop];
+                [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:
+                                                   [NSIndexPath indexPathForRow:_subtreeRow inSection:0]]
+                                 withRowAnimation:UITableViewRowAnimationTop];
+                [tableView endUpdates];
+            }
+        } else {
+            // The subtree row should disappear, since we do not offer it for the selected packet.
+            _subtreeRow = 0;
+            if (oldSubtreeRow > 0)
+                [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:
+                                                   [NSIndexPath indexPathForRow:oldSubtreeRow inSection:0]]
+                                 withRowAnimation:UITableViewRowAnimationTop];
+        }
     }
 
-    NSInteger oldSubtreeRow = _subtreeRow;
-    
-    NSInteger packetIndex = [self packetIndexForPath:indexPath];
-    regina::NPacket* p = static_cast<regina::NPacket*>([_packets pointerAtIndex:packetIndex]);
-    if (p->getPacketType() != regina::NContainer::packetType && p->getFirstTreeChild()) {
-        _subtreeRow = packetIndex + 1;
-        if (oldSubtreeRow == 0) {
-            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:
-                                               [NSIndexPath indexPathForRow:_subtreeRow inSection:0]]
-                             withRowAnimation:UITableViewRowAnimationTop];
-        } else {
-            [tableView beginUpdates];
-            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:
-                                               [NSIndexPath indexPathForRow:oldSubtreeRow inSection:0]]
-                             withRowAnimation:UITableViewRowAnimationTop];
-            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:
-                                               [NSIndexPath indexPathForRow:_subtreeRow inSection:0]]
-                             withRowAnimation:UITableViewRowAnimationTop];
-            [tableView endUpdates];
-        }
-    } else {
-        _subtreeRow = 0;
-        if (oldSubtreeRow > 0)
-            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:
-                                               [NSIndexPath indexPathForRow:oldSubtreeRow inSection:0]]
-                             withRowAnimation:UITableViewRowAnimationTop];
-    }
     if (p->getPacketType() != regina::NContainer::packetType)
         [self viewPacket:p];
 }
@@ -452,7 +470,6 @@
         regina::NPacket* packet = static_cast<regina::NPacket*>([_packets pointerAtIndex:packetIndex]);
 
         [_packets removePointerAtIndex:packetIndex];
-        [_packetIndices removeObjectForKey:[NSValue valueWithPointer:packet]];
 
         if (_subtreeRow == self.actionPath.row + 1) {
             // We need to remove the subtree cell also.
