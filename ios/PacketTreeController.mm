@@ -43,10 +43,10 @@
 #import "packet/ncontainer.h"
 #import "packet/ntext.h"
 
-#pragma mark - Packet tree row
-
 // TODO: Rename packets.
 // TODO: Move packets around the tree.
+
+#pragma mark - Packet tree row
 
 @interface PacketTreeRow : NSObject
 
@@ -84,8 +84,6 @@
     NSIndexPath* actionIndexPath;
     __weak UIPopoverController* _newPacketPopover;
 }
-
-- (void)fill;
 
 @end
 
@@ -153,19 +151,16 @@
     [self refreshPackets];
 }
 
-- (void)fill {
+- (void)refreshPackets {
     if (! _node)
         return;
-    
+
     _rows = [NSMutableArray array];
-    
+
     regina::NPacket* p;
     for (p = _node->getFirstTreeChild(); p; p = p->getNextTreeSibling())
         [_rows addObject:[PacketTreeRow packetTreeRowWithPacket:p subtree:false]];
-}
 
-- (void)refreshPackets {
-    [self fill];
     [self.tableView reloadData];
 }
 
