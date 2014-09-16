@@ -175,7 +175,19 @@
 }
 
 - (void)viewPacket:(regina::NPacket *)p {
-    self.detail.packet = p;
+    if (p->getPacketType() != regina::PACKET_CONTAINER) {
+        // View this packet in detail.
+        self.detail.packet = p;
+    }
+
+    if (p->getTreeParent() == self.node) {
+        // This is one of the packets in the master list.
+        // Select it (if this is safe), and make sure it is visible.
+        NSIndexPath* path = [self pathForPacket:p];
+        if (p->getPacketType() != regina::PACKET_CONTAINER && ! [self.tableView.indexPathForSelectedRow isEqual:path])
+            [self.tableView selectRowAtIndexPath:path animated:NO scrollPosition:UITableViewScrollPositionNone];
+        [self.tableView scrollToRowAtIndexPath:[self pathForPacket:p] atScrollPosition:UITableViewScrollPositionNone animated:YES];
+    }
 }
 
 - (void)newPacket:(regina::PacketType)type {
@@ -279,8 +291,12 @@
             [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
 
+    // Disable the following code, since the new packet actions will call viewPacket:,
+    // which scrolls the table anyway.
+    /*
     if (path)
         [self.tableView scrollToRowAtIndexPath:path atScrollPosition:UITableViewScrollPositionNone animated:YES];
+     */
 }
 
 - (void)childWasRemovedFrom:(regina::NPacket *)packet child:(regina::NPacket *)child inParentDestructor:(bool)d {

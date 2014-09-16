@@ -94,6 +94,7 @@
             regina::NContainer* c = new regina::NContainer();
             c->setPacketLabel("Container");
             spec.tree.node->insertChildLast(c);
+            [spec.tree viewPacket:c];
             break;
         }
         case regina::PACKET_TEXT:
@@ -103,7 +104,7 @@
             t->setPacketLabel("Text");
             t->setText("Type your text here.");
             spec.tree.node->insertChildLast(t);
-            spec.tree.detail.packet = t;
+            [spec.tree viewPacket:t];
             break;
         }
         case regina::PACKET_TRIANGULATION:
