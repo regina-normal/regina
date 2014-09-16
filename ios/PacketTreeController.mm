@@ -295,9 +295,10 @@
         if (packet->getTreeParent())
             self.title = [NSString stringWithUTF8String:packet->getPacketLabel().c_str()];
     } else {
+        // Don't animate, since this was most likely a result of the user editing the cell.
         NSIndexPath* path = [self pathForPacket:packet];
         if (path)
-            [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationNone];
     }
 }
 
