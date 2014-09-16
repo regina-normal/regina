@@ -36,6 +36,8 @@
 
 @interface DocumentListController () {
     DetailViewController *_detail;
+    UIEdgeInsets _originalContentInsets;
+    UIEdgeInsets _originalScrollIndicatorInsets;
 }
 @end
 
@@ -50,6 +52,17 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     _detail.doc = nil;
+
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    [nc addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
+    [nc addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    [nc removeObserver:self name:UIKeyboardDidShowNotification object:nil];
+    [nc removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (void)viewDidLoad
@@ -86,6 +99,34 @@
         // We are creating a new document from scratch.
         [[segue destinationViewController] newDocumentWithDetail:_detail];
     }
+}
+
+- (void)keyboardDidShow:(NSNotification*)notification
+{
+    _originalContentInsets = self.tableView.contentInset;
+    _originalScrollIndicatorInsets = self.tableView.scrollIndicatorInsets;
+
+    CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    CGFloat kbHeight = UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation]) ? kbSize.height : kbSize.width;
+
+    self.tableView.contentInset = UIEdgeInsetsMake(_originalContentInsets.top,
+                                                   _originalContentInsets.left,
+                                                   kbHeight,
+                                                   _originalContentInsets.right);
+
+    self.tableView.scrollIndicatorInsets = UIEdgeInsetsMake(_originalScrollIndicatorInsets.top,
+                                                            _originalScrollIndicatorInsets.left,
+                                                            kbHeight,
+                                                            _originalScrollIndicatorInsets.right);
+
+    if (self.actionPath)
+        [self.tableView scrollToRowAtIndexPath:self.actionPath atScrollPosition:UITableViewScrollPositionNone animated:YES];
+}
+
+- (void)keyboardWillHide:(NSNotification*)notification
+{
+    self.tableView.contentInset = _originalContentInsets;
+    self.tableView.scrollIndicatorInsets = _originalScrollIndicatorInsets;
 }
 
 @end

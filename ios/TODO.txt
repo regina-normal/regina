@@ -71,6 +71,7 @@ LONG-TERM:
 Restore arm64 build (0ed85f0).
 Find a way to install *.tdb in a subdirectory beneath Resources/.
 Rename actions: tap outside the text field -> end edit
+Rename actions: ensure table view insets are OK if the device is rotated while the keyboard is shown
 
 Support state preservation and restoration.  See:
   https://developer.apple.com/library/ios/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/StatePreservation/StatePreservation.html

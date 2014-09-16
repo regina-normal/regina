@@ -326,10 +326,6 @@ enum {
             [bg addSubview:f];
             [self.tableView addSubview:bg];
             [f becomeFirstResponder];
-
-            // TODO: Make sure the cell being renamed is visible.
-            // TODO: self.tableView.contentInset = UIEdgeInsetsMake(TODO);
-            [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
         }
     }
 }
