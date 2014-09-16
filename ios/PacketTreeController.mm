@@ -46,10 +46,38 @@
 // TODO: Move packets around the tree.
 
 @interface PacketTreeController () <UIAlertViewDelegate, UIActionSheetDelegate, PacketDelegate> {
+    /**
+     * Stores the immediate children of the subtree packet (self.node), in order.
+     * This should always be in sync with the packets as they are stored in Regina's calculation engine.
+     */
     NSPointerArray *_packets;
-    NSInteger _subtreeRow;
+
+    /**
+     * Stores the index of the packet with which the user last interacted.
+     * This is simply used as a hint for packet-to-index lookup,
+     * in the hope of avoiding a linear scan through the _packets array.
+     *
+     * It does not matter if this becomes out of date - the only possible consequence
+     * is that packet-to-index lookup may run in linear time instead of constant time.
+     */
     NSInteger _recentPacketIndex;
+
+    /**
+     * Listens on the subtree packet (self.node), as well as all of its immediate children.
+     */
     PacketListenerIOS* _listener;
+
+    /**
+     * Stores the row of the table containing the "Browse subpackets" cell, or 0 if
+     * this cell is not currently visible.
+     */
+    NSInteger _subtreeRow;
+
+    /**
+     * Stores the "New packet" popover menu.
+     * This is a zeroing weak reference, which means it should be set to nil
+     * automatically when the popover is dismissed.
+     */
     __weak UIPopoverController* _newPacketPopover;
 }
 
