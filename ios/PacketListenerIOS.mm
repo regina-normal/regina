@@ -39,52 +39,66 @@
 class NPacketListenerObjC : public regina::NPacketListener {
 private:
     void* _object;
+    regina::NPacket* _listenChildrenOf;
 public:
-    inline NPacketListenerObjC(void* object) : _object(object) {
+    inline NPacketListenerObjC(void* object, regina::NPacket* listenChildrenOf) : _object(object), _listenChildrenOf(listenChildrenOf) {
     }
     
     inline void packetToBeChanged(regina::NPacket* packet) {
-        [(__bridge id)_object packetToBeChanged:packet];
+        if ([(__bridge id)_object respondsToSelector:@selector(packetToBeChanged:)])
+            [(__bridge id)_object packetToBeChanged:packet];
     }
     
     inline void packetWasChanged(regina::NPacket* packet) {
-        [(__bridge id)_object packetWasChanged:packet];
+        if ([(__bridge id)_object respondsToSelector:@selector(packetWasChanged:)])
+            [(__bridge id)_object packetWasChanged:packet];
     }
     
     inline void packetToBeRenamed(regina::NPacket* packet) {
-        [(__bridge id)_object packetToBeRenamed:packet];
+        if ([(__bridge id)_object respondsToSelector:@selector(packetToBeRenamed:)])
+            [(__bridge id)_object packetToBeRenamed:packet];
     }
     
     inline void packetWasRenamed(regina::NPacket* packet) {
-        [(__bridge id)_object packetWasRenamed:packet];
+        if ([(__bridge id)_object respondsToSelector:@selector(packetWasRenamed:)])
+            [(__bridge id)_object packetWasRenamed:packet];
     }
     
     inline void packetToBeDestroyed(regina::NPacket* packet) {
-        [(__bridge id)_object packetToBeDestroyed:packet];
+        if ([(__bridge id)_object respondsToSelector:@selector(packetToBeDestroyed:)])
+            [(__bridge id)_object packetToBeDestroyed:packet];
     }
     
     inline void childToBeAdded(regina::NPacket* packet, regina::NPacket* child) {
-        [(__bridge id)_object childToBeAddedTo:packet child:child];
+        if (packet == _listenChildrenOf)
+            child->listen(this);
+        if ([(__bridge id)_object respondsToSelector:@selector(childToBeAddedTo:child:)])
+            [(__bridge id)_object childToBeAddedTo:packet child:child];
     }
     
     inline void childWasAdded(regina::NPacket* packet, regina::NPacket* child) {
-        [(__bridge id)_object childWasAddedTo:packet child:child];
+        if ([(__bridge id)_object respondsToSelector:@selector(childWasAddedTo:child:)])
+            [(__bridge id)_object childWasAddedTo:packet child:child];
     }
     
     inline void childToBeRemoved(regina::NPacket* packet, regina::NPacket* child, bool inParentDestructor) {
-        [(__bridge id)_object childToBeRemovedFrom:packet child:child inParentDestructor:inParentDestructor];
+        if ([(__bridge id)_object respondsToSelector:@selector(childToBeRemovedFrom:child:inParentDestructor:)])
+            [(__bridge id)_object childToBeRemovedFrom:packet child:child inParentDestructor:inParentDestructor];
     }
     
     inline void childWasRemoved(regina::NPacket* packet, regina::NPacket* child, bool inParentDestructor) {
-        [(__bridge id)_object childWasRemovedFrom:packet child:child inParentDestructor:inParentDestructor];
+        if ([(__bridge id)_object respondsToSelector:@selector(childWasRemovedFrom:child:inParentDestructor:)])
+            [(__bridge id)_object childWasRemovedFrom:packet child:child inParentDestructor:inParentDestructor];
     }
     
     inline void childrenToBeReordered(regina::NPacket* packet) {
-        [(__bridge id)_object childrenToBeReordered:packet];
+        if ([(__bridge id)_object respondsToSelector:@selector(childrenToBeReordered:)])
+            [(__bridge id)_object childrenToBeReordered:packet];
     }
     
     inline void childrenWereReordered(regina::NPacket* packet) {
-        [(__bridge id)_object childrenWereReordered:packet];
+        if ([(__bridge id)_object respondsToSelector:@selector(childrenWereReordered:)])
+            [(__bridge id)_object childrenWereReordered:packet];
     }
 };
 
@@ -97,50 +111,36 @@ public:
 
 @implementation PacketListenerIOS
 
-- (id)init {
+- (id)initWithPacket:(regina::NPacket *)packet delegate:(id<PacketDelegate>)delegate listenChildren:(BOOL)listenChildren
+{
     self = [super init];
-    if (self)
-        _wrapper = new NPacketListenerObjC((__bridge void*)self);
+    if (self) {
+        _wrapper = new NPacketListenerObjC((__bridge void*)delegate, listenChildren ? packet : 0);
+        packet->listen(_wrapper);
+
+        if (listenChildren)
+            for (regina::NPacket* p = packet->getFirstTreeChild(); p; p = p->getNextTreeSibling())
+                p->listen(_wrapper);
+    }
     return self;
 }
 
-- (void)dealloc {
++ (id)listenerWithPacket:(regina::NPacket *)packet delegate:(id<PacketDelegate>)delegate listenChildren:(BOOL)listenChildren
+{
+    return [[PacketListenerIOS alloc] initWithPacket:packet delegate:delegate listenChildren:listenChildren];
+}
+
+- (void)permanentlyUnlisten
+{
+    // This implicitly calls packet->unlisten(_wrapper) on every packet that
+    // we are listening to.
     delete _wrapper;
+    _wrapper = 0;
 }
 
-- (void)listen:(regina::NPacket*)packet {
-    packet->listen(_wrapper);
-}
-- (void)unlisten:(regina::NPacket*)packet {
-    packet->unlisten(_wrapper);
-}
-- (void)unlistenFromAllPackets {
-    _wrapper->unregisterFromAllPackets();
-}
-
-#pragma mark Empty callbacks
-
-- (void)packetToBeChanged:(regina::NPacket*)packet {
-}
-- (void)packetWasChanged:(regina::NPacket*)packet {
-}
-- (void)packetToBeRenamed:(regina::NPacket*)packet {
-}
-- (void)packetWasRenamed:(regina::NPacket*)packet {
-}
-- (void)packetToBeDestroyed:(regina::NPacket*)packet {
-}
-- (void)childToBeAddedTo:(regina::NPacket*)packet child:(regina::NPacket*)child {
-}
-- (void)childWasAddedTo:(regina::NPacket*)packet child:(regina::NPacket*)child {
-}
-- (void)childToBeRemovedFrom:(regina::NPacket*)packet child:(regina::NPacket*)child inParentDestructor:(bool)d {
-}
-- (void)childWasRemovedFrom:(regina::NPacket*)packet child:(regina::NPacket*)child inParentDestructor:(bool)d {
-}
-- (void)childrenToBeReordered:(regina::NPacket*)packet {
-}
-- (void)childrenWereReordered:(regina::NPacket*)packet {
+- (void)dealloc
+{
+    delete _wrapper;
 }
 
 @end

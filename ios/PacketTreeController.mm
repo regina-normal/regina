@@ -75,63 +75,9 @@
 
 @end
 
-#pragma mark - Custom packet listener
-
-@interface PacketTreeListener : PacketListenerIOS {
-    PacketTreeController* _tree;
-}
-- (id)initWithTree:(PacketTreeController*)tree;
-@end
-
-@implementation PacketTreeListener
-
-- (id)initWithTree:(PacketTreeController *)tree {
-    self = [super init];
-    if (self) {
-        _tree = tree;
-        
-        // Listen on both the subtree root and its immediate children.
-        [self listen:_tree.node];
-        
-        for (regina::NPacket* p = _tree.node->getFirstTreeChild(); p; p = p->getNextTreeSibling())
-            [self listen:p];
-        
-        [tree refreshPackets];
-    }
-    return self;
-}
-
-- (void)packetWasChanged:(regina::NPacket *)packet {
-    [_tree.document setDirty];
-}
-
-- (void)packetWasRenamed:(regina::NPacket *)packet {
-    // TODO: listener packetWasRenamed - is this correct?
-    [_tree.document setDirty];
-    [_tree refreshPackets];
-}
-
-- (void)childWasAddedTo:(regina::NPacket*)packet child:(regina::NPacket*)child {
-    // TODO: listener childWasAddedTo - is this correct?
-    [_tree.document setDirty];
-    [_tree refreshPackets];
-    if (packet == _tree.node)
-        [self listen:child];
-}
-
-- (void)childWasRemovedFrom:(regina::NPacket *)packet child:(regina::NPacket *)child inParentDestructor:(bool)d {
-    [_tree.document setDirty];
-}
-
-- (void)childrenWereReordered:(regina::NPacket *)packet {
-    [_tree.document setDirty];
-}
-
-@end
-
 #pragma mark - Packet tree controller
 
-@interface PacketTreeController () <UIAlertViewDelegate, UIActionSheetDelegate> {
+@interface PacketTreeController () <UIAlertViewDelegate, UIActionSheetDelegate, PacketDelegate> {
     NSMutableArray *_rows;
     NSInteger _subtreeRow;
     PacketListenerIOS* _listener;
@@ -157,8 +103,9 @@
         }
         NSLog(@"Created.");
         _node = doc.tree;
-        _listener = [[PacketTreeListener alloc] initWithTree:self];
+        _listener = [PacketListenerIOS listenerWithPacket:_node delegate:self listenChildren:YES];
         self.title = doc.localizedName;
+        [self refreshPackets];
     }];
 }
 
@@ -190,8 +137,9 @@
         }
         NSLog(@"Opened.");
         _node = doc.tree;
-        _listener = [[PacketTreeListener alloc] initWithTree:self];
+        _listener = [PacketListenerIOS listenerWithPacket:_node delegate:self listenChildren:YES];
         self.title = doc.localizedName;
+        [self refreshPackets];
     }];
     
     _detail.doc = doc;
@@ -200,9 +148,9 @@
 - (void)openSubtree:(regina::NPacket *)p detail:(DetailViewController *)d {
     _detail = d;
     _node = p;
-    [self setTitle:[NSString stringWithUTF8String:p->getPacketLabel().c_str()]];
-
-    _listener = [[PacketTreeListener alloc] initWithTree:self];
+    _listener = [PacketListenerIOS listenerWithPacket:_node delegate:self listenChildren:YES];
+    self.title = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
+    [self refreshPackets];
 }
 
 - (void)fill {
@@ -241,6 +189,11 @@
         return;
 
     [PacketManagerIOS newPacket:spec];
+}
+
+- (void)dealloc
+{
+    [_listener permanentlyUnlisten];
 }
 
 - (ReginaDocument *)document
@@ -284,7 +237,38 @@
     }
 }
 
-#pragma mark - Table View
+#pragma mark - Packet listener
+
+- (void)packetWasChanged:(regina::NPacket *)packet {
+    [self.document setDirty];
+}
+
+- (void)packetWasRenamed:(regina::NPacket *)packet {
+    // TODO: Refresh only the necessary table cell.
+    [self.document setDirty];
+    [self refreshPackets];
+}
+
+- (void)childWasAddedTo:(regina::NPacket*)packet child:(regina::NPacket*)child {
+    // TODO: Scroll to the new packet.
+    // TODO: Refresh only the necessary bits of the tree.
+    [self.document setDirty];
+    [self refreshPackets];
+}
+
+- (void)childWasRemovedFrom:(regina::NPacket *)packet child:(regina::NPacket *)child inParentDestructor:(bool)d {
+    // No need to update the table, since this action can only have happened as a result
+    // of user interaction with the table.
+    [self.document setDirty];
+}
+
+- (void)childrenWereReordered:(regina::NPacket *)packet {
+    // No need to update the table, since this action can only have happened as a result
+    // of user interaction with the table.
+    [self.document setDirty];
+}
+
+#pragma mark - Table view
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {

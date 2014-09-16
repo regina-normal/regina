@@ -36,12 +36,14 @@ namespace regina {
     class NPacket;
 }
 
-@interface PacketListenerIOS : NSObject
-
-- (void)listen:(regina::NPacket*)packet;
-- (void)unlisten:(regina::NPacket*)packet;
-- (void)unlistenFromAllPackets;
-
+/**
+ * A protocol that mirrors Regina's C++ NPacketListener interface.
+ *
+ * Objects that wish to respond to changes to the packet tree should
+ * implement the relevant methods from this protocol.
+ */
+@protocol PacketDelegate <NSObject>
+@optional
 - (void)packetToBeChanged:(regina::NPacket*)packet;
 - (void)packetWasChanged:(regina::NPacket*)packet;
 - (void)packetToBeRenamed:(regina::NPacket*)packet;
@@ -53,5 +55,43 @@ namespace regina {
 - (void)childWasRemovedFrom:(regina::NPacket*)packet child:(regina::NPacket*)child inParentDestructor:(bool)d;
 - (void)childrenToBeReordered:(regina::NPacket*)packet;
 - (void)childrenWereReordered:(regina::NPacket*)packet;
+@end
+
+/**
+ * An object that listens for changes to a packet tree and responds
+ * by calling the corresponding methods for a given delegate object.
+ *
+ * This class essentially acts as a bridge between the C++ NPacketListener code
+ * and the Objective-C protocol mechanisms.
+ *
+ * \warning This class does not manage lifespans at all.  You must ensure that,
+ * if the listener might outlive the delegate object, then the method
+ * permanentlyUnlisten: is called before the delegate is destroyed.
+ */
+@interface PacketListenerIOS : NSObject
+
+/**
+ * Initialises a new packet listener, listening to the given packet and
+ * sending events to the given delegate object.  See
+ * listenerWithPacket:delegate:listenChildren: for further details.
+ */
+- (id)initWithPacket:(regina::NPacket*)packet delegate:(id<PacketDelegate>)delegate listenChildren:(BOOL)listenChildren;
+
+/**
+ * Creates a new packet listener, listening to the given packet and
+ * sending events to the given delegate object.
+ *
+ * @param listenChildren If \c YES, then this will always listen to not only
+ * the given packet but also all of its immediate children (but not descendants at a
+ * deeper level in the packet tree).  This behaviour will be maintained automatically as
+ * packets are added and/or removed from the packet tree.
+ */
++ (id)listenerWithPacket:(regina::NPacket*)packet delegate:(id<PacketDelegate>)delegate listenChildren:(BOOL)listenChildren;
+
+/**
+ * Unregisters this listener from all packets that it is currently listening to.
+ * This operation cannot be undone.
+ */
+- (void)permanentlyUnlisten;
 
 @end
