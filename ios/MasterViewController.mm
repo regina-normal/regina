@@ -188,9 +188,6 @@ enum {
     
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
     
-    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newDocument:)];
-    self.navigationItem.rightBarButtonItem = addButton;
-
     self.docURLs = [NSMutableArray array];
     self.docsByName = [NSMutableDictionary dictionary];
 }
@@ -264,7 +261,7 @@ enum {
     return [self openURL:url preferredName:nil];
 }
 
-- (void)newDocument:(id)sender
+- (IBAction)newDocument:(id)sender
 {
     UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil
                                                        delegate:self

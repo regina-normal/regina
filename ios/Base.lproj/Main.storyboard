@@ -379,7 +379,13 @@
                             <outletCollection property="gestureRecognizers" destination="2db-rL-tGN" appends="YES" id="DSW-Be-rmb"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Documents" id="Zdf-7t-Un8"/>
+                    <navigationItem key="navigationItem" title="Documents" id="Zdf-7t-Un8">
+                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="add" id="IQq-2W-V44">
+                            <connections>
+                                <action selector="newDocument:" destination="7bK-jq-Zjz" id="3Jn-e3-CT1"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <segue destination="tA5-Tr-Mbx" kind="push" identifier="openInbox" id="sZ3-q9-8Px"/>
                         <segue destination="tA5-Tr-Mbx" kind="push" identifier="openNew" id="PKC-M9-EqR"/>
