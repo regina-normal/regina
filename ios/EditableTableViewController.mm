@@ -30,65 +30,63 @@
  *                                                                        *
  **************************************************************************/
 
-#import "DetailViewController.h"
-#import "DocumentListController.h"
-#import "PacketTreeController.h"
+#import "EditableTableViewController.h"
 
-@interface DocumentListController () {
-    DetailViewController *_detail;
+@interface EditableTableViewController () {
     UIEdgeInsets _originalContentInsets;
     UIEdgeInsets _originalScrollIndicatorInsets;
 }
 @end
 
-@implementation DocumentListController
-
-- (void)awakeFromNib
-{
-    self.clearsSelectionOnViewWillAppear = NO;
-    [super awakeFromNib];
-}
+@implementation EditableTableViewController
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    _detail.doc = nil;
+
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    [nc addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
+    [nc addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }
 
-- (void)viewDidLoad
+- (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewDidLoad];
+    [super viewWillDisappear:animated];
 
-    _detail = (DetailViewController*)
-        [[[[self splitViewController] viewControllers] lastObject] topViewController];
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    [nc removeObserver:self name:UIKeyboardDidShowNotification object:nil];
+    [nc removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
-- (ReginaDocument *)documentForIndexPath:(NSIndexPath *)indexPath
+- (void)keyboardDidShow:(NSNotification*)notification
 {
-    // Implemented by subclasses.
-    return nil;
+    _originalContentInsets = self.tableView.contentInset;
+    _originalScrollIndicatorInsets = self.tableView.scrollIndicatorInsets;
+
+    CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    CGFloat kbHeight = UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation]) ?
+        kbSize.height : kbSize.width;
+
+    self.tableView.contentInset = UIEdgeInsetsMake(_originalContentInsets.top,
+                                                   _originalContentInsets.left,
+                                                   kbHeight,
+                                                   _originalContentInsets.right);
+
+    self.tableView.scrollIndicatorInsets = UIEdgeInsetsMake(_originalScrollIndicatorInsets.top,
+                                                            _originalScrollIndicatorInsets.left,
+                                                            kbHeight,
+                                                            _originalScrollIndicatorInsets.right);
+
+    if (self.actionPath)
+        [self.tableView scrollToRowAtIndexPath:self.actionPath
+                              atScrollPosition:UITableViewScrollPositionNone
+                                      animated:YES];
 }
 
-- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
+- (void)keyboardWillHide:(NSNotification*)notification
 {
-    return ! self.actionPath;
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Note: the real work for loading a data file happens in a new thread.
-    if ([[segue identifier] isEqualToString:@"openDocument"]) {
-        // The user clicked on a table cell that represents a document.
-        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        ReginaDocument* doc = [self documentForIndexPath:indexPath];
-        [[segue destinationViewController] openDocument:doc detail:_detail];
-    } else if ([[segue identifier] isEqualToString:@"openInbox"]) {
-        // Some other app sent a document to us.
-        // The corresponding ReginaDocument will be contained in sender.
-        [[segue destinationViewController] openDocument:sender detail:_detail];
-    } else if ([[segue identifier] isEqualToString:@"openNew"]) {
-        // We are creating a new document from scratch.
-        [[segue destinationViewController] newDocumentWithDetail:_detail];
-    }
+    self.tableView.contentInset = _originalContentInsets;
+    self.tableView.scrollIndicatorInsets = _originalScrollIndicatorInsets;
 }
 
 @end

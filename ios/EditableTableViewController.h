@@ -31,35 +31,28 @@
  **************************************************************************/
 
 #import <UIKit/UIKit.h>
-#import "EditableTableViewController.h"
-#import "ReginaDocument.h"
-#import "packet/packettype.h"
-
-namespace regina {
-    class NPacket;
-}
-
-@class DetailViewController;
-@class NewPacketSpec;
-
-@interface PacketTreeController : EditableTableViewController
-
-@property (assign, nonatomic, readonly) regina::NPacket* node;
-@property (weak, nonatomic, readonly) DetailViewController* detail;
-
-- (void)newDocumentWithDetail:(DetailViewController*)d;
-- (void)openDocument:(ReginaDocument*)doc detail:(DetailViewController*)d;
-- (void)openSubtree:(regina::NPacket*)p detail:(DetailViewController*)d;
 
 /**
- * Should only need to be called from the internal packet listener.
+ * The view controller for a table that supports actions on cells, such as
+ * renaming or deleting cells.
+ *
+ * This superclass offers a place to register where actions are taking
+ * place (the \a actionPath property), and manages the positioning of the
+ * table as the keyboard appears and disappears.
+ *
+ * All other functionality is left for subclasses to implement.
  */
-- (void)refreshPackets;
+@interface EditableTableViewController : UITableViewController
 
-- (void)viewPacket:(regina::NPacket*)p;
-- (void)newPacket:(regina::PacketType)type;
-
-- (ReginaDocument*)document;
-- (regina::NPacket*)viewingPacket;
+/**
+ * If the user is currently editing a table cell (e.g., renaming
+ * or deleting it), then this stores the corresponding index in the table.
+ * Otherwise this property is \a nil.
+ *
+ * Subclasses should update this property as the user initiates, cancels
+ * and/or completes actions, and should disable appropriate parts of the user
+ * interface whenever it is non-nil.
+ */
+@property (strong, nonatomic) NSIndexPath *actionPath;
 
 @end

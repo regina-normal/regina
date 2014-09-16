@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #import <UIKit/UIKit.h>
+#import "EditableTableViewController.h"
 #import "ReginaDocument.h"
 
 /**
@@ -39,18 +40,7 @@
  *
  * This must be subclassed before it can be used.
  */
-@interface DocumentListController : UITableViewController
-
-/**
- * If the user is currently editing a table cell (e.g., renaming
- * or deleting it), then this stores the corresponding index in the table.
- * Otherwise this property is \a nil.
- *
- * Subclasses should update this property as the user initiates, cancels
- * and/or completes actions, and should disable appropriate parts of the user
- * interface whenever it is non-nil.
- */
-@property (strong, nonatomic) NSIndexPath *actionPath;
+@interface DocumentListController : EditableTableViewController
 
 /**
  * Returns a newly created document corresponding to the given

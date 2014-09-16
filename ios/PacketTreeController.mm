@@ -50,7 +50,6 @@
     NSPointerArray *_packets;
     NSInteger _subtreeRow;
     PacketListenerIOS* _listener;
-    NSIndexPath* actionIndexPath;
     __weak UIPopoverController* _newPacketPopover;
 }
 
@@ -272,7 +271,7 @@
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return ! (_subtreeRow > 0 && indexPath.row == _subtreeRow);
+    return (! self.actionPath) && (! (_subtreeRow > 0 && indexPath.row == _subtreeRow));
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -285,8 +284,11 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (self.actionPath)
+        return;
+
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        actionIndexPath = indexPath;
+        self.actionPath = indexPath;
         CGRect cell = [tableView cellForRowAtIndexPath:indexPath].frame;
         
         NSString* deleteMsg;
@@ -354,37 +356,39 @@
 #pragma mark - Action sheet
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex != actionSheet.destructiveButtonIndex)
-        return;
+    if (buttonIndex == actionSheet.destructiveButtonIndex) {
+        int packetIndex = [self packetIndexForPath:self.actionPath];
+        regina::NPacket* packet = static_cast<regina::NPacket*>([_packets pointerAtIndex:packetIndex]);
 
-    int packetIndex = [self packetIndexForPath:actionIndexPath];
-    regina::NPacket* packet = static_cast<regina::NPacket*>([_packets pointerAtIndex:packetIndex]);
-
-    [_packets removePointerAtIndex:packetIndex];
-    if (_subtreeRow == actionIndexPath.row + 1) {
-        // We need to remove the subtree cell also.
-        NSIndexPath* subtreePath = [NSIndexPath indexPathForRow:_subtreeRow inSection:0];
-        _subtreeRow = 0;
-        [self.tableView deleteRowsAtIndexPaths:@[actionIndexPath, subtreePath]
-                               withRowAnimation:UITableViewRowAnimationFade];
-    } else {
-        [self.tableView deleteRowsAtIndexPaths:@[actionIndexPath]
-                               withRowAnimation:UITableViewRowAnimationFade];
+        [_packets removePointerAtIndex:packetIndex];
+        if (_subtreeRow == self.actionPath.row + 1) {
+            // We need to remove the subtree cell also.
+            NSIndexPath* subtreePath = [NSIndexPath indexPathForRow:_subtreeRow inSection:0];
+            _subtreeRow = 0;
+            [self.tableView deleteRowsAtIndexPaths:@[self.actionPath, subtreePath]
+                                  withRowAnimation:UITableViewRowAnimationFade];
+        } else {
+            [self.tableView deleteRowsAtIndexPaths:@[self.actionPath]
+                                  withRowAnimation:UITableViewRowAnimationFade];
+        }
+        
+        delete packet;
     }
-    
-    delete packet;
+
+    self.actionPath = nil;
 }
 
 #pragma mark - Alert view
 
 - (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    // This method is hooked up to alerts in which we failed to open a document.
-    // When the alert is dismissed, we roll back to the main documents list.
+    // This is a consequence of failing to open a document.
+    // Specifically, this is called after the corresponding "could not open" alert is dismissed.
+    // Pop back to the main documents list.
     
-    // We put it here in willDismissWithButtonIndex so the forward animation
-    // (in which this packet tree controller is pushed) has time to finish,
-    // and we do not end up in a mess with nested push/pop segues.
+    // We put the call to popViewControllerAnimated: here, after the alert is dismissed,
+    // so that the forward animation that pushed this packet tree controller has time to finish
+    // and we can thus avoid errors from nested push/pop segues.
     [self.navigationController popViewControllerAnimated:YES];
 }
 
