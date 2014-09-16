@@ -188,9 +188,6 @@ enum {
     
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
 
-    UILongPressGestureRecognizer *r = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
-    [self.tableView addGestureRecognizer:r];
-
     self.docURLs = [NSMutableArray array];
     self.docsByName = [NSMutableDictionary dictionary];
 }
@@ -283,53 +280,6 @@ enum {
         return [ReginaDocument documentWithURL:[self.docURLs[indexPath.row] url]];
 }
 
-- (IBAction)longPress:(id)sender {
-    UILongPressGestureRecognizer *press = static_cast<UILongPressGestureRecognizer*>(sender);
-    UIGestureRecognizerState state = press.state;
-
-    CGPoint location = [press locationInView:self.tableView];
-    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
-
-    if (self.actionPath) {
-        // We are in the middle of one action; do not start another.
-        return;
-    }
-
-    if (indexPath && indexPath.section == 1) {
-        if (state == UIGestureRecognizerStateBegan) {
-            self.actionPath = indexPath;
-
-            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-
-            // Create a background sheet to hide the old cell contents.
-            // The inset of dy=1 is so we don't cover the cell dividers.
-            UIView* bg = [[UIView alloc] initWithFrame:CGRectInset(cell.frame, 0, 1)];
-            bg.backgroundColor = cell.backgroundColor;
-
-            // The text field itself will be smaller.
-            // Add a small additional y inset, and an x inset that aligns the text field
-            // with the labels in other cells.
-            CGRect frame = CGRectMake(0, 0, CGRectGetWidth(bg.frame), CGRectGetHeight(bg.frame));
-            frame = CGRectInset(frame, CGRectGetMinX(cell.textLabel.frame), 5);
-
-            UITextField* f = [[UITextField alloc] initWithFrame:frame];
-            f.backgroundColor = cell.backgroundColor;
-            f.borderStyle = UITextBorderStyleRoundedRect;
-            f.placeholder = @"Type your document name...";
-            f.clearButtonMode = UITextFieldViewModeAlways;
-            f.text = static_cast<DocumentSpec*>(self.docURLs[indexPath.row]).name;
-            f.returnKeyType = UIReturnKeyDone;
-            f.autocapitalizationType = UITextAutocapitalizationTypeSentences;
-            f.autocorrectionType = UITextAutocorrectionTypeNo;
-            f.delegate = self;
-
-            [bg addSubview:f];
-            [self.tableView addSubview:bg];
-            [f becomeFirstResponder];
-        }
-    }
-}
-
 - (void)refreshDocURLs
 {
     // Flush out the ordered array of documents.
@@ -391,6 +341,103 @@ enum {
         NSLog(@"Warning: refreshURL could not locate URL: %@", url);
         [self refreshDocURLs];
     }
+}
+
+#pragma mark - Editable table view
+
+- (BOOL)renameAllowed:(NSIndexPath *)path
+{
+    return path.section == 1;
+}
+
+- (NSString *)renameInit:(NSIndexPath *)path
+{
+    return static_cast<DocumentSpec*>(self.docURLs[path.row]).name;
+}
+
+- (void)renameDone:(NSIndexPath *)path result:(NSString *)result
+{
+    NSString* text = [result stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if (text.length == 0) {
+        UIAlertView* alert = [[UIAlertView alloc]
+                              initWithTitle:@"Empty Document Name"
+                              message:nil
+                              delegate:nil
+                              cancelButtonTitle:@"Close"
+                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+
+    DocumentSpec* spec = self.docURLs[path.row];
+
+    NSString* filename = [text stringByReplacingOccurrencesOfString:@"/" withString:@":"];
+    if ([filename isEqualToString:spec.name])
+        return;
+
+    if (spec.type == DOC_NATIVE)
+        filename = [filename stringByAppendingPathExtension:@"rga"];
+    NSURL* docsDir = [ReginaDocument docsDir];
+    NSURL* newURL = [docsDir URLByAppendingPathComponent:filename];
+    if ([newURL isEqual:spec.url])
+        return;
+
+    // Some sanity checking to make sure there are no special characters doing unexpected things.
+    NSURL* dir = [newURL URLByDeletingLastPathComponent];
+    if (! [dir isEqual:docsDir]) {
+        NSLog(@"Renamed URL not in documents directory: %@", newURL);
+        UIAlertView* alert = [[UIAlertView alloc]
+                              initWithTitle:@"Cannot Rename"
+                              message:@"It is possible that your new document name contains special characters that I was not expecting."
+                              delegate:nil
+                              cancelButtonTitle:@"Close"
+                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+
+    NSFileManager* manager = [NSFileManager defaultManager];
+    if ([manager fileExistsAtPath:newURL.path]) {
+        UIAlertView* alert = [[UIAlertView alloc]
+                              initWithTitle:@"Name Already Taken"
+                              message:@"Another document is already using this name."
+                              delegate:nil
+                              cancelButtonTitle:@"Close"
+                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+
+    NSLog(@"Renaming: %@ -> %@", spec.url, newURL);
+    if (! [manager moveItemAtURL:spec.url toURL:newURL error:nil]) {
+        NSLog(@"Rename failed.");
+        UIAlertView* alert = [[UIAlertView alloc]
+                              initWithTitle:@"Could Not Rename"
+                              message:nil
+                              delegate:nil
+                              cancelButtonTitle:@"Close"
+                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+
+    // All good.  Update the internal array and the visual table.
+    [self.docURLs removeObjectAtIndex:path.row];
+    [self.docsByName removeObjectForKey:spec.url];
+
+    DocumentSpec* newSpec = [DocumentSpec specWithURL:newURL];
+    NSUInteger newRow = [self.docURLs indexOfObject:newSpec
+                                      inSortedRange:NSMakeRange(0, self.docURLs.count)
+                                            options:NSBinarySearchingInsertionIndex
+                                    usingComparator:^(DocumentSpec* x, DocumentSpec* y) {
+                                        return [x compare:y];
+                                    }];
+    [self.docURLs insertObject:newSpec atIndex:newRow];
+    [self.docsByName setObject:newSpec forKey:newURL];
+    NSIndexPath* newPath = [NSIndexPath indexPathForRow:newRow inSection:1];
+    if (newRow != path.row)
+        [self.tableView moveRowAtIndexPath:path toIndexPath:newPath];
+    [self.tableView reloadRowsAtIndexPaths:@[newPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 #pragma mark - URL Session
@@ -549,106 +596,6 @@ enum {
             self.actionPath = nil;
             break;
     }
-}
-
-#pragma mark - Text Field
-
-- (void)textFieldDidEndEditing:(UITextField *)textField
-{
-    NSIndexPath* renamePath = self.actionPath;
-    NSString* text = [textField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-
-    // The superview of the text field is the empty sheet covering up the old cell contents.
-    // Remove that sheet (and the text field it contains) from the table view.
-    [textField.superview removeFromSuperview];
-    self.actionPath = nil;
-
-    if (text.length == 0) {
-        UIAlertView* alert = [[UIAlertView alloc]
-                              initWithTitle:@"Empty Document Name"
-                              message:nil
-                              delegate:nil
-                              cancelButtonTitle:@"Close"
-                              otherButtonTitles:nil];
-        [alert show];
-        return;
-    }
-
-    DocumentSpec* spec = self.docURLs[renamePath.row];
-
-    NSString* filename = [text stringByReplacingOccurrencesOfString:@"/" withString:@":"];
-    if ([filename isEqualToString:spec.name])
-        return;
-
-    if (spec.type == DOC_NATIVE)
-        filename = [filename stringByAppendingPathExtension:@"rga"];
-    NSURL* docsDir = [ReginaDocument docsDir];
-    NSURL* newURL = [docsDir URLByAppendingPathComponent:filename];
-    if ([newURL isEqual:spec.url])
-        return;
-
-    // Some sanity checking to make sure there are no special characters doing unexpected things.
-    NSURL* dir = [newURL URLByDeletingLastPathComponent];
-    if (! [dir isEqual:docsDir]) {
-        NSLog(@"Renamed URL not in documents directory: %@", newURL);
-        UIAlertView* alert = [[UIAlertView alloc]
-                              initWithTitle:@"Cannot Rename"
-                              message:@"It is possible that your new document name contains special characters that I was not expecting."
-                              delegate:nil
-                              cancelButtonTitle:@"Close"
-                              otherButtonTitles:nil];
-        [alert show];
-        return;
-    }
-
-    NSFileManager* manager = [NSFileManager defaultManager];
-    if ([manager fileExistsAtPath:newURL.path]) {
-        UIAlertView* alert = [[UIAlertView alloc]
-                              initWithTitle:@"Name Already Taken"
-                              message:@"Another document is already using this name."
-                              delegate:nil
-                              cancelButtonTitle:@"Close"
-                              otherButtonTitles:nil];
-        [alert show];
-        return;
-    }
-
-    NSLog(@"Renaming: %@ -> %@", spec.url, newURL);
-    if (! [manager moveItemAtURL:spec.url toURL:newURL error:nil]) {
-        NSLog(@"Rename failed.");
-        UIAlertView* alert = [[UIAlertView alloc]
-                              initWithTitle:@"Could Not Rename"
-                              message:nil
-                              delegate:nil
-                              cancelButtonTitle:@"Close"
-                              otherButtonTitles:nil];
-        [alert show];
-        return;
-    }
-
-    // All good.  Update the internal array and the visual table.
-    [self.docURLs removeObjectAtIndex:renamePath.row];
-    [self.docsByName removeObjectForKey:spec.url];
-
-    DocumentSpec* newSpec = [DocumentSpec specWithURL:newURL];
-    NSUInteger newRow = [self.docURLs indexOfObject:newSpec
-                                      inSortedRange:NSMakeRange(0, self.docURLs.count)
-                                            options:NSBinarySearchingInsertionIndex
-                                    usingComparator:^(DocumentSpec* x, DocumentSpec* y) {
-                                        return [x compare:y];
-                                    }];
-    [self.docURLs insertObject:newSpec atIndex:newRow];
-    [self.docsByName setObject:newSpec forKey:newURL];
-    NSIndexPath* newPath = [NSIndexPath indexPathForRow:newRow inSection:1];
-    if (newRow != renamePath.row)
-        [self.tableView moveRowAtIndexPath:renamePath toIndexPath:newPath];
-    [self.tableView reloadRowsAtIndexPaths:@[newPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-}
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-    [textField resignFirstResponder];
-    return NO;
 }
 
 @end

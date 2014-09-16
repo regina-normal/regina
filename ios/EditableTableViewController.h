@@ -36,9 +36,11 @@
  * The view controller for a table that supports actions on cells, such as
  * renaming or deleting cells.
  *
- * This superclass offers a place to register where actions are taking
- * place (the \a actionPath property), and manages the positioning of the
- * table as the keyboard appears and disappears.
+ * This superclass:
+ *
+ * - offers a place to register where actions are taking place (the \a actionPath property);
+ * - offers a facility for renaming cells using a long press gesture (the \a rename... methods, which must be overridden);
+ * - manages the positioning of the table as the keyboard appears and disappears.
  *
  * All other functionality is left for subclasses to implement.
  */
@@ -54,5 +56,40 @@
  * interface whenever it is non-nil.
  */
 @property (strong, nonatomic) NSIndexPath *actionPath;
+
+/**
+ * Subclasses must override this to indicate whether the user is allowed
+ * to rename the table cell at the given index.
+ * The default implementation simply returns \c NO.
+ *
+ * This is called when a long press is detected.
+ */
+- (BOOL)renameAllowed:(NSIndexPath*)path;
+
+/**
+ * Subclasses must override this to indicate what initial name to offer
+ * the user when they begin a renaming operation.
+ *
+ * The default implementation returns \c nil (which is not a valid value).
+ *
+ * This will only be called when renaming begins.  You may assume that
+ * renameAllowed: returned \c YES.
+ */
+- (NSString*)renameInit:(NSIndexPath*)path;
+
+/**
+ * Subclasses must override this to handle the result of a renaming operation.
+ * When the user finishes typing the new name, this routine will be called.
+ * The subclass implementation is responsible for integrating this back into the
+ * user interface and refreshing the table cell as appropriate.
+ *
+ * The default implementation does nothing.
+ *
+ * This will only be called after renaming is finished.  You may assume
+ * that renameAllowed: returned \c YES.
+ *
+ * @param result The new name as entered by the user.
+ */
+- (void)renameDone:(NSIndexPath*)path result:(NSString*)result;
 
 @end
