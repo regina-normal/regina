@@ -376,7 +376,6 @@
                         <connections>
                             <outlet property="dataSource" destination="7bK-jq-Zjz" id="Gho-Na-rnu"/>
                             <outlet property="delegate" destination="7bK-jq-Zjz" id="RA6-mI-bju"/>
-                            <outletCollection property="gestureRecognizers" destination="2db-rL-tGN" appends="YES" id="DSW-Be-rmb"/>
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Documents" id="Zdf-7t-Un8">
@@ -392,11 +391,6 @@
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rux-fX-hf1" sceneMemberID="firstResponder"/>
-                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="2db-rL-tGN">
-                    <connections>
-                        <action selector="longPress:" destination="7bK-jq-Zjz" id="mU4-Gu-TWL"/>
-                    </connections>
-                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="859" y="-631"/>
         </scene>

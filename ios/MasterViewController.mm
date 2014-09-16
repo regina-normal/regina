@@ -187,7 +187,10 @@ enum {
     [super viewDidLoad];
     
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
-    
+
+    UILongPressGestureRecognizer *r = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
+    [self.tableView addGestureRecognizer:r];
+
     self.docURLs = [NSMutableArray array];
     self.docsByName = [NSMutableDictionary dictionary];
 }
