@@ -46,39 +46,8 @@
 // TODO: Rename packets.
 // TODO: Move packets around the tree.
 
-#pragma mark - Packet tree row
-
-@interface PacketTreeRow : NSObject
-
-@property (assign, nonatomic, readonly) regina::NPacket* packet;
-@property (assign, nonatomic, readonly) bool subtree;
-
-- (id)initWithPacket:(regina::NPacket*)p subtree:(bool)s;
-+ (id)packetTreeRowWithPacket:(regina::NPacket*)p subtree:(bool) s;
-
-@end
-
-@implementation PacketTreeRow
-
-- (id)initWithPacket:(regina::NPacket*)p subtree:(bool)s {
-    self = [super init];
-    if (self) {
-        _packet = p;
-        _subtree = s;
-    }
-    return self;
-}
-
-+ (id)packetTreeRowWithPacket:(regina::NPacket*)p subtree:(bool) s {
-    return [[PacketTreeRow alloc] initWithPacket:p subtree:s];
-}
-
-@end
-
-#pragma mark - Packet tree controller
-
 @interface PacketTreeController () <UIAlertViewDelegate, UIActionSheetDelegate, PacketDelegate> {
-    NSMutableArray *_rows;
+    NSPointerArray *_packets;
     NSInteger _subtreeRow;
     PacketListenerIOS* _listener;
     NSIndexPath* actionIndexPath;
@@ -155,20 +124,28 @@
     if (! _node)
         return;
 
-    _rows = [NSMutableArray array];
+    _packets = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsOpaquePersonality];
 
     regina::NPacket* p;
     for (p = _node->getFirstTreeChild(); p; p = p->getNextTreeSibling())
-        [_rows addObject:[PacketTreeRow packetTreeRowWithPacket:p subtree:false]];
+        [_packets addPointer:p];
 
     [self.tableView reloadData];
 }
 
-- (int)packetIndexFor:(NSIndexPath*)indexPath {
+- (int)packetIndexForPath:(NSIndexPath*)indexPath {
     if (_subtreeRow <= indexPath.row && _subtreeRow > 0)
         return indexPath.row - 1;
     else
         return indexPath.row;
+}
+
+// Note: if indexPath points to the subtree row, this returns the associated packet.
+- (regina::NPacket*)packetForPath:(NSIndexPath*)indexPath {
+    if (_subtreeRow <= indexPath.row && _subtreeRow > 0)
+        return static_cast<regina::NPacket*>([_packets pointerAtIndex:(indexPath.row - 1)]);
+    else
+        return static_cast<regina::NPacket*>([_packets pointerAtIndex:indexPath.row]);
 }
 
 - (void)viewPacket:(regina::NPacket *)p {
@@ -219,9 +196,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"openSubtree"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-
-        NSInteger packetIndex = [self packetIndexFor:indexPath];
-        [[segue destinationViewController] openSubtree:[_rows[packetIndex] packet] detail:self.detail];
+        [[segue destinationViewController] openSubtree:[self packetForPath:indexPath] detail:self.detail];
     } else if ([[segue identifier] isEqualToString:@"newPacket"]) {
         _newPacketPopover = [(UIStoryboardPopoverSegue*)segue popoverController];
         ((NewPacketMenu*)segue.destinationViewController).packetTree = self;
@@ -267,7 +242,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return (_subtreeRow > 0 ? [_rows count] + 1 : [_rows count]);
+    return (_subtreeRow > 0 ? [_packets count] + 1 : [_packets count]);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -275,10 +250,7 @@
     if (_subtreeRow > 0 && indexPath.row == _subtreeRow)
         return [tableView dequeueReusableCellWithIdentifier:@"Subtree" forIndexPath:indexPath];
 
-    NSInteger rowIndex = [self packetIndexFor:indexPath];
-    
-    PacketTreeRow* r = _rows[rowIndex];
-    regina::NPacket* p = [r packet];
+    regina::NPacket* p = [self packetForPath:indexPath];
 
     UITableViewCell *cell;
     if (p->getPacketType() == regina::NContainer::packetType)
@@ -318,7 +290,7 @@
         CGRect cell = [tableView cellForRowAtIndexPath:indexPath].frame;
         
         NSString* deleteMsg;
-        regina::NPacket* p = [_rows[[self packetIndexFor:indexPath]] packet];
+        regina::NPacket* p = [self packetForPath:indexPath];
         unsigned long totalPackets = p->getNumberOfDescendants();
         if (totalPackets == 0)
             deleteMsg = @"Delete packet";
@@ -344,18 +316,16 @@
     if (_subtreeRow == indexPath.row + 1) {
         // The user has selected the packet whose browse-subtree cell is
         // already visible.
-        PacketTreeRow* r = _rows[indexPath.row];
-        [self viewPacket:r.packet];
+        [self viewPacket:[self packetForPath:indexPath]];
         return;
     }
 
-    NSInteger rowIndex = [self packetIndexFor:indexPath];
     NSInteger oldSubtreeRow = _subtreeRow;
     
-    PacketTreeRow* r = _rows[rowIndex];
-    regina::NPacket* p = [r packet];
+    NSInteger packetIndex = [self packetIndexForPath:indexPath];
+    regina::NPacket* p = static_cast<regina::NPacket*>([_packets pointerAtIndex:packetIndex]);
     if (p->getPacketType() != regina::NContainer::packetType && p->getFirstTreeChild()) {
-        _subtreeRow = rowIndex + 1;
+        _subtreeRow = packetIndex + 1;
         if (oldSubtreeRow == 0) {
             [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:
                                                [NSIndexPath indexPathForRow:_subtreeRow inSection:0]]
@@ -378,7 +348,7 @@
                              withRowAnimation:UITableViewRowAnimationTop];
     }
     if (p->getPacketType() != regina::NContainer::packetType)
-        [self viewPacket:r.packet];
+        [self viewPacket:p];
 }
 
 #pragma mark - Action sheet
@@ -387,10 +357,10 @@
     if (buttonIndex != actionSheet.destructiveButtonIndex)
         return;
 
-    int packetIndex = [self packetIndexFor:actionIndexPath];
-    regina::NPacket* packet = [_rows[packetIndex] packet];
+    int packetIndex = [self packetIndexForPath:actionIndexPath];
+    regina::NPacket* packet = static_cast<regina::NPacket*>([_packets pointerAtIndex:packetIndex]);
 
-    [_rows removeObjectAtIndex:[self packetIndexFor:actionIndexPath]];
+    [_packets removePointerAtIndex:packetIndex];
     if (_subtreeRow == actionIndexPath.row + 1) {
         // We need to remove the subtree cell also.
         NSIndexPath* subtreePath = [NSIndexPath indexPathForRow:_subtreeRow inSection:0];
