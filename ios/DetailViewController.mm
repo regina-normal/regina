@@ -33,21 +33,26 @@
 #import "DetailViewController.h"
 #import "MasterViewController.h"
 #import "MBProgressHUD.h"
+#import "PacketListenerIOS.h"
 #import "PacketManagerIOS.h"
 #import "ReginaHelper.h"
 #import "packet/npacket.h"
 #import "packet/packettype.h"
 
-@interface DetailViewController () <UIActionSheetDelegate> {
+@interface DetailViewController () <UIActionSheetDelegate, PacketDelegate> {
     NSString* _menuTitle;
     UIViewController* _sub;
+    PacketListenerIOS* _listener;
     UIDocumentInteractionController* _interact;
 }
 @end
 
 @implementation DetailViewController
 
-#pragma mark - Managing the detail item
+- (void)dealloc
+{
+    [_listener permanentlyUnlisten];
+}
 
 - (void)renamePortraitPulloverButton:(NSString*)title
 {
@@ -104,16 +109,24 @@
 }
 
 - (void)setPacket:(regina::NPacket *)p {
+    if (_packet == p)
+        return;
+
     _packet = p;
     
     if (p == nil) {
         // Display an empty panel.
         [self navigationItem].title = @"";
         [_sub performSegueWithIdentifier:@"embedEmpty" sender:nil];
+
+        [_listener permanentlyUnlisten];
+        _listener = nil;
     } else {
         // Display the packet viewer / editor.
         [self navigationItem].title = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
         [_sub performSegueWithIdentifier:[PacketManagerIOS segueFor:p] sender:self];
+
+        _listener = [PacketListenerIOS listenerWithPacket:p delegate:self listenChildren:NO];
     }
 }
 
@@ -168,6 +181,14 @@
         
         [sheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
     }
+}
+
+#pragma mark - Packet listener
+
+- (void)packetWasRenamed:(regina::NPacket *)packet
+{
+    if (packet == self.packet)
+        self.title = [NSString stringWithUTF8String:packet->getPacketLabel().c_str()];
 }
 
 #pragma mark - Action sheet
