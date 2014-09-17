@@ -30,7 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
+#import "DetailViewController.h"
 #import "PDFViewController.h"
+#import "ReginaHelper.h"
 #import "TempFile.h"
 #import "packet/npdf.h"
 
@@ -107,13 +109,13 @@
 {
     if (parent)
         if (! static_cast<regina::NPDF*>(self.packet)->isNull())
-            self.detailViewController.sharer = self;
+            [ReginaHelper detail].sharer = self;
 }
 
 - (void)willMoveToParentViewController:(UIViewController *)parent
 {
     if (! parent)
-        self.detailViewController.sharer = nil;
+        [ReginaHelper detail].sharer = nil;
 }
 
 - (UIViewController *) documentInteractionControllerViewControllerForPreview: (UIDocumentInteractionController *) controller {
