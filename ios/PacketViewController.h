@@ -31,7 +31,6 @@
  **************************************************************************/
 
 #import <UIKit/UIKit.h>
-#import "DetailViewController.h"
 
 namespace regina {
     class NPacket;
@@ -41,12 +40,6 @@ namespace regina {
 
 @property (assign, nonatomic) regina::NPacket* packet;
 
-/**
- * Returns the controller for the detail view within which
- * this packet view has been embedded.
- */
-- (DetailViewController*)detailViewController;
-
-- (UIDocument*)document;
+- (void)endEditing;
 
 @end

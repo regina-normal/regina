@@ -35,13 +35,15 @@
 #import "MBProgressHUD.h"
 #import "PacketListenerIOS.h"
 #import "PacketManagerIOS.h"
+#import "PacketViewController.h"
 #import "ReginaHelper.h"
+#import "SwitchableSubcontroller.h"
 #import "packet/npacket.h"
 #import "packet/packettype.h"
 
 @interface DetailViewController () <UIActionSheetDelegate, PacketDelegate> {
     NSString* _menuTitle;
-    UIViewController* _sub;
+    SwitchableSubcontroller* _sub;
     PacketListenerIOS* _listener;
     UIDocumentInteractionController* _interact;
 }
@@ -67,6 +69,11 @@
     if (doc == _doc && ! force)
         return;
 
+    // Close any packet viewers that might be open,
+    // push any outstanding changes to the calculation engine,
+    // and segue to whatever the detail panel should display instead.
+    [self setPacket:nil forceRefresh:YES emptySegue:(doc ? nil : @"embedWelcome")];
+
     if (_doc && _doc != doc) {
         NSLog(@"Closing document...");
         ReginaDocument* oldDoc = _doc;
@@ -78,27 +85,17 @@
     }
     
     _doc = doc;
-    _packet = nil;
     _interact = nil;
     
+    // Adjust items on the navigation bar as necessary.
     if (doc) {
-        // Display an empty panel.
-        [self navigationItem].title = @"";
-        [_sub performSegueWithIdentifier:@"embedEmpty" sender:nil];
-        
         [self renamePortraitPulloverButton:@"Packets"];
-        
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
                                                   initWithBarButtonSystemItem:UIBarButtonSystemItemAction
                                                   target:self
                                                   action:@selector(share)];
     } else {
-        // Display the welcome screen.
-        [self navigationItem].title = @"";
-        [_sub performSegueWithIdentifier:@"embedWelcome" sender:nil];
-        
         [self renamePortraitPulloverButton:@"Documents"];
-        
         self.navigationItem.rightBarButtonItem = nil;
     }
 }
@@ -108,16 +105,22 @@
     [self setDoc:doc forceRefresh:NO];
 }
 
-- (void)setPacket:(regina::NPacket *)p {
-    if (_packet == p)
+- (void)setPacket:(regina::NPacket *)p forceRefresh:(BOOL)force emptySegue:(NSString*)emptySegue {
+    if (_packet == p && ! force)
         return;
+
+    if (_packet) {
+        // Push any outstanding changes to the calculation engine.
+        PacketViewController* c = static_cast<PacketViewController*>([_sub subview]);
+        [c endEditing];
+    }
 
     _packet = p;
     
     if (p == nil) {
         // Display an empty panel.
         [self navigationItem].title = @"";
-        [_sub performSegueWithIdentifier:@"embedEmpty" sender:nil];
+        [_sub performSegueWithIdentifier:(emptySegue ? emptySegue : @"embedEmpty") sender:nil];
 
         [_listener permanentlyUnlisten];
         _listener = nil;
@@ -128,6 +131,11 @@
 
         _listener = [PacketListenerIOS listenerWithPacket:p delegate:self listenChildren:NO];
     }
+}
+
+- (void)setPacket:(regina::NPacket *)packet
+{
+    [self setPacket:packet forceRefresh:NO emptySegue:nil];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

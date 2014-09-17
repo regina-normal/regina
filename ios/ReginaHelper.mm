@@ -50,6 +50,11 @@ static DetailViewController* detail;
     return detail;
 }
 
++ (ReginaDocument *)document
+{
+    return detail.doc;
+}
+
 + (void)initWithApp:(AppDelegate *)app
 {
     UISplitViewController *splitViewController = (UISplitViewController *)app.window.rootViewController;

@@ -38,16 +38,9 @@
 
 @implementation SwitchableSubcontroller
 
-- (void)viewDidLoad
+- (UIViewController *)subview
 {
-    [super viewDidLoad];
-	// Do any additional setup after loading the view.
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    return self.childViewControllers.lastObject;
 }
 
 - (void)addAutoLayoutConstraints:(UIView*)subView {
@@ -69,7 +62,7 @@
     to.view.translatesAutoresizingMaskIntoConstraints = NO;
 
     if (self.childViewControllers.count > 0) {
-        UIViewController* from = [self.childViewControllers objectAtIndex:0];
+        UIViewController* from = self.childViewControllers.lastObject;
         
         [from willMoveToParentViewController:nil];
         [self addChildViewController:to];

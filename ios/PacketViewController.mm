@@ -31,35 +31,15 @@
  **************************************************************************/
 
 #import "PacketViewController.h"
+#import "ReginaHelper.h"
 
 @interface PacketViewController ()
-
 @end
 
 @implementation PacketViewController
 
-- (void)viewDidLoad
+- (void)endEditing
 {
-    [super viewDidLoad];
-	// Do any additional setup after loading the view.
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (DetailViewController *)detailViewController
-{
-    // The parent view controller is a SwitchableSubcontroller.
-    // *Its* parent is the detail view controller.
-    return static_cast<DetailViewController*>(self.parentViewController.parentViewController);
-}
-
-- (UIDocument *)document
-{
-    return self.detailViewController.doc;
 }
 
 @end

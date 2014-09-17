@@ -34,4 +34,6 @@
 
 @interface SwitchableSubcontroller : UIViewController
 
+- (UIViewController*)subview;
+
 @end

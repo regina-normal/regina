@@ -35,6 +35,7 @@
 @class AppDelegate;
 @class DetailViewController;
 @class MasterViewController;
+@class ReginaDocument;
 
 /**
  * Gives access to some of the core objects in the user interface.
@@ -52,6 +53,11 @@
  * packet viewers will be placed.
  */
 + (DetailViewController*)detail;
+
+/**
+ * Returns the current working document, or \c nil if no document is open.
+ */
++ (ReginaDocument*)document;
 
 /**
  * Initialises this helper class.  This should be called once at startup.
