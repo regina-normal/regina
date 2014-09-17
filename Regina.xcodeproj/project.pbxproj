@@ -1051,6 +1051,7 @@
 		05B14EB819B424E6002138C0 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0569F92F19B3655C00051091 /* libtokyocabinet.framework */; };
 		05B14EB919B424F9002138C0 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
 		05B62166180B9D7300CCB90B /* title.png in Resources */ = {isa = PBXBuildFile; fileRef = 05B62165180B9D7300CCB90B /* title.png */; };
+		05B7708419C92A5000E2E558 /* ScriptViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B7708319C92A5000E2E558 /* ScriptViewController.mm */; };
 		05B9EC1B18245F2100DCACF3 /* euler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B9EC1A18245F2100DCACF3 /* euler.cpp */; };
 		05B9EC1C18245F2100DCACF3 /* euler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B9EC1A18245F2100DCACF3 /* euler.cpp */; };
 		05BC538F1812BEB000FE9217 /* SwitchableSubcontroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.m */; };
@@ -2206,6 +2207,8 @@
 		05B14EB019B4240D002138C0 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05B14EB419B4240D002138C0 /* mkcensusdb.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mkcensusdb.cpp; sourceTree = "<group>"; };
 		05B62165180B9D7300CCB90B /* title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = title.png; sourceTree = "<group>"; };
+		05B7708219C92A5000E2E558 /* ScriptViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScriptViewController.h; sourceTree = "<group>"; };
+		05B7708319C92A5000E2E558 /* ScriptViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ScriptViewController.mm; sourceTree = "<group>"; };
 		05B9EC1A18245F2100DCACF3 /* euler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = euler.cpp; sourceTree = "<group>"; };
 		05BC538D1812BEB000FE9217 /* SwitchableSubcontroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwitchableSubcontroller.h; sourceTree = "<group>"; };
 		05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwitchableSubcontroller.m; sourceTree = "<group>"; };
@@ -2324,6 +2327,8 @@
 				055FF38119BECF590057462A /* NewTriangulationController.mm */,
 				05943CF219B68C0500E77EF3 /* PDFViewController.h */,
 				05943CF319B68C0500E77EF3 /* PDFViewController.mm */,
+				05B7708219C92A5000E2E558 /* ScriptViewController.h */,
+				05B7708319C92A5000E2E558 /* ScriptViewController.mm */,
 				050313BF1812DB06007F0CBE /* TextViewController.h */,
 				050313C01812DB06007F0CBE /* TextViewController.mm */,
 				0589FAC41814862B0064CD57 /* TriangulationSubcontroller.h */,
@@ -4330,6 +4335,7 @@
 				05A73CAE19B2EFF90099C617 /* open.cpp in Sources */,
 				052FA1881806129B00FAE4DF /* isosig.cpp in Sources */,
 				05A73CA319B2EF5A0099C617 /* matrix_generators.c in Sources */,
+				05B7708419C92A5000E2E558 /* ScriptViewController.mm in Sources */,
 				05F23E1319C1305A005B53B5 /* NewAnglesController.mm in Sources */,
 				052FA1931806129B00FAE4DF /* nmanifold.cpp in Sources */,
 				052FA1E31806129B00FAE4DF /* nsstandard.cpp in Sources */,

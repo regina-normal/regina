@@ -80,6 +80,7 @@
 + (NSString *)segueFor:(regina::NPacket *)p {
     switch (p->getPacketType()) {
         case regina::PACKET_PDF: return @"embedPDF";
+        case regina::PACKET_SCRIPT: return @"embedScript";
         case regina::PACKET_TEXT: return @"embedText";
         case regina::PACKET_TRIANGULATION: return @"embedTriangulation";
         default: return @"embedDefault";
