@@ -33,7 +33,7 @@
 #import "TextViewController.h"
 #import "packet/ntext.h"
 
-@interface TextViewController ()
+@interface TextViewController () <UITextViewDelegate>
 @property (weak, nonatomic) IBOutlet UITextView *detail;
 @end
 
@@ -42,15 +42,23 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
-    regina::NText* t = (regina::NText*)self.packet;
+
+    regina::NText* t = static_cast<regina::NText*>(self.packet);
     _detail.text = [NSString stringWithUTF8String:t->getText().c_str()];
+    _detail.delegate = self;
 }
 
-- (void)didReceiveMemoryWarning
+- (void)endEditing
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    // As a consequence, this calls textViewDidEndEditing:,
+    // which is where the real work is done.
+    [self.detail resignFirstResponder];
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView
+{
+    regina::NText* t = static_cast<regina::NText*>(self.packet);
+    t->setText([textView.text UTF8String]);
 }
 
 @end

@@ -32,6 +32,8 @@
 
 #import "PacketViewController.h"
 
+/**
+ * The controller for viewing and editing text packets.
+ */
 @interface TextViewController : PacketViewController
-
 @end

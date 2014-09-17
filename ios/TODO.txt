@@ -15,7 +15,6 @@ CLEAN UP:
 
 - PacketManagerIOS
 
-- packets/TextViewController
 - packets/TriangulationViewController
 - packets/TriangulationSubcontroller
 - packets/TriGluingsViewController
@@ -26,7 +25,6 @@ CLEAN UP:
 
 WRITE VIEWERS:
 
-- Text:                   one-page, editor
 - PDF:                    one-page
 - Filters:                one-page, editor
 - Script:                 one-page
