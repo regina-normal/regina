@@ -47,7 +47,9 @@
 
 #pragma mark - Script view controller
 
-@interface ScriptViewController () <UITableViewDataSource>
+@interface ScriptViewController () <UITableViewDataSource, UITableViewDelegate> {
+    CGFloat variableHeaderHeight;
+}
 @property (weak, nonatomic) IBOutlet UITableView *variables;
 @property (weak, nonatomic) IBOutlet UITextView *script;
 @end
@@ -61,6 +63,9 @@
     regina::NScript* s = static_cast<regina::NScript*>(self.packet);
     self.script.text = [NSString stringWithUTF8String:s->getText().c_str()];
 
+    variableHeaderHeight = 0;
+
+    self.variables.delegate = self;
     self.variables.dataSource = self;
 }
 
@@ -72,29 +77,50 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     regina::NScript* s = static_cast<regina::NScript*>(self.packet);
-    
-    if (s->getNumberOfVariables() == 0) {
-        return [tableView dequeueReusableCellWithIdentifier:@"Empty"];
-    } else {
-        ScriptVariableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Variable" forIndexPath:indexPath];
-        cell.variable.text = [NSString stringWithUTF8String:s->getVariableName(indexPath.row).c_str()];
 
-        regina::NPacket* value = s->getVariableValue(indexPath.row);
-        if (value) {
-            cell.icon.image = [PacketManagerIOS iconFor:value];
+    if (indexPath.row == 0)
+        return [tableView dequeueReusableCellWithIdentifier:@"Header"];
+
+    if (s->getNumberOfVariables() == 0)
+        return [tableView dequeueReusableCellWithIdentifier:@"Empty"];
+
+    ScriptVariableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Variable" forIndexPath:indexPath];
+    cell.variable.text = [NSString stringWithUTF8String:s->getVariableName(indexPath.row - 1).c_str()];
+
+    regina::NPacket* value = s->getVariableValue(indexPath.row - 1);
+    if (value) {
+        cell.icon.image = [PacketManagerIOS iconFor:value];
+        if (value->getTreeParent())
             cell.value.text = [NSString stringWithUTF8String:value->getPacketLabel().c_str()];
-        } else {
-            cell.icon.image = nil;
-            cell.value.text = @"None";
-        }
-        return cell;
+        else
+            cell.value.text = @"⟨Entire tree⟩";
+    } else {
+        cell.icon.image = nil;
+        cell.value.text = @"⟨None⟩";
     }
+    return cell;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     unsigned long nVar = static_cast<regina::NScript*>(self.packet)->getNumberOfVariables();
-    return (nVar > 0 ? nVar : 1);
+    return 1 + (nVar > 0 ? nVar : 1);
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.row > 0)
+        return self.variables.rowHeight;
+
+    // The header row is smaller.  Calculate it based on the cell contents, which include
+    // auto-layout constraints that pin the labels to the upper and lower boundaries.
+    if (variableHeaderHeight == 0) {
+        UITableViewCell* cell = [self.variables dequeueReusableCellWithIdentifier:@"Header"];
+        [cell layoutIfNeeded];
+        CGSize size = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+        variableHeaderHeight = size.height;
+    }
+    return variableHeaderHeight;
 }
 
 @end

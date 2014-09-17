@@ -41,37 +41,30 @@
 @implementation PacketManagerIOS
 
 + (UIImage*)iconFor:(regina::NPacket *)p {
+    if (! p->getTreeParent())
+        return [UIImage imageNamed:@"Document"];
+
     switch (p->getPacketType()) {
         case regina::PACKET_ANGLESTRUCTURELIST:
             return [UIImage imageNamed:@"Angles"];
-            break;
         case regina::PACKET_CONTAINER:
             return [UIImage imageNamed:@"Container"];
-            break;
         case regina::PACKET_DIM2TRIANGULATION:
             return [UIImage imageNamed:@"Dim2Triangulation"];
-            break;
         case regina::PACKET_NORMALSURFACELIST:
             return [UIImage imageNamed:@"Surfaces"];
-            break;
         case regina::PACKET_PDF:
             return [UIImage imageNamed:@"PDF"];
-            break;
         case regina::PACKET_SCRIPT:
             return [UIImage imageNamed:@"Script"];
-            break;
         case regina::PACKET_SNAPPEATRIANGULATION:
             return [UIImage imageNamed:@"SnapPea"];
-            break;
         case regina::PACKET_SURFACEFILTER:
             return [UIImage imageNamed:@"Filter"];
-            break;
         case regina::PACKET_TEXT:
             return [UIImage imageNamed:@"Text"];
-            break;
         case regina::PACKET_TRIANGULATION:
             return [UIImage imageNamed:@"Triangulation"];
-            break;
         default:
             return nil;
     }
