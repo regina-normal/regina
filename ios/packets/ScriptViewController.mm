@@ -34,6 +34,19 @@
 #import "ScriptViewController.h"
 #import "packet/nscript.h"
 
+#pragma mark - Script variable cell
+
+@interface ScriptVariableCell ()
+@property (weak, nonatomic) IBOutlet UILabel *variable;
+@property (weak, nonatomic) IBOutlet UILabel *value;
+@property (weak, nonatomic) IBOutlet UIImageView *icon;
+@end
+
+@implementation ScriptVariableCell
+@end
+
+#pragma mark - Script view controller
+
 @interface ScriptViewController () <UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *variables;
 @property (weak, nonatomic) IBOutlet UITextView *script;
@@ -63,16 +76,16 @@
     if (s->getNumberOfVariables() == 0) {
         return [tableView dequeueReusableCellWithIdentifier:@"Empty"];
     } else {
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Variable" forIndexPath:indexPath];
-        cell.textLabel.text = [NSString stringWithUTF8String:s->getVariableName(indexPath.row).c_str()];
+        ScriptVariableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Variable" forIndexPath:indexPath];
+        cell.variable.text = [NSString stringWithUTF8String:s->getVariableName(indexPath.row).c_str()];
 
         regina::NPacket* value = s->getVariableValue(indexPath.row);
         if (value) {
-            cell.imageView.image = [PacketManagerIOS iconFor:value];
-            cell.detailTextLabel.text = [NSString stringWithUTF8String:value->getPacketLabel().c_str()];
+            cell.icon.image = [PacketManagerIOS iconFor:value];
+            cell.value.text = [NSString stringWithUTF8String:value->getPacketLabel().c_str()];
         } else {
-            cell.imageView.image = nil;
-            cell.detailTextLabel.text = @"None";
+            cell.icon.image = nil;
+            cell.value.text = @"None";
         }
         return cell;
     }
