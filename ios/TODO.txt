@@ -27,7 +27,6 @@ WRITE VIEWERS:
 
 - PDF:                    one-page
 - Filters:                one-page, editor
-- Script:                 one-page
 - 2-D triangulation:      tabs,     editor
 - 3-D triangulation:      tabs,     editor
 - SnapPea triangulation:  tabs,     editor
