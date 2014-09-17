@@ -33,6 +33,8 @@
 #import "TextViewController.h"
 #import "packet/ntext.h"
 
+// TODO: Need to change insets to account for space taken by the keyboard.
+
 @interface TextViewController () <UITextViewDelegate>
 @property (weak, nonatomic) IBOutlet UITextView *detail;
 @end
