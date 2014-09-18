@@ -77,10 +77,8 @@
 
     /**
      * Stores the "New packet" popover menu.
-     * This is a zeroing weak reference, which means it should be set to nil
-     * automatically when the popover is dismissed.
      */
-    __weak UIPopoverController* _newPacketPopover;
+    UIPopoverController* _newPacketPopover;
 }
 
 @end
@@ -233,8 +231,10 @@
 }
 
 - (void)newPacket:(regina::PacketType)type {
-    if (_newPacketPopover)
+    if (_newPacketPopover) {
         [_newPacketPopover dismissPopoverAnimated:NO];
+        _newPacketPopover = nil;
+    }
 
     NewPacketSpec* spec = [NewPacketSpec specWithType:type tree:self];
     if (! [spec parentWithAlert:YES])
@@ -258,6 +258,7 @@
         // Instead of showing it, we should dismiss it (since the button
         // was pressed a second time).
         [_newPacketPopover dismissPopoverAnimated:NO];
+        _newPacketPopover = nil;
         return NO;
     }
     return YES;

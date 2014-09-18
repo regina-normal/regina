@@ -130,7 +130,7 @@ static NSArray* _allRows;
             maxWidth = currWidth;
     }
     CGFloat width = maxWidth + 80; // Room for 32x32 icon plus some padding.
-    
+
     self.preferredContentSize = CGSizeMake(width, height);
     self.tableView.scrollEnabled = NO;
 }
