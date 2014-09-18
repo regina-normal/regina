@@ -32,6 +32,8 @@
 
 #import "SwitchableSubcontroller.h"
 
+// TODO: Deal with the flicker as new panels move in/out.
+
 @interface SwitchableSubcontroller ()
 
 @end

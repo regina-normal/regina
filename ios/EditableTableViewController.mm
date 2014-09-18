@@ -32,6 +32,8 @@
 
 #import "EditableTableViewController.h"
 
+// TODO: Renaming -> autoscrolling / insets badly broken under iOS 8.
+
 @interface EditableTableViewController () <UITextFieldDelegate> {
     UIEdgeInsets _originalContentInsets;
     UIEdgeInsets _originalScrollIndicatorInsets;
