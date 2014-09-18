@@ -271,10 +271,6 @@
     } else if ([[segue identifier] isEqualToString:@"newPacket"]) {
         _newPacketPopover = [(UIStoryboardPopoverSegue*)segue popoverController];
         ((NewPacketMenu*)segue.destinationViewController).packetTree = self;
-    } else {
-        // This must be one of the new packet segues.
-        // Pass through the parent packet.
-        ((NewPacketController*)segue.destinationViewController).spec = sender;
     }
 }
 

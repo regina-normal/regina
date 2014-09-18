@@ -117,28 +117,36 @@
             break;
         }
         case regina::PACKET_TRIANGULATION:
-            [tree performSegueWithIdentifier:@"newTriangulation" sender:spec];
+            [PacketManagerIOS newPacket:spec formSheet:@"newTriangulation"];
             break;
         case regina::PACKET_DIM2TRIANGULATION:
-            [tree performSegueWithIdentifier:@"newDim2Triangulation" sender:spec];
+            [PacketManagerIOS newPacket:spec formSheet:@"newDim2Triangulation"];
             break;
         case regina::PACKET_NORMALSURFACELIST:
-            [tree performSegueWithIdentifier:@"newSurfaces" sender:spec];
+            [PacketManagerIOS newPacket:spec formSheet:@"newSurfaces"];
             break;
         case regina::PACKET_ANGLESTRUCTURELIST:
-            [tree performSegueWithIdentifier:@"newAngles" sender:spec];
+            [PacketManagerIOS newPacket:spec formSheet:@"newAngles"];
             break;
         case regina::PACKET_SNAPPEATRIANGULATION:
-            [tree performSegueWithIdentifier:@"newSnapPea" sender:spec];
+            [PacketManagerIOS newPacket:spec formSheet:@"newSnapPea"];
             break;
         case regina::PACKET_SURFACEFILTER:
-            [tree performSegueWithIdentifier:@"newFilter" sender:spec];
+            [PacketManagerIOS newPacket:spec formSheet:@"newFilter"];
             break;
         case regina::PACKET_PDF:
         case regina::PACKET_SCRIPT:
             // We don't create these in the iOS version of Regina.
             break;
     }
+}
+
++ (void)newPacket:(NewPacketSpec*)spec formSheet:(NSString*)sheetID
+{
+    UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+    UIViewController* sheet = [storyboard instantiateViewControllerWithIdentifier:sheetID];
+    static_cast<NewPacketController*>(sheet).spec = spec;
+    [[ReginaHelper detail] presentViewController:sheet animated:YES completion:nil];
 }
 
 @end

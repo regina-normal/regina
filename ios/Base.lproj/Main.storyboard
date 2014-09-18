@@ -711,14 +711,6 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
-                    <connections>
-                        <segue destination="iJb-vO-RRQ" kind="modal" identifier="newSurfaces" modalPresentationStyle="formSheet" id="TCf-VP-Yq2"/>
-                        <segue destination="iIb-Aw-6vD" kind="modal" identifier="newTriangulation" modalPresentationStyle="formSheet" id="Qxq-v7-TLn"/>
-                        <segue destination="uWV-Yj-5w4" kind="modal" identifier="newDim2Triangulation" modalPresentationStyle="formSheet" id="vRX-aJ-PXY"/>
-                        <segue destination="a63-T1-shL" kind="modal" identifier="newAngles" modalPresentationStyle="formSheet" id="CF5-er-eFD"/>
-                        <segue destination="nkC-am-T1c" kind="modal" identifier="newFilter" modalPresentationStyle="formSheet" id="LQ7-o4-zkt"/>
-                        <segue destination="0BX-4R-Ycg" kind="modal" identifier="newSnapPea" modalPresentationStyle="formSheet" id="6aT-f5-AGE"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fjY-rQ-nyG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -772,7 +764,7 @@
         <!--New Surfaces Controller-->
         <scene sceneID="mJp-7s-7fF">
             <objects>
-                <viewController id="iJb-vO-RRQ" customClass="NewSurfacesController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="newSurfaces" modalPresentationStyle="formSheet" id="iJb-vO-RRQ" customClass="NewSurfacesController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="7o9-wz-P6o"/>
                         <viewControllerLayoutGuide type="bottom" id="6pZ-eB-4Kr"/>
@@ -905,6 +897,7 @@
                             <constraint firstAttribute="trailing" secondItem="isF-FG-zAW" secondAttribute="trailing" id="seD-44-WIW"/>
                         </constraints>
                     </view>
+                    <nil key="simulatedStatusBarMetrics"/>
                     <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="cancelButton" destination="Wvx-Ri-dAI" id="MAx-0i-dav"/>
@@ -927,7 +920,7 @@
         <!--New Triangulation Controller-->
         <scene sceneID="qsA-fH-Xxt">
             <objects>
-                <viewController id="iIb-Aw-6vD" customClass="NewTriangulationController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="newTriangulation" modalPresentationStyle="formSheet" id="iIb-Aw-6vD" customClass="NewTriangulationController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Ggn-se-bcK"/>
                         <viewControllerLayoutGuide type="bottom" id="cSc-NN-F9b"/>
@@ -992,6 +985,8 @@
                             <constraint firstItem="hQQ-dK-YUg" firstAttribute="leading" secondItem="RM3-RF-gz7" secondAttribute="leading" id="y6o-Wm-P0I"/>
                         </constraints>
                     </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="container" destination="hQQ-dK-YUg" id="bmH-bH-g5q"/>
                         <outlet property="types" destination="Gj9-3o-6MF" id="RZj-YE-Sch"/>
@@ -1004,7 +999,7 @@
         <!--New Dim2 Triangulation Controller-->
         <scene sceneID="kJv-ms-1ie">
             <objects>
-                <viewController id="uWV-Yj-5w4" customClass="NewDim2TriangulationController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="newDim2Triangulation" modalPresentationStyle="formSheet" id="uWV-Yj-5w4" customClass="NewDim2TriangulationController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="DD8-iw-Clj"/>
                         <viewControllerLayoutGuide type="bottom" id="dts-7a-mKv"/>
@@ -1070,6 +1065,8 @@
                             <constraint firstAttribute="trailing" secondItem="xnv-EE-zIl" secondAttribute="trailing" id="xyK-9v-tEy"/>
                         </constraints>
                     </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="container" destination="xnv-EE-zIl" id="gKs-Q1-ryR"/>
                         <outlet property="types" destination="Um6-8T-NX6" id="hE8-Eb-72w"/>
@@ -1082,7 +1079,7 @@
         <!--New Snap Pea Controller-->
         <scene sceneID="3Vo-p2-Sl9">
             <objects>
-                <viewController id="0BX-4R-Ycg" customClass="NewSnapPeaController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="newSnapPea" modalPresentationStyle="formSheet" id="0BX-4R-Ycg" customClass="NewSnapPeaController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="lYk-bE-1KU"/>
                         <viewControllerLayoutGuide type="bottom" id="qlN-3Y-Dde"/>
@@ -1146,6 +1143,8 @@
                             <constraint firstAttribute="trailing" secondItem="U8E-gO-OA5" secondAttribute="trailing" id="ubd-I2-w6z"/>
                         </constraints>
                     </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="container" destination="diu-FA-0KY" id="Awo-F7-9mc"/>
                         <outlet property="types" destination="Sn2-zK-RFh" id="NKV-J1-T1e"/>
@@ -1589,7 +1588,7 @@
         <!--New Angles Controller-->
         <scene sceneID="tgd-7r-XfU">
             <objects>
-                <viewController id="a63-T1-shL" customClass="NewAnglesController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="newAngles" modalPresentationStyle="formSheet" id="a63-T1-shL" customClass="NewAnglesController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="nlH-fU-bw6"/>
                         <viewControllerLayoutGuide type="bottom" id="jgu-Vk-Ghv"/>
@@ -1693,6 +1692,7 @@
                         </constraints>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
+                    <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="cancelButton" destination="EvQ-Mc-HJ7" id="I5g-5Q-zww"/>
                         <outlet property="enumerateButton" destination="agV-qk-uCj" id="9LD-K7-RgD"/>
@@ -1718,7 +1718,7 @@
         <!--New Filter Controller-->
         <scene sceneID="fzR-tO-8j1">
             <objects>
-                <viewController id="nkC-am-T1c" customClass="NewFilterController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="newFilter" modalPresentationStyle="formSheet" id="nkC-am-T1c" customClass="NewFilterController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ukn-NO-Rad"/>
                         <viewControllerLayoutGuide type="bottom" id="Egf-0X-PZ7"/>
@@ -1781,6 +1781,7 @@
                         </constraints>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
+                    <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="whichControl" destination="tsL-O6-5K1" id="Wyv-1r-tc4"/>
                         <outlet property="whichDesc" destination="D8N-6Q-NoL" id="VyX-00-hqT"/>
