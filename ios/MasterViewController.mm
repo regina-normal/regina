@@ -271,6 +271,7 @@ enum {
                                               cancelButtonTitle:@"Cancel"
                                          destructiveButtonTitle:nil
                                               otherButtonTitles:@"New document", @"Import from Dropbox", nil];
+    // TODO: Crash on iOS8 in portrait.
     sheet.tag = sheetNew;
     [sheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
 }
