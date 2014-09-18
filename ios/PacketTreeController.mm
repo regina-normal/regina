@@ -237,7 +237,7 @@
     }
 
     NewPacketSpec* spec = [NewPacketSpec specWithType:type tree:self];
-    if (! [spec parentWithAlert:YES])
+    if (! [spec hasParentWithAlert])
         return;
 
     [PacketManagerIOS newPacket:spec];

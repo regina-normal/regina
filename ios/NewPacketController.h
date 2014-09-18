@@ -41,14 +41,13 @@ namespace regina {
 
 @interface NewPacketSpec : NSObject
 
-@property (weak, nonatomic, readonly) PacketTreeController* tree;
 @property (assign, nonatomic, readonly) regina::PacketType type;
+@property (assign, nonatomic, readonly) regina::NPacket* parent;
 
-- (id)initWithType:(regina::PacketType)t tree:(PacketTreeController*)t;
-+ (id)specWithType:(regina::PacketType)t tree:(PacketTreeController*)t;
-- (regina::NPacket*)parent;
-- (regina::NPacket*)parentWithAlert:(BOOL)alert;
-- (regina::NPacket*)packetTree;
+- (id)initWithType:(regina::PacketType)t tree:(PacketTreeController*)tree;
++ (id)specWithType:(regina::PacketType)t tree:(PacketTreeController*)tree;
+
+- (BOOL)hasParentWithAlert;
 
 @end
 

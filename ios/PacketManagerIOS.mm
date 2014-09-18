@@ -89,13 +89,20 @@
 }
 
 + (void)newPacket:(NewPacketSpec*)spec {
+    if (! spec.parent)
+        return;
+
+    PacketTreeController* tree = [ReginaHelper tree];
+    if (! tree)
+        return;
+
     switch (spec.type) {
         case regina::PACKET_CONTAINER:
         {
             // We can do this immediately, no input required.
             regina::NContainer* c = new regina::NContainer();
             c->setPacketLabel("Container");
-            spec.tree.node->insertChildLast(c);
+            spec.parent->insertChildLast(c);
             [[ReginaHelper tree] selectPacket:c];
             break;
         }
@@ -105,27 +112,27 @@
             regina::NText* t = new regina::NText();
             t->setPacketLabel("Text");
             t->setText("Type your text here.");
-            spec.tree.node->insertChildLast(t);
+            spec.parent->insertChildLast(t);
             [ReginaHelper viewPacket:t alreadySelected:NO];
             break;
         }
         case regina::PACKET_TRIANGULATION:
-            [spec.tree performSegueWithIdentifier:@"newTriangulation" sender:spec];
+            [tree performSegueWithIdentifier:@"newTriangulation" sender:spec];
             break;
         case regina::PACKET_DIM2TRIANGULATION:
-            [spec.tree performSegueWithIdentifier:@"newDim2Triangulation" sender:spec];
+            [tree performSegueWithIdentifier:@"newDim2Triangulation" sender:spec];
             break;
         case regina::PACKET_NORMALSURFACELIST:
-            [spec.tree performSegueWithIdentifier:@"newSurfaces" sender:spec];
+            [tree performSegueWithIdentifier:@"newSurfaces" sender:spec];
             break;
         case regina::PACKET_ANGLESTRUCTURELIST:
-            [spec.tree performSegueWithIdentifier:@"newAngles" sender:spec];
+            [tree performSegueWithIdentifier:@"newAngles" sender:spec];
             break;
         case regina::PACKET_SNAPPEATRIANGULATION:
-            [spec.tree performSegueWithIdentifier:@"newSnapPea" sender:spec];
+            [tree performSegueWithIdentifier:@"newSnapPea" sender:spec];
             break;
         case regina::PACKET_SURFACEFILTER:
-            [spec.tree performSegueWithIdentifier:@"newFilter" sender:spec];
+            [tree performSegueWithIdentifier:@"newFilter" sender:spec];
             break;
         case regina::PACKET_PDF:
         case regina::PACKET_SCRIPT:
