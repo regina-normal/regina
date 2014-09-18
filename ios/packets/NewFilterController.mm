@@ -80,7 +80,7 @@ static NSArray* whichText;
             return;
     }
     self.spec.parent->insertChildLast(ans);
-    [ReginaHelper viewPacket:ans alreadySelected:NO];
+    [self.spec created:ans];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

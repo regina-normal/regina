@@ -68,14 +68,11 @@ static DetailViewController* detail;
         return nil;
 }
 
-+ (void)viewPacket:(regina::NPacket *)packet alreadySelected:(BOOL)alreadySelected
++ (void)viewPacket:(regina::NPacket *)packet
 {
     detail.packet = packet;
-    if (! alreadySelected) {
-        PacketTreeController* tree = [ReginaHelper tree];
-        if (tree)
-            [tree selectPacket:packet];
-    }
+    // Note: the following call is safe even if tree == nil.
+    [[ReginaHelper tree] selectPacket:packet];
 }
 
 + (void)initWithApp:(AppDelegate *)app

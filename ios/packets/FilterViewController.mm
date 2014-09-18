@@ -30,8 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#import "PacketManagerIOS.h"
 #import "FilterViewController.h"
+#import "NewPacketController.h"
+#import "PacketManagerIOS.h"
+#import "PacketTreeController.h"
+#import "ReginaHelper.h"
 #import "surfaces/sfcombination.h"
 #import "surfaces/sfproperties.h"
 
@@ -244,7 +247,10 @@ static NSMutableCharacterSet* eulerSeparators;
 }
 
 - (IBAction)addSubfilter:(id)sender {
-    NSLog(@"TODO: Add");
+    // Create a new child packet, but leave the master and detail displays as they are.
+    NewPacketSpec* spec = [NewPacketSpec specWithType:regina::PACKET_SURFACEFILTER parent:self.packet];
+    spec.viewOnCreation = NO;
+    [PacketManagerIOS newPacket:spec];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -270,6 +276,10 @@ static NSMutableCharacterSet* eulerSeparators;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    PacketTreeController* tree = [ReginaHelper tree];
+    if (tree.node == self.packet->getTreeParent())
+        [tree pushToChild:self.packet];
+
     // TODO: Either add a new subfilter, or view the selected subfilter.
     NSLog(@"TODO: View");
 }

@@ -49,12 +49,10 @@
 {
     self.pageSelector = s;
     
-    UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-    
     id page;
     self.pages = [NSMutableArray array];
     for (id i in storyboardIDs) {
-        page = [storyboard instantiateViewControllerWithIdentifier:i];
+        page = [self.storyboard instantiateViewControllerWithIdentifier:i];
         if (! page)
             NSLog(@"No view controller for storyboard ID: %@", i);
         else if (! [[page class] conformsToProtocol:@protocol(PacketCreator)])

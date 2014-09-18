@@ -122,7 +122,7 @@ static NSArray* whichText;
                 [alert show];
             } else {
                 ans->setPacketLabel("Angle structures");
-                [ReginaHelper viewPacket:ans alreadySelected:NO];
+                [self.spec created:ans];
             }
             [self dismissViewControllerAnimated:YES completion:nil];
         });

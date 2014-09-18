@@ -45,6 +45,7 @@
     self = [super init];
     if (self) {
         _type = type;
+        _viewOnCreation = YES;
 
         regina::NPacket* viewing = [ReginaHelper detail].packet;
         if (type == regina::PACKET_NORMALSURFACELIST || type == regina::PACKET_ANGLESTRUCTURELIST) {
@@ -63,6 +64,22 @@
 + (id)specWithType:(regina::PacketType)type tree:(PacketTreeController *)tree
 {
     return [[NewPacketSpec alloc] initWithType:type tree:tree];
+}
+
+- (id)initWithType:(regina::PacketType)type parent:(regina::NPacket *)parent
+{
+    self = [super init];
+    if (self) {
+        _type = type;
+        _parent = parent;
+        _viewOnCreation = YES;
+    }
+    return self;
+}
+
++ (id)specWithType:(regina::PacketType)type parent:(regina::NPacket *)parent
+{
+    return [[NewPacketSpec alloc] initWithType:type parent:parent];
 }
 
 - (BOOL)hasParentWithAlert
@@ -91,6 +108,16 @@
                                           otherButtonTitles:nil];
     [alert show];
     return NO;
+}
+
+- (void)created:(regina::NPacket *)result
+{
+    if (result) {
+        if (self.viewOnCreation && result->getPacketType() != regina::PACKET_CONTAINER)
+            [ReginaHelper viewPacket:result];
+        else
+            [[ReginaHelper tree] selectPacket:result];
+    }
 }
 
 + (BOOL)isTriangulation:(regina::NPacket*)p

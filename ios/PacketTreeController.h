@@ -65,4 +65,9 @@ namespace regina {
 
 - (void)newPacket:(regina::PacketType)type;
 
+/**
+ * Safe if \a child is not in the list.
+ */
+- (void)pushToChild:(regina::NPacket*)child;
+
 @end

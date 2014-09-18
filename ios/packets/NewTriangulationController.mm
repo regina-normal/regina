@@ -57,7 +57,7 @@
     regina::NPacket* ans = [self.pages create];
     if (ans) {
         self.spec.parent->insertChildLast(ans);
-        [ReginaHelper viewPacket:ans alreadySelected:NO];
+        [self.spec created:ans];
         [self dismissViewControllerAnimated:YES completion:nil];
     }
 }

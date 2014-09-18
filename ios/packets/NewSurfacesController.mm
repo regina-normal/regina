@@ -185,7 +185,7 @@ static NSArray* embText;
                 [alert show];
             } else {
                 ans->setPacketLabel("Normal surfaces");
-                [ReginaHelper viewPacket:ans alreadySelected:NO];
+                [self.spec created:ans];
             }
             [self dismissViewControllerAnimated:YES completion:nil];
         });

@@ -103,7 +103,7 @@
             regina::NContainer* c = new regina::NContainer();
             c->setPacketLabel("Container");
             spec.parent->insertChildLast(c);
-            [[ReginaHelper tree] selectPacket:c];
+            [spec created:c];
             break;
         }
         case regina::PACKET_TEXT:
@@ -113,7 +113,7 @@
             t->setPacketLabel("Text");
             t->setText("Type your text here.");
             spec.parent->insertChildLast(t);
-            [ReginaHelper viewPacket:t alreadySelected:NO];
+            [spec created:t];
             break;
         }
         case regina::PACKET_TRIANGULATION:
@@ -143,10 +143,10 @@
 
 + (void)newPacket:(NewPacketSpec*)spec formSheet:(NSString*)sheetID
 {
-    UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-    UIViewController* sheet = [storyboard instantiateViewControllerWithIdentifier:sheetID];
+    DetailViewController* detail = [ReginaHelper detail];
+    UIViewController* sheet = [detail.storyboard instantiateViewControllerWithIdentifier:sheetID];
     static_cast<NewPacketController*>(sheet).spec = spec;
-    [[ReginaHelper detail] presentViewController:sheet animated:YES completion:nil];
+    [detail presentViewController:sheet animated:YES completion:nil];
 }
 
 @end

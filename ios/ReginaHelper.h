@@ -73,14 +73,12 @@ namespace regina {
 /**
  * Opens the given packet for viewing and/or editing.
  *
- * @param alreadySelected Set this to \c YES if you know in advance that
- * the packet is already selected in the master view controller.  If you pass
- * \c NO, then this routine will attempt to select the packet in the master view
- * if this has not already been done.  Passing \c NO is always safe, even if
- * the packet is already selected, or even if the packet does not appear in the master
- * view at all.
+ * This routine will also attempt to select the packet in the master view
+ * if this has not already been done.  This will always be safe, even if
+ * the packet is already selected, or even if the packet does not appear
+ * in the master view at all.
  */
-+ (void)viewPacket:(regina::NPacket*)packet alreadySelected:(BOOL)alreadySelected;
++ (void)viewPacket:(regina::NPacket*)packet;
 
 /**
  * Initialises this helper class.  This should be called once at startup.

@@ -243,6 +243,17 @@
     [PacketManagerIOS newPacket:spec];
 }
 
+- (void)pushToChild:(regina::NPacket *)child
+{
+    if (child->getTreeParent() != self.node)
+        return;
+
+    // Hmm.  Let's not select the packet for now.
+    PacketTreeController* subtree = [self.storyboard instantiateViewControllerWithIdentifier:@"packetTree"];
+    [subtree openSubtree:child detail:self.detail];
+    [self.navigationController pushViewController:subtree animated:YES];
+}
+
 - (void)dealloc
 {
     [_listener permanentlyUnlisten];

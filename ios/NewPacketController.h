@@ -43,11 +43,20 @@ namespace regina {
 
 @property (assign, nonatomic, readonly) regina::PacketType type;
 @property (assign, nonatomic, readonly) regina::NPacket* parent;
+@property (assign, nonatomic) BOOL viewOnCreation;
 
-- (id)initWithType:(regina::PacketType)t tree:(PacketTreeController*)tree;
-+ (id)specWithType:(regina::PacketType)t tree:(PacketTreeController*)tree;
+// Note: parent will be 0 if no suitable parent could be found.
+// Test this via parent, or hasParentWithAlert.
+- (id)initWithType:(regina::PacketType)type tree:(PacketTreeController*)tree;
++ (id)specWithType:(regina::PacketType)type tree:(PacketTreeController*)tree;
+
+// PRE: The given parent is suitable and non-null.
+- (id)initWithType:(regina::PacketType)type parent:(regina::NPacket*)parent;
++ (id)specWithType:(regina::PacketType)type parent:(regina::NPacket*)parent;
 
 - (BOOL)hasParentWithAlert;
+
+- (void)created:(regina::NPacket*)result;
 
 @end
 
