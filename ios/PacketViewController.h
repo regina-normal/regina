@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#import <UIKit/UIKit.h>
+#import "PacketListenerIOS.h"
 
 namespace regina {
     class NPacket;
@@ -40,6 +40,11 @@ namespace regina {
 
 @property (assign, nonatomic) regina::NPacket* packet;
 
+@end
+
+@interface PacketEditController : PacketViewController <PacketDelegate>
+
 - (void)endEditing;
+- (void)packetWasChanged:(regina::NPacket *)packet;
 
 @end

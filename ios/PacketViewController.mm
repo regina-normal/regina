@@ -31,15 +31,44 @@
  **************************************************************************/
 
 #import "PacketViewController.h"
+#import "ReginaDocument.h"
 #import "ReginaHelper.h"
 
-@interface PacketViewController ()
+@implementation PacketViewController
 @end
 
-@implementation PacketViewController
+@interface PacketEditController () {
+    PacketListenerIOS* _listener;
+}
+@end
+
+@implementation PacketEditController
+
+- (void)dealloc
+{
+    [_listener permanentlyUnlisten];
+}
+
+- (void)setPacket:(regina::NPacket *)packet
+{
+    [super setPacket:packet];
+
+    if (packet == nil) {
+        [_listener permanentlyUnlisten];
+        _listener = nil;
+    } else {
+        [_listener permanentlyUnlisten];
+        _listener = [PacketListenerIOS listenerWithPacket:packet delegate:self listenChildren:NO];
+    }
+}
 
 - (void)endEditing
 {
+}
+
+- (void)packetWasChanged:(regina::NPacket *)packet
+{
+    [[ReginaHelper document] setDirty];
 }
 
 @end

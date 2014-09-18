@@ -33,7 +33,13 @@
 #import "PacketViewController.h"
 
 /**
- * The controller for viewing and editing text packets.
+ * The controller for viewing property-based surface filters.
  */
-@interface TextViewController : PacketEditController
+@interface FilterPropertiesViewController : PacketEditController
+@end
+
+/**
+ * The controller for viewing combination-based surface filters.
+ */
+@interface FilterCombinationViewController : PacketEditController
 @end

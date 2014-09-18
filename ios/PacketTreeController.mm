@@ -284,10 +284,6 @@
 
 #pragma mark - Packet listener
 
-- (void)packetWasChanged:(regina::NPacket *)packet {
-    [self.document setDirty];
-}
-
 - (void)packetWasRenamed:(regina::NPacket *)packet {
     [self.document setDirty];
     if (packet == self.node) {

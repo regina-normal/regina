@@ -111,8 +111,8 @@
 
     if (_packet) {
         // Push any outstanding changes to the calculation engine.
-        PacketViewController* c = static_cast<PacketViewController*>([_sub subview]);
-        [c endEditing];
+        if ([[_sub subview].class isSubclassOfClass:[PacketEditController class]])
+            [static_cast<PacketEditController*>([_sub subview]) endEditing];
     }
 
     _packet = p;
@@ -129,6 +129,7 @@
         [self navigationItem].title = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
         [_sub performSegueWithIdentifier:[PacketManagerIOS segueFor:p] sender:self];
 
+        [_listener permanentlyUnlisten];
         _listener = [PacketListenerIOS listenerWithPacket:p delegate:self listenChildren:NO];
     }
 }
