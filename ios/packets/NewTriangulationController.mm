@@ -32,6 +32,7 @@
 
 #import "NewTriangulationController.h"
 #import "PacketTreeController.h"
+#import "ReginaHelper.h"
 #import "triangulation/nexampletriangulation.h"
 #import "triangulation/ntriangulation.h"
 
@@ -56,7 +57,7 @@
     regina::NPacket* ans = [self.pages create];
     if (ans) {
         self.spec.parent->insertChildLast(ans);
-        [self.spec.tree viewPacket:ans];
+        [ReginaHelper viewPacket:ans alreadySelected:NO];
         [self dismissViewControllerAnimated:YES completion:nil];
     }
 }

@@ -213,20 +213,23 @@
         return [NSIndexPath indexPathForRow:(index + 1) inSection:0];
 }
 
-- (void)viewPacket:(regina::NPacket *)p {
-    if (p->getPacketType() != regina::PACKET_CONTAINER) {
-        // View this packet in detail.
-        self.detail.packet = p;
-    }
+- (BOOL)selectPacket:(regina::NPacket*)p {
+    if (p->getTreeParent() != self.node)
+        return NO;
 
-    if (p->getTreeParent() == self.node) {
-        // This is one of the packets in the master list.
-        // Select it (if this is safe), and make sure it is visible.
-        NSIndexPath* path = [self pathForPacket:p];
-        if (p->getPacketType() != regina::PACKET_CONTAINER && ! [self.tableView.indexPathForSelectedRow isEqual:path])
-            [self.tableView selectRowAtIndexPath:path animated:NO scrollPosition:UITableViewScrollPositionNone];
-        [self.tableView scrollToRowAtIndexPath:[self pathForPacket:p] atScrollPosition:UITableViewScrollPositionNone animated:YES];
-    }
+    // This packet should be in our list of immediate children.
+    // If it is a container then we don't select it (since pressing on
+    // a container cell would normally push immediately to the subtree).
+    // Regardless, however, we ensure that the cell is visible on screen.
+    NSIndexPath* path = [self pathForPacket:p];
+    if (! path)
+        return NO;
+
+    if (p->getPacketType() != regina::PACKET_CONTAINER && ! [self.tableView.indexPathForSelectedRow isEqual:path])
+        [self.tableView selectRowAtIndexPath:path animated:NO scrollPosition:UITableViewScrollPositionNone];
+
+    [self.tableView scrollToRowAtIndexPath:[self pathForPacket:p] atScrollPosition:UITableViewScrollPositionNone animated:YES];
+    return YES;
 }
 
 - (void)newPacket:(regina::PacketType)type {
@@ -243,16 +246,6 @@
 - (void)dealloc
 {
     [_listener permanentlyUnlisten];
-}
-
-- (ReginaDocument *)document
-{
-    return self.detail.doc;
-}
-
-- (regina::NPacket *)viewingPacket
-{
-    return self.detail.packet;
 }
 
 #pragma mark - Segues
@@ -287,7 +280,7 @@
 #pragma mark - Packet listener
 
 - (void)packetWasRenamed:(regina::NPacket *)packet {
-    [self.document setDirty];
+    [self.detail.doc setDirty];
     if (packet == self.node) {
         // Refresh the title, but only if this is not the root of the packet tree.
         if (packet->getTreeParent())
@@ -301,7 +294,7 @@
 }
 
 - (void)childWasAddedTo:(regina::NPacket*)packet child:(regina::NPacket*)child {
-    [self.document setDirty];
+    [self.detail.doc setDirty];
 
     NSIndexPath* path;
     if (packet == self.node) {
@@ -331,7 +324,7 @@
             [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
 
-    // Disable the following code, since the new packet actions will call viewPacket:,
+    // Disable the following code, since the new packet actions will call selectPacket:,
     // which scrolls the table anyway.
     /*
     if (path)
@@ -342,13 +335,13 @@
 - (void)childWasRemovedFrom:(regina::NPacket *)packet child:(regina::NPacket *)child inParentDestructor:(bool)d {
     // No need to update the table, since this action can only have happened as a result
     // of user interaction with the table.
-    [self.document setDirty];
+    [self.detail.doc setDirty];
 }
 
 - (void)childrenWereReordered:(regina::NPacket *)packet {
     // No need to update the table, since this action can only have happened as a result
     // of user interaction with the table.
-    [self.document setDirty];
+    [self.detail.doc setDirty];
 }
 
 #pragma mark - Editable table view
@@ -485,8 +478,8 @@
         }
     }
 
-    if (p->getPacketType() != regina::NContainer::packetType)
-        [self viewPacket:p];
+    if (p->getPacketType() != regina::PACKET_CONTAINER)
+        self.detail.packet = p;
 }
 
 #pragma mark - Action sheet

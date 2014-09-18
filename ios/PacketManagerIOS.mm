@@ -34,6 +34,7 @@
 #import "NewPacketController.h"
 #import "PacketManagerIOS.h"
 #import "PacketTreeController.h"
+#import "ReginaHelper.h"
 #import "packet/ncontainer.h"
 #import "packet/npacket.h"
 #import "packet/ntext.h"
@@ -95,7 +96,7 @@
             regina::NContainer* c = new regina::NContainer();
             c->setPacketLabel("Container");
             spec.tree.node->insertChildLast(c);
-            [spec.tree viewPacket:c];
+            [[ReginaHelper tree] selectPacket:c];
             break;
         }
         case regina::PACKET_TEXT:
@@ -105,7 +106,7 @@
             t->setPacketLabel("Text");
             t->setText("Type your text here.");
             spec.tree.node->insertChildLast(t);
-            [spec.tree viewPacket:t];
+            [ReginaHelper viewPacket:t alreadySelected:NO];
             break;
         }
         case regina::PACKET_TRIANGULATION:

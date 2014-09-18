@@ -56,10 +56,13 @@ namespace regina {
  */
 - (void)refreshPackets;
 
-- (void)viewPacket:(regina::NPacket*)p;
-- (void)newPacket:(regina::PacketType)type;
+/**
+ * Safely does nothing if \a p is not in the list of children.
+ * Refuses to select a container packet, but regardless will scroll
+ * down to ensure that the packet is visible in the table.
+ */
+- (BOOL)selectPacket:(regina::NPacket*)p;
 
-- (ReginaDocument*)document;
-- (regina::NPacket*)viewingPacket;
+- (void)newPacket:(regina::PacketType)type;
 
 @end

@@ -33,8 +33,12 @@
 #import "AppDelegate.h"
 #import "DetailViewController.h"
 #import "MasterViewController.h"
+#import "PacketTreeController.h"
 #import "ReginaHelper.h"
 
+static UISplitViewController* split;
+static UINavigationController* masterNav;
+static UINavigationController* detailNav;
 static MasterViewController* master;
 static DetailViewController* detail;
 
@@ -55,18 +59,36 @@ static DetailViewController* detail;
     return detail.doc;
 }
 
++ (PacketTreeController *)tree
+{
+    UIViewController* tree = masterNav.topViewController;
+    if ([tree.class isSubclassOfClass:[PacketTreeController class]])
+        return static_cast<PacketTreeController*>(tree);
+    else
+        return nil;
+}
+
++ (void)viewPacket:(regina::NPacket *)packet alreadySelected:(BOOL)alreadySelected
+{
+    detail.packet = packet;
+    if (! alreadySelected) {
+        PacketTreeController* tree = [ReginaHelper tree];
+        if (tree)
+            [tree selectPacket:packet];
+    }
+}
+
 + (void)initWithApp:(AppDelegate *)app
 {
-    UISplitViewController *splitViewController = (UISplitViewController *)app.window.rootViewController;
-    UINavigationController *navigationController;
+    split = (UISplitViewController *)app.window.rootViewController;
 
-    navigationController = [splitViewController.viewControllers firstObject];
-    master = (id)navigationController.topViewController;
+    masterNav = [split.viewControllers firstObject];
+    master = (id)masterNav.topViewController;
 
-    navigationController = [splitViewController.viewControllers lastObject];
-    detail = (id)navigationController.topViewController;
-    splitViewController.delegate = detail;
+    detailNav = [split.viewControllers lastObject];
+    detail = (id)detailNav.topViewController;
 
+    split.delegate = detail;
 }
 
 @end

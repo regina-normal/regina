@@ -32,6 +32,7 @@
 
 #import "NewAnglesController.h"
 #import "PacketTreeController.h"
+#import "ReginaHelper.h"
 #import "angle/nanglestructurelist.h"
 #import "progress/nprogresstracker.h"
 
@@ -121,7 +122,7 @@ static NSArray* whichText;
                 [alert show];
             } else {
                 ans->setPacketLabel("Angle structures");
-                [self.spec.tree viewPacket:ans];
+                [ReginaHelper viewPacket:ans alreadySelected:NO];
             }
             [self dismissViewControllerAnimated:YES completion:nil];
         });

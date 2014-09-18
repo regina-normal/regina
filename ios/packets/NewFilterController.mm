@@ -32,6 +32,7 @@
 
 #import "NewFilterController.h"
 #import "PacketTreeController.h"
+#import "ReginaHelper.h"
 #import "surfaces/sfcombination.h"
 #import "surfaces/sfproperties.h"
 
@@ -79,7 +80,7 @@ static NSArray* whichText;
             return;
     }
     self.spec.parent->insertChildLast(ans);
-    [self.spec.tree viewPacket:ans];
+    [ReginaHelper viewPacket:ans alreadySelected:NO];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

@@ -35,7 +35,12 @@
 @class AppDelegate;
 @class DetailViewController;
 @class MasterViewController;
+@class PacketTreeController;
 @class ReginaDocument;
+
+namespace regina {
+    class NPacket;
+}
 
 /**
  * Gives access to some of the core objects in the user interface.
@@ -58,6 +63,24 @@
  * Returns the current working document, or \c nil if no document is open.
  */
 + (ReginaDocument*)document;
+
+/**
+ * Returns the top-level packet tree controller, or \c nil if no
+ * document is open.
+ */
++ (PacketTreeController*)tree;
+
+/**
+ * Opens the given packet for viewing and/or editing.
+ *
+ * @param alreadySelected Set this to \c YES if you know in advance that
+ * the packet is already selected in the master view controller.  If you pass
+ * \c NO, then this routine will attempt to select the packet in the master view
+ * if this has not already been done.  Passing \c NO is always safe, even if
+ * the packet is already selected, or even if the packet does not appear in the master
+ * view at all.
+ */
++ (void)viewPacket:(regina::NPacket*)packet alreadySelected:(BOOL)alreadySelected;
 
 /**
  * Initialises this helper class.  This should be called once at startup.

@@ -32,6 +32,7 @@
 
 #import "NewDim2TriangulationController.h"
 #import "PacketTreeController.h"
+#import "ReginaHelper.h"
 #import "dim2/dim2exampletriangulation.h"
 #import "dim2/dim2triangulation.h"
 
@@ -56,7 +57,7 @@
     regina::NPacket* ans = [self.pages create];
     if (ans) {
         self.spec.parent->insertChildLast(ans);
-        [self.spec.tree viewPacket:ans];
+        [ReginaHelper viewPacket:ans alreadySelected:NO];
         [self dismissViewControllerAnimated:YES completion:nil];
     }
 }

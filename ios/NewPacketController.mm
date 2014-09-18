@@ -32,6 +32,7 @@
 
 #import "DetailViewController.h"
 #import "NewPacketController.h"
+#import "ReginaHelper.h"
 #import "PacketTreeController.h"
 #import "packet/npacket.h"
 
@@ -62,7 +63,7 @@
         _type = type;
         _tree = t;
         _subtree = t.node;
-        _viewing = t.viewingPacket;
+        _viewing = [ReginaHelper detail].packet;
     }
     return self;
 }

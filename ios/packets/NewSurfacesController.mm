@@ -32,6 +32,7 @@
 
 #import "NewSurfacesController.h"
 #import "PacketTreeController.h"
+#import "ReginaHelper.h"
 #import "progress/nprogresstracker.h"
 #import "surfaces/nnormalsurfacelist.h"
 
@@ -184,7 +185,7 @@ static NSArray* embText;
                 [alert show];
             } else {
                 ans->setPacketLabel("Normal surfaces");
-                [self.spec.tree viewPacket:ans];
+                [ReginaHelper viewPacket:ans alreadySelected:NO];
             }
             [self dismissViewControllerAnimated:YES completion:nil];
         });
