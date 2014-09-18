@@ -36,6 +36,10 @@
 #import "progress/nprogresstracker.h"
 #import "surfaces/nnormalsurfacelist.h"
 
+#define KEY_LAST_TYPE @"NewSurfacesType"
+#define KEY_LAST_COORDS @"NewSurfacesCoords"
+#define KEY_LAST_EMB @"NewSurfacesEmb"
+
 using regina::NNormalSurfaceList;
 
 static NSArray* whichText;
@@ -73,7 +77,11 @@ static NSArray* embText;
     
     if (self.spec.parent)
         _triangulation.text = [NSString stringWithUTF8String:self.spec.parent->getPacketLabel().c_str()];
-    
+
+    self.whichControl.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_TYPE];
+    self.coordControl.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_COORDS];
+    self.embControl.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_EMB];
+
     // Update the description labels.
     [self whichChanged:nil];
     [self coordChanged:nil];
@@ -82,14 +90,17 @@ static NSArray* embText;
 
 - (IBAction)whichChanged:(id)sender {
     _whichDesc.text = whichText[_whichControl.selectedSegmentIndex];
+    [[NSUserDefaults standardUserDefaults] setInteger:self.whichControl.selectedSegmentIndex forKey:KEY_LAST_TYPE];
 }
 
 - (IBAction)coordChanged:(id)sender {
     _coordDesc.text = coordText[_coordControl.selectedSegmentIndex];
+    [[NSUserDefaults standardUserDefaults] setInteger:self.coordControl.selectedSegmentIndex forKey:KEY_LAST_COORDS];
 }
 
 - (IBAction)embChanged:(id)sender {
     _embDesc.text = embText[_embControl.selectedSegmentIndex];
+    [[NSUserDefaults standardUserDefaults] setInteger:self.embControl.selectedSegmentIndex forKey:KEY_LAST_EMB];
 }
 
 - (IBAction)cancel:(id)sender {

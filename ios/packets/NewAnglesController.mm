@@ -36,6 +36,8 @@
 #import "angle/nanglestructurelist.h"
 #import "progress/nprogresstracker.h"
 
+#define KEY_LAST_TAUT @"NewAnglesTaut"
+
 using regina::NAngleStructureList;
 
 static NSArray* whichText;
@@ -65,13 +67,16 @@ static NSArray* whichText;
     
     if (self.spec.parent)
         _triangulation.text = [NSString stringWithUTF8String:self.spec.parent->getPacketLabel().c_str()];
-    
+
+    self.whichControl.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_TAUT];
+
     // Update the description labels.
     [self whichChanged:nil];
 }
 
 - (IBAction)whichChanged:(id)sender {
     _whichDesc.text = whichText[_whichControl.selectedSegmentIndex];
+    [[NSUserDefaults standardUserDefaults] setInteger:self.whichControl.selectedSegmentIndex forKey:KEY_LAST_TAUT];
 }
 
 - (IBAction)cancel:(id)sender {

@@ -36,6 +36,8 @@
 #import "surfaces/sfcombination.h"
 #import "surfaces/sfproperties.h"
 
+#define KEY_LAST_TYPE @"NewFilterType"
+
 static NSArray* whichText;
 
 @interface NewFilterController ()
@@ -52,6 +54,8 @@ static NSArray* whichText;
 - (void)viewDidLoad {
     if (! whichText)
         [NewFilterController initArrays];
+
+    self.whichControl.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_TYPE];
     
     // Update the description labels.
     [self whichChanged:nil];
@@ -59,6 +63,7 @@ static NSArray* whichText;
 
 - (IBAction)whichChanged:(id)sender {
     self.whichDesc.text = whichText[self.whichControl.selectedSegmentIndex];
+    [[NSUserDefaults standardUserDefaults] setInteger:self.whichControl.selectedSegmentIndex forKey:KEY_LAST_TYPE];
 }
 
 - (IBAction)cancel:(id)sender {
