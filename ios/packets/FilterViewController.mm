@@ -44,6 +44,7 @@ static NSArray* boundaryText;
 static NSMutableCharacterSet* eulerSeparators;
 
 // TODO: Do we need to fix the "ambiguous row height" warning under iOS 8?
+// TODO: Detect renamed subfilters.  Requires a new packet listener action.
 
 #pragma mark - Property-based filter
 
@@ -276,12 +277,33 @@ static NSMutableCharacterSet* eulerSeparators;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (indexPath.row == _subfilters.count) {
+        // This is the new subpacket cell.
+        // Leave this work to the button on the cell.
+        return;
+    }
+
     PacketTreeController* tree = [ReginaHelper tree];
     if (tree.node == self.packet->getTreeParent())
         [tree pushToChild:self.packet];
 
-    // TODO: Either add a new subfilter, or view the selected subfilter.
-    NSLog(@"TODO: View");
+    // Hmm.  Selection does not work because the subtree is not yet
+    // present in the master navigation controller (the animated transition
+    // is still taking place at this point).
+    // This is minor enough to leave as is for now.
+    [ReginaHelper viewPacket:static_cast<regina::NPacket*>([_subfilters pointerAtIndex:indexPath.row])];
+}
+
+- (void)childWasAddedTo:(regina::NPacket *)packet child:(regina::NPacket *)child
+{
+    // Be brutal for now: just reload the entire table.
+    [self updateSubfilters];
+}
+
+- (void)childWasRemovedFrom:(regina::NPacket *)packet child:(regina::NPacket *)child inParentDestructor:(bool)d
+{
+    // Be brutal for now: just reload the entire table.
+    [self updateSubfilters];
 }
 
 @end
