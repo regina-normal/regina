@@ -202,7 +202,9 @@ static NSMutableCharacterSet* eulerSeparators;
 
 #pragma mark - Combination-based filter
 
-@interface FilterCombinationViewController ()
+@interface FilterCombinationViewController () <UITableViewDataSource, UITableViewDelegate> {
+    NSPointerArray *_subfilters;
+}
 @property (weak, nonatomic) IBOutlet UITableView *children;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *type;
 @end
@@ -214,6 +216,60 @@ static NSMutableCharacterSet* eulerSeparators;
     [super viewDidLoad];
 
     regina::NSurfaceFilterCombination* c = static_cast<regina::NSurfaceFilterCombination*>(self.packet);
+
+    self.type.selectedSegmentIndex = (c->getUsesAnd() ? 0 : 1);
+
+    self.children.dataSource = self;
+    self.children.delegate = self;
+    [self updateSubfilters];
+    // TODO: Listen on child renames / additions / deletions.
+}
+
+- (void)updateSubfilters
+{
+    _subfilters = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsOpaquePersonality];
+
+    regina::NPacket* p;
+    for (p = self.packet->getFirstTreeChild(); p; p = p->getNextTreeSibling())
+        if (p->getPacketType() == regina::PACKET_SURFACEFILTER)
+            [_subfilters addPointer:p];
+
+    [self.children reloadData];
+}
+
+- (IBAction)typeChanged:(id)sender {
+    static_cast<regina::NSurfaceFilterCombination*>(self.packet)->setUsesAnd(self.type.selectedSegmentIndex == 0);
+}
+
+- (IBAction)addSubfilter:(id)sender {
+    NSLog(@"TODO: Add");
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return NO;
+}
+
+- (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.row == _subfilters.count)
+        return [self.children dequeueReusableCellWithIdentifier:@"Add" forIndexPath:indexPath];
+    else {
+        UITableViewCell* cell = [self.children dequeueReusableCellWithIdentifier:@"Subfilter" forIndexPath:indexPath];
+        cell.textLabel.text = [NSString stringWithUTF8String:static_cast<regina::NPacket*>([_subfilters pointerAtIndex:indexPath.row])->getPacketLabel().c_str()];
+        return cell;
+    }
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return _subfilters.count + 1;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // TODO: Either add a new subfilter, or view the selected subfilter.
+    NSLog(@"TODO: View");
 }
 
 @end
