@@ -47,7 +47,7 @@
 // TODO: Popping the navigation controller while renaming a cell causes badness.
 // TODO: (Linked to the above): Make tap outside cell simply finish a rename.
 
-@interface PacketTreeController () <UIAlertViewDelegate, UIActionSheetDelegate, PacketDelegate> {
+@interface PacketTreeController () <UIAlertViewDelegate, PacketDelegate> {
     /**
      * Stores the immediate children of the subtree packet (self.node), in order.
      * This should always be in sync with the packets as they are stored in Regina's calculation engine.
@@ -371,6 +371,39 @@
     p->setPacketLabel([[result stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] UTF8String]);
 }
 
+- (NSString *)deleteConfirmation:(NSIndexPath *)path
+{
+    _recentPacketIndex = [self packetIndexForPath:path];
+    regina::NPacket* p = static_cast<regina::NPacket*>([_packets pointerAtIndex:_recentPacketIndex]);
+
+    unsigned long totalPackets = p->getNumberOfDescendants();
+    if (totalPackets == 0)
+        return @"Delete packet";
+    else
+        return [NSString stringWithFormat:@"Delete %ld packets", totalPackets + 1];
+}
+
+- (void)deleteAction
+{
+    int packetIndex = [self packetIndexForPath:self.actionPath];
+    regina::NPacket* packet = static_cast<regina::NPacket*>([_packets pointerAtIndex:packetIndex]);
+
+    [_packets removePointerAtIndex:packetIndex];
+
+    if (_subtreeRow == self.actionPath.row + 1) {
+        // We need to remove the subtree cell also.
+        NSIndexPath* subtreePath = [NSIndexPath indexPathForRow:_subtreeRow inSection:0];
+        _subtreeRow = 0;
+        [self.tableView deleteRowsAtIndexPaths:@[self.actionPath, subtreePath]
+                              withRowAnimation:UITableViewRowAnimationFade];
+    } else {
+        [self.tableView deleteRowsAtIndexPaths:@[self.actionPath]
+                              withRowAnimation:UITableViewRowAnimationFade];
+    }
+
+    delete packet;
+}
+
 #pragma mark - Table view
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -406,42 +439,6 @@
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return (! self.actionPath) && (! (_subtreeRow > 0 && indexPath.row == _subtreeRow));
-}
-
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (_subtreeRow > 0 && indexPath.row == _subtreeRow)
-        return UITableViewCellEditingStyleNone;
-    else
-        return UITableViewCellEditingStyleDelete;
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (self.actionPath)
-        return;
-
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        self.actionPath = indexPath;
-        CGRect cell = [tableView cellForRowAtIndexPath:indexPath].frame;
-        
-        _recentPacketIndex = [self packetIndexForPath:indexPath];
-        regina::NPacket* p = static_cast<regina::NPacket*>([_packets pointerAtIndex:_recentPacketIndex]);
-
-        NSString* deleteMsg;
-        unsigned long totalPackets = p->getNumberOfDescendants();
-        if (totalPackets == 0)
-            deleteMsg = @"Delete packet";
-        else
-            deleteMsg = [NSString stringWithFormat:@"Delete %ld packets", totalPackets + 1];
-
-        UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil
-                                                           delegate:self
-                                                  cancelButtonTitle:@"Cancel"
-                                             destructiveButtonTitle:deleteMsg
-                                                  otherButtonTitles:nil];
-        [sheet showFromRect:cell inView:tableView animated:YES];
-    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -488,32 +485,6 @@
 
     if (p->getPacketType() != regina::PACKET_CONTAINER)
         self.detail.packet = p;
-}
-
-#pragma mark - Action sheet
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == actionSheet.destructiveButtonIndex) {
-        int packetIndex = [self packetIndexForPath:self.actionPath];
-        regina::NPacket* packet = static_cast<regina::NPacket*>([_packets pointerAtIndex:packetIndex]);
-
-        [_packets removePointerAtIndex:packetIndex];
-
-        if (_subtreeRow == self.actionPath.row + 1) {
-            // We need to remove the subtree cell also.
-            NSIndexPath* subtreePath = [NSIndexPath indexPathForRow:_subtreeRow inSection:0];
-            _subtreeRow = 0;
-            [self.tableView deleteRowsAtIndexPaths:@[self.actionPath, subtreePath]
-                                  withRowAnimation:UITableViewRowAnimationFade];
-        } else {
-            [self.tableView deleteRowsAtIndexPaths:@[self.actionPath]
-                                  withRowAnimation:UITableViewRowAnimationFade];
-        }
-        
-        delete packet;
-    }
-
-    self.actionPath = nil;
 }
 
 #pragma mark - Alert view

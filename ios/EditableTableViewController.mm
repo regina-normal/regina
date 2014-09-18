@@ -31,6 +31,9 @@
  **************************************************************************/
 
 #import "EditableTableViewController.h"
+#import "ReginaHelper.h"
+
+#define SHEET_DELETE 501
 
 // TODO: Renaming -> autoscrolling / insets badly broken under iOS 8.
 
@@ -127,6 +130,15 @@
 {
 }
 
+- (NSString *)deleteConfirmation:(NSIndexPath *)path
+{
+    return @"Delete";
+}
+
+- (void)deleteAction
+{
+}
+
 - (void)keyboardDidShow:(NSNotification*)notification
 {
     _originalContentInsets = self.tableView.contentInset;
@@ -159,7 +171,61 @@
     self.tableView.scrollIndicatorInsets = _originalScrollIndicatorInsets;
 }
 
-#pragma mark - Text Field
+#pragma mark - Table view
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.actionPath)
+        return;
+
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        self.actionPath = indexPath;
+        CGRect cell = [tableView cellForRowAtIndexPath:indexPath].frame;
+
+        if ([ReginaHelper ios8]) {
+            UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil
+                                                                           message:nil
+                                                                    preferredStyle:UIAlertControllerStyleActionSheet];
+            [alert addAction:[UIAlertAction actionWithTitle:[self deleteConfirmation:indexPath]
+                                                      style:UIAlertActionStyleDestructive
+                                                    handler:^(UIAlertAction*) {
+                                                        [self deleteAction];
+                                                        self.actionPath = nil;
+                                                    }]];
+            [alert addAction:[UIAlertAction actionWithTitle:@"Cancel"
+                                                      style:UIAlertActionStyleCancel
+                                                    handler:^(UIAlertAction*) {
+                                                        self.actionPath = nil;
+                                                    }]];
+            [alert setModalPresentationStyle:UIModalPresentationPopover];
+            alert.popoverPresentationController.sourceView = tableView;
+            alert.popoverPresentationController.sourceRect = cell;
+            // Popovers to the right appear strangely cropped on iOS 8.  Disallow them.
+            alert.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp | UIPopoverArrowDirectionDown;
+            [self presentViewController:alert animated:YES completion:nil];
+        } else {
+            UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                               delegate:self
+                                                      cancelButtonTitle:@"Cancel"
+                                                 destructiveButtonTitle:[self deleteConfirmation:indexPath]
+                                                      otherButtonTitles:nil];
+            sheet.tag = SHEET_DELETE;
+            [sheet showFromRect:cell inView:tableView animated:YES];
+        }
+    }
+}
+
+#pragma mark - Action sheet
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (actionSheet.tag == SHEET_DELETE) {
+        if (buttonIndex == actionSheet.destructiveButtonIndex)
+            [self deleteAction];
+        self.actionPath = nil;
+    }
+}
+
+#pragma mark - Text field
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {

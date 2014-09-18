@@ -40,8 +40,7 @@
 
 // Action sheet tags;
 enum {
-    sheetNew,
-    sheetDelete
+    sheetNew = 1,
 };
 
 static UIColor* darkGoldenrod = [UIColor colorWithRed:(0xB8 / 256.0) green:(0x86 / 256.0) blue:(0x0B / 256.0) alpha:1.0];
@@ -154,7 +153,7 @@ enum {
 
 #pragma mark - Master view controller
 
-@interface MasterViewController () <UIActionSheetDelegate, NSURLSessionDownloadDelegate> {
+@interface MasterViewController () <NSURLSessionDownloadDelegate> {
     MBProgressHUD* dropboxHUD;
     UIView* rootView;
 }
@@ -444,6 +443,30 @@ enum {
     [self.tableView reloadRowsAtIndexPaths:@[newPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
+- (NSString *)deleteConfirmation:(NSIndexPath *)path
+{
+    return @"Delete document";
+}
+
+- (void)deleteAction
+{
+    NSURL* url = [self.docURLs[self.actionPath.row] url];
+    NSLog(@"Deleting document: %@", url);
+    if ([[NSFileManager defaultManager] removeItemAtURL:url error:nil]) {
+        [self.docURLs removeObjectAtIndex:self.actionPath.row];
+        [self.docsByName removeObjectForKey:url];
+        [self.tableView deleteRowsAtIndexPaths:@[self.actionPath] withRowAnimation:UITableViewRowAnimationFade];
+    } else {
+        UIAlertView* alert = [[UIAlertView alloc]
+                              initWithTitle:@"Could Not Delete Document"
+                              message:nil
+                              delegate:nil
+                              cancelButtonTitle:@"Close"
+                              otherButtonTitles:nil];
+        [alert show];
+    }
+}
+
 #pragma mark - URL Session
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location
@@ -543,52 +566,6 @@ enum {
     return (! self.actionPath) && (indexPath.section == 1);
 }
 
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return UITableViewCellEditingStyleDelete;
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (self.actionPath)
-        return;
-
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        CGRect cell = [tableView cellForRowAtIndexPath:indexPath].frame;
-        
-        self.actionPath = indexPath;
-
-        /**
-         * This is the iOS 8 way:
-        UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil
-                                                                       message:nil
-                                                                preferredStyle:UIAlertControllerStyleActionSheet];
-        [alert addAction:[UIAlertAction actionWithTitle:@"Delete document"
-                                                  style:UIAlertActionStyleDestructive
-                                                handler:^(UIAlertAction*) {
-                                                    [self actionDeleteDecided:YES];
-                                                }]];
-        [alert addAction:[UIAlertAction actionWithTitle:@"Cancel"
-                                                  style:UIAlertActionStyleCancel
-                                                handler:^(UIAlertAction*) {
-                                                    [self actionDeleteDecided:NO];
-                                                }]];
-        [alert setModalPresentationStyle:UIModalPresentationPopover];
-        alert.popoverPresentationController.sourceView = tableView;
-        alert.popoverPresentationController.sourceRect = cell;
-        [self presentViewController:alert animated:YES completion:nil];
-         */
-
-        UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil
-                                                           delegate:self
-                                                  cancelButtonTitle:@"Cancel"
-                                             destructiveButtonTitle:@"Delete document"
-                                                  otherButtonTitles:nil];
-        sheet.tag = sheetDelete;
-        [sheet showFromRect:cell inView:tableView animated:YES];
-    }
-}
-
 #pragma mark - Action Sheet
 
 - (void)actionNewFrom:(BOOL)native
@@ -605,28 +582,6 @@ enum {
     }
 }
 
-- (void)actionDeleteDecided:(BOOL)shouldDelete
-{
-    if (shouldDelete) {
-        NSURL* url = [self.docURLs[self.actionPath.row] url];
-        NSLog(@"Deleting document: %@", url);
-        if ([[NSFileManager defaultManager] removeItemAtURL:url error:nil]) {
-            [self.docURLs removeObjectAtIndex:self.actionPath.row];
-            [self.docsByName removeObjectForKey:url];
-            [self.tableView deleteRowsAtIndexPaths:@[self.actionPath] withRowAnimation:UITableViewRowAnimationFade];
-        } else {
-            UIAlertView* alert = [[UIAlertView alloc]
-                                  initWithTitle:@"Could Not Delete Document"
-                                  message:nil
-                                  delegate:nil
-                                  cancelButtonTitle:@"Close"
-                                  otherButtonTitles:nil];
-            [alert show];
-        }
-    }
-    self.actionPath = nil;
-}
-
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     switch (actionSheet.tag) {
         case sheetNew:
@@ -635,9 +590,8 @@ enum {
             else if (buttonIndex == 1)
                 [self actionNewFrom:NO];
             break;
-        case sheetDelete:
-            [self actionDeleteDecided:(buttonIndex == actionSheet.destructiveButtonIndex)];
-            break;
+        default:
+            [super actionSheet:actionSheet clickedButtonAtIndex:buttonIndex];
     }
 }
 

@@ -41,6 +41,7 @@ static UINavigationController* masterNav;
 static UINavigationController* detailNav;
 static MasterViewController* master;
 static DetailViewController* detail;
+BOOL ios8;
 
 @implementation ReginaHelper
 
@@ -75,6 +76,11 @@ static DetailViewController* detail;
     [[ReginaHelper tree] selectPacket:packet];
 }
 
++ (BOOL)ios8
+{
+    return ios8;
+}
+
 + (void)initWithApp:(AppDelegate *)app
 {
     split = (UISplitViewController *)app.window.rootViewController;
@@ -86,6 +92,12 @@ static DetailViewController* detail;
     detail = (id)detailNav.topViewController;
 
     split.delegate = detail;
+
+    ios8 = ([[[UIDevice currentDevice] systemVersion] compare:@"8.0" options:NSNumericSearch] != NSOrderedAscending);
+    if (ios8)
+        NSLog(@"Running on >= iOS 8");
+    else
+        NSLog(@"Running on iOS 7");
 }
 
 @end

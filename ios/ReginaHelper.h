@@ -81,6 +81,11 @@ namespace regina {
 + (void)viewPacket:(regina::NPacket*)packet;
 
 /**
+ * Is this app running on iOS 8 or above?
+ */
++ (BOOL)ios8;
+
+/**
  * Initialises this helper class.  This should be called once at startup.
  */
 + (void)initWithApp:(AppDelegate*)app;
