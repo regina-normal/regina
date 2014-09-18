@@ -557,7 +557,33 @@ enum {
         CGRect cell = [tableView cellForRowAtIndexPath:indexPath].frame;
         
         self.actionPath = indexPath;
-        UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete document" otherButtonTitles:nil];
+
+        /**
+         * This is the iOS 8 way:
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil
+                                                                       message:nil
+                                                                preferredStyle:UIAlertControllerStyleActionSheet];
+        [alert addAction:[UIAlertAction actionWithTitle:@"Delete document"
+                                                  style:UIAlertActionStyleDestructive
+                                                handler:^(UIAlertAction*) {
+                                                    [self actionDeleteDecided:YES];
+                                                }]];
+        [alert addAction:[UIAlertAction actionWithTitle:@"Cancel"
+                                                  style:UIAlertActionStyleCancel
+                                                handler:^(UIAlertAction*) {
+                                                    [self actionDeleteDecided:NO];
+                                                }]];
+        [alert setModalPresentationStyle:UIModalPresentationPopover];
+        alert.popoverPresentationController.sourceView = tableView;
+        alert.popoverPresentationController.sourceRect = cell;
+        [self presentViewController:alert animated:YES completion:nil];
+         */
+
+        UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                           delegate:self
+                                                  cancelButtonTitle:@"Cancel"
+                                             destructiveButtonTitle:@"Delete document"
+                                                  otherButtonTitles:nil];
         sheet.tag = sheetDelete;
         [sheet showFromRect:cell inView:tableView animated:YES];
     }
@@ -565,39 +591,52 @@ enum {
 
 #pragma mark - Action Sheet
 
+- (void)actionNewFrom:(BOOL)native
+{
+    if (native) {
+        // Create a new document.
+        [self performSegueWithIdentifier:@"openNew" sender:self];
+    } else {
+        // Import from Dropbox.
+        [[DBChooser defaultChooser] openChooserForLinkType:DBChooserLinkTypeDirect fromViewController:self completion:^(NSArray *results) {
+            if ([results count])
+                [self openURL:[results.firstObject link]];
+        }];
+    }
+}
+
+- (void)actionDeleteDecided:(BOOL)shouldDelete
+{
+    if (shouldDelete) {
+        NSURL* url = [self.docURLs[self.actionPath.row] url];
+        NSLog(@"Deleting document: %@", url);
+        if ([[NSFileManager defaultManager] removeItemAtURL:url error:nil]) {
+            [self.docURLs removeObjectAtIndex:self.actionPath.row];
+            [self.docsByName removeObjectForKey:url];
+            [self.tableView deleteRowsAtIndexPaths:@[self.actionPath] withRowAnimation:UITableViewRowAnimationFade];
+        } else {
+            UIAlertView* alert = [[UIAlertView alloc]
+                                  initWithTitle:@"Could Not Delete Document"
+                                  message:nil
+                                  delegate:nil
+                                  cancelButtonTitle:@"Close"
+                                  otherButtonTitles:nil];
+            [alert show];
+        }
+    }
+    self.actionPath = nil;
+}
+
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     switch (actionSheet.tag) {
         case sheetNew:
-            if (buttonIndex == 0) {
-                // Create a new document.
-                [self performSegueWithIdentifier:@"openNew" sender:self];
-            } else if (buttonIndex == 1) {
-                // Import from Dropbox.
-                [[DBChooser defaultChooser] openChooserForLinkType:DBChooserLinkTypeDirect fromViewController:self completion:^(NSArray *results) {
-                    if ([results count])
-                        [self openURL:[results.firstObject link]];
-                }];
-            }
+            if (buttonIndex == 0)
+                [self actionNewFrom:YES];
+            else if (buttonIndex == 1)
+                [self actionNewFrom:NO];
             break;
         case sheetDelete:
-            if (buttonIndex == actionSheet.destructiveButtonIndex) {
-                NSURL* url = [self.docURLs[self.actionPath.row] url];
-                NSLog(@"Deleting document: %@", url);
-                if ([[NSFileManager defaultManager] removeItemAtURL:url error:nil]) {
-                    [self.docURLs removeObjectAtIndex:self.actionPath.row];
-                    [self.docsByName removeObjectForKey:url];
-                    [self.tableView deleteRowsAtIndexPaths:@[self.actionPath] withRowAnimation:UITableViewRowAnimationFade];
-                } else {
-                    UIAlertView* alert = [[UIAlertView alloc]
-                                          initWithTitle:@"Could Not Delete Document"
-                                          message:nil
-                                          delegate:nil
-                                          cancelButtonTitle:@"Close"
-                                          otherButtonTitles:nil];
-                    [alert show];
-                }
-            }
-            self.actionPath = nil;
+            [self actionDeleteDecided:(buttonIndex == actionSheet.destructiveButtonIndex)];
             break;
     }
 }
