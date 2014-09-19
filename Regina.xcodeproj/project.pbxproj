@@ -1056,6 +1056,7 @@
 		05B9EC1B18245F2100DCACF3 /* euler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B9EC1A18245F2100DCACF3 /* euler.cpp */; };
 		05B9EC1C18245F2100DCACF3 /* euler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B9EC1A18245F2100DCACF3 /* euler.cpp */; };
 		05BC538F1812BEB000FE9217 /* SwitchableSubcontroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.m */; };
+		05BEB0C119CCE0B0006AB2C8 /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 05BEB0C019CCE0B0006AB2C8 /* UIView+Toast.m */; };
 		05CA99E618078466006161DC /* registryutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CA99E518078465006161DC /* registryutils.h */; };
 		05D0A1101812F0BE005ED097 /* TriangulationViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D0A10F1812F0BE005ED097 /* TriangulationViewController.mm */; };
 		05D1C16F19C6542700CF92F2 /* ReginaHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D1C16E19C6542700CF92F2 /* ReginaHelper.mm */; };
@@ -2215,6 +2216,8 @@
 		05B9EC1A18245F2100DCACF3 /* euler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = euler.cpp; sourceTree = "<group>"; };
 		05BC538D1812BEB000FE9217 /* SwitchableSubcontroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwitchableSubcontroller.h; sourceTree = "<group>"; };
 		05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwitchableSubcontroller.m; sourceTree = "<group>"; };
+		05BEB0BF19CCE0B0006AB2C8 /* UIView+Toast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+Toast.h"; path = "Toast/UIView+Toast.h"; sourceTree = "<group>"; };
+		05BEB0C019CCE0B0006AB2C8 /* UIView+Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+Toast.m"; path = "Toast/UIView+Toast.m"; sourceTree = "<group>"; };
 		05CA99E518078465006161DC /* registryutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = registryutils.h; sourceTree = "<group>"; };
 		05D0A10E1812F0BE005ED097 /* TriangulationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriangulationViewController.h; sourceTree = "<group>"; };
 		05D0A10F1812F0BE005ED097 /* TriangulationViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TriangulationViewController.mm; sourceTree = "<group>"; };
@@ -3328,6 +3331,7 @@
 				054F7E2E180B99320090B1F3 /* HTML */,
 				055FF35719BE91D90057462A /* HexColors */,
 				05F96C14180A14E600C99F96 /* MBProgressHUD */,
+				05BEB0C219CCE0BB006AB2C8 /* Toast */,
 				055FF34D19BE90C90057462A /* TSMessages */,
 			);
 			path = ios;
@@ -3769,6 +3773,15 @@
 				055ABEA419B499DC00044C1B /* README.txt */,
 			);
 			path = census;
+			sourceTree = "<group>";
+		};
+		05BEB0C219CCE0BB006AB2C8 /* Toast */ = {
+			isa = PBXGroup;
+			children = (
+				05BEB0BF19CCE0B0006AB2C8 /* UIView+Toast.h */,
+				05BEB0C019CCE0B0006AB2C8 /* UIView+Toast.m */,
+			);
+			name = Toast;
 			sourceTree = "<group>";
 		};
 		05F96C14180A14E600C99F96 /* MBProgressHUD */ = {
@@ -4345,6 +4358,7 @@
 				052FA1931806129B00FAE4DF /* nmanifold.cpp in Sources */,
 				052FA1E31806129B00FAE4DF /* nsstandard.cpp in Sources */,
 				052FA1E61806129B00FAE4DF /* nxmlfilterreader.cpp in Sources */,
+				05BEB0C119CCE0B0006AB2C8 /* UIView+Toast.m in Sources */,
 				052FA1811806129B00FAE4DF /* ntypetrie.cpp in Sources */,
 				05A73C8019B2EE680099C617 /* angle.cpp in Sources */,
 				05062FB718169F06008A20A5 /* nboundarycomponent.cpp in Sources */,
