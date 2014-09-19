@@ -74,11 +74,6 @@
      * this cell is not currently visible.
      */
     NSInteger _subtreeRow;
-
-    /**
-     * Stores the "New packet" popover menu.
-     */
-    UIPopoverController* _newPacketPopover;
 }
 
 @end
@@ -231,11 +226,6 @@
 }
 
 - (void)newPacket:(regina::PacketType)type {
-    if (_newPacketPopover) {
-        [_newPacketPopover dismissPopoverAnimated:NO];
-        _newPacketPopover = nil;
-    }
-
     NewPacketSpec* spec = [NewPacketSpec specWithType:type tree:self];
     if (! [spec hasParentWithAlert])
         return;
@@ -261,27 +251,14 @@
 
 #pragma mark - Segues
 
-- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
-    // Note that _newPacketPopover is a zeroing weak reference, and will
-    // automagically return to nil when the popover is dismissed.
-    if ([identifier isEqualToString:@"newPacket"] && _newPacketPopover) {
-        // The popover is already visible.
-        // Instead of showing it, we should dismiss it (since the button
-        // was pressed a second time).
-        [_newPacketPopover dismissPopoverAnimated:NO];
-        _newPacketPopover = nil;
-        return NO;
-    }
-    return YES;
-}
-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"openSubtree"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         [[segue destinationViewController] openSubtree:[self packetForPath:indexPath] detail:self.detail];
     } else if ([[segue identifier] isEqualToString:@"newPacket"]) {
-        _newPacketPopover = [(UIStoryboardPopoverSegue*)segue popoverController];
-        ((NewPacketMenu*)segue.destinationViewController).packetTree = self;
+        NewPacketMenu* menu = static_cast<NewPacketMenu*>(segue.destinationViewController);
+        menu.packetTree = self;
+        menu.seguePopoverController = static_cast<UIStoryboardPopoverSegue*>(segue).popoverController;
     }
 }
 

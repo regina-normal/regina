@@ -48,6 +48,13 @@ namespace regina {
 @interface ReginaHelper : NSObject
 
 /**
+ * Returns the root view controller for the entire app.
+ * This is useful for displaying popups (which might otherwise
+ * be hidden beneath the master view controller in portrait mode).
+ */
++ (UIViewController*)root;
+
+/**
  * Returns the root-level master view controller.  This contains the
  * list of documents within the local documents directory.
  */

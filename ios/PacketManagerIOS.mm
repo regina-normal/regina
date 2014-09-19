@@ -143,10 +143,10 @@
 
 + (void)newPacket:(NewPacketSpec*)spec formSheet:(NSString*)sheetID
 {
-    DetailViewController* detail = [ReginaHelper detail];
-    UIViewController* sheet = [detail.storyboard instantiateViewControllerWithIdentifier:sheetID];
+    UIViewController* root = [ReginaHelper root];
+    UIViewController* sheet = [root.storyboard instantiateViewControllerWithIdentifier:sheetID];
     static_cast<NewPacketController*>(sheet).spec = spec;
-    [detail presentViewController:sheet animated:YES completion:nil];
+    [root presentViewController:sheet animated:YES completion:nil];
 }
 
 @end

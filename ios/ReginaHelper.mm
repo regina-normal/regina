@@ -45,6 +45,11 @@ BOOL ios8;
 
 @implementation ReginaHelper
 
++ (UIViewController *)root
+{
+    return split;
+}
+
 + (MasterViewController *)master
 {
     return master;

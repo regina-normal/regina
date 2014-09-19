@@ -41,5 +41,6 @@
 @interface NewPacketMenu : UITableViewController
 
 @property (weak, nonatomic) PacketTreeController* packetTree;
+@property (strong, nonatomic) UIPopoverController* seguePopoverController;
 
 @end

@@ -164,6 +164,8 @@ static NSArray* _allRows;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self.seguePopoverController dismissPopoverAnimated:NO];
+
     // By the time we reach this point, the global array will have already been created.
     NewPacketRow* row = _allRows[indexPath.row];
     [_packetTree newPacket:row.type];
