@@ -192,10 +192,20 @@ __weak static UIViewController *_defaultViewController;
     __block CGFloat verticalOffset = 0.0f;
     
     void (^addStatusBarHeightToVerticalOffset)() = ^void() {
-        BOOL isPortrait = UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]);
+        
+        if (currentView.messagePosition == TSMessageNotificationPositionNavBarOverlay){
+            return;
+        }
+        
         CGSize statusBarSize = [UIApplication sharedApplication].statusBarFrame.size;
-        CGFloat offset = isPortrait ? statusBarSize.height : statusBarSize.width;
-        verticalOffset += offset;
+        
+        if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerForRemoteNotifications)]) {
+            verticalOffset += statusBarSize.height;
+        } else {
+            BOOL isPortrait = UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]);
+            CGFloat offset = isPortrait ? statusBarSize.height : statusBarSize.width;
+            verticalOffset += offset;
+        }
     };
     
     if ([currentView.viewController isKindOfClass:[UINavigationController class]] || [currentView.viewController.parentViewController isKindOfClass:[UINavigationController class]])
@@ -211,7 +221,7 @@ __weak static UIViewController *_defaultViewController;
         if (!isViewIsUnderStatusBar && currentNavigationController.parentViewController == nil) {
             isViewIsUnderStatusBar = ![TSMessage isNavigationBarInNavigationControllerHidden:currentNavigationController]; // strange but true
         }
-        if (![TSMessage isNavigationBarInNavigationControllerHidden:currentNavigationController])
+        if (![TSMessage isNavigationBarInNavigationControllerHidden:currentNavigationController] && currentView.messagePosition != TSMessageNotificationPositionNavBarOverlay)
         {
             [currentNavigationController.view insertSubview:currentView
                                                belowSubview:[currentNavigationController navigationBar]];
@@ -237,7 +247,7 @@ __weak static UIViewController *_defaultViewController;
     }
     
     CGPoint toPoint;
-    if (currentView.messagePosition == TSMessageNotificationPositionTop)
+    if (currentView.messagePosition != TSMessageNotificationPositionBottom)
     {
         CGFloat navigationbarBottomOfViewController = 0;
         
@@ -324,7 +334,7 @@ __weak static UIViewController *_defaultViewController;
                                                object:currentView];
     
     CGPoint fadeOutToPoint;
-    if (currentView.messagePosition == TSMessageNotificationPositionTop)
+    if (currentView.messagePosition != TSMessageNotificationPositionBottom)
     {
         fadeOutToPoint = CGPointMake(currentView.center.x, -CGRectGetHeight(currentView.frame)/2.f);
     }

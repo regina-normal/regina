@@ -11,13 +11,14 @@
 #import "TSBlurView.h"
 #import "TSMessage.h"
 
+#define TSMessageViewMinimumPadding 15.0
 
-#define TSMessageViewPadding 15.0
-
-#define TSDesignFileName @"TSMessages.bundle/TSMessagesDefaultDesign.json"
+#define TSDesignFileName @"TSMessagesDefaultDesign.json"
+#define TSMessageBundleName @"TSMessages"
 
 
 static NSMutableDictionary *_notificationDesign;
+static NSBundle *podBundle;
 
 @interface TSMessage (TSMessageView)
 - (void)fadeOutNotification:(TSMessageView *)currentView; // private method of TSMessage, but called by TSMessageView in -[fadeMeOut]
@@ -65,7 +66,13 @@ static NSMutableDictionary *_notificationDesign;
 {
     if (!_notificationDesign)
     {
-        NSString *path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:TSDesignFileName];
+        if (!podBundle)
+        {
+            podBundle = [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:TSMessageBundleName
+                                                                                 ofType:@"bundle"]];
+        }
+        
+        NSString *path = [[podBundle resourcePath] stringByAppendingPathComponent:TSDesignFileName];
         _notificationDesign = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfFile:path]
                                                                                                             options:kNilOptions
                                                                                                               error:nil]];
@@ -78,11 +85,24 @@ static NSMutableDictionary *_notificationDesign;
 + (void)addNotificationDesignFromFile:(NSString *)filename
 {
     NSString *path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:filename];
-    NSDictionary *design = [NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfFile:path]
-                                                           options:kNilOptions
-                                                             error:nil];
-    
-    [[TSMessageView notificationDesign] addEntriesFromDictionary:design];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path])
+    {
+        NSDictionary *design = [NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfFile:path]
+                                                               options:kNilOptions
+                                                                 error:nil];
+        
+        [[TSMessageView notificationDesign] addEntriesFromDictionary:design];
+    }
+    else
+    {
+        NSAssert(NO, @"Error loading design file with name %@", filename);
+    }
+}
+
+- (CGFloat)padding
+{
+    // Adds 10 padding to to cover navigation bar
+    return self.messagePosition == TSMessageNotificationPositionNavBarOverlay ? TSMessageViewMinimumPadding + 10.0f : TSMessageViewMinimumPadding;
 }
 
 - (id)initWithTitle:(NSString *)title
@@ -111,6 +131,8 @@ canBeDismissedByUser:(BOOL)dismissingEnabled
         self.buttonCallback = buttonCallback;
         
         CGFloat screenWidth = self.viewController.view.bounds.size.width;
+        CGFloat padding = [self padding];
+        
         NSDictionary *current;
         NSString *currentString;
         switch (notificationType)
@@ -145,7 +167,7 @@ canBeDismissedByUser:(BOOL)dismissingEnabled
         
         if (!image && [[current valueForKey:@"imageName"] length])
         {
-            image = [UIImage imageNamed:[current valueForKey:@"imageName"]];
+            image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.bundle/%@", TSMessageBundleName, [current valueForKey:@"imageName"]]];
         }
         
         if (![TSMessage iOS7StyleEnabled])
@@ -153,7 +175,9 @@ canBeDismissedByUser:(BOOL)dismissingEnabled
             self.alpha = 0.0;
             
             // add background image here
-            UIImage *backgroundImage = [[UIImage imageNamed:[current valueForKey:@"backgroundImageName"]] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0];
+            UIImage *backgroundImage = [UIImage imageNamed:[NSString stringWithFormat:@"%@.bundle/%@", TSMessageBundleName, [current valueForKey:@"backgroundImageName"]]];
+            backgroundImage = [backgroundImage stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0];
+            
             _backgroundImageView = [[UIImageView alloc] initWithImage:backgroundImage];
             self.backgroundImageView.autoresizingMask = (UIViewAutoresizingFlexibleWidth);
             [self addSubview:self.backgroundImageView];
@@ -171,8 +195,8 @@ canBeDismissedByUser:(BOOL)dismissingEnabled
                                                    alpha:1.0];
         
         
-        self.textSpaceLeft = 2 * TSMessageViewPadding;
-        if (image) self.textSpaceLeft += image.size.width + 2 * TSMessageViewPadding;
+        self.textSpaceLeft = 2 * padding;
+        if (image) self.textSpaceLeft += image.size.width + 2 * padding;
         
         // Set up title label
         _titleLabel = [[UILabel alloc] init];
@@ -224,8 +248,8 @@ canBeDismissedByUser:(BOOL)dismissingEnabled
         if (image)
         {
             _iconImageView = [[UIImageView alloc] initWithImage:image];
-            self.iconImageView.frame = CGRectMake(TSMessageViewPadding * 2,
-                                                  TSMessageViewPadding,
+            self.iconImageView.frame = CGRectMake(padding * 2,
+                                                  padding,
                                                   image.size.width,
                                                   image.size.height);
             [self addSubview:self.iconImageView];
@@ -236,11 +260,15 @@ canBeDismissedByUser:(BOOL)dismissingEnabled
         {
             _button = [UIButton buttonWithType:UIButtonTypeCustom];
             
-            UIImage *buttonBackgroundImage = [[UIImage imageNamed:[current valueForKey:@"buttonBackgroundImageName"]] resizableImageWithCapInsets:UIEdgeInsetsMake(15.0, 12.0, 15.0, 11.0)];
+            
+            UIImage *buttonBackgroundImage = [UIImage imageNamed:[NSString stringWithFormat:@"%@.bundle/%@", TSMessageBundleName, [current valueForKey:@"buttonBackgroundImageName"]]];
+            
+            buttonBackgroundImage = [buttonBackgroundImage resizableImageWithCapInsets:UIEdgeInsetsMake(15.0, 12.0, 15.0, 11.0)];
             
             if (!buttonBackgroundImage)
             {
-                buttonBackgroundImage = [[UIImage imageNamed:[current valueForKey:@"NotificationButtonBackground"]] resizableImageWithCapInsets:UIEdgeInsetsMake(15.0, 12.0, 15.0, 11.0)];
+                buttonBackgroundImage = [UIImage imageNamed:[NSString stringWithFormat:@"%@.bundle/%@", TSMessageBundleName, [current valueForKey:@"NotificationButtonBackground"]]];
+                buttonBackgroundImage = [buttonBackgroundImage resizableImageWithCapInsets:UIEdgeInsetsMake(15.0, 12.0, 15.0, 11.0)];
             }
             
             [self.button setBackgroundImage:buttonBackgroundImage forState:UIControlStateNormal];
@@ -270,14 +298,14 @@ canBeDismissedByUser:(BOOL)dismissingEnabled
             
             self.button.contentEdgeInsets = UIEdgeInsetsMake(0.0, 5.0, 0.0, 5.0);
             [self.button sizeToFit];
-            self.button.frame = CGRectMake(screenWidth - TSMessageViewPadding - self.button.frame.size.width,
+            self.button.frame = CGRectMake(screenWidth - padding - self.button.frame.size.width,
                                            0.0,
                                            self.button.frame.size.width,
                                            31.0);
             
             [self addSubview:self.button];
             
-            self.textSpaceRight = self.button.frame.size.width + TSMessageViewPadding;
+            self.textSpaceRight = self.button.frame.size.width + padding;
         }
         
         // Add a border on the bottom (or on the top, depending on the view's postion)
@@ -341,11 +369,11 @@ canBeDismissedByUser:(BOOL)dismissingEnabled
 {
     CGFloat currentHeight;
     CGFloat screenWidth = self.viewController.view.bounds.size.width;
-    
+    CGFloat padding = [self padding];
     
     self.titleLabel.frame = CGRectMake(self.textSpaceLeft,
-                                       TSMessageViewPadding,
-                                       screenWidth - TSMessageViewPadding - self.textSpaceLeft - self.textSpaceRight,
+                                       padding,
+                                       screenWidth - padding - self.textSpaceLeft - self.textSpaceRight,
                                        0.0);
     [self.titleLabel sizeToFit];
     
@@ -353,7 +381,7 @@ canBeDismissedByUser:(BOOL)dismissingEnabled
     {
         self.contentLabel.frame = CGRectMake(self.textSpaceLeft,
                                              self.titleLabel.frame.origin.y + self.titleLabel.frame.size.height + 5.0,
-                                             screenWidth - TSMessageViewPadding - self.textSpaceLeft - self.textSpaceRight,
+                                             screenWidth - padding - self.textSpaceLeft - self.textSpaceRight,
                                              0.0);
         [self.contentLabel sizeToFit];
         
@@ -365,14 +393,14 @@ canBeDismissedByUser:(BOOL)dismissingEnabled
         currentHeight = self.titleLabel.frame.origin.y + self.titleLabel.frame.size.height;
     }
     
-    currentHeight += TSMessageViewPadding;
+    currentHeight += padding;
     
     if (self.iconImageView)
     {
         // Check if that makes the popup larger (height)
-        if (self.iconImageView.frame.origin.y + self.iconImageView.frame.size.height + TSMessageViewPadding > currentHeight)
+        if (self.iconImageView.frame.origin.y + self.iconImageView.frame.size.height + padding > currentHeight)
         {
-            currentHeight = self.iconImageView.frame.origin.y + self.iconImageView.frame.size.height + TSMessageViewPadding;
+            currentHeight = self.iconImageView.frame.origin.y + self.iconImageView.frame.size.height + padding;
         }
         else
         {
