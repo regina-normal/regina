@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13E28" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="H1p-Uh-vWS">
     <dependencies>
-        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -719,11 +718,12 @@
         <!--New Packet Menu-->
         <scene sceneID="ULi-i1-42j">
             <objects>
-                <tableViewController id="9gf-1e-ysj" customClass="NewPacketMenu" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="newPacket" id="9gf-1e-ysj" customClass="NewPacketMenu" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="vYV-XT-ab6">
                         <rect key="frame" x="0.0" y="0.0" width="250" height="350"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Entry" textLabel="WhK-eb-xNz" imageView="kjW-xK-JKC" style="IBUITableViewCellStyleDefault" id="1CR-Wa-1Jw">
                                 <rect key="frame" x="0.0" y="22" width="250" height="44"/>

@@ -115,15 +115,17 @@ static NSArray* _allRows;
     [super viewDidLoad];
 
     // Resize the popover to fit the available cells exactly.
+    // Note that we cannot rely on [self.tableView rowHeight] to compute row heights,
+    // since in iOS 8 the default rowHeight is -1 (UITableViewAutomaticDimension).
     NSInteger nRows = [self.tableView numberOfRowsInSection:0];
-    NSInteger height = nRows * [self.tableView rowHeight];
-    
-    CGFloat maxWidth = 0;
+
+    CGFloat maxWidth = 0, height = 0;
     UITableViewCell* currCell;
     NSString *currLabel;
     CGFloat currWidth;
     for (NSInteger i = 0; i < nRows; ++i) {
         currCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+        height += CGRectGetHeight(currCell.frame);
         currLabel = currCell.textLabel.text;
         currWidth = [currLabel sizeWithAttributes:@{NSFontAttributeName:currCell.textLabel.font}].width;
         if (maxWidth < currWidth)
