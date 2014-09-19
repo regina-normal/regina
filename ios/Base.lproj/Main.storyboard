@@ -929,7 +929,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <navigationBar contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9hw-aN-4PO">
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9hw-aN-4PO">
                                 <rect key="frame" x="0.0" y="0.0" width="540" height="44"/>
                                 <items>
                                     <navigationItem title="New 3-D triangulation" id="jmP-SL-vYT">
@@ -953,7 +953,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="QKb-XN-J8L"/>
                                 </items>
                             </toolbar>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Gj9-3o-6MF">
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Gj9-3o-6MF">
                                 <rect key="frame" x="41" y="84" width="458" height="29"/>
                                 <segments>
                                     <segment title="Empty"/>
@@ -961,7 +961,7 @@
                                     <segment title="Isomorphism signature"/>
                                 </segments>
                             </segmentedControl>
-                            <containerView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hQQ-dK-YUg">
+                            <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hQQ-dK-YUg">
                                 <rect key="frame" x="0.0" y="132" width="540" height="436"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <connections>
@@ -1008,7 +1008,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <navigationBar contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Dun-u6-7yF">
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dun-u6-7yF">
                                 <rect key="frame" x="0.0" y="0.0" width="540" height="44"/>
                                 <items>
                                     <navigationItem title="New 2-D triangulation" id="KBa-SJ-LWW">
@@ -1032,7 +1032,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="mh3-nw-y8Z"/>
                                 </items>
                             </toolbar>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Um6-8T-NX6">
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Um6-8T-NX6">
                                 <rect key="frame" x="33" y="84" width="475" height="29"/>
                                 <segments>
                                     <segment title="Empty"/>
@@ -1041,7 +1041,7 @@
                                     <segment title="Isomorphism sig."/>
                                 </segments>
                             </segmentedControl>
-                            <containerView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xnv-EE-zIl">
+                            <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xnv-EE-zIl">
                                 <rect key="frame" x="0.0" y="132" width="540" height="436"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <connections>
@@ -1100,7 +1100,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="tbD-zU-yR3"/>
                                 </items>
                             </toolbar>
-                            <navigationBar contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hAI-7m-HM5">
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hAI-7m-HM5">
                                 <rect key="frame" x="0.0" y="0.0" width="540" height="44"/>
                                 <items>
                                     <navigationItem title="New SnapPea triangulation" id="a8E-G8-g6z">
@@ -1112,14 +1112,14 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Sn2-zK-RFh">
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Sn2-zK-RFh">
                                 <rect key="frame" x="73" y="84" width="395" height="29"/>
                                 <segments>
                                     <segment title="Convert a Regina triangulation"/>
                                     <segment title="Example"/>
                                 </segments>
                             </segmentedControl>
-                            <containerView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="diu-FA-0KY">
+                            <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="diu-FA-0KY">
                                 <rect key="frame" x="0.0" y="132" width="540" height="436"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <connections>
