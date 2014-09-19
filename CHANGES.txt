@@ -10,18 +10,27 @@ Regina - A Normal Surface Theory Calculator
 Version 4.97  [ (under development) ]
 
     ENGINE:
+        Class CompressionBuffer, CompressionStream, DecompressionBuffer,
+                DecompressionStream, ZBuffer:
+            - Removed entirely.  Regina now uses boost::iostreams instead.
+        Class NExampleSnapPeaTriangulation:
+            - New class for building ready-made SnapPea examples.
+        Class NExampleTriangulation:
+            - Renamed figureEightKnotComplement(), trefoilKnotComplement()
+              and whiteheadLinkComplement() to figureEight(), trefoil()
+              and whiteheadLink() respectively.  The old names are kept
+              but deprecated.
         Class NGlobalDirs:
             - The directory containing the machine-encoded census data is now
               independent of home().  It can be queried through the new census()
               routine, and set through an optional third argument to setDirs().
             - The homeDir argument to setDirs() may now be the empty string,
               which signals that the directory should not be changed.
-        Class CompressionBuffer, CompressionStream, DecompressionBuffer,
-                DecompressionStream, ZBuffer:
-            - Removed entirely.  Regina now uses boost::iostreams instead.
         Class NPacket:
             - Added a variant of save() that takes an output stream (as
               opposed to a filename).
+        Class NSurfaceFilterProperties:
+            - New set-based routine setECs().
         Routine open():
             - Added a variant that takes an input stream (as opposed to
               a filename).

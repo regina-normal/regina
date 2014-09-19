@@ -317,7 +317,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             weberSeifert.setPacketLabel("Weber-Seifert");
 
             copyAndDelete(figure8,
-                NExampleTriangulation::figureEightKnotComplement());
+                NExampleTriangulation::figureEight());
             figure8.setPacketLabel("Figure 8 knot complement");
 
             copyAndDelete(solidKB, NExampleTriangulation::solidKleinBottle());
@@ -338,7 +338,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             singleTet_bary.setPacketLabel("Subdivided tetrahedron");
 
             copyAndDelete(fig8_bary,
-                NExampleTriangulation::figureEightKnotComplement());
+                NExampleTriangulation::figureEight());
             fig8_bary.barycentricSubdivision();
             fig8_bary.setPacketLabel("Subdivided figure 8 knot complement");
 
@@ -2810,7 +2810,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             tri = NTriangulation::fromIsoSig("cMcabbgds");
             delete verifySolidTorus(tri, "Ideal solid torus");
 
-            tri = NExampleTriangulation::figureEightKnotComplement();
+            tri = NExampleTriangulation::figureEight();
             delete verifyNotSolidTorus(tri, "Figure 8 Knot Complement");
 
             // Some knot complements (with real boundary):

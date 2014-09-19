@@ -60,9 +60,9 @@ tri.addTetrahedron(regina.NTetrahedron())
 printEuler(tri, "Solid ball")
 
 # Ideal:
-printEuler(regina.NExampleTriangulation.figureEightKnotComplement(),
+printEuler(regina.NExampleTriangulation.figureEight(),
 	"Figure eight knot complement")
-printEuler(regina.NExampleTriangulation.whiteheadLinkComplement(),
+printEuler(regina.NExampleTriangulation.whiteheadLink(),
 	"Whitehead link complement")
 printEuler(regina.NExampleTriangulation.gieseking(),
 	"Gieseking manifold")

@@ -169,6 +169,16 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
         NBoolSet getRealBoundary() const;
 
         /**
+         * Sets the allowable Euler characteristics to the given set.
+         * See getECs() for further details.
+         *
+         * \ifaces Not present.
+         *
+         * @param s the new set of allowable Euler characteristics.
+         */
+        void setECs(const std::set<NLargeInteger>& s);
+
+        /**
          * Adds the given Euler characteristic to the set of allowable
          * Euler characteristics.  See getECs() for further details.
          *
@@ -263,6 +273,12 @@ inline NBoolSet NSurfaceFilterProperties::getRealBoundary() const {
     return realBoundary;
 }
 
+inline void NSurfaceFilterProperties::setECs(const std::set<NLargeInteger>& s) {
+    if (eulerChar != s) {
+        ChangeEventSpan span(this);
+        eulerChar = s;
+    }
+}
 inline void NSurfaceFilterProperties::addEC(const NLargeInteger& ec) {
     ChangeEventSpan span(this);
     eulerChar.insert(ec);

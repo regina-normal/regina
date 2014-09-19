@@ -33,6 +33,7 @@
 /* end stub */
 
 // Regina core includes:
+#include "snappea/nexamplesnappeatriangulation.h"
 #include "snappea/nsnappeatriangulation.h"
 
 // UI includes:
@@ -49,6 +50,7 @@
 #include <QTextEdit>
 #include <QStackedWidget>
 
+using regina::NExampleSnapPeaTriangulation;
 using regina::NSnapPeaTriangulation;
 using regina::NTriangulation;
 
@@ -70,6 +72,7 @@ namespace {
     enum {
         EXAMPLE_GIESEKING,
         EXAMPLE_FIG8,
+        EXAMPLE_TREFOIL,
         EXAMPLE_WHITEHEAD,
         EXAMPLE_X101
     };
@@ -168,8 +171,9 @@ NSnapPeaTriangulationCreator::NSnapPeaTriangulationCreator(
     exampleWhich = new QComboBox(area);
     exampleWhich->insertItem(0, QObject::tr("Gieseking manifold"));
     exampleWhich->insertItem(1, QObject::tr("Figure 8 knot complement"));
-    exampleWhich->insertItem(2, QObject::tr("Whitehead link complement"));
-    exampleWhich->insertItem(3, QObject::tr("Census manifold x101"));
+    exampleWhich->insertItem(2, QObject::tr("Trefoil knot complement"));
+    exampleWhich->insertItem(3, QObject::tr("Whitehead link complement"));
+    exampleWhich->insertItem(4, QObject::tr("Census manifold x101"));
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
     subLayout->addWidget(exampleWhich, 1);
@@ -270,167 +274,15 @@ regina::NPacket* NSnapPeaTriangulationCreator::createPacket(regina::NPacket*,
     } else if (typeId == TRI_EXAMPLE) {
         switch (exampleWhich->currentIndex()) {
             case EXAMPLE_GIESEKING:
-                return new NSnapPeaTriangulation(
-"% Triangulation\n"
-"m000\n"
-"geometric_solution  1.01494161\n"
-"nonorientable_manifold\n"
-"CS_unknown\n"
-"\n"
-"0 1\n"
-"    Klein   0.000000000000   0.000000000000\n"
-"\n"
-"1\n"
-"   0    0    0    0 \n"
-" 1320 3021 2130 3102\n"
-"   0    0    0    0 \n"
-"  0  0 -1  1 -1  0  1  0  1  0  0 -1  0 -1  1  0\n"
-"  0  0  1 -1  1  0  0 -1  0 -1  0  1  0  1 -1  0\n"
-"  0  0  0  0  0  0  0  0  1 -1  0  0  0  0  0  0\n"
-"  0  0  0  0  0  0  0  0  1 -1  0  0  0  0  0  0\n"
-"  0.500000000000   0.866025403784\n");
+                return NExampleSnapPeaTriangulation::gieseking();
             case EXAMPLE_FIG8:
-                return new NSnapPeaTriangulation(
-"% Triangulation\n"
-"m004\n"
-"geometric_solution  2.02988321\n"
-"oriented_manifold\n"
-"CS_unknown\n"
-"\n"
-"1 0\n"
-"    torus   0.000000000000   0.000000000000\n"
-"\n"
-"2\n"
-"   1    1    1    1 \n"
-" 0132 1230 2310 2103\n"
-"   0    0    0    0 \n"
-"  0  0  0  0  0  0  0  0 -1  1  0  0  0  0  0  0\n"
-"  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
-"  0 -1  0  1  1  0 -1  0  0  1  0 -1 -1  0  1  0\n"
-"  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
-"  0.500000000000   0.866025403784\n"
-"\n"
-"   0    0    0    0 \n"
-" 0132 3201 3012 2103\n"
-"   0    0    0    0 \n"
-"  0  0  0  0  0  0  0  0  0  0  0  0  1  0 -1  0\n"
-"  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
-"  0 -1  0  1 -1  0  1  0  1  0  0 -1  0  1 -1  0\n"
-"  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
-"  0.500000000000   0.866025403784\n");
+                return NExampleSnapPeaTriangulation::figureEight();
+            case EXAMPLE_TREFOIL:
+                return NExampleSnapPeaTriangulation::trefoil();
             case EXAMPLE_WHITEHEAD:
-                return new NSnapPeaTriangulation(
-"% Triangulation\n"
-"m129\n"
-"geometric_solution  3.66386238\n"
-"oriented_manifold\n"
-"CS_unknown\n"
-"\n"
-"2 0\n"
-"    torus   0.000000000000   0.000000000000\n"
-"    torus   0.000000000000   0.000000000000\n"
-"\n"
-"4\n"
-"   1    2    3    1 \n"
-" 0132 0132 0132 3201\n"
-"   0    1    0    1 \n"
-"  0  1 -1  0 -1  0  1  0  0  0  0  0  0  0  0  0\n"
-"  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
-"  0 -1  0  1  0  0 -1  1 -1  0  0  1  0  0  0  0\n"
-"  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
-"  1.000000000000   1.000000000000\n"
-"\n"
-"   0    0    3    2 \n"
-" 0132 2310 3120 3120\n"
-"   0    1    1    0 \n"
-"  0  0  0  0  1  0 -1  0  0  0  0  0  0  0  0  0\n"
-"  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
-"  0 -1  1  0  0  0  0  0  0 -1  0  1  1 -1  0  0\n"
-"  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
-"  0.500000000000   0.500000000000\n"
-"\n"
-"   1    0    3    3 \n"
-" 3120 0132 0213 3120\n"
-"   0    1    1    0 \n"
-"  0 -1  1  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
-"  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
-"  0  1  0 -1  0  0 -1  1 -1  0  0  1  0  0  0  0\n"
-"  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
-"  0.500000000000   0.500000000000\n"
-"\n"
-"   2    2    1    0 \n"
-" 3120 0213 3120 0132\n"
-"   0    1    1    0 \n"
-"  0 -1  0  1  0  0  1 -1  0  0  0  0  0  0  0  0\n"
-"  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
-"  0  0  0  0 -1  0  0  1 -1  1  0  0  1  0 -1  0\n"
-"  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
-"  0.500000000000   0.500000000000\n");
+                return NExampleSnapPeaTriangulation::whiteheadLink();
             case EXAMPLE_X101:
-                return new NSnapPeaTriangulation(
-"% Triangulation\n"
-"x101\n"
-"geometric_solution  5.07470803\n"
-"nonorientable_manifold\n"
-"CS_unknown\n"
-"\n"
-"0 1\n"
-"    Klein   0.000000000000   0.000000000000\n"
-"\n"
-"6\n"
-"   1    2    3    4 \n"
-" 0132 0132 0132 0132\n"
-"   0    0    0    0 \n"
-"  0 -1  0  1  0  0  0  0  0  0  0  0  0  0  0  0\n"
-"  0  1 -1  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
-"  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
-"  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
-"  0.500000000000   0.866025403784\n"
-"\n"
-"   0    5    2    2 \n"
-" 0132 0132 1032 1302\n"
-"   0    0    0    0 \n"
-"  0  0  0  0  0  0  0  0  0 -1  0  1  0  0  0  0\n"
-"  0 -1  0  1  0  0  0  0  0  1  0 -1  0  0  0  0\n"
-"  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
-"  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
-"  0.500000000000   0.866025403784\n"
-"\n"
-"   5    0    1    1 \n"
-" 0132 0132 2031 1032\n"
-"   0    0    0    0 \n"
-"  0  1 -1  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
-"  0 -1  1  0  1  0 -1  0  0  0  0  0  0  0  0  0\n"
-"  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
-"  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
-"  0.500000000000   0.866025403784\n"
-"\n"
-"   4    4    5    0 \n"
-" 1302 1032 0123 0132\n"
-"   0    0    0    0 \n"
-"  0  0  0  0  0  0  0  0  0  0  0  0  0  1 -1  0\n"
-"  0 -1  0  1  0  0  0  0  0  0  0  0 -1  0  1  0\n"
-"  0  0  0  0  0  0  0  0  0  0  0  0 -1  1  0  0\n"
-"  0  0  0  0  0  0  0  0  0  0  0  0 -1  1  0  0\n"
-"  0.500000000000   0.866025403784\n"
-"\n"
-"   3    3    0    5 \n"
-" 1032 2031 0132 0123\n"
-"   0    0    0    0 \n"
-"  0  0 -1  1  1  0  0 -1  0  0  0  0  0  0  0  0\n"
-"  0  0  0  0  0  0  0  0 -1  1  0  0  0  0  0  0\n"
-"  0  0  0  0  0  0  0  0 -1  1  0  0  0  0  0  0\n"
-"  0  0  0  0  0  0  0  0 -1  1  0  0  0  0  0  0\n"
-"  0.500000000000   0.866025403784\n"
-"\n"
-"   2    1    3    4 \n"
-" 0132 0132 0123 0123\n"
-"   0    0    0    0 \n"
-"  0  0  0  0  0  0  0  0  0  0  0  0  0  1 -1  0\n"
-"  0  1  0 -1 -1  0  0  1  0  0  0  0  0 -1  1  0\n"
-"  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
-"  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
-" -1.000000000000  -0.000000000000\n");
+                return NExampleSnapPeaTriangulation::x101();
         }
 
         ReginaSupport::info(parentWidget,
