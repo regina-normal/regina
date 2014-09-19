@@ -54,7 +54,7 @@
 #include "shareableobject.h"
 #include "generic/dimtraits.h"
 #include "utilities/flags.h"
-#include "utilities/nmarkedvector.h"
+#include "utilities/nproperty.h"
 
 namespace regina {
 
@@ -77,16 +77,16 @@ enum MorseAlgFlags {
     /** Collapsing approach, collapsing one dimension at a time. 
 	In every step the lexicographically minimal free face 
         is collapsed. If no free face is available, the lexicographically
-        minimal face is removed and marked as critical. This is the default method.
-        Can be combined with DMT_RANDOM for a pre-processing step which randomly relabels
-        the faces of the triangulation. */
+        minimal face is removed and marked as critical. This is the default 
+        method. Can be combined with DMT_RANDOM for a pre-processing step which 
+        randomly relabels the faces of the triangulation. */
     DMT_BENEDETTILUTZLEX = 0x0000,
     /** Collapsing approach, collapsing one dimension at a time. 
 	In every step the lexicographically maximal free face 
         is collapsed. If no free face is available, the lexicographically
         maximal face is removed and marked as critical.
-        Can be combined with DMT_RANDOM for a pre-processing step which randomly relabels
-        the faces of the triangulation. */
+        Can be combined with DMT_RANDOM for a pre-processing step which randomly 
+        relabels the faces of the triangulation. */
     DMT_BENEDETTILUTZREVLEX = 0x0001,
     /** Collapsing approach, collapsing one dimension at a time. 
 	In every step a free face is chosen to collapse uniformly at
@@ -150,8 +150,8 @@ inline MorseAlg operator | (MorseAlgFlags lhs, MorseAlgFlags rhs) {
  * as explained in more detail in Forman, Robin. Morse Theory for Cell 
  * Complexes. Adv. in Math. 134, 90-145 (1995)
  *
- * The data structure stores cycle free matchings between d- and (d-1)-faces of a 
- * triangulation along with an absolut Morse value (a ``height'')
+ * The data structure stores cycle free matchings between d- and (d-1)-faces of 
+ * a triangulation along with an absolut Morse value (a ``height'')
  * for each face.
  * 
  * While the matchings can be followed from the height storing them 
@@ -174,43 +174,42 @@ inline MorseAlg operator | (MorseAlgFlags lhs, MorseAlgFlags rhs) {
  *
  */
 class REGINA_API NMorseFunction : public ShareableObject {
-    private:
+    public:
         typedef struct {
             bool down;
             long idx;
             unsigned long height;
         } morseitem;
 
-    public:
         typedef std::vector<morseitem*>::const_iterator MorseIterator;
             /**< Used to iterate through a morsefunction by height. */
 
     private:
-        mutable NMarkedVector<morseitem> moresetetrahedra_;
-            /**< Per tetrahedron: if bool = false index of triangle the tetrahedron is 
-              * matched by (or -1 for critical), followed by the height (function value) 
-              * of the tetrahedron. */
-        mutable NMarkedVector<morseitem> moresetetriangles_;
-            /**< Per triangle: if bool = false index of edge the triangle is matched by, 
-              * if bool = true index of tetrahedron the triangle matches to  
+        std::vector<morseitem> morsefaces_[4];
+            /**< Per tetrahedron [3]: if bool = false index of triangle the 
+              * tetrahedron is matched by (or -1 for critical), followed by 
+              * the height (function value) of the tetrahedron. 
+              *
+              * Per triangle [2]: if bool = false index of edge the triangle is 
+              * matched by, if bool = true index of tetrahedron the triangle 
+              * matches to  (or -1 for critical), followed by the height 
+              * (function value) of the triangle. 
+              *
+              * Per edge [1]: if bool = false index of vertex the edge is 
+              * matched by, if bool = true index of triangle the edge matches to
               * (or -1 for critical), followed by the height (function value) 
-              * of the triangle. */
-        mutable NMarkedVector<morseitem> moreseedges_;
-            /**< Per edge: if bool = false index of vertex the edge is matched by, 
-              * if bool = true index of triangle the edge matches to  
-              * (or -1 for critical), followed by the height (function value) 
-              * of the edge. */
-        mutable NMarkedVector<morseitem> moresevertices_;
-            /**< Per edge: if bool = true index of edge the vertex matches to  
-              * (or -1 for critical), followed by the height (function value) 
-              * of the vertex. */
+              * of the edge. 
+              *
+              * Per vertex [0]: if bool = true index of edge the vertex matches 
+              * to  (or -1 for critical), followed by the height (function 
+              * value) of the vertex. */
 
-        mutable bool valid_;
+        bool valid_;
             /**< Is the morse function valid? */
 
-        mutable bool perfect_;
+        mutable NProperty<bool> perfect_;
             /**< Is the morse function perfect? */
-        mutable bool optimal_;
+        mutable NProperty<bool> optimal_;
             /**< Is the morse function optimal? */
 
     public:
@@ -223,7 +222,8 @@ class REGINA_API NMorseFunction : public ShareableObject {
          * @param algorithm the algorithm type to be used to compute the
          * the Morse function.
          */
-        NMorseFunction(const NTriangulation& tri, int algorithm=DMT_BENEDETTILUTZLEX+DMT_RANDOM);
+        NMorseFunction(const NTriangulation& tri, 
+            int algorithm=DMT_BENEDETTILUTZLEX||DMT_RANDOM);
 
         /**
          * Destroys this Morse function.
@@ -234,11 +234,12 @@ class REGINA_API NMorseFunction : public ShareableObject {
 // explanation for JS:
 /*
 
-[const] returndatatype[{*|&}] functionname([const] arg1datatype[{*|&}] arg1, [const] arg2datatype[{*|&}] arg1, ...) [const] 
+[const] returndatatype[{*|&}] functionname([const] arg1datatype[{*|&}] arg1, 
+[const] arg2datatype[{*|&}] arg1, ...) [const] 
 
-returndatatype: if pointer (bla* or bla&) then add 'const' in front if you don't want this to value to change
-argndatatype: same
-add 'const' in the end if this function should not change the data of the object
+returndatatype: if pointer (bla* or bla&) then add 'const' in front if you don't
+want this to value to change argndatatype: same add 'const' in the end if this 
+function should not change the data of the object
 
 */
 
@@ -266,15 +267,15 @@ add 'const' in the end if this function should not change the data of the object
          * This function will take a dimension \a dim and an index \a i
          * and return the \a i -th critical face of index \a dim of this
          * Morse function as a pointer pointing to that face of the 
-         * corresponding triangulation. If such a critical face does not
-         * exist \c fail is returned.
+         * corresponding triangulation. 
          *
          * @param dim dimension of critical point
          * @param i index of critical point in list of critical \a dim -faces
          * @return the \a i -th critical \a d -face
          */
         template <unsigned int dim>
-        typename DimTraits<3>::Face<dim>::type& criticalFace(unsigned long i) const;
+        typename DimTraits<3>::Face<dim>::type& 
+            criticalFace(unsigned long i) const;
 
         /** 
          * Returns the number of critical faces of index \a dim of the Morse
@@ -283,7 +284,7 @@ add 'const' in the end if this function should not change the data of the object
          * @param dim dimension of critical faces to count
          * @return the number of critical \a d -faces
          */
-        unsigned long noCriticalFaces(unsigned int dim) const;
+        unsigned long countCriticalFaces(unsigned int dim) const;
 
         /** 
          * Returns the overall number of critical faces of the Morse
@@ -291,7 +292,7 @@ add 'const' in the end if this function should not change the data of the object
          *
          * @return the overall number of critical faces
          */
-        unsigned long noCriticalFaces() const;
+        unsigned long countCriticalFaces() const;
 
         /** 
          * According to the Morse inequalities, the i-th Betti number
@@ -319,12 +320,13 @@ add 'const' in the end if this function should not change the data of the object
          * @return the index or height of \a t in Morse function
          */
         template <unsigned int dim>
-        unsigned long faceIndex(const NTriangle* t) const;
+        unsigned long 
+            faceIndex(const typename DimTraits<3>::Face<dim+1>::type* t) const;
 
         /** 
          * Returns the face of height \a idx , i.e., the face which is 
          * mapped to \a idx . If no face is mapped to \a idx under the
-         * Morse function \c fail is returned.
+         * Morse function \c 0 is returned.
          *
          * Note that, according to Forman, a Morse function must be injective
          * and thus this function is well-defined.
@@ -333,12 +335,12 @@ add 'const' in the end if this function should not change the data of the object
          * @return face at position or height \a idx in Morse function
          */
         template <unsigned int dim>
-        typename DimTraits<3>::Face<dim>::type& Face(const int idx) const;
+        typename DimTraits<3>::Face<dim>::type* Face(const int idx) const;
 
         /** 
-         * Returns the (i+1)-face T, the i-face \a t is matched with in the Morse function.
-         * This is meant to be the inverse of isMatchedBy(). If \a t does not match any
-         * (i+1)-face \a fail is returned.
+         * Returns the (i+1)-face T, the i-face \a t is matched with in the 
+         * Morse function. This is meant to be the inverse of isMatchedBy(). 
+         * If \a t does not match any (i+1)-face \a NULL is returned.
          *
          * @param t face of dimension i
          * @return (i+1)-face T where \a t is pointing to (e.g., 
@@ -346,12 +348,13 @@ add 'const' in the end if this function should not change the data of the object
          * from \a t inside T)
          */
         template <unsigned int dim>
-        typename DimTraits<3>::Face<dim+1>::type& matchedFace(const typename DimTraits<3>::Face<dim>::type* t) const;
+        typename DimTraits<3>::Face<dim+1>::type&
+            matchedFace(const typename DimTraits<3>::Face<dim>::type* t) const;
 
         /** 
-         * Returns the i-face t which matches the (i+1)-face \a T in the Morse function.
-         * This is meant to be the inverse of matchedFace(). If \a T is not matched,
-         * \c fail is returned.
+         * Returns the i-face t which matches the (i+1)-face \a T in the Morse 
+         * function. This is meant to be the inverse of matchedFace(). If \a T 
+         * is not matched, \c NULL is returned.
          *
          * @param T face of dimension (i+1)
          * @return i-face t, such that t is pointing to \a T
@@ -359,32 +362,38 @@ add 'const' in the end if this function should not change the data of the object
          * is pointing from t inside \a T)
          */
         template <unsigned int dim>
-        typename DimTraits<3>::Face<dim-1>::type& isMatchedBy(const typename DimTraits<3>::Face<dim>::type* T) const;
+        typename DimTraits<3>::Face<dim-1>::type&
+	    isMatchedBy(const typename DimTraits<3>::Face<dim>::type* T) const;
 
         /** 
-         * Maybe possible without chain class? Input is single face, positively oriented.
+         * Maybe possible without chain class? Input is single face, positively 
+         * oriented.
          *
-         * This will some day implement the discrete gradient. Argument \a c is a chain of \a dim -faces.
-         * This should be implemented using templates. Under construction. Keep in mind there are
-         * already related classes in Regina handling chains. Keep also in mind we need
-         * more than just chains for homology computation. We need free modules (as opposed to 
+         * This will some day implement the discrete gradient. Argument \a c is 
+         * a chain of \a dim -faces. This should be implemented using templates.
+         * Under construction. Keep in mind there are already related classes in
+         * Regina handling chains. Keep also in mind we need more than just 
+         * chains for homology computation. We need free modules (as opposed to 
          * free Z-modules)
          *
          * @param c i-chain to compute the discrete gradient from  
          * @return discrete gradient from \a c
          */
         template <unsigned int dim>
-        std::pair<typename DimTraits<3>::Face<dim+1>::type&, unsigned int> discreteGradient(const typename DimTraits<3>::Face<dim>::type* c) const;
+        std::pair<typename DimTraits<3>::Face<dim+1>::type&, unsigned int> 
+            discreteGradient(const typename DimTraits<3>::Face<dim>::type* c) 
+            const;
 //        *NChain discreteGradient(const *NChain c) const;
 
         /** 
          * Definitely not possible to implement without chain class.
          *
-         * This will some day implement the discrete gradient flow. Argument \a c is a chain of \a dim -faces.
-         * This should be implemented using templates. Under construction. Keep in mind there are
-         * already related classes in Regina handling chains. Keep also in mind we need
-         * more than just chains for homology computation. We need free modules (as opposed to 
-         * free Z-modules)
+         * This will some day implement the discrete gradient flow. Argument \a 
+         * c is a chain of \a dim -faces. This should be implemented using 
+         * templates. Under construction. Keep in mind there are already related
+         * classes in Regina handling chains. Keep also in mind we need more 
+         * than just chains for homology computation. We need free modules (as 
+         * opposed to free Z-modules)
          *
          * @param c i-chain
          * @return i-chain which is the image of \a c under the 
