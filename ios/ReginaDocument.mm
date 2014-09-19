@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #import "ReginaDocument.h"
-#import "TSMessage.h"
+#import "ReginaHelper.h"
 #import "packet/ncontainer.h"
 #import "packet/ntext.h"
 #import "snappea/nsnappeatriangulation.h"
@@ -263,9 +263,7 @@ enum DocError {
         NSURL* newURL = [ReginaDocument uniqueDocURLFor:self.fileURL];
         if ([[NSFileManager defaultManager] copyItemAtURL:self.fileURL toURL:newURL error:nil]) {
             [self presentedItemDidMoveToURL:newURL];
-            [TSMessage showNotificationWithTitle:@"Copied to documents folder:"
-                                        subtitle:newURL.lastPathComponent
-                                            type:TSMessageNotificationTypeMessage];
+            [ReginaHelper notify:@"Copied to documents folder" detail:newURL.lastPathComponent];
 
             description = nil;
             _type = DOC_NATIVE;
@@ -285,11 +283,9 @@ enum DocError {
         NSURL* newURL = [ReginaDocument uniqueRgaURLFor:self.fileURL];
         [self presentedItemDidMoveToURL:newURL];
         [self saveToURL:newURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
-            if (success) {
-                [TSMessage showNotificationWithTitle:@"Converted to Regina document:"
-                                            subtitle:newURL.lastPathComponent
-                                                type:TSMessageNotificationTypeMessage];
-            } else {
+            if (success)
+                [ReginaHelper notify:@"Converted to Regina document" detail:newURL.lastPathComponent];
+            else {
                 UIAlertView* alert = [[UIAlertView alloc]
                                       initWithTitle:@"Changes Will Be Lost"
                                       message:@"I was unable to save this document in Regina's native file format.  This means that any changes you make here will be lost."

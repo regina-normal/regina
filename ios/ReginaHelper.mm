@@ -34,6 +34,7 @@
 #import "DetailViewController.h"
 #import "MasterViewController.h"
 #import "PacketTreeController.h"
+#import "UIView+Toast.h"
 #import "ReginaHelper.h"
 
 static UISplitViewController* split;
@@ -79,6 +80,24 @@ BOOL ios8;
     detail.packet = packet;
     // Note: the following call is safe even if tree == nil.
     [[ReginaHelper tree] selectPacket:packet];
+}
+
++ (void)notify:(NSString *)message detail:(NSString *)detail
+{
+    // Using TSMessage:
+    /*
+    [TSMessage showNotificationInViewController:split
+                                          title:message
+                                       subtitle:detail
+                                           type:TSMessageNotificationTypeMessage];
+    */
+
+    // Using Toast:
+    if (detail)
+        [split.view makeToast:detail duration:3.0 position:@"top" title:message];
+    else
+        [split.view makeToast:message duration:3.0 position:@"top"];
+
 }
 
 + (BOOL)ios8

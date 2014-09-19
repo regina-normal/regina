@@ -88,6 +88,12 @@ namespace regina {
 + (void)viewPacket:(regina::NPacket*)packet;
 
 /**
+ * Shows a notification banner for a brief period of time.
+ * The message is mandatory; the detail is optional.
+ */
++ (void)notify:(NSString*)message detail:(NSString*)detail;
+
+/**
  * Is this app running on iOS 8 or above?
  */
 + (BOOL)ios8;
