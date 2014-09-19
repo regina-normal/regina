@@ -84,6 +84,8 @@ BOOL ios8;
 
 + (void)notify:(NSString *)message detail:(NSString *)detail
 {
+    // TODO: In portrait, this is hidden beneath the master view controller.
+
     // Using TSMessage:
     /*
     [TSMessage showNotificationInViewController:split
