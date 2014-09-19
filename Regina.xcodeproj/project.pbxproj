@@ -860,11 +860,6 @@
 		055D6C6719B6F10F0062F001 /* TempFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 055D6C6619B6F10F0062F001 /* TempFile.m */; };
 		055DDCEF1808575300C973FB /* filterregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 055DDCED1808575300C973FB /* filterregistry-impl.h */; };
 		055DDCF01808575300C973FB /* surfacefiltertype.h in Headers */ = {isa = PBXBuildFile; fileRef = 055DDCEE1808575300C973FB /* surfacefiltertype.h */; };
-		055FF35419BE90E20057462A /* TSBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = 055FF34F19BE90E20057462A /* TSBlurView.m */; };
-		055FF35519BE90E20057462A /* TSMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 055FF35119BE90E20057462A /* TSMessage.m */; };
-		055FF35619BE90E20057462A /* TSMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 055FF35319BE90E20057462A /* TSMessageView.m */; };
-		055FF35A19BE91EB0057462A /* HexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 055FF35919BE91EB0057462A /* HexColor.m */; };
-		055FF37F19BE96660057462A /* TSMessages.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 055FF37E19BE96660057462A /* TSMessages.bundle */; };
 		055FF38219BECF590057462A /* NewTriangulationController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055FF38119BECF590057462A /* NewTriangulationController.mm */; };
 		055FF38519BFB3C30057462A /* NewPacketPageViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055FF38419BFB3C30057462A /* NewPacketPageViewController.mm */; };
 		055FF38819C044FB0057462A /* NewDim2TriangulationController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055FF38719C044FB0057462A /* NewDim2TriangulationController.mm */; };
@@ -1878,15 +1873,6 @@
 		055D6C6619B6F10F0062F001 /* TempFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TempFile.m; sourceTree = "<group>"; };
 		055DDCED1808575300C973FB /* filterregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "filterregistry-impl.h"; sourceTree = "<group>"; };
 		055DDCEE1808575300C973FB /* surfacefiltertype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = surfacefiltertype.h; sourceTree = "<group>"; };
-		055FF34E19BE90E20057462A /* TSBlurView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TSBlurView.h; path = TSMessages/Classes/TSBlurView.h; sourceTree = "<group>"; };
-		055FF34F19BE90E20057462A /* TSBlurView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TSBlurView.m; path = TSMessages/Classes/TSBlurView.m; sourceTree = "<group>"; };
-		055FF35019BE90E20057462A /* TSMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TSMessage.h; path = TSMessages/Classes/TSMessage.h; sourceTree = "<group>"; };
-		055FF35119BE90E20057462A /* TSMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TSMessage.m; path = TSMessages/Classes/TSMessage.m; sourceTree = "<group>"; };
-		055FF35219BE90E20057462A /* TSMessageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TSMessageView.h; path = TSMessages/Classes/TSMessageView.h; sourceTree = "<group>"; };
-		055FF35319BE90E20057462A /* TSMessageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TSMessageView.m; path = TSMessages/Classes/TSMessageView.m; sourceTree = "<group>"; };
-		055FF35819BE91EB0057462A /* HexColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HexColor.h; path = HexColors/HexColor.h; sourceTree = "<group>"; };
-		055FF35919BE91EB0057462A /* HexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HexColor.m; path = HexColors/HexColor.m; sourceTree = "<group>"; };
-		055FF37E19BE96660057462A /* TSMessages.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = TSMessages.bundle; path = TSMessages/TSMessages.bundle; sourceTree = "<group>"; };
 		055FF38019BECF590057462A /* NewTriangulationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewTriangulationController.h; sourceTree = "<group>"; };
 		055FF38119BECF590057462A /* NewTriangulationController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewTriangulationController.mm; sourceTree = "<group>"; };
 		055FF38319BFB3C30057462A /* NewPacketPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewPacketPageViewController.h; sourceTree = "<group>"; };
@@ -3329,10 +3315,8 @@
 				052FA1441806103000FAE4DF /* Images.xcassets */,
 				052FA1301806102F00FAE4DF /* Supporting Files */,
 				054F7E2E180B99320090B1F3 /* HTML */,
-				055FF35719BE91D90057462A /* HexColors */,
 				05F96C14180A14E600C99F96 /* MBProgressHUD */,
 				05BEB0C219CCE0BB006AB2C8 /* Toast */,
-				055FF34D19BE90C90057462A /* TSMessages */,
 			);
 			path = ios;
 			sourceTree = "<group>";
@@ -3360,29 +3344,6 @@
 				054F7E2A180B96AC0090B1F3 /* welcome.html */,
 			);
 			name = HTML;
-			sourceTree = "<group>";
-		};
-		055FF34D19BE90C90057462A /* TSMessages */ = {
-			isa = PBXGroup;
-			children = (
-				055FF37E19BE96660057462A /* TSMessages.bundle */,
-				055FF34E19BE90E20057462A /* TSBlurView.h */,
-				055FF34F19BE90E20057462A /* TSBlurView.m */,
-				055FF35019BE90E20057462A /* TSMessage.h */,
-				055FF35119BE90E20057462A /* TSMessage.m */,
-				055FF35219BE90E20057462A /* TSMessageView.h */,
-				055FF35319BE90E20057462A /* TSMessageView.m */,
-			);
-			name = TSMessages;
-			sourceTree = "<group>";
-		};
-		055FF35719BE91D90057462A /* HexColors */ = {
-			isa = PBXGroup;
-			children = (
-				055FF35819BE91EB0057462A /* HexColor.h */,
-				055FF35919BE91EB0057462A /* HexColor.m */,
-			);
-			name = HexColors;
 			sourceTree = "<group>";
 		};
 		0564A2151811D91C002CC2AE /* qtui */ = {
@@ -4231,7 +4192,6 @@
 				052FA1341806102F00FAE4DF /* InfoPlist.strings in Resources */,
 				052FA13D1806103000FAE4DF /* Main.storyboard in Resources */,
 				054F7E2D180B99270090B1F3 /* regina.css in Resources */,
-				055FF37F19BE96660057462A /* TSMessages.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4332,7 +4292,6 @@
 				052FA1D01806129B00FAE4DF /* ntrivialtri.cpp in Sources */,
 				052FA214180612DD00FAE4DF /* canonize_result.c in Sources */,
 				05A73C8519B2EEC50099C617 /* csv.cpp in Sources */,
-				055FF35619BE90E20057462A /* TSMessageView.m in Sources */,
 				052FA1701806129B00FAE4DF /* ngluingpermsearcher.cpp in Sources */,
 				052FA21C180612DD00FAE4DF /* cusp_cross_sections.c in Sources */,
 				052FA1801806129B00FAE4DF /* ntreetraversal.cpp in Sources */,
@@ -4346,7 +4305,6 @@
 				052FA1EB1806129B00FAE4DF /* sfcombination.cpp in Sources */,
 				052FA18D1806129B00FAE4DF /* ngenerictriangulation.cpp in Sources */,
 				052FA1771806129B00FAE4DF /* isomorphic.cpp in Sources */,
-				055FF35419BE90E20057462A /* TSBlurView.m in Sources */,
 				052FA1B71806129B00FAE4DF /* nblockedsfsloop.cpp in Sources */,
 				052FA21A180612DD00FAE4DF /* core_geodesics.c in Sources */,
 				052FA1971806129B00FAE4DF /* nsnappeacensusmfd.cpp in Sources */,
@@ -4380,7 +4338,6 @@
 				05F23E1619C13432005B53B5 /* NewFilterController.mm in Sources */,
 				0589FACC1814BECF0064CD57 /* PacketListenerIOS.mm in Sources */,
 				052FA211180612DD00FAE4DF /* canonize.c in Sources */,
-				055FF35519BE90E20057462A /* TSMessage.m in Sources */,
 				052FA1F51806129B00FAE4DF /* insertlayered.cpp in Sources */,
 				059101181812F4C9000A8D16 /* PacketSubcontroller.mm in Sources */,
 				052FA1981806129B00FAE4DF /* ntorusbundle.cpp in Sources */,
@@ -4402,7 +4359,6 @@
 				05062FB918169F06008A20A5 /* ncomponent.cpp in Sources */,
 				052FA21D180612DD00FAE4DF /* cusp_neighborhoods.c in Sources */,
 				052FA1EC1806129B00FAE4DF /* sfproperties.cpp in Sources */,
-				055FF35A19BE91EB0057462A /* HexColor.m in Sources */,
 				052FA1E91806129B00FAE4DF /* orientable.cpp in Sources */,
 				052FA1F11806129B00FAE4DF /* decompose.cpp in Sources */,
 				052FA1CA1806129B00FAE4DF /* nsnappeacensustri.cpp in Sources */,
