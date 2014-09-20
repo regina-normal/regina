@@ -34,6 +34,7 @@
 #import "MasterViewController.h"
 #import "MBProgressHUD.h"
 #import "ReginaDocument.h"
+#import "ReginaHelper.h"
 
 // TODO: Disallow multiple presses on + (new document)
 // TODO: Opening a bad file from drobox fails
@@ -56,6 +57,11 @@ enum {
     DOCSPEC_TYPE_RGA,
     DOCSPEC_TYPE_TRI,
     DOCSPEC_TYPE_UNKNOWN
+};
+
+enum DocSource {
+    DOCSOURCE_NATIVE,
+    DOCSOURCE_DROPBOX
 };
 
 @property (strong, nonatomic, readonly) NSURL* url;
@@ -263,16 +269,52 @@ enum {
     return [self openURL:url preferredName:nil];
 }
 
+- (void)newDocumentFrom:(DocSource)source
+{
+    switch (source) {
+        case DOCSOURCE_NATIVE:
+            // Create a new document.
+            [self performSegueWithIdentifier:@"openNew" sender:self];
+            break;
+        case DOCSOURCE_DROPBOX:
+            // Import from Dropbox.
+            [[DBChooser defaultChooser] openChooserForLinkType:DBChooserLinkTypeDirect fromViewController:self completion:^(NSArray *results) {
+                if ([results count])
+                    [self openURL:[results.firstObject link]];
+            }];
+            break;
+    }
+}
+
 - (IBAction)newDocument:(id)sender
 {
-    UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil
-                                                       delegate:self
-                                              cancelButtonTitle:@"Cancel"
-                                         destructiveButtonTitle:nil
-                                              otherButtonTitles:@"New document", @"Import from Dropbox", nil];
-    // TODO: Crash on iOS8 in portrait.
-    sheet.tag = sheetNew;
-    [sheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
+    if ([ReginaHelper ios8]) {
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        [alert addAction:[UIAlertAction actionWithTitle:@"New document"
+                                                  style:UIAlertActionStyleDefault
+                                                handler:^(UIAlertAction*) {
+                                                    [self newDocumentFrom:DOCSOURCE_NATIVE];
+                                                }]];
+        [alert addAction:[UIAlertAction actionWithTitle:@"Import from Dropbox"
+                                                  style:UIAlertActionStyleDefault
+                                                handler:^(UIAlertAction*) {
+                                                    [self newDocumentFrom:DOCSOURCE_DROPBOX];
+                                                }]];
+        [alert addAction:[UIAlertAction actionWithTitle:@"Cancel"
+                                                  style:UIAlertActionStyleCancel
+                                                handler:nil]];
+        [alert setModalPresentationStyle:UIModalPresentationPopover];
+        alert.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;
+        [self presentViewController:alert animated:YES completion:nil];
+    } else {
+        UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                           delegate:self
+                                                  cancelButtonTitle:@"Cancel"
+                                             destructiveButtonTitle:nil
+                                                  otherButtonTitles:@"New document", @"Import from Dropbox", nil];
+        sheet.tag = sheetNew;
+        [sheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
+    }
 }
 
 - (ReginaDocument *)documentForIndexPath:(NSIndexPath *)indexPath
@@ -568,31 +610,15 @@ enum {
 
 #pragma mark - Action Sheet
 
-- (void)actionNewFrom:(BOOL)native
-{
-    if (native) {
-        // Create a new document.
-        [self performSegueWithIdentifier:@"openNew" sender:self];
-    } else {
-        // Import from Dropbox.
-        [[DBChooser defaultChooser] openChooserForLinkType:DBChooserLinkTypeDirect fromViewController:self completion:^(NSArray *results) {
-            if ([results count])
-                [self openURL:[results.firstObject link]];
-        }];
-    }
-}
-
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    switch (actionSheet.tag) {
-        case sheetNew:
-            if (buttonIndex == 0)
-                [self actionNewFrom:YES];
-            else if (buttonIndex == 1)
-                [self actionNewFrom:NO];
-            break;
-        default:
-            [super actionSheet:actionSheet clickedButtonAtIndex:buttonIndex];
-    }
+    if (actionSheet.tag == sheetNew) {
+        switch (buttonIndex) {
+            case 0: [self newDocumentFrom:DOCSOURCE_NATIVE]; break;
+            case 1: [self newDocumentFrom:DOCSOURCE_DROPBOX]; break;
+            default: break;
+        }
+    } else
+        [super actionSheet:actionSheet clickedButtonAtIndex:buttonIndex];
 }
 
 @end
