@@ -759,7 +759,6 @@
 		052FA243180613A900FAE4DF /* libgmpxx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA240180613A900FAE4DF /* libgmpxx.framework */; };
 		053E5B5219B3D45B00166778 /* libgmp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA23F180613A900FAE4DF /* libgmp.framework */; };
 		053E5B5319B3D46000166778 /* libgmpxx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA240180613A900FAE4DF /* libgmpxx.framework */; };
-		053E5B5419B3D46D00166778 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0569F92F19B3655C00051091 /* libtokyocabinet.framework */; };
 		053E5B5619B3D79200166778 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
 		0543AE911811DE79002758F8 /* packetui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5CB1811D920002CC2AE /* packetui.h */; };
 		0543AE931811E12A002758F8 /* boundarycomponentchooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A40E1811D91E002CC2AE /* boundarycomponentchooser.h */; };
@@ -987,6 +986,8 @@
 		0591011B1813230A000A8D16 /* NewPacketMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591011A1813230A000A8D16 /* NewPacketMenu.mm */; };
 		0591011E181364BB000A8D16 /* NewSurfacesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591011D181364BB000A8D16 /* NewSurfacesController.mm */; };
 		0591012118141996000A8D16 /* NewPacketController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591012018141996000A8D16 /* NewPacketController.mm */; };
+		05937A9619CDBBF300160F9A /* libtokyocabinet-macosx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05937A9519CDBBF300160F9A /* libtokyocabinet-macosx.framework */; };
+		05937A9719CE387100160F9A /* libtokyocabinet-macosx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05937A9519CDBBF300160F9A /* libtokyocabinet-macosx.framework */; };
 		05943CF419B68C0500E77EF3 /* PDFViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05943CF319B68C0500E77EF3 /* PDFViewController.mm */; };
 		05992CB319BA8BB90032CE65 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA23E180613A900FAE4DF /* boost.framework */; };
 		05A73C7519B2EDBF0099C617 /* hyperbolic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */; };
@@ -1043,7 +1044,6 @@
 		05A73CE619B2F9DC0099C617 /* nsnappeaui.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CC919B2F1AB0099C617 /* nsnappeaui.h */; };
 		05B14EB519B4240D002138C0 /* mkcensusdb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B14EB419B4240D002138C0 /* mkcensusdb.cpp */; };
 		05B14EB719B424D8002138C0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A51806047E00FAE4DF /* libz.dylib */; };
-		05B14EB819B424E6002138C0 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0569F92F19B3655C00051091 /* libtokyocabinet.framework */; };
 		05B14EB919B424F9002138C0 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
 		05B62166180B9D7300CCB90B /* title.png in Resources */ = {isa = PBXBuildFile; fileRef = 05B62165180B9D7300CCB90B /* title.png */; };
 		05B7708419C92A5000E2E558 /* ScriptViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B7708319C92A5000E2E558 /* ScriptViewController.mm */; };
@@ -2123,6 +2123,7 @@
 		0591011D181364BB000A8D16 /* NewSurfacesController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewSurfacesController.mm; sourceTree = "<group>"; };
 		0591011F18141996000A8D16 /* NewPacketController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewPacketController.h; sourceTree = "<group>"; };
 		0591012018141996000A8D16 /* NewPacketController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewPacketController.mm; sourceTree = "<group>"; };
+		05937A9519CDBBF300160F9A /* libtokyocabinet-macosx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "libtokyocabinet-macosx.framework"; path = "../../Library/Frameworks/libtokyocabinet-macosx.framework"; sourceTree = "<group>"; };
 		05943CF219B68C0500E77EF3 /* PDFViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDFViewController.h; sourceTree = "<group>"; };
 		05943CF319B68C0500E77EF3 /* PDFViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PDFViewController.mm; sourceTree = "<group>"; };
 		05A47F971809CB7600F86BFD /* closed-hyp-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-hyp-census.rga"; sourceTree = "<group>"; };
@@ -2282,7 +2283,7 @@
 				05992CB319BA8BB90032CE65 /* boost.framework in Frameworks */,
 				053E5B5219B3D45B00166778 /* libgmp.framework in Frameworks */,
 				053E5B5319B3D46000166778 /* libgmpxx.framework in Frameworks */,
-				053E5B5419B3D46D00166778 /* libtokyocabinet.framework in Frameworks */,
+				05937A9719CE387100160F9A /* libtokyocabinet-macosx.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2293,7 +2294,7 @@
 				05B14EB919B424F9002138C0 /* libbz2.dylib in Frameworks */,
 				05B14EB719B424D8002138C0 /* libz.dylib in Frameworks */,
 				05EC452F19B99A81002D0633 /* boost.framework in Frameworks */,
-				05B14EB819B424E6002138C0 /* libtokyocabinet.framework in Frameworks */,
+				05937A9619CDBBF300160F9A /* libtokyocabinet-macosx.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3130,6 +3131,7 @@
 				052FA23F180613A900FAE4DF /* libgmp.framework */,
 				052FA240180613A900FAE4DF /* libgmpxx.framework */,
 				0569F92F19B3655C00051091 /* libtokyocabinet.framework */,
+				05937A9519CDBBF300160F9A /* libtokyocabinet-macosx.framework */,
 				053E5B5519B3D79100166778 /* libbz2.dylib */,
 				055B7317181D7F2400449D14 /* libiconv.dylib */,
 				055B7319181D7F2B00449D14 /* libxml2.dylib */,
@@ -5075,7 +5077,7 @@
 		052FA1591806103000FAE4DF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
@@ -5114,7 +5116,7 @@
 		052FA15A1806103000FAE4DF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
