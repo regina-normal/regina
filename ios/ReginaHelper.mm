@@ -84,8 +84,6 @@ BOOL ios8;
 
 + (void)notify:(NSString *)message detail:(NSString *)detail
 {
-    // TODO: In portrait, this is hidden beneath the master view controller.
-
     // Using TSMessage:
     /*
     [TSMessage showNotificationInViewController:split
@@ -94,11 +92,13 @@ BOOL ios8;
                                            type:TSMessageNotificationTypeMessage];
     */
 
-    // Using Toast:
+    // In portrait, display the banner in the top right corner so it is not obscured by
+    // the master view controller.
+    NSString* position = (UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) ? @"topright" : @"top");
     if (detail)
-        [split.view makeToast:detail duration:3.0 position:@"top" title:message];
+        [split.view makeToast:detail duration:3.0 position:position title:message];
     else
-        [split.view makeToast:message duration:3.0 position:@"top"];
+        [split.view makeToast:message duration:3.0 position:position];
 
 }
 
