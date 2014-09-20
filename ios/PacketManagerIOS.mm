@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #import "DetailViewController.h"
+#import "MasterViewController.h"
 #import "NewPacketController.h"
 #import "PacketManagerIOS.h"
 #import "PacketTreeController.h"
@@ -143,10 +144,12 @@
 
 + (void)newPacket:(NewPacketSpec*)spec formSheet:(NSString*)sheetID
 {
-    UIViewController* root = [ReginaHelper root];
-    UIViewController* sheet = [root.storyboard instantiateViewControllerWithIdentifier:sheetID];
+    // Present the form sheet from the master view controller.
+    // Otherwise the form sheet may appear *beneath* master (iOS 8, portrait mode).
+    UIViewController* from = [ReginaHelper master];
+    UIViewController* sheet = [from.storyboard instantiateViewControllerWithIdentifier:sheetID];
     static_cast<NewPacketController*>(sheet).spec = spec;
-    [root presentViewController:sheet animated:YES completion:nil];
+    [from presentViewController:sheet animated:YES completion:nil];
 }
 
 @end

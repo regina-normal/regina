@@ -37,7 +37,6 @@
 #pragma mark - NewPacketRow
 
 // TODO: ios8: strange vertical line on the menu.
-// TODO: ios8, portrait: new dialog appears beneath the master controller.
 
 // The internal global array of all available packet types.
 // This will be created the first time it is required.
