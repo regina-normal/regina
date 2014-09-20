@@ -36,7 +36,6 @@
 #import "ReginaDocument.h"
 #import "ReginaHelper.h"
 
-// TODO: Disallow multiple presses on + (new document)
 // TODO: Opening a bad file from drobox fails
 
 // Action sheet tags;
@@ -288,6 +287,10 @@ enum DocSource {
 
 - (IBAction)newDocument:(id)sender
 {
+    // Note: on ios7, pressing the + button multiple times will bring up
+    // multiple overlaid copies of the new document action sheet.
+    // I assume this is a bug in ios7 (since the behaviour is fixed in ios8),
+    // so we won't worry about working around it here.
     if ([ReginaHelper ios8]) {
         UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
         [alert addAction:[UIAlertAction actionWithTitle:@"New document"
