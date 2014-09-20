@@ -119,7 +119,7 @@ static NSArray* _allRows;
     // since in iOS 8 the default rowHeight is -1 (UITableViewAutomaticDimension).
     NSInteger nRows = [self.tableView numberOfRowsInSection:0];
 
-    CGFloat maxWidth = 0, height = 0;
+    CGFloat width = 0, height = 0;
     UITableViewCell* currCell;
     NSString *currLabel;
     CGFloat currWidth;
@@ -128,12 +128,13 @@ static NSArray* _allRows;
         height += CGRectGetHeight(currCell.frame);
         currLabel = currCell.textLabel.text;
         currWidth = [currLabel sizeWithAttributes:@{NSFontAttributeName:currCell.textLabel.font}].width;
-        if (maxWidth < currWidth)
-            maxWidth = currWidth;
+        if (width < currWidth)
+            width = currWidth;
     }
-    CGFloat width = maxWidth + 80; // Room for 32x32 icon plus some padding.
 
-    self.preferredContentSize = CGSizeMake(width, height);
+    // Increase width to make room for a 32x32 icon plus some padding.
+    // Decrease height to remove the unwanted cell separator at the bottom of the table.
+    self.preferredContentSize = CGSizeMake(width + 80, height - 1);
     self.tableView.scrollEnabled = NO;
 }
 
