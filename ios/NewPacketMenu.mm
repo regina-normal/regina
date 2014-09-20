@@ -36,8 +36,6 @@
 
 #pragma mark - NewPacketRow
 
-// TODO: ios8: strange vertical line on the menu.
-
 // The internal global array of all available packet types.
 // This will be created the first time it is required.
 static NSArray* _allRows;
