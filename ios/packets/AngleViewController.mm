@@ -37,9 +37,14 @@
 #import "angle/nanglestructurelist.h"
 #import "triangulation/ntriangulation.h"
 
+static UIColor* yesColour = [UIColor colorWithRed:0.0 green:0.5 blue:0.0 alpha:1.0];
+static UIColor* noColour = [UIColor colorWithRed:0.5 green:0.0 blue:0.0 alpha:1.0];
+
 #pragma mark - Angle structure view controller
 
-@interface AngleViewController ()
+@interface AngleViewController () <PacketDelegate> {
+    PacketListenerIOS* _triListener;
+}
 @property (weak, nonatomic) IBOutlet UILabel *countAndType;
 @property (weak, nonatomic) IBOutlet UILabel *span;
 @property (weak, nonatomic) IBOutlet UIButton *triangulation;
@@ -71,35 +76,64 @@
             self.countAndType.text = [NSString stringWithFormat:@"%ld vertex angle structures", count];
     }
 
-    // TODO: Use attributed text for this.
-    if (a->spansStrict()) {
-        if (a->spansTaut())
-            self.span.text = @"Span includes: Strict, Taut";
-        else
-            self.span.text = @"Span includes: Strict, NO Taut";
-    } else {
-        if (a->spansTaut())
-            self.span.text = @"Span includes: NO Strict, Taut";
-        else
-            self.span.text = @"Span includes: NO Strict, NO Taut";
-    }
+    NSAttributedString* strictText = (a->spansStrict() ?
+                                      [[NSAttributedString alloc]
+                                       initWithString:@"Strict"
+                                       attributes:@{NSForegroundColorAttributeName: yesColour}] :
+                                      [[NSAttributedString alloc]
+                                       initWithString:@"No strict"
+                                       attributes:@{NSForegroundColorAttributeName: noColour}]);
+    NSAttributedString* tautText = (a->spansTaut() ?
+                                    [[NSAttributedString alloc]
+                                     initWithString:@"Taut"
+                                     attributes:@{NSForegroundColorAttributeName: yesColour}] :
+                                    [[NSAttributedString alloc]
+                                     initWithString:@"No taut"
+                                     attributes:@{NSForegroundColorAttributeName: noColour}]);
 
-    // TODO: Listen for triangulation renames.
-    NSString* triName = [NSString stringWithUTF8String:a->getTriangulation()->getPacketLabel().c_str()];
-    [self.triangulation setTitle:triName forState:UIControlStateNormal];
+    NSMutableAttributedString* spanText = [[NSMutableAttributedString alloc] initWithString:@"Span includes: "];
+    [spanText appendAttributedString:strictText];
+    [spanText appendAttributedString:[[NSAttributedString alloc] initWithString:@", "]];
+    [spanText appendAttributedString:tautText];
+    self.span.attributedText = spanText;
+
+    [self updateTriangulationButton];
+    // Continue to update the button text if the triangulation is renamed.
+    _triListener = [PacketListenerIOS listenerWithPacket:a->getTriangulation() delegate:self listenChildren:NO];
 
     // TODO: Set up the table.
 }
 
+- (void)dealloc
+{
+    [_triListener permanentlyUnlisten];
+}
+
 - (IBAction)openTriangulation:(id)sender {
     regina::NPacket* show = static_cast<regina::NAngleStructureList*>(self.packet)->getTriangulation();
-    PacketTreeController* tree = [ReginaHelper tree];
-    if (tree.node == show)
-        [tree.navigationController popViewControllerAnimated:YES]; // TODO: Generalise.
+    [[ReginaHelper tree] navigateToPacket:show->getTreeParent()];
+    // TODO: Generalise more.
 
     // We can't select this normal surface list in the tree, since the pop action is animated and
     // will not have finished by this point.
     [ReginaHelper viewPacket:static_cast<regina::NAngleStructureList*>(self.packet)->getTriangulation()];
+}
+
+- (void)updateTriangulationButton
+{
+    regina::NPacket* tri = static_cast<regina::NAngleStructureList*>(self.packet)->getTriangulation();
+    NSString* triName = [NSString stringWithUTF8String:tri->getPacketLabel().c_str()];
+    if (triName.length == 0)
+        triName = @"(Unnamed)";
+    [self.triangulation setTitle:triName forState:UIControlStateNormal];
+}
+
+#pragma mark - Packet listener
+
+- (void)packetWasRenamed:(regina::NPacket *)packet
+{
+    if (packet == static_cast<regina::NAngleStructureList*>(self.packet)->getTriangulation())
+        [self updateTriangulationButton];
 }
 
 @end
