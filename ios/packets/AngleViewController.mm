@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #import "AngleViewController.h"
+#import "MDSpreadViewClasses.h"
 #import "PacketTreeController.h"
 #import "ReginaHelper.h"
 #import "angle/nanglestructure.h"
@@ -42,13 +43,13 @@ static UIColor* noColour = [UIColor colorWithRed:0.5 green:0.0 blue:0.0 alpha:1.
 
 #pragma mark - Angle structure view controller
 
-@interface AngleViewController () <PacketDelegate> {
+@interface AngleViewController () <MDSpreadViewDataSource, PacketDelegate> {
     PacketListenerIOS* _triListener;
 }
 @property (weak, nonatomic) IBOutlet UILabel *countAndType;
 @property (weak, nonatomic) IBOutlet UILabel *span;
 @property (weak, nonatomic) IBOutlet UIButton *triangulation;
-@property (weak, nonatomic) IBOutlet UIScrollView *angles;
+@property (weak, nonatomic) IBOutlet MDSpreadView *angles;
 @end
 
 @implementation AngleViewController
@@ -101,7 +102,7 @@ static UIColor* noColour = [UIColor colorWithRed:0.5 green:0.0 blue:0.0 alpha:1.
     // Continue to update the button text if the triangulation is renamed.
     _triListener = [PacketListenerIOS listenerWithPacket:a->getTriangulation() delegate:self listenChildren:NO];
 
-    // TODO: Set up the table.
+    self.angles.dataSource = self;
 }
 
 - (void)dealloc
@@ -133,6 +134,70 @@ static UIColor* noColour = [UIColor colorWithRed:0.5 green:0.0 blue:0.0 alpha:1.
 {
     if (packet == static_cast<regina::NAngleStructureList*>(self.packet)->getTriangulation())
         [self updateTriangulationButton];
+}
+
+#pragma mark - MDSpreadView data source
+
+- (NSInteger)spreadView:(MDSpreadView *)aSpreadView numberOfColumnsInSection:(NSInteger)section
+{
+    return 1 + 3 * static_cast<regina::NAngleStructureList*>(self.packet)->getTriangulation()->getNumberOfTetrahedra();
+}
+
+- (NSInteger)spreadView:(MDSpreadView *)aSpreadView numberOfRowsInSection:(NSInteger)section
+{
+    return static_cast<regina::NAngleStructureList*>(self.packet)->getNumberOfStructures();
+}
+
+- (id)spreadView:(MDSpreadView *)aSpreadView titleForHeaderInRowSection:(NSInteger)section forColumnAtIndexPath:(MDIndexPath *)columnPath
+{
+    if (columnPath.column == 0)
+        return @"Type";
+    else {
+        NSInteger tet = (columnPath.column - 1) / 3;
+        NSInteger type = (columnPath.column - 1) % 3;
+        switch (type) {
+            case 0: return [NSString stringWithFormat:@"%d: 01/23", tet];
+            case 1: return [NSString stringWithFormat:@"%d: 02/13", tet];
+            case 2: return [NSString stringWithFormat:@"%d: 03/12", tet];
+            default: return nil;
+        }
+    }
+}
+
+- (id)spreadView:(MDSpreadView *)aSpreadView titleForHeaderInColumnSection:(NSInteger)section forRowAtIndexPath:(MDIndexPath *)rowPath
+{
+    return [NSString stringWithFormat:@"%d.", rowPath.row];
+}
+
+- (id)spreadView:(MDSpreadView *)aSpreadView objectValueForRowAtIndexPath:(MDIndexPath *)rowPath forColumnAtIndexPath:(MDIndexPath *)columnPath
+{
+    const regina::NAngleStructure* a = static_cast<regina::NAngleStructureList*>(self.packet)->getStructure(rowPath.row);
+
+    if (columnPath.column == 0) {
+        if (a->isStrict())
+            return @"Strict";
+        else if (a->isVeering())
+            return @"Veering";
+        else if (a->isTaut())
+            return @"Taut";
+        else
+            return @"";
+    }
+
+    regina::NRational angle = a->getAngle((columnPath.column - 1) / 3, (columnPath.column - 1) % 3);
+    if (angle == 0)
+        return @"";
+    if (angle == 1)
+        return @"π";
+    if (angle.getDenominator() == 1)
+        return [NSString stringWithFormat:@"%s π",
+                angle.getNumerator().stringValue().c_str()];
+    if (angle.getNumerator() == 1)
+        return [NSString stringWithFormat:@"π / %s",
+                angle.getDenominator().stringValue().c_str()];
+    return [NSString stringWithFormat:@"%s π / %s",
+            angle.getNumerator().stringValue().c_str(),
+            angle.getDenominator().stringValue().c_str()];
 }
 
 @end
