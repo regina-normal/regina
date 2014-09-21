@@ -25,11 +25,11 @@ CLEAN UP:
 
 WRITE VIEWERS:
 
-- PDF:                    one-page
-- 2-D triangulation:      tabs,     editor
-- 3-D triangulation:      tabs,     editor
-- SnapPea triangulation:  tabs,     editor
-- Normal surfaces:        tabs
+- PDF:                    quick look
+- 2-D triangulation:      2 tabs, editor
+- 3-D triangulation:      6 tabs, editor
+- SnapPea triangulation:  7 tabs, editor
+- Normal surfaces:        4 tabs
 
 TEST:
 
