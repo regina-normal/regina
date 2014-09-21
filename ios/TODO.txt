@@ -29,7 +29,6 @@ WRITE VIEWERS:
 - 2-D triangulation:      tabs,     editor
 - 3-D triangulation:      tabs,     editor
 - SnapPea triangulation:  tabs,     editor
-- Angle structures:       one-page
 - Normal surfaces:        tabs
 
 TEST:
