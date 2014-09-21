@@ -32,8 +32,6 @@
 
 #import "SwitchableSubcontroller.h"
 
-// TODO: Deal with the flicker as new panels move in/out.
-
 @interface SwitchableSubcontroller ()
 
 @end
@@ -45,43 +43,36 @@
     return self.childViewControllers.lastObject;
 }
 
-- (void)addAutoLayoutConstraints:(UIView*)subView {
-    NSDictionary *views = NSDictionaryOfVariableBindings(subView);
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[subView]|"
-                                                                      options:0
-                                                                      metrics:nil
-                                                                        views:views]];
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[subView]|"
-                                                                      options:0
-                                                                      metrics:nil
-                                                                        views:views]];
-}
-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     UIViewController* to = segue.destinationViewController;
-    
-    // Switch off autoresizing now, so we can safely add autolayout constraints later.
-    to.view.translatesAutoresizingMaskIntoConstraints = NO;
+    to.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
 
     if (self.childViewControllers.count > 0) {
         UIViewController* from = self.childViewControllers.lastObject;
-        
-        [from willMoveToParentViewController:nil];
+
+        // Note: The following call to addChildViewController: should
+        // automatically call [to willMoveToParentViewController:self].
         [self addChildViewController:to];
+
+        to.view.frame = from.view.bounds;
+        [to.view layoutIfNeeded];
+
         [self transitionFromViewController:from
                           toViewController:to
                                   duration:0
                                    options:0
                                 animations:nil
                                 completion:^(BOOL finished) {
+                                    // Likewise, the following call to removeFromParentViewController should
+                                    // automatically call [from didMoveToParentViewController:nil].
+                                    [from willMoveToParentViewController:nil];
                                     [from removeFromParentViewController];
-                                    [self addAutoLayoutConstraints:to.view];
+
                                     [to didMoveToParentViewController:self];
                                 }];
     } else {
         [self addChildViewController:to];
         [self.view addSubview:to.view];
-        [self addAutoLayoutConstraints:to.view];
         [to didMoveToParentViewController:self];
     }
 }
