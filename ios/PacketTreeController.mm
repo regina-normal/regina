@@ -233,15 +233,31 @@
     [PacketManagerIOS newPacket:spec];
 }
 
-- (void)pushToChild:(regina::NPacket *)child
+- (BOOL)navigateToPacket:(regina::NPacket *)dest
 {
-    if (child->getTreeParent() != self.node)
-        return;
+    if (! dest)
+        return NO;
+    
+    if (dest == self.node) {
+        // We're already there.
+        return YES;
+    }
 
-    // Hmm.  Let's not select the packet for now.
-    PacketTreeController* subtree = [self.storyboard instantiateViewControllerWithIdentifier:@"packetTree"];
-    [subtree openSubtree:child detail:self.detail];
-    [self.navigationController pushViewController:subtree animated:YES];
+    if (dest->getTreeParent() == self.node) {
+        // This involves a single push.
+        PacketTreeController* subtree = [self.storyboard instantiateViewControllerWithIdentifier:@"packetTree"];
+        [subtree openSubtree:dest detail:self.detail];
+        [self.navigationController pushViewController:subtree animated:YES];
+        return YES;
+    }
+
+    if (self.node->getTreeParent() == dest) {
+        // This involves a single pop.
+        [self.navigationController popViewControllerAnimated:YES];
+        return YES;
+    }
+
+    return NO;
 }
 
 - (void)dealloc

@@ -284,8 +284,7 @@ static NSMutableCharacterSet* eulerSeparators;
     }
 
     PacketTreeController* tree = [ReginaHelper tree];
-    if (tree.node == self.packet->getTreeParent())
-        [tree pushToChild:self.packet];
+    [tree navigateToPacket:self.packet];
 
     // Hmm.  Selection does not work because the subtree is not yet
     // present in the master navigation controller (the animated transition

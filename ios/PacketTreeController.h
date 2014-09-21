@@ -66,8 +66,11 @@ namespace regina {
 - (void)newPacket:(regina::PacketType)type;
 
 /**
- * Safe if \a child is not in the list.
+ * Currently, will do nothing unless this involves a single push or a single pop.
+ * Safe if dest is 0.
+ * TODO: Perhaps make this work more generally, via a sequence of pop/push transitions.
+ * TODO: Perhaps make this automatic when detail.packet changes?
  */
-- (void)pushToChild:(regina::NPacket*)child;
+- (BOOL)navigateToPacket:(regina::NPacket*)dest;
 
 @end
