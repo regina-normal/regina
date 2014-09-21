@@ -112,7 +112,6 @@ static UIColor* noColour = [UIColor colorWithRed:0.5 green:0.0 blue:0.0 alpha:1.
 - (IBAction)openTriangulation:(id)sender {
     regina::NPacket* show = static_cast<regina::NAngleStructureList*>(self.packet)->getTriangulation();
     [[ReginaHelper tree] navigateToPacket:show->getTreeParent()];
-    // TODO: Generalise more.
 
     // We can't select this normal surface list in the tree, since the pop action is animated and
     // will not have finished by this point.
