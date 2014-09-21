@@ -41,10 +41,24 @@
 static UIColor* yesColour = [UIColor colorWithRed:0.0 green:0.5 blue:0.0 alpha:1.0];
 static UIColor* noColour = [UIColor colorWithRed:0.5 green:0.0 blue:0.0 alpha:1.0];
 
+// These fonts are hard-coded into the MDSpreadView classes.
+// Replicate them here so we can compute cell sizes.
+static UIFont* headerFont = [UIFont boldSystemFontOfSize:14];
+static UIFont* cellFont = [UIFont systemFontOfSize:16];
+
+// MDSpreadViewHeaderCell.m uses a horizontal padding of 28, assuming no sort indicator.
+// Both the header and cell classes use a vertical padding of 3.
+#define CELL_WIDTH_PADDING 32
+#define CELL_HEIGHT_PADDING 6
+
 #pragma mark - Angle structure view controller
 
-@interface AngleViewController () <MDSpreadViewDataSource, PacketDelegate> {
+@interface AngleViewController () <MDSpreadViewDataSource, MDSpreadViewDelegate, PacketDelegate> {
     PacketListenerIOS* _triListener;
+    CGFloat widthHeader;
+    CGFloat widthType;
+    CGFloat widthAngle;
+    CGFloat height;
 }
 @property (weak, nonatomic) IBOutlet UILabel *countAndType;
 @property (weak, nonatomic) IBOutlet UILabel *span;
@@ -102,7 +116,27 @@ static UIColor* noColour = [UIColor colorWithRed:0.5 green:0.0 blue:0.0 alpha:1.
     // Continue to update the button text if the triangulation is renamed.
     _triListener = [PacketListenerIOS listenerWithPacket:a->getTriangulation() delegate:self listenChildren:NO];
 
+    [self initMetrics];
     self.angles.dataSource = self;
+    self.angles.delegate = self;
+    self.angles.allowsRowHeaderSelection = YES;
+}
+
+- (void)initMetrics
+{
+    regina::NAngleStructureList* a = static_cast<regina::NAngleStructureList*>(self.packet);
+    NSString* text;
+
+    text = [NSString stringWithFormat:@"%ld.", a->getNumberOfStructures() - 1];
+    widthHeader = CELL_WIDTH_PADDING + [text sizeWithAttributes:@{NSFontAttributeName: headerFont}].width;
+
+    text = @"Veering";
+    CGSize size = [text sizeWithAttributes:@{NSFontAttributeName: cellFont}];
+    widthType = CELL_WIDTH_PADDING + size.width;
+    height = CELL_HEIGHT_PADDING + size.height;
+
+    text = [NSString stringWithFormat:@"%ld: 01/23", a->getTriangulation()->getNumberOfTetrahedra() - 1];
+    widthAngle = CELL_WIDTH_PADDING + [text sizeWithAttributes:@{NSFontAttributeName: headerFont}].width;
 }
 
 - (void)dealloc
@@ -198,6 +232,26 @@ static UIColor* noColour = [UIColor colorWithRed:0.5 green:0.0 blue:0.0 alpha:1.
     return [NSString stringWithFormat:@"%s π / %s",
             angle.getNumerator().stringValue().c_str(),
             angle.getDenominator().stringValue().c_str()];
+}
+
+#pragma mark - MDSpreadView delegate
+
+- (CGFloat)spreadView:(MDSpreadView *)aSpreadView widthForColumnHeaderInSection:(NSInteger)columnSection
+{
+    return widthHeader;
+}
+
+- (CGFloat)spreadView:(MDSpreadView *)aSpreadView widthForColumnAtIndexPath:(MDIndexPath *)indexPath
+{
+    switch (indexPath.column) {
+        case 0: return widthType;
+        default: return widthAngle;
+    }
+}
+
+- (CGFloat)spreadView:(MDSpreadView *)aSpreadView heightForRowAtIndexPath:(MDIndexPath *)indexPath
+{
+    return height;
 }
 
 @end
