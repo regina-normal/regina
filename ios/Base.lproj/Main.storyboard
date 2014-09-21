@@ -233,7 +233,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0fR-mn-Aqe" customClass="MDSpreadView">
-                                <rect key="frame" x="20" y="168" width="663" height="580"/>
+                                <rect key="frame" x="20" y="169" width="663" height="579"/>
                             </scrollView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kb8-Oa-NP5">
                                 <rect key="frame" x="20" y="93" width="663" height="21"/>
@@ -247,7 +247,8 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p0j-AZ-BWb">
-                                <rect key="frame" x="392" y="118" width="30" height="30"/>
+                                <rect key="frame" x="392" y="116" width="30" height="33"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title=" ">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
