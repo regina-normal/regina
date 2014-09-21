@@ -29,6 +29,8 @@ Version 4.97  [ (under development) ]
         Class NPacket:
             - Added a variant of save() that takes an output stream (as
               opposed to a filename).
+        Class NPacketListener:
+            - New events childToBeRenamed(), childWasRenamed().
         Class NSurfaceFilterProperties:
             - New set-based routine setECs().
         Routine open():

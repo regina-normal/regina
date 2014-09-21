@@ -66,10 +66,10 @@ class NPacket;
  * These events come in future/past pairs: packetToBeChanged() and
  * packetWasChanged(), childToBeAdded() and childWasAdded(), and so on.
  * These event pairs are mutually exclusive: any event will
- * cause at most one pair of routines to be called for each listener.  For
- * instance, if a packet is renamed then packetToBeRenamed() and
- * packetWasRenamed() will be called but packetToBeChanged() and
- * packetWasChanged() will not.
+ * cause at most one pair of routines to be called for each
+ * (packet, listener) pair.  For instance, if a packet is renamed then
+ * packetToBeRenamed() and packetWasRenamed() will be called but
+ * packetToBeChanged() and packetWasChanged() will not.
  *
  * As a special case, when a packet is destroyed there is only the future
  * event packetToBeDestroyed() with no matching "past" event, since \e after
@@ -153,6 +153,7 @@ class REGINA_API NPacketListener {
          * The default implementation of this routine is to do nothing.
          *
          * @param packet the packet being listened to.
+         * @see childToBeRenamed()
          */
         virtual void packetToBeRenamed(NPacket* packet);
         /**
@@ -163,6 +164,7 @@ class REGINA_API NPacketListener {
          * The default implementation of this routine is to do nothing.
          *
          * @param packet the packet being listened to.
+         * @see childWasRenamed()
          */
         virtual void packetWasRenamed(NPacket* packet);
         /**
@@ -281,6 +283,28 @@ class REGINA_API NPacketListener {
          * @param packet the packet being listened to.
          */
         virtual void childrenWereReordered(NPacket* packet);
+        /**
+         * Called before one of this packet's immediate children has its
+         * label or tags changed.
+         * Before this change, childToBeRenamed() will be called also.
+         *
+         * The default implementation of this routine is to do nothing.
+         *
+         * @param packet the packet being listened to.
+         * @see packetToBeRenamed()
+         */
+        virtual void childToBeRenamed(NPacket* packet, NPacket* child);
+        /**
+         * Called after one of this packet's immediate children has its
+         * label or tags changed.
+         * Before this change, childToBeRenamed() will be called also.
+         *
+         * The default implementation of this routine is to do nothing.
+         *
+         * @param packet the packet being listened to.
+         * @see packetWasRenamed()
+         */
+        virtual void childWasRenamed(NPacket* packet, NPacket* child);
 
         /*@}*/
 
@@ -326,6 +350,12 @@ inline void NPacketListener::childrenToBeReordered(NPacket*) {
 }
 
 inline void NPacketListener::childrenWereReordered(NPacket*) {
+}
+
+inline void NPacketListener::childToBeRenamed(NPacket*, NPacket*) {
+}
+
+inline void NPacketListener::childWasRenamed(NPacket*, NPacket*) {
 }
 
 } // namespace regina
