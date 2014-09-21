@@ -55,6 +55,8 @@ namespace regina {
 - (void)childWasRemovedFrom:(regina::NPacket*)packet child:(regina::NPacket*)child inParentDestructor:(bool)d;
 - (void)childrenToBeReordered:(regina::NPacket*)packet;
 - (void)childrenWereReordered:(regina::NPacket*)packet;
+- (void)childToBeRenamed:(regina::NPacket*)packet child:(regina::NPacket*)child;
+- (void)childWasRenamed:(regina::NPacket*)packet child:(regina::NPacket*)child;
 @end
 
 /**

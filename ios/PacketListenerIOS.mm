@@ -100,6 +100,16 @@ public:
         if ([(__bridge id)_object respondsToSelector:@selector(childrenWereReordered:)])
             [(__bridge id)_object childrenWereReordered:packet];
     }
+
+    inline void childToBeRenamed(regina::NPacket* packet, regina::NPacket* child) {
+        if ([(__bridge id)_object respondsToSelector:@selector(childToBeRenamed:child:)])
+            [(__bridge id)_object childToBeRenamed:packet child:child];
+    }
+    
+    inline void childWasRenamed(regina::NPacket* packet, regina::NPacket* child) {
+        if ([(__bridge id)_object respondsToSelector:@selector(childWasRenamed:child:)])
+            [(__bridge id)_object childWasRenamed:packet child:child];
+    }
 };
 
 #pragma mark - Main interface
