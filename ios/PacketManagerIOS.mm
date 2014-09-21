@@ -75,6 +75,7 @@
 
 + (NSString *)segueFor:(regina::NPacket *)p {
     switch (p->getPacketType()) {
+        case regina::PACKET_ANGLESTRUCTURELIST: return @"embedAngles";
         case regina::PACKET_PDF: return @"embedPDF";
         case regina::PACKET_SCRIPT: return @"embedScript";
         case regina::PACKET_SURFACEFILTER:

@@ -988,6 +988,7 @@
 		0591012118141996000A8D16 /* NewPacketController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591012018141996000A8D16 /* NewPacketController.mm */; };
 		05937A9619CDBBF300160F9A /* libtokyocabinet-macosx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05937A9519CDBBF300160F9A /* libtokyocabinet-macosx.framework */; };
 		05937A9719CE387100160F9A /* libtokyocabinet-macosx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05937A9519CDBBF300160F9A /* libtokyocabinet-macosx.framework */; };
+		05937A9A19CEC20900160F9A /* AngleViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05937A9919CEC20900160F9A /* AngleViewController.mm */; };
 		05943CF419B68C0500E77EF3 /* PDFViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05943CF319B68C0500E77EF3 /* PDFViewController.mm */; };
 		05992CB319BA8BB90032CE65 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA23E180613A900FAE4DF /* boost.framework */; };
 		05A73C7519B2EDBF0099C617 /* hyperbolic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */; };
@@ -2124,6 +2125,8 @@
 		0591011F18141996000A8D16 /* NewPacketController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewPacketController.h; sourceTree = "<group>"; };
 		0591012018141996000A8D16 /* NewPacketController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewPacketController.mm; sourceTree = "<group>"; };
 		05937A9519CDBBF300160F9A /* libtokyocabinet-macosx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "libtokyocabinet-macosx.framework"; path = "../../Library/Frameworks/libtokyocabinet-macosx.framework"; sourceTree = "<group>"; };
+		05937A9819CEC20900160F9A /* AngleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AngleViewController.h; sourceTree = "<group>"; };
+		05937A9919CEC20900160F9A /* AngleViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AngleViewController.mm; sourceTree = "<group>"; };
 		05943CF219B68C0500E77EF3 /* PDFViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDFViewController.h; sourceTree = "<group>"; };
 		05943CF319B68C0500E77EF3 /* PDFViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PDFViewController.mm; sourceTree = "<group>"; };
 		05A47F971809CB7600F86BFD /* closed-hyp-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-hyp-census.rga"; sourceTree = "<group>"; };
@@ -2304,6 +2307,8 @@
 		050313BE1812DAC0007F0CBE /* packets */ = {
 			isa = PBXGroup;
 			children = (
+				05937A9819CEC20900160F9A /* AngleViewController.h */,
+				05937A9919CEC20900160F9A /* AngleViewController.mm */,
 				050313C21812DB1E007F0CBE /* DefaultPacketViewController.h */,
 				050313C31812DB1E007F0CBE /* DefaultPacketViewController.mm */,
 				05B7708519CA4FF100E2E558 /* FilterViewController.h */,
@@ -4286,6 +4291,7 @@
 				05583A6219B8041F00076187 /* ReginaDocument.mm in Sources */,
 				052FA22B180612DD00FAE4DF /* intersection_numbers.c in Sources */,
 				052FA1EE1806129B00FAE4DF /* stdtoquad.cpp in Sources */,
+				05937A9A19CEC20900160F9A /* AngleViewController.mm in Sources */,
 				052FA227180612DD00FAE4DF /* holonomy.c in Sources */,
 				052FA1A01806129B00FAE4DF /* nperm5.cpp in Sources */,
 				052FA1361806103000FAE4DF /* main.m in Sources */,
