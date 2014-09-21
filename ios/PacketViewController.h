@@ -45,6 +45,8 @@ namespace regina {
 @interface PacketEditController : PacketViewController <PacketDelegate>
 
 - (void)endEditing;
+
+// Marks the document as dirty.  Subclass implementations must call this.
 - (void)packetWasChanged:(regina::NPacket *)packet;
 
 @end
