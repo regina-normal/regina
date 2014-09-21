@@ -44,7 +44,6 @@ static NSArray* boundaryText;
 static NSMutableCharacterSet* eulerSeparators;
 
 // TODO: Do we need to fix the "ambiguous row height" warning under iOS 8?
-// TODO: Detect renamed subfilters.  Requires a new packet listener action.
 
 #pragma mark - Property-based filter
 
@@ -300,6 +299,12 @@ static NSMutableCharacterSet* eulerSeparators;
 }
 
 - (void)childWasRemovedFrom:(regina::NPacket *)packet child:(regina::NPacket *)child inParentDestructor:(bool)d
+{
+    // Be brutal for now: just reload the entire table.
+    [self updateSubfilters];
+}
+
+- (void)childWasRenamed:(regina::NPacket *)packet child:(regina::NPacket *)child
 {
     // Be brutal for now: just reload the entire table.
     [self updateSubfilters];
