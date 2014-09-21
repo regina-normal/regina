@@ -989,6 +989,13 @@
 		05937A9619CDBBF300160F9A /* libtokyocabinet-macosx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05937A9519CDBBF300160F9A /* libtokyocabinet-macosx.framework */; };
 		05937A9719CE387100160F9A /* libtokyocabinet-macosx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05937A9519CDBBF300160F9A /* libtokyocabinet-macosx.framework */; };
 		05937A9A19CEC20900160F9A /* AngleViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05937A9919CEC20900160F9A /* AngleViewController.mm */; };
+		05937AD119CECF4300160F9A /* MDSpreadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05937A9E19CECF4300160F9A /* MDSpreadView.m */; };
+		05937AD219CECF4300160F9A /* MDSpreadViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 05937AA019CECF4300160F9A /* MDSpreadViewCell.m */; };
+		05937AD319CECF4300160F9A /* MDSpreadViewCellBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = 05937AA219CECF4300160F9A /* MDSpreadViewCellBackground.m */; };
+		05937AD419CECF4300160F9A /* MDSpreadViewCellColumnHeaderBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = 05937AA419CECF4300160F9A /* MDSpreadViewCellColumnHeaderBackground.m */; };
+		05937AD519CECF4300160F9A /* MDSpreadViewCellCornerHeaderBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = 05937AA619CECF4300160F9A /* MDSpreadViewCellCornerHeaderBackground.m */; };
+		05937AD619CECF4300160F9A /* MDSpreadViewCellRowHeaderBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = 05937AA819CECF4300160F9A /* MDSpreadViewCellRowHeaderBackground.m */; };
+		05937AD719CECF4300160F9A /* MDSpreadViewHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 05937AAB19CECF4300160F9A /* MDSpreadViewHeaderCell.m */; };
 		05943CF419B68C0500E77EF3 /* PDFViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05943CF319B68C0500E77EF3 /* PDFViewController.mm */; };
 		05992CB319BA8BB90032CE65 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA23E180613A900FAE4DF /* boost.framework */; };
 		05A73C7519B2EDBF0099C617 /* hyperbolic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */; };
@@ -2127,6 +2134,21 @@
 		05937A9519CDBBF300160F9A /* libtokyocabinet-macosx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "libtokyocabinet-macosx.framework"; path = "../../Library/Frameworks/libtokyocabinet-macosx.framework"; sourceTree = "<group>"; };
 		05937A9819CEC20900160F9A /* AngleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AngleViewController.h; sourceTree = "<group>"; };
 		05937A9919CEC20900160F9A /* AngleViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AngleViewController.mm; sourceTree = "<group>"; };
+		05937A9D19CECF4300160F9A /* MDSpreadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSpreadView.h; sourceTree = "<group>"; };
+		05937A9E19CECF4300160F9A /* MDSpreadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSpreadView.m; sourceTree = "<group>"; };
+		05937A9F19CECF4300160F9A /* MDSpreadViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSpreadViewCell.h; sourceTree = "<group>"; };
+		05937AA019CECF4300160F9A /* MDSpreadViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSpreadViewCell.m; sourceTree = "<group>"; };
+		05937AA119CECF4300160F9A /* MDSpreadViewCellBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSpreadViewCellBackground.h; sourceTree = "<group>"; };
+		05937AA219CECF4300160F9A /* MDSpreadViewCellBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSpreadViewCellBackground.m; sourceTree = "<group>"; };
+		05937AA319CECF4300160F9A /* MDSpreadViewCellColumnHeaderBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSpreadViewCellColumnHeaderBackground.h; sourceTree = "<group>"; };
+		05937AA419CECF4300160F9A /* MDSpreadViewCellColumnHeaderBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSpreadViewCellColumnHeaderBackground.m; sourceTree = "<group>"; };
+		05937AA519CECF4300160F9A /* MDSpreadViewCellCornerHeaderBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSpreadViewCellCornerHeaderBackground.h; sourceTree = "<group>"; };
+		05937AA619CECF4300160F9A /* MDSpreadViewCellCornerHeaderBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSpreadViewCellCornerHeaderBackground.m; sourceTree = "<group>"; };
+		05937AA719CECF4300160F9A /* MDSpreadViewCellRowHeaderBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSpreadViewCellRowHeaderBackground.h; sourceTree = "<group>"; };
+		05937AA819CECF4300160F9A /* MDSpreadViewCellRowHeaderBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSpreadViewCellRowHeaderBackground.m; sourceTree = "<group>"; };
+		05937AA919CECF4300160F9A /* MDSpreadViewClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSpreadViewClasses.h; sourceTree = "<group>"; };
+		05937AAA19CECF4300160F9A /* MDSpreadViewHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSpreadViewHeaderCell.h; sourceTree = "<group>"; };
+		05937AAB19CECF4300160F9A /* MDSpreadViewHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSpreadViewHeaderCell.m; sourceTree = "<group>"; };
 		05943CF219B68C0500E77EF3 /* PDFViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDFViewController.h; sourceTree = "<group>"; };
 		05943CF319B68C0500E77EF3 /* PDFViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PDFViewController.mm; sourceTree = "<group>"; };
 		05A47F971809CB7600F86BFD /* closed-hyp-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-hyp-census.rga"; sourceTree = "<group>"; };
@@ -3323,6 +3345,7 @@
 				052FA1301806102F00FAE4DF /* Supporting Files */,
 				054F7E2E180B99320090B1F3 /* HTML */,
 				05F96C14180A14E600C99F96 /* MBProgressHUD */,
+				05937A9B19CECF4300160F9A /* MDSpreadView */,
 				05BEB0C219CCE0BB006AB2C8 /* Toast */,
 			);
 			path = ios;
@@ -3682,6 +3705,36 @@
 				0583656918DB88D9008B08D9 /* testdim2.h */,
 			);
 			path = dim2;
+			sourceTree = "<group>";
+		};
+		05937A9B19CECF4300160F9A /* MDSpreadView */ = {
+			isa = PBXGroup;
+			children = (
+				05937A9C19CECF4300160F9A /* Classes */,
+			);
+			path = MDSpreadView;
+			sourceTree = "<group>";
+		};
+		05937A9C19CECF4300160F9A /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				05937A9D19CECF4300160F9A /* MDSpreadView.h */,
+				05937A9E19CECF4300160F9A /* MDSpreadView.m */,
+				05937A9F19CECF4300160F9A /* MDSpreadViewCell.h */,
+				05937AA019CECF4300160F9A /* MDSpreadViewCell.m */,
+				05937AA119CECF4300160F9A /* MDSpreadViewCellBackground.h */,
+				05937AA219CECF4300160F9A /* MDSpreadViewCellBackground.m */,
+				05937AA319CECF4300160F9A /* MDSpreadViewCellColumnHeaderBackground.h */,
+				05937AA419CECF4300160F9A /* MDSpreadViewCellColumnHeaderBackground.m */,
+				05937AA519CECF4300160F9A /* MDSpreadViewCellCornerHeaderBackground.h */,
+				05937AA619CECF4300160F9A /* MDSpreadViewCellCornerHeaderBackground.m */,
+				05937AA719CECF4300160F9A /* MDSpreadViewCellRowHeaderBackground.h */,
+				05937AA819CECF4300160F9A /* MDSpreadViewCellRowHeaderBackground.m */,
+				05937AA919CECF4300160F9A /* MDSpreadViewClasses.h */,
+				05937AAA19CECF4300160F9A /* MDSpreadViewHeaderCell.h */,
+				05937AAB19CECF4300160F9A /* MDSpreadViewHeaderCell.m */,
+			);
+			path = Classes;
 			sourceTree = "<group>";
 		};
 		05A47F961809CB7500F86BFD /* examples */ = {
@@ -4272,6 +4325,7 @@
 				054BC4C719B4A726005E01A0 /* cusped-hyp-or-census-9.zsig in Sources */,
 				054BC4C819B4A726005E01A0 /* hyp-knot-link-census.zsig in Sources */,
 				055FF38819C044FB0057462A /* NewDim2TriangulationController.mm in Sources */,
+				05937AD219CECF4300160F9A /* MDSpreadViewCell.m in Sources */,
 				055B7312181D7CF800449D14 /* dim2boundarycomponent.cpp in Sources */,
 				052FA16E1806129B00FAE4DF /* nfacepairing.cpp in Sources */,
 				052FA229180612DD00FAE4DF /* identify_solution_type.c in Sources */,
@@ -4282,9 +4336,11 @@
 				052FA213180612DD00FAE4DF /* canonize_part_2.c in Sources */,
 				052FA1691806129B00FAE4DF /* dim2census.cpp in Sources */,
 				052FA1B11806129B00FAE4DF /* uimessages.cpp in Sources */,
+				05937AD319CECF4300160F9A /* MDSpreadViewCellBackground.m in Sources */,
 				052FA1681806129B00FAE4DF /* compact.cpp in Sources */,
 				0591011B1813230A000A8D16 /* NewPacketMenu.mm in Sources */,
 				052FA1C41806129B00FAE4DF /* nplugtrisolidtorus.cpp in Sources */,
+				05937AD119CECF4300160F9A /* MDSpreadView.m in Sources */,
 				052FA1A21806129B00FAE4DF /* nrational.cpp in Sources */,
 				052FA1A51806129B00FAE4DF /* seedprimes.cpp in Sources */,
 				05A73CA719B2EF5A0099C617 /* sl2c_matrices.c in Sources */,
@@ -4298,6 +4354,7 @@
 				052FA1AD1806129B00FAE4DF /* nxmlpacketreaders.cpp in Sources */,
 				052FA233180612DD00FAE4DF /* simplify_triangulation.c in Sources */,
 				052FA1D01806129B00FAE4DF /* ntrivialtri.cpp in Sources */,
+				05937AD619CECF4300160F9A /* MDSpreadViewCellRowHeaderBackground.m in Sources */,
 				052FA214180612DD00FAE4DF /* canonize_result.c in Sources */,
 				05A73C8519B2EEC50099C617 /* csv.cpp in Sources */,
 				052FA1701806129B00FAE4DF /* ngluingpermsearcher.cpp in Sources */,
@@ -4358,6 +4415,7 @@
 				052FA18A1806129B00FAE4DF /* pdf.cpp in Sources */,
 				052FA17F1806129B00FAE4DF /* ntreelp.cpp in Sources */,
 				052FA17C1806129B00FAE4DF /* HilbertSeries.cpp in Sources */,
+				05937AD519CECF4300160F9A /* MDSpreadViewCellCornerHeaderBackground.m in Sources */,
 				052FA1F41806129B00FAE4DF /* hydrate.cpp in Sources */,
 				052FA1F31806129B00FAE4DF /* homotopy.cpp in Sources */,
 				052FA1A61806129B00FAE4DF /* npacket.cpp in Sources */,
@@ -4407,6 +4465,7 @@
 				052FA224180612DD00FAE4DF /* finite_vertices.c in Sources */,
 				05A73CA119B2EF5A0099C617 /* matrix_conversion.c in Sources */,
 				052FA16C1806129B00FAE4DF /* dim2gluingpermsearcher.cpp in Sources */,
+				05937AD719CECF4300160F9A /* MDSpreadViewHeaderCell.m in Sources */,
 				052FA1FE1806129B00FAE4DF /* ntriangulation.cpp in Sources */,
 				052FA2031806129B00FAE4DF /* simplifyglobal.cpp in Sources */,
 				052FA1E41806129B00FAE4DF /* nsurfacefilter.cpp in Sources */,
@@ -4535,6 +4594,7 @@
 				052FA1BB1806129B00FAE4DF /* nlayeredchain.cpp in Sources */,
 				052FA1CC1806129B00FAE4DF /* nsnappedtwosphere.cpp in Sources */,
 				052FA1891806129B00FAE4DF /* orb.cpp in Sources */,
+				05937AD419CECF4300160F9A /* MDSpreadViewCellColumnHeaderBackground.m in Sources */,
 				052FA16F1806129B00FAE4DF /* ngluingperms.cpp in Sources */,
 				051806DB18123057008EBB01 /* EmptySegue.m in Sources */,
 				05F9561319B53E7900377BEC /* TriRecognitionViewController.mm in Sources */,
