@@ -73,8 +73,14 @@ std::string NPacket::getFullName() const {
 
 void NPacket::setPacketLabel(const std::string& newLabel) {
     fireEvent(&NPacketListener::packetToBeRenamed);
+    if (treeParent)
+        treeParent->fireEvent(&NPacketListener::childToBeRenamed, this);
+
     packetLabel = newLabel;
+
     fireEvent(&NPacketListener::packetWasRenamed);
+    if (treeParent)
+        treeParent->fireEvent(&NPacketListener::childWasRenamed, this);
 }
 
 bool NPacket::listen(NPacketListener* listener) {
@@ -625,11 +631,17 @@ bool NPacket::makeUniqueLabels(NPacket* reference) {
 
 bool NPacket::addTag(const std::string& tag) {
     fireEvent(&NPacketListener::packetToBeRenamed);
+    if (treeParent)
+        treeParent->fireEvent(&NPacketListener::childToBeRenamed, this);
+
     if (! tags.get())
         tags.reset(new std::set<std::string>());
-
     bool ans = tags->insert(tag).second;
+
     fireEvent(&NPacketListener::packetWasRenamed);
+    if (treeParent)
+        treeParent->fireEvent(&NPacketListener::childWasRenamed, this);
+
     return ans;
 }
 
@@ -638,16 +650,29 @@ bool NPacket::removeTag(const std::string& tag) {
         return false;
 
     fireEvent(&NPacketListener::packetToBeRenamed);
+    if (treeParent)
+        treeParent->fireEvent(&NPacketListener::childToBeRenamed, this);
+
     bool ans = tags->erase(tag);
+
     fireEvent(&NPacketListener::packetWasRenamed);
+    if (treeParent)
+        treeParent->fireEvent(&NPacketListener::childWasRenamed, this);
+
     return ans;
 }
 
 void NPacket::removeAllTags() {
     if (tags.get() && ! tags->empty()) {
         fireEvent(&NPacketListener::packetToBeRenamed);
+        if (treeParent)
+            treeParent->fireEvent(&NPacketListener::childToBeRenamed, this);
+
         tags->clear();
+
         fireEvent(&NPacketListener::packetWasRenamed);
+        if (treeParent)
+            treeParent->fireEvent(&NPacketListener::childWasRenamed, this);
     }
 }
 
