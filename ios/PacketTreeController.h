@@ -39,17 +39,15 @@ namespace regina {
     class NPacket;
 }
 
-@class DetailViewController;
 @class NewPacketSpec;
 
 @interface PacketTreeController : EditableTableViewController
 
 @property (assign, nonatomic, readonly) regina::NPacket* node;
-@property (weak, nonatomic, readonly) DetailViewController* detail;
 
-- (void)newDocumentWithDetail:(DetailViewController*)d;
-- (void)openDocument:(ReginaDocument*)doc detail:(DetailViewController*)d;
-- (void)openSubtree:(regina::NPacket*)p detail:(DetailViewController*)d;
+- (void)newDocument;
+- (void)openDocument:(ReginaDocument*)doc;
+- (void)openSubtree:(regina::NPacket*)p;
 
 /**
  * Should only need to be called from the internal packet listener.

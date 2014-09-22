@@ -37,6 +37,7 @@
 #import "PacketListenerIOS.h"
 #import "PacketManagerIOS.h"
 #import "PacketTreeController.h"
+#import "ReginaHelper.h"
 
 #import "file/nxmlfile.h"
 #import "packet/npacket.h"
@@ -80,12 +81,11 @@
 
 @implementation PacketTreeController
 
-- (void)newDocumentWithDetail:(DetailViewController *)d
+- (void)newDocument
 {
     NSLog(@"Creating new document...");
     
-    _detail = d;
-    _detail.doc = [ReginaDocument documentNewWithCompletionHandler:^(ReginaDocument* doc) {
+    [ReginaHelper detail].doc = [ReginaDocument documentNewWithCompletionHandler:^(ReginaDocument* doc) {
         if (! doc) {
             NSLog(@"Could not create.");
             return;
@@ -98,11 +98,9 @@
     }];
 }
 
-- (void)openDocument:(ReginaDocument*)doc detail:(DetailViewController *)d
+- (void)openDocument:(ReginaDocument*)doc
 {
     NSLog(@"Opening document...");
-    
-    _detail = d;
     
     // We use an activity indicator since files could take some time to load.
     UIView* rootView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
@@ -131,11 +129,11 @@
         [self refreshPackets];
     }];
     
-    _detail.doc = doc;
+    [ReginaHelper detail].doc = doc;
 }
 
-- (void)openSubtree:(regina::NPacket *)p detail:(DetailViewController *)d {
-    _detail = d;
+- (void)openSubtree:(regina::NPacket *)p
+{
     _node = p;
     _listener = [PacketListenerIOS listenerWithPacket:_node delegate:self listenChildren:YES];
     self.title = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
@@ -246,7 +244,7 @@
     if (dest->getTreeParent() == self.node) {
         // This involves a single push.
         PacketTreeController* subtree = [self.storyboard instantiateViewControllerWithIdentifier:@"packetTree"];
-        [subtree openSubtree:dest detail:self.detail];
+        [subtree openSubtree:dest];
         [self.navigationController pushViewController:subtree animated:YES];
         return YES;
     }
@@ -270,7 +268,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"openSubtree"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        [[segue destinationViewController] openSubtree:[self packetForPath:indexPath] detail:self.detail];
+        [[segue destinationViewController] openSubtree:[self packetForPath:indexPath]];
     } else if ([[segue identifier] isEqualToString:@"newPacket"]) {
         NewPacketMenu* menu = static_cast<NewPacketMenu*>(segue.destinationViewController);
         menu.packetTree = self;
@@ -281,7 +279,7 @@
 #pragma mark - Packet listener
 
 - (void)packetWasRenamed:(regina::NPacket *)packet {
-    [self.detail.doc setDirty];
+    [[ReginaHelper document] setDirty];
     if (packet == self.node) {
         // Refresh the title, but only if this is not the root of the packet tree.
         if (packet->getTreeParent())
@@ -295,7 +293,7 @@
 }
 
 - (void)childWasAddedTo:(regina::NPacket*)packet child:(regina::NPacket*)child {
-    [self.detail.doc setDirty];
+    [[ReginaHelper document] setDirty];
 
     NSIndexPath* path;
     if (packet == self.node) {
@@ -336,13 +334,13 @@
 - (void)childWasRemovedFrom:(regina::NPacket *)packet child:(regina::NPacket *)child inParentDestructor:(bool)d {
     // No need to update the table, since this action can only have happened as a result
     // of user interaction with the table.
-    [self.detail.doc setDirty];
+    [[ReginaHelper document] setDirty];
 }
 
 - (void)childrenWereReordered:(regina::NPacket *)packet {
     // No need to update the table, since this action can only have happened as a result
     // of user interaction with the table.
-    [self.detail.doc setDirty];
+    [[ReginaHelper document] setDirty];
 }
 
 #pragma mark - Editable table view
@@ -477,7 +475,7 @@
     }
 
     if (p->getPacketType() != regina::PACKET_CONTAINER)
-        self.detail.packet = p;
+        [ReginaHelper detail].packet = p;
 }
 
 #pragma mark - Alert view

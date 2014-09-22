@@ -80,14 +80,14 @@
         // The user clicked on a table cell that represents a document.
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         ReginaDocument* doc = [self documentForIndexPath:indexPath];
-        [[segue destinationViewController] openDocument:doc detail:_detail];
+        [[segue destinationViewController] openDocument:doc];
     } else if ([[segue identifier] isEqualToString:@"openInbox"]) {
         // Some other app sent a document to us.
         // The corresponding ReginaDocument will be contained in sender.
-        [[segue destinationViewController] openDocument:sender detail:_detail];
+        [[segue destinationViewController] openDocument:sender];
     } else if ([[segue identifier] isEqualToString:@"openNew"]) {
         // We are creating a new document from scratch.
-        [[segue destinationViewController] newDocumentWithDetail:_detail];
+        [[segue destinationViewController] newDocument];
     }
 }
 
