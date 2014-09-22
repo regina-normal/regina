@@ -56,6 +56,7 @@ namespace regina {
 
 /**
  * Safely does nothing if \a p is not in the list of children.
+ * Must not pass \c null.
  * Refuses to select a container packet, but regardless will scroll
  * down to ensure that the packet is visible in the table.
  */
