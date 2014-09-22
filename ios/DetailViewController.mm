@@ -43,6 +43,8 @@
 #import "packet/npdf.h"
 #import "packet/packettype.h"
 
+// TODO: Rotate between landscape and portrait -> vertical space appears above the packet viewer.
+
 @interface DetailViewController () <UIActionSheetDelegate, UIDocumentInteractionControllerDelegate, PacketDelegate> {
     NSString* _menuTitle;
     PacketListenerIOS* _listener;

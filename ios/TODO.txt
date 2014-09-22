@@ -22,7 +22,6 @@ CLEAN UP:
 
 WRITE VIEWERS:
 
-- PDF:                    quick look
 - 2-D triangulation:      2 tabs, editor
 - 3-D triangulation:      6 tabs, editor
 - SnapPea triangulation:  7 tabs, editor
