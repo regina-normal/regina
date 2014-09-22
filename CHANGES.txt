@@ -31,6 +31,12 @@ Version 4.97  [ (under development) ]
               opposed to a filename).
         Class NSurfaceFilterProperties:
             - New set-based routine setECs().
+        Class NTriangulation:
+            - Completely removed the deprecated routines getNumberOfFaces(),
+              getFaces(), getFace() and faceIndex().
+            - New template routines getFaces<dim>(), getFace<dim>() and
+              faceIndex<dim>(), which act as generic aliases for
+              dimension-specific skeletal query routines.
         Routine open():
             - Added a variant that takes an input stream (as opposed to
               a filename).

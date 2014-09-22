@@ -235,7 +235,6 @@ void addNTriangulation() {
         .def("getBoundaryComponents", getBoundaryComponents_list)
         .def("getVertices", getVertices_list)
         .def("getEdges", getEdges_list)
-        .def("getFaces", getTriangles_list)
         .def("getTriangles", getTriangles_list)
         .def("getComponent", &NTriangulation::getComponent,
             return_value_policy<reference_existing_object>())
@@ -245,8 +244,6 @@ void addNTriangulation() {
             return_value_policy<reference_existing_object>())
         .def("getEdge", &NTriangulation::getEdge,
             return_value_policy<reference_existing_object>())
-        .def("getFace", &NTriangulation::getFace,
-            return_value_policy<reference_existing_object>())
         .def("getTriangle", &NTriangulation::getTriangle,
             return_value_policy<reference_existing_object>())
         .def("componentIndex", &NTriangulation::componentIndex)
@@ -254,7 +251,6 @@ void addNTriangulation() {
             &NTriangulation::boundaryComponentIndex)
         .def("vertexIndex", &NTriangulation::vertexIndex)
         .def("edgeIndex", &NTriangulation::edgeIndex)
-        .def("faceIndex", &NTriangulation::faceIndex)
         .def("triangleIndex", &NTriangulation::triangleIndex)
         .def("isIdenticalTo", &NTriangulation::isIdenticalTo)
         .def("isIsomorphicTo", &NTriangulation::isIsomorphicTo)

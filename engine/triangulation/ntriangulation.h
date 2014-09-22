@@ -658,30 +658,14 @@ class REGINA_API NTriangulation : public NPacket,
          */
         unsigned long getNumberOfTriangles() const;
         /**
-         * A deprecated alias for getNumberOfTriangles().
-         *
-         * This routine returns the number of triangular faces in this
-         * triangulation.  See getNumberOfTriangles() for further details.
-         *
-         * Do not confuse this deprecated alias with the
-         * (non-deprecated) tempate function getNumberOfFaces<dim>().
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use getNumberOfTriangles() instead.
-         *
-         * @return the number of triangles.
-         */
-        unsigned long getNumberOfFaces() const;
-        /**
          * Returns the number of faces of the given dimension in this
          * triangulation.
          *
-         * This template function is to assist with writing dimension-agnostic
-         * code that can be reused to work in different dimensions.
+         * The dimension of the faces is indicated by the template
+         * parameter \a dim, and must be between 0 and 3 inclusive.
          *
-         * \pre the template argument \a dim is between 0 and 3 inclusive.
-         *
-         * \ifacespython Not present.
+         * \ifacespython Not present.  Instead use the dimension-specific
+         * aliases getNumberOfVertices(), getNumberOfEdges(), and so on.
          *
          * @return the number of faces of the given dimension.
          */
@@ -769,18 +753,30 @@ class REGINA_API NTriangulation : public NPacket,
          * @return the list of all triangles.
          */
         const std::vector<NTriangle*>& getTriangles() const;
+
         /**
-         * A deprecated alias for getTriangles().
+         * Returns all faces of the given dimension in this triangulation.
          *
-         * This routine returns all triangular faces in this triangulation.
-         * See getTriangles() for further details.
+         * The dimension of the faces is indicated by the template
+         * parameter \a dim, and must be between 0 and 3 inclusive.
          *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use getTriangles() instead.
+         * If \a dim is strictly less than 3, then the objects in this
+         * list should be considered temporary only.  This is because
+         * each time the triangulation changes, all lower-dimensional
+         * faces will be deleted and recomputed.
          *
-         * @return the list of all triangles.
+         * Regardless of \a dim, the reference to the list itself will
+         * remain valid and up-to-date for the entire lifespan of the
+         * triangulation.
+         *
+         * \ifacespython Not present.  Instead use the dimension-specific
+         * aliases getVertices(), getEdges(), and so on.
+         *
+         * @return the list of all faces of the given dimension.
          */
-        const std::vector<NTriangle*>& getFaces() const;
+        template <int dim>
+        const std::vector<typename Face<dim>::type*>& getFaces() const;
+
         /**
          * Returns the requested triangulation component.
          *
@@ -842,20 +838,30 @@ class REGINA_API NTriangulation : public NPacket,
          * @return the requested triangle.
          */
         NTriangle* getTriangle(unsigned long index) const;
+
         /**
-         * A deprecated alias for getTriangle().
+         * Returns the requested face of the given dimension in this
+         * triangulation.
          *
-         * This routine returns the requested triangular face in the
-         * triangulation.  See getTriangle() for further details.
+         * The dimension of the face is indicated by the template
+         * parameter \a dim, and must be between 0 and 3 inclusive.
          *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use getTriangle() instead.
+         * If \a dim is strictly less than 3, then the object that is
+         * returned should be considered temporary only.  This is because
+         * each time the triangulation changes, all lower-dimensional
+         * faces will be deleted and recomputed.
          *
-         * @param index the index of the desired triangle, ranging from 0
-         * to getNumberOfTriangles()-1 inclusive.
-         * @return the requested triangle.
+         * \ifacespython Not present.  Instead use the dimension-specific
+         * aliases getVertex(), getEdge(), and so on.
+         *
+         * @param index the index of the given face, amongst all faces
+         * of the given dimension.  This must be between 0 and
+         * getNumberOfFaces<dim>() inclusive.
+         * @return the requested face.
          */
-        NTriangle* getFace(unsigned long index) const;
+        template <int dim>
+        const typename Face<dim>::type* getFace(unsigned long index) const;
+
         /**
          * Returns the index of the given component in the triangulation.
          *
@@ -957,21 +963,28 @@ class REGINA_API NTriangulation : public NPacket,
          * triangle, 1 is the second and so on.
          */
         long triangleIndex(const NTriangle* triangle) const;
+
         /**
-         * A deprecated alias for triangleIndex().
+         * Returns the index of the given face in this triangulation.
+         * This will be the index amongst all faces of dimension \a dim,
+         * and will be between 0 and getNumberOfFaces<dim>()-1 inclusive.
          *
-         * This routine returns the index of the given triangle in the
-         * triangulation.  See triangleIndex() for further details.
+         * The dimension of the face is indicated by the template
+         * parameter \a dim, and must be between 0 and 3 inclusive.
          *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use triangleIndex() instead.
+         * \pre The given face belongs to this triangulation.
          *
-         * @param triangle specifies which triangle to find in the
-         * triangulation.
-         * @return the index of the specified triangle, where 0 is the first
-         * triangle, 1 is the second and so on.
+         * \warning Passing a null pointer to this routine will probably
+         * crash your program.
+         *
+         * \ifacespython Not present.  Instead use the dimension-specific
+         * aliases vertexIndex(), edgeIndex(), and so on.
+         *
+         * @param face the face to locate within this triangulation.
+         * @return the index of the given face.
          */
-        long faceIndex(const NTriangle* triangle) const;
+        template <int dim>
+        long faceIndex(const typename Face<dim>::type* face) const;
 
         /**
          * Determines if this triangulation contains any two-sphere
@@ -3848,10 +3861,6 @@ inline unsigned long NTriangulation::getNumberOfTriangles() const {
     return triangles_.size();
 }
 
-inline unsigned long NTriangulation::getNumberOfFaces() const {
-    return getNumberOfTriangles();
-}
-
 template <>
 inline unsigned long NTriangulation::getNumberOfFaces<0>() const {
     return getNumberOfVertices();
@@ -3928,8 +3937,24 @@ inline const std::vector<NTriangle*>& NTriangulation::getTriangles()
     return (const std::vector<NTriangle*>&)(triangles_);
 }
 
-inline const std::vector<NTriangle*>& NTriangulation::getFaces() const {
+template <>
+inline const std::vector<NVertex*>& NTriangulation::getFaces<0>() const {
+    return getVertices();
+}
+
+template <>
+inline const std::vector<NEdge*>& NTriangulation::getFaces<1>() const {
+    return getEdges();
+}
+
+template <>
+inline const std::vector<NTriangle*>& NTriangulation::getFaces<2>() const {
     return getTriangles();
+}
+
+template <>
+inline const std::vector<NTetrahedron*>& NTriangulation::getFaces<3>() const {
+    return getTetrahedra();
 }
 
 inline NComponent* NTriangulation::getComponent(unsigned long index) const {
@@ -3963,8 +3988,24 @@ inline NTriangle* NTriangulation::getTriangle(unsigned long index) const {
     return triangles_[index];
 }
 
-inline NTriangle* NTriangulation::getFace(unsigned long index) const {
+template <>
+inline const NVertex* NTriangulation::getFace<0>(unsigned long index) const {
+    return getVertex(index);
+}
+
+template <>
+inline const NEdge* NTriangulation::getFace<1>(unsigned long index) const {
+    return getEdge(index);
+}
+
+template <>
+inline const NTriangle* NTriangulation::getFace<2>(unsigned long index) const {
     return getTriangle(index);
+}
+
+template <>
+inline const NTetrahedron* NTriangulation::getFace<3>(unsigned long index) const {
+    return getTetrahedron(index);
 }
 
 inline long NTriangulation::componentIndex(const NComponent* component) const {
@@ -3988,8 +4029,24 @@ inline long NTriangulation::triangleIndex(const NTriangle* tri) const {
     return tri->markedIndex();
 }
 
-inline long NTriangulation::faceIndex(const NTriangle* tri) const {
-    return tri->markedIndex();
+template <>
+inline long NTriangulation::faceIndex<0>(const NVertex* face) const {
+    return vertexIndex(face);
+}
+
+template <>
+inline long NTriangulation::faceIndex<1>(const NEdge* face) const {
+    return edgeIndex(face);
+}
+
+template <>
+inline long NTriangulation::faceIndex<2>(const NTriangle* face) const {
+    return triangleIndex(face);
+}
+
+template <>
+inline long NTriangulation::faceIndex<3>(const NTetrahedron* face) const {
+    return tetrahedronIndex(face);
 }
 
 inline bool NTriangulation::hasTwoSphereBoundaryComponents() const {
