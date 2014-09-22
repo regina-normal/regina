@@ -35,6 +35,7 @@
 #import "MBProgressHUD.h"
 #import "PacketListenerIOS.h"
 #import "PacketManagerIOS.h"
+#import "PacketTreeController.h"
 #import "PacketViewController.h"
 #import "ReginaHelper.h"
 #import "TempFile.h"
@@ -118,18 +119,23 @@
     if (_packet == p && ! force)
         return;
 
+    if (self.interaction) {
+        // Should never happen, since QuickLook is modal - it should only
+        // be closed through user interaction with itself.
+        NSLog(@"Warning: PDF QuickLook was closed programmatically.  This should not happen.");
+        [self.interaction dismissPreviewAnimated:NO];
+        [self documentInteractionControllerDidEndPreview:self.interaction];
+    }
+
     if (_packet) {
-        if (self.interaction) {
-            NSLog(@"End interaction.");
-            [self.interaction dismissPreviewAnimated:NO];
-            [self.navigationController popViewControllerAnimated:NO];
-            self.interaction = nil;
-            self.interactionFile = nil;
-        } else if ([self.contents.class isSubclassOfClass:[PacketEditController class]]) {
+        if ([self.contents.class isSubclassOfClass:[PacketEditController class]]) {
             // Push any outstanding edits to the calculation engine.
             [static_cast<PacketEditController*>(self.contents) endEditing];
         }
     }
+
+    [_listener permanentlyUnlisten];
+    _listener = nil;
 
     _packet = p;
     
@@ -137,23 +143,33 @@
         // Display an empty panel.
         [self navigationItem].title = @"";
         [self embedViewer:(emptySegue ? emptySegue : @"empty")];
-
-        [_listener permanentlyUnlisten];
-        _listener = nil;
     } else if (p->getPacketType() == regina::PACKET_PDF) {
-        // Use QuickLook.
         regina::NPDF* pdf = static_cast<regina::NPDF*>(p);
 
+        // Open the PDF using QuickLook.
         if (pdf->isNull()) {
-            // TODO.
+            UIAlertView* alert = [[UIAlertView alloc]
+                                  initWithTitle:@"PDF Contains No Data"
+                                  message:nil
+                                  delegate:nil
+                                  cancelButtonTitle:@"Close"
+                                  otherButtonTitles:nil];
+            [alert show];
+
             _packet = nil;
             return;
         }
 
         self.interactionFile = [TempFile tempFileWithExtension:@"pdf"];
-        NSLog(@"Temporary PDF filename: %@", self.interactionFile.filename);
         if (! pdf->savePDF([self.interactionFile.filename UTF8String])) {
-            // TODO.
+            UIAlertView* alert = [[UIAlertView alloc]
+                                  initWithTitle:@"Could Not Save PDF"
+                                  message:@"I was not able to save the PDF document to this device for viewing."
+                                  delegate:nil
+                                  cancelButtonTitle:@"Close"
+                                  otherButtonTitles:nil];
+            [alert show];
+
             self.interactionFile = nil;
             _packet = nil;
             return;
@@ -162,13 +178,18 @@
         self.interaction = [UIDocumentInteractionController interactionControllerWithURL:self.interactionFile.url];
         self.interaction.delegate = self;
 
+        // When QuickLook returns, we will have lost our packet selection in the tree.
+        // Make sure that user interface we return to reflects this.
+        _packet = nil;
+        [self navigationItem].title = @"";
+        [self embedViewer:(emptySegue ? emptySegue : @"empty")];
+
         [self.interaction presentPreviewAnimated:YES];
     } else {
         // Display the relevant packet viewer / editor.
         [self navigationItem].title = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
         [self embedViewer:[PacketManagerIOS viewerFor:p]];
 
-        [_listener permanentlyUnlisten];
         _listener = [PacketListenerIOS listenerWithPacket:p delegate:self listenChildren:NO];
     }
 }
@@ -300,12 +321,11 @@
 #pragma mark - Document interaction
 
 - (UIViewController *) documentInteractionControllerViewControllerForPreview: (UIDocumentInteractionController *) controller {
-    return self.navigationController;
+    return [ReginaHelper master];
 }
 
 - (void)documentInteractionControllerDidEndPreview:(UIDocumentInteractionController *)controller
 {
-    NSLog(@"End interaction.");
     if (self.interaction == controller) {
         self.interaction = nil;
         self.interactionFile = nil;
