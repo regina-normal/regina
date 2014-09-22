@@ -43,7 +43,7 @@
 #import "packet/npdf.h"
 #import "packet/packettype.h"
 
-// TODO: Rotate between landscape and portrait -> vertical space appears above the packet viewer.
+// TODO: The view container can just be a plain old view.  Check the spacing under rotation after doing this.
 
 @interface DetailViewController () <UIActionSheetDelegate, UIDocumentInteractionControllerDelegate, PacketDelegate> {
     NSString* _menuTitle;
@@ -216,7 +216,7 @@
     // automatically call [to willMoveToParentViewController:self].
     [self addChildViewController:to];
 
-    to.view.frame = self.container.bounds;
+    to.view.frame = self.container.frame;
     [to.view layoutIfNeeded];
 
     if (from) {
@@ -234,7 +234,7 @@
                                     [to didMoveToParentViewController:self];
                                 }];
     } else {
-        [self.container addSubview:to.view];
+        [self.view addSubview:to.view];
         [to didMoveToParentViewController:self];
     }
 }
