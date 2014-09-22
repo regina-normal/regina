@@ -76,7 +76,6 @@
 + (NSString *)viewerFor:(regina::NPacket *)p {
     switch (p->getPacketType()) {
         case regina::PACKET_ANGLESTRUCTURELIST: return @"viewAngles";
-        case regina::PACKET_PDF: return @"viewPDF";
         case regina::PACKET_SCRIPT: return @"viewScript";
         case regina::PACKET_SURFACEFILTER:
             switch (static_cast<regina::NSurfaceFilter*>(p)->getFilterType()) {

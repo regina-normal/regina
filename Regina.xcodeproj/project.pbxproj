@@ -994,7 +994,6 @@
 		05937AD619CECF4300160F9A /* MDSpreadViewCellRowHeaderBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = 05937AA819CECF4300160F9A /* MDSpreadViewCellRowHeaderBackground.m */; };
 		05937AD719CECF4300160F9A /* MDSpreadViewHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 05937AAB19CECF4300160F9A /* MDSpreadViewHeaderCell.m */; };
 		05937B2319CF819C00160F9A /* PacketTabBarController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05937B2219CF819C00160F9A /* PacketTabBarController.mm */; };
-		05943CF419B68C0500E77EF3 /* PDFViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05943CF319B68C0500E77EF3 /* PDFViewController.mm */; };
 		05992CB319BA8BB90032CE65 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA23E180613A900FAE4DF /* boost.framework */; };
 		05A73C7519B2EDBF0099C617 /* hyperbolic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */; };
 		05A73C7619B2EDBF0099C617 /* hyperbolic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */; };
@@ -2142,8 +2141,6 @@
 		05937AAB19CECF4300160F9A /* MDSpreadViewHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSpreadViewHeaderCell.m; sourceTree = "<group>"; };
 		05937B2119CF819C00160F9A /* PacketTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketTabBarController.h; sourceTree = "<group>"; };
 		05937B2219CF819C00160F9A /* PacketTabBarController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketTabBarController.mm; sourceTree = "<group>"; };
-		05943CF219B68C0500E77EF3 /* PDFViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDFViewController.h; sourceTree = "<group>"; };
-		05943CF319B68C0500E77EF3 /* PDFViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PDFViewController.mm; sourceTree = "<group>"; };
 		05A47F971809CB7600F86BFD /* closed-hyp-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-hyp-census.rga"; sourceTree = "<group>"; };
 		05A47F981809CB7600F86BFD /* closed-nor-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-nor-census.rga"; sourceTree = "<group>"; };
 		05A47F9A1809CB7600F86BFD /* closed-or-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-or-census.rga"; sourceTree = "<group>"; };
@@ -2338,8 +2335,6 @@
 				0591011D181364BB000A8D16 /* NewSurfacesController.mm */,
 				055FF38019BECF590057462A /* NewTriangulationController.h */,
 				055FF38119BECF590057462A /* NewTriangulationController.mm */,
-				05943CF219B68C0500E77EF3 /* PDFViewController.h */,
-				05943CF319B68C0500E77EF3 /* PDFViewController.mm */,
 				05B7708219C92A5000E2E558 /* ScriptViewController.h */,
 				05B7708319C92A5000E2E558 /* ScriptViewController.mm */,
 				050313BF1812DB06007F0CBE /* TextViewController.h */,
@@ -4509,7 +4504,6 @@
 				052FA226180612DD00FAE4DF /* gluing_equations.c in Sources */,
 				052FA222180612DD00FAE4DF /* filling.c in Sources */,
 				052FA1E81806129B00FAE4DF /* nxmlsurfacereader.cpp in Sources */,
-				05943CF419B68C0500E77EF3 /* PDFViewController.mm in Sources */,
 				052FA1EF1806129B00FAE4DF /* cover.cpp in Sources */,
 				052FA18F1806129B00FAE4DF /* ngraphpair.cpp in Sources */,
 				052FA220180612DD00FAE4DF /* Dehn_coefficients.c in Sources */,

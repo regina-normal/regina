@@ -37,16 +37,20 @@
 #import "PacketManagerIOS.h"
 #import "PacketViewController.h"
 #import "ReginaHelper.h"
+#import "TempFile.h"
 #import "packet/npacket.h"
+#import "packet/npdf.h"
 #import "packet/packettype.h"
 
-@interface DetailViewController () <UIActionSheetDelegate, PacketDelegate> {
+@interface DetailViewController () <UIActionSheetDelegate, UIDocumentInteractionControllerDelegate, PacketDelegate> {
     NSString* _menuTitle;
     PacketListenerIOS* _listener;
     UIDocumentInteractionController* _interact;
 }
 @property (weak, nonatomic) IBOutlet UIView *container;
 @property (strong, nonatomic) UIViewController *contents;
+@property (strong, nonatomic) UIDocumentInteractionController *interaction;
+@property (strong, nonatomic) TempFile *interactionFile;
 @end
 
 @implementation DetailViewController
@@ -115,9 +119,16 @@
         return;
 
     if (_packet) {
-        // Push any outstanding changes to the calculation engine.
-        if ([self.contents.class isSubclassOfClass:[PacketEditController class]])
+        if (self.interaction) {
+            NSLog(@"End interaction.");
+            [self.interaction dismissPreviewAnimated:NO];
+            [self.navigationController popViewControllerAnimated:NO];
+            self.interaction = nil;
+            self.interactionFile = nil;
+        } else if ([self.contents.class isSubclassOfClass:[PacketEditController class]]) {
+            // Push any outstanding edits to the calculation engine.
             [static_cast<PacketEditController*>(self.contents) endEditing];
+        }
     }
 
     _packet = p;
@@ -129,8 +140,31 @@
 
         [_listener permanentlyUnlisten];
         _listener = nil;
+    } else if (p->getPacketType() == regina::PACKET_PDF) {
+        // Use QuickLook.
+        regina::NPDF* pdf = static_cast<regina::NPDF*>(p);
+
+        if (pdf->isNull()) {
+            // TODO.
+            _packet = nil;
+            return;
+        }
+
+        self.interactionFile = [TempFile tempFileWithExtension:@"pdf"];
+        NSLog(@"Temporary PDF filename: %@", self.interactionFile.filename);
+        if (! pdf->savePDF([self.interactionFile.filename UTF8String])) {
+            // TODO.
+            self.interactionFile = nil;
+            _packet = nil;
+            return;
+        }
+
+        self.interaction = [UIDocumentInteractionController interactionControllerWithURL:self.interactionFile.url];
+        self.interaction.delegate = self;
+
+        [self.interaction presentPreviewAnimated:YES];
     } else {
-        // Display the packet viewer / editor.
+        // Display the relevant packet viewer / editor.
         [self navigationItem].title = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
         [self embedViewer:[PacketManagerIOS viewerFor:p]];
 
@@ -261,6 +295,21 @@
 {
     // Called when the view is shown again in the split view, invalidating the button and popover controller.
     [self.navigationItem setLeftBarButtonItem:nil animated:YES];
+}
+
+#pragma mark - Document interaction
+
+- (UIViewController *) documentInteractionControllerViewControllerForPreview: (UIDocumentInteractionController *) controller {
+    return self.navigationController;
+}
+
+- (void)documentInteractionControllerDidEndPreview:(UIDocumentInteractionController *)controller
+{
+    NSLog(@"End interaction.");
+    if (self.interaction == controller) {
+        self.interaction = nil;
+        self.interactionFile = nil;
+    }
 }
 
 @end
