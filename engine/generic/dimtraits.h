@@ -77,10 +77,24 @@ struct DimTraits {
     typedef void Perm;
         /**< The permutation type used to describe gluings between
              top-dimensional simplices in a \a dim-manifold triangulation. */
+
+    /**
+     * Provides information about faces of dimension \a subdim within a
+     * \a dim-manifold triangulation.  This struct is defined for all
+     * face dimensions \a subdim between 0 and \a dim inclusive.
+     */
+    template <int subdim>
+    struct Face {
+        typedef void type;
+            /**< The data type used to represent a face of dimension
+                 \a subdim within a \a dim-manifold triangulation. */
+    };
 };
 
 #ifndef __DOXYGEN
 class Dim2Triangulation;
+class Dim2Vertex;
+class Dim2Edge;
 class Dim2Triangle;
 class Dim2Isomorphism;
 class Dim2EdgePairing;
@@ -93,17 +107,34 @@ struct DimTraits<2> {
     typedef Dim2Isomorphism Isomorphism;
     typedef Dim2EdgePairing FacetPairing;
     typedef NPerm3 Perm;
+
+    template <int subdim>
+    struct Face;
 };
 
-class NEdge;
-class NTetrahedron;
-class NTriangle;
+template <>
+struct DimTraits<2>::Face<0> {
+    typedef Dim2Vertex type;
+};
+
+template <>
+struct DimTraits<2>::Face<1> {
+    typedef Dim2Edge type;
+};
+
+template <>
+struct DimTraits<2>::Face<2> {
+    typedef Dim2Triangle type;
+};
+
 class NTriangulation;
+class NVertex;
+class NEdge;
+class NTriangle;
 class NTetrahedron;
 class NIsomorphism;
 class NFacePairing;
 class NPerm4;
-class NVertex;
 
 template <>
 struct DimTraits<3> {
@@ -113,8 +144,7 @@ struct DimTraits<3> {
     typedef NFacePairing FacetPairing;
     typedef NPerm4 Perm;
 
-    // TODO: Document this mess below.
-    template <int dim>
+    template <int subdim>
     struct Face;
 };
 
