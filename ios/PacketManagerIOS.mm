@@ -73,20 +73,20 @@
     }
 }
 
-+ (NSString *)segueFor:(regina::NPacket *)p {
++ (NSString *)viewerFor:(regina::NPacket *)p {
     switch (p->getPacketType()) {
-        case regina::PACKET_ANGLESTRUCTURELIST: return @"embedAngles";
-        case regina::PACKET_PDF: return @"embedPDF";
-        case regina::PACKET_SCRIPT: return @"embedScript";
+        case regina::PACKET_ANGLESTRUCTURELIST: return @"viewAngles";
+        case regina::PACKET_PDF: return @"viewPDF";
+        case regina::PACKET_SCRIPT: return @"viewScript";
         case regina::PACKET_SURFACEFILTER:
             switch (static_cast<regina::NSurfaceFilter*>(p)->getFilterType()) {
-                case regina::NS_FILTER_PROPERTIES: return @"embedFilterProperties";
-                case regina::NS_FILTER_COMBINATION: return @"embedFilterCombination";
-                default: return @"embedDefault";
+                case regina::NS_FILTER_PROPERTIES: return @"viewFilterProperties";
+                case regina::NS_FILTER_COMBINATION: return @"viewFilterCombination";
+                default: return @"viewDefault";
             }
-        case regina::PACKET_TEXT: return @"embedText";
-        case regina::PACKET_TRIANGULATION: return @"embedTriangulation";
-        default: return @"embedDefault";
+        case regina::PACKET_TEXT: return @"viewText";
+        case regina::PACKET_TRIANGULATION: return @"viewTriangulation";
+        default: return @"viewDefault";
     }
 }
 

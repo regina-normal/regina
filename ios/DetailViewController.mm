@@ -37,19 +37,24 @@
 #import "PacketManagerIOS.h"
 #import "PacketViewController.h"
 #import "ReginaHelper.h"
-#import "SwitchableSubcontroller.h"
 #import "packet/npacket.h"
 #import "packet/packettype.h"
 
 @interface DetailViewController () <UIActionSheetDelegate, PacketDelegate> {
     NSString* _menuTitle;
-    SwitchableSubcontroller* _sub;
     PacketListenerIOS* _listener;
     UIDocumentInteractionController* _interact;
 }
+@property (weak, nonatomic) IBOutlet UIView *container;
+@property (strong, nonatomic) UIViewController *contents;
 @end
 
 @implementation DetailViewController
+
+- (void)viewDidLoad
+{
+    [self setDoc:nil forceRefresh:YES];
+}
 
 - (void)dealloc
 {
@@ -72,7 +77,7 @@
     // Close any packet viewers that might be open,
     // push any outstanding changes to the calculation engine,
     // and segue to whatever the detail panel should display instead.
-    [self setPacket:nil forceRefresh:YES emptySegue:(doc ? nil : @"embedWelcome")];
+    [self setPacket:nil forceRefresh:YES emptySegue:(doc ? nil : @"welcome")];
 
     if (_doc && _doc != doc) {
         NSLog(@"Closing document...");
@@ -111,8 +116,8 @@
 
     if (_packet) {
         // Push any outstanding changes to the calculation engine.
-        if ([[_sub subview].class isSubclassOfClass:[PacketEditController class]])
-            [static_cast<PacketEditController*>([_sub subview]) endEditing];
+        if ([self.contents.class isSubclassOfClass:[PacketEditController class]])
+            [static_cast<PacketEditController*>(self.contents) endEditing];
     }
 
     _packet = p;
@@ -120,14 +125,14 @@
     if (p == nil) {
         // Display an empty panel.
         [self navigationItem].title = @"";
-        [_sub performSegueWithIdentifier:(emptySegue ? emptySegue : @"embedEmpty") sender:nil];
+        [self embedViewer:(emptySegue ? emptySegue : @"empty")];
 
         [_listener permanentlyUnlisten];
         _listener = nil;
     } else {
         // Display the packet viewer / editor.
         [self navigationItem].title = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
-        [_sub performSegueWithIdentifier:[PacketManagerIOS segueFor:p] sender:self];
+        [self embedViewer:[PacketManagerIOS viewerFor:p]];
 
         [_listener permanentlyUnlisten];
         _listener = [PacketListenerIOS listenerWithPacket:p delegate:self listenChildren:NO];
@@ -139,13 +144,41 @@
     [self setPacket:packet forceRefresh:NO emptySegue:nil];
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // This is the embed segue.
-    if (! _sub) {
-        _sub = segue.destinationViewController;
-        
-        // Now that we have identified _sub, refresh the detail view.
-        [self setDoc:_doc forceRefresh:YES];
+- (void)embedViewer:(NSString*)viewerID
+{
+    UIViewController* from = self.contents;
+    UIViewController* to = [self.storyboard instantiateViewControllerWithIdentifier:viewerID];
+    self.contents = to;
+
+    if (self.packet)
+        static_cast<PacketViewController*>(to).packet = self.packet;
+
+    to.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+
+    // Note: The following call to addChildViewController: should
+    // automatically call [to willMoveToParentViewController:self].
+    [self addChildViewController:to];
+
+    to.view.frame = self.container.bounds;
+    [to.view layoutIfNeeded];
+
+    if (from) {
+        [self transitionFromViewController:from
+                          toViewController:to
+                                  duration:0
+                                   options:0
+                                animations:nil
+                                completion:^(BOOL finished) {
+                                    // Likewise, the following call to removeFromParentViewController should
+                                    // automatically call [from didMoveToParentViewController:nil].
+                                    [from willMoveToParentViewController:nil];
+                                    [from removeFromParentViewController];
+
+                                    [to didMoveToParentViewController:self];
+                                }];
+    } else {
+        [self.container addSubview:to.view];
+        [to didMoveToParentViewController:self];
     }
 }
 

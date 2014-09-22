@@ -41,7 +41,7 @@ namespace regina {
 @interface PacketManagerIOS : NSObject
 
 + (UIImage*)iconFor:(regina::NPacket*)p;
-+ (NSString*)segueFor:(regina::NPacket*)p;
++ (NSString*)viewerFor:(regina::NPacket*)p;
 + (void)newPacket:(NewPacketSpec*)spec;
 
 @end

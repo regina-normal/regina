@@ -10,13 +10,10 @@ CLEAN UP:
 
 - DetailViewController
 - PacketViewController
-- PacketSubcontroller
-- SwitchableSubcontroller
 
 - PacketManagerIOS
 
 - packets/TriangulationViewController
-- packets/TriangulationSubcontroller
 - packets/TriGluingsViewController
 - packets/TriRecognitionViewController
 
