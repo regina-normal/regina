@@ -43,14 +43,11 @@
 #import "packet/npdf.h"
 #import "packet/packettype.h"
 
-// TODO: The view container can just be a plain old view.  Check the spacing under rotation after doing this.
-
 @interface DetailViewController () <UIActionSheetDelegate, UIDocumentInteractionControllerDelegate, PacketDelegate> {
     NSString* _menuTitle;
     PacketListenerIOS* _listener;
     UIDocumentInteractionController* _interact;
 }
-@property (weak, nonatomic) IBOutlet UIView *container;
 @property (strong, nonatomic) UIViewController *contents;
 @property (strong, nonatomic) UIDocumentInteractionController *interaction;
 @property (strong, nonatomic) TempFile *interactionFile;
@@ -216,7 +213,15 @@
     // automatically call [to willMoveToParentViewController:self].
     [self addChildViewController:to];
 
-    to.view.frame = self.container.frame;
+    if (from)
+        to.view.frame = from.view.frame;
+    else {
+        CGSize outerSize = self.view.frame.size;
+        CGRect navFrame = self.navigationController.navigationBar.frame;
+        CGFloat navHeight = navFrame.size.height + navFrame.origin.y /* account for status bar also */;
+        to.view.frame = CGRectMake(0, navHeight, outerSize.width, outerSize.height - navHeight);
+    }
+
     [to.view layoutIfNeeded];
 
     if (from) {

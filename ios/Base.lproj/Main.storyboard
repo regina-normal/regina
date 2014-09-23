@@ -81,24 +81,9 @@
                     <view key="view" contentMode="scaleToFill" id="srr-r2-MQN">
                         <rect key="frame" x="0.0" y="0.0" width="703" height="768"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OdY-kv-Jz0">
-                                <rect key="frame" x="0.0" y="64" width="703" height="704"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                            </containerView>
-                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="OdY-kv-Jz0" firstAttribute="top" secondItem="tZa-u7-g03" secondAttribute="bottom" id="1E5-rC-dVA"/>
-                            <constraint firstItem="F5p-xA-ILQ" firstAttribute="top" secondItem="OdY-kv-Jz0" secondAttribute="bottom" id="b2L-v9-Grz"/>
-                            <constraint firstAttribute="trailing" secondItem="OdY-kv-Jz0" secondAttribute="trailing" id="ieg-0Z-0JV"/>
-                            <constraint firstItem="OdY-kv-Jz0" firstAttribute="leading" secondItem="srr-r2-MQN" secondAttribute="leading" id="mUh-7o-7Uq"/>
-                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Regina" id="PoR-wv-FMe"/>
-                    <connections>
-                        <outlet property="container" destination="OdY-kv-Jz0" id="Ie8-6s-tkO"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5Uj-1t-low" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -183,7 +168,6 @@
         <!--View Controller-->
         <scene sceneID="gD7-q9-lF7">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Vfc-GD-ELU" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController modalPresentationStyle="formSheet" id="pNe-l7-YNV" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="dhq-Zc-k3L"/>
@@ -213,13 +197,13 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="550" height="200"/>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Vfc-GD-ELU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="185" y="2519"/>
         </scene>
         <!--Angle View Controller-->
         <scene sceneID="XsF-Tf-spx">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="UMY-p9-K7w" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="viewAngles" id="jZd-zD-1eX" customClass="AngleViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="cfb-rS-kfE"/>
@@ -308,13 +292,13 @@
                         <outlet property="triangulation" destination="p0j-AZ-BWb" id="PdI-mr-oWh"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UMY-p9-K7w" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="859.5" y="3090"/>
         </scene>
         <!--Filter Properties View Controller-->
         <scene sceneID="HoL-ce-yiZ">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="jfU-2v-BrM" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="viewFilterProperties" id="yYd-Ua-Q5F" customClass="FilterPropertiesViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="FOI-3d-ctB"/>
@@ -459,6 +443,7 @@
                         <outlet property="orientabilityExpln" destination="zcC-8W-jyv" id="oaH-Pa-IUf"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jfU-2v-BrM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="7.5" y="3998"/>
         </scene>
@@ -1447,7 +1432,6 @@
         <!--Filter Combination View Controller-->
         <scene sceneID="3nw-CC-TBa">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="aeo-Q6-8Ix" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="viewFilterCombination" id="vFt-aQ-pFh" customClass="FilterCombinationViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="iYR-KV-eIu"/>
@@ -1558,6 +1542,7 @@
                         <outlet property="type" destination="Bxe-0j-K0n" id="Q7Y-7W-BU5"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aeo-Q6-8Ix" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="859.5" y="3998"/>
         </scene>
@@ -2361,7 +2346,6 @@
         <!--Script View Controller-->
         <scene sceneID="7W8-x3-d0m">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ZF6-Dl-NsN" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="viewScript" id="hwU-kY-f7E" customClass="ScriptViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Vaz-9H-NUx"/>
@@ -2535,6 +2519,7 @@
                         <outlet property="variables" destination="mgW-R2-OXk" id="cgF-bh-xoP"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ZF6-Dl-NsN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="7.5" y="3090"/>
         </scene>
