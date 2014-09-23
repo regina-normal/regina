@@ -57,6 +57,13 @@
 
 - (void)viewDidLoad
 {
+    // It seems automaticallyAdjustsScrollViewInsets behaves differently under iOS 7 vs 8.
+    // This is causing vertical misplacement when the device is rotated while a packet
+    // viewer is open.
+    // Disable automaticallyAdjustsScrollViewInsets, and instead explicitly create room
+    // for the navigation bar in the packet viewer's frame (see embedViewer: for the code).
+    self.automaticallyAdjustsScrollViewInsets = NO;
+
     [self setDoc:nil forceRefresh:YES];
 }
 
@@ -213,9 +220,9 @@
     // automatically call [to willMoveToParentViewController:self].
     [self addChildViewController:to];
 
-    if (from)
+    if (from) {
         to.view.frame = from.view.frame;
-    else {
+    } else {
         CGSize outerSize = self.view.frame.size;
         CGRect navFrame = self.navigationController.navigationBar.frame;
         CGFloat navHeight = navFrame.size.height + navFrame.origin.y /* account for status bar also */;
