@@ -37,6 +37,7 @@
 
 @interface TextViewController () <UITextViewDelegate>
 @property (weak, nonatomic) IBOutlet UITextView *detail;
+@property (assign, nonatomic) regina::NText* packet;
 @end
 
 @implementation TextViewController
@@ -45,8 +46,7 @@
 {
     [super viewDidLoad];
 
-    regina::NText* t = static_cast<regina::NText*>(self.packet);
-    _detail.text = [NSString stringWithUTF8String:t->getText().c_str()];
+    _detail.text = [NSString stringWithUTF8String:self.packet->getText().c_str()];
     _detail.delegate = self;
 }
 
@@ -59,8 +59,7 @@
 
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
-    regina::NText* t = static_cast<regina::NText*>(self.packet);
-    t->setText([textView.text UTF8String]);
+    self.packet->setText([textView.text UTF8String]);
 }
 
 @end

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		050313C11812DB06007F0CBE /* TextViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050313C01812DB06007F0CBE /* TextViewController.mm */; };
 		050313C41812DB1E007F0CBE /* DefaultPacketViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050313C31812DB1E007F0CBE /* DefaultPacketViewController.mm */; };
-		050313C71812DDF0007F0CBE /* PacketViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050313C61812DDF0007F0CBE /* PacketViewController.mm */; };
 		0503DCD419B7D8AA0085F3CC /* regina-doc-64.png in Resources */ = {isa = PBXBuildFile; fileRef = 0503DCD219B7D8950085F3CC /* regina-doc-64.png */; };
 		0503DCD519B7D8AA0085F3CC /* regina-doc-320.png in Resources */ = {isa = PBXBuildFile; fileRef = 0503DCD319B7D8950085F3CC /* regina-doc-320.png */; };
 		0503DCD819B7E3AD0085F3CC /* DocumentListController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0503DCD719B7E3AD0085F3CC /* DocumentListController.mm */; };
@@ -1215,8 +1214,7 @@
 		050313C01812DB06007F0CBE /* TextViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TextViewController.mm; sourceTree = "<group>"; };
 		050313C21812DB1E007F0CBE /* DefaultPacketViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefaultPacketViewController.h; sourceTree = "<group>"; };
 		050313C31812DB1E007F0CBE /* DefaultPacketViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DefaultPacketViewController.mm; sourceTree = "<group>"; };
-		050313C51812DDF0007F0CBE /* PacketViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketViewController.h; sourceTree = "<group>"; };
-		050313C61812DDF0007F0CBE /* PacketViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketViewController.mm; sourceTree = "<group>"; };
+		050313C51812DDF0007F0CBE /* PacketViewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketViewer.h; sourceTree = "<group>"; };
 		0503DCD219B7D8950085F3CC /* regina-doc-64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "regina-doc-64.png"; sourceTree = "<group>"; };
 		0503DCD319B7D8950085F3CC /* regina-doc-320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "regina-doc-320.png"; sourceTree = "<group>"; };
 		0503DCD619B7E3AD0085F3CC /* DocumentListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentListController.h; sourceTree = "<group>"; };
@@ -3308,8 +3306,7 @@
 				05937B2219CF819C00160F9A /* PacketTabBarController.mm */,
 				05F96C111809F59600C99F96 /* PacketTreeController.h */,
 				05F96C121809F59600C99F96 /* PacketTreeController.mm */,
-				050313C51812DDF0007F0CBE /* PacketViewController.h */,
-				050313C61812DDF0007F0CBE /* PacketViewController.mm */,
+				050313C51812DDF0007F0CBE /* PacketViewer.h */,
 				05583A6019B8041F00076187 /* ReginaDocument.h */,
 				05583A6119B8041F00076187 /* ReginaDocument.mm */,
 				05D1C16D19C6542700CF92F2 /* ReginaHelper.h */,
@@ -4499,7 +4496,6 @@
 				052FA19C1806129B00FAE4DF /* ninteger.cpp in Sources */,
 				052FA22C180612DD00FAE4DF /* my_malloc.c in Sources */,
 				052FA225180612DD00FAE4DF /* gcd.c in Sources */,
-				050313C71812DDF0007F0CBE /* PacketViewController.mm in Sources */,
 				052FA1B81806129B00FAE4DF /* nblockedsfspair.cpp in Sources */,
 				052FA226180612DD00FAE4DF /* gluing_equations.c in Sources */,
 				052FA222180612DD00FAE4DF /* filling.c in Sources */,

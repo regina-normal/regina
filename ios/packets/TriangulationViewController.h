@@ -30,8 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#import "PacketViewController.h"
+#import "PacketViewer.h"
 
-@interface TriangulationViewController : PacketViewController
+@interface TriangulationViewController : UIViewController <PacketEditor>
 
 @end

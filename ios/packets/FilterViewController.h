@@ -30,16 +30,16 @@
  *                                                                        *
  **************************************************************************/
 
-#import "PacketViewController.h"
+#import "PacketViewer.h"
 
 /**
  * The controller for viewing property-based surface filters.
  */
-@interface FilterPropertiesViewController : PacketEditController
+@interface FilterPropertiesViewController : UIViewController <PacketEditor>
 @end
 
 /**
  * The controller for viewing combination-based surface filters.
  */
-@interface FilterCombinationViewController : PacketEditController
+@interface FilterCombinationViewController : UIViewController <PacketEditor>
 @end

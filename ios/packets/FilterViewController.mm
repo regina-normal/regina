@@ -56,6 +56,7 @@ static NSMutableCharacterSet* eulerSeparators;
 @property (weak, nonatomic) IBOutlet UILabel *boundaryExpln;
 @property (weak, nonatomic) IBOutlet UITextField *euler;
 @property (weak, nonatomic) IBOutlet UILabel *eulerExpln;
+@property (assign, nonatomic) regina::NSurfaceFilterProperties* packet;
 @end
 
 @implementation FilterPropertiesViewController
@@ -67,10 +68,9 @@ static NSMutableCharacterSet* eulerSeparators;
     if (! orientabilityText)
         [FilterPropertiesViewController initArrays];
 
-    regina::NSurfaceFilterProperties* f = static_cast<regina::NSurfaceFilterProperties*>(self.packet);
-    self.orientability.selectedSegmentIndex = [FilterPropertiesViewController selectionFromSet:f->getOrientability()];
-    self.compactness.selectedSegmentIndex = [FilterPropertiesViewController selectionFromSet:f->getCompactness()];
-    self.boundary.selectedSegmentIndex = [FilterPropertiesViewController selectionFromSet:f->getRealBoundary()];
+    self.orientability.selectedSegmentIndex = [FilterPropertiesViewController selectionFromSet:self.packet->getOrientability()];
+    self.compactness.selectedSegmentIndex = [FilterPropertiesViewController selectionFromSet:self.packet->getCompactness()];
+    self.boundary.selectedSegmentIndex = [FilterPropertiesViewController selectionFromSet:self.packet->getRealBoundary()];
 
     [self updateEulerDisplay];
     self.euler.delegate = self;
@@ -85,7 +85,7 @@ static NSMutableCharacterSet* eulerSeparators;
 
 - (void)updateEulerDisplay
 {
-    const std::set<regina::NLargeInteger>& ECs = static_cast<regina::NSurfaceFilterProperties*>(self.packet)->getECs();
+    const std::set<regina::NLargeInteger>& ECs = self.packet->getECs();
     if (ECs.empty()) {
         self.euler.text = @"";
         self.eulerExpln.text = @"No restrictions on Euler characteristic.";
@@ -105,19 +105,19 @@ static NSMutableCharacterSet* eulerSeparators;
 - (IBAction)orientabilityChanged:(id)sender {
     int selection = self.orientability.selectedSegmentIndex;
     self.orientabilityExpln.text = orientabilityText[selection];
-    static_cast<regina::NSurfaceFilterProperties*>(self.packet)->setOrientability([FilterPropertiesViewController setFromSelection:selection]);
+    self.packet->setOrientability([FilterPropertiesViewController setFromSelection:selection]);
 }
 
 - (IBAction)compactnessChanged:(id)sender {
     int selection = self.compactness.selectedSegmentIndex;
     self.compactnessExpln.text = compactnessText[selection];
-    static_cast<regina::NSurfaceFilterProperties*>(self.packet)->setCompactness([FilterPropertiesViewController setFromSelection:selection]);
+    self.packet->setCompactness([FilterPropertiesViewController setFromSelection:selection]);
 }
 
 - (IBAction)boundaryChanged:(id)sender {
     int selection = self.boundary.selectedSegmentIndex;
     self.boundaryExpln.text = boundaryText[selection];
-    static_cast<regina::NSurfaceFilterProperties*>(self.packet)->setRealBoundary([FilterPropertiesViewController setFromSelection:selection]);
+    self.packet->setRealBoundary([FilterPropertiesViewController setFromSelection:selection]);
 }
 
 + (regina::NBoolSet)setFromSelection:(int)selection
@@ -192,8 +192,7 @@ static NSMutableCharacterSet* eulerSeparators;
         set.insert(euler);
     }
 
-    regina::NSurfaceFilterProperties* f = static_cast<regina::NSurfaceFilterProperties*>(self.packet);
-    f->setECs(set);
+    self.packet->setECs(set);
     [self updateEulerDisplay];
 }
 
@@ -212,6 +211,7 @@ static NSMutableCharacterSet* eulerSeparators;
 }
 @property (weak, nonatomic) IBOutlet UITableView *children;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *type;
+@property (assign, nonatomic) regina::NSurfaceFilterCombination* packet;
 @end
 
 @implementation FilterCombinationViewController
@@ -220,14 +220,17 @@ static NSMutableCharacterSet* eulerSeparators;
 {
     [super viewDidLoad];
 
-    regina::NSurfaceFilterCombination* c = static_cast<regina::NSurfaceFilterCombination*>(self.packet);
-
-    self.type.selectedSegmentIndex = (c->getUsesAnd() ? 0 : 1);
+    self.type.selectedSegmentIndex = (self.packet->getUsesAnd() ? 0 : 1);
 
     self.children.dataSource = self;
     self.children.delegate = self;
     [self updateSubfilters];
     // TODO: Listen on child renames / additions / deletions.
+}
+
+- (void)endEditing
+{
+    // Nothing to do: edits are committed as soon as they happen via typeChanged:.
 }
 
 - (void)updateSubfilters
@@ -243,7 +246,7 @@ static NSMutableCharacterSet* eulerSeparators;
 }
 
 - (IBAction)typeChanged:(id)sender {
-    static_cast<regina::NSurfaceFilterCombination*>(self.packet)->setUsesAnd(self.type.selectedSegmentIndex == 0);
+    self.packet->setUsesAnd(self.type.selectedSegmentIndex == 0);
 }
 
 - (IBAction)addSubfilter:(id)sender {

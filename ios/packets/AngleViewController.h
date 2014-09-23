@@ -30,10 +30,10 @@
  *                                                                        *
  **************************************************************************/
 
-#import "PacketViewController.h"
+#import "PacketViewer.h"
 
 /**
  * The controller for viewing script packets.
  */
-@interface AngleViewController : PacketViewController
+@interface AngleViewController : UIViewController <PacketViewer>
 @end

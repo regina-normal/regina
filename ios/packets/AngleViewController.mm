@@ -64,6 +64,7 @@ static UIFont* cellFont = [UIFont systemFontOfSize:16];
 @property (weak, nonatomic) IBOutlet UILabel *span;
 @property (weak, nonatomic) IBOutlet UIButton *triangulation;
 @property (weak, nonatomic) IBOutlet MDSpreadView *angles;
+@property (assign, nonatomic) regina::NAngleStructureList* packet;
 @end
 
 @implementation AngleViewController
@@ -72,10 +73,8 @@ static UIFont* cellFont = [UIFont systemFontOfSize:16];
 {
     [super viewDidLoad];
 
-    regina::NAngleStructureList* a = static_cast<regina::NAngleStructureList*>(self.packet);
-
-    unsigned long count = a->getNumberOfStructures();
-    if (a->isTautOnly()) {
+    unsigned long count = self.packet->getNumberOfStructures();
+    if (self.packet->isTautOnly()) {
         if (count == 0)
             self.countAndType.text = @"No taut angle structures";
         else if (count == 1)
@@ -91,14 +90,14 @@ static UIFont* cellFont = [UIFont systemFontOfSize:16];
             self.countAndType.text = [NSString stringWithFormat:@"%ld vertex angle structures", count];
     }
 
-    NSAttributedString* strictText = (a->spansStrict() ?
+    NSAttributedString* strictText = (self.packet->spansStrict() ?
                                       [[NSAttributedString alloc]
                                        initWithString:@"Strict"
                                        attributes:@{NSForegroundColorAttributeName: yesColour}] :
                                       [[NSAttributedString alloc]
                                        initWithString:@"No strict"
                                        attributes:@{NSForegroundColorAttributeName: noColour}]);
-    NSAttributedString* tautText = (a->spansTaut() ?
+    NSAttributedString* tautText = (self.packet->spansTaut() ?
                                     [[NSAttributedString alloc]
                                      initWithString:@"Taut"
                                      attributes:@{NSForegroundColorAttributeName: yesColour}] :
@@ -114,7 +113,7 @@ static UIFont* cellFont = [UIFont systemFontOfSize:16];
 
     [self updateTriangulationButton];
     // Continue to update the button text if the triangulation is renamed.
-    _triListener = [PacketListenerIOS listenerWithPacket:a->getTriangulation() delegate:self listenChildren:NO];
+    _triListener = [PacketListenerIOS listenerWithPacket:self.packet->getTriangulation() delegate:self listenChildren:NO];
 
     [self initMetrics];
     self.angles.dataSource = self;
@@ -124,10 +123,9 @@ static UIFont* cellFont = [UIFont systemFontOfSize:16];
 
 - (void)initMetrics
 {
-    regina::NAngleStructureList* a = static_cast<regina::NAngleStructureList*>(self.packet);
     NSString* text;
 
-    text = [NSString stringWithFormat:@"%ld.", a->getNumberOfStructures() - 1];
+    text = [NSString stringWithFormat:@"%ld.", self.packet->getNumberOfStructures() - 1];
     widthHeader = CELL_WIDTH_PADDING + [text sizeWithAttributes:@{NSFontAttributeName: headerFont}].width;
 
     text = @"Veering";
@@ -135,7 +133,7 @@ static UIFont* cellFont = [UIFont systemFontOfSize:16];
     widthType = CELL_WIDTH_PADDING + size.width;
     height = CELL_HEIGHT_PADDING + size.height;
 
-    text = [NSString stringWithFormat:@"%ld: 01/23", a->getTriangulation()->getNumberOfTetrahedra() - 1];
+    text = [NSString stringWithFormat:@"%ld: 01/23", self.packet->getTriangulation()->getNumberOfTetrahedra() - 1];
     widthAngle = CELL_WIDTH_PADDING + [text sizeWithAttributes:@{NSFontAttributeName: headerFont}].width;
 }
 
@@ -145,17 +143,18 @@ static UIFont* cellFont = [UIFont systemFontOfSize:16];
 }
 
 - (IBAction)openTriangulation:(id)sender {
-    regina::NPacket* show = static_cast<regina::NAngleStructureList*>(self.packet)->getTriangulation();
-    [[ReginaHelper tree] navigateToPacket:show->getTreeParent()];
+    regina::NPacket* show = self.packet->getTriangulation();
 
-    // We can't select this normal surface list in the tree, since the pop action is animated and
-    // will not have finished by this point.
-    [ReginaHelper viewPacket:static_cast<regina::NAngleStructureList*>(self.packet)->getTriangulation()];
+    [[ReginaHelper tree] navigateToPacket:show->getTreeParent()];
+    // We can't select this normal surface list in the parent triangulation's child list,
+    // since the pop action is animated and will not have finished by this point.
+
+    [ReginaHelper viewPacket:show];
 }
 
 - (void)updateTriangulationButton
 {
-    regina::NPacket* tri = static_cast<regina::NAngleStructureList*>(self.packet)->getTriangulation();
+    regina::NPacket* tri = self.packet->getTriangulation();
     NSString* triName = [NSString stringWithUTF8String:tri->getPacketLabel().c_str()];
     if (triName.length == 0)
         triName = @"(Unnamed)";
@@ -166,7 +165,7 @@ static UIFont* cellFont = [UIFont systemFontOfSize:16];
 
 - (void)packetWasRenamed:(regina::NPacket *)packet
 {
-    if (packet == static_cast<regina::NAngleStructureList*>(self.packet)->getTriangulation())
+    if (packet == self.packet->getTriangulation())
         [self updateTriangulationButton];
 }
 
@@ -174,12 +173,12 @@ static UIFont* cellFont = [UIFont systemFontOfSize:16];
 
 - (NSInteger)spreadView:(MDSpreadView *)aSpreadView numberOfColumnsInSection:(NSInteger)section
 {
-    return 1 + 3 * static_cast<regina::NAngleStructureList*>(self.packet)->getTriangulation()->getNumberOfTetrahedra();
+    return 1 + 3 * self.packet->getTriangulation()->getNumberOfTetrahedra();
 }
 
 - (NSInteger)spreadView:(MDSpreadView *)aSpreadView numberOfRowsInSection:(NSInteger)section
 {
-    return static_cast<regina::NAngleStructureList*>(self.packet)->getNumberOfStructures();
+    return self.packet->getNumberOfStructures();
 }
 
 - (id)spreadView:(MDSpreadView *)aSpreadView titleForHeaderInRowSection:(NSInteger)section forColumnAtIndexPath:(MDIndexPath *)columnPath
@@ -205,7 +204,7 @@ static UIFont* cellFont = [UIFont systemFontOfSize:16];
 
 - (id)spreadView:(MDSpreadView *)aSpreadView objectValueForRowAtIndexPath:(MDIndexPath *)rowPath forColumnAtIndexPath:(MDIndexPath *)columnPath
 {
-    const regina::NAngleStructure* a = static_cast<regina::NAngleStructureList*>(self.packet)->getStructure(rowPath.row);
+    const regina::NAngleStructure* a = self.packet->getStructure(rowPath.row);
 
     if (columnPath.column == 0) {
         if (a->isStrict())

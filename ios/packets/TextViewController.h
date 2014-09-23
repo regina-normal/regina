@@ -30,10 +30,10 @@
  *                                                                        *
  **************************************************************************/
 
-#import "PacketViewController.h"
+#import "PacketViewer.h"
 
 /**
  * The controller for viewing and editing text packets.
  */
-@interface TextViewController : PacketEditController
+@interface TextViewController : UIViewController <PacketEditor>
 @end

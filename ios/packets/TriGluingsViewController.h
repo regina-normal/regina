@@ -31,8 +31,8 @@
  **************************************************************************/
 
 #import <UIKit/UIKit.h>
-#import "PacketViewController.h"
+#import "PacketViewer.h"
 
-@interface TriGluingsViewController : PacketViewController
+@interface TriGluingsViewController : UIViewController <PacketEditor>
 
 @end

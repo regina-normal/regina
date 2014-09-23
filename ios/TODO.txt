@@ -9,7 +9,7 @@ CLEAN UP:
 - NewPacketPageViewController
 
 - DetailViewController
-- PacketViewController
+- PacketViewer and PacketEditor protocols
 
 - PacketManagerIOS
 

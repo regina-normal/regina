@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#import "PacketViewController.h"
+#import "PacketViewer.h"
 
 /**
  * A cell in a table of script variables.
@@ -41,5 +41,5 @@
 /**
  * The controller for viewing script packets.
  */
-@interface ScriptViewController : PacketViewController
+@interface ScriptViewController : UIViewController <PacketViewer>
 @end

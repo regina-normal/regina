@@ -36,7 +36,7 @@
 #import "PacketListenerIOS.h"
 #import "PacketManagerIOS.h"
 #import "PacketTreeController.h"
-#import "PacketViewController.h"
+#import "PacketViewer.h"
 #import "ReginaHelper.h"
 #import "TempFile.h"
 #import "packet/npacket.h"
@@ -134,9 +134,9 @@
     }
 
     if (_packet) {
-        if ([self.contents.class isSubclassOfClass:[PacketEditController class]]) {
+        if ([self.contents.class conformsToProtocol:@protocol(PacketEditor)]) {
             // Push any outstanding edits to the calculation engine.
-            [static_cast<PacketEditController*>(self.contents) endEditing];
+            [static_cast<id <PacketEditor> >(self.contents) endEditing];
         }
     }
 
@@ -211,8 +211,8 @@
     UIViewController* to = [self.storyboard instantiateViewControllerWithIdentifier:viewerID];
     self.contents = to;
 
-    if (self.packet)
-        static_cast<PacketViewController*>(to).packet = self.packet;
+    if ([to.class conformsToProtocol:@protocol(PacketViewer)])
+        static_cast<id <PacketViewer> >(to).packet = self.packet;
 
     to.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
 
@@ -295,6 +295,11 @@
 }
 
 #pragma mark - Packet listener
+
+- (void)packetWasChanged:(regina::NPacket *)packet
+{
+    [[ReginaHelper document] setDirty];
+}
 
 - (void)packetWasRenamed:(regina::NPacket *)packet
 {

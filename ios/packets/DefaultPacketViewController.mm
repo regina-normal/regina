@@ -35,6 +35,7 @@
 
 @interface DefaultPacketViewController ()
 @property (weak, nonatomic) IBOutlet UITextView *detail;
+@property (assign, nonatomic) regina::NPacket* packet;
 @end
 
 @implementation DefaultPacketViewController

@@ -31,8 +31,8 @@
  **************************************************************************/
 
 #import <UIKit/UIKit.h>
-#import "PacketViewController.h"
+#import "PacketViewer.h"
 
-@interface TriRecognitionViewController : PacketViewController
+@interface TriRecognitionViewController : UIViewController <PacketViewer>
 
 @end

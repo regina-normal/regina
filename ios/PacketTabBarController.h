@@ -31,12 +31,13 @@
  **************************************************************************/
 
 #import "PacketListenerIOS.h"
+#import "PacketViewer.h"
 
 namespace regina {
     class NPacket;
 }
 
-@interface PacketTabBarController : UITabBarController <PacketDelegate>
+@interface PacketTabBarController : UITabBarController <PacketEditor, PacketDelegate>
 
 @property (assign, nonatomic) regina::NPacket* packet;
 

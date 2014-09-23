@@ -56,6 +56,7 @@
 }
 @property (weak, nonatomic) IBOutlet UITableView *variables;
 @property (weak, nonatomic) IBOutlet UITextView *script;
+@property (assign, nonatomic) regina::NScript* packet;
 @end
 
 @implementation ScriptViewController
@@ -64,8 +65,7 @@
 {
     [super viewDidLoad];
 
-    regina::NScript* s = static_cast<regina::NScript*>(self.packet);
-    self.script.text = [NSString stringWithUTF8String:s->getText().c_str()];
+    self.script.text = [NSString stringWithUTF8String:self.packet->getText().c_str()];
 
     variableHeaderHeight = 0;
 
@@ -80,18 +80,16 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    regina::NScript* s = static_cast<regina::NScript*>(self.packet);
-
     if (indexPath.row == 0)
         return [tableView dequeueReusableCellWithIdentifier:@"Header"];
 
-    if (s->getNumberOfVariables() == 0)
+    if (self.packet->getNumberOfVariables() == 0)
         return [tableView dequeueReusableCellWithIdentifier:@"Empty"];
 
     ScriptVariableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Variable" forIndexPath:indexPath];
-    cell.variable.text = [NSString stringWithUTF8String:s->getVariableName(indexPath.row - 1).c_str()];
+    cell.variable.text = [NSString stringWithUTF8String:self.packet->getVariableName(indexPath.row - 1).c_str()];
 
-    regina::NPacket* value = s->getVariableValue(indexPath.row - 1);
+    regina::NPacket* value = self.packet->getVariableValue(indexPath.row - 1);
     if (value) {
         cell.icon.image = [PacketManagerIOS iconFor:value];
         if (value->getTreeParent())
@@ -107,7 +105,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    unsigned long nVar = static_cast<regina::NScript*>(self.packet)->getNumberOfVariables();
+    unsigned long nVar = self.packet->getNumberOfVariables();
     return 1 + (nVar > 0 ? nVar : 1);
 }
 
