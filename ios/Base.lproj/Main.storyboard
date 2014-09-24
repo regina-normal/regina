@@ -2029,10 +2029,10 @@
             </objects>
             <point key="canvasLocation" x="2993.5" y="3795"/>
         </scene>
-        <!--Packet Tab Bar Controller-->
+        <!--Surfaces View Controller-->
         <scene sceneID="N0J-RA-b5k">
             <objects>
-                <tabBarController storyboardIdentifier="viewSurfaces" id="Lng-tx-uIb" customClass="PacketTabBarController" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="viewSurfaces" id="Lng-tx-uIb" customClass="SurfacesViewController" sceneMemberID="viewController">
                     <nil key="simulatedStatusBarMetrics"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <nil key="simulatedBottomBarMetrics"/>
@@ -2073,10 +2073,10 @@
             </objects>
             <point key="canvasLocation" x="2993.5" y="1507"/>
         </scene>
-        <!--Packet Tab Bar Controller-->
+        <!--Dim2 Triangulation View Controller-->
         <scene sceneID="7Uy-n2-S7J">
             <objects>
-                <tabBarController storyboardIdentifier="viewDim2Triangulation" id="fue-On-Sb7" customClass="PacketTabBarController" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="viewDim2Triangulation" id="fue-On-Sb7" customClass="Dim2TriangulationViewController" sceneMemberID="viewController">
                     <nil key="simulatedStatusBarMetrics"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <nil key="simulatedBottomBarMetrics"/>
@@ -2134,10 +2134,10 @@
             </objects>
             <point key="canvasLocation" x="5305.5" y="1507"/>
         </scene>
-        <!--Packet Tab Bar Controller-->
+        <!--Triangulation View Controller-->
         <scene sceneID="rgl-eb-lh1">
             <objects>
-                <tabBarController storyboardIdentifier="viewTriangulation" id="JtD-tg-GIx" customClass="PacketTabBarController" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="viewTriangulation" id="JtD-tg-GIx" customClass="TriangulationViewController" sceneMemberID="viewController">
                     <nil key="simulatedStatusBarMetrics"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <nil key="simulatedBottomBarMetrics"/>

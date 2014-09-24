@@ -30,50 +30,17 @@
  *                                                                        *
  **************************************************************************/
 
-#import "PacketTabBarController.h"
-#import "ReginaDocument.h"
-#import "ReginaHelper.h"
+#import "SurfacesViewController.h"
 
-@interface PacketTabBarController () {
-    PacketListenerIOS* _listener;
-}
-@end
+@implementation SurfacesViewController
 
-@implementation PacketTabBarController
-
-- (void)dealloc
+- (void)viewDidLoad
 {
-    [_listener permanentlyUnlisten];
-}
-
-- (void)setPacket:(regina::NPacket *)packet
-{
-    _packet = packet;
-
-    if (packet == nil) {
-        [_listener permanentlyUnlisten];
-        _listener = nil;
-    } else {
-        [_listener permanentlyUnlisten];
-        _listener = [PacketListenerIOS listenerWithPacket:packet delegate:self listenChildren:NO];
-    }
-}
-
-- (void)endEditing
-{
-    // TODO: Pass through to the current tab.
-}
-
-- (void)setSelectedImages:(NSArray *)imageNames
-{
-    for (int i = 0; i < imageNames.count; ++i)
-        if (imageNames[i] != [NSNull null])
-            static_cast<UITabBarItem*>(self.tabBar.items[i]).selectedImage = [UIImage imageNamed:imageNames[i]];
-}
-
-- (void)packetWasChanged:(regina::NPacket *)packet
-{
-    [[ReginaHelper document] setDirty];
+    [super viewDidLoad];
+    [self setSelectedImages:@[@"Tab-Summary-Bold",
+                              [NSNull null],
+                              @"Tab-Compat-Bold",
+                              [NSNull null]]];
 }
 
 @end

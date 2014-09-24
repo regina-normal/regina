@@ -13,7 +13,6 @@ CLEAN UP:
 
 - PacketManagerIOS
 
-- packets/TriangulationViewController
 - packets/TriGluingsViewController
 - packets/TriRecognitionViewController
 
@@ -26,6 +25,10 @@ WRITE VIEWERS:
 - 3-D triangulation:      6 tabs, editor
 - SnapPea triangulation:  7 tabs, editor
 - Normal surfaces:        4 tabs
+
+SHORT-TERM:
+
+- Rerender AppIcon, Packets/Document, launch images
 
 TEST:
 
@@ -52,4 +55,11 @@ LONG-TERM:
   + Indicate error conditions and handle document-version conflicts.
   + All documents in iCloud or none.  See: https://developer.apple.com/Library/ios/documentation/DataManagement/Conceptual/DocumentBasedAppPGiOS/ManageDocumentLifeCycle/ManageDocumentLifeCycle.html
 
+NOTES:
+
+- The UITabBarController Xcode bug:
+
+  2014-09-24 08:37:08.504 Regina[2650:700914] CUICatalog: Invalid asset name supplied: (null)
+  2014-09-24 08:37:08.504 Regina[2650:700914] CUICatalog: Invalid asset name supplied: (null)
+  2014-09-24 08:37:08.505 Regina[2650:700914] Could not load the "(null)" image referenced from a nib in the bundle with identifier "net.sourceforge.regina.Regina"
 

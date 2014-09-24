@@ -31,49 +31,14 @@
  **************************************************************************/
 
 #import "PacketTabBarController.h"
-#import "ReginaDocument.h"
-#import "ReginaHelper.h"
 
-@interface PacketTabBarController () {
-    PacketListenerIOS* _listener;
-}
-@end
-
-@implementation PacketTabBarController
-
-- (void)dealloc
-{
-    [_listener permanentlyUnlisten];
-}
-
-- (void)setPacket:(regina::NPacket *)packet
-{
-    _packet = packet;
-
-    if (packet == nil) {
-        [_listener permanentlyUnlisten];
-        _listener = nil;
-    } else {
-        [_listener permanentlyUnlisten];
-        _listener = [PacketListenerIOS listenerWithPacket:packet delegate:self listenChildren:NO];
-    }
-}
-
-- (void)endEditing
-{
-    // TODO: Pass through to the current tab.
-}
-
-- (void)setSelectedImages:(NSArray *)imageNames
-{
-    for (int i = 0; i < imageNames.count; ++i)
-        if (imageNames[i] != [NSNull null])
-            static_cast<UITabBarItem*>(self.tabBar.items[i]).selectedImage = [UIImage imageNamed:imageNames[i]];
-}
-
-- (void)packetWasChanged:(regina::NPacket *)packet
-{
-    [[ReginaHelper document] setDirty];
-}
-
+/**
+ * This class exists \e only to work around what appears to be a
+ * current Xcode bug.  See the notes for
+ * PacketTabBarController::setSelectedImages for details.
+ *
+ * Once this Xcode bug is fixed, this class can be safely removed
+ * and we can return to using the more general PacketTabBarController.
+ */
+@interface Dim2TriangulationViewController : PacketTabBarController
 @end

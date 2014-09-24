@@ -43,4 +43,14 @@ namespace regina {
 
 - (void)endEditing;
 
+/**
+ * Manually set the selected images for tab bar icons.
+ * This is necessary because Xcode 6.0.1 seems to have a bug:
+ * setting the selected image for a tab icon in the storyboard
+ * results in an "Invalid asset name" error at runtime (and a null image).
+ *
+ * Once the bug in Xcode is fixed, this method can be safely removed.
+ */
+- (void)setSelectedImages:(NSArray*)imageNames;
+
 @end

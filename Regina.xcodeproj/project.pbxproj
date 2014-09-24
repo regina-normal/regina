@@ -978,6 +978,8 @@
 		0588F1191808D43B006BDC79 /* packettype.h in Headers */ = {isa = PBXBuildFile; fileRef = 0588F1171808D43B006BDC79 /* packettype.h */; };
 		0589FAC3181484860064CD57 /* TriGluingsViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0589FAC2181484860064CD57 /* TriGluingsViewController.mm */; };
 		0589FACC1814BECF0064CD57 /* PacketListenerIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0589FACB1814BECF0064CD57 /* PacketListenerIOS.mm */; };
+		058FADA719D388920001B5B5 /* Dim2TriangulationViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058FADA419D388920001B5B5 /* Dim2TriangulationViewController.mm */; };
+		058FADA819D388920001B5B5 /* SurfacesViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058FADA619D388920001B5B5 /* SurfacesViewController.mm */; };
 		059101151812F349000A8D16 /* DetailViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 059101141812F349000A8D16 /* DetailViewController.mm */; };
 		0591011B1813230A000A8D16 /* NewPacketMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591011A1813230A000A8D16 /* NewPacketMenu.mm */; };
 		0591011E181364BB000A8D16 /* NewSurfacesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591011D181364BB000A8D16 /* NewSurfacesController.mm */; };
@@ -2111,6 +2113,10 @@
 		0589FAC718148F700064CD57 /* sample-ios.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "sample-ios.rga"; sourceTree = "<group>"; };
 		0589FACA1814BECF0064CD57 /* PacketListenerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketListenerIOS.h; sourceTree = "<group>"; };
 		0589FACB1814BECF0064CD57 /* PacketListenerIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketListenerIOS.mm; sourceTree = "<group>"; };
+		058FADA319D388920001B5B5 /* Dim2TriangulationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dim2TriangulationViewController.h; sourceTree = "<group>"; };
+		058FADA419D388920001B5B5 /* Dim2TriangulationViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Dim2TriangulationViewController.mm; sourceTree = "<group>"; };
+		058FADA519D388920001B5B5 /* SurfacesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurfacesViewController.h; sourceTree = "<group>"; };
+		058FADA619D388920001B5B5 /* SurfacesViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SurfacesViewController.mm; sourceTree = "<group>"; };
 		059101131812F349000A8D16 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		059101141812F349000A8D16 /* DetailViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DetailViewController.mm; sourceTree = "<group>"; };
 		059101191813230A000A8D16 /* NewPacketMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewPacketMenu.h; sourceTree = "<group>"; };
@@ -2319,6 +2325,8 @@
 				05937A9919CEC20900160F9A /* AngleViewController.mm */,
 				050313C21812DB1E007F0CBE /* DefaultPacketViewController.h */,
 				050313C31812DB1E007F0CBE /* DefaultPacketViewController.mm */,
+				058FADA319D388920001B5B5 /* Dim2TriangulationViewController.h */,
+				058FADA419D388920001B5B5 /* Dim2TriangulationViewController.mm */,
 				05B7708519CA4FF100E2E558 /* FilterViewController.h */,
 				05B7708619CA4FF100E2E558 /* FilterViewController.mm */,
 				05F23E1119C1305A005B53B5 /* NewAnglesController.h */,
@@ -2332,6 +2340,8 @@
 				0591011C181364BB000A8D16 /* NewSurfacesController.h */,
 				0591011D181364BB000A8D16 /* NewSurfacesController.mm */,
 				055FF38019BECF590057462A /* NewTriangulationController.h */,
+				058FADA519D388920001B5B5 /* SurfacesViewController.h */,
+				058FADA619D388920001B5B5 /* SurfacesViewController.mm */,
 				055FF38119BECF590057462A /* NewTriangulationController.mm */,
 				05B7708219C92A5000E2E558 /* ScriptViewController.h */,
 				05B7708319C92A5000E2E558 /* ScriptViewController.mm */,
@@ -4303,6 +4313,7 @@
 				054BC4C819B4A726005E01A0 /* hyp-knot-link-census.zsig in Sources */,
 				055FF38819C044FB0057462A /* NewDim2TriangulationController.mm in Sources */,
 				05937AD219CECF4300160F9A /* MDSpreadViewCell.m in Sources */,
+				058FADA719D388920001B5B5 /* Dim2TriangulationViewController.mm in Sources */,
 				055B7312181D7CF800449D14 /* dim2boundarycomponent.cpp in Sources */,
 				052FA16E1806129B00FAE4DF /* nfacepairing.cpp in Sources */,
 				052FA229180612DD00FAE4DF /* identify_solution_type.c in Sources */,
@@ -4405,6 +4416,7 @@
 				052FA1F11806129B00FAE4DF /* decompose.cpp in Sources */,
 				052FA1CA1806129B00FAE4DF /* nsnappeacensustri.cpp in Sources */,
 				052FA1C21806129B00FAE4DF /* npillowtwosphere.cpp in Sources */,
+				058FADA819D388920001B5B5 /* SurfacesViewController.mm in Sources */,
 				052FA1661806129B00FAE4DF /* nxmlanglestructreader.cpp in Sources */,
 				052FA20C1806129B00FAE4DF /* osutils.cpp in Sources */,
 				052FA1C11806129B00FAE4DF /* nlayering.cpp in Sources */,
