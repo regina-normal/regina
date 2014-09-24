@@ -980,6 +980,7 @@
 		0589FACC1814BECF0064CD57 /* PacketListenerIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0589FACB1814BECF0064CD57 /* PacketListenerIOS.mm */; };
 		058FADA719D388920001B5B5 /* Dim2TriangulationViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058FADA419D388920001B5B5 /* Dim2TriangulationViewController.mm */; };
 		058FADA819D388920001B5B5 /* SurfacesViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058FADA619D388920001B5B5 /* SurfacesViewController.mm */; };
+		058FADAB19D38BFC0001B5B5 /* SnapPeaViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058FADAA19D38BFC0001B5B5 /* SnapPeaViewController.mm */; };
 		059101151812F349000A8D16 /* DetailViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 059101141812F349000A8D16 /* DetailViewController.mm */; };
 		0591011B1813230A000A8D16 /* NewPacketMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591011A1813230A000A8D16 /* NewPacketMenu.mm */; };
 		0591011E181364BB000A8D16 /* NewSurfacesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591011D181364BB000A8D16 /* NewSurfacesController.mm */; };
@@ -2117,6 +2118,8 @@
 		058FADA419D388920001B5B5 /* Dim2TriangulationViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Dim2TriangulationViewController.mm; sourceTree = "<group>"; };
 		058FADA519D388920001B5B5 /* SurfacesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurfacesViewController.h; sourceTree = "<group>"; };
 		058FADA619D388920001B5B5 /* SurfacesViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SurfacesViewController.mm; sourceTree = "<group>"; };
+		058FADA919D38BFC0001B5B5 /* SnapPeaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaViewController.h; sourceTree = "<group>"; };
+		058FADAA19D38BFC0001B5B5 /* SnapPeaViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapPeaViewController.mm; sourceTree = "<group>"; };
 		059101131812F349000A8D16 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		059101141812F349000A8D16 /* DetailViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DetailViewController.mm; sourceTree = "<group>"; };
 		059101191813230A000A8D16 /* NewPacketMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewPacketMenu.h; sourceTree = "<group>"; };
@@ -2340,11 +2343,13 @@
 				0591011C181364BB000A8D16 /* NewSurfacesController.h */,
 				0591011D181364BB000A8D16 /* NewSurfacesController.mm */,
 				055FF38019BECF590057462A /* NewTriangulationController.h */,
+				055FF38119BECF590057462A /* NewTriangulationController.mm */,
 				058FADA519D388920001B5B5 /* SurfacesViewController.h */,
 				058FADA619D388920001B5B5 /* SurfacesViewController.mm */,
-				055FF38119BECF590057462A /* NewTriangulationController.mm */,
 				05B7708219C92A5000E2E558 /* ScriptViewController.h */,
 				05B7708319C92A5000E2E558 /* ScriptViewController.mm */,
+				058FADA919D38BFC0001B5B5 /* SnapPeaViewController.h */,
+				058FADAA19D38BFC0001B5B5 /* SnapPeaViewController.mm */,
 				050313BF1812DB06007F0CBE /* TextViewController.h */,
 				050313C01812DB06007F0CBE /* TextViewController.mm */,
 				05D0A10E1812F0BE005ED097 /* TriangulationViewController.h */,
@@ -4376,6 +4381,7 @@
 				052FA1D11806129B00FAE4DF /* ntxicore.cpp in Sources */,
 				05D1C17219C7F95100CF92F2 /* EditableTableViewController.mm in Sources */,
 				052FA1751806129B00FAE4DF /* dim2triangle.cpp in Sources */,
+				058FADAB19D38BFC0001B5B5 /* SnapPeaViewController.mm in Sources */,
 				052FA1E01806129B00FAE4DF /* nsorientedquad.cpp in Sources */,
 				052FA1E21806129B00FAE4DF /* nsquadoct.cpp in Sources */,
 				052FA1C01806129B00FAE4DF /* nlayeredsurfacebundle.cpp in Sources */,

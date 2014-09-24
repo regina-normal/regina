@@ -79,6 +79,7 @@
         case regina::PACKET_DIM2TRIANGULATION: return @"viewDim2Triangulation";
         case regina::PACKET_NORMALSURFACELIST: return @"viewSurfaces";
         case regina::PACKET_SCRIPT: return @"viewScript";
+        case regina::PACKET_SNAPPEATRIANGULATION: return @"viewSnapPea";
         case regina::PACKET_SURFACEFILTER:
             switch (static_cast<regina::NSurfaceFilter*>(p)->getFilterType()) {
                 case regina::NS_FILTER_PROPERTIES: return @"viewFilterProperties";
