@@ -105,24 +105,24 @@ static NSMutableCharacterSet* eulerSeparators;
 }
 
 - (IBAction)orientabilityChanged:(id)sender {
-    int selection = self.orientability.selectedSegmentIndex;
+    long selection = self.orientability.selectedSegmentIndex;
     self.orientabilityExpln.text = orientabilityText[selection];
     self.packet->setOrientability([FilterPropertiesViewController setFromSelection:selection]);
 }
 
 - (IBAction)compactnessChanged:(id)sender {
-    int selection = self.compactness.selectedSegmentIndex;
+    long selection = self.compactness.selectedSegmentIndex;
     self.compactnessExpln.text = compactnessText[selection];
     self.packet->setCompactness([FilterPropertiesViewController setFromSelection:selection]);
 }
 
 - (IBAction)boundaryChanged:(id)sender {
-    int selection = self.boundary.selectedSegmentIndex;
+    long selection = self.boundary.selectedSegmentIndex;
     self.boundaryExpln.text = boundaryText[selection];
     self.packet->setRealBoundary([FilterPropertiesViewController setFromSelection:selection]);
 }
 
-+ (regina::NBoolSet)setFromSelection:(int)selection
++ (regina::NBoolSet)setFromSelection:(long)selection
 {
     switch (selection) {
         case 0: return regina::NBoolSet::sBoth;
@@ -132,7 +132,7 @@ static NSMutableCharacterSet* eulerSeparators;
     }
 }
 
-+ (int)selectionFromSet:(const regina::NBoolSet&)set
++ (long)selectionFromSet:(const regina::NBoolSet&)set
 {
     if (set == regina::NBoolSet::sBoth)
         return 0;
