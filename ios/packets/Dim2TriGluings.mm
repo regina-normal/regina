@@ -34,6 +34,11 @@
 #import "Dim2TriangulationViewController.h"
 #import "dim2/dim2triangulation.h"
 
+// TODO: Use labels so we can drag-to-delete.  Use temporary text fields as required.
+// TODO: Edit gluings!  Don't forget the keyboard scrolling nonsense.
+// TODO: A few deletes and then we get stuck.
+// TODO: Update the header on delete.
+
 #pragma mark - Table cell
 
 @interface Dim2GluingCell : UITableViewCell
@@ -86,40 +91,64 @@
                 (gluing * regina::Dim2Edge::ordering[srcEdge]).trunc2().c_str()];
 }
 
+- (IBAction)newTriangle:(id)sender {
+    self.packet->newSimplex();
+
+    // Update the necessary elements of the UI.
+    NSIndexPath* last = [NSIndexPath indexPathForRow:self.packet->getNumberOfSimplices()
+                                          inSection:0];
+    NSIndexPath* add = [NSIndexPath indexPathForRow:self.packet->getNumberOfSimplices()+1
+                                          inSection:0];
+    [self.triangles insertRowsAtIndexPaths:@[last]
+                          withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self.triangles scrollToRowAtIndexPath:add
+                          atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+
+    self.properties.text = self.viewer.headerText;
+}
+
 #pragma mark - Table view
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (self.packet->isEmpty())
-        return 2;
-    else
-        return 1 + self.packet->getNumberOfTriangles();
+    return 2 + self.packet->getNumberOfTriangles();
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row == 0)
         return [tableView dequeueReusableCellWithIdentifier:@"Header"];
+    else if (indexPath.row == self.packet->getNumberOfTriangles() + 1)
+        return [tableView dequeueReusableCellWithIdentifier:@"Add"];
 
     Dim2GluingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Triangle" forIndexPath:indexPath];
-    if (self.packet->isEmpty()) {
-        cell.index.text = @"No triangles";
-        cell.edge0.text = @"";
-        cell.edge1.text = @"";
-        cell.edge2.text = @"";
-    } else {
-        cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
-        regina::Dim2Triangle* t = self.packet->getTriangle(indexPath.row - 1);
-        cell.edge0.text = [Dim2TriGluings destStringFromEdge:0 dest:t->adjacentTriangle(0) gluing:t->adjacentGluing(0)];
-        cell.edge1.text = [Dim2TriGluings destStringFromEdge:1 dest:t->adjacentTriangle(1) gluing:t->adjacentGluing(1)];
-        cell.edge2.text = [Dim2TriGluings destStringFromEdge:2 dest:t->adjacentTriangle(2) gluing:t->adjacentGluing(2)];
-    }
+    cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
+    regina::Dim2Triangle* t = self.packet->getTriangle(indexPath.row - 1);
+    cell.edge0.text = [Dim2TriGluings destStringFromEdge:0 dest:t->adjacentTriangle(0) gluing:t->adjacentGluing(0)];
+    cell.edge1.text = [Dim2TriGluings destStringFromEdge:1 dest:t->adjacentTriangle(1) gluing:t->adjacentGluing(1)];
+    cell.edge2.text = [Dim2TriGluings destStringFromEdge:2 dest:t->adjacentTriangle(2) gluing:t->adjacentGluing(2)];
     return cell;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return NO;
+    return (indexPath.row > 0 && indexPath.row <= self.packet->getNumberOfSimplices());
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.row == 0 || indexPath.row > self.packet->getNumberOfSimplices())
+        return;
+
+    self.packet->removeSimplexAt(indexPath.row - 1);
+
+    [self.triangles deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    // Many rows could change - not only do we blank out gluings for adjacent triangles,
+    // but we also need to reindex every triangle after the one that was removed.
+    // Just reload everything.
+    [self.triangles reloadData];
+
+    self.properties.text = self.viewer.headerText;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

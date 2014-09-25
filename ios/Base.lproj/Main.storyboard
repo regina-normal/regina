@@ -1961,7 +1961,7 @@
                                 <rect key="frame" x="20" y="292" width="663" height="419"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="VertexHeader" id="Eww-vH-vv0">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="VertexHeader" id="Eww-vH-vv0">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Eww-vH-vv0" id="5u5-ll-fwy">
@@ -2076,7 +2076,7 @@
                                             <outlet property="type" destination="th5-E3-0wy" id="adh-qe-8OE"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="EdgeHeader" id="NWd-oZ-ngK">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="EdgeHeader" id="NWd-oZ-ngK">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="NWd-oZ-ngK" id="da7-Mf-hkV">
@@ -2191,7 +2191,7 @@
                                             <outlet property="type" destination="xVB-PC-CNI" id="Waf-vk-Hej"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ComponentHeader" id="seV-aE-4bV">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ComponentHeader" id="seV-aE-4bV">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="seV-aE-4bV" id="Afc-6b-oOq">
@@ -2306,7 +2306,7 @@
                                             <outlet property="type" destination="7kq-Ry-fTW" id="Cna-He-wKZ"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="BdryHeader" id="0Ei-bw-U4X">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="BdryHeader" id="0Ei-bw-U4X">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0Ei-bw-U4X" id="URu-Sk-tpk">
@@ -2920,6 +2920,29 @@
                                             <outlet property="index" destination="emK-v1-G6R" id="w1l-D3-GZG"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="Add" id="4lB-EY-wFo">
+                                        <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4lB-EY-wFo" id="udc-CJ-xDZ">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qMB-YD-Dgt">
+                                                    <rect key="frame" x="268" y="7" width="128" height="30"/>
+                                                    <state key="normal" title="Add a new triangle">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="addSubfilter:" destination="vFt-aQ-pFh" eventType="touchUpInside" id="dAl-pE-IPl"/>
+                                                        <action selector="newTriangle:" destination="lAL-g5-7to" eventType="touchUpInside" id="4rE-mp-gRd"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="centerY" secondItem="qMB-YD-Dgt" secondAttribute="centerY" id="X06-mP-pXA"/>
+                                                <constraint firstAttribute="centerX" secondItem="qMB-YD-Dgt" secondAttribute="centerX" id="nXC-rQ-4Hf"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                 </prototypes>
                             </tableView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Triangle Gluings" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="78N-ay-U7r">
@@ -2928,19 +2951,11 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pNA-s1-lpV">
-                                <rect key="frame" x="661" y="124" width="22" height="22"/>
-                                <state key="normal">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="78N-ay-U7r" firstAttribute="centerY" secondItem="pNA-s1-lpV" secondAttribute="centerY" id="4VK-E0-ECz"/>
                             <constraint firstItem="5mv-Wt-Kv3" firstAttribute="top" secondItem="7WL-jZ-WQ9" secondAttribute="bottom" constant="8" id="6HD-gB-LCJ"/>
                             <constraint firstAttribute="trailing" secondItem="Kjr-EU-KN6" secondAttribute="trailing" constant="20" id="IgV-4N-6xP"/>
-                            <constraint firstAttribute="trailing" secondItem="pNA-s1-lpV" secondAttribute="trailing" constant="20" id="Qok-ue-66z"/>
                             <constraint firstAttribute="centerX" secondItem="78N-ay-U7r" secondAttribute="centerX" id="Wyc-bN-FVl"/>
                             <constraint firstItem="7WL-jZ-WQ9" firstAttribute="top" secondItem="78N-ay-U7r" secondAttribute="bottom" constant="20" id="ZWe-NI-oW5"/>
                             <constraint firstItem="78N-ay-U7r" firstAttribute="top" secondItem="Kjr-EU-KN6" secondAttribute="bottom" constant="40" id="i32-iC-jjt"/>
