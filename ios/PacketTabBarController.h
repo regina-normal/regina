@@ -49,4 +49,9 @@ namespace regina {
  */
 - (void)setSelectedImages:(NSArray*)imageNames;
 
+/**
+ * This must be called from viewDidLoad.
+ */
+- (void)registerDefaultKey:(NSString*)key;
+
 @end

@@ -40,6 +40,7 @@
     [super viewDidLoad];
     [self setSelectedImages:@[@"Tab-Gluings-Bold",
                               @"Tab-Skeleton-Bold"]];
+    [self registerDefaultKey:@"ViewDim2Tab"];
 }
 
 - (void)endEditing

@@ -32,13 +32,38 @@
 
 #import "PacketTabBarController.h"
 
+@interface PacketTabBarController () <UITabBarControllerDelegate>
+@property (strong, nonatomic) NSString *defaultKey;
+@end
+
 @implementation PacketTabBarController
+
+- (void)viewDidLoad
+{
+    self.delegate = self;
+}
 
 - (void)setSelectedImages:(NSArray *)imageNames
 {
     for (int i = 0; i < imageNames.count; ++i)
         if (imageNames[i] != [NSNull null])
             static_cast<UITabBarItem*>(self.tabBar.items[i]).selectedImage = [UIImage imageNamed:imageNames[i]];
+}
+
+- (void)registerDefaultKey:(NSString *)key
+{
+    self.defaultKey = key;
+    self.selectedIndex = [[NSUserDefaults standardUserDefaults] integerForKey:self.defaultKey];
+}
+
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
+{
+    if (! self.defaultKey)
+        return;
+
+    NSUInteger index = [self.viewControllers indexOfObject:viewController];
+    if (index != NSNotFound)
+        [[NSUserDefaults standardUserDefaults] setInteger:index forKey:self.defaultKey];
 }
 
 @end
