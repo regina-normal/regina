@@ -37,13 +37,6 @@ namespace regina {
     class NPacket;
 }
 
-@protocol PacketSharer
-
-- (NSString*)shareText;
-- (void)shareFromButton:(UIBarButtonItem*)button;
-
-@end
-
 @interface DetailViewController : UIViewController <UISplitViewControllerDelegate>
 
 /**
@@ -57,7 +50,5 @@ namespace regina {
  * If you set this to nil (but \a doc is non-nil) then an empty panel will be displayed.
  */
 @property (assign, nonatomic) regina::NPacket* packet;
-
-@property (weak, nonatomic) id <PacketSharer> sharer;
 
 @end

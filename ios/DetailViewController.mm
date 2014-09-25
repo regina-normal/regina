@@ -43,7 +43,7 @@
 #import "packet/npdf.h"
 #import "packet/packettype.h"
 
-@interface DetailViewController () <UIActionSheetDelegate, UIDocumentInteractionControllerDelegate, PacketDelegate> {
+@interface DetailViewController () <UIDocumentInteractionControllerDelegate, PacketDelegate> {
     NSString* _menuTitle;
     PacketListenerIOS* _listener;
     UIDocumentInteractionController* _interact;
@@ -51,6 +51,7 @@
 @property (strong, nonatomic) UIViewController *contents;
 @property (strong, nonatomic) UIDocumentInteractionController *interaction;
 @property (strong, nonatomic) TempFile *interactionFile;
+@property (strong, nonatomic) UIBarButtonItem *shareButton;
 @end
 
 @implementation DetailViewController
@@ -106,12 +107,14 @@
     // Adjust items on the navigation bar as necessary.
     if (doc) {
         [self renamePortraitPulloverButton:@"Packets"];
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
-                                                  initWithBarButtonSystemItem:UIBarButtonSystemItemAction
-                                                  target:self
-                                                  action:@selector(share)];
+        self.shareButton = [[UIBarButtonItem alloc]
+                            initWithBarButtonSystemItem:UIBarButtonSystemItemAction
+                            target:self
+                            action:@selector(shareDocument)];
+        self.navigationItem.rightBarButtonItem = self.shareButton;
     } else {
         [self renamePortraitPulloverButton:@"Documents"];
+        self.shareButton = nil;
         self.navigationItem.rightBarButtonItem = nil;
     }
 }
@@ -264,7 +267,7 @@
         [self.doc saveToURL:self.doc.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success){
             [MBProgressHUD hideHUDForView:rootView animated:NO];
             if (success)
-                [_interact presentOptionsMenuFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
+                [_interact presentOptionsMenuFromBarButtonItem:self.shareButton animated:YES];
             else {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Save"
                                                                 message:nil
@@ -275,22 +278,7 @@
             }
         }];
     } else {
-        [_interact presentOptionsMenuFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
-    }
-}
-
-- (void)share
-{
-    if (! self.sharer)
-        [self shareDocument];
-    else {
-        UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil
-                                                           delegate:self
-                                                  cancelButtonTitle:@"Cancel"
-                                             destructiveButtonTitle:nil
-                                                  otherButtonTitles:@"Share document", self.sharer.shareText, nil];
-        
-        [sheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
+        [_interact presentOptionsMenuFromBarButtonItem:self.shareButton animated:YES];
     }
 }
 
@@ -311,16 +299,6 @@
 {
     if (packet == self.packet)
         self.packet = nil;
-}
-
-#pragma mark - Action sheet
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == 0)
-        [self shareDocument];
-    else if (buttonIndex == 1)
-        [self.sharer shareFromButton:self.navigationItem.rightBarButtonItem];
 }
 
 #pragma mark - Split view
