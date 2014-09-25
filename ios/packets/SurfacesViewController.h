@@ -32,13 +32,12 @@
 
 #import "PacketTabBarController.h"
 
-/**
- * This class exists \e only to work around what appears to be a
- * current Xcode bug.  See the notes for
- * PacketTabBarController::setSelectedImages for details.
- *
- * Once this Xcode bug is fixed, this class can be safely removed
- * and we can return to using the more general PacketTabBarController.
- */
-@interface SurfacesViewController : PacketTabBarController
+namespace regina {
+    class NNormalSurfaceList;
+}
+
+@interface SurfacesViewController : PacketTabBarController <PacketViewer>
+
+@property (assign, nonatomic) regina::NNormalSurfaceList* packet;
+
 @end

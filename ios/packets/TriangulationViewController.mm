@@ -46,4 +46,14 @@
     [self registerDefaultKey:@"ViewTriangulationTab"];
 }
 
+- (NSString *)packetActionIcon
+{
+    return @"NavBar-Triangulation";
+}
+
+- (void)packetActionPressed
+{
+    NSLog(@"TODO: Triangulation action pressed!");
+}
+
 @end

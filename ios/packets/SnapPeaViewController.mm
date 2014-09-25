@@ -46,4 +46,14 @@
     [self registerDefaultKey:@"ViewSnapPeaTab"];
 }
 
+- (NSString *)packetActionIcon
+{
+    return @"NavBar-SnapPea";
+}
+
+- (void)packetActionPressed
+{
+    NSLog(@"TODO: SnapPea action pressed!");
+}
+
 @end

@@ -44,4 +44,14 @@
     [self registerDefaultKey:@"ViewSurfacesTab"];
 }
 
+- (NSString *)packetActionIcon
+{
+    return @"NavBar-Surfaces";
+}
+
+- (void)packetActionPressed
+{
+    NSLog(@"TODO: Surfaces action pressed!");
+}
+
 @end

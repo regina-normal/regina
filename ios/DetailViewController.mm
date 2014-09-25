@@ -52,6 +52,7 @@
 @property (strong, nonatomic) UIDocumentInteractionController *interaction;
 @property (strong, nonatomic) TempFile *interactionFile;
 @property (strong, nonatomic) UIBarButtonItem *shareButton;
+@property (strong, nonatomic) UIBarButtonItem *packetActionButton;
 @end
 
 @implementation DetailViewController
@@ -86,6 +87,13 @@
     if (doc == _doc && ! force)
         return;
 
+    self.shareButton = (doc ?
+                        [[UIBarButtonItem alloc]
+                         initWithBarButtonSystemItem:UIBarButtonSystemItemAction
+                         target:self
+                         action:@selector(shareDocument)] :
+                        nil);
+
     // Close any packet viewers that might be open,
     // push any outstanding changes to the calculation engine,
     // and segue to whatever the detail panel should display instead.
@@ -107,15 +115,8 @@
     // Adjust items on the navigation bar as necessary.
     if (doc) {
         [self renamePortraitPulloverButton:@"Packets"];
-        self.shareButton = [[UIBarButtonItem alloc]
-                            initWithBarButtonSystemItem:UIBarButtonSystemItemAction
-                            target:self
-                            action:@selector(shareDocument)];
-        self.navigationItem.rightBarButtonItem = self.shareButton;
     } else {
         [self renamePortraitPulloverButton:@"Documents"];
-        self.shareButton = nil;
-        self.navigationItem.rightBarButtonItem = nil;
     }
 }
 
@@ -150,7 +151,7 @@
     
     if (p == nil) {
         // Display an empty panel.
-        [self navigationItem].title = @"";
+        self.navigationItem.title = @"";
         [self embedViewer:(emptySegue ? emptySegue : @"empty")];
     } else if (p->getPacketType() == regina::PACKET_PDF) {
         regina::NPDF* pdf = static_cast<regina::NPDF*>(p);
@@ -166,6 +167,7 @@
             [alert show];
 
             _packet = nil;
+            // TODO: Do the usual nil things.
             return;
         }
 
@@ -181,6 +183,7 @@
 
             self.interactionFile = nil;
             _packet = nil;
+            // TODO: Do the usual nil things.
             return;
         }
 
@@ -190,13 +193,13 @@
         // When QuickLook returns, we will have lost our packet selection in the tree.
         // Make sure that user interface we return to reflects this.
         _packet = nil;
-        [self navigationItem].title = @"";
+        self.navigationItem.title = @"";
         [self embedViewer:(emptySegue ? emptySegue : @"empty")];
 
         [self.interaction presentPreviewAnimated:YES];
     } else {
         // Display the relevant packet viewer / editor.
-        [self navigationItem].title = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
+        self.navigationItem.title = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
         [self embedViewer:[PacketManagerIOS viewerFor:p]];
 
         _listener = [PacketListenerIOS listenerWithPacket:p delegate:self listenChildren:NO];
@@ -210,12 +213,25 @@
 
 - (void)embedViewer:(NSString*)viewerID
 {
+    // Clear out the old packet action button (if any) ASAP.
+    self.packetActionButton = nil;
+    self.navigationItem.rightBarButtonItems = (self.shareButton ? @[self.shareButton] : @[]);
+
     UIViewController* from = self.contents;
     UIViewController* to = [self.storyboard instantiateViewControllerWithIdentifier:viewerID];
     self.contents = to;
 
-    if ([to.class conformsToProtocol:@protocol(PacketViewer)])
+    if ([to.class conformsToProtocol:@protocol(PacketViewer)]) {
         static_cast<id <PacketViewer> >(to).packet = self.packet;
+
+        if ([to respondsToSelector:@selector(packetActionIcon)]) {
+            NSString* iconName = [static_cast<id <PacketViewer> >(to) packetActionIcon];
+            self.packetActionButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:iconName]
+                                                                       style:UIBarButtonItemStylePlain
+                                                                      target:to
+                                                                      action:@selector(packetActionPressed)];
+        }
+    }
 
     to.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
 
@@ -247,10 +263,14 @@
                                     [from removeFromParentViewController];
 
                                     [to didMoveToParentViewController:self];
+                                    self.navigationItem.rightBarButtonItems = (self.packetActionButton ? @[self.shareButton, self.packetActionButton] :
+                                                                               self.shareButton ? @[self.shareButton] : @[]);
                                 }];
     } else {
         [self.view addSubview:to.view];
         [to didMoveToParentViewController:self];
+        self.navigationItem.rightBarButtonItems = (self.packetActionButton ? @[self.shareButton, self.packetActionButton] :
+                                                   self.shareButton ? @[self.shareButton] : @[]);
     }
 }
 
