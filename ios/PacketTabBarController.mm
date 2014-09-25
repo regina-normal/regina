@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #import "PacketTabBarController.h"
+#import "PacketViewer.h"
 
 @interface PacketTabBarController () <UITabBarControllerDelegate>
 @property (strong, nonatomic) NSString *defaultKey;
@@ -64,6 +65,13 @@
     NSUInteger index = [self.viewControllers indexOfObject:viewController];
     if (index != NSNotFound)
         [[NSUserDefaults standardUserDefaults] setInteger:index forKey:self.defaultKey];
+}
+
+- (void)endEditing
+{
+    UIViewController* c = self.selectedViewController;
+    if ([c.class conformsToProtocol:@protocol(PacketEditor)])
+        [static_cast<id<PacketEditor> >(c) endEditing];
 }
 
 @end

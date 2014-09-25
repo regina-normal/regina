@@ -43,11 +43,6 @@
     [self registerDefaultKey:@"ViewDim2Tab"];
 }
 
-- (void)endEditing
-{
-    // TODO.
-}
-
 - (NSString *)headerText
 {
     if (self.packet->isEmpty())
