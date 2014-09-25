@@ -43,6 +43,8 @@ static NSArray* compactnessText;
 static NSArray* boundaryText;
 static NSMutableCharacterSet* eulerSeparators;
 
+// TODO: Restore packet listener.
+
 // TODO: Do we need to fix the "ambiguous row height" warning under iOS 8?
 
 #pragma mark - Property-based filter
