@@ -43,6 +43,7 @@
                               @"Tab-Composition-Bold",
                               @"Tab-Recognition-Bold",
                               @"Tab-SnapPea-Bold"]];
+    [self registerDefaultKey:@"ViewTriangulationTab"];
 }
 
 @end

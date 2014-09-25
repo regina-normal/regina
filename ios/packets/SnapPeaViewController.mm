@@ -43,6 +43,7 @@
                               [NSNull null],
                               @"Tab-Composition-Bold",
                               @"Tab-Recognition-Bold"]];
+    [self registerDefaultKey:@"ViewSnapPeaTab"];
 }
 
 @end

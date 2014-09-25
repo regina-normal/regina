@@ -41,6 +41,7 @@
                               @"Tab-Coords-Bold",
                               @"Tab-Compat-Bold",
                               @"Tab-Matching-Bold"]];
+    [self registerDefaultKey:@"ViewSurfacesTab"];
 }
 
 @end
