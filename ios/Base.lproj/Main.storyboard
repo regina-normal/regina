@@ -2040,11 +2040,11 @@
                             <constraint firstItem="4uU-Tt-6Zg" firstAttribute="leading" secondItem="YMW-Eu-XrM" secondAttribute="leading" constant="20" id="9zN-bX-Ppm"/>
                             <constraint firstItem="BFE-dg-s6c" firstAttribute="leading" secondItem="mqs-B9-44p" secondAttribute="trailing" id="E1f-Ws-wZ0"/>
                             <constraint firstItem="njB-bn-bap" firstAttribute="leading" secondItem="YMW-Eu-XrM" secondAttribute="leading" constant="20" id="Enn-cq-0Pc"/>
+                            <constraint firstItem="mqs-B9-44p" firstAttribute="top" secondItem="YMW-Eu-XrM" secondAttribute="top" id="Exl-hA-r0h"/>
                             <constraint firstItem="cBw-gO-h9U" firstAttribute="baseline" secondItem="2Nt-It-M3P" secondAttribute="baseline" id="FsM-Uq-w9n"/>
                             <constraint firstItem="njB-bn-bap" firstAttribute="top" secondItem="4uU-Tt-6Zg" secondAttribute="bottom" constant="40" id="GXg-bG-zfB"/>
                             <constraint firstItem="csl-4P-nqf" firstAttribute="leading" secondItem="t5H-am-vWC" secondAttribute="leading" id="HpL-3Y-6a5"/>
                             <constraint firstItem="aT4-aX-nge" firstAttribute="leading" secondItem="YMW-Eu-XrM" secondAttribute="leading" constant="20" id="K73-oG-gIz"/>
-                            <constraint firstItem="mqs-B9-44p" firstAttribute="top" secondItem="YMW-Eu-XrM" secondAttribute="topMargin" id="KLy-Tu-0y0"/>
                             <constraint firstItem="Mgh-xG-5Vi" firstAttribute="leading" secondItem="nug-NW-iG2" secondAttribute="leading" id="KkQ-zl-eI0"/>
                             <constraint firstAttribute="trailing" secondItem="fq9-J2-DTq" secondAttribute="trailing" constant="20" id="Ksb-hG-fT2"/>
                             <constraint firstItem="fq9-J2-DTq" firstAttribute="top" secondItem="AQy-li-l2Q" secondAttribute="bottom" constant="20" id="NN1-yb-Izj"/>
@@ -2388,13 +2388,13 @@
                                             <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                             <constraints>
                                                 <constraint firstItem="E4m-c7-ngl" firstAttribute="baseline" secondItem="zOb-Kt-Jr3" secondAttribute="baseline" id="7Tn-tg-ixh"/>
-                                                <constraint firstItem="E4m-c7-ngl" firstAttribute="leading" secondItem="xeT-h9-Hdz" secondAttribute="leadingMargin" id="8EM-Wj-QYj"/>
                                                 <constraint firstItem="E4m-c7-ngl" firstAttribute="top" secondItem="xeT-h9-Hdz" secondAttribute="top" constant="6" id="F05-Lo-i8G"/>
                                                 <constraint firstItem="E4m-c7-ngl" firstAttribute="baseline" secondItem="LkB-tR-96m" secondAttribute="baseline" id="HEk-Ue-QUQ"/>
                                                 <constraint firstItem="zOb-Kt-Jr3" firstAttribute="leading" secondItem="dmF-vd-S0a" secondAttribute="trailing" constant="8" id="JS5-Zf-ypi"/>
                                                 <constraint firstItem="E4m-c7-ngl" firstAttribute="baseline" secondItem="dmF-vd-S0a" secondAttribute="baseline" id="ORj-P0-MA2"/>
                                                 <constraint firstItem="LkB-tR-96m" firstAttribute="width" secondItem="zOb-Kt-Jr3" secondAttribute="width" id="Phl-LB-K2E"/>
                                                 <constraint firstItem="LkB-tR-96m" firstAttribute="width" secondItem="dmF-vd-S0a" secondAttribute="width" id="SA8-HM-Iyb"/>
+                                                <constraint firstItem="E4m-c7-ngl" firstAttribute="leading" secondItem="xeT-h9-Hdz" secondAttribute="leading" constant="8" id="TpB-8u-FhL"/>
                                                 <constraint firstItem="dmF-vd-S0a" firstAttribute="leading" secondItem="LkB-tR-96m" secondAttribute="trailing" constant="8" id="WXm-RF-o6I"/>
                                                 <constraint firstItem="LkB-tR-96m" firstAttribute="leading" secondItem="E4m-c7-ngl" secondAttribute="trailing" constant="40" id="nyy-ia-Y6J"/>
                                             </constraints>
@@ -2436,15 +2436,14 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="YZH-NW-hav" firstAttribute="leading" secondItem="wbK-pQ-DN4" secondAttribute="trailing" constant="8" id="1ip-vP-zBi"/>
-                                                <constraint firstItem="emK-v1-G6R" firstAttribute="top" secondItem="Q4N-3a-5Gr" secondAttribute="topMargin" constant="3" id="5eY-8J-HaD"/>
                                                 <constraint firstItem="wbK-pQ-DN4" firstAttribute="baseline" secondItem="emK-v1-G6R" secondAttribute="baseline" id="9fb-UY-hoO"/>
                                                 <constraint firstItem="94r-99-6nP" firstAttribute="leading" secondItem="emK-v1-G6R" secondAttribute="trailing" constant="40" id="FPy-dO-x5T"/>
+                                                <constraint firstItem="emK-v1-G6R" firstAttribute="leading" secondItem="Q4N-3a-5Gr" secondAttribute="leading" constant="8" id="G4k-Vk-B5N"/>
+                                                <constraint firstAttribute="centerY" secondItem="emK-v1-G6R" secondAttribute="centerY" id="HTR-qc-fzp"/>
                                                 <constraint firstItem="94r-99-6nP" firstAttribute="width" secondItem="YZH-NW-hav" secondAttribute="width" id="JnM-2O-Vpa"/>
                                                 <constraint firstItem="wbK-pQ-DN4" firstAttribute="baseline" secondItem="94r-99-6nP" secondAttribute="baseline" id="Zup-oK-Ix9"/>
                                                 <constraint firstItem="YZH-NW-hav" firstAttribute="width" secondItem="wbK-pQ-DN4" secondAttribute="width" id="bJZ-8d-N8w"/>
                                                 <constraint firstItem="wbK-pQ-DN4" firstAttribute="leading" secondItem="94r-99-6nP" secondAttribute="trailing" constant="8" id="dtE-cb-IvJ"/>
-                                                <constraint firstItem="emK-v1-G6R" firstAttribute="leading" secondItem="Q4N-3a-5Gr" secondAttribute="leadingMargin" id="mxm-9B-QXx"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="emK-v1-G6R" secondAttribute="bottom" constant="3" id="pSJ-nA-rHF"/>
                                                 <constraint firstItem="wbK-pQ-DN4" firstAttribute="baseline" secondItem="YZH-NW-hav" secondAttribute="baseline" id="sx6-xA-PNj"/>
                                             </constraints>
                                         </tableViewCellContentView>
