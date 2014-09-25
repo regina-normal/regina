@@ -32,7 +32,6 @@ SHORT-TERM:
 
 TEST:
 
-- Dim2 creation from surface page, once we have a proper Dim2 viewer.
 - Return to the app during facetime (status bar is thicker), and make sure
   the UI is still laid out correctly.
 
