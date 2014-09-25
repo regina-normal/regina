@@ -46,7 +46,7 @@
 @implementation Dim2GluingCell
 @end
 
-#pragma mark - Dim2 gluings viewer
+#pragma mark - Dim2Triangulation gluings viewer
 
 @interface Dim2TriGluings () <UITableViewDelegate, UITableViewDataSource> {
     CGFloat headerHeight;
@@ -68,9 +68,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    // Do any additional setup after loading the view.
-
-    self.packet = static_cast<regina::Dim2Triangulation*>(static_cast<id<PacketViewer> >(self.viewer).packet);
+    self.packet = self.viewer.packet;
 
     self.properties.text = self.viewer.headerText;
 
@@ -78,11 +76,24 @@
     self.triangles.dataSource = self;
 }
 
++ (NSString*)destStringFromEdge:(int)srcEdge dest:(regina::Dim2Triangle*)destTri gluing:(const regina::NPerm3&)gluing
+{
+    if (! destTri)
+        return @"";
+    else
+        return [NSString stringWithFormat:@"%ld (%s)",
+                destTri->markedIndex(),
+                (gluing * regina::Dim2Edge::ordering[srcEdge]).trunc2().c_str()];
+}
+
 #pragma mark - Table view
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1 + self.packet->getNumberOfTriangles();
+    if (self.packet->isEmpty())
+        return 2;
+    else
+        return 1 + self.packet->getNumberOfTriangles();
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -90,17 +101,20 @@
     if (indexPath.row == 0)
         return [tableView dequeueReusableCellWithIdentifier:@"Header"];
 
-    // TODO
-    if (self.packet->isEmpty())
-        return [tableView dequeueReusableCellWithIdentifier:@"Empty"];
-
     Dim2GluingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Triangle" forIndexPath:indexPath];
-    cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row];
-    cell.edge0.text = @"TODO";
-    cell.edge1.text = @"TODO";
-    cell.edge2.text = @"TODO";
+    if (self.packet->isEmpty()) {
+        cell.index.text = @"No triangles";
+        cell.edge0.text = @"";
+        cell.edge1.text = @"";
+        cell.edge2.text = @"";
+    } else {
+        cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
+        regina::Dim2Triangle* t = self.packet->getTriangle(indexPath.row - 1);
+        cell.edge0.text = [Dim2TriGluings destStringFromEdge:0 dest:t->adjacentTriangle(0) gluing:t->adjacentGluing(0)];
+        cell.edge1.text = [Dim2TriGluings destStringFromEdge:1 dest:t->adjacentTriangle(1) gluing:t->adjacentGluing(1)];
+        cell.edge2.text = [Dim2TriGluings destStringFromEdge:2 dest:t->adjacentTriangle(2) gluing:t->adjacentGluing(2)];
+    }
     return cell;
-
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath

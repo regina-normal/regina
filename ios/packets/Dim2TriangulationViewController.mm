@@ -42,29 +42,32 @@
                               @"Tab-Skeleton-Bold"]];
 }
 
+- (void)endEditing
+{
+    // TODO.
+}
+
 - (NSString *)headerText
 {
-    regina::Dim2Triangulation* tri = static_cast<regina::Dim2Triangulation*>(self.packet);
-
-    if (tri->isEmpty())
+    if (self.packet->isEmpty())
         return @"Empty";
 
     NSMutableString* msg = [NSMutableString string];
-    if (! tri->isConnected()) {
+    if (! self.packet->isConnected()) {
         msg = [NSMutableString stringWithString:@"Disconnected, "];
-        if (tri->isClosed())
+        if (self.packet->isClosed())
             [msg appendString:@"closed, "];
         else
             [msg appendString:@"with boundary, "];
-        if (tri->isOrientable())
+        if (self.packet->isOrientable())
             [msg appendString:@"orientable"];
         else
             [msg appendString:@"non-orientable"];
     } else {
         // It's connected.  Report the exact manifold.
-        if (tri->isOrientable()) {
-            long punctures = tri->getNumberOfBoundaryComponents();
-            long genus = (2 - tri->getEulerChar() - punctures) / 2;
+        if (self.packet->isOrientable()) {
+            long punctures = self.packet->getNumberOfBoundaryComponents();
+            long genus = (2 - self.packet->getEulerChar() - punctures) / 2;
 
             // Special names for surfaces with boundary:
             if (genus == 0 && punctures == 1)
@@ -85,8 +88,8 @@
                     [msg appendFormat:@", %ld punctures", punctures];
             }
         } else {
-            long punctures = tri->getNumberOfBoundaryComponents();
-            long genus = (2 - tri->getEulerChar() - punctures);
+            long punctures = self.packet->getNumberOfBoundaryComponents();
+            long genus = (2 - self.packet->getEulerChar() - punctures);
 
             // Special names for surfaces with boundary:
             if (genus == 1 && punctures == 1)
@@ -107,7 +110,7 @@
         }
     }
 
-    [msg appendFormat:@" (χ = %ld)", tri->getEulerChar()];
+    [msg appendFormat:@" (χ = %ld)", self.packet->getEulerChar()];
     return msg;
 }
 

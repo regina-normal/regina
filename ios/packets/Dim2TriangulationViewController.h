@@ -32,6 +32,10 @@
 
 #import "PacketTabBarController.h"
 
+namespace regina {
+    class Dim2Triangulation;
+}
+
 /**
  * This class exists \e only to work around what appears to be a
  * current Xcode bug.  See the notes for
@@ -40,7 +44,8 @@
  * Once this Xcode bug is fixed, this class can be safely removed
  * and we can return to using the more general PacketTabBarController.
  */
-@interface Dim2TriangulationViewController : PacketTabBarController
+@interface Dim2TriangulationViewController : PacketTabBarController <PacketEditor>
+@property (assign, nonatomic) regina::Dim2Triangulation* packet;
 
 - (NSString*)headerText;
 
