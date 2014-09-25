@@ -38,9 +38,9 @@
 {
     [super viewDidLoad];
     [self setSelectedImages:@[@"Tab-Summary-Bold",
-                              [NSNull null],
+                              @"Tab-Coords-Bold",
                               @"Tab-Compat-Bold",
-                              [NSNull null]]];
+                              @"Tab-Matching-Bold"]];
 }
 
 @end

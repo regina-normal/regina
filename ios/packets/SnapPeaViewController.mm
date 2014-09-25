@@ -37,7 +37,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self setSelectedImages:@[[NSNull null],
+    [self setSelectedImages:@[@"Tab-Cusps-Bold",
                               @"Tab-Gluings-Bold",
                               @"Tab-Skeleton-Bold",
                               [NSNull null],

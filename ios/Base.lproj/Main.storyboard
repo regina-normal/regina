@@ -1966,7 +1966,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Coordinates" id="n9p-EZ-sIQ"/>
+                    <tabBarItem key="tabBarItem" title="Coordinates" image="Tab-Coords" id="n9p-EZ-sIQ"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EaM-I1-12P" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -2004,7 +2004,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Matching Equations" id="j5J-yp-9E3"/>
+                    <tabBarItem key="tabBarItem" title="Matching Equations" image="Tab-Matching" id="j5J-yp-9E3"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BBJ-qy-77E" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -2080,7 +2080,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Shapes &amp; Cusps" id="Wwk-Vo-tJ8"/>
+                    <tabBarItem key="tabBarItem" title="Shapes &amp; Cusps" image="Tab-Cusps" id="Wwk-Vo-tJ8"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="97Z-Mj-0kM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -2716,7 +2716,10 @@
         <image name="Tab-Algebra" width="25" height="25"/>
         <image name="Tab-Compat" width="25" height="25"/>
         <image name="Tab-Composition" width="25" height="25"/>
+        <image name="Tab-Coords" width="25" height="25"/>
+        <image name="Tab-Cusps" width="25" height="25"/>
         <image name="Tab-Gluings" width="25" height="25"/>
+        <image name="Tab-Matching" width="25" height="25"/>
         <image name="Tab-Recognition" width="25" height="25"/>
         <image name="Tab-Skeleton" width="25" height="25"/>
         <image name="Tab-SnapPea" width="25" height="25"/>
