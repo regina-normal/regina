@@ -30,23 +30,44 @@
  *                                                                        *
  **************************************************************************/
 
-#import "PacketTabBarController.h"
+#import "Dim2TriSkeleton.h"
+#import "Dim2TriangulationViewController.h"
+#import "dim2/dim2triangulation.h"
 
-@interface PacketTabBarController ()
+@interface Dim2TriSkeleton ()
+@property (weak, nonatomic) IBOutlet UILabel *summary;
+@property (weak, nonatomic) IBOutlet UILabel *vertexCount;
+@property (weak, nonatomic) IBOutlet UILabel *edgeCount;
+@property (weak, nonatomic) IBOutlet UILabel *triangleCount;
+@property (weak, nonatomic) IBOutlet UILabel *componentCount;
+@property (weak, nonatomic) IBOutlet UILabel *bdryCount;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *viewWhich;
+@property (weak, nonatomic) IBOutlet UITableView *details;
+
+@property (strong, nonatomic) Dim2TriangulationViewController* viewer;
+@property (assign, nonatomic) regina::Dim2Triangulation* packet;
 @end
 
-@implementation PacketTabBarController
+@implementation Dim2TriSkeleton
 
-- (void)endEditing
+- (void)viewDidLoad
 {
-    // TODO: Pass through to the current tab.
+    [super viewDidLoad];
+    self.viewer = static_cast<Dim2TriangulationViewController*>(self.parentViewController);
 }
 
-- (void)setSelectedImages:(NSArray *)imageNames
-{
-    for (int i = 0; i < imageNames.count; ++i)
-        if (imageNames[i] != [NSNull null])
-            static_cast<UITabBarItem*>(self.tabBar.items[i]).selectedImage = [UIImage imageNamed:imageNames[i]];
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+
+    self.packet = static_cast<regina::Dim2Triangulation*>(static_cast<id<PacketViewer> >(self.viewer).packet);
+
+    self.summary.text = self.viewer.headerText;
+
+    self.vertexCount.text = [NSString stringWithFormat:@"%ld", self.packet->getNumberOfFaces<0>()];
+    self.edgeCount.text = [NSString stringWithFormat:@"%ld", self.packet->getNumberOfFaces<1>()];
+    self.triangleCount.text = [NSString stringWithFormat:@"%ld", self.packet->getNumberOfFaces<2>()];
+    self.componentCount.text = [NSString stringWithFormat:@"%ld", self.packet->getNumberOfComponents()];
+    self.bdryCount.text = [NSString stringWithFormat:@"%ld", self.packet->getNumberOfBoundaryComponents()];
 }
 
 @end

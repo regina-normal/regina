@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #import "Dim2TriangulationViewController.h"
+#import "dim2/dim2triangulation.h"
 
 @implementation Dim2TriangulationViewController
 
@@ -39,6 +40,75 @@
     [super viewDidLoad];
     [self setSelectedImages:@[@"Tab-Gluings-Bold",
                               @"Tab-Skeleton-Bold"]];
+}
+
+- (NSString *)headerText
+{
+    regina::Dim2Triangulation* tri = static_cast<regina::Dim2Triangulation*>(self.packet);
+
+    if (tri->isEmpty())
+        return @"Empty";
+
+    NSMutableString* msg = [NSMutableString string];
+    if (! tri->isConnected()) {
+        msg = [NSMutableString stringWithString:@"Disconnected, "];
+        if (tri->isClosed())
+            [msg appendString:@"closed, "];
+        else
+            [msg appendString:@"with boundary, "];
+        if (tri->isOrientable())
+            [msg appendString:@"orientable"];
+        else
+            [msg appendString:@"non-orientable"];
+    } else {
+        // It's connected.  Report the exact manifold.
+        if (tri->isOrientable()) {
+            long punctures = tri->getNumberOfBoundaryComponents();
+            long genus = (2 - tri->getEulerChar() - punctures) / 2;
+
+            // Special names for surfaces with boundary:
+            if (genus == 0 && punctures == 1)
+                msg = [NSMutableString stringWithString:@"Disc"];
+            else if (genus == 0 && punctures == 2)
+                msg = [NSMutableString stringWithString:@"Annulus"];
+            else {
+                if (genus == 0)
+                    msg = [NSMutableString stringWithString:@"Sphere"];
+                else if (genus == 1)
+                    msg = [NSMutableString stringWithString:@"Torus"];
+                else
+                    msg = [NSMutableString stringWithFormat:@"Genus %ld torus", genus];
+
+                if (punctures == 1)
+                    [msg appendString:@", 1 puncture"];
+                else if (punctures > 1)
+                    [msg appendFormat:@", %ld punctures", punctures];
+            }
+        } else {
+            long punctures = tri->getNumberOfBoundaryComponents();
+            long genus = (2 - tri->getEulerChar() - punctures);
+
+            // Special names for surfaces with boundary:
+            if (genus == 1 && punctures == 1)
+                msg = [NSMutableString stringWithString:@"Möbius band"];
+            else {
+                if (genus == 1)
+                    msg = [NSMutableString stringWithString:@"Projective plane"];
+                else if (genus == 2)
+                    msg = [NSMutableString stringWithString:@"Klein bottle"];
+                else
+                    msg = [NSMutableString stringWithFormat:@"Non-orientable genus %ld surface", genus];
+
+                if (punctures == 1)
+                    [msg appendString:@", 1 puncture"];
+                else if (punctures > 1)
+                    [msg appendFormat:@", %ld punctures", punctures];
+            }
+        }
+    }
+
+    [msg appendFormat:@" (χ = %ld)", tri->getEulerChar()];
+    return msg;
 }
 
 @end

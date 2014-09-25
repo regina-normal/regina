@@ -41,4 +41,7 @@
  * and we can return to using the more general PacketTabBarController.
  */
 @interface Dim2TriangulationViewController : PacketTabBarController
+
+- (NSString*)headerText;
+
 @end

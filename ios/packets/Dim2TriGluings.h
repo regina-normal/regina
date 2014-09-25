@@ -30,23 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#import "PacketTabBarController.h"
+#import "PacketViewer.h"
 
-@interface PacketTabBarController ()
-@end
-
-@implementation PacketTabBarController
-
-- (void)endEditing
-{
-    // TODO: Pass through to the current tab.
-}
-
-- (void)setSelectedImages:(NSArray *)imageNames
-{
-    for (int i = 0; i < imageNames.count; ++i)
-        if (imageNames[i] != [NSNull null])
-            static_cast<UITabBarItem*>(self.tabBar.items[i]).selectedImage = [UIImage imageNamed:imageNames[i]];
-}
-
+@interface Dim2TriGluings : UIViewController <PacketViewer>
 @end
