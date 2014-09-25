@@ -45,6 +45,7 @@ LONG-TERM:
 - Audit the use of UIAlert (should we use banners instead)?
 - See if we can't arrange syntax highlighting for the script viewer.
 - PDF viewer: use a filename based on the packet label.
+- Offer a way to run the test suite.
 
 - Support state preservation and restoration.  See:
   https://developer.apple.com/library/ios/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/StatePreservation/StatePreservation.html
