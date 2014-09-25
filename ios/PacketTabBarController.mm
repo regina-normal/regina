@@ -32,15 +32,7 @@
 
 #import "PacketTabBarController.h"
 
-@interface PacketTabBarController ()
-@end
-
 @implementation PacketTabBarController
-
-- (void)endEditing
-{
-    // TODO: Pass through to the current tab.
-}
 
 - (void)setSelectedImages:(NSArray *)imageNames
 {

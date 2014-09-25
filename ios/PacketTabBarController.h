@@ -37,11 +37,7 @@ namespace regina {
     class NPacket;
 }
 
-@interface PacketTabBarController : UITabBarController <PacketEditor, PacketDelegate>
-
-@property (assign, nonatomic) regina::NPacket* packet;
-
-- (void)endEditing;
+@interface PacketTabBarController : UITabBarController
 
 /**
  * Manually set the selected images for tab bar icons.
