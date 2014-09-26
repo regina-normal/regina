@@ -40,4 +40,6 @@ namespace regina {
 
 @property (assign, nonatomic) regina::NTriangulation* packet;
 
+- (void)updateHeader:(UILabel*)header;
+
 @end

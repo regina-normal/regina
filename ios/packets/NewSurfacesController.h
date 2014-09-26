@@ -33,5 +33,4 @@
 #import "NewPacketController.h"
 
 @interface NewSurfacesController : NewPacketController
-
 @end

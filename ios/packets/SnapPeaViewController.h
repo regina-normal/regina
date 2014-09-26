@@ -40,4 +40,6 @@ namespace regina {
 
 @property (assign, nonatomic) regina::NSnapPeaTriangulation* packet;
 
+- (void)updateHeader:(UILabel*)summary volume:(UILabel*)volume solnType:(UILabel*)solnType;
+
 @end

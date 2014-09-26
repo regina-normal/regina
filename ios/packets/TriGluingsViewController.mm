@@ -30,11 +30,15 @@
  *                                                                        *
  **************************************************************************/
 
+#import "TriangulationViewController.h"
 #import "TriGluingsViewController.h"
 #import "triangulation/ntriangulation.h"
 
 @interface TriGluingsViewController ()
 @property (weak, nonatomic) IBOutlet UITextView *detail;
+
+@property (strong, nonatomic) TriangulationViewController* viewer;
+@property (assign, nonatomic) regina::NTriangulation* packet;
 @end
 
 @implementation TriGluingsViewController
@@ -46,10 +50,9 @@
     _detail.text = [NSString stringWithUTF8String:self.packet->detail().c_str()];
 }
 
-- (void)didReceiveMemoryWarning
+- (void)endEditing
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    // TODO
 }
 
 @end

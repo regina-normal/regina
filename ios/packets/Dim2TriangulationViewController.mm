@@ -43,18 +43,22 @@
     [self registerDefaultKey:@"ViewDim2Tab"];
 }
 
-- (NSString *)headerText
+- (void)updateHeader:(UILabel *)header
 {
-    if (self.packet->isEmpty())
-        return @"Empty";
+    if (self.packet->isEmpty()) {
+        header.text = @"Empty";
+        return;
+    }
 
     NSMutableString* msg = [NSMutableString string];
     if (! self.packet->isConnected()) {
         msg = [NSMutableString stringWithString:@"Disconnected, "];
+
         if (self.packet->isClosed())
             [msg appendString:@"closed, "];
         else
             [msg appendString:@"with boundary, "];
+        
         if (self.packet->isOrientable())
             [msg appendString:@"orientable"];
         else
@@ -107,7 +111,7 @@
     }
 
     [msg appendFormat:@" (χ = %ld)", self.packet->getEulerChar()];
-    return msg;
+    header.text = msg;
 }
 
 @end

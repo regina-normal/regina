@@ -30,12 +30,16 @@
  *                                                                        *
  **************************************************************************/
 
+#import "TriangulationViewController.h"
 #import "TriRecognitionViewController.h"
 #import "census/ncensus.h"
 #import "triangulation/ntriangulation.h"
 
 @interface TriRecognitionViewController ()
 @property (weak, nonatomic) IBOutlet UITextView *detail;
+
+@property (strong, nonatomic) TriangulationViewController* viewer;
+@property (assign, nonatomic) regina::NTriangulation* packet;
 @end
 
 @implementation TriRecognitionViewController
@@ -66,12 +70,6 @@
     display += self.packet->detail();
     
     _detail.text = [NSString stringWithUTF8String:display.c_str()];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end

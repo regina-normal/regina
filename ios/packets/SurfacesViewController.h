@@ -40,4 +40,6 @@ namespace regina {
 
 @property (assign, nonatomic) regina::NNormalSurfaceList* packet;
 
+- (void)updateHeader:(UILabel*)summary coords:(UILabel*)coords tri:(UIButton*)tri;
+
 @end

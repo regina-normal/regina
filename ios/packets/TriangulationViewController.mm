@@ -56,4 +56,9 @@
     NSLog(@"TODO: Triangulation action pressed!");
 }
 
+- (void)updateHeader:(UILabel *)header
+{
+    // TODO
+}
+
 @end

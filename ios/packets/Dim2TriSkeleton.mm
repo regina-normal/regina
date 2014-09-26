@@ -80,7 +80,7 @@
     [super viewWillAppear:animated];
     self.packet = self.viewer.packet;
 
-    self.summary.text = self.viewer.headerText;
+    [self.viewer updateHeader:self.summary];
 
     self.vertexCount.text = [NSString stringWithFormat:@"%ld", self.packet->getNumberOfFaces<0>()];
     self.edgeCount.text = [NSString stringWithFormat:@"%ld", self.packet->getNumberOfFaces<1>()];

@@ -75,7 +75,7 @@
     [super viewWillAppear:animated];
     self.packet = self.viewer.packet;
 
-    self.properties.text = self.viewer.headerText;
+    [self.viewer updateHeader:self.properties];
 
     self.triangles.delegate = self;
     self.triangles.dataSource = self;
@@ -104,7 +104,7 @@
     [self.triangles scrollToRowAtIndexPath:add
                           atScrollPosition:UITableViewScrollPositionBottom animated:YES];
 
-    self.properties.text = self.viewer.headerText;
+    [self.viewer updateHeader:self.properties];
 }
 
 #pragma mark - Table view
@@ -148,7 +148,7 @@
     // Just reload everything.
     [self.triangles reloadData];
 
-    self.properties.text = self.viewer.headerText;
+    [self.viewer updateHeader:self.properties];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

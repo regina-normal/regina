@@ -56,4 +56,9 @@
     NSLog(@"TODO: SnapPea action pressed!");
 }
 
+- (void)updateHeader:(UILabel *)summary volume:(UILabel *)volume solnType:(UILabel *)solnType
+{
+    // TODO
+}
+
 @end

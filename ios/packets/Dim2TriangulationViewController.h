@@ -40,6 +40,6 @@ namespace regina {
 
 @property (assign, nonatomic) regina::Dim2Triangulation* packet;
 
-- (NSString*)headerText;
+- (void)updateHeader:(UILabel*)header;
 
 @end

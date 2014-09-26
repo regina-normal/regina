@@ -54,4 +54,9 @@
     NSLog(@"TODO: Surfaces action pressed!");
 }
 
+- (void)updateHeader:(UILabel *)summary coords:(UILabel *)coords tri:(UIButton *)tri
+{
+    // TODO
+}
+
 @end
