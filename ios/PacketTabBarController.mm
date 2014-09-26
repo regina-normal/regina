@@ -33,6 +33,8 @@
 #import "PacketTabBarController.h"
 #import "PacketViewer.h"
 
+// TODO: Too much vertical space at the top of each tab for iOS 7 (okay in iOS 8).
+
 @interface PacketTabBarController () <UITabBarControllerDelegate>
 @property (strong, nonatomic) NSString *defaultKey;
 @end
