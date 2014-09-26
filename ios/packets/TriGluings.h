@@ -30,46 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#import "TriangulationViewController.h"
-#import "TriRecognitionViewController.h"
-#import "census/ncensus.h"
-#import "triangulation/ntriangulation.h"
+#import <UIKit/UIKit.h>
+#import "PacketViewer.h"
 
-@interface TriRecognitionViewController ()
-@property (weak, nonatomic) IBOutlet UITextView *detail;
-
-@property (strong, nonatomic) TriangulationViewController* viewer;
-@property (assign, nonatomic) regina::NTriangulation* packet;
-@end
-
-@implementation TriRecognitionViewController
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    
-    // Display the results of a census lookup.
-    std::string display;
-    
-    regina::NCensusHits* hits = regina::NCensus::lookup(static_cast<regina::NTriangulation*>(self.packet)->isoSig());
-    if (hits->count() == 0)
-        display = "Census: Not found";
-    else {
-        display = "Census: ";
-        const regina::NCensusHit* hit;
-        for (hit = hits->first(); hit; hit = hit->next()) {
-            if (hit != hits->first())
-                display += ", ";
-            display += hit->name();
-        }
-    }
-    delete hits;
-    
-    display += "\n\n";
-    display += self.packet->detail();
-    
-    _detail.text = [NSString stringWithUTF8String:display.c_str()];
-}
+@interface TriGluings : UIViewController <PacketEditor>
 
 @end

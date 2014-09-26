@@ -30,9 +30,35 @@
  *                                                                        *
  **************************************************************************/
 
-#import <UIKit/UIKit.h>
-#import "PacketViewer.h"
+#import "TriangulationViewController.h"
+#import "TriGluings.h"
+#import "triangulation/ntriangulation.h"
 
-@interface TriGluingsViewController : UIViewController <PacketEditor>
+@interface TriGluings ()
+@property (weak, nonatomic) IBOutlet UILabel *header;
+
+@property (strong, nonatomic) TriangulationViewController* viewer;
+@property (assign, nonatomic) regina::NTriangulation* packet;
+@end
+
+@implementation TriGluings
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    self.viewer = static_cast<TriangulationViewController*>(self.parentViewController);
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.packet = self.viewer.packet;
+
+    [self.viewer updateHeader:self.header];
+}
+
+- (void)endEditing
+{
+    // TODO
+}
 
 @end
