@@ -50,7 +50,7 @@
         return;
     }
 
-    NSMutableString* msg = [NSMutableString string];
+    NSMutableString* msg;
     if (! self.packet->isConnected()) {
         msg = [NSMutableString stringWithString:@"Disconnected, "];
 

@@ -35,7 +35,7 @@
 #import "triangulation/ntriangulation.h"
 
 @interface TriGluingsViewController ()
-@property (weak, nonatomic) IBOutlet UITextView *detail;
+@property (weak, nonatomic) IBOutlet UILabel *header;
 
 @property (strong, nonatomic) TriangulationViewController* viewer;
 @property (assign, nonatomic) regina::NTriangulation* packet;
@@ -46,8 +46,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
-    _detail.text = [NSString stringWithUTF8String:self.packet->detail().c_str()];
+    self.viewer = static_cast<TriangulationViewController*>(self.parentViewController);
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.packet = self.viewer.packet;
+
+    [self.viewer updateHeader:self.header];
 }
 
 - (void)endEditing
