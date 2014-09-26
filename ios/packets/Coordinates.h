@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2013, Ben Burton                                   *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -30,61 +30,53 @@
  *                                                                        *
  **************************************************************************/
 
-#import "TriangulationViewController.h"
-#import "TriRecognition.h"
-#import "census/ncensus.h"
-#import "triangulation/ntriangulation.h"
+/* end stub */
 
-@interface TriRecognition ()
-@property (weak, nonatomic) IBOutlet UILabel *header;
+#import <Foundation/Foundation.h>
+#import "maths/ninteger.h"
+#import "surfaces/normalcoords.h"
 
-@property (strong, nonatomic) TriangulationViewController* viewer;
-@property (assign, nonatomic) regina::NTriangulation* packet;
-@end
-
-@implementation TriRecognition
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    self.viewer = static_cast<TriangulationViewController*>(self.parentViewController);
+namespace regina {
+    class NNormalSurface;
+    class NTriangulation;
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    self.packet = self.viewer.packet;
+@interface Coordinates : NSObject
 
-    [self.viewer updateHeader:self.header];
-}
+/**
+ * Return a human-readable name for the given coordinate system.
+ */
++ (NSString*)name:(regina::NormalCoords)coordSystem capitalise:(BOOL)capitalise;
 
-/* TODO:
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    
-    // Display the results of a census lookup.
-    std::string display;
-    
-    regina::NCensusHits* hits = regina::NCensus::lookup(static_cast<regina::NTriangulation*>(self.packet)->isoSig());
-    if (hits->count() == 0)
-        display = "Census: Not found";
-    else {
-        display = "Census: ";
-        const regina::NCensusHit* hit;
-        for (hit = hits->first(); hit; hit = hit->next()) {
-            if (hit != hits->first())
-                display += ", ";
-            display += hit->name();
-        }
-    }
-    delete hits;
-    
-    display += "\n\n";
-    display += self.packet->detail();
-    
-    _detail.text = [NSString stringWithUTF8String:display.c_str()];
-}
-*/
+/**
+ * Does the given coordinate system generate almost normal
+ * surfaces when used with NNormalSurfaceList::enumerate()?
+ *
+ * Only coordinate systems that are used for enumerating surfaces
+ * (not just viewing surfaces) are relevant here.
+ */
++ (BOOL)generatesAlmostNormal:(regina::NormalCoords)coordSystem;
+
+/**
+ * Return the number of coordinate columns in the given coordinate
+ * system.
+ */
++ (unsigned long)numColumns:(regina::NormalCoords)coordSystem tri:(regina::NTriangulation*)tri;
+
+/**
+ * Return a column header for the given coordinate of the given
+ * coordinate system.
+ *
+ * The associated triangulation may be passed so that more precise
+ * information can be returned, though this routine will behave
+ * well without it.
+ */
++ (NSString*)columnName:(regina::NormalCoords)coordSystem whichCoord:(unsigned long)whichCoord tri:(regina::NTriangulation*)tri;
+
+/**
+ * Return a particular coordinate of a normal surface in the given
+ * coordinate system.
+ */
++ (regina::NLargeInteger)getCoordinate:(regina::NormalCoords)coordSystem surface:(const regina::NNormalSurface&)surface whichCoord:(unsigned long)whichCoord;
 
 @end

@@ -31,6 +31,9 @@
  **************************************************************************/
 
 #import "SnapPeaViewController.h"
+#import "snappea/nsnappeatriangulation.h"
+
+static UIColor* badColour = [UIColor colorWithRed:0.5 green:0.0 blue:0.0 alpha:1.0];
 
 @implementation SnapPeaViewController
 
@@ -58,7 +61,100 @@
 
 - (void)updateHeader:(UILabel *)summary volume:(UILabel *)volume solnType:(UILabel *)solnType
 {
-    // TODO
+    if (self.packet->isNull()) {
+        summary.text = @"Null triangulation (no SnapPea data)";
+        volume.text = @"";
+        solnType.text = @"";
+        return;
+    }
+    if (self.packet->isEmpty()) {
+        summary.text = @"Empty triangulation";
+        volume.text = @"";
+        solnType.text = @"";
+        return;
+    }
+
+    if (! self.packet->isValid()) {
+        summary.attributedText = [[NSAttributedString alloc] initWithString:@"Invalid triangulation"
+                                                                attributes:@{NSForegroundColorAttributeName: badColour}];
+        volume.text = @"";
+        solnType.text = @"";
+        return;
+    }
+
+    NSMutableString* msg;
+
+    if (self.packet->isOrientable())
+        msg = [NSMutableString stringWithString:@"Orientable, "];
+    else
+        msg = [NSMutableString stringWithString:@"Non-orientable, "];
+
+    unsigned nFilled = self.packet->countFilledCusps();
+    unsigned nComplete = self.packet->countCompleteCusps();
+
+    if (nFilled + nComplete == 1) {
+        [msg appendString:@"1 cusp, "];
+        if (nFilled)
+            [msg appendString:@"filled"];
+        else
+            [msg appendString:@"complete"];
+    } else if (nFilled == 0) {
+        [msg appendFormat:@"%d cusps, all complete", nComplete];
+    } else if (nComplete == 0) {
+        [msg appendFormat:@"%d cusps, all filled", nFilled];
+    } else {
+        [msg appendFormat:@"%d cusps, %d filled", (nFilled + nComplete), nFilled];
+    }
+    summary.text = msg;
+
+    // Volume and solution type:
+    switch (self.packet->solutionType()) {
+        case regina::NSnapPeaTriangulation::not_attempted:
+            volume.text = @"Solution not attempted";
+            solnType.text= @"";
+            break;
+        case regina::NSnapPeaTriangulation::geometric_solution:
+            if (self.packet->volumeZero())
+                volume.text = @"Volume approximately zero";
+            else
+                volume.text = [NSString stringWithFormat:@"Volume: %lf", self.packet->volume()];
+            solnType.text = @"Tetrahedra positively oriented";
+            break;
+        case regina::NSnapPeaTriangulation::nongeometric_solution:
+            if (self.packet->volumeZero())
+                volume.text = @"Volume approximately zero";
+            else
+                volume.text = [NSString stringWithFormat:@"Volume: %lf", self.packet->volume()];
+            solnType.text = @"Contains negatively oriented tetrahedra";
+            break;
+        case regina::NSnapPeaTriangulation::flat_solution:
+            if (self.packet->volumeZero())
+                volume.text = @"Volume approximately zero";
+            else
+                volume.text = [NSString stringWithFormat:@"Volume: %lf", self.packet->volume()];
+            solnType.text = @"All tetrahedra flat";
+            break;
+        case regina::NSnapPeaTriangulation::degenerate_solution:
+            if (self.packet->volumeZero())
+                volume.text = @"Volume approximately zero";
+            else
+                volume.text = [NSString stringWithFormat:@"Volume: %lf", self.packet->volume()];
+            solnType.text = @"Contains degenerate tetrahedra";
+            break;
+        case regina::NSnapPeaTriangulation::other_solution:
+            volume.text = @"Unrecognised solution type";
+            solnType.text = @"";
+            break;
+        case regina::NSnapPeaTriangulation::no_solution:
+            volume.text = @"No solution found";
+            solnType.text = @"";
+            break;
+        default:
+            volume.attributedText = [[NSAttributedString alloc] initWithString:@"Invalid solution type"
+                                                                    attributes:@{NSForegroundColorAttributeName: badColour}];
+            solnType.text = @"";
+            break;
+    }
 }
 
 @end

@@ -30,78 +30,32 @@
  *                                                                        *
  **************************************************************************/
 
-#import "Coordinates.h"
 #import "SurfacesViewController.h"
-#import "surfaces/nnormalsurfacelist.h"
+#import "SurfacesSummary.h"
 #import "triangulation/ntriangulation.h"
 
-@implementation SurfacesViewController
+@interface SurfacesSummary ()
+@property (weak, nonatomic) IBOutlet UILabel *header;
+@property (weak, nonatomic) IBOutlet UILabel *coords;
+@property (weak, nonatomic) IBOutlet UIButton *tri;
 
-// TODO: Listen for renames on triangulation.
+@property (strong, nonatomic) SurfacesViewController* viewer;
+@property (assign, nonatomic) regina::NNormalSurfaceList* packet;
+@end
+
+@implementation SurfacesSummary
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self setSelectedImages:@[@"Tab-Summary-Bold",
-                              @"Tab-Coords-Bold",
-                              @"Tab-Compat-Bold",
-                              @"Tab-Matching-Bold"]];
-    [self registerDefaultKey:@"ViewSurfacesTab"];
+    self.viewer = static_cast<SurfacesViewController*>(self.parentViewController);
 }
 
-- (NSString *)packetActionIcon
-{
-    return @"NavBar-Surfaces";
-}
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.packet = self.viewer.packet;
 
-- (void)packetActionPressed
-{
-    NSLog(@"TODO: Surfaces action pressed!");
-}
-
-- (void)updateHeader:(UILabel *)summary coords:(UILabel *)coords tri:(UIButton *)tri
-{
-    regina::NormalList which = self.packet->which();
-
-    NSString *sEmb, *sType;
-
-    if (which.has(regina::NS_EMBEDDED_ONLY))
-        sEmb = @"embedded";
-    else if (which.has(regina::NS_IMMERSED_SINGULAR))
-        sEmb = @"embedded / immersed / singular";
-    else
-        sEmb = @"unknown";
-
-    if (which.has(regina::NS_VERTEX))
-        sType = @"vertex";
-    else if (which.has(regina::NS_FUNDAMENTAL))
-        sType = @"fundamental";
-    else if (which.has(regina::NS_CUSTOM))
-        sType = @"custom";
-    else if (which.has(regina::NS_LEGACY))
-        sType = @"legacy";
-    else
-        sType = @"unknown";
-
-    if (self.packet->getNumberOfSurfaces() == 0)
-        summary.text = [NSString stringWithFormat:@"No %@, %@ surfaces", sType, sEmb];
-    else if (self.packet->getNumberOfSurfaces() == 1)
-        summary.text = [NSString stringWithFormat:@"1 %@, %@ surface", sType, sEmb];
-    else
-        summary.text = [NSString stringWithFormat:@"%ld %@, %@ surfaces",
-                        self.packet->getNumberOfSurfaces(), sType, sEmb];
-
-    coords.text = [NSString stringWithFormat:@"Enumerated in %@ coordinates", [Coordinates name:self.packet->coords() capitalise:NO]];
-    [self updateTriangulationButton:tri];
-}
-
-- (void)updateTriangulationButton:(UIButton*)button
-{
-    regina::NPacket* tri = self.packet->getTriangulation();
-    NSString* triName = [NSString stringWithUTF8String:tri->getPacketLabel().c_str()];
-    if (triName.length == 0)
-        triName = @"(Unnamed)";
-    [button setTitle:triName forState:UIControlStateNormal];
+    [self.viewer updateHeader:self.header coords:self.coords tri:self.tri];
 }
 
 @end
