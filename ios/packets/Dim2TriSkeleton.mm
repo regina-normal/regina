@@ -32,11 +32,14 @@
 
 #import "Dim2TriSkeleton.h"
 #import "Dim2TriangulationViewController.h"
+#import "ReginaHelper.h"
 #import "dim2/dim2triangulation.h"
 
 #define KEY_LAST_DIM2_SKELETON_TYPE @"ViewDim2SkeletonWhich"
 
 // TODO: Allow cells to spread over multiple lines.
+// TODO: Augh.  In ios7 (not ios8), skeleton tables run under tabs after switching between tabs
+// TODO: Vertical space in ios7
 
 #pragma mark - Table cell
 
@@ -53,14 +56,10 @@
 #pragma mark - Dim2Triangulation skeleton viewer
 
 @interface Dim2TriSkeleton () <UITableViewDataSource, UITableViewDelegate> {
-    CGFloat headerHeight;
+    CGFloat headerHeight, fatHeaderHeight;
 }
 @property (weak, nonatomic) IBOutlet UILabel *summary;
-@property (weak, nonatomic) IBOutlet UILabel *vertexCount;
-@property (weak, nonatomic) IBOutlet UILabel *edgeCount;
-@property (weak, nonatomic) IBOutlet UILabel *triangleCount;
-@property (weak, nonatomic) IBOutlet UILabel *componentCount;
-@property (weak, nonatomic) IBOutlet UILabel *bdryCount;
+@property (weak, nonatomic) IBOutlet UILabel *fVector;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *viewWhich;
 @property (weak, nonatomic) IBOutlet UITableView *details;
 
@@ -82,16 +81,27 @@
 
     [self.viewer updateHeader:self.summary];
 
-    self.vertexCount.text = [NSString stringWithFormat:@"%ld", self.packet->getNumberOfFaces<0>()];
-    self.edgeCount.text = [NSString stringWithFormat:@"%ld", self.packet->getNumberOfFaces<1>()];
-    self.triangleCount.text = [NSString stringWithFormat:@"%ld", self.packet->getNumberOfFaces<2>()];
-    self.componentCount.text = [NSString stringWithFormat:@"%ld", self.packet->getNumberOfComponents()];
-    self.bdryCount.text = [NSString stringWithFormat:@"%ld", self.packet->getNumberOfBoundaryComponents()];
+    self.fVector.text = [NSString stringWithFormat:@"f-vector: (%ld, %ld, %ld)",
+                         self.packet->getNumberOfFaces<0>(),
+                         self.packet->getNumberOfFaces<1>(),
+                         self.packet->getNumberOfFaces<2>()];
+
+    [self.viewWhich setTitle:COUNTSTR(self.packet->getNumberOfFaces<0>(), "vertex", "vertices") forSegmentAtIndex:0];
+    [self.viewWhich setTitle:COUNTSTR(self.packet->getNumberOfFaces<1>(), "edge", "edges") forSegmentAtIndex:1];
+    [self.viewWhich setTitle:COUNTSTR(self.packet->getNumberOfFaces<2>(), "triangle", "triangles") forSegmentAtIndex:2];
+    [self.viewWhich setTitle:COUNTSTR(self.packet->getNumberOfComponents(), "component", "components") forSegmentAtIndex:3];
+    [self.viewWhich setTitle:COUNTSTR(self.packet->getNumberOfBoundaryComponents(), "boundary", "boundaries") forSegmentAtIndex:4];
 
     self.viewWhich.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_DIM2_SKELETON_TYPE];
 
-    self.details.delegate = self;
-    self.details.dataSource = self;
+    if (! self.details.delegate) {
+        self.details.delegate = self;
+        self.details.dataSource = self;
+    } else {
+        // We're returning to a view that we've shown before.
+        // Make sure everything is up to date.
+        [self.details reloadData];
+    }
 }
 
 - (IBAction)whichChanged:(id)sender {
@@ -116,9 +126,11 @@
             return 1 + MAX(self.packet->getNumberOfVertices(), 1);
         case 1: /* edges */
             return 1 + MAX(self.packet->getNumberOfEdges(), 1);
-        case 2: /* components */
+        case 2: /* triangles */
+            return 1 + MAX(self.packet->getNumberOfTriangles(), 1);;
+        case 3: /* components */
             return 1 + MAX(self.packet->getNumberOfComponents(), 1);
-        case 3: /* boundary components */
+        case 4: /* boundary components */
             return 1 + MAX(self.packet->getNumberOfBoundaryComponents(), 1);
         default:
             return 0;
@@ -133,9 +145,11 @@
                 return [tableView dequeueReusableCellWithIdentifier:@"VertexHeader"];
             case 1: /* edges */
                 return [tableView dequeueReusableCellWithIdentifier:@"EdgeHeader"];
-            case 2: /* components */
+            case 2: /* triangles */
+                return [tableView dequeueReusableCellWithIdentifier:@"TriangleHeader"];
+            case 3: /* components */
                 return [tableView dequeueReusableCellWithIdentifier:@"ComponentHeader"];
-            case 3: /* boundary components */
+            case 4: /* boundary components */
                 return [tableView dequeueReusableCellWithIdentifier:@"BdryHeader"];
             default:
                 return nil;
@@ -187,16 +201,44 @@
                 cell.pieces.text = pieces;
             }
             break;
-        case 2: /* components */
+        case 2: /* triangles */
+            if (self.packet->getNumberOfTriangles() == 0) {
+                cell = [tableView dequeueReusableCellWithIdentifier:@"Empty" forIndexPath:indexPath];
+                cell.index.text = @"No triangles";
+                cell.type.text = cell.pieces.text = @"";
+            } else {
+                regina::Dim2Triangle *t = self.packet->getTriangle(indexPath.row - 1);
+                cell = [tableView dequeueReusableCellWithIdentifier:@"Triangle" forIndexPath:indexPath];
+                cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
+
+                cell.type.text = [NSString stringWithFormat:@"%ld, %ld, %ld",
+                                  t->getVertex(0)->markedIndex(),
+                                  t->getVertex(1)->markedIndex(),
+                                  t->getVertex(2)->markedIndex()];
+
+                cell.pieces.text = [NSString stringWithFormat:@"%ld, %ld, %ld",
+                                    t->getEdge(2)->markedIndex(),
+                                    t->getEdge(1)->markedIndex(),
+                                    t->getEdge(0)->markedIndex()];
+            }
+            break;
+        case 3: /* components */
             if (self.packet->getNumberOfComponents() == 0) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Empty" forIndexPath:indexPath];
                 cell.index.text = @"No components";
                 cell.type.text = cell.size.text = cell.pieces.text = @"";
+            } else if (self.packet->getNumberOfComponents() == 1) {
+                regina::Dim2Component* c = self.packet->getComponent(0);
+                cell = [tableView dequeueReusableCellWithIdentifier:@"Component" forIndexPath:indexPath];
+                cell.index.text = @"0.";
+                cell.size.text = COUNTSTR(c->getNumberOfSimplices(), "triangle", "triangles");
+                cell.type.text = (c->isOrientable() ? @"Orbl" : @"Non-orbl");
+                cell.pieces.text = @"All triangles";
             } else {
                 regina::Dim2Component* c = self.packet->getComponent(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Component" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
-                cell.size.text = [NSString stringWithFormat:@"%ld", c->getNumberOfTriangles()];
+                cell.size.text = COUNTSTR(c->getNumberOfSimplices(), "triangle", "triangles");
                 cell.type.text = (c->isOrientable() ? @"Orbl" : @"Non-orbl");
 
                 NSMutableString* pieces = [NSMutableString string];
@@ -207,7 +249,7 @@
                 cell.pieces.text = pieces;
             }
             break;
-        case 3: /* boundary components */
+        case 4: /* boundary components */
             if (self.packet->getNumberOfBoundaryComponents() == 0) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Empty" forIndexPath:indexPath];
                 cell.index.text = @"No boundary components";
@@ -216,9 +258,7 @@
                 regina::Dim2BoundaryComponent* b = self.packet->getBoundaryComponent(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Bdry" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
-                cell.size.text = (b->getNumberOfEdges() == 1 ?
-                                  @"1 edge" :
-                                  [NSString stringWithFormat:@"%ld edges", b->getNumberOfEdges()]);
+                cell.size.text = COUNTSTR(b->getNumberOfEdges(), "edge", "edges");
 
                 NSMutableString* pieces = [NSMutableString string];
                 for (unsigned long i = 0; i < b->getNumberOfEdges(); ++i) {
@@ -245,15 +285,26 @@
     if (indexPath.row > 0)
         return self.details.rowHeight;
 
-    // The header row is smaller.  Calculate it based on the cell contents, which include
-    // auto-layout constraints that pin the labels to the upper and lower boundaries.
-    if (headerHeight == 0) {
-        UITableViewCell* cell = [self.details dequeueReusableCellWithIdentifier:@"EdgeHeader"];
-        [cell layoutIfNeeded];
-        CGSize size = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
-        headerHeight = size.height;
+    if (self.viewWhich.selectedSegmentIndex != 2) {
+        // The header row is smaller.  Calculate it based on the cell contents, which include
+        // auto-layout constraints that pin the labels to the upper and lower boundaries.
+        if (headerHeight == 0) {
+            UITableViewCell* cell = [self.details dequeueReusableCellWithIdentifier:@"EdgeHeader"];
+            [cell layoutIfNeeded];
+            CGSize size = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+            headerHeight = size.height;
+        }
+        return headerHeight;
+    } else {
+        // Same deal for a two-line header.
+        if (fatHeaderHeight == 0) {
+            UITableViewCell* cell = [self.details dequeueReusableCellWithIdentifier:@"TriangleHeader"];
+            [cell layoutIfNeeded];
+            CGSize size = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+            fatHeaderHeight = size.height;
+        }
+        return fatHeaderHeight;
     }
-    return headerHeight;
 }
 
 @end
