@@ -37,15 +37,6 @@
 
 namespace regina {
 
-const int NTriangle::TRIANGLE = 1;
-const int NTriangle::SCARF = 2;
-const int NTriangle::PARACHUTE = 3;
-const int NTriangle::CONE = 4;
-const int NTriangle::MOBIUS = 5;
-const int NTriangle::HORN = 6;
-const int NTriangle::DUNCEHAT = 7;
-const int NTriangle::L31 = 8;
-
 const NPerm4 NTriangle::ordering[4] = {
     NPerm4(1, 2, 3, 0),
     NPerm4(0, 2, 3, 1),
@@ -53,7 +44,7 @@ const NPerm4 NTriangle::ordering[4] = {
     NPerm4(0, 1, 2, 3)
 };
 
-int NTriangle::getType() {
+NTriangle::Type NTriangle::getType() {
     if (type_)
         return type_;
 
@@ -110,7 +101,7 @@ int NTriangle::getType() {
         }
 
     // We should never reach this point.
-    return 0;
+    return UNKNOWN_TYPE;
 }
 
 NEdge* NTriangle::getEdge(int edge) const {

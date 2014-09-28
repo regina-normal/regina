@@ -115,6 +115,15 @@ void addNVertex() {
             &NVertex::getLinkEulerCharacteristic)
     ;
 
+    enum_<regina::NVertex::LinkType>("LinkType")
+        .value("SPHERE", regina::NVertex::SPHERE)
+        .value("DISC", regina::NVertex::DISC)
+        .value("TORUS", regina::NVertex::TORUS)
+        .value("KLEIN_BOTTLE", regina::NVertex::KLEIN_BOTTLE)
+        .value("NON_STANDARD_CUSP", regina::NVertex::NON_STANDARD_CUSP)
+        .value("NON_STANDARD_BDRY", regina::NVertex::NON_STANDARD_BDRY)
+        ;
+
     s.attr("SPHERE") = NVertex::SPHERE;
     s.attr("DISC") = NVertex::DISC;
     s.attr("TORUS") = NVertex::TORUS;
