@@ -196,7 +196,7 @@ QVariant VertexModel::data(const QModelIndex& index, int role) const {
                 if (link == NVertex::TORUS)
                     return tr("Cusp (torus)");
                 if (link == NVertex::KLEIN_BOTTLE)
-                    return tr("Cusp (klein bottle)");
+                    return tr("Cusp (Klein bottle)");
                 if (link == NVertex::NON_STANDARD_CUSP) {
                     if (item->isLinkOrientable())
                         return tr("Cusp (orbl, genus %1)").arg(
@@ -215,10 +215,10 @@ QVariant VertexModel::data(const QModelIndex& index, int role) const {
                 QString ans;
                 std::vector<regina::NVertexEmbedding>::const_iterator it;
                 for (it = item->getEmbeddings().begin();
-                        it != item->getEmbeddings().end(); it++)
+                        it != item->getEmbeddings().end(); ++it)
                     appendToList(ans, QString("%1 (%2)").
-                        arg(tri->tetrahedronIndex((*it).getTetrahedron())).
-                        arg((*it).getVertex()));
+                        arg(tri->tetrahedronIndex(it->getTetrahedron())).
+                        arg(it->getVertex()));
                 return ans;
         }
         return QString();
@@ -307,10 +307,10 @@ QVariant EdgeModel::data(const QModelIndex& index, int role) const {
                 QString ans;
                 std::deque<regina::NEdgeEmbedding>::const_iterator it;
                 for (it = item->getEmbeddings().begin();
-                        it != item->getEmbeddings().end(); it++)
+                        it != item->getEmbeddings().end(); ++it)
                     appendToList(ans, QString("%1 (%2)").
-                        arg(tri->tetrahedronIndex((*it).getTetrahedron())).
-                        arg((*it).getVertices().trunc2().c_str()));
+                        arg(tri->tetrahedronIndex(it->getTetrahedron())).
+                        arg(it->getVertices().trunc2().c_str()));
                 return ans;
         }
         return QString();
@@ -398,7 +398,7 @@ QVariant TriangleModel::data(const QModelIndex& index, int role) const {
                 if (type == NTriangle::PARACHUTE)
                     return prefix + tr("Parachute");
                 if (type == NTriangle::MOBIUS)
-                    return prefix + tr("Mobius band");
+                    return prefix + trUtf8("Möbius band");
                 if (type == NTriangle::CONE)
                     return prefix + tr("Cone");
                 if (type == NTriangle::HORN)
