@@ -32,7 +32,7 @@
 
 #import "Dim2TriSkeleton.h"
 #import "Dim2TriangulationViewController.h"
-#import "ReginaHelper.h"
+#import "TextHelper.h"
 #import "dim2/dim2triangulation.h"
 
 #define KEY_LAST_DIM2_SKELETON_TYPE @"ViewDim2SkeletonWhich"
@@ -86,11 +86,11 @@
                          self.packet->getNumberOfFaces<1>(),
                          self.packet->getNumberOfFaces<2>()];
 
-    [self.viewWhich setTitle:COUNTSTR(self.packet->getNumberOfFaces<0>(), "vertex", "vertices") forSegmentAtIndex:0];
-    [self.viewWhich setTitle:COUNTSTR(self.packet->getNumberOfFaces<1>(), "edge", "edges") forSegmentAtIndex:1];
-    [self.viewWhich setTitle:COUNTSTR(self.packet->getNumberOfFaces<2>(), "triangle", "triangles") forSegmentAtIndex:2];
-    [self.viewWhich setTitle:COUNTSTR(self.packet->getNumberOfComponents(), "component", "components") forSegmentAtIndex:3];
-    [self.viewWhich setTitle:COUNTSTR(self.packet->getNumberOfBoundaryComponents(), "boundary", "boundaries") forSegmentAtIndex:4];
+    [self.viewWhich setTitle:[TextHelper countString:self.packet->getNumberOfFaces<0>() singular:"vertex" plural:"vertices"] forSegmentAtIndex:0];
+    [self.viewWhich setTitle:[TextHelper countString:self.packet->getNumberOfFaces<1>() singular:"edge" plural:"edges"] forSegmentAtIndex:1];
+    [self.viewWhich setTitle:[TextHelper countString:self.packet->getNumberOfFaces<2>() singular:"triangle" plural:"triangles"] forSegmentAtIndex:2];
+    [self.viewWhich setTitle:[TextHelper countString:self.packet->getNumberOfComponents() singular:"component" plural:"components"] forSegmentAtIndex:3];
+    [self.viewWhich setTitle:[TextHelper countString:self.packet->getNumberOfBoundaryComponents() singular:"boundary" plural:"boundaries"] forSegmentAtIndex:4];
 
     self.viewWhich.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_DIM2_SKELETON_TYPE];
 
@@ -107,14 +107,6 @@
 - (IBAction)whichChanged:(id)sender {
     [self.details reloadData];
     [[NSUserDefaults standardUserDefaults] setInteger:self.viewWhich.selectedSegmentIndex forKey:KEY_LAST_DIM2_SKELETON_TYPE];
-}
-
-+ (void)appendToList:(NSMutableString*)str item:(NSString*)item
-{
-    if (str.length == 0)
-        [str appendString:item];
-    else
-        [str appendFormat:@", %@", item];
 }
 
 #pragma mark - Table view
@@ -173,10 +165,10 @@
                 NSMutableString* pieces = [NSMutableString string];
                 std::deque<regina::Dim2VertexEmbedding>::const_iterator it;
                 for (it = v->getEmbeddings().begin(); it != v->getEmbeddings().end(); it++)
-                    [Dim2TriSkeleton appendToList:pieces
-                                             item:[NSString stringWithFormat:@"%ld (%d)",
-                                                   self.packet->triangleIndex((*it).getTriangle()),
-                                                   (*it).getVertex()]];
+                    [TextHelper appendToList:pieces
+                                        item:[NSString stringWithFormat:@"%ld (%d)",
+                                              self.packet->triangleIndex((*it).getTriangle()),
+                                              (*it).getVertex()]];
                 cell.pieces.text = pieces;
             }
             break;
@@ -194,10 +186,10 @@
 
                 NSMutableString* pieces = [NSMutableString string];
                 for (unsigned i = 0; i < e->getNumberOfEmbeddings(); i++)
-                    [Dim2TriSkeleton appendToList:pieces
-                                             item:[NSString stringWithFormat:@"%ld (%s)",
-                                                   self.packet->triangleIndex(e->getEmbedding(i).getTriangle()),
-                                                   e->getEmbedding(i).getVertices().trunc2().c_str()]];
+                    [TextHelper appendToList:pieces
+                                        item:[NSString stringWithFormat:@"%ld (%s)",
+                                              self.packet->triangleIndex(e->getEmbedding(i).getTriangle()),
+                                              e->getEmbedding(i).getVertices().trunc2().c_str()]];
                 cell.pieces.text = pieces;
             }
             break;
@@ -231,21 +223,21 @@
                 regina::Dim2Component* c = self.packet->getComponent(0);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Component" forIndexPath:indexPath];
                 cell.index.text = @"0.";
-                cell.size.text = COUNTSTR(c->getNumberOfSimplices(), "triangle", "triangles");
+                cell.size.text = [TextHelper countString:c->getNumberOfSimplices() singular:"triangle" plural:"triangles"];
                 cell.type.text = (c->isOrientable() ? @"Orbl" : @"Non-orbl");
                 cell.pieces.text = @"All triangles";
             } else {
                 regina::Dim2Component* c = self.packet->getComponent(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Component" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
-                cell.size.text = COUNTSTR(c->getNumberOfSimplices(), "triangle", "triangles");
+                cell.size.text = [TextHelper countString:c->getNumberOfSimplices() singular:"triangle" plural:"triangles"];
                 cell.type.text = (c->isOrientable() ? @"Orbl" : @"Non-orbl");
 
                 NSMutableString* pieces = [NSMutableString string];
                 for (unsigned long i = 0; i < c->getNumberOfTriangles(); ++i)
-                    [Dim2TriSkeleton appendToList:pieces
-                                             item:[NSString stringWithFormat:@"%ld",
-                                                   self.packet->triangleIndex(c->getTriangle(i))]];
+                    [TextHelper appendToList:pieces
+                                        item:[NSString stringWithFormat:@"%ld",
+                                              self.packet->triangleIndex(c->getTriangle(i))]];
                 cell.pieces.text = pieces;
             }
             break;
@@ -258,15 +250,15 @@
                 regina::Dim2BoundaryComponent* b = self.packet->getBoundaryComponent(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Bdry" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
-                cell.size.text = COUNTSTR(b->getNumberOfEdges(), "edge", "edges");
+                cell.size.text = [TextHelper countString:b->getNumberOfEdges() singular:"edge" plural:"edges"];
 
                 NSMutableString* pieces = [NSMutableString string];
                 for (unsigned long i = 0; i < b->getNumberOfEdges(); ++i) {
                     const regina::Dim2EdgeEmbedding& emb = b->getEdge(i)->getEmbedding(0);
-                    [Dim2TriSkeleton appendToList:pieces
-                                             item:[NSString stringWithFormat:@"%ld (%s)",
-                                                   self.packet->triangleIndex(emb.getTriangle()),
-                                                   emb.getVertices().trunc2().c_str()]];
+                    [TextHelper appendToList:pieces
+                                        item:[NSString stringWithFormat:@"%ld (%s)",
+                                              self.packet->triangleIndex(emb.getTriangle()),
+                                              emb.getVertices().trunc2().c_str()]];
                 }
                 cell.pieces.text = pieces;
             }

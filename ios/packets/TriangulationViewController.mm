@@ -31,9 +31,8 @@
  **************************************************************************/
 
 #import "TriangulationViewController.h"
+#import "TextHelper.h"
 #import "triangulation/ntriangulation.h"
-
-static UIColor* badColour = [UIColor colorWithRed:0.5 green:0.0 blue:0.0 alpha:1.0];
 
 @implementation TriangulationViewController
 
@@ -67,8 +66,7 @@ static UIColor* badColour = [UIColor colorWithRed:0.5 green:0.0 blue:0.0 alpha:1
     }
 
     if (! self.packet->isValid()) {
-        header.attributedText = [[NSAttributedString alloc] initWithString:@"Invalid triangulation"
-                                                                attributes:@{NSForegroundColorAttributeName: badColour}];
+        header.attributedText = [TextHelper badString:@"Invalid triangulation"];
         return;
     }
 

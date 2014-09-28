@@ -31,9 +31,8 @@
  **************************************************************************/
 
 #import "SnapPeaViewController.h"
+#import "TextHelper.h"
 #import "snappea/nsnappeatriangulation.h"
-
-static UIColor* badColour = [UIColor colorWithRed:0.5 green:0.0 blue:0.0 alpha:1.0];
 
 @implementation SnapPeaViewController
 
@@ -75,8 +74,7 @@ static UIColor* badColour = [UIColor colorWithRed:0.5 green:0.0 blue:0.0 alpha:1
     }
 
     if (! self.packet->isValid()) {
-        summary.attributedText = [[NSAttributedString alloc] initWithString:@"Invalid triangulation"
-                                                                attributes:@{NSForegroundColorAttributeName: badColour}];
+        summary.attributedText = [TextHelper badString:@"Invalid triangulation"];
         volume.text = @"";
         solnType.text = @"";
         return;
@@ -150,8 +148,7 @@ static UIColor* badColour = [UIColor colorWithRed:0.5 green:0.0 blue:0.0 alpha:1
             solnType.text = @"";
             break;
         default:
-            volume.attributedText = [[NSAttributedString alloc] initWithString:@"Invalid solution type"
-                                                                    attributes:@{NSForegroundColorAttributeName: badColour}];
+            volume.attributedText = [TextHelper badString:@"Invalid solution type"];
             solnType.text = @"";
             break;
     }

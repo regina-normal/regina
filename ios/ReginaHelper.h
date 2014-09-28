@@ -42,8 +42,6 @@ namespace regina {
     class NPacket;
 }
 
-#define COUNTSTR(n, singular, plural) ((n) == 1 ? [NSString stringWithFormat:@"1 %s", singular] : [NSString stringWithFormat:@"%ld %s", (n), plural])
-
 /**
  * Gives access to some of the core objects in the user interface.
  */
