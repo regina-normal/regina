@@ -37,7 +37,7 @@
 
 #define KEY_LAST_TRI_SKELETON_TYPE @"ViewTriSkeletonWhich"
 
-// TODO: Allow cells to spread over multiple lines.
+// TODO: Long press views full (overflowing) contents of cell.
 // TODO: Augh.  In ios7 (not ios8), skeleton tables run under tabs after switching between tabs
 // TODO: Vertical space in ios7
 
@@ -175,16 +175,16 @@
                         cell.type.text = @"Bdry";
                         break;
                     case regina::NVertex::TORUS:
-                        cell.type.text = @"Cusp (torus)";
+                        cell.type.text = @"Ideal: Torus";
                         break;
                     case regina::NVertex::KLEIN_BOTTLE:
-                        cell.type.text = @"Cusp (Klein bottle)";
+                        cell.type.text = @"Ideal: Klein bottle";
                         break;
                     case regina::NVertex::NON_STANDARD_CUSP:
                         if (v->isLinkOrientable())
-                            cell.type.text = [NSString stringWithFormat:@"Cusp (orbl, genus %ld)", (1 - (v->getLinkEulerChar() / 2))];
+                            cell.type.text = [NSString stringWithFormat:@"Ideal: Genus %ld orbl", (1 - (v->getLinkEulerChar() / 2))];
                         else
-                            cell.type.text = [NSString stringWithFormat:@"Cusp (non-or, genus %ld)", (2 - v->getLinkEulerChar())];
+                            cell.type.text = [NSString stringWithFormat:@"Ideal: Genus %ld non-orbl", (2 - v->getLinkEulerChar())];
                         break;
                     case regina::NVertex::NON_STANDARD_BDRY:
                         cell.type.attributedText = [TextHelper badString:@"Invalid"];
@@ -240,24 +240,38 @@
                 regina::NTriangle* t = self.packet->getTriangle(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Triangle" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
-                cell.size.text = [NSString stringWithFormat:@"%d", t->getNumberOfEmbeddings()];
 
-                NSString* typeStr;
+                cell.type.text = (t->isBoundary() ? @"Bdry" : @"Internal");
+
                 switch (t->getType()) {
-                    case regina::NTriangle::TRIANGLE: typeStr = @"Triangle"; break;
-                    case regina::NTriangle::SCARF: typeStr = @"Scarf"; break;
-                    case regina::NTriangle::PARACHUTE: typeStr = @"Parachute"; break;
-                    case regina::NTriangle::MOBIUS: typeStr = @"Möbius band"; break;
-                    case regina::NTriangle::CONE: typeStr = @"Cone"; break;
-                    case regina::NTriangle::HORN: typeStr = @"Horn"; break;
-                    case regina::NTriangle::DUNCEHAT: typeStr = @"Dunce hat"; break;
-                    case regina::NTriangle::L31: typeStr = @"L(3,1)"; break;
-                    case regina::NTriangle::UNKNOWN_TYPE: typeStr = @"Unknown"; break;
+                    case regina::NTriangle::TRIANGLE:
+                        cell.size.text = @"Triangle";
+                        break;
+                    case regina::NTriangle::SCARF:
+                        cell.size.text = @"Scarf";
+                        break;
+                    case regina::NTriangle::PARACHUTE:
+                        cell.size.text = @"Parachute";
+                        break;
+                    case regina::NTriangle::MOBIUS:
+                        cell.size.text = @"Möbius band";
+                        break;
+                    case regina::NTriangle::CONE:
+                        cell.size.text = @"Cone";
+                        break;
+                    case regina::NTriangle::HORN:
+                        cell.size.text = @"Horn";
+                        break;
+                    case regina::NTriangle::DUNCEHAT:
+                        cell.size.text = @"Dunce hat";
+                        break;
+                    case regina::NTriangle::L31:
+                        cell.size.text = @"L(3,1)";
+                        break;
+                    case regina::NTriangle::UNKNOWN_TYPE:
+                        cell.size.attributedText = [TextHelper badString:@"Unknown"];
+                        break;
                 }
-                if (t->isBoundary())
-                    cell.type.text = [NSString stringWithFormat:@"(Bdry) %@", typeStr];
-                else
-                    cell.type.text = typeStr;
 
                 NSMutableString* pieces = [NSMutableString string];
                 for (unsigned i = 0; i < t->getNumberOfEmbeddings(); i++)
@@ -312,7 +326,7 @@
 
                 cell.type.text = [NSString stringWithFormat:@"%s %s",
                                   (c->isIdeal() ? "Ideal, " : "Real, "),
-                                  (c->isOrientable() ? "Orbl" : "Non-orbl")];
+                                  (c->isOrientable() ? "orbl" : "non-orbl")];
 
                 if (self.packet->getNumberOfComponents() == 1) {
                     cell.pieces.text = @"All tetrahedra";
@@ -350,6 +364,8 @@
                                             item:[NSString stringWithFormat:@"%ld (%d)",
                                                   self.packet->tetrahedronIndex(it->getTetrahedron()),
                                                   it->getVertex()]];
+                    cell.pieces.text = [NSString stringWithFormat:@"Vertices %@", pieces];
+                    // Parity says #vertices >= 2, so always use plural form.
                 } else {
                     for (unsigned long i = 0; i < b->getNumberOfTriangles(); ++i) {
                         const regina::NTriangleEmbedding& emb = b->getTriangle(i)->getEmbedding(0);
@@ -358,8 +374,9 @@
                                                   self.packet->tetrahedronIndex(emb.getTetrahedron()),
                                                   emb.getVertices().trunc3().c_str()]];
                     }
+                    cell.pieces.text = [NSString stringWithFormat:@"Faces %@", pieces];
+                    // Parity says #faces >= 2, so always use plural form.
                 }
-                cell.pieces.text = pieces;
             }
             break;
     }
