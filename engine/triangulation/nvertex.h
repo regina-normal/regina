@@ -164,20 +164,39 @@ class REGINA_API NVertexEmbedding {
  */
 class REGINA_API NVertex : public ShareableObject, public NMarkedElement {
     public:
-        static const int SPHERE;
-            /**< Specifies a vertex link that is a sphere. */
-        static const int DISC;
-            /**< Specifies a vertex link that is a disc. */
-        static const int TORUS;
-            /**< Specifies a vertex link that is a torus. */
-        static const int KLEIN_BOTTLE;
-            /**< Specifies a vertex link that is a Klein bottle. */
-        static const int NON_STANDARD_CUSP;
-            /**< Specifies a vertex link that is closed and is not a
-                 sphere, torus or Klein bottle. */
-        static const int NON_STANDARD_BDRY;
-            /**< Specifies a vertex link that has boundary and is not a
-                 disc. */
+        /**
+         * Categorises the possible links of a vertex into a small number
+         * of common types.  Here a vertex link is considered only up to its
+         * topology (not the combinatorics of its triangulation).
+         *
+         * @see getLink
+         */
+        enum LinkType {
+            SPHERE = 1,
+                /**< Specifies a vertex link that is a sphere.
+                     In other words, the vertex is internal. */
+            DISC = 2,
+                /**< Specifies a vertex link that is a disc.
+                     In other words, the vertex lies on a real boundary
+                     component. */
+            TORUS = 3,
+                /**< Specifies a vertex link that is a torus.
+                     In other words, this is an ideal vertex
+                     representing a torus cusp. */
+            KLEIN_BOTTLE = 4,
+                /**< Specifies a vertex link that is a Klein bottle.
+                     In other words, this is an ideal vertex
+                     representing a Klein bottle cusp. */
+            NON_STANDARD_CUSP = 5,
+                /**< Specifies a vertex link that is closed and is not a
+                     sphere, torus or Klein bottle.
+                     In other words, this is an ideal vertex but not one
+                     of the standard ideal vertex types. */
+            NON_STANDARD_BDRY = 6
+                /**< Specifies a vertex link that has boundary and is not a
+                     disc.  In other words, this vertex makes the
+                     triangulation invalid. */
+        };
     private:
         std::vector<NVertexEmbedding> embeddings_;
             /**< A list of descriptors telling how this vertex forms a part of
@@ -187,9 +206,8 @@ class REGINA_API NVertex : public ShareableObject, public NMarkedElement {
         NBoundaryComponent* boundaryComponent_;
             /**< The boundary component that this vertex is a part of,
                  or 0 if this vertex is internal. */
-        int link_;
-            /**< Specifies the link of the vertex according to one of the
-                 predefined vertex link constants in NVertex. */
+        LinkType link_;
+            /**< A broad categorisation of the topology of the vertex link. */
         bool linkOrientable_;
             /**< Specifies whether the vertex link is orientable. */
         long linkEulerChar_;
@@ -287,15 +305,17 @@ class REGINA_API NVertex : public ShareableObject, public NMarkedElement {
         unsigned long getDegree() const;
 
         /**
-         * Returns a description of the link of the vertex.
+         * Returns a broad categorisation of the link of the vertex.
+         * This considers topological information only, not the
+         * combinatorics of how the link is triangulated.
          *
          * This routine does not require a full triangulation of the
          * vertex link, and so can be much faster than analysing the
          * result of buildLink().
          *
-         * @return one of the predefined link constants in NVertex.
+         * @return a broad categorisation of the vertex link.
          */
-        int getLink() const;
+        LinkType getLink() const;
 
         /**
          * Returns a full 2-manifold triangulation describing
@@ -519,7 +539,7 @@ inline unsigned long NVertex::getDegree() const {
     return embeddings_.size();
 }
 
-inline int NVertex::getLink() const {
+inline NVertex::LinkType NVertex::getLink() const {
     return link_;
 }
 

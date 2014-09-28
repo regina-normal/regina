@@ -33,6 +33,13 @@ Version 4.97  [ (under development) ]
             - New events childToBeRenamed(), childWasRenamed().
         Class NSurfaceFilterProperties:
             - New set-based routine setECs().
+        Class NTriangle:
+            - Added a new Type enumeration, which encapsulates (and replaces)
+              the old triangle type constants.  Also added a new type
+              constant UNKNOWN_TYPE.
+        Class NVertex:
+            - Added a new LinkType enumeration, which encapsulates (and
+              replaces) the old link type constants.
         Routine open():
             - Added a variant that takes an input stream (as opposed to
               a filename).

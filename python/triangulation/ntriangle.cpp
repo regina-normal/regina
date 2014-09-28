@@ -90,6 +90,18 @@ void addNTriangle() {
             .def("getEdgeMapping", &NTriangle::getEdgeMapping)
         ;
 
+        enum_<regina::NTriangle::Type>("Type")
+            .value("UNKNOWN_TYPE", regina::NTriangle::UNKNOWN_TYPE)
+            .value("TRIANGLE", regina::NTriangle::TRIANGLE)
+            .value("SCARF", regina::NTriangle::SCARF)
+            .value("PARACHUTE", regina::NTriangle::PARACHUTE)
+            .value("CONE", regina::NTriangle::CONE)
+            .value("MOBIUS", regina::NTriangle::MOBIUS)
+            .value("HORN", regina::NTriangle::HORN)
+            .value("DUNCEHAT", regina::NTriangle::DUNCEHAT)
+            .value("L31", regina::NTriangle::L31)
+            ;
+
         s.attr("TRIANGLE") = NTriangle::TRIANGLE;
         s.attr("SCARF") = NTriangle::SCARF;
         s.attr("PARACHUTE") = NTriangle::PARACHUTE;
