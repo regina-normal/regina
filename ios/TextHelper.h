@@ -38,7 +38,7 @@
 @interface TextHelper : NSObject
 
 /**
- * Renders the given text in a dark goldenrod font.
+ * Renders the given text in a brown font.
  */
 + (NSAttributedString*)markedString:(NSString*)text;
 
