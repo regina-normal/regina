@@ -32,9 +32,15 @@
 
 #import "TextHelper.h"
 
+static UIColor* darkGoldenrod = [UIColor colorWithRed:(0xB8 / 256.0) green:(0x86 / 256.0) blue:(0x0B / 256.0) alpha:1.0];
 static UIColor* badColour = [UIColor colorWithRed:0.5 green:0.0 blue:0.0 alpha:1.0];
 
 @implementation TextHelper
+
++ (NSAttributedString *)markedString:(NSString *)text
+{
+    return [[NSAttributedString alloc] initWithString:text attributes:@{NSForegroundColorAttributeName: darkGoldenrod}];
+}
 
 + (NSAttributedString *)badString:(NSString *)text
 {

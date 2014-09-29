@@ -38,6 +38,11 @@
 @interface TextHelper : NSObject
 
 /**
+ * Renders the given text in a dark goldenrod font.
+ */
++ (NSAttributedString*)markedString:(NSString*)text;
+
+/**
  * Renders the given text in a dark red colour.
  */
 + (NSAttributedString*)badString:(NSString*)text;
