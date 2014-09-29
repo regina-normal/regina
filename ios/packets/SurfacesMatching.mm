@@ -38,7 +38,6 @@
 #import "surfaces/nnormalsurfacelist.h"
 #import "triangulation/ntriangulation.h"
 
-// TODO: Listen on triangulation rename.  For all surface tabs, actually.
 // TODO: Offer a "compact view".
 // TODO: Make a base clase for dealing with MDSpreadView.
 
@@ -56,30 +55,15 @@ static UIFont* headerFont = [UIFont boldSystemFontOfSize:14];
     CGFloat width, height;
     CGFloat widthHeader;
 }
-@property (weak, nonatomic) IBOutlet UILabel *header;
-@property (weak, nonatomic) IBOutlet UILabel *coords;
-@property (weak, nonatomic) IBOutlet UIButton *tri;
 @property (weak, nonatomic) IBOutlet MDSpreadView *grid;
-
-@property (strong, nonatomic) SurfacesViewController* viewer;
-@property (assign, nonatomic) regina::NNormalSurfaceList* packet;
 @property (assign, nonatomic) regina::NMatrixInt* matrix;
 @end
 
 @implementation SurfacesMatching
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    self.viewer = static_cast<SurfacesViewController*>(self.parentViewController);
-}
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-
-    self.packet = self.viewer.packet;
-    [self.viewer updateHeader:self.header coords:self.coords tri:self.tri];
 
     delete self.matrix;
     self.matrix = self.packet->recreateMatchingEquations();

@@ -30,32 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#import "SurfacesViewController.h"
 #import "SurfacesSummary.h"
-#import "triangulation/ntriangulation.h"
-
-@interface SurfacesSummary ()
-@property (weak, nonatomic) IBOutlet UILabel *header;
-@property (weak, nonatomic) IBOutlet UILabel *coords;
-@property (weak, nonatomic) IBOutlet UIButton *tri;
-
-@property (strong, nonatomic) SurfacesViewController* viewer;
-@property (assign, nonatomic) regina::NNormalSurfaceList* packet;
-@end
 
 @implementation SurfacesSummary
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    self.viewer = static_cast<SurfacesViewController*>(self.parentViewController);
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    self.packet = self.viewer.packet;
-
-    [self.viewer updateHeader:self.header coords:self.coords tri:self.tri];
-}
 
 @end

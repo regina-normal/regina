@@ -43,3 +43,10 @@ namespace regina {
 - (void)updateHeader:(UILabel*)summary coords:(UILabel*)coords tri:(UIButton*)tri;
 
 @end
+
+@interface SurfacesTab : UIViewController <PacketViewer>
+
+@property (strong, nonatomic) SurfacesViewController* viewer;
+@property (assign, nonatomic) regina::NNormalSurfaceList* packet;
+
+@end

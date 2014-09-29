@@ -30,9 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#import <UIKit/UIKit.h>
-#import "PacketViewer.h"
+#import "SurfacesViewController.h"
 
-@interface SurfacesSummary : UIViewController <PacketViewer>
-
+@interface SurfacesSummary : SurfacesTab
 @end

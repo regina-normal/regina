@@ -35,6 +35,8 @@
 #import "surfaces/nnormalsurfacelist.h"
 #import "triangulation/ntriangulation.h"
 
+#pragma mark - Surfaces view controller
+
 @implementation SurfacesViewController
 
 // TODO: Listen for renames on triangulation.
@@ -102,6 +104,48 @@
     if (triName.length == 0)
         triName = @"(Unnamed)";
     [button setTitle:triName forState:UIControlStateNormal];
+}
+
+@end
+
+#pragma mark - Surfaces tab
+
+@interface SurfacesTab () <PacketDelegate> {
+    PacketListenerIOS* _triListener;
+}
+@property (weak, nonatomic) IBOutlet UILabel *header;
+@property (weak, nonatomic) IBOutlet UILabel *coords;
+@property (weak, nonatomic) IBOutlet UIButton *tri;
+@end
+
+@implementation SurfacesTab
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    self.viewer = static_cast<SurfacesViewController*>(self.parentViewController);
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
+    self.packet = self.viewer.packet;
+    [self.viewer updateHeader:self.header coords:self.coords tri:self.tri];
+
+    [_triListener permanentlyUnlisten];
+    _triListener = [PacketListenerIOS listenerWithPacket:self.packet->getTriangulation() delegate:self listenChildren:NO];
+}
+
+- (void)dealloc
+{
+    [_triListener permanentlyUnlisten];
+}
+
+- (void)packetWasRenamed:(regina::NPacket *)packet
+{
+    if (packet == self.packet->getTriangulation())
+        [self.viewer updateTriangulationButton:self.tri];
 }
 
 @end
