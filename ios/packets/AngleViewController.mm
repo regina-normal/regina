@@ -34,14 +34,10 @@
 #import "MDSpreadViewClasses.h"
 #import "PacketTreeController.h"
 #import "ReginaHelper.h"
+#import "TextHelper.h"
 #import "angle/nanglestructure.h"
 #import "angle/nanglestructurelist.h"
 #import "triangulation/ntriangulation.h"
-
-// TODO: Restore packet listener.
-
-static UIColor* yesColour = [UIColor colorWithRed:0.0 green:0.5 blue:0.0 alpha:1.0];
-static UIColor* noColour = [UIColor colorWithRed:0.5 green:0.0 blue:0.0 alpha:1.0];
 
 // These fonts are hard-coded into the MDSpreadView classes.
 // Replicate them here so we can compute cell sizes.
@@ -92,20 +88,11 @@ static UIFont* cellFont = [UIFont systemFontOfSize:16];
             self.countAndType.text = [NSString stringWithFormat:@"%ld vertex angle structures", count];
     }
 
-    NSAttributedString* strictText = (self.packet->spansStrict() ?
-                                      [[NSAttributedString alloc]
-                                       initWithString:@"Strict"
-                                       attributes:@{NSForegroundColorAttributeName: yesColour}] :
-                                      [[NSAttributedString alloc]
-                                       initWithString:@"No strict"
-                                       attributes:@{NSForegroundColorAttributeName: noColour}]);
-    NSAttributedString* tautText = (self.packet->spansTaut() ?
-                                    [[NSAttributedString alloc]
-                                     initWithString:@"Taut"
-                                     attributes:@{NSForegroundColorAttributeName: yesColour}] :
-                                    [[NSAttributedString alloc]
-                                     initWithString:@"No taut"
-                                     attributes:@{NSForegroundColorAttributeName: noColour}]);
+    BOOL spansStrict = self.packet->spansStrict();
+    NSAttributedString* strictText = [TextHelper yesNoString:(spansStrict ? @"Strict" : @"No strict") yesNo:spansStrict];
+
+    BOOL spansTaut = self.packet->spansTaut();
+    NSAttributedString* tautText = [TextHelper yesNoString:(spansTaut ? @"Taut" : @"No taut") yesNo:spansTaut];
 
     NSMutableAttributedString* spanText = [[NSMutableAttributedString alloc] initWithString:@"Span includes: "];
     [spanText appendAttributedString:strictText];
