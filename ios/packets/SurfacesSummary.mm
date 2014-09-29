@@ -32,6 +32,43 @@
 
 #import "SurfacesSummary.h"
 
+@interface SurfacesSummary () <UITableViewDataSource>
+@property (weak, nonatomic) IBOutlet UITableView *table;
+@end
+
 @implementation SurfacesSummary
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.table.dataSource = self;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 1;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 3;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    switch (section) {
+        case 0: return @"Closed surfaces";
+        case 1: return @"Bounded surfaces";
+        case 2: return @"Spun (non-compact) surfaces";
+    }
+    return @"";
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Count" forIndexPath:indexPath];
+    cell.textLabel.text = @"χ = TODO";
+    return cell;
+}
 
 @end
