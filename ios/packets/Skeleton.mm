@@ -35,8 +35,6 @@
 #import "TextHelper.h"
 #import "TextPopover.h"
 
-// TODO: Tab-based viewers, ios7: skeleton tables run under tabs after switching between tabs
-// TODO: Tab-based viewers, ios7: extra vertical space up top
 // TODO: ios7: popover broken on long press
 
 @implementation SkeletonHeaderCell
