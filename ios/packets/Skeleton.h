@@ -32,6 +32,13 @@
 
 #import <UIKit/UIKit.h>
 
+@interface SkeletonHeaderCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UILabel *index;
+@property (weak, nonatomic) IBOutlet UILabel *data0;
+@property (weak, nonatomic) IBOutlet UILabel *data1;
+@property (weak, nonatomic) IBOutlet UILabel *data2;
+@end
+
 @interface SkeletonCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *index;
 @property (weak, nonatomic) IBOutlet UILabel *data0;
@@ -40,4 +47,5 @@
 @end
 
 @interface SkeletonViewer : UIViewController
+@property (weak, nonatomic) IBOutlet UITableView *details;
 @end

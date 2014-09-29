@@ -32,17 +32,10 @@
 
 #import "Dim2TriSkeleton.h"
 #import "Dim2TriangulationViewController.h"
-#import "Skeleton.h"
 #import "TextHelper.h"
 #import "dim2/dim2triangulation.h"
 
 #define KEY_LAST_DIM2_SKELETON_TYPE @"ViewDim2SkeletonWhich"
-
-// TODO: Allow cells to spread over multiple lines.
-// TODO: Augh.  In ios7 (not ios8), skeleton tables run under tabs after switching between tabs
-// TODO: Vertical space in ios7
-
-#pragma mark - Dim2Triangulation skeleton viewer
 
 @interface Dim2TriSkeleton () <UITableViewDataSource, UITableViewDelegate> {
     CGFloat headerHeight, fatHeaderHeight;
@@ -50,7 +43,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *summary;
 @property (weak, nonatomic) IBOutlet UILabel *fVector;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *viewWhich;
-@property (weak, nonatomic) IBOutlet UITableView *details;
 
 @property (strong, nonatomic) Dim2TriangulationViewController* viewer;
 @property (assign, nonatomic) regina::Dim2Triangulation* packet;

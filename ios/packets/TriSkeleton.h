@@ -32,7 +32,8 @@
 
 #import <UIKit/UIKit.h>
 #import "PacketViewer.h"
+#import "Skeleton.h"
 
-@interface TriSkeleton : UIViewController <PacketViewer>
+@interface TriSkeleton : SkeletonViewer <PacketViewer>
 
 @end

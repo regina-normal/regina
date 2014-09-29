@@ -30,7 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-#import "Skeleton.h"
 #import "TriangulationViewController.h"
 #import "TriSkeleton.h"
 #import "TextHelper.h"
@@ -38,19 +37,12 @@
 
 #define KEY_LAST_TRI_SKELETON_TYPE @"ViewTriSkeletonWhich"
 
-// TODO: Long press views full (overflowing) contents of cell.
-// TODO: Augh.  In ios7 (not ios8), skeleton tables run under tabs after switching between tabs
-// TODO: Vertical space in ios7
-
-#pragma mark - Triangulation skeleton viewer
-
 @interface TriSkeleton () <UITableViewDataSource, UITableViewDelegate> {
     CGFloat headerHeight, fatHeaderHeight;
 }
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UILabel *fVector;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *viewWhich;
-@property (weak, nonatomic) IBOutlet UITableView *details;
 
 @property (strong, nonatomic) TriangulationViewController* viewer;
 @property (assign, nonatomic) regina::NTriangulation* packet;
