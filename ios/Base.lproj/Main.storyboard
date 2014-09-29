@@ -2756,7 +2756,7 @@
         <!--Matching Equations-->
         <scene sceneID="O7L-99-Hf6">
             <objects>
-                <viewController id="EDU-Ge-aTy" sceneMemberID="viewController">
+                <viewController id="EDU-Ge-aTy" customClass="SurfacesMatching" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ddG-jC-Shx"/>
                         <viewControllerLayoutGuide type="bottom" id="Z7p-jk-Ly3"/>
@@ -2805,6 +2805,9 @@
                                     <constraint firstAttribute="height" constant="10" id="NCS-cI-KQp"/>
                                 </constraints>
                             </view>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7gJ-sx-Tpc" customClass="MDSpreadView">
+                                <rect key="frame" x="20" y="169" width="663" height="530"/>
+                            </scrollView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -2815,6 +2818,10 @@
                             <constraint firstAttribute="trailing" secondItem="Iy6-m4-zK7" secondAttribute="trailing" constant="20" id="OKY-1b-CcY"/>
                             <constraint firstItem="Iy6-m4-zK7" firstAttribute="top" secondItem="mYQ-43-28I" secondAttribute="bottom" constant="8" id="U0M-Ys-EPT"/>
                             <constraint firstItem="3rf-iT-gr6" firstAttribute="width" secondItem="eCg-c8-5nC" secondAttribute="width" id="UH7-9u-Yju"/>
+                            <constraint firstItem="7gJ-sx-Tpc" firstAttribute="leading" secondItem="nUi-Kz-scK" secondAttribute="leading" constant="20" id="UYN-ay-Js9"/>
+                            <constraint firstAttribute="trailing" secondItem="7gJ-sx-Tpc" secondAttribute="trailing" constant="20" id="b8l-B6-Cof"/>
+                            <constraint firstItem="7gJ-sx-Tpc" firstAttribute="top" secondItem="RJo-fL-gzg" secondAttribute="bottom" constant="20" id="d72-rm-1fM"/>
+                            <constraint firstItem="Z7p-jk-Ly3" firstAttribute="top" secondItem="7gJ-sx-Tpc" secondAttribute="bottom" constant="20" id="dCu-gH-fg9"/>
                             <constraint firstItem="3rf-iT-gr6" firstAttribute="leading" secondItem="RJo-fL-gzg" secondAttribute="trailing" constant="8" id="fs7-du-jEJ"/>
                             <constraint firstItem="eCg-c8-5nC" firstAttribute="leading" secondItem="nUi-Kz-scK" secondAttribute="leading" constant="20" id="icF-B1-dQJ"/>
                             <constraint firstAttribute="trailing" secondItem="mYQ-43-28I" secondAttribute="trailing" constant="20" id="liC-uk-4UP"/>
@@ -2827,6 +2834,12 @@
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Matching Equations" image="Tab-Matching" id="j5J-yp-9E3"/>
+                    <connections>
+                        <outlet property="coords" destination="Iy6-m4-zK7" id="7yw-Nz-2vM"/>
+                        <outlet property="grid" destination="7gJ-sx-Tpc" id="C3b-NM-iri"/>
+                        <outlet property="header" destination="mYQ-43-28I" id="LSh-Ge-Nmr"/>
+                        <outlet property="tri" destination="RJo-fL-gzg" id="88K-Gf-E9B"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BBJ-qy-77E" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

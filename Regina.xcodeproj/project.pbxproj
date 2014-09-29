@@ -977,6 +977,7 @@
 		058637F3181DBC5900E95307 /* syntax in Resources */ = {isa = PBXBuildFile; fileRef = 058637F2181DBC5800E95307 /* syntax */; };
 		058637F5181DBCE100E95307 /* pylib in Resources */ = {isa = PBXBuildFile; fileRef = 058637F4181DBCE100E95307 /* pylib */; };
 		058641F019D77D820019E056 /* TextHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058641EF19D77D820019E056 /* TextHelper.mm */; };
+		0586426B19D92D550019E056 /* SurfacesMatching.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0586426A19D92D550019E056 /* SurfacesMatching.mm */; };
 		0588F1181808D43B006BDC79 /* packetregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0588F1161808D43B006BDC79 /* packetregistry-impl.h */; };
 		0588F1191808D43B006BDC79 /* packettype.h in Headers */ = {isa = PBXBuildFile; fileRef = 0588F1171808D43B006BDC79 /* packettype.h */; };
 		0589FAC3181484860064CD57 /* TriGluings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0589FAC2181484860064CD57 /* TriGluings.mm */; };
@@ -2125,6 +2126,8 @@
 		058637F4181DBCE100E95307 /* pylib */ = {isa = PBXFileReference; lastKnownFileType = folder; path = pylib; sourceTree = SOURCE_ROOT; };
 		058641EE19D77D820019E056 /* TextHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextHelper.h; sourceTree = "<group>"; };
 		058641EF19D77D820019E056 /* TextHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TextHelper.mm; sourceTree = "<group>"; };
+		0586426919D92D550019E056 /* SurfacesMatching.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurfacesMatching.h; sourceTree = "<group>"; };
+		0586426A19D92D550019E056 /* SurfacesMatching.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SurfacesMatching.mm; sourceTree = "<group>"; };
 		0588F1161808D43B006BDC79 /* packetregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "packetregistry-impl.h"; sourceTree = "<group>"; };
 		0588F1171808D43B006BDC79 /* packettype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packettype.h; sourceTree = "<group>"; };
 		0589FAC1181484860064CD57 /* TriGluings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriGluings.h; sourceTree = "<group>"; };
@@ -2396,6 +2399,8 @@
 				058FADBF19D5074C0001B5B5 /* SnapPeaSkeleton.mm */,
 				058FADA519D388920001B5B5 /* SurfacesViewController.h */,
 				058FADA619D388920001B5B5 /* SurfacesViewController.mm */,
+				0586426919D92D550019E056 /* SurfacesMatching.h */,
+				0586426A19D92D550019E056 /* SurfacesMatching.mm */,
 				058FADC119D508070001B5B5 /* SurfacesSummary.h */,
 				058FADC219D508070001B5B5 /* SurfacesSummary.mm */,
 				050313BF1812DB06007F0CBE /* TextViewController.h */,
@@ -4539,6 +4544,7 @@
 				052FA1DC1806129B00FAE4DF /* nnormalsurfacelist.cpp in Sources */,
 				052FA1CB1806129B00FAE4DF /* nsnappedball.cpp in Sources */,
 				052FA1FF1806129B00FAE4DF /* nvertex.cpp in Sources */,
+				0586426B19D92D550019E056 /* SurfacesMatching.mm in Sources */,
 				052FA1AE1806129B00FAE4DF /* nprogresstypes.cpp in Sources */,
 				052FA23B180612DD00FAE4DF /* unix_file_io.c in Sources */,
 				052FA1D41806129B00FAE4DF /* enumerator.cpp in Sources */,
