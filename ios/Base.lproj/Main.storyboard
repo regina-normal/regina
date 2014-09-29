@@ -2538,9 +2538,9 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="index" destination="bil-9h-qi0" id="3bk-Bd-msl"/>
-                                            <outlet property="data1" destination="eT4-Jd-WsF" id="GLu-zJ-YUf"/>
                                             <outlet property="data0" destination="e5o-3l-fWY" id="u2L-GH-Cy7"/>
+                                            <outlet property="data1" destination="eT4-Jd-WsF" id="GLu-zJ-YUf"/>
+                                            <outlet property="index" destination="bil-9h-qi0" id="3bk-Bd-msl"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
