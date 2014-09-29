@@ -4583,7 +4583,7 @@
         <!--Script View Controller-->
         <scene sceneID="7W8-x3-d0m">
             <objects>
-                <viewController storyboardIdentifier="viewScript" id="hwU-kY-f7E" customClass="ScriptViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="viewScript" automaticallyAdjustsScrollViewInsets="NO" id="hwU-kY-f7E" customClass="ScriptViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Vaz-9H-NUx"/>
                         <viewControllerLayoutGuide type="bottom" id="Grq-iZ-1oQ"/>
