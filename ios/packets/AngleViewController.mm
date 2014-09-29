@@ -34,20 +34,11 @@
 #import "MDSpreadViewClasses.h"
 #import "PacketTreeController.h"
 #import "ReginaHelper.h"
+#import "SpreadHelper.h"
 #import "TextHelper.h"
 #import "angle/nanglestructure.h"
 #import "angle/nanglestructurelist.h"
 #import "triangulation/ntriangulation.h"
-
-// These fonts are hard-coded into the MDSpreadView classes.
-// Replicate them here so we can compute cell sizes.
-static UIFont* headerFont = [UIFont boldSystemFontOfSize:14];
-static UIFont* cellFont = [UIFont systemFontOfSize:16];
-
-// MDSpreadViewHeaderCell.m uses a horizontal padding of 28, assuming no sort indicator.
-// Both the header and cell classes use a vertical padding of 3.
-#define CELL_WIDTH_PADDING 32
-#define CELL_HEIGHT_PADDING 6
 
 #pragma mark - Angle structure view controller
 
@@ -115,15 +106,15 @@ static UIFont* cellFont = [UIFont systemFontOfSize:16];
     NSString* text;
 
     text = [NSString stringWithFormat:@"%ld.", self.packet->getNumberOfStructures() - 1];
-    widthHeader = CELL_WIDTH_PADDING + [text sizeWithAttributes:@{NSFontAttributeName: headerFont}].width;
+    widthHeader = MD_CELL_WIDTH_PADDING + [SpreadHelper headerSize:text].width;
 
     text = @"Veering";
-    CGSize size = [text sizeWithAttributes:@{NSFontAttributeName: cellFont}];
-    widthType = CELL_WIDTH_PADDING + size.width;
-    height = CELL_HEIGHT_PADDING + size.height;
+    CGSize size = [SpreadHelper cellSize:text];
+    widthType = MD_CELL_WIDTH_PADDING + size.width;
+    height = MD_CELL_HEIGHT_PADDING + size.height;
 
     text = [NSString stringWithFormat:@"%ld: 01/23", self.packet->getTriangulation()->getNumberOfTetrahedra() - 1];
-    widthAngle = CELL_WIDTH_PADDING + [text sizeWithAttributes:@{NSFontAttributeName: headerFont}].width;
+    widthAngle = MD_CELL_WIDTH_PADDING + [SpreadHelper headerSize:text].width;
 }
 
 - (void)dealloc

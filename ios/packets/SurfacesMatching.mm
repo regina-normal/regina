@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #import "Coordinates.h"
+#import "SpreadHelper.h"
 #import "SurfacesMatching.h"
 #import "SurfacesViewController.h"
 #import "MDSpreadViewClasses.h"
@@ -39,21 +40,6 @@
 #import "triangulation/ntriangulation.h"
 
 #define KEY_SURFACES_MATCHING_COMPACT @"SurfacesMatchingCompact"
-
-// TODO: Make a base clase for dealing with MDSpreadView.
-
-// These fonts are hard-coded into the MDSpreadView classes.
-// Replicate them here so we can compute cell sizes.
-static UIFont* cellFont = [UIFont systemFontOfSize:16];
-static UIFont* headerFont = [UIFont boldSystemFontOfSize:14];
-
-// MDSpreadViewHeaderCell.m uses a horizontal padding of 28, assuming no sort indicator.
-// Both the header and cell classes use a vertical padding of 3.
-#define CELL_WIDTH_PADDING 32
-#define CELL_HEIGHT_PADDING 6
-
-#define CELL_TIGHT_WIDTH_PADDING 4
-#define CELL_TIGHT_HEIGHT_PADDING 2
 
 @interface SurfacesMatching () <MDSpreadViewDataSource, MDSpreadViewDelegate, PacketDelegate> {
     CGFloat width, height;
@@ -91,15 +77,15 @@ static UIFont* headerFont = [UIFont boldSystemFontOfSize:14];
     NSString* text;
 
     text = [NSString stringWithFormat:@"%ld.", self.matrix->rows() - 1];
-    widthHeader = CELL_WIDTH_PADDING + [text sizeWithAttributes:@{NSFontAttributeName: headerFont}].width;
+    widthHeader = MD_CELL_WIDTH_PADDING + [SpreadHelper headerSize:text].width;
 
     text = (self.compact.on ? @"-0" :
             [Coordinates columnName:self.packet->coords()
                          whichCoord:self.matrix->columns()-1
                                 tri:self.packet->getTriangulation()]);
-    CGSize size = [text sizeWithAttributes:@{NSFontAttributeName: cellFont}];
-    width = (self.compact.on ? CELL_TIGHT_WIDTH_PADDING : CELL_WIDTH_PADDING) + size.width;
-    height = (self.compact.on ? CELL_TIGHT_HEIGHT_PADDING : CELL_HEIGHT_PADDING) + size.height;
+    CGSize size = [SpreadHelper cellSize:text];
+    width = (self.compact.on ? MD_CELL_TIGHT_WIDTH_PADDING : MD_CELL_WIDTH_PADDING) + size.width;
+    height = (self.compact.on ? MD_CELL_TIGHT_HEIGHT_PADDING : MD_CELL_HEIGHT_PADDING) + size.height;
 }
 
 - (IBAction)compactChanged:(id)sender {

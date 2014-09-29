@@ -978,6 +978,7 @@
 		058637F5181DBCE100E95307 /* pylib in Resources */ = {isa = PBXBuildFile; fileRef = 058637F4181DBCE100E95307 /* pylib */; };
 		058641F019D77D820019E056 /* TextHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058641EF19D77D820019E056 /* TextHelper.mm */; };
 		0586426B19D92D550019E056 /* SurfacesMatching.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0586426A19D92D550019E056 /* SurfacesMatching.mm */; };
+		0586426E19D982D00019E056 /* SpreadHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0586426D19D982D00019E056 /* SpreadHelper.mm */; };
 		0588F1181808D43B006BDC79 /* packetregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0588F1161808D43B006BDC79 /* packetregistry-impl.h */; };
 		0588F1191808D43B006BDC79 /* packettype.h in Headers */ = {isa = PBXBuildFile; fileRef = 0588F1171808D43B006BDC79 /* packettype.h */; };
 		0589FAC3181484860064CD57 /* TriGluings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0589FAC2181484860064CD57 /* TriGluings.mm */; };
@@ -2128,6 +2129,8 @@
 		058641EF19D77D820019E056 /* TextHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TextHelper.mm; sourceTree = "<group>"; };
 		0586426919D92D550019E056 /* SurfacesMatching.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurfacesMatching.h; sourceTree = "<group>"; };
 		0586426A19D92D550019E056 /* SurfacesMatching.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SurfacesMatching.mm; sourceTree = "<group>"; };
+		0586426C19D982CF0019E056 /* SpreadHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpreadHelper.h; sourceTree = "<group>"; };
+		0586426D19D982D00019E056 /* SpreadHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SpreadHelper.mm; sourceTree = "<group>"; };
 		0588F1161808D43B006BDC79 /* packetregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "packetregistry-impl.h"; sourceTree = "<group>"; };
 		0588F1171808D43B006BDC79 /* packettype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packettype.h; sourceTree = "<group>"; };
 		0589FAC1181484860064CD57 /* TriGluings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriGluings.h; sourceTree = "<group>"; };
@@ -3389,6 +3392,8 @@
 				05D1C16E19C6542700CF92F2 /* ReginaHelper.mm */,
 				05FEA07D19C2B96000A31924 /* PacketPicker.h */,
 				05FEA07E19C2B96000A31924 /* PacketPicker.mm */,
+				0586426C19D982CF0019E056 /* SpreadHelper.h */,
+				0586426D19D982D00019E056 /* SpreadHelper.mm */,
 				055D6C6519B6F10F0062F001 /* TempFile.h */,
 				055D6C6619B6F10F0062F001 /* TempFile.m */,
 				058641EE19D77D820019E056 /* TextHelper.h */,
@@ -4441,6 +4446,7 @@
 				052FA1931806129B00FAE4DF /* nmanifold.cpp in Sources */,
 				052FA1E31806129B00FAE4DF /* nsstandard.cpp in Sources */,
 				052FA1E61806129B00FAE4DF /* nxmlfilterreader.cpp in Sources */,
+				0586426E19D982D00019E056 /* SpreadHelper.mm in Sources */,
 				05BEB0C119CCE0B0006AB2C8 /* UIView+Toast.m in Sources */,
 				052FA1811806129B00FAE4DF /* ntypetrie.cpp in Sources */,
 				05A73C8019B2EE680099C617 /* angle.cpp in Sources */,
