@@ -41,6 +41,9 @@
 
 #define KEY_SURFACES_MATCHING_COMPACT @"SurfacesMatchingCompact"
 
+static NSString *compactCellID = @"_ReginaCompactSpreadCell";
+static NSString *regularCellID = @"_ReginaRegularSpreadCell";
+
 @interface SurfacesMatching () <MDSpreadViewDataSource, MDSpreadViewDelegate, PacketDelegate> {
     CGFloat width, height;
     CGFloat widthHeader;
@@ -109,7 +112,10 @@
 
 - (id)spreadView:(MDSpreadView *)aSpreadView titleForHeaderInRowSection:(NSInteger)section forColumnAtIndexPath:(MDIndexPath *)columnPath
 {
-    return [Coordinates columnName:self.packet->coords() whichCoord:columnPath.column tri:self.packet->getTriangulation()];
+    return (self.compact.on ? @"" :
+            [Coordinates columnName:self.packet->coords()
+                         whichCoord:columnPath.column
+                                tri:self.packet->getTriangulation()]);
 }
 
 - (id)spreadView:(MDSpreadView *)aSpreadView titleForHeaderInColumnSection:(NSInteger)section forRowAtIndexPath:(MDIndexPath *)rowPath
@@ -126,6 +132,25 @@
         return @(entry.stringValue().c_str());
 }
 
+- (MDSpreadViewCell *)spreadView:(MDSpreadView *)aSpreadView cellForRowAtIndexPath:(MDIndexPath *)rowPath forColumnAtIndexPath:(MDIndexPath *)columnPath
+{
+    MDSpreadViewCell* cell;
+    if (self.compact.on) {
+        cell = [aSpreadView dequeueReusableCellWithIdentifier:compactCellID];
+        if (! cell)
+            cell = [[CompactSpreadViewCell alloc] initWithStyle:MDSpreadViewCellStyleDefault
+                                                reuseIdentifier:compactCellID];
+    } else {
+        cell = [aSpreadView dequeueReusableCellWithIdentifier:regularCellID];
+        if (! cell)
+            cell = [[MDSpreadViewCell alloc] initWithStyle:MDSpreadViewCellStyleDefault
+                                           reuseIdentifier:regularCellID];
+    }
+    cell.objectValue = [self spreadView:aSpreadView objectValueForRowAtIndexPath:rowPath forColumnAtIndexPath:columnPath];
+    cell.textLabel.textAlignment = NSTextAlignmentRight;
+    return cell;
+}
+
 #pragma mark - MDSpreadView delegate
 
 - (CGFloat)spreadView:(MDSpreadView *)aSpreadView widthForColumnHeaderInSection:(NSInteger)columnSection
@@ -136,6 +161,11 @@
 - (CGFloat)spreadView:(MDSpreadView *)aSpreadView widthForColumnAtIndexPath:(MDIndexPath *)indexPath
 {
     return width;
+}
+
+- (CGFloat)spreadView:(MDSpreadView *)aSpreadView heightForRowHeaderInSection:(NSInteger)rowSection
+{
+    return (self.compact.on ? 1 : height);
 }
 
 - (CGFloat)spreadView:(MDSpreadView *)aSpreadView heightForRowAtIndexPath:(MDIndexPath *)indexPath

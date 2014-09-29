@@ -30,14 +30,14 @@
  *                                                                        *
  **************************************************************************/
 
-#import <Foundation/Foundation.h>
+#import "MDSpreadView.h"
 
 // MDSpreadViewHeaderCell.m uses a horizontal padding of 28, assuming no sort indicator.
 // Both the header and cell classes use a vertical padding of 3.
 #define MD_CELL_WIDTH_PADDING 32
 #define MD_CELL_HEIGHT_PADDING 6
 
-#define MD_CELL_TIGHT_WIDTH_PADDING 4
+#define MD_CELL_TIGHT_WIDTH_PADDING 6
 #define MD_CELL_TIGHT_HEIGHT_PADDING 2
 
 /**
@@ -48,4 +48,7 @@
 + (CGSize)cellSize:(NSString*)text;
 + (CGSize)headerSize:(NSString*)text;
 
+@end
+
+@interface CompactSpreadViewCell : MDSpreadViewCell
 @end

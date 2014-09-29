@@ -50,3 +50,19 @@ static UIFont* headerFont = [UIFont boldSystemFontOfSize:14];
 }
 
 @end
+
+@interface CompactSpreadViewCell ()
+@end
+
+@implementation CompactSpreadViewCell
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    self.textLabel.frame = CGRectMake((MD_CELL_TIGHT_WIDTH_PADDING / 2),
+                                      (MD_CELL_TIGHT_HEIGHT_PADDING / 2),
+                                      self.bounds.size.width - (MD_CELL_TIGHT_WIDTH_PADDING / 2),
+                                      self.bounds.size.height - (MD_CELL_TIGHT_HEIGHT_PADDING / 2));
+}
+
+@end
