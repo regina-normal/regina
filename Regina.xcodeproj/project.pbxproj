@@ -811,6 +811,7 @@
 		0543AEC41811E12A002758F8 /* reginapref.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5EE1811D920002CC2AE /* reginapref.h */; };
 		0543AEC51811E12A002758F8 /* reginaprefset.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5F01811D920002CC2AE /* reginaprefset.h */; };
 		0543AEC61811E12A002758F8 /* shortrunner.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5F61811D920002CC2AE /* shortrunner.h */; };
+		054535B919D8EA7100BED767 /* TextPopover.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054535B819D8EA7100BED767 /* TextPopover.mm */; };
 		054BC4C319B4A726005E01A0 /* closed-hyp-census-full.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9E19B499DC00044C1B /* closed-hyp-census-full.zsig */; };
 		054BC4C419B4A726005E01A0 /* closed-nor-census-11.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9F19B499DC00044C1B /* closed-nor-census-11.zsig */; };
 		054BC4C519B4A726005E01A0 /* closed-or-census-11.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABEA019B499DC00044C1B /* closed-or-census-11.zsig */; };
@@ -1861,6 +1862,8 @@
 		052FA240180613A900FAE4DF /* libgmpxx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmpxx.framework; path = ../../Library/Frameworks/libgmpxx.framework; sourceTree = "<group>"; };
 		053E5B5519B3D79100166778 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
 		0543AEC71811E2AD002758F8 /* Regina.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Regina.entitlements; sourceTree = "<group>"; };
+		054535B719D8EA7100BED767 /* TextPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextPopover.h; sourceTree = "<group>"; };
+		054535B819D8EA7100BED767 /* TextPopover.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TextPopover.mm; sourceTree = "<group>"; };
 		054F7E27180B93770090B1F3 /* WelcomePopupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomePopupController.h; sourceTree = "<group>"; };
 		054F7E28180B93770090B1F3 /* WelcomePopupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomePopupController.m; sourceTree = "<group>"; };
 		054F7E2A180B96AC0090B1F3 /* welcome.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = welcome.html; sourceTree = "<group>"; };
@@ -3380,6 +3383,8 @@
 				055D6C6619B6F10F0062F001 /* TempFile.m */,
 				058641EE19D77D820019E056 /* TextHelper.h */,
 				058641EF19D77D820019E056 /* TextHelper.mm */,
+				054535B719D8EA7100BED767 /* TextPopover.h */,
+				054535B819D8EA7100BED767 /* TextPopover.mm */,
 				054F7E27180B93770090B1F3 /* WelcomePopupController.h */,
 				054F7E28180B93770090B1F3 /* WelcomePopupController.m */,
 				050313BE1812DAC0007F0CBE /* packets */,
@@ -4491,6 +4496,7 @@
 				052FA22D180612DD00FAE4DF /* o31_matrices.c in Sources */,
 				0503DCDB19B7E4F10085F3CC /* CensusListController.mm in Sources */,
 				052FA2001806129B00FAE4DF /* nxmltrireader.cpp in Sources */,
+				054535B919D8EA7100BED767 /* TextPopover.mm in Sources */,
 				052FA2061806129B00FAE4DF /* surfaces.cpp in Sources */,
 				05A73C9F19B2EF5A0099C617 /* homology.c in Sources */,
 				05D1C16F19C6542700CF92F2 /* ReginaHelper.mm in Sources */,
