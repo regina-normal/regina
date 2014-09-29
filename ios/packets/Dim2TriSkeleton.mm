@@ -32,6 +32,7 @@
 
 #import "Dim2TriSkeleton.h"
 #import "Dim2TriangulationViewController.h"
+#import "Skeleton.h"
 #import "TextHelper.h"
 #import "dim2/dim2triangulation.h"
 
@@ -40,18 +41,6 @@
 // TODO: Allow cells to spread over multiple lines.
 // TODO: Augh.  In ios7 (not ios8), skeleton tables run under tabs after switching between tabs
 // TODO: Vertical space in ios7
-
-#pragma mark - Table cell
-
-@interface Dim2SkeletonCell : UITableViewCell
-@property (weak, nonatomic) IBOutlet UILabel *index;
-@property (weak, nonatomic) IBOutlet UILabel *type;
-@property (weak, nonatomic) IBOutlet UILabel *size;
-@property (weak, nonatomic) IBOutlet UILabel *pieces;
-@end
-
-@implementation Dim2SkeletonCell
-@end
 
 #pragma mark - Dim2Triangulation skeleton viewer
 
@@ -148,19 +137,19 @@
         }
     }
 
-    Dim2SkeletonCell *cell;
+    SkeletonCell *cell;
     switch (self.viewWhich.selectedSegmentIndex) {
         case 0: /* vertices */
             if (self.packet->getNumberOfVertices() == 0) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Empty" forIndexPath:indexPath];
                 cell.index.text = @"No vertices";
-                cell.type.text = cell.size.text = cell.pieces.text = @"";
+                cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
                 regina::Dim2Vertex* v = self.packet->getVertex(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Vertex" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
-                cell.size.text = [NSString stringWithFormat:@"%ld", v->getDegree()];
-                cell.type.text = (v->isBoundary() ? @"Bdry" : @"Internal");
+                cell.data0.text = (v->isBoundary() ? @"Bdry" : @"Internal");
+                cell.data1.text = [NSString stringWithFormat:@"%ld", v->getDegree()];
 
                 NSMutableString* pieces = [NSMutableString string];
                 std::deque<regina::Dim2VertexEmbedding>::const_iterator it;
@@ -169,20 +158,20 @@
                                         item:[NSString stringWithFormat:@"%ld (%d)",
                                               self.packet->triangleIndex((*it).getTriangle()),
                                               (*it).getVertex()]];
-                cell.pieces.text = pieces;
+                cell.data2.text = pieces;
             }
             break;
         case 1: /* edges */
             if (self.packet->getNumberOfEdges() == 0) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Empty" forIndexPath:indexPath];
                 cell.index.text = @"No edges";
-                cell.type.text = cell.size.text = cell.pieces.text = @"";
+                cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
                 regina::Dim2Edge* e = self.packet->getEdge(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Edge" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
-                cell.size.text = [NSString stringWithFormat:@"%d", e->getNumberOfEmbeddings()];
-                cell.type.text = (e->isBoundary() ? @"Bdry" : @"Internal");
+                cell.data0.text = (e->isBoundary() ? @"Bdry" : @"Internal");
+                cell.data1.text = [NSString stringWithFormat:@"%d", e->getNumberOfEmbeddings()];
 
                 NSMutableString* pieces = [NSMutableString string];
                 for (unsigned i = 0; i < e->getNumberOfEmbeddings(); i++)
@@ -190,67 +179,63 @@
                                         item:[NSString stringWithFormat:@"%ld (%s)",
                                               self.packet->triangleIndex(e->getEmbedding(i).getTriangle()),
                                               e->getEmbedding(i).getVertices().trunc2().c_str()]];
-                cell.pieces.text = pieces;
+                cell.data2.text = pieces;
             }
             break;
         case 2: /* triangles */
             if (self.packet->getNumberOfTriangles() == 0) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Empty" forIndexPath:indexPath];
                 cell.index.text = @"No triangles";
-                cell.type.text = cell.pieces.text = @"";
+                cell.data0.text = cell.data1.text = @"";
             } else {
                 regina::Dim2Triangle *t = self.packet->getTriangle(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Triangle" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
 
-                cell.type.text = [NSString stringWithFormat:@"%ld, %ld, %ld",
+                cell.data0.text = [NSString stringWithFormat:@"%ld, %ld, %ld",
                                   t->getVertex(0)->markedIndex(),
                                   t->getVertex(1)->markedIndex(),
                                   t->getVertex(2)->markedIndex()];
 
-                cell.pieces.text = [NSString stringWithFormat:@"%ld, %ld, %ld",
-                                    t->getEdge(2)->markedIndex(),
-                                    t->getEdge(1)->markedIndex(),
-                                    t->getEdge(0)->markedIndex()];
+                cell.data1.text = [NSString stringWithFormat:@"%ld, %ld, %ld",
+                                   t->getEdge(2)->markedIndex(),
+                                   t->getEdge(1)->markedIndex(),
+                                   t->getEdge(0)->markedIndex()];
             }
             break;
         case 3: /* components */
             if (self.packet->getNumberOfComponents() == 0) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Empty" forIndexPath:indexPath];
                 cell.index.text = @"No components";
-                cell.type.text = cell.size.text = cell.pieces.text = @"";
-            } else if (self.packet->getNumberOfComponents() == 1) {
-                regina::Dim2Component* c = self.packet->getComponent(0);
-                cell = [tableView dequeueReusableCellWithIdentifier:@"Component" forIndexPath:indexPath];
-                cell.index.text = @"0.";
-                cell.size.text = [TextHelper countString:c->getNumberOfSimplices() singular:"triangle" plural:"triangles"];
-                cell.type.text = (c->isOrientable() ? @"Orbl" : @"Non-orbl");
-                cell.pieces.text = @"All triangles";
+                cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
                 regina::Dim2Component* c = self.packet->getComponent(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Component" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
-                cell.size.text = [TextHelper countString:c->getNumberOfSimplices() singular:"triangle" plural:"triangles"];
-                cell.type.text = (c->isOrientable() ? @"Orbl" : @"Non-orbl");
-
-                NSMutableString* pieces = [NSMutableString string];
-                for (unsigned long i = 0; i < c->getNumberOfTriangles(); ++i)
-                    [TextHelper appendToList:pieces
-                                        item:[NSString stringWithFormat:@"%ld",
-                                              self.packet->triangleIndex(c->getTriangle(i))]];
-                cell.pieces.text = pieces;
+                cell.data0.text = (c->isOrientable() ? @"Orbl" : @"Non-orbl");
+                cell.data1.text = [TextHelper countString:c->getNumberOfSimplices() singular:"triangle" plural:"triangles"];
+                if (self.packet->getNumberOfComponents() == 1) {
+                    cell.data2.text = @"All triangles";
+                } else {
+                    NSMutableString* pieces = [NSMutableString string];
+                    for (unsigned long i = 0; i < c->getNumberOfTriangles(); ++i)
+                        [TextHelper appendToList:pieces
+                                            item:[NSString stringWithFormat:@"%ld",
+                                                  self.packet->triangleIndex(c->getTriangle(i))]];
+                    cell.data2.text = pieces;
+                }
             }
             break;
         case 4: /* boundary components */
             if (self.packet->getNumberOfBoundaryComponents() == 0) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Empty" forIndexPath:indexPath];
                 cell.index.text = @"No boundary components";
-                cell.type.text = cell.size.text = cell.pieces.text = @"";
+                cell.data0.text = cell.data1.text = @"";
             } else {
                 regina::Dim2BoundaryComponent* b = self.packet->getBoundaryComponent(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Bdry" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
-                cell.size.text = [TextHelper countString:b->getNumberOfEdges() singular:"edge" plural:"edges"];
+                cell.data0.text = [TextHelper countString:b->getNumberOfEdges() singular:"edge" plural:"edges"];
 
                 NSMutableString* pieces = [NSMutableString string];
                 for (unsigned long i = 0; i < b->getNumberOfEdges(); ++i) {
@@ -260,7 +245,7 @@
                                               self.packet->triangleIndex(emb.getTriangle()),
                                               emb.getVertices().trunc2().c_str()]];
                 }
-                cell.pieces.text = pieces;
+                cell.data1.text = pieces;
             }
             break;
     }

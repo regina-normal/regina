@@ -1963,7 +1963,7 @@
                                 <rect key="frame" x="20" y="194" width="663" height="517"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Empty" id="fk8-9t-GQp" customClass="Dim2SkeletonCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Empty" id="fk8-9t-GQp" customClass="SkeletonCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fk8-9t-GQp" id="OJu-5C-RZf">
@@ -2042,7 +2042,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Vertex" id="Gvw-dC-hAv" customClass="Dim2SkeletonCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Vertex" id="Gvw-dC-hAv" customClass="SkeletonCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Gvw-dC-hAv" id="zGF-5a-888">
@@ -2095,10 +2095,10 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="data0" destination="th5-E3-0wy" id="adh-qe-8OE"/>
+                                            <outlet property="data1" destination="V9f-Yp-7dF" id="OpD-Ok-CrI"/>
+                                            <outlet property="data2" destination="BFZ-CG-86e" id="DcR-yW-1ar"/>
                                             <outlet property="index" destination="2nf-xF-DMB" id="eIc-Lv-Cca"/>
-                                            <outlet property="pieces" destination="BFZ-CG-86e" id="DcR-yW-1ar"/>
-                                            <outlet property="size" destination="V9f-Yp-7dF" id="OpD-Ok-CrI"/>
-                                            <outlet property="type" destination="th5-E3-0wy" id="adh-qe-8OE"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="EdgeHeader" id="NWd-oZ-ngK">
@@ -2157,7 +2157,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Edge" id="hRE-zj-bOm" customClass="Dim2SkeletonCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Edge" id="hRE-zj-bOm" customClass="SkeletonCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hRE-zj-bOm" id="p4U-aF-LWt">
@@ -2210,10 +2210,10 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="data0" destination="xVB-PC-CNI" id="Waf-vk-Hej"/>
+                                            <outlet property="data1" destination="RSz-t8-fhU" id="3qN-tl-teM"/>
+                                            <outlet property="data2" destination="slF-7f-Gfk" id="oyD-M8-5VE"/>
                                             <outlet property="index" destination="9Bv-A4-SPt" id="QCa-DU-dNJ"/>
-                                            <outlet property="pieces" destination="slF-7f-Gfk" id="oyD-M8-5VE"/>
-                                            <outlet property="size" destination="RSz-t8-fhU" id="3qN-tl-teM"/>
-                                            <outlet property="type" destination="xVB-PC-CNI" id="Waf-vk-Hej"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TriangleHeader" rowHeight="86" id="e4b-nI-Nh8">
@@ -2289,7 +2289,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Triangle" id="wLB-MY-Xbh" customClass="Dim2SkeletonCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Triangle" id="wLB-MY-Xbh" customClass="SkeletonCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="wLB-MY-Xbh" id="WV0-SC-jjR">
@@ -2331,10 +2331,9 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="data0" destination="xvm-r5-hLM" id="SUr-tf-Q0Q"/>
+                                            <outlet property="data1" destination="2th-ct-zH3" id="hNS-nn-wa7"/>
                                             <outlet property="index" destination="zgg-n2-7ce" id="Ul6-wL-eky"/>
-                                            <outlet property="pieces" destination="2th-ct-zH3" id="dND-AO-eEk"/>
-                                            <outlet property="size" destination="xvm-r5-hLM" id="olh-j8-a0v"/>
-                                            <outlet property="type" destination="xvm-r5-hLM" id="SUr-tf-Q0Q"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ComponentHeader" id="seV-aE-4bV">
@@ -2393,7 +2392,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Component" id="tx7-tX-JDP" customClass="Dim2SkeletonCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Component" id="tx7-tX-JDP" customClass="SkeletonCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="tx7-tX-JDP" id="q4E-Kb-mXl">
@@ -2446,10 +2445,10 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="data0" destination="7kq-Ry-fTW" id="PNI-LC-iDD"/>
+                                            <outlet property="data1" destination="PMp-hL-ncR" id="zdf-VM-tD4"/>
+                                            <outlet property="data2" destination="nru-bB-IFf" id="gAb-8Z-h7z"/>
                                             <outlet property="index" destination="XfJ-IR-vfu" id="MBi-Sz-TRl"/>
-                                            <outlet property="pieces" destination="nru-bB-IFf" id="gAb-8Z-h7z"/>
-                                            <outlet property="size" destination="PMp-hL-ncR" id="zdf-VM-tD4"/>
-                                            <outlet property="type" destination="7kq-Ry-fTW" id="PNI-LC-iDD"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="BdryHeader" id="0Ei-bw-U4X">
@@ -2497,7 +2496,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Bdry" id="hed-pC-kPN" customClass="Dim2SkeletonCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Bdry" id="hed-pC-kPN" customClass="SkeletonCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hed-pC-kPN" id="949-ck-nqh">
@@ -2540,8 +2539,8 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="index" destination="bil-9h-qi0" id="3bk-Bd-msl"/>
-                                            <outlet property="pieces" destination="eT4-Jd-WsF" id="GLu-zJ-YUf"/>
-                                            <outlet property="size" destination="e5o-3l-fWY" id="u2L-GH-Cy7"/>
+                                            <outlet property="data1" destination="eT4-Jd-WsF" id="GLu-zJ-YUf"/>
+                                            <outlet property="data0" destination="e5o-3l-fWY" id="u2L-GH-Cy7"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -3503,11 +3502,11 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="3G1-uR-eUS">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="3G1-uR-eUS">
                                 <rect key="frame" x="20" y="194" width="663" height="517"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Empty" id="flh-uq-mSw" customClass="Dim2SkeletonCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Empty" id="flh-uq-mSw" customClass="SkeletonCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="flh-uq-mSw" id="ZCI-3b-P6n">
@@ -3586,7 +3585,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Vertex" id="jIv-Tt-KfE" customClass="TriSkeletonCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Vertex" id="jIv-Tt-KfE" customClass="SkeletonCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="jIv-Tt-KfE" id="Ab1-Mq-Hal">
@@ -3639,10 +3638,10 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="data0" destination="Dup-vi-Fdb" id="3Im-wN-qbY"/>
+                                            <outlet property="data1" destination="0pL-H9-lon" id="G3V-dl-nLX"/>
+                                            <outlet property="data2" destination="M7Y-qR-tvT" id="caa-YT-fht"/>
                                             <outlet property="index" destination="gBR-sK-0PE" id="nrt-ha-tJB"/>
-                                            <outlet property="pieces" destination="M7Y-qR-tvT" id="caa-YT-fht"/>
-                                            <outlet property="size" destination="0pL-H9-lon" id="G3V-dl-nLX"/>
-                                            <outlet property="type" destination="Dup-vi-Fdb" id="3Im-wN-qbY"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="EdgeHeader" id="dDL-6l-itb">
@@ -3701,7 +3700,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Edge" id="xkV-DB-Nju" customClass="TriSkeletonCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Edge" id="xkV-DB-Nju" customClass="SkeletonCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="xkV-DB-Nju" id="AtO-2Y-f4V">
@@ -3754,10 +3753,10 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="data0" destination="1PH-Kv-qj9" id="pbM-Mj-6k0"/>
+                                            <outlet property="data1" destination="eKD-5t-TR9" id="g2j-8F-BVO"/>
+                                            <outlet property="data2" destination="Qou-wg-u72" id="ZdS-Kh-sEk"/>
                                             <outlet property="index" destination="CqI-mk-gqq" id="sRU-mf-KD9"/>
-                                            <outlet property="pieces" destination="Qou-wg-u72" id="ZdS-Kh-sEk"/>
-                                            <outlet property="size" destination="eKD-5t-TR9" id="g2j-8F-BVO"/>
-                                            <outlet property="type" destination="1PH-Kv-qj9" id="pbM-Mj-6k0"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TriangleHeader" id="WQB-uV-AJf">
@@ -3816,7 +3815,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Triangle" id="dMk-cY-m6Y" customClass="TriSkeletonCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Triangle" id="dMk-cY-m6Y" customClass="SkeletonCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="dMk-cY-m6Y" id="1dc-vN-Bd4">
@@ -3869,10 +3868,10 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="data0" destination="wrG-Ks-ETR" id="ioZ-IE-CaV"/>
+                                            <outlet property="data1" destination="6pj-u0-dvO" id="wQo-ak-mfG"/>
+                                            <outlet property="data2" destination="BwG-z0-AUw" id="Jb4-hu-CzG"/>
                                             <outlet property="index" destination="jeQ-xT-8ZF" id="87K-Xw-0nb"/>
-                                            <outlet property="pieces" destination="BwG-z0-AUw" id="Jb4-hu-CzG"/>
-                                            <outlet property="size" destination="6pj-u0-dvO" id="wQo-ak-mfG"/>
-                                            <outlet property="type" destination="wrG-Ks-ETR" id="ioZ-IE-CaV"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TetrahedronHeader" rowHeight="86" id="Lfu-RB-mz1">
@@ -3967,7 +3966,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Tetrahedron" id="lLE-J7-MFa" customClass="TriSkeletonCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Tetrahedron" id="lLE-J7-MFa" customClass="SkeletonCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lLE-J7-MFa" id="EAf-nv-lad">
@@ -4022,10 +4021,10 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="data0" destination="hA5-Ea-OIR" id="Fn9-w5-3rr"/>
+                                            <outlet property="data1" destination="kSZ-H8-i1J" id="Sfc-tR-3nM"/>
+                                            <outlet property="data2" destination="eRO-hi-mJP" id="YvI-4e-gUD"/>
                                             <outlet property="index" destination="bvd-wE-hFe" id="7X5-Z8-sX0"/>
-                                            <outlet property="pieces" destination="eRO-hi-mJP" id="YvI-4e-gUD"/>
-                                            <outlet property="size" destination="kSZ-H8-i1J" id="Sfc-tR-3nM"/>
-                                            <outlet property="type" destination="hA5-Ea-OIR" id="Fn9-w5-3rr"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ComponentHeader" id="MOu-eO-HDs">
@@ -4084,7 +4083,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Component" id="TWN-26-pFu" customClass="TriSkeletonCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Component" id="TWN-26-pFu" customClass="SkeletonCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="TWN-26-pFu" id="N9s-te-VuA">
@@ -4137,10 +4136,10 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="data0" destination="fmy-If-aK5" id="xto-OM-WvU"/>
+                                            <outlet property="data1" destination="aDS-ax-hPe" id="YUm-EW-ybh"/>
+                                            <outlet property="data2" destination="twl-vK-lxB" id="gGi-qI-l0T"/>
                                             <outlet property="index" destination="gPc-XF-DEC" id="ggd-uu-ef0"/>
-                                            <outlet property="pieces" destination="twl-vK-lxB" id="gGi-qI-l0T"/>
-                                            <outlet property="size" destination="aDS-ax-hPe" id="YUm-EW-ybh"/>
-                                            <outlet property="type" destination="fmy-If-aK5" id="xto-OM-WvU"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="BdryHeader" id="0rt-E9-zoY">
@@ -4199,7 +4198,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Bdry" id="Kbd-tQ-zl2" customClass="TriSkeletonCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Bdry" id="Kbd-tQ-zl2" customClass="SkeletonCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Kbd-tQ-zl2" id="SSd-un-OD1">
@@ -4252,10 +4251,10 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="data0" destination="8if-MJ-Kc1" id="5iq-er-wb7"/>
+                                            <outlet property="data1" destination="crS-UW-oCR" id="fea-hv-ggX"/>
+                                            <outlet property="data2" destination="TLb-VQ-Euq" id="IMi-dc-dPb"/>
                                             <outlet property="index" destination="0Kw-lT-VZK" id="eMV-pS-sYs"/>
-                                            <outlet property="pieces" destination="TLb-VQ-Euq" id="IMi-dc-dPb"/>
-                                            <outlet property="size" destination="crS-UW-oCR" id="fea-hv-ggX"/>
-                                            <outlet property="type" destination="8if-MJ-Kc1" id="5iq-er-wb7"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

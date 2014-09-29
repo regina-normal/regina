@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#import "Skeleton.h"
 #import "TriangulationViewController.h"
 #import "TriSkeleton.h"
 #import "TextHelper.h"
@@ -40,18 +41,6 @@
 // TODO: Long press views full (overflowing) contents of cell.
 // TODO: Augh.  In ios7 (not ios8), skeleton tables run under tabs after switching between tabs
 // TODO: Vertical space in ios7
-
-#pragma mark - Table cell
-
-@interface TriSkeletonCell : UITableViewCell
-@property (weak, nonatomic) IBOutlet UILabel *index;
-@property (weak, nonatomic) IBOutlet UILabel *type;
-@property (weak, nonatomic) IBOutlet UILabel *size;
-@property (weak, nonatomic) IBOutlet UILabel *pieces;
-@end
-
-@implementation TriSkeletonCell
-@end
 
 #pragma mark - Triangulation skeleton viewer
 
@@ -154,43 +143,43 @@
         }
     }
 
-    TriSkeletonCell *cell;
+    SkeletonCell *cell;
     switch (self.viewWhich.selectedSegmentIndex) {
         case 0: /* vertices */
             if (self.packet->getNumberOfVertices() == 0) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Empty" forIndexPath:indexPath];
                 cell.index.text = @"No vertices";
-                cell.type.text = cell.size.text = cell.pieces.text = @"";
+                cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
                 regina::NVertex* v = self.packet->getVertex(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Vertex" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
-                cell.size.text = [NSString stringWithFormat:@"%ld", v->getDegree()];
+                cell.data1.text = [NSString stringWithFormat:@"%ld", v->getDegree()];
 
                 switch (v->getLink()) {
                     case regina::NVertex::SPHERE:
-                        cell.type.text = @"Internal";
+                        cell.data0.text = @"Internal";
                         break;
                     case regina::NVertex::DISC:
-                        cell.type.text = @"Bdry";
+                        cell.data0.text = @"Bdry";
                         break;
                     case regina::NVertex::TORUS:
-                        cell.type.text = @"Ideal: Torus";
+                        cell.data0.text = @"Ideal: Torus";
                         break;
                     case regina::NVertex::KLEIN_BOTTLE:
-                        cell.type.text = @"Ideal: Klein bottle";
+                        cell.data0.text = @"Ideal: Klein bottle";
                         break;
                     case regina::NVertex::NON_STANDARD_CUSP:
                         if (v->isLinkOrientable())
-                            cell.type.text = [NSString stringWithFormat:@"Ideal: Genus %ld orbl", (1 - (v->getLinkEulerChar() / 2))];
+                            cell.data0.text = [NSString stringWithFormat:@"Ideal: Genus %ld orbl", (1 - (v->getLinkEulerChar() / 2))];
                         else
-                            cell.type.text = [NSString stringWithFormat:@"Ideal: Genus %ld non-orbl", (2 - v->getLinkEulerChar())];
+                            cell.data0.text = [NSString stringWithFormat:@"Ideal: Genus %ld non-orbl", (2 - v->getLinkEulerChar())];
                         break;
                     case regina::NVertex::NON_STANDARD_BDRY:
-                        cell.type.attributedText = [TextHelper badString:@"Invalid"];
+                        cell.data0.attributedText = [TextHelper badString:@"Invalid"];
                         break;
                     default:
-                        cell.type.attributedText = [TextHelper badString:@"Unknown"];
+                        cell.data0.attributedText = [TextHelper badString:@"Unknown"];
                 }
 
                 NSMutableString* pieces = [NSMutableString string];
@@ -200,26 +189,26 @@
                                         item:[NSString stringWithFormat:@"%ld (%d)",
                                               self.packet->tetrahedronIndex(it->getTetrahedron()),
                                               it->getVertex()]];
-                cell.pieces.text = pieces;
+                cell.data2.text = pieces;
             }
             break;
         case 1: /* edges */
             if (self.packet->getNumberOfEdges() == 0) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Empty" forIndexPath:indexPath];
                 cell.index.text = @"No edges";
-                cell.type.text = cell.size.text = cell.pieces.text = @"";
+                cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
                 regina::NEdge* e = self.packet->getEdge(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Edge" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
-                cell.size.text = [NSString stringWithFormat:@"%ld", e->getNumberOfEmbeddings()];
+                cell.data1.text = [NSString stringWithFormat:@"%ld", e->getNumberOfEmbeddings()];
 
                 if (! e->isValid())
-                    cell.type.attributedText = [TextHelper badString:@"Invalid"];
+                    cell.data0.attributedText = [TextHelper badString:@"Invalid"];
                 else if (e->isBoundary())
-                    cell.type.text = @"Bdry";
+                    cell.data0.text = @"Bdry";
                 else
-                    cell.type.text = @"Internal";
+                    cell.data0.text = @"Internal";
 
                 NSMutableString* pieces = [NSMutableString string];
                 std::deque<regina::NEdgeEmbedding>::const_iterator it;
@@ -228,48 +217,48 @@
                                         item:[NSString stringWithFormat:@"%ld (%s)",
                                               self.packet->tetrahedronIndex(it->getTetrahedron()),
                                               it->getVertices().trunc2().c_str()]];
-                cell.pieces.text = pieces;
+                cell.data2.text = pieces;
             }
             break;
         case 2: /* triangles */
             if (self.packet->getNumberOfTriangles() == 0) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Empty" forIndexPath:indexPath];
                 cell.index.text = @"No triangles";
-                cell.type.text = cell.size.text = cell.pieces.text = @"";
+                cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
                 regina::NTriangle* t = self.packet->getTriangle(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Triangle" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
 
-                cell.type.text = (t->isBoundary() ? @"Bdry" : @"Internal");
+                cell.data0.text = (t->isBoundary() ? @"Bdry" : @"Internal");
 
                 switch (t->getType()) {
                     case regina::NTriangle::TRIANGLE:
-                        cell.size.text = @"Triangle";
+                        cell.data1.text = @"Triangle";
                         break;
                     case regina::NTriangle::SCARF:
-                        cell.size.text = @"Scarf";
+                        cell.data1.text = @"Scarf";
                         break;
                     case regina::NTriangle::PARACHUTE:
-                        cell.size.text = @"Parachute";
+                        cell.data1.text = @"Parachute";
                         break;
                     case regina::NTriangle::MOBIUS:
-                        cell.size.text = @"Möbius band";
+                        cell.data1.text = @"Möbius band";
                         break;
                     case regina::NTriangle::CONE:
-                        cell.size.text = @"Cone";
+                        cell.data1.text = @"Cone";
                         break;
                     case regina::NTriangle::HORN:
-                        cell.size.text = @"Horn";
+                        cell.data1.text = @"Horn";
                         break;
                     case regina::NTriangle::DUNCEHAT:
-                        cell.size.text = @"Dunce hat";
+                        cell.data1.text = @"Dunce hat";
                         break;
                     case regina::NTriangle::L31:
-                        cell.size.text = @"L(3,1)";
+                        cell.data1.text = @"L(3,1)";
                         break;
                     case regina::NTriangle::UNKNOWN_TYPE:
-                        cell.size.attributedText = [TextHelper badString:@"Unknown"];
+                        cell.data1.attributedText = [TextHelper badString:@"Unknown"];
                         break;
                 }
 
@@ -279,26 +268,26 @@
                                         item:[NSString stringWithFormat:@"%ld (%s)",
                                               self.packet->tetrahedronIndex(t->getEmbedding(i).getTetrahedron()),
                                               t->getEmbedding(i).getVertices().trunc3().c_str()]];
-                cell.pieces.text = pieces;
+                cell.data2.text = pieces;
             }
             break;
         case 3: /* tetrahedra */
             if (self.packet->getNumberOfTetrahedra() == 0) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Empty" forIndexPath:indexPath];
                 cell.index.text = @"No tetrahedra";
-                cell.type.text = cell.pieces.text = @"";
+                cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
                 regina::NTetrahedron *t = self.packet->getTetrahedron(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Tetrahedron" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
 
-                cell.type.text = [NSString stringWithFormat:@"%ld, %ld, %ld, %ld",
+                cell.data0.text = [NSString stringWithFormat:@"%ld, %ld, %ld, %ld",
                                   t->getVertex(0)->markedIndex(),
                                   t->getVertex(1)->markedIndex(),
                                   t->getVertex(2)->markedIndex(),
                                   t->getVertex(3)->markedIndex()];
 
-                cell.size.text = [NSString stringWithFormat:@"%ld, %ld, %ld, %ld, %ld, %ld",
+                cell.data1.text = [NSString stringWithFormat:@"%ld, %ld, %ld, %ld, %ld, %ld",
                                   t->getEdge(0)->markedIndex(),
                                   t->getEdge(1)->markedIndex(),
                                   t->getEdge(2)->markedIndex(),
@@ -306,7 +295,7 @@
                                   t->getEdge(4)->markedIndex(),
                                   t->getEdge(5)->markedIndex()];
 
-                cell.pieces.text = [NSString stringWithFormat:@"%ld, %ld, %ld, %ld",
+                cell.data2.text = [NSString stringWithFormat:@"%ld, %ld, %ld, %ld",
                                     t->getTriangle(3)->markedIndex(),
                                     t->getTriangle(2)->markedIndex(),
                                     t->getTriangle(1)->markedIndex(),
@@ -317,26 +306,26 @@
             if (self.packet->getNumberOfComponents() == 0) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Empty" forIndexPath:indexPath];
                 cell.index.text = @"No components";
-                cell.type.text = cell.size.text = cell.pieces.text = @"";
+                cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
                 regina::NComponent* c = self.packet->getComponent(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Component" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
-                cell.size.text = [TextHelper countString:c->getNumberOfSimplices() singular:"tetrahedron" plural:"tetrahedra"];
+                cell.data1.text = [TextHelper countString:c->getNumberOfSimplices() singular:"tetrahedron" plural:"tetrahedra"];
 
-                cell.type.text = [NSString stringWithFormat:@"%s %s",
+                cell.data0.text = [NSString stringWithFormat:@"%s %s",
                                   (c->isIdeal() ? "Ideal, " : "Real, "),
                                   (c->isOrientable() ? "orbl" : "non-orbl")];
 
                 if (self.packet->getNumberOfComponents() == 1) {
-                    cell.pieces.text = @"All tetrahedra";
+                    cell.data2.text = @"All tetrahedra";
                 } else {
                     NSMutableString* pieces = [NSMutableString string];
                     for (unsigned long i = 0; i < c->getNumberOfTriangles(); ++i)
                         [TextHelper appendToList:pieces
                                             item:[NSString stringWithFormat:@"%ld",
                                                   self.packet->tetrahedronIndex(c->getTetrahedron(i))]];
-                    cell.pieces.text = pieces;
+                    cell.data2.text = pieces;
                 }
             }
             break;
@@ -344,14 +333,14 @@
             if (self.packet->getNumberOfBoundaryComponents() == 0) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Empty" forIndexPath:indexPath];
                 cell.index.text = @"No boundary components";
-                cell.type.text = cell.size.text = cell.pieces.text = @"";
+                cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
                 regina::NBoundaryComponent* b = self.packet->getBoundaryComponent(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Bdry" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
-                cell.type.text = (b->isIdeal() ? @"Ideal" : @"Real");
+                cell.data0.text = (b->isIdeal() ? @"Ideal" : @"Real");
                 // Note: by parity, #triangles must be >= 2 and so we can safely use the plural form.
-                cell.size.text = (b->isIdeal() ?
+                cell.data1.text = (b->isIdeal() ?
                                   [NSString stringWithFormat:@"Degree %ld", b->getVertex(0)->getDegree()] :
                                   [NSString stringWithFormat:@"%ld triangles", b->getNumberOfTriangles()]);
 
@@ -364,7 +353,7 @@
                                             item:[NSString stringWithFormat:@"%ld (%d)",
                                                   self.packet->tetrahedronIndex(it->getTetrahedron()),
                                                   it->getVertex()]];
-                    cell.pieces.text = [NSString stringWithFormat:@"Vertices %@", pieces];
+                    cell.data2.text = [NSString stringWithFormat:@"Vertices %@", pieces];
                     // Parity says #vertices >= 2, so always use plural form.
                 } else {
                     for (unsigned long i = 0; i < b->getNumberOfTriangles(); ++i) {
@@ -374,7 +363,7 @@
                                                   self.packet->tetrahedronIndex(emb.getTetrahedron()),
                                                   emb.getVertices().trunc3().c_str()]];
                     }
-                    cell.pieces.text = [NSString stringWithFormat:@"Faces %@", pieces];
+                    cell.data2.text = [NSString stringWithFormat:@"Faces %@", pieces];
                     // Parity says #faces >= 2, so always use plural form.
                 }
             }
