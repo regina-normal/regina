@@ -38,7 +38,8 @@
 #import "surfaces/nnormalsurfacelist.h"
 #import "triangulation/ntriangulation.h"
 
-// TODO: Offer a "compact view".
+#define KEY_SURFACES_MATCHING_COMPACT @"SurfacesMatchingCompact"
+
 // TODO: Make a base clase for dealing with MDSpreadView.
 
 // These fonts are hard-coded into the MDSpreadView classes.
@@ -51,10 +52,14 @@ static UIFont* headerFont = [UIFont boldSystemFontOfSize:14];
 #define CELL_WIDTH_PADDING 32
 #define CELL_HEIGHT_PADDING 6
 
+#define CELL_TIGHT_WIDTH_PADDING 4
+#define CELL_TIGHT_HEIGHT_PADDING 2
+
 @interface SurfacesMatching () <MDSpreadViewDataSource, MDSpreadViewDelegate, PacketDelegate> {
     CGFloat width, height;
     CGFloat widthHeader;
 }
+@property (weak, nonatomic) IBOutlet UISwitch *compact;
 @property (weak, nonatomic) IBOutlet MDSpreadView *grid;
 @property (assign, nonatomic) regina::NMatrixInt* matrix;
 @end
@@ -67,6 +72,8 @@ static UIFont* headerFont = [UIFont boldSystemFontOfSize:14];
 
     delete self.matrix;
     self.matrix = self.packet->recreateMatchingEquations();
+
+    self.compact.on = [[NSUserDefaults standardUserDefaults] boolForKey:KEY_SURFACES_MATCHING_COMPACT];
 
     [self initMetrics];
     self.grid.dataSource = self;
@@ -86,12 +93,20 @@ static UIFont* headerFont = [UIFont boldSystemFontOfSize:14];
     text = [NSString stringWithFormat:@"%ld.", self.matrix->rows() - 1];
     widthHeader = CELL_WIDTH_PADDING + [text sizeWithAttributes:@{NSFontAttributeName: headerFont}].width;
 
-    text = [Coordinates columnName:self.packet->coords()
-                        whichCoord:self.matrix->columns()-1
-                               tri:self.packet->getTriangulation()];
+    text = (self.compact.on ? @"-0" :
+            [Coordinates columnName:self.packet->coords()
+                         whichCoord:self.matrix->columns()-1
+                                tri:self.packet->getTriangulation()]);
     CGSize size = [text sizeWithAttributes:@{NSFontAttributeName: cellFont}];
-    width = CELL_WIDTH_PADDING + size.width;
-    height = CELL_HEIGHT_PADDING + size.height;
+    width = (self.compact.on ? CELL_TIGHT_WIDTH_PADDING : CELL_WIDTH_PADDING) + size.width;
+    height = (self.compact.on ? CELL_TIGHT_HEIGHT_PADDING : CELL_HEIGHT_PADDING) + size.height;
+}
+
+- (IBAction)compactChanged:(id)sender {
+    [[NSUserDefaults standardUserDefaults] setBool:self.compact.on forKey:KEY_SURFACES_MATCHING_COMPACT];
+
+    [self initMetrics];
+    [self.grid reloadData];
 }
 
 #pragma mark - MDSpreadView data source

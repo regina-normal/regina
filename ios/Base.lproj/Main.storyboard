@@ -2806,35 +2806,52 @@
                                 </constraints>
                             </view>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7gJ-sx-Tpc" customClass="MDSpreadView">
-                                <rect key="frame" x="20" y="169" width="663" height="530"/>
+                                <rect key="frame" x="20" y="208" width="663" height="491"/>
                             </scrollView>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="w5g-l5-Vxp">
+                                <rect key="frame" x="634" y="169" width="51" height="31"/>
+                                <connections>
+                                    <action selector="compactChanged:" destination="EDU-Ge-aTy" eventType="valueChanged" id="JiP-2F-V21"/>
+                                </connections>
+                            </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Compact view" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QqX-xe-Pqs">
+                                <rect key="frame" x="515" y="174" width="111" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="3rf-iT-gr6" secondAttribute="trailing" constant="20" id="0f0-Hd-rpu"/>
+                            <constraint firstItem="w5g-l5-Vxp" firstAttribute="top" secondItem="RJo-fL-gzg" secondAttribute="bottom" constant="20" id="3GV-sG-dOl"/>
                             <constraint firstItem="RJo-fL-gzg" firstAttribute="leading" secondItem="OM8-XP-bcI" secondAttribute="trailing" constant="8" id="AqX-fe-TUV"/>
                             <constraint firstItem="OM8-XP-bcI" firstAttribute="leading" secondItem="eCg-c8-5nC" secondAttribute="trailing" constant="8" id="BpR-NB-RNQ"/>
                             <constraint firstItem="mYQ-43-28I" firstAttribute="top" secondItem="ddG-jC-Shx" secondAttribute="bottom" constant="20" id="Gdy-05-VXR"/>
+                            <constraint firstItem="w5g-l5-Vxp" firstAttribute="leading" secondItem="QqX-xe-Pqs" secondAttribute="trailing" constant="8" id="HvQ-FL-2Mb"/>
                             <constraint firstAttribute="trailing" secondItem="Iy6-m4-zK7" secondAttribute="trailing" constant="20" id="OKY-1b-CcY"/>
                             <constraint firstItem="Iy6-m4-zK7" firstAttribute="top" secondItem="mYQ-43-28I" secondAttribute="bottom" constant="8" id="U0M-Ys-EPT"/>
                             <constraint firstItem="3rf-iT-gr6" firstAttribute="width" secondItem="eCg-c8-5nC" secondAttribute="width" id="UH7-9u-Yju"/>
                             <constraint firstItem="7gJ-sx-Tpc" firstAttribute="leading" secondItem="nUi-Kz-scK" secondAttribute="leading" constant="20" id="UYN-ay-Js9"/>
+                            <constraint firstItem="QqX-xe-Pqs" firstAttribute="centerY" secondItem="w5g-l5-Vxp" secondAttribute="centerY" id="VC3-xR-kd5"/>
                             <constraint firstAttribute="trailing" secondItem="7gJ-sx-Tpc" secondAttribute="trailing" constant="20" id="b8l-B6-Cof"/>
-                            <constraint firstItem="7gJ-sx-Tpc" firstAttribute="top" secondItem="RJo-fL-gzg" secondAttribute="bottom" constant="20" id="d72-rm-1fM"/>
                             <constraint firstItem="Z7p-jk-Ly3" firstAttribute="top" secondItem="7gJ-sx-Tpc" secondAttribute="bottom" constant="20" id="dCu-gH-fg9"/>
                             <constraint firstItem="3rf-iT-gr6" firstAttribute="leading" secondItem="RJo-fL-gzg" secondAttribute="trailing" constant="8" id="fs7-du-jEJ"/>
                             <constraint firstItem="eCg-c8-5nC" firstAttribute="leading" secondItem="nUi-Kz-scK" secondAttribute="leading" constant="20" id="icF-B1-dQJ"/>
+                            <constraint firstItem="7gJ-sx-Tpc" firstAttribute="top" secondItem="w5g-l5-Vxp" secondAttribute="bottom" constant="8" id="jMk-ek-LZM"/>
                             <constraint firstAttribute="trailing" secondItem="mYQ-43-28I" secondAttribute="trailing" constant="20" id="liC-uk-4UP"/>
                             <constraint firstItem="mYQ-43-28I" firstAttribute="leading" secondItem="nUi-Kz-scK" secondAttribute="leading" constant="20" id="p91-qD-pAd"/>
                             <constraint firstItem="3rf-iT-gr6" firstAttribute="centerY" secondItem="OM8-XP-bcI" secondAttribute="centerY" id="qkO-QP-5XX"/>
                             <constraint firstItem="Iy6-m4-zK7" firstAttribute="leading" secondItem="nUi-Kz-scK" secondAttribute="leading" constant="20" id="tg1-Yr-Fir"/>
                             <constraint firstItem="3rf-iT-gr6" firstAttribute="centerY" secondItem="eCg-c8-5nC" secondAttribute="centerY" id="uqD-Lg-i87"/>
                             <constraint firstItem="RJo-fL-gzg" firstAttribute="baseline" secondItem="OM8-XP-bcI" secondAttribute="baseline" id="vwE-fN-heB"/>
+                            <constraint firstAttribute="trailing" secondItem="w5g-l5-Vxp" secondAttribute="trailing" constant="20" id="yYJ-uA-NdE"/>
                             <constraint firstItem="OM8-XP-bcI" firstAttribute="top" secondItem="Iy6-m4-zK7" secondAttribute="bottom" constant="8" id="zKk-DJ-8Gm"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Matching Equations" image="Tab-Matching" id="j5J-yp-9E3"/>
                     <connections>
+                        <outlet property="compact" destination="w5g-l5-Vxp" id="C35-pd-H7x"/>
                         <outlet property="coords" destination="Iy6-m4-zK7" id="7yw-Nz-2vM"/>
                         <outlet property="grid" destination="7gJ-sx-Tpc" id="C3b-NM-iri"/>
                         <outlet property="header" destination="mYQ-43-28I" id="LSh-Ge-Nmr"/>
