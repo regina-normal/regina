@@ -45,7 +45,7 @@ static NSString *compactCellID = @"_ReginaCompactSpreadCell";
 static NSString *regularCellID = @"_ReginaRegularSpreadCell";
 
 @interface SurfacesMatching () <MDSpreadViewDataSource, MDSpreadViewDelegate, PacketDelegate> {
-    CGFloat width, height;
+    CGSize cellSize;
     CGFloat widthHeader;
 }
 @property (weak, nonatomic) IBOutlet UISwitch *compact;
@@ -65,6 +65,9 @@ static NSString *regularCellID = @"_ReginaRegularSpreadCell";
     self.compact.on = [[NSUserDefaults standardUserDefaults] boolForKey:KEY_SURFACES_MATCHING_COMPACT];
 
     [self initMetrics];
+    self.grid.defaultHeaderColumnCellClass = [RegularSpreadHeaderCellRight class];
+    self.grid.defaultHeaderRowCellClass = [RegularSpreadHeaderCellCentre class];
+    self.grid.defaultHeaderCornerCellClass = [RegularSpreadHeaderCellCentre class];
     self.grid.dataSource = self;
     self.grid.delegate = self;
     self.grid.allowsRowHeaderSelection = YES;
@@ -77,18 +80,16 @@ static NSString *regularCellID = @"_ReginaRegularSpreadCell";
 
 - (void)initMetrics
 {
-    NSString* text;
+    widthHeader = [RegularSpreadHeaderCell cellSizeFor:[NSString stringWithFormat:@"%ld.", self.matrix->rows() - 1]].width;
 
-    text = [NSString stringWithFormat:@"%ld.", self.matrix->rows() - 1];
-    widthHeader = MD_CELL_WIDTH_PADDING + [SpreadHelper headerSize:text].width;
-
-    text = (self.compact.on ? @"-0" :
-            [Coordinates columnName:self.packet->coords()
-                         whichCoord:self.matrix->columns()-1
-                                tri:self.packet->getTriangulation()]);
-    CGSize size = [SpreadHelper cellSize:text];
-    width = (self.compact.on ? MD_CELL_TIGHT_WIDTH_PADDING : MD_CELL_WIDTH_PADDING) + size.width;
-    height = (self.compact.on ? MD_CELL_TIGHT_HEIGHT_PADDING : MD_CELL_HEIGHT_PADDING) + size.height;
+    if (self.compact.on) {
+        cellSize = [CompactSpreadViewCell cellSizeFor:@"-0"];
+    } else {
+        cellSize = [RegularSpreadHeaderCell cellSizeFor:
+                    [Coordinates columnName:self.packet->coords()
+                                 whichCoord:self.matrix->columns()-1
+                                        tri:self.packet->getTriangulation()]];
+    }
 }
 
 - (IBAction)compactChanged:(id)sender {
@@ -138,13 +139,11 @@ static NSString *regularCellID = @"_ReginaRegularSpreadCell";
     if (self.compact.on) {
         cell = [aSpreadView dequeueReusableCellWithIdentifier:compactCellID];
         if (! cell)
-            cell = [[CompactSpreadViewCell alloc] initWithStyle:MDSpreadViewCellStyleDefault
-                                                reuseIdentifier:compactCellID];
+            cell = [[CompactSpreadViewCell alloc] initWithReuseIdentifier:compactCellID];
     } else {
         cell = [aSpreadView dequeueReusableCellWithIdentifier:regularCellID];
         if (! cell)
-            cell = [[MDSpreadViewCell alloc] initWithStyle:MDSpreadViewCellStyleDefault
-                                           reuseIdentifier:regularCellID];
+            cell = [[RegularSpreadViewCell alloc] initWithReuseIdentifier:regularCellID];
     }
     cell.objectValue = [self spreadView:aSpreadView objectValueForRowAtIndexPath:rowPath forColumnAtIndexPath:columnPath];
     cell.textLabel.textAlignment = NSTextAlignmentRight;
@@ -160,17 +159,17 @@ static NSString *regularCellID = @"_ReginaRegularSpreadCell";
 
 - (CGFloat)spreadView:(MDSpreadView *)aSpreadView widthForColumnAtIndexPath:(MDIndexPath *)indexPath
 {
-    return width;
+    return cellSize.width;
 }
 
 - (CGFloat)spreadView:(MDSpreadView *)aSpreadView heightForRowHeaderInSection:(NSInteger)rowSection
 {
-    return (self.compact.on ? 1 : height);
+    return (self.compact.on ? 1 : cellSize.height);
 }
 
 - (CGFloat)spreadView:(MDSpreadView *)aSpreadView heightForRowAtIndexPath:(MDIndexPath *)indexPath
 {
-    return height;
+    return cellSize.height;
 }
 
 @end

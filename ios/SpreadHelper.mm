@@ -37,16 +37,41 @@
 static UIFont* cellFont = [UIFont systemFontOfSize:16];
 static UIFont* headerFont = [UIFont boldSystemFontOfSize:14];
 
-@implementation SpreadHelper
+#define MD_CELL_WIDTH_PADDING 10
+#define MD_CELL_HEIGHT_PADDING 3
 
-+ (CGSize)cellSize:(NSString *)text
+#define MD_CELL_TIGHT_WIDTH_PADDING 2
+#define MD_CELL_TIGHT_HEIGHT_PADDING 1
+
+// TODO: The use of clearColor in the header cells is a cheat.
+// I suspect that if we try to select such a cell, the clear color will be lost.
+// The symptom it addresses is that, for header height 1, the UILabel inside the cell bleeds colour outside the cell.
+
+@interface RegularSpreadViewCell ()
+@end
+
+@implementation RegularSpreadViewCell
+
++ (CGSize)cellSizeFor:(NSString *)text
 {
-    return [text sizeWithAttributes:@{NSFontAttributeName: cellFont}];
+    CGSize s = [text sizeWithAttributes:@{NSFontAttributeName: cellFont}];
+    s.width += (2 * MD_CELL_WIDTH_PADDING + 2);
+    s.height += (2 * MD_CELL_HEIGHT_PADDING);
+    return s;
 }
 
-+ (CGSize)headerSize:(NSString *)text
+- (id)initWithReuseIdentifier:(NSString *)identifier
 {
-    return [text sizeWithAttributes:@{NSFontAttributeName: headerFont}];
+    return [super initWithStyle:MDSpreadViewCellStyleDefault reuseIdentifier:identifier];
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    self.textLabel.frame = CGRectMake(MD_CELL_WIDTH_PADDING,
+                                      MD_CELL_HEIGHT_PADDING,
+                                      self.bounds.size.width - 2 * MD_CELL_WIDTH_PADDING,
+                                      self.bounds.size.height - 2 * MD_CELL_HEIGHT_PADDING);
 }
 
 @end
@@ -56,13 +81,87 @@ static UIFont* headerFont = [UIFont boldSystemFontOfSize:14];
 
 @implementation CompactSpreadViewCell
 
++ (CGSize)cellSizeFor:(NSString *)text
+{
+    CGSize s = [text sizeWithAttributes:@{NSFontAttributeName: cellFont}];
+    s.width += (2 * MD_CELL_TIGHT_WIDTH_PADDING + 2);
+    s.height += (2 * MD_CELL_TIGHT_HEIGHT_PADDING);
+    return s;
+}
+
+- (id)initWithReuseIdentifier:(NSString *)identifier
+{
+    return [super initWithStyle:MDSpreadViewCellStyleDefault reuseIdentifier:identifier];
+}
+
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    self.textLabel.frame = CGRectMake((MD_CELL_TIGHT_WIDTH_PADDING / 2),
-                                      (MD_CELL_TIGHT_HEIGHT_PADDING / 2),
-                                      self.bounds.size.width - (MD_CELL_TIGHT_WIDTH_PADDING / 2),
-                                      self.bounds.size.height - (MD_CELL_TIGHT_HEIGHT_PADDING / 2));
+    self.textLabel.frame = CGRectMake(MD_CELL_TIGHT_WIDTH_PADDING,
+                                      MD_CELL_TIGHT_HEIGHT_PADDING,
+                                      self.bounds.size.width - 2 * MD_CELL_TIGHT_WIDTH_PADDING,
+                                      self.bounds.size.height - 2 * MD_CELL_TIGHT_HEIGHT_PADDING);
+}
+
+@end
+
+@implementation RegularSpreadHeaderCell
+
++ (CGSize)cellSizeFor:(NSString *)text
+{
+    CGSize s = [text sizeWithAttributes:@{NSFontAttributeName: headerFont}];
+    s.width += (2 * MD_CELL_WIDTH_PADDING + 2);
+    s.height += (2 * MD_CELL_HEIGHT_PADDING);
+    return s;
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    self.textLabel.frame = CGRectMake(MD_CELL_WIDTH_PADDING,
+                                      MD_CELL_HEIGHT_PADDING,
+                                      self.bounds.size.width - 2 * MD_CELL_WIDTH_PADDING,
+                                      self.bounds.size.height - 2 * MD_CELL_HEIGHT_PADDING);
+}
+
+@end
+
+@implementation RegularSpreadHeaderCellCentre
+
+- (id)initWithStyle:(MDSpreadViewHeaderCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        self.textLabel.textAlignment = NSTextAlignmentCenter;
+        self.textLabel.backgroundColor = [UIColor clearColor];
+    }
+    return self;
+}
+
+@end
+
+@implementation RegularSpreadHeaderCellRight
+
+- (id)initWithStyle:(MDSpreadViewHeaderCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        self.textLabel.textAlignment = NSTextAlignmentRight;
+        self.textLabel.backgroundColor = [UIColor clearColor];
+    }
+    return self;
+}
+
+@end
+
+@implementation RegularSpreadHeaderCellEmpty
+
+- (id)initWithStyle:(MDSpreadViewHeaderCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self)
+        self.textLabel.hidden = YES;
+    return self;
 }
 
 @end

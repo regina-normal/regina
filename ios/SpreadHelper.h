@@ -30,25 +30,35 @@
  *                                                                        *
  **************************************************************************/
 
-#import "MDSpreadView.h"
+#import "MDSpreadViewClasses.h"
 
-// MDSpreadViewHeaderCell.m uses a horizontal padding of 28, assuming no sort indicator.
-// Both the header and cell classes use a vertical padding of 3.
-#define MD_CELL_WIDTH_PADDING 32
-#define MD_CELL_HEIGHT_PADDING 6
+@interface RegularSpreadViewCell : MDSpreadViewCell
 
-#define MD_CELL_TIGHT_WIDTH_PADDING 6
-#define MD_CELL_TIGHT_HEIGHT_PADDING 2
++ (CGSize)cellSizeFor:(NSString*)text;
 
-/**
- * Helper routines for working with spreadsheet views.
- */
-@interface SpreadHelper : NSObject
-
-+ (CGSize)cellSize:(NSString*)text;
-+ (CGSize)headerSize:(NSString*)text;
+- (id)initWithReuseIdentifier:(NSString*)identifier;
 
 @end
 
 @interface CompactSpreadViewCell : MDSpreadViewCell
+
++ (CGSize)cellSizeFor:(NSString*)text;
+
+- (id)initWithReuseIdentifier:(NSString*)identifier;
+
+@end
+
+@interface RegularSpreadHeaderCell : MDSpreadViewHeaderCell
+
++ (CGSize)cellSizeFor:(NSString*)text;
+
+@end
+
+@interface RegularSpreadHeaderCellCentre : RegularSpreadHeaderCell
+@end
+
+@interface RegularSpreadHeaderCellRight : RegularSpreadHeaderCell
+@end
+
+@interface RegularSpreadHeaderCellEmpty : RegularSpreadHeaderCell
 @end

@@ -96,6 +96,9 @@
     _triListener = [PacketListenerIOS listenerWithPacket:self.packet->getTriangulation() delegate:self listenChildren:NO];
 
     [self initMetrics];
+    self.angles.defaultCellClass = [RegularSpreadViewCell class];
+    self.angles.defaultHeaderColumnCellClass = [RegularSpreadHeaderCellRight class];
+    self.angles.defaultHeaderRowCellClass = [RegularSpreadHeaderCellCentre class];
     self.angles.dataSource = self;
     self.angles.delegate = self;
     self.angles.allowsRowHeaderSelection = YES;
@@ -103,18 +106,15 @@
 
 - (void)initMetrics
 {
-    NSString* text;
+    widthHeader = [RegularSpreadHeaderCell
+                   cellSizeFor:[NSString stringWithFormat:@"%ld.", self.packet->getNumberOfStructures() - 1]].width;
 
-    text = [NSString stringWithFormat:@"%ld.", self.packet->getNumberOfStructures() - 1];
-    widthHeader = MD_CELL_WIDTH_PADDING + [SpreadHelper headerSize:text].width;
+    CGSize s = [RegularSpreadViewCell cellSizeFor:@"Veering"];
+    widthType = s.width;
+    height = s.height;
 
-    text = @"Veering";
-    CGSize size = [SpreadHelper cellSize:text];
-    widthType = MD_CELL_WIDTH_PADDING + size.width;
-    height = MD_CELL_HEIGHT_PADDING + size.height;
-
-    text = [NSString stringWithFormat:@"%ld: 01/23", self.packet->getTriangulation()->getNumberOfTetrahedra() - 1];
-    widthAngle = MD_CELL_WIDTH_PADDING + [SpreadHelper headerSize:text].width;
+    widthAngle = [RegularSpreadHeaderCell
+                  cellSizeFor:[NSString stringWithFormat:@"%ld: 01/23", self.packet->getTriangulation()->getNumberOfTetrahedra() - 1]].width;
 }
 
 - (void)dealloc
