@@ -35,9 +35,9 @@
 #import "TextHelper.h"
 #import "TextPopover.h"
 
-// TODO: Long press views full (overflowing) contents of cell.
-// TODO: Augh.  In ios7 (not ios8), skeleton tables run under tabs after switching between tabs
-// TODO: Vertical space in ios7
+// TODO: Tab-based viewers, ios7: skeleton tables run under tabs after switching between tabs
+// TODO: Tab-based viewers, ios7: extra vertical space up top
+// TODO: ios7: popover broken on long press
 
 @implementation SkeletonHeaderCell
 @end
@@ -53,6 +53,13 @@
     
     UILongPressGestureRecognizer *r = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
     [self.details addGestureRecognizer:r];
+}
+
++ (NSAttributedString*)titleFromHeaderField:(UILabel*)field
+{
+    // Note: iOS uses \U00002028 as a line separator in labels.
+    NSString* text = [NSString stringWithFormat:@"%@: ", [field.text stringByReplacingOccurrencesOfString:@"\U00002028" withString:@" "]];
+    return [TextHelper markedString:text];
 }
 
 - (IBAction)longPress:(id)sender {
@@ -75,23 +82,42 @@
     if (state == UIGestureRecognizerStateBegan) {
         
         NSIndexPath *headerPath = [NSIndexPath indexPathForRow:0 inSection:0];
-        UITableViewCell *header = [self.details cellForRowAtIndexPath:headerPath];
+        SkeletonHeaderCell *header = static_cast<SkeletonHeaderCell*>([self.details cellForRowAtIndexPath:headerPath]);
         
-        // TODO: Fix text.
         NSMutableAttributedString* detail = [[NSMutableAttributedString alloc] init];
-        [detail appendAttributedString:[TextHelper markedString:@"Index: "]];
-        [detail appendAttributedString:[[NSAttributedString alloc] initWithString:cell.index.text]];
-        [detail appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
-        [detail appendAttributedString:[TextHelper markedString:@"Type: "]];
+
+        NSString* objectType;
+        switch (header.tag) {
+            case 0: objectType = @"Vertex"; break;
+            case 1: objectType = @"Edge"; break;
+            case 2: objectType = @"Triangle"; break;
+            case 3: objectType = @"Tetrahedron"; break;
+            case -1: objectType = @"Component"; break;
+            case -2: objectType = @"Boundary component"; break;
+            default: objectType = @"Unknown"; break;
+        }
+
+        [detail appendAttributedString:[TextHelper markedString:[NSString stringWithFormat:@"%@ #: ", objectType]]];
+        [detail appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%d\n", indexPath.row - 1]]];
+
+        [detail appendAttributedString:[SkeletonViewer titleFromHeaderField:header.data0]];
         [detail appendAttributedString:[[NSAttributedString alloc] initWithString:cell.data0.text]];
         [detail appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
-        [detail appendAttributedString:[TextHelper markedString:@"Size: "]];
-        [detail appendAttributedString:[[NSAttributedString alloc] initWithString:cell.data1.text]];
-        [detail appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
-        [detail appendAttributedString:[TextHelper markedString:@"Pieces: "]];
-        [detail appendAttributedString:[[NSAttributedString alloc] initWithString:cell.data2.text]];
+
+        if (header.data1) {
+            [detail appendAttributedString:[SkeletonViewer titleFromHeaderField:header.data1]];
+            [detail appendAttributedString:[[NSAttributedString alloc] initWithString:cell.data1.text]];
+            [detail appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
+        }
+
+        if (header.data2) {
+            [detail appendAttributedString:[SkeletonViewer titleFromHeaderField:header.data2]];
+            [detail appendAttributedString:[[NSAttributedString alloc] initWithString:cell.data2.text]];
+            [detail appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
+        }
+
         [detail addAttributes:@{NSFontAttributeName: cell.index.font} range:NSMakeRange(0, detail.length)];
-        
+
         TextPopover* c = [self.storyboard instantiateViewControllerWithIdentifier:@"textPopover"];
         c.text = detail;
         UIPopoverController* popover = [[UIPopoverController alloc] initWithContentViewController:c];

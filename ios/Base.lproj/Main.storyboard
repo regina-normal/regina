@@ -1986,7 +1986,7 @@
                                             <outlet property="index" destination="PKQ-iD-gY7" id="CHt-CZ-u4V"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="VertexHeader" id="Eww-vH-vv0">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="VertexHeader" id="Eww-vH-vv0" customClass="SkeletonHeaderCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Eww-vH-vv0" id="5u5-ll-fwy">
@@ -2041,6 +2041,12 @@
                                                 <constraint firstAttribute="centerY" secondItem="agN-Qj-jFL" secondAttribute="centerY" id="wPs-I8-SDU"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="data0" destination="ZS9-hA-nUx" id="a7E-Yk-F3L"/>
+                                            <outlet property="data1" destination="LUh-kz-zbX" id="rSk-zS-Zjx"/>
+                                            <outlet property="data2" destination="agN-Qj-jFL" id="2Ha-5K-R1Y"/>
+                                            <outlet property="index" destination="KkP-Ae-zJ2" id="jcE-OB-dfS"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Vertex" id="Gvw-dC-hAv" customClass="SkeletonCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
@@ -2101,7 +2107,7 @@
                                             <outlet property="index" destination="2nf-xF-DMB" id="eIc-Lv-Cca"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="EdgeHeader" id="NWd-oZ-ngK">
+                                    <tableViewCell tag="1" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="EdgeHeader" id="NWd-oZ-ngK" customClass="SkeletonHeaderCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="NWd-oZ-ngK" id="da7-Mf-hkV">
@@ -2156,6 +2162,12 @@
                                                 <constraint firstItem="2gM-FZ-PC4" firstAttribute="leading" secondItem="dEK-WU-crK" secondAttribute="trailing" constant="8" id="zsq-Pz-wWV"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="data0" destination="Iac-Ur-FqC" id="KR2-Xe-T6q"/>
+                                            <outlet property="data1" destination="dEK-WU-crK" id="Lhu-Ub-vhK"/>
+                                            <outlet property="data2" destination="2gM-FZ-PC4" id="7jk-SP-Wsl"/>
+                                            <outlet property="index" destination="hpg-xx-V4a" id="CsE-0I-XJX"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Edge" id="hRE-zj-bOm" customClass="SkeletonCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
@@ -2216,20 +2228,20 @@
                                             <outlet property="index" destination="9Bv-A4-SPt" id="QCa-DU-dNJ"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TriangleHeader" rowHeight="86" id="e4b-nI-Nh8">
+                                    <tableViewCell tag="2" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TriangleHeader" rowHeight="86" id="e4b-nI-Nh8" customClass="SkeletonHeaderCell">
                                         <rect key="frame" x="20" y="341" width="663" height="86"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="e4b-nI-Nh8" id="aK9-kg-A2h">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="250" text="To add, remove or edit triangles, visit the Gluings tab." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ssB-x6-wsa">
-                                                    <rect key="frame" x="0.0" y="6" width="663" height="23"/>
+                                                    <rect key="frame" x="0.0" y="6" width="663" height="25"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="#" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YVE-mj-Faa">
-                                                    <rect key="frame" x="8" y="41" width="40" height="17"/>
+                                                    <rect key="frame" x="8" y="43" width="40" height="17"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="40" id="WYB-3D-pVc"/>
                                                     </constraints>
@@ -2237,8 +2249,8 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Vertex #" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TTj-X9-FBk">
-                                                    <rect key="frame" x="56" y="41" width="120" height="17"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Vertex # (0, 1, 2)" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TTj-X9-FBk">
+                                                    <rect key="frame" x="56" y="43" width="120" height="36"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="120" id="4Eq-sR-fEn"/>
                                                     </constraints>
@@ -2246,14 +2258,8 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="(0, 1, 2)" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DtQ-sx-Bll">
-                                                    <rect key="frame" x="56" y="62" width="120" height="17"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Edge #" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Ro-Im-7wY">
-                                                    <rect key="frame" x="184" y="41" width="120" height="17"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Edge # (01, 02, 12)" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Ro-Im-7wY">
+                                                    <rect key="frame" x="184" y="43" width="120" height="36"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="120" id="LpS-0g-dLz"/>
                                                     </constraints>
@@ -2261,33 +2267,26 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="(01, 02, 12)" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0wT-Mp-mtF">
-                                                    <rect key="frame" x="184" y="62" width="120" height="17"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
                                             </subviews>
                                             <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                             <constraints>
+                                                <constraint firstItem="6Ro-Im-7wY" firstAttribute="top" secondItem="YVE-mj-Faa" secondAttribute="top" id="0i1-Io-YW5"/>
                                                 <constraint firstItem="ssB-x6-wsa" firstAttribute="top" secondItem="aK9-kg-A2h" secondAttribute="top" constant="6" id="2ee-uT-Whg"/>
-                                                <constraint firstItem="TTj-X9-FBk" firstAttribute="centerY" secondItem="YVE-mj-Faa" secondAttribute="centerY" id="4rX-rb-5gp"/>
                                                 <constraint firstItem="6Ro-Im-7wY" firstAttribute="top" secondItem="ssB-x6-wsa" secondAttribute="bottom" constant="12" id="9A5-sb-4kw"/>
                                                 <constraint firstItem="TTj-X9-FBk" firstAttribute="leading" secondItem="YVE-mj-Faa" secondAttribute="trailing" constant="8" id="DNp-Zs-zBD"/>
-                                                <constraint firstItem="0wT-Mp-mtF" firstAttribute="width" secondItem="6Ro-Im-7wY" secondAttribute="width" id="DuV-MB-F5d"/>
                                                 <constraint firstAttribute="trailing" secondItem="ssB-x6-wsa" secondAttribute="trailing" id="EW2-re-F9D"/>
-                                                <constraint firstItem="0wT-Mp-mtF" firstAttribute="top" secondItem="6Ro-Im-7wY" secondAttribute="bottom" constant="4" id="GpI-Wt-iv8"/>
                                                 <constraint firstItem="YVE-mj-Faa" firstAttribute="leading" secondItem="aK9-kg-A2h" secondAttribute="leading" constant="8" id="Hbt-Cu-x7K"/>
-                                                <constraint firstItem="TTj-X9-FBk" firstAttribute="centerY" secondItem="6Ro-Im-7wY" secondAttribute="centerY" id="RpM-0m-BOZ"/>
-                                                <constraint firstItem="TTj-X9-FBk" firstAttribute="leading" secondItem="DtQ-sx-Bll" secondAttribute="leading" id="Uxe-f6-pUy"/>
-                                                <constraint firstItem="DtQ-sx-Bll" firstAttribute="centerY" secondItem="0wT-Mp-mtF" secondAttribute="centerY" id="ZaQ-92-k3C"/>
-                                                <constraint firstItem="TTj-X9-FBk" firstAttribute="width" secondItem="DtQ-sx-Bll" secondAttribute="width" id="a3K-EA-e7H"/>
-                                                <constraint firstItem="0wT-Mp-mtF" firstAttribute="leading" secondItem="6Ro-Im-7wY" secondAttribute="leading" id="qew-jg-Zg8"/>
+                                                <constraint firstItem="6Ro-Im-7wY" firstAttribute="top" secondItem="TTj-X9-FBk" secondAttribute="top" id="bAo-rI-Feb"/>
                                                 <constraint firstItem="6Ro-Im-7wY" firstAttribute="leading" secondItem="TTj-X9-FBk" secondAttribute="trailing" constant="8" id="uyK-RU-fc2"/>
-                                                <constraint firstAttribute="bottom" secondItem="0wT-Mp-mtF" secondAttribute="bottom" constant="6" id="xgB-lB-b0s"/>
+                                                <constraint firstAttribute="bottom" secondItem="6Ro-Im-7wY" secondAttribute="bottom" constant="6" id="xVs-Mt-dl2"/>
                                                 <constraint firstItem="ssB-x6-wsa" firstAttribute="leading" secondItem="aK9-kg-A2h" secondAttribute="leading" id="yU1-af-8jo"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="data0" destination="TTj-X9-FBk" id="H8V-93-sS5"/>
+                                            <outlet property="data1" destination="6Ro-Im-7wY" id="jkw-Bt-lZJ"/>
+                                            <outlet property="index" destination="YVE-mj-Faa" id="Y3C-IR-Xl8"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Triangle" id="wLB-MY-Xbh" customClass="SkeletonCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
@@ -2336,7 +2335,7 @@
                                             <outlet property="index" destination="zgg-n2-7ce" id="Ul6-wL-eky"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ComponentHeader" id="seV-aE-4bV">
+                                    <tableViewCell tag="-1" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ComponentHeader" id="seV-aE-4bV" customClass="SkeletonHeaderCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="seV-aE-4bV" id="Afc-6b-oOq">
@@ -2391,6 +2390,12 @@
                                                 <constraint firstItem="wif-IB-emn" firstAttribute="top" secondItem="Afc-6b-oOq" secondAttribute="top" constant="6" id="svw-Ed-90T"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="data0" destination="MVn-mS-uSb" id="L1d-dS-uAS"/>
+                                            <outlet property="data1" destination="rgv-7F-tMg" id="6lH-Ec-R5o"/>
+                                            <outlet property="data2" destination="fVE-Xb-jSL" id="LjP-4x-OyA"/>
+                                            <outlet property="index" destination="wif-IB-emn" id="NaG-Ia-TBB"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Component" id="tx7-tX-JDP" customClass="SkeletonCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
@@ -2451,7 +2456,7 @@
                                             <outlet property="index" destination="XfJ-IR-vfu" id="MBi-Sz-TRl"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="BdryHeader" id="0Ei-bw-U4X">
+                                    <tableViewCell tag="-2" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="BdryHeader" id="0Ei-bw-U4X" customClass="SkeletonHeaderCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0Ei-bw-U4X" id="URu-Sk-tpk">
@@ -2495,6 +2500,11 @@
                                                 <constraint firstItem="yvG-zZ-7sP" firstAttribute="leading" secondItem="URu-Sk-tpk" secondAttribute="leading" constant="8" id="qU8-71-8wh"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="data0" destination="JBf-of-hZL" id="KAa-VB-dlZ"/>
+                                            <outlet property="data1" destination="cxP-Ne-gCC" id="zLL-5u-FQK"/>
+                                            <outlet property="index" destination="yvG-zZ-7sP" id="a7L-RY-MHo"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Bdry" id="hed-pC-kPN" customClass="SkeletonCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
@@ -3502,7 +3512,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="3G1-uR-eUS">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="3G1-uR-eUS">
                                 <rect key="frame" x="20" y="194" width="663" height="517"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
@@ -3529,7 +3539,7 @@
                                             <outlet property="index" destination="kDB-i0-fke" id="REI-lc-vU0"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="VertexHeader" id="N2g-fS-qVX">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="VertexHeader" id="N2g-fS-qVX" customClass="SkeletonHeaderCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="N2g-fS-qVX" id="dYG-Dy-GFx">
@@ -3584,6 +3594,12 @@
                                                 <constraint firstItem="EJH-on-ihi" firstAttribute="leading" secondItem="aFX-Sp-h08" secondAttribute="trailing" constant="8" id="vqe-2v-jsr"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="data0" destination="aFX-Sp-h08" id="ki6-1m-IQG"/>
+                                            <outlet property="data1" destination="EJH-on-ihi" id="DC7-X8-wPi"/>
+                                            <outlet property="data2" destination="lVI-6b-BPK" id="6Li-a5-MUE"/>
+                                            <outlet property="index" destination="14X-6F-LJq" id="2K0-tf-yBM"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Vertex" id="jIv-Tt-KfE" customClass="SkeletonCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
@@ -3644,7 +3660,7 @@
                                             <outlet property="index" destination="gBR-sK-0PE" id="nrt-ha-tJB"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="EdgeHeader" id="dDL-6l-itb">
+                                    <tableViewCell tag="1" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="EdgeHeader" id="dDL-6l-itb" customClass="SkeletonHeaderCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="dDL-6l-itb" id="pSA-Q7-10b">
@@ -3699,6 +3715,12 @@
                                                 <constraint firstAttribute="centerY" secondItem="VP5-dG-mnt" secondAttribute="centerY" id="pr5-Sr-NHg"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="data0" destination="vlV-aY-ztg" id="9Vb-pQ-KdI"/>
+                                            <outlet property="data1" destination="35N-Tu-5fL" id="y00-UY-NoX"/>
+                                            <outlet property="data2" destination="VP5-dG-mnt" id="Yaf-6f-s2y"/>
+                                            <outlet property="index" destination="8Vf-lZ-YCF" id="Of9-Lz-BYv"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Edge" id="xkV-DB-Nju" customClass="SkeletonCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
@@ -3759,7 +3781,7 @@
                                             <outlet property="index" destination="CqI-mk-gqq" id="sRU-mf-KD9"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TriangleHeader" id="WQB-uV-AJf">
+                                    <tableViewCell tag="2" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TriangleHeader" id="WQB-uV-AJf" customClass="SkeletonHeaderCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="WQB-uV-AJf" id="8hM-hA-4Cn">
@@ -3814,6 +3836,12 @@
                                                 <constraint firstAttribute="centerY" secondItem="Mib-LN-ZWO" secondAttribute="centerY" id="rV6-qj-cx6"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="data0" destination="Q0u-Hn-xNj" id="Qn2-y6-vsB"/>
+                                            <outlet property="data1" destination="cr1-zu-KhZ" id="kLN-Vp-qZg"/>
+                                            <outlet property="data2" destination="gkU-vc-52Y" id="QAN-6W-9df"/>
+                                            <outlet property="index" destination="Mib-LN-ZWO" id="huT-ui-013"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Triangle" id="dMk-cY-m6Y" customClass="SkeletonCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
@@ -3874,19 +3902,19 @@
                                             <outlet property="index" destination="jeQ-xT-8ZF" id="87K-Xw-0nb"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TetrahedronHeader" rowHeight="86" id="Lfu-RB-mz1">
+                                    <tableViewCell tag="3" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TetrahedronHeader" rowHeight="86" id="Lfu-RB-mz1" customClass="SkeletonHeaderCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Lfu-RB-mz1" id="Chn-8o-rCn">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="250" text="To add, remove or edit tetrahedra, visit the Gluings tab." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lBe-Np-fw4">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="250" misplaced="YES" text="To add, remove or edit tetrahedra, visit the Gluings tab." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lBe-Np-fw4">
                                                     <rect key="frame" x="0.0" y="6" width="663" height="23"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="#" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uO5-DQ-t0d">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" misplaced="YES" text="#" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uO5-DQ-t0d">
                                                     <rect key="frame" x="8" y="41" width="40" height="17"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="40" id="vxA-9k-ldw"/>
@@ -3895,8 +3923,8 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Vertex #" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pjY-gZ-0w7">
-                                                    <rect key="frame" x="56" y="41" width="160" height="17"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Vertex # (0, 1, 2, 3)" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pjY-gZ-0w7">
+                                                    <rect key="frame" x="56" y="43" width="160" height="36"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="160" id="gEG-Rt-T47"/>
                                                     </constraints>
@@ -3904,14 +3932,8 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="(0, 1, 2, 3)" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Qs-bM-elq">
-                                                    <rect key="frame" x="56" y="62" width="160" height="17"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Edge #" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Eot-AE-X0E">
-                                                    <rect key="frame" x="224" y="41" width="220" height="17"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Edge # (01, 02, 03, 12, 13, 23)" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Eot-AE-X0E">
+                                                    <rect key="frame" x="224" y="43" width="220" height="36"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="220" id="qya-Q2-Swf"/>
                                                     </constraints>
@@ -3919,20 +3941,8 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="(01, 02, 03, 12, 13, 23)" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mp7-dY-fJ2">
-                                                    <rect key="frame" x="224" y="62" width="220" height="17"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Triangle #" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ej5-uQ-mla">
-                                                    <rect key="frame" x="452" y="41" width="203" height="17"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="(012, 013, 023, 123)" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pgo-MI-mM1">
-                                                    <rect key="frame" x="452" y="62" width="203" height="17"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Triangle # (012, 013, 023, 123)" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ej5-uQ-mla">
+                                                    <rect key="frame" x="452" y="43" width="203" height="36"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
@@ -3941,30 +3951,26 @@
                                             <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                             <constraints>
                                                 <constraint firstItem="uO5-DQ-t0d" firstAttribute="leading" secondItem="Chn-8o-rCn" secondAttribute="leading" constant="8" id="0yd-Sz-8JF"/>
-                                                <constraint firstItem="pjY-gZ-0w7" firstAttribute="centerY" secondItem="Eot-AE-X0E" secondAttribute="centerY" id="23o-St-LnW"/>
-                                                <constraint firstItem="Mp7-dY-fJ2" firstAttribute="width" secondItem="Eot-AE-X0E" secondAttribute="width" id="2yb-IB-nZI"/>
                                                 <constraint firstAttribute="trailing" secondItem="lBe-Np-fw4" secondAttribute="trailing" id="7TR-zI-G6o"/>
                                                 <constraint firstItem="pjY-gZ-0w7" firstAttribute="leading" secondItem="uO5-DQ-t0d" secondAttribute="trailing" constant="8" id="9ge-qB-gX7"/>
-                                                <constraint firstItem="pjY-gZ-0w7" firstAttribute="width" secondItem="8Qs-bM-elq" secondAttribute="width" id="DeC-Ul-JPd"/>
-                                                <constraint firstItem="Eot-AE-X0E" firstAttribute="centerY" secondItem="ej5-uQ-mla" secondAttribute="centerY" id="EPl-Ng-Sca"/>
                                                 <constraint firstItem="lBe-Np-fw4" firstAttribute="leading" secondItem="Chn-8o-rCn" secondAttribute="leading" id="Hxk-dv-an4"/>
-                                                <constraint firstItem="ej5-uQ-mla" firstAttribute="centerX" secondItem="Pgo-MI-mM1" secondAttribute="centerX" id="I98-2s-r0g"/>
                                                 <constraint firstItem="Eot-AE-X0E" firstAttribute="top" secondItem="lBe-Np-fw4" secondAttribute="bottom" constant="12" id="NxQ-z8-Mzh"/>
-                                                <constraint firstItem="ej5-uQ-mla" firstAttribute="leading" secondItem="Pgo-MI-mM1" secondAttribute="leading" id="OF1-HW-cis"/>
-                                                <constraint firstAttribute="bottom" secondItem="Mp7-dY-fJ2" secondAttribute="bottom" constant="6" id="Oqt-eG-4RJ"/>
-                                                <constraint firstItem="pjY-gZ-0w7" firstAttribute="leading" secondItem="8Qs-bM-elq" secondAttribute="leading" id="QHb-6f-KiA"/>
-                                                <constraint firstItem="Mp7-dY-fJ2" firstAttribute="top" secondItem="Eot-AE-X0E" secondAttribute="bottom" constant="4" id="W59-me-CaP"/>
                                                 <constraint firstItem="lBe-Np-fw4" firstAttribute="top" secondItem="Chn-8o-rCn" secondAttribute="top" constant="6" id="WQX-6d-yVm"/>
-                                                <constraint firstItem="ej5-uQ-mla" firstAttribute="width" secondItem="Pgo-MI-mM1" secondAttribute="width" id="WrM-xa-foT"/>
-                                                <constraint firstItem="Mp7-dY-fJ2" firstAttribute="leading" secondItem="Eot-AE-X0E" secondAttribute="leading" id="fpW-E2-8zy"/>
+                                                <constraint firstItem="ej5-uQ-mla" firstAttribute="top" secondItem="uO5-DQ-t0d" secondAttribute="top" id="Z2d-7C-Fg0"/>
+                                                <constraint firstItem="ej5-uQ-mla" firstAttribute="top" secondItem="pjY-gZ-0w7" secondAttribute="top" id="hZ8-6a-TCe"/>
+                                                <constraint firstAttribute="bottom" secondItem="Eot-AE-X0E" secondAttribute="bottom" constant="6" id="jsF-v8-xXi"/>
                                                 <constraint firstItem="Eot-AE-X0E" firstAttribute="leading" secondItem="pjY-gZ-0w7" secondAttribute="trailing" constant="8" id="nub-X0-uhD"/>
                                                 <constraint firstItem="ej5-uQ-mla" firstAttribute="leading" secondItem="Eot-AE-X0E" secondAttribute="trailing" constant="8" id="pvh-Uq-nn6"/>
-                                                <constraint firstItem="8Qs-bM-elq" firstAttribute="centerY" secondItem="Pgo-MI-mM1" secondAttribute="centerY" id="sPM-1z-zZv"/>
+                                                <constraint firstItem="ej5-uQ-mla" firstAttribute="top" secondItem="Eot-AE-X0E" secondAttribute="top" id="qHf-jJ-24Y"/>
                                                 <constraint firstAttribute="trailing" secondItem="ej5-uQ-mla" secondAttribute="trailing" constant="8" id="viv-LJ-q3h"/>
-                                                <constraint firstItem="pjY-gZ-0w7" firstAttribute="centerY" secondItem="uO5-DQ-t0d" secondAttribute="centerY" id="wEO-KQ-wKr"/>
-                                                <constraint firstItem="8Qs-bM-elq" firstAttribute="centerY" secondItem="Mp7-dY-fJ2" secondAttribute="centerY" id="xmH-5W-vi8"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="data0" destination="pjY-gZ-0w7" id="gnG-uA-khG"/>
+                                            <outlet property="data1" destination="Eot-AE-X0E" id="DiT-Uo-N4H"/>
+                                            <outlet property="data2" destination="ej5-uQ-mla" id="FR1-jM-TRn"/>
+                                            <outlet property="index" destination="uO5-DQ-t0d" id="ZT3-lc-McB"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Tetrahedron" id="lLE-J7-MFa" customClass="SkeletonCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
@@ -4027,7 +4033,7 @@
                                             <outlet property="index" destination="bvd-wE-hFe" id="7X5-Z8-sX0"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ComponentHeader" id="MOu-eO-HDs">
+                                    <tableViewCell tag="-1" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ComponentHeader" id="MOu-eO-HDs" customClass="SkeletonHeaderCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="MOu-eO-HDs" id="2Ac-T4-nph">
@@ -4082,6 +4088,12 @@
                                                 <constraint firstAttribute="centerY" secondItem="XJz-MB-xIO" secondAttribute="centerY" id="sfE-8u-iFM"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="data0" destination="Aja-Vh-Kzp" id="l3h-2y-NI5"/>
+                                            <outlet property="data1" destination="KEp-HQ-nDI" id="fEI-FU-7q3"/>
+                                            <outlet property="data2" destination="XJz-MB-xIO" id="1lL-I6-kzb"/>
+                                            <outlet property="index" destination="P0q-fl-JUW" id="6dd-mg-LQY"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Component" id="TWN-26-pFu" customClass="SkeletonCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
@@ -4142,7 +4154,7 @@
                                             <outlet property="index" destination="gPc-XF-DEC" id="ggd-uu-ef0"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="BdryHeader" id="0rt-E9-zoY">
+                                    <tableViewCell tag="-2" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="BdryHeader" id="0rt-E9-zoY" customClass="SkeletonHeaderCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0rt-E9-zoY" id="3Gk-WY-azg">
@@ -4197,6 +4209,12 @@
                                                 <constraint firstItem="yJV-59-R8A" firstAttribute="leading" secondItem="c20-WY-w43" secondAttribute="trailing" constant="8" id="vgC-eb-MdH"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="data0" destination="c20-WY-w43" id="aOn-Qr-Eb3"/>
+                                            <outlet property="data1" destination="yJV-59-R8A" id="rC0-bR-w7E"/>
+                                            <outlet property="data2" destination="r6O-pm-Va9" id="m6Q-oW-sAm"/>
+                                            <outlet property="index" destination="9yo-bP-8p3" id="1ON-6d-Qcu"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Bdry" id="Kbd-tQ-zl2" customClass="SkeletonCell">
                                         <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
