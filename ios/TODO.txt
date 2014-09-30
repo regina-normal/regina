@@ -47,6 +47,7 @@ LONG-TERM:
 - PDF viewer: use a filename based on the packet label.
 - Offer a way to run the test suite.
 - Graphviz for dual graphs.
+- Surface coordinates viewer: support filters
 
 - Support state preservation and restoration.  See:
   https://developer.apple.com/library/ios/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/StatePreservation/StatePreservation.html

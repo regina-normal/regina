@@ -2598,7 +2598,7 @@
         <!--Coordinates-->
         <scene sceneID="sz0-zr-La9">
             <objects>
-                <viewController id="ewC-ja-LfT" sceneMemberID="viewController">
+                <viewController id="ewC-ja-LfT" customClass="SurfacesCoords" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="HG6-RJ-dGn"/>
                         <viewControllerLayoutGuide type="bottom" id="pTB-SC-3WZ"/>
@@ -2647,28 +2647,71 @@
                                     <constraint firstAttribute="height" constant="10" id="ZNh-Ei-V80"/>
                                 </constraints>
                             </view>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="elu-fJ-bll" customClass="MDSpreadView">
+                                <rect key="frame" x="20" y="208" width="663" height="491"/>
+                            </scrollView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Compact view" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g5X-up-SB9">
+                                <rect key="frame" x="533" y="176" width="93" height="17"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="TQe-19-7jF">
+                                <rect key="frame" x="20" y="171" width="359" height="29"/>
+                                <segments>
+                                    <segment title="Standard"/>
+                                    <segment title=" "/>
+                                    <segment title="Edge weight"/>
+                                    <segment title="Triangle arc"/>
+                                </segments>
+                                <connections>
+                                    <action selector="coordsChanged:" destination="ewC-ja-LfT" eventType="valueChanged" id="TdJ-VU-Hfh"/>
+                                </connections>
+                            </segmentedControl>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="H76-35-f7y">
+                                <rect key="frame" x="634" y="169" width="51" height="31"/>
+                                <connections>
+                                    <action selector="compactChanged:" destination="EDU-Ge-aTy" eventType="valueChanged" id="Ynl-sp-ibW"/>
+                                    <action selector="compactChanged:" destination="ewC-ja-LfT" eventType="valueChanged" id="yXB-Pk-aiF"/>
+                                </connections>
+                            </switch>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="TQe-19-7jF" firstAttribute="centerY" secondItem="H76-35-f7y" secondAttribute="centerY" id="0MN-rD-DXx"/>
+                            <constraint firstItem="g5X-up-SB9" firstAttribute="centerY" secondItem="H76-35-f7y" secondAttribute="centerY" id="0Od-Ee-dQ3"/>
                             <constraint firstAttribute="trailing" secondItem="6EV-8f-eL4" secondAttribute="trailing" constant="20" id="3FZ-ll-a6g"/>
                             <constraint firstItem="e2J-lZ-krM" firstAttribute="leading" secondItem="Fig-cd-j6X" secondAttribute="trailing" constant="8" id="5Zz-Ae-lQ2"/>
+                            <constraint firstAttribute="trailing" secondItem="elu-fJ-bll" secondAttribute="trailing" constant="20" id="B7K-qe-7l6"/>
                             <constraint firstItem="2Fv-uK-oTU" firstAttribute="width" secondItem="6zS-bi-uxd" secondAttribute="width" id="EEW-K4-yBy"/>
                             <constraint firstItem="2Fv-uK-oTU" firstAttribute="leading" secondItem="e2J-lZ-krM" secondAttribute="trailing" constant="8" id="FPS-os-bOZ"/>
                             <constraint firstItem="Fig-cd-j6X" firstAttribute="top" secondItem="0CN-h3-DHx" secondAttribute="bottom" constant="8" id="H9Z-6O-Jmr"/>
                             <constraint firstAttribute="trailing" secondItem="2Fv-uK-oTU" secondAttribute="trailing" constant="20" id="HI1-Cw-Zg6"/>
                             <constraint firstAttribute="trailing" secondItem="0CN-h3-DHx" secondAttribute="trailing" constant="20" id="JQh-mj-fQb"/>
+                            <constraint firstItem="TQe-19-7jF" firstAttribute="leading" secondItem="Xqc-fJ-KHh" secondAttribute="leading" constant="20" id="MuJ-jP-iMJ"/>
                             <constraint firstItem="0CN-h3-DHx" firstAttribute="top" secondItem="6EV-8f-eL4" secondAttribute="bottom" constant="8" id="PIU-A2-Y1P"/>
                             <constraint firstItem="0CN-h3-DHx" firstAttribute="leading" secondItem="Xqc-fJ-KHh" secondAttribute="leading" constant="20" id="Uix-mg-wwo"/>
+                            <constraint firstItem="H76-35-f7y" firstAttribute="leading" secondItem="g5X-up-SB9" secondAttribute="trailing" constant="8" id="WLo-Cc-zdm"/>
+                            <constraint firstItem="elu-fJ-bll" firstAttribute="top" secondItem="H76-35-f7y" secondAttribute="bottom" constant="8" id="XhM-Bs-l0s"/>
                             <constraint firstItem="6zS-bi-uxd" firstAttribute="leading" secondItem="Xqc-fJ-KHh" secondAttribute="leading" constant="20" id="b2q-Y1-DV4"/>
+                            <constraint firstAttribute="trailing" secondItem="H76-35-f7y" secondAttribute="trailing" constant="20" id="ePk-GV-fHT"/>
                             <constraint firstItem="e2J-lZ-krM" firstAttribute="baseline" secondItem="Fig-cd-j6X" secondAttribute="baseline" id="j7f-9p-21d"/>
+                            <constraint firstItem="pTB-SC-3WZ" firstAttribute="top" secondItem="elu-fJ-bll" secondAttribute="bottom" constant="20" id="kxe-D6-d5b"/>
+                            <constraint firstItem="elu-fJ-bll" firstAttribute="leading" secondItem="Xqc-fJ-KHh" secondAttribute="leading" constant="20" id="lOD-f6-v0z"/>
                             <constraint firstItem="6EV-8f-eL4" firstAttribute="leading" secondItem="Xqc-fJ-KHh" secondAttribute="leading" constant="20" id="m49-k7-Bc4"/>
                             <constraint firstItem="6EV-8f-eL4" firstAttribute="top" secondItem="HG6-RJ-dGn" secondAttribute="bottom" constant="20" id="okI-IY-PwP"/>
                             <constraint firstItem="Fig-cd-j6X" firstAttribute="leading" secondItem="6zS-bi-uxd" secondAttribute="trailing" constant="8" id="piN-Qu-DPH"/>
                             <constraint firstItem="2Fv-uK-oTU" firstAttribute="centerY" secondItem="Fig-cd-j6X" secondAttribute="centerY" id="rQ1-rZ-clZ"/>
                             <constraint firstItem="2Fv-uK-oTU" firstAttribute="centerY" secondItem="6zS-bi-uxd" secondAttribute="centerY" id="roy-Fo-bGh"/>
+                            <constraint firstItem="H76-35-f7y" firstAttribute="top" secondItem="e2J-lZ-krM" secondAttribute="bottom" constant="20" id="uiG-hx-GPj"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Coordinates" image="Tab-Coords" id="n9p-EZ-sIQ"/>
+                    <connections>
+                        <outlet property="compact" destination="H76-35-f7y" id="oR6-eZ-Zbq"/>
+                        <outlet property="grid" destination="elu-fJ-bll" id="Byt-MH-wSW"/>
+                        <outlet property="selectCoords" destination="TQe-19-7jF" id="AUD-4g-MeO"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EaM-I1-12P" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

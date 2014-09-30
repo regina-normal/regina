@@ -144,9 +144,12 @@ using regina::NTriangle;
         if (! (tri && tri->getEdge(whichCoord)->isBoundary()))
             return [NSString stringWithFormat:@"%ld", whichCoord];
         else
-            return [NSString stringWithFormat:@"%ld [B]", whichCoord];
+            return [NSString stringWithFormat:@"%ld: ∂", whichCoord];
     } else if (coordSystem == regina::NS_TRIANGLE_ARCS) {
-        return [NSString stringWithFormat:@"%ld: %ld", (whichCoord / 3), (whichCoord % 3)];
+        if (! (tri && tri->getTriangle(whichCoord / 3)->isBoundary()))
+            return [NSString stringWithFormat:@"%ld: %ld", (whichCoord / 3), (whichCoord % 3)];
+        else
+            return [NSString stringWithFormat:@"%ld: %ld: ∂", (whichCoord / 3), (whichCoord % 3)];
     } else if (coordSystem == regina::NS_ORIENTED) {
         unsigned long stdCoord = whichCoord / 2;
         if (whichCoord % 2 == 0) {
