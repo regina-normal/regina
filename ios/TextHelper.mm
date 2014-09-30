@@ -37,6 +37,7 @@ static UIColor* darkerGoldenrod = [UIColor colorWithRed:(0x80 / 256.0) green:(0x
 static UIColor* yesColour = [UIColor colorWithRed:0.0 green:0.5 blue:0.0 alpha:1.0];
 static UIColor* noColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha:1.0];
 static UIColor* badColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha:1.0];
+static UIColor* dimColour = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1.0];
 
 @implementation TextHelper
 
@@ -60,6 +61,11 @@ static UIColor* badColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha:1
 + (NSAttributedString *)badString:(NSString *)text
 {
     return [[NSAttributedString alloc] initWithString:text attributes:@{NSForegroundColorAttributeName: badColour}];
+}
+
++ (NSAttributedString *)dimString:(NSString *)text
+{
+    return [[NSAttributedString alloc] initWithString:text attributes:@{NSForegroundColorAttributeName: dimColour}];
 }
 
 + (void)appendToList:(NSMutableString*)str item:(NSString*)item

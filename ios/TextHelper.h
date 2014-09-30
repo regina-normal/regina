@@ -59,6 +59,11 @@
 + (NSAttributedString*)badString:(NSString*)text;
 
 /**
+ * Renders the given text in a dim grey colour.
+ */
++ (NSAttributedString*)dimString:(NSString*)text;
+
+/**
  * Appends \a item to \a str.
  * If \a str is non-empty then the new text \a item will be
  * separated from the existing text by a comma and a space.
