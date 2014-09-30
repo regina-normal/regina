@@ -42,8 +42,12 @@
 
 #define KEY_SURFACES_COORDS_COMPACT @"SurfacesCoordsCompact"
 
-static NSString *compactCellID = @"_ReginaCompactSpreadCell";
-static NSString *regularCellID = @"_ReginaRegularSpreadCell";
+static NSString *compactCellID = @"_ReginaCompactCell";
+static NSString *regularCellID = @"_ReginaRegularCell";
+static NSString *headerCellID = @"_ReginaHeaderCell";
+
+static UIColor *headerBlack = [UIColor blackColor];
+static UIColor *headerBdry = [UIColor colorWithRed:(0xB8 / 256.0) green:(0x86 / 256.0) blue:(0x0B / 256.0) alpha:1.0];
 
 // TODO: On long press, view details (and cut/crush).
 // TODO: Edge weight and triangle arc coords: Yellow header
@@ -109,8 +113,8 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
 
     [self initMetrics];
     self.grid.defaultHeaderColumnCellClass = [RegularSpreadHeaderCellRight class];
-    self.grid.defaultHeaderRowCellClass = [RegularSpreadHeaderCellCentre class];
     self.grid.defaultHeaderCornerCellClass = [RegularSpreadHeaderCellCentre class];
+    // The column headers are managed manually, so that we can colour them if required.
     self.grid.dataSource = self;
     self.grid.delegate = self;
     self.grid.allowsRowHeaderSelection = YES;
@@ -218,10 +222,23 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
     return self.packet->getNumberOfSurfaces();
 }
 
-- (id)spreadView:(MDSpreadView *)aSpreadView titleForHeaderInRowSection:(NSInteger)section forColumnAtIndexPath:(MDIndexPath *)columnPath
+- (id)spreadView:(MDSpreadView *)aSpreadView titleForHeaderInColumnSection:(NSInteger)section forRowAtIndexPath:(MDIndexPath *)rowPath
 {
-    if (self.compact.on)
-        return @"";
+    return [NSString stringWithFormat:@"%ld.", (long)rowPath.row];
+}
+
+- (MDSpreadViewCell *)spreadView:(MDSpreadView *)aSpreadView cellForHeaderInRowSection:(NSInteger)section forColumnAtIndexPath:(MDIndexPath *)columnPath
+{
+    MDSpreadViewCell* cell = [aSpreadView dequeueReusableCellWithIdentifier:headerCellID];
+    if (! cell)
+        cell = [[RegularSpreadHeaderCellCentre alloc] initWithStyle:MDSpreadViewHeaderCellStyleRow reuseIdentifier:headerCellID];
+
+    cell.textLabel.textColor = headerBlack;
+
+    if (self.compact.on) {
+        cell.textLabel.text = @"";
+        return cell;
+    }
 
     int prop = PROP_NONE;
     int coord = columnPath.column;
@@ -240,31 +257,32 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
 
     switch (prop) {
         case PROP_NONE: break;
-        case PROP_NAME: return @"Name";
-        case PROP_EULER: return @"Euler";
-        case PROP_ORBL: return @"Orient";
-        case PROP_SIDES: return @"Sides";
-        case PROP_BDRY: return @"Bdry";
-        case PROP_LINK: return @"Link";
-        case PROP_TYPE: return @"Type";
+        case PROP_NAME: cell.textLabel.text = @"Name"; return cell;
+        case PROP_EULER: cell.textLabel.text = @"Euler"; return cell;
+        case PROP_ORBL: cell.textLabel.text = @"Orient"; return cell;
+        case PROP_SIDES: cell.textLabel.text = @"Sides"; return cell;
+        case PROP_BDRY: cell.textLabel.text = @"Bdry"; return cell;
+        case PROP_LINK: cell.textLabel.text = @"Link"; return cell;
+        case PROP_TYPE: cell.textLabel.text = @"Type"; return cell;
     }
 
     if (self.packet->allowsAlmostNormal()) {
-        if (coord == 0)
-            return @"Octagon";
-        else
+        if (coord == 0) {
+            cell.textLabel.text = @"Octagon";
+            return cell;
+        } else
             --coord;
     }
 
-    return (self.compact.on ? @"" :
-            [Coordinates columnName:viewCoords
-                         whichCoord:coord
-                                tri:self.packet->getTriangulation()]);
-}
+    cell.textLabel.text = [Coordinates columnName:viewCoords
+                                       whichCoord:coord
+                                              tri:self.packet->getTriangulation()];
 
-- (id)spreadView:(MDSpreadView *)aSpreadView titleForHeaderInColumnSection:(NSInteger)section forRowAtIndexPath:(MDIndexPath *)rowPath
-{
-    return [NSString stringWithFormat:@"%ld.", (long)rowPath.row];
+    if ((viewCoords == regina::NS_EDGE_WEIGHT && self.packet->getTriangulation()->getEdge(coord)->isBoundary()) ||
+            (viewCoords == regina::NS_TRIANGLE_ARCS && self.packet->getTriangulation()->getTriangle(coord / 3)->isBoundary()))
+        cell.textLabel.textColor = headerBdry;
+
+    return cell;
 }
 
 - (MDSpreadViewCell *)spreadView:(MDSpreadView *)aSpreadView cellForRowAtIndexPath:(MDIndexPath *)rowPath forColumnAtIndexPath:(MDIndexPath *)columnPath
