@@ -43,6 +43,12 @@
 + (NSAttributedString*)yesNoString:(NSString*)text yesNo:(BOOL)yesNo;
 
 /**
+ * According to the given boolean, renders either the text \a yes in a
+ * green font, or the text \a no in a red font.
+ */
++ (NSAttributedString*)yesNoString:(BOOL)yesNo yes:(NSString*)yes no:(NSString*)no;
+
+/**
  * Renders the given text in a brown font.
  */
 + (NSAttributedString*)markedString:(NSString*)text;

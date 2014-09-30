@@ -45,6 +45,13 @@ static UIColor* badColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha:1
     return [[NSAttributedString alloc] initWithString:text attributes:@{NSForegroundColorAttributeName: (yesNo ? yesColour : noColour)}];
 }
 
++ (NSAttributedString *)yesNoString:(BOOL)yesNo yes:(NSString *)yes no:(NSString *)no
+{
+    return (yesNo ?
+            [[NSAttributedString alloc] initWithString:yes attributes:@{NSForegroundColorAttributeName: yesColour}] :
+            [[NSAttributedString alloc] initWithString:no attributes:@{NSForegroundColorAttributeName: noColour}]);
+}
+
 + (NSAttributedString *)markedString:(NSString *)text
 {
     return [[NSAttributedString alloc] initWithString:text attributes:@{NSForegroundColorAttributeName: darkGoldenrod}];
