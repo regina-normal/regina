@@ -50,7 +50,6 @@ static UIColor *headerBlack = [UIColor blackColor];
 static UIColor *headerBdry = [UIColor colorWithRed:(0xB8 / 256.0) green:(0x86 / 256.0) blue:(0x0B / 256.0) alpha:1.0];
 
 // TODO: On long press, view details (and cut/crush).
-// TODO: Edge weight and triangle arc coords: Yellow header
 
 #define PROP_NONE 0
 #define PROP_NAME 1
