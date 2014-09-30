@@ -161,21 +161,7 @@ static NSString *regularCellID = @"_ReginaRegularSpreadCell";
 
 - (id)spreadView:(MDSpreadView *)aSpreadView titleForHeaderInColumnSection:(NSInteger)section forRowAtIndexPath:(MDIndexPath *)rowPath
 {
-    return [NSString stringWithFormat:@"%d.", rowPath.row];
-}
-
-- (id)spreadView:(MDSpreadView *)aSpreadView objectValueForRowAtIndexPath:(MDIndexPath *)rowPath forColumnAtIndexPath:(MDIndexPath *)columnPath
-{
-    // TODO.
-    regina::NLargeInteger val = [Coordinates getCoordinate:viewCoords
-                                                   surface:*self.packet->getSurface(rowPath.row)
-                                                whichCoord:columnPath.column];
-
-    if (val.isZero())
-        return @"";
-    if (val.isInfinite())
-        return @"∞";
-    return @(val.stringValue().c_str());
+    return [NSString stringWithFormat:@"%ld.", (long)rowPath.row];
 }
 
 - (MDSpreadViewCell *)spreadView:(MDSpreadView *)aSpreadView cellForRowAtIndexPath:(MDIndexPath *)rowPath forColumnAtIndexPath:(MDIndexPath *)columnPath
@@ -190,7 +176,17 @@ static NSString *regularCellID = @"_ReginaRegularSpreadCell";
         if (! cell)
             cell = [[RegularSpreadViewCell alloc] initWithReuseIdentifier:regularCellID];
     }
-    cell.objectValue = [self spreadView:aSpreadView objectValueForRowAtIndexPath:rowPath forColumnAtIndexPath:columnPath];
+
+    regina::NLargeInteger val = [Coordinates getCoordinate:viewCoords
+                                                   surface:*self.packet->getSurface(rowPath.row)
+                                                whichCoord:columnPath.column];
+    if (val.isZero())
+        cell.textLabel.text = @"";
+    else if (val.isInfinite())
+        cell.textLabel.text = @"∞";
+    else
+        cell.textLabel.text = @(val.stringValue().c_str());
+
     cell.textLabel.textAlignment = NSTextAlignmentRight;
     return cell;
 }
