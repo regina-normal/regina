@@ -181,6 +181,38 @@ using regina::NTriangle;
     return @"Unknown";
 }
 
++ (NSString*)longestColumnName:(regina::NormalCoords)coordSystem tri:(regina::NTriangulation*)tri
+{
+    switch (coordSystem) {
+        case regina::NS_STANDARD:
+        case regina::NS_QUAD:
+        case regina::NS_AN_STANDARD:
+        case regina::NS_AN_QUAD_OCT:
+        case regina::NS_AN_LEGACY:
+            return [NSString stringWithFormat:@"Q%ld: 00/00", tri->getNumberOfTetrahedra()];
+        case regina::NS_EDGE_WEIGHT:
+            if (tri->hasBoundaryTriangles())
+                return [NSString stringWithFormat:@"%ld: ∂", tri->getNumberOfEdges()];
+            else
+                return [NSString stringWithFormat:@"%ld", tri->getNumberOfEdges()];
+            break;
+        case regina::NS_TRIANGLE_ARCS:
+            if (tri->hasBoundaryTriangles())
+                return [NSString stringWithFormat:@"%ld: 0: ∂", tri->getNumberOfTriangles()];
+            else
+                return [NSString stringWithFormat:@"%ld: 0", tri->getNumberOfTriangles()];
+            break;
+        case regina::NS_ORIENTED:
+        case regina::NS_ORIENTED_QUAD:
+            return [NSString stringWithFormat:@"%ld: 000", tri->getNumberOfTetrahedra()];
+            break;
+        case regina::NS_ANGLE:
+            // Should never appear.
+        default:
+            return @"";
+    }
+}
+
 + (regina::NLargeInteger)getCoordinate:(regina::NormalCoords)coordSystem surface:(const regina::NNormalSurface&)surface whichCoord:(unsigned long)whichCoord
 {
     if (coordSystem == regina::NS_STANDARD) {

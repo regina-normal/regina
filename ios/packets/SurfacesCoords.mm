@@ -46,7 +46,7 @@ static NSString *compactCellID = @"_ReginaCompactSpreadCell";
 static NSString *regularCellID = @"_ReginaRegularSpreadCell";
 
 // TODO: On long press, view details (and cut/crush).
-// TODO: Edge weight and triangle arc coords: Yellow header, and leave room for bdry symbol.
+// TODO: Edge weight and triangle arc coords: Yellow header
 
 #define PROP_NONE 0
 #define PROP_NAME 1
@@ -169,10 +169,10 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
         widthCoord = s.width;
         height = s.height;
     } else {
-        widthCoord = [RegularSpreadHeaderCell cellSizeFor:
-                      [Coordinates columnName:viewCoords
-                                   whichCoord:[Coordinates numColumns:viewCoords tri:self.packet->getTriangulation()] - 1
-                                          tri:self.packet->getTriangulation()]].width;
+        NSString* longestColumnName = [Coordinates longestColumnName:viewCoords tri:self.packet->getTriangulation()];
+        if (longestColumnName.length < 2)
+            longestColumnName = @"99"; // Ah, edge weight space.
+        widthCoord = [RegularSpreadHeaderCell cellSizeFor:longestColumnName].width;
         height = [RegularSpreadViewCell cellSizeFor:@"g0"].height;
     }
 }

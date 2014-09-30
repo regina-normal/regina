@@ -86,9 +86,8 @@ static NSString *regularCellID = @"_ReginaRegularSpreadCell";
         cellSize = [CompactSpreadViewCell cellSizeFor:@"-0"];
     } else {
         cellSize = [RegularSpreadHeaderCell cellSizeFor:
-                    [Coordinates columnName:self.packet->coords()
-                                 whichCoord:self.matrix->columns()-1
-                                        tri:self.packet->getTriangulation()]];
+                    [Coordinates longestColumnName:self.packet->coords()
+                                               tri:self.packet->getTriangulation()]];
     }
 }
 

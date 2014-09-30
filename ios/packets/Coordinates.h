@@ -74,6 +74,13 @@ namespace regina {
 + (NSString*)columnName:(regina::NormalCoords)coordSystem whichCoord:(unsigned long)whichCoord tri:(regina::NTriangulation*)tri;
 
 /**
+ * Returns the longest coordinate column header that we might expect to see.
+ *
+ * Here the associated triangulation is mandatory.
+ */
++ (NSString*)longestColumnName:(regina::NormalCoords)coordSystem tri:(regina::NTriangulation*)tri;
+
+/**
  * Return a particular coordinate of a normal surface in the given
  * coordinate system.
  */
