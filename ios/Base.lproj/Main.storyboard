@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="H1p-Uh-vWS">
     <dependencies>
-        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -2709,8 +2708,11 @@
                     <tabBarItem key="tabBarItem" title="Coordinates" image="Tab-Coords" id="n9p-EZ-sIQ"/>
                     <connections>
                         <outlet property="compact" destination="H76-35-f7y" id="oR6-eZ-Zbq"/>
+                        <outlet property="coords" destination="0CN-h3-DHx" id="Rh8-Be-lwP"/>
                         <outlet property="grid" destination="elu-fJ-bll" id="Byt-MH-wSW"/>
+                        <outlet property="header" destination="6EV-8f-eL4" id="8l4-hl-4J6"/>
                         <outlet property="selectCoords" destination="TQe-19-7jF" id="AUD-4g-MeO"/>
+                        <outlet property="tri" destination="e2J-lZ-krM" id="mwT-RU-DpG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EaM-I1-12P" userLabel="First Responder" sceneMemberID="firstResponder"/>
