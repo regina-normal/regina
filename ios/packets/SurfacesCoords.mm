@@ -34,7 +34,9 @@
 #import "SpreadHelper.h"
 #import "SurfacesCoords.h"
 #import "SurfacesViewController.h"
+#import "TextHelper.h"
 #import "MDSpreadViewClasses.h"
+#import "snappea/nsnappeatriangulation.h"
 #import "surfaces/nnormalsurfacelist.h"
 #import "triangulation/ntriangulation.h"
 
@@ -43,8 +45,25 @@
 static NSString *compactCellID = @"_ReginaCompactSpreadCell";
 static NSString *regularCellID = @"_ReginaRegularSpreadCell";
 
+// TODO: On long press, view details (and cut/crush).
+// TODO: Edge weight and triangle arc coords: Yellow header, and leave room for bdry symbol.
+
+#define PROP_NONE 0
+#define PROP_NAME 1
+#define PROP_EULER 2
+#define PROP_ORBL 3
+#define PROP_SIDES 4
+#define PROP_BDRY 5
+#define PROP_LINK 6
+#define PROP_TYPE 7
+
+static NSArray* embProps = @[@PROP_EULER, @PROP_ORBL, @PROP_SIDES, @PROP_BDRY, @PROP_LINK];
+static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
+
 @interface SurfacesCoords () <MDSpreadViewDataSource, MDSpreadViewDelegate, PacketDelegate> {
-    CGSize cellSize;
+    NSArray* widthProps;
+    CGFloat widthCoord;
+    CGFloat height;
     CGFloat widthHeader;
     regina::NormalCoords viewCoords;
 }
@@ -66,6 +85,7 @@ static NSString *regularCellID = @"_ReginaRegularSpreadCell";
     } else {
         [self.selectCoords setTitle:@"Quad" forSegmentAtIndex:1];
     }
+
     viewCoords = self.packet->coords();
     switch (viewCoords) {
         case regina::NS_STANDARD:
@@ -98,16 +118,62 @@ static NSString *regularCellID = @"_ReginaRegularSpreadCell";
 
 - (void)initMetrics
 {
-    // TODO: Redo.
+    NSMutableArray* w = [[NSMutableArray alloc] init];
+
+    CGFloat tmp;
+    for (NSNumber* prop in (self.packet->isEmbeddedOnly() ? embProps : nonEmbProps)) {
+        switch (prop.intValue) {
+            case PROP_NAME:
+                tmp = [RegularSpreadViewCell cellSizeFor:@"Name"].width;
+                break;
+            case PROP_EULER:
+                tmp = (self.compact.on ? [RegularSpreadViewCell cellSizeFor:@"-99"] : [RegularSpreadHeaderCell cellSizeFor:@"Euler"]).width;
+                break;
+            case PROP_ORBL:
+                tmp = [RegularSpreadViewCell cellSizeFor:(self.compact.on ? @"✓" : @"Non-or.")].width;
+                break;
+            case PROP_SIDES:
+                tmp = (self.compact.on ? [RegularSpreadViewCell cellSizeFor:@"2"] : [RegularSpreadHeaderCell cellSizeFor:@"Sides"]).width;
+                break;
+            case PROP_BDRY:
+                if (self.packet->getTriangulation()->isClosed())
+                    tmp = (self.compact.on ? [RegularSpreadViewCell cellSizeFor:@"—"] : [RegularSpreadHeaderCell cellSizeFor:@"Bdry"]).width;
+                else if (! self.packet->allowsSpun())
+                    tmp = [RegularSpreadViewCell cellSizeFor:@"Real"].width;
+                else if (! dynamic_cast<regina::NSnapPeaTriangulation*>(self.packet->getTriangulation()))
+                    tmp = [RegularSpreadViewCell cellSizeFor:@"Spun"].width;
+                else
+                    tmp = [RegularSpreadViewCell cellSizeFor:@"Spun (99, 99)"].width;
+                break;
+            case PROP_LINK:
+                tmp = [RegularSpreadViewCell cellSizeFor:@"Edge 99"].width;
+                break;
+            case PROP_TYPE:
+                tmp = [RegularSpreadViewCell cellSizeFor:@"Splitting"].width;
+                break;
+        }
+        [w addObject:[NSNumber numberWithFloat:tmp]];
+    }
+
+    if (self.packet->allowsAlmostNormal()) {
+        tmp = [RegularSpreadViewCell cellSizeFor:@"K99: 99/99 (99 octs)"].width;
+        [w addObject:[NSNumber numberWithFloat:tmp]];
+    }
+
+    widthProps = w;
+
     widthHeader = [RegularSpreadHeaderCell cellSizeFor:[NSString stringWithFormat:@"%ld.", self.packet->getNumberOfSurfaces() - 1]].width;
 
     if (self.compact.on) {
-        cellSize = [CompactSpreadViewCell cellSizeFor:@"-0"];
+        CGSize s = [CompactSpreadViewCell cellSizeFor:@"g00"];
+        widthCoord = s.width;
+        height = s.height;
     } else {
-        cellSize = [RegularSpreadHeaderCell cellSizeFor:
-                    [Coordinates columnName:viewCoords
-                                 whichCoord:0 // TODO
-                                        tri:self.packet->getTriangulation()]];
+        widthCoord = [RegularSpreadHeaderCell cellSizeFor:
+                      [Coordinates columnName:viewCoords
+                                   whichCoord:[Coordinates numColumns:viewCoords tri:self.packet->getTriangulation()] - 1
+                                          tri:self.packet->getTriangulation()]].width;
+        height = [RegularSpreadViewCell cellSizeFor:@"g0"].height;
     }
 }
 
@@ -142,8 +208,9 @@ static NSString *regularCellID = @"_ReginaRegularSpreadCell";
 
 - (NSInteger)spreadView:(MDSpreadView *)aSpreadView numberOfColumnsInSection:(NSInteger)section
 {
-    // TODO.
-    return [Coordinates numColumns:viewCoords tri:self.packet->getTriangulation()];
+    return (self.packet->isEmbeddedOnly() ? embProps.count : nonEmbProps.count) +
+           (self.packet->allowsAlmostNormal() ? 1 : 0) +
+           [Coordinates numColumns:viewCoords tri:self.packet->getTriangulation()];
 }
 
 - (NSInteger)spreadView:(MDSpreadView *)aSpreadView numberOfRowsInSection:(NSInteger)section
@@ -153,9 +220,45 @@ static NSString *regularCellID = @"_ReginaRegularSpreadCell";
 
 - (id)spreadView:(MDSpreadView *)aSpreadView titleForHeaderInRowSection:(NSInteger)section forColumnAtIndexPath:(MDIndexPath *)columnPath
 {
+    if (self.compact.on)
+        return @"";
+
+    int prop = PROP_NONE;
+    int coord = columnPath.column;
+
+    if (self.packet->isEmbeddedOnly()) {
+        if (coord < embProps.count)
+            prop = [embProps[coord] intValue];
+        else
+            coord -= embProps.count;
+    } else {
+        if (coord < nonEmbProps.count)
+            prop = [nonEmbProps[coord] intValue];
+        else
+            coord -= nonEmbProps.count;
+    }
+
+    switch (prop) {
+        case PROP_NONE: break;
+        case PROP_NAME: return @"Name";
+        case PROP_EULER: return @"Euler";
+        case PROP_ORBL: return @"Orient";
+        case PROP_SIDES: return @"Sides";
+        case PROP_BDRY: return @"Bdry";
+        case PROP_LINK: return @"Link";
+        case PROP_TYPE: return @"Type";
+    }
+
+    if (self.packet->allowsAlmostNormal()) {
+        if (coord == 0)
+            return @"Octagon";
+        else
+            --coord;
+    }
+
     return (self.compact.on ? @"" :
             [Coordinates columnName:viewCoords
-                         whichCoord:columnPath.column
+                         whichCoord:coord
                                 tri:self.packet->getTriangulation()]);
 }
 
@@ -177,9 +280,135 @@ static NSString *regularCellID = @"_ReginaRegularSpreadCell";
             cell = [[RegularSpreadViewCell alloc] initWithReuseIdentifier:regularCellID];
     }
 
-    regina::NLargeInteger val = [Coordinates getCoordinate:viewCoords
-                                                   surface:*self.packet->getSurface(rowPath.row)
-                                                whichCoord:columnPath.column];
+    const regina::NNormalSurface* s = self.packet->getSurface(rowPath.row);
+
+    int prop = PROP_NONE;
+    int coord = columnPath.column;
+
+    if (self.packet->isEmbeddedOnly()) {
+        if (coord < embProps.count)
+            prop = [embProps[coord] intValue];
+        else
+            coord -= embProps.count;
+    } else {
+        if (coord < nonEmbProps.count)
+            prop = [nonEmbProps[coord] intValue];
+        else
+            coord -= nonEmbProps.count;
+    }
+
+    switch (prop) {
+        case PROP_NONE:
+            break;
+        case PROP_NAME:
+            cell.textLabel.text = @(s->getName().c_str());
+            cell.textLabel.textAlignment = NSTextAlignmentLeft;
+            return cell;
+        case PROP_EULER:
+            if (s->isCompact())
+                cell.textLabel.text = @(s->getEulerChar().stringValue().c_str());
+            else
+                cell.textLabel.text = @"";
+            cell.textLabel.textAlignment = NSTextAlignmentRight;
+            return cell;
+        case PROP_ORBL:
+            if (s->isCompact())
+                cell.textLabel.attributedText = [TextHelper yesNoString:s->isOrientable()
+                                                                    yes:@"✓"
+                                                                     no:(self.compact.on ? @"✕" : @"Non-or.")];
+            else
+                cell.textLabel.text = @"";
+            cell.textLabel.textAlignment = NSTextAlignmentCenter;
+            return cell;
+        case PROP_SIDES:
+            if (s->isCompact())
+                cell.textLabel.attributedText = [TextHelper yesNoString:s->isTwoSided() yes:@"2" no:@"1"];
+            else
+                cell.textLabel.text = @"";
+            cell.textLabel.textAlignment = NSTextAlignmentCenter;
+            return cell;
+        case PROP_BDRY:
+            if (! s->isCompact()) {
+                regina::NMatrixInt* slopes = s->boundaryIntersections();
+                if (slopes) {
+                    NSMutableString* bdry = [NSMutableString stringWithString:@"Spun:"];
+                    // Display each boundary slope as (nu(L), -nu(M)).
+                    for (unsigned i = 0; i < slopes->rows(); ++i)
+                        [bdry appendFormat:@" (%s, %s)",
+                         slopes->entry(i,1).stringValue().c_str(),
+                         (-slopes->entry(i,0)).stringValue().c_str()];
+                    cell.textLabel.attributedText = [TextHelper markedString:bdry];
+                } else
+                    cell.textLabel.attributedText = [TextHelper markedString:@"Spun"];
+            } else if (s->hasRealBoundary())
+                cell.textLabel.attributedText = [TextHelper yesNoString:@"Real" yesNo:NO];
+            else
+                cell.textLabel.attributedText = [TextHelper yesNoString:@"—" yesNo:YES];
+            cell.textLabel.textAlignment = NSTextAlignmentLeft;
+            return cell;
+        case PROP_LINK:
+        {
+            const regina::NVertex* v;
+            std::pair<const regina::NEdge*, const regina::NEdge*> e;
+
+            if ((v = s->isVertexLink()))
+                cell.textLabel.text = [NSString stringWithFormat:@"Vertex %ld",
+                                       self.packet->getTriangulation()->vertexIndex(v)];
+            else if ((e = s->isThinEdgeLink()).first) {
+                if (e.second)
+                    cell.textLabel.text = [NSString stringWithFormat:@"Edges %ld, %ld",
+                                           self.packet->getTriangulation()->edgeIndex(e.first),
+                                           self.packet->getTriangulation()->edgeIndex(e.second)];
+                else
+                    cell.textLabel.text = [NSString stringWithFormat:@"Edge %ld",
+                                           self.packet->getTriangulation()->edgeIndex(e.first)];
+            } else
+                cell.textLabel.text = @"";
+            cell.textLabel.textAlignment = NSTextAlignmentLeft;
+            return cell;
+        }
+        case PROP_TYPE:
+        {
+            regina::NLargeInteger tot;
+            if (s->isSplitting())
+                cell.textLabel.text = @"Splitting";
+            else if (! (tot = s->isCentral()).isZero())
+                cell.textLabel.text = [NSString stringWithFormat:@"Central (%ld)", tot.longValue()];
+            else
+                cell.textLabel.text = @"";
+            cell.textLabel.textAlignment = NSTextAlignmentLeft;
+            return cell;
+        }
+    }
+
+    if (self.packet->allowsAlmostNormal()) {
+        if (coord == 0) {
+            regina::NDiscType oct = s->getOctPosition();
+            if (oct == regina::NDiscType::NONE) {
+                cell.textLabel.text = @"";
+                return cell;
+            }
+
+            regina::NLargeInteger tot = s->getOctCoord(oct.tetIndex, oct.type);
+            if (tot == 1) {
+                cell.textLabel.attributedText = [TextHelper yesNoString:[NSString stringWithFormat:@"K%ld: %s (1 oct)",
+                                                                         oct.tetIndex,
+                                                                         regina::vertexSplitString[oct.type]]
+                                                                  yesNo:YES];
+            } else {
+                cell.textLabel.attributedText = [TextHelper yesNoString:[NSString stringWithFormat:@"K%ld: %s (%s octs)",
+                                                                         oct.tetIndex,
+                                                                         regina::vertexSplitString[oct.type],
+                                                                         tot.stringValue().c_str()]
+                                                                  yesNo:NO];
+            }
+            cell.textLabel.textAlignment = NSTextAlignmentLeft;
+            return cell;
+        } else
+            --coord;
+    }
+
+    regina::NLargeInteger val = [Coordinates getCoordinate:viewCoords surface:*s whichCoord:coord];
     if (val.isZero())
         cell.textLabel.text = @"";
     else if (val.isInfinite())
@@ -200,17 +429,20 @@ static NSString *regularCellID = @"_ReginaRegularSpreadCell";
 
 - (CGFloat)spreadView:(MDSpreadView *)aSpreadView widthForColumnAtIndexPath:(MDIndexPath *)indexPath
 {
-    return cellSize.width;
+    if (indexPath.column < widthProps.count)
+        return [widthProps[indexPath.column] floatValue];
+    else
+        return widthCoord;
 }
 
 - (CGFloat)spreadView:(MDSpreadView *)aSpreadView heightForRowHeaderInSection:(NSInteger)rowSection
 {
-    return (self.compact.on ? 1 : cellSize.height);
+    return (self.compact.on ? 1 : height);
 }
 
 - (CGFloat)spreadView:(MDSpreadView *)aSpreadView heightForRowAtIndexPath:(MDIndexPath *)indexPath
 {
-    return cellSize.height;
+    return height;
 }
 
 @end
