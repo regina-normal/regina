@@ -35,8 +35,8 @@
 static UIColor* darkGoldenrod = [UIColor colorWithRed:(0xB8 / 256.0) green:(0x86 / 256.0) blue:(0x0B / 256.0) alpha:1.0];
 static UIColor* darkerGoldenrod = [UIColor colorWithRed:(0x80 / 256.0) green:(0x5E / 256.0) blue:(0x08 / 256.0) alpha:1.0];
 static UIColor* yesColour = [UIColor colorWithRed:0.0 green:0.5 blue:0.0 alpha:1.0];
-static UIColor* noColour = [UIColor colorWithRed:0.5 green:0.0 blue:0.0 alpha:1.0];
-static UIColor* badColour = [UIColor colorWithRed:0.5 green:0.0 blue:0.0 alpha:1.0];
+static UIColor* noColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha:1.0];
+static UIColor* badColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha:1.0];
 
 @implementation TextHelper
 
