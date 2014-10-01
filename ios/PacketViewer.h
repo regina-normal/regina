@@ -40,6 +40,7 @@ namespace regina {
 
 - (regina::NPacket*)packet;
 - (void)setPacket:(regina::NPacket*)packet;
+- (void)reloadPacket;
 
 @optional
 

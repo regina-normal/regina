@@ -52,7 +52,11 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.packet = self.viewer.packet;
+    [self reloadPacket];
+}
 
+- (void)reloadPacket
+{
     [self.viewer updateHeader:self.header];
 }
 

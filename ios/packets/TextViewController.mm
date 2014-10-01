@@ -35,19 +35,29 @@
 
 // TODO: Need to change insets to account for space taken by the keyboard.
 
-@interface TextViewController () <UITextViewDelegate>
+@interface TextViewController () <UITextViewDelegate> {
+    BOOL myEdit;
+}
 @property (weak, nonatomic) IBOutlet UITextView *detail;
 @property (assign, nonatomic) regina::NText* packet;
 @end
 
 @implementation TextViewController
 
-- (void)viewDidLoad
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super viewDidLoad];
+    [super viewWillAppear:animated];
+
+    _detail.delegate = self;
+
+    [self reloadPacket];
+}
+
+- (void)reloadPacket {
+    if (myEdit)
+        return;
 
     _detail.text = [NSString stringWithUTF8String:self.packet->getText().c_str()];
-    _detail.delegate = self;
 }
 
 - (void)endEditing
@@ -59,7 +69,9 @@
 
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
+    myEdit = YES;
     self.packet->setText([textView.text UTF8String]);
+    myEdit = NO;
 }
 
 @end

@@ -58,10 +58,22 @@
 
 @implementation AngleViewController
 
-- (void)viewDidLoad
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super viewDidLoad];
+    [super viewWillAppear:animated];
 
+    self.angles.defaultCellClass = [RegularSpreadViewCell class];
+    self.angles.defaultHeaderColumnCellClass = [RegularSpreadHeaderCellRight class];
+    self.angles.defaultHeaderRowCellClass = [RegularSpreadHeaderCellCentre class];
+    self.angles.dataSource = self;
+    self.angles.delegate = self;
+    self.angles.allowsRowHeaderSelection = YES;
+
+    [self reloadPacket];
+}
+
+- (void)reloadPacket
+{
     unsigned long count = self.packet->getNumberOfStructures();
     if (self.packet->isTautOnly()) {
         if (count == 0)
@@ -79,29 +91,19 @@
             self.countAndType.text = [NSString stringWithFormat:@"%ld vertex angle structures", count];
     }
 
-    BOOL spansStrict = self.packet->spansStrict();
-    NSAttributedString* strictText = [TextHelper yesNoString:(spansStrict ? @"Strict" : @"No strict") yesNo:spansStrict];
-
-    BOOL spansTaut = self.packet->spansTaut();
-    NSAttributedString* tautText = [TextHelper yesNoString:(spansTaut ? @"Taut" : @"No taut") yesNo:spansTaut];
-
     NSMutableAttributedString* spanText = [[NSMutableAttributedString alloc] initWithString:@"Span includes: "];
-    [spanText appendAttributedString:strictText];
+    [spanText appendAttributedString:[TextHelper yesNoString:self.packet->spansStrict() yes:@"Strict" no:@"No strict"]];
     [spanText appendAttributedString:[[NSAttributedString alloc] initWithString:@", "]];
-    [spanText appendAttributedString:tautText];
+    [spanText appendAttributedString:[TextHelper yesNoString:self.packet->spansTaut() yes:@"Taut" no:@"No taut"]];
     self.span.attributedText = spanText;
 
     [self updateTriangulationButton];
     // Continue to update the button text if the triangulation is renamed.
-    _triListener = [PacketListenerIOS listenerWithPacket:self.packet->getTriangulation() delegate:self listenChildren:NO];
+    if (! _triListener)
+        _triListener = [PacketListenerIOS listenerWithPacket:self.packet->getTriangulation() delegate:self listenChildren:NO];
 
     [self initMetrics];
-    self.angles.defaultCellClass = [RegularSpreadViewCell class];
-    self.angles.defaultHeaderColumnCellClass = [RegularSpreadHeaderCellRight class];
-    self.angles.defaultHeaderRowCellClass = [RegularSpreadHeaderCellCentre class];
-    self.angles.dataSource = self;
-    self.angles.delegate = self;
-    self.angles.allowsRowHeaderSelection = YES;
+    [self.angles reloadData];
 }
 
 - (void)initMetrics

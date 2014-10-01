@@ -41,7 +41,15 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+
     self.table.dataSource = self;
+
+    [self reloadPacket];
+}
+
+- (void)reloadPacket
+{
+    [self.table reloadData];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

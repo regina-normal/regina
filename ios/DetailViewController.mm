@@ -307,6 +307,9 @@
 - (void)packetWasChanged:(regina::NPacket *)packet
 {
     [[ReginaHelper document] setDirty];
+
+    if ([self.contents conformsToProtocol:@protocol(PacketViewer)])
+        [static_cast<id<PacketViewer> >(self.contents) reloadPacket];
 }
 
 - (void)packetWasRenamed:(regina::NPacket *)packet

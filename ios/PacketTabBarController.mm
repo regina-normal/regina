@@ -78,10 +78,15 @@
         [[NSUserDefaults standardUserDefaults] setInteger:index forKey:self.defaultKey];
 }
 
+- (void)reloadPacket
+{
+    [static_cast<id<PacketViewer> >(self.selectedViewController) reloadPacket];
+}
+
 - (void)endEditing
 {
     UIViewController* c = self.selectedViewController;
-    if ([c.class conformsToProtocol:@protocol(PacketEditor)])
+    if ([c conformsToProtocol:@protocol(PacketEditor)])
         [static_cast<id<PacketEditor> >(c) endEditing];
 }
 

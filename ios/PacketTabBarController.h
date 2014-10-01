@@ -55,6 +55,11 @@ namespace regina {
 - (void)registerDefaultKey:(NSString*)key;
 
 /**
+ * Calls reloadPacket on the current tab.
+ */
+- (void)reloadPacket;
+
+/**
  * Calls endEditing on the current tab if it is a packet editor.
  */
 - (void)endEditing;

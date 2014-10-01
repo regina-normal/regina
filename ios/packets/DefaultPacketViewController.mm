@@ -40,11 +40,14 @@
 
 @implementation DefaultPacketViewController
 
-- (void)viewDidLoad
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super viewDidLoad];
-    
-    // Load the contents of the packet.
+    [super viewWillAppear:animated];
+    [self reloadPacket];
+}
+
+- (void)reloadPacket
+{
     self.detail.text = [NSString stringWithUTF8String:self.packet->detail().c_str()];
 }
 

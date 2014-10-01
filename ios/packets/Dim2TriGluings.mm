@@ -75,10 +75,16 @@
     [super viewWillAppear:animated];
     self.packet = self.viewer.packet;
 
-    [self.viewer updateHeader:self.properties];
-
     self.triangles.delegate = self;
     self.triangles.dataSource = self;
+
+    [self reloadPacket];
+}
+
+- (void)reloadPacket
+{
+    [self.viewer updateHeader:self.properties];
+    [self.triangles reloadData];
 }
 
 + (NSString*)destStringFromEdge:(int)srcEdge dest:(regina::Dim2Triangle*)destTri gluing:(const regina::NPerm3&)gluing

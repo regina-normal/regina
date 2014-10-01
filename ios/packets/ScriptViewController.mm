@@ -61,16 +61,22 @@
 
 @implementation ScriptViewController
 
-- (void)viewDidLoad
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super viewDidLoad];
-
-    self.script.text = [NSString stringWithUTF8String:self.packet->getText().c_str()];
+    [super viewWillAppear:animated];
 
     variableHeaderHeight = 0;
 
     self.variables.delegate = self;
     self.variables.dataSource = self;
+
+    [self reloadPacket];
+}
+
+- (void)reloadPacket
+{
+    self.script.text = [NSString stringWithUTF8String:self.packet->getText().c_str()];
+    [self.variables reloadData];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath

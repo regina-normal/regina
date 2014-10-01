@@ -49,7 +49,9 @@ static NSMutableCharacterSet* eulerSeparators;
 
 #pragma mark - Property-based filter
 
-@interface FilterPropertiesViewController () <UITextFieldDelegate>
+@interface FilterPropertiesViewController () <UITextFieldDelegate> {
+    BOOL myEdit;
+}
 @property (weak, nonatomic) IBOutlet UISegmentedControl *orientability;
 @property (weak, nonatomic) IBOutlet UILabel *orientabilityExpln;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *compactness;
@@ -63,19 +65,28 @@ static NSMutableCharacterSet* eulerSeparators;
 
 @implementation FilterPropertiesViewController
 
-- (void)viewDidLoad
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super viewDidLoad];
+    [super viewWillAppear:animated];
 
     if (! orientabilityText)
         [FilterPropertiesViewController initArrays];
+
+    self.euler.delegate = self;
+
+    [self reloadPacket];
+}
+
+- (void)reloadPacket
+{
+    if (myEdit)
+        return;
 
     self.orientability.selectedSegmentIndex = [FilterPropertiesViewController selectionFromSet:self.packet->getOrientability()];
     self.compactness.selectedSegmentIndex = [FilterPropertiesViewController selectionFromSet:self.packet->getCompactness()];
     self.boundary.selectedSegmentIndex = [FilterPropertiesViewController selectionFromSet:self.packet->getRealBoundary()];
 
     [self updateEulerDisplay];
-    self.euler.delegate = self;
 
     // Update the description labels.
     // This will not trigger a change event on the packet, since the various
@@ -105,21 +116,27 @@ static NSMutableCharacterSet* eulerSeparators;
 }
 
 - (IBAction)orientabilityChanged:(id)sender {
+    myEdit = YES;
     long selection = self.orientability.selectedSegmentIndex;
     self.orientabilityExpln.text = orientabilityText[selection];
     self.packet->setOrientability([FilterPropertiesViewController setFromSelection:selection]);
+    myEdit = NO;
 }
 
 - (IBAction)compactnessChanged:(id)sender {
+    myEdit = YES;
     long selection = self.compactness.selectedSegmentIndex;
     self.compactnessExpln.text = compactnessText[selection];
     self.packet->setCompactness([FilterPropertiesViewController setFromSelection:selection]);
+    myEdit = NO;
 }
 
 - (IBAction)boundaryChanged:(id)sender {
+    myEdit = YES;
     long selection = self.boundary.selectedSegmentIndex;
     self.boundaryExpln.text = boundaryText[selection];
     self.packet->setRealBoundary([FilterPropertiesViewController setFromSelection:selection]);
+    myEdit = NO;
 }
 
 + (regina::NBoolSet)setFromSelection:(long)selection
@@ -194,8 +211,10 @@ static NSMutableCharacterSet* eulerSeparators;
         set.insert(euler);
     }
 
+    myEdit = YES;
     self.packet->setECs(set);
     [self updateEulerDisplay];
+    myEdit = NO;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -208,8 +227,10 @@ static NSMutableCharacterSet* eulerSeparators;
 
 #pragma mark - Combination-based filter
 
-@interface FilterCombinationViewController () <UITableViewDataSource, UITableViewDelegate> {
+@interface FilterCombinationViewController () <UITableViewDataSource, UITableViewDelegate, PacketDelegate> {
     NSPointerArray *_subfilters;
+    PacketListenerIOS *_listener;
+    BOOL myEdit;
 }
 @property (weak, nonatomic) IBOutlet UITableView *children;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *type;
@@ -218,16 +239,33 @@ static NSMutableCharacterSet* eulerSeparators;
 
 @implementation FilterCombinationViewController
 
-- (void)viewDidLoad
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super viewDidLoad];
-
-    self.type.selectedSegmentIndex = (self.packet->getUsesAnd() ? 0 : 1);
+    [super viewWillAppear:animated];
 
     self.children.dataSource = self;
     self.children.delegate = self;
+
+    [self reloadPacket];
+}
+
+- (void)reloadPacket
+{
+    if (myEdit)
+        return;
+
+    self.type.selectedSegmentIndex = (self.packet->getUsesAnd() ? 0 : 1);
+
     [self updateSubfilters];
-    // TODO: Listen on child renames / additions / deletions.
+
+    // Listen on child renames / additions / deletions.
+    if (! _listener)
+        _listener = [PacketListenerIOS listenerWithPacket:self.packet delegate:self listenChildren:NO];
+}
+
+- (void)dealloc
+{
+    [_listener permanentlyUnlisten];
 }
 
 - (void)endEditing
@@ -248,7 +286,9 @@ static NSMutableCharacterSet* eulerSeparators;
 }
 
 - (IBAction)typeChanged:(id)sender {
+    myEdit = YES;
     self.packet->setUsesAnd(self.type.selectedSegmentIndex == 0);
+    myEdit = NO;
 }
 
 - (IBAction)addSubfilter:(id)sender {

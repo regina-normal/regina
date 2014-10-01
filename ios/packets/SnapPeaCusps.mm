@@ -59,7 +59,7 @@
 
 - (void)reloadPacket
 {
-    [self.viewer updateHeader:self.header];
+    [self.viewer updateHeader:self.header volume:self.volume solnType:self.solnType];
 }
 
 @end
