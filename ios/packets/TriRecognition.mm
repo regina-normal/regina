@@ -49,7 +49,13 @@
 #define PROP_STRICT 8
 #define PROP_HYPERBOLIC 9
 
+// Currently the largest isosig in the census tables starts with 'G'.
+// This represents 32 tetrahedra.
+// We will be more conservative here.
+#define MAX_CENSUS_TRIANGULATION_SIZE 50
+
 // TODO: Census lookup: long press for more lines of information.
+// TODO: This code relies on cellForRowAtIndexPath being called in order for rows 0,1,... - fix this.
 
 @interface PropertyCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *name;
@@ -97,32 +103,36 @@
         isHyp = false;
 
     // Combinatorial recognition.
-    regina::NStandardTriangulation* std = regina::NStandardTriangulation::isStandardTriangulation(self.packet);
-    if (std) {
-        regina::NManifold* mfd = std->getManifold();
-        if (mfd) {
-            isHyp = mfd->isHyperbolic();
-            manifoldName = @(mfd->getName().c_str());
-            delete mfd;
+    {
+        regina::NTriangulation simp(*self.packet);
+        simp.intelligentSimplify();
+        regina::NStandardTriangulation* std = regina::NStandardTriangulation::isStandardTriangulation(&simp);
+        if (std) {
+            regina::NManifold* mfd = std->getManifold();
+            if (mfd) {
+                isHyp = mfd->isHyperbolic();
+                manifoldName = @(mfd->getName().c_str());
+                delete mfd;
 
-            // If we have the 3-sphere, 3-ball or solid torus, then
-            // automatically run the large recognition routines: these
-            // should finish quickly and give results consistent with
-            // the combinatorial routines.
-            if ([manifoldName isEqualToString:@"S3"]) {
-                self.packet->isThreeSphere();
-            } else if ([manifoldName isEqualToString:@"B3"]) {
-                self.packet->isBall();
-            } else if ([manifoldName isEqualToString:@"B2 x S1"]) {
-                self.packet->isSolidTorus();
+                // If we have the 3-sphere, 3-ball or solid torus, then
+                // automatically run the large recognition routines: these
+                // should finish quickly and give results consistent with
+                // the combinatorial routines.
+                if ([manifoldName isEqualToString:@"S3"]) {
+                    self.packet->isThreeSphere();
+                } else if ([manifoldName isEqualToString:@"B3"]) {
+                    self.packet->isBall();
+                } else if ([manifoldName isEqualToString:@"B2 x S1"]) {
+                    self.packet->isSolidTorus();
+                }
             }
+            delete std;
         }
-        delete std;
+        if (manifoldName)
+            self.manifold.text = manifoldName;
+        else
+            self.manifold.attributedText = [TextHelper dimString:@"Not recognised"];
     }
-    if (manifoldName)
-        self.manifold.text = manifoldName;
-    else
-        self.manifold.attributedText = [TextHelper dimString:@"Not recognised"];
 
     // What properties should we display?
     propertyList = [[NSMutableArray alloc] init];
@@ -150,20 +160,23 @@
     self.properties.dataSource = self;
 
     // Display the results of a census lookup.
-    regina::NCensusHits* hits = regina::NCensus::lookup(static_cast<regina::NTriangulation*>(self.packet)->isoSig());
-    if (hits->count() == 0)
-        self.census.attributedText = [TextHelper dimString:@"Not found"];
-    else {
-        NSMutableString* msg = [[NSMutableString alloc] init];
-        const regina::NCensusHit* hit;
-        for (hit = hits->first(); hit; hit = hit->next()) {
-            if (hit != hits->first())
-                [msg appendString:@"\n"];
-            [msg appendString:@(hit->name().c_str())];
+    if (self.packet->getNumberOfTetrahedra() <= MAX_CENSUS_TRIANGULATION_SIZE) {
+        regina::NCensusHits* hits = regina::NCensus::lookup(static_cast<regina::NTriangulation*>(self.packet)->isoSig());
+        if (hits->count() == 0)
+            self.census.attributedText = [TextHelper dimString:@"Not found"];
+        else {
+            NSMutableString* msg = [[NSMutableString alloc] init];
+            const regina::NCensusHit* hit;
+            for (hit = hits->first(); hit; hit = hit->next()) {
+                if (hit != hits->first())
+                    [msg appendString:@"\n"];
+                [msg appendString:@(hit->name().c_str())];
+            }
+            self.census.text = msg;
         }
-        self.census.text = msg;
-    }
-    delete hits;
+        delete hits;
+    } else
+        self.census.attributedText = [TextHelper dimString:@"Not found"];
 }
 
 + (NSString*)propertyName:(int)property
@@ -263,7 +276,6 @@
 - (void)calculate:(int)property
 {
     // TODO: Calculate properties.
-    // TODO: Ensure that cells are created from top to bottom.
 }
 
 #pragma mark - Table view
