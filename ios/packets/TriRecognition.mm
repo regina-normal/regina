@@ -32,6 +32,7 @@
 
 #import "MBProgressHUD.h"
 #import "ReginaHelper.h"
+#import "SnapPeaViewController.h"
 #import "TextHelper.h"
 #import "TriangulationViewController.h"
 #import "TriRecognition.h"
@@ -63,7 +64,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *name;
 @property (weak, nonatomic) IBOutlet UILabel *value;
 @property (weak, nonatomic) IBOutlet UIButton *calculate;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *progress;
 @end
 
 @implementation PropertyCell
@@ -76,27 +76,26 @@
     MBProgressHUD* hud;
 }
 @property (weak, nonatomic) IBOutlet UILabel *header;
+@property (weak, nonatomic) IBOutlet UILabel *volume;
+@property (weak, nonatomic) IBOutlet UILabel *solnType;
+
 @property (weak, nonatomic) IBOutlet UITableView *properties;
 @property (weak, nonatomic) IBOutlet UILabel *manifold;
 @property (weak, nonatomic) IBOutlet UILabel *census;
 
-@property (strong, nonatomic) TriangulationViewController* viewer;
 @property (assign, nonatomic) regina::NTriangulation* packet;
 @end
 
 @implementation TriRecognition
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    self.viewer = static_cast<TriangulationViewController*>(self.parentViewController);
-}
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.packet = self.viewer.packet;
+    self.packet = static_cast<regina::NTriangulation*>(static_cast<id<PacketViewer> >(self.parentViewController).packet);
 
-    [self.viewer updateHeader:self.header];
+    if ([self.parentViewController isKindOfClass:[SnapPeaViewController class]])
+        [static_cast<SnapPeaViewController*>(self.parentViewController) updateHeader:self.header volume:self.volume solnType:self.solnType];
+    else
+        [static_cast<TriangulationViewController*>(self.parentViewController) updateHeader:self.header];
 
     manifoldName = nil;
     isHyp.clear();
@@ -178,7 +177,6 @@
         if (self.packet->getNumberOfTetrahedra() <= 50)
             self.packet->hasStrictAngleStructure();
     }
-    self.properties.dataSource = self;
 
     // Display the results of a census lookup.
     if (self.packet->getNumberOfTetrahedra() <= MAX_CENSUS_TRIANGULATION_SIZE) {
@@ -200,6 +198,8 @@
         self.census.attributedText = [TextHelper dimString:@"Not found"];
 
     [self updateHyperbolic];
+
+    self.properties.dataSource = self;
 }
 
 + (NSString*)propertyName:(int)property
@@ -235,8 +235,9 @@
         isHyp = true;
 
     if (isHyp.known())
-        [self.properties reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:[propertyList indexOfObject:@PROP_HYPERBOLIC] inSection:0]]
-                               withRowAnimation:NO];
+        if (self.properties.dataSource == self) /* Avoid crashes when updating before the table is first loaded. */
+            [self.properties reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:[propertyList indexOfObject:@PROP_HYPERBOLIC] inSection:0]]
+                                   withRowAnimation:NO];
 }
 
 - (NSAttributedString*)value:(int)property
@@ -368,7 +369,6 @@
     else
         [cell.calculate addTarget:self action:@selector(calculate:) forControlEvents:UIControlEventTouchUpInside];
     cell.calculate.hidden = (value || prop == PROP_HYPERBOLIC);
-    cell.progress.hidden = YES;
     return cell;
 }
 
