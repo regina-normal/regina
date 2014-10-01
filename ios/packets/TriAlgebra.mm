@@ -113,6 +113,13 @@
     [super viewWillAppear:animated];
     self.packet = self.viewer.packet;
 
+    self.tvValues.dataSource = self;
+
+    [self reloadPacket];
+}
+
+- (void)reloadPacket
+{
     [self.viewer updateHeader:self.header];
 
     // Simplify before doing any algebraic computations.
@@ -219,7 +226,6 @@
     for (regina::NTriangulation::TuraevViroSet::const_iterator it = s.begin(); it != s.end(); ++it)
         [computed addObject:[TVItem itemWithValue:it->second r:it->first.first root:it->first.second]];
 
-    self.tvValues.dataSource = self;
     [self.tvValues reloadData];
 }
 

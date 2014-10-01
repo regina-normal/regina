@@ -60,6 +60,14 @@
     [super viewWillAppear:animated];
     self.packet = self.viewer.packet;
 
+    self.details.delegate = self;
+    self.details.dataSource = self;
+
+    [self reloadPacket];
+}
+
+- (void)reloadPacket
+{
     [self.viewer updateHeader:self.summary];
 
     self.fVector.text = [NSString stringWithFormat:@"f-vector: (%ld, %ld, %ld)",
@@ -75,14 +83,7 @@
 
     self.viewWhich.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_DIM2_SKELETON_TYPE];
 
-    if (! self.details.delegate) {
-        self.details.delegate = self;
-        self.details.dataSource = self;
-    } else {
-        // We're returning to a view that we've shown before.
-        // Make sure everything is up to date.
-        [self.details reloadData];
-    }
+    [self.details reloadData];
 }
 
 - (IBAction)whichChanged:(id)sender {

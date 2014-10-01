@@ -92,6 +92,13 @@
     [super viewWillAppear:animated];
     self.packet = static_cast<regina::NTriangulation*>(static_cast<id<PacketViewer> >(self.parentViewController).packet);
 
+    self.properties.dataSource = self;
+
+    [self reloadPacket];
+}
+
+- (void)reloadPacket
+{
     if ([self.parentViewController isKindOfClass:[SnapPeaViewController class]])
         [static_cast<SnapPeaViewController*>(self.parentViewController) updateHeader:self.header volume:self.volume solnType:self.solnType];
     else
@@ -198,8 +205,7 @@
         self.census.attributedText = [TextHelper dimString:@"Not found"];
 
     [self updateHyperbolic];
-
-    self.properties.dataSource = self;
+    [self.properties reloadData];
 }
 
 + (NSString*)propertyName:(int)property
@@ -218,6 +224,7 @@
     return nil;
 }
 
+// Note: Does not update the table display.  This should always be followed by [self.properties reloadData].
 - (void)updateHyperbolic
 {
     if (isHyp.known())
@@ -233,11 +240,6 @@
         isHyp = false;
     else if (self.packet->isValid() && self.packet->isStandard() && self.packet->knowsStrictAngleStructure() && self.packet->hasStrictAngleStructure())
         isHyp = true;
-
-    if (isHyp.known())
-        if (self.properties.dataSource == self) /* Avoid crashes when updating before the table is first loaded. */
-            [self.properties reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:[propertyList indexOfObject:@PROP_HYPERBOLIC] inSection:0]]
-                                   withRowAnimation:NO];
 }
 
 - (NSAttributedString*)value:(int)property

@@ -137,7 +137,6 @@
     [super viewWillAppear:animated];
 
     self.packet = self.viewer.packet;
-    [self.viewer updateHeader:self.header coords:self.coords tri:self.tri];
 
     [_triListener permanentlyUnlisten];
     _triListener = [PacketListenerIOS listenerWithPacket:self.packet->getTriangulation() delegate:self listenChildren:NO];
@@ -146,6 +145,11 @@
 - (void)dealloc
 {
     [_triListener permanentlyUnlisten];
+}
+
+- (void)reloadPacket
+{
+    [self.viewer updateHeader:self.header coords:self.coords tri:self.tri];
 }
 
 - (void)packetWasRenamed:(regina::NPacket *)packet

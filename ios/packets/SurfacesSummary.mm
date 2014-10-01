@@ -49,6 +49,7 @@
 
 - (void)reloadPacket
 {
+    [super reloadPacket];
     [self.table reloadData];
 }
 

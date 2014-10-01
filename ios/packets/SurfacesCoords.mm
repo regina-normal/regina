@@ -83,6 +83,20 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
 
     self.compact.on = [[NSUserDefaults standardUserDefaults] boolForKey:KEY_SURFACES_COORDS_COMPACT];
 
+    self.grid.defaultHeaderColumnCellClass = [RegularSpreadHeaderCellRight class];
+    self.grid.defaultHeaderCornerCellClass = [RegularSpreadHeaderCellCentre class];
+    // The column headers are managed manually, so that we can colour them if required.
+    self.grid.dataSource = self;
+    self.grid.delegate = self;
+    self.grid.allowsRowHeaderSelection = YES;
+
+    [self reloadPacket];
+}
+
+- (void)reloadPacket
+{
+    [super reloadPacket];
+
     if (self.packet->allowsAlmostNormal()) {
         [self.selectCoords setTitle:@"Quad-oct" forSegmentAtIndex:1];
     } else {
@@ -111,12 +125,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
     }
 
     [self initMetrics];
-    self.grid.defaultHeaderColumnCellClass = [RegularSpreadHeaderCellRight class];
-    self.grid.defaultHeaderCornerCellClass = [RegularSpreadHeaderCellCentre class];
-    // The column headers are managed manually, so that we can colour them if required.
-    self.grid.dataSource = self;
-    self.grid.delegate = self;
-    self.grid.allowsRowHeaderSelection = YES;
+    [self.grid reloadData];
 }
 
 - (void)initMetrics

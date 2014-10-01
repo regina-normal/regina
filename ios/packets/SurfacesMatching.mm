@@ -59,23 +59,32 @@ static NSString *regularCellID = @"_ReginaRegularSpreadCell";
 {
     [super viewWillAppear:animated];
 
-    delete self.matrix;
-    self.matrix = self.packet->recreateMatchingEquations();
-
     self.compact.on = [[NSUserDefaults standardUserDefaults] boolForKey:KEY_SURFACES_MATCHING_COMPACT];
 
-    [self initMetrics];
     self.grid.defaultHeaderColumnCellClass = [RegularSpreadHeaderCellRight class];
     self.grid.defaultHeaderRowCellClass = [RegularSpreadHeaderCellCentre class];
     self.grid.defaultHeaderCornerCellClass = [RegularSpreadHeaderCellCentre class];
     self.grid.dataSource = self;
     self.grid.delegate = self;
     self.grid.allowsRowHeaderSelection = YES;
+
+    [self reloadPacket];
 }
 
 - (void)dealloc
 {
     delete self.matrix;
+}
+
+- (void)reloadPacket
+{
+    [super reloadPacket];
+
+    delete self.matrix;
+    self.matrix = self.packet->recreateMatchingEquations();
+
+    [self initMetrics];
+    [self.grid reloadData];
 }
 
 - (void)initMetrics

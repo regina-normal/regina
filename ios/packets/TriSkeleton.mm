@@ -57,6 +57,14 @@
     [super viewWillAppear:animated];
     self.packet = static_cast<regina::NTriangulation*>(static_cast<id<PacketViewer> >(self.parentViewController).packet);
 
+    self.details.delegate = self;
+    self.details.dataSource = self;
+
+    [self reloadPacket];
+}
+
+- (void)reloadPacket
+{
     if ([self.parentViewController isKindOfClass:[SnapPeaViewController class]])
         [static_cast<SnapPeaViewController*>(self.parentViewController) updateHeader:self.header volume:self.volume solnType:self.solnType];
     else
@@ -77,14 +85,7 @@
 
     self.viewWhich.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_TRI_SKELETON_TYPE];
 
-    if (! self.details.delegate) {
-        self.details.delegate = self;
-        self.details.dataSource = self;
-    } else {
-        // We're returning to a view that we've shown before.
-        // Make sure everything is up to date.
-        [self.details reloadData];
-    }
+    [self.details reloadData];
 }
 
 - (IBAction)whichChanged:(id)sender {
