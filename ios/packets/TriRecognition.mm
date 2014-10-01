@@ -57,6 +57,7 @@
 // TODO: Census lookup: long press for more lines of information.
 
 @interface PropertyCell : UITableViewCell
+@property (assign, nonatomic) int property;
 @property (weak, nonatomic) IBOutlet UILabel *name;
 @property (weak, nonatomic) IBOutlet UILabel *value;
 @property (weak, nonatomic) IBOutlet UIButton *calculate;
@@ -290,9 +291,35 @@
     }
 }
 
-- (void)calculate:(int)property
+- (void)calculate:(id)sender
 {
-    // TODO: Calculate properties.
+    UIView *cell = [sender superview];
+    while (! [cell isKindOfClass:[PropertyCell class]])
+        cell = cell.superview;
+
+    static_cast<PropertyCell*>(cell).calculate.hidden = YES;
+
+    // TODO: Progress HUD.
+    switch (static_cast<PropertyCell*>(cell).property) {
+        case PROP_SPHERE:
+            self.packet->isThreeSphere(); break;
+        case PROP_BALL:
+            self.packet->isBall(); break;
+        case PROP_SOLIDTORUS:
+            self.packet->isSolidTorus(); break;
+        case PROP_ZEROEFF:
+            self.packet->isZeroEfficient(); break;
+        case PROP_SPLITTING:
+            self.packet->hasSplittingSurface(); break;
+        case PROP_IRREDUCIBLE:
+            self.packet->isIrreducible(); break;
+        case PROP_HAKEN:
+            self.packet->isHaken(); break;
+        case PROP_STRICT:
+            self.packet->hasStrictAngleStructure(); break;
+    }
+    [self updateHyperbolic];
+    [self.properties reloadData];
 }
 
 #pragma mark - Table view
@@ -312,6 +339,7 @@
     int prop = [propertyList[indexPath.row] intValue];
 
     PropertyCell* cell = [tableView dequeueReusableCellWithIdentifier:@"Property" forIndexPath:indexPath];
+    cell.property = prop;
     cell.name.text = [TriRecognition propertyName:prop];
 
     NSAttributedString* value = [self value:prop];
@@ -321,6 +349,10 @@
     else
         cell.value.text = @"Unknown";
 
+    if (value || prop == PROP_HYPERBOLIC)
+        cell.calculate.hidden = YES;
+    else
+        [cell.calculate addTarget:self action:@selector(calculate:) forControlEvents:UIControlEventTouchUpInside];
     cell.calculate.hidden = (value || prop == PROP_HYPERBOLIC);
     cell.progress.hidden = YES;
     return cell;
