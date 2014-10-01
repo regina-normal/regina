@@ -55,7 +55,13 @@
 
 - (void)packetActionPressed
 {
-    NSLog(@"TODO: SnapPea action pressed!");
+    // TODO: Implement actions.
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"To Be Implemented"
+                                                    message:nil
+                                                   delegate:nil
+                                          cancelButtonTitle:@"Close"
+                                          otherButtonTitles:nil];
+    [alert show];
 }
 
 - (void)updateHeader:(UILabel *)summary volume:(UILabel *)volume solnType:(UILabel *)solnType

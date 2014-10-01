@@ -55,7 +55,13 @@
 
 - (void)packetActionPressed
 {
-    NSLog(@"TODO: Triangulation action pressed!");
+    // TODO: Implement actions.
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"To Be Implemented"
+                                                    message:nil
+                                                   delegate:nil
+                                          cancelButtonTitle:@"Close"
+                                          otherButtonTitles:nil];
+    [alert show];
 }
 
 - (void)updateHeader:(UILabel *)header
