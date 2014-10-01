@@ -993,7 +993,6 @@
 		058FADBB19D506160001B5B5 /* TriComposition.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058FADB519D506160001B5B5 /* TriComposition.mm */; };
 		058FADBC19D506160001B5B5 /* TriSkeleton.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058FADB719D506160001B5B5 /* TriSkeleton.mm */; };
 		058FADBD19D506160001B5B5 /* TriSnapPea.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058FADB919D506160001B5B5 /* TriSnapPea.mm */; };
-		058FADC019D5074C0001B5B5 /* SnapPeaSkeleton.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058FADBF19D5074C0001B5B5 /* SnapPeaSkeleton.mm */; };
 		058FADC319D508070001B5B5 /* SurfacesSummary.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058FADC219D508070001B5B5 /* SurfacesSummary.mm */; };
 		058FADC619D50DA10001B5B5 /* Coordinates.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058FADC519D50DA10001B5B5 /* Coordinates.mm */; };
 		059101151812F349000A8D16 /* DetailViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 059101141812F349000A8D16 /* DetailViewController.mm */; };
@@ -2159,8 +2158,6 @@
 		058FADB719D506160001B5B5 /* TriSkeleton.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TriSkeleton.mm; sourceTree = "<group>"; };
 		058FADB819D506160001B5B5 /* TriSnapPea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriSnapPea.h; sourceTree = "<group>"; };
 		058FADB919D506160001B5B5 /* TriSnapPea.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TriSnapPea.mm; sourceTree = "<group>"; };
-		058FADBE19D5074C0001B5B5 /* SnapPeaSkeleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaSkeleton.h; sourceTree = "<group>"; };
-		058FADBF19D5074C0001B5B5 /* SnapPeaSkeleton.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapPeaSkeleton.mm; sourceTree = "<group>"; };
 		058FADC119D508070001B5B5 /* SurfacesSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurfacesSummary.h; sourceTree = "<group>"; };
 		058FADC219D508070001B5B5 /* SurfacesSummary.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SurfacesSummary.mm; sourceTree = "<group>"; };
 		058FADC419D50C5D0001B5B5 /* Coordinates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Coordinates.h; sourceTree = "<group>"; };
@@ -2401,8 +2398,6 @@
 				054535BB19D90C3A00BED767 /* Skeleton.mm */,
 				058FADA919D38BFC0001B5B5 /* SnapPeaViewController.h */,
 				058FADAA19D38BFC0001B5B5 /* SnapPeaViewController.mm */,
-				058FADBE19D5074C0001B5B5 /* SnapPeaSkeleton.h */,
-				058FADBF19D5074C0001B5B5 /* SnapPeaSkeleton.mm */,
 				058FADA519D388920001B5B5 /* SurfacesViewController.h */,
 				058FADA619D388920001B5B5 /* SurfacesViewController.mm */,
 				0586426F19DA258E0019E056 /* SurfacesCoords.h */,
@@ -4491,7 +4486,6 @@
 				052FA1F41806129B00FAE4DF /* hydrate.cpp in Sources */,
 				058FADBC19D506160001B5B5 /* TriSkeleton.mm in Sources */,
 				052FA1F31806129B00FAE4DF /* homotopy.cpp in Sources */,
-				058FADC019D5074C0001B5B5 /* SnapPeaSkeleton.mm in Sources */,
 				052FA1A61806129B00FAE4DF /* npacket.cpp in Sources */,
 				052FA21E180612DD00FAE4DF /* cusp_shapes.c in Sources */,
 				052FA231180612DD00FAE4DF /* precision.c in Sources */,
