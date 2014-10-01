@@ -21,6 +21,7 @@
 		050AFC5A19DCB9B100835ED6 /* SnapPeaAlgebra.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5519DCB9B100835ED6 /* SnapPeaAlgebra.mm */; };
 		050AFC5B19DCB9B200835ED6 /* SnapPeaComposition.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5719DCB9B100835ED6 /* SnapPeaComposition.mm */; };
 		050AFC5C19DCB9B200835ED6 /* SnapPeaGluings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5919DCB9B100835ED6 /* SnapPeaGluings.mm */; };
+		050AFC5F19DCC68B00835ED6 /* SurfacesCompat.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5E19DCC68B00835ED6 /* SurfacesCompat.mm */; };
 		0513753D1809B8D3002E525B /* coordregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753B1809B8D2002E525B /* coordregistry-impl.h */; };
 		0513753E1809B8D3002E525B /* coordregistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753C1809B8D2002E525B /* coordregistry.h */; };
 		051806D4181202BD008EBB01 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 051806D3181202BD008EBB01 /* icons */; };
@@ -1252,6 +1253,8 @@
 		050AFC5719DCB9B100835ED6 /* SnapPeaComposition.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapPeaComposition.mm; sourceTree = "<group>"; };
 		050AFC5819DCB9B100835ED6 /* SnapPeaGluings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaGluings.h; sourceTree = "<group>"; };
 		050AFC5919DCB9B100835ED6 /* SnapPeaGluings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapPeaGluings.mm; sourceTree = "<group>"; };
+		050AFC5D19DCC68B00835ED6 /* SurfacesCompat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurfacesCompat.h; sourceTree = "<group>"; };
+		050AFC5E19DCC68B00835ED6 /* SurfacesCompat.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SurfacesCompat.mm; sourceTree = "<group>"; };
 		0513753B1809B8D2002E525B /* coordregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "coordregistry-impl.h"; sourceTree = "<group>"; };
 		0513753C1809B8D2002E525B /* coordregistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = coordregistry.h; sourceTree = "<group>"; };
 		051806D3181202BD008EBB01 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = src/icons; sourceTree = "<group>"; };
@@ -2420,6 +2423,8 @@
 				050AFC5919DCB9B100835ED6 /* SnapPeaGluings.mm */,
 				058FADA519D388920001B5B5 /* SurfacesViewController.h */,
 				058FADA619D388920001B5B5 /* SurfacesViewController.mm */,
+				050AFC5D19DCC68B00835ED6 /* SurfacesCompat.h */,
+				050AFC5E19DCC68B00835ED6 /* SurfacesCompat.mm */,
 				0586426F19DA258E0019E056 /* SurfacesCoords.h */,
 				0586427019DA258E0019E056 /* SurfacesCoords.mm */,
 				0586426919D92D550019E056 /* SurfacesMatching.h */,
@@ -4549,6 +4554,7 @@
 				052FA17A1806129B00FAE4DF /* engine.cpp in Sources */,
 				052FA22F180612DD00FAE4DF /* peripheral_curves.c in Sources */,
 				052FA1791806129B00FAE4DF /* skeleton.cpp in Sources */,
+				050AFC5F19DCC68B00835ED6 /* SurfacesCompat.mm in Sources */,
 				052FA1BA1806129B00FAE4DF /* nl31pillow.cpp in Sources */,
 				052FA22E180612DD00FAE4DF /* orient.c in Sources */,
 				052FA1A31806129B00FAE4DF /* nray.cpp in Sources */,

@@ -2723,7 +2723,7 @@
         <!--Compatibility-->
         <scene sceneID="Him-Qw-i6b">
             <objects>
-                <viewController id="5Mi-U2-xPd" sceneMemberID="viewController">
+                <viewController id="5Mi-U2-xPd" customClass="SurfacesCompat" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="NWF-2x-rI9"/>
                         <viewControllerLayoutGuide type="bottom" id="cHz-Zq-dnD"/>
@@ -2802,6 +2802,11 @@
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Compatibility" image="Tab-Compat" id="dKo-gl-8TU"/>
+                    <connections>
+                        <outlet property="coords" destination="45f-x5-c4e" id="VCO-UL-DYJ"/>
+                        <outlet property="header" destination="Xda-6z-sil" id="0e8-2l-cZZ"/>
+                        <outlet property="tri" destination="Aqs-qy-i8Z" id="tdQ-Qq-MNe"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KmB-Ux-CeJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
