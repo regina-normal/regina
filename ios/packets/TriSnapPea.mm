@@ -30,12 +30,21 @@
  *                                                                        *
  **************************************************************************/
 
+#import "PacketTreeController.h"
+#import "ReginaHelper.h"
+#import "TextHelper.h"
 #import "TriangulationViewController.h"
 #import "TriSnapPea.h"
+#import "snappea/nsnappeatriangulation.h"
 #import "triangulation/ntriangulation.h"
 
 @interface TriSnapPea ()
 @property (weak, nonatomic) IBOutlet UILabel *header;
+@property (weak, nonatomic) IBOutlet UILabel *solnType;
+@property (weak, nonatomic) IBOutlet UILabel *volume;
+@property (weak, nonatomic) IBOutlet UIButton *convert;
+@property (weak, nonatomic) IBOutlet UILabel *convertLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *convertIcon;
 
 @property (strong, nonatomic) TriangulationViewController* viewer;
 @property (assign, nonatomic) regina::NTriangulation* packet;
@@ -54,6 +63,63 @@
     self.packet = self.viewer.packet;
 
     [self.viewer updateHeader:self.header];
+
+    regina::NSnapPeaTriangulation snappeaTri(*self.packet);
+
+    if (snappeaTri.isNull()) {
+        self.solnType.attributedText = self.volume.attributedText = [TextHelper dimString:@"Unavailable for this triangulation"];
+
+        self.convert.hidden = YES;
+        self.convertLabel.hidden = YES;
+        self.convertIcon.hidden = YES;
+    } else {
+        switch (snappeaTri.solutionType()) {
+            case regina::NSnapPeaTriangulation::not_attempted:
+                self.solnType.text = @"Not attempted"; break;
+            case regina::NSnapPeaTriangulation::geometric_solution:
+                self.solnType.text = @"Tetrahedra positively oriented"; break;
+            case regina::NSnapPeaTriangulation::nongeometric_solution:
+                self.solnType.text = @"Contains negatively oriented tetrahedra"; break;
+            case regina::NSnapPeaTriangulation::flat_solution:
+                self.solnType.text = @"All tetrahedra flat"; break;
+            case regina::NSnapPeaTriangulation::degenerate_solution:
+                self.solnType.text = @"Contains degenerate tetrahedra"; break;
+            case regina::NSnapPeaTriangulation::other_solution:
+                self.solnType.text = @"Unrecognised solution type"; break;
+            case regina::NSnapPeaTriangulation::no_solution:
+                self.solnType.text = @"No solution found"; break;
+            default:
+                self.solnType.text = @"ERROR (invalid solution type)"; break;
+        }
+
+        int places;
+        double ans = snappeaTri.volume(places);
+
+        if (snappeaTri.volumeZero()) {
+            // Zero is within the margin of error, and this margin of
+            // error is small.  Report it as zero, with the exact result
+            // beneath.
+            self.volume.text = [NSString stringWithFormat:@"Possibly zero\n(calculated %.9lf,\nest. %d places accuracy)",
+                                ans, places];
+        } else {
+            self.volume.text = [NSString stringWithFormat:@"%.9lf\n(est. %d places accuracy)",
+                                ans, places];
+        }
+
+        self.convert.hidden = NO;
+        self.convertLabel.hidden = NO;
+        self.convertIcon.hidden = NO;
+    }
+}
+
+- (IBAction)toSnapPea:(id)sender {
+    regina::NSnapPeaTriangulation* s = new regina::NSnapPeaTriangulation(*self.packet);
+    s->setPacketLabel(self.packet->getPacketLabel());
+
+    self.packet->insertChildLast(s);
+
+    [[ReginaHelper tree] navigateToPacket:self.packet];
+    [ReginaHelper viewPacket:s];
 }
 
 @end
