@@ -30,6 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
+#import "MBProgressHUD.h"
+#import "ReginaHelper.h"
 #import "TextHelper.h"
 #import "TriangulationViewController.h"
 #import "TriRecognition.h"
@@ -71,6 +73,7 @@
     NSMutableArray* propertyList;
     NSString* manifoldName;
     regina::NProperty<bool> isHyp;
+    MBProgressHUD* hud;
 }
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UITableView *properties;
@@ -299,27 +302,38 @@
 
     static_cast<PropertyCell*>(cell).calculate.hidden = YES;
 
-    // TODO: Progress HUD.
-    switch (static_cast<PropertyCell*>(cell).property) {
-        case PROP_SPHERE:
-            self.packet->isThreeSphere(); break;
-        case PROP_BALL:
-            self.packet->isBall(); break;
-        case PROP_SOLIDTORUS:
-            self.packet->isSolidTorus(); break;
-        case PROP_ZEROEFF:
-            self.packet->isZeroEfficient(); break;
-        case PROP_SPLITTING:
-            self.packet->hasSplittingSurface(); break;
-        case PROP_IRREDUCIBLE:
-            self.packet->isIrreducible(); break;
-        case PROP_HAKEN:
-            self.packet->isHaken(); break;
-        case PROP_STRICT:
-            self.packet->hasStrictAngleStructure(); break;
-    }
-    [self updateHyperbolic];
-    [self.properties reloadData];
+    UIView* root = [UIApplication sharedApplication].keyWindow.rootViewController.view;
+    hud = [MBProgressHUD showHUDAddedTo:root animated:YES];
+    hud.labelText = @"Calculating…";
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        switch (static_cast<PropertyCell*>(cell).property) {
+            case PROP_SPHERE:
+                self.packet->isThreeSphere(); break;
+            case PROP_BALL:
+                self.packet->isBall(); break;
+            case PROP_SOLIDTORUS:
+                self.packet->isSolidTorus(); break;
+            case PROP_ZEROEFF:
+                self.packet->isZeroEfficient(); break;
+            case PROP_SPLITTING:
+                self.packet->hasSplittingSurface(); break;
+            case PROP_IRREDUCIBLE:
+                self.packet->isIrreducible(); break;
+            case PROP_HAKEN:
+                self.packet->isHaken(); break;
+            case PROP_STRICT:
+                self.packet->hasStrictAngleStructure(); break;
+        }
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideHUDForView:root animated:NO];
+            hud = nil;
+
+            [self updateHyperbolic];
+            [self.properties reloadData];
+        });
+    });
 }
 
 #pragma mark - Table view
