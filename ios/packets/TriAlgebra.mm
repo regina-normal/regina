@@ -33,9 +33,57 @@
 #import "TextHelper.h"
 #import "TriangulationViewController.h"
 #import "TriAlgebra.h"
+#import "maths/numbertheory.h"
 #import "triangulation/ntriangulation.h"
 
-@interface TriAlgebra ()
+#define TV_WARN_LARGE_R 15
+
+@interface TVItem : NSObject
+
+@property (assign, nonatomic) int r;
+@property (assign, nonatomic) int root;
+@property (assign, nonatomic) double value;
+
+- (id)initWithValue:(double)value r:(int)r root:(int)root;
++ (id)itemWithValue:(double)value r:(int)r root:(int)root;
+
+- (NSComparisonResult)compare:(TVItem*)rhs;
+
+@end
+
+@implementation TVItem
+
+- (id)initWithValue:(double)value r:(int)r root:(int)root
+{
+    self = [super init];
+    if (self) {
+        _value = value;
+        _r = r;
+        _root = root;
+    }
+    return self;
+}
+
++ (id)itemWithValue:(double)value r:(int)r root:(int)root
+{
+    return [[TVItem alloc] initWithValue:value r:r root:root];
+}
+
+- (NSComparisonResult)compare:(TVItem *)rhs
+{
+    if (self.r < rhs.r) return NSOrderedAscending;
+    if (self.r > rhs.r) return NSOrderedDescending;
+    if (self.root < rhs.root) return NSOrderedAscending;
+    if (self.root > rhs.root) return NSOrderedDescending;
+    return NSOrderedSame;
+}
+
+@end
+
+@interface TriAlgebra () <UITableViewDataSource, UIAlertViewDelegate> {
+    int r, root;
+    NSMutableArray* computed;
+}
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UILabel *h1;
 @property (weak, nonatomic) IBOutlet UILabel *h1Rel;
@@ -166,10 +214,139 @@
         self.fundRelsDetails.textContainerInset = UIEdgeInsetsMake(10, 10, 10, 10);
     }
 
-    // TODO: TV
+    computed = [[NSMutableArray alloc] init];
+    const regina::NTriangulation::TuraevViroSet& s = self.packet->allCalculatedTuraevViro();
+    for (regina::NTriangulation::TuraevViroSet::const_iterator it = s.begin(); it != s.end(); ++it)
+        [computed addObject:[TVItem itemWithValue:it->second r:it->first.first root:it->first.second]];
+
+    self.tvValues.dataSource = self;
+    [self.tvValues reloadData];
 }
 
 - (IBAction)tvCalculate:(id)sender {
+    NSRegularExpression* regex = [[NSRegularExpression alloc] initWithPattern:@"\\A[ \\(]*(\\d+)[ ,]+(\\d+)[ \\)]*\\Z" options:0 error:nil];
+    NSTextCheckingResult* result = [regex firstMatchInString:self.tvArgs.text options:0 range:NSMakeRange(0, self.tvArgs.text.length)];
+    if (! result) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Turaev-Viro Parameters"
+                                                        message:@"Please enter the parameters (r, root) in the box provided.  "
+                                                                 "These must be positive integers with 0 < root < 2r, and where "
+                                                                 "root describes a (2r)th root of unity.  An example is (5, 3)."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+
+    r = [[self.tvArgs.text substringWithRange:[result rangeAtIndex:1]] intValue];
+    root = [[self.tvArgs.text substringWithRange:[result rangeAtIndex:2]] intValue];
+
+    // Run sanity checks.
+    if (! (self.packet->isValid() && self.packet->isClosed() && ! self.packet->isEmpty())) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Calculate"
+                                                        message:@"Turaev-Viro invariants are currently only available for closed, valid, non-empty triangulations."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+
+    if (r < 3) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Requires r ≥ 3"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+
+    if (root <= 0 || root >= 2 * r) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Requires 0 < root < 2r"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+
+    if (regina::gcd(r, root) > 1) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Requires gcd(r, root) = 1"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+
+    if (r >= TV_WARN_LARGE_R) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Long Calculation Ahead"
+                                                        message:@"Turaev-Viro invariants require exponential time to compute, and you have chosen a large value of r.  "
+                                                                 "Are you sure you wish to proceed?"
+                                                       delegate:self
+                                              cancelButtonTitle:@"Cancel"
+                                              otherButtonTitles:@"Compute", nil];
+        [alert show];
+        return;
+    }
+
+    // Calculate the invariant!
+    [self calculateTV];
+}
+
+- (void)calculateTV
+{
+    const regina::NTriangulation::TuraevViroSet& s = self.packet->allCalculatedTuraevViro();
+    if (s.find(std::make_pair(r, root)) != s.end()) {
+        // Duplicate.
+        return;
+    }
+
+    double value = self.packet->turaevViro(r, root);
+    TVItem* item = [TVItem itemWithValue:value r:r root:root];
+
+    NSUInteger index = [computed indexOfObject:item
+                                 inSortedRange:NSMakeRange(0, computed.count)
+                                       options:NSBinarySearchingInsertionIndex
+                               usingComparator:^(TVItem* x, TVItem* y) { return [x compare:y]; }];
+    [computed insertObject:item atIndex:index];
+    NSIndexPath* path = [NSIndexPath indexPathForRow:index inSection:0];
+    [self.tvValues insertRowsAtIndexPaths:@[path] withRowAnimation:YES];
+}
+
+#pragma mark - Table view
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return computed.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    TVItem* item = computed[indexPath.row];
+    UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"Value" forIndexPath:indexPath];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%lf", item.value];
+    cell.textLabel.text = [NSString stringWithFormat:@"%d, %d:", item.r, item.root];
+    return cell;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return NO;
+}
+
+#pragma mark - Alert view
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == alertView.cancelButtonIndex)
+        return;
+
+    // TODO: Lock with processing spinner.
+    [self calculateTV];
 }
 
 @end

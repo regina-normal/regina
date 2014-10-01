@@ -4551,7 +4551,10 @@
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0R1-g3-niy">
                                         <rect key="frame" x="98" y="80" width="148" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="numbersAndPunctuation" returnKeyType="go" enablesReturnKeyAutomatically="YES"/>
+                                        <connections>
+                                            <action selector="tvCalculate:" destination="E8x-R2-m55" eventType="editingDidEndOnExit" id="MBC-1q-xQX"/>
+                                        </connections>
                                     </textField>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="DVV-dk-r4S">
                                         <rect key="frame" x="20" y="130" width="311" height="496"/>
@@ -4565,13 +4568,13 @@
                                                     <subviews>
                                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="iod-41-dmk">
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                             <color key="textColor" red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="WlK-dt-x6L">
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
@@ -4599,7 +4602,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r3D-2s-oFW">
-                                <rect key="frame" x="351" y="105" width="1" height="594"/>
+                                <rect key="frame" x="351" y="125" width="1" height="574"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="1" id="sGf-cK-bkS"/>
@@ -4760,7 +4763,7 @@
                             <constraint firstItem="GfL-PH-V6W" firstAttribute="width" secondItem="xbb-lw-BU9" secondAttribute="width" id="PXL-ag-rZu"/>
                             <constraint firstItem="FLX-7t-Qed" firstAttribute="leading" secondItem="NL7-PX-glE" secondAttribute="leading" constant="20" id="QCQ-Pm-LnE"/>
                             <constraint firstItem="r3D-2s-oFW" firstAttribute="leading" secondItem="GfL-PH-V6W" secondAttribute="trailing" id="T5r-oh-clX"/>
-                            <constraint firstItem="r3D-2s-oFW" firstAttribute="top" secondItem="FLX-7t-Qed" secondAttribute="bottom" constant="20" id="TJV-xG-RNR"/>
+                            <constraint firstItem="r3D-2s-oFW" firstAttribute="top" secondItem="FLX-7t-Qed" secondAttribute="bottom" constant="40" id="TJV-xG-RNR"/>
                             <constraint firstAttribute="trailing" secondItem="FLX-7t-Qed" secondAttribute="trailing" constant="20" id="VAj-8L-ucS"/>
                             <constraint firstItem="FLX-7t-Qed" firstAttribute="top" secondItem="CHu-yF-XJP" secondAttribute="bottom" constant="20" id="W8a-tZ-u7w"/>
                             <constraint firstAttribute="trailing" secondItem="xbb-lw-BU9" secondAttribute="trailing" id="ZCh-cg-OSp"/>
