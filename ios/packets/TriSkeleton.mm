@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#import "SnapPeaViewController.h"
 #import "TriangulationViewController.h"
 #import "TriSkeleton.h"
 #import "TextHelper.h"
@@ -41,26 +42,25 @@
     CGFloat headerHeight, fatHeaderHeight;
 }
 @property (weak, nonatomic) IBOutlet UILabel *header;
+@property (weak, nonatomic) IBOutlet UILabel *volume;
+@property (weak, nonatomic) IBOutlet UILabel *solnType;
+
 @property (weak, nonatomic) IBOutlet UILabel *fVector;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *viewWhich;
 
-@property (strong, nonatomic) TriangulationViewController* viewer;
 @property (assign, nonatomic) regina::NTriangulation* packet;
 @end
 
 @implementation TriSkeleton
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    self.viewer = static_cast<TriangulationViewController*>(self.parentViewController);
-}
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.packet = self.viewer.packet;
+    self.packet = static_cast<regina::NTriangulation*>(static_cast<id<PacketViewer> >(self.parentViewController).packet);
 
-    [self.viewer updateHeader:self.header];
+    if ([self.parentViewController isKindOfClass:[SnapPeaViewController class]])
+        [static_cast<SnapPeaViewController*>(self.parentViewController) updateHeader:self.header volume:self.volume solnType:self.solnType];
+    else
+        [static_cast<TriangulationViewController*>(self.parentViewController) updateHeader:self.header];
 
     self.fVector.text = [NSString stringWithFormat:@"f-vector: (%ld, %ld, %ld, %ld)",
                          self.packet->getNumberOfFaces<0>(),
