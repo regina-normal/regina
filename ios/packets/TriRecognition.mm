@@ -55,7 +55,6 @@
 #define MAX_CENSUS_TRIANGULATION_SIZE 50
 
 // TODO: Census lookup: long press for more lines of information.
-// TODO: This code relies on cellForRowAtIndexPath being called in order for rows 0,1,... - fix this.
 
 @interface PropertyCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *name;
@@ -135,27 +134,45 @@
     }
 
     // What properties should we display?
+    // Precompute these properties now for sufficiently small triangulations.
     propertyList = [[NSMutableArray alloc] init];
-    if (self.packet->isClosed())
+    if (self.packet->isClosed()) {
         [propertyList addObject:@PROP_SPHERE];
-    else if (self.packet->getNumberOfBoundaryComponents() > 0) {
+        if (self.packet->getNumberOfTetrahedra() <= 6)
+            self.packet->isThreeSphere();
+    } else if (self.packet->getNumberOfBoundaryComponents() > 0) {
         // Real boundary only:
-        if (self.packet->hasBoundaryTriangles())
+        if (self.packet->hasBoundaryTriangles()) {
             [propertyList addObject:@PROP_BALL];
+            if (self.packet->getNumberOfTetrahedra() <= 6)
+                self.packet->isBall();
+        }
         // Either real or ideal boundary:
         [propertyList addObject:@PROP_SOLIDTORUS];
+        if (self.packet->getNumberOfTetrahedra() <= 6)
+            self.packet->isSolidTorus();
     }
     if (! dynamic_cast<regina::NSnapPeaTriangulation*>(self.packet)) {
         [propertyList addObject:@PROP_ZEROEFF];
         [propertyList addObject:@PROP_SPLITTING];
+        if (self.packet->getNumberOfTetrahedra() <= 6) {
+            self.packet->isZeroEfficient();
+            self.packet->hasSplittingSurface();
+        }
     }
     if (self.packet->isOrientable() && self.packet->isClosed() && self.packet->isValid() && self.packet->isConnected()) {
         [propertyList addObject:@PROP_IRREDUCIBLE];
         [propertyList addObject:@PROP_HAKEN];
+        if (self.packet->getNumberOfTetrahedra() <= 6) {
+            self.packet->isIrreducible();
+            self.packet->isHaken();
+        }
     }
     if (self.packet->isIdeal() && ! self.packet->hasBoundaryFaces()) {
         [propertyList addObject:@PROP_STRICT];
         [propertyList addObject:@PROP_HYPERBOLIC];
+        if (self.packet->getNumberOfTetrahedra() <= 50)
+            self.packet->hasStrictAngleStructure();
     }
     self.properties.dataSource = self;
 
@@ -177,6 +194,8 @@
         delete hits;
     } else
         self.census.attributedText = [TextHelper dimString:@"Not found"];
+
+    [self updateHyperbolic];
 }
 
 + (NSString*)propertyName:(int)property
@@ -195,41 +214,53 @@
     return nil;
 }
 
+- (void)updateHyperbolic
+{
+    if (isHyp.known())
+        return;
+
+    if (self.packet->isClosed() && self.packet->knowsThreeSphere() && self.packet->isThreeSphere())
+        isHyp = false;
+    else if (self.packet->hasBoundaryTriangles() && self.packet->knowsBall() && self.packet->isBall())
+        isHyp = false;
+    else if (self.packet->getNumberOfBoundaryComponents() > 0 && self.packet->knowsSolidTorus() && self.packet->isSolidTorus())
+        isHyp = false;
+    else if (self.packet->isOrientable() && self.packet->isClosed() && self.packet->isValid() && self.packet->isConnected() && self.packet->knowsIrreducible() && ! self.packet->isIrreducible())
+        isHyp = false;
+    else if (self.packet->isValid() && self.packet->isStandard() && self.packet->knowsStrictAngleStructure() && self.packet->hasStrictAngleStructure())
+        isHyp = true;
+
+    if (isHyp.known())
+        [self.properties reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:[propertyList indexOfObject:@PROP_HYPERBOLIC] inSection:0]]
+                               withRowAnimation:NO];
+}
+
 - (NSAttributedString*)value:(int)property
 {
     switch (property) {
         case PROP_SPHERE:
-            if (self.packet->knowsThreeSphere() || self.packet->getNumberOfTetrahedra() <= 6) {
-                if (self.packet->isThreeSphere()) {
-                    isHyp = false;
-                    if (! manifoldName)
-                        self.manifold.text = manifoldName = @"S3";
-                }
+            if (self.packet->knowsThreeSphere()) {
+                if (self.packet->isThreeSphere() && ! manifoldName)
+                    self.manifold.text = manifoldName = @"S3";
                 return [TextHelper yesNoString:self.packet->isThreeSphere() yes:@"Yes" no:@"No"];
             }
             return nil;
         case PROP_BALL:
-            if (self.packet->knowsBall() || self.packet->getNumberOfTetrahedra() <= 6) {
-                if (self.packet->isBall()) {
-                    isHyp = false;
-                    if (! manifoldName)
-                        self.manifold.text = manifoldName = @"B3";
-                }
+            if (self.packet->knowsBall()) {
+                if (self.packet->isBall() && ! manifoldName)
+                    self.manifold.text = manifoldName = @"B3";
                 return [TextHelper yesNoString:self.packet->isBall() yes:@"Yes" no:@"No"];
             }
             return nil;
         case PROP_SOLIDTORUS:
-            if (self.packet->knowsSolidTorus() || self.packet->getNumberOfTetrahedra() <= 6) {
-                if (self.packet->isSolidTorus()) {
-                    isHyp = false;
-                    if (! manifoldName)
-                        self.manifold.text = manifoldName = @"B2 x S1";
-                }
+            if (self.packet->knowsSolidTorus()) {
+                if (self.packet->isSolidTorus() && ! manifoldName)
+                    self.manifold.text = manifoldName = @"B2 x S1";
                 return [TextHelper yesNoString:self.packet->isSolidTorus() yes:@"Yes" no:@"No"];
             }
             return nil;
         case PROP_ZEROEFF:
-            if (self.packet->knowsZeroEfficient() || self.packet->getNumberOfTetrahedra() <= 6)
+            if (self.packet->knowsZeroEfficient())
                 return [TextHelper yesNoString:self.packet->isZeroEfficient() yes:@"Yes" no:@"No"];
             return nil;
         case PROP_SPLITTING:
@@ -237,32 +268,18 @@
                 return [TextHelper yesNoString:self.packet->hasSplittingSurface() yes:@"Yes" no:@"No"];
             return nil;
         case PROP_IRREDUCIBLE:
-            if (self.packet->knowsIrreducible() || self.packet->getNumberOfTetrahedra() <= 6) {
-                if (! self.packet->isIrreducible()) {
-                    isHyp = false;
-                }
+            if (self.packet->knowsIrreducible())
                 return [TextHelper yesNoString:self.packet->isIrreducible() yes:@"Yes" no:@"No"];
-            }
             return nil;
         case PROP_HAKEN:
-            if (self.packet->knowsIrreducible() && ! self.packet->isIrreducible()) {
-                // We are not allowed to test Hakenness in this situation.
+            if (self.packet->knowsIrreducible() && ! self.packet->isIrreducible())
                 return [TextHelper markedString:@"N/A"];
-            } else if (self.packet->knowsHaken() || self.packet->getNumberOfTetrahedra() <= 6) {
-                // This will not trigger new knowledge about irreducibility,
-                // since if the triangulation has few tetrahedra we would
-                // have just run an irreducibility test in the previous cell.
+            else if (self.packet->knowsHaken())
                 return [TextHelper yesNoString:self.packet->isHaken() yes:@"Yes" no:@"No"];
-            }
             return nil;
         case PROP_STRICT:
-            if (self.packet->knowsStrictAngleStructure() || self.packet->getNumberOfTetrahedra() <= 50) {
-                if (self.packet->hasStrictAngleStructure()) {
-                    if (self.packet->isValid() && self.packet->isStandard())
-                        isHyp = true;
-                }
+            if (self.packet->knowsStrictAngleStructure())
                 return [TextHelper yesNoString:self.packet->hasStrictAngleStructure() yes:@"Yes" no:@"No"];
-            }
             return nil;
         case PROP_HYPERBOLIC:
             if (isHyp.known())
@@ -292,7 +309,6 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // TODO.
     int prop = [propertyList[indexPath.row] intValue];
 
     PropertyCell* cell = [tableView dequeueReusableCellWithIdentifier:@"Property" forIndexPath:indexPath];
