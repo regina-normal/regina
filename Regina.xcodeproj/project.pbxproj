@@ -17,6 +17,10 @@
 		05062FB718169F06008A20A5 /* nboundarycomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05062FB418169F06008A20A5 /* nboundarycomponent.cpp */; };
 		05062FB818169F06008A20A5 /* ncomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05062FB518169F06008A20A5 /* ncomponent.cpp */; };
 		05062FB918169F06008A20A5 /* ncomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05062FB518169F06008A20A5 /* ncomponent.cpp */; };
+		050AFC5319DCB90E00835ED6 /* SnapPeaCusps.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5219DCB90E00835ED6 /* SnapPeaCusps.mm */; };
+		050AFC5A19DCB9B100835ED6 /* SnapPeaAlgebra.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5519DCB9B100835ED6 /* SnapPeaAlgebra.mm */; };
+		050AFC5B19DCB9B200835ED6 /* SnapPeaComposition.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5719DCB9B100835ED6 /* SnapPeaComposition.mm */; };
+		050AFC5C19DCB9B200835ED6 /* SnapPeaGluings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5919DCB9B100835ED6 /* SnapPeaGluings.mm */; };
 		0513753D1809B8D3002E525B /* coordregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753B1809B8D2002E525B /* coordregistry-impl.h */; };
 		0513753E1809B8D3002E525B /* coordregistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753C1809B8D2002E525B /* coordregistry.h */; };
 		051806D4181202BD008EBB01 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 051806D3181202BD008EBB01 /* icons */; };
@@ -1240,6 +1244,14 @@
 		0503DCDA19B7E4F10085F3CC /* CensusListController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CensusListController.mm; sourceTree = "<group>"; };
 		05062FB418169F06008A20A5 /* nboundarycomponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nboundarycomponent.cpp; sourceTree = "<group>"; };
 		05062FB518169F06008A20A5 /* ncomponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ncomponent.cpp; sourceTree = "<group>"; };
+		050AFC5119DCB90E00835ED6 /* SnapPeaCusps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaCusps.h; sourceTree = "<group>"; };
+		050AFC5219DCB90E00835ED6 /* SnapPeaCusps.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapPeaCusps.mm; sourceTree = "<group>"; };
+		050AFC5419DCB9B100835ED6 /* SnapPeaAlgebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaAlgebra.h; sourceTree = "<group>"; };
+		050AFC5519DCB9B100835ED6 /* SnapPeaAlgebra.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapPeaAlgebra.mm; sourceTree = "<group>"; };
+		050AFC5619DCB9B100835ED6 /* SnapPeaComposition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaComposition.h; sourceTree = "<group>"; };
+		050AFC5719DCB9B100835ED6 /* SnapPeaComposition.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapPeaComposition.mm; sourceTree = "<group>"; };
+		050AFC5819DCB9B100835ED6 /* SnapPeaGluings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaGluings.h; sourceTree = "<group>"; };
+		050AFC5919DCB9B100835ED6 /* SnapPeaGluings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapPeaGluings.mm; sourceTree = "<group>"; };
 		0513753B1809B8D2002E525B /* coordregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "coordregistry-impl.h"; sourceTree = "<group>"; };
 		0513753C1809B8D2002E525B /* coordregistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = coordregistry.h; sourceTree = "<group>"; };
 		051806D3181202BD008EBB01 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = src/icons; sourceTree = "<group>"; };
@@ -2398,6 +2410,14 @@
 				054535BB19D90C3A00BED767 /* Skeleton.mm */,
 				058FADA919D38BFC0001B5B5 /* SnapPeaViewController.h */,
 				058FADAA19D38BFC0001B5B5 /* SnapPeaViewController.mm */,
+				050AFC5419DCB9B100835ED6 /* SnapPeaAlgebra.h */,
+				050AFC5519DCB9B100835ED6 /* SnapPeaAlgebra.mm */,
+				050AFC5619DCB9B100835ED6 /* SnapPeaComposition.h */,
+				050AFC5719DCB9B100835ED6 /* SnapPeaComposition.mm */,
+				050AFC5119DCB90E00835ED6 /* SnapPeaCusps.h */,
+				050AFC5219DCB90E00835ED6 /* SnapPeaCusps.mm */,
+				050AFC5819DCB9B100835ED6 /* SnapPeaGluings.h */,
+				050AFC5919DCB9B100835ED6 /* SnapPeaGluings.mm */,
 				058FADA519D388920001B5B5 /* SurfacesViewController.h */,
 				058FADA619D388920001B5B5 /* SurfacesViewController.mm */,
 				0586426F19DA258E0019E056 /* SurfacesCoords.h */,
@@ -4443,6 +4463,7 @@
 				05A73CA319B2EF5A0099C617 /* matrix_generators.c in Sources */,
 				05B7708419C92A5000E2E558 /* ScriptViewController.mm in Sources */,
 				05F23E1319C1305A005B53B5 /* NewAnglesController.mm in Sources */,
+				050AFC5A19DCB9B100835ED6 /* SnapPeaAlgebra.mm in Sources */,
 				052FA1931806129B00FAE4DF /* nmanifold.cpp in Sources */,
 				052FA1E31806129B00FAE4DF /* nsstandard.cpp in Sources */,
 				052FA1E61806129B00FAE4DF /* nxmlfilterreader.cpp in Sources */,
@@ -4563,6 +4584,7 @@
 				052FA230180612DD00FAE4DF /* positioned_tet.c in Sources */,
 				052FA1781806129B00FAE4DF /* nxmldim2trireader.cpp in Sources */,
 				052FA1DA1806129B00FAE4DF /* ndisctype.cpp in Sources */,
+				050AFC5C19DCB9B200835ED6 /* SnapPeaGluings.mm in Sources */,
 				052FA212180612DD00FAE4DF /* canonize_part_1.c in Sources */,
 				052FA1E51806129B00FAE4DF /* nsurfacesubset.cpp in Sources */,
 				055B7314181D7CF800449D14 /* dim2component.cpp in Sources */,
@@ -4581,6 +4603,7 @@
 				052FA1831806129B00FAE4DF /* nglobaldirs.cpp in Sources */,
 				058FADC619D50DA10001B5B5 /* Coordinates.mm in Sources */,
 				052FA1FC1806129B00FAE4DF /* ntetrahedron.cpp in Sources */,
+				050AFC5B19DCB9B200835ED6 /* SnapPeaComposition.mm in Sources */,
 				052FA1611806129B00FAE4DF /* nhomgrouppresentation.cpp in Sources */,
 				0591012118141996000A8D16 /* NewPacketController.mm in Sources */,
 				052FA2021806129B00FAE4DF /* simplify.cpp in Sources */,
@@ -4663,6 +4686,7 @@
 				052FA1F91806129B00FAE4DF /* nfacepair.cpp in Sources */,
 				052FA1EA1806129B00FAE4DF /* quadtostd.cpp in Sources */,
 				052FA1F71806129B00FAE4DF /* nedge.cpp in Sources */,
+				050AFC5319DCB90E00835ED6 /* SnapPeaCusps.mm in Sources */,
 				052FA1FB1806129B00FAE4DF /* nisomorphism.cpp in Sources */,
 				052FA1BB1806129B00FAE4DF /* nlayeredchain.cpp in Sources */,
 				052FA1CC1806129B00FAE4DF /* nsnappedtwosphere.cpp in Sources */,

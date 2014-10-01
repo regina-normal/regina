@@ -3029,7 +3029,7 @@
         <!--Gluings-->
         <scene sceneID="Q7i-JM-JZt">
             <objects>
-                <viewController id="3vR-K7-zd9" sceneMemberID="viewController">
+                <viewController id="3vR-K7-zd9" customClass="SnapPeaGluings" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="yxm-Cr-G7N"/>
                         <viewControllerLayoutGuide type="bottom" id="C0R-ac-aDx"/>
@@ -3079,6 +3079,11 @@
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Gluings" image="Tab-Gluings" id="FN9-1Q-e1J"/>
+                    <connections>
+                        <outlet property="header" destination="zQZ-Pd-9a3" id="Q9m-Zg-mru"/>
+                        <outlet property="solnType" destination="1b2-W1-gth" id="O6A-9x-bIy"/>
+                        <outlet property="volume" destination="R0Y-85-FEv" id="gCf-l6-0l9"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tpt-uC-wgg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -3931,7 +3936,7 @@
         <!--Shapes & Cusps-->
         <scene sceneID="9PS-wY-83S">
             <objects>
-                <viewController id="Rdx-qA-GwJ" sceneMemberID="viewController">
+                <viewController id="Rdx-qA-GwJ" customClass="SnapPeaCusps" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="IWo-7W-c1L"/>
                         <viewControllerLayoutGuide type="bottom" id="Dk6-uc-YpD"/>
@@ -3981,6 +3986,11 @@
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Shapes &amp; Cusps" image="Tab-Cusps" id="Wwk-Vo-tJ8"/>
+                    <connections>
+                        <outlet property="header" destination="LKb-16-GiL" id="2Hc-6j-snh"/>
+                        <outlet property="solnType" destination="Ehs-fI-8Ks" id="rYC-1w-mN6"/>
+                        <outlet property="volume" destination="ZD9-Rj-zMG" id="1mh-ps-Zri"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="97Z-Mj-0kM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -3989,7 +3999,7 @@
         <!--Algebra-->
         <scene sceneID="oEu-5v-nVH">
             <objects>
-                <viewController id="rSX-VM-2wT" sceneMemberID="viewController">
+                <viewController id="rSX-VM-2wT" customClass="SnapPeaAlgebra" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="dR8-8b-sDO"/>
                         <viewControllerLayoutGuide type="bottom" id="uQU-nL-Ca0"/>
@@ -4039,6 +4049,11 @@
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Algebra" image="Tab-Algebra" id="BMH-0G-vye"/>
+                    <connections>
+                        <outlet property="header" destination="HwC-pK-GaS" id="rHM-qS-f1I"/>
+                        <outlet property="solnType" destination="bcL-lJ-mhR" id="A4H-W3-49Y"/>
+                        <outlet property="volume" destination="4vB-mQ-D1C" id="KoL-zo-pA2"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bwZ-0F-HLg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -4047,7 +4062,7 @@
         <!--Composition-->
         <scene sceneID="usf-Jg-nfe">
             <objects>
-                <viewController id="iMB-kx-LGT" sceneMemberID="viewController">
+                <viewController id="iMB-kx-LGT" customClass="SnapPeaComposition" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="NiA-04-1YF"/>
                         <viewControllerLayoutGuide type="bottom" id="qzZ-me-jBn"/>
@@ -4097,6 +4112,11 @@
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Composition" image="Tab-Composition" id="e0P-Ru-E75"/>
+                    <connections>
+                        <outlet property="header" destination="g4p-K6-CAf" id="5Cp-Rg-7tA"/>
+                        <outlet property="solnType" destination="QHi-hf-kFK" id="GQW-15-Css"/>
+                        <outlet property="volume" destination="0p2-fi-qEq" id="dEx-Md-4xN"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gj9-Nn-gVO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
