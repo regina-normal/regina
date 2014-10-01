@@ -32,8 +32,8 @@
 
 #import "PacketTabBarController.h"
 #import "PacketViewer.h"
+#import "ReginaHelper.h"
 
-// TODO: Tab-based viewers, ios7: skeleton tables run under tabs after switching between tabs
 // TODO: Too much vertical space at the top of each tab for iOS 7 (okay in iOS 8).
 
 @interface PacketTabBarController () <UITabBarControllerDelegate>
@@ -45,6 +45,14 @@
 - (void)viewDidLoad
 {
     self.delegate = self;
+
+    if (! [ReginaHelper ios8]) {
+        // Stop view from running beneath the tab bar on iOS 7.
+        self.tabBar.translucent = NO;
+
+        // Also, shade the tab bar (otherwise on iOS 7 it appears white).
+        self.tabBar.barTintColor = [UIColor colorWithRed:0.975 green:0.975 blue:0.975 alpha:1.0];
+    }
 }
 
 - (void)setSelectedImages:(NSArray *)imageNames
