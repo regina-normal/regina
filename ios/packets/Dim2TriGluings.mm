@@ -54,7 +54,10 @@
 
 @interface Dim2TriGluings () <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate> {
     CGFloat headerHeight;
+    UILabel* editLabel;
     UITextField* editField;
+    int editSimplex;
+    int editEdge; // -1 for editing the description
     BOOL myEdit;
 }
 @property (weak, nonatomic) IBOutlet UILabel *properties;
@@ -124,30 +127,42 @@
 
 - (void)endEditing
 {
-    // TODO: Check that this works.
     // As a consequence, this calls textViewDidEndEditing:,
     // which is where the real work is done.
     [editField resignFirstResponder];
 }
 
-- (void)editGluing:(int)simplex edge:(int)edge cell:(Dim2GluingCell*)cell label:(UILabel*)label
+- (void)editGluingForSimplex:(int)simplex cell:(Dim2GluingCell*)cell label:(UILabel*)label
 {
     // Finish and process any other edit that is currently in progress.
     if (editField)
         [editField resignFirstResponder];
     
-    NSLog(@"New edit field");
+    editLabel = label;
+    editSimplex = simplex;
+    editEdge = label.tag;
+    
     editField = [[UITextField alloc] initWithFrame:label.frame];
     editField.backgroundColor = cell.backgroundColor;
     editField.borderStyle = UITextBorderStyleNone;
-    editField.placeholder = @"Gluing";
+    editField.placeholder = (editEdge >= 0 ? @"Gluing" : @"Name");
     editField.clearButtonMode = UITextFieldViewModeAlways;
-    editField.text = label.text;
     editField.returnKeyType = UIReturnKeyDone;
-    editField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     editField.autocorrectionType = UITextAutocorrectionTypeNo;
-    editField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
-    editField.textAlignment = NSTextAlignmentRight;
+    if (editEdge >= 0) {
+        regina::Dim2Triangle* t = self.packet->getSimplex(editSimplex);
+        editField.text = [Dim2TriGluings destStringFromEdge:editEdge
+                                                       dest:t->adjacentTriangle(editEdge)
+                                                     gluing:t->adjacentGluing(editEdge)];
+        editField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+        editField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+        editField.textAlignment = NSTextAlignmentRight;
+    } else {
+        editField.text = @(self.packet->getSimplex(simplex)->getDescription().c_str());
+        editField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
+        editField.keyboardType = UIKeyboardTypeDefault;
+        editField.textAlignment = NSTextAlignmentLeft;
+    }
     editField.delegate = self;
 
     [cell addSubview:editField];
@@ -163,28 +178,42 @@
     NSIndexPath *indexPath = [self.triangles indexPathForRowAtPoint:location];
     if (indexPath.row == 0 || indexPath.row > self.packet->getNumberOfSimplices())
         return;
-
+    
     Dim2GluingCell* cell = static_cast<Dim2GluingCell*>([self.triangles cellForRowAtIndexPath:indexPath]);
     CGPoint inner = [self.triangles convertPoint:location toView:cell];
     if (CGRectContainsPoint(cell.index.frame, inner)) {
-        // TODO: Relabel the simplex.
-    } else if (CGRectContainsPoint(cell.edge0.frame, inner))
-        [self editGluing:indexPath.row-1 edge:0 cell:cell label:cell.edge0];
-    else if (CGRectContainsPoint(cell.edge1.frame, inner))
-        [self editGluing:indexPath.row-1 edge:1 cell:cell label:cell.edge1];
-    else if (CGRectContainsPoint(cell.edge2.frame, inner))
-        [self editGluing:indexPath.row-1 edge:2 cell:cell label:cell.edge2];
+        [self editGluingForSimplex:indexPath.row-1 cell:cell label:cell.index];
+    } else if (CGRectContainsPoint(cell.edge0.frame, inner)) {
+        [self editGluingForSimplex:indexPath.row-1 cell:cell label:cell.edge0];
+    } else if (CGRectContainsPoint(cell.edge1.frame, inner)) {
+        [self editGluingForSimplex:indexPath.row-1 cell:cell label:cell.edge1];
+    } else if (CGRectContainsPoint(cell.edge2.frame, inner)) {
+        [self editGluingForSimplex:indexPath.row-1 cell:cell label:cell.edge2];
+    }
 }
 
 #pragma mark - Text field
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-    NSLog(@"TODO: New gluing: %@", textField.text);
+    if (editField != textField) {
+        NSLog(@"Error: Mismatched text field when editing gluings.");
+        return;
+    }
+    
+    myEdit = YES;
+    if (editEdge >= 0) {
+        // TODO: Do this.
+    } else {
+        NSString* desc = [editField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        self.packet->getSimplex(editSimplex)->setDescription(desc.UTF8String);
+        editLabel.text = [NSString stringWithFormat:@"%d. %@", editSimplex, desc];
+    }
+    myEdit = NO;
 
-    [textField removeFromSuperview];
-    if (textField == editField)
-        editField = nil;
+    [editField removeFromSuperview];
+    editField = nil;
+    editLabel = nil;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -209,8 +238,7 @@
 
     Dim2GluingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Triangle" forIndexPath:indexPath];
     regina::Dim2Triangle* t = self.packet->getTriangle(indexPath.row - 1);
-    cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
-    // TODO: Show triangle name.
+    cell.index.text = [NSString stringWithFormat:@"%d. %s", indexPath.row - 1, t->getDescription().c_str()];
     cell.edge0.text = [Dim2TriGluings destStringFromEdge:0 dest:t->adjacentTriangle(0) gluing:t->adjacentGluing(0)];
     cell.edge1.text = [Dim2TriGluings destStringFromEdge:1 dest:t->adjacentTriangle(1) gluing:t->adjacentGluing(1)];
     cell.edge2.text = [Dim2TriGluings destStringFromEdge:2 dest:t->adjacentTriangle(2) gluing:t->adjacentGluing(2)];
