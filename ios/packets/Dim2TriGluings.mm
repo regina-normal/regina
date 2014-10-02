@@ -37,6 +37,7 @@
 // TODO: Use labels so we can drag-to-delete.  Use temporary text fields as required.
 // TODO: Edit gluings!  Don't forget the keyboard scrolling nonsense.
 // TODO: A few deletes and then we get stuck.
+// TODO: Extend height of tap region to the entire cell.
 
 #pragma mark - Table cell
 
@@ -52,8 +53,9 @@
 
 #pragma mark - Dim2Triangulation gluings viewer
 
-@interface Dim2TriGluings () <UITableViewDelegate, UITableViewDataSource> {
+@interface Dim2TriGluings () <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate> {
     CGFloat headerHeight;
+    UITextField* editField;
     BOOL myEdit;
 }
 @property (weak, nonatomic) IBOutlet UILabel *properties;
@@ -69,6 +71,9 @@
 {
     [super viewDidLoad];
     self.viewer = static_cast<Dim2TriangulationViewController*>(self.parentViewController);
+
+    UITapGestureRecognizer *r = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(touched:)];
+    [self.triangles addGestureRecognizer:r];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -93,7 +98,7 @@
 + (NSString*)destStringFromEdge:(int)srcEdge dest:(regina::Dim2Triangle*)destTri gluing:(const regina::NPerm3&)gluing
 {
     if (! destTri)
-        return @"";
+        return @" "; // Need a space to ensure the label has enough height to pick up touches.
     else
         return [NSString stringWithFormat:@"%ld (%s)",
                 destTri->markedIndex(),
@@ -120,7 +125,70 @@
 
 - (void)endEditing
 {
-    // TODO
+    // TODO: Check that this works.
+    // As a consequence, this calls textViewDidEndEditing:,
+    // which is where the real work is done.
+    [editField resignFirstResponder];
+}
+
+- (void)editGluing:(int)simplex edge:(int)edge cell:(Dim2GluingCell*)cell label:(UILabel*)label
+{
+    NSLog(@"New edit field");
+    editField = [[UITextField alloc] initWithFrame:label.frame];
+    editField.backgroundColor = cell.backgroundColor;
+    editField.borderStyle = UITextBorderStyleNone;
+    editField.placeholder = @"New gluing";
+    // TODO: Placeholder working???
+    editField.clearButtonMode = UITextFieldViewModeAlways;
+    editField.text = label.text;
+    editField.returnKeyType = UIReturnKeyDone;
+    editField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    editField.autocorrectionType = UITextAutocorrectionTypeNo;
+    editField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+    editField.textAlignment = NSTextAlignmentRight;
+    editField.delegate = self;
+
+    [cell addSubview:editField];
+    [editField becomeFirstResponder];
+}
+
+- (IBAction)touched:(id)sender {
+    UITapGestureRecognizer *tap = static_cast<UITapGestureRecognizer*>(sender);
+    if (tap.state != UIGestureRecognizerStateRecognized)
+        return;
+
+    CGPoint location = [tap locationInView:self.triangles];
+    NSIndexPath *indexPath = [self.triangles indexPathForRowAtPoint:location];
+    if (indexPath.row == 0 || indexPath.row > self.packet->getNumberOfSimplices())
+        return;
+
+    Dim2GluingCell* cell = static_cast<Dim2GluingCell*>([self.triangles cellForRowAtIndexPath:indexPath]);
+    CGPoint inner = [self.triangles convertPoint:location toView:cell];
+    if (CGRectContainsPoint(cell.index.frame, inner)) {
+        // TODO: Relabel the simplex.
+    } else if (CGRectContainsPoint(cell.edge0.frame, inner))
+        [self editGluing:indexPath.row-1 edge:0 cell:cell label:cell.edge0];
+    else if (CGRectContainsPoint(cell.edge1.frame, inner))
+        [self editGluing:indexPath.row-1 edge:1 cell:cell label:cell.edge1];
+    else if (CGRectContainsPoint(cell.edge2.frame, inner))
+        [self editGluing:indexPath.row-1 edge:2 cell:cell label:cell.edge2];
+}
+
+#pragma mark - Text field
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    NSLog(@"TODO: New gluing: %@", textField.text);
+
+    [textField removeFromSuperview];
+    if (textField == editField)
+        editField = nil;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return NO;
 }
 
 #pragma mark - Table view

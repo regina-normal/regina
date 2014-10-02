@@ -58,6 +58,7 @@
 #define MAX_CENSUS_TRIANGULATION_SIZE 50
 
 // TODO: Census lookup: long press for more lines of information.
+// TODO: Use autolayout to position (manifold, census).
 
 @interface PropertyCell : UITableViewCell
 @property (assign, nonatomic) int property;
