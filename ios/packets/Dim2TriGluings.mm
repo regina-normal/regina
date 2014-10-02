@@ -37,15 +37,14 @@
 // TODO: Use labels so we can drag-to-delete.  Use temporary text fields as required.
 // TODO: Edit gluings!  Don't forget the keyboard scrolling nonsense.
 // TODO: A few deletes and then we get stuck.
-// TODO: Update the header on delete.
 
 #pragma mark - Table cell
 
 @interface Dim2GluingCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *index;
-@property (weak, nonatomic) IBOutlet UITextField *edge2;
-@property (weak, nonatomic) IBOutlet UITextField *edge1;
-@property (weak, nonatomic) IBOutlet UITextField *edge0;
+@property (weak, nonatomic) IBOutlet UILabel *edge2;
+@property (weak, nonatomic) IBOutlet UILabel *edge1;
+@property (weak, nonatomic) IBOutlet UILabel *edge0;
 @end
 
 @implementation Dim2GluingCell
@@ -55,6 +54,7 @@
 
 @interface Dim2TriGluings () <UITableViewDelegate, UITableViewDataSource> {
     CGFloat headerHeight;
+    BOOL myEdit;
 }
 @property (weak, nonatomic) IBOutlet UILabel *properties;
 @property (weak, nonatomic) IBOutlet UITableView *triangles;
@@ -83,6 +83,9 @@
 
 - (void)reloadPacket
 {
+    if (myEdit)
+        return;
+
     [self.viewer updateHeader:self.properties];
     [self.triangles reloadData];
 }
@@ -98,7 +101,9 @@
 }
 
 - (IBAction)newTriangle:(id)sender {
+    myEdit = YES;
     self.packet->newSimplex();
+    myEdit = NO;
 
     // Update the necessary elements of the UI.
     NSIndexPath* last = [NSIndexPath indexPathForRow:self.packet->getNumberOfSimplices()
@@ -111,6 +116,11 @@
                           atScrollPosition:UITableViewScrollPositionBottom animated:YES];
 
     [self.viewer updateHeader:self.properties];
+}
+
+- (void)endEditing
+{
+    // TODO
 }
 
 #pragma mark - Table view
@@ -128,8 +138,9 @@
         return [tableView dequeueReusableCellWithIdentifier:@"Add"];
 
     Dim2GluingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Triangle" forIndexPath:indexPath];
-    cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
     regina::Dim2Triangle* t = self.packet->getTriangle(indexPath.row - 1);
+    cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
+    // TODO: Show triangle name.
     cell.edge0.text = [Dim2TriGluings destStringFromEdge:0 dest:t->adjacentTriangle(0) gluing:t->adjacentGluing(0)];
     cell.edge1.text = [Dim2TriGluings destStringFromEdge:1 dest:t->adjacentTriangle(1) gluing:t->adjacentGluing(1)];
     cell.edge2.text = [Dim2TriGluings destStringFromEdge:2 dest:t->adjacentTriangle(2) gluing:t->adjacentGluing(2)];
@@ -146,15 +157,11 @@
     if (indexPath.row == 0 || indexPath.row > self.packet->getNumberOfSimplices())
         return;
 
-    self.packet->removeSimplexAt(indexPath.row - 1);
-
-    [self.triangles deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     // Many rows could change - not only do we blank out gluings for adjacent triangles,
     // but we also need to reindex every triangle after the one that was removed.
     // Just reload everything.
-    [self.triangles reloadData];
-
-    [self.viewer updateHeader:self.properties];
+    // This is easy: we don't set myEdit=YES, and instead rely on the automatic packet reload.
+    self.packet->removeSimplexAt(indexPath.row - 1);
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
