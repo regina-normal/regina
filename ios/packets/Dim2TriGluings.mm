@@ -34,7 +34,6 @@
 #import "Dim2TriangulationViewController.h"
 #import "dim2/dim2triangulation.h"
 
-// TODO: Use labels so we can drag-to-delete.  Use temporary text fields as required.
 // TODO: Edit gluings!  Don't forget the keyboard scrolling nonsense.
 // TODO: A few deletes and then we get stuck.
 // TODO: Extend height of tap region to the entire cell.
@@ -98,7 +97,7 @@
 + (NSString*)destStringFromEdge:(int)srcEdge dest:(regina::Dim2Triangle*)destTri gluing:(const regina::NPerm3&)gluing
 {
     if (! destTri)
-        return @" "; // Need a space to ensure the label has enough height to pick up touches.
+        return @" "; // Use a space to ensure the label has enough height to pick up touches.
     else
         return [NSString stringWithFormat:@"%ld (%s)",
                 destTri->markedIndex(),
@@ -133,12 +132,15 @@
 
 - (void)editGluing:(int)simplex edge:(int)edge cell:(Dim2GluingCell*)cell label:(UILabel*)label
 {
+    // Finish and process any other edit that is currently in progress.
+    if (editField)
+        [editField resignFirstResponder];
+    
     NSLog(@"New edit field");
     editField = [[UITextField alloc] initWithFrame:label.frame];
     editField.backgroundColor = cell.backgroundColor;
     editField.borderStyle = UITextBorderStyleNone;
-    editField.placeholder = @"New gluing";
-    // TODO: Placeholder working???
+    editField.placeholder = @"Gluing";
     editField.clearButtonMode = UITextFieldViewModeAlways;
     editField.text = label.text;
     editField.returnKeyType = UIReturnKeyDone;
