@@ -159,6 +159,7 @@
         editField.keyboardType = UIKeyboardTypeDefault;
         editField.textAlignment = NSTextAlignmentLeft;
     }
+    // TODO: Select all text in field.
     editField.delegate = self;
 
     [cell addSubview:editField];
