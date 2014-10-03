@@ -215,6 +215,7 @@
                 [toReload addObject:[NSIndexPath indexPathForRow:t->adjacentSimplex(editEdge)->markedIndex()+1 inSection:0]];
                 t->unjoin(editEdge);
                 editLabel.text = @" ";
+                [self.viewer updateHeader:self.properties];
                 myEdit = NO;
             }
         } else {
@@ -273,34 +274,37 @@
                 // We are making a change, and it's a valid one.
                 // Do it.
                 myEdit = YES;
-                regina::NPacket::ChangeEventSpan span(self.packet);
-                
-                // First unglue from the old partner if it exists.
-                if (t->adjacentSimplex(editEdge)) {
-                    [toReload addObject:[NSIndexPath indexPathForRow:t->adjacentSimplex(editEdge)->markedIndex()+1 inSection:0]];
-                    t->unjoin(editEdge);
-                }
-                
-                // We are gluing the edge to a new partner.
-                int destEdge = destGluing[editEdge];
-                
-                // Does this new partner already have its own partner?
-                // If so, better unglue it.
-                regina::Dim2Triangle* adj = self.packet->getSimplex(destSimplex);
-                if (adj->adjacentSimplex(destEdge)) {
-                    NSIndexPath* path = [NSIndexPath indexPathForRow:adj->adjacentSimplex(destEdge)->markedIndex()+1 inSection:0];
+                {
+                    regina::NPacket::ChangeEventSpan span(self.packet);
+                    
+                    // First unglue from the old partner if it exists.
+                    if (t->adjacentSimplex(editEdge)) {
+                        [toReload addObject:[NSIndexPath indexPathForRow:t->adjacentSimplex(editEdge)->markedIndex()+1 inSection:0]];
+                        t->unjoin(editEdge);
+                    }
+                    
+                    // We are gluing the edge to a new partner.
+                    int destEdge = destGluing[editEdge];
+                    
+                    // Does this new partner already have its own partner?
+                    // If so, better unglue it.
+                    regina::Dim2Triangle* adj = self.packet->getSimplex(destSimplex);
+                    if (adj->adjacentSimplex(destEdge)) {
+                        NSIndexPath* path = [NSIndexPath indexPathForRow:adj->adjacentSimplex(destEdge)->markedIndex()+1 inSection:0];
+                        if ([toReload indexOfObject:path] == NSNotFound)
+                            [toReload addObject:path];
+                        adj->unjoin(destEdge);
+                    }
+                    
+                    // Glue the two edges together.
+                    t->joinTo(editEdge, adj, destGluing);
+                    NSIndexPath* path = [NSIndexPath indexPathForRow:destSimplex+1 inSection:0];
                     if ([toReload indexOfObject:path] == NSNotFound)
                         [toReload addObject:path];
-                    adj->unjoin(destEdge);
+                    
+                    editLabel.text = [NSString stringWithFormat:@"%d (%d%d)", destSimplex, adj0, adj1];
                 }
-                
-                // Glue the two edges together.
-                t->joinTo(editEdge, adj, destGluing);
-                NSIndexPath* path = [NSIndexPath indexPathForRow:destSimplex+1 inSection:0];
-                if ([toReload indexOfObject:path] == NSNotFound)
-                    [toReload addObject:path];
-                
-                editLabel.text = [NSString stringWithFormat:@"%d (%d%d)", destSimplex, adj0, adj1];
+                [self.viewer updateHeader:self.properties];
                 myEdit = NO;
             }
         }

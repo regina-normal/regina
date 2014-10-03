@@ -223,6 +223,7 @@
                 [toReload addObject:[NSIndexPath indexPathForRow:t->adjacentSimplex(editFacet)->markedIndex()+1 inSection:0]];
                 t->unjoin(editFacet);
                 editLabel.text = @" ";
+                [self.viewer updateHeader:self.header];
                 myEdit = NO;
             }
         } else {
@@ -282,34 +283,37 @@
                 // We are making a change, and it's a valid one.
                 // Do it.
                 myEdit = YES;
-                regina::NPacket::ChangeEventSpan span(self.packet);
-                
-                // First unglue from the old partner if it exists.
-                if (t->adjacentSimplex(editFacet)) {
-                    [toReload addObject:[NSIndexPath indexPathForRow:t->adjacentSimplex(editFacet)->markedIndex()+1 inSection:0]];
-                    t->unjoin(editFacet);
-                }
-                
-                // We are gluing the facet to a new partner.
-                int destFacet = destGluing[editFacet];
-                
-                // Does this new partner already have its own partner?
-                // If so, better unglue it.
-                regina::NTetrahedron* adj = self.packet->getSimplex(destSimplex);
-                if (adj->adjacentSimplex(destFacet)) {
-                    NSIndexPath* path = [NSIndexPath indexPathForRow:adj->adjacentSimplex(destFacet)->markedIndex()+1 inSection:0];
+                {
+                    regina::NPacket::ChangeEventSpan span(self.packet);
+                    
+                    // First unglue from the old partner if it exists.
+                    if (t->adjacentSimplex(editFacet)) {
+                        [toReload addObject:[NSIndexPath indexPathForRow:t->adjacentSimplex(editFacet)->markedIndex()+1 inSection:0]];
+                        t->unjoin(editFacet);
+                    }
+                    
+                    // We are gluing the facet to a new partner.
+                    int destFacet = destGluing[editFacet];
+                    
+                    // Does this new partner already have its own partner?
+                    // If so, better unglue it.
+                    regina::NTetrahedron* adj = self.packet->getSimplex(destSimplex);
+                    if (adj->adjacentSimplex(destFacet)) {
+                        NSIndexPath* path = [NSIndexPath indexPathForRow:adj->adjacentSimplex(destFacet)->markedIndex()+1 inSection:0];
+                        if ([toReload indexOfObject:path] == NSNotFound)
+                            [toReload addObject:path];
+                        adj->unjoin(destFacet);
+                    }
+                    
+                    // Glue the two facets together.
+                    t->joinTo(editFacet, adj, destGluing);
+                    NSIndexPath* path = [NSIndexPath indexPathForRow:destSimplex+1 inSection:0];
                     if ([toReload indexOfObject:path] == NSNotFound)
                         [toReload addObject:path];
-                    adj->unjoin(destFacet);
+                    
+                    editLabel.text = [NSString stringWithFormat:@"%d (%d%d%d)", destSimplex, adj0, adj1, adj2];
                 }
-                
-                // Glue the two facets together.
-                t->joinTo(editFacet, adj, destGluing);
-                NSIndexPath* path = [NSIndexPath indexPathForRow:destSimplex+1 inSection:0];
-                if ([toReload indexOfObject:path] == NSNotFound)
-                    [toReload addObject:path];
-                
-                editLabel.text = [NSString stringWithFormat:@"%d (%d%d%d)", destSimplex, adj0, adj1, adj2];
+                [self.viewer updateHeader:self.header];
                 myEdit = NO;
             }
         }
