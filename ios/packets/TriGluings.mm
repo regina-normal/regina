@@ -110,7 +110,8 @@
 }
 
 - (IBAction)newSimplex:(id)sender {
-    // TODO: Check for editability.
+    if (! self.packet->isPacketEditable())
+        return;
     
     myEdit = YES;
     self.packet->newSimplex();
@@ -177,8 +178,9 @@
         editField = nil;
     }
     
-    // TODO: Check for editability.
-    
+    if (! self.packet->isPacketEditable())
+        return;
+
     UITapGestureRecognizer *tap = static_cast<UITapGestureRecognizer*>(sender);
     if (tap.state != UIGestureRecognizerStateRecognized)
         return;
@@ -208,6 +210,13 @@
 {
     if (editField != textField) {
         NSLog(@"Error: Mismatched text field when editing gluings.");
+        return;
+    }
+    
+    if (! self.packet->isPacketEditable()) {
+        [editField removeFromSuperview];
+        editField = nil;
+        editLabel = nil;
         return;
     }
     
@@ -344,7 +353,7 @@ cleanUpGluing:
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 2 + self.packet->getNumberOfSimplices();
+    return (self.packet->isPacketEditable() ? 2 : 1) + self.packet->getNumberOfSimplices();
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -366,7 +375,10 @@ cleanUpGluing:
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return (indexPath.row > 0 && indexPath.row <= self.packet->getNumberOfSimplices());
+    if (self.packet->isPacketEditable())
+        return (indexPath.row > 0 && indexPath.row <= self.packet->getNumberOfSimplices());
+    else
+        return NO;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
