@@ -148,7 +148,7 @@
     if (editEdge >= 0) {
         regina::Dim2Triangle* t = self.packet->getSimplex(editSimplex);
         editField.text = [Dim2TriGluings destStringFromEdge:editEdge
-                                                       dest:t->adjacentTriangle(editEdge)
+                                                       dest:t->adjacentSimplex(editEdge)
                                                      gluing:t->adjacentGluing(editEdge)];
         editField.autocapitalizationType = UITextAutocapitalizationTypeNone;
         editField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
@@ -331,22 +331,22 @@ cleanUpGluing:
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 2 + self.packet->getNumberOfTriangles();
+    return 2 + self.packet->getNumberOfSimplices();
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row == 0)
         return [tableView dequeueReusableCellWithIdentifier:@"Header"];
-    else if (indexPath.row == self.packet->getNumberOfTriangles() + 1)
+    else if (indexPath.row == self.packet->getNumberOfSimplices() + 1)
         return [tableView dequeueReusableCellWithIdentifier:@"Add"];
 
     Dim2GluingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Triangle" forIndexPath:indexPath];
-    regina::Dim2Triangle* t = self.packet->getTriangle(indexPath.row - 1);
+    regina::Dim2Triangle* t = self.packet->getSimplex(indexPath.row - 1);
     cell.index.text = [NSString stringWithFormat:@"%d. %s", indexPath.row - 1, t->getDescription().c_str()];
-    cell.edge0.text = [Dim2TriGluings destStringFromEdge:0 dest:t->adjacentTriangle(0) gluing:t->adjacentGluing(0)];
-    cell.edge1.text = [Dim2TriGluings destStringFromEdge:1 dest:t->adjacentTriangle(1) gluing:t->adjacentGluing(1)];
-    cell.edge2.text = [Dim2TriGluings destStringFromEdge:2 dest:t->adjacentTriangle(2) gluing:t->adjacentGluing(2)];
+    cell.edge0.text = [Dim2TriGluings destStringFromEdge:0 dest:t->adjacentSimplex(0) gluing:t->adjacentGluing(0)];
+    cell.edge1.text = [Dim2TriGluings destStringFromEdge:1 dest:t->adjacentSimplex(1) gluing:t->adjacentGluing(1)];
+    cell.edge2.text = [Dim2TriGluings destStringFromEdge:2 dest:t->adjacentSimplex(2) gluing:t->adjacentGluing(2)];
     return cell;
 }
 
