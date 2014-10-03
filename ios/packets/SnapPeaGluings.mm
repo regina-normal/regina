@@ -34,10 +34,28 @@
 #import "SnapPeaGluings.h"
 #import "snappea/nsnappeatriangulation.h"
 
-@interface SnapPeaGluings ()
+#pragma mark - Table cell
+
+@interface SnapPeaGluingCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UILabel *index;
+@property (weak, nonatomic) IBOutlet UILabel *face3;
+@property (weak, nonatomic) IBOutlet UILabel *face2;
+@property (weak, nonatomic) IBOutlet UILabel *face1;
+@property (weak, nonatomic) IBOutlet UILabel *face0;
+@end
+
+@implementation SnapPeaGluingCell
+@end
+
+#pragma mark - SnapPea gluings
+
+@interface SnapPeaGluings () <UITableViewDataSource, UITableViewDelegate> {
+    CGFloat headerHeight;
+}
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UILabel *volume;
 @property (weak, nonatomic) IBOutlet UILabel *solnType;
+@property (weak, nonatomic) IBOutlet UITableView *tetrahedra;
 
 @property (strong, nonatomic) SnapPeaViewController* viewer;
 @property (assign, nonatomic) regina::NSnapPeaTriangulation* packet;
@@ -54,12 +72,71 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.packet = self.viewer.packet;
+
+    self.tetrahedra.delegate = self;
+    self.tetrahedra.dataSource = self;
+    
     [self reloadPacket];
 }
 
 - (void)reloadPacket
 {
     [self.viewer updateHeader:self.header volume:self.volume solnType:self.solnType];
+    [self.tetrahedra reloadData];
+}
+
++ (NSString*)destStringFromFace:(int)srcFace dest:(regina::NTetrahedron*)destTet gluing:(const regina::NPerm4&)gluing
+{
+    if (! destTet)
+        return @" ";
+    else
+        return [NSString stringWithFormat:@"%ld (%s)",
+                destTet->markedIndex(),
+                (gluing * regina::NTriangle::ordering[srcFace]).trunc3().c_str()];
+}
+
+#pragma mark - Table view
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 1 + self.packet->getNumberOfSimplices();
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.row == 0)
+        return [tableView dequeueReusableCellWithIdentifier:@"Header"];
+    
+    SnapPeaGluingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Tetrahedron" forIndexPath:indexPath];
+    regina::NTetrahedron* t = self.packet->getSimplex(indexPath.row - 1);
+    cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
+    cell.face0.text = [SnapPeaGluings destStringFromFace:0 dest:t->adjacentSimplex(0) gluing:t->adjacentGluing(0)];
+    cell.face1.text = [SnapPeaGluings destStringFromFace:1 dest:t->adjacentSimplex(1) gluing:t->adjacentGluing(1)];
+    cell.face2.text = [SnapPeaGluings destStringFromFace:2 dest:t->adjacentSimplex(2) gluing:t->adjacentGluing(2)];
+    cell.face3.text = [SnapPeaGluings destStringFromFace:3 dest:t->adjacentSimplex(3) gluing:t->adjacentGluing(3)];
+    return cell;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return NO;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.row > 0)
+        return self.tetrahedra.rowHeight;
+    
+    // The header row is smaller.  Calculate it based on the cell contents, which include
+    // auto-layout constraints that pin the labels to the upper and lower boundaries.
+    if (headerHeight == 0) {
+        UITableViewCell* cell = [self.tetrahedra dequeueReusableCellWithIdentifier:@"Header"];
+        [cell layoutIfNeeded];
+        CGSize size = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+        headerHeight = size.height;
+    }
+    return headerHeight;
 }
 
 @end
+
