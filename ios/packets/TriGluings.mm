@@ -136,8 +136,6 @@
     [editField resignFirstResponder];
 }
 
-// TODO: Down to here.
-
 - (void)editGluingForSimplex:(int)simplex cell:(TriGluingCell*)cell label:(UILabel*)label
 {
     editLabel = label;
@@ -232,7 +230,7 @@
             NSTextCheckingResult* result = [regex firstMatchInString:dest options:0 range:NSMakeRange(0, dest.length)];
             if (! result) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Gluing"
-                                                                message:@"Please enter the gluing in the form tetrahedron (face).  For example, you could enter \"5 (20)\", or just \"5 20\"."
+                                                                message:@"Please enter the gluing in the form tetrahedron (face).  For example, you could enter \"6 (130)\", or just \"6 130\"."
                                                                delegate:nil
                                                       cancelButtonTitle:@"Close"
                                                       otherButtonTitles:nil];
@@ -243,7 +241,7 @@
             int destSimplex = [[dest substringWithRange:[result rangeAtIndex:1]] intValue];
             if (destSimplex < 0 || destSimplex >= self.packet->getNumberOfSimplices()) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Tetrahedron"
-                                                                message:@"Please enter the gluing in the form tetrahedron (face).  For example, you could enter \"5 (20)\", or just \"5 20\"."
+                                                                message:@"Please enter the gluing in the form tetrahedron (face).  For example, you could enter \"6 (130)\", or just \"6 130\"."
                                                                delegate:nil
                                                       cancelButtonTitle:@"Close"
                                                       otherButtonTitles:nil];
@@ -259,7 +257,7 @@
             int adj2 = (adjGluingAsInt % 10);
             if (adj0 == adj1 || adj0 == adj2 || adj1 == adj2) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Face"
-                                                                message:@"Please enter the gluing in the form tetrahedron (face).  For example, you could enter \"5 (20)\", or just \"5 20\"."
+                                                                message:@"Please enter the gluing in the form tetrahedron (face).  For example, you could enter \"6 (130)\", or just \"6 130\"."
                                                                delegate:nil
                                                       cancelButtonTitle:@"Close"
                                                       otherButtonTitles:nil];
@@ -311,7 +309,7 @@
                 if ([toReload indexOfObject:path] == NSNotFound)
                     [toReload addObject:path];
                 
-                editLabel.text = [NSString stringWithFormat:@"%d (%d%d)", destSimplex, adj0, adj1];
+                editLabel.text = [NSString stringWithFormat:@"%d (%d%d%d)", destSimplex, adj0, adj1, adj2];
                 myEdit = NO;
             }
         }
