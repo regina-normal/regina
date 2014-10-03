@@ -34,7 +34,7 @@
 #import "Dim2TriangulationViewController.h"
 #import "dim2/dim2triangulation.h"
 
-// TODO: Edit gluings!  Don't forget the keyboard scrolling nonsense.
+// TODO: Don't forget the keyboard scrolling nonsense.
 // TODO: A few deletes and then we get stuck.
 // TODO: Extend height of tap region to the entire cell.
 
@@ -134,10 +134,6 @@
 
 - (void)editGluingForSimplex:(int)simplex cell:(Dim2GluingCell*)cell label:(UILabel*)label
 {
-    // Finish and process any other edit that is currently in progress.
-    if (editField)
-        [editField resignFirstResponder];
-    
     editLabel = label;
     editSimplex = simplex;
     editEdge = label.tag;
@@ -170,6 +166,12 @@
 }
 
 - (IBAction)touched:(id)sender {
+    // Finish and process any other edit that is currently in progress.
+    if (editField) {
+        [editField resignFirstResponder];
+        editField = nil;
+    }
+    
     UITapGestureRecognizer *tap = static_cast<UITapGestureRecognizer*>(sender);
     if (tap.state != UIGestureRecognizerStateRecognized)
         return;
@@ -181,15 +183,14 @@
     
     Dim2GluingCell* cell = static_cast<Dim2GluingCell*>([self.triangles cellForRowAtIndexPath:indexPath]);
     CGPoint inner = [self.triangles convertPoint:location toView:cell];
-    if (CGRectContainsPoint(cell.index.frame, inner)) {
+    if (CGRectContainsPoint(cell.index.frame, inner))
         [self editGluingForSimplex:indexPath.row-1 cell:cell label:cell.index];
-    } else if (CGRectContainsPoint(cell.edge0.frame, inner)) {
+    else if (CGRectContainsPoint(cell.edge0.frame, inner))
         [self editGluingForSimplex:indexPath.row-1 cell:cell label:cell.edge0];
-    } else if (CGRectContainsPoint(cell.edge1.frame, inner)) {
+    else if (CGRectContainsPoint(cell.edge1.frame, inner))
         [self editGluingForSimplex:indexPath.row-1 cell:cell label:cell.edge1];
-    } else if (CGRectContainsPoint(cell.edge2.frame, inner)) {
+    else if (CGRectContainsPoint(cell.edge2.frame, inner))
         [self editGluingForSimplex:indexPath.row-1 cell:cell label:cell.edge2];
-    }
 }
 
 #pragma mark - Text field
@@ -201,19 +202,122 @@
         return;
     }
     
-    myEdit = YES;
+    regina::Dim2Triangle* t = self.packet->getSimplex(editSimplex);
+    
+    NSMutableArray* toReload = [[NSMutableArray alloc] init];
     if (editEdge >= 0) {
-        // TODO: Do this.
-    } else {
-        NSString* desc = [editField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        self.packet->getSimplex(editSimplex)->setDescription(desc.UTF8String);
-        editLabel.text = [NSString stringWithFormat:@"%d. %@", editSimplex, desc];
-    }
-    myEdit = NO;
+        NSString* dest = [editField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        if (dest.length == 0) {
+            // We are making this a boundary edge.
+            if (t->adjacentSimplex(editEdge)) {
+                myEdit = YES;
+                [toReload addObject:[NSIndexPath indexPathForRow:t->adjacentSimplex(editEdge)->markedIndex()+1 inSection:0]];
+                t->unjoin(editEdge);
+                editLabel.text = @" ";
+                myEdit = NO;
+            }
+        } else {
+            NSRegularExpression* regex = [[NSRegularExpression alloc] initWithPattern:@"\\A(\\d+)[ ,\\(]+([0-2][0-2])[ \\)]*\\Z" options:0 error:nil];
+            NSTextCheckingResult* result = [regex firstMatchInString:dest options:0 range:NSMakeRange(0, dest.length)];
+            if (! result) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Gluing"
+                                                                message:@"Please enter the gluing in the form triangle (edge).  For example, you could enter \"5 (20)\", or just \"5 20\"."
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"Close"
+                                                      otherButtonTitles:nil];
+                [alert show];
+                goto cleanUpGluing;
+            }
+            
+            int destSimplex = [[dest substringWithRange:[result rangeAtIndex:1]] intValue];
+            if (destSimplex < 0 || destSimplex >= self.packet->getNumberOfSimplices()) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Triangle"
+                                                                message:@"Please enter the gluing in the form triangle (edge).  For example, you could enter \"5 (20)\", or just \"5 20\"."
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"Close"
+                                                      otherButtonTitles:nil];
+                [alert show];
+                goto cleanUpGluing;
+            }
 
+            // We know at this point that we pass the regex, which means the adjacent edge
+            // is in the form [0-2][0-2].
+            int adjGluingAsInt = [dest substringWithRange:[result rangeAtIndex:2]].intValue;
+            int adj0 = (adjGluingAsInt / 10);
+            int adj1 = (adjGluingAsInt % 10);
+            if (adj0 == adj1) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Edge"
+                                                                message:@"Please enter the gluing in the form triangle (edge).  For example, you could enter \"5 (20)\", or just \"5 20\"."
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"Close"
+                                                      otherButtonTitles:nil];
+                [alert show];
+                goto cleanUpGluing;
+            }
+            regina::NPerm3 destGluing = regina::NPerm3(adj0, adj1, (3 - adj0 - adj1)) *
+                regina::Dim2Edge::ordering[editEdge].inverse();
+
+            // Are we gluing the edge to itself?
+            if (destSimplex == editSimplex && destGluing[editEdge] == editEdge) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Glue an Edge to Itself"
+                                                                message:nil
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"Close"
+                                                      otherButtonTitles:nil];
+                [alert show];
+                goto cleanUpGluing;
+            }
+            
+            if (t->adjacentSimplex(editEdge) != self.packet->getSimplex(destSimplex) || destGluing != t->adjacentGluing(editEdge)) {
+                // We are making a change, and it's a valid one.
+                // Do it.
+                myEdit = YES;
+                regina::NPacket::ChangeEventSpan span(self.packet);
+                
+                // First unglue from the old partner if it exists.
+                if (t->adjacentSimplex(editEdge)) {
+                    [toReload addObject:[NSIndexPath indexPathForRow:t->adjacentSimplex(editEdge)->markedIndex()+1 inSection:0]];
+                    t->unjoin(editEdge);
+                }
+                
+                // We are gluing the edge to a new partner.
+                int destEdge = destGluing[editEdge];
+                
+                // Does this new partner already have its own partner?
+                // If so, better unglue it.
+                regina::Dim2Triangle* adj = self.packet->getSimplex(destSimplex);
+                if (adj->adjacentSimplex(destEdge)) {
+                    NSIndexPath* path = [NSIndexPath indexPathForRow:adj->adjacentSimplex(destEdge)->markedIndex()+1 inSection:0];
+                    if ([toReload indexOfObject:path] == NSNotFound)
+                        [toReload addObject:path];
+                    adj->unjoin(destEdge);
+                }
+                
+                // Glue the two edges together.
+                t->joinTo(editEdge, adj, destGluing);
+                NSIndexPath* path = [NSIndexPath indexPathForRow:destSimplex+1 inSection:0];
+                if ([toReload indexOfObject:path] == NSNotFound)
+                    [toReload addObject:path];
+                
+                editLabel.text = [NSString stringWithFormat:@"%d (%d%d)", destSimplex, adj0, adj1];
+                myEdit = NO;
+            }
+        }
+    } else {
+        myEdit = YES;
+        NSString* desc = [editField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        t->setDescription(desc.UTF8String);
+        editLabel.text = [NSString stringWithFormat:@"%d. %@", editSimplex, desc];
+        myEdit = NO;
+    }
+
+cleanUpGluing:
     [editField removeFromSuperview];
     editField = nil;
     editLabel = nil;
+    
+    if (toReload.count)
+        [self.triangles reloadRowsAtIndexPaths:toReload withRowAnimation:NO];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
