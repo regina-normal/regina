@@ -34,6 +34,8 @@
 #import "TriGluings.h"
 #import "triangulation/ntriangulation.h"
 
+// TODO: Use a padlock to indicate uneditability?
+
 @interface TriGluings ()
 @property (weak, nonatomic) IBOutlet UILabel *header;
 
