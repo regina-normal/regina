@@ -77,6 +77,56 @@
 - (void)reloadPacket
 {
     [self.viewer updateHeader:self.header volume:self.volume solnType:self.solnType];
+    
+    if (self.packet->isNull() || self.packet->countFilledCusps() == 0) {
+        self.filledHomologyLabel.hidden = YES;
+        self.filledHomology.hidden = YES;
+        self.filledFundLabel.hidden = YES;
+        self.filledFundName.hidden = YES;
+        self.filledFundGens.hidden = YES;
+        self.filledFundRels.hidden = YES;
+        self.filledFundDetails.hidden = YES;
+    } else {
+        self.filledHomologyLabel.hidden = NO;
+        self.filledHomology.hidden = NO;
+        self.filledFundLabel.hidden = NO;
+        self.filledFundName.hidden = NO;
+        self.filledFundGens.hidden = NO;
+        self.filledFundRels.hidden = NO;
+        self.filledFundDetails.hidden = NO;
+
+        self.filledHomology.text = @(self.packet->homologyFilled()->str().c_str());
+        [TriAlgebra reloadGroup:*(self.packet->fundamentalGroupFilled())
+                           name:self.filledFundName
+                           gens:self.filledFundGens
+                           rels:self.filledFundRels
+                        details:self.filledFundDetails];
+    }
+    
+    if (self.packet->isNull()) {
+        self.unfilledHomologyLabel.hidden = YES;
+        self.unfilledHomology.hidden = YES;
+        self.unfilledFundLabel.hidden = YES;
+        self.unfilledFundName.hidden = YES;
+        self.unfilledFundGens.hidden = YES;
+        self.unfilledFundRels.hidden = YES;
+        self.unfilledFundDetails.hidden = YES;
+    } else {
+        self.unfilledHomologyLabel.hidden = NO;
+        self.unfilledHomology.hidden = NO;
+        self.unfilledFundLabel.hidden = NO;
+        self.unfilledFundName.hidden = NO;
+        self.unfilledFundGens.hidden = NO;
+        self.unfilledFundRels.hidden = NO;
+        self.unfilledFundDetails.hidden = NO;
+        
+        self.unfilledHomology.text = @(self.packet->getHomologyH1().str().c_str());
+        [TriAlgebra reloadGroup:self.packet->getFundamentalGroup()
+                           name:self.unfilledFundName
+                           gens:self.unfilledFundGens
+                           rels:self.unfilledFundRels
+                        details:self.unfilledFundDetails];
+    }
 }
 
 @end

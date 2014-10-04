@@ -118,6 +118,79 @@
     [self reloadPacket];
 }
 
++ (void)reloadGroup:(const regina::NGroupPresentation &)group name:(UILabel *)name gens:(UILabel *)gens rels:(UILabel *)rels details:(UITextView *)details
+{
+    std::string groupName = group.recogniseGroup();
+    if (groupName.length()) {
+        name.text = [@(groupName.c_str()) stringByReplacingOccurrencesOfString:@"↦" withString:@"→"];
+    } else {
+        name.attributedText = [TextHelper dimString:@"Not recognised"];
+    }
+    
+    unsigned long nGens = group.getNumberOfGenerators();
+    bool alphabetic = (nGens <= 26);
+    if (nGens == 0)
+        gens.text = @"No generators";
+    else if (nGens == 1)
+        gens.text = @"1 generator: a";
+    else if (nGens == 2)
+        gens.text = @"2 generators: a, b";
+    else if (alphabetic)
+        gens.text = [NSString stringWithFormat:@"%ld generators: a ... %c",
+                     nGens, char('a' + nGens - 1)];
+    else
+        gens.text = [NSString stringWithFormat:@"%ld generators: g0 ... g%ld",
+                     nGens, nGens - 1];
+    
+    unsigned long nRels = group.getNumberOfRelations();
+    if (nRels == 0) {
+        rels.text = @"No relations";
+    } else if (nRels == 1) {
+        rels.text = @"1 relation:";
+    } else {
+        rels.text = [NSString stringWithFormat:@"%ld relations:", nRels];
+    }
+    
+    NSMutableString* relsText = [[NSMutableString alloc] init];
+    if (alphabetic) {
+        // Generators are a, b, ...
+        for (long i = 0; i < nRels; ++i) {
+            NSMutableString* rel;
+            const std::list<regina::NGroupExpressionTerm>& terms(group.getRelation(i).getTerms());
+            if (terms.empty())
+                rel = [[NSMutableString alloc] initWithString:@"1"];
+            else {
+                rel = [[NSMutableString alloc] initWithString:@"1 ="];
+                std::list<regina::NGroupExpressionTerm>::const_iterator it;
+                for (it = terms.begin(); it != terms.end(); ++it) {
+                    [rel appendString:@" "];
+                    if (it->exponent == 0)
+                        [rel appendString:@"1"];
+                    else {
+                        [rel appendFormat:@"%c", char('a' + it->generator)];
+                        if (it->exponent != 1)
+                            [rel appendFormat:@"^%ld", it->exponent];
+                    }
+                }
+            }
+            if (i > 0)
+                [relsText appendString:@"\n"];
+            [relsText appendString:rel];
+        }
+    } else {
+        // Generators are g0, g1, ...
+        // This is the default text that comes from the calculation engine.
+        for (long i = 0; i < nRels; ++i) {
+            if (i > 0)
+                [relsText appendString:@"\n"];
+            [relsText appendFormat:@"1 = %s", group.getRelation(i).str().c_str()];
+        }
+    }
+    details.text = relsText;
+    details.font = rels.font;
+    details.textContainerInset = UIEdgeInsetsMake(10, 10, 10, 10);
+}
+
 - (void)reloadPacket
 {
     [self.viewer updateHeader:self.header];
@@ -148,77 +221,11 @@
         self.fundName.text = @"Disconnected";
         self.fundGens.text = self.fundRels.text = self.fundRelsDetails.text = @"";
     } else {
-        const regina::NGroupPresentation& fg = t.getFundamentalGroup();
-
-        std::string name = fg.recogniseGroup();
-        if (name.length()) {
-            self.fundName.text = [@(name.c_str()) stringByReplacingOccurrencesOfString:@"↦" withString:@"→"];
-        } else {
-            self.fundName.attributedText = [TextHelper dimString:@"Not recognised"];
-        }
-
-        unsigned long nGens = fg.getNumberOfGenerators();
-        bool alphabetic = (nGens <= 26);
-        if (nGens == 0)
-            self.fundGens.text = @"No generators";
-        else if (nGens == 1)
-            self.fundGens.text = @"1 generator: a";
-        else if (nGens == 2)
-            self.fundGens.text = @"2 generators: a, b";
-        else if (alphabetic)
-            self.fundGens.text = [NSString stringWithFormat:@"%ld generators: a ... %c",
-                                  nGens, char('a' + nGens - 1)];
-        else
-            self.fundGens.text = [NSString stringWithFormat:@"%ld generators: g0 ... g%ld",
-                                  nGens, nGens - 1];
-
-        unsigned long nRels = fg.getNumberOfRelations();
-        if (nRels == 0) {
-            self.fundRels.text = @"No relations";
-        } else if (nRels == 1) {
-            self.fundRels.text = @"1 relation:";
-        } else {
-            self.fundRels.text = [NSString stringWithFormat:@"%ld relations:", nRels];
-        }
-
-        NSMutableString* rels = [[NSMutableString alloc] init];
-        if (alphabetic) {
-            // Generators are a, b, ...
-            for (long i = 0; i < nRels; ++i) {
-                NSMutableString* rel;
-                const std::list<regina::NGroupExpressionTerm>& terms(fg.getRelation(i).getTerms());
-                if (terms.empty())
-                    rel = [[NSMutableString alloc] initWithString:@"1"];
-                else {
-                    rel = [[NSMutableString alloc] initWithString:@"1 ="];
-                    std::list<regina::NGroupExpressionTerm>::const_iterator it;
-                    for (it = terms.begin(); it != terms.end(); ++it) {
-                        [rel appendString:@" "];
-                        if (it->exponent == 0)
-                            [rel appendString:@"1"];
-                        else {
-                            [rel appendFormat:@"%c", char('a' + it->generator)];
-                            if (it->exponent != 1)
-                                [rel appendFormat:@"^%ld", it->exponent];
-                        }
-                    }
-                }
-                if (i > 0)
-                    [rels appendString:@"\n"];
-                [rels appendString:rel];
-            }
-        } else {
-            // Generators are g0, g1, ...
-            // This is the default text that comes from the calculation engine.
-            for (long i = 0; i < nRels; ++i) {
-                if (i > 0)
-                    [rels appendString:@"\n"];
-                [rels appendFormat:@"1 = %s", fg.getRelation(i).str().c_str()];
-            }
-        }
-        self.fundRelsDetails.text = rels;
-        self.fundRelsDetails.font = self.fundRels.font;
-        self.fundRelsDetails.textContainerInset = UIEdgeInsetsMake(10, 10, 10, 10);
+        [TriAlgebra reloadGroup:self.packet->getFundamentalGroup()
+                           name:self.fundName
+                           gens:self.fundGens
+                           rels:self.fundRels
+                        details:self.fundRelsDetails];
     }
 
     computed = [[NSMutableArray alloc] init];

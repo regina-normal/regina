@@ -33,6 +33,16 @@
 #import <UIKit/UIKit.h>
 #import "PacketViewer.h"
 
+namespace regina {
+    class NGroupPresentation;
+}
+
 @interface TriAlgebra : UIViewController <PacketViewer>
+
++ (void)reloadGroup:(const regina::NGroupPresentation&)group
+               name:(UILabel*)name
+               gens:(UILabel*)gens
+               rels:(UILabel*)rels
+            details:(UITextView*)details;
 
 @end
