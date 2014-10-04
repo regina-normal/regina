@@ -34,10 +34,34 @@
 #import "SnapPeaCusps.h"
 #import "snappea/nsnappeatriangulation.h"
 
+#pragma mark - Table cells
+
+@interface SnapPeaCuspCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UILabel *cusp;
+@property (weak, nonatomic) IBOutlet UILabel *vertex;
+@property (weak, nonatomic) IBOutlet UILabel *filling;
+@end
+
+@implementation SnapPeaCuspCell
+@end
+
+@interface SnapPeaShapeCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UILabel *index;
+@property (weak, nonatomic) IBOutlet UILabel *real;
+@property (weak, nonatomic) IBOutlet UILabel *imag;
+@end
+
+@implementation SnapPeaShapeCell
+@end
+
+#pragma mark - SnapPea cusps
+
 @interface SnapPeaCusps ()
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UILabel *volume;
 @property (weak, nonatomic) IBOutlet UILabel *solnType;
+@property (weak, nonatomic) IBOutlet UITableView *cusps;
+@property (weak, nonatomic) IBOutlet UITableView *shapes;
 
 @property (strong, nonatomic) SnapPeaViewController* viewer;
 @property (assign, nonatomic) regina::NSnapPeaTriangulation* packet;

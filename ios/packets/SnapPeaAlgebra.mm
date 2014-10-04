@@ -32,12 +32,29 @@
 
 #import "SnapPeaViewController.h"
 #import "SnapPeaAlgebra.h"
+#import "TriAlgebra.h"
 #import "snappea/nsnappeatriangulation.h"
 
 @interface SnapPeaAlgebra ()
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UILabel *volume;
 @property (weak, nonatomic) IBOutlet UILabel *solnType;
+
+@property (weak, nonatomic) IBOutlet UILabel *filledHomologyLabel;
+@property (weak, nonatomic) IBOutlet UILabel *filledHomology;
+@property (weak, nonatomic) IBOutlet UILabel *filledFundLabel;
+@property (weak, nonatomic) IBOutlet UILabel *filledFundName;
+@property (weak, nonatomic) IBOutlet UILabel *filledFundGens;
+@property (weak, nonatomic) IBOutlet UILabel *filledFundRels;
+@property (weak, nonatomic) IBOutlet UITextView *filledFundDetails;
+
+@property (weak, nonatomic) IBOutlet UILabel *unfilledHomologyLabel;
+@property (weak, nonatomic) IBOutlet UILabel *unfilledHomology;
+@property (weak, nonatomic) IBOutlet UILabel *unfilledFundLabel;
+@property (weak, nonatomic) IBOutlet UILabel *unfilledFundName;
+@property (weak, nonatomic) IBOutlet UILabel *unfilledFundGens;
+@property (weak, nonatomic) IBOutlet UILabel *unfilledFundRels;
+@property (weak, nonatomic) IBOutlet UITextView *unfilledFundDetails;
 
 @property (strong, nonatomic) SnapPeaViewController* viewer;
 @property (assign, nonatomic) regina::NSnapPeaTriangulation* packet;

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="H1p-Uh-vWS">
     <dependencies>
-        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -4157,7 +4156,7 @@
                                                     </constraints>
                                                 </tableViewCellContentView>
                                             </tableViewCell>
-                                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Shape" id="ysG-6U-acE" customClass="SnapPeaGluingCell">
+                                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Shape" id="ysG-6U-acE" customClass="SnapPeaShapeCell">
                                                 <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ysG-6U-acE" id="PB2-LG-ujc">
@@ -4196,6 +4195,11 @@
                                                         <constraint firstItem="iFc-aY-MJa" firstAttribute="leading" secondItem="jKe-o7-5rs" secondAttribute="trailing" constant="20" id="ree-Tf-SbS"/>
                                                     </constraints>
                                                 </tableViewCellContentView>
+                                                <connections>
+                                                    <outlet property="imag" destination="iFc-aY-MJa" id="KaN-27-OXl"/>
+                                                    <outlet property="index" destination="0Xp-Vb-ua1" id="0nr-8r-GM3"/>
+                                                    <outlet property="real" destination="jKe-o7-5rs" id="ftd-od-yod"/>
+                                                </connections>
                                             </tableViewCell>
                                         </prototypes>
                                     </tableView>
@@ -4277,7 +4281,7 @@
                                                     </constraints>
                                                 </tableViewCellContentView>
                                             </tableViewCell>
-                                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cusp" id="eAb-nl-Neh" customClass="SnapPeaGluingCell">
+                                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cusp" id="eAb-nl-Neh" customClass="SnapPeaCuspCell">
                                                 <rect key="frame" x="0.0" y="0.0" width="663" height="44"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="eAb-nl-Neh" id="Q9D-9q-Z6w">
@@ -4320,6 +4324,11 @@
                                                         <constraint firstItem="lui-Ne-YUp" firstAttribute="baseline" secondItem="EZ4-Cy-qqB" secondAttribute="baseline" id="mKD-Yh-Lyn"/>
                                                     </constraints>
                                                 </tableViewCellContentView>
+                                                <connections>
+                                                    <outlet property="cusp" destination="EZ4-Cy-qqB" id="066-fi-d44"/>
+                                                    <outlet property="filling" destination="lui-Ne-YUp" id="pCP-eb-ahO"/>
+                                                    <outlet property="vertex" destination="R4b-ZD-RKf" id="RJl-jM-HDc"/>
+                                                </connections>
                                             </tableViewCell>
                                         </prototypes>
                                     </tableView>
@@ -4374,7 +4383,9 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Shapes &amp; Cusps" image="Tab-Cusps" id="Wwk-Vo-tJ8"/>
                     <connections>
+                        <outlet property="cusps" destination="qUb-97-lhF" id="y34-CH-FMd"/>
                         <outlet property="header" destination="LKb-16-GiL" id="2Hc-6j-snh"/>
+                        <outlet property="shapes" destination="Y9p-qc-SMS" id="dyM-53-RG7"/>
                         <outlet property="solnType" destination="Ehs-fI-8Ks" id="rYC-1w-mN6"/>
                         <outlet property="volume" destination="ZD9-Rj-zMG" id="1mh-ps-Zri"/>
                     </connections>
@@ -4603,8 +4614,22 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Algebra" image="Tab-Algebra" id="BMH-0G-vye"/>
                     <connections>
+                        <outlet property="filledFundDetails" destination="rNH-Cc-Wyy" id="2ng-Zh-5XT"/>
+                        <outlet property="filledFundGens" destination="dyf-eH-SUy" id="Kog-rd-ujw"/>
+                        <outlet property="filledFundLabel" destination="2m2-oW-2cg" id="273-rO-zNe"/>
+                        <outlet property="filledFundName" destination="yDP-og-j3x" id="HnP-fJ-615"/>
+                        <outlet property="filledFundRels" destination="LWA-fE-bwY" id="HXz-Pj-dxm"/>
+                        <outlet property="filledHomology" destination="Hn1-Hy-qc8" id="AR4-u8-3Dn"/>
+                        <outlet property="filledHomologyLabel" destination="oOJ-fP-NVN" id="Nxt-Tk-HBx"/>
                         <outlet property="header" destination="HwC-pK-GaS" id="rHM-qS-f1I"/>
                         <outlet property="solnType" destination="bcL-lJ-mhR" id="A4H-W3-49Y"/>
+                        <outlet property="unfilledFundDetails" destination="DjW-UI-QSN" id="Acu-Kf-XNN"/>
+                        <outlet property="unfilledFundGens" destination="jgx-nq-Sjt" id="brs-Kr-NxQ"/>
+                        <outlet property="unfilledFundLabel" destination="hnj-c9-gCn" id="G06-Bv-crP"/>
+                        <outlet property="unfilledFundName" destination="F7U-OB-Imc" id="ws0-N3-leo"/>
+                        <outlet property="unfilledFundRels" destination="ALB-kq-H47" id="d2a-1D-8bF"/>
+                        <outlet property="unfilledHomology" destination="nDj-HE-Phu" id="qKD-Ag-X7c"/>
+                        <outlet property="unfilledHomologyLabel" destination="ceC-bM-WQB" id="4Nc-tb-5qp"/>
                         <outlet property="volume" destination="4vB-mQ-D1C" id="KoL-zo-pA2"/>
                     </connections>
                 </viewController>
