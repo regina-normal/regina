@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="H1p-Uh-vWS">
     <dependencies>
-        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -4110,7 +4109,7 @@
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Y9p-qc-SMS">
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Y9p-qc-SMS">
                                         <rect key="frame" x="20" y="79.5" width="311" height="478"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <prototypes>
@@ -4231,7 +4230,7 @@
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="qUb-97-lhF">
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="qUb-97-lhF">
                                         <rect key="frame" x="20" y="79" width="311" height="418.5"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <prototypes>
@@ -4338,6 +4337,9 @@
                                         <state key="normal" title="Permanently fill cusps">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="fillCusps:" destination="Rdx-qA-GwJ" eventType="touchUpInside" id="utu-8w-FJV"/>
+                                        </connections>
                                     </button>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="Action-Fill" translatesAutoresizingMaskIntoConstraints="NO" id="wpM-c1-cgk">
                                         <rect key="frame" x="60" y="527" width="32" height="32"/>
@@ -4385,6 +4387,7 @@
                     <tabBarItem key="tabBarItem" title="Shapes &amp; Cusps" image="Tab-Cusps" id="Wwk-Vo-tJ8"/>
                     <connections>
                         <outlet property="cusps" destination="qUb-97-lhF" id="y34-CH-FMd"/>
+                        <outlet property="fill" destination="CJq-3L-je3" id="mnQ-6s-W4A"/>
                         <outlet property="header" destination="LKb-16-GiL" id="2Hc-6j-snh"/>
                         <outlet property="shapes" destination="Y9p-qc-SMS" id="dyM-53-RG7"/>
                         <outlet property="solnType" destination="Ehs-fI-8Ks" id="rYC-1w-mN6"/>

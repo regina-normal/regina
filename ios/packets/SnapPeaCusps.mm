@@ -34,6 +34,9 @@
 #import "SnapPeaCusps.h"
 #import "snappea/nsnappeatriangulation.h"
 
+// TODO: Edit fillings!
+// TODO: Shapes: truncate trailing 0s.
+
 #pragma mark - Table cells
 
 @interface SnapPeaCuspCell : UITableViewCell
@@ -56,12 +59,15 @@
 
 #pragma mark - SnapPea cusps
 
-@interface SnapPeaCusps ()
+@interface SnapPeaCusps () <UITableViewDataSource, UITableViewDelegate> {
+    CGFloat headerHeight;
+}
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UILabel *volume;
 @property (weak, nonatomic) IBOutlet UILabel *solnType;
 @property (weak, nonatomic) IBOutlet UITableView *cusps;
 @property (weak, nonatomic) IBOutlet UITableView *shapes;
+@property (weak, nonatomic) IBOutlet UIButton *fill;
 
 @property (strong, nonatomic) SnapPeaViewController* viewer;
 @property (assign, nonatomic) regina::NSnapPeaTriangulation* packet;
@@ -78,12 +84,86 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.packet = self.viewer.packet;
+    
+    self.cusps.delegate = self;
+    self.cusps.dataSource = self;
+    
+    self.shapes.delegate = self;
+    self.shapes.dataSource = self;
+    
     [self reloadPacket];
 }
 
 - (void)reloadPacket
 {
     [self.viewer updateHeader:self.header volume:self.volume solnType:self.solnType];
+
+    self.fill.enabled = (self.packet->countFilledCusps() > 0);
+    [self.cusps reloadData];
+    [self.shapes reloadData];
+}
+
+- (void)endEditing
+{
+    // TODO.
+}
+
+- (IBAction)fillCusps:(id)sender
+{
+    // TODO.  Note: makes an edit?
+}
+
+#pragma mark - Table view
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return NO;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.row == 0)
+        return [tableView dequeueReusableCellWithIdentifier:@"Header"];
+    
+    if (tableView == self.cusps) {
+        SnapPeaCuspCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cusp" forIndexPath:indexPath];
+        const regina::NCusp* cusp = self.packet->cusp(indexPath.row - 1);
+        cell.cusp.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
+        cell.vertex.text = [NSString stringWithFormat:@"%ld", cusp->vertex()->markedIndex()];
+        if (cusp->complete())
+            cell.filling.text = @"—";
+        else
+            cell.filling.text = [NSString stringWithFormat:@"%d, %d", cusp->m(), cusp->l()];
+        return cell;
+    } else {
+        SnapPeaShapeCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Shape" forIndexPath:indexPath];
+        std::complex<double> shape = self.packet->shape(indexPath.row - 1);
+        cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
+        cell.real.text = [NSString stringWithFormat:@"%lf", shape.real()];
+        cell.imag.text = [NSString stringWithFormat:@"%lf", shape.imag()];
+        return cell;
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.row > 0)
+        return tableView.rowHeight;
+    
+    // The header row is smaller.  Calculate it based on the cell contents, which include
+    // auto-layout constraints that pin the labels to the upper and lower boundaries.
+    if (headerHeight == 0) {
+        UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"Header"];
+        [cell layoutIfNeeded];
+        CGSize size = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+        headerHeight = size.height;
+    }
+    return headerHeight;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 1 + (tableView == self.cusps ? self.packet->countCusps() : self.packet->getNumberOfTetrahedra());
 }
 
 @end

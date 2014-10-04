@@ -33,6 +33,6 @@
 #import <UIKit/UIKit.h>
 #import "PacketViewer.h"
 
-@interface SnapPeaCusps : UIViewController <PacketViewer>
+@interface SnapPeaCusps : UIViewController <PacketEditor>
 
 @end
