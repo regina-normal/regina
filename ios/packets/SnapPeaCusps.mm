@@ -32,10 +32,15 @@
 
 #import "SnapPeaViewController.h"
 #import "SnapPeaCusps.h"
+#import "maths/numbertheory.h"
 #import "snappea/nsnappeatriangulation.h"
 
 // TODO: Edit fillings!
+// TODO: Keyboard scrolling.
+// TODO: Extend height of tap region to the entire cell.
 // TODO: Shapes: truncate trailing 0s.
+// TODO: Action for permanently fill cusps.
+// TODO: Switch to algebra tab after adding filling -> CRASH!
 
 #pragma mark - Table cells
 
@@ -59,8 +64,12 @@
 
 #pragma mark - SnapPea cusps
 
-@interface SnapPeaCusps () <UITableViewDataSource, UITableViewDelegate> {
+@interface SnapPeaCusps () <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate> {
     CGFloat headerHeight;
+    UILabel* editLabel;
+    UITextField* editField;
+    int editCusp;
+    BOOL myEdit;
 }
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UILabel *volume;
@@ -79,6 +88,9 @@
 {
     [super viewDidLoad];
     self.viewer = static_cast<SnapPeaViewController*>(self.parentViewController);
+    
+    UITapGestureRecognizer *r = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(touched:)];
+    [self.cusps addGestureRecognizer:r];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -96,6 +108,9 @@
 
 - (void)reloadPacket
 {
+    if (myEdit)
+        return;
+    
     [self.viewer updateHeader:self.header volume:self.volume solnType:self.solnType];
 
     self.fill.enabled = (self.packet->countFilledCusps() > 0);
@@ -105,12 +120,175 @@
 
 - (void)endEditing
 {
-    // TODO.
+    // As a consequence, this calls textViewDidEndEditing:,
+    // which is where the real work is done.
+    [editField resignFirstResponder];
 }
 
 - (IBAction)fillCusps:(id)sender
 {
     // TODO.  Note: makes an edit?
+}
+
+- (void)editFillingForCusp:(int)cusp cell:(SnapPeaCuspCell*)cell label:(UILabel*)label
+{
+    editLabel = label;
+    editCusp = cusp;
+    
+    const regina::NCusp* c = self.packet->cusp(cusp);
+    
+    editField = [[UITextField alloc] initWithFrame:label.frame];
+    editField.backgroundColor = cell.backgroundColor;
+    editField.borderStyle = UITextBorderStyleNone;
+    editField.placeholder = @"Filling";
+    editField.clearButtonMode = UITextFieldViewModeAlways;
+    editField.returnKeyType = UIReturnKeyDone;
+    editField.autocorrectionType = UITextAutocorrectionTypeNo;
+    if (! c->complete())
+        editField.text = [NSString stringWithFormat:@"%d, %d", c->m(), c->l()];
+    editField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    editField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+    editField.textAlignment = NSTextAlignmentLeft;
+    // TODO: Select all text in field.
+    editField.delegate = self;
+    
+    [cell addSubview:editField];
+    [editField becomeFirstResponder];
+}
+
+- (IBAction)touched:(id)sender {
+    // Finish and process any other edit that is currently in progress.
+    if (editField) {
+        [editField resignFirstResponder];
+        editField = nil;
+    }
+    
+    UITapGestureRecognizer *tap = static_cast<UITapGestureRecognizer*>(sender);
+    if (tap.state != UIGestureRecognizerStateRecognized)
+        return;
+    
+    CGPoint location = [tap locationInView:self.cusps];
+    NSIndexPath *indexPath = [self.cusps indexPathForRowAtPoint:location];
+    if (indexPath.row == 0 || indexPath.row > self.packet->countCusps())
+        return;
+    
+    SnapPeaCuspCell* cell = static_cast<SnapPeaCuspCell*>([self.cusps cellForRowAtIndexPath:indexPath]);
+    CGPoint inner = [self.cusps convertPoint:location toView:cell];
+    if (CGRectContainsPoint(cell.filling.frame, inner))
+        [self editFillingForCusp:indexPath.row-1 cell:cell label:cell.filling];
+}
+
+#pragma mark - Text field
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    if (editField != textField) {
+        NSLog(@"Error: Mismatched text field when editing fillings.");
+        return;
+    }
+
+    BOOL reload = NO;
+    
+    NSString* filling = [editField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if (filling.length == 0 || [filling isEqualToString:@"-"]) {
+        // We are making this cusp complete.
+        if (! self.packet->cusp(editCusp)->complete()) {
+            myEdit = YES;
+            self.packet->unfill(editCusp);
+            editLabel.text = @"—";
+            reload = YES;
+            myEdit = NO;
+        }
+    } else {
+        NSRegularExpression* regex = [[NSRegularExpression alloc] initWithPattern:@"\\A(-?\\d+)[ ,]+(-?\\d+)\\Z" options:0 error:nil];
+        NSTextCheckingResult* result = [regex firstMatchInString:filling options:0 range:NSMakeRange(0, filling.length)];
+        if (! result) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Filling"
+                                                            message:@"Please enter a pair of filling coefficients.  For example, you could enter \"5, 3\", or just \"5 3\".  To remove a filling, just leave this field blank."
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Close"
+                                                  otherButtonTitles:nil];
+            [alert show];
+            goto cleanUpFilling;
+        }
+        
+        int m = [[filling substringWithRange:[result rangeAtIndex:1]] intValue];
+        int l = [[filling substringWithRange:[result rangeAtIndex:2]] intValue];
+
+        if (m == INT_MAX || m == INT_MIN || l == INT_MAX || l == INT_MIN) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Filling Coefficients Too Large"
+                                                            message:nil
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Close"
+                                                  otherButtonTitles:nil];
+            [alert show];
+            goto cleanUpFilling;
+        }
+        
+        if (m == 0 && l == 0) {
+            // Again, make this cusp complete.
+            if (! self.packet->cusp(editCusp)->complete()) {
+                myEdit = YES;
+                self.packet->unfill(editCusp);
+                editLabel.text = @"—";
+                reload = YES;
+                myEdit = NO;
+            }
+            goto cleanUpFilling;
+        }
+        
+        if (regina::gcd(m, l) != 1) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Filling Coefficients Must Be Coprime"
+                                                            message:nil
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Close"
+                                                  otherButtonTitles:nil];
+            [alert show];
+            goto cleanUpFilling;
+        }
+
+        if ((! self.packet->cusp(editCusp)->vertex()->isLinkOrientable()) && l != 0) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Non-Orientable Filling Coefficients Must Be (±1, 0)"
+                                                            message:nil
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Close"
+                                                  otherButtonTitles:nil];
+            [alert show];
+            goto cleanUpFilling;
+        }
+        
+        myEdit = YES;
+        if (! self.packet->fill(m, l, editCusp)) {
+            myEdit = NO;
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Fill"
+                                                            message:@"SnapPea rejected these filling coefficients, and I'm not sure why."
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Close"
+                                                  otherButtonTitles:nil];
+            [alert show];
+            goto cleanUpFilling;
+        }
+        editLabel.text = [NSString stringWithFormat:@"%d, %d", m, l];
+        reload = YES;
+        myEdit = NO;
+    }
+    
+cleanUpFilling:
+    [editField removeFromSuperview];
+    editField = nil;
+    editLabel = nil;
+    
+    if (reload) {
+        [self.viewer updateHeader:self.header volume:self.volume solnType:self.solnType];
+        [self.shapes reloadData];
+        self.fill.enabled = (self.packet->countFilledCusps() > 0);
+    }
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return NO;
 }
 
 #pragma mark - Table view
@@ -139,8 +317,8 @@
         SnapPeaShapeCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Shape" forIndexPath:indexPath];
         std::complex<double> shape = self.packet->shape(indexPath.row - 1);
         cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
-        cell.real.text = [NSString stringWithFormat:@"%lf", shape.real()];
-        cell.imag.text = [NSString stringWithFormat:@"%lf", shape.imag()];
+        cell.real.text = [NSString stringWithFormat:@"%g", shape.real()];
+        cell.imag.text = [NSString stringWithFormat:@"%g", shape.imag()];
         return cell;
     }
 }
