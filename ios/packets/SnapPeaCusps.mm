@@ -35,12 +35,9 @@
 #import "maths/numbertheory.h"
 #import "snappea/nsnappeatriangulation.h"
 
-// TODO: Edit fillings!
 // TODO: Keyboard scrolling.
 // TODO: Extend height of tap region to the entire cell.
-// TODO: Shapes: truncate trailing 0s.
 // TODO: Action for permanently fill cusps.
-// TODO: Switch to algebra tab after adding filling -> CRASH!
 
 #pragma mark - Table cells
 

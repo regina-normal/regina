@@ -32,6 +32,7 @@
 
 #import "SnapPeaViewController.h"
 #import "SnapPeaAlgebra.h"
+#import "TextHelper.h"
 #import "TriAlgebra.h"
 #import "snappea/nsnappeatriangulation.h"
 
@@ -95,12 +96,23 @@
         self.filledFundRels.hidden = NO;
         self.filledFundDetails.hidden = NO;
 
-        self.filledHomology.text = @(self.packet->homologyFilled()->str().c_str());
-        [TriAlgebra reloadGroup:*(self.packet->fundamentalGroupFilled())
-                           name:self.filledFundName
-                           gens:self.filledFundGens
-                           rels:self.filledFundRels
-                        details:self.filledFundDetails];
+        const regina::NAbelianGroup* h1 = self.packet->homologyFilled();
+        if (h1)
+            self.filledHomology.text = @(h1->str().c_str());
+        else
+            self.filledHomology.attributedText = [TextHelper dimString:@"Could not compute"];
+        
+        const regina::NGroupPresentation* pi1 = self.packet->fundamentalGroupFilled();
+        if (pi1)
+            [TriAlgebra reloadGroup:*pi1
+                               name:self.filledFundName
+                               gens:self.filledFundGens
+                               rels:self.filledFundRels
+                            details:self.filledFundDetails];
+        else {
+            self.filledFundName.attributedText = [TextHelper dimString:@"Could not compute"];
+            self.filledFundGens.text = self.filledFundRels.text = self.filledFundDetails.text = nil;
+        }
     }
     
     if (self.packet->isNull()) {
