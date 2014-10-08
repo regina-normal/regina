@@ -37,7 +37,6 @@
 #import <iterator>
 #import <map>
 
-// TODO: Compress cell heights.
 // TODO: Experiment with changing cell style.
 
 #pragma mark - Surfaces summary table cell
@@ -147,7 +146,7 @@ struct CountSet {
 };
 
 @interface SurfacesSummary () <UITableViewDataSource, UITableViewDelegate> {
-    CGFloat headerHeight;
+    CGFloat headerHeight, cellHeight;
     
     CountSet nClosed, nBounded;
     std::map<regina::NLargeInteger, CountSet> eulerClosed, eulerBounded;
@@ -327,18 +326,24 @@ struct CountSet {
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row > 0)
-        return self.table.rowHeight;
-    
-    // The header row is smaller.  Calculate it based on the cell contents, which include
-    // auto-layout constraints that pin the labels to the upper and lower boundaries.
-    if (headerHeight == 0) {
-        UITableViewCell* cell = [self.table dequeueReusableCellWithIdentifier:@"Header"];
-        [cell layoutIfNeeded];
-        CGSize size = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
-        headerHeight = size.height;
+    if (indexPath.row == 0) {
+        if (headerHeight == 0) {
+            UITableViewCell* cell = [self.table dequeueReusableCellWithIdentifier:@"Header"];
+            [cell layoutIfNeeded];
+            CGSize size = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+            headerHeight = size.height;
+        }
+        return headerHeight;
+    } else {
+        if (cellHeight == 0) {
+            SurfacesSummaryTableCell* cell = [self.table dequeueReusableCellWithIdentifier:@"Count"];
+            cell.euler.text = @"χ = -9";
+            [cell layoutIfNeeded];
+            CGSize size = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+            cellHeight = size.height;
+        }
+        return cellHeight;
     }
-    return headerHeight;
 }
 
 @end
