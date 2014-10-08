@@ -37,8 +37,6 @@
 #import <iterator>
 #import <map>
 
-// TODO: Experiment with changing cell style.
-
 #pragma mark - Surfaces summary table cell
 
 @interface SurfacesSummaryTableCell : UITableViewCell
@@ -205,7 +203,7 @@ struct CountSet {
 {
     if (nSpun) {
         if (section == 0)
-            return 0;
+            return 2;
         --section;
     }
     
@@ -234,8 +232,8 @@ struct CountSet {
     if (nSpun) {
         if (section == 0)
             return [TextHelper countString:nSpun
-                                  singular:"spun (non-compact) surface"
-                                    plural:"spun (non-compact) surfaces"];
+                                  singular:"non-compact surface"
+                                    plural:"non-compact surfaces"];
         --section;
     }
     
@@ -264,8 +262,19 @@ struct CountSet {
     SurfacesSummaryTableCell* cell;
     
     if (nSpun) {
-        if (section == 0)
-            return nil;
+        if (section == 0) {
+            if (indexPath.row == 0) {
+                cell = [tableView dequeueReusableCellWithIdentifier:@"Header" forIndexPath:indexPath];
+                cell.count0.text = @"Total";
+                cell.count1.text = cell.count2.text = cell.count3.text = @" ";
+            } else {
+                cell = [tableView dequeueReusableCellWithIdentifier:@"Count" forIndexPath:indexPath];
+                cell.euler.text = @"Spun";
+                cell.count0.text = [NSString stringWithFormat:@"%ld", nSpun];
+                cell.count1.text = cell.count2.text = cell.count3.text = @" ";
+            }
+            return cell;
+        }
         --section;
     }
     
