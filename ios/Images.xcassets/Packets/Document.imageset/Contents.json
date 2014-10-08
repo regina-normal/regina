@@ -3,16 +3,17 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "document-32.png"
+      "filename" : "regina-32.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "document-32@2x.png"
+      "filename" : "regina-64.png"
     },
     {
       "idiom" : "universal",
-      "scale" : "3x"
+      "scale" : "3x",
+      "filename" : "regina-96.png"
     }
   ],
   "info" : {
