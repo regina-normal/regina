@@ -294,6 +294,26 @@ bool NNormalSurface::sameSurface(const NNormalSurface& other) const {
     return true;
 }
 
+bool NNormalSurface::embedded() const {
+    unsigned long nTets = triangulation->getNumberOfTetrahedra();
+
+    int type;
+    int found;
+    for (unsigned long tet = 0; tet < nTets; ++tet) {
+        found = 0;
+        for (type = 0; type < 3; ++type)
+            if (getQuadCoord(tet, type) > 0)
+                ++found;
+        for (type = 0; type < 3; ++type)
+            if (getOctCoord(tet, type) > 0)
+                ++found;
+        if (found > 1)
+            return false;
+    }
+
+    return true;
+}
+
 bool NNormalSurface::locallyCompatible(const NNormalSurface& other) const {
     unsigned long nTets = triangulation->getNumberOfTetrahedra();
 

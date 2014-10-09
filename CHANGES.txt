@@ -26,6 +26,8 @@ Version 4.97  [ (under development) ]
               routine, and set through an optional third argument to setDirs().
             - The homeDir argument to setDirs() may now be the empty string,
               which signals that the directory should not be changed.
+        Class NNormalSurface:
+            - New convenience routines normal() and embedded().
         Class NPacket:
             - Added a variant of save() that takes an output stream (as
               opposed to a filename).

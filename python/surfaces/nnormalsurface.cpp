@@ -180,6 +180,8 @@ void addNNormalSurface() {
         .def("crush", &NNormalSurface::crush,
             return_value_policy<manage_new_object>())
         .def("sameSurface", &NNormalSurface::sameSurface)
+        .def("normal", &NNormalSurface::normal)
+        .def("embedded", &NNormalSurface::embedded)
         .def("locallyCompatible", &NNormalSurface::locallyCompatible)
         .def("disjoint", &NNormalSurface::disjoint)
 #ifndef EXCLUDE_NORMALIZ
