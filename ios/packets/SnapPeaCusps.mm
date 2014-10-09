@@ -30,6 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
+#import "PacketTreeController.h"
+#import "ReginaHelper.h"
 #import "SnapPeaViewController.h"
 #import "SnapPeaCusps.h"
 #import "maths/numbertheory.h"
@@ -37,7 +39,6 @@
 
 // TODO: Keyboard scrolling.
 // TODO: Extend height of tap region to the entire cell.
-// TODO: Action for permanently fill cusps.
 
 #pragma mark - Table cells
 
@@ -124,7 +125,12 @@
 
 - (IBAction)fillCusps:(id)sender
 {
-    // TODO.  Note: makes an edit?
+    regina::NTriangulation* s = self.packet->filledTriangulation();
+    s->setPacketLabel(self.packet->getPacketLabel() + " (Filled)");
+    self.packet->insertChildLast(s);
+
+    [[ReginaHelper tree] navigateToPacket:self.packet];
+    [ReginaHelper viewPacket:s];
 }
 
 - (void)editFillingForCusp:(int)cusp cell:(SnapPeaCuspCell*)cell label:(UILabel*)label
@@ -146,11 +152,11 @@
     editField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     editField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
     editField.textAlignment = NSTextAlignmentLeft;
-    // TODO: Select all text in field.
     editField.delegate = self;
     
     [cell addSubview:editField];
     [editField becomeFirstResponder];
+    [editField selectAll:nil];
 }
 
 - (IBAction)touched:(id)sender {
