@@ -31,6 +31,8 @@
  **************************************************************************/
 
 #import "Coordinates.h"
+#import "PacketTreeController.h"
+#import "ReginaHelper.h"
 #import "SpreadHelper.h"
 #import "SurfacesCoords.h"
 #import "SurfacesViewController.h"
@@ -49,7 +51,7 @@ static NSString *headerCellID = @"_ReginaHeaderCell";
 static UIColor *headerBlack = [UIColor blackColor];
 static UIColor *headerBdry = [UIColor colorWithRed:(0xB8 / 256.0) green:(0x86 / 256.0) blue:(0x0B / 256.0) alpha:1.0];
 
-// TODO: On long press, view details (and cut/crush).
+// TODO: On long press, view details (in case cells are too narrow).
 
 #define PROP_NONE 0
 #define PROP_NAME 1
@@ -69,10 +71,13 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
     CGFloat height;
     CGFloat widthHeader;
     regina::NormalCoords viewCoords;
+    long selectedRow; // 0 for no selection, or (surface index + 1) for a surface.
 }
 @property (weak, nonatomic) IBOutlet UISwitch *compact;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *selectCoords;
 @property (weak, nonatomic) IBOutlet MDSpreadView *grid;
+@property (weak, nonatomic) IBOutlet UIButton *cutAlongButton;
+@property (weak, nonatomic) IBOutlet UIButton *crushButton;
 @end
 
 @implementation SurfacesCoords
@@ -88,6 +93,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
     // The column headers are managed manually, so that we can colour them if required.
     self.grid.dataSource = self;
     self.grid.delegate = self;
+    self.grid.selectionMode = self.grid.highlightMode = MDSpreadViewSelectionModeRow;
     self.grid.allowsRowHeaderSelection = YES;
 
     [self reloadPacket];
@@ -126,6 +132,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
 
     [self initMetrics];
     [self.grid reloadData];
+    [self refreshActions];
 }
 
 - (void)initMetrics
@@ -214,6 +221,109 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
 
     [self initMetrics];
     [self.grid reloadData];
+}
+
+- (IBAction)cutAlong:(id)sender {
+    if (selectedRow == 0 || selectedRow > self.packet->getNumberOfSurfaces()) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Please Select a Surface"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    
+    const regina::NNormalSurface* s = self.packet->getSurface(selectedRow - 1);
+    if (! s->isCompact()) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Surface Not Compact"
+                                                        message:@"I can only cut along compact surfaces, not spun-normal surfaces."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    if (s->getOctPosition() != regina::NDiscType::NONE) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Surface Has Octagons"
+                                                        message:@"I can only cut along normal surfaces, not almost normal surfaces."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    if (! s->locallyCompatible(*s)) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Surface Not Embedded"
+                                                        message:@"I can only cut along embedded surfaces, not immersed and/or branched surfaces."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    
+    regina::NTriangulation* ans = s->cutAlong();
+    ans->intelligentSimplify();
+    ans->setPacketLabel(self.packet->getTriangulation()->getPacketLabel() + " (Cut)");
+    self.packet->insertChildLast(ans);
+    
+    [[ReginaHelper tree] navigateToPacket:self.packet];
+    [ReginaHelper viewPacket:ans];
+}
+
+- (IBAction)crush:(id)sender {
+    if (selectedRow == 0 || selectedRow > self.packet->getNumberOfSurfaces()) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Please Select a Surface"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    
+    const regina::NNormalSurface* s = self.packet->getSurface(selectedRow - 1);
+    if (! s->isCompact()) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Surface Not Compact"
+                                                        message:@"I can only crush compact surfaces, not spun-normal surfaces."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    if (s->getOctPosition() != regina::NDiscType::NONE) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Surface Has Octagons"
+                                                        message:@"I can only crush normal surfaces, not almost normal surfaces."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    if (! s->locallyCompatible(*s)) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Surface Not Embedded"
+                                                        message:@"I can only crush embedded surfaces, not immersed and/or branched surfaces."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+
+    regina::NTriangulation* ans = s->crush();
+    ans->intelligentSimplify();
+    ans->setPacketLabel(self.packet->getTriangulation()->getPacketLabel() + " (Crushed)");
+    self.packet->insertChildLast(ans);
+    
+    [[ReginaHelper tree] navigateToPacket:self.packet];
+    [ReginaHelper viewPacket:ans];
+}
+
+- (void)refreshActions
+{
+    self.cutAlongButton.enabled = self.crushButton.enabled = (selectedRow > 0 && selectedRow <= self.packet->getNumberOfSurfaces());
 }
 
 #pragma mark - MDSpreadView data source
@@ -470,5 +580,17 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
 {
     return height;
 }
+
+- (void)spreadView:(MDSpreadView *)aSpreadView didSelectCellForRowAtIndexPath:(MDIndexPath *)rowPath forColumnAtIndexPath:(MDIndexPath *)columnPath
+{
+    if (rowPath.row >= 0)
+        selectedRow = rowPath.row + 1;
+    else
+        selectedRow = 0;
+    
+    [self refreshActions];
+}
+
+// We don't implement didDeselectCell..., since this is always followed immediately by a new selection.
 
 @end
