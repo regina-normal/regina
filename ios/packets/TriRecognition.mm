@@ -59,6 +59,7 @@
 
 // TODO: Census lookup: long press for more lines of information.
 // TODO: Use autolayout to position (manifold, census).
+// TODO: Say "Unfilled Manifold" for SnapPea triangulations.
 
 @interface PropertyCell : UITableViewCell
 @property (assign, nonatomic) int property;
