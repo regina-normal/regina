@@ -36,6 +36,9 @@
 
 @interface TriComposition ()
 @property (weak, nonatomic) IBOutlet UILabel *header;
+@property (weak, nonatomic) IBOutlet UILabel *isosig;
+@property (weak, nonatomic) IBOutlet UILabel *standard;
+@property (weak, nonatomic) IBOutlet UITextView *components;
 
 @property (strong, nonatomic) TriangulationViewController* viewer;
 @property (assign, nonatomic) regina::NTriangulation* packet;
