@@ -43,7 +43,7 @@
 #endif
 
 #include "regina-core.h"
-#include "utilities/boostutils.h"
+#include <boost/noncopyable.hpp>
 #include <list>
 
 namespace regina {
@@ -85,7 +85,7 @@ namespace regina {
  * \ifacespython Not present.
  */
 template <typename T>
-class NListOnCall : public regina::boost::noncopyable {
+class NListOnCall : public boost::noncopyable {
     public:
         /**
          * An iterator over this list.  This operates as a forward

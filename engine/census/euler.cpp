@@ -37,7 +37,6 @@
 #include "triangulation/nedge.h"
 #include "triangulation/nfacepair.h"
 #include "triangulation/ntriangulation.h"
-#include "utilities/boostutils.h"
 #include "utilities/memutils.h"
 
 namespace regina {

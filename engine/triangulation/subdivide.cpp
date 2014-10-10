@@ -37,7 +37,6 @@
 
 #include "triangulation/ntriangulation.h"
 #include "utilities/memutils.h"
-#include "utilities/stlutils.h"
 
 namespace regina {
 

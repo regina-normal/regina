@@ -42,6 +42,7 @@
 #define __NCENSUS_H
 #endif
 
+#include <boost/noncopyable.hpp>
 #include "regina-core.h"
 #include "census/nfacepairing.h"
 #include "utilities/nbooleans.h"
@@ -158,7 +159,7 @@ class NCensusDB {
  * NCensusHits class, which essentially represents a list of individual
  * NCensusHit objects.
  */
-class NCensusHit : public regina::boost::noncopyable {
+class NCensusHit : public boost::noncopyable {
     private:
         const std::string name_;
             /**< The human-readable name associated with the triangulation
@@ -229,7 +230,7 @@ class NCensusHit : public regina::boost::noncopyable {
  * individual hit, you can call NCensusHit::next() to retrieve the next hit
  * in the list (this will return 0 if no more hits were found).
  */
-class NCensusHits : public regina::boost::noncopyable {
+class NCensusHits : public boost::noncopyable {
     private:
         NCensusHit* first_;
             /**< The first hit in the list, or 0 if there are no hits. */

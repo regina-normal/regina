@@ -10,6 +10,9 @@ Regina - A Normal Surface Theory Calculator
 Version 4.97  [ (under development) ]
 
     ENGINE:
+        Namespace regina::boost, regina::stl:
+            - Removed these namespaces and all their members.  To fix
+              code that used regina::boost, just use plain boost instead.
         Class CompressionBuffer, CompressionStream, DecompressionBuffer,
                 DecompressionStream, ZBuffer:
             - Removed entirely.  Regina now uses boost::iostreams instead.
@@ -26,6 +29,8 @@ Version 4.97  [ (under development) ]
               routine, and set through an optional third argument to setDirs().
             - The homeDir argument to setDirs() may now be the empty string,
               which signals that the directory should not be changed.
+        Class NNormalSurface:
+            - New convenience routines normal() and embedded().
         Class NPacket:
             - Added a variant of save() that takes an output stream (as
               opposed to a filename).
