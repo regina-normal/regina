@@ -244,7 +244,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
         [alert show];
         return;
     }
-    if (s->getOctPosition() != regina::NDiscType::NONE) {
+    if (! s->normal()) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Surface Has Octagons"
                                                         message:@"I can only cut along normal surfaces, not almost normal surfaces."
                                                        delegate:nil
@@ -253,7 +253,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
         [alert show];
         return;
     }
-    if (! s->locallyCompatible(*s)) {
+    if (! s->embedded()) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Surface Not Embedded"
                                                         message:@"I can only cut along embedded surfaces, not immersed and/or branched surfaces."
                                                        delegate:nil
@@ -293,7 +293,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
         [alert show];
         return;
     }
-    if (s->getOctPosition() != regina::NDiscType::NONE) {
+    if (! s->normal()) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Surface Has Octagons"
                                                         message:@"I can only crush normal surfaces, not almost normal surfaces."
                                                        delegate:nil
@@ -302,7 +302,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
         [alert show];
         return;
     }
-    if (! s->locallyCompatible(*s)) {
+    if (! s->embedded()) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Surface Not Embedded"
                                                         message:@"I can only crush embedded surfaces, not immersed and/or branched surfaces."
                                                        delegate:nil
