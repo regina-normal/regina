@@ -37,7 +37,6 @@
 #include "algebra/ngrouppresentation.h"
 #include "algebra/nhomgrouppresentation.h"
 #include "maths/numbertheory.h"
-#include "utilities/stlutils.h"
 
 namespace regina {
 

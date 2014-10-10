@@ -44,7 +44,6 @@
 #include "algebra/nmarkedabeliangroup.h"
 #include "algebra/nabeliangroup.h"
 #include "maths/numbertheory.h"
-#include "utilities/stlutils.h"
 #include "maths/matrixops.h"
 
 namespace regina {

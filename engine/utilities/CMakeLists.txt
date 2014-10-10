@@ -45,7 +45,6 @@ if (${REGINA_INSTALL_DEV})
     osutils.h
     ptrutils.h
     registryutils.h
-    stlutils.h
     stringutils.h
     stringutils-impl.h
     stringutils.tcc
