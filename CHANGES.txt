@@ -11,8 +11,8 @@ Version 4.97  [ (under development) ]
 
     ENGINE:
         Namespace regina::boost, regina::stl:
-            - Removed this namespace and all its members.  Just use boost
-              directly instead.
+            - Removed these namespaces and all their members.  To fix
+              code that used regina::boost, just use plain boost instead.
         Class CompressionBuffer, CompressionStream, DecompressionBuffer,
                 DecompressionStream, ZBuffer:
             - Removed entirely.  Regina now uses boost::iostreams instead.
