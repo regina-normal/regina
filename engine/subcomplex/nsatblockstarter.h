@@ -77,7 +77,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NSatBlockStarter : regina::boost::noncopyable {
+class REGINA_API NSatBlockStarter : boost::noncopyable {
     private:
         NTriangulation triangulation_;
             /**< The triangulation of the saturated block. */

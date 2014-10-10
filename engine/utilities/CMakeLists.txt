@@ -24,7 +24,6 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     base64.h
     bitmanip.h
-    boostutils.h
     flags.h
     i18nutils.h
     intutils.h

@@ -42,6 +42,7 @@
 #define __NGENERALFACETPAIRING_H
 #endif
 
+#include <boost/noncopyable.hpp>
 #include <iostream>
 #include <list>
 #include "regina-core.h"
@@ -84,7 +85,8 @@ namespace regina {
  * (such as NFacePairing) are available for Python users.
  */
 template <int dim>
-class REGINA_API NGenericFacetPairing : public NThread {
+class REGINA_API NGenericFacetPairing : public NThread,
+        public boost::noncopyable {
     public:
         typedef typename DimTraits<dim>::FacetPairing FacetPairing;
             /**< The facet pairing class specific to this dimension.

@@ -50,7 +50,6 @@
 #include "shareableobject.h"
 #include "packet/npacketlistener.h"
 #include "packet/packettype.h"
-#include "utilities/boostutils.h"
 
 namespace regina {
 
@@ -1129,7 +1128,7 @@ class REGINA_API NPacket : public ShareableObject {
          * entire change set, instead of many events representing each
          * individual modification.
          */
-        class ChangeEventSpan : public regina::boost::noncopyable {
+        class ChangeEventSpan : public boost::noncopyable {
             private:
                 NPacket* packet_;
                     /**< The packet for which change events are fired. */

@@ -42,7 +42,6 @@
 #include "maths/numbertheory.h"
 #include "subcomplex/nsatannulus.h"
 #include "triangulation/ntriangulation.h"
-#include "utilities/boostutils.h"
 
 namespace regina {
 
