@@ -64,9 +64,11 @@
 #define INDENT3 "\t\t\t- "
 #define INDENT4 "\t\t\t\t- "
 
-// TODO: Make triangulation and isosig copyable via long press.
+// TODO: Test this over the census.
 
-@interface TriComposition () <UITextFieldDelegate>
+@interface TriComposition () <UITextFieldDelegate> {
+    UILabel* copyFrom;
+}
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UILabel *volume;
 @property (weak, nonatomic) IBOutlet UILabel *solnType;
@@ -80,11 +82,39 @@
 
 @implementation TriComposition
 
+- (void)viewDidLoad
+{
+    UILongPressGestureRecognizer *r = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
+    [self.view addGestureRecognizer:r];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.packet = static_cast<regina::NTriangulation*>(static_cast<id<PacketViewer> >(self.parentViewController).packet);
 
     [self reloadPacket];
+}
+
+- (IBAction)longPress:(id)sender {
+    UILongPressGestureRecognizer *press = static_cast<UILongPressGestureRecognizer*>(sender);
+    if (press.state == UIGestureRecognizerStateBegan) {
+        copyFrom = nil;
+        CGPoint location = [press locationInView:self.view];
+        if (CGRectContainsPoint(self.isosig.frame, location))
+            copyFrom = self.isosig;
+        else if (CGRectContainsPoint(self.standard.frame, location))
+            copyFrom = self.standard;
+        if (! copyFrom)
+            return;
+        
+        [self becomeFirstResponder];
+        
+        UIMenuController *copyMenu = [UIMenuController sharedMenuController];
+        CGRect textBounds = [copyFrom textRectForBounds:copyFrom.bounds limitedToNumberOfLines:copyFrom.numberOfLines];
+        [copyMenu setTargetRect:textBounds inView:copyFrom];
+        copyMenu.arrowDirection = UIMenuControllerArrowDefault;
+        [copyMenu setMenuVisible:YES animated:YES];
+    }
 }
 
 - (void)reloadPacket
@@ -126,6 +156,29 @@
     self.components.font = self.standard.font;
     self.components.text = details;
 }
+
+#pragma mark - UIResponder
+
+- (BOOL)canBecomeFirstResponder
+{
+    return (copyFrom != nil);
+}
+
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender
+{
+    if (action == @selector(copy:) && copyFrom)
+        return YES;
+    else
+        return [super canPerformAction:action withSender:sender];
+}
+
+- (void)copy:(id)sender
+{
+    if (copyFrom)
+        [[UIPasteboard generalPasteboard] setString:copyFrom.text];
+}
+
+#pragma mark - Subcomplexes
 
 - (void)findAugTriSolidTori:(NSMutableString*)details
 {
