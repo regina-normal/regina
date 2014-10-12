@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#import "SnapPeaViewController.h"
 #import "TextHelper.h"
 #import "TriangulationViewController.h"
 #import "TriComposition.h"
@@ -67,32 +68,32 @@
 
 @interface TriComposition () <UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *header;
+@property (weak, nonatomic) IBOutlet UILabel *volume;
+@property (weak, nonatomic) IBOutlet UILabel *solnType;
+
 @property (weak, nonatomic) IBOutlet UILabel *isosig;
 @property (weak, nonatomic) IBOutlet UILabel *standard;
 @property (weak, nonatomic) IBOutlet UITextView *components;
 
-@property (strong, nonatomic) TriangulationViewController* viewer;
 @property (assign, nonatomic) regina::NTriangulation* packet;
 @end
 
 @implementation TriComposition
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    self.viewer = static_cast<TriangulationViewController*>(self.parentViewController);
-}
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.packet = self.viewer.packet;
+    self.packet = static_cast<regina::NTriangulation*>(static_cast<id<PacketViewer> >(self.parentViewController).packet);
+
     [self reloadPacket];
 }
 
 - (void)reloadPacket
 {
-    [self.viewer updateHeader:self.header];
-    
+    if ([self.parentViewController isKindOfClass:[SnapPeaViewController class]])
+        [static_cast<SnapPeaViewController*>(self.parentViewController) updateHeader:self.header volume:self.volume solnType:self.solnType];
+    else
+        [static_cast<TriangulationViewController*>(self.parentViewController) updateHeader:self.header];
+
     self.isosig.text = @(self.packet->isoSig().c_str());
     
     regina::NStandardTriangulation* stdTri = regina::NStandardTriangulation::isStandardTriangulation(self.packet);
