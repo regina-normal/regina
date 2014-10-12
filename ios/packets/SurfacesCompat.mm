@@ -34,11 +34,26 @@
 #import "SurfacesViewController.h"
 #import "surfaces/nnormalsurfacelist.h"
 
+#define KEY_LAST_TYPE @"SurfacesCompatType"
+
+static NSArray* typeText = @[@"Do surfaces have compatible quadrilateral and/or octagon types?",
+                             @"Can surfaces be made globally disjoint?"];
+
+@interface SurfacesCompat ()
+@property (weak, nonatomic) IBOutlet UISegmentedControl *type;
+@property (weak, nonatomic) IBOutlet UILabel *typeExpln;
+@property (weak, nonatomic) IBOutlet UIView *grid;
+@end
+
 @implementation SurfacesCompat
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    self.type.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_TYPE];
+    [self typeChanged:nil];
+
     [self reloadPacket];
 }
 
@@ -46,6 +61,13 @@
 {
     [super reloadPacket];
     // TODO: Implement.
+}
+
+- (IBAction)typeChanged:(id)sender {
+    self.typeExpln.text = typeText[self.type.selectedSegmentIndex];
+    [[NSUserDefaults standardUserDefaults] setInteger:self.type.selectedSegmentIndex forKey:KEY_LAST_TYPE];
+    
+    [self reloadPacket];
 }
 
 @end
