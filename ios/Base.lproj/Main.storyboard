@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="H1p-Uh-vWS">
     <dependencies>
+        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -6728,38 +6729,38 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Isomorphism signature:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cht-s2-r1Y">
-                                <rect key="frame" x="20" y="124.5" width="174.5" height="19.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="251" text="Isomorphism signature:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cht-s2-r1Y">
+                                <rect key="frame" x="20" y="164" width="174.5" height="19.5"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Triangulation:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4OA-Jh-Kgk">
-                                <rect key="frame" x="20" y="164.5" width="100" height="19.5"/>
+                                <rect key="frame" x="20" y="124" width="100" height="19.5"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UnA-1U-2b2">
-                                <rect key="frame" x="214" y="123.5" width="5" height="20.5"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Components:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ebl-RO-lHC">
-                                <rect key="frame" x="20" y="204.5" width="100" height="19.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Components:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ebl-RO-lHC">
+                                <rect key="frame" x="20" y="203" width="663" height="19.5"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j6q-Fe-oC2">
-                                <rect key="frame" x="20" y="231.5" width="663" height="467.5"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j6q-Fe-oC2">
+                                <rect key="frame" x="20" y="231" width="663" height="468"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G0k-K3-6M4">
-                                <rect key="frame" x="214" y="163.5" width="5" height="20.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="34t-53-7fK">
+                                <rect key="frame" x="214" y="123" width="469" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XwY-yg-3WL">
+                                <rect key="frame" x="214" y="163" width="468.5" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
@@ -6767,31 +6768,34 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="cht-s2-r1Y" firstAttribute="top" secondItem="CDr-Nv-lJP" secondAttribute="bottom" constant="40" id="2Pn-J7-mUA"/>
+                            <constraint firstItem="cht-s2-r1Y" firstAttribute="top" secondItem="4OA-Jh-Kgk" secondAttribute="bottom" constant="20" id="22k-gn-Rsb"/>
+                            <constraint firstItem="4OA-Jh-Kgk" firstAttribute="baseline" secondItem="34t-53-7fK" secondAttribute="baseline" id="2xh-dZ-Nqs"/>
                             <constraint firstItem="j6q-Fe-oC2" firstAttribute="top" secondItem="Ebl-RO-lHC" secondAttribute="bottom" constant="8" symbolic="YES" id="AQF-AM-5n1"/>
+                            <constraint firstItem="4OA-Jh-Kgk" firstAttribute="top" secondItem="CDr-Nv-lJP" secondAttribute="bottom" constant="40" id="B5j-Sc-vTh"/>
                             <constraint firstItem="cht-s2-r1Y" firstAttribute="leading" secondItem="qGR-N8-KrD" secondAttribute="leading" constant="20" id="EWc-oq-Qb2"/>
+                            <constraint firstAttribute="trailing" secondItem="34t-53-7fK" secondAttribute="trailing" constant="20" id="FvZ-ag-Tme"/>
                             <constraint firstAttribute="trailing" secondItem="CDr-Nv-lJP" secondAttribute="trailing" constant="20" id="IjW-4S-pIu"/>
                             <constraint firstAttribute="trailing" secondItem="j6q-Fe-oC2" secondAttribute="trailing" constant="20" id="Jes-32-hr5"/>
                             <constraint firstItem="cht-s2-r1Y" firstAttribute="leading" secondItem="4OA-Jh-Kgk" secondAttribute="leading" id="PGU-WL-Bvb"/>
-                            <constraint firstItem="UnA-1U-2b2" firstAttribute="leading" secondItem="cht-s2-r1Y" secondAttribute="trailing" constant="20" id="bkq-Cr-nYx"/>
-                            <constraint firstItem="Ebl-RO-lHC" firstAttribute="top" secondItem="4OA-Jh-Kgk" secondAttribute="bottom" constant="20" id="gZT-bI-utc"/>
-                            <constraint firstItem="4OA-Jh-Kgk" firstAttribute="baseline" secondItem="G0k-K3-6M4" secondAttribute="baseline" id="ib1-VC-U7E"/>
+                            <constraint firstItem="XwY-yg-3WL" firstAttribute="leading" secondItem="cht-s2-r1Y" secondAttribute="trailing" constant="20" id="bmq-tZ-Hk1"/>
+                            <constraint firstItem="Ebl-RO-lHC" firstAttribute="top" secondItem="cht-s2-r1Y" secondAttribute="bottom" constant="20" id="cfM-DR-XJK"/>
+                            <constraint firstAttribute="trailing" secondItem="XwY-yg-3WL" secondAttribute="trailing" constant="20" id="gtH-QL-clH"/>
+                            <constraint firstItem="cht-s2-r1Y" firstAttribute="baseline" secondItem="XwY-yg-3WL" secondAttribute="baseline" id="h2o-Pg-lyb"/>
                             <constraint firstItem="cht-s2-r1Y" firstAttribute="leading" secondItem="Ebl-RO-lHC" secondAttribute="leading" id="k8P-mb-jTt"/>
                             <constraint firstItem="CDr-Nv-lJP" firstAttribute="top" secondItem="Qt3-s2-HNV" secondAttribute="bottom" constant="20" id="mGp-rh-7B1"/>
+                            <constraint firstItem="XwY-yg-3WL" firstAttribute="leading" secondItem="34t-53-7fK" secondAttribute="leading" id="oM6-Je-KDg"/>
                             <constraint firstItem="CDr-Nv-lJP" firstAttribute="leading" secondItem="qGR-N8-KrD" secondAttribute="leading" constant="20" id="q6g-XY-VX7"/>
-                            <constraint firstItem="4OA-Jh-Kgk" firstAttribute="top" secondItem="cht-s2-r1Y" secondAttribute="bottom" constant="20" id="qx7-Rx-9r5"/>
-                            <constraint firstItem="cht-s2-r1Y" firstAttribute="baseline" secondItem="UnA-1U-2b2" secondAttribute="baseline" id="snu-vr-oUp"/>
                             <constraint firstItem="sdE-bn-1uA" firstAttribute="top" secondItem="j6q-Fe-oC2" secondAttribute="bottom" constant="20" id="swU-Dm-EUz"/>
                             <constraint firstItem="cht-s2-r1Y" firstAttribute="leading" secondItem="j6q-Fe-oC2" secondAttribute="leading" id="tu5-hk-Ra4"/>
-                            <constraint firstItem="UnA-1U-2b2" firstAttribute="leading" secondItem="G0k-K3-6M4" secondAttribute="leading" id="xIm-SG-Tw7"/>
+                            <constraint firstAttribute="trailing" secondItem="Ebl-RO-lHC" secondAttribute="trailing" constant="20" id="uVu-Vf-MwH"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Composition" image="Tab-Composition" id="tGM-UH-qfC"/>
                     <connections>
                         <outlet property="components" destination="j6q-Fe-oC2" id="BsM-aq-4tR"/>
                         <outlet property="header" destination="CDr-Nv-lJP" id="Gxv-dG-cih"/>
-                        <outlet property="isosig" destination="UnA-1U-2b2" id="YPC-cs-9g6"/>
-                        <outlet property="standard" destination="G0k-K3-6M4" id="MDb-be-ikc"/>
+                        <outlet property="isosig" destination="XwY-yg-3WL" id="6YY-HB-MgQ"/>
+                        <outlet property="standard" destination="34t-53-7fK" id="ePj-OX-HBs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j1o-2T-0ZK" userLabel="First Responder" sceneMemberID="firstResponder"/>
