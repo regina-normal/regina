@@ -418,9 +418,10 @@ void NTriCompositionUI::findAugTriSolidTori() {
                 details->setText(0,tr("Attached: layered chain (%1) + "
                     "layered solid torus").
                     arg(chainType));
-            } else
+            } else {
                 details = new QTreeWidgetItem(id, details);
                 details->setText(0,tr("Attached: 3 layered solid tori"));
+            }
 
             delete aug;
         }
