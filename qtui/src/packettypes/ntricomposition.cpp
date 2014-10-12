@@ -224,14 +224,14 @@ void NTriCompositionUI::refresh() {
     findPlugTriSolidTori();
     findBlockedTriangulations();
 
-    // Look for bounded subcomplexes.
-    findLayeredSolidTori();
-    findSpiralSolidTori();
-    findSnappedBalls();
-
     // Look for interesting surfaces.
     findPillowSpheres();
     findSnappedSpheres();
+
+    // Look for bounded subcomplexes.
+    findLayeredSolidTori();
+    findSnappedBalls();
+    findSpiralSolidTori();
 
     // Expand so that two levels of children are visible.
     bool foundInnerChildren = false;
