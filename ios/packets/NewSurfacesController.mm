@@ -40,6 +40,8 @@
 #define KEY_LAST_COORDS @"NewSurfacesCoords"
 #define KEY_LAST_EMB @"NewSurfacesEmb"
 
+// TODO: Surfaces and angles: push to displayed panel.
+
 using regina::NNormalSurfaceList;
 
 static NSArray* whichText;
