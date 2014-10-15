@@ -32,6 +32,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface WelcomeViewController : UIViewController
+@interface TestSuiteController : UIViewController
+- (void)runTests;
+@end
 
+@interface WelcomeViewController : UIViewController
 @end

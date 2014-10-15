@@ -5380,6 +5380,68 @@
             </objects>
             <point key="canvasLocation" x="2993.5" y="1506"/>
         </scene>
+        <!--Test Suite Controller-->
+        <scene sceneID="qpl-T7-rDz">
+            <objects>
+                <viewController storyboardIdentifier="testSuite" modalPresentationStyle="formSheet" id="ty0-dc-Q4n" customClass="TestSuiteController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="QOm-n9-y0e"/>
+                        <viewControllerLayoutGuide type="bottom" id="7mg-nj-npO"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="7mI-VG-dry">
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bNn-P9-jpH">
+                                <rect key="frame" x="0.0" y="44" width="540" height="532"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <attributedString key="attributedText"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K4O-YA-1YE">
+                                <rect key="frame" x="0.0" y="0.0" width="540" height="44"/>
+                                <items>
+                                    <navigationItem title="Regina Test Suite" id="w26-jT-cEz"/>
+                                </items>
+                            </navigationBar>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1XW-zS-2Yf">
+                                <rect key="frame" x="0.0" y="576" width="540" height="44"/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="sZH-77-PNm"/>
+                                    <barButtonItem title="Close" id="Xrh-hf-rU0">
+                                        <connections>
+                                            <action selector="close:" destination="ty0-dc-Q4n" id="XuT-T9-kYF"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="tox-KO-UHZ"/>
+                                </items>
+                            </toolbar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="K4O-YA-1YE" firstAttribute="leading" secondItem="7mI-VG-dry" secondAttribute="leading" id="0JL-4M-dKX"/>
+                            <constraint firstItem="K4O-YA-1YE" firstAttribute="top" secondItem="QOm-n9-y0e" secondAttribute="bottom" id="2fi-Gh-bmu"/>
+                            <constraint firstAttribute="trailing" secondItem="bNn-P9-jpH" secondAttribute="trailing" id="8EW-F6-o7b"/>
+                            <constraint firstAttribute="trailing" secondItem="1XW-zS-2Yf" secondAttribute="trailing" id="KdR-EO-vvK"/>
+                            <constraint firstAttribute="trailing" secondItem="K4O-YA-1YE" secondAttribute="trailing" id="PmR-0K-Zov"/>
+                            <constraint firstItem="1XW-zS-2Yf" firstAttribute="top" secondItem="bNn-P9-jpH" secondAttribute="bottom" id="UF2-Uv-3gQ"/>
+                            <constraint firstItem="bNn-P9-jpH" firstAttribute="top" secondItem="K4O-YA-1YE" secondAttribute="bottom" id="X4H-ga-zAD"/>
+                            <constraint firstItem="1XW-zS-2Yf" firstAttribute="leading" secondItem="7mI-VG-dry" secondAttribute="leading" id="p6z-FS-PEn"/>
+                            <constraint firstItem="bNn-P9-jpH" firstAttribute="leading" secondItem="7mI-VG-dry" secondAttribute="leading" id="scX-go-Myx"/>
+                            <constraint firstItem="7mg-nj-npO" firstAttribute="top" secondItem="1XW-zS-2Yf" secondAttribute="bottom" id="vIk-Zc-6ss"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <connections>
+                        <outlet property="closeButton" destination="Xrh-hf-rU0" id="pRn-MZ-cmq"/>
+                        <outlet property="output" destination="bNn-P9-jpH" id="uvd-rt-K5B"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8ZU-RZ-cgf" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="719" y="1331"/>
+        </scene>
         <!--Dim2 Triangulation View Controller-->
         <scene sceneID="7Uy-n2-S7J">
             <objects>

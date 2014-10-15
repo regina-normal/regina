@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#import "ReginaHelper.h"
 #import "WelcomeViewController.h"
 #import "../testsuite/testsuite.h"
 #import <cppunit/Test.h>
@@ -75,7 +76,35 @@ void runAllTests() {
     runner.run("", false, true, false);
 }
 
-@interface WelcomeViewController ()
+#pragma mark - Test suite controller
+
+@interface TestSuiteController ()
+@property (weak, nonatomic) IBOutlet UITextView *output;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *closeButton;
+@end
+
+@implementation TestSuiteController
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    self.closeButton.enabled = NO;
+}
+
+- (void)runTests
+{
+    // TODO.
+    self.closeButton.enabled = YES;
+}
+
+- (IBAction)close:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+@end
+
+#pragma mark - Welcome view controller
+
+@interface WelcomeViewController () <UIActionSheetDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *icon;
 @end
 
@@ -87,15 +116,51 @@ void runAllTests() {
     [self.view addGestureRecognizer:r];
 }
 
-- (IBAction)longPress:(id)sender {
+- (void)runTestSuite
+{
+    UIViewController* sheet = [self.storyboard instantiateViewControllerWithIdentifier:@"testSuite"];
+    [self presentViewController:sheet animated:YES completion:^{
+        [static_cast<TestSuiteController*>(sheet) runTests];
+    }];
+}
+
+- (IBAction)longPress:(id)sender
+{
     UILongPressGestureRecognizer *press = static_cast<UILongPressGestureRecognizer*>(sender);
     if (press.state == UIGestureRecognizerStateBegan) {
         CGPoint location = [press locationInView:self.view];
         if (CGRectContainsPoint(self.icon.frame, location)) {
-            NSLog(@"Run test suite!");
-            runAllTests();
+            if ([ReginaHelper ios8]) {
+                UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+                [alert addAction:[UIAlertAction actionWithTitle:@"Run test suite"
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction*) {
+                                                            [self runTestSuite];
+                                                        }]];
+                [alert addAction:[UIAlertAction actionWithTitle:@"Cancel"
+                                                          style:UIAlertActionStyleCancel
+                                                        handler:nil]];
+                [alert setModalPresentationStyle:UIModalPresentationPopover];
+                alert.popoverPresentationController.sourceView = self.view;
+                alert.popoverPresentationController.sourceRect = self.icon.frame;
+                [self presentViewController:alert animated:YES completion:nil];
+            } else {
+                UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                                   delegate:self
+                                                          cancelButtonTitle:@"Cancel"
+                                                     destructiveButtonTitle:nil
+                                                          otherButtonTitles:@"Run test suite", nil];
+                [sheet showFromRect:self.icon.frame inView:self.view animated:YES];
+            }
         }
     }
+}
+
+#pragma mark Action Sheet
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex != actionSheet.cancelButtonIndex)
+        [self runTestSuite];
 }
 
 @end
