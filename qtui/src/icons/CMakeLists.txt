@@ -2,6 +2,7 @@ set (IMG_FILES )
 
 set (IMGS
   barycentric
+  canonical
   components
   cone
   connsum

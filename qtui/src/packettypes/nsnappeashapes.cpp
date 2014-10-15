@@ -272,6 +272,7 @@ NSnapPeaShapesUI::NSnapPeaShapesUI(regina::NSnapPeaTriangulation* packet,
 
     QAction* actCanonise = new QAction(this);
     actCanonise->setText(tr("&Canonical Retriangulation"));
+    actCanonise->setIcon(ReginaSupport::regIcon("canonical"));
     actCanonise->setToolTip(tr(
         "Build the canonical retriangulation of the canonical "
         "cell decomposition"));
