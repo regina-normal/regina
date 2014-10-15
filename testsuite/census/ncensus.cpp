@@ -130,12 +130,14 @@ class NCensusTest : public CppUnit::TestFixture {
             // Make sure that the database library is working, and that
             // we can access all censuses.
 
+#ifdef TESTSUITE_CENSUS_DIR
             // Temporarily redirect the home directory so that Regina
             // finds the census data files in the source tree.
             std::string census = regina::NGlobalDirs::census();
             std::string python = regina::NGlobalDirs::pythonModule();
             regina::NGlobalDirs::setDirs("", python, TESTSUITE_CENSUS_DIR);
-
+#endif
+            
             verifyLookupNone("");
             verifyLookupNone("abcdefg");
             verifyLookup("fvPQcdecedekrsnrs",
@@ -151,7 +153,9 @@ class NCensusTest : public CppUnit::TestFixture {
             verifyLookup("kLLPLLQkceefejjiijiiiatdmpamxt",
                 "L408001", "L410005"); // hyp knots & links, multiple times
 
+#ifdef TESTSUITE_CENSUS_DIR
             regina::NGlobalDirs::setDirs("", python, census);
+#endif
         }
 
         void rawCounts() {
