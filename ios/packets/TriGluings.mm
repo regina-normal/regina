@@ -365,7 +365,7 @@ cleanUpGluing:
     
     TriGluingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Tetrahedron" forIndexPath:indexPath];
     regina::NTetrahedron* t = self.packet->getSimplex(indexPath.row - 1);
-    cell.index.text = [NSString stringWithFormat:@"%d. %s", indexPath.row - 1, t->getDescription().c_str()];
+    cell.index.text = [NSString stringWithFormat:@"%ld. %s", indexPath.row - 1, t->getDescription().c_str()];
     cell.face0.text = [TriGluings destStringFromFacet:0 dest:t->adjacentSimplex(0) gluing:t->adjacentGluing(0)];
     cell.face1.text = [TriGluings destStringFromFacet:1 dest:t->adjacentSimplex(1) gluing:t->adjacentGluing(1)];
     cell.face2.text = [TriGluings destStringFromFacet:2 dest:t->adjacentSimplex(2) gluing:t->adjacentGluing(2)];

@@ -33,7 +33,7 @@
 #import "PacketViewer.h"
 
 /**
- * The controller for viewing script packets.
+ * The controller for viewing angle structure lists.
  */
 @interface AngleViewController : UIViewController <PacketViewer>
 @end
