@@ -48,6 +48,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *fVector;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *viewWhich;
 
+@property (weak, nonatomic) IBOutlet UIButton *vtxLinksButton;
+@property (weak, nonatomic) IBOutlet UIImageView *vtxLinksIcon;
+
 @property (assign, nonatomic) regina::NTriangulation* packet;
 @end
 

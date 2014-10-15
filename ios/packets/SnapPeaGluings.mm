@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#import "ReginaHelper.h"
 #import "SnapPeaViewController.h"
 #import "SnapPeaGluings.h"
 #import "snappea/nsnappeatriangulation.h"
@@ -93,6 +94,37 @@
         return [NSString stringWithFormat:@"%ld (%s)",
                 destTet->markedIndex(),
                 (gluing * regina::NTriangle::ordering[srcFace]).trunc3().c_str()];
+}
+
+- (IBAction)randomise:(id)sender {
+    if (self.packet->isNull()) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"This is a Null Triangulation"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    
+    self.packet->randomise();
+}
+
+- (IBAction)toRegina:(id)sender {
+    if (self.packet->isNull()) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"This is a Null Triangulation"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    
+    regina::NTriangulation* ans = new regina::NTriangulation(*self.packet);
+    ans->setPacketLabel(self.packet->getPacketLabel());
+    self.packet->insertChildLast(ans);
+    [ReginaHelper viewPacket:ans];
 }
 
 #pragma mark - Table view

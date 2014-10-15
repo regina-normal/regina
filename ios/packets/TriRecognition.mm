@@ -341,6 +341,38 @@
     });
 }
 
+- (IBAction)canonical:(id)sender {
+    // This action is only available to SnapPea triangulations.
+    regina::NSnapPeaTriangulation* s = dynamic_cast<regina::NSnapPeaTriangulation*>(self.packet);
+    if (! s)
+        return;
+    
+    if (s->isNull()) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"This is a Null Triangulation"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    
+    regina::NTriangulation* ans = s->canonise();
+    if (! ans) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Could Not Retriangulate"
+                                                        message:@"The SnapPea kernel was not able to build the canonical retriangulation of the canonical cell decomposition."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    
+    ans->setPacketLabel(self.packet->getPacketLabel() + " (Canonical)");
+    self.packet->insertChildLast(ans);
+    [ReginaHelper viewPacket:ans];
+}
+
 #pragma mark - Table view
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath

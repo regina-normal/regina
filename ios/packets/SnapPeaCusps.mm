@@ -75,6 +75,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *cusps;
 @property (weak, nonatomic) IBOutlet UITableView *shapes;
 @property (weak, nonatomic) IBOutlet UIButton *fill;
+@property (weak, nonatomic) IBOutlet UIImageView *fillIcon;
 
 @property (strong, nonatomic) SnapPeaViewController* viewer;
 @property (assign, nonatomic) regina::NSnapPeaTriangulation* packet;
