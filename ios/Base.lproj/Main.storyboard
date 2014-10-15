@@ -6981,7 +6981,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j6q-Fe-oC2">
-                                <rect key="frame" x="20" y="231" width="663" height="468"/>
+                                <rect key="frame" x="20" y="231" width="663" height="488"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -7018,7 +7018,7 @@
                             <constraint firstItem="CDr-Nv-lJP" firstAttribute="top" secondItem="Qt3-s2-HNV" secondAttribute="bottom" constant="20" id="mGp-rh-7B1"/>
                             <constraint firstItem="XwY-yg-3WL" firstAttribute="leading" secondItem="34t-53-7fK" secondAttribute="leading" id="oM6-Je-KDg"/>
                             <constraint firstItem="CDr-Nv-lJP" firstAttribute="leading" secondItem="qGR-N8-KrD" secondAttribute="leading" constant="20" id="q6g-XY-VX7"/>
-                            <constraint firstItem="sdE-bn-1uA" firstAttribute="top" secondItem="j6q-Fe-oC2" secondAttribute="bottom" constant="20" id="swU-Dm-EUz"/>
+                            <constraint firstItem="sdE-bn-1uA" firstAttribute="top" secondItem="j6q-Fe-oC2" secondAttribute="bottom" id="swU-Dm-EUz"/>
                             <constraint firstItem="cht-s2-r1Y" firstAttribute="leading" secondItem="j6q-Fe-oC2" secondAttribute="leading" id="tu5-hk-Ra4"/>
                             <constraint firstAttribute="trailing" secondItem="Ebl-RO-lHC" secondAttribute="trailing" constant="20" id="uVu-Vf-MwH"/>
                         </constraints>
