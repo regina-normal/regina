@@ -158,10 +158,11 @@ public:
 
 - (void)failure:(const CppUnit::TestFailure &)failure
 {
+    NSString* rawText = [NSString stringWithFormat:@"  ✘\n\nFailure: %s\n", failure.thrownException()->message().details().c_str()];
+
     dispatch_async(dispatch_get_main_queue(), ^{
         ++nFailures;
         
-        NSString* rawText = [NSString stringWithFormat:@"  ✘\n\nFailure: %s\n\n", failure.thrownException()->message().details().c_str()];
         [history appendAttributedString:[[NSAttributedString alloc] initWithString:rawText
                                                                      attributes:@{NSForegroundColorAttributeName:failureColour}]];
         
