@@ -33,57 +33,79 @@
 #import "ReginaHelper.h"
 #import "WelcomeViewController.h"
 #import "../testsuite/testsuite.h"
+#import <cppunit/Exception.h>
 #import <cppunit/Test.h>
+#import <cppunit/TestFailure.h>
 #import <cppunit/TestResult.h>
 #import <cppunit/TextTestProgressListener.h>
 #import <cppunit/ui/text/TestRunner.h>
 
+@class TestSuiteController;
+
 class iOSProgress : public CppUnit::TextTestProgressListener {
 private:
+    void* _iOSController;
     bool failed;
     
 public:
-    iOSProgress() : TextTestProgressListener(), failed(false) {
+    iOSProgress(void* iOSController) : TextTestProgressListener(), _iOSController(iOSController), failed(false) {
     }
     
     virtual void startTest(CppUnit::Test* test) {
-        NSLog(@(truncateFixture(test->getName()).c_str()));
+        [(__bridge id)_iOSController startTest:@(truncateFixture(test->getName()).c_str())];
         failed = false;
     }
     
-    virtual void addFailure(const CppUnit::TestFailure&) {
+    virtual void addFailure(const CppUnit::TestFailure& failure) {
         if (! failed) {
-            NSLog(@"FAILED.");
+            [(__bridge id)_iOSController failure:failure];
             failed = true;
         }
     }
     
     virtual void endTest(CppUnit::Test*) {
         if (! failed)
-            NSLog(@"ok.");
+            [(__bridge id)_iOSController success];
     }
 };
 
-void runAllTests() {
-    NSLog(@"Regina calculation engine test suite");
-    
-    CppUnit::TextTestRunner runner;
-    iOSProgress progress;
-    
-    populateTests(runner);
-    
-    runner.eventManager().addListener(&progress);
-    runner.run("", false, true, false);
-}
-
 #pragma mark - Test suite controller
 
-@interface TestSuiteController ()
+@interface TestSuiteController () {
+    NSMutableAttributedString* history;
+    UIColor* testColour;
+    UIColor* successColour;
+    UIColor* failureColour;
+    UIColor* runningColour;
+    NSMutableAttributedString* runningString;
+    NSMutableAttributedString* successString;
+    
+    int nSuccesses;
+    int nFailures;
+}
 @property (weak, nonatomic) IBOutlet UITextView *output;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *closeButton;
 @end
 
 @implementation TestSuiteController
+
+- (void)viewDidLoad
+{
+    testColour = [UIColor blackColor];
+    successColour = [UIColor colorWithRed:0.0 green:0.5 blue:0.0 alpha:1.0];
+    failureColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha:1.0];
+    runningColour = [UIColor colorWithRed:(0xB8 / 256.0) green:(0x86 / 256.0) blue:(0x0B / 256.0) alpha:1.0];
+
+    runningString = [[NSMutableAttributedString alloc] init];
+    [runningString appendAttributedString:[[NSAttributedString alloc] initWithString:@"  –  "
+                                                                          attributes:@{NSForegroundColorAttributeName:testColour}]];
+    [runningString appendAttributedString:[[NSAttributedString alloc] initWithString:@"Running…\n\n"
+                                                                          attributes:@{NSForegroundColorAttributeName:runningColour}]];
+    
+    successString = [[NSMutableAttributedString alloc] init];
+    [successString appendAttributedString:[[NSAttributedString alloc] initWithString:@"  ✔︎\n"
+                                                                          attributes:@{NSForegroundColorAttributeName:successColour}]];
+}
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -92,8 +114,81 @@ void runAllTests() {
 
 - (void)runTests
 {
-    // TODO.
-    self.closeButton.enabled = YES;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        CppUnit::TextTestRunner runner;
+        populateTests(runner);
+        
+        iOSProgress progress((__bridge void*)self);
+        runner.eventManager().addListener(&progress);
+        
+        history = [[NSMutableAttributedString alloc] init];
+        nSuccesses = nFailures = 0;
+        
+        runner.run("", false, false, false);
+        
+        [self finished];
+    });
+}
+
+- (void)startTest:(NSString *)name
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [history appendAttributedString:[[NSAttributedString alloc] initWithString:name
+                                                                        attributes:@{NSForegroundColorAttributeName:testColour}]];
+        NSMutableAttributedString* text = [[NSMutableAttributedString alloc] init];
+        [text appendAttributedString:history];
+        [text appendAttributedString:runningString];
+        
+        self.output.attributedText = text;
+        [self.output scrollRangeToVisible:NSMakeRange(text.length - 1, 1)];
+    });
+}
+
+- (void)success
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        ++nSuccesses;
+        
+        [history appendAttributedString:successString];
+        
+        self.output.attributedText = history;
+        [self.output scrollRangeToVisible:NSMakeRange(history.length - 1, 1)];
+    });
+}
+
+- (void)failure:(const CppUnit::TestFailure &)failure
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        ++nFailures;
+        
+        NSString* rawText = [NSString stringWithFormat:@"  ✘\n\nFailure: %s\n\n", failure.thrownException()->message().details().c_str()];
+        [history appendAttributedString:[[NSAttributedString alloc] initWithString:rawText
+                                                                     attributes:@{NSForegroundColorAttributeName:failureColour}]];
+        
+        self.output.attributedText = history;
+        [self.output scrollRangeToVisible:NSMakeRange(history.length - 1, 1)];
+    });
+}
+                   
+- (void)finished
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (nFailures == 0) {
+            NSString* rawText = [NSString stringWithFormat:@"\nAll %d tests passed.\n\n", nSuccesses];
+            [history appendAttributedString:[[NSAttributedString alloc] initWithString:rawText
+                                                                            attributes:@{NSForegroundColorAttributeName:successColour}]];
+        } else {
+            // TODO: Mail the developers automatically?
+            NSString* rawText = [NSString stringWithFormat:@"\n%d of %d tests failed.\nPlease pass this information on to the Regina developers.\n\n", nFailures, (nFailures + nSuccesses)];
+            [history appendAttributedString:[[NSAttributedString alloc] initWithString:rawText
+                                                                            attributes:@{NSForegroundColorAttributeName:failureColour}]];
+        }
+        
+        self.output.attributedText = history;
+        [self.output scrollRangeToVisible:NSMakeRange(history.length - 1, 1)];
+
+        self.closeButton.enabled = YES;
+    });
 }
 
 - (IBAction)close:(id)sender {

@@ -32,8 +32,39 @@
 
 #import <Foundation/Foundation.h>
 
+namespace CppUnit {
+    class TestFailure;
+}
+
 @interface TestSuiteController : UIViewController
+
+/**
+ * Runs the test suite.
+ * Must be called from the main thread.
+ */
 - (void)runTests;
+
+/**
+ * Called at the beginning of each test.
+ * May be called from any thread.
+ */
+- (void)startTest:(NSString*)name;
+/**
+ * Called at the end of a test if that test succeeds.
+ * May be called from any thread.
+ */
+- (void)success;
+/**
+ * Called at the end of a test if that test fails.
+ * May be called from any thread.
+ */
+- (void)failure:(const CppUnit::TestFailure&)failure;
+/**
+ * Called after all tests are finished.
+ * May be called from any thread.
+ */
+- (void)finished;
+
 @end
 
 @interface WelcomeViewController : UIViewController
