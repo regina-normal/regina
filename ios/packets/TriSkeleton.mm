@@ -149,7 +149,7 @@
             } else {
                 regina::NVertex* v = self.packet->getVertex(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Vertex" forIndexPath:indexPath];
-                cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
+                cell.index.text = [NSString stringWithFormat:@"%ld.", indexPath.row - 1];
                 cell.data1.text = [NSString stringWithFormat:@"%ld", v->getDegree()];
 
                 switch (v->getLink()) {
@@ -196,7 +196,7 @@
             } else {
                 regina::NEdge* e = self.packet->getEdge(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Edge" forIndexPath:indexPath];
-                cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
+                cell.index.text = [NSString stringWithFormat:@"%ld.", indexPath.row - 1];
                 cell.data1.text = [NSString stringWithFormat:@"%ld", e->getNumberOfEmbeddings()];
 
                 if (! e->isValid())
@@ -224,7 +224,7 @@
             } else {
                 regina::NTriangle* t = self.packet->getTriangle(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Triangle" forIndexPath:indexPath];
-                cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
+                cell.index.text = [NSString stringWithFormat:@"%ld.", indexPath.row - 1];
 
                 cell.data0.text = (t->isBoundary() ? @"Bdry" : @"Internal");
 
@@ -275,7 +275,7 @@
             } else {
                 regina::NTetrahedron *t = self.packet->getTetrahedron(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Tetrahedron" forIndexPath:indexPath];
-                cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
+                cell.index.text = [NSString stringWithFormat:@"%ld.", indexPath.row - 1];
 
                 cell.data0.text = [NSString stringWithFormat:@"%ld, %ld, %ld, %ld",
                                   t->getVertex(0)->markedIndex(),
@@ -306,7 +306,7 @@
             } else {
                 regina::NComponent* c = self.packet->getComponent(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Component" forIndexPath:indexPath];
-                cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
+                cell.index.text = [NSString stringWithFormat:@"%ld.", indexPath.row - 1];
                 cell.data1.text = [TextHelper countString:c->getNumberOfSimplices() singular:"tetrahedron" plural:"tetrahedra"];
 
                 cell.data0.text = [NSString stringWithFormat:@"%s %s",
@@ -333,7 +333,7 @@
             } else {
                 regina::NBoundaryComponent* b = self.packet->getBoundaryComponent(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Bdry" forIndexPath:indexPath];
-                cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
+                cell.index.text = [NSString stringWithFormat:@"%ld.", indexPath.row - 1];
                 cell.data0.text = (b->isIdeal() ? @"Ideal" : @"Real");
                 // Note: by parity, #triangles must be >= 2 and so we can safely use the plural form.
                 cell.data1.text = (b->isIdeal() ?
