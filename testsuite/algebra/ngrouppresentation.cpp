@@ -39,7 +39,7 @@
 #include "algebra/nmarkedabeliangroup.h"
 #include "utilities/stringutils.h"
 
-#include "testsuite/utilities/testutilities.h"
+#include "testsuite/algebra/testalgebra.h"
 
 using regina::NLargeInteger;
 using regina::NMarkedAbelianGroup;

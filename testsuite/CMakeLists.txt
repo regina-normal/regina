@@ -8,7 +8,7 @@ SET_PROPERTY ( DIRECTORY
 SET ( SOURCES
   exhaustive
   runalltests
-  testparams
+  testsuite
   )
 # Each of these subdirectories modifies the SOURCES variable,
 # adding more source files
