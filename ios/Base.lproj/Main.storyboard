@@ -24,7 +24,7 @@
         <!--Detail-->
         <scene sceneID="yUG-lL-AsK">
             <objects>
-                <viewController storyboardIdentifier="welcome" title="Detail" id="JEX-9P-axG" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="welcome" title="Detail" id="JEX-9P-axG" customClass="WelcomeViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Zad-Wd-Voc"/>
                         <viewControllerLayoutGuide type="bottom" id="jgI-mX-LPZ"/>
@@ -65,6 +65,9 @@
                     <nil key="simulatedStatusBarMetrics"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <splitViewDetailSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <connections>
+                        <outlet property="icon" destination="AZB-5i-qpZ" id="aV7-bu-B0g"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FJe-Yq-33r" sceneMemberID="firstResponder"/>
             </objects>
