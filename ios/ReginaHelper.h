@@ -80,9 +80,9 @@ namespace regina {
 /**
  * Opens the given packet for viewing and/or editing.
  *
- * This routine will also attempt to select the packet in the master view
- * if this has not already been done.  This will always be safe, even if
- * the packet is already selected, or even if the packet does not appear
+ * This routine will also attempt to navigate to and select the packet in the
+ * master view if this has not already been done.  This will always be safe,
+ * even if the packet is already selected, or even if the packet does not appear
  * in the master view at all.
  */
 + (void)viewPacket:(regina::NPacket*)packet;

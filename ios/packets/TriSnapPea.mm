@@ -30,7 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-#import "PacketTreeController.h"
 #import "ReginaHelper.h"
 #import "TextHelper.h"
 #import "TriangulationViewController.h"
@@ -121,8 +120,6 @@
     s->setPacketLabel(self.packet->getPacketLabel());
 
     self.packet->insertChildLast(s);
-
-    [[ReginaHelper tree] navigateToPacket:self.packet];
     [ReginaHelper viewPacket:s];
 }
 

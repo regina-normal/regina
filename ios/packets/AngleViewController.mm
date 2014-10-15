@@ -32,7 +32,6 @@
 
 #import "AngleViewController.h"
 #import "MDSpreadViewClasses.h"
-#import "PacketTreeController.h"
 #import "ReginaHelper.h"
 #import "SpreadHelper.h"
 #import "TextHelper.h"
@@ -126,11 +125,6 @@
 
 - (IBAction)openTriangulation:(id)sender {
     regina::NPacket* show = self.packet->getTriangulation();
-
-    [[ReginaHelper tree] navigateToPacket:show->getTreeParent()];
-    // We can't select this normal surface list in the parent triangulation's child list,
-    // since the pop action is animated and will not have finished by this point.
-
     [ReginaHelper viewPacket:show];
 }
 

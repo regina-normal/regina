@@ -30,7 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-#import "PacketTreeController.h"
 #import "ReginaHelper.h"
 #import "SnapPeaViewController.h"
 #import "SnapPeaCusps.h"
@@ -129,8 +128,6 @@
     regina::NTriangulation* s = self.packet->filledTriangulation();
     s->setPacketLabel(self.packet->getPacketLabel() + " (Filled)");
     self.packet->insertChildLast(s);
-
-    [[ReginaHelper tree] navigateToPacket:self.packet];
     [ReginaHelper viewPacket:s];
 }
 

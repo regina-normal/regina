@@ -33,7 +33,6 @@
 #import "FilterViewController.h"
 #import "NewPacketController.h"
 #import "PacketManagerIOS.h"
-#import "PacketTreeController.h"
 #import "ReginaHelper.h"
 #import "surfaces/sfcombination.h"
 #import "surfaces/sfproperties.h"
@@ -327,13 +326,6 @@ static NSMutableCharacterSet* eulerSeparators;
         return;
     }
 
-    PacketTreeController* tree = [ReginaHelper tree];
-    [tree navigateToPacket:self.packet];
-
-    // Hmm.  Selection does not work because the subtree is not yet
-    // present in the master navigation controller (the animated transition
-    // is still taking place at this point).
-    // This is minor enough to leave as is for now.
     [ReginaHelper viewPacket:static_cast<regina::NPacket*>([_subfilters pointerAtIndex:indexPath.row])];
 }
 

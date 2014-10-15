@@ -36,6 +36,7 @@
 #import "PacketTreeController.h"
 #import "UIView+Toast.h"
 #import "ReginaHelper.h"
+#import "packet/npacket.h"
 
 static UISplitViewController* split;
 static UINavigationController* masterNav;
@@ -78,8 +79,16 @@ BOOL ios8;
 + (void)viewPacket:(regina::NPacket *)packet
 {
     detail.packet = packet;
-    // Note: the following call is safe even if tree == nil.
-    [[ReginaHelper tree] selectPacket:packet];
+    
+    PacketTreeController* tree = [ReginaHelper tree];
+    // Note: the following calls are safe even if tree == nil.
+    [tree navigateToPacket:packet->getTreeParent()];
+    [tree selectPacket:packet];
+    
+    // Hmm.  Selection does not always work because the subtree might not yet
+    // be present in the master navigation controller (the animated transition
+    // is still taking place at this point).
+    // This is minor - don't worry about selection for now.
 }
 
 + (void)notify:(NSString *)message detail:(NSString *)detail

@@ -31,7 +31,6 @@
  **************************************************************************/
 
 #import "Coordinates.h"
-#import "PacketTreeController.h"
 #import "ReginaHelper.h"
 #import "SpreadHelper.h"
 #import "SurfacesCoords.h"
@@ -267,8 +266,6 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
     ans->intelligentSimplify();
     ans->setPacketLabel(self.packet->getTriangulation()->getPacketLabel() + " (Cut)");
     self.packet->insertChildLast(ans);
-    
-    [[ReginaHelper tree] navigateToPacket:self.packet];
     [ReginaHelper viewPacket:ans];
 }
 
@@ -316,8 +313,6 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
     ans->intelligentSimplify();
     ans->setPacketLabel(self.packet->getTriangulation()->getPacketLabel() + " (Crushed)");
     self.packet->insertChildLast(ans);
-    
-    [[ReginaHelper tree] navigateToPacket:self.packet];
     [ReginaHelper viewPacket:ans];
 }
 
