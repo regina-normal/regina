@@ -30,10 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
+#import "ReginaHelper.h"
 #import "SnapPeaViewController.h"
 #import "TriangulationViewController.h"
 #import "TriSkeleton.h"
 #import "TextHelper.h"
+#import "dim2/dim2triangulation.h"
 #import "triangulation/ntriangulation.h"
 
 #define KEY_LAST_TRI_SKELETON_TYPE @"ViewTriSkeletonWhich"
@@ -89,11 +91,45 @@
     self.viewWhich.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_TRI_SKELETON_TYPE];
 
     [self.details reloadData];
+    [self updateVertexLinkButton];
 }
 
 - (IBAction)whichChanged:(id)sender {
     [self.details reloadData];
+    [self updateVertexLinkButton];
     [[NSUserDefaults standardUserDefaults] setInteger:self.viewWhich.selectedSegmentIndex forKey:KEY_LAST_TRI_SKELETON_TYPE];
+}
+
+- (void)updateVertexLinkButton {
+    if (self.viewWhich.selectedSegmentIndex == 0) {
+        NSIndexPath* seln = self.details.indexPathForSelectedRow;
+        if (seln && seln.row > 0 && seln.row <= self.packet->getNumberOfVertices()) {
+            self.vtxLinksButton.enabled = YES;
+            return;
+        }
+    }
+    self.vtxLinksButton.enabled = NO;
+}
+
+- (IBAction)vertexLinks:(id)sender {
+    if (self.viewWhich.selectedSegmentIndex != 0)
+        return;
+    
+    NSIndexPath* seln = self.details.indexPathForSelectedRow;
+    if ((! seln) || seln.row <= 0 || seln.row > self.packet->getNumberOfVertices()) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Please Select a Vertex"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    
+    regina::Dim2Triangulation* ans = new regina::Dim2Triangulation(*self.packet->getVertex(seln.row - 1)->buildLink());
+    ans->setPacketLabel([NSString stringWithFormat:@"Link of vertex %ld", seln.row - 1].UTF8String);
+    self.packet->insertChildLast(ans);
+    [ReginaHelper viewPacket:ans];
 }
 
 #pragma mark - Table view
@@ -400,5 +436,14 @@
     }
 }
 
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self updateVertexLinkButton];
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self updateVertexLinkButton];
+}
 
 @end
