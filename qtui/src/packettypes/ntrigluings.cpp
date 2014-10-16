@@ -389,7 +389,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     actSimplify = new QAction(this);
     actSimplify->setText(tr("&Simplify"));
-    actSimplify->setIcon(ReginaSupport::themeIcon("tools-wizard"));
+    actSimplify->setIcon(ReginaSupport::regIcon("simplify"));
     actSimplify->setToolTip(tr(
         "Simplify the triangulation as far as possible"));
     actSimplify->setEnabled(readWrite);
