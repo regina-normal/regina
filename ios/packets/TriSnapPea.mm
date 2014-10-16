@@ -43,7 +43,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *volume;
 @property (weak, nonatomic) IBOutlet UIButton *convert;
 @property (weak, nonatomic) IBOutlet UILabel *convertLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *convertIcon;
+@property (weak, nonatomic) IBOutlet UIButton *convertIcon;
 
 @property (strong, nonatomic) TriangulationViewController* viewer;
 @property (assign, nonatomic) regina::NTriangulation* packet;

@@ -48,22 +48,6 @@
     [self registerDefaultKey:@"ViewSnapPeaTab"];
 }
 
-- (NSString *)packetActionIcon
-{
-    return @"NavBar-SnapPea";
-}
-
-- (void)packetActionPressed
-{
-    // TODO: Implement actions.
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"To Be Implemented"
-                                                    message:nil
-                                                   delegate:nil
-                                          cancelButtonTitle:@"Close"
-                                          otherButtonTitles:nil];
-    [alert show];
-}
-
 - (void)updateHeader:(UILabel *)summary volume:(UILabel *)volume solnType:(UILabel *)solnType
 {
     if (self.packet->isNull()) {
