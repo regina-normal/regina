@@ -32,6 +32,7 @@ set (IMGS
   python_console
   randomise
   regina
+  simplify
   snappea
   vtxlinks
   )

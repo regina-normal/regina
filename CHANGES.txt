@@ -50,6 +50,9 @@ Version 4.97  [ (under development) ]
               a filename).
         Header zstream.h:
             - Removed entirely.  Regina now uses boost::iostreams instead.
+    USER INTERFACE:
+        - Drilling an edge now creates a new triangulation, as opposed
+          to modifying the current triangulation.
 
 Version 4.96  [ 29 August, 2014 ]
 

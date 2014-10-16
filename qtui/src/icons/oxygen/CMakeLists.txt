@@ -45,7 +45,6 @@ set (IMGS
   run-build-file
   system-run
   text-x-c++src
-  tools-wizard
   utilities-terminal
   view-list-text
   view-refresh
