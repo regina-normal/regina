@@ -52,7 +52,6 @@
 @property (strong, nonatomic) UIDocumentInteractionController *interaction;
 @property (strong, nonatomic) TempFile *interactionFile;
 @property (strong, nonatomic) UIBarButtonItem *shareButton;
-@property (strong, nonatomic) UIBarButtonItem *packetActionButton;
 @end
 
 @implementation DetailViewController
@@ -93,6 +92,7 @@
                          target:self
                          action:@selector(shareDocument)] :
                         nil);
+    self.navigationItem.rightBarButtonItem = self.shareButton;
 
     // Close any packet viewers that might be open,
     // push any outstanding changes to the calculation engine,
@@ -213,25 +213,12 @@
 
 - (void)embedViewer:(NSString*)viewerID
 {
-    // Clear out the old packet action button (if any) ASAP.
-    self.packetActionButton = nil;
-    self.navigationItem.rightBarButtonItems = (self.shareButton ? @[self.shareButton] : @[]);
-
     UIViewController* from = self.contents;
     UIViewController* to = [self.storyboard instantiateViewControllerWithIdentifier:viewerID];
     self.contents = to;
 
-    if ([to.class conformsToProtocol:@protocol(PacketViewer)]) {
+    if ([to.class conformsToProtocol:@protocol(PacketViewer)])
         static_cast<id <PacketViewer> >(to).packet = self.packet;
-
-        if ([to respondsToSelector:@selector(packetActionIcon)]) {
-            NSString* iconName = [static_cast<id <PacketViewer> >(to) packetActionIcon];
-            self.packetActionButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:iconName]
-                                                                       style:UIBarButtonItemStylePlain
-                                                                      target:to
-                                                                      action:@selector(packetActionPressed)];
-        }
-    }
 
     to.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
 
@@ -263,14 +250,10 @@
                                     [from removeFromParentViewController];
 
                                     [to didMoveToParentViewController:self];
-                                    self.navigationItem.rightBarButtonItems = (self.packetActionButton ? @[self.shareButton, self.packetActionButton] :
-                                                                               self.shareButton ? @[self.shareButton] : @[]);
                                 }];
     } else {
         [self.view addSubview:to.view];
         [to didMoveToParentViewController:self];
-        self.navigationItem.rightBarButtonItems = (self.packetActionButton ? @[self.shareButton, self.packetActionButton] :
-                                                   self.shareButton ? @[self.shareButton] : @[]);
     }
 }
 

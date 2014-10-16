@@ -42,11 +42,6 @@ namespace regina {
 - (void)setPacket:(regina::NPacket*)packet;
 - (void)reloadPacket;
 
-@optional
-
-- (NSString*)packetActionIcon;
-- (void)packetActionPressed;
-
 @end
 
 @protocol PacketEditor <PacketViewer>

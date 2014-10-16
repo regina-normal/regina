@@ -48,22 +48,6 @@
     [self registerDefaultKey:@"ViewTriangulationTab"];
 }
 
-- (NSString *)packetActionIcon
-{
-    return @"NavBar-Triangulation";
-}
-
-- (void)packetActionPressed
-{
-    // TODO: Implement actions.
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"To Be Implemented"
-                                                    message:nil
-                                                   delegate:nil
-                                          cancelButtonTitle:@"Close"
-                                          otherButtonTitles:nil];
-    [alert show];
-}
-
 - (void)updateHeader:(UILabel *)header
 {
     if (self.packet->isEmpty()) {
