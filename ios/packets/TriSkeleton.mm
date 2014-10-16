@@ -51,7 +51,7 @@
 @property (weak, nonatomic) IBOutlet UISegmentedControl *viewWhich;
 
 @property (weak, nonatomic) IBOutlet UIButton *vtxLinksButton;
-@property (weak, nonatomic) IBOutlet UIImageView *vtxLinksIcon;
+@property (weak, nonatomic) IBOutlet UIButton *vtxLinksIcon;
 
 @property (assign, nonatomic) regina::NTriangulation* packet;
 @end
@@ -104,11 +104,11 @@
     if (self.viewWhich.selectedSegmentIndex == 0) {
         NSIndexPath* seln = self.details.indexPathForSelectedRow;
         if (seln && seln.row > 0 && seln.row <= self.packet->getNumberOfVertices()) {
-            self.vtxLinksButton.enabled = YES;
+            self.vtxLinksButton.enabled = self.vtxLinksIcon.enabled = YES;
             return;
         }
     }
-    self.vtxLinksButton.enabled = NO;
+    self.vtxLinksButton.enabled = self.vtxLinksIcon.enabled = NO;
 }
 
 - (IBAction)vertexLinks:(id)sender {

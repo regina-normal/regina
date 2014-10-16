@@ -74,7 +74,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *cusps;
 @property (weak, nonatomic) IBOutlet UITableView *shapes;
 @property (weak, nonatomic) IBOutlet UIButton *fill;
-@property (weak, nonatomic) IBOutlet UIImageView *fillIcon;
+@property (weak, nonatomic) IBOutlet UIButton *fillIcon;
 
 @property (strong, nonatomic) SnapPeaViewController* viewer;
 @property (assign, nonatomic) regina::NSnapPeaTriangulation* packet;
@@ -111,7 +111,7 @@
     
     [self.viewer updateHeader:self.header volume:self.volume solnType:self.solnType];
 
-    self.fill.enabled = (self.packet->countFilledCusps() > 0);
+    self.fill.enabled = self.fillIcon.enabled = (self.packet->countFilledCusps() > 0);
     [self.cusps reloadData];
     [self.shapes reloadData];
 }
@@ -282,7 +282,7 @@ cleanUpFilling:
     if (reload) {
         [self.viewer updateHeader:self.header volume:self.volume solnType:self.solnType];
         [self.shapes reloadData];
-        self.fill.enabled = (self.packet->countFilledCusps() > 0);
+        self.fill.enabled = self.fillIcon.enabled = (self.packet->countFilledCusps() > 0);
     }
 }
 
