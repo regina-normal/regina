@@ -867,7 +867,12 @@ void NTriGluingsUI::drillEdge() {
                 "Drilling requires multiple subdivisions, and\n"
                 "can be quite slow for larger triangulations.\n\n"
                 "Please be patient."), ui));
-            tri->drillEdge(chosen);
+
+            regina::NTriangulation* ans = new regina::NTriangulation(*tri);
+            ans->drillEdge(ans->getEdge(chosen->index()));
+            ans->setPacketLabel(tri->getPacketLabel() + " (Drilled)");
+            tri->insertChildLast(ans);
+            enclosingPane->getMainWindow()->packetView(ans, true, true);
         }
     }
 }
