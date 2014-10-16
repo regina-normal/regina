@@ -6403,7 +6403,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="vertexLinks:" destination="0iB-LS-sG4" eventType="touchUpInside" id="Hh9-Yi-PKF"/>
+                                    <action selector="vertexLinks:" destination="e7R-Ek-ug0" eventType="touchUpInside" id="jBA-t4-Fgs"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="laj-j4-dZQ">
@@ -6412,7 +6412,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="vertexLinks:" destination="0iB-LS-sG4" eventType="touchUpInside" id="LP1-Ol-I4x"/>
+                                    <action selector="vertexLinks:" destination="e7R-Ek-ug0" eventType="touchUpInside" id="5Iv-hI-uYg"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NCC-o2-G3y">
@@ -6420,12 +6420,18 @@
                                 <state key="normal" title="Drill edge">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="drillEdge:" destination="e7R-Ek-ug0" eventType="touchUpInside" id="pZr-nW-AAC"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A4U-Fo-8sS">
                                 <rect key="frame" x="461.5" y="668" width="32" height="32"/>
                                 <state key="normal" image="Action-DrillEdge">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="drillEdge:" destination="e7R-Ek-ug0" eventType="touchUpInside" id="tlG-HQ-r7r"/>
+                                </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9ec-gd-ljy">
                                 <rect key="frame" x="566.5" y="674" width="136.5" height="20"/>
@@ -6485,9 +6491,13 @@
                     <tabBarItem key="tabBarItem" title="Skeleton" image="Tab-Skeleton" id="Na2-IE-ra7"/>
                     <connections>
                         <outlet property="details" destination="3G1-uR-eUS" id="HLH-5b-lou"/>
+                        <outlet property="drillEdgeButton" destination="NCC-o2-G3y" id="cpy-VT-l8l"/>
+                        <outlet property="drillEdgeIcon" destination="A4U-Fo-8sS" id="d0d-mz-dqX"/>
                         <outlet property="fVector" destination="IgP-EH-MsF" id="4Oe-3E-uZG"/>
                         <outlet property="header" destination="3iC-77-lBR" id="5hd-mF-QZ3"/>
                         <outlet property="viewWhich" destination="7fA-ls-oAs" id="tgu-Tf-ZEd"/>
+                        <outlet property="vtxLinksButton" destination="FiG-MS-TkT" id="M8X-tO-e43"/>
+                        <outlet property="vtxLinksIcon" destination="laj-j4-dZQ" id="RXS-UO-KXv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GA2-mS-7ib" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -6513,7 +6523,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="nwP-3T-iK1">
-                                <rect key="frame" x="20" y="124.5" width="663" height="586"/>
+                                <rect key="frame" x="20" y="124" width="663" height="525"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Header" id="ZWq-kp-8RM">
@@ -6670,16 +6680,99 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OpA-Ux-0fI">
+                                <rect key="frame" x="159.5" y="669" width="42" height="30"/>
+                                <state key="normal" title="Orient">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="flo-mp-eg6">
+                                <rect key="frame" x="119.5" y="668" width="32" height="32"/>
+                                <state key="normal" image="Action-Orient">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zwq-cv-DPg">
+                                <rect key="frame" x="359.5" y="669" width="55" height="30"/>
+                                <state key="normal" title="Simplify">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5qk-g4-FdA">
+                                <rect key="frame" x="533.5" y="669" width="51" height="30"/>
+                                <state key="normal" title="More…">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="drillEdge:" destination="e7R-Ek-ug0" eventType="touchUpInside" id="TE1-Y5-rAY"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ILK-AI-J3x">
+                                <rect key="frame" x="319.5" y="668" width="32" height="32"/>
+                                <state key="normal" image="Action-Simplify">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Jg-95-Hv7">
+                                <rect key="frame" x="414.5" y="674" width="119" height="20"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="MNb-ll-nPV"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Oua-y5-n8f">
+                                <rect key="frame" x="201.5" y="674" width="118" height="20"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="jDv-bq-QXS"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qBH-j8-kw3">
+                                <rect key="frame" x="0.0" y="674" width="119" height="20"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="eqa-T0-gme"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dEt-3z-Bca">
+                                <rect key="frame" x="584.5" y="674" width="118.5" height="20"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="KnD-V8-Fm4"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="nwP-3T-iK1" secondAttribute="trailing" constant="20" id="0fc-c4-stE"/>
-                            <constraint firstItem="QK1-k1-OOL" firstAttribute="top" secondItem="nwP-3T-iK1" secondAttribute="bottom" constant="8" id="PlT-vd-YDf"/>
+                            <constraint firstAttribute="trailing" secondItem="dEt-3z-Bca" secondAttribute="trailing" id="1da-JT-Xsa"/>
+                            <constraint firstItem="zwq-cv-DPg" firstAttribute="centerY" secondItem="5qk-g4-FdA" secondAttribute="centerY" id="2B3-c5-3Yd"/>
+                            <constraint firstItem="ILK-AI-J3x" firstAttribute="centerY" secondItem="Oua-y5-n8f" secondAttribute="centerY" id="4Y2-rK-Fd1"/>
+                            <constraint firstItem="flo-mp-eg6" firstAttribute="leading" secondItem="qBH-j8-kw3" secondAttribute="trailing" id="AcU-Wy-SB1"/>
+                            <constraint firstItem="zwq-cv-DPg" firstAttribute="centerY" secondItem="3Jg-95-Hv7" secondAttribute="centerY" id="BeV-O3-gFU"/>
+                            <constraint firstItem="flo-mp-eg6" firstAttribute="centerY" secondItem="OpA-Ux-0fI" secondAttribute="centerY" id="DjS-zi-Yr0"/>
+                            <constraint firstItem="zwq-cv-DPg" firstAttribute="leading" secondItem="ILK-AI-J3x" secondAttribute="trailing" constant="8" id="FkQ-Ow-ui8"/>
+                            <constraint firstItem="Oua-y5-n8f" firstAttribute="leading" secondItem="OpA-Ux-0fI" secondAttribute="trailing" id="HKz-UB-HzM"/>
+                            <constraint firstItem="QK1-k1-OOL" firstAttribute="top" secondItem="OpA-Ux-0fI" secondAttribute="bottom" constant="20" id="L3b-Ei-f5k"/>
+                            <constraint firstItem="ILK-AI-J3x" firstAttribute="centerY" secondItem="zwq-cv-DPg" secondAttribute="centerY" id="LcZ-7F-kJW"/>
+                            <constraint firstItem="qBH-j8-kw3" firstAttribute="width" secondItem="3Jg-95-Hv7" secondAttribute="width" id="NqF-eP-Fch"/>
+                            <constraint firstItem="qBH-j8-kw3" firstAttribute="width" secondItem="Oua-y5-n8f" secondAttribute="width" id="OyZ-A6-oY0"/>
+                            <constraint firstItem="dEt-3z-Bca" firstAttribute="leading" secondItem="5qk-g4-FdA" secondAttribute="trailing" id="U9j-4Z-l6D"/>
+                            <constraint firstItem="3Jg-95-Hv7" firstAttribute="width" secondItem="dEt-3z-Bca" secondAttribute="width" id="Xm6-rH-5kk"/>
                             <constraint firstItem="nwP-3T-iK1" firstAttribute="top" secondItem="OYb-dz-M7E" secondAttribute="bottom" constant="40" id="Xnw-tq-L1C"/>
+                            <constraint firstItem="qBH-j8-kw3" firstAttribute="centerY" secondItem="flo-mp-eg6" secondAttribute="centerY" id="YRI-73-spt"/>
                             <constraint firstItem="nwP-3T-iK1" firstAttribute="leading" secondItem="NXQ-th-PL6" secondAttribute="leading" constant="20" id="Z76-m2-8GA"/>
                             <constraint firstItem="OYb-dz-M7E" firstAttribute="leading" secondItem="NXQ-th-PL6" secondAttribute="leading" constant="20" id="Zz9-RP-Ogo"/>
+                            <constraint firstItem="5qk-g4-FdA" firstAttribute="leading" secondItem="3Jg-95-Hv7" secondAttribute="trailing" id="afk-vV-BPk"/>
+                            <constraint firstItem="OpA-Ux-0fI" firstAttribute="leading" secondItem="flo-mp-eg6" secondAttribute="trailing" constant="8" id="byz-x7-dIk"/>
                             <constraint firstAttribute="trailing" secondItem="OYb-dz-M7E" secondAttribute="trailing" constant="20" id="ceA-jM-3S4"/>
+                            <constraint firstItem="zwq-cv-DPg" firstAttribute="centerY" secondItem="OpA-Ux-0fI" secondAttribute="centerY" id="h4Y-BN-MIq"/>
+                            <constraint firstItem="OpA-Ux-0fI" firstAttribute="top" secondItem="nwP-3T-iK1" secondAttribute="bottom" constant="20" id="hGr-tp-yfG"/>
                             <constraint firstItem="OYb-dz-M7E" firstAttribute="top" secondItem="g4W-5x-0Ii" secondAttribute="bottom" constant="20" id="kWh-y4-Tmo"/>
+                            <constraint firstItem="qBH-j8-kw3" firstAttribute="leading" secondItem="NXQ-th-PL6" secondAttribute="leading" id="lX0-JJ-cSo"/>
+                            <constraint firstItem="zwq-cv-DPg" firstAttribute="centerY" secondItem="dEt-3z-Bca" secondAttribute="centerY" id="nrq-q1-nge"/>
+                            <constraint firstItem="ILK-AI-J3x" firstAttribute="leading" secondItem="Oua-y5-n8f" secondAttribute="trailing" id="uaD-Dd-SsI"/>
+                            <constraint firstItem="3Jg-95-Hv7" firstAttribute="leading" secondItem="zwq-cv-DPg" secondAttribute="trailing" id="vi1-aH-YNY"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Gluings" image="Tab-Gluings" id="Pcq-QM-0xg"/>
@@ -6690,7 +6783,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eQz-KB-ZqC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5825.5" y="1507"/>
+            <point key="canvasLocation" x="5825.5" y="1507.5"/>
         </scene>
         <!--Text Popover-->
         <scene sceneID="yJt-x6-tua">
@@ -7725,7 +7818,9 @@
         <image name="Action-Canonical" width="32" height="32"/>
         <image name="Action-DrillEdge" width="32" height="32"/>
         <image name="Action-Fill" width="32" height="32"/>
+        <image name="Action-Orient" width="32" height="32"/>
         <image name="Action-Randomise" width="32" height="32"/>
+        <image name="Action-Simplify" width="32" height="32"/>
         <image name="Action-VtxLinks" width="32" height="32"/>
         <image name="Container" width="32" height="32"/>
         <image name="Filter" width="32" height="32"/>

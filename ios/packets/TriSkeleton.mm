@@ -52,6 +52,8 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *vtxLinksButton;
 @property (weak, nonatomic) IBOutlet UIButton *vtxLinksIcon;
+@property (weak, nonatomic) IBOutlet UIButton *drillEdgeButton;
+@property (weak, nonatomic) IBOutlet UIButton *drillEdgeIcon;
 
 @property (assign, nonatomic) regina::NTriangulation* packet;
 @end
@@ -91,24 +93,33 @@
     self.viewWhich.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_TRI_SKELETON_TYPE];
 
     [self.details reloadData];
-    [self updateVertexLinkButton];
+    [self updateActions];
 }
 
 - (IBAction)whichChanged:(id)sender {
     [self.details reloadData];
-    [self updateVertexLinkButton];
+    [self updateActions];
     [[NSUserDefaults standardUserDefaults] setInteger:self.viewWhich.selectedSegmentIndex forKey:KEY_LAST_TRI_SKELETON_TYPE];
 }
 
-- (void)updateVertexLinkButton {
+- (void)updateActions {
+    // Vertex links:
+    BOOL enable = NO;
     if (self.viewWhich.selectedSegmentIndex == 0) {
         NSIndexPath* seln = self.details.indexPathForSelectedRow;
-        if (seln && seln.row > 0 && seln.row <= self.packet->getNumberOfVertices()) {
-            self.vtxLinksButton.enabled = self.vtxLinksIcon.enabled = YES;
-            return;
-        }
+        if (seln && seln.row > 0 && seln.row <= self.packet->getNumberOfVertices())
+            enable = YES;
     }
-    self.vtxLinksButton.enabled = self.vtxLinksIcon.enabled = NO;
+    self.vtxLinksButton.enabled = self.vtxLinksIcon.enabled = enable;
+    
+    // Drill edge:
+    enable = NO;
+    if (self.viewWhich.selectedSegmentIndex == 1 && self.packet->getPacketType() == regina::PACKET_TRIANGULATION) {
+        NSIndexPath* seln = self.details.indexPathForSelectedRow;
+        if (seln && seln.row > 0 && seln.row <= self.packet->getNumberOfEdges())
+            enable = YES;
+    }
+    self.drillEdgeButton.enabled = self.drillEdgeIcon.enabled = enable;
 }
 
 - (IBAction)vertexLinks:(id)sender {
@@ -128,6 +139,28 @@
     
     regina::Dim2Triangulation* ans = new regina::Dim2Triangulation(*self.packet->getVertex(seln.row - 1)->buildLink());
     ans->setPacketLabel([NSString stringWithFormat:@"Link of vertex %ld", seln.row - 1].UTF8String);
+    self.packet->insertChildLast(ans);
+    [ReginaHelper viewPacket:ans];
+}
+
+- (IBAction)drillEdge:(id)sender {
+    if (self.viewWhich.selectedSegmentIndex != 1)
+        return;
+    
+    NSIndexPath* seln = self.details.indexPathForSelectedRow;
+    if ((! seln) || seln.row <= 0 || seln.row > self.packet->getNumberOfEdges()) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Please Select an Edge"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    
+    regina::NTriangulation* ans = new regina::NTriangulation(*self.packet);
+    ans->drillEdge(ans->getEdge(seln.row - 1));
+    ans->setPacketLabel(self.packet->getPacketLabel() + " (Drilled)");
     self.packet->insertChildLast(ans);
     [ReginaHelper viewPacket:ans];
 }
@@ -438,12 +471,12 @@
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self updateVertexLinkButton];
+    [self updateActions];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self updateVertexLinkButton];
+    [self updateActions];
 }
 
 @end
