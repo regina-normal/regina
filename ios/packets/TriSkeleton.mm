@@ -159,10 +159,15 @@
     }
     
     regina::NTriangulation* ans = new regina::NTriangulation(*self.packet);
-    ans->drillEdge(ans->getEdge(seln.row - 1));
-    ans->setPacketLabel(self.packet->getPacketLabel() + " (Drilled)");
-    self.packet->insertChildLast(ans);
-    [ReginaHelper viewPacket:ans];
+    [ReginaHelper runWithHUD:@"Drilling…"
+                        code:^{
+                            ans->drillEdge(ans->getEdge(seln.row - 1));
+                            ans->setPacketLabel(self.packet->getPacketLabel() + " (Drilled)");
+                        }
+                     cleanup:^{
+                         self.packet->insertChildLast(ans);
+                         [ReginaHelper viewPacket:ans];
+                     }];
 }
 
 #pragma mark - Table view

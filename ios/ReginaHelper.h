@@ -94,6 +94,15 @@ namespace regina {
 + (void)notify:(NSString*)message detail:(NSString*)detail;
 
 /**
+ * Displays a HUD while the given code block runs in a background thread.
+ *
+ * The cleanup block is optional; if non-nil, it will run on the main thread
+ * after the code block has finished.  This can be used (for instance) to
+ * update elements of the user interface.
+ */
++ (void)runWithHUD:(NSString*)message code:(void(^)())code cleanup:(void(^)())cleanup;
+
+/**
  * Is this app running on iOS 8 or above?
  */
 + (BOOL)ios8;

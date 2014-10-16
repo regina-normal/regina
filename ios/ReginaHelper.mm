@@ -34,8 +34,9 @@
 #import "DetailViewController.h"
 #import "MasterViewController.h"
 #import "PacketTreeController.h"
-#import "UIView+Toast.h"
 #import "ReginaHelper.h"
+#import "MBProgressHUD.h"
+#import "UIView+Toast.h"
 #import "packet/npacket.h"
 
 static UISplitViewController* split;
@@ -109,6 +110,22 @@ BOOL ios8;
     else
         [split.view makeToast:message duration:3.0 position:position];
 
+}
+
++ (void)runWithHUD:(NSString *)message code:(void (^)())code cleanup:(void(^)())cleanup
+{
+    UIView* root = [UIApplication sharedApplication].keyWindow.rootViewController.view;
+    MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:root animated:YES];
+    hud.labelText = message;
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        code();
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideHUDForView:root animated:NO];
+            if (cleanup != nil)
+                cleanup();
+        });
+    });
 }
 
 + (BOOL)ios8
