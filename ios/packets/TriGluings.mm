@@ -204,6 +204,54 @@
         [self editGluingForSimplex:indexPath.row-1 cell:cell label:cell.face3];
 }
 
+- (IBAction)simplify:(id)sender
+{
+    [self endEditing];
+    
+    if (! self.packet->intelligentSimplify()) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Simplify"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
+}
+
+- (IBAction)orient:(id)sender
+{
+    [self endEditing];
+    
+    if (self.packet->isOriented()) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Already Oriented"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    
+    bool hasOr = false;
+    regina::NTriangulation::ComponentIterator cit;
+    for (cit = self.packet->getComponents().begin(); cit != self.packet->getComponents().end(); ++cit)
+        if ((*cit)->isOrientable()) {
+            hasOr = true;
+            break;
+        }
+    if (! hasOr) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Orientable Components"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    
+    self.packet->orient();
+}
+
 #pragma mark - Text field
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
