@@ -600,7 +600,8 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     QAction* actConnectedSumDecomposition = new QAction(this);
     actConnectedSumDecomposition->setText(tr("Co&nnected Sum Decomposition"));
-    actConnectedSumDecomposition->setIcon(ReginaSupport::regIcon("connsum"));
+    actConnectedSumDecomposition->setIcon(ReginaSupport::regIcon(
+        "connectedsum"));
     actConnectedSumDecomposition->setToolTip(tr(
         "Split into a connected sum of prime 3-manifolds"));
     actConnectedSumDecomposition->setWhatsThis(tr("Break this "

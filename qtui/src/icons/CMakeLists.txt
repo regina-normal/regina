@@ -5,7 +5,7 @@ set (IMGS
   canonical
   components
   cone
-  connsum
+  connectedsum
   connectedsumwith
   csvexport
   dehydrated
