@@ -54,7 +54,7 @@
 
 #pragma mark - Triangulation gluings
 
-@interface TriGluings () <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate> {
+@interface TriGluings () <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIActionSheetDelegate> {
     CGFloat headerHeight;
     UILabel* editLabel;
     UITextField* editField;
@@ -64,6 +64,7 @@
 }
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UITableView *tetrahedra;
+@property (weak, nonatomic) IBOutlet UIButton *actionsButton;
 
 @property (strong, nonatomic) TriangulationViewController* viewer;
 @property (assign, nonatomic) regina::NTriangulation* packet;
@@ -205,6 +206,8 @@
         [self editGluingForSimplex:indexPath.row-1 cell:cell label:cell.face3];
 }
 
+#pragma mark - Triangulation operations
+
 - (IBAction)simplify:(id)sender
 {
     [self endEditing];
@@ -253,16 +256,105 @@
     self.packet->orient();
 }
 
+- (IBAction)extractComponents:(id)sender
+{
+    [self endEditing];
+    
+    // TODO: Implement extract components.
+}
+
+- (IBAction)barycentricSubdivision:(id)sender
+{
+    [self endEditing];
+    
+    self.packet->barycentricSubdivision();
+}
+
+- (IBAction)idealToFinite:(id)sender
+{
+    [self endEditing];
+    
+    if (self.packet->isValid() && ! self.packet->isIdeal()) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Ideal Vertices"
+                                                        message:@"This operation truncates ideal (or invalid) vertices to produce real boundary components."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    
+    self.packet->idealToFinite();
+}
+
+- (IBAction)makeIdeal:(id)sender
+{
+    [self endEditing];
+    
+    if (! self.packet->hasBoundaryTriangles()) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Boundary Triangles"
+                                                        message:@"This operation converts real boundary components, formed from boundary triangles, into ideal vertices."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    
+    self.packet->finiteToIdeal();
+}
+
+- (IBAction)doubleCover:(id)sender
+{
+    [self endEditing];
+    
+    self.packet->makeDoubleCover();
+}
+
+- (IBAction)puncture:(id)sender
+{
+    [self endEditing];
+    
+    if (self.packet->isEmpty()) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Empty Triangulation"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    self.packet->puncture();
+}
+
+- (IBAction)elementaryMove:(id)sender
+{
+    [self endEditing];
+    
+    // TODO: Implement eltmove.
+}
+
+- (IBAction)connectedSumWith:(id)sender
+{
+    [self endEditing];
+    
+    // TODO: Implement #with.
+}
+
 - (IBAction)actions:(id)sender {
-    // TODO:
-    // - Extract components
-    // - Barycentric subdivision
-    // - Truncate ideal vertices
-    // - Make ideal
-    // - Double cover
-    // - Puncture
-    // - Elementary move ...
-    // - Connected sum with ...
+    UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                       delegate:self
+                                              cancelButtonTitle:@"Cancel"
+                                         destructiveButtonTitle:nil
+                                              otherButtonTitles:@"Extract components",
+                                                                @"Barycentric subdivision",
+                                                                @"Truncate ideal vertices",
+                                                                @"Make ideal",
+                                                                @"Double cover",
+                                                                @"Puncture",
+                                                                @"Elementary move…",
+                                                                @"Connected sum with…", nil];
+    [sheet showFromRect:self.actionsButton.frame inView:self.view animated:YES];
 }
 
 #pragma mark - Text field
@@ -468,6 +560,30 @@ cleanUpGluing:
         headerHeight = size.height;
     }
     return headerHeight;
+}
+
+#pragma mark - Action sheet
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (buttonIndex) {
+        case 0:
+            [self extractComponents:nil]; break;
+        case 1:
+            [self barycentricSubdivision:nil]; break;
+        case 2:
+            [self idealToFinite:nil]; break;
+        case 3:
+            [self makeIdeal:nil]; break;
+        case 4:
+            [self doubleCover:nil]; break;
+        case 5:
+            [self puncture:nil]; break;
+        case 6:
+            [self elementaryMove:nil]; break;
+        case 7:
+            [self connectedSumWith:nil]; break;
+    }
 }
 
 @end
