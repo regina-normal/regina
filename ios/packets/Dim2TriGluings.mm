@@ -148,9 +148,10 @@
     editField.autocorrectionType = UITextAutocorrectionTypeNo;
     if (editEdge >= 0) {
         regina::Dim2Triangle* t = self.packet->getSimplex(editSimplex);
-        editField.text = [Dim2TriGluings destStringFromEdge:editEdge
-                                                       dest:t->adjacentSimplex(editEdge)
-                                                     gluing:t->adjacentGluing(editEdge)];
+        editField.text = [[Dim2TriGluings destStringFromEdge:editEdge
+                                                        dest:t->adjacentSimplex(editEdge)
+                                                      gluing:t->adjacentGluing(editEdge)]
+                          stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         editField.autocapitalizationType = UITextAutocapitalizationTypeNone;
         editField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
         editField.textAlignment = NSTextAlignmentRight;

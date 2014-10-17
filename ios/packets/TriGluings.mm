@@ -152,9 +152,10 @@
     editField.autocorrectionType = UITextAutocorrectionTypeNo;
     if (editFacet >= 0) {
         regina::NTetrahedron* t = self.packet->getSimplex(editSimplex);
-        editField.text = [TriGluings destStringFromFacet:editFacet
-                                                    dest:t->adjacentSimplex(editFacet)
-                                                  gluing:t->adjacentGluing(editFacet)];
+        editField.text = [[TriGluings destStringFromFacet:editFacet
+                                                     dest:t->adjacentSimplex(editFacet)
+                                                   gluing:t->adjacentGluing(editFacet)]
+                          stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         editField.autocapitalizationType = UITextAutocapitalizationTypeNone;
         editField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
         editField.textAlignment = NSTextAlignmentRight;
