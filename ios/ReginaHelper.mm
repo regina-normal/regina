@@ -79,17 +79,20 @@ BOOL ios8;
 
 + (void)viewPacket:(regina::NPacket *)packet
 {
-    detail.packet = packet;
+    BOOL display = (packet->getPacketType() != regina::PACKET_CONTAINER);
+    if (display)
+        detail.packet = packet;
     
     PacketTreeController* tree = [ReginaHelper tree];
     // Note: the following calls are safe even if tree == nil.
     [tree navigateToPacket:packet->getTreeParent()];
-    [tree selectPacket:packet];
     
     // Hmm.  Selection does not always work because the subtree might not yet
     // be present in the master navigation controller (the animated transition
     // is still taking place at this point).
-    // This is minor - don't worry about selection for now.
+    // Ah well, this is minor.
+    if (display)
+        [tree selectPacket:packet];
 }
 
 + (void)notify:(NSString *)message detail:(NSString *)detail

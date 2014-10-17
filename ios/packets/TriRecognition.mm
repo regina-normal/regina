@@ -438,6 +438,8 @@
                                                                        otherButtonTitles:nil];
                                  [alert show];
                              }
+                             
+                             [ReginaHelper viewPacket:small];
                          } else {
                              UIAlertView* alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%ld Prime Summands", nSummands]
                                                                              message:@"This is a composite manifold.  I have constructed new triangulations for each of its summands."
@@ -445,9 +447,8 @@
                                                                    cancelButtonTitle:@"Close"
                                                                    otherButtonTitles:nil];
                              [alert show];
+                             [ReginaHelper viewPacket:base];
                          }
-                         
-                         // TODO: Show the user the new triangulation(s).
                          
                          // We might have learned something new for the recognition tab to show.
                          [self reloadPacket];
