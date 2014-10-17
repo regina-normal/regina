@@ -59,7 +59,7 @@
 #define MAX_CENSUS_TRIANGULATION_SIZE 50
 
 // TODO: Census lookup: long press for more lines of information.
-// TODO: Use autolayout to position (manifold, census).
+// TODO: Make the internal table "just the right height".
 // TODO: Say "Unfilled Manifold" for SnapPea triangulations.
 // TODO: #decomp -> need to add "%d children" in the master view in a timely manner (this is currently very slow).
 // TODO: Delete packets, return to parent -> needs to update "subpackets" labels.
