@@ -38,6 +38,7 @@
 #import "TriRecognition.h"
 #import "census/ncensus.h"
 #import "manifold/nmanifold.h"
+#import "packet/ncontainer.h"
 #import "snappea/nsnappeatriangulation.h"
 #import "subcomplex/nstandardtri.h"
 #import "triangulation/ntriangulation.h"
@@ -60,6 +61,8 @@
 // TODO: Census lookup: long press for more lines of information.
 // TODO: Use autolayout to position (manifold, census).
 // TODO: Say "Unfilled Manifold" for SnapPea triangulations.
+// TODO: #decomp -> need to add "%d children" in the master view in a timely manner (this is currently very slow).
+// TODO: Delete packets, return to parent -> needs to update "subpackets" labels.
 
 @interface PropertyCell : UITableViewCell
 @property (assign, nonatomic) int property;
@@ -339,6 +342,116 @@
             [self.properties reloadData];
         });
     });
+}
+
+- (IBAction)connectedSum:(id)sender {
+    if (self.packet->isEmpty()) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Empty Triangulation"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    if (! (self.packet->isValid() && self.packet->isClosed() && self.packet->isConnected())) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Cannot Decompose"
+                                                        message:@"I can only perform connected sum decompositions for closed and connected 3-manifolds."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+
+    // Where to insert the summands?
+    // If there are already children of this triangulation, insert
+    // the new triangulations at a deeper level.
+    regina::NPacket* base;
+    if (self.packet->getFirstTreeChild()) {
+        base = new regina::NContainer();
+        self.packet->insertChildLast(base);
+        if (self.packet->getPacketLabel().empty())
+            base->setPacketLabel("Summands");
+        else
+            base->setPacketLabel(self.packet->getPacketLabel() + " (Summands)");
+    } else
+        base = self.packet;
+
+    __block long nSummands = 0;
+    [ReginaHelper runWithHUD:@"Decomposing…"
+                        code:^{
+                            nSummands = self.packet->connectedSumDecomposition(base);
+                        }
+                     cleanup:^{
+                         if (nSummands < 0) {
+                             UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Two-Sided Projective Plane"
+                                                                             message:@"This manifold contains an embedded two-sided projective plane.  Regina cannot always compute connected sum decompositions in such cases, and this happens to be one such case that it cannot resolve."
+                                                                            delegate:nil
+                                                                   cancelButtonTitle:@"Close"
+                                                                   otherButtonTitles:nil];
+                             [alert show];
+                         } else if (nSummands == 0) {
+                             UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"S³"
+                                                                             message:@"This is the 3-sphere.  It has no prime summands."
+                                                                            delegate:nil
+                                                                   cancelButtonTitle:@"Close"
+                                                                   otherButtonTitles:nil];
+                             [alert show];
+                         } else if (nSummands == 1) {
+                             // Special-case S2xS1, S2x~S1 and RP3, which do not have
+                             // 0-efficient triangulations.
+                             regina::NTriangulation* small = static_cast<regina::NTriangulation*>(base->getFirstTreeChild());
+                             
+                             if (small->getNumberOfTetrahedra() <= 2 && small->getHomologyH1().isZ()) {
+                                 // The only closed prime manifolds with
+                                 // H_1 = Z and <= 2 tetrahedra are S2xS1 and S2x~S1.
+                                 if (small->isOrientable()) {
+                                     UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"S²×S¹"
+                                                                                     message:@"This is the prime manifold S²×S¹.  I have constructed a new minimal (but not 0-efficient) triangulation."
+                                                                                    delegate:nil
+                                                                           cancelButtonTitle:@"Close"
+                                                                           otherButtonTitles:nil];
+                                     [alert show];
+                                 } else {
+                                     UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"S²×~S¹"
+                                                                                     message:@"This is the prime manifold S²×~S¹ (the non-orientable twisted product).  I have constructed a new minimal (but not 0-efficient) triangulation."
+                                                                                    delegate:nil
+                                                                           cancelButtonTitle:@"Close"
+                                                                           otherButtonTitles:nil];
+                                     [alert show];
+                                 }
+                             } else if (small->getNumberOfTetrahedra() <= 2 && small->getHomologyH1().isZn(2)) {
+                                 // The only closed prime orientable manifold with
+                                 // H_1 = Z_2 and <= 2 tetrahedra is RP3.
+                                 UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"ℝP³"
+                                                                                 message:@"This is the prime manifold ℝP³.  I have constructed a new minimal (but not 0-efficient) triangulation."
+                                                                                delegate:nil
+                                                                       cancelButtonTitle:@"Close"
+                                                                       otherButtonTitles:nil];
+                                 [alert show];
+                             } else {
+                                 UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Prime 3-Manifold"
+                                                                                 message:@"This is a prime 3-manifold.  I have constructed a new 0-efficient triangulation."
+                                                                                delegate:nil
+                                                                       cancelButtonTitle:@"Close"
+                                                                       otherButtonTitles:nil];
+                                 [alert show];
+                             }
+                         } else {
+                             UIAlertView* alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%ld Prime Summands", nSummands]
+                                                                             message:@"This is a composite manifold.  I have constructed new triangulations for each of its summands."
+                                                                            delegate:nil
+                                                                   cancelButtonTitle:@"Close"
+                                                                   otherButtonTitles:nil];
+                             [alert show];
+                         }
+                         
+                         // TODO: Show the user the new triangulation(s).
+                         
+                         // We might have learned something new for the recognition tab to show.
+                         [self reloadPacket];
+                     }];
 }
 
 - (IBAction)canonical:(id)sender {

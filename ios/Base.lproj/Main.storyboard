@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="H1p-Uh-vWS">
     <dependencies>
-        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -7252,19 +7251,19 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Census:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZuD-py-zhb">
-                                <rect key="frame" x="200" y="471.5" width="60.5" height="19.5"/>
+                                <rect key="frame" x="200" y="471" width="60.5" height="19.5"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xMl-C9-7T3">
-                                <rect key="frame" x="289.5" y="430" width="5" height="20.5"/>
+                                <rect key="frame" x="289" y="430" width="5" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dHr-IQ-pnb">
-                                <rect key="frame" x="289.5" y="470.5" width="5" height="20.5"/>
+                                <rect key="frame" x="289" y="470" width="5" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
@@ -7345,24 +7344,42 @@
                                 </prototypes>
                             </tableView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yvR-fT-Jfv">
-                                <rect key="frame" x="347" y="499" width="10" height="220"/>
+                                <rect key="frame" x="347" y="499" width="10" height="150"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="10" id="kQP-7r-qvy"/>
                                 </constraints>
                             </view>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jRr-36-lyt">
-                                <rect key="frame" x="20" y="470.5" width="5" height="20.5"/>
+                                <rect key="frame" x="20" y="470" width="5" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="High-Level Recognition Routines" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="keW-Jz-uHx">
-                                <rect key="frame" x="229" y="124.5" width="244" height="19.5"/>
+                                <rect key="frame" x="229" y="124" width="244" height="19.5"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CHV-0u-EsB">
+                                <rect key="frame" x="204" y="668" width="32" height="32"/>
+                                <state key="normal" image="Action-ConnectedSum">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="connectedSum:" destination="Y29-Wh-2Yc" eventType="touchUpInside" id="BWG-0K-mKq"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="74X-Uy-gxL">
+                                <rect key="frame" x="244" y="669" width="215" height="30"/>
+                                <state key="normal" title="Connected sum decomposition">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="connectedSum:" destination="Y29-Wh-2Yc" eventType="touchUpInside" id="Lcu-Lv-Kvr"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -7370,10 +7387,14 @@
                             <constraint firstAttribute="trailing" secondItem="FnG-UG-cNk" secondAttribute="trailing" constant="20" id="4c9-3c-pa4"/>
                             <constraint firstItem="UIg-3o-tU6" firstAttribute="top" secondItem="YyC-1H-Ljs" secondAttribute="bottom" constant="20" id="57R-gE-eeL"/>
                             <constraint firstItem="yvR-fT-Jfv" firstAttribute="top" secondItem="dHr-IQ-pnb" secondAttribute="bottom" constant="8" id="6zT-yd-qug"/>
+                            <constraint firstItem="74X-Uy-gxL" firstAttribute="leading" secondItem="CHV-0u-EsB" secondAttribute="trailing" constant="8" id="AZ2-9d-SiO"/>
+                            <constraint firstItem="74X-Uy-gxL" firstAttribute="top" secondItem="yvR-fT-Jfv" secondAttribute="bottom" constant="20" id="Bfy-nk-RBc"/>
                             <constraint firstItem="dHr-IQ-pnb" firstAttribute="top" secondItem="xMl-C9-7T3" secondAttribute="bottom" constant="20" id="IW9-bc-wf1"/>
+                            <constraint firstItem="74X-Uy-gxL" firstAttribute="centerY" secondItem="CHV-0u-EsB" secondAttribute="centerY" id="Iza-cx-atH"/>
                             <constraint firstItem="keW-Jz-uHx" firstAttribute="top" secondItem="UIg-3o-tU6" secondAttribute="bottom" constant="40" id="KLq-ES-MpW"/>
                             <constraint firstItem="KOo-rp-EYQ" firstAttribute="leading" secondItem="hEa-rG-gcc" secondAttribute="leading" constant="200" id="Kjq-iq-0Jk"/>
                             <constraint firstItem="jRr-36-lyt" firstAttribute="top" secondItem="dHr-IQ-pnb" secondAttribute="top" id="O0v-lF-gcX"/>
+                            <constraint firstAttribute="centerX" secondItem="74X-Uy-gxL" secondAttribute="centerX" id="Pjf-kM-6JL"/>
                             <constraint firstAttribute="trailing" secondItem="UIg-3o-tU6" secondAttribute="trailing" constant="20" id="Qdb-EH-mdF"/>
                             <constraint firstItem="FnG-UG-cNk" firstAttribute="top" secondItem="keW-Jz-uHx" secondAttribute="bottom" constant="16" id="S1r-Nv-IJh"/>
                             <constraint firstItem="ZuD-py-zhb" firstAttribute="leading" secondItem="KOo-rp-EYQ" secondAttribute="leading" id="Wrw-Io-4xS"/>
@@ -7381,11 +7402,11 @@
                             <constraint firstItem="jRr-36-lyt" firstAttribute="leading" secondItem="hEa-rG-gcc" secondAttribute="leading" constant="20" id="XQK-Fa-KiE"/>
                             <constraint firstItem="xMl-C9-7T3" firstAttribute="leading" secondItem="dHr-IQ-pnb" secondAttribute="leading" id="ZUR-Aj-xKH"/>
                             <constraint firstAttribute="centerX" secondItem="yvR-fT-Jfv" secondAttribute="centerX" id="cbX-Ty-YRL"/>
+                            <constraint firstItem="vT4-AR-b3O" firstAttribute="top" secondItem="74X-Uy-gxL" secondAttribute="bottom" constant="20" id="cii-ae-Ypm"/>
                             <constraint firstAttribute="centerX" secondItem="keW-Jz-uHx" secondAttribute="centerX" id="dM9-8p-8Qy"/>
                             <constraint firstItem="UIg-3o-tU6" firstAttribute="leading" secondItem="hEa-rG-gcc" secondAttribute="leading" constant="20" id="eV9-wT-afe"/>
                             <constraint firstItem="jRr-36-lyt" firstAttribute="baseline" secondItem="ZuD-py-zhb" secondAttribute="baseline" id="oJE-zJ-aQZ"/>
                             <constraint firstItem="xMl-C9-7T3" firstAttribute="top" secondItem="FnG-UG-cNk" secondAttribute="bottom" constant="40" id="s6y-8d-dzO"/>
-                            <constraint firstItem="vT4-AR-b3O" firstAttribute="top" secondItem="yvR-fT-Jfv" secondAttribute="bottom" id="uIs-eU-DTW"/>
                             <constraint firstItem="KOo-rp-EYQ" firstAttribute="baseline" secondItem="xMl-C9-7T3" secondAttribute="baseline" id="vyg-pV-t1z"/>
                         </constraints>
                     </view>
@@ -7816,6 +7837,7 @@
     </scenes>
     <resources>
         <image name="Action-Canonical" width="32" height="32"/>
+        <image name="Action-ConnectedSum" width="32" height="32"/>
         <image name="Action-DrillEdge" width="32" height="32"/>
         <image name="Action-Fill" width="32" height="32"/>
         <image name="Action-Orient" width="32" height="32"/>
