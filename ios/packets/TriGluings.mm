@@ -64,6 +64,8 @@
 }
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UITableView *tetrahedra;
+@property (weak, nonatomic) IBOutlet UIButton *orientButton;
+@property (weak, nonatomic) IBOutlet UIButton *orientIcon;
 @property (weak, nonatomic) IBOutlet UIButton *actionsButton;
 
 @property (strong, nonatomic) TriangulationViewController* viewer;
@@ -97,6 +99,7 @@
         return;
     
     [self.viewer updateHeader:self.header];
+    self.orientButton.enabled = self.orientIcon.enabled = (self.packet->isOrientable() && ! self.packet->isOriented());
     [self.tetrahedra reloadData];
 }
 
