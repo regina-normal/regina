@@ -253,6 +253,18 @@
     self.packet->orient();
 }
 
+- (IBAction)actions:(id)sender {
+    // TODO:
+    // - Extract components
+    // - Barycentric subdivision
+    // - Truncate ideal vertices
+    // - Make ideal
+    // - Double cover
+    // - Puncture
+    // - Elementary move ...
+    // - Connected sum with ...
+}
+
 #pragma mark - Text field
 
 - (void)textFieldDidEndEditing:(UITextField *)textField

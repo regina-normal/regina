@@ -6753,6 +6753,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
+                                    <action selector="actions:" destination="qRa-sB-Dvt" eventType="touchUpInside" id="TOn-Rd-d9q"/>
                                     <action selector="drillEdge:" destination="e7R-Ek-ug0" eventType="touchUpInside" id="TE1-Y5-rAY"/>
                                 </connections>
                             </button>
