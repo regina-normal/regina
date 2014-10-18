@@ -42,14 +42,18 @@ namespace regina {
 bool NTriangulation::knowsStrictAngleStructure() const {
     // There are some simple cases for which we can deduce the answer
     // automatically.
-    if (tetrahedra_.empty())
-        return (strictAngleStructure_ = 0);
+    if (tetrahedra_.empty()) {
+        strictAngleStructure_ = 0;
+        return true;
+    }
 
     if (! hasBoundaryTriangles()) {
         // It is easy to prove that, if an angle structure exists,
         // then we must have #edges = #tetrahedra.
-        if (edges_.size() != tetrahedra_.size())
-            return (strictAngleStructure_ = 0);
+        if (edges_.size() != tetrahedra_.size()) {
+            strictAngleStructure_ = 0;
+            return true;
+        }
     }
 
     return strictAngleStructure_.known();
