@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#import "EltMovesController.h"
 #import "ReginaHelper.h"
 #import "TriangulationViewController.h"
 #import "TriGluings.h"
@@ -412,13 +413,15 @@
     self.packet->intelligentSimplify();
 }
 
-- (IBAction)elementaryMove:(id)sender
+- (IBAction)elementaryMoves:(id)sender
 {
     [self endEditing];
     if (! [self checkEditable])
         return;
 
-    // TODO: Implement eltmove.
+    UIViewController* sheet = [self.storyboard instantiateViewControllerWithIdentifier:@"eltMoves"];
+    static_cast<EltMovesController*>(sheet).packet = self.packet;
+    [self presentViewController:sheet animated:YES completion:nil];
 }
 
 - (IBAction)actions:(id)sender {
@@ -432,7 +435,7 @@
                                                                 @"Make ideal",
                                                                 @"Double cover",
                                                                 @"Puncture",
-                                                                @"Elementary move…",
+                                                                @"Elementary moves",
                                                                 nil];
     [sheet showFromRect:self.actionsButton.frame inView:self.view animated:YES];
 }
@@ -644,8 +647,11 @@ cleanUpGluing:
 
 #pragma mark - Action sheet
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
+    // Note: We implement didDismissWithButtonIndex: instead of clickedButtonAtIndex:,
+    // since this ensures that the action sheet popover is already dismissed before we
+    // try to open any other popover (such as the elementary moves view).
     switch (buttonIndex) {
         case 0:
             [self extractComponents:nil]; break;
@@ -660,7 +666,7 @@ cleanUpGluing:
         case 5:
             [self puncture:nil]; break;
         case 6:
-            [self elementaryMove:nil]; break;
+            [self elementaryMoves:nil]; break;
     }
 }
 

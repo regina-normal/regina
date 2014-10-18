@@ -1112,6 +1112,7 @@
 		05D1174D19EE0460003BEC55 /* simplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0583655C18DB882B008B08D9 /* simplify.cpp */; };
 		05D1C16F19C6542700CF92F2 /* ReginaHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D1C16E19C6542700CF92F2 /* ReginaHelper.mm */; };
 		05D1C17219C7F95100CF92F2 /* EditableTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D1C17119C7F95100CF92F2 /* EditableTableViewController.mm */; };
+		05EA195719F30A0100D37501 /* EltMovesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05EA195619F30A0100D37501 /* EltMovesController.mm */; };
 		05EC452F19B99A81002D0633 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA23E180613A900FAE4DF /* boost.framework */; };
 		05F23E0F19C08834005B53B5 /* snappea-doc-64.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F23E0D19C08834005B53B5 /* snappea-doc-64.png */; };
 		05F23E1019C08834005B53B5 /* snappea-doc-320.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F23E0E19C08834005B53B5 /* snappea-doc-320.png */; };
@@ -2320,6 +2321,8 @@
 		05D1C16E19C6542700CF92F2 /* ReginaHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ReginaHelper.mm; sourceTree = "<group>"; };
 		05D1C17019C7F95100CF92F2 /* EditableTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditableTableViewController.h; sourceTree = "<group>"; };
 		05D1C17119C7F95100CF92F2 /* EditableTableViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EditableTableViewController.mm; sourceTree = "<group>"; };
+		05EA195519F30A0100D37501 /* EltMovesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EltMovesController.h; sourceTree = "<group>"; };
+		05EA195619F30A0100D37501 /* EltMovesController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EltMovesController.mm; sourceTree = "<group>"; };
 		05F23E0D19C08834005B53B5 /* snappea-doc-64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "snappea-doc-64.png"; sourceTree = "<group>"; };
 		05F23E0E19C08834005B53B5 /* snappea-doc-320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "snappea-doc-320.png"; sourceTree = "<group>"; };
 		05F23E1119C1305A005B53B5 /* NewAnglesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewAnglesController.h; sourceTree = "<group>"; };
@@ -2425,6 +2428,8 @@
 				058FADAD19D3C3640001B5B5 /* Dim2TriGluings.mm */,
 				058FADAF19D3C37D0001B5B5 /* Dim2TriSkeleton.h */,
 				058FADB019D3C37D0001B5B5 /* Dim2TriSkeleton.mm */,
+				05EA195519F30A0100D37501 /* EltMovesController.h */,
+				05EA195619F30A0100D37501 /* EltMovesController.mm */,
 				05B7708519CA4FF100E2E558 /* FilterViewController.h */,
 				05B7708619CA4FF100E2E558 /* FilterViewController.mm */,
 				05F23E1119C1305A005B53B5 /* NewAnglesController.h */,
@@ -4617,6 +4622,7 @@
 				052FA1B91806129B00FAE4DF /* nblockedsfstriple.cpp in Sources */,
 				052FA1D51806129B00FAE4DF /* enumfilter.cpp in Sources */,
 				052FA1B51806129B00FAE4DF /* naugtrisolidtorus.cpp in Sources */,
+				05EA195719F30A0100D37501 /* EltMovesController.mm in Sources */,
 				052FA16D1806129B00FAE4DF /* ncensus.cpp in Sources */,
 				052FA1DC1806129B00FAE4DF /* nnormalsurfacelist.cpp in Sources */,
 				052FA1CB1806129B00FAE4DF /* nsnappedball.cpp in Sources */,
