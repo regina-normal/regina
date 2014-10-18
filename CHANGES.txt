@@ -42,6 +42,9 @@ Version 4.97  [ (under development) ]
             - Added a new Type enumeration, which encapsulates (and replaces)
               the old triangle type constants.  Also added a new type
               constant UNKNOWN_TYPE.
+        Class NTriangulation:
+            - Removed the optional boolean argument (forceDivision) from
+              idealToFinite().
         Class NVertex:
             - Added a new LinkType enumeration, which encapsulates (and
               replaces) the old link type constants.

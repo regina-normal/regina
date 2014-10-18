@@ -177,11 +177,10 @@ void NTriangulation::drillEdge(NEdge* e) {
     intelligentSimplify();
 }
 
-bool NTriangulation::idealToFinite(bool forceDivision) {
+bool NTriangulation::idealToFinite() {
     // The call to isValid() ensures the skeleton has been calculated.
     if (isValid() && ! isIdeal())
-        if (! forceDivision)
-            return false;
+        return false;
 
     int i,j,k,l;
     long numOldTet = tetrahedra_.size();
