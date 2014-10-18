@@ -41,7 +41,6 @@
 // TODO: A few deletes and then we get stuck.
 // TODO: Extend height of tap region to the entire cell.
 // TODO: Child deleted -> refresh editability behaviours / indicators
-// TODO: Disable edit actions on this viewer for read-only triangulations.
 // TODO: Provide a way to clone packets.
 
 #pragma mark - Table cell
@@ -218,10 +217,27 @@
 
 #pragma mark - Triangulation operations
 
+- (BOOL)checkEditable
+{
+    if (! self.packet->isPacketEditable()) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Cannot Change Gluings"
+                                                        message:@"This triangulation has associated normal surfaces and/or angle structures, and so you cannot change its tetrahedron gluings."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return NO;
+    }
+
+    return YES;
+}
+
 - (IBAction)simplify:(id)sender
 {
     [self endEditing];
-    
+    if (! [self checkEditable])
+        return;
+
     if (! self.packet->intelligentSimplify()) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Simplify"
                                                         message:nil
@@ -235,6 +251,8 @@
 - (IBAction)orient:(id)sender
 {
     [self endEditing];
+    if (! [self checkEditable])
+        return;
     
     if (self.packet->isOriented()) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Already Oriented"
@@ -317,6 +335,8 @@
 - (IBAction)barycentricSubdivision:(id)sender
 {
     [self endEditing];
+    if (! [self checkEditable])
+        return;
 
     self.packet->barycentricSubdivision();
 }
@@ -324,7 +344,9 @@
 - (IBAction)idealToFinite:(id)sender
 {
     [self endEditing];
-    
+    if (! [self checkEditable])
+        return;
+
     if (self.packet->isValid() && ! self.packet->isIdeal()) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Ideal Vertices"
                                                         message:@"This operation truncates ideal (or invalid) vertices to produce real boundary components."
@@ -343,7 +365,9 @@
 - (IBAction)makeIdeal:(id)sender
 {
     [self endEditing];
-    
+    if (! [self checkEditable])
+        return;
+
     if (! self.packet->hasBoundaryTriangles()) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Boundary Triangles"
                                                         message:@"This operation converts real boundary components, formed from boundary triangles, into ideal vertices."
@@ -362,14 +386,18 @@
 - (IBAction)doubleCover:(id)sender
 {
     [self endEditing];
-    
+    if (! [self checkEditable])
+        return;
+
     self.packet->makeDoubleCover();
 }
 
 - (IBAction)puncture:(id)sender
 {
     [self endEditing];
-    
+    if (! [self checkEditable])
+        return;
+
     if (self.packet->isEmpty()) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Empty Triangulation"
                                                         message:nil
@@ -388,7 +416,9 @@
 - (IBAction)elementaryMove:(id)sender
 {
     [self endEditing];
-    
+    if (! [self checkEditable])
+        return;
+
     // TODO: Implement eltmove.
 }
 
