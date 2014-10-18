@@ -107,7 +107,7 @@ void insertTri(const NTriangulation& source) {
 
     if (makeSurfaces)
         NNormalSurfaceList::enumerate(t, NS_STANDARD)->
-            setPacketLabel(t->getPacketLabel() + ": Surfaces");
+            setPacketLabel(t->adornedLabel("Surfaces"));
 }
 
 void process(const char* filename) {
