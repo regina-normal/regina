@@ -341,13 +341,6 @@
     // TODO: Implement eltmove.
 }
 
-- (IBAction)connectedSumWith:(id)sender
-{
-    [self endEditing];
-    
-    // TODO: Implement #with.
-}
-
 - (IBAction)actions:(id)sender {
     UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil
                                                        delegate:self
@@ -360,7 +353,6 @@
                                                                 @"Double cover",
                                                                 @"Puncture",
                                                                 @"Elementary move…",
-                                                                @"Connected sum with…", nil];
     [sheet showFromRect:self.actionsButton.frame inView:self.view animated:YES];
 }
 
@@ -588,8 +580,6 @@ cleanUpGluing:
             [self puncture:nil]; break;
         case 6:
             [self elementaryMove:nil]; break;
-        case 7:
-            [self connectedSumWith:nil]; break;
     }
 }
 
