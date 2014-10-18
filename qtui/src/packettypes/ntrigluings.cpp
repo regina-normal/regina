@@ -812,8 +812,11 @@ void NTriGluingsUI::idealToFinite() {
         ReginaSupport::info(ui,
             tr("This triangulation has no ideal vertices."),
             tr("Only ideal vertices will be truncated."));
-    else
+    else {
+        regina::NPacket::ChangeEventSpan span(tri);
         tri->idealToFinite();
+        tri->intelligentSimplify();
+    }
 }
 
 void NTriGluingsUI::finiteToIdeal() {
@@ -824,8 +827,11 @@ void NTriGluingsUI::finiteToIdeal() {
             tr("This triangulation has no real boundary components."),
             tr("Only real boundary components will be converted into "
             "ideal vertices."));
-    else
+    else {
+        regina::NPacket::ChangeEventSpan span(tri);
         tri->finiteToIdeal();
+        tri->intelligentSimplify();
+    }
 }
 
 void NTriGluingsUI::elementaryMove() {
@@ -846,8 +852,11 @@ void NTriGluingsUI::puncture() {
     if (tri->isEmpty())
         ReginaSupport::info(ui,
             tr("I cannot puncture an empty triangulation."));
-    else
+    else {
+        regina::NPacket::ChangeEventSpan span(tri);
         tri->puncture();
+        tri->intelligentSimplify();
+    }
 }
 
 void NTriGluingsUI::drillEdge() {

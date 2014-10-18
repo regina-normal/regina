@@ -56,6 +56,8 @@ Version 4.97  [ (under development) ]
     USER INTERFACE:
         - Drilling an edge now creates a new triangulation, as opposed
           to modifying the current triangulation.
+        - Puncturing a triangulation, making it ideal or truncating ideal
+          vertices now automatically simplify the resulting triangulation.
 
 Version 4.96  [ 29 August, 2014 ]
 
