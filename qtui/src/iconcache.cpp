@@ -91,7 +91,7 @@ void IconCache::constructLocked(IconID id) {
     QIcon base = icon(id);
 
     if (emblemLocked_.isNull())
-        emblemLocked_ = ReginaSupport::themeIcon("emblem-locked");
+        emblemLocked_ = ReginaSupport::regIcon("locked");
 
     locked_[id] = ReginaSupport::overlayIcon(base, emblemLocked_);
 }

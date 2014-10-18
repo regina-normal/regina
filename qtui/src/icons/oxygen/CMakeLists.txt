@@ -31,7 +31,6 @@ set (IMGS
   edit-select-all
   edit-table-delete-row
   edit-table-insert-row-below
-  emblem-locked
   go-bottom
   go-top
   help-about
