@@ -370,10 +370,7 @@
     if (self.packet->getFirstTreeChild()) {
         base = new regina::NContainer();
         self.packet->insertChildLast(base);
-        if (self.packet->getPacketLabel().empty())
-            base->setPacketLabel("Summands");
-        else
-            base->setPacketLabel(self.packet->getPacketLabel() + " (Summands)");
+        base->setPacketLabel(self.packet->adornedLabel("Summands"));
     } else
         base = self.packet;
 
@@ -481,7 +478,7 @@
         return;
     }
     
-    ans->setPacketLabel(self.packet->getPacketLabel() + " (Canonical)");
+    ans->setPacketLabel(self.packet->adornedLabel("Canonical"));
     self.packet->insertChildLast(ans);
     [ReginaHelper viewPacket:ans];
 }

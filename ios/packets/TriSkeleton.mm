@@ -162,7 +162,7 @@
     [ReginaHelper runWithHUD:@"Drilling…"
                         code:^{
                             ans->drillEdge(ans->getEdge(seln.row - 1));
-                            ans->setPacketLabel(self.packet->getPacketLabel() + " (Drilled)");
+                            ans->setPacketLabel(self.packet->adornedLabel("Drilled"));
                         }
                      cleanup:^{
                          self.packet->insertChildLast(ans);

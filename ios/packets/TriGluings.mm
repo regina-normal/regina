@@ -43,7 +43,6 @@
 // TODO: Child deleted -> refresh editability behaviours / indicators
 // TODO: Disable edit actions on this viewer for read-only triangulations.
 // TODO: Provide a way to clone packets.
-// TODO: NPacket::adornedLabel();
 
 #pragma mark - Table cell
 
@@ -297,10 +296,7 @@
     if (self.packet->getFirstTreeChild()) {
         base = new regina::NContainer();
         self.packet->insertChildLast(base);
-        if (self.packet->getPacketLabel().empty())
-            base->setPacketLabel("Components");
-        else
-            base->setPacketLabel(self.packet->getPacketLabel() + " (Components)");
+        base->setPacketLabel(self.packet->adornedLabel("Components"));
     } else
         base = self.packet;
 
