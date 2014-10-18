@@ -48,7 +48,7 @@
     [self registerDefaultKey:@"ViewTriangulationTab"];
 }
 
-- (void)updateHeader:(UILabel *)header
+- (void)updateHeader:(UILabel *)header lockIcon:(UIButton*)lockIcon
 {
     if (self.packet->isEmpty()) {
         header.text = @"Empty";
@@ -87,6 +87,8 @@
         [msg appendString:@"disconnected"];
 
     header.text = msg;
+
+    lockIcon.hidden = self.packet->isPacketEditable();
 }
 
 @end

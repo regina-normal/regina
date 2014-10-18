@@ -46,6 +46,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UILabel *volume;
 @property (weak, nonatomic) IBOutlet UILabel *solnType;
+@property (weak, nonatomic) IBOutlet UIButton *lockIcon;
 
 @property (weak, nonatomic) IBOutlet UILabel *fVector;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *viewWhich;
@@ -75,7 +76,7 @@
     if ([self.parentViewController isKindOfClass:[SnapPeaViewController class]])
         [static_cast<SnapPeaViewController*>(self.parentViewController) updateHeader:self.header volume:self.volume solnType:self.solnType];
     else
-        [static_cast<TriangulationViewController*>(self.parentViewController) updateHeader:self.header];
+        [static_cast<TriangulationViewController*>(self.parentViewController) updateHeader:self.header lockIcon:self.lockIcon];
 
     self.fVector.text = [NSString stringWithFormat:@"f-vector: (%ld, %ld, %ld, %ld)",
                          self.packet->getNumberOfFaces<0>(),

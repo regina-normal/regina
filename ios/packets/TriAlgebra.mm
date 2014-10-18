@@ -85,6 +85,8 @@
     NSMutableArray* computed;
 }
 @property (weak, nonatomic) IBOutlet UILabel *header;
+@property (weak, nonatomic) IBOutlet UIButton *lockIcon;
+
 @property (weak, nonatomic) IBOutlet UILabel *h1;
 @property (weak, nonatomic) IBOutlet UILabel *h1Rel;
 @property (weak, nonatomic) IBOutlet UILabel *h1Bdry;
@@ -193,7 +195,7 @@
 
 - (void)reloadPacket
 {
-    [self.viewer updateHeader:self.header];
+    [self.viewer updateHeader:self.header lockIcon:self.lockIcon];
 
     // Simplify before doing any algebraic computations.
     regina::NTriangulation t(*self.packet);

@@ -41,6 +41,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UILabel *solnType;
 @property (weak, nonatomic) IBOutlet UILabel *volume;
+@property (weak, nonatomic) IBOutlet UIButton *lockIcon;
+
 @property (weak, nonatomic) IBOutlet UIButton *convert;
 @property (weak, nonatomic) IBOutlet UILabel *convertLabel;
 @property (weak, nonatomic) IBOutlet UIButton *convertIcon;
@@ -65,7 +67,7 @@
 
 - (void)reloadPacket
 {
-    [self.viewer updateHeader:self.header];
+    [self.viewer updateHeader:self.header lockIcon:self.lockIcon];
 
     regina::NSnapPeaTriangulation snappeaTri(*self.packet);
 

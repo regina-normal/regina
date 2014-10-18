@@ -69,6 +69,7 @@
 }
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UIButton *lockIcon;
+
 @property (weak, nonatomic) IBOutlet UITableView *tetrahedra;
 @property (weak, nonatomic) IBOutlet UIButton *orientButton;
 @property (weak, nonatomic) IBOutlet UIButton *orientIcon;
@@ -104,8 +105,7 @@
     if (myEdit)
         return;
     
-    [self.viewer updateHeader:self.header];
-    self.lockIcon.hidden = self.packet->isPacketEditable();
+    [self.viewer updateHeader:self.header lockIcon:self.lockIcon];
     self.orientButton.enabled = self.orientIcon.enabled = (self.packet->isOrientable() && ! self.packet->isOriented());
     [self.tetrahedra reloadData];
 }
@@ -138,7 +138,7 @@
     [self.tetrahedra scrollToRowAtIndexPath:add
                           atScrollPosition:UITableViewScrollPositionBottom animated:YES];
     
-    [self.viewer updateHeader:self.header];
+    [self.viewer updateHeader:self.header lockIcon:self.lockIcon];
 }
 
 - (void)endEditing
@@ -436,7 +436,7 @@
                 [toReload addObject:[NSIndexPath indexPathForRow:t->adjacentSimplex(editFacet)->markedIndex()+1 inSection:0]];
                 t->unjoin(editFacet);
                 editLabel.text = @" ";
-                [self.viewer updateHeader:self.header];
+                [self.viewer updateHeader:self.header lockIcon:self.lockIcon];
                 myEdit = NO;
             }
         } else {
@@ -526,7 +526,7 @@
                     
                     editLabel.text = [NSString stringWithFormat:@"%d (%d%d%d)", destSimplex, adj0, adj1, adj2];
                 }
-                [self.viewer updateHeader:self.header];
+                [self.viewer updateHeader:self.header lockIcon:self.lockIcon];
                 myEdit = NO;
             }
         }

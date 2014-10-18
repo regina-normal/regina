@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="14A389" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="H1p-Uh-vWS">
     <dependencies>
-        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -6439,7 +6438,7 @@
                                 </prototypes>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FiG-MS-TkT">
-                                <rect key="frame" x="176.5" y="669" width="149" height="30"/>
+                                <rect key="frame" x="176" y="669" width="149" height="30"/>
                                 <state key="normal" title="Triangulate vertex link">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -6448,7 +6447,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="laj-j4-dZQ">
-                                <rect key="frame" x="136.5" y="668" width="32" height="32"/>
+                                <rect key="frame" x="136" y="668" width="32" height="32"/>
                                 <state key="normal" image="Action-VtxLinks">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -6457,7 +6456,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NCC-o2-G3y">
-                                <rect key="frame" x="501.5" y="669" width="65" height="30"/>
+                                <rect key="frame" x="501" y="669" width="65" height="30"/>
                                 <state key="normal" title="Drill edge">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -6466,7 +6465,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A4U-Fo-8sS">
-                                <rect key="frame" x="461.5" y="668" width="32" height="32"/>
+                                <rect key="frame" x="461" y="668" width="32" height="32"/>
                                 <state key="normal" image="Action-DrillEdge">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -6475,14 +6474,14 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9ec-gd-ljy">
-                                <rect key="frame" x="566.5" y="674" width="136.5" height="20"/>
+                                <rect key="frame" x="566" y="674" width="136.5" height="20"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="qlE-Xi-xhf"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="btH-oa-soj">
-                                <rect key="frame" x="325.5" y="674" width="136" height="20"/>
+                                <rect key="frame" x="325" y="674" width="136" height="20"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="fHE-be-pLn"/>
@@ -6495,6 +6494,17 @@
                                     <constraint firstAttribute="height" constant="20" id="37g-R1-0Wb"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ufZ-sU-afz">
+                                <rect key="frame" x="651" y="59" width="32" height="32"/>
+                                <state key="normal" image="Lock">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="Wr3-Nr-7yO" kind="popover" popoverAnchorView="ufZ-sU-afz" id="eDD-DS-lIr">
+                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                    </segue>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -6512,6 +6522,7 @@
                             <constraint firstItem="NCC-o2-G3y" firstAttribute="leading" secondItem="A4U-Fo-8sS" secondAttribute="trailing" constant="8" id="EZa-b5-OEn"/>
                             <constraint firstItem="EPv-3v-JiV" firstAttribute="leading" secondItem="fgO-oH-ChF" secondAttribute="leading" id="Ecc-Ye-eSq"/>
                             <constraint firstItem="A4U-Fo-8sS" firstAttribute="leading" secondItem="btH-oa-soj" secondAttribute="trailing" id="GeZ-86-Y3L"/>
+                            <constraint firstAttribute="trailing" secondItem="ufZ-sU-afz" secondAttribute="trailing" constant="20" id="HZ2-VQ-q50"/>
                             <constraint firstAttribute="centerX" secondItem="7fA-ls-oAs" secondAttribute="centerX" id="JNa-bt-Oki"/>
                             <constraint firstItem="laj-j4-dZQ" firstAttribute="centerY" secondItem="FiG-MS-TkT" secondAttribute="centerY" id="NXd-tj-WrZ"/>
                             <constraint firstAttribute="trailing" secondItem="9ec-gd-ljy" secondAttribute="trailing" id="O0K-VA-JXQ"/>
@@ -6526,6 +6537,7 @@
                             <constraint firstAttribute="trailing" secondItem="3G1-uR-eUS" secondAttribute="trailing" constant="20" id="nXY-ME-p4n"/>
                             <constraint firstItem="NCC-o2-G3y" firstAttribute="centerY" secondItem="FiG-MS-TkT" secondAttribute="centerY" id="oSO-iM-zD6"/>
                             <constraint firstItem="IgP-EH-MsF" firstAttribute="top" secondItem="3iC-77-lBR" secondAttribute="bottom" constant="20" id="r2k-1m-MI2"/>
+                            <constraint firstItem="3iC-77-lBR" firstAttribute="centerY" secondItem="ufZ-sU-afz" secondAttribute="centerY" id="xLm-X8-eG4"/>
                             <constraint firstItem="3iC-77-lBR" firstAttribute="leading" secondItem="fgO-oH-ChF" secondAttribute="leading" constant="20" id="yie-Lp-9Tm"/>
                         </constraints>
                     </view>
@@ -6536,6 +6548,7 @@
                         <outlet property="drillEdgeIcon" destination="A4U-Fo-8sS" id="d0d-mz-dqX"/>
                         <outlet property="fVector" destination="IgP-EH-MsF" id="4Oe-3E-uZG"/>
                         <outlet property="header" destination="3iC-77-lBR" id="5hd-mF-QZ3"/>
+                        <outlet property="lockIcon" destination="ufZ-sU-afz" id="xPL-E0-Nw1"/>
                         <outlet property="viewWhich" destination="7fA-ls-oAs" id="tgu-Tf-ZEd"/>
                         <outlet property="vtxLinksButton" destination="FiG-MS-TkT" id="M8X-tO-e43"/>
                         <outlet property="vtxLinksIcon" destination="laj-j4-dZQ" id="RXS-UO-KXv"/>
@@ -7168,9 +7181,22 @@
                                     <constraint firstItem="bVy-kf-QiD" firstAttribute="leading" secondItem="GfL-PH-V6W" secondAttribute="leading" constant="20" id="yvm-ao-X9D"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gac-7Q-yvY">
+                                <rect key="frame" x="651" y="59" width="32" height="32"/>
+                                <state key="normal" image="Lock">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="Wr3-Nr-7yO" kind="popover" popoverAnchorView="gac-7Q-yvY" id="o8i-Re-a8F">
+                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                    </segue>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="gac-7Q-yvY" secondAttribute="trailing" constant="20" id="4Xs-sN-1oF"/>
+                            <constraint firstItem="gac-7Q-yvY" firstAttribute="centerY" secondItem="FLX-7t-Qed" secondAttribute="centerY" id="55U-6S-BMa"/>
                             <constraint firstItem="xXo-39-sIV" firstAttribute="top" secondItem="r3D-2s-oFW" secondAttribute="bottom" constant="20" id="MI9-BC-oO3"/>
                             <constraint firstItem="GfL-PH-V6W" firstAttribute="top" secondItem="FLX-7t-Qed" secondAttribute="bottom" id="OlI-oL-0eE"/>
                             <constraint firstItem="GfL-PH-V6W" firstAttribute="width" secondItem="xbb-lw-BU9" secondAttribute="width" id="PXL-ag-rZu"/>
@@ -7199,6 +7225,7 @@
                         <outlet property="h2" destination="rJW-C8-L5e" id="GXn-Nn-R4F"/>
                         <outlet property="h2z2" destination="gR7-iI-KgM" id="3lg-Ln-Qif"/>
                         <outlet property="header" destination="FLX-7t-Qed" id="Kux-HO-uO8"/>
+                        <outlet property="lockIcon" destination="gac-7Q-yvY" id="YOj-Ju-uoD"/>
                         <outlet property="tvArgs" destination="0R1-g3-niy" id="v6h-63-jgv"/>
                         <outlet property="tvValues" destination="DVV-dk-r4S" id="EbP-EM-GAH"/>
                     </connections>
@@ -7261,6 +7288,17 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kqn-Ey-B3d">
+                                <rect key="frame" x="651" y="59" width="32" height="32"/>
+                                <state key="normal" image="Lock">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="Wr3-Nr-7yO" kind="popover" popoverAnchorView="kqn-Ey-B3d" id="vrA-OC-rcf">
+                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                    </segue>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -7272,6 +7310,7 @@
                             <constraint firstAttribute="trailing" secondItem="34t-53-7fK" secondAttribute="trailing" constant="20" id="FvZ-ag-Tme"/>
                             <constraint firstAttribute="trailing" secondItem="CDr-Nv-lJP" secondAttribute="trailing" constant="20" id="IjW-4S-pIu"/>
                             <constraint firstAttribute="trailing" secondItem="j6q-Fe-oC2" secondAttribute="trailing" constant="20" id="Jes-32-hr5"/>
+                            <constraint firstAttribute="trailing" secondItem="kqn-Ey-B3d" secondAttribute="trailing" constant="20" id="OjF-DH-MxI"/>
                             <constraint firstItem="cht-s2-r1Y" firstAttribute="leading" secondItem="4OA-Jh-Kgk" secondAttribute="leading" id="PGU-WL-Bvb"/>
                             <constraint firstItem="XwY-yg-3WL" firstAttribute="leading" secondItem="cht-s2-r1Y" secondAttribute="trailing" constant="20" id="bmq-tZ-Hk1"/>
                             <constraint firstItem="Ebl-RO-lHC" firstAttribute="top" secondItem="cht-s2-r1Y" secondAttribute="bottom" constant="20" id="cfM-DR-XJK"/>
@@ -7279,6 +7318,7 @@
                             <constraint firstItem="cht-s2-r1Y" firstAttribute="baseline" secondItem="XwY-yg-3WL" secondAttribute="baseline" id="h2o-Pg-lyb"/>
                             <constraint firstItem="cht-s2-r1Y" firstAttribute="leading" secondItem="Ebl-RO-lHC" secondAttribute="leading" id="k8P-mb-jTt"/>
                             <constraint firstItem="CDr-Nv-lJP" firstAttribute="top" secondItem="Qt3-s2-HNV" secondAttribute="bottom" constant="20" id="mGp-rh-7B1"/>
+                            <constraint firstItem="CDr-Nv-lJP" firstAttribute="centerY" secondItem="kqn-Ey-B3d" secondAttribute="centerY" id="o2O-QL-TTK"/>
                             <constraint firstItem="XwY-yg-3WL" firstAttribute="leading" secondItem="34t-53-7fK" secondAttribute="leading" id="oM6-Je-KDg"/>
                             <constraint firstItem="CDr-Nv-lJP" firstAttribute="leading" secondItem="qGR-N8-KrD" secondAttribute="leading" constant="20" id="q6g-XY-VX7"/>
                             <constraint firstItem="sdE-bn-1uA" firstAttribute="top" secondItem="j6q-Fe-oC2" secondAttribute="bottom" id="swU-Dm-EUz"/>
@@ -7291,6 +7331,7 @@
                         <outlet property="components" destination="j6q-Fe-oC2" id="BsM-aq-4tR"/>
                         <outlet property="header" destination="CDr-Nv-lJP" id="Gxv-dG-cih"/>
                         <outlet property="isosig" destination="XwY-yg-3WL" id="6YY-HB-MgQ"/>
+                        <outlet property="lockIcon" destination="kqn-Ey-B3d" id="Vce-HM-cfW"/>
                         <outlet property="standard" destination="34t-53-7fK" id="ePj-OX-HBs"/>
                     </connections>
                 </viewController>
@@ -7480,6 +7521,17 @@
                                     <constraint firstAttribute="height" constant="20" id="p03-6L-Ux2"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VaN-E4-8m4">
+                                <rect key="frame" x="651" y="59" width="32" height="32"/>
+                                <state key="normal" image="Lock">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="Wr3-Nr-7yO" kind="popover" popoverAnchorView="VaN-E4-8m4" id="G8y-vN-7pv">
+                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                    </segue>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -7497,6 +7549,7 @@
                             <constraint firstItem="74X-Uy-gxL" firstAttribute="centerY" secondItem="CHV-0u-EsB" secondAttribute="centerY" id="Iza-cx-atH"/>
                             <constraint firstItem="keW-Jz-uHx" firstAttribute="top" secondItem="UIg-3o-tU6" secondAttribute="bottom" constant="40" id="KLq-ES-MpW"/>
                             <constraint firstItem="jRr-36-lyt" firstAttribute="top" secondItem="dHr-IQ-pnb" secondAttribute="top" id="O0v-lF-gcX"/>
+                            <constraint firstItem="UIg-3o-tU6" firstAttribute="centerY" secondItem="VaN-E4-8m4" secondAttribute="centerY" id="O2Q-LU-M5h"/>
                             <constraint firstItem="KOo-rp-EYQ" firstAttribute="leading" secondItem="bWS-TZ-jQs" secondAttribute="trailing" id="OXT-k5-r2y"/>
                             <constraint firstAttribute="centerX" secondItem="74X-Uy-gxL" secondAttribute="centerX" id="Pjf-kM-6JL"/>
                             <constraint firstItem="yvR-fT-Jfv" firstAttribute="height" secondItem="fj9-zf-giO" secondAttribute="height" id="Pmh-Et-foe"/>
@@ -7512,6 +7565,7 @@
                             <constraint firstItem="vT4-AR-b3O" firstAttribute="top" secondItem="74X-Uy-gxL" secondAttribute="bottom" constant="20" id="cii-ae-Ypm"/>
                             <constraint firstAttribute="centerX" secondItem="keW-Jz-uHx" secondAttribute="centerX" id="dM9-8p-8Qy"/>
                             <constraint firstItem="UIg-3o-tU6" firstAttribute="leading" secondItem="hEa-rG-gcc" secondAttribute="leading" constant="20" id="eV9-wT-afe"/>
+                            <constraint firstAttribute="trailing" secondItem="VaN-E4-8m4" secondAttribute="trailing" constant="20" id="gfC-jT-cil"/>
                             <constraint firstItem="uMd-mm-lfO" firstAttribute="leading" secondItem="xMl-C9-7T3" secondAttribute="trailing" id="jDS-e0-EbY"/>
                             <constraint firstItem="yvR-fT-Jfv" firstAttribute="height" secondItem="Lax-Hi-k83" secondAttribute="height" id="jaV-R2-xDI"/>
                             <constraint firstItem="Lax-Hi-k83" firstAttribute="top" secondItem="FnG-UG-cNk" secondAttribute="bottom" constant="8" id="jrM-zp-3MV"/>
@@ -7527,6 +7581,7 @@
                     <connections>
                         <outlet property="census" destination="dHr-IQ-pnb" id="Q0K-tG-DxX"/>
                         <outlet property="header" destination="UIg-3o-tU6" id="lyQ-zg-yOG"/>
+                        <outlet property="lockIcon" destination="VaN-E4-8m4" id="6LG-Gp-rhN"/>
                         <outlet property="manifold" destination="xMl-C9-7T3" id="Zpy-Oc-fEv"/>
                         <outlet property="properties" destination="FnG-UG-cNk" id="ogV-XT-Y5b"/>
                     </connections>
@@ -7554,31 +7609,31 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Solution type:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zUK-qB-2Y4">
-                                <rect key="frame" x="286" y="356.5" width="106" height="20.5"/>
+                                <rect key="frame" x="286" y="356" width="106" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Volume:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wGC-TV-aWK">
-                                <rect key="frame" x="330" y="396.5" width="61.5" height="20.5"/>
+                                <rect key="frame" x="330" y="396" width="61.5" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KNG-aT-hi5">
-                                <rect key="frame" x="412" y="356.5" width="5" height="20.5"/>
+                                <rect key="frame" x="412" y="356" width="5" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UFd-3z-PXe">
-                                <rect key="frame" x="412" y="396.5" width="5" height="20.5"/>
+                                <rect key="frame" x="412" y="396" width="5" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="For more detailed information:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zHZ-L7-j1N">
-                                <rect key="frame" x="236" y="628.5" width="231" height="20.5"/>
+                                <rect key="frame" x="236" y="628" width="231" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
@@ -7599,21 +7654,21 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vMo-YC-zqO">
-                                <rect key="frame" x="347" y="425.5" width="10" height="195.5"/>
+                                <rect key="frame" x="347" y="425" width="10" height="196"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="10" id="I8g-LI-P2T"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7XH-05-RhD">
-                                <rect key="frame" x="347" y="152" width="10" height="196.5"/>
+                                <rect key="frame" x="347" y="152" width="10" height="196"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="10" id="kt0-Jj-xk6"/>
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jQ3-B5-RIe">
-                                <rect key="frame" x="20" y="396.5" width="5" height="20.5"/>
+                                <rect key="frame" x="20" y="396" width="5" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
@@ -7641,6 +7696,17 @@
                                     <action selector="toSnapPea:" destination="BiH-OW-Gco" eventType="touchUpInside" id="bDc-AN-a4r"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LGC-Kt-V0f">
+                                <rect key="frame" x="651" y="59" width="32" height="32"/>
+                                <state key="normal" image="Lock">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="Wr3-Nr-7yO" kind="popover" popoverAnchorView="LGC-Kt-V0f" id="QoR-Tt-bF3">
+                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                    </segue>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -7655,11 +7721,13 @@
                             <constraint firstAttribute="trailing" secondItem="XSa-72-flk" secondAttribute="trailing" constant="20" id="INN-Hb-K4H"/>
                             <constraint firstItem="VAO-dS-4ib" firstAttribute="leading" secondItem="Iza-WL-gdI" secondAttribute="leading" constant="20" id="IYS-pB-Fp7"/>
                             <constraint firstItem="aFB-5N-ZPt" firstAttribute="leading" secondItem="fuA-Ef-7gy" secondAttribute="trailing" constant="8" id="Jj4-Y0-alp"/>
+                            <constraint firstItem="XSa-72-flk" firstAttribute="centerY" secondItem="LGC-Kt-V0f" secondAttribute="centerY" id="LCS-ON-dZl"/>
                             <constraint firstItem="zUK-qB-2Y4" firstAttribute="leading" secondItem="VAO-dS-4ib" secondAttribute="trailing" constant="8" id="LEm-9m-wmQ"/>
                             <constraint firstItem="KNG-aT-hi5" firstAttribute="leading" secondItem="UFd-3z-PXe" secondAttribute="leading" id="Mf2-8W-U1d"/>
                             <constraint firstItem="7XH-05-RhD" firstAttribute="height" secondItem="vMo-YC-zqO" secondAttribute="height" id="PfC-pW-eMP"/>
                             <constraint firstAttribute="centerX" secondItem="zHZ-L7-j1N" secondAttribute="centerX" id="PmB-1d-Vwy"/>
                             <constraint firstItem="zUK-qB-2Y4" firstAttribute="baseline" secondItem="KNG-aT-hi5" secondAttribute="baseline" id="Ptq-An-3lS"/>
+                            <constraint firstAttribute="trailing" secondItem="LGC-Kt-V0f" secondAttribute="trailing" constant="20" id="Q5w-7R-Ki7"/>
                             <constraint firstItem="XSa-72-flk" firstAttribute="leading" secondItem="Iza-WL-gdI" secondAttribute="leading" constant="20" id="Tgr-za-si7"/>
                             <constraint firstItem="B78-EJ-K3D" firstAttribute="top" secondItem="XSa-72-flk" secondAttribute="bottom" constant="40" id="Tvg-Mz-NDs"/>
                             <constraint firstItem="vMo-YC-zqO" firstAttribute="top" secondItem="UFd-3z-PXe" secondAttribute="bottom" constant="8" id="WE0-ZR-RP8"/>
@@ -7685,6 +7753,7 @@
                         <outlet property="convertIcon" destination="fuA-Ef-7gy" id="ztT-Iw-1dS"/>
                         <outlet property="convertLabel" destination="zHZ-L7-j1N" id="jyf-Sc-9OP"/>
                         <outlet property="header" destination="XSa-72-flk" id="qyY-f0-oZs"/>
+                        <outlet property="lockIcon" destination="LGC-Kt-V0f" id="Et5-LW-cp7"/>
                         <outlet property="solnType" destination="KNG-aT-hi5" id="h3I-kA-N4T"/>
                         <outlet property="volume" destination="UFd-3z-PXe" id="1sD-k4-buG"/>
                     </connections>
@@ -7949,10 +8018,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="575" height="200"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" showsHorizontalScrollIndicator="NO" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qDa-jb-hJE">
-                                <rect key="frame" x="20" y="20" width="510" height="160"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qDa-jb-hJE">
+                                <rect key="frame" x="20" y="20" width="535" height="160"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <string key="text">This triangulation has associated normal surfaces and/or angle structures, and so you cannot change its gluings.  You may clone the triangulation, and then edit the clone instead.  To clone a packet, tap and hold it in the list of packets on the left.</string>
+                                <mutableString key="text">This triangulation has associated normal surfaces and/or angle structures, and so you cannot change its tetrahedron gluings.  You may clone the triangulation, and then edit the clone instead.  To clone a packet, tap and hold it in the list of packets on the left.</mutableString>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
@@ -7971,7 +8040,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GuV-pt-pB8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6292" y="948"/>
+            <point key="canvasLocation" x="7789.5" y="2519"/>
         </scene>
     </scenes>
     <resources>
@@ -8008,6 +8077,7 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="iPv-1V-ozc"/>
         <segue reference="sZ3-q9-8Px"/>
     </inferredMetricsTieBreakers>
 </document>

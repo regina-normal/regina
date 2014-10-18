@@ -40,6 +40,6 @@ namespace regina {
 
 @property (assign, nonatomic) regina::NTriangulation* packet;
 
-- (void)updateHeader:(UILabel*)header;
+- (void)updateHeader:(UILabel*)header lockIcon:(UIButton*)lockIcon;
 
 @end

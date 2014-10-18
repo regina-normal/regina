@@ -82,6 +82,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UILabel *volume;
 @property (weak, nonatomic) IBOutlet UILabel *solnType;
+@property (weak, nonatomic) IBOutlet UIButton *lockIcon;
 
 @property (weak, nonatomic) IBOutlet UITableView *properties;
 @property (weak, nonatomic) IBOutlet UILabel *manifold;
@@ -106,7 +107,7 @@
     if ([self.parentViewController isKindOfClass:[SnapPeaViewController class]])
         [static_cast<SnapPeaViewController*>(self.parentViewController) updateHeader:self.header volume:self.volume solnType:self.solnType];
     else
-        [static_cast<TriangulationViewController*>(self.parentViewController) updateHeader:self.header];
+        [static_cast<TriangulationViewController*>(self.parentViewController) updateHeader:self.header lockIcon:self.lockIcon];
 
     manifoldName = nil;
     isHyp.clear();
