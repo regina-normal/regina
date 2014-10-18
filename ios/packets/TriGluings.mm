@@ -291,7 +291,9 @@
         return;
     }
     
+    regina::NPacket::ChangeEventSpan span(self.packet);
     self.packet->idealToFinite();
+    self.packet->intelligentSimplify();
 }
 
 - (IBAction)makeIdeal:(id)sender
@@ -307,8 +309,10 @@
         [alert show];
         return;
     }
-    
+
+    regina::NPacket::ChangeEventSpan span(self.packet);
     self.packet->finiteToIdeal();
+    self.packet->intelligentSimplify();
 }
 
 - (IBAction)doubleCover:(id)sender
@@ -331,7 +335,10 @@
         [alert show];
         return;
     }
+
+    regina::NPacket::ChangeEventSpan span(self.packet);
     self.packet->puncture();
+    self.packet->intelligentSimplify();
 }
 
 - (IBAction)elementaryMove:(id)sender
@@ -353,6 +360,7 @@
                                                                 @"Double cover",
                                                                 @"Puncture",
                                                                 @"Elementary move…",
+                                                                nil];
     [sheet showFromRect:self.actionsButton.frame inView:self.view animated:YES];
 }
 
