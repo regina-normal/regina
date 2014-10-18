@@ -106,6 +106,16 @@
         [alert show];
         return;
     }
+
+    if (! self.packet->isPacketEditable()) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Cannot Change Gluings"
+                                                        message:@"This triangulation has associated normal surfaces and/or angle structures, and so you cannot change its tetrahedron gluings."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
     
     self.packet->randomise();
 }
