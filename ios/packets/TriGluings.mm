@@ -36,7 +36,6 @@
 #import "packet/ncontainer.h"
 #import "triangulation/ntriangulation.h"
 
-// TODO: Padlock on headers for all tabs.
 // TODO: Don't forget the keyboard scrolling nonsense.
 // TODO: A few deletes and then we get stuck.
 // TODO: Extend height of tap region to the entire cell.
