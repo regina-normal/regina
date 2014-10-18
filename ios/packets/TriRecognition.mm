@@ -441,7 +441,7 @@
                              [ReginaHelper viewPacket:small];
                          } else {
                              UIAlertView* alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%ld Prime Summands", nSummands]
-                                                                             message:@"This is a composite manifold.  I have constructed new triangulations for each of its summands."
+                                                                             message:@"This is a composite manifold.  I have constructed a new triangulation for each summand."
                                                                             delegate:nil
                                                                    cancelButtonTitle:@"Close"
                                                                    otherButtonTitles:nil];
