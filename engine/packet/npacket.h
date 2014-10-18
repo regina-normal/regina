@@ -252,6 +252,32 @@ class REGINA_API NPacket : public ShareableObject {
         std::string getHumanLabel() const;
 
         /**
+         * Returns the label of this packet adorned with the given string.
+         *
+         * An adornment typically shows how a packet has been created
+         * and/or modified.  For instance, the \a adornment argument
+         * might be "Filled", or "Summand #1".
+         *
+         * The way in which the packet label is adorned depends upon
+         * the label itself (in particular, an empty packet label
+         * will be handled in a sensible way).  The way in which the
+         * packet label is adorned is subject to change in future versions
+         * of Regina.
+         *
+         * Note that, whilst this routine returns a modified version of the
+         * packet label, the label itself will not be permamently changed.
+         *
+         * @param adornment the string that will be used to adorn this
+         * packet label.  The adornment should just be a piece of
+         * English, ideally beginning with an upper-case letter.
+         * It should not contain any surrounding punctuation such as
+         * brackets or a dash (this will be added automatically by
+         * this routine as required).
+         * @return a copy of the packet label with the given adornment.
+         */
+        std::string adornedLabel(const std::string& adornment) const;
+
+        /**
          * Sets the label associated with this individual packet.
          *
          * \pre No other packet in the overall tree

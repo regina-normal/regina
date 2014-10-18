@@ -43,6 +43,7 @@
 #include "packet/npacketlistener.h"
 #include "packet/nscript.h"
 #include "utilities/base64.h"
+#include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {
@@ -69,6 +70,17 @@ NPacket::~NPacket() {
 
 std::string NPacket::getFullName() const {
     return getHumanLabel() + " (" + getPacketTypeName() + ")";
+}
+
+std::string NPacket::adornedLabel(const std::string& adornment) const {
+    std::string ans = stripWhitespace(packetLabel);
+    if (ans.empty())
+        return adornment;
+
+    ans += " (";
+    ans += adornment;
+    ans += ')';
+    return ans;
 }
 
 void NPacket::setPacketLabel(const std::string& newLabel) {

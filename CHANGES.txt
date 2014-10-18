@@ -34,6 +34,7 @@ Version 4.97  [ (under development) ]
         Class NPacket:
             - Added a variant of save() that takes an output stream (as
               opposed to a filename).
+            - New routine adornedLabel() for creating modified packet labels.
         Class NPacketListener:
             - New events childToBeRenamed(), childWasRenamed().
         Class NSurfaceFilterProperties:
