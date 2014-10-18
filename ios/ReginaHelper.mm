@@ -95,6 +95,19 @@ BOOL ios8;
         [tree selectPacket:packet];
 }
 
++ (void)viewChildren:(regina::NPacket *)packet
+{
+    PacketTreeController* tree = [ReginaHelper tree];
+    [tree navigateToPacket:packet];
+
+    regina::NPacket* child = packet->getFirstTreeChild();
+
+    if (child && ! child->getNextTreeSibling()) {
+        detail.packet = packet->getFirstTreeChild();
+        [tree selectPacket:child];
+    }
+}
+
 + (void)notify:(NSString *)message detail:(NSString *)detail
 {
     // Using TSMessage:

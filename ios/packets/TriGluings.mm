@@ -30,16 +30,20 @@
  *                                                                        *
  **************************************************************************/
 
+#import "ReginaHelper.h"
 #import "TriangulationViewController.h"
 #import "TriGluings.h"
+#import "packet/ncontainer.h"
 #import "triangulation/ntriangulation.h"
 
+// TODO: Padlock on headers for all tabs.
 // TODO: Don't forget the keyboard scrolling nonsense.
 // TODO: A few deletes and then we get stuck.
 // TODO: Extend height of tap region to the entire cell.
 // TODO: Child deleted -> refresh editability behaviours / indicators
 // TODO: Disable edit actions on this viewer for read-only triangulations.
 // TODO: Provide a way to clone packets.
+// TODO: NPacket::adornedLabel();
 
 #pragma mark - Table cell
 
@@ -267,13 +271,57 @@
 {
     [self endEditing];
     
-    // TODO: Implement extract components.
+    if (self.packet->isEmpty()) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Empty Triangulation"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    if (self.packet->isConnected()) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Triangulation is Connected"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+
+    // Where to insert the components?
+    // If there are already children of this triangulation, insert
+    // the new triangulations at a deeper level.
+    regina::NPacket* base;
+    if (self.packet->getFirstTreeChild()) {
+        base = new regina::NContainer();
+        self.packet->insertChildLast(base);
+        if (self.packet->getPacketLabel().empty())
+            base->setPacketLabel("Components");
+        else
+            base->setPacketLabel(self.packet->getPacketLabel() + " (Components)");
+    } else
+        base = self.packet;
+
+    // Make the split.
+    unsigned long nComps = self.packet->splitIntoComponents(base);
+
+    // Tell the user what happened.
+    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%ld Components Extracted", nComps]
+                                                    message:@"I have constructed a new triangulation for each component."
+                                                   delegate:nil
+                                          cancelButtonTitle:@"Close"
+                                          otherButtonTitles:nil];
+    [alert show];
+
+    [ReginaHelper viewChildren:base];
 }
 
 - (IBAction)barycentricSubdivision:(id)sender
 {
     [self endEditing];
-    
+
     self.packet->barycentricSubdivision();
 }
 

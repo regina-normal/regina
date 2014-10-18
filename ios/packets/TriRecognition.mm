@@ -446,7 +446,7 @@
                                                                    cancelButtonTitle:@"Close"
                                                                    otherButtonTitles:nil];
                              [alert show];
-                             [ReginaHelper viewPacket:base];
+                             [ReginaHelper viewChildren:base];
                          }
                          
                          // We might have learned something new for the recognition tab to show.
