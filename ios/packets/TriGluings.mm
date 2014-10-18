@@ -37,7 +37,9 @@
 // TODO: Don't forget the keyboard scrolling nonsense.
 // TODO: A few deletes and then we get stuck.
 // TODO: Extend height of tap region to the entire cell.
-// TODO: Use a padlock to indicate uneditability?
+// TODO: Child deleted -> refresh editability behaviours / indicators
+// TODO: Disable edit actions on this viewer for read-only triangulations.
+// TODO: Provide a way to clone packets.
 
 #pragma mark - Table cell
 
@@ -63,6 +65,7 @@
     BOOL myEdit;
 }
 @property (weak, nonatomic) IBOutlet UILabel *header;
+@property (weak, nonatomic) IBOutlet UIButton *lockIcon;
 @property (weak, nonatomic) IBOutlet UITableView *tetrahedra;
 @property (weak, nonatomic) IBOutlet UIButton *orientButton;
 @property (weak, nonatomic) IBOutlet UIButton *orientIcon;
@@ -99,6 +102,7 @@
         return;
     
     [self.viewer updateHeader:self.header];
+    self.lockIcon.hidden = self.packet->isPacketEditable();
     self.orientButton.enabled = self.orientIcon.enabled = (self.packet->isOrientable() && ! self.packet->isOriented());
     [self.tetrahedra reloadData];
 }
