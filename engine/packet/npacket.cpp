@@ -43,6 +43,7 @@
 #include "packet/npacketlistener.h"
 #include "packet/nscript.h"
 #include "utilities/base64.h"
+#include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {
@@ -69,6 +70,17 @@ NPacket::~NPacket() {
 
 std::string NPacket::getFullName() const {
     return getHumanLabel() + " (" + getPacketTypeName() + ")";
+}
+
+std::string NPacket::adornedLabel(const std::string& adornment) const {
+    std::string ans = stripWhitespace(packetLabel);
+    if (ans.empty())
+        return adornment;
+
+    ans += " (";
+    ans += adornment;
+    ans += ')';
+    return ans;
 }
 
 void NPacket::setPacketLabel(const std::string& newLabel) {
@@ -522,7 +534,7 @@ NPacket* NPacket::clone(bool cloneDescendants, bool end) const {
     if (treeParent == 0)
         return 0;
     NPacket* ans = internalClonePacket(treeParent);
-    ans->setPacketLabel(packetLabel + " - clone");
+    ans->setPacketLabel(adornedLabel("Clone"));
     if (end)
         treeParent->insertChildLast(ans);
     else
@@ -562,7 +574,7 @@ void NPacket::internalCloneDescendants(NPacket* parent) const {
     NPacket* clone;
     while (child) {
         clone = child->internalClonePacket(parent);
-        clone->setPacketLabel(child->packetLabel + " - clone");
+        clone->setPacketLabel(child->packetLabel);
         parent->insertChildLast(clone);
         child->internalCloneDescendants(clone);
         child = child->nextTreeSibling;

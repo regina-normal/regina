@@ -90,8 +90,6 @@ namespace {
         NTriangulation::splitIntoComponents, 0, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_connectedSumDecomposition,
         NTriangulation::connectedSumDecomposition, 0, 2);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_idealToFinite,
-        NTriangulation::idealToFinite, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_puncture,
         NTriangulation::puncture, 0, 1);
 
@@ -350,8 +348,7 @@ void addNTriangulation() {
         .def("isHaken", &NTriangulation::isHaken)
         .def("knowsHaken", &NTriangulation::knowsHaken)
         .def("makeDoubleCover", &NTriangulation::makeDoubleCover)
-        .def("idealToFinite", &NTriangulation::idealToFinite,
-            OL_idealToFinite())
+        .def("idealToFinite", &NTriangulation::idealToFinite)
         .def("finiteToIdeal", &NTriangulation::finiteToIdeal)
         .def("barycentricSubdivision", &NTriangulation::barycentricSubdivision)
         .def("drillEdge", &NTriangulation::drillEdge)

@@ -111,6 +111,7 @@ void addNPacket() {
         .def("getPacketLabel", &NPacket::getPacketLabel,
             return_value_policy<return_by_value>())
         .def("getHumanLabel", &NPacket::getHumanLabel)
+        .def("adornedLabel", &NPacket::adornedLabel)
         .def("setPacketLabel", &NPacket::setPacketLabel)
         .def("getFullName", &NPacket::getFullName)
         .def("makeUniqueLabel", &NPacket::makeUniqueLabel)

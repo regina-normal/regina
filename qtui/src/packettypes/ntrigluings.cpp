@@ -812,8 +812,11 @@ void NTriGluingsUI::idealToFinite() {
         ReginaSupport::info(ui,
             tr("This triangulation has no ideal vertices."),
             tr("Only ideal vertices will be truncated."));
-    else
+    else {
+        regina::NPacket::ChangeEventSpan span(tri);
         tri->idealToFinite();
+        tri->intelligentSimplify();
+    }
 }
 
 void NTriGluingsUI::finiteToIdeal() {
@@ -824,8 +827,11 @@ void NTriGluingsUI::finiteToIdeal() {
             tr("This triangulation has no real boundary components."),
             tr("Only real boundary components will be converted into "
             "ideal vertices."));
-    else
+    else {
+        regina::NPacket::ChangeEventSpan span(tri);
         tri->finiteToIdeal();
+        tri->intelligentSimplify();
+    }
 }
 
 void NTriGluingsUI::elementaryMove() {
@@ -846,8 +852,11 @@ void NTriGluingsUI::puncture() {
     if (tri->isEmpty())
         ReginaSupport::info(ui,
             tr("I cannot puncture an empty triangulation."));
-    else
+    else {
+        regina::NPacket::ChangeEventSpan span(tri);
         tri->puncture();
+        tri->intelligentSimplify();
+    }
 }
 
 void NTriGluingsUI::drillEdge() {
@@ -871,7 +880,7 @@ void NTriGluingsUI::drillEdge() {
 
             regina::NTriangulation* ans = new regina::NTriangulation(*tri);
             ans->drillEdge(ans->getEdge(chosen->index()));
-            ans->setPacketLabel(tri->getPacketLabel() + " (Drilled)");
+            ans->setPacketLabel(tri->adornedLabel("Drilled"));
             tri->insertChildLast(ans);
             enclosingPane->getMainWindow()->packetView(ans, true, true);
         }
@@ -975,10 +984,7 @@ void NTriGluingsUI::splitIntoComponents() {
         if (tri->getFirstTreeChild()) {
             base = new regina::NContainer();
             tri->insertChildLast(base);
-            if (tri->getPacketLabel().empty())
-                base->setPacketLabel("Components");
-            else
-                base->setPacketLabel(tri->getPacketLabel() + " - Components");
+            base->setPacketLabel(tri->adornedLabel("Components"));
         } else
             base = tri;
 
@@ -1019,10 +1025,7 @@ void NTriGluingsUI::connectedSumDecomposition() {
         if (tri->getFirstTreeChild()) {
             base = new regina::NContainer();
             tri->insertChildLast(base);
-            if (tri->getPacketLabel().empty())
-                base->setPacketLabel("Summands");
-            else
-                base->setPacketLabel(tri->getPacketLabel() + " - Summands");
+            base->setPacketLabel(tri->adornedLabel("Summands"));
         } else
             base = tri;
 

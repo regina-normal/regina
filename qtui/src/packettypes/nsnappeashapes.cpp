@@ -506,7 +506,7 @@ void NSnapPeaShapesUI::fill() {
                     "triangulation."),
                 tr("Please report this to the Regina developers."));
         } else {
-            ans->setPacketLabel(tri->getPacketLabel() + " (Filled)");
+            ans->setPacketLabel(tri->adornedLabel("Filled"));
             tri->insertChildLast(ans);
             enclosingPane->getMainWindow()->packetView(ans, true, true);
         }

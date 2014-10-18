@@ -15,6 +15,7 @@ set (IMGS
   filter_comb
   filter_prop
   finite
+  locked
   orb
   orient
   packet_angles
