@@ -880,7 +880,7 @@ void NTriGluingsUI::drillEdge() {
 
             regina::NTriangulation* ans = new regina::NTriangulation(*tri);
             ans->drillEdge(ans->getEdge(chosen->index()));
-            ans->setPacketLabel(tri->getPacketLabel() + " (Drilled)");
+            ans->setPacketLabel(tri->adornedLabel("Drilled"));
             tri->insertChildLast(ans);
             enclosingPane->getMainWindow()->packetView(ans, true, true);
         }
@@ -984,10 +984,7 @@ void NTriGluingsUI::splitIntoComponents() {
         if (tri->getFirstTreeChild()) {
             base = new regina::NContainer();
             tri->insertChildLast(base);
-            if (tri->getPacketLabel().empty())
-                base->setPacketLabel("Components");
-            else
-                base->setPacketLabel(tri->getPacketLabel() + " - Components");
+            base->setPacketLabel(tri->adornedLabel("Components"));
         } else
             base = tri;
 
@@ -1028,10 +1025,7 @@ void NTriGluingsUI::connectedSumDecomposition() {
         if (tri->getFirstTreeChild()) {
             base = new regina::NContainer();
             tri->insertChildLast(base);
-            if (tri->getPacketLabel().empty())
-                base->setPacketLabel("Summands");
-            else
-                base->setPacketLabel(tri->getPacketLabel() + " - Summands");
+            base->setPacketLabel(tri->adornedLabel("Summands"));
         } else
             base = tri;
 

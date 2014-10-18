@@ -534,7 +534,7 @@ NPacket* NPacket::clone(bool cloneDescendants, bool end) const {
     if (treeParent == 0)
         return 0;
     NPacket* ans = internalClonePacket(treeParent);
-    ans->setPacketLabel(packetLabel + " - clone");
+    ans->setPacketLabel(adornedLabel("Clone"));
     if (end)
         treeParent->insertChildLast(ans);
     else
@@ -574,7 +574,7 @@ void NPacket::internalCloneDescendants(NPacket* parent) const {
     NPacket* clone;
     while (child) {
         clone = child->internalClonePacket(parent);
-        clone->setPacketLabel(child->packetLabel + " - clone");
+        clone->setPacketLabel(child->packetLabel);
         parent->insertChildLast(clone);
         child->internalCloneDescendants(clone);
         child = child->nextTreeSibling;
