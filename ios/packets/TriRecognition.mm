@@ -60,7 +60,6 @@
 // TODO: Census lookup: long press for more lines of information.
 // TODO: Make the internal table "just the right height".
 // TODO: Delete packets, return to parent -> needs to update "subpackets" labels.
-// TODO: Check census lookup line breaks (too aggressive).
 
 @interface PropertyCell : UITableViewCell
 @property (assign, nonatomic) int property;
@@ -191,21 +190,27 @@
     // Display the results of a census lookup.
     if (self.packet->getNumberOfTetrahedra() <= MAX_CENSUS_TRIANGULATION_SIZE) {
         regina::NCensusHits* hits = regina::NCensus::lookup(static_cast<regina::NTriangulation*>(self.packet)->isoSig());
-        if (hits->count() == 0)
+        if (hits->count() == 0) {
+            self.census.numberOfLines = 1;
             self.census.attributedText = [TextHelper dimString:@"Not found"];
-        else {
+        } else {
             NSMutableString* msg = [[NSMutableString alloc] init];
             const regina::NCensusHit* hit;
+            int nHits = 0;
             for (hit = hits->first(); hit; hit = hit->next()) {
                 if (hit != hits->first())
                     [msg appendString:@"\n"];
                 [msg appendString:@(hit->name().c_str())];
+                ++nHits;
             }
+            self.census.numberOfLines = nHits;
             self.census.text = msg;
         }
         delete hits;
-    } else
+    } else {
+        self.census.numberOfLines = 1;
         self.census.attributedText = [TextHelper dimString:@"Not found"];
+    }
 
     [self updateHyperbolic];
     [self.properties reloadData];
