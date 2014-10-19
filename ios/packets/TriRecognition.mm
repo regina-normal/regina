@@ -59,7 +59,6 @@
 
 // TODO: Census lookup: long press for more lines of information.
 // TODO: Make the internal table "just the right height".
-// TODO: #decomp -> need to add "%d children" in the master view in a timely manner (this is currently very slow).
 // TODO: Delete packets, return to parent -> needs to update "subpackets" labels.
 
 @interface PropertyCell : UITableViewCell
@@ -355,17 +354,7 @@
         return;
     }
 
-    // Where to insert the summands?
-    // If there are already children of this triangulation, insert
-    // the new triangulations at a deeper level.
-    regina::NPacket* base;
-    if (self.packet->getFirstTreeChild()) {
-        base = new regina::NContainer();
-        self.packet->insertChildLast(base);
-        base->setPacketLabel(self.packet->adornedLabel("Summands"));
-    } else
-        base = self.packet;
-
+    regina::NPacket* base = new regina::NContainer();
     __block long nSummands = 0;
     [ReginaHelper runWithHUD:@"Decomposing…"
                         code:^{
@@ -373,6 +362,7 @@
                         }
                      cleanup:^{
                          if (nSummands < 0) {
+                             delete base;
                              UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Two-Sided Projective Plane"
                                                                              message:@"This manifold contains an embedded two-sided projective plane.  Regina cannot always compute connected sum decompositions in such cases, and this happens to be one such case that it cannot resolve."
                                                                             delegate:nil
@@ -380,6 +370,7 @@
                                                                    otherButtonTitles:nil];
                              [alert show];
                          } else if (nSummands == 0) {
+                             delete base;
                              UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"S³"
                                                                              message:@"This is the 3-sphere.  It has no prime summands."
                                                                             delegate:nil
@@ -387,23 +378,25 @@
                                                                    otherButtonTitles:nil];
                              [alert show];
                          } else if (nSummands == 1) {
+                             regina::NTriangulation* small = static_cast<regina::NTriangulation*>(base->getFirstTreeChild());
+
                              // Special-case S2xS1, S2x~S1 and RP3, which do not have
                              // 0-efficient triangulations.
-                             regina::NTriangulation* small = static_cast<regina::NTriangulation*>(base->getFirstTreeChild());
-                             
                              if (small->getNumberOfTetrahedra() <= 2 && small->getHomologyH1().isZ()) {
                                  // The only closed prime manifolds with
                                  // H_1 = Z and <= 2 tetrahedra are S2xS1 and S2x~S1.
                                  if (small->isOrientable()) {
-                                     UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"S²×S¹"
-                                                                                     message:@"This is the prime manifold S²×S¹.  I have constructed a new minimal (but not 0-efficient) triangulation."
+                                     small->setPacketLabel("S² × S¹ (Minimal)");
+                                     UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"S² × S¹"
+                                                                                     message:@"This is the prime manifold S² × S¹.  I have constructed a new minimal (but not 0-efficient) triangulation."
                                                                                     delegate:nil
                                                                            cancelButtonTitle:@"Close"
                                                                            otherButtonTitles:nil];
                                      [alert show];
                                  } else {
-                                     UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"S²×~S¹"
-                                                                                     message:@"This is the prime manifold S²×~S¹ (the non-orientable twisted product).  I have constructed a new minimal (but not 0-efficient) triangulation."
+                                     small->setPacketLabel("S² × ~S¹ (Minimal)");
+                                     UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"S² × ~S¹"
+                                                                                     message:@"This is the prime manifold S² × ~S¹ (the non-orientable twisted product).  I have constructed a new minimal (but not 0-efficient) triangulation."
                                                                                     delegate:nil
                                                                            cancelButtonTitle:@"Close"
                                                                            otherButtonTitles:nil];
@@ -412,6 +405,7 @@
                              } else if (small->getNumberOfTetrahedra() <= 2 && small->getHomologyH1().isZn(2)) {
                                  // The only closed prime orientable manifold with
                                  // H_1 = Z_2 and <= 2 tetrahedra is RP3.
+                                 small->setPacketLabel("ℝP³ (Minimal)");
                                  UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"ℝP³"
                                                                                  message:@"This is the prime manifold ℝP³.  I have constructed a new minimal (but not 0-efficient) triangulation."
                                                                                 delegate:nil
@@ -419,6 +413,7 @@
                                                                        otherButtonTitles:nil];
                                  [alert show];
                              } else {
+                                 small->setPacketLabel(self.packet->adornedLabel("0-efficient"));
                                  UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Prime 3-Manifold"
                                                                                  message:@"This is a prime 3-manifold.  I have constructed a new 0-efficient triangulation."
                                                                                 delegate:nil
@@ -426,7 +421,9 @@
                                                                        otherButtonTitles:nil];
                                  [alert show];
                              }
-                             
+
+                             small->reparent(self.packet);
+                             delete base;
                              [ReginaHelper viewPacket:small];
                          } else {
                              UIAlertView* alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%ld Prime Summands", nSummands]
@@ -435,7 +432,18 @@
                                                                    cancelButtonTitle:@"Close"
                                                                    otherButtonTitles:nil];
                              [alert show];
-                             [ReginaHelper viewChildren:base];
+
+                             if (self.packet->getFirstTreeChild()) {
+                                 // This packet already has children.
+                                 // Insert the summands at a deeper level.
+                                 base->setPacketLabel(self.packet->adornedLabel("Summands"));
+                                 self.packet->insertChildLast(base);
+                                 [ReginaHelper viewChildren:base];
+                             } else {
+                                 base->transferChildren(self.packet);
+                                 delete base;
+                                 [ReginaHelper viewChildren:self.packet];
+                             }
                          }
                          
                          // We might have learned something new for the recognition tab to show.
