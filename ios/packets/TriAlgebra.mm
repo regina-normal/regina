@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#import "ReginaHelper.h"
 #import "TextHelper.h"
 #import "TriangulationViewController.h"
 #import "TriAlgebra.h"
@@ -312,6 +313,7 @@
     [self calculateTV];
 }
 
+// This may be called from either the main queue or a background thread.
 - (void)calculateTV
 {
     const regina::NTriangulation::TuraevViroSet& s = self.packet->allCalculatedTuraevViro();
@@ -328,8 +330,12 @@
                                        options:NSBinarySearchingInsertionIndex
                                usingComparator:^(TVItem* x, TVItem* y) { return [x compare:y]; }];
     [computed insertObject:item atIndex:index];
-    NSIndexPath* path = [NSIndexPath indexPathForRow:index inSection:0];
-    [self.tvValues insertRowsAtIndexPaths:@[path] withRowAnimation:YES];
+
+    // The table needs to be updated in the main queue.
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSIndexPath* path = [NSIndexPath indexPathForRow:index inSection:0];
+        [self.tvValues insertRowsAtIndexPaths:@[path] withRowAnimation:YES];
+    });
 }
 
 #pragma mark - Table view
@@ -360,8 +366,11 @@
     if (buttonIndex == alertView.cancelButtonIndex)
         return;
 
-    // TODO: Lock with processing spinner.
-    [self calculateTV];
+    [ReginaHelper runWithHUD:@"Calculating…"
+                        code:^{
+                            [self calculateTV];
+                        }
+                     cleanup:nil];
 }
 
 @end
