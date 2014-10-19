@@ -38,6 +38,24 @@
 #import "triangulation/ntriangulation.h"
 #import "triangulation/nvertex.h"
 
+@interface EdgeArg : NSObject
+@property (assign, nonatomic) unsigned long edge;
+@property (assign, nonatomic) int arg;
+- (id)init:(unsigned long)edge arg:(int)arg;
+@end
+
+@implementation EdgeArg
+- (id)init:(unsigned long)edge arg:(int)arg
+{
+    self = [super init];
+    if (self) {
+        _edge = edge;
+        _arg = arg;
+    }
+    return self;
+}
+@end
+
 @interface EltMovesController () {
     NSMutableArray* options32;
     NSMutableArray* options23;
@@ -111,6 +129,7 @@
                          self.packet->getNumberOfFaces<3>()];
 
     unsigned long i;
+    int arg;
 
     options32 = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->getNumberOfEdges(); ++i)
@@ -160,7 +179,22 @@
         self.detail14.attributedText = unavailable;
     }
 
-    // TODO
+    options44 = [[NSMutableArray alloc] init];
+    for (i = 0; i < self.packet->getNumberOfEdges(); ++i)
+        for (arg = 0; arg < 2; ++arg)
+            if (self.packet->fourFourMove(self.packet->getEdge(i), arg, true, false))
+                [options44 addObject:[[EdgeArg alloc] init:i arg:arg]];
+    if (options44.count > 0) {
+        self.button44.enabled = self.stepper44.enabled = YES;
+        self.stepper44.maximumValue = options44.count - 1;
+        if (self.stepper44.value >= options44.count)
+            self.stepper44.value = options44.count - 1;
+        else
+            [self changed44:nil];
+    } else {
+        self.button44.enabled = self.stepper44.enabled = NO;
+        self.detail44.attributedText = unavailable;
+    }
 
     options20Edge = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->getNumberOfEdges(); ++i)
@@ -194,7 +228,22 @@
         self.detail20Vtx.attributedText = unavailable;
     }
 
-    // TODO
+    options21 = [[NSMutableArray alloc] init];
+    for (i = 0; i < self.packet->getNumberOfEdges(); ++i)
+        for (arg = 0; arg < 2; ++arg)
+            if (self.packet->twoOneMove(self.packet->getEdge(i), arg, true, false))
+                [options21 addObject:[[EdgeArg alloc] init:i arg:arg]];
+    if (options21.count > 0) {
+        self.button21.enabled = self.stepper21.enabled = YES;
+        self.stepper21.maximumValue = options21.count - 1;
+        if (self.stepper21.value >= options21.count)
+            self.stepper21.value = options21.count - 1;
+        else
+            [self changed21:nil];
+    } else {
+        self.button21.enabled = self.stepper21.enabled = NO;
+        self.detail21.attributedText = unavailable;
+    }
 
     optionsOpenBook = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->getNumberOfTriangles(); ++i)
@@ -281,6 +330,16 @@
     return self.packet->getEdge([options[use] longValue]);
 }
 
+- (EdgeArg*)edgeArgFor:(UIStepper*)stepper options:(NSArray*)options
+{
+    NSInteger use = stepper.value;
+    if (use < 0 || use >= options.count) {
+        NSLog(@"Invalid edge-with-arg stepper value: %d", use);
+        return 0;
+    }
+    return options[use];
+}
+
 - (regina::NTriangle*)triangleFor:(UIStepper*)stepper options:(NSArray*)options
 {
     NSInteger use = stepper.value;
@@ -336,6 +395,34 @@
     const regina::NEdgeEmbedding& e0 = edge->getEmbedding(0);
     [text appendFormat:@"Edge %ld — %ld (%s)",
      edge->index(),
+     e0.getTetrahedron()->index(),
+     e0.getVertices().trunc2().c_str()];
+
+    if (edge->getNumberOfEmbeddings() > 1) {
+        const regina::NEdgeEmbedding& e1 = edge->getEmbedding(1);
+        [text appendFormat:@", %ld (%s)",
+         e1.getTetrahedron()->index(),
+         e1.getVertices().trunc2().c_str()];
+        if (edge->getNumberOfEmbeddings() > 2)
+            [text appendString:@", …"];
+    }
+
+    return [[NSAttributedString alloc] initWithString:text];
+}
+
+- (NSAttributedString*)edgeDesc:(EdgeArg*)edgeArg type:(NSString*)type
+{
+    if (! edgeArg)
+        return [TextHelper badString:@"Invalid edge-with-arg"];
+
+    NSMutableString* text = [[NSMutableString alloc] init];
+
+    regina::NEdge* edge = self.packet->getEdge(edgeArg.edge);
+    const regina::NEdgeEmbedding& e0 = edge->getEmbedding(0);
+    [text appendFormat:@"Edge %ld [%@ %d] — %ld (%s)",
+     edge->index(),
+     type,
+     edgeArg.arg,
      e0.getTetrahedron()->index(),
      e0.getVertices().trunc2().c_str()];
 
@@ -415,6 +502,12 @@
 
 - (IBAction)do44:(id)sender
 {
+    EdgeArg* use = [self edgeArgFor:self.stepper44 options:options44];
+    if (! use)
+        return;
+
+    self.packet->fourFourMove(self.packet->getEdge(use.edge), use.arg, true, true);
+    [self reloadMoves];
 }
 
 - (IBAction)do20Edge:(id)sender
@@ -439,6 +532,12 @@
 
 - (IBAction)do21:(id)sender
 {
+    EdgeArg* use = [self edgeArgFor:self.stepper21 options:options21];
+    if (! use)
+        return;
+
+    self.packet->twoOneMove(self.packet->getEdge(use.edge), use.arg, true, true);
+    [self reloadMoves];
 }
 
 - (IBAction)doOpenBook:(id)sender
@@ -498,6 +597,7 @@
 
 - (IBAction)changed44:(id)sender
 {
+    self.detail44.attributedText = [self edgeDesc:[self edgeArgFor:self.stepper44 options:options44] type:@"axis"];
 }
 
 - (IBAction)changed20Edge:(id)sender
@@ -512,6 +612,7 @@
 
 - (IBAction)changed21:(id)sender
 {
+    self.detail21.attributedText = [self edgeDesc:[self edgeArgFor:self.stepper21 options:options21] type:@"end"];
 }
 
 - (IBAction)changedOpenBook:(id)sender
