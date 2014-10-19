@@ -60,6 +60,7 @@
 // TODO: Census lookup: long press for more lines of information.
 // TODO: Make the internal table "just the right height".
 // TODO: Delete packets, return to parent -> needs to update "subpackets" labels.
+// TODO: Check census lookup line breaks (too aggressive).
 
 @interface PropertyCell : UITableViewCell
 @property (assign, nonatomic) int property;
