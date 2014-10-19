@@ -104,7 +104,11 @@
 
 - (void)reloadMoves
 {
-    // TODO: Update f-vector.
+    self.fVector.text = [NSString stringWithFormat:@"f-vector: (%ld, %ld, %ld, %ld)",
+                         self.packet->getNumberOfFaces<0>(),
+                         self.packet->getNumberOfFaces<1>(),
+                         self.packet->getNumberOfFaces<2>(),
+                         self.packet->getNumberOfFaces<3>()];
 
     unsigned long i;
 
@@ -139,8 +143,132 @@
         self.button23.enabled = self.stepper23.enabled = NO;
         self.detail23.attributedText = unavailable;
     }
-    
+
+    options14 = [[NSMutableArray alloc] init];
+    for (i = 0; i < self.packet->getNumberOfTetrahedra(); ++i)
+        if (self.packet->oneFourMove(self.packet->getTetrahedron(i), true, false))
+            [options14 addObject:@(i)];
+    if (options14.count > 0) {
+        self.button14.enabled = self.stepper14.enabled = YES;
+        self.stepper14.maximumValue = options14.count - 1;
+        if (self.stepper14.value >= options14.count)
+            self.stepper14.value = options14.count - 1;
+        else
+            [self changed14:nil];
+    } else {
+        self.button14.enabled = self.stepper14.enabled = NO;
+        self.detail14.attributedText = unavailable;
+    }
+
     // TODO
+
+    options20Edge = [[NSMutableArray alloc] init];
+    for (i = 0; i < self.packet->getNumberOfEdges(); ++i)
+        if (self.packet->twoZeroMove(self.packet->getEdge(i), true, false))
+            [options20Edge addObject:@(i)];
+    if (options20Edge.count > 0) {
+        self.button20Edge.enabled = self.stepper20Edge.enabled = YES;
+        self.stepper20Edge.maximumValue = options20Edge.count - 1;
+        if (self.stepper20Edge.value >= options20Edge.count)
+            self.stepper20Edge.value = options20Edge.count - 1;
+        else
+            [self changed20Edge:nil];
+    } else {
+        self.button20Edge.enabled = self.stepper20Edge.enabled = NO;
+        self.detail20Edge.attributedText = unavailable;
+    }
+
+    options20Vtx = [[NSMutableArray alloc] init];
+    for (i = 0; i < self.packet->getNumberOfVertices(); ++i)
+        if (self.packet->twoZeroMove(self.packet->getVertex(i), true, false))
+            [options20Vtx addObject:@(i)];
+    if (options20Vtx.count > 0) {
+        self.button20Vtx.enabled = self.stepper20Vtx.enabled = YES;
+        self.stepper20Vtx.maximumValue = options20Vtx.count - 1;
+        if (self.stepper20Vtx.value >= options20Vtx.count)
+            self.stepper20Vtx.value = options20Vtx.count - 1;
+        else
+            [self changed20Vtx:nil];
+    } else {
+        self.button20Vtx.enabled = self.stepper20Vtx.enabled = NO;
+        self.detail20Vtx.attributedText = unavailable;
+    }
+
+    // TODO
+
+    optionsOpenBook = [[NSMutableArray alloc] init];
+    for (i = 0; i < self.packet->getNumberOfTriangles(); ++i)
+        if (self.packet->openBook(self.packet->getTriangle(i), true, false))
+            [optionsOpenBook addObject:@(i)];
+    if (optionsOpenBook.count > 0) {
+        self.buttonOpenBook.enabled = self.stepperOpenBook.enabled = YES;
+        self.stepperOpenBook.maximumValue = optionsOpenBook.count - 1;
+        if (self.stepperOpenBook.value >= optionsOpenBook.count)
+            self.stepperOpenBook.value = optionsOpenBook.count - 1;
+        else
+            [self changedOpenBook:nil];
+    } else {
+        self.buttonOpenBook.enabled = self.stepperOpenBook.enabled = NO;
+        self.detailOpenBook.attributedText = unavailable;
+    }
+
+    optionsCloseBook = [[NSMutableArray alloc] init];
+    for (i = 0; i < self.packet->getNumberOfEdges(); ++i)
+        if (self.packet->closeBook(self.packet->getEdge(i), true, false))
+            [optionsCloseBook addObject:@(i)];
+    if (optionsCloseBook.count > 0) {
+        self.buttonCloseBook.enabled = self.stepperCloseBook.enabled = YES;
+        self.stepperCloseBook.maximumValue = optionsCloseBook.count - 1;
+        if (self.stepperCloseBook.value >= optionsCloseBook.count)
+            self.stepperCloseBook.value = optionsCloseBook.count - 1;
+        else
+            [self changedCloseBook:nil];
+    } else {
+        self.buttonCloseBook.enabled = self.stepperCloseBook.enabled = NO;
+        self.detailCloseBook.attributedText = unavailable;
+    }
+
+    optionsShell = [[NSMutableArray alloc] init];
+    for (i = 0; i < self.packet->getNumberOfTetrahedra(); ++i)
+        if (self.packet->shellBoundary(self.packet->getTetrahedron(i), true, false))
+            [optionsShell addObject:@(i)];
+    if (optionsShell.count > 0) {
+        self.buttonShell.enabled = self.stepperShell.enabled = YES;
+        self.stepperShell.maximumValue = optionsShell.count - 1;
+        if (self.stepperShell.value >= optionsShell.count)
+            self.stepperShell.value = optionsShell.count - 1;
+        else
+            [self changedShell:nil];
+    } else {
+        self.buttonShell.enabled = self.stepperShell.enabled = NO;
+        self.detailShell.attributedText = unavailable;
+    }
+
+    optionsCollapseEdge = [[NSMutableArray alloc] init];
+    for (i = 0; i < self.packet->getNumberOfEdges(); ++i)
+        if (self.packet->collapseEdge(self.packet->getEdge(i), true, false))
+            [optionsCollapseEdge addObject:@(i)];
+    if (optionsCollapseEdge.count > 0) {
+        self.buttonCollapseEdge.enabled = self.stepperCollapseEdge.enabled = YES;
+        self.stepperCollapseEdge.maximumValue = optionsCollapseEdge.count - 1;
+        if (self.stepperCollapseEdge.value >= optionsCollapseEdge.count)
+            self.stepperCollapseEdge.value = optionsCollapseEdge.count - 1;
+        else
+            [self changedCollapseEdge:nil];
+    } else {
+        self.buttonCollapseEdge.enabled = self.stepperCollapseEdge.enabled = NO;
+        self.detailCollapseEdge.attributedText = unavailable;
+    }
+}
+
+- (regina::NVertex*)vertexFor:(UIStepper*)stepper options:(NSArray*)options
+{
+    NSInteger use = stepper.value;
+    if (use < 0 || use >= options.count) {
+        NSLog(@"Invalid vertex stepper value: %d", use);
+        return 0;
+    }
+    return self.packet->getVertex([options[use] longValue]);
 }
 
 - (regina::NEdge*)edgeFor:(UIStepper*)stepper options:(NSArray*)options
@@ -161,6 +289,41 @@
         return 0;
     }
     return self.packet->getTriangle([options[use] longValue]);
+}
+
+- (regina::NTetrahedron*)tetrahedronFor:(UIStepper*)stepper options:(NSArray*)options
+{
+    NSInteger use = stepper.value;
+    if (use < 0 || use >= options.count) {
+        NSLog(@"Invalid tetrahedron stepper value: %d", use);
+        return 0;
+    }
+    return self.packet->getTetrahedron([options[use] longValue]);
+}
+
+- (NSAttributedString*)vertexDesc:(regina::NVertex*)vertex
+{
+    if (! vertex)
+        return [TextHelper badString:@"Invalid vertex"];
+
+    NSMutableString* text = [[NSMutableString alloc] init];
+
+    const regina::NVertexEmbedding& e0 = vertex->getEmbedding(0);
+    [text appendFormat:@"Vertex %ld — %ld (%d)",
+     vertex->index(),
+     e0.getTetrahedron()->index(),
+     e0.getVertex()];
+
+    if (vertex->getNumberOfEmbeddings() > 1) {
+        const regina::NVertexEmbedding& e1 = vertex->getEmbedding(1);
+        [text appendFormat:@", %ld (%d)",
+         e1.getTetrahedron()->index(),
+         e1.getVertex()];
+        if (vertex->getNumberOfEmbeddings() > 2)
+            [text appendString:@", …"];
+    }
+
+    return [[NSAttributedString alloc] initWithString:text];
 }
 
 - (NSAttributedString*)edgeDesc:(regina::NEdge*)edge
@@ -211,6 +374,15 @@
     return [[NSAttributedString alloc] initWithString:text];
 }
 
+- (NSAttributedString*)tetrahedronDesc:(regina::NTetrahedron*)tetrahedron
+{
+    if (! tetrahedron)
+        return [TextHelper badString:@"Invalid tetrahedron"];
+
+    NSString* text = [NSString stringWithFormat:@"Tetrahedron %ld", tetrahedron->index()];
+    return [[NSAttributedString alloc] initWithString:text];
+}
+
 - (IBAction)do32:(id)sender
 {
     regina::NEdge* use = [self edgeFor:self.stepper32 options:options32];
@@ -233,6 +405,12 @@
 
 - (IBAction)do14:(id)sender
 {
+    regina::NTetrahedron* use = [self tetrahedronFor:self.stepper14 options:options14];
+    if (! use)
+        return;
+
+    self.packet->oneFourMove(use, true, true);
+    [self reloadMoves];
 }
 
 - (IBAction)do44:(id)sender
@@ -241,10 +419,22 @@
 
 - (IBAction)do20Edge:(id)sender
 {
+    regina::NEdge* use = [self edgeFor:self.stepper20Edge options:options20Edge];
+    if (! use)
+        return;
+
+    self.packet->twoZeroMove(use, true, true);
+    [self reloadMoves];
 }
 
 - (IBAction)do20Vtx:(id)sender
 {
+    regina::NVertex* use = [self vertexFor:self.stepper20Vtx options:options20Vtx];
+    if (! use)
+        return;
+
+    self.packet->twoZeroMove(use, true, true);
+    [self reloadMoves];
 }
 
 - (IBAction)do21:(id)sender
@@ -253,18 +443,42 @@
 
 - (IBAction)doOpenBook:(id)sender
 {
+    regina::NTriangle* use = [self triangleFor:self.stepperOpenBook options:optionsOpenBook];
+    if (! use)
+        return;
+
+    self.packet->openBook(use, true, true);
+    [self reloadMoves];
 }
 
 - (IBAction)doCloseBook:(id)sender
 {
+    regina::NEdge* use = [self edgeFor:self.stepperCloseBook options:optionsCloseBook];
+    if (! use)
+        return;
+
+    self.packet->closeBook(use, true, true);
+    [self reloadMoves];
 }
 
 - (IBAction)doShell:(id)sender
 {
+    regina::NTetrahedron* use = [self tetrahedronFor:self.stepperShell options:optionsShell];
+    if (! use)
+        return;
+
+    self.packet->shellBoundary(use, true, true);
+    [self reloadMoves];
 }
 
 - (IBAction)doCollapseEdge:(id)sender
 {
+    regina::NEdge* use = [self edgeFor:self.stepperCollapseEdge options:optionsCollapseEdge];
+    if (! use)
+        return;
+
+    self.packet->collapseEdge(use, true, true);
+    [self reloadMoves];
 }
 
 - (IBAction)changed32:(id)sender
@@ -279,6 +493,7 @@
 
 - (IBAction)changed14:(id)sender
 {
+    self.detail14.attributedText = [self tetrahedronDesc:[self tetrahedronFor:self.stepper14 options:options14]];
 }
 
 - (IBAction)changed44:(id)sender
@@ -287,10 +502,12 @@
 
 - (IBAction)changed20Edge:(id)sender
 {
+    self.detail20Edge.attributedText = [self edgeDesc:[self edgeFor:self.stepper20Edge options:options20Edge]];
 }
 
 - (IBAction)changed20Vtx:(id)sender
 {
+    self.detail20Vtx.attributedText = [self vertexDesc:[self vertexFor:self.stepper20Vtx options:options20Vtx]];
 }
 
 - (IBAction)changed21:(id)sender
@@ -299,18 +516,22 @@
 
 - (IBAction)changedOpenBook:(id)sender
 {
+    self.detailOpenBook.attributedText = [self triangleDesc:[self triangleFor:self.stepperOpenBook options:optionsOpenBook]];
 }
 
 - (IBAction)changedCloseBook:(id)sender
 {
+    self.detailCloseBook.attributedText = [self edgeDesc:[self edgeFor:self.stepperCloseBook options:optionsCloseBook]];
 }
 
 - (IBAction)changedShell:(id)sender
 {
+    self.detailShell.attributedText = [self tetrahedronDesc:[self tetrahedronFor:self.stepperShell options:optionsShell]];
 }
 
 - (IBAction)changedCollapseEdge:(id)sender
 {
+    self.detailCollapseEdge.attributedText = [self edgeDesc:[self edgeFor:self.stepperCollapseEdge options:optionsCollapseEdge]];
 }
 
 - (IBAction)close:(id)sender
