@@ -37,6 +37,7 @@
 
 // TODO: Renaming -> autoscrolling / insets badly broken under iOS 8.
 // TODO: Edit -> Delete on iOS 8 seems to "half-exit" edit mode.  Bug?
+// TODO: Rename actions -> tap outside text field ends edit
 
 @interface EditableTableViewController () <UITextFieldDelegate> {
     UIEdgeInsets _originalContentInsets;

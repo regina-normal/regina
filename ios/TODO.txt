@@ -40,7 +40,6 @@ LONG-TERM:
 - Call UIApplication::idleTimerDisabled when running long tasks
   (e.g., enumerating normal surfaces), to stop the screen from locking.
 - Find a way to install *.tdb in a subdirectory beneath Resources/.
-- Rename actions: tap outside the text field -> end edit
 - Rename actions: ensure table view insets are OK if the device is rotated while the keyboard is shown
 - Audit the use of UIAlert (should we use banners instead)?
 - See if we can't arrange syntax highlighting for the script viewer.
@@ -48,6 +47,7 @@ LONG-TERM:
 - Graphviz for dual graphs.
 - Surface coordinates viewer: support filters
 - Implement connectedSumWith.
+- Decide what to do about "ambiguous row height" warning in iOS 8 (FilterViewController, ScriptViewController)
 
 - Support state preservation and restoration.  See:
   https://developer.apple.com/library/ios/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/StatePreservation/StatePreservation.html
