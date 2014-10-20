@@ -42,6 +42,10 @@ namespace regina {
 - (void)setPacket:(regina::NPacket*)packet;
 - (void)reloadPacket;
 
+@optional
+
+- (void)editabilityChanged;
+
 @end
 
 @protocol PacketEditor <PacketViewer>

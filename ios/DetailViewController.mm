@@ -46,6 +46,7 @@
 @interface DetailViewController () <UIDocumentInteractionControllerDelegate, PacketDelegate> {
     NSString* _menuTitle;
     PacketListenerIOS* _listener;
+    bool editable;
     UIDocumentInteractionController* _interact;
 }
 @property (strong, nonatomic) UIViewController *contents;
@@ -206,6 +207,7 @@
         self.navigationItem.title = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
         [self embedViewer:[PacketManagerIOS viewerFor:p]];
 
+        editable = p->isPacketEditable();
         _listener = [PacketListenerIOS listenerWithPacket:p delegate:self listenChildren:NO];
     }
 }
@@ -309,6 +311,32 @@
 {
     if (packet == self.packet)
         self.packet = nil;
+}
+
+- (void)childWasAddedTo:(regina::NPacket *)packet child:(regina::NPacket *)child
+{
+    if (packet == self.packet) {
+        bool newEditability = packet->isPacketEditable();
+        if (newEditability != editable) {
+            editable = newEditability;
+            if ([self.contents conformsToProtocol:@protocol(PacketViewer)])
+                if ([self.contents respondsToSelector:@selector(editabilityChanged)])
+                    [static_cast<id<PacketViewer> >(self.contents) editabilityChanged];
+        }
+    }
+}
+
+- (void)childWasRemovedFrom:(regina::NPacket *)packet child:(regina::NPacket *)child inParentDestructor:(bool)d
+{
+    if (packet == self.packet) {
+        bool newEditability = packet->isPacketEditable();
+        if (newEditability != editable) {
+            editable = newEditability;
+            if ([self.contents conformsToProtocol:@protocol(PacketViewer)])
+                if ([self.contents respondsToSelector:@selector(editabilityChanged)])
+                    [static_cast<id<PacketViewer> >(self.contents) editabilityChanged];
+        }
+    }
 }
 
 #pragma mark - Split view

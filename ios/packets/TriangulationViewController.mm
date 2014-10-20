@@ -87,4 +87,12 @@
     lockIcon.hidden = self.packet->isPacketEditable();
 }
 
+- (void)editabilityChanged
+{
+    // A bit heavyweight.
+    // For most tabs all we actually need to do is update the lock icon.
+    // Sometimes there is more to do though (e.g., the gluings tab shows/hides the new-simplex row).
+    [static_cast<id<PacketViewer> >(self.selectedViewController) reloadPacket];
+}
+
 @end
