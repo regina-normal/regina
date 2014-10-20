@@ -518,42 +518,51 @@ enum DocSource {
 {
     NSLog(@"Downloaded to: %@", location);
  
-    [MBProgressHUD hideHUDForView:rootView animated:NO];
-    dropboxHUD = nil;
-    
     ReginaDocument* doc = [ReginaDocument documentWithInboxURL:location preferredName:downloadTask.currentRequest.URL];
-    if (doc)
-        [self performSegueWithIdentifier:@"openInbox" sender:doc];
-    else {
-        UIAlertView* alert = [[UIAlertView alloc]
-                              initWithTitle:@"Could Not Save on Device"
-                              message:nil
-                              delegate:nil
-                              cancelButtonTitle:@"Close"
-                              otherButtonTitles:nil];
-        [alert show];
-    }
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideHUDForView:rootView animated:NO];
+        dropboxHUD = nil;
+
+        if (doc)
+            [self performSegueWithIdentifier:@"openInbox" sender:doc];
+        else {
+            UIAlertView* alert = [[UIAlertView alloc]
+                                  initWithTitle:@"Could Not Save on Device"
+                                  message:nil
+                                  delegate:nil
+                                  cancelButtonTitle:@"Close"
+                                  otherButtonTitles:nil];
+            [alert show];
+        }
+    });
 }
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
 {
-    if (dropboxHUD && totalBytesExpectedToWrite > 0)
-        dropboxHUD.progress = (float(totalBytesWritten)) / (float(totalBytesExpectedToWrite));
+    if (dropboxHUD && totalBytesExpectedToWrite > 0) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            dropboxHUD.progress = (float(totalBytesWritten)) / (float(totalBytesExpectedToWrite));
+        });
+    }
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
 {
     if (error) {
         NSLog(@"Download error.");
-        [MBProgressHUD hideHUDForView:rootView animated:NO];
-        dropboxHUD = nil;
-        UIAlertView* alert = [[UIAlertView alloc]
-                              initWithTitle:@"Could Not Download"
-                              message:nil
-                              delegate:nil
-                              cancelButtonTitle:@"Close"
-                              otherButtonTitles:nil];
-        [alert show];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideHUDForView:rootView animated:NO];
+            dropboxHUD = nil;
+
+            UIAlertView* alert = [[UIAlertView alloc]
+                                  initWithTitle:@"Could Not Download"
+                                  message:nil
+                                  delegate:nil
+                                  cancelButtonTitle:@"Close"
+                                  otherButtonTitles:nil];
+            [alert show];
+        });
     }
 }
 
