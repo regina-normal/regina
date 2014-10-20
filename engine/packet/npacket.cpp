@@ -207,6 +207,35 @@ void NPacket::reparent(NPacket* newParent, bool first) {
         newParent->insertChildLast(this);
 }
 
+void NPacket::transferChildren(NPacket* newParent) {
+    if (! firstTreeChild)
+        return;
+
+    NPacket* start = firstTreeChild;
+    NPacket* child;
+
+    for (child = start; child; child = child->nextTreeSibling)
+        fireEvent(&NPacketListener::childToBeRemoved, child, false);
+    for (child = start; child; child = child->nextTreeSibling)
+        newParent->fireEvent(&NPacketListener::childToBeAdded, child);
+
+    start->prevTreeSibling = newParent->lastTreeChild;
+    if (newParent->lastTreeChild)
+        newParent->lastTreeChild->nextTreeSibling = start;
+    else
+        newParent->firstTreeChild = start;
+    newParent->lastTreeChild = lastTreeChild;
+    firstTreeChild = lastTreeChild = 0;
+
+    for (child = start; child; child = child->nextTreeSibling)
+        child->treeParent = newParent;
+
+    for (child = start; child; child = child->nextTreeSibling)
+        fireEvent(&NPacketListener::childWasRemoved, child, false);
+    for (child = start; child; child = child->nextTreeSibling)
+        newParent->fireEvent(&NPacketListener::childWasAdded, child);
+}
+
 void NPacket::moveUp(unsigned steps) {
     if (steps == 0 || ! prevTreeSibling)
         return;
