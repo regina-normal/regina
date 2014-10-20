@@ -331,7 +331,10 @@
      */
 }
 
-- (void)childWasRemovedFrom:(regina::NPacket *)packet child:(regina::NPacket *)child inParentDestructor:(bool)d {
+- (void)childWasRemovedFrom:(regina::NPacket *)packet child:(regina::NPacket *)child inParentDestructor:(bool)destructor {
+    if (destructor)
+        return;
+
     if (packet == self.node) {
         // No need to update the table, since this action can only have happened as a result
         // of user interaction with the table.
