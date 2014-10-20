@@ -57,8 +57,6 @@
 // We will be more conservative here.
 #define MAX_CENSUS_TRIANGULATION_SIZE 50
 
-// TODO: Delete packets, return to parent -> needs to update "subpackets" labels.
-
 @interface PropertyCell : UITableViewCell
 @property (assign, nonatomic) int property;
 @property (weak, nonatomic) IBOutlet UILabel *name;

@@ -332,9 +332,16 @@
 }
 
 - (void)childWasRemovedFrom:(regina::NPacket *)packet child:(regina::NPacket *)child inParentDestructor:(bool)d {
-    // No need to update the table, since this action can only have happened as a result
-    // of user interaction with the table.
-    [[ReginaHelper document] setDirty];
+    if (packet == self.node) {
+        // No need to update the table, since this action can only have happened as a result
+        // of user interaction with the table.
+        [[ReginaHelper document] setDirty];
+    } else {
+        // One of our children needs a new subtitle (which counts *its* children).
+        NSIndexPath* path = [self pathForPacket:packet];
+        if (path)
+            [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
 }
 
 - (void)childrenWereReordered:(regina::NPacket *)packet {
