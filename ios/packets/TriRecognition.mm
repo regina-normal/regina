@@ -57,7 +57,6 @@
 // We will be more conservative here.
 #define MAX_CENSUS_TRIANGULATION_SIZE 50
 
-// TODO: Make the internal table "just the right height".
 // TODO: Delete packets, return to parent -> needs to update "subpackets" labels.
 
 @interface PropertyCell : UITableViewCell
