@@ -37,7 +37,6 @@
 // TODO: Don't forget the keyboard scrolling nonsense.
 // TODO: A few deletes and then we get stuck.
 // TODO: Extend height of tap region to the entire cell.
-// TODO: Space this out a little more.
 
 #pragma mark - Table cell
 
