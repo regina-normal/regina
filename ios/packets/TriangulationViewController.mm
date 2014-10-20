@@ -50,43 +50,39 @@
 
 - (void)updateHeader:(UILabel *)header lockIcon:(UIButton*)lockIcon
 {
-    if (self.packet->isEmpty()) {
+    if (self.packet->isEmpty())
         header.text = @"Empty";
-        return;
-    }
-
-    if (! self.packet->isValid()) {
+    else if (! self.packet->isValid())
         header.attributedText = [TextHelper badString:@"Invalid triangulation"];
-        return;
-    }
-
-    NSMutableString* msg;
-
-    if (self.packet->isClosed())
-        msg = [NSMutableString stringWithString:@"Closed, "];
     else {
-        if (self.packet->isIdeal() && self.packet->hasBoundaryTriangles())
-            msg = [NSMutableString stringWithString:@"Ideal & real boundary, "];
-        else if (self.packet->isIdeal())
-            msg = [NSMutableString stringWithString:@"Ideal boundary, "];
-        else if (self.packet->hasBoundaryTriangles())
-            msg = [NSMutableString stringWithString:@"Real boundary, "];
-    }
+        NSMutableString* msg;
 
-    if (self.packet->isOrientable()) {
-        if (self.packet->isOriented())
-            [msg appendString:@"orientable and oriented, "];
+        if (self.packet->isClosed())
+            msg = [NSMutableString stringWithString:@"Closed, "];
+        else {
+            if (self.packet->isIdeal() && self.packet->hasBoundaryTriangles())
+                msg = [NSMutableString stringWithString:@"Ideal & real boundary, "];
+            else if (self.packet->isIdeal())
+                msg = [NSMutableString stringWithString:@"Ideal boundary, "];
+            else if (self.packet->hasBoundaryTriangles())
+                msg = [NSMutableString stringWithString:@"Real boundary, "];
+        }
+
+        if (self.packet->isOrientable()) {
+            if (self.packet->isOriented())
+                [msg appendString:@"orientable and oriented, "];
+            else
+                [msg appendString:@"orientable but not oriented, "];
+        } else
+            [msg appendString:@"non-orientable, "];
+
+        if (self.packet->isConnected())
+            [msg appendString:@"connected"];
         else
-            [msg appendString:@"orientable but not oriented, "];
-    } else
-        [msg appendString:@"non-orientable, "];
-
-    if (self.packet->isConnected())
-        [msg appendString:@"connected"];
-    else
-        [msg appendString:@"disconnected"];
-
-    header.text = msg;
+            [msg appendString:@"disconnected"];
+        
+        header.text = msg;
+    }
 
     lockIcon.hidden = self.packet->isPacketEditable();
 }
