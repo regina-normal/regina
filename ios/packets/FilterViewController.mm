@@ -42,8 +42,6 @@ static NSArray* compactnessText;
 static NSArray* boundaryText;
 static NSMutableCharacterSet* eulerSeparators;
 
-// TODO: Restore packet listener.
-
 #pragma mark - Property-based filter
 
 @interface FilterPropertiesViewController () <UITextFieldDelegate> {
