@@ -39,8 +39,6 @@
 
 @implementation SurfacesViewController
 
-// TODO: Listen for renames on triangulation.
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
