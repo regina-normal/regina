@@ -148,7 +148,7 @@
     // What properties should we display?
     // Precompute these properties now for sufficiently small triangulations.
     propertyList = [[NSMutableArray alloc] init];
-    if (self.packet->isClosed()) {
+    if (self.packet->isClosed() && ! self.packet->isEmpty()) {
         [propertyList addObject:@PROP_SPHERE];
         if (self.packet->getNumberOfTetrahedra() <= 6)
             self.packet->isThreeSphere();
@@ -164,7 +164,7 @@
         if (self.packet->getNumberOfTetrahedra() <= 6)
             self.packet->isSolidTorus();
     }
-    if (! dynamic_cast<regina::NSnapPeaTriangulation*>(self.packet)) {
+    if ((! self.packet->isEmpty()) && (! dynamic_cast<regina::NSnapPeaTriangulation*>(self.packet))) {
         [propertyList addObject:@PROP_ZEROEFF];
         [propertyList addObject:@PROP_SPLITTING];
         if (self.packet->getNumberOfTetrahedra() <= 6) {
@@ -172,7 +172,7 @@
             self.packet->hasSplittingSurface();
         }
     }
-    if (self.packet->isOrientable() && self.packet->isClosed() && self.packet->isValid() && self.packet->isConnected()) {
+    if (self.packet->isOrientable() && self.packet->isClosed() && self.packet->isValid() && self.packet->isConnected() && ! self.packet->isEmpty()) {
         [propertyList addObject:@PROP_IRREDUCIBLE];
         [propertyList addObject:@PROP_HAKEN];
         if (self.packet->getNumberOfTetrahedra() <= 6) {
