@@ -35,15 +35,8 @@
 
 #define SHEET_DELETE 501
 
-// TODO: Renaming -> autoscrolling / insets badly broken under iOS 8.
 // TODO: Edit -> Delete on iOS 8 seems to "half-exit" edit mode.  Bug?
 // TODO: Rename actions -> tap outside text field ends edit
-
-@interface EditableTableViewController () <UITextFieldDelegate> {
-    UIEdgeInsets _originalContentInsets;
-    UIEdgeInsets _originalScrollIndicatorInsets;
-}
-@end
 
 @implementation EditableTableViewController
 
@@ -59,7 +52,6 @@
 
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
     [nc addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
-    [nc addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -68,7 +60,6 @@
 
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
     [nc removeObserver:self name:UIKeyboardDidShowNotification object:nil];
-    [nc removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (IBAction)longPress:(id)sender {
@@ -143,34 +134,10 @@
 
 - (void)keyboardDidShow:(NSNotification*)notification
 {
-    _originalContentInsets = self.tableView.contentInset;
-    _originalScrollIndicatorInsets = self.tableView.scrollIndicatorInsets;
-
-    // TODO: kbHeight is still not right in portrait mode.
-    CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    CGFloat kbHeight = UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation]) ?
-        kbSize.height : kbSize.width;
-
-    self.tableView.contentInset = UIEdgeInsetsMake(_originalContentInsets.top,
-                                                   _originalContentInsets.left,
-                                                   kbHeight,
-                                                   _originalContentInsets.right);
-
-    self.tableView.scrollIndicatorInsets = UIEdgeInsetsMake(_originalScrollIndicatorInsets.top,
-                                                            _originalScrollIndicatorInsets.left,
-                                                            kbHeight,
-                                                            _originalScrollIndicatorInsets.right);
-
     if (self.actionPath)
         [self.tableView scrollToRowAtIndexPath:self.actionPath
                               atScrollPosition:UITableViewScrollPositionNone
                                       animated:YES];
-}
-
-- (void)keyboardWillHide:(NSNotification*)notification
-{
-    self.tableView.contentInset = _originalContentInsets;
-    self.tableView.scrollIndicatorInsets = _originalScrollIndicatorInsets;
 }
 
 #pragma mark - Table view

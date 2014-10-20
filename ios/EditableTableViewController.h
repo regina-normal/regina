@@ -55,7 +55,7 @@
  * are those listed below.  This class also implements UITextFieldDelegate internally,
  * but subclasses should not need to override any UITextFieldDelegate functions.
  */
-@interface EditableTableViewController : UITableViewController <UIActionSheetDelegate>
+@interface EditableTableViewController : UITableViewController <UIActionSheetDelegate, UITextFieldDelegate>
 
 /**
  * If the user is currently editing a table cell (e.g., renaming
