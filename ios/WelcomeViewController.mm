@@ -40,6 +40,8 @@
 #import <cppunit/TextTestProgressListener.h>
 #import <cppunit/ui/text/TestRunner.h>
 
+// TODO: Explain the + buttons on the welcome screen.
+
 @class TestSuiteController;
 
 class iOSProgress : public CppUnit::TextTestProgressListener {
