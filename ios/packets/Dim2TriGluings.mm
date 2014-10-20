@@ -34,10 +34,6 @@
 #import "Dim2TriangulationViewController.h"
 #import "dim2/dim2triangulation.h"
 
-// TODO: Don't forget the keyboard scrolling nonsense.
-// TODO: A few deletes and then we get stuck.
-// TODO: Extend height of tap region to the entire cell.
-
 #pragma mark - Table cell
 
 @interface Dim2GluingCell : UITableViewCell

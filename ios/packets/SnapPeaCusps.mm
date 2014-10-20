@@ -36,9 +36,6 @@
 #import "maths/numbertheory.h"
 #import "snappea/nsnappeatriangulation.h"
 
-// TODO: Keyboard scrolling.
-// TODO: Extend height of tap region to the entire cell.
-
 #pragma mark - Table cells
 
 @interface SnapPeaCuspCell : UITableViewCell
