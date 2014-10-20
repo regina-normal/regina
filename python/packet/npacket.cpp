@@ -146,6 +146,7 @@ void addNPacket() {
         .def("makeOrphan", makeOrphan_return,
             return_value_policy<manage_new_object>())
         .def("reparent", reparent_check, OL_reparent())
+        .def("transferChildren", &NPacket::transferChildren)
         .def("swapWithNextSibling", &NPacket::swapWithNextSibling)
         .def("moveUp", &NPacket::moveUp, OL_moveUp())
         .def("moveDown", &NPacket::moveDown, OL_moveDown())

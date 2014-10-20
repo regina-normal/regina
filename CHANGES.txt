@@ -35,6 +35,7 @@ Version 4.97  [ (under development) ]
             - Added a variant of save() that takes an output stream (as
               opposed to a filename).
             - New routine adornedLabel() for creating modified packet labels.
+            - New routine transferChildren() for bulk tree reorganisation.
         Class NPacketListener:
             - New events childToBeRenamed(), childWasRenamed().
         Class NSurfaceFilterProperties:

@@ -721,6 +721,9 @@ class REGINA_API NPacket : public ShareableObject {
          * This routine takes small constant time.  It is safe to use
          * regardless of whether this packet has a parent or not.
          *
+         * If you wish to reparent \e all of the children of a given
+         * packet, see transferChildren() instead.
+         *
          * \pre This packet does not depend on its parent; see
          * dependsOnParent() for details.
          * \pre The given parent is not a descendant of this packet.
@@ -739,6 +742,26 @@ class REGINA_API NPacket : public ShareableObject {
          * it should be inserted as the last child.
          */
         void reparent(NPacket* newParent, bool first = false);
+
+        /**
+         * Cuts all of this packet's children out of the packet tree,
+         * and reinserts them as children of the given packet instead.
+         *
+         * The children of this packet will be appended to the end of
+         * the new parent's child list, in the same order as they were
+         * previously.
+         *
+         * This is equivalent to calling reparent() on each child, but
+         * should be somewhat faster if there are many children to move.
+         *
+         * \pre None of the children of this packet depend on their
+         * current parent; see dependsOnParent() for details.
+         * \pre The given parent is not a descendant of this packet.
+         *
+         * @param newParent the new parent beneath which the children
+         * will be inserted.
+         */
+        void transferChildren(NPacket* newParent);
 
         /**
          * Swaps this packet with its next sibling in the sequence of
