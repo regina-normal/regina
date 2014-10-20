@@ -111,7 +111,7 @@
 
 - (BOOL)empty
 {
-    return ((! self.allowNone) && (self.choices.count == 1));
+    return ((! self.allowNone) && (self.choices.count == 1) && (! [self.choices[0] packet]));
 }
 
 - (regina::NPacket *)selectedPacket
