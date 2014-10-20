@@ -36,8 +36,6 @@
 #import "ReginaDocument.h"
 #import "ReginaHelper.h"
 
-// TODO: Opening a bad file from drobox fails
-
 // Action sheet tags;
 enum {
     sheetNew = 1,
