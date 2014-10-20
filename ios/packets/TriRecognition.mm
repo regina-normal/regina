@@ -81,6 +81,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *lockIcon;
 
 @property (weak, nonatomic) IBOutlet UITableView *properties;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *propertiesHeight;
 @property (weak, nonatomic) IBOutlet UILabel *manifold;
 @property (weak, nonatomic) IBOutlet UILabel *census;
 
@@ -213,6 +214,10 @@
 
     [self updateHyperbolic];
     [self.properties reloadData];
+
+    // Resize the table according to the number of properties we are calculating.
+    self.propertiesHeight.constant = self.properties.contentSize.height;
+    [self.view setNeedsUpdateConstraints];
 }
 
 + (NSString*)propertyName:(int)property

@@ -5129,7 +5129,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6xS-mY-FQc">
-                                                    <rect key="frame" x="141" y="11" width="200" height="20.5"/>
+                                                    <rect key="frame" x="141" y="11.5" width="200" height="20.5"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="200" id="RKe-ir-xoC"/>
                                                     </constraints>
@@ -5138,7 +5138,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ew1-RN-o3P">
-                                                    <rect key="frame" x="349" y="11" width="100" height="20.5"/>
+                                                    <rect key="frame" x="349" y="11.5" width="100" height="20.5"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="100" id="0Jg-Sc-sJp"/>
                                                     </constraints>
@@ -5147,7 +5147,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LiA-xz-Cd6">
-                                                    <rect key="frame" x="457" y="7" width="65" height="30"/>
+                                                    <rect key="frame" x="457" y="7.5" width="65" height="30"/>
                                                     <state key="normal" title="Calculate">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
@@ -5310,6 +5310,7 @@
                         <outlet property="header" destination="sxf-Yn-faO" id="IQq-nQ-z6x"/>
                         <outlet property="manifold" destination="1hv-Mv-uzJ" id="pqF-F4-C8t"/>
                         <outlet property="properties" destination="3vB-F3-FWB" id="Kmg-bG-wuj"/>
+                        <outlet property="propertiesHeight" destination="Lnr-xg-LKq" id="uFE-VT-V9u"/>
                         <outlet property="solnType" destination="P1k-af-SjU" id="aaR-RP-Zf1"/>
                         <outlet property="volume" destination="YRe-js-p76" id="7P6-uO-DUc"/>
                     </connections>
@@ -7396,7 +7397,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z8S-gE-olS">
-                                                    <rect key="frame" x="141" y="11" width="200" height="20.5"/>
+                                                    <rect key="frame" x="141" y="11.5" width="200" height="20.5"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="200" id="cfs-qW-FMD"/>
                                                     </constraints>
@@ -7405,7 +7406,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ftt-GN-jO6">
-                                                    <rect key="frame" x="349" y="11" width="100" height="20.5"/>
+                                                    <rect key="frame" x="349" y="11.5" width="100" height="20.5"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="100" id="FEC-Z2-PXd"/>
                                                     </constraints>
@@ -7414,7 +7415,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wV3-ae-aye">
-                                                    <rect key="frame" x="457" y="7" width="65" height="30"/>
+                                                    <rect key="frame" x="457" y="7.5" width="65" height="30"/>
                                                     <state key="normal" title="Calculate">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
@@ -7585,6 +7586,7 @@
                         <outlet property="lockIcon" destination="VaN-E4-8m4" id="6LG-Gp-rhN"/>
                         <outlet property="manifold" destination="xMl-C9-7T3" id="Zpy-Oc-fEv"/>
                         <outlet property="properties" destination="FnG-UG-cNk" id="ogV-XT-Y5b"/>
+                        <outlet property="propertiesHeight" destination="wfQ-35-7Vi" id="Ztd-ZA-hRY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="I3Q-C9-WZd" userLabel="First Responder" sceneMemberID="firstResponder"/>
