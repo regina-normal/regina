@@ -167,7 +167,9 @@
             [alert show];
 
             _packet = nil;
-            // TODO: Do the usual nil things.
+            self.navigationItem.title = @"";
+            [self embedViewer:(emptySegue ? emptySegue : @"empty")];
+
             return;
         }
 
@@ -183,7 +185,9 @@
 
             self.interactionFile = nil;
             _packet = nil;
-            // TODO: Do the usual nil things.
+            self.navigationItem.title = @"";
+            [self embedViewer:(emptySegue ? emptySegue : @"empty")];
+            
             return;
         }
 
