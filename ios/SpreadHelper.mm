@@ -43,7 +43,7 @@ static UIFont* headerFont = [UIFont boldSystemFontOfSize:14];
 #define MD_CELL_TIGHT_WIDTH_PADDING 2
 #define MD_CELL_TIGHT_HEIGHT_PADDING 1
 
-// TODO: The use of clearColor in the header cells is a cheat.
+// Note: The use of clearColor in the header cells is a cheat.
 // I suspect that if we try to select such a cell, the clear color will be lost.
 // The symptom it addresses is that, for header height 1, the UILabel inside the cell bleeds colour outside the cell.
 

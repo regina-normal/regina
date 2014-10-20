@@ -121,7 +121,6 @@ static NSArray* embText;
     regina::NormalList which;
     regina::NormalAlg alg;
     
-    // TODO: Replace these switch statements with something more robust against GUI changes.
     bool broken = false;
     bool almostNormal = false;
     switch (_whichControl.selectedSegmentIndex) {

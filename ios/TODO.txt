@@ -48,6 +48,9 @@ LONG-TERM:
 - Surface coordinates viewer: support filters
 - Implement connectedSumWith.
 - Decide what to do about "ambiguous row height" warning in iOS 8 (FilterViewController, ScriptViewController)
+- Test suite failure: mail the developers automatically?
+- NewSurfacesController::updateProgress: replace switch statements with something more robust against GUI changes?
+- SurfacesCoords: on long press, view details (in case cells are too narrow).
 
 - Support state preservation and restoration.  See:
   https://developer.apple.com/library/ios/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/StatePreservation/StatePreservation.html

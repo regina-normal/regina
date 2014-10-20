@@ -179,7 +179,6 @@ public:
             [history appendAttributedString:[[NSAttributedString alloc] initWithString:rawText
                                                                             attributes:@{NSForegroundColorAttributeName:successColour}]];
         } else {
-            // TODO: Mail the developers automatically?
             NSString* rawText = [NSString stringWithFormat:@"\n%d of %d tests failed.\nPlease pass this information on to the Regina developers.\n\n", nFailures, (nFailures + nSuccesses)];
             [history appendAttributedString:[[NSAttributedString alloc] initWithString:rawText
                                                                             attributes:@{NSForegroundColorAttributeName:failureColour}]];
