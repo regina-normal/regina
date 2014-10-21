@@ -34,8 +34,6 @@
 #import "ScriptViewController.h"
 #import "packet/nscript.h"
 
-// TODO: The code windows scrolls down a little on load in landspace mode.
-
 #pragma mark - Script variable cell
 
 @interface ScriptVariableCell ()
