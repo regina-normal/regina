@@ -47,6 +47,7 @@
 // TODO: Move packets around the tree.
 // TODO: Popping the navigation controller while renaming a cell causes badness.
 // TODO: (Linked to the above): Make tap outside cell simply finish a rename.
+// TODO: Provide a way to clone packets.
 
 @interface PacketTreeController () <UIAlertViewDelegate, PacketDelegate> {
     /**
