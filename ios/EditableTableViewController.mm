@@ -35,7 +35,6 @@
 
 #define SHEET_DELETE 501
 
-// TODO: Edit -> Delete on iOS 8 seems to "half-exit" edit mode.  Bug?
 // TODO: Rename actions -> tap outside text field ends edit
 
 @implementation EditableTableViewController

@@ -190,8 +190,10 @@ enum DocSource {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    self.navigationItem.leftBarButtonItem = self.editButtonItem;
+
+    // Meh.  Don't show the edit menu here - we don't get it in the packet tree anyway,
+    // and better to have a consistent means of deleting things.
+    // self.navigationItem.leftBarButtonItem = self.editButtonItem;
 
     self.docURLs = [NSMutableArray array];
     self.docsByName = [NSMutableDictionary dictionary];
