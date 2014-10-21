@@ -82,6 +82,19 @@
     self.triangles.dataSource = self;
 
     [self reloadPacket];
+
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    [nc addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
+    [nc addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    [nc removeObserver:self name:UIKeyboardDidShowNotification object:nil];
+    [nc removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (void)reloadPacket
@@ -189,6 +202,34 @@
         [self editGluingForSimplex:indexPath.row-1 cell:cell label:cell.edge1];
     else if (CGRectContainsPoint(cell.edge2.frame, inner))
         [self editGluingForSimplex:indexPath.row-1 cell:cell label:cell.edge2];
+}
+
+#pragma mark - Keyboard notifications
+
+- (void)keyboardDidShow:(NSNotification*)notification
+{
+    // See the notes for TextViewController for why we take MIN(...) here.
+    CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    CGFloat kbHeight = MIN(kbSize.width, kbSize.height);
+
+    CGRect tableInDetail = [self.parentViewController.view convertRect:self.triangles.frame fromView:self.view];
+    CGFloat unused = self.parentViewController.view.bounds.size.height - tableInDetail.origin.y - tableInDetail.size.height;
+
+    if (kbHeight <= unused)
+        return;
+
+    self.triangles.contentInset = UIEdgeInsetsMake(0, 0, kbHeight - unused, 0);
+    self.triangles.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, kbHeight - unused, 0);
+
+    [self.triangles scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:editSimplex+1 inSection:0]
+                          atScrollPosition:UITableViewScrollPositionNone
+                                  animated:YES];
+}
+
+- (void)keyboardWillHide:(NSNotification*)notification
+{
+    self.triangles.contentInset = UIEdgeInsetsZero;
+    self.triangles.scrollIndicatorInsets = UIEdgeInsetsZero;
 }
 
 #pragma mark - Text field

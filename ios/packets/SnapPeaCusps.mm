@@ -99,6 +99,19 @@
     self.shapes.dataSource = self;
     
     [self reloadPacket];
+
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    [nc addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
+    [nc addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    [nc removeObserver:self name:UIKeyboardDidShowNotification object:nil];
+    [nc removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (void)reloadPacket
@@ -174,6 +187,34 @@
     CGPoint inner = [self.cusps convertPoint:location toView:cell];
     if (CGRectContainsPoint(cell.filling.frame, inner))
         [self editFillingForCusp:indexPath.row-1 cell:cell label:cell.filling];
+}
+
+#pragma mark - Keyboard notifications
+
+- (void)keyboardDidShow:(NSNotification*)notification
+{
+    // See the notes for TextViewController for why we take MIN(...) here.
+    CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    CGFloat kbHeight = MIN(kbSize.width, kbSize.height);
+
+    CGRect tableInDetail = [self.parentViewController.view convertRect:self.cusps.bounds fromView:self.cusps];
+    CGFloat unused = self.parentViewController.view.bounds.size.height - tableInDetail.origin.y - tableInDetail.size.height;
+
+    if (kbHeight <= unused)
+        return;
+
+    self.cusps.contentInset = UIEdgeInsetsMake(0, 0, kbHeight - unused, 0);
+    self.cusps.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, kbHeight - unused, 0);
+
+    [self.cusps scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:editCusp+1 inSection:0]
+                      atScrollPosition:UITableViewScrollPositionNone
+                              animated:YES];
+}
+
+- (void)keyboardWillHide:(NSNotification*)notification
+{
+    self.cusps.contentInset = UIEdgeInsetsZero;
+    self.cusps.scrollIndicatorInsets = UIEdgeInsetsZero;
 }
 
 #pragma mark - Text field

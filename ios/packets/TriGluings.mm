@@ -37,7 +37,6 @@
 #import "packet/ncontainer.h"
 #import "triangulation/ntriangulation.h"
 
-// TODO: Don't forget the keyboard scrolling nonsense (also snappea/cusps, dim2/gluings)
 // TODO: A few deletes and then we get stuck (also dim2/gluings)
 // TODO: Extend height of tap region to the entire cell (also snappea/cusps, dim2/gluings)
 
@@ -97,6 +96,19 @@
     self.tetrahedra.dataSource = self;
     
     [self reloadPacket];
+
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    [nc addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
+    [nc addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    [nc removeObserver:self name:UIKeyboardDidShowNotification object:nil];
+    [nc removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (void)reloadPacket
@@ -438,6 +450,34 @@
                                                                 @"Elementary moves",
                                                                 nil];
     [sheet showFromRect:self.actionsButton.frame inView:self.view animated:YES];
+}
+
+#pragma mark - Keyboard notifications
+
+- (void)keyboardDidShow:(NSNotification*)notification
+{
+    // See the notes for TextViewController for why we take MIN(...) here.
+    CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    CGFloat kbHeight = MIN(kbSize.width, kbSize.height);
+
+    CGRect tableInDetail = [self.parentViewController.view convertRect:self.tetrahedra.frame fromView:self.view];
+    CGFloat unused = self.parentViewController.view.bounds.size.height - tableInDetail.origin.y - tableInDetail.size.height;
+
+    if (kbHeight <= unused)
+        return;
+
+    self.tetrahedra.contentInset = UIEdgeInsetsMake(0, 0, kbHeight - unused, 0);
+    self.tetrahedra.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, kbHeight - unused, 0);
+
+    [self.tetrahedra scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:editSimplex+1 inSection:0]
+                           atScrollPosition:UITableViewScrollPositionNone
+                                   animated:YES];
+}
+
+- (void)keyboardWillHide:(NSNotification*)notification
+{
+    self.tetrahedra.contentInset = UIEdgeInsetsZero;
+    self.tetrahedra.scrollIndicatorInsets = UIEdgeInsetsZero;
 }
 
 #pragma mark - Text field
