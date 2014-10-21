@@ -67,9 +67,8 @@ namespace regina {
 /**
  * Currently, will do nothing unless this involves a single push or a single pop.
  * Safe if dest is 0.
- * TODO: Perhaps make this work more generally, via a sequence of pop/push transitions.
- * TODO: Perhaps make this automatic when detail.packet changes?
+ * TODO: FEATURE: Perhaps make this automatic when detail.packet changes?
  */
-- (BOOL)navigateToPacket:(regina::NPacket*)dest;
+- (void)navigateToPacket:(regina::NPacket*)dest;
 
 @end

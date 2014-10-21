@@ -232,31 +232,62 @@
     [PacketManagerIOS newPacket:spec];
 }
 
-- (BOOL)navigateToPacket:(regina::NPacket *)dest
+- (void)navigateToPacket:(regina::NPacket *)dest
 {
-    if (! dest)
-        return NO;
+    if ((! dest) || dest == self.node)
+        return;
     
-    if (dest == self.node) {
-        // We're already there.
-        return YES;
-    }
-
     if (dest->getTreeParent() == self.node) {
         // This involves a single push.
         PacketTreeController* subtree = [self.storyboard instantiateViewControllerWithIdentifier:@"packetTree"];
         [subtree openSubtree:dest];
         [self.navigationController pushViewController:subtree animated:YES];
-        return YES;
-    }
-
-    if (self.node->getTreeParent() == dest) {
+    } else if (self.node->getTreeParent() == dest) {
         // This involves a single pop.
         [self.navigationController popViewControllerAnimated:YES];
-        return YES;
-    }
+    } else {
+        // Something more complicated.
+        NSPointerArray* myLeafToRoot = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsOpaquePersonality];
+        NSPointerArray* destLeafToRoot = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsOpaquePersonality];
 
-    return NO;
+        regina::NPacket* p;
+        for (p = self.node; p; p = p->getTreeParent())
+            [myLeafToRoot addPointer:p];
+        for (p = dest; p; p = p->getTreeParent())
+            [destLeafToRoot addPointer:p];
+
+        long myIdx = myLeafToRoot.count - 1; // Root.
+        long destIdx = destLeafToRoot.count - 1; // Root.
+        while (true) {
+            // INV: myLeafToRoot[myIdx,...] == destLeafToRoot[destIdx,...].
+            if (myIdx == 0 || destIdx == 0)
+                break;
+            if ([myLeafToRoot pointerAtIndex:(myIdx-1)] != [destLeafToRoot pointerAtIndex:(destIdx-1)])
+                break;
+            --myIdx;
+            --destIdx;
+        }
+
+        regina::NPacket* lca = static_cast<regina::NPacket*>([destLeafToRoot pointerAtIndex:destIdx]);
+
+        NSMutableArray* controllers = [[NSMutableArray alloc] init];
+        long i;
+        PacketTreeController* subtree;
+        UIViewController* c;
+        for (i = 0; ; ++i) {
+            c = self.navigationController.viewControllers[i];
+            [controllers addObject:c];
+            if ([c isKindOfClass:[PacketTreeController class]] && static_cast<PacketTreeController*>(c).node == lca)
+                break;
+        }
+        for (i = destIdx - 1; i >= 0; --i) {
+            subtree = [self.storyboard instantiateViewControllerWithIdentifier:@"packetTree"];
+            [subtree openSubtree:static_cast<regina::NPacket*>([destLeafToRoot pointerAtIndex:i])];
+            [controllers addObject:subtree];
+        }
+
+        [self.navigationController setViewControllers:controllers animated:YES];
+    }
 }
 
 - (void)dealloc
