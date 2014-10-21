@@ -151,15 +151,22 @@ BOOL ios8;
 
 + (void)initWithApp:(AppDelegate *)app
 {
-    split = (UISplitViewController *)app.window.rootViewController;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        split = (UISplitViewController *)app.window.rootViewController;
 
-    masterNav = [split.viewControllers firstObject];
-    master = (id)masterNav.topViewController;
+        masterNav = [split.viewControllers firstObject];
+        master = (id)masterNav.topViewController;
 
-    detailNav = [split.viewControllers lastObject];
-    detail = (id)detailNav.topViewController;
+        detailNav = [split.viewControllers lastObject];
+        detail = (id)detailNav.topViewController;
 
-    split.delegate = detail;
+        split.delegate = detail;
+    } else {
+        split = nil;
+        master = nil;
+        detail = nil;
+        masterNav = detailNav = nil;
+    }
 
     ios8 = ([[[UIDevice currentDevice] systemVersion] compare:@"8.0" options:NSNumericSearch] != NSOrderedAscending);
     if (ios8)

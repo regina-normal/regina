@@ -1,0 +1,45 @@
+diff --git a/Regina.xcodeproj/project.pbxproj b/Regina.xcodeproj/project.pbxproj
+index 5d2e918..f058e46 100644
+--- a/Regina.xcodeproj/project.pbxproj
++++ b/Regina.xcodeproj/project.pbxproj
+@@ -5349,7 +5349,7 @@
+ 				PRODUCT_NAME = Regina;
+ 				PROVISIONING_PROFILE = "";
+ 				SDKROOT = iphoneos;
+-				TARGETED_DEVICE_FAMILY = 2;
++				TARGETED_DEVICE_FAMILY = "1,2";
+ 				WRAPPER_EXTENSION = app;
+ 			};
+ 			name = Debug;
+@@ -5383,7 +5383,7 @@
+ 				PRODUCT_NAME = Regina;
+ 				PROVISIONING_PROFILE = "";
+ 				SDKROOT = iphoneos;
+-				TARGETED_DEVICE_FAMILY = 2;
++				TARGETED_DEVICE_FAMILY = "1,2";
+ 				VALIDATE_PRODUCT = YES;
+ 				WRAPPER_EXTENSION = app;
+ 			};
+diff --git a/ios/Regina-Info.plist b/ios/Regina-Info.plist
+index ec551cb..e8aa96d 100644
+--- a/ios/Regina-Info.plist
++++ b/ios/Regina-Info.plist
+@@ -73,6 +73,8 @@
+ 	<key>LSRequiresIPhoneOS</key>
+ 	<true/>
+ 	<key>UIMainStoryboardFile</key>
++	<string>iPhone</string>
++	<key>UIMainStoryboardFile~ipad</key>
+ 	<string>Main</string>
+ 	<key>UIRequiredDeviceCapabilities</key>
+ 	<array>
+@@ -91,8 +93,7 @@
+ 	<key>UISupportedInterfaceOrientations</key>
+ 	<array>
+ 		<string>UIInterfaceOrientationPortrait</string>
+-		<string>UIInterfaceOrientationLandscapeLeft</string>
+-		<string>UIInterfaceOrientationLandscapeRight</string>
++		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+ 	</array>
+ 	<key>UISupportedInterfaceOrientations~ipad</key>
+ 	<array>

@@ -213,7 +213,7 @@ public:
     [self.view addGestureRecognizer:r];
 }
 
-- (void)runTestSuite
+- (IBAction)runTestSuite:(id)sender
 {
     UIViewController* sheet = [self.storyboard instantiateViewControllerWithIdentifier:@"testSuite"];
     [self presentViewController:sheet animated:YES completion:^{
@@ -232,7 +232,7 @@ public:
                 [alert addAction:[UIAlertAction actionWithTitle:@"Run test suite"
                                                           style:UIAlertActionStyleDefault
                                                         handler:^(UIAlertAction*) {
-                                                            [self runTestSuite];
+                                                            [self runTestSuite:nil];
                                                         }]];
                 [alert addAction:[UIAlertAction actionWithTitle:@"Cancel"
                                                           style:UIAlertActionStyleCancel
@@ -257,7 +257,7 @@ public:
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex != actionSheet.cancelButtonIndex)
-        [self runTestSuite];
+        [self runTestSuite:nil];
 }
 
 @end
