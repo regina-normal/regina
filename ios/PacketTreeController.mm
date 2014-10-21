@@ -44,10 +44,9 @@
 #import "packet/ncontainer.h"
 #import "packet/ntext.h"
 
-// TODO: Move packets around the tree.
-// TODO: Popping the navigation controller while renaming a cell causes badness.
-// TODO: (Linked to the above): Make tap outside cell simply finish a rename.
-// TODO: Provide a way to clone packets.
+// TODO: FEATURE: Move packets around the tree.
+// TODO: BUG: Popping the navigation controller while renaming a cell causes badness.
+// TODO: FEATURE: Provide a way to clone packets.
 
 @interface PacketTreeController () <UIAlertViewDelegate, PacketDelegate> {
     /**

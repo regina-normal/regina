@@ -37,7 +37,7 @@
 #import "packet/ncontainer.h"
 #import "triangulation/ntriangulation.h"
 
-// TODO: A few deletes and then we get stuck (also dim2/gluings)
+// TODO: BUG: A few deletes and then we get stuck (also dim2/gluings)
 
 #pragma mark - Table cell
 

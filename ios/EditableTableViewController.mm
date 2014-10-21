@@ -35,7 +35,7 @@
 
 #define SHEET_DELETE 501
 
-// TODO: Rename actions -> tap outside text field ends edit
+// TODO: FEATURE: Rename actions -> tap outside text field ends edit
 
 @implementation EditableTableViewController
 

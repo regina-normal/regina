@@ -143,7 +143,7 @@ enum DocError {
     self = [super initWithFileURL:url];
     if (self) {
         _tree = new regina::NContainer();
-        regina::NText* text = new regina::NText("TODO: A welcome.");
+        regina::NText* text = new regina::NText("TODO: WELCOME: A welcome.");
         text->setPacketLabel("Read me");
         _tree->insertChildLast(text);
         _type = DOC_NATIVE;

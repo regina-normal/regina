@@ -40,7 +40,7 @@
 #import <cppunit/TextTestProgressListener.h>
 #import <cppunit/ui/text/TestRunner.h>
 
-// TODO: Explain the + buttons on the welcome screen.
+// TODO: WELCOME: Explain the + buttons on the welcome screen.
 
 @class TestSuiteController;
 
