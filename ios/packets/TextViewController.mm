@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#import "ReginaHelper.h"
 #import "TextViewController.h"
 #import "packet/ntext.h"
 
@@ -89,7 +90,8 @@
 {
     // Grumph.  iOS 7 (but not iOS 8) lets the cursor move beneath
     // the keyboard as you type.  Ensure that the cursor remains visible.
-    [self ensureCursorVisible];
+    if (! [ReginaHelper ios8])
+        [self ensureCursorVisible];
 }
 
 - (void)ensureCursorVisible
