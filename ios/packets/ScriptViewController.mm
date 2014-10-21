@@ -34,7 +34,6 @@
 #import "ScriptViewController.h"
 #import "packet/nscript.h"
 
-// TODO: Check behaviour of table row separators under iOS 8.
 // TODO: The code windows scrolls down a little on load in landspace mode.
 
 #pragma mark - Script variable cell
