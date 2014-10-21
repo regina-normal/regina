@@ -85,6 +85,29 @@
     myEdit = NO;
 }
 
+- (void)textViewDidChange:(UITextView *)textView
+{
+    // Grumph.  iOS 7 (but not iOS 8) lets the cursor move beneath
+    // the keyboard as you type.  Ensure that the cursor remains visible.
+    [self ensureCursorVisible];
+}
+
+- (void)ensureCursorVisible
+{
+    // Sigh.  If we call [self.detail scrollRangeToVisible:self.detail.selectedRange],
+    // the cursor does not move up above the keyboard (happens in both iOS 7 and iOS 8).
+    // Scroll manually instead.
+    CGRect caret = [self.detail caretRectForPosition:self.detail.selectedTextRange.end];
+    CGFloat overflow = caret.origin.y + caret.size.height - (self.detail.contentOffset.y + self.detail.bounds.size.height - self.detail.contentInset.bottom /* keyboard height */);
+    if (overflow > 0) {
+        // Add a few points more than the required offset.
+        [UIView animateWithDuration:.1 animations:^{
+            self.detail.contentOffset = CGPointMake(self.detail.contentOffset.x,
+                                                    self.detail.contentOffset.y + overflow + 7);
+        }];
+    }
+}
+
 - (void)keyboardDidShow:(NSNotification*)notification
 {
     // Madly, the (width, height) for kbSize seem to switch positions between iOS 7 and iOS 8
@@ -99,18 +122,7 @@
     self.detail.contentInset = UIEdgeInsetsMake(0, 0, kbHeight, 0);
     self.detail.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, kbHeight, 0);
 
-    // Sigh.  If we call [self.detail scrollRangeToVisible:self.detail.selectedRange],
-    // the cursor does not move up above the keyboard.
-    // Do this manually instead.
-    CGRect caret = [self.detail caretRectForPosition:self.detail.selectedTextRange.end];
-    CGFloat overflow = caret.origin.y + caret.size.height - (self.detail.contentOffset.y + self.detail.bounds.size.height - kbHeight);
-    if (overflow > 0) {
-        // Add a few points more than the required offset.
-        [UIView animateWithDuration:.2 animations:^{
-            self.detail.contentOffset = CGPointMake(self.detail.contentOffset.x,
-                                                    self.detail.contentOffset.y + overflow + 7);
-        }];
-    }
+    [self ensureCursorVisible];
 }
 
 - (void)keyboardWillHide:(NSNotification*)notification
