@@ -46,7 +46,7 @@
 {
     [super viewWillAppear:animated];
 
-    _detail.delegate = self;
+    self.detail.delegate = self;
 
     [self reloadPacket];
 
