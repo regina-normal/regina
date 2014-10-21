@@ -64,8 +64,6 @@
 #define INDENT3 "\t\t\t- "
 #define INDENT4 "\t\t\t\t- "
 
-// TODO: Test this over the census.
-
 @interface TriComposition () <UITextFieldDelegate> {
     UILabel* copyFrom;
 }

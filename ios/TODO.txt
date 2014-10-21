@@ -34,6 +34,7 @@ TEST:
 
 - Return to the app during facetime (status bar is thicker), and make sure
   the UI is still laid out correctly.
+- Test composition tab over the census.
 
 LONG-TERM:
 
