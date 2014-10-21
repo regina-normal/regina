@@ -2632,6 +2632,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
+                                    <action selector="openTriangulation:" destination="ewC-ja-LfT" eventType="touchUpInside" id="JjS-qN-5Eo"/>
                                     <action selector="openTriangulation:" destination="jZd-zD-1eX" eventType="touchUpInside" id="juR-2E-G5j"/>
                                 </connections>
                             </button>
@@ -2812,6 +2813,7 @@
                                 </state>
                                 <connections>
                                     <action selector="openTriangulation:" destination="jZd-zD-1eX" eventType="touchUpInside" id="I8H-sn-4sF"/>
+                                    <action selector="openTriangulation:" destination="5Mi-U2-xPd" eventType="touchUpInside" id="WQR-aN-WXY"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4yI-gZ-J5U">
@@ -2928,6 +2930,7 @@
                                 </state>
                                 <connections>
                                     <action selector="openTriangulation:" destination="jZd-zD-1eX" eventType="touchUpInside" id="0bP-Y6-fJH"/>
+                                    <action selector="openTriangulation:" destination="EDU-Ge-aTy" eventType="touchUpInside" id="GyO-P8-t0U"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eCg-c8-5nC">
@@ -3036,7 +3039,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="openTriangulation:" destination="jZd-zD-1eX" eventType="touchUpInside" id="EyC-Fz-IeE"/>
+                                    <action selector="openTriangulation:" destination="YQb-vx-fkT" eventType="touchUpInside" id="GH9-Oc-iyz"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Imm-Od-DKO">

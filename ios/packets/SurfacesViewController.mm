@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #import "Coordinates.h"
+#import "ReginaHelper.h"
 #import "SurfacesViewController.h"
 #import "surfaces/nnormalsurfacelist.h"
 #import "triangulation/ntriangulation.h"
@@ -132,6 +133,10 @@
 - (void)reloadPacket
 {
     [self.viewer updateHeader:self.header coords:self.coords tri:self.tri];
+}
+
+- (IBAction)openTriangulation:(id)sender {
+    [ReginaHelper viewPacket:self.packet->getTriangulation()];
 }
 
 - (void)packetWasRenamed:(regina::NPacket *)packet

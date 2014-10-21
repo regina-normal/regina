@@ -124,8 +124,7 @@
 }
 
 - (IBAction)openTriangulation:(id)sender {
-    regina::NPacket* show = self.packet->getTriangulation();
-    [ReginaHelper viewPacket:show];
+    [ReginaHelper viewPacket:self.packet->getTriangulation()];
 }
 
 - (void)updateTriangulationButton

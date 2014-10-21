@@ -49,4 +49,6 @@ namespace regina {
 @property (strong, nonatomic) SurfacesViewController* viewer;
 @property (assign, nonatomic) regina::NNormalSurfaceList* packet;
 
+- (IBAction)openTriangulation:(id)sender;
+
 @end
