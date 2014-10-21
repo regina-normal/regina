@@ -38,7 +38,6 @@
 #import "triangulation/ntriangulation.h"
 
 // TODO: A few deletes and then we get stuck (also dim2/gluings)
-// TODO: Extend height of tap region to the entire cell (also snappea/cusps, dim2/gluings)
 
 // TODO: Provide a way to clone packets.
 
