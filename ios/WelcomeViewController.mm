@@ -74,7 +74,6 @@ public:
 #pragma mark - Test suite controller
 
 @interface TestSuiteController () {
-    NSMutableAttributedString* history;
     UIColor* testColour;
     UIColor* successColour;
     UIColor* failureColour;
@@ -101,9 +100,9 @@ public:
     runningString = [[NSMutableAttributedString alloc] init];
     [runningString appendAttributedString:[[NSAttributedString alloc] initWithString:@"  –  "
                                                                           attributes:@{NSForegroundColorAttributeName:testColour}]];
-    [runningString appendAttributedString:[[NSAttributedString alloc] initWithString:@"Running…\n\n"
+    [runningString appendAttributedString:[[NSAttributedString alloc] initWithString:@"Running…\n"
                                                                           attributes:@{NSForegroundColorAttributeName:runningColour}]];
-    
+
     successString = [[NSMutableAttributedString alloc] init];
     [successString appendAttributedString:[[NSAttributedString alloc] initWithString:@"  ✔︎\n"
                                                                           attributes:@{NSForegroundColorAttributeName:successColour}]];
@@ -116,15 +115,14 @@ public:
 
 - (void)runTests
 {
+    nSuccesses = nFailures = 0;
+
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         CppUnit::TextTestRunner runner;
         populateTests(runner);
         
         iOSProgress progress((__bridge void*)self);
         runner.eventManager().addListener(&progress);
-        
-        history = [[NSMutableAttributedString alloc] init];
-        nSuccesses = nFailures = 0;
         
         runner.run("", false, false, false);
         
@@ -135,14 +133,11 @@ public:
 - (void)startTest:(NSString *)name
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [history appendAttributedString:[[NSAttributedString alloc] initWithString:name
-                                                                        attributes:@{NSForegroundColorAttributeName:testColour}]];
-        NSMutableAttributedString* text = [[NSMutableAttributedString alloc] init];
-        [text appendAttributedString:history];
-        [text appendAttributedString:runningString];
-        
-        self.output.attributedText = text;
-        [self.output scrollRangeToVisible:NSMakeRange(text.length - 1, 1)];
+        [self.output.textStorage appendAttributedString:[[NSAttributedString alloc] initWithString:name
+                                                                                        attributes:@{NSForegroundColorAttributeName:testColour}]];
+        [self.output.textStorage appendAttributedString:runningString];
+
+        [self.output scrollRangeToVisible:NSMakeRange(self.output.textStorage.length, 0)];
     });
 }
 
@@ -150,26 +145,27 @@ public:
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         ++nSuccesses;
-        
-        [history appendAttributedString:successString];
-        
-        self.output.attributedText = history;
-        [self.output scrollRangeToVisible:NSMakeRange(history.length - 1, 1)];
+
+        [self.output.textStorage replaceCharactersInRange:NSMakeRange(self.output.textStorage.length - runningString.length, runningString.length)
+                                     withAttributedString:successString];
+
+        // No need to scroll, since we will start a new test (or summarise results) immediately.
     });
 }
 
 - (void)failure:(const CppUnit::TestFailure &)failure
 {
     NSString* rawText = [NSString stringWithFormat:@"  ✘\n\nFailure: %s\n", failure.thrownException()->message().details().c_str()];
+    NSAttributedString* formatted = [[NSAttributedString alloc] initWithString:rawText
+                                                                    attributes:@{NSForegroundColorAttributeName:failureColour}];
 
     dispatch_async(dispatch_get_main_queue(), ^{
         ++nFailures;
         
-        [history appendAttributedString:[[NSAttributedString alloc] initWithString:rawText
-                                                                     attributes:@{NSForegroundColorAttributeName:failureColour}]];
-        
-        self.output.attributedText = history;
-        [self.output scrollRangeToVisible:NSMakeRange(history.length - 1, 1)];
+        [self.output.textStorage replaceCharactersInRange:NSMakeRange(self.output.textStorage.length - runningString.length, runningString.length)
+                                     withAttributedString:formatted];
+
+        // No need to scroll, since we will start a new test (or summarise results) immediately.
     });
 }
                    
@@ -178,16 +174,15 @@ public:
     dispatch_async(dispatch_get_main_queue(), ^{
         if (nFailures == 0) {
             NSString* rawText = [NSString stringWithFormat:@"\nAll %d tests passed.\n\n", nSuccesses];
-            [history appendAttributedString:[[NSAttributedString alloc] initWithString:rawText
-                                                                            attributes:@{NSForegroundColorAttributeName:successColour}]];
+            [self.output.textStorage appendAttributedString:[[NSAttributedString alloc] initWithString:rawText
+                                                                                            attributes:@{NSForegroundColorAttributeName:successColour}]];
         } else {
             NSString* rawText = [NSString stringWithFormat:@"\n%d of %d tests failed.\nPlease pass this information on to the Regina developers.\n\n", nFailures, (nFailures + nSuccesses)];
-            [history appendAttributedString:[[NSAttributedString alloc] initWithString:rawText
-                                                                            attributes:@{NSForegroundColorAttributeName:failureColour}]];
+            [self.output.textStorage appendAttributedString:[[NSAttributedString alloc] initWithString:rawText
+                                                                                            attributes:@{NSForegroundColorAttributeName:failureColour}]];
         }
         
-        self.output.attributedText = history;
-        [self.output scrollRangeToVisible:NSMakeRange(history.length - 1, 1)];
+        [self.output scrollRangeToVisible:NSMakeRange(self.output.textStorage.length, 0)];
 
         self.closeButton.enabled = YES;
     });
