@@ -223,7 +223,6 @@ public:
 
 - (IBAction)longPress:(id)sender
 {
-    // TODO: Arrows up or down only.
     UILongPressGestureRecognizer *press = static_cast<UILongPressGestureRecognizer*>(sender);
     if (press.state == UIGestureRecognizerStateBegan) {
         CGPoint location = [press locationInView:self.view];
@@ -241,6 +240,8 @@ public:
                 [alert setModalPresentationStyle:UIModalPresentationPopover];
                 alert.popoverPresentationController.sourceView = self.view;
                 alert.popoverPresentationController.sourceRect = self.icon.frame;
+                if ([ReginaHelper ios8])
+                    alert.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp | UIPopoverArrowDirectionDown;
                 [self presentViewController:alert animated:YES completion:nil];
             } else {
                 UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil
