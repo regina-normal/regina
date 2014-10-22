@@ -223,6 +223,7 @@ public:
 
 - (IBAction)longPress:(id)sender
 {
+    // TODO: Arrows up or down only.
     UILongPressGestureRecognizer *press = static_cast<UILongPressGestureRecognizer*>(sender);
     if (press.state == UIGestureRecognizerStateBegan) {
         CGPoint location = [press locationInView:self.view];
