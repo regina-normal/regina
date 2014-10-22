@@ -226,40 +226,36 @@
     if ([to.class conformsToProtocol:@protocol(PacketViewer)])
         static_cast<id <PacketViewer> >(to).packet = self.packet;
 
-    to.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    [from willMoveToParentViewController:nil];
 
     // Note: The following call to addChildViewController: should
     // automatically call [to willMoveToParentViewController:self].
     [self addChildViewController:to];
 
+    UIView* subview = to.view;
+    subview.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:subview];
+
+    id topGuide = self.topLayoutGuide;
+    NSDictionary *views = NSDictionaryOfVariableBindings(subview, topGuide);
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[topGuide][subview]|"
+                                                                      options:0
+                                                                      metrics:nil
+                                                                        views:views]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[subview]|"
+                                                                      options:0
+                                                                      metrics:nil
+                                                                        views:views]];
+    [self.view setNeedsLayout];
+
+    [to didMoveToParentViewController:self];
+
     if (from) {
-        to.view.frame = from.view.frame;
-    } else {
-        CGSize outerSize = self.view.frame.size;
-        CGRect navFrame = self.navigationController.navigationBar.frame;
-        CGFloat navHeight = navFrame.size.height + navFrame.origin.y /* account for status bar also */;
-        to.view.frame = CGRectMake(0, navHeight, outerSize.width, outerSize.height - navHeight);
-    }
+        [from.view removeFromSuperview];
 
-    [to.view layoutIfNeeded];
-
-    if (from) {
-        [self transitionFromViewController:from
-                          toViewController:to
-                                  duration:0
-                                   options:0
-                                animations:nil
-                                completion:^(BOOL finished) {
-                                    // Likewise, the following call to removeFromParentViewController should
-                                    // automatically call [from didMoveToParentViewController:nil].
-                                    [from willMoveToParentViewController:nil];
-                                    [from removeFromParentViewController];
-
-                                    [to didMoveToParentViewController:self];
-                                }];
-    } else {
-        [self.view addSubview:to.view];
-        [to didMoveToParentViewController:self];
+        // Likewise, the following call to removeFromParentViewController should
+        // automatically call [from didMoveToParentViewController:nil].
+        [from removeFromParentViewController];
     }
 }
 
