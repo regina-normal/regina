@@ -45,7 +45,6 @@
 #import "packet/ntext.h"
 
 // TODO: FEATURE: Move packets around the tree.
-// TODO: BUG: Popping the navigation controller while renaming a cell causes badness.
 // TODO: FEATURE: Provide a way to clone packets.
 
 @interface PacketTreeController () <UIAlertViewDelegate, PacketDelegate> {

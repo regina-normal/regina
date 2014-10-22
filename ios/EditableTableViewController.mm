@@ -37,6 +37,11 @@
 
 // TODO: FEATURE: Rename actions -> tap outside text field ends edit
 
+@interface EditableTableViewController () {
+    UITextField* renameField;
+}
+@end
+
 @implementation EditableTableViewController
 
 - (void)viewDidLoad
@@ -55,6 +60,9 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    if (renameField)
+        [renameField endEditing:YES];
+    
     [super viewWillDisappear:animated];
 
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
@@ -90,20 +98,20 @@
             CGRect frame = CGRectMake(0, 0, CGRectGetWidth(bg.frame), CGRectGetHeight(bg.frame));
             frame = CGRectInset(frame, CGRectGetMinX(cell.textLabel.frame), 5);
 
-            UITextField* f = [[UITextField alloc] initWithFrame:frame];
-            f.backgroundColor = cell.backgroundColor;
-            f.borderStyle = UITextBorderStyleRoundedRect;
-            // f.placeholder = @"Type your document name...";
-            f.clearButtonMode = UITextFieldViewModeAlways;
-            f.text = [self renameInit:indexPath];
-            f.returnKeyType = UIReturnKeyDone;
-            f.autocapitalizationType = UITextAutocapitalizationTypeSentences;
-            f.autocorrectionType = UITextAutocorrectionTypeNo;
-            f.delegate = self;
+            renameField = [[UITextField alloc] initWithFrame:frame];
+            renameField.backgroundColor = cell.backgroundColor;
+            renameField.borderStyle = UITextBorderStyleRoundedRect;
+            // renameField.placeholder = @"Type your document name...";
+            renameField.clearButtonMode = UITextFieldViewModeAlways;
+            renameField.text = [self renameInit:indexPath];
+            renameField.returnKeyType = UIReturnKeyDone;
+            renameField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
+            renameField.autocorrectionType = UITextAutocorrectionTypeNo;
+            renameField.delegate = self;
 
-            [bg addSubview:f];
+            [bg addSubview:renameField];
             [self.tableView addSubview:bg];
-            [f becomeFirstResponder];
+            [renameField becomeFirstResponder];
         }
     }
 }
@@ -204,6 +212,7 @@
     // Remove that sheet (and the text field it contains) from the table view.
     [textField.superview removeFromSuperview];
     self.actionPath = nil;
+    renameField = nil;
 
     [self renameDone:renamePath result:text];
 }
