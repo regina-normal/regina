@@ -2288,7 +2288,7 @@ inline NIntegerBase<supportInfinity>::NIntegerBase(
         const NNativeInteger<bytes>& value) :
         small_(value.nativeValue()), large_(0) {
     BOOST_STATIC_ASSERT(bytes % sizeof(long) == 0);
-    if (sizeof(long) < bytes && value.nativeValue() != small_) {
+    if (sizeof(long) < bytes && value.nativeValue() != static_cast<typename IntOfSize<bytes>::type>(small_)) {
         // It didn't fit.  Take things one long at a time.
         unsigned blocks = bytes / sizeof(long);
         large_ = new mpz_t;
