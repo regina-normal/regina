@@ -60,17 +60,20 @@ class NPrimesTest : public CppUnit::TestFixture {
         void testSize(long size, const char* list) {
             long ans = NPrimes::size();
 
-            if (ans != size) {
+            // We can't test the size exactly, since the size may be
+            // larger than expected if other parts of Regina have
+            // already been run (in particular, if the test suite is
+            // being run for a second time in the same process).
+
+            if (ans < size) {
                 std::ostringstream msg;
-                msg << list << " should have size " << size
+                msg << list << " should have size >= " << size
                     << ", not " << ans << '.';
                 CPPUNIT_FAIL(msg.str());
             }
         }
 
         void autoGrow() {
-            // We rely here on the fact that no part of the test suite should
-            // have asked for very large primes before this test is run.
             testSize(10000, "The initial list of seed primes");
             NPrimes::prime(10005, false);
             testSize(10000, "The unexpanded list of primes");
