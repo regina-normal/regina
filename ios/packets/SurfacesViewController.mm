@@ -92,6 +92,11 @@
     NSString* triName = [NSString stringWithUTF8String:tri->getPacketLabel().c_str()];
     if (triName.length == 0)
         triName = @"(Unnamed)";
+
+    // Regarding the triangulation button:
+    // If we just call setTitle:, then then button flashes annoyingly the first time we switch to each tab.
+    // The following two-step method fixes this.
+    button.titleLabel.text = triName;
     [button setTitle:triName forState:UIControlStateNormal];
 }
 

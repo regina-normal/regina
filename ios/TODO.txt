@@ -54,7 +54,6 @@ LONG-TERM:
 - SurfacesCoords: on long press, view details (in case cells are too narrow).
 - Work out why horizontal alert views end up cropped (check autolayout
   messages dumped to the log).
-- Surface viewers: stop the triangulation button from flashing on setTitle.
 
 - Support state preservation and restoration.  See:
   https://developer.apple.com/library/ios/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/StatePreservation/StatePreservation.html
