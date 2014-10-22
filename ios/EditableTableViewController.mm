@@ -35,8 +35,6 @@
 
 #define SHEET_DELETE 501
 
-// TODO: FEATURE: Rename actions -> tap outside text field ends edit
-
 @interface EditableTableViewController () {
     UITextField* renameField;
 }
