@@ -226,19 +226,22 @@
     if ([to.class conformsToProtocol:@protocol(PacketViewer)])
         static_cast<id <PacketViewer> >(to).packet = self.packet;
 
-    [from willMoveToParentViewController:nil];
-
-    // Note: The following call to addChildViewController: should
-    // automatically call [to willMoveToParentViewController:self].
-    [self addChildViewController:to];
+    if (from) {
+        [from willMoveToParentViewController:nil];
+        [from.view removeFromSuperview];
+        // The following call to removeFromParentViewController should
+        // automatically call [from didMoveToParentViewController:nil].
+        [from removeFromParentViewController];
+    }
 
     UIView* subview = to.view;
     subview.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:subview];
 
     id topGuide = self.topLayoutGuide;
-    NSDictionary *views = NSDictionaryOfVariableBindings(subview, topGuide);
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[topGuide][subview]|"
+    id bottomGuide = self.bottomLayoutGuide;
+    NSDictionary *views = NSDictionaryOfVariableBindings(subview, topGuide, bottomGuide);
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[topGuide][subview][bottomGuide]"
                                                                       options:0
                                                                       metrics:nil
                                                                         views:views]];
@@ -248,15 +251,10 @@
                                                                         views:views]];
     [self.view setNeedsLayout];
 
+    // Note: The following call to addChildViewController: should
+    // automatically call [to willMoveToParentViewController:self].
+    [self addChildViewController:to];
     [to didMoveToParentViewController:self];
-
-    if (from) {
-        [from.view removeFromSuperview];
-
-        // Likewise, the following call to removeFromParentViewController should
-        // automatically call [from didMoveToParentViewController:nil].
-        [from removeFromParentViewController];
-    }
 }
 
 - (void)shareDocument
