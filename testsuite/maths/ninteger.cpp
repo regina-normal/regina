@@ -78,6 +78,7 @@ class NIntegerTest : public CppUnit::TestFixture {
 #ifdef INT128_AVAILABLE
     CPPUNIT_TEST(constructNative128<NInteger>);
     CPPUNIT_TEST(constructNative128<NLargeInteger>);
+    CPPUNIT_TEST(gcdNative128);
 #endif
     CPPUNIT_TEST(stringValue<NInteger>);
     CPPUNIT_TEST(stringValue<NLargeInteger>);
@@ -1146,6 +1147,31 @@ class NIntegerTest : public CppUnit::TestFixture {
                 "-170141183460469231731687303715884105728");
             testNative128<IntType>(maxVal,
                 "170141183460469231731687303715884105727");
+        }
+
+        void gcdNative128() {
+            // On arm64 with 128-bit integers, the implementation of
+            // gcdWith() in Regina 4.96 gives gcd(3,3) = 55340232221128654851.
+            // Ouch.
+
+            regina::IntOfSize<16>::type n = 3;
+            int shift = 0;
+            n <<= shift;
+            if (n != 3) {
+                std::ostringstream msg;
+                msg << "128-bit (3 <<= 0) gives "
+                    << (long)(n >> 64) << ":" << (long)(n) << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            regina::NNativeInteger<16> a, b;
+            a = b = 3;
+            a.gcdWith(b);
+            if (a != 3) {
+                std::ostringstream msg;
+                msg << "128-bit gcd gives gcd(3,3) = " << a << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
         }
 #endif
 
