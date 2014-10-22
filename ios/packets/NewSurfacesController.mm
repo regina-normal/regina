@@ -172,6 +172,8 @@ static NSArray* embText;
 
     _running = true;
 
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
+
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NNormalSurfaceList* ans =
             NNormalSurfaceList::enumerate((regina::NTriangulation*)self.spec.parent,
@@ -185,6 +187,8 @@ static NSArray* embText;
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            [UIApplication sharedApplication].idleTimerDisabled = NO;
+
             if (_tracker.isCancelled()) {
                 delete ans;
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Enumeration Cancelled"

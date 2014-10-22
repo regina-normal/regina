@@ -115,6 +115,8 @@ public:
 
 - (void)runTests
 {
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
+
     nSuccesses = nFailures = 0;
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -127,6 +129,7 @@ public:
         runner.run("", false, false, false);
         
         [self finished];
+        [UIApplication sharedApplication].idleTimerDisabled = NO;
     });
 }
 

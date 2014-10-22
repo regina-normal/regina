@@ -105,6 +105,8 @@ static NSArray* whichText;
 
     _running = true;
 
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
+
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NAngleStructureList* ans =
             NAngleStructureList::enumerate((regina::NTriangulation*)self.spec.parent, tautOnly, &_tracker);
@@ -117,6 +119,8 @@ static NSArray* whichText;
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            [UIApplication sharedApplication].idleTimerDisabled = NO;
+            
             if (_tracker.isCancelled()) {
                 delete ans;
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Enumeration Cancelled"
