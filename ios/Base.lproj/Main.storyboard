@@ -8482,7 +8482,7 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="vrA-OC-rcf"/>
         <segue reference="sZ3-q9-8Px"/>
+        <segue reference="iPv-1V-ozc"/>
     </inferredMetricsTieBreakers>
 </document>
