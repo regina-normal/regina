@@ -77,6 +77,14 @@ BOOL ios8;
         return nil;
 }
 
++ (PacketTreeController *)treeRoot
+{
+    for (UIViewController* c in masterNav.viewControllers)
+        if ([c isKindOfClass:[PacketTreeController class]])
+            return static_cast<PacketTreeController*>(c);
+    return nil;
+}
+
 + (void)viewPacket:(regina::NPacket *)packet
 {
     BOOL display = (packet->getPacketType() != regina::PACKET_CONTAINER);

@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#import "PacketTreeController.h"
 #import "ReginaDocument.h"
 #import "ReginaHelper.h"
 #import "packet/ncontainer.h"
@@ -277,6 +278,7 @@ enum DocError {
             _type = DOC_NATIVE;
             
             [self updateChangeCount:UIDocumentChangeDone];
+            ReginaHelper.treeRoot.navigationItem.title = [newURL.lastPathComponent stringByDeletingPathExtension];
         } else {
             UIAlertView* alert = [[UIAlertView alloc]
                                   initWithTitle:@"Changes Will Be Lost"

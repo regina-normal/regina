@@ -72,10 +72,16 @@ namespace regina {
 + (ReginaDocument*)document;
 
 /**
- * Returns the top-level packet tree controller, or \c nil if no
- * document is open.
+ * Returns the topmost packet tree controller in the navigation stack,
+ * or \c nil if no document is open.
  */
 + (PacketTreeController*)tree;
+
+/**
+ * Returns the packet tree controller corresponding to the root of the
+ * packet tree, or \c nil if no document is open.
+ */
++ (PacketTreeController*)treeRoot;
 
 /**
  * Opens the given packet for viewing and/or editing.
