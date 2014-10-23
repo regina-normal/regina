@@ -143,7 +143,14 @@ enum DocError {
     self = [super initWithFileURL:url];
     if (self) {
         _tree = new regina::NContainer();
-        regina::NText* text = new regina::NText("TODO: WELCOME: A welcome.");
+        regina::NText* text = new regina::NText(
+"Welcome to Regina!\n\n"
+"A single Regina document can contain many objects, also called \"packets\".  "
+"For example, a packet might be a triangulation, a list of normal surfaces, "
+"or a text snippet (such as this one).\n\n"
+"To create a new packet, press + in the top-left corner of the screen.\n\n"
+"To delete a packet, swipe to the left.  If you like, you can delete this packet now.");
+
         text->setPacketLabel("Read me");
         _tree->insertChildLast(text);
         _type = DOC_NATIVE;
