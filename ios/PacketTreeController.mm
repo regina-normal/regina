@@ -91,6 +91,11 @@
         _listener = [PacketListenerIOS listenerWithPacket:_node delegate:self listenChildren:YES];
         self.title = doc.localizedName;
         [self refreshPackets];
+
+        // Be helpful to the user and open the placeholder text packet that is
+        // created with every new document.
+        if (_node->getFirstTreeChild())
+            ReginaHelper.detail.packet = _node->getFirstTreeChild();
     }];
 }
 
@@ -123,6 +128,10 @@
         _listener = [PacketListenerIOS listenerWithPacket:_node delegate:self listenChildren:YES];
         self.title = doc.localizedName;
         [self refreshPackets];
+
+        // If there is only one packet, open it immediately.
+        if (_node->getFirstTreeChild() && ! _node->getFirstTreeChild()->getNextTreeSibling())
+            ReginaHelper.detail.packet = _node->getFirstTreeChild();
     }];
     
     [ReginaHelper detail].doc = doc;

@@ -33,8 +33,6 @@
 #import "CensusListController.h"
 #import "Example.h"
 
-// TODO: WELCOME: Cut down iOS census examples to a more manageable size.
-
 @interface CensusListController () {
     NSArray *_census;
 }
