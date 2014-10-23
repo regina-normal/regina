@@ -130,6 +130,8 @@ BOOL ios8;
 
 + (void)runWithHUD:(NSString *)message code:(void (^)())code cleanup:(void(^)())cleanup
 {
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
+
     UIView* root = [UIApplication sharedApplication].keyWindow.rootViewController.view;
     MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:root animated:YES];
     hud.labelText = message;
@@ -140,6 +142,8 @@ BOOL ios8;
             [MBProgressHUD hideHUDForView:root animated:NO];
             if (cleanup != nil)
                 cleanup();
+
+            [UIApplication sharedApplication].idleTimerDisabled = NO;
         });
     });
 }
