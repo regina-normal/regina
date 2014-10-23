@@ -3,19 +3,19 @@
     {
       "size" : "29x29",
       "idiom" : "iphone",
-      "filename" : "regina-bg-29.png",
+      "filename" : "app-29-1.png",
       "scale" : "1x"
     },
     {
       "size" : "29x29",
       "idiom" : "iphone",
-      "filename" : "regina-bg-58.png",
+      "filename" : "app-58-1.png",
       "scale" : "2x"
     },
     {
       "size" : "40x40",
       "idiom" : "iphone",
-      "filename" : "regina-bg-80.png",
+      "filename" : "app-80-1.png",
       "scale" : "2x"
     },
     {
@@ -31,37 +31,37 @@
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "regina-bg-120.png",
+      "filename" : "app-120.png",
       "scale" : "2x"
     },
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "regina-bg-180.png",
+      "filename" : "app-180.png",
       "scale" : "3x"
     },
     {
       "size" : "29x29",
       "idiom" : "ipad",
-      "filename" : "regina-bg-29-1.png",
+      "filename" : "app-29.png",
       "scale" : "1x"
     },
     {
       "size" : "29x29",
       "idiom" : "ipad",
-      "filename" : "regina-bg-58-1.png",
+      "filename" : "app-58.png",
       "scale" : "2x"
     },
     {
       "size" : "40x40",
       "idiom" : "ipad",
-      "filename" : "regina-bg-40.png",
+      "filename" : "app-40.png",
       "scale" : "1x"
     },
     {
       "size" : "40x40",
       "idiom" : "ipad",
-      "filename" : "regina-bg-80-1.png",
+      "filename" : "app-80.png",
       "scale" : "2x"
     },
     {
@@ -87,73 +87,73 @@
     {
       "size" : "76x76",
       "idiom" : "ipad",
-      "filename" : "regina-bg-76.png",
+      "filename" : "app-76.png",
       "scale" : "1x"
     },
     {
       "size" : "76x76",
       "idiom" : "ipad",
-      "filename" : "regina-bg-152.png",
+      "filename" : "app-152.png",
       "scale" : "2x"
     },
     {
       "size" : "16x16",
       "idiom" : "mac",
-      "filename" : "regina-bg-16.png",
+      "filename" : "app-16.png",
       "scale" : "1x"
     },
     {
       "size" : "16x16",
       "idiom" : "mac",
-      "filename" : "regina-bg-32.png",
+      "filename" : "app-32-1.png",
       "scale" : "2x"
     },
     {
       "size" : "32x32",
       "idiom" : "mac",
-      "filename" : "regina-bg-32-1.png",
+      "filename" : "app-32.png",
       "scale" : "1x"
     },
     {
       "size" : "32x32",
       "idiom" : "mac",
-      "filename" : "regina-bg-64.png",
+      "filename" : "app-64.png",
       "scale" : "2x"
     },
     {
       "size" : "128x128",
       "idiom" : "mac",
-      "filename" : "regina-bg-128.png",
+      "filename" : "app-128.png",
       "scale" : "1x"
     },
     {
       "size" : "128x128",
       "idiom" : "mac",
-      "filename" : "regina-bg-256.png",
+      "filename" : "app-256-1.png",
       "scale" : "2x"
     },
     {
       "size" : "256x256",
       "idiom" : "mac",
-      "filename" : "regina-bg-256-1.png",
+      "filename" : "app-256.png",
       "scale" : "1x"
     },
     {
       "size" : "256x256",
       "idiom" : "mac",
-      "filename" : "regina-bg-512.png",
+      "filename" : "app-512-1.png",
       "scale" : "2x"
     },
     {
       "size" : "512x512",
       "idiom" : "mac",
-      "filename" : "regina-bg-512-1.png",
+      "filename" : "app-512.png",
       "scale" : "1x"
     },
     {
       "size" : "512x512",
       "idiom" : "mac",
-      "filename" : "regina-bg-1024.png",
+      "filename" : "app-1024.png",
       "scale" : "2x"
     }
   ],
