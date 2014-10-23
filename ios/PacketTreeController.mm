@@ -44,9 +44,6 @@
 #import "packet/ncontainer.h"
 #import "packet/ntext.h"
 
-// TODO: FEATURE: Move packets around the tree.
-// TODO: FEATURE: Provide a way to clone packets.
-
 @interface PacketTreeController () <UIAlertViewDelegate, PacketDelegate> {
     /**
      * Stores the immediate children of the subtree packet (self.node), in order.
@@ -170,17 +167,15 @@
     if (_recentPacketIndex < _packets.count && [_packets pointerAtIndex:_recentPacketIndex] == packet)
         return _recentPacketIndex;
 
+    // Note: it is possible that the array is not in sync with the packet tree.
+    // (This happens for instance when a new packet is created in the middle
+    // of the list as opposed to the end.)
     NSLog(@"Performing linear search for packet.");
     int index = 0;
-    for (regina::NPacket* p = self.node->getFirstTreeChild(); p; p = p->getNextTreeSibling(), ++index) {
-        if (p == packet) {
-            if (index < _packets.count && [_packets pointerAtIndex:index] == packet) {
-                _recentPacketIndex = index;
-                return index;
-            } else {
-                NSLog(@"ERROR: Mismatch between packet indices and the packet tree.");
-                return -1;
-            }
+    for ( ; index < _packets.count; ++index) {
+        if ([_packets pointerAtIndex:index] == packet) {
+            _recentPacketIndex = index;
+            return index;
         }
     }
     return -1;
@@ -336,10 +331,8 @@
         } else {
             // This requires a linear scan to find childIndex, but the good news
             // is that the linear scan only happens if the insertion is *not* at
-            // the end of the list.  I cannot offhand think of a scenario in which
-            // this can even happen for the iOS version.
-            childIndex = [self packetIndexForPacket:child->getNextTreeSibling()] - 1;
-            NSAssert(childIndex >= 0, @"childWasAddedTo: childIndex should be non-negative.");
+            // the end of the list.
+            childIndex = [self packetIndexForPacket:child->getNextTreeSibling()];
             [_packets insertPointer:child atIndex:childIndex];
         }
 
@@ -400,6 +393,34 @@
     _recentPacketIndex = [self packetIndexForPath:path];
     regina::NPacket* p = static_cast<regina::NPacket*>([_packets pointerAtIndex:_recentPacketIndex]);
     p->setPacketLabel([[result stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] UTF8String]);
+}
+
+- (NSArray *)otherActionLabels
+{
+    _recentPacketIndex = [self packetIndexForPath:self.actionPath];
+    regina::NPacket* p = static_cast<regina::NPacket*>([_packets pointerAtIndex:_recentPacketIndex]);
+
+    if (p->getFirstTreeChild())
+        return @[@"Clone", @"Clone Subtree", @"Move"];
+    else
+        return @[@"Clone", @"Move"];
+}
+
+- (void)otherActionSelected:(int)which
+{
+    _recentPacketIndex = [self packetIndexForPath:self.actionPath];
+    regina::NPacket* p = static_cast<regina::NPacket*>([_packets pointerAtIndex:_recentPacketIndex]);
+
+    if (which == 0) {
+        /* Clone packet */
+        p->clone(false, false);
+    } else if (which == 1 && p->getFirstTreeChild()) {
+        /* Clone subtree */
+        p->clone(true, false);
+    } else {
+        // TODO: Move packet.
+        NSLog(@"Move packet.");
+    }
 }
 
 - (NSString *)deleteConfirmation:(NSIndexPath *)path

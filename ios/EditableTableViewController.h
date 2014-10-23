@@ -43,6 +43,8 @@
  *   must be overridden);
  * - offers a facility for renaming cells using a long press gesture (the \a rename... methods,
  *   which must likewise be overridden);
+ * - offers a facility for additional long-press actions (the \a otherAction... methods,
+ *   which need only be overridden if there are additional actions available);
  * - manages the positioning of the table as the keyboard appears and disappears.
  *
  * All other functionality is left for subclasses to implement.
@@ -102,6 +104,27 @@
  * @param result The new name as entered by the user.
  */
 - (void)renameDone:(NSIndexPath*)path result:(NSString*)result;
+
+/**
+ * Subclasses that offer additional long-press actions should override this
+ * method, which must return an array of text labels to show on the long-press
+ * action sheet.
+ */
+- (NSArray*)otherActionLabels;
+
+/**
+ * Subclasses that offer additional long-press actions should override this
+ * method, which will be called when the user selections one of these additional
+ * actions.  This routine is where the additional actions should be implemented.
+ *
+ * This class will reset \a actionIndex to \a nil immediately after this routine
+ * is called.  If your action needs to preserve \a actionIndex then your implementation
+ * of otherActionSelected should make a local copy.
+ *
+ * @param which Indicates which action was selected.  This will match the
+ * corresponding array index into \a otherActionLabels.
+ */
+- (void)otherActionSelected:(int)which;
 
 /**
  * Subclasses must override this to return the label on the destructive

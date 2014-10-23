@@ -34,9 +34,11 @@
 #import "ReginaHelper.h"
 
 #define SHEET_DELETE 501
+#define SHEET_ACTION 502
 
 @interface EditableTableViewController () {
     UITextField* renameField;
+    NSInteger renameIndex;
 }
 @end
 
@@ -83,35 +85,96 @@
         if (state == UIGestureRecognizerStateBegan) {
             self.actionPath = indexPath;
 
-            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+            NSArray* other = self.otherActionLabels;
+            if (other) {
+                // Show an action sheet offering the various actions available.
+                UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:self.actionPath];
 
-            // Create a background sheet to hide the old cell contents.
-            // The inset of dy=1 is so we don't cover the cell dividers.
-            UIView* bg = [[UIView alloc] initWithFrame:CGRectInset(cell.frame, 0, 1)];
-            bg.backgroundColor = cell.backgroundColor;
+                if ([ReginaHelper ios8]) {
+                    UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil
+                                                                                   message:nil
+                                                                            preferredStyle:UIAlertControllerStyleActionSheet];
 
-            // The text field itself will be smaller.
-            // Add a small additional y inset, and an x inset that aligns the text field
-            // with the labels in other cells.
-            CGRect frame = CGRectMake(0, 0, CGRectGetWidth(bg.frame), CGRectGetHeight(bg.frame));
-            frame = CGRectInset(frame, CGRectGetMinX(cell.textLabel.frame), 5);
+                    int index = 0;
+                    for (NSString* label : other) {
+                        [alert addAction:[UIAlertAction actionWithTitle:label
+                                                                  style:UIAlertActionStyleDefault
+                                                                handler:^(UIAlertAction*){
+                                                                    [self otherActionSelected:index];
+                                                                    self.actionPath = nil;
+                                                                }]];
+                        ++index;
+                    }
+                    [alert addAction:[UIAlertAction actionWithTitle:@"Rename"
+                                                              style:UIAlertActionStyleDefault
+                                                            handler:^(UIAlertAction*) {
+                                                                [self renameBegin];
+                                                            }]];
+                    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel"
+                                                              style:UIAlertActionStyleCancel
+                                                            handler:^(UIAlertAction*) {
+                                                                self.actionPath = nil;
+                                                            }]];
+                    [alert setModalPresentationStyle:UIModalPresentationPopover];
+                    alert.popoverPresentationController.sourceView = self.tableView;
+                    alert.popoverPresentationController.sourceRect = cell.frame;
+                    [self presentViewController:alert animated:YES completion:nil];
+                } else {
+                    UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                                       delegate:self
+                                                              cancelButtonTitle:nil
+                                                         destructiveButtonTitle:nil
+                                                              otherButtonTitles:nil];
 
-            renameField = [[UITextField alloc] initWithFrame:frame];
-            renameField.backgroundColor = cell.backgroundColor;
-            renameField.borderStyle = UITextBorderStyleRoundedRect;
-            // renameField.placeholder = @"Type your document name...";
-            renameField.clearButtonMode = UITextFieldViewModeAlways;
-            renameField.text = [self renameInit:indexPath];
-            renameField.returnKeyType = UIReturnKeyDone;
-            renameField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
-            renameField.autocorrectionType = UITextAutocorrectionTypeNo;
-            renameField.delegate = self;
+                    int index = 0;
+                    for (NSString* label : other) {
+                        [sheet addButtonWithTitle:label];
+                        ++index;
+                    }
+                    renameIndex = [sheet addButtonWithTitle:@"Rename"];
+                    sheet.cancelButtonIndex = [sheet addButtonWithTitle:@"Cancel"];
 
-            [bg addSubview:renameField];
-            [self.tableView addSubview:bg];
-            [renameField becomeFirstResponder];
+                    sheet.tag = SHEET_ACTION;
+                    [sheet showFromRect:cell.frame inView:self.tableView animated:YES];
+                }
+            } else {
+                // The only available action is rename.
+                // Just do it immediately.
+                [self renameBegin];
+            }
         }
     }
+}
+
+- (void)renameBegin
+{
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:self.actionPath];
+
+    // Create a background sheet to hide the old cell contents.
+    // The inset of dy=1 is so we don't cover the cell dividers.
+    UIView* bg = [[UIView alloc] initWithFrame:CGRectInset(cell.frame, 0, 1)];
+    bg.backgroundColor = cell.backgroundColor;
+
+    // The text field itself will be smaller.
+    // Add a small additional y inset, and an x inset that aligns the text field
+    // with the labels in other cells.
+    CGRect frame = CGRectMake(0, 0, CGRectGetWidth(bg.frame), CGRectGetHeight(bg.frame));
+    frame = CGRectInset(frame, CGRectGetMinX(cell.textLabel.frame), 5);
+
+    renameField = [[UITextField alloc] initWithFrame:frame];
+    renameField.backgroundColor = cell.backgroundColor;
+    renameField.borderStyle = UITextBorderStyleRoundedRect;
+    // renameField.placeholder = @"Type your document name...";
+    renameField.clearButtonMode = UITextFieldViewModeAlways;
+    renameField.text = [self renameInit:self.actionPath];
+    renameField.returnKeyType = UIReturnKeyDone;
+    renameField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
+    renameField.autocorrectionType = UITextAutocorrectionTypeNo;
+    renameField.delegate = self;
+
+    [bg addSubview:renameField];
+    [self.tableView addSubview:bg];
+    [renameField becomeFirstResponder];
 }
 
 - (BOOL)renameAllowed:(NSIndexPath *)path
@@ -125,6 +188,15 @@
 }
 
 - (void)renameDone:(NSIndexPath *)path result:(NSString *)result
+{
+}
+
+- (NSArray *)otherActionLabels
+{
+    return nil;
+}
+
+- (void)otherActionSelected:(int)which
 {
 }
 
@@ -196,6 +268,13 @@
         if (buttonIndex == actionSheet.destructiveButtonIndex)
             [self deleteAction];
         self.actionPath = nil;
+    } else if (actionSheet.tag == SHEET_ACTION) {
+        if (buttonIndex == renameIndex)
+            [self renameBegin];
+        else {
+            [self otherActionSelected:buttonIndex];
+            self.actionPath = nil;
+        }
     }
 }
 
