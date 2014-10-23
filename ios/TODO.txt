@@ -38,6 +38,7 @@ TEST:
 
 LONG-TERM:
 
+- Move packets around the tree.
 - Call UIApplication::idleTimerDisabled when running long tasks
   (e.g., enumerating normal surfaces), to stop the screen from locking.
 - Find a way to install *.tdb in a subdirectory beneath Resources/.

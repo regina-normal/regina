@@ -401,9 +401,9 @@
     regina::NPacket* p = static_cast<regina::NPacket*>([_packets pointerAtIndex:_recentPacketIndex]);
 
     if (p->getFirstTreeChild())
-        return @[@"Clone", @"Clone Subtree", @"Move"];
+        return @[@"Clone", @"Clone Subtree"];
     else
-        return @[@"Clone", @"Move"];
+        return @[@"Clone"];
 }
 
 - (void)otherActionSelected:(int)which
@@ -417,9 +417,6 @@
     } else if (which == 1 && p->getFirstTreeChild()) {
         /* Clone subtree */
         p->clone(true, false);
-    } else {
-        // TODO: Move packet.
-        NSLog(@"Move packet.");
     }
 }
 
