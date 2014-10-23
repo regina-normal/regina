@@ -69,7 +69,8 @@
     if (myEdit)
         return;
 
-    _detail.text = [NSString stringWithUTF8String:self.packet->getText().c_str()];
+    self.detail.text = [NSString stringWithUTF8String:self.packet->getText().c_str()];
+    [self.detail scrollRangeToVisible:NSMakeRange(0, 0)];
 }
 
 - (void)endEditing

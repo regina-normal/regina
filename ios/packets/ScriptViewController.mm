@@ -72,6 +72,7 @@
 - (void)reloadPacket
 {
     self.script.text = [NSString stringWithUTF8String:self.packet->getText().c_str()];
+    [self.script scrollRangeToVisible:NSMakeRange(0, 0)];
     [self.variables reloadData];
 }
 
