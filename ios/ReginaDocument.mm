@@ -147,7 +147,7 @@ enum DocError {
 "Welcome to Regina!\n\n"
 "A single Regina document can contain many objects, also called \"packets\".  "
 "For example, a packet might be a triangulation, a list of normal surfaces, "
-"or a text snippet (such as this one).\n\n"
+"or a text note (such as this one).\n\n"
 "To create a new packet, press + in the top-left corner of the screen.\n\n"
 "To delete a packet, swipe it to the left in the list of packets.  "
 "If you like, you can delete this packet now.");

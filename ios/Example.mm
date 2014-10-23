@@ -32,7 +32,7 @@
 
 #import "Example.h"
 
-static Example* _intro = [Example exampleWithFile:@"sample-ios.rga" desc:@"Introductory examples"];
+static Example* _intro = [Example exampleWithFile:@"sample.rga" desc:@"Introductory examples"];
 
 static NSArray* _census = [NSArray arrayWithObjects:
                            [Example exampleWithFile:@"closed-or-census.rga" desc:@"Closed census (orientable)"],
