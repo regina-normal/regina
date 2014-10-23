@@ -5636,6 +5636,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				MACOSX_DEPLOYMENT_TARGET = "";
 				PRODUCT_NAME = mkcensusdb;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -5652,6 +5653,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				MACOSX_DEPLOYMENT_TARGET = "";
 				PRODUCT_NAME = mkcensusdb;
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
