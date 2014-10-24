@@ -69,8 +69,10 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>4.96.1.0</string>
+	<string>4.96.1.1</string>
 	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UIFileSharingEnabled</key>
 	<true/>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
