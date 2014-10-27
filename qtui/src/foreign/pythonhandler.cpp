@@ -62,7 +62,7 @@ regina::NPacket* PythonHandler::importData(const QString& fileName,
         ReginaSupport::warn(parentWidget,
             QObject::tr("The import failed."), 
             QObject::tr("<qt>I could not read from the file <tt>%1</tt>.</qt>").
-                arg(Qt::escape(fileName)));
+                arg(fileName.toHtmlEscaped()));
         return 0;
     }
     QTextStream in(&f);
@@ -141,7 +141,7 @@ bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
         ReginaSupport::warn(parentWidget,
             QObject::tr("The export failed."), 
             QObject::tr("<qt>I could not write to the file <tt>%1</tt>.</qt>").
-                arg(Qt::escape(fileName)));
+                arg(fileName.toHtmlEscaped()));
         return false;
     }
     QTextStream out(&f);

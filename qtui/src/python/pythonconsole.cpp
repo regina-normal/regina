@@ -319,7 +319,7 @@ bool PythonConsole::importRegina() {
         if (! regModuleDir.empty())
             installationMsg = tr("The module 'regina' should be installed "
                 "beneath the directory <tt>%1/</tt>.  ")
-                .arg(Qt::escape(QFile::decodeName(regModuleDir.c_str())));
+                .arg(QFile::decodeName(regModuleDir.c_str()).toHtmlEscaped());
         else
             installationMsg = tr("The module 'regina' should be installed "
                 "in Python's standard site-packages directory.  ");
@@ -417,7 +417,7 @@ void PythonConsole::saveLog() {
                 tr("I could not save the session transcript."),
                 tr("<qt>An error occurred whilst "
                 "attempting to write to the file <tt>%1</tt>.</qt>").
-                arg(Qt::escape(fileName)));
+                arg(fileName.toHtmlEscaped()));
         else {
             QTextStream out(&f);
             out.setCodec(QTextCodec::codecForName("UTF-8"));

@@ -194,7 +194,7 @@ bool ScriptVarModel::setData(const QModelIndex& index, const QVariant& value,
             if (data.isEmpty()) {
                 ReginaSupport::info(0,
                     tr("<qt><tt>%1</tt> is not a valid Python "
-                        "variable name.</qt>").arg(Qt::escape(oldData)));
+                        "variable name.</qt>").arg(oldData.toHtmlEscaped()));
                 return false;
             }
             if (! rePythonIdentifier.exactMatch(data))
@@ -202,9 +202,9 @@ bool ScriptVarModel::setData(const QModelIndex& index, const QVariant& value,
 
             ReginaSupport::info(0,
                 tr("<qt><tt>%1</tt> is not a valid Python variable name.</qt>").
-                    arg(Qt::escape(oldData)),
+                    arg(oldData.toHtmlEscaped()),
                 tr("<qt>I have changed it to <tt>%1</tt> instead.</qt>").
-                    arg(Qt::escape(data)));
+                    arg(data.toHtmlEscaped()));
         }
         if (nameUsedElsewhere(data, index.row())) {
             QString oldData(data);
@@ -218,9 +218,9 @@ bool ScriptVarModel::setData(const QModelIndex& index, const QVariant& value,
 
             ReginaSupport::info(0,
                 tr("<qt>Another variable is already using the "
-                    "name <tt>%1</tt>.</qt>").arg(Qt::escape(oldData)),
+                    "name <tt>%1</tt>.</qt>").arg(oldData.toHtmlEscaped()),
                 tr("<qt>I will use <tt>%1</tt> instead.</qt>").
-                    arg(Qt::escape(data)));
+                    arg(data.toHtmlEscaped()));
         }
 
         script_->setVariableName(index.row(), data.toLatin1().constData());
@@ -512,7 +512,8 @@ void NScriptUI::removeSelectedVariables() {
     msgBox.setIcon(QMessageBox::Question);
     if (rows.size() == 1) {
         msgBox.setText(tr("<qt>The variable <tt>%1</tt> will be removed.</qt>").
-            arg(Qt::escape(script->getVariableName(*rows.begin()).c_str())));
+            arg(QString(script->getVariableName(*rows.begin()).c_str()).
+                toHtmlEscaped()));
         msgBox.setInformativeText(tr("Are you sure?"));
     } else {
         msgBox.setText(tr("%1 variables will be removed.").arg(rows.size()));

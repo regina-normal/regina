@@ -269,8 +269,8 @@ void NAngleStructureUI::refreshHeader() {
         "<qt>%1<br>%2<br>Triangulation: <a href=\"#\">%3</a></qt>").
         arg(count).
         arg(span).
-        arg(Qt::escape(model->structures()->getTriangulation()->
-            getHumanLabel().c_str())));
+        arg(QString(model->structures()->getTriangulation()->
+            getHumanLabel().c_str()).toHtmlEscaped()));
 }
 
 void NAngleStructureUI::viewTriangulation() {

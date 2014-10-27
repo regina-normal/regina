@@ -352,7 +352,7 @@ void ReginaMain::fileOpenUrl(const QUrl& url) {
             tr("I could not open the selected file."),
             tr("<qt>Please check that the file <tt>%1</tt> "
             "is readable and in Regina format.</qt>").
-            arg(Qt::escape(localFile)));
+            arg(localFile.toHtmlEscaped()));
         return;
     }
 
@@ -385,7 +385,7 @@ void ReginaMain::fileOpenExample(const QUrl& url, const QString& description) {
             tr("I could not locate the example that you requested."),
             tr("<qt>The example \"%1\" may not have been installed properly.  "
             "Please contact <i>%2</i> for assistance.").
-            arg(Qt::escape(description)).arg(PACKAGE_BUGREPORT));
+            arg(description.toHtmlEscaped()).arg(PACKAGE_BUGREPORT));
         return;
     }
 
@@ -397,7 +397,7 @@ void ReginaMain::fileOpenExample(const QUrl& url, const QString& description) {
             tr("I could not open the example that you requested."),
             tr("<qt>The example \"%1\" may not have been installed properly.  "
             "Please contact <i>%2</i> for assistance.").
-            arg(Qt::escape(description)).arg(PACKAGE_BUGREPORT));
+            arg(description.toHtmlEscaped()).arg(PACKAGE_BUGREPORT));
         return;
     }
 
@@ -492,13 +492,13 @@ void ReginaMain::packetDelete() {
     if (packet->getFirstTreeChild()) {
         msgBox.setText(tr("<qt>You are about to delete the packet <i>%1</i> "
             "and all of its children.</qt>").
-            arg(Qt::escape(packet->getHumanLabel().c_str())));
+            arg(QString(packet->getHumanLabel().c_str()).toHtmlEscaped()));
         delBtn = msgBox.addButton(tr("Delete All"),
             QMessageBox::AcceptRole);
     } else {
         msgBox.setText(tr("<qt>You are about to delete the packet "
             "<i>%1</i>.</qt>").
-            arg(Qt::escape(packet->getHumanLabel().c_str())));
+            arg(QString(packet->getHumanLabel().c_str()).toHtmlEscaped()));
         delBtn = msgBox.addButton(tr("Delete"),
             QMessageBox::AcceptRole);
     }
@@ -830,7 +830,7 @@ bool ReginaMain::saveFile() {
     } else {
         ReginaSupport::warn(this,
             tr("<qt>I could not save the data file <tt>%1</tt>.</qt>").
-                arg(Qt::escape(localFile)),
+                arg(localFile.toHtmlEscaped()),
             tr("Please check that you have permissions to write "
                 "to this file."));
         return false;

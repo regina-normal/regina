@@ -376,12 +376,12 @@ void ReginaPrefSet::openHandbook(const char* section, const char* handbook,
                 ReginaSupport::warn(parentWidget,
                     QObject::tr("I could not open the requested handbook."),
                     QObject::tr("<qt>Please try pointing your web browser to: "
-                    "<tt>%1</tt></qt>").arg(Qt::escape(page)));
+                    "<tt>%1</tt></qt>").arg(page.toHtmlEscaped()));
             } else {
                 ReginaSupport::warn(parentWidget,
                     QObject::tr("I could not open the Regina handbook."),
                     QObject::tr("<qt>Please try pointing your web browser to: "
-                    "<tt>%1</tt></qt>").arg(Qt::escape(page)));
+                    "<tt>%1</tt></qt>").arg(page.toHtmlEscaped()));
             }
         }
     } else {
@@ -390,13 +390,13 @@ void ReginaPrefSet::openHandbook(const char* section, const char* handbook,
                 QObject::tr("I could not find the requested handbook."),
                 QObject::tr("<qt>It should be installed at: "
                 "<tt>%1</tt><p>Please contact %2 for assistance.</qt>")
-                .arg(Qt::escape(index)).arg(PACKAGE_BUGREPORT));
+                .arg(index.toHtmlEscaped()).arg(PACKAGE_BUGREPORT));
         } else {
             ReginaSupport::warn(parentWidget,
                 QObject::tr("I could not find the Regina handbook."),
                 QObject::tr("<qt>It should be installed at: "
                 "<tt>%1</tt><p>Please contact %2 for assistance.</qt>")
-                .arg(Qt::escape(index)).arg(PACKAGE_BUGREPORT));
+                .arg(index.toHtmlEscaped()).arg(PACKAGE_BUGREPORT));
         }
     }
 }

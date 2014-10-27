@@ -129,7 +129,7 @@ void NewPacketDialog::slotOk() {
             "the new packet."),
             tr("<qt>The packet <i>%1</i> cannot act as a parent for "
             "the new packet.</qt>").
-            arg(Qt::escape(parentPacket->getHumanLabel().c_str())));
+            arg(QString(parentPacket->getHumanLabel().c_str()).toHtmlEscaped()));
         return;
     }
 

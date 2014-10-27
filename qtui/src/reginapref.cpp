@@ -320,13 +320,13 @@ void ReginaPreferences::slotApply() {
         if (! info.exists()) {
             ReginaSupport::sorry(this,
                 tr("<qt>The GAP executable <i>%1</i> "
-                "does not exist.</qt>").arg(Qt::escape(strVal)),
+                "does not exist.</qt>").arg(strVal.toHtmlEscaped()),
                 tr("I have reset this back to its old value."));
             toolsPrefs->editGAPExec->setText(prefSet.triGAPExec);
         } else if (! (info.isFile() && info.isExecutable())) {
             ReginaSupport::sorry(this,
                 tr("<qt>The GAP executable <i>%1</i> is not an "
-                "executable program.</qt>").arg(Qt::escape(strVal)),
+                "executable program.</qt>").arg(strVal.toHtmlEscaped()),
                 tr("I have reset this back to its old value."));
             toolsPrefs->editGAPExec->setText(prefSet.triGAPExec);
         } else {
@@ -351,7 +351,7 @@ void ReginaPreferences::slotApply() {
         if (! found) {
             ReginaSupport::sorry(this,
                 tr("<qt>I could not find the GAP executable <i>%1</i> "
-                "on the search path.</qt>").arg(Qt::escape(strVal)),
+                "on the search path.</qt>").arg(strVal.toHtmlEscaped()),
                 tr("<qt>This means "
                 "that you cannot use GAP from within Regina.<p>"
                 "This is not really a problem; it just means that Regina "
@@ -424,23 +424,23 @@ void ReginaPreferences::slotApply() {
             if (gvStatus == GraphvizStatus::notFound) {
                 box.setText(
                     tr("<qt>I could not find the Graphviz executable <i>%1</i> "
-                    "on the search path.</qt>").arg(Qt::escape(strVal)));
+                    "on the search path.</qt>").arg(strVal.toHtmlEscaped()));
                 box.setDetailedText(
                     tr("The following directories are in the search path:\n%1")
                     .arg(pathList.join("\n")));
             } else if (gvStatus == GraphvizStatus::notExist) {
                 box.setText(
                     tr("<qt>The Graphviz executable <i>%1</i> "
-                        "does not exist.</qt>").arg(Qt::escape(strVal)));
+                        "does not exist.</qt>").arg(strVal.toHtmlEscaped()));
             } else if (gvStatus == GraphvizStatus::notExecutable) {
                 box.setText(
                     tr("<qt>The Graphviz executable <i>%1</i> "
                         "is not an executable program.</qt>")
-                        .arg(Qt::escape(strVal)));
+                        .arg(strVal.toHtmlEscaped()));
             } else if (gvStatus == GraphvizStatus::notStartable) {
                 box.setText(
                     tr("<qt>The Graphviz executable <i>%1</i> "
-                    "cannot be started.</qt>").arg(Qt::escape(strVal)));
+                    "cannot be started.</qt>").arg(strVal.toHtmlEscaped()));
             } else if (gvStatus == GraphvizStatus::unsupported) {
                 box.setText(
                     tr("I cannot determine which "
@@ -457,7 +457,7 @@ void ReginaPreferences::slotApply() {
                     "please notify the Regina authors at <i>%2</i>.<p>"
                     "Are you sure you wish to save your new Graphviz "
                     "setting?</qt>").
-                    arg(Qt::escape(strVal)).arg(PACKAGE_BUGREPORT));
+                    arg(strVal.toHtmlEscaped()).arg(PACKAGE_BUGREPORT));
             } else if (gvStatus == GraphvizStatus::version1NotDot) {
                 box.setText(
                     tr("You appear to be running "

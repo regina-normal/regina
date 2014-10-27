@@ -527,7 +527,7 @@ void NTriCellularInfoUI::refresh() {
             // non-orientable triangulations.
             // Encase it in <qt>..</qt> so it can wrap over multiple lines.
             EmbeddingComments->setText(QString("<qt>%1</qt>").arg(
-                Qt::escape(minfo.getEmbeddabilityComment().c_str())));
+                QString(minfo.getEmbeddabilityComment().c_str()).toHtmlEscaped()));
         }
     } else {
         QString msg(QObject::tr("Invalid Triangulation"));

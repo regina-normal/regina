@@ -51,7 +51,7 @@ regina::NPacket* ReginaHandler::importData(const QString& fileName,
             QObject::tr("The import failed."),
             QObject::tr("<qt>Please check that the file <tt>%1</tt> "
             "is readable and in Regina format.</qt>").
-                arg(Qt::escape(fileName)));
+                arg(fileName.toHtmlEscaped()));
     if (ans->getPacketLabel().empty())
         ans->setPacketLabel("Imported data");
     return ans;
@@ -68,7 +68,7 @@ bool ReginaHandler::exportData(regina::NPacket* data,
             QObject::tr("I cannot export this packet subtree on its own."), 
             QObject::tr("<qt>This is because the root packet <i>%1</i> "
             "must stay connected to its parent.</qt>").
-            arg(Qt::escape(data->getHumanLabel().c_str())));
+            arg(QString(data->getHumanLabel().c_str()).toHtmlEscaped()));
         return false;
     }
     if (! data->save(QFile::encodeName(fileName), compressed)) {
@@ -76,7 +76,7 @@ bool ReginaHandler::exportData(regina::NPacket* data,
             QObject::tr("The export failed."), 
             QObject::tr("<qt>An unknown error occurred, probably related "
             "to file I/O.  Please check that you have permissions to write "
-            "to the file <tt>%1</tt>.</qt>").arg(Qt::escape(fileName)));
+            "to the file <tt>%1</tt>.</qt>").arg(fileName.toHtmlEscaped()));
         return false;
     }
     return true;
