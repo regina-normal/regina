@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED (VERSION 2.8.7)
+CMAKE_MINIMUM_REQUIRED (VERSION 2.8.11)
 PROJECT (regina)
 
 # Let the user override the package name.
@@ -477,7 +477,8 @@ IF(DISABLE_GUI)
   MESSAGE(WARNING "User set DISABLE_GUI=1: graphical user interface disabled.")
 ELSE(DISABLE_GUI)
   set(GUI_REQUIRED TRUE)
-  FIND_PACKAGE(Qt4 COMPONENTS QtGui QtCore)
+  set(CMAKE_AUTOMOC ON)
+  FIND_PACKAGE(Qt5Widgets)
 
   FIND_PACKAGE(SourceHighlight)
   MACRO_LOG_FEATURE(SRCHILITE_FOUND
@@ -502,15 +503,15 @@ ELSE(DISABLE_GUI)
 
   # This must come after SharedMimeInfo is included, since the qtui/
   # makefiles use SharedMimeInfo macros.
-  if (QT4_FOUND)
+  if (Qt5Widgets_FOUND)
     ADD_SUBDIRECTORY(qtui)
-  endif (QT4_FOUND)
+  endif (Qt5Widgets_FOUND)
   MESSAGE(STATUS "Graphical user interface enabled")
 ENDIF(DISABLE_GUI)
-MACRO_LOG_FEATURE(QT4_FOUND
-  "Qt4"
+MACRO_LOG_FEATURE(Qt5Widgets_FOUND
+  "Qt5"
   "Required for Regina's graphical user interface"
-  "http://qt.nokia.com/"
+  "http://qt-project.org/"
   GUI_REQUIRED ""
   "To disable the graphical user interface, run: cmake -DDISABLE_GUI=1")
 
