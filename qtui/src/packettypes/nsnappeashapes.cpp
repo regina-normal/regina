@@ -244,7 +244,7 @@ NSnapPeaShapesUI::NSnapPeaShapesUI(regina::NSnapPeaTriangulation* packet,
     shapes->setRootIsDecorated(false);
     shapes->setAlternatingRowColors(true);
     shapes->header()->setStretchLastSection(false);
-    shapes->header()->setResizeMode(QHeaderView::ResizeToContents);
+    shapes->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     shapes->setSelectionMode(QAbstractItemView::NoSelection);
     shapes->setWhatsThis(tr("Shows the shape of each tetrahedron, "
         "with respect to the Dehn filled hyperbolic structure.  "

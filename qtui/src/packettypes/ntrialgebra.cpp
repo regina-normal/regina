@@ -310,7 +310,7 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
     invariants->setRootIsDecorated(false);
     invariants->setAlternatingRowColors(true);
     invariants->header()->setStretchLastSection(false);
-    invariants->header()->setResizeMode(QHeaderView::ResizeToContents);
+    invariants->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     invariants->setSelectionMode(QAbstractItemView::NoSelection);
     invariants->setWhatsThis(tr("A list of all Turaev-Viro invariants "
         "that have been calculated so far for this triangulation.  To "

@@ -58,7 +58,9 @@ void AngleModel::rebuild() {
     // We should be using beginResetModel() / ... / endResetModel(),
     // but by the time we get here presumably it's too late and the model
     // has already been altered.. :/
-    reset();
+    // reset();
+    beginResetModel();
+    endResetModel();
 }
 
 int AngleModel::rowCount(const QModelIndex& /* unused parent */) const {
