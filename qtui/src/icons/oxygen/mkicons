@@ -2,8 +2,8 @@
 use strict;
 
 # Oxygen icon sources:
-# svn://anonsvn.kde.org/home/kde/trunk/kdesupport/oxygen-icons/scalable
-# svn://anonsvn.kde.org/home/kde/tags/kdesupport-for-4.5/oxygen-icons/scalable
+# svn://anonsvn.kde.org/home/kde/tags/kdesupport-for-4.5/oxygen-icons
+# svn://anonsvn.kde.org/home/kde/trunk/kdesupport/oxygen-icons
 
 my @actionSizes = ( 16, 22, 32 );
 my @dialogSizes = ( 16, 22, 32, 48, 64 );
@@ -57,6 +57,8 @@ my @dialogIcons = qw/
     system-run
     /;
 
+my $svn = undef;
+
 sub usage {
     my $err = shift;
     $err and print STDERR "ERROR: $err\n\n";
@@ -68,11 +70,18 @@ sub render {
     my $icon = shift;
     my $size = shift;
     my $filename = shift;
-    my $baseDir = shift;
+    my $class = shift;
 
-    my $src = "$baseDir/small/${size}x${size}/$icon.svgz";
-    -e $src or $src = "$baseDir/$icon.svgz";
-    -e $src or $src = "$baseDir/small/48x48/$icon.svgz";
+    my $src = "$svn/${size}x${size}/$class/$icon.png";
+    if (-e "$src") {
+        `cp "$src" "$filename"`;
+        return;
+    }
+
+    $src = "$svn/scalable/$class/$icon.svgz";
+    -e $src or $src = "$svn/scalable/$class/small/64x64/$icon.svgz";
+    -e $src or $src = "$svn/scalable/$class/small/48x48/$icon.svgz";
+    -e $src or $src = "$svn/scalable/$class/small/32x32/$icon.svgz";
     if (not -e $src) {
         print STDERR "ERROR: Could not find source for $icon at size $size.\n";
         return;
@@ -84,10 +93,8 @@ sub render {
 sub process {
     my $icon = shift;
     my $sizes = shift;
-    my $svn = shift;
 
-    my @src = glob("$svn/*/$icon.svgz");
-    my $baseDir = undef;
+    my @src = glob("$svn/scalable/*/$icon.svgz");
     if ($#src > 0) {
         print STDERR "ERROR: Ambiguous sources for $icon:\n";
         foreach (@src) {
@@ -95,11 +102,8 @@ sub process {
         }
         return;
     }
-    if ($#src == 0) {
-        $baseDir = $src[0];
-        $baseDir =~ s/\/[^\/]+.svgz//;
-    } else {
-        @src = glob("$svn/*/small/48x48/$icon.svgz");
+    if ($#src < 0) {
+        @src = glob("$svn/scalable/*/small/48x48/$icon.svgz");
         if ($#src > 0) {
             print STDERR "ERROR: Ambiguous sources for $icon:\n";
             foreach (@src) {
@@ -107,36 +111,33 @@ sub process {
             }
             return;
         }
-        if ($#src == 0) {
-            $baseDir = $src[0];
-            $baseDir =~ s/\/small\/48x48\/[^\/]+.svgz//;
-            print "Resorting to 48x48 icon for $icon.\n";
+        if ($#src < 0) {
+            print STDERR "ERROR: No sources found for $icon\n";
+            return;
         }
     }
 
-    if (not $baseDir) {
-        print STDERR "ERROR: No sources found for $icon\n";
-        return;
-    }
+    $src[0] =~ /scalable\/([^\/]+)\// or die;
+    my $class = $1;
 
     foreach (@$sizes) {
-        render($icon, $_, "$icon-$_.png", $baseDir);
-        render($icon, 2 * $_, "$icon-$_\@2x.png", $baseDir);
+        render($icon, $_, "$icon-$_.png", $1);
+        render($icon, 2 * $_, "$icon-$_\@2x.png", $1);
     }
 }
 
 $#ARGV == 0 or usage;
 
-my $svn = $ARGV[0];
+$svn = $ARGV[0];
 -d "$svn" or usage "Argument \"$svn\" is not a directory.";
--e "$svn/actions/window-close.svgz" or
-    usage "Argument \"$svn\" does not look like an oxygen/scalable checkout.";
+-e "$svn/scalable/actions/window-close.svgz" or
+    usage "Argument \"$svn\" does not look like an oxygen-icons checkout.";
 
 foreach my $i (@actionIcons) {
-    process($i, \@actionSizes, $svn);
+    process($i, \@actionSizes);
 }
 
 foreach my $i (@dialogIcons) {
-    process($i, \@dialogSizes, $svn);
+    process($i, \@dialogSizes);
 }
 
