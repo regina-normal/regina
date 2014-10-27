@@ -174,7 +174,7 @@ bool GluingsModel::setData(const QModelIndex& index, const QVariant& value,
         if (newName == t->getDescription().c_str())
             return false;
 
-        t->setDescription(newName.toAscii().constData());
+        t->setDescription(newName.toLatin1().constData());
         return true;
     }
 
@@ -959,7 +959,7 @@ void NTriGluingsUI::vertexLinks() {
             regina::Dim2Triangulation* ans = new regina::Dim2Triangulation(
                 *chosen->buildLink());
             ans->setPacketLabel(tr("Link of vertex %1").arg(
-                tri->vertexIndex(chosen)).toAscii().constData());
+                tri->vertexIndex(chosen)).toLatin1().constData());
             tri->insertChildLast(ans);
             enclosingPane->getMainWindow()->packetView(ans, true, true);
         }

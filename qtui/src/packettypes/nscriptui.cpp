@@ -223,7 +223,7 @@ bool ScriptVarModel::setData(const QModelIndex& index, const QVariant& value,
                     arg(Qt::escape(data)));
         }
 
-        script_->setVariableName(index.row(), data.toAscii().constData());
+        script_->setVariableName(index.row(), data.toLatin1().constData());
         return true;
     } else if (index.column() == 1) {
         // This is handled by the delegate class.
@@ -481,9 +481,9 @@ void NScriptUI::addVariable() {
     // Add the new variable.
     // TODO: Alter addVariable() to return the index immediately, so we
     // don't need to fetch it again.
-    script->addVariable(varName.toAscii().constData(), 0);
+    script->addVariable(varName.toLatin1().constData(), 0);
     varTable->scrollTo(model->index(
-        script->getVariableIndex(varName.toAscii().constData()),
+        script->getVariableIndex(varName.toLatin1().constData()),
         0, QModelIndex()));
 }
 

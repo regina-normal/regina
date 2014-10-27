@@ -371,7 +371,7 @@ void PythonConsole::setSelectedPacket(regina::NPacket* packet) {
 }
 
 void PythonConsole::setVar(const QString& name, regina::NPacket* value) {
-    if (! interpreter->setVar(name.toAscii(), value)) {
+    if (! interpreter->setVar(name.toLatin1(), value)) {
         QString pktName;
         if (value)
             pktName = value->getHumanLabel().c_str();
@@ -384,7 +384,7 @@ void PythonConsole::setVar(const QString& name, regina::NPacket* value) {
 }
 
 void PythonConsole::executeLine(const QString& line) {
-    interpreter->executeLine(line.toAscii().data());
+    interpreter->executeLine(line.toLatin1().data());
 }
 
 void PythonConsole::executeLine(const std::string& line) {
@@ -396,14 +396,14 @@ void PythonConsole::executeLine(const char* line) {
 }
 
 bool PythonConsole::compileScript(const QString& script) {
-    return interpreter->compileScript(script.toAscii());
+    return interpreter->compileScript(script.toLatin1());
 }
 
 void PythonConsole::executeScript(const QString& script,
         const QString& scriptName) {
     addOutput(scriptName.isEmpty() ? tr("Running %1...").arg(scriptName) :
             tr("Running script..."));
-    interpreter->runScript(script.toAscii());
+    interpreter->runScript(script.toLatin1());
 }
 
 void PythonConsole::saveLog() {
@@ -468,7 +468,7 @@ QString PythonConsole::encode(const QString& plaintext) {
 }
 
 QString PythonConsole::initialIndent(const QString& line) {
-    const char* start = line.toAscii();
+    const char* start = line.toLatin1();
     const char* pos = start;
     while (*pos && isspace(*pos))
         pos++;
@@ -492,7 +492,7 @@ void PythonConsole::processCommand() {
 
     // Do the actual processing (which could take some time).
     QApplication::instance()->processEvents();
-    bool done = interpreter->executeLine(cmd.toAscii().constData());
+    bool done = interpreter->executeLine(cmd.toLatin1().constData());
 
     // Finish the output.
     output->flush();
@@ -533,7 +533,7 @@ void PythonConsole::getNextCompletion() {
         input->setCompletionLineStart(input->text().left(pos));
         lastWord = re.cap(1);
         interpreter->executeLine(cmd.arg(lastWord)
-            .arg(nextCompletion).toAscii().constData());
+            .arg(nextCompletion).toLatin1().constData());
     } else {
         outputToTabCompletion = false;
     }

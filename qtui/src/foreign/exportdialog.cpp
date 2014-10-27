@@ -71,7 +71,7 @@ ExportDialog::ExportDialog(QWidget* parent, regina::NPacket* packetTree,
     if (useCodec) {
         hStrip = new QHBoxLayout;
         label = new QLabel(tr("<qt>Text encoding: %1</qt>").
-            arg(QString::fromAscii(
+            arg(QString::fromLatin1(
                 ReginaPrefSet::global().fileImportExportCodec)));
         hStrip->addWidget(label);
         QPushButton* btn = new QPushButton(tr("Learn more..."));
@@ -126,7 +126,7 @@ void ExportDialog::slotEncodingInfo() {
     ReginaSupport::info(this,
         tr("<qt>I will encode any international symbols "
             "using the <b>%1</b> encoding.</qt>").arg(
-            QString::fromAscii(ReginaPrefSet::global().fileImportExportCodec)),
+            QString::fromLatin1(ReginaPrefSet::global().fileImportExportCodec)),
         tr("<qt>This is only relevant if you use letters or symbols "
             "that are not found on a typical English keyboard.<p>"
             "If you wish to use a different encoding, you can "

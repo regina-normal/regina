@@ -358,7 +358,7 @@ bool SurfaceModel::setData(const QModelIndex& index, const QVariant& value,
         regina::NPacket::ChangeEventSpan span(surfaces_);
         const_cast<regina::NNormalSurface*>(
             surfaces_->getSurface(realIndex[index.row()]))->
-            setName(value.toString().toAscii().constData());
+            setName(value.toString().toLatin1().constData());
         return true;
     } else
         return false;

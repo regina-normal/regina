@@ -54,11 +54,11 @@ CodecChooser::CodecChooser() : QComboBox() {
 }
 
 QByteArray CodecChooser::selectedCodecName() {
-    return currentText().toAscii();
+    return currentText().toLatin1();
 }
 
 void CodecChooser::setCodecName(const QByteArray& codec) {
-    int pos = findText(QString::fromAscii(codec));
+    int pos = findText(QString::fromLatin1(codec));
     if (pos >= 0)
         setCurrentIndex(pos);
 }

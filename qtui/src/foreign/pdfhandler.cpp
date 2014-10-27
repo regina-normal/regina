@@ -55,7 +55,7 @@ regina::NPacket* PDFHandler::importData(const QString& fileName,
             QObject::tr("<qt>Please check that the file <tt>%1</tt> "
             "is readable and in PDF format.</qt>").arg(Qt::escape(fileName)));
     else
-        ans->setPacketLabel(QObject::tr("PDF document").toAscii().constData());
+        ans->setPacketLabel(QObject::tr("PDF document").toLatin1().constData());
     return ans;
 }
 

@@ -270,7 +270,7 @@ bool NSurfaceFilterPropUI::notifyOptionsChanged() {
         QStringList list = ecText.split(reECSeps);
         for (QStringList::Iterator it = list.begin(); it != list.end();
                 it++)
-            filter->addEC((*it).toAscii().constData());
+            filter->addEC((*it).toLatin1().constData());
 
         // Refill the text box so that it looks nice.
         eulerList->setText(filterECList());

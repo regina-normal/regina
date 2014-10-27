@@ -147,7 +147,7 @@ void NewPacketDialog::slotOk() {
         return;
 
     // Fix the new packet.
-    newPacket->setPacketLabel(std::string(useLabel.toAscii().constData()));
+    newPacket->setPacketLabel(std::string(useLabel.toLatin1().constData()));
     if (! newPacket->getTreeParent())
         parentPacket->insertChildLast(newPacket);
 

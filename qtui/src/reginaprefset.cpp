@@ -138,7 +138,7 @@ void ReginaFilePref::readUserKey(QList<ReginaFilePref>& list,
             it != strings.end(); it++) {
         if ((*it).isEmpty())
             continue;
-        switch ((*it)[0].toAscii()) {
+        switch ((*it)[0].toLatin1()) {
             case '+':
                 // Active file.
                 list.push_back(ReginaFilePref((*it).mid(1), true));
