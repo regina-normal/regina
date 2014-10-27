@@ -161,7 +161,7 @@ bool Dim2GluingsModel::setData(const QModelIndex& index, const QVariant& value,
         if (newName == t->getDescription().c_str())
             return false;
 
-        t->setDescription(newName.toLatin1().constData());
+        t->setDescription(newName.toUtf8().constData());
         return true;
     }
 

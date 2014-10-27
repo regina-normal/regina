@@ -271,7 +271,7 @@ regina::NPacket* Dim2TriangulationCreator::createPacket(regina::NPacket*,
         }
 
         Dim2Triangulation* ans = Dim2Triangulation::fromIsoSig(
-            reIsoSig.cap(1).toLatin1().constData());
+            reIsoSig.cap(1).toUtf8().constData());
         if (ans)
             return ans;
         ReginaSupport::sorry(parentWidget,

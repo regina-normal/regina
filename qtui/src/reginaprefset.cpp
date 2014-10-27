@@ -138,6 +138,7 @@ void ReginaFilePref::readUserKey(QList<ReginaFilePref>& list,
             it != strings.end(); it++) {
         if ((*it).isEmpty())
             continue;
+        // Use toLatin1() since we're just testing a char for '+' or '-'.
         switch ((*it)[0].toLatin1()) {
             case '+':
                 // Active file.

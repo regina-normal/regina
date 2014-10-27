@@ -54,10 +54,12 @@ CodecChooser::CodecChooser() : QComboBox() {
 }
 
 QByteArray CodecChooser::selectedCodecName() {
+    // Latin1 is ok since codec names are just ASCII, no?
     return currentText().toLatin1();
 }
 
 void CodecChooser::setCodecName(const QByteArray& codec) {
+    // Latin1 is ok since codec names are just ASCII, no?
     int pos = findText(QString::fromLatin1(codec));
     if (pos >= 0)
         setCurrentIndex(pos);

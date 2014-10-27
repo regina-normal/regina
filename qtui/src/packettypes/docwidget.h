@@ -146,7 +146,7 @@ DocWidget<PacketType, Sanitise>::DocWidget(
 template <class PacketType, class Sanitise>
 DocWidget<PacketType, Sanitise>::~DocWidget() {
     // Push any outstanding changes to the calculation engine.
-    packet_->setText(toPlainText().toLatin1().constData());
+    packet_->setText(toPlainText().toUtf8().constData());
 
     // If we are the last DocWidget registered for this packet, delete
     // the underlying QTextDocument.
@@ -175,7 +175,7 @@ template <class PacketType, class Sanitise>
 inline void DocWidget<PacketType, Sanitise>::commit() {
     QString text = toPlainText();
     Sanitise::sanitise(text);
-    packet_->setText(text.toLatin1().constData());
+    packet_->setText(text.toUtf8().constData());
 }
 
 template <class PacketType, class Sanitise>

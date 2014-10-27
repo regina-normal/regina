@@ -259,7 +259,7 @@ regina::NPacket* NSnapPeaTriangulationCreator::createPacket(regina::NPacket*,
         return ans;
     } else if (typeId == TRI_FILE) {
         NSnapPeaTriangulation* ans = new NSnapPeaTriangulation(
-            fileContents->toPlainText().toLatin1().constData());
+            fileContents->toPlainText().toUtf8().constData());
         if ((! ans) || (ans->isNull())) {
             ReginaSupport::info(parentWidget,
                 QObject::tr("This does not appear to be a valid "

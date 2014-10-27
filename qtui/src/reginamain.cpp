@@ -477,7 +477,7 @@ void ReginaMain::packetRename() {
     if ((! ok) || (newLabel == packet->getPacketLabel().c_str()))
         return;
 
-    packet->setPacketLabel(newLabel.toLatin1().constData());
+    packet->setPacketLabel(newLabel.toUtf8().constData());
     return;
 }
 
@@ -741,7 +741,7 @@ void ReginaMain::initPacketTree() {
         delete packetTree;
     packetTree = new regina::NContainer();
     // No label now, since the root packet is hidden.
-    // packetTree->setPacketLabel(tr("Data").toLatin1().constData());
+    // packetTree->setPacketLabel(tr("Data").toUtf8().constData());
 
     // Update the visual representation.
     treeView->fill(packetTree);

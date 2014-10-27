@@ -85,8 +85,7 @@ ImportDialog::ImportDialog(QWidget* parent, regina::NPacket* importedData,
     if (useCodec) {
         hStrip = new QHBoxLayout;
         l = new QLabel(tr("<qt>Text encoding: %1</qt>").
-            arg(QString::fromLatin1(
-                ReginaPrefSet::global().fileImportExportCodec)));
+            arg(QString(ReginaPrefSet::global().fileImportExportCodec)));
         hStrip->addWidget(l);
         QPushButton* btn = new QPushButton(tr("Learn more..."));
         hStrip->addWidget(btn);
@@ -141,7 +140,7 @@ void ImportDialog::slotOk() {
 
     // Check the label.
     QString useLabel = label->text().trimmed();
-    QByteArray ascii = useLabel.toLatin1();
+    QByteArray ascii = useLabel.toUtf8();
     if (useLabel.isEmpty()) {
         ReginaSupport::info(this,
             tr("Please enter a label for the new packet."));
@@ -159,7 +158,7 @@ void ImportDialog::slotEncodingInfo() {
     ReginaSupport::info(this,
         tr("<qt>I will assume that any international symbols "
             "are encoding using the <b>%1</b> encoding.</qt>").arg(
-            QString::fromLatin1(ReginaPrefSet::global().fileImportExportCodec)),
+            QString(ReginaPrefSet::global().fileImportExportCodec)),
         tr("<qt>This is only relevant if you use letters or symbols "
             "that are not found on a typical English keyboard.<p>"
             "If you wish to use a different encoding, you can "
