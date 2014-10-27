@@ -44,7 +44,6 @@ set (IMGS
   system-run
   text-x-c++src
   utilities-terminal
-  view-refresh
   window-close
   )
 set (SIZES 16 16@2x 22 22@2x 32 32@2x 48 48@2x 64 64@2x 128 128@2x)
