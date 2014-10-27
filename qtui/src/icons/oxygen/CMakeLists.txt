@@ -25,7 +25,6 @@ set (IMGS
   edit-copy
   edit-cut
   edit-delete
-  edit-find
   edit-paste
   edit-rename
   edit-select-all
@@ -45,7 +44,6 @@ set (IMGS
   system-run
   text-x-c++src
   utilities-terminal
-  view-list-text
   view-refresh
   window-close
   )
