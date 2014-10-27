@@ -36,7 +36,7 @@ set (IMGS
   snappea
   vtxlinks
   )
-set (SIZES 16 22 32 48 64 128)
+set (SIZES 16 16@2x 22 22@2x 32 32@2x 48 48@2x 64 64@2x 128 128@2x)
 
 foreach (IMG_CLASS ${IMGS})
   foreach (IMG_SIZE ${SIZES})

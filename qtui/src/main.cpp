@@ -45,6 +45,7 @@
 
 int main(int argc, char **argv) {
     ReginaManager *app = new ReginaManager(argc, argv);
+    app->setAttribute(Qt::AA_UseHighDpiPixmaps);
 
     QCoreApplication::setOrganizationName("Regina");
     QCoreApplication::setOrganizationDomain("regina.sourceforge.net");
