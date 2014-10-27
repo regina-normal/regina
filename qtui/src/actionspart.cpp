@@ -117,7 +117,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&SnapPea Triangulation"));
-    act->setIcon(ReginaSupport::regIcon("snappea"));
+    act->setIcon(ReginaSupport::regIcon("packet_snappea"));
     act->setToolTip(tr("Import a SnapPea triangulation"));
     act->setWhatsThis(tr("Import an external SnapPea file as a new "
         "triangulation in this packet tree."));
@@ -216,7 +216,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&SnapPea Triangulation"));
-    act->setIcon(ReginaSupport::regIcon("snappea"));
+    act->setIcon(ReginaSupport::regIcon("packet_snappea"));
     act->setToolTip(tr("Export a SnapPea triangulation"));
     act->setWhatsThis(tr("Export a triangulation from this packet tree "
         "to a separate SnapPea file."));
