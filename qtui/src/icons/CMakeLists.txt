@@ -30,7 +30,6 @@ set (IMGS
   packet_triangulation
   packet_view
   puncture
-  python_console
   randomise
   regina
   simplify
