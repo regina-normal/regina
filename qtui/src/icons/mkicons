@@ -10,6 +10,7 @@ my @actionIcons = qw/
     components
     connectedsum
     connectedsumwith
+    dehydrated
     doublecover
     drilledge
     fill
@@ -24,7 +25,6 @@ my @actionIcons = qw/
     /;
 #    cone
 #    csvexport
-#    dehydrated
 #    finite
 
 my @packetIcons = qw/
