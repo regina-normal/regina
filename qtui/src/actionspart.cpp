@@ -730,8 +730,7 @@ void ReginaMain::setupActions() {
     toolBarMain->addSeparator();
     toolBarMain->addAction(actPython);
 
-    if (! ReginaPrefSet::global().useDock)
-        addToolBarBreak();
+    addToolBarBreak();
 
     toolBarPacket = addToolBar(tr("New Packets"));
     toolBarPacket->addAction(actContainer);

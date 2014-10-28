@@ -118,17 +118,6 @@ PacketPane::PacketPane(ReginaMain* newMainWindow, NPacket* newPacket,
 
     // Create the actions first, since PacketManager::createUI()
     // might want to modify them.
-    actDockUndock = new QAction(this);
-    actDockUndock->setText(tr("Un&dock"));
-    actDockUndock->setIcon(ReginaSupport::themeIcon("mail-attachment"));
-    actDockUndock->setToolTip(tr("Dock / undock this packet viewer"));
-    actDockUndock->setWhatsThis(tr("Dock or undock this packet viewer.  "
-        "A docked viewer sits within the main window, to the right of "
-        "the packet tree.  An undocked viewer floats in its own window."));
-    actDockUndock->setVisible(ReginaPrefSet::global().useDock);
-    actDockUndock->setEnabled(ReginaPrefSet::global().useDock);
-    connect(actDockUndock,SIGNAL(triggered()),this, SLOT(floatPane()));
-
     actClose = new QAction(this);
     actClose->setText(tr("&Close"));
     actClose->setIcon(ReginaSupport::themeIcon("window-close"));
@@ -137,7 +126,7 @@ PacketPane::PacketPane(ReginaMain* newMainWindow, NPacket* newPacket,
     actClose->setWhatsThis(tr("Close this packet viewer."));
     connect(actClose,SIGNAL(triggered()), this, SLOT(close()));
 
-    // Set up the header and dock/undock button.
+    // Set up the header.
     QBoxLayout* headerBox = new QHBoxLayout();
     headerBox->setSpacing(0);
 
@@ -161,19 +150,6 @@ PacketPane::PacketPane(ReginaMain* newMainWindow, NPacket* newPacket,
 
     headerBox->addStretch(1);
 
-    dockUndockBtn = new QToolButton();
-    dockUndockBtn->setCheckable(true);
-    dockUndockBtn->setIcon(ReginaSupport::themeIcon("mail-attachment"));
-    dockUndockBtn->setText(tr("Dock or undock this packet viewer"));
-    dockUndockBtn->setChecked(true);
-    dockUndockBtn->setWhatsThis(tr("Dock or undock this packet viewer.  "
-        "A docked viewer sits within the main window, to the right of "
-        "the packet tree.  An undocked viewer floats in its own window."));
-    dockUndockBtn->setVisible(ReginaPrefSet::global().useDock);
-    dockUndockBtn->setEnabled(ReginaPrefSet::global().useDock);
-    headerBox->addWidget(dockUndockBtn);
-    connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
-
     layout->addLayout(headerBox);
 
     QFrame* separator = new QFrame();
@@ -193,15 +169,7 @@ PacketPane::PacketPane(ReginaMain* newMainWindow, NPacket* newPacket,
 
 PacketPane::~PacketPane() {
     delete mainUI;
-    delete actDockUndock;
     delete actClose;
-}
-
-void PacketPane::supportDock(bool shouldSupport) {
-    actDockUndock->setEnabled(shouldSupport);
-    actDockUndock->setVisible(shouldSupport);
-    dockUndockBtn->setEnabled(shouldSupport);
-    dockUndockBtn->setVisible(shouldSupport);
 }
 
 void PacketPane::fillPacketTypeMenu(QMenu* menu) {
@@ -214,8 +182,6 @@ void PacketPane::fillPacketTypeMenu(QMenu* menu) {
         }
         menu->addSeparator();
     }
-
-    menu->addAction(actDockUndock);
     menu->addAction(actClose);
 }
 
@@ -339,47 +305,13 @@ bool PacketPane::close() {
     // We'll come back to this class when they call queryClose().
     if (frame)
         return frame->close();
-    else
-        return mainWindow->closeDockedPane();
-}
-
-void PacketPane::dockPane() {
-    if (! frame)
-        return;
-
-    // The packet pane is currently floating.
-
-    mainWindow->dock(this);
-    frame->hide();
-
-    // Use deleteLater() instead of delete; otherwise we get occasional
-    // crashes when the event loop cleans up the departing window.
-    frame->deleteLater();
-    frame = 0;
-
-    dockUndockBtn->setChecked(true);
-    actDockUndock->setText(tr("Un&dock"));
-    disconnect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(dockPane()));
-    connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
-    disconnect(actDockUndock, SIGNAL(triggered()), this, SLOT(dockPane()));
-    connect(actDockUndock, SIGNAL(triggered()), this, SLOT(floatPane()));
 }
 
 void PacketPane::floatPane() {
     if (frame)
         return;
 
-    // The packet pane is currently docked.
-    mainWindow->aboutToUndock(this);
     frame = new PacketWindow(this, mainWindow);
-
-    dockUndockBtn->setChecked(false);
-    actDockUndock->setText(tr("&Dock"));
-    disconnect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
-    connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(dockPane()));
-    disconnect(actDockUndock, SIGNAL(triggered()), this, SLOT(floatPane()));
-    connect(actDockUndock, SIGNAL(triggered()), this, SLOT(dockPane()));
-
     frame->show();
 }
 

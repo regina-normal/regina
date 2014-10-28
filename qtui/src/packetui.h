@@ -267,8 +267,7 @@ class DefaultPacketUI : public ErrorPacketUI {
  * A full-featured component through which the user can view or edit a
  * single packet.
  *
- * Packet panes may be either docked within a main window
- * or may be floating freely in their own frames.
+ * Packet panes float freely in their own frames.
  */
 class PacketPane : public QWidget, public regina::NPacketListener {
     Q_OBJECT
@@ -286,7 +285,6 @@ class PacketPane : public QWidget, public regina::NPacketListener {
         QLabel* headerIcon;
         QLabel* headerTitle;
         PacketUI* mainUI;
-        QToolButton* dockUndockBtn;
 
         /**
          * Properties
@@ -296,7 +294,6 @@ class PacketPane : public QWidget, public regina::NPacketListener {
         /**
          * Internal actions
          */
-        QAction* actDockUndock;
         QAction* actClose;
 
         /**
@@ -324,11 +321,6 @@ class PacketPane : public QWidget, public regina::NPacketListener {
         regina::NPacket* getPacket();
         ReginaMain* getMainWindow();
         PacketUI* getUI();
-
-        /**
-         * Set this pane to support or not support docking as appropriate.
-         */
-        void supportDock(bool shouldSupport);
 
         /**
          * Fill the given menu with the internal packet actions.
@@ -411,28 +403,10 @@ class PacketPane : public QWidget, public regina::NPacketListener {
          * Closes this packet pane.  The user will be prompted if
          * necessary.
          *
-         * For a packet pane that is currently docked, this routine
-         * is equivalent to calling ReginaMain::closeDockedPane().
-         *
          * Note that all this routine does is delegate the closure
          * operation to whatever component currently owns this packet pane.
          */
         bool close();
-
-        /**
-         * Docks this packet pane into the main window, if
-         * it is not already docked.  If another packet pane is
-         * already docked and refuses to be closed, the other pane will
-         * be moved into its own freely floating window.
-         *
-         * This routine is the one and only way to dock a packet pane
-         * that is currently floating in its own window.
-         *
-         * It is assumed that the packet pane is already registered with
-         * the main window, and is either already docked or
-         * currently floating in its own window.
-         */
-        void dockPane();
 
         /**
          * Floats this packet pane in its own top-level window, if it is
@@ -443,11 +417,7 @@ class PacketPane : public QWidget, public regina::NPacketListener {
          *
          * It is assumed that the packet pane is already registered with
          * the main window, though it does not matter if the
-         * pane is currently floating, docked or parentless.
-         *
-         * Note that a currently docked packet pane can also be floated by
-         * calling ReginaMain::floatDockedPane(), which simply calls
-         * this routine.
+         * pane is currently floating or parentless.
          */
         void floatPane();
 

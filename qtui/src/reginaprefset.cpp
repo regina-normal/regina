@@ -259,7 +259,6 @@ ReginaPrefSet::ReginaPrefSet() :
         triGraphvizExec(defaultGraphvizExec),
         triGraphvizLabels(true),
         triSurfacePropsThreshold(6),
-        useDock(false),
         warnOnNonEmbedded(true) {
 }
 
@@ -447,7 +446,6 @@ void ReginaPrefSet::readInternal() {
     settings.endGroup();
 
     settings.beginGroup("Display");
-    useDock = settings.value("UseDock", false).toBool();
     displayTagsInTree = settings.value("DisplayTagsInTree", false).toBool();
     settings.endGroup();
 
@@ -550,7 +548,6 @@ void ReginaPrefSet::saveInternal() const {
     settings.endGroup();
 
     settings.beginGroup("Display");
-    settings.setValue("UseDock", useDock);
     settings.setValue("DisplayTagsInTree", displayTagsInTree);
     settings.endGroup();
 

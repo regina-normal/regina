@@ -85,9 +85,7 @@ ReginaMain::ReginaMain(ReginaManager* useManager, bool starterWindow) :
         fakeRoot_(false),
         packetMenu(0),
         aboutApp(0),
-        dockedPane(0),
-        dirty(false),
-        supportingDock(ReginaPrefSet::global().useDock) {
+        dirty(false) {
     setAttribute(Qt::WA_DeleteOnClose);
 
     // Accept drag and drop.
@@ -131,12 +129,6 @@ void ReginaMain::plugPacketMenu() {
         menuBar()->removeAction(packetMenu->menuAction());
         delete packetMenu;
         packetMenu = 0;
-    }
-    if (dockedPane) {
-        packetMenu = new QMenu(tr("Docked %1").arg(dockedPane->getUI()->
-            getPacketMenuText()));
-        menuBar()->insertMenu(toolMenu->menuAction(), packetMenu);
-        dockedPane->fillPacketTypeMenu(packetMenu);
     }
 }
 
@@ -212,34 +204,6 @@ void ReginaMain::ensureVisibleInTree(regina::NPacket* packet) {
     PacketTreeItem* item = treeView->find(packet);
     if (item)
         treeView->scrollToItem(item);
-}
-
-void ReginaMain::dock(PacketPane* newPane) {
-    // Get rid of the currently docked pane by whatever means necessary.
-    if (! closeDockedPane())
-        dockedPane->floatPane();
-
-    newPane->setParent(dockArea);
-    static_cast<QBoxLayout*>(dockArea->layout())->addWidget(newPane, 1);
-    dockedPane = newPane;
-
-    newPane->registerEditOperations(actCut, actCopy, actPaste);
-    
-    // Postpone plugPacketMenu() until after this run through the event
-    // loop, in the hope of avoiding the strange situation where menus
-    // end up in the wrong order even though QMenuBar is trying to
-    // insert them exactly where they should go...
-    QApplication::postEvent(this,
-        new QEvent((QEvent::Type)EVT_PLUG_PACKET_MENU));
-}
-
-void ReginaMain::aboutToUndock(PacketPane* undockedPane) {
-    unplugPacketMenu();
-    undockedPane->deregisterEditOperations();
-
-    if (dockedPane == undockedPane) {
-        dockedPane = 0;
-    }
 }
 
 void ReginaMain::isClosing(PacketPane* closingPane) {
@@ -596,33 +560,6 @@ void ReginaMain::helpIntro() {
     dlg->activateWindow();
 }
 
-void ReginaMain::floatDockedPane() {
-    // Delegate the entire procedure to PacketPane::floatPane().
-    // Processing will return to this class when PacketPane calls
-    // ReginaMain::aboutToUndock().
-    if (dockedPane)
-        dockedPane->floatPane();
-}
-
-bool ReginaMain::closeDockedPane() {
-    // Is there anything to close?
-    if (! dockedPane)
-        return true;
-
-    // Are we allowed to close it?
-    if (! dockedPane->queryClose())
-        return false;
-
-    // Close it.  Note that queryClose() has already done the
-    // deregistration for us.
-    PacketPane* closedPane = dockedPane;
-    aboutToUndock(dockedPane);
-
-    // At this point dockedPane is already 0.
-    delete closedPane;
-    return true;
-}
-
 bool ReginaMain::closeAllPanes() {
     // Copy the list since the original list will be modified as panes
     // are closed.
@@ -669,17 +606,19 @@ void ReginaMain::setupWidgets() {
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
 
-    splitter = new QSplitter();
-    splitter->setWhatsThis(tr(
+    // Set up the packet tree viewer.
+    treeView = new PacketTreeView(this);
+    treeView->setWhatsThis(tr(
         "<qt>Each piece of information stored in a data file "
         "is a <i>packet</i>: this include triangulations, normal surface "
         "lists, text items and so on.<p>"
         "Packets within a data file are arranged in a tree-like structure, "
-        "which you should see on the left-hand side of the window.  "
-        "If you click on a packet in the tree, it will open up in the "
-        "right-hand side of the window where you can edit it or view "
-        "detailed information.</qt>"));
-    layout->addWidget(splitter, 1);
+        "which you will see in this window.  "
+        "You can click on a packet in the tree to "
+        "edit it or view detailed information.</qt>"));
+    connect(treeView, SIGNAL(itemSelectionChanged()), this,
+        SLOT(updateTreeActions()));
+    layout->addWidget(treeView, 1);
 
     if (starterWindow_ && ReginaPrefSet::global().helpIntroOnStartup) {
         // Give the user something helpful to start with.
@@ -707,31 +646,6 @@ void ReginaMain::setupWidgets() {
     } else
         advice = 0;
 
-    // Set up the packet tree viewer.
-    treeView = new PacketTreeView(this, splitter);
-    treeView->setSizePolicy(QSizePolicy(
-        QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding));
-    // Leave the stretch factors at the default of zero.
-    connect(treeView, SIGNAL(itemSelectionChanged()), this,
-        SLOT(updateTreeActions()));
-
-    // Set up the docking area.
-    dockArea = new QWidget(splitter);
-    QBoxLayout* dockLayout = new QVBoxLayout(dockArea);
-    dockLayout->setContentsMargins(0, 0, 0, 0);
-    if (! supportingDock)
-        dockArea->hide();
-
-    QSizePolicy qpol(
-        QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-    qpol.setHorizontalStretch(5);
-    qpol.setVerticalStretch(5);
-    dockArea->setSizePolicy(qpol);
-
-    // Make sure the docking area gets some space even when there's
-    // nothing in it.
-    dockLayout->addStrut(100);
-
     // Put it all inside the main window.
     setCentralWidget(main);
 }
@@ -751,11 +665,7 @@ void ReginaMain::initPacketTree() {
 
 void ReginaMain::view(PacketPane* newPane) {
     // Display the new pane.
-    if (supportingDock) {
-        dock(newPane);
-        newPane->setFocus();
-    } else
-        newPane->floatPane();
+    newPane->floatPane();
 
     // Add it to the list of currently managed panes.
     allPanes.append(newPane);
@@ -843,33 +753,5 @@ void ReginaMain::updatePreferences() {
         delete advice;
         advice = 0;
     }
-
-    if (ReginaPrefSet::global().useDock == supportingDock)
-        return;
-
-    supportingDock = ReginaPrefSet::global().useDock;
-
-    if (! supportingDock)
-        floatDockedPane();
-
-    dockArea->setVisible(supportingDock);
-    if (supportingDock)
-        removeToolBarBreak(toolBarPacket);
-    else
-        insertToolBarBreak(toolBarPacket);
-
-    // Resize to the suggested width, but only use the suggested height
-    // if it is larger (i.e., never shrink vertically).
-    // Here we use QMainWindow's sizeHint() which measures the widths of
-    // toolbars, instead of ReginaMain's sizeHint() which simply uses
-    // the size of the last main window.
-    QSize s = QMainWindow::sizeHint();
-    if (height() > s.height())
-        s.setHeight(height());
-    resize(s);
-
-    for (QLinkedList<PacketPane *>::iterator it = allPanes.begin();
-            it != allPanes.end(); it++)
-        (*it)->supportDock(supportingDock);
 }
 
