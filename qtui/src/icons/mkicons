@@ -20,6 +20,12 @@ my @actionIcons = qw/
     simplify
     vtxlinks
     /;
+#    cone
+#    csvexport
+#    dehydrated
+#    doublecover
+#    finite
+#    orb
 
 my @packetIcons = qw/
     angles
@@ -33,8 +39,11 @@ my @packetIcons = qw/
     text
     triangulation
     /;
+#    filter_comb
+#    filter_prop
 
-# TODO: Also, regina and x-regina.
+#    regina
+#    x-regina
 
 my $aux = undef;
 
