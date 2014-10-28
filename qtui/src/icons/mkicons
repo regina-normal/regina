@@ -10,9 +10,11 @@ my @actionIcons = qw/
     components
     connectedsum
     connectedsumwith
+    doublecover
     drilledge
     fill
     locked
+    orb
     orient
     packet_view
     puncture
@@ -23,9 +25,7 @@ my @actionIcons = qw/
 #    cone
 #    csvexport
 #    dehydrated
-#    doublecover
 #    finite
-#    orb
 
 my @packetIcons = qw/
     angles
