@@ -772,7 +772,7 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QWidget(parent) {
     // Set up the button panel.
     QBoxLayout* vBox = new QVBoxLayout();
 
-    QPushButton* btnAdd = new QPushButton(ReginaSupport::themeIcon("list-add"),
+    QPushButton* btnAdd = new QPushButton(ReginaSupport::regIcon("insert"),
         tr("Add..."));
     // btnAdd->setFlat(true);
     vBox->addWidget(btnAdd);
@@ -782,7 +782,7 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QWidget(parent) {
         "This list contains the Python libraries to be loaded at "
         "the beginning of each new Python session."));
 
-    btnRemove = new QPushButton(ReginaSupport::themeIcon("list-remove"),
+    btnRemove = new QPushButton(ReginaSupport::regIcon("delete"),
         tr("Remove"));
     // btnRemove->setFlat(true);
     vBox->addWidget(btnRemove);

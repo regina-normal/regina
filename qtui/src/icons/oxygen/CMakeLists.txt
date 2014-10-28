@@ -36,8 +36,6 @@ set (IMGS
   help-contents
   help-contextual
   help-hint
-  list-add
-  list-remove
   mail-attachment
   process-stop
   run-build-file

@@ -9,12 +9,14 @@ set (IMGS
   connectedsumwith
   csvexport
   dehydrated
+  delete
   doublecover
   drilledge
   fill
   filter_comb
   filter_prop
   finite
+  insert
   locked
   orb
   orient
