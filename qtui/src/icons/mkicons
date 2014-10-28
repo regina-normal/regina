@@ -26,6 +26,7 @@ my @actionIcons = qw/
 #    cone
 #    csvexport
 #    finite
+#    signature
 
 my @packetIcons = qw/
     angles
