@@ -88,9 +88,7 @@ sub process {
     }
 }
 
-$#ARGV == 0 or usage;
-
-$aux = $ARGV[0];
+$aux = ($#ARGV < 0 ? "$ENV{'HOME'}/git/regina-aux" : $ARGV[0]);
 -d "$aux" or usage "Argument \"$aux\" is not a directory.";
 -e "$aux/icons/src/packets/triangulation.svg" or
     usage "Argument \"$aux\" does not look like a regina-aux checkout.";
