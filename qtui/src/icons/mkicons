@@ -32,6 +32,8 @@ my @packetIcons = qw/
     container
     dim2triangulation
     filter
+    filter_comb
+    filter_prop
     pdf
     script
     snappea
@@ -39,8 +41,6 @@ my @packetIcons = qw/
     text
     triangulation
     /;
-#    filter_comb
-#    filter_prop
 
 #    regina
 #    x-regina
@@ -58,6 +58,15 @@ sub render {
     my $src = shift;
     my $size = shift;
     my $filename = shift;
+
+    if ($size <= 16) {
+        my $lores = $src;
+        $lores =~ s/\.svg$/-lores.svg/;
+        if (-e $lores) {
+            print "Using lo-res SVG: $filename\n";
+            $src = $lores;
+        }
+    }
 
     # `rsvg -w$size -h$size "$src" "$filename"`;
     `inkscape -z -e "$filename" -w $size -h $size "$src"`;
@@ -93,6 +102,7 @@ foreach my $i (@actionIcons) {
 
 foreach my $i (@packetIcons) {
     my $src = "$aux/icons/src/packets/$i.svg";
-    process("packet_$i", \@packetSizes, $src);
+    my $prefix = ($i eq 'filter_comb' || $i eq 'filter_prop' ? '' : 'packet_');
+    process("$prefix$i", \@packetSizes, $src);
 }
 
