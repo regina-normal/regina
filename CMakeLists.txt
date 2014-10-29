@@ -479,6 +479,7 @@ ELSE(DISABLE_GUI)
   set(GUI_REQUIRED TRUE)
   set(CMAKE_AUTOMOC ON)
   FIND_PACKAGE(Qt5Widgets)
+  FIND_PACKAGE(Qt5Svg)
 
   FIND_PACKAGE(SourceHighlight)
   MACRO_LOG_FEATURE(SRCHILITE_FOUND
@@ -503,12 +504,15 @@ ELSE(DISABLE_GUI)
 
   # This must come after SharedMimeInfo is included, since the qtui/
   # makefiles use SharedMimeInfo macros.
-  if (Qt5Widgets_FOUND)
+  if (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
     ADD_SUBDIRECTORY(qtui)
-  endif (Qt5Widgets_FOUND)
+    SET(QT5_FOUND TRUE)
+  else (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
+    SET(QT5_FOUND FALSE)
+  endif (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
   MESSAGE(STATUS "Graphical user interface enabled")
 ENDIF(DISABLE_GUI)
-MACRO_LOG_FEATURE(Qt5Widgets_FOUND
+MACRO_LOG_FEATURE(QT5_FOUND
   "Qt5"
   "Required for Regina's graphical user interface"
   "http://qt-project.org/"
