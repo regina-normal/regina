@@ -70,7 +70,7 @@ if (APPLE)
   set(REGINA_APP_NAME Regina)
 
   # Add application and mimetype icons to the app bundle.
-  set(REGINA_ICNS ${PROJECT_SOURCE_DIR}/icons/regina.icns ${PROJECT_SOURCE_DIR}/icons/x-regina.icns)
+  set(REGINA_ICNS regina.icns x-regina.icns)
   set_source_files_properties(${REGINA_ICNS} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
   set(SOURCES ${SOURCES} ${REGINA_ICNS})
 else (APPLE)
