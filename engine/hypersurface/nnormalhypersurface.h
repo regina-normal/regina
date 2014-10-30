@@ -677,6 +677,14 @@ class REGINA_API NNormalHypersurface : public ShareableObject {
         bool sameSurface(const NNormalHypersurface& other) const;
 
         /**
+         * Determines whether this hypersurface is embedded.  This is true if
+         * and only if the surface contains no conflicting prism types.
+         *
+         * @return \c true if and only if this hypersurface is embedded.
+         */
+        bool embedded() const;
+
+        /**
          * Determines whether this and the given hypersurface are locally
          * compatible.  Local compatibility means that, within each individual
          * pentachoron of the triangulation, it is possible to arrange the
