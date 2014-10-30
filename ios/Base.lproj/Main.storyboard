@@ -5632,6 +5632,60 @@
             </objects>
             <point key="canvasLocation" x="1729.5" y="2174"/>
         </scene>
+        <!--Graph-->
+        <scene sceneID="toc-zO-UYR">
+            <objects>
+                <viewController id="n6H-e3-Xo9" customClass="TriGraph" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Yve-4f-TBN"/>
+                        <viewControllerLayoutGuide type="bottom" id="lCy-qR-26P"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="QNA-h6-gj4">
+                        <rect key="frame" x="0.0" y="0.0" width="703" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Iw3-GD-hAT">
+                                <rect key="frame" x="20" y="20" width="663" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zc0-7d-g5d">
+                                <rect key="frame" x="651" y="14" width="32" height="32"/>
+                                <state key="normal" image="Lock">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <webView contentMode="scaleToFill" scalesPageToFit="YES" allowsInlineMediaPlayback="NO" mediaPlaybackRequiresUserAction="NO" mediaPlaybackAllowsAirPlay="NO" keyboardDisplayRequiresUserAction="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JEU-GG-naj">
+                                <rect key="frame" x="20" y="80.5" width="663" height="618.5"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <dataDetectorType key="dataDetectorTypes"/>
+                            </webView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="zc0-7d-g5d" secondAttribute="trailing" constant="20" id="Azr-52-tV4"/>
+                            <constraint firstAttribute="trailing" secondItem="Iw3-GD-hAT" secondAttribute="trailing" constant="20" id="BJm-wj-HS7"/>
+                            <constraint firstItem="JEU-GG-naj" firstAttribute="top" secondItem="Iw3-GD-hAT" secondAttribute="bottom" constant="40" id="MWP-Lc-5Or"/>
+                            <constraint firstItem="Iw3-GD-hAT" firstAttribute="leading" secondItem="QNA-h6-gj4" secondAttribute="leading" constant="20" id="WX3-0Z-Zyo"/>
+                            <constraint firstItem="Iw3-GD-hAT" firstAttribute="top" secondItem="QNA-h6-gj4" secondAttribute="top" constant="20" id="b07-DS-fuL"/>
+                            <constraint firstItem="lCy-qR-26P" firstAttribute="top" secondItem="JEU-GG-naj" secondAttribute="bottom" constant="20" id="beQ-KB-uGQ"/>
+                            <constraint firstItem="zc0-7d-g5d" firstAttribute="centerY" secondItem="Iw3-GD-hAT" secondAttribute="centerY" id="boe-vn-7VK"/>
+                            <constraint firstItem="JEU-GG-naj" firstAttribute="leading" secondItem="QNA-h6-gj4" secondAttribute="leading" constant="20" id="kyO-Vv-vAJ"/>
+                            <constraint firstAttribute="trailing" secondItem="JEU-GG-naj" secondAttribute="trailing" constant="20" id="l3D-Rq-fBk"/>
+                        </constraints>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Graph" image="Tab-Graph" id="aR5-Ii-50E"/>
+                    <connections>
+                        <outlet property="graph" destination="JEU-GG-naj" id="IVe-Xx-tKf"/>
+                        <outlet property="header" destination="Iw3-GD-hAT" id="SlP-LT-3iy"/>
+                        <outlet property="lockIcon" destination="zc0-7d-g5d" id="AWU-ou-nda"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Wgy-sP-gYF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="7789.5" y="3359"/>
+        </scene>
         <!--Skeleton-->
         <scene sceneID="F5F-Xc-I9M">
             <objects>
@@ -6921,6 +6975,7 @@
                     <connections>
                         <segue destination="qRa-sB-Dvt" kind="relationship" relationship="viewControllers" id="79f-Qh-4ih"/>
                         <segue destination="e7R-Ek-ug0" kind="relationship" relationship="viewControllers" id="Sae-4b-qBm"/>
+                        <segue destination="n6H-e3-Xo9" kind="relationship" relationship="viewControllers" id="8Xr-Jj-5mf"/>
                         <segue destination="E8x-R2-m55" kind="relationship" relationship="viewControllers" id="XRM-wn-L3m"/>
                         <segue destination="i6X-BY-fes" kind="relationship" relationship="viewControllers" id="Qc2-rY-SdL"/>
                         <segue destination="Y29-Wh-2Yc" kind="relationship" relationship="viewControllers" id="r1E-tG-05E"/>
@@ -8461,6 +8516,7 @@
         <image name="Tab-Coords" width="25" height="25"/>
         <image name="Tab-Cusps" width="25" height="25"/>
         <image name="Tab-Gluings" width="25" height="25"/>
+        <image name="Tab-Graph" width="25" height="25"/>
         <image name="Tab-Matching" width="25" height="25"/>
         <image name="Tab-Recognition" width="25" height="25"/>
         <image name="Tab-Skeleton" width="25" height="25"/>

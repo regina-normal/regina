@@ -30,70 +30,66 @@
  *                                                                        *
  **************************************************************************/
 
+#import "SnapPeaViewController.h"
 #import "TriangulationViewController.h"
-#import "TextHelper.h"
+#import "TriGraph.h"
+#import "census/nfacepairing.h"
 #import "triangulation/ntriangulation.h"
+#import "gvc.h"
 
-@implementation TriangulationViewController
+extern gvplugin_library_t gvplugin_neato_layout_LTX_library;
+extern gvplugin_library_t gvplugin_core_LTX_library;
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    [self setSelectedImages:@[@"Tab-Gluings-Bold",
-                              @"Tab-Skeleton-Bold",
-                              @"Tab-Graph-Bold",
-                              [NSNull null],
-                              @"Tab-Composition-Bold",
-                              @"Tab-Recognition-Bold",
-                              @"Tab-SnapPea-Bold"]];
-    [self registerDefaultKey:@"ViewTriangulationTab"];
+@interface TriGraph ()
+@property (weak, nonatomic) IBOutlet UILabel *header;
+@property (weak, nonatomic) IBOutlet UILabel *volume;
+@property (weak, nonatomic) IBOutlet UILabel *solnType;
+@property (weak, nonatomic) IBOutlet UIButton *lockIcon;
+
+@property (weak, nonatomic) IBOutlet UIWebView *graph;
+
+@property (assign, nonatomic) regina::NTriangulation* packet;
+@end
+
+@implementation TriGraph
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.packet = static_cast<regina::NTriangulation*>(static_cast<id<PacketViewer> >(self.parentViewController).packet);
+
+    [self reloadPacket];
 }
 
-- (void)updateHeader:(UILabel *)header lockIcon:(UIButton*)lockIcon
+- (void)reloadPacket
 {
-    if (self.packet->isEmpty())
-        header.text = @"Empty";
-    else if (! self.packet->isValid())
-        header.attributedText = [TextHelper badString:@"Invalid triangulation"];
-    else {
-        NSMutableString* msg;
+    if ([self.parentViewController isKindOfClass:[SnapPeaViewController class]])
+        [static_cast<SnapPeaViewController*>(self.parentViewController) updateHeader:self.header volume:self.volume solnType:self.solnType];
+    else
+        [static_cast<TriangulationViewController*>(self.parentViewController) updateHeader:self.header lockIcon:self.lockIcon];
 
-        if (self.packet->isClosed())
-            msg = [NSMutableString stringWithString:@"Closed, "];
-        else {
-            if (self.packet->isIdeal() && self.packet->hasBoundaryTriangles())
-                msg = [NSMutableString stringWithString:@"Ideal & real boundary, "];
-            else if (self.packet->isIdeal())
-                msg = [NSMutableString stringWithString:@"Ideal boundary, "];
-            else if (self.packet->hasBoundaryTriangles())
-                msg = [NSMutableString stringWithString:@"Real boundary, "];
-        }
+    regina::NFacePairing* p = new regina::NFacePairing(*self.packet);
+    std::string dot = p->dot("v", false /* subgraph */, true /* labels */);
+    delete p;
 
-        if (self.packet->isOrientable()) {
-            if (self.packet->isOriented())
-                [msg appendString:@"orientable and oriented, "];
-            else
-                [msg appendString:@"orientable but not oriented, "];
-        } else
-            [msg appendString:@"non-orientable, "];
+    char* svg;
+    unsigned svgLen;
 
-        if (self.packet->isConnected())
-            [msg appendString:@"connected"];
-        else
-            [msg appendString:@"disconnected"];
-        
-        header.text = msg;
-    }
+    GVC_t* gvc = gvContext();
+    gvAddLibrary(gvc, &gvplugin_core_LTX_library);
+    gvAddLibrary(gvc, &gvplugin_neato_layout_LTX_library);
+    Agraph_t* g = agmemread(dot.c_str());
+    gvLayout(gvc, g, "neato");
+    gvRenderData(gvc, g, "svg", &svg, &svgLen);
+    gvFreeLayout(gvc, g);
+    agclose(g);
+    gvFreeContext(gvc);
 
-    lockIcon.hidden = self.packet->isPacketEditable();
-}
+    [self.graph loadData:[NSData dataWithBytes:svg length:svgLen]
+                MIMEType:@"image/svg+xml"
+        textEncodingName:@"utf-8"
+                 baseURL:[NSURL URLWithString:@"file://graph.svg"]];
 
-- (void)editabilityChanged
-{
-    // A bit heavyweight.
-    // For most tabs all we actually need to do is update the lock icon.
-    // Sometimes there is more to do though (e.g., the gluings tab shows/hides the new-simplex row).
-    [static_cast<id<PacketViewer> >(self.selectedViewController) reloadPacket];
+    self.graph.scalesPageToFit = YES;
 }
 
 @end

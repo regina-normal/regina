@@ -1120,6 +1120,8 @@
 		05D1174D19EE0460003BEC55 /* simplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0583655C18DB882B008B08D9 /* simplify.cpp */; };
 		05D1C16F19C6542700CF92F2 /* ReginaHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D1C16E19C6542700CF92F2 /* ReginaHelper.mm */; };
 		05D1C17219C7F95100CF92F2 /* EditableTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D1C17119C7F95100CF92F2 /* EditableTableViewController.mm */; };
+		05D6CFA41A01D0A60039150F /* TriGraph.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D6CFA31A01D0A60039150F /* TriGraph.mm */; };
+		05D6CFA61A01D2C60039150F /* graphviz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05D6CFA51A01D2C60039150F /* graphviz.framework */; };
 		05EA195719F30A0100D37501 /* EltMovesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05EA195619F30A0100D37501 /* EltMovesController.mm */; };
 		05EC452F19B99A81002D0633 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA23E180613A900FAE4DF /* boost.framework */; };
 		05F23E0F19C08834005B53B5 /* snappea-doc-64.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F23E0D19C08834005B53B5 /* snappea-doc-64.png */; };
@@ -2330,6 +2332,9 @@
 		05D1C16E19C6542700CF92F2 /* ReginaHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ReginaHelper.mm; sourceTree = "<group>"; };
 		05D1C17019C7F95100CF92F2 /* EditableTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditableTableViewController.h; sourceTree = "<group>"; };
 		05D1C17119C7F95100CF92F2 /* EditableTableViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EditableTableViewController.mm; sourceTree = "<group>"; };
+		05D6CFA21A01D0A60039150F /* TriGraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriGraph.h; sourceTree = "<group>"; };
+		05D6CFA31A01D0A60039150F /* TriGraph.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TriGraph.mm; sourceTree = "<group>"; };
+		05D6CFA51A01D2C60039150F /* graphviz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = graphviz.framework; path = ../../Library/Frameworks/graphviz.framework; sourceTree = "<group>"; };
 		05EA195519F30A0100D37501 /* EltMovesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EltMovesController.h; sourceTree = "<group>"; };
 		05EA195619F30A0100D37501 /* EltMovesController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EltMovesController.mm; sourceTree = "<group>"; };
 		05F23E0D19C08834005B53B5 /* snappea-doc-64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "snappea-doc-64.png"; sourceTree = "<group>"; };
@@ -2373,6 +2378,7 @@
 				057FA754180615F6008E25F6 /* libz.dylib in Frameworks */,
 				052FA241180613A900FAE4DF /* boost.framework in Frameworks */,
 				05D1172A19EDFE6E003BEC55 /* cppunit.framework in Frameworks */,
+				05D6CFA61A01D2C60039150F /* graphviz.framework in Frameworks */,
 				052FA242180613A900FAE4DF /* libgmp.framework in Frameworks */,
 				052FA243180613A900FAE4DF /* libgmpxx.framework in Frameworks */,
 				0569F93019B3655C00051091 /* libtokyocabinet.framework in Frameworks */,
@@ -2485,6 +2491,8 @@
 				058FADB519D506160001B5B5 /* TriComposition.mm */,
 				0589FAC1181484860064CD57 /* TriGluings.h */,
 				0589FAC2181484860064CD57 /* TriGluings.mm */,
+				05D6CFA21A01D0A60039150F /* TriGraph.h */,
+				05D6CFA31A01D0A60039150F /* TriGraph.mm */,
 				05F9561119B53E7900377BEC /* TriRecognition.h */,
 				05F9561219B53E7900377BEC /* TriRecognition.mm */,
 				058FADB619D506160001B5B5 /* TriSkeleton.h */,
@@ -3285,6 +3293,7 @@
 				057FA751180615F5008E25F6 /* libz.dylib */,
 				052FA23E180613A900FAE4DF /* boost.framework */,
 				05500A1019B422360074CE5D /* cppunit.framework */,
+				05D6CFA51A01D2C60039150F /* graphviz.framework */,
 				052FA23F180613A900FAE4DF /* libgmp.framework */,
 				052FA240180613A900FAE4DF /* libgmpxx.framework */,
 				0569F92F19B3655C00051091 /* libtokyocabinet.framework */,
@@ -4521,6 +4530,7 @@
 				052FA1671806129B00FAE4DF /* closedprimemin.cpp in Sources */,
 				052FA1F81806129B00FAE4DF /* nexampletriangulation.cpp in Sources */,
 				052FA1401806103000FAE4DF /* MasterViewController.mm in Sources */,
+				05D6CFA41A01D0A60039150F /* TriGraph.mm in Sources */,
 				052FA218180612DD00FAE4DF /* close_cusps.c in Sources */,
 				052FA22A180612DD00FAE4DF /* interface.c in Sources */,
 				052FA1EB1806129B00FAE4DF /* sfcombination.cpp in Sources */,
@@ -5536,6 +5546,7 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/libgmp.framework/Headers",
 					"$(USER_LIBRARY_DIR)/Frameworks/libgmpxx.framework/Headers",
 					"$(USER_LIBRARY_DIR)/Frameworks/libtokyocabinet.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/graphviz.framework/Headers",
 				);
 				MACOSX_DEPLOYMENT_TARGET = "";
 				ONLY_ACTIVE_ARCH = YES;
@@ -5579,6 +5590,7 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/libgmp.framework/Headers",
 					"$(USER_LIBRARY_DIR)/Frameworks/libgmpxx.framework/Headers",
 					"$(USER_LIBRARY_DIR)/Frameworks/libtokyocabinet.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/graphviz.framework/Headers",
 				);
 				MACOSX_DEPLOYMENT_TARGET = "";
 				SDKROOT = macosx;
