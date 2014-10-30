@@ -157,7 +157,7 @@ bool Dim4GluingsModel::setData(const QModelIndex& index, const QVariant& value,
         if (newName == p->getDescription().c_str())
             return false;
 
-        p->setDescription(newName.toAscii().constData());
+        p->setDescription(newName.toUtf8().constData());
         return true;
     }
 
@@ -348,7 +348,7 @@ Dim4TriGluingsUI::Dim4TriGluingsUI(regina::Dim4Triangulation* packet,
 
     actAddPent = new QAction(this);
     actAddPent->setText(tr("&Add Pent"));
-    actAddPent->setIcon(ReginaSupport::themeIcon("list-add"));
+    actAddPent->setIcon(ReginaSupport::regIcon("insert"));
     actAddPent->setToolTip(tr("Add a new pentachoron"));
     actAddPent->setEnabled(readWrite);
     actAddPent->setWhatsThis(tr("Add a new pentachoron to this "
@@ -359,7 +359,7 @@ Dim4TriGluingsUI::Dim4TriGluingsUI(regina::Dim4Triangulation* packet,
 
     actRemovePent = new QAction(this);
     actRemovePent->setText(tr("&Remove Pent"));
-    actRemovePent->setIcon(ReginaSupport::themeIcon("list-remove"));
+    actRemovePent->setIcon(ReginaSupport::regIcon("delete"));
     actRemovePent->setToolTip(tr("Remove the currently selected pentachora"));
     actRemovePent->setEnabled(false);
     actRemovePent->setWhatsThis(tr("Remove the currently selected "
