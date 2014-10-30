@@ -8,21 +8,6 @@ SET ( FILES
   vertexchooser
   )
 
-SET ( MOC_FILES
-  boundarycomponentchooser.h
-  cuspchooser.h
-  edgechooser.h
-  edgeintchooser.h
-  tetrahedronchooser.h
-  trianglechooser.h
-  vertexchooser.h
-  )
-
-FOREACH( MOC ${MOC_FILES} )
-  SET ( MOC_HEADERS ${MOC_HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/${MOC} )
-ENDFOREACH(MOC)
-SET ( MOC_HEADERS ${MOC_HEADERS} PARENT_SCOPE)
-
 FOREACH( FILE ${FILES} )
   SET( SOURCES ${SOURCES} choosers/${FILE})
 ENDFOREACH(FILE)

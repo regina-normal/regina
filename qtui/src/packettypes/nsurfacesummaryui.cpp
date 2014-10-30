@@ -108,7 +108,7 @@ NSurfaceSummaryUI::NSurfaceSummaryUI(
     tableClosed->setRootIsDecorated(false);
     tableClosed->setAlternatingRowColors(false);
     tableClosed->header()->setStretchLastSection(false);
-    tableClosed->header()->setResizeMode(QHeaderView::ResizeToContents);
+    tableClosed->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     tableClosed->setSelectionMode(QAbstractItemView::NoSelection);
     tableClosed->setWhatsThis(tr("<qt>Breaks down the total count "
         "for closed compact surfaces (i.e., closed surfaces with "
@@ -128,7 +128,7 @@ NSurfaceSummaryUI::NSurfaceSummaryUI(
     tableBounded->setRootIsDecorated(false);
     tableBounded->setAlternatingRowColors(false);
     tableBounded->header()->setStretchLastSection(false);
-    tableBounded->header()->setResizeMode(QHeaderView::ResizeToContents);
+    tableBounded->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     tableBounded->setSelectionMode(QAbstractItemView::NoSelection);
     tableBounded->setWhatsThis(tr("<qt>Breaks down the total "
         "count for surfaces with real boundary (i.e., bounded surfaces with "

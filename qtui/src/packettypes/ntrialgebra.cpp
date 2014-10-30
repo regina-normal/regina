@@ -310,7 +310,7 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
     invariants->setRootIsDecorated(false);
     invariants->setAlternatingRowColors(true);
     invariants->header()->setStretchLastSection(false);
-    invariants->header()->setResizeMode(QHeaderView::ResizeToContents);
+    invariants->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     invariants->setSelectionMode(QAbstractItemView::NoSelection);
     invariants->setWhatsThis(tr("A list of all Turaev-Viro invariants "
         "that have been calculated so far for this triangulation.  To "
@@ -527,7 +527,7 @@ void NTriCellularInfoUI::refresh() {
             // non-orientable triangulations.
             // Encase it in <qt>..</qt> so it can wrap over multiple lines.
             EmbeddingComments->setText(QString("<qt>%1</qt>").arg(
-                Qt::escape(minfo.getEmbeddabilityComment().c_str())));
+                QString(minfo.getEmbeddabilityComment().c_str()).toHtmlEscaped()));
         }
     } else {
         QString msg(QObject::tr("Invalid Triangulation"));

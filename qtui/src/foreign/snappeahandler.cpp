@@ -54,7 +54,7 @@ regina::NPacket* SnapPeaHandler::importData(const QString& fileName,
             QObject::tr("The import failed."),
             QObject::tr("<qt>Please check that the file <tt>%1</tt> "
                 "is readable and in SnapPea format.</qt>").
-                arg(Qt::escape(fileName)));
+                arg(fileName.toHtmlEscaped()));
         delete ans;
         return 0;
     }
@@ -88,7 +88,7 @@ bool SnapPeaHandler::exportData(regina::NPacket* data,
             QObject::tr("The export failed."),
             QObject::tr("<qt>An unknown error occurred, probably related "
             "to file I/O.  Please check that you have permissions to write "
-            "to the file <tt>%1</tt>.</qt>").arg(Qt::escape(fileName)));
+            "to the file <tt>%1</tt>.</qt>").arg(fileName.toHtmlEscaped()));
         return false;
     }
     return true;

@@ -74,6 +74,10 @@ Version 4.97  [ (under development) ]
         Header zstream.h:
             - Removed entirely.  Regina now uses boost::iostreams instead.
     USER INTERFACE:
+        - Now builds against Qt5, not Qt4.
+        - Supports hi-resolution (e.g., retina) displays.
+        - Removed the old and increasingly poorly supported option of
+          docking packets into the main window.
         - Drilling an edge now creates a new triangulation, as opposed
           to modifying the current triangulation.
         - Puncturing a triangulation, making it ideal or truncating ideal

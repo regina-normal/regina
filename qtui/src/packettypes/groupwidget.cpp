@@ -48,7 +48,6 @@
 #include <QListWidget>
 #include <QMessageBox>
 #include <QPushButton>
-#include <QTextDocument> // For Qt::escape()
 
 #define MAX_RELATIONS_FOR_PROLIFERATION 8
 
@@ -313,7 +312,8 @@ QString GroupWidget::verifyGAPExec() {
         if (! found) {
             ReginaSupport::sorry(this,
                 tr("<qt>I could not find the GAP executable <i>%1</i> "
-                "on the default search path.</qt>").arg(Qt::escape(useExec)),
+                "on the default search path.</qt>").
+                    arg(useExec.toHtmlEscaped()),
                 tr("<qt>If you have GAP (Groups, Algorithms and Programming) "
                 "installed on your system, please go into Regina's "
                 "settings (<i>Tools</i> section) and tell Regina "
@@ -327,7 +327,7 @@ QString GroupWidget::verifyGAPExec() {
     if (! info.exists()) {
         ReginaSupport::sorry(this,
             tr("<qt>The GAP executable <i>%1</i> does not exist.</qt>").
-                arg(Qt::escape(useExec)),
+                arg(useExec.toHtmlEscaped()),
             tr("<qt>If you have GAP (Groups, Algorithms and Programming) "
             "installed on your system, please go into Regina's "
             "settings (<i>Tools</i> section) and tell Regina "
@@ -336,7 +336,7 @@ QString GroupWidget::verifyGAPExec() {
     } else if (! (info.isFile() && info.isExecutable())) {
         ReginaSupport::sorry(this,
             tr("<qt>The GAP executable <i>%1</i> does not appear to be "
-            "an executable program.</qt>").arg(Qt::escape(useExec)),
+            "an executable program.</qt>").arg(useExec.toHtmlEscaped()),
             tr("<qt>If you have GAP (Groups, Algorithms and Programming) "
             "installed on your system, please go into Regina's "
             "settings (<i>Tools</i> section) and tell Regina "

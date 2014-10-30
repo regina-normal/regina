@@ -44,52 +44,9 @@ SET ( FILES
   skeletonwindow
   )
 
-SET ( MOC_FILES
-  dim2trigluings.h
-  dim2triskeleton.h
-  dim2triui.h
-  dim4trialgebra.h
-  dim4trigluings.h
-  dim4triskeleton.h
-  dim4triui.h
-  eltmovedialog.h
-  facetgraphtab.h
-  gaprunner.h
-  groupwidget.h
-  nanglestructureui.h
-  ncompatcanvas.h
-  nnormalsurfaceui.h
-  nscriptui.h
-  nsnappeacreator.h
-  nsnappeafile.h
-  nsnappeagluings.h
-  nsnappeashapes.h
-  nsnappeaui.h
-  nsurfacecompatui.h
-  nsurfacecoordinateui.h
-  nsurfacefiltercomb.h
-  nsurfacefilterprop.h
-  nsurfacematchingui.h
-  nsurfacesummaryui.h
-  ntextui.h
-  ntrialgebra.h
-  ntriangulationui.h
-  ntricomposition.h
-  ntrigluings.h
-  ntriskeleton.h
-  ntrisurfaces.h
-  skeletonwindow.h
-  )
-
 IF (NOT EXCLUDE_SNAPPEA)
   SET (FILES ${FILES} ntrisnappea snappeacomponents)
-  SET (MOC_FILES ${MOC_FILES} ntrisnappea.h snappeacomponents.h)
 ENDIF (NOT EXCLUDE_SNAPPEA)
-
-FOREACH( MOC ${MOC_FILES} )
-  SET ( MOC_HEADERS ${MOC_HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/${MOC} )
-ENDFOREACH(MOC)
-SET ( MOC_HEADERS ${MOC_HEADERS} PARENT_SCOPE)
 
 FOREACH( FILE ${FILES} )
   SET( SOURCES ${SOURCES} packettypes/${FILE})

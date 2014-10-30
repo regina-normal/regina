@@ -438,10 +438,6 @@ class ReginaPrefSet : public QObject {
             /**< The maximum number of tetrahedra for which surface-related
                  properties of 3-manifold triangulations will be automatically
                  calculated. */
-        bool useDock;
-            /**< Do we use a dock area in the main window (as opposed to
-                 a new window for each open packet)?  This mimics the
-                 old behaviour from Regina 4.90 and before. */
 
         bool warnOnNonEmbedded;
             /**< Whether to warn when attempting to enumerate normal surfaces

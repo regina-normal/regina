@@ -53,9 +53,9 @@ regina::NPacket* PDFHandler::importData(const QString& fileName,
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
             QObject::tr("<qt>Please check that the file <tt>%1</tt> "
-            "is readable and in PDF format.</qt>").arg(Qt::escape(fileName)));
+            "is readable and in PDF format.</qt>").arg(fileName.toHtmlEscaped()));
     else
-        ans->setPacketLabel(QObject::tr("PDF document").toAscii().constData());
+        ans->setPacketLabel(QObject::tr("PDF document").toUtf8().constData());
     return ans;
 }
 
@@ -78,7 +78,7 @@ bool PDFHandler::exportData(regina::NPacket* data, const QString& fileName,
             QObject::tr("The export failed."), 
             QObject::tr("<qt>An unknown error occurred, probably related "
             "to file I/O.  Please check that you have permissions to write "
-            "to the file <tt>%1</tt>.</qt>").arg(Qt::escape(fileName)));
+            "to the file <tt>%1</tt>.</qt>").arg(fileName.toHtmlEscaped()));
         return false;
     }
     return true;

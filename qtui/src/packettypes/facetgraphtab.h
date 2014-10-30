@@ -48,6 +48,7 @@ class MessageLayer;
 
 class QScrollArea;
 class QStackedWidget;
+class QSvgWidget;
 
 namespace regina {
     class Dim2Triangulation;
@@ -135,7 +136,7 @@ class FacetGraphTab : public QObject, public PacketViewerTab {
         QScrollArea* layerGraph;
         MessageLayer* layerInfo;
         MessageLayer* layerError;
-        QLabel* graph;
+        QSvgWidget* graph;
         bool neverDrawn;
 
         /**

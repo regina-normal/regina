@@ -150,8 +150,8 @@ void NSurfaceHeaderUI::refresh() {
         "Triangulation: <a href=\"#\">%3</a></qt>").
         arg(count).
         arg(header->tr(Coordinates::name(surfaces->coords(), false))).
-        arg(Qt::escape(
-            surfaces->getTriangulation()->getHumanLabel().c_str())));
+        arg(QString(surfaces->getTriangulation()->getHumanLabel().c_str()).
+            toHtmlEscaped()));
 }
 
 void NSurfaceHeaderUI::viewTriangulation() {

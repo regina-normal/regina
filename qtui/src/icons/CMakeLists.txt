@@ -9,12 +9,14 @@ set (IMGS
   connectedsumwith
   csvexport
   dehydrated
+  delete
   doublecover
   drilledge
   fill
   filter_comb
   filter_prop
   finite
+  insert
   locked
   orb
   orient
@@ -31,14 +33,13 @@ set (IMGS
   packet_triangulation
   packet_view
   puncture
-  python_console
   randomise
   regina
   simplify
   snappea
   vtxlinks
   )
-set (SIZES 16 22 32 48 64 128)
+set (SIZES 16 16@2x 22 22@2x 32 32@2x 48 48@2x 64 64@2x 128 128@2x)
 
 foreach (IMG_CLASS ${IMGS})
   foreach (IMG_SIZE ${SIZES})
@@ -55,8 +56,10 @@ if (${REGINA_INSTALL_TYPE} STREQUAL XDG)
   foreach (IMG_SIZE ${SIZES})
     if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/regina-${IMG_SIZE}.png)
       INSTALL (FILES ${CMAKE_CURRENT_SOURCE_DIR}/regina-${IMG_SIZE}.png DESTINATION ${ICONDIR}/hicolor/${IMG_SIZE}x${IMG_SIZE}/apps RENAME regina.png)
-      INSTALL (FILES ${CMAKE_CURRENT_SOURCE_DIR}/x-regina-${IMG_SIZE}.png DESTINATION ${ICONDIR}/hicolor/${IMG_SIZE}x${IMG_SIZE}/mimetypes RENAME application-x-regina.png)
     endif (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/regina-${IMG_SIZE}.png)
+    if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/x-regina-${IMG_SIZE}.png)
+      INSTALL (FILES ${CMAKE_CURRENT_SOURCE_DIR}/x-regina-${IMG_SIZE}.png DESTINATION ${ICONDIR}/hicolor/${IMG_SIZE}x${IMG_SIZE}/mimetypes RENAME application-x-regina.png)
+    endif (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/x-regina-${IMG_SIZE}.png)
   endforeach (IMG_SIZE ${SIZES})
 endif (${REGINA_INSTALL_TYPE} STREQUAL XDG)
 
