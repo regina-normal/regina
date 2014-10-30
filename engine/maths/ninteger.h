@@ -2288,7 +2288,7 @@ inline NIntegerBase<supportInfinity>::NIntegerBase(
         const NNativeInteger<bytes>& value) :
         small_(value.nativeValue()), large_(0) {
     BOOST_STATIC_ASSERT(bytes % sizeof(long) == 0);
-    if (sizeof(long) < bytes && value.nativeValue() != small_) {
+    if (sizeof(long) < bytes && value.nativeValue() != static_cast<typename IntOfSize<bytes>::type>(small_)) {
         // It didn't fit.  Take things one long at a time.
         unsigned blocks = bytes / sizeof(long);
         large_ = new mpz_t;
@@ -3531,7 +3531,15 @@ void NNativeInteger<bytes>::gcdWith(const NNativeInteger<bytes>& other) {
             while (! (a & 1));
         }
     }
-    data_ = (a << pow2);
+    // On arm64 with 128-bit integers I am seeing some very strange behaviour
+    // when pow2=0.  For instance, (3 << 0) = (0x0000000300000003).  Aaaugh.
+    // Things seem fine for non-zero shifts, so just test for pow2=0 explicitly.
+    // (Note: things are working correctly on x86_64 - it's just arm64 that is
+    // showing these errors.)
+    if (pow2)
+        data_ = (a << pow2);
+    else
+        data_ = a;
 }
 
 template <int bytes>

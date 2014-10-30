@@ -168,18 +168,13 @@ QIcon ReginaSupport::themeIcon(const QString& name) {
 
 QIcon ReginaSupport::overlayIcon(const QIcon& base, const QIcon& emblem) {
     QIcon icon;
-    int overlaySize;
     for (int i = 0; iconSizes[i]; ++i) {
         QPixmap iconPic = base.pixmap(iconSizes[i]);
         if (iconPic.isNull())
             continue;
 
-        overlaySize = (iconSizes[i] <= 22 ? 8 : iconSizes[i] <= 48 ? 16 : 22);
-        QPixmap overlayPic = emblem.pixmap(overlaySize);
-
         QPainter painter(&iconPic);
-        painter.drawPixmap(0, iconSizes[i] - overlayPic.height(), overlayPic);
-
+        painter.drawPixmap(0, 0, emblem.pixmap(iconSizes[i]));
         icon.addPixmap(iconPic);
     }
     return icon;

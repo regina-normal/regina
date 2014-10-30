@@ -2742,7 +2742,7 @@ class REGINA_API NTriangulation : public NPacket,
          * @return \c true if and only if the triangulation was changed.
          * @author David Letscher
          */
-        bool idealToFinite(bool forceDivision = false);
+        bool idealToFinite();
 
         /**
          * Converts each real boundary component into a cusp (i.e., an ideal

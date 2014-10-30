@@ -45,6 +45,8 @@ namespace {
         &NPacket::nextTreePacket;
     NPacket* (NPacket::*findPacketLabel_non_const)(const std::string&) =
         &NPacket::findPacketLabel;
+    bool (NPacket::*save_filename)(const char*, bool) const = &NPacket::save;
+    NPacket* (*open_filename)(const char*) = &regina::open;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_moveUp,
         NPacket::moveUp, 0, 1);
@@ -109,6 +111,7 @@ void addNPacket() {
         .def("getPacketLabel", &NPacket::getPacketLabel,
             return_value_policy<return_by_value>())
         .def("getHumanLabel", &NPacket::getHumanLabel)
+        .def("adornedLabel", &NPacket::adornedLabel)
         .def("setPacketLabel", &NPacket::setPacketLabel)
         .def("getFullName", &NPacket::getFullName)
         .def("makeUniqueLabel", &NPacket::makeUniqueLabel)
@@ -143,6 +146,7 @@ void addNPacket() {
         .def("makeOrphan", makeOrphan_return,
             return_value_policy<manage_new_object>())
         .def("reparent", reparent_check, OL_reparent())
+        .def("transferChildren", &NPacket::transferChildren)
         .def("swapWithNextSibling", &NPacket::swapWithNextSibling)
         .def("moveUp", &NPacket::moveUp, OL_moveUp())
         .def("moveDown", &NPacket::moveDown, OL_moveDown())
@@ -159,10 +163,10 @@ void addNPacket() {
         .def("isPacketEditable", &NPacket::isPacketEditable)
         .def("clone", &NPacket::clone, OL_clone()[
             return_value_policy<reference_existing_object>()])
-        .def("save", &NPacket::save, OL_save())
+        .def("save", save_filename, OL_save())
         .def("internalID", &NPacket::internalID);
     ;
 
-    def("open", regina::open, return_value_policy<manage_new_object>());
+    def("open", open_filename, return_value_policy<manage_new_object>());
 }
 

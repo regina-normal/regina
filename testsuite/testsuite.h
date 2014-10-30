@@ -32,6 +32,23 @@
 
 /* end stub */
 
+#include <string>
+
+namespace CppUnit {
+    class TextTestRunner;
+}
+
+/**
+ * Populates the given test suite with individual tests for various
+ * components of Regina.
+ */
+void populateTests(CppUnit::TextTestRunner& runner);
+
+/**
+ * Improves the readability of the test name "FIXTURE.TEST".
+ */
+std::string truncateFixture(const std::string& testName);
+
 /**
  * Reads all optional test parameters from the environment, and
  * writes any relevant informative messages to std::cout.

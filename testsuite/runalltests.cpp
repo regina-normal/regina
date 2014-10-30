@@ -33,12 +33,14 @@
 /* end stub */
 
 #include "regina-config.h" // For EXCLUDE_SNAPPEA
+#include "testsuite.h"
 
 #include <cctype>
 #include <iostream>
 #include <cppunit/Test.h>
 #include <cppunit/TestResult.h>
 #include <cppunit/TextTestProgressListener.h>
+<<<<<<< HEAD
 #include "testsuite/testparams.h"
 #include "testsuite/algebra/testalgebra.h"
 #include "testsuite/angle/testangle.h"
@@ -78,6 +80,9 @@ std::string truncateFixture(const std::string& testName) {
     // Otherwise don't modify anything.
     return testName;
 }
+=======
+#include <cppunit/TextTestRunner.h>
+>>>>>>> master
 
 /**
  * Used for outputting progress.
@@ -116,9 +121,10 @@ bool runAllTests() {
     std::cout << "Regina calculation engine test suite\n\n" << std::flush;
     checkTestParams();
 
-    CppUnit::TextUi::TestRunner runner;
+    CppUnit::TextTestRunner runner;
     ReginaProgress progress;
 
+<<<<<<< HEAD
     /**
      * BEGIN REGINA TEST SUITES
      *
@@ -183,6 +189,9 @@ bool runAllTests() {
     /**
      * END REGINA TEST SUITES
      */
+=======
+    populateTests(runner);
+>>>>>>> master
 
     runner.eventManager().addListener(&progress);
     return runner.run("", false, true, false);

@@ -50,7 +50,6 @@
 #include "shareableobject.h"
 #include "packet/npacketlistener.h"
 #include "packet/packettype.h"
-#include "utilities/boostutils.h"
 
 namespace regina {
 
@@ -251,6 +250,32 @@ class REGINA_API NPacket : public ShareableObject {
          * @return this individual packet's label.
          */
         std::string getHumanLabel() const;
+
+        /**
+         * Returns the label of this packet adorned with the given string.
+         *
+         * An adornment typically shows how a packet has been created
+         * and/or modified.  For instance, the \a adornment argument
+         * might be "Filled", or "Summand #1".
+         *
+         * The way in which the packet label is adorned depends upon
+         * the label itself (in particular, an empty packet label
+         * will be handled in a sensible way).  The way in which the
+         * packet label is adorned is subject to change in future versions
+         * of Regina.
+         *
+         * Note that, whilst this routine returns a modified version of the
+         * packet label, the label itself will not be permamently changed.
+         *
+         * @param adornment the string that will be used to adorn this
+         * packet label.  The adornment should just be a piece of
+         * English, ideally beginning with an upper-case letter.
+         * It should not contain any surrounding punctuation such as
+         * brackets or a dash (this will be added automatically by
+         * this routine as required).
+         * @return a copy of the packet label with the given adornment.
+         */
+        std::string adornedLabel(const std::string& adornment) const;
 
         /**
          * Sets the label associated with this individual packet.
@@ -696,6 +721,9 @@ class REGINA_API NPacket : public ShareableObject {
          * This routine takes small constant time.  It is safe to use
          * regardless of whether this packet has a parent or not.
          *
+         * If you wish to reparent \e all of the children of a given
+         * packet, see transferChildren() instead.
+         *
          * \pre This packet does not depend on its parent; see
          * dependsOnParent() for details.
          * \pre The given parent is not a descendant of this packet.
@@ -714,6 +742,26 @@ class REGINA_API NPacket : public ShareableObject {
          * it should be inserted as the last child.
          */
         void reparent(NPacket* newParent, bool first = false);
+
+        /**
+         * Cuts all of this packet's children out of the packet tree,
+         * and reinserts them as children of the given packet instead.
+         *
+         * The children of this packet will be appended to the end of
+         * the new parent's child list, in the same order as they were
+         * previously.
+         *
+         * This is equivalent to calling reparent() on each child, but
+         * should be somewhat faster if there are many children to move.
+         *
+         * \pre None of the children of this packet depend on their
+         * current parent; see dependsOnParent() for details.
+         * \pre The given parent is not a descendant of this packet.
+         *
+         * @param newParent the new parent beneath which the children
+         * will be inserted.
+         */
+        void transferChildren(NPacket* newParent);
 
         /**
          * Swaps this packet with its next sibling in the sequence of
@@ -976,7 +1024,7 @@ class REGINA_API NPacket : public ShareableObject {
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given file \e name,
          * and simply passes it through unchanged to low-level C/C++ file I/O
-         * routines.  The \e contents of the file will be written usign UTF-8.
+         * routines.  The \e contents of the file will be written using UTF-8.
          *
          * @param filename the pathname of the file to write to.
          * @param compressed \c true if the XML data should be compressed,
@@ -984,6 +1032,28 @@ class REGINA_API NPacket : public ShareableObject {
          * @return \c true if and only if the file was successfully written.
          */
         bool save(const char* filename, bool compressed = true) const;
+
+        /**
+         * Writes the subtree rooted at this packet to the given output
+         * stream, in the format of a Regina XML data file.  The data file
+         * may be optionally compressed (Regina can happily read both
+         * compressed and uncompressed XML).
+         *
+         * Typically this will be called from the root of the packet
+         * tree, which will write the entire packet tree to the given
+         * output stream.
+         *
+         * \pre The given stream is open for writing.
+         * \pre The given packet does not depend on its parent.
+         *
+         * \ifacespython Not present.
+         *
+         * @param s the output stream to which to write.
+         * @param compressed \c true if the XML data should be compressed,
+         * or \c false if it should be written as plain text.
+         * @return \c true if and only if the data was successfully written.
+         */
+        bool save(std::ostream& s, bool compressed = true) const;
 
         /**
          * Writes the subtree rooted at this packet to the given output
@@ -1107,7 +1177,7 @@ class REGINA_API NPacket : public ShareableObject {
          * entire change set, instead of many events representing each
          * individual modification.
          */
-        class ChangeEventSpan : public regina::boost::noncopyable {
+        class ChangeEventSpan : public boost::noncopyable {
             private:
                 NPacket* packet_;
                     /**< The packet for which change events are fired. */
@@ -1289,6 +1359,26 @@ class REGINA_API NPacket : public ShareableObject {
  * @return the packet tree read from file, or 0 on error (as explained above).
  */
 REGINA_API NPacket* open(const char* filename);
+
+/**
+ * Reads a Regina data file from the given input stream, and returns the
+ * corresponding packet tree.
+ * This uses Regina's native XML file format; it does not matter whether
+ * the XML file is compressed or uncompressed.
+ *
+ * If the stream could not be read or if the top-level packet in the tree
+ * could not be read, then this routine will return 0.  If some packet deeper
+ * within the tree could not be read then that particular packet (and
+ * its descendants, if any) will simply be ignored.
+ *
+ * \pre The given stream is open for reading.
+ *
+ * \ifacespython Not present.
+ *
+ * @param in the input stream to read from.
+ * @return the packet tree read from file, or 0 on error (as explained above).
+ */
+REGINA_API NPacket* open(std::istream& s);
 
 /*@}*/
 

@@ -69,6 +69,13 @@
 // #define REGINA_TREE_TRACE
 
 /**
+ * Define REGINA_TABLEAUX_TRACE to output details of the linear programming
+ * tableaux as we walk through the search tree.  This is for diagnostic
+ * purposes only.
+ */
+// #define REGINA_TABLEAUX_TRACE
+
+/**
  * Define REGINA_SURFACE_TRACE to output details of full normal surfaces
  * (possibly immersed, or branched), as well as their corresponding
  * type vectors, as we walk through the search tree.
@@ -718,6 +725,13 @@ bool NTreeEnumeration<LPConstraint, BanConstraint, Integer>::next(
             continue;
         }
 
+#ifdef REGINA_TABLEAUX_TRACE
+        std::cout << "Types: ";
+        dumpTypes(std::cout);
+        std::cout << ", level: " << level_ << "\nTableaux:\n";
+        lpSlot_[level_ + 1]->dump(std::cout);
+        std::cout.flush();
+#endif
         // Now all our constraints are enforced, and we can
         // simply test the tableaux for feasibility.
         if (lpSlot_[level_ + 1]->isFeasible()) {

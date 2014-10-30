@@ -272,6 +272,7 @@ NSnapPeaShapesUI::NSnapPeaShapesUI(regina::NSnapPeaTriangulation* packet,
 
     QAction* actCanonise = new QAction(this);
     actCanonise->setText(tr("&Canonical Retriangulation"));
+    actCanonise->setIcon(ReginaSupport::regIcon("canonical"));
     actCanonise->setToolTip(tr(
         "Build the canonical retriangulation of the canonical "
         "cell decomposition"));
@@ -505,7 +506,7 @@ void NSnapPeaShapesUI::fill() {
                     "triangulation."),
                 tr("Please report this to the Regina developers."));
         } else {
-            ans->setPacketLabel(tri->getPacketLabel() + " (Filled)");
+            ans->setPacketLabel(tri->adornedLabel("Filled"));
             tri->insertChildLast(ans);
             enclosingPane->getMainWindow()->packetView(ans, true, true);
         }

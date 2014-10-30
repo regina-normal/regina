@@ -2,14 +2,13 @@
 # Regina's calculation engine.
 SET_PROPERTY ( DIRECTORY
   PROPERTY COMPILE_DEFINITIONS
-    TESTSUITE_DATA_HOME_SOURCE=\"${PROJECT_SOURCE_DIR}/engine\"
-    TESTSUITE_DATA_HOME_BINARY=\"${PROJECT_BINARY_DIR}/engine\"
+    TESTSUITE_CENSUS_DIR=\"${PROJECT_BINARY_DIR}/engine/data/census\"
 )
 
 SET ( SOURCES
   exhaustive
   runalltests
-  testparams
+  testsuite
   )
 # Each of these subdirectories modifies the SOURCES variable,
 # adding more source files

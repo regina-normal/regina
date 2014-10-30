@@ -44,7 +44,6 @@
 #include "regina-core.h"
 #include "maths/nmatrix2.h"
 #include "maths/nperm4.h"
-#include "utilities/boostutils.h"
 
 namespace regina {
 

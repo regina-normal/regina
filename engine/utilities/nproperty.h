@@ -41,8 +41,8 @@
 #define __NPROPERTY_H
 #endif
 
+#include <boost/noncopyable.hpp>
 #include "regina-core.h"
-#include "utilities/boostutils.h"
 
 namespace regina {
 
@@ -236,7 +236,7 @@ template <typename T, template <typename Stored> class Storage = StoreValue>
 class NProperty :
         public NPropertyBase,
         protected Storage<T>,
-        public regina::boost::noncopyable {
+        public boost::noncopyable {
     public:
         typedef typename Storage<T>::InitType InitType;
             /**< The type by which new values for the underlying

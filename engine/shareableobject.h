@@ -44,9 +44,9 @@
 
 #include <iostream>
 #include <string>
+#include <boost/noncopyable.hpp>
 
 #include "regina-core.h"
-#include "utilities/boostutils.h"
 
 namespace regina {
 
@@ -69,7 +69,7 @@ namespace regina {
  * See the various interface notes pages for more details regarding
  * using classes derived from ShareableObject.
  */
-class REGINA_API ShareableObject : public regina::boost::noncopyable {
+class REGINA_API ShareableObject : public boost::noncopyable {
     public:
         /**
          * \name Constructors and Destructors

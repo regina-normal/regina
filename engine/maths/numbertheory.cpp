@@ -35,7 +35,6 @@
 #include <algorithm>
 #include <functional>
 #include "maths/numbertheory.h"
-#include "utilities/stlutils.h"
 
 namespace regina {
 
@@ -198,12 +197,13 @@ void primesUpTo(const NLargeInteger& roof, std::list<NLargeInteger>& primes) {
 
     // Run through the rest.
     NLargeInteger current(3);
+    std::list<NLargeInteger>::const_iterator it;
     while (current <= roof) {
         // Is current prime?
-        if (find_if(primes.begin(), primes.end(), regina::stl::compose1(
-                bind2nd(std::equal_to<NLargeInteger>(), NLargeInteger::zero),
-                bind1st(std::modulus<NLargeInteger>(), current))) ==
-                primes.end())
+        for (it = primes.begin(); it != primes.end(); ++it)
+            if ((current % (*it)).isZero())
+                break;
+        if (it == primes.end())
             primes.push_back(current);
         current += 2;
     }

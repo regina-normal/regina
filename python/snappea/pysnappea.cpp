@@ -32,9 +32,11 @@
 
 /* end stub */
 
+void addNExampleSnapPeaTriangulation();
 void addNSnapPeaTriangulation();
 
 void addSnapPea() {
+    addNExampleSnapPeaTriangulation();
     addNSnapPeaTriangulation();
 }
 

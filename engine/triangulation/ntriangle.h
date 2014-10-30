@@ -154,28 +154,42 @@ class REGINA_API NTriangleEmbedding {
  */
 class REGINA_API NTriangle : public ShareableObject, public NMarkedElement {
     public:
-        static const int TRIANGLE;
-            /**< Specifies a triangle with no identified vertices or edges. */
-        static const int SCARF;
-            /**< Specifies a triangle with two identified vertices. */
-        static const int PARACHUTE;
-            /**< Specifies a triangle with three identified vertices. */
-        static const int CONE;
-            /**< Specifies a triangle with two edges identified to form a
-                 cone. */
-        static const int MOBIUS;
-            /**< Specifies a triangle with two edges identified to form a
-                 mobius band. */
-        static const int HORN;
-            /**< Specifies a triangle with two edges identified to form a
-                 cone with all three vertices identified. */
-        static const int DUNCEHAT;
-            /**< Specifies a triangle with all three edges identified, some
-                 via orientable and some via non-orientable gluings. */
-        static const int L31;
-            /**< Specifies a triangle with all three edges identified using
-                 non-orientable gluings.  Note that this forms a spine for
-                 the Lens space L(3,1). */
+        /**
+         * The \e type of a triangle, which indicates how the vertices and
+         * edges of the triangle are identified together.  Here the vertices
+         * of a triangle are considered unlabelled (so a relabelling
+         * will not change the triangle type).
+         *
+         * @see getType
+         */
+        enum Type {
+            UNKNOWN_TYPE = 0,
+                /**< Indicates that the triangle type has not yet been
+                     determined. */
+            TRIANGLE = 1,
+                /**< Specifies a triangle with no identified vertices or
+                     edges. */
+            SCARF = 2,
+                /**< Specifies a triangle with two identified vertices. */
+            PARACHUTE = 3,
+                /**< Specifies a triangle with three identified vertices. */
+            CONE = 4,
+                /**< Specifies a triangle with two edges identified to form a
+                     cone. */
+            MOBIUS = 5,
+                /**< Specifies a triangle with two edges identified to form a
+                     mobius band. */
+            HORN = 6,
+                /**< Specifies a triangle with two edges identified to form a
+                     cone with all three vertices identified. */
+            DUNCEHAT = 7,
+                /**< Specifies a triangle with all three edges identified, some
+                     via orientable and some via non-orientable gluings. */
+            L31 = 8
+                /**< Specifies a triangle with all three edges identified using
+                     non-orientable gluings.  Note that this forms a spine for
+                     the Lens space L(3,1). */
+        };
 
         /**
          * An array that maps triangle numbers within a tetrahedron
@@ -214,9 +228,8 @@ class REGINA_API NTriangle : public ShareableObject, public NMarkedElement {
         NBoundaryComponent* boundaryComponent_;
             /**< The boundary component that this triangle is a part of,
                  or 0 if this triangle is internal. */
-        int type_;
-            /**< Specifies the triangle type according to one of the
-                 predefined triangle type constants in NTriangle, or 0 if
+        Type type_;
+            /**< Specifies the triangle type, or \a UNKNOWN_TYPE if the
                  type has not yet been determined. */
         int subtype_;
             /**< Specifies the vertex or edge that plays a special role
@@ -250,12 +263,14 @@ class REGINA_API NTriangle : public ShareableObject, public NMarkedElement {
 
         /**
          * Returns a description of the triangle type.
-         * The triangle type describes how the edges and vertices of the
+         * This will be one of the eight shapes described by the Type
+         * enumeration, indicating how the edges and vertices of the
          * triangle are identified.
          *
-         * @return one of the predefined triangle type constants in NTriangle.
+         * @return the type of this triangle.  This routine will never
+         * return UNKNOWN_TYPE.
          */
-        int getType();
+        Type getType();
 
         /**
          * Return the triangle vertex or triangle edge that plays a special role
@@ -411,7 +426,7 @@ namespace regina {
 // Inline functions for NTriangle
 
 inline NTriangle::NTriangle(NComponent* myComponent) : nEmbeddings_(0),
-        component_(myComponent), boundaryComponent_(0), type_(0) {
+        component_(myComponent), boundaryComponent_(0), type_(UNKNOWN_TYPE) {
 }
 
 inline NTriangle::~NTriangle() {

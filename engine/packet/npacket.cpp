@@ -35,13 +35,16 @@
 #include <set>
 #include <fstream>
 #include <sstream>
+#include <boost/iostreams/device/file.hpp>
+#include <boost/iostreams/filtering_stream.hpp>
+#include <boost/iostreams/filter/gzip.hpp>
 #include "engine.h"
 #include "packet/npacket.h"
 #include "packet/npacketlistener.h"
 #include "packet/nscript.h"
 #include "utilities/base64.h"
+#include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
-#include "utilities/zstream.h"
 
 namespace regina {
 
@@ -69,10 +72,27 @@ std::string NPacket::getFullName() const {
     return getHumanLabel() + " (" + getPacketTypeName() + ")";
 }
 
+std::string NPacket::adornedLabel(const std::string& adornment) const {
+    std::string ans = stripWhitespace(packetLabel);
+    if (ans.empty())
+        return adornment;
+
+    ans += " (";
+    ans += adornment;
+    ans += ')';
+    return ans;
+}
+
 void NPacket::setPacketLabel(const std::string& newLabel) {
     fireEvent(&NPacketListener::packetToBeRenamed);
+    if (treeParent)
+        treeParent->fireEvent(&NPacketListener::childToBeRenamed, this);
+
     packetLabel = newLabel;
+
     fireEvent(&NPacketListener::packetWasRenamed);
+    if (treeParent)
+        treeParent->fireEvent(&NPacketListener::childWasRenamed, this);
 }
 
 bool NPacket::listen(NPacketListener* listener) {
@@ -185,6 +205,35 @@ void NPacket::reparent(NPacket* newParent, bool first) {
         newParent->insertChildFirst(this);
     else
         newParent->insertChildLast(this);
+}
+
+void NPacket::transferChildren(NPacket* newParent) {
+    if (! firstTreeChild)
+        return;
+
+    NPacket* start = firstTreeChild;
+    NPacket* child;
+
+    for (child = start; child; child = child->nextTreeSibling)
+        fireEvent(&NPacketListener::childToBeRemoved, child, false);
+    for (child = start; child; child = child->nextTreeSibling)
+        newParent->fireEvent(&NPacketListener::childToBeAdded, child);
+
+    start->prevTreeSibling = newParent->lastTreeChild;
+    if (newParent->lastTreeChild)
+        newParent->lastTreeChild->nextTreeSibling = start;
+    else
+        newParent->firstTreeChild = start;
+    newParent->lastTreeChild = lastTreeChild;
+    firstTreeChild = lastTreeChild = 0;
+
+    for (child = start; child; child = child->nextTreeSibling)
+        child->treeParent = newParent;
+
+    for (child = start; child; child = child->nextTreeSibling)
+        fireEvent(&NPacketListener::childWasRemoved, child, false);
+    for (child = start; child; child = child->nextTreeSibling)
+        newParent->fireEvent(&NPacketListener::childWasAdded, child);
 }
 
 void NPacket::moveUp(unsigned steps) {
@@ -514,7 +563,7 @@ NPacket* NPacket::clone(bool cloneDescendants, bool end) const {
     if (treeParent == 0)
         return 0;
     NPacket* ans = internalClonePacket(treeParent);
-    ans->setPacketLabel(packetLabel + " - clone");
+    ans->setPacketLabel(adornedLabel("Clone"));
     if (end)
         treeParent->insertChildLast(ans);
     else
@@ -525,16 +574,26 @@ NPacket* NPacket::clone(bool cloneDescendants, bool end) const {
 }
 
 bool NPacket::save(const char* filename, bool compressed) const {
+    std::ofstream out(filename);
+    // We don't test whether the file was opened, since
+    // save(std::ostream&, bool) tests this for us as the first thing it does.
+    return save(out, compressed);
+}
+
+bool NPacket::save(std::ostream& s, bool compressed) const {
+    // Note: save(const char*, bool) relies on us testing here whether s
+    // was successfully opened.  If anyone removes this test, then they
+    // should add a corresponding test to save(const char*, bool) instead.
+    if (! s)
+        return false;
+
     if (compressed) {
-        CompressionStream out(filename);
-        if (! out)
-            return false;
+        ::boost::iostreams::filtering_ostream out;
+        out.push(::boost::iostreams::gzip_compressor());
+        out.push(s);
         writeXMLFile(out);
     } else {
-        std::ofstream out(filename);
-        if (! out)
-            return false;
-        writeXMLFile(out);
+        writeXMLFile(s);
     }
     return true;
 }
@@ -544,7 +603,7 @@ void NPacket::internalCloneDescendants(NPacket* parent) const {
     NPacket* clone;
     while (child) {
         clone = child->internalClonePacket(parent);
-        clone->setPacketLabel(child->packetLabel + " - clone");
+        clone->setPacketLabel(child->packetLabel);
         parent->insertChildLast(clone);
         child->internalCloneDescendants(clone);
         child = child->nextTreeSibling;
@@ -613,11 +672,17 @@ bool NPacket::makeUniqueLabels(NPacket* reference) {
 
 bool NPacket::addTag(const std::string& tag) {
     fireEvent(&NPacketListener::packetToBeRenamed);
+    if (treeParent)
+        treeParent->fireEvent(&NPacketListener::childToBeRenamed, this);
+
     if (! tags.get())
         tags.reset(new std::set<std::string>());
-
     bool ans = tags->insert(tag).second;
+
     fireEvent(&NPacketListener::packetWasRenamed);
+    if (treeParent)
+        treeParent->fireEvent(&NPacketListener::childWasRenamed, this);
+
     return ans;
 }
 
@@ -626,16 +691,29 @@ bool NPacket::removeTag(const std::string& tag) {
         return false;
 
     fireEvent(&NPacketListener::packetToBeRenamed);
+    if (treeParent)
+        treeParent->fireEvent(&NPacketListener::childToBeRenamed, this);
+
     bool ans = tags->erase(tag);
+
     fireEvent(&NPacketListener::packetWasRenamed);
+    if (treeParent)
+        treeParent->fireEvent(&NPacketListener::childWasRenamed, this);
+
     return ans;
 }
 
 void NPacket::removeAllTags() {
     if (tags.get() && ! tags->empty()) {
         fireEvent(&NPacketListener::packetToBeRenamed);
+        if (treeParent)
+            treeParent->fireEvent(&NPacketListener::childToBeRenamed, this);
+
         tags->clear();
+
         fireEvent(&NPacketListener::packetWasRenamed);
+        if (treeParent)
+            treeParent->fireEvent(&NPacketListener::childWasRenamed, this);
     }
 }
 

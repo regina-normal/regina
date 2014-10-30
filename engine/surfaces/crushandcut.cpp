@@ -1454,7 +1454,6 @@ namespace {
 
                 // Look for a normal disc or sphere to crush.
                 NNormalSurface* ans;
-                NMatrixInt* eqns;
                 NTriangulation* crush;
                 unsigned nComp;
                 bool found;
@@ -1580,8 +1579,6 @@ bool NNormalSurface::isIncompressible() const {
     // Time for the heavy machinery.
     NTriangulation* cut = cutAlong();
     cut->intelligentSimplify();
-
-    bool result;
 
     NTriangulation* side[2];
     side[0] = side[1] = 0;

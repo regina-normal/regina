@@ -10,7 +10,6 @@ SET ( FILES
   osutils
   stringutils
   xmlutils
-  zstream
   )
 
 # Prepend folder name
@@ -25,7 +24,6 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     base64.h
     bitmanip.h
-    boostutils.h
     flags.h
     i18nutils.h
     intutils.h
@@ -47,11 +45,9 @@ if (${REGINA_INSTALL_DEV})
     osutils.h
     ptrutils.h
     registryutils.h
-    stlutils.h
     stringutils.h
     stringutils-impl.h
     stringutils.tcc
     xmlutils.h
-    zstream.h
     DESTINATION ${INCLUDEDIR}/utilities COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

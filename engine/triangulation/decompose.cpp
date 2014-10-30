@@ -100,11 +100,8 @@ unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
 
         if (setLabels) {
             std::ostringstream label;
-            if (getPacketLabel().empty())
-                label << "Cmpt #" << (whichComp + 1);
-            else
-                label << getPacketLabel() << " - Cmpt #" << (whichComp + 1);
-            newTris[whichComp]->setPacketLabel(label.str());
+            label << "Component #" << (whichComp + 1);
+            newTris[whichComp]->setPacketLabel(adornedLabel(label.str()));
         }
     }
 
@@ -284,11 +281,8 @@ long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
 
         if (setLabels) {
             std::ostringstream label;
-            if (getPacketLabel().empty())
-                label << "Summand #" << (whichComp + 1);
-            else
-                label << getPacketLabel() << " - Summand #" << (whichComp + 1);
-            (*it)->setPacketLabel(label.str());
+            label << "Summand #" << (whichComp + 1);
+            (*it)->setPacketLabel(adornedLabel(label.str()));
         }
 
         whichComp++;
@@ -662,10 +656,7 @@ bool NTriangulation::knowsSolidTorus() const {
 NPacket* NTriangulation::makeZeroEfficient() {
     // Extract a connected sum decomposition.
     NContainer* connSum = new NContainer();
-    if (getPacketLabel().empty())
-        connSum->setPacketLabel("Decomposition");
-    else
-        connSum->setPacketLabel(getPacketLabel() + " - Decomposition");
+    connSum->setPacketLabel(adornedLabel("Decomposition"));
 
     long ans = connectedSumDecomposition(connSum, true);
     if (ans > 1) {
@@ -720,8 +711,6 @@ bool NTriangulation::isIrreducible() const {
     // Start crushing normal spheres.
     NContainer toProcess;
     toProcess.insertChildLast(working);
-
-    unsigned long whichComp = 0;
 
     NTriangulation* processing;
     NTriangulation* crushed;
@@ -1188,8 +1177,6 @@ bool NTriangulation::isHaken() const {
     }
     std::sort(id, id + list->getNumberOfSurfaces());
 
-    const NNormalSurface* f;
-    unsigned long discs;
     for (unsigned i = 0; i < list->getNumberOfSurfaces(); ++i) {
         // std::cout << "Testing surface " << i << "..." << std::endl;
         if (list->getSurface(id[i].index)->isIncompressible()) {

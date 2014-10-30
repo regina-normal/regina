@@ -1492,6 +1492,33 @@ class REGINA_API NNormalSurface : public ShareableObject {
         bool sameSurface(const NNormalSurface& other) const;
 
         /**
+         * Determines whether this surface contains only triangle and/or
+         * quadrilateral discs.  This is to distinguish normal surfaces
+         * from more general surfaces such as almost normal surfaces
+         * (which also contain octagonal pieces).
+         *
+         * Even if the underlying coordinate system supports other
+         * disc types (such as octagons), this routine will still return
+         * \c true if this particular surface does not use them.
+         * This is in contrast to the routine
+         * NNormalSurfaceList::allowsAlmostNormal(), which only examines
+         * the underlying coordinate system.
+         *
+         * @return \c true if and only if this surface contains only
+         * triangles and/or quadrilaterals.
+         */
+        bool normal() const;
+
+        /**
+         * Determines whether this surface is embedded.  This is true if
+         * and only if the surface contains no conflicting quadrilateral
+         * and/or octagon types.
+         *
+         * @return \c true if and only if this surface is embedded.
+         */
+        bool embedded() const;
+
+        /**
          * Determines whether this and the given surface are locally compatible.
          * Local compatibility means that, within each individual tetrahedron
          * of the triangulation, it is possible to arrange the normal
@@ -1874,6 +1901,10 @@ inline bool NNormalSurface::isSplitting() const {
 
 inline NLargeInteger NNormalSurface::isCentral() const {
     return vector->isCentral(triangulation);
+}
+
+inline bool NNormalSurface::normal() const {
+    return (getOctPosition() == NDiscType::NONE);
 }
 
 inline const NNormalSurfaceVector* NNormalSurface::rawVector() const {

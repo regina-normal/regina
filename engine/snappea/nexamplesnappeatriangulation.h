@@ -32,66 +32,81 @@
 
 /* end stub */
 
-#include <climits>
-#include <cstdio>
-#include "utilities/zstream.h"
+/*! \file snappea/nexamplesnappeatriangulation.h
+ *  \brief Offers several ready-made example SnapPea triangulations.
+ */
+
+#ifndef __NEXAMPLESNAPPEATRIANGULATION_H
+#ifndef __DOXYGEN
+#define __NEXAMPLESNAPPEATRIANGULATION_H
+#endif
+
+#include "regina-core.h"
 
 namespace regina {
 
-const int ZBuffer::zEOF = EOF;
+class NSnapPeaTriangulation;
 
-std::streamsize ZBuffer::xsgetn(char* s, std::streamsize n) {
-    std::streamsize read = 0;
-    
-    if (next != -1) {
-        *s = static_cast<char>(next);
-        next = -1;
+/**
+ * \weakgroup snappea
+ * @{
+ */
 
-        --n;
-        ++s;
-        read = 1;
-    }
-    
-    int ret;
-    while (n > 0) {
-        // Be careful: std::streamsize could be a larger integer type than
-        // zlib's unsigned int.
-        ret = gzread(file, s,
-            (n > UINT_MAX ? UINT_MAX : static_cast<unsigned>(n)));
-        if (ret == -1)
-            return zEOF;
+/**
+ * This class offers routines for constructing various example SnapPea
+ * triangulations.  This is analagous to the (much richer)
+ * NExampleTriangulation class.
+ *
+ * Each of the routines in this class constructs a new triangulation from
+ * scratch.  It is up to the caller of each routine to destroy the
+ * triangulation that is returned.
+ */
+class REGINA_API NExampleSnapPeaTriangulation {
+    public:
+        /**
+         * Returns a new triangulation of the Gieseking manifold.
+         *
+         * @return a newly constructed SnapPea triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static NSnapPeaTriangulation* gieseking();
 
-        n -= ret;
-        s += ret;
-        read += ret;
-    }
-    
-    return read;
-}
+        /**
+         * Returns a new triangulation of the figure eight knot complement.
+         *
+         * @return a newly constructed SnapPea triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static NSnapPeaTriangulation* figureEight();
 
-int ZBuffer::close() {
-    if (file) {
-        int ans = gzclose(file);
-        file = 0;
-        return (ans == Z_OK ? 0 : zEOF);
-    } else
-        return 0;
-}
+        /**
+         * Returns a new triangulation of the trefoil knot complement.
+         *
+         * @return a newly constructed SnapPea triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static NSnapPeaTriangulation* trefoil();
 
-int ZBuffer::open(const char* path, const char* mode) {
-    if (file)
-        close();
-    file = gzopen(path, mode);
-    next = -1;
-    return (file ? 0 : zEOF);
-}
-    
-void ZBuffer::showError(std::ostream& out) {
-    if (file) {
-        int err;
-        out << "(De)compression error: " << gzerror(file, &err) << std::endl;
-    } else
-        out << "(De)compression error: No open file." << std::endl;
-}
+        /**
+         * Returns a new triangulation of the Whitehead link complement.
+         *
+         * @return a newly constructed SnapPea triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static NSnapPeaTriangulation* whiteheadLink();
+
+        /**
+         * Returns a new triangulation of the census manifold \c x101.
+         *
+         * @return a newly constructed SnapPea triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static NSnapPeaTriangulation* x101();
+};
+
+/*@}*/
 
 } // namespace regina
+
+#endif
+

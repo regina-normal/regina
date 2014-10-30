@@ -2,9 +2,10 @@ set (IMG_FILES )
 
 set (IMGS
   barycentric
+  canonical
   components
   cone
-  connsum
+  connectedsum
   connectedsumwith
   csvexport
   dehydrated
@@ -14,6 +15,7 @@ set (IMGS
   filter_comb
   filter_prop
   finite
+  locked
   orb
   orient
   packet_angles
@@ -32,6 +34,7 @@ set (IMGS
   python_console
   randomise
   regina
+  simplify
   snappea
   vtxlinks
   )

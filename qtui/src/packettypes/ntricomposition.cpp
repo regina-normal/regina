@@ -224,14 +224,14 @@ void NTriCompositionUI::refresh() {
     findPlugTriSolidTori();
     findBlockedTriangulations();
 
-    // Look for bounded subcomplexes.
-    findLayeredSolidTori();
-    findSpiralSolidTori();
-    findSnappedBalls();
-
     // Look for interesting surfaces.
     findPillowSpheres();
     findSnappedSpheres();
+
+    // Look for bounded subcomplexes.
+    findLayeredSolidTori();
+    findSnappedBalls();
+    findSpiralSolidTori();
 
     // Expand so that two levels of children are visible.
     bool foundInnerChildren = false;
@@ -418,9 +418,10 @@ void NTriCompositionUI::findAugTriSolidTori() {
                 details->setText(0,tr("Attached: layered chain (%1) + "
                     "layered solid torus").
                     arg(chainType));
-            } else
+            } else {
                 details = new QTreeWidgetItem(id, details);
                 details->setText(0,tr("Attached: 3 layered solid tori"));
+            }
 
             delete aug;
         }

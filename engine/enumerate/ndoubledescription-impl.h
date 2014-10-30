@@ -48,7 +48,6 @@
 #include "maths/matrixops.h"
 #include "maths/nray.h"
 #include "progress/nprogresstracker.h"
-#include "utilities/boostutils.h"
 #include "utilities/memutils.h"
 #include "utilities/nbitmask.h"
 #include "utilities/ntrieset.h"
