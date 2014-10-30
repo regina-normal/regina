@@ -38,7 +38,7 @@ set (IMGS
   snappea
   vtxlinks
   )
-set (SIZES 16 16@2x 22 22@2x 32 32@2x 48 48@2x 64 64@2x 128 128@2x)
+set (SIZES 16 16@2x 22 22@2x 32 32@2x 48 48@2x 64 64@2x)
 
 foreach (IMG_CLASS ${IMGS})
   foreach (IMG_SIZE ${SIZES})
@@ -49,17 +49,5 @@ foreach (IMG_CLASS ${IMGS})
 endforeach (IMG_CLASS ${IMGS})
 
 INSTALL (FILES ${IMG_FILES} SOURCES DESTINATION ${PKGDATADIR}/icons)
-
-if (${REGINA_INSTALL_TYPE} STREQUAL XDG)
-  # Install application icons for freedesktop.org.
-  foreach (IMG_SIZE ${SIZES})
-    if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/regina-${IMG_SIZE}.png)
-      INSTALL (FILES ${CMAKE_CURRENT_SOURCE_DIR}/regina-${IMG_SIZE}.png DESTINATION ${ICONDIR}/hicolor/${IMG_SIZE}x${IMG_SIZE}/apps RENAME regina.png)
-    endif (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/regina-${IMG_SIZE}.png)
-    if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/x-regina-${IMG_SIZE}.png)
-      INSTALL (FILES ${CMAKE_CURRENT_SOURCE_DIR}/x-regina-${IMG_SIZE}.png DESTINATION ${ICONDIR}/hicolor/${IMG_SIZE}x${IMG_SIZE}/mimetypes RENAME application-x-regina.png)
-    endif (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/x-regina-${IMG_SIZE}.png)
-  endforeach (IMG_SIZE ${SIZES})
-endif (${REGINA_INSTALL_TYPE} STREQUAL XDG)
 
 ADD_SUBDIRECTORY(oxygen)

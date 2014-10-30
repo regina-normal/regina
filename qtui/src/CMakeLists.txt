@@ -70,7 +70,7 @@ if (APPLE)
   set(REGINA_APP_NAME Regina)
 
   # Add application and mimetype icons to the app bundle.
-  set(REGINA_ICNS regina.icns x-regina.icns)
+  set(REGINA_ICNS ${CMAKE_CURRENT_SOURCE_DIR}/regina.icns ${CMAKE_CURRENT_SOURCE_DIR}/x-regina.icns)
   set_source_files_properties(${REGINA_ICNS} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
   set(SOURCES ${SOURCES} ${REGINA_ICNS})
 else (APPLE)
@@ -81,6 +81,15 @@ if (WIN32)
   # Add an icon to the executable.
   set(SOURCES ${SOURCES} regina.rc)
 endif (WIN32)
+
+if (${REGINA_INSTALL_TYPE} STREQUAL XDG)
+  # Install XDG application icons.
+  set (XDGSIZES 16 22 24 32 48 64 128 256)
+  foreach (IMG_SIZE ${XDGSIZES})
+    INSTALL (FILES ${CMAKE_CURRENT_SOURCE_DIR}/xdg-icons/regina-${IMG_SIZE}.png DESTINATION ${ICONDIR}/hicolor/${IMG_SIZE}x${IMG_SIZE}/apps RENAME regina.png)
+    INSTALL (FILES ${CMAKE_CURRENT_SOURCE_DIR}/xdg-icons/x-regina-${IMG_SIZE}.png DESTINATION ${ICONDIR}/hicolor/${IMG_SIZE}x${IMG_SIZE}/mimetypes RENAME application-x-regina.png)
+  endforeach (IMG_SIZE ${XDGSIZES})
+endif (${REGINA_INSTALL_TYPE} STREQUAL XDG)
 
 if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
   set(REGINA_BUNDLE_DEST .)
