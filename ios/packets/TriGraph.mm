@@ -83,11 +83,12 @@ extern gvplugin_library_t gvplugin_core_LTX_library;
     gvFreeLayout(gvc, g);
     agclose(g);
     gvFreeContext(gvc);
+    // NSLog(@"SVG:\n%s", svg);
 
     [self.graph loadData:[NSData dataWithBytes:svg length:svgLen]
                 MIMEType:@"image/svg+xml"
         textEncodingName:@"utf-8"
-                 baseURL:[NSURL URLWithString:@"file://graph.svg"]];
+                 baseURL:nil];
 
     self.graph.scalesPageToFit = YES;
 }
