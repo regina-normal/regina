@@ -48,7 +48,6 @@
 #include <QLabel>
 #include <QLayout>
 #include <QPushButton>
-#include <QTextDocument> // For Qt::escape
 #include <QToolTip>
 #include <QWhatsThis>
 
@@ -643,7 +642,7 @@ void NTriSurfacesUI::refresh() {
 
     if (! name.empty()) {
         manifold->setText(tr("<qt><b>Manifold:</b>&nbsp;&nbsp;%1</qt>")
-            .arg(Qt::escape(name.c_str())));
+            .arg(QString(name.c_str()).toHtmlEscaped()));
     } else {
         manifold->setText(tr("<qt><b>Manifold:</b>&nbsp;&nbsp;"
             "Not recognised</qt>"));
@@ -654,14 +653,14 @@ void NTriSurfacesUI::refresh() {
         census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;Not found</qt>"));
     } else if (hits->count() == 1) {
         census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;%1</qt>")
-            .arg(Qt::escape(hits->first()->name().c_str())));
+            .arg(QString(hits->first()->name().c_str()).toHtmlEscaped()));
     } else {
         QString ans = tr("<qt><b>Census:</b>&nbsp;&nbsp;%1 matches")
             .arg(hits->count());
         const regina::NCensusHit* hit = hits->first();
         for ( ; hit; hit = hit->next()) {
             ans += "<br>";
-            ans += Qt::escape(hit->name().c_str());
+            ans += QString(hit->name().c_str()).toHtmlEscaped();
         }
         ans += "</qt>";
         census->setText(ans);

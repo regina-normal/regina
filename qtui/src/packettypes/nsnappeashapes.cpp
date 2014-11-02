@@ -244,7 +244,7 @@ NSnapPeaShapesUI::NSnapPeaShapesUI(regina::NSnapPeaTriangulation* packet,
     shapes->setRootIsDecorated(false);
     shapes->setAlternatingRowColors(true);
     shapes->header()->setStretchLastSection(false);
-    shapes->header()->setResizeMode(QHeaderView::ResizeToContents);
+    shapes->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     shapes->setSelectionMode(QAbstractItemView::NoSelection);
     shapes->setWhatsThis(tr("Shows the shape of each tetrahedron, "
         "with respect to the Dehn filled hyperbolic structure.  "
@@ -449,7 +449,7 @@ void NSnapPeaShapesUI::vertexLinks() {
             regina::Dim2Triangulation* ans = new regina::Dim2Triangulation(
                 *chosen->buildLink());
             ans->setPacketLabel(tr("Link of vertex %1").arg(
-                tri->vertexIndex(chosen)).toAscii().constData());
+                tri->vertexIndex(chosen)).toUtf8().constData());
             tri->insertChildLast(ans);
             enclosingPane->getMainWindow()->packetView(ans, true, true);
         }
@@ -535,7 +535,7 @@ void NSnapPeaShapesUI::canonise() {
                 "canonical cell decomposition."));
         } else {
             ans->setPacketLabel(tr("Canonical retriangulation").
-                toAscii().constData());
+                toUtf8().constData());
             tri->insertChildLast(ans);
             enclosingPane->getMainWindow()->packetView(ans, true, true);
         }

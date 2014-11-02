@@ -161,7 +161,7 @@ bool Dim2GluingsModel::setData(const QModelIndex& index, const QVariant& value,
         if (newName == t->getDescription().c_str())
             return false;
 
-        t->setDescription(newName.toAscii().constData());
+        t->setDescription(newName.toUtf8().constData());
         return true;
     }
 
@@ -344,7 +344,7 @@ Dim2TriGluingsUI::Dim2TriGluingsUI(regina::Dim2Triangulation* packet,
 
     actAddTri = new QAction(this);
     actAddTri->setText(tr("&Add Triangle"));
-    actAddTri->setIcon(ReginaSupport::themeIcon("list-add"));
+    actAddTri->setIcon(ReginaSupport::regIcon("insert"));
     actAddTri->setToolTip(tr("Add a new triangle"));
     actAddTri->setEnabled(readWrite);
     actAddTri->setWhatsThis(tr("Add a new triangle to this triangulation."));
@@ -354,7 +354,7 @@ Dim2TriGluingsUI::Dim2TriGluingsUI(regina::Dim2Triangulation* packet,
 
     actRemoveTri = new QAction(this);
     actRemoveTri->setText(tr("&Remove Triangle"));
-    actRemoveTri->setIcon(ReginaSupport::themeIcon("list-remove"));
+    actRemoveTri->setIcon(ReginaSupport::regIcon("delete"));
     actRemoveTri->setToolTip(tr("Remove the currently selected triangles"));
     actRemoveTri->setEnabled(false);
     actRemoveTri->setWhatsThis(tr("Remove the currently selected "

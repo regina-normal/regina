@@ -76,7 +76,7 @@ NCompatCanvas::NCompatCanvas(unsigned useNumSurfaces) :
 
     gridX = LEFT_MARGIN + textWidth + 2 * TICK_LENGTH;
     gridY = TOP_MARGIN + textHeight + 2 * TICK_LENGTH;
-    gridSize = nSurfaces * cellSize + 1;
+    gridSize = nSurfaces * cellSize;
 
     // Work out how much extra space we might need beyond the bottom of the
     // canvas.  Be careful when subtracting, since we are using unsigned ints.
@@ -97,8 +97,8 @@ NCompatCanvas::NCompatCanvas(unsigned useNumSurfaces) :
             bottomMargin = OUTER_MARGIN;
     }
 
-    setSceneRect(0, 0, gridX + gridSize + rightMargin,
-        gridY + gridSize + bottomMargin);
+    setSceneRect(0, 0, gridX + gridSize + 1 + rightMargin,
+        gridY + gridSize + 1 + bottomMargin);
 
     // Draw a bounding box.
     QGraphicsRectItem* box = new QGraphicsRectItem(
@@ -227,7 +227,7 @@ NCompatCanvas::NCompatCanvas(unsigned useNumSurfaces) :
             l->setPen(QPen(Qt::lightGray));
         l->setLine(
             gridX,                gridY + (i * cellSize),
-            gridX + gridSize - 1, gridY + (i * cellSize));
+            gridX + gridSize, gridY + (i * cellSize));
         l->setZValue(9);
         l->show();
     }
@@ -238,7 +238,7 @@ NCompatCanvas::NCompatCanvas(unsigned useNumSurfaces) :
             l->setPen(QPen(Qt::lightGray));
         l->setLine(
             gridX + (i * cellSize), gridY,
-            gridX + (i * cellSize), gridY + gridSize - 1);
+            gridX + (i * cellSize), gridY + gridSize);
         l->setZValue(9);
         l->show();
     }
@@ -268,7 +268,7 @@ void NCompatCanvas::fillLocal(const NNormalSurfaceList& surfaces) {
             if (s->locallyCompatible(*t)) {
                 box = new QGraphicsRectItem(
                     gridX + i * cellSize, gridY + j * cellSize,
-                    cellSize + 1, cellSize + 1);
+                    cellSize, cellSize);
                 addItem(box);
                 box->setPen(border);
                 box->setBrush(fill);
@@ -278,7 +278,7 @@ void NCompatCanvas::fillLocal(const NNormalSurfaceList& surfaces) {
                 if (i != j) {
                     box = new QGraphicsRectItem(
                         gridX + j * cellSize, gridY + i * cellSize,
-                        cellSize + 1, cellSize + 1);
+                        cellSize, cellSize);
                     addItem(box);
                     box->setPen(border);
                     box->setBrush(fill);
@@ -316,7 +316,7 @@ void NCompatCanvas::fillGlobal(const NNormalSurfaceList& surfaces) {
     for (i = 0; i < nSurfaces; ++i) {
         if (! usable[i]) {
             box = new QGraphicsRectItem(
-                gridX + i * cellSize, gridY, cellSize + 1, gridSize);
+                gridX + i * cellSize, gridY, cellSize, gridSize);
             addItem(box);
             box->setPen(border);
             box->setBrush(hash);
@@ -324,7 +324,7 @@ void NCompatCanvas::fillGlobal(const NNormalSurfaceList& surfaces) {
             box->show();
 
             box = new QGraphicsRectItem(
-                gridX, gridY + i * cellSize, gridSize, cellSize + 1);
+                gridX, gridY + i * cellSize, gridSize, cellSize);
             addItem(box);
             box->setPen(border);
             box->setBrush(hash);
@@ -345,7 +345,7 @@ void NCompatCanvas::fillGlobal(const NNormalSurfaceList& surfaces) {
             if (s->disjoint(*t)) {
                 box = new QGraphicsRectItem(
                     gridX + i * cellSize, gridY + j * cellSize,
-                    cellSize + 1, cellSize + 1);
+                    cellSize, cellSize);
                 addItem(box);
                 box->setPen(border);
                 box->setBrush(fill);
@@ -355,7 +355,7 @@ void NCompatCanvas::fillGlobal(const NNormalSurfaceList& surfaces) {
                 if (i != j) {
                     box = new QGraphicsRectItem(
                         gridX + j * cellSize, gridY + i * cellSize,
-                        cellSize + 1, cellSize + 1);
+                        cellSize, cellSize);
                     addItem(box);
                     box->setPen(border);
                     box->setBrush(fill);

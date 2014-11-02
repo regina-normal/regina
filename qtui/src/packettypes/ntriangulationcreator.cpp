@@ -630,7 +630,7 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         }
 
         NTriangulation* ans = NTriangulation::fromIsoSig(
-            reIsoSig.cap(1).toAscii().constData());
+            reIsoSig.cap(1).toUtf8().constData());
         if (ans)
             return ans;
         ReginaSupport::sorry(parentWidget,
@@ -657,7 +657,7 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
 
         NTriangulation* ans = new NTriangulation();
         if (! ans->insertRehydration(
-                reDehydration.cap(1).toAscii().constData())) {
+                reDehydration.cap(1).toUtf8().constData())) {
             delete ans;
             ReginaSupport::sorry(parentWidget, 
                 QObject::tr("I could not interpret the given "
@@ -687,7 +687,7 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         }
 
         regina::NSignature* sig = regina::NSignature::parse(
-            reSignature.cap(1).toAscii().constData());
+            reSignature.cap(1).toUtf8().constData());
         if (! sig) {
             ReginaSupport::sorry(parentWidget, 
                 QObject::tr("I could not interpret the given "

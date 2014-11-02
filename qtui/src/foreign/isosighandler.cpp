@@ -63,7 +63,7 @@ regina::NPacket* IsoSigHandler::importData(const QString& fileName,
             QObject::tr("The import failed."),
             QObject::tr("<qt>I could not open the file <tt>%1</tt>.  "
                 "Please check that this file is readable.</qt>")
-                .arg(Qt::escape(fileName)));
+                .arg(fileName.toHtmlEscaped()));
         return 0;
     }
 
@@ -97,7 +97,7 @@ regina::NPacket* IsoSigHandler::importData(const QString& fileName,
 
     // All worked out okay.
     ans->setPacketLabel(
-        QObject::tr("Imported Triangulations").toAscii().constData());
+        QObject::tr("Imported Triangulations").toUtf8().constData());
     return ans;
 }
 

@@ -149,9 +149,9 @@ inline QModelIndex MatchingModel::index(int row, int column,
         const QModelIndex& /* unused parent */) const {
     if (eqns_.get())
         return createIndex(row, column,
-            quint32(eqns_->columns() * row + column));
+            quintptr(eqns_->columns() * row + column));
     else
-        return createIndex(row, column, quint32(0));
+        return createIndex(row, column, quintptr(0));
 }
 
 inline QModelIndex MatchingModel::parent(const QModelIndex& /* unused index */) const {

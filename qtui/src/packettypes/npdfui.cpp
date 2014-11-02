@@ -106,8 +106,8 @@ void NPDFExternalViewer::view(regina::NPacket* packet, QWidget* parentWidget) {
                 "<tt>%1 \"%2\"</tt><p>"
                 "You can fix this by editing the <i>Tools</i> options in "
                 "Regina's settings.</qt>").
-                arg(Qt::escape(externalViewer)).
-                arg(Qt::escape(temp->localFileName())));
+                arg(externalViewer.toHtmlEscaped()).
+                arg(temp->localFileName().toHtmlEscaped()));
             delete temp;
         }
     }

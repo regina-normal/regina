@@ -54,7 +54,7 @@ regina::NPacket* OrbHandler::importData(const QString& fileName,
             QObject::tr("The import failed."),
             QObject::tr("<qt>Please check that the file <tt>%1</tt> "
             "is readable and in Orb / Casson format.").
-                arg(Qt::escape(fileName)));
+                arg(fileName.toHtmlEscaped()));
     return ans;
 }
 

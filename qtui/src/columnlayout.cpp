@@ -37,7 +37,6 @@
 
 #include <QFrame>
 #include <QLabel>
-#include <QTextDocument> // For Qt::escape().
 
 ColumnLayout::ColumnLayout() : QHBoxLayout(), empty_(true) {
 }
@@ -57,7 +56,7 @@ void ColumnLayout::addLayout(QLayout* layout, const QString& title) {
     QBoxLayout* col = new QVBoxLayout();
 
     QLabel* label = new QLabel(QString("<qt><b>%1</b></qt>")
-        .arg(Qt::escape(title)));
+        .arg(title.toHtmlEscaped()));
     label->setAlignment(Qt::AlignCenter);
     col->addWidget(label);
 

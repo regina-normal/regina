@@ -128,7 +128,6 @@ class ReginaMain : public QMainWindow {
          */
         QSplitter* splitter;
         PacketTreeView* treeView;
-        QWidget* dockArea;
         QWidget* advice;
 
         /**
@@ -141,13 +140,11 @@ class ReginaMain : public QMainWindow {
          * Packet panes
          */
         QLinkedList<PacketPane*> allPanes;
-        PacketPane* dockedPane;
 
         /** 
          * Miscellaneous flags
          */
         bool dirty;
-        bool supportingDock;
 
     public:
         /**
@@ -197,40 +194,6 @@ class ReginaMain : public QMainWindow {
          * Ensure that the given packet is visible in the packet tree.
          */
         void ensureVisibleInTree(regina::NPacket* packet);
-
-        /**
-         * Handles the incorporation of an existing packet pane into the
-         * part's dock area.  Any currently docked pane that refuses to
-         * close will be forced out into its own floating window.
-         *
-         * This is routine is always called at some point whenever a
-         * packet pane is inserted into the dock area.
-         *
-         * This routine does not handle registration of the packet pane
-         * into the list of managed panes, the clean removal of the
-         * packet pane from any preexisting container, or the
-         * configuration of the pane's dock/undock button and associated
-         * actions.
-         *
-         * Note that this routine is not designed for general use.
-         * For docking a pane that is currently floating,
-         * PacketPane::dockPane() should be used.  For docking a newly
-         * created pane, a combination of ReginaMain::view() and
-         * PacketPane::dockPane() should be used.
-         */
-        void dock(PacketPane* newPane);
-
-        /**
-         * Adjusts the part's interface components to reflect the fact
-         * that a packet pane is about to leave the docking area.
-         *
-         * This routine must always be called when a packet pane is
-         * either closed or floated into its own window.
-         *
-         * This routine will happily cope with the case in which the given
-         * packet is in fact not currently docked.
-         */
-        void aboutToUndock(PacketPane* undockedPane);
 
         /**
          * Handles the deregistration of a packet pane from the list of
@@ -365,18 +328,7 @@ class ReginaMain : public QMainWindow {
         void helpIntro();
 
         /**
-         * Float the currently docked pane.
-         */
-        void floatDockedPane();
-
-        /**
-         * Attempt to close the currently docked pane.
-         * The user will be prompted if necessary.
-         */
-        bool closeDockedPane();
-
-        /**
-         * Attempt to close all panes, docked or undocked.
+         * Attempt to close all packet panes.
          * The user will be prompted if necessary.
          */
         bool closeAllPanes();
@@ -402,9 +354,8 @@ class ReginaMain : public QMainWindow {
 
         /**
          * Display a newly created packet pane in a sensible manner.
-         * Whether it is docked or in a free-floating window will be
-         * decided according to the current arrangement of panes and any
-         * relevant user settings.
+         * The current implementation always float the packet in a new
+         * window.
          *
          * Note that this routine should only be called for newly
          * created packet panes.

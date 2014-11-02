@@ -25,7 +25,6 @@ set (IMGS
   edit-copy
   edit-cut
   edit-delete
-  edit-find
   edit-paste
   edit-rename
   edit-select-all
@@ -37,19 +36,15 @@ set (IMGS
   help-contents
   help-contextual
   help-hint
-  list-add
-  list-remove
   mail-attachment
   process-stop
   run-build-file
   system-run
   text-x-c++src
   utilities-terminal
-  view-list-text
-  view-refresh
   window-close
   )
-set (SIZES 8 16 22 32 48 64 128)
+set (SIZES 16 16@2x 22 22@2x 32 32@2x 48 48@2x 64 64@2x 128 128@2x)
 
 foreach (IMG_CLASS ${IMGS})
   foreach (IMG_SIZE ${SIZES})

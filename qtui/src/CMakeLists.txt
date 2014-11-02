@@ -1,6 +1,3 @@
-INCLUDE(${QT_USE_FILE})
-ADD_DEFINITIONS(${QT_DEFINITIONS})
-
 # Some GUI code will need to know about the installation type.
 IF (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
   ADD_DEFINITIONS(-DREGINA_INSTALL_BUNDLE=1)
@@ -10,7 +7,7 @@ ENDIF ()
 
 INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_DIRS} ${ENGINE_INCLUDES} ${PROJECT_BINARY_DIR}/engine)
 
-SET(LINK_LIBS ${ENGINE_LIBRARY} ${QT_LIBRARIES})
+SET(LINK_LIBS ${ENGINE_LIBRARY} Qt5::Widgets Qt5::Svg)
 
 ADD_SUBDIRECTORY(icons)
 ADD_SUBDIRECTORY(choosers)
@@ -69,36 +66,11 @@ SET(SOURCES ${SOURCES}
   shortrunner
   )
 
-SET(MOC_HEADERS ${MOC_HEADERS}
-  columnlayout.h
-  coordinatechooser.h
-  introdialog.h
-  recentfilesaction.h
-  reginaprefset.h
-  shortrunner.h
-  packettreeview.h
-  newpacketdialog.h
-  packetchooser.h
-  packeteditiface.h
-  packettabui.h
-  packetui.h
-  packetwindow.h
-  patiencedialog.h
-  progressdialogs.h
-  examplesaction.h
-  reginaabout.h
-  reginamain.h
-  reginamanager.h
-  reginapref.h
-  )
-
-QT4_WRAP_CPP(regina-app_HEADERS_MOC ${MOC_HEADERS})
-
 if (APPLE)
   set(REGINA_APP_NAME Regina)
 
   # Add application and mimetype icons to the app bundle.
-  set(REGINA_ICNS ${PROJECT_SOURCE_DIR}/icons/regina.icns ${PROJECT_SOURCE_DIR}/icons/x-regina.icns)
+  set(REGINA_ICNS ${CMAKE_CURRENT_SOURCE_DIR}/regina.icns ${CMAKE_CURRENT_SOURCE_DIR}/x-regina.icns)
   set_source_files_properties(${REGINA_ICNS} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
   set(SOURCES ${SOURCES} ${REGINA_ICNS})
 else (APPLE)
@@ -110,13 +82,22 @@ if (WIN32)
   set(SOURCES ${SOURCES} regina.rc)
 endif (WIN32)
 
+if (${REGINA_INSTALL_TYPE} STREQUAL XDG)
+  # Install XDG application icons.
+  set (XDGSIZES 16 22 24 32 48 64 128 256)
+  foreach (IMG_SIZE ${XDGSIZES})
+    INSTALL (FILES ${CMAKE_CURRENT_SOURCE_DIR}/xdg-icons/regina-${IMG_SIZE}.png DESTINATION ${ICONDIR}/hicolor/${IMG_SIZE}x${IMG_SIZE}/apps RENAME regina.png)
+    INSTALL (FILES ${CMAKE_CURRENT_SOURCE_DIR}/xdg-icons/x-regina-${IMG_SIZE}.png DESTINATION ${ICONDIR}/hicolor/${IMG_SIZE}x${IMG_SIZE}/mimetypes RENAME application-x-regina.png)
+  endforeach (IMG_SIZE ${XDGSIZES})
+endif (${REGINA_INSTALL_TYPE} STREQUAL XDG)
+
 if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
   set(REGINA_BUNDLE_DEST .)
 else (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
   set(REGINA_BUNDLE_DEST bin)
 endif (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
 
-ADD_EXECUTABLE(${REGINA_APP_NAME} MACOSX_BUNDLE WIN32 ${SOURCES} ${regina-app_HEADERS_MOC})
+ADD_EXECUTABLE(${REGINA_APP_NAME} MACOSX_BUNDLE WIN32 ${SOURCES})
 
 TARGET_LINK_LIBRARIES(${REGINA_APP_NAME} ${LINK_LIBS})
 

@@ -259,34 +259,34 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                 return QVariant();
 
             if (s->isOrientable())
-                return Qt::darkGreen;
+                return QColor(Qt::darkGreen);
             else
-                return Qt::darkRed;
+                return QColor(Qt::darkRed);
         } else if (surfaces_->isEmbeddedOnly() && index.column() == 4) {
             if (! s->isCompact())
                 return QVariant();
 
             if (s->isTwoSided())
-                return Qt::darkGreen;
+                return QColor(Qt::darkGreen);
             else
-                return Qt::darkRed;
+                return QColor(Qt::darkRed);
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 5) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 3)) {
             if (! s->isCompact())
-                return Qt::darkYellow;
+                return QColor(Qt::darkYellow);
             else if (s->hasRealBoundary())
-                return Qt::darkRed;
+                return QColor(Qt::darkRed);
             else
-                return Qt::darkGreen;
+                return QColor(Qt::darkGreen);
         } else if (surfaces_->allowsAlmostNormal() &&
                 ((surfaces_->isEmbeddedOnly() && index.column() == 8) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 6))) {
             regina::NDiscType oct = s->getOctPosition();
             if (oct != regina::NDiscType::NONE) {
                 if (s->getOctCoord(oct.tetIndex, oct.type) > 1)
-                    return Qt::darkRed;
+                    return QColor(Qt::darkRed);
                 else
-                    return Qt::darkGreen;
+                    return QColor(Qt::darkGreen);
             }
         } else
             return QVariant();
@@ -358,7 +358,7 @@ bool SurfaceModel::setData(const QModelIndex& index, const QVariant& value,
         regina::NPacket::ChangeEventSpan span(surfaces_);
         const_cast<regina::NNormalSurface*>(
             surfaces_->getSurface(realIndex[index.row()]))->
-            setName(value.toString().toAscii().constData());
+            setName(value.toString().toUtf8().constData());
         return true;
     } else
         return false;

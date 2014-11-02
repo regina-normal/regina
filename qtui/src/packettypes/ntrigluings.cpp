@@ -174,7 +174,7 @@ bool GluingsModel::setData(const QModelIndex& index, const QVariant& value,
         if (newName == t->getDescription().c_str())
             return false;
 
-        t->setDescription(newName.toAscii().constData());
+        t->setDescription(newName.toUtf8().constData());
         return true;
     }
 
@@ -361,7 +361,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     actAddTet = new QAction(this);
     actAddTet->setText(tr("&Add Tet"));
-    actAddTet->setIcon(ReginaSupport::themeIcon("list-add"));
+    actAddTet->setIcon(ReginaSupport::regIcon("insert"));
     actAddTet->setToolTip(tr("Add a new tetrahedron"));
     actAddTet->setEnabled(readWrite);
     actAddTet->setWhatsThis(tr("Add a new tetrahedron to this "
@@ -372,7 +372,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     actRemoveTet = new QAction(this);
     actRemoveTet->setText(tr("&Remove Tet"));
-    actRemoveTet->setIcon(ReginaSupport::themeIcon("list-remove"));
+    actRemoveTet->setIcon(ReginaSupport::regIcon("delete"));
     actRemoveTet->setToolTip(tr("Remove the currently selected tetrahedra"));
     actRemoveTet->setEnabled(false);
     actRemoveTet->setWhatsThis(tr("Remove the currently selected "
@@ -959,7 +959,7 @@ void NTriGluingsUI::vertexLinks() {
             regina::Dim2Triangulation* ans = new regina::Dim2Triangulation(
                 *chosen->buildLink());
             ans->setPacketLabel(tr("Link of vertex %1").arg(
-                tri->vertexIndex(chosen)).toAscii().constData());
+                tri->vertexIndex(chosen)).toUtf8().constData());
             tri->insertChildLast(ans);
             enclosingPane->getMainWindow()->packetView(ans, true, true);
         }

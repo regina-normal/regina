@@ -60,7 +60,7 @@ bool SourceHandler::exportData(regina::NPacket* data, const QString& fileName,
         ReginaSupport::warn(parentWidget,
             QObject::tr("The export failed."), 
             QObject::tr("<qt>I could not write to the file <tt>%1</tt>.</qt>").
-                arg(Qt::escape(fileName)));
+                arg(fileName.toHtmlEscaped()));
         return false;
     }
     QTextStream out(&f);

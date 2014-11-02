@@ -1,0 +1,142 @@
+#!/usr/bin/perl -w
+use strict;
+
+# Oxygen icon sources:
+# svn://anonsvn.kde.org/home/kde/tags/kdesupport-for-4.5/oxygen-icons
+# svn://anonsvn.kde.org/home/kde/trunk/kdesupport/oxygen-icons
+
+my @actionSizes = ( 16, 22, 32 );
+my @dialogSizes = ( 16, 22, 32, 48, 64 );
+my @actionIcons = qw/
+    application-exit
+    application-xml
+    arrow-down
+    arrow-down-double
+    arrow-left
+    arrow-right
+    arrow-up
+    arrow-up-double
+    bookmarks
+    configure
+    dialog-cancel
+    dialog-ok
+    document-new
+    document-open
+    document-open-recent
+    document-save
+    document-save-as
+    document-sign
+    edit-copy
+    edit-cut
+    edit-delete
+    edit-paste
+    edit-rename
+    edit-select-all
+    edit-table-delete-row
+    edit-table-insert-row-below
+    go-bottom
+    go-top
+    help-about
+    help-contents
+    help-contextual
+    list-add
+    list-remove
+    process-stop
+    run-build-file
+    text-x-c++src
+    utilities-terminal
+    window-close
+    /;
+my @dialogIcons = qw/
+    clock
+    dialog-warning
+    dialog-information
+    help-hint
+    system-run
+    /;
+
+my $svn = undef;
+
+sub usage {
+    my $err = shift;
+    $err and print STDERR "ERROR: $err\n\n";
+    print STDERR "Usage: mkicons <path_to_scalable_checkout>\n";
+    exit 1;
+}
+
+sub render {
+    my $icon = shift;
+    my $size = shift;
+    my $filename = shift;
+    my $class = shift;
+
+    my $src = "$svn/${size}x${size}/$class/$icon.png";
+    if (-e "$src") {
+        `cp "$src" "$filename"`;
+        return;
+    }
+
+    $src = "$svn/scalable/$class/$icon.svgz";
+    -e $src or $src = "$svn/scalable/$class/small/64x64/$icon.svgz";
+    -e $src or $src = "$svn/scalable/$class/small/48x48/$icon.svgz";
+    -e $src or $src = "$svn/scalable/$class/small/32x32/$icon.svgz";
+    if (not -e $src) {
+        print STDERR "ERROR: Could not find source for $icon at size $size.\n";
+        return;
+    }
+
+    #`rsvg -w$size -h$size "$src" "$filename"`;
+    `inkscape -z -e "$filename" -w $size -h $size "$src"`;
+}
+
+sub process {
+    my $icon = shift;
+    my $sizes = shift;
+
+    my @src = glob("$svn/scalable/*/$icon.svgz");
+    if ($#src > 0) {
+        print STDERR "ERROR: Ambiguous sources for $icon:\n";
+        foreach (@src) {
+            print STDERR "$_\n";
+        }
+        return;
+    }
+    if ($#src < 0) {
+        @src = glob("$svn/scalable/*/small/48x48/$icon.svgz");
+        if ($#src > 0) {
+            print STDERR "ERROR: Ambiguous sources for $icon:\n";
+            foreach (@src) {
+                print STDERR "$_\n";
+            }
+            return;
+        }
+        if ($#src < 0) {
+            print STDERR "ERROR: No sources found for $icon\n";
+            return;
+        }
+    }
+
+    $src[0] =~ /scalable\/([^\/]+)\// or die;
+    my $class = $1;
+
+    foreach (@$sizes) {
+        render($icon, $_, "$icon-$_.png", $1);
+        render($icon, 2 * $_, "$icon-$_\@2x.png", $1);
+    }
+}
+
+$#ARGV == 0 or usage;
+
+$svn = $ARGV[0];
+-d "$svn" or usage "Argument \"$svn\" is not a directory.";
+-e "$svn/scalable/actions/window-close.svgz" or
+    usage "Argument \"$svn\" does not look like an oxygen-icons checkout.";
+
+foreach my $i (@actionIcons) {
+    process($i, \@actionSizes);
+}
+
+foreach my $i (@dialogIcons) {
+    process($i, \@dialogSizes);
+}
+
