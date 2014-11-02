@@ -44,12 +44,8 @@
 #include <QFile>
 
 int main(int argc, char **argv) {
-    // Always talk to and from the calculation engine in UTF-8.
-    // This must be specified *before* constructing our about data,
-    // since some of the about data is stored as plain C strings.
-    if (QTextCodec* codec = QTextCodec::codecForName("UTF-8"))
-        QTextCodec::setCodecForCStrings(codec);
     ReginaManager *app = new ReginaManager(argc, argv);
+    app->setAttribute(Qt::AA_UseHighDpiPixmaps);
 
     QCoreApplication::setOrganizationName("Regina");
     QCoreApplication::setOrganizationDomain("regina.sourceforge.net");

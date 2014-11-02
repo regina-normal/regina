@@ -70,7 +70,7 @@ void PythonManager::openPythonReference(QWidget* topLevelWindow) {
             QObject::tr("I could not find the Python API reference."),
             QObject::tr("<qt>It should be installed in: <tt>%1/</tt><p>"
             "Please contact %2 for assistance.</qt>")
-            .arg(Qt::escape(docDir))
+            .arg(docDir.toHtmlEscaped())
             .arg(PACKAGE_BUGREPORT));
     }
 }

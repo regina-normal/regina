@@ -48,11 +48,11 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include <QLabel>
 #include <QLayout>
 #include <QProcess>
 #include <QPushButton>
 #include <QScrollArea>
+#include <QSvgWidget>
 #include <QSysInfo>
 #include <QStackedWidget>
 #include <QTemporaryFile>
@@ -80,8 +80,7 @@ FacetGraphTab::FacetGraphTab(FacetGraphData* useData,
     // layerGraph->setStyleSheet("QScrollArea, .QWidget { "
     //                             "background-color:transparent; "
     //                         "}");
-    graph = new QLabel(layerGraph);
-    graph->setAlignment(Qt::AlignCenter);
+    graph = new QSvgWidget(layerGraph);
     layerGraph->setWidget(graph);
     layerGraph->setWhatsThis(data->overview());
     stack->addWidget(layerGraph);
@@ -232,18 +231,18 @@ void FacetGraphTab::refresh() {
     data->writeDot(outDot, graphvizLabels);
     outDot.close();
 
-    QTemporaryFile tmpPng(QString("%1/XXXXXX.png").arg(QDir::tempPath()));;
-    if (! tmpPng.open()) {
-        showError(tr("<qt>The temporary PNG file <i>%1</i> "
-            "could not be created.</qt>").arg(tmpPng.fileName()));
+    QTemporaryFile tmpSvg(QString("%1/XXXXXX.svg").arg(QDir::tempPath()));;
+    if (! tmpSvg.open()) {
+        showError(tr("<qt>The temporary SVG file <i>%1</i> "
+            "could not be created.</qt>").arg(tmpSvg.fileName()));
         return;
     }
-    tmpPng.close();
+    tmpSvg.close();
 
     QProcess graphviz;
     QStringList args;
-    args << "-Tpng" << "-Gsize=2.5,4" << "-o" << tmpPng.fileName() 
-        << tmpDot.fileName();
+    args << "-Tsvg" // << "-Gsize=2.5,4"
+        << "-o" << tmpSvg.fileName() << tmpDot.fileName();
     graphviz.start(useExec,args);
     graphviz.waitForFinished();
     if ( graphviz.exitStatus() != QProcess::NormalExit) {
@@ -259,17 +258,7 @@ void FacetGraphTab::refresh() {
         return;
     }
 
-    QPixmap png(tmpPng.fileName());
-    if (png.isNull()) {
-        showError(tr("<qt>The PNG graphic created by Graphviz "
-            "could not be loaded.<p>The Graphviz executable used "
-            "was <i>%1</i>.  If this is not correct, please change it "
-            "in the Regina configuration (<i>Tools</i> section).</qt>").
-            arg(useExec));
-        return;
-    }
-
-    graph->setPixmap(png);
+    graph->load(tmpSvg.fileName());
     graph->resize(graph->sizeHint());
 
     stack->setCurrentWidget(layerGraph);

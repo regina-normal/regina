@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED (VERSION 2.8.7)
+CMAKE_MINIMUM_REQUIRED (VERSION 2.8.11)
 PROJECT (regina)
 
 # Let the user override the package name.
@@ -477,7 +477,9 @@ IF(DISABLE_GUI)
   MESSAGE(WARNING "User set DISABLE_GUI=1: graphical user interface disabled.")
 ELSE(DISABLE_GUI)
   set(GUI_REQUIRED TRUE)
-  FIND_PACKAGE(Qt4 COMPONENTS QtGui QtCore)
+  set(CMAKE_AUTOMOC ON)
+  FIND_PACKAGE(Qt5Widgets)
+  FIND_PACKAGE(Qt5Svg)
 
   FIND_PACKAGE(SourceHighlight)
   MACRO_LOG_FEATURE(SRCHILITE_FOUND
@@ -502,15 +504,18 @@ ELSE(DISABLE_GUI)
 
   # This must come after SharedMimeInfo is included, since the qtui/
   # makefiles use SharedMimeInfo macros.
-  if (QT4_FOUND)
+  if (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
     ADD_SUBDIRECTORY(qtui)
-  endif (QT4_FOUND)
+    SET(QT5_FOUND TRUE)
+  else (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
+    SET(QT5_FOUND FALSE)
+  endif (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
   MESSAGE(STATUS "Graphical user interface enabled")
 ENDIF(DISABLE_GUI)
-MACRO_LOG_FEATURE(QT4_FOUND
-  "Qt4"
+MACRO_LOG_FEATURE(QT5_FOUND
+  "Qt5"
   "Required for Regina's graphical user interface"
-  "http://qt.nokia.com/"
+  "http://qt-project.org/"
   GUI_REQUIRED ""
   "To disable the graphical user interface, run: cmake -DDISABLE_GUI=1")
 
@@ -564,8 +569,6 @@ set(CPACK_SOURCE_IGNORE_FILES
   "~$"
   "^${PROJECT_BINARY_DIR}/"
   "^${PROJECT_SOURCE_DIR}/engine/snappea/kernel/unused/"
-  "^${PROJECT_SOURCE_DIR}/icons/povray/"
-  "^${PROJECT_SOURCE_DIR}/icons/src/"
   "^${PROJECT_SOURCE_DIR}/packaging/"
   "^${PROJECT_SOURCE_DIR}/utils/local/"
   "^${PROJECT_SOURCE_DIR}/utils/snappea/"

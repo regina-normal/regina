@@ -117,7 +117,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&SnapPea Triangulation"));
-    act->setIcon(ReginaSupport::regIcon("snappea"));
+    act->setIcon(ReginaSupport::regIcon("packet_snappea"));
     act->setToolTip(tr("Import a SnapPea triangulation"));
     act->setWhatsThis(tr("Import an external SnapPea file as a new "
         "triangulation in this packet tree."));
@@ -216,7 +216,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&SnapPea Triangulation"));
-    act->setIcon(ReginaSupport::regIcon("snappea"));
+    act->setIcon(ReginaSupport::regIcon("packet_snappea"));
     act->setToolTip(tr("Export a SnapPea triangulation"));
     act->setWhatsThis(tr("Export a triangulation from this packet tree "
         "to a separate SnapPea file."));
@@ -615,21 +615,6 @@ void ReginaMain::setupActions() {
     treePacketEditActions.append(act);
     treeMenu->addAction(act);
 
-    treeMenu->addSeparator();
-
-    QAction* actRefresh = new QAction(this);
-    actRefresh->setText(tr("Refres&h Tree"));
-    actRefresh->setIcon(ReginaSupport::themeIcon("view-refresh"));
-    actRefresh->setShortcuts(QKeySequence::Refresh);
-    actRefresh->setToolTip(tr("Refresh the entire packet tree"));
-    actRefresh->setWhatsThis(tr("Refresh the entire packet tree.<p>"
-        "This should not normally be necessary, but it is a possible "
-        "fix-up in case the tree is out of sync with what is happening "
-        "elsewhere.  Note that the file is <i>not</i> reloaded from "
-        "disc; the tree is just resynced with packet editors and so on."));
-    connect(actRefresh, SIGNAL(triggered()), this, SLOT(treeRefresh()) );
-    treeMenu->addAction(actRefresh);
-    
     // --- Tools actions ---
 
     toolMenu = menuBar()->addMenu(tr("&Tools"));
@@ -745,8 +730,7 @@ void ReginaMain::setupActions() {
     toolBarMain->addSeparator();
     toolBarMain->addAction(actPython);
 
-    if (! ReginaPrefSet::global().useDock)
-        addToolBarBreak();
+    addToolBarBreak();
 
     toolBarPacket = addToolBar(tr("New Packets"));
     toolBarPacket->addAction(actContainer);

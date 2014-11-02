@@ -62,7 +62,7 @@ regina::NPacket* PythonHandler::importData(const QString& fileName,
         ReginaSupport::warn(parentWidget,
             QObject::tr("The import failed."), 
             QObject::tr("<qt>I could not read from the file <tt>%1</tt>.</qt>").
-                arg(Qt::escape(fileName)));
+                arg(fileName.toHtmlEscaped()));
         return 0;
     }
     QTextStream in(&f);
@@ -70,7 +70,7 @@ regina::NPacket* PythonHandler::importData(const QString& fileName,
     in.setCodec(ReginaPrefSet::importExportCodec());
 
     regina::NScript* ans = new regina::NScript();
-    ans->setPacketLabel(QObject::tr("Imported Script").toAscii().constData());
+    ans->setPacketLabel(QObject::tr("Imported Script").toUtf8().constData());
 
     // Read in the script.
     bool readingMetadata = true;
@@ -89,21 +89,21 @@ regina::NPacket* PythonHandler::importData(const QString& fileName,
                 metadata = metadata.mid(scriptMarker.length()).
                     trimmed();
                 if (! metadata.isEmpty())
-                    ans->setPacketLabel(metadata.toAscii().constData());
+                    ans->setPacketLabel(metadata.toUtf8().constData());
             } else if (metadata.startsWith(varMarker)) {
                 // A script variable.
                 metadata = metadata.mid(varMarker.length()).trimmed();
                 pos = metadata.indexOf(':');
                 if (pos >= 0) {
                     ans->addVariable(
-                        metadata.left(pos).trimmed().toAscii().constData(),
+                        metadata.left(pos).trimmed().toUtf8().constData(),
                         parentWidget->getPacketTree()->findPacketLabel(
                             metadata.mid(pos + 1).trimmed().
-                            toAscii().constData()));
+                            toUtf8().constData()));
                 } else {
                     // Hmm, it wasn't a script variable after all.
                     readingMetadata = false;
-                    ans->append(line.toAscii().constData());
+                    ans->append(line.toUtf8().constData());
                     ans->append("\n");
                 }
             } else if (metadata == endMetadataMarker) {
@@ -112,13 +112,13 @@ regina::NPacket* PythonHandler::importData(const QString& fileName,
             } else {
                 // It's not metadata at all.
                 readingMetadata = false;
-                ans->append(line.toAscii().constData());
+                ans->append(line.toUtf8().constData());
                 ans->append("\n");
             }
         } else {
             // We're out of the metadata.
             readingMetadata = false;
-            ans->append(line.toAscii().constData());
+            ans->append(line.toUtf8().constData());
             ans->append("\n");
         }
 
@@ -141,7 +141,7 @@ bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
         ReginaSupport::warn(parentWidget,
             QObject::tr("The export failed."), 
             QObject::tr("<qt>I could not write to the file <tt>%1</tt>.</qt>").
-                arg(Qt::escape(fileName)));
+                arg(fileName.toHtmlEscaped()));
         return false;
     }
     QTextStream out(&f);

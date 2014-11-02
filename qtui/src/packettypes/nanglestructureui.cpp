@@ -58,7 +58,9 @@ void AngleModel::rebuild() {
     // We should be using beginResetModel() / ... / endResetModel(),
     // but by the time we get here presumably it's too late and the model
     // has already been altered.. :/
-    reset();
+    // reset();
+    beginResetModel();
+    endResetModel();
 }
 
 int AngleModel::rowCount(const QModelIndex& /* unused parent */) const {
@@ -269,8 +271,8 @@ void NAngleStructureUI::refreshHeader() {
         "<qt>%1<br>%2<br>Triangulation: <a href=\"#\">%3</a></qt>").
         arg(count).
         arg(span).
-        arg(Qt::escape(model->structures()->getTriangulation()->
-            getHumanLabel().c_str())));
+        arg(QString(model->structures()->getTriangulation()->
+            getHumanLabel().c_str()).toHtmlEscaped()));
 }
 
 void NAngleStructureUI::viewTriangulation() {

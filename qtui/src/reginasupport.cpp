@@ -41,7 +41,9 @@
 #include <QPainter>
 
 namespace {
-    int iconSizes[] = { 8, 16, 22, 32, 48, 64, 128, 0 /* terminator */ };
+    int iconSizes[] = { 16, 22, 32, 48, 64, 128, 0 /* terminator */ };
+    int iconSizesRaw[] = { 16, 22, 32, 44, 48, 64, 96, 128, 256, 0 };
+        /**< The union of (iconSizes) and (2 * iconSizes). */
 }
 
 QString ReginaSupport::home_;
@@ -150,8 +152,11 @@ const QString& ReginaSupport::home() {
 QIcon ReginaSupport::regIcon(const QString& name) {
     QIcon icon;
     QString filename = home() + "/icons/" + name + "-%1.png";
-    for (int i = 0; iconSizes[i]; ++i)
+    QString filename2x = home() + "/icons/" + name + "-%1@2x.png";
+    for (int i = 0; iconSizes[i]; ++i) {
         icon.addFile(filename.arg(iconSizes[i]));
+        icon.addFile(filename2x.arg(iconSizes[i]));
+    }
     return icon;
 }
 
@@ -161,20 +166,23 @@ QIcon ReginaSupport::themeIcon(const QString& name) {
         return icon;
 
     QString filename = home() + "/icons/oxygen/" + name + "-%1.png";
-    for (int i = 0; iconSizes[i]; ++i)
+    QString filename2x = home() + "/icons/oxygen/" + name + "-%1@2x.png";
+    for (int i = 0; iconSizes[i]; ++i) {
         icon.addFile(filename.arg(iconSizes[i]));
+        icon.addFile(filename2x.arg(iconSizes[i]));
+    }
     return icon;
 }
 
 QIcon ReginaSupport::overlayIcon(const QIcon& base, const QIcon& emblem) {
     QIcon icon;
-    for (int i = 0; iconSizes[i]; ++i) {
-        QPixmap iconPic = base.pixmap(iconSizes[i]);
+    for (int i = 0; iconSizesRaw[i]; ++i) {
+        QPixmap iconPic = base.pixmap(iconSizesRaw[i]);
         if (iconPic.isNull())
             continue;
 
         QPainter painter(&iconPic);
-        painter.drawPixmap(0, 0, emblem.pixmap(iconSizes[i]));
+        painter.drawPixmap(0, 0, emblem.pixmap(iconSizesRaw[i]));
         icon.addPixmap(iconPic);
     }
     return icon;
