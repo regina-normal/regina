@@ -42,6 +42,7 @@
     [self setSelectedImages:@[@"Tab-Cusps-Bold",
                               @"Tab-Gluings-Bold",
                               @"Tab-Skeleton-Bold",
+                              @"Tab-Graph-Bold",
                               [NSNull null],
                               @"Tab-Composition-Bold",
                               @"Tab-Recognition-Bold"]];
