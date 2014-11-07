@@ -8,12 +8,14 @@ my @actionIcons = qw/
     barycentric
     canonical
     components
+    cone
     connectedsum
     connectedsumwith
     dehydrated
     doublecover
     drilledge
     fill
+    finite
     locked
     orb
     orient
@@ -23,9 +25,7 @@ my @actionIcons = qw/
     simplify
     vtxlinks
     /;
-#    cone
 #    csvexport
-#    finite
 #    signature
 
 my @packetIcons = qw/
@@ -42,9 +42,6 @@ my @packetIcons = qw/
     text
     triangulation
     /;
-
-#    regina
-#    x-regina
 
 my $aux = undef;
 
