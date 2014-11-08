@@ -57,12 +57,23 @@ sub render {
     my $size = shift;
     my $filename = shift;
 
+    my $custom = 0;
     if ($size <= 16) {
         my $lores = $src;
         $lores =~ s/\.svg$/-lores.svg/;
         if (-e $lores) {
             print "Using lo-res SVG: $filename\n";
             $src = $lores;
+            $custom = 1;
+        }
+    }
+    if (not $custom) {
+        my $lores = $src;
+        $lores =~ s/\.svg$/-$size.svg/;
+        if (-e $lores) {
+            print "Using ${size}x SVG: $filename\n";
+            $src = $lores;
+            $custom = 1;
         }
     }
 
