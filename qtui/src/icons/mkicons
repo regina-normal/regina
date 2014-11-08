@@ -11,6 +11,7 @@ my @actionIcons = qw/
     cone
     connectedsum
     connectedsumwith
+    csvexport
     dehydrated
     doublecover
     drilledge
@@ -25,7 +26,6 @@ my @actionIcons = qw/
     simplify
     vtxlinks
     /;
-#    csvexport
 #    signature
 
 my @packetIcons = qw/
