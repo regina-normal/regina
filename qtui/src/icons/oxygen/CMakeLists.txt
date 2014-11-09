@@ -21,7 +21,6 @@ set (IMGS
   document-open-recent
   document-save
   document-save-as
-  document-sign
   edit-copy
   edit-cut
   edit-delete
