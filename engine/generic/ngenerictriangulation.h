@@ -94,6 +94,22 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          */
         bool isEmpty() const;
 
+        /**
+         * Returns the number of top-dimensional simplices in the
+         * triangulation.
+         *
+         * This is identical to getNumberOfSimplices(), but with two extra
+         * advantages: (i) it is shorter to type; and (ii) it appears
+         * in the template base class NGenericTriangulation, which may
+         * be useful for templated code.
+         *
+         * In three dimensions, this routine is equivalent to calling
+         * NTriangulation::getNumberOfTetrahedra().
+         *
+         * @return The number of top-dimensional simplices.
+         */
+        unsigned long size() const;
+
         /*@}*/
         /**
          * \name Isomorphism Testing
@@ -484,6 +500,12 @@ template <int dim>
 inline bool NGenericTriangulation<dim>::isEmpty() const {
     return (static_cast<const typename DimTraits<dim>::Triangulation*>(this)->
         getNumberOfSimplices() == 0);
+}
+
+template <int dim>
+inline unsigned long NGenericTriangulation<dim>::size() const {
+    return static_cast<const typename DimTraits<dim>::Triangulation*>(this)->
+        getNumberOfSimplices();
 }
 
 } // namespace regina
