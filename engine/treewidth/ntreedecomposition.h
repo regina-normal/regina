@@ -72,13 +72,26 @@ class REGINA_API NTreeBag : public ShareableObject {
             /**< The number of elements in this bag. */
         int* elements_;
             /**< The elements of this bag, sorted in ascending order. */
+        NTreeBag* parent_;
+        NTreeBag* sibling_;
+        NTreeBag* children_;
 
     public:
+        /**
+         * Note: the bag will not be inserted into the tree.
+         * That is, parent_, sibling_ and children_ will all be null.
+         */
+        NTreeBag(const NTreeBag& cloneMe);
         ~NTreeBag();
 
         int size() const;
         int element(int which) const;
         bool contains(int element) const;
+
+        /**
+         * Inserts as the first child.
+         */
+        void insertChild(NTreeBag* child);
 
         void writeTextShort(std::ostream& out) const;
 
@@ -88,13 +101,11 @@ class REGINA_API NTreeBag : public ShareableObject {
     friend class NTreeDecomposition;
 };
 
-/**
- * TODO: Document that a bag's parent always has a higher number,
- * and so processing bags in order 0..(size-1) will give a leaf-to-root
- * ordering.
- */
 class REGINA_API NTreeDecomposition : public ShareableObject {
     protected:
+        /**
+         * Note: loops are ignored.
+         */
         struct Graph {
             int order_;
             bool** adj_;
@@ -109,10 +120,10 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
         };
 
     private:
-        int size_;
         int width_;
-        NTreeBag** bags_;
-        int* parent_;
+            /**< The width of the tree decomposition; that is, one less
+                 than the maximum bag size. */
+        NTreeBag* root_;
 
     public:
         template <int dim>
@@ -128,9 +139,6 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
         ~NTreeDecomposition();
 
         int width() const;
-        int size() const;
-        const NTreeBag& bag(int which) const;
-        int parent(int which) const;
 
         void writeTextShort(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
@@ -148,10 +156,30 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
 // Inline functions for NTreeBag
 
 inline NTreeBag::NTreeBag(int size) :
-        size_(size), elements_(new int[size_]) {
+        size_(size),
+        elements_(new int[size_]),
+        parent_(0),
+        sibling_(0),
+        children_(0) {
+}
+
+inline NTreeBag::NTreeBag(const NTreeBag& cloneMe) :
+        size_(cloneMe.size_),
+        elements_(new int[cloneMe.size_]),
+        parent_(0),
+        sibling_(0),
+        children_(0) {
+    for (int i = 0; i < size_; ++i)
+        elements_[i] = cloneMe.elements_[i];
 }
 
 inline NTreeBag::~NTreeBag() {
+    NTreeBag* tmp;
+    while (children_) {
+        tmp = children_;
+        children_ = children_->sibling_;
+        delete tmp;
+    }
     delete[] elements_;
 }
 
@@ -163,31 +191,20 @@ inline int NTreeBag::element(int which) const {
     return elements_[which];
 }
 
+inline void NTreeBag::insertChild(NTreeBag* child) {
+    child->parent_ = this;
+    child->sibling_ = children_;
+    children_ = child;
+}
+
 // Inline functions for NTreeDecomposition
 
 inline NTreeDecomposition::~NTreeDecomposition() {
-    if (bags_) {
-        for (int i = 0; i < size_; ++i)
-            delete bags_[i];
-        delete[] bags_;
-    }
-    delete[] parent_;
+    delete root_;
 }
 
 inline int NTreeDecomposition::width() const {
     return width_;
-}
-
-inline int NTreeDecomposition::size() const {
-    return size_;
-}
-
-inline const NTreeBag& NTreeDecomposition::bag(int which) const {
-    return *bags_[which];
-}
-
-inline int NTreeDecomposition::parent(int which) const {
-    return parent_[which];
 }
 
 // Inline functions for NTreeDecomposition::Graph

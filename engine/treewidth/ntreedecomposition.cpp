@@ -95,11 +95,7 @@ void NTreeDecomposition::construct(Graph& graph, TreeDecompositionAlg alg) {
 void NTreeDecomposition::greedyFillIn(Graph& graph) {
     width_ = 0;
 
-    size_ = graph.order_;
-    bags_ = new NTreeBag*[size_];
-    parent_ = new int[size_];
-
-    // Step 1: Find a good elimination order.
+    // Find a good elimination order.
     //
     // We add edges to graph as we do this, so that the graph becomes chordal.
     // We also construct the bags as we go.
@@ -107,32 +103,33 @@ void NTreeDecomposition::greedyFillIn(Graph& graph) {
     // Note: This step currently requires O(n^4) time; surely with a
     // little tweaking we can improve this.
 
-    bool* used = new bool[size_];
-    int* elimOrder = new int[size_]; // Elimination stage -> vertex
-    int* elimStage = new int[size_]; // Vertex -> elimination stage
+    bool* used = new bool[graph.order_];
+    int* elimOrder = new int[graph.order_]; // Elimination stage -> vertex
+    int* elimStage = new int[graph.order_]; // Vertex -> elimination stage
+    NTreeBag** bags = new NTreeBag*[graph.order_];
 
-    std::fill(used, used + size_, false);
+    std::fill(used, used + graph.order_, false);
 
     int elim, elimEdges, elimBagSize;
     int bestElim, bestElimEdges, bestElimBagSize;
     int stage, j, k, which;
-    for (stage = 0; stage < size_; ++stage) {
+    for (stage = 0; stage < graph.order_; ++stage) {
         bestElim = -1;
 
-        for (elim = 0; elim < size_; ++elim) {
+        for (elim = 0; elim < graph.order_; ++elim) {
             if (used[elim])
                 continue;
 
             // See how many edges we need to add if we eliminate this vertex.
             elimEdges = 0;
             elimBagSize = 1;
-            for (j = 0; j < size_; ++j) {
+            for (j = 0; j < graph.order_; ++j) {
                 if (used[j] || j == elim || ! graph.adj_[elim][j])
                     continue;
 
                 // j is an unused neighbour of elim.
                 ++elimBagSize;
-                for (k = j + 1; k < size_; ++k) {
+                for (k = j + 1; k < graph.order_; ++k) {
                     if (used[k] || k == elim || ! graph.adj_[elim][k])
                         continue;
 
@@ -159,17 +156,17 @@ void NTreeDecomposition::greedyFillIn(Graph& graph) {
         // Build the corresponding bag.
         // This contains the eliminated vertex and all of its unused neighbours.
         // Ensure the elements are stored in sorted order.
-        bags_[stage] = new NTreeBag(bestElimBagSize);
+        bags[stage] = new NTreeBag(bestElimBagSize);
         which = 0;
-        for (j = 0; j < size_; ++j) {
+        for (j = 0; j < graph.order_; ++j) {
             if (j == bestElim) {
-                bags_[stage]->elements_[which++] = j;
+                bags[stage]->elements_[which++] = j;
             } else if ((! used[j]) && graph.adj_[bestElim][j]) {
-                bags_[stage]->elements_[which++] = j;
+                bags[stage]->elements_[which++] = j;
 
                 // Add links between neighbours of bestElim so that this bag
                 // becomes a clique.
-                for (k = j + 1; k < size_; ++k) {
+                for (k = j + 1; k < graph.order_; ++k) {
                     if (used[k] || ! graph.adj_[bestElim][k])
                         continue;
                     if (! graph.adj_[j][k])
@@ -179,64 +176,68 @@ void NTreeDecomposition::greedyFillIn(Graph& graph) {
         }
     }
 
+    // Now hook the bags together into a tree.
     // Step 2: Set the parent relationships in the tree.
+    root_ = bags[graph.order_ - 1];
 
-    for (stage = 0; stage < size_ - 1; ++stage) {
-        parent_[stage] = size_ - 1;
-
-        if (bags_[stage]->size_ == 1) {
+    int parent;
+    for (stage = 0; stage < graph.order_ - 1; ++stage) {
+        if (bags[stage]->size_ == 1) {
             // The graph must have been disconnected, and the resulting
             // tree decomposition becomes a forest.
             // Just hook this bag directly beneath the root.
+            root_->insertChild(bags[stage]);
             continue;
         }
 
-        for (j = 0; j < bags_[stage]->size_; ++j) {
-            k = elimStage[bags_[stage]->elements_[j]];
-            if (k > stage && k < parent_[stage])
-                parent_[stage] = k;
+        parent = graph.order_ - 1;
+        for (j = 0; j < bags[stage]->size_; ++j) {
+            k = elimStage[bags[stage]->elements_[j]];
+            if (k > stage && k < parent)
+                parent = k;
         }
+        bags[parent]->insertChild(bags[stage]);
     }
-
-    parent_[size_ - 1] = - 1;
 
     // Clean up.
 
     delete[] used;
     delete[] elimOrder;
     delete[] elimStage;
+    delete[] bags;
 }
 
 void NTreeDecomposition::writeTextShort(std::ostream& out) const {
-    out << "Tree decomposition: ";
-    if (size_ == 1)
-        out << "1 bag";
-    else
-        out << size_ << " bags";
-    out << ", width " << width_;
+    out << "Tree decomposition of width " << width_;
 }
 
 void NTreeDecomposition::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << std::endl;
 
-    int i, j;
-    for (i = 0; i < size_; ++i) {
-        out << "Bag " << i;
-        if (parent_[i] < 0)
-            out << " (root)";
-        else
-            out << " (-> " << parent_[i] << ')';
-        out << " - ";
+    int indent = 0;
+    NTreeBag* b = root_;
+    int i;
 
-        if (bags_[i]->size_ == 1)
-            out << "1 element:";
-        else
-            out << bags_[i]->size_ << " elements:";
-
-        for (j = 0; j < bags_[i]->size_; ++j)
-            out << ' ' << bags_[i]->elements_[j];
+    while (b) {
+        for (i = 0; i < indent; ++i)
+            out << "  ";
+        out << "Bag (" << b->size_ << "):";
+        for (i = 0; i < b->size_; ++i)
+            out << ' ' << b->elements_[i];
         out << std::endl;
+
+        if (b->children_) {
+            ++indent;
+            b = b->children_;
+        } else {
+            while (b && ! b->sibling_) {
+                --indent;
+                b = b->parent_;
+            }
+            if (b)
+                b = b->sibling_;
+        }
     }
 }
 

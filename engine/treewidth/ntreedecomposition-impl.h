@@ -47,7 +47,7 @@ template <int dim>
 NTreeDecomposition::NTreeDecomposition(
         const NGenericTriangulation<dim>& triangulation,
         TreeDecompositionAlg alg) :
-        size_(0), width_(0), bags_(0), parent_(0) {
+        width_(0), root_(0) {
     Graph g(triangulation.size());
 
     int i, j;
@@ -67,7 +67,7 @@ template <int dim>
 NTreeDecomposition::NTreeDecomposition(
         const NGenericFacetPairing<dim>& pairing,
         TreeDecompositionAlg alg) :
-        size_(0), width_(0), bags_(0), parent_(0) {
+        width_(0), root_(0) {
     Graph g(pairing.size());
 
     int i, j;
