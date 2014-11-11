@@ -78,7 +78,7 @@ void NTreeDecomposition::Graph::dump(std::ostream& out) const {
 void NTreeDecomposition::construct(Graph& graph, TreeDecompositionAlg alg) {
     if (graph.order_ == 0) {
         // No tree, no bags.
-        width = -1;
+        width_ = -1;
         return;
     }
 
