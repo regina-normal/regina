@@ -63,6 +63,9 @@ class NTreeBag;
 enum TreeDecompositionAlg {
     TD_UPPER = 0x0001,
     TD_UPPER_GREEDY_FILL_IN = 0x0001,
+    /**
+     * Not yet implemented: will fall back to greedy for now.
+     */
     TD_EXACT = 0x0010
 };
 
@@ -116,15 +119,16 @@ class REGINA_API NTreeBag : public ShareableObject {
         const NTreeBag* next() const;
         const NTreeBag* nextPrefix() const;
 
+        void writeTextShort(std::ostream& out) const;
+
+    private:
+        NTreeBag(int size);
+
         /**
          * Inserts as the first child.
          */
         void insertChild(NTreeBag* child);
 
-        void writeTextShort(std::ostream& out) const;
-
-    private:
-        NTreeBag(int size);
         /**
          * Only swaps the lists of elements.
          */
@@ -159,11 +163,19 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
         NTreeBag* root_;
 
     public:
+        /**
+         * \ifacespython The first argument must be of type NTriangulation
+         * or Dim2Triangulation.
+         */
         template <int dim>
         NTreeDecomposition(
             const NGenericTriangulation<dim>& triangulation,
             TreeDecompositionAlg alg = TD_UPPER);
 
+        /**
+         * \ifacespython The first argument must be of type NFacePairing
+         * or Dim2EdgePairing.
+         */
         template <int dim>
         NTreeDecomposition(
             const NGenericFacetPairing<dim>& pairing,
@@ -186,7 +198,19 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
 
         void writeTextShort(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
+#if 0
+        /**
+         * Verifies that (i) all bag elements are in range;
+         * (ii) all elements appear in some bag; and
+         * (iii) the path condition holds.
+         * Does not verify the edge condition (since we do not have
+         * access to the edges of the underlying graph).
+         */
+        bool verify(int order) const;
 
+        template <int dim>
+        bool verify(const NGenericTriangulation<dim>& triangulation) const;
+#endif
     private:
         /**
          * Note: graph may be modified during this routine.
