@@ -121,8 +121,8 @@ void NTreeDecomposition::Graph::dump(std::ostream& out) const {
     int i, j;
     for (i = 0; i < order_; ++i) {
         for (j = 0; j < order_; ++j)
-            std::cout << (adj_[i][j] ? '*' : '_');
-        std::cout << std::endl;
+            out << (adj_[i][j] ? '*' : '_');
+        out << std::endl;
     }
 }
 
