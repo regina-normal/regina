@@ -73,6 +73,12 @@ enum BagComparison {
     BAG_UNRELATED = 2
 };
 
+enum NiceType {
+    NICE_INTRODUCE = 1,
+    NICE_FORGET = 2,
+    NICE_JOIN = 3
+};
+
 class REGINA_API NTreeBag : public ShareableObject {
     private:
         int size_;
@@ -83,6 +89,8 @@ class REGINA_API NTreeBag : public ShareableObject {
         NTreeBag* sibling_;
         NTreeBag* children_;
         int type_;
+            /**< Zero if nothing special; otherwise a non-zero type
+                 constant specific to the application. */
         int subtype_;
         int index_;
             /**< Undefined until set by NTreeDecomposition.

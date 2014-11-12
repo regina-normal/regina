@@ -375,7 +375,146 @@ bool NTreeDecomposition::compress() {
 }
 
 void NTreeDecomposition::makeNice() {
-    // TODO
+    if (! root_)
+        return;
+
+    compress();
+
+    // First add a chain of forget nodes above the root, right up to a
+    // new empty bag.
+    NTreeBag* b = root_;
+    NTreeBag *tmp, *tmp2, *tmp3;
+    int i;
+    for (i = b->size_ - 1; i >= 0; --i) {
+        tmp = new NTreeBag(i);
+        std::copy(b->elements_, b->elements_ + i, tmp->elements_);
+        tmp->children_ = root_;
+        root_->parent_ = tmp;
+        root_ = tmp;
+
+        tmp->type_ = NICE_FORGET;
+        tmp->subtype_ = b->elements_[i];
+    }
+
+    NTreeBag* next;
+    int p1, p2;
+    while (b) {
+        // Invariants:
+        // - b is not the root;
+        // - everything before b in a prefix ordering has been made nice.
+        if (b->children_ && b->children_->sibling_) {
+            // b is a branching node.
+            b->type_ = NICE_JOIN;
+            b->subtype_ = 0;
+
+            tmp = new NTreeBag(*b);
+            tmp2 = new NTreeBag(*b);
+
+            tmp2->children_ = b->children_->sibling_;
+            tmp2->children_->parent_ = tmp2;
+
+            tmp->children_ = b->children_;
+            tmp->children_->parent_ = tmp;
+            tmp->children_->sibling_ = 0;
+
+            b->children_ = tmp;
+            tmp->sibling_ = tmp2;
+            tmp->parent_ = b;
+            tmp2->parent_ = b;
+
+            b = tmp;
+        } else if (b->children_) {
+            // b has only one child.
+            // Insert the necessary sequence of forgets and introduces.
+            // Because we called compress() above, we know that we will
+            // need at least one forget and at least one introduce.
+            next = b->children_;
+
+            p1 = p2 = 0;
+            tmp = b;
+            tmp2 = next;
+            while (p1 < tmp->size_ || p2 < tmp2->size_) {
+                // [b, ..., tmp) and [tmp2, ..., next) are nice.
+                // p1, p2 are element indices into tmp, tmp2 respectively.
+                if (p2 == tmp2->size_ ||
+                        (p1 < tmp2->size_ &&
+                         tmp->elements_[p1] < tmp2->elements_[p2])) {
+                    // Introduce tmp->elements_[p1].
+                    tmp->type_ = NICE_INTRODUCE;
+                    tmp->subtype_ = tmp->elements_[p1];
+
+                    tmp3 = new NTreeBag(tmp->size_ - 1);
+                    std::copy(tmp->elements_,
+                        tmp->elements_ + p1, tmp3->elements_);
+                    std::copy(tmp->elements_ + p1 + 1,
+                        tmp->elements_ + tmp->size_, tmp3->elements_ + p1);
+
+                    tmp3->parent_ = tmp;
+                    tmp3->children_ = tmp2;
+                    tmp->children_ = tmp3;
+                    tmp2->parent_ = tmp3;
+
+                    tmp = tmp3;
+                } else if (p1 == tmp2->size_ ||
+                        (tmp->elements_[p1] > tmp2->elements_[p2])) {
+                    // Forget tmp2->elements_[p2].
+                    tmp3 = new NTreeBag(tmp2->size_ - 1);
+                    std::copy(tmp2->elements_,
+                        tmp2->elements_ + p2, tmp3->elements_);
+                    std::copy(tmp2->elements_ + p2 + 1,
+                        tmp2->elements_ + tmp2->size_, tmp3->elements_ + p2);
+
+                    tmp3->type_ = NICE_FORGET;
+                    tmp3->subtype_ = tmp2->elements_[p2];
+
+                    tmp3->parent_ = tmp;
+                    tmp3->children_ = tmp2;
+                    tmp->children_ = tmp3;
+                    tmp2->parent_ = tmp3;
+
+                    tmp2 = tmp3;
+                } else {
+                    // tmp->elements_[p1] == tmp2->elements_[p2].
+                    ++p1;
+                    ++p2;
+                }
+            }
+
+            // Now tmp and tmp2 contain the same elements.
+            // Remove tmp.
+            // Since there is at least one forget and at least one
+            // introduce in this sequence, we know that tmp lies strictly
+            // between b and next.
+            tmp->parent_->children_ = tmp->children_;
+            tmp->children_->parent_ = tmp->parent_;
+            tmp->children_ = 0;
+            delete tmp;
+
+            // Done!  Jump to the bottom of the sequence and continue.
+            b = next;
+        } else {
+            // b is a leaf node.
+            // Build a series of introduce nodes.
+            next = const_cast<NTreeBag*>(b->nextPrefix());
+
+            b->type_ = NICE_INTRODUCE;
+            b->subtype_ = b->elements_[b->size_ - 1];
+
+            tmp = b;
+            for (i = b->size_ - 1; i > 0; --i) {
+                tmp2 = new NTreeBag(i);
+                std::copy(b->elements_, b->elements_ + i, tmp2->elements_);
+                tmp->children_ = tmp2;
+                tmp2->parent_ = tmp;
+                tmp = tmp2;
+
+                tmp->type_ = NICE_INTRODUCE;
+                tmp->subtype_ = b->elements_[i - 1];
+            }
+
+            b = next;
+        }
+    }
 
     reindex();
 }
