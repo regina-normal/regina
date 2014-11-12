@@ -393,7 +393,7 @@ void NTreeDecomposition::makeNice() {
         root_ = tmp;
 
         tmp->type_ = NICE_FORGET;
-        tmp->subtype_ = b->elements_[i];
+        tmp->subtype_ = i;
     }
 
     NTreeBag* next;
@@ -441,7 +441,7 @@ void NTreeDecomposition::makeNice() {
                          tmp->elements_[p1] < tmp2->elements_[p2])) {
                     // Introduce tmp->elements_[p1].
                     tmp->type_ = NICE_INTRODUCE;
-                    tmp->subtype_ = tmp->elements_[p1];
+                    tmp->subtype_ = p1;
 
                     tmp3 = new NTreeBag(tmp->size_ - 1);
                     std::copy(tmp->elements_,
@@ -465,7 +465,7 @@ void NTreeDecomposition::makeNice() {
                         tmp2->elements_ + tmp2->size_, tmp3->elements_ + p2);
 
                     tmp3->type_ = NICE_FORGET;
-                    tmp3->subtype_ = tmp2->elements_[p2];
+                    tmp3->subtype_ = p2;
 
                     tmp3->parent_ = tmp;
                     tmp3->children_ = tmp2;
@@ -498,7 +498,7 @@ void NTreeDecomposition::makeNice() {
             next = const_cast<NTreeBag*>(b->nextPrefix());
 
             b->type_ = NICE_INTRODUCE;
-            b->subtype_ = b->elements_[b->size_ - 1];
+            b->subtype_ = b->size_ - 1;
 
             tmp = b;
             for (i = b->size_ - 1; i > 0; --i) {
@@ -509,7 +509,7 @@ void NTreeDecomposition::makeNice() {
                 tmp = tmp2;
 
                 tmp->type_ = NICE_INTRODUCE;
-                tmp->subtype_ = b->elements_[i - 1];
+                tmp->subtype_ = i - 1;
             }
 
             b = next;
