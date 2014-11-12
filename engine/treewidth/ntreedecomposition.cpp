@@ -56,6 +56,37 @@ bool NTreeBag::contains(int element) const {
     return std::binary_search(elements_, elements_ + size_, element);
 }
 
+BagComparison NTreeBag::compare(const NTreeBag& rhs) const {
+    int p1 = 0;
+    int p2 = 0;
+    bool extraInLHS = false;
+    bool extraInRHS = false;
+
+    while (p1 < size_ && p2 < rhs.size_) {
+        if (elements_[p1] == rhs.elements_[p2]) {
+            ++p1;
+            ++p2;
+            continue;
+        } else if (elements_[p1] < rhs.elements_[p2]) {
+            ++p1;
+            if (extraInRHS)
+                return BAG_UNRELATED;
+            extraInLHS = true;
+        } else {
+            ++p2;
+            if (extraInLHS)
+                return BAG_UNRELATED;
+            extraInRHS = true;
+        }
+    }
+
+    if (p1 < size_)
+        return (extraInRHS ? BAG_UNRELATED : BAG_SUPERSET);
+    if (p2 < rhs.size_)
+        return (extraInLHS ? BAG_UNRELATED : BAG_SUBSET);
+    return (extraInLHS ? BAG_SUPERSET : extraInRHS ? BAG_SUBSET : BAG_EQUAL);
+}
+
 const NTreeBag* NTreeBag::nextPrefix() const {
     if (children_)
         return children_;
@@ -237,8 +268,105 @@ const NTreeBag* NTreeDecomposition::first() const {
     return b;
 }
 
-void NTreeDecomposition::compress() {
-    // TODO
+bool NTreeDecomposition::compress() {
+    // Do a prefix enumeration (root first), and compress edges up to
+    // parents when one bag is a subset of the other.
+    // The path condition ensures that no such subset relationships
+    // should remain.
+    if (! (root_ && root_->children_))
+        return false;
+
+    bool changed = false;
+    NTreeBag* b = root_->children_;
+    NTreeBag* siblingOf = 0;
+    NTreeBag* next;
+    NTreeBag* nextIsSiblingOf;
+    NTreeBag* child;
+    while (b) {
+        // We are ready to process bag b.
+        // Invariants:
+        // - Bag b has a parent (i.e., is not the root).
+        // - We have already processed all ancestors of b, but we have
+        //   not processed any children of b.
+        // - If siblingOf is non-null, then b = siblingOf->sibling_.
+        // - If siblingOf is null, then b = b->parent_->children_.
+
+        // First work out which bag will be processed next, so the tree
+        // traversal runs as expected even if we merge b into its parent.
+        if (b->children_) {
+            next = b->children_;
+            nextIsSiblingOf = 0;
+        } else {
+            next = b;
+            while (next && ! next->sibling_)
+                next = next->parent_;
+            if (next) {
+                nextIsSiblingOf = next;
+                next = next->sibling_;
+            }
+        }
+
+        // Now see if we need to merge b with b->parent_.
+        BagComparison compare = b->compare(*b->parent_);
+        if (compare != BAG_UNRELATED) {
+            // We will merge b with b->parent_, and then remove b.
+            if (compare == BAG_SUPERSET)
+                b->swapContents(*b->parent_);
+
+            if (b->children_) {
+                // Bag b has children.
+                // Replace bag b with its list of children.
+
+                // 1) Make all children of b point to the correct parent,
+                // and also make note of the last child of b.
+                child = b->children_;
+                while (true) {
+                    child->parent_ = b->parent_;
+                    if (child->sibling_)
+                        child = child->sibling_;
+                    else
+                        break;
+                }
+
+                // 2) Splice the children of b into the higher list of
+                // children to which b belongs.
+                child->sibling_ = b->sibling_;
+                if (siblingOf)
+                    siblingOf->sibling_ = b->children_;
+                else
+                    b->parent_->children_ = b->children_;
+
+                // Note: in this case we have next == b->children_.
+                // Adjust this for the new tree structure.
+                nextIsSiblingOf = siblingOf;
+            } else {
+                // Bag b is a leaf.  Just remove it.
+                if (siblingOf)
+                    siblingOf->sibling_ = b->sibling_;
+                else 
+                    b->parent_->children_ = b->sibling_;
+
+                // In this case, next could either be the sibling of b, or
+                // (if b has no sibling) something further along in the tree.
+                // Adjust nextIsSiblingOf if we need to.
+                if (nextIsSiblingOf == b)
+                    nextIsSiblingOf = siblingOf;
+            }
+
+            // Ensure that deleting b does not cascade to its children.
+            b->children_ = 0;
+
+            delete b;
+
+            changed = true;
+        }
+
+        // Move to the next node for processing.
+        b = next;
+        siblingOf = nextIsSiblingOf;
+    }
+
+    return changed;
 }
 
 void NTreeDecomposition::makeNice() {

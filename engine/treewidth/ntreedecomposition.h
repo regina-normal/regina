@@ -66,6 +66,13 @@ enum TreeDecompositionAlg {
     TD_EXACT = 0x0010
 };
 
+enum BagComparison {
+    BAG_EQUAL = 0,
+    BAG_SUBSET = -1,
+    BAG_SUPERSET = 1,
+    BAG_UNRELATED = 2
+};
+
 class REGINA_API NTreeBag : public ShareableObject {
     private:
         int size_;
@@ -88,6 +95,8 @@ class REGINA_API NTreeBag : public ShareableObject {
         int element(int which) const;
         bool contains(int element) const;
 
+        BagComparison compare(const NTreeBag& rhs) const;
+
         const NTreeBag* next() const;
         const NTreeBag* nextPrefix() const;
 
@@ -100,6 +109,10 @@ class REGINA_API NTreeBag : public ShareableObject {
 
     private:
         NTreeBag(int size);
+        /**
+         * Only swaps the lists of elements.
+         */
+        void swapContents(NTreeBag& other);
 
     friend class NTreeDecomposition;
 };
@@ -147,7 +160,10 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
         const NTreeBag* first() const;
         const NTreeBag* firstPrefix() const;
 
-        void compress();
+        /**
+         * Merge adjacent bags where one is a subset of another.
+         */
+        bool compress();
         void makeNice();
 
         void writeTextShort(std::ostream& out) const;
@@ -205,6 +221,11 @@ inline void NTreeBag::insertChild(NTreeBag* child) {
     child->parent_ = this;
     child->sibling_ = children_;
     children_ = child;
+}
+
+inline void NTreeBag::swapContents(NTreeBag& other) {
+    int s = size_; size_ = other.size_; other.size_ = s;
+    int* e = elements_; elements_ = other.elements_; other.elements_ = e;
 }
 
 // Inline functions for NTreeDecomposition
