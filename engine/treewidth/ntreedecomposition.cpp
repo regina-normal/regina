@@ -130,6 +130,7 @@ void NTreeDecomposition::construct(Graph& graph, TreeDecompositionAlg alg) {
     if (graph.order_ == 0) {
         // No tree, no bags.
         width_ = -1;
+        size_ = 0;
         return;
     }
 
