@@ -437,7 +437,7 @@ void NTreeDecomposition::makeNice() {
                 // [b, ..., tmp) and [tmp2, ..., next) are nice.
                 // p1, p2 are element indices into tmp, tmp2 respectively.
                 if (p2 == tmp2->size_ ||
-                        (p1 < tmp2->size_ &&
+                        (p1 < tmp->size_ &&
                          tmp->elements_[p1] < tmp2->elements_[p2])) {
                     // Introduce tmp->elements_[p1].
                     tmp->type_ = NICE_INTRODUCE;
@@ -455,7 +455,7 @@ void NTreeDecomposition::makeNice() {
                     tmp2->parent_ = tmp3;
 
                     tmp = tmp3;
-                } else if (p1 == tmp2->size_ ||
+                } else if (p1 == tmp->size_ ||
                         (tmp->elements_[p1] > tmp2->elements_[p2])) {
                     // Forget tmp2->elements_[p2].
                     tmp3 = new NTreeBag(tmp2->size_ - 1);
