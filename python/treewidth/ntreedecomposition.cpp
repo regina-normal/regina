@@ -1,0 +1,122 @@
+
+/**************************************************************************
+ *                                                                        *
+ *  Regina - A Normal Surface Theory Calculator                           *
+ *  Python Interface                                                      *
+ *                                                                        *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
+ *  For further details contact Ben Burton (bab@debian.org).              *
+ *                                                                        *
+ *  This program is free software; you can redistribute it and/or         *
+ *  modify it under the terms of the GNU General Public License as        *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  As an exception, when this program is distributed through (i) the     *
+ *  App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or     *
+ *  (iii) Google Play by Google Inc., then that store may impose any      *
+ *  digital rights management, device limits and/or redistribution        *
+ *  restrictions that are required by its terms of service.               *
+ *                                                                        *
+ *  This program is distributed in the hope that it will be useful, but   *
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
+ *  General Public License for more details.                              *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public             *
+ *  License along with this program; if not, write to the Free            *
+ *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,       *
+ *  MA 02110-1301, USA.                                                   *
+ *                                                                        *
+ **************************************************************************/
+
+/* end stub */
+
+#include <boost/python.hpp>
+#include "census/dim2edgepairing.h"
+#include "census/nfacepairing.h"
+#include "dim2/dim2triangulation.h"
+#include "treewidth/ntreedecomposition.h"
+#include "triangulation/ntriangulation.h"
+
+using namespace boost::python;
+using regina::NTreeBag;
+using regina::NTreeDecomposition;
+
+void addNTreeDecomposition() {
+    scope global;
+
+    enum_<regina::TreeDecompositionAlg>("TreeDecompositionAlg")
+        .value("TD_UPPER", regina::TD_UPPER)
+        .value("TD_UPPER_GREEDY_FILL_IN", regina::TD_UPPER_GREEDY_FILL_IN)
+        .value("TD_EXACT", regina::TD_EXACT)
+        ;
+
+    global.attr("TD_UPPER") = regina::TD_UPPER;
+    global.attr("TD_UPPER_GREEDY_FILL_IN") = regina::TD_UPPER_GREEDY_FILL_IN;
+    global.attr("TD_EXACT") = regina::TD_EXACT;
+
+    enum_<regina::BagComparison>("BagComparison")
+        .value("BAG_EQUAL", regina::BAG_EQUAL)
+        .value("BAG_SUBSET", regina::BAG_SUBSET)
+        .value("BAG_SUPERSET", regina::BAG_SUPERSET)
+        .value("BAG_UNRELATED", regina::BAG_UNRELATED)
+        ;
+
+    global.attr("BAG_EQUAL") = regina::BAG_EQUAL;
+    global.attr("BAG_SUBSET") = regina::BAG_SUBSET;
+    global.attr("BAG_SUPERSET") = regina::BAG_SUPERSET;
+    global.attr("BAG_UNRELATED") = regina::BAG_UNRELATED;
+
+    enum_<regina::NiceType>("NiceType")
+        .value("NICE_INTRODUCE", regina::NICE_INTRODUCE)
+        .value("NICE_FORGET", regina::NICE_FORGET)
+        .value("NICE_JOIN", regina::NICE_JOIN)
+        ;
+
+    global.attr("NICE_INTRODUCE") = regina::NICE_INTRODUCE;
+    global.attr("NICE_FORGET") = regina::NICE_FORGET;
+    global.attr("NICE_JOIN") = regina::NICE_JOIN;
+
+    class_<NTreeBag, bases<regina::ShareableObject>,
+            std::auto_ptr<NTreeBag>, boost::noncopyable>("NTreeBag",
+            init<const NTreeBag&>())
+        .def("size", &NTreeBag::size)
+        .def("element", &NTreeBag::element)
+        .def("contains", &NTreeBag::contains)
+        .def("index", &NTreeBag::index)
+        .def("compare", &NTreeBag::compare)
+        .def("next", &NTreeBag::next,
+            return_value_policy<reference_existing_object>())
+        .def("nextPrefix", &NTreeBag::nextPrefix,
+            return_value_policy<reference_existing_object>())
+    ;
+
+    class_<NTreeDecomposition, bases<regina::ShareableObject>,
+            std::auto_ptr<NTreeDecomposition>,
+            boost::noncopyable>("NTreeDecomposition", no_init)
+        .def(init<const regina::NTriangulation&>())
+        .def(init<const regina::NTriangulation&,
+            regina::TreeDecompositionAlg>())
+        .def(init<const regina::Dim2Triangulation&>())
+        .def(init<const regina::Dim2Triangulation&,
+            regina::TreeDecompositionAlg>())
+        .def(init<const regina::NFacePairing&>())
+        .def(init<const regina::NFacePairing&,
+            regina::TreeDecompositionAlg>())
+        .def(init<const regina::Dim2EdgePairing&>())
+        .def(init<const regina::Dim2EdgePairing&,
+            regina::TreeDecompositionAlg>())
+        .def("width", &NTreeDecomposition::width)
+        .def("size", &NTreeDecomposition::size)
+        .def("root", &NTreeDecomposition::root,
+            return_value_policy<reference_existing_object>())
+        .def("first", &NTreeDecomposition::first,
+            return_value_policy<reference_existing_object>())
+        .def("firstPrefix", &NTreeDecomposition::firstPrefix,
+            return_value_policy<reference_existing_object>())
+        .def("compress", &NTreeDecomposition::compress)
+        .def("makeNice", &NTreeDecomposition::makeNice)
+    ;
+}
+
