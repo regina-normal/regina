@@ -82,11 +82,17 @@ class REGINA_API NTreeBag : public ShareableObject {
         NTreeBag* parent_;
         NTreeBag* sibling_;
         NTreeBag* children_;
+        int type_;
+        int subtype_;
+        int index_;
+            /**< Undefined until set by NTreeDecomposition. */
 
     public:
         /**
-         * Note: the bag will not be inserted into the tree.
-         * That is, parent_, sibling_ and children_ will all be null.
+         * Note: only the list of elements will be cloned.
+         * The bag will not be inserted into the tree (so parent_, sibling_
+         * and children_ will all be null), and type and subtype will not
+         * be set.
          */
         NTreeBag(const NTreeBag& cloneMe);
         ~NTreeBag();
@@ -94,6 +100,7 @@ class REGINA_API NTreeBag : public ShareableObject {
         int size() const;
         int element(int which) const;
         bool contains(int element) const;
+        int index() const;
 
         BagComparison compare(const NTreeBag& rhs) const;
 
@@ -139,6 +146,7 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
         int width_;
             /**< The width of the tree decomposition; that is, one less
                  than the maximum bag size. */
+        int size_;
         NTreeBag* root_;
 
     public:
@@ -155,6 +163,7 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
         ~NTreeDecomposition();
 
         int width() const;
+        int size() const;
 
         const NTreeBag* root() const;
         const NTreeBag* first() const;
@@ -175,6 +184,7 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
          */
         void construct(Graph& graph, TreeDecompositionAlg alg);
         void greedyFillIn(Graph& graph);
+        void reindex();
 };
 
 /*@}*/
@@ -186,7 +196,9 @@ inline NTreeBag::NTreeBag(int size) :
         elements_(new int[size_]),
         parent_(0),
         sibling_(0),
-        children_(0) {
+        children_(0),
+        type_(0),
+        subtype_(0) {
 }
 
 inline NTreeBag::NTreeBag(const NTreeBag& cloneMe) :
@@ -194,7 +206,9 @@ inline NTreeBag::NTreeBag(const NTreeBag& cloneMe) :
         elements_(new int[cloneMe.size_]),
         parent_(0),
         sibling_(0),
-        children_(0) {
+        children_(0),
+        type_(0),
+        subtype_(0) {
     for (int i = 0; i < size_; ++i)
         elements_[i] = cloneMe.elements_[i];
 }
@@ -215,6 +229,10 @@ inline int NTreeBag::size() const {
 
 inline int NTreeBag::element(int which) const {
     return elements_[which];
+}
+
+inline int NTreeBag::index() const {
+    return index_;
 }
 
 inline void NTreeBag::insertChild(NTreeBag* child) {
@@ -238,12 +256,22 @@ inline int NTreeDecomposition::width() const {
     return width_;
 }
 
+inline int NTreeDecomposition::size() const {
+    return size_;
+}
+
 inline const NTreeBag* NTreeDecomposition::root() const {
     return root_;
 }
 
 inline const NTreeBag* NTreeDecomposition::firstPrefix() const {
     return root_;
+}
+
+inline void NTreeDecomposition::reindex() {
+    size_ = 0;
+    for (const NTreeBag* b = first(); b; b = b->next())
+        const_cast<NTreeBag*>(b)->index_ = size_++;
 }
 
 // Inline functions for NTreeDecomposition::Graph

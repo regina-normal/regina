@@ -141,6 +141,8 @@ void NTreeDecomposition::construct(Graph& graph, TreeDecompositionAlg alg) {
         default:
             greedyFillIn(graph);
     }
+
+    reindex();
 }
 
 void NTreeDecomposition::greedyFillIn(Graph& graph) {
@@ -366,15 +368,20 @@ bool NTreeDecomposition::compress() {
         siblingOf = nextIsSiblingOf;
     }
 
+    if (changed)
+        reindex();
     return changed;
 }
 
 void NTreeDecomposition::makeNice() {
     // TODO
+
+    reindex();
 }
 
 void NTreeDecomposition::writeTextShort(std::ostream& out) const {
-    out << "Tree decomposition of width " << width_;
+    out << "Tree decomposition: width " << width_
+        << ", size " << size_;
 }
 
 void NTreeDecomposition::writeTextLong(std::ostream& out) const {
@@ -388,7 +395,7 @@ void NTreeDecomposition::writeTextLong(std::ostream& out) const {
     while (b) {
         for (i = 0; i < indent; ++i)
             out << "  ";
-        out << "Bag (" << b->size_ << "):";
+        out << "Bag " << b->index_ << " [" << b->size_ << "]:";
         for (i = 0; i < b->size_; ++i)
             out << ' ' << b->elements_[i];
         out << std::endl;
