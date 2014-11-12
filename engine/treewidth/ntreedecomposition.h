@@ -85,7 +85,8 @@ class REGINA_API NTreeBag : public ShareableObject {
         int type_;
         int subtype_;
         int index_;
-            /**< Undefined until set by NTreeDecomposition. */
+            /**< Undefined until set by NTreeDecomposition.
+                 Otherwise ordered from leaves to root. */
 
     public:
         /**
