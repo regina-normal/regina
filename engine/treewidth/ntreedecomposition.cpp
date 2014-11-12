@@ -56,6 +56,26 @@ bool NTreeBag::contains(int element) const {
     return std::binary_search(elements_, elements_ + size_, element);
 }
 
+const NTreeBag* NTreeBag::nextPrefix() const {
+    if (children_)
+        return children_;
+
+    const NTreeBag* b = this;
+    while (b && ! b->sibling_)
+        b = b->parent_;
+    return (b ? b->sibling_ : 0);
+}
+
+const NTreeBag* NTreeBag::next() const {
+    if (! sibling_)
+        return parent_;
+
+    const NTreeBag* b = sibling_;
+    while (b && b->children_)
+        b = b->children_;
+    return b;
+}
+
 void NTreeBag::writeTextShort(std::ostream& out) const {
     if (size_ == 1)
         out << "Bag of 1 element:";
@@ -205,6 +225,24 @@ void NTreeDecomposition::greedyFillIn(Graph& graph) {
     delete[] elimOrder;
     delete[] elimStage;
     delete[] bags;
+}
+
+const NTreeBag* NTreeDecomposition::first() const {
+    if (! root_)
+        return 0;
+
+    NTreeBag* b = root_;
+    while (b->children_)
+        b = b->children_;
+    return b;
+}
+
+void NTreeDecomposition::compress() {
+    // TODO
+}
+
+void NTreeDecomposition::makeNice() {
+    // TODO
 }
 
 void NTreeDecomposition::writeTextShort(std::ostream& out) const {

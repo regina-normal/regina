@@ -88,6 +88,9 @@ class REGINA_API NTreeBag : public ShareableObject {
         int element(int which) const;
         bool contains(int element) const;
 
+        const NTreeBag* next() const;
+        const NTreeBag* nextPrefix() const;
+
         /**
          * Inserts as the first child.
          */
@@ -139,6 +142,13 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
         ~NTreeDecomposition();
 
         int width() const;
+
+        const NTreeBag* root() const;
+        const NTreeBag* first() const;
+        const NTreeBag* firstPrefix() const;
+
+        void compress();
+        void makeNice();
 
         void writeTextShort(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
@@ -205,6 +215,14 @@ inline NTreeDecomposition::~NTreeDecomposition() {
 
 inline int NTreeDecomposition::width() const {
     return width_;
+}
+
+inline const NTreeBag* NTreeDecomposition::root() const {
+    return root_;
+}
+
+inline const NTreeBag* NTreeDecomposition::firstPrefix() const {
+    return root_;
 }
 
 // Inline functions for NTreeDecomposition::Graph
