@@ -344,7 +344,7 @@ inline void NTreeDecomposition::reindex() {
 inline NTreeDecomposition::Graph::Graph(int order) :
         order_(order), adj_(new bool*[order]) {
     int i, j;
-    for (i = 0; i < order_; ++i) {
+    for (i = 0; i < order; ++i) {
         adj_[i] = new bool[order];
         for (j = 0; j < order; ++j)
             adj_[i][j] = false;
