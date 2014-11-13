@@ -114,10 +114,18 @@ class REGINA_API NTreeBag : public ShareableObject {
         bool contains(int element) const;
         int index() const;
 
+        int type() const;
+        int subtype() const;
+
         BagComparison compare(const NTreeBag& rhs) const;
 
         const NTreeBag* next() const;
         const NTreeBag* nextPrefix() const;
+
+        const NTreeBag* parent() const;
+        const NTreeBag* children() const;
+        const NTreeBag* sibling() const;
+        bool isLeaf() const;
 
         void writeTextShort(std::ostream& out) const;
 
@@ -266,6 +274,30 @@ inline int NTreeBag::element(int which) const {
 
 inline int NTreeBag::index() const {
     return index_;
+}
+
+inline int NTreeBag::type() const {
+    return type_;
+}
+
+inline int NTreeBag::subtype() const {
+    return subtype_;
+}
+
+inline const NTreeBag* NTreeBag::parent() const {
+    return parent_;
+}
+
+inline const NTreeBag* NTreeBag::children() const {
+    return children_;
+}
+
+inline const NTreeBag* NTreeBag::sibling() const {
+    return sibling_;
+}
+
+inline bool NTreeBag::isLeaf() const {
+    return (! children_);
 }
 
 inline void NTreeBag::insertChild(NTreeBag* child) {

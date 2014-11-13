@@ -85,11 +85,20 @@ void addNTreeDecomposition() {
         .def("element", &NTreeBag::element)
         .def("contains", &NTreeBag::contains)
         .def("index", &NTreeBag::index)
+        .def("type", &NTreeBag::type)
+        .def("subtype", &NTreeBag::subtype)
         .def("compare", &NTreeBag::compare)
         .def("next", &NTreeBag::next,
             return_value_policy<reference_existing_object>())
         .def("nextPrefix", &NTreeBag::nextPrefix,
             return_value_policy<reference_existing_object>())
+        .def("parent", &NTreeBag::parent,
+            return_value_policy<reference_existing_object>())
+        .def("children", &NTreeBag::children,
+            return_value_policy<reference_existing_object>())
+        .def("sibling", &NTreeBag::sibling,
+            return_value_policy<reference_existing_object>())
+        .def("isLeaf", &NTreeBag::isLeaf)
     ;
 
     class_<NTreeDecomposition, bases<regina::ShareableObject>,
