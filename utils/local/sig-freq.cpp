@@ -80,11 +80,11 @@ int main() {
         regina::NNormalSurfaceList* s;
 
         s = regina::NNormalSurfaceList::enumerate(tri, regina::NS_STANDARD);
-        ++sfreq[s->getNumberOfSurfaces()];
+        ++sfreq[s->size()];
         delete s;
 
         s = regina::NNormalSurfaceList::enumerate(tri, regina::NS_QUAD);
-        ++qfreq[s->getNumberOfSurfaces()];
+        ++qfreq[s->size()];
         delete s;
 
         delete tri;

@@ -16,6 +16,9 @@ Version 4.97  [ (under development) ]
         Class CompressionBuffer, CompressionStream, DecompressionBuffer,
                 DecompressionStream, ZBuffer:
             - Removed entirely.  Regina now uses boost::iostreams instead.
+        Class NAngleStructureList:
+            - Renamed getNumberOfStructures() to size().  The old name is
+              deprecated, but has been kept for backward compatibility.
         Class NExampleSnapPeaTriangulation:
             - New class for building ready-made SnapPea examples.
         Class NExampleTriangulation:
@@ -36,6 +39,9 @@ Version 4.97  [ (under development) ]
               which signals that the directory should not be changed.
         Class NNormalSurface:
             - New convenience routines normal() and embedded().
+        Class NNormalSurfaceList, NNormalSurfaceSubset:
+            - Renamed getNumberOfSurfaces() to size().  The old name is
+              deprecated, but has been kept for backward compatibility.
         Class NPacket:
             - Added a variant of save() that takes an output stream (as
               opposed to a filename).

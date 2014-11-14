@@ -2048,7 +2048,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 NNormalSurfaceList* s = NNormalSurfaceList::enumerate(
                     tri, regina::NS_STANDARD);
                 const NNormalSurface* f;
-                for (size_t i = 0; i < s->getNumberOfSurfaces(); ++i) {
+                for (size_t i = 0; i < s->size(); ++i) {
                     f = s->getSurface(i);
                     if (f->getEulerChar() == 2 &&
                             (! f->hasRealBoundary()) &&

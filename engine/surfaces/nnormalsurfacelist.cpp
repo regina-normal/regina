@@ -57,7 +57,7 @@ const NormalCoords NNormalSurfaceList::ORIENTED = NS_ORIENTED;
 const NormalCoords NNormalSurfaceList::ORIENTED_QUAD = NS_ORIENTED_QUAD;
 
 void NNormalSurfaceList::writeAllSurfaces(std::ostream& out) const {
-    unsigned long n = getNumberOfSurfaces();
+    unsigned long n = size();
     out << "Number of surfaces is " << n << '\n';
     for (unsigned long i = 0; i < n; i++) {
         getSurface(i)->writeTextShort(out);

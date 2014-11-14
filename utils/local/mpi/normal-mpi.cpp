@@ -400,7 +400,7 @@ int mainSlave() {
                 s = NNormalSurfaceList::enumerate(t,
                     (quad ? NS_QUAD : NS_STANDARD));
                 out << t->getNumberOfTetrahedra() << ' '
-                    << s->getNumberOfSurfaces() << " \""
+                    << s->size() << " \""
                     << t->getPacketLabel() << '"' << std::endl;
 
                 ++done;
