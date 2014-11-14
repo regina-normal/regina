@@ -1,3 +1,7 @@
+NEXT RELEASE:
+
+- Support files without container roots
+
 CLEAN UP:
 
 - MasterViewController
@@ -44,7 +48,6 @@ LONG-TERM:
 - Audit the use of UIAlert (should we use banners instead)?
 - See if we can't arrange syntax highlighting for the script viewer.
 - PDF viewer: use a filename based on the packet label.
-- Graphviz for dual graphs.
 - Surface coordinates viewer: support filters
 - Implement connectedSumWith.
 - Decide what to do about "ambiguous row height" warning in iOS 8 (FilterViewController, ScriptViewController)
