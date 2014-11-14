@@ -34,6 +34,8 @@ set (IMGS
   puncture
   randomise
   regina
+  signature-2d
+  signature-3d
   simplify
   snappea
   vtxlinks

@@ -516,14 +516,14 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
 
             regina::NNormalSurfaceList* s =
                 regina::NNormalSurfaceList::enumerate(t, regina::NS_QUAD);
-            if (s->getNumberOfSurfaces() != 4)
+            if (s->size() != 4)
                 CPPUNIT_FAIL(
                     "The figure 8 knot complement should have 4 vertex "
                     "surfaces in quad space.");
 
             regina::NMatrixInt* m;
             bool found[4];
-            for (int i = 0; i < s->getNumberOfSurfaces(); ++i) {
+            for (int i = 0; i < s->size(); ++i) {
                 m = s->getSurface(i)->boundaryIntersections();
                 if (m->rows() != 1 || m->columns() != 2) {
                     CPPUNIT_FAIL(

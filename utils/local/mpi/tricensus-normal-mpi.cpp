@@ -574,7 +574,7 @@ void slaveFoundGluingPerms(const regina::NGluingPermSearcher* perms, void*) {
                         regina::NNormalSurfaceList::enumerate(tri,
                         regina::NS_STANDARD);
                     sout << tri->getNumberOfTetrahedra() << ' '
-                        << s->getNumberOfSurfaces() << ' '
+                        << s->size() << ' '
                         << '#' << nSolns << '\n';
                 }
             }
@@ -592,7 +592,7 @@ void slaveFoundGluingPerms(const regina::NGluingPermSearcher* perms, void*) {
                         regina::NNormalSurfaceList::enumerate(tri,
                         regina::NS_QUAD);
                     qout << tri->getNumberOfTetrahedra() << ' '
-                        << s->getNumberOfSurfaces() << ' '
+                        << s->size() << ' '
                         << '#' << nSolns << '\n';
                 }
             }

@@ -248,10 +248,10 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             msg << "Number of " << listType << " for "
                 << list->getTriangulation()->getPacketLabel()
                 << " should be " << expectedSize << ", not "
-                << list->getNumberOfSurfaces() << '.';
+                << list->size() << '.';
 
             CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                list->getNumberOfSurfaces() == expectedSize);
+                list->size() == expectedSize);
         }
 
         void testSurface(const NNormalSurface* surface, const char* triName,
@@ -391,7 +391,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 bool realBdry, bool vertexLink, unsigned edgeLink,
                 unsigned long central, bool splitting) {
             unsigned long tot = 0;
-            unsigned long size = list->getNumberOfSurfaces();
+            unsigned long size = list->size();
 
             const NNormalSurface* s;
             for (unsigned long i = 0; i < size; i++) {
@@ -441,10 +441,10 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         static bool identical(const NNormalSurfaceList* lhs,
                 const NNormalSurfaceList* rhs) {
-            if (lhs->getNumberOfSurfaces() != rhs->getNumberOfSurfaces())
+            if (lhs->size() != rhs->size())
                 return false;
 
-            unsigned long n = lhs->getNumberOfSurfaces();
+            unsigned long n = lhs->size();
             if (n == 0)
                 return true;
 
@@ -625,7 +625,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 &figure8, NS_QUAD);
 
             testSize(list, "quad normal surfaces", 4);
-            for (unsigned long i = 0; i < list->getNumberOfSurfaces(); i++)
+            for (unsigned long i = 0; i < list->size(); i++)
                 testSurface(list->getSurface(i),
                     "the figure eight knot complement", "spun surface",
                     0 /* euler, N/A */, 0 /* connected, N/A */,
@@ -1791,7 +1791,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         static void testDisjoint(NTriangulation* tri) {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
                 tri, NS_AN_STANDARD);
-            unsigned long n = list->getNumberOfSurfaces();
+            unsigned long n = list->size();
 
             unsigned long i, j;
             const NNormalSurface *s, *t;
@@ -2048,7 +2048,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         static void testCutAlong(NTriangulation* tri) {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
                 tri, NS_STANDARD);
-            unsigned long n = list->getNumberOfSurfaces();
+            unsigned long n = list->size();
 
             const NNormalSurface *s;
             std::auto_ptr<NTriangulation> t;

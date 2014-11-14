@@ -583,10 +583,10 @@ void slaveFoundGluingPerms(const regina::NGluingPermSearcher* perms, void*) {
             regina::NNormalSurfaceList* s;
 
             s = regina::NNormalSurfaceList::enumerate(tri, regina::NS_STANDARD);
-            ++sfreq[s->getNumberOfSurfaces()];
+            ++sfreq[s->size()];
 
             s = regina::NNormalSurfaceList::enumerate(tri, regina::NS_QUAD);
-            ++qfreq[s->getNumberOfSurfaces()];
+            ++qfreq[s->size()];
         }
 
         // Toss away the triangulation (and any surface lists beneath it).

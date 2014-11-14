@@ -62,6 +62,7 @@ void addNAngleStructureList() {
         .def("getTriangulation", &NAngleStructureList::getTriangulation,
             return_value_policy<reference_existing_object>())
         .def("isTautOnly", &NAngleStructureList::isTautOnly)
+        .def("size", &NAngleStructureList::size)
         .def("getNumberOfStructures",
             &NAngleStructureList::getNumberOfStructures)
         .def("getStructure", &NAngleStructureList::getStructure,
