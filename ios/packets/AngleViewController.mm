@@ -73,7 +73,7 @@
 
 - (void)reloadPacket
 {
-    unsigned long count = self.packet->getNumberOfStructures();
+    unsigned long count = self.packet->size();
     if (self.packet->isTautOnly()) {
         if (count == 0)
             self.countAndType.text = @"No taut angle structures";
@@ -108,7 +108,7 @@
 - (void)initMetrics
 {
     widthHeader = [RegularSpreadHeaderCell
-                   cellSizeFor:[NSString stringWithFormat:@"%ld.", self.packet->getNumberOfStructures() - 1]].width;
+                   cellSizeFor:[NSString stringWithFormat:@"%ld.", self.packet->size() - 1]].width;
 
     CGSize s = [RegularSpreadViewCell cellSizeFor:@"Veering"];
     widthType = s.width;
@@ -153,7 +153,7 @@
 
 - (NSInteger)spreadView:(MDSpreadView *)aSpreadView numberOfRowsInSection:(NSInteger)section
 {
-    return self.packet->getNumberOfStructures();
+    return self.packet->size();
 }
 
 - (id)spreadView:(MDSpreadView *)aSpreadView titleForHeaderInRowSection:(NSInteger)section forColumnAtIndexPath:(MDIndexPath *)columnPath

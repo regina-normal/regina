@@ -175,7 +175,7 @@ struct CountSet {
     eulerBounded.clear();
     nSpun = 0;
     
-    unsigned long n = self.packet->getNumberOfSurfaces();
+    unsigned long n = self.packet->size();
     const regina::NNormalSurface* s;
     regina::NLargeInteger euler;
     for (unsigned long i = 0; i < n; ++i) {

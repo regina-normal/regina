@@ -178,7 +178,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
 
     widthProps = w;
 
-    widthHeader = [RegularSpreadHeaderCell cellSizeFor:[NSString stringWithFormat:@"%ld.", self.packet->getNumberOfSurfaces() - 1]].width;
+    widthHeader = [RegularSpreadHeaderCell cellSizeFor:[NSString stringWithFormat:@"%ld.", self.packet->size() - 1]].width;
 
     if (self.compact.on) {
         CGSize s = [CompactSpreadViewCell cellSizeFor:@"g00"];
@@ -221,7 +221,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
 }
 
 - (IBAction)cutAlong:(id)sender {
-    if (selectedRow == 0 || selectedRow > self.packet->getNumberOfSurfaces()) {
+    if (selectedRow == 0 || selectedRow > self.packet->size()) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Please Select a Surface"
                                                         message:nil
                                                        delegate:nil
@@ -268,7 +268,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
 }
 
 - (IBAction)crush:(id)sender {
-    if (selectedRow == 0 || selectedRow > self.packet->getNumberOfSurfaces()) {
+    if (selectedRow == 0 || selectedRow > self.packet->size()) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Please Select a Surface"
                                                         message:nil
                                                        delegate:nil
@@ -316,7 +316,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
 
 - (void)refreshActions
 {
-    self.cutAlongButton.enabled = self.crushButton.enabled = (selectedRow > 0 && selectedRow <= self.packet->getNumberOfSurfaces());
+    self.cutAlongButton.enabled = self.crushButton.enabled = (selectedRow > 0 && selectedRow <= self.packet->size());
 }
 
 #pragma mark - MDSpreadView data source
@@ -330,7 +330,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
 
 - (NSInteger)spreadView:(MDSpreadView *)aSpreadView numberOfRowsInSection:(NSInteger)section
 {
-    return self.packet->getNumberOfSurfaces();
+    return self.packet->size();
 }
 
 - (id)spreadView:(MDSpreadView *)aSpreadView titleForHeaderInColumnSection:(NSInteger)section forRowAtIndexPath:(MDIndexPath *)rowPath

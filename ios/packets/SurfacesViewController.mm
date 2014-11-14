@@ -74,13 +74,13 @@
     else
         sType = @"unknown";
 
-    if (self.packet->getNumberOfSurfaces() == 0)
+    if (self.packet->size() == 0)
         summary.text = [NSString stringWithFormat:@"No %@, %@ surfaces", sType, sEmb];
-    else if (self.packet->getNumberOfSurfaces() == 1)
+    else if (self.packet->size() == 1)
         summary.text = [NSString stringWithFormat:@"1 %@, %@ surface", sType, sEmb];
     else
         summary.text = [NSString stringWithFormat:@"%ld %@, %@ surfaces",
-                        self.packet->getNumberOfSurfaces(), sType, sEmb];
+                        self.packet->size(), sType, sEmb];
 
     coords.text = [NSString stringWithFormat:@"Enumerated in %@ coordinates", [Coordinates name:self.packet->coords() capitalise:NO]];
     [self updateTriangulationButton:tri];

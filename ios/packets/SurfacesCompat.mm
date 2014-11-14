@@ -101,7 +101,7 @@ static NSArray* typeText = @[@"Do surfaces have compatible quadrilateral and/or 
 
 - (void)buildLocal
 {
-    unsigned long n = self.packet->getNumberOfSurfaces();
+    unsigned long n = self.packet->size();
     unsigned long i, j;
     NSMutableArray* row;
     const regina::NNormalSurface* s;
@@ -118,7 +118,7 @@ static NSArray* typeText = @[@"Do surfaces have compatible quadrilateral and/or 
 
 - (void)buildGlobal
 {
-    unsigned long n = self.packet->getNumberOfSurfaces();
+    unsigned long n = self.packet->size();
     unsigned long i, j;
     NSMutableArray* row;
     const regina::NNormalSurface* s;
@@ -176,7 +176,7 @@ static NSArray* typeText = @[@"Do surfaces have compatible quadrilateral and/or 
     if (! self.packet)
         return;
     
-    unsigned long n = self.packet->getNumberOfSurfaces();
+    unsigned long n = self.packet->size();
     
     if (n == 0) {
         [self drawError:@"No surfaces to display"];
