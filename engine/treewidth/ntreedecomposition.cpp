@@ -52,6 +52,11 @@ template NTreeDecomposition::NTreeDecomposition(
 template NTreeDecomposition::NTreeDecomposition(
     const NGenericFacetPairing<3>&, TreeDecompositionAlg);
 
+template NTreeDecomposition::NTreeDecomposition(
+    unsigned, bool const**, TreeDecompositionAlg);
+template NTreeDecomposition::NTreeDecomposition(
+    unsigned, int const**, TreeDecompositionAlg);
+
 bool NTreeBag::contains(int element) const {
     return std::binary_search(elements_, elements_ + size_, element);
 }

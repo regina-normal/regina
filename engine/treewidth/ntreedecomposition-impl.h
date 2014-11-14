@@ -79,6 +79,20 @@ NTreeDecomposition::NTreeDecomposition(
     construct(g, alg);
 }
 
+template <typename T>
+NTreeDecomposition::NTreeDecomposition(unsigned order, T const** graph,
+        TreeDecompositionAlg alg) :
+        width_(0), root_(0) {
+    Graph g(order);
+
+    int i, j;
+    for (i = 0; i < order; ++i)
+        for (j = 0; j < order; ++j)
+            g.adj_[i][j] = graph[i][j] || graph[j][i];
+
+    construct(g, alg);
+}
+
 } // namespace regina
 
 #endif

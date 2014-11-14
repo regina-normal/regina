@@ -43,6 +43,69 @@ using namespace boost::python;
 using regina::NTreeBag;
 using regina::NTreeDecomposition;
 
+namespace {
+    NTreeDecomposition* fromListAlg(boost::python::list graph,
+            regina::TreeDecompositionAlg alg = regina::TD_UPPER) {
+        long len = boost::python::len(graph);
+
+        long i, j, k;
+        bool** g = new bool*[len];
+        boost::python::list row;
+
+        for (i = 0; i < len; ++i) {
+            g[i] = new bool[len];
+
+            extract<boost::python::list> x_list(graph[i]);
+            if (! x_list.check()) {
+                // Throw an exception.
+                for (k = 0; k <= i; ++k)
+                    delete[] g[k];
+                delete[] g;
+                x_list();
+            }
+
+            row = x_list();
+            if (boost::python::len(row) != len) {
+                // Throw an exception.
+                for (k = 0; k <= i; ++k)
+                    delete[] g[k];
+                delete[] g;
+
+                PyErr_SetString(PyExc_ValueError,
+                    "Initialisation list does not describe a square matrix.");
+                boost::python::throw_error_already_set();
+            }
+
+            for (j = 0; j < len; ++j) {
+                extract<bool> val(row[j]);
+                if (val.check()) {
+                    g[i][j] = val();
+                    continue;
+                }
+
+                // Throw an exception.
+                for (k = 0; k <= i; ++k)
+                    delete[] g[k];
+                delete[] g;
+                val();
+            }
+        }
+
+        NTreeDecomposition* ans = new NTreeDecomposition(
+            len, const_cast<bool const**>(g), alg);
+
+        for (i = 0; i < len; ++i)
+            delete[] g[i];
+        delete[] g;
+
+        return ans;
+    }
+
+    inline NTreeDecomposition* fromList(boost::python::list graph) {
+        return fromListAlg(graph);
+    }
+}
+
 void addNTreeDecomposition() {
     scope global;
 
@@ -116,6 +179,8 @@ void addNTreeDecomposition() {
         .def(init<const regina::Dim2EdgePairing&>())
         .def(init<const regina::Dim2EdgePairing&,
             regina::TreeDecompositionAlg>())
+        .def("__init__", make_constructor(fromListAlg))
+        .def("__init__", make_constructor(fromList))
         .def("width", &NTreeDecomposition::width)
         .def("size", &NTreeDecomposition::size)
         .def("root", &NTreeDecomposition::root,

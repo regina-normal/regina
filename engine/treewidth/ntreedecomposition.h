@@ -189,6 +189,14 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
             const NGenericFacetPairing<dim>& pairing,
             TreeDecompositionAlg alg = TD_UPPER);
 
+        /**
+         * Note: if the matrix is asymmetric (a digraph), then the
+         * undirected graph will be used.  Loops are ignored.
+         */
+        template <typename T>
+        NTreeDecomposition(unsigned order, T const** const graph,
+            TreeDecompositionAlg alg = TD_UPPER);
+
         ~NTreeDecomposition();
 
         int width() const;
