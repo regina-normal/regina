@@ -62,7 +62,7 @@ SurfaceModel::SurfaceModel(regina::NNormalSurfaceList* surfaces,
         surfaces_(surfaces),
         coordSystem_(surfaces->coords()),
         isReadWrite(readWrite) {
-    nFiltered = surfaces_->getNumberOfSurfaces();
+    nFiltered = surfaces_->size();
     if (nFiltered == 0)
         realIndex = 0;
     else {
@@ -86,11 +86,11 @@ void SurfaceModel::rebuild(regina::NormalCoords coordSystem,
 
     delete[] realIndex;
     nFiltered = 0;
-    if (surfaces_->getNumberOfSurfaces() == 0)
+    if (surfaces_->size() == 0)
         realIndex = 0;
     else {
-        realIndex = new unsigned[surfaces_->getNumberOfSurfaces()];
-        for (unsigned i = 0; i < surfaces_->getNumberOfSurfaces(); ++i)
+        realIndex = new unsigned[surfaces_->size()];
+        for (unsigned i = 0; i < surfaces_->size(); ++i)
             if ((! filter) || filter->accept(*surfaces_->getSurface(i)))
                 realIndex[nFiltered++] = i;
     }

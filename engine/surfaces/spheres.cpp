@@ -57,7 +57,7 @@ NNormalSurface* NNormalSurface::findNonTrivialSphere(NTriangulation* tri) {
     // or 1-sided projective planes.
     NNormalSurfaceList* surfaces = NNormalSurfaceList::enumerate(tri,
         NS_STANDARD);
-    unsigned long nSurfaces = surfaces->getNumberOfSurfaces();
+    unsigned long nSurfaces = surfaces->size();
 
     const NNormalSurface* s;
     NLargeInteger chi;
@@ -98,7 +98,7 @@ NNormalSurface* NNormalSurface::findVtxOctAlmostNormalSphere(
 
     NNormalSurfaceList* surfaces = NNormalSurfaceList::enumerate(tri, quadOct ?
         NS_AN_QUAD_OCT : NS_AN_STANDARD);
-    unsigned long nSurfaces = surfaces->getNumberOfSurfaces();
+    unsigned long nSurfaces = surfaces->size();
     unsigned long nTets = tri->getNumberOfTetrahedra();
 
     // Note that our surfaces are guaranteed to be in smallest possible

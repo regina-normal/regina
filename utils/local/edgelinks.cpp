@@ -167,7 +167,7 @@ bool process(const std::string& filename) {
             s = NNormalSurfaceList::enumerate(t, NS_QUAD);
 
             links = 0;
-            n = s->getNumberOfSurfaces();
+            n = s->size();
             for (i = 0; i < n; ++i)
                 if (s->getSurface(i)->isThinEdgeLink().first)
                     ++links;

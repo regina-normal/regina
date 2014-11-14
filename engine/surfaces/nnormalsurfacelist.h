@@ -674,7 +674,16 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          */
         NTriangulation* getTriangulation() const;
         /**
-         * Returns the number of surfaces stored in this set.
+         * Returns the number of surfaces stored in this list.
+         *
+         * @return the number of surfaces.
+         */
+        unsigned long size() const;
+        /**
+         * Deprecated routine to return the number of surfaces
+         * stored in this list.
+         *
+         * \deprecated Please use the identical routine size() instead.
          *
          * @return the number of surfaces.
          */
@@ -683,7 +692,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * Returns the surface at the requested index in this set.
          *
          * @param index the index of the requested surface in this set;
-         * this must be between 0 and getNumberOfSurfaces()-1 inclusive.
+         * this must be between 0 and size()-1 inclusive.
          *
          * @return the normal surface at the requested index in this set.
          */
@@ -1780,6 +1789,9 @@ inline bool NNormalSurfaceList::isEmbeddedOnly() const {
     return which_.has(NS_EMBEDDED_ONLY);
 }
 
+inline unsigned long NNormalSurfaceList::size() const {
+    return surfaces.size();
+}
 inline unsigned long NNormalSurfaceList::getNumberOfSurfaces() const {
     return surfaces.size();
 }

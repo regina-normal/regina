@@ -103,7 +103,7 @@ NNormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
         (isValid() && ! isIdeal()) ? NS_QUAD : NS_STANDARD);
     const NNormalSurface* s;
     NNormalSurface* ans = 0;
-    for (size_t i = 0; i < surfaces->getNumberOfSurfaces() && ! ans; ++i) {
+    for (size_t i = 0; i < surfaces->size() && ! ans; ++i) {
         s = surfaces->getSurface(i);
 
         // These are vertex surfaces, so we know they must be connected.
@@ -175,7 +175,7 @@ NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
     unsigned oct;
     bool found, broken;
     NLargeInteger coord;
-    for (size_t i = 0; i < surfaces->getNumberOfSurfaces() && ! ans; ++i) {
+    for (size_t i = 0; i < surfaces->size() && ! ans; ++i) {
         s = surfaces->getSurface(i);
 
         // These are vertex surfaces, so we know they must be connected.
@@ -253,7 +253,7 @@ bool NTriangulation::hasSplittingSurface() {
         NS_STANDARD);
 
     // Run through all vertex surfaces.
-    unsigned long nSurfaces = surfaces->getNumberOfSurfaces();
+    unsigned long nSurfaces = surfaces->size();
     const NNormalSurface* s;
     NLargeInteger chi;
     for (unsigned long i = 0; i < nSurfaces; i++) {

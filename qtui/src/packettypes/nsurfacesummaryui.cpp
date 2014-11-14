@@ -159,7 +159,7 @@ QWidget* NSurfaceSummaryUI::getInterface() {
 }
 
 void NSurfaceSummaryUI::refresh() {
-    unsigned long n = surfaces->getNumberOfSurfaces();
+    unsigned long n = surfaces->size();
 
     unsigned long spun = 0;
     unsigned long bounded = 0;

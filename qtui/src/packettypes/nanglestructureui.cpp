@@ -64,7 +64,7 @@ void AngleModel::rebuild() {
 }
 
 int AngleModel::rowCount(const QModelIndex& /* unused parent */) const {
-    return structures_->getNumberOfStructures();
+    return structures_->size();
 }
 
 int AngleModel::columnCount(const QModelIndex& /* unused parent */) const {
@@ -238,7 +238,7 @@ void NAngleStructureUI::refreshHeader() {
     QString count, span;
 
     // Update the general statistics.
-    unsigned long nStructs = model->structures()->getNumberOfStructures();
+    unsigned long nStructs = model->structures()->size();
     if (model->structures()->isTautOnly()) {
         if (nStructs == 0)
             count = tr("No taut angle structures");
