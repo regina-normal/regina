@@ -302,7 +302,7 @@ void NNormalHypersurfaceList::writeTextLong(std::ostream& o) const {
     o << "Coordinates: " << forCoords(coords_, NameFunction(), "Unknown")
         << '\n';
 
-    unsigned long n = getNumberOfHypersurfaces();
+    unsigned long n = size();
     o << "Number of hypersurfaces is " << n << '\n';
     for (unsigned long i = 0; i < n; i++) {
         getHypersurface(i)->writeTextShort(o);

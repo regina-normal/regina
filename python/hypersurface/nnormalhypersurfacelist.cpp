@@ -136,8 +136,7 @@ void addNNormalHypersurfaceList() {
         .def("isEmbeddedOnly", &NNormalHypersurfaceList::isEmbeddedOnly)
         .def("getTriangulation", &NNormalHypersurfaceList::getTriangulation,
             return_value_policy<reference_existing_object>())
-        .def("getNumberOfHypersurfaces",
-            &NNormalHypersurfaceList::getNumberOfHypersurfaces)
+        .def("size", &NNormalHypersurfaceList::size)
         .def("getHypersurface", &NNormalHypersurfaceList::getHypersurface,
             return_internal_reference<>())
         .staticmethod("enumerate")
