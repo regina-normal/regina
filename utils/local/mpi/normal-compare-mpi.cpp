@@ -430,12 +430,12 @@ int mainSlave() {
         clockStart = ::clock();
         q = NNormalSurfaceList::enumerate(t, NS_QUAD, true);
         timeQuad = ::clock() - clockStart;
-        numQuad = q->getNumberOfSurfaces();
+        numQuad = q->size();
 
         clockStart = ::clock();
         s = q->quadToStandard();
         timeConv = ::clock() - clockStart;
-        numStd = s->getNumberOfSurfaces();
+        numStd = s->size();
 
         q->makeOrphan(); delete q;
         s->makeOrphan(); delete s;
@@ -443,10 +443,10 @@ int mainSlave() {
         clockStart = ::clock();
         s = NNormalSurfaceList::enumerateStandardDirect(t);
         timeStd = ::clock() - clockStart;
-        if (s->getNumberOfSurfaces() != numStd) {
+        if (s->size() != numStd) {
             s->makeOrphan(); delete s;
             slaveSendError(RESULT_ERR_BADANS, numStd,
-                s->getNumberOfSurfaces());
+                s->size());
             continue;
         }
 

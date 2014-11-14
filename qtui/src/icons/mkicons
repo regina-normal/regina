@@ -8,25 +8,26 @@ my @actionIcons = qw/
     barycentric
     canonical
     components
+    cone
     connectedsum
     connectedsumwith
+    csvexport
     dehydrated
     doublecover
     drilledge
     fill
+    finite
     locked
     orb
     orient
     packet_view
     puncture
     randomise
+    signature-2d
+    signature-3d
     simplify
     vtxlinks
     /;
-#    cone
-#    csvexport
-#    finite
-#    signature
 
 my @packetIcons = qw/
     angles
@@ -43,9 +44,6 @@ my @packetIcons = qw/
     triangulation
     /;
 
-#    regina
-#    x-regina
-
 my $aux = undef;
 
 sub usage {
@@ -60,12 +58,23 @@ sub render {
     my $size = shift;
     my $filename = shift;
 
+    my $custom = 0;
     if ($size <= 16) {
         my $lores = $src;
         $lores =~ s/\.svg$/-lores.svg/;
         if (-e $lores) {
             print "Using lo-res SVG: $filename\n";
             $src = $lores;
+            $custom = 1;
+        }
+    }
+    if (not $custom) {
+        my $lores = $src;
+        $lores =~ s/\.svg$/-$size.svg/;
+        if (-e $lores) {
+            print "Using ${size}x SVG: $filename\n";
+            $src = $lores;
+            $custom = 1;
         }
     }
 

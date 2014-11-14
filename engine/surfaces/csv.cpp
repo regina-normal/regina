@@ -200,7 +200,7 @@ bool NNormalSurfaceList::saveCSVStandard(const char* filename,
     out << std::endl;
 
     // Write the data for individual surfaces.
-    unsigned long tot = getNumberOfSurfaces();
+    unsigned long tot = size();
     const NNormalSurface* s;
     for (i = 0; i < tot; ++i) {
         s = getSurface(i);
@@ -258,7 +258,7 @@ bool NNormalSurfaceList::saveCSVEdgeWeight(const char* filename,
     out << std::endl;
 
     // Write the data for individual surfaces.
-    unsigned long tot = getNumberOfSurfaces();
+    unsigned long tot = size();
     const NNormalSurface* s;
     for (i = 0; i < tot; ++i) {
         s = getSurface(i);

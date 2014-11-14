@@ -128,7 +128,7 @@ NSurfaceCompatibilityUI::~NSurfaceCompatibilityUI() {
 }
 
 void NSurfaceCompatibilityUI::updatePreferences() {
-    if ((! matrixLocal) && surfaces->getNumberOfSurfaces() <= 
+    if ((! matrixLocal) && surfaces->size() <= 
             ReginaPrefSet::global().surfacesCompatThreshold)
         refresh();
 }
@@ -157,7 +157,7 @@ void NSurfaceCompatibilityUI::refresh() {
     layerLocal = layerGlobal = 0;
 
     // Are we able to compute the new matrices if we want to?
-    if (surfaces->getNumberOfSurfaces() == 0) {
+    if (surfaces->size() == 0) {
         setMessage(EMPTY_LIST);
         return;
     }
@@ -167,7 +167,7 @@ void NSurfaceCompatibilityUI::refresh() {
     }
 
     // Should we compute new matrices?
-    if ((! requestedCalculation) && surfaces->getNumberOfSurfaces() >
+    if ((! requestedCalculation) && surfaces->size() >
             ReginaPrefSet::global().surfacesCompatThreshold) {
         // Nope.
         setMessage(TOO_LARGE);
@@ -176,8 +176,8 @@ void NSurfaceCompatibilityUI::refresh() {
     }
 
     // Yes, we should compute new matrices.
-    matrixLocal = new NCompatCanvas(surfaces->getNumberOfSurfaces());
-    matrixGlobal = new NCompatCanvas(surfaces->getNumberOfSurfaces());
+    matrixLocal = new NCompatCanvas(surfaces->size());
+    matrixGlobal = new NCompatCanvas(surfaces->size());
 
     layerLocal = new QGraphicsView(matrixLocal);
     stack->addWidget(layerLocal);

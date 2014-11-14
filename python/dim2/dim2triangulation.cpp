@@ -178,6 +178,7 @@ void addDim2Triangulation() {
         .def("isContainedIn", isContainedIn_ptr,
             return_value_policy<manage_new_object>())
         .def("isEmpty", &Dim2Triangulation::isEmpty)
+        .def("size", &Dim2Triangulation::size)
         .def("isValid", &Dim2Triangulation::isValid)
         .def("getEulerChar", &Dim2Triangulation::getEulerChar)
         .def("isClosed", &Dim2Triangulation::isClosed)

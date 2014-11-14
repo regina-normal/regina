@@ -137,13 +137,13 @@ void NSurfaceHeaderUI::refresh() {
     // sType.append(QString(" [%1]").arg(alg.intValue()));
 
     QString count;
-    if (surfaces->getNumberOfSurfaces() == 0)
+    if (surfaces->size() == 0)
         count = header->tr("No %1, %2 surfaces").arg(sType).arg(sEmb);
-    else if (surfaces->getNumberOfSurfaces() == 1)
+    else if (surfaces->size() == 1)
         count = header->tr("1 %1, %2 surface").arg(sType).arg(sEmb);
     else
         count = header->tr("%1 %2, %3 surfaces").arg(
-            surfaces->getNumberOfSurfaces()).arg(sType).arg(sEmb);
+            surfaces->size()).arg(sType).arg(sEmb);
 
     header->setText(header->tr(
         "<qt>%1<br>Enumerated in %2 coordinates<br>"

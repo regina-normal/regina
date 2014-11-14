@@ -104,10 +104,10 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
                 std::ostringstream msg;
                 msg << "Number of angle structures for " << triName
                     << " should be " << expectedSize << ", not "
-                    << list->getNumberOfStructures() << '.';
+                    << list->size() << '.';
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    list->getNumberOfStructures() == expectedSize);
+                    list->size() == expectedSize);
             }
             {
                 std::ostringstream msg;
@@ -137,7 +137,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
                 const char* triName, unsigned long expectedCount,
                 bool strict, bool taut) {
             unsigned long tot = 0;
-            unsigned long size = list->getNumberOfStructures();
+            unsigned long size = list->size();
 
             const NAngleStructure* s;
             for (unsigned long i = 0; i < size; i++) {
@@ -222,10 +222,10 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
             }
 
             NAngleStructureList* a = NAngleStructureList::enumerate(tri, true);
-            if (a->getNumberOfStructures() != nTaut) {
+            if (a->size() != nTaut) {
                 std::ostringstream msg;
                 msg << "Taut angle structures for " << isoSig << ": "
-                    "found " << a->getNumberOfStructures()
+                    "found " << a->size()
                     << " structures instead of the expected " << nTaut << ".";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -233,7 +233,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
             unsigned long i, j, k;
             regina::NRational tmp, tot;
             regina::NEdge* e;
-            for (i = 0; i < a->getNumberOfStructures(); ++i) {
+            for (i = 0; i < a->size(); ++i) {
                 const NAngleStructure* s = a->getStructure(i);
 
                 for (j = 0; j < tri->getNumberOfTetrahedra(); ++j) {
@@ -344,11 +344,11 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
             unsigned nAll = 0, nTaut = 0;
             unsigned i;
 
-            for (i = 0; i < all->getNumberOfStructures(); ++i)
+            for (i = 0; i < all->size(); ++i)
                 if (all->getStructure(i)->isTaut())
                     ++nAll;
 
-            for (i = 0; i < taut->getNumberOfStructures(); ++i)
+            for (i = 0; i < taut->size(); ++i)
                 if (taut->getStructure(i)->isTaut())
                     ++nTaut;
                 else {
@@ -406,10 +406,10 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
 
         static bool identical(const NAngleStructureList* lhs,
                 const NAngleStructureList* rhs) {
-            if (lhs->getNumberOfStructures() != rhs->getNumberOfStructures())
+            if (lhs->size() != rhs->size())
                 return false;
 
-            unsigned long n = lhs->getNumberOfStructures();
+            unsigned long n = lhs->size();
             if (n == 0)
                 return true;
 
@@ -440,11 +440,11 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
 
         static bool identicalTaut(const NAngleStructureList* all,
                 const NAngleStructureList* taut) {
-            if (all->getNumberOfStructures() < taut->getNumberOfStructures())
+            if (all->size() < taut->size())
                 return false;
 
-            unsigned long nAll = all->getNumberOfStructures();
-            unsigned long nTaut = taut->getNumberOfStructures();
+            unsigned long nAll = all->size();
+            unsigned long nTaut = taut->size();
 
             typedef const NAngleStructureVector* VecPtr;
             VecPtr* allRaw = new VecPtr[nAll + 1];

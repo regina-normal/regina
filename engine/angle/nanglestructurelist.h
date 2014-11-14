@@ -137,14 +137,22 @@ class REGINA_API NAngleStructureList : public NPacket {
          *
          * @return the number of angle structures.
          */
+        unsigned long size() const;
+        /**
+         * Deprecated routine to return the number of angle structures
+         * stored in this list.
+         *
+         * \deprecated Please use the identical routine size() instead.
+         *
+         * @return the number of angle structures.
+         */
         unsigned long getNumberOfStructures() const;
         /**
          * Returns the angle structure at the requested index in this
          * list.
          *
          * @param index the index of the requested angle structure in
-         * this list; this must be between 0 and
-         * getNumberOfStructures()-1 inclusive.
+         * this list; this must be between 0 and size()-1 inclusive.
          * @return the angle structure at the requested index.
          */
         const NAngleStructure* getStructure(unsigned long index) const;
@@ -448,6 +456,9 @@ inline bool NAngleStructureList::isTautOnly() const {
     return tautOnly_;
 }
 
+inline unsigned long NAngleStructureList::size() const {
+    return structures.size();
+}
 inline unsigned long NAngleStructureList::getNumberOfStructures() const {
     return structures.size();
 }

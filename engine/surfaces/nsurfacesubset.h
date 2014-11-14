@@ -156,7 +156,16 @@ class REGINA_API NSurfaceSubset : public ShareableObject {
         NTriangulation* getTriangulation() const;
 
         /**
-         * Returns the number of surfaces stored in this set.
+         * Returns the number of surfaces stored in this list.
+         *
+         * @return the number of surfaces.
+         */
+        unsigned long size() const;
+        /**
+         * Deprecated routine to return the number of surfaces
+         * stored in this list.
+         *
+         * \deprecated Please use the identical routine size() instead.
          *
          * @return the number of surfaces.
          */
@@ -165,7 +174,7 @@ class REGINA_API NSurfaceSubset : public ShareableObject {
          * Returns the surface at the requested index in this set.
          *
          * @param index the index of the requested surface in this set;
-         * this must be between 0 and getNumberOfSurfaces()-1 inclusive.
+         * this must be between 0 and size()-1 inclusive.
          *
          * @return the normal surface at the requested index in this set.
          */
@@ -214,6 +223,9 @@ inline bool NSurfaceSubset::isEmbeddedOnly() const {
 }
 inline NTriangulation* NSurfaceSubset::getTriangulation() const {
     return source.getTriangulation();
+}
+inline unsigned long NSurfaceSubset::size() const {
+    return surfaces.size();
 }
 inline unsigned long NSurfaceSubset::getNumberOfSurfaces() const {
     return surfaces.size();

@@ -879,7 +879,7 @@ bool NTriangulation::hasCompressingDisc() const {
                     NNormalSurfaceList* q = NNormalSurfaceList::enumerate(
                         use, NS_STANDARD);
 
-                    unsigned long nSurfaces = q->getNumberOfSurfaces();
+                    unsigned long nSurfaces = q->size();
                     for (unsigned long i = 0; i < nSurfaces; ++i) {
                         if (q->getSurface(i)->isCompressingDisc(true)) {
                             delete use;
@@ -939,7 +939,7 @@ bool NTriangulation::hasCompressingDisc() const {
         NNormalSurfaceList* q = NNormalSurfaceList::enumerate(use, NS_STANDARD);
 
         // Run through all vertex surfaces looking for a compressing disc.
-        unsigned long nSurfaces = q->getNumberOfSurfaces();
+        unsigned long nSurfaces = q->size();
         for (unsigned long i = 0; i < nSurfaces; ++i) {
             // Use the fact that all vertex normal surfaces are connected.
             if (q->getSurface(i)->isCompressingDisc(true)) {
@@ -1169,15 +1169,15 @@ bool NTriangulation::isHaken() const {
     // Run through each surface, one at a time.
     // Sort them first however, so we process the (easier) smaller genus
     // surfaces first.
-    SurfaceID* id = new SurfaceID[list->getNumberOfSurfaces()];
+    SurfaceID* id = new SurfaceID[list->size()];
     unsigned i;
-    for (i = 0; i < list->getNumberOfSurfaces(); ++i) {
+    for (i = 0; i < list->size(); ++i) {
         id[i].index = i;
         id[i].euler = list->getSurface(i)->getEulerChar().longValue();
     }
-    std::sort(id, id + list->getNumberOfSurfaces());
+    std::sort(id, id + list->size());
 
-    for (unsigned i = 0; i < list->getNumberOfSurfaces(); ++i) {
+    for (unsigned i = 0; i < list->size(); ++i) {
         // std::cout << "Testing surface " << i << "..." << std::endl;
         if (list->getSurface(id[i].index)->isIncompressible()) {
             delete[] id;

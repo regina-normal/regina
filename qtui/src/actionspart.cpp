@@ -137,7 +137,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&Isomorphism Signature List (2-D)"));
-    act->setIcon(ReginaSupport::themeIcon("document-sign"));
+    act->setIcon(ReginaSupport::regIcon("signature-2d"));
     act->setToolTip(tr("Import an isomorphism signature list "
         "for 2-manifold triangulations"));
     act->setWhatsThis(tr("Import an external text file containing "
@@ -150,7 +150,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&Isomorphism Signature List (3-D)"));
-    act->setIcon(ReginaSupport::themeIcon("document-sign"));
+    act->setIcon(ReginaSupport::regIcon("signature-3d"));
     act->setToolTip(tr("Import an isomorphism signature list "
         "for 3-manifold triangulations"));
     act->setWhatsThis(tr("Import an external text file containing "
