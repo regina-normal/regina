@@ -222,6 +222,14 @@ namespace {
         // Run through all admissible colourings.
         std::complex<double> ans = 0.0;
 
+        // Compute the vertex contributions separately, since these are
+        // constant.
+        std::complex<double> vertexContrib = 1.0;
+        unsigned long i;
+        for (i = 0; i < tri.getNumberOfVertices(); i++)
+            vertexContrib *= init.vertexContrib;
+
+        // Now hunt for colourings.
         unsigned long nEdges = tri.getNumberOfEdges();
         unsigned long nTriangles = tri.getNumberOfTriangles();
         unsigned long* colour = new unsigned long[nEdges];
@@ -234,14 +242,11 @@ namespace {
         long index1, index2;
         NTriangle* triangle;
         const NTetrahedron* tet;
-        unsigned long i;
         while (curr >= 0) {
             // Have we found an admissible colouring?
             if (curr >= static_cast<long>(nEdges)) {
                 // Increment ans appropriately.
                 valColour = 1.0;
-                for (i = 0; i < tri.getNumberOfVertices(); i++)
-                    valColour *= init.vertexContrib;
                 for (i = 0; i < nEdges; i++)
                     valColour *= init.edgeContrib(colour[i]);
                 for (i = 0; i < nTriangles; i++) {
@@ -312,6 +317,8 @@ namespace {
         }
 
         delete[] colour;
+
+        ans *= vertexContrib;
         return ans;
     }
 
