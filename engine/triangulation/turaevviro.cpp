@@ -215,6 +215,46 @@ namespace {
             }
             return ans;
         }
+
+        /**
+         * Multiplies a single tetrahedron-based contribution with all
+         * triangle contributions for which that tetrahedron is responsible.
+         * A tetrahedron is "responsible" for a triangle contribution iff
+         * it is the tetrahedron referenced by triangle->getEmbedding(0).
+         *
+         * The six arguments colour0, ..., colour5 refer to the colours
+         * on tetrahedron edges 0, ..., 5 respectively.
+         */
+        std::complex<double> tetContrib(const NTetrahedron* tet,
+                unsigned long colour0, unsigned long colour1,
+                unsigned long colour2, unsigned long colour3,
+                unsigned long colour4, unsigned long colour5) const {
+            std::complex<double> ans = tetContrib(
+                colour0, colour1, colour3, colour5, colour4, colour2);
+            int i;
+            const NTriangle* triangle;
+            for (i = 0; i < 4; ++i) {
+                triangle = tet->getTriangle(i);
+                if (triangle->getEmbedding(0).getTetrahedron() == tet &&
+                        triangle->getEmbedding(0).getTriangle() == i) {
+                    switch (i) {
+                        case 0:
+                            ans *= triContrib(colour3, colour4, colour5);
+                            break;
+                        case 1:
+                            ans *= triContrib(colour1, colour2, colour5);
+                            break;
+                        case 2:
+                            ans *= triContrib(colour0, colour2, colour4);
+                            break;
+                        case 3:
+                            ans *= triContrib(colour0, colour1, colour3);
+                            break;
+                    }
+                }
+            }
+            return ans;
+        }
     };
 
     std::complex<double> turaevViroBacktrack(const NTriangulation& tri,
@@ -240,7 +280,6 @@ namespace {
         bool admissible;
         std::deque<NEdgeEmbedding>::const_iterator embit;
         long index1, index2;
-        NTriangle* triangle;
         const NTetrahedron* tet;
         while (curr >= 0) {
             // Have we found an admissible colouring?
@@ -249,22 +288,15 @@ namespace {
                 valColour = 1.0;
                 for (i = 0; i < nEdges; i++)
                     valColour *= init.edgeContrib(colour[i]);
-                for (i = 0; i < nTriangles; i++) {
-                    triangle = tri.getTriangle(i);
-                    valColour *= init.triContrib(
-                        colour[tri.edgeIndex(triangle->getEdge(0))],
-                        colour[tri.edgeIndex(triangle->getEdge(1))],
-                        colour[tri.edgeIndex(triangle->getEdge(2))]);
-                }
                 for (i = 0; i < tri.getNumberOfTetrahedra(); i++) {
                     tet = tri.getTetrahedron(i);
-                    valColour *= init.tetContrib(
+                    valColour *= init.tetContrib(tet,
                         colour[tri.edgeIndex(tet->getEdge(0))],
                         colour[tri.edgeIndex(tet->getEdge(1))],
+                        colour[tri.edgeIndex(tet->getEdge(2))],
                         colour[tri.edgeIndex(tet->getEdge(3))],
-                        colour[tri.edgeIndex(tet->getEdge(5))],
                         colour[tri.edgeIndex(tet->getEdge(4))],
-                        colour[tri.edgeIndex(tet->getEdge(2))]
+                        colour[tri.edgeIndex(tet->getEdge(5))]
                         );
                 }
 
