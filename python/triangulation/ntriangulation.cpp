@@ -92,6 +92,8 @@ namespace {
         NTriangulation::connectedSumDecomposition, 0, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_puncture,
         NTriangulation::puncture, 0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_turaevViro,
+        NTriangulation::turaevViro, 2, 3);
 
     void simplifiedFundamentalGroup_own(NTriangulation& tri,
             std::auto_ptr<regina::NGroupPresentation> group) {
@@ -189,6 +191,18 @@ namespace {
 }
 
 void addNTriangulation() {
+    scope global;
+
+    enum_<regina::TuraevViroAlg>("TuraevViroAlg")
+        .value("TV_DEFAULT", regina::TV_DEFAULT)
+        .value("TV_BACKTRACK", regina::TV_BACKTRACK)
+        .value("TV_TREEWIDTH", regina::TV_TREEWIDTH)
+        ;
+
+    global.attr("TV_DEFAULT") = regina::TV_DEFAULT;
+    global.attr("TV_BACKTRACK") = regina::TV_BACKTRACK;
+    global.attr("TV_TREEWIDTH") = regina::TV_TREEWIDTH;
+
     scope s = class_<NTriangulation, bases<regina::NPacket>,
             std::auto_ptr<NTriangulation>,
             boost::noncopyable>("NTriangulation")
@@ -291,7 +305,7 @@ void addNTriangulation() {
         .def("getHomologyH2", &NTriangulation::getHomologyH2,
             return_internal_reference<>())
         .def("getHomologyH2Z2", &NTriangulation::getHomologyH2Z2)
-        .def("turaevViro", &NTriangulation::turaevViro)
+        .def("turaevViro", &NTriangulation::turaevViro, OL_turaevViro())
         .def("isZeroEfficient", &NTriangulation::isZeroEfficient)
         .def("knowsZeroEfficient", &NTriangulation::knowsZeroEfficient)
         .def("hasSplittingSurface", &NTriangulation::hasSplittingSurface)

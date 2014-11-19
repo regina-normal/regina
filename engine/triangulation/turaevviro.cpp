@@ -176,7 +176,7 @@ namespace {
          */
         std::complex<double> tetContrib(unsigned long i, unsigned long j,
                 unsigned long k, unsigned long l, unsigned long m,
-                unsigned long n) {
+                unsigned long n) const {
             std::complex<double> ans = 0.0;
 
             unsigned long minZ = i + j + k;
@@ -216,10 +216,113 @@ namespace {
             return ans;
         }
     };
+
+    std::complex<double> turaevViroBacktrack(const NTriangulation& tri,
+            unsigned long r, const InitialData& init) {
+        // Run through all admissible colourings.
+        std::complex<double> ans = 0.0;
+
+        unsigned long nEdges = tri.getNumberOfEdges();
+        unsigned long nTriangles = tri.getNumberOfTriangles();
+        unsigned long* colour = new unsigned long[nEdges];
+
+        std::fill(colour, colour + nEdges, 0);
+        long curr = 0;
+        std::complex<double> valColour;
+        bool admissible;
+        std::deque<NEdgeEmbedding>::const_iterator embit;
+        long index1, index2;
+        NTriangle* triangle;
+        const NTetrahedron* tet;
+        unsigned long i;
+        while (curr >= 0) {
+            // Have we found an admissible colouring?
+            if (curr >= static_cast<long>(nEdges)) {
+                // Increment ans appropriately.
+                valColour = 1.0;
+                for (i = 0; i < tri.getNumberOfVertices(); i++)
+                    valColour *= init.vertexContrib;
+                for (i = 0; i < nEdges; i++)
+                    valColour *= init.edgeContrib(colour[i]);
+                for (i = 0; i < nTriangles; i++) {
+                    triangle = tri.getTriangle(i);
+                    valColour *= init.triContrib(
+                        colour[tri.edgeIndex(triangle->getEdge(0))],
+                        colour[tri.edgeIndex(triangle->getEdge(1))],
+                        colour[tri.edgeIndex(triangle->getEdge(2))]);
+                }
+                for (i = 0; i < tri.getNumberOfTetrahedra(); i++) {
+                    tet = tri.getTetrahedron(i);
+                    valColour *= init.tetContrib(
+                        colour[tri.edgeIndex(tet->getEdge(0))],
+                        colour[tri.edgeIndex(tet->getEdge(1))],
+                        colour[tri.edgeIndex(tet->getEdge(3))],
+                        colour[tri.edgeIndex(tet->getEdge(5))],
+                        colour[tri.edgeIndex(tet->getEdge(4))],
+                        colour[tri.edgeIndex(tet->getEdge(2))]
+                        );
+                }
+
+                ans += valColour;
+
+                // Step back down one level.
+                curr--;
+                if (curr >= 0)
+                    colour[curr]++;
+                continue;
+            }
+
+            // Have we run out of values to try at this level?
+            if (colour[curr] > r - 2) {
+                colour[curr] = 0;
+                curr--;
+                if (curr >= 0)
+                    colour[curr]++;
+                continue;
+            }
+
+            // Does the current value for colour[curr] preserve admissibility?
+            admissible = true;
+            const std::deque<NEdgeEmbedding>& embs(tri.getEdge(curr)->
+                getEmbeddings());
+            for (embit = embs.begin(); embit != embs.end(); embit++) {
+                index1 = tri.edgeIndex((*embit).getTetrahedron()->getEdge(
+                    NEdge::edgeNumber[(*embit).getVertices()[0]]
+                    [(*embit).getVertices()[2]]));
+                index2 = tri.edgeIndex((*embit).getTetrahedron()->getEdge(
+                    NEdge::edgeNumber[(*embit).getVertices()[1]]
+                    [(*embit).getVertices()[2]]));
+                if (index1 <= curr && index2 <= curr) {
+                    // We've decided upon colours for all three edges of
+                    // this triangle containing the current edge.
+                    if (! init.isAdmissible(colour[index1], colour[index2],
+                            colour[curr])) {
+                        admissible = false;
+                        break;
+                    }
+                }
+            }
+
+            // Use the current value for colour[curr] if appropriate;
+            // otherwise step forwards to the next value.
+            if (admissible)
+                curr++;
+            else
+                colour[curr]++;
+        }
+
+        delete[] colour;
+        return ans;
+    }
+
+    std::complex<double> turaevViroTreewidth(const NTriangulation& tri,
+            unsigned long r, InitialData& init) {
+        return 0;
+    }
 }
 
-double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
-        const {
+double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot,
+        TuraevViroAlg alg) const {
     // Have we already calculated this invariant?
     std::pair<unsigned long, unsigned long> tvParams(r, whichRoot);
     TuraevViroSet::const_iterator it = turaevViroCache_.find(tvParams);
@@ -238,92 +341,16 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
     double angle = (M_PI * whichRoot) / r;
     InitialData init(r, angle);
 
-    // Run through all admissible colourings.
-    std::complex<double> ans = 0.0;
-
-    unsigned long nEdges = getNumberOfEdges();
-    unsigned long nTriangles = getNumberOfTriangles();
-    unsigned long* colour = new unsigned long[nEdges];
-
-    std::fill(colour, colour + nEdges, 0);
-    long curr = 0;
-    std::complex<double> valColour;
-    bool admissible;
-    std::deque<NEdgeEmbedding>::const_iterator embit;
-    long index1, index2;
-    unsigned long i;
-    while (curr >= 0) {
-        // Have we found an admissible colouring?
-        if (curr >= static_cast<long>(nEdges)) {
-            // Increment ans appropriately.
-            valColour = 1.0;
-            for (i = 0; i < vertices_.size(); i++)
-                valColour *= init.vertexContrib;
-            for (i = 0; i < nEdges; i++)
-                valColour *= init.edgeContrib(colour[i]);
-            for (i = 0; i < nTriangles; i++)
-                valColour *= init.triContrib(
-                    colour[edgeIndex(triangles_[i]->getEdge(0))],
-                    colour[edgeIndex(triangles_[i]->getEdge(1))],
-                    colour[edgeIndex(triangles_[i]->getEdge(2))]);
-            for (i = 0; i < tetrahedra_.size(); i++)
-                valColour *= init.tetContrib(
-                    colour[edgeIndex(tetrahedra_[i]->getEdge(0))],
-                    colour[edgeIndex(tetrahedra_[i]->getEdge(1))],
-                    colour[edgeIndex(tetrahedra_[i]->getEdge(3))],
-                    colour[edgeIndex(tetrahedra_[i]->getEdge(5))],
-                    colour[edgeIndex(tetrahedra_[i]->getEdge(4))],
-                    colour[edgeIndex(tetrahedra_[i]->getEdge(2))]
-                    );
-
-            ans += valColour;
-
-            // Step back down one level.
-            curr--;
-            if (curr >= 0)
-                colour[curr]++;
-            continue;
-        }
-
-        // Have we run out of values to try at this level?
-        if (colour[curr] > r - 2) {
-            colour[curr] = 0;
-            curr--;
-            if (curr >= 0)
-                colour[curr]++;
-            continue;
-        }
-
-        // Does the current value for colour[curr] preserve admissibility?
-        admissible = true;
-        const std::deque<NEdgeEmbedding>& embs(edges_[curr]->getEmbeddings());
-        for (embit = embs.begin(); embit != embs.end(); embit++) {
-            index1 = edgeIndex((*embit).getTetrahedron()->getEdge(
-                NEdge::edgeNumber[(*embit).getVertices()[0]]
-                [(*embit).getVertices()[2]]));
-            index2 = edgeIndex((*embit).getTetrahedron()->getEdge(
-                NEdge::edgeNumber[(*embit).getVertices()[1]]
-                [(*embit).getVertices()[2]]));
-            if (index1 <= curr && index2 <= curr) {
-                // We've decided upon colours for all three edges of
-                // this triangle containing the current edge.
-                if (! init.isAdmissible(colour[index1], colour[index2],
-                        colour[curr])) {
-                    admissible = false;
-                    break;
-                }
-            }
-        }
-
-        // Use the current value for colour[curr] if appropriate;
-        // otherwise step forwards to the next value.
-        if (admissible)
-            curr++;
-        else
-            colour[curr]++;
+    std::complex<double> ans;
+    switch (alg) {
+        case TV_DEFAULT:
+        case TV_BACKTRACK:
+            ans = turaevViroBacktrack(*this, r, init);
+            break;
+        case TV_TREEWIDTH:
+            ans = turaevViroTreewidth(*this, r, init);
+            break;
     }
-
-    delete[] colour;
 
     if (isNonZero(ans.imag())) {
         // This should never happen, since the Turaev-Viro invariant is the

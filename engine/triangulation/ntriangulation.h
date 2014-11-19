@@ -99,6 +99,31 @@ struct PacketInfo<PACKET_TRIANGULATION> {
 };
 
 /**
+ * Represents the various algorithms available for computing Turaev-Viro
+ * invariants.
+ */
+enum TuraevViroAlg {
+    /**
+     * The default algorithm.  Here Regina will choose whichever
+     * algorithm it thinks (rightly or wrongly) is most appropriate.
+     */
+    TV_DEFAULT = 0,
+    /**
+     * A backtracking algorithm.  This enumerates edge colourings and
+     * sums their corresponding weights.  This can be slow in general
+     * but has very small memory usage.
+     */
+    TV_BACKTRACK = 1,
+    /**
+     * A treewidth-based algorithm.  This uses dynamic programming over
+     * a tree decomposition of the face pairing graph.  This can be fast
+     * for triangulations whose face pairing graphs have small treewidth,
+     * but may require extremely large amounts of memory.
+     */
+    TV_TREEWIDTH = 2
+};
+
+/**
  * Stores the triangulation of a 3-manifold along with its
  * various cellular structures and other information.
  *
@@ -1387,11 +1412,15 @@ class REGINA_API NTriangulation : public NPacket,
          * @param whichRoot determines q0 to be the root of unity
          * e^(2i * Pi * whichRoot / 2r); this argument must be strictly
          * between 0 and 2r and must have no common factors with r.
+         * @param alg the algorithm with which to compute the invariant.
+         * If you are not sure, the default value (TV_DEFAULT) is a safe
+         * choice.
          * @return the requested Turaev-Viro invariant.
          *
          * @see allCalculatedTuraevViro
          */
-        double turaevViro(unsigned long r, unsigned long whichRoot) const;
+        double turaevViro(unsigned long r, unsigned long whichRoot,
+            TuraevViroAlg alg = TV_DEFAULT) const;
         /**
          * Returns the set of all Turaev-Viro state sum invariants that
          * have already been calculated for this 3-manifold.
