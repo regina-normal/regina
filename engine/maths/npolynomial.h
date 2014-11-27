@@ -73,11 +73,11 @@ class REGINA_API NPolynomial {
          */
         NPolynomial(size_t degree);
         NPolynomial(const NPolynomial<T>& value);
-        virtual ~NPolynomial();
+        ~NPolynomial();
+        void init(size_t degree);
         size_t degree() const;
         const T& operator [] (size_t exp) const;
         T& operator [] (size_t exp);
-        void init(size_t degree);
         NPolynomial& operator = (const NPolynomial<T>& value);
         NPolynomial& operator += (const NPolynomial<T>& other);
         NPolynomial& operator -= (const NPolynomial<T>& other);
