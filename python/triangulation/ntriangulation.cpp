@@ -197,11 +197,13 @@ void addNTriangulation() {
         .value("TV_DEFAULT", regina::TV_DEFAULT)
         .value("TV_BACKTRACK", regina::TV_BACKTRACK)
         .value("TV_TREEWIDTH", regina::TV_TREEWIDTH)
+        .value("TV_POLYTOPE", regina::TV_POLYTOPE)
         ;
 
     global.attr("TV_DEFAULT") = regina::TV_DEFAULT;
     global.attr("TV_BACKTRACK") = regina::TV_BACKTRACK;
     global.attr("TV_TREEWIDTH") = regina::TV_TREEWIDTH;
+    global.attr("TV_POLYTOPE") = regina::TV_POLYTOPE;
 
     scope s = class_<NTriangulation, bases<regina::NPacket>,
             std::auto_ptr<NTriangulation>,
