@@ -37,6 +37,8 @@
 #include <cmath>
 #include <vector>
 
+// TODO: Make sure all operations work upon one's self.
+
 namespace regina {
 
 namespace {
@@ -91,13 +93,50 @@ NCyclotomic& NCyclotomic::operator *= (const NCyclotomic& other) {
 }
 
 std::ostream& operator << (std::ostream& out, const NCyclotomic& c) {
-    // TODO: Improve.
-    out << c[0];
-    for (size_t i = 1; i < c.degree(); ++i) {
-        out << " + " << c[i] << " x";
-        if (i > 1)
-            out << '^' << i;
+    bool output = false;
+    size_t i = c.degree() - 1;
+    while (true) {
+        if (c[i] != 0) {
+            if (i == 0) {
+                if (output) {
+                    if (c[i] > 0)
+                        out << " + " << c[i];
+                    else
+                        out << " - " << (-c[i]);
+                } else
+                    out << c[i];
+            } else {
+                if (output) {
+                    if (c[i] == 1)
+                        out << " + ";
+                    else if (c[i] > 0)
+                        out << " + " << c[i] << ' ';
+                    else if (c[i] == -1)
+                        out << " - ";
+                    else
+                        out << " - " << (-c[i]) << ' ';
+                } else {
+                    if (c[i] == -1)
+                        out << "- ";
+                    else if (c[i] != 1)
+                        out << c[i] << ' ';
+                }
+                if (i == 1)
+                    out << 'x';
+                else
+                    out << "x^" << i;
+            }
+            output = true;
+        }
+
+        if (i == 0)
+            break;
+        --i;
     }
+
+    if (! output)
+        out << '0';
+
     return out;
 }
 

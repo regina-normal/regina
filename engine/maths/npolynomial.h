@@ -51,6 +51,8 @@ namespace regina {
  * @{
  */
 
+// TODO: Make sure all operations work on one's self.
+
 /**
  * TODO.
  *
