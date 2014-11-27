@@ -54,7 +54,20 @@ std::complex<double> NCyclotomic::evaluate(size_t whichRoot) {
 }
 
 void NCyclotomic::invert() {
-    // TODO
+    const NPolynomial<NInteger>& cyc = cyclotomic(field_);
+
+    NPolynomial<NRational>* self = polynomial();
+    NPolynomial<NRational> gcd, u, v;
+
+    self->gcdWithCoeffs(cyclotomic(field_), gcd, u, v);
+
+    size_t i;
+    for (i = 0; i < degree_ && i <= u.degree(); ++i)
+        coeff_[i] = u[i];
+    for ( ; i < degree_; ++i)
+        coeff_[i] = 0;
+
+    delete self;
 }
 
 NCyclotomic& NCyclotomic::operator *= (const NCyclotomic& other) {

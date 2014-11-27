@@ -67,26 +67,51 @@ class REGINA_API NPolynomial {
         T* coeff_;
 
     public:
+        /**
+         * Initialises to zero.
+         */
         NPolynomial();
         /**
          * Initialises to x^degree.
          */
         NPolynomial(size_t degree);
-        NPolynomial(const NPolynomial<T>& value);
+
+        template <typename U>
+        NPolynomial(const NPolynomial<U>& value);
+
+        template <typename iterator>
+        NPolynomial(iterator begin, iterator end);
+
         ~NPolynomial();
+        void init();
         void init(size_t degree);
         size_t degree() const;
         const T& operator [] (size_t exp) const;
+        // Warning: must not zero out the leading coefficient.
         T& operator [] (size_t exp);
         NPolynomial& operator = (const NPolynomial<T>& value);
+        void swap(NPolynomial<T>& other);
+
+        NPolynomial& operator *= (const T& scalar);
+        // Assumes exact division of coefficients using /=.
+        NPolynomial& operator /= (const T& scalar);
+
         NPolynomial& operator += (const NPolynomial<T>& other);
         NPolynomial& operator -= (const NPolynomial<T>& other);
         NPolynomial& operator *= (const NPolynomial<T>& other);
         /**
          * Currently requires T = NInteger or NLargeInteger.
-         * Assumes exact division (i.e., no remainder).
+         * Assumes exact division of the polynomials (i.e., no remainder).
          */
         NPolynomial& operator /= (const NPolynomial<T>& other);
+        // Assumes exact division of coefficients using /=.
+        void divisionAlg(const NPolynomial<T>& divisor,
+            NPolynomial<T>& quotient, NPolynomial<T>& remainder) const;
+        // Assumes exact division of coefficients using /=.
+        // Solves for u*this + v*other = gcd, with gcd monic.
+        template <typename U>
+        void gcdWithCoeffs(const NPolynomial<U>& other,
+            NPolynomial<T>& gcd, NPolynomial<T>& u, NPolynomial<T>& v) const;
 };
 
 /**
@@ -109,15 +134,43 @@ inline NPolynomial<T>::NPolynomial(size_t degree) :
 }
 
 template <typename T>
-inline NPolynomial<T>::NPolynomial(const NPolynomial<T>& value) :
-        degree_(value.degree_), coeff_(new T[value.degree_ + 1]) {
+template <typename iterator>
+NPolynomial<T>::NPolynomial(iterator begin, iterator end) {
+    if (begin == end) {
+        degree_ = 0;
+        coeff_ = new T[1];
+        return;
+    }
+
+    degree_ = end - begin - 1;
+    coeff_ = new T[degree_ + 1];
+
+    size_t i;
+    for (i = 0; begin != end; ++i, ++begin)
+        coeff_[i] = *begin;
+
+    while (degree_ > 0 && coeff_[degree_] == 0)
+        --degree_;
+}
+
+template <typename T>
+template <typename U>
+inline NPolynomial<T>::NPolynomial(const NPolynomial<U>& value) :
+        degree_(value.degree()), coeff_(new T[value.degree() + 1]) {
     for (size_t i = 0; i <= degree_; ++i)
-        coeff_[i] = value.coeff_[i];
+        coeff_[i] = value[i];
 }
 
 template <typename T>
 inline NPolynomial<T>::~NPolynomial() {
     delete[] coeff_;
+}
+
+template <typename T>
+inline void NPolynomial<T>::init() {
+    delete[] coeff_;
+    degree_ = 0;
+    coeff_ = new T[1];
 }
 
 template <typename T>
@@ -150,8 +203,32 @@ NPolynomial<T>& NPolynomial<T>::operator = (const NPolynomial<T>& other) {
         coeff_ = new T[other.degree_ + 1];
     }
     degree_ = other.degree_;
-    for (size_t i = 0; i < degree_; ++i)
+    for (size_t i = 0; i <= degree_; ++i)
         coeff_[i] = other.coeff_[i];
+    return *this;
+}
+
+template <typename T>
+inline void NPolynomial<T>::swap(NPolynomial<T>& other) {
+    std::swap(degree_, other.degree_);
+    std::swap(coeff_, other.coeff_);
+}
+
+template <typename T>
+NPolynomial<T>& NPolynomial<T>::operator *= (const T& scalar) {
+    if (scalar == 0)
+        init();
+    else {
+        for (size_t i = 0; i <= degree_; ++i)
+            coeff_[i] *= scalar;
+    }
+    return *this;
+}
+
+template <typename T>
+inline NPolynomial<T>& NPolynomial<T>::operator /= (const T& scalar) {
+    for (size_t i = 0; i <= degree_; ++i)
+        coeff_[i] /= scalar;
     return *this;
 }
 
@@ -197,7 +274,7 @@ NPolynomial<T>& NPolynomial<T>::operator *= (const NPolynomial<T>& other) {
     size_t i, j;
     T* ans = new T[degree_ + other.degree_ + 1];
     for (i = 0; i <= degree_; ++i)
-        for (j = 0; j < other.degree_; ++j)
+        for (j = 0; j <= other.degree_; ++j)
             ans[i + j] += (coeff_[i] * other.coeff_[j]);
 
     delete[] coeff_;
@@ -279,6 +356,102 @@ std::ostream& operator << (std::ostream& out, const NPolynomial<T>& p) {
     }
 
     return out;
+}
+
+template <typename T>
+void NPolynomial<T>::divisionAlg(const NPolynomial<T>& divisor,
+        NPolynomial<T>& quotient, NPolynomial<T>& remainder) const {
+    if (divisor.degree_ > degree_) {
+        quotient.init();
+        remainder = *this;
+        return;
+    }
+
+    size_t i, j;
+    if (divisor.degree_ == 0) {
+        quotient = *this;
+        for (i = 0; i <= quotient.degree_; ++i)
+            quotient.coeff_[i] /= divisor.coeff_[0];
+        remainder.init();
+        return;
+    }
+
+    // From here we have: 0 < deg(divisor) <= deg(this).
+
+    quotient.degree_ = degree_ - divisor.degree_;
+    quotient.coeff_ = new T[quotient.degree_ + 1];
+
+    remainder = *this;
+
+    for (i = degree_; i >= divisor.degree_; --i) {
+        quotient.coeff_[i - divisor.degree_] =
+            remainder.coeff_[i] / divisor.coeff_[divisor.degree_];
+        for (j = 0; j <= divisor.degree_; ++j)
+            remainder.coeff_[j + i - divisor.degree_] -=
+                (quotient.coeff_[i - divisor.degree_] * divisor.coeff_[j]);
+    }
+
+    remainder.degree_ = divisor.degree_ - 1;
+    while (remainder.degree_ > 0 && remainder.coeff_[remainder.degree_] == 0)
+        --remainder.degree_;
+}
+
+template <typename T>
+template <typename U>
+void NPolynomial<T>::gcdWithCoeffs(const NPolynomial<U>& other,
+        NPolynomial<T>& gcd, NPolynomial<T>& u, NPolynomial<T>& v) const {
+    // We use Euclid's algorithm to find gcd(this, other).
+    //
+    // At each stage we maintain the invariants:
+    // - u * this + v * other = x
+    // - uu * this + vv * other = y
+    // - deg(x) >= deg(y)
+    //
+    // We begin with (x, y, u, v, uu, vv) = (this, other, 1, 0, 0, 1).
+    // The iteration step, assuming x = q * y + r and r monic, is then:
+    // - (x, y, u, v, uu, vv) -> (y, r, uu, vv, u-q*uu, v-q*vv)
+    // We finish with (x, y) = (gcd, 0).
+    //
+    // In the code below we use the given polyomial gcd to store x throughout
+    // the algorithm.
+
+    gcd = *this;
+    NPolynomial<T> y(other);
+    u.init(0);
+    v.init();
+    NPolynomial<T> uu;
+    NPolynomial<T> vv(0);
+
+    if (gcd.degree() < y.degree()) {
+        gcd.swap(y);
+        u.swap(uu);
+        v.swap(vv);
+    }
+
+    NPolynomial<T> tmp, q, r;
+    while (y.degree() > 0 || y[0] != 0) {
+        gcd.divisionAlg(y, q, r);
+
+        tmp = q;
+        tmp *= uu;
+        u -= tmp;
+
+        tmp = q;
+        tmp *= vv;
+        v -= tmp;
+
+        u.swap(uu);
+        v.swap(vv);
+        gcd.swap(y);
+        y.swap(r);
+    }
+
+    if (gcd[gcd.degree_] != 0 && gcd[gcd.degree_] != 1) {
+        T leading(gcd[gcd.degree_]);
+        gcd /= leading;
+        u /= leading;
+        v /= leading;
+    }
 }
 
 } // namespace regina
