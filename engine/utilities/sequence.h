@@ -48,14 +48,17 @@ namespace regina {
 
 /**
  * TODO: Document.
+ *
+ * \ifacespython Not present.
  */
+template <typename T>
 class REGINA_API LightweightSequence {
     public:
-        typedef int* iterator;
-        typedef const int* const_iterator;
+        typedef T* iterator;
+        typedef const T* const_iterator;
 
     private:
-        int* data_;
+        T* data_;
         size_t size_;
 
     public:
@@ -67,8 +70,8 @@ class REGINA_API LightweightSequence {
         void destroy();
 
         size_t size() const;
-        int operator [] (size_t pos) const;
-        int& operator [] (size_t pos);
+        T operator [] (size_t pos) const;
+        T& operator [] (size_t pos);
 
         iterator begin();
         const_iterator begin() const;
@@ -82,64 +85,83 @@ class REGINA_API LightweightSequence {
         };
 };
 
-std::ostream& operator << (std::ostream& out, const LightweightSequence& s);
+template <typename T>
+std::ostream& operator << (std::ostream& out, const LightweightSequence<T>& s);
 
 // Inline functions:
 
-inline LightweightSequence::LightweightSequence() : data_(0), size_(0) {
+template <typename T>
+inline LightweightSequence<T>::LightweightSequence() : data_(0), size_(0) {
 }
 
-inline LightweightSequence::LightweightSequence(size_t size) :
-        data_(new int[size]), size_(size) {
+template <typename T>
+inline LightweightSequence<T>::LightweightSequence(size_t size) :
+        data_(new T[size]), size_(size) {
 }
 
-inline LightweightSequence::~LightweightSequence() {
+template <typename T>
+inline LightweightSequence<T>::~LightweightSequence() {
     delete[] data_;
 }
 
-inline void LightweightSequence::init(size_t size) {
+template <typename T>
+inline void LightweightSequence<T>::init(size_t size) {
     delete[] data_;
-    data_ = new int[size];
+    data_ = new T[size];
     size_ = size;
 }
 
-inline void LightweightSequence::destroy() {
+template <typename T>
+inline void LightweightSequence<T>::destroy() {
     if (data_) {
         delete[] data_;
         data_ = 0;
     }
 }
 
-inline size_t LightweightSequence::size() const {
+template <typename T>
+inline size_t LightweightSequence<T>::size() const {
     return size_;
 }
 
-inline int LightweightSequence::operator [] (size_t pos) const {
+template <typename T>
+inline T LightweightSequence<T>::operator [] (size_t pos) const {
     return data_[pos];
 }
 
-inline int& LightweightSequence::operator [] (size_t pos) {
+template <typename T>
+inline T& LightweightSequence<T>::operator [] (size_t pos) {
     return data_[pos];
 }
 
-inline LightweightSequence::iterator LightweightSequence::begin() {
+template <typename T>
+inline typename LightweightSequence<T>::iterator
+        LightweightSequence<T>::begin() {
     return data_;
 }
 
-inline LightweightSequence::const_iterator LightweightSequence::begin() const {
+template <typename T>
+inline typename LightweightSequence<T>::const_iterator
+        LightweightSequence<T>::begin() const {
     return data_;
 }
 
-inline LightweightSequence::iterator LightweightSequence::end() {
+template <typename T>
+inline typename LightweightSequence<T>::iterator
+        LightweightSequence<T>::end() {
     return data_ + size_;
 }
 
-inline LightweightSequence::const_iterator LightweightSequence::end() const {
+template <typename T>
+inline typename LightweightSequence<T>::const_iterator
+        LightweightSequence<T>::end() const {
     return data_ + size_;
 }
 
-inline bool LightweightSequence::Less::operator () (
-        const LightweightSequence* a, const LightweightSequence* b) const {
+template <typename T>
+inline bool LightweightSequence<T>::Less::operator () (
+        const LightweightSequence<T>* a, const LightweightSequence<T>* b)
+        const {
     for (size_t i = 0; i < a->size_; ++i)
         if (a->data_[i] < b->data_[i])
             return true;
@@ -148,8 +170,9 @@ inline bool LightweightSequence::Less::operator () (
     return false;
 }
 
+template <typename T>
 inline std::ostream& operator << (std::ostream& out,
-        const LightweightSequence& s) {
+        const LightweightSequence<T>& s) {
     out << '(';
     for (size_t i = 0; i < s.size(); ++i) {
         if (i > 0)

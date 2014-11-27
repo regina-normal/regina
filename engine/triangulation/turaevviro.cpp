@@ -405,7 +405,8 @@ namespace {
         // of its tetrahedra will be marked as seenDegree[i] = -1 (as
         // opposed to seenDegree[i] = tri.getEdge(i)->getDegree()).
         // This is simply to make such a condition easier to test.
-        LightweightSequence* seenDegree = new LightweightSequence[nBags];
+        LightweightSequence<int>* seenDegree =
+            new LightweightSequence<int>[nBags];
 
         for (bag = d.first(); bag; bag = bag->next()) {
             index = bag->index();
@@ -446,11 +447,11 @@ namespace {
             }
         }
 
-        typedef std::map<LightweightSequence*, std::complex<double>,
-            LightweightSequence::Less> SolnSet;
+        typedef std::map<LightweightSequence<int>*, std::complex<double>,
+            LightweightSequence<int>::Less> SolnSet;
 
         SolnSet** partial = new SolnSet*[nBags];
-        LightweightSequence* seq;
+        LightweightSequence<int>* seq;
         SolnSet::iterator it, it2;
         std::pair<SolnSet::iterator, bool> existingSoln;
         int e1, e2;
@@ -478,7 +479,7 @@ namespace {
 
             if (bag->isLeaf()) {
                 // A single empty colouring.
-                seq = new LightweightSequence(nEdges);
+                seq = new LightweightSequence<int>(nEdges);
                 std::fill(seq->begin(), seq->end(), TV_UNCOLOURED);
 
                 partial[index] = new SolnSet;
@@ -533,7 +534,7 @@ namespace {
                             // that we will use as a lookup key.
                             // For any edges that never appear beyond
                             // this bag, we mark them for aggregation.
-                            seq = new LightweightSequence(nEdges);
+                            seq = new LightweightSequence<int>(nEdges);
                             for (i = 0; i < nEdges; ++i)
                                 if (seenDegree[index][i] < 0)
                                     (*seq)[i] = TV_AGGREGATED;
@@ -634,7 +635,7 @@ namespace {
                         // value, again aggregating if necessary.
                         val = it->second * it2->second;
 
-                        seq = new LightweightSequence(nEdges);
+                        seq = new LightweightSequence<int>(nEdges);
                         for (i = 0; i < nEdges; ++i)
                             if (seenDegree[index][i] < 0)
                                 (*seq)[i] = TV_AGGREGATED;
