@@ -32,33 +32,40 @@
 
 /* end stub */
 
-void addMatrixOps();
-void addNCyclotomic();
-void addNInteger();
-void addNLargeInteger();
-void addNMatrix2();
-void addNMatrixInt();
-void addNPerm3();
-void addNPerm4();
-void addNPerm5();
-void addNPrimes();
-void addNRational();
-void addNumberTheory();
-void addPermConv();
+#include <boost/python.hpp>
+#include "maths/ncyclotomic.h"
 
-void addMaths() {
-    addMatrixOps();
-    addNCyclotomic();
-    addNInteger();
-    addNLargeInteger();
-    addNMatrix2();
-    addNMatrixInt();
-    addNPerm3();
-    addNPerm4();
-    addNPerm5();
-    addNPrimes();
-    addNRational();
-    addNumberTheory();
-    addPermConv();
+using namespace boost::python;
+using regina::NCyclotomic;
+
+namespace {
+    const regina::NRational& getItem(const NCyclotomic& c, int exp) {
+        return c[exp];
+    }
+    void setItem(NCyclotomic& c, int exp, const regina::NRational& value) {
+        c[exp] = value;
+    }
+}
+
+void addNCyclotomic() {
+    scope s = class_<NCyclotomic>("NCyclotomic", init<size_t>())
+        .def(init<size_t, int>())
+        .def(init<size_t, const regina::NRational&>())
+        .def(init<const NCyclotomic&>())
+        .def("init", &NCyclotomic::init)
+        .def("field", &NCyclotomic::field)
+        .def("degree", &NCyclotomic::degree)
+        .def("__getitem__", getItem,
+            return_internal_reference<>())
+        .def("__setitem__", setItem)
+        .def("evaluate", &NCyclotomic::evaluate)
+        .def("invert", &NCyclotomic::invert)
+        .def(self += self)
+        .def(self -= self)
+        .def(self *= self)
+        .def(self /= self)
+        .def(self_ns::str(self))
+        .def(self_ns::repr(self))
+    ;
 }
 

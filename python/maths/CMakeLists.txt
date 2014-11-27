@@ -3,6 +3,7 @@
 # Files to compile
 SET ( FILES
   matrixops
+  ncyclotomic
   ninteger
   nlargeinteger
   nmatrixint
