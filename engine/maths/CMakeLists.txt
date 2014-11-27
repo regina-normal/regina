@@ -34,6 +34,7 @@ if (${REGINA_INSTALL_DEV})
     nperm3.h
     nperm4.h
     nperm5.h
+    npolynomial.h
     nprimes.h
     nrational.h
     nray.h
