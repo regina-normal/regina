@@ -45,7 +45,7 @@ namespace {
     std::vector<NPolynomial<NInteger> > cyclotomicCache;
 }
 
-std::complex<double> NCyclotomic::evaluate(size_t whichRoot) {
+std::complex<double> NCyclotomic::evaluate(size_t whichRoot) const {
     double real = coeff_[0].doubleApprox();
     double imag = 0;
     double c;
