@@ -38,6 +38,7 @@
 #include "regina-config.h"
 #include "enumerate/normaliz/cone.h"
 #include "maths/approx.h"
+#include "maths/ncyclotomic.h"
 #include "maths/numbertheory.h"
 #include "treewidth/ntreedecomposition.h"
 #include "triangulation/ntriangulation.h"
@@ -46,7 +47,8 @@
 #include <map>
 
 // #define TV_BACKTRACK_DUMP_COLOURINGS
-// #define TV_IGNORE_CACHE
+#define TV_IGNORE_CACHE
+#define EXACT
 
 #define TV_UNCOLOURED -1
 #define TV_AGGREGATED -2
@@ -54,21 +56,26 @@
 namespace regina {
 
 namespace {
+#ifdef EXACT
+    typedef NCyclotomic TVType;
+    typedef NCyclotomic TVResult;
+#else
+    typedef std::complex<double> TVType;
+    typedef double TVResult;
+#endif
+
     /**
      * Allows calculation of [n]! for arbitrary n.
      * Values are cached as they are calculated.
      */
     class BracketFactorial {
         private:
-            double* fact;
+            TVResult* bracket_;
+                /**< The cached brackets [0], [1], ..., [r-1] . */
+            TVResult* fact_;
                 /**< The cached values [0]!, [1]!, ..., [r-1]! . */
-            double* inv;
+            TVResult* inv_;
                 /**< The cached inverses of the values stored in fact[]. */
-            double angle;
-                /**< The angle arg(q0). */
-            unsigned long r;
-                /**< The integer r, for which 2r * angle is some integer
-                     multiple of 2 * Pi. */
 
         public:
             /**
@@ -76,50 +83,85 @@ namespace {
              *
              * Requires r >= 3.
              */
-            BracketFactorial(double newAngle, unsigned long newR) :
-                    fact(new double[newR]), inv(new double[newR]),
-                    angle(newAngle), r(newR) {
-                fact[0] = fact[1] = inv[0] = inv[1] = 1.0;
+            BracketFactorial(unsigned long r, unsigned long whichRoot) :
+                    bracket_(new TVResult[r]),
+                    fact_(new TVResult[r]),
+                    inv_(new TVResult[r]) {
+#ifdef EXACT
+                bool halfField = (r % 2 != 0 && whichRoot % 2 == 0);
+                bracket_[0].init(halfField ? r : 2 * r);
+                bracket_[0][0] = 1;
+                fact_[0] = fact_[1] = inv_[0] = inv_[1] =
+                    bracket_[1] = bracket_[0];
+
+                TVResult q(halfField ? r : 2 * r);
+                q[1] = 1;
+                TVResult qInv(q);
+                qInv.invert();
+
+                TVResult base(q);
+                base -= qInv;
+                base.invert();
+
+                TVResult qPow(q);
+                TVResult qPowInv(qInv);
+
+                TVResult tmp;
                 for (unsigned long i = 2; i < r; i++) {
-                    fact[i] = fact[i - 1] * sin(angle * i) / sin(angle);
-                    inv[i] = inv[i - 1] * sin(angle) / sin(angle * i);
+                    qPow *= q;
+                    qPowInv *= qInv;
+
+                    bracket_[i] = qPow;
+                    bracket_[i] -= qPowInv;
+                    bracket_[i] *= base;
+                    fact_[i] = fact_[i - 1];
+                    fact_[i] *= bracket_[i];
+                    inv_[i] = inv_[i - 1];
+                    inv_[i] /= bracket_[i];
                 }
+#else
+                TVResult angle = (M_PI * whichRoot) / r;
+                bracket_[0] = bracket_[1] = fact_[0] = fact_[1] =
+                    inv_[0] = inv_[1] = 1.0;
+                for (unsigned long i = 2; i < r; i++) {
+                    bracket_[i] = sin(angle * i) / sin(angle);
+                    fact_[i] = fact_[i - 1] * bracket_[i];
+                    inv_[i] = inv_[i - 1] / bracket_[i];
+                }
+#endif
             }
 
             /**
              * Clean up memory.
              */
             ~BracketFactorial() {
-                delete[] fact;
-                delete[] inv;
+                delete[] bracket_;
+                delete[] fact_;
+                delete[] inv_;
             }
 
             /**
-             * Calculates the single value [n] (note that there is no
-             * factorial symbol included).
-             * These values are individually easy to calculate and so
-             * are not cached.
+             * Returns the single value [index] (with no factorial symbol).
+             * Requires index < r.
              */
-            double bracket(unsigned long index) const {
-                if (index == 0 || index == 1)
-                    return 1;
-                return sin(angle * index) / sin(angle);
+            const TVResult& bracket(unsigned long index) const {
+                return bracket_[index];
             }
 
             /**
              * Returns the value [index]!.
+             * Requires index < r.
              */
-            double operator [] (unsigned long index) const {
-                return (index < r ? fact[index] : 0.0);
+            const TVResult& operator [] (unsigned long index) const {
+                return fact_[index];
             }
 
             /**
              * Returns the value [index]! ^ -1.
-             *
              * Requires index < r.
              */
-            double inverse(unsigned long index) const {
-                return inv[index];
+            const TVResult& inverse(unsigned long index) const {
+                return inv_[index];
             }
     };
 
@@ -128,19 +170,35 @@ namespace {
      * and Viro's paper.
      */
     struct InitialData {
-        unsigned long r;
-            /**< The integer r. */
-        double angle;
-            /**< The angle arg(q0). */
+        unsigned long r, whichRoot;
+            /**< The Turaev-Viro parameters. */
+        bool halfField;
         BracketFactorial fact;
             /**< The cached values [n]!. */
-        double vertexContrib;
+        TVType vertexContrib;
             /**< The vertex-based contribution to the Turaev-Viro invariant;
                  this is the inverse square of the distinguished value w. */
 
-        InitialData(unsigned long newR, unsigned long whichRoot) :
-                r(newR), angle((M_PI * whichRoot) / r), fact(angle, r) {
-            vertexContrib = 2.0 * sin(angle) * sin(angle) / r;
+        InitialData(unsigned long newR, unsigned long newWhichRoot) :
+                r(newR),
+                whichRoot(newWhichRoot),
+                halfField(r % 2 != 0 && whichRoot % 2 == 0),
+                fact(r, whichRoot) {
+#ifdef EXACT
+            // vertexContrib should be |q - q^-1|^2 / 2r.
+            vertexContrib.init(halfField ? r : 2 * r);
+            vertexContrib[1] = 1;
+            TVResult inv(vertexContrib);
+            inv.invert();
+
+            vertexContrib -= inv;           // Pure imaginary.
+            vertexContrib *= vertexContrib; // Gives -|..|^2
+            vertexContrib.negate();         // Gives +|..|^2
+            vertexContrib /= (2 * r);
+#else
+            double tmp = sin(M_PI * whichRoot / r);
+            vertexContrib = 2.0 * tmp * tmp / r;
+#endif
         }
 
         /**
@@ -154,41 +212,52 @@ namespace {
         }
 
         /**
-         * Determines the triangle-based contribution to the Turaev-Viro
+         * Multiplies ans by the triangle-based contribution to the Turaev-Viro
          * invariant.  This corresponds to +/- Delta(i/2, j/2, k/2)^2.
          */
-        std::complex<double> triContrib(unsigned long i, unsigned long j,
-                unsigned long k) const {
+        void triContrib(unsigned long i, unsigned long j, unsigned long k,
+                TVType& ans) const {
             // By admissibility, (i + j + k) is guaranteed to be even.
-            std::complex<double> ans =
-                fact[(i + j - k) / 2] *
-                fact[(j + k - i) / 2] *
-                fact[(k + i - j) / 2] *
-                fact.inverse((i + j + k + 2) / 2);
-
-            return ((i + j + k) % 4 == 0 ? ans : -ans);
+            ans *= fact[(i + j - k) / 2];
+            ans *= fact[(j + k - i) / 2];
+            ans *= fact[(k + i - j) / 2];
+            ans *= fact.inverse((i + j + k + 2) / 2);
+            if ((i + j + k) % 4 != 0)
+#ifdef EXACT
+                ans.negate();
+#else
+                ans = -ans;
+#endif
         }
 
         /**
-         * Determines the edge-based contribution to the Turaev-Viro
+         * Multiplies ans by the edge-based contribution to the Turaev-Viro
          * invariant.  This corresponds to w(i/2)^2.
          */
-        std::complex<double> edgeContrib(unsigned long i) const {
-            return (i % 2 == 0 ? fact.bracket(i + 1) : - fact.bracket(i + 1));
+        void edgeContrib(unsigned long i, TVType& ans) const {
+            ans *= fact.bracket(i + 1);
+            if (i % 2 != 0) {
+#ifdef EXACT
+                ans.negate();
+#else
+                ans = -ans;
+#endif
+            }
         }
 
         /**
-         * Determines the tetrahedron-based contribution to the Turaev-Viro
-         * invariant.  This combines with the square roots of the triangle-based
-         * contributions for the four tetrahedron faces to give the symbol
+         * Sets ansToOverwrite to the tetrahedron-based contribution to the
+         * Turaev-Viro invariant.  This combines with the square roots of the
+         * triangle-based contributions for the four tetrahedron faces to
+         * give the symbol
          *
          *     | i/2 j/2 k/2 |
          *     | l/2 m/2 n/2 | .
          */
-        std::complex<double> tetContrib(unsigned long i, unsigned long j,
+        void tetContrib(unsigned long i, unsigned long j,
                 unsigned long k, unsigned long l, unsigned long m,
-                unsigned long n) const {
-            std::complex<double> ans = 0.0;
+                unsigned long n, TVType& ansToOverwrite) const {
+            ansToOverwrite = 0;
 
             unsigned long minZ = i + j + k;
             if (minZ < i + m + n)
@@ -204,45 +273,50 @@ namespace {
             if (maxZ > j + k + m + n)
                 maxZ = j + k + m + n;
 
-            double term;
+            TVType term;
             for (unsigned long z = minZ; z <= maxZ; z++) {
                 if (z % 2 != 0)
                     continue;
 
                 // We are guaranteed that z / 2 is an integer.
-                term = fact[(z + 2) / 2] *
-                    fact.inverse((z - i - j - k) / 2) *
-                    fact.inverse((z - i - m - n) / 2) *
-                    fact.inverse((z - j - l - n) / 2) *
-                    fact.inverse((z - k - l - m) / 2) *
-                    fact.inverse((i + j + l + m - z) / 2) *
-                    fact.inverse((i + k + l + n - z) / 2) *
-                    fact.inverse((j + k + m + n - z) / 2);
+                if (((z + 2) / 2) < r) {
+                    term = fact[(z + 2) / 2];
+                    term *= fact.inverse((z - i - j - k) / 2);
+                    term *= fact.inverse((z - i - m - n) / 2);
+                    term *= fact.inverse((z - j - l - n) / 2);
+                    term *= fact.inverse((z - k - l - m) / 2);
+                    term *= fact.inverse((i + j + l + m - z) / 2);
+                    term *= fact.inverse((i + k + l + n - z) / 2);
+                    term *= fact.inverse((j + k + m + n - z) / 2);
 
-                if (z % 4 == 0)
-                    ans += term;
-                else
-                    ans -= term;
+                    if (z % 4 == 0)
+                        ansToOverwrite += term;
+                    else
+                        ansToOverwrite -= term;
+                }
             }
-            return ans;
         }
 
         /**
-         * Multiplies a single tetrahedron-based contribution with all
-         * triangle and edge contributions for which that tetrahedron is
-         * responsible.  A tetrahedron is "responsible" for a triangle or
-         * edge contribution iff it is the tetrahedron referenced by
-         * getEmbedding(0) for that triangle or edge.
+         * Multiplies ans by a single tetrahedron-based contribution
+         * along with all triangle and edge contributions for which that
+         * tetrahedron is responsible.  A tetrahedron is "responsible" for
+         * a triangle or edge contribution iff it is the tetrahedron
+         * referenced by getEmbedding(0) for that triangle or edge.
          *
          * The six arguments colour0, ..., colour5 refer to the colours
          * on tetrahedron edges 0, ..., 5 respectively.
          */
-        std::complex<double> tetContrib(const NTetrahedron* tet,
+        void tetContrib(const NTetrahedron* tet,
                 unsigned long colour0, unsigned long colour1,
                 unsigned long colour2, unsigned long colour3,
-                unsigned long colour4, unsigned long colour5) const {
-            std::complex<double> ans = tetContrib(
-                colour0, colour1, colour3, colour5, colour4, colour2);
+                unsigned long colour4, unsigned long colour5,
+                TVType& ans) const {
+            TVType tmp(halfField ? r : 2 * r);
+            tetContrib(colour0, colour1, colour3, colour5, colour4, colour2,
+                tmp);
+            ans *= tmp;
+
             int i;
             const NTriangle* triangle;
             const NEdge* edge;
@@ -252,16 +326,16 @@ namespace {
                         triangle->getEmbedding(0).getTriangle() == i) {
                     switch (i) {
                         case 0:
-                            ans *= triContrib(colour3, colour4, colour5);
+                            triContrib(colour3, colour4, colour5, ans);
                             break;
                         case 1:
-                            ans *= triContrib(colour1, colour2, colour5);
+                            triContrib(colour1, colour2, colour5, ans);
                             break;
                         case 2:
-                            ans *= triContrib(colour0, colour2, colour4);
+                            triContrib(colour0, colour2, colour4, ans);
                             break;
                         case 3:
-                            ans *= triContrib(colour0, colour1, colour3);
+                            triContrib(colour0, colour1, colour3, ans);
                             break;
                     }
                 }
@@ -271,39 +345,36 @@ namespace {
                 if (edge->getEmbedding(0).getTetrahedron() == tet &&
                         edge->getEmbedding(0).getEdge() == i) {
                     switch (i) {
-                        case 0: ans *= edgeContrib(colour0); break;
-                        case 1: ans *= edgeContrib(colour1); break;
-                        case 2: ans *= edgeContrib(colour2); break;
-                        case 3: ans *= edgeContrib(colour3); break;
-                        case 4: ans *= edgeContrib(colour4); break;
-                        case 5: ans *= edgeContrib(colour5); break;
+                        case 0: edgeContrib(colour0, ans); break;
+                        case 1: edgeContrib(colour1, ans); break;
+                        case 2: edgeContrib(colour2, ans); break;
+                        case 3: edgeContrib(colour3, ans); break;
+                        case 4: edgeContrib(colour4, ans); break;
+                        case 5: edgeContrib(colour5, ans); break;
                     }
                 }
             }
-            return ans;
         }
     };
 
-    std::complex<double> turaevViroBacktrack(const NTriangulation& tri,
+    TVType turaevViroBacktrack(const NTriangulation& tri,
             const InitialData& init) {
         // Run through all admissible colourings.
-        std::complex<double> ans = 0.0;
-
-        // Compute the vertex contributions separately, since these are
-        // constant.
-        std::complex<double> vertexContrib = 1.0;
-        unsigned long i;
-        for (i = 0; i < tri.getNumberOfVertices(); i++)
-            vertexContrib *= init.vertexContrib;
+#ifdef EXACT
+        TVType ans(init.halfField ? init.r : 2 * init.r);
+#else
+        TVType ans = 0.0;
+#endif
 
         // Now hunt for colourings.
+        unsigned long i;
         unsigned long nEdges = tri.getNumberOfEdges();
         unsigned long nTriangles = tri.getNumberOfTriangles();
         unsigned long* colour = new unsigned long[nEdges];
 
         std::fill(colour, colour + nEdges, 0);
         long curr = 0;
-        std::complex<double> valColour;
+        TVType valColour(init.halfField ? init.r : 2 * init.r);
         bool admissible;
         std::deque<NEdgeEmbedding>::const_iterator embit;
         long index1, index2;
@@ -320,17 +391,17 @@ namespace {
                 std::cout << std::endl;
 #endif
                 // Increment ans appropriately.
-                valColour = 1.0;
+                valColour = 1;
                 for (i = 0; i < tri.getNumberOfTetrahedra(); i++) {
                     tet = tri.getTetrahedron(i);
-                    valColour *= init.tetContrib(tet,
+                    init.tetContrib(tet,
                         colour[tet->getEdge(0)->index()],
                         colour[tet->getEdge(1)->index()],
                         colour[tet->getEdge(2)->index()],
                         colour[tet->getEdge(3)->index()],
                         colour[tet->getEdge(4)->index()],
-                        colour[tet->getEdge(5)->index()]
-                        );
+                        colour[tet->getEdge(5)->index()],
+                        valColour);
                 }
 
                 ans += valColour;
@@ -383,11 +454,15 @@ namespace {
 
         delete[] colour;
 
-        ans *= vertexContrib;
+        // Compute the vertex contributions separately, since these are
+        // constant.
+        for (i = 0; i < tri.getNumberOfVertices(); i++)
+            ans *= init.vertexContrib;
+
         return ans;
     }
 
-    std::complex<double> turaevViroTreewidth(const NTriangulation& tri,
+    TVType turaevViroTreewidth(const NTriangulation& tri,
             InitialData& init) {
         NTreeDecomposition d(tri);
         d.compress();
@@ -447,7 +522,7 @@ namespace {
             }
         }
 
-        typedef std::map<LightweightSequence<int>*, std::complex<double>,
+        typedef std::map<LightweightSequence<int>*, TVType,
             LightweightSequence<int>::Less> SolnSet;
 
         SolnSet** partial = new SolnSet*[nBags];
@@ -459,7 +534,7 @@ namespace {
         int colour[6];
         int level;
         bool ok;
-        std::complex<double> val;
+        TVType val;
 
         // For each new tetrahedron that appears in a forget bag, we
         // colour its edges in the order 5,4,3,2,1,0.
@@ -483,7 +558,13 @@ namespace {
                 std::fill(seq->begin(), seq->end(), TV_UNCOLOURED);
 
                 partial[index] = new SolnSet;
-                partial[index]->insert(std::make_pair(seq, 1.0));
+#ifdef EXACT
+                val.init(init.halfField ? init.r : 2 * init.r);
+                val[0] = 1;
+#else
+                val = 1.0;
+#endif
+                partial[index]->insert(std::make_pair(seq, val));
             } else if (bag->type() == NICE_INTRODUCE) {
                 // Introduce bag.
                 child = bag->children();
@@ -526,9 +607,10 @@ namespace {
                             // We have an admissible partial colouring.
 
                             // First, compute its (partial) weight:
-                            val = it->second * init.tetContrib(tet,
+                            val = it->second;
+                            init.tetContrib(tet,
                                 colour[0], colour[1], colour[2],
-                                colour[3], colour[4], colour[5]);
+                                colour[3], colour[4], colour[5], val);
 
                             // Next, compute the sequence of colours
                             // that we will use as a lookup key.
@@ -633,7 +715,8 @@ namespace {
 
                         // Combine them and store the corresponding
                         // value, again aggregating if necessary.
-                        val = it->second * it2->second;
+                        val = it->second;
+                        val *= it2->second;
 
                         seq = new LightweightSequence<int>(nEdges);
                         for (i = 0; i < nEdges; ++i)
@@ -676,7 +759,7 @@ namespace {
 
         // The final bag contains no tetrahedra, and so there should be
         // only one colouring stored (in which all edge colours are aggregated).
-        std::complex<double> ans = partial[nBags - 1]->begin()->second;
+        TVType ans = partial[nBags - 1]->begin()->second;
         for (i = 0; i < tri.getNumberOfVertices(); i++)
             ans *= init.vertexContrib;
 
@@ -692,7 +775,7 @@ namespace {
         return ans;
     }
 
-    std::complex<double> turaevViroPolytope(const NTriangulation& tri,
+    TVType turaevViroPolytope(const NTriangulation& tri,
             InitialData& init) {
         std::vector<std::vector<mpz_class> > input;
         unsigned long nTri = tri.getNumberOfTriangles();
@@ -733,7 +816,7 @@ namespace {
 
         if (! cone.isComputed(libnormaliz::ConeProperty::HilbertBasis)) {
             std::cerr << "ERROR: Hilbert basis not computed!" << std::endl;
-            return 0;
+            return TVType(init.halfField ? init.r : 2 * init.r);
         }
         const std::vector<std::vector<mpz_class> > basis =
             cone.getHilbertBasis();
@@ -745,7 +828,7 @@ namespace {
             std::cout << std::endl;
         }
 
-        return 0;
+        return TVType(init.halfField ? init.r : 2 * init.r);
     }
 }
 
@@ -770,7 +853,7 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot,
     // Set up our initial data.
     InitialData init(r, whichRoot);
 
-    std::complex<double> ans;
+    TVType ans;
     switch (alg) {
         case TV_DEFAULT:
         case TV_BACKTRACK:
@@ -785,6 +868,12 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot,
             break;
     }
 
+#ifdef EXACT
+    std::cout << "Result: " << ans << std::endl;
+    std::cout << "Evaluation: " << ans.evaluate(
+        init.halfField ? whichRoot / 2 : whichRoot) << std::endl;
+    return 0.0; // TODO
+#else
     if (isNonZero(ans.imag())) {
         // This should never happen, since the Turaev-Viro invariant is the
         // square of the modulus of the Witten invariant for sl_2.
@@ -796,6 +885,7 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot,
     }
     turaevViroCache_[tvParams] = ans.real();
     return ans.real();
+#endif
 }
 
 } // namespace regina

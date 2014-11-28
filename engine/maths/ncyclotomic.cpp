@@ -48,9 +48,11 @@ namespace {
 std::complex<double> NCyclotomic::evaluate(size_t whichRoot) {
     double real = coeff_[0].doubleApprox();
     double imag = 0;
+    double c;
     for (size_t i = 1; i < degree_; ++i) {
-        real += coeff_[i].doubleApprox() * cos(2 * M_PI * whichRoot / field_);
-        imag += coeff_[i].doubleApprox() * sin(2 * M_PI * whichRoot / field_);
+        c = coeff_[i].doubleApprox();
+        real += c * cos(2 * M_PI * whichRoot * i / field_);
+        imag += c * sin(2 * M_PI * whichRoot * i / field_);
     }
     return std::complex<double>(real, imag);
 }

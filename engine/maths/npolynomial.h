@@ -78,6 +78,8 @@ class REGINA_API NPolynomial {
          */
         NPolynomial(size_t degree);
 
+        NPolynomial(const NPolynomial<T>& value);
+
         template <typename U>
         NPolynomial(const NPolynomial<U>& value);
 
@@ -153,6 +155,13 @@ NPolynomial<T>::NPolynomial(iterator begin, iterator end) {
 
     while (degree_ > 0 && coeff_[degree_] == 0)
         --degree_;
+}
+
+template <typename T>
+inline NPolynomial<T>::NPolynomial(const NPolynomial<T>& value) :
+        degree_(value.degree()), coeff_(new T[value.degree() + 1]) {
+    for (size_t i = 0; i <= degree_; ++i)
+        coeff_[i] = value[i];
 }
 
 template <typename T>

@@ -67,7 +67,8 @@ class REGINA_API NCyclotomic {
         NRational* coeff_;
 
     public:
-        NCyclotomic(size_t field);
+        NCyclotomic();
+        explicit NCyclotomic(size_t field);
         NCyclotomic(size_t field, int value);
         NCyclotomic(size_t field, const NRational& value);
         NCyclotomic(const NCyclotomic& value);
@@ -80,12 +81,17 @@ class REGINA_API NCyclotomic {
         std::complex<double> evaluate(size_t whichRoot);
         NPolynomial<NRational>* polynomial() const;
         NCyclotomic& operator = (const NCyclotomic& value);
+        NCyclotomic& operator = (const NRational& scalar);
+        void negate();
         void invert();
         // PRE, for following operations: Same fields.
         NCyclotomic& operator += (const NCyclotomic& other);
         NCyclotomic& operator -= (const NCyclotomic& other);
         NCyclotomic& operator *= (const NCyclotomic& other);
         NCyclotomic& operator /= (const NCyclotomic& other);
+
+        NCyclotomic& operator *= (const NRational& scalar);
+        NCyclotomic& operator /= (const NRational& scalar);
 
         // Not in python.
         // PRE: n > 0.
@@ -97,6 +103,9 @@ REGINA_API std::ostream& operator << (std::ostream& out, const NCyclotomic& c);
 /*@}*/
 
 // Inline functions for NCyclotomic
+
+inline NCyclotomic::NCyclotomic() : field_(0), degree_(0), coeff_(0) {
+}
 
 inline NCyclotomic::NCyclotomic(size_t field) :
         field_(field), degree_(cyclotomic(field).degree()),
@@ -169,6 +178,18 @@ inline NCyclotomic& NCyclotomic::operator = (const NCyclotomic& other) {
     return *this;
 }
 
+inline NCyclotomic& NCyclotomic::operator = (const NRational& scalar) {
+    coeff_[0] = scalar;
+    for (size_t i = 1; i < degree_; ++i)
+        coeff_[i] = 0;
+    return *this;
+}
+
+inline void NCyclotomic::negate() {
+    for (size_t i = 0; i < degree_; ++i)
+        coeff_[i].negate();
+}
+
 inline NCyclotomic& NCyclotomic::operator += (const NCyclotomic& other) {
     for (size_t i = 0; i < degree_; ++i)
         coeff_[i] += other.coeff_[i];
@@ -185,6 +206,18 @@ inline NCyclotomic& NCyclotomic::operator /= (const NCyclotomic& other) {
     NCyclotomic tmp(other);
     tmp.invert();
     return (*this) *= tmp;
+}
+
+inline NCyclotomic& NCyclotomic::operator *= (const NRational& scalar) {
+    for (size_t i = 0; i < degree_; ++i)
+        coeff_[i] *= scalar;
+    return *this;
+}
+
+inline NCyclotomic& NCyclotomic::operator /= (const NRational& scalar) {
+    for (size_t i = 0; i < degree_; ++i)
+        coeff_[i] /= scalar;
+    return *this;
 }
 
 } // namespace regina
