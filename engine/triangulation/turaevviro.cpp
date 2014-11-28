@@ -47,8 +47,7 @@
 #include <map>
 
 // #define TV_BACKTRACK_DUMP_COLOURINGS
-#define TV_IGNORE_CACHE
-#define EXACT
+// #define TV_IGNORE_CACHE
 
 #define TV_UNCOLOURED -1
 #define TV_AGGREGATED -2
@@ -56,19 +55,31 @@
 namespace regina {
 
 namespace {
-#ifdef EXACT
-    typedef NCyclotomic TVType;
-    typedef NCyclotomic TVResult;
-#else
-    typedef std::complex<double> TVType;
-    typedef double TVResult;
-#endif
+    template <bool exact>
+    struct TuraevViroDetails;
+
+    template <>
+    struct TuraevViroDetails<true> {
+        typedef NCyclotomic TVType;
+        typedef NCyclotomic TVResult;
+    };
+
+    template <>
+    struct TuraevViroDetails<false> {
+        typedef std::complex<double> TVType;
+        typedef double TVResult;
+    };
 
     /**
      * Allows calculation of [n]! for arbitrary n.
      * Values are cached as they are calculated.
      */
+    template <bool exact>
     class BracketFactorial {
+        public:
+            typedef typename TuraevViroDetails<exact>::TVType TVType;
+            typedef typename TuraevViroDetails<exact>::TVResult TVResult;
+
         private:
             TVResult* bracket_;
                 /**< The cached brackets [0], [1], ..., [r-1] . */
@@ -83,53 +94,7 @@ namespace {
              *
              * Requires r >= 3.
              */
-            BracketFactorial(unsigned long r, unsigned long whichRoot) :
-                    bracket_(new TVResult[r]),
-                    fact_(new TVResult[r]),
-                    inv_(new TVResult[r]) {
-#ifdef EXACT
-                bool halfField = (r % 2 != 0 && whichRoot % 2 == 0);
-                bracket_[0].init(halfField ? r : 2 * r);
-                bracket_[0][0] = 1;
-                fact_[0] = fact_[1] = inv_[0] = inv_[1] =
-                    bracket_[1] = bracket_[0];
-
-                TVResult q(halfField ? r : 2 * r);
-                q[1] = 1;
-                TVResult qInv(q);
-                qInv.invert();
-
-                TVResult base(q);
-                base -= qInv;
-                base.invert();
-
-                TVResult qPow(q);
-                TVResult qPowInv(qInv);
-
-                TVResult tmp;
-                for (unsigned long i = 2; i < r; i++) {
-                    qPow *= q;
-                    qPowInv *= qInv;
-
-                    bracket_[i] = qPow;
-                    bracket_[i] -= qPowInv;
-                    bracket_[i] *= base;
-                    fact_[i] = fact_[i - 1];
-                    fact_[i] *= bracket_[i];
-                    inv_[i] = inv_[i - 1];
-                    inv_[i] /= bracket_[i];
-                }
-#else
-                TVResult angle = (M_PI * whichRoot) / r;
-                bracket_[0] = bracket_[1] = fact_[0] = fact_[1] =
-                    inv_[0] = inv_[1] = 1.0;
-                for (unsigned long i = 2; i < r; i++) {
-                    bracket_[i] = sin(angle * i) / sin(angle);
-                    fact_[i] = fact_[i - 1] * bracket_[i];
-                    inv_[i] = inv_[i - 1] / bracket_[i];
-                }
-#endif
-            }
+            BracketFactorial(unsigned long r, unsigned long whichRoot);
 
             /**
              * Clean up memory.
@@ -165,41 +130,85 @@ namespace {
             }
     };
 
+    template <>
+    BracketFactorial<true>::BracketFactorial(
+            unsigned long r, unsigned long whichRoot) :
+            bracket_(new TVResult[r]),
+            fact_(new TVResult[r]),
+            inv_(new TVResult[r]) {
+        bool halfField = (r % 2 != 0 && whichRoot % 2 == 0);
+        bracket_[0].init(halfField ? r : 2 * r);
+        bracket_[0][0] = 1;
+        fact_[0] = fact_[1] = inv_[0] = inv_[1] =
+            bracket_[1] = bracket_[0];
+
+        TVResult q(halfField ? r : 2 * r);
+        q[1] = 1;
+        TVResult qInv(q);
+        qInv.invert();
+
+        TVResult base(q);
+        base -= qInv;
+        base.invert();
+
+        TVResult qPow(q);
+        TVResult qPowInv(qInv);
+
+        TVResult tmp;
+        for (unsigned long i = 2; i < r; i++) {
+            qPow *= q;
+            qPowInv *= qInv;
+
+            bracket_[i] = qPow;
+            bracket_[i] -= qPowInv;
+            bracket_[i] *= base;
+            fact_[i] = fact_[i - 1];
+            fact_[i] *= bracket_[i];
+            inv_[i] = inv_[i - 1];
+            inv_[i] /= bracket_[i];
+        }
+    }
+
+    template <>
+    BracketFactorial<false>::BracketFactorial(
+            unsigned long r, unsigned long whichRoot) :
+            bracket_(new TVResult[r]),
+            fact_(new TVResult[r]),
+            inv_(new TVResult[r]) {
+        TVResult angle = (M_PI * whichRoot) / r;
+        bracket_[0] = bracket_[1] = fact_[0] = fact_[1] =
+            inv_[0] = inv_[1] = 1.0;
+        for (unsigned long i = 2; i < r; i++) {
+            bracket_[i] = sin(angle * i) / sin(angle);
+            fact_[i] = fact_[i - 1] * bracket_[i];
+            inv_[i] = inv_[i - 1] / bracket_[i];
+        }
+    }
+
     /**
      * Represents the initial data as described in Section 7 of Turaev
      * and Viro's paper.
      */
+    template <bool exact>
     struct InitialData {
+        typedef typename TuraevViroDetails<exact>::TVType TVType;
+        typedef typename TuraevViroDetails<exact>::TVResult TVResult;
+
         unsigned long r, whichRoot;
             /**< The Turaev-Viro parameters. */
         bool halfField;
-        BracketFactorial fact;
+        BracketFactorial<exact> fact;
             /**< The cached values [n]!. */
         TVType vertexContrib;
             /**< The vertex-based contribution to the Turaev-Viro invariant;
                  this is the inverse square of the distinguished value w. */
 
-        InitialData(unsigned long newR, unsigned long newWhichRoot) :
-                r(newR),
-                whichRoot(newWhichRoot),
-                halfField(r % 2 != 0 && whichRoot % 2 == 0),
-                fact(r, whichRoot) {
-#ifdef EXACT
-            // vertexContrib should be |q - q^-1|^2 / 2r.
-            vertexContrib.init(halfField ? r : 2 * r);
-            vertexContrib[1] = 1;
-            TVResult inv(vertexContrib);
-            inv.invert();
+        InitialData(unsigned long newR, unsigned long newWhichRoot);
 
-            vertexContrib -= inv;           // Pure imaginary.
-            vertexContrib *= vertexContrib; // Gives -|..|^2
-            vertexContrib.negate();         // Gives +|..|^2
-            vertexContrib /= (2 * r);
-#else
-            double tmp = sin(M_PI * whichRoot / r);
-            vertexContrib = 2.0 * tmp * tmp / r;
-#endif
-        }
+        static void negate(TVType& x);
+
+        void initZero(TVType& x) const;
+        void initOne(TVType& x) const;
 
         /**
          * Determines whether (i/2, j/2, k/2) is an admissible triple.
@@ -223,11 +232,7 @@ namespace {
             ans *= fact[(k + i - j) / 2];
             ans *= fact.inverse((i + j + k + 2) / 2);
             if ((i + j + k) % 4 != 0)
-#ifdef EXACT
-                ans.negate();
-#else
-                ans = -ans;
-#endif
+                negate(ans);
         }
 
         /**
@@ -236,13 +241,8 @@ namespace {
          */
         void edgeContrib(unsigned long i, TVType& ans) const {
             ans *= fact.bracket(i + 1);
-            if (i % 2 != 0) {
-#ifdef EXACT
-                ans.negate();
-#else
-                ans = -ans;
-#endif
-            }
+            if (i % 2 != 0)
+                negate(ans);
         }
 
         /**
@@ -357,14 +357,80 @@ namespace {
         }
     };
 
-    TVType turaevViroBacktrack(const NTriangulation& tri,
-            const InitialData& init) {
+    template <>
+    InitialData<true>::InitialData(
+            unsigned long newR, unsigned long newWhichRoot) :
+            r(newR),
+            whichRoot(newWhichRoot),
+            halfField(r % 2 != 0 && whichRoot % 2 == 0),
+            fact(r, whichRoot) {
+        // vertexContrib should be |q - q^-1|^2 / 2r.
+        vertexContrib.init(halfField ? r : 2 * r);
+        vertexContrib[1] = 1;
+        TVResult inv(vertexContrib);
+        inv.invert();
+
+        vertexContrib -= inv;           // Pure imaginary.
+        vertexContrib *= vertexContrib; // Gives -|..|^2
+        vertexContrib.negate();         // Gives +|..|^2
+        vertexContrib /= (2 * r);
+    }
+
+    template <>
+    InitialData<false>::InitialData(
+            unsigned long newR, unsigned long newWhichRoot) :
+            r(newR),
+            whichRoot(newWhichRoot),
+            halfField(r % 2 != 0 && whichRoot % 2 == 0),
+            fact(r, whichRoot) {
+        double tmp = sin(M_PI * whichRoot / r);
+        vertexContrib = 2.0 * tmp * tmp / r;
+    }
+
+    template <>
+    inline void InitialData<true>::negate(InitialData<true>::TVType& x) {
+        x.negate();
+    }
+
+    template <>
+    inline void InitialData<false>::negate(InitialData<false>::TVType& x) {
+        x = -x;
+    }
+
+    template <>
+    inline void InitialData<true>::initZero(InitialData<true>::TVType& x)
+            const {
+        x.init(halfField ? r : 2 * r);
+    }
+
+    template <>
+    inline void InitialData<false>::initZero(InitialData<false>::TVType& x)
+            const {
+        x = 0.0;
+    }
+
+    template <>
+    inline void InitialData<true>::initOne(InitialData<true>::TVType& x)
+            const {
+        x.init(halfField ? r : 2 * r);
+        x[0] = 1;
+    }
+
+    template <>
+    inline void InitialData<false>::initOne(InitialData<false>::TVType& x)
+            const {
+        x = 1.0;
+    }
+
+    template <bool exact>
+    typename InitialData<exact>::TVType turaevViroBacktrack(
+            const NTriangulation& tri,
+            const InitialData<exact>& init) {
+        typedef typename InitialData<exact>::TVType TVType;
+
         // Run through all admissible colourings.
-#ifdef EXACT
-        TVType ans(init.halfField ? init.r : 2 * init.r);
-#else
-        TVType ans = 0.0;
-#endif
+        TVType ans;
+        init.initZero(ans);
 
         // Now hunt for colourings.
         unsigned long i;
@@ -462,8 +528,12 @@ namespace {
         return ans;
     }
 
-    TVType turaevViroTreewidth(const NTriangulation& tri,
-            InitialData& init) {
+    template <bool exact>
+    typename InitialData<exact>::TVType turaevViroTreewidth(
+            const NTriangulation& tri,
+            InitialData<exact>& init) {
+        typedef typename InitialData<exact>::TVType TVType;
+
         NTreeDecomposition d(tri);
         d.compress();
         d.makeNice();
@@ -527,8 +597,8 @@ namespace {
 
         SolnSet** partial = new SolnSet*[nBags];
         LightweightSequence<int>* seq;
-        SolnSet::iterator it, it2;
-        std::pair<SolnSet::iterator, bool> existingSoln;
+        typename SolnSet::iterator it, it2;
+        std::pair<typename SolnSet::iterator, bool> existingSoln;
         int e1, e2;
         int tetEdge[6];
         int colour[6];
@@ -558,12 +628,7 @@ namespace {
                 std::fill(seq->begin(), seq->end(), TV_UNCOLOURED);
 
                 partial[index] = new SolnSet;
-#ifdef EXACT
-                val.init(init.halfField ? init.r : 2 * init.r);
-                val[0] = 1;
-#else
-                val = 1.0;
-#endif
+                init.initOne(val);
                 partial[index]->insert(std::make_pair(seq, val));
             } else if (bag->type() == NICE_INTRODUCE) {
                 // Introduce bag.
@@ -775,8 +840,12 @@ namespace {
         return ans;
     }
 
-    TVType turaevViroPolytope(const NTriangulation& tri,
-            InitialData& init) {
+    template <bool exact>
+    typename InitialData<exact>::TVType turaevViroPolytope(
+            const NTriangulation& tri,
+            InitialData<exact>& init) {
+        typedef typename InitialData<exact>::TVType TVType;
+
         std::vector<std::vector<mpz_class> > input;
         unsigned long nTri = tri.getNumberOfTriangles();
 
@@ -851,9 +920,9 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot,
         return 0;
 
     // Set up our initial data.
-    InitialData init(r, whichRoot);
+    InitialData<false> init(r, whichRoot);
 
-    TVType ans;
+    InitialData<false>::TVType ans;
     switch (alg) {
         case TV_DEFAULT:
         case TV_BACKTRACK:
@@ -868,7 +937,7 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot,
             break;
     }
 
-#ifdef EXACT
+#if 0
     std::cout << "Result: " << ans << std::endl;
     std::cout << "Evaluation: " << ans.evaluate(
         init.halfField ? whichRoot / 2 : whichRoot) << std::endl;
