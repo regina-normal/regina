@@ -104,10 +104,13 @@ class REGINA_API NPolynomial {
         size_t degree() const;
         const T& operator [] (size_t exp) const;
         void set(size_t exp, const T& value);
+        bool operator == (const NPolynomial<T>& rhs) const;
+        bool operator != (const NPolynomial<T>& rhs) const;
         NPolynomial& operator = (const NPolynomial<T>& value);
         template <typename U>
         NPolynomial& operator = (const NPolynomial<U>& value);
         void swap(NPolynomial<T>& other);
+
 
         NPolynomial& operator *= (const T& scalar);
         // Assumes exact division of coefficients using /=.
@@ -246,6 +249,26 @@ void NPolynomial<T>::set(size_t exp, const T& value) {
         coeff_ = newCoeff;
         degree_ = exp;
     }
+}
+
+template <typename T>
+inline bool NPolynomial<T>::operator == (const NPolynomial<T>& rhs) const {
+    if (degree_ != rhs.degree_)
+        return false;
+    for (size_t i = 0; i <= degree_; ++i)
+        if (coeff_[i] != rhs.coeff_[i])
+            return false;
+    return true;
+}
+
+template <typename T>
+inline bool NPolynomial<T>::operator != (const NPolynomial<T>& rhs) const {
+    if (degree_ != rhs.degree_)
+        return true;
+    for (size_t i = 0; i <= degree_; ++i)
+        if (coeff_[i] != rhs.coeff_[i])
+            return true;
+    return false;
 }
 
 template <typename T>

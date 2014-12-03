@@ -81,18 +81,19 @@ class REGINA_API NCyclotomic {
         std::complex<double> evaluate(size_t whichRoot) const;
         NPolynomial<NRational>* polynomial() const;
         bool operator == (const NCyclotomic& rhs) const;
+        bool operator != (const NCyclotomic& rhs) const;
         NCyclotomic& operator = (const NCyclotomic& value);
         NCyclotomic& operator = (const NRational& scalar);
         void negate();
         void invert();
+        NCyclotomic& operator *= (const NRational& scalar);
+        NCyclotomic& operator /= (const NRational& scalar);
         // PRE, for following operations: Same fields.
         NCyclotomic& operator += (const NCyclotomic& other);
         NCyclotomic& operator -= (const NCyclotomic& other);
         NCyclotomic& operator *= (const NCyclotomic& other);
         NCyclotomic& operator /= (const NCyclotomic& other);
 
-        NCyclotomic& operator *= (const NRational& scalar);
-        NCyclotomic& operator /= (const NRational& scalar);
 
         // Not in python.
         // PRE: n > 0.
@@ -174,6 +175,15 @@ inline bool NCyclotomic::operator == (const NCyclotomic& rhs) const {
         if (coeff_[i] != rhs.coeff_[i])
             return false;
     return true;
+}
+
+inline bool NCyclotomic::operator != (const NCyclotomic& rhs) const {
+    if (field_ != rhs.field_)
+        return true;
+    for (size_t i = 0; i < degree_; ++i)
+        if (coeff_[i] != rhs.coeff_[i])
+            return true;
+    return false;
 }
 
 inline NCyclotomic& NCyclotomic::operator = (const NCyclotomic& other) {
