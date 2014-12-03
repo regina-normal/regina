@@ -76,8 +76,14 @@ class REGINA_API NPolynomial {
         /**
          * Initialises to x^degree.
          */
-        NPolynomial(size_t degree);
+        explicit NPolynomial(size_t degree);
 
+        /**
+         * Note for developers: even though this routine is identical to
+         * the templated copy constructor, it must be declared and
+         * implemented separately.  Otherwise the compiler might create
+         * its own (incorrect) copy constructor automatically.
+         */
         NPolynomial(const NPolynomial<T>& value);
 
         template <typename U>
@@ -87,13 +93,20 @@ class REGINA_API NPolynomial {
         NPolynomial(iterator begin, iterator end);
 
         ~NPolynomial();
+
         void init();
+
         void init(size_t degree);
+
+        template <typename iterator>
+        void init(iterator begin, iterator end);
+
         size_t degree() const;
         const T& operator [] (size_t exp) const;
-        // Warning: must not zero out the leading coefficient.
-        T& operator [] (size_t exp);
+        void set(size_t exp, const T& value);
         NPolynomial& operator = (const NPolynomial<T>& value);
+        template <typename U>
+        NPolynomial& operator = (const NPolynomial<U>& value);
         void swap(NPolynomial<T>& other);
 
         NPolynomial& operator *= (const T& scalar);
@@ -139,22 +152,8 @@ inline NPolynomial<T>::NPolynomial(size_t degree) :
 
 template <typename T>
 template <typename iterator>
-NPolynomial<T>::NPolynomial(iterator begin, iterator end) {
-    if (begin == end) {
-        degree_ = 0;
-        coeff_ = new T[1];
-        return;
-    }
-
-    degree_ = end - begin - 1;
-    coeff_ = new T[degree_ + 1];
-
-    size_t i;
-    for (i = 0; begin != end; ++i, ++begin)
-        coeff_[i] = *begin;
-
-    while (degree_ > 0 && coeff_[degree_] == 0)
-        --degree_;
+inline NPolynomial<T>::NPolynomial(iterator begin, iterator end) : coeff_(0) {
+    init(begin, end);
 }
 
 template <typename T>
@@ -193,6 +192,28 @@ inline void NPolynomial<T>::init(size_t degree) {
 }
 
 template <typename T>
+template <typename iterator>
+void NPolynomial<T>::init(iterator begin, iterator end) {
+    delete[] coeff_;
+
+    if (begin == end) {
+        degree_ = 0;
+        coeff_ = new T[1];
+        return;
+    }
+
+    degree_ = end - begin - 1;
+    coeff_ = new T[degree_ + 1];
+
+    size_t i;
+    for (i = 0; begin != end; ++i, ++begin)
+        coeff_[i] = *begin;
+
+    while (degree_ > 0 && coeff_[degree_] == 0)
+        --degree_;
+}
+
+template <typename T>
 inline size_t NPolynomial<T>::degree() const {
     return degree_;
 }
@@ -203,12 +224,45 @@ inline const T& NPolynomial<T>::operator [] (size_t exp) const {
 }
 
 template <typename T>
-inline T& NPolynomial<T>::operator [] (size_t exp) {
-    return coeff_[exp];
+void NPolynomial<T>::set(size_t exp, const T& value) {
+    if (exp < degree_) {
+        coeff_[exp] = value;
+    } else if (exp == degree_) {
+        if (value == 0) {
+            --degree_;
+            while (degree_ > 0 && coeff_[degree_] == 0)
+                --degree_;
+        } else {
+            coeff_[exp] = value;
+        }
+    } else if (! (value == 0)) {
+        T* newCoeff = new T[exp + 1];
+        size_t i;
+        for (i = 0; i <= degree_; ++i)
+            newCoeff[i] = coeff_[i];
+        newCoeff[exp] = value;
+
+        delete[] coeff_;
+        coeff_ = newCoeff;
+        degree_ = exp;
+    }
 }
 
 template <typename T>
 NPolynomial<T>& NPolynomial<T>::operator = (const NPolynomial<T>& other) {
+    if (degree_ < other.degree_) {
+        delete[] coeff_;
+        coeff_ = new T[other.degree_ + 1];
+    }
+    degree_ = other.degree_;
+    for (size_t i = 0; i <= degree_; ++i)
+        coeff_[i] = other.coeff_[i];
+    return *this;
+}
+
+template <typename T>
+template <typename U>
+NPolynomial<T>& NPolynomial<T>::operator = (const NPolynomial<U>& other) {
     if (degree_ < other.degree_) {
         delete[] coeff_;
         coeff_ = new T[other.degree_ + 1];

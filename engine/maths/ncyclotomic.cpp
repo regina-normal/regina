@@ -162,7 +162,7 @@ const NPolynomial<NInteger>& NCyclotomic::cyclotomic(size_t n) {
         for (i = 0; i < nDiv; ++i)
             if (cyclotomicCache[div[i] - 1].degree() == 0) {
                 cyclotomicCache[div[i] - 1].init(div[i]);
-                cyclotomicCache[div[i] - 1][0] = -1;
+                cyclotomicCache[div[i] - 1].set(0, -1);
 
                 for (j = 0; j < i; ++j)
                     if (div[i] % div[j] == 0)
