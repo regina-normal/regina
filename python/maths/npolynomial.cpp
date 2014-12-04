@@ -32,35 +32,52 @@
 
 /* end stub */
 
-void addMatrixOps();
-void addNCyclotomic();
-void addNInteger();
-void addNLargeInteger();
-void addNMatrix2();
-void addNMatrixInt();
-void addNPerm3();
-void addNPerm4();
-void addNPerm5();
-void addNPolynomial();
-void addNPrimes();
-void addNRational();
-void addNumberTheory();
-void addPermConv();
+#include <boost/python.hpp>
+#include "maths/npolynomial.h"
+#include "maths/nrational.h"
 
-void addMaths() {
-    addMatrixOps();
-    addNCyclotomic();
-    addNInteger();
-    addNLargeInteger();
-    addNMatrix2();
-    addNMatrixInt();
-    addNPerm3();
-    addNPerm4();
-    addNPerm5();
-    addNPolynomial();
-    addNPrimes();
-    addNRational();
-    addNumberTheory();
-    addPermConv();
+using namespace boost::python;
+using regina::NPolynomial;
+using regina::NRational;
+
+namespace {
+    const regina::NRational& getItem(const NPolynomial<NRational>& p,
+            size_t exp) {
+        return p[exp];
+    }
+    void setItem(NPolynomial<NRational>& p, size_t exp,
+            const regina::NRational& value) {
+        p.set(exp, value);
+    }
+
+    void (NPolynomial<NRational>::*init_void)() =
+        &NPolynomial<NRational>::init;
+    void (NPolynomial<NRational>::*init_degree)(size_t) =
+        &NPolynomial<NRational>::init;
+}
+
+void addNPolynomial() {
+    scope s = class_<NPolynomial<NRational> >("NPolynomial")
+        .def(init<size_t>())
+        .def(init<const NPolynomial<NRational>&>())
+        .def("init", init_void)
+        .def("init", init_degree)
+        .def("degree", &NPolynomial<NRational>::degree)
+        .def("__getitem__", getItem, return_internal_reference<>())
+        .def("__setitem__", setItem)
+        .def("set", &NPolynomial<NRational>::set)
+        .def(self == self)
+        .def(self != self)
+        .def(self *= NRational())
+        .def(self /= NRational())
+        .def(self += self)
+        .def(self -= self)
+        .def(self *= self)
+        .def(self /= self)
+        .def("divisionAlg", &NPolynomial<NRational>::divisionAlg)
+        .def("gcdWithCoeffs", &NPolynomial<NRational>::gcdWithCoeffs<NRational>)
+        .def(self_ns::str(self))
+        .def(self_ns::repr(self))
+    ;
 }
 

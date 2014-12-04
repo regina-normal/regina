@@ -60,7 +60,8 @@ namespace regina {
  *
  * Pre: T has a default constructor that initialises to zero.
  *
- * \ifacespython Not present.
+ * \ifacespython In Python, NPolynomial refers to the specific template
+ * class NPolynomial<NRational>.
  */
 template <typename T>
 class REGINA_API NPolynomial {
@@ -86,9 +87,11 @@ class REGINA_API NPolynomial {
          */
         NPolynomial(const NPolynomial<T>& value);
 
+        // Not in Python (though the copy constructor is).
         template <typename U>
         NPolynomial(const NPolynomial<U>& value);
 
+        // Not in Python.
         template <typename iterator>
         NPolynomial(iterator begin, iterator end);
 
@@ -98,6 +101,7 @@ class REGINA_API NPolynomial {
 
         void init(size_t degree);
 
+        // Not in Python.
         template <typename iterator>
         void init(iterator begin, iterator end);
 

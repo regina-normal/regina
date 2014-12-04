@@ -11,6 +11,7 @@ SET ( FILES
   nperm3
   nperm4
   nperm5
+  npolynomial
   nprimes
   nrational
   numbertheory
