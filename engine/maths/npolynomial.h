@@ -389,7 +389,7 @@ NPolynomial<T>& NPolynomial<T>::operator /= (const NPolynomial<T>& other) {
     coeff_ = new T[degree_ - other.degree_ + 1];
     for (i = degree_; i >= other.degree_; --i) {
         coeff_[i - other.degree_] =
-            remainder[i].divByExact(other.coeff_[other.degree_]);
+            remainder[i] /= other.coeff_[other.degree_];
         for (j = 0; j <= other.degree_; ++j)
             remainder[j + i - other.degree_] -=
                 (coeff_[i - other.degree_] * other.coeff_[j]);
