@@ -200,6 +200,24 @@ class REGINA_API NPolynomial {
         bool isZero() const;
 
         /**
+         * Returns whether this polynomial is monic.  A \e monic
+         * polynomial is a non-zero polynomial whose leading coefficient
+         * is one.
+         *
+         * @return \c true if and only if this is monic.
+         */
+        bool isMonic() const;
+
+        /**
+         * Returns the leading coefficient of this polynomial.
+         * If this is the zero polynomial, then the leading coefficient
+         * will be zero.
+         *
+         * @return the leading coefficient of this polynomial.
+         */
+        const T& leading() const;
+
+        /**
          * Returns the given coefficient of this polynomial.
          *
          * @param exp the exponent of the term whose coefficient should
@@ -538,6 +556,16 @@ inline size_t NPolynomial<T>::degree() const {
 template <typename T>
 inline bool NPolynomial<T>::isZero() const {
     return (degree_ == 0 && coeff_[0] == 0);
+}
+
+template <typename T>
+inline bool NPolynomial<T>::isMonic() const {
+    return (coeff_[degree_] == 1);
+}
+
+template <typename T>
+inline const T& NPolynomial<T>::leading() const {
+    return coeff_[degree_];
 }
 
 template <typename T>
