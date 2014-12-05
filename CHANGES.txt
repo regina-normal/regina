@@ -49,6 +49,9 @@ Version 4.97  [ (under development) ]
             - New routine transferChildren() for bulk tree reorganisation.
         Class NPacketListener:
             - New events childToBeRenamed(), childWasRenamed().
+        Class NPolynomial:
+            - New class for working with single-variable polynomials
+              over arbitrary rings.
         Class NSurfaceFilterProperties:
             - New set-based routine setECs().
         Class NTriangle:
