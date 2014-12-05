@@ -132,7 +132,8 @@ class REGINA_API NPolynomial {
          * \pre Objects of type \a T can be assigned values from
          * dereferenced iterators of type \a iterator.
          *
-         * \ifacespython Not present.
+         * \ifacespython Instead of a pair of iterators, this routine
+         * takes a python list of coefficients.
          *
          * @param begin the beginning of the sequence of coefficients.
          * @param end a past-the-end iterator indicating the end of the
@@ -172,7 +173,8 @@ class REGINA_API NPolynomial {
          * \pre Objects of type \a T can be assigned values from
          * dereferenced iterators of type \a iterator.
          *
-         * \ifacespython Not present.
+         * \ifacespython Instead of a pair of iterators, this routine
+         * takes a python list of coefficients.
          *
          * @param begin the beginning of the sequence of coefficients.
          * @param end a past-the-end iterator indicating the end of the

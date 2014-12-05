@@ -59,6 +59,53 @@ namespace {
         return make_tuple(q, r);
     }
 
+    NRational* seqFromList(boost::python::list l) {
+        long len = boost::python::len(l);
+        NRational* coeffs = new NRational[len];
+        for (long i = 0; i < len; ++i) {
+            // Accept any type that we know how to convert to a rational.
+            extract<regina::NRational&> x_rat(l[i]);
+            if (x_rat.check()) {
+                coeffs[i] = x_rat();
+                continue;
+            }
+            extract<regina::NLargeInteger&> x_large(l[i]);
+            if (x_large.check()) {
+                coeffs[i] = x_large();
+                continue;
+            }
+            extract<long> x_long(l[i]);
+            if (x_long.check()) {
+                coeffs[i] = x_long();
+                continue;
+            }
+
+            // Throw an exception.
+            delete[] coeffs;
+            x_rat();
+        }
+        return coeffs;
+    }
+
+    NPolynomial<NRational>* create_seq(boost::python::list l) {
+        NRational* coeffs = seqFromList(l);
+        if (coeffs) {
+            NPolynomial<NRational>* ans = new NPolynomial<NRational>(
+                coeffs, coeffs + boost::python::len(l));
+            delete[] coeffs;
+            return ans;
+        }
+        return 0;
+    }
+
+    void init_seq(NPolynomial<NRational>& p, boost::python::list l) {
+        NRational* coeffs = seqFromList(l);
+        if (coeffs) {
+            p.init(coeffs, coeffs + boost::python::len(l));
+            delete[] coeffs;
+        }
+    }
+
     void (NPolynomial<NRational>::*init_void)() =
         &NPolynomial<NRational>::init;
     void (NPolynomial<NRational>::*init_degree)(size_t) =
@@ -71,8 +118,10 @@ void addNPolynomial() {
             boost::noncopyable>("NPolynomial")
         .def(init<size_t>())
         .def(init<const NPolynomial<NRational>&>())
+        .def("__init__", make_constructor(create_seq))
         .def("init", init_void)
         .def("init", init_degree)
+        .def("init", init_seq)
         .def("degree", &NPolynomial<NRational>::degree)
         .def("isZero", &NPolynomial<NRational>::isZero)
         .def("isMonic", &NPolynomial<NRational>::isMonic)
