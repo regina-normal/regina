@@ -94,6 +94,37 @@ NCyclotomic& NCyclotomic::operator *= (const NCyclotomic& other) {
     return *this;
 }
 
+const NPolynomial<NInteger>& NCyclotomic::cyclotomic(size_t n) {
+    if (cyclotomicCache.size() < n)
+        cyclotomicCache.resize(n);
+    if (cyclotomicCache[n - 1].degree() == 0) {
+        // We need to compute one or more cyclotomic polynomials.
+        //
+        // The following code could be made slicker.
+        // It is fairly simple at present since it is a fair assumption
+        // (for now) that n will be small.
+
+        // Build a list of all divisors of n.
+        size_t* div = new size_t[n];
+        size_t nDiv = 0;
+        size_t i, j;
+        for (i = 1; i <= n; ++i)
+            if (n % i == 0)
+                div[nDiv++] = i;
+        for (i = 0; i < nDiv; ++i)
+            if (cyclotomicCache[div[i] - 1].degree() == 0) {
+                cyclotomicCache[div[i] - 1].init(div[i]);
+                cyclotomicCache[div[i] - 1].set(0, -1);
+
+                for (j = 0; j < i; ++j)
+                    if (div[i] % div[j] == 0)
+                        cyclotomicCache[div[i] - 1] /=
+                            cyclotomicCache[div[j] - 1];
+            }
+    }
+    return cyclotomicCache[n - 1];
+}
+
 std::ostream& operator << (std::ostream& out, const NCyclotomic& c) {
     bool output = false;
     size_t i = c.degree() - 1;
@@ -140,37 +171,6 @@ std::ostream& operator << (std::ostream& out, const NCyclotomic& c) {
         out << '0';
 
     return out;
-}
-
-const NPolynomial<NInteger>& NCyclotomic::cyclotomic(size_t n) {
-    if (cyclotomicCache.size() < n)
-        cyclotomicCache.resize(n);
-    if (cyclotomicCache[n - 1].degree() == 0) {
-        // We need to compute one or more cyclotomic polynomials.
-        //
-        // The following code could be made slicker.
-        // It is fairly simple at present since it is a fair assumption
-        // (for now) that n will be small.
-
-        // Build a list of all divisors of n.
-        size_t* div = new size_t[n];
-        size_t nDiv = 0;
-        size_t i, j;
-        for (i = 1; i <= n; ++i)
-            if (n % i == 0)
-                div[nDiv++] = i;
-        for (i = 0; i < nDiv; ++i)
-            if (cyclotomicCache[div[i] - 1].degree() == 0) {
-                cyclotomicCache[div[i] - 1].init(div[i]);
-                cyclotomicCache[div[i] - 1].set(0, -1);
-
-                for (j = 0; j < i; ++j)
-                    if (div[i] % div[j] == 0)
-                        cyclotomicCache[div[i] - 1] /=
-                            cyclotomicCache[div[j] - 1];
-            }
-    }
-    return cyclotomicCache[n - 1];
 }
 
 }
