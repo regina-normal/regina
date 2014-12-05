@@ -355,7 +355,7 @@ class REGINA_API NPolynomial {
         /**
          * Multiplies this by the given polynomial.
          *
-         * @param other the polynomial to multiply by this.
+         * @param other the polynomial to multiply this by.
          * @return a reference to this polynomial.
          */
         NPolynomial& operator *= (const NPolynomial<T>& other);
@@ -386,7 +386,7 @@ class REGINA_API NPolynomial {
          * If not (e.g., if \a T is NInteger) then this requires some
          * prior knowledge about the arguments.
          *
-         * @param other the polynomial to divide by this.
+         * @param other the polynomial to divide this by.
          * @return a reference to this polynomial.
          */
         NPolynomial& operator /= (const NPolynomial<T>& other);
