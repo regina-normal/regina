@@ -848,7 +848,7 @@ void NPolynomial<T>::gcdWithCoeffs(const NPolynomial<U>& other,
             return;
         }
 
-        // gcd(this, 0) = this / this[this.degree].
+        // gcd(this, 0) = this / this.leading()
         gcd = *this;
         gcd /= coeff_[degree_];
         u.init(0);
@@ -857,7 +857,7 @@ void NPolynomial<T>::gcdWithCoeffs(const NPolynomial<U>& other,
         return;
     }
     if (isZero()) {
-        // gcd(0, other) = other / other[other.degree].
+        // gcd(0, other) = other / other.leading()
         gcd = other;
         gcd /= other[other.degree()];
         u.init();
@@ -916,7 +916,8 @@ void NPolynomial<T>::gcdWithCoeffs(const NPolynomial<U>& other,
     }
 
     // Make the gcd monic.
-    if (gcd[gcd.degree_] != 0 && gcd[gcd.degree_] != 1) {
+    // Note that gcd != 0 at this point, so this is indeed possible.
+    if (! gcd.isMonic()) {
         T leading(gcd[gcd.degree_]);
         gcd /= leading;
         u /= leading;
