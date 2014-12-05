@@ -37,8 +37,6 @@
 #include <cmath>
 #include <vector>
 
-// TODO: Make sure all operations work upon one's self.
-
 namespace regina {
 
 namespace {
@@ -75,6 +73,8 @@ void NCyclotomic::invert() {
 }
 
 NCyclotomic& NCyclotomic::operator *= (const NCyclotomic& other) {
+    // TODO: Make sure this works on self.
+
     const NPolynomial<NInteger>& cyc = cyclotomic(field_);
 
     size_t i, j;

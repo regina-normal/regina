@@ -48,9 +48,6 @@
 
 namespace regina {
 
-template <typename T>
-class NPolynomial;
-
 /**
  * \weakgroup maths
  * @{
