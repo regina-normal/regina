@@ -50,6 +50,15 @@ namespace {
         p.set(exp, value);
     }
 
+    boost::python::tuple divisionAlg(const NPolynomial<NRational>& p,
+            const NPolynomial<NRational>& divisor) {
+        std::auto_ptr<NPolynomial<NRational> > q(new NPolynomial<NRational>);
+        std::auto_ptr<NPolynomial<NRational> > r(new NPolynomial<NRational>);
+
+        p.divisionAlg(divisor, *q, *r);
+        return make_tuple(q, r);
+    }
+
     void (NPolynomial<NRational>::*init_void)() =
         &NPolynomial<NRational>::init;
     void (NPolynomial<NRational>::*init_degree)(size_t) =
@@ -57,13 +66,18 @@ namespace {
 }
 
 void addNPolynomial() {
-    scope s = class_<NPolynomial<NRational> >("NPolynomial")
+    scope s = class_<NPolynomial<NRational>,
+            std::auto_ptr<NPolynomial<NRational> >,
+            boost::noncopyable>("NPolynomial")
         .def(init<size_t>())
         .def(init<const NPolynomial<NRational>&>())
         .def("init", init_void)
         .def("init", init_degree)
         .def("degree", &NPolynomial<NRational>::degree)
         .def("isZero", &NPolynomial<NRational>::isZero)
+        .def("isMonic", &NPolynomial<NRational>::isMonic)
+        .def("leading", &NPolynomial<NRational>::leading,
+            return_internal_reference<>())
         .def("__getitem__", getItem, return_internal_reference<>())
         .def("__setitem__", setItem)
         .def("set", &NPolynomial<NRational>::set)
@@ -75,7 +89,7 @@ void addNPolynomial() {
         .def(self -= self)
         .def(self *= self)
         .def(self /= self)
-        .def("divisionAlg", &NPolynomial<NRational>::divisionAlg)
+        .def("divisionAlg", &divisionAlg)
         .def("gcdWithCoeffs", &NPolynomial<NRational>::gcdWithCoeffs<NRational>)
         .def(self_ns::str(self))
         .def(self_ns::repr(self))

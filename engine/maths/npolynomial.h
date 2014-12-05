@@ -421,6 +421,11 @@ class REGINA_API NPolynomial {
          * \pre Neither \a quotient nor \a remainder is a reference to
          * this polynomial.
          *
+         * \ifacespython The arguments \a quotient and \a remainder are
+         * missing; instead these are passed back through the return
+         * value of the function.  Specifically, this function returns a
+         * (\a quotient, \a remainder) pair.
+         *
          * @param divisor the polynomial to divide by this.
          * @param quotient a polynomial whose contents will be destroyed and
          * replaced with the quotient \a q, as described above.
