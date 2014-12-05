@@ -45,6 +45,10 @@ namespace {
     void setItem(NCyclotomic& c, int exp, const regina::NRational& value) {
         c[exp] = value;
     }
+    regina::NPolynomial<regina::NRational>* cyclotomic(size_t n) {
+        return new regina::NPolynomial<regina::NRational>(
+            NCyclotomic::cyclotomic(n));
+    }
 }
 
 void addNCyclotomic() {
@@ -64,8 +68,11 @@ void addNCyclotomic() {
         .def(self -= self)
         .def(self *= self)
         .def(self /= self)
+        .def("cyclotomic", &cyclotomic,
+            return_value_policy<manage_new_object>())
         .def(self_ns::str(self))
         .def(self_ns::repr(self))
+        .staticmethod("cyclotomic")
     ;
 }
 

@@ -95,7 +95,7 @@ class REGINA_API NCyclotomic {
         NCyclotomic& operator /= (const NCyclotomic& other);
 
 
-        // Not in python.
+        // Python: returns NPolynomial<NRational>, newly allocated.
         // PRE: n > 0.
         static const NPolynomial<NInteger>& cyclotomic(size_t n);
 };
