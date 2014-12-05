@@ -63,6 +63,7 @@ void addNPolynomial() {
         .def("init", init_void)
         .def("init", init_degree)
         .def("degree", &NPolynomial<NRational>::degree)
+        .def("isZero", &NPolynomial<NRational>::isZero)
         .def("__getitem__", getItem, return_internal_reference<>())
         .def("__setitem__", setItem)
         .def("set", &NPolynomial<NRational>::set)

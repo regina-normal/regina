@@ -193,6 +193,13 @@ class REGINA_API NPolynomial {
         size_t degree() const;
 
         /**
+         * Returns whether this is the zero polynomial.
+         *
+         * @return \c true if and only if this is the zero polynomial.
+         */
+        bool isZero() const;
+
+        /**
          * Returns the given coefficient of this polynomial.
          *
          * @param exp the exponent of the term whose coefficient should
@@ -325,24 +332,121 @@ class REGINA_API NPolynomial {
          */
         NPolynomial& operator -= (const NPolynomial<T>& other);
 
-        NPolynomial& operator *= (const NPolynomial<T>& other);
         /**
-         * Currently requires T = NInteger or NLargeInteger.
-         * Assumes exact division of the polynomials (i.e., no remainder).
+         * Multiplies this by the given polynomial.
+         *
+         * @param other the polynomial to multiply by this.
+         * @return a reference to this polynomial.
+         */
+        NPolynomial& operator *= (const NPolynomial<T>& other);
+
+        /**
+         * Divides this by the given polynomial.
+         *
+         * More precisely: suppose there exist polynomials \a q and \a r with
+         * coefficients of type \a T for which <tt>this = q.other + r</tt>,
+         * and where \a r has smaller degree than \a other.  Then we call
+         * \a q the \e quotient, and \a r the \e remainder.
+         *
+         * This routine replaces this polynomial with the quotient \a q,
+         * and discards the remainder.  If you need to keep the remainder
+         * also, then call divisionAlg() instead.
+         *
+         * Coefficients are divided using the operator /= on type \a T.
+         *
+         * If your coefficient type \a T is not a field (e.g., if \a T
+         * is NInteger), you must be sure to know in advance that the
+         * quotient exists (see the precondition below).  Otherwise the
+         * behaviour of this routine is undefined.
+         *
+         * \pre The given polynomial is not the zero polynomial.
+         *
+         * \pre The quotient as defined above exists.  If \a T is a field
+         * type (e.g., if \a T is NRational) then this is true automatically.
+         * If not (e.g., if \a T is NInteger) then this requires some
+         * prior knowledge about the arguments.
+         *
+         * @param other the polynomial to divide by this.
+         * @return a reference to this polynomial.
          */
         NPolynomial& operator /= (const NPolynomial<T>& other);
-        // Assumes exact division of coefficients using /=.
+
+        /**
+         * Divides this by the given divisor, and extracts both the
+         * quotient and the remainder.
+         *
+         * More precisely: suppose there exist polynomials \a q and \a r with
+         * coefficients of type \a T for which <tt>this = q.divisor + r</tt>,
+         * and where \a r has smaller degree than \a divisor.  Then this
+         * routine sets the given polynomial \a quotient to \a q, and sets
+         * the given polynomial \a remainder to \a r.
+         *
+         * If you do not need the remainder (e.g., if you know in
+         * advance that \a divisor divides into this polynomial exactly),
+         * then you can use the division operator /= instead, which will
+         * be a little faster.
+         *
+         * If your coefficient type \a T is not a field (e.g., if \a T
+         * is NInteger), you must be sure to know in advance that the
+         * quotient exists (see the precondition below).  Otherwise the
+         * behaviour of this routine is undefined.
+         *
+         * Coefficients are divided using the operator /= on type \a T.
+         *
+         * \pre The given divisor is not the zero polynomial.
+         *
+         * \pre The quotient as defined above exists.  If \a T is a field
+         * type (e.g., if \a T is NRational) then this is true automatically.
+         * If not (e.g., if \a T is NInteger) then this requires some
+         * prior knowledge about the arguments.
+         *
+         * \pre Neither \a quotient nor \a remainder is a reference to
+         * this polynomial.
+         *
+         * @param divisor the polynomial to divide by this.
+         * @param quotient a polynomial whose contents will be destroyed and
+         * replaced with the quotient \a q, as described above.
+         * @return remainder a polynomial whose contents will be destroyed
+         * and replaced with the remainder \a r, as described above.
+         */
         void divisionAlg(const NPolynomial<T>& divisor,
             NPolynomial<T>& quotient, NPolynomial<T>& remainder) const;
-        // Assumes exact division of coefficients using /=.
-        // Solves for u*this + v*other = gcd, with gcd monic.
+
+        /**
+         * Calculates the greatest common divisor of this and the given
+         * polynomial, and finds a linear combination of these
+         * polynomials that gives this gcd.
+         *
+         * The greatest common divisor will be a monic polynomial.
+         * The polynomials returned in \a u and \a v will satisfy
+         * <tt>u*this + v*other = gcd</tt>.
+         *
+         * As a special case, gcd(0,0) is considered to be zero.
+         *
+         * \pre The coefficient type \a T represents a field.  In particular,
+         * NRational is supported but NInteger is not.
+         *
+         * @param other the polynomial whose greatest common divisor with this
+         * polynomial we should compute.
+         * @param gcd a polynomial whose contents will be destroyed and
+         * replaced with the greatest common divisor \a d, as described above.
+         * @param u a polynomial whose contents will be destroyed and
+         * replaced with \a u, as described above.
+         * @param v a polynomial whose contents will be destroyed and
+         * replaced with \a v, as described above.
+         */
         template <typename U>
         void gcdWithCoeffs(const NPolynomial<U>& other,
             NPolynomial<T>& gcd, NPolynomial<T>& u, NPolynomial<T>& v) const;
 };
 
 /**
- * Assumes a less-than operator.
+ * Writes the given polynomial to the given output stream in
+ * human-readable form.
+ *
+ * @param out the output stream to which to write.
+ * @param p the polynomial to write.
+ * @return a reference to the given output stream.
  */
 template <typename T>
 REGINA_API std::ostream& operator << (std::ostream& out,
@@ -432,6 +536,11 @@ inline size_t NPolynomial<T>::degree() const {
 }
 
 template <typename T>
+inline bool NPolynomial<T>::isZero() const {
+    return (degree_ == 0 && coeff_[0] == 0);
+}
+
+template <typename T>
 inline const T& NPolynomial<T>::operator [] (size_t exp) const {
     return coeff_[exp];
 }
@@ -501,13 +610,13 @@ template <typename U>
 NPolynomial<T>& NPolynomial<T>::operator = (const NPolynomial<U>& other) {
     // This works even if &other == this, since we don't reallocate if
     // the degrees are equal.
-    if (degree_ < other.degree_) {
+    if (degree_ < other.degree()) {
         delete[] coeff_;
-        coeff_ = new T[other.degree_ + 1];
+        coeff_ = new T[other.degree() + 1];
     }
-    degree_ = other.degree_;
+    degree_ = other.degree();
     for (size_t i = 0; i <= degree_; ++i)
-        coeff_[i] = other.coeff_[i];
+        coeff_[i] = other[i];
     return *this;
 }
 
@@ -583,7 +692,14 @@ NPolynomial<T>& NPolynomial<T>::operator -= (const NPolynomial<T>& other) {
 
 template <typename T>
 NPolynomial<T>& NPolynomial<T>::operator *= (const NPolynomial<T>& other) {
-    // This works even if &other == this, since we construct the
+    if (isZero())
+        return *this;
+    if (other.isZero()) {
+        init();
+        return *this;
+    }
+
+    // The following code works even if &other == this, since we construct the
     // coefficients of the product in a separate section of memory.
     size_t i, j;
     T* ans = new T[degree_ + other.degree_ + 1];
@@ -595,24 +711,31 @@ NPolynomial<T>& NPolynomial<T>::operator *= (const NPolynomial<T>& other) {
     coeff_ = ans;
     degree_ += other.degree_;
 
-    while (degree_ > 0 && coeff_[degree_] == 0)
-        --degree_;
+    // Both leading coefficients are non-zero, so the degree is correct.
     return *this;
 }
 
 template <typename T>
 NPolynomial<T>& NPolynomial<T>::operator /= (const NPolynomial<T>& other) {
+    // The code below breaks if other and *this are the same object, so
+    // treat this case specially.
+    if (&other == this) {
+        init(0);
+        return *this;
+    }
+
     size_t i, j;
     if (other.degree_ == 0) {
-        // The following code is correct even if &other == this.
         for (i = 0; i <= degree_; ++i)
             coeff_[i] /= other.coeff_[0];
         return *this;
     }
+
+    // The divisor has positive degree.
     if (degree_ == 0)
         return *this;
 
-    // TODO: Make self /= self work from here down.
+    // Both this and the divisor have positive degree.
     T* remainder = coeff_;
     coeff_ = new T[degree_ - other.degree_ + 1];
     for (i = degree_; i >= other.degree_; --i) {
@@ -626,6 +749,146 @@ NPolynomial<T>& NPolynomial<T>::operator /= (const NPolynomial<T>& other) {
     degree_ -= other.degree_;
 
     return *this;
+}
+
+template <typename T>
+void NPolynomial<T>::divisionAlg(const NPolynomial<T>& divisor,
+        NPolynomial<T>& quotient, NPolynomial<T>& remainder) const {
+    // The code below breaks if divisor and *this are the same object, so
+    // treat this case specially.
+    if (&divisor == this) {
+        quotient.init(0);
+        remainder.init();
+        return;
+    }
+
+    if (divisor.degree_ > degree_) {
+        quotient.init();
+        remainder = *this;
+        return;
+    }
+
+    size_t i, j;
+    if (divisor.degree_ == 0) {
+        quotient = *this;
+        for (i = 0; i <= quotient.degree_; ++i)
+            quotient.coeff_[i] /= divisor.coeff_[0];
+        remainder.init();
+        return;
+    }
+
+    // From here we have: 0 < deg(divisor) <= deg(this).
+    // In particular, both this and divisor have strictly positive degree.
+
+    quotient.degree_ = degree_ - divisor.degree_;
+    delete[] quotient.coeff_;
+    quotient.coeff_ = new T[quotient.degree_ + 1];
+
+    remainder = *this;
+
+    for (i = degree_; i >= divisor.degree_; --i) {
+        quotient.coeff_[i - divisor.degree_] = remainder.coeff_[i];
+        quotient.coeff_[i - divisor.degree_] /= divisor.coeff_[divisor.degree_];
+        for (j = 0; j <= divisor.degree_; ++j)
+            remainder.coeff_[j + i - divisor.degree_] -=
+                (quotient.coeff_[i - divisor.degree_] * divisor.coeff_[j]);
+    }
+
+    // Although the degree of the quotient is correct, the remainder
+    // might have zero coefficients at any (or all) positions.
+    remainder.degree_ = divisor.degree_ - 1;
+    while (remainder.degree_ > 0 && remainder.coeff_[remainder.degree_] == 0)
+        --remainder.degree_;
+}
+
+template <typename T>
+template <typename U>
+void NPolynomial<T>::gcdWithCoeffs(const NPolynomial<U>& other,
+        NPolynomial<T>& gcd, NPolynomial<T>& u, NPolynomial<T>& v) const {
+    // Special-case situations where one or both polynomials are zero.
+    if (other.isZero()) {
+        if (isZero()) {
+            // gcd(0, 0) = 0.
+            gcd.init();
+            u.init();
+            v.init();
+            return;
+        }
+
+        // gcd(this, 0) = this / this[this.degree].
+        gcd = *this;
+        gcd /= coeff_[degree_];
+        u.init(0);
+        u.coeff_[0] /= coeff_[degree_];
+        v.init();
+        return;
+    }
+    if (isZero()) {
+        // gcd(0, other) = other / other[other.degree].
+        gcd = other;
+        gcd /= other[other.degree()];
+        u.init();
+        v.init(0);
+        v.coeff_[0] /= other[other.degree()];
+        return;
+    }
+
+    // We use Euclid's algorithm to find gcd(this, other).
+    //
+    // At each stage we maintain the invariants:
+    //
+    //   u * this + v * other = x
+    //   uu * this + vv * other = y
+    //   deg(x) >= deg(y)
+    //
+    // We begin with (x, y, u, v, uu, vv) = (this, other, 1, 0, 0, 1).
+    // The iteration step, assuming x = q * y + r, is then:
+    //
+    //   (x, y, u, v, uu, vv) -> (y, r, uu, vv, u-q*uu, v-q*vv)
+    //
+    // We finish with (x, y) = (gcd, 0).
+    //
+    // In the code below we use the given polyomial gcd to store x throughout
+    // the algorithm.
+
+    gcd = *this;
+    NPolynomial<T> y(other);
+    u.init(0);
+    v.init();
+    NPolynomial<T> uu;
+    NPolynomial<T> vv(0);
+
+    if (gcd.degree() < y.degree()) {
+        gcd.swap(y);
+        u.swap(uu);
+        v.swap(vv);
+    }
+
+    NPolynomial<T> tmp, q, r;
+    while (! y.isZero()) {
+        gcd.divisionAlg(y, q, r);
+
+        tmp = q;
+        tmp *= uu;
+        u -= tmp;
+
+        tmp = q;
+        tmp *= vv;
+        v -= tmp;
+
+        u.swap(uu);
+        v.swap(vv);
+        gcd.swap(y);
+        y.swap(r);
+    }
+
+    // Make the gcd monic.
+    if (gcd[gcd.degree_] != 0 && gcd[gcd.degree_] != 1) {
+        T leading(gcd[gcd.degree_]);
+        gcd /= leading;
+        u /= leading;
+        v /= leading;
+    }
 }
 
 template <typename T>
@@ -672,102 +935,6 @@ std::ostream& operator << (std::ostream& out, const NPolynomial<T>& p) {
     }
 
     return out;
-}
-
-template <typename T>
-void NPolynomial<T>::divisionAlg(const NPolynomial<T>& divisor,
-        NPolynomial<T>& quotient, NPolynomial<T>& remainder) const {
-    if (divisor.degree_ > degree_) {
-        quotient.init();
-        remainder = *this;
-        return;
-    }
-
-    size_t i, j;
-    if (divisor.degree_ == 0) {
-        quotient = *this;
-        for (i = 0; i <= quotient.degree_; ++i)
-            quotient.coeff_[i] /= divisor.coeff_[0];
-        remainder.init();
-        return;
-    }
-
-    // From here we have: 0 < deg(divisor) <= deg(this).
-
-    quotient.degree_ = degree_ - divisor.degree_;
-    quotient.coeff_ = new T[quotient.degree_ + 1];
-
-    remainder = *this;
-
-    for (i = degree_; i >= divisor.degree_; --i) {
-        quotient.coeff_[i - divisor.degree_] =
-            remainder.coeff_[i] / divisor.coeff_[divisor.degree_];
-        for (j = 0; j <= divisor.degree_; ++j)
-            remainder.coeff_[j + i - divisor.degree_] -=
-                (quotient.coeff_[i - divisor.degree_] * divisor.coeff_[j]);
-    }
-
-    remainder.degree_ = divisor.degree_ - 1;
-    while (remainder.degree_ > 0 && remainder.coeff_[remainder.degree_] == 0)
-        --remainder.degree_;
-}
-
-template <typename T>
-template <typename U>
-void NPolynomial<T>::gcdWithCoeffs(const NPolynomial<U>& other,
-        NPolynomial<T>& gcd, NPolynomial<T>& u, NPolynomial<T>& v) const {
-    // We use Euclid's algorithm to find gcd(this, other).
-    //
-    // At each stage we maintain the invariants:
-    // - u * this + v * other = x
-    // - uu * this + vv * other = y
-    // - deg(x) >= deg(y)
-    //
-    // We begin with (x, y, u, v, uu, vv) = (this, other, 1, 0, 0, 1).
-    // The iteration step, assuming x = q * y + r and r monic, is then:
-    // - (x, y, u, v, uu, vv) -> (y, r, uu, vv, u-q*uu, v-q*vv)
-    // We finish with (x, y) = (gcd, 0).
-    //
-    // In the code below we use the given polyomial gcd to store x throughout
-    // the algorithm.
-
-    gcd = *this;
-    NPolynomial<T> y(other);
-    u.init(0);
-    v.init();
-    NPolynomial<T> uu;
-    NPolynomial<T> vv(0);
-
-    if (gcd.degree() < y.degree()) {
-        gcd.swap(y);
-        u.swap(uu);
-        v.swap(vv);
-    }
-
-    NPolynomial<T> tmp, q, r;
-    while (y.degree() > 0 || y[0] != 0) {
-        gcd.divisionAlg(y, q, r);
-
-        tmp = q;
-        tmp *= uu;
-        u -= tmp;
-
-        tmp = q;
-        tmp *= vv;
-        v -= tmp;
-
-        u.swap(uu);
-        v.swap(vv);
-        gcd.swap(y);
-        y.swap(r);
-    }
-
-    if (gcd[gcd.degree_] != 0 && gcd[gcd.degree_] != 1) {
-        T leading(gcd[gcd.degree_]);
-        gcd /= leading;
-        u /= leading;
-        v /= leading;
-    }
 }
 
 } // namespace regina
