@@ -56,6 +56,7 @@ std::complex<double> NCyclotomic::evaluate(size_t whichRoot) const {
 }
 
 void NCyclotomic::invert() {
+    // TODO: Check
     const NPolynomial<NInteger>& cyc = cyclotomic(field_);
 
     NPolynomial<NRational>* self = polynomial();
@@ -74,6 +75,7 @@ void NCyclotomic::invert() {
 
 NCyclotomic& NCyclotomic::operator *= (const NCyclotomic& other) {
     // TODO: Make sure this works on self.
+    // TODO: Check
 
     const NPolynomial<NInteger>& cyc = cyclotomic(field_);
 
@@ -121,6 +123,7 @@ const NPolynomial<NInteger>& NCyclotomic::cyclotomic(size_t n) {
                         cyclotomicCache[div[i] - 1] /=
                             cyclotomicCache[div[j] - 1];
             }
+        delete[] div;
     }
     return cyclotomicCache[n - 1];
 }
