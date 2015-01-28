@@ -169,19 +169,89 @@ class REGINA_API NCyclotomic {
          */
         size_t field() const;
         /**
-         * TODO
+         * Returns the degree of the polynomial that defines the
+         * underlying cyclotomic field.
+         *
+         * This is the degree of the cyclotomic polynomial <tt>Φ_n</tt>,
+         * and also the value of Euler's totient function <tt>φ(n)</tt>,
+         * where \a n is the order of the field as returned by field().
+         *
+         * A value of zero indicates that this field element has not yet
+         * been initialised (for instance, it was created using the
+         * default constructor).
+         *
+         * @return the degree of the polynomial that defines the
+         * underlying field.
          */
         size_t degree() const;
         /**
-         * TODO
+         * Returns an individual rational coefficient of the
+         * polynomial representation of this field element.
+         *
+         * The polynomial representation expresses this field element
+         * as a member of <tt>ℚ[x]/Φ_n</tt>, using a rational polynomial
+         * of degree strictly less than <tt>deg(Φ_n) = φ(n)</tt>;
+         * that is, strictly less than the value returned by degree().
+         * See the NCyclotomic class notes for further details.
+         *
+         * In particular, for a field element \a e, the operator
+         * <tt>e[i]</tt> will return the coefficient of <tt>x^i</tt>
+         * in this polynomial representation.
+         *
+         * This is a constant (read-only) routine; note that there is a
+         * non-constant (read-write) variant of this routine also.
+         *
+         * @param exp indicates which coefficient to return; this must
+         * be between 0 and degree()-1 inclusive.
+         * @return a constant reference to the corresponding
+         * rational coefficient.
          */
         const NRational& operator [] (size_t exp) const;
         /**
-         * TODO
+         * Offers access to an individual rational coefficient of the
+         * polynomial representation of this field element.
+         *
+         * The polynomial representation expresses this field element
+         * as a member of <tt>ℚ[x]/Φ_n</tt>, using a rational polynomial
+         * of degree strictly less than <tt>deg(Φ_n) = φ(n)</tt>;
+         * that is, strictly less than the value returned by degree().
+         * See the NCyclotomic class notes for further details.
+         *
+         * In particular, for a field element \a e, the operator
+         * <tt>e[i]</tt> will give access to the coefficient of <tt>x^i</tt>
+         * in this polynomial representation.
+         *
+         * This routine returns a non-constant reference: you can use
+         * this to directly edit the coefficients (and therefore the value of
+         * the field element).  Note that there is also a constant (read-only)
+         * variant of this routine.
+         *
+         * @param exp indicates which coefficient to access; this must
+         * be between 0 and degree()-1 inclusive.
+         * @return a reference to the corresponding rational coefficient.
          */
         NRational& operator [] (size_t exp);
         /**
-         * TODO
+         * Returns the full polynomial representation of this field element.
+         *
+         * The polynomial representation expresses this field element
+         * as a member of <tt>ℚ[x]/Φ_n</tt>, using a rational polynomial
+         * of degree strictly less than <tt>deg(Φ_n) = φ(n)</tt>;
+         * that is, strictly less than the value returned by degree().
+         * See the NCyclotomic class notes for further details.
+         *
+         * This routine returns the polynomial representation as a newly
+         * allocated NPolynomial<NRational> object.  The caller of this
+         * routine is responsible for destroying this new polynomial.
+         *
+         * The new polynomial will become independent of this NCyclotomic field
+         * element: if you subsequently change this field element then the
+         * new NPolynomial object will not change, and likewise if you
+         * change the new NPolynomial object then this NCyclotomic field
+         * element will not change.
+         *
+         * @return a new polynomial giving the full polynomial
+         * representation of this field element.
          */
         NPolynomial<NRational>* polynomial() const;
         /**
