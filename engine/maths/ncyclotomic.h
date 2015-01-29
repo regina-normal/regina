@@ -254,6 +254,10 @@ class REGINA_API NCyclotomic {
          * change the new NPolynomial object then this NCyclotomic field
          * element will not change.
          *
+         * \pre This field element has been initialised (either through
+         * a non-default constructor, an assignment operator, or by
+         * calling init()).
+         *
          * @return a new polynomial giving the full polynomial
          * representation of this field element.
          */
@@ -277,6 +281,10 @@ class REGINA_API NCyclotomic {
          * \pre The argument \e whichRoot is coprime to \a n (the order of
          * the underlying cyclotomic field).
          *
+         * \pre This field element has been initialised (either through
+         * a non-default constructor, an assignment operator, or by
+         * calling init()).
+         *
          * \warning This routine uses floating point arithmetic, and so the
          * value that it returns is subject to the usual floating point error.
          *
@@ -296,6 +304,12 @@ class REGINA_API NCyclotomic {
          * this test will always return \c false, even if they take the
          * same numerical value when evaluated as complex numbers.
          *
+         * If either this or \a rhs have not been initialised (typically
+         * because they were created using the default constructor),
+         * then this comparison will return \c false.  If \e both field
+         * elements have not been initialised, then this comparison will
+         * return \c true.
+         *
          * @param rhs the value to compare with this.
          * @return \c true if and only if this and \a rhs are the same
          * element of the same cyclotomic field.
@@ -311,6 +325,12 @@ class REGINA_API NCyclotomic {
          * elements are not equal), even if they take the same numerical
          * value when evaluated as complex numbers.
          *
+         * If either this or \a rhs have not been initialised (typically
+         * because they were created using the default constructor),
+         * then this comparison will return \c true.  If \e both field
+         * elements have not been initialised, then this comparison will
+         * return \c false.
+         *
          * @param rhs the value to compare with this.
          * @return \c false if this and \a rhs are the same element of the
          * same cyclotomic field, or \c true if they are not.
@@ -320,9 +340,13 @@ class REGINA_API NCyclotomic {
         /**
          * Sets this to a copy of the given field element.
          *
-         * If this and \a value belong to different cyclotomic fields,
-         * then the underlying field for this element will be changed to
-         * match the field for \a value.
+         * This assignment operator is safe even if this and \a value belong
+         * to different cyclotomic fields, or if this and/or \a value has not
+         * yet been initialised.  The underlying field for this element will
+         * simply be changed to match the underlying field for \a value,
+         * and all old information stored for this element (if any) will
+         * be safely discarded.  If \a value is uninitialised then this
+         * field element will become uninitialised also.
          *
          * @param value the new value to assign to this field element.
          * @return a reference to this field element.
@@ -336,6 +360,9 @@ class REGINA_API NCyclotomic {
          * The polynomial representation for this field element will
          * simply be a constant.
          *
+         * \pre This field element has already been initialised (and so
+         * it already has specified an underlying cyclotomic field).
+         *
          * @param scalar the new rational value of this field element.
          * @return a reference to this field element.
          */
@@ -348,6 +375,9 @@ class REGINA_API NCyclotomic {
 
         /**
          * Inverts this field element.
+         *
+         * \pre This field element has already been initialised (and so
+         * it already has specified an underlying cyclotomic field).
          *
          * \pre This field element is non-zero.
          */
