@@ -132,6 +132,7 @@ void addNPolynomial() {
         .def("set", &NPolynomial<NRational>::set)
         .def(self == self)
         .def(self != self)
+        .def("swap", &NPolynomial<NRational>::swap)
         .def(self *= NRational())
         .def(self /= NRational())
         .def(self += self)

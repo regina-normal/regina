@@ -49,21 +49,32 @@ namespace {
         return new regina::NPolynomial<regina::NRational>(
             NCyclotomic::cyclotomic(n));
     }
+
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_evaluate,
+        NCyclotomic::evaluate, 0, 1);
 }
 
 void addNCyclotomic() {
-    scope s = class_<NCyclotomic>("NCyclotomic", init<size_t>())
+    scope s = class_<NCyclotomic, std::auto_ptr<NCyclotomic>,
+            boost::noncopyable>("NCyclotomic")
+        .def(init<size_t>())
         .def(init<size_t, int>())
         .def(init<size_t, const regina::NRational&>())
         .def(init<const NCyclotomic&>())
         .def("init", &NCyclotomic::init)
         .def("field", &NCyclotomic::field)
         .def("degree", &NCyclotomic::degree)
-        .def("__getitem__", getItem,
-            return_internal_reference<>())
+        .def("__getitem__", getItem, return_internal_reference<>())
         .def("__setitem__", setItem)
-        .def("evaluate", &NCyclotomic::evaluate)
+        .def("polynomial", &NCyclotomic::polynomial,
+            return_value_policy<manage_new_object>())
+        .def("evaluate", &NCyclotomic::evaluate, OL_evaluate())
+        .def(self == self)
+        .def(self != self)
+        .def("negate", &NCyclotomic::invert)
         .def("invert", &NCyclotomic::invert)
+        .def(self *= regina::NRational())
+        .def(self /= regina::NRational())
         .def(self += self)
         .def(self -= self)
         .def(self *= self)
