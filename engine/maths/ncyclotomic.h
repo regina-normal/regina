@@ -64,6 +64,10 @@ namespace regina {
  * Using this isomorphism, each element of the cyclotomic field can be
  * uniquely represented as a rational polynomial of degree strictly less than
  * <tt>deg(Φ_n) = φ(n)</tt>, where <tt>φ</tt> denotes Euler's totient function.
+ * This class stores field elements using such a polynomial representation,
+ * and does \e not store complex numbers directly.  If you require the
+ * complex value of a field element (as a floating point approximation),
+ * you can call evaluate().
  *
  * Each object of this class stores both the value of the field element
  * and the order \a n of the underlying field.  This means that you can
@@ -255,9 +259,34 @@ class REGINA_API NCyclotomic {
          */
         NPolynomial<NRational>* polynomial() const;
         /**
-         * TODO
+         * Returns the value of this cyclotomic field element as a
+         * complex number.
+         *
+         * The evaluation depends upon \e which primitive root of unity
+         * is used to build the underlying cyclotomic field of order \a n.
+         * This ambiguity is resolved as follows.
+         *
+         * Suppose the polynomial representation of this field element in
+         * <tt>ℚ[x]/Φ_n</tt> (as described in the NCyclotomic class notes) is
+         * <tt>f(x)</tt>.  Then the evaluation of this field element will be
+         * <tt>f(ρ)</tt>, where \a ρ is the <tt>n</tt>th root of unity
+         * <tt>ρ = exp(2πi × k/n)</tt>,
+         * and where \a k is the argument \e whichRoot as passed to this
+         * routine.
+         *
+         * \pre The argument \e whichRoot is coprime to \a n (the order of
+         * the underlying cyclotomic field).
+         *
+         * \warning This routine uses floating point arithmetic, and so the
+         * value that it returns is subject to the usual floating point error.
+         *
+         * @param whichRoot indicates which root of unity will be used
+         * to convert the polynomial representation of this field
+         * element into a complex number.
+         * @return a floating-point approximation of this cyclotomic field
+         * element as a complex number.
          */
-        std::complex<double> evaluate(size_t whichRoot) const;
+        std::complex<double> evaluate(size_t whichRoot = 1) const;
 
         /**
          * Tests whether or not this and the given argument are the same
