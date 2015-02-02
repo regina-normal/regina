@@ -145,6 +145,8 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
     protected:
         /**
          * Note: loops are ignored.
+         *
+         * \ifacespython Not present.
          */
         struct Graph {
             int order_;
