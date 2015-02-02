@@ -62,11 +62,7 @@ class NTreeBag;
 
 enum TreeDecompositionAlg {
     TD_UPPER = 0x0001,
-    TD_UPPER_GREEDY_FILL_IN = 0x0001,
-    /**
-     * Not yet implemented: will fall back to greedy for now.
-     */
-    TD_EXACT = 0x0010
+    TD_UPPER_GREEDY_FILL_IN = 0x0001
 };
 
 enum BagComparison {

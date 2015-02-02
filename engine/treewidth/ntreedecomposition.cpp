@@ -140,9 +140,6 @@ void NTreeDecomposition::construct(Graph& graph, TreeDecompositionAlg alg) {
     }
 
     switch (alg) {
-        case TD_EXACT:
-            // TODO: Implement an exact algorithm.
-
         case TD_UPPER_GREEDY_FILL_IN:
         default:
             greedyFillIn(graph);

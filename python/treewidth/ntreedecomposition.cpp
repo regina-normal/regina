@@ -112,12 +112,10 @@ void addNTreeDecomposition() {
     enum_<regina::TreeDecompositionAlg>("TreeDecompositionAlg")
         .value("TD_UPPER", regina::TD_UPPER)
         .value("TD_UPPER_GREEDY_FILL_IN", regina::TD_UPPER_GREEDY_FILL_IN)
-        .value("TD_EXACT", regina::TD_EXACT)
         ;
 
     global.attr("TD_UPPER") = regina::TD_UPPER;
     global.attr("TD_UPPER_GREEDY_FILL_IN") = regina::TD_UPPER_GREEDY_FILL_IN;
-    global.attr("TD_EXACT") = regina::TD_EXACT;
 
     enum_<regina::BagComparison>("BagComparison")
         .value("BAG_EQUAL", regina::BAG_EQUAL)
