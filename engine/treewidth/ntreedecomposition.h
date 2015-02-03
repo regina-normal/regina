@@ -33,7 +33,8 @@
 /* end stub */
 
 /*! \file treewidth/ntreedecomposition.h
- *  \brief Deals with tree decompositions of facet pairing graphs.
+ *  \brief Deals with treewidth and tree decompositions, in particular
+ *  for facet pairing graphs.
  */
 
 #ifndef __NTREEDECOMPOSITION_H
@@ -57,24 +58,94 @@ namespace regina {
 class NTreeBag;
 
 /**
- * TODO: Document this file.
+ * Indicates which algorithm should be used to compute a tree decomposition
+ * of a graph.
+ *
+ * Additional algorithms may be added to this list in future versions of
+ * Regina.
  */
-
 enum TreeDecompositionAlg {
+    /**
+     * Indicates that a fast upper bound algorithm should be used.
+     *
+     * This does not promise to find a tree decomposition of smallest
+     * possible width (an NP-hard problem), but it does promise to run
+     * in small polynomial time.
+     *
+     * This constant \a TD_UPPER indicates that the "most appropriate"
+     * upper bound algorithm should be used.  This is a good choice for
+     * users who just want a good tree decomposition and want it quickly,
+     * without needing to know the details of how it was produced.
+     */
     TD_UPPER = 0x0001,
+    /**
+     * Indicates that the greedy fill-in heuristic should be used.
+     *
+     * This does not promise to find a tree decomposition of smallest
+     * possible width (an NP-hard problem), but it does promise to run
+     * in small polynomial time.
+     *
+     * The greedy fill-in heuristic has been found experimentally to perform
+     * well on general graphs (T. van Dijk, J.-P. van den Heuvel and W. Slob,
+     * "Computing treewidth with LibTW", www.treewidth.com, 2006).
+     * Experimentation within Regina also suggests that it performs well in
+     * the setting of face pairing graphs of 3-manifold triangulations.
+     */
     TD_UPPER_GREEDY_FILL_IN = 0x0001
 };
 
+/**
+ * Indicates the relationship between two bags in a tree decomposition.
+ */
 enum BagComparison {
+    /**
+     * Indicates that the two bags have identical contents.
+     */
     BAG_EQUAL = 0,
+    /**
+     * Indicates that the first bag is a strict subset of the second.
+     */
     BAG_SUBSET = -1,
+    /**
+     * Indicates that the first bag is a strict superset of the second.
+     */
     BAG_SUPERSET = 1,
+    /**
+     * Indicates that neither bag is a subset of the other.
+     */
     BAG_UNRELATED = 2
 };
 
+/**
+ * Used to indicate the type of each bag in a \e nice tree decomposition.
+ *
+ * A nice tree decomposition is produced by calling
+ * NTreeDecomposition::makeNice().  As a result:
+ *
+ * - every bag will be either an \e introduce bag, a \e forget bag, or a
+ *   \e join bag, as defined below;
+ *
+ * - the root bag will be a forget bag, and will be empty;
+ *
+ * - every leaf bag will be an introduce bag, containing precisely one node.
+ */
 enum NiceType {
+    /**
+     * Indicates an introduce bag.  An \e introduce bag has only one child bag.
+     * It contains all of the nodes in this child bag plus exactly one
+     * new node, and contains no other nodes besides these.
+     */
     NICE_INTRODUCE = 1,
+    /**
+     * Indicates a forget bag.  A \e forget bag has only one child bag.
+     * It contains all of the nodes in this child bag except for exactly one
+     * missing node, and contains no other nodes besides these.
+     */
     NICE_FORGET = 2,
+    /**
+     * Indicates a join bag.  A \e join bag has exactly two child bags,
+     * where the join bag and both of its child bags are all identical.
+     */
     NICE_JOIN = 3
 };
 
@@ -85,18 +156,29 @@ class REGINA_API NTreeBag : public ShareableObject {
         int* elements_;
             /**< The elements of this bag, sorted in ascending order. */
         NTreeBag* parent_;
+            /**< The parent of this bag, or \c null if this is the root bag. */
         NTreeBag* sibling_;
+            /**< The next sibling of this bag, or \c null if this is the
+                 last child of the parent bag. */
         NTreeBag* children_;
+            /**< The first child of this bag.  The remaining children
+                 can be accessed from the first child by repeatedly
+                 calling sibling(). */
         int type_;
-            /**< Zero if nothing special; otherwise a non-zero type
-                 constant specific to the application. */
+            /**< Used where necessary to indicate the role that this bag
+                 plays in the tree decomposition.  See type() for details. */
         int subtype_;
+            /**< Used where necessary to give more precise information
+                 (in addition to \a type_) on the role that this bag plays
+                 in the tree decomposition.  See subtype() for details. */
         int index_;
-            /**< Undefined until set by NTreeDecomposition.
-                 Otherwise ordered from leaves to root. */
+            /**< Indicates the index of this bag within the underlying
+                 tree decomposition, following a leaves-to-root ordering
+                 of the bags.  See index() for details. */
 
     public:
         /**
+         * TODO: HERE.
          * Note: only the list of elements will be cloned.
          * The bag will not be inserted into the tree (so parent_, sibling_
          * and children_ will all be null), and type and subtype will not
@@ -110,6 +192,10 @@ class REGINA_API NTreeBag : public ShareableObject {
         bool contains(int element) const;
         int index() const;
 
+        /**
+         * Zero if nothing special; otherwise a non-zero type
+         * constant specific to the application.
+         */
         int type() const;
         int subtype() const;
 
