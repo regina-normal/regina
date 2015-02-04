@@ -329,13 +329,6 @@ void NTriangulation::writeXMLPacketData(std::ostream& out) const {
             << '\n';
     if (haken_.known())
         out << "  " << xmlValueTag("haken", haken_.value()) << '\n';
-    if (! turaevViroCache_.empty()) {
-        for (TuraevViroSet::const_iterator it = turaevViroCache_.begin();
-                it != turaevViroCache_.end(); it++)
-            out << "  <turaevviro r=\"" << (*it).first.first
-                << "\" root=\"" << (*it).first.second
-                << "\" value=\"" << (*it).second << "\"/>\n";
-    }
 }
 
 NTriangulation* NTriangulation::enterTextTriangulation(std::istream& in,
