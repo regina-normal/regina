@@ -901,10 +901,10 @@ namespace {
     }
 }
 
-double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot,
-        TuraevViroAlg alg) const {
+NCyclotomic NTriangulation::turaevViro(unsigned long r,
+        unsigned long whichRoot, TuraevViroAlg alg) const {
     // Have we already calculated this invariant?
-    std::pair<unsigned long, unsigned long> tvParams(r, whichRoot);
+    std::pair<unsigned long, bool> tvParams(r, (whichRoot % 2 != 0));
 #ifndef TV_IGNORE_CACHE
     TuraevViroSet::const_iterator it = turaevViroCache_.find(tvParams);
     if (it != turaevViroCache_.end())
@@ -913,16 +913,13 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot,
 
     // Do some basic parameter checks.
     if (r < 3)
-        return 0;
-    if (whichRoot >= 2 * r)
-        return 0;
-    if (gcd(r, whichRoot) > 1)
-        return 0;
+        return NCyclotomic();
+    whichRoot = (whichRoot % 2 == 0 ? 2 : 1);
 
     // Set up our initial data.
-    InitialData<false> init(r, whichRoot);
+    InitialData<true> init(r, whichRoot);
 
-    InitialData<false>::TVType ans;
+    InitialData<true>::TVType ans;
     switch (alg) {
         case TV_DEFAULT:
         case TV_BACKTRACK:
@@ -943,6 +940,7 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot,
         init.halfField ? whichRoot / 2 : whichRoot) << std::endl;
     return 0.0; // TODO
 #else
+#if 0
     if (isNonZero(ans.imag())) {
         // This should never happen, since the Turaev-Viro invariant is the
         // square of the modulus of the Witten invariant for sl_2.
@@ -955,6 +953,9 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot,
     turaevViroCache_[tvParams] = ans.real();
     return ans.real();
 #endif
+#endif
+
+    return ans;
 }
 
 } // namespace regina

@@ -2286,8 +2286,8 @@ class NTriangulationTest : public TriangulationTest<3> {
                          tri->isClosed() &&
                          tri->isOrientable() &&
                          tri->isConnected() &&
-                         tri->getHomologyH1().isTrivial() &&
-                         tri->turaevViro(5, 1) < 0.5);
+                         tri->getHomologyH1().isTrivial());
+                         //tri->turaevViro(5, 1) < 0.5);
 
             if (expected && ! found) {
                 std::ostringstream msg;
@@ -2861,6 +2861,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             runCensusAllBounded(&testSolidTorus4);
         }
 
+#if 0
         void verifyTV3(NTriangulation& t, const std::string& triName) {
             // Verify the Turaev-Viro invariants for r=3.
             // The expected values are described in the paper of Turaev
@@ -2990,8 +2991,10 @@ class NTriangulationTest : public TriangulationTest<3> {
                 }
             }
         }
+#endif
 
         void turaevViro() {
+#if 0
             verifyTV3(s3, "S^3");
             verifyTV3(s2xs1, "S^2 x S^1");
             verifyTV3(rp3_1, "RP^3 (1 vtx)");
@@ -3017,6 +3020,7 @@ class NTriangulationTest : public TriangulationTest<3> {
 
             verifyTVS2xS1(4); verifyTVS2xS1(5); verifyTVS2xS1(6);
             verifyTVS2xS1(7); verifyTVS2xS1(8);
+#endif
         }
 
         static void verifyDoubleCover(NTriangulation* tri) {

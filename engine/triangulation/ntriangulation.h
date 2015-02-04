@@ -51,6 +51,7 @@
 #include "algebra/ngrouppresentation.h"
 #include "angle/nanglestructure.h"
 #include "generic/ngenerictriangulation.h"
+#include "maths/ncyclotomic.h"
 #include "packet/npacket.h"
 #include "utilities/nbooleans.h"
 #include "utilities/nmarkedvector.h"
@@ -185,7 +186,7 @@ class REGINA_API NTriangulation : public NPacket,
                 BoundaryComponentIterator;
             /**< Used to iterate through boundary components. */
 
-        typedef std::map<std::pair<unsigned long, unsigned long>, double>
+        typedef std::map<std::pair<unsigned long, bool>, NCyclotomic>
                 TuraevViroSet;
             /**< A map from (r, whichRoot) pairs to Turaev-Viro invariants. */
 
@@ -1424,7 +1425,7 @@ class REGINA_API NTriangulation : public NPacket,
          *
          * @see allCalculatedTuraevViro
          */
-        double turaevViro(unsigned long r, unsigned long whichRoot,
+        NCyclotomic turaevViro(unsigned long r, unsigned long whichRoot,
             TuraevViroAlg alg = TV_DEFAULT) const;
         /**
          * Returns the set of all Turaev-Viro state sum invariants that

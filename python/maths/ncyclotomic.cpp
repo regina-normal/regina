@@ -55,8 +55,7 @@ namespace {
 }
 
 void addNCyclotomic() {
-    scope s = class_<NCyclotomic, std::auto_ptr<NCyclotomic>,
-            boost::noncopyable>("NCyclotomic")
+    scope s = class_<NCyclotomic, std::auto_ptr<NCyclotomic> >("NCyclotomic")
         .def(init<size_t>())
         .def(init<size_t, int>())
         .def(init<size_t, const regina::NRational&>())
