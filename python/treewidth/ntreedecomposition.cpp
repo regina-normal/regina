@@ -140,8 +140,7 @@ void addNTreeDecomposition() {
     global.attr("NICE_JOIN") = regina::NICE_JOIN;
 
     class_<NTreeBag, bases<regina::ShareableObject>,
-            std::auto_ptr<NTreeBag>, boost::noncopyable>("NTreeBag",
-            init<const NTreeBag&>())
+            std::auto_ptr<NTreeBag>, boost::noncopyable>("NTreeBag", no_init)
         .def("size", &NTreeBag::size)
         .def("element", &NTreeBag::element)
         .def("contains", &NTreeBag::contains)

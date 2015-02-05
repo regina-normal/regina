@@ -177,14 +177,6 @@ class REGINA_API NTreeBag : public ShareableObject {
                  of the bags.  See index() for details. */
 
     public:
-        /**
-         * TODO: HERE.
-         * Note: only the list of elements will be cloned.
-         * The bag will not be inserted into the tree (so parent_, sibling_
-         * and children_ will all be null), and type and subtype will not
-         * be set.
-         */
-        NTreeBag(const NTreeBag& cloneMe);
         ~NTreeBag();
 
         int size() const;
@@ -213,6 +205,14 @@ class REGINA_API NTreeBag : public ShareableObject {
 
     private:
         NTreeBag(int size);
+
+        /**
+         * Note: only the list of elements will be cloned.
+         * The bag will not be inserted into the tree (so parent_, sibling_
+         * and children_ will all be null), and type and subtype will not
+         * be set.
+         */
+        NTreeBag(const NTreeBag& cloneMe);
 
         /**
          * Inserts as the first child.
