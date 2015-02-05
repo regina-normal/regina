@@ -133,9 +133,11 @@ void NTreeDecomposition::Graph::dump(std::ostream& out) const {
 
 void NTreeDecomposition::construct(Graph& graph, TreeDecompositionAlg alg) {
     if (graph.order_ == 0) {
-        // No tree, no bags.
+        // No tree, one empty bag.
         width_ = -1;
-        size_ = 0;
+        size_ = 1;
+        root_ = new NTreeBag(0);
+        reindex();
         return;
     }
 
