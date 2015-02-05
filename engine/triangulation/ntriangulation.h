@@ -123,11 +123,6 @@ enum TuraevViroAlg {
      * but it may require extremely large amounts of memory.
      */
     TV_TREEWIDTH = 2,
-    /**
-     * A polytope based algorithm.  This is based on a Hilbert basis
-     * computation.
-     */
-    TV_POLYTOPE = 3
 };
 
 /**
