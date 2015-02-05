@@ -159,6 +159,10 @@ enum NiceType {
  * these bags are subject to various constraints as described in the
  * NTreeDecomposition class notes.
  *
+ * In Regina, the underlying tree \a T is a rooted tree, so that every
+ * non-root bag has exactly one parent bag, and every bag has some
+ * number of children (possibly many, possibly zero).
+ *
  * This class NTreeBag represents a single bag in a tree decomposition.
  *
  * - You can query which nodes of \a G the bag contains through the member
@@ -173,7 +177,7 @@ enum NiceType {
  *   with the help of member functions next(), nextPrefix() and index().
  *
  * - If the tree decomposition is of a special type (such as a \e nice
- *   tree decomposition), then each bag may be adorned with some addition
+ *   tree decomposition), then each bag may be adorned with some additional
  *   information; you can access this through the member functions type()
  *   and subtype().
  */
@@ -266,22 +270,170 @@ class REGINA_API NTreeBag : public ShareableObject {
         int index() const;
 
         /**
-         * TODO: HERE.
+         * Returns auxiliary information associated with bags in special
+         * classes of tree decompositions.
          *
-         * Zero if nothing special; otherwise a non-zero type
-         * constant specific to the application.
+         * If the underlying tree decomposition is of a special type,
+         * then each bag may be adorned with some additional information
+         * indicating the particular role that the bag plays.  This
+         * additional information can be accessed through the member
+         * functions type() and subtype().
+         *
+         * - If there is no type and/or subtype information stored for this
+         *   bag, then type() will return zero, and subtype() will be undefined.
+         *
+         * - If there is type and/or subtype information stored for this
+         *   bag, then the return value of type() is guaranteed to be non-zero.
+         *   The specific meaning of subtype() (and indeed whether it is even
+         *   defined) will typically depend on the return value of type().
+         *
+         * At present, types and subtypes are only stored for
+         * \e nice tree decompositions.  See NTreeDecomposition::makeNice()
+         * for details on what type() and subtype() represent.
+         *
+         * @return a non-zero value indicating the role that this bag plays
+         * in this tree decomposition, or zero if type and subtype information
+         * are not stored.
          */
         int type() const;
+        /**
+         * Returns a secondary level of auxiliary information associated with
+         * bags in special classes of tree decompositions.
+         *
+         * If the underlying tree decomposition is of a special type,
+         * then each bag may be adorned with some additional information
+         * indicating the particular role that the bag plays.  This
+         * additional information can be accessed through the member
+         * functions type() and subtype().
+         *
+         * - If there is no type and/or subtype information stored for this
+         *   bag, then type() will return zero, and subtype() will be undefined.
+         *
+         * - If there is type and/or subtype information stored for this
+         *   bag, then type() will be non-zero, and the specific meaning of
+         *   subtype() (and indeed whether it is even defined) will depend
+         *   on the value of type().
+         *
+         * At present, types and subtypes are only stored for
+         * \e nice tree decompositions.  See NTreeDecomposition::makeNice()
+         * for details on what type() and subtype() represent.
+         *
+         * @return additional information indicating the role that this
+         * bag plays in this tree decomposition, or undefined if no
+         * additional subtype information is stored for this bag.
+         */
         int subtype() const;
 
+        /**
+         * Determines if there is a subset/superset relationship between
+         * this and the given bag.
+         *
+         * Recall that, in a tree decomposition of a graph \a G, each
+         * bag is a set of nodes of \a G.  This function will return one
+         * of the following constants:
+         *
+         * - BAG_EQUAL if this and \a rhs are equal;
+         * - BAG_SUBSET if this bag is a strict subset of \a rhs;
+         * - BAG_SUPERSET if this bag is a strict superset of \a rhs;
+         * - BAG_UNRELATED if neither this nor \a rhs is a subset of the other.
+         *
+         * @param rhs the bag to compare with this.
+         * @return the relationship between the two bags, as outlined above.
+         */
         BagComparison compare(const NTreeBag& rhs) const;
 
+        /**
+         * Used for a postfix iteration through all of the bags in a tree
+         * decomposition.  Amongst other things, a \e postfix iteration is
+         * one in which all of the children of any bag \a b will be processed
+         * before \a b itself.
+         *
+         * If \a d is a tree decomposition, then you can complete a full
+         * postfix iteration of bags as follows:
+         *
+         * - the first bag in a postfix iteration is <tt>d.first()</tt>;
+         * - the next bag after \a b in the iteration is <tt>b.next()</tt>;
+         * - the iteration terminates when <tt>b.next()</tt> is \c null.
+         *
+         * This iteration processes the children of each bag in order;
+         * that is, it processes each bag \a b before <tt>b.sibling()</tt>
+         * (if the latter exists).
+         *
+         * The bags in a tree decomposition are indexed as 0,1,2,...,
+         * as described by the index() member function.  This postfix
+         * iteration is equivalent to iterating through bags 0,1,2,...
+         * in order.
+         *
+         * @return the next bag after this in a postfix iteration of all
+         * bags, or \c null if this is the final bag in such an iteration
+         * (i.e., the root bag).
+         */
         const NTreeBag* next() const;
+        /**
+         * Used for a prefix iteration through all of the bags in a tree
+         * decomposition.  Amongst other things, a \e prefix iteration is
+         * one in which each bag will be processed before any of its children.
+         *
+         * If \a d is a tree decomposition, then you can complete a full
+         * prefix iteration of bags as follows:
+         *
+         * - the first bag in a prefix iteration is <tt>d.firstPrefix()</tt>
+         *   (or equivalently, <tt>d.root()</tt>);
+         * - the next bag after \a b in the iteration is
+         *   <tt>b.nextPrefix()</tt>;
+         * - the iteration terminates when <tt>b.nextPrefix()</tt> is \c null.
+         *
+         * This iteration processes the children of each bag in order;
+         * that is, it processes each bag \a b before <tt>b.sibling()</tt>
+         * (if the latter exists).
+         *
+         * @return the next bag after this in a prefix iteration of all
+         * bags, or \c null if this is the final bag in such an iteration.
+         */
         const NTreeBag* nextPrefix() const;
 
+        /**
+         * Returns the parent of this bag in the underlying rooted tree.
+         *
+         * @return the parent of this bag, or \c null if this bag is at
+         * the root of the tree.
+         */
         const NTreeBag* parent() const;
+        /**
+         * Returns the first child of this bag in the underlying rooted tree.
+         *
+         * If a bag has no children, then children() will be \c null.
+         * If a bag has many children, then these will be
+         * <tt>children()</tt>, <tt>children()->sibling()</tt>,
+         * <tt>children()->sibling()->sibling()</tt>, and so on.
+         *
+         * @return the first child of this bag, or \c null if this is a
+         * leaf bag (i.e., it has no children).
+         */
         const NTreeBag* children() const;
+        /**
+         * Returns the next sibling of this bag in the underlying rooted tree.
+         *
+         * Specifically, if the parent of this bag has many children,
+         * then sibling() will return the next child after this.
+         *
+         * More generally, all of the children of a bag \a b can be accessed as
+         * <tt>b.children()</tt>, <tt>b.children()->sibling()</tt>,
+         * <tt>b.children()->sibling()->sibling()</tt>, and so on.
+         *
+         * @return the next sibling of this bag, or \c null if either
+         * (i) this is the final child of the parent bag, or
+         * (ii) this is the root bag.
+         */
         const NTreeBag* sibling() const;
+        /**
+         * Determines if this is a leaf bag.  A leaf bag is a bag with
+         * no children in the underlying tree.
+         *
+         * This is equivalent to testing whether children() is \c null.
+         *
+         * @return \c true if and only if this is a leaf bag.
+         */
         bool isLeaf() const;
 
         void writeTextShort(std::ostream& out) const;
@@ -340,6 +492,9 @@ class REGINA_API NTreeBag : public ShareableObject {
     friend class NTreeDecomposition;
 };
 
+/**
+ * TODO: HERE.
+ */
 class REGINA_API NTreeDecomposition : public ShareableObject {
     protected:
         /**
