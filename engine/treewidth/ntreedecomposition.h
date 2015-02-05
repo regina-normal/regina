@@ -566,19 +566,7 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
 
         void writeTextShort(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
-#if 0
-        /**
-         * Verifies that (i) all bag elements are in range;
-         * (ii) all elements appear in some bag; and
-         * (iii) the path condition holds.
-         * Does not verify the edge condition (since we do not have
-         * access to the edges of the underlying graph).
-         */
-        bool verify(int order) const;
 
-        template <int dim>
-        bool verify(const NGenericTriangulation<dim>& triangulation) const;
-#endif
     private:
         /**
          * Note: graph may be modified during this routine.
