@@ -149,21 +149,49 @@ enum NiceType {
     NICE_JOIN = 3
 };
 
+/**
+ * Represents a single bag in a tree decomposition.
+ *
+ * The class NTreeDecomposition is used to build, manipulate and iterate
+ * over tree decompositions of graphs.  A tree decomposition of a graph \a G
+ * consists of (i) an underlying tree \a T; and (ii) a \e bag at every node of
+ * this tree.  Each bag is a set of zero or more nodes of \a G, and
+ * these bags are subject to various constraints as described in the
+ * NTreeDecomposition class notes.
+ *
+ * This class NTreeBag represents a single bag in a tree decomposition.
+ *
+ * - You can query which nodes of \a G the bag contains through the member
+ *   functions size(), element() and contains().  It is assumed that the
+ *   nodes of \a G are numbered, and so the nodes stored in this bag are
+ *   simply represented as integers.
+ *
+ * - You can query the location of the bag in the underlying tree \a T
+ *   through the member functions parent(), children(), sibling() and isLeaf().
+ *
+ * - You can iterate through all the bags in the tree decomposition
+ *   with the help of member functions next(), nextPrefix() and index().
+ *
+ * - If the tree decomposition is of a special type (such as a \e nice
+ *   tree decomposition), then each bag may be adorned with some addition
+ *   information; you can access this through the member functions type()
+ *   and subtype().
+ */
 class REGINA_API NTreeBag : public ShareableObject {
     private:
         int size_;
-            /**< The number of elements in this bag. */
+            /**< The number of nodes (of the graph \a G) stored in this bag. */
         int* elements_;
-            /**< The elements of this bag, sorted in ascending order. */
+            /**< The individual nodes of this bag, sorted in ascending order. */
         NTreeBag* parent_;
-            /**< The parent of this bag, or \c null if this is the root bag. */
+            /**< The parent of this bag in the underlying tree \a T,
+                 or \c null if this is the root bag. */
         NTreeBag* sibling_;
-            /**< The next sibling of this bag, or \c null if this is the
-                 last child of the parent bag. */
+            /**< The next sibling of this bag in the underlying tree \a T,
+                 or \c null if this is the final child of the parent bag. */
         NTreeBag* children_;
-            /**< The first child of this bag.  The remaining children
-                 can be accessed from the first child by repeatedly
-                 calling sibling(). */
+            /**< The first child of this bag in the underlying tree \a T,
+                 or \c null if this bag is a leaf of the tree. */
         int type_;
             /**< Used where necessary to indicate the role that this bag
                  plays in the tree decomposition.  See type() for details. */
@@ -177,14 +205,69 @@ class REGINA_API NTreeBag : public ShareableObject {
                  of the bags.  See index() for details. */
 
     public:
+        /**
+         * Destroys this bag.
+         */
         ~NTreeBag();
 
+        /**
+         * Returns the number of graph nodes stored in this bag.
+         *
+         * Suppose this is a bag in a tree decomposition of some graph \a G.
+         * Then each bag is a subset of the nodes of \a G, and this
+         * function simply returns the size of this subset.
+         *
+         * @return the number of graph nodes in this bag.
+         */
         int size() const;
+        /**
+         * Used to query the individual graph nodes stored in this bag.
+         *
+         * Suppose this is a bag in a tree decomposition of some graph \a G;
+         * recall that we assume that the nodes of \a G are numbered.
+         * Then <tt>element(i)</tt> returns the number of the <i>i</i>th
+         * node stored in this bag.
+         *
+         * Nodes are always stored in ascending order.  This means that
+         * <tt>element(0) &lt; element(1) &lt; element(2) &lt; ...</tt>.
+         *
+         * @param which indicates which node should be returned; this
+         * must be between 0 and size()-1 inclusive.
+         * @return the number of the corresponding node stored in this bag.
+         */
         int element(int which) const;
+        /**
+         * Queries whether a given graph node is contained in this bag.
+         *
+         * Suppose this is a bag in a tree decomposition of some graph \a G;
+         * recall that we assume that the nodes of \a G are numbered.
+         * Then <tt>contains(x)</tt> queries whether the node numbered \a x
+         * is contained in this bag.
+         *
+         * @param element the number of some node in the graph \a G.
+         * @return \c true if and only if the given node is in this bag.
+         */
         bool contains(int element) const;
+
+        /**
+         * Returns the index of this bag within the full tree decomposition.
+         *
+         * Suppose the entire tree decomposition contains \a n bags.
+         * Then these bags are automatically numbered 0,1,...,<i>n</i>-1.
+         * This member function returns the number of this particular bag.
+         *
+         * The numbering of bags follows a leaves-to-root scheme.  In other
+         * words, for any non-root bag \a b we have
+         * <tt>b.index() &lt; b.parent()->index()</tt>.
+         *
+         * @return the index of this bag within the full tree decomposition
+         * \a d; this will be between 0 and <tt>d.size()-1</tt> inclusive.
+         */
         int index() const;
 
         /**
+         * TODO: HERE.
+         *
          * Zero if nothing special; otherwise a non-zero type
          * constant specific to the application.
          */
@@ -204,23 +287,53 @@ class REGINA_API NTreeBag : public ShareableObject {
         void writeTextShort(std::ostream& out) const;
 
     private:
+        /**
+         * Creates a new bag with space allocated to hold the given number of
+         * graph nodes.
+         *
+         * Specifically, the member \a size_ will be set and the array
+         * \e elements_ will be allocated to this size, but the \e contents of
+         * the array (i.e., the graph nodes themselves) will be left
+         * uninitialised.
+         *
+         * This new bag will not be inserted into the tree, and will not
+         * be assigned any other information (such as index, type or subtype).
+         *
+         * @param size the number of nodes that will be contained in the
+         * new bag.
+         */
         NTreeBag(int size);
 
         /**
-         * Note: only the list of elements will be cloned.
-         * The bag will not be inserted into the tree (so parent_, sibling_
-         * and children_ will all be null), and type and subtype will not
-         * be set.
+         * Creates a new bag containing the same graph nodes as the given bag.
+         *
+         * Specifically, only the list of nodes stored in the given bag will
+         * be cloned.  This new bag will not be inserted into the tree, and
+         * will not be assigned any other information (such as index,
+         * type or subtype).
+         *
+         * @param cloneMe the bag whose contents should be cloned.
          */
         NTreeBag(const NTreeBag& cloneMe);
 
         /**
-         * Inserts as the first child.
+         * Inserts the given bag into the tree as the first child of this bag.
+         *
+         * Any existing children of this bag will become siblings of \a child.
+         *
+         * \pre The given bag has not yet been inserted into the tree.
+         *
+         * @param child the bag to insert into the tree.
          */
         void insertChild(NTreeBag* child);
 
         /**
-         * Only swaps the lists of elements.
+         * Swaps the contents of this and the given bag.
+         *
+         * This only swaps the nodes stored in each bag.  It does not
+         * switch the positions of the two bags in the underlying tree.
+         *
+         * @param other the bag to swap contents with this.
          */
         void swapContents(NTreeBag& other);
 

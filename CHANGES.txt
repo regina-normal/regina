@@ -58,6 +58,9 @@ Version 4.97  [ (under development) ]
               over arbitrary rings.
         Class NSurfaceFilterProperties:
             - New set-based routine setECs().
+        Class NTreeBag, NTreeDecomposition:
+            - Classes for computing tree decompositions of graphs
+              (including facet pairing graphs of triangulations).
         Class NTriangle:
             - Added a new Type enumeration, which encapsulates (and replaces)
               the old triangle type constants.  Also added a new type
