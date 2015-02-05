@@ -93,9 +93,9 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_puncture,
         NTriangulation::puncture, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_turaevViro,
-        NTriangulation::turaevViro, 2, 3);
+        NTriangulation::turaevViro, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_turaevViroApprox,
-        NTriangulation::turaevViroApprox, 2, 3);
+        NTriangulation::turaevViroApprox, 1, 3);
 
     void simplifiedFundamentalGroup_own(NTriangulation& tri,
             std::auto_ptr<regina::NGroupPresentation> group) {

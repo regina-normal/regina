@@ -1458,7 +1458,7 @@ class REGINA_API NTriangulation : public NPacket,
          *
          * @see allCalculatedTuraevViro
          */
-        NCyclotomic turaevViro(unsigned long r, bool parity,
+        NCyclotomic turaevViro(unsigned long r, bool parity = true,
             TuraevViroAlg alg = TV_DEFAULT) const;
         /**
          * Computes the given Turaev-Viro state sum invariant of this
@@ -1507,7 +1507,7 @@ class REGINA_API NTriangulation : public NPacket,
          *
          * @see allCalculatedTuraevViro
          */
-        double turaevViroApprox(unsigned long r, unsigned long whichRoot,
+        double turaevViroApprox(unsigned long r, unsigned long whichRoot = 1,
             TuraevViroAlg alg = TV_DEFAULT) const;
         /**
          * Returns the cache of all Turaev-Viro state sum invariants that
