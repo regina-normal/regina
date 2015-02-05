@@ -167,8 +167,8 @@ enum NiceType {
  *
  * - You can query which nodes of \a G the bag contains through the member
  *   functions size(), element() and contains().  It is assumed that the
- *   nodes of \a G are numbered, and so the nodes stored in this bag are
- *   simply represented as integers.
+ *   nodes of \a G are numbered 0,1,2,..., and so the nodes stored in this
+ *   bag are simply represented as integers.
  *
  * - You can query the location of the bag in the underlying tree \a T
  *   through the member functions parent(), children(), sibling() and isLeaf().
@@ -180,6 +180,13 @@ enum NiceType {
  *   tree decomposition), then each bag may be adorned with some additional
  *   information; you can access this through the member functions type()
  *   and subtype().
+ *
+ * To \e build a tree decomposition of a graph, see the various
+ * NTreeDecomposition class constructors.
+ *
+ * Note that a bag may be empty (indeed, if you call
+ * NTreeDecomposition::makeNice() then it is guaranteed that the root bag
+ * will be empty).
  */
 class REGINA_API NTreeBag : public ShareableObject {
     private:
@@ -227,8 +234,8 @@ class REGINA_API NTreeBag : public ShareableObject {
         /**
          * Used to query the individual graph nodes stored in this bag.
          *
-         * Suppose this is a bag in a tree decomposition of some graph \a G;
-         * recall that we assume that the nodes of \a G are numbered.
+         * Suppose this is a bag in a tree decomposition of some graph \a G,
+         * whose nodes are numbered 0,1,2,....
          * Then <tt>element(i)</tt> returns the number of the <i>i</i>th
          * node stored in this bag.
          *
@@ -243,8 +250,8 @@ class REGINA_API NTreeBag : public ShareableObject {
         /**
          * Queries whether a given graph node is contained in this bag.
          *
-         * Suppose this is a bag in a tree decomposition of some graph \a G;
-         * recall that we assume that the nodes of \a G are numbered.
+         * Suppose this is a bag in a tree decomposition of some graph \a G,
+         * whose nodes are numbered 0,1,2,....
          * Then <tt>contains(x)</tt> queries whether the node numbered \a x
          * is contained in this bag.
          *
@@ -493,39 +500,139 @@ class REGINA_API NTreeBag : public ShareableObject {
 };
 
 /**
- * TODO: HERE.
+ * Represents a tree decomposition of a graph.
+ *
+ * Whilst this class can be used to build tree decompositions of
+ * arbitrary graphs, it also offers a simple interface for building a
+ * tree decomposition of the facet pairing graph of a given triangulation.
+ * This is an important step in the implementation of fixed-parameter
+ * tractable algorithms on triangulated manifolds.
+ *
+ * Given a graph \a G, a tree decomposition of \a G consists of
+ * (i) an underlying tree \a T; and (ii) a \e bag at every node of
+ * this tree.  Each bag is a set of zero or more nodes of \a G, and
+ * these bags are subject to the following constraints:
+ *
+ * - Every node of \a G belongs to some bag;
+ *
+ * - Every arc of \a G has both its endpoints in some common bag;
+ *
+ * - For every node \a v of \a G, the set of \e all bags containing \a v
+ *   forms a (connected) subtree of \a T.
+ *
+ * In Regina, the underlying tree \a T is a rooted tree, so that every
+ * non-root bag has exactly one parent bag, and every bag has some
+ * number of children (possibly many, possibly zero).
+ *
+ * Tree decompositions are generally considered "better" if their bags
+ * are smaller (i.e., contain fewer nodes of \a G).  To this end, the
+ * \e width of a tree decomposition is one less than its largest bag size,
+ * and the \e treewidth of \a G is the minimum width over all tree
+ * decompositions of \a G.
+ *
+ * A tree decomposition is described by a single NTreeDecomposition object,
+ * and the class NTreeBag is used to represent each individual bag.
+ *
+ * - You can build a tree decomposition using the various
+ *   NTreeDecomposition constructors, and manipulate it using member
+ *   functions such as compress() and makeNice().
+ *
+ * - To iterate through the bags of the tree decomposition, you can use
+ *   NTreeDecomposition::first() and NTreeBag::next() (for a postfix
+ *   iteration), or you can use NTreeDecomposition::firstPrefix() and
+ *   NTreeBag::nextPrefix() (for a prefix iteration).
+ *
+ * The bags themselves are stored as sets of integers: it is assumed that the
+ * nodes of \a G are numbered 0,1,2,..., and so the bags simply store the
+ * numbers of the nodes that they contain.
+ *
+ * This class also numbers its bags 0,1,...,size()-1 in a leaves-to-root
+ * manner; that is, for each non-root bag \a b, the parent of \a b will
+ * have a higher index than \a b itself.  This may be useful if you wish
+ * to store auxiliary information alongside each bag in a separate array.
+ * You can access this numbering through the function NTreeBag::index().
+ * (Note that NTreeDecomposition does not store its bags in an array, and so
+ * does not offer a "random access" function to access the bag at an
+ * arbitrary index.)
+ *
+ * There are two broad classes of algorithms for building tree
+ * decompositions: (i) \e exact algorithms, which are slow but guarantee to
+ * find a tree decomposition of the smallest possible width; and
+ * (ii) \e greedy algorithms, which are fast and which aim to keep the width
+ * small but which do not promise minimality.  Currently Regina only
+ * offers greedy algorithms, though this may change in a future release.
+ * See the TreeDecompositionAlg enumeration for a list of all algorithms
+ * that are currently available.
+ *
+ * Whilst individual bags are allowed to be empty, this class insists
+ * that any tree decomposition must contain at least one bag.  In
+ * particular, if \a G is the empty graph, then a typical tree
+ * decomposition would consist of just one empty bag.
  */
 class REGINA_API NTreeDecomposition : public ShareableObject {
     protected:
         /**
-         * Note: loops are ignored.
+         * Represents a graph, which may be directed or undirected.
+         *
+         * This is an internal class, used to convert input graphs into
+         * a common format before passing them to the main tree
+         * decomposition algorithms.
          *
          * \ifacespython Not present.
          */
         struct Graph {
             int order_;
+                /**< The number of nodes in the graph. */
             bool** adj_;
+                /**< The adjacency matrix for the graph.  Specifically,
+                     adj_[i][j] is \c true if and only if there is an
+                     arc from node \a i to node \a j. */
 
             /**
-             * Fills with false.
+             * Constructs a new graph with no arcs.
+             *
+             * @param order the number of nodes in the new graph.
              */
             Graph(int order);
+            /**
+             * Destroys this graph.
+             */
             ~Graph();
 
+            /**
+             * Writes the adjacency matrix of this graph in a compact
+             * format to the given output stream.
+             *
+             * The output will be formatted as a matrix, and will be
+             * spread across multiple lines.
+             *
+             * @param out the output stream to which to write.
+             */
             void dump(std::ostream& out) const;
         };
 
     private:
         int width_;
-            /**< The width of the tree decomposition; that is, one less
+            /**< The width of this tree decomposition; that is, one less
                  than the maximum bag size. */
         int size_;
+            /**< The number of bags in this tree decomposition. */
         NTreeBag* root_;
+            /**< The bag at the root of the underlying tree. */
 
     public:
         /**
-         * \ifacespython The first argument must be of type NTriangulation
-         * or Dim2Triangulation.
+         * Builds a tree decomposition of the facet pairing graph of the
+         * given triangulation.
+         *
+         * The nodes of the graph will be numbered in the same way as
+         * the top-dimensional simplices of the given triangulation.
+         *
+         * @param triangulation the triangulation whose facet pairing
+         * graph we are working with.
+         * @param alg the algorithm that should be used to compute the
+         * tree decomposition; in particular, this specifies whether to
+         * use a slow exact algorithm or a fast greedy algorithm.
          */
         template <int dim>
         NTreeDecomposition(
@@ -533,8 +640,16 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
             TreeDecompositionAlg alg = TD_UPPER);
 
         /**
-         * \ifacespython The first argument must be of type NFacePairing
-         * or Dim2EdgePairing.
+         * Builds a tree decomposition of the given facet pairing graph.
+         *
+         * The nodes of the graph will be numbered in the same way as
+         * the top-dimensional simplices of the given triangulation.
+         *
+         * @param triangulation the triangulation whose facet pairing
+         * graph we are working with.
+         * @param alg the algorithm that should be used to compute the
+         * tree decomposition; in particular, this specifies whether to
+         * use a slow exact algorithm or a fast greedy algorithm.
          */
         template <int dim>
         NTreeDecomposition(
@@ -542,26 +657,131 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
             TreeDecompositionAlg alg = TD_UPPER);
 
         /**
-         * Note: if the matrix is asymmetric (a digraph), then the
-         * undirected graph will be used.  Loops are ignored.
+         * Builds a tree decomposition of an arbitrary graph.
+         * The graph may be directed or undirected.
+         *
+         * The graph is specified by an adjacency matrix.  The matrix
+         * may contain any data type (this is the template argument \a T).
+         * However, the contents of this matrix will be interpreted as
+         * booleans: an arc runs from node \a i to node \a j if and
+         * only if \a graph[i][j] is \c true when interpreted as a boolean.
+         *
+         * \ifacespython The adjacency matrix should be given as a
+         * list of lists.  There is no need to use the same data type \a T
+         * throughout: each element of the matrix will be individually
+         * interpreted as a boolean as described above.
+         *
+         * @param order the number of nodes in the graph.
+         * @param graph the adjacency matrix of the graph.
+         * @param alg the algorithm that should be used to compute the
+         * tree decomposition; in particular, this specifies whether to
+         * use a slow exact algorithm or a fast greedy algorithm.
          */
         template <typename T>
         NTreeDecomposition(unsigned order, T const** const graph,
             TreeDecompositionAlg alg = TD_UPPER);
 
+        /**
+         * Destroys this tree decomposition and all of its bags.
+         */
         ~NTreeDecomposition();
 
+        /**
+         * Returns the width of this tree decomposition.
+         * This is one less than the size of the largest bag.
+         *
+         * @return the width of this tree decomposition.
+         */
         int width() const;
+        /**
+         * Returns the number of bags in this tree decomposition.
+         *
+         * This is guaranteed to be strictly positive.
+         *
+         * @return the number of bags.
+         */
         int size() const;
 
+        /**
+         * Returns the bag at the root of the underlying tree.
+         *
+         * The return value of this function is guaranteed to be non-null.
+         *
+         * @return the root bag.
+         */
         const NTreeBag* root() const;
+        /**
+         * Used for a postfix iteration through all of the bags in the tree
+         * decomposition.  Amongst other things, a \e postfix iteration is
+         * one in which all of the children of any bag \a b will be processed
+         * before \a b itself.
+         *
+         * If \a d is a tree decomposition, then you can complete a full
+         * postfix iteration of bags as follows:
+         *
+         * - the first bag in a postfix iteration is <tt>d.first()</tt>;
+         * - the next bag after \a b in the iteration is <tt>b.next()</tt>;
+         * - the iteration terminates when <tt>b.next()</tt> is \c null.
+         *
+         * This iteration processes the children of each bag in order;
+         * that is, it processes each bag \a b before <tt>b.sibling()</tt>
+         * (if the latter exists).
+         *
+         * This postfix iteration is equivalent to iterating through bags
+         * numbered 0,1,2,...; that is, following the order of
+         * NTreeBag::index().
+         *
+         * The return value of this function is guaranteed to be non-null.
+         *
+         * @return the first bag in a postfix iteration of all bags.
+         */
         const NTreeBag* first() const;
+        /**
+         * Used for a prefix iteration through all of the bags in the tree
+         * decomposition.  Amongst other things, a \e prefix iteration is
+         * one in which each bag will be processed before any of its children.
+         *
+         * If \a d is a tree decomposition, then you can complete a full
+         * prefix iteration of bags as follows:
+         *
+         * - the first bag in a prefix iteration is <tt>d.firstPrefix()</tt>;
+         * - the next bag after \a b in the iteration is
+         *   <tt>b.nextPrefix()</tt>;
+         * - the iteration terminates when <tt>b.nextPrefix()</tt> is \c null.
+         *
+         * This iteration processes the children of each bag in order;
+         * that is, it processes each bag \a b before <tt>b.sibling()</tt>
+         * (if the latter exists).
+         *
+         * Since the first bag in a prefix iteration must be the root bag,
+         * this function is identical to calling root().
+         *
+         * The return value of this function is guaranteed to be non-null.
+         *
+         * @return the first bag in a prefix iteration of all bags.
+         */
         const NTreeBag* firstPrefix() const;
 
         /**
-         * Merge adjacent bags where one is a subset of another.
+         * Removes redundant bags from this tree decomposition.
+         *
+         * Specifically, this routine "compresses" the tree decomposition
+         * as follows: whenever two bags are adjacent in the underlying
+         * tree and one is a subset of the other, these bags will be merged.
+         *
+         * Note that some NTreeBag objects may be destroyed (thereby
+         * invalidating pointers or references to them), and for those
+         * bags that are not destroyed, their indices (as returned by
+         * NTreeBag::index()) may change.
+         *
+         * @return \c true if and only if the tree decomposition was changed.
          */
         bool compress();
+        /**
+         * TODO: HERE.
+         *
+         * Note: this implicitly calls compress() before doing its thing.
+         */
         void makeNice();
 
         void writeTextShort(std::ostream& out) const;
@@ -569,6 +789,7 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
 
     private:
         /**
+         * TODO.
          * Note: graph may be modified during this routine.
          */
         void construct(Graph& graph, TreeDecompositionAlg alg);
