@@ -901,23 +901,60 @@ namespace {
     }
 }
 
-NCyclotomic NTriangulation::turaevViro(unsigned long r,
+double NTriangulation::turaevViroApprox(unsigned long r,
         unsigned long whichRoot, TuraevViroAlg alg) const {
+    // Do some basic parameter checks.
+    if (r < 3)
+        return 0;
+    if (whichRoot >= 2 * r)
+        return 0;
+    if (gcd(r, whichRoot) > 1)
+        return 0;
+
+    // Set up our initial data.
+    InitialData<false> init(r, whichRoot);
+
+    InitialData<false>::TVType ans;
+    switch (alg) {
+        case TV_DEFAULT:
+        case TV_BACKTRACK:
+            ans = turaevViroBacktrack(*this, init);
+            break;
+        case TV_TREEWIDTH:
+            ans = turaevViroTreewidth(*this, init);
+            break;
+    }
+
+    if (isNonZero(ans.imag())) {
+        // This should never happen, since the Turaev-Viro invariant is the
+        // square of the modulus of the Witten invariant for sl_2.
+        std::cerr <<
+            "WARNING: The Turaev-Viro invariant has an imaginary component.\n"
+            "         This should never happen.\n"
+            "         Please report this (along with the 3-manifold that"
+            "         was used) to " << PACKAGE_BUGREPORT << "." << std::endl;
+    }
+    return ans.real();
+}
+
+NCyclotomic NTriangulation::turaevViro(unsigned long r, bool parity,
+        TuraevViroAlg alg) const {
+    // Do some basic parameter checks.
+    if (r < 3)
+        return NCyclotomic();
+    if (r % 2 == 0)
+        parity = false;
+
     // Have we already calculated this invariant?
-    std::pair<unsigned long, bool> tvParams(r, (whichRoot % 2 != 0));
+    std::pair<unsigned long, bool> tvParams(r, parity);
 #ifndef TV_IGNORE_CACHE
     TuraevViroSet::const_iterator it = turaevViroCache_.find(tvParams);
     if (it != turaevViroCache_.end())
         return (*it).second;
 #endif
 
-    // Do some basic parameter checks.
-    if (r < 3)
-        return NCyclotomic();
-    whichRoot = (whichRoot % 2 == 0 ? 2 : 1);
-
     // Set up our initial data.
-    InitialData<true> init(r, whichRoot);
+    InitialData<true> init(r, (parity ? 1 : 0));
 
     InitialData<true>::TVType ans;
     switch (alg) {
@@ -928,34 +965,9 @@ NCyclotomic NTriangulation::turaevViro(unsigned long r,
         case TV_TREEWIDTH:
             ans = turaevViroTreewidth(*this, init);
             break;
-        case TV_POLYTOPE:
-            // TODO: Cache the Hilbert basis.
-            ans = turaevViroPolytope(*this, init);
-            break;
     }
 
-#if 0
-    std::cout << "Result: " << ans << std::endl;
-    std::cout << "Evaluation: " << ans.evaluate(
-        init.halfField ? whichRoot / 2 : whichRoot) << std::endl;
-    return 0.0; // TODO
-#else
-#if 0
-    if (isNonZero(ans.imag())) {
-        // This should never happen, since the Turaev-Viro invariant is the
-        // square of the modulus of the Witten invariant for sl_2.
-        std::cerr <<
-            "WARNING: The Turaev-Viro invariant has an imaginary component.\n"
-            "         This should never happen.\n"
-            "         Please report this (along with the 3-manifold that"
-            "         was used) to " << PACKAGE_BUGREPORT << "." << std::endl;
-    }
-    turaevViroCache_[tvParams] = ans.real();
-    return ans.real();
-#endif
-#endif
-
-    return ans;
+    return (turaevViroCache_[tvParams] = ans);
 }
 
 } // namespace regina

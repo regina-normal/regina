@@ -63,6 +63,11 @@ Version 4.97  [ (under development) ]
               the old triangle type constants.  Also added a new type
               constant UNKNOWN_TYPE.
         Class NTriangulation:
+            - The routine turaevViro() now computes Turaev-Viro invariants
+              using exact arithmetic, as elements of a cyclotomic field.  The
+              old floating-point routine has been renamed to turaevViroApprox().
+            - Both turaevViro() and turaevViroApprox() now take an
+              optional argument to specify which algorithm to use.
             - Removed Turaev-Viro invariants from the XML data file format.
               Any Turaev-Viro invariants contained in older data files
               (which will be floating-point approximations) will be ignored.
