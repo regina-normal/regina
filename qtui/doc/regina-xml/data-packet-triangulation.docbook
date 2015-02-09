@@ -61,6 +61,15 @@ packet ::= (&xml-tetrahedra;,
   </para>
 
   <refsect2>
+   <title>Deprecated Data</title>
+   <para>
+    The child &xml-turaevviro; element is deprecated, and should not be used.
+    This element will not be written by the latest version of &regina;,
+    and will be ignored when reading older data files.
+   </para>
+  </refsect2>
+
+  <refsect2>
    <title>Parents</title>
    <para>
     The following elements contain <sgmltag>packet</sgmltag>:

@@ -4,6 +4,7 @@
 SET ( FILES
   approx
   matrixops
+  ncyclotomic
   ninteger
   nmatrix2
   nperm3
@@ -26,6 +27,7 @@ if (${REGINA_INSTALL_DEV})
   INSTALL( FILES
     approx.h
     matrixops.h
+    ncyclotomic.h
     ninteger.h
     nlargeinteger.h
     nmatrix.h
@@ -34,6 +36,7 @@ if (${REGINA_INSTALL_DEV})
     nperm3.h
     nperm4.h
     nperm5.h
+    npolynomial.h
     nprimes.h
     nrational.h
     nray.h

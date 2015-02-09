@@ -34,9 +34,13 @@ Version 4.97  [ (under development) ]
         Class CompressionBuffer, CompressionStream, DecompressionBuffer,
                 DecompressionStream, ZBuffer:
             - Removed entirely.  Regina now uses boost::iostreams instead.
+        Class LightweightSequence:
+            - New lightweight class for storing an array of objects.
         Class NAngleStructureList:
             - Renamed getNumberOfStructures() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
+        Class NCyclotomic:
+            - New class for exact arithmetic in cyclotomic fields.
         Class NExampleSnapPeaTriangulation:
             - New class for building ready-made SnapPea examples.
         Class NExampleTriangulation:
@@ -67,13 +71,34 @@ Version 4.97  [ (under development) ]
             - New routine transferChildren() for bulk tree reorganisation.
         Class NPacketListener:
             - New events childToBeRenamed(), childWasRenamed().
+        Class NPolynomial:
+            - New class for working with single-variable polynomials
+              over arbitrary rings.
         Class NSurfaceFilterProperties:
             - New set-based routine setECs().
+        Class NTreeBag, NTreeDecomposition:
+            - Classes for computing tree decompositions of graphs
+              (including facet pairing graphs of triangulations).
         Class NTriangle:
             - Added a new Type enumeration, which encapsulates (and replaces)
               the old triangle type constants.  Also added a new type
               constant UNKNOWN_TYPE.
         Class NTriangulation:
+            - The routine turaevViro() now computes Turaev-Viro invariants
+              using exact arithmetic, as elements of a cyclotomic field.  The
+              old floating-point routine has been renamed to turaevViroApprox().
+            - The second argument to turaevViro() is now a boolean indicating
+              the parity of whichRoot, as opposed to the integer whichRoot
+              itself (since in cyclotomic fields, this is all that matters).
+            - Both turaevViro() and turaevViroApprox() now offer a default
+              value for the second argument (whichRoot / parity), and now take
+              an optional third argument to specify which algorithm to use.
+            - Both turaevViro() and turaevViroApprox() now offer a treewidth-
+              based algorithm.  This can be significantly faster than the old
+              backtracking algorithm, but also uses significantly more memory.
+            - Removed Turaev-Viro invariants from the XML data file format.
+              Any Turaev-Viro invariants contained in older data files
+              (which will be floating-point approximations) will be ignored.
             - Removed the optional boolean argument (forceDivision) from
               idealToFinite().
         Class NVertex:

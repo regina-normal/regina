@@ -58,6 +58,7 @@ void addSnapPea();
 void addSplit();
 void addSubcomplex();
 void addSurfaces();
+void addTreewidth();
 void addTriangulation();
 void addUtilities();
 
@@ -149,5 +150,6 @@ BOOST_PYTHON_MODULE(engine) {
     addSurfaces();
     addHypersurface();
     addDim2();
+    addTreewidth();
 }
 

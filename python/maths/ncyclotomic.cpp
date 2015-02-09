@@ -32,35 +32,57 @@
 
 /* end stub */
 
-void addMatrixOps();
-void addNCyclotomic();
-void addNInteger();
-void addNLargeInteger();
-void addNMatrix2();
-void addNMatrixInt();
-void addNPerm3();
-void addNPerm4();
-void addNPerm5();
-void addNPolynomial();
-void addNPrimes();
-void addNRational();
-void addNumberTheory();
-void addPermConv();
+#include <boost/python.hpp>
+#include "maths/ncyclotomic.h"
 
-void addMaths() {
-    addMatrixOps();
-    addNCyclotomic();
-    addNInteger();
-    addNLargeInteger();
-    addNMatrix2();
-    addNMatrixInt();
-    addNPerm3();
-    addNPerm4();
-    addNPerm5();
-    addNPolynomial();
-    addNPrimes();
-    addNRational();
-    addNumberTheory();
-    addPermConv();
+using namespace boost::python;
+using regina::NCyclotomic;
+
+namespace {
+    const regina::NRational& getItem(const NCyclotomic& c, int exp) {
+        return c[exp];
+    }
+    void setItem(NCyclotomic& c, int exp, const regina::NRational& value) {
+        c[exp] = value;
+    }
+    regina::NPolynomial<regina::NRational>* cyclotomic(size_t n) {
+        return new regina::NPolynomial<regina::NRational>(
+            NCyclotomic::cyclotomic(n));
+    }
+
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_evaluate,
+        NCyclotomic::evaluate, 0, 1);
+}
+
+void addNCyclotomic() {
+    scope s = class_<NCyclotomic, std::auto_ptr<NCyclotomic> >("NCyclotomic")
+        .def(init<size_t>())
+        .def(init<size_t, int>())
+        .def(init<size_t, const regina::NRational&>())
+        .def(init<const NCyclotomic&>())
+        .def("init", &NCyclotomic::init)
+        .def("field", &NCyclotomic::field)
+        .def("degree", &NCyclotomic::degree)
+        .def("__getitem__", getItem, return_internal_reference<>())
+        .def("__setitem__", setItem)
+        .def("polynomial", &NCyclotomic::polynomial,
+            return_value_policy<manage_new_object>())
+        .def("evaluate", &NCyclotomic::evaluate, OL_evaluate())
+        .def(self == self)
+        .def(self != self)
+        .def("negate", &NCyclotomic::invert)
+        .def("invert", &NCyclotomic::invert)
+        .def(self *= regina::NRational())
+        .def(self /= regina::NRational())
+        .def(self += self)
+        .def(self -= self)
+        .def(self *= self)
+        .def(self /= self)
+        .def("cyclotomic", &cyclotomic,
+            return_value_policy<manage_new_object>())
+        .def(self_ns::str(self))
+        .def(self_ns::repr(self))
+        .staticmethod("cyclotomic")
+    ;
 }
 
