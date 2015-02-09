@@ -1,0 +1,329 @@
+
+/**************************************************************************
+ *                                                                        *
+ *  Regina - A Normal Surface Theory Calculator                           *
+ *  Computational Engine                                                  *
+ *                                                                        *
+ *  Copyright (c) 1999-2014, Ben Burton                                   *
+ *  For further details contact Ben Burton (bab@debian.org).              *
+ *                                                                        *
+ *  This program is free software; you can redistribute it and/or         *
+ *  modify it under the terms of the GNU General Public License as        *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  As an exception, when this program is distributed through (i) the     *
+ *  App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or     *
+ *  (iii) Google Play by Google Inc., then that store may impose any      *
+ *  digital rights management, device limits and/or redistribution        *
+ *  restrictions that are required by its terms of service.               *
+ *                                                                        *
+ *  This program is distributed in the hope that it will be useful, but   *
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
+ *  General Public License for more details.                              *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public             *
+ *  License along with this program; if not, write to the Free            *
+ *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,       *
+ *  MA 02110-1301, USA.                                                   *
+ *                                                                        *
+ **************************************************************************/
+
+/* end stub */
+
+/*! \file utilities/sequence.h
+ *  \brief Support for temporary lightweight sequences.
+ */
+
+#ifndef __SEQUENCE_H
+#ifndef __DOXYGEN
+#define __SEQUENCE_H
+#endif
+
+#include <iostream>
+#include "regina-core.h"
+
+namespace regina {
+
+/**
+ * A lightweight class for storing a random-access sequence of objects.
+ *
+ * This class is intended as a lightweight substitute for std::vector,
+ * especially when working with temporary sequences that are frequently
+ * created and destroyed.  The underlying storage just uses a native
+ * C-style array, and the C++ class wrapper provides the usual mechanisms
+ * for safe and simple memory management.
+ *
+ * The size (number of elements) of a sequence can be changed, but this
+ * should not be done lightly.  Unlike std::vector, resizing a sequence
+ * is an expensive operation that deletes all existing contents of the
+ * sequence and forces a reallocation of the underlying storage.
+ * See init() for details.
+ *
+ * \ifacespython Not present.
+ */
+template <typename T>
+class REGINA_API LightweightSequence {
+    public:
+        typedef T* iterator;
+            /**< An iterator type for read-write access to the elements
+                of a sequence.  Such a type can be dereferenced
+                (yielding a reference to type \a T), and manipulated
+                using the usual pointer arithmetic (such as <tt>p++</tt>,
+                <tt>--p</tt>, <tt>p += n</tt>, and so on). */
+        typedef const T* const_iterator;
+            /**< An iterator type for read-only access to the elements
+                of a sequence.  Such a type can be dereferenced
+                (yielding a const reference to type \a T), and manipulated
+                using the usual pointer arithmetic (such as <tt>p++</tt>,
+                <tt>--p</tt>, <tt>p += n</tt>, and so on). */
+
+    private:
+        T* data_;
+            /**< The elements of the sequence, stored as a C-style array. */
+        size_t size_;
+            /**< The number of elements in the sequence. */
+
+    public:
+        /**
+         * Creates a new empty sequence; that is, a sequence of size zero.
+         *
+         * This sequence can be resized by calling init().
+         */
+        LightweightSequence();
+        /**
+         * Create a new sequence containing the given number of
+         * elements.  The elements themselves will be initialised using
+         * the default constructor for type \a T.
+         *
+         * @param size the number of elements in the new sequence.
+         */
+        LightweightSequence(size_t size);
+        /**
+         * Destroys this sequence and all of its elements.
+         *
+         * All elements of the sequence will be destroyed using the
+         * destructor for type \a T.  If the elements are pointers whose
+         * pointee objects need to be deleted also, you must do this
+         * separately before destroying the sequence itself.
+         */
+        ~LightweightSequence();
+
+        /**
+         * Resizes this sequence to contain the given number of elements.
+         *
+         * All existing elements in this sequence will be destroyed, using the
+         * default destructor for type \a T.  If the elements are pointers
+         * whose pointee objects need to be deleted also, you must do this
+         * separately before calling init().
+         *
+         * The elements of the sequence after this routine is called
+         * will be initialised using the default constructor for type \a T.
+         *
+         * \warning Calling init() is an expensive operation, in that it will
+         * always force a reallocation of the underlying storage (even if the
+         * new size is smaller than the old).
+         *
+         * @param size the number of elements that the sequence will
+         * contain after this routine is called.
+         */
+        void init(size_t size = 0);
+
+        /**
+         * Returns the number of elements in this sequence.  This can be
+         * changed (in a destructive way) by calling init().
+         */
+        size_t size() const;
+
+        /**
+         * Returns a copy of the element at the given index in the sequence.
+         *
+         * @param pos the index of the requested element; this must be
+         * between 0 and size()-1 inclusive.
+         * @return a copy of the requested element.
+         */
+        T operator [] (size_t pos) const;
+        /**
+         * Returns a reference to the element at the given index in the
+         * sequence.
+         *
+         * @param pos the index of the requested element; this must be
+         * between 0 and size()-1 inclusive.
+         * @return a reference to the requested element.
+         */
+        T& operator [] (size_t pos);
+
+        /**
+         * Returns a read-write iterator that points to the first element
+         * of the sequence.
+         *
+         * Note that an iterator is simply a pointer to an element of
+         * the sequence, and so by dereferencing an iterator you can
+         * change the corresponding element of the sequence directly.
+         *
+         * @return a read-write begin iterator.
+         */
+        iterator begin();
+        /**
+         * Returns a read-only iterator that points to the first element
+         * of the sequence.
+         *
+         * Note that a const_iterator is simply a const pointer to an element
+         * of the sequence, and so by dereferencing a const_iterator you can
+         * access (but not change) the corresponding element of the sequence.
+         *
+         * @return a read-only begin iterator.
+         */
+        const_iterator begin() const;
+        /**
+         * Returns a read-write iterator that points beyond the last element
+         * of the sequence.
+         *
+         * Note that, because this iterator is past-the-end, it must not be
+         * dereferenced.
+         *
+         * @return a read-write past-the-end iterator.
+         */
+        iterator end();
+        /**
+         * Returns a read-only iterator that points beyond the last element
+         * of the sequence.
+         *
+         * Note that, because this iterator is past-the-end, it must not be
+         * dereferenced.
+         *
+         * @return a read-only past-the-end iterator.
+         */
+        const_iterator end() const;
+
+        /**
+         * A binary function object that compares two sequences
+         * lexicographically.
+         *
+         * \pre The type \a T supports the less-than operator.
+         */
+        struct REGINA_API Less {
+            /**
+             * Compares two sequences lexicographically.  The sequences
+             * need not be the same size.
+             *
+             * @param a the first of the two sequences to compare.
+             * @param b the second of the two sequences to compare.
+             * @return \c true if sequence \a a is strictly lexicographically
+             * smaller than sequence \a b, or \c false if \a a is either
+             * lexicographically greater than or equal to \a b.
+             */
+            bool operator () (const LightweightSequence* a,
+                    const LightweightSequence* b) const;
+        };
+};
+
+/**
+ * Writes the given sequence to the given output stream.  No newline
+ * will be written.
+ *
+ * The sequence will be written in the form <tt>(a, b, c, ...)</tt>.
+ *
+ * \pre An object \a x of type \a T can be written to an output stream
+ * using the syntax <tt>out << x</tt>.
+ *
+ * @param out the output stream to which to write.
+ * @param s the sequence to write.
+ * @return a reference to the given output stream.
+ */
+template <typename T>
+std::ostream& operator << (std::ostream& out, const LightweightSequence<T>& s);
+
+// Inline functions:
+
+template <typename T>
+inline LightweightSequence<T>::LightweightSequence() : data_(0), size_(0) {
+}
+
+template <typename T>
+inline LightweightSequence<T>::LightweightSequence(size_t size) :
+        data_(new T[size]), size_(size) {
+}
+
+template <typename T>
+inline LightweightSequence<T>::~LightweightSequence() {
+    delete[] data_;
+}
+
+template <typename T>
+inline void LightweightSequence<T>::init(size_t size) {
+    delete[] data_;
+    data_ = (size ? new T[size] : 0);
+    size_ = size;
+}
+
+template <typename T>
+inline size_t LightweightSequence<T>::size() const {
+    return size_;
+}
+
+template <typename T>
+inline T LightweightSequence<T>::operator [] (size_t pos) const {
+    return data_[pos];
+}
+
+template <typename T>
+inline T& LightweightSequence<T>::operator [] (size_t pos) {
+    return data_[pos];
+}
+
+template <typename T>
+inline typename LightweightSequence<T>::iterator
+        LightweightSequence<T>::begin() {
+    return data_;
+}
+
+template <typename T>
+inline typename LightweightSequence<T>::const_iterator
+        LightweightSequence<T>::begin() const {
+    return data_;
+}
+
+template <typename T>
+inline typename LightweightSequence<T>::iterator
+        LightweightSequence<T>::end() {
+    return data_ + size_;
+}
+
+template <typename T>
+inline typename LightweightSequence<T>::const_iterator
+        LightweightSequence<T>::end() const {
+    return data_ + size_;
+}
+
+template <typename T>
+inline bool LightweightSequence<T>::Less::operator () (
+        const LightweightSequence<T>* a, const LightweightSequence<T>* b)
+        const {
+    for (size_t i = 0; i < b->size_; ++i)
+        if (i >= a->size_ || a->data_[i] < b->data_[i])
+            return true;
+        else if (b->data_[i] < a->data_[i])
+            return false;
+    // The sequences match for the first b->size_ elements, and
+    // sequence a is at least as long as sequence b.
+    return false;
+}
+
+template <typename T>
+inline std::ostream& operator << (std::ostream& out,
+        const LightweightSequence<T>& s) {
+    out << '(';
+    for (size_t i = 0; i < s.size(); ++i) {
+        if (i > 0)
+            out << ", ";
+        out << s[i];
+    }
+    return out << ')';
+}
+
+} // namespace regina
+
+#endif
+

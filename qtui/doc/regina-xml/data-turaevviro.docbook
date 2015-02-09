@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>turaevviro</refname>
-  <refpurpose>A single Turaev-Viro invariant for a triangulation</refpurpose>
+  <refpurpose>Deprecated: do not use</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -52,6 +52,11 @@ turaevviro ::=</synopsis>
 
  <refsect1>
   <title>Description</title>
+  <para>
+   This element is deprecated, and should no longer be used.
+   This element will not be written by the latest version of &regina;,
+   and will be ignored when reading older data files.
+  </para>
   <para>
    A &xml-turaevviro; element stores a single calculated Turaev-Viro
    invariant for a triangulation.

@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,35 +32,67 @@
 
 /* end stub */
 
-void addMatrixOps();
-void addNCyclotomic();
-void addNInteger();
-void addNLargeInteger();
-void addNMatrix2();
-void addNMatrixInt();
-void addNPerm3();
-void addNPerm4();
-void addNPerm5();
-void addNPolynomial();
-void addNPrimes();
-void addNRational();
-void addNumberTheory();
-void addPermConv();
+/* Template definitions for ntreedecomposition.h. */
 
-void addMaths() {
-    addMatrixOps();
-    addNCyclotomic();
-    addNInteger();
-    addNLargeInteger();
-    addNMatrix2();
-    addNMatrixInt();
-    addNPerm3();
-    addNPerm4();
-    addNPerm5();
-    addNPolynomial();
-    addNPrimes();
-    addNRational();
-    addNumberTheory();
-    addPermConv();
+#ifndef __NTREEDECOMPOSITION_IMPL_H
+#ifndef __DOXYGEN
+#define __NTREEDECOMPOSITION_IMPL_H
+#endif
+
+#include "treewidth/ntreedecomposition.h"
+
+namespace regina {
+
+template <int dim>
+NTreeDecomposition::NTreeDecomposition(
+        const NGenericTriangulation<dim>& triangulation,
+        TreeDecompositionAlg alg) :
+        width_(0), root_(0) {
+    Graph g(triangulation.size());
+
+    int i, j;
+    const typename DimTraits<dim>::Simplex* simp;
+    for (i = 0; i < g.order_; ++i) {
+        simp = static_cast<const typename DimTraits<dim>::Triangulation&>(
+            triangulation).getSimplex(i);
+        for (j = 0; j <= dim; ++j)
+            if (simp->adjacentSimplex(j))
+                g.adj_[i][simp->adjacentSimplex(j)->index()] = true;
+    }
+
+    construct(g, alg);
 }
 
+template <int dim>
+NTreeDecomposition::NTreeDecomposition(
+        const NGenericFacetPairing<dim>& pairing,
+        TreeDecompositionAlg alg) :
+        width_(0), root_(0) {
+    Graph g(pairing.size());
+
+    int i, j;
+    for (i = 0; i < g.order_; ++i)
+        for (j = 0; j <= dim; ++j)
+            if (! pairing.isUnmatched(i, j))
+                g.adj_[i][pairing.dest(i, j).simp] = true;
+
+    construct(g, alg);
+}
+
+template <typename T>
+NTreeDecomposition::NTreeDecomposition(unsigned order, T const** graph,
+        TreeDecompositionAlg alg) :
+        width_(0), root_(0) {
+    Graph g(order);
+
+    int i, j;
+    for (i = 0; i < order; ++i)
+        for (j = 0; j < order; ++j)
+            g.adj_[i][j] = graph[i][j] || graph[j][i];
+
+    construct(g, alg);
+}
+
+} // namespace regina
+
+#endif
