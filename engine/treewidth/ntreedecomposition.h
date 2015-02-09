@@ -363,8 +363,8 @@ class REGINA_API NTreeBag : public ShareableObject {
          * one in which all of the children of any bag \a b will be processed
          * before \a b itself.
          *
-         * If \a d is a tree decomposition, then you can complete a full
-         * postfix iteration of bags as follows:
+         * If \a d is a non-empty tree decomposition, then you can complete a
+         * full postfix iteration of bags as follows:
          *
          * - the first bag in a postfix iteration is <tt>d.first()</tt>;
          * - the next bag after \a b in the iteration is <tt>b.next()</tt>;
@@ -389,8 +389,8 @@ class REGINA_API NTreeBag : public ShareableObject {
          * decomposition.  Amongst other things, a \e prefix iteration is
          * one in which each bag will be processed before any of its children.
          *
-         * If \a d is a tree decomposition, then you can complete a full
-         * prefix iteration of bags as follows:
+         * If \a d is a non-empty tree decomposition, then you can complete a
+         * full prefix iteration of bags as follows:
          *
          * - the first bag in a prefix iteration is <tt>d.firstPrefix()</tt>
          *   (or equivalently, <tt>d.root()</tt>);
@@ -572,10 +572,9 @@ class REGINA_API NTreeBag : public ShareableObject {
  * See the TreeDecompositionAlg enumeration for a list of all algorithms
  * that are currently available.
  *
- * Whilst individual bags are allowed to be empty, this class insists
- * that any tree decomposition must contain at least one bag.  In
- * particular, if \a G is the empty graph, then a typical tree
- * decomposition would consist of just one empty bag.
+ * Note that individual bags are allowed to be empty.  Moreover, if the
+ * underlying graph \a G is empty then the tree decomposition may
+ * contain no bags at all.
  */
 class REGINA_API NTreeDecomposition : public ShareableObject {
     protected:
@@ -704,8 +703,6 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
         /**
          * Returns the number of bags in this tree decomposition.
          *
-         * This is guaranteed to be strictly positive.
-         *
          * @return the number of bags.
          */
         int size() const;
@@ -713,9 +710,8 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
         /**
          * Returns the bag at the root of the underlying tree.
          *
-         * The return value of this function is guaranteed to be non-null.
-         *
-         * @return the root bag.
+         * @return the root bag, or \c null if there are no bags (which
+         * means the underlying graph \a G is empty).
          */
         const NTreeBag* root() const;
         /**
@@ -724,8 +720,8 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
          * one in which all of the children of any bag \a b will be processed
          * before \a b itself.
          *
-         * If \a d is a tree decomposition, then you can complete a full
-         * postfix iteration of bags as follows:
+         * If \a d is a non-empty tree decomposition, then you can complete a
+         * full postfix iteration of bags as follows:
          *
          * - the first bag in a postfix iteration is <tt>d.first()</tt>;
          * - the next bag after \a b in the iteration is <tt>b.next()</tt>;
@@ -739,9 +735,9 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
          * numbered 0,1,2,...; that is, following the order of
          * NTreeBag::index().
          *
-         * The return value of this function is guaranteed to be non-null.
-         *
-         * @return the first bag in a postfix iteration of all bags.
+         * @return the first bag in a postfix iteration of all bags, or
+         * \c null if there are no bags (which means the underlying
+         * graph \a G is empty).
          */
         const NTreeBag* first() const;
         /**
@@ -749,8 +745,8 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
          * decomposition.  Amongst other things, a \e prefix iteration is
          * one in which each bag will be processed before any of its children.
          *
-         * If \a d is a tree decomposition, then you can complete a full
-         * prefix iteration of bags as follows:
+         * If \a d is a non-empty tree decomposition, then you can complete a
+         * full prefix iteration of bags as follows:
          *
          * - the first bag in a prefix iteration is <tt>d.firstPrefix()</tt>;
          * - the next bag after \a b in the iteration is
@@ -764,9 +760,9 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
          * Since the first bag in a prefix iteration must be the root bag,
          * this function is identical to calling root().
          *
-         * The return value of this function is guaranteed to be non-null.
-         *
-         * @return the first bag in a prefix iteration of all bags.
+         * @return the first bag in a prefix iteration of all bags, or
+         * \c null if there are no bags (which means the underlying
+         * graph \a G is empty).
          */
         const NTreeBag* firstPrefix() const;
 
@@ -809,8 +805,6 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
          * This routine will also ensure that the root bag is a forget bag,
          * containing no nodes at all.
          *
-         * TODO: What happens to an empty graph?
-         *
          * This routine will set NTreeBag::type() and NTreeBag::subtype()
          * for each bag as follows:
          *
@@ -827,6 +821,9 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
          *   node will be <tt>b.children()->element(b.subtype())</tt>.
          *
          * - For a join bag, NTreeBag::subtype() will be undefined.
+         *
+         * If the underlying graph is empty, then this routine will
+         * produce a tree decomposition with no bags at all.
          *
          * \warning Note that NTreeBag::subtype() is \e not the number of
          * the new or missing node, but instead gives the \e index of the

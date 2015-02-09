@@ -133,11 +133,9 @@ void NTreeDecomposition::Graph::dump(std::ostream& out) const {
 
 void NTreeDecomposition::construct(Graph& graph, TreeDecompositionAlg alg) {
     if (graph.order_ == 0) {
-        // No tree, one empty bag.
+        // No tree, no bags.
         width_ = -1;
-        size_ = 1;
-        root_ = new NTreeBag(0);
-        reindex();
+        size_ = 0;
         return;
     }
 
@@ -383,6 +381,14 @@ void NTreeDecomposition::makeNice() {
         return;
 
     compress();
+
+    if (root_ && (! root_->children()) && root_->size_ == 0) {
+        delete root_;
+        root_ = 0;
+        size_ = 0;
+        // width_ is unchanged (it must have been -1 already).
+        return;
+    }
 
     // First add a chain of forget nodes above the root, right up to a
     // new empty bag.
