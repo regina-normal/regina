@@ -75,6 +75,9 @@ Version 4.97  [ (under development) ]
             - Both turaevViro() and turaevViroApprox() now offer a default
               value for the second argument (whichRoot / parity), and now take
               an optional third argument to specify which algorithm to use.
+            - Both turaevViro() and turaevViroApprox() now offer a treewidth-
+              based algorithm.  This can be significantly faster than the old
+              backtracking algorithm, but also uses significantly more memory.
             - Removed Turaev-Viro invariants from the XML data file format.
               Any Turaev-Viro invariants contained in older data files
               (which will be floating-point approximations) will be ignored.
