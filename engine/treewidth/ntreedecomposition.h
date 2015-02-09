@@ -128,12 +128,20 @@ enum BagComparison {
  * - the root bag will be a forget bag, and will be empty;
  *
  * - every leaf bag will be an introduce bag, containing precisely one node.
+ *
+ * See NTreeDecomposition::makeNice() for further details, including how
+ * NTreeBag::type() and NTreeBag::subtype() are defined for a nice tree
+ * decomposition.
  */
 enum NiceType {
     /**
      * Indicates an introduce bag.  An \e introduce bag has only one child bag.
      * It contains all of the nodes in this child bag plus exactly one
      * new node, and contains no other nodes besides these.
+     *
+     * As a special case, a leaf bag (which has no child bags at all) is
+     * also considered to be an introduce bag.  In this case, the leaf bag
+     * contains exactly one node.
      */
     NICE_INTRODUCE = 1,
     /**
@@ -778,9 +786,55 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
          */
         bool compress();
         /**
-         * TODO: HERE.
+         * Converts this into a nice tree decomposition.
          *
-         * Note: this implicitly calls compress() before doing its thing.
+         * A \e nice tree decomposition is one in which every bag is one of
+         * the following types:
+         *
+         * - an \e introduce bag, which has only one child bag, and which
+         *   contains all of the nodes in this child bag plus exactly one
+         *   new node (and nothing else);
+         *
+         * - a \e forget bag, which has only one child bag, and which contains
+         *   all of the nodes in this child bag except for exactly one
+         *   missing node (and nothing else);
+         *
+         * - a \e join bag, which has exactly two child bags, and where each
+         *   child bag contains exactly the same nodes as the join bag itself.
+         *
+         * As a special case, each leaf bag (which has no child bags at all)
+         * is also considered to be an introduce bag, and will contain
+         * exactly one node.
+         *
+         * This routine will also ensure that the root bag is a forget bag,
+         * containing no nodes at all.
+         *
+         * TODO: What happens to an empty graph?
+         *
+         * This routine will set NTreeBag::type() and NTreeBag::subtype()
+         * for each bag as follows:
+         *
+         * - NTreeBag::type() will be one of the constants from the
+         *   NiceType enumeration, indicating whether the bag is an
+         *   introduce, forget or join bag.
+         *
+         * - For an introduce bag \a b, NTreeBag::subtype() will indicate
+         *   which "new" node was introduced.  Specifically, the new node
+         *   will be <tt>b.element(b.subtype())</tt>.
+         *
+         * - For a forget bag \a b, NTreeBag::subtype() will indicate
+         *   which "missing" node was forgotten.  Specifically, the missing
+         *   node will be <tt>b.children()->element(b.subtype())</tt>.
+         *
+         * - For a join bag, NTreeBag::subtype() will be undefined.
+         *
+         * \warning Note that NTreeBag::subtype() is \e not the number of
+         * the new or missing node, but instead gives the \e index of the
+         * new or missing node within the relevant bag.
+         *
+         * \note This routine calls compress() automatically, and so
+         * there is no need to explicitly call compress() before calling
+         * makeNice().
          */
         void makeNice();
 
@@ -789,11 +843,28 @@ class REGINA_API NTreeDecomposition : public ShareableObject {
 
     private:
         /**
-         * TODO.
-         * Note: graph may be modified during this routine.
+         * Called by the various constructors to build this tree
+         * decomposition from the given graph, using the given algorithm.
+         *
+         * The given graph may (and typically will) be modified, sometimes
+         * severely and irrepairably, by this routine.
          */
         void construct(Graph& graph, TreeDecompositionAlg alg);
+        /**
+         * Called by construct() to build this tree decomposition from the
+         * given graph, using the greedy fill-in algorithm.
+         *
+         * The given graph may (and typically will) be modified, sometimes
+         * severely and irrepairably, by this routine.
+         */
         void greedyFillIn(Graph& graph);
+        /**
+         * Reindexes the bags in this tree decomposition to follow a
+         * postfix iteration over the tree.
+         *
+         * The postfix iteration is the same iteration defined by
+         * NTreeDecomposition::first() and NTreeBag::next().
+         */
         void reindex();
 };
 
