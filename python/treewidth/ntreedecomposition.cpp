@@ -170,11 +170,17 @@ void addNTreeDecomposition() {
         .def(init<const regina::Dim2Triangulation&>())
         .def(init<const regina::Dim2Triangulation&,
             regina::TreeDecompositionAlg>())
+        .def(init<const regina::Dim4Triangulation&>())
+        .def(init<const regina::Dim4Triangulation&,
+            regina::TreeDecompositionAlg>())
         .def(init<const regina::NFacePairing&>())
         .def(init<const regina::NFacePairing&,
             regina::TreeDecompositionAlg>())
         .def(init<const regina::Dim2EdgePairing&>())
         .def(init<const regina::Dim2EdgePairing&,
+            regina::TreeDecompositionAlg>())
+        .def(init<const regina::Dim4FacetPairing&>())
+        .def(init<const regina::Dim4FacetPairing&,
             regina::TreeDecompositionAlg>())
         .def("__init__", make_constructor(fromListAlg))
         .def("__init__", make_constructor(fromList))
