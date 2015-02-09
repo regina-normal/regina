@@ -454,7 +454,6 @@ namespace {
                         std::cout << ' ';
                     std::cout << colour[i];
                 }
-                std::cout << std::endl;
 #endif
                 // Increment ans appropriately.
                 valColour = 1;
@@ -470,6 +469,9 @@ namespace {
                         valColour);
                 }
 
+#ifdef TV_BACKTRACK_DUMP_COLOURINGS
+                std::cout << "  -->  " << valColour << std::endl;
+#endif
                 ans += valColour;
 
                 // Step back down one level.
