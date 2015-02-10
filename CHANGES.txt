@@ -16,6 +16,9 @@ Version 4.97  [ (under development) ]
         Class CompressionBuffer, CompressionStream, DecompressionBuffer,
                 DecompressionStream, ZBuffer:
             - Removed entirely.  Regina now uses boost::iostreams instead.
+        Class DegreeLessThan, DegreeGreaterThan:
+            - New template-based helper classes for sorting subfaces of
+              a triangulation by degree.
         Class Dim2Triangulation:
             - New dimension-agnostic getFace<subdim>() template function.
         Class FaceTraits:
