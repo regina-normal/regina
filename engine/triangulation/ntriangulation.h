@@ -110,8 +110,8 @@ enum TuraevViroAlg {
      */
     TV_DEFAULT = 0,
     /**
-     * A backtracking algorithm.  This enumerates edge colourings and
-     * sums their corresponding weights.  This can be slow in general
+     * An optimised backtracking algorithm.  This enumerates edge colourings
+     * and sums their corresponding weights.  This can be slow in general
      * (since there could be exponentially many edge colourings),
      * but it has very small memory usage.
      */
@@ -123,6 +123,16 @@ enum TuraevViroAlg {
      * but it may require extremely large amounts of memory.
      */
     TV_TREEWIDTH = 2,
+    /**
+     * An unoptimised backtracking algorithm.  Like TV_BACKTRACK, this
+     * enumerates edge colourings and sums weights.  However, the
+     * implementation is more naive.
+     *
+     * \warning This algorithm should only be used for comparison and
+     * experimentation.  Due to its slow performance, it is not suitable
+     * for "real" applications.
+     */
+    TV_NAIVE = 3
 };
 
 /**

@@ -428,6 +428,124 @@ namespace {
             const InitialData<exact>& init) {
         typedef typename InitialData<exact>::TVType TVType;
 
+        // We first sort the edges by degree.
+        //
+        // Our plan is to run through all admissible colourings via a
+        // backtracking search, with the high-degree edges towards the root
+        // of the search tree and the low-degree edges towards the leaves.
+
+        unsigned long nEdges = tri.getNumberOfEdges();
+        unsigned long* order = new unsigned long[nEdges];
+
+
+
+        // Run through all admissible colourings.
+        TVType ans;
+        init.initZero(ans);
+
+        // Now hunt for colourings.
+        unsigned long i;
+        unsigned long nTriangles = tri.getNumberOfTriangles();
+        unsigned long* colour = new unsigned long[nEdges];
+
+        std::fill(colour, colour + nEdges, 0);
+        long curr = 0;
+        TVType valColour(init.halfField ? init.r : 2 * init.r);
+        bool admissible;
+        std::deque<NEdgeEmbedding>::const_iterator embit;
+        long index1, index2;
+        const NTetrahedron* tet;
+        while (curr >= 0) {
+            // Have we found an admissible colouring?
+            if (curr >= static_cast<long>(nEdges)) {
+#ifdef TV_BACKTRACK_DUMP_COLOURINGS
+                for (i = 0; i < nEdges; ++i) {
+                    if (i > 0)
+                        std::cout << ' ';
+                    std::cout << colour[i];
+                }
+#endif
+                // Increment ans appropriately.
+                valColour = 1;
+                for (i = 0; i < tri.getNumberOfTetrahedra(); i++) {
+                    tet = tri.getTetrahedron(i);
+                    init.tetContrib(tet,
+                        colour[tet->getEdge(0)->index()],
+                        colour[tet->getEdge(1)->index()],
+                        colour[tet->getEdge(2)->index()],
+                        colour[tet->getEdge(3)->index()],
+                        colour[tet->getEdge(4)->index()],
+                        colour[tet->getEdge(5)->index()],
+                        valColour);
+                }
+
+#ifdef TV_BACKTRACK_DUMP_COLOURINGS
+                std::cout << "  -->  " << valColour << std::endl;
+#endif
+                ans += valColour;
+
+                // Step back down one level.
+                curr--;
+                if (curr >= 0)
+                    colour[curr]++;
+                continue;
+            }
+
+            // Have we run out of values to try at this level?
+            if (colour[curr] > init.r - 2) {
+                colour[curr] = 0;
+                curr--;
+                if (curr >= 0)
+                    colour[curr]++;
+                continue;
+            }
+
+            // Does the current value for colour[curr] preserve admissibility?
+            admissible = true;
+            const std::deque<NEdgeEmbedding>& embs(tri.getEdge(curr)->
+                getEmbeddings());
+            for (embit = embs.begin(); embit != embs.end(); embit++) {
+                index1 = tri.edgeIndex((*embit).getTetrahedron()->getEdge(
+                    NEdge::edgeNumber[(*embit).getVertices()[0]]
+                    [(*embit).getVertices()[2]]));
+                index2 = tri.edgeIndex((*embit).getTetrahedron()->getEdge(
+                    NEdge::edgeNumber[(*embit).getVertices()[1]]
+                    [(*embit).getVertices()[2]]));
+                if (index1 <= curr && index2 <= curr) {
+                    // We've decided upon colours for all three edges of
+                    // this triangle containing the current edge.
+                    if (! init.isAdmissible(colour[index1], colour[index2],
+                            colour[curr])) {
+                        admissible = false;
+                        break;
+                    }
+                }
+            }
+
+            // Use the current value for colour[curr] if appropriate;
+            // otherwise step forwards to the next value.
+            if (admissible)
+                curr++;
+            else
+                colour[curr]++;
+        }
+
+        delete[] colour;
+
+        // Compute the vertex contributions separately, since these are
+        // constant.
+        for (i = 0; i < tri.getNumberOfVertices(); i++)
+            ans *= init.vertexContrib;
+
+        return ans;
+    }
+
+    template <bool exact>
+    typename InitialData<exact>::TVType turaevViroNaive(
+            const NTriangulation& tri,
+            const InitialData<exact>& init) {
+        typedef typename InitialData<exact>::TVType TVType;
+
         // Run through all admissible colourings.
         TVType ans;
         init.initZero(ans);
@@ -925,6 +1043,9 @@ double NTriangulation::turaevViroApprox(unsigned long r,
         case TV_TREEWIDTH:
             ans = turaevViroTreewidth(*this, init);
             break;
+        case TV_NAIVE:
+            ans = turaevViroNaive(*this, init);
+            break;
     }
 
     if (isNonZero(ans.imag())) {
@@ -966,6 +1087,9 @@ NCyclotomic NTriangulation::turaevViro(unsigned long r, bool parity,
             break;
         case TV_TREEWIDTH:
             ans = turaevViroTreewidth(*this, init);
+            break;
+        case TV_NAIVE:
+            ans = turaevViroNaive(*this, init);
             break;
     }
 
