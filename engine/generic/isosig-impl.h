@@ -538,6 +538,13 @@ typename DimTraits<dim>::Triangulation*
                     // Boundary facet.
                 } else if (facetAction[facetPos] == 1) {
                     // Join to new simplex.
+                    if (nextUnused >= nSimp) {
+                        delete[] facetAction;
+                        delete[] joinDest;
+                        delete[] joinGluing;
+                        delete[] simp;
+                        return 0;
+                    }
                     simp[i]->joinTo(j, simp[nextUnused++], Perm());
                 } else {
                     // Join to existing simplex.
@@ -547,8 +554,6 @@ typename DimTraits<dim>::Triangulation*
                         delete[] facetAction;
                         delete[] joinDest;
                         delete[] joinGluing;
-                        for (int k = 0; k < nSimp; ++k)
-                            delete simp[k];
                         delete[] simp;
                         return 0;
                     }
