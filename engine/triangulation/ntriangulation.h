@@ -887,6 +887,9 @@ class REGINA_API NTriangulation : public NPacket,
          * This routine returns the requested triangular face in the
          * triangulation.  See getTriangle() for further details.
          *
+         * Do not confuse this deprecated alias with the
+         * (non-deprecated) tempate function getFace<dim>().
+         *
          * \deprecated This routine will be removed in a future version
          * of Regina.  Please use getTriangle() instead.
          *
@@ -895,6 +898,24 @@ class REGINA_API NTriangulation : public NPacket,
          * @return the requested triangle.
          */
         NTriangle* getFace(unsigned long index) const;
+        /**
+         * Returns the requested face of the given dimension in this
+         * triangulation.
+         *
+         * This template function is to assist with writing dimension-agnostic
+         * code that can be reused to work in different dimensions.
+         *
+         * \pre the template argument \a subdim is between 0 and 3 inclusive.
+         *
+         * \ifacespython Not present.
+         *
+         * @param index the index of the desired face, ranging from 0 to
+         * getNumberOfFaces<subdim>()-1 inclusive.
+         * @return the requested face.
+         */
+        template <int subdim>
+        typename FaceTraits<3, subdim>::Face* getFace(unsigned long index)
+            const;
         /**
          * Returns the index of the given component in the triangulation.
          *
@@ -4095,6 +4116,26 @@ inline NTriangle* NTriangulation::getTriangle(unsigned long index) const {
 
 inline NTriangle* NTriangulation::getFace(unsigned long index) const {
     return getTriangle(index);
+}
+
+template <>
+inline NVertex* NTriangulation::getFace<0>(unsigned long index) const {
+    return vertices_[index];
+}
+
+template <>
+inline NEdge* NTriangulation::getFace<1>(unsigned long index) const {
+    return edges_[index];
+}
+
+template <>
+inline NTriangle* NTriangulation::getFace<2>(unsigned long index) const {
+    return triangles_[index];
+}
+
+template <>
+inline NTetrahedron* NTriangulation::getFace<3>(unsigned long index) const {
+    return tetrahedra_[index];
 }
 
 inline long NTriangulation::componentIndex(const NComponent* component) const {

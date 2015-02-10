@@ -261,7 +261,7 @@ void addNTriangulation() {
             return_value_policy<reference_existing_object>())
         .def("getEdge", &NTriangulation::getEdge,
             return_value_policy<reference_existing_object>())
-        .def("getFace", &NTriangulation::getFace,
+        .def("getFace", &NTriangulation::getTriangle,
             return_value_policy<reference_existing_object>())
         .def("getTriangle", &NTriangulation::getTriangle,
             return_value_policy<reference_existing_object>())

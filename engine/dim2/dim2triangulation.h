@@ -605,6 +605,24 @@ class REGINA_API Dim2Triangulation : public NPacket,
          */
         Dim2Edge* getEdge(unsigned long index) const;
         /**
+         * Returns the requested face of the given dimension in this
+         * triangulation.
+         *
+         * This template function is to assist with writing dimension-agnostic
+         * code that can be reused to work in different dimensions.
+         *
+         * \pre the template argument \a subdim is between 0 and 2 inclusive.
+         *
+         * \ifacespython Not present.
+         *
+         * @param index the index of the desired face, ranging from 0 to
+         * getNumberOfFaces<subdim>()-1 inclusive.
+         * @return the requested face.
+         */
+        template <int subdim>
+        typename FaceTraits<2, subdim>::Face* getFace(unsigned long index)
+            const;
+        /**
          * Returns the index of the given component in the triangulation.
          *
          * \pre The given component belongs to this triangulation.
@@ -1293,6 +1311,21 @@ inline Dim2Edge* Dim2Triangulation::getEdge(unsigned long index) const {
     if (! calculatedSkeleton_)
         calculateSkeleton();
     return edges_[index];
+}
+
+template <>
+inline Dim2Vertex* Dim2Triangulation::getFace<0>(unsigned long index) const {
+    return vertices_[index];
+}
+
+template <>
+inline Dim2Edge* Dim2Triangulation::getFace<1>(unsigned long index) const {
+    return edges_[index];
+}
+
+template <>
+inline Dim2Triangle* Dim2Triangulation::getFace<2>(unsigned long index) const {
+    return triangles_[index];
 }
 
 inline long Dim2Triangulation::componentIndex(const Dim2Component* component)
