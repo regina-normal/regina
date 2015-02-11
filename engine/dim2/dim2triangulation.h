@@ -677,6 +677,27 @@ class REGINA_API Dim2Triangulation : public NPacket,
          * edge, 1 is the second and so on.
          */
         long edgeIndex(const Dim2Edge* edge) const;
+        /**
+         * Returns the index of the given face of the given dimension in this
+         * triangulation.
+         *
+         * This template function is to assist with writing dimension-agnostic
+         * code that can be reused to work in different dimensions.
+         *
+         * \pre The template argument \a subdim is between 0 and 2 inclusive.
+         * \pre The given face belongs to this triangulation.
+         *
+         * \warning Passing a null pointer to this routine will probably
+         * crash your program.
+         *
+         * \ifacespython Not present.
+         *
+         * @param face specifies which face to find in the triangulation.
+         * @return the index of the specified face, where 0 is the first
+         * \a subdim-face, 1 is the second \a subdim-face, and so on.
+         */
+        template <int subdim>
+        long faceIndex(const typename FaceTraits<2, subdim>::Face* face) const;
 
         /*@}*/
         /**
@@ -1344,6 +1365,21 @@ inline long Dim2Triangulation::vertexIndex(const Dim2Vertex* vertex) const {
 
 inline long Dim2Triangulation::edgeIndex(const Dim2Edge* edge) const {
     return edge->markedIndex();
+}
+
+template <>
+inline long Dim2Triangulation::faceIndex<0>(const Dim2Vertex* face) const {
+    return face->markedIndex();
+}
+
+template <>
+inline long Dim2Triangulation::faceIndex<1>(const Dim2Edge* face) const {
+    return face->markedIndex();
+}
+
+template <>
+inline long Dim2Triangulation::faceIndex<2>(const Dim2Triangle* face) const {
+    return face->markedIndex();
 }
 
 inline bool Dim2Triangulation::isValid() const {
