@@ -482,13 +482,13 @@ class REGINA_API Dim2Triangulation : public NPacket,
          * This template function is to assist with writing dimension-agnostic
          * code that can be reused to work in different dimensions.
          *
-         * \pre the template argument \a dim is between 0 and 2 inclusive.
+         * \pre The template argument \a subdim is between 0 and 2 inclusive.
          *
          * \ifacespython Not present.
          *
          * @return the number of faces of the given dimension.
          */
-        template <int dim>
+        template <int subdim>
         unsigned long getNumberOfFaces() const;
 
         /**
@@ -611,7 +611,7 @@ class REGINA_API Dim2Triangulation : public NPacket,
          * This template function is to assist with writing dimension-agnostic
          * code that can be reused to work in different dimensions.
          *
-         * \pre the template argument \a subdim is between 0 and 2 inclusive.
+         * \pre The template argument \a subdim is between 0 and 2 inclusive.
          *
          * \ifacespython Not present.
          *
