@@ -518,6 +518,7 @@ namespace {
         bool admissible;
         long index1, index2;
         const NTetrahedron* tet;
+        const NTriangle* triangle;
         while (curr >= 0) {
             // Have we found an admissible colouring?
             if (curr >= static_cast<long>(nEdges)) {
@@ -557,24 +558,14 @@ namespace {
             // Does the current value for colour[sortedEdges[curr]]
             // preserve admissibility?
             admissible = true;
-            const std::deque<NEdgeEmbedding>& embs(
-                tri.getEdge(sortedEdges[curr])->getEmbeddings());
-            for (embit = embs.begin(); embit != embs.end(); embit++) {
-                index1 = tri.edgeIndex((*embit).getTetrahedron()->getEdge(
-                    NEdge::edgeNumber[(*embit).getVertices()[0]]
-                    [(*embit).getVertices()[2]]));
-                index2 = tri.edgeIndex((*embit).getTetrahedron()->getEdge(
-                    NEdge::edgeNumber[(*embit).getVertices()[1]]
-                    [(*embit).getVertices()[2]]));
-                if (edgePos[index1] <= curr && edgePos[index2] <= curr) {
-                    // We've decided upon colours for all three edges of
-                    // this triangle containing the current edge.
-                    if (! init.isAdmissible(colour[index1], colour[index2],
-                            colour[sortedEdges[curr]])) {
-                        admissible = false;
-                        break;
-                    }
-                }
+            for (i = triDoneStart[curr];
+                    admissible && i < triDoneStart[curr + 1]; ++i) {
+                triangle = tri.getTriangle(triDone[i]);
+                if (! init.isAdmissible(
+                        colour[triangle->getEdge(0)->index()],
+                        colour[triangle->getEdge(1)->index()],
+                        colour[triangle->getEdge(2)->index()]))
+                    admissible = false;
             }
 
             // Use the current value for colour[curr] if appropriate;
@@ -587,23 +578,26 @@ namespace {
                     edgeCache[curr]);
 
                 triangleCache[curr] = triangleCache[curr - 1];
-                for (i = triDoneStart[curr - 1]; i < triDoneStart[curr]; ++i)
+                for (i = triDoneStart[curr - 1]; i < triDoneStart[curr]; ++i) {
+                    triangle = tri.getTriangle(triDone[i]);
                     init.triContrib(
-                        colour[tri.getTriangle(triDone[i])->getEdge(0)->index()],
-                        colour[tri.getTriangle(triDone[i])->getEdge(1)->index()],
-                        colour[tri.getTriangle(triDone[i])->getEdge(2)->index()],
+                        colour[triangle->getEdge(0)->index()],
+                        colour[triangle->getEdge(1)->index()],
+                        colour[triangle->getEdge(2)->index()],
                         triangleCache[curr]);
+                }
 
                 tetCache[curr] = tetCache[curr - 1];
                 for (i = tetDoneStart[curr - 1]; i < tetDoneStart[curr]; ++i) {
                     // Unlike the others, this call overwrites tmpTVType.
+                    tet = tri.getTetrahedron(tetDone[i]);
                     init.tetContrib(
-                        colour[tri.getTetrahedron(tetDone[i])->getEdge(0)->index()],
-                        colour[tri.getTetrahedron(tetDone[i])->getEdge(1)->index()],
-                        colour[tri.getTetrahedron(tetDone[i])->getEdge(3)->index()],
-                        colour[tri.getTetrahedron(tetDone[i])->getEdge(5)->index()],
-                        colour[tri.getTetrahedron(tetDone[i])->getEdge(4)->index()],
-                        colour[tri.getTetrahedron(tetDone[i])->getEdge(2)->index()],
+                        colour[tet->getEdge(0)->index()],
+                        colour[tet->getEdge(1)->index()],
+                        colour[tet->getEdge(3)->index()],
+                        colour[tet->getEdge(5)->index()],
+                        colour[tet->getEdge(4)->index()],
+                        colour[tet->getEdge(2)->index()],
                         tmpTVType);
                     tetCache[curr] *= tmpTVType;
                 }
