@@ -355,41 +355,6 @@ namespace {
                 }
             }
         }
-        // TODO: Get rid of this.
-        void tetContribCached(const NTetrahedron* tet,
-                unsigned long colour0, unsigned long colour1,
-                unsigned long colour2, unsigned long colour3,
-                unsigned long colour4, unsigned long colour5,
-                TVType& ans) const {
-            TVType tmp(halfField ? r : 2 * r);
-            tetContrib(colour0, colour1, colour3, colour5, colour4, colour2,
-                tmp);
-            ans *= tmp;
-
-            int i;
-            const NTriangle* triangle;
-            const NEdge* edge;
-            for (i = 0; i < 4; ++i) {
-                triangle = tet->getTriangle(i);
-                if (triangle->getEmbedding(0).getTetrahedron() == tet &&
-                        triangle->getEmbedding(0).getTriangle() == i) {
-                    switch (i) {
-                        case 0:
-                            triContrib(colour3, colour4, colour5, ans);
-                            break;
-                        case 1:
-                            triContrib(colour1, colour2, colour5, ans);
-                            break;
-                        case 2:
-                            triContrib(colour0, colour2, colour4, ans);
-                            break;
-                        case 3:
-                            triContrib(colour0, colour1, colour3, ans);
-                            break;
-                    }
-                }
-            }
-        }
     };
 
     template <>
@@ -463,14 +428,16 @@ namespace {
             const InitialData<exact>& init) {
         typedef typename InitialData<exact>::TVType TVType;
 
-        // We first sort the edges by degree.
-        //
+        unsigned long nEdges = tri.getNumberOfEdges();
+        unsigned long nTriangles = tri.getNumberOfTriangles();
+        unsigned long nTet = tri.getNumberOfTetrahedra();
+
         // Our plan is to run through all admissible colourings via a
         // backtracking search, with the high-degree edges towards the root
         // of the search tree and the low-degree edges towards the leaves.
 
-        unsigned long i;
-        unsigned long nEdges = tri.getNumberOfEdges();
+        // We first sort the edges by degree.
+        unsigned long i, j;
         unsigned long* sortedEdges = new unsigned long[nEdges];
         unsigned long* edgePos = new unsigned long[nEdges];
 
@@ -481,23 +448,74 @@ namespace {
         for (i = 0; i < nEdges; ++i)
             edgePos[sortedEdges[i]] = i;
 
+        // Work out which triangles and tetrahedra will be completely
+        // coloured at each level of the search tree.
+        //
+        // The following code contains some quadratic loops; we don't
+        // worry about this since it makes the code simpler and the
+        // overall algorithm is much slower (exponential) anyway.
+        std::deque<NEdgeEmbedding>::const_iterator embit;
+        unsigned long* tmp;
+
+        tmp = new unsigned long[nTriangles];
+        for (i = 0; i < nEdges; ++i) {
+            const std::deque<NEdgeEmbedding>& embs(
+                tri.getEdge(sortedEdges[i])->getEmbeddings());
+            for (embit = embs.begin(); embit != embs.end(); embit++)
+                tmp[(*embit).getTetrahedron()->
+                    getTriangle((*embit).getVertices()[2])->index()] = i;
+        }
+        unsigned long* triDone = new unsigned long[nTriangles];
+        unsigned long* triDoneStart = new unsigned long[nEdges + 1];
+        triDoneStart[0] = 0;
+        for (i = 0; i < nEdges; ++i) {
+            triDoneStart[i + 1] = triDoneStart[i];
+            for (j = 0; j < nTriangles; ++j)
+                if (tmp[j] == i)
+                    triDone[triDoneStart[i + 1]++] = j;
+        }
+        delete[] tmp;
+
+        tmp = new unsigned long[nTet];
+        for (i = 0; i < nEdges; ++i) {
+            const std::deque<NEdgeEmbedding>& embs(
+                tri.getEdge(sortedEdges[i])->getEmbeddings());
+            for (embit = embs.begin(); embit != embs.end(); embit++)
+                tmp[(*embit).getTetrahedron()->index()] = i;
+        }
+        unsigned long* tetDone = new unsigned long[nTet];
+        unsigned long* tetDoneStart = new unsigned long[nEdges + 1];
+        tetDoneStart[0] = 0;
+        for (i = 0; i < nEdges; ++i) {
+            tetDoneStart[i + 1] = tetDoneStart[i];
+            for (j = 0; j < nTet; ++j)
+                if (tmp[j] == i)
+                    tetDone[tetDoneStart[i + 1]++] = j;
+        }
+        delete[] tmp;
+
         // Caches for partially computed weights of colourings:
         TVType* edgeCache = new TVType[nEdges + 1];
         init.initOne(edgeCache[0]);
+
+        TVType* triangleCache = new TVType[nEdges + 1];
+        init.initOne(triangleCache[0]);
+
+        TVType* tetCache = new TVType[nEdges + 1];
+        init.initOne(tetCache[0]);
 
         // Run through all admissible colourings.
         TVType ans;
         init.initZero(ans);
 
         // Now hunt for colourings.
-        unsigned long nTriangles = tri.getNumberOfTriangles();
         unsigned long* colour = new unsigned long[nEdges];
 
         std::fill(colour, colour + nEdges, 0);
         long curr = 0;
         TVType valColour(init.halfField ? init.r : 2 * init.r);
+        TVType tmpTVType(init.halfField ? init.r : 2 * init.r);
         bool admissible;
-        std::deque<NEdgeEmbedding>::const_iterator embit;
         long index1, index2;
         const NTetrahedron* tet;
         while (curr >= 0) {
@@ -511,19 +529,9 @@ namespace {
                 }
 #endif
                 // Increment ans appropriately.
-                valColour = 1;
-                for (i = 0; i < tri.getNumberOfTetrahedra(); i++) {
-                    tet = tri.getTetrahedron(i);
-                    init.tetContribCached(tet,
-                        colour[tet->getEdge(0)->index()],
-                        colour[tet->getEdge(1)->index()],
-                        colour[tet->getEdge(2)->index()],
-                        colour[tet->getEdge(3)->index()],
-                        colour[tet->getEdge(4)->index()],
-                        colour[tet->getEdge(5)->index()],
-                        valColour);
-                }
-                valColour *= edgeCache[curr];
+                valColour = edgeCache[curr];
+                valColour *= triangleCache[curr];
+                valColour *= tetCache[curr];
 
 #ifdef TV_BACKTRACK_DUMP_COLOURINGS
                 std::cout << "  -->  " << valColour << std::endl;
@@ -573,9 +581,32 @@ namespace {
             // otherwise step forwards to the next value.
             if (admissible) {
                 curr++;
+
                 edgeCache[curr] = edgeCache[curr - 1];
                 init.edgeContrib(colour[sortedEdges[curr - 1]],
                     edgeCache[curr]);
+
+                triangleCache[curr] = triangleCache[curr - 1];
+                for (i = triDoneStart[curr - 1]; i < triDoneStart[curr]; ++i)
+                    init.triContrib(
+                        colour[tri.getTriangle(triDone[i])->getEdge(0)->index()],
+                        colour[tri.getTriangle(triDone[i])->getEdge(1)->index()],
+                        colour[tri.getTriangle(triDone[i])->getEdge(2)->index()],
+                        triangleCache[curr]);
+
+                tetCache[curr] = tetCache[curr - 1];
+                for (i = tetDoneStart[curr - 1]; i < tetDoneStart[curr]; ++i) {
+                    // Unlike the others, this call overwrites tmpTVType.
+                    init.tetContrib(
+                        colour[tri.getTetrahedron(tetDone[i])->getEdge(0)->index()],
+                        colour[tri.getTetrahedron(tetDone[i])->getEdge(1)->index()],
+                        colour[tri.getTetrahedron(tetDone[i])->getEdge(3)->index()],
+                        colour[tri.getTetrahedron(tetDone[i])->getEdge(5)->index()],
+                        colour[tri.getTetrahedron(tetDone[i])->getEdge(4)->index()],
+                        colour[tri.getTetrahedron(tetDone[i])->getEdge(2)->index()],
+                        tmpTVType);
+                    tetCache[curr] *= tmpTVType;
+                }
             } else
                 colour[sortedEdges[curr]]++;
         }
@@ -583,7 +614,14 @@ namespace {
         delete[] colour;
         delete[] sortedEdges;
         delete[] edgePos;
+        delete[] triDone;
+        delete[] triDoneStart;
+        delete[] tetDone;
+        delete[] tetDoneStart;
+
         delete[] edgeCache;
+        delete[] triangleCache;
+        delete[] tetCache;
 
         // Compute the vertex contributions separately, since these are
         // constant.
