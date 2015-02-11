@@ -616,10 +616,8 @@ inline DegreeLessThan<dim, subdim>::DegreeLessThan(
 template <int dim, int subdim>
 inline bool DegreeLessThan<dim, subdim>::operator () (
         unsigned a, unsigned b) const {
-    return (static_cast<typename FaceTraits<dim, subdim>::Face*>(
-            tri_.template getFace<subdim>(a))->getNumberOfEmbeddings() <
-        static_cast<typename FaceTraits<dim, subdim>::Face*>(
-            tri_.template getFace<subdim>(b))->getNumberOfEmbeddings());
+    return (tri_.template getFace<subdim>(a)->getNumberOfEmbeddings() <
+            tri_.template getFace<subdim>(b)->getNumberOfEmbeddings());
 }
 
 template <int dim, int subdim>
@@ -630,10 +628,8 @@ inline DegreeGreaterThan<dim, subdim>::DegreeGreaterThan(
 template <int dim, int subdim>
 inline bool DegreeGreaterThan<dim, subdim>::operator () (
         unsigned a, unsigned b) const {
-    return (static_cast<typename FaceTraits<dim, subdim>::Face*>(
-            tri_.template getFace<subdim>(a))->getNumberOfEmbeddings() >
-        static_cast<typename FaceTraits<dim, subdim>::Face*>(
-            tri_.template getFace<subdim>(b))->getNumberOfEmbeddings());
+    return (tri_.template getFace<subdim>(a)->getNumberOfEmbeddings() >
+            tri_.template getFace<subdim>(b)->getNumberOfEmbeddings());
 }
 
 } // namespace regina
