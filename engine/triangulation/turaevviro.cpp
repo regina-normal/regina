@@ -355,6 +355,41 @@ namespace {
                 }
             }
         }
+        // TODO: Get rid of this.
+        void tetContribCached(const NTetrahedron* tet,
+                unsigned long colour0, unsigned long colour1,
+                unsigned long colour2, unsigned long colour3,
+                unsigned long colour4, unsigned long colour5,
+                TVType& ans) const {
+            TVType tmp(halfField ? r : 2 * r);
+            tetContrib(colour0, colour1, colour3, colour5, colour4, colour2,
+                tmp);
+            ans *= tmp;
+
+            int i;
+            const NTriangle* triangle;
+            const NEdge* edge;
+            for (i = 0; i < 4; ++i) {
+                triangle = tet->getTriangle(i);
+                if (triangle->getEmbedding(0).getTetrahedron() == tet &&
+                        triangle->getEmbedding(0).getTriangle() == i) {
+                    switch (i) {
+                        case 0:
+                            triContrib(colour3, colour4, colour5, ans);
+                            break;
+                        case 1:
+                            triContrib(colour1, colour2, colour5, ans);
+                            break;
+                        case 2:
+                            triContrib(colour0, colour2, colour4, ans);
+                            break;
+                        case 3:
+                            triContrib(colour0, colour1, colour3, ans);
+                            break;
+                    }
+                }
+            }
+        }
     };
 
     template <>
@@ -441,9 +476,14 @@ namespace {
 
         for (i = 0; i < nEdges; ++i)
             sortedEdges[i] = i;
-        std::sort(sortedEdges, sortedEdges + nEdges, DegreeLessThan<3, 1>(tri));
+        std::sort(sortedEdges, sortedEdges + nEdges,
+            DegreeGreaterThan<3, 1>(tri));
         for (i = 0; i < nEdges; ++i)
             edgePos[sortedEdges[i]] = i;
+
+        // Caches for partially computed weights of colourings:
+        TVType* edgeCache = new TVType[nEdges + 1];
+        init.initOne(edgeCache[0]);
 
         // Run through all admissible colourings.
         TVType ans;
@@ -474,7 +514,7 @@ namespace {
                 valColour = 1;
                 for (i = 0; i < tri.getNumberOfTetrahedra(); i++) {
                     tet = tri.getTetrahedron(i);
-                    init.tetContrib(tet,
+                    init.tetContribCached(tet,
                         colour[tet->getEdge(0)->index()],
                         colour[tet->getEdge(1)->index()],
                         colour[tet->getEdge(2)->index()],
@@ -483,6 +523,7 @@ namespace {
                         colour[tet->getEdge(5)->index()],
                         valColour);
                 }
+                valColour *= edgeCache[curr];
 
 #ifdef TV_BACKTRACK_DUMP_COLOURINGS
                 std::cout << "  -->  " << valColour << std::endl;
@@ -530,15 +571,19 @@ namespace {
 
             // Use the current value for colour[curr] if appropriate;
             // otherwise step forwards to the next value.
-            if (admissible)
+            if (admissible) {
                 curr++;
-            else
+                edgeCache[curr] = edgeCache[curr - 1];
+                init.edgeContrib(colour[sortedEdges[curr - 1]],
+                    edgeCache[curr]);
+            } else
                 colour[sortedEdges[curr]]++;
         }
 
         delete[] colour;
         delete[] sortedEdges;
         delete[] edgePos;
+        delete[] edgeCache;
 
         // Compute the vertex contributions separately, since these are
         // constant.
