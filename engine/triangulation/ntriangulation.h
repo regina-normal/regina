@@ -703,7 +703,7 @@ class REGINA_API NTriangulation : public NPacket,
          * triangulation.  See getNumberOfTriangles() for further details.
          *
          * Do not confuse this deprecated alias with the
-         * (non-deprecated) tempate function getNumberOfFaces<dim>().
+         * (non-deprecated) tempate function getNumberOfFaces<subdim>().
          *
          * \deprecated This routine will be removed in a future version
          * of Regina.  Please use getNumberOfTriangles() instead.
@@ -718,13 +718,13 @@ class REGINA_API NTriangulation : public NPacket,
          * This template function is to assist with writing dimension-agnostic
          * code that can be reused to work in different dimensions.
          *
-         * \pre the template argument \a dim is between 0 and 3 inclusive.
+         * \pre The template argument \a subdim is between 0 and 3 inclusive.
          *
          * \ifacespython Not present.
          *
          * @return the number of faces of the given dimension.
          */
-        template <int dim>
+        template <int subdim>
         unsigned long getNumberOfFaces() const;
 
         /**
@@ -888,7 +888,7 @@ class REGINA_API NTriangulation : public NPacket,
          * triangulation.  See getTriangle() for further details.
          *
          * Do not confuse this deprecated alias with the
-         * (non-deprecated) tempate function getFace<dim>().
+         * (non-deprecated) tempate function getFace<subdim>().
          *
          * \deprecated This routine will be removed in a future version
          * of Regina.  Please use getTriangle() instead.
@@ -905,7 +905,7 @@ class REGINA_API NTriangulation : public NPacket,
          * This template function is to assist with writing dimension-agnostic
          * code that can be reused to work in different dimensions.
          *
-         * \pre the template argument \a subdim is between 0 and 3 inclusive.
+         * \pre The template argument \a subdim is between 0 and 3 inclusive.
          *
          * \ifacespython Not present.
          *
@@ -1022,6 +1022,9 @@ class REGINA_API NTriangulation : public NPacket,
          *
          * This routine returns the index of the given triangle in the
          * triangulation.  See triangleIndex() for further details.
+         *
+         * Do not confuse this deprecated alias with the
+         * (non-deprecated) tempate function faceIndex<subdim>().
          *
          * \deprecated This routine will be removed in a future version
          * of Regina.  Please use triangleIndex() instead.
