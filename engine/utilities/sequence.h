@@ -244,6 +244,9 @@ class REGINA_API LightweightSequence {
         };
 
         /**
+         * A helper object for comparing subsequences, for use in
+         * maps whose keys are pointers to sequences.
+         *
          * TODO: Document.
          */
         template <typename Iterator>
@@ -426,7 +429,7 @@ template <typename Iterator>
 inline bool LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
         equal(Iterator a, Iterator b) const {
     for (size_t i = 0; i < nSub_; ++i)
-        if ((*(a->first))[i] != (*(b->first))[i])
+        if ((*(a->first))[sub_[i]] != (*(b->first))[sub_[i]])
             return false;
     return true;
 }
@@ -436,9 +439,9 @@ template <typename Iterator>
 inline bool LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
         less(Iterator a, Iterator b) const {
     for (size_t i = 0; i < nSub_; ++i)
-        if ((*(a->first))[i] < (*(b->first))[i])
+        if ((*(a->first))[sub_[i]] < (*(b->first))[sub_[i]])
             return true;
-        else if ((*(a->first))[i] > (*(b->first))[i])
+        else if ((*(a->first))[sub_[i]] > (*(b->first))[sub_[i]])
             return false;
     return false;
 }
@@ -448,9 +451,9 @@ template <typename Iterator>
 inline bool LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
         operator () (Iterator a, Iterator b) const {
     for (size_t i = 0; i < nSub_; ++i)
-        if ((*(a->first))[i] < (*(b->first))[i])
+        if ((*(a->first))[sub_[i]] < (*(b->first))[sub_[i]])
             return true;
-        else if ((*(a->first))[i] > (*(b->first))[i])
+        else if ((*(a->first))[sub_[i]] > (*(b->first))[sub_[i]])
             return false;
     return false;
 }
