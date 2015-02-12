@@ -800,6 +800,10 @@ namespace {
         typedef std::map<LightweightSequence<int>*, TVType,
             LightweightSequence<int>::Less> SolnSet;
 
+        typedef std::multimap<LightweightSequence<int>*,
+            typename SolnSet::iterator,
+            LightweightSequence<int>::Less> SolnSubset;
+
         SolnSet** partial = new SolnSet*[nBags];
         LightweightSequence<int>* seq;
         typename SolnSet::iterator it, it2;
@@ -813,6 +817,10 @@ namespace {
 
         int* overlap = new int[nEdges];
         int nOverlap;
+        SolnSubset leftIndexed, rightIndexed;
+        typename SolnSubset::iterator subit, subit2;
+        std::pair<typename SolnSubset::iterator,
+            typename SolnSubset::iterator> subrange;
 
         // For each new tetrahedron that appears in a forget bag, we
         // colour its edges in the order 5,4,3,2,1,0.
@@ -960,9 +968,9 @@ namespace {
                     }
                 }
 
-                for (it2 = partial[child->index()]->begin();
-                        it2 != partial[child->index()]->end(); ++it2)
-                    delete it2->first;
+                for (it = partial[child->index()]->begin();
+                        it != partial[child->index()]->end(); ++it)
+                    delete it->first;
                 delete partial[child->index()];
                 partial[child->index()] = 0;
             } else {
@@ -979,31 +987,40 @@ namespace {
                     overlap[nOverlap++] = i;
 
                 for (it = partial[child->index()]->begin();
-                        it != partial[child->index()]->end(); ++it)
-                    for (it2 = partial[sibling->index()]->begin();
-                            it2 != partial[sibling->index()]->end(); ++it2) {
-                        // Are the two solutions compatible?
-                        ok = true;
-                        for (i = 0; ok && i < nOverlap; ++i)
-                            if ((*it->first)[overlap[i]] !=
-                                    (*it2->first)[overlap[i]])
-                                ok = false;
-                        if (! ok)
-                            continue;
+                        it != partial[child->index()]->end(); ++it) {
+                    seq = new LightweightSequence<int>(nOverlap);
+                    for (i = 0; i < nOverlap; ++i)
+                        (*seq)[i] = (*it->first)[overlap[i]];
+                    leftIndexed.insert(std::make_pair(seq, it));
+                }
 
+                for (it = partial[sibling->index()]->begin();
+                        it != partial[sibling->index()]->end(); ++it) {
+                    seq = new LightweightSequence<int>(nOverlap);
+                    for (i = 0; i < nOverlap; ++i)
+                        (*seq)[i] = (*it->first)[overlap[i]];
+                    rightIndexed.insert(std::make_pair(seq, it));
+                }
+
+                for (subit = leftIndexed.begin();
+                        subit != leftIndexed.end(); ++subit) {
+                    subrange = rightIndexed.equal_range(subit->first);
+                    for (subit2 = subrange.first; subit2 != subrange.second;
+                            ++subit2) {
+                        // We have two compatible solutions.
                         // Combine them and store the corresponding
                         // value, again aggregating if necessary.
-                        val = it->second;
-                        val *= it2->second;
+                        val = subit->second->second;
+                        val *= subit2->second->second;
 
                         seq = new LightweightSequence<int>(nEdges);
                         for (i = 0; i < nEdges; ++i)
                             if (seenDegree[index][i] < 0)
                                 (*seq)[i] = TV_AGGREGATED;
                             else if (seenDegree[child->index()][i] > 0)
-                                (*seq)[i] = (*it->first)[i];
+                                (*seq)[i] = (*(subit->second)->first)[i];
                             else
-                                (*seq)[i] = (*it2->first)[i];
+                                (*seq)[i] = (*(subit2->second)->first)[i];
 
                         existingSoln = partial[index]->insert(
                             std::make_pair(seq, val));
@@ -1012,6 +1029,17 @@ namespace {
                             delete seq;
                         }
                     }
+                }
+
+                for (subit = leftIndexed.begin();
+                        subit != leftIndexed.end(); ++subit)
+                    delete subit->first;
+                leftIndexed.clear();
+
+                for (subit = rightIndexed.begin();
+                        subit != rightIndexed.end(); ++subit)
+                    delete subit->first;
+                rightIndexed.clear();
 
                 for (it2 = partial[child->index()]->begin();
                         it2 != partial[child->index()]->end(); ++it2)
