@@ -242,6 +242,29 @@ class REGINA_API LightweightSequence {
             bool operator () (const LightweightSequence* a,
                     const LightweightSequence* b) const;
         };
+
+        /**
+         * TODO: Document.
+         */
+        template <typename Iterator>
+        class REGINA_API SubsequenceCompareFirstPtr {
+            private:
+                size_t nSub_;
+                size_t* sub_;
+
+            public:
+                SubsequenceCompareFirstPtr(size_t nSub, const size_t* sub);
+                SubsequenceCompareFirstPtr(
+                    const SubsequenceCompareFirstPtr<Iterator>& cloneMe);
+                ~SubsequenceCompareFirstPtr();
+
+                bool equal(Iterator a, Iterator b) const;
+                bool less(Iterator a, Iterator b) const;
+                bool operator () (Iterator a, Iterator b) const;
+
+                SubsequenceCompareFirstPtr<Iterator>& operator = (
+                    const SubsequenceCompareFirstPtr<Iterator>& cloneMe);
+        };
 };
 
 /**
@@ -370,6 +393,80 @@ inline std::ostream& operator << (std::ostream& out,
         out << s[i];
     }
     return out << ')';
+}
+
+template <typename T>
+template <typename Iterator>
+inline LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
+        SubsequenceCompareFirstPtr(size_t nSub, const size_t* sub) :
+        nSub_(nSub), sub_(new size_t[nSub]) {
+    for (size_t i = 0; i < nSub_; ++i)
+        sub_[i] = sub[i];
+}
+
+template <typename T>
+template <typename Iterator>
+inline LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
+        SubsequenceCompareFirstPtr(
+        const SubsequenceCompareFirstPtr<Iterator>& cloneMe) :
+        nSub_(cloneMe.nSub_), sub_(new size_t[cloneMe.nSub_]) {
+    for (size_t i = 0; i < nSub_; ++i)
+        sub_[i] = cloneMe.sub_[i];
+}
+
+template <typename T>
+template <typename Iterator>
+inline LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
+        ~SubsequenceCompareFirstPtr()  {
+    delete[] sub_;
+}
+
+template <typename T>
+template <typename Iterator>
+inline bool LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
+        equal(Iterator a, Iterator b) const {
+    for (size_t i = 0; i < nSub_; ++i)
+        if ((*(a->first))[i] != (*(b->first))[i])
+            return false;
+    return true;
+}
+
+template <typename T>
+template <typename Iterator>
+inline bool LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
+        less(Iterator a, Iterator b) const {
+    for (size_t i = 0; i < nSub_; ++i)
+        if ((*(a->first))[i] < (*(b->first))[i])
+            return true;
+        else if ((*(a->first))[i] > (*(b->first))[i])
+            return false;
+    return false;
+}
+
+template <typename T>
+template <typename Iterator>
+inline bool LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
+        operator () (Iterator a, Iterator b) const {
+    for (size_t i = 0; i < nSub_; ++i)
+        if ((*(a->first))[i] < (*(b->first))[i])
+            return true;
+        else if ((*(a->first))[i] > (*(b->first))[i])
+            return false;
+    return false;
+}
+
+template <typename T>
+template <typename Iterator>
+inline LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>&
+        LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
+        operator = (
+        const SubsequenceCompareFirstPtr<Iterator>& cloneMe) {
+    delete[] sub_;
+
+    nSub_ = cloneMe.nSub_;
+    sub_ = new size_t[nSub_];
+    for (size_t i = 0; i < nSub_; ++i)
+        sub_[i] = cloneMe.sub_[i];
 }
 
 } // namespace regina
