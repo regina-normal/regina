@@ -757,9 +757,7 @@ namespace {
             InitialData<exact>& init) {
         typedef typename InitialData<exact>::TVType TVType;
 
-        NTreeDecomposition d(tri);
-        d.compress();
-        d.makeNice();
+        const NTreeDecomposition& d = tri.niceTreeDecomposition();
 
         int nEdges = tri.getNumberOfEdges();
         int nBags = d.size();
