@@ -198,6 +198,29 @@ class REGINA_API LightweightSequence {
         const_iterator end() const;
 
         /**
+         * Tests whether this and the given sequence are identical.
+         *
+         * The sequences need not be the same size, though if the sizes
+         * are different then this routine will return \c false immediately.
+         *
+         * @param rhs the sequence to compare with this.
+         * @return \c true if and only if this and the given sequence
+         * are identical.
+         */
+        bool operator == (const LightweightSequence& rhs) const;
+
+        /**
+         * Tests whether this sequence is lexicographically smaller than the
+         * given sequence.  The sequences need not be the same size.
+         *
+         * @param rhs the sequence to compare with this.
+         * @return \c true if this is strictly lexicographically
+         * smaller than \a rhs, or \c false if this is either
+         * lexicographically greater than or equal to \a rhs.
+         */
+        bool operator < (const LightweightSequence& rhs) const;
+
+        /**
          * A binary function object that compares two sequences
          * lexicographically.
          *
@@ -207,6 +230,8 @@ class REGINA_API LightweightSequence {
             /**
              * Compares two sequences lexicographically.  The sequences
              * need not be the same size.
+             *
+             * This routine is identical to testing <tt>(*a) &lt; (*b)</tt>.
              *
              * @param a the first of the two sequences to compare.
              * @param b the second of the two sequences to compare.
@@ -295,6 +320,30 @@ template <typename T>
 inline typename LightweightSequence<T>::const_iterator
         LightweightSequence<T>::end() const {
     return data_ + size_;
+}
+
+template <typename T>
+inline bool LightweightSequence<T>::operator == (
+        const LightweightSequence& rhs) const {
+    if (size_ != rhs.size_)
+        return false;
+    for (size_t i = 0; i < size_; ++i)
+        if (data_[i] != rhs.data_[i])
+            return false;
+    return true;
+}
+
+template <typename T>
+inline bool LightweightSequence<T>::operator < (
+        const LightweightSequence<T>& rhs) const {
+    for (size_t i = 0; i < rhs.size_; ++i)
+        if (i >= size_ || data_[i] < rhs.data_[i])
+            return true;
+        else if (rhs.data_[i] < data_[i])
+            return false;
+    // The sequences match for the first rhs.size_ elements, and
+    // this sequence is at least as long as rhs.
+    return false;
 }
 
 template <typename T>
