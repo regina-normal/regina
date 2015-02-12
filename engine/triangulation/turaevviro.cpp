@@ -631,14 +631,30 @@ namespace {
             const InitialData<exact>& init) {
         typedef typename InitialData<exact>::TVType TVType;
 
+        unsigned long nEdges = tri.getNumberOfEdges();
+        unsigned long nTriangles = tri.getNumberOfTriangles();
+
+        // Our plan is to run through all admissible colourings via a
+        // backtracking search, with the high-degree edges towards the root
+        // of the search tree and the low-degree edges towards the leaves.
+
+        // We first sort the edges by degree.
+        unsigned long i;
+        unsigned long* sortedEdges = new unsigned long[nEdges];
+        unsigned long* edgePos = new unsigned long[nEdges];
+
+        for (i = 0; i < nEdges; ++i)
+            sortedEdges[i] = i;
+        std::sort(sortedEdges, sortedEdges + nEdges,
+            DegreeGreaterThan<3, 1>(tri));
+        for (i = 0; i < nEdges; ++i)
+            edgePos[sortedEdges[i]] = i;
+
         // Run through all admissible colourings.
         TVType ans;
         init.initZero(ans);
 
         // Now hunt for colourings.
-        unsigned long i;
-        unsigned long nEdges = tri.getNumberOfEdges();
-        unsigned long nTriangles = tri.getNumberOfTriangles();
         unsigned long* colour = new unsigned long[nEdges];
 
         std::fill(colour, colour + nEdges, 0);
@@ -680,23 +696,23 @@ namespace {
                 // Step back down one level.
                 curr--;
                 if (curr >= 0)
-                    colour[curr]++;
+                    colour[sortedEdges[curr]]++;
                 continue;
             }
 
             // Have we run out of values to try at this level?
-            if (colour[curr] > init.r - 2) {
-                colour[curr] = 0;
+            if (colour[sortedEdges[curr]] > init.r - 2) {
+                colour[sortedEdges[curr]] = 0;
                 curr--;
                 if (curr >= 0)
-                    colour[curr]++;
+                    colour[sortedEdges[curr]]++;
                 continue;
             }
 
             // Does the current value for colour[curr] preserve admissibility?
             admissible = true;
-            const std::deque<NEdgeEmbedding>& embs(tri.getEdge(curr)->
-                getEmbeddings());
+            const std::deque<NEdgeEmbedding>&
+                embs(tri.getEdge(sortedEdges[curr])->getEmbeddings());
             for (embit = embs.begin(); embit != embs.end(); embit++) {
                 index1 = tri.edgeIndex((*embit).getTetrahedron()->getEdge(
                     NEdge::edgeNumber[(*embit).getVertices()[0]]
@@ -704,11 +720,11 @@ namespace {
                 index2 = tri.edgeIndex((*embit).getTetrahedron()->getEdge(
                     NEdge::edgeNumber[(*embit).getVertices()[1]]
                     [(*embit).getVertices()[2]]));
-                if (index1 <= curr && index2 <= curr) {
+                if (edgePos[index1] <= curr && edgePos[index2] <= curr) {
                     // We've decided upon colours for all three edges of
                     // this triangle containing the current edge.
                     if (! init.isAdmissible(colour[index1], colour[index2],
-                            colour[curr])) {
+                            colour[sortedEdges[curr]])) {
                         admissible = false;
                         break;
                     }
@@ -720,10 +736,12 @@ namespace {
             if (admissible)
                 curr++;
             else
-                colour[curr]++;
+                colour[sortedEdges[curr]]++;
         }
 
         delete[] colour;
+        delete[] sortedEdges;
+        delete[] edgePos;
 
         // Compute the vertex contributions separately, since these are
         // constant.
