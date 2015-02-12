@@ -257,6 +257,16 @@ class REGINA_API LightweightSequence {
          * - The actual objects that we compare are not the sequences
          *   themselves, but iterators that point to (key, value) pairs,
          *   whose keys are pointers to sequences.
+         *
+         * More precisely: suppose the indices of the elements to
+         * compare are \a i0, \a i1, \a i2, ..., and that we are comparing
+         * iterators \a a, \a b.  Then this function object will consider the
+         * sequences <tt>s = *(a->first)</tt> and <tt>t = *(b->first)</tt>,
+         * and will lexicographically compare their subsequences
+         * <tt>s[i0], s[i1], ...</tt> and <tt>t[i0], t[i1], ...</tt>.
+         *
+         * Note that the indices \a i0, \a i1, ... do not need to be in
+         * increasing order.
          */
         template <typename Iterator>
         class REGINA_API SubsequenceCompareFirstPtr {
@@ -269,7 +279,18 @@ class REGINA_API LightweightSequence {
 
             public:
                 /**
-                 * TODO.
+                 * Creates a new function object.
+                 *
+                 * As explained in the class notes, this object compares
+                 * just some, not necessarily all, elements of two
+                 * sequences.  The indices of the elements to compare
+                 * should be passed to this constructor.
+                 *
+                 * @param nSub the number of elements to compare from
+                 * each sequence.
+                 * @param sub the indices of the elements to compare
+                 * from each sequence; that is, the indices \a i0,
+                 * \a i1, ..., as described in the class notes.
                  */
                 SubsequenceCompareFirstPtr(size_t nSub, const size_t* sub);
                 /**
@@ -285,19 +306,55 @@ class REGINA_API LightweightSequence {
                 ~SubsequenceCompareFirstPtr();
 
                 /**
-                 * TODO.
+                 * Tests whether the subsequences referred to by the
+                 * given pair of iterators are identical.
+                 *
+                 * See the class notes for details on how each iterator
+                 * is converted into a subsequence.
+                 *
+                 * @param a an iterator indicating the first of the two
+                 * subsequences to compare.
+                 * @param a an iterator indicating the second of the two
+                 * subsequences to compare.
+                 * @return \c true if and only if the two subsequences
+                 * are identical.
                  */
                 bool equal(Iterator a, Iterator b) const;
                 /**
-                 * TODO.
+                 * Lexicographically compares the subsequences referred to
+                 * by the given pair of iterators.
                  *
-                 * This is identical to the bracket operator.
+                 * See the class notes for details on how each iterator
+                 * is converted into a subsequence.
+                 *
+                 * This member function is identical to the bracket operator.
+                 *
+                 * @param a an iterator indicating the first of the two
+                 * subsequences to compare.
+                 * @param a an iterator indicating the second of the two
+                 * subsequences to compare.
+                 * @return \c true if and only if the subsequence
+                 * indicated by \a a is lexicographically smaller than
+                 * the subsequence indicated by \a b.
                  */
                 bool less(Iterator a, Iterator b) const;
                 /**
-                 * TODO.
+                 * Lexicographically compares the subsequences referred to
+                 * by the given pair of iterators.
                  *
-                 * This is identical to the less() member function.
+                 * See the class notes for details on how each iterator
+                 * is converted into a subsequence.
+                 *
+                 * This bracket operator is identical to the less()
+                 * member function.
+                 *
+                 * @param a an iterator indicating the first of the two
+                 * subsequences to compare.
+                 * @param a an iterator indicating the second of the two
+                 * subsequences to compare.
+                 * @return \c true if and only if the subsequence
+                 * indicated by \a a is lexicographically smaller than
+                 * the subsequence indicated by \a b.
                  */
                 bool operator () (Iterator a, Iterator b) const;
 
