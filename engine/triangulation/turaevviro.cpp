@@ -811,6 +811,9 @@ namespace {
         bool ok;
         TVType val;
 
+        int* overlap = new int[nEdges];
+        int nOverlap;
+
         // For each new tetrahedron that appears in a forget bag, we
         // colour its edges in the order 5,4,3,2,1,0.
         // This is so that we get triangles appearing as soon as possible
@@ -969,16 +972,21 @@ namespace {
                 child = bag->children();
                 sibling = child->sibling();
 
+                nOverlap = 0;
+                for (i = 0; i < nEdges; ++i)
+                    if (seenDegree[child->index()][i] != 0 &&
+                            seenDegree[sibling->index()][i] != 0)
+                    overlap[nOverlap++] = i;
+
                 for (it = partial[child->index()]->begin();
                         it != partial[child->index()]->end(); ++it)
                     for (it2 = partial[sibling->index()]->begin();
                             it2 != partial[sibling->index()]->end(); ++it2) {
                         // Are the two solutions compatible?
                         ok = true;
-                        for (i = 0; ok && i < nEdges; ++i)
-                            if ((*it->first)[i] != TV_UNCOLOURED &&
-                                    (*it2->first)[i] != TV_UNCOLOURED &&
-                                    (*it->first)[i] != (*it2->first)[i])
+                        for (i = 0; ok && i < nOverlap; ++i)
+                            if ((*it->first)[overlap[i]] !=
+                                    (*it2->first)[overlap[i]])
                                 ok = false;
                         if (! ok)
                             continue;
@@ -1041,6 +1049,7 @@ namespace {
 
         delete[] seenDegree;
         delete[] partial;
+        delete[] overlap;
 
         return ans;
     }
