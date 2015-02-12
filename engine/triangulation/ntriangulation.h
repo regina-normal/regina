@@ -53,6 +53,7 @@
 #include "generic/ngenerictriangulation.h"
 #include "maths/ncyclotomic.h"
 #include "packet/npacket.h"
+#include "treewidth/ntreedecomposition.h"
 #include "utilities/nbooleans.h"
 #include "utilities/nmarkedvector.h"
 #include "utilities/nproperty.h"
@@ -269,6 +270,11 @@ class REGINA_API NTriangulation : public NPacket,
                 strictAngleStructure_;
             /**< A strict angle structure on this triangulation, or the
                  null pointer if none exists. */
+
+        mutable NProperty<NTreeDecomposition, StoreManagedPtr>
+                niceTreeDecomposition_;
+            /**< A nice tree decomposition of the face pairing graph of
+                 this triangulation. */
 
         mutable TuraevViroSet turaevViroCache_;
             /**< The set of Turaev-Viro invariants that have already
@@ -2873,6 +2879,31 @@ class REGINA_API NTriangulation : public NPacket,
          */
         bool hasSimpleCompressingDisc() const;
 
+        /**
+         * Returns a nice tree decomposition of the face pairing graph
+         * of this triangulation.  This can (for example) be used in
+         * implementing algorithms that are fixed-parameter tractable
+         * in the treewidth of the face pairing graph.
+         *
+         * See NTreeDecomposition for further details on tree
+         * decompositions, and see NTreeDecomposition::makeNice() for
+         * details on what it means to be a \e nice tree decomposition.
+         *
+         * This routine is fast: it will use a greedy algorithm to find a
+         * tree decomposition with (hopefully) small width, but with
+         * no guarantees that the width of this tree decomposition is the
+         * smallest possible.
+         *
+         * The tree decomposition will be cached, so that if this routine is
+         * called a second time (and the underlying triangulation has not
+         * been changed) then the same tree decomposition will be returned
+         * immediately.
+         *
+         * @return a nice tree decomposition of the face pairing graph
+         * of this triangulation.
+         */
+        const NTreeDecomposition& niceTreeDecomposition() const;
+
         /*@}*/
         /**
          * \name Subdivisions, Extensions and Covers
@@ -4297,6 +4328,15 @@ inline unsigned long NTriangulation::getHomologyH2Z2() const {
 inline const NTriangulation::TuraevViroSet&
         NTriangulation::allCalculatedTuraevViro() const {
     return turaevViroCache_;
+}
+
+inline const NTreeDecomposition& NTriangulation::niceTreeDecomposition() const {
+    if (niceTreeDecomposition_.known())
+        return *niceTreeDecomposition_.value();
+
+    NTreeDecomposition* ans = new NTreeDecomposition(*this, TD_UPPER);
+    ans->makeNice();
+    return *(niceTreeDecomposition_ = ans);
 }
 
 inline void NTriangulation::writeTextShort(std::ostream& out) const {

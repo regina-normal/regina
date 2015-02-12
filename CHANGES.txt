@@ -97,6 +97,8 @@ Version 4.97  [ (under development) ]
               idealToFinite().
             - New dimension-agnostic getFace<subdim>() and
               faceIndex<subdim>() template functions.
+            - New routine niceTreeDecomposition() for constructing and
+              caching a nice tree decomposition of the face pairing graph.
         Class NVertex:
             - Added a new LinkType enumeration, which encapsulates (and
               replaces) the old link type constants.

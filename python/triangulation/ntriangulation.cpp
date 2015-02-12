@@ -368,6 +368,8 @@ void addNTriangulation() {
             &NTriangulation::hasSimpleCompressingDisc)
         .def("isHaken", &NTriangulation::isHaken)
         .def("knowsHaken", &NTriangulation::knowsHaken)
+        .def("niceTreeDecomposition", &NTriangulation::niceTreeDecomposition,
+            return_internal_reference<>())
         .def("makeDoubleCover", &NTriangulation::makeDoubleCover)
         .def("idealToFinite", &NTriangulation::idealToFinite)
         .def("finiteToIdeal", &NTriangulation::finiteToIdeal)
