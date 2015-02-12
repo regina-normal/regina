@@ -221,8 +221,8 @@ class REGINA_API LightweightSequence {
         bool operator < (const LightweightSequence& rhs) const;
 
         /**
-         * A binary function object that compares two sequences
-         * lexicographically.
+         * A binary function object that compares sequences lexicographically,
+         * for use in containers that hold pointers to sequences.
          *
          * \pre The type \a T supports the less-than operator.
          */
@@ -233,8 +233,8 @@ class REGINA_API LightweightSequence {
              *
              * This routine is identical to testing <tt>(*a) &lt; (*b)</tt>.
              *
-             * @param a the first of the two sequences to compare.
-             * @param b the second of the two sequences to compare.
+             * @param a a pointer to the first of the two sequences to compare.
+             * @param b a pointer to the second of the two sequences to compare.
              * @return \c true if sequence \a a is strictly lexicographically
              * smaller than sequence \a b, or \c false if \a a is either
              * lexicographically greater than or equal to \a b.
@@ -244,27 +244,72 @@ class REGINA_API LightweightSequence {
         };
 
         /**
-         * A helper object for comparing subsequences, for use in
-         * maps whose keys are pointers to sequences.
+         * A binary function object for comparing subsequences, for use in
+         * associative containers whose keys are pointers to sequences.
          *
-         * TODO: Document.
+         * This is a very specialised comparison object, for use in the
+         * following settings:
+         *
+         * - We are interested in comparing just some, not necessarily all,
+         *   of the elements of each sequence.  The indices of the elements
+         *   to compare are passed to the constructor of this comparison object.
+         *
+         * - The actual objects that we compare are not the sequences
+         *   themselves, but iterators that point to (key, value) pairs,
+         *   whose keys are pointers to sequences.
          */
         template <typename Iterator>
         class REGINA_API SubsequenceCompareFirstPtr {
             private:
                 size_t nSub_;
+                    /**< The number of elements to compare in each sequence. */
                 size_t* sub_;
+                    /**< The indices of the elements to compare in each
+                         sequence. */
 
             public:
+                /**
+                 * TODO.
+                 */
                 SubsequenceCompareFirstPtr(size_t nSub, const size_t* sub);
+                /**
+                 * Creates a clone of the given function object.
+                 *
+                 * @param cloneMe the function object to copy.
+                 */
                 SubsequenceCompareFirstPtr(
                     const SubsequenceCompareFirstPtr<Iterator>& cloneMe);
+                /**
+                 * Destroys this function object.
+                 */
                 ~SubsequenceCompareFirstPtr();
 
+                /**
+                 * TODO.
+                 */
                 bool equal(Iterator a, Iterator b) const;
+                /**
+                 * TODO.
+                 *
+                 * This is identical to the bracket operator.
+                 */
                 bool less(Iterator a, Iterator b) const;
+                /**
+                 * TODO.
+                 *
+                 * This is identical to the less() member function.
+                 */
                 bool operator () (Iterator a, Iterator b) const;
 
+                /**
+                 * Makes this function object identical to the given
+                 * function object.  The original list of indices that
+                 * was previously stored with this function object will
+                 * be destroyed.
+                 *
+                 * @param cloneMe the function object to copy.
+                 * @return a reference to this function object.
+                 */
                 SubsequenceCompareFirstPtr<Iterator>& operator = (
                     const SubsequenceCompareFirstPtr<Iterator>& cloneMe);
         };
@@ -470,6 +515,8 @@ inline LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>&
     sub_ = new size_t[nSub_];
     for (size_t i = 0; i < nSub_; ++i)
         sub_[i] = cloneMe.sub_[i];
+
+    return *this;
 }
 
 } // namespace regina
