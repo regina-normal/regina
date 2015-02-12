@@ -818,7 +818,7 @@ namespace {
         int* overlap = new int[nEdges];
         int nOverlap;
         SolnSubset leftIndexed, rightIndexed;
-        typename SolnSubset::iterator subit, subit2;
+        typename SolnSubset::iterator subit, subit2, subprev;
         std::pair<typename SolnSubset::iterator,
             typename SolnSubset::iterator> subrange;
 
@@ -1004,7 +1004,11 @@ namespace {
 
                 for (subit = leftIndexed.begin();
                         subit != leftIndexed.end(); ++subit) {
-                    subrange = rightIndexed.equal_range(subit->first);
+                    if (subit == leftIndexed.begin() ||
+                            ! (*(subit->first) == *(subprev->first))) {
+                        subrange = rightIndexed.equal_range(subit->first);
+                        subprev = subit;
+                    }
                     for (subit2 = subrange.first; subit2 != subrange.second;
                             ++subit2) {
                         // We have two compatible solutions.
