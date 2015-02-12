@@ -45,7 +45,6 @@
 #include "utilities/sequence.h"
 #include <gmpxx.h>
 #include <map>
-#include <vector>
 
 // #define TV_BACKTRACK_DUMP_COLOURINGS
 // #define TV_IGNORE_CACHE
@@ -816,13 +815,12 @@ namespace {
 
         typedef std::map<LightweightSequence<int>*, TVType,
             LightweightSequence<int>::Less> SolnSet;
-
-        typedef std::vector<typename SolnSet::iterator> SolnOrder;
+        typedef typename SolnSet::iterator SolnIterator;
 
         SolnSet** partial = new SolnSet*[nBags];
         LightweightSequence<int>* seq;
-        typename SolnSet::iterator it, it2;
-        std::pair<typename SolnSet::iterator, bool> existingSoln;
+        SolnIterator it, it2;
+        std::pair<SolnIterator, bool> existingSoln;
         int e1, e2;
         int tetEdge[6];
         int colour[6];
@@ -832,10 +830,10 @@ namespace {
 
         size_t* overlap = new size_t[nEdges];
         size_t nOverlap;
-        SolnOrder leftIndexed, rightIndexed;
-        typename SolnOrder::iterator subit, subit2;
-        std::pair<typename SolnOrder::iterator,
-            typename SolnOrder::iterator> subrange, subrange2;
+        SolnIterator *leftIndexed, *rightIndexed;
+        size_t nLeft, nRight;
+        SolnIterator *subit, *subit2;
+        std::pair<SolnIterator*, SolnIterator*> subrange, subrange2;
 
         // For each new tetrahedron that appears in a forget bag, we
         // colour its edges in the order 5,4,3,2,1,0.
@@ -1002,42 +1000,45 @@ namespace {
                     overlap[nOverlap++] = i;
 
                 LightweightSequence<int>::SubsequenceCompareFirstPtr<
-                    typename SolnSet::iterator> compare(nOverlap, overlap);
+                    SolnIterator> compare(nOverlap, overlap);
 
-                leftIndexed.reserve(partial[child->index()]->size());
+                nLeft = 0;
+                leftIndexed = new SolnIterator[partial[child->index()]->size()];
                 for (it = partial[child->index()]->begin();
                         it != partial[child->index()]->end(); ++it)
-                    leftIndexed.push_back(it);
-                std::sort(leftIndexed.begin(), leftIndexed.end(), compare);
+                    leftIndexed[nLeft++] = it;
+                std::sort(leftIndexed, leftIndexed + nLeft, compare);
 
-                rightIndexed.reserve(partial[sibling->index()]->size());
+                nRight = 0;
+                rightIndexed = new SolnIterator[
+                    partial[sibling->index()]->size()];
                 for (it = partial[sibling->index()]->begin();
                         it != partial[sibling->index()]->end(); ++it)
-                    rightIndexed.push_back(it);
-                std::sort(rightIndexed.begin(), rightIndexed.end(), compare);
+                    rightIndexed[nRight++] = it;
+                std::sort(rightIndexed, rightIndexed + nRight, compare);
 
-                subrange.second = leftIndexed.begin();
-                subrange2.second = rightIndexed.begin();
+                subrange.second = leftIndexed;
+                subrange2.second = rightIndexed;
 
-                while (subrange.second != leftIndexed.end() &&
-                        subrange2.second != rightIndexed.end()) {
+                while (subrange.second != leftIndexed + nLeft &&
+                        subrange2.second != rightIndexed + nRight) {
                     subrange.first = subrange.second;
-                    while (subrange.second != leftIndexed.end() &&
+                    while (subrange.second != leftIndexed + nLeft &&
                             compare.equal(*subrange.first, *subrange.second))
                         ++subrange.second;
 
                     subrange2.first = subrange2.second;
-                    while (subrange2.first != rightIndexed.end() &&
+                    while (subrange2.first != rightIndexed + nRight &&
                             compare.less(*subrange2.first, *subrange.first))
                         ++subrange2.first;
 
-                    if (subrange2.first == rightIndexed.end())
+                    if (subrange2.first == rightIndexed + nRight)
                         break;
                     if (compare.less(*subrange.first, *subrange2.first))
                         continue;
 
                     subrange2.second = subrange2.first;
-                    while (subrange2.second != rightIndexed.end() &&
+                    while (subrange2.second != rightIndexed + nRight &&
                             compare.equal(*subrange2.first, *subrange2.second))
                         ++subrange2.second;
 
@@ -1069,8 +1070,8 @@ namespace {
                         }
                 }
 
-                leftIndexed.clear();
-                rightIndexed.clear();
+                delete[] leftIndexed;
+                delete[] rightIndexed;
 
                 for (it2 = partial[child->index()]->begin();
                         it2 != partial[child->index()]->end(); ++it2)
