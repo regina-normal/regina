@@ -621,6 +621,15 @@ class REGINA_API NGenericFacetPairing : public NThread,
             NBoolSet boundary, int nBdryFacets, Use use,
             void* useArgs = 0, bool newThread = false);
 
+        /**
+         * Remove a simplex from this facet pairing, and reorganise the result.
+         *
+         * \pre The facet pairing contains a simplex by the given index.
+         *
+         * @param toRemove the simplex to remove.
+         */
+        void removeSimplex(int toRemove);
+
     protected:
         /**
          * Creates a new facet pairing.  All internal arrays will be

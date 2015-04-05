@@ -106,6 +106,8 @@ class NFacePairingTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(rawCountsBounded);
     CPPUNIT_TEST(badSubgraphs);
 
+    CPPUNIT_TEST(removingSimplex);
+
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -117,6 +119,29 @@ class NFacePairingTest : public CppUnit::TestFixture {
         }
 
         void tearDown() {
+        }
+
+        void removingSimplex() {
+            // Two test cases, both worked out by hand. First is a single-ended
+            // chain on two tetrahedra, second is a double-ended chain on 4
+            // tetrahedra with one face identification already removed.
+            int testCases = 2;
+            std::string start[] = { "0 1 0 0 1 0 1 1 0 2 0 3 2 0 2 0" , "0 1 0 0 1 0 1 1 0 2 0 3 2 0 4 0 1 2 3 0 3 1 4 0 2 1 2 2 3 3 3 2"};
+            int toRemove[] = { 0 , 2};
+            std::string end[] = { "1 0 1 0 1 0 1 0" , "0 1 0 0 1 0 1 1 0 2 0 3 3 0 3 0 3 0 3 0 2 3 2 2" };
+            for (int i = 0; i < testCases; ++i) {
+                NFacePairing *pairing = NFacePairing::fromTextRep(start[i]);
+                pairing->removeSimplex(toRemove[i]);
+                if (! (pairing->toTextRep() == end[i])) {
+                    std::ostringstream msg;
+                    msg << "Face pairing graph " << start[i]
+                        << " with simplex " << toRemove[i]
+                        << " removed should be " << std::endl << end[i]
+                        << " not " << std::endl << pairing->toTextRep();
+
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
         }
 
         void rawCountsClosed() {
