@@ -300,11 +300,15 @@ class REGINA_API NGenericFacetPairing : public NThread,
 
 
         /**
-         * Makes the facet pairing canonical.
+         * Makes the facet pairing canonical, i.e., applies an isomorphism such
+         * that the string representation is lexographically minimal of all
+         * isomorphic representations.
          *
+         * \pre This facet pairing is connected, i.e., it is possible
+         * to reach any simplex from any other simplex via a
+         * series of matched facet pairs.
          *
          * @return the isomorphism used to make the pairing canonical.
-
          */
         Isomorphism * makeCanonical();
 
