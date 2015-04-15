@@ -298,6 +298,16 @@ class REGINA_API NGenericFacetPairing : public NThread,
          */
         bool isCanonical() const;
 
+
+        /**
+         * Makes the facet pairing canonical.
+         *
+         *
+         * @return the isomorphism used to make the pairing canonical.
+
+         */
+        Isomorphism * makeCanonical();
+
         /**
          * Fills the given list with the set of all combinatorial
          * automorphisms of this facet pairing.
@@ -629,6 +639,7 @@ class REGINA_API NGenericFacetPairing : public NThread,
          * @param toRemove the simplex to remove.
          */
         void removeSimplex(int toRemove);
+
 
     protected:
         /**
