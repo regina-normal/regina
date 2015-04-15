@@ -38,6 +38,7 @@
 #include "testsuite/census/testcensus.h"
 
 using regina::NFacePairing;
+using regina::NIsomorphism;
 using regina::NBoolSet;
 
 /**
@@ -141,6 +142,38 @@ class NFacePairingTest : public CppUnit::TestFixture {
 
                     CPPUNIT_FAIL(msg.str());
                 }
+                delete pairing;
+            }
+        }
+
+        void makeCanonical() {
+            int testCases = 3;
+            std::string start[] = {
+                "1 0 1 0 0 3 0 2" ,
+                "1 0 1 1 0 3 0 2 0 0 0 1 2 0 2 0" ,
+                "3 1 2 2 1 1 1 0 0 3 0 2 3 0 2 0 1 3 4 0 0 1 4 0 1 2 0 0 3 3 3 2" };
+            std::string end[] =   {
+                "0 1 0 0 1 0 1 0" ,
+                "0 1 0 0 1 0 1 1 0 2 0 3 2 0 2 0" ,
+                "0 1 0 0 1 0 2 0 0 2 2 1 2 2 3 0 0 3 1 1 1 2 3 1 1 3 2 3 4 0 4 0" };
+            for (int i = 0; i < testCases; ++i) {
+                NFacePairing *pairing = NFacePairing::fromTextRep(start[i]);
+                std::ostringstream msg;
+                if ( pairing->isCanonical()) {
+                    msg << "Face pairing graph " << start[i]
+                        << " already canonical, bad test." << std::endl;
+                    CPPUNIT_FAIL(msg.str());
+                }
+                NIsomorphism *iso = pairing->makeCanonical();
+                if (! pairing->isCanonical()) {
+                    msg << "Face pairing graph " << start[i]
+                        << " made canonical should be " << std::endl << end[i]
+                        << " not " << std::endl << pairing->toTextRep();
+
+                    CPPUNIT_FAIL(msg.str());
+                }
+                delete iso;
+                delete pairing;
             }
         }
 
