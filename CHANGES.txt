@@ -63,6 +63,9 @@ Version 4.97  [ (under development) ]
             - New routine transferChildren() for bulk tree reorganisation.
         Class NPacketListener:
             - New events childToBeRenamed(), childWasRenamed().
+        Class NPerm:
+            - Removed the old deprecated NPerm typedef (this was synonymous
+              with NPerm4).
         Class NPolynomial:
             - New class for working with single-variable polynomials
               over arbitrary rings.
@@ -105,6 +108,8 @@ Version 4.97  [ (under development) ]
         Routine open():
             - Added a variant that takes an input stream (as opposed to
               a filename).
+        Header nperm.h:
+            - Removed this deprecated header from the triangulation/ directory.
         Header zstream.h:
             - Removed entirely.  Regina now uses boost::iostreams instead.
     USER INTERFACE:
