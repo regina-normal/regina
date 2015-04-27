@@ -2231,7 +2231,7 @@ inline NIntegerBase<supportInfinity>::NIntegerBase(unsigned value) :
         small_(value) {
     // Detect overflow.
     if (small_ < 0) {
-        large_ = new mpz_t;
+        large_ = new __mpz_struct[1];
         mpz_init_set_ui(large_, value);
     } else
         large_ = 0;
@@ -2247,7 +2247,7 @@ inline NIntegerBase<supportInfinity>::NIntegerBase(unsigned long value) :
         small_(value) {
     // Detect overflow.
     if (small_ < 0) {
-        large_ = new mpz_t;
+        large_ = new __mpz_struct[1];
         mpz_init_set_ui(large_, value);
     } else
         large_ = 0;
@@ -2260,7 +2260,7 @@ inline NIntegerBase<supportInfinity>::NIntegerBase(
         large_ = 0;
         makeInfinite();
     } else if (value.large_) {
-        large_ = new mpz_t;
+        large_ = new __mpz_struct[1];
         mpz_init_set(large_, value.large_);
     } else {
         small_ = value.small_;
@@ -2274,7 +2274,7 @@ inline NIntegerBase<supportInfinity>::NIntegerBase(
     // If value is infinite, we cannot make this infinite.
     // This is why we insist via preconditions that value is finite.
     if (value.large_) {
-        large_ = new mpz_t;
+        large_ = new __mpz_struct[1];
         mpz_init_set(large_, value.large_);
     } else {
         small_ = value.small_;
@@ -2291,7 +2291,7 @@ inline NIntegerBase<supportInfinity>::NIntegerBase(
     if (sizeof(long) < bytes && value.nativeValue() != static_cast<typename IntOfSize<bytes>::type>(small_)) {
         // It didn't fit.  Take things one long at a time.
         unsigned blocks = bytes / sizeof(long);
-        large_ = new mpz_t;
+        large_ = new __mpz_struct[1];
         mpz_init_set_si(large_, static_cast<long>(
             value.nativeValue() >> ((blocks - 1) * 8 * sizeof(long))));
         for (unsigned i = 2; i <= blocks; ++i) {
@@ -2402,7 +2402,7 @@ inline NIntegerBase<supportInfinity>&
         if (large_)
             mpz_set(large_, value.large_);
         else {
-            large_ = new mpz_t;
+            large_ = new __mpz_struct[1];
             mpz_init_set(large_, value.large_);
         }
     } else {
@@ -2424,7 +2424,7 @@ inline NIntegerBase<supportInfinity>&
         if (large_)
             mpz_set(large_, value.large_);
         else {
-            large_ = new mpz_t;
+            large_ = new __mpz_struct[1];
             mpz_init_set(large_, value.large_);
         }
     } else {
@@ -2458,7 +2458,7 @@ inline NIntegerBase<supportInfinity>&
         if (large_)
             mpz_set_ui(large_, value);
         else {
-            large_ = new mpz_t;
+            large_ = new __mpz_struct[1];
             mpz_init_set_ui(large_, value);
         }
     } else if (large_) {
@@ -2491,7 +2491,7 @@ inline NIntegerBase<supportInfinity>&
         if (large_)
             mpz_set_ui(large_, value);
         else {
-            large_ = new mpz_t;
+            large_ = new __mpz_struct[1];
             mpz_init_set_ui(large_, value);
         }
     } else if (large_) {
@@ -2951,14 +2951,14 @@ inline NIntegerBase<supportInfinity>
         return *this;
     if (large_) {
         NIntegerBase<supportInfinity> ans;
-        ans.large_ = new mpz_t;
+        ans.large_ = new __mpz_struct[1];
         mpz_init(ans.large_);
         mpz_neg(ans.large_, large_);
         return ans;
     } else if (small_ == LONG_MIN) {
         // Overflow, just.
         NIntegerBase<supportInfinity> ans;
-        ans.large_ = new mpz_t;
+        ans.large_ = new __mpz_struct[1];
         mpz_init_set_si(ans.large_, small_);
         mpz_neg(ans.large_, ans.large_);
         return ans;
@@ -3025,14 +3025,14 @@ inline NIntegerBase<supportInfinity> NIntegerBase<supportInfinity>::abs()
         return *this;
     if (large_) {
         NIntegerBase<supportInfinity> ans;
-        ans.large_ = new mpz_t;
+        ans.large_ = new __mpz_struct[1];
         mpz_init_set(ans.large_, large_);
         mpz_abs(ans.large_, large_);
         return ans;
     } else if (small_ == LONG_MIN) {
         // Overflow, just.
         NIntegerBase<supportInfinity> ans;
-        ans.large_ = new mpz_t;
+        ans.large_ = new __mpz_struct[1];
         mpz_init_set_si(ans.large_, small_);
         mpz_neg(ans.large_, ans.large_);
         return ans;
@@ -3074,7 +3074,7 @@ template <bool supportInfinity>
 inline void NIntegerBase<supportInfinity>::setRaw(mpz_srcptr fromData) {
     makeFinite();
     if (! large_) {
-        large_ = new mpz_t;
+        large_ = new __mpz_struct[1];
         mpz_init_set(large_, fromData);
     } else {
         mpz_set(large_, fromData);
@@ -3110,7 +3110,7 @@ inline void NIntegerBase<supportInfinity>::tryReduce() {
 
 template <bool supportInfinity>
 inline void NIntegerBase<supportInfinity>::forceLarge() {
-    large_ = new mpz_t;
+    large_ = new __mpz_struct[1];
     mpz_init_set_si(large_, small_);
 }
 

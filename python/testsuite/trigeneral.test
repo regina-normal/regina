@@ -84,7 +84,9 @@ def vitalStats(tri):
 		print "H2:", tri.getHomologyH2()
 		print "H2Z2:", tri.getHomologyH2Z2(), "Z_2"
 	if tri.isValid() and tri.isClosed() and tri.getNumberOfTetrahedra() > 0:
-		tv = tri.turaevViro(5, 3)
+		print "TV(5, 3) =", tri.turaevViro(5, 3)
+
+		tv = tri.turaevViroApprox(5, 3)
 
 		# We round the figures to 5 decimal places so that machines with
 		# different precisions do not give different output.
@@ -94,7 +96,7 @@ def vitalStats(tri):
 
 		if tv < 0.00001 and tv > -0.00001:
 			tv = 0
-		print "TV(5, 3): %.5f" % tv
+		print "TV(5, 3) ~ %.5f" % tv
 
 	# Normal surface computations should only be run on sufficiently
 	# small triangulations, so as to keep the tests relatively fast.
