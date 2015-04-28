@@ -64,6 +64,7 @@ Version 4.97  [ (under development) ]
         Class NPacketListener:
             - New events childToBeRenamed(), childWasRenamed().
         Class NPerm:
+            - New template class for permutations of 2..16 objects.
             - Removed the old deprecated NPerm typedef (this was synonymous
               with NPerm4).
         Class NPolynomial:

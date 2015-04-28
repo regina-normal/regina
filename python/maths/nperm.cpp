@@ -32,37 +32,60 @@
 
 /* end stub */
 
-void addMatrixOps();
-void addNCyclotomic();
-void addNInteger();
-void addNLargeInteger();
-void addNMatrix2();
-void addNMatrixInt();
-void addNPerm3();
-void addNPerm4();
-void addNPerm5();
-void addNPerm();
-void addNPolynomial();
-void addNPrimes();
-void addNRational();
-void addNumberTheory();
-void addPermConv();
+// We need to see Python.h first to avoid a "portability fix" in pyport.h
+// that breaks boost.python on MacOSX.
+#include "Python.h"
+#include <boost/python.hpp>
+#include "maths/nperm.h"
 
-void addMaths() {
-    addMatrixOps();
-    addNCyclotomic();
-    addNInteger();
-    addNLargeInteger();
-    addNMatrix2();
-    addNMatrixInt();
-    addNPerm3();
-    addNPerm4();
-    addNPerm5();
-    addNPerm();
-    addNPolynomial();
-    addNPrimes();
-    addNRational();
-    addNumberTheory();
-    addPermConv();
+using namespace boost::python;
+using regina::NPerm;
+
+namespace {
+    template <int n>
+    int perm_getItem(const NPerm<n>& p, int index) {
+        return p[index];
+    }
+}
+
+template <int n>
+void addNPerm(const char* name) {
+    scope s = class_<NPerm<n> >(name)
+        .def(init<int, int>())
+        .def(init<const NPerm<n>&>())
+        .def("getPermCode", &NPerm<n>::getPermCode)
+        .def("setPermCode", &NPerm<n>::setPermCode)
+        .def("fromPermCode", &NPerm<n>::fromPermCode)
+        .def("isPermCode", &NPerm<n>::isPermCode)
+        .def(self * self)
+        .def("inverse", &NPerm<n>::inverse)
+        .def("sign", &NPerm<n>::sign)
+        .def("__getitem__", perm_getItem<n>)
+        .def("preImageOf", &NPerm<n>::preImageOf)
+        .def(self == self)
+        .def(self != self)
+        .def("compareWith", &NPerm<n>::compareWith)
+        .def("isIdentity", &NPerm<n>::isIdentity)
+        .def("str", &NPerm<n>::str)
+        .def("trunc", &NPerm<n>::trunc)
+        .def("__str__", &NPerm<n>::str)
+        .def("__repr__", &NPerm<n>::str)
+        .staticmethod("fromPermCode")
+        .staticmethod("isPermCode")
+    ;
+}
+
+void addNPerm() {
+    addNPerm<6>("NPerm6");
+    addNPerm<7>("NPerm7");
+    addNPerm<8>("NPerm8");
+    addNPerm<9>("NPerm9");
+    addNPerm<10>("NPerm10");
+    addNPerm<11>("NPerm11");
+    addNPerm<12>("NPerm12");
+    addNPerm<13>("NPerm13");
+    addNPerm<14>("NPerm14");
+    addNPerm<15>("NPerm15");
+    addNPerm<16>("NPerm16");
 }
 
