@@ -43,6 +43,7 @@
 
 #include <string>
 #include "regina-core.h"
+#include "utilities/intutils.h"
 
 namespace regina {
 
@@ -51,60 +52,55 @@ namespace regina {
  * @{
  */
 
+constexpr int permImageBits(int n) {
+    return (n <= 1 ? 0 : 1 + permBits((n + 1) / 2));
+}
+
+constexpr int permImageMask(int n) {
+    return (1 << permImageBits(n)) - 1;
+}
+
 /**
  * Internal class for use by NPerm, indicating how internal codes are
- * constructed for permutations of 5 &le; \a n &le; 16 elements.
+ * constructed for permutations of &ge; 5 elements.
  *
  * Typical end users will not need to use this class.
  *
  * \note Permutations of \a n &le; 4 objects also use internal codes,
  * but these codes are constructed differently (typically as indices into
  * the symmetric group <i>S<sub>n</sub></i>).
- * Permutations of \a n > 16 elements are (at present) not supported by Regina.
  *
  * \ifacespython Not present.
  *
  * @tparam n the number of objects being permuted in the corresponding
- * NPerm<n> class.  This must be between 5 and 16 inclusive.
+ * NPerm<n> class.  At present, this must be between 5 and 16 inclusive.
  */
 template <int n>
 struct REGINA_API NPermCodePacked {
-#ifndef __DOXYGEN
-    // This is the generic implementation for large n.
-    // Implementations for smaller n are specialised later in this file.
-    static_assert(9 <= n && n <= 16,
-        "NPermCodePacked: 4-bit implementation is for 9 <= n <= 16.");
-#endif
     enum {
         /**
          * Indicates the number of bits used to store a single integer
          * \a k in the range 0 &le; \a k < \a n.
-         * This template is specialised to use different constants for
-         * different values of \a n.
          *
          * \ifacespython Not present.
          */
-        imageBits = 4,
+        imageBits = permImageBits(n),
         /**
          * A mask whose lowest \a imageBits bits are 1, and whose
          * remaining higher order bits are all 0.
-         * This template is specialised to use different constants for
-         * different values of \a n.
          *
          * \ifacespython Not present.
          */
-        imageMask = 15
+        imageMask = permImageMask(n)
     };
 
     /**
      * Indicates the native unsigned integer type used to store the images of
      * all integers 0,...,<i>n</i>-1 under a permutation.
-     * This template is specialised to use different sized integer types for
-     * different values of \a n.
      *
      * \ifacespython Not present.
      */
-    typedef uint64_t Code;
+    typedef typename IntOfMinSize<permImageBits(n) * n>::utype Code;
 };
 
 /**
@@ -402,34 +398,6 @@ inline REGINA_API std::ostream& operator << (std::ostream& out,
 }
 
 /*@}*/
-
-// Template specialisations for NPermCodePacked
-
-#ifndef __DOXYGEN
-template <>
-struct REGINA_API NPermCodePacked<8> {
-    enum { imageBits = 3, imageMask = 7 };
-    typedef uint32_t Code;
-};
-
-template <>
-struct REGINA_API NPermCodePacked<7> {
-    enum { imageBits = 3, imageMask = 7 };
-    typedef uint32_t Code;
-};
-
-template <>
-struct REGINA_API NPermCodePacked<6> {
-    enum { imageBits = 3, imageMask = 7 };
-    typedef uint32_t Code;
-};
-
-template <>
-struct REGINA_API NPermCodePacked<5> {
-    enum { imageBits = 3, imageMask = 7 };
-    typedef uint16_t Code;
-};
-#endif // __DOXYGEN
 
 // Inline functions for NPerm
 
