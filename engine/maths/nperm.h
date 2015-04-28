@@ -79,7 +79,8 @@ struct REGINA_API NPermCodePacked {
         /**
          * Indicates the number of bits used to store a single integer
          * \a k in the range 0 &le; \a k < \a n.
-         * This will be different for different values of \a n.
+         * This template is specialised to use different constants for
+         * different values of \a n.
          *
          * \ifacespython Not present.
          */
@@ -87,7 +88,8 @@ struct REGINA_API NPermCodePacked {
         /**
          * A mask whose lowest \a imageBits bits are 1, and whose
          * remaining higher order bits are all 0.
-         * This will be different for different values of \a n.
+         * This template is specialised to use different constants for
+         * different values of \a n.
          *
          * \ifacespython Not present.
          */
@@ -97,7 +99,8 @@ struct REGINA_API NPermCodePacked {
     /**
      * Indicates the native unsigned integer type used to store the images of
      * all integers 0,...,<i>n</i>-1 under a permutation.
-     * This type will be different for different values of \a n.
+     * This template is specialised to use different sized integer types for
+     * different values of \a n.
      *
      * \ifacespython Not present.
      */
