@@ -26,6 +26,8 @@ Version 4.97  [ (under development) ]
             - New template class to help with writing dimension-agnostic code.
               This class offers typedefs for (subdim)-dimensional faces
               within a (dim)-dimensional triangulation.
+        Class IntOfMinSize:
+            - Gives access to native integer types of a given minimum size.
         Class LightweightSequence:
             - New lightweight class for storing an array of objects.
         Class NAngleStructureList:
@@ -106,6 +108,8 @@ Version 4.97  [ (under development) ]
         Class NVertex:
             - Added a new LinkType enumeration, which encapsulates (and
               replaces) the old link type constants.
+        Routine nextPowerOfTwo():
+            - Convenience routine for rounding up to a power of two.
         Routine open():
             - Added a variant that takes an input stream (as opposed to
               a filename).

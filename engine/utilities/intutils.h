@@ -49,14 +49,30 @@
 namespace regina {
 
 /**
- * Gives access to k-byte integer types, where \a k is a constant that
- * is not known until compile time.
+ * Returns the smallest integer power of two that is greater than or equal to
+ * the given argument \a n.
+ * If \a n is non-positive then this function will return 1.
+ *
+ * \param n any integer.
+ * \return the smallest integer power of two that is &ge; \a n.
+ */
+constexpr int nextPowerOfTwo(int n) {
+    return (n <= 1 ? 1 : (nextPowerOfTwo((n + 1) / 2)) << 1);
+}
+
+/**
+ * Gives access to native integer types that hold \e exactly \a k bytes,
+ * where \a k may be any compile-time constant.
+ *
+ * \tparam k the exact number of bytes in the native integer types.
+ *
+ * @see IntOfMinSize
  */
 template <int bytes>
 struct IntOfSize {
     /**
-     * A signed integer type with \a k bytes, where \a k is the template
-     * parameter.
+     * A native signed integer type with exactly \a k bytes, where \a k is the
+     * template parameter.
      *
      * The default is \c void, which indicates that Regina does not know
      * how to access an integer type of the requested size.
@@ -64,14 +80,43 @@ struct IntOfSize {
     typedef void type;
 
     /**
-     * An unsigned integer type with \a k bytes, where \a k is the template
-     * parameter.
+     * A native unsigned integer type with exactly \a k bytes, where \a k is the
+     * template parameter.
      *
      * The default is \c void, which indicates that Regina does not know
      * how to access an integer type of the requested size.
      */
     typedef void utype;
 };
+
+/**
+ * Gives access to native integer types that hold <em>at least</em> \a k bytes,
+ * where \a k may be any compile-time constant.
+ *
+ * \tparam k the minimum number of bytes in the native integer types.
+ *
+ * @see IntOfSize
+ */
+template <int bytes>
+struct IntOfMinSize {
+    /**
+     * A native signed integer type with at least \a k bytes, where \a k is
+     * the template parameter.
+     *
+     * The default is \c void, which indicates that Regina does not know
+     * how to access an integer type of the requested size.
+     */
+    typedef IntOfSize<nextPowerOfTwo(bytes)>::type type;
+
+    /**
+     * A native unsigned integer type with at least \a k bytes, where \a k is
+     * the template parameter.
+     *
+     * The default is \c void, which indicates that Regina does not know
+     * how to access an integer type of the requested size.
+     */
+    typedef IntOfSize<nextPowerOfTwo(bytes)>::utype utype;
+}
 
 #ifndef __DOXYGEN
 template <>
