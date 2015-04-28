@@ -106,7 +106,7 @@ struct IntOfMinSize {
      * The default is \c void, which indicates that Regina does not know
      * how to access an integer type of the requested size.
      */
-    typedef IntOfSize<nextPowerOfTwo(bytes)>::type type;
+    typedef typename IntOfSize<nextPowerOfTwo(bytes)>::type type;
 
     /**
      * A native unsigned integer type with at least \a k bytes, where \a k is
@@ -115,8 +115,8 @@ struct IntOfMinSize {
      * The default is \c void, which indicates that Regina does not know
      * how to access an integer type of the requested size.
      */
-    typedef IntOfSize<nextPowerOfTwo(bytes)>::utype utype;
-}
+    typedef typename IntOfSize<nextPowerOfTwo(bytes)>::utype utype;
+};
 
 #ifndef __DOXYGEN
 template <>
