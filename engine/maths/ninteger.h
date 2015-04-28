@@ -41,7 +41,6 @@
  *  \brief Provides arbitrary-precision and fixed-precision integer types.
  */
 
-#include <boost/static_assert.hpp>
 #include <climits>
 #include <stdint.h> // MPIR (and thus SAGE) needs this *before* gmp.h.
 #include <gmp.h>
@@ -2287,7 +2286,8 @@ template <int bytes>
 inline NIntegerBase<supportInfinity>::NIntegerBase(
         const NNativeInteger<bytes>& value) :
         small_(value.nativeValue()), large_(0) {
-    BOOST_STATIC_ASSERT(bytes % sizeof(long) == 0);
+    static_assert(bytes % sizeof(long) == 0,
+        "NIntegerBase native constructor: native integer must partition exactly into long integers.");
     if (sizeof(long) < bytes && value.nativeValue() != static_cast<typename IntOfSize<bytes>::type>(small_)) {
         // It didn't fit.  Take things one long at a time.
         unsigned blocks = bytes / sizeof(long);
@@ -2308,7 +2308,8 @@ inline typename IntOfSize<bytes>::type
         NIntegerBase<supportInfinity>::nativeValue() const {
     typedef typename IntOfSize<bytes>::type Native;
     typedef typename IntOfSize<bytes>::utype UNative;
-    BOOST_STATIC_ASSERT(bytes % sizeof(long) == 0);
+    static_assert(bytes % sizeof(long) == 0,
+        "NIntegerBase::nativeValue(): native integer must partition exactly into long integers.");
 
     if (sizeof(long) >= bytes || ! large_) {
         // Suppose this integer lies within the given byte range.
