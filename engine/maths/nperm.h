@@ -69,7 +69,7 @@ namespace regina {
  * NPerm<n> class.  This must be between 5 and 16 inclusive.
  */
 template <int n>
-struct REGINA_API NPermCode {
+struct REGINA_API NPermCodePacked {
 #ifndef __DOXYGEN
     // This is the generic implementation for large n.
     // Implementations for smaller n are specialised later in this file.
@@ -113,7 +113,7 @@ struct REGINA_API NPermCode {
  * reconstruct the permutation.
  * Thus the internal code may be a useful means for passing
  * permutation objects to and from the engine.
- * If we let \a k denote NPermCode<n>::imageBits, then this internal code
+ * If we let \a k denote NPermCodePacked<n>::imageBits, then this internal code
  * is an unsigned integer where the lowest \a k bits represent the image of 0,
  * the next lowest \a k bits represent the image of 1, and so on.
  *
@@ -134,11 +134,11 @@ struct REGINA_API NPermCode {
  * This must be between 2 and 16 inclusive.
  */
 template <int n>
-class REGINA_API NPerm : public NPermCode<n> {
+class REGINA_API NPerm : public NPermCodePacked<n> {
     public:
-        using typename NPermCode<n>::Code;
-        using NPermCode<n>::imageBits;
-        using NPermCode<n>::imageMask;
+        using typename NPermCodePacked<n>::Code;
+        using NPermCodePacked<n>::imageBits;
+        using NPermCodePacked<n>::imageMask;
 
     private:
         Code code_;
@@ -400,29 +400,29 @@ inline REGINA_API std::ostream& operator << (std::ostream& out,
 
 /*@}*/
 
-// Template specialisations for NPermCode
+// Template specialisations for NPermCodePacked
 
 #ifndef __DOXYGEN
 template <>
-struct REGINA_API NPermCode<8> {
+struct REGINA_API NPermCodePacked<8> {
     enum { imageBits = 3, imageMask = 7 };
     typedef uint32_t Code;
 };
 
 template <>
-struct REGINA_API NPermCode<7> {
+struct REGINA_API NPermCodePacked<7> {
     enum { imageBits = 3, imageMask = 7 };
     typedef uint32_t Code;
 };
 
 template <>
-struct REGINA_API NPermCode<6> {
+struct REGINA_API NPermCodePacked<6> {
     enum { imageBits = 3, imageMask = 7 };
     typedef uint32_t Code;
 };
 
 template <>
-struct REGINA_API NPermCode<5> {
+struct REGINA_API NPermCodePacked<5> {
     enum { imageBits = 3, imageMask = 7 };
     typedef uint16_t Code;
 };
