@@ -1511,11 +1511,11 @@ void NHomologicalData::computeTorsionLinkingForm() {
                     // since it's all integer multiples of 2pi/8, we just
                     // need to check for
                     // xld==0, yld<>0, yld==0, xld<>0 and xld/yld=pm1
-                    if ( fabs(xlD) < 0.001*fabs(ylD) ) {
+                    if ( std::abs(xlD) < 0.001*std::abs(ylD) ) {
                         if (ylD > 0.0) twoTorSigmaV[i]=2;
                         else twoTorSigmaV[i]=6;
                     } else
-                        if ( fabs(ylD) < 0.001*fabs(xlD) ) {
+                        if ( std::abs(ylD) < 0.001*std::abs(xlD) ) {
                             if (xlD > 0.0) twoTorSigmaV[i]=0L;
                             else twoTorSigmaV[i]=4;
                         } else
