@@ -42,7 +42,6 @@
 #endif
 
 #include <string>
-#include <boost/static_assert.hpp>
 #include "regina-core.h"
 
 namespace regina {
@@ -73,7 +72,8 @@ struct REGINA_API NPermCodePacked {
 #ifndef __DOXYGEN
     // This is the generic implementation for large n.
     // Implementations for smaller n are specialised later in this file.
-    BOOST_STATIC_ASSERT(9 <= n && n <= 16);
+    static_assert(9 <= n && n <= 16,
+        "NPermCodePacked: 4-bit implementation is for 9 <= n <= 16.");
 #endif
     enum {
         /**
