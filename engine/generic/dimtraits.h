@@ -103,13 +103,16 @@ struct FaceTraits {
 };
 
 #ifndef __DOXYGEN
+
+template <int n>
+class NPerm;
+
 class Dim2Edge;
 class Dim2Triangulation;
 class Dim2Triangle;
 class Dim2Isomorphism;
 class Dim2EdgePairing;
 class Dim2Vertex;
-class NPerm3;
 
 template <>
 struct DimTraits<2> {
@@ -117,7 +120,7 @@ struct DimTraits<2> {
     typedef Dim2Triangle Simplex;
     typedef Dim2Isomorphism Isomorphism;
     typedef Dim2EdgePairing FacetPairing;
-    typedef NPerm3 Perm;
+    typedef NPerm<3> Perm;
 };
 
 class NEdge;
@@ -126,7 +129,6 @@ class NTriangulation;
 class NTetrahedron;
 class NIsomorphism;
 class NFacePairing;
-class NPerm4;
 class NVertex;
 
 template <>
@@ -135,7 +137,7 @@ struct DimTraits<3> {
     typedef NTetrahedron Simplex;
     typedef NIsomorphism Isomorphism;
     typedef NFacePairing FacetPairing;
-    typedef NPerm4 Perm;
+    typedef NPerm<4> Perm;
 };
 
 template <>

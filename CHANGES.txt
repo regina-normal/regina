@@ -66,9 +66,21 @@ Version 4.97  [ (under development) ]
         Class NPacketListener:
             - New events childToBeRenamed(), childWasRenamed().
         Class NPerm:
-            - New template class for permutations of 2..16 objects.
+            - New generic template class for permutations of 2..16 objects.
+              The old NPerm3, NPerm4 and NPerm5 classes are now
+              specialisations of this template.
             - Removed the old deprecated NPerm typedef (this was synonymous
               with NPerm4).
+        Class NPerm3, NPerm4, NPerm5:
+            - These are now specialisations NPerm<3>, NPerm<4> and NPerm<5>.
+              The names NPerm3, NPerm4 and NPerm5 are now convenience typedefs.
+            - Added Code typedef for internal permutation codes.
+            - Added imageBits const for NPerm5, in line with the new
+              generic NPerm template.
+            - The nPerms and nPerms_1 constants are now static const ints,
+              not enum constants.
+            - New trunc() routine that takes a length argument.
+            - New constructors that take two arrays.
         Class NPolynomial:
             - New class for working with single-variable polynomials
               over arbitrary rings.

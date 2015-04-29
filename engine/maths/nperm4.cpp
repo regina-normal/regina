@@ -39,22 +39,22 @@
 
 namespace regina {
 
-const int NPerm4::nPerms;
-const int NPerm4::nPerms_1;
+const int NPerm<4>::nPerms;
+const int NPerm<4>::nPerms_1;
 
-const NPerm4 NPerm4::S4[24] = {
-    NPerm4((NPerm4::Code)0),
-                NPerm4(1),  NPerm4(2),  NPerm4(3),  NPerm4(4),  NPerm4(5),
-    NPerm4(6),  NPerm4(7),  NPerm4(8),  NPerm4(9),  NPerm4(10), NPerm4(11),
-    NPerm4(12), NPerm4(13), NPerm4(14), NPerm4(15), NPerm4(16), NPerm4(17),
-    NPerm4(18), NPerm4(19), NPerm4(20), NPerm4(21), NPerm4(22), NPerm4(23)
+const NPerm<4> NPerm<4>::S4[24] = {
+    NPerm<4>((NPerm<4>::Code)0),
+                NPerm<4>(1),  NPerm<4>(2),  NPerm<4>(3),  NPerm<4>(4),  NPerm<4>(5),
+    NPerm<4>(6),  NPerm<4>(7),  NPerm<4>(8),  NPerm<4>(9),  NPerm<4>(10), NPerm<4>(11),
+    NPerm<4>(12), NPerm<4>(13), NPerm<4>(14), NPerm<4>(15), NPerm<4>(16), NPerm<4>(17),
+    NPerm<4>(18), NPerm<4>(19), NPerm<4>(20), NPerm<4>(21), NPerm<4>(22), NPerm<4>(23)
 };
 
-const NPerm4* NPerm4::Sn = NPerm4::S4;
+const NPerm<4>* NPerm<4>::Sn = NPerm<4>::S4;
 
-const NPerm4* allPermsS4 = NPerm4::S4;
+const NPerm<4>* allPermsS4 = NPerm<4>::S4;
 
-const unsigned NPerm4::invS4[24] = {
+const unsigned NPerm<4>::invS4[24] = {
     0, 1, 4, 3,
     2, 5, 6, 7,
     12, 19, 18, 13,
@@ -63,62 +63,62 @@ const unsigned NPerm4::invS4[24] = {
     14, 21, 22, 17
 };
 
-const unsigned* NPerm4::invSn = NPerm4::invS4;
+const unsigned* NPerm<4>::invSn = NPerm<4>::invS4;
 
-const unsigned* allPermsS4Inv = NPerm4::invS4;
+const unsigned* allPermsS4Inv = NPerm<4>::invS4;
 
-const NPerm4 NPerm4::orderedS4[24] = {
-    NPerm4((NPerm4::Code)0),  NPerm4(1),  NPerm4(3),  NPerm4(2),
-    NPerm4(4),  NPerm4(5),  NPerm4(7),  NPerm4(6),
-    NPerm4(8),  NPerm4(9),  NPerm4(11), NPerm4(10),
-    NPerm4(12), NPerm4(13), NPerm4(15), NPerm4(14),
-    NPerm4(16), NPerm4(17), NPerm4(19), NPerm4(18),
-    NPerm4(20), NPerm4(21), NPerm4(23), NPerm4(22)
+const NPerm<4> NPerm<4>::orderedS4[24] = {
+    NPerm<4>((NPerm<4>::Code)0),  NPerm<4>(1),  NPerm<4>(3),  NPerm<4>(2),
+    NPerm<4>(4),  NPerm<4>(5),  NPerm<4>(7),  NPerm<4>(6),
+    NPerm<4>(8),  NPerm<4>(9),  NPerm<4>(11), NPerm<4>(10),
+    NPerm<4>(12), NPerm<4>(13), NPerm<4>(15), NPerm<4>(14),
+    NPerm<4>(16), NPerm<4>(17), NPerm<4>(19), NPerm<4>(18),
+    NPerm<4>(20), NPerm<4>(21), NPerm<4>(23), NPerm<4>(22)
 };
 
-const NPerm4* NPerm4::orderedSn = NPerm4::orderedS4;
+const NPerm<4>* NPerm<4>::orderedSn = NPerm<4>::orderedS4;
 
-const NPerm4* orderedPermsS4 = NPerm4::orderedS4;
+const NPerm<4>* orderedPermsS4 = NPerm<4>::orderedS4;
 
-const NPerm4 NPerm4::S3[6] = {
-    NPerm4(0,1,2,3), NPerm4(0,2,1,3),
-    NPerm4(1,2,0,3), NPerm4(1,0,2,3),
-    NPerm4(2,0,1,3), NPerm4(2,1,0,3)
+const NPerm<4> NPerm<4>::S3[6] = {
+    NPerm<4>(0,1,2,3), NPerm<4>(0,2,1,3),
+    NPerm<4>(1,2,0,3), NPerm<4>(1,0,2,3),
+    NPerm<4>(2,0,1,3), NPerm<4>(2,1,0,3)
 };
 
-const NPerm4* NPerm4::Sn_1 = NPerm4::S3;
+const NPerm<4>* NPerm<4>::Sn_1 = NPerm<4>::S3;
 
-const NPerm4* allPermsS3 = NPerm4::S3;
+const NPerm<4>* allPermsS3 = NPerm<4>::S3;
 
-const unsigned NPerm4::invS3[6] = {
+const unsigned NPerm<4>::invS3[6] = {
     0, 1,
     4, 3,
     2, 5
 };
 
-const unsigned* allPermsS3Inv = NPerm4::invS3;
+const unsigned* allPermsS3Inv = NPerm<4>::invS3;
 
-const NPerm4 NPerm4::orderedS3[6] = {
-    NPerm4(0,1,2,3), NPerm4(0,2,1,3),
-    NPerm4(1,0,2,3), NPerm4(1,2,0,3),
-    NPerm4(2,0,1,3), NPerm4(2,1,0,3)
+const NPerm<4> NPerm<4>::orderedS3[6] = {
+    NPerm<4>(0,1,2,3), NPerm<4>(0,2,1,3),
+    NPerm<4>(1,0,2,3), NPerm<4>(1,2,0,3),
+    NPerm<4>(2,0,1,3), NPerm<4>(2,1,0,3)
 };
 
-const NPerm4* orderedPermsS3 = NPerm4::orderedS3;
+const NPerm<4>* orderedPermsS3 = NPerm<4>::orderedS3;
 
-const NPerm4 NPerm4::S2[2] = {
-    NPerm4(0,1,2,3), NPerm4(1,0,2,3)
+const NPerm<4> NPerm<4>::S2[2] = {
+    NPerm<4>(0,1,2,3), NPerm<4>(1,0,2,3)
 };
 
-const NPerm4* allPermsS2 = NPerm4::S2;
+const NPerm<4>* allPermsS2 = NPerm<4>::S2;
 
-const unsigned NPerm4::invS2[2] = {
+const unsigned NPerm<4>::invS2[2] = {
     0, 1
 };
 
-const unsigned* allPermsS2Inv = NPerm4::invS2;
+const unsigned* allPermsS2Inv = NPerm<4>::invS2;
 
-const NPerm4::Code NPerm4::imageTable[24][4] = {
+const NPerm<4>::Code NPerm<4>::imageTable[24][4] = {
     { 0, 1, 2, 3 }, { 0, 1, 3, 2 }, { 0, 2, 3, 1 }, { 0, 2, 1, 3 },
     { 0, 3, 1, 2 }, { 0, 3, 2, 1 }, { 1, 0, 3, 2 }, { 1, 0, 2, 3 },
     { 1, 2, 0, 3 }, { 1, 2, 3, 0 }, { 1, 3, 2, 0 }, { 1, 3, 0, 2 },
@@ -127,7 +127,7 @@ const NPerm4::Code NPerm4::imageTable[24][4] = {
     { 3, 1, 0, 2 }, { 3, 1, 2, 0 }, { 3, 2, 1, 0 }, { 3, 2, 0, 1 }
 };
 
-const NPerm4::Code NPerm4::productTable[24][24] = {
+const NPerm<4>::Code NPerm<4>::productTable[24][24] = {
     // Generated using an older version of Regina in which products were
     // computed (not simply looked up from a dictionary like the one below).
     { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23 },
@@ -156,14 +156,14 @@ const NPerm4::Code NPerm4::productTable[24][24] = {
     { 23,22,19,18,21,20,17,16,13,12,15,14,5,4,3,2,1,0,11,10,9,8,7,6 }
 };
 
-const NPerm4::Code NPerm4::swapTable[4][4] = {
+const NPerm<4>::Code NPerm<4>::swapTable[4][4] = {
     {  0, 7, 15, 21 },
     {  7, 0,  3,  5 },
     { 15, 3,  0,  1 },
     { 21, 5,  1,  0 }
 };
 
-NPerm4::NPerm4(int a0, int a1, int b0, int b1, int c0, int c1, int d0, int d1) {
+NPerm<4>::NPerm(int a0, int a1, int b0, int b1, int c0, int c1, int d0, int d1) {
     int image[4];
     image[a0] = a1;
     image[b0] = b1;
@@ -172,7 +172,7 @@ NPerm4::NPerm4(int a0, int a1, int b0, int b1, int c0, int c1, int d0, int d1) {
     code_ = static_cast<Code>(S4Index(image[0], image[1], image[2], image[3]));
 }
 
-NPerm4::NPerm4(const int* a, const int* b) {
+NPerm<4>::NPerm(const int* a, const int* b) {
     int image[4];
     image[a[0]] = b[0];
     image[a[1]] = b[1];
@@ -181,7 +181,7 @@ NPerm4::NPerm4(const int* a, const int* b) {
     code_ = static_cast<Code>(S4Index(image[0], image[1], image[2], image[3]));
 }
 
-bool NPerm4::isPermCode(Code code) {
+bool NPerm<4>::isPermCode(Code code) {
     unsigned mask = 0;
     for (int i = 0; i < 4; i++)
         mask |= (1 << ((code >> (2 * i)) & 3));
@@ -189,7 +189,7 @@ bool NPerm4::isPermCode(Code code) {
     return (mask == 15);
 }
 
-std::string NPerm4::str() const {
+std::string NPerm<4>::str() const {
     char ans[5];
     for (int i = 0; i < 4; i++)
         ans[i] = static_cast<char>('0' + imageTable[code_][i]);
@@ -198,7 +198,7 @@ std::string NPerm4::str() const {
     return ans;
 }
 
-std::string NPerm4::trunc(unsigned len) const {
+std::string NPerm<4>::trunc(unsigned len) const {
     char ans[5];
     for (unsigned i = 0; i < len; ++i)
         ans[i] = static_cast<char>('0' + imageTable[code_][i]);
@@ -206,7 +206,7 @@ std::string NPerm4::trunc(unsigned len) const {
     return ans;
 }
 
-std::string NPerm4::trunc2() const {
+std::string NPerm<4>::trunc2() const {
     char ans[3];
     ans[0] = static_cast<char>('0' + imageTable[code_][0]);
     ans[1] = static_cast<char>('0' + imageTable[code_][1]);
@@ -214,7 +214,7 @@ std::string NPerm4::trunc2() const {
     return ans;
 }
 
-std::string NPerm4::trunc3() const {
+std::string NPerm<4>::trunc3() const {
     char ans[4];
     ans[0] = static_cast<char>('0' + imageTable[code_][0]);
     ans[1] = static_cast<char>('0' + imageTable[code_][1]);
@@ -223,36 +223,36 @@ std::string NPerm4::trunc3() const {
     return ans;
 }
 
-NPerm4 faceOrdering(int face) {
+NPerm<4> faceOrdering(int face) {
     switch(face) {
         case 0:
-            return NPerm4(1,2,3,0);
+            return NPerm<4>(1,2,3,0);
         case 1:
-            return NPerm4(0,2,3,1);
+            return NPerm<4>(0,2,3,1);
         case 2:
-            return NPerm4(0,1,3,2);
+            return NPerm<4>(0,1,3,2);
         case 3:
-            return NPerm4(0,1,2,3);
+            return NPerm<4>(0,1,2,3);
     }
-    return NPerm4();
+    return NPerm<4>();
 }
 
-NPerm4 edgeOrdering(int edge) {
+NPerm<4> edgeOrdering(int edge) {
     switch(edge) {
         case 0:
-            return NPerm4(0,1,2,3);
+            return NPerm<4>(0,1,2,3);
         case 1:
-            return NPerm4(0,2,3,1);
+            return NPerm<4>(0,2,3,1);
         case 2:
-            return NPerm4(0,3,1,2);
+            return NPerm<4>(0,3,1,2);
         case 3:
-            return NPerm4(1,2,0,3);
+            return NPerm<4>(1,2,0,3);
         case 4:
-            return NPerm4(1,3,2,0);
+            return NPerm<4>(1,3,2,0);
         case 5:
-            return NPerm4(2,3,0,1);
+            return NPerm<4>(2,3,0,1);
     }
-    return NPerm4();
+    return NPerm<4>();
 }
 
 std::string faceDescription(int face) {

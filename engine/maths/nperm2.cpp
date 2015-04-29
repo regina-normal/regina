@@ -33,41 +33,41 @@
 /* end stub */
 
 #include <sstream>
-#include "maths/nperm3.h"
+#include "maths/nperm2.h"
 
 namespace regina {
 
-const int NPerm<3>::nPerms;
-const int NPerm<3>::nPerms_1;
+const int NPerm2::nPerms;
+const int NPerm2::nPerms_1;
 
-const NPerm<3> NPerm<3>::S3[6] = {
-    NPerm<3>((NPerm<3>::Code)0), NPerm<3>(1), NPerm<3>(2),
-    NPerm<3>(3), NPerm<3>(4), NPerm<3>(5)
+const NPerm3 NPerm3::S3[6] = {
+    NPerm3((NPerm3::Code)0), NPerm3(1), NPerm3(2),
+    NPerm3(3), NPerm3(4), NPerm3(5)
 };
 
-const NPerm<3>* NPerm<3>::Sn = NPerm<3>::S3;
+const NPerm3* NPerm3::Sn = NPerm3::S3;
 
-const unsigned NPerm<3>::invS3[6] = {
+const unsigned NPerm3::invS3[6] = {
     0, 1, 4, 3, 2, 5
 };
 
-const unsigned* NPerm<3>::invSn = NPerm<3>::invS3;
+const unsigned* NPerm3::invSn = NPerm3::invS3;
 
-const NPerm<3> NPerm<3>::orderedS3[6] = {
-    NPerm<3>(code012), NPerm<3>(code021),
-    NPerm<3>(code102), NPerm<3>(code120),
-    NPerm<3>(code201), NPerm<3>(code210)
+const NPerm3 NPerm3::orderedS3[6] = {
+    NPerm3(code012), NPerm3(code021),
+    NPerm3(code102), NPerm3(code120),
+    NPerm3(code201), NPerm3(code210)
 };
 
-const NPerm<3>* NPerm<3>::orderedSn = NPerm<3>::orderedS3;
+const NPerm3* NPerm3::orderedSn = NPerm3::orderedS3;
 
-const NPerm<3> NPerm<3>::S2[2] = {
-    NPerm<3>(code012), NPerm<3>(code102)
+const NPerm3 NPerm3::S2[2] = {
+    NPerm3(code012), NPerm3(code102)
 };
 
-const NPerm<3>* NPerm<3>::Sn_1 = NPerm<3>::S2;
+const NPerm3* NPerm3::Sn_1 = NPerm3::S2;
 
-const NPerm<3>::Code NPerm<3>::imageTable[6][3] = {
+const NPerm3::Code NPerm3::imageTable[6][3] = {
     { 0, 1, 2 },
     { 0, 2, 1 },
     { 1, 2, 0 },
@@ -76,7 +76,7 @@ const NPerm<3>::Code NPerm<3>::imageTable[6][3] = {
     { 2, 1, 0 }
 };
 
-const NPerm<3>::Code NPerm<3>::productTable[6][6] = {
+const NPerm3::Code NPerm3::productTable[6][6] = {
     { 0, 1, 2, 3, 4, 5 },
     { 1, 0, 5, 4, 3, 2 },
     { 2, 3, 4, 5, 0, 1 },
@@ -85,7 +85,7 @@ const NPerm<3>::Code NPerm<3>::productTable[6][6] = {
     { 5, 4, 3, 2, 1, 0 }
 };
 
-NPerm<3>::NPerm(const int* a, const int* b) {
+NPerm3::NPerm3(const int* a, const int* b) {
     int image[3];
     image[a[0]] = b[0];
     image[a[1]] = b[1];
@@ -101,7 +101,7 @@ NPerm<3>::NPerm(const int* a, const int* b) {
     }
 }
 
-std::string NPerm<3>::str() const {
+std::string NPerm3::str() const {
     char ans[4];
     ans[0] = static_cast<char>('0' + imageTable[code_][0]);
     ans[1] = static_cast<char>('0' + imageTable[code_][1]);
@@ -110,19 +110,11 @@ std::string NPerm<3>::str() const {
     return ans;
 }
 
-std::string NPerm<3>::trunc(unsigned len) const {
+std::string NPerm3::trunc(unsigned len) const {
     char ans[4];
     for (unsigned i = 0; i < len; ++i)
         ans[i] = static_cast<char>('0' + imageTable[code_][i]);
     ans[len] = 0;
-    return ans;
-}
-
-std::string NPerm<3>::trunc2() const {
-    char ans[3];
-    ans[0] = static_cast<char>('0' + imageTable[code_][0]);
-    ans[1] = static_cast<char>('0' + imageTable[code_][1]);
-    ans[2] = 0;
     return ans;
 }
 

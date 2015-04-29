@@ -32,18 +32,17 @@
 
 /* end stub */
 
-/*! \file maths/nperm3.h
- *  \brief Deals with permutations of {0,1,2}.
+/*! \file maths/nperm2.h
+ *  \brief Deals with permutations of {0,1}.
  */
 
-#ifndef __NPERM3_H
+#ifndef __NPERM2_H
 #ifndef __DOXYGEN
-#define __NPERM3_H
+#define __NPERM2_H
 #endif
 
 #include <string>
 #include "regina-core.h"
-#include "nperm.h"
 
 namespace regina {
 
@@ -53,7 +52,7 @@ namespace regina {
  */
 
 /**
- * Represents a permutation of {0,1,2}.
+ * Represents a permutation of {0,1}.
  *
  * These objects are small enough to pass about by value instead of by
  * reference.  Moreover, they are extremely fast to work with.
@@ -63,27 +62,22 @@ namespace regina {
  * Thus the internal code may be a useful means for passing
  * permutation objects to and from the engine.
  *
- * The internal code is an integer between 0 and 5 inclusive,
- * representing the index of the permutation in the array NPerm<3>::S3.
- *
- * This class is faster and sleeker than related classes such as NPerm4 and
- * NPerm5.  On the other hand, this class does not offer quite as rich an
- * interface as the others.
+ * The internal code is 0 for the identity permutation, or 1 for the
+ * permutation that swaps (0,1).
  */
-template <>
-class REGINA_API NPerm<3> {
+class REGINA_API NPerm2 {
     public:
         /**
-         * The total number of permutations on three elements.
+         * The total number of permutations on two elements.
          * This is the size of the array Sn.
          */
-        static const int nPerms = 6;
+        static const int nPerms = 2;
 
         /**
-         * The total number of permutations on two elements.
+         * The total number of permutations on one element.
          * This is the size of the array Sn_1.
          */
-        static const int nPerms_1 = 2;
+        static const int nPerms_1 = 1;
 
         /**
          * Indicates the native unsigned integer type used to store the
@@ -92,27 +86,22 @@ class REGINA_API NPerm<3> {
         typedef uint8_t Code;
 
         /**
-         * Contains all possible permutations of three elements.
+         * Contains all possible permutations of two elements.
          *
-         * The permutations with even indices in the array are the even
-         * permutations, and those with odd indices in the array are the
-         * odd permutations.
+         * The identity is S2[0], and the swap is S2[1].
          *
-         * For all permutation classes (NPerm<3>, NPerm4 and so on),
-         * the S3 array stores the same permutations in the same order
+         * For all permutation classes (NPerm3, NPerm4 and so on),
+         * the S2 array stores the same permutations in the same order
          * (but of course using different data types).
-         *
-         * Note that these permutations are not necessarily in
-         * lexicographical order.
          */
-        static const NPerm<3> S3[6];
+        static const NPerm2 S2[6];
 
         /**
-         * A dimension-agnostic alias for NPerm<3>::S3.  In general, for
+         * A dimension-agnostic alias for NPerm2::S2.  In general, for
          * each \a K the class NPermK will define an alias \a Sn
          * that references the list of all permutations NPermK::SK.
          */
-        static const NPerm<3>* Sn;
+        static const NPerm2* Sn;
 
         /**
          * Contains the inverses of the permutations in the array \a S3.
@@ -123,7 +112,7 @@ class REGINA_API NPerm<3> {
         static const unsigned invS3[6];
 
         /**
-         * A dimension-agnostic alias for NPerm<3>::invS3.  In general, for
+         * A dimension-agnostic alias for NPerm2::invS3.  In general, for
          * each \a K the class NPermK will define an alias \a invSn
          * that references the list of all permutations NPermK::invSK.
          */
@@ -133,14 +122,14 @@ class REGINA_API NPerm<3> {
          * Contains all possible permutations of three elements in
          * lexicographical order.
          */
-        static const NPerm<3> orderedS3[6];
+        static const NPerm2 orderedS3[6];
 
         /**
-         * A dimension-agnostic alias for NPerm<3>::orderedS3.  In general, for
+         * A dimension-agnostic alias for NPerm2::orderedS3.  In general, for
          * each \a K the class NPermK will define an alias \a orderedSn
          * that references the list of all permutations NPermK::orderedSK.
          */
-        static const NPerm<3>* orderedSn;
+        static const NPerm2* orderedSn;
 
         /**
          * Contains all possible permutations of two elements.
@@ -150,59 +139,20 @@ class REGINA_API NPerm<3> {
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * For all permutation classes (NPerm<3>, NPerm4 and so on),
+         * For all permutation classes (NPerm2, NPerm4 and so on),
          * the S2 array stores the same permutations in the same order
          * (but of course using different data types).
          *
          * Note that these permutations are already in lexicographical order.
          */
-        static const NPerm<3> S2[2];
+        static const NPerm2 S2[2];
 
         /**
-         * A dimension-agnostic alias for NPerm<3>::S2.  In general, for
+         * A dimension-agnostic alias for NPerm2::S2.  In general, for
          * each \a K the class NPermK will define an alias \a Sn_1
          * that references the list of all permutations NPermK::S(K-1).
          */
-        static const NPerm<3>* Sn_1;
-
-        enum {
-            /**
-             * The internal code for the permutation (0,1,2).
-             *
-             * \ifacespython Not present.
-             */
-            code012 = 0,
-            /**
-             * The internal code for the permutation (0,2,1).
-             *
-             * \ifacespython Not present.
-             */
-            code021 = 1,
-            /**
-             * The internal code for the permutation (1,2,0).
-             *
-             * \ifacespython Not present.
-             */
-            code120 = 2,
-            /**
-             * The internal code for the permutation (1,0,2).
-             *
-             * \ifacespython Not present.
-             */
-            code102 = 3,
-            /**
-             * The internal code for the permutation (2,0,1).
-             *
-             * \ifacespython Not present.
-             */
-            code201 = 4,
-            /**
-             * The internal code for the permutation (2,1,0).
-             *
-             * \ifacespython Not present.
-             */
-            code210 = 5
-        };
+        static const NPerm2* Sn_1;
 
     private:
         Code code_;
@@ -212,7 +162,7 @@ class REGINA_API NPerm<3> {
         /**
          * Creates the identity permutation.
          */
-        NPerm();
+        NPerm2();
 
         /**
          * Creates the transposition of \a a and \a b.
@@ -223,19 +173,7 @@ class REGINA_API NPerm<3> {
          * @param a the element to switch with \a b.
          * @param b the element to switch with \a a.
          */
-        NPerm(int a, int b);
-
-        /**
-         * Creates a permutation mapping (0,1,2) to
-         * (<i>a</i>,<i>b</i>,<i>c</i>) respectively.
-         *
-         * \pre {<i>a</i>,<i>b</i>,<i>c</i>} = {0,1,2}.
-         *
-         * @param a the desired image of 0.
-         * @param b the desired image of 1.
-         * @param c the desired image of 2.
-         */
-        NPerm(int a, int b, int c);
+        NPerm2(int a, int b);
 
         /**
          * Creates a permutation mapping \a i to \a image[i] for each
@@ -248,7 +186,7 @@ class REGINA_API NPerm<3> {
          *
          * @param image the array of images.
          */
-        NPerm(const int* image);
+        NPerm2(const int* image);
 
         /**
          * Creates a permutation mapping (\a a[0], ..., \a a[2]) to
@@ -263,7 +201,7 @@ class REGINA_API NPerm<3> {
          * @param b the corresponding array of images; this must also have
          * length 3.
          */
-        NPerm(const int* a, const int* b);
+        NPerm2(const int* a, const int* b);
 
         /**
          * Creates a permutation that is a clone of the given
@@ -271,7 +209,7 @@ class REGINA_API NPerm<3> {
          *
          * @param cloneMe the permutation to clone.
          */
-        NPerm(const NPerm<3>& cloneMe);
+        NPerm2(const NPerm2& cloneMe);
 
         /**
          * Returns the internal code representing this permutation.
@@ -306,7 +244,7 @@ class REGINA_API NPerm<3> {
          * @param code the internal code for the new permutation.
          * @return the permutation represented by the given internal code.
          */
-        static NPerm<3> fromPermCode(Code code);
+        static NPerm2 fromPermCode(Code code);
 
         /**
          * Determines whether the given integer is a valid internal
@@ -325,7 +263,7 @@ class REGINA_API NPerm<3> {
          * to this permutation.
          * @return a reference to this permutation.
          */
-        NPerm<3>& operator = (const NPerm<3>& cloneMe);
+        NPerm2& operator = (const NPerm2& cloneMe);
 
         /**
          * Returns the composition of this permutation with the given
@@ -336,14 +274,14 @@ class REGINA_API NPerm<3> {
          * @param q the permutation with which to compose this.
          * @return the composition of both permutations.
          */
-        NPerm<3> operator * (const NPerm<3>& q) const;
+        NPerm2 operator * (const NPerm2& q) const;
 
         /**
          * Finds the inverse of this permutation.
          *
          * @return the inverse of this permutation.
          */
-        NPerm<3> inverse() const;
+        NPerm2 inverse() const;
 
         /**
          * Determines the sign of this permutation.
@@ -382,7 +320,7 @@ class REGINA_API NPerm<3> {
          * @return \c true if and only if this and the given permutation
          * are equal.
          */
-        bool operator == (const NPerm<3>& other) const;
+        bool operator == (const NPerm2& other) const;
 
         /**
          * Determines if this differs from the given permutation.
@@ -393,7 +331,7 @@ class REGINA_API NPerm<3> {
          * @return \c true if and only if this and the given permutation
          * differ.
          */
-        bool operator != (const NPerm<3>& other) const;
+        bool operator != (const NPerm2& other) const;
 
         /**
          * Lexicographically compares the images of (0,1,2) under this
@@ -404,7 +342,7 @@ class REGINA_API NPerm<3> {
          * the permutations are equal and 1 if this permutation produces
          * a greater image.
          */
-        int compareWith(const NPerm<3>& other) const;
+        int compareWith(const NPerm2& other) const;
 
         /**
          * Determines if this is the identity permutation.
@@ -414,16 +352,6 @@ class REGINA_API NPerm<3> {
          */
         bool isIdentity() const;
 
-        /**
-         * A deprecated alias for str(), which returns a string representation
-         * of this permutation.
-         *
-         * \deprecated This routine has (at long last) been deprecated;
-         * use the simpler-to-type str() instead.
-         *
-         * @return a string representation of this permutation.
-         */
-        std::string toString() const;
         /**
          * Returns a string representation of this permutation.
          * The representation will consist of three adjacent digits
@@ -446,66 +374,38 @@ class REGINA_API NPerm<3> {
         std::string trunc(unsigned len) const;
 
         /**
-         * Returns a string representation of this permutation with only
-         * the images of 0 and 1.  The resulting string will therefore
-         * have length two.
-         *
-         * @return a truncated string representation of this permutation.
-         */
-        std::string trunc2() const;
-
-        /**
-         * Returns the index of this permutation in the NPerm<3>::S3 array.
+         * Returns the index of this permutation in the NPerm2::S3 array.
          *
          * @return the index \a i for which this permutation is equal to
-         * NPerm<3>::S3[i].  This will be between 0 and 5 inclusive.
+         * NPerm2::S3[i].  This will be between 0 and 5 inclusive.
          */
-        int S3Index() const;
+        int S2Index() const;
 
         /**
-         * Returns the index of this permutation in the NPerm<3>::S3 array.
+         * Returns the index of this permutation in the NPerm2::S3 array.
          * This is a dimension-agnostic alias for S3Index().
          *
          * @return the index \a i for which this permutation is equal to
-         * NPerm<3>::S3[i].  This will be between 0 and 5 inclusive.
+         * NPerm2::S2[i].  This will be between 0 and 5 inclusive.
          */
         int SnIndex() const;
 
         /**
-         * Returns the index of this permutation in the NPerm<3>::orderedS3 array.
+         * Returns the index of this permutation in the NPerm2::orderedS2 array.
          *
          * @return the index \a i for which this permutation is equal to
-         * NPerm<3>::orderedS3[i].  This will be between 0 and 5 inclusive.
+         * NPerm2::orderedS3[i].  This will be between 0 and 5 inclusive.
          */
-        int orderedS3Index() const;
+        int orderedS2Index() const;
 
         /**
-         * Returns the index of this permutation in the NPerm<3>::orderedS3 array.
+         * Returns the index of this permutation in the NPerm2::orderedS2 array.
          * This is a dimension-agnostic alias for orderedS3Index().
          *
          * @return the index \a i for which this permutation is equal to
-         * NPerm<3>::orderedS3[i].  This will be between 0 and 5 inclusive.
+         * NPerm2::orderedS3[i].  This will be between 0 and 5 inclusive.
          */
         int orderedSnIndex() const;
-
-    private:
-        /**
-         * Contains the images of every element under every possible
-         * permutation.
-         *
-         * Specifically, the image of \a x under the permutation <tt>S3[i]</tt>
-         * is <tt>imageTable[i][x]</tt>.
-         */
-        static const Code imageTable[6][3];
-
-        /**
-         * Contains the full multiplication table for all possible
-         * permutations.
-         *
-         * Specifically, the product <tt>S3[x] * S3[y]</tt> is
-         * the permutation <tt>S3[product[x][y]]</tt>.
-         */
-        static const Code productTable[6][6];
 
     private:
         /**
@@ -517,41 +417,36 @@ class REGINA_API NPerm<3> {
          * @param code the internal code from which the new
          * permutation will be created.
          */
-        NPerm<3>(Code code);
+        NPerm2(Code code);
 
-    friend std::ostream& operator << (std::ostream& out, const NPerm<3>& p);
+    friend std::ostream& operator << (std::ostream& out, const NPerm2& p);
 };
-
-/**
- * A convenience typedef for NPerm<3>.
- */
-typedef NPerm<3> NPerm3;
 
 /**
  * Writes a string representation of the given permutation to the given
  * output stream.  The format will be the same as is used by
- * NPerm<3>::str().
+ * NPerm2::str().
  *
  * @param out the output stream to which to write.
  * @param p the permutation to write.
  * @return a reference to \a out.
  */
 inline REGINA_API std::ostream& operator << (std::ostream& out,
-        const NPerm<3>& p) {
+        const NPerm2& p) {
     return (out << p.str());
 }
 
 /*@}*/
 
-// Inline functions for NPerm<3>
+// Inline functions for NPerm2
 
-inline NPerm<3>::NPerm() : code_(0) {
+inline NPerm2::NPerm2() : code_(0) {
 }
 
-inline NPerm<3>::NPerm(Code code) : code_(code) {
+inline NPerm2::NPerm2(Code code) : code_(code) {
 }
 
-inline NPerm<3>::NPerm(int a, int b) {
+inline NPerm2::NPerm2(int a, int b) {
     // Transposition.
     if (a == b)
         code_ = code012;
@@ -565,7 +460,7 @@ inline NPerm<3>::NPerm(int a, int b) {
     }
 }
 
-inline NPerm<3>::NPerm(int a, int b, int) {
+inline NPerm2::NPerm2(int a, int b, int) {
     // Images of (0, 1, 2).
     switch (a) {
         case 0:
@@ -577,7 +472,7 @@ inline NPerm<3>::NPerm(int a, int b, int) {
     }
 }
 
-inline NPerm<3>::NPerm(const int* image) {
+inline NPerm2::NPerm2(const int* image) {
     switch (image[0]) {
         case 0:
             code_ = static_cast<Code>(image[1] == 1 ? 0 : 1); break;
@@ -588,60 +483,60 @@ inline NPerm<3>::NPerm(const int* image) {
     }
 }
 
-inline NPerm<3>::NPerm(const NPerm<3>& cloneMe) : code_(cloneMe.code_) {
+inline NPerm2::NPerm2(const NPerm2& cloneMe) : code_(cloneMe.code_) {
 }
 
-inline NPerm<3>::Code NPerm<3>::getPermCode() const {
+inline NPerm2::Code NPerm2::getPermCode() const {
     return code_;
 }
 
-inline void NPerm<3>::setPermCode(Code code) {
+inline void NPerm2::setPermCode(Code code) {
     code_ = code;
 }
 
-inline NPerm<3> NPerm<3>::fromPermCode(Code code) {
-    return NPerm<3>(code);
+inline NPerm2 NPerm2::fromPermCode(Code code) {
+    return NPerm2(code);
 }
 
-inline bool NPerm<3>::isPermCode(Code code) {
+inline bool NPerm2::isPermCode(Code code) {
     // code >= 0 is a no-op because we are using an unsigned data type.
     return (code < 6);
 }
 
-inline NPerm<3>& NPerm<3>::operator = (const NPerm<3>& cloneMe) {
+inline NPerm2& NPerm2::operator = (const NPerm2& cloneMe) {
     code_ = cloneMe.code_;
     return *this;
 }
 
-inline NPerm<3> NPerm<3>::operator * (const NPerm<3>& q) const {
-    return NPerm<3>(productTable[code_][q.code_]);
+inline NPerm2 NPerm2::operator * (const NPerm2& q) const {
+    return NPerm2(productTable[code_][q.code_]);
 }
 
-inline NPerm<3> NPerm<3>::inverse() const {
-    return NPerm<3>(static_cast<Code>(invS3[code_]));
+inline NPerm2 NPerm2::inverse() const {
+    return NPerm2(static_cast<Code>(invS3[code_]));
 }
 
-inline int NPerm<3>::sign() const {
+inline int NPerm2::sign() const {
     return (code_ % 2 ? -1 : 1);
 }
 
-inline int NPerm<3>::operator[](int source) const {
+inline int NPerm2::operator[](int source) const {
     return imageTable[code_][source];
 }
 
-inline int NPerm<3>::preImageOf(int image) const {
+inline int NPerm2::preImageOf(int image) const {
     return imageTable[invS3[code_]][image];
 }
 
-inline bool NPerm<3>::operator == (const NPerm<3>& other) const {
+inline bool NPerm2::operator == (const NPerm2& other) const {
     return (code_ == other.code_);
 }
 
-inline bool NPerm<3>::operator != (const NPerm<3>& other) const {
+inline bool NPerm2::operator != (const NPerm2& other) const {
     return (code_ != other.code_);
 }
 
-inline int NPerm<3>::compareWith(const NPerm<3>& other) const {
+inline int NPerm2::compareWith(const NPerm2& other) const {
     // Computing orderedS3Index() is very fast.
     // Use this instead of comparing images one at a time.
     int o1 = orderedS3Index();
@@ -649,30 +544,30 @@ inline int NPerm<3>::compareWith(const NPerm<3>& other) const {
     return (o1 == o2 ? 0 : o1 < o2 ? -1 : 1);
 }
 
-inline bool NPerm<3>::isIdentity() const {
+inline bool NPerm2::isIdentity() const {
     return (code_ == 0);
 }
 
-inline std::string NPerm<3>::toString() const {
+inline std::string NPerm2::toString() const {
     return str();
 }
 
-inline int NPerm<3>::S3Index() const {
+inline int NPerm2::S3Index() const {
     return code_;
 }
 
-inline int NPerm<3>::SnIndex() const {
+inline int NPerm2::SnIndex() const {
     return code_;
 }
 
-inline int NPerm<3>::orderedS3Index() const {
+inline int NPerm2::orderedS3Index() const {
     if (code_ == 2 || code_ == 3)
         return code_ ^ 1;
     else
         return code_;
 }
 
-inline int NPerm<3>::orderedSnIndex() const {
+inline int NPerm2::orderedSnIndex() const {
     return orderedS3Index();
 }
 

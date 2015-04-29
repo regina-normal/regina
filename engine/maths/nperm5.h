@@ -43,6 +43,7 @@
 
 #include <string>
 #include "regina-core.h"
+#include "maths/nperm.h"
 
 namespace regina {
 
@@ -54,7 +55,7 @@ namespace regina {
 /**
  * Represents a permutation of {0,1,2,3,4}.
  * Amongst other things, such permutations are used in describing
- * simplex gluings in 4-manifold triangulations.  NPerm5 objects are small
+ * simplex gluings in 4-manifold triangulations.  NPerm<5> objects are small
  * enough to pass about by value instead of by reference.
  *
  * Each permutation has an internal code, and this code is sufficient to
@@ -66,7 +67,8 @@ namespace regina {
  * the image of 0, the next lowest three bits represent the image of 1 and so
  * on.
  */
-class REGINA_API NPerm5 {
+template <>
+class REGINA_API NPerm<5> {
     public:
         /**
          * The total number of permutations on five elements.
@@ -105,27 +107,27 @@ class REGINA_API NPerm5 {
          * Note that the permutations are not necessarily in
          * lexicographical order.
          */
-        static const NPerm5 S5[120];
+        static const NPerm<5> S5[120];
 
         /**
-         * A dimension-agnostic alias for NPerm5::S5.  In general, for
+         * A dimension-agnostic alias for NPerm<5>::S5.  In general, for
          * each \a K the class NPermK will define an alias \a Sn
          * that references the list of all permutations NPermK::SK.
          */
-        static const NPerm5* Sn;
+        static const NPerm<5>* Sn;
 
         /**
          * Contains all possible permutations of five elements in
          * lexicographical order.
          */
-        static const NPerm5 orderedS5[120];
+        static const NPerm<5> orderedS5[120];
 
         /**
-         * A dimension-agnostic alias for NPerm5::orderedS5.  In general, for
+         * A dimension-agnostic alias for NPerm<5>::orderedS5.  In general, for
          * each \a K the class NPermK will define an alias \a orderedSn
          * that references the list of all permutations NPermK::orderedSK.
          */
-        static const NPerm5* orderedSn;
+        static const NPerm<5>* orderedSn;
 
         /**
          * Contains the inverses of the permutations in the array \a S5.
@@ -136,7 +138,7 @@ class REGINA_API NPerm5 {
         static const unsigned invS5[120];
 
         /**
-         * A dimension-agnostic alias for NPerm5::invS5.  In general, for
+         * A dimension-agnostic alias for NPerm<5>::invS5.  In general, for
          * each \a K the class NPermK will define an alias \a invSn
          * that references the list of all permutations NPermK::invSK.
          */
@@ -150,7 +152,7 @@ class REGINA_API NPerm5 {
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * For all permutation classes (NPerm4, NPerm5 and so on), the
+         * For all permutation classes (NPerm4, NPerm<5> and so on), the
          * S4 array stores the same permutations in the same order (but
          * of course using different data types).
          *
@@ -158,20 +160,20 @@ class REGINA_API NPerm5 {
          * lexicographical order.  For the corresponding inverse array,
          * see NPerm4::invS4.
          */
-        static const NPerm5 S4[24];
+        static const NPerm<5> S4[24];
 
         /**
-         * A dimension-agnostic alias for NPerm5::S4.  In general, for
+         * A dimension-agnostic alias for NPerm<5>::S4.  In general, for
          * each \a K the class NPermK will define an alias \a Sn_1
          * that references the list of all permutations NPermK::S(K-1).
          */
-        static const NPerm5* Sn_1;
+        static const NPerm<5>* Sn_1;
 
         /**
          * Contains all possible permutations of four elements in
          * lexicographical order.  In each permutation, 4 maps to 4.
          */
-        static const NPerm5 orderedS4[24];
+        static const NPerm<5> orderedS4[24];
 
         /**
          * Contains all possible permutations of three elements.
@@ -181,7 +183,7 @@ class REGINA_API NPerm5 {
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * For all permutation classes (NPerm4, NPerm5 and so on), the
+         * For all permutation classes (NPerm4, NPerm<5> and so on), the
          * S3 array stores the same permutations in the same order (but
          * of course using different data types).
          *
@@ -189,14 +191,14 @@ class REGINA_API NPerm5 {
          * lexicographical order.  For the corresponding inverse array,
          * see NPerm3::invS3.
          */
-        static const NPerm5 S3[6];
+        static const NPerm<5> S3[6];
 
         /**
          * Contains all possible permutations of three elements in
          * lexicographical order.  In each permutation, 3 maps to 3 and
          * 4 maps to 4.
          */
-        static const NPerm5 orderedS3[6];
+        static const NPerm<5> orderedS3[6];
 
         /**
          * Contains all possible permutations of two elements.
@@ -206,13 +208,13 @@ class REGINA_API NPerm5 {
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * For all permutation classes (NPerm4, NPerm5 and so on), the
+         * For all permutation classes (NPerm4, NPerm<5> and so on), the
          * S2 array stores the same permutations in the same order (but
          * of course using different data types).
          *
          * Note that these permutations are already in lexicographical order.
          */
-        static const NPerm5 S2[2];
+        static const NPerm<5> S2[2];
 
     private:
         unsigned code;
@@ -222,7 +224,7 @@ class REGINA_API NPerm5 {
         /**
          * Creates the identity permutation.
          */
-        NPerm5();
+        NPerm();
 
         /**
          * Creates the transposition of \a a and \a b.
@@ -233,7 +235,7 @@ class REGINA_API NPerm5 {
          * @param a the element to switch with \a b.
          * @param b the element to switch with \a a.
          */
-        NPerm5(int a, int b);
+        NPerm(int a, int b);
 
         /**
          * Creates a permutation mapping (0,1,2,3,4) to
@@ -247,7 +249,7 @@ class REGINA_API NPerm5 {
          * @param d the desired image of 3.
          * @param e the desired image of 4.
          */
-        NPerm5(int a, int b, int c, int d, int e);
+        NPerm(int a, int b, int c, int d, int e);
 
         /**
          * Creates a permutation mapping \a i to \a image[i] for each
@@ -260,7 +262,7 @@ class REGINA_API NPerm5 {
          *
          * @param image the array of images.
          */
-        NPerm5(const int* image);
+        NPerm(const int* image);
 
         /**
          * Creates a permutation mapping (\a a[0], ..., \a a[4]) to
@@ -275,7 +277,7 @@ class REGINA_API NPerm5 {
          * @param b the corresponding array of images; this must also have
          * length 5.
          */
-        NPerm5(const int* a, const int* b);
+        NPerm(const int* a, const int* b);
 
         /**
          * Creates a permutation mapping
@@ -297,7 +299,7 @@ class REGINA_API NPerm5 {
          * @param d1 the desired image of <i>d0</i>.
          * @param e1 the desired image of <i>e0</i>.
          */
-        NPerm5(int a0, int a1, int b0, int b1, int c0, int c1, int d0, int d1,
+        NPerm(int a0, int a1, int b0, int b1, int c0, int c1, int d0, int d1,
             int e0, int e1);
 
         /**
@@ -306,7 +308,7 @@ class REGINA_API NPerm5 {
          *
          * @param cloneMe the permutation to clone.
          */
-        NPerm5(const NPerm5& cloneMe);
+        NPerm(const NPerm<5>& cloneMe);
 
         /**
          * Returns the internal code representing this permutation.
@@ -341,7 +343,7 @@ class REGINA_API NPerm5 {
          * @param newCode the internal code for the new permutation.
          * @return the permutation reprsented by the given internal code.
          */
-        static NPerm5 fromPermCode(Code newCode);
+        static NPerm<5> fromPermCode(Code newCode);
 
         /**
          * Determines whether the given integer is a valid internal
@@ -360,7 +362,7 @@ class REGINA_API NPerm5 {
          * to this permutation.
          * @return a reference to this permutation.
          */
-        NPerm5& operator = (const NPerm5& cloneMe);
+        NPerm<5>& operator = (const NPerm<5>& cloneMe);
 
         /**
          * Returns the composition of this permutation with the given
@@ -371,14 +373,14 @@ class REGINA_API NPerm5 {
          * @param q the permutation with which to compose this.
          * @return the composition of both permutations.
          */
-        NPerm5 operator * (const NPerm5& q) const;
+        NPerm<5> operator * (const NPerm<5>& q) const;
 
         /**
          * Finds the inverse of this permutation.
          *
          * @return the inverse of this permutation.
          */
-        NPerm5 inverse() const;
+        NPerm<5> inverse() const;
 
         /**
          * Determines the sign of this permutation.
@@ -417,7 +419,7 @@ class REGINA_API NPerm5 {
          * @return \c true if and only if this and the given permutation
          * are equal.
          */
-        bool operator == (const NPerm5& other) const;
+        bool operator == (const NPerm<5>& other) const;
 
         /**
          * Determines if this differs from the given permutation.
@@ -428,7 +430,7 @@ class REGINA_API NPerm5 {
          * @return \c true if and only if this and the given permutation
          * differ.
          */
-        bool operator != (const NPerm5& other) const;
+        bool operator != (const NPerm<5>& other) const;
 
         /**
          * Lexicographically compares the images of (0,1,2,3,4) under this
@@ -439,7 +441,7 @@ class REGINA_API NPerm5 {
          * the permutations are equal and 1 if this permutation produces
          * a greater image.
          */
-        int compareWith(const NPerm5& other) const;
+        int compareWith(const NPerm<5>& other) const;
 
         /**
          * Determines if this is the identity permutation.
@@ -510,40 +512,40 @@ class REGINA_API NPerm5 {
         std::string trunc4() const;
 
         /**
-         * Returns the index of this permutation in the NPerm5::S5 array.
+         * Returns the index of this permutation in the NPerm<5>::S5 array.
          *
          * @return the index \a i for which this permutation is equal to
-         * NPerm5::S5[i].  This will be between 0 and 119 inclusive.
+         * NPerm<5>::S5[i].  This will be between 0 and 119 inclusive.
          *
          * @author Ryan Budney
          */
         int S5Index() const;
 
         /**
-         * Returns the index of this permutation in the NPerm5::S5 array.
+         * Returns the index of this permutation in the NPerm<5>::S5 array.
          * This is a dimension-agnostic alias for S5Index().
          *
          * @return the index \a i for which this permutation is equal to
-         * NPerm5::S5[i].  This will be between 0 and 119 inclusive.
+         * NPerm<5>::S5[i].  This will be between 0 and 119 inclusive.
          */
         int SnIndex() const;
 
         /**
-         * Returns the index of this permutation in the NPerm5::orderedS5 array.
+         * Returns the index of this permutation in the NPerm<5>::orderedS5 array.
          *
          * @return the index \a i for which this permutation is equal to
-         * NPerm5::orderedS5[i].  This will be between 0 and 119 inclusive.
+         * NPerm<5>::orderedS5[i].  This will be between 0 and 119 inclusive.
          *
          * @author Ryan Budney
          */
         int orderedS5Index() const;
 
         /**
-         * Returns the index of this permutation in the NPerm5::orderedS5 array.
+         * Returns the index of this permutation in the NPerm<5>::orderedS5 array.
          * This is a dimension-agnostic alias for orderedS5Index().
          *
          * @return the index \a i for which this permutation is equal to
-         * NPerm5::orderedS5[i].  This will be between 0 and 119 inclusive.
+         * NPerm<5>::orderedS5[i].  This will be between 0 and 119 inclusive.
          */
         int orderedSnIndex() const;
 
@@ -557,7 +559,7 @@ class REGINA_API NPerm5 {
          * @param newCode the internal code from which the new
          * permutation will be created.
          */
-        NPerm5(Code newCode);
+        NPerm<5>(Code newCode);
 
         /**
          * Determines the image of the given integer under this
@@ -569,49 +571,54 @@ class REGINA_API NPerm5 {
          */
         int imageOf(int source) const;
 
-    friend std::ostream& operator << (std::ostream& out, const NPerm5& p);
+    friend std::ostream& operator << (std::ostream& out, const NPerm<5>& p);
 };
 
 /**
  * Writes a string representation of the given permutation to the given
  * output stream.  The format will be the same as is used by
- * NPerm5::str().
+ * NPerm<5>::str().
  *
  * @param out the output stream to which to write.
  * @param p the permutation to write.
  * @return a reference to \a out.
  */
 inline REGINA_API std::ostream& operator << (std::ostream& out,
-        const NPerm5& p) {
+        const NPerm<5>& p) {
     return (out << p.str());
 }
 
+/**
+ * A convenience typedef for NPerm<5>.
+ */
+typedef NPerm<5> NPerm5;
+
 /*@}*/
 
-// Inline functions for NPerm5
+// Inline functions for NPerm<5>
 
-inline NPerm5::NPerm5() : code(18056) {
+inline NPerm<5>::NPerm() : code(18056) {
 }
 
-inline NPerm5::NPerm5(Code newCode) : code(newCode) {
+inline NPerm<5>::NPerm(Code newCode) : code(newCode) {
 }
 
-inline NPerm5::NPerm5(int a, int b) {
+inline NPerm<5>::NPerm(int a, int b) {
     code = 18056;
     code += ((a << (3*b)) - (b << (3*b)));
     code += ((b << (3*a)) - (a << (3*a)));
 }
 
-inline NPerm5::NPerm5(int a, int b, int c, int d, int e) {
+inline NPerm<5>::NPerm(int a, int b, int c, int d, int e) {
     code = (e << 12) | (d << 9) | (c << 6) | (b << 3) | a;
 }
 
-inline NPerm5::NPerm5(const int* image) {
+inline NPerm<5>::NPerm(const int* image) {
     code = (image[4] << 12) | (image[3] << 9) | (image[2] << 6) |
         (image[1] << 3) | image[0];
 }
 
-inline NPerm5::NPerm5(const int* a, const int* b) {
+inline NPerm<5>::NPerm(const int* a, const int* b) {
     code =
         (b[0] << (3*a[0])) |
         (b[1] << (3*a[1])) |
@@ -620,7 +627,7 @@ inline NPerm5::NPerm5(const int* a, const int* b) {
         (b[4] << (3*a[4]));
 }
 
-inline NPerm5::NPerm5(int a0, int a1, int b0, int b1,
+inline NPerm<5>::NPerm(int a0, int a1, int b0, int b1,
         int c0, int c1, int d0, int d1, int e0, int e1) {
     code =
         (a1 << (3*a0)) |
@@ -630,45 +637,45 @@ inline NPerm5::NPerm5(int a0, int a1, int b0, int b1,
         (e1 << (3*e0));
 }
 
-inline NPerm5::NPerm5(const NPerm5& cloneMe) : code(cloneMe.code) {
+inline NPerm<5>::NPerm(const NPerm<5>& cloneMe) : code(cloneMe.code) {
 }
 
-inline NPerm5::Code NPerm5::getPermCode() const {
+inline NPerm<5>::Code NPerm<5>::getPermCode() const {
     return code;
 }
 
-inline void NPerm5::setPermCode(Code newCode) {
+inline void NPerm<5>::setPermCode(Code newCode) {
     code = newCode;
 }
 
-inline NPerm5 NPerm5::fromPermCode(Code newCode) {
-    return NPerm5(newCode);
+inline NPerm<5> NPerm<5>::fromPermCode(Code newCode) {
+    return NPerm<5>(newCode);
 }
 
-inline NPerm5& NPerm5::operator = (const NPerm5& cloneMe) {
+inline NPerm<5>& NPerm<5>::operator = (const NPerm<5>& cloneMe) {
     code = cloneMe.code;
     return *this;
 }
 
-inline NPerm5 NPerm5::operator *(const NPerm5& q) const {
-    return NPerm5(imageOf(q[0]), imageOf(q[1]), imageOf(q[2]),
+inline NPerm<5> NPerm<5>::operator *(const NPerm<5>& q) const {
+    return NPerm<5>(imageOf(q[0]), imageOf(q[1]), imageOf(q[2]),
         imageOf(q[3]), imageOf(q[4]));
 }
 
-inline NPerm5 NPerm5::inverse() const {
+inline NPerm<5> NPerm<5>::inverse() const {
     // Specify the inverse by its internal code.
-    return NPerm5(static_cast<Code>(
+    return NPerm<5>(static_cast<Code>(
         (1 << (3*imageOf(1))) |
         (2 << (3*imageOf(2))) |
         (3 << (3*imageOf(3))) |
         (4 << (3*imageOf(4)))));
 }
 
-inline int NPerm5::operator[](int source) const {
+inline int NPerm<5>::operator[](int source) const {
     return (code >> (3*source)) & 7;
 }
 
-inline int NPerm5::preImageOf(int image) const {
+inline int NPerm<5>::preImageOf(int image) const {
     if (( code       & 7) == static_cast<Code>(image)) return 0;
     if (((code >> 3) & 7) == static_cast<Code>(image)) return 1;
     if (((code >> 6) & 7) == static_cast<Code>(image)) return 2;
@@ -676,31 +683,31 @@ inline int NPerm5::preImageOf(int image) const {
     return 4;
 }
 
-inline bool NPerm5::operator == (const NPerm5& other) const {
+inline bool NPerm<5>::operator == (const NPerm<5>& other) const {
     return (code == other.code);
 }
 
-inline bool NPerm5::operator != (const NPerm5& other) const {
+inline bool NPerm<5>::operator != (const NPerm<5>& other) const {
     return (code != other.code);
 }
 
-inline std::string NPerm5::toString() const {
+inline std::string NPerm<5>::toString() const {
     return str();
 }
 
-inline bool NPerm5::isIdentity() const {
+inline bool NPerm<5>::isIdentity() const {
     return (code == 18056);
 }
 
-inline int NPerm5::imageOf(int source) const {
+inline int NPerm<5>::imageOf(int source) const {
     return (code >> (3*source)) & 7;
 }
 
-inline int NPerm5::SnIndex() const {
+inline int NPerm<5>::SnIndex() const {
     return S5Index();
 }
 
-inline int NPerm5::orderedSnIndex() const {
+inline int NPerm<5>::orderedSnIndex() const {
     return orderedS5Index();
 }
 

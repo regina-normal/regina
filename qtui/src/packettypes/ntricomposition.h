@@ -56,7 +56,6 @@ namespace regina {
     class NIsomorphism;
     class NMatrix2;
     class NPacket;
-    class NPerm4;
     class NSatRegion;
     class NStandardTriangulation;
     class NTriangulation;
