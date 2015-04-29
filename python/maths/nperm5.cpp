@@ -91,6 +91,10 @@ void addNPerm5() {
         .staticmethod("isPermCode")
     ;
 
+    s.attr("imageBits") = NPerm5::imageBits;
+    s.attr("nPerms") = NPerm5::nPerms;
+    s.attr("nPerms_1") = NPerm5::nPerms_1;
+
     s.attr("S5") = &NPerm5_S5_arr;
     s.attr("Sn") = &NPerm5_S5_arr;
     s.attr("orderedS5") = &NPerm5_orderedS5_arr;

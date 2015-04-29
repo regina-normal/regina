@@ -128,6 +128,9 @@ void addNPerm4() {
             .staticmethod("isPermCode2")
         ;
 
+        s.attr("nPerms") = NPerm4::nPerms;
+        s.attr("nPerms_1") = NPerm4::nPerms_1;
+
         s.attr("S4") = &NPerm4_S4_arr;
         s.attr("Sn") = &NPerm4_S4_arr;
         s.attr("invS4") = &NPerm4_invS4_arr;

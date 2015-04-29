@@ -72,6 +72,18 @@ namespace regina {
 class REGINA_API NPerm3 {
     public:
         /**
+         * The total number of permutations on three elements.
+         * This is the size of the array Sn.
+         */
+        static const int nPerms = 6;
+
+        /**
+         * The total number of permutations on two elements.
+         * This is the size of the array Sn_1.
+         */
+        static const int nPerms_1 = 2;
+
+        /**
          * Indicates the native unsigned integer type used to store the
          * internal permutation code.
          */
@@ -150,24 +162,6 @@ class REGINA_API NPerm3 {
          * that references the list of all permutations NPermK::S(K-1).
          */
         static const NPerm3* Sn_1;
-
-        enum {
-            /**
-             * The total number of permutations on three elements.
-             * This is the size of the array Sn.
-             *
-             * \ifacespython Not present.
-             */
-            nPerms = 6,
-
-            /**
-             * The total number of permutations on two elements.
-             * This is the size of the array Sn_1.
-             *
-             * \ifacespython Not present.
-             */
-            nPerms_1 = 2
-        };
 
         enum {
             /**

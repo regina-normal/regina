@@ -84,6 +84,9 @@ void addNPerm3() {
         .staticmethod("isPermCode")
     ;
 
+    s.attr("nPerms") = NPerm3::nPerms;
+    s.attr("nPerms_1") = NPerm3::nPerms_1;
+
     s.attr("S3") = &NPerm3_S3_arr;
     s.attr("Sn") = &NPerm3_S3_arr;
     s.attr("orderedS3") = &NPerm3_orderedS3_arr;

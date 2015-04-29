@@ -69,6 +69,18 @@ namespace regina {
 class REGINA_API NPerm5 {
     public:
         /**
+         * The total number of permutations on five elements.
+         * This is the size of the array Sn.
+         */
+        static const int nPerms = 120;
+
+        /**
+         * The total number of permutations on four elements.
+         * This is the size of the array Sn_1.
+         */
+        static const int nPerms_1 = 24;
+
+        /**
          * Indicates the number of bits used by the permutation code to
          * store the image of a single integer.
          *
@@ -201,24 +213,6 @@ class REGINA_API NPerm5 {
          * Note that these permutations are already in lexicographical order.
          */
         static const NPerm5 S2[2];
-
-        enum {
-            /**
-             * The total number of permutations on five elements.
-             * This is the size of the array Sn.
-             *
-             * \ifacespython Not present.
-             */
-            nPerms = 120,
-
-            /**
-             * The total number of permutations on four elements.
-             * This is the size of the array Sn_1.
-             *
-             * \ifacespython Not present.
-             */
-            nPerms_1 = 24
-        };
 
     private:
         unsigned code;

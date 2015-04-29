@@ -88,6 +88,18 @@ namespace regina {
 class REGINA_API NPerm4 {
     public:
         /**
+         * The total number of permutations on four elements.
+         * This is the size of the array Sn.
+         */
+        static const int nPerms = 24;
+
+        /**
+         * The total number of permutations on three elements.
+         * This is the size of the array Sn_1.
+         */
+        static const int nPerms_1 = 6;
+
+        /**
          * Indicates the native unsigned integer type used to store the
          * internal permutation code.
          */
@@ -214,24 +226,6 @@ class REGINA_API NPerm4 {
          * version of Regina.
          */
         static const unsigned invS2[2];
-
-        enum {
-            /**
-             * The total number of permutations on four elements.
-             * This is the size of the array Sn.
-             *
-             * \ifacespython Not present.
-             */
-            nPerms = 24,
-
-            /**
-             * The total number of permutations on three elements.
-             * This is the size of the array Sn_1.
-             *
-             * \ifacespython Not present.
-             */
-            nPerms_1 = 6
-        };
 
     private:
         Code code_;

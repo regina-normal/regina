@@ -37,6 +37,8 @@
 
 namespace regina {
 
+const int NPerm5::nPerms;
+const int NPerm5::nPerms_1;
 const int NPerm5::imageBits;
 
 const NPerm5 NPerm5::S5[120] = {
