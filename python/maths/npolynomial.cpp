@@ -56,7 +56,7 @@ namespace {
         std::auto_ptr<NPolynomial<NRational> > r(new NPolynomial<NRational>);
 
         p.divisionAlg(divisor, *q, *r);
-        return make_tuple(q, r);
+        return boost::python::make_tuple(q, r);
     }
 
     NRational* seqFromList(boost::python::list l) {
