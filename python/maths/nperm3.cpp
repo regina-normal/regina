@@ -74,6 +74,7 @@ void addNPerm3() {
         .def("isIdentity", &NPerm3::isIdentity)
         .def("toString", &NPerm3::toString)
         .def("str", &NPerm3::str)
+        .def("trunc", &NPerm3::trunc)
         .def("trunc2", &NPerm3::trunc2)
         .def("S3Index", &NPerm3::S3Index)
         .def("orderedS3Index", &NPerm3::orderedS3Index)

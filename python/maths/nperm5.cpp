@@ -79,6 +79,7 @@ void addNPerm5() {
         .def("isIdentity", &NPerm5::isIdentity)
         .def("toString", &NPerm5::toString)
         .def("str", &NPerm5::str)
+        .def("trunc", &NPerm5::trunc)
         .def("trunc2", &NPerm5::trunc2)
         .def("trunc3", &NPerm5::trunc3)
         .def("trunc4", &NPerm5::trunc4)

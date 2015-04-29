@@ -243,6 +243,14 @@ std::string NPerm5::str() const {
     return ans;
 }
 
+std::string NPerm5::trunc(unsigned len) const {
+    char ans[6];
+    for (unsigned i = 0; i < len; ++i)
+        ans[i] = static_cast<char>('0' + imageOf(i));
+    ans[len] = 0;
+    return ans;
+}
+
 std::string NPerm5::trunc2() const {
     char ans[3];
     ans[0] = static_cast<char>('0' + imageOf(0));

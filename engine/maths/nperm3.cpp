@@ -94,6 +94,14 @@ std::string NPerm3::str() const {
     return ans;
 }
 
+std::string NPerm3::trunc(unsigned len) const {
+    char ans[4];
+    for (unsigned i = 0; i < len; ++i)
+        ans[i] = static_cast<char>('0' + imageTable[code_][i]);
+    ans[len] = 0;
+    return ans;
+}
+
 std::string NPerm3::trunc2() const {
     char ans[3];
     ans[0] = static_cast<char>('0' + imageTable[code_][0]);

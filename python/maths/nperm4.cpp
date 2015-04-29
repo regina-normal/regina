@@ -115,6 +115,7 @@ void addNPerm4() {
             .def("isIdentity", &NPerm4::isIdentity)
             .def("toString", &NPerm4::toString)
             .def("str", &NPerm4::str)
+            .def("trunc", &NPerm4::trunc)
             .def("trunc2", &NPerm4::trunc2)
             .def("trunc3", &NPerm4::trunc3)
             .def("S4Index", S4Index_void)

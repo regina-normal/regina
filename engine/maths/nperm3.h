@@ -418,6 +418,17 @@ class REGINA_API NPerm3 {
         std::string str() const;
 
         /**
+         * Returns a prefix of the string representation of this permutation,
+         * containing only the images of the first \a len integers.
+         *
+         * @param len the length of the prefix required; this must be
+         * between 0 and 3 inclusive.
+         * @return the corresponding prefix of the string representation
+         * of this permutation.
+         */
+        std::string trunc(unsigned len) const;
+
+        /**
          * Returns a string representation of this permutation with only
          * the images of 0 and 1.  The resulting string will therefore
          * have length two.
