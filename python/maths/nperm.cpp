@@ -73,6 +73,10 @@ void addNPerm(const char* name) {
         .staticmethod("fromPermCode")
         .staticmethod("isPermCode")
     ;
+
+    s.attr("nPerms") = NPerm<n>::nPerms;
+    s.attr("nPerms_1") = NPerm<n>::nPerms_1;
+    s.attr("imageBits") = NPerm<n>::imageBits;
 }
 
 void addNPerm() {

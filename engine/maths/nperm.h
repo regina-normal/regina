@@ -52,96 +52,94 @@ namespace regina {
  * @{
  */
 
-constexpr int permImageBits(int n) {
-    return (n <= 1 ? 0 : 1 + permImageBits((n + 1) / 2));
-}
-
-constexpr int permImageMask(int n) {
-    return (1 << permImageBits(n)) - 1;
-}
-
-/**
- * Internal class for use by NPerm, indicating how internal codes are
- * constructed for permutations of &ge; 5 elements.
- *
- * Typical end users will not need to use this class.
- *
- * \note Permutations of \a n &le; 4 objects also use internal codes,
- * but these codes are constructed differently (typically as indices into
- * the symmetric group <i>S<sub>n</sub></i>).
- *
- * \ifacespython Not present.
- *
- * @tparam n the number of objects being permuted in the corresponding
- * NPerm<n> class.  At present, this must be between 5 and 16 inclusive.
- */
-template <int n>
-struct REGINA_API NPermCodePacked {
-    enum {
-        /**
-         * Indicates the number of bits used to store a single integer
-         * \a k in the range 0 &le; \a k < \a n.
-         *
-         * \ifacespython Not present.
-         */
-        imageBits = permImageBits(n),
-        /**
-         * A mask whose lowest \a imageBits bits are 1, and whose
-         * remaining higher order bits are all 0.
-         *
-         * \ifacespython Not present.
-         */
-        imageMask = permImageMask(n)
-    };
-
-    /**
-     * Indicates the native unsigned integer type used to store the images of
-     * all integers 0,...,<i>n</i>-1 under a permutation.
-     *
-     * \ifacespython Not present.
-     */
-    typedef typename IntOfMinSize<(permImageBits(n) * n + 7) / 8>::utype Code;
-};
-
 /**
  * Represents a permutation of {0,1,...,<i>n</i>-1}.
  * Amongst other things, such permutations are used to describe
  * simplex gluings in (<i>n</i>-1)-manifold triangulations.
  *
- * Each permutation has an internal code, and this code is sufficient to
- * reconstruct the permutation.
- * Thus the internal code may be a useful means for passing
- * permutation objects to and from the engine.
- * If we let \a k denote NPermCodePacked<n>::imageBits, then this internal code
- * is an unsigned integer where the lowest \a k bits represent the image of 0,
- * the next lowest \a k bits represent the image of 1, and so on.
- *
  * NPerm objects are small enough to pass about by value instead of by
  * reference.  The trade-off is that, for this to be possible, the NPerm
  * class can only work with \a n &le; 16.
  *
- * For \a n = 3, 4 and 5, this class offers additional functionality,
+ * Each permutation has an internal code, which is a single native
+ * integer that is sufficient to reconstruct the entire permutation.
+ * Thus the internal code may be a useful means for passing permutation
+ * objects to and from the engine.  These codes are constructed as follows:
+ *
+ * - For 5 &le; \a n &le; 16, the code is essentially a packed array
+ *   that holds the images of 0,...,<i>n</i>-1 in a single native integer type.
+ *   More precisely, the internal code is an unsigned integer of type \a Code,
+ *   whose lowest \a imageBits bits represent the image of 0, whose next
+ *   lowest \a imageBits bits represent the image of 1, and so on.
+ *
+ * - For \a n &le; 4, the code is an index into a hard-coded list of
+ *   all possible permutations (i.e., an index into the symmetric group
+ *   <i>S<sub>n</sub></i>).  For details, see the documentation for
+ *   the specialisations NPerm<2>, NPerm<3> and NPerm<4> respectively.
+ *
+ * For \a n = 3, 4 and 5, this class offers some additional functionality,
  * and is made available under the typedefs NPerm3, NPerm4 and NPerm5
  * respectively.  These specialised classes play a central role in describing
  * and manipulating 2-, 3- and 4-manifold triangulations.
  *
- * \ifacespython The various instantiations of this template class
- * are available in Python under the hard-coded names
- * NPerm3, NPerm4, ..., NPerm16.
+ * \ifacespython The various instantiations of this template class are
+ * available in Python under the hard-coded names NPerm2, NPerm3, ..., NPerm16.
  *
  * @tparam n the number of objects being permuted.
  * This must be between 2 and 16 inclusive.
  */
 template <int n>
-class REGINA_API NPerm : public NPermCodePacked<n> {
+class REGINA_API NPerm {
+    static_assert(n >= 5 && n <= 16,
+        "The generic NPerm<n> template is only available for 5 <= n <= 16.");
     public:
-        using typename NPermCodePacked<n>::Code;
-        using NPermCodePacked<n>::imageBits;
-        using NPermCodePacked<n>::imageMask;
+        /**
+         * The total number of permutations on \a n elements.
+         * This is the size of the symmetric group <i>S<sub>n</sub></i>.
+         */
+        static const int64_t nPerms;
+
+        /**
+         * The total number of permutations on <i>n</i>-1 elements.  This is
+         * the size of the symmetric group <i>S</i><sub><i>n</i>-1</sub>.
+         */
+        static const int64_t nPerms_1;
+
+        /**
+         * Indicates the number of bits used by the permutation code
+         * to store the image of a single integer.
+         *
+         * This constant refers to the "image packing" codes that are
+         * used for \a n &ge; 5, as described in the NPerm class notes.
+         * For \a n &le; 4 the permutation codes are constructed in a
+         * different way, and so this constant is not present.
+         *
+         * The full permutation code packs \a n such images together,
+         * and so uses \a n * \a imageBits bits in total.
+         */
+        static const int imageBits;
+
+        /**
+         * Indicates the native unsigned integer type used to store the
+         * internal permutation code.
+         *
+         * This typedef is present for all values of \a n, though its
+         * precise size depends on how the permutation code is
+         * constructed.  In particular, this type is defined differently
+         * for \a n &le; 4 than for \a n &ge; 5.
+         */
+        typedef typename IntOfMinSize<(imageBits * n + 7) / 8>::utype Code;
 
     private:
         Code code_;
             /**< The internal code representing this permutation. */
+
+        static const Code idCode_;
+            /**< The internal code for the identity permutation. */
+
+        static const Code imageMask_;
+            /**< A bitmask whose lowest \a imageBits are 1, and whose
+                 remaining higher order bits are all 0. */
 
     public:
         /**
@@ -399,21 +397,55 @@ inline REGINA_API std::ostream& operator << (std::ostream& out,
 
 /*@}*/
 
-// Inline functions for NPerm
+// Static constants for NPerm
 
-template <int n>
-inline NPerm<n>::NPerm() {
-    code_ = 0;
-    for (Code i = 0; i < n; ++i)
-        code_ |= (i << (imageBits * i));
+namespace {
+    constexpr int64_t factorial(int n) {
+        return (n <= 1 ? 1 : factorial(n - 1) * n);
+    }
 }
 
 template <int n>
-inline NPerm<n>::NPerm(int a, int b) {
-    code_ = 0;
-    for (Code i = 0; i < n; ++i)
-        if (i != a && i != b)
-            code_ |= (i << (imageBits * i));
+const int64_t NPerm<n>::nPerms = factorial(n);
+
+template <int n>
+const int64_t NPerm<n>::nPerms_1 = factorial(n-1);
+
+namespace {
+    constexpr int permImageBits(int n) {
+        return (n <= 1 ? 0 : 1 + permImageBits((n + 1) / 2));
+    }
+}
+
+template <int n>
+const int NPerm<n>::imageBits = permImageBits(n);
+
+namespace {
+    template <int n>
+    inline constexpr typename NPerm<n>::Code idCodePartial(int k) {
+        return (k == 0 ? 0 :
+            static_cast<typename NPerm<n>::Code>(k) <<
+                (NPerm<n>::imageBits * k) | idCodePartial<n>(k - 1));
+    }
+}
+
+template <int n>
+const typename NPerm<n>::Code NPerm<n>::idCode_ = idCodePartial<n>(n);
+
+template <int n>
+const typename NPerm<n>::Code NPerm<n>::imageMask_ =
+    (static_cast<typename NPerm<n>::Code>(1) << NPerm<n>::imageBits) - 1;
+
+// Inline functions for NPerm
+
+template <int n>
+inline NPerm<n>::NPerm() : code_(idCode_) {
+}
+
+template <int n>
+inline NPerm<n>::NPerm(int a, int b) : code_(idCode_) {
+    code_ &= ~(imageMask_ << (imageBits * a));
+    code_ &= ~(imageMask_ << (imageBits * b));
     code_ |= (static_cast<Code>(a) << (imageBits * b));
     code_ |= (static_cast<Code>(b) << (imageBits * a));
 }
@@ -459,7 +491,7 @@ template <int n>
 bool NPerm<n>::isPermCode(Code code) {
     unsigned mask = 0;
     for (int i = 0; i < n; ++i)
-        mask |= (1 << ((code >> (imageBits * i)) & imageMask));
+        mask |= (1 << ((code >> (imageBits * i)) & imageMask_));
     return (mask + 1 == (1 << n));
 }
 
@@ -498,13 +530,13 @@ int NPerm<n>::sign() const {
 
 template <int n>
 inline int NPerm<n>::operator[](int source) const {
-    return (code_ >> (imageBits * source)) & imageMask;
+    return (code_ >> (imageBits * source)) & imageMask_;
 }
 
 template <int n>
 inline int NPerm<n>::preImageOf(int image) const {
     for (int i = 0; i < n; ++i)
-        if (((code_ >> (imageBits * i)) & imageMask) == image)
+        if (((code_ >> (imageBits * i)) & imageMask_) == image)
             return i;
     // We should never reach this point.
     return -1;
@@ -533,13 +565,7 @@ int NPerm<n>::compareWith(const NPerm& other) const {
 
 template <int n>
 inline bool NPerm<n>::isIdentity() const {
-    Code c = code_;
-    for (int i = 0; i < n; ++i) {
-        if ((c & imageMask) != i)
-            return false;
-        c >>= imageBits;
-    }
-    return (c == 0);
+    return (code_ == idCode_);
 }
 
 template <int n>
@@ -547,7 +573,7 @@ std::string NPerm<n>::str() const {
     char ans[n + 1];
     int image;
     for (int i = 0; i < n; ++i) {
-        image = (code_ >> (imageBits * i)) & imageMask;
+        image = (code_ >> (imageBits * i)) & imageMask_;
         ans[i] = (image < 10 ? '0' + image : 'a' - 10 + image);
     }
     ans[n] = 0;
@@ -560,7 +586,7 @@ std::string NPerm<n>::trunc(unsigned len) const {
     char ans[n + 1];
     int image;
     for (int i = 0; i < len; ++i) {
-        image = (code_ >> (imageBits * i)) & imageMask;
+        image = (code_ >> (imageBits * i)) & imageMask_;
         ans[i] = (image < 10 ? '0' + image : 'a' - 10 + image);
     }
     ans[len] = 0;
