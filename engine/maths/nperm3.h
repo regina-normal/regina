@@ -72,6 +72,12 @@ namespace regina {
 class REGINA_API NPerm3 {
     public:
         /**
+         * Indicates the native unsigned integer type used to store the
+         * internal permutation code.
+         */
+        typedef uint8_t Code;
+
+        /**
          * Contains all possible permutations of three elements.
          *
          * The permutations with even indices in the array are the even
@@ -203,7 +209,7 @@ class REGINA_API NPerm3 {
         };
 
     private:
-        unsigned char code_;
+        Code code_;
             /**< The internal code representing this permutation. */
 
     public:
@@ -266,7 +272,7 @@ class REGINA_API NPerm3 {
          *
          * @return the internal code.
          */
-        unsigned char getPermCode() const;
+        Code getPermCode() const;
 
         /**
          * Sets this permutation to that represented by the given
@@ -278,7 +284,7 @@ class REGINA_API NPerm3 {
          * @param code the internal code that will determine the
          * new value of this permutation.
          */
-        void setPermCode(unsigned char code);
+        void setPermCode(Code code);
 
         /**
          * Creates a permutation from the given internal code.
@@ -289,7 +295,7 @@ class REGINA_API NPerm3 {
          * @param code the internal code for the new permutation.
          * @return the permutation represented by the given internal code.
          */
-        static NPerm3 fromPermCode(unsigned char code);
+        static NPerm3 fromPermCode(Code code);
 
         /**
          * Determines whether the given integer is a valid internal
@@ -299,7 +305,7 @@ class REGINA_API NPerm3 {
          * @return \c true if and only if the given code is a valid
          * internal permutation code.
          */
-        static bool isPermCode(unsigned char code);
+        static bool isPermCode(Code code);
 
         /**
          * Sets this permutation to be equal to the given permutation.
@@ -468,7 +474,7 @@ class REGINA_API NPerm3 {
          * Specifically, the image of \a x under the permutation <tt>S3[i]</tt>
          * is <tt>imageTable[i][x]</tt>.
          */
-        static const unsigned char imageTable[6][3];
+        static const Code imageTable[6][3];
 
         /**
          * Contains the full multiplication table for all possible
@@ -477,7 +483,7 @@ class REGINA_API NPerm3 {
          * Specifically, the product <tt>S3[x] * S3[y]</tt> is
          * the permutation <tt>S3[product[x][y]]</tt>.
          */
-        static const unsigned char productTable[6][6];
+        static const Code productTable[6][6];
 
     private:
         /**
@@ -489,7 +495,7 @@ class REGINA_API NPerm3 {
          * @param code the internal code from which the new
          * permutation will be created.
          */
-        NPerm3(unsigned char code);
+        NPerm3(Code code);
 
     friend std::ostream& operator << (std::ostream& out, const NPerm3& p);
 };
@@ -515,7 +521,7 @@ inline REGINA_API std::ostream& operator << (std::ostream& out,
 inline NPerm3::NPerm3() : code_(0) {
 }
 
-inline NPerm3::NPerm3(unsigned char code) : code_(code) {
+inline NPerm3::NPerm3(Code code) : code_(code) {
 }
 
 inline NPerm3::NPerm3(int a, int b) {
@@ -536,41 +542,41 @@ inline NPerm3::NPerm3(int a, int b, int) {
     // Images of (0, 1, 2).
     switch (a) {
         case 0:
-            code_ = static_cast<unsigned char>(b == 1 ? 0 : 1); break;
+            code_ = static_cast<Code>(b == 1 ? 0 : 1); break;
         case 1:
-            code_ = static_cast<unsigned char>(b == 2 ? 2 : 3); break;
+            code_ = static_cast<Code>(b == 2 ? 2 : 3); break;
         case 2:
-            code_ = static_cast<unsigned char>(b == 0 ? 4 : 5); break;
+            code_ = static_cast<Code>(b == 0 ? 4 : 5); break;
     }
 }
 
 inline NPerm3::NPerm3(const int* image) {
     switch (image[0]) {
         case 0:
-            code_ = static_cast<unsigned char>(image[1] == 1 ? 0 : 1); break;
+            code_ = static_cast<Code>(image[1] == 1 ? 0 : 1); break;
         case 1:
-            code_ = static_cast<unsigned char>(image[1] == 2 ? 2 : 3); break;
+            code_ = static_cast<Code>(image[1] == 2 ? 2 : 3); break;
         case 2:
-            code_ = static_cast<unsigned char>(image[1] == 0 ? 4 : 5); break;
+            code_ = static_cast<Code>(image[1] == 0 ? 4 : 5); break;
     }
 }
 
 inline NPerm3::NPerm3(const NPerm3& cloneMe) : code_(cloneMe.code_) {
 }
 
-inline unsigned char NPerm3::getPermCode() const {
+inline NPerm3::Code NPerm3::getPermCode() const {
     return code_;
 }
 
-inline void NPerm3::setPermCode(unsigned char code) {
+inline void NPerm3::setPermCode(Code code) {
     code_ = code;
 }
 
-inline NPerm3 NPerm3::fromPermCode(unsigned char code) {
+inline NPerm3 NPerm3::fromPermCode(Code code) {
     return NPerm3(code);
 }
 
-inline bool NPerm3::isPermCode(unsigned char code) {
+inline bool NPerm3::isPermCode(Code code) {
     // code >= 0 is a no-op because we are using an unsigned data type.
     return (code < 6);
 }
@@ -585,7 +591,7 @@ inline NPerm3 NPerm3::operator * (const NPerm3& q) const {
 }
 
 inline NPerm3 NPerm3::inverse() const {
-    return NPerm3(static_cast<unsigned char>(invS3[code_]));
+    return NPerm3(static_cast<Code>(invS3[code_]));
 }
 
 inline int NPerm3::sign() const {

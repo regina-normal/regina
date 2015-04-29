@@ -40,7 +40,7 @@
 namespace regina {
 
 const NPerm4 NPerm4::S4[24] = {
-    NPerm4((unsigned char)0),
+    NPerm4((NPerm4::Code)0),
                 NPerm4(1),  NPerm4(2),  NPerm4(3),  NPerm4(4),  NPerm4(5),
     NPerm4(6),  NPerm4(7),  NPerm4(8),  NPerm4(9),  NPerm4(10), NPerm4(11),
     NPerm4(12), NPerm4(13), NPerm4(14), NPerm4(15), NPerm4(16), NPerm4(17),
@@ -65,7 +65,7 @@ const unsigned* NPerm4::invSn = NPerm4::invS4;
 const unsigned* allPermsS4Inv = NPerm4::invS4;
 
 const NPerm4 NPerm4::orderedS4[24] = {
-    NPerm4((unsigned char)0),  NPerm4(1),  NPerm4(3),  NPerm4(2),
+    NPerm4((NPerm4::Code)0),  NPerm4(1),  NPerm4(3),  NPerm4(2),
     NPerm4(4),  NPerm4(5),  NPerm4(7),  NPerm4(6),
     NPerm4(8),  NPerm4(9),  NPerm4(11), NPerm4(10),
     NPerm4(12), NPerm4(13), NPerm4(15), NPerm4(14),
@@ -115,7 +115,7 @@ const unsigned NPerm4::invS2[2] = {
 
 const unsigned* allPermsS2Inv = NPerm4::invS2;
 
-const unsigned char NPerm4::imageTable[24][4] = {
+const NPerm4::Code NPerm4::imageTable[24][4] = {
     { 0, 1, 2, 3 }, { 0, 1, 3, 2 }, { 0, 2, 3, 1 }, { 0, 2, 1, 3 },
     { 0, 3, 1, 2 }, { 0, 3, 2, 1 }, { 1, 0, 3, 2 }, { 1, 0, 2, 3 },
     { 1, 2, 0, 3 }, { 1, 2, 3, 0 }, { 1, 3, 2, 0 }, { 1, 3, 0, 2 },
@@ -124,7 +124,7 @@ const unsigned char NPerm4::imageTable[24][4] = {
     { 3, 1, 0, 2 }, { 3, 1, 2, 0 }, { 3, 2, 1, 0 }, { 3, 2, 0, 1 }
 };
 
-const unsigned char NPerm4::productTable[24][24] = {
+const NPerm4::Code NPerm4::productTable[24][24] = {
     // Generated using an older version of Regina in which products were
     // computed (not simply looked up from a dictionary like the one below).
     { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23 },
@@ -153,7 +153,7 @@ const unsigned char NPerm4::productTable[24][24] = {
     { 23,22,19,18,21,20,17,16,13,12,15,14,5,4,3,2,1,0,11,10,9,8,7,6 }
 };
 
-const unsigned char NPerm4::swapTable[4][4] = {
+const NPerm4::Code NPerm4::swapTable[4][4] = {
     {  0, 7, 15, 21 },
     {  7, 0,  3,  5 },
     { 15, 3,  0,  1 },
@@ -166,11 +166,11 @@ NPerm4::NPerm4(int a0, int a1, int b0, int b1, int c0, int c1, int d0, int d1) {
     image[b0] = b1;
     image[c0] = c1;
     image[d0] = d1;
-    code_ = static_cast<unsigned char>(
+    code_ = static_cast<Code>(
         S4Index(image[0], image[1], image[2], image[3]));
 }
 
-bool NPerm4::isPermCode(unsigned char code) {
+bool NPerm4::isPermCode(Code code) {
     unsigned mask = 0;
     for (int i = 0; i < 4; i++)
         mask |= (1 << ((code >> (2 * i)) & 3));

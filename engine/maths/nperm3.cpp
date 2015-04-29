@@ -38,7 +38,7 @@
 namespace regina {
 
 const NPerm3 NPerm3::S3[6] = {
-    NPerm3((unsigned char)0), NPerm3(1), NPerm3(2),
+    NPerm3((NPerm3::Code)0), NPerm3(1), NPerm3(2),
     NPerm3(3), NPerm3(4), NPerm3(5)
 };
 
@@ -64,7 +64,7 @@ const NPerm3 NPerm3::S2[2] = {
 
 const NPerm3* NPerm3::Sn_1 = NPerm3::S2;
 
-const unsigned char NPerm3::imageTable[6][3] = {
+const NPerm3::Code NPerm3::imageTable[6][3] = {
     { 0, 1, 2 },
     { 0, 2, 1 },
     { 1, 2, 0 },
@@ -73,7 +73,7 @@ const unsigned char NPerm3::imageTable[6][3] = {
     { 2, 1, 0 }
 };
 
-const unsigned char NPerm3::productTable[6][6] = {
+const NPerm3::Code NPerm3::productTable[6][6] = {
     { 0, 1, 2, 3, 4, 5 },
     { 1, 0, 5, 4, 3, 2 },
     { 2, 3, 4, 5, 0, 1 },

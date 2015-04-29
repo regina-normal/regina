@@ -69,6 +69,21 @@ namespace regina {
 class REGINA_API NPerm5 {
     public:
         /**
+         * Indicates the number of bits used by the permutation code to
+         * store the image of a single integer.
+         *
+         * The full permutation code packs 5 such images together, and
+         * so uses 5 * \a imageBits bits in total.
+         */
+        static const int imageBits = 3;
+
+        /**
+         * Indicates the native unsigned integer type used to store the
+         * internal permutation code.
+         */
+        typedef uint16_t Code;
+
+        /**
          * Contains all possible permutations of five elements.
          *
          * The permutations with even indices in the array are the even
@@ -294,7 +309,7 @@ class REGINA_API NPerm5 {
          *
          * @return the internal code.
          */
-        unsigned getPermCode() const;
+        Code getPermCode() const;
 
         /**
          * Sets this permutation to that represented by the given
@@ -306,7 +321,7 @@ class REGINA_API NPerm5 {
          * @param newCode the internal code that will determine the
          * new value of this permutation.
          */
-        void setPermCode(unsigned newCode);
+        void setPermCode(Code newCode);
 
         /**
          * Creates a permutation from the given internal code.
@@ -317,7 +332,7 @@ class REGINA_API NPerm5 {
          * @param newCode the internal code for the new permutation.
          * @return the permutation reprsented by the given internal code.
          */
-        static NPerm5 fromPermCode(unsigned newCode);
+        static NPerm5 fromPermCode(Code newCode);
 
         /**
          * Determines whether the given integer is a valid internal
@@ -327,7 +342,7 @@ class REGINA_API NPerm5 {
          * @return \c true if and only if the given code is a valid
          * internal permutation code.
          */
-        static bool isPermCode(unsigned newCode);
+        static bool isPermCode(Code newCode);
 
         /**
          * Sets this permutation to be equal to the given permutation.
@@ -522,7 +537,7 @@ class REGINA_API NPerm5 {
          * @param newCode the internal code from which the new
          * permutation will be created.
          */
-        NPerm5(unsigned newCode);
+        NPerm5(Code newCode);
 
         /**
          * Determines the image of the given integer under this
@@ -558,7 +573,7 @@ inline REGINA_API std::ostream& operator << (std::ostream& out,
 inline NPerm5::NPerm5() : code(18056) {
 }
 
-inline NPerm5::NPerm5(unsigned newCode) : code(newCode) {
+inline NPerm5::NPerm5(Code newCode) : code(newCode) {
 }
 
 inline NPerm5::NPerm5(int a, int b) {
@@ -589,15 +604,15 @@ inline NPerm5::NPerm5(int a0, int a1, int b0, int b1,
 inline NPerm5::NPerm5(const NPerm5& cloneMe) : code(cloneMe.code) {
 }
 
-inline unsigned NPerm5::getPermCode() const {
+inline NPerm5::Code NPerm5::getPermCode() const {
     return code;
 }
 
-inline void NPerm5::setPermCode(unsigned newCode) {
+inline void NPerm5::setPermCode(Code newCode) {
     code = newCode;
 }
 
-inline NPerm5 NPerm5::fromPermCode(unsigned newCode) {
+inline NPerm5 NPerm5::fromPermCode(Code newCode) {
     return NPerm5(newCode);
 }
 
@@ -613,7 +628,7 @@ inline NPerm5 NPerm5::operator *(const NPerm5& q) const {
 
 inline NPerm5 NPerm5::inverse() const {
     // Specify the inverse by its internal code.
-    return NPerm5(static_cast<unsigned>(
+    return NPerm5(static_cast<Code>(
         (1 << (3*imageOf(1))) |
         (2 << (3*imageOf(2))) |
         (3 << (3*imageOf(3))) |
@@ -625,10 +640,10 @@ inline int NPerm5::operator[](int source) const {
 }
 
 inline int NPerm5::preImageOf(int image) const {
-    if (( code       & 7) == static_cast<unsigned>(image)) return 0;
-    if (((code >> 3) & 7) == static_cast<unsigned>(image)) return 1;
-    if (((code >> 6) & 7) == static_cast<unsigned>(image)) return 2;
-    if (((code >> 9) & 7) == static_cast<unsigned>(image)) return 3;
+    if (( code       & 7) == static_cast<Code>(image)) return 0;
+    if (((code >> 3) & 7) == static_cast<Code>(image)) return 1;
+    if (((code >> 6) & 7) == static_cast<Code>(image)) return 2;
+    if (((code >> 9) & 7) == static_cast<Code>(image)) return 3;
     return 4;
 }
 

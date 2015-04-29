@@ -88,6 +88,12 @@ namespace regina {
 class REGINA_API NPerm4 {
     public:
         /**
+         * Indicates the native unsigned integer type used to store the
+         * internal permutation code.
+         */
+        typedef uint8_t Code;
+
+        /**
          * Contains all possible permutations of four elements.
          *
          * The permutations with even indices in the array are the even
@@ -228,7 +234,7 @@ class REGINA_API NPerm4 {
         };
 
     private:
-        unsigned char code_;
+        Code code_;
             /**< The internal code representing this permutation. */
 
     public:
@@ -315,7 +321,7 @@ class REGINA_API NPerm4 {
          *
          * @return the first-generation permutation code.
          */
-        unsigned char getPermCode() const;
+        Code getPermCode() const;
 
         /**
          * Returns the second-generation code representing this permutation.
@@ -329,7 +335,7 @@ class REGINA_API NPerm4 {
          *
          * @return the second-generation permutation code.
          */
-        unsigned char getPermCode2() const;
+        Code getPermCode2() const;
 
         /**
          * Sets this permutation to that represented by the given
@@ -345,7 +351,7 @@ class REGINA_API NPerm4 {
          * @param code the first-generation code that will determine the
          * new value of this permutation.
          */
-        void setPermCode(unsigned char code);
+        void setPermCode(Code code);
 
         /**
          * Sets this permutation to that represented by the given
@@ -360,7 +366,7 @@ class REGINA_API NPerm4 {
          * @param code the second-generation code that will determine the
          * new value of this permutation.
          */
-        void setPermCode2(unsigned char code);
+        void setPermCode2(Code code);
 
         /**
          * Creates a permutation from the given first-generation
@@ -376,7 +382,7 @@ class REGINA_API NPerm4 {
          * @param code the first-generation code for the new permutation.
          * @return the permutation represented by the given code.
          */
-        static NPerm4 fromPermCode(unsigned char code);
+        static NPerm4 fromPermCode(Code code);
 
         /**
          * Creates a permutation from the given second-generation
@@ -391,7 +397,7 @@ class REGINA_API NPerm4 {
          * @param code the second-generation code for the new permutation.
          * @return the permutation represented by the given code.
          */
-        static NPerm4 fromPermCode2(unsigned char code);
+        static NPerm4 fromPermCode2(Code code);
 
         /**
          * Determines whether the given character is a valid first-generation
@@ -406,7 +412,7 @@ class REGINA_API NPerm4 {
          * @return \c true if and only if the given code is a valid
          * first-generation permutation code.
          */
-        static bool isPermCode(unsigned char code);
+        static bool isPermCode(Code code);
 
         /**
          * Determines whether the given character is a valid second-generation
@@ -421,7 +427,7 @@ class REGINA_API NPerm4 {
          * @return \c true if and only if the given code is a valid
          * second-generation permutation code.
          */
-        static bool isPermCode2(unsigned char code);
+        static bool isPermCode2(Code code);
 
         /**
          * Sets this permutation to the transposition of
@@ -636,7 +642,7 @@ class REGINA_API NPerm4 {
          * Specifically, the image of \a x under the permutation <tt>S4[i]</tt>
          * is <tt>imageTable[i][x]</tt>.
          */
-        static const unsigned char imageTable[24][4];
+        static const Code imageTable[24][4];
 
         /**
          * Contains the full multiplication table for all possible
@@ -645,7 +651,7 @@ class REGINA_API NPerm4 {
          * Specifically, the product <tt>S4[x] * S4[y]</tt> is the
          * permutation <tt>S4[product[x][y]]</tt>.
          */
-        static const unsigned char productTable[24][24];
+        static const Code productTable[24][24];
 
         /**
          * Contains a full table of two-element swaps.
@@ -653,7 +659,7 @@ class REGINA_API NPerm4 {
          * Specifically, the permutation that swaps \a x and \a y is
          * <tt>S4[swapTable[x][y]]</tt>.  Here \a x and \a y may be equal.
          */
-        static const unsigned char swapTable[4][4];
+        static const Code swapTable[4][4];
 
     private:
         /**
@@ -666,7 +672,7 @@ class REGINA_API NPerm4 {
          * @param code the second-generation code from which the new
          * permutation will be created.
          */
-        NPerm4(unsigned char code);
+        NPerm4(Code code);
 
         /**
          * Returns the index into the NPerm4::S4 array of the permutation that
@@ -923,18 +929,18 @@ REGINA_API std::string edgeDescription(const NPerm4& edgePerm);
 inline NPerm4::NPerm4() : code_(0) {
 }
 
-inline NPerm4::NPerm4(unsigned char code) : code_(code) {
+inline NPerm4::NPerm4(Code code) : code_(code) {
 }
 
 inline NPerm4::NPerm4(int a, int b) : code_(swapTable[a][b]) {
 }
 
 inline NPerm4::NPerm4(int a, int b, int c, int d) :
-        code_(static_cast<unsigned char>(S4Index(a, b, c, d))) {
+        code_(static_cast<Code>(S4Index(a, b, c, d))) {
 }
 
 inline NPerm4::NPerm4(const int* image) :
-        code_(static_cast<unsigned char>(S4Index(
+        code_(static_cast<Code>(S4Index(
         image[0], image[1], image[2], image[3]))) {
 }
 
@@ -946,46 +952,46 @@ inline void NPerm4::setPerm(int a, int b) {
 }
 
 inline void NPerm4::setPerm(int a, int b, int c, int d) {
-    code_ = static_cast<unsigned char>(S4Index(a, b, c, d));
+    code_ = static_cast<Code>(S4Index(a, b, c, d));
 }
 
-inline unsigned char NPerm4::getPermCode() const {
-    return static_cast<unsigned char>(
+inline NPerm4::Code NPerm4::getPermCode() const {
+    return static_cast<Code>(
         imageTable[code_][0] |
         (imageTable[code_][1] << 2) |
         (imageTable[code_][2] << 4) |
         (imageTable[code_][3] << 6));
 }
 
-inline unsigned char NPerm4::getPermCode2() const {
+inline NPerm4::Code NPerm4::getPermCode2() const {
     return code_;
 }
 
-inline void NPerm4::setPermCode(unsigned char code) {
-    code_ = static_cast<unsigned char>(S4Index(
+inline void NPerm4::setPermCode(Code code) {
+    code_ = static_cast<Code>(S4Index(
         code & 0x03,
         (code >> 2) & 0x03,
         (code >> 4) & 0x03,
         (code >> 6) & 0x03));
 }
 
-inline void NPerm4::setPermCode2(unsigned char code) {
+inline void NPerm4::setPermCode2(Code code) {
     code_ = code;
 }
 
-inline NPerm4 NPerm4::fromPermCode(unsigned char code) {
-    return NPerm4(static_cast<unsigned char>(S4Index(
+inline NPerm4 NPerm4::fromPermCode(Code code) {
+    return NPerm4(static_cast<Code>(S4Index(
         code & 0x03,
         (code >> 2) & 0x03,
         (code >> 4) & 0x03,
         (code >> 6) & 0x03)));
 }
 
-inline NPerm4 NPerm4::fromPermCode2(unsigned char code) {
+inline NPerm4 NPerm4::fromPermCode2(Code code) {
     return NPerm4(code);
 }
 
-inline bool NPerm4::isPermCode2(unsigned char code) {
+inline bool NPerm4::isPermCode2(Code code) {
     // code >= 0 is automatic because we are using an unsigned data type.
     return (code < 24);
 }
@@ -1000,7 +1006,7 @@ inline NPerm4 NPerm4::operator *(const NPerm4& q) const {
 }
 
 inline NPerm4 NPerm4::inverse() const {
-    return NPerm4(static_cast<unsigned char>(invS4[code_]));
+    return NPerm4(static_cast<Code>(invS4[code_]));
 }
 
 inline int NPerm4::sign() const {

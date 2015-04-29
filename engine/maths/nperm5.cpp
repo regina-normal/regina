@@ -37,6 +37,8 @@
 
 namespace regina {
 
+const int NPerm5::imageBits;
+
 const NPerm5 NPerm5::S5[120] = {
     NPerm5(0,1,2,3,4), NPerm5(0,1,2,4,3), NPerm5(0,1,3,4,2), NPerm5(0,1,3,2,4),
     NPerm5(0,1,4,2,3), NPerm5(0,1,4,3,2), NPerm5(0,2,1,4,3), NPerm5(0,2,1,3,4),
@@ -158,7 +160,7 @@ const NPerm5 NPerm5::S2[2] = {
     NPerm5(0,1,2,3,4), NPerm5(1,0,2,3,4)
 };
 
-bool NPerm5::isPermCode(unsigned code) {
+bool NPerm5::isPermCode(Code code) {
     unsigned mask = 0;
     for (int i = 0; i < 5; i++)
         mask |= (1 << ((code >> (3 * i)) & 7));
