@@ -96,12 +96,18 @@ class REGINA_API NPerm {
         /**
          * The total number of permutations on \a n elements.
          * This is the size of the symmetric group <i>S<sub>n</sub></i>.
+         *
+         * \note The template specialisations for \a n &le; 5 use a
+         * plain int type, not int64_t.
          */
         static const int64_t nPerms;
 
         /**
          * The total number of permutations on <i>n</i>-1 elements.  This is
          * the size of the symmetric group <i>S</i><sub><i>n</i>-1</sub>.
+         *
+         * \note The template specialisations for \a n &le; 5 use a
+         * plain int type, not int64_t.
          */
         static const int64_t nPerms_1;
 
