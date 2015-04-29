@@ -75,7 +75,7 @@ namespace regina {
  * - For \a n &le; 4, the code is an index into a hard-coded list of
  *   all possible permutations (i.e., an index into the symmetric group
  *   <i>S<sub>n</sub></i>).  For details, see the documentation for
- *   the specialisations NPerm<2>, NPerm<3> and NPerm<4> respectively.
+ *   the specialisations NPerm<3> and NPerm<4> respectively.
  *
  * For \a n = 3, 4 and 5, this class offers some additional functionality,
  * and is made available under the typedefs NPerm3, NPerm4 and NPerm5
@@ -83,10 +83,10 @@ namespace regina {
  * and manipulating 2-, 3- and 4-manifold triangulations.
  *
  * \ifacespython The various instantiations of this template class are
- * available in Python under the hard-coded names NPerm2, NPerm3, ..., NPerm16.
+ * available in Python under the hard-coded names NPerm3, NPerm4, ..., NPerm16.
  *
  * @tparam n the number of objects being permuted.
- * This must be between 2 and 16 inclusive.
+ * This must be between 3 and 16 inclusive.
  */
 template <int n>
 class REGINA_API NPerm {
@@ -393,7 +393,7 @@ class REGINA_API NPerm {
  * @return a reference to \a out.
  *
  * @tparam n the number of objects being permuted.
- * This must be between 2 and 16 inclusive.
+ * This must be between 3 and 16 inclusive.
  */
 template <int n>
 inline REGINA_API std::ostream& operator << (std::ostream& out,
