@@ -379,8 +379,6 @@ class REGINA_API NPerm {
          * will be created.
          */
         NPerm(Code code);
-
-    friend std::ostream& operator << (std::ostream& out, const NPerm& p);
 };
 
 /**

@@ -518,28 +518,12 @@ class REGINA_API NPerm<3> {
          * permutation will be created.
          */
         NPerm<3>(Code code);
-
-    friend std::ostream& operator << (std::ostream& out, const NPerm<3>& p);
 };
 
 /**
  * A convenience typedef for NPerm<3>.
  */
 typedef NPerm<3> NPerm3;
-
-/**
- * Writes a string representation of the given permutation to the given
- * output stream.  The format will be the same as is used by
- * NPerm<3>::str().
- *
- * @param out the output stream to which to write.
- * @param p the permutation to write.
- * @return a reference to \a out.
- */
-inline REGINA_API std::ostream& operator << (std::ostream& out,
-        const NPerm<3>& p) {
-    return (out << p.str());
-}
 
 /*@}*/
 

@@ -570,23 +570,7 @@ class REGINA_API NPerm<5> {
          * @return the image of \a source.
          */
         int imageOf(int source) const;
-
-    friend std::ostream& operator << (std::ostream& out, const NPerm<5>& p);
 };
-
-/**
- * Writes a string representation of the given permutation to the given
- * output stream.  The format will be the same as is used by
- * NPerm<5>::str().
- *
- * @param out the output stream to which to write.
- * @param p the permutation to write.
- * @return a reference to \a out.
- */
-inline REGINA_API std::ostream& operator << (std::ostream& out,
-        const NPerm<5>& p) {
-    return (out << p.str());
-}
 
 /**
  * A convenience typedef for NPerm<5>.
