@@ -53,7 +53,7 @@ namespace regina {
  */
 
 constexpr int permImageBits(int n) {
-    return (n <= 1 ? 0 : 1 + permBits((n + 1) / 2));
+    return (n <= 1 ? 0 : 1 + permImageBits((n + 1) / 2));
 }
 
 constexpr int permImageMask(int n) {
@@ -100,7 +100,7 @@ struct REGINA_API NPermCodePacked {
      *
      * \ifacespython Not present.
      */
-    typedef typename IntOfMinSize<permImageBits(n) * n>::utype Code;
+    typedef typename IntOfMinSize<(permImageBits(n) * n + 7) / 8>::utype Code;
 };
 
 /**
