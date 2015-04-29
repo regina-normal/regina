@@ -85,6 +85,22 @@ const NPerm3::Code NPerm3::productTable[6][6] = {
     { 5, 4, 3, 2, 1, 0 }
 };
 
+NPerm3::NPerm3(const int* a, const int* b) {
+    int image[3];
+    image[a[0]] = b[0];
+    image[a[1]] = b[1];
+    image[a[2]] = b[2];
+
+    switch (image[0]) {
+        case 0:
+            code_ = static_cast<Code>(image[1] == 1 ? 0 : 1); break;
+        case 1:
+            code_ = static_cast<Code>(image[1] == 2 ? 2 : 3); break;
+        case 2:
+            code_ = static_cast<Code>(image[1] == 0 ? 4 : 5); break;
+    }
+}
+
 std::string NPerm3::str() const {
     char ans[4];
     ans[0] = static_cast<char>('0' + imageTable[code_][0]);

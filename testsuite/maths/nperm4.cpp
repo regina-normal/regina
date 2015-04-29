@@ -175,14 +175,27 @@ class NPerm4Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            int arr[4];
-            arr[0] = a; arr[1] = b; arr[2] = c; arr[3] = d;
-            NPerm4 parr(arr);
-            if (! looksEqual(parr, p, name.str())) {
-                std::ostringstream msg;
-                msg << "The array constructor fails for "
-                    "the permutation " << name.str() << ".";
-                CPPUNIT_FAIL(msg.str());
+            {
+                int arr[4] = { a, b, c, d };
+                NPerm4 parr(arr);
+                if (! looksEqual(parr, p, name.str())) {
+                    std::ostringstream msg;
+                    msg << "The array constructor fails for "
+                        "the permutation " << name.str() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            {
+                int arrA[4] = { 1, 3, 2, 0 };
+                int arrB[4] = { b, d, c, a };
+                NPerm4 parr2(arrA, arrB);
+                if (! looksEqual(parr2, p, name.str())) {
+                    std::ostringstream msg;
+                    msg << "The two-array constructor fails for "
+                        "the permutation " << name.str() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
             }
 
             NPerm4 p3(p);

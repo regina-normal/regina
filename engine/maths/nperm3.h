@@ -249,6 +249,21 @@ class REGINA_API NPerm3 {
         NPerm3(const int* image);
 
         /**
+         * Creates a permutation mapping (\a a[0], ..., \a a[2]) to
+         * (\a b[0], ..., \a b[2]) respectively.
+         *
+         * \pre Both arrays \a a and \a b contain 3 elements, which
+         * are 0,...,2 in some order.
+         *
+         * \ifacespython Not present.
+         *
+         * @param a the array of preimages; this must have length 3.
+         * @param b the corresponding array of images; this must also have
+         * length 3.
+         */
+        NPerm3(const int* a, const int* b);
+
+        /**
          * Creates a permutation that is a clone of the given
          * permutation.
          *

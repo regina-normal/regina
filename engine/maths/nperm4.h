@@ -275,6 +275,21 @@ class REGINA_API NPerm4 {
         NPerm4(const int* image);
 
         /**
+         * Creates a permutation mapping (\a a[0], ..., \a a[3]) to
+         * (\a b[0], ..., \a b[3]) respectively.
+         *
+         * \pre Both arrays \a a and \a b contain 4 elements, which
+         * are 0,...,3 in some order.
+         *
+         * \ifacespython Not present.
+         *
+         * @param a the array of preimages; this must have length 4.
+         * @param b the corresponding array of images; this must also have
+         * length 4.
+         */
+        NPerm4(const int* a, const int* b);
+
+        /**
          * Creates a permutation mapping
          * (<i>a0</i>,<i>b0</i>,<i>c0</i>,<i>d0</i>) to
          * (<i>a1</i>,<i>b1</i>,<i>c1</i>,<i>d1</i>) respectively.
