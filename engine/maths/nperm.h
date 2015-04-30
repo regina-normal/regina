@@ -601,7 +601,7 @@ NPerm<n> NPerm<n>::atIndex(Index i) {
         image[n - p - 1] = i % (p + 1);
         i /= (p + 1);
     }
-    for (p = 0; p < n; ++p)
+    for (p = n - 1; p >= 0; --p)
         for (q = p + 1; q < n; ++q)
             if (image[q] >= image[p])
                 ++image[q];
