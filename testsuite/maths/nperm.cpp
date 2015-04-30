@@ -128,9 +128,10 @@ class NPermTest : public CppUnit::TestFixture {
             return ((reorderings % 2 == 0) ? 1 : -1);
         }
 
-        void testPerm(const NPerm& p) {
+        void testPerm(const NPerm& p, bool isIdentity, bool isReverse) {
             std::ostringstream name;
-            for (int i = 0; i < n; ++i)
+            int i;
+            for (i = 0; i < n; ++i)
                 name << (p[i] < 10 ? char('0' + p[i]) : char('a' + p[i] - 10));
 
             NPerm p1 = NPerm::fromPermCode(p.getPermCode());
@@ -141,9 +142,10 @@ class NPermTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            /** TODO
             {
-                int arr[5] = { a, b, c, d, e };
+                int arr[n];
+                for (i = 0; i < n; ++i)
+                    arr[i] = p[i];
                 NPerm parr(arr);
                 if (! looksEqual(parr, p, name.str())) {
                     std::ostringstream msg;
@@ -154,8 +156,11 @@ class NPermTest : public CppUnit::TestFixture {
             }
 
             {
-                int arrA[5] = { 2, 3, 0, 4, 1 };
-                int arrB[5] = { c, d, a, e, b };
+                int arrA[n], arrB[n];
+                for (i = 0; i < n; ++i) {
+                    arrA[i] = (i + 2) % n;
+                    arrB[i] = p[(i + 2) % n];
+                }
                 NPerm parr2(arrA, arrB);
                 if (! looksEqual(parr2, p, name.str())) {
                     std::ostringstream msg;
@@ -164,7 +169,6 @@ class NPermTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
             }
-            */
 
             NPerm p3(p);
             if (! looksEqual(p3, p, name.str())) {
@@ -174,8 +178,13 @@ class NPermTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NPerm p4(0, n-1);
-            // TODO: Check that these are distinct.
+            NPerm p4 = p * NPerm(0, n-1);
+            if (! looksDistinct(p4, p)) {
+                std::ostringstream msg;
+                msg << "Permutation " << name.str()
+                    << " is unchanged after a right pair swap.";
+                CPPUNIT_FAIL(msg.str());
+            }
             p4 = p;
             if (! looksEqual(p4, p, name.str())) {
                 std::ostringstream msg;
@@ -184,8 +193,13 @@ class NPermTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NPerm p5(0, n-1);
-            // TODO: Check that these are distinct.
+            NPerm p5 = NPerm(0, n-1) * p;
+            if (! looksDistinct(p5, p)) {
+                std::ostringstream msg;
+                msg << "Permutation " << name.str()
+                    << " is unchanged after a left pair swap.";
+                CPPUNIT_FAIL(msg.str());
+            }
             p5.setPermCode(p3.getPermCode());
             if (! looksEqual(p5, p, name.str())) {
                 std::ostringstream msg;
@@ -219,36 +233,19 @@ class NPermTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            /**
-             TODO
-            if (! looksEqual(p * NPerm(0, 1), NPerm(b, a, c, d, e))) {
-                std::ostringstream msg;
-                msg << "Multiplying permutation " << name.str()
-                    << " by (0 <--> 1) does not give the expected result.";
-                CPPUNIT_FAIL(msg.str());
+            for (int from = 0; from < n - 1; ++from) {
+                int image[n];
+                for (int i = 0; i < n; ++i)
+                    image[i] = p[i];
+                std::swap(image[from], image[from + 1]);
+                if (! looksEqual(p * NPerm(from, from + 1), NPerm(image))) {
+                    std::ostringstream msg;
+                    msg << "Multiplying permutation " << name.str()
+                        << " by (" << from << " <--> " << (from + 1)
+                        << ") does not give the expected result.";
+                    CPPUNIT_FAIL(msg.str());
+                }
             }
-
-            if (! looksEqual(p * NPerm(1, 2), NPerm(a, c, b, d, e))) {
-                std::ostringstream msg;
-                msg << "Multiplying permutation " << name.str()
-                    << " by (1 <--> 2) does not give the expected result.";
-                CPPUNIT_FAIL(msg.str());
-            }
-
-            if (! looksEqual(p * NPerm(2, 3), NPerm(a, b, d, c, e))) {
-                std::ostringstream msg;
-                msg << "Multiplying permutation " << name.str()
-                    << " by (2 <--> 3) does not give the expected result.";
-                CPPUNIT_FAIL(msg.str());
-            }
-
-            if (! looksEqual(p * NPerm(3, 4), NPerm(a, b, c, e, d))) {
-                std::ostringstream msg;
-                msg << "Multiplying permutation " << name.str()
-                    << " by (3 <--> 4) does not give the expected result.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            */
 
             if (! looksLikeIdentity(p * p.inverse())) {
                 std::ostringstream msg;
@@ -264,17 +261,14 @@ class NPermTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
  
-            /**
-             TODO
             NPerm inv = p.inverse();
-            if (inv[a] != 0 || inv[b] != 1 || inv[c] != 2 ||
-                    inv[d] != 3 || inv[e] != 4) {
-                std::ostringstream msg;
-                msg << "The inverse of permutation " << name.str()
-                    << " does not appear to be correct.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            */
+            for (i = 0; i < n; ++i)
+                if (inv[p[i]] != i) {
+                    std::ostringstream msg;
+                    msg << "The inverse of permutation " << name.str()
+                        << " does not appear to be correct.";
+                    CPPUNIT_FAIL(msg.str());
+                }
 
             if (p.sign() != expectedSign(p)) {
                 // Bah.  Just call expectedSign() again.
@@ -284,18 +278,15 @@ class NPermTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            /**
-             TODO
-            if (p.preImageOf(a) != 0 || p.preImageOf(b) != 1 ||
-                    p.preImageOf(c) != 2 || p.preImageOf(d) != 3 ||
-                    p.preImageOf(e) != 4) {
-                std::ostringstream msg;
-                msg << "The element preimages for permutation " << name.str()
-                    << " do not appear to be correct.";
-                CPPUNIT_FAIL(msg.str());
-            }
+            for (i = 0; i < n; ++i)
+                if (p.preImageOf(p[i]) != i) {
+                    std::ostringstream msg;
+                    msg << "The element preimages for permutation "
+                        << name.str() << " do not appear to be correct.";
+                    CPPUNIT_FAIL(msg.str());
+                }
 
-            if (a != 0 || b != 1 || c != 2 || d != 3 || e != 4) {
+            if (! isIdentity) {
                 NPerm id;
                 if (p.compareWith(id) != 1 || id.compareWith(p) != -1) {
                     std::ostringstream msg;
@@ -313,8 +304,11 @@ class NPermTest : public CppUnit::TestFixture {
                 }
             }
 
-            if (a != 4 || b != 3 || c != 2 || d != 1 || e != 0) {
-                NPerm last(4, 3, 2, 1, 0);
+            if (! isReverse) {
+                int image[n];
+                for (i = 0; i < n; ++i)
+                    image[n - i - 1] = i;
+                NPerm last(image);
                 if (p.compareWith(last) != -1 || last.compareWith(p) != 1) {
                     std::ostringstream msg;
                     msg << "Permutation " << name.str()
@@ -323,7 +317,6 @@ class NPermTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
             }
-            */
 
             if (p.compareWith(p) != 0) {
                 std::ostringstream msg;
@@ -359,7 +352,7 @@ class NPermTest : public CppUnit::TestFixture {
 
             // Test all possible permutations.
             for (Index i = 0; i < nIdx; ++i)
-                testPerm(NPerm::atIndex(idx[i]));
+                testPerm(NPerm::atIndex(idx[i]), i == 0, i == nIdx - 1);
         }
 
         void products() {
