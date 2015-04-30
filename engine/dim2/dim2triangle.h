@@ -78,7 +78,9 @@ class Dim2Triangulation;
  * Dim2Triangulation::removeAllTriangles(); these routines will
  * automatically destroy the triangles as they are removed.
  */
-class REGINA_API Dim2Triangle : public ShareableObject, public SimplexBase<2> {
+class REGINA_API Dim2Triangle :
+        public ShareableObject,
+        public SimplexBase<2, true> {
     private:
         Dim2Vertex* vertex_[3];
             /**< Vertices in the triangulation skeleton that are
@@ -306,19 +308,19 @@ inline int Dim2Triangle::orientation() const {
 }
 
 inline void Dim2Triangle::writeTextShort(std::ostream& out) const {
-    SimplexBase<2>::str(out);
+    SimplexBase<2, true>::str(out);
 }
 
 inline void Dim2Triangle::writeTextLong(std::ostream& out) const {
-    SimplexBase<2>::detail(out);
+    SimplexBase<2, true>::detail(out);
 }
 
 inline Dim2Triangle::Dim2Triangle(Dim2Triangulation* tri) :
-        SimplexBase<2>(tri) {
+        SimplexBase<2, true>(tri) {
 }
 
 inline Dim2Triangle::Dim2Triangle(const std::string& desc,
-        Dim2Triangulation* tri) : SimplexBase<2>(desc, tri) {
+        Dim2Triangulation* tri) : SimplexBase<2, true>(desc, tri) {
 }
 
 } // namespace regina
