@@ -626,8 +626,20 @@ NPerm<n> NPerm<n>::atIndex(Index i) {
 
 template <int n>
 typename NPerm<n>::Index NPerm<n>::index() const {
-    // TODO
-    return 0;
+    int image[n];
+    int p, q;
+    for (p = 0; p < n; ++p)
+        image[p] = (*this)[p];
+    for (p = 0; p < n; ++p)
+        for (q = p + 1; q < n; ++q)
+            if (image[q] > image[p])
+                --image[q];
+    Index ans = 0;
+    for (p = 0; p < n - 1; ++p) {
+        ans *= (n - p);
+        ans += image[p];
+    }
+    return ans;
 }
 
 template <int n>

@@ -67,6 +67,7 @@ void addNPerm(const char* name) {
         .def("compareWith", &NPerm<n>::compareWith)
         .def("isIdentity", &NPerm<n>::isIdentity)
         .def("atIndex", &NPerm<n>::atIndex)
+        .def("index", &NPerm<n>::index)
         .def("str", &NPerm<n>::str)
         .def("trunc", &NPerm<n>::trunc)
         .def("__str__", &NPerm<n>::str)
