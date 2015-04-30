@@ -454,6 +454,12 @@ class REGINA_API NTreeBag :
          */
         bool isLeaf() const;
 
+        /**
+         * Writes a short string representation of this object to the
+         * given output stream.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
 
     private:
@@ -580,7 +586,7 @@ class REGINA_API NTreeBag :
  * contain no bags at all.
  */
 class REGINA_API NTreeDecomposition :
-        public DetailedOutput<NTreeDecomposition>,
+        public Output<NTreeDecomposition>,
         public boost::noncopyable {
     protected:
         /**
@@ -840,7 +846,20 @@ class REGINA_API NTreeDecomposition :
          */
         void makeNice();
 
+        /**
+         * Writes a short string representation of this object to the
+         * given output stream.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+
+        /**
+         * Writes a detailed string representation of this object to the
+         * given output stream.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 
     private:

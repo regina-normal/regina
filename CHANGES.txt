@@ -102,6 +102,17 @@ Version 4.97  [ (under development) ]
         Class NVertex:
             - Added a new LinkType enumeration, which encapsulates (and
               replaces) the old link type constants.
+        Class Output, ShortOutput:
+            - New classes that provide consistent APIs for objects to provide
+              short and detailed string output.  This may be used as a
+              lightweight replacement for ShareableObject, and eventually
+              it will replace ShareableObject completely.
+        Class ShareableObject:
+            - This is no longer a mandatory base class for objects that
+              are mirrored in external interfaces.  Ultimately, the plan
+              is to remove ShareableObject entirely.
+            - The old string output routines are now provided by the Output
+              template class, which is now a base class for ShareableObject.
         Routine open():
             - Added a variant that takes an input stream (as opposed to
               a filename).

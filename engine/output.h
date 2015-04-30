@@ -33,7 +33,7 @@
 /* end stub */
 
 /*! \file output.h
- *  \brief Provides a common interface for string output.
+ *  \brief Provides a common interface for human-readable text output.
  */
 
 #ifndef __OUTPUT_H
@@ -54,60 +54,63 @@ namespace regina {
  */
 
 /**
- * A common base class for objects that write string output.
+ * A common base class for objects that write human-readable text output.
+ * This class ensures that text output routines have consistent
+ * names and behaviours across Regina's entire API.
+ *
  * Two types of output are supported: \e short output, which fits on a
  * single line; and \e detailed output, which may be arbitrarily long.
  *
- * Any class that provides string output should ultimately inherit from
- * this base class.  This ensures that all string output routines have
- * common signatures across Regina's API.  Your must provide two
- * functions, each of which takes a single std::ostream& argument:
+ * Any class that provides text output should ultimately inherit from
+ * this base class.  Your derived class must provide two functions,
+ * each of which takes a single std::ostream& argument:
  *
  * - \a writeTextShort(out), which writes the short output to the given
  * output stream;
  *
- * - \a writeTextLong(out), which writes the long output to the given
+ * - \a writeTextLong(out), which writes the detailed output to the given
  * output stream.
  *
- * In return, this class will provide the routines str() and detail(),
- * which return the short and long output respectively in string format.
- *
- * See the documentation for str() and detail() for guidelines as to how
+ * The documentation for str() and detail() gives guidelines as to how
  * this output should be formatted.
  *
- * If your class is simple and has no need for detailed output, it may
- * derive from ShortOutput instead, which will provide a default
+ * In return, this class will provide the functions str() and detail(),
+ * which return these short and detailed outputs respectively in
+ * std::string format.
+ *
+ * If your class is simple and has no need for detailed output then it may
+ * derive from ShortOutput instead, which provides a default
  * implementation for \a writeTextLong().
  *
  * \tparam T the class that provides the implementations of
  * \a writeTextShort() and \a writeTextLong().  Typically this will be
- * your class (that is, your class \a C will typically derive from
- * DetailedOutput<C>).  However, in some cases this may deeper in the
- * class hierarchy.
+ * your own class (i.e., your class \a C derives from Output<C>).
+ * However, this may be deeper in the class hierarchy.
  *
- * \ifacespython Not present; the output routines str() and detail() will be
- * provided directly through the various subclasses.
+ * \ifacespython Not present, but the output routines str() and detail() will
+ * be provided directly through the various subclasses.
  */
 template <class T>
-struct REGINA_API DetailedOutput {
+struct REGINA_API Output {
     public:
         /**
-         * Returns a short string representation of this object.
-         * This string should be human-readable, should fit on a single line,
+         * Returns a short text representation of this object.
+         * This text should be human-readable, should fit on a single line,
          * and should not end with a newline.
          *
-         * \ifacespython In addition to str(), this is also provided as the
+         * \ifacespython In addition to str(), this is also used as the
          * Python "stringification" function <tt>__str__()</tt>.
          *
          * @return a short text representation of this object.
          */
         std::string str() const;
         /**
-         * Returns a detailed string representation of this object.
-         * This string should provide the user with all the information they
-         * could want.  It should be human-readable, should not contain
-         * extremely long lines (which cause problems for users reading
-         * the output in a terminal), and should end with a final newline.
+         * Returns a detailed text representation of this object.
+         * This text may span many lines, and should provide the user
+         * with all the information they could want.  It should be
+         * human-readable, should not contain extremely long lines
+         * (which cause problems for users reading the output in a terminal),
+         * and should end with a final newline.
          *
          * @return a detailed text representation of this object.
          */
@@ -133,12 +136,12 @@ struct REGINA_API DetailedOutput {
 };
 
 /**
- * A common base class for objects that provide short output only.
+ * A common base class for objects that provide short text output only.
  *
- * All classes that provide string output should ultimately inherit from
- * DetailedOutput, which provides support for both short output and
- * detailed output.  However, if your class is simple and has no need
- * for detailed output, then you may inherit from ShortOutput instead.
+ * All classes that provide human-readable text output should ultimately
+ * inherit from Output, which provides support for both short output and
+ * detailed output.  However, if your class is simple and has no need for
+ * detailed output, then you may inherit from ShortOutput instead.
  *
  * You must provide a single function \a writeTextShort(out), which
  * takes a single std::ostream& argument, and which writes the short
@@ -149,19 +152,18 @@ struct REGINA_API DetailedOutput {
  * only difference is that detail() will include a final newline,
  * whereas str() will not.
  *
- * See the documentation for DetailedOutput::str() for further guidelines
+ * See the documentation for Output::str() for further guidelines
  * as to how this output should be formatted.
  *
  * \tparam T the class that provides the implementation of \a writeTextShort().
- * Typically this will be your class (that is, your class \a C will typically
- * derive from DetailedOutput<C>).  However, in some cases this may deeper
- * in the class hierarchy.
+ * Typically this will be your own class (i.e., your class \a C derives from
+ * ShortOutput<C>).  However, this may be deeper in the class hierarchy.
  *
- * \ifacespython Not present; the output routines str() and detail() will be
- * provided directly through the various subclasses.
+ * \ifacespython Not present, but the output routines str() and detail() will
+ * be provided directly through the various subclasses.
  */
 template <class T>
-struct REGINA_API ShortOutput : public DetailedOutput<T> {
+struct REGINA_API ShortOutput : public Output<T> {
     /**
      * A default implementation for detailed output.
      * This routine simply calls \a T::writeTextShort() and appends
@@ -179,26 +181,26 @@ struct REGINA_API ShortOutput : public DetailedOutput<T> {
 // Inline functions
 
 template <class T>
-inline std::string DetailedOutput<T>::str() const {
+inline std::string Output<T>::str() const {
     std::ostringstream out;
     static_cast<const T*>(this)->writeTextShort(out);
     return out.str();
 }
 
 template <class T>
-inline std::string DetailedOutput<T>::detail() const {
+inline std::string Output<T>::detail() const {
     std::ostringstream out;
     static_cast<const T*>(this)->writeTextLong(out);
     return out.str();
 }
 
 template <class T>
-inline std::string DetailedOutput<T>::toString() const {
+inline std::string Output<T>::toString() const {
     return str();
 }
 
 template <class T>
-inline std::string DetailedOutput<T>::toStringLong() const {
+inline std::string Output<T>::toStringLong() const {
     return detail();
 }
 
