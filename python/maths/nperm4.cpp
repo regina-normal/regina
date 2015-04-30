@@ -114,6 +114,7 @@ void addNPerm4() {
             .def("compareWith", &NPerm4::compareWith)
             .def("isIdentity", &NPerm4::isIdentity)
             .def("atIndex", &NPerm4::atIndex)
+            .def("index", &NPerm4::index)
             .def("toString", &NPerm4::toString)
             .def("str", &NPerm4::str)
             .def("trunc", &NPerm4::trunc)

@@ -360,6 +360,22 @@ class REGINA_API NPerm {
         static NPerm atIndex(Index i);
 
         /**
+         * Returns the lexicographical index of this permutation.  This
+         * indicates where this permutation sits within a full lexicographical
+         * ordering of all <i>n</i>! permutations on \a n elements.
+         *
+         * Lexicographical ordering treats each permutation \a p as the
+         * <i>n</i>-tuple (\a p[0], \a p[1], ..., \a p[<i>n</i>-1]).
+         * In particular, the identity permutation has index 0, and the
+         * "reverse" permutation (which maps each \a i to <i>n</i>-<i>i</i>-1)
+         * has index <i>n</i>!-1.
+         *
+         * @return the index of this permutation, which will be between
+         * 0 and <i>n</i>!-1 inclusive.
+         */
+        Index index() const;
+
+        /**
          * Returns a string representation of this permutation.
          * The representation will consist of \a n adjacent digits
          * representing the images of 0,...,<i>n</i>-1 respectively.
@@ -606,6 +622,12 @@ NPerm<n> NPerm<n>::atIndex(Index i) {
             if (image[q] >= image[p])
                 ++image[q];
     return NPerm<n>(image);
+}
+
+template <int n>
+typename NPerm<n>::Index NPerm<n>::index() const {
+    // TODO
+    return 0;
 }
 
 template <int n>

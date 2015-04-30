@@ -78,6 +78,7 @@ void addNPerm5() {
         .def("compareWith", &NPerm5::compareWith)
         .def("isIdentity", &NPerm5::isIdentity)
         .def("atIndex", &NPerm5::atIndex)
+        .def("index", &NPerm5::index)
         .def("toString", &NPerm5::toString)
         .def("str", &NPerm5::str)
         .def("trunc", &NPerm5::trunc)

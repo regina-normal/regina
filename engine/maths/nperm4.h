@@ -585,7 +585,7 @@ class REGINA_API NPerm<4> {
          * permutations are numbered lexicographically beginning at 0.
          *
          * Lexicographical ordering treats each permutation \a p as the
-         * <i>n</i>-tuple (\a p[0], \a p[1], \a p[2], \a p[3]).
+         * 4-tuple (\a p[0], \a p[1], \a p[2], \a p[3]).
          *
          * The return value will be identical to orderedS4[\a i].
          *
@@ -594,6 +594,24 @@ class REGINA_API NPerm<4> {
          * @return the <i>i</i>th permutation.
          */
         static NPerm atIndex(Index i);
+
+        /**
+         * Returns the lexicographical index of this permutation.  This
+         * indicates where this permutation sits within a full lexicographical
+         * ordering of all 4! permutations on four elements.
+         *
+         * Lexicographical ordering treats each permutation \a p as the
+         * 4-tuple (\a p[0], \a p[1], \a p[2], \a p[3]).
+         * In particular, the identity permutation has index 0, and the
+         * "reverse" permutation (which maps each \a i to 3-<i>i</i>)
+         * has index 23 = 4!-1.
+         *
+         * This routine is identical to orderedS4Index().
+         *
+         * @return the index of this permutation, which will be between
+         * 0 and 23 inclusive.
+         */
+        Index index() const;
 
         /**
          * A deprecated alias for str(), which returns a string representation
@@ -1069,6 +1087,10 @@ inline bool NPerm<4>::isIdentity() const {
 
 inline NPerm<4> NPerm<4>::atIndex(Index i) {
     return orderedS4[i];
+}
+
+inline NPerm<4>::Index NPerm<4>::index() const {
+    return orderedS4Index();
 }
 
 inline std::string NPerm<4>::toString() const {

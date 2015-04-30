@@ -465,7 +465,7 @@ class REGINA_API NPerm<5> {
          * permutations are numbered lexicographically beginning at 0.
          *
          * Lexicographical ordering treats each permutation \a p as the
-         * <i>n</i>-tuple (\a p[0], \a p[1], \a p[2], \a p[3], \a p[4]).
+         * 5-tuple (\a p[0], \a p[1], \a p[2], \a p[3], \a p[4]).
          *
          * The return value will be identical to orderedS5[\a i].
          *
@@ -474,6 +474,24 @@ class REGINA_API NPerm<5> {
          * @return the <i>i</i>th permutation.
          */
         static NPerm atIndex(Index i);
+
+        /**
+         * Returns the lexicographical index of this permutation.  This
+         * indicates where this permutation sits within a full lexicographical
+         * ordering of all 5! permutations on five elements.
+         *
+         * Lexicographical ordering treats each permutation \a p as the
+         * 5-tuple (\a p[0], \a p[1], \a p[2], \a p[3], \a p[4]).
+         * In particular, the identity permutation has index 0, and the
+         * "reverse" permutation (which maps each \a i to 4-<i>i</i>)
+         * has index 119 = 5!-1.
+         *
+         * This routine is identical to orderedS5Index().
+         *
+         * @return the index of this permutation, which will be between
+         * 0 and 119 inclusive.
+         */
+        Index index() const;
 
         /**
          * A deprecated alias for str(), which returns a string representation
@@ -707,6 +725,10 @@ inline bool NPerm<5>::isIdentity() const {
 
 inline NPerm<5> NPerm<5>::atIndex(Index i) {
     return orderedS5[i];
+}
+
+inline NPerm<5>::Index NPerm<5>::index() const {
+    return orderedS5Index();
 }
 
 inline int NPerm<5>::imageOf(int source) const {

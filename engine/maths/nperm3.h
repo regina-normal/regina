@@ -426,7 +426,7 @@ class REGINA_API NPerm<3> {
          * permutations are numbered lexicographically beginning at 0.
          *
          * Lexicographical ordering treats each permutation \a p as the
-         * <i>n</i>-tuple (\a p[0], \a p[1], \a p[2]).
+         * 3-tuple (\a p[0], \a p[1], \a p[2]).
          *
          * The return value will be identical to orderedS3[\a i].
          *
@@ -435,6 +435,24 @@ class REGINA_API NPerm<3> {
          * @return the <i>i</i>th permutation.
          */
         static NPerm atIndex(Index i);
+
+        /**
+         * Returns the lexicographical index of this permutation.  This
+         * indicates where this permutation sits within a full lexicographical
+         * ordering of all 3! permutations on three elements.
+         *
+         * Lexicographical ordering treats each permutation \a p as the
+         * 3-tuple (\a p[0], \a p[1], \a p[2]).
+         * In particular, the identity permutation has index 0, and the
+         * "reverse" permutation (which maps each \a i to 2-<i>i</i>)
+         * has index 5 = 3!-1.
+         *
+         * This routine is identical to orderedS3Index().
+         *
+         * @return the index of this permutation, which will be between
+         * 0 and 5 inclusive.
+         */
+        Index index() const;
 
         /**
          * A deprecated alias for str(), which returns a string representation
@@ -661,6 +679,10 @@ inline bool NPerm<3>::isIdentity() const {
 
 inline NPerm<3> NPerm<3>::atIndex(Index i) {
     return orderedS3[i];
+}
+
+inline NPerm<3>::Index NPerm<3>::index() const {
+    return orderedS3Index();
 }
 
 inline std::string NPerm<3>::toString() const {

@@ -75,7 +75,8 @@ Version 4.97  [ (under development) ]
             - These are now specialisations NPerm<3>, NPerm<4> and NPerm<5>.
               The old names NPerm3, NPerm4 and NPerm5 remain as typedefs.
             - Added a Code typedef for internal permutation codes.
-            - New routine atIndex() for consistency with the new NPerm template.
+            - New routines atIndex() and index(), for consistency with the
+              new NPerm template.
             - Added an Image typedef for use with index() and atIndex().
             - Added imageBits const for NPerm5, in line with the new
               generic NPerm template.
