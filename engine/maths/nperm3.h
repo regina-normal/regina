@@ -458,16 +458,6 @@ class REGINA_API NPerm<3> {
         Index index() const;
 
         /**
-         * A deprecated alias for str(), which returns a string representation
-         * of this permutation.
-         *
-         * \deprecated This routine has (at long last) been deprecated;
-         * use the simpler-to-type str() instead.
-         *
-         * @return a string representation of this permutation.
-         */
-        std::string toString() const;
-        /**
          * Returns a string representation of this permutation.
          * The representation will consist of three adjacent digits
          * representing the images of 0, 1 and 2 respectively.  An
@@ -686,10 +676,6 @@ inline NPerm<3> NPerm<3>::atIndex(Index i) {
 
 inline NPerm<3>::Index NPerm<3>::index() const {
     return orderedS3Index();
-}
-
-inline std::string NPerm<3>::toString() const {
-    return str();
 }
 
 inline int NPerm<3>::S3Index() const {

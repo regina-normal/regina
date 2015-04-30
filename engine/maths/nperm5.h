@@ -500,16 +500,6 @@ class REGINA_API NPerm<5> {
         Index index() const;
 
         /**
-         * A deprecated alias for str(), which returns a string representation
-         * of this permutation.
-         *
-         * \deprecated This routine has (at long last) been deprecated;
-         * use the simpler-to-type str() instead.
-         *
-         * @return a string representation of this permutation.
-         */
-        std::string toString() const;
-        /**
          * Returns a string representation of this permutation.
          * The representation will consist of five adjacent digits
          * representing the images of 0, 1, 2, 3 and 4 respectively.
@@ -719,10 +709,6 @@ inline bool NPerm<5>::operator == (const NPerm<5>& other) const {
 
 inline bool NPerm<5>::operator != (const NPerm<5>& other) const {
     return (code != other.code);
-}
-
-inline std::string NPerm<5>::toString() const {
-    return str();
 }
 
 inline bool NPerm<5>::isIdentity() const {

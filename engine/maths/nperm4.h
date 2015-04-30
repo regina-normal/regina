@@ -197,18 +197,6 @@ class REGINA_API NPerm<4> {
         static const NPerm<4>* Sn_1;
 
         /**
-         * Contains the inverses of the permutations in the array \a S3.
-         *
-         * Specifically, the inverse of permutation <tt>S3[i]</tt> is
-         * the permutation <tt>S3[ invS3[i] ]</tt>.
-         *
-         * \deprecated This is identical to the array NPerm3::invS3.
-         * This unnecessary copy in NPerm<4> will be removed in some
-         * future version of Regina.
-         */
-        static const unsigned invS3[6];
-
-        /**
          * Contains all possible permutations of three elements in
          * lexicographical order.  In each permutation, 3 maps to 3.
          */
@@ -229,18 +217,6 @@ class REGINA_API NPerm<4> {
          * Note that these permutations are already in lexicographical order.
          */
         static const NPerm<4> S2[2];
-
-        /**
-         * Contains the inverses of the permutations in the array \a S2.
-         *
-         * Specifically, the inverse of permutation <tt>S2[i]</tt> is
-         * the permutation <tt>S2[ invS2[i] ]</tt>.
-         *
-         * \deprecated This array is unnecessary, since all elements of S2 are
-         * their own inverses.  This array will be removed in some future
-         * version of Regina.
-         */
-        static const unsigned invS2[2];
 
     private:
         Code code_;
@@ -454,41 +430,6 @@ class REGINA_API NPerm<4> {
         static bool isPermCode2(Code code);
 
         /**
-         * Sets this permutation to the transposition of
-         * \a a and \a b.
-         * Note that \a a and \a b need not be distinct.
-         *
-         * \pre \a a and \a b are in {0,1,2,3}.
-         *
-         * \deprecated This routine is largely unnecessary, since NPerm<4>
-         * objects are tiny and cheap.  Just use the assignment operator
-         * instead.  This routine will eventually be removed entirely in
-         * a future version of Regina.
-         *
-         * @param a the element to switch with \a b.
-         * @param b the element to switch with \a a.
-         */
-        void setPerm(int a, int b);
-
-        /**
-         * Sets this permutation to that mapping (0,1,2,3) to
-         * (<i>a</i>,<i>b</i>,<i>c</i>,<i>d</i>) respectively.
-         *
-         * \pre {<i>a</i>,<i>b</i>,<i>c</i>,<i>d</i>} = {0,1,2,3}.
-         *
-         * \deprecated This routine is largely unnecessary, since NPerm<4>
-         * objects are tiny and cheap.  Just use the assignment operator
-         * instead.  This routine will eventually be removed entirely in
-         * a future version of Regina.
-         *
-         * @param a the desired image of 0.
-         * @param b the desired image of 1.
-         * @param c the desired image of 2.
-         * @param d the desired image of 3.
-         */
-        void setPerm(int a, int b, int c, int d);
-
-        /**
          * Sets this permutation to be equal to the given permutation.
          *
          * @param cloneMe the permutation whose value will be assigned
@@ -619,16 +560,6 @@ class REGINA_API NPerm<4> {
          */
         Index index() const;
 
-        /**
-         * A deprecated alias for str(), which returns a string representation
-         * of this permutation.
-         *
-         * \deprecated This routine has (at long last) been deprecated;
-         * use the simpler-to-type str() instead.
-         *
-         * @return a string representation of this permutation.
-         */
-        std::string toString() const;
         /**
          * Returns a string representation of this permutation.
          * The representation will consist of four adjacent digits
@@ -763,221 +694,8 @@ class REGINA_API NPerm<4> {
  */
 typedef NPerm<4> NPerm4;
 
-// Constants
-
-/**
- * An array of size 24 containing all possible permutations of four elements.
- *
- * The permutations with even indices in the array are the even permutations,
- * and those with odd indices in the array are the odd permutations.
- *
- * Note that the permutations are not necessarily in lexicographical order.
- *
- * \deprecated This array has been moved into the NPerm<4> class, and can now
- * be accessed as the static array NPerm<4>::S4.  The deprecated name
- * regina::allPermsS4 now just points to NPerm<4>::S4, and will be removed
- * in some future version of Regina.
- */
-REGINA_API extern const NPerm<4>* allPermsS4;
-
-/**
- * An array of size 24 containing the inverses of the permutations in the
- * array \a allPermsS4.
- *
- * Specifically, the inverse of permutation <tt>allPermsS4[i]</tt> is
- * the permutation <tt>allPermsS4[ allPermsS4Inv[i] ]</tt>.
- *
- * \deprecated This array has been moved into the NPerm<4> class, and can now
- * be accessed as the static array NPerm<4>::invS4.  The deprecated name
- * regina::allPermsS4Inv now just points to NPerm<4>::invS4, and will
- * be removed in some future version of Regina.
- */
-REGINA_API extern const unsigned* allPermsS4Inv;
-
-/**
- * An array of size 24 containing all possible permutations of four elements
- * in lexicographical order.
- *
- * \deprecated This array has been moved into the NPerm<4> class, and can now
- * be accessed as the static array NPerm<4>::orderedS4.  The deprecated name
- * regina::orderedPermsS4 now just points to NPerm<4>::orderedS4, and will be
- * removed in some future version of Regina.
- */
-REGINA_API extern const NPerm<4>* orderedPermsS4;
-
-/**
- * An array of size 6 containing all possible permutations of three elements.
- * In each permutation, 3 maps to 3.
- *
- * The permutations with even indices in the array are the even permutations,
- * and those with odd indices in the array are the odd permutations.
- *
- * Note that the permutations are not necessarily in lexicographical order.
- *
- * \deprecated This array has been moved into the NPerm<4> class, and can now
- * be accessed as the static array NPerm<4>::S3.  The deprecated name
- * regina::allPermsS4 now just points to NPerm<4>::S3, and will be removed
- * in some future version of Regina.
- */
-REGINA_API extern const NPerm<4>* allPermsS3;
-
-/**
- * An array of size 6 containing the inverses of the permutations in the
- * array \a allPermsS3.
- *
- * Specifically, the inverse of permutation <tt>allPermsS3[i]</tt> is
- * the permutation <tt>allPermsS3[ allPermsS3Inv[i] ]</tt>.
- *
- * \deprecated This array has been moved into the NPerm3 class, and can now
- * be accessed as the static array NPerm3::invS3.  The deprecated name
- * regina::allPermsS3Inv now just points to NPerm3::invS3, and will be
- * removed in some future version of Regina.
- */
-REGINA_API extern const unsigned* allPermsS3Inv;
-
-/**
- * An array of size 6 containing all possible permutations of three elements
- * in lexicographical order.  In each permutation, 3 maps to 3.
- *
- * \deprecated This array has been moved into the NPerm<4> class, and can now
- * be accessed as the static array NPerm<4>::orderedS3.  The deprecated name
- * regina::orderedPermsS3 now just points to NPerm<4>::orderedS3, and will be
- * removed in some future version of Regina.
- */
-REGINA_API extern const NPerm<4>* orderedPermsS3;
-
-/**
- * An array of size 2 containing all possible permutations of two elements.
- * In each permutation, 2 maps to 2 and 3 maps to 3.
- *
- * The permutations with even indices in the array are the even permutations,
- * and those with odd indices in the array are the odd permutations.
- *
- * Note that the permutations are also in lexicographical order.
- *
- * \deprecated This array has been moved into the NPerm<4> class, and can now
- * be accessed as the static array NPerm<4>::S2.  The deprecated name
- * regina::allPermsS2 now just points to NPerm<4>::S2, and will be removed in
- * some future version of Regina.
- */
-REGINA_API extern const NPerm<4>* allPermsS2;
-
-/**
- * An array of size 2 containing the inverses of the permutations in the
- * array \a allPermsS2.
- *
- * Specifically, the inverse of permutation <tt>allPermsS2[i]</tt> is
- * the permutation <tt>allPermsS2[ allPermsS2Inv[i] ]</tt>.
- *
- * \deprecated This array is unnecessary, since all elements of S2 are
- * their own inverses.  This array will be removed in some future version
- * of Regina.
- */
-REGINA_API extern const unsigned* allPermsS2Inv;
-
 // Routines for constructing the permutations associated to
 // triangles and edges of the triangulation
-
-/**
- * Returns a permutation mapping (0,1,2) to the vertices of the
- * given tetrahedron face in their canonical order.  The images of
- * (0,1,2) will be the vertex numbers of the vertices that make up the
- * given face of a generic tetrahedron.
- *
- * \deprecated This routine is no longer recommended, and will be
- * removed in some future version of Regina.  Please use the lookup
- * table NTriangle::ordering instead (which gives identical results).
- *
- * @param face a face number in a tetrahedron.  This should be between 0
- * and 3 inclusive.  Note that face <i>i</i> is opposite vertex
- * <i>i</i>.
- * @return the permutation representing the canonical ordering of
- * vertices in the given face.
- */
-REGINA_API NPerm<4> faceOrdering(int face);
-
-/**
- * Returns a permutation mapping (0,1) to the vertices of the
- * given tetrahedron edge in their canonical order.  The images of
- * (0,1) will be the vertex numbers of the vertices that make up the
- * given edge of a generic tetrahedron.
- *
- * The images of 2 and 3 in the returned permutation will be chosen so
- * that the permutation will be even.
- *
- * \deprecated This routine is no longer recommended, and will be
- * removed in some future version of Regina.  Please use the lookup
- * table NEdge::ordering instead (which gives identical results).
- *
- * @param edge an edge number in a tetrahedron.  This should be between 0 and
- * 5 inclusive.  The constant arrays NEdge::edgeNumber and NEdge::edgeVertex
- * describe which vertex numbers are joined by which edge numbers.
- * @return the permutation representing the canonical ordering of
- * vertices in the given edge.
- */
-REGINA_API NPerm<4> edgeOrdering(int edge);
-
-/**
- * Returns a string representation of the permutation mapping
- * (0,1,2) to the vertices of the given tetrahedron face in their
- * canonical order, as described in faceOrdering().
- * Only the images of 0, 1 and 2 will be put in the string.
- *
- * \deprecated This routine is no longer recommended, and will be
- * removed in some future version of Regina.  Please use
- * <tt>NTriangle::ordering[face].trunc3()</tt> (which gives identical results).
- *
- * @param face a face number in a tetrahedron.  This should be between 0
- * and 3 inclusive.  Note that face <i>i</i> is opposite vertex
- * <i>i</i>.
- * @return a string representing the
- * canonical ordering of vertices in the given face.
- */
-REGINA_API std::string faceDescription(int face);
-
-/**
- * Returns a string representation of the given permutation with only
- * the images of 0, 1 and 2 included.
- *
- * \deprecated This routine is no longer recommended, and will be
- * removed in some future version of Regina.  Please use NPerm<4>::trunc3()
- * instead (which gives identical results).
- *
- * @param facePerm the permutation to represent.
- * @return a restricted string representation of the given permutation.
- */
-REGINA_API std::string faceDescription(const NPerm<4>& facePerm);
-
-/**
- * Returns a string representation of the permutation mapping
- * (0,1) to the vertices of the given tetrahedron edge in their
- * canonical order, as described in edgeOrdering().
- * Only the images of 0 and 1 will be put in the string.
- *
- * \deprecated This routine is no longer recommended, and will be
- * removed in some future version of Regina.  Please use
- * <tt>NEdge::ordering[edge].trunc2()</tt> (which gives identical results).
- *
- * @param edge an edge number in a tetrahedron.  This should be between 0 and
- * 5 inclusive.  The constant arrays NEdge::edgeNumber and NEdge::edgeVertex
- * describe which vertex numbers are joined by which edge numbers.
- * @return a string representing the canonical ordering of
- * vertices in the given edge.
- */
-REGINA_API std::string edgeDescription(int edge);
-
-/**
- * Returns a string representation of the given permutation with only
- * the images of 0 and 1 included.
- *
- * \deprecated This routine is no longer recommended, and will be
- * removed in some future version of Regina.  Please use NPerm<4>::trunc2()
- * instead (which gives identical results).
- *
- * @param edgePerm the permutation to represent.
- * @return a restricted string representation of the given permutation.
- */
-REGINA_API std::string edgeDescription(const NPerm<4>& edgePerm);
 
 /*@}*/
 
@@ -1002,14 +720,6 @@ inline NPerm<4>::NPerm(const int* image) :
 }
 
 inline NPerm<4>::NPerm(const NPerm<4>& cloneMe) : code_(cloneMe.code_) {
-}
-
-inline void NPerm<4>::setPerm(int a, int b) {
-    code_ = swapTable[a][b];
-}
-
-inline void NPerm<4>::setPerm(int a, int b, int c, int d) {
-    code_ = static_cast<Code>(S4Index(a, b, c, d));
 }
 
 inline NPerm<4>::Code NPerm<4>::getPermCode() const {
@@ -1099,10 +809,6 @@ inline NPerm<4>::Index NPerm<4>::index() const {
     return orderedS4Index();
 }
 
-inline std::string NPerm<4>::toString() const {
-    return str();
-}
-
 inline bool NPerm<4>::operator == (const NPerm<4>& other) const {
     return (code_ == other.code_);
 }
@@ -1139,14 +845,6 @@ inline int NPerm<4>::S4Index(int a, int b, int c, int d) {
 
 inline int NPerm<4>::SnIndex() const {
     return S4Index();
-}
-
-inline std::string faceDescription(const NPerm<4>& facePerm) {
-    return facePerm.trunc3();
-}
-
-inline std::string edgeDescription(const NPerm<4>& edgePerm) {
-    return edgePerm.trunc2();
 }
 
 } // namespace regina

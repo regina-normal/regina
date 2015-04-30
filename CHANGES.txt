@@ -84,6 +84,13 @@ Version 4.97  [ (under development) ]
               not enum constants.
             - New trunc() routine that takes a length argument.
             - New constructors that take two arrays.
+            - Removed deprecated toString() and setPerm() routines.
+            - Removed deprecated arrays from NPerm4::invS3 and NPerm4::invS2.
+            - Removed deprecated global arrays from nperm4.h, including
+              allPermsS{4,3,2}, allPermsS{4,3,2}Inv, and orderedPermsS{4,3}.
+            - Removed deprecated global functions from nperm4.h, including
+              faceOrdering(), faceDescription(), edgeOrdering(), and
+              edgeDescription().
         Class NPolynomial:
             - New class for working with single-variable polynomials
               over arbitrary rings.

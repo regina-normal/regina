@@ -52,8 +52,6 @@ const NPerm<4> NPerm<4>::S4[24] = {
 
 const NPerm<4>* NPerm<4>::Sn = NPerm<4>::S4;
 
-const NPerm<4>* allPermsS4 = NPerm<4>::S4;
-
 const unsigned NPerm<4>::invS4[24] = {
     0, 1, 4, 3,
     2, 5, 6, 7,
@@ -64,8 +62,6 @@ const unsigned NPerm<4>::invS4[24] = {
 };
 
 const unsigned* NPerm<4>::invSn = NPerm<4>::invS4;
-
-const unsigned* allPermsS4Inv = NPerm<4>::invS4;
 
 const NPerm<4> NPerm<4>::orderedS4[24] = {
     NPerm<4>((NPerm<4>::Code)0),  NPerm<4>(1),  NPerm<4>(3),  NPerm<4>(2),
@@ -78,8 +74,6 @@ const NPerm<4> NPerm<4>::orderedS4[24] = {
 
 const NPerm<4>* NPerm<4>::orderedSn = NPerm<4>::orderedS4;
 
-const NPerm<4>* orderedPermsS4 = NPerm<4>::orderedS4;
-
 const NPerm<4> NPerm<4>::S3[6] = {
     NPerm<4>(0,1,2,3), NPerm<4>(0,2,1,3),
     NPerm<4>(1,2,0,3), NPerm<4>(1,0,2,3),
@@ -88,35 +82,15 @@ const NPerm<4> NPerm<4>::S3[6] = {
 
 const NPerm<4>* NPerm<4>::Sn_1 = NPerm<4>::S3;
 
-const NPerm<4>* allPermsS3 = NPerm<4>::S3;
-
-const unsigned NPerm<4>::invS3[6] = {
-    0, 1,
-    4, 3,
-    2, 5
-};
-
-const unsigned* allPermsS3Inv = NPerm<4>::invS3;
-
 const NPerm<4> NPerm<4>::orderedS3[6] = {
     NPerm<4>(0,1,2,3), NPerm<4>(0,2,1,3),
     NPerm<4>(1,0,2,3), NPerm<4>(1,2,0,3),
     NPerm<4>(2,0,1,3), NPerm<4>(2,1,0,3)
 };
 
-const NPerm<4>* orderedPermsS3 = NPerm<4>::orderedS3;
-
 const NPerm<4> NPerm<4>::S2[2] = {
     NPerm<4>(0,1,2,3), NPerm<4>(1,0,2,3)
 };
-
-const NPerm<4>* allPermsS2 = NPerm<4>::S2;
-
-const unsigned NPerm<4>::invS2[2] = {
-    0, 1
-};
-
-const unsigned* allPermsS2Inv = NPerm<4>::invS2;
 
 const NPerm<4>::Code NPerm<4>::imageTable[24][4] = {
     { 0, 1, 2, 3 }, { 0, 1, 3, 2 }, { 0, 2, 3, 1 }, { 0, 2, 1, 3 },
@@ -221,48 +195,6 @@ std::string NPerm<4>::trunc3() const {
     ans[2] = static_cast<char>('0' + imageTable[code_][2]);
     ans[3] = 0;
     return ans;
-}
-
-NPerm<4> faceOrdering(int face) {
-    switch(face) {
-        case 0:
-            return NPerm<4>(1,2,3,0);
-        case 1:
-            return NPerm<4>(0,2,3,1);
-        case 2:
-            return NPerm<4>(0,1,3,2);
-        case 3:
-            return NPerm<4>(0,1,2,3);
-    }
-    return NPerm<4>();
-}
-
-NPerm<4> edgeOrdering(int edge) {
-    switch(edge) {
-        case 0:
-            return NPerm<4>(0,1,2,3);
-        case 1:
-            return NPerm<4>(0,2,3,1);
-        case 2:
-            return NPerm<4>(0,3,1,2);
-        case 3:
-            return NPerm<4>(1,2,0,3);
-        case 4:
-            return NPerm<4>(1,3,2,0);
-        case 5:
-            return NPerm<4>(2,3,0,1);
-    }
-    return NPerm<4>();
-}
-
-std::string faceDescription(int face) {
-    // deprecated
-    return NTriangle::ordering[face].trunc3();
-}
-
-std::string edgeDescription(int edge) {
-    // deprecated
-    return NEdge::ordering[edge].trunc2();
 }
 
 } // namespace regina

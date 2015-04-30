@@ -74,7 +74,6 @@ void addNPerm3() {
         .def("isIdentity", &NPerm3::isIdentity)
         .def("atIndex", &NPerm3::atIndex)
         .def("index", &NPerm3::index)
-        .def("toString", &NPerm3::toString)
         .def("str", &NPerm3::str)
         .def("trunc", &NPerm3::trunc)
         .def("trunc2", &NPerm3::trunc2)
