@@ -43,9 +43,10 @@
 #endif
 
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "census/ngenericfacetpairing.h"
 #include "generic/ngenerictriangulation.h"
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -196,7 +197,9 @@ enum NiceType {
  * NTreeDecomposition::makeNice() then it is guaranteed that the root bag
  * will be empty).
  */
-class REGINA_API NTreeBag : public ShareableObject {
+class REGINA_API NTreeBag :
+        public ShortOutput<NTreeBag>,
+        public boost::noncopyable {
     private:
         int size_;
             /**< The number of nodes (of the graph \a G) stored in this bag. */
@@ -576,7 +579,9 @@ class REGINA_API NTreeBag : public ShareableObject {
  * underlying graph \a G is empty then the tree decomposition may
  * contain no bags at all.
  */
-class REGINA_API NTreeDecomposition : public ShareableObject {
+class REGINA_API NTreeDecomposition :
+        public DetailedOutput<NTreeDecomposition>,
+        public boost::noncopyable {
     protected:
         /**
          * Represents a graph, which may be directed or undirected.
