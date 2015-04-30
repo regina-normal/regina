@@ -94,24 +94,6 @@ class REGINA_API NPerm {
         "The generic NPerm<n> template is only available for 5 <= n <= 16.");
     public:
         /**
-         * The total number of permutations on \a n elements.
-         * This is the size of the symmetric group <i>S<sub>n</sub></i>.
-         *
-         * \note The template specialisations for \a n &le; 5 use a
-         * plain int type, not int64_t.
-         */
-        static const int64_t nPerms;
-
-        /**
-         * The total number of permutations on <i>n</i>-1 elements.  This is
-         * the size of the symmetric group <i>S</i><sub><i>n</i>-1</sub>.
-         *
-         * \note The template specialisations for \a n &le; 5 use a
-         * plain int type, not int64_t.
-         */
-        static const int64_t nPerms_1;
-
-        /**
          * Indicates the number of bits used by the permutation code
          * to store the image of a single integer.
          *
@@ -126,6 +108,13 @@ class REGINA_API NPerm {
         static const int imageBits;
 
         /**
+         * Denotes a native signed integer type large enough to count all
+         * permutations on \a n elements.  In other words, this is a
+         * native signed integer type large enough to hold <i>n</i>!.
+         */
+        typedef typename IntOfMinSize<(imageBits * n + 7) / 8>::type Index;
+
+        /**
          * Indicates the native unsigned integer type used to store the
          * internal permutation code.
          *
@@ -135,6 +124,18 @@ class REGINA_API NPerm {
          * for \a n &le; 4 than for \a n &ge; 5.
          */
         typedef typename IntOfMinSize<(imageBits * n + 7) / 8>::utype Code;
+
+        /**
+         * The total number of permutations on \a n elements.
+         * This is the size of the symmetric group <i>S<sub>n</sub></i>.
+         */
+        static const Index nPerms;
+
+        /**
+         * The total number of permutations on <i>n</i>-1 elements.  This is
+         * the size of the symmetric group <i>S</i><sub><i>n</i>-1</sub>.
+         */
+        static const Index nPerms_1;
 
     private:
         Code code_;
@@ -346,6 +347,19 @@ class REGINA_API NPerm {
         bool isIdentity() const;
 
         /**
+         * Returns the <i>i</i>th permutation on \a n elements, where
+         * permutations are numbered lexicographically beginning at 0.
+         *
+         * Lexicographical ordering treats each permutation \a p as the
+         * <i>n</i>-tuple (\a p[0], \a p[1], ..., \a p[<i>n</i>-1]).
+         *
+         * @param i the lexicographical index of the permutation; this
+         * must be between 0 and <i>n</i>!-1 inclusive.
+         * @return the <i>i</i>th permutation.
+         */
+        static NPerm atIndex(Index i);
+
+        /**
          * Returns a string representation of this permutation.
          * The representation will consist of \a n adjacent digits
          * representing the images of 0,...,<i>n</i>-1 respectively.
@@ -416,10 +430,10 @@ namespace {
 }
 
 template <int n>
-const int64_t NPerm<n>::nPerms = factorial(n);
+const typename NPerm<n>::Index NPerm<n>::nPerms = factorial(n);
 
 template <int n>
-const int64_t NPerm<n>::nPerms_1 = factorial(n-1);
+const typename NPerm<n>::Index NPerm<n>::nPerms_1 = factorial(n-1);
 
 namespace {
     constexpr int permImageBits(int n) {
@@ -576,6 +590,22 @@ int NPerm<n>::compareWith(const NPerm& other) const {
 template <int n>
 inline bool NPerm<n>::isIdentity() const {
     return (code_ == idCode_);
+}
+
+template <int n>
+NPerm<n> NPerm<n>::atIndex(Index i) {
+    Code c = idCode_;
+    int image[n];
+    int p, q;
+    for (p = 0; p < n; ++p) {
+        image[n - p - 1] = i % (p + 1);
+        i /= (p + 1);
+    }
+    for (p = 0; p < n; ++p)
+        for (q = p + 1; q < n; ++q)
+            if (image[q] >= image[p])
+                ++image[q];
+    return NPerm<n>(image);
 }
 
 template <int n>

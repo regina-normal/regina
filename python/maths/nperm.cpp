@@ -66,12 +66,14 @@ void addNPerm(const char* name) {
         .def(self != self)
         .def("compareWith", &NPerm<n>::compareWith)
         .def("isIdentity", &NPerm<n>::isIdentity)
+        .def("atIndex", &NPerm<n>::atIndex)
         .def("str", &NPerm<n>::str)
         .def("trunc", &NPerm<n>::trunc)
         .def("__str__", &NPerm<n>::str)
         .def("__repr__", &NPerm<n>::str)
         .staticmethod("fromPermCode")
         .staticmethod("isPermCode")
+        .staticmethod("atIndex")
     ;
 
     s.attr("nPerms") = NPerm<n>::nPerms;
