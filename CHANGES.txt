@@ -9,6 +9,8 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.97  [ (under development) ]
 
+    GENERAL:
+        - Now uses aspects of C++11, which your compiler will need to support.
     ENGINE:
         Namespace regina::boost, regina::stl:
             - Removed these namespaces and all their members.  To fix
