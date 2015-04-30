@@ -113,6 +113,7 @@ void addNPerm4() {
             .def(self != self)
             .def("compareWith", &NPerm4::compareWith)
             .def("isIdentity", &NPerm4::isIdentity)
+            .def("atIndex", &NPerm4::atIndex)
             .def("toString", &NPerm4::toString)
             .def("str", &NPerm4::str)
             .def("trunc", &NPerm4::trunc)
@@ -127,6 +128,7 @@ void addNPerm4() {
             .staticmethod("fromPermCode2")
             .staticmethod("isPermCode")
             .staticmethod("isPermCode2")
+            .staticmethod("atIndex")
         ;
 
         s.attr("nPerms") = NPerm4::nPerms;

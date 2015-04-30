@@ -74,16 +74,23 @@ template <>
 class REGINA_API NPerm<3> {
     public:
         /**
+         * Denotes a native signed integer type large enough to count all
+         * permutations on three elements.  In other words, this is a
+         * native signed integer type large enough to store (3!).
+         */
+        typedef int Index;
+
+        /**
          * The total number of permutations on three elements.
          * This is the size of the array Sn.
          */
-        static const int nPerms = 6;
+        static const Index nPerms = 6;
 
         /**
          * The total number of permutations on two elements.
          * This is the size of the array Sn_1.
          */
-        static const int nPerms_1 = 2;
+        static const Index nPerms_1 = 2;
 
         /**
          * Indicates the native unsigned integer type used to store the
@@ -415,6 +422,21 @@ class REGINA_API NPerm<3> {
         bool isIdentity() const;
 
         /**
+         * Returns the <i>i</i>th permutation on three elements, where
+         * permutations are numbered lexicographically beginning at 0.
+         *
+         * Lexicographical ordering treats each permutation \a p as the
+         * <i>n</i>-tuple (\a p[0], \a p[1], \a p[2]).
+         *
+         * The return value will be identical to orderedS3[\a i].
+         *
+         * @param i the lexicographical index of the permutation; this
+         * must be between 0 and 5 inclusive.
+         * @return the <i>i</i>th permutation.
+         */
+        static NPerm atIndex(Index i);
+
+        /**
          * A deprecated alias for str(), which returns a string representation
          * of this permutation.
          *
@@ -635,6 +657,10 @@ inline int NPerm<3>::compareWith(const NPerm<3>& other) const {
 
 inline bool NPerm<3>::isIdentity() const {
     return (code_ == 0);
+}
+
+inline NPerm<3> NPerm<3>::atIndex(Index i) {
+    return orderedS3[i];
 }
 
 inline std::string NPerm<3>::toString() const {

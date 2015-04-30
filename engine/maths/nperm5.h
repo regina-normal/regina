@@ -71,16 +71,23 @@ template <>
 class REGINA_API NPerm<5> {
     public:
         /**
+         * Denotes a native signed integer type large enough to count all
+         * permutations on five elements.  In other words, this is a
+         * native signed integer type large enough to store (5!).
+         */
+        typedef int Index;
+
+        /**
          * The total number of permutations on five elements.
          * This is the size of the array Sn.
          */
-        static const int nPerms = 120;
+        static const Index nPerms = 120;
 
         /**
          * The total number of permutations on four elements.
          * This is the size of the array Sn_1.
          */
-        static const int nPerms_1 = 24;
+        static const Index nPerms_1 = 24;
 
         /**
          * Indicates the number of bits used by the permutation code to
@@ -454,6 +461,21 @@ class REGINA_API NPerm<5> {
         bool isIdentity() const;
 
         /**
+         * Returns the <i>i</i>th permutation on five elements, where
+         * permutations are numbered lexicographically beginning at 0.
+         *
+         * Lexicographical ordering treats each permutation \a p as the
+         * <i>n</i>-tuple (\a p[0], \a p[1], \a p[2], \a p[3], \a p[4]).
+         *
+         * The return value will be identical to orderedS5[\a i].
+         *
+         * @param i the lexicographical index of the permutation; this
+         * must be between 0 and 119 inclusive.
+         * @return the <i>i</i>th permutation.
+         */
+        static NPerm atIndex(Index i);
+
+        /**
          * A deprecated alias for str(), which returns a string representation
          * of this permutation.
          *
@@ -681,6 +703,10 @@ inline std::string NPerm<5>::toString() const {
 
 inline bool NPerm<5>::isIdentity() const {
     return (code == 18056);
+}
+
+inline NPerm<5> NPerm<5>::atIndex(Index i) {
+    return orderedS5[i];
 }
 
 inline int NPerm<5>::imageOf(int source) const {

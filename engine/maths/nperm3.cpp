@@ -37,8 +37,8 @@
 
 namespace regina {
 
-const int NPerm<3>::nPerms;
-const int NPerm<3>::nPerms_1;
+const NPerm<3>::Index NPerm<3>::nPerms;
+const NPerm<3>::Index NPerm<3>::nPerms_1;
 
 const NPerm<3> NPerm<3>::S3[6] = {
     NPerm<3>((NPerm<3>::Code)0), NPerm<3>(1), NPerm<3>(2),

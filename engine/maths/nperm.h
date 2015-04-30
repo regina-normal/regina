@@ -110,7 +110,7 @@ class REGINA_API NPerm {
         /**
          * Denotes a native signed integer type large enough to count all
          * permutations on \a n elements.  In other words, this is a
-         * native signed integer type large enough to hold <i>n</i>!.
+         * native signed integer type large enough to store (<i>n</i>!).
          */
         typedef typename IntOfMinSize<(imageBits * n + 7) / 8>::type Index;
 

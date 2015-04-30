@@ -72,6 +72,7 @@ void addNPerm3() {
         .def(self != self)
         .def("compareWith", &NPerm3::compareWith)
         .def("isIdentity", &NPerm3::isIdentity)
+        .def("atIndex", &NPerm3::atIndex)
         .def("toString", &NPerm3::toString)
         .def("str", &NPerm3::str)
         .def("trunc", &NPerm3::trunc)
@@ -83,6 +84,7 @@ void addNPerm3() {
         .def("__repr__", &NPerm3::str)
         .staticmethod("fromPermCode")
         .staticmethod("isPermCode")
+        .staticmethod("atIndex")
     ;
 
     s.attr("nPerms") = NPerm3::nPerms;
