@@ -46,6 +46,7 @@
 
 void addMatrixOps(CppUnit::TextUi::TestRunner& runner);
 void addNInteger(CppUnit::TextUi::TestRunner& runner);
+void addNPerm(CppUnit::TextUi::TestRunner& runner);
 void addNPerm3(CppUnit::TextUi::TestRunner& runner);
 void addNPerm4(CppUnit::TextUi::TestRunner& runner);
 void addNPerm5(CppUnit::TextUi::TestRunner& runner);

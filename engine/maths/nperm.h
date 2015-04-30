@@ -470,7 +470,7 @@ namespace {
 }
 
 template <int n>
-const typename NPerm<n>::Code NPerm<n>::idCode_ = idCodePartial<n>(n);
+const typename NPerm<n>::Code NPerm<n>::idCode_ = idCodePartial<n>(n - 1);
 
 template <int n>
 const typename NPerm<n>::Code NPerm<n>::imageMask_ =
