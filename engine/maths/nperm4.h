@@ -54,17 +54,20 @@ namespace regina {
 
 /**
  * Represents a permutation of {0,1,2,3}.
- * Amongst other things, such permutations are used in specifying how
+ * This is a specialisation of the generic NPerm template: it is highly
+ * optimised, and also offers some additional functionality.
+ * Amongst other things, this permutation class is used to specify how
  * simplices of a 3-manifold triangulation are glued together.
- * NPerm<4> objects are small enough to pass about by value instead of by
- * reference.
  *
- * Each permutation has an internal code, and this code is sufficient to
- * reconstruct the permutation.
- * Thus the internal code may be a useful means for passing
- * permutation objects to and from the engine.
+ * As with all NPerm template classes, these objects are small enough to
+ * pass about by value instead of by reference.  Moreover, NPerm4
+ * is extremely fast to work with.
  *
- * The internal permutation codes have changed as of Regina 4.6.1:
+ * Each permutation has an internal code, which is a single native
+ * integer that is sufficient to reconstruct the permutation.
+ * Thus the internal code may be a useful means for passing permutation
+ * objects to and from the engine.  For NPerm4, the internal permutation
+ * codes have changed as of Regina 4.6.1:
  *
  * - \e First-generation codes were used internally in Regina 4.6 and earlier.
  *   These codes were characters whose lowest two bits represented the
@@ -85,6 +88,9 @@ namespace regina {
  * is because the first-generation routines incur additional overhead
  * in converting back and forth between the second-generation codes
  * (which are used internally by NPerm<4>).
+ *
+ * \ifacespython Since Python does not support templates, this class is
+ * made available under the name NPerm4.
  */
 template <>
 class REGINA_API NPerm<4> {

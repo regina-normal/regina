@@ -54,21 +54,24 @@ namespace regina {
 
 /**
  * Represents a permutation of {0,1,2}.
+ * This is a specialisation of the generic NPerm template: it is highly
+ * optimised, and also offers some additional functionality.
+ * Amongst other things, this permutation class is used to specify how
+ * simplices of a 2-manifold triangulation are glued together.
  *
- * These objects are small enough to pass about by value instead of by
- * reference.  Moreover, they are extremely fast to work with.
+ * As with all NPerm template classes, these objects are small enough to
+ * pass about by value instead of by reference.  Moreover, NPerm3 in
+ * particular is extremely fast to work with.
  *
- * Each permutation has an internal code, and this code is sufficient to
- * reconstruct the permutation.
- * Thus the internal code may be a useful means for passing
- * permutation objects to and from the engine.
+ * Each permutation has an internal code, which is a single native
+ * integer that is sufficient to reconstruct the permutation.
+ * Thus the internal code may be a useful means for passing permutation
+ * objects to and from the engine.  For NPerm3, the internal code is an
+ * integer between 0 and 5 inclusive that gives the index of the
+ * permutation in the array NPerm<3>::S3.
  *
- * The internal code is an integer between 0 and 5 inclusive,
- * representing the index of the permutation in the array NPerm<3>::S3.
- *
- * This class is faster and sleeker than related classes such as NPerm4 and
- * NPerm5.  On the other hand, this class does not offer quite as rich an
- * interface as the others.
+ * \ifacespython Since Python does not support templates, this class is
+ * made available under the name NPerm3.
  */
 template <>
 class REGINA_API NPerm<3> {

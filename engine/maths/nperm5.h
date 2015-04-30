@@ -54,18 +54,24 @@ namespace regina {
 
 /**
  * Represents a permutation of {0,1,2,3,4}.
- * Amongst other things, such permutations are used in describing
- * simplex gluings in 4-manifold triangulations.  NPerm<5> objects are small
- * enough to pass about by value instead of by reference.
+ * This is a specialisation of the generic NPerm template: it is highly
+ * optimised, and also offers some additional functionality.
+ * Amongst other things, this permutation class is used to specify how
+ * simplices of a 4-manifold triangulation are glued together.
  *
- * Each permutation has an internal code, and this code is sufficient to
- * reconstruct the permutation.
- * Thus the internal code may be a useful means for passing
- * permutation objects to and from the engine.
+ * As with all NPerm template classes, these objects are small enough to
+ * pass about by value instead of by reference.
  *
- * The internal code is an unsigned integer.  The lowest three bits represent
+ * Each permutation has an internal code, which is a single native
+ * integer that is sufficient to reconstruct the permutation.
+ * Thus the internal code may be a useful means for passing permutation
+ * objects to and from the engine.  For NPerm5, the internal code follows
+ * the general scheme used for NPerm<n>: the lowest three bits represent
  * the image of 0, the next lowest three bits represent the image of 1 and so
- * on.
+ * on.  See the generic NPerm template for further details.
+ *
+ * \ifacespython Since Python does not support templates, this class is
+ * made available under the name NPerm5.
  */
 template <>
 class REGINA_API NPerm<5> {

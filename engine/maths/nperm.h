@@ -59,7 +59,7 @@ namespace regina {
  *
  * NPerm objects are small enough to pass about by value instead of by
  * reference.  The trade-off is that, for this to be possible, the NPerm
- * class can only work with \a n &le; 16.
+ * template class can only work with \a n &le; 16.
  *
  * Each permutation has an internal code, which is a single native
  * integer that is sufficient to reconstruct the entire permutation.
@@ -77,13 +77,17 @@ namespace regina {
  *   <i>S<sub>n</sub></i>).  For details, see the documentation for
  *   the specialisations NPerm<3> and NPerm<4> respectively.
  *
- * For \a n = 3, 4 and 5, this class offers some additional functionality,
- * and is made available under the typedefs NPerm3, NPerm4 and NPerm5
- * respectively.  These specialised classes play a central role in describing
- * and manipulating 2-, 3- and 4-manifold triangulations.
+ * For \a n = 3, 4 and 5 (which are central to 2-, 3- and 4-manifold
+ * triangulations), this template is specialised: the code is highly optimised
+ * and also offers some extra functionality.  You will need to include
+ * nperm3.h, nperm4.h and nperm5.h respectively to use these specialised
+ * classes; otherwise any code that uses NPerm<3>, NPerm<4> or NPerm<5>
+ * will not compile.  For convenience, the typedefs NPerm3, NPerm4 and NPerm5
+ * are also available for these classes.
  *
- * \ifacespython The various instantiations of this template class are
- * available in Python under the hard-coded names NPerm3, NPerm4, ..., NPerm16.
+ * \ifacespython Python does not support templates.  For each
+ * \a n = 3,...,16, this class is available in Python under the
+ * corresponding name NPerm3, NPerm4, ..., NPerm16.
  *
  * @tparam n the number of objects being permuted.
  * This must be between 3 and 16 inclusive.
