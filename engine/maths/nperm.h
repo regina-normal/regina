@@ -53,6 +53,24 @@ namespace regina {
  */
 
 /**
+ * Returns the character used to express the integer \a i in a permutation.
+ *
+ * - For \a i = 0,...,9, this will be the usual digit representing \a i.
+ *
+ * - For \a i &ge; 10, this will be a lower-case letter.  In particular,
+ *   for \a i = 10,...,15, this will be the usual hexadecimal digit
+ *   representing \a i.
+ *
+ * - At present, this routine only supports integers \a i < 36.
+ *
+ * @param the integer to represent; this must be between 0 and 35 inclusive.
+ * @return the single character used to represent \a i.
+ */
+inline constexpr char digit(int i) {
+    return (i < 10 ? '0' + i : 'a' + i - 10);
+}
+
+/**
  * Represents a permutation of {0,1,...,<i>n</i>-1}.
  * Amongst other things, such permutations are used to describe
  * simplex gluings in (<i>n</i>-1)-manifold triangulations.
@@ -650,10 +668,8 @@ template <int n>
 std::string NPerm<n>::str() const {
     char ans[n + 1];
     int image;
-    for (int i = 0; i < n; ++i) {
-        image = (code_ >> (imageBits * i)) & imageMask_;
-        ans[i] = (image < 10 ? '0' + image : 'a' - 10 + image);
-    }
+    for (int i = 0; i < n; ++i)
+        ans[i] = regina::digit((code_ >> (imageBits * i)) & imageMask_);
     ans[n] = 0;
 
     return ans;
@@ -663,10 +679,8 @@ template <int n>
 std::string NPerm<n>::trunc(unsigned len) const {
     char ans[n + 1];
     int image;
-    for (int i = 0; i < len; ++i) {
-        image = (code_ >> (imageBits * i)) & imageMask_;
-        ans[i] = (image < 10 ? '0' + image : 'a' - 10 + image);
-    }
+    for (int i = 0; i < len; ++i)
+        ans[i] = regina::digit((code_ >> (imageBits * i)) & imageMask_);
     ans[len] = 0;
 
     return ans;

@@ -158,6 +158,8 @@ Version 4.97  [ (under development) ]
               is to remove ShareableObject entirely.
             - The old string output routines are now provided by the Output
               template class, which is now a base class for ShareableObject.
+        Routine digit():
+            - Convenience routine for converting integers into characters.
         Routine nextPowerOfTwo():
             - Convenience routine for rounding up to a power of two.
         Routine open():

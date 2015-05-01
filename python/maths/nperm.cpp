@@ -83,6 +83,8 @@ void addNPerm(const char* name) {
 }
 
 void addNPerm() {
+    boost::python::def("digit", regina::digit);
+
     addNPerm<6>("NPerm6");
     addNPerm<7>("NPerm7");
     addNPerm<8>("NPerm8");
