@@ -70,7 +70,8 @@ struct DimTraits {
              <i>dim</i>-manifold triangulation. */
     typedef void Isomorphism;
         /**< The data type for an isomorphism between two
-             <i>dim</i>-manifold triangulations. */
+             <i>dim</i>-manifold triangulations.
+             Typically this is a subclass of NGenericIsomorphism<dim>. */
     typedef void FacetPairing;
         /**< The data type that represents a pairing of facets of
              top-dimensional simplices in a <i>dim</i>-manifold
