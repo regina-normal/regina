@@ -178,7 +178,7 @@ class REGINA_API NRational {
         /**
          * Destroys this rational.
          */
-        virtual ~NRational();
+        ~NRational();
 
         /**
          * Sets this rational to the given rational value.
