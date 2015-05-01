@@ -50,14 +50,14 @@ void addNFileInfo() {
             return_value_policy<return_by_value>())
         .def("isCompressed", &NFileInfo::isCompressed)
         .def("isInvalid", &NFileInfo::isInvalid)
-        .def("NFileInfo_identify", &NFileInfo::identify,
+        .def("identify", &NFileInfo::identify,
             return_value_policy<manage_new_object>())
         .def("str", &NFileInfo::str)
         .def("toString", &NFileInfo::toString)
         .def("detail", &NFileInfo::detail)
         .def("toStringLong", &NFileInfo::toStringLong)
         .def("__str__", &NFileInfo::str)
-        .staticmethod("NFileInfo_identify")
+        .staticmethod("identify")
     ;
 
     // Apparently there is no way in python to make a module attribute
