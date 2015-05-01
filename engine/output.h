@@ -92,46 +92,46 @@ namespace regina {
  */
 template <class T>
 struct REGINA_API Output {
-        /**
-         * Returns a short text representation of this object.
-         * This text should be human-readable, should fit on a single line,
-         * and should not end with a newline.
-         *
-         * \ifacespython In addition to str(), this is also used as the
-         * Python "stringification" function <tt>__str__()</tt>.
-         *
-         * @return a short text representation of this object.
-         */
-        std::string str() const;
-        /**
-         * Returns a detailed text representation of this object.
-         * This text may span many lines, and should provide the user
-         * with all the information they could want.  It should be
-         * human-readable, should not contain extremely long lines
-         * (which cause problems for users reading the output in a terminal),
-         * and should end with a final newline.
-         *
-         * @return a detailed text representation of this object.
-         */
-        std::string detail() const;
-        /**
-         * A deprecated alias for str().
-         *
-         * \deprecated This routine has (at long last) been deprecated;
-         * use the simpler-to-type str() instead.
-         *
-         * @return a short text representation of this object.
-         */
-        std::string toString() const;
-        /**
-         * A deprecated alias for detail().
-         *
-         * \deprecated This routine has (at long last) been deprecated;
-         * use the simpler-to-type detail() instead.
-         *
-         * @return a long text representation of this object.
-         */
-        std::string toStringLong() const;
+    /**
+     * Returns a short text representation of this object.
+     * This text should be human-readable, should fit on a single line,
+     * and should not end with a newline.
+     *
+     * \ifacespython In addition to str(), this is also used as the
+     * Python "stringification" function <tt>__str__()</tt>.
+     *
+     * @return a short text representation of this object.
+     */
+    std::string str() const;
+    /**
+     * Returns a detailed text representation of this object.
+     * This text may span many lines, and should provide the user
+     * with all the information they could want.  It should be
+     * human-readable, should not contain extremely long lines
+     * (which cause problems for users reading the output in a terminal),
+     * and should end with a final newline.
+     *
+     * @return a detailed text representation of this object.
+     */
+    std::string detail() const;
+    /**
+     * A deprecated alias for str().
+     *
+     * \deprecated This routine has (at long last) been deprecated;
+     * use the simpler-to-type str() instead.
+     *
+     * @return a short text representation of this object.
+     */
+    std::string toString() const;
+    /**
+     * A deprecated alias for detail().
+     *
+     * \deprecated This routine has (at long last) been deprecated;
+     * use the simpler-to-type detail() instead.
+     *
+     * @return a long text representation of this object.
+     */
+    std::string toStringLong() const;
 };
 
 /**
