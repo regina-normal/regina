@@ -6,6 +6,13 @@ Regina - A Normal Surface Theory Calculator
     For a full list of changes, including all changes to the C++/Python API,
     see the file CHANGES.txt.
 
+Version 4.97  [ (under development) ]
+
+    TODO:
+        - Turaev-Viro: exact arithmetic, treewidth algorithms.
+        - SnapPea ready-made examples.
+        - Qt5 and high-resolution / retina displays.
+
 Version 4.96  [ 29 August, 2014 ]
 
     Features:
