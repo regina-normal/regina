@@ -108,7 +108,7 @@ class NMatrix {
         /**
          * Destroys this matrix.
          */
-        virtual ~NMatrix() {
+        ~NMatrix() {
             for (unsigned long i = 0; i < nRows; i++)
                 delete[] data[i];
             delete[] data;
@@ -268,7 +268,7 @@ class NMatrix {
          *
          * @param out the output stream to which to write.
          */
-        virtual void writeMatrix(std::ostream& out) const {
+        void writeMatrix(std::ostream& out) const {
             unsigned long r, c;
             for (r = 0; r < nRows; r++) {
                 for (c = 0; c < nCols; c++) {

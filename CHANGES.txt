@@ -51,6 +51,8 @@ Version 4.97  [ (under development) ]
               routine, and set through an optional third argument to setDirs().
             - The homeDir argument to setDirs() may now be the empty string,
               which signals that the directory should not be changed.
+        Class NMatrix:
+            - The destructor and writeMatrix() are no longer virtual.
         Class NNormalSurface:
             - New convenience routines normal() and embedded().
         Class NNormalSurfaceList, NNormalSurfaceSubset:
@@ -66,6 +68,8 @@ Version 4.97  [ (under development) ]
         Class NPolynomial:
             - New class for working with single-variable polynomials
               over arbitrary rings.
+        Class NRational:
+            - The destructor is no longer virtual.
         Class NSurfaceFilterProperties:
             - New set-based routine setECs().
         Class NTreeBag, NTreeDecomposition:
