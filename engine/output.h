@@ -92,7 +92,6 @@ namespace regina {
  */
 template <class T>
 struct REGINA_API Output {
-    public:
         /**
          * Returns a short text representation of this object.
          * This text should be human-readable, should fit on a single line,
