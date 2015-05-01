@@ -43,9 +43,10 @@
 #endif
 
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "generic/dimtraits.h"
 #include "generic/nfacetspec.h"
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -103,20 +104,15 @@ namespace regina {
  * \tparam dim The dimension of the underlying triangulation.
  */
 template <int dim>
-class REGINA_API NGenericIsomorphism : public ShareableObject {
+class REGINA_API NGenericIsomorphism :
+        public DimTraits<dim>,
+        public Output<NGenericIsomorphism<dim> >,
+        public boost::noncopyable {
     public:
-        typedef typename DimTraits<dim>::Isomorphism Isomorphism;
-            /**< The isomorphism class used by triangulations of this
-                 specific dimension.  Typically this is a subclass of
-                 NGenericIsomorphism<dim>. */
-        typedef typename DimTraits<dim>::Perm Perm;
-            /**< The permutation class used to glue together facets of
-                 simplices when building triangulations in this dimension. */
-        typedef typename DimTraits<dim>::Simplex Simplex;
-            /**< The class that represents a top-level simplex of a
-                 triangulation in this dimension. */
-        typedef typename DimTraits<dim>::Triangulation Triangulation;
-            /**< The triangulation class specific to this dimension. */
+        using typename DimTraits<dim>::Isomorphism;
+        using typename DimTraits<dim>::Perm;
+        using typename DimTraits<dim>::Simplex;
+        using typename DimTraits<dim>::Triangulation;
 
     protected:
         unsigned nSimplices_;
@@ -316,7 +312,23 @@ class REGINA_API NGenericIsomorphism : public ShareableObject {
          */
         void applyInPlace(Triangulation* tri) const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 
         /**
