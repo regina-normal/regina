@@ -33,8 +33,7 @@
 /* end stub */
 
 /*! \file shareableobject.h
- *  \brief Deals with objects that can be shared from the
- *  calculation engine with the outside world.
+ *  \brief Provides a deprecated base class for many objects in Regina.
  */
 
 #ifndef __SHAREABLEOBJECT_H
@@ -45,6 +44,7 @@
 #include <iostream>
 #include <string>
 #include <boost/noncopyable.hpp>
+#include "output.h"
 
 #include "regina-core.h"
 
@@ -56,20 +56,16 @@ namespace regina {
  */
 
 /**
- * Facilitates mirroring objects in the underlying C++ calculation
- * engine using the various wrapper classes provided in the various
- * external interfaces (such as the Python interface).
+ * A deprecated base class for many objects in Regina.
  *
- * In the underlying C++ engine, a ShareableObject is an object that can
- * be shared with the outside world.  In the external
- * interfaces, a ShareableObject is a vacuous wrapper that allows access
- * to the data and methods of the corresponding object in the underlying
- * engine.
- *
- * See the various interface notes pages for more details regarding
- * using classes derived from ShareableObject.
+ * \deprecated For a long time now, the only real functionality that this
+ * class has provided is the common output routines str() and detail().
+ * Classes that provide text output should now inherit from the appropriate
+ * Output template class instead.
  */
-class REGINA_API ShareableObject : public boost::noncopyable {
+class REGINA_API ShareableObject :
+        public Output<ShareableObject>,
+        public boost::noncopyable {
     public:
         /**
          * \name Constructors and Destructors
@@ -120,40 +116,6 @@ class REGINA_API ShareableObject : public boost::noncopyable {
          * @param out the output stream to which to write.
          */
         virtual void writeTextLong(std::ostream& out) const;
-        /**
-         * Returns the output from writeTextShort() as a string.
-         *
-         * \ifacespython This implements the <tt>__str__()</tt> function.
-         *
-         * @return a short text representation of this object.
-         */
-        std::string str() const;
-        /**
-         * A deprecated alias for str(), which returns the output from
-         * writeTextShort() as a string.
-         *
-         * \deprecated This routine has (at long last) been deprecated;
-         * use the simpler-to-type str() instead.
-         *
-         * @return a short text representation of this object.
-         */
-        std::string toString() const;
-        /**
-         * Returns the output from writeTextLong() as a string.
-         *
-         * @return a long text representation of this object.
-         */
-        std::string detail() const;
-        /**
-         * A deprecated alias for detail(), which returns the output
-         * from writeTextLong() as a string.
-         *
-         * \deprecated This routine has (at long last) been deprecated;
-         * use the simpler-to-type detail() instead.
-         *
-         * @return a long text representation of this object.
-         */
-        std::string toStringLong() const;
 
         /*@}*/
 };
@@ -170,14 +132,6 @@ inline ShareableObject::~ShareableObject() {
 inline void ShareableObject::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << '\n';
-}
-
-inline std::string ShareableObject::toString() const {
-    return str();
-}
-
-inline std::string ShareableObject::toStringLong() const {
-    return detail();
 }
 
 } // namespace regina

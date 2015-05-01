@@ -139,8 +139,8 @@ void addNTreeDecomposition() {
     global.attr("NICE_FORGET") = regina::NICE_FORGET;
     global.attr("NICE_JOIN") = regina::NICE_JOIN;
 
-    class_<NTreeBag, bases<regina::ShareableObject>,
-            std::auto_ptr<NTreeBag>, boost::noncopyable>("NTreeBag", no_init)
+    class_<NTreeBag, std::auto_ptr<NTreeBag>,
+            boost::noncopyable>("NTreeBag", no_init)
         .def("size", &NTreeBag::size)
         .def("element", &NTreeBag::element)
         .def("contains", &NTreeBag::contains)
@@ -159,10 +159,14 @@ void addNTreeDecomposition() {
         .def("sibling", &NTreeBag::sibling,
             return_value_policy<reference_existing_object>())
         .def("isLeaf", &NTreeBag::isLeaf)
+        .def("str", &NTreeBag::str)
+        .def("toString", &NTreeBag::toString)
+        .def("detail", &NTreeBag::detail)
+        .def("toStringLong", &NTreeBag::toStringLong)
+        .def("__str__", &NTreeBag::str)
     ;
 
-    class_<NTreeDecomposition, bases<regina::ShareableObject>,
-            std::auto_ptr<NTreeDecomposition>,
+    class_<NTreeDecomposition, std::auto_ptr<NTreeDecomposition>,
             boost::noncopyable>("NTreeDecomposition", no_init)
         .def(init<const regina::NTriangulation&>())
         .def(init<const regina::NTriangulation&,
@@ -188,6 +192,11 @@ void addNTreeDecomposition() {
             return_value_policy<reference_existing_object>())
         .def("compress", &NTreeDecomposition::compress)
         .def("makeNice", &NTreeDecomposition::makeNice)
+        .def("str", &NTreeDecomposition::str)
+        .def("toString", &NTreeDecomposition::toString)
+        .def("detail", &NTreeDecomposition::detail)
+        .def("toStringLong", &NTreeDecomposition::toStringLong)
+        .def("__str__", &NTreeDecomposition::str)
     ;
 }
 

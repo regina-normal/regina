@@ -44,6 +44,7 @@
 #include <vector>
 #include <memory>
 #include "regina-core.h"
+#include "shareableobject.h"
 #include "maths/nmatrixint.h"
 #include "utilities/ptrutils.h"
 

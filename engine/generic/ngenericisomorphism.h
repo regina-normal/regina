@@ -43,9 +43,10 @@
 #endif
 
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "generic/dimtraits.h"
 #include "generic/nfacetspec.h"
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -56,66 +57,62 @@ namespace regina {
 
 /**
  * A dimension-agnostic base class that represents a combinatorial
- * isomorphism from one \a dim-manifold triangulation into another.
+ * isomorphism from one <i>dim</i>-manifold triangulation into another.
  *
  * Each dimension that Regina works with (2, 3 and 4) offers its own
  * subclass with richer functionality; users typically do not need to
  * work with this template base class directly.
  *
- * In essence, a combinatorial isomorphism from triangulation T to
- * triangulation U is a one-to-one map from the simplices of T to the
- * simplices of U that allows relabelling of both the simplices and
+ * In essence, a combinatorial isomorphism from triangulation \a T to
+ * triangulation \a U is a one-to-one map from the simplices of \a T to the
+ * simplices of \a U that allows relabelling of both the simplices and
  * their facets (or equivalently, their vertices), and that preserves
  * gluings across adjacent simplices.
  *
- * More precisely:  An isomorphism consists of (i) a one-to-one map f
- * from the simplices of T to the simplices of U, and (ii) for each
- * simplex S of T, a permutation f_S of the facets (0,...,\a dim) of S,
- * for which the following condition holds:
+ * More precisely:  An isomorphism consists of (i) a one-to-one map \a f
+ * from the simplices of \a T to the simplices of \a U, and (ii) for each
+ * simplex \a S of \a T, a permutation \a f<sub>S</sub> of the facets
+ * (0,...,\a dim) of \a S, for which the following condition holds:
  *
- *   - If facet k of simplex S and facet k' of simplex S'
- *     are identified in T, then facet f_S(k) of f(S) and facet f_S'(k')
- *     of f(S') are identified in U.  Moreover, their gluing is consistent
- *     with the facet/vertex permutations; that is, there is a commutative
- *     square involving the gluing maps in T and U and the permutations
- *     f_S and f_S'.
+ *   - If facet \a k of simplex \a S and facet \a k' of simplex \a S'
+ *     are identified in \a T, then facet \a f<sub>S</sub>(\a k) of \a f(S)
+ *     and facet \a f<sub>S'</sub>(\a k') of \a f(S') are identified in \a U.
+ *     Moreover, their gluing is consistent with the facet/vertex permutations;
+ *     that is, there is a commutative square involving the gluing maps in
+ *     \a T and \a U and the permutations \a f<sub>S</sub> and
+ *     \a f<sub>S'</sub>.
  *
  * Isomorphisms can be <i>boundary complete</i> or
  * <i>boundary incomplete</i>.  A boundary complete isomorphism
  * satisfies the additional condition:
  *
- *   - If facet x is a boundary facet of T then facet f(x) is a boundary
- *     facet of U.
+ *   - If facet \a x is a boundary facet of \a T then facet \a f(x) is a
+ *     boundary facet of \a U.
  *
  * A boundary complete isomorphism thus indicates that a copy of
- * triangulation T is present as an entire component (or components) of U,
+ * triangulation \a T is present as an entire component (or components) of \a U,
  * whereas a boundary incomplete isomorphism represents an embedding of a
- * copy of triangulation T as a subcomplex of some possibly larger component
- * (or components) of U.
+ * copy of triangulation \a T as a subcomplex of some possibly larger component
+ * (or components) of \a U.
  *
- * Note that in all cases triangulation U may contain more simplices
- * than triangulation T.
- *
- * \pre The dimension argument \a dim is either 2, 3 or 4.
+ * Note that for all types of isomorphism, triangulation \a U is allowed
+ * to contain more simplices than triangulation \a T.
  *
  * \ifacespython Not present, though the dimension-specific subclasses
  * (such as NIsomorphism and Dim4Isomorphism) are available for Python users.
+ *
+ * \tparam dim The dimension of the underlying triangulation.
  */
 template <int dim>
-class REGINA_API NGenericIsomorphism : public ShareableObject {
+class REGINA_API NGenericIsomorphism :
+        public DimTraits<dim>,
+        public Output<NGenericIsomorphism<dim> >,
+        public boost::noncopyable {
     public:
-        typedef typename DimTraits<dim>::Isomorphism Isomorphism;
-            /**< The isomorphism class used by triangulations of this
-                 specific dimension.  Typically this is a subclass of
-                 NGenericIsomorphism<dim>. */
-        typedef typename DimTraits<dim>::Perm Perm;
-            /**< The permutation class used to glue together facets of
-                 simplices when building triangulations in this dimension. */
-        typedef typename DimTraits<dim>::Simplex Simplex;
-            /**< The class that represents a top-level simplex of a
-                 triangulation in this dimension. */
-        typedef typename DimTraits<dim>::Triangulation Triangulation;
-            /**< The triangulation class specific to this dimension. */
+        using typename DimTraits<dim>::Isomorphism;
+        using typename DimTraits<dim>::Perm;
+        using typename DimTraits<dim>::Simplex;
+        using typename DimTraits<dim>::Triangulation;
 
     protected:
         unsigned nSimplices_;
@@ -315,7 +312,23 @@ class REGINA_API NGenericIsomorphism : public ShareableObject {
          */
         void applyInPlace(Triangulation* tri) const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 
         /**

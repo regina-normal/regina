@@ -64,19 +64,22 @@ namespace regina {
 template <int dim>
 struct DimTraits {
     typedef void Triangulation;
-        /**< The main data type for a \a dim-manifold triangulation. */
+        /**< The main data type for a <i>dim</i>-manifold triangulation. */
     typedef void Simplex;
         /**< The data type for a top-dimensional simplex in a
-             \a dim-manifold triangulation. */
+             <i>dim</i>-manifold triangulation. */
     typedef void Isomorphism;
         /**< The data type for an isomorphism between two
-             \a dim-manifold triangulations. */
+             <i>dim</i>-manifold triangulations.
+             Typically this is a subclass of NGenericIsomorphism<dim>. */
     typedef void FacetPairing;
         /**< The data type that represents a pairing of facets of
-             top-dimensional simplices in a \a dim-manifold triangulation. */
+             top-dimensional simplices in a <i>dim</i>-manifold
+             triangulation. */
     typedef void Perm;
         /**< The permutation type used to describe gluings between
-             top-dimensional simplices in a \a dim-manifold triangulation. */
+             top-dimensional simplices in a <i>dim</i>-manifold
+             triangulation. */
 };
 
 /**
@@ -98,8 +101,8 @@ struct DimTraits {
 template <int dim, int subdim>
 struct FaceTraits {
     typedef void Face;
-        /**< The main data type for a \a subdim-dimensional face in a
-             \a dim-manifold triangulation. */
+        /**< The main data type for a </i>subdim</i>-dimensional face in a
+             <i>dim</i>-manifold triangulation. */
 };
 
 #ifndef __DOXYGEN

@@ -42,7 +42,6 @@
  */
 
 #include "regina-core.h"
-#include "shareableobject.h"
 #include "maths/ninteger.h"
 #include "maths/nmatrix.h"
 
@@ -66,8 +65,7 @@ namespace regina {
  * Exceptions are noted in the documentation for each individual member
  * function.
  */
-class REGINA_API NMatrixInt :
-        public NMatrixRing<NLargeInteger>, public ShareableObject {
+class REGINA_API NMatrixInt : public NMatrixRing<NLargeInteger> {
     public:
         /**
          * Creates a new matrix of the given size.
@@ -202,25 +200,15 @@ class REGINA_API NMatrixInt :
             if (gcd != NLargeInteger::zero && gcd != NLargeInteger::one)
                 divColExact(col, gcd);
         }
-
-        virtual void writeTextShort(std::ostream& out) const;
-        virtual void writeTextLong(std::ostream& out) const;
 };
 
 // Inline functions for NMatrixInt
 
 inline NMatrixInt::NMatrixInt(unsigned long rows, unsigned long cols) :
-        NMatrixRing<NLargeInteger>(rows, cols), ShareableObject() {
+        NMatrixRing<NLargeInteger>(rows, cols) {
 }
 inline NMatrixInt::NMatrixInt(const NMatrixInt& cloneMe) :
-        NMatrixRing<NLargeInteger>(cloneMe), ShareableObject() {
-}
-
-inline void NMatrixInt::writeTextShort(std::ostream& out) const {
-    out << nRows << " x " << nCols << " integer matrix";
-}
-inline void NMatrixInt::writeTextLong(std::ostream& out) const {
-    writeMatrix(out);
+        NMatrixRing<NLargeInteger>(cloneMe) {
 }
 
 /*@}*/
