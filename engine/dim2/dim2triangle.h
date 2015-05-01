@@ -42,7 +42,6 @@
 #endif
 
 #include "regina-core.h"
-#include "shareableobject.h"
 #include "generic/simplex.h"
 #include "maths/nperm3.h"
 #include "utilities/nmarkedvector.h"
@@ -78,9 +77,7 @@ class Dim2Triangulation;
  * Dim2Triangulation::removeAllTriangles(); these routines will
  * automatically destroy the triangles as they are removed.
  */
-class REGINA_API Dim2Triangle :
-        public ShareableObject,
-        public SimplexBase<2, true> {
+class REGINA_API Dim2Triangle : public SimplexBase<2, true> {
     private:
         Dim2Vertex* vertex_[3];
             /**< Vertices in the triangulation skeleton that are
@@ -226,10 +223,6 @@ class REGINA_API Dim2Triangle :
          */
         int orientation() const;
 
-        void writeTextShort(std::ostream& out) const;
-        void writeTextLong(std::ostream& out) const;
-        using ShareableObject::str;
-
     private:
         /**
          * Creates a new triangle with empty description and no
@@ -305,14 +298,6 @@ inline int Dim2Triangle::orientation() const {
     if (! getTriangulation()->calculatedSkeleton_)
         getTriangulation()->calculateSkeleton();
     return orientation_;
-}
-
-inline void Dim2Triangle::writeTextShort(std::ostream& out) const {
-    SimplexBase<2, true>::str(out);
-}
-
-inline void Dim2Triangle::writeTextLong(std::ostream& out) const {
-    SimplexBase<2, true>::detail(out);
 }
 
 inline Dim2Triangle::Dim2Triangle(Dim2Triangulation* tri) :

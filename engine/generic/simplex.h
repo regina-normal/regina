@@ -42,6 +42,7 @@
 #endif
 
 #include "regina-core.h"
+#include "output.h"
 #include "generic/dimtraits.h"
 #include "generic/policies.h"
 #include "maths/nperm.h"
@@ -74,6 +75,7 @@ template <int dim, bool isPacket = false>
 class REGINA_API SimplexBase :
         public DimTraits<dim>,
         public NMarkedElement,
+        public Output<SimplexBase<dim>>,
         public boost::noncopyable {
     public:
         using typename DimTraits<dim>::Triangulation;
@@ -261,10 +263,8 @@ class REGINA_API SimplexBase :
          */
         Triangulation* getTriangulation() const;
 
-        std::string str() const;
-        std::ostream&  str(std::ostream& out) const;
-        std::string detail() const;
-        std::ostream& detail(std::ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     protected:
         /**
@@ -285,8 +285,6 @@ class REGINA_API SimplexBase :
 
     friend Triangulation;
 };
-
-// TODO: Disambiguate str() from Dim2Triangle.
 
 /*@}*/
 
@@ -345,11 +343,11 @@ inline typename SimplexBase<dim, isPacket>::Triangulation*
 }
 
 template <int dim, bool isPacket>
-inline std::ostream& SimplexBase<dim, isPacket>::str(std::ostream& out) const {
+inline void SimplexBase<dim, isPacket>::writeTextShort(std::ostream& out)
+        const {
     out << dim << "-simplex";
     if (! description_.empty())
         out << ": " << description_;
-    return out;
 }
 
 template <int dim, bool isPacket>
@@ -406,22 +404,26 @@ void SimplexBase<dim, isPacket>::joinTo(int myFacet, Simplex* you,
 }
 
 template <int dim, bool isPacket>
-std::ostream& SimplexBase<dim, isPacket>::detail(std::ostream& out) const {
-    str(out) << std::endl;
-    for (int i = dim; i >= 0; --i) {
-        // TODO: output.
-        /*
-        out << NTriangle::ordering[i].trunc3() << " -> ";
-        if (! adj_[i])
+void SimplexBase<dim, isPacket>::writeTextLong(std::ostream& out) const {
+    writeTextShort(out);
+    out << std::endl;
+    int facet, j;
+    for (facet = dim; facet >= 0; --facet) {
+        for (j = 0; j <= dim; ++j)
+            if (j != facet)
+                out << regina::digit(j);
+        out << " -> ";
+        if (! adj_[facet])
             out << "boundary";
-        else
-            out << adj_[i]->markedIndex() << " ("
-                << (gluing_[i] * NTriangle::ordering[i]).trunc3()
-                << ')';
+        else {
+            out << adj_[facet]->markedIndex() << " (";
+            for (j = 0; j <= dim; ++j)
+                if (j != facet)
+                    out << regina::digit(gluing_[facet][j]);
+            out << ')';
+        }
         out << std::endl;
-        */
     }
-    return out;
 }
 
 } // namespace regina
