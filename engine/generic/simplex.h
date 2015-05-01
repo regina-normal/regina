@@ -60,8 +60,8 @@ namespace regina {
 /**
  * Represents a top-dimensional simplex in a <i>dim</i>-manifold triangulation.
  *
- * For example, for 3-manifolds this would be a tetrahedron, and for
- * 2-manifolds this would be a triangle.
+ * For example, for 3-manifolds this class represents a tetrahedron, and for
+ * 2-manifolds this class represents a triangle.
  *
  * Top-dimensional simplices cannot exist in isolation (without a
  * triangulation object), and they cannot be created or destroyed directly.
@@ -69,7 +69,19 @@ namespace regina {
  * by calling routines such as Triangulation<dim>::newSimplex() or
  * Triangulation<dim>::removeSimplex().
  *
+ * Amongst other things, this class is used to view and change the gluings
+ * between top-dimensional simplices.  For this we number the facets and
+ * vertices of each simplex 0,...,\a dim, so that facet \a i is opposite
+ * vertex \a i.
+ *
+ * Each simplex may have an optional description.  This is typically a
+ * human-readable piece of text.  Descriptions are not required, and do
+ * not need to be unique.
+ *
  * \tparam dim the dimension of the underlying triangulation.
+ * \tparam isPacket \c true if and only if the underlying triangulation class
+ * derives from NPacket.  This will affect whether or routines such as
+ * join() and unjoin() fire packet change events.
  */
 template <int dim, bool isPacket = false>
 class REGINA_API SimplexBase :
@@ -87,34 +99,37 @@ class REGINA_API SimplexBase :
             /**< Stores the adjacent simplex glued to each facet of this
                  simplex.  Specifically, <tt>adj_[f]</tt> represents the
                  simplex joined to facet \a f of this simplex, or is 0
-                 if facet \a f lies on the triangulation boundary.  Facets are
-                 numbered from 0 to \a dim inclusive, where facet \a i is
-                 opposite vertex \a i of the simplex. */
+                 if facet \a f lies on the triangulation boundary. */
         Perm gluing_[dim + 1];
-            /**< Stores the corresponence between vertices of this simplex and
-                 adjacent simplices.  If facet \a f is joined to some other
-                 simplex (i.e., it is not boundary), then \a gluing_[\a f]
-                 represents the permutation \a p whereby vertex \a v of
-                 this simplex is identified with vertex \a p[\a v] of
-                 the adjacent simplex. */
+            /**< Indicates how vertices map to each other across each gluing.
+                 Specifically, if facet \a f is joined to some other simplex
+                 (i.e., it is not boundary), then \a gluing_[\a f] represents
+                 the induced mapping from vertices of this simplex to
+                 vertices of the adjacent simplex. */
         std::string description_;
-            /**< A text description of this simplex.
-                 Descriptions are not mandatory and need not be unique. */
+            /**< The description of this simplex, or the empty string
+                 if there is no description. */
 
         Triangulation* tri_;
             /**< The triangulation to which this simplex belongs. */
 
     public:
         /**
-         * Returns the text description associated with this simplex.
+         * Returns the description associated with this simplex.
          *
-         * @return the description of this simplex.
+         * @return the description of this simplex, or the empty string
+         * if no description is stored.
          */
         const std::string& getDescription() const;
 
         /**
-         * Sets the text description associated with this simplex.
-         * Note that descriptions need not be unique, and may be empty.
+         * Sets the description associated with this simplex.
+         *
+         * This may be any text whatsoever; typically it is intended to
+         * be human-readable.  Descriptions do not need to be unique.
+         *
+         * To remove an existing description, you can simply set the
+         * description to the empty string.
          *
          * @param desc the new description to assign to this simplex.
          */
@@ -123,7 +138,10 @@ class REGINA_API SimplexBase :
         /**
          * Returns the index of this simplex in the underlying triangulation.
          * This is identical to calling
-         * <tt>getTriangulation()->tetrahedronIndex(this)</tt>.
+         * <tt>getTriangulation()->simplexIndex(this)</tt>.
+         *
+         * The index will be an integer between 0 and
+         * <tt>getTriangulation()->size()-1</tt> inclusive.
          *
          * Note that indexing may change when a simplex is added to or removed
          * from the underlying triangulation.
@@ -131,6 +149,8 @@ class REGINA_API SimplexBase :
          * @return the index of this simplex.
          */
         size_t index() const;
+
+        // TODO: Documentation needs to be revised from here onwards.
 
         /**
          * Returns the adjacent tetrahedron glued to the given face of this
@@ -235,48 +255,77 @@ class REGINA_API SimplexBase :
          * face number <tt>gluing[myFacet]</tt>.
          */
         void joinTo(int myFacet, Simplex* you, Perm gluing);
+        // TODO: Documentation needs to be revised above this point.
         /**
-         * Unglues the given face of this tetrahedron from whatever is
-         * joined to it.  The other tetrahedron involved (possibly this
-         * one) will be automatically updated.
+         * Unglues the given facet of this simplex from whatever it is
+         * joined to.  As a result, the given facet of this simplex
+         * will become a boundary facet.
          *
-         * \pre The given face of this tetrahedron has some tetrahedron
-         * (possibly this one) glued to it.
+         * If there was an adjacent simplex to begin with, then this other
+         * simplex will be updated automatically (i.e., you only need to
+         * call unjoin() from one side of the gluing).
          *
-         * @param myFacet the face of this tetrahedron whose gluing we
-         * will undo.  This should be between 0 and 3 inclusive, where
-         * face \c i is opposite vertex \c i of the tetrahedron.
-         * @return the ex-adjacent tetrahedron that was originally glued
-         * to the given face of this tetrahedron.
+         * This routine is safe to call even if the given facet is
+         * already a boundary facet (in which case it will do nothing).
+         *
+         * @param myFacet the facet of this simplex whose gluing we
+         * will undo.  This should be between 0 and \a dim inclusive.
+         * @return the simplex that was originally glued to the given facet
+         * of this simplex, or 0 if this was already a boundary facet.
          */
         Simplex* unjoin(int myFacet);
         /**
-         * Undoes any face gluings involving this tetrahedron.
-         * Any other tetrahedra involved will be automatically updated.
+         * Unglues this simplex from any adjacent simplices.
+         * As a result, every facet of this simplex will become a boundary
+         * facet, and this simplex will form its own separate component
+         * of the underlying triangulation.
+         *
+         * If there were any adjacent simplices to begin with, these
+         * will be updated automatically.
+         *
+         * This routine is safe to call even if there are no adjacent
+         * simplices (in which case it will do nothing).
          */
         void isolate();
 
         /**
-         * Returns the triangulation to which this tetrahedron belongs.
+         * Returns the triangulation to which this simplex belongs.
          *
-         * @return the triangulation containing this tetrahedron.
+         * @return the triangulation containing this simplex.
          */
         Triangulation* getTriangulation() const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 
     protected:
         /**
-         * Creates a new simplex with an empty description and no
-         * facets joined to anything.
+         * Creates a new simplex with no description and no facets joined
+         * to anything.
          *
          * @param tri the triangulation to which the new simplex belongs.
          */
         SimplexBase(Triangulation* tri);
         /**
-         * Creates a new triangle with the given description and
-         * no facets joined to anything.
+         * Creates a new simplex with the given description and no facets
+         * joined to anything.
          *
          * @param desc the description to give the new simplex.
          * @param tri the triangulation to which the new simplex belongs.
@@ -366,18 +415,20 @@ void SimplexBase<dim, isPacket>::isolate() {
 }
 
 template <int dim, bool isPacket>
-typename SimplexBase<dim, isPacket>::Simplex* SimplexBase<dim, isPacket>::unjoin(int myFacet) {
+typename SimplexBase<dim, isPacket>::Simplex*
+        SimplexBase<dim, isPacket>::unjoin(int myFacet) {
+    if (! adj_[myFacet])
+        return 0;
+
     ChangeEventSpan<isPacket> span(tri_);
 
     Simplex* you = adj_[myFacet];
     int yourFacet = gluing_[myFacet][myFacet];
-    assert(you);
-    assert(you->adj_[yourFacet]);
+    assert(you->adj_[yourFacet] == this);
     you->adj_[yourFacet] = 0;
     adj_[myFacet] = 0;
 
     tri_->clearAllProperties();
-
     return you;
 }
 
