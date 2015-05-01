@@ -33,8 +33,7 @@
 /* end stub */
 
 /*! \file shareableobject.h
- *  \brief Deals with objects that can be shared from the
- *  calculation engine with the outside world.
+ *  \brief Provides a deprecated base class for many objects in Regina.
  */
 
 #ifndef __SHAREABLEOBJECT_H
@@ -57,18 +56,12 @@ namespace regina {
  */
 
 /**
- * Facilitates mirroring objects in the underlying C++ calculation
- * engine using the various wrapper classes provided in the various
- * external interfaces (such as the Python interface).
+ * A deprecated base class for many objects in Regina.
  *
- * In the underlying C++ engine, a ShareableObject is an object that can
- * be shared with the outside world.  In the external
- * interfaces, a ShareableObject is a vacuous wrapper that allows access
- * to the data and methods of the corresponding object in the underlying
- * engine.
- *
- * See the various interface notes pages for more details regarding
- * using classes derived from ShareableObject.
+ * \deprecated For a long time now, the only real functionality that this
+ * class has provided is the common output routines str() and detail().
+ * Classes that provide text output should now inherit from the appropriate
+ * Output template class instead.
  */
 class REGINA_API ShareableObject :
         public Output<ShareableObject>,
