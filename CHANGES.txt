@@ -9,6 +9,9 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.97  [ (under development) ]
 
+    TODO:
+        - Once things become generic enough, note in the relevant
+          simplex classes that unjoin() is safe on boundary facets.
     GENERAL:
         - Now uses aspects of C++11, which your compiler will need to support.
     ENGINE:
