@@ -455,7 +455,7 @@ class REGINA_API NTreeBag :
         bool isLeaf() const;
 
         /**
-         * Writes a short string representation of this object to the
+         * Writes a short text representation of this object to the
          * given output stream.
          *
          * \ifacespython Not present.
@@ -849,7 +849,7 @@ class REGINA_API NTreeDecomposition :
         void makeNice();
 
         /**
-         * Writes a short string representation of this object to the
+         * Writes a short text representation of this object to the
          * given output stream.
          *
          * \ifacespython Not present.
@@ -859,7 +859,7 @@ class REGINA_API NTreeDecomposition :
         void writeTextShort(std::ostream& out) const;
 
         /**
-         * Writes a detailed string representation of this object to the
+         * Writes a detailed text representation of this object to the
          * given output stream.
          *
          * \ifacespython Not present.

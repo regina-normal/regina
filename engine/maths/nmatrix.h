@@ -315,7 +315,7 @@ class NMatrix : public Output<NMatrix<T> >, public boost::noncopyable {
         }
 
         /**
-         * Writes a short string representation of this object to the
+         * Writes a short text representation of this object to the
          * given output stream.
          *
          * \ifacespython Not present.
@@ -326,7 +326,7 @@ class NMatrix : public Output<NMatrix<T> >, public boost::noncopyable {
             out << nRows << " x " << nCols << " matrix";
         }
         /**
-         * Writes a detailed string representation of this object to the
+         * Writes a detailed text representation of this object to the
          * given output stream.
          *
          * \ifacespython Not present.
