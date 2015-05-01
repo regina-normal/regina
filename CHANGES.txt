@@ -53,6 +53,11 @@ Version 4.97  [ (under development) ]
               which signals that the directory should not be changed.
         Class NMatrix:
             - The destructor and writeMatrix() are no longer virtual.
+            - Now derives from Output, and provides str() and detail()
+              output routines.
+        Class NMatrixInt:
+            - No longer derives from ShareableObject.  Text output is now
+              provided by the inherited Output base class intead.
         Class NNormalSurface:
             - New convenience routines normal() and embedded().
         Class NNormalSurfaceList, NNormalSurfaceSubset:
