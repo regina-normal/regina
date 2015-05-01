@@ -458,6 +458,8 @@ class REGINA_API NTreeBag :
          * Writes a short string representation of this object to the
          * given output stream.
          *
+         * \ifacespython Not present.
+         *
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
@@ -850,6 +852,8 @@ class REGINA_API NTreeDecomposition :
          * Writes a short string representation of this object to the
          * given output stream.
          *
+         * \ifacespython Not present.
+         *
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
@@ -857,6 +861,8 @@ class REGINA_API NTreeDecomposition :
         /**
          * Writes a detailed string representation of this object to the
          * given output stream.
+         *
+         * \ifacespython Not present.
          *
          * @param out the output stream to which to write.
          */
