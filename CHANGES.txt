@@ -40,6 +40,8 @@ Version 4.97  [ (under development) ]
               and whiteheadLinkComplement() to figureEight(), trefoil()
               and whiteheadLink() respectively.  The old names are kept
               but deprecated.
+        Class NFileInfo:
+            - Now derives from Output instead of ShareableObject.
         Class NGenericFacetPairing, NFacePairing, Dim2EdgePairing:
             - Routines dotHeader() and writeDotHeader() no longer set an
               explicit background colour.
