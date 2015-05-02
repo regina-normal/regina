@@ -33,7 +33,7 @@
 /* end stub */
 
 /*! \file generic/ngenericisomorphism.h
- *  \brief Deals with combinatorial isomorphisms of \a n-manifold
+ *  \brief Deals with combinatorial isomorphisms of <i>n</i>-manifold
  *  triangulations.
  */
 
@@ -103,6 +103,7 @@ namespace regina {
  * (such as NIsomorphism and Dim4Isomorphism) are available for Python users.
  *
  * \tparam dim The dimension of the underlying triangulation.
+ * At present, only dimensions 2, 3 and 4 are supported.
  */
 template <int dim>
 class REGINA_API NGenericIsomorphism :
