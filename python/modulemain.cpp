@@ -46,6 +46,7 @@ void addCensus();
 void addDim2();
 void addFile();
 void addForeign();
+void addGeneric();
 void addManifold();
 void addMaths();
 void addPacket();
@@ -146,6 +147,7 @@ BOOST_PYTHON_MODULE(engine) {
     addAngle();
     addSurfaces();
     addDim2();
+    addGeneric();
     addTreewidth();
 }
 
