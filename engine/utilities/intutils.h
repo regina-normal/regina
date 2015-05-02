@@ -80,6 +80,8 @@ constexpr int nextPowerOfTwo(int n) {
  *
  * \tparam k the exact number of bytes in the native integer types.
  *
+ * \ifacespython Not present.
+ *
  * @see IntOfMinSize
  */
 template <int bytes>
@@ -108,6 +110,8 @@ struct IntOfSize {
  * where \a k may be any compile-time constant.
  *
  * \tparam k the minimum number of bytes in the native integer types.
+ *
+ * \ifacespython Not present.
  *
  * @see IntOfSize
  */
