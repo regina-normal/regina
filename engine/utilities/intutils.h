@@ -49,6 +49,20 @@
 namespace regina {
 
 /**
+ * Returns the number of bits required to store integers in the range
+ * 0,...,<i>n</i>-1.
+ * This is simply the number of bits in the binary expansion of <i>n</i>-1.
+ *
+ * If \a n is non-positive then this function will return 0.
+ *
+ * \param n any integer.
+ * \return the number of bits required to store 0,...,<i>n</i>-1.
+ */
+constexpr int bitsRequired(int n) {
+    return (n <= 1 ? 0 : (bitsRequired((n + 1) / 2)) + 1);
+}
+
+/**
  * Returns the smallest integer power of two that is greater than or equal to
  * the given argument \a n.
  * If \a n is non-positive then this function will return 1.
