@@ -412,7 +412,7 @@ inline const std::string& SimplexBase<dim, isPacket>::getDescription() const {
 template <int dim, bool isPacket>
 inline void SimplexBase<dim, isPacket>::setDescription(
         const std::string& desc) {
-    ChangeEventSpan<isPacket> span(tri_);
+    ChangeEventSpan<typename DimTraits<dim>::Triangulation> span(tri_);
     description_ = desc;
 }
 
@@ -472,7 +472,7 @@ Simplex<dim>* SimplexBase<dim, isPacket>::unjoin(int myFacet) {
     if (! adj_[myFacet])
         return 0;
 
-    ChangeEventSpan<isPacket> span(tri_);
+    ChangeEventSpan<typename DimTraits<dim>::Triangulation> span(tri_);
 
     Simplex<dim>* you = adj_[myFacet];
     int yourFacet = gluing_[myFacet][myFacet];
@@ -487,7 +487,7 @@ Simplex<dim>* SimplexBase<dim, isPacket>::unjoin(int myFacet) {
 template <int dim, bool isPacket>
 void SimplexBase<dim, isPacket>::joinTo(int myFacet, Simplex<dim>* you,
         NPerm<dim+1> gluing) {
-    ChangeEventSpan<isPacket> span(tri_);
+    ChangeEventSpan<typename DimTraits<dim>::Triangulation> span(tri_);
 
     assert(tri_ == you->tri_);
     assert((! adj_[myFacet]) ||

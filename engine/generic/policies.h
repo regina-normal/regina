@@ -33,7 +33,7 @@
 /* end stub */
 
 /*! \file generic/policies.h
- *  \brief TODO.
+ *  \brief Internal helper classes for writing generic dimension-agnostic code.
  */
 
 #ifndef __POLICIES_H
@@ -43,6 +43,7 @@
 
 #include "regina-core.h"
 #include "packet/npacket.h"
+#include <boost/type_traits/is_base_of.hpp>
 
 namespace regina {
 
@@ -51,20 +52,73 @@ namespace regina {
  * @{
  */
 
-template <bool isPacket>
-class ChangeEventSpan;
+/**
+ * An internal helper class for the ChangeEventSpan template.
+ * See ChangeEventSpan for further details.
+ */
+template <typename T, bool isPacket = boost::is_base_of<NPacket, T>::value>
+struct ChangeEventSpanBase;
 
-template <>
-struct ChangeEventSpan<true> : public NPacket::ChangeEventSpan {
-    template <typename Packet>
-    ChangeEventSpan(Packet* p) : NPacket::ChangeEventSpan(p) {}
+/**
+ * An internal helper class that fires packet change events if and
+ * only if the given type derives from NPacket.
+ *
+ * Suppose you are implementing a packet subclass \a T, and you write
+ * a member function that changes the contents of an object of type \a T.
+ * If \a T were a packet type, you would typically declare a local
+ * NPacket::ChangeEventSpan object on the stack before making your changes;
+ * this object would then take care of firing the events
+ * NPacket::packetToBeChanged() and NPacket::packetWasChanged() when
+ * required.
+ *
+ * Suppose now that you are implementing a \e generic class \a T,
+ * and you do not know whether or not \a T derives from NPacket.
+ * In this case, instead of creating a local NPacket::ChangeEventSpan
+ * object, you would create a local ChangeEventSpan<T> object:
+ *
+ * - If the compiler determines that \a T is a subclass of NPacket,
+ *   then this will create an NPacket::ChangeEventSpan object and fire
+ *   the appropriate events as per normal.
+ *
+ * - If the compiler determines that \a T is \e not a subclass of NPacket,
+ *   then this will do nothing.
+ *
+ * Note that, for the purposes of this template, NPacket is itself
+ * considered to be a subclass of NPacket.
+ *
+ * \tparam T the class of the object that you are changing.
+ */
+template <typename T>
+struct ChangeEventSpan : public ChangeEventSpanBase<T> {
+    /**
+     * Creates a new NPacket::ChangeEventSpan if and only if
+     * \a T is a subclass of NPacket.  The NPacket::ChangeEventSpan
+     * will have the same lifespan as this object.
+     *
+     * If \a T is not a subclass of NPacket, then this constructor does
+     * nothing.
+     *
+     * @param object If \a T is a subclass of NPacket, then \a object should
+     * be a pointer to the packet that you are about to change.
+     */
+    inline ChangeEventSpan(T* object) : ChangeEventSpanBase<T>(object) {
+    }
 };
 
-template <>
-struct ChangeEventSpan<false> {
-    template <typename T>
-    ChangeEventSpan(T) {}
+#ifndef __DOXYGEN
+template <typename T>
+struct ChangeEventSpanBase<T, false> {
+    inline ChangeEventSpanBase(T* object) {
+    }
 };
+
+template <typename T>
+struct ChangeEventSpanBase<T, true> : public NPacket::ChangeEventSpan {
+    inline ChangeEventSpanBase(NPacket* object) :
+            NPacket::ChangeEventSpan(object) {
+    }
+};
+#endif
 
 } // namespace regina
 
