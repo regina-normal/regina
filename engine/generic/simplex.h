@@ -70,6 +70,8 @@ class Simplex;
  * See the Simplex template class notes for further information.
  *
  * \tparam dim the dimension of the underlying triangulation.
+ * This must be at least 2.
+ *
  * \tparam isPacket \c true if and only if the underlying triangulation class
  * derives from NPacket.  This will affect whether or routines such as
  * join() and unjoin() fire packet change events.
@@ -79,6 +81,7 @@ class REGINA_API SimplexBase :
         public NMarkedElement,
         public Output<SimplexBase<dim>>,
         public boost::noncopyable {
+    static_assert(dim >= 2, "SimplexBase requires dimension >= 2.");
     private:
         Simplex<dim>* adj_[dim + 1];
             /**< Stores the adjacent simplex glued to each facet of this
@@ -357,6 +360,7 @@ class REGINA_API SimplexBase :
  * Python for the time being.
  *
  * \tparam dim the dimension of the underlying triangulation.
+ * This must be at least 2.
  */
 template <int dim>
 class REGINA_API Simplex : public SimplexBase<dim> {
