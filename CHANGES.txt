@@ -179,10 +179,12 @@ Version 4.97  [ (under development) ]
               whereas Simplex<dim> is specialised for dimensions 2, 3 and 4.
             - The old class names Dim2Triangle and NTetrahedron have
               been kept as typedefs for convenience.
+        Routine bitsRequired():
+            - New constexpr routine for counting bits in an integer.
         Routine digit():
-            - Convenience routine for converting integers into characters.
+            - New constexpr routine for converting integers into characters.
         Routine nextPowerOfTwo():
-            - Convenience routine for rounding up to a power of two.
+            - New constexpr routine for rounding up to a power of two.
         Routine open():
             - Added a variant that takes an input stream (as opposed to
               a filename).

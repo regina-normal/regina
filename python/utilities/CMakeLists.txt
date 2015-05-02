@@ -3,6 +3,7 @@
 # Files to compile
 SET ( FILES
   i18nutils
+  intutils
   nbooleans
   osutils
   pyutilities

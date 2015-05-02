@@ -32,19 +32,13 @@
 
 /* end stub */
 
-void addIntUtils();
-void addLocale();
-void addNBoolSet();
-void addNTriBool();
-void addOSUtils();
-void addStringUtils();
+#include <boost/python.hpp>
+#include "utilities/intutils.h"
 
-void addUtilities() {
-    addIntUtils();
-    addLocale();
-    addNBoolSet();
-    addNTriBool();
-    addOSUtils();
-    addStringUtils();
+using namespace boost::python;
+
+void addIntUtils() {
+    boost::python::def("bitsRequired", regina::bitsRequired);
+    boost::python::def("nextPowerOfTwo", regina::nextPowerOfTwo);
 }
 
