@@ -110,9 +110,11 @@ struct FaceTraits {
 template <int n>
 class NPerm;
 
+template <int n>
+class Simplex;
+
 class Dim2Edge;
 class Dim2Triangulation;
-class Dim2Triangle;
 class Dim2Isomorphism;
 class Dim2EdgePairing;
 class Dim2Vertex;
@@ -120,7 +122,7 @@ class Dim2Vertex;
 template <>
 struct DimTraits<2> {
     typedef Dim2Triangulation Triangulation;
-    typedef Dim2Triangle Simplex;
+    typedef Simplex<2> Simplex;
     typedef Dim2Isomorphism Isomorphism;
     typedef Dim2EdgePairing FacetPairing;
     typedef NPerm<3> Perm;
@@ -155,7 +157,7 @@ struct FaceTraits<2, 1> {
 
 template <>
 struct FaceTraits<2, 2> {
-    typedef Dim2Triangle Face;
+    typedef Simplex<2> Face;
 };
 
 template <>

@@ -52,31 +52,22 @@
 
 namespace regina {
 
+template <int dim>
+class Simplex;
+
 /**
  * \weakgroup generic
  * @{
  */
 
 /**
- * Represents a top-dimensional simplex in a <i>dim</i>-manifold triangulation.
+ * Provides core functionality for a top-dimensional simplex in a
+ * <i>dim</i>-manifold triangulation.
  *
- * For example, for 3-manifolds this class represents a tetrahedron, and for
- * 2-manifolds this class represents a triangle.
+ * Such a simplex is represented by the class Simplex<dim>, which uses this as
+ * a base class.  End users should not need to refer to SimplexBase directly.
  *
- * Top-dimensional simplices cannot exist in isolation (without a
- * triangulation object), and they cannot be created or destroyed directly.
- * Instead, you create and destroy them through the underlying triangulation,
- * by calling routines such as Triangulation<dim>::newSimplex() or
- * Triangulation<dim>::removeSimplex().
- *
- * Amongst other things, this class is used to view and change the gluings
- * between top-dimensional simplices.  For this we number the facets and
- * vertices of each simplex 0,...,\a dim, so that facet \a i is opposite
- * vertex \a i.
- *
- * Each simplex may have an optional description.  This is typically a
- * human-readable piece of text.  Descriptions are not required, and do
- * not need to be unique.
+ * See the Simplex template class notes for further information.
  *
  * \tparam dim the dimension of the underlying triangulation.
  * \tparam isPacket \c true if and only if the underlying triangulation class
@@ -85,22 +76,16 @@ namespace regina {
  */
 template <int dim, bool isPacket = false>
 class REGINA_API SimplexBase :
-        public DimTraits<dim>,
         public NMarkedElement,
         public Output<SimplexBase<dim>>,
         public boost::noncopyable {
-    public:
-        using typename DimTraits<dim>::Triangulation;
-        using typename DimTraits<dim>::Simplex;
-        using typename DimTraits<dim>::Perm;
-
     private:
-        Simplex* adj_[dim + 1];
+        Simplex<dim>* adj_[dim + 1];
             /**< Stores the adjacent simplex glued to each facet of this
                  simplex.  Specifically, <tt>adj_[f]</tt> represents the
                  simplex joined to facet \a f of this simplex, or is 0
                  if facet \a f lies on the triangulation boundary. */
-        Perm gluing_[dim + 1];
+        NPerm<dim + 1> gluing_[dim + 1];
             /**< Indicates how vertices map to each other across each gluing.
                  Specifically, if facet \a f is joined to some other simplex
                  (i.e., it is not boundary), then \a gluing_[\a f] represents
@@ -110,7 +95,7 @@ class REGINA_API SimplexBase :
             /**< The description of this simplex, or the empty string
                  if there is no description. */
 
-        Triangulation* tri_;
+        typename DimTraits<dim>::Triangulation* tri_;
             /**< The triangulation to which this simplex belongs. */
 
     public:
@@ -166,7 +151,7 @@ class REGINA_API SimplexBase :
          * @return the adjacent tetrahedron glued to the given face, or 0
          * if the given face lies on the boundary.
          */
-        Simplex* adjacentSimplex(int face) const;
+        Simplex<dim>* adjacentSimplex(int face) const;
 
         /**
          * Returns a permutation describing the correspondence between
@@ -188,7 +173,7 @@ class REGINA_API SimplexBase :
          * tetrahedron to the vertices of the tetrahedron adjacent along
          * the given face.
          */
-        Perm adjacentGluing(int face) const;
+        NPerm<dim + 1> adjacentGluing(int face) const;
         /**
          * Examines the tetrahedron glued to the given face of this
          * tetrahedron, and returns the corresponding face of that
@@ -254,7 +239,7 @@ class REGINA_API SimplexBase :
          * will be glued to the given face of this tetrahedron will be
          * face number <tt>gluing[myFacet]</tt>.
          */
-        void joinTo(int myFacet, Simplex* you, Perm gluing);
+        void joinTo(int myFacet, Simplex<dim>* you, NPerm<dim + 1> gluing);
         // TODO: Documentation needs to be revised above this point.
         /**
          * Unglues the given facet of this simplex from whatever it is
@@ -273,7 +258,7 @@ class REGINA_API SimplexBase :
          * @return the simplex that was originally glued to the given facet
          * of this simplex, or 0 if this was already a boundary facet.
          */
-        Simplex* unjoin(int myFacet);
+        Simplex<dim>* unjoin(int myFacet);
         /**
          * Unglues this simplex from any adjacent simplices.
          * As a result, every facet of this simplex will become a boundary
@@ -293,7 +278,7 @@ class REGINA_API SimplexBase :
          *
          * @return the triangulation containing this simplex.
          */
-        Triangulation* getTriangulation() const;
+        typename DimTraits<dim>::Triangulation* getTriangulation() const;
 
         /**
          * Writes a short text representation of this object to the
@@ -322,7 +307,7 @@ class REGINA_API SimplexBase :
          *
          * @param tri the triangulation to which the new simplex belongs.
          */
-        SimplexBase(Triangulation* tri);
+        SimplexBase(typename DimTraits<dim>::Triangulation* tri);
         /**
          * Creates a new simplex with the given description and no facets
          * joined to anything.
@@ -330,24 +315,91 @@ class REGINA_API SimplexBase :
          * @param desc the description to give the new simplex.
          * @param tri the triangulation to which the new simplex belongs.
          */
-        SimplexBase(const std::string& desc, Triangulation* tri);
+        SimplexBase(const std::string& desc,
+            typename DimTraits<dim>::Triangulation* tri);
 
-    friend Triangulation;
+    friend typename DimTraits<dim>::Triangulation;
 };
+
+/**
+ * Represents a top-dimensional simplex in a <i>dim</i>-manifold triangulation.
+ *
+ * For example, for 3-manifolds this class represents a tetrahedron, and for
+ * 2-manifolds this class represents a triangle.
+ *
+ * Top-dimensional simplices cannot exist in isolation (without a
+ * triangulation object), and they cannot be created or destroyed directly.
+ * Instead, you create and destroy them through the underlying triangulation,
+ * by calling routines such as Triangulation<dim>::newSimplex() or
+ * Triangulation<dim>::removeSimplex().
+ *
+ * Amongst other things, this class is used to view and change the gluings
+ * between top-dimensional simplices.  For this we number the facets and
+ * vertices of each simplex 0,...,\a dim, so that facet \a i is opposite
+ * vertex \a i.
+ *
+ * Each simplex may have an optional description.  This is typically a
+ * human-readable piece of text.  Descriptions are not required, and do
+ * not need to be unique.
+ *
+ * For \a dim = 2, 3 and 4, this template is specialised and offers
+ * significant extra functionality.  In order to use these specialised
+ * classes, you will need to include the corresponding headers (e.g.,
+ * dim2/dim2triangle.h for \a dim = 2, or triangulation/ntetrahedron.h
+ * for \a dim = 3).  Otherwise any code that uses Simplex<2>, Simplex<3> or
+ * Simplex<4> will not compile.  For convenience, the typedefs Dim2Triangle,
+ * NTetrahedron and Dim4Pentachoron are also available for these
+ * specialised classes.
+ *
+ * \ifacespython Python does not support templates.  For \a dim = 2, 3 and 4,
+ * this class is available in Python under the name Simplex2, Simplex3 or
+ * Simplex4 respectively.  Higher-dimensional classes are not available in
+ * Python for the time being.
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ */
+template <int dim>
+class REGINA_API Simplex : public SimplexBase<dim> {
+    protected:
+        /**
+         * Creates a new simplex with no description and no facets joined
+         * to anything.
+         *
+         * @param tri the triangulation to which the new simplex belongs.
+         */
+        Simplex(typename DimTraits<dim>::Triangulation* tri);
+        /**
+         * Creates a new simplex with the given description and no facets
+         * joined to anything.
+         *
+         * @param desc the description to give the new simplex.
+         * @param tri the triangulation to which the new simplex belongs.
+         */
+        Simplex(const std::string& desc,
+            typename DimTraits<dim>::Triangulation* tri);
+};
+
+// Note that some of our simplex classes are specialised elsewhere.
+// Do not explicitly drag in the specialised headers for now.
+template <> class Simplex<2>;
+template <> class Simplex<3>;
+template <> class Simplex<4>;
 
 /*@}*/
 
 // Inline functions for SimplexBase
 
 template <int dim, bool isPacket>
-inline SimplexBase<dim, isPacket>::SimplexBase(Triangulation* tri) : tri_(tri) {
+inline SimplexBase<dim, isPacket>::SimplexBase(
+        typename DimTraits<dim>::Triangulation* tri) : tri_(tri) {
     for (int i = 0; i <= dim; ++i)
         adj_[i] = 0;
 }
 
 template <int dim, bool isPacket>
 inline SimplexBase<dim, isPacket>::SimplexBase(const std::string& desc,
-        Triangulation* tri) : description_(desc), tri_(tri) {
+        typename DimTraits<dim>::Triangulation* tri) :
+        description_(desc), tri_(tri) {
     for (int i = 0; i <= dim; ++i)
         adj_[i] = 0;
 }
@@ -358,7 +410,8 @@ inline const std::string& SimplexBase<dim, isPacket>::getDescription() const {
 }
 
 template <int dim, bool isPacket>
-inline void SimplexBase<dim, isPacket>::setDescription(const std::string& desc) {
+inline void SimplexBase<dim, isPacket>::setDescription(
+        const std::string& desc) {
     ChangeEventSpan<isPacket> span(tri_);
     description_ = desc;
 }
@@ -369,8 +422,8 @@ inline size_t SimplexBase<dim, isPacket>::index() const {
 }
 
 template <int dim, bool isPacket>
-inline typename SimplexBase<dim, isPacket>::Simplex* SimplexBase<dim, isPacket>::adjacentSimplex(
-        int facet) const {
+inline Simplex<dim>* SimplexBase<dim, isPacket>::adjacentSimplex(int facet)
+        const {
     return adj_[facet];
 }
 
@@ -380,13 +433,13 @@ inline int SimplexBase<dim, isPacket>::adjacentFacet(int facet) const {
 }
 
 template <int dim, bool isPacket>
-inline typename SimplexBase<dim, isPacket>::Perm SimplexBase<dim, isPacket>::adjacentGluing(
+inline NPerm<dim + 1> SimplexBase<dim, isPacket>::adjacentGluing(
         int face) const {
     return gluing_[face];
 }
 
 template <int dim, bool isPacket>
-inline typename SimplexBase<dim, isPacket>::Triangulation*
+inline typename DimTraits<dim>::Triangulation*
         SimplexBase<dim, isPacket>::getTriangulation() const {
     return tri_;
 }
@@ -415,14 +468,13 @@ void SimplexBase<dim, isPacket>::isolate() {
 }
 
 template <int dim, bool isPacket>
-typename SimplexBase<dim, isPacket>::Simplex*
-        SimplexBase<dim, isPacket>::unjoin(int myFacet) {
+Simplex<dim>* SimplexBase<dim, isPacket>::unjoin(int myFacet) {
     if (! adj_[myFacet])
         return 0;
 
     ChangeEventSpan<isPacket> span(tri_);
 
-    Simplex* you = adj_[myFacet];
+    Simplex<dim>* you = adj_[myFacet];
     int yourFacet = gluing_[myFacet][myFacet];
     assert(you->adj_[yourFacet] == this);
     you->adj_[yourFacet] = 0;
@@ -433,8 +485,8 @@ typename SimplexBase<dim, isPacket>::Simplex*
 }
 
 template <int dim, bool isPacket>
-void SimplexBase<dim, isPacket>::joinTo(int myFacet, Simplex* you,
-        Perm gluing) {
+void SimplexBase<dim, isPacket>::joinTo(int myFacet, Simplex<dim>* you,
+        NPerm<dim + 1> gluing) {
     ChangeEventSpan<isPacket> span(tri_);
 
     assert(tri_ == you->tri_);
@@ -448,7 +500,7 @@ void SimplexBase<dim, isPacket>::joinTo(int myFacet, Simplex* you,
         (you->adj_[yourFacet] == this &&
             you->gluing_[yourFacet] == gluing.inverse()));
     assert(! (you == this && yourFacet == myFacet));
-    you->adj_[yourFacet] = static_cast<Simplex*>(this);
+    you->adj_[yourFacet] = static_cast<Simplex<dim>*>(this);
     you->gluing_[yourFacet] = gluing.inverse();
 
     tri_->clearAllProperties();
@@ -475,6 +527,19 @@ void SimplexBase<dim, isPacket>::writeTextLong(std::ostream& out) const {
         }
         out << std::endl;
     }
+}
+
+// Inline functions for Simplex
+
+template <int dim>
+inline Simplex<dim>::Simplex(typename DimTraits<dim>::Triangulation* tri) :
+        SimplexBase<dim>(tri) {
+}
+
+template <int dim>
+inline Simplex<dim>::Simplex(const std::string& desc,
+        typename DimTraits<dim>::Triangulation* tri) :
+        SimplexBase<dim>(desc, tri) {
 }
 
 } // namespace regina

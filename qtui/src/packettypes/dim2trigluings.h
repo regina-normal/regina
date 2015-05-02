@@ -50,8 +50,8 @@ class QToolBar;
 
 namespace regina {
     class Dim2Triangulation;
-    class Dim2Triangle;
     class NPacket;
+    template <int> class Simplex;
 };
 
 class Dim2GluingsModel : public QAbstractItemModel {
@@ -115,7 +115,7 @@ class Dim2GluingsModel : public QAbstractItemModel {
          * edge gluing.  This routine handles both boundary and
          * non-boundary edges.
          */
-        static QString destString(int srcEdge, regina::Dim2Triangle* destTri,
+        static QString destString(int srcEdge, regina::Simplex<2>* destTri,
             const regina::NPerm3& gluing);
 
         /**

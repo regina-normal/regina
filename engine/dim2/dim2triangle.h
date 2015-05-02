@@ -77,7 +77,8 @@ class Dim2Triangulation;
  * Dim2Triangulation::removeAllTriangles(); these routines will
  * automatically destroy the triangles as they are removed.
  */
-class REGINA_API Dim2Triangle : public SimplexBase<2, true> {
+template <>
+class REGINA_API Simplex<2> : public SimplexBase<2, true> {
     private:
         Dim2Vertex* vertex_[3];
             /**< Vertices in the triangulation skeleton that are
@@ -102,16 +103,11 @@ class REGINA_API Dim2Triangle : public SimplexBase<2, true> {
 
     public:
         /**
-         * Destroys this triangle.
-         */
-        virtual ~Dim2Triangle();
-
-        /**
          * A dimension-specific alias for adjacentSimplex().
          *
          * See adjacentSimplex() for further information.
          */
-        Dim2Triangle* adjacentTriangle(int edge) const;
+        Simplex* adjacentTriangle(int edge) const;
         /**
          * A dimension-specific alias for adjacentFacet().
          * This is to assist with writing dimension-agnostic code that
@@ -230,7 +226,7 @@ class REGINA_API Dim2Triangle : public SimplexBase<2, true> {
          *
          * @param tri the triangulation to which the new triangle belongs.
          */
-        Dim2Triangle(Dim2Triangulation* tri);
+        Simplex(Dim2Triangulation* tri);
         /**
          * Creates a new triangle with the given description and
          * no edges joined to anything.
@@ -238,11 +234,16 @@ class REGINA_API Dim2Triangle : public SimplexBase<2, true> {
          * @param desc the description to give the new triangle.
          * @param tri the triangulation to which the new triangle belongs.
          */
-        Dim2Triangle(const std::string& desc, Dim2Triangulation* tri);
+        Simplex(const std::string& desc, Dim2Triangulation* tri);
 
     friend class Dim2Triangulation;
         /**< Allow access to private members. */
 };
+
+/**
+ * A convenience typedef for Simplex<2>.
+ */
+typedef Simplex<2> Dim2Triangle;
 
 /*@}*/
 
@@ -251,60 +252,57 @@ class REGINA_API Dim2Triangle : public SimplexBase<2, true> {
 #include "dim2/dim2triangulation.h"
 namespace regina {
 
-// Inline functions for Dim2Triangle
+// Inline functions for Simplex<2>
 
-inline Dim2Triangle::~Dim2Triangle() {
-}
-
-inline Dim2Triangle* Dim2Triangle::adjacentTriangle(int edge) const {
+inline Simplex<2>* Simplex<2>::adjacentTriangle(int edge) const {
     return adjacentSimplex(edge);
 }
 
-inline int Dim2Triangle::adjacentEdge(int edge) const {
+inline int Simplex<2>::adjacentEdge(int edge) const {
     return adjacentFacet(edge);
 }
 
-inline Dim2Component* Dim2Triangle::getComponent() const {
+inline Dim2Component* Simplex<2>::getComponent() const {
     if (! getTriangulation()->calculatedSkeleton_)
         getTriangulation()->calculateSkeleton();
     return component_;
 }
 
-inline Dim2Vertex* Dim2Triangle::getVertex(int vertex) const {
+inline Dim2Vertex* Simplex<2>::getVertex(int vertex) const {
     if (! getTriangulation()->calculatedSkeleton_)
         getTriangulation()->calculateSkeleton();
     return vertex_[vertex];
 }
 
-inline Dim2Edge* Dim2Triangle::getEdge(int edge) const {
+inline Dim2Edge* Simplex<2>::getEdge(int edge) const {
     if (! getTriangulation()->calculatedSkeleton_)
         getTriangulation()->calculateSkeleton();
     return edge_[edge];
 }
 
-inline NPerm3 Dim2Triangle::getVertexMapping(int vertex) const {
+inline NPerm3 Simplex<2>::getVertexMapping(int vertex) const {
     if (! getTriangulation()->calculatedSkeleton_)
         getTriangulation()->calculateSkeleton();
     return vertexMapping_[vertex];
 }
 
-inline NPerm3 Dim2Triangle::getEdgeMapping(int edge) const {
+inline NPerm3 Simplex<2>::getEdgeMapping(int edge) const {
     if (! getTriangulation()->calculatedSkeleton_)
         getTriangulation()->calculateSkeleton();
     return edgeMapping_[edge];
 }
 
-inline int Dim2Triangle::orientation() const {
+inline int Simplex<2>::orientation() const {
     if (! getTriangulation()->calculatedSkeleton_)
         getTriangulation()->calculateSkeleton();
     return orientation_;
 }
 
-inline Dim2Triangle::Dim2Triangle(Dim2Triangulation* tri) :
+inline Simplex<2>::Simplex(Dim2Triangulation* tri) :
         SimplexBase<2, true>(tri) {
 }
 
-inline Dim2Triangle::Dim2Triangle(const std::string& desc,
+inline Simplex<2>::Simplex(const std::string& desc,
         Dim2Triangulation* tri) : SimplexBase<2, true>(desc, tri) {
 }
 

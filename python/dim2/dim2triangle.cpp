@@ -43,8 +43,8 @@ using namespace boost::python;
 using regina::Dim2Triangle;
 
 void addDim2Triangle() {
-    class_<Dim2Triangle, std::auto_ptr<Dim2Triangle>, boost::noncopyable>(
-            "Dim2Triangle", no_init)
+    class_<regina::Simplex<2>, std::auto_ptr<regina::Simplex<2>>,
+            boost::noncopyable>("Simplex2", no_init)
         .def("getDescription", &Dim2Triangle::getDescription,
             return_value_policy<return_by_value>())
         .def("setDescription", &Dim2Triangle::setDescription)
@@ -78,5 +78,7 @@ void addDim2Triangle() {
         .def("toStringLong", &Dim2Triangle::toStringLong)
         .def("__str__", &Dim2Triangle::str)
     ;
+
+    scope().attr("Dim2Triangle") = scope().attr("Simplex2");
 }
 

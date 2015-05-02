@@ -60,13 +60,14 @@ namespace regina {
 class Dim2BoundaryComponent;
 class Dim2Component;
 class Dim2Edge;
-class Dim2Triangle;
 class Dim2Triangulation;
 class Dim2Vertex;
 class NXMLDim2TriangulationReader;
 class NXMLPacketReader;
 
 template <int, bool> class SimplexBase;
+template <int> class Simplex;
+typedef Simplex<2> Dim2Triangle;
 
 /**
  * \addtogroup dim2 2-Manifold Triangulations
@@ -1097,7 +1098,7 @@ class REGINA_API Dim2Triangulation : public NPacket,
         static bool compatibleTriangles(Dim2Triangle* src, Dim2Triangle* dest,
             NPerm3 p);
 
-    friend class Dim2Triangle;
+    friend class regina::Simplex<2>;
     friend class regina::NGenericTriangulation<2>;
     friend class regina::SimplexBase<2, true>;
     friend class regina::NXMLDim2TriangulationReader;
