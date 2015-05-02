@@ -78,7 +78,7 @@ class Dim2Triangulation;
  * automatically destroy the triangles as they are removed.
  */
 template <>
-class REGINA_API Simplex<2> : public SimplexBase<2, true> {
+class REGINA_API Simplex<2> : public SimplexBase<2> {
     private:
         Dim2Vertex* vertex_[3];
             /**< Vertices in the triangulation skeleton that are
@@ -298,12 +298,11 @@ inline int Simplex<2>::orientation() const {
     return orientation_;
 }
 
-inline Simplex<2>::Simplex(Dim2Triangulation* tri) :
-        SimplexBase<2, true>(tri) {
+inline Simplex<2>::Simplex(Dim2Triangulation* tri) : SimplexBase<2>(tri) {
 }
 
 inline Simplex<2>::Simplex(const std::string& desc,
-        Dim2Triangulation* tri) : SimplexBase<2, true>(desc, tri) {
+        Dim2Triangulation* tri) : SimplexBase<2>(desc, tri) {
 }
 
 } // namespace regina

@@ -65,7 +65,7 @@ class Dim2Vertex;
 class NXMLDim2TriangulationReader;
 class NXMLPacketReader;
 
-template <int, bool> class SimplexBase;
+template <int> class SimplexBase;
 template <int> class Simplex;
 typedef Simplex<2> Dim2Triangle;
 
@@ -1099,8 +1099,8 @@ class REGINA_API Dim2Triangulation : public NPacket,
             NPerm3 p);
 
     friend class regina::Simplex<2>;
+    friend class regina::SimplexBase<2>;
     friend class regina::NGenericTriangulation<2>;
-    friend class regina::SimplexBase<2, true>;
     friend class regina::NXMLDim2TriangulationReader;
 };
 

@@ -71,12 +71,8 @@ class Simplex;
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be at least 2.
- *
- * \tparam isPacket \c true if and only if the underlying triangulation class
- * derives from NPacket.  This will affect whether or routines such as
- * join() and unjoin() fire packet change events.
  */
-template <int dim, bool isPacket = false>
+template <int dim>
 class REGINA_API SimplexBase :
         public NMarkedElement,
         public Output<SimplexBase<dim>>,
@@ -393,86 +389,83 @@ template <> class Simplex<4>;
 
 // Inline functions for SimplexBase
 
-template <int dim, bool isPacket>
-inline SimplexBase<dim, isPacket>::SimplexBase(
+template <int dim>
+inline SimplexBase<dim>::SimplexBase(
         typename DimTraits<dim>::Triangulation* tri) : tri_(tri) {
     for (int i = 0; i <= dim; ++i)
         adj_[i] = 0;
 }
 
-template <int dim, bool isPacket>
-inline SimplexBase<dim, isPacket>::SimplexBase(const std::string& desc,
+template <int dim>
+inline SimplexBase<dim>::SimplexBase(const std::string& desc,
         typename DimTraits<dim>::Triangulation* tri) :
         description_(desc), tri_(tri) {
     for (int i = 0; i <= dim; ++i)
         adj_[i] = 0;
 }
 
-template <int dim, bool isPacket>
-inline const std::string& SimplexBase<dim, isPacket>::getDescription() const {
+template <int dim>
+inline const std::string& SimplexBase<dim>::getDescription() const {
     return description_;
 }
 
-template <int dim, bool isPacket>
-inline void SimplexBase<dim, isPacket>::setDescription(
-        const std::string& desc) {
+template <int dim>
+inline void SimplexBase<dim>::setDescription(const std::string& desc) {
     ChangeEventSpan<typename DimTraits<dim>::Triangulation> span(tri_);
     description_ = desc;
 }
 
-template <int dim, bool isPacket>
-inline size_t SimplexBase<dim, isPacket>::index() const {
+template <int dim>
+inline size_t SimplexBase<dim>::index() const {
     return markedIndex();
 }
 
-template <int dim, bool isPacket>
-inline Simplex<dim>* SimplexBase<dim, isPacket>::adjacentSimplex(int facet)
-        const {
+template <int dim>
+inline Simplex<dim>* SimplexBase<dim>::adjacentSimplex(int facet) const {
     return adj_[facet];
 }
 
-template <int dim, bool isPacket>
-inline int SimplexBase<dim, isPacket>::adjacentFacet(int facet) const {
+template <int dim>
+inline int SimplexBase<dim>::adjacentFacet(int facet) const {
     return gluing_[facet][facet];
 }
 
-template <int dim, bool isPacket>
-inline NPerm<dim+1> SimplexBase<dim, isPacket>::adjacentGluing(
+template <int dim>
+inline NPerm<dim+1> SimplexBase<dim>::adjacentGluing(
         int face) const {
     return gluing_[face];
 }
 
-template <int dim, bool isPacket>
+template <int dim>
 inline typename DimTraits<dim>::Triangulation*
-        SimplexBase<dim, isPacket>::getTriangulation() const {
+        SimplexBase<dim>::getTriangulation() const {
     return tri_;
 }
 
-template <int dim, bool isPacket>
-inline void SimplexBase<dim, isPacket>::writeTextShort(std::ostream& out)
-        const {
+template <int dim>
+inline void SimplexBase<dim>::writeTextShort(std::ostream& out) const {
     out << dim << "-simplex";
     if (! description_.empty())
         out << ": " << description_;
 }
 
-template <int dim, bool isPacket>
-bool SimplexBase<dim, isPacket>::hasBoundary() const {
+template <int dim>
+bool SimplexBase<dim>::hasBoundary() const {
     for (int i = 0; i <= dim; ++i)
         if (! adj_[i])
             return true;
     return false;
 }
 
-template <int dim, bool isPacket>
-void SimplexBase<dim, isPacket>::isolate() {
+template <int dim>
+void SimplexBase<dim>::isolate() {
     for (int i = 0; i <= dim; ++i)
         if (adj_[i])
             unjoin(i);
 }
 
-template <int dim, bool isPacket>
-Simplex<dim>* SimplexBase<dim, isPacket>::unjoin(int myFacet) {
+template <int dim>
+Simplex<dim>* SimplexBase<dim>::unjoin(int myFacet) {
     if (! adj_[myFacet])
         return 0;
 
@@ -488,8 +481,8 @@ Simplex<dim>* SimplexBase<dim, isPacket>::unjoin(int myFacet) {
     return you;
 }
 
-template <int dim, bool isPacket>
-void SimplexBase<dim, isPacket>::joinTo(int myFacet, Simplex<dim>* you,
+template <int dim>
+void SimplexBase<dim>::joinTo(int myFacet, Simplex<dim>* you,
         NPerm<dim+1> gluing) {
     ChangeEventSpan<typename DimTraits<dim>::Triangulation> span(tri_);
 
@@ -510,8 +503,8 @@ void SimplexBase<dim, isPacket>::joinTo(int myFacet, Simplex<dim>* you,
     tri_->clearAllProperties();
 }
 
-template <int dim, bool isPacket>
-void SimplexBase<dim, isPacket>::writeTextLong(std::ostream& out) const {
+template <int dim>
+void SimplexBase<dim>::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << std::endl;
     int facet, j;
