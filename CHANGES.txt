@@ -24,6 +24,9 @@ Version 4.97  [ (under development) ]
         Class DegreeLessThan, DegreeGreaterThan:
             - New template-based helper classes for sorting subfaces of
               a triangulation by degree.
+        Class Dim2Triangle:
+            - Now just a typedef for the new class Simplex<2>, which has
+              the same functionality as the old Dim2Triangle.
         Class Dim2Triangulation:
             - New dimension-agnostic getFace<subdim>() and
               faceIndex<subdim>() template functions.
@@ -163,6 +166,13 @@ Version 4.97  [ (under development) ]
               is to remove ShareableObject entirely.
             - The old string output routines are now provided by the Output
               template class, which is now a base class for ShareableObject.
+        Class Simplex, SimplexBase:
+            - Simplex<dim> is now a generic class that replaces the old
+              Dim2Triangle, NTetrahedron and so on.  SimplexBase<dim> is
+              base class with functionality common to all dimensions,
+              whereas Simplex<dim> is specialised for dimensions 2, 3 and 4.
+            - The old class names Dim2Triangle and NTetrahedron have
+              been kept as typedefs for convenience.
         Routine digit():
             - Convenience routine for converting integers into characters.
         Routine nextPowerOfTwo():
