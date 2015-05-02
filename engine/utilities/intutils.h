@@ -55,22 +55,41 @@ namespace regina {
  *
  * If \a n is non-positive then this function will return 0.
  *
+ * \ifacespython In Python, this routine fixes the integer type
+ * \a IntType to be \c long.
+ *
  * \param n any integer.
  * \return the number of bits required to store 0,...,<i>n</i>-1.
+ *
+ * \tparam IntType any integer type, such as \c int, \c long, and so on.
  */
-constexpr int bitsRequired(int n) {
+template <typename IntType>
+constexpr int bitsRequired(IntType n) {
     return (n <= 1 ? 0 : (bitsRequired((n + 1) / 2)) + 1);
 }
 
 /**
  * Returns the smallest integer power of two that is greater than or equal to
  * the given argument \a n.
+ *
  * If \a n is non-positive then this function will return 1.
+ *
+ * \ifacespython In Python, this routine fixes the integer type
+ * \a IntType to be \c long.
+ *
+ * \warning Even though the return value is the same type as the
+ * argument \a n, this routine may still overflow.  For example, if
+ * \a IntType is a signed char then nextPowerOfTwo(127) will return -128, and
+ * if \a IntType is an unsigned char then nextPowerOfTwo(255) will return 0.
+ * Be sure that \a IntType is large enough for your requirements.
  *
  * \param n any integer.
  * \return the smallest integer power of two that is &ge; \a n.
+ *
+ * \tparam IntType any integer type, such as \c int, \c long, and so on.
  */
-constexpr int nextPowerOfTwo(int n) {
+template <typename IntType>
+constexpr IntType nextPowerOfTwo(IntType n) {
     return (n <= 1 ? 1 : (nextPowerOfTwo((n + 1) / 2)) << 1);
 }
 

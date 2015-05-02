@@ -38,7 +38,7 @@
 using namespace boost::python;
 
 void addIntUtils() {
-    boost::python::def("bitsRequired", regina::bitsRequired);
-    boost::python::def("nextPowerOfTwo", regina::nextPowerOfTwo);
+    boost::python::def("bitsRequired", regina::bitsRequired<long>);
+    boost::python::def("nextPowerOfTwo", regina::nextPowerOfTwo<long>);
 }
 
