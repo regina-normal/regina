@@ -57,8 +57,14 @@ Version 4.97  [ (under development) ]
         Class NGenericFacetPairing, NFacePairing, Dim2EdgePairing:
             - Routines dotHeader() and writeDotHeader() no longer set an
               explicit background colour.
+            - Removed the Perm typedef.  Juse use NPerm<dim+1> instead.
+        Class NGenericGluingPermSearcher:
+            - Removed the Perm typedef.  Juse use NPerm<dim+1> instead.
+        Class NGenericIsomorphism:
+            - Removed the Perm typedef.  Juse use NPerm<dim+1> instead.
         Class NGenericTriangulation, NTriangulation, Dim2Triangulation:
             - New routine size(), which is an alias for getNumberOfSimplices().
+            - Removed the Perm typedef.  Juse use NPerm<dim+1> instead.
         Class NGlobalDirs:
             - The directory containing the machine-encoded census data is now
               independent of home().  It can be queried through the new census()
