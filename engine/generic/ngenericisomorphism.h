@@ -46,6 +46,7 @@
 #include "output.h"
 #include "generic/dimtraits.h"
 #include "generic/nfacetspec.h"
+#include "maths/nperm.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {
@@ -110,7 +111,6 @@ class REGINA_API NGenericIsomorphism :
         public boost::noncopyable {
     public:
         using typename DimTraits<dim>::Isomorphism;
-        using typename DimTraits<dim>::Perm;
         using typename DimTraits<dim>::Simplex;
         using typename DimTraits<dim>::Triangulation;
 
@@ -120,7 +120,7 @@ class REGINA_API NGenericIsomorphism :
         int* simpImage_;
             /**< The simplex of the destination triangulation that
                  each simplex of the source triangulation maps to. */
-        Perm* facetPerm_;
+        NPerm<dim+1>* facetPerm_;
             /**< The permutation applied to the facets of each
                  source simplex. */
 
@@ -196,7 +196,7 @@ class REGINA_API NGenericIsomorphism :
          * @return a read-write reference to the permutation applied to the
          * facets of the source simplex.
          */
-        Perm& facetPerm(unsigned sourceSimp);
+        NPerm<dim+1>& facetPerm(unsigned sourceSimp);
         /**
          * Determines the permutation that is applied to the (\a dim + 1)
          * facets of the given source simplex under this isomorphism.
@@ -210,7 +210,7 @@ class REGINA_API NGenericIsomorphism :
          * @return the permutation applied to the facets of the
          * source simplex.
          */
-        Perm facetPerm(unsigned sourceSimp) const;
+        NPerm<dim+1> facetPerm(unsigned sourceSimp) const;
         /**
          * Determines the image of the given source simplex facet
          * under this isomorphism.  Note that a value only is returned; this
@@ -364,7 +364,7 @@ template <int dim>
 inline NGenericIsomorphism<dim>::NGenericIsomorphism(unsigned nSimplices) :
         nSimplices_(nSimplices),
         simpImage_(nSimplices > 0 ? new int[nSimplices] : 0),
-        facetPerm_(nSimplices > 0 ? new Perm[nSimplices] : 0) {
+        facetPerm_(nSimplices > 0 ? new NPerm<dim+1>[nSimplices] : 0) {
 }
 
 template <int dim>
@@ -390,16 +390,13 @@ inline int NGenericIsomorphism<dim>::simpImage(unsigned sourceSimp) const {
 }
 
 template <int dim>
-inline typename NGenericIsomorphism<dim>::Perm&
-        NGenericIsomorphism<dim>::facetPerm(
-        unsigned sourceSimp) {
+inline NPerm<dim+1>& NGenericIsomorphism<dim>::facetPerm(unsigned sourceSimp) {
     return facetPerm_[sourceSimp];
 }
 
 template <int dim>
-inline typename NGenericIsomorphism<dim>::Perm
-        NGenericIsomorphism<dim>::facetPerm(
-        unsigned sourceSimp) const {
+inline NPerm<dim+1> NGenericIsomorphism<dim>::facetPerm(unsigned sourceSimp)
+        const {
     return facetPerm_[sourceSimp];
 }
 

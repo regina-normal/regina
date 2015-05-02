@@ -70,7 +70,7 @@ NGenericIsomorphism<dim>::NGenericIsomorphism(
         simpImage_(cloneMe.nSimplices_ > 0 ?
             new int[cloneMe.nSimplices_] : 0),
         facetPerm_(cloneMe.nSimplices_ > 0 ?
-            new Perm[cloneMe.nSimplices_] : 0) {
+            new NPerm<dim+1>[cloneMe.nSimplices_] : 0) {
     std::copy(cloneMe.simpImage_, cloneMe.simpImage_ + nSimplices_,
         simpImage_);
     std::copy(cloneMe.facetPerm_, cloneMe.facetPerm_ + nSimplices_,
@@ -90,7 +90,7 @@ typename NGenericIsomorphism<dim>::Isomorphism* NGenericIsomorphism<dim>::
 
     // Randomly choose the individual permutations.
     for (i = 0; i < nSimplices; i++)
-        ans->facetPerm_[i] = Perm::Sn[rand() % Perm::nPerms];
+        ans->facetPerm_[i] = NPerm<dim+1>::Sn[rand() % NPerm<dim+1>::nPerms];
 
     return ans;
 }
@@ -121,7 +121,7 @@ typename NGenericIsomorphism<dim>::Triangulation*
 
     const Simplex *myTet, *adjTet;
     unsigned long adjTetIndex;
-    Perm gluingPerm;
+    NPerm<dim+1> gluingPerm;
     for (t = 0; t < nSimplices_; t++) {
         myTet = original->getSimplex(t);
         for (f = 0; f <= dim; f++)
@@ -168,7 +168,7 @@ void NGenericIsomorphism<dim>::applyInPlace(
 
     const Simplex *myTet, *adjTet;
     unsigned long adjTetIndex;
-    Perm gluingPerm;
+    NPerm<dim+1> gluingPerm;
     for (t = 0; t < nSimplices_; t++) {
         myTet = tri->getSimplex(t);
         for (f = 0; f <= dim; f++)

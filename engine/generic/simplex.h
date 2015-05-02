@@ -85,7 +85,7 @@ class REGINA_API SimplexBase :
                  simplex.  Specifically, <tt>adj_[f]</tt> represents the
                  simplex joined to facet \a f of this simplex, or is 0
                  if facet \a f lies on the triangulation boundary. */
-        NPerm<dim + 1> gluing_[dim + 1];
+        NPerm<dim+1> gluing_[dim + 1];
             /**< Indicates how vertices map to each other across each gluing.
                  Specifically, if facet \a f is joined to some other simplex
                  (i.e., it is not boundary), then \a gluing_[\a f] represents
@@ -173,7 +173,7 @@ class REGINA_API SimplexBase :
          * tetrahedron to the vertices of the tetrahedron adjacent along
          * the given face.
          */
-        NPerm<dim + 1> adjacentGluing(int face) const;
+        NPerm<dim+1> adjacentGluing(int face) const;
         /**
          * Examines the tetrahedron glued to the given face of this
          * tetrahedron, and returns the corresponding face of that
@@ -239,7 +239,7 @@ class REGINA_API SimplexBase :
          * will be glued to the given face of this tetrahedron will be
          * face number <tt>gluing[myFacet]</tt>.
          */
-        void joinTo(int myFacet, Simplex<dim>* you, NPerm<dim + 1> gluing);
+        void joinTo(int myFacet, Simplex<dim>* you, NPerm<dim+1> gluing);
         // TODO: Documentation needs to be revised above this point.
         /**
          * Unglues the given facet of this simplex from whatever it is
@@ -433,7 +433,7 @@ inline int SimplexBase<dim, isPacket>::adjacentFacet(int facet) const {
 }
 
 template <int dim, bool isPacket>
-inline NPerm<dim + 1> SimplexBase<dim, isPacket>::adjacentGluing(
+inline NPerm<dim+1> SimplexBase<dim, isPacket>::adjacentGluing(
         int face) const {
     return gluing_[face];
 }
@@ -486,7 +486,7 @@ Simplex<dim>* SimplexBase<dim, isPacket>::unjoin(int myFacet) {
 
 template <int dim, bool isPacket>
 void SimplexBase<dim, isPacket>::joinTo(int myFacet, Simplex<dim>* you,
-        NPerm<dim + 1> gluing) {
+        NPerm<dim+1> gluing) {
     ChangeEventSpan<isPacket> span(tri_);
 
     assert(tri_ == you->tri_);

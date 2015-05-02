@@ -43,6 +43,7 @@
 
 #include "regina-core.h"
 #include "generic/dimtraits.h"
+#include "maths/nperm.h"
 #include <list>
 #include <memory>
 #include <string>
@@ -76,7 +77,6 @@ template <int dim>
 class REGINA_API NGenericTriangulation : public DimTraits<dim> {
     public:
         using typename DimTraits<dim>::Isomorphism;
-        using typename DimTraits<dim>::Perm;
         using typename DimTraits<dim>::Simplex;
         using typename DimTraits<dim>::Triangulation;
 
@@ -488,7 +488,7 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
         static std::string isoSigFrom(
             const typename DimTraits<dim>::Triangulation& tri,
             unsigned simp,
-            const typename DimTraits<dim>::Perm& vertices,
+            const NPerm<dim+1>& vertices,
             typename DimTraits<dim>::Isomorphism* relabelling);
 };
 

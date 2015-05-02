@@ -39,7 +39,7 @@
 
 /**
  * The numbers of base64 characters required to store an index into
- * DimTraits<dim>::Perm::Sn.
+ * NPerm<dim+1>::Sn.
  *
  * This is 1 if dim <= 3  (since 4! <= 64), and 2 if dim = 4 (since 5! > 64).
  */
@@ -152,11 +152,10 @@ template <int dim>
 std::string NGenericTriangulation<dim>::isoSigFrom(
         const typename DimTraits<dim>::Triangulation& tri,
         unsigned simp,
-        const typename DimTraits<dim>::Perm& vertices,
+        const NPerm<dim+1>& vertices,
         typename DimTraits<dim>::Isomorphism* relabelling) {
     // These typedefs are already present in the class declaration,
     // but gcc 4.4 seems to break unless we include them here also.
-    typedef typename DimTraits<dim>::Perm Perm;
     typedef typename DimTraits<dim>::Simplex Simplex;
 
     // Only process the component that simp belongs to.
@@ -181,7 +180,7 @@ std::string NGenericTriangulation<dim>::isoSigFrom(
     // What are the destination simplices and gluing permutations for
     // each facet under case #2 above?
     // For gluing permutations, we store the index of the permutation in
-    // Perm::orderedSn.
+    // NPerm<dim+1>::orderedSn.
     unsigned* joinDest = new unsigned[tri.template getNumberOfFaces<dim-1>()];
     unsigned* joinGluing = new unsigned[tri.template getNumberOfFaces<dim-1>()];
 
@@ -192,7 +191,7 @@ std::string NGenericTriangulation<dim>::isoSigFrom(
 
     // The image for each simplex and its vertices:
     int* image = new int[nSimp];
-    Perm* vertexMap = new Perm[nSimp];
+    NPerm<dim+1>* vertexMap = new NPerm<dim+1>[nSimp];
 
     // The preimage for each simplex:
     int* preImage = new int[nSimp];
@@ -342,7 +341,6 @@ std::string NGenericTriangulation<dim>::isoSig(
         typename DimTraits<dim>::Isomorphism** relabelling) const {
     // These typedefs are already present in the class declaration,
     // but gcc 4.7.3 seems to break unless we include them here also.
-    typedef typename DimTraits<dim>::Perm Perm;
     typedef typename DimTraits<dim>::Triangulation Triangulation;
     typedef typename DimTraits<dim>::Isomorphism Isomorphism;
 
@@ -381,9 +379,9 @@ std::string NGenericTriangulation<dim>::isoSig(
         cSimp = (*it)->getNumberOfSimplices();
 
         for (simp = 0; simp < (*it)->getNumberOfSimplices(); ++simp)
-            for (perm = 0; perm < Perm::nPerms; ++perm) {
+            for (perm = 0; perm < NPerm<dim+1>::nPerms; ++perm) {
                 curr = isoSigFrom(tri, (*it)->getSimplex(simp)->markedIndex(),
-                    Perm::orderedSn[perm], currRelabelling);
+                    NPerm<dim+1>::orderedSn[perm], currRelabelling);
                 if ((simp == 0 && perm == 0) || (curr < comp[i])) {
                     comp[i].swap(curr);
                     if (relabelling)
@@ -409,7 +407,6 @@ typename DimTraits<dim>::Triangulation*
         NGenericTriangulation<dim>::fromIsoSig(const std::string& sig) {
     // These typedefs are already present in the class declaration,
     // but gcc 4.4 seems to break unless we include them here also.
-    typedef typename DimTraits<dim>::Perm Perm;
     typedef typename DimTraits<dim>::Simplex Simplex;
     typedef typename DimTraits<dim>::Triangulation Triangulation;
 
@@ -512,7 +509,7 @@ typename DimTraits<dim>::Triangulation*
             joinGluing[i] = SREAD(c, CHARS_PER_PERM(dim));
             c += CHARS_PER_PERM(dim);
 
-            if (joinGluing[i] >= Perm::nPerms) {
+            if (joinGluing[i] >= NPerm<dim+1>::nPerms) {
                 delete[] facetAction;
                 delete[] joinDest;
                 delete[] joinGluing;
@@ -545,12 +542,12 @@ typename DimTraits<dim>::Triangulation*
                         delete[] simp;
                         return 0;
                     }
-                    simp[i]->joinTo(j, simp[nextUnused++], Perm());
+                    simp[i]->joinTo(j, simp[nextUnused++], NPerm<dim+1>());
                 } else {
                     // Join to existing simplex.
                     if (joinDest[joinPos] >= nextUnused ||
                             simp[joinDest[joinPos]]->adjacentSimplex(
-                            Perm::orderedSn[joinGluing[joinPos]][j])) {
+                            NPerm<dim+1>::orderedSn[joinGluing[joinPos]][j])) {
                         delete[] facetAction;
                         delete[] joinDest;
                         delete[] joinGluing;
@@ -558,7 +555,7 @@ typename DimTraits<dim>::Triangulation*
                         return 0;
                     }
                     simp[i]->joinTo(j, simp[joinDest[joinPos]],
-                        Perm::orderedSn[joinGluing[joinPos]]);
+                        NPerm<dim+1>::orderedSn[joinGluing[joinPos]]);
                     ++joinPos;
                 }
 

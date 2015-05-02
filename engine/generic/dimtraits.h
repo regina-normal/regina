@@ -76,10 +76,6 @@ struct DimTraits {
         /**< The data type that represents a pairing of facets of
              top-dimensional simplices in a <i>dim</i>-manifold
              triangulation. */
-    typedef void Perm;
-        /**< The permutation type used to describe gluings between
-             top-dimensional simplices in a <i>dim</i>-manifold
-             triangulation. */
 };
 
 /**
@@ -108,9 +104,6 @@ struct FaceTraits {
 #ifndef __DOXYGEN
 
 template <int n>
-class NPerm;
-
-template <int n>
 class Simplex;
 
 class Dim2Edge;
@@ -125,7 +118,6 @@ struct DimTraits<2> {
     typedef Simplex<2> Simplex;
     typedef Dim2Isomorphism Isomorphism;
     typedef Dim2EdgePairing FacetPairing;
-    typedef NPerm<3> Perm;
 };
 
 class NEdge;
@@ -142,7 +134,6 @@ struct DimTraits<3> {
     typedef NTetrahedron Simplex;
     typedef NIsomorphism Isomorphism;
     typedef NFacePairing FacetPairing;
-    typedef NPerm<4> Perm;
 };
 
 template <>

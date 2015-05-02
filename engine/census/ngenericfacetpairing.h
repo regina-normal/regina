@@ -94,9 +94,6 @@ class REGINA_API NGenericFacetPairing : public NThread,
         typedef typename DimTraits<dim>::Isomorphism Isomorphism;
             /**< The isomorphism class used for triangulations in
                  this dimension. */
-        typedef typename DimTraits<dim>::Perm Perm;
-            /**< The permutation class used to glue together facets of
-                 simplices when building triangulations in this dimension. */
         typedef typename DimTraits<dim>::Simplex Simplex;
             /**< The class that represents a top-level simplex of a
                  triangulation in this dimension. */
