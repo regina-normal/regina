@@ -40,10 +40,9 @@
 /**
  * The numbers of base64 characters required to store an index into
  * NPerm<dim+1>::Sn.
- *
- * This is 1 if dim <= 3  (since 4! <= 64), and 2 if dim = 4 (since 5! > 64).
  */
-#define CHARS_PER_PERM(dim) ((dim) <= 3 ? 1 : 2)
+#define CHARS_PER_PERM(dim) \
+    ((regina::bitsRequired(NPerm<(dim)+1>::nPerms) + 5) / 6)
 
 namespace regina {
 
