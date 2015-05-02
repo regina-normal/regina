@@ -473,14 +473,8 @@ const typename NPerm<n>::Index NPerm<n>::nPerms = factorial(n);
 template <int n>
 const typename NPerm<n>::Index NPerm<n>::nPerms_1 = factorial(n-1);
 
-namespace {
-    constexpr int permImageBits(int n) {
-        return (n <= 1 ? 0 : 1 + permImageBits((n + 1) / 2));
-    }
-}
-
 template <int n>
-const int NPerm<n>::imageBits = permImageBits(n);
+const int NPerm<n>::imageBits = regina::bitsRequired(n);
 
 namespace {
     template <int n>
