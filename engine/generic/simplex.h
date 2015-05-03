@@ -79,7 +79,7 @@ class REGINA_API SimplexBase :
         public NMarkedElement,
         public Output<SimplexBase<dim>>,
         public boost::noncopyable {
-    static_assert(dim >= 2, "SimplexBase requires dimension >= 2.");
+    static_assert(dim >= 2, "Simplex requires dimension >= 2.");
     private:
         Simplex<dim>* adj_[dim + 1];
             /**< Stores the adjacent simplex glued to each facet of this
@@ -334,19 +334,17 @@ class REGINA_API SimplexBase :
  * human-readable piece of text.  Descriptions are not required, and do
  * not need to be unique.
  *
- * For \a dim = 2, 3 and 4, this template is specialised and offers
+ * For dimensions 2 and 3, this template is specialised and offers
  * significant extra functionality.  In order to use these specialised
- * classes, you will need to include the corresponding headers (e.g.,
- * dim2/dim2triangle.h for \a dim = 2, or triangulation/ntetrahedron.h
- * for \a dim = 3).  Otherwise any code that uses Simplex<2>, Simplex<3> or
- * Simplex<4> will not compile.  For convenience, the typedefs Dim2Triangle,
- * NTetrahedron and Dim4Pentachoron are also available for these
- * specialised classes.
+ * classes, you will need to include the corresponding headers
+ * (dim2/dim2triangle.h for \a dim = 2, or triangulation/ntetrahedron.h
+ * for \a dim = 3).  For convenience, there are typedefs available for
+ * these specialised classes (Dim2Triangle and NTetrahedron respectively).
  *
- * \ifacespython Python does not support templates.  For \a dim = 2, 3 and 4,
- * this class is available in Python under the name Simplex2, Simplex3 or
- * Simplex4 respectively.  Higher-dimensional classes are not available in
- * Python for the time being.
+ * \ifacespython Python does not support templates.  For \a dim = 2 and 3,
+ * this class is available in Python under the names Simplex2 and Simplex3
+ * respectively (as well as the typedefs mentioned above).
+ * Higher-dimensional classes are not available in Python for the time being.
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be at least 2.
@@ -376,7 +374,6 @@ class REGINA_API Simplex : public SimplexBase<dim> {
 // Do not explicitly drag in the specialised headers for now.
 template <> class Simplex<2>;
 template <> class Simplex<3>;
-template <> class Simplex<4>;
 
 /*@}*/
 
