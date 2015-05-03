@@ -51,7 +51,7 @@ NTreeDecomposition::NTreeDecomposition(
     Graph g(triangulation.size());
 
     int i, j;
-    const typename DimTraits<dim>::Simplex* simp;
+    const Simplex<dim>* simp;
     for (i = 0; i < g.order_; ++i) {
         simp = static_cast<const typename DimTraits<dim>::Triangulation&>(
             triangulation).getSimplex(i);

@@ -57,7 +57,7 @@ NGenericFacetPairing<dim>::NGenericFacetPairing(
         size_(tri.getNumberOfSimplices()),
         pairs_(new NFacetSpec<dim>[tri.getNumberOfSimplices() * (dim + 1)]) {
     unsigned p, f, index;
-    const Simplex *simp, *adj;
+    const Simplex<dim> *simp, *adj;
     for (index = 0, p = 0; p < size_; ++p) {
         simp = tri.getSimplex(p);
         for (f = 0; f <= dim; ++f) {

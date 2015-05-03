@@ -77,7 +77,6 @@ template <int dim>
 class REGINA_API NGenericTriangulation : public DimTraits<dim> {
     public:
         using typename DimTraits<dim>::Isomorphism;
-        using typename DimTraits<dim>::Simplex;
         using typename DimTraits<dim>::Triangulation;
 
     public:
@@ -131,7 +130,7 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * vertices), see isIsomorphicTo() instead.
          *
          * This test does \e not examine the textual simplex descriptions,
-         * as seen in Simplex::getDescription(); these may still differ.
+         * as seen in Simplex<dim>::getDescription(); these may still differ.
          * It also does not test the numbering of vertices, edges and so on,
          * as used by getVertex(), getEdge() and so on;
          * although at the time of writing these will always be

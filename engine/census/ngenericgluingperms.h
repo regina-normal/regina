@@ -83,7 +83,6 @@ template <int dim>
 class REGINA_API NGenericGluingPerms {
     public:
         typedef typename DimTraits<dim>::FacetPairing FacetPairing;
-        typedef typename DimTraits<dim>::Simplex Simplex;
         typedef typename DimTraits<dim>::Triangulation Triangulation;
     protected:
         const FacetPairing* pairing_;

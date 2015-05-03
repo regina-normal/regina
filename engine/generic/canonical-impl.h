@@ -74,7 +74,7 @@ namespace {
         unsigned origTri, origTriBest;
         int origFacet, origFacetBest;
 
-        typename DimTraits<dim>::Simplex *adjTri, *adjTriBest;
+        Simplex<dim> *adjTri, *adjTriBest;
         unsigned adjTriIndex, adjTriIndexBest;
         unsigned finalImage, finalImageBest;
 

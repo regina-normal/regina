@@ -153,10 +153,6 @@ std::string NGenericTriangulation<dim>::isoSigFrom(
         unsigned simp,
         const NPerm<dim+1>& vertices,
         typename DimTraits<dim>::Isomorphism* relabelling) {
-    // These typedefs are already present in the class declaration,
-    // but gcc 4.4 seems to break unless we include them here also.
-    typedef typename DimTraits<dim>::Simplex Simplex;
-
     // Only process the component that simp belongs to.
 
     // ---------------------------------------------------------------------
@@ -201,7 +197,7 @@ std::string NGenericTriangulation<dim>::isoSigFrom(
     unsigned facetPos, joinPos, nextUnusedSimp;
     unsigned simpImg, facetImg;
     unsigned simpSrc, facetSrc, dest;
-    const Simplex* s;
+    const Simplex<dim>* s;
 
     // ---------------------------------------------------------------------
     // The code!
@@ -406,7 +402,6 @@ typename DimTraits<dim>::Triangulation*
         NGenericTriangulation<dim>::fromIsoSig(const std::string& sig) {
     // These typedefs are already present in the class declaration,
     // but gcc 4.4 seems to break unless we include them here also.
-    typedef typename DimTraits<dim>::Simplex Simplex;
     typedef typename DimTraits<dim>::Triangulation Triangulation;
 
     std::auto_ptr<Triangulation> ans(new Triangulation());
@@ -517,7 +512,7 @@ typename DimTraits<dim>::Triangulation*
         }
 
         // End of component!
-        Simplex** simp = new Simplex*[nSimp];
+        Simplex<dim>** simp = new Simplex<dim>*[nSimp];
         for (i = 0; i < nSimp; ++i)
             simp[i] = ans->newSimplex();
 

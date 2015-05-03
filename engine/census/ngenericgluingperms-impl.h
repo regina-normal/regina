@@ -58,7 +58,7 @@ typename NGenericGluingPerms<dim>::Triangulation*
     unsigned nSimp = size();
 
     Triangulation* ans = new Triangulation;
-    Simplex** simp = new Simplex*[nSimp];
+    Simplex<dim>** simp = new Simplex<dim>*[nSimp];
 
     unsigned t, facet;
     for (t = 0; t < nSimp; ++t)

@@ -65,9 +65,6 @@ template <int dim>
 struct DimTraits {
     typedef void Triangulation;
         /**< The main data type for a <i>dim</i>-manifold triangulation. */
-    typedef void Simplex;
-        /**< The data type for a top-dimensional simplex in a
-             <i>dim</i>-manifold triangulation. */
     typedef void Isomorphism;
         /**< The data type for an isomorphism between two
              <i>dim</i>-manifold triangulations.
@@ -115,7 +112,6 @@ class Dim2Vertex;
 template <>
 struct DimTraits<2> {
     typedef Dim2Triangulation Triangulation;
-    typedef Simplex<2> Simplex;
     typedef Dim2Isomorphism Isomorphism;
     typedef Dim2EdgePairing FacetPairing;
 };
@@ -130,7 +126,6 @@ class NVertex;
 template <>
 struct DimTraits<3> {
     typedef NTriangulation Triangulation;
-    typedef Simplex<3> Simplex;
     typedef NIsomorphism Isomorphism;
     typedef NFacePairing FacetPairing;
 };

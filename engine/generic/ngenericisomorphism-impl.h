@@ -107,7 +107,7 @@ typename NGenericIsomorphism<dim>::Triangulation*
         return new Triangulation();
 
     Triangulation* ans = new Triangulation();
-    Simplex** tet = new Simplex*[nSimplices_];
+    Simplex<dim>** tet = new Simplex<dim>*[nSimplices_];
     unsigned long t;
     int f;
 
@@ -119,7 +119,7 @@ typename NGenericIsomorphism<dim>::Triangulation*
         tet[simpImage_[t]]->setDescription(
             original->getSimplex(t)->getDescription());
 
-    const Simplex *myTet, *adjTet;
+    const Simplex<dim> *myTet, *adjTet;
     unsigned long adjTetIndex;
     NPerm<dim+1> gluingPerm;
     for (t = 0; t < nSimplices_; t++) {
@@ -154,7 +154,7 @@ void NGenericIsomorphism<dim>::applyInPlace(
         return;
 
     Triangulation staging;
-    Simplex** tet = new Simplex*[nSimplices_];
+    Simplex<dim>** tet = new Simplex<dim>*[nSimplices_];
     unsigned long t;
     int f;
 
@@ -166,7 +166,7 @@ void NGenericIsomorphism<dim>::applyInPlace(
         tet[simpImage_[t]]->setDescription(
             tri->getSimplex(t)->getDescription());
 
-    const Simplex *myTet, *adjTet;
+    const Simplex<dim> *myTet, *adjTet;
     unsigned long adjTetIndex;
     NPerm<dim+1> gluingPerm;
     for (t = 0; t < nSimplices_; t++) {

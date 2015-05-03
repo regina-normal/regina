@@ -112,7 +112,6 @@ class REGINA_API NGenericIsomorphism :
         public boost::noncopyable {
     public:
         using typename DimTraits<dim>::Isomorphism;
-        using typename DimTraits<dim>::Simplex;
         using typename DimTraits<dim>::Triangulation;
 
     protected:
