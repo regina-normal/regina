@@ -60,22 +60,18 @@ class Dim2Triangulation;
  */
 
 /**
- * Represents a triangular face in a 2-manifold triangulation.
+ * Represents a triangle within a 2-manifold triangulation.
  *
- * With each triangle is stored various pieces of information
- * regarding the overall skeletal structure and component structure of
- * the triangulation.  This skeletal information will be allocated, calculated
- * and deallocated by the Dim2Triangulation object containing the
- * corresponding triangles.
+ * This is a specialisation of the generic Simplex class template; see the
+ * generic Simplex documentation for an overview of how this class works.
  *
- * A triangle must always belong to a 2-manifold triangulation.  You can
- * construct new triangles using either Dim2Triangulation::newTriangle()
- * or Dim2Triangulation::newTriangle(const std::string&); these
- * routines will automatically add the new triangles to the triangulation.
- * You can destroy triangles by calling Dim2Trianguation::removeTriangle(),
- * Dim2Trianguation::removeTriangleAt() or
- * Dim2Triangulation::removeAllTriangles(); these routines will
- * automatically destroy the triangles as they are removed.
+ * This 2-dimensional specialisation contains some extra functionality.
+ * In particular, each triangle stores additional details on how this
+ * triangle and its sub-faces integrate into the overall skeletal structure
+ * of the triangulation.
+ *
+ * An implementation note: the Dim2Triangulation class is responsible for
+ * creating, maintaining and destroying this extra skeletal information.
  */
 template <>
 class REGINA_API Simplex<2> : public SimplexBase<2> {
