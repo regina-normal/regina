@@ -61,13 +61,15 @@ class Simplex;
  */
 
 /**
- * Provides core functionality for a top-dimensional simplex in a
- * <i>dim</i>-manifold triangulation.
+ * Helper class that provides core functionality for a top-dimensional
+ * simplex in a <i>dim</i>-manifold triangulation.
  *
- * Such a simplex is represented by the class Simplex<dim>, which uses this as
- * a base class.  End users should not need to refer to SimplexBase directly.
+ * Each top-dimensional simplex is represented by the class Simplex<dim>,
+ * which uses this as a base class.  End users should not need to refer
+ * to SimplexBase directly.
  *
- * See the Simplex template class notes for further information.
+ * See the Simplex template class notes for further information, including
+ * details of how the vertices and facets of each simplex are numbered.
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be at least 2.
@@ -134,112 +136,103 @@ class REGINA_API SimplexBase :
          */
         size_t index() const;
 
-        // TODO: Documentation needs to be revised from here onwards.
+        /**
+         * Returns the adjacent simplex that is glued to the given facet of
+         * this simplex.  If there is no adjacent simplex (i.e., the
+         * given facet lies on the triangulation boundary), then this
+         * routine will return 0.
+         *
+         * @param facet the facet of this simplex to examine; this must
+         * be between 0 and \a dim inclusive.
+         * @return the adjacent simplex glued to the given facet, or 0
+         * if the given facet lies on the boundary.
+         */
+        Simplex<dim>* adjacentSimplex(int facet) const;
 
         /**
-         * Returns the adjacent tetrahedron glued to the given face of this
-         * tetrahedron, or 0 if the given face is on the triangulation
-         * boundary.
+         * Returns a permutation that indicates precisely how this
+         * simplex is glued to the adjacent simplex across the given facet.
          *
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 3-manifold triangulations means a tetrahedron).
+         * In detail: suppose that the given facet of this simplex is glued to
+         * an adjacent simplex \a A.  Then this gluing induces a mapping from
+         * the vertices of this simplex to the vertices of \a A.  We can
+         * express this mapping in the form of a permutation \a p, where:
          *
-         * @param face the face of this tetrahedron to examine.  This
-         * should be between 0 and 3 inclusive, where face \c i is
-         * opposite vertex \c i of the tetrahedron.
-         * @return the adjacent tetrahedron glued to the given face, or 0
-         * if the given face lies on the boundary.
+         * - for any \a v &ne; \a facet, the gluing identifies vertex \a v
+         *   of this simplex with vertex \a p[\a v] of simplex \a A;
+         *
+         * - \a p[\a facet] indicates the facet of \a A that is on the
+         *   other side of the gluing (i.e., the facet of \a A that is
+         *   glued to the given facet of this simplex).
+         *
+         * \pre The given facet of this simplex has some adjacent simplex
+         * (possibly this one) glued to it.  In other words,
+         * adjacentSimplex(\a facet) is not \c null.
+         *
+         * @param facet the facet of this simplex that we are examining.
+         * This must be between 0 and \a dim inclusive.
+         * @return a permutation that maps the vertices of this simplex to the
+         * vertices of the adjacent simplex, as described above.
          */
-        Simplex<dim>* adjacentSimplex(int face) const;
-
+        NPerm<dim+1> adjacentGluing(int facet) const;
         /**
-         * Returns a permutation describing the correspondence between
-         * vertices of this tetrahedron and vertices of the adjacent
-         * tetrahedron glued to the given face of this tetrahedron.
+         * If the given facet of this simplex is glued to facet \a f of
+         * some adjacent simplex, then this routine returns the adjacent
+         * facet number \a f.
          *
-         * If we call this permutation \c p, then for each vertex \c v of this
-         * tetrahedron, <tt>p[v]</tt> will be the vertex of the adjacent
-         * tetrahedron that is identified with \c v according to the gluing
-         * along the given face of this tetrahedron.
+         * The return value from this routine is identical to
+         * adjacentGluing(\a facet)[\a facet].
          *
-         * \pre The given face of this tetrahedron has some tetrahedron
-         * (possibly this one) glued to it.
+         * \pre The given facet of this simplex has some adjacent simplex
+         * (possibly this one) glued to it.  In other words,
+         * adjacentSimplex(\a facet) is not \c null.
          *
-         * @param face the face of this tetrahedron whose gluing we
-         * will examine.  This should be between 0 and 3 inclusive, where
-         * face \c i is opposite vertex \c i of the tetrahedron.
-         * @return a permutation mapping the vertices of this
-         * tetrahedron to the vertices of the tetrahedron adjacent along
-         * the given face.
-         */
-        NPerm<dim+1> adjacentGluing(int face) const;
-        /**
-         * Examines the tetrahedron glued to the given face of this
-         * tetrahedron, and returns the corresponding face of that
-         * tetrahedron.  That is, the returned face of the adjacent
-         * tetrahedron is glued to the given face of this tetrahedron.
-         *
-         * Here "facet" refers to a facet of a top-dimensional simplex
-         * (e.g., for a 3-manifold triangulations this means a 2-face of
-         * a tetrahedron).
-         *
-         * \pre The given face of this tetrahedron has some tetrahedron
-         * (possibly this one) glued to it.
-         *
-         * @param face the face of this tetrahedron whose gluing we
-         * will examine.  This
-         * should be between 0 and 3 inclusive, where face \c i is
-         * opposite vertex \c i of the tetrahedron.
-         * @return the face of the tetrahedron adjacent along the given
-         * face that is in fact glued to the given face of this
-         * tetrahedron.
+         * @param facet the facet of this simplex that we are examining.
+         * This must be between 0 and \a dim inclusive.
+         * @return the corresponding facet number of the adjacent simplex
+         * that is glued to the given facet of this simplex.
          */
         int adjacentFacet(int facet) const;
         /**
-         * Determines if this tetrahedron has any faces that are
-         * boundary triangles.
+         * Determines if this simplex has any facets that lie on the
+         * triangulation boundary.  In other words, this routine
+         * determines whether any facet of this simplex is not currently
+         * glued to an adjacent simplex.
          *
-         * @return \c true if and only if this tetrahedron has any
-         * boundary triangles.
+         * @return \c true if and only if this simplex has any boundary facets.
          */
         bool hasBoundary() const;
 
         /**
-         * Joins the given face of this tetrahedron to another
-         * tetrahedron.  The other tetrahedron involved will be
-         * automatically updated.
+         * Joins the given facet of this simplex to some facet of another
+         * simplex.  The other simplex will be updated automatically
+         * (i.e., you only need to call join() from one side of the gluing).
          *
-         * Neither tetrahedron needs to belong to a triangulation (i.e.,
-         * you can join tetrahedra together before or after calling
-         * NTriangulation::addTetrahedron()).  However, if both
-         * tetrahedra do belong to a triangulation then it must be the
-         * \e same triangulation.
+         * You may join a facet of this simplex to some different facet of
+         * the same simplex (i.e., you may pass \a you == \c this),
+         * though you cannot join a facet to itself.
          *
-         * \pre This and the given tetrahedron do not belong to
-         * different triangulations.
-         * \pre The given face of this tetrahedron is not currently glued to
+         * \pre This and the given simplex belong to the same triangulation.
+         * \pre The given facet of this simplex is not currently glued to
          * anything.
-         * \pre The face of the other tetrahedron that will be glued to the
-         * given face of this tetrahedron is not currently glued to anything.
-         * \pre If the other tetrahedron involved is this tetrahedron, we are
-         * not attempting to glue a face to itself.
+         * \pre The corresponding facet of the other simplex
+         * (i.e., facet \a gluing[\a myFacet] of \a you) is likewise not
+         * currently glued to anything.
+         * \pre We are not attempting to glue a facet to itself
+         * (i.e., we do not have both \a you == \c this and
+         * \a gluing[\a myFacet] == \a myFacet).
          *
-         * @param myFacet the face of this tetrahedron that will be glued
-         * to the given other tetrahedron.  This
-         * should be between 0 and 3 inclusive, where face \c i is
-         * opposite vertex \c i of the tetrahedron.
-         * @param you the tetrahedron (possibly this one) that will be
-         * glued to the given face of this tetrahedron.
-         * @param gluing a permutation describing the mapping of
-         * vertices by which the two tetrahedra will be joined.  Each
-         * vertex \c v of this tetrahedron that lies on the given face will
-         * be identified with vertex <tt>gluing[v]</tt> of tetrahedron
-         * <tt>you</tt>.  In addition, the face of <tt>you</tt> that
-         * will be glued to the given face of this tetrahedron will be
-         * face number <tt>gluing[myFacet]</tt>.
+         * @param myFacet the facet of this simplex that will be glued
+         * to the given simplex \a you.  This facet number must be between
+         * 0 and \a dim inclusive.
+         * @param you the other simplex that will be glued to the given facet
+         * of this simplex.
+         * @param gluing a permutation that describes how the vertices of
+         * this simplex will map to the vertices of \a you across the
+         * new gluing.  This permutation should be in the form described
+         * by adjacentGluing().
          */
         void joinTo(int myFacet, Simplex<dim>* you, NPerm<dim+1> gluing);
-        // TODO: Documentation needs to be revised above this point.
         /**
          * Unglues the given facet of this simplex from whatever it is
          * joined to.  As a result, the given facet of this simplex
@@ -328,7 +321,7 @@ class REGINA_API SimplexBase :
  *
  * Top-dimensional simplices cannot exist in isolation (without a
  * triangulation object), and they cannot be created or destroyed directly.
- * Instead, you create and destroy them through the underlying triangulation,
+ * Instead, you create and destroy them via the underlying triangulation,
  * by calling routines such as Triangulation<dim>::newSimplex() or
  * Triangulation<dim>::removeSimplex().
  *

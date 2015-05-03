@@ -61,22 +61,18 @@ class NTriangulation;
  */
 
 /**
- * Represents a tetrahedron in a triangulation.
+ * Represents a tetrahedron within a 3-manifold triangulation.
  *
- * With each tetrahedron is stored various pieces of information
- * regarding the overall skeletal structure and component structure of
- * the triangulation.  This skeletal information will be allocated, calculated
- * and deallocated by the NTriangulation object containing the
- * corresponding tetrahedra.
+ * This is a specialisation of the generic Simplex class template; see the
+ * generic Simplex documentation for an overview of how this class works.
  *
- * A tetrahedron must always belong to a 3-manifold triangulation.  You can
- * construct new tetrahedra using either NTriangulation::newTetrahedron() or
- * NTriangulation::newTetrahedron(const std::string&); these routines will
- * automatically add the new tetrahedra to the triangulation.
- * You can destroy tetrahedra by calling NTriangulation::removeTetrahedron(),
- * NTriangulation::removeTetrahedronAt() or
- * NTriangulation::removeAllTetrahedra(); these routines will
- * automatically destroy the tetrahedra as they are removed.
+ * This 3-dimensional specialisation contains some extra functionality.
+ * In particular, each tetrahedron stores additional details on how this
+ * tetrahedron and its sub-faces integrate into the overall skeletal
+ * structure of the triangulation.
+ *
+ * An implementation note: the NTriangulation class is responsible for
+ * creating, maintaining and destroying this extra skeletal information.
  */
 template <>
 class REGINA_API Simplex<3> : public SimplexBase<3> {
