@@ -42,14 +42,11 @@
 #endif
 
 #include "regina-core.h"
-#include "shareableobject.h"
-#include "generic/ngenericisomorphism.h"
+#include "generic/isomorphism.h"
 #include "maths/nperm4.h"
 #include "triangulation/ntetface.h"
 
 namespace regina {
-
-class NTriangulation;
 
 /**
  * \weakgroup triangulation
@@ -57,8 +54,8 @@ class NTriangulation;
  */
 
 /**
- * Represents a combinatorial isomorphism from one triangulation into
- * another.
+ * Represents a combinatorial isomorphism from one 3-manifold triangulation
+ * into another.
  *
  * In essence, a combinatorial isomorphism from triangulation \a T to
  * triangulation \a U is a one-to-one map from the tetrahedra of \a T to the

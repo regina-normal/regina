@@ -42,9 +42,8 @@
 #endif
 
 #include "regina-core.h"
-#include "shareableobject.h"
 #include "generic/nfacetspec.h"
-#include "generic/ngenericisomorphism.h"
+#include "generic/isomorphism.h"
 #include "maths/nperm3.h"
 
 namespace regina {
