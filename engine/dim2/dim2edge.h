@@ -55,6 +55,7 @@ class Dim2Triangulation;
 class Dim2Vertex;
 
 template <int> class Simplex;
+typedef Simplex<2> Dim2Triangle;
 
 /**
  * \weakgroup dim2
@@ -67,7 +68,7 @@ template <int> class Simplex;
  */
 class REGINA_API Dim2EdgeEmbedding {
     private:
-        Simplex<2>* triangle_;
+        Dim2Triangle* triangle_;
             /**< The triangle in which this edge is contained. */
         int edge_;
             /**< The edge number of the triangle that is this edge. */
@@ -88,7 +89,7 @@ class REGINA_API Dim2EdgeEmbedding {
          * @param tri the triangle in which this edge is contained.
          * @param edge the edge number of \a tri that is this edge.
          */
-        Dim2EdgeEmbedding(Simplex<2>* tri, int edge);
+        Dim2EdgeEmbedding(Dim2Triangle* tri, int edge);
 
         /**
          * Creates an embedding descriptor containing the same data as
@@ -111,7 +112,7 @@ class REGINA_API Dim2EdgeEmbedding {
          *
          * @return the triangle.
          */
-        Simplex<2>* getTriangle() const;
+        Dim2Triangle* getTriangle() const;
 
         /**
          * Returns the edge number within getTriangle() that is this edge.
@@ -123,7 +124,7 @@ class REGINA_API Dim2EdgeEmbedding {
         /**
          * Returns a mapping from vertices (0,1) of this edge to the
          * corresponding vertex numbers in getTriangle(), as described
-         * in Simplex<2>::getEdgeMapping().
+         * in Dim2Triangle::getEdgeMapping().
          *
          * @return a mapping from the vertices of this edge to the
          * corresponding vertices of getTriangle().
@@ -171,7 +172,7 @@ class REGINA_API Dim2Edge : public ShareableObject, public NMarkedElement {
          *
          * This table does \e not describe the mapping from specific
          * edges within a triangulation into individual triangles
-         * (for that, see Simplex<2>::getEdgeMapping() instead).
+         * (for that, see Dim2Triangle::getEdgeMapping() instead).
          * This table merely provides a neat and consistent way of
          * listing the vertices of any given edge of a triangle.
          */
@@ -299,7 +300,7 @@ inline Dim2EdgeEmbedding::Dim2EdgeEmbedding() : triangle_(0) {
 }
 
 inline Dim2EdgeEmbedding::Dim2EdgeEmbedding(
-        Simplex<2>* tri, int edge) :
+        Dim2Triangle* tri, int edge) :
         triangle_(tri), edge_(edge) {
 }
 
@@ -315,7 +316,7 @@ inline Dim2EdgeEmbedding& Dim2EdgeEmbedding::operator =
     return *this;
 }
 
-inline Simplex<2>* Dim2EdgeEmbedding::getTriangle() const {
+inline Dim2Triangle* Dim2EdgeEmbedding::getTriangle() const {
     return triangle_;
 }
 

@@ -55,6 +55,7 @@ class Dim2Component;
 class Dim2Triangulation;
 
 template <int> class Simplex;
+typedef Simplex<2> Dim2Triangle;
 
 /**
  * \weakgroup dim2
@@ -67,7 +68,7 @@ template <int> class Simplex;
  */
 class REGINA_API Dim2VertexEmbedding {
     private:
-        Simplex<2>* triangle_;
+        Dim2Triangle* triangle_;
             /**< The triangle in which this vertex is contained. */
         int vertex_;
             /**< The vertex number of the triangle that is this vertex. */
@@ -88,7 +89,7 @@ class REGINA_API Dim2VertexEmbedding {
          * @param tri the triangle in which this vertex is contained.
          * @param vertex the vertex number of \a tri that is this vertex.
          */
-        Dim2VertexEmbedding(Simplex<2>* tri, int vertex);
+        Dim2VertexEmbedding(Dim2Triangle* tri, int vertex);
 
         /**
          * Creates an embedding descriptor containing the same data as
@@ -111,7 +112,7 @@ class REGINA_API Dim2VertexEmbedding {
          *
          * @return the triangle.
          */
-        Simplex<2>* getTriangle() const;
+        Dim2Triangle* getTriangle() const;
 
         /**
          * Returns the vertex number within getTriangle() that is this vertex.
@@ -125,7 +126,7 @@ class REGINA_API Dim2VertexEmbedding {
          * getTriangle() that is this vertex.  This permutation also maps
          * (1,2) to the two remaining triangle vertices in a manner that
          * preserves orientation as you walk around the vertex.
-         * See Simplex<2>::getVertexMapping() for details.
+         * See Dim2Triangle::getVertexMapping() for details.
          *
          * @return a permutation that maps 0 to the corresponding
          * vertex number of getTriangle().
@@ -280,7 +281,7 @@ namespace regina {
 inline Dim2VertexEmbedding::Dim2VertexEmbedding() : triangle_(0) {
 }
 
-inline Dim2VertexEmbedding::Dim2VertexEmbedding(Simplex<2>* tri,
+inline Dim2VertexEmbedding::Dim2VertexEmbedding(Dim2Triangle* tri,
         int vertex) :
         triangle_(tri), vertex_(vertex) {
 }
@@ -297,7 +298,7 @@ inline Dim2VertexEmbedding& Dim2VertexEmbedding::operator =
     return *this;
 }
 
-inline Simplex<2>* Dim2VertexEmbedding::getTriangle() const {
+inline Dim2Triangle* Dim2VertexEmbedding::getTriangle() const {
     return triangle_;
 }
 

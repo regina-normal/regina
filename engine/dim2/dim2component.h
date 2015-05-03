@@ -53,6 +53,7 @@ class Dim2Edge;
 class Dim2Vertex;
 
 template <int> class Simplex;
+typedef Simplex<2> Dim2Triangle;
 
 /**
  * \weakgroup dim2
@@ -66,7 +67,7 @@ template <int> class Simplex;
  */
 class REGINA_API Dim2Component : public ShareableObject, public NMarkedElement {
     private:
-        std::vector<Simplex<2>*> triangles_;
+        std::vector<Dim2Triangle*> triangles_;
             /**< List of triangles in the component. */
         std::vector<Dim2Edge*> edges_;
             /**< List of edges in the component. */
@@ -141,7 +142,7 @@ class REGINA_API Dim2Component : public ShareableObject, public NMarkedElement {
          *
          * \ifacespython This routine returns a python list.
          */
-        const std::vector<Simplex<2>*>& getTriangles() const;
+        const std::vector<Dim2Triangle*>& getTriangles() const;
 
         /**
          * Returns all edges in the component.
@@ -176,7 +177,7 @@ class REGINA_API Dim2Component : public ShareableObject, public NMarkedElement {
          * triangulation.
          * @return the requested triangle.
          */
-        Simplex<2>* getTriangle(unsigned long index) const;
+        Dim2Triangle* getTriangle(unsigned long index) const;
         /**
          * A dimension-agnostic alias for getTriangle().
          * This is to assist with writing dimension-agnostic code that
@@ -187,7 +188,7 @@ class REGINA_API Dim2Component : public ShareableObject, public NMarkedElement {
          * 
          * See getTriangle() for further information.
          */
-        Simplex<2>* getSimplex(unsigned long index) const;
+        Dim2Triangle* getSimplex(unsigned long index) const;
 
         /**
          * Returns the requested edge in this component.
@@ -299,7 +300,7 @@ inline unsigned long Dim2Component::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
-inline const std::vector<Simplex<2>*>& Dim2Component::getTriangles() const {
+inline const std::vector<Dim2Triangle*>& Dim2Component::getTriangles() const {
     return triangles_;
 }
 
@@ -311,11 +312,11 @@ inline const std::vector<Dim2Vertex*>& Dim2Component::getVertices() const {
     return vertices_;
 }
 
-inline Simplex<2>* Dim2Component::getTriangle(unsigned long index) const {
+inline Dim2Triangle* Dim2Component::getTriangle(unsigned long index) const {
     return triangles_[index];
 }
 
-inline Simplex<2>* Dim2Component::getSimplex(unsigned long index) const {
+inline Dim2Triangle* Dim2Component::getSimplex(unsigned long index) const {
     return triangles_[index];
 }
 
