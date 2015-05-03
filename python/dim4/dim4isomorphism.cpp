@@ -52,8 +52,7 @@ namespace {
 }
 
 void addDim4Isomorphism() {
-    class_<Dim4Isomorphism, bases<regina::ShareableObject>,
-            std::auto_ptr<Dim4Isomorphism>, boost::noncopyable>
+    class_<Dim4Isomorphism, std::auto_ptr<Dim4Isomorphism>, boost::noncopyable>
             ("Dim4Isomorphism", init<const Dim4Isomorphism&>())
         .def("getSourceSimplices", &Dim4Isomorphism::getSourceSimplices)
         .def("getSourcePentachora", &Dim4Isomorphism::getSourcePentachora)
@@ -67,6 +66,11 @@ void addDim4Isomorphism() {
         .def("applyInPlace", &Dim4Isomorphism::applyInPlace)
         .def("random", &Dim4Isomorphism::random,
             return_value_policy<manage_new_object>())
+        .def("str", &Dim4Isomorphism::str)
+        .def("toString", &Dim4Isomorphism::toString)
+        .def("detail", &Dim4Isomorphism::detail)
+        .def("toStringLong", &Dim4Isomorphism::toStringLong)
+        .def("__str__", &Dim4Isomorphism::str)
         .staticmethod("random")
     ;
 }
