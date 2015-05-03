@@ -60,39 +60,40 @@ class Dim4Triangulation;
  * Represents a combinatorial isomorphism from one 4-manifold triangulation
  * into another.
  *
- * In essence, a combinatorial isomorphism from triangulation T to
- * triangulation U is a one-to-one map from the pentachora of T to the
- * pentachora of U that allows relabelling of both the pentachora and
+ * In essence, a combinatorial isomorphism from triangulation \a T to
+ * triangulation \a U is a one-to-one map from the pentachora of \a T to the
+ * pentachora of \a U that allows relabelling of both the pentachora and
  * their facets (or equivalently, their vertices), and that preserves
  * gluings across adjacent pentachora.
  *
- * More precisely:  An isomorphism consists of (i) a one-to-one map f
- * from the pentachora of T to the pentachora of U, and (ii) for each
- * pentachoron S of T, a permutation f_S of the facets (0,1,2,3,4) of S,
- * for which the following condition holds:
+ * More precisely:  An isomorphism consists of (i) a one-to-one map \a f
+ * from the pentachora of \a T to the pentachora of \a U, and (ii) for each
+ * pentachoron \a S of \a T, a permutation \a f<sub>S</sub> of the facets
+ * (0,1,2,3,4) of \a S, for which the following condition holds:
  *
- *   - If facet k of pentachoron S and facet k' of pentachoron S'
- *     are identified in T, then facet f_S(k) of f(S) and facet f_S'(k')
- *     of f(S') are identified in U.  Moreover, their gluing is consistent
- *     with the facet/vertex permutations; that is, there is a commutative
- *     square involving the gluing maps in T and U and the permutations
- *     f_S and f_S'.
+ *   - If facet \a k of pentachoron \a S and facet \a k' of pentachoron \a S'
+ *     are identified in \a T, then facet \a f<sub>S</sub>(\a k) of \a f(S)
+ *     and facet \a f<sub>S'</sub>(\a k') of \a f(S') are identified in \a U.
+ *     Moreover, their gluing is consistent with the facet/vertex permutations;
+ *     that is, there is a commutative square involving the gluing maps in
+ *     \a T and \a U and the permutations \a f<sub>S</sub> and
+ *     \a f<sub>S'</sub>.
  *
  * Isomorphisms can be <i>boundary complete</i> or
  * <i>boundary incomplete</i>.  A boundary complete isomorphism
  * satisfies the additional condition:
  *
- *   - If facet x is a boundary facet of T then facet f(x) is a boundary
- *     facet of U.
+ *   - If facet \a x is a boundary facet of \a T then facet \a f(x) is a
+ *     boundary facet of \a U.
  *
  * A boundary complete isomorphism thus indicates that a copy of
- * triangulation T is present as an entire component (or components) of U,
+ * triangulation \a T is present as an entire component (or components) of \a U,
  * whereas a boundary incomplete isomorphism represents an embedding of a
- * copy of triangulation T as a subcomplex of some possibly larger component
- * (or components) of U.
+ * copy of triangulation \a T as a subcomplex of some possibly larger component
+ * (or components) of \a U.
  *
- * Note that in all cases triangulation U may contain more pentachora
- * than triangulation T.
+ * Note that for all types of isomorphism, triangulation \a U is allowed
+ * to contain more pentachora than triangulation \a T.
  */
 class REGINA_API Dim4Isomorphism : public NGenericIsomorphism<4> {
     public:
