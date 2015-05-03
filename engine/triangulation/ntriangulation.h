@@ -53,6 +53,7 @@
 #include "generic/ngenerictriangulation.h"
 #include "maths/ncyclotomic.h"
 #include "packet/npacket.h"
+#include "treewidth/ntreedecomposition.h"
 #include "utilities/nbooleans.h"
 #include "utilities/nmarkedvector.h"
 #include "utilities/nproperty.h"
@@ -110,8 +111,8 @@ enum TuraevViroAlg {
      */
     TV_DEFAULT = 0,
     /**
-     * A backtracking algorithm.  This enumerates edge colourings and
-     * sums their corresponding weights.  This can be slow in general
+     * An optimised backtracking algorithm.  This enumerates edge colourings
+     * and sums their corresponding weights.  This can be slow in general
      * (since there could be exponentially many edge colourings),
      * but it has very small memory usage.
      */
@@ -123,6 +124,16 @@ enum TuraevViroAlg {
      * but it may require extremely large amounts of memory.
      */
     TV_TREEWIDTH = 2,
+    /**
+     * An unoptimised backtracking algorithm.  Like TV_BACKTRACK, this
+     * enumerates edge colourings and sums weights.  However, the
+     * implementation is more naive.
+     *
+     * \warning This algorithm should only be used for comparison and
+     * experimentation.  Due to its slow performance, it is not suitable
+     * for "real" applications.
+     */
+    TV_NAIVE = 3
 };
 
 /**
@@ -259,6 +270,11 @@ class REGINA_API NTriangulation : public NPacket,
                 strictAngleStructure_;
             /**< A strict angle structure on this triangulation, or the
                  null pointer if none exists. */
+
+        mutable NProperty<NTreeDecomposition, StoreManagedPtr>
+                niceTreeDecomposition_;
+            /**< A nice tree decomposition of the face pairing graph of
+                 this triangulation. */
 
         mutable TuraevViroSet turaevViroCache_;
             /**< The set of Turaev-Viro invariants that have already
@@ -693,7 +709,7 @@ class REGINA_API NTriangulation : public NPacket,
          * triangulation.  See getNumberOfTriangles() for further details.
          *
          * Do not confuse this deprecated alias with the
-         * (non-deprecated) tempate function getNumberOfFaces<dim>().
+         * (non-deprecated) tempate function getNumberOfFaces<subdim>().
          *
          * \deprecated This routine will be removed in a future version
          * of Regina.  Please use getNumberOfTriangles() instead.
@@ -708,13 +724,13 @@ class REGINA_API NTriangulation : public NPacket,
          * This template function is to assist with writing dimension-agnostic
          * code that can be reused to work in different dimensions.
          *
-         * \pre the template argument \a dim is between 0 and 3 inclusive.
+         * \pre The template argument \a subdim is between 0 and 3 inclusive.
          *
          * \ifacespython Not present.
          *
          * @return the number of faces of the given dimension.
          */
-        template <int dim>
+        template <int subdim>
         unsigned long getNumberOfFaces() const;
 
         /**
@@ -877,6 +893,9 @@ class REGINA_API NTriangulation : public NPacket,
          * This routine returns the requested triangular face in the
          * triangulation.  See getTriangle() for further details.
          *
+         * Do not confuse this deprecated alias with the
+         * (non-deprecated) tempate function getFace<subdim>().
+         *
          * \deprecated This routine will be removed in a future version
          * of Regina.  Please use getTriangle() instead.
          *
@@ -885,6 +904,24 @@ class REGINA_API NTriangulation : public NPacket,
          * @return the requested triangle.
          */
         NTriangle* getFace(unsigned long index) const;
+        /**
+         * Returns the requested face of the given dimension in this
+         * triangulation.
+         *
+         * This template function is to assist with writing dimension-agnostic
+         * code that can be reused to work in different dimensions.
+         *
+         * \pre The template argument \a subdim is between 0 and 3 inclusive.
+         *
+         * \ifacespython Not present.
+         *
+         * @param index the index of the desired face, ranging from 0 to
+         * getNumberOfFaces<subdim>()-1 inclusive.
+         * @return the requested face.
+         */
+        template <int subdim>
+        typename FaceTraits<3, subdim>::Face* getFace(unsigned long index)
+            const;
         /**
          * Returns the index of the given component in the triangulation.
          *
@@ -992,6 +1029,9 @@ class REGINA_API NTriangulation : public NPacket,
          * This routine returns the index of the given triangle in the
          * triangulation.  See triangleIndex() for further details.
          *
+         * Do not confuse this deprecated alias with the
+         * (non-deprecated) tempate function faceIndex<subdim>().
+         *
          * \deprecated This routine will be removed in a future version
          * of Regina.  Please use triangleIndex() instead.
          *
@@ -1001,6 +1041,27 @@ class REGINA_API NTriangulation : public NPacket,
          * triangle, 1 is the second and so on.
          */
         long faceIndex(const NTriangle* triangle) const;
+        /**
+         * Returns the index of the given face of the given dimension in this
+         * triangulation.
+         *
+         * This template function is to assist with writing dimension-agnostic
+         * code that can be reused to work in different dimensions.
+         *
+         * \pre The template argument \a subdim is between 0 and 3 inclusive.
+         * \pre The given face belongs to this triangulation.
+         *
+         * \warning Passing a null pointer to this routine will probably
+         * crash your program.
+         *
+         * \ifacespython Not present.
+         *
+         * @param face specifies which face to find in the triangulation.
+         * @return the index of the specified face, where 0 is the first
+         * \a subdim-face, 1 is the second \a subdim-face, and so on.
+         */
+        template <int subdim>
+        long faceIndex(const typename FaceTraits<3, subdim>::Face* face) const;
 
         /**
          * Determines if this triangulation contains any two-sphere
@@ -2818,6 +2879,31 @@ class REGINA_API NTriangulation : public NPacket,
          */
         bool hasSimpleCompressingDisc() const;
 
+        /**
+         * Returns a nice tree decomposition of the face pairing graph
+         * of this triangulation.  This can (for example) be used in
+         * implementing algorithms that are fixed-parameter tractable
+         * in the treewidth of the face pairing graph.
+         *
+         * See NTreeDecomposition for further details on tree
+         * decompositions, and see NTreeDecomposition::makeNice() for
+         * details on what it means to be a \e nice tree decomposition.
+         *
+         * This routine is fast: it will use a greedy algorithm to find a
+         * tree decomposition with (hopefully) small width, but with
+         * no guarantees that the width of this tree decomposition is the
+         * smallest possible.
+         *
+         * The tree decomposition will be cached, so that if this routine is
+         * called a second time (and the underlying triangulation has not
+         * been changed) then the same tree decomposition will be returned
+         * immediately.
+         *
+         * @return a nice tree decomposition of the face pairing graph
+         * of this triangulation.
+         */
+        const NTreeDecomposition& niceTreeDecomposition() const;
+
         /*@}*/
         /**
          * \name Subdivisions, Extensions and Covers
@@ -4087,6 +4173,26 @@ inline NTriangle* NTriangulation::getFace(unsigned long index) const {
     return getTriangle(index);
 }
 
+template <>
+inline NVertex* NTriangulation::getFace<0>(unsigned long index) const {
+    return vertices_[index];
+}
+
+template <>
+inline NEdge* NTriangulation::getFace<1>(unsigned long index) const {
+    return edges_[index];
+}
+
+template <>
+inline NTriangle* NTriangulation::getFace<2>(unsigned long index) const {
+    return triangles_[index];
+}
+
+template <>
+inline NTetrahedron* NTriangulation::getFace<3>(unsigned long index) const {
+    return tetrahedra_[index];
+}
+
 inline long NTriangulation::componentIndex(const NComponent* component) const {
     return component->markedIndex();
 }
@@ -4110,6 +4216,26 @@ inline long NTriangulation::triangleIndex(const NTriangle* tri) const {
 
 inline long NTriangulation::faceIndex(const NTriangle* tri) const {
     return tri->markedIndex();
+}
+
+template <>
+inline long NTriangulation::faceIndex<0>(const NVertex* face) const {
+    return face->markedIndex();
+}
+
+template <>
+inline long NTriangulation::faceIndex<1>(const NEdge* face) const {
+    return face->markedIndex();
+}
+
+template <>
+inline long NTriangulation::faceIndex<2>(const NTriangle* face) const {
+    return face->markedIndex();
+}
+
+template <>
+inline long NTriangulation::faceIndex<3>(const NTetrahedron* face) const {
+    return face->markedIndex();
 }
 
 inline bool NTriangulation::hasTwoSphereBoundaryComponents() const {
@@ -4202,6 +4328,15 @@ inline unsigned long NTriangulation::getHomologyH2Z2() const {
 inline const NTriangulation::TuraevViroSet&
         NTriangulation::allCalculatedTuraevViro() const {
     return turaevViroCache_;
+}
+
+inline const NTreeDecomposition& NTriangulation::niceTreeDecomposition() const {
+    if (niceTreeDecomposition_.known())
+        return *niceTreeDecomposition_.value();
+
+    NTreeDecomposition* ans = new NTreeDecomposition(*this, TD_UPPER);
+    ans->makeNice();
+    return *(niceTreeDecomposition_ = ans);
 }
 
 inline void NTriangulation::writeTextShort(std::ostream& out) const {

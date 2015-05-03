@@ -428,14 +428,233 @@ namespace {
             const InitialData<exact>& init) {
         typedef typename InitialData<exact>::TVType TVType;
 
+        unsigned long nEdges = tri.getNumberOfEdges();
+        unsigned long nTriangles = tri.getNumberOfTriangles();
+        unsigned long nTet = tri.getNumberOfTetrahedra();
+
+        // Our plan is to run through all admissible colourings via a
+        // backtracking search, with the high-degree edges towards the root
+        // of the search tree and the low-degree edges towards the leaves.
+
+        // We first sort the edges by degree.
+        unsigned long i, j;
+        unsigned long* sortedEdges = new unsigned long[nEdges];
+        unsigned long* edgePos = new unsigned long[nEdges];
+
+        for (i = 0; i < nEdges; ++i)
+            sortedEdges[i] = i;
+        std::sort(sortedEdges, sortedEdges + nEdges,
+            DegreeGreaterThan<3, 1>(tri));
+        for (i = 0; i < nEdges; ++i)
+            edgePos[sortedEdges[i]] = i;
+
+        // Work out which triangles and tetrahedra will be completely
+        // coloured at each level of the search tree.
+        //
+        // The following code contains some quadratic loops; we don't
+        // worry about this since it makes the code simpler and the
+        // overall algorithm is much slower (exponential) anyway.
+        std::deque<NEdgeEmbedding>::const_iterator embit;
+        unsigned long* tmp;
+
+        tmp = new unsigned long[nTriangles];
+        for (i = 0; i < nEdges; ++i) {
+            const std::deque<NEdgeEmbedding>& embs(
+                tri.getEdge(sortedEdges[i])->getEmbeddings());
+            for (embit = embs.begin(); embit != embs.end(); embit++)
+                tmp[(*embit).getTetrahedron()->
+                    getTriangle((*embit).getVertices()[2])->index()] = i;
+        }
+        unsigned long* triDone = new unsigned long[nTriangles];
+        unsigned long* triDoneStart = new unsigned long[nEdges + 1];
+        triDoneStart[0] = 0;
+        for (i = 0; i < nEdges; ++i) {
+            triDoneStart[i + 1] = triDoneStart[i];
+            for (j = 0; j < nTriangles; ++j)
+                if (tmp[j] == i)
+                    triDone[triDoneStart[i + 1]++] = j;
+        }
+        delete[] tmp;
+
+        tmp = new unsigned long[nTet];
+        for (i = 0; i < nEdges; ++i) {
+            const std::deque<NEdgeEmbedding>& embs(
+                tri.getEdge(sortedEdges[i])->getEmbeddings());
+            for (embit = embs.begin(); embit != embs.end(); embit++)
+                tmp[(*embit).getTetrahedron()->index()] = i;
+        }
+        unsigned long* tetDone = new unsigned long[nTet];
+        unsigned long* tetDoneStart = new unsigned long[nEdges + 1];
+        tetDoneStart[0] = 0;
+        for (i = 0; i < nEdges; ++i) {
+            tetDoneStart[i + 1] = tetDoneStart[i];
+            for (j = 0; j < nTet; ++j)
+                if (tmp[j] == i)
+                    tetDone[tetDoneStart[i + 1]++] = j;
+        }
+        delete[] tmp;
+
+        // Caches for partially computed weights of colourings:
+        TVType* edgeCache = new TVType[nEdges + 1];
+        init.initOne(edgeCache[0]);
+
+        TVType* triangleCache = new TVType[nEdges + 1];
+        init.initOne(triangleCache[0]);
+
+        TVType* tetCache = new TVType[nEdges + 1];
+        init.initOne(tetCache[0]);
+
         // Run through all admissible colourings.
         TVType ans;
         init.initZero(ans);
 
         // Now hunt for colourings.
-        unsigned long i;
+        unsigned long* colour = new unsigned long[nEdges];
+
+        std::fill(colour, colour + nEdges, 0);
+        long curr = 0;
+        TVType valColour(init.halfField ? init.r : 2 * init.r);
+        TVType tmpTVType(init.halfField ? init.r : 2 * init.r);
+        bool admissible;
+        long index1, index2;
+        const NTetrahedron* tet;
+        const NTriangle* triangle;
+        while (curr >= 0) {
+            // Have we found an admissible colouring?
+            if (curr >= static_cast<long>(nEdges)) {
+#ifdef TV_BACKTRACK_DUMP_COLOURINGS
+                for (i = 0; i < nEdges; ++i) {
+                    if (i > 0)
+                        std::cout << ' ';
+                    std::cout << colour[i];
+                }
+#endif
+                // Increment ans appropriately.
+                valColour = edgeCache[curr];
+                valColour *= triangleCache[curr];
+                valColour *= tetCache[curr];
+
+#ifdef TV_BACKTRACK_DUMP_COLOURINGS
+                std::cout << "  -->  " << valColour << std::endl;
+#endif
+                ans += valColour;
+
+                // Step back down one level.
+                curr--;
+                if (curr >= 0)
+                    colour[sortedEdges[curr]]++;
+                continue;
+            }
+
+            // Have we run out of values to try at this level?
+            if (colour[sortedEdges[curr]] > init.r - 2) {
+                colour[sortedEdges[curr]] = 0;
+                curr--;
+                if (curr >= 0)
+                    colour[sortedEdges[curr]]++;
+                continue;
+            }
+
+            // Does the current value for colour[sortedEdges[curr]]
+            // preserve admissibility?
+            admissible = true;
+            for (i = triDoneStart[curr];
+                    admissible && i < triDoneStart[curr + 1]; ++i) {
+                triangle = tri.getTriangle(triDone[i]);
+                if (! init.isAdmissible(
+                        colour[triangle->getEdge(0)->index()],
+                        colour[triangle->getEdge(1)->index()],
+                        colour[triangle->getEdge(2)->index()]))
+                    admissible = false;
+            }
+
+            // Use the current value for colour[curr] if appropriate;
+            // otherwise step forwards to the next value.
+            if (admissible) {
+                curr++;
+
+                edgeCache[curr] = edgeCache[curr - 1];
+                init.edgeContrib(colour[sortedEdges[curr - 1]],
+                    edgeCache[curr]);
+
+                triangleCache[curr] = triangleCache[curr - 1];
+                for (i = triDoneStart[curr - 1]; i < triDoneStart[curr]; ++i) {
+                    triangle = tri.getTriangle(triDone[i]);
+                    init.triContrib(
+                        colour[triangle->getEdge(0)->index()],
+                        colour[triangle->getEdge(1)->index()],
+                        colour[triangle->getEdge(2)->index()],
+                        triangleCache[curr]);
+                }
+
+                tetCache[curr] = tetCache[curr - 1];
+                for (i = tetDoneStart[curr - 1]; i < tetDoneStart[curr]; ++i) {
+                    // Unlike the others, this call overwrites tmpTVType.
+                    tet = tri.getTetrahedron(tetDone[i]);
+                    init.tetContrib(
+                        colour[tet->getEdge(0)->index()],
+                        colour[tet->getEdge(1)->index()],
+                        colour[tet->getEdge(3)->index()],
+                        colour[tet->getEdge(5)->index()],
+                        colour[tet->getEdge(4)->index()],
+                        colour[tet->getEdge(2)->index()],
+                        tmpTVType);
+                    tetCache[curr] *= tmpTVType;
+                }
+            } else
+                colour[sortedEdges[curr]]++;
+        }
+
+        delete[] colour;
+        delete[] sortedEdges;
+        delete[] edgePos;
+        delete[] triDone;
+        delete[] triDoneStart;
+        delete[] tetDone;
+        delete[] tetDoneStart;
+
+        delete[] edgeCache;
+        delete[] triangleCache;
+        delete[] tetCache;
+
+        // Compute the vertex contributions separately, since these are
+        // constant.
+        for (i = 0; i < tri.getNumberOfVertices(); i++)
+            ans *= init.vertexContrib;
+
+        return ans;
+    }
+
+    template <bool exact>
+    typename InitialData<exact>::TVType turaevViroNaive(
+            const NTriangulation& tri,
+            const InitialData<exact>& init) {
+        typedef typename InitialData<exact>::TVType TVType;
+
         unsigned long nEdges = tri.getNumberOfEdges();
         unsigned long nTriangles = tri.getNumberOfTriangles();
+
+        // Our plan is to run through all admissible colourings via a
+        // backtracking search, with the high-degree edges towards the root
+        // of the search tree and the low-degree edges towards the leaves.
+
+        // We first sort the edges by degree.
+        unsigned long i;
+        unsigned long* sortedEdges = new unsigned long[nEdges];
+        unsigned long* edgePos = new unsigned long[nEdges];
+
+        for (i = 0; i < nEdges; ++i)
+            sortedEdges[i] = i;
+        std::sort(sortedEdges, sortedEdges + nEdges,
+            DegreeGreaterThan<3, 1>(tri));
+        for (i = 0; i < nEdges; ++i)
+            edgePos[sortedEdges[i]] = i;
+
+        // Run through all admissible colourings.
+        TVType ans;
+        init.initZero(ans);
+
+        // Now hunt for colourings.
         unsigned long* colour = new unsigned long[nEdges];
 
         std::fill(colour, colour + nEdges, 0);
@@ -477,23 +696,23 @@ namespace {
                 // Step back down one level.
                 curr--;
                 if (curr >= 0)
-                    colour[curr]++;
+                    colour[sortedEdges[curr]]++;
                 continue;
             }
 
             // Have we run out of values to try at this level?
-            if (colour[curr] > init.r - 2) {
-                colour[curr] = 0;
+            if (colour[sortedEdges[curr]] > init.r - 2) {
+                colour[sortedEdges[curr]] = 0;
                 curr--;
                 if (curr >= 0)
-                    colour[curr]++;
+                    colour[sortedEdges[curr]]++;
                 continue;
             }
 
             // Does the current value for colour[curr] preserve admissibility?
             admissible = true;
-            const std::deque<NEdgeEmbedding>& embs(tri.getEdge(curr)->
-                getEmbeddings());
+            const std::deque<NEdgeEmbedding>&
+                embs(tri.getEdge(sortedEdges[curr])->getEmbeddings());
             for (embit = embs.begin(); embit != embs.end(); embit++) {
                 index1 = tri.edgeIndex((*embit).getTetrahedron()->getEdge(
                     NEdge::edgeNumber[(*embit).getVertices()[0]]
@@ -501,11 +720,11 @@ namespace {
                 index2 = tri.edgeIndex((*embit).getTetrahedron()->getEdge(
                     NEdge::edgeNumber[(*embit).getVertices()[1]]
                     [(*embit).getVertices()[2]]));
-                if (index1 <= curr && index2 <= curr) {
+                if (edgePos[index1] <= curr && edgePos[index2] <= curr) {
                     // We've decided upon colours for all three edges of
                     // this triangle containing the current edge.
                     if (! init.isAdmissible(colour[index1], colour[index2],
-                            colour[curr])) {
+                            colour[sortedEdges[curr]])) {
                         admissible = false;
                         break;
                     }
@@ -517,10 +736,12 @@ namespace {
             if (admissible)
                 curr++;
             else
-                colour[curr]++;
+                colour[sortedEdges[curr]]++;
         }
 
         delete[] colour;
+        delete[] sortedEdges;
+        delete[] edgePos;
 
         // Compute the vertex contributions separately, since these are
         // constant.
@@ -536,9 +757,7 @@ namespace {
             InitialData<exact>& init) {
         typedef typename InitialData<exact>::TVType TVType;
 
-        NTreeDecomposition d(tri);
-        d.compress();
-        d.makeNice();
+        const NTreeDecomposition& d = tri.niceTreeDecomposition();
 
         int nEdges = tri.getNumberOfEdges();
         int nBags = d.size();
@@ -596,17 +815,25 @@ namespace {
 
         typedef std::map<LightweightSequence<int>*, TVType,
             LightweightSequence<int>::Less> SolnSet;
+        typedef typename SolnSet::iterator SolnIterator;
 
         SolnSet** partial = new SolnSet*[nBags];
         LightweightSequence<int>* seq;
-        typename SolnSet::iterator it, it2;
-        std::pair<typename SolnSet::iterator, bool> existingSoln;
+        SolnIterator it, it2;
+        std::pair<SolnIterator, bool> existingSoln;
         int e1, e2;
         int tetEdge[6];
         int colour[6];
         int level;
         bool ok;
         TVType val;
+
+        size_t* overlap = new size_t[nEdges];
+        size_t nOverlap;
+        SolnIterator *leftIndexed, *rightIndexed;
+        size_t nLeft, nRight;
+        SolnIterator *subit, *subit2;
+        std::pair<SolnIterator*, SolnIterator*> subrange, subrange2;
 
         // For each new tetrahedron that appears in a forget bag, we
         // colour its edges in the order 5,4,3,2,1,0.
@@ -754,9 +981,9 @@ namespace {
                     }
                 }
 
-                for (it2 = partial[child->index()]->begin();
-                        it2 != partial[child->index()]->end(); ++it2)
-                    delete it2->first;
+                for (it = partial[child->index()]->begin();
+                        it != partial[child->index()]->end(); ++it)
+                    delete it->first;
                 delete partial[child->index()];
                 partial[child->index()] = 0;
             } else {
@@ -766,41 +993,85 @@ namespace {
                 child = bag->children();
                 sibling = child->sibling();
 
+                nOverlap = 0;
+                for (i = 0; i < nEdges; ++i)
+                    if (seenDegree[child->index()][i] != 0 &&
+                            seenDegree[sibling->index()][i] != 0)
+                    overlap[nOverlap++] = i;
+
+                LightweightSequence<int>::SubsequenceCompareFirstPtr<
+                    SolnIterator> compare(nOverlap, overlap);
+
+                nLeft = 0;
+                leftIndexed = new SolnIterator[partial[child->index()]->size()];
                 for (it = partial[child->index()]->begin();
                         it != partial[child->index()]->end(); ++it)
-                    for (it2 = partial[sibling->index()]->begin();
-                            it2 != partial[sibling->index()]->end(); ++it2) {
-                        // Are the two solutions compatible?
-                        ok = true;
-                        for (i = 0; ok && i < nEdges; ++i)
-                            if ((*it->first)[i] != TV_UNCOLOURED &&
-                                    (*it2->first)[i] != TV_UNCOLOURED &&
-                                    (*it->first)[i] != (*it2->first)[i])
-                                ok = false;
-                        if (! ok)
-                            continue;
+                    leftIndexed[nLeft++] = it;
+                std::sort(leftIndexed, leftIndexed + nLeft, compare);
 
-                        // Combine them and store the corresponding
-                        // value, again aggregating if necessary.
-                        val = it->second;
-                        val *= it2->second;
+                nRight = 0;
+                rightIndexed = new SolnIterator[
+                    partial[sibling->index()]->size()];
+                for (it = partial[sibling->index()]->begin();
+                        it != partial[sibling->index()]->end(); ++it)
+                    rightIndexed[nRight++] = it;
+                std::sort(rightIndexed, rightIndexed + nRight, compare);
 
-                        seq = new LightweightSequence<int>(nEdges);
-                        for (i = 0; i < nEdges; ++i)
-                            if (seenDegree[index][i] < 0)
-                                (*seq)[i] = TV_AGGREGATED;
-                            else if (seenDegree[child->index()][i] > 0)
-                                (*seq)[i] = (*it->first)[i];
-                            else
-                                (*seq)[i] = (*it2->first)[i];
+                subrange.second = leftIndexed;
+                subrange2.second = rightIndexed;
 
-                        existingSoln = partial[index]->insert(
-                            std::make_pair(seq, val));
-                        if (! existingSoln.second) {
-                            existingSoln.first->second += val;
-                            delete seq;
+                while (subrange.second != leftIndexed + nLeft &&
+                        subrange2.second != rightIndexed + nRight) {
+                    subrange.first = subrange.second;
+                    while (subrange.second != leftIndexed + nLeft &&
+                            compare.equal(*subrange.first, *subrange.second))
+                        ++subrange.second;
+
+                    subrange2.first = subrange2.second;
+                    while (subrange2.first != rightIndexed + nRight &&
+                            compare.less(*subrange2.first, *subrange.first))
+                        ++subrange2.first;
+
+                    if (subrange2.first == rightIndexed + nRight)
+                        break;
+                    if (compare.less(*subrange.first, *subrange2.first))
+                        continue;
+
+                    subrange2.second = subrange2.first;
+                    while (subrange2.second != rightIndexed + nRight &&
+                            compare.equal(*subrange2.first, *subrange2.second))
+                        ++subrange2.second;
+
+                    for (subit = subrange.first;
+                            subit != subrange.second; ++subit)
+                        for (subit2 = subrange2.first;
+                                subit2 != subrange2.second; ++subit2) {
+                            // We have two compatible solutions.
+                            // Combine them and store the corresponding
+                            // value, again aggregating if necessary.
+                            val = (*subit)->second;
+                            val *= (*subit2)->second;
+
+                            seq = new LightweightSequence<int>(nEdges);
+                            for (i = 0; i < nEdges; ++i)
+                                if (seenDegree[index][i] < 0)
+                                    (*seq)[i] = TV_AGGREGATED;
+                                else if (seenDegree[child->index()][i] > 0)
+                                    (*seq)[i] = (*((*subit)->first))[i];
+                                else
+                                    (*seq)[i] = (*((*subit2)->first))[i];
+
+                            existingSoln = partial[index]->insert(
+                                std::make_pair(seq, val));
+                            if (! existingSoln.second) {
+                                existingSoln.first->second += val;
+                                delete seq;
+                            }
                         }
-                    }
+                }
+
+                delete[] leftIndexed;
+                delete[] rightIndexed;
 
                 for (it2 = partial[child->index()]->begin();
                         it2 != partial[child->index()]->end(); ++it2)
@@ -838,6 +1109,7 @@ namespace {
 
         delete[] seenDegree;
         delete[] partial;
+        delete[] overlap;
 
         return ans;
     }
@@ -925,6 +1197,9 @@ double NTriangulation::turaevViroApprox(unsigned long r,
         case TV_TREEWIDTH:
             ans = turaevViroTreewidth(*this, init);
             break;
+        case TV_NAIVE:
+            ans = turaevViroNaive(*this, init);
+            break;
     }
 
     if (isNonZero(ans.imag())) {
@@ -966,6 +1241,9 @@ NCyclotomic NTriangulation::turaevViro(unsigned long r, bool parity,
             break;
         case TV_TREEWIDTH:
             ans = turaevViroTreewidth(*this, init);
+            break;
+        case TV_NAIVE:
+            ans = turaevViroNaive(*this, init);
             break;
     }
 

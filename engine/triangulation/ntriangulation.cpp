@@ -166,6 +166,7 @@ void NTriangulation::clearAllProperties() {
     haken_.clear();
     strictAngleStructure_.clear();
 
+    niceTreeDecomposition_.clear();
     turaevViroCache_.clear();
 }
 

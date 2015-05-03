@@ -104,7 +104,7 @@ namespace {
 }
 
 void addNMatrixInt() {
-    scope s = class_<NMatrixInt, bases<regina::ShareableObject>,
+    scope s = class_<NMatrixInt,
             std::auto_ptr<NMatrixInt>, boost::noncopyable>("NMatrixInt",
             init<unsigned long, unsigned long>())
         .def(init<const NMatrixInt&>())
@@ -133,6 +133,11 @@ void addNMatrixInt() {
         .def(self == self)
         .def(self != self)
         .def("__mul__", multiply)
+        .def("str", &NMatrixInt::str)
+        .def("toString", &NMatrixInt::toString)
+        .def("detail", &NMatrixInt::detail)
+        .def("toStringLong", &NMatrixInt::toStringLong)
+        .def("__str__", &NMatrixInt::str)
     ;
 
     s.attr("zero") = NMatrixInt::zero;

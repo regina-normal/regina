@@ -198,8 +198,31 @@ class REGINA_API LightweightSequence {
         const_iterator end() const;
 
         /**
-         * A binary function object that compares two sequences
-         * lexicographically.
+         * Tests whether this and the given sequence are identical.
+         *
+         * The sequences need not be the same size, though if the sizes
+         * are different then this routine will return \c false immediately.
+         *
+         * @param rhs the sequence to compare with this.
+         * @return \c true if and only if this and the given sequence
+         * are identical.
+         */
+        bool operator == (const LightweightSequence& rhs) const;
+
+        /**
+         * Tests whether this sequence is lexicographically smaller than the
+         * given sequence.  The sequences need not be the same size.
+         *
+         * @param rhs the sequence to compare with this.
+         * @return \c true if this is strictly lexicographically
+         * smaller than \a rhs, or \c false if this is either
+         * lexicographically greater than or equal to \a rhs.
+         */
+        bool operator < (const LightweightSequence& rhs) const;
+
+        /**
+         * A binary function object that compares sequences lexicographically,
+         * for use in containers that hold pointers to sequences.
          *
          * \pre The type \a T supports the less-than operator.
          */
@@ -208,14 +231,144 @@ class REGINA_API LightweightSequence {
              * Compares two sequences lexicographically.  The sequences
              * need not be the same size.
              *
-             * @param a the first of the two sequences to compare.
-             * @param b the second of the two sequences to compare.
+             * This routine is identical to testing <tt>(*a) &lt; (*b)</tt>.
+             *
+             * @param a a pointer to the first of the two sequences to compare.
+             * @param b a pointer to the second of the two sequences to compare.
              * @return \c true if sequence \a a is strictly lexicographically
              * smaller than sequence \a b, or \c false if \a a is either
              * lexicographically greater than or equal to \a b.
              */
             bool operator () (const LightweightSequence* a,
                     const LightweightSequence* b) const;
+        };
+
+        /**
+         * A binary function object for comparing subsequences, for use in
+         * associative containers whose keys are pointers to sequences.
+         *
+         * This is a very specialised comparison object, for use in the
+         * following settings:
+         *
+         * - We are interested in comparing just some, not necessarily all,
+         *   of the elements of each sequence.  The indices of the elements
+         *   to compare are passed to the constructor of this comparison object.
+         *
+         * - The actual objects that we compare are not the sequences
+         *   themselves, but iterators that point to (key, value) pairs,
+         *   whose keys are pointers to sequences.
+         *
+         * More precisely: suppose the indices of the elements to
+         * compare are \a i0, \a i1, \a i2, ..., and that we are comparing
+         * iterators \a a, \a b.  Then this function object will consider the
+         * sequences <tt>s = *(a->first)</tt> and <tt>t = *(b->first)</tt>,
+         * and will lexicographically compare their subsequences
+         * <tt>s[i0], s[i1], ...</tt> and <tt>t[i0], t[i1], ...</tt>.
+         *
+         * Note that the indices \a i0, \a i1, ... do not need to be in
+         * increasing order.
+         */
+        template <typename Iterator>
+        class REGINA_API SubsequenceCompareFirstPtr {
+            private:
+                size_t nSub_;
+                    /**< The number of elements to compare in each sequence. */
+                size_t* sub_;
+                    /**< The indices of the elements to compare in each
+                         sequence. */
+
+            public:
+                /**
+                 * Creates a new function object.
+                 *
+                 * As explained in the class notes, this object compares
+                 * just some, not necessarily all, elements of two
+                 * sequences.  The indices of the elements to compare
+                 * should be passed to this constructor.
+                 *
+                 * @param nSub the number of elements to compare from
+                 * each sequence.
+                 * @param sub the indices of the elements to compare
+                 * from each sequence; that is, the indices \a i0,
+                 * \a i1, ..., as described in the class notes.
+                 */
+                SubsequenceCompareFirstPtr(size_t nSub, const size_t* sub);
+                /**
+                 * Creates a clone of the given function object.
+                 *
+                 * @param cloneMe the function object to copy.
+                 */
+                SubsequenceCompareFirstPtr(
+                    const SubsequenceCompareFirstPtr<Iterator>& cloneMe);
+                /**
+                 * Destroys this function object.
+                 */
+                ~SubsequenceCompareFirstPtr();
+
+                /**
+                 * Tests whether the subsequences referred to by the
+                 * given pair of iterators are identical.
+                 *
+                 * See the class notes for details on how each iterator
+                 * is converted into a subsequence.
+                 *
+                 * @param a an iterator indicating the first of the two
+                 * subsequences to compare.
+                 * @param a an iterator indicating the second of the two
+                 * subsequences to compare.
+                 * @return \c true if and only if the two subsequences
+                 * are identical.
+                 */
+                bool equal(Iterator a, Iterator b) const;
+                /**
+                 * Lexicographically compares the subsequences referred to
+                 * by the given pair of iterators.
+                 *
+                 * See the class notes for details on how each iterator
+                 * is converted into a subsequence.
+                 *
+                 * This member function is identical to the bracket operator.
+                 *
+                 * @param a an iterator indicating the first of the two
+                 * subsequences to compare.
+                 * @param a an iterator indicating the second of the two
+                 * subsequences to compare.
+                 * @return \c true if and only if the subsequence
+                 * indicated by \a a is lexicographically smaller than
+                 * the subsequence indicated by \a b.
+                 */
+                bool less(Iterator a, Iterator b) const;
+                /**
+                 * Lexicographically compares the subsequences referred to
+                 * by the given pair of iterators.
+                 *
+                 * See the class notes for details on how each iterator
+                 * is converted into a subsequence.
+                 *
+                 * This bracket operator is identical to the less()
+                 * member function.
+                 *
+                 * @param a an iterator indicating the first of the two
+                 * subsequences to compare.
+                 * @param a an iterator indicating the second of the two
+                 * subsequences to compare.
+                 * @return \c true if and only if the subsequence
+                 * indicated by \a a is lexicographically smaller than
+                 * the subsequence indicated by \a b.
+                 */
+                bool operator () (Iterator a, Iterator b) const;
+
+                /**
+                 * Makes this function object identical to the given
+                 * function object.  The original list of indices that
+                 * was previously stored with this function object will
+                 * be destroyed.
+                 *
+                 * @param cloneMe the function object to copy.
+                 * @return a reference to this function object.
+                 */
+                SubsequenceCompareFirstPtr<Iterator>& operator = (
+                    const SubsequenceCompareFirstPtr<Iterator>& cloneMe);
         };
 };
 
@@ -298,6 +451,30 @@ inline typename LightweightSequence<T>::const_iterator
 }
 
 template <typename T>
+inline bool LightweightSequence<T>::operator == (
+        const LightweightSequence& rhs) const {
+    if (size_ != rhs.size_)
+        return false;
+    for (size_t i = 0; i < size_; ++i)
+        if (data_[i] != rhs.data_[i])
+            return false;
+    return true;
+}
+
+template <typename T>
+inline bool LightweightSequence<T>::operator < (
+        const LightweightSequence<T>& rhs) const {
+    for (size_t i = 0; i < rhs.size_; ++i)
+        if (i >= size_ || data_[i] < rhs.data_[i])
+            return true;
+        else if (rhs.data_[i] < data_[i])
+            return false;
+    // The sequences match for the first rhs.size_ elements, and
+    // this sequence is at least as long as rhs.
+    return false;
+}
+
+template <typename T>
 inline bool LightweightSequence<T>::Less::operator () (
         const LightweightSequence<T>* a, const LightweightSequence<T>* b)
         const {
@@ -321,6 +498,82 @@ inline std::ostream& operator << (std::ostream& out,
         out << s[i];
     }
     return out << ')';
+}
+
+template <typename T>
+template <typename Iterator>
+inline LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
+        SubsequenceCompareFirstPtr(size_t nSub, const size_t* sub) :
+        nSub_(nSub), sub_(new size_t[nSub]) {
+    for (size_t i = 0; i < nSub_; ++i)
+        sub_[i] = sub[i];
+}
+
+template <typename T>
+template <typename Iterator>
+inline LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
+        SubsequenceCompareFirstPtr(
+        const SubsequenceCompareFirstPtr<Iterator>& cloneMe) :
+        nSub_(cloneMe.nSub_), sub_(new size_t[cloneMe.nSub_]) {
+    for (size_t i = 0; i < nSub_; ++i)
+        sub_[i] = cloneMe.sub_[i];
+}
+
+template <typename T>
+template <typename Iterator>
+inline LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
+        ~SubsequenceCompareFirstPtr()  {
+    delete[] sub_;
+}
+
+template <typename T>
+template <typename Iterator>
+inline bool LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
+        equal(Iterator a, Iterator b) const {
+    for (size_t i = 0; i < nSub_; ++i)
+        if ((*(a->first))[sub_[i]] != (*(b->first))[sub_[i]])
+            return false;
+    return true;
+}
+
+template <typename T>
+template <typename Iterator>
+inline bool LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
+        less(Iterator a, Iterator b) const {
+    for (size_t i = 0; i < nSub_; ++i)
+        if ((*(a->first))[sub_[i]] < (*(b->first))[sub_[i]])
+            return true;
+        else if ((*(a->first))[sub_[i]] > (*(b->first))[sub_[i]])
+            return false;
+    return false;
+}
+
+template <typename T>
+template <typename Iterator>
+inline bool LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
+        operator () (Iterator a, Iterator b) const {
+    for (size_t i = 0; i < nSub_; ++i)
+        if ((*(a->first))[sub_[i]] < (*(b->first))[sub_[i]])
+            return true;
+        else if ((*(a->first))[sub_[i]] > (*(b->first))[sub_[i]])
+            return false;
+    return false;
+}
+
+template <typename T>
+template <typename Iterator>
+inline LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>&
+        LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
+        operator = (
+        const SubsequenceCompareFirstPtr<Iterator>& cloneMe) {
+    delete[] sub_;
+
+    nSub_ = cloneMe.nSub_;
+    sub_ = new size_t[nSub_];
+    for (size_t i = 0; i < nSub_; ++i)
+        sub_[i] = cloneMe.sub_[i];
+
+    return *this;
 }
 
 } // namespace regina

@@ -34,6 +34,7 @@
 
 #include <cstdio>
 #include <cstring>
+#include <iostream>
 #include <sstream>
 #include <boost/iostreams/device/file.hpp>
 #include <boost/iostreams/filtering_stream.hpp>

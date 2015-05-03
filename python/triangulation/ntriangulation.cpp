@@ -184,7 +184,7 @@ namespace {
     boost::python::tuple isoSig_relabelling(const NTriangulation& t) {
         regina::NIsomorphism* iso;
         std::string sig = t.isoSig(&iso);
-        return make_tuple(
+        return boost::python::make_tuple(
             sig,
             boost::python::object(boost::python::handle<>(
                 boost::python::manage_new_object::
@@ -199,11 +199,13 @@ void addNTriangulation() {
         .value("TV_DEFAULT", regina::TV_DEFAULT)
         .value("TV_BACKTRACK", regina::TV_BACKTRACK)
         .value("TV_TREEWIDTH", regina::TV_TREEWIDTH)
+        .value("TV_NAIVE", regina::TV_NAIVE)
         ;
 
     global.attr("TV_DEFAULT") = regina::TV_DEFAULT;
     global.attr("TV_BACKTRACK") = regina::TV_BACKTRACK;
     global.attr("TV_TREEWIDTH") = regina::TV_TREEWIDTH;
+    global.attr("TV_NAIVE") = regina::TV_NAIVE;
 
     scope s = class_<NTriangulation, bases<regina::NPacket>,
             std::auto_ptr<NTriangulation>,
@@ -259,7 +261,7 @@ void addNTriangulation() {
             return_value_policy<reference_existing_object>())
         .def("getEdge", &NTriangulation::getEdge,
             return_value_policy<reference_existing_object>())
-        .def("getFace", &NTriangulation::getFace,
+        .def("getFace", &NTriangulation::getTriangle,
             return_value_policy<reference_existing_object>())
         .def("getTriangle", &NTriangulation::getTriangle,
             return_value_policy<reference_existing_object>())
@@ -268,7 +270,7 @@ void addNTriangulation() {
             &NTriangulation::boundaryComponentIndex)
         .def("vertexIndex", &NTriangulation::vertexIndex)
         .def("edgeIndex", &NTriangulation::edgeIndex)
-        .def("faceIndex", &NTriangulation::faceIndex)
+        .def("faceIndex", &NTriangulation::triangleIndex)
         .def("triangleIndex", &NTriangulation::triangleIndex)
         .def("isIdenticalTo", &NTriangulation::isIdenticalTo)
         .def("isIsomorphicTo", &NTriangulation::isIsomorphicTo)
@@ -366,6 +368,8 @@ void addNTriangulation() {
             &NTriangulation::hasSimpleCompressingDisc)
         .def("isHaken", &NTriangulation::isHaken)
         .def("knowsHaken", &NTriangulation::knowsHaken)
+        .def("niceTreeDecomposition", &NTriangulation::niceTreeDecomposition,
+            return_internal_reference<>())
         .def("makeDoubleCover", &NTriangulation::makeDoubleCover)
         .def("idealToFinite", &NTriangulation::idealToFinite)
         .def("finiteToIdeal", &NTriangulation::finiteToIdeal)

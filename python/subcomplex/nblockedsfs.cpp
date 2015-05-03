@@ -44,7 +44,7 @@ namespace {
     boost::python::tuple isPluggedIBundle_tuple(const NBlockedSFS& b) {
         std::string name;
         bool ans = b.isPluggedIBundle(name);
-        return make_tuple(ans, name);
+        return boost::python::make_tuple(ans, name);
     }
 }
 

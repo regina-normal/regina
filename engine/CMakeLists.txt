@@ -14,7 +14,7 @@ INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/engine)
 INCLUDE_DIRECTORIES(${TOKYOCABINET_INCLUDE_DIRS})
 LINK_DIRECTORIES(${TOKYOCABINET_LIBRARY_DIRS})
 
-SET ( SOURCES engine shareableobject )
+SET ( SOURCES engine )
 # Each of these subdirectories modifies the SOURCE variable,
 # adding more source files
 ADD_SUBDIRECTORY("algebra")
