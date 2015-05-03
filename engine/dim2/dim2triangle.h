@@ -110,8 +110,6 @@ class REGINA_API Simplex<2> : public SimplexBase<2> {
         Simplex* adjacentTriangle(int edge) const;
         /**
          * A dimension-specific alias for adjacentFacet().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
          *
          * See adjacentFacet() for further information.
          */

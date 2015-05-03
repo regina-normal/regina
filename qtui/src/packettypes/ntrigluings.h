@@ -50,8 +50,8 @@ class QToolBar;
 
 namespace regina {
     class NPacket;
-    class NTetrahedron;
     class NTriangulation;
+    template <int> class Simplex;
 };
 
 class GluingsModel : public QAbstractItemModel {
@@ -115,7 +115,7 @@ class GluingsModel : public QAbstractItemModel {
          * face gluing.  This routine handles both boundary and
          * non-boundary faces.
          */
-        static QString destString(int srcFace, regina::NTetrahedron* destTet,
+        static QString destString(int srcFace, regina::Simplex<3>* destTet,
             const regina::NPerm4& gluing);
 
         /**

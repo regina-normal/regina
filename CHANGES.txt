@@ -127,6 +127,15 @@ Version 4.97  [ (under development) ]
               should now inherit from Output<> instead.
         Class NSurfaceFilterProperties:
             - New set-based routine setECs().
+        Class NTetrahedron:
+            - Now just a typedef for the new class Simplex<3>, which has
+              the same functionality as the old NTetrahedron.
+            - Removed the old deprecated public constructors.  The only way
+              to construct a new tetrahedron is via the triangulation, using
+              NTriangulation::newTetrahedron() or NTriangulation::newSimplex().
+            - Removed deprecated routines getAdjacentTetrahedron(),
+              getAdjacentTetrahedronGluing(), getAdjacentFace(), getFace()
+              and getFaceMapping().
         Class NTreeBag, NTreeDecomposition:
             - Classes for computing tree decompositions of graphs
               (including facet pairing graphs of triangulations).
@@ -158,6 +167,8 @@ Version 4.97  [ (under development) ]
               faceIndex<subdim>() template functions.
             - New routine niceTreeDecomposition() for constructing and
               caching a nice tree decomposition of the face pairing graph.
+            - Removed deprecated routines addTetrahedron() and
+              gluingsHaveChanged().
         Class NVertex:
             - Added a new LinkType enumeration, which encapsulates (and
               replaces) the old link type constants.

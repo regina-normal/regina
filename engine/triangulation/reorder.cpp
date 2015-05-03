@@ -318,8 +318,8 @@ bool NTriangulation::isOrdered() const {
     for(it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it)
         for(int face = 0; face < 4; face++)
 
-            if((*it)->tetrahedra_[face]) {
-                NPerm4 perm = (*it) -> tetrahedronPerm_[face];
+            if((*it)->adj_[face]) {
+                NPerm4 perm = (*it) -> gluing_[face];
 
                 // check that the permutation is order preserving on the face
                 int last = -1;

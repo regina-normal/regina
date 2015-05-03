@@ -106,12 +106,6 @@ namespace {
         return NTriangulation::enterTextTriangulation(std::cin, std::cout);
     }
 
-    void addTetrahedron_own(NTriangulation& tri,
-            std::auto_ptr<regina::NTetrahedron> tet) {
-        tri.addTetrahedron(tet.get());
-        tet.release();
-    }
-
     boost::python::list getTetrahedra_list(NTriangulation& t) {
         boost::python::list ans;
         for (NTriangulation::TetrahedronIterator it =
@@ -230,7 +224,6 @@ void addNTriangulation() {
             return_value_policy<reference_existing_object>())
         .def("newSimplex", newTetrahedron_string,
             return_value_policy<reference_existing_object>())
-        .def("addTetrahedron", addTetrahedron_own)
         .def("removeTetrahedron", &NTriangulation::removeTetrahedron)
         .def("removeSimplex", &NTriangulation::removeSimplex)
         .def("removeTetrahedronAt", &NTriangulation::removeTetrahedronAt)
@@ -239,7 +232,6 @@ void addNTriangulation() {
         .def("removeAllSimplices", &NTriangulation::removeAllSimplices)
         .def("swapContents", &NTriangulation::swapContents)
         .def("moveContentsTo", &NTriangulation::moveContentsTo)
-        .def("gluingsHaveChanged", &NTriangulation::gluingsHaveChanged)
         .def("getNumberOfComponents", &NTriangulation::getNumberOfComponents)
         .def("getNumberOfBoundaryComponents",
             &NTriangulation::getNumberOfBoundaryComponents)

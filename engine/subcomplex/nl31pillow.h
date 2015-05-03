@@ -46,7 +46,8 @@
 
 namespace regina {
 
-class NTetrahedron;
+template <int> class Simplex;
+typedef Simplex<3> NTetrahedron;
 
 /**
  * \weakgroup subcomplex

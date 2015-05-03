@@ -47,8 +47,10 @@
 #include <vector>
 
 namespace regina {
-    class NTetrahedron;
     class NTriangulation;
+
+    template <int> class Simplex;
+    typedef regina::Simplex<3> NTetrahedron;
 };
 
 /**

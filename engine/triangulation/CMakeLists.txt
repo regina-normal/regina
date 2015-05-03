@@ -18,7 +18,6 @@ SET ( FILES
   nfacepair
   nhomologicaldata
   nisomorphism
-  ntetrahedron
   ntriangle
   ntriangulation
   nvertex

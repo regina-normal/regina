@@ -71,7 +71,6 @@ class NBoundaryComponent;
 class NComponent;
 class NEdge;
 class NTriangle;
-class NTetrahedron;
 class NVertex;
 class NGroupPresentation;
 class NIsomorphism;
@@ -79,6 +78,10 @@ class NNormalSurface;
 class NTriangulation;
 class NXMLPacketReader;
 class NXMLTriangulationReader;
+
+template <int> class SimplexBase;
+template <int> class Simplex;
+typedef Simplex<3> NTetrahedron;
 
 /**
  * \addtogroup triangulation Triangulations
@@ -524,38 +527,6 @@ class REGINA_API NTriangulation : public NPacket,
          */
         NTetrahedron* newSimplex(const std::string& desc);
         /**
-         * Inserts the given tetrahedron into the triangulation.
-         * No face gluings anywhere will be examined or altered.
-         *
-         * The new tetrahedron will be assigned a higher index in the
-         * triangulation than all tetrahedra already present.
-         *
-         * \pre The given tetrahedron does not already belong to a
-         * different triangulation (though already belonging to \e this
-         * triangulation is perfectly fine).
-         *
-         * \deprecated Users should create tetrahedra by calling
-         * newTetrahedron() or newTetrahedron(const std::string&), which
-         * will add the tetrahedron to the triangulation automatically.
-         *
-         * \warning As of Regina 4.90, this routine will also add any
-         * neighbouring tetrahedra that do not yet belong to a
-         * triangulation; moreover, this addition is recursive.  This is done
-         * to ensure that, whenever one tetrahedron belongs to a
-         * triangulation, everything that it is joined to (directly or
-         * indirectly) also belongs to that same triangulation.
-         * See the NTetrahedron class notes for further details on how
-         * tetrahedron management has changed in Regina 4.90 and above.
-         *
-         * \ifacespython Since this triangulation takes ownership
-         * of the given tetrahedron, the python object containing the
-         * given tetrahedron becomes a null object and should no longer
-         * be used.
-         *
-         * @param tet the tetrahedron to insert.
-         */
-        void addTetrahedron(NTetrahedron* tet);
-        /**
          * Removes the given tetrahedron from the triangulation.
          * All faces glued to this tetrahedron will be unglued.
          * The tetrahedron will be deallocated.
@@ -653,16 +624,6 @@ class REGINA_API NTriangulation : public NPacket,
          * moved.
          */
         void moveContentsTo(NTriangulation& dest);
-        /**
-         * This routine now does nothing, and should not be used.
-         *
-         * \deprecated In Regina versions 4.6 and earlier, this routine
-         * was used to manually notify the triangulation that the gluings
-         * of tetrahedra had changed.  In Regina 4.90 and later this
-         * notification is automatic.  This routine now does nothing at
-         * all, and can safely be removed from any existing code.
-         */
-        void gluingsHaveChanged();
 
         /*@}*/
         /**
@@ -3878,8 +3839,9 @@ class REGINA_API NTriangulation : public NPacket,
                 std::set<NTetrahedron*>&) const;
             /**< Internal to maximalForestInDualSkeleton(). */
 
+    friend class regina::Simplex<3>;
+    friend class regina::SimplexBase<3>;
     friend class regina::NGenericTriangulation<3>;
-    friend class regina::NTetrahedron;
     friend class regina::NXMLTriangulationReader;
 };
 
@@ -3955,8 +3917,7 @@ inline long NTriangulation::simplexIndex(const NTetrahedron* tet) const {
 inline NTetrahedron* NTriangulation::newTetrahedron() {
     ChangeEventSpan span(this);
 
-    NTetrahedron* tet = new NTetrahedron();
-    tet->tri_ = this;
+    NTetrahedron* tet = new NTetrahedron(this);
     tetrahedra_.push_back(tet);
     clearAllProperties();
 
@@ -3970,8 +3931,7 @@ inline NTetrahedron* NTriangulation::newSimplex() {
 inline NTetrahedron* NTriangulation::newTetrahedron(const std::string& desc) {
     ChangeEventSpan span(this);
 
-    NTetrahedron* tet = new NTetrahedron(desc);
-    tet->tri_ = this;
+    NTetrahedron* tet = new NTetrahedron(desc, this);
     tetrahedra_.push_back(tet);
     clearAllProperties();
 
@@ -4019,9 +3979,6 @@ inline void NTriangulation::removeAllTetrahedra() {
 
 inline void NTriangulation::removeAllSimplices() {
     removeAllTetrahedra();
-}
-
-inline void NTriangulation::gluingsHaveChanged() {
 }
 
 inline unsigned long NTriangulation::getNumberOfBoundaryComponents() const {

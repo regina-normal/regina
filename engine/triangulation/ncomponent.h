@@ -48,11 +48,13 @@
 
 namespace regina {
 
-class NTetrahedron;
 class NTriangle;
 class NEdge;
 class NVertex;
 class NBoundaryComponent;
+
+template <int> class Simplex;
+typedef Simplex<3> NTetrahedron;
 
 /**
  * \weakgroup triangulation

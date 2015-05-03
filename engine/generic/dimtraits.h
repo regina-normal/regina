@@ -123,7 +123,6 @@ struct DimTraits<2> {
 class NEdge;
 class NTriangle;
 class NTriangulation;
-class NTetrahedron;
 class NIsomorphism;
 class NFacePairing;
 class NVertex;
@@ -131,7 +130,7 @@ class NVertex;
 template <>
 struct DimTraits<3> {
     typedef NTriangulation Triangulation;
-    typedef NTetrahedron Simplex;
+    typedef Simplex<3> Simplex;
     typedef NIsomorphism Isomorphism;
     typedef NFacePairing FacetPairing;
 };
@@ -168,7 +167,7 @@ struct FaceTraits<3, 2> {
 
 template <>
 struct FaceTraits<3, 3> {
-    typedef NTetrahedron Face;
+    typedef Simplex<3> Face;
 };
 #endif
 

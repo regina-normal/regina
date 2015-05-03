@@ -64,50 +64,6 @@ NTriangulation::NTriangulation(const std::string& description) :
     delete attempt;
 }
 
-void NTriangulation::addTetrahedron(NTetrahedron* t) {
-    // Make this a no-op if the tetrahedron has already been added.
-    if (t->tri_ == this)
-        return;
-    assert(t->tri_ == 0);
-
-    ChangeEventSpan span(this);
-
-    t->tri_ = this;
-    tetrahedra_.push_back(t);
-
-    // Aggressively add neighbours of t (recursively).
-    // First check whether this is even necessary.
-    bool moreToAdd = false;
-    int i;
-    for (i = 0; i < 4; ++i)
-        if (t->adjacentTetrahedron(i) && ! t->adjacentTetrahedron(i)->tri_) {
-            moreToAdd = true;
-            break;
-        }
-    if (moreToAdd) {
-        // Yep, it's necessary.. off we go.
-        std::stack<NTetrahedron*> toFollow;
-        toFollow.push(t);
-
-        NTetrahedron* next;
-        NTetrahedron* adj;
-        while (! toFollow.empty()) {
-            next = toFollow.top();
-            toFollow.pop();
-            for (i = 0; i < 4; ++i) {
-                adj = next->adjacentTetrahedron(i);
-                if (adj && ! adj->tri_) {
-                    adj->tri_ = this;
-                    tetrahedra_.push_back(adj);
-                    toFollow.push(adj);
-                }
-            }
-        }
-    }
-
-    clearAllProperties();
-}
-
 void NTriangulation::swapContents(NTriangulation& other) {
     ChangeEventSpan span1(this);
     ChangeEventSpan span2(&other);
