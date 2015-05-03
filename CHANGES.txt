@@ -9,9 +9,6 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.97  [ (under development) ]
 
-    TODO:
-        - Once things become generic enough, note in the relevant
-          simplex classes that unjoin() is safe on boundary facets.
     GENERAL:
         - Now uses aspects of C++11, which your compiler will need to support.
     ENGINE:
@@ -27,6 +24,7 @@ Version 4.97  [ (under development) ]
         Class Dim2Triangle:
             - Now just a typedef for the new class Simplex<2>, which has
               the same functionality as the old Dim2Triangle.
+            - You can now safely call unjoin() on a boundary edge.
         Class Dim2Triangulation:
             - New dimension-agnostic getFace<subdim>() and
               faceIndex<subdim>() template functions.
@@ -137,6 +135,7 @@ Version 4.97  [ (under development) ]
             - Removed deprecated routines getAdjacentTetrahedron(),
               getAdjacentTetrahedronGluing(), getAdjacentFace(), getFace()
               and getFaceMapping().
+            - You can now safely call unjoin() on a boundary face.
         Class NTreeBag, NTreeDecomposition:
             - Classes for computing tree decompositions of graphs
               (including facet pairing graphs of triangulations).
