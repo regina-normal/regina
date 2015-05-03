@@ -35,7 +35,9 @@
 #include <boost/python.hpp>
 #include "census/dim2edgepairing.h"
 #include "census/nfacepairing.h"
+#include "census/dim4facetpairing.h"
 #include "dim2/dim2triangulation.h"
+#include "dim4/dim4triangulation.h"
 #include "treewidth/ntreedecomposition.h"
 #include "triangulation/ntriangulation.h"
 
