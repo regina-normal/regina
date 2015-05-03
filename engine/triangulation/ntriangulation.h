@@ -73,14 +73,15 @@ class NEdge;
 class NTriangle;
 class NVertex;
 class NGroupPresentation;
-class NIsomorphism;
 class NNormalSurface;
 class NTriangulation;
 class NXMLPacketReader;
 class NXMLTriangulationReader;
 
+template <int> class Isomorphism;
 template <int> class SimplexBase;
 template <int> class Simplex;
+typedef Isomorphism<3> NIsomorphism;
 typedef Simplex<3> NTetrahedron;
 
 /**

@@ -94,7 +94,8 @@ namespace regina {
  *
  * \todo \feature Composition of isomorphisms.
  */
-class REGINA_API NIsomorphism : public NGenericIsomorphism<3> {
+template <>
+class REGINA_API Isomorphism<3> : public IsomorphismBase<3> {
     public:
         /**
          * Creates a new isomorphism with no initialisation.
@@ -104,14 +105,14 @@ class REGINA_API NIsomorphism : public NGenericIsomorphism<3> {
          * @param sourceTetrahedra the number of tetrahedra in the source
          * triangulation associated with this isomorphism; this may be zero.
          */
-        NIsomorphism(unsigned sourceTetrahedra);
+        Isomorphism(unsigned sourceTetrahedra);
         /**
          * Creates a new isomorphism identical to the given isomorphism.
          *
          * @param cloneMe the isomorphism upon which to base the new
          * isomorphism.
          */
-        NIsomorphism(const NIsomorphism& cloneMe);
+        Isomorphism(const Isomorphism& cloneMe);
 
         /**
          * Returns the number of tetrahedra in the source triangulation
@@ -196,75 +197,39 @@ class REGINA_API NIsomorphism : public NGenericIsomorphism<3> {
 };
 
 /**
- * A deprecated synonym for NIsomorphism, provided for backward
- * compatibility only.  See NIsomorphism for further details (and please
- * use the NIsomorphism class instead).
- *
- * \deprecated All of the functionality that NIsomorphismDirect used to
- * provide in old versions of Regina has now been moved into the parent class
- * NIsomorphism.  The NIsomorphismDirect class is now an empty subclass of
- * NIsomorphism, provided for backward compatibility only, and should not
- * be used in new applications.  This class will be removed from Regina
- * in the near future.
- *
- * \ifacespython Not present.
+ * A convenience typedef for Isomorphism<3>.
  */
-class REGINA_API NIsomorphismDirect : public NIsomorphism {
-    public:
-        /**
-         * Creates a new isomorphism with no initialisation.
-         *
-         * @param sourceTetrahedra the number of tetrahedra in the source
-         * triangulation associated with this isomorphism; this may be zero.
-         */
-        NIsomorphismDirect(unsigned sourceTetrahedra);
-        /**
-         * Creates a new isomorphism identical to the given isomorphism.
-         *
-         * @param cloneMe the isomorphism upon which to base the new
-         * isomorphism.
-         */
-        NIsomorphismDirect(const NIsomorphism& cloneMe);
-};
+typedef Isomorphism<3> NIsomorphism;
 
 /*@}*/
 
-// Inline functions for NIsomorphism
+// Inline functions for Isomorphism<3>
 
-inline NIsomorphism::NIsomorphism(unsigned sourceTetrahedra) :
-        NGenericIsomorphism<3>(sourceTetrahedra) {
+inline Isomorphism<3>::Isomorphism(unsigned sourceTetrahedra) :
+        IsomorphismBase<3>(sourceTetrahedra) {
 }
 
-inline NIsomorphism::NIsomorphism(const NIsomorphism& cloneMe) :
-        NGenericIsomorphism<3>(cloneMe) {
+inline Isomorphism<3>::Isomorphism(const Isomorphism& cloneMe) :
+        IsomorphismBase<3>(cloneMe) {
 }
 
-inline unsigned NIsomorphism::getSourceTetrahedra() const {
+inline unsigned Isomorphism<3>::getSourceTetrahedra() const {
     return nSimplices_;
 }
 
-inline int& NIsomorphism::tetImage(unsigned sourceTet) {
+inline int& Isomorphism<3>::tetImage(unsigned sourceTet) {
     return simpImage_[sourceTet];
 }
 
-inline int NIsomorphism::tetImage(unsigned sourceTet) const {
+inline int Isomorphism<3>::tetImage(unsigned sourceTet) const {
     return simpImage_[sourceTet];
 }
 
-inline NPerm4& NIsomorphism::facePerm(unsigned sourceTet) {
+inline NPerm4& Isomorphism<3>::facePerm(unsigned sourceTet) {
     return facetPerm_[sourceTet];
 }
-inline NPerm4 NIsomorphism::facePerm(unsigned sourceTet) const {
+inline NPerm4 Isomorphism<3>::facePerm(unsigned sourceTet) const {
     return facetPerm_[sourceTet];
-}
-
-// Inline functions for NIsomorphismDirect
-
-inline NIsomorphismDirect::NIsomorphismDirect(unsigned sourceTetrahedra) :
-        NIsomorphism(sourceTetrahedra) {
-}
-inline NIsomorphismDirect::NIsomorphismDirect(const NIsomorphism& cloneMe) :
-        NIsomorphism(cloneMe) {
 }
 
 } // namespace regina

@@ -65,10 +65,6 @@ template <int dim>
 struct DimTraits {
     typedef void Triangulation;
         /**< The main data type for a <i>dim</i>-manifold triangulation. */
-    typedef void Isomorphism;
-        /**< The data type for an isomorphism between two
-             <i>dim</i>-manifold triangulations.
-             Typically this is a subclass of NGenericIsomorphism<dim>. */
     typedef void FacetPairing;
         /**< The data type that represents a pairing of facets of
              top-dimensional simplices in a <i>dim</i>-manifold
@@ -105,28 +101,24 @@ class Simplex;
 
 class Dim2Edge;
 class Dim2Triangulation;
-class Dim2Isomorphism;
 class Dim2EdgePairing;
 class Dim2Vertex;
 
 template <>
 struct DimTraits<2> {
     typedef Dim2Triangulation Triangulation;
-    typedef Dim2Isomorphism Isomorphism;
     typedef Dim2EdgePairing FacetPairing;
 };
 
 class NEdge;
 class NTriangle;
 class NTriangulation;
-class NIsomorphism;
 class NFacePairing;
 class NVertex;
 
 template <>
 struct DimTraits<3> {
     typedef NTriangulation Triangulation;
-    typedef NIsomorphism Isomorphism;
     typedef NFacePairing FacetPairing;
 };
 

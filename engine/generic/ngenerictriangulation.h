@@ -50,6 +50,8 @@
 
 namespace regina {
 
+template <int> class Isomorphism;
+
 /**
  * \weakgroup generic
  * @{
@@ -76,7 +78,6 @@ namespace regina {
 template <int dim>
 class REGINA_API NGenericTriangulation : public DimTraits<dim> {
     public:
-        using typename DimTraits<dim>::Isomorphism;
         using typename DimTraits<dim>::Triangulation;
 
     public:
@@ -186,7 +187,7 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * @return details of the isomorphism if the two triangulations
          * are combinatorially isomorphic, or a null pointer otherwise.
          */
-        std::auto_ptr<typename DimTraits<dim>::Isomorphism> isIsomorphicTo(
+        std::auto_ptr<Isomorphism<dim>> isIsomorphicTo(
             const typename DimTraits<dim>::Triangulation& other) const;
 
         /**
@@ -223,7 +224,7 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * @return details of the isomorphism if such a copy is found,
          * or a null pointer otherwise.
          */
-        std::auto_ptr<typename DimTraits<dim>::Isomorphism> isContainedIn(
+        std::auto_ptr<Isomorphism<dim>> isContainedIn(
             const typename DimTraits<dim>::Triangulation& other) const;
 
         /**
@@ -251,7 +252,7 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          */
         unsigned long findAllIsomorphisms(
             const typename DimTraits<dim>::Triangulation& other,
-            std::list<typename DimTraits<dim>::Isomorphism*>& results) const;
+            std::list<Isomorphism<dim>*>& results) const;
 
         /**
          * Finds all ways in which an isomorphic copy of this triangulation
@@ -281,7 +282,7 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          */
         unsigned long findAllSubcomplexesIn(
             const typename DimTraits<dim>::Triangulation& other,
-            std::list<typename DimTraits<dim>::Isomorphism*>& results) const;
+            std::list<Isomorphism<dim>*>& results) const;
 
         /**
          * Relabel the top-dimensional simplices and their vertices so that
@@ -377,8 +378,7 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * described above.
          * @return the isomorphism signature of this triangulation.
          */
-        std::string isoSig(
-            typename DimTraits<dim>::Isomorphism** relabelling = 0) const;
+        std::string isoSig(Isomorphism<dim>** relabelling = 0) const;
 
         /*@}*/
         /**
@@ -488,7 +488,7 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
             const typename DimTraits<dim>::Triangulation& tri,
             unsigned simp,
             const NPerm<dim+1>& vertices,
-            typename DimTraits<dim>::Isomorphism* relabelling);
+            Isomorphism<dim>* relabelling);
 };
 
 /**

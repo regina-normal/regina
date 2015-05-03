@@ -246,8 +246,8 @@ class REGINA_API IsomorphismBase :
          * @return the new isomorphic triangulation, or 0 if a problem
          * was encountered (i.e., an unmet precondition was noticed).
          */
-        typedef DimTraits<dim>::Triangulation* apply(
-            const typedef DimTraits<dim>::Triangulation* original) const;
+        typename DimTraits<dim>::Triangulation* apply(
+            const typename DimTraits<dim>::Triangulation* original) const;
 
         /**
          * Applies this isomorphism to the given triangulation,
@@ -275,7 +275,7 @@ class REGINA_API IsomorphismBase :
          * @param tri the triangulation to which this isomorphism
          * should be applied.
          */
-        void applyInPlace(typedef DimTraits<dim>::Triangulation* tri) const;
+        void applyInPlace(typename DimTraits<dim>::Triangulation* tri) const;
 
         /**
          * Writes a short text representation of this object to the
@@ -467,7 +467,7 @@ inline NFacetSpec<dim> IsomorphismBase<dim>::operator [] (
 }
 
 template <int dim>
-inline Isomorphism<dim>* IsomorphismBase::identity(unsigned nSimplices) {
+inline Isomorphism<dim>* IsomorphismBase<dim>::identity(unsigned nSimplices) {
     Isomorphism<dim>* id = new Isomorphism<dim>(nSimplices);
     for (unsigned i = 0; i < nSimplices; ++i)
         id->simpImage_[i] = i;
