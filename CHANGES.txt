@@ -34,6 +34,10 @@ Version 4.97  [ (under development) ]
         Class Dim2Triangulation:
             - New dimension-agnostic getFace<subdim>() and
               faceIndex<subdim>() template functions.
+            - Routines getNumberOfSimplices(), getSimplices() and getSimplex()
+              have been renamed to size(), simplices() and simplex()
+              respectively.  The old names are deprecated but have been
+              kept for backward compatibility.
         Class DimTraits:
             - Removed the Isomorphism typedef.  Juse use Isomorphism<dim>.
             - Removed the Perm typedef.  Juse use NPerm<dim+1>.
@@ -71,7 +75,6 @@ Version 4.97  [ (under development) ]
         Class NGenericIsomorphism:
             - Removed the Perm typedef.  Juse use NPerm<dim+1> instead.
         Class NGenericTriangulation, NTriangulation, Dim2Triangulation:
-            - New routine size(), which is an alias for getNumberOfSimplices().
             - Removed the Perm typedef.  Juse use NPerm<dim+1> instead.
         Class NGlobalDirs:
             - The directory containing the machine-encoded census data is now
@@ -189,6 +192,10 @@ Version 4.97  [ (under development) ]
               faceIndex<subdim>() template functions.
             - New routine niceTreeDecomposition() for constructing and
               caching a nice tree decomposition of the face pairing graph.
+            - Routines getNumberOfSimplices(), getSimplices() and getSimplex()
+              have been renamed to size(), simplices() and simplex()
+              respectively.  The old names are deprecated but have been
+              kept for backward compatibility.
             - Removed deprecated routines addTetrahedron() and
               gluingsHaveChanged().
         Class NVertex:
