@@ -42,7 +42,8 @@
 #endif
 
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -65,7 +66,9 @@ class NTriangulation;
  * since these routines are properly implemented in the base class
  * NManifold.
  */
-class REGINA_API NManifold : public ShareableObject {
+class REGINA_API NManifold :
+        public Output<NManifold>,
+        public boost::noncopyable {
     public:
         /**
          * A destructor that does nothing.
@@ -217,8 +220,24 @@ class REGINA_API NManifold : public ShareableObject {
          */
         virtual std::ostream& writeStructure(std::ostream& out) const;
 
-        virtual void writeTextShort(std::ostream& out) const;
-        virtual void writeTextLong(std::ostream& out) const;
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
 };
 
 /*@}*/
