@@ -132,8 +132,7 @@ namespace {
 }
 
 void addNNormalSurface() {
-    class_<NNormalSurface, bases<regina::ShareableObject>,
-            std::auto_ptr<NNormalSurface>, boost::noncopyable>
+    class_<NNormalSurface, std::auto_ptr<NNormalSurface>, boost::noncopyable>
             ("NNormalSurface", no_init)
         .def("__init__", make_constructor(fromCoordinates))
         .def("clone", &NNormalSurface::clone,
@@ -194,6 +193,11 @@ void addNNormalSurface() {
             return_value_policy<manage_new_object>())
         .def("findVtxOctAlmostNormalSphere", findVtxOctAlmostNormalSphere2,
             return_value_policy<manage_new_object>())
+        .def("str", &NNormalSurface::str)
+        .def("toString", &NNormalSurface::toString)
+        .def("detail", &NNormalSurface::detail)
+        .def("toStringLong", &NNormalSurface::toStringLong)
+        .def("__str__", &NNormalSurface::str)
         .staticmethod("findNonTrivialSphere")
         .staticmethod("findVtxOctAlmostNormalSphere")
     ;

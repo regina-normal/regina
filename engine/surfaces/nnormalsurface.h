@@ -46,13 +46,14 @@
 
 #include <utility>
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "maths/nperm4.h"
 #include "maths/nray.h"
 #include "surfaces/ndisctype.h"
 #include "surfaces/normalcoords.h"
 #include "utilities/nbooleans.h"
 #include "utilities/nproperty.h"
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -753,7 +754,9 @@ class REGINA_API NNormalSurfaceVector : public NRay {
  * \todo \featurelong Determine which faces in the solution space a
  * normal surface belongs to.
  */
-class REGINA_API NNormalSurface : public ShareableObject {
+class REGINA_API NNormalSurface :
+        public ShortOutput<NNormalSurface>,
+        public boost::noncopyable {
     protected:
         NNormalSurfaceVector* vector;
             /**< Contains the coordinates of the normal surface in whichever
@@ -836,7 +839,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * The underlying vector of coordinates will also be
          * deallocated.
          */
-        virtual ~NNormalSurface();
+        ~NNormalSurface();
 
         /**
          * Creates a newly allocated clone of this normal surface.

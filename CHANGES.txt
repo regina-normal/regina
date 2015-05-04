@@ -64,9 +64,14 @@ Version 4.97  [ (under development) ]
               provided by the inherited Output base class intead.
         Class NNormalSurface:
             - New convenience routines normal() and embedded().
-        Class NNormalSurfaceList, NNormalSurfaceSubset:
+            - Now derives from ShortOutput instead of ShareableObject.
+        Class NNormalSurfaceList:
             - Renamed getNumberOfSurfaces() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
+        Class NNormalSurfaceSubset:
+            - Renamed getNumberOfSurfaces() to size().  The old name is
+              deprecated, but has been kept for backward compatibility.
+            - Now derives from Output instead of ShareableObject.
         Class NPacket:
             - Added a variant of save() that takes an output stream (as
               opposed to a filename).
