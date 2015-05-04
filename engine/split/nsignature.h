@@ -133,7 +133,7 @@ class REGINA_API NSignature :
         /**
          * Destroys this signature.
          */
-        virtual ~NSignature();
+        ~NSignature();
 
         /**
          * Returns the order of this signature.  The order is the number
@@ -250,7 +250,7 @@ class REGINA_API NSignature :
          *
          * @param out the output stream to which to write.
          */
-        virtual void writeTextShort(std::ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
     private:
         /**
