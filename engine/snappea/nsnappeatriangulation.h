@@ -150,11 +150,6 @@ class REGINA_API NCusp :
 
     public:
         /**
-         * Default destructor.
-         */
-        virtual ~NCusp();
-
-        /**
          * Returns the corresponding vertex of the Regina triangulation
          * (i.e., of the NTriangulation structure that is inherited by
          * NSnapPeaTriangulation).
@@ -1492,9 +1487,6 @@ inline SnapPeaFatalError::SnapPeaFatalError(
 }
 
 // Inline functions for NCusp
-
-inline NCusp::~NCusp() {
-}
 
 inline NCusp::NCusp() {
 }
