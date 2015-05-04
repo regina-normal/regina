@@ -71,6 +71,9 @@ class Isomorphism;
  *
  * See the Isomorphism class notes for further information.
  *
+ * \ifacespython This base class is not present, but the "end user" class
+ * Isomorphism<dim> is.
+ *
  * \tparam dim the dimension of the triangulations that this isomorphism
  * class works with.  This must be at least 2.
  */
@@ -94,7 +97,7 @@ class REGINA_API IsomorphismBase :
         /**
          * Creates a new isomorphism with no initialisation.
          * The images of the simplices and their vertices must be
-         * explicit set using simpImage() and facetPerm().
+         * explicitly set using simpImage() and facetPerm().
          *
          * @param nSimplices the number of simplices in the source
          * triangulation associated with this isomorphism.
@@ -395,7 +398,9 @@ class REGINA_API Isomorphism : public IsomorphismBase<dim> {
         /**
          * Creates a new isomorphism with no initialisation.
          * The images of the simplices and their vertices must be
-         * explicit set using simpImage() and facetPerm().
+         * explicitly set using simpImage() and facetPerm().
+         *
+         * \ifacespython Not present.
          *
          * @param nSimplices the number of simplices in the source
          * triangulation associated with this isomorphism.

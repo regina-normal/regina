@@ -71,6 +71,9 @@ class Simplex;
  * See the Simplex template class notes for further information, including
  * details of how the vertices and facets of each simplex are numbered.
  *
+ * \ifacespython This base class is not present, but the "end user" class
+ * Simplex<dim> is.
+ *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be at least 2.
  */

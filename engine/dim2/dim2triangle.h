@@ -63,7 +63,7 @@ class Dim2Triangulation;
  * Represents a triangle within a 2-manifold triangulation.
  *
  * This is a specialisation of the generic Simplex class template; see the
- * generic Simplex documentation for an overview of how this class works.
+ * Simplex documentation for an overview of how this class works.
  *
  * This 2-dimensional specialisation contains some extra functionality.
  * In particular, each triangle stores additional details on how this
