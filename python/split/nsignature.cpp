@@ -47,15 +47,19 @@ namespace {
 }
 
 void addNSignature() {
-    class_<NSignature, bases<regina::ShareableObject>,
-            std::auto_ptr<NSignature>, boost::noncopyable>("NSignature",
-            init<const NSignature&>())
+    class_<NSignature, std::auto_ptr<NSignature>,
+        boost::noncopyable>("NSignature", init<const NSignature&>())
         .def("getOrder", &NSignature::getOrder)
         .def("parse", &NSignature::parse,
             return_value_policy<manage_new_object>())
         .def("triangulate", &NSignature::triangulate,
             return_value_policy<manage_new_object>())
         .def("writeCycles", &writeCycles)
+        .def("str", &NSignature::str)
+        .def("toString", &NSignature::toString)
+        .def("detail", &NSignature::detail)
+        .def("toStringLong", &NSignature::toStringLong)
+        .def("__str__", &NSignature::str)
         .staticmethod("parse")
     ;
 }

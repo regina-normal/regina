@@ -56,10 +56,9 @@ namespace {
     }
 }
 
-NSignature::NSignature(const NSignature& sig) : ShareableObject(),
-        order(sig.order), label(new unsigned[2 * sig.order]),
-        labelInv(new bool[2 * sig.order]), nCycles(sig.nCycles),
-        cycleStart(new unsigned[sig.nCycles + 1]),
+NSignature::NSignature(const NSignature& sig) : order(sig.order),
+        label(new unsigned[2 * sig.order]), labelInv(new bool[2 * sig.order]),
+        nCycles(sig.nCycles), cycleStart(new unsigned[sig.nCycles + 1]),
         nCycleGroups(sig.nCycleGroups),
         cycleGroupStart(new unsigned[sig.nCycleGroups + 1]) {
     std::copy(sig.label, sig.label + 2 * sig.order, label);

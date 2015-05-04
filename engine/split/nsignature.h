@@ -42,7 +42,8 @@
 #endif
 
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -94,7 +95,9 @@ class NTriangulation;
  * <i>Minimal triangulations and normal surfaces</i>, Burton, PhD thesis,
  * available from the Regina website.
  */
-class REGINA_API NSignature : public ShareableObject {
+class REGINA_API NSignature :
+        public ShortOutput<NSignature>,
+        public boost::noncopyable {
     private:
         unsigned order;
             /**< The number of quads in this splitting surface. */
@@ -239,6 +242,14 @@ class REGINA_API NSignature : public ShareableObject {
         void writeCycles(std::ostream& out, const std::string& cycleOpen,
             const std::string& cycleClose, const std::string& cycleJoin) const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         virtual void writeTextShort(std::ostream& out) const;
 
     private:

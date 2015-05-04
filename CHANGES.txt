@@ -83,6 +83,8 @@ Version 4.97  [ (under development) ]
             - Deprecated.  The only real functionality that this
               provides is str() and detail(); classes that require this
               should now inherit from Output<> instead.
+        Class NSignature:
+            - Now derives from ShortOutput instead of ShareableObject.
         Class NSurfaceFilterProperties:
             - New set-based routine setECs().
         Class NTreeBag, NTreeDecomposition:
