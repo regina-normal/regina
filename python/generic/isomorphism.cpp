@@ -32,11 +32,58 @@
 
 /* end stub */
 
-void addIsomorphism();
-void addSimplex();
+#include <boost/python.hpp>
+#include "generic/isomorphism.h"
 
-void addGeneric() {
-    addIsomorphism();
-    addSimplex();
+using namespace boost::python;
+using regina::Isomorphism;
+
+namespace {
+    template <int dim>
+    struct PyIsoHelper {
+        static int (Isomorphism<dim>::*simpImage_const)(unsigned) const =
+            &Isomorphism<dim>::simpImage;
+
+        static regina::NPerm<dim+1> (Isomorphism<dim>::*facetPerm_const)(
+            unsigned) const = &Isomorphism<dim>::facetPerm;
+
+        static regina::NFacetSpec<dim> iso_getItem(const Isomorphism<dim>& iso,
+                const regina::NFacetSpec<dim>& f) {
+            return iso[f];
+        }
+    };
+}
+
+template <int dim>
+void addIsomorphism(const char* name) {
+    class_<Isomorphism<dim>, std::auto_ptr<Isomorphism<dim>>,
+            boost::noncopyable>(name, init<const Isomorphism<dim>&>())
+        .def("size", &Isomorphism<dim>::size)
+        .def("getSourceSimplices", &Isomorphism<dim>::getSourceSimplices)
+        .def("simpImage", PyIsoHelper<dim>::simpImage_const)
+        .def("facetPerm", PyIsoHelper<dim>::facetPerm_const)
+        .def("__getitem__", PyIsoHelper<dim>::iso_getItem)
+        .def("isIdentity", &Isomorphism<dim>::isIdentity)
+        .def("apply", &Isomorphism<dim>::apply,
+            return_value_policy<manage_new_object>())
+        .def("applyInPlace", &Isomorphism<dim>::applyInPlace)
+        .def("random", &Isomorphism<dim>::random,
+            return_value_policy<manage_new_object>())
+        .def("identity", &Isomorphism<dim>::identity,
+            return_value_policy<manage_new_object>())
+        .def("str", &Isomorphism<dim>::str)
+        .def("toString", &Isomorphism<dim>::toString)
+        .def("detail", &Isomorphism<dim>::detail)
+        .def("toStringLong", &Isomorphism<dim>::toStringLong)
+        .def("__str__", &Isomorphism<dim>::str)
+        .staticmethod("random")
+        .staticmethod("identity")
+    ;
+}
+
+void addIsomorphism() {
+    // boost::python::def("helper", regina::helper);
+
+    // addIsomorphism<4>("Isomorphism4");
 }
 
