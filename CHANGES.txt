@@ -81,6 +81,8 @@ Version 4.97  [ (under development) ]
             - New routine transferChildren() for bulk tree reorganisation.
         Class NPacketListener:
             - New events childToBeRenamed(), childWasRenamed().
+        Class NPillowTwoSphere, NSnappedTwoSphere:
+            - Now derive from ShortOutput instead of ShareableObject.
         Class NPolynomial:
             - New class for working with single-variable polynomials
               over arbitrary rings.
@@ -92,7 +94,15 @@ Version 4.97  [ (under development) ]
             - Deprecated.  The only real functionality that this
               provides is str() and detail(); classes that require this
               should now inherit from Output<> instead.
+        Class NSatBlock:
+            - Now derives from Output instead of ShareableObject.
+            - Classes inheriting from this must now implement writeTextShort,
+              and can optionally overwrite the default writeTextLong function.
+        Class NSatRegion:
+            - Now derives from Output instead of ShareableObject.
         Class NSignature:
+            - Now derives from ShortOutput instead of ShareableObject.
+        Class NStandardTri:
             - Now derives from ShortOutput instead of ShareableObject.
         Class NSurfaceFilterProperties:
             - New set-based routine setECs().
@@ -127,6 +137,8 @@ Version 4.97  [ (under development) ]
               faceIndex<subdim>() template functions.
             - New routine niceTreeDecomposition() for constructing and
               caching a nice tree decomposition of the face pairing graph.
+        Class NTxICore:
+            - Now derives from Output instead of ShareabltObject
         Class NVertex:
             - Added a new LinkType enumeration, which encapsulates (and
               replaces) the old link type constants.

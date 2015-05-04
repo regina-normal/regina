@@ -43,9 +43,10 @@
 #endif
 
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "subcomplex/nsatannulus.h"
 #include <set>
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -114,7 +115,9 @@ class NTriangulation;
  * triangulation-specific information stored in the subclass.  See the
  * transform() documentation for further details.
  */
-class REGINA_API NSatBlock : public ShareableObject {
+class REGINA_API NSatBlock :
+        public Output<NSatBlock>,
+        public boost::noncopyable {
     public:
         typedef std::set<NTetrahedron*> TetList;
             /**< The data structure used to store a list of tetrahedra
@@ -556,6 +559,26 @@ class REGINA_API NSatBlock : public ShareableObject {
         static NSatBlock* isBlock(const NSatAnnulus& annulus,
             TetList& avoidTets);
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+         virtual void writeTextShort(std::ostream& out) const = 0;
+
+         /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+         virtual void writeTextLong(std::ostream& out) const;
+
     protected:
         /**
          * Constructor for a block with the given number of annuli on
@@ -720,6 +743,11 @@ inline NSatBlock::~NSatBlock() {
     delete[] adjAnnulus_;
     delete[] adjReflected_;
     delete[] adjBackwards_;
+}
+
+inline void NSatBlock::writeTextLong(std::ostream& out) const {
+    writeTextShort(out);
+    out << '\n';
 }
 
 inline unsigned NSatBlock::nAnnuli() const {

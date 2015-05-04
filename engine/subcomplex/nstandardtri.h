@@ -42,7 +42,8 @@
 #endif
 
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -73,7 +74,9 @@ class NTriangulation;
  * not need to override writeTextShort() since this routine is
  * properly implemented in the base class NStandardTriangulation.
  */
-class REGINA_API NStandardTriangulation : public ShareableObject {
+class REGINA_API NStandardTriangulation :
+        public ShortOutput<NStandardTriangulation>,
+        public boost::noncopyable {
     public:
         /**
          * A destructor that does nothing.

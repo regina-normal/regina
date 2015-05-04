@@ -43,7 +43,9 @@
 #endif
 
 #include "regina-core.h"
+#include "output.h"
 #include "subcomplex/nsnappedball.h"
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -70,17 +72,19 @@ class NSnappedBall;
  * 2-sphere was separating, the resulting triangulation will contain the
  * two terms of the corresponding connected sum.
  */
-class REGINA_API NSnappedTwoSphere : public ShareableObject {
+class REGINA_API NSnappedTwoSphere :
+        public ShortOutput<NSnappedTwoSphere>,
+        public boost::noncopyable {
     private:
         NSnappedBall* ball[2];
             /**< The two snapped 3-balls whose equators are joined. */
-    
+
     public:
         /**
          * Destroys this snapped 2-sphere; note that the corresponding
          * snapped 3-balls will also be destroyed.
          */
-        virtual ~NSnappedTwoSphere();
+        ~NSnappedTwoSphere();
         /**
          * Returns a newly created clone of this structure.
          *
