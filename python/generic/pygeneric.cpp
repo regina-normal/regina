@@ -34,9 +34,11 @@
 
 void addIsomorphism();
 void addSimplex();
+void addTriangulations();
 
 void addGeneric() {
     addIsomorphism();
     addSimplex();
+    addTriangulations();
 }
 

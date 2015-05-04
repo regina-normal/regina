@@ -52,8 +52,8 @@
 
 namespace regina {
 
-template <int dim>
-class Simplex;
+template <int dim> class Simplex;
+template <int dim> class TriangulationBase;
 
 /**
  * \weakgroup generic
@@ -313,6 +313,7 @@ class REGINA_API SimplexBase :
         SimplexBase(const std::string& desc,
             typename DimTraits<dim>::Triangulation* tri);
 
+    friend class TriangulationBase<dim>;
     friend typename DimTraits<dim>::Triangulation;
 };
 
@@ -371,6 +372,8 @@ class REGINA_API Simplex : public SimplexBase<dim> {
          */
         Simplex(const std::string& desc,
             typename DimTraits<dim>::Triangulation* tri);
+
+    friend class TriangulationBase<dim>;
 };
 
 // Note that some of our simplex classes are specialised elsewhere.

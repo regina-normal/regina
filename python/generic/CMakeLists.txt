@@ -3,6 +3,7 @@ SET ( FILES
   isomorphism
   simplex
   pygeneric
+  triangulation
   )
 
 # Prepend folder name

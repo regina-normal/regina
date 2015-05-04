@@ -33,42 +33,71 @@
 /* end stub */
 
 #include <boost/python.hpp>
-#include "generic/simplex.h"
 #include "generic/triangulation.h"
 
 using namespace boost::python;
-using regina::Simplex;
+using regina::Triangulation;
+
+namespace {
+    template <int dim>
+    struct PyTriHelper {
+        typedef regina::Simplex<dim>* (Triangulation<dim>::*
+            simplex_non_const_type)(size_t);
+        typedef regina::Simplex<dim>* (Triangulation<dim>::*
+            newSimplex_void_type)();
+        typedef regina::Simplex<dim>* (Triangulation<dim>::*
+            newSimplex_string_type)(const std::string&);
+
+        static boost::python::list simplices_list(Triangulation<dim>& t) {
+            boost::python::list ans;
+            for (auto i = t.simplices().begin(); i != t.simplices().end(); ++i)
+                ans.append(boost::python::ptr(*i));
+            return ans;
+        }
+    };
+}
 
 template <int dim>
-void addSimplex(const char* name) {
-    class_<regina::Simplex<dim>, std::auto_ptr<regina::Simplex<dim>>,
-            boost::noncopyable>(name, no_init)
-        .def("getDescription", &Simplex<dim>::getDescription,
-            return_value_policy<return_by_value>())
-        .def("setDescription", &Simplex<dim>::setDescription)
-        .def("index", &Simplex<dim>::index)
-        .def("adjacentSimplex", &Simplex<dim>::adjacentSimplex,
+void addTriangulation(const char* name) {
+    class_<Triangulation<dim>, std::auto_ptr<Triangulation<dim>>,
+            boost::noncopyable>(name)
+        .def(init<const Triangulation<dim>&>())
+        .def("size", &Triangulation<dim>::size)
+        .def("getNumberOfSimplices", &Triangulation<dim>::getNumberOfSimplices)
+        .def("simplices", PyTriHelper<dim>::simplices_list)
+        .def("getSimplices", PyTriHelper<dim>::simplices_list)
+        .def("simplex", typename PyTriHelper<dim>::simplex_non_const_type(
+            &Triangulation<dim>::simplex),
             return_value_policy<reference_existing_object>())
-        .def("adjacentGluing", &Simplex<dim>::adjacentGluing)
-        .def("adjacentFacet", &Simplex<dim>::adjacentFacet)
-        .def("hasBoundary", &Simplex<dim>::hasBoundary)
-        .def("joinTo", &Simplex<dim>::joinTo)
-        .def("unjoin", &Simplex<dim>::unjoin,
+        .def("getSimplex", typename PyTriHelper<dim>::simplex_non_const_type(
+            &Triangulation<dim>::simplex),
             return_value_policy<reference_existing_object>())
-        .def("isolate", &Simplex<dim>::isolate)
-        .def("getTriangulation", &Simplex<dim>::getTriangulation,
+        .def("simplexIndex", &Triangulation<dim>::simplexIndex)
+        .def("newSimplex", typename PyTriHelper<dim>::newSimplex_void_type(
+            &Triangulation<dim>::newSimplex),
             return_value_policy<reference_existing_object>())
-        .def("str", &Simplex<dim>::str)
-        .def("toString", &Simplex<dim>::toString)
-        .def("detail", &Simplex<dim>::detail)
-        .def("toStringLong", &Simplex<dim>::toStringLong)
-        .def("__str__", &Simplex<dim>::str)
+        .def("newSimplex", typename PyTriHelper<dim>::newSimplex_string_type(
+            &Triangulation<dim>::newSimplex),
+            return_value_policy<reference_existing_object>())
+        .def("removeSimplex", &Triangulation<dim>::removeSimplex)
+        .def("removeSimplexAt", &Triangulation<dim>::removeSimplexAt)
+        .def("removeAllSimplices", &Triangulation<dim>::removeAllSimplices)
+        .def("swapContents", &Triangulation<dim>::swapContents)
+        .def("moveContentsTo", &Triangulation<dim>::moveContentsTo)
+        .def("isEmpty", &Triangulation<dim>::isEmpty)
+        .def("hasBoundaryFacets", &Triangulation<dim>::hasBoundaryFacets)
+        .def("isIdenticalTo", &Triangulation<dim>::isIdenticalTo)
+        .def("str", &Triangulation<dim>::str)
+        .def("toString", &Triangulation<dim>::toString)
+        .def("detail", &Triangulation<dim>::detail)
+        .def("toStringLong", &Triangulation<dim>::toStringLong)
+        .def("__str__", &Triangulation<dim>::str)
     ;
 }
 
-void addSimplex() {
+void addTriangulations() {
     // boost::python::def("helper", regina::helper);
 
-    addSimplex<5>("Simplex5");
+    addTriangulation<5>("Triangulation5");
 }
 

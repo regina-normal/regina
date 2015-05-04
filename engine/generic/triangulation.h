@@ -41,19 +41,22 @@
 #define __TRIANGULATION_H
 #endif
 
+#include <iomanip>
+#include <iostream>
 #include <memory>
+#include <sstream>
 #include <string>
 #include <vector>
 #include "regina-core.h"
 #include "output.h"
+#include "generic/simplex.h"
 #include "maths/nperm.h"
 #include "utilities/nmarkedvector.h"
 
 namespace regina {
 
 template <int> class Isomorphism;
-template <int> class SimplexBase;
-template <int> class Simplex;
+template <int> class Triangulation;
 
 /**
  * \weakgroup generic
@@ -76,12 +79,13 @@ template <int> class Simplex;
  */
 template <int dim>
 class REGINA_API TriangulationBase :
-        public Output<IsomorphismBase<dim>>,
+        public Output<TriangulationBase<dim>>,
         public boost::noncopyable {
     static_assert(dim >= 2, "Triangulation requires dimension >= 2.");
 
     public:
-        typedef std::vector<Simplex<dim>*>::const_iterator SimplexIterator;
+        typedef typename std::vector<Simplex<dim>*>::const_iterator
+                SimplexIterator;
             /**< Used to iterate through top-dimensional simplices. */
 
     protected:
@@ -99,19 +103,19 @@ class REGINA_API TriangulationBase :
          *
          * Creates an empty triangulation.
          */
-        Triangulation();
+        TriangulationBase();
         /**
          * Creates a new copy of the given triangulation.
          *
          * @param copy the triangulation to copy.
          */
-        Triangulation(const Triangulation& copy);
+        TriangulationBase(const TriangulationBase& copy);
         /**
          * Destroys this triangulation.
          *
          * The simplices within this triangulation will also be destroyed.
          */
-        ~Triangulation();
+        ~TriangulationBase();
 
         /*@}*/
         /**
@@ -125,7 +129,7 @@ class REGINA_API TriangulationBase :
          *
          * @return The number of top-dimensional simplices.
          */
-        unsigned long size() const;
+        size_t size() const;
         /**
          * Deprecated routine that returns the number of top-dimensional
          * simplices in the triangulation.
@@ -134,7 +138,7 @@ class REGINA_API TriangulationBase :
          *
          * @return the number of top-dimensional simplices.
          */
-        unsigned long getNumberOfSimplices() const;
+        size_t getNumberOfSimplices() const;
         /**
          * Returns all top-dimensional simplices in the triangulation.
          *
@@ -168,7 +172,7 @@ class REGINA_API TriangulationBase :
          * value should be between 0 and size()-1 inclusive.
          * @return the <i>index</i>th top-dimensional simplex.
          */
-        Simplex<dim>* simplex(unsigned long index);
+        Simplex<dim>* simplex(size_t index);
         /**
          * Deprecated routine that returns the top-dimensional simplex at
          * the given index in the triangulation.
@@ -177,7 +181,7 @@ class REGINA_API TriangulationBase :
          *
          * See simplex() for further details.
          */
-        Simplex<dim>* getSimplex(unsigned long index);
+        Simplex<dim>* getSimplex(size_t index);
         /**
          * Returns the top-dimensional simplex at the given index in the
          * triangulation.
@@ -189,7 +193,7 @@ class REGINA_API TriangulationBase :
          * value should be between 0 and size()-1 inclusive.
          * @return the <i>index</i>th top-dimensional simplex.
          */
-        const Simplex<dim>* simplex(unsigned long index) const;
+        const Simplex<dim>* simplex(size_t index) const;
         /**
          * Deprecated routine that returns the top-dimensional simplex at
          * the given index in the triangulation.
@@ -198,7 +202,7 @@ class REGINA_API TriangulationBase :
          *
          * See simplex() for further details.
          */
-        const Simplex<dim>* getSimplex(unsigned long index) const;
+        const Simplex<dim>* getSimplex(size_t index) const;
         /**
          * Returns the index of the given top-dimensional simplex in the
          * triangulation.
@@ -211,14 +215,14 @@ class REGINA_API TriangulationBase :
          * \warning Passing a null pointer to this routine will probably
          * crash your program.  If you are passing the result of some other
          * routine that \e might return null (such as
-         * Simplex<dim>::adjacentTriangle), you should explicitly
+         * Simplex<dim>::adjacentSimplex), you should explicitly
          * test for null beforehand.
          *
          * @param simplex specifies which simplex to find in the triangulation.
          * @return the index of the specified simplex; this will be an
          * integer between 0 and size()-1 inclusive.
          */
-        long simplexIndex(const Simplex<dim>* simplex) const;
+        size_t simplexIndex(const Simplex<dim>* simplex) const;
         /**
          * Creates a new top-dimensional simplex and adds it to this
          * triangulation.
@@ -272,7 +276,7 @@ class REGINA_API TriangulationBase :
          * @param index specifies which top-dimensionalsimplex to remove; this
          * must be between 0 and size()-1 inclusive.
          */
-        void removeSimplexAt(unsigned long index);
+        void removeSimplexAt(size_t index);
         /**
          * Removes all simplices from the triangulation.
          * As a result, this triangulation will become empty.
@@ -293,7 +297,7 @@ class REGINA_API TriangulationBase :
          * @param other the triangulation whose contents should be
          * swapped with this.
          */
-        void swapContents(Triangulation& other);
+        void swapContents(Triangulation<dim>& other);
         /**
          * Moves the contents of this triangulation into the given
          * destination triangulation, without destroying any pre-existing
@@ -311,7 +315,7 @@ class REGINA_API TriangulationBase :
          *
          * @param dest the triangulation into which simplices should be moved.
          */
-        void moveContentsTo(Triangulation& dest);
+        void moveContentsTo(Triangulation<dim>& dest);
 
         /*@}*/
         /**
@@ -344,7 +348,6 @@ class REGINA_API TriangulationBase :
          */
         /*@{*/
 
-// TODO: HERE
         /**
          * Determines if this triangulation is combinatorially identical
          * to the given triangulation.
@@ -355,58 +358,65 @@ class REGINA_API TriangulationBase :
          * In other words, "identical" means that the triangulations
          * are isomorphic via the identity isomorphism.
          *
-         * To test for the less strict combinatorial isomorphism (which
-         * allows relabelling of the top-dimensional simplices and their
-         * vertices), see isIsomorphicTo() instead.
+         * For the less strict notion of \e isomorphic triangulations,
+         * which allows relabelling of the top-dimensional simplices and their
+         * vertices, see isIsomorphicTo() instead.
          *
          * This test does \e not examine the textual simplex descriptions,
          * as seen in Simplex<dim>::getDescription(); these may still differ.
-         * It also does not test the numbering of vertices, edges and so on,
-         * as used by getVertex(), getEdge() and so on;
-         * although at the time of writing these will always be
-         * numbered the same for identical triangulations, it is
-         * conceivable that in future versions of Regina there may
-         * be situations in which identical triangulations can acquire
-         * different numberings for vertices, edges, etc.
+         * It also does not test whether lower-dimensional faces are
+         * numbered identically (vertices, edges and so on); this routine
+         * is only concerned with top-dimensional simplices.
+         *
+         * (At the time of writing, two identical triangulations will
+         * always number their lower-dimensional faces in the same way.
+         * However, it is conceivable that in future versions of Regina there
+         * may be situations in which identical triangulations can acquire
+         * different numberings for vertices, edges, and so on.)
          *
          * @param other the triangulation to compare with this one.
          * @return \c true if and only if the two triangulations are
          * combinatorially identical.
          */
-        bool isIdenticalTo(const typename DimTraits<dim>::Triangulation& other)
-            const;
-
+        bool isIdenticalTo(const Triangulation<dim>& other) const;
+#if 0
         /**
          * Determines if this triangulation is combinatorially
          * isomorphic to the given triangulation.
          *
-         * Specifically, this routine determines if there is a
-         * one-to-one and onto boundary complete combinatorial
-         * isomorphism from this triangulation to \a other.  Boundary
-         * complete isomorphisms are described in detail in the
-         * Isomorphism class notes.
+         * Two triangulations are \e isomorphic if and only it is
+         * possible to relabel their top-dimensional simplices and the
+         * (<i>dim</i>+1) vertices of each simplex in a way that makes
+         * the two triangulations combinatorially identical, as returned
+         * by isIdenticalTo().
+         *
+         * Equivalently, two triangulations are isomorphic if and only if
+         * there is a one-to-one and onto boundary complete combinatorial
+         * isomorphism from this triangulation to \a other, as described
+         * in the Isomorphism class notes.
          *
          * In particular, note that this triangulation and \a other must
          * contain the same number of top-dimensional simplices for such an
          * isomorphism to exist.
          *
-         * If you need to ensure that top-dimensional simplices are labelled
-         * the same in both triangulations, see the stricter test
-         * isIdenticalTo() instead.
-         *
-         * If a boundary complete isomorphism is found, the details of
-         * this isomorphism are returned.  The isomorphism is newly
-         * constructed, and so to assist with memory management is
-         * returned as a std::auto_ptr.  Thus, to test whether an
-         * isomorphism exists without having to explicitly deal with the
-         * isomorphism itself, you can call
-         * <tt>if (isIsomorphicTo(other).get())</tt> and the newly
+         * If the triangulations are isomorphic, then this routine returns
+         * one such boundary complete isomorphism (i.e., one such relabelling).
+         * The isomorphism will be newly constructed, and to assist with
+         * memory management, it will be returned as a std::auto_ptr.
+         * Thus, to test whether an isomorphism exists without having to
+         * explicitly manage with the isomorphism itself, you can just call
+         * <tt>if (isIsomorphicTo(other).get())</tt>, in which case the newly
          * created isomorphism (if it exists) will be automatically
          * destroyed.
          *
-         * If more than one such isomorphism exists, only one will be
-         * returned.  For a routine that returns all such isomorphisms,
-         * see findAllIsomorphisms().
+         * There may be many such isomorphisms between the two triangulations.
+         * If you need to find \e all such isomorphisms, you may call
+         * findAllIsomorphisms() instead.
+         *
+         * If you need to ensure that top-dimensional simplices are labelled
+         * the same in both triangulations (i.e., that the triangulations are
+         * related by the \e identity isomorphism), you should call the
+         * stricter test isIdenticalTo() instead.
          *
          * \todo \opt Improve the complexity by choosing a simplex
          * mapping from each component and following gluings to
@@ -417,8 +427,8 @@ class REGINA_API TriangulationBase :
          * are combinatorially isomorphic, or a null pointer otherwise.
          */
         std::auto_ptr<Isomorphism<dim>> isIsomorphicTo(
-            const typename DimTraits<dim>::Triangulation& other) const;
-
+            const Triangulation& other) const;
+// TODO
         /**
          * Determines if an isomorphic copy of this triangulation is
          * contained within the given triangulation, possibly as a
@@ -454,7 +464,7 @@ class REGINA_API TriangulationBase :
          * or a null pointer otherwise.
          */
         std::auto_ptr<Isomorphism<dim>> isContainedIn(
-            const typename DimTraits<dim>::Triangulation& other) const;
+            const Triangulation& other) const;
 
         /**
          * Finds all ways in which this triangulation is combinatorially
@@ -479,8 +489,7 @@ class REGINA_API TriangulationBase :
          * be stored.
          * @return the number of isomorphisms that were found.
          */
-        unsigned long findAllIsomorphisms(
-            const typename DimTraits<dim>::Triangulation& other,
+        unsigned long findAllIsomorphisms(const Triangulation& other,
             std::list<Isomorphism<dim>*>& results) const;
 
         /**
@@ -509,8 +518,7 @@ class REGINA_API TriangulationBase :
          * be stored.
          * @return the number of isomorphisms that were found.
          */
-        unsigned long findAllSubcomplexesIn(
-            const typename DimTraits<dim>::Triangulation& other,
+        unsigned long findAllSubcomplexesIn(const Triangulation& other,
             std::list<Isomorphism<dim>*>& results) const;
 
         /**
@@ -554,7 +562,7 @@ class REGINA_API TriangulationBase :
          *
          * @param source the triangulation whose copy will be inserted.
          */
-        void insertTriangulation(const Dim2Triangulation& source);
+        void insertTriangulation(const Triangulation& source);
 
         /**
          * Inserts into this triangulation a set of triangles and their
@@ -599,7 +607,7 @@ class REGINA_API TriangulationBase :
          *
          * \ifacespython Not present.
          *
-         * @param nTriangles the number of additional triangles to insert.
+         * @param nSimplices the number of additional simplices to insert.
          * @param adjacencies describes which of the new triangle edges
          * are to be identified.  This array must have initial
          * dimension at least \a nTriangles.
@@ -607,8 +615,10 @@ class REGINA_API TriangulationBase :
          * which these new triangle edges should be identified.  This
          * array must also have initial dimension at least \a nTriangles.
          */
-        void insertConstruction(unsigned long nTriangles,
-            const int adjacencies[][3], const int gluings[][3][3]);
+        void insertConstruction(
+            size_t nSimplices,
+            const int adjacencies[][dim+1],
+            const int gluings[][dim+1][dim+1]);
 
         /*@}*/
         /**
@@ -744,8 +754,7 @@ class REGINA_API TriangulationBase :
          * successful, or null if the given string was not a valid
          * isomorphism signature.
          */
-        static typename DimTraits<dim>::Triangulation* fromIsoSig(
-            const std::string& sig);
+        static Triangulation* fromIsoSig(const std::string& sig);
 
         /**
          * Deduces the number of top-dimensional simplices in a
@@ -787,245 +796,36 @@ class REGINA_API TriangulationBase :
          * because the given string was not a valid isomorphism signature.
          */
         static size_t isoSigComponentSize(const std::string& sig);
-
+#endif
         /*@}*/
         /**
          * \name Output
          */
         /*@{*/
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 
         /*@}*/
 
     private:
-        /**
-         * Internal to isoSig().
-         *
-         * Constructs a candidate isomorphism signature for a single
-         * component of this triangulation.  This candidate signature
-         * assumes that the given simplex with the given labelling
-         * of its vertices becomes simplex zero with vertices 0..dim
-         * under the "canonical isomorphism".
-         *
-         * @param simp the index of some simplex in this triangulation.
-         * @param vertices some ordering of the vertices of the
-         * given tetrahedron.
-         * @param if this is non-null, it will be filled with the canonical
-         * isomorphism; in this case it must already have been constructed
-         * for the correct number of simplices.
-         * @return the candidate isomorphism signature.
-         */
-        static std::string isoSigFrom(
-            const typename DimTraits<dim>::Triangulation& tri,
-            unsigned simp,
-            const NPerm<dim+1>& vertices,
-            Isomorphism<dim>* relabelling);
-};
-
-/**
- * A function object used for sorting faces of triangulations by
- * increasing degree.  This can (for instance) be used with std::sort().
- *
- * The template argument \a dim refers to the dimension of the overall
- * triangluation(s) with which you are working.  The template argument
- * \a subdim refers to the dimension of the faces that you are sorting.
- * So, for instance, to sort edges of a 3-manifold triangulation by
- * increasing edge degree, you would use DegreeLessThan<3, 1>.
- *
- * A single instance of this class works with faces of a single
- * fixed triangulation (which is passed to the class constructor).
- *
- * \pre \a dim is one of the supported triangulation dimensions.
- * \pre \a subdim is between 0 and \a dim-1 inclusive.
- */
-template <int dim, int subdim>
-class REGINA_API DegreeLessThan {
-    private:
-        const typename DimTraits<dim>::Triangulation& tri_;
-            /**< The triangulation with which we are working. */
-
-    public:
-        /**
-         * Constructions a function object for working with faces of the
-         * given triangulation.
-         *
-         * @param tri the triangulation with which we are working.
-         */
-        DegreeLessThan(const typename DimTraits<dim>::Triangulation& tri);
-        /**
-         * Compares the degrees of the \a subdim-dimensional faces
-         * at the given indices within the working triangulation.
-         * The triangulation that is used will be the one that was
-         * passed to the class constructor.
-         *
-         * \pre Both \a a and \a b are non-negative, and are strictly
-         * less than the total number of \a subdim-dimensional faces in
-         * the triangulation.
-         *
-         * @param a the index of the first \a subdim-dimensional face
-         * within the triangulation.
-         * @param b the index of the second \a subdim-dimensional face
-         * within the triangulation.
-         * @return \c true if and only if face \a a has smaller degree than
-         * face \a b within the given triangulation.
-         */
-        bool operator() (unsigned a, unsigned b) const;
-};
-
-/**
- * A function object used for sorting faces of triangulations by
- * decreasing degree.  This can (for instance) be used with std::sort().
- *
- * The template argument \a dim refers to the dimension of the overall
- * triangluation(s) with which you are working.  The template argument
- * \a subdim refers to the dimension of the faces that you are sorting.
- * So, for instance, to sort edges of a 3-manifold triangulation by
- * decreasing edge degree, you would use DegreeGreaterThan<3, 1>.
- *
- * A single instance of this class works with faces of a single
- * fixed triangulation (which is passed to the class constructor).
- *
- * \pre \a dim is one of the supported triangulation dimensions.
- * \pre \a subdim is between 0 and \a dim-1 inclusive.
- */
-template <int dim, int subdim>
-class REGINA_API DegreeGreaterThan {
-    private:
-        const typename DimTraits<dim>::Triangulation& tri_;
-            /**< The triangulation with which we are working. */
-
-    public:
-        /**
-         * Constructions a function object for working with faces of the
-         * given triangulation.
-         *
-         * @param tri the triangulation with which we are working.
-         */
-        DegreeGreaterThan(const typename DimTraits<dim>::Triangulation& tri);
-        /**
-         * Compares the degrees of the \a subdim-dimensional faces
-         * at the given indices within the working triangulation.
-         * The triangulation that is used will be the one that was
-         * passed to the class constructor.
-         *
-         * \pre Both \a a and \a b are non-negative, and are strictly
-         * less than the total number of \a subdim-dimensional faces in
-         * the triangulation.
-         *
-         * @param a the index of the first \a subdim-dimensional face
-         * within the triangulation.
-         * @param b the index of the second \a subdim-dimensional face
-         * within the triangulation.
-         * @return \c true if and only if face \a a has greater degree than
-         * face \a b within the given triangulation.
-         */
-        bool operator() (unsigned a, unsigned b) const;
-};
-
-/*@}*/
-
-// Inline functions:
-
-template <int dim>
-inline bool NGenericTriangulation<dim>::isEmpty() const {
-    return (static_cast<const typename DimTraits<dim>::Triangulation*>(this)->
-        getNumberOfSimplices() == 0);
-}
-
-template <int dim>
-inline unsigned long NGenericTriangulation<dim>::size() const {
-    return static_cast<const typename DimTraits<dim>::Triangulation*>(this)->
-        getNumberOfSimplices();
-}
-
-template <int dim, int subdim>
-inline DegreeLessThan<dim, subdim>::DegreeLessThan(
-        const typename DimTraits<dim>::Triangulation& tri) : tri_(tri) {
-}
-
-template <int dim, int subdim>
-inline bool DegreeLessThan<dim, subdim>::operator () (
-        unsigned a, unsigned b) const {
-    return (tri_.template getFace<subdim>(a)->getNumberOfEmbeddings() <
-            tri_.template getFace<subdim>(b)->getNumberOfEmbeddings());
-}
-
-template <int dim, int subdim>
-inline DegreeGreaterThan<dim, subdim>::DegreeGreaterThan(
-        const typename DimTraits<dim>::Triangulation& tri) : tri_(tri) {
-}
-
-template <int dim, int subdim>
-inline bool DegreeGreaterThan<dim, subdim>::operator () (
-        unsigned a, unsigned b) const {
-    return (tri_.template getFace<subdim>(a)->getNumberOfEmbeddings() >
-            tri_.template getFace<subdim>(b)->getNumberOfEmbeddings());
-}
-
-} // namespace regina
-
-#endif
-
-
-
-
-
-
-
-/**
- * Stores the triangulation of a 2-manifold along with its
- * various cellular structures and other information.  A 2-manifold
- * triangulation is built from triangular faces.
- *
- * When the triangulation is deleted, the corresponding
- * triangles, the cellular structure and all other properties
- * will be deallocated.
- *
- * Elements of the 1- and 0-skeletons (edges and vertices respectively) are
- * always temporary, as are components and
- * boundary components.  Whenever a change occurs with the triangulation,
- * these objects will all be deleted and a new skeletal structure will be
- * calculated.  The same is true of various other triangulation properties.
- */
-    public:
-
-    protected:
-        virtual NPacket* internalClonePacket(NPacket* parent) const;
-
-        /**
-         * Turns this triangulation into a clone of the given triangulation.
-         * The tree structure and label of this triangulation are not touched.
-         *
-         * @param from the triangulation from which this triangulation
-         * will be cloned.
-         */
-        void cloneFrom(const Dim2Triangulation& from);
-
-    private:
-        void deleteTriangles();
-            /**< Deallocates all triangles and empties the list. */
-
-        /**
-         * Clears any calculated properties and declares them all
-         * unknown.  All dynamic memory used for storing known
-         * properties is deallocated.
-         *
-         * In most cases this routine is followed immediately by firing
-         * a packet change event.
-         */
-        virtual void clearAllProperties();
-
-        /**
-         * Recalculates vertices, edges, components and
-         * boundary components, as well as various other skeletal properties.
-         * All appropriate lists are filled.
-         *
-         * \pre All skeletal lists are empty.
-         */
-        void calculateSkeleton() const;
-
+#if 0
         /**
          * Determines if an isomorphic copy of this triangulation is
          * contained within the given triangulation.
@@ -1068,220 +868,364 @@ inline bool DegreeGreaterThan<dim, subdim>::operator () (
          * returned.
          * @return the total number of isomorphisms found.
          */
-        unsigned long findIsomorphisms(const Dim2Triangulation& other,
-                std::list<Dim2Isomorphism*>& results,
+        unsigned long findIsomorphisms(const Triangulation& other,
+                std::list<Isomorphism<dim>*>& results,
                 bool completeIsomorphism, bool firstOnly) const;
 
-    friend class regina::Simplex<2>;
-    friend class regina::SimplexBase<2>;
-    friend class regina::NGenericTriangulation<2>;
-    friend class regina::NXMLDim2TriangulationReader;
+        /**
+         * Internal to isoSig().
+         *
+         * Constructs a candidate isomorphism signature for a single
+         * component of this triangulation.  This candidate signature
+         * assumes that the given simplex with the given labelling
+         * of its vertices becomes simplex zero with vertices 0..dim
+         * under the "canonical isomorphism".
+         *
+         * @param tri the triangulation under consideration.
+         * @param simp the index of some simplex in this triangulation.
+         * @param vertices some ordering of the vertices of the
+         * given tetrahedron.
+         * @param relabelling if this is non-null, it will be filled with the
+         * canonical isomorphism; in this case it must already have been
+         * constructed for the correct number of simplices.
+         * @return the candidate isomorphism signature.
+         */
+        static std::string isoSigFrom(const Triangulation& tri, unsigned simp,
+            const NPerm<dim+1>& vertices, Isomorphism<dim>* relabelling);
+#endif
+};
+
+/**
+ * A <i>dim</i>-dimensional triangulation, built by gluing
+ * <i>dim</i>-dimensional simplices along their (<i>dim</i>-1)-dimensional
+ * facets.  Typically (but not necessarily) such triangulations are used
+ * to represent <i>dim</i>-manifolds.
+ *
+ * TODO: Flesh out with more documentation here.
+ *
+ * For dimensions 2 and 3, this template is specialised and offers
+ * \e much more functionality.  In order to use these specialised
+ * classes, you will need to include the corresponding headers
+ * (dim2/dim2triangulation.h for \a dim = 2, or triangulation/ntriangulation.h
+ * for \a dim = 3).  For convenience, there are typedefs available for
+ * these specialised classes (Dim2Triangulation and NTriangulation
+ * respectively).
+ *
+ * \ifacespython Python does not support templates.  For \a dim = 2 and 3,
+ * this class is available in Python under the names Triangulation2 and
+ * Triangulation3 respectively (as well as the typedefs mentioned above).
+ * Higher-dimensional classes are not available in Python for the time being.
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * This must be at least 2.
+ */
+template <int dim>
+class REGINA_API Triangulation : public TriangulationBase<dim> {
+    public:
+        /**
+         * \name Constructors and Destructors
+         */
+        /*@{*/
+
+        /**
+         * Default constructor.
+         *
+         * Creates an empty triangulation.
+         */
+        Triangulation();
+        /**
+         * Creates a new copy of the given triangulation.
+         *
+         * @param copy the triangulation to copy.
+         */
+        Triangulation(const Triangulation& copy);
+
+        /*@}*/
+    private:
+        /**
+         * Clears any calculated properties and declares them all unknown.
+         * This must be called by any internal function that changes the
+         * triangulation.
+         */
+        void clearAllProperties();
+
+    friend class SimplexBase<dim>;
+    friend class TriangulationBase<dim>;
 };
 
 /*@}*/
 
-} // namespace regina
-// Some more headers that are required for inline functions:
-#include "dim2/dim2triangle.h"
-#include "dim2/dim2edge.h"
-#include "dim2/dim2vertex.h"
-#include "dim2/dim2component.h"
-#include "dim2/dim2boundarycomponent.h"
-namespace regina {
+// Inline functions for TriangulationBase
 
-// Inline functions for Dim2Triangulation
-
-inline Dim2Triangulation::Dim2Triangulation() :
-        NPacket(), calculatedSkeleton_(false) {
+template <int dim>
+inline TriangulationBase<dim>::TriangulationBase() {
 }
 
-inline Dim2Triangulation::Dim2Triangulation(const Dim2Triangulation& cloneMe) :
-        NPacket(), calculatedSkeleton_(false) {
-    cloneFrom(cloneMe);
+template <int dim>
+TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& copy) {
+    // We don't fire a change event here since this is a constructor.
+    // There should be nobody listening on events yet.
+
+    SimplexIterator me, you;
+    for (you = copy.simplices_.begin(); you != copy.simplices_.end(); ++you)
+        simplices_.push_back(new Simplex<dim>((*you)->getDescription(),
+            static_cast<Triangulation<dim>*>(this)));
+
+    // Copy the internal simplex data, including gluings.
+    int f;
+    for (me = simplices_.begin(), you = copy.simplices_.begin();
+            me != simplices_.end(); ++me, ++you) {
+        for (f = 0; f <= dim; ++f) {
+            if ((*you)->adj_[f]) {
+                (*me)->adj_[f] = simplices_[(*you)->adj_[f]->index()];
+                (*me)->gluing_[f] = (*you)->gluing_[f];
+            } else
+                (*me)->adj_[f] = 0;
+        }
+    }
 }
 
-inline Dim2Triangulation::~Dim2Triangulation() {
-    clearAllProperties();
-    deleteTriangles();
+template <int dim>
+inline TriangulationBase<dim>::~TriangulationBase() {
+    for (auto it = simplices_.begin(); it != simplices_.end(); ++it)
+        delete *it;
 }
 
-inline void Dim2Triangulation::writeTextShort(std::ostream& out) const {
-    out << "Triangulation with " << triangles_.size()
-        << (triangles_.size() == 1 ? " triangle" : " triangles");
+template <int dim>
+inline size_t TriangulationBase<dim>::size() const {
+    return simplices_.size();
 }
 
-inline bool Dim2Triangulation::dependsOnParent() const {
+template <int dim>
+inline size_t TriangulationBase<dim>::getNumberOfSimplices() const {
+    return simplices_.size();
+}
+
+template <int dim>
+inline const std::vector<Simplex<dim>*>& TriangulationBase<dim>::simplices()
+        const {
+    return (const std::vector<Simplex<dim>*>&)(simplices_);
+}
+
+template <int dim>
+inline const std::vector<Simplex<dim>*>& TriangulationBase<dim>::getSimplices()
+        const {
+    return (const std::vector<Simplex<dim>*>&)(simplices_);
+}
+
+template <int dim>
+inline Simplex<dim>* TriangulationBase<dim>::simplex(size_t index) {
+    return simplices_[index];
+}
+
+template <int dim>
+inline Simplex<dim>* TriangulationBase<dim>::getSimplex(size_t index) {
+    return simplices_[index];
+}
+
+template <int dim>
+inline const Simplex<dim>* TriangulationBase<dim>::simplex(size_t index) const {
+    return simplices_[index];
+}
+
+template <int dim>
+inline const Simplex<dim>* TriangulationBase<dim>::getSimplex(size_t index)
+        const {
+    return simplices_[index];
+}
+
+template <int dim>
+inline size_t TriangulationBase<dim>::simplexIndex(const Simplex<dim>* simplex)
+        const {
+    return simplex->markedIndex();
+}
+
+template <int dim>
+Simplex<dim>* TriangulationBase<dim>::newSimplex() {
+    ChangeEventSpan<Triangulation<dim>> span(
+        static_cast<Triangulation<dim>*>(this));
+    Simplex<dim>* s = new Simplex<dim>(static_cast<Triangulation<dim>*>(this));
+    simplices_.push_back(s);
+    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
+    return s;
+}
+
+template <int dim>
+Simplex<dim>* TriangulationBase<dim>::newSimplex(const std::string& desc) {
+    ChangeEventSpan<Triangulation<dim>> span(
+        static_cast<Triangulation<dim>*>(this));
+    Simplex<dim>* s = new Simplex<dim>(desc,
+        static_cast<Triangulation<dim>*>(this));
+    simplices_.push_back(s);
+    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
+    return s;
+}
+
+template <int dim>
+inline void TriangulationBase<dim>::removeSimplex(Simplex<dim>* simplex) {
+    ChangeEventSpan<Triangulation<dim>> span(
+        static_cast<Triangulation<dim>*>(this));
+
+    simplex->isolate();
+    simplices_.erase(simplices_.begin() + simplex->markedIndex());
+    delete simplex;
+
+    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
+}
+
+template <int dim>
+inline void TriangulationBase<dim>::removeSimplexAt(size_t index) {
+    ChangeEventSpan<Triangulation<dim>> span(
+        static_cast<Triangulation<dim>*>(this));
+
+    Simplex<dim>* simplex = simplices_[index];
+    simplex->isolate();
+    simplices_.erase(simplices_.begin() + index);
+    delete simplex;
+
+    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
+}
+
+template <int dim>
+inline void TriangulationBase<dim>::removeAllSimplices() {
+    ChangeEventSpan<Triangulation<dim>> span(
+        static_cast<Triangulation<dim>*>(this));
+
+    for (auto it = simplices_.begin(); it != simplices_.end(); ++it)
+        delete *it;
+    simplices_.clear();
+
+    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
+}
+
+template <int dim>
+void TriangulationBase<dim>::swapContents(Triangulation<dim>& other) {
+    ChangeEventSpan<Triangulation<dim>> span1(
+        static_cast<Triangulation<dim>*>(this));
+    ChangeEventSpan<Triangulation<dim>> span2(&other);
+
+    simplices_.swap(other.simplices_);
+
+    SimplexIterator it;
+    for (it = simplices_.begin(); it != simplices_.end(); ++it)
+        (*it)->tri_ = static_cast<Triangulation<dim>*>(this);
+    for (it = other.simplices_.begin(); it != other.simplices_.end(); ++it)
+        (*it)->tri_ = &other;
+
+    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
+    static_cast<Triangulation<dim>&>(other).clearAllProperties();
+}
+
+template <int dim>
+void TriangulationBase<dim>::moveContentsTo(Triangulation<dim>& dest) {
+    ChangeEventSpan<Triangulation<dim>> span1(
+        static_cast<Triangulation<dim>*>(this));
+    ChangeEventSpan<Triangulation<dim>> span2(&dest);
+
+    SimplexIterator it;
+    for (it = simplices_.begin(); it != simplices_.end(); ++it) {
+        // This is an abuse of NMarkedVector, since for a brief moment
+        // each triangle belongs to both vectors simplices_ and dest.simplices_.
+        // However, the subsequent clear() operation does not touch the
+        // markings (indices), and so we end up with the correct result
+        // (i.e., the markings are correct for dest).
+        (*it)->tri_ = &dest;
+        dest.simplices_.push_back(*it);
+    }
+    simplices_.clear();
+
+    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
+    static_cast<Triangulation<dim>&>(dest).clearAllProperties();
+}
+
+template <int dim>
+inline bool TriangulationBase<dim>::isEmpty() const {
+    return simplices_.empty();
+}
+
+template <int dim>
+inline bool TriangulationBase<dim>::hasBoundaryFacets() const {
+    for (auto it = simplices_.begin(); it != simplices_.end(); ++it)
+        if ((*it)->hasBoundary())
+            return true;
     return false;
 }
 
-inline unsigned long Dim2Triangulation::getNumberOfSimplices() const {
-    return triangles_.size();
-}
-
-inline const std::vector<Simplex<dim>*>& Dim2Triangulation::getSimplices()
+template <int dim>
+bool TriangulationBase<dim>::isIdenticalTo(const Triangulation<dim>& other)
         const {
-    return (const std::vector<Simplex<dim>*>&)(triangles_);
-}
+    if (simplices_.size() != other.simplices_.size())
+        return false;
 
-inline Simplex<dim>* Dim2Triangulation::getSimplex(unsigned long index) {
-    return triangles_[index];
-}
-
-inline const Simplex<dim>* Dim2Triangulation::getSimplex(unsigned long index)
-        const {
-    return triangles_[index];
-}
-
-inline long Dim2Triangulation::simplexIndex(const Simplex<dim>* tri) const {
-    return tri->markedIndex();
-}
-
-inline Simplex<dim>* Dim2Triangulation::newSimplex() {
-    ChangeEventSpan span(this);
-    Simplex<dim>* tri = new Simplex<dim>(this);
-    triangles_.push_back(tri);
-    clearAllProperties();
-    return tri;
-}
-
-inline Simplex<dim>* Dim2Triangulation::newSimplex(const std::string& desc) {
-    ChangeEventSpan span(this);
-    Simplex<dim>* tri = new Simplex<dim>(desc, this);
-    triangles_.push_back(tri);
-    clearAllProperties();
-    return tri;
-}
-
-inline void Dim2Triangulation::removeSimplex(Simplex<dim>* tri) {
-    ChangeEventSpan span(this);
-
-    tri->isolate();
-    triangles_.erase(triangles_.begin() + triangleIndex(tri));
-    delete tri;
-
-    clearAllProperties();
-}
-
-inline void Dim2Triangulation::removeSimplexAt(unsigned long index) {
-    ChangeEventSpan span(this);
-
-    Simplex<dim>* ans = triangles_[index];
-    ans->isolate();
-    triangles_.erase(triangles_.begin() + index);
-    delete ans;
-
-    clearAllProperties();
-}
-
-inline void Dim2Triangulation::removeAllSimplices() {
-    ChangeEventSpan span(this);
-    deleteTriangles();
-    clearAllProperties();
-}
-
-inline bool Dim2Triangulation::hasBoundaryEdges() const {
-    return ! isClosed();
-}
-
-inline NPacket* Dim2Triangulation::internalClonePacket(NPacket*) const {
-    return new Dim2Triangulation(*this);
-}
-
-} // namespace regina
-
-#endif
-
-
-#include <cassert>
-#include <iomanip>
-#include <iostream>
-#include <sstream>
-#include "dim2/dim2triangulation.h"
-#include "utilities/xmlutils.h"
-
-namespace regina {
-
-Dim2Triangulation::Dim2Triangulation(const std::string& description) :
-        calculatedSkeleton_(false) {
-    Dim2Triangulation* attempt;
-
-    if ((attempt = fromIsoSig(description))) {
-        cloneFrom(*attempt);
-        setPacketLabel(description);
+    SimplexIterator me, you;
+    int f;
+    for (me = simplices_.begin(), you = other.simplices_.begin();
+            me != simplices_.end(); ++me, ++you) {
+        for (f = 0; f <= dim; ++f) {
+            if ((*you)->adj_[f]) {
+                if ((*me)->adj_[f] != simplices_[(*you)->adj_[f]->index()])
+                    return false;
+                if ((*me)->gluing_[f] != (*you)->gluing_[f])
+                    return false;
+            } else {
+                if ((*me)->adj_[f])
+                    return false;
+            }
+        }
     }
 
-    delete attempt;
+    return true;
 }
 
-void Dim2Triangulation::swapContents(Dim2Triangulation& other) {
-    ChangeEventSpan span1(this);
-    ChangeEventSpan span2(&other);
-
-    clearAllProperties();
-    other.clearAllProperties();
-
-    triangles_.swap(other.triangles_);
-
-    TriangleIterator it;
-    for (it = triangles_.begin(); it != triangles_.end(); ++it)
-        (*it)->tri_ = this;
-    for (it = other.triangles_.begin(); it != other.triangles_.end(); ++it)
-        (*it)->tri_ = &other;
+template <int dim>
+inline void TriangulationBase<dim>::writeTextShort(std::ostream& out) const {
+    if (simplices_.size() == 0)
+        out << "Empty " << dim << "-dimensional triangulation";
+    else
+        out << "Triangulation with " << simplices_.size() << ' ' << dim << '-'
+            << (simplices_.size() == 1 ? "simplex" : "simplices");
 }
 
-void Dim2Triangulation::moveContentsTo(Dim2Triangulation& dest) {
-    ChangeEventSpan span1(this);
-    ChangeEventSpan span2(&dest);
+template <int dim>
+void TriangulationBase<dim>::writeTextLong(std::ostream& out) const {
+    writeTextShort(out);
+    out << "\n\n";
 
-    clearAllProperties();
-    dest.clearAllProperties();
-
-    TriangleIterator it;
-    for (it = triangles_.begin(); it != triangles_.end(); ++it) {
-        // This is an abuse of NMarkedVector, since for a brief moment
-        // each triangle belongs to both vectors triangles_ and dest.triangles_.
-        // However, the subsequent clear() operation does not touch the
-        // triangle markings (indices), and so we end up with the
-        // correct result (i.e., the markings are correct for dest).
-        (*it)->tri_ = &dest;
-        dest.triangles_.push_back(*it);
-    }
-    triangles_.clear();
-}
-
-void Dim2Triangulation::writeTextLong(std::ostream& out) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-
-    out << "Size of the skeleton:\n";
-    out << "  Triangles: " << triangles_.size() << '\n';
-    out << "  Edges: " << edges_.size() << '\n';
-    out << "  Vertices: " << vertices_.size() << '\n';
-    out << '\n';
-
-    Simplex<dim>* tri;
-    Simplex<dim>* adjTri;
-    unsigned triPos;
+    Simplex<dim>* simp;
+    Simplex<dim>* adj;
+    size_t pos;
     int i, j;
-    NPerm3 adjPerm;
+    NPerm<dim+1> gluing;
 
-    out << "Triangle gluing:\n";
-    out << "  Triangle  |  glued to:     (01)     (02)     (12)\n";
-    out << "  ----------+--------------------------------------\n";
-    for (triPos=0; triPos < triangles_.size(); triPos++) {
-        tri = triangles_[triPos];
-        out << "      " << std::setw(4) << triPos << "  |           ";
-        for (i = 2; i >= 0; --i) {
-            out << " ";
-            adjTri = tri->adjacentTriangle(i);
-            if (! adjTri)
+    out << "  Simplex  |  glued to:";
+    for (i = dim; i >= 0; --i) {
+        out << "     (";
+        for (j = 0; j <= dim; ++j)
+            if (j != i)
+                out << regina::digit(j);
+        out << ')';
+    }
+    out << '\n';
+    out << "  ---------+-----------";
+    for (i = dim; i >= 0; --i)
+        for (j = 0; j < 7 + dim; ++j)
+            out << '-';
+    out << '\n';
+    for (pos=0; pos < simplices_.size(); pos++) {
+        simp = simplices_[pos];
+        out << "     " << std::setw(4) << pos << "  |           ";
+        for (i = dim; i >= 0; --i) {
+            adj = simp->adjacentSimplex(i);
+            if (! adj) {
+                for (j = 0; j < dim - 1; ++j)
+                    out << ' ';
                 out << "boundary";
-            else {
-                adjPerm = tri->adjacentGluing(i);
-                out << std::setw(3) << triangleIndex(adjTri) << " (";
-                for (j = 0; j < 3; ++j) {
-                    if (j == i) continue;
-                    out << adjPerm[j];
+            } else {
+                gluing = simp->adjacentGluing(i);
+                out << std::setw(4) << adj->markedIndex() << " (";
+                for (j = 0; j <= dim; ++j) {
+                    if (j != i)
+                        out << regina::digit(gluing[j]);
                 }
                 out << ")";
             }
@@ -1289,67 +1233,43 @@ void Dim2Triangulation::writeTextLong(std::ostream& out) const {
         out << '\n';
     }
     out << '\n';
-
-    out << "Vertices:\n";
-    out << "  Triangle  |  vertex:    0   1   2\n";
-    out << "  ----------+----------------------\n";
-    for (triPos = 0; triPos < triangles_.size(); ++triPos) {
-        tri = triangles_[triPos];
-        out << "      " << std::setw(4) << triPos << "  |          ";
-        for (i = 0; i < 3; ++i)
-            out << ' ' << std::setw(3) <<
-                vertexIndex(tri->getVertex(i));
-        out << '\n';
-    }
-    out << '\n';
-
-    out << "Edges:\n";
-    out << "  Triangle  |  edge:   01  02  12\n";
-    out << "  ----------+--------------------\n";
-    for (triPos = 0; triPos < triangles_.size(); ++triPos) {
-        tri = triangles_[triPos];
-        out << "      " << std::setw(4) << triPos << "  |        ";
-        for (i = 2; i >= 0; --i)
-            out << ' ' << std::setw(3) << edgeIndex(tri->getEdge(i));
-        out << '\n';
-    }
-    out << '\n';
 }
 
-void Dim2Triangulation::insertTriangulation(const Dim2Triangulation& X) {
+#if 0
+void Triangulation<dim>::insertTriangulation(const Triangulation<dim>& X) {
     ChangeEventSpan span(this);
 
-    unsigned long nOrig = getNumberOfTriangles();
-    unsigned long nX = X.getNumberOfTriangles();
+    size_t nOrig = getNumberOfTriangles();
+    size_t nX = X.getNumberOfTriangles();
 
-    unsigned long triPos;
+    size_t triPos;
     for (triPos = 0; triPos < nX; ++triPos)
-        newTriangle(X.triangles_[triPos]->getDescription());
+        newTriangle(X.simplices_[triPos]->getDescription());
 
     // Make the gluings.
-    unsigned long adjPos;
+    size_t adjPos;
     Simplex<dim>* tri;
     Simplex<dim>* adjTri;
     NPerm3 adjPerm;
     int edge;
     for (triPos = 0; triPos < nX; ++triPos) {
-        tri = X.triangles_[triPos];
+        tri = X.simplices_[triPos];
         for (edge = 0; edge < 3; ++edge) {
-            adjTri = tri->adjacentTriangle(edge);
+            adjTri = tri->adjacentSimplex(edge);
             if (adjTri) {
                 adjPos = X.triangleIndex(adjTri);
                 adjPerm = tri->adjacentGluing(edge);
                 if (adjPos > triPos ||
                         (adjPos == triPos && adjPerm[edge] > edge)) {
-                    triangles_[nOrig + triPos]->joinTo(edge,
-                        triangles_[nOrig + adjPos], adjPerm);
+                    simplices_[nOrig + triPos]->joinTo(edge,
+                        simplices_[nOrig + adjPos], adjPerm);
                 }
             }
         }
     }
 }
 
-void Dim2Triangulation::insertConstruction(unsigned long nTriangles,
+void Triangulation<dim>::insertConstruction(size_t nTriangles,
         const int adjacencies[][3], const int gluings[][3][3]) {
     if (nTriangles == 0)
         return;
@@ -1367,7 +1287,7 @@ void Dim2Triangulation::insertConstruction(unsigned long nTriangles,
     for (i = 0; i < nTriangles; ++i)
         for (j = 0; j < 3; ++j)
             if (adjacencies[i][j] >= 0 &&
-                    ! tri[i]->adjacentTriangle(j)) {
+                    ! tri[i]->adjacentSimplex(j)) {
                 p = NPerm3(gluings[i][j][0], gluings[i][j][1],
                     gluings[i][j][2]);
                 tri[i]->joinTo(j, tri[adjacencies[i][j]], p);
@@ -1376,7 +1296,7 @@ void Dim2Triangulation::insertConstruction(unsigned long nTriangles,
     delete[] tri;
 }
 
-std::string Dim2Triangulation::dumpConstruction() const {
+std::string Triangulation<dim>::dumpConstruction() const {
     std::ostringstream ans;
     ans <<
 "/**\n";
@@ -1388,7 +1308,7 @@ std::string Dim2Triangulation::dumpConstruction() const {
 " */\n"
 "\n";
 
-    if (triangles_.empty()) {
+    if (simplices_.empty()) {
         ans <<
 "/* This triangulation is empty.  No code is being generated. */\n";
         return ans.str();
@@ -1401,20 +1321,20 @@ std::string Dim2Triangulation::dumpConstruction() const {
 " */\n"
 "\n";
 
-    unsigned long nTriangles = triangles_.size();
+    size_t nTriangles = simplices_.size();
     Simplex<dim>* tri;
     NPerm3 perm;
-    unsigned long p;
+    size_t p;
     int e, i;
 
     ans << "const int adjacencies[" << nTriangles << "][3] = {\n";
     for (p = 0; p < nTriangles; ++p) {
-        tri = triangles_[p];
+        tri = simplices_[p];
 
         ans << "    { ";
         for (e = 0; e < 3; ++e) {
-            if (tri->adjacentTriangle(e)) {
-                ans << triangleIndex(tri->adjacentTriangle(e));
+            if (tri->adjacentSimplex(e)) {
+                ans << triangleIndex(tri->adjacentSimplex(e));
             } else
                 ans << "-1";
 
@@ -1430,11 +1350,11 @@ std::string Dim2Triangulation::dumpConstruction() const {
 
     ans << "const int gluings[" << nTriangles << "][3][3] = {\n";
     for (p = 0; p < nTriangles; ++p) {
-        tri = triangles_[p];
+        tri = simplices_[p];
 
         ans << "    { ";
         for (e = 0; e < 3; ++e) {
-            if (tri->adjacentTriangle(e)) {
+            if (tri->adjacentSimplex(e)) {
                 perm = tri->adjacentGluing(e);
                 ans << "{ ";
                 for (i = 0; i < 3; ++i) {
@@ -1463,59 +1383,29 @@ std::string Dim2Triangulation::dumpConstruction() const {
 " * based on the information stored in the arrays above.\n"
 " */\n"
 "\n"
-"Dim2Triangulation tri;\n"
+"Triangulation<dim> tri;\n"
 "tri.insertConstruction(" << nTriangles << ", adjacencies, gluings);\n"
 "\n";
 
     return ans.str();
 }
+#endif
 
-void Dim2Triangulation::cloneFrom(const Dim2Triangulation& X) {
-    ChangeEventSpan span(this);
+// Inline functions for Triangulation
 
-    removeAllTriangles();
-
-    TriangleIterator it;
-    for (it = X.triangles_.begin(); it != X.triangles_.end(); ++it)
-        newTriangle((*it)->getDescription());
-
-    // Make the gluings.
-    long triPos, adjPos;
-    Simplex<dim>* tri;
-    Simplex<dim>* adjTri;
-    NPerm3 adjPerm;
-    int edge;
-    triPos = 0;
-    for (it = X.triangles_.begin(); it != X.triangles_.end(); ++it) {
-        tri = *it;
-        for (edge = 0; edge < 3; ++edge) {
-            adjTri = tri->adjacentTriangle(edge);
-            if (adjTri) {
-                adjPos = X.triangleIndex(adjTri);
-                adjPerm = tri->adjacentGluing(edge);
-                if (adjPos > triPos ||
-                        (adjPos == triPos && adjPerm[edge] > edge)) {
-                    triangles_[triPos]->joinTo(edge,
-                        triangles_[adjPos], adjPerm);
-                }
-            }
-        }
-        ++triPos;
-    }
-
-    // Properties:
-    // None yet for 2-manifold triangulations.
+template <int dim>
+inline Triangulation<dim>::Triangulation() : TriangulationBase<dim>() {
 }
 
-void Dim2Triangulation::deleteTriangles() {
-    for (TriangleIterator it = triangles_.begin(); it != triangles_.end(); ++it)
-        delete *it;
-    triangles_.clear();
+template <int dim>
+inline Triangulation<dim>::Triangulation(const Triangulation& copy) :
+        TriangulationBase<dim>(copy) {
 }
 
-void Dim2Triangulation::clearAllProperties() {
-    if (calculatedSkeleton_)
-        deleteSkeleton();
+template <int dim>
+inline void Triangulation<dim>::clearAllProperties() {
 }
 
 } // namespace regina
+
+#endif
