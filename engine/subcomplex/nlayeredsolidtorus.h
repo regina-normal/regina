@@ -46,10 +46,11 @@
 
 namespace regina {
 
-class NIsomorphism;
 class NTriangulation;
 
+template <int> class Isomorphism;
 template <int> class Simplex;
+typedef Isomorphism<3> NIsomorphism;
 typedef Simplex<3> NTetrahedron;
 
 /**

@@ -274,9 +274,9 @@ bool NGenericFacetPairing<dim>::isCanonicalInternal(
     // special-case the situation in which there are no facet gluings at all.
     if (isUnmatched(0, 0)) {
         // We must have just one simplex with no facet gluings at all.
-        Isomorphism* ans;
+        Isomorphism<dim>* ans;
         for (int i = 0; i < NPerm<dim+1>::nPerms; ++i) {
-            ans = new Isomorphism(1);
+            ans = new Isomorphism<dim>(1);
             ans->simpImage(0) = 0;
             ans->facetPerm(0) = NPerm<dim+1>::Sn[i];
             list.push_back(ans);
@@ -323,8 +323,7 @@ bool NGenericFacetPairing<dim>::isCanonicalInternal(
         // If firstFace doesn't glue to the same simplex but this
         // facet does, we're not in canonical form.
         if (firstFaceDest.simp != 0 && firstDestPre.simp == preImage[0].simp) {
-            for_each(list.begin(), list.end(),
-                FuncDelete<Isomorphism>());
+            for_each(list.begin(), list.end(), FuncDelete<Isomorphism<dim>>());
             list.clear();
             delete[] image;
             delete[] preImage;
@@ -360,7 +359,7 @@ bool NGenericFacetPairing<dim>::isCanonicalInternal(
 
             if (trying.isPastEnd(size_, true)) {
                 // We have a complete automorphism!
-                Isomorphism* ans = new Isomorphism(size_);
+                Isomorphism<dim>* ans = new Isomorphism<dim>(size_);
                 for (i = 0; i < size_; i++) {
                     ans->simpImage(i) = image[i * (dim + 1)].simp;
                     for (j = 0; j <= dim; ++j)
@@ -400,7 +399,7 @@ bool NGenericFacetPairing<dim>::isCanonicalInternal(
                         if (isUnmatched(trying) && (! isUnmatched(pre))) {
                             // We're not in canonical form.
                             for_each(list.begin(), list.end(),
-                                FuncDelete<Isomorphism>());
+                                FuncDelete<Isomorphism<dim>>());
                             list.clear();
                             delete[] image;
                             delete[] preImage;
@@ -491,7 +490,7 @@ bool NGenericFacetPairing<dim>::isCanonicalInternal(
                     } else if (fPre < fImg) {
                         // Whapow, we're not in canonical form.
                         for_each(list.begin(), list.end(),
-                            FuncDelete<Isomorphism>());
+                            FuncDelete<Isomorphism<dim>>());
                         list.clear();
                         delete[] image;
                         delete[] preImage;
@@ -759,7 +758,7 @@ void* NGenericFacetPairing<dim>::run(void* param) {
                 args->use(static_cast<FacetPairing*>(this),
                     &allAutomorphisms, args->useArgs);
                 for_each(allAutomorphisms.begin(), allAutomorphisms.end(),
-                    FuncDelete<Isomorphism>());
+                    FuncDelete<Isomorphism<dim>>());
                 allAutomorphisms.clear();
             }
 

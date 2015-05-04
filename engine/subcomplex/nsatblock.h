@@ -49,12 +49,13 @@
 
 namespace regina {
 
-class NIsomorphism;
 struct NSatAnnulus;
 class NSFSpace;
 class NTriangulation;
 
+template <int> class Isomorphism;
 template <int> class Simplex;
+typedef Isomorphism<3> NIsomorphism;
 typedef Simplex<3> NTetrahedron;
 
 /**

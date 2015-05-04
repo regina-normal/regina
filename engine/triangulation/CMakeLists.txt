@@ -17,7 +17,6 @@ SET ( FILES
   nexampletriangulation
   nfacepair
   nhomologicaldata
-  nisomorphism
   ntriangle
   ntriangulation
   nvertex

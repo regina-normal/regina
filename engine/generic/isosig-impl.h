@@ -152,7 +152,7 @@ std::string NGenericTriangulation<dim>::isoSigFrom(
         const typename DimTraits<dim>::Triangulation& tri,
         unsigned simp,
         const NPerm<dim+1>& vertices,
-        typename DimTraits<dim>::Isomorphism* relabelling) {
+        Isomorphism<dim>* relabelling) {
     // Only process the component that simp belongs to.
 
     // ---------------------------------------------------------------------
@@ -333,11 +333,10 @@ std::string NGenericTriangulation<dim>::isoSigFrom(
 
 template <int dim>
 std::string NGenericTriangulation<dim>::isoSig(
-        typename DimTraits<dim>::Isomorphism** relabelling) const {
+        Isomorphism<dim>** relabelling) const {
     // These typedefs are already present in the class declaration,
     // but gcc 4.7.3 seems to break unless we include them here also.
     typedef typename DimTraits<dim>::Triangulation Triangulation;
-    typedef typename DimTraits<dim>::Isomorphism Isomorphism;
 
     const Triangulation& tri(static_cast<const Triangulation&>(*this));
 
@@ -347,10 +346,10 @@ std::string NGenericTriangulation<dim>::isoSig(
         relabelling = 0;  // ... and forget they ever asked for an isomorphism.
     }
 
-    Isomorphism* currRelabelling = 0;
+    Isomorphism<dim>* currRelabelling = 0;
     if (relabelling) {
-        *relabelling = new Isomorphism(tri.getNumberOfSimplices());
-        currRelabelling = new Isomorphism(tri.getNumberOfSimplices());
+        *relabelling = new Isomorphism<dim>(tri.getNumberOfSimplices());
+        currRelabelling = new Isomorphism<dim>(tri.getNumberOfSimplices());
     }
 
     if (tri.getSimplices().empty()) {

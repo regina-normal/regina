@@ -45,7 +45,10 @@
 #include "output.h"
 #include "generic/dimtraits.h"
 #include "generic/nfacetspec.h"
+#include "generic/policies.h"
 #include "maths/nperm.h"
+#include <algorithm>
+#include <cstdlib>
 #include <boost/noncopyable.hpp>
 
 namespace regina {
@@ -103,7 +106,7 @@ class REGINA_API IsomorphismBase :
          *
          * @param copy the isomorphism to copy.
          */
-        IsomorphismBase(const Isomorphism<dim>& copy);
+        IsomorphismBase(const IsomorphismBase<dim>& copy);
         /**
          * Destroys this isomorphism.
          */
@@ -424,6 +427,15 @@ inline IsomorphismBase<dim>::IsomorphismBase(unsigned nSimplices) :
 }
 
 template <int dim>
+inline IsomorphismBase<dim>::IsomorphismBase(const IsomorphismBase<dim>& copy) :
+        nSimplices_(copy.nSimplices_),
+        simpImage_(new int[copy.nSimplices_]),
+        facetPerm_(new NPerm<dim+1>[copy.nSimplices_]) {
+    std::copy(copy.simpImage_, copy.simpImage_ + nSimplices_, simpImage_);
+    std::copy(copy.facetPerm_, copy.facetPerm_ + nSimplices_, facetPerm_);
+}
+
+template <int dim>
 inline IsomorphismBase<dim>::~IsomorphismBase() {
     delete[] simpImage_;
     delete[] facetPerm_;
@@ -467,11 +479,114 @@ inline NFacetSpec<dim> IsomorphismBase<dim>::operator [] (
 }
 
 template <int dim>
+bool IsomorphismBase<dim>::isIdentity() const {
+    for (unsigned p = 0; p < nSimplices_; ++p) {
+        if (simpImage_[p] != p)
+            return false;
+        if (! facetPerm_[p].isIdentity())
+            return false;
+    }
+    return true;
+}
+
+template <int dim>
+typename DimTraits<dim>::Triangulation* IsomorphismBase<dim>::apply(
+        const typename DimTraits<dim>::Triangulation* original) const {
+    if (original->getNumberOfSimplices() != nSimplices_)
+        return 0;
+
+    if (nSimplices_ == 0)
+        return new typename DimTraits<dim>::Triangulation();
+
+    typename DimTraits<dim>::Triangulation* ans =
+        new typename DimTraits<dim>::Triangulation();
+    Simplex<dim>** tet = new Simplex<dim>*[nSimplices_];
+    unsigned long t;
+    int f;
+
+    ChangeEventSpan<typename DimTraits<dim>::Triangulation> span(ans);
+    for (t = 0; t < nSimplices_; t++)
+        tet[t] = ans->newSimplex();
+
+    for (t = 0; t < nSimplices_; t++)
+        tet[simpImage_[t]]->setDescription(
+            original->getSimplex(t)->getDescription());
+
+    const Simplex<dim> *myTet, *adjTet;
+    unsigned long adjTetIndex;
+    NPerm<dim+1> gluingPerm;
+    for (t = 0; t < nSimplices_; t++) {
+        myTet = original->getSimplex(t);
+        for (f = 0; f <= dim; f++)
+            if ((adjTet = myTet->adjacentSimplex(f))) {
+                // We have an adjacent simplex.
+                adjTetIndex = original->simplexIndex(adjTet);
+                gluingPerm = myTet->adjacentGluing(f);
+
+                // Make the gluing from one side only.
+                if (adjTetIndex > t || (adjTetIndex == t &&
+                        gluingPerm[f] > f))
+                    tet[simpImage_[t]]->joinTo(facetPerm_[t][f],
+                        tet[simpImage_[adjTetIndex]],
+                        facetPerm_[adjTetIndex] * gluingPerm *
+                            facetPerm_[t].inverse());
+            }
+    }
+
+    delete[] tet;
+    return ans;
+}
+
+template <int dim>
+void IsomorphismBase<dim>::applyInPlace(
+        typename DimTraits<dim>::Triangulation* tri) const {
+    if (tri->getNumberOfSimplices() != nSimplices_)
+        return;
+
+    if (nSimplices_ == 0)
+        return;
+
+    typename DimTraits<dim>::Triangulation* staging = apply(tri);
+    tri->swapContents(*staging);
+    delete staging;
+}
+
+template <int dim>
+inline void IsomorphismBase<dim>::writeTextShort(std::ostream& out) const {
+    out << "Isomorphism between " << dim << "-manifold triangulations";
+}
+
+template <int dim>
+inline void IsomorphismBase<dim>::writeTextLong(std::ostream& out) const {
+    for (unsigned i = 0; i < nSimplices_; ++i)
+        out << i << " -> " << simpImage_[i] << " (" << facetPerm_[i] << ")\n";
+}
+
+template <int dim>
 inline Isomorphism<dim>* IsomorphismBase<dim>::identity(unsigned nSimplices) {
     Isomorphism<dim>* id = new Isomorphism<dim>(nSimplices);
     for (unsigned i = 0; i < nSimplices; ++i)
         id->simpImage_[i] = i;
     return id;
+}
+
+template <int dim>
+Isomorphism<dim>* IsomorphismBase<dim>::random(unsigned nSimplices) {
+    Isomorphism<dim>* ans = new Isomorphism<dim>(nSimplices);
+
+    // Randomly choose the destination simplices.
+    unsigned i;
+    for (i = 0; i < nSimplices; i++)
+        ans->simpImage_[i] = i;
+    std::random_shuffle(ans->simpImage_, ans->simpImage_ + nSimplices);
+
+    // Randomly choose the individual permutations.
+    // TODO: Avoid overflow for large dim.
+    for (i = 0; i < nSimplices; i++)
+        ans->facetPerm_[i] = NPerm<dim+1>::atIndex(
+            rand() % NPerm<dim+1>::nPerms);
+
+    return ans;
 }
 
 // Inline functions for Isomorphism

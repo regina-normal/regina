@@ -65,8 +65,10 @@ class Dim2Vertex;
 class NXMLDim2TriangulationReader;
 class NXMLPacketReader;
 
+template <int> class Isomorphism;
 template <int> class SimplexBase;
 template <int> class Simplex;
+typedef Isomorphism<2> Dim2Isomorphism;
 typedef Simplex<2> Dim2Triangle;
 
 /**

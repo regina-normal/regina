@@ -56,10 +56,10 @@ namespace {
     template <int dim>
     bool extendIsomorphism(
             const typename DimTraits<dim>::Triangulation* tri,
-            typename DimTraits<dim>::Isomorphism& current,
-            typename DimTraits<dim>::Isomorphism& currentInv,
-            const typename DimTraits<dim>::Isomorphism& best,
-            const typename DimTraits<dim>::Isomorphism& bestInv) {
+            Isomorphism<dim>& current,
+            Isomorphism<dim>& currentInv,
+            const Isomorphism<dim>& best,
+            const Isomorphism<dim>& bestInv) {
         bool better = false;
 
         unsigned nSimp = tri->getNumberOfSimplices();
@@ -179,8 +179,8 @@ bool NGenericTriangulation<dim>::makeCanonical() {
         return false;
 
     // Prepare to search for isomorphisms.
-    typename DimTraits<dim>::Isomorphism current(nSimp), currentInv(nSimp);
-    typename DimTraits<dim>::Isomorphism best(nSimp), bestInv(nSimp);
+    Isomorphism<dim> current(nSimp), currentInv(nSimp);
+    Isomorphism<dim> best(nSimp), bestInv(nSimp);
 
     // The thing to best is the identity isomorphism.
     unsigned simp, inner;

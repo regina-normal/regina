@@ -48,8 +48,6 @@
 
 namespace regina {
 
-class Dim2Triangulation;
-
 /**
  * \weakgroup dim2
  * @{
@@ -94,7 +92,8 @@ class Dim2Triangulation;
  * Note that for all types of isomorphism, triangulation \a U is allowed
  * to contain more triangles than triangulation \a T.
  */
-class REGINA_API Dim2Isomorphism : public NGenericIsomorphism<2> {
+template <>
+class REGINA_API Isomorphism<2> : public IsomorphismBase<2> {
     public:
         /**
          * Creates a new isomorphism with no initialisation.
@@ -104,14 +103,14 @@ class REGINA_API Dim2Isomorphism : public NGenericIsomorphism<2> {
          * @param sourceTriangles the number of triangles in the source
          * triangulation associated with this isomorphism; this may be zero.
          */
-        Dim2Isomorphism(unsigned sourceTriangles);
+        Isomorphism(unsigned sourceTriangles);
         /**
          * Creates a new isomorphism identical to the given isomorphism.
          *
          * @param cloneMe the isomorphism upon which to base the new
          * isomorphism.
          */
-        Dim2Isomorphism(const Dim2Isomorphism& cloneMe);
+        Isomorphism(const Isomorphism& cloneMe);
 
         /**
          * Returns the number of triangles in the source triangulation
@@ -198,34 +197,39 @@ class REGINA_API Dim2Isomorphism : public NGenericIsomorphism<2> {
         NPerm3 edgePerm(unsigned sourceTriangle) const;
 };
 
+/**
+ * A convenience typedef for Isomorphism<2>.
+ */
+typedef Isomorphism<2> Dim2Isomorphism;
+
 /*@}*/
 
-// Inline functions for Dim2Isomorphism
+// Inline functions for Isomorphism<2>
 
-inline Dim2Isomorphism::Dim2Isomorphism(unsigned sourceTriangles) :
-        NGenericIsomorphism<2>(sourceTriangles) {
+inline Isomorphism<2>::Isomorphism(unsigned sourceTriangles) :
+        IsomorphismBase<2>(sourceTriangles) {
 }
 
-inline Dim2Isomorphism::Dim2Isomorphism(const Dim2Isomorphism& cloneMe) :
-        NGenericIsomorphism<2>(cloneMe) {
+inline Isomorphism<2>::Isomorphism(const Isomorphism<2>& cloneMe) :
+        IsomorphismBase<2>(cloneMe) {
 }
 
-inline unsigned Dim2Isomorphism::getSourceTriangles() const {
+inline unsigned Isomorphism<2>::getSourceTriangles() const {
     return nSimplices_;
 }
 
-inline int& Dim2Isomorphism::triImage(unsigned sourceTriangle) {
+inline int& Isomorphism<2>::triImage(unsigned sourceTriangle) {
     return simpImage_[sourceTriangle];
 }
 
-inline int Dim2Isomorphism::triImage(unsigned sourceTriangle) const {
+inline int Isomorphism<2>::triImage(unsigned sourceTriangle) const {
     return simpImage_[sourceTriangle];
 }
 
-inline NPerm3& Dim2Isomorphism::edgePerm(unsigned sourceTriangle) {
+inline NPerm3& Isomorphism<2>::edgePerm(unsigned sourceTriangle) {
     return facetPerm_[sourceTriangle];
 }
-inline NPerm3 Dim2Isomorphism::edgePerm(unsigned sourceTriangle) const {
+inline NPerm3 Isomorphism<2>::edgePerm(unsigned sourceTriangle) const {
     return facetPerm_[sourceTriangle];
 }
 

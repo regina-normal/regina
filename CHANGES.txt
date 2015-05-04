@@ -22,6 +22,8 @@ Version 4.97  [ (under development) ]
             - New template-based helper classes for sorting subfaces of
               a triangulation by degree.
         Class Dim2Isomorphism:
+            - Now just a typedef for the new class Isomorphism<2>, which has
+              the same functionality as the old Dim2Isomorphism.
             - New static routine identity().
             - Routine getSourceSimplices() is deprecated, and has been
               replaced with the easier-to-type size().
@@ -76,6 +78,8 @@ Version 4.97  [ (under development) ]
             - The homeDir argument to setDirs() may now be the empty string,
               which signals that the directory should not be changed.
         Class NIsomorphism:
+            - Now just a typedef for the new class Isomorphism<3>, which has
+              the same functionality as the old NIsomorphism.
             - New static routine identity().
             - Routine getSourceSimplices() is deprecated, and has been
               replaced with the easier-to-type size().

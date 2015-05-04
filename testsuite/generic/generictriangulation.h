@@ -36,12 +36,12 @@
 #include "generic/dimtraits.h"
 
 using regina::DimTraits;
+using regina::Isomorphism;
 
 template <int dim>
 class TriangulationTest : public CppUnit::TestFixture {
     public:
         typedef typename DimTraits<dim>::Triangulation Triangulation;
-        typedef typename DimTraits<dim>::Isomorphism Isomorphism;
 
     public:
         static void verifyMakeCanonical(Triangulation* tri) {
@@ -56,7 +56,7 @@ class TriangulationTest : public CppUnit::TestFixture {
             canonical.makeCanonical();
 
             for (int i = 0; i < trials; ++i) {
-                Isomorphism* iso = Isomorphism::random(
+                Isomorphism<dim>* iso = Isomorphism<dim>::random(
                     tri->getNumberOfSimplices());
                 Triangulation* t = iso->apply(tri);
                 delete iso;
@@ -135,7 +135,7 @@ class TriangulationTest : public CppUnit::TestFixture {
 
             std::string otherSig;
             for (unsigned i = 0; i < 10; ++i) {
-                Isomorphism* iso = Isomorphism::random(
+                Isomorphism<dim>* iso = Isomorphism<dim>::random(
                     tri->getNumberOfSimplices());
                 Triangulation* other = iso->apply(tri);
                 delete iso;
@@ -152,7 +152,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 delete other;
             }
             for (unsigned i = 0; i < 10; ++i) {
-                Isomorphism* iso = Isomorphism::random(
+                Isomorphism<dim>* iso = Isomorphism<dim>::random(
                     tri->getNumberOfSimplices());
                 Triangulation other(*tri);
                 iso->applyInPlace(&other);
@@ -170,7 +170,7 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
 
             if (tri->getNumberOfComponents() == 1) {
-                Isomorphism* relabelling;
+                Isomorphism<dim>* relabelling;
                 tri->isoSig(&relabelling);
 
                 Triangulation* rebuild = Triangulation::fromIsoSig(sig);

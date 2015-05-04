@@ -67,35 +67,33 @@ bool NGenericTriangulation<dim>::isIdenticalTo(
 }
 
 template <int dim>
-inline std::auto_ptr<typename DimTraits<dim>::Isomorphism>
+inline std::auto_ptr<Isomorphism<dim>>
         NGenericTriangulation<dim>::isIsomorphicTo(
         const typename DimTraits<dim>::Triangulation& other) const {
-    std::list<typename DimTraits<dim>::Isomorphism*> results;
+    std::list<Isomorphism<dim>*> results;
     if (static_cast<const typename DimTraits<dim>::Triangulation&>(*this).
             findIsomorphisms(other, results, true, true))
-        return std::auto_ptr<typename DimTraits<dim>::Isomorphism>(
-            results.front());
+        return std::auto_ptr<Isomorphism<dim>>(results.front());
     else
-        return std::auto_ptr<typename DimTraits<dim>::Isomorphism>(0);
+        return std::auto_ptr<Isomorphism<dim>>(0);
 }
 
 template <int dim>
-inline std::auto_ptr<typename DimTraits<dim>::Isomorphism>
+inline std::auto_ptr<Isomorphism<dim>>
         NGenericTriangulation<dim>::isContainedIn(
         const typename DimTraits<dim>::Triangulation& other) const {
-    std::list<typename DimTraits<dim>::Isomorphism*> results;
+    std::list<Isomorphism<dim>*> results;
     if (static_cast<const typename DimTraits<dim>::Triangulation&>(*this).
             findIsomorphisms(other, results, false, true))
-        return std::auto_ptr<typename DimTraits<dim>::Isomorphism>(
-            results.front());
+        return std::auto_ptr<Isomorphism<dim>>(results.front());
     else
-        return std::auto_ptr<typename DimTraits<dim>::Isomorphism>(0);
+        return std::auto_ptr<Isomorphism<dim>>(0);
 }
 
 template <int dim>
 inline unsigned long NGenericTriangulation<dim>::findAllIsomorphisms(
         const typename DimTraits<dim>::Triangulation& other,
-        std::list<typename DimTraits<dim>::Isomorphism*>& results) const {
+        std::list<Isomorphism<dim>*>& results) const {
     return static_cast<const typename DimTraits<dim>::Triangulation&>(*this).
         findIsomorphisms(other, results, true, false);
 }
@@ -103,7 +101,7 @@ inline unsigned long NGenericTriangulation<dim>::findAllIsomorphisms(
 template <int dim>
 inline unsigned long NGenericTriangulation<dim>::findAllSubcomplexesIn(
         const typename DimTraits<dim>::Triangulation& other,
-        std::list<typename DimTraits<dim>::Isomorphism*>& results) const {
+        std::list<Isomorphism<dim>*>& results) const {
     return static_cast<const typename DimTraits<dim>::Triangulation&>(*this).
         findIsomorphisms(other, results, false, false);
 }
