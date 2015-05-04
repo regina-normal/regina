@@ -135,7 +135,9 @@ struct PacketInfo<PACKET_SNAPPEATRIANGULATION> {
  * be deleted and replaced with new ones (using fresh data re-fetched from
  * the SnapPea kernel).
  */
-class REGINA_API NCusp : public ShareableObject {
+class REGINA_API NCusp :
+        public ShortOutput<NCusp>,
+        public boost::noncopyable {
     private:
         NVertex* vertex_;
             /**< The corresponding vertex of the Regina triangulation. */
@@ -200,6 +202,14 @@ class REGINA_API NCusp : public ShareableObject {
          */
         int l() const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
 
     private:

@@ -31,6 +31,8 @@ Version 4.97  [ (under development) ]
         Class NAngleStructureList:
             - Renamed getNumberOfStructures() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
+        Class NCusp:
+            - Now derives from ShortOutput instead of ShareableObject.
         Class NCyclotomic:
             - New class for exact arithmetic in cyclotomic fields.
         Class NExampleSnapPeaTriangulation:
