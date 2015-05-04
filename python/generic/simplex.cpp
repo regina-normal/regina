@@ -40,7 +40,7 @@ using regina::Simplex;
 
 template <int dim>
 void addSimplex(const char* name) {
-    class_<regina::Simplex<dim>, std::auto_ptr<regina::Simplex<2>>,
+    class_<regina::Simplex<dim>, std::auto_ptr<regina::Simplex<dim>>,
             boost::noncopyable>(name, no_init)
         .def("getDescription", &Simplex<dim>::getDescription,
             return_value_policy<return_by_value>())
