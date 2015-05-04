@@ -44,8 +44,9 @@
 
 #include <ctime>
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "utilities/nthread.h"
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -93,7 +94,10 @@ namespace regina {
  * \deprecated This class is deprecated.  Please use the more flexible
  * and more streamlined NProgressTracker class instead.
  */
-class REGINA_API NProgress : public ShareableObject, protected NMutex {
+class REGINA_API NProgress :
+        public ShortOutput<NProgress>,
+        public boost::noncopyable,
+        protected NMutex {
     protected:
         mutable bool changed;
             /**< Has the state of progress changed since the last query? */
@@ -271,6 +275,14 @@ class REGINA_API NProgress : public ShareableObject, protected NMutex {
          */
         long totalCPUTime() const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
 
     protected:
