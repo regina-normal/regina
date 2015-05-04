@@ -31,6 +31,8 @@ Version 4.97  [ (under development) ]
         Class NAngleStructureList:
             - Renamed getNumberOfStructures() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
+        Class NCusp:
+            - Now derives from ShortOutput instead of ShareableObject.
         Class NCyclotomic:
             - New class for exact arithmetic in cyclotomic fields.
         Class NExampleSnapPeaTriangulation:
@@ -75,12 +77,16 @@ Version 4.97  [ (under development) ]
         Class NPolynomial:
             - New class for working with single-variable polynomials
               over arbitrary rings.
+        Class NProgress, NProgressManager:
+            - Now derives from ShortOutput instead of ShareableObject.
         Class NRational:
             - The destructor is no longer virtual.
         Class ShareableObject:
             - Deprecated.  The only real functionality that this
               provides is str() and detail(); classes that require this
               should now inherit from Output<> instead.
+        Class NSignature:
+            - Now derives from ShortOutput instead of ShareableObject.
         Class NSurfaceFilterProperties:
             - New set-based routine setECs().
         Class NTreeBag, NTreeDecomposition:

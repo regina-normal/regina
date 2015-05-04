@@ -39,8 +39,7 @@ using namespace boost::python;
 using regina::NProgress;
 
 void addNProgress() {
-    class_<NProgress, bases<regina::ShareableObject>,
-            std::auto_ptr<NProgress>, boost::noncopyable>
+    class_<NProgress, std::auto_ptr<NProgress>, boost::noncopyable>
             ("NProgress", no_init)
         .def("hasChanged", &NProgress::hasChanged)
         .def("isFinished", &NProgress::isFinished)
@@ -52,6 +51,11 @@ void addNProgress() {
         .def("getPercent", &NProgress::getPercent)
         .def("getRealTime", &NProgress::getRealTime)
         .def("totalCPUTime", &NProgress::totalCPUTime)
+        .def("str", &NProgress::str)
+        .def("toString", &NProgress::toString)
+        .def("detail", &NProgress::detail)
+        .def("toStringLong", &NProgress::toStringLong)
+        .def("__str__", &NProgress::str)
     ;
 }
 
