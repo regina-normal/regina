@@ -41,6 +41,7 @@
 #define __NPERM3_H
 #endif
 
+#include <cstdlib>
 #include <string>
 #include "regina-core.h"
 #include "nperm.h"
@@ -440,6 +441,17 @@ class REGINA_API NPerm<3> {
         static NPerm atIndex(Index i);
 
         /**
+         * Returns a random permutation on three elements.
+         * All permutations are returned with equal probability.
+         *
+         * The implementation uses the C standard ::rand() function for its
+         * random number generation.
+         *
+         * @return a random permutation.
+         */
+        static NPerm rand();
+
+        /**
          * Returns the lexicographical index of this permutation.  This
          * indicates where this permutation sits within a full lexicographical
          * ordering of all 3! permutations on three elements.
@@ -676,6 +688,10 @@ inline NPerm<3> NPerm<3>::atIndex(Index i) {
 
 inline NPerm<3>::Index NPerm<3>::index() const {
     return orderedS3Index();
+}
+
+inline NPerm<3> NPerm<3>::rand() {
+    return S3[::rand() % 6];
 }
 
 inline int NPerm<3>::S3Index() const {

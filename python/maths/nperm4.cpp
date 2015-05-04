@@ -83,6 +83,7 @@ void addNPerm4() {
         .def("isIdentity", &NPerm4::isIdentity)
         .def("atIndex", &NPerm4::atIndex)
         .def("index", &NPerm4::index)
+        .def("rand", &NPerm4::rand)
         .def("str", &NPerm4::str)
         .def("trunc", &NPerm4::trunc)
         .def("trunc2", &NPerm4::trunc2)
@@ -97,6 +98,7 @@ void addNPerm4() {
         .staticmethod("isPermCode")
         .staticmethod("isPermCode2")
         .staticmethod("atIndex")
+        .staticmethod("rand")
     ;
 
     s.attr("nPerms") = NPerm4::nPerms;

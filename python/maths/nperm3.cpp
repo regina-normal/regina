@@ -74,6 +74,7 @@ void addNPerm3() {
         .def("isIdentity", &NPerm3::isIdentity)
         .def("atIndex", &NPerm3::atIndex)
         .def("index", &NPerm3::index)
+        .def("rand", &NPerm3::rand)
         .def("str", &NPerm3::str)
         .def("trunc", &NPerm3::trunc)
         .def("trunc2", &NPerm3::trunc2)
@@ -85,6 +86,7 @@ void addNPerm3() {
         .staticmethod("fromPermCode")
         .staticmethod("isPermCode")
         .staticmethod("atIndex")
+        .staticmethod("rand")
     ;
 
     s.attr("nPerms") = NPerm3::nPerms;

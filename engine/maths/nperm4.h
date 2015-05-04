@@ -41,6 +41,7 @@
 #define __NPERM4_H
 #endif
 
+#include <cstdlib>
 #include <string>
 #include "regina-core.h"
 #include "maths/nperm.h"
@@ -561,6 +562,17 @@ class REGINA_API NPerm<4> {
         Index index() const;
 
         /**
+         * Returns a random permutation on four elements.
+         * All permutations are returned with equal probability.
+         *
+         * The implementation uses the C standard ::rand() function for its
+         * random number generation.
+         *
+         * @return a random permutation.
+         */
+        static NPerm rand();
+
+        /**
          * Returns a string representation of this permutation.
          * The representation will consist of four adjacent digits
          * representing the images of 0, 1, 2 and 3 respectively.  An
@@ -807,6 +819,10 @@ inline NPerm<4> NPerm<4>::atIndex(Index i) {
 
 inline NPerm<4>::Index NPerm<4>::index() const {
     return orderedS4Index();
+}
+
+inline NPerm<4> NPerm<4>::rand() {
+    return S4[::rand() % 24];
 }
 
 inline bool NPerm<4>::operator == (const NPerm<4>& other) const {

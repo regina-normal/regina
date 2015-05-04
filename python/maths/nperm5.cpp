@@ -79,6 +79,7 @@ void addNPerm5() {
         .def("isIdentity", &NPerm5::isIdentity)
         .def("atIndex", &NPerm5::atIndex)
         .def("index", &NPerm5::index)
+        .def("rand", &NPerm5::rand)
         .def("str", &NPerm5::str)
         .def("trunc", &NPerm5::trunc)
         .def("trunc2", &NPerm5::trunc2)
@@ -92,6 +93,7 @@ void addNPerm5() {
         .staticmethod("fromPermCode")
         .staticmethod("isPermCode")
         .staticmethod("atIndex")
+        .staticmethod("rand")
     ;
 
     s.attr("imageBits") = NPerm5::imageBits;

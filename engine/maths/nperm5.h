@@ -41,6 +41,7 @@
 #define __NPERM5_H
 #endif
 
+#include <cstdlib>
 #include <string>
 #include "regina-core.h"
 #include "maths/nperm.h"
@@ -500,6 +501,17 @@ class REGINA_API NPerm<5> {
         Index index() const;
 
         /**
+         * Returns a random permutation on five elements.
+         * All permutations are returned with equal probability.
+         *
+         * The implementation uses the C standard ::rand() function for its
+         * random number generation.
+         *
+         * @return a random permutation.
+         */
+        static NPerm rand();
+
+        /**
          * Returns a string representation of this permutation.
          * The representation will consist of five adjacent digits
          * representing the images of 0, 1, 2, 3 and 4 respectively.
@@ -721,6 +733,10 @@ inline NPerm<5> NPerm<5>::atIndex(Index i) {
 
 inline NPerm<5>::Index NPerm<5>::index() const {
     return orderedS5Index();
+}
+
+inline NPerm<5> NPerm<5>::rand() {
+    return S5[::rand() % 120];
 }
 
 inline int NPerm<5>::imageOf(int source) const {

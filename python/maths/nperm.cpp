@@ -68,6 +68,7 @@ void addNPerm(const char* name) {
         .def("isIdentity", &NPerm<n>::isIdentity)
         .def("atIndex", &NPerm<n>::atIndex)
         .def("index", &NPerm<n>::index)
+        .def("rand", &NPerm<n>::rand)
         .def("str", &NPerm<n>::str)
         .def("trunc", &NPerm<n>::trunc)
         .def("__str__", &NPerm<n>::str)
@@ -75,6 +76,7 @@ void addNPerm(const char* name) {
         .staticmethod("fromPermCode")
         .staticmethod("isPermCode")
         .staticmethod("atIndex")
+        .staticmethod("rand")
     ;
 
     s.attr("nPerms") = NPerm<n>::nPerms;

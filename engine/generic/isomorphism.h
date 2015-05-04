@@ -48,7 +48,6 @@
 #include "generic/policies.h"
 #include "maths/nperm.h"
 #include <algorithm>
-#include <cstdlib>
 #include <boost/noncopyable.hpp>
 
 namespace regina {
@@ -586,10 +585,8 @@ Isomorphism<dim>* IsomorphismBase<dim>::random(unsigned nSimplices) {
     std::random_shuffle(ans->simpImage_, ans->simpImage_ + nSimplices);
 
     // Randomly choose the individual permutations.
-    // TODO: Avoid overflow for large dim.
     for (i = 0; i < nSimplices; i++)
-        ans->facetPerm_[i] = NPerm<dim+1>::atIndex(
-            rand() % NPerm<dim+1>::nPerms);
+        ans->facetPerm_[i] = NPerm<dim+1>::rand();
 
     return ans;
 }

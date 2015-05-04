@@ -41,6 +41,7 @@
 #define __NPERM_H
 #endif
 
+#include <cstdlib>
 #include <string>
 #include "regina-core.h"
 #include "utilities/intutils.h"
@@ -398,6 +399,17 @@ class REGINA_API NPerm {
         Index index() const;
 
         /**
+         * Returns a random permutation on \a n elements.
+         * All permutations are returned with equal probability.
+         *
+         * The implementation uses the C standard ::rand() function for its
+         * random number generation.
+         *
+         * @return a random permutation.
+         */
+        static NPerm rand();
+
+        /**
          * Returns a string representation of this permutation.
          * The representation will consist of \a n adjacent digits
          * representing the images of 0,...,<i>n</i>-1 respectively.
@@ -656,6 +668,22 @@ typename NPerm<n>::Index NPerm<n>::index() const {
         ans += image[p];
     }
     return ans;
+}
+
+template <int n>
+NPerm<n> NPerm<n>::rand() {
+    // We can't just call atIndex(rand() % nPerms), since nPerms might
+    // be too large to fit into an int (which is what rand() returns).
+    Code c = idCode_;
+    int image[n];
+    int p, q;
+    for (p = 0; p < n; ++p)
+        image[n - p - 1] = ::rand() % (p + 1);
+    for (p = n - 1; p >= 0; --p)
+        for (q = p + 1; q < n; ++q)
+            if (image[q] >= image[p])
+                ++image[q];
+    return NPerm<n>(image);
 }
 
 template <int n>
