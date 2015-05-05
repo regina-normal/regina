@@ -379,6 +379,7 @@ class REGINA_API TriangulationBase :
          * combinatorially identical.
          */
         bool isIdenticalTo(const Triangulation<dim>& other) const;
+
 #if 0
         /**
          * Determines if this triangulation is combinatorially
@@ -428,8 +429,8 @@ class REGINA_API TriangulationBase :
          */
         std::auto_ptr<Isomorphism<dim>> isIsomorphicTo(
             const Triangulation& other) const;
-// TODO
         /**
+         * TODO: Check docs.
          * Determines if an isomorphic copy of this triangulation is
          * contained within the given triangulation, possibly as a
          * subcomplex of some larger component (or components).
@@ -467,6 +468,7 @@ class REGINA_API TriangulationBase :
             const Triangulation& other) const;
 
         /**
+         * TODO: Check docs.
          * Finds all ways in which this triangulation is combinatorially
          * isomorphic to the given triangulation.
          *
@@ -493,6 +495,7 @@ class REGINA_API TriangulationBase :
             std::list<Isomorphism<dim>*>& results) const;
 
         /**
+         * TODO: Check docs.
          * Finds all ways in which an isomorphic copy of this triangulation
          * is contained within the given triangulation, possibly as a
          * subcomplex of some larger component (or components).
@@ -522,6 +525,7 @@ class REGINA_API TriangulationBase :
             std::list<Isomorphism<dim>*>& results) const;
 
         /**
+         * TODO: Check docs.
          * Relabel the top-dimensional simplices and their vertices so that
          * this triangulation is in canonical form.  This is essentially
          * the lexicographically smallest labelling when the facet
@@ -544,7 +548,7 @@ class REGINA_API TriangulationBase :
          * if the triangulation was in canonical form to begin with.
          */
         bool makeCanonical();
-
+#endif
         /*@}*/
         /**
          * \name Building Triangulations
@@ -554,66 +558,79 @@ class REGINA_API TriangulationBase :
         /**
          * Inserts a copy of the given triangulation into this triangulation.
          *
-         * The new triangles will be inserted into this triangulation
-         * in the order in which they appear in the given triangulation,
-         * and the numbering of their vertices (0-2) will not change.
-         * They will be given the same descriptions as appear in the
-         * given triangulation.
+         * The top-dimensional simplices of \a source will be copied into this
+         * triangulation in the same order in which they appear in \a source.
+         * That is, if the original size of this triangulation was \a S,
+         * then the simplex at index \a i in \a source will be copied into
+         * this triangulation as a new simplex at index <i>S</i>+<i>i</i>.
+         *
+         * The copies will use the same vertex numbering and descriptions
+         * as the original simplices from \a source, and any gluings
+         * between the simplices of \a source will likewise be copied
+         * across as gluings between their copies in this triangulation.
+         *
+         * This routine behaves correctly when \a source is this triangulation.
          *
          * @param source the triangulation whose copy will be inserted.
          */
-        void insertTriangulation(const Triangulation& source);
+        void insertTriangulation(const Triangulation<dim>& source);
 
         /**
-         * Inserts into this triangulation a set of triangles and their
-         * gluings as described by the given integer arrays.
+         * Inserts a given triangulation into this triangulation, where
+         * the given triangulation is described by a pair of integer arrays.
          *
-         * This routine is provided to make it easy to hard-code a
-         * medium-sized triangulation in a C++ source file.  All of the
-         * pertinent data can be hard-coded into a pair of integer arrays at
-         * the beginning of the source file, avoiding an otherwise tedious
-         * sequence of many joinTo() calls.
+         * The main purpose of this routine is to allow users to hard-code
+         * triangulations into C++ source files.  In particular, all of the
+         * simplex gluings can be hard-coded into a pair of integer arrays
+         * at the beginning of the source file, avoiding an otherwise tedious
+         * sequence of many calls to Simplex<dim>::join().  If you have
+         * a particular triangulation that you would like to hard-code
+         * in this way, you can call dumpConstruction() to generate the
+         * corresponding integer arrays as C++ source code.
          *
-         * An additional \a nTriangles triangles will be inserted into
-         * this triangulation.  The relationships between these triangles
-         * should be stored in the two arrays as follows.  Note that the
-         * new triangles are numbered from 0 to (\a nTriangles - 1), and
-         * individual triangle edges are numbered from 0 to 2.
+         * This routine will insert an additional \a nSimplices top-dimensional
+         * simplices into this triangulation.  We number these simplices
+         * 0,1,...,<i>nSimplices</i>-1.  The gluings between these
+         * new simplices should be stored in the two arrays as follows.
          *
-         * The \a adjacencies array describes which triangle edges are
-         * joined to which others.  Specifically, <tt>adjacencies[f][e]</tt>
-         * should contain the number of the triangle joined to edge \a e
-         * of triangle \a f.  If this edge is to be left as a
-         * boundary edge, <tt>adjacencies[f][e]</tt> should be -1.
+         * The \a adjacencies array describes which simplices are joined to
+         * which others.  Specifically, <tt>adjacencies[s][f]</tt> indicates
+         * which of the new simplices is joined to facet \a f of simplex \a s.
+         * This should be between 0 and <i>nSimplices</i>-1 inclusive, or -1
+         * if facet \a f of simplex \a s is to be left as a boundary facet.
          *
          * The \a gluings array describes the particular gluing permutations
-         * used when joining these triangle edges together.  Specifically,
-         * <tt>gluings[f][e][0..2]</tt> should describe the permutation
-         * used to join edge \a e of triangle \a f to its adjacent
-         * triangle.  These three integers should be 0, 1 and 2 in some
-         * order, so that <tt>gluings[f][e][i]</tt> contains the image of
-         * \a i under this permutation.  If edge \a e of triangle \a f
-         * is to be left as a boundary edge, <tt>gluings[f][e][0..2]</tt>
+         * used to join these simplices together.  Specifically,
+         * <tt>gluings[s][f][0..\a dim]</tt> should describe the permutation
+         * used to join facet \a f of simplex \a s to its adjacent simplex.
+         * These <i>dim</i>+1 integers should be 0,1,...,\a dim in some
+         * order, so that <tt>gluings[s][f][i]</tt> contains the image of \a i
+         * under this permutation.  If facet \a f of simplex \a s is to be
+         * left as a boundary facet, then <tt>gluings[s][f][0..\a dim]</tt>
          * may contain anything (and will be duly ignored).
+         *
+         * If this triangulation is empty before this routine is called, then
+         * the new simplices will be given indices 0,1,...,<i>nSimplices</i>-1
+         * according to the numbering described above.  Otherwise they will be
+         * inserted after any pre-existing simplices, and so they will be given
+         * larger indices instead.  In the latter case, the \a adjacencies
+         * array should still refer to the new simplices as
+         * 0,1,...,<i>nSimplices</i>-1, and this routine will handle any
+         * renumbering automatically at runtime.
          *
          * It is the responsibility of the caller of this routine to
          * ensure that the given arrays are correct and consistent.
          * No error checking will be performed by this routine.
          *
-         * Note that, for an existing triangulation, dumpConstruction()
-         * will output a pair of C++ arrays that can be copied into a
-         * source file and used to reconstruct the triangulation via
-         * this routine.
-         *
          * \ifacespython Not present.
          *
          * @param nSimplices the number of additional simplices to insert.
-         * @param adjacencies describes which of the new triangle edges
-         * are to be identified.  This array must have initial
-         * dimension at least \a nTriangles.
-         * @param gluings describes the specific gluing permutations by
-         * which these new triangle edges should be identified.  This
-         * array must also have initial dimension at least \a nTriangles.
+         * @param adjacencies describes which simplices are adjace to
+         * which others, as described above.  This array must have initial
+         * dimension at least \a nSimplices.
+         * @param gluings describes the specific gluing permutations, as
+         * described above.  This array must also have initial dimension
+         * at least \a nSimplices.
          */
         void insertConstruction(
             size_t nSimplices,
@@ -625,8 +642,9 @@ class REGINA_API TriangulationBase :
          * \name Exporting Triangulations
          */
         /*@{*/
-
+#if 0
         /**
+         * TODO: Check docs.
          * Constructs the isomorphism signature for this triangulation.
          *
          * An <i>isomorphism signature</i> is a compact text representation of
@@ -691,7 +709,7 @@ class REGINA_API TriangulationBase :
          * @return the isomorphism signature of this triangulation.
          */
         std::string isoSig(Isomorphism<dim>** relabelling = 0) const;
-
+#endif
         /**
          * Returns C++ code that can be used with insertConstruction()
          * to reconstruct this triangulation.
@@ -699,21 +717,21 @@ class REGINA_API TriangulationBase :
          * The code produced will consist of the following:
          *
          * - the declaration and initialisation of two integer arrays,
-         *   describing the triangle gluings in this trianguation;
-         * - two additional lines that declare a new Dim2Triangulation and
+         *   describing the gluings between simplices of this trianguation;
+         * - two additional lines that declare a new Triangulation<dim> and
          *   call insertConstruction() to rebuild this triangulation.
          *
          * The main purpose of this routine is to generate the two integer
          * arrays, which can be tedious and error-prone to code up by hand.
          *
          * Note that the number of lines of code produced grows linearly
-         * with the number of triangles.  If this triangulation is very
+         * with the number of simplices.  If this triangulation is very
          * large, the returned string will be very large as well.
          *
          * @return the C++ code that was generated.
          */
         std::string dumpConstruction() const;
-
+#if 0
         /*@}*/
         /**
          * \name Importing Triangulations
@@ -721,6 +739,7 @@ class REGINA_API TriangulationBase :
         /*@{*/
 
         /**
+         * TODO: Check docs.
          * Recovers a full triangulation from an isomorphism signature.
          *
          * See isoSig() for more information on isomorphism signatures.
@@ -757,6 +776,7 @@ class REGINA_API TriangulationBase :
         static Triangulation* fromIsoSig(const std::string& sig);
 
         /**
+         * TODO: Check docs.
          * Deduces the number of top-dimensional simplices in a
          * connected triangulation from its isomorphism signature.
          *
@@ -827,6 +847,7 @@ class REGINA_API TriangulationBase :
     private:
 #if 0
         /**
+         * TODO: Check docs.
          * Determines if an isomorphic copy of this triangulation is
          * contained within the given triangulation.
          *
@@ -873,6 +894,7 @@ class REGINA_API TriangulationBase :
                 bool completeIsomorphism, bool firstOnly) const;
 
         /**
+         * TODO: Check docs.
          * Internal to isoSig().
          *
          * Constructs a candidate isomorphism signature for a single
@@ -965,6 +987,8 @@ template <int dim>
 TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& copy) {
     // We don't fire a change event here since this is a constructor.
     // There should be nobody listening on events yet.
+    // Likewise, we don't clearAllProperties() since no properties
+    // will have been computed yet.
 
     SimplexIterator me, you;
     for (you = copy.simplices_.begin(); you != copy.simplices_.end(); ++you)
@@ -1235,74 +1259,90 @@ void TriangulationBase<dim>::writeTextLong(std::ostream& out) const {
     out << '\n';
 }
 
-#if 0
-void Triangulation<dim>::insertTriangulation(const Triangulation<dim>& X) {
-    ChangeEventSpan span(this);
+template <int dim>
+void TriangulationBase<dim>::insertTriangulation(
+        const Triangulation<dim>& source) {
+    ChangeEventSpan<Triangulation<dim>> span(
+        static_cast<Triangulation<dim>*>(this));
 
-    size_t nOrig = getNumberOfTriangles();
-    size_t nX = X.getNumberOfTriangles();
+    size_t nOrig = getNumberOfSimplices();
 
-    size_t triPos;
-    for (triPos = 0; triPos < nX; ++triPos)
-        newTriangle(X.simplices_[triPos]->getDescription());
+    // Each time we loop through simplices we must only make nOrig
+    // iterations.  This ensures that the routine behaves correctly even
+    // if source is this triangulation.
+    SimplexIterator i = source.simplices_.begin();
+    size_t done = 0;
+    for ( ; done < nOrig; ++i, ++done)
+        simplices_.push_back(new Simplex<dim>((*i)->getDescription(),
+            static_cast<Triangulation<dim>*>(this)));
 
-    // Make the gluings.
-    size_t adjPos;
-    Simplex<dim>* tri;
-    Simplex<dim>* adjTri;
-    NPerm3 adjPerm;
-    int edge;
-    for (triPos = 0; triPos < nX; ++triPos) {
-        tri = X.simplices_[triPos];
-        for (edge = 0; edge < 3; ++edge) {
-            adjTri = tri->adjacentSimplex(edge);
-            if (adjTri) {
-                adjPos = X.triangleIndex(adjTri);
-                adjPerm = tri->adjacentGluing(edge);
-                if (adjPos > triPos ||
-                        (adjPos == triPos && adjPerm[edge] > edge)) {
-                    simplices_[nOrig + triPos]->joinTo(edge,
-                        simplices_[nOrig + adjPos], adjPerm);
-                }
-            }
+    Simplex<dim>* s;
+    int f;
+
+    i = source.simplices_.begin();
+    done = 0;
+    for ( ; done < nOrig; ++i, ++done) {
+        s = simplices_[nOrig + done];
+        for (f = 0; f <= dim; ++f) {
+            if ((*i)->adj_[f]) {
+                s->adj_[f] = simplices_[nOrig + (*i)->adj_[f]->index()];
+                s->gluing_[f] = (*i)->gluing_[f];
+            } else
+                s->adj_[f] = 0;
         }
     }
+
+    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
 }
 
-void Triangulation<dim>::insertConstruction(size_t nTriangles,
-        const int adjacencies[][3], const int gluings[][3][3]) {
-    if (nTriangles == 0)
+template <int dim>
+void TriangulationBase<dim>::insertConstruction(size_t nSimplices,
+        const int adjacencies[][dim+1], const int gluings[][dim+1][dim+1]) {
+    if (nSimplices == 0)
         return;
 
-    Simplex<dim>** tri = new Simplex<dim>*[nTriangles];
+    ChangeEventSpan<Triangulation<dim>> span(
+        static_cast<Triangulation<dim>*>(this));
 
-    unsigned i, j;
-    NPerm3 p;
+    size_t nOrig = getNumberOfSimplices();
 
-    ChangeEventSpan span(this);
+    // Each time we loop through simplices we must only make nOrig
+    // iterations.  This ensures that the routine behaves correctly even
+    // if source is this triangulation.
+    size_t i;
+    for (i = 0; i < nOrig; ++i)
+        simplices_.push_back(new Simplex<dim>(
+            static_cast<Triangulation<dim>*>(this)));
 
-    for (i = 0; i < nTriangles; ++i)
-        tri[i] = newTriangle();
+    Simplex<dim>* s;
+    int f;
+    for (i = 0; i < nOrig; ++i) {
+        s = simplices_[nOrig + i];
+        for (f = 0; f <= dim; ++f) {
+            if (adjacencies[i][f] >= 0) {
+                s->adj_[f] = simplices_[nOrig + adjacencies[i][f]];
+                s->gluing_[f] = NPerm<dim+1>(gluings[i][f]);
+            } else
+                s->adj_[f] = 0;
+        }
+    }
 
-    for (i = 0; i < nTriangles; ++i)
-        for (j = 0; j < 3; ++j)
-            if (adjacencies[i][j] >= 0 &&
-                    ! tri[i]->adjacentSimplex(j)) {
-                p = NPerm3(gluings[i][j][0], gluings[i][j][1],
-                    gluings[i][j][2]);
-                tri[i]->joinTo(j, tri[adjacencies[i][j]], p);
-            }
-
-    delete[] tri;
+    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
 }
 
-std::string Triangulation<dim>::dumpConstruction() const {
+template <int dim>
+std::string TriangulationBase<dim>::dumpConstruction() const {
     std::ostringstream ans;
     ans <<
 "/**\n";
+#if 0
+TODO: packet labels
     if (! getPacketLabel().empty())
         ans <<
-" * 2-manifold triangulation: " << getPacketLabel() << "\n";
+" * " << dim << "-dimensional triangulation: " << getPacketLabel() << "\n";
+#endif
+    ans <<
+" * " << dim << "-dimensional triangulation:\n";
     ans <<
 " * Code automatically generated by dumpConstruction().\n"
 " */\n"
@@ -1316,31 +1356,31 @@ std::string Triangulation<dim>::dumpConstruction() const {
 
     ans <<
 "/**\n"
-" * The following arrays describe the individual gluings of\n"
-" * triangle edges.\n"
+" * The following arrays describe the gluings between simplices.\n"
 " */\n"
 "\n";
 
-    size_t nTriangles = simplices_.size();
-    Simplex<dim>* tri;
-    NPerm3 perm;
+    size_t nSimplices = simplices_.size();
+    Simplex<dim>* s;
+    NPerm<dim+1> perm;
     size_t p;
-    int e, i;
+    int f, i;
 
-    ans << "const int adjacencies[" << nTriangles << "][3] = {\n";
-    for (p = 0; p < nTriangles; ++p) {
-        tri = simplices_[p];
+    ans << "const int adjacencies[" << nSimplices << "][" << (dim+1)
+        << "] = {\n";
+    for (p = 0; p < nSimplices; ++p) {
+        s = simplices_[p];
 
         ans << "    { ";
-        for (e = 0; e < 3; ++e) {
-            if (tri->adjacentSimplex(e)) {
-                ans << triangleIndex(tri->adjacentSimplex(e));
+        for (f = 0; f <= dim; ++f) {
+            if (s->adjacentSimplex(f)) {
+                ans << s->adjacentSimplex(f)->index();
             } else
                 ans << "-1";
 
-            if (e < 2)
+            if (f < dim)
                 ans << ", ";
-            else if (p != nTriangles - 1)
+            else if (p != nSimplices - 1)
                 ans << "},\n";
             else
                 ans << "}\n";
@@ -1348,28 +1388,33 @@ std::string Triangulation<dim>::dumpConstruction() const {
     }
     ans << "};\n\n";
 
-    ans << "const int gluings[" << nTriangles << "][3][3] = {\n";
-    for (p = 0; p < nTriangles; ++p) {
-        tri = simplices_[p];
+    ans << "const int gluings[" << nSimplices << "][" << (dim+1)
+        << "][" << (dim+1) << "] = {\n";
+    for (p = 0; p < nSimplices; ++p) {
+        s = simplices_[p];
 
         ans << "    { ";
-        for (e = 0; e < 3; ++e) {
-            if (tri->adjacentSimplex(e)) {
-                perm = tri->adjacentGluing(e);
+        for (f = 0; f <= dim; ++f) {
+            if (s->adjacentSimplex(f)) {
+                perm = s->adjacentGluing(f);
                 ans << "{ ";
-                for (i = 0; i < 3; ++i) {
+                for (i = 0; i <= dim; ++i) {
                     ans << perm[i];
-                    if (i < 2)
+                    if (i < dim)
                         ans << ", ";
                     else
                         ans << " }";
                 }
-            } else
-                ans << "{ 0, 0, 0 }";
+            } else {
+                ans << "{ ";
+                for (i = 0; i < dim; ++i)
+                    ans << "0, ";
+                ans << "0 }";
+            }
 
-            if (e < 2)
+            if (f < dim)
                 ans << ", ";
-            else if (p != nTriangles - 1)
+            else if (p != nSimplices - 1)
                 ans << " },\n";
             else
                 ans << " }\n";
@@ -1379,17 +1424,16 @@ std::string Triangulation<dim>::dumpConstruction() const {
 
     ans <<
 "/**\n"
-" * The following code actually constructs a 2-manifold triangulation\n"
+" * The following code constructs a " << dim << "-dimensional triangulation\n"
 " * based on the information stored in the arrays above.\n"
 " */\n"
 "\n"
-"Triangulation<dim> tri;\n"
-"tri.insertConstruction(" << nTriangles << ", adjacencies, gluings);\n"
+"Triangulation<" << dim << "> tri;\n"
+"tri.insertConstruction(" << nSimplices << ", adjacencies, gluings);\n"
 "\n";
 
     return ans.str();
 }
-#endif
 
 // Inline functions for Triangulation
 

@@ -87,6 +87,8 @@ void addTriangulation(const char* name) {
         .def("isEmpty", &Triangulation<dim>::isEmpty)
         .def("hasBoundaryFacets", &Triangulation<dim>::hasBoundaryFacets)
         .def("isIdenticalTo", &Triangulation<dim>::isIdenticalTo)
+        .def("insertTriangulation", &Triangulation<dim>::insertTriangulation)
+        .def("dumpConstruction", &Triangulation<dim>::dumpConstruction)
         .def("str", &Triangulation<dim>::str)
         .def("toString", &Triangulation<dim>::toString)
         .def("detail", &Triangulation<dim>::detail)
