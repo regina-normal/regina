@@ -100,13 +100,12 @@ struct FaceTraits {
 #ifndef __DOXYGEN
 
 class Dim2Edge;
-class Dim2Triangulation;
 class Dim2EdgePairing;
 class Dim2Vertex;
 
 template <>
 struct DimTraits<2> {
-    typedef Dim2Triangulation Triangulation;
+    typedef Triangulation<2> Triangulation;
     typedef Dim2EdgePairing FacetPairing;
 };
 

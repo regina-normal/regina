@@ -51,9 +51,11 @@ class QStackedWidget;
 class QSvgWidget;
 
 namespace regina {
-    class Dim2Triangulation;
     class NPacket;
     class NTriangulation;
+
+    template <int> class Triangulation;
+    typedef Triangulation<2> Dim2Triangulation;
 };
 
 /**

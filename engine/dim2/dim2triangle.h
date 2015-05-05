@@ -52,7 +52,9 @@ namespace regina {
 class Dim2Edge;
 class Dim2Vertex;
 class Dim2Component;
-class Dim2Triangulation;
+
+template <int> class Triangulation;
+typedef Triangulation<2> Dim2Triangulation;
 
 /**
  * \weakgroup dim2
@@ -230,7 +232,8 @@ class REGINA_API Simplex<2> : public SimplexBase<2> {
          */
         Simplex(const std::string& desc, Dim2Triangulation* tri);
 
-    friend class Dim2Triangulation;
+    friend class Triangulation<2>;
+    friend class TriangulationBase<2>;
         /**< Allow access to private members. */
 };
 

@@ -41,7 +41,7 @@
 
 namespace regina {
 
-Dim2Triangulation::Dim2Triangulation(const std::string& description) :
+Triangulation<2>::Triangulation(const std::string& description) :
         calculatedSkeleton_(false) {
     Dim2Triangulation* attempt;
 
@@ -53,14 +53,14 @@ Dim2Triangulation::Dim2Triangulation(const std::string& description) :
     delete attempt;
 }
 
-bool Dim2Triangulation::isMinimal() const {
+bool Triangulation<2>::isMinimal() const {
     // 2-sphere:
     if (getEulerChar() == 2)
-        return (triangles_.size() == 2);
+        return (simplices_.size() == 2);
 
     // Projective plane and disc:
     if (getEulerChar() == 1)
-        return (triangles_.size() == (isClosed() ? 2 : 1));
+        return (simplices_.size() == (isClosed() ? 2 : 1));
 
     // All other closed manifolds:
     if (isClosed())
@@ -70,48 +70,12 @@ bool Dim2Triangulation::isMinimal() const {
     return (vertices_.size() == boundaryComponents_.size());
 }
 
-void Dim2Triangulation::swapContents(Dim2Triangulation& other) {
-    ChangeEventSpan span1(this);
-    ChangeEventSpan span2(&other);
-
-    clearAllProperties();
-    other.clearAllProperties();
-
-    triangles_.swap(other.triangles_);
-
-    TriangleIterator it;
-    for (it = triangles_.begin(); it != triangles_.end(); ++it)
-        (*it)->tri_ = this;
-    for (it = other.triangles_.begin(); it != other.triangles_.end(); ++it)
-        (*it)->tri_ = &other;
-}
-
-void Dim2Triangulation::moveContentsTo(Dim2Triangulation& dest) {
-    ChangeEventSpan span1(this);
-    ChangeEventSpan span2(&dest);
-
-    clearAllProperties();
-    dest.clearAllProperties();
-
-    TriangleIterator it;
-    for (it = triangles_.begin(); it != triangles_.end(); ++it) {
-        // This is an abuse of NMarkedVector, since for a brief moment
-        // each triangle belongs to both vectors triangles_ and dest.triangles_.
-        // However, the subsequent clear() operation does not touch the
-        // triangle markings (indices), and so we end up with the
-        // correct result (i.e., the markings are correct for dest).
-        (*it)->tri_ = &dest;
-        dest.triangles_.push_back(*it);
-    }
-    triangles_.clear();
-}
-
-void Dim2Triangulation::writeTextLong(std::ostream& out) const {
+void Triangulation<2>::writeTextLong(std::ostream& out) const {
     if (! calculatedSkeleton_)
         calculateSkeleton();
 
     out << "Size of the skeleton:\n";
-    out << "  Triangles: " << triangles_.size() << '\n';
+    out << "  Triangles: " << simplices_.size() << '\n';
     out << "  Edges: " << edges_.size() << '\n';
     out << "  Vertices: " << vertices_.size() << '\n';
     out << '\n';
@@ -125,8 +89,8 @@ void Dim2Triangulation::writeTextLong(std::ostream& out) const {
     out << "Triangle gluing:\n";
     out << "  Triangle  |  glued to:     (01)     (02)     (12)\n";
     out << "  ----------+--------------------------------------\n";
-    for (triPos=0; triPos < triangles_.size(); triPos++) {
-        tri = triangles_[triPos];
+    for (triPos=0; triPos < simplices_.size(); triPos++) {
+        tri = simplices_[triPos];
         out << "      " << std::setw(4) << triPos << "  |           ";
         for (i = 2; i >= 0; --i) {
             out << " ";
@@ -150,8 +114,8 @@ void Dim2Triangulation::writeTextLong(std::ostream& out) const {
     out << "Vertices:\n";
     out << "  Triangle  |  vertex:    0   1   2\n";
     out << "  ----------+----------------------\n";
-    for (triPos = 0; triPos < triangles_.size(); ++triPos) {
-        tri = triangles_[triPos];
+    for (triPos = 0; triPos < simplices_.size(); ++triPos) {
+        tri = simplices_[triPos];
         out << "      " << std::setw(4) << triPos << "  |          ";
         for (i = 0; i < 3; ++i)
             out << ' ' << std::setw(3) <<
@@ -163,8 +127,8 @@ void Dim2Triangulation::writeTextLong(std::ostream& out) const {
     out << "Edges:\n";
     out << "  Triangle  |  edge:   01  02  12\n";
     out << "  ----------+--------------------\n";
-    for (triPos = 0; triPos < triangles_.size(); ++triPos) {
-        tri = triangles_[triPos];
+    for (triPos = 0; triPos < simplices_.size(); ++triPos) {
+        tri = simplices_[triPos];
         out << "      " << std::setw(4) << triPos << "  |        ";
         for (i = 2; i >= 0; --i)
             out << ' ' << std::setw(3) << edgeIndex(tri->getEdge(i));
@@ -173,161 +137,7 @@ void Dim2Triangulation::writeTextLong(std::ostream& out) const {
     out << '\n';
 }
 
-void Dim2Triangulation::insertTriangulation(const Dim2Triangulation& X) {
-    ChangeEventSpan span(this);
-
-    unsigned long nOrig = getNumberOfTriangles();
-    unsigned long nX = X.getNumberOfTriangles();
-
-    unsigned long triPos;
-    for (triPos = 0; triPos < nX; ++triPos)
-        newTriangle(X.triangles_[triPos]->getDescription());
-
-    // Make the gluings.
-    unsigned long adjPos;
-    Dim2Triangle* tri;
-    Dim2Triangle* adjTri;
-    NPerm3 adjPerm;
-    int edge;
-    for (triPos = 0; triPos < nX; ++triPos) {
-        tri = X.triangles_[triPos];
-        for (edge = 0; edge < 3; ++edge) {
-            adjTri = tri->adjacentTriangle(edge);
-            if (adjTri) {
-                adjPos = X.triangleIndex(adjTri);
-                adjPerm = tri->adjacentGluing(edge);
-                if (adjPos > triPos ||
-                        (adjPos == triPos && adjPerm[edge] > edge)) {
-                    triangles_[nOrig + triPos]->joinTo(edge,
-                        triangles_[nOrig + adjPos], adjPerm);
-                }
-            }
-        }
-    }
-}
-
-void Dim2Triangulation::insertConstruction(unsigned long nTriangles,
-        const int adjacencies[][3], const int gluings[][3][3]) {
-    if (nTriangles == 0)
-        return;
-
-    Dim2Triangle** tri = new Dim2Triangle*[nTriangles];
-
-    unsigned i, j;
-    NPerm3 p;
-
-    ChangeEventSpan span(this);
-
-    for (i = 0; i < nTriangles; ++i)
-        tri[i] = newTriangle();
-
-    for (i = 0; i < nTriangles; ++i)
-        for (j = 0; j < 3; ++j)
-            if (adjacencies[i][j] >= 0 &&
-                    ! tri[i]->adjacentTriangle(j)) {
-                p = NPerm3(gluings[i][j][0], gluings[i][j][1],
-                    gluings[i][j][2]);
-                tri[i]->joinTo(j, tri[adjacencies[i][j]], p);
-            }
-
-    delete[] tri;
-}
-
-std::string Dim2Triangulation::dumpConstruction() const {
-    std::ostringstream ans;
-    ans <<
-"/**\n";
-    if (! getPacketLabel().empty())
-        ans <<
-" * 2-manifold triangulation: " << getPacketLabel() << "\n";
-    ans <<
-" * Code automatically generated by dumpConstruction().\n"
-" */\n"
-"\n";
-
-    if (triangles_.empty()) {
-        ans <<
-"/* This triangulation is empty.  No code is being generated. */\n";
-        return ans.str();
-    }
-
-    ans <<
-"/**\n"
-" * The following arrays describe the individual gluings of\n"
-" * triangle edges.\n"
-" */\n"
-"\n";
-
-    unsigned long nTriangles = triangles_.size();
-    Dim2Triangle* tri;
-    NPerm3 perm;
-    unsigned long p;
-    int e, i;
-
-    ans << "const int adjacencies[" << nTriangles << "][3] = {\n";
-    for (p = 0; p < nTriangles; ++p) {
-        tri = triangles_[p];
-
-        ans << "    { ";
-        for (e = 0; e < 3; ++e) {
-            if (tri->adjacentTriangle(e)) {
-                ans << triangleIndex(tri->adjacentTriangle(e));
-            } else
-                ans << "-1";
-
-            if (e < 2)
-                ans << ", ";
-            else if (p != nTriangles - 1)
-                ans << "},\n";
-            else
-                ans << "}\n";
-        }
-    }
-    ans << "};\n\n";
-
-    ans << "const int gluings[" << nTriangles << "][3][3] = {\n";
-    for (p = 0; p < nTriangles; ++p) {
-        tri = triangles_[p];
-
-        ans << "    { ";
-        for (e = 0; e < 3; ++e) {
-            if (tri->adjacentTriangle(e)) {
-                perm = tri->adjacentGluing(e);
-                ans << "{ ";
-                for (i = 0; i < 3; ++i) {
-                    ans << perm[i];
-                    if (i < 2)
-                        ans << ", ";
-                    else
-                        ans << " }";
-                }
-            } else
-                ans << "{ 0, 0, 0 }";
-
-            if (e < 2)
-                ans << ", ";
-            else if (p != nTriangles - 1)
-                ans << " },\n";
-            else
-                ans << " }\n";
-        }
-    }
-    ans << "};\n\n";
-
-    ans <<
-"/**\n"
-" * The following code actually constructs a 2-manifold triangulation\n"
-" * based on the information stored in the arrays above.\n"
-" */\n"
-"\n"
-"Dim2Triangulation tri;\n"
-"tri.insertConstruction(" << nTriangles << ", adjacencies, gluings);\n"
-"\n";
-
-    return ans.str();
-}
-
-void Dim2Triangulation::writeXMLPacketData(std::ostream& out) const {
+void Triangulation<2>::writeXMLPacketData(std::ostream& out) const {
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlValueTag;
 
@@ -336,8 +146,8 @@ void Dim2Triangulation::writeXMLPacketData(std::ostream& out) const {
     Dim2Triangle* adjTri;
     int edge;
 
-    out << "  <triangles ntriangles=\"" << triangles_.size() << "\">\n";
-    for (it = triangles_.begin(); it != triangles_.end(); ++it) {
+    out << "  <triangles ntriangles=\"" << simplices_.size() << "\">\n";
+    for (it = simplices_.begin(); it != simplices_.end(); ++it) {
         out << "    <triangle desc=\"" <<
             xmlEncodeSpecialChars((*it)->getDescription()) << "\"> ";
         for (edge = 0; edge < 3; ++edge) {
@@ -354,13 +164,13 @@ void Dim2Triangulation::writeXMLPacketData(std::ostream& out) const {
     out << "  </triangles>\n";
 }
 
-void Dim2Triangulation::cloneFrom(const Dim2Triangulation& X) {
+void Triangulation<2>::cloneFrom(const Dim2Triangulation& X) {
     ChangeEventSpan span(this);
 
     removeAllTriangles();
 
     TriangleIterator it;
-    for (it = X.triangles_.begin(); it != X.triangles_.end(); ++it)
+    for (it = X.simplices_.begin(); it != X.simplices_.end(); ++it)
         newTriangle((*it)->getDescription());
 
     // Make the gluings.
@@ -370,7 +180,7 @@ void Dim2Triangulation::cloneFrom(const Dim2Triangulation& X) {
     NPerm3 adjPerm;
     int edge;
     triPos = 0;
-    for (it = X.triangles_.begin(); it != X.triangles_.end(); ++it) {
+    for (it = X.simplices_.begin(); it != X.simplices_.end(); ++it) {
         tri = *it;
         for (edge = 0; edge < 3; ++edge) {
             adjTri = tri->adjacentTriangle(edge);
@@ -379,8 +189,8 @@ void Dim2Triangulation::cloneFrom(const Dim2Triangulation& X) {
                 adjPerm = tri->adjacentGluing(edge);
                 if (adjPos > triPos ||
                         (adjPos == triPos && adjPerm[edge] > edge)) {
-                    triangles_[triPos]->joinTo(edge,
-                        triangles_[adjPos], adjPerm);
+                    simplices_[triPos]->joinTo(edge,
+                        simplices_[adjPos], adjPerm);
                 }
             }
         }
@@ -391,13 +201,7 @@ void Dim2Triangulation::cloneFrom(const Dim2Triangulation& X) {
     // None yet for 2-manifold triangulations.
 }
 
-void Dim2Triangulation::deleteTriangles() {
-    for (TriangleIterator it = triangles_.begin(); it != triangles_.end(); ++it)
-        delete *it;
-    triangles_.clear();
-}
-
-void Dim2Triangulation::deleteSkeleton() {
+void Triangulation<2>::deleteSkeleton() {
     for (VertexIterator it = vertices_.begin(); it != vertices_.end(); ++it)
         delete *it;
     for (EdgeIterator it = edges_.begin(); it != edges_.end(); ++it)
@@ -417,7 +221,7 @@ void Dim2Triangulation::deleteSkeleton() {
     calculatedSkeleton_ = false;
 }
 
-void Dim2Triangulation::clearAllProperties() {
+void Triangulation<2>::clearAllProperties() {
     if (calculatedSkeleton_)
         deleteSkeleton();
 }

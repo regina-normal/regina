@@ -39,7 +39,7 @@
 
 namespace regina {
 
-void Dim2Triangulation::calculateSkeleton() const {
+void Triangulation<2>::calculateSkeleton() const {
     // Triangulations are orientable until proven otherwise.
     orientable_ = true;
 
@@ -49,7 +49,7 @@ void Dim2Triangulation::calculateSkeleton() const {
 
     // Get rid of the empty triangulation now, so that all the helper routines
     // can happily assume at least one triangle.
-    if (triangles_.empty())
+    if (simplices_.empty())
         return;
 
     // Off we go!
@@ -82,20 +82,20 @@ void Dim2Triangulation::calculateSkeleton() const {
         // - all Dim2BoundaryComponent members
 }
 
-void Dim2Triangulation::calculateComponents() const {
+void Triangulation<2>::calculateComponents() const {
     TriangleIterator it;
-    for (it = triangles_.begin(); it != triangles_.end(); ++it) {
+    for (it = simplices_.begin(); it != simplices_.end(); ++it) {
         (*it)->component_ = 0;
         std::fill((*it)->edge_, (*it)->edge_ + 3, static_cast<Dim2Edge*>(0));
     }
 
     Dim2Component* label;
-    Dim2Triangle** stack = new Dim2Triangle*[triangles_.size()];
+    Dim2Triangle** stack = new Dim2Triangle*[simplices_.size()];
     unsigned stackSize = 0;
     Dim2Triangle *loopTri, *tri, *adjTri;
     Dim2Edge* e;
     int edge, adjEdge, adjOrientation;
-    for (it = triangles_.begin(); it != triangles_.end(); ++it) {
+    for (it = simplices_.begin(); it != simplices_.end(); ++it) {
         loopTri = *it;
         if (loopTri->component_)
             continue;
@@ -197,7 +197,7 @@ void Dim2Triangulation::calculateComponents() const {
     // Now run through again and number the edges (i.e., insert them
     // into the main list) in lexicographical order.  Again, edges are
     // ordered in reverse.
-    for (it = triangles_.begin(); it != triangles_.end(); ++it) {
+    for (it = simplices_.begin(); it != simplices_.end(); ++it) {
         tri = *it;
         for (edge = 2; edge >= 0; --edge) {
             e = tri->edge_[edge];
@@ -214,10 +214,10 @@ void Dim2Triangulation::calculateComponents() const {
     delete[] stack;
 }
 
-void Dim2Triangulation::calculateVertices() const {
+void Triangulation<2>::calculateVertices() const {
     TriangleIterator it;
     int loopVtx;
-    for (it = triangles_.begin(); it != triangles_.end(); ++it)
+    for (it = simplices_.begin(); it != simplices_.end(); ++it)
         for (loopVtx = 0; loopVtx < 3; ++loopVtx)
             (*it)->vertex_[loopVtx] = 0;
 
@@ -226,7 +226,7 @@ void Dim2Triangulation::calculateVertices() const {
     int adjVertex;
     NPerm3 map, adjMap;
     int dir, exitEdge;
-    for (it = triangles_.begin(); it != triangles_.end(); ++it) {
+    for (it = simplices_.begin(); it != simplices_.end(); ++it) {
         loopTri = *it;
         for (loopVtx = 2; loopVtx >= 0; --loopVtx) {
             if (loopTri->vertex_[loopVtx])
@@ -286,9 +286,9 @@ void Dim2Triangulation::calculateVertices() const {
     }
 }
 
-void Dim2Triangulation::calculateBoundary() const {
+void Triangulation<2>::calculateBoundary() const {
     // Are there any boundary edges at all?
-    long nBdry = 2 * edges_.size() - 3 * triangles_.size();
+    long nBdry = 2 * edges_.size() - 3 * simplices_.size();
     if (nBdry == 0)
         return;
 

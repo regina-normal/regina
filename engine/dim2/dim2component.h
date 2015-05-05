@@ -53,7 +53,9 @@ class Dim2Edge;
 class Dim2Vertex;
 
 template <int> class Simplex;
+template <int> class Triangulation;
 typedef Simplex<2> Dim2Triangle;
+typedef Triangulation<2> Dim2Triangulation;
 
 /**
  * \weakgroup dim2
@@ -262,7 +264,7 @@ class REGINA_API Dim2Component : public ShareableObject, public NMarkedElement {
          */
         Dim2Component();
 
-    friend class Dim2Triangulation;
+    friend class Triangulation<2>;
         /**< Allow access to private members. */
 };
 

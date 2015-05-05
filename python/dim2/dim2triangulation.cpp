@@ -39,6 +39,7 @@
 
 using namespace boost::python;
 using regina::Dim2Triangulation;
+using regina::Triangulation;
 
 namespace {
     regina::Dim2Triangle* (Dim2Triangulation::*newTriangle_void)() =
@@ -118,9 +119,10 @@ namespace {
 }
 
 void addDim2Triangulation() {
-    scope s = class_<Dim2Triangulation, bases<regina::NPacket>,
-            std::auto_ptr<Dim2Triangulation>,
-            boost::noncopyable>("Dim2Triangulation")
+    {
+    scope s = class_<Triangulation<2>, bases<regina::NPacket>,
+            std::auto_ptr<Triangulation<2>>,
+            boost::noncopyable>("Triangulation2")
         .def(init<const Dim2Triangulation&>())
         .def(init<const std::string&>())
         .def("getNumberOfTriangles", &Dim2Triangulation::getNumberOfTriangles)
@@ -206,5 +208,8 @@ void addDim2Triangulation() {
 
     implicitly_convertible<std::auto_ptr<Dim2Triangulation>,
         std::auto_ptr<regina::NPacket> >();
+    }
+
+    scope().attr("Dim2Triangulation") = scope().attr("Triangulation2");
 }
 

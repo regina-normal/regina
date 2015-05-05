@@ -49,9 +49,9 @@ class EditTableView;
 class QToolBar;
 
 namespace regina {
-    class Dim2Triangulation;
     class NPacket;
     template <int> class Simplex;
+    template <int> class Triangulation;
 };
 
 class Dim2GluingsModel : public QAbstractItemModel {
@@ -59,7 +59,7 @@ class Dim2GluingsModel : public QAbstractItemModel {
         /**
          * Details of the triangulation
          */
-        regina::Dim2Triangulation* tri_;
+        regina::Triangulation<2>* tri_;
 
         /**
          * Internal status
@@ -70,7 +70,7 @@ class Dim2GluingsModel : public QAbstractItemModel {
         /**
          * Constructor and destructor.
          */
-        Dim2GluingsModel(regina::Dim2Triangulation* tri, bool readWrite);
+        Dim2GluingsModel(regina::Triangulation<2>* tri, bool readWrite);
 
         /**
          * Read-write state.
@@ -142,7 +142,7 @@ class Dim2TriGluingsUI : public QObject, public PacketEditorTab {
         /**
          * Packet details
          */
-        regina::Dim2Triangulation* tri;
+        regina::Triangulation<2>* tri;
 
         /**
          * Internal components
@@ -163,7 +163,7 @@ class Dim2TriGluingsUI : public QObject, public PacketEditorTab {
         /**
          * Constructor and destructor.
          */
-        Dim2TriGluingsUI(regina::Dim2Triangulation* packet,
+        Dim2TriGluingsUI(regina::Triangulation<2>* packet,
                 PacketTabbedUI* useParentUI, bool readWrite);
         ~Dim2TriGluingsUI();
 

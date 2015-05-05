@@ -46,7 +46,8 @@
 
 namespace regina {
 
-class Dim2Triangulation;
+template <int> class Triangulation;
+typedef Triangulation<2> Dim2Triangulation;
 
 /**
  * \weakgroup triangulation

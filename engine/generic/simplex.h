@@ -382,6 +382,7 @@ class REGINA_API Simplex : public SimplexBase<dim> {
         Simplex(const std::string& desc,
             typename DimTraits<dim>::Triangulation* tri);
 
+    friend class Triangulation<dim>;
     friend class TriangulationBase<dim>;
 };
 

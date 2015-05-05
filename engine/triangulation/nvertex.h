@@ -50,15 +50,16 @@
 
 namespace regina {
 
-class Dim2Triangulation;
 class NBoundaryComponent;
 class NComponent;
 class NTriangulation;
 
 template <int> class Isomorphism;
 template <int> class Simplex;
+template <int> class Triangulation;
 typedef Isomorphism<3> NIsomorphism;
 typedef Simplex<3> NTetrahedron;
+typedef Triangulation<2> Dim2Triangulation;
 
 /**
  * \weakgroup triangulation

@@ -72,6 +72,14 @@ template <int> class Triangulation;
  *
  * See the Triangulation class notes for further information.
  *
+ * Note that this class does not derive from Output.  This is to avoid clashes
+ * with the output code inherited from NPacket.  Specifically:
+ *
+ * - for those dimensions where Triangulation<dim> derives from NPacket, the
+ *   output routines are inherited from NPacket (which derives from Output).
+ *
+ * - for other dimensions, Triangulation<dim> derives from Output directly.
+ *
  * \ifacespython This base class is not present, but the "end user" class
  * Triangulation<dim> is.
  *
@@ -978,6 +986,10 @@ class REGINA_API Triangulation :
     friend class SimplexBase<dim>;
     friend class TriangulationBase<dim>;
 };
+
+// Note that some of our triangulation classes are specialised elsewhere.
+// Do not explicitly drag in the specialised headers for now.
+template <> class Triangulation<2>;
 
 /*@}*/
 
