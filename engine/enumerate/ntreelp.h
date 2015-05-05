@@ -56,7 +56,9 @@ namespace regina {
 
 class NMatrixInt;
 class NRay;
-class NTriangulation;
+
+template <int> class Triangulation;
+typedef Triangulation<3> NTriangulation;
 
 /**
  * \weakgroup enumerate

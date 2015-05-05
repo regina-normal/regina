@@ -79,7 +79,7 @@ void NTriangulation::calculateSkeleton() const {
 void NTriangulation::checkPermutations() const {
     TetrahedronIterator it;
 
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); it++)
+    for (it = simplices_.begin(); it != simplices_.end(); it++)
         for (int face = 0; face < 4; face++) {
             NTetrahedron * adjacent = (*it) -> adjacentTetrahedron(face);
 
@@ -113,10 +113,10 @@ void NTriangulation::calculateComponents() const {
     TetrahedronIterator it;
     NComponent* label;
     NTetrahedron* tet;
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); it++)
+    for (it = simplices_.begin(); it != simplices_.end(); it++)
         (*it)->component_ = 0;
 
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); it++) {
+    for (it = simplices_.begin(); it != simplices_.end(); it++) {
         tet = *it;
         if (tet->component_ == 0) {
             label = new NComponent();
@@ -136,7 +136,7 @@ void NTriangulation::labelComponent(NTetrahedron* firstTet,
     // on at most once, the array size does not need to be very large.
 
     // Note that we have >= 1 tetrahedron, since firstTet != 0.
-    NTetrahedron** queue = new NTetrahedron*[tetrahedra_.size()];
+    NTetrahedron** queue = new NTetrahedron*[simplices_.size()];
 
     firstTet->component_ = component;
     component->tetrahedra_.push_back(firstTet);
@@ -181,13 +181,13 @@ void NTriangulation::calculateVertices() const {
     int vertex;
     NTetrahedron* tet;
     NVertex* label;
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); it++) {
+    for (it = simplices_.begin(); it != simplices_.end(); it++) {
         tet = *it;
         for (vertex=0; vertex<4; vertex++)
             tet->vertices_[vertex] = 0;
     }
 
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); it++) {
+    for (it = simplices_.begin(); it != simplices_.end(); it++) {
         tet = *it;
         for (vertex=0; vertex<4; vertex++)
             if (! tet->vertices_[vertex]) {
@@ -206,8 +206,8 @@ void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
     // array size does not need to be very large.
 
     // Note that we have >= 1 tetrahedron, since firstTet != 0.
-    NTetrahedron** queueTet = new NTetrahedron*[tetrahedra_.size() * 4];
-    int* queueVtx = new int[tetrahedra_.size() * 4];
+    NTetrahedron** queueTet = new NTetrahedron*[simplices_.size() * 4];
+    int* queueVtx = new int[simplices_.size() * 4];
 
     firstTet->vertices_[firstVertex] = label;
     firstTet->vertexMapping_[firstVertex] = NPerm4(0, firstVertex);
@@ -282,13 +282,13 @@ void NTriangulation::calculateEdges() const {
     int edge;
     NTetrahedron* tet;
     NEdge* label;
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); it++) {
+    for (it = simplices_.begin(); it != simplices_.end(); it++) {
         tet = *it;
         for (edge=0; edge<6; edge++)
             tet->edges_[edge] = 0;
     }
 
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); it++) {
+    for (it = simplices_.begin(); it != simplices_.end(); it++) {
         tet = *it;
         for (edge=0; edge<6; edge++)
             if (! tet->edges_[edge]) {
@@ -373,13 +373,13 @@ void NTriangulation::calculateTriangles() const {
     NTriangle* label;
     NPerm4 adjVertices;
     int adjFace;
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); it++) {
+    for (it = simplices_.begin(); it != simplices_.end(); it++) {
         tet = *it;
         for (face=0; face<4; face++)
             tet->triangles_[face] = 0;
     }
 
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); it++) {
+    for (it = simplices_.begin(); it != simplices_.end(); it++) {
         tet = *it;
         for (face=3; face>=0; face--)
             if (! tet->triangles_[face]) {

@@ -48,8 +48,8 @@ unsigned long NTriangulation::findIsomorphisms(
         other.calculateSkeleton();
 
     // Deal with the empty triangulation first.
-    if (tetrahedra_.empty()) {
-        if (completeIsomorphism && ! other.tetrahedra_.empty())
+    if (simplices_.empty()) {
+        if (completeIsomorphism && ! other.simplices_.empty())
             return 0;
         results.push_back(new NIsomorphism(0));
         return 1;
@@ -61,7 +61,7 @@ unsigned long NTriangulation::findIsomorphisms(
         // Must be boundary complete, 1-to-1 and onto.
         // That is, combinatorially the two triangulations must be
         // identical.
-        if (tetrahedra_.size() != other.tetrahedra_.size())
+        if (simplices_.size() != other.simplices_.size())
             return 0;
         if (triangles_.size() != other.triangles_.size())
             return 0;
@@ -158,7 +158,7 @@ unsigned long NTriangulation::findIsomorphisms(
     } else {
         // May be boundary incomplete, and need not be onto.
         // Not much we can test for unfortunately.
-        if (tetrahedra_.size() > other.tetrahedra_.size())
+        if (simplices_.size() > other.simplices_.size())
             return 0;
         if ((! orientable_) && other.orientable_)
             return 0;
@@ -168,8 +168,8 @@ unsigned long NTriangulation::findIsomorphisms(
     // From the tests above, we are guaranteed that both triangulations
     // have at least one tetrahedron.
     unsigned long nResults = 0;
-    unsigned long nTetrahedra = tetrahedra_.size();
-    unsigned long nDestTetrahedra = other.tetrahedra_.size();
+    unsigned long nTetrahedra = simplices_.size();
+    unsigned long nDestTetrahedra = other.simplices_.size();
     unsigned long nComponents = components_.size();
     unsigned i;
 
@@ -254,7 +254,7 @@ unsigned long NTriangulation::findIsomorphisms(
             // 2) The component sizes match precisely.
             while (startTet[comp] < nDestTetrahedra &&
                     (whichComp[startTet[comp]] >= 0 ||
-                     other.tetrahedra_[startTet[comp]]->getComponent()->
+                     other.simplices_[startTet[comp]]->getComponent()->
                      getNumberOfTetrahedra() != compSize))
                 startTet[comp]++;
         } else {
@@ -264,7 +264,7 @@ unsigned long NTriangulation::findIsomorphisms(
             // the source component.
             while (startTet[comp] < nDestTetrahedra &&
                     (whichComp[startTet[comp]] >= 0 ||
-                     other.tetrahedra_[startTet[comp]]->getComponent()->
+                     other.simplices_[startTet[comp]]->getComponent()->
                      getNumberOfTetrahedra() < compSize))
                 startTet[comp]++;
         }
@@ -307,10 +307,10 @@ unsigned long NTriangulation::findIsomorphisms(
         while ((! broken) && (! toProcess.empty())) {
             tetIndex = toProcess.front();
             toProcess.pop();
-            tet = tetrahedra_[tetIndex];
+            tet = simplices_[tetIndex];
             tetPerm = iso.facePerm(tetIndex);
             destTetIndex = iso.tetImage(tetIndex);
-            destTet = other.tetrahedra_[destTetIndex];
+            destTet = other.simplices_[destTetIndex];
 
             // If we are after a complete isomorphism, we might as well
             // test whether the edge and vertex degrees match.

@@ -534,18 +534,6 @@ class REGINA_API DegreeGreaterThan {
 
 // Inline functions:
 
-template <int dim>
-inline bool NGenericTriangulation<dim>::isEmpty() const {
-    return (static_cast<const typename DimTraits<dim>::Triangulation*>(this)->
-        getNumberOfSimplices() == 0);
-}
-
-template <int dim>
-inline unsigned long NGenericTriangulation<dim>::size() const {
-    return static_cast<const typename DimTraits<dim>::Triangulation*>(this)->
-        getNumberOfSimplices();
-}
-
 template <int dim, int subdim>
 inline DegreeLessThan<dim, subdim>::DegreeLessThan(
         const typename DimTraits<dim>::Triangulation& tri) : tri_(tri) {

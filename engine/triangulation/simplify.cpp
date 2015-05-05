@@ -1178,7 +1178,7 @@ void NTriangulation::reorderTetrahedraBFS(bool reverse) {
             while (used[nextTet])
                 ++nextTet;
 
-            ordered[filled++] = tetrahedra_[nextTet];
+            ordered[filled++] = simplices_[nextTet];
             used[nextTet] = true;
             ++nextTet;
         }
@@ -1198,15 +1198,15 @@ void NTriangulation::reorderTetrahedraBFS(bool reverse) {
 
     // Flush the tetrahedra from the triangulation, and reinsert them in
     // the order in which they were found during the breadth-first search.
-    tetrahedra_.clear();
+    simplices_.clear();
 
     unsigned long j;
     if (reverse) {
         for (j = n; j > 0; )
-            tetrahedra_.push_back(ordered[--j]);
+            simplices_.push_back(ordered[--j]);
     } else {
         for (j = 0; j < n; )
-            tetrahedra_.push_back(ordered[j++]);
+            simplices_.push_back(ordered[j++]);
     }
 
     delete[] used;

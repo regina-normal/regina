@@ -49,7 +49,9 @@ namespace regina {
 class NAbelianGroup;
 class NComponent;
 class NManifold;
-class NTriangulation;
+
+template <int> class Triangulation;
+typedef Triangulation<3> NTriangulation;
 
 /**
  * \addtogroup subcomplex Standard Triangulations and Subcomplexes

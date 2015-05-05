@@ -37,36 +37,6 @@
 namespace regina {
 
 template <int dim>
-bool NGenericTriangulation<dim>::isIdenticalTo(
-        const typename DimTraits<dim>::Triangulation& other) const {
-    const typename DimTraits<dim>::Triangulation& me(
-        static_cast<const typename DimTraits<dim>::Triangulation&>(*this));
-    if (me.getNumberOfSimplices() != other.getNumberOfSimplices())
-        return false;
-
-    unsigned long i;
-    unsigned j;
-    for (i = 0; i < me.getNumberOfSimplices(); ++i)
-        for (j = 0; j <= dim; ++j) {
-            if (me.getSimplex(i)->adjacentSimplex(j)) {
-                if (! other.getSimplex(i)->adjacentSimplex(j))
-                    return false;
-                if (me.getSimplex(i)->adjacentSimplex(j)->markedIndex() !=
-                        other.getSimplex(i)->adjacentSimplex(j)->markedIndex())
-                    return false;
-                if (me.getSimplex(i)->adjacentGluing(j) !=
-                        other.getSimplex(i)->adjacentGluing(j))
-                    return false;
-            } else {
-                if (other.getSimplex(i)->adjacentSimplex(j))
-                    return false;
-            }
-        }
-
-    return true;
-}
-
-template <int dim>
 inline std::auto_ptr<Isomorphism<dim>>
         NGenericTriangulation<dim>::isIsomorphicTo(
         const typename DimTraits<dim>::Triangulation& other) const {

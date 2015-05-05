@@ -48,12 +48,13 @@
 namespace regina {
 
 class NMatrix2;
-class NTriangulation;
 
 template <int> class Isomorphism;
 template <int> class Simplex;
+template <int> class Triangulation;
 typedef Isomorphism<3> NIsomorphism;
 typedef Simplex<3> NTetrahedron;
+typedef Triangulation<3> NTriangulation;
 
 /**
  * \weakgroup subcomplex

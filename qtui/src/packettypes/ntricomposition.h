@@ -57,8 +57,9 @@ namespace regina {
     class NPacket;
     class NSatRegion;
     class NStandardTriangulation;
-    class NTriangulation;
     template <int> class Isomorphism;
+    template <int> class Triangulation;
+    typedef Triangulation<3> NTriangulation;
 };
 
 /**

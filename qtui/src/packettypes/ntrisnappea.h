@@ -48,7 +48,8 @@ class QStackedWidget;
 namespace regina {
     class NPacket;
     class NSnapPeaTriangulation;
-    class NTriangulation;
+    template <int> class Triangulation;
+    typedef Triangulation<3> NTriangulation;
 };
 
 /**

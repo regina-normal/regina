@@ -45,7 +45,7 @@ namespace regina {
 
 template <int dim>
 NTreeDecomposition::NTreeDecomposition(
-        const NGenericTriangulation<dim>& triangulation,
+        const Triangulation<dim>& triangulation,
         TreeDecompositionAlg alg) :
         width_(0), root_(0) {
     Graph g(triangulation.size());

@@ -52,11 +52,12 @@ namespace regina {
 
 class NBoundaryComponent;
 class NComponent;
-class NTriangulation;
 class NVertex;
 
 template <int> class Simplex;
+template <int> class Triangulation;
 typedef Simplex<3> NTetrahedron;
+typedef Triangulation<3> NTriangulation;
 
 /**
  * \weakgroup triangulation
@@ -421,7 +422,7 @@ class REGINA_API NEdge : public ShareableObject, public NMarkedElement {
          */
         NEdge(NComponent* myComponent);
 
-    friend class NTriangulation;
+    friend class Triangulation<3>;
         /**< Allow access to private members. */
 };
 

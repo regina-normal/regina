@@ -38,7 +38,7 @@
 namespace regina {
 
 void NTriangulation::makeDoubleCover() {
-    unsigned long sheetSize = tetrahedra_.size();
+    unsigned long sheetSize = simplices_.size();
     if (sheetSize == 0)
         return;
 
@@ -48,10 +48,10 @@ void NTriangulation::makeDoubleCover() {
     NTetrahedron** upper = new NTetrahedron*[sheetSize];
     unsigned long i;
     for (i = 0; i < sheetSize; i++)
-        upper[i] = newTetrahedron(tetrahedra_[i]->getDescription());
+        upper[i] = newTetrahedron(simplices_[i]->getDescription());
 
     // Reset each tetrahedron orientation.
-    TetrahedronIterator tit = tetrahedra_.begin();
+    TetrahedronIterator tit = simplices_.begin();
     for (i = 0; i < sheetSize; i++) {
         (*tit++)->tetOrientation_ = 0;
         upper[i]->tetOrientation_ = 0;
@@ -73,13 +73,13 @@ void NTriangulation::makeDoubleCover() {
             // We've found a new component.
             // Completely recreate the gluings for this component.
             upper[i]->tetOrientation_ = 1;
-            tetrahedra_[i]->tetOrientation_ = -1;
+            simplices_[i]->tetOrientation_ = -1;
             tetQueue.push(i);
 
             while (! tetQueue.empty()) {
                 upperTet = tetQueue.front();
                 tetQueue.pop();
-                lowerTet = tetrahedra_[upperTet];
+                lowerTet = simplices_[upperTet];
 
                 for (face = 0; face < 4; face++) {
                     lowerAdj = lowerTet->adjacentTetrahedron(face);

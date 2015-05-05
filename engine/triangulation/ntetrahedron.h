@@ -53,7 +53,9 @@ class NTriangle;
 class NEdge;
 class NVertex;
 class NComponent;
-class NTriangulation;
+
+template <int> class Triangulation;
+typedef Triangulation<3> NTriangulation;
 
 /**
  * \weakgroup triangulation
@@ -377,7 +379,8 @@ class REGINA_API Simplex<3> : public SimplexBase<3> {
          */
         Simplex(const std::string& desc, NTriangulation* tri);
 
-    friend class NTriangulation;
+    friend class Triangulation<3>;
+    friend class TriangulationBase<3>;
         /**< Allow access to private members. */
 };
 

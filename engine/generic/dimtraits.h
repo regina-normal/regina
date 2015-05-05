@@ -111,13 +111,12 @@ struct DimTraits<2> {
 
 class NEdge;
 class NTriangle;
-class NTriangulation;
 class NFacePairing;
 class NVertex;
 
 template <>
 struct DimTraits<3> {
-    typedef NTriangulation Triangulation;
+    typedef Triangulation<3> Triangulation;
     typedef NFacePairing FacetPairing;
 };
 

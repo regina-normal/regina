@@ -42,7 +42,7 @@ namespace regina {
 bool NTriangulation::knowsStrictAngleStructure() const {
     // There are some simple cases for which we can deduce the answer
     // automatically.
-    if (tetrahedra_.empty()) {
+    if (simplices_.empty()) {
         strictAngleStructure_ = 0;
         return true;
     }
@@ -50,7 +50,7 @@ bool NTriangulation::knowsStrictAngleStructure() const {
     if (! hasBoundaryTriangles()) {
         // It is easy to prove that, if an angle structure exists,
         // then we must have #edges = #tetrahedra.
-        if (edges_.size() != tetrahedra_.size()) {
+        if (edges_.size() != simplices_.size()) {
             strictAngleStructure_ = 0;
             return true;
         }
@@ -82,7 +82,7 @@ const NAngleStructure* NTriangulation::findStrictAngleStructure() const {
         return (strictAngleStructure_ = 0);
 
     // We have a strict angle structure: reconstruct it.
-    unsigned long len = 3 * tetrahedra_.size() + 1;
+    unsigned long len = 3 * simplices_.size() + 1;
     NAngleStructureVector* v = new NAngleStructureVector(len);
     lp.extractSolution(*v, 0 /* type vector */);
     return (strictAngleStructure_ = new NAngleStructure(this, v));

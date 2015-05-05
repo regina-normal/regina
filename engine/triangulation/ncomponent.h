@@ -54,7 +54,9 @@ class NVertex;
 class NBoundaryComponent;
 
 template <int> class Simplex;
+template <int> class Triangulation;
 typedef Simplex<3> NTetrahedron;
+typedef Triangulation<3> NTriangulation;
 
 /**
  * \weakgroup triangulation
@@ -291,7 +293,7 @@ class REGINA_API NComponent : public ShareableObject, public NMarkedElement {
          */
         NComponent();
 
-    friend class NTriangulation;
+    friend class Triangulation<3>;
         /**< Allow access to private members. */
 };
 

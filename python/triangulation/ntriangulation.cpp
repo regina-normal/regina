@@ -41,6 +41,7 @@
 
 using namespace boost::python;
 using regina::NTriangulation;
+using regina::Triangulation;
 
 namespace {
     regina::NTetrahedron* (NTriangulation::*newTetrahedron_void)() =
@@ -187,6 +188,7 @@ namespace {
 }
 
 void addNTriangulation() {
+    {
     scope global;
 
     enum_<regina::TuraevViroAlg>("TuraevViroAlg")
@@ -201,9 +203,9 @@ void addNTriangulation() {
     global.attr("TV_TREEWIDTH") = regina::TV_TREEWIDTH;
     global.attr("TV_NAIVE") = regina::TV_NAIVE;
 
-    scope s = class_<NTriangulation, bases<regina::NPacket>,
-            std::auto_ptr<NTriangulation>,
-            boost::noncopyable>("NTriangulation")
+    scope s = class_<Triangulation<3>, bases<regina::NPacket>,
+            std::auto_ptr<Triangulation<3>>,
+            boost::noncopyable>("Triangulation3")
         .def(init<const NTriangulation&>())
         .def(init<const std::string&>())
         .def("getNumberOfTetrahedra", &NTriangulation::getNumberOfTetrahedra)
@@ -411,5 +413,9 @@ void addNTriangulation() {
 
     implicitly_convertible<std::auto_ptr<NTriangulation>,
         std::auto_ptr<regina::NPacket> >();
+
+    }
+
+    scope().attr("NTriangulation") = scope().attr("Triangulation3");
 }
 

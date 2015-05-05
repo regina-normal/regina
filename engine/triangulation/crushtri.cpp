@@ -149,7 +149,7 @@ void NTriangulation::maximalForestInDualSkeleton(std::set<NTriangle*>& triSet)
 
     triSet.clear();
     std::set<NTetrahedron*> visited;
-    for (TetrahedronIterator it = tetrahedra_.begin(); it != tetrahedra_.end();
+    for (TetrahedronIterator it = simplices_.begin(); it != simplices_.end();
             it++)
         if (! (visited.count(*it)))
             stretchDualForestFromTet(*it, triSet, visited);
