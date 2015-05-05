@@ -53,6 +53,7 @@
 namespace regina {
 
 template <int dim> class Simplex;
+template <int dim> class Triangulation;
 template <int dim> class TriangulationBase;
 
 /**
@@ -99,7 +100,7 @@ class REGINA_API SimplexBase :
             /**< The description of this simplex, or the empty string
                  if there is no description. */
 
-        typename DimTraits<dim>::Triangulation* tri_;
+        Triangulation<dim>* tri_;
             /**< The triangulation to which this simplex belongs. */
 
     public:
@@ -282,7 +283,7 @@ class REGINA_API SimplexBase :
          *
          * @return the triangulation containing this simplex.
          */
-        typename DimTraits<dim>::Triangulation* getTriangulation() const;
+        Triangulation<dim>* getTriangulation() const;
 
         /**
          * Writes a short text representation of this object to the
@@ -311,7 +312,7 @@ class REGINA_API SimplexBase :
          *
          * @param tri the triangulation to which the new simplex belongs.
          */
-        SimplexBase(typename DimTraits<dim>::Triangulation* tri);
+        SimplexBase(Triangulation<dim>* tri);
         /**
          * Creates a new simplex with the given description and no facets
          * joined to anything.
@@ -319,11 +320,10 @@ class REGINA_API SimplexBase :
          * @param desc the description to give the new simplex.
          * @param tri the triangulation to which the new simplex belongs.
          */
-        SimplexBase(const std::string& desc,
-            typename DimTraits<dim>::Triangulation* tri);
+        SimplexBase(const std::string& desc, Triangulation<dim>* tri);
 
     friend class TriangulationBase<dim>;
-    friend typename DimTraits<dim>::Triangulation;
+    friend class Triangulation<dim>;
 };
 
 /**
@@ -371,7 +371,7 @@ class REGINA_API Simplex : public SimplexBase<dim> {
          *
          * @param tri the triangulation to which the new simplex belongs.
          */
-        Simplex(typename DimTraits<dim>::Triangulation* tri);
+        Simplex(Triangulation<dim>* tri);
         /**
          * Creates a new simplex with the given description and no facets
          * joined to anything.
@@ -379,8 +379,7 @@ class REGINA_API Simplex : public SimplexBase<dim> {
          * @param desc the description to give the new simplex.
          * @param tri the triangulation to which the new simplex belongs.
          */
-        Simplex(const std::string& desc,
-            typename DimTraits<dim>::Triangulation* tri);
+        Simplex(const std::string& desc, Triangulation<dim>* tri);
 
     friend class Triangulation<dim>;
     friend class TriangulationBase<dim>;
@@ -396,15 +395,14 @@ template <> class Simplex<3>;
 // Inline functions for SimplexBase
 
 template <int dim>
-inline SimplexBase<dim>::SimplexBase(
-        typename DimTraits<dim>::Triangulation* tri) : tri_(tri) {
+inline SimplexBase<dim>::SimplexBase(Triangulation<dim>* tri) : tri_(tri) {
     for (int i = 0; i <= dim; ++i)
         adj_[i] = 0;
 }
 
 template <int dim>
 inline SimplexBase<dim>::SimplexBase(const std::string& desc,
-        typename DimTraits<dim>::Triangulation* tri) :
+        Triangulation<dim>* tri) :
         description_(desc), tri_(tri) {
     for (int i = 0; i <= dim; ++i)
         adj_[i] = 0;
@@ -417,7 +415,7 @@ inline const std::string& SimplexBase<dim>::getDescription() const {
 
 template <int dim>
 inline void SimplexBase<dim>::setDescription(const std::string& desc) {
-    ChangeEventSpan<typename DimTraits<dim>::Triangulation> span(tri_);
+    ChangeEventSpan<Triangulation<dim>> span(tri_);
     description_ = desc;
 }
 
@@ -442,8 +440,7 @@ inline NPerm<dim+1> SimplexBase<dim>::adjacentGluing(int face) const {
 }
 
 template <int dim>
-inline typename DimTraits<dim>::Triangulation*
-        SimplexBase<dim>::getTriangulation() const {
+inline Triangulation<dim>* SimplexBase<dim>::getTriangulation() const {
     return tri_;
 }
 
@@ -474,7 +471,7 @@ Simplex<dim>* SimplexBase<dim>::unjoin(int myFacet) {
     if (! adj_[myFacet])
         return 0;
 
-    ChangeEventSpan<typename DimTraits<dim>::Triangulation> span(tri_);
+    ChangeEventSpan<Triangulation<dim>> span(tri_);
 
     Simplex<dim>* you = adj_[myFacet];
     int yourFacet = gluing_[myFacet][myFacet];
@@ -489,7 +486,7 @@ Simplex<dim>* SimplexBase<dim>::unjoin(int myFacet) {
 template <int dim>
 void SimplexBase<dim>::join(int myFacet, Simplex<dim>* you,
         NPerm<dim+1> gluing) {
-    ChangeEventSpan<typename DimTraits<dim>::Triangulation> span(tri_);
+    ChangeEventSpan<Triangulation<dim>> span(tri_);
 
     assert(tri_ == you->tri_);
     assert((! adj_[myFacet]) ||
@@ -540,13 +537,13 @@ void SimplexBase<dim>::writeTextLong(std::ostream& out) const {
 // Inline functions for Simplex
 
 template <int dim>
-inline Simplex<dim>::Simplex(typename DimTraits<dim>::Triangulation* tri) :
+inline Simplex<dim>::Simplex(Triangulation<dim>* tri) :
         SimplexBase<dim>(tri) {
 }
 
 template <int dim>
 inline Simplex<dim>::Simplex(const std::string& desc,
-        typename DimTraits<dim>::Triangulation* tri) :
+        Triangulation<dim>* tri) :
         SimplexBase<dim>(desc, tri) {
 }
 

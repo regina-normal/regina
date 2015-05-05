@@ -52,8 +52,7 @@ NGenericFacetPairing<dim>::NGenericFacetPairing(
 }
 
 template <int dim>
-NGenericFacetPairing<dim>::NGenericFacetPairing(
-        const typename NGenericFacetPairing<dim>::Triangulation& tri) :
+NGenericFacetPairing<dim>::NGenericFacetPairing(const Triangulation<dim>& tri) :
         size_(tri.getNumberOfSimplices()),
         pairs_(new NFacetSpec<dim>[tri.getNumberOfSimplices() * (dim + 1)]) {
     unsigned p, f, index;

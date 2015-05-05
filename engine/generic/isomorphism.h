@@ -52,8 +52,8 @@
 
 namespace regina {
 
-template <int dim>
-class Isomorphism;
+template <int dim> class Isomorphism;
+template <int dim> class Triangulation;
 
 /**
  * \weakgroup generic
@@ -251,8 +251,7 @@ class REGINA_API IsomorphismBase :
          * @return the new isomorphic triangulation, or 0 if a problem
          * was encountered (i.e., an unmet precondition was noticed).
          */
-        typename DimTraits<dim>::Triangulation* apply(
-            const typename DimTraits<dim>::Triangulation* original) const;
+        Triangulation<dim>* apply(const Triangulation<dim>* original) const;
 
         /**
          * Applies this isomorphism to the given triangulation,
@@ -280,7 +279,7 @@ class REGINA_API IsomorphismBase :
          * @param tri the triangulation to which this isomorphism
          * should be applied.
          */
-        void applyInPlace(typename DimTraits<dim>::Triangulation* tri) const;
+        void applyInPlace(Triangulation<dim>* tri) const;
 
         /**
          * Writes a short text representation of this object to the
@@ -494,21 +493,20 @@ bool IsomorphismBase<dim>::isIdentity() const {
 }
 
 template <int dim>
-typename DimTraits<dim>::Triangulation* IsomorphismBase<dim>::apply(
-        const typename DimTraits<dim>::Triangulation* original) const {
+Triangulation<dim>* IsomorphismBase<dim>::apply(
+        const Triangulation<dim>* original) const {
     if (original->getNumberOfSimplices() != nSimplices_)
         return 0;
 
     if (nSimplices_ == 0)
-        return new typename DimTraits<dim>::Triangulation();
+        return new Triangulation<dim>();
 
-    typename DimTraits<dim>::Triangulation* ans =
-        new typename DimTraits<dim>::Triangulation();
+    Triangulation<dim>* ans = new Triangulation<dim>();
     Simplex<dim>** tet = new Simplex<dim>*[nSimplices_];
     unsigned long t;
     int f;
 
-    ChangeEventSpan<typename DimTraits<dim>::Triangulation> span(ans);
+    ChangeEventSpan<Triangulation<dim>> span(ans);
     for (t = 0; t < nSimplices_; t++)
         tet[t] = ans->newSimplex();
 
@@ -542,15 +540,14 @@ typename DimTraits<dim>::Triangulation* IsomorphismBase<dim>::apply(
 }
 
 template <int dim>
-void IsomorphismBase<dim>::applyInPlace(
-        typename DimTraits<dim>::Triangulation* tri) const {
+void IsomorphismBase<dim>::applyInPlace(Triangulation<dim>* tri) const {
     if (tri->getNumberOfSimplices() != nSimplices_)
         return;
 
     if (nSimplices_ == 0)
         return;
 
-    typename DimTraits<dim>::Triangulation* staging = apply(tri);
+    Triangulation<dim>* staging = apply(tri);
     tri->swapContents(*staging);
     delete staging;
 }

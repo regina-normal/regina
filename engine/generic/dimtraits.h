@@ -47,7 +47,6 @@
 namespace regina {
 
 template <int n> class Simplex;
-template <int n> class Triangulation;
 
 /**
  * \addtogroup generic Generic code
@@ -66,8 +65,6 @@ template <int n> class Triangulation;
  */
 template <int dim>
 struct DimTraits {
-    typedef Triangulation<dim> Triangulation;
-        /**< The main data type for a <i>dim</i>-manifold triangulation. */
     typedef void FacetPairing;
         /**< The data type that represents a pairing of facets of
              top-dimensional simplices in a <i>dim</i>-manifold
@@ -105,7 +102,6 @@ class Dim2Vertex;
 
 template <>
 struct DimTraits<2> {
-    typedef Triangulation<2> Triangulation;
     typedef Dim2EdgePairing FacetPairing;
 };
 
@@ -116,7 +112,6 @@ class NVertex;
 
 template <>
 struct DimTraits<3> {
-    typedef Triangulation<3> Triangulation;
     typedef NFacePairing FacetPairing;
 };
 

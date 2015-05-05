@@ -53,8 +53,7 @@ NTreeDecomposition::NTreeDecomposition(
     int i, j;
     const Simplex<dim>* simp;
     for (i = 0; i < g.order_; ++i) {
-        simp = static_cast<const typename DimTraits<dim>::Triangulation&>(
-            triangulation).getSimplex(i);
+        simp = triangulation.getSimplex(i);
         for (j = 0; j <= dim; ++j)
             if (simp->adjacentSimplex(j))
                 g.adj_[i][simp->adjacentSimplex(j)->index()] = true;

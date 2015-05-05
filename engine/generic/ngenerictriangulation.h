@@ -51,6 +51,7 @@
 namespace regina {
 
 template <int> class Isomorphism;
+template <int> class Triangulation;
 
 /**
  * \weakgroup generic
@@ -76,10 +77,7 @@ template <int> class Isomorphism;
  * Regina supports.
  */
 template <int dim>
-class REGINA_API NGenericTriangulation : public DimTraits<dim> {
-    public:
-        using typename DimTraits<dim>::Triangulation;
-
+class REGINA_API NGenericTriangulation {
     public:
         /**
          * \name Isomorphism Testing
@@ -127,7 +125,7 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * are combinatorially isomorphic, or a null pointer otherwise.
          */
         std::auto_ptr<Isomorphism<dim>> isIsomorphicTo(
-            const typename DimTraits<dim>::Triangulation& other) const;
+            const Triangulation<dim>& other) const;
 
         /**
          * Determines if an isomorphic copy of this triangulation is
@@ -164,7 +162,7 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * or a null pointer otherwise.
          */
         std::auto_ptr<Isomorphism<dim>> isContainedIn(
-            const typename DimTraits<dim>::Triangulation& other) const;
+            const Triangulation<dim>& other) const;
 
         /**
          * Finds all ways in which this triangulation is combinatorially
@@ -189,8 +187,7 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * be stored.
          * @return the number of isomorphisms that were found.
          */
-        unsigned long findAllIsomorphisms(
-            const typename DimTraits<dim>::Triangulation& other,
+        unsigned long findAllIsomorphisms(const Triangulation<dim>& other,
             std::list<Isomorphism<dim>*>& results) const;
 
         /**
@@ -219,8 +216,7 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * be stored.
          * @return the number of isomorphisms that were found.
          */
-        unsigned long findAllSubcomplexesIn(
-            const typename DimTraits<dim>::Triangulation& other,
+        unsigned long findAllSubcomplexesIn(const Triangulation<dim>& other,
             std::list<Isomorphism<dim>*>& results) const;
 
         /**
@@ -359,8 +355,7 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * successful, or null if the given string was not a valid
          * isomorphism signature.
          */
-        static typename DimTraits<dim>::Triangulation* fromIsoSig(
-            const std::string& sig);
+        static Triangulation<dim>* fromIsoSig(const std::string& sig);
 
         /**
          * Deduces the number of top-dimensional simplices in a
@@ -424,7 +419,7 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * @return the candidate isomorphism signature.
          */
         static std::string isoSigFrom(
-            const typename DimTraits<dim>::Triangulation& tri,
+            const Triangulation<dim>& tri,
             unsigned simp,
             const NPerm<dim+1>& vertices,
             Isomorphism<dim>* relabelling);
@@ -449,7 +444,7 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
 template <int dim, int subdim>
 class REGINA_API DegreeLessThan {
     private:
-        const typename DimTraits<dim>::Triangulation& tri_;
+        const Triangulation<dim>& tri_;
             /**< The triangulation with which we are working. */
 
     public:
@@ -459,7 +454,7 @@ class REGINA_API DegreeLessThan {
          *
          * @param tri the triangulation with which we are working.
          */
-        DegreeLessThan(const typename DimTraits<dim>::Triangulation& tri);
+        DegreeLessThan(const Triangulation<dim>& tri);
         /**
          * Compares the degrees of the \a subdim-dimensional faces
          * at the given indices within the working triangulation.
@@ -499,7 +494,7 @@ class REGINA_API DegreeLessThan {
 template <int dim, int subdim>
 class REGINA_API DegreeGreaterThan {
     private:
-        const typename DimTraits<dim>::Triangulation& tri_;
+        const Triangulation<dim>& tri_;
             /**< The triangulation with which we are working. */
 
     public:
@@ -509,7 +504,7 @@ class REGINA_API DegreeGreaterThan {
          *
          * @param tri the triangulation with which we are working.
          */
-        DegreeGreaterThan(const typename DimTraits<dim>::Triangulation& tri);
+        DegreeGreaterThan(const Triangulation<dim>& tri);
         /**
          * Compares the degrees of the \a subdim-dimensional faces
          * at the given indices within the working triangulation.
@@ -536,7 +531,7 @@ class REGINA_API DegreeGreaterThan {
 
 template <int dim, int subdim>
 inline DegreeLessThan<dim, subdim>::DegreeLessThan(
-        const typename DimTraits<dim>::Triangulation& tri) : tri_(tri) {
+        const Triangulation<dim>& tri) : tri_(tri) {
 }
 
 template <int dim, int subdim>
@@ -548,7 +543,7 @@ inline bool DegreeLessThan<dim, subdim>::operator () (
 
 template <int dim, int subdim>
 inline DegreeGreaterThan<dim, subdim>::DegreeGreaterThan(
-        const typename DimTraits<dim>::Triangulation& tri) : tri_(tri) {
+        const Triangulation<dim>& tri) : tri_(tri) {
 }
 
 template <int dim, int subdim>

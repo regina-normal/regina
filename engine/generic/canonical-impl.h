@@ -55,7 +55,7 @@ namespace {
      */
     template <int dim>
     bool extendIsomorphism(
-            const typename DimTraits<dim>::Triangulation* tri,
+            const Triangulation<dim>* tri,
             Isomorphism<dim>& current,
             Isomorphism<dim>& currentInv,
             const Isomorphism<dim>& best,
@@ -169,8 +169,7 @@ namespace {
 
 template <int dim>
 bool NGenericTriangulation<dim>::makeCanonical() {
-    typename DimTraits<dim>::Triangulation* me =
-        static_cast<typename DimTraits<dim>::Triangulation*>(this);
+    Triangulation<dim>* me = static_cast<Triangulation<dim>*>(this);
 
     unsigned nSimp = me->getNumberOfSimplices();
 

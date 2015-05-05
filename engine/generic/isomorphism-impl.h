@@ -39,9 +39,9 @@ namespace regina {
 template <int dim>
 inline std::auto_ptr<Isomorphism<dim>>
         NGenericTriangulation<dim>::isIsomorphicTo(
-        const typename DimTraits<dim>::Triangulation& other) const {
+        const Triangulation<dim>& other) const {
     std::list<Isomorphism<dim>*> results;
-    if (static_cast<const typename DimTraits<dim>::Triangulation&>(*this).
+    if (static_cast<const Triangulation<dim>&>(*this).
             findIsomorphisms(other, results, true, true))
         return std::auto_ptr<Isomorphism<dim>>(results.front());
     else
@@ -51,9 +51,9 @@ inline std::auto_ptr<Isomorphism<dim>>
 template <int dim>
 inline std::auto_ptr<Isomorphism<dim>>
         NGenericTriangulation<dim>::isContainedIn(
-        const typename DimTraits<dim>::Triangulation& other) const {
+        const Triangulation<dim>& other) const {
     std::list<Isomorphism<dim>*> results;
-    if (static_cast<const typename DimTraits<dim>::Triangulation&>(*this).
+    if (static_cast<const Triangulation<dim>&>(*this).
             findIsomorphisms(other, results, false, true))
         return std::auto_ptr<Isomorphism<dim>>(results.front());
     else
@@ -62,17 +62,17 @@ inline std::auto_ptr<Isomorphism<dim>>
 
 template <int dim>
 inline unsigned long NGenericTriangulation<dim>::findAllIsomorphisms(
-        const typename DimTraits<dim>::Triangulation& other,
+        const Triangulation<dim>& other,
         std::list<Isomorphism<dim>*>& results) const {
-    return static_cast<const typename DimTraits<dim>::Triangulation&>(*this).
+    return static_cast<const Triangulation<dim>&>(*this).
         findIsomorphisms(other, results, true, false);
 }
 
 template <int dim>
 inline unsigned long NGenericTriangulation<dim>::findAllSubcomplexesIn(
-        const typename DimTraits<dim>::Triangulation& other,
+        const Triangulation<dim>& other,
         std::list<Isomorphism<dim>*>& results) const {
-    return static_cast<const typename DimTraits<dim>::Triangulation&>(*this).
+    return static_cast<const Triangulation<dim>&>(*this).
         findIsomorphisms(other, results, false, false);
 }
 

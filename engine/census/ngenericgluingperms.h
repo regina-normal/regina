@@ -83,7 +83,6 @@ template <int dim>
 class REGINA_API NGenericGluingPerms {
     public:
         typedef typename DimTraits<dim>::FacetPairing FacetPairing;
-        typedef typename DimTraits<dim>::Triangulation Triangulation;
     protected:
         const FacetPairing* pairing_;
             /**< The facet pairing that this permutation set complements.
@@ -210,7 +209,7 @@ class REGINA_API NGenericGluingPerms {
          *
          * @return a newly created triangulation modelled by this structure.
          */
-        Triangulation* triangulate() const;
+        Triangulation<dim>* triangulate() const;
 
         /**
          * Dumps all internal data in a plain text format to the given

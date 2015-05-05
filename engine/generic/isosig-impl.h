@@ -149,7 +149,7 @@ namespace {
 
 template <int dim>
 std::string NGenericTriangulation<dim>::isoSigFrom(
-        const typename DimTraits<dim>::Triangulation& tri,
+        const Triangulation<dim>& tri,
         unsigned simp,
         const NPerm<dim+1>& vertices,
         Isomorphism<dim>* relabelling) {
@@ -334,11 +334,8 @@ std::string NGenericTriangulation<dim>::isoSigFrom(
 template <int dim>
 std::string NGenericTriangulation<dim>::isoSig(
         Isomorphism<dim>** relabelling) const {
-    // These typedefs are already present in the class declaration,
-    // but gcc 4.7.3 seems to break unless we include them here also.
-    typedef typename DimTraits<dim>::Triangulation Triangulation;
-
-    const Triangulation& tri(static_cast<const Triangulation&>(*this));
+    const Triangulation<dim>& tri(
+        static_cast<const Triangulation<dim>&>(*this));
 
     // Make sure the user is not trying to do something illegal.
     if (relabelling && tri.getNumberOfComponents() != 1) {
@@ -362,7 +359,7 @@ std::string NGenericTriangulation<dim>::isoSig(
     // The triangulation is non-empty.  Get a signature string for each
     // connected component.
     unsigned i;
-    typename Triangulation::ComponentIterator it;
+    typename Triangulation<dim>::ComponentIterator it;
     unsigned cSimp;
     unsigned simp, perm;
     std::string curr;
@@ -397,13 +394,9 @@ std::string NGenericTriangulation<dim>::isoSig(
 }
 
 template <int dim>
-typename DimTraits<dim>::Triangulation*
-        NGenericTriangulation<dim>::fromIsoSig(const std::string& sig) {
-    // These typedefs are already present in the class declaration,
-    // but gcc 4.4 seems to break unless we include them here also.
-    typedef typename DimTraits<dim>::Triangulation Triangulation;
-
-    std::auto_ptr<Triangulation> ans(new Triangulation());
+Triangulation<dim>* NGenericTriangulation<dim>::fromIsoSig(
+        const std::string& sig) {
+    std::auto_ptr<Triangulation<dim>> ans(new Triangulation<dim>());
 
     NPacket::ChangeEventSpan span(ans.get());
 

@@ -53,11 +53,10 @@ NGenericGluingPerms<dim>::NGenericGluingPerms(
 }
 
 template <int dim>
-typename NGenericGluingPerms<dim>::Triangulation*
-        NGenericGluingPerms<dim>::triangulate() const {
+Triangulation<dim>* NGenericGluingPerms<dim>::triangulate() const {
     unsigned nSimp = size();
 
-    Triangulation* ans = new Triangulation;
+    Triangulation<dim>* ans = new Triangulation<dim>;
     Simplex<dim>** simp = new Simplex<dim>*[nSimp];
 
     unsigned t, facet;
