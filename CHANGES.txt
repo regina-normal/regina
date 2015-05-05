@@ -171,7 +171,7 @@ Version 4.97  [ (under development) ]
         - Puncturing a triangulation, making it ideal or truncating ideal
           vertices now automatically simplify the resulting triangulation.
     PYTHON:
-        - For many classes, writeTextShort() and writeTextLong() are no
+        - For all classes, writeTextShort() and writeTextLong() are no
           longer exposed to Python.  Simply use str() and detail() instead.
 
 Version 4.96  [ 29 August, 2014 ]
