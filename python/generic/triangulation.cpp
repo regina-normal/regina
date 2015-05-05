@@ -96,8 +96,6 @@ void addTriangulation(const char* name) {
 }
 
 void addTriangulations() {
-    // boost::python::def("helper", regina::helper);
-
     addTriangulation<5>("Triangulation5");
 }
 

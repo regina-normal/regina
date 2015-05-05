@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "generic/isomorphism.h"
+#include "generic/triangulation.h"
 
 using namespace boost::python;
 using regina::Isomorphism;
@@ -41,11 +42,10 @@ using regina::Isomorphism;
 namespace {
     template <int dim>
     struct PyIsoHelper {
-        static int (Isomorphism<dim>::*simpImage_const)(unsigned) const =
-            &Isomorphism<dim>::simpImage;
+        typedef int (Isomorphism<dim>::*simpImage_const_type)(unsigned) const;
 
-        static regina::NPerm<dim+1> (Isomorphism<dim>::*facetPerm_const)(
-            unsigned) const = &Isomorphism<dim>::facetPerm;
+        typedef regina::NPerm<dim+1> (Isomorphism<dim>::*facetPerm_const_type)(
+            unsigned) const;
 
         static regina::NFacetSpec<dim> iso_getItem(const Isomorphism<dim>& iso,
                 const regina::NFacetSpec<dim>& f) {
@@ -60,8 +60,10 @@ void addIsomorphism(const char* name) {
             boost::noncopyable>(name, init<const Isomorphism<dim>&>())
         .def("size", &Isomorphism<dim>::size)
         .def("getSourceSimplices", &Isomorphism<dim>::getSourceSimplices)
-        .def("simpImage", PyIsoHelper<dim>::simpImage_const)
-        .def("facetPerm", PyIsoHelper<dim>::facetPerm_const)
+        .def("simpImage", typename PyIsoHelper<dim>::simpImage_const_type(
+            &Isomorphism<dim>::simpImage))
+        .def("facetPerm", typename PyIsoHelper<dim>::facetPerm_const_type(
+            &Isomorphism<dim>::facetPerm))
         .def("__getitem__", PyIsoHelper<dim>::iso_getItem)
         .def("isIdentity", &Isomorphism<dim>::isIdentity)
         .def("apply", &Isomorphism<dim>::apply,
@@ -82,8 +84,6 @@ void addIsomorphism(const char* name) {
 }
 
 void addIsomorphism() {
-    // boost::python::def("helper", regina::helper);
-
-    // addIsomorphism<4>("Isomorphism4");
+    addIsomorphism<5>("Isomorphism5");
 }
 

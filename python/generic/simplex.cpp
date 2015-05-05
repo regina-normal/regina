@@ -67,8 +67,6 @@ void addSimplex(const char* name) {
 }
 
 void addSimplex() {
-    // boost::python::def("helper", regina::helper);
-
     addSimplex<5>("Simplex5");
 }
 
