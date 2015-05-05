@@ -102,7 +102,8 @@ namespace {
      * The integer is broken into nChars distinct 6-bit blocks, and the
      * lowest-significance blocks are written first.
      */
-    void SAPPEND(std::string& s, unsigned val, unsigned nChars) {
+    template <typename IntType>
+    void SAPPEND(std::string& s, IntType val, unsigned nChars) {
         for ( ; nChars > 0; --nChars) {
             s += SCHAR(val & 0x3F);
             val >>= 6;
@@ -113,10 +114,11 @@ namespace {
      * Read the integer at the beginning of the given string.
      * Assumes the string has length >= nChars.
      */
-    unsigned SREAD(const char* s, unsigned nChars) {
-        unsigned ans = 0;
+    template <typename IntType>
+    IntType SREAD(const char* s, unsigned nChars) {
+        IntType ans = 0;
         for (unsigned i = 0; i < nChars; ++i)
-            ans += (SVAL(s[i]) << (6 * i));
+            ans |= (static_cast<IntType>(SVAL(s[i])) << (6 * i));
         return ans;
     }
 
@@ -421,7 +423,7 @@ Triangulation<dim>* NGenericTriangulation<dim>::fromIsoSig(
             nChars = SVAL(*c++);
             if (! SHASCHARS(c, nChars))
                 return 0;
-            nSimp = SREAD(c, nChars);
+            nSimp = SREAD<unsigned>(c, nChars);
             c += nChars;
         }
 
@@ -479,7 +481,7 @@ Triangulation<dim>* NGenericTriangulation<dim>::fromIsoSig(
                 return 0;
             }
 
-            joinDest[i] = SREAD(c, nChars);
+            joinDest[i] = SREAD<unsigned>(c, nChars);
             c += nChars;
         }
 
@@ -492,7 +494,7 @@ Triangulation<dim>* NGenericTriangulation<dim>::fromIsoSig(
                 return 0;
             }
 
-            joinGluing[i] = SREAD(c, CHARS_PER_PERM(dim));
+            joinGluing[i] = SREAD<unsigned>(c, CHARS_PER_PERM(dim));
             c += CHARS_PER_PERM(dim);
 
             if (joinGluing[i] >= NPerm<dim+1>::nPerms) {
@@ -580,7 +582,7 @@ size_t NGenericTriangulation<dim>::isoSigComponentSize(const std::string& sig) {
     for (const char* d = c; d < c + nChars; ++d)
         if (! SVALID(*d))
             return 0;
-    return SREAD(c, nChars);
+    return SREAD<unsigned>(c, nChars);
 }
 
 } // namespace regina
