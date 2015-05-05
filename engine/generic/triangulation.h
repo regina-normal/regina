@@ -1225,30 +1225,29 @@ void TriangulationBase<dim>::insertTriangulation(
         static_cast<Triangulation<dim>*>(this));
 
     size_t nOrig = getNumberOfSimplices();
-    size_t nSource = getNumberOfSimplices();
+    size_t nSource = source.getNumberOfSimplices();
 
-    // Each time we loop through simplices we must only make nSource
-    // iterations.  This ensures that the routine behaves correctly even
-    // if source is this triangulation.
-    SimplexIterator i = source.simplices_.begin();
-    size_t done = 0;
-    for ( ; done < nSource; ++i, ++done)
-        simplices_.push_back(new Simplex<dim>((*i)->getDescription(),
+    // To ensure that things work even if source is this triangulation:
+    // - we only make nSource iterations through each loop;
+    // - we avoid using iterators over source, which could be invalidated.
+
+    size_t i;
+    for (i = 0; i < nSource; ++i)
+        simplices_.push_back(new Simplex<dim>(
+            source.simplices_[i]->description_,
             static_cast<Triangulation<dim>*>(this)));
 
-    Simplex<dim>* s;
+    Simplex<dim> *me, *you;
     int f;
-
-    i = source.simplices_.begin();
-    done = 0;
-    for ( ; done < nSource; ++i, ++done) {
-        s = simplices_[nOrig + done];
+    for (i = 0; i < nSource; ++i) {
+        me = simplices_[nOrig + i];
+        you = source.simplices_[i];
         for (f = 0; f <= dim; ++f) {
-            if ((*i)->adj_[f]) {
-                s->adj_[f] = simplices_[nOrig + (*i)->adj_[f]->index()];
-                s->gluing_[f] = (*i)->gluing_[f];
+            if (you->adj_[f]) {
+                me->adj_[f] = simplices_[nOrig + you->adj_[f]->index()];
+                me->gluing_[f] = you->gluing_[f];
             } else
-                s->adj_[f] = 0;
+                me->adj_[f] = 0;
         }
     }
 
