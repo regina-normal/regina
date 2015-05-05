@@ -78,9 +78,7 @@ template <int> class Triangulation;
  * \tparam dim the dimension of the triangulation.  This must be at least 2.
  */
 template <int dim>
-class REGINA_API TriangulationBase :
-        public Output<TriangulationBase<dim>>,
-        public boost::noncopyable {
+class REGINA_API TriangulationBase : public boost::noncopyable {
     static_assert(dim >= 2, "Triangulation requires dimension >= 2.");
 
     public:
@@ -818,31 +816,6 @@ class REGINA_API TriangulationBase :
         static size_t isoSigComponentSize(const std::string& sig);
 #endif
         /*@}*/
-        /**
-         * \name Output
-         */
-        /*@{*/
-
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
-
-        /*@}*/
 
     private:
 #if 0
@@ -942,7 +915,12 @@ class REGINA_API TriangulationBase :
  * This must be at least 2.
  */
 template <int dim>
-class REGINA_API Triangulation : public TriangulationBase<dim> {
+class REGINA_API Triangulation :
+        public TriangulationBase<dim>,
+        public Output<Triangulation<dim>> {
+    protected:
+        using TriangulationBase<dim>::simplices_;
+
     public:
         /**
          * \name Constructors and Destructors
@@ -963,6 +941,32 @@ class REGINA_API Triangulation : public TriangulationBase<dim> {
         Triangulation(const Triangulation& copy);
 
         /*@}*/
+        /**
+         * \name Output
+         */
+        /*@{*/
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
+
+        /*@}*/
+
     private:
         /**
          * Clears any calculated properties and declares them all unknown.
@@ -1202,64 +1206,6 @@ bool TriangulationBase<dim>::isIdenticalTo(const Triangulation<dim>& other)
 }
 
 template <int dim>
-inline void TriangulationBase<dim>::writeTextShort(std::ostream& out) const {
-    if (simplices_.size() == 0)
-        out << "Empty " << dim << "-dimensional triangulation";
-    else
-        out << "Triangulation with " << simplices_.size() << ' ' << dim << '-'
-            << (simplices_.size() == 1 ? "simplex" : "simplices");
-}
-
-template <int dim>
-void TriangulationBase<dim>::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
-    out << "\n\n";
-
-    Simplex<dim>* simp;
-    Simplex<dim>* adj;
-    size_t pos;
-    int i, j;
-    NPerm<dim+1> gluing;
-
-    out << "  Simplex  |  glued to:";
-    for (i = dim; i >= 0; --i) {
-        out << "     (";
-        for (j = 0; j <= dim; ++j)
-            if (j != i)
-                out << regina::digit(j);
-        out << ')';
-    }
-    out << '\n';
-    out << "  ---------+-----------";
-    for (i = dim; i >= 0; --i)
-        for (j = 0; j < 7 + dim; ++j)
-            out << '-';
-    out << '\n';
-    for (pos=0; pos < simplices_.size(); pos++) {
-        simp = simplices_[pos];
-        out << "     " << std::setw(4) << pos << "  |           ";
-        for (i = dim; i >= 0; --i) {
-            adj = simp->adjacentSimplex(i);
-            if (! adj) {
-                for (j = 0; j < dim - 1; ++j)
-                    out << ' ';
-                out << "boundary";
-            } else {
-                gluing = simp->adjacentGluing(i);
-                out << std::setw(4) << adj->markedIndex() << " (";
-                for (j = 0; j <= dim; ++j) {
-                    if (j != i)
-                        out << regina::digit(gluing[j]);
-                }
-                out << ")";
-            }
-        }
-        out << '\n';
-    }
-    out << '\n';
-}
-
-template <int dim>
 void TriangulationBase<dim>::insertTriangulation(
         const Triangulation<dim>& source) {
     ChangeEventSpan<Triangulation<dim>> span(
@@ -1448,6 +1394,64 @@ inline Triangulation<dim>::Triangulation(const Triangulation& copy) :
 
 template <int dim>
 inline void Triangulation<dim>::clearAllProperties() {
+}
+
+template <int dim>
+inline void Triangulation<dim>::writeTextShort(std::ostream& out) const {
+    if (simplices_.size() == 0)
+        out << "Empty " << dim << "-dimensional triangulation";
+    else
+        out << "Triangulation with " << simplices_.size() << ' ' << dim << '-'
+            << (simplices_.size() == 1 ? "simplex" : "simplices");
+}
+
+template <int dim>
+void Triangulation<dim>::writeTextLong(std::ostream& out) const {
+    writeTextShort(out);
+    out << "\n\n";
+
+    Simplex<dim>* simp;
+    Simplex<dim>* adj;
+    size_t pos;
+    int i, j;
+    NPerm<dim+1> gluing;
+
+    out << "  Simplex  |  glued to:";
+    for (i = dim; i >= 0; --i) {
+        out << "     (";
+        for (j = 0; j <= dim; ++j)
+            if (j != i)
+                out << regina::digit(j);
+        out << ')';
+    }
+    out << '\n';
+    out << "  ---------+-----------";
+    for (i = dim; i >= 0; --i)
+        for (j = 0; j < 7 + dim; ++j)
+            out << '-';
+    out << '\n';
+    for (pos=0; pos < simplices_.size(); pos++) {
+        simp = simplices_[pos];
+        out << "     " << std::setw(4) << pos << "  |           ";
+        for (i = dim; i >= 0; --i) {
+            adj = simp->adjacentSimplex(i);
+            if (! adj) {
+                for (j = 0; j < dim - 1; ++j)
+                    out << ' ';
+                out << "boundary";
+            } else {
+                gluing = simp->adjacentGluing(i);
+                out << std::setw(4) << adj->markedIndex() << " (";
+                for (j = 0; j <= dim; ++j) {
+                    if (j != i)
+                        out << regina::digit(gluing[j]);
+                }
+                out << ")";
+            }
+        }
+        out << '\n';
+    }
+    out << '\n';
 }
 
 } // namespace regina
