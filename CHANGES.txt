@@ -34,6 +34,8 @@ Version 4.97  [ (under development) ]
             - Routine joinTo() has been renamed to join().  The old name
               joinTo() has been kept but is now deprecated.
         Class Dim2Triangulation:
+            - Now just a typedef for the new class Triangulation<2>, which has
+              the same functionality as the old Dim2Triangulation.
             - New dimension-agnostic getFace<subdim>() and
               faceIndex<subdim>() template functions.
             - Routines getNumberOfSimplices(), getSimplices() and getSimplex()
@@ -50,6 +52,13 @@ Version 4.97  [ (under development) ]
               within a (dim)-dimensional triangulation.
         Class IntOfMinSize:
             - Gives access to native integer types of a given minimum size.
+        Class Isomorphism, IsomorphismBase:
+            - Isomorphism<dim> is now a generic class that replaces the old
+              Dim2Isomorphism, NIsomorphism and so on.  IsomorphismBase<dim>
+              is a base class with functionality common to all dimensions,
+              whereas Isomorphism<dim> is specialised for dimensions 2, 3 and 4.
+            - The old class names Dim2Isomorphism and NIsomorphism have
+              been kept as typedefs for convenience.
         Class LightweightSequence:
             - New lightweight class for storing an array of objects.
         Class NAngleStructureList:
@@ -173,6 +182,8 @@ Version 4.97  [ (under development) ]
               the old triangle type constants.  Also added a new type
               constant UNKNOWN_TYPE.
         Class NTriangulation:
+            - Now just a typedef for the new class Triangulation<3>, which has
+              the same functionality as the old NTriangulation.
             - The routine turaevViro() now computes Turaev-Viro invariants
               using exact arithmetic, as elements of a cyclotomic field.  The
               old floating-point routine has been renamed to turaevViroApprox().
@@ -218,10 +229,17 @@ Version 4.97  [ (under development) ]
               template class, which is now a base class for ShareableObject.
         Class Simplex, SimplexBase:
             - Simplex<dim> is now a generic class that replaces the old
-              Dim2Triangle, NTetrahedron and so on.  SimplexBase<dim> is
+              Dim2Triangle, NTetrahedron and so on.  SimplexBase<dim> is a
               base class with functionality common to all dimensions,
               whereas Simplex<dim> is specialised for dimensions 2, 3 and 4.
             - The old class names Dim2Triangle and NTetrahedron have
+              been kept as typedefs for convenience.
+        Class Triangulation, TriangulationBase:
+            - Triangulation<dim> is now a generic class that replaces the old
+              Dim2Triangulation, NTriangulation, etc.  TriangulationBase<dim>
+              is a base class with functionality common to all dimensions,
+              whereas Triangulation<dim> is specialised for dimensions 2, 3, 4.
+            - The old class names Dim2Triangulation and NTriangulation have
               been kept as typedefs for convenience.
         Routine bitsRequired():
             - New constexpr routine for counting bits in an integer.
