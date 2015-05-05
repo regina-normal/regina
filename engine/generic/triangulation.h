@@ -1225,13 +1225,14 @@ void TriangulationBase<dim>::insertTriangulation(
         static_cast<Triangulation<dim>*>(this));
 
     size_t nOrig = getNumberOfSimplices();
+    size_t nSource = getNumberOfSimplices();
 
-    // Each time we loop through simplices we must only make nOrig
+    // Each time we loop through simplices we must only make nSource
     // iterations.  This ensures that the routine behaves correctly even
     // if source is this triangulation.
     SimplexIterator i = source.simplices_.begin();
     size_t done = 0;
-    for ( ; done < nOrig; ++i, ++done)
+    for ( ; done < nSource; ++i, ++done)
         simplices_.push_back(new Simplex<dim>((*i)->getDescription(),
             static_cast<Triangulation<dim>*>(this)));
 
@@ -1240,7 +1241,7 @@ void TriangulationBase<dim>::insertTriangulation(
 
     i = source.simplices_.begin();
     done = 0;
-    for ( ; done < nOrig; ++i, ++done) {
+    for ( ; done < nSource; ++i, ++done) {
         s = simplices_[nOrig + done];
         for (f = 0; f <= dim; ++f) {
             if ((*i)->adj_[f]) {
@@ -1265,17 +1266,17 @@ void TriangulationBase<dim>::insertConstruction(size_t nSimplices,
 
     size_t nOrig = getNumberOfSimplices();
 
-    // Each time we loop through simplices we must only make nOrig
+    // Each time we loop through simplices we must only make nSimplices
     // iterations.  This ensures that the routine behaves correctly even
     // if source is this triangulation.
     size_t i;
-    for (i = 0; i < nOrig; ++i)
+    for (i = 0; i < nSimplices; ++i)
         simplices_.push_back(new Simplex<dim>(
             static_cast<Triangulation<dim>*>(this)));
 
     Simplex<dim>* s;
     int f;
-    for (i = 0; i < nOrig; ++i) {
+    for (i = 0; i < nSimplices; ++i) {
         s = simplices_[nOrig + i];
         for (f = 0; f <= dim; ++f) {
             if (adjacencies[i][f] >= 0) {
