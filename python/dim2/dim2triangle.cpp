@@ -58,6 +58,7 @@ void addDim2Triangle() {
         .def("adjacentFacet", &Dim2Triangle::adjacentFacet)
         .def("hasBoundary", &Dim2Triangle::hasBoundary)
         .def("joinTo", &Dim2Triangle::joinTo)
+        .def("join", &Dim2Triangle::join)
         .def("unjoin", &Dim2Triangle::unjoin,
             return_value_policy<reference_existing_object>())
         .def("isolate", &Dim2Triangle::isolate)

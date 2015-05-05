@@ -235,6 +235,15 @@ class REGINA_API SimplexBase :
          * new gluing.  This permutation should be in the form described
          * by adjacentGluing().
          */
+        void join(int myFacet, Simplex<dim>* you, NPerm<dim+1> gluing);
+        /**
+         * Deprecated alias for join(), which joins the given facet of
+         * this simplex to some facet of another simplex.
+         *
+         * \deprecated Simply call join() instead.
+         *
+         * See join() for further details.
+         */
         void joinTo(int myFacet, Simplex<dim>* you, NPerm<dim+1> gluing);
         /**
          * Unglues the given facet of this simplex from whatever it is
@@ -427,8 +436,7 @@ inline int SimplexBase<dim>::adjacentFacet(int facet) const {
 }
 
 template <int dim>
-inline NPerm<dim+1> SimplexBase<dim>::adjacentGluing(
-        int face) const {
+inline NPerm<dim+1> SimplexBase<dim>::adjacentGluing(int face) const {
     return gluing_[face];
 }
 
@@ -478,7 +486,7 @@ Simplex<dim>* SimplexBase<dim>::unjoin(int myFacet) {
 }
 
 template <int dim>
-void SimplexBase<dim>::joinTo(int myFacet, Simplex<dim>* you,
+void SimplexBase<dim>::join(int myFacet, Simplex<dim>* you,
         NPerm<dim+1> gluing) {
     ChangeEventSpan<typename DimTraits<dim>::Triangulation> span(tri_);
 
@@ -497,6 +505,12 @@ void SimplexBase<dim>::joinTo(int myFacet, Simplex<dim>* you,
     you->gluing_[yourFacet] = gluing.inverse();
 
     tri_->clearAllProperties();
+}
+
+template <int dim>
+inline void SimplexBase<dim>::joinTo(int myFacet, Simplex<dim>* you,
+        NPerm<dim+1> gluing) {
+    join(myFacet, you, gluing);
 }
 
 template <int dim>

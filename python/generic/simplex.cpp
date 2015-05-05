@@ -53,6 +53,7 @@ void addSimplex(const char* name) {
         .def("adjacentFacet", &Simplex<dim>::adjacentFacet)
         .def("hasBoundary", &Simplex<dim>::hasBoundary)
         .def("joinTo", &Simplex<dim>::joinTo)
+        .def("join", &Simplex<dim>::join)
         .def("unjoin", &Simplex<dim>::unjoin,
             return_value_policy<reference_existing_object>())
         .def("isolate", &Simplex<dim>::isolate)
