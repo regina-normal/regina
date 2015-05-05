@@ -1114,13 +1114,14 @@ class REGINA_API NNormalSurface :
         void setName(const std::string& newName);
 
         /**
-         * The text representation will be in standard triangle-quad-oct
-         * coordinates.  Octagonal coordinates will only be written if
-         * the surface is stored using a coordinate system that supports
-         * almost normal surfaces.
+         * Writes this surface to the given output stream, using
+         * standard triangle-quad-oct coordinates.  Octagonal coordinates
+         * will only be written if the surface is stored using a coordinate
+         * system that supports almost normal surfaces.
          *
-         * \ifacespython The paramater \a out does not exist, and is
-         * taken to be standard output.
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
