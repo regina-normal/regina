@@ -82,70 +82,9 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
 
     public:
         /**
-         * \name Basic Properties
-         */
-        /*@{*/
-
-        /**
-         * Determines whether this triangulation is empty.
-         * An empty triangulation is one with no simplices at all.
-         *
-         * @return \c true if and only if this triangulation is empty.
-         */
-        bool isEmpty() const;
-
-        /**
-         * Returns the number of top-dimensional simplices in the
-         * triangulation.
-         *
-         * This is identical to getNumberOfSimplices(), but with two extra
-         * advantages: (i) it is shorter to type; and (ii) it appears
-         * in the template base class NGenericTriangulation, which may
-         * be useful for templated code.
-         *
-         * In three dimensions, this routine is equivalent to calling
-         * NTriangulation::getNumberOfTetrahedra().
-         *
-         * @return The number of top-dimensional simplices.
-         */
-        unsigned long size() const;
-
-        /*@}*/
-        /**
          * \name Isomorphism Testing
          */
         /*@{*/
-
-        /**
-         * Determines if this triangulation is combinatorially identical
-         * to the given triangulation.
-         *
-         * Here "identical" means that the triangulations have the same
-         * number of top-dimensional simplices, with gluings between the same
-         * pairs of numbered simplices using the same gluing permutations.
-         * In other words, "identical" means that the triangulations
-         * are isomorphic via the identity isomorphism.
-         *
-         * To test for the less strict combinatorial isomorphism (which
-         * allows relabelling of the top-dimensional simplices and their
-         * vertices), see isIsomorphicTo() instead.
-         *
-         * This test does \e not examine the textual simplex descriptions,
-         * as seen in Simplex<dim>::getDescription(); these may still differ.
-         * It also does not test the numbering of vertices, edges and so on,
-         * as used by getVertex(), getEdge() and so on;
-         * although at the time of writing these will always be
-         * numbered the same for identical triangulations, it is
-         * conceivable that in future versions of Regina there may
-         * be situations in which identical triangulations can acquire
-         * different numberings for vertices, edges, etc.
-         *
-         * @param other the triangulation to compare with this one.
-         * @return \c true if and only if the two triangulations are
-         * combinatorially identical.
-         */
-        bool isIdenticalTo(const typename DimTraits<dim>::Triangulation& other)
-            const;
 
         /**
          * Determines if this triangulation is combinatorially
