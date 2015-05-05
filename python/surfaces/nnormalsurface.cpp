@@ -107,9 +107,6 @@ namespace {
         return new NNormalSurface(t, v);
     }
 
-    void writeTextShort_stdio(const NNormalSurface& s) {
-        s.writeTextShort(std::cout);
-    }
     void writeRawVector_stdio(const NNormalSurface& s) {
         s.writeRawVector(std::cout);
     }
@@ -155,7 +152,6 @@ void addNNormalSurface() {
         .def("getName", &NNormalSurface::getName,
             return_value_policy<return_by_value>())
         .def("setName", &NNormalSurface::setName)
-        .def("writeTextShort", writeTextShort_stdio)
         .def("writeRawVector", writeRawVector_stdio)
         .def("isEmpty", &NNormalSurface::isEmpty)
         .def("isCompact", &NNormalSurface::isCompact)
