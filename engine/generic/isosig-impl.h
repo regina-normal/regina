@@ -155,6 +155,7 @@ std::string NGenericTriangulation<dim>::isoSigFrom(
         unsigned simp,
         const NPerm<dim+1>& vertices,
         Isomorphism<dim>* relabelling) {
+    // TODO: Verify.
     // Only process the component that simp belongs to.
 
     // ---------------------------------------------------------------------
@@ -336,6 +337,7 @@ std::string NGenericTriangulation<dim>::isoSigFrom(
 template <int dim>
 std::string NGenericTriangulation<dim>::isoSig(
         Isomorphism<dim>** relabelling) const {
+    // TODO: Verify.
     const Triangulation<dim>& tri(
         static_cast<const Triangulation<dim>&>(*this));
 
@@ -485,7 +487,8 @@ Triangulation<dim>* NGenericTriangulation<dim>::fromIsoSig(
             c += nChars;
         }
 
-        unsigned* joinGluing = new unsigned[nJoins + 1];
+        typename NPerm<dim+1>::Index* joinGluing =
+            new typename NPerm<dim+1>::Index[nJoins + 1];
         for (i = 0; i < nJoins; ++i) {
             if (! SHASCHARS(c, 1)) {
                 delete[] facetAction;
@@ -494,10 +497,11 @@ Triangulation<dim>* NGenericTriangulation<dim>::fromIsoSig(
                 return 0;
             }
 
-            joinGluing[i] = SREAD<unsigned>(c, CHARS_PER_PERM(dim));
+            joinGluing[i] = SREAD<typename NPerm<dim+1>::Index>(c,
+                CHARS_PER_PERM(dim));
             c += CHARS_PER_PERM(dim);
 
-            if (joinGluing[i] >= NPerm<dim+1>::nPerms) {
+            if (joinGluing[i] >= NPerm<dim+1>::nPerms || joinGluing[i] < 0) {
                 delete[] facetAction;
                 delete[] joinDest;
                 delete[] joinGluing;
@@ -513,6 +517,7 @@ Triangulation<dim>* NGenericTriangulation<dim>::fromIsoSig(
         facetPos = 0;
         unsigned nextUnused = 1;
         unsigned joinPos = 0;
+        NPerm<dim+1> gluing;
         for (i = 0; i < nSimp; ++i)
             for (j = 0; j <= dim; ++j) {
                 // Already glued from the other side:
@@ -533,17 +538,17 @@ Triangulation<dim>* NGenericTriangulation<dim>::fromIsoSig(
                     simp[i]->joinTo(j, simp[nextUnused++], NPerm<dim+1>());
                 } else {
                     // Join to existing simplex.
+                    gluing = NPerm<dim+1>::atIndex(joinGluing[joinPos]);
                     if (joinDest[joinPos] >= nextUnused ||
                             simp[joinDest[joinPos]]->adjacentSimplex(
-                            NPerm<dim+1>::orderedSn[joinGluing[joinPos]][j])) {
+                            gluing[j])) {
                         delete[] facetAction;
                         delete[] joinDest;
                         delete[] joinGluing;
                         delete[] simp;
                         return 0;
                     }
-                    simp[i]->joinTo(j, simp[joinDest[joinPos]],
-                        NPerm<dim+1>::orderedSn[joinGluing[joinPos]]);
+                    simp[i]->joinTo(j, simp[joinDest[joinPos]], gluing);
                     ++joinPos;
                 }
 
