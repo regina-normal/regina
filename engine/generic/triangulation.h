@@ -319,6 +319,8 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
          *
          * Any pointers or references to Simplex<dim> objects will remain valid.
          *
+         * \pre \a dest is not this triangulation.
+         *
          * @param dest the triangulation into which simplices should be moved.
          */
         void moveContentsTo(Triangulation<dim>& dest);
