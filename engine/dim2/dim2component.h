@@ -66,6 +66,7 @@ class Dim2Vertex;
  */
 class REGINA_API Dim2Component :
         public Output<Dim2Component>,
+        public boost::noncopyable,
         public NMarkedElement {
     private:
         std::vector<Dim2Triangle*> triangles_;
