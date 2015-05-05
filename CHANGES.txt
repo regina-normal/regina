@@ -22,6 +22,8 @@ Version 4.97  [ (under development) ]
         Class Dim2Triangulation:
             - New dimension-agnostic getFace<subdim>() and
               faceIndex<subdim>() template functions.
+        Class Dim2BoundaryComponent, Dim2Component, Dim2Edge, Dim2Triangle, Dim2Vertex
+            - Now derive from Output instead of ShareableObject.
         Class FaceTraits:
             - New template class to help with writing dimension-agnostic code.
               This class offers typedefs for (subdim)-dimensional faces

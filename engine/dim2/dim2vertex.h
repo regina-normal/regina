@@ -43,9 +43,10 @@
 
 #include <deque>
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "maths/nperm3.h"
 #include "utilities/nmarkedvector.h"
+#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
@@ -157,7 +158,9 @@ class REGINA_API Dim2VertexEmbedding {
  * Vertices are highly temporary; once a triangulation changes, all its
  * vertex objects will be deleted and new ones will be created.
  */
-class REGINA_API Dim2Vertex : public ShareableObject, public NMarkedElement {
+class REGINA_API Dim2Vertex :
+        public Output<Dim2Vertex>,
+        public NMarkedElement {
     private:
         std::deque<Dim2VertexEmbedding> emb_;
             /**< A list of descriptors telling how this vertex forms a part of
@@ -250,7 +253,23 @@ class REGINA_API Dim2Vertex : public ShareableObject, public NMarkedElement {
          */
         bool isBoundary() const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 
     private:

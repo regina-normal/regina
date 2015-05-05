@@ -43,8 +43,9 @@
 
 #include <vector>
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "utilities/nmarkedvector.h"
+#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
@@ -66,7 +67,9 @@ class Dim2Vertex;
  * ones will be created.
  */
 class REGINA_API Dim2BoundaryComponent :
-        public ShareableObject, public NMarkedElement {
+        public Output<Dim2BoundaryComponent>,
+        public boost::noncopyable,
+        public NMarkedElement {
     private:
         std::vector<Dim2Edge*> edges_;
             /**< List of edges in the component. */
@@ -74,11 +77,6 @@ class REGINA_API Dim2BoundaryComponent :
             /**< List of vertices in the component. */
 
     public:
-        /**
-         * Default destructor.
-         */
-        virtual ~Dim2BoundaryComponent();
-
         /**
          * Returns the index of this boundary component in the underlying
          * triangulation.  This is identical to calling
@@ -138,14 +136,24 @@ class REGINA_API Dim2BoundaryComponent :
          */
         Dim2Component* getComponent() const;
 
-        void writeTextShort(std::ostream& out) const;
-        void writeTextLong(std::ostream& out) const;
-
-    private:
         /**
-         * Default constructor.
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
          */
-        Dim2BoundaryComponent();
+        void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
 
     friend class Dim2Triangulation;
         /**< Allow access to private members. */
@@ -159,12 +167,6 @@ class REGINA_API Dim2BoundaryComponent :
 namespace regina {
 
 // Inline functions for Dim2BoundaryComponent
-
-inline Dim2BoundaryComponent::Dim2BoundaryComponent() {
-}
-
-inline Dim2BoundaryComponent::~Dim2BoundaryComponent() {
-}
 
 inline unsigned long Dim2BoundaryComponent::index() const {
     return markedIndex();
