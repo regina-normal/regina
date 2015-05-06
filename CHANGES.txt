@@ -60,6 +60,10 @@ Version 4.97  [ (under development) ]
               routine, and set through an optional third argument to setDirs().
             - The homeDir argument to setDirs() may now be the empty string,
               which signals that the directory should not be changed.
+        Class NGroupExpression, NMarkedAbelianGroup:
+            - Now derive from ShortOutput instead of ShareableObject.
+        Class NGroupPresentation, NHomGroupPresentation
+            - Now derive from Output instead of ShareableObject.
         Class NManifold:
             - Now derives from Output instead of ShareableObject.
         Class NMatrix:

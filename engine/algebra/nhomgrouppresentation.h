@@ -43,7 +43,8 @@
 
 #include <vector>
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -73,7 +74,9 @@ class NGroupPresentation;
  *
  * \todo Add a routine to attempt to verify validity of homomorphism.
  */
-class REGINA_API NHomGroupPresentation : public ShareableObject {
+class REGINA_API NHomGroupPresentation :
+        public Output<NHomGroupPresentation>,
+        public boost::noncopyable {
     private:
         NGroupPresentation* domain_;
             /**< The domain of the homomorphism. */
@@ -346,7 +349,23 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
          */
         std::auto_ptr< NHomMarkedAbelianGroup > markedAbelianisation() const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 };
 
