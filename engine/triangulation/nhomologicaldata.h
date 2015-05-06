@@ -474,13 +474,16 @@ public:
      */
     ~NHomologicalData();
     /**
-     * Short text representation as required by SharableObject.
+     * Writes a short text representation of this object to the
+     * given output stream.
      *
      * Note this only writes pre-computed data.  Thus if you have
      * not yet asked NHomologicalData to compute anything about this
-     * triangulation, writeTextShort may be empty. 
+     * triangulation, writeTextShort may be empty.
      *
-     * @param out the stream to write to.
+     * \ifacespython Not present.
+     *
+     * @param out the output stream to which to write.
      */
     virtual void writeTextShort(std::ostream& out) const;
 
