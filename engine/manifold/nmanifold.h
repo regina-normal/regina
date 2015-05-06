@@ -61,10 +61,9 @@ class NTriangulation;
  * 3-manifold that may be in use is not of interest.
  *
  * Subclasses corresponding to the different types of 3-manifold must
- * (of course) override all pure virtual functions.
- * They do not need to override writeTextShort() or writeTextLong()
- * since these routines are properly implemented in the base class
- * NManifold.
+ * (of course) override all pure virtual functions.  They must not override
+ * writeTextShort() or writeTextLong(), since these routines are \e not virtual,
+ * and are provided by the base class NManifold.
  */
 class REGINA_API NManifold :
         public Output<NManifold>,
