@@ -45,8 +45,7 @@ using namespace boost::python;
 using regina::NTetrahedron;
 
 void addNTetrahedron() {
-    class_<NTetrahedron, bases<regina::ShareableObject>,
-            std::auto_ptr<NTetrahedron>, boost::noncopyable>(
+    class_<NTetrahedron, std::auto_ptr<NTetrahedron>, boost::noncopyable>(
             "NTetrahedron", init<>())
         .def(init<const std::string&>())
         .def("getDescription", &NTetrahedron::getDescription,
@@ -87,6 +86,11 @@ void addNTetrahedron() {
         .def("getFaceMapping", &NTetrahedron::getFaceMapping)
         .def("getTriangleMapping", &NTetrahedron::getTriangleMapping)
         .def("orientation", &NTetrahedron::orientation)
+        .def("str", &NTetrahedron::str)
+        .def("toString", &NTetrahedron::toString)
+        .def("detail", &NTetrahedron::detail)
+        .def("toStringLong", &NTetrahedron::toStringLong)
+        .def("__str__", &NTetrahedron::str)
     ;
 }
 

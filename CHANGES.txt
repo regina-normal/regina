@@ -36,10 +36,16 @@ Version 4.97  [ (under development) ]
             - Now derives from ShortOutput instead of ShareableObject.
         Class NAbelianGroup:
             - Now derives from ShortOutput instead of ShareableObject.
+        Class NBoundaryComponent:
+            - Now derives from Output instead of ShareableObject.
+        Class NComponent:
+            - Now derives from Output instead of ShareableObject.
         Class NCusp:
             - Now derives from ShortOutput instead of ShareableObject.
         Class NCyclotomic:
             - New class for exact arithmetic in cyclotomic fields.
+        Class NEdge:
+            - Now derives from Output instead of ShareableObject.
         Class NExampleSnapPeaTriangulation:
             - New class for building ready-made SnapPea examples.
         Class NExampleTriangulation:
@@ -64,6 +70,8 @@ Version 4.97  [ (under development) ]
             - Now derive from ShortOutput instead of ShareableObject.
         Class NGroupPresentation, NHomGroupPresentation
             - Now derive from Output instead of ShareableObject.
+        Class NHomologicalData:
+            - Now derives from ShortOutput instead of ShareableObject.
         Class NManifold:
             - Now derives from Output instead of ShareableObject.
         Class NMatrix:
@@ -115,6 +123,8 @@ Version 4.97  [ (under development) ]
             - Now derives from ShortOutput instead of ShareableObject.
         Class NSurfaceFilterProperties:
             - New set-based routine setECs().
+        Class NTetrahedron:
+            - Now derives from Output instead of ShareableObject.
         Class NTreeBag, NTreeDecomposition:
             - Classes for computing tree decompositions of graphs
               (including facet pairing graphs of triangulations).
@@ -122,6 +132,7 @@ Version 4.97  [ (under development) ]
             - Added a new Type enumeration, which encapsulates (and replaces)
               the old triangle type constants.  Also added a new type
               constant UNKNOWN_TYPE.
+            - Now derives from Output instead of ShareableObject.
         Class NTriangulation:
             - The routine turaevViro() now computes Turaev-Viro invariants
               using exact arithmetic, as elements of a cyclotomic field.  The
@@ -151,6 +162,7 @@ Version 4.97  [ (under development) ]
         Class NVertex:
             - Added a new LinkType enumeration, which encapsulates (and
               replaces) the old link type constants.
+            - Now derives from Output instead of ShareableObject.
         Class Output, ShortOutput:
             - New classes that provide consistent APIs for objects to provide
               short and detailed string output.  This may be used as a

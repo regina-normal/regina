@@ -40,8 +40,8 @@ using regina::NHomologicalData;
 using regina::NTriangulation;
 
 void addNHomologicalData() {
-    class_<NHomologicalData, bases<regina::ShareableObject>,
-            std::auto_ptr<NHomologicalData>, boost::noncopyable>
+    class_<NHomologicalData, std::auto_ptr<NHomologicalData>,
+            boost::noncopyable>
             ("NHomologicalData", init<const NTriangulation&>())
         .def(init<const NHomologicalData&>())
         .def("getHomology", &NHomologicalData::getHomology,
@@ -73,6 +73,11 @@ void addNHomologicalData() {
         .def("getEmbeddabilityComment",
             &NHomologicalData::getEmbeddabilityComment,
             return_value_policy<copy_const_reference>())
+        .def("str", &NHomologicalData::str)
+        .def("toString", &NHomologicalData::toString)
+        .def("detail", &NHomologicalData::detail)
+        .def("toStringLong", &NHomologicalData::toStringLong)
+        .def("__str__", &NHomologicalData::str)
     ;
 }
 
