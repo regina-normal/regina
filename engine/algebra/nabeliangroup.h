@@ -334,7 +334,6 @@ class REGINA_API NAbelianGroup :
         void writeXMLData(std::ostream& out) const;
 
         /**
-        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
