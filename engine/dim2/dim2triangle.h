@@ -45,6 +45,7 @@
 #include "output.h"
 #include "maths/nperm3.h"
 #include "utilities/nmarkedvector.h"
+#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
@@ -79,6 +80,7 @@ class Dim2Triangulation;
  */
 class REGINA_API Dim2Triangle :
         public Output<Dim2Triangle>,
+        public boost::noncopyable,
         public NMarkedElement {
     private:
         Dim2Triangle* adj_[3];

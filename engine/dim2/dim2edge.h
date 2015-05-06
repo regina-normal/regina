@@ -158,6 +158,7 @@ class REGINA_API Dim2EdgeEmbedding {
  */
 class REGINA_API Dim2Edge :
         public Output<Dim2Edge>,
+        public boost::noncopyable,
         public NMarkedElement {
     public:
         /**

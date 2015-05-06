@@ -154,6 +154,11 @@ class REGINA_API Dim2BoundaryComponent :
          * @param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
+    private:
+        /**
+         * Default constructor.
+         */
+        Dim2BoundaryComponent();
 
     friend class Dim2Triangulation;
         /**< Allow access to private members. */
@@ -167,6 +172,9 @@ class REGINA_API Dim2BoundaryComponent :
 namespace regina {
 
 // Inline functions for Dim2BoundaryComponent
+
+inline Dim2BoundaryComponent::Dim2BoundaryComponent() {
+}
 
 inline unsigned long Dim2BoundaryComponent::index() const {
     return markedIndex();

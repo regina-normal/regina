@@ -160,6 +160,7 @@ class REGINA_API Dim2VertexEmbedding {
  */
 class REGINA_API Dim2Vertex :
         public Output<Dim2Vertex>,
+        public boost::noncopyable,
         public NMarkedElement {
     private:
         std::deque<Dim2VertexEmbedding> emb_;
