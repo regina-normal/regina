@@ -267,6 +267,7 @@ inline void NManifold::writeTextLong(std::ostream& out) const {
     std::string details = getStructure();
     if (! details.empty())
         out << " ( " << details << " )";
+    out << std::endl;
 }
 
 } // namespace regina
