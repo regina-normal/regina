@@ -69,5 +69,7 @@ void addSimplex(const char* name) {
 
 void addSimplex() {
     addSimplex<5>("Simplex5");
+    addSimplex<8>("Simplex8");
+    addSimplex<15>("Simplex15");
 }
 

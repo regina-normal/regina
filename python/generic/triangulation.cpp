@@ -99,5 +99,7 @@ void addTriangulation(const char* name) {
 
 void addTriangulations() {
     addTriangulation<5>("Triangulation5");
+    addTriangulation<8>("Triangulation8");
+    addTriangulation<15>("Triangulation15");
 }
 
