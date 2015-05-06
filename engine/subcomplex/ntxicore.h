@@ -485,6 +485,7 @@ inline void NTxICore::writeTextShort(std::ostream& out) const {
 inline void NTxICore::writeTextLong(std::ostream& out) const {
     out << "TxI core: ";
     writeName(out);
+    out << std::endl;
 }
 
 // Inline functions for NTxIDiagonalCore
