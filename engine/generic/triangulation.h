@@ -483,25 +483,25 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
         /*@{*/
 #if 0
         /**
-         * TODO: Check docs.
          * Constructs the isomorphism signature for this triangulation.
          *
          * An <i>isomorphism signature</i> is a compact text representation of
-         * a triangulation.  Unlike dehydrations for 3-manifold triangulations,
-         * an isomorphism signature uniquely determines a triangulation up
-         * to combinatorial isomorphism (assuming the dimension is known in
-         * advance).
-         * That is, two triangulations of dimension \a dim are combinatorially
-         * isomorphic if and only if their isomorphism signatures are the same.
+         * a triangulation that uniquely determines the triangulation up to
+         * combinatorial isomorphism.  That is, two triangulations of
+         * dimension \a dim are combinatorially isomorphic if and only if
+         * their isomorphism signatures are the same.
          *
          * The isomorphism signature is constructed entirely of printable
          * characters, and has length proportional to <tt>n log n</tt>,
          * where \a n is the number of top-dimenisonal simplices.
          *
-         * Isomorphism signatures are more general than dehydrations:
-         * they can be used with any triangulation (including closed,
-         * bounded and/or disconnected triangulations, as well
-         * as triangulations with large numbers of triangles).
+         * Whilst the format of an isomorphism signature bears some
+         * similarity to dehydration strings for 3-manifolds, they are more
+         * general: isomorphism signatures can be used with any triangulations,
+         * including closed, bounded and/or disconnected triangulations,
+         * as well as triangulations with many simplices.  Note also that
+         * 3-manifold dehydration strings are not unique up to isomorphism
+         * (they depend on the particular labelling of tetrahedra).
          *
          * The time required to construct the isomorphism signature of a
          * triangulation is <tt>O(n^2 log^2 n)</tt>.
@@ -529,7 +529,7 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
          * \ifacespython The isomorphism argument is not present.
          * Instead there are two routines: fromIsoSig(), which returns a
          * string only, and fromIsoSigDetail(), which returns a pair
-         * (signature, relabelling).
+         * (\a signature, \a relabelling).
          *
          * \pre If \a relabelling is non-null, then this triangulation
          * must be non-empty and connected.  The facility to return a
@@ -539,12 +539,12 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
          * \warning Do not mix isomorphism signatures between dimensions!
          * It is possible that the same string could corresponding to both a
          * \a p-dimensional triangulation and a \a q-dimensional triangulation
-         * for different \a p and \a q.
+         * for different dimensions \a p and \a q.
          *
-         * @param relabelling if non-null, this will be modified to point to a
-         * new isomorphism describing the relationship between this
-         * triangulation and that reconstructed from fromIsoSig(), as
-         * described above.
+         * @param relabelling if this is non-null, it will be modified to
+         * point to a new isomorphism that describes the relationship between
+         * this triangulation and the triangulation that will be reconstructed
+         * from fromIsoSig(), as described above.
          * @return the isomorphism signature of this triangulation.
          */
         std::string isoSig(Isomorphism<dim>** relabelling = 0) const;
@@ -578,19 +578,23 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
         /*@{*/
 
         /**
-         * TODO: Check docs.
          * Recovers a full triangulation from an isomorphism signature.
          *
          * See isoSig() for more information on isomorphism signatures.
          * It will be assumed that the signature describes a triangulation of
          * dimension \a dim.
          *
-         * The triangulation that is returned will be newly created.
+         * The triangulation that is returned will be newly created, and
+         * it is the responsibility of the caller of this routine to
+         * destroy it.
          *
          * Calling isoSig() followed by fromIsoSig() is not guaranteed to
-         * produce an identical triangulation to the original, but it
-         * \e is guaranteed to produce a combinatorially isomorphic
-         * triangulation.
+         * produce an \e identical triangulation to the original, but it
+         * is guaranteed to produce a combinatorially \e isomorphic
+         * triangulation.  In other words, fromIsoSig() may reconstruct the
+         * triangulation with its simplices and/or vertices relabelled.
+         * The optional argument to isoSig() allows you to determine the
+         * precise relabelling that will be used, if you need to know it.
          *
          * For a full and precise description of the isomorphism signature
          * format for 3-manifold triangulations, see <i>Simplification paths
@@ -602,20 +606,18 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
          * \warning Do not mix isomorphism signatures between dimensions!
          * It is possible that the same string could corresponding to both a
          * \a p-dimensional triangulation and a \a q-dimensional triangulation
-         * for different \a p and \a q.
+         * for different dimensions \a p and \a q.
          *
-         * @param sig the isomorphism signature of the
-         * triangulation to construct.  Note that, unlike dehydration
-         * strings for 3-manifold triangulations, case is important for
-         * isomorphism signatures.
+         * @param sig the isomorphism signature of the triangulation to
+         * construct.  Note that isomorphism signature are case-sensitive
+         * (unlike, for example, dehydration strings for 3-manifolds).
          * @return a newly allocated triangulation if the reconstruction was
-         * successful, or null if the given string was not a valid
-         * isomorphism signature.
+         * successful, or \c null if the given string was not a valid
+         * <i>dim</i>-dimensional isomorphism signature.
          */
         static Triangulation* fromIsoSig(const std::string& sig);
 
         /**
-         * TODO: Check docs.
          * Deduces the number of top-dimensional simplices in a
          * connected triangulation from its isomorphism signature.
          *
@@ -628,28 +630,27 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
          * (e.g., the number of tetrahedra in the case \a dim = 3).
          * You can also pass an isomorphism signature that describes a
          * disconnected triangulation; however, this routine will only
-         * return the number of simplices in the first connected component.
-         * If you need the total number of simplices in a disconnected
-         * triangulation, you will need to reconstruct the full triangulation
-         * by calling fromIsoSig() instead.
+         * return the number of top-dimensional simplices in the first
+         * connected component.  If you need the total size of a
+         * disconnected triangulation, you will need to reconstruct the
+         * full triangulation by calling fromIsoSig() instead.
          *
          * This routine is very fast, since it only examines the first
          * few characters of the isomorphism signature (in which the size
-         * of the first component is encoded).  However, it is therefore
-         * possible to pass an invalid isomorphism signature and still
-         * receive a positive result.  If you need to \e test whether a
-         * signature is valid or not, you must call fromIsoSig()
+         * of the first component is encoded).  However, a side-effect
+         * of this is that it is possible to pass an \e invalid isomorphism
+         * signature and still receive a positive result.  If you need to
+         * test whether a signature is valid or not, you must call fromIsoSig()
          * instead, which will examine the entire signature in full.
          *
          * \warning Do not mix isomorphism signatures between dimensions!
          * It is possible that the same string could corresponding to both a
          * \a p-dimensional triangulation and a \a q-dimensional triangulation
-         * for different \a p and \a q.
+         * for different dimensions \a p and \a q.
          *
-         * @param sig an isomorphism signature of a \a dim-dimensional
-         * triangulation.  Note that, unlike dehydration strings for
-         * 3-manifold triangulations, case is important for isomorphism
-         * signatures.
+         * @param sig the isomorphism signature of a <i>dim</i>-dimensional
+         * triangulation.  Note that isomorphism signature are case-sensitive
+         * (unlike, for example, dehydration strings for 3-manifolds).
          * @return the number of top-dimensional simplices in the first
          * connected component, or 0 if this could not be determined
          * because the given string was not a valid isomorphism signature.
@@ -666,13 +667,13 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
          * Constructs a candidate isomorphism signature for a single
          * component of this triangulation.  This candidate signature
          * assumes that the given simplex with the given labelling
-         * of its vertices becomes simplex zero with vertices 0..dim
-         * under the "canonical isomorphism".
+         * of its vertices becomes simplex zero with vertices
+         * 0,...,\a dim under the "canonical isomorphism".
          *
          * @param tri the triangulation under consideration.
-         * @param simp the index of some simplex in this triangulation.
-         * @param vertices some ordering of the vertices of the
-         * given tetrahedron.
+         * @param simp the index of some top-dimensional simplex in this
+         * triangulation.
+         * @param vertices some ordering of the vertices of the given simplex.
          * @param relabelling if this is non-null, it will be filled with the
          * canonical isomorphism; in this case it must already have been
          * constructed for the correct number of simplices.
