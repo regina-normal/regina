@@ -567,6 +567,8 @@ class REGINA_API NSatBlock :
          * Writes a short text representation of this object to the
          * given output stream.
          *
+         * This must be implemented by subclasses.
+         *
          * \ifacespython Not present.
          *
          * @param out the output stream to which to write.
@@ -576,6 +578,9 @@ class REGINA_API NSatBlock :
          /**
          * Writes a detailed text representation of this object to the
          * given output stream.
+         *
+         * This may be reimplemented by subclasses, but the parent
+         * NSatBlock class offers a reasonable default implementation.
          *
          * \ifacespython Not present.
          *

@@ -72,12 +72,14 @@ typedef Triangulation<3> NTriangulation;
  * routines such as
  * NStandardTriangulation::isStandardTriangulation(NTriangulation*).
  *
- * Subclasses corresponding to different families of triangulations do
- * not need to override writeTextShort() since this routine is
- * properly implemented in the base class NStandardTriangulation.
+ * Subclasses corresponding to different families of triangulations may,
+ * but not need to, override the output routines writeTextShort() and
+ * writeTextLong().  This class offers sensible default implementations
+ * of both routines, which call the pure virtual function writeName()
+ * (which every subclass must override).
  */
 class REGINA_API NStandardTriangulation :
-        public ShortOutput<NStandardTriangulation>,
+        public Output<NStandardTriangulation>,
         public boost::noncopyable {
     public:
         /**
@@ -185,11 +187,29 @@ class REGINA_API NStandardTriangulation :
          * Writes a short text representation of this object to the
          * given output stream.
          *
+         * This may be reimplemented by subclasses, but the parent
+         * NStandardTriangulation class offers a reasonable default
+         * implementation based on writeName().
+         *
          * \ifacespython Not present.
          *
          * @param out the output stream to which to write.
          */
         virtual void writeTextShort(std::ostream& out) const;
+
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * This may be reimplemented by subclasses, but the parent
+         * NStandardTriangulation class offers a reasonable default
+         * implementation based on writeName().
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        virtual void writeTextLong(std::ostream& out) const;
 
         /**
          * Determines whether the given component represents one of the
@@ -254,6 +274,11 @@ inline NAbelianGroup* NStandardTriangulation::getHomologyH1() const {
 
 inline void NStandardTriangulation::writeTextShort(std::ostream& out) const {
     writeName(out);
+}
+
+inline void NStandardTriangulation::writeTextLong(std::ostream& out) const {
+    writeName(out);
+    out << '\n';
 }
 
 } // namespace regina

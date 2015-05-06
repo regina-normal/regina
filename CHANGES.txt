@@ -12,6 +12,11 @@ Version 4.97  [ (under development) ]
     GENERAL:
         - Now uses aspects of C++11, which your compiler will need to support.
     ENGINE:
+        All:
+            - Removed ShareableObject from the class hierarchy.  All classes
+              that used to inherit from ShareableObject now inherit (directly
+              or indirectly) from the Output<> template instead.  As a result,
+              many such classes no longer contain any virtual functions.
         Namespace regina::boost, regina::stl:
             - Removed these namespaces and all their members.  To fix
               code that used regina::boost, just use plain boost instead.
@@ -67,19 +72,8 @@ Version 4.97  [ (under development) ]
         Class NAngleStructureList:
             - Renamed getNumberOfStructures() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
-            - Now derives from ShortOutput instead of ShareableObject.
-        Class NAbelianGroup:
-            - Now derives from ShortOutput instead of ShareableObject.
-        Class NBoundaryComponent:
-            - Now derives from Output instead of ShareableObject.
-        Class NComponent:
-            - Now derives from Output instead of ShareableObject.
-        Class NCusp:
-            - Now derives from ShortOutput instead of ShareableObject.
         Class NCyclotomic:
             - New class for exact arithmetic in cyclotomic fields.
-        Class NEdge:
-            - Now derives from Output instead of ShareableObject.
         Class NExampleSnapPeaTriangulation:
             - New class for building ready-made SnapPea examples.
         Class NExampleTriangulation:
@@ -87,8 +81,6 @@ Version 4.97  [ (under development) ]
               and whiteheadLinkComplement() to figureEight(), trefoil()
               and whiteheadLink() respectively.  The old names are kept
               but deprecated.
-        Class NFileInfo:
-            - Now derives from Output instead of ShareableObject.
         Class NGenericFacetPairing, NFacePairing, Dim2EdgePairing:
             - Routines dotHeader() and writeDotHeader() no longer set an
               explicit background colour.
@@ -116,31 +108,18 @@ Version 4.97  [ (under development) ]
               replaced with the easier-to-type size().
         Class NIsomorphismDirect:
             - Removed this class, which has been deprecated for some time now.
-        Class NGroupExpression, NMarkedAbelianGroup:
-            - Now derive from ShortOutput instead of ShareableObject.
-        Class NGroupPresentation, NHomGroupPresentation
-            - Now derive from Output instead of ShareableObject.
-        Class NHomologicalData:
-            - Now derives from ShortOutput instead of ShareableObject.
-        Class NManifold:
-            - Now derives from Output instead of ShareableObject.
         Class NMatrix:
             - The destructor and writeMatrix() are no longer virtual.
             - Now derives from Output, and provides str() and detail()
               output routines.
-        Class NMatrixInt:
-            - No longer derives from ShareableObject.  Text output is now
-              provided by the inherited Output base class intead.
         Class NNormalSurface:
             - New convenience routines normal() and embedded().
-            - Now derives from ShortOutput instead of ShareableObject.
         Class NNormalSurfaceList:
             - Renamed getNumberOfSurfaces() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
         Class NNormalSurfaceSubset:
             - Renamed getNumberOfSurfaces() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
-            - Now derives from Output instead of ShareableObject.
         Class NPacket:
             - Added a variant of save() that takes an output stream (as
               opposed to a filename).
@@ -175,29 +154,14 @@ Version 4.97  [ (under development) ]
             - Removed deprecated global functions from nperm4.h, including
               faceOrdering(), faceDescription(), edgeOrdering(), and
               edgeDescription().
-        Class NPillowTwoSphere, NSnappedTwoSphere:
-            - Now derive from ShortOutput instead of ShareableObject.
         Class NPolynomial:
             - New class for working with single-variable polynomials
               over arbitrary rings.
-        Class NProgress, NProgressManager:
-            - Now derives from ShortOutput instead of ShareableObject.
         Class NRational:
             - The destructor is no longer virtual.
-        Class ShareableObject:
-            - Deprecated.  The only real functionality that this
-              provides is str() and detail(); classes that require this
-              should now inherit from Output<> instead.
         Class NSatBlock:
-            - Now derives from Output instead of ShareableObject.
             - Classes inheriting from this must now implement writeTextShort,
               and can optionally overwrite the default writeTextLong function.
-        Class NSatRegion:
-            - Now derives from Output instead of ShareableObject.
-        Class NSignature:
-            - Now derives from ShortOutput instead of ShareableObject.
-        Class NStandardTri:
-            - Now derives from ShortOutput instead of ShareableObject.
         Class NSurfaceFilterProperties:
             - New set-based routine setECs().
         Class NTetrahedron:
@@ -219,7 +183,6 @@ Version 4.97  [ (under development) ]
             - Added a new Type enumeration, which encapsulates (and replaces)
               the old triangle type constants.  Also added a new type
               constant UNKNOWN_TYPE.
-            - Now derives from Output instead of ShareableObject.
         Class NTriangulation:
             - Now just a typedef for the new class Triangulation<3>, which has
               the same functionality as the old NTriangulation.
@@ -252,23 +215,20 @@ Version 4.97  [ (under development) ]
               kept for backward compatibility.
             - Removed deprecated routines addTetrahedron() and
               gluingsHaveChanged().
-        Class NTxICore:
-            - Now derives from Output instead of ShareableObject
         Class NVertex:
             - Added a new LinkType enumeration, which encapsulates (and
               replaces) the old link type constants.
-            - Now derives from Output instead of ShareableObject.
         Class Output, ShortOutput:
             - New classes that provide consistent APIs for objects to provide
-              short and detailed string output.  This may be used as a
+              short and detailed string output.  This has been introduced as a
               lightweight replacement for ShareableObject, and eventually
               it will replace ShareableObject completely.
         Class ShareableObject:
-            - This is no longer a mandatory base class for objects that
+            - Deprecated.  This is no longer a base class for objects that
               are mirrored in external interfaces.  Ultimately, the plan
               is to remove ShareableObject entirely.
-            - The old string output routines are now provided by the Output
-              template class, which is now a base class for ShareableObject.
+            - The string output routines str() and detail() are now provided
+              by the Output template class instead.
         Class Simplex, SimplexBase:
             - Simplex<dim> is now a generic class that replaces the old
               Dim2Triangle, NTetrahedron and so on.  SimplexBase<dim> is a
