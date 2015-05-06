@@ -139,12 +139,7 @@ enum SurfaceExportFields {
              value of this constant may change as a result. */
 };
 
-/**
- * Stores information about the normal surface list packet.
- * See the general PacketInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct PacketInfo<PACKET_NORMALSURFACELIST> {
     typedef NNormalSurfaceList Class;
@@ -152,6 +147,7 @@ struct PacketInfo<PACKET_NORMALSURFACELIST> {
         return "Normal Surface List";
     }
 };
+#endif
 
 /**
  * A packet representing a collection of normal surfaces in a 3-manifold.

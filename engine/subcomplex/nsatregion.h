@@ -43,8 +43,10 @@
 #endif
 
 #include "regina-core.h"
+#include "output.h"
 #include "subcomplex/nsatblock.h"
 #include <vector>
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -168,7 +170,9 @@ struct REGINA_API NSatBlockSpec {
  * with annuli grouped and oriented according to the region boundaries (as
  * opposed to individual block boundaries).
  */
-class REGINA_API NSatRegion : public ShareableObject {
+class REGINA_API NSatRegion :
+        public Output<NSatRegion>,
+        public boost::noncopyable {
     private:
         typedef std::vector<NSatBlockSpec> BlockSet;
             /**< The data structure used to store the list of
@@ -237,7 +241,7 @@ class REGINA_API NSatRegion : public ShareableObject {
          * Destroys this structure and all of its internal data,
          * including the individual blocks that make up this region.
          */
-        virtual ~NSatRegion();
+        ~NSatRegion();
 
         /**
          * Returns the number of saturated blocks that come together
@@ -567,7 +571,24 @@ class REGINA_API NSatRegion : public ShareableObject {
          */
         void writeDetail(std::ostream& out, const std::string& title) const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 
     private:

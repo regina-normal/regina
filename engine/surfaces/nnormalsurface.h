@@ -46,13 +46,14 @@
 
 #include <utility>
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "maths/nperm4.h"
 #include "maths/nray.h"
 #include "surfaces/ndisctype.h"
 #include "surfaces/normalcoords.h"
 #include "utilities/nbooleans.h"
 #include "utilities/nproperty.h"
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -227,6 +228,9 @@ typedef Triangulation<3> NTriangulation;
  *   human-readable name of the coordinate system.
  *
  * \ifacespython Not present.
+ *
+ * \tparam coordType one of the #NormalCoords constants, indicating
+ * which coordinate system we are querying.
  */
 template <NormalCoords coordType>
 struct NormalInfo;
@@ -755,7 +759,9 @@ class REGINA_API NNormalSurfaceVector : public NRay {
  * \todo \featurelong Determine which faces in the solution space a
  * normal surface belongs to.
  */
-class REGINA_API NNormalSurface : public ShareableObject {
+class REGINA_API NNormalSurface :
+        public ShortOutput<NNormalSurface>,
+        public boost::noncopyable {
     protected:
         NNormalSurfaceVector* vector;
             /**< Contains the coordinates of the normal surface in whichever
@@ -838,7 +844,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * The underlying vector of coordinates will also be
          * deallocated.
          */
-        virtual ~NNormalSurface();
+        ~NNormalSurface();
 
         /**
          * Creates a newly allocated clone of this normal surface.
@@ -1113,13 +1119,14 @@ class REGINA_API NNormalSurface : public ShareableObject {
         void setName(const std::string& newName);
 
         /**
-         * The text representation will be in standard triangle-quad-oct
-         * coordinates.  Octagonal coordinates will only be written if
-         * the surface is stored using a coordinate system that supports
-         * almost normal surfaces.
+         * Writes this surface to the given output stream, using
+         * standard triangle-quad-oct coordinates.  Octagonal coordinates
+         * will only be written if the surface is stored using a coordinate
+         * system that supports almost normal surfaces.
          *
-         * \ifacespython The paramater \a out does not exist, and is
-         * taken to be standard output.
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**

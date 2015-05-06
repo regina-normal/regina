@@ -118,7 +118,7 @@ void addNGroupPresentation() {
         .def(self_ns::str(self))
     ;
 
-    class_<NGroupExpression, bases<regina::ShareableObject>,
+    class_<NGroupExpression,
             std::auto_ptr<NGroupExpression>, boost::noncopyable>
             ("NGroupExpression")
         .def(init<const NGroupExpression&>())
@@ -152,9 +152,14 @@ void addNGroupPresentation() {
         .def("toTeX", &NGroupExpression::toTeX)
         .def("writeText", expressionWriteText, OL_expressionWriteText())
         .def("writeTeX", expressionWriteTeX)
+        .def("str", &NGroupExpression::str)
+        .def("toString", &NGroupExpression::toString)
+        .def("detail", &NGroupExpression::detail)
+        .def("toStringLong", &NGroupExpression::toStringLong)
+        .def("__str__", &NGroupExpression::str)
     ;
 
-    class_<NGroupPresentation, bases<regina::ShareableObject>,
+    class_<NGroupPresentation,
             std::auto_ptr<NGroupPresentation>, boost::noncopyable>
             ("NGroupPresentation")
         .def(init<const NGroupPresentation&>())
@@ -201,6 +206,11 @@ void addNGroupPresentation() {
         .def("compact", &NGroupPresentation::compact)
         .def("writeTeX", presentationWriteTeX)
         .def("writeTextCompact", presentationWriteTextCompact)
+        .def("str", &NGroupPresentation::str)
+        .def("toString", &NGroupPresentation::toString)
+        .def("detail", &NGroupPresentation::detail)
+        .def("toStringLong", &NGroupPresentation::toStringLong)
+        .def("__str__", &NGroupPresentation::str)
     ;
 }
 

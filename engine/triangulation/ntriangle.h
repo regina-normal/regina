@@ -42,9 +42,10 @@
 #endif
 
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "maths/nperm4.h"
 #include "utilities/nmarkedvector.h"
+#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
@@ -155,7 +156,10 @@ class REGINA_API NTriangleEmbedding {
  * Triangles are highly temporary; once a triangulation changes, all its
  * triangle objects will be deleted and new ones will be created.
  */
-class REGINA_API NTriangle : public ShareableObject, public NMarkedElement {
+class REGINA_API NTriangle :
+        public Output<NTriangle>,
+        public boost::noncopyable,
+        public NMarkedElement {
     public:
         /**
          * The \e type of a triangle, which indicates how the vertices and
@@ -245,7 +249,7 @@ class REGINA_API NTriangle : public ShareableObject, public NMarkedElement {
          * All embedding descriptors stored in this triangle will be
          * automatically deleted.
          */
-        virtual ~NTriangle();
+        ~NTriangle();
 
         /**
          * Returns the index of this triangle in the underlying
@@ -402,7 +406,23 @@ class REGINA_API NTriangle : public ShareableObject, public NMarkedElement {
          */
         NPerm4 getEdgeMapping(int edge) const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 
     private:

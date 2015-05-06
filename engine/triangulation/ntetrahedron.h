@@ -45,6 +45,7 @@
 #include "generic/simplex.h"
 #include "maths/nperm4.h"
 #include "utilities/nmarkedvector.h"
+#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {

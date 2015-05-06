@@ -90,12 +90,7 @@ typedef Simplex<3> NTetrahedron;
  * @{
  */
 
-/**
- * Stores information about the 3-manifold triangulation packet.
- * See the general PacketInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct PacketInfo<PACKET_TRIANGULATION> {
     typedef NTriangulation Class;
@@ -103,6 +98,7 @@ struct PacketInfo<PACKET_TRIANGULATION> {
         return "3-Manifold Triangulation";
     }
 };
+#endif
 
 /**
  * Represents the various algorithms available for computing Turaev-Viro
@@ -2683,12 +2679,6 @@ class REGINA_API Triangulation<3> :
          * \todo \optlong Have this routine only use as many tetrahedra
          * as are necessary, leaving finite vertices alone.
          *
-         * @param forceDivision specifies what to do if the triangulation
-         * has no ideal or non-standard vertices.
-         * If \c true, the triangulation will be
-         * subdivided anyway, as if all vertices were ideal.  If
-         * \c false (the default), the triangulation will be left alone.
-         *
          * @return \c true if and only if the triangulation was changed.
          * @author David Letscher
          */
@@ -3807,6 +3797,7 @@ inline long Triangulation<3>::faceIndex(const NTriangle* tri) const {
     return tri->markedIndex();
 }
 
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 inline long Triangulation<3>::faceIndex<0>(const NVertex* face) const {
     return face->markedIndex();
@@ -3826,6 +3817,7 @@ template <>
 inline long Triangulation<3>::faceIndex<3>(const NTetrahedron* face) const {
     return face->markedIndex();
 }
+#endif
 
 inline bool Triangulation<3>::hasTwoSphereBoundaryComponents() const {
     if (! twoSphereBoundaryComponents_.known())

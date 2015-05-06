@@ -112,12 +112,7 @@ struct SnapPeaFatalError : public SnapPeaException {
 struct SnapPeaMemoryFull : public SnapPeaException {
 };
 
-/**
- * Stores information about the SnapPea triangulation packet.
- * See the general PacketInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct PacketInfo<PACKET_SNAPPEATRIANGULATION> {
     typedef NSnapPeaTriangulation Class;
@@ -125,6 +120,7 @@ struct PacketInfo<PACKET_SNAPPEATRIANGULATION> {
         return "SnapPea Triangulation";
     }
 };
+#endif
 
 /**
  * Represents a single cusp of a SnapPea triangulation.

@@ -70,14 +70,6 @@ namespace {
             "\nSoftware for 3-manifold topology and normal surface theory" +
             "\nCopyright (c) 1999-2014, The Regina development team";
     }
-
-    void shareableWriteTextShort(const ShareableObject& obj) {
-        obj.writeTextShort(std::cout);
-    }
-
-    void shareableWriteTextLong(const ShareableObject& obj) {
-        obj.writeTextLong(std::cout);
-    }
 }
 
 /**
@@ -116,8 +108,6 @@ BOOST_PYTHON_MODULE(engine) {
 
     boost::python::class_<ShareableObject, boost::noncopyable>
             ("ShareableObject", boost::python::no_init)
-        .def("writeTextShort", &shareableWriteTextShort)
-        .def("writeTextLong", &shareableWriteTextLong)
         .def("str", &ShareableObject::str)
         .def("toString", &ShareableObject::toString)
         .def("detail", &ShareableObject::detail)

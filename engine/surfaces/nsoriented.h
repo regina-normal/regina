@@ -54,12 +54,7 @@ class NNormalSurfaceVectorOriented;
  * @{
  */
 
-/**
- * Stores information about transversely oriented standard normal coordinates.
- * See the general NormalInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct NormalInfo<NS_ORIENTED> {
     typedef NNormalSurfaceVectorOriented Class;
@@ -74,6 +69,7 @@ struct NormalInfo<NS_ORIENTED> {
         oriented = 1
     };
 };
+#endif
 
 /**
  * A normal surface vector using transversely oriented standard

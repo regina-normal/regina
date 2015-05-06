@@ -43,9 +43,10 @@
 
 #include <vector>
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "maths/nperm4.h"
 #include "utilities/nmarkedvector.h"
+#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
@@ -166,7 +167,10 @@ class REGINA_API NVertexEmbedding {
  * Vertices are highly temporary; once a triangulation changes, all its
  * vertex objects will be deleted and new ones will be created.
  */
-class REGINA_API NVertex : public ShareableObject, public NMarkedElement {
+class REGINA_API NVertex :
+        public Output<NVertex>,
+        public boost::noncopyable,
+        public NMarkedElement {
     public:
         /**
          * Categorises the possible links of a vertex into a small number
@@ -224,7 +228,7 @@ class REGINA_API NVertex : public ShareableObject, public NMarkedElement {
         /**
          * Default destructor.
          */
-        virtual ~NVertex();
+        ~NVertex();
 
         /**
          * Returns the index of this vertex in the underlying
@@ -492,7 +496,23 @@ class REGINA_API NVertex : public ShareableObject, public NMarkedElement {
          */
         long getLinkEulerCharacteristic() const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 
     private:

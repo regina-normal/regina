@@ -53,8 +53,8 @@ namespace {
 }
 
 void addNManifold() {
-    class_<NManifold, boost::noncopyable, bases<regina::ShareableObject>,
-            std::auto_ptr<NManifold> >("NManifold", no_init)
+    class_<NManifold, boost::noncopyable, std::auto_ptr<NManifold> >
+            ("NManifold", no_init)
         .def("getName", &NManifold::getName)
         .def("getTeXName", &NManifold::getTeXName)
         .def("getStructure", &NManifold::getStructure)
@@ -67,6 +67,11 @@ void addNManifold() {
         .def("writeTeXName", writeTeXName_stdio)
         .def("writeStructure", writeStructure_stdio)
         .def(self < self)
+        .def("str", &NManifold::str)
+        .def("toString", &NManifold::toString)
+        .def("detail", &NManifold::detail)
+        .def("toStringLong", &NManifold::toStringLong)
+        .def("__str__", &NManifold::str)
     ;
 }
 

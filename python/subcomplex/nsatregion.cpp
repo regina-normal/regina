@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "manifold/nsfs.h"
 #include "subcomplex/nsatregion.h"
+#include <iostream>
 
 using namespace boost::python;
 using regina::NSatBlock;
@@ -85,7 +86,7 @@ void addNSatRegion() {
         .def_readonly("refHoriz", &NSatBlockSpec::refHoriz)
     ;
 
-    class_<NSatRegion, boost::noncopyable, bases<regina::ShareableObject>,
+    class_<NSatRegion, boost::noncopyable,
             std::auto_ptr<NSatRegion> >("NSatRegion", init<NSatBlock*>())
         .def("numberOfBlocks", &NSatRegion::numberOfBlocks)
         .def("block", &NSatRegion::block, return_internal_reference<>())
@@ -99,6 +100,11 @@ void addNSatRegion() {
         .def("expand", expand_nolist, OL_expand())
         .def("writeBlockAbbrs", writeBlockAbbrs_stdio, OL_writeBlockAbbrs())
         .def("writeDetail", writeDetail_stdio)
+        .def("str", &NSatRegion::str)
+        .def("toString", &NSatRegion::toString)
+        .def("detail", &NSatRegion::detail)
+        .def("toStringLong", &NSatRegion::toStringLong)
+        .def("__str__", &NSatRegion::str)
     ;
 }
 

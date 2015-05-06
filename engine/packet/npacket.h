@@ -79,6 +79,9 @@ class NXMLTreeResolver;
  *   human-readable name of the packet type.
  *
  * \ifacespython Not present.
+ *
+ * \tparam packetType one of the #PacketType constants, indicating
+ * which type of packet we are querying.
  */
 template <PacketType packetType>
 struct PacketInfo;

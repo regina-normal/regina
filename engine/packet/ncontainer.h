@@ -55,12 +55,7 @@ class NContainer;
  * @{
  */
 
-/**
- * Stores information about the container packet.
- * See the general PacketInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct PacketInfo<PACKET_CONTAINER> {
     typedef NContainer Class;
@@ -68,6 +63,7 @@ struct PacketInfo<PACKET_CONTAINER> {
         return "Container";
     }
 };
+#endif
 
 /**
  * A packet that simply contains other packets.  Such

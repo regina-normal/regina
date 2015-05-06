@@ -77,12 +77,7 @@ typedef Simplex<2> Dim2Triangle;
  * @{
  */
 
-/**
- * Stores information about the 2-manifold triangulation packet.
- * See the general PacketInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct PacketInfo<PACKET_DIM2TRIANGULATION> {
     typedef Triangulation<2> Class;
@@ -90,6 +85,7 @@ struct PacketInfo<PACKET_DIM2TRIANGULATION> {
         return "2-Manifold Triangulation";
     }
 };
+#endif
 
 /**
  * Represents a 2-manifold triangulation.

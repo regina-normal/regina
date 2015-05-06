@@ -42,6 +42,7 @@
 #endif
 
 #include "regina-core.h"
+#include "output.h"
 #include "algebra/nmarkedabeliangroup.h"
 #include "maths/nrational.h"
 #include "triangulation/ntriangulation.h"
@@ -50,6 +51,7 @@
 #include <memory>
 #include <vector>
 #include <cstddef>
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -121,7 +123,9 @@ typedef Triangulation<3> NTriangulation;
  *
  * @author Ryan Budney
  */
-class REGINA_API NHomologicalData : public ShareableObject {
+class REGINA_API NHomologicalData :
+    public ShortOutput<NHomologicalData>,
+    public boost::noncopyable {
 private:
     /**
      * A fairly primitive class that implements sorted arrays of
@@ -469,7 +473,7 @@ public:
     /**
      * Destructor.
      */
-    virtual ~NHomologicalData();
+    ~NHomologicalData();
     /**
      * Short text representation as required by SharableObject.
      *
@@ -762,7 +766,6 @@ public:
 
 // constructor
 inline NHomologicalData::NHomologicalData(const NTriangulation& input):
-        ShareableObject(),
 
         tri(new NTriangulation(input)),
 
@@ -781,7 +784,6 @@ inline NHomologicalData::NHomologicalData(const NTriangulation& input):
 
 // copy constructor
 inline NHomologicalData::NHomologicalData(const NHomologicalData& g) :
-        ShareableObject(),
 
         tri(clonePtr(g.tri)),
 

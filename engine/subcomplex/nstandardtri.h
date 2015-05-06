@@ -42,7 +42,8 @@
 #endif
 
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -75,7 +76,9 @@ typedef Triangulation<3> NTriangulation;
  * not need to override writeTextShort() since this routine is
  * properly implemented in the base class NStandardTriangulation.
  */
-class REGINA_API NStandardTriangulation : public ShareableObject {
+class REGINA_API NStandardTriangulation :
+        public ShortOutput<NStandardTriangulation>,
+        public boost::noncopyable {
     public:
         /**
          * A destructor that does nothing.
@@ -178,6 +181,14 @@ class REGINA_API NStandardTriangulation : public ShareableObject {
          */
         virtual std::ostream& writeTeXName(std::ostream& out) const = 0;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         virtual void writeTextShort(std::ostream& out) const;
 
         /**

@@ -43,9 +43,10 @@
 
 #include <deque>
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "maths/nperm4.h"
 #include "utilities/nmarkedvector.h"
+#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
@@ -213,7 +214,10 @@ class REGINA_API NEdgeEmbedding {
  * Edges are highly temporary; once a triangulation changes, all its
  * edge objects will be deleted and new ones will be created.
  */
-class REGINA_API NEdge : public ShareableObject, public NMarkedElement {
+class REGINA_API NEdge :
+        public Output<NEdge>,
+        public boost::noncopyable,
+        public NMarkedElement {
     public:
         /**
          * A table that maps vertices of a tetrahedron to edge numbers.
@@ -298,10 +302,6 @@ class REGINA_API NEdge : public ShareableObject, public NMarkedElement {
             /**< Is this edge valid? */
 
     public:
-        /**
-         * Default destructor.
-         */
-        ~NEdge();
 
         /**
          * Returns the index of this edge in the underlying
@@ -409,7 +409,23 @@ class REGINA_API NEdge : public ShareableObject, public NMarkedElement {
          */
         bool isValid() const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 
     private:
@@ -437,9 +453,6 @@ namespace regina {
 
 inline NEdge::NEdge(NComponent* myComponent) : component_(myComponent),
         boundaryComponent_(0), valid_(true) {
-}
-
-inline NEdge::~NEdge() {
 }
 
 inline unsigned long NEdge::index() const {

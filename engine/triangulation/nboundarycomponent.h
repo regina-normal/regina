@@ -43,8 +43,9 @@
 
 #include <vector>
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "utilities/nmarkedvector.h"
+#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
@@ -87,7 +88,8 @@ typedef Triangulation<3> NTriangulation;
  * ones will be created.
  */
 class REGINA_API NBoundaryComponent :
-        public ShareableObject, public NMarkedElement {
+        public Output<NBoundaryComponent>,
+        public NMarkedElement {
     private:
         std::vector<NTriangle*> triangles_;
             /**< List of triangles in the component. */
@@ -100,10 +102,6 @@ class REGINA_API NBoundaryComponent :
             /**< Is this boundary component orientable? */
 
     public:
-        /**
-         * Default destructor.
-         */
-        virtual ~NBoundaryComponent();
 
         /**
          * Returns the index of this boundary component in the underlying
@@ -263,7 +261,23 @@ class REGINA_API NBoundaryComponent :
          */
         bool isOrientable() const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 
     private:
@@ -301,9 +315,6 @@ inline NBoundaryComponent::NBoundaryComponent() {
 
 inline NBoundaryComponent::NBoundaryComponent(NVertex* idealVertex) {
     vertices_.push_back(idealVertex);
-}
-
-inline NBoundaryComponent::~NBoundaryComponent() {
 }
 
 inline unsigned long NBoundaryComponent::index() const {
