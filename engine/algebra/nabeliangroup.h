@@ -44,7 +44,8 @@
 #include <set>
 #include "regina-core.h"
 #include "maths/ninteger.h"
-#include "shareableobject.h"
+#include "output.h"
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -71,7 +72,9 @@ class NMatrixInt;
  * \todo \optlong Look at using sparse matrices for storage of SNF and
  * the like.
  */
-class REGINA_API NAbelianGroup : public ShareableObject {
+class REGINA_API NAbelianGroup :
+        public ShortOutput<NAbelianGroup>,
+        public boost::noncopyable {
     protected:
         unsigned rank;
             /**< The rank of the group (the number of Z components). */
@@ -124,11 +127,6 @@ class REGINA_API NAbelianGroup : public ShareableObject {
          */
         NAbelianGroup(const NMatrixInt& M, const NMatrixInt& N,
             const NLargeInteger &p);
-
-        /**
-         * Destroys the group.
-         */
-        virtual ~NAbelianGroup();
 
         /**
          * Increments the rank of the group by the given integer.
@@ -342,7 +340,7 @@ class REGINA_API NAbelianGroup : public ShareableObject {
          * invariant factors of the group, as described in the
          * NAbelianGroup notes.
          */
-        virtual void writeTextShort(std::ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
     protected:
         /**
@@ -373,11 +371,7 @@ inline NAbelianGroup::NAbelianGroup() : rank(0) {
 }
 
 inline NAbelianGroup::NAbelianGroup(const NAbelianGroup& g) :
-        ShareableObject(), rank(g.rank),
-        invariantFactors(g.invariantFactors) {
-}
-
-inline NAbelianGroup::~NAbelianGroup() {
+        rank(g.rank), invariantFactors(g.invariantFactors) {
 }
 
 inline void NAbelianGroup::addRank(int extraRank) {
