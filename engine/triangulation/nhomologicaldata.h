@@ -485,7 +485,7 @@ public:
      *
      * @param out the output stream to which to write.
      */
-    virtual void writeTextShort(std::ostream& out) const;
+    void writeTextShort(std::ostream& out) const;
 
     /**
      * This routine gives access to the manifold's homology computed
