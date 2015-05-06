@@ -685,12 +685,40 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
 };
 
 /**
- * A <i>dim</i>-dimensional triangulation, built by gluing
+ * A <i>dim</i>-dimensional triangulation, built by gluing together
  * <i>dim</i>-dimensional simplices along their (<i>dim</i>-1)-dimensional
  * facets.  Typically (but not necessarily) such triangulations are used
  * to represent <i>dim</i>-manifolds.
  *
- * TODO: Flesh out with more documentation here.
+ * Such triangulations are not the same as pure simplicial complexes, for two
+ * reasons:
+ *
+ * - The only identifications that the user can explicitly specify are
+ *   gluings between <i>dim</i>-dimensional simplices along their
+ *   (<i>dim</i>-1)-dimensional facets.  All other identifications between
+ *   <i>k</i>-faces (for any \a k) are simply consequences of these
+ *   (<i>dim</i>-1)-dimensional gluings.  In contrast, a simplicial complex
+ *   allows explicit gluings between faces of any dimension.
+ *
+ * - There is no requirement for a <i>k</i>-face to have (<i>k</i>+1) distinct
+ *   vertices (so, for example, edges may be loops).  Many distinct
+ *   <i>k</i>-faces of a top-dimensional simplex may be identified together
+ *   as a consequence of the (<i>dim</i>-1)-dimensional gluings, and indeed
+ *   we are even allowed to glue together two distinct factets of the same
+ *   <i>dim</i>-simplex.  In contrast, a simplicial complex does not allow
+ *   any of these situations.
+ *
+ * Amongst other things, this definition is general enough to capture
+ * any reasonable definition of a <i>dim</i>-manifold triangulation.
+ * However, there is no requirement that a triangulation must actually
+ * represent a manifold (and indeed, testing this condition is undecidable
+ * for sufficiently large \a dim).
+ *
+ * You can construct a triangulation from scratch using routines such as
+ * newSimplex() and Simplex<dim>::join().  There are also routines for
+ * importing and exporting triangulations in bulk, such as isoSig() and
+ * fromIsoSig() (which uses <em>isomorphism signatures</em>), or
+ * insertConstruction() and dumpConstruction() (which exports C++ code).
  *
  * For dimensions 2 and 3, this template is specialised and offers
  * \e much more functionality.  In order to use these specialised
@@ -1129,7 +1157,7 @@ std::string TriangulationBase<dim>::dumpConstruction() const {
     ans <<
 "/**\n";
 #if 0
-TODO: packet labels
+TODO: output packet labels if we derive from NPacket
     if (! getPacketLabel().empty())
         ans <<
 " * " << dim << "-dimensional triangulation: " << getPacketLabel() << "\n";
