@@ -10,6 +10,11 @@ Regina - A Normal Surface Theory Calculator
 Version 4.97  [ (under development) ]
 
     ENGINE:
+        All:
+            - Removed ShareableObject from the class hierarchy.  All classes
+              that used to inherit from ShareableObject now inherit (directly
+              or indirectly) from the Output<> template instead.  As a result,
+              many such classes no longer contain any virtual functions.
         Namespace regina::boost, regina::stl:
             - Removed these namespaces and all their members.  To fix
               code that used regina::boost, just use plain boost instead.
@@ -22,8 +27,6 @@ Version 4.97  [ (under development) ]
         Class Dim2Triangulation:
             - New dimension-agnostic getFace<subdim>() and
               faceIndex<subdim>() template functions.
-        Class Dim2BoundaryComponent, Dim2Component, Dim2Edge, Dim2Triangle, Dim2Vertex
-            - Now derive from Output instead of ShareableObject.
         Class FaceTraits:
             - New template class to help with writing dimension-agnostic code.
               This class offers typedefs for (subdim)-dimensional faces
@@ -33,19 +36,8 @@ Version 4.97  [ (under development) ]
         Class NAngleStructureList:
             - Renamed getNumberOfStructures() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
-            - Now derives from ShortOutput instead of ShareableObject.
-        Class NAbelianGroup:
-            - Now derives from ShortOutput instead of ShareableObject.
-        Class NBoundaryComponent:
-            - Now derives from Output instead of ShareableObject.
-        Class NComponent:
-            - Now derives from Output instead of ShareableObject.
-        Class NCusp:
-            - Now derives from ShortOutput instead of ShareableObject.
         Class NCyclotomic:
             - New class for exact arithmetic in cyclotomic fields.
-        Class NEdge:
-            - Now derives from Output instead of ShareableObject.
         Class NExampleSnapPeaTriangulation:
             - New class for building ready-made SnapPea examples.
         Class NExampleTriangulation:
@@ -53,8 +45,6 @@ Version 4.97  [ (under development) ]
               and whiteheadLinkComplement() to figureEight(), trefoil()
               and whiteheadLink() respectively.  The old names are kept
               but deprecated.
-        Class NFileInfo:
-            - Now derives from Output instead of ShareableObject.
         Class NGenericFacetPairing, NFacePairing, Dim2EdgePairing:
             - Routines dotHeader() and writeDotHeader() no longer set an
               explicit background colour.
@@ -66,31 +56,18 @@ Version 4.97  [ (under development) ]
               routine, and set through an optional third argument to setDirs().
             - The homeDir argument to setDirs() may now be the empty string,
               which signals that the directory should not be changed.
-        Class NGroupExpression, NMarkedAbelianGroup:
-            - Now derive from ShortOutput instead of ShareableObject.
-        Class NGroupPresentation, NHomGroupPresentation
-            - Now derive from Output instead of ShareableObject.
-        Class NHomologicalData:
-            - Now derives from ShortOutput instead of ShareableObject.
-        Class NManifold:
-            - Now derives from Output instead of ShareableObject.
         Class NMatrix:
             - The destructor and writeMatrix() are no longer virtual.
             - Now derives from Output, and provides str() and detail()
               output routines.
-        Class NMatrixInt:
-            - No longer derives from ShareableObject.  Text output is now
-              provided by the inherited Output base class intead.
         Class NNormalSurface:
             - New convenience routines normal() and embedded().
-            - Now derives from ShortOutput instead of ShareableObject.
         Class NNormalSurfaceList:
             - Renamed getNumberOfSurfaces() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
         Class NNormalSurfaceSubset:
             - Renamed getNumberOfSurfaces() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
-            - Now derives from Output instead of ShareableObject.
         Class NPacket:
             - Added a variant of save() that takes an output stream (as
               opposed to a filename).
@@ -98,33 +75,16 @@ Version 4.97  [ (under development) ]
             - New routine transferChildren() for bulk tree reorganisation.
         Class NPacketListener:
             - New events childToBeRenamed(), childWasRenamed().
-        Class NPillowTwoSphere, NSnappedTwoSphere:
-            - Now derive from ShortOutput instead of ShareableObject.
         Class NPolynomial:
             - New class for working with single-variable polynomials
               over arbitrary rings.
-        Class NProgress, NProgressManager:
-            - Now derives from ShortOutput instead of ShareableObject.
         Class NRational:
             - The destructor is no longer virtual.
-        Class ShareableObject:
-            - Deprecated.  The only real functionality that this
-              provides is str() and detail(); classes that require this
-              should now inherit from Output<> instead.
         Class NSatBlock:
-            - Now derives from Output instead of ShareableObject.
             - Classes inheriting from this must now implement writeTextShort,
               and can optionally overwrite the default writeTextLong function.
-        Class NSatRegion:
-            - Now derives from Output instead of ShareableObject.
-        Class NSignature:
-            - Now derives from ShortOutput instead of ShareableObject.
-        Class NStandardTri:
-            - Now derives from ShortOutput instead of ShareableObject.
         Class NSurfaceFilterProperties:
             - New set-based routine setECs().
-        Class NTetrahedron:
-            - Now derives from Output instead of ShareableObject.
         Class NTreeBag, NTreeDecomposition:
             - Classes for computing tree decompositions of graphs
               (including facet pairing graphs of triangulations).
@@ -132,7 +92,6 @@ Version 4.97  [ (under development) ]
             - Added a new Type enumeration, which encapsulates (and replaces)
               the old triangle type constants.  Also added a new type
               constant UNKNOWN_TYPE.
-            - Now derives from Output instead of ShareableObject.
         Class NTriangulation:
             - The routine turaevViro() now computes Turaev-Viro invariants
               using exact arithmetic, as elements of a cyclotomic field.  The
@@ -157,23 +116,20 @@ Version 4.97  [ (under development) ]
               faceIndex<subdim>() template functions.
             - New routine niceTreeDecomposition() for constructing and
               caching a nice tree decomposition of the face pairing graph.
-        Class NTxICore:
-            - Now derives from Output instead of ShareableObject
         Class NVertex:
             - Added a new LinkType enumeration, which encapsulates (and
               replaces) the old link type constants.
-            - Now derives from Output instead of ShareableObject.
         Class Output, ShortOutput:
             - New classes that provide consistent APIs for objects to provide
-              short and detailed string output.  This may be used as a
+              short and detailed string output.  This has been introduced as a
               lightweight replacement for ShareableObject, and eventually
               it will replace ShareableObject completely.
         Class ShareableObject:
-            - This is no longer a mandatory base class for objects that
+            - Deprecated.  This is no longer a base class for objects that
               are mirrored in external interfaces.  Ultimately, the plan
               is to remove ShareableObject entirely.
-            - The old string output routines are now provided by the Output
-              template class, which is now a base class for ShareableObject.
+            - The string output routines str() and detail() are now provided
+              by the Output template class instead.
         Routine open():
             - Added a variant that takes an input stream (as opposed to
               a filename).
