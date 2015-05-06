@@ -223,6 +223,9 @@ class REGINA_API NManifold :
          * Writes a short text representation of this object to the
          * given output stream.
          *
+         * Subclasses must not override this routine.  They should
+         * override writeName() instead.
+         *
          * \ifacespython Not present.
          *
          * @param out the output stream to which to write.
@@ -231,6 +234,9 @@ class REGINA_API NManifold :
         /**
          * Writes a detailed text representation of this object to the
          * given output stream.
+         *
+         * Subclasses must not override this routine.  They should
+         * override writeName() and writeStructure() instead.
          *
          * \ifacespython Not present.
          *
