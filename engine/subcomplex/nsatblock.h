@@ -170,7 +170,7 @@ class REGINA_API NSatBlock :
          * that are referenced by the \a adjBlock array will \e not be
          * destroyed.
          */
-        ~NSatBlock();
+        virtual ~NSatBlock();
 
         /**
          * Returns a newly created clone of this saturated block structure.
