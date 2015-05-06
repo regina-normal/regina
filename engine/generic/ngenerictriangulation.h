@@ -88,33 +88,39 @@ class REGINA_API NGenericTriangulation {
          * Determines if this triangulation is combinatorially
          * isomorphic to the given triangulation.
          *
-         * Specifically, this routine determines if there is a
-         * one-to-one and onto boundary complete combinatorial
-         * isomorphism from this triangulation to \a other.  Boundary
-         * complete isomorphisms are described in detail in the
-         * Isomorphism class notes.
+         * Two triangulations are \e isomorphic if and only it is
+         * possible to relabel their top-dimensional simplices and the
+         * (<i>dim</i>+1) vertices of each simplex in a way that makes
+         * the two triangulations combinatorially identical, as returned
+         * by isIdenticalTo().
+         *
+         * Equivalently, two triangulations are isomorphic if and only if
+         * there is a one-to-one and onto boundary complete combinatorial
+         * isomorphism from this triangulation to \a other, as described
+         * in the Isomorphism class notes.
          *
          * In particular, note that this triangulation and \a other must
          * contain the same number of top-dimensional simplices for such an
          * isomorphism to exist.
          *
-         * If you need to ensure that top-dimensional simplices are labelled
-         * the same in both triangulations, see the stricter test
-         * isIdenticalTo() instead.
-         *
-         * If a boundary complete isomorphism is found, the details of
-         * this isomorphism are returned.  The isomorphism is newly
-         * constructed, and so to assist with memory management is
-         * returned as a std::auto_ptr.  Thus, to test whether an
-         * isomorphism exists without having to explicitly deal with the
-         * isomorphism itself, you can call
-         * <tt>if (isIsomorphicTo(other).get())</tt> and the newly
+         * If the triangulations are isomorphic, then this routine returns
+         * one such boundary complete isomorphism (i.e., one such relabelling).
+         * The isomorphism will be newly constructed, and to assist with
+         * memory management, it will be returned as a std::auto_ptr.
+         * Thus, to test whether an isomorphism exists without having to
+         * explicitly manage with the isomorphism itself, you can just call
+         * <tt>if (isIsomorphicTo(other).get())</tt>, in which case the newly
          * created isomorphism (if it exists) will be automatically
          * destroyed.
          *
-         * If more than one such isomorphism exists, only one will be
-         * returned.  For a routine that returns all such isomorphisms,
-         * see findAllIsomorphisms().
+         * There may be many such isomorphisms between the two triangulations.
+         * If you need to find \e all such isomorphisms, you may call
+         * findAllIsomorphisms() instead.
+         *
+         * If you need to ensure that top-dimensional simplices are labelled
+         * the same in both triangulations (i.e., that the triangulations are
+         * related by the \e identity isomorphism), you should call the
+         * stricter test isIdenticalTo() instead.
          *
          * \todo \opt Improve the complexity by choosing a simplex
          * mapping from each component and following gluings to
@@ -413,9 +419,9 @@ class REGINA_API NGenericTriangulation {
          * @param simp the index of some simplex in this triangulation.
          * @param vertices some ordering of the vertices of the
          * given tetrahedron.
-         * @param if this is non-null, it will be filled with the canonical
-         * isomorphism; in this case it must already have been constructed
-         * for the correct number of simplices.
+         * @param relabelling if this is non-null, it will be filled with the
+         * canonical isomorphism; in this case it must already have been
+         * constructed for the correct number of simplices.
          * @return the candidate isomorphism signature.
          */
         static std::string isoSigFrom(
