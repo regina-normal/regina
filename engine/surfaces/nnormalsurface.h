@@ -226,6 +226,9 @@ class NMatrixInt;
  *   human-readable name of the coordinate system.
  *
  * \ifacespython Not present.
+ *
+ * \tparam coordType one of the #NormalCoords constants, indicating
+ * which coordinate system we are querying.
  */
 template <NormalCoords coordType>
 struct NormalInfo;
