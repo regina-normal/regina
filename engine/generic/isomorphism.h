@@ -45,7 +45,6 @@
 #include "output.h"
 #include "generic/dimtraits.h"
 #include "generic/nfacetspec.h"
-#include "generic/policies.h"
 #include "maths/nperm.h"
 #include <algorithm>
 #include <boost/noncopyable.hpp>
@@ -506,7 +505,7 @@ Triangulation<dim>* IsomorphismBase<dim>::apply(
     unsigned long t;
     int f;
 
-    ChangeEventSpan<Triangulation<dim>> span(ans);
+    typename Triangulation<dim>::ChangeEventSpan span(ans);
     for (t = 0; t < nSimplices_; t++)
         tet[t] = ans->newSimplex();
 

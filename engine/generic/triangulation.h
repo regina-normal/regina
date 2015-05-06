@@ -985,6 +985,54 @@ class REGINA_API Triangulation :
          */
         void clearAllProperties();
 
+    public:
+        /**
+         * A do-nothing replacement for NPacket::ChangeEventSpan, for
+         * use with triangulation classes that do not derive from NPacket.
+         *
+         * Any function that modifies a packet must, directly or indirectly,
+         * create an NPacket::ChangeEventSpan object; the constructor
+         * and destructor of this object will in turn fire required events
+         * such as NPacketListener::packetToBeChanged() and
+         * NPacketListener::packetWasChanged().
+         *
+         * However, NPacket::ChangeEventSpan can (of course) only work
+         * with classes derived from NPacket.  This creates problems for
+         * generic functions that modify \e triangulations, since
+         * small-dimensional triangulations (such as Triangulation<3>)
+         * derive from NPacket, whereas the generic Triangulation<dim> class
+         * does not.
+         *
+         * For this reason, the generic Triangulation<dim> class
+         * provides its own ChangeEventSpan type (i.e., this class),
+         * which harmlessly does nothing at all.
+         *
+         * So: Any generic function that modifies a Triangulation<dim>,
+         * regardless of the dimension \a dim, should create a
+         * Triangulation<dim>::ChangeEventSpan object (instead of an
+         * NPacket::ChangeEventSpan object).
+         *
+         * - If Triangulation<dim> does derive from NPacket, then this will
+         *   equate to the inherited type NPacket::ChangeEventSpan,
+         *   and the necessary packet events will be fired correctly.
+         *
+         * - If Triangulation<dim> does not derive from NPacket, then
+         *   this will equate to the do-nothing type defined here.
+         *   The code will harmlessly compile and do nothing (as intended).
+         *
+         * See NPacket::ChangeEventSpan for further detail on how
+         * ChangeEventSpan objects should be used.
+         */
+        class ChangeEventSpan {
+            public:
+                /**
+                 * Constructor that does nothing.
+                 * The argument is ignored.
+                 */
+                inline ChangeEventSpan(TriangulationBase<dim>*) {
+                }
+        };
+
     friend class SimplexBase<dim>;
     friend class TriangulationBase<dim>;
 };
@@ -1085,7 +1133,7 @@ inline size_t TriangulationBase<dim>::simplexIndex(const Simplex<dim>* simplex)
 
 template <int dim>
 Simplex<dim>* TriangulationBase<dim>::newSimplex() {
-    ChangeEventSpan<Triangulation<dim>> span(
+    typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>*>(this));
     Simplex<dim>* s = new Simplex<dim>(static_cast<Triangulation<dim>*>(this));
     simplices_.push_back(s);
@@ -1095,7 +1143,7 @@ Simplex<dim>* TriangulationBase<dim>::newSimplex() {
 
 template <int dim>
 Simplex<dim>* TriangulationBase<dim>::newSimplex(const std::string& desc) {
-    ChangeEventSpan<Triangulation<dim>> span(
+    typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>*>(this));
     Simplex<dim>* s = new Simplex<dim>(desc,
         static_cast<Triangulation<dim>*>(this));
@@ -1106,7 +1154,7 @@ Simplex<dim>* TriangulationBase<dim>::newSimplex(const std::string& desc) {
 
 template <int dim>
 inline void TriangulationBase<dim>::removeSimplex(Simplex<dim>* simplex) {
-    ChangeEventSpan<Triangulation<dim>> span(
+    typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>*>(this));
 
     simplex->isolate();
@@ -1118,7 +1166,7 @@ inline void TriangulationBase<dim>::removeSimplex(Simplex<dim>* simplex) {
 
 template <int dim>
 inline void TriangulationBase<dim>::removeSimplexAt(size_t index) {
-    ChangeEventSpan<Triangulation<dim>> span(
+    typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>*>(this));
 
     Simplex<dim>* simplex = simplices_[index];
@@ -1131,7 +1179,7 @@ inline void TriangulationBase<dim>::removeSimplexAt(size_t index) {
 
 template <int dim>
 inline void TriangulationBase<dim>::removeAllSimplices() {
-    ChangeEventSpan<Triangulation<dim>> span(
+    typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>*>(this));
 
     for (auto it = simplices_.begin(); it != simplices_.end(); ++it)
@@ -1143,9 +1191,9 @@ inline void TriangulationBase<dim>::removeAllSimplices() {
 
 template <int dim>
 void TriangulationBase<dim>::swapContents(Triangulation<dim>& other) {
-    ChangeEventSpan<Triangulation<dim>> span1(
+    typename Triangulation<dim>::ChangeEventSpan span1(
         static_cast<Triangulation<dim>*>(this));
-    ChangeEventSpan<Triangulation<dim>> span2(&other);
+    typename Triangulation<dim>::ChangeEventSpan span2(&other);
 
     simplices_.swap(other.simplices_);
 
@@ -1161,9 +1209,9 @@ void TriangulationBase<dim>::swapContents(Triangulation<dim>& other) {
 
 template <int dim>
 void TriangulationBase<dim>::moveContentsTo(Triangulation<dim>& dest) {
-    ChangeEventSpan<Triangulation<dim>> span1(
+    typename Triangulation<dim>::ChangeEventSpan span1(
         static_cast<Triangulation<dim>*>(this));
-    ChangeEventSpan<Triangulation<dim>> span2(&dest);
+    typename Triangulation<dim>::ChangeEventSpan span2(&dest);
 
     SimplexIterator it;
     for (it = simplices_.begin(); it != simplices_.end(); ++it) {
@@ -1223,7 +1271,7 @@ bool TriangulationBase<dim>::isIdenticalTo(const Triangulation<dim>& other)
 template <int dim>
 void TriangulationBase<dim>::insertTriangulation(
         const Triangulation<dim>& source) {
-    ChangeEventSpan<Triangulation<dim>> span(
+    typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>*>(this));
 
     size_t nOrig = getNumberOfSimplices();
@@ -1262,7 +1310,7 @@ void TriangulationBase<dim>::insertConstruction(size_t nSimplices,
     if (nSimplices == 0)
         return;
 
-    ChangeEventSpan<Triangulation<dim>> span(
+    typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>*>(this));
 
     size_t nOrig = getNumberOfSimplices();

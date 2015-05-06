@@ -44,7 +44,6 @@
 #include "regina-core.h"
 #include "output.h"
 #include "generic/dimtraits.h"
-#include "generic/policies.h"
 #include "maths/nperm.h"
 #include "utilities/nmarkedvector.h"
 #include <cassert>
@@ -415,7 +414,7 @@ inline const std::string& SimplexBase<dim>::getDescription() const {
 
 template <int dim>
 inline void SimplexBase<dim>::setDescription(const std::string& desc) {
-    ChangeEventSpan<Triangulation<dim>> span(tri_);
+    typename Triangulation<dim>::ChangeEventSpan span(tri_);
     description_ = desc;
 }
 
@@ -471,7 +470,7 @@ Simplex<dim>* SimplexBase<dim>::unjoin(int myFacet) {
     if (! adj_[myFacet])
         return 0;
 
-    ChangeEventSpan<Triangulation<dim>> span(tri_);
+    typename Triangulation<dim>::ChangeEventSpan span(tri_);
 
     Simplex<dim>* you = adj_[myFacet];
     int yourFacet = gluing_[myFacet][myFacet];
@@ -486,7 +485,7 @@ Simplex<dim>* SimplexBase<dim>::unjoin(int myFacet) {
 template <int dim>
 void SimplexBase<dim>::join(int myFacet, Simplex<dim>* you,
         NPerm<dim+1> gluing) {
-    ChangeEventSpan<Triangulation<dim>> span(tri_);
+    typename Triangulation<dim>::ChangeEventSpan span(tri_);
 
     assert(tri_ == you->tri_);
     assert((! adj_[myFacet]) ||

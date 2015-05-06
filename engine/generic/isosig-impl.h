@@ -35,7 +35,6 @@
 #include <algorithm>
 #include <string>
 #include "generic/ngenerictriangulation.h"
-#include "generic/policies.h"
 
 /**
  * The numbers of base64 characters required to store an index into
@@ -402,7 +401,7 @@ Triangulation<dim>* NGenericTriangulation<dim>::fromIsoSig(
         const std::string& sig) {
     std::auto_ptr<Triangulation<dim>> ans(new Triangulation<dim>());
 
-    ChangeEventSpan<Triangulation<dim>> span(ans.get());
+    typename Triangulation<dim>::ChangeEventSpan span(ans.get());
 
     const char* c = sig.c_str();
 
