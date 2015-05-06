@@ -143,7 +143,7 @@ Version 4.97  [ (under development) ]
             - New routine niceTreeDecomposition() for constructing and
               caching a nice tree decomposition of the face pairing graph.
         Class NTxICore:
-            - Now derives from Output instead of ShareabltObject
+            - Now derives from Output instead of ShareableObject
         Class NVertex:
             - Added a new LinkType enumeration, which encapsulates (and
               replaces) the old link type constants.

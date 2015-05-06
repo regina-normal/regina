@@ -179,6 +179,14 @@ class REGINA_API NStandardTriangulation :
          */
         virtual std::ostream& writeTeXName(std::ostream& out) const = 0;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         virtual void writeTextShort(std::ostream& out) const;
 
         /**
