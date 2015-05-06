@@ -334,11 +334,19 @@ class REGINA_API NAbelianGroup :
         void writeXMLData(std::ostream& out) const;
 
         /**
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
          * The text representation will be of the form
          * <tt>3 Z + 4 Z_2 + Z_120</tt>.
          * The torsion elements will be written in terms of the
          * invariant factors of the group, as described in the
          * NAbelianGroup notes.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
