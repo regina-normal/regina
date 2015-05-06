@@ -314,7 +314,7 @@ class REGINA_API LightweightSequence {
                  *
                  * @param a an iterator indicating the first of the two
                  * subsequences to compare.
-                 * @param a an iterator indicating the second of the two
+                 * @param b an iterator indicating the second of the two
                  * subsequences to compare.
                  * @return \c true if and only if the two subsequences
                  * are identical.
@@ -331,7 +331,7 @@ class REGINA_API LightweightSequence {
                  *
                  * @param a an iterator indicating the first of the two
                  * subsequences to compare.
-                 * @param a an iterator indicating the second of the two
+                 * @param b an iterator indicating the second of the two
                  * subsequences to compare.
                  * @return \c true if and only if the subsequence
                  * indicated by \a a is lexicographically smaller than
@@ -350,7 +350,7 @@ class REGINA_API LightweightSequence {
                  *
                  * @param a an iterator indicating the first of the two
                  * subsequences to compare.
-                 * @param a an iterator indicating the second of the two
+                 * @param b an iterator indicating the second of the two
                  * subsequences to compare.
                  * @return \c true if and only if the subsequence
                  * indicated by \a a is lexicographically smaller than
