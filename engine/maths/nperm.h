@@ -72,6 +72,17 @@ inline constexpr char digit(int i) {
 }
 
 /**
+ * Returns the factorial of \a n.
+ *
+ * @param n any non-negative integer; this must be at most 20
+ * (since otherwise the factorial will overflow).
+ * @return the factorial of \a n..
+ */
+inline constexpr int64_t factorial(int n) {
+    return (n <= 1 ? 1 : factorial(n - 1) * n);
+}
+
+/**
  * Represents a permutation of {0,1,...,<i>n</i>-1}.
  * Amongst other things, such permutations are used to describe
  * simplex gluings in (<i>n</i>-1)-manifold triangulations.
@@ -128,7 +139,7 @@ class REGINA_API NPerm {
          * The full permutation code packs \a n such images together,
          * and so uses \a n * \a imageBits bits in total.
          */
-        static const int imageBits;
+        static constexpr int imageBits = regina::bitsRequired(n);
 
         /**
          * Denotes a native signed integer type large enough to count all
@@ -152,22 +163,29 @@ class REGINA_API NPerm {
          * The total number of permutations on \a n elements.
          * This is the size of the symmetric group <i>S<sub>n</sub></i>.
          */
-        static const Index nPerms;
+        static constexpr Index nPerms = factorial(n);
 
         /**
          * The total number of permutations on <i>n</i>-1 elements.  This is
          * the size of the symmetric group <i>S</i><sub><i>n</i>-1</sub>.
          */
-        static const Index nPerms_1;
+        static constexpr Index nPerms_1 = factorial(n-1);
 
     private:
         Code code_;
             /**< The internal code representing this permutation. */
 
-        static const Code idCode_;
+        /**
+         * Internal helper routine.  This routine recursively computes the
+         * private constant idCode_ at compile time.
+         */
+        static constexpr typename NPerm<n>::Code idCodePartial(int k);
+
+        static constexpr Code idCode_ = idCodePartial(n - 1);
             /**< The internal code for the identity permutation. */
 
-        static const Code imageMask_;
+        static constexpr Code imageMask_ = (static_cast<
+                typename NPerm<n>::Code>(1) << NPerm<n>::imageBits) - 1;
             /**< A bitmask whose lowest \a imageBits are 1, and whose
                  remaining higher order bits are all 0. */
 
@@ -473,38 +491,29 @@ template <> class NPerm<5>;
 
 // Static constants for NPerm
 
-namespace {
-    constexpr int64_t factorial(int n) {
-        return (n <= 1 ? 1 : factorial(n - 1) * n);
-    }
-}
+template <int n>
+constexpr typename NPerm<n>::Index NPerm<n>::nPerms;
 
 template <int n>
-const typename NPerm<n>::Index NPerm<n>::nPerms = factorial(n);
+constexpr typename NPerm<n>::Index NPerm<n>::nPerms_1;
 
 template <int n>
-const typename NPerm<n>::Index NPerm<n>::nPerms_1 = factorial(n-1);
+constexpr int NPerm<n>::imageBits;
 
 template <int n>
-const int NPerm<n>::imageBits = regina::bitsRequired(n);
-
-namespace {
-    template <int n>
-    inline constexpr typename NPerm<n>::Code idCodePartial(int k) {
-        return (k == 0 ? 0 :
-            static_cast<typename NPerm<n>::Code>(k) <<
-                (NPerm<n>::imageBits * k) | idCodePartial<n>(k - 1));
-    }
-}
+constexpr typename NPerm<n>::Code NPerm<n>::idCode_;
 
 template <int n>
-const typename NPerm<n>::Code NPerm<n>::idCode_ = idCodePartial<n>(n - 1);
-
-template <int n>
-const typename NPerm<n>::Code NPerm<n>::imageMask_ =
-    (static_cast<typename NPerm<n>::Code>(1) << NPerm<n>::imageBits) - 1;
+constexpr typename NPerm<n>::Code NPerm<n>::imageMask_;
 
 // Inline functions for NPerm
+
+template <int n>
+inline constexpr typename NPerm<n>::Code NPerm<n>::idCodePartial(int k) {
+    return (k == 0 ? 0 :
+        (static_cast<Code>(k) << (NPerm<n>::imageBits * k)) |
+            idCodePartial(k - 1));
+}
 
 template <int n>
 inline NPerm<n>::NPerm() : code_(idCode_) {

@@ -247,6 +247,8 @@ Version 4.97  [ (under development) ]
             - New constexpr routine for counting bits in an integer.
         Routine digit():
             - New constexpr routine for converting integers into characters.
+        Routine factorial():
+            - New constexpr routine for computing factorials.
         Routine nextPowerOfTwo():
             - New constexpr routine for rounding up to a power of two.
         Routine open():
