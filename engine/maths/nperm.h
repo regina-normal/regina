@@ -213,8 +213,6 @@ class REGINA_API NPerm {
          * \pre The array \a image contains \a n elements, which are
          * 0,...,<i>n</i>-1 in some order.
          *
-         * \ifacespython Not present.
-         *
          * @param image the array of images.
          */
         NPerm(const int* image);

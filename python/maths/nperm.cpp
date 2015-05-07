@@ -48,31 +48,27 @@ namespace {
     }
 
     template <int n>
-    NPerm<n> * fromList(boost::python::list l) {
+    boost::shared_ptr<NPerm<n>> fromList(boost::python::list l) {
         long len = boost::python::len(l);
         if ( len != n ) {
             char err[80];
-            sprintf(err, "Initialisation list for NPerm%d "
-                         "must contain exactly %d integers.", n, n);
+            snprintf(err, 80, "Initialisation list for NPerm%d must contain "
+                              "exactly %d integers.", n, n);
             PyErr_SetString(PyExc_ValueError, err);
             boost::python::throw_error_already_set();
         }
-        int* image = new int[n];
+        int image[n];
         for ( long i = 0; i < n; i++) {
             extract<int> val(l[i]);
             if (!val.check()) {
-                delete[] image;
                 // Throws an exception
                 val();
             }
             image[i] = val();
         }
-        NPerm<n> * ans = new NPerm<n>(image);
-        delete[] image;
+        boost::shared_ptr<NPerm<n>> ans(new NPerm<n>(image));
         return ans;
     }
-
-
 }
 
 template <int n>
