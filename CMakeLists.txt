@@ -119,7 +119,7 @@ NEED_CXX11_FEATURE("static_assert")
 IF(NOT HAVE_CXX11_FEATURES)
   MESSAGE(FATAL_ERROR "Regina requires C++11 support to compile. In particular, Regina uses the \"auto\", \"constexpr\" and \"static_assert\" features.")
 ENDIF()
-SET(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} ${CXX11_SWITCH})
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11_SWITCH}")
 MESSAGE(STATUS "Checking for C++11 features: auto, constexpr, static_assert - Success")
 
 # All the user to exclude various pieces of third-party code that are
