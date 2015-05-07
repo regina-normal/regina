@@ -47,9 +47,10 @@
 #include <set>
 
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "packet/npacketlistener.h"
 #include "packet/packettype.h"
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -151,7 +152,9 @@ struct PacketInfo;
  * \todo \feature Provide automatic name selection/specification upon
  * child packet insertion.
  */
-class REGINA_API NPacket : public ShareableObject {
+class REGINA_API NPacket :
+        public Output<NPacket>,
+        public boost::noncopyable {
     private:
         std::string packetLabel;
             /**< The unique label for this individual packet of information. */
@@ -1342,6 +1345,27 @@ class REGINA_API NPacket : public ShareableObject {
          * they handle the event.
          */
         void fireDestructionEvent();
+
+    public:
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+         virtual void writeTextShort(std::ostream& out) const = 0;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+         virtual void writeTextLong(std::ostream& out) const;
+
 };
 
 /**
@@ -1394,6 +1418,11 @@ inline NPacket::NPacket(NPacket* parent) : firstTreeChild(0), lastTreeChild(0),
         parent->insertChildLast(this);
     else
         treeParent = 0;
+}
+
+inline void NPacket::writeTextLong(std::ostream& out) const {
+    writeTextShort(out);
+    out << '\n';
 }
 
 inline const std::string& NPacket::getPacketLabel() const {
