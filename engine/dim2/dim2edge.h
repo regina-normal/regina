@@ -51,11 +51,12 @@
 namespace regina {
 
 class Dim2BoundaryComponent;
-class Dim2Component;
 class Dim2Vertex;
 
+template <int> class Component;
 template <int> class Simplex;
 template <int> class Triangulation;
+typedef Component<2> Dim2Component;
 typedef Simplex<2> Dim2Triangle;
 typedef Triangulation<2> Dim2Triangulation;
 

@@ -41,11 +41,8 @@
  *  \brief Deals with components of a 2-manifold triangulation.
  */
 
-#include <vector>
 #include "regina-core.h"
-#include "output.h"
-#include "utilities/nmarkedvector.h"
-#include <boost/noncopyable.hpp>
+#include "generic/component.h"
 
 namespace regina {
 
@@ -64,17 +61,18 @@ typedef Triangulation<2> Dim2Triangulation;
  */
 
 /**
- * Represents a component of a 2-manifold triangulation.
- * Components are highly temporary; once a triangulation changes, all
- * its component objects will be deleted and new ones will be created.
+ * Represents a connected component of a 2-manifold triangulation.
+ *
+ * This is a specialisation of the generic Component class template; see
+ * the Component documentation for an overview of how this class works.
+ *
+ * This 2-dimensional specialisation contains some extra functionality.
+ * In particular, each 2-dimensional component also stores details on
+ * lower-dimensional faces (i.e., vertices and edges) and boundary components.
  */
-class REGINA_API Dim2Component :
-        public Output<Dim2Component>,
-        public boost::noncopyable,
-        public NMarkedElement {
+template <>
+class REGINA_API Component<2> : public ComponentBase<2> {
     private:
-        std::vector<Dim2Triangle*> triangles_;
-            /**< List of triangles in the component. */
         std::vector<Dim2Edge*> edges_;
             /**< List of edges in the component. */
         std::vector<Dim2Vertex*> vertices_;
@@ -82,37 +80,13 @@ class REGINA_API Dim2Component :
         std::vector<Dim2BoundaryComponent*> boundaryComponents_;
             /**< List of boundary components in the component. */
 
-        bool orientable_;
-            /**< Is the component orientable? */
-
     public:
-
         /**
-         * Returns the index of this component in the underlying
-         * triangulation.  This is identical to calling
-         * <tt>getTriangulation()->componentIndex(this)</tt>.
+         * A dimension-specific alias for size().
          *
-         * @return the index of this component vertex.
-         */
-        unsigned long index() const;
-
-        /**
-         * Returns the number of triangles in this component.
-         *
-         * @return the number of triangles.
+         * See size() for further information.
          */
         unsigned long getNumberOfTriangles() const;
-        /**
-         * A dimension-agnostic alias for getNumberOfTriangles().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 2-manifold triangulations means a triangle).
-         * 
-         * See getNumberOfTriangles() for further information.
-         */
-        unsigned long getNumberOfSimplices() const;
 
         /**
          * Returns the number of edges in this component.
@@ -136,13 +110,9 @@ class REGINA_API Dim2Component :
         unsigned long getNumberOfBoundaryComponents() const;
 
         /**
-         * Returns all triangular faces in the component.
+         * A dimension-specific alias for simplices().
          *
-         * The reference returned will remain valid for as long as this
-         * component object exists, always reflecting the triangles currently 
-         * in the component.
-         *
-         * \ifacespython This routine returns a python list.
+         * See simplices() for further information.
          */
         const std::vector<Dim2Triangle*>& getTriangles() const;
 
@@ -169,28 +139,11 @@ class REGINA_API Dim2Component :
         const std::vector<Dim2Vertex*>& getVertices() const;
 
         /**
-         * Returns the requested triangle in this component.
+         * A dimension-specific alias for simplex().
          *
-         * @param index the index of the requested triangle in the
-         * component.  This should be between 0 and
-         * getNumberOfTriangles()-1 inclusive.
-         * Note that the index of a triangle in the component need
-         * not be the index of the same triangle in the entire
-         * triangulation.
-         * @return the requested triangle.
+         * See simplex() for further information.
          */
         Dim2Triangle* getTriangle(unsigned long index) const;
-        /**
-         * A dimension-agnostic alias for getTriangle().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 2-manifold triangulations means a triangle).
-         * 
-         * See getTriangle() for further information.
-         */
-        Dim2Triangle* getSimplex(unsigned long index) const;
 
         /**
          * Returns the requested edge in this component.
@@ -232,13 +185,6 @@ class REGINA_API Dim2Component :
         Dim2BoundaryComponent* getBoundaryComponent(unsigned long index) const;
 
         /**
-         * Determines if this component is orientable.
-         * 
-         * @return \c true if and only if this component is orientable.
-         */
-        bool isOrientable() const;
-
-        /**
          * Determines if this component is closed.
          * This is the case if and only if it has no boundary.
          *
@@ -247,30 +193,11 @@ class REGINA_API Dim2Component :
         bool isClosed() const;
 
         /**
-         * Returns the number of boundary edges in this component.
+         * A dimension-specific alias for getNumberOfBoundaryFacets().
          *
-         * @return the number of boundary edges.
+         * See getNumberOfBoundaryFacets() for further information.
          */
-        unsigned long getNumberOfBoundaryEdges() const;
-
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
+        size_t getNumberOfBoundaryEdges() const;
 
     private:
         /**
@@ -278,7 +205,7 @@ class REGINA_API Dim2Component :
          *
          * Marks the component as orientable.
          */
-        Dim2Component();
+        Component();
 
     friend class Triangulation<2>;
         /**< Allow access to private members. */
@@ -286,78 +213,62 @@ class REGINA_API Dim2Component :
 
 /*@}*/
 
-// Inline functions for Dim2Component
+// Inline functions for Component<2>
 
-inline Dim2Component::Dim2Component() : orientable_(true) {
+inline Component<2>::Component() : ComponentBase<2>() {
 }
 
-inline unsigned long Dim2Component::index() const {
-    return markedIndex();
+inline unsigned long Component<2>::getNumberOfTriangles() const {
+    return size();
 }
 
-inline unsigned long Dim2Component::getNumberOfTriangles() const {
-    return triangles_.size();
-}
-
-inline unsigned long Dim2Component::getNumberOfSimplices() const {
-    return triangles_.size();
-}
-
-inline unsigned long Dim2Component::getNumberOfEdges() const {
+inline unsigned long Component<2>::getNumberOfEdges() const {
     return edges_.size();
 }
 
-inline unsigned long Dim2Component::getNumberOfVertices() const {
+inline unsigned long Component<2>::getNumberOfVertices() const {
     return vertices_.size();
 }
 
-inline unsigned long Dim2Component::getNumberOfBoundaryComponents() const {
+inline unsigned long Component<2>::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
-inline const std::vector<Dim2Triangle*>& Dim2Component::getTriangles() const {
-    return triangles_;
+inline const std::vector<Dim2Triangle*>& Component<2>::getTriangles() const {
+    return simplices();
 }
 
-inline const std::vector<Dim2Edge*>& Dim2Component::getEdges() const {
+inline const std::vector<Dim2Edge*>& Component<2>::getEdges() const {
     return edges_;
 }
 
-inline const std::vector<Dim2Vertex*>& Dim2Component::getVertices() const {
+inline const std::vector<Dim2Vertex*>& Component<2>::getVertices() const {
     return vertices_;
 }
 
-inline Dim2Triangle* Dim2Component::getTriangle(unsigned long index) const {
-    return triangles_[index];
+inline Dim2Triangle* Component<2>::getTriangle(unsigned long index) const {
+    return simplex(index);
 }
 
-inline Dim2Triangle* Dim2Component::getSimplex(unsigned long index) const {
-    return triangles_[index];
-}
-
-inline Dim2Edge* Dim2Component::getEdge(unsigned long index) const {
+inline Dim2Edge* Component<2>::getEdge(unsigned long index) const {
     return edges_[index];
 }
 
-inline Dim2Vertex* Dim2Component::getVertex(unsigned long index) const {
+inline Dim2Vertex* Component<2>::getVertex(unsigned long index) const {
     return vertices_[index];
 }
 
-inline Dim2BoundaryComponent* Dim2Component::getBoundaryComponent(
+inline Dim2BoundaryComponent* Component<2>::getBoundaryComponent(
         unsigned long index) const {
     return boundaryComponents_[index];
 }
 
-inline bool Dim2Component::isOrientable() const {
-    return orientable_;
-}
-
-inline bool Dim2Component::isClosed() const {
+inline bool Component<2>::isClosed() const {
     return (boundaryComponents_.empty());
 }
 
-inline unsigned long Dim2Component::getNumberOfBoundaryEdges() const {
-    return 2 * edges_.size() - 3 * triangles_.size();
+inline size_t Component<2>::getNumberOfBoundaryEdges() const {
+    return getNumberOfBoundaryFacets();
 }
 
 } // namespace regina

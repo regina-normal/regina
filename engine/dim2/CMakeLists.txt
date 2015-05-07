@@ -3,7 +3,6 @@
 # Files to compile
 SET ( FILES
   dim2boundarycomponent
-  dim2component
   dim2edge
   dim2exampletriangulation
   dim2triangulation

@@ -40,6 +40,7 @@
 #include "dim2/dim2vertex.h"
 
 using namespace boost::python;
+using regina::Component;
 using regina::Dim2Component;
 
 namespace {
@@ -69,19 +70,23 @@ namespace {
 }
 
 void addDim2Component() {
-    class_<Dim2Component, std::auto_ptr<Dim2Component>, boost::noncopyable>
-            ("Dim2Component", no_init)
+    class_<Component<2>, std::auto_ptr<Component<2>>, boost::noncopyable>
+            ("Component2", no_init)
         .def("index", &Dim2Component::index)
+        .def("size", &Dim2Component::size)
         .def("getNumberOfTriangles", &Dim2Component::getNumberOfTriangles)
         .def("getNumberOfSimplices", &Dim2Component::getNumberOfSimplices)
         .def("getNumberOfEdges", &Dim2Component::getNumberOfEdges)
         .def("getNumberOfVertices", &Dim2Component::getNumberOfVertices)
         .def("getNumberOfBoundaryComponents",
             &Dim2Component::getNumberOfBoundaryComponents)
+        .def("simplices", getTriangles_list)
         .def("getTriangles", getTriangles_list)
         .def("getEdges", getEdges_list)
         .def("getVertices", getVertices_list)
         .def("getTriangle", &Dim2Component::getTriangle,
+            return_value_policy<reference_existing_object>())
+        .def("simplex", &Dim2Component::simplex,
             return_value_policy<reference_existing_object>())
         .def("getSimplex", &Dim2Component::getSimplex,
             return_value_policy<reference_existing_object>())
@@ -93,6 +98,8 @@ void addDim2Component() {
             return_value_policy<reference_existing_object>())
         .def("isOrientable", &Dim2Component::isOrientable)
         .def("isClosed", &Dim2Component::isClosed)
+        .def("getNumberOfBoundaryFacets",
+            &Dim2Component::getNumberOfBoundaryFacets)
         .def("getNumberOfBoundaryEdges",
             &Dim2Component::getNumberOfBoundaryEdges)
         .def("str", &Dim2Component::str)
@@ -101,5 +108,7 @@ void addDim2Component() {
         .def("toStringLong", &Dim2Component::toStringLong)
         .def("__str__", &Dim2Component::str)
     ;
+
+    scope().attr("Dim2Component") = scope().attr("Component2");
 }
 

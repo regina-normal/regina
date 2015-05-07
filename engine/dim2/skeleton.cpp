@@ -110,7 +110,7 @@ void Triangulation<2>::calculateComponents() const {
         // edges, we might as well collect information on the
         // edges while we're at it.
         loopTri->component_ = label;
-        label->triangles_.push_back(loopTri);
+        label->simplices_.push_back(loopTri);
         loopTri->orientation_ = 1;
 
         stack[0] = loopTri;
@@ -177,7 +177,7 @@ void Triangulation<2>::calculateComponents() const {
                     } else {
                         // Wheee!  A triangle we haven't seen before.
                         adjTri->component_ = label;
-                        label->triangles_.push_back(adjTri);
+                        label->simplices_.push_back(adjTri);
                         adjTri->orientation_ = adjOrientation;
 
                         stack[stackSize++] = adjTri;

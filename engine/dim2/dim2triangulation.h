@@ -59,15 +59,16 @@
 namespace regina {
 
 class Dim2BoundaryComponent;
-class Dim2Component;
 class Dim2Edge;
 class Dim2Vertex;
 class NXMLDim2TriangulationReader;
 class NXMLPacketReader;
 
+template <int> class Component;
 template <int> class Isomorphism;
 template <int> class SimplexBase;
 template <int> class Simplex;
+typedef Component<2> Dim2Component;
 typedef Isomorphism<2> Dim2Isomorphism;
 typedef Simplex<2> Dim2Triangle;
 

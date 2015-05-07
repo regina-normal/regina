@@ -20,6 +20,13 @@ Version 4.97  [ (under development) ]
         Namespace regina::boost, regina::stl:
             - Removed these namespaces and all their members.  To fix
               code that used regina::boost, just use plain boost instead.
+        Class Component, ComponentBase:
+            - Component<dim> is now a generic class that replaces the old
+              Dim2Component, NComponent and so on.  ComponentBase<dim> is a
+              base class with functionality common to all dimensions,
+              whereas Component<dim> is specialised for dimensions 2, 3 and 4.
+            - The old class names Dim2Component and NComponent have
+              been kept as typedefs for convenience.
         Class CompressionBuffer, CompressionStream, DecompressionBuffer,
                 DecompressionStream, ZBuffer:
             - Removed entirely.  Regina now uses boost::iostreams instead.
@@ -28,6 +35,13 @@ Version 4.97  [ (under development) ]
               a triangulation by degree.
         Class Dim2BoundaryComponent, Dim2Component, Dim2Edge, Dim2Vertex
             - Now derive from Output instead of ShareableObject.
+        Class Dim2Component:
+            - New routine getNumberOfBoundaryFacets(), which is identical to
+              the dimension-specific getNumberOfBoundaryEdges().
+            - Routines getNumberOfSimplices(), getSimplices() and getSimplex()
+              have been renamed to size(), simplices() and simplex()
+              respectively.  The old names are deprecated but have been
+              kept for backward compatibility.
         Class Dim2Isomorphism:
             - Now just a typedef for the new class Isomorphism<2>, which has
               the same functionality as the old Dim2Isomorphism.
@@ -72,6 +86,13 @@ Version 4.97  [ (under development) ]
         Class NAngleStructureList:
             - Renamed getNumberOfStructures() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
+        Class NComponent:
+            - New routine getNumberOfBoundaryFacets(), which is identical to
+              the dimension-specific getNumberOfBoundaryTriangles().
+            - Routines getNumberOfSimplices(), getSimplices() and getSimplex()
+              have been renamed to size(), simplices() and simplex()
+              respectively.  The old names are deprecated but have been
+              kept for backward compatibility.
         Class NCyclotomic:
             - New class for exact arithmetic in cyclotomic fields.
         Class NExampleSnapPeaTriangulation:
