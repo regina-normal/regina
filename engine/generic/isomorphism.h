@@ -43,7 +43,6 @@
 
 #include "regina-core.h"
 #include "output.h"
-#include "generic/dimtraits.h"
 #include "generic/nfacetspec.h"
 #include "maths/nperm.h"
 #include <algorithm>
@@ -52,6 +51,7 @@
 namespace regina {
 
 template <int dim> class Isomorphism;
+template <int dim> class Simplex;
 template <int dim> class Triangulation;
 
 /**

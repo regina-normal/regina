@@ -43,7 +43,6 @@
 
 #include "regina-core.h"
 #include "output.h"
-#include "generic/dimtraits.h"
 #include "maths/nperm.h"
 #include "utilities/nmarkedvector.h"
 #include <cassert>
