@@ -46,6 +46,33 @@ namespace {
     int perm_getItem(const NPerm<n>& p, int index) {
         return p[index];
     }
+
+    template <int n>
+    NPerm<n> * fromList(boost::python::list l) {
+        long len = boost::python::len(l);
+        if ( len != n ) {
+            char err[80];
+            sprintf(err, "Initialisation list for NPerm%d "
+                         "must contain exactly %d integers.", n, n);
+            PyErr_SetString(PyExc_ValueError, err);
+            boost::python::throw_error_already_set();
+        }
+        int* image = new int[n];
+        for ( long i = 0; i < n; i++) {
+            extract<int> val(l[i]);
+            if (!val.check()) {
+                delete[] image;
+                // Throws an exception
+                val();
+            }
+            image[i] = val();
+        }
+        NPerm<n> * ans = new NPerm<n>(image);
+        delete[] image;
+        return ans;
+    }
+
+
 }
 
 template <int n>
@@ -53,6 +80,7 @@ void addNPerm(const char* name) {
     scope s = class_<NPerm<n> >(name)
         .def(init<int, int>())
         .def(init<const NPerm<n>&>())
+        .def("__init__", make_constructor(fromList<n>))
         .def("getPermCode", &NPerm<n>::getPermCode)
         .def("setPermCode", &NPerm<n>::setPermCode)
         .def("fromPermCode", &NPerm<n>::fromPermCode)
