@@ -66,8 +66,7 @@ namespace {
             }
             image[i] = val();
         }
-        boost::shared_ptr<NPerm<n>> ans(new NPerm<n>(image));
-        return ans;
+        return boost::shared_ptr<NPerm<n>>(new NPerm<n>(image));
     }
 }
 
