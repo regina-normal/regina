@@ -38,7 +38,7 @@
 #endif
 
 /*! \file dim2/dim2component.h
- *  \brief Deals with components of a 2-manifold triangulation.
+ *  \brief Deals with connected components of a 2-manifold triangulation.
  */
 
 #include "regina-core.h"
@@ -203,12 +203,11 @@ class REGINA_API Component<2> : public ComponentBase<2> {
         /**
          * Default constructor.
          *
-         * Marks the component as orientable.
+         * Marks the component as orientable, with no boundary facets.
          */
         Component();
 
     friend class Triangulation<2>;
-        /**< Allow access to private members. */
 };
 
 /*@}*/
