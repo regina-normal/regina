@@ -12,7 +12,6 @@ SET ( FILES
   insertlayered
   isomorphic
   nboundarycomponent
-  ncomponent
   nedge
   nexampletriangulation
   nfacepair

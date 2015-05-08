@@ -48,10 +48,11 @@
 namespace regina {
 
 class NAbelianGroup;
-class NComponent;
 class NManifold;
 
+template <int> class Component;
 template <int> class Triangulation;
+typedef Component<3> NComponent;
 typedef Triangulation<3> NTriangulation;
 
 /**

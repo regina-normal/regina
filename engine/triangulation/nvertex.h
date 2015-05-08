@@ -52,11 +52,12 @@
 namespace regina {
 
 class NBoundaryComponent;
-class NComponent;
 
+template <int> class Component;
 template <int> class Isomorphism;
 template <int> class Simplex;
 template <int> class Triangulation;
+typedef Component<3> NComponent;
 typedef Isomorphism<3> NIsomorphism;
 typedef Simplex<3> NTetrahedron;
 typedef Triangulation<2> Dim2Triangulation;

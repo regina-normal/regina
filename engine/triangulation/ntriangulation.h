@@ -69,7 +69,6 @@ namespace regina {
 
 class NAngleStructure;
 class NBoundaryComponent;
-class NComponent;
 class NEdge;
 class NTriangle;
 class NVertex;
@@ -78,9 +77,11 @@ class NNormalSurface;
 class NXMLPacketReader;
 class NXMLTriangulationReader;
 
+template <int> class Component;
 template <int> class Isomorphism;
 template <int> class SimplexBase;
 template <int> class Simplex;
+typedef Component<3> NComponent;
 typedef Isomorphism<3> NIsomorphism;
 typedef Simplex<3> NTetrahedron;
 

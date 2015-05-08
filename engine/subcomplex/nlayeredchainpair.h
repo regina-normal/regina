@@ -46,7 +46,8 @@
 
 namespace regina {
 
-class NComponent;
+template <int> class Component;
+typedef Component<3> NComponent;
 
 /**
  * \weakgroup subcomplex

@@ -139,7 +139,7 @@ void NTriangulation::labelComponent(NTetrahedron* firstTet,
     NTetrahedron** queue = new NTetrahedron*[simplices_.size()];
 
     firstTet->component_ = component;
-    component->tetrahedra_.push_back(firstTet);
+    component->simplices_.push_back(firstTet);
     firstTet->tetOrientation_ = 1;
 
     unsigned queueStart = 0, queueEnd = 1;
@@ -164,7 +164,7 @@ void NTriangulation::labelComponent(NTetrahedron* firstTet,
                     }
                 } else {
                     adjTet->component_ = component;
-                    component->tetrahedra_.push_back(adjTet);
+                    component->simplices_.push_back(adjTet);
                     adjTet->tetOrientation_ = yourOrientation;
 
                     queue[queueEnd++] = adjTet;

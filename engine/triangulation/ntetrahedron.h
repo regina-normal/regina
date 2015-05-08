@@ -52,9 +52,10 @@ namespace regina {
 class NTriangle;
 class NEdge;
 class NVertex;
-class NComponent;
 
+template <int> class Component;
 template <int> class Triangulation;
+typedef Component<3> NComponent;
 typedef Triangulation<3> NTriangulation;
 
 /**

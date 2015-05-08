@@ -51,12 +51,13 @@
 namespace regina {
 
 class NBoundaryComponent;
-class NComponent;
 class NEdge;
 class NVertex;
 
+template <int> class Component;
 template <int> class Simplex;
 template <int> class Triangulation;
+typedef Component<3> NComponent;
 typedef Simplex<3> NTetrahedron;
 typedef Triangulation<3> NTriangulation;
 
