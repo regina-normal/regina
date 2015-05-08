@@ -86,28 +86,28 @@ class REGINA_API Component<2> : public ComponentBase<2> {
          *
          * See size() for further information.
          */
-        unsigned long getNumberOfTriangles() const;
+        size_t getNumberOfTriangles() const;
 
         /**
          * Returns the number of edges in this component.
          *
          * @return the number of edges.
          */
-        unsigned long getNumberOfEdges() const;
+        size_t getNumberOfEdges() const;
 
         /**
          * Returns the number of vertices in this component.
          *
          * @return the number of vertices.
          */
-        unsigned long getNumberOfVertices() const;
+        size_t getNumberOfVertices() const;
 
         /**
          * Returns the number of boundary components in this component.
          *
          * @return the number of boundary components.
          */
-        unsigned long getNumberOfBoundaryComponents() const;
+        size_t getNumberOfBoundaryComponents() const;
 
         /**
          * A dimension-specific alias for simplices().
@@ -143,7 +143,7 @@ class REGINA_API Component<2> : public ComponentBase<2> {
          *
          * See simplex() for further information.
          */
-        Dim2Triangle* getTriangle(unsigned long index) const;
+        Dim2Triangle* getTriangle(size_t index) const;
 
         /**
          * Returns the requested edge in this component.
@@ -156,7 +156,7 @@ class REGINA_API Component<2> : public ComponentBase<2> {
          * triangulation.
          * @return the requested edge.
          */
-        Dim2Edge* getEdge(unsigned long index) const;
+        Dim2Edge* getEdge(size_t index) const;
 
         /**
          * Returns the requested vertex in this component.
@@ -169,7 +169,7 @@ class REGINA_API Component<2> : public ComponentBase<2> {
          * triangulation.
          * @return the requested vertex.
          */
-        Dim2Vertex* getVertex(unsigned long index) const;
+        Dim2Vertex* getVertex(size_t index) const;
 
         /**
          * Returns the requested boundary component in this component.
@@ -182,7 +182,7 @@ class REGINA_API Component<2> : public ComponentBase<2> {
          * entire triangulation.
          * @return the requested boundary component.
          */
-        Dim2BoundaryComponent* getBoundaryComponent(unsigned long index) const;
+        Dim2BoundaryComponent* getBoundaryComponent(size_t index) const;
 
         /**
          * Determines if this component is closed.
@@ -217,19 +217,19 @@ class REGINA_API Component<2> : public ComponentBase<2> {
 inline Component<2>::Component() : ComponentBase<2>() {
 }
 
-inline unsigned long Component<2>::getNumberOfTriangles() const {
+inline size_t Component<2>::getNumberOfTriangles() const {
     return size();
 }
 
-inline unsigned long Component<2>::getNumberOfEdges() const {
+inline size_t Component<2>::getNumberOfEdges() const {
     return edges_.size();
 }
 
-inline unsigned long Component<2>::getNumberOfVertices() const {
+inline size_t Component<2>::getNumberOfVertices() const {
     return vertices_.size();
 }
 
-inline unsigned long Component<2>::getNumberOfBoundaryComponents() const {
+inline size_t Component<2>::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
@@ -245,20 +245,20 @@ inline const std::vector<Dim2Vertex*>& Component<2>::getVertices() const {
     return vertices_;
 }
 
-inline Dim2Triangle* Component<2>::getTriangle(unsigned long index) const {
+inline Dim2Triangle* Component<2>::getTriangle(size_t index) const {
     return simplex(index);
 }
 
-inline Dim2Edge* Component<2>::getEdge(unsigned long index) const {
+inline Dim2Edge* Component<2>::getEdge(size_t index) const {
     return edges_[index];
 }
 
-inline Dim2Vertex* Component<2>::getVertex(unsigned long index) const {
+inline Dim2Vertex* Component<2>::getVertex(size_t index) const {
     return vertices_[index];
 }
 
-inline Dim2BoundaryComponent* Component<2>::getBoundaryComponent(
-        unsigned long index) const {
+inline Dim2BoundaryComponent* Component<2>::getBoundaryComponent(size_t index)
+        const {
     return boundaryComponents_[index];
 }
 
