@@ -40,6 +40,7 @@
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
 #include "../globalarray.h"
+#include "../equality.h"
 
 using namespace boost::python;
 using regina::NTetrahedron;
@@ -91,6 +92,7 @@ void addNTetrahedron() {
         .def("detail", &NTetrahedron::detail)
         .def("toStringLong", &NTetrahedron::toStringLong)
         .def("__str__", &NTetrahedron::str)
+        .def("__eq__", regina::python::EqualPtr<NTetrahedron>)
     ;
 }
 
