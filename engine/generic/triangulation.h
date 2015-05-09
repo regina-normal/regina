@@ -1548,7 +1548,7 @@ void TriangulationBase<dim>::calculateSkeleton() const {
     // simplex is processed only once, an array of size simplices_.size()
     // is large enough.
     Simplex<dim>** queue = new Simplex<dim>*[simplices_.size()];
-    unsigned queueStart = 0, queueEnd = 0;
+    size_t queueStart = 0, queueEnd = 0;
 
     Component<dim>* c;
     Simplex<dim> *s, *adj;
