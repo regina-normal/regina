@@ -147,14 +147,13 @@ enum TuraevViroAlg {
  * including many functions specific to 3-manifolds, plus rich details of
  * the combinatorial structure of the triangulation.
  *
- * In particular, this class tracks the vertices, edges and triangles of the
+ * In particular, this class also tracks vertices, edges and triangles of the
  * triangulation (as represented by the classes NVertex, NEdge and NTriangle),
- * as well as components and boundary components (as represented by the
- * classes NComponent and NBoundaryComponent).  Such objects
- * are temporary: whenever the triangulation changes, these objects will be
- * deleted and rebuilt, and so any pointers to them will become invalid.
- * Likewise, if the triangulation is deleted then these objects will be
- * deleted alongside it.
+ * as well as boundary components (as represented by the class
+ * NBoundaryComponent).  Such objects are temporary: whenever the
+ * triangulation changes, these objects will be deleted and rebuilt, and so
+ * any pointers to them will become invalid.  Likewise, if the triangulation
+ * is deleted then these objects will be deleted alongside it.
  *
  * \todo \feature Is the boundary incompressible?
  * \todo \featurelong Am I obviously a handlebody?  (Simplify and see
@@ -3266,9 +3265,11 @@ class REGINA_API Triangulation<3> :
         void cloneFrom(const NTriangulation& from);
 
     private:
+        /**
+         * Deallocates all skeletal objects and empties all
+         * corresponding lists.
+         */
         void deleteSkeleton();
-            /**< Deallocates all skeletal objects and empties all
-                 corresponding lists. */
 
         /**
          * Clears any calculated properties and declares them all

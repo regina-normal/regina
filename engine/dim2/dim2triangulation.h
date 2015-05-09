@@ -98,14 +98,13 @@ struct PacketInfo<PACKET_DIM2TRIANGULATION> {
  * including many functions specific to 2-manifolds, plus rich details of
  * the combinatorial structure of the triangulation.
  *
- * In particular, this class tracks the vertices and edges of the
+ * In particular, this class also tracks the vertices and edges of the
  * triangulation (as represented by the classes Dim2Vertex and Dim2Edge),
- * as well as components and boundary components (as represented by the
- * classes Dim2Component and Dim2BoundaryComponent).  Such objects
- * are temporary: whenever the triangulation changes, these objects will be
- * deleted and rebuilt, and so any pointers to them will become invalid.
- * Likewise, if the triangulation is deleted then these objects will be
- * deleted alongside it.
+ * as well as boundary components (as represented by the class
+ * Dim2BoundaryComponent).  Such objects are temporary: whenever the
+ * triangulation changes, these objects will be deleted and rebuilt, and so
+ * any pointers to them will become invalid.  Likewise, if the triangulation
+ * is deleted then these objects will be deleted alongside it.
  */
 template <>
 class REGINA_API Triangulation<2> :
