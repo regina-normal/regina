@@ -636,8 +636,6 @@ class REGINA_API Triangulation<2> :
         void cloneFrom(const Triangulation& from);
 
     private:
-        void deleteSkeleton();
-
         /**
          * Clears any calculated properties and declares them all
          * unknown.  All dynamic memory used for storing known
@@ -648,20 +646,14 @@ class REGINA_API Triangulation<2> :
          */
         virtual void clearAllProperties();
 
-        /**
-         * Recalculates vertices, edges, components and
-         * boundary components, as well as various other skeletal properties.
-         * All appropriate lists are filled.
-         *
-         * \pre All skeletal lists are empty.
-         */
+        void deleteSkeleton();
         void calculateSkeleton() const;
 
         /**
          * Internal to calculateSkeleton().  See the comments within
          * calculateSkeleton() for precisely what this routine does.
          */
-        void calculateComponents() const;
+        void calculateEdges() const;
         /**
          * Internal to calculateSkeleton().  See the comments within
          * calculateSkeleton() for precisely what this routine does.

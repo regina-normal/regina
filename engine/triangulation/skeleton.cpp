@@ -41,9 +41,10 @@
 namespace regina {
 
 void NTriangulation::calculateSkeleton() const {
+    TriangulationBase<3>::calculateSkeleton();
+
     ideal_ = false;
     valid_ = true;
-    orientable_ = true;
     standard_ = true;
 
 #if 0
@@ -53,13 +54,6 @@ void NTriangulation::calculateSkeleton() const {
         // used correctly)
 #endif
 
-    // Set this now so that any tetrahedron query routines do not try to
-    // recursively recompute the skeleton again.
-    calculatedSkeleton_ = true;
-
-    calculateComponents();
-        // Sets components, orientable, NComponent.orientable,
-        //     NTetrahedron.component
     calculateTriangles();
         // Sets triangles, NTriangle.component
     calculateVertices();
@@ -107,73 +101,6 @@ void NTriangulation::checkPermutations() const {
                 }
             }
         }
-}
-
-void NTriangulation::calculateComponents() const {
-    TetrahedronIterator it;
-    NComponent* label;
-    NTetrahedron* tet;
-    for (it = simplices_.begin(); it != simplices_.end(); it++)
-        (*it)->component_ = 0;
-
-    for (it = simplices_.begin(); it != simplices_.end(); it++) {
-        tet = *it;
-        if (tet->component_ == 0) {
-            label = new NComponent();
-            labelComponent(tet, label);
-            components_.push_back(label);
-        }
-    }
-}
-
-void NTriangulation::labelComponent(NTetrahedron* firstTet,
-        NComponent* component) const {
-    // Now non-recursive; uses a queue instead.
-    // The queue contains tetrahedra from which we need to propagate
-    //     component labelling.
-
-    // Use plain C arrays for the queue.  Since each tetrahedron is pushed
-    // on at most once, the array size does not need to be very large.
-
-    // Note that we have >= 1 tetrahedron, since firstTet != 0.
-    NTetrahedron** queue = new NTetrahedron*[simplices_.size()];
-
-    firstTet->component_ = component;
-    component->simplices_.push_back(firstTet);
-    firstTet->tetOrientation_ = 1;
-
-    unsigned queueStart = 0, queueEnd = 1;
-    queue[0] = firstTet;
-
-    NTetrahedron* tet;
-    NTetrahedron* adjTet;
-    int face;
-    int yourOrientation;
-    while (queueStart < queueEnd) {
-        tet = queue[queueStart++];
-
-        for (face=0; face<4; face++) {
-            adjTet = tet->adjacentTetrahedron(face);
-            if (adjTet) {
-                yourOrientation = (tet->adjacentGluing(face).
-                    sign() == 1 ? -tet->tetOrientation_ : tet->tetOrientation_);
-                if (adjTet->component_) {
-                    if (yourOrientation != adjTet->tetOrientation_) {
-                        orientable_ = false;
-                        component->orientable_ = false;
-                    }
-                } else {
-                    adjTet->component_ = component;
-                    component->simplices_.push_back(adjTet);
-                    adjTet->tetOrientation_ = yourOrientation;
-
-                    queue[queueEnd++] = adjTet;
-                }
-            }
-        }
-    }
-
-    delete[] queue;
 }
 
 void NTriangulation::calculateVertices() const {

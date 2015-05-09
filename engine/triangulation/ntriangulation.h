@@ -3262,8 +3262,6 @@ class REGINA_API Triangulation<3> :
         void cloneFrom(const NTriangulation& from);
 
     private:
-        void deleteSkeleton();
-
         /**
          * Clears any calculated properties and declares them all
          * unknown.  All dynamic memory used for storing known
@@ -3290,25 +3288,9 @@ class REGINA_API Triangulation<3> :
          * @author Matthias Goerner
          */
         void checkPermutations() const;
-        /**
-         * Recalculates vertices, edges, triangles, components and
-         * boundary components, as well as various other skeletal
-         * properties such as validity and vertex links.
-         * All appropriate lists are filled.
-         *
-         * \pre All skeletal lists are empty.
-         */
+
+        void deleteSkeleton();
         void calculateSkeleton() const;
-        /**
-         * Calculates the triangulation components and associated
-         * properties.
-         *
-         * \warning This should only be called from within
-         * calculateSkeleton().
-         */
-        void calculateComponents() const;
-        void labelComponent(NTetrahedron*, NComponent*) const;
-            /**< Internal to calculateComponents(). */
         /**
          * Calculates the triangulation vertices and associated
          * properties.

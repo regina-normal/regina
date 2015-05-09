@@ -781,7 +781,40 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
         /**
          * Ensures that all "on demand" skeletal objects have been calculated.
          */
-        void ensureSkeleton();
+        void ensureSkeleton() const;
+
+        /**
+         * Determines whether the skeletal objects and properties of this
+         * triangulation have been calculated.
+         *
+         * These are only calculated "on demand", when a skeletal property
+         * is first queried.
+         *
+         * @return \c true if and only if the skeleton has been calculated.
+         */
+        bool calculatedSkeleton() const;
+
+        /**
+         * Calculates all skeletal objects for this triangulation.
+         *
+         * For this parent class, calculateSkeleton() computes properties
+         * such as connected components and orientability.  Some
+         * Triangulation<dim> subclasses may track additional skeletal data,
+         * in which case they should reimplement this function.  Their
+         * reimplementations \e must call this parent implementation.
+         *
+         * You should never call this function directly; instead call
+         * ensureSkeleton() instead.
+         *
+         * \pre No skeletal objects have been computed, and the
+         * corresponding internal lists are all empty.
+         *
+         * \warning Any call to calculateSkeleton() must first cast down to
+         * Triangulation<dim>.  You should never directly call this
+         * parent implementation (unless of course you are reimplementing
+         * calculateSkeleton() in a Triangulation<dim> subclass).
+         */
+        void calculateSkeleton() const;
 
         /**
          * Deallocates all skeletal objects that are managed by this
@@ -795,9 +828,14 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
          * parent implementation.
          *
          * Note that TriangulationBase never calls this routine itself.
-         * Typically deleteSkeleton() will be called by
+         * Typically deleteSkeleton() is only ever called by
          * Triangulation<dim>::clearAllProperties, which in turn is
          * called by the Triangulation<dim> destructor.
+         *
+         * \warning Any call to deleteSkeleton() must first cast down to
+         * Triangulation<dim>.  You should never directly call this
+         * parent implementation (unless of course you are reimplementing
+         * deleteSkeleton() in a Triangulation<dim> subclass).
          */
         void deleteSkeleton();
 
@@ -1465,9 +1503,75 @@ TODO: output packet labels if we derive from NPacket
 }
 
 template <int dim>
-inline void TriangulationBase<dim>::ensureSkeleton() {
+inline void TriangulationBase<dim>::ensureSkeleton() const {
     if (! calculatedSkeleton_)
-        calculateSkeleton();
+        static_cast<const Triangulation<Dim>*>(this)->calculateSkeleton();
+}
+
+template <int dim>
+void TriangulationBase<dim>::calculateSkeleton() const {
+    // Set this now so that any tetrahedron query routines do not try to
+    // recursively recompute the skeleton again.
+    calculatedSkeleton_ = true;
+
+    // Triangulations are orientable until proven otherwise.
+    orientable_ = true;
+
+    SimplexIterator it;
+    for (it = simplices_.begin(); it != simplices_.end(); ++it)
+        (*it)->component_ = 0;
+
+    // Our breadth-first search through simplices is non-recursive.
+    // It uses a queue that contains simplices from which we need to propagate
+    // component labelling.  We use a plain C array for this queue: since each
+    // simplex is processed only once, an array of size simplices_.size()
+    // is large enough.
+    Simplex<dim>** queue = new Simplex<dim>*[simplices_.size()];
+    unsigned queueStart = 0, queueEnd = 0;
+
+    Component<dim>* c;
+    Simplex<dim> *s, *adj;
+    int facet;
+    int yourOrientation;
+    for (it = simplices_.begin(); it != simplices_.end(); ++it) {
+        s = *it;
+        if (s->component_ == 0) {
+            c = new Component<dim>();
+            components_.push_back(label);
+
+            s->component_ = c;
+            c->simplices_.push_back(s);
+            s->orientation_ = 1;
+
+            queue[queueEnd++] = s;
+            while (queueStart < queueEnd) {
+                s = queue[queueStart++];
+
+                for (facet = 0; facet <= dim; ++facet) {
+                    adj = s->adjacentSimplex(facet);
+                    if (adj) {
+                        yourOrientation =
+                            (s->adjacentGluing(facet).sign() == 1 ?
+                            -s->orientation_ : s->orientation_);
+                        if (adj->component_) {
+                            if (yourOrientation != adj->orientation_) {
+                                orientable_ = component->orientable_ = false;
+                            }
+                        } else {
+                            adj->component_ = c;
+                            c->simplices_.push_back(adj);
+                            adj->orientation_ = yourOrientation;
+
+                            queue[queueEnd++] = adj;
+                        }
+                    } else
+                        ++c->boundaryFacets_;
+                }
+            }
+        }
+    }
+
+    delete[] queue;
 }
 
 template <int dim>
@@ -1478,6 +1582,11 @@ inline void TriangluationBase<dim>::deleteSkeleton() {
     components_.clear();
 
     calculatedSkeleton_ = false;
+}
+
+template <int dim>
+inline bool TriangluationBase<dim>::calculatedSkeleton() {
+    return calculatedSkeleton_;
 }
 
 // Inline functions for Triangulation
@@ -1493,6 +1602,8 @@ inline Triangulation<dim>::Triangulation(const Triangulation& copy) :
 
 template <int dim>
 inline void Triangulation<dim>::clearAllProperties() {
+    if (calculatedSkeleton_)
+        deleteSkeleton();
 }
 
 template <int dim>

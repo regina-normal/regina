@@ -40,12 +40,7 @@
 namespace regina {
 
 void Triangulation<2>::calculateSkeleton() const {
-    // Triangulations are orientable until proven otherwise.
-    orientable_ = true;
-
-    // Set this now so that any triangle query routines do not try to
-    // recursively recompute the skeleton again.
-    calculatedSkeleton_ = true;
+    TriangulationBase<2>::calculateSkeleton();
 
     // Get rid of the empty triangulation now, so that all the helper routines
     // can happily assume at least one triangle.
@@ -53,15 +48,10 @@ void Triangulation<2>::calculateSkeleton() const {
         return;
 
     // Off we go!
-    calculateComponents();
+    calculateEdges();
         // Sets:
-        // - components_
         // - edges_
-        // - orientable_
         // - Dim2Component::edges_
-        // - Dim2Component::orientable_
-        // - Dim2Triangle::component_
-        // - Dim2Triangle::orientation_
         // - Dim2Triangle::edge_
         // - Dim2Triangle::edgeMapping_
         // - all Dim2Edge members except boundaryComponent_
@@ -82,136 +72,52 @@ void Triangulation<2>::calculateSkeleton() const {
         // - all Dim2BoundaryComponent members
 }
 
-void Triangulation<2>::calculateComponents() const {
+void Triangulation<2>::calculateEdges() const {
     TriangleIterator it;
-    for (it = simplices_.begin(); it != simplices_.end(); ++it) {
-        (*it)->component_ = 0;
+    for (it = simplices_.begin(); it != simplices_.end(); ++it)
         std::fill((*it)->edge_, (*it)->edge_ + 3, static_cast<Dim2Edge*>(0));
-    }
 
-    Dim2Component* label;
-    Dim2Triangle** stack = new Dim2Triangle*[simplices_.size()];
-    unsigned stackSize = 0;
-    Dim2Triangle *loopTri, *tri, *adjTri;
+    Dim2Triangle *tri, *adjTri;
     Dim2Edge* e;
-    int edge, adjEdge, adjOrientation;
-    for (it = simplices_.begin(); it != simplices_.end(); ++it) {
-        loopTri = *it;
-        if (loopTri->component_)
-            continue;
+    int edge, adjEdge;
 
-        label = new Dim2Component();
-        components_.push_back(label);
-
-        // Run a depth-first search from this triangle to
-        // completely enumerate all triangles in this component.
-        //
-        // Since we are walking from one triangle to another via
-        // edges, we might as well collect information on the
-        // edges while we're at it.
-        loopTri->component_ = label;
-        label->simplices_.push_back(loopTri);
-        loopTri->orientation_ = 1;
-
-        stack[0] = loopTri;
-        stackSize = 1;
-
-        while (stackSize > 0) {
-            tri = stack[--stackSize];
-
-            for (edge = 0; edge < 3; ++edge) {
-                // Have we already checked out this edge from the other side?
-                if (tri->edge_[edge])
-                    continue;
-
-                // Make a new edge, but leave the embeddings and
-                // mappings until we see which side we're on.  This is so
-                // that the edges *look* as though we enumerated them in
-                // lexicographical order (instead of via a depth-first search
-                // through each triangulation component).
-                e = new Dim2Edge(tri->component_);
-
-                adjTri = tri->adjacentTriangle(edge);
-                if (adjTri) {
-                    // We have an adjacent triangle.
-                    adjEdge = tri->adjacentEdge(edge);
-
-                    tri->edge_[edge] = e;
-                    adjTri->edge_[adjEdge] = e;
-
-                    // Choose an edge mapping according to which side
-                    // comes "first" lexicographically.  Note that edge 2 is
-                    // really edge 01, and so is "less than" edge 0, which
-                    // is really edge 12.  In short, edges get ordered in
-                    // reverse.
-                    if (tri->markedIndex() < adjTri->markedIndex() ||
-                            (tri->markedIndex() == adjTri->markedIndex() &&
-                             edge > adjEdge)) {
-                        // tri comes first.
-                        tri->edgeMapping_[edge] = Dim2Edge::ordering[edge];
-                        adjTri->edgeMapping_[adjEdge] =
-                            tri->adjacentGluing(edge) *
-                            Dim2Edge::ordering[edge];
-
-                        e->emb_[0] = Dim2EdgeEmbedding(tri, edge);
-                        e->emb_[1] = Dim2EdgeEmbedding(adjTri, adjEdge);
-                    } else {
-                        // adjTri comes first.
-                        adjTri->edgeMapping_[adjEdge] =
-                            Dim2Edge::ordering[adjEdge];
-                        tri->edgeMapping_[edge] =
-                            adjTri->adjacentGluing(adjEdge) *
-                            Dim2Edge::ordering[adjEdge];
-
-                        e->emb_[0] = Dim2EdgeEmbedding(adjTri, adjEdge);
-                        e->emb_[1] = Dim2EdgeEmbedding(tri, edge);
-                    }
-                    e->nEmb_ = 2;
-
-                    // Deal with orientations and connected components.
-                    adjOrientation = (tri->adjacentGluing(edge).sign() == 1 ?
-                        - tri->orientation_ : tri->orientation_);
-                    if (adjTri->component_) {
-                        if (adjOrientation != adjTri->orientation_)
-                            orientable_ = label->orientable_ = false;
-                    } else {
-                        // Wheee!  A triangle we haven't seen before.
-                        adjTri->component_ = label;
-                        label->simplices_.push_back(adjTri);
-                        adjTri->orientation_ = adjOrientation;
-
-                        stack[stackSize++] = adjTri;
-                    }
-                } else {
-                    // This is a boundary edge.
-                    tri->edge_[edge] = e;
-                    tri->edgeMapping_[edge] = Dim2Edge::ordering[edge];
-
-                    e->emb_[0] = Dim2EdgeEmbedding(tri, edge);
-                    e->nEmb_ = 1;
-                }
-            }
-        }
-    }
-
-    // Now run through again and number the edges (i.e., insert them
-    // into the main list) in lexicographical order.  Again, edges are
-    // ordered in reverse.
+    // We process the edges in lexicographical order, according to the
+    // truncated permutation labels that are displayed to the user.
+    // This means working through the facets of each simplex in *reverse*.
     for (it = simplices_.begin(); it != simplices_.end(); ++it) {
         tri = *it;
         for (edge = 2; edge >= 0; --edge) {
-            e = tri->edge_[edge];
-            if (e->nEmb_ == 2 &&
-                    (e->emb_[0].getTriangle() != tri ||
-                     e->emb_[0].getEdge() != edge))
+            // Have we already checked out this edge from the other side?
+            if (tri->edge_[edge])
                 continue;
 
+            // A new edge!
+            e = new Dim2Edge(tri->component_);
             edges_.push_back(e);
             tri->component_->edges_.push_back(e);
+
+            tri->edge_[edge] = e;
+            tri->edgeMapping_[edge] = Dim2Edge::ordering[edge];
+
+            adjTri = tri->adjacentTriangle(edge);
+            if (adjTri) {
+                // We have an adjacent triangle.
+                adjEdge = tri->adjacentEdge(edge);
+
+                adjTri->edge_[adjEdge] = e;
+                adjTri->edgeMapping_[adjEdge] = tri->adjacentGluing(edge) *
+                    Dim2Edge::ordering[edge];
+
+                e->emb_[0] = Dim2EdgeEmbedding(tri, edge);
+                e->emb_[1] = Dim2EdgeEmbedding(adjTri, adjEdge);
+                e->nEmb_ = 2;
+            } else {
+                // This is a boundary edge.
+                e->emb_[0] = Dim2EdgeEmbedding(tri, edge);
+                e->nEmb_ = 1;
+            }
         }
     }
-
-    delete[] stack;
 }
 
 void Triangulation<2>::calculateVertices() const {
