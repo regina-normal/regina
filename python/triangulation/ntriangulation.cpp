@@ -287,7 +287,10 @@ void addNTriangulation() {
         .def("isIdeal", &NTriangulation::isIdeal)
         .def("isStandard", &NTriangulation::isStandard)
         .def("hasBoundaryFaces", &NTriangulation::hasBoundaryFaces)
+        .def("hasBoundaryFacets", &NTriangulation::hasBoundaryFacets)
         .def("hasBoundaryTriangles", &NTriangulation::hasBoundaryTriangles)
+        .def("countBoundaryFacets", &NTriangulation::countBoundaryFacets)
+        .def("countBoundaryTriangles", &NTriangulation::countBoundaryTriangles)
         .def("getNumberOfBoundaryTriangles",
             &NTriangulation::getNumberOfBoundaryTriangles)
         .def("isClosed", &NTriangulation::isClosed)

@@ -38,10 +38,10 @@ Version 4.97  [ (under development) ]
         Class Dim2Component:
             - New routine getNumberOfBoundaryFacets(), which is identical to
               the dimension-specific getNumberOfBoundaryEdges().
-            - Routines getNumberOfSimplices(), getSimplices() and getSimplex()
-              have been renamed to size(), simplices() and simplex()
-              respectively.  The old names are deprecated but have been
-              kept for backward compatibility.
+            - Routines getNumberOfSimplices(), getSimplices(), getSimplex()
+              and getNumberOfBoundaryFacets() have been renamed to size(),
+              simplices(), simplex() and countBoundaryFacets() respectively.
+              The old names are retained but deprecated.
         Class Dim2Isomorphism:
             - Now just a typedef for the new class Isomorphism<2>, which has
               the same functionality as the old Dim2Isomorphism.
@@ -61,6 +61,7 @@ Version 4.97  [ (under development) ]
               the same functionality as the old Dim2Triangulation.
             - New dimension-agnostic getFace<subdim>() and
               faceIndex<subdim>() template functions.
+            - New dimension-agnostic function hasBoundaryFacets().
             - Routines getNumberOfSimplices(), getSimplices() and getSimplex()
               have been renamed to size(), simplices() and simplex()
               respectively.  The old names are deprecated but have been
@@ -68,6 +69,8 @@ Version 4.97  [ (under development) ]
             - Renamed getNumberOfComponents(), getComponents(), getComponent()
               to countComponents(), components() and component().  The
               old names are deprecated but kept for backward compatibility.
+            - Renamed getNumberOfBoundaryEdges() to countBoundaryFacets();
+              added an alias countBoundaryEdges(); deprecated the old name.
         Class DimTraits:
             - Removed the Isomorphism typedef.  Juse use Isomorphism<dim>.
             - Removed the Perm typedef.  Juse use NPerm<dim+1>.
@@ -94,10 +97,10 @@ Version 4.97  [ (under development) ]
         Class NComponent:
             - New routine getNumberOfBoundaryFacets(), which is identical to
               the dimension-specific getNumberOfBoundaryTriangles().
-            - Routines getNumberOfSimplices(), getSimplices() and getSimplex()
-              have been renamed to size(), simplices() and simplex()
-              respectively.  The old names are deprecated but have been
-              kept for backward compatibility.
+            - Routines getNumberOfSimplices(), getSimplices(), getSimplex()
+              and getNumberOfBoundaryFacets() have been renamed to size(),
+              simplices(), simplex() and countBoundaryFacets() respectively.
+              The old names are retained but deprecated.
         Class NCyclotomic:
             - New class for exact arithmetic in cyclotomic fields.
         Class NExampleSnapPeaTriangulation:
@@ -233,6 +236,7 @@ Version 4.97  [ (under development) ]
               (which will be floating-point approximations) will be ignored.
             - Removed the optional boolean argument (forceDivision) from
               idealToFinite().
+            - New dimension-agnostic function hasBoundaryFacets().
             - New dimension-agnostic getFace<subdim>() and
               faceIndex<subdim>() template functions.
             - New routine niceTreeDecomposition() for constructing and
@@ -246,6 +250,8 @@ Version 4.97  [ (under development) ]
             - Renamed getNumberOfComponents(), getComponents(), getComponent()
               to countComponents(), components() and component().  The
               old names are deprecated but kept for backward compatibility.
+            - Renamed getNumberOfBoundaryTriangles() to countBoundaryFacets();
+              added an alias countBoundaryTriangles(); deprecated the old name.
         Class NVertex:
             - Added a new LinkType enumeration, which encapsulates (and
               replaces) the old link type constants.

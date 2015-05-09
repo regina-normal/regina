@@ -86,8 +86,6 @@ class REGINA_API Component<3> : public ComponentBase<3> {
 
         bool ideal_;
             /**< Is the component ideal? */
-        bool orientable_;
-            /**< Is the component orientable? */
 
     public:
 

@@ -889,12 +889,22 @@ class REGINA_API Triangulation<3> :
          * See hasBoundaryFacets() for further information.
          */
         bool hasBoundaryFaces() const;
+        size_t countBoundaryFacets() const;
         /**
-         * Returns the number of boundary triangles in this triangulation.
+         * A dimension-specific alias for countBoundaryFacets().
          *
-         * @return the total number of boundary triangles.
+         * See countBoundaryFacets() for further information.
          */
-        unsigned long getNumberOfBoundaryTriangles() const;
+        size_t countBoundaryTriangles() const;
+        /**
+         * A deprecated alias for countBoundaryFacets().
+         *
+         * \deprecated Call countBoundaryTriangles() or countBoundaryFacets()
+         * instead.
+         *
+         * See countBoundaryFacets() for further information.
+         */
+        size_t getNumberOfBoundaryTriangles() const;
         /**
          * Determines if this triangulation is closed.
          * This is the case if and only if it has no boundary.
@@ -3719,9 +3729,18 @@ inline bool Triangulation<3>::hasBoundaryFaces() const {
     return hasBoundaryTriangles();
 }
 
-inline unsigned long Triangulation<3>::getNumberOfBoundaryTriangles() const {
+inline size_t Triangulation<3>::countBoundaryFacets() const {
+    // Override, since we can do this faster in dimension 3.
     ensureSkeleton();
     return 2 * triangles_.size() - 4 * simplices_.size();
+}
+
+inline size_t Triangulation<3>::countBoundaryTriangles() const {
+    return countBoundaryFacets();
+}
+
+inline size_t Triangulation<3>::getNumberOfBoundaryTriangles() const {
+    return countBoundaryFacets();
 }
 
 inline bool Triangulation<3>::isClosed() const {

@@ -66,6 +66,7 @@ void addComponent(const char* name) {
         .def("getSimplex", &Component<dim>::getSimplex,
             return_value_policy<reference_existing_object>())
         .def("isOrientable", &Component<dim>::isOrientable)
+        .def("countBoundaryFacets", &Component<dim>::countBoundaryFacets)
         .def("getNumberOfBoundaryFacets",
             &Component<dim>::getNumberOfBoundaryFacets)
         .def("str", &Component<dim>::str)

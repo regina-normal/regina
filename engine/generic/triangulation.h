@@ -458,6 +458,16 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
         bool hasBoundaryFacets() const;
 
         /**
+         * Returns the total number of boundary facets in this triangulation.
+         *
+         * This routine counts facets of top-dimensional simplices that are
+         * not glued to some adjacent top-dimensional simplex.
+         *
+         * @return the total number of boundary facets.
+         */
+        size_t countBoundaryFacets() const;
+
+        /**
          * Determines if this triangulation is orientable.
          *
          * @return \c true if and only if this triangulation is orientable.
@@ -1285,10 +1295,18 @@ inline bool TriangulationBase<dim>::isEmpty() const {
 
 template <int dim>
 inline bool TriangulationBase<dim>::hasBoundaryFacets() const {
-    for (auto it = simplices_.begin(); it != simplices_.end(); ++it)
-        if ((*it)->hasBoundary())
+    for (auto it = components_.begin(); it != components_.end(); ++it)
+        if ((*it)->countBoundaryFacets())
             return true;
     return false;
+}
+
+template <int dim>
+inline size_t TriangulationBase<dim>::countBoundaryFacets() const {
+    size_t ans = 0;
+    for (auto it = components_.begin(); it != components_.end(); ++it)
+        ans += (*it)->countBoundaryFacets();
+    return ans;
 }
 
 template <int dim>

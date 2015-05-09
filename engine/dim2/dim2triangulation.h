@@ -516,12 +516,22 @@ class REGINA_API Triangulation<2> :
          * See hasBoundaryFacets() for further information.
          */
         bool hasBoundaryEdges() const;
+        size_t countBoundaryFacets() const;
         /**
-         * Returns the number of boundary edges in this triangulation.
+         * A dimension-specific alias for countBoundaryFacets().
          *
-         * @return the total number of boundary edges.
+         * See countBoundaryFacets() for further information.
          */
-        unsigned long getNumberOfBoundaryEdges() const;
+        size_t countBoundaryEdges() const;
+        /**
+         * A deprecated alias for countBoundaryFacets().
+         *
+         * \deprecated Call countBoundaryEdges() or countBoundaryFacets()
+         * instead.
+         *
+         * See countBoundaryFacets() for further information.
+         */
+        size_t getNumberOfBoundaryEdges() const;
         /**
          * Always returns \c false.
          *
@@ -947,9 +957,18 @@ inline bool Triangulation<2>::hasBoundaryEdges() const {
     return ! isClosed();
 }
 
-inline unsigned long Triangulation<2>::getNumberOfBoundaryEdges() const {
+inline size_t Triangulation<2>::countBoundaryFacets() const {
+    // Override, since we can do this faster in dimension 2.
     ensureSkeleton();
     return 2 * edges_.size() - 3 * simplices_.size();
+}
+
+inline size_t Triangulation<2>::countBoundaryEdges() const {
+    return countBoundaryFacets();
+}
+
+inline size_t Triangulation<2>::getNumberOfBoundaryEdges() const {
+    return countBoundaryFacets();
 }
 
 inline bool Triangulation<2>::isIdeal() const {

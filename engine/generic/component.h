@@ -178,8 +178,17 @@ class REGINA_API ComponentBase :
          *
          * This routine runs in constant time (since the result is
          * computed in advance, when the component is first created).
-         * 
-         * @return the number of boundary facets.
+         *
+         * @return the total number of boundary facets.
+         */
+        size_t countBoundaryFacets() const;
+        /**
+         * Deprecated routine that returns the number of boundary facets
+         * in this component.
+         *
+         * \deprecated Simply call countBoundaryFacets() instead.
+         *
+         * See countBoundaryFacets() for further details.
          */
         size_t getNumberOfBoundaryFacets() const;
 
@@ -305,6 +314,11 @@ inline Simplex<dim>* ComponentBase<dim>::getSimplex(size_t index) const {
 template <int dim>
 inline bool ComponentBase<dim>::isOrientable() const {
     return orientable_;
+}
+
+template <int dim>
+inline size_t ComponentBase<dim>::countBoundaryFacets() const {
+    return boundaryFacets_;
 }
 
 template <int dim>

@@ -188,7 +188,10 @@ void addDim2Triangulation() {
         .def("isValid", &Dim2Triangulation::isValid)
         .def("getEulerChar", &Dim2Triangulation::getEulerChar)
         .def("isClosed", &Dim2Triangulation::isClosed)
+        .def("hasBoundaryFacets", &Dim2Triangulation::hasBoundaryFacets)
         .def("hasBoundaryEdges", &Dim2Triangulation::hasBoundaryEdges)
+        .def("countBoundaryFacets", &Dim2Triangulation::countBoundaryFacets)
+        .def("countBoundaryEdges", &Dim2Triangulation::countBoundaryEdges)
         .def("getNumberOfBoundaryEdges",
             &Dim2Triangulation::getNumberOfBoundaryEdges)
         .def("isOrientable", &Dim2Triangulation::isOrientable)

@@ -88,6 +88,7 @@ void addNComponent() {
         .def("isIdeal", &NComponent::isIdeal)
         .def("isOrientable", &NComponent::isOrientable)
         .def("isClosed", &NComponent::isClosed)
+        .def("countBoundaryFacets", &NComponent::countBoundaryFacets)
         .def("getNumberOfBoundaryTriangles",
             &NComponent::getNumberOfBoundaryTriangles)
         .def("getNumberOfBoundaryFacets",
