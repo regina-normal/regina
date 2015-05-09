@@ -33,7 +33,7 @@
 /* end stub */
 
 /*! \file python/equality.h
- *  \brief Allows the comparison of Python objects which refer to C++ objects.
+ *  \brief Allows the comparison of Python objects which point to C++ objects.
  *  Two Python pointer objects are equal if and only if they both point to the
  *  same C++ object.
  */
