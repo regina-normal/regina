@@ -1183,45 +1183,46 @@ void TriangulationBase<dim>::moveContentsTo(Triangulation<dim>& dest) {
 }
 
 template <int dim>
-inline size_t Triangulation<dim>::countComponents() const {
+inline size_t TriangulationBase<dim>::countComponents() const {
     ensureSkeleton();
     return components_.size();
 }
 
 template <int dim>
-inline size_t Triangulation<dim>::getNumberOfComponents() const {
+inline size_t TriangulationBase<dim>::getNumberOfComponents() const {
     ensureSkeleton();
     return components_.size();
 }
 
 template <int dim>
-inline const std::vector<Component<dim>*>& Triangulation<dim>::components()
+inline const std::vector<Component<dim>*>& TriangulationBase<dim>::components()
         const {
     ensureSkeleton();
     return (const std::vector<Component<dim>*>&)(components_);
 }
 
 template <int dim>
-inline const std::vector<Component<dim>*>& Triangulation<dim>::getComponents()
-        const {
+inline const std::vector<Component<dim>*>&
+        TriangulationBase<dim>::getComponents() const {
     ensureSkeleton();
     return (const std::vector<Component<dim>*>&)(components_);
 }
 
 template <int dim>
-inline Component<dim>* Triangulation<dim>::component(size_t index) const {
+inline Component<dim>* TriangulationBase<dim>::component(size_t index) const {
     ensureSkeleton();
     return components_[index];
 }
 
 template <int dim>
-inline Component<dim>* Triangulation<dim>::getComponent(size_t index) const {
+inline Component<dim>* TriangulationBase<dim>::getComponent(size_t index)
+        const {
     ensureSkeleton();
     return components_[index];
 }
 
 template <int dim>
-inline size_t Triangulation<dim>::componentIndex(
+inline size_t TriangulationBase<dim>::componentIndex(
         const Component<dim>* component) const {
     return component->markedIndex();
 }
@@ -1240,13 +1241,13 @@ inline bool TriangulationBase<dim>::hasBoundaryFacets() const {
 }
 
 template <int dim>
-inline bool Triangulation<dim>::isOrientable() const {
+inline bool TriangulationBase<dim>::isOrientable() const {
     ensureSkeleton();
     return orientable_;
 }
 
 template <int dim>
-inline bool Triangulation<dim>::isConnected() const {
+inline bool TriangulationBase<dim>::isConnected() const {
     ensureSkeleton();
     return (components_.size() <= 1);
 }
