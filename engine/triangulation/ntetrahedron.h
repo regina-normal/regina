@@ -55,7 +55,6 @@ class NVertex;
 
 template <int> class Component;
 template <int> class Triangulation;
-typedef Component<3> NComponent;
 typedef Triangulation<3> NTriangulation;
 
 /**
@@ -109,12 +108,6 @@ class REGINA_API Simplex<3> : public SimplexBase<3> {
         NPerm4 triMapping_[4];
             /**< Maps (0,1,2) to the vertices of this tetrahedron that form
                  each triangular face, as described in getTriangleMapping(). */
-        int tetOrientation_;
-            /**< The orientation of this tetrahedron in the triangulation.
-                 This will either be 1 or -1. */
-        NComponent* component_;
-            /**< The component to which this tetrahedron belongs in the
-                 triangulation. */
 
     public:
         /**
@@ -130,22 +123,6 @@ class REGINA_API Simplex<3> : public SimplexBase<3> {
          */
         int adjacentFace(int face) const;
 
-        /**
-         * Returns the triangulation component to which this tetrahedron
-         * belongs.
-         *
-         * As of Regina 4.90, if the skeletal information for the
-         * triangulation has not been computed then this will be done
-         * automatically.  There is no need for users to explicitly
-         * recompute the skeleton themselves.
-         *
-         * \pre This tetrahedron belongs to a triangulation (i.e., it
-         * was created using NTriangulation::newTetrahedron() or added
-         * using NTriangulation::addTetrahedron()).
-         *
-         * @return the component containing this tetrahedron.
-         */
-        NComponent* getComponent() const;
         /**
          * Returns the vertex in the triangulation skeleton
          * corresponding to the given vertex of this tetrahedron.
@@ -338,30 +315,6 @@ class REGINA_API Simplex<3> : public SimplexBase<3> {
          * triangle to the vertices of this tetrahedron.
          */
         NPerm4 getTriangleMapping(int face) const;
-        /**
-         * Returns the orientation of this tetrahedron in the
-         * triangulation.
-         *
-         * The orientation of each tetrahedron is always +1 or -1.
-         * In an orientable component of a triangulation,
-         * adjacent tetrahedra have the same orientations if one could be
-         * transposed onto the other without reflection, and they have
-         * opposite orientations if a reflection would be required.
-         * In a non-orientable component, orientations are still +1 and
-         * -1 but no further guarantees can be made.
-         *
-         * As of Regina 4.90, if the skeletal information for the
-         * triangulation has not been computed then this will be done
-         * automatically.  There is no need for users to explicitly
-         * recompute the skeleton themselves.
-         *
-         * \pre This tetrahedron belongs to a triangulation (i.e., it
-         * was created using NTriangulation::newTetrahedron() or added
-         * using NTriangulation::addTetrahedron()).
-         *
-         * @return +1 or -1 according to the orientation of this tetrahedron.
-         */
-        int orientation() const;
 
     private:
         /**
@@ -407,12 +360,6 @@ inline int Simplex<3>::adjacentFace(int face) const {
     return adjacentFacet(face);
 }
 
-inline NComponent* Simplex<3>::getComponent() const {
-    if (! getTriangulation()->calculatedSkeleton_)
-        getTriangulation()->calculateSkeleton();
-    return component_;
-}
-
 inline NVertex* Simplex<3>::getVertex(int vertex) const {
     if (! getTriangulation()->calculatedSkeleton_)
         getTriangulation()->calculateSkeleton();
@@ -447,12 +394,6 @@ inline NPerm4 Simplex<3>::getTriangleMapping(int face) const {
     if (! getTriangulation()->calculatedSkeleton_)
         getTriangulation()->calculateSkeleton();
     return triMapping_[face];
-}
-
-inline int Simplex<3>::orientation() const {
-    if (! getTriangulation()->calculatedSkeleton_)
-        getTriangulation()->calculateSkeleton();
-    return tetOrientation_;
 }
 
 inline Simplex<3>::Simplex(NTriangulation* tri) : SimplexBase<3>(tri) {

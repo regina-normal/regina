@@ -64,6 +64,8 @@ void addDim2Triangle() {
         .def("isolate", &Dim2Triangle::isolate)
         .def("getTriangulation", &Dim2Triangle::getTriangulation,
             return_value_policy<reference_existing_object>())
+        .def("component", &Dim2Triangle::component,
+            return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim2Triangle::getComponent,
             return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim2Triangle::getVertex,

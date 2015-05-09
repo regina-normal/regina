@@ -54,7 +54,6 @@ class Dim2Vertex;
 
 template <int> class Component;
 template <int> class Triangulation;
-typedef Component<2> Dim2Component;
 typedef Triangulation<2> Dim2Triangulation;
 
 /**
@@ -93,12 +92,6 @@ class REGINA_API Simplex<2> : public SimplexBase<2> {
         NPerm3 edgeMapping_[3];
             /**< Maps (0,1) to the vertices of this triangle that form
                  each edge, as described in getEdgeMapping(). */
-        int orientation_;
-            /**< The orientation of this triangle in the triangulation.
-                 This will either be 1 or -1. */
-        Dim2Component* component_;
-            /**< The component to which this triangle belongs in the
-                 triangulation. */
 
     public:
         /**
@@ -114,13 +107,6 @@ class REGINA_API Simplex<2> : public SimplexBase<2> {
          */
         int adjacentEdge(int edge) const;
 
-        /**
-         * Returns the 2-manifold triangulation component to which this
-         * triangle belongs.
-         *
-         * @return the component containing this triangle.
-         */
-        Dim2Component* getComponent() const;
         /**
          * Returns the vertex in the 2-manifold triangulation skeleton
          * corresponding to the given vertex of this triangle.
@@ -200,21 +186,6 @@ class REGINA_API Simplex<2> : public SimplexBase<2> {
          * edge to the corresponding vertices of this triangle.
          */
         NPerm3 getEdgeMapping(int edge) const;
-        /**
-         * Returns the orientation of this triangle in the 2-manifold
-         * triangulation.
-         *
-         * The orientation of each triangle is always +1 or -1.
-         * In an orientable component of a triangulation,
-         * adjacent triangles have the same orientations if one could be
-         * transposed onto the other without reflection, and they have
-         * opposite orientations if a reflection would be required.
-         * In a non-orientable component, orientations are still +1 and
-         * -1 but no further guarantees can be made.
-         *
-         * @return +1 or -1 according to the orientation of this triangle.
-         */
-        int orientation() const;
 
     private:
         /**
@@ -260,12 +231,6 @@ inline int Simplex<2>::adjacentEdge(int edge) const {
     return adjacentFacet(edge);
 }
 
-inline Dim2Component* Simplex<2>::getComponent() const {
-    if (! getTriangulation()->calculatedSkeleton_)
-        getTriangulation()->calculateSkeleton();
-    return component_;
-}
-
 inline Dim2Vertex* Simplex<2>::getVertex(int vertex) const {
     if (! getTriangulation()->calculatedSkeleton_)
         getTriangulation()->calculateSkeleton();
@@ -288,12 +253,6 @@ inline NPerm3 Simplex<2>::getEdgeMapping(int edge) const {
     if (! getTriangulation()->calculatedSkeleton_)
         getTriangulation()->calculateSkeleton();
     return edgeMapping_[edge];
-}
-
-inline int Simplex<2>::orientation() const {
-    if (! getTriangulation()->calculatedSkeleton_)
-        getTriangulation()->calculateSkeleton();
-    return orientation_;
 }
 
 inline Simplex<2>::Simplex(Dim2Triangulation* tri) : SimplexBase<2>(tri) {

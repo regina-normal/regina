@@ -101,6 +101,14 @@ class REGINA_API SimplexBase :
         Triangulation<dim>* tri_;
             /**< The triangulation to which this simplex belongs. */
 
+        int orientation_;
+            /**< The orientation of this simplex in the triangulation.
+                 This will either be +1 or -1, and will only be set
+                 if/when the skeleton of the triangulation is computed. */
+        Component<Dim>* component_;
+            /**< The component to which this simplex belongs in the
+                 triangulation.  This will only be set if/when the
+                 skeleton of the triangulation is computed. */
     public:
         /**
          * Returns the description associated with this simplex.
@@ -284,6 +292,40 @@ class REGINA_API SimplexBase :
         Triangulation<dim>* getTriangulation() const;
 
         /**
+         * Returns the connected component of the triangulation to
+         * which this simplex belongs.
+         *
+         * @return the component containing this simplex.
+         */
+        Component<dim>* component() const;
+
+        /**
+         * Deprecated alias for component(), which returns the connected
+         * component of the triangulation to which this simplex belongs.
+         *
+         * \deprecated Simply call component() instead.
+         *
+         * See component() for further details.
+         */
+        Component<dim>* getComponent() const;
+
+        /**
+         * Returns the orientation of this simplex in the 2-manifold
+         * triangulation.
+         *
+         * The orientation of each top-dimensional simplex is always +1 or -1.
+         * In an orientable component of a triangulation,
+         * adjacent simplices have the same orientations if one could be
+         * transposed onto the other without reflection, and they have
+         * opposite orientations if a reflection would be required.
+         * In a non-orientable component, orientations are arbitrary
+         * (but they will still all be +1 or -1).
+         *
+         * @return +1 or -1 according to the orientation of this triangle.
+         */
+        int orientation() const;
+
+        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -440,6 +482,23 @@ inline NPerm<dim+1> SimplexBase<dim>::adjacentGluing(int face) const {
 template <int dim>
 inline Triangulation<dim>* SimplexBase<dim>::getTriangulation() const {
     return tri_;
+}
+
+template <int dim>
+inline Component<dim>* Simplex<dim>::component() const {
+    getTriangulation()->ensureSkeleton();
+    return component_;
+}
+
+template <int dim>
+inline Component<dim>* Simplex<dim>::getComponent() const {
+    return component();
+}
+
+template <int dim>
+inline int Simplex<dim>::orientation() const {
+    getTriangulation()->ensureSkeleton();
+    return orientation_;
 }
 
 template <int dim>

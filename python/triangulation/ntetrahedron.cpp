@@ -66,6 +66,8 @@ void addNTetrahedron() {
         .def("isolate", &NTetrahedron::isolate)
         .def("getTriangulation", &NTetrahedron::getTriangulation,
             return_value_policy<reference_existing_object>())
+        .def("component", &NTetrahedron::component,
+            return_value_policy<reference_existing_object>())
         .def("getComponent", &NTetrahedron::getComponent,
             return_value_policy<reference_existing_object>())
         .def("getVertex", &NTetrahedron::getVertex,

@@ -54,6 +54,8 @@ Version 4.97  [ (under development) ]
             - You can now safely call unjoin() on a boundary edge.
             - Routine joinTo() has been renamed to join().  The old name
               joinTo() has been kept but is now deprecated.
+            - Routine getComponent() has been renamed to component().
+              The old name getComponent() has been kept but is now deprecated.
         Class Dim2Triangulation:
             - Now just a typedef for the new class Triangulation<2>, which has
               the same functionality as the old Dim2Triangulation.
@@ -197,6 +199,8 @@ Version 4.97  [ (under development) ]
             - You can now safely call unjoin() on a boundary face.
             - Routine joinTo() has been renamed to join().  The old name
               joinTo() has been kept but is now deprecated.
+            - Routine getComponent() has been renamed to component().
+              The old name getComponent() has been kept but is now deprecated.
         Class NTreeBag, NTreeDecomposition:
             - Classes for computing tree decompositions of graphs
               (including facet pairing graphs of triangulations).
