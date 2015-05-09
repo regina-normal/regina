@@ -65,11 +65,11 @@ unsigned long Triangulation<2>::findIsomorphisms(
             return 0;
         if (vertices_.size() != other.vertices_.size())
             return 0;
-        if (components_.size() != other.components_.size())
+        if (components().size() != other.components().size())
             return 0;
         if (boundaryComponents_.size() != other.boundaryComponents_.size())
             return 0;
-        if (orientable_ ^ other.orientable_)
+        if (isOrientable() ^ other.isOrientable())
             return 0;
 
         // Test degree sequences and the like.
@@ -97,13 +97,13 @@ unsigned long Triangulation<2>::findIsomorphisms(
         }
         {
             ComponentIterator it;
-            for (it = components_.begin(); it != components_.end(); it++) {
+            for (it = components().begin(); it != components().end(); it++) {
                 mapIt = map1.insert(
                     std::make_pair((*it)->getNumberOfTriangles(), 0)).first;
                 (*mapIt).second++;
             }
-            for (it = other.components_.begin();
-                    it != other.components_.end(); it++) {
+            for (it = other.components().begin();
+                    it != other.components().end(); it++) {
                 mapIt = map2.insert(
                     std::make_pair((*it)->getNumberOfTriangles(), 0)).first;
                 (*mapIt).second++;
@@ -137,7 +137,7 @@ unsigned long Triangulation<2>::findIsomorphisms(
         // Not much we can test for unfortunately.
         if (simplices_.size() > other.simplices_.size())
             return 0;
-        if ((! orientable_) && other.orientable_)
+        if ((! isOrientable()) && other.isOrientable())
             return 0;
     }
 
@@ -147,7 +147,7 @@ unsigned long Triangulation<2>::findIsomorphisms(
     unsigned long nResults = 0;
     unsigned long nTriangles = simplices_.size();
     unsigned long nDestTriangles = other.simplices_.size();
-    unsigned long nComponents = components_.size();
+    unsigned long nComponents = components().size();
     unsigned i;
 
     Dim2Isomorphism iso(nTriangles);
@@ -224,7 +224,7 @@ unsigned long Triangulation<2>::findIsomorphisms(
         }
 
         // Be sure we're looking at a triangle we can use.
-        compSize = components_[comp]->getNumberOfTriangles();
+        compSize = component(comp)->getNumberOfTriangles();
         if (completeIsomorphism) {
             // Conditions:
             // 1) The destination triangle is unused.
@@ -273,7 +273,7 @@ unsigned long Triangulation<2>::findIsomorphisms(
         // Note that there is only one way of doing this (as seen by
         // following adjacent triangle gluings).  It either works or
         // it doesn't.
-        myTriIndex = triangleIndex(components_[comp]->getTriangle(0));
+        myTriIndex = triangleIndex(component(comp)->simplex(0));
 
         whichComp[startTri[comp]] = comp;
         iso.simpImage(myTriIndex) = startTri[comp];

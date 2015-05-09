@@ -67,11 +67,11 @@ unsigned long NTriangulation::findIsomorphisms(
             return 0;
         if (vertices_.size() != other.vertices_.size())
             return 0;
-        if (components_.size() != other.components_.size())
+        if (components().size() != other.components().size())
             return 0;
         if (boundaryComponents_.size() != other.boundaryComponents_.size())
             return 0;
-        if (orientable_ ^ other.orientable_)
+        if (isOrientable() ^ other.isOrientable())
             return 0;
 
         // Test degree sequences and the like.
@@ -118,13 +118,13 @@ unsigned long NTriangulation::findIsomorphisms(
         }
         {
             ComponentIterator it;
-            for (it = components_.begin(); it != components_.end(); it++) {
+            for (it = components().begin(); it != components().end(); it++) {
                 mapIt = map1.insert(
                     std::make_pair((*it)->getNumberOfTetrahedra(), 0)).first;
                 (*mapIt).second++;
             }
-            for (it = other.components_.begin();
-                    it != other.components_.end(); it++) {
+            for (it = other.components().begin();
+                    it != other.components().end(); it++) {
                 mapIt = map2.insert(
                     std::make_pair((*it)->getNumberOfTetrahedra(), 0)).first;
                 (*mapIt).second++;
@@ -158,7 +158,7 @@ unsigned long NTriangulation::findIsomorphisms(
         // Not much we can test for unfortunately.
         if (simplices_.size() > other.simplices_.size())
             return 0;
-        if ((! orientable_) && other.orientable_)
+        if ((! isOrientable()) && other.isOrientable())
             return 0;
     }
 
@@ -168,7 +168,7 @@ unsigned long NTriangulation::findIsomorphisms(
     unsigned long nResults = 0;
     unsigned long nTetrahedra = simplices_.size();
     unsigned long nDestTetrahedra = other.simplices_.size();
-    unsigned long nComponents = components_.size();
+    unsigned long nComponents = components().size();
     unsigned i;
 
     NIsomorphism iso(nTetrahedra);
@@ -245,7 +245,7 @@ unsigned long NTriangulation::findIsomorphisms(
         }
 
         // Be sure we're looking at a tetrahedron we can use.
-        compSize = components_[comp]->getNumberOfTetrahedra();
+        compSize = component(comp)->getNumberOfTetrahedra();
         if (completeIsomorphism) {
             // Conditions:
             // 1) The destination tetrahedron is unused.
@@ -294,7 +294,7 @@ unsigned long NTriangulation::findIsomorphisms(
         // Note that there is only one way of doing this (as seen by
         // following adjacent tetrahedron gluings).  It either works or
         // it doesn't.
-        tetIndex = tetrahedronIndex(components_[comp]->getTetrahedron(0));
+        tetIndex = tetrahedronIndex(component(comp)->simplex(0));
 
         whichComp[startTet[comp]] = comp;
         iso.tetImage(tetIndex) = startTet[comp];

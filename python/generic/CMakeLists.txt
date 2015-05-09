@@ -1,5 +1,6 @@
 # Files to compile
 SET ( FILES
+  component
   isomorphism
   simplex
   pygeneric

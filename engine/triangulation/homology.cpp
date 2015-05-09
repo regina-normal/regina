@@ -142,8 +142,8 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
         nBdryEdges += (*bit)->getNumberOfEdges();
         nBdryTri += (*bit)->getNumberOfTriangles();
     }
-    for (ComponentIterator cit = components_.begin();
-            cit != components_.end(); cit++)
+    for (ComponentIterator cit = components().begin();
+            cit != components().end(); cit++)
         if ((*cit)->isClosed())
             nClosedComponents++;
     long nGens = getNumberOfEdges() - nBdryEdges
@@ -253,8 +253,8 @@ const NAbelianGroup& NTriangulation::getHomologyH2() const {
         // Non-orientable!
         // z2rank = # closed cmpts - # closed orientable cmpts
         z2rank = 0;
-        for (ComponentIterator cit = components_.begin();
-                cit != components_.end(); cit++)
+        for (ComponentIterator cit = components().begin();
+                cit != components().end(); cit++)
             if ((*cit)->isClosed())
                 if (! ((*cit)->isOrientable()))
                     z2rank++;

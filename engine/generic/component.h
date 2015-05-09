@@ -210,7 +210,6 @@ class REGINA_API ComponentBase :
          */
         ComponentBase();
 
-    friend class Triangulation<dim>;
     friend class TriangulationBase<dim>;
 };
 

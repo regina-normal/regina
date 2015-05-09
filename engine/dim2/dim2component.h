@@ -208,6 +208,7 @@ class REGINA_API Component<2> : public ComponentBase<2> {
         Component();
 
     friend class Triangulation<2>;
+    friend class TriangulationBase<2>;
 };
 
 /*@}*/

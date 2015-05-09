@@ -286,7 +286,7 @@ bool NTriangulation::isOriented() const {
         return false;
 
     for(it = simplices_.begin(); it != simplices_.end(); ++it)
-        if( (*it) -> tetOrientation_ != 1)
+        if( (*it) -> orientation() != 1)
             return false;
 
     return true;
@@ -301,7 +301,7 @@ void NTriangulation::orient() {
     int t;
     for (t = 0, it = simplices_.begin(); it != simplices_.end(); ++it, ++t) {
         flip_tets_iso.tetImage(t) = t;
-        if ((*it)->tetOrientation_ == 1 ||
+        if ((*it)->orientation() == 1 ||
                 ! (*it)->getComponent()->isOrientable())
             flip_tets_iso.facePerm(t) = NPerm4(); // Identity
         else

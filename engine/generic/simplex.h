@@ -50,6 +50,7 @@
 
 namespace regina {
 
+template <int dim> class Component;
 template <int dim> class Simplex;
 template <int dim> class Triangulation;
 template <int dim> class TriangulationBase;
@@ -105,7 +106,7 @@ class REGINA_API SimplexBase :
             /**< The orientation of this simplex in the triangulation.
                  This will either be +1 or -1, and will only be set
                  if/when the skeleton of the triangulation is computed. */
-        Component<Dim>* component_;
+        Component<dim>* component_;
             /**< The component to which this simplex belongs in the
                  triangulation.  This will only be set if/when the
                  skeleton of the triangulation is computed. */
@@ -485,18 +486,18 @@ inline Triangulation<dim>* SimplexBase<dim>::getTriangulation() const {
 }
 
 template <int dim>
-inline Component<dim>* Simplex<dim>::component() const {
+inline Component<dim>* SimplexBase<dim>::component() const {
     getTriangulation()->ensureSkeleton();
     return component_;
 }
 
 template <int dim>
-inline Component<dim>* Simplex<dim>::getComponent() const {
+inline Component<dim>* SimplexBase<dim>::getComponent() const {
     return component();
 }
 
 template <int dim>
-inline int Simplex<dim>::orientation() const {
+inline int SimplexBase<dim>::orientation() const {
     getTriangulation()->ensureSkeleton();
     return orientation_;
 }

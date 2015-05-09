@@ -49,12 +49,14 @@
 #include <vector>
 #include "regina-core.h"
 #include "output.h"
+#include "generic/component.h"
 #include "generic/simplex.h"
 #include "maths/nperm.h"
 #include "utilities/nmarkedvector.h"
 
 namespace regina {
 
+template <int> class Component;
 template <int> class Isomorphism;
 template <int> class Triangulation;
 
@@ -93,7 +95,8 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
         typedef typename std::vector<Simplex<dim>*>::const_iterator
                 SimplexIterator;
             /**< Used to iterate through top-dimensional simplices. */
-        typedef std::vector<Component<dim>*>::const_iterator ComponentIterator;
+        typedef typename std::vector<Component<dim>*>::const_iterator
+                ComponentIterator;
             /**< Used to iterate through connected components. */
 
     protected:
@@ -104,7 +107,7 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
         mutable bool calculatedSkeleton_;
             /**< Has the skeleton been calculated?  This is only done
                  "on demand", when a skeletal property is first queried. */
-        mutable NMarkedVector<Dim2Component> components_;
+        mutable NMarkedVector<Component<dim>> components_;
             /**< The connected components that form the triangulation.
                  This list is only filled if/when the skeleton of the
                  triangulation is computed. */
@@ -1505,7 +1508,7 @@ TODO: output packet labels if we derive from NPacket
 template <int dim>
 inline void TriangulationBase<dim>::ensureSkeleton() const {
     if (! calculatedSkeleton_)
-        static_cast<const Triangulation<Dim>*>(this)->calculateSkeleton();
+        static_cast<const Triangulation<dim>*>(this)->calculateSkeleton();
 }
 
 template <int dim>
@@ -1537,7 +1540,7 @@ void TriangulationBase<dim>::calculateSkeleton() const {
         s = *it;
         if (s->component_ == 0) {
             c = new Component<dim>();
-            components_.push_back(label);
+            components_.push_back(c);
 
             s->component_ = c;
             c->simplices_.push_back(s);
@@ -1555,7 +1558,7 @@ void TriangulationBase<dim>::calculateSkeleton() const {
                             -s->orientation_ : s->orientation_);
                         if (adj->component_) {
                             if (yourOrientation != adj->orientation_) {
-                                orientable_ = component->orientable_ = false;
+                                orientable_ = c->orientable_ = false;
                             }
                         } else {
                             adj->component_ = c;
@@ -1575,7 +1578,7 @@ void TriangulationBase<dim>::calculateSkeleton() const {
 }
 
 template <int dim>
-inline void TriangluationBase<dim>::deleteSkeleton() {
+inline void TriangulationBase<dim>::deleteSkeleton() {
     for (auto it = components_.begin(); it != components_.end(); ++it)
         delete *it;
 
@@ -1585,7 +1588,7 @@ inline void TriangluationBase<dim>::deleteSkeleton() {
 }
 
 template <int dim>
-inline bool TriangluationBase<dim>::calculatedSkeleton() {
+inline bool TriangulationBase<dim>::calculatedSkeleton() const {
     return calculatedSkeleton_;
 }
 
@@ -1602,8 +1605,10 @@ inline Triangulation<dim>::Triangulation(const Triangulation& copy) :
 
 template <int dim>
 inline void Triangulation<dim>::clearAllProperties() {
-    if (calculatedSkeleton_)
-        deleteSkeleton();
+    // We have no override for deleteSkeleton().
+    // Just call the base class implementation.
+    if (TriangulationBase<dim>::calculatedSkeleton())
+        TriangulationBase<dim>::deleteSkeleton();
 }
 
 template <int dim>

@@ -32,15 +32,52 @@
 
 /* end stub */
 
-void addComponent();
-void addIsomorphism();
-void addSimplex();
-void addTriangulations();
+#include <boost/python.hpp>
+#include "generic/component.h"
+#include "generic/simplex.h"
 
-void addGeneric() {
-    addComponent();
-    addIsomorphism();
-    addSimplex();
-    addTriangulations();
+using namespace boost::python;
+using regina::Component;
+
+namespace {
+    template <int dim>
+    struct PyComponentHelper {
+        boost::python::list simplices_list(Component<dim>& t) {
+            boost::python::list ans;
+            for (auto it = t.simplices().begin();
+                    it != t.simplices().end(); ++it)
+                ans.append(boost::python::ptr(*it));
+            return ans;
+        }
+    };
 }
 
+template <int dim>
+void addComponent(const char* name) {
+    class_<Component<dim>, std::auto_ptr<Component<dim>>, boost::noncopyable>
+            (name, no_init)
+        .def("index", &Component<dim>::index)
+        .def("size", &Component<dim>::size)
+        .def("getNumberOfSimplices", &Component<dim>::getNumberOfSimplices)
+        .def("simplices", &PyComponentHelper<dim>::simplices_list)
+        .def("getSimplices", &PyComponentHelper<dim>::simplices_list)
+        .def("simplex", &Component<dim>::simplex,
+            return_value_policy<reference_existing_object>())
+        .def("getSimplex", &Component<dim>::getSimplex,
+            return_value_policy<reference_existing_object>())
+        .def("isOrientable", &Component<dim>::isOrientable)
+        .def("getNumberOfBoundaryFacets",
+            &Component<dim>::getNumberOfBoundaryFacets)
+        .def("str", &Component<dim>::str)
+        .def("toString", &Component<dim>::toString)
+        .def("detail", &Component<dim>::detail)
+        .def("toStringLong", &Component<dim>::toStringLong)
+        .def("__str__", &Component<dim>::str)
+    ;
+}
+
+void addComponent() {
+    addComponent<5>("Component5");
+    addComponent<8>("Component8");
+    addComponent<15>("Component15");
+}

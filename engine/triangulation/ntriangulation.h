@@ -3443,6 +3443,7 @@ typedef Triangulation<3> NTriangulation;
 #include "triangulation/ntriangle.h"
 #include "triangulation/nedge.h"
 #include "triangulation/nvertex.h"
+#include "triangulation/ncomponent.h"
 #include "triangulation/nboundarycomponent.h"
 namespace regina {
 
