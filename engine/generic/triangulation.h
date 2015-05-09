@@ -93,10 +93,22 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
         typedef typename std::vector<Simplex<dim>*>::const_iterator
                 SimplexIterator;
             /**< Used to iterate through top-dimensional simplices. */
+        typedef std::vector<Component<dim>*>::const_iterator ComponentIterator;
+            /**< Used to iterate through connected components. */
 
     protected:
         NMarkedVector<Simplex<dim>> simplices_;
             /**< The top-dimensional simplices that form the triangulation. */
+
+    private:
+        mutable NMarkedVector<Dim2Component> components_;
+            /**< The connected components that form the triangulation.
+                 This list is only filled if/when the skeleton of the
+                 triangulation is computed. */
+
+        mutable bool orientable_;
+            /**< Is the triangulation orientable?  This property is only set
+                 if/when the skeleton of the triangulation is computed. */
 
     public:
         /**
@@ -327,6 +339,96 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
 
         /*@}*/
         /**
+         * \name Skeletal Queries
+         */
+        /*@{*/
+
+        /**
+         * Returns the number of connected components in this triangulation.
+         *
+         * @return the number of connected components.
+         */
+        size_t countComponents() const;
+
+        /**
+         * Deprecated routine that returns the number of connected components
+         * in this triangulation.
+         *
+         * \deprecated Simply call countComponents() instead.
+         *
+         * See countComponents() for further details.
+         */
+        size_t getNumberOfComponents() const;
+
+        /**
+         * Returns all connected components of this triangulation.
+         *
+         * Note that each time the triangulation changes, all component
+         * objects will be deleted and replaced with new ones.
+         * Therefore these component objects should be considered temporary
+         * only.
+         *
+         * In contrast, this reference to the \e list of all components
+         * will remain valid and up-to-date for as long as the triangulation
+         * exists.
+         *
+         * \ifacespython This routine returns a python list.
+         *
+         * @return the list of all components.
+         */
+        const std::vector<Component<dim>*>& components() const;
+
+        /**
+         * Deprecated routine that returns all connected components
+         * of this triangulation.
+         *
+         * \deprecated Simply call components() instead.
+         *
+         * See components() for further details.
+         */
+        const std::vector<Component<dim>*>& getComponents() const;
+
+        /**
+         * Returns the requested connected component of this triangulation.
+         *
+         * Note that each time the triangulation changes, all component
+         * objects will be deleted and replaced with new ones.
+         * Therefore this component object should be considered temporary only.
+         *
+         * @param index the index of the desired component; this must be
+         * between 0 and countComponents()-1 inclusive.
+         * @return the requested component.
+         */
+        Component<dim>* component(size_t index) const;
+
+        /**
+         * Deprecated routine that returns the requested connected component
+         * of this triangulation.
+         *
+         * \deprecated Simply call component() instead.
+         *
+         * See component() for further details.
+         */
+        Component<dim>* getComponent(size_t index) const;
+
+        /**
+         * Returns the index of the given connected component in this
+         * triangulation.
+         *
+         * \pre The given component belongs to this triangulation.
+         *
+         * \warning Passing a null pointer to this routine will probably
+         * crash your program.
+         *
+         * @param component specifies which component to find in the
+         * triangulation.
+         * @return the index of the specified component; this will be an
+         * integer between 0 and countComponents()-1 inclusive.
+         */
+        size_t componentIndex(const Component<dim>* component) const;
+
+        /*@}*/
+        /**
          * \name Basic Properties
          */
         /*@{*/
@@ -349,6 +451,20 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
          * @return \c true if and only if there are boundary facets.
          */
         bool hasBoundaryFacets() const;
+
+        /**
+         * Determines if this triangulation is orientable.
+         *
+         * @return \c true if and only if this triangulation is orientable.
+         */
+        bool isOrientable() const;
+
+        /**
+         * Determines if this triangulation is connected.
+         *
+         * @return \c true if and only if this triangulation is connected.
+         */
+        bool isConnected() const;
 
         /*@}*/
         /**
@@ -720,6 +836,13 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
  * fromIsoSig() (which uses <em>isomorphism signatures</em>), or
  * insertConstruction() and dumpConstruction() (which exports C++ code).
  *
+ * In additional to top-dimensional simplices, this class also tracks
+ * connected components of the triangulation, as represented by the
+ * class Component<dim>.  Such objects are temporary: whenever the
+ * triangulation changes, they will be deleted and rebuilt, and any
+ * pointers to them will become invalid.  Likewise, if the triangulation
+ * is deleted then all component objects will be deleted alongside it.
+ *
  * For dimensions 2 and 3, this template is specialised and offers
  * \e much more functionality.  In order to use these specialised
  * classes, you will need to include the corresponding headers
@@ -1042,6 +1165,50 @@ void TriangulationBase<dim>::moveContentsTo(Triangulation<dim>& dest) {
 }
 
 template <int dim>
+inline size_t Triangulation<dim>::countComponents() const {
+    ensureSkeleton();
+    return components_.size();
+}
+
+template <int dim>
+inline size_t Triangulation<dim>::getNumberOfComponents() const {
+    ensureSkeleton();
+    return components_.size();
+}
+
+template <int dim>
+inline const std::vector<Component<dim>*>& Triangulation<dim>::components()
+        const {
+    ensureSkeleton();
+    return (const std::vector<Component<dim>*>&)(components_);
+}
+
+template <int dim>
+inline const std::vector<Component<dim>*>& Triangulation<dim>::getComponents()
+        const {
+    ensureSkeleton();
+    return (const std::vector<Component<dim>*>&)(components_);
+}
+
+template <int dim>
+inline Component<dim>* Triangulation<dim>::component(size_t index) const {
+    ensureSkeleton();
+    return components_[index];
+}
+
+template <int dim>
+inline Component<dim>* Triangulation<dim>::getComponent(size_t index) const {
+    ensureSkeleton();
+    return components_[index];
+}
+
+template <int dim>
+inline size_t Triangulation<dim>::componentIndex(
+        const Component<dim>* component) const {
+    return component->markedIndex();
+}
+
+template <int dim>
 inline bool TriangulationBase<dim>::isEmpty() const {
     return simplices_.empty();
 }
@@ -1052,6 +1219,18 @@ inline bool TriangulationBase<dim>::hasBoundaryFacets() const {
         if ((*it)->hasBoundary())
             return true;
     return false;
+}
+
+template <int dim>
+inline bool Triangulation<dim>::isOrientable() const {
+    ensureSkeleton();
+    return orientable_;
+}
+
+template <int dim>
+inline bool Triangulation<dim>::isConnected() const {
+    ensureSkeleton();
+    return (components_.size() <= 1);
 }
 
 template <int dim>

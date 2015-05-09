@@ -68,7 +68,6 @@ template <int> class Component;
 template <int> class Isomorphism;
 template <int> class SimplexBase;
 template <int> class Simplex;
-typedef Component<2> Dim2Component;
 typedef Isomorphism<2> Dim2Isomorphism;
 typedef Simplex<2> Dim2Triangle;
 
@@ -123,8 +122,6 @@ class REGINA_API Triangulation<2> :
             /**< Used to iterate through edges. */
         typedef std::vector<Dim2Vertex*>::const_iterator VertexIterator;
             /**< Used to iterate through vertices. */
-        typedef std::vector<Dim2Component*>::const_iterator ComponentIterator;
-            /**< Used to iterate through components. */
         typedef std::vector<Dim2BoundaryComponent*>::const_iterator
                 BoundaryComponentIterator;
             /**< Used to iterate through boundary components. */
@@ -137,14 +134,9 @@ class REGINA_API Triangulation<2> :
             /**< The edges in the triangulation skeleton. */
         mutable NMarkedVector<Dim2Vertex> vertices_;
             /**< The vertices in the triangulation skeleton. */
-        mutable NMarkedVector<Dim2Component> components_;
-            /**< The components that form the triangulation. */
         mutable NMarkedVector<Dim2BoundaryComponent> boundaryComponents_;
             /**< The components that form the boundary of the
                  triangulation. */
-
-        mutable bool orientable_;
-            /**< Is the triangulation orientable? */
 
     public:
         /**
@@ -283,12 +275,6 @@ class REGINA_API Triangulation<2> :
          */
         unsigned long getNumberOfBoundaryComponents() const;
         /**
-         * Returns the number of components in this triangulation.
-         *
-         * @return the number of components.
-         */
-        unsigned long getNumberOfComponents() const;
-        /**
          * Returns the number of vertices in this triangulation.
          *
          * @return the number of vertices.
@@ -316,22 +302,6 @@ class REGINA_API Triangulation<2> :
         template <int subdim>
         unsigned long getNumberOfFaces() const;
 
-        /**
-         * Returns all components of this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * components will be deleted and replaced with new
-         * ones.  Thus the objects contained in this list should be
-         * considered temporary only.
-         *
-         * This reference to the list however will remain valid and
-         * up-to-date for as long as the triangulation exists.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of all components.
-         */
-        const std::vector<Dim2Component*>& getComponents() const;
         /**
          * Returns all boundary components of this triangulation.
          *
@@ -381,18 +351,6 @@ class REGINA_API Triangulation<2> :
          * @return the list of all edges.
          */
         const std::vector<Dim2Edge*>& getEdges() const;
-        /**
-         * Returns the requested triangulation component.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * components will be deleted and replaced with new
-         * ones.  Thus this object should be considered temporary only.
-         *
-         * @param index the index of the desired component, ranging from 0
-         * to getNumberOfComponents()-1 inclusive.
-         * @return the requested component.
-         */
-        Dim2Component* getComponent(unsigned long index) const;
         /**
          * Returns the requested triangulation boundary component.
          *
@@ -447,20 +405,6 @@ class REGINA_API Triangulation<2> :
         template <int subdim>
         typename FaceTraits<2, subdim>::Face* getFace(unsigned long index)
             const;
-        /**
-         * Returns the index of the given component in the triangulation.
-         *
-         * \pre The given component belongs to this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.
-         *
-         * @param component specifies which component to find in the
-         * triangulation.
-         * @return the index of the specified component, where 0 is the first
-         * component, 1 is the second and so on.
-         */
-        long componentIndex(const Dim2Component* component) const;
         /**
          * Returns the index of the given boundary component
          * in the triangulation.
@@ -582,18 +526,6 @@ class REGINA_API Triangulation<2> :
          * @return the total number of boundary edges.
          */
         unsigned long getNumberOfBoundaryEdges() const;
-        /**
-         * Determines if this triangulation is orientable.
-         *
-         * @return \c true if and only if this triangulation is orientable.
-         */
-        bool isOrientable() const;
-        /**
-         * Determines if this triangulation is connected.
-         *
-         * @return \c true if and only if this triangulation is connected.
-         */
-        bool isConnected() const;
         /**
          * Always returns \c false.
          *
@@ -834,7 +766,6 @@ typedef Triangulation<2> Dim2Triangulation;
 #include "dim2/dim2triangle.h"
 #include "dim2/dim2edge.h"
 #include "dim2/dim2vertex.h"
-#include "dim2/dim2component.h"
 #include "dim2/dim2boundarycomponent.h"
 namespace regina {
 
@@ -910,12 +841,6 @@ inline unsigned long Triangulation<2>::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
-inline unsigned long Triangulation<2>::getNumberOfComponents() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return components_.size();
-}
-
 inline unsigned long Triangulation<2>::getNumberOfVertices() const {
     if (! calculatedSkeleton_)
         calculateSkeleton();
@@ -943,13 +868,6 @@ inline unsigned long Triangulation<2>::getNumberOfFaces<2>() const {
     return getNumberOfTriangles();
 }
 
-inline const std::vector<Dim2Component*>& Triangulation<2>::getComponents()
-        const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return (const std::vector<Dim2Component*>&)(components_);
-}
-
 inline const std::vector<Dim2BoundaryComponent*>&
         Triangulation<2>::getBoundaryComponents() const {
     if (! calculatedSkeleton_)
@@ -967,13 +885,6 @@ inline const std::vector<Dim2Edge*>& Triangulation<2>::getEdges() const {
     if (! calculatedSkeleton_)
         calculateSkeleton();
     return (const std::vector<Dim2Edge*>&)(edges_);
-}
-
-inline Dim2Component* Triangulation<2>::getComponent(unsigned long index)
-        const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return components_[index];
 }
 
 inline Dim2BoundaryComponent* Triangulation<2>::getBoundaryComponent(
@@ -1008,11 +919,6 @@ inline Dim2Edge* Triangulation<2>::getFace<1>(unsigned long index) const {
 template <>
 inline Dim2Triangle* Triangulation<2>::getFace<2>(unsigned long index) const {
     return simplices_[index];
-}
-
-inline long Triangulation<2>::componentIndex(const Dim2Component* component)
-        const {
-    return component->markedIndex();
 }
 
 inline long Triangulation<2>::boundaryComponentIndex(
@@ -1073,20 +979,8 @@ inline unsigned long Triangulation<2>::getNumberOfBoundaryEdges() const {
     return 2 * edges_.size() - 3 * simplices_.size();
 }
 
-inline bool Triangulation<2>::isOrientable() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return orientable_;
-}
-
 inline bool Triangulation<2>::isIdeal() const {
     return false;
-}
-
-inline bool Triangulation<2>::isConnected() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return (components_.size() <= 1);
 }
 
 inline NPacket* Triangulation<2>::internalClonePacket(NPacket*) const {

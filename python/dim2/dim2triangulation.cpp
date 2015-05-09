@@ -151,15 +151,19 @@ void addDim2Triangulation() {
         .def("removeAllSimplices", &Dim2Triangulation::removeAllSimplices)
         .def("swapContents", &Dim2Triangulation::swapContents)
         .def("moveContentsTo", &Dim2Triangulation::moveContentsTo)
+        .def("countComponents", &Dim2Triangulation::countComponents)
         .def("getNumberOfComponents", &Dim2Triangulation::getNumberOfComponents)
         .def("getNumberOfBoundaryComponents",
             &Dim2Triangulation::getNumberOfBoundaryComponents)
         .def("getNumberOfVertices", &Dim2Triangulation::getNumberOfVertices)
         .def("getNumberOfEdges", &Dim2Triangulation::getNumberOfEdges)
+        .def("components", Dim2_getComponents_list)
         .def("getComponents", Dim2_getComponents_list)
         .def("getBoundaryComponents", Dim2_getBoundaryComponents_list)
         .def("getVertices", Dim2_getVertices_list)
         .def("getEdges", Dim2_getEdges_list)
+        .def("component", &Dim2Triangulation::component,
+            return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim2Triangulation::getComponent,
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &Dim2Triangulation::getBoundaryComponent,

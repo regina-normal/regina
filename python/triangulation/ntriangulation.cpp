@@ -234,6 +234,7 @@ void addNTriangulation() {
         .def("removeAllSimplices", &NTriangulation::removeAllSimplices)
         .def("swapContents", &NTriangulation::swapContents)
         .def("moveContentsTo", &NTriangulation::moveContentsTo)
+        .def("countComponents", &NTriangulation::countComponents)
         .def("getNumberOfComponents", &NTriangulation::getNumberOfComponents)
         .def("getNumberOfBoundaryComponents",
             &NTriangulation::getNumberOfBoundaryComponents)
@@ -241,12 +242,15 @@ void addNTriangulation() {
         .def("getNumberOfEdges", &NTriangulation::getNumberOfEdges)
         .def("getNumberOfFaces", &NTriangulation::getNumberOfTriangles)
         .def("getNumberOfTriangles", &NTriangulation::getNumberOfTriangles)
+        .def("components", getComponents_list)
         .def("getComponents", getComponents_list)
         .def("getBoundaryComponents", getBoundaryComponents_list)
         .def("getVertices", getVertices_list)
         .def("getEdges", getEdges_list)
         .def("getFaces", getTriangles_list)
         .def("getTriangles", getTriangles_list)
+        .def("component", &NTriangulation::component,
+            return_value_policy<reference_existing_object>())
         .def("getComponent", &NTriangulation::getComponent,
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &NTriangulation::getBoundaryComponent,

@@ -186,8 +186,6 @@ class REGINA_API Triangulation<3> :
             /**< Used to iterate through edges. */
         typedef std::vector<NVertex*>::const_iterator VertexIterator;
             /**< Used to iterate through vertices. */
-        typedef std::vector<NComponent*>::const_iterator ComponentIterator;
-            /**< Used to iterate through components. */
         typedef std::vector<NBoundaryComponent*>::const_iterator
                 BoundaryComponentIterator;
             /**< Used to iterate through boundary components. */
@@ -207,8 +205,6 @@ class REGINA_API Triangulation<3> :
             /**< The edges in the triangulation skeleton. */
         mutable NMarkedVector<NVertex> vertices_;
             /**< The vertices in the triangulation skeleton. */
-        mutable NMarkedVector<NComponent> components_;
-            /**< The components that form the triangulation. */
         mutable NMarkedVector<NBoundaryComponent> boundaryComponents_;
             /**< The components that form the boundary of the
                  triangulation. */
@@ -219,8 +215,6 @@ class REGINA_API Triangulation<3> :
             /**< Is the triangulation ideal? */
         mutable bool standard_;
             /**< Is the triangulation standard? */
-        mutable bool orientable_;
-            /**< Is the triangulation orientable? */
 
         mutable NProperty<NGroupPresentation, StoreManagedPtr>
                 fundamentalGroup_;
@@ -425,12 +419,6 @@ class REGINA_API Triangulation<3> :
          */
         unsigned long getNumberOfBoundaryComponents() const;
         /**
-         * Returns the number of components in this triangulation.
-         *
-         * @return the number of components.
-         */
-        unsigned long getNumberOfComponents() const;
-        /**
          * Returns the number of vertices in this triangulation.
          *
          * @return the number of vertices.
@@ -479,22 +467,6 @@ class REGINA_API Triangulation<3> :
         template <int subdim>
         unsigned long getNumberOfFaces() const;
 
-        /**
-         * Returns all components of this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * components will be deleted and replaced with new
-         * ones.  Thus the objects contained in this list should be
-         * considered temporary only.
-         *
-         * This reference to the list however will remain valid and
-         * up-to-date for as long as the triangulation exists.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of all components.
-         */
-        const std::vector<NComponent*>& getComponents() const;
         /**
          * Returns all boundary components of this triangulation.
          * Note that each ideal vertex forms its own boundary component.
@@ -572,18 +544,6 @@ class REGINA_API Triangulation<3> :
          * @return the list of all triangles.
          */
         const std::vector<NTriangle*>& getFaces() const;
-        /**
-         * Returns the requested triangulation component.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * components will be deleted and replaced with new
-         * ones.  Thus this object should be considered temporary only.
-         *
-         * @param index the index of the desired component, ranging from 0
-         * to getNumberOfComponents()-1 inclusive.
-         * @return the requested component.
-         */
-        NComponent* getComponent(unsigned long index) const;
         /**
          * Returns the requested triangulation boundary component.
          *
@@ -668,26 +628,6 @@ class REGINA_API Triangulation<3> :
         template <int subdim>
         typename FaceTraits<3, subdim>::Face* getFace(unsigned long index)
             const;
-        /**
-         * Returns the index of the given component in the triangulation.
-         *
-         * This routine was introduced in Regina 4.5, and replaces the
-         * old getComponentIndex().  The name has been changed
-         * because, unlike the old routine, it requires that the given
-         * component belongs to the triangulation (a consequence of
-         * some significant memory optimisations).
-         *
-         * \pre The given component belongs to this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.
-         *
-         * @param component specifies which component to find in the
-         * triangulation.
-         * @return the index of the specified component, where 0 is the first
-         * component, 1 is the second and so on.
-         */
-        long componentIndex(const NComponent* component) const;
         /**
          * Returns the index of the given boundary component
          * in the triangulation.
@@ -967,13 +907,6 @@ class REGINA_API Triangulation<3> :
          * @return \c true if and only if this triangulation is closed.
          */
         bool isClosed() const;
-        /**
-         * Determines if this triangulation is orientable.
-         *
-         * @return \c true if and only if this triangulation is
-         * orientable.
-         */
-        bool isOrientable() const;
 
         /**
          * Determines if this triangulation is oriented; that is, if
@@ -1013,14 +946,6 @@ class REGINA_API Triangulation<3> :
          * @author Matthias Goerner
          */
         bool isOrdered() const;
-
-        /**
-         * Determines if this triangulation is connected.
-         *
-         * @return \c true if and only if this triangulation is
-         * connected.
-         */
-        bool isConnected() const;
 
         /*@}*/
         /**
@@ -3542,7 +3467,6 @@ typedef Triangulation<3> NTriangulation;
 #include "triangulation/ntriangle.h"
 #include "triangulation/nedge.h"
 #include "triangulation/nvertex.h"
-#include "triangulation/ncomponent.h"
 #include "triangulation/nboundarycomponent.h"
 namespace regina {
 
@@ -3609,12 +3533,6 @@ inline unsigned long Triangulation<3>::getNumberOfBoundaryComponents() const {
     if (! calculatedSkeleton_)
         calculateSkeleton();
     return boundaryComponents_.size();
-}
-
-inline unsigned long Triangulation<3>::getNumberOfComponents() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return components_.size();
 }
 
 inline unsigned long Triangulation<3>::getNumberOfVertices() const {
@@ -3686,12 +3604,6 @@ inline const std::vector<NBoundaryComponent*>&
     return (const std::vector<NBoundaryComponent*>&)(boundaryComponents_);
 }
 
-inline const std::vector<NComponent*>& Triangulation<3>::getComponents() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return (const std::vector<NComponent*>&)(components_);
-}
-
 inline const std::vector<NVertex*>& Triangulation<3>::getVertices() const {
     if (! calculatedSkeleton_)
         calculateSkeleton();
@@ -3714,12 +3626,6 @@ inline const std::vector<NTriangle*>& Triangulation<3>::getTriangles()
 
 inline const std::vector<NTriangle*>& Triangulation<3>::getFaces() const {
     return getTriangles();
-}
-
-inline NComponent* Triangulation<3>::getComponent(unsigned long index) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return components_[index];
 }
 
 inline NBoundaryComponent* Triangulation<3>::getBoundaryComponent(
@@ -3769,11 +3675,6 @@ inline NTriangle* Triangulation<3>::getFace<2>(unsigned long index) const {
 template <>
 inline NTetrahedron* Triangulation<3>::getFace<3>(unsigned long index) const {
     return simplices_[index];
-}
-
-inline long Triangulation<3>::componentIndex(const NComponent* component)
-        const {
-    return component->markedIndex();
 }
 
 inline long Triangulation<3>::boundaryComponentIndex(
@@ -3869,18 +3770,6 @@ inline bool Triangulation<3>::isClosed() const {
     if (! calculatedSkeleton_)
         calculateSkeleton();
     return boundaryComponents_.empty();
-}
-
-inline bool Triangulation<3>::isOrientable() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return orientable_;
-}
-
-inline bool Triangulation<3>::isConnected() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return (components_.size() <= 1);
 }
 
 inline void Triangulation<3>::simplifiedFundamentalGroup(

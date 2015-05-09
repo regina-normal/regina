@@ -65,6 +65,9 @@ Version 4.97  [ (under development) ]
               have been renamed to size(), simplices() and simplex()
               respectively.  The old names are deprecated but have been
               kept for backward compatibility.
+            - Renamed getNumberOfComponents(), getComponents(), getComponent()
+              to countComponents(), components() and component().  The
+              old names are deprecated but kept for backward compatibility.
         Class DimTraits:
             - Removed the Isomorphism typedef.  Juse use Isomorphism<dim>.
             - Removed the Perm typedef.  Juse use NPerm<dim+1>.
@@ -240,6 +243,9 @@ Version 4.97  [ (under development) ]
               kept for backward compatibility.
             - Removed deprecated routines addTetrahedron() and
               gluingsHaveChanged().
+            - Renamed getNumberOfComponents(), getComponents(), getComponent()
+              to countComponents(), components() and component().  The
+              old names are deprecated but kept for backward compatibility.
         Class NVertex:
             - Added a new LinkType enumeration, which encapsulates (and
               replaces) the old link type constants.
