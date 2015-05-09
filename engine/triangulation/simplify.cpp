@@ -841,8 +841,7 @@ bool NTriangulation::shellBoundary(NTetrahedron* t,
         bool check, bool perform) {
     // To perform the move we don't even need a skeleton.
     if (check) {
-        if (! calculatedSkeleton_)
-            calculateSkeleton();
+        ensureSkeleton();
 
         int nBdry = 0;
         int i, j;

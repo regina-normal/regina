@@ -293,8 +293,7 @@ bool NTriangulation::isOriented() const {
 }
 
 void NTriangulation::orient() {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
 
     NIsomorphism flip_tets_iso(getNumberOfTetrahedra());
 
@@ -333,10 +332,8 @@ bool NTriangulation::isOrdered() const {
     return true;
 }
 
-bool NTriangulation::order(bool force_oriented)
-{
-    if(!calculatedSkeleton_)
-        calculateSkeleton();
+bool NTriangulation::order(bool force_oriented) {
+    ensureSkeleton();
 
     if(force_oriented && !isOrientable())
         return false;

@@ -232,26 +232,22 @@ inline int Simplex<2>::adjacentEdge(int edge) const {
 }
 
 inline Dim2Vertex* Simplex<2>::getVertex(int vertex) const {
-    if (! getTriangulation()->calculatedSkeleton_)
-        getTriangulation()->calculateSkeleton();
+    getTriangulation()->ensureSkeleton();
     return vertex_[vertex];
 }
 
 inline Dim2Edge* Simplex<2>::getEdge(int edge) const {
-    if (! getTriangulation()->calculatedSkeleton_)
-        getTriangulation()->calculateSkeleton();
+    getTriangulation()->ensureSkeleton();
     return edge_[edge];
 }
 
 inline NPerm3 Simplex<2>::getVertexMapping(int vertex) const {
-    if (! getTriangulation()->calculatedSkeleton_)
-        getTriangulation()->calculateSkeleton();
+    getTriangulation()->ensureSkeleton();
     return vertexMapping_[vertex];
 }
 
 inline NPerm3 Simplex<2>::getEdgeMapping(int edge) const {
-    if (! getTriangulation()->calculatedSkeleton_)
-        getTriangulation()->calculateSkeleton();
+    getTriangulation()->ensureSkeleton();
     return edgeMapping_[edge];
 }
 

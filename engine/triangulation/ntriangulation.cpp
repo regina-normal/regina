@@ -46,8 +46,7 @@
 
 namespace regina {
 
-Triangulation<3>::Triangulation(const std::string& description) :
-        calculatedSkeleton_(false) {
+Triangulation<3>::Triangulation(const std::string& description) {
     NTriangulation* attempt;
 
     if ((attempt = fromIsoSig(description))) {
@@ -90,8 +89,7 @@ void Triangulation<3>::clearAllProperties() {
 }
 
 void Triangulation<3>::writeTextLong(std::ostream& out) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
 
     out << "Size of the skeleton:\n";
     out << "  Tetrahedra: " << simplices_.size() << '\n';

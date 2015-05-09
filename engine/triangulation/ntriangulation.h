@@ -195,9 +195,6 @@ class REGINA_API Triangulation<3> :
                  as described by turaevViro(). */
 
     private:
-        mutable bool calculatedSkeleton_;
-            /**< Has the skeleton been calculated? */
-
         mutable NMarkedVector<NTriangle> triangles_;
             /**< The triangles in the triangulation skeleton. */
         mutable NMarkedVector<NEdge> edges_;
@@ -3473,11 +3470,10 @@ namespace regina {
 
 // Inline functions for NTriangulation
 
-inline Triangulation<3>::Triangulation() : calculatedSkeleton_(false) {
+inline Triangulation<3>::Triangulation() {
 }
 
-inline Triangulation<3>::Triangulation(const NTriangulation& cloneMe) :
-        NPacket(), calculatedSkeleton_(false) {
+inline Triangulation<3>::Triangulation(const NTriangulation& cloneMe) {
     cloneFrom(cloneMe);
 }
 
@@ -3531,26 +3527,22 @@ inline void Triangulation<3>::removeAllTetrahedra() {
 }
 
 inline unsigned long Triangulation<3>::getNumberOfBoundaryComponents() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return boundaryComponents_.size();
 }
 
 inline unsigned long Triangulation<3>::getNumberOfVertices() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return vertices_.size();
 }
 
 inline unsigned long Triangulation<3>::getNumberOfEdges() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return edges_.size();
 }
 
 inline unsigned long Triangulation<3>::getNumberOfTriangles() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return triangles_.size();
 }
 
@@ -3579,8 +3571,7 @@ inline unsigned long Triangulation<3>::getNumberOfFaces<3>() const {
 }
 
 inline long Triangulation<3>::getEulerCharTri() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
 
     // Cast away the unsignedness of std::vector::size().
     return static_cast<long>(vertices_.size())
@@ -3600,28 +3591,24 @@ inline const std::vector<NTetrahedron*>& Triangulation<3>::getTetrahedra()
 
 inline const std::vector<NBoundaryComponent*>&
         Triangulation<3>::getBoundaryComponents() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return (const std::vector<NBoundaryComponent*>&)(boundaryComponents_);
 }
 
 inline const std::vector<NVertex*>& Triangulation<3>::getVertices() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return (const std::vector<NVertex*>&)(vertices_);
 }
 
 inline const std::vector<NEdge*>& Triangulation<3>::getEdges()
         const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return (const std::vector<NEdge*>&)(edges_);
 }
 
 inline const std::vector<NTriangle*>& Triangulation<3>::getTriangles()
         const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return (const std::vector<NTriangle*>&)(triangles_);
 }
 
@@ -3631,26 +3618,22 @@ inline const std::vector<NTriangle*>& Triangulation<3>::getFaces() const {
 
 inline NBoundaryComponent* Triangulation<3>::getBoundaryComponent(
         unsigned long index) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return boundaryComponents_[index];
 }
 
 inline NVertex* Triangulation<3>::getVertex(unsigned long index) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return vertices_[index];
 }
 
 inline NEdge* Triangulation<3>::getEdge(unsigned long index) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return edges_[index];
 }
 
 inline NTriangle* Triangulation<3>::getTriangle(unsigned long index) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return triangles_[index];
 }
 
@@ -3734,26 +3717,22 @@ inline bool Triangulation<3>::hasNegativeIdealBoundaryComponents() const {
 }
 
 inline bool Triangulation<3>::isValid() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return valid_;
 }
 
 inline bool Triangulation<3>::isIdeal() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return ideal_;
 }
 
 inline bool Triangulation<3>::isStandard() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return standard_;
 }
 
 inline bool Triangulation<3>::hasBoundaryTriangles() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return (triangles_.size() > 2 * simplices_.size());
 }
 
@@ -3762,14 +3741,12 @@ inline bool Triangulation<3>::hasBoundaryFaces() const {
 }
 
 inline unsigned long Triangulation<3>::getNumberOfBoundaryTriangles() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return 2 * triangles_.size() - 4 * simplices_.size();
 }
 
 inline bool Triangulation<3>::isClosed() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return boundaryComponents_.empty();
 }
 

@@ -605,8 +605,7 @@ void NTriangulation::calculateVertexLinks() const {
 
 void NTriangulation::calculateBoundaryProperties() const {
     // Make sure the skeleton has been calculated!
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
 
     bool localTwoSphereBoundaryComponents = false;
     bool localNegativeIdealBoundaryComponents = false;

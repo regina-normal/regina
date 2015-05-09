@@ -41,8 +41,7 @@
 
 namespace regina {
 
-Triangulation<2>::Triangulation(const std::string& description) :
-        calculatedSkeleton_(false) {
+Triangulation<2>::Triangulation(const std::string& description) {
     Dim2Triangulation* attempt;
 
     if ((attempt = fromIsoSig(description))) {
@@ -71,8 +70,7 @@ bool Triangulation<2>::isMinimal() const {
 }
 
 void Triangulation<2>::writeTextLong(std::ostream& out) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
 
     out << "Size of the skeleton:\n";
     out << "  Triangles: " << simplices_.size() << '\n';

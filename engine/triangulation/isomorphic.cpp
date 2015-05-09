@@ -42,10 +42,8 @@ namespace regina {
 unsigned long NTriangulation::findIsomorphisms(
         const NTriangulation& other, std::list<NIsomorphism*>& results,
         bool completeIsomorphism, bool firstOnly) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    if (! other.calculatedSkeleton_)
-        other.calculateSkeleton();
+    ensureSkeleton();
+    other.ensureSkeleton();
 
     // Deal with the empty triangulation first.
     if (simplices_.empty()) {

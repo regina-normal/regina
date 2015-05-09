@@ -38,8 +38,7 @@ namespace regina {
 
 void NTriangulation::maximalForestInBoundary(std::set<NEdge*>& edgeSet,
         std::set<NVertex*>& vertexSet) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
 
     vertexSet.clear();
     edgeSet.clear();
@@ -83,8 +82,7 @@ void NTriangulation::stretchBoundaryForestFromVertex(NVertex* from,
 
 void NTriangulation::maximalForestInSkeleton(std::set<NEdge*>& edgeSet,
         bool canJoinBoundaries) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
 
     std::set<NVertex*> vertexSet;
     std::set<NVertex*> thisBranch;
@@ -144,8 +142,7 @@ bool NTriangulation::stretchForestFromVertex(NVertex* from,
 
 void NTriangulation::maximalForestInDualSkeleton(std::set<NTriangle*>& triSet)
         const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
 
     triSet.clear();
     std::set<NTetrahedron*> visited;

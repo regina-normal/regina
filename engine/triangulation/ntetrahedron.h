@@ -361,38 +361,32 @@ inline int Simplex<3>::adjacentFace(int face) const {
 }
 
 inline NVertex* Simplex<3>::getVertex(int vertex) const {
-    if (! getTriangulation()->calculatedSkeleton_)
-        getTriangulation()->calculateSkeleton();
+    getTriangulation()->ensureSkeleton();
     return vertices_[vertex];
 }
 
 inline NEdge* Simplex<3>::getEdge(int edge) const {
-    if (! getTriangulation()->calculatedSkeleton_)
-        getTriangulation()->calculateSkeleton();
+    getTriangulation()->ensureSkeleton();
     return edges_[edge];
 }
 
 inline NTriangle* Simplex<3>::getTriangle(int face) const {
-    if (! getTriangulation()->calculatedSkeleton_)
-        getTriangulation()->calculateSkeleton();
+    getTriangulation()->ensureSkeleton();
     return triangles_[face];
 }
 
 inline NPerm4 Simplex<3>::getVertexMapping(int vertex) const {
-    if (! getTriangulation()->calculatedSkeleton_)
-        getTriangulation()->calculateSkeleton();
+    getTriangulation()->ensureSkeleton();
     return vertexMapping_[vertex];
 }
 
 inline NPerm4 Simplex<3>::getEdgeMapping(int edge) const {
-    if (! getTriangulation()->calculatedSkeleton_)
-        getTriangulation()->calculateSkeleton();
+    getTriangulation()->ensureSkeleton();
     return edgeMapping_[edge];
 }
 
 inline NPerm4 Simplex<3>::getTriangleMapping(int face) const {
-    if (! getTriangulation()->calculatedSkeleton_)
-        getTriangulation()->calculateSkeleton();
+    getTriangulation()->ensureSkeleton();
     return triMapping_[face];
 }
 

@@ -126,9 +126,6 @@ class REGINA_API Triangulation<2> :
             /**< Used to iterate through boundary components. */
 
     private:
-        mutable bool calculatedSkeleton_;
-            /**< Has the skeleton been calculated? */
-
         mutable NMarkedVector<Dim2Edge> edges_;
             /**< The edges in the triangulation skeleton. */
         mutable NMarkedVector<Dim2Vertex> vertices_;
@@ -770,12 +767,10 @@ namespace regina {
 
 // Inline functions for Triangulation<2>
 
-inline Triangulation<2>::Triangulation() :
-        NPacket(), calculatedSkeleton_(false) {
+inline Triangulation<2>::Triangulation() {
 }
 
-inline Triangulation<2>::Triangulation(const Triangulation& cloneMe) :
-        NPacket(), calculatedSkeleton_(false) {
+inline Triangulation<2>::Triangulation(const Triangulation& cloneMe) {
     cloneFrom(cloneMe);
 }
 
@@ -835,20 +830,17 @@ inline void Triangulation<2>::removeAllTriangles() {
 }
 
 inline unsigned long Triangulation<2>::getNumberOfBoundaryComponents() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return boundaryComponents_.size();
 }
 
 inline unsigned long Triangulation<2>::getNumberOfVertices() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return vertices_.size();
 }
 
 inline unsigned long Triangulation<2>::getNumberOfEdges() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return edges_.size();
 }
 
@@ -869,39 +861,33 @@ inline unsigned long Triangulation<2>::getNumberOfFaces<2>() const {
 
 inline const std::vector<Dim2BoundaryComponent*>&
         Triangulation<2>::getBoundaryComponents() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return (const std::vector<Dim2BoundaryComponent*>&)(boundaryComponents_);
 }
 
 inline const std::vector<Dim2Vertex*>& Triangulation<2>::getVertices() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return (const std::vector<Dim2Vertex*>&)(vertices_);
 }
 
 inline const std::vector<Dim2Edge*>& Triangulation<2>::getEdges() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return (const std::vector<Dim2Edge*>&)(edges_);
 }
 
 inline Dim2BoundaryComponent* Triangulation<2>::getBoundaryComponent(
         unsigned long index) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return boundaryComponents_[index];
 }
 
 inline Dim2Vertex* Triangulation<2>::getVertex(unsigned long index) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return vertices_[index];
 }
 
 inline Dim2Edge* Triangulation<2>::getEdge(unsigned long index) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return edges_[index];
 }
 
@@ -953,8 +939,7 @@ inline bool Triangulation<2>::isValid() const {
 }
 
 inline long Triangulation<2>::getEulerChar() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
 
     // Cast away the unsignedness of std::vector::size().
     return static_cast<long>(vertices_.size())
@@ -963,8 +948,7 @@ inline long Triangulation<2>::getEulerChar() const {
 }
 
 inline bool Triangulation<2>::isClosed() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return boundaryComponents_.empty();
 }
 
@@ -973,8 +957,7 @@ inline bool Triangulation<2>::hasBoundaryEdges() const {
 }
 
 inline unsigned long Triangulation<2>::getNumberOfBoundaryEdges() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return 2 * edges_.size() - 3 * simplices_.size();
 }
 

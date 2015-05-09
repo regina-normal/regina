@@ -101,11 +101,13 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
             /**< The top-dimensional simplices that form the triangulation. */
 
     private:
+        mutable bool calculatedSkeleton_;
+            /**< Has the skeleton been calculated?  This is only done
+                 "on demand", when a skeletal property is first queried. */
         mutable NMarkedVector<Dim2Component> components_;
             /**< The connected components that form the triangulation.
                  This list is only filled if/when the skeleton of the
                  triangulation is computed. */
-
         mutable bool orientable_;
             /**< Is the triangulation orientable?  This property is only set
                  if/when the skeleton of the triangulation is computed. */
@@ -982,11 +984,13 @@ template <> class Triangulation<3>;
 // Inline functions for TriangulationBase
 
 template <int dim>
-inline TriangulationBase<dim>::TriangulationBase() {
+inline TriangulationBase<dim>::TriangulationBase() :
+        calculatedSkeleton_(false) {
 }
 
 template <int dim>
-TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& copy) {
+TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& copy) :
+        calculatedSkeleton_(false) {
     // We don't fire a change event here since this is a constructor.
     // There should be nobody listening on events yet.
     // Likewise, we don't clearAllProperties() since no properties

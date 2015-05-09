@@ -42,10 +42,8 @@ namespace regina {
 unsigned long Triangulation<2>::findIsomorphisms(
         const Dim2Triangulation& other, std::list<Dim2Isomorphism*>& results,
         bool completeIsomorphism, bool firstOnly) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    if (! other.calculatedSkeleton_)
-        other.calculateSkeleton();
+    ensureSkeleton();
+    other.ensureSkeleton();
 
     // Deal with the empty triangulation first.
     if (simplices_.empty()) {
