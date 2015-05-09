@@ -149,12 +149,8 @@ namespace {
 }
 
 template <int dim>
-std::string NGenericTriangulation<dim>::isoSigFrom(
-        const Triangulation<dim>& tri,
-        unsigned simp,
-        const NPerm<dim+1>& vertices,
-        Isomorphism<dim>* relabelling) {
-    // TODO: Verify.
+std::string NGenericTriangulation<dim>::isoSigFrom(size_t simp,
+        const NPerm<dim+1>& vertices, Isomorphism<dim>* relabelling) {
     // Only process the component that simp belongs to.
 
     // ---------------------------------------------------------------------
@@ -162,7 +158,7 @@ std::string NGenericTriangulation<dim>::isoSigFrom(
     // ---------------------------------------------------------------------
 
     // The number of simplices.
-    unsigned nSimp = tri.getNumberOfSimplices();
+    size_t nSimp = size();
 
     // What happens to each new facet that we encounter?
     // Options are:
@@ -172,14 +168,16 @@ std::string NGenericTriangulation<dim>::isoSigFrom(
     // These actions are stored in lexicographical order by (simplex, facet),
     // but only once for each facet (so we "skip" gluings that we've
     // already seen from the other direction).
-    char* facetAction = new char[tri.template getNumberOfFaces<dim-1>()];
+    size_t nFacets = ((dim + 1) * size() + countBoundaryFacets()) / 2;
+    char* facetAction = new char[nFacets];
 
     // What are the destination simplices and gluing permutations for
     // each facet under case #2 above?
     // For gluing permutations, we store the index of the permutation in
     // NPerm<dim+1>::orderedSn.
-    unsigned* joinDest = new unsigned[tri.template getNumberOfFaces<dim-1>()];
-    unsigned* joinGluing = new unsigned[tri.template getNumberOfFaces<dim-1>()];
+    size_t* joinDest = new size_t[nFacets];
+    typedef typename NPerm<dim+1>::Index PermIndex;
+    PermIndex* joinGluing = new PermIndex[nFacets];
 
     // ---------------------------------------------------------------------
     // Data for finding the unique canonical isomorphism from this
@@ -187,18 +185,18 @@ std::string NGenericTriangulation<dim>::isoSigFrom(
     // ---------------------------------------------------------------------
 
     // The image for each simplex and its vertices:
-    int* image = new int[nSimp];
+    ptrdiff_t* image = new ptrdiff_t[nSimp];
     NPerm<dim+1>* vertexMap = new NPerm<dim+1>[nSimp];
 
     // The preimage for each simplex:
-    int* preImage = new int[nSimp];
+    ptrdiff_t* preImage = new ptrdiff_t[nSimp];
 
     // ---------------------------------------------------------------------
     // Looping variables
     // ---------------------------------------------------------------------
-    unsigned facetPos, joinPos, nextUnusedSimp;
-    unsigned simpImg, facetImg;
-    unsigned simpSrc, facetSrc, dest;
+    size_t facetPos, joinPos, nextUnusedSimp;
+    size_t simpImg, simpSrc, dest;
+    unsigned facetImg, facetSrc;
     const Simplex<dim>* s;
 
     // ---------------------------------------------------------------------
@@ -223,7 +221,7 @@ std::string NGenericTriangulation<dim>::isoSigFrom(
     // exhausted a single connected component of the triangulation.
     for (simpImg = 0; simpImg < nSimp && preImage[simpImg] >= 0; ++simpImg) {
         simpSrc = preImage[simpImg];
-        s = tri.getSimplex(simpSrc);
+        s = getSimplex(simpSrc);
 
         for (facetImg = 0; facetImg <= dim; ++facetImg) {
             facetSrc = vertexMap[simpSrc].preImageOf(facetImg);
@@ -242,7 +240,7 @@ std::string NGenericTriangulation<dim>::isoSigFrom(
 
             // We have a real gluing.  Is it a gluing we've already seen
             // from the other side?
-            dest = tri.simplexIndex(s->adjacentSimplex(facetSrc));
+            dest = simplexIndex(s->adjacentSimplex(facetSrc));
 
             if (image[dest] >= 0)
                 if (image[dest] < image[simpSrc] ||
@@ -288,13 +286,13 @@ std::string NGenericTriangulation<dim>::isoSigFrom(
     // Keep it simple for small triangulations (1 character per integer).
     // For large triangulations, start with a special marker followed by
     // the number of chars per integer.
-    unsigned nCompSimp = simpImg;
+    size_t nCompSimp = simpImg;
     unsigned nChars;
     if (nCompSimp < 63)
         nChars = 1;
     else {
         nChars = 0;
-        unsigned tmp = nCompSimp;
+        size_t tmp = nCompSimp;
         while (tmp > 0) {
             tmp >>= 6;
             ++nChars;
@@ -305,7 +303,7 @@ std::string NGenericTriangulation<dim>::isoSigFrom(
     }
 
     // Off we go.
-    unsigned i;
+    size_t i;
     SAPPEND(ans, nCompSimp, nChars);
     for (i = 0; i < facetPos; i += 3)
         SAPPENDTRITS(ans, facetAction + i,
@@ -336,23 +334,19 @@ std::string NGenericTriangulation<dim>::isoSigFrom(
 template <int dim>
 std::string NGenericTriangulation<dim>::isoSig(
         Isomorphism<dim>** relabelling) const {
-    // TODO: Verify.
-    const Triangulation<dim>& tri(
-        static_cast<const Triangulation<dim>&>(*this));
-
     // Make sure the user is not trying to do something illegal.
-    if (relabelling && tri.getNumberOfComponents() != 1) {
+    if (relabelling && countComponents() != 1) {
         *relabelling = 0; // Return 0 to the user...
         relabelling = 0;  // ... and forget they ever asked for an isomorphism.
     }
 
     Isomorphism<dim>* currRelabelling = 0;
     if (relabelling) {
-        *relabelling = new Isomorphism<dim>(tri.getNumberOfSimplices());
-        currRelabelling = new Isomorphism<dim>(tri.getNumberOfSimplices());
+        *relabelling = new Isomorphism<dim>(size());
+        currRelabelling = new Isomorphism<dim>(size());
     }
 
-    if (tri.getSimplices().empty()) {
+    if (isEmpty()) {
         char c[2];
         c[0] = SCHAR(0);
         c[1] = 0;
@@ -361,21 +355,18 @@ std::string NGenericTriangulation<dim>::isoSig(
 
     // The triangulation is non-empty.  Get a signature string for each
     // connected component.
-    unsigned i;
-    typename Triangulation<dim>::ComponentIterator it;
-    unsigned cSimp;
-    unsigned simp, perm;
+    size_t i;
+    size_t simp;
+    typename NPerm<dim+1>::Index perm;
     std::string curr;
 
-    std::string* comp = new std::string[tri.getNumberOfComponents()];
-    for (it = tri.getComponents().begin(), i = 0;
-            it != tri.getComponents().end(); ++it, ++i) {
-        cSimp = (*it)->getNumberOfSimplices();
-
-        for (simp = 0; simp < (*it)->getNumberOfSimplices(); ++simp)
+    std::string* comp = new std::string[countComponents()];
+    for (auto it = components().begin(), i = 0;
+            it != components().end(); ++it, ++i) {
+        for (simp = 0; simp < (*it)->size(); ++simp)
             for (perm = 0; perm < NPerm<dim+1>::nPerms; ++perm) {
-                curr = isoSigFrom(tri, (*it)->getSimplex(simp)->markedIndex(),
-                    NPerm<dim+1>::orderedSn[perm], currRelabelling);
+                curr = isoSigFrom((*it)->simplex(simp)->index(),
+                    NPerm<dim+1>::atIndex(perm), currRelabelling);
                 if ((simp == 0 && perm == 0) || (curr < comp[i])) {
                     comp[i].swap(curr);
                     if (relabelling)
@@ -385,10 +376,10 @@ std::string NGenericTriangulation<dim>::isoSig(
     }
 
     // Pack the components together.
-    std::sort(comp, comp + tri.getNumberOfComponents());
+    std::sort(comp, comp + countComponents());
 
     std::string ans;
-    for (i = 0; i < tri.getNumberOfComponents(); ++i)
+    for (i = 0; i < countComponents(); ++i)
         ans += comp[i];
 
     delete[] comp;
@@ -411,8 +402,8 @@ Triangulation<dim>* NGenericTriangulation<dim>::fromIsoSig(
         if (! SVALID(*d))
             return 0;
 
-    unsigned i, j;
-    unsigned nSimp, nChars;
+    unsigned i;
+    size_t nSimp, pos, nChars;
     while (*c) {
         // Read one component at a time.
         nSimp = SVAL(*c++);
@@ -435,9 +426,9 @@ Triangulation<dim>* NGenericTriangulation<dim>::fromIsoSig(
 
         // Non-empty component; keep going.
         char* facetAction = new char[(dim+1) * nSimp + 2];
-        unsigned nFacets = 0;
-        unsigned facetPos = 0;
-        unsigned nJoins = 0;
+        size_t nFacets = 0;
+        size_t facetPos = 0;
+        size_t nJoins = 0;
 
         for ( ; nFacets < (dim+1) * nSimp; facetPos += 3) {
             if (! *c) {
@@ -474,21 +465,21 @@ Triangulation<dim>* NGenericTriangulation<dim>::fromIsoSig(
             }
         }
 
-        unsigned* joinDest = new unsigned[nJoins + 1];
-        for (i = 0; i < nJoins; ++i) {
+        size_t* joinDest = new size_t[nJoins + 1];
+        for (pos = 0; pos < nJoins; ++pos) {
             if (! SHASCHARS(c, nChars)) {
                 delete[] facetAction;
                 delete[] joinDest;
                 return 0;
             }
 
-            joinDest[i] = SREAD<unsigned>(c, nChars);
+            joinDest[pos] = SREAD<unsigned>(c, nChars);
             c += nChars;
         }
 
         typename NPerm<dim+1>::Index* joinGluing =
             new typename NPerm<dim+1>::Index[nJoins + 1];
-        for (i = 0; i < nJoins; ++i) {
+        for (pos = 0; pos < nJoins; ++pos) {
             if (! SHASCHARS(c, 1)) {
                 delete[] facetAction;
                 delete[] joinDest;
@@ -496,11 +487,12 @@ Triangulation<dim>* NGenericTriangulation<dim>::fromIsoSig(
                 return 0;
             }
 
-            joinGluing[i] = SREAD<typename NPerm<dim+1>::Index>(c,
+            joinGluing[pos] = SREAD<typename NPerm<dim+1>::Index>(c,
                 CHARS_PER_PERM(dim));
             c += CHARS_PER_PERM(dim);
 
-            if (joinGluing[i] >= NPerm<dim+1>::nPerms || joinGluing[i] < 0) {
+            if (joinGluing[pos] >= NPerm<dim+1>::nPerms ||
+                    joinGluing[pos] < 0) {
                 delete[] facetAction;
                 delete[] joinDest;
                 delete[] joinGluing;
@@ -510,17 +502,17 @@ Triangulation<dim>* NGenericTriangulation<dim>::fromIsoSig(
 
         // End of component!
         Simplex<dim>** simp = new Simplex<dim>*[nSimp];
-        for (i = 0; i < nSimp; ++i)
-            simp[i] = ans->newSimplex();
+        for (pos = 0; pos < nSimp; ++pos)
+            simp[pos] = ans->newSimplex();
 
         facetPos = 0;
-        unsigned nextUnused = 1;
-        unsigned joinPos = 0;
+        size_t nextUnused = 1;
+        size_t joinPos = 0;
         NPerm<dim+1> gluing;
-        for (i = 0; i < nSimp; ++i)
-            for (j = 0; j <= dim; ++j) {
+        for (pos = 0; pos < nSimp; ++pos)
+            for (i = 0; i <= dim; ++i) {
                 // Already glued from the other side:
-                if (simp[i]->adjacentSimplex(j))
+                if (simp[pos]->adjacentSimplex(i))
                     continue;
 
                 if (facetAction[facetPos] == 0) {
@@ -534,20 +526,20 @@ Triangulation<dim>* NGenericTriangulation<dim>::fromIsoSig(
                         delete[] simp;
                         return 0;
                     }
-                    simp[i]->joinTo(j, simp[nextUnused++], NPerm<dim+1>());
+                    simp[pos]->joinTo(i, simp[nextUnused++], NPerm<dim+1>());
                 } else {
                     // Join to existing simplex.
                     gluing = NPerm<dim+1>::atIndex(joinGluing[joinPos]);
                     if (joinDest[joinPos] >= nextUnused ||
                             simp[joinDest[joinPos]]->adjacentSimplex(
-                            gluing[j])) {
+                            gluing[i])) {
                         delete[] facetAction;
                         delete[] joinDest;
                         delete[] joinGluing;
                         delete[] simp;
                         return 0;
                     }
-                    simp[i]->joinTo(j, simp[joinDest[joinPos]], gluing);
+                    simp[pos]->joinTo(i, simp[joinDest[joinPos]], gluing);
                     ++joinPos;
                 }
 
