@@ -3262,10 +3262,6 @@ class REGINA_API Triangulation<3> :
         void cloneFrom(const NTriangulation& from);
 
     private:
-        /**
-         * Deallocates all skeletal objects and empties all
-         * corresponding lists.
-         */
         void deleteSkeleton();
 
         /**

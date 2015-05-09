@@ -778,6 +778,20 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
         /*@}*/
 
     private:
+        /**
+         * Deallocates all skeletal objects and empties all
+         * corresponding lists.
+         *
+         * Triangulation<dim> subclasses may reimplement this, but they
+         * \e must call this parent implementation.
+         *
+         * TriangulationBase never calls this routine itself.  Typically
+         * deleteSkeleton() will be called by
+         * Triangulation<dim>::clearAllProperties, which in turn is
+         * called by the Triangulation<dim> destructor.
+         */
+        void deleteSkeleton();
+
 #if 0
         /**
          * Internal to isoSig().
@@ -1437,6 +1451,16 @@ TODO: output packet labels if we derive from NPacket
 "\n";
 
     return ans.str();
+}
+
+template <int dim>
+inline void TriangluationBase<dim>::deleteSkeleton() {
+    for (auto it = components_.begin(); it != components_.end(); ++it)
+        delete *it;
+
+    components_.clear();
+
+    calculatedSkeleton_ = false;
 }
 
 // Inline functions for Triangulation

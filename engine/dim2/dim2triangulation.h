@@ -637,8 +637,6 @@ class REGINA_API Triangulation<2> :
 
     private:
         void deleteSkeleton();
-            /**< Deallocates all skeletal objects and empties all
-                 corresponding lists. */
 
         /**
          * Clears any calculated properties and declares them all

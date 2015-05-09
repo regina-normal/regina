@@ -204,23 +204,19 @@ void Triangulation<2>::deleteSkeleton() {
         delete *it;
     for (EdgeIterator it = edges_.begin(); it != edges_.end(); ++it)
         delete *it;
-    for (ComponentIterator it = components_.begin();
-            it != components_.end(); ++it)
-        delete *it;
     for (BoundaryComponentIterator it = boundaryComponents_.begin();
             it != boundaryComponents_.end(); ++it)
         delete *it;
 
     vertices_.clear();
     edges_.clear();
-    components_.clear();
     boundaryComponents_.clear();
 
-    calculatedSkeleton_ = false;
+    TriangulationBase<2>::deleteSkeleton();
 }
 
 void Triangulation<2>::clearAllProperties() {
-    if (calculatedSkeleton_)
+    if (calculatedSkeleton())
         deleteSkeleton();
 }
 

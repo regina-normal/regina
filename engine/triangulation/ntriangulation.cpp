@@ -64,7 +64,7 @@ Triangulation<3>::Triangulation(const std::string& description) {
 }
 
 void Triangulation<3>::clearAllProperties() {
-    if (calculatedSkeleton_)
+    if (calculatedSkeleton())
         deleteSkeleton();
 
     fundamentalGroup_.clear();
@@ -383,9 +383,6 @@ void Triangulation<3>::deleteSkeleton() {
         delete *it;
     for (TriangleIterator it = triangles_.begin(); it != triangles_.end(); ++it)
         delete *it;
-    for (ComponentIterator it = components_.begin();
-            it != components_.end(); ++it)
-        delete *it;
     for (BoundaryComponentIterator it = boundaryComponents_.begin();
             it != boundaryComponents_.end(); ++it)
         delete *it;
@@ -393,10 +390,9 @@ void Triangulation<3>::deleteSkeleton() {
     vertices_.clear();
     edges_.clear();
     triangles_.clear();
-    components_.clear();
     boundaryComponents_.clear();
 
-    calculatedSkeleton_ = false;
+    TriangulationBase<3>::deleteSkeleton();
 }
 
 void Triangulation<3>::cloneFrom(const NTriangulation& X) {
