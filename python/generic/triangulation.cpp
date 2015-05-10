@@ -54,6 +54,21 @@ namespace {
                 ans.append(boost::python::ptr(*i));
             return ans;
         }
+
+        static std::string isoSig_void(const Triangulation<dim>& t) {
+            return t.isoSig();
+        }
+
+        static boost::python::tuple isoSig_relabelling(
+                const Triangulation<dim>& t) {
+            regina::Isomorphism<dim>* iso;
+            std::string sig = t.isoSig(&iso);
+            return boost::python::make_tuple(
+                sig,
+                boost::python::object(boost::python::handle<>(
+                    boost::python::manage_new_object::
+                    apply<regina::Isomorphism<dim>*>::type()(iso))));
+        }
     };
 }
 
@@ -88,12 +103,19 @@ void addTriangulation(const char* name) {
         .def("hasBoundaryFacets", &Triangulation<dim>::hasBoundaryFacets)
         .def("isIdenticalTo", &Triangulation<dim>::isIdenticalTo)
         .def("insertTriangulation", &Triangulation<dim>::insertTriangulation)
+        .def("isoSig", PyTriHelper<dim>::isoSig_void)
+        .def("isoSigDetail", PyTriHelper<dim>::isoSig_relabelling)
+        .def("fromIsoSig", &Triangulation<dim>::fromIsoSig,
+            return_value_policy<manage_new_object>())
+        .def("isoSigComponentSize", &Triangulation<dim>::isoSigComponentSize)
         .def("dumpConstruction", &Triangulation<dim>::dumpConstruction)
         .def("str", &Triangulation<dim>::str)
         .def("toString", &Triangulation<dim>::toString)
         .def("detail", &Triangulation<dim>::detail)
         .def("toStringLong", &Triangulation<dim>::toStringLong)
         .def("__str__", &Triangulation<dim>::str)
+        .staticmethod("fromIsoSig")
+        .staticmethod("isoSigComponentSize")
     ;
 }
 
