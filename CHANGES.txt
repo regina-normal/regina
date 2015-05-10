@@ -257,13 +257,11 @@ Version 4.97  [ (under development) ]
               replaces) the old link type constants.
         Class Output, ShortOutput:
             - New classes that provide consistent APIs for objects to provide
-              short and detailed string output.  This has been introduced as a
-              lightweight replacement for ShareableObject, and eventually
-              it will replace ShareableObject completely.
+              short and detailed string output.  These have been introduced as
+              lightweight replacements for the now-defunct ShareableObject.
         Class ShareableObject:
-            - Deprecated.  This is no longer a base class for objects that
-              are mirrored in external interfaces.  Ultimately, the plan
-              is to remove ShareableObject entirely.
+            - Removed entirely.  This is no longer needed as a base class for
+              objects that are mirrored in external interfaces (e.g., python).
             - The string output routines str() and detail() are now provided
               by the Output template class instead.
         Class Simplex, SimplexBase:
