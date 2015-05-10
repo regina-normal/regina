@@ -51,9 +51,8 @@ namespace {
 }
 
 void addNNormalHypersurface() {
-    class_<NNormalHypersurface, bases<regina::ShareableObject>,
-            std::auto_ptr<NNormalHypersurface>, boost::noncopyable>
-            ("NNormalHypersurface", no_init)
+    class_<NNormalHypersurface, std::auto_ptr<NNormalHypersurface>,
+            boost::noncopyable>("NNormalHypersurface", no_init)
         .def("clone", &NNormalHypersurface::clone,
             return_value_policy<manage_new_object>())
         .def("getTetrahedronCoord", &NNormalHypersurface::getTetrahedronCoord)
@@ -80,6 +79,11 @@ void addNNormalHypersurface() {
         .def("sameSurface", &NNormalHypersurface::sameSurface)
         .def("embedded", &NNormalHypersurface::embedded)
         .def("locallyCompatible", &NNormalHypersurface::locallyCompatible)
+        .def("str", &NNormalHypersurface::str)
+        .def("toString", &NNormalHypersurface::toString)
+        .def("detail", &NNormalHypersurface::detail)
+        .def("toStringLong", &NNormalHypersurface::toStringLong)
+        .def("__str__", &NNormalHypersurface::str)
     ;
 }
 

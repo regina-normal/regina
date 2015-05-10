@@ -65,9 +65,8 @@ void addDim4Tetrahedron() {
         .def(self != self)
     ;
 
-    scope s = class_<Dim4Tetrahedron, bases<regina::ShareableObject>,
-            std::auto_ptr<Dim4Tetrahedron>, boost::noncopyable>
-            ("Dim4Tetrahedron", no_init)
+    scope s = class_<Dim4Tetrahedron, std::auto_ptr<Dim4Tetrahedron>,
+            boost::noncopyable>("Dim4Tetrahedron", no_init)
         .def("index", &Dim4Tetrahedron::index)
         .def("getNumberOfEmbeddings", &Dim4Tetrahedron::getNumberOfEmbeddings)
         .def("getEmbedding", &Dim4Tetrahedron::getEmbedding,
@@ -87,6 +86,11 @@ void addDim4Tetrahedron() {
         .def("getEdgeMapping", &Dim4Tetrahedron::getEdgeMapping)
         .def("getTriangleMapping", &Dim4Tetrahedron::getTriangleMapping)
         .def("isBoundary", &Dim4Tetrahedron::isBoundary)
+        .def("str", &Dim4Tetrahedron::str)
+        .def("toString", &Dim4Tetrahedron::toString)
+        .def("detail", &Dim4Tetrahedron::detail)
+        .def("toStringLong", &Dim4Tetrahedron::toStringLong)
+        .def("__str__", &Dim4Tetrahedron::str)
     ;
 
     s.attr("ordering") = &Dim4Tetrahedron_ordering;

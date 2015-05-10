@@ -45,8 +45,7 @@ using namespace boost::python;
 using regina::Dim4Component;
 
 void addDim4Component() {
-    class_<Dim4Component, bases<regina::ShareableObject>,
-            std::auto_ptr<Dim4Component>, boost::noncopyable>
+    class_<Dim4Component, std::auto_ptr<Dim4Component>, boost::noncopyable>
             ("Dim4Component", no_init)
         .def("index", &Dim4Component::index)
         .def("getNumberOfPentachora", &Dim4Component::getNumberOfPentachora)
@@ -76,6 +75,11 @@ void addDim4Component() {
         .def("isClosed", &Dim4Component::isClosed)
         .def("getNumberOfBoundaryTetrahedra",
             &Dim4Component::getNumberOfBoundaryTetrahedra)
+        .def("str", &Dim4Component::str)
+        .def("toString", &Dim4Component::toString)
+        .def("detail", &Dim4Component::detail)
+        .def("toStringLong", &Dim4Component::toStringLong)
+        .def("__str__", &Dim4Component::str)
     ;
 }
 

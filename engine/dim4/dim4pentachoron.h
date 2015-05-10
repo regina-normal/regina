@@ -42,9 +42,10 @@
 #endif
 
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "maths/nperm5.h"
 #include "utilities/nmarkedvector.h"
+#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
@@ -81,7 +82,9 @@ class Dim4Triangulation;
  * automatically destroy the pentachora as they are removed.
  */
 class REGINA_API Dim4Pentachoron :
-        public ShareableObject, public NMarkedElement {
+        public Output<Dim4Pentachoron>,
+        public boost::noncopyable,
+        public NMarkedElement {
     private:
         Dim4Pentachoron* adj_[5];
             /**< Stores the adjacent pentachora glued to each facet of this
@@ -141,11 +144,6 @@ class REGINA_API Dim4Pentachoron :
                  triangulation. */
 
     public:
-        /**
-         * Destroys this pentachoron.
-         */
-        virtual ~Dim4Pentachoron();
-
         /**
          * Returns the text description associated with this
          * pentachoron.
@@ -520,7 +518,23 @@ class REGINA_API Dim4Pentachoron :
          */
         int orientation() const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 
     private:
@@ -552,9 +566,6 @@ class REGINA_API Dim4Pentachoron :
 namespace regina {
 
 // Inline functions for Dim4Pentachoron
-
-inline Dim4Pentachoron::~Dim4Pentachoron() {
-}
 
 inline const std::string& Dim4Pentachoron::getDescription() const {
     return desc_;

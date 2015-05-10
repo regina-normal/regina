@@ -45,8 +45,7 @@ using namespace boost::python;
 using regina::Dim4Pentachoron;
 
 void addDim4Pentachoron() {
-    class_<Dim4Pentachoron, bases<regina::ShareableObject>,
-            std::auto_ptr<Dim4Pentachoron>, boost::noncopyable>(
+    class_<Dim4Pentachoron, std::auto_ptr<Dim4Pentachoron>, boost::noncopyable>(
             "Dim4Pentachoron", no_init)
         .def("getDescription", &Dim4Pentachoron::getDescription,
             return_value_policy<return_by_value>())
@@ -80,6 +79,11 @@ void addDim4Pentachoron() {
         .def("getTriangleMapping", &Dim4Pentachoron::getTriangleMapping)
         .def("getTetrahedronMapping", &Dim4Pentachoron::getTetrahedronMapping)
         .def("orientation", &Dim4Pentachoron::orientation)
+        .def("str", &Dim4Pentachoron::str)
+        .def("toString", &Dim4Pentachoron::toString)
+        .def("detail", &Dim4Pentachoron::detail)
+        .def("toStringLong", &Dim4Pentachoron::toStringLong)
+        .def("__str__", &Dim4Pentachoron::str)
     ;
 }
 

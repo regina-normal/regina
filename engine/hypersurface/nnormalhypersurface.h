@@ -44,12 +44,13 @@
 
 #include <utility>
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "hypersurface/hypercoords.h"
 #include "maths/nperm5.h"
 #include "maths/nray.h"
 #include "utilities/nbooleans.h"
 #include "utilities/nproperty.h"
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -87,6 +88,9 @@ class NXMLNormalHypersurfaceReader;
  *   human-readable name of the coordinate system.
  *
  * \ifacespython Not present.
+ *
+ * \tparam coordType one of the #HyperCoords constants, indicating which
+ * coordinate system we are querying.
  */
 template <HyperCoords coordType>
 struct HyperInfo;
@@ -390,7 +394,9 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
  * are allowed; in these cases, the corresponding coordinate lookup routines
  * will return NLargeInteger::infinity where appropriate.
  */
-class REGINA_API NNormalHypersurface : public ShareableObject {
+class REGINA_API NNormalHypersurface :
+        public ShortOutput<NNormalHypersurface>,
+        public boost::noncopyable {
     protected:
         NNormalHypersurfaceVector* vector_;
             /**< Contains the coordinates of the normal hypersurface in
@@ -430,7 +436,7 @@ class REGINA_API NNormalHypersurface : public ShareableObject {
          * Destroys this normal hypersurface.
          * The underlying vector of coordinates will also be deallocated.
          */
-        virtual ~NNormalHypersurface();
+        ~NNormalHypersurface();
 
         /**
          * Creates a newly allocated clone of this normal hypersurface.
@@ -534,11 +540,12 @@ class REGINA_API NNormalHypersurface : public ShareableObject {
         void setName(const std::string& name);
 
         /**
-         * The text representation will be in standard tetrahedron-prism
-         * coordinates.
+         * Writes this hypersurface to the given output stream, using
+         * standard tetrahedron-prism coordinates.
          *
-         * \ifacespython The paramater \a out does not exist, and is
-         * taken to be standard output.
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
@@ -564,7 +571,7 @@ class REGINA_API NNormalHypersurface : public ShareableObject {
          *
          * @param out the output stream to which the XML should be written.
          */
-        virtual void writeXMLData(std::ostream& out) const;
+        void writeXMLData(std::ostream& out) const;
 
         /**
          * Determines if this normal hypersurface is empty (has no
@@ -619,7 +626,7 @@ class REGINA_API NNormalHypersurface : public ShareableObject {
          * @return the vertex linked by this hypersurface, or 0 if this
          * hypersurface is not the link of a single vertex.
          */
-        virtual const Dim4Vertex* isVertexLink() const;
+        const Dim4Vertex* isVertexLink() const;
         /**
          * Determines whether or not a rational multiple of this hypersurface
          * is the thin link of a single edge.
@@ -633,7 +640,7 @@ class REGINA_API NNormalHypersurface : public ShareableObject {
          * @return the edge linked by this hypersurface, or 0 if this
          * hypersurface is not a thin edge link.
          */
-        virtual const Dim4Edge* isThinEdgeLink() const;
+        const Dim4Edge* isThinEdgeLink() const;
 
         /**
          * Returns a 3-manifold triangulation describing this normal
