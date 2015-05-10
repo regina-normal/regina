@@ -35,7 +35,6 @@
 #include <boost/python.hpp>
 
 #include "engine.h"
-#include "shareableobject.h"
 #include "regina-config.h"
 
 void addGlobalArray();
@@ -61,28 +60,12 @@ void addTriangulation();
 void addUtilities();
 
 using boost::python::self;
-using regina::ShareableObject;
 
 namespace {
     std::string welcome() {
         return std::string(PACKAGE_STRING) +
             "\nSoftware for 3-manifold topology and normal surface theory" +
             "\nCopyright (c) 1999-2014, The Regina development team";
-    }
-}
-
-/**
- * Make == work like pointer equality for ShareableObject.
- */
-namespace regina {
-    static inline bool operator == (const ShareableObject& a,
-            const ShareableObject& b) {
-        return &a == &b;
-    }
-
-    static inline bool operator != (const ShareableObject& a,
-            const ShareableObject& b) {
-        return &a != &b;
     }
 }
 
@@ -102,19 +85,6 @@ BOOST_PYTHON_MODULE(engine) {
     boost::python::def("getVersionMinor", regina::getVersionMinor);
     boost::python::def("versionUsesUTF8", regina::versionUsesUTF8);
     boost::python::def("testEngine", regina::testEngine);
-
-    // ShareableObject class:
-
-    boost::python::class_<ShareableObject, boost::noncopyable>
-            ("ShareableObject", boost::python::no_init)
-        .def("str", &ShareableObject::str)
-        .def("toString", &ShareableObject::toString)
-        .def("detail", &ShareableObject::detail)
-        .def("toStringLong", &ShareableObject::toStringLong)
-        .def("__str__", &ShareableObject::str)
-        .def(self == self)
-        .def(self != self)
-    ;
 
     // Components from subdirectories (in approximate dependency order):
 
