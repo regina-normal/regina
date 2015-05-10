@@ -104,7 +104,6 @@ namespace {
 
 void addNPacket() {
     class_<NPacket, boost::noncopyable,
-            bases<regina::ShareableObject>,
             std::auto_ptr<NPacket> >("NPacket", no_init)
         .def("getPacketType", &NPacket::getPacketType)
         .def("getPacketTypeName", &NPacket::getPacketTypeName)
@@ -164,7 +163,12 @@ void addNPacket() {
         .def("clone", &NPacket::clone, OL_clone()[
             return_value_policy<reference_existing_object>()])
         .def("save", save_filename, OL_save())
-        .def("internalID", &NPacket::internalID);
+        .def("internalID", &NPacket::internalID)
+        .def("str", &NPacket::str)
+        .def("toString", &NPacket::toString)
+        .def("detail", &NPacket::detail)
+        .def("toStringLong", &NPacket::toStringLong)
+        .def("__str__", &NPacket::str);
     ;
 
     def("open", open_filename, return_value_policy<manage_new_object>());
