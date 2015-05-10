@@ -43,8 +43,9 @@
 
 #include <vector>
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "utilities/nmarkedvector.h"
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -64,7 +65,10 @@ class NBoundaryComponent;
  * Components are highly temporary; once a triangulation changes, all
  * its component objects will be deleted and new ones will be created.
  */
-class REGINA_API NComponent : public ShareableObject, public NMarkedElement {
+class REGINA_API NComponent :
+        public Output<NComponent>,
+        public boost::noncopyable,
+        public NMarkedElement {
     private:
         std::vector<NTetrahedron*> tetrahedra_;
             /**< List of tetrahedra in the component. */
@@ -83,10 +87,6 @@ class REGINA_API NComponent : public ShareableObject, public NMarkedElement {
             /**< Is the component orientable? */
 
     public:
-        /**
-         * Default destructor.
-         */
-        virtual ~NComponent();
 
         /**
          * Returns the index of this component in the underlying
@@ -280,7 +280,23 @@ class REGINA_API NComponent : public ShareableObject, public NMarkedElement {
          */
         unsigned long getNumberOfBoundaryTriangles() const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 
     private:
@@ -298,9 +314,6 @@ class REGINA_API NComponent : public ShareableObject, public NMarkedElement {
 // Inline functions for NComponent
 
 inline NComponent::NComponent() : ideal_(false), orientable_(true) {
-}
-
-inline NComponent::~NComponent() {
 }
 
 inline unsigned long NComponent::index() const {

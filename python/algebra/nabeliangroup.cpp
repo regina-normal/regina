@@ -95,8 +95,8 @@ namespace {
 }
 
 void addNAbelianGroup() {
-    class_<NAbelianGroup, bases<regina::ShareableObject>,
-            std::auto_ptr<NAbelianGroup>, boost::noncopyable>("NAbelianGroup")
+    class_<NAbelianGroup, std::auto_ptr<NAbelianGroup>, boost::noncopyable>
+            ("NAbelianGroup")
         .def(init<const NAbelianGroup&>())
         .def(init<const NMatrixInt&, const NMatrixInt&>())
         .def(init<const NMatrixInt&, const NMatrixInt&, const NLargeInteger&>())
@@ -120,6 +120,11 @@ void addNAbelianGroup() {
         .def("isZn", &NAbelianGroup::isZn)
         .def(self == self)
         .def(self != self)
+        .def("str", &NAbelianGroup::str)
+        .def("toString", &NAbelianGroup::toString)
+        .def("detail", &NAbelianGroup::detail)
+        .def("toStringLong", &NAbelianGroup::toStringLong)
+        .def("__str__", &NAbelianGroup::str)
     ;
 }
 

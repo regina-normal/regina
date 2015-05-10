@@ -28,6 +28,11 @@ Version 5.0  [ (under development) ]
 Version 4.97  [ (under development) ]
 
     ENGINE:
+        All:
+            - Removed ShareableObject from the class hierarchy.  All classes
+              that used to inherit from ShareableObject now inherit (directly
+              or indirectly) from the Output<> template instead.  As a result,
+              many such classes no longer contain any virtual functions.
         Namespace regina::boost, regina::stl:
             - Removed these namespaces and all their members.  To fix
               code that used regina::boost, just use plain boost instead.
@@ -58,8 +63,6 @@ Version 4.97  [ (under development) ]
               and whiteheadLinkComplement() to figureEight(), trefoil()
               and whiteheadLink() respectively.  The old names are kept
               but deprecated.
-        Class NFileInfo:
-            - Now derives from Output instead of ShareableObject.
         Class NGenericFacetPairing, NFacePairing, Dim2EdgePairing:
             - Routines dotHeader() and writeDotHeader() no longer set an
               explicit background colour.
@@ -75,12 +78,12 @@ Version 4.97  [ (under development) ]
             - The destructor and writeMatrix() are no longer virtual.
             - Now derives from Output, and provides str() and detail()
               output routines.
-        Class NMatrixInt:
-            - No longer derives from ShareableObject.  Text output is now
-              provided by the inherited Output base class intead.
         Class NNormalSurface:
             - New convenience routines normal() and embedded().
-        Class NNormalSurfaceList, NNormalSurfaceSubset:
+        Class NNormalSurfaceList:
+            - Renamed getNumberOfSurfaces() to size().  The old name is
+              deprecated, but has been kept for backward compatibility.
+        Class NNormalSurfaceSubset:
             - Renamed getNumberOfSurfaces() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
         Class NPacket:
@@ -95,10 +98,9 @@ Version 4.97  [ (under development) ]
               over arbitrary rings.
         Class NRational:
             - The destructor is no longer virtual.
-        Class ShareableObject:
-            - Deprecated.  The only real functionality that this
-              provides is str() and detail(); classes that require this
-              should now inherit from Output<> instead.
+        Class NSatBlock:
+            - Classes inheriting from this must now implement writeTextShort,
+              and can optionally overwrite the default writeTextLong function.
         Class NSurfaceFilterProperties:
             - New set-based routine setECs().
         Class NTreeBag, NTreeDecomposition:
@@ -137,15 +139,15 @@ Version 4.97  [ (under development) ]
               replaces) the old link type constants.
         Class Output, ShortOutput:
             - New classes that provide consistent APIs for objects to provide
-              short and detailed string output.  This may be used as a
+              short and detailed string output.  This has been introduced as a
               lightweight replacement for ShareableObject, and eventually
               it will replace ShareableObject completely.
         Class ShareableObject:
-            - This is no longer a mandatory base class for objects that
+            - Deprecated.  This is no longer a base class for objects that
               are mirrored in external interfaces.  Ultimately, the plan
               is to remove ShareableObject entirely.
-            - The old string output routines are now provided by the Output
-              template class, which is now a base class for ShareableObject.
+            - The string output routines str() and detail() are now provided
+              by the Output template class instead.
         Routine open():
             - Added a variant that takes an input stream (as opposed to
               a filename).
@@ -161,7 +163,7 @@ Version 4.97  [ (under development) ]
         - Puncturing a triangulation, making it ideal or truncating ideal
           vertices now automatically simplify the resulting triangulation.
     PYTHON:
-        - For many classes, writeTextShort() and writeTextLong() are no
+        - For all classes, writeTextShort() and writeTextLong() are no
           longer exposed to Python.  Simply use str() and detail() instead.
 
 Version 4.96  [ 29 August, 2014 ]

@@ -62,8 +62,8 @@ void addDim2Edge() {
         .def(self != self)
     ;
 
-    scope s = class_<Dim2Edge, bases<regina::ShareableObject>,
-            std::auto_ptr<Dim2Edge>, boost::noncopyable>("Dim2Edge", no_init)
+    scope s = class_<Dim2Edge, std::auto_ptr<Dim2Edge>, boost::noncopyable>
+            ("Dim2Edge", no_init)
         .def("index", &Dim2Edge::index)
         .def("getNumberOfEmbeddings", &Dim2Edge::getNumberOfEmbeddings)
         .def("getEmbedding", &Dim2Edge::getEmbedding,
@@ -77,6 +77,11 @@ void addDim2Edge() {
         .def("getVertex", &Dim2Edge::getVertex,
             return_value_policy<reference_existing_object>())
         .def("isBoundary", &Dim2Edge::isBoundary)
+        .def("str", &Dim2Edge::str)
+        .def("toString", &Dim2Edge::toString)
+        .def("detail", &Dim2Edge::detail)
+        .def("toStringLong", &Dim2Edge::toStringLong)
+        .def("__str__", &Dim2Edge::str)
     ;
 
     s.attr("ordering") = &Dim2Edge_ordering;

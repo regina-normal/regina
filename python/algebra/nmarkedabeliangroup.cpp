@@ -137,9 +137,9 @@ namespace {
 }
 
 void addNMarkedAbelianGroup() {
-    class_<NMarkedAbelianGroup, bases<regina::ShareableObject>,
-            std::auto_ptr<NMarkedAbelianGroup>, boost::noncopyable>(
-            "NMarkedAbelianGroup", init<const NMatrixInt&, const NMatrixInt&>())
+    class_<NMarkedAbelianGroup, std::auto_ptr<NMarkedAbelianGroup>,
+            boost::noncopyable> ( "NMarkedAbelianGroup",
+            init<const NMatrixInt&, const NMatrixInt&>())
         .def(init<const NMarkedAbelianGroup&>())
         .def(init<const NMatrixInt&, const NMatrixInt&, const NLargeInteger&>())
         .def(init<unsigned long, const NLargeInteger&>())
@@ -192,12 +192,16 @@ void addNMarkedAbelianGroup() {
             return_value_policy<return_by_value>())
         .def("torsionSubgroup", &NMarkedAbelianGroup::torsionSubgroup)
         .def("torsionInclusion", &NMarkedAbelianGroup::torsionInclusion)
+        .def("str", &NMarkedAbelianGroup::str)
+        .def("toString", &NMarkedAbelianGroup::toString)
+        .def("detail", &NMarkedAbelianGroup::detail)
+        .def("toStringLong", &NMarkedAbelianGroup::toStringLong)
+        .def("__str__", &NMarkedAbelianGroup::str)
         .def(self == self)
     ;
 
-    class_<NHomMarkedAbelianGroup, bases<regina::ShareableObject>,
-            std::auto_ptr<NHomMarkedAbelianGroup>, boost::noncopyable>(
-            "NHomMarkedAbelianGroup",
+    class_<NHomMarkedAbelianGroup, std::auto_ptr<NHomMarkedAbelianGroup>,
+            boost::noncopyable>( "NHomMarkedAbelianGroup",
             init<const NMarkedAbelianGroup&, const NMarkedAbelianGroup&,
                 const NMatrixInt&>())
         .def(init<const NHomMarkedAbelianGroup&>())
@@ -228,6 +232,11 @@ void addNMarkedAbelianGroup() {
         // TODO: evalCC, evalSNF
         .def("inverseHom", &NHomMarkedAbelianGroup::inverseHom)
         .def("__mul__", multiplyHom)
+        .def("str", &NHomMarkedAbelianGroup::str)
+        .def("toString", &NHomMarkedAbelianGroup::toString)
+        .def("detail", &NHomMarkedAbelianGroup::detail)
+        .def("toStringLong", &NHomMarkedAbelianGroup::toStringLong)
+        .def("__str__", &NHomMarkedAbelianGroup::str)
     ;
 }
 

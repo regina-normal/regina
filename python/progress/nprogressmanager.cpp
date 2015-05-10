@@ -40,13 +40,17 @@ using regina::NProgress;
 using regina::NProgressManager;
 
 void addNProgressManager() {
-    class_<NProgressManager, bases<regina::ShareableObject>,
-            std::auto_ptr<NProgressManager>,
+    class_<NProgressManager, std::auto_ptr<NProgressManager>,
             boost::noncopyable>("NProgressManager", init<>())
         .def("isStarted", &NProgressManager::isStarted)
         .def("isFinished", &NProgressManager::isFinished)
         .def("getProgress", &NProgressManager::getProgress,
             return_internal_reference<>())
+        .def("str", &NProgressManager::str)
+        .def("toString", &NProgressManager::toString)
+        .def("detail", &NProgressManager::detail)
+        .def("toStringLong", &NProgressManager::toStringLong)
+        .def("__str__", &NProgressManager::str)
     ;
 }
 

@@ -43,8 +43,10 @@
 #endif
 
 #include "regina-core.h"
+#include "output.h"
 #include "maths/nmatrix2.h"
 #include "triangulation/ntriangulation.h"
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -79,7 +81,9 @@ namespace regina {
  * class without reason).  This triangulation can be accessed through the
  * core() routine.
  */
-class REGINA_API NTxICore : public ShareableObject {
+class REGINA_API NTxICore :
+        public Output<NTxICore>,
+        public boost::noncopyable {
     protected:
         NTriangulation core_;
             /**< A full copy of the <tt>T x I</tt> triangulation that is
@@ -279,7 +283,23 @@ class REGINA_API NTxICore : public ShareableObject {
          */
         virtual std::ostream& writeTeXName(std::ostream& out) const = 0;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 
     protected:
@@ -465,6 +485,7 @@ inline void NTxICore::writeTextShort(std::ostream& out) const {
 inline void NTxICore::writeTextLong(std::ostream& out) const {
     out << "TxI core: ";
     writeName(out);
+    out << std::endl;
 }
 
 // Inline functions for NTxIDiagonalCore

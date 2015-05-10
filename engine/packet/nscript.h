@@ -57,12 +57,7 @@ class NScript;
  * @{
  */
 
-/**
- * Stores information about the script packet.
- * See the general PacketInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct PacketInfo<PACKET_SCRIPT> {
     typedef NScript Class;
@@ -70,6 +65,7 @@ struct PacketInfo<PACKET_SCRIPT> {
         return "Script";
     }
 };
+#endif
 
 /**
  * A packet representing a Python script that can be run.

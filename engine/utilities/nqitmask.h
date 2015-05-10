@@ -238,9 +238,8 @@ class NQitmask1 {
             return ((mask1 | mask2) & (other.mask1 | other.mask2));
         }
 
-    template <typename X>
     friend std::ostream& operator << (std::ostream& out,
-        const NQitmask1<X>& mask);
+        const NQitmask1<T>& mask);
 };
 
 /**
@@ -477,9 +476,8 @@ class NQitmask2 {
                 ((high1 | high2) & (other.high1 | other.high2));
         }
 
-    template <typename X, typename Y>
     friend std::ostream& operator << (std::ostream& out,
-        const NQitmask2<X, Y>& mask);
+        const NQitmask2<T, U>& mask);
 };
 
 /**

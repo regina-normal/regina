@@ -68,8 +68,7 @@ void addDim2Vertex() {
         .def(self != self)
     ;
 
-    scope s = class_<Dim2Vertex, bases<regina::ShareableObject>,
-            std::auto_ptr<Dim2Vertex>, boost::noncopyable>
+    scope s = class_<Dim2Vertex, std::auto_ptr<Dim2Vertex>, boost::noncopyable>
             ("Dim2Vertex", no_init)
         .def("index", &Dim2Vertex::index)
         .def("getEmbeddings", Dim2Vertex_getEmbeddings_list)
@@ -84,6 +83,11 @@ void addDim2Vertex() {
             return_value_policy<reference_existing_object>())
         .def("getDegree", &Dim2Vertex::getDegree)
         .def("isBoundary", &Dim2Vertex::isBoundary)
+        .def("str", &Dim2Vertex::str)
+        .def("toString", &Dim2Vertex::toString)
+        .def("detail", &Dim2Vertex::detail)
+        .def("toStringLong", &Dim2Vertex::toStringLong)
+        .def("__str__", &Dim2Vertex::str)
     ;
 }
 

@@ -54,12 +54,7 @@ class NNormalSurfaceVectorQuadOct;
  * @{
  */
 
-/**
- * Stores information about quad-oct almost normal coordinates.
- * See the general NormalInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct NormalInfo<NS_AN_QUAD_OCT> {
     typedef NNormalSurfaceVectorQuadOct Class;
@@ -74,6 +69,7 @@ struct NormalInfo<NS_AN_QUAD_OCT> {
         oriented = 0
     };
 };
+#endif
 
 /**
  * An almost normal surface vector using quad-oct coordinates.

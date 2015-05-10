@@ -54,12 +54,7 @@ class NNormalSurfaceVectorQuad;
  * @{
  */
 
-/**
- * Stores information about quad normal coordinates.
- * See the general NormalInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct NormalInfo<NS_QUAD> {
     typedef NNormalSurfaceVectorQuad Class;
@@ -74,6 +69,7 @@ struct NormalInfo<NS_QUAD> {
         oriented = 0
     };
 };
+#endif
 
 /**
  * A normal surface vector using quad coordinates.

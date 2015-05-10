@@ -44,8 +44,7 @@ using namespace boost::python;
 using regina::NComponent;
 
 void addNComponent() {
-    class_<NComponent, bases<regina::ShareableObject>,
-            std::auto_ptr<NComponent>, boost::noncopyable>
+    class_<NComponent, std::auto_ptr<NComponent>, boost::noncopyable>
             ("NComponent", no_init)
         .def("index", &NComponent::index)
         .def("getNumberOfTetrahedra", &NComponent::getNumberOfTetrahedra)
@@ -75,6 +74,11 @@ void addNComponent() {
         .def("isClosed", &NComponent::isClosed)
         .def("getNumberOfBoundaryTriangles",
             &NComponent::getNumberOfBoundaryTriangles)
+        .def("str", &NComponent::str)
+        .def("toString", &NComponent::toString)
+        .def("detail", &NComponent::detail)
+        .def("toStringLong", &NComponent::toStringLong)
+        .def("__str__", &NComponent::str)
     ;
 }
 

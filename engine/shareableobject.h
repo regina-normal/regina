@@ -94,8 +94,7 @@ class REGINA_API ShareableObject :
          * The output should be human-readable, should fit on a single line,
          * and should not end with a newline.
          *
-         * \ifacespython The parameter \a out does not exist;
-         * standard output will be used.
+         * \ifacespython Not present.
          *
          * @param out the output stream to which to write.
          */
@@ -110,8 +109,7 @@ class REGINA_API ShareableObject :
          * The default implementation of this routine merely calls
          * writeTextShort() and adds a newline.
          *
-         * \ifacespython The parameter \a out does not exist;
-         * standard output will be used.
+         * \ifacespython Not present.
          *
          * @param out the output stream to which to write.
          */

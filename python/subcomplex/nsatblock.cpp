@@ -71,7 +71,7 @@ namespace {
 }
 
 void addNSatBlock() {
-    class_<NSatBlock, boost::noncopyable, bases<regina::ShareableObject>,
+    class_<NSatBlock, boost::noncopyable,
             std::auto_ptr<NSatBlock> >("NSatBlock", no_init)
         .def("clone", &NSatBlock::clone,
             return_value_policy<manage_new_object>())
@@ -94,6 +94,11 @@ void addNSatBlock() {
         .def(self < self)
         .def("isBlock", isBlock_nolist,
             return_value_policy<manage_new_object>())
+        .def("str", &NSatBlock::str)
+        .def("toString", &NSatBlock::toString)
+        .def("detail", &NSatBlock::detail)
+        .def("toStringLong", &NSatBlock::toStringLong)
+        .def("__str__", &NSatBlock::str)
         .staticmethod("isBlock")
     ;
 }
