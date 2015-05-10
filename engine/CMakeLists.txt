@@ -59,7 +59,7 @@ TARGET_LINK_LIBRARIES(regina-engine
 SET_TARGET_PROPERTIES(regina-engine PROPERTIES VERSION ${PACKAGE_VERSION})
 SET_TARGET_PROPERTIES(regina-engine PROPERTIES SOVERSION ${PACKAGE_VERSION})
 
-SET( HEADERS ${HEADERS} docs.h engine.h regina-core.h shareableobject.h )
+SET( HEADERS ${HEADERS} docs.h engine.h output.h regina-core.h )
 SET( MANS ${MANS} regina-engine-config.1 )
 
 # Build space-separated lists of flags for regine-engine-config:
