@@ -612,7 +612,7 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
          * \name Exporting Triangulations
          */
         /*@{*/
-#if 0
+
         /**
          * Constructs the isomorphism signature for this triangulation.
          *
@@ -635,7 +635,9 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
          * (they depend on the particular labelling of tetrahedra).
          *
          * The time required to construct the isomorphism signature of a
-         * triangulation is <tt>O(n^2 log^2 n)</tt>.
+         * triangulation is <tt>O((dim!) n^2 log^2 n)</tt>.  Whilst this
+         * is fine for large triangulation, it will be extremly slow for
+         * large \e dimensions.
          *
          * The routine fromIsoSig() can be used to recover a
          * triangulation from an isomorphism signature.  The triangulation
@@ -679,7 +681,7 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
          * @return the isomorphism signature of this triangulation.
          */
         std::string isoSig(Isomorphism<dim>** relabelling = 0) const;
-#endif
+
         /**
          * Returns C++ code that can be used with insertConstruction()
          * to reconstruct this triangulation.
@@ -701,7 +703,7 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
          * @return the C++ code that was generated.
          */
         std::string dumpConstruction() const;
-#if 0
+
         /*@}*/
         /**
          * \name Importing Triangulations
@@ -746,7 +748,7 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
          * successful, or \c null if the given string was not a valid
          * <i>dim</i>-dimensional isomorphism signature.
          */
-        static Triangulation* fromIsoSig(const std::string& sig);
+        static Triangulation<dim>* fromIsoSig(const std::string& sig);
 
         /**
          * Deduces the number of top-dimensional simplices in a
@@ -787,7 +789,7 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
          * because the given string was not a valid isomorphism signature.
          */
         static size_t isoSigComponentSize(const std::string& sig);
-#endif
+
         /*@}*/
 
     protected:
@@ -853,7 +855,6 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
         void deleteSkeleton();
 
     private:
-#if 0
         /**
          * Internal to isoSig().
          *
@@ -872,9 +873,8 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
          * constructed for the correct number of simplices.
          * @return the candidate isomorphism signature.
          */
-        static std::string isoSigFrom(const Triangulation& tri, unsigned simp,
-            const NPerm<dim+1>& vertices, Isomorphism<dim>* relabelling);
-#endif
+        std::string isoSigFrom(size_t simp, const NPerm<dim+1>& vertices,
+            Isomorphism<dim>* relabelling) const;
 };
 
 /**
@@ -1688,5 +1688,7 @@ void Triangulation<dim>::writeTextLong(std::ostream& out) const {
 }
 
 } // namespace regina
+
+#include "generic/isosig-impl.h"
 
 #endif

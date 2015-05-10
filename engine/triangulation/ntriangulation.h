@@ -2926,8 +2926,6 @@ class REGINA_API Triangulation<3> :
          */
         /*@{*/
 
-        using NGenericTriangulation<3>::isoSig;
-
         /**
          * Dehydrates this triangulation into an alphabetical string.
          *
@@ -3211,9 +3209,6 @@ class REGINA_API Triangulation<3> :
          * @see insertRehydration
          */
         static NTriangulation* rehydrate(const std::string& dehydration);
-
-        using NGenericTriangulation<3>::fromIsoSig;
-        using NGenericTriangulation<3>::isoSigComponentSize;
 
         /**
          * Extracts the tetrahedron gluings from a string that contains the

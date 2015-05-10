@@ -33,24 +33,25 @@
 /* end stub */
 
 #include <algorithm>
-#include <string>
-#include "generic/ngenerictriangulation.h"
-
-/**
- * The numbers of base64 characters required to store an index into
- * NPerm<dim+1>::Sn.
- */
-#define CHARS_PER_PERM(dim) \
-    ((regina::bitsRequired(NPerm<(dim)+1>::nPerms) + 5) / 6)
 
 namespace regina {
 
-namespace {
+#ifndef __DOXYGEN
+struct IsoSigHelper {
+    /**
+     * The numbers of base64 characters required to store an index into
+     * NPerm<dim+1>::Sn.
+     */
+    template <int dim>
+    static constexpr unsigned CHARS_PER_PERM() {
+        return ((regina::bitsRequired(NPerm<(dim)+1>::nPerms) + 5) / 6);
+    }
+
     /**
      * Determine the integer value represented by the given character in
      * a signature string.
      */
-    inline unsigned SVAL(char c) {
+    static unsigned SVAL(char c) {
         if (c >= 'a' && c <= 'z')
             return (c - 'a');
         if (c >= 'A' && c <= 'Z')
@@ -66,7 +67,7 @@ namespace {
      * Determine the character that represents the given integer value
      * in a signature string.
      */
-    inline char SCHAR(unsigned c) {
+    static char SCHAR(unsigned c) {
         if (c < 26)
             return (char(c) + 'a');
         if (c < 52)
@@ -81,7 +82,7 @@ namespace {
     /**
      * Is the given character a valid character in a signature string?
      */
-    inline bool SVALID(char c) {
+    static bool SVALID(char c) {
         return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
             (c >= '0' && c <= '9') || c == '+' || c == '-');
     }
@@ -89,7 +90,7 @@ namespace {
     /**
      * Does the given string contain at least nChars characters?
      */
-    inline bool SHASCHARS(const char* s, unsigned nChars) {
+    static bool SHASCHARS(const char* s, unsigned nChars) {
         for ( ; nChars > 0; --nChars)
             if (! *s)
                 return false;
@@ -102,7 +103,7 @@ namespace {
      * lowest-significance blocks are written first.
      */
     template <typename IntType>
-    void SAPPEND(std::string& s, IntType val, unsigned nChars) {
+    static void SAPPEND(std::string& s, IntType val, unsigned nChars) {
         for ( ; nChars > 0; --nChars) {
             s += SCHAR(val & 0x3F);
             val >>= 6;
@@ -114,7 +115,7 @@ namespace {
      * Assumes the string has length >= nChars.
      */
     template <typename IntType>
-    IntType SREAD(const char* s, unsigned nChars) {
+    static IntType SREAD(const char* s, unsigned nChars) {
         IntType ans = 0;
         for (unsigned i = 0; i < nChars; ++i)
             ans |= (static_cast<IntType>(SVAL(s[i])) << (6 * i));
@@ -126,7 +127,8 @@ namespace {
      * These are packed into a single character, with the first trit
      * representing the lowest-significance bits and so on.
      */
-    void SAPPENDTRITS(std::string& s, const char* trits, unsigned nTrits) {
+    static void SAPPENDTRITS(std::string& s, const char* trits,
+            unsigned nTrits) {
         char ans = 0;
         if (nTrits >= 1)
             ans |= trits[0];
@@ -140,17 +142,18 @@ namespace {
     /**
      * Reads three trits (0, 1 or 2) from the given character.
      */
-    void SREADTRITS(char c, char* result) {
+    static void SREADTRITS(char c, char* result) {
         unsigned val = SVAL(c);
         result[0] = val & 3;
         result[1] = (val >> 2) & 3;
         result[2] = (val >> 4) & 3;
     }
-}
+};
+#endif
 
 template <int dim>
-std::string NGenericTriangulation<dim>::isoSigFrom(size_t simp,
-        const NPerm<dim+1>& vertices, Isomorphism<dim>* relabelling) {
+std::string TriangulationBase<dim>::isoSigFrom(size_t simp,
+        const NPerm<dim+1>& vertices, Isomorphism<dim>* relabelling) const {
     // Only process the component that simp belongs to.
 
     // ---------------------------------------------------------------------
@@ -298,20 +301,21 @@ std::string NGenericTriangulation<dim>::isoSigFrom(size_t simp,
             ++nChars;
         }
 
-        ans = SCHAR(63);
-        ans += SCHAR(nChars);
+        ans = IsoSigHelper::SCHAR(63);
+        ans += IsoSigHelper::SCHAR(nChars);
     }
 
     // Off we go.
     size_t i;
-    SAPPEND(ans, nCompSimp, nChars);
+    IsoSigHelper::SAPPEND(ans, nCompSimp, nChars);
     for (i = 0; i < facetPos; i += 3)
-        SAPPENDTRITS(ans, facetAction + i,
+        IsoSigHelper::SAPPENDTRITS(ans, facetAction + i,
             (facetPos >= i + 3 ? 3 : facetPos - i));
     for (i = 0; i < joinPos; ++i)
-        SAPPEND(ans, joinDest[i], nChars);
+        IsoSigHelper::SAPPEND(ans, joinDest[i], nChars);
     for (i = 0; i < joinPos; ++i)
-        SAPPEND(ans, joinGluing[i], CHARS_PER_PERM(dim));
+        IsoSigHelper::SAPPEND(ans, joinGluing[i],
+            IsoSigHelper::CHARS_PER_PERM<dim>());
 
     // Record the canonical isomorphism if required.
     if (relabelling)
@@ -332,7 +336,7 @@ std::string NGenericTriangulation<dim>::isoSigFrom(size_t simp,
 }
 
 template <int dim>
-std::string NGenericTriangulation<dim>::isoSig(
+std::string TriangulationBase<dim>::isoSig(
         Isomorphism<dim>** relabelling) const {
     // Make sure the user is not trying to do something illegal.
     if (relabelling && countComponents() != 1) {
@@ -348,20 +352,21 @@ std::string NGenericTriangulation<dim>::isoSig(
 
     if (isEmpty()) {
         char c[2];
-        c[0] = SCHAR(0);
+        c[0] = IsoSigHelper::SCHAR(0);
         c[1] = 0;
         return c;
     }
 
     // The triangulation is non-empty.  Get a signature string for each
     // connected component.
+    ComponentIterator it;
     size_t i;
     size_t simp;
     typename NPerm<dim+1>::Index perm;
     std::string curr;
 
     std::string* comp = new std::string[countComponents()];
-    for (auto it = components().begin(), i = 0;
+    for (it = components().begin(), i = 0;
             it != components().end(); ++it, ++i) {
         for (simp = 0; simp < (*it)->size(); ++simp)
             for (perm = 0; perm < NPerm<dim+1>::nPerms; ++perm) {
@@ -388,7 +393,7 @@ std::string NGenericTriangulation<dim>::isoSig(
 }
 
 template <int dim>
-Triangulation<dim>* NGenericTriangulation<dim>::fromIsoSig(
+Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
         const std::string& sig) {
     std::auto_ptr<Triangulation<dim>> ans(new Triangulation<dim>());
 
@@ -399,23 +404,23 @@ Triangulation<dim>* NGenericTriangulation<dim>::fromIsoSig(
     // Initial check for invalid characters.
     const char* d;
     for (d = c; *d; ++d)
-        if (! SVALID(*d))
+        if (! IsoSigHelper::SVALID(*d))
             return 0;
 
     unsigned i;
     size_t nSimp, pos, nChars;
     while (*c) {
         // Read one component at a time.
-        nSimp = SVAL(*c++);
+        nSimp = IsoSigHelper::SVAL(*c++);
         if (nSimp < 63)
             nChars = 1;
         else {
             if (! *c)
                 return 0;
-            nChars = SVAL(*c++);
-            if (! SHASCHARS(c, nChars))
+            nChars = IsoSigHelper::SVAL(*c++);
+            if (! IsoSigHelper::SHASCHARS(c, nChars))
                 return 0;
-            nSimp = SREAD<unsigned>(c, nChars);
+            nSimp = IsoSigHelper::SREAD<unsigned>(c, nChars);
             c += nChars;
         }
 
@@ -435,7 +440,7 @@ Triangulation<dim>* NGenericTriangulation<dim>::fromIsoSig(
                 delete[] facetAction;
                 return 0;
             }
-            SREADTRITS(*c++, facetAction + facetPos);
+            IsoSigHelper::SREADTRITS(*c++, facetAction + facetPos);
             for (i = 0; i < 3; ++i) {
                 // If we're already finished, make sure the leftover trits
                 // are zero.
@@ -467,29 +472,30 @@ Triangulation<dim>* NGenericTriangulation<dim>::fromIsoSig(
 
         size_t* joinDest = new size_t[nJoins + 1];
         for (pos = 0; pos < nJoins; ++pos) {
-            if (! SHASCHARS(c, nChars)) {
+            if (! IsoSigHelper::SHASCHARS(c, nChars)) {
                 delete[] facetAction;
                 delete[] joinDest;
                 return 0;
             }
 
-            joinDest[pos] = SREAD<unsigned>(c, nChars);
+            joinDest[pos] = IsoSigHelper::SREAD<unsigned>(c, nChars);
             c += nChars;
         }
 
         typename NPerm<dim+1>::Index* joinGluing =
             new typename NPerm<dim+1>::Index[nJoins + 1];
         for (pos = 0; pos < nJoins; ++pos) {
-            if (! SHASCHARS(c, 1)) {
+            if (! IsoSigHelper::SHASCHARS(c, 1)) {
                 delete[] facetAction;
                 delete[] joinDest;
                 delete[] joinGluing;
                 return 0;
             }
 
-            joinGluing[pos] = SREAD<typename NPerm<dim+1>::Index>(c,
-                CHARS_PER_PERM(dim));
-            c += CHARS_PER_PERM(dim);
+            joinGluing[pos] =
+                IsoSigHelper::SREAD<typename NPerm<dim+1>::Index>(c,
+                IsoSigHelper::CHARS_PER_PERM<dim>());
+            c += IsoSigHelper::CHARS_PER_PERM<dim>();
 
             if (joinGluing[pos] >= NPerm<dim+1>::nPerms ||
                     joinGluing[pos] < 0) {
@@ -556,15 +562,15 @@ Triangulation<dim>* NGenericTriangulation<dim>::fromIsoSig(
 }
 
 template <int dim>
-size_t NGenericTriangulation<dim>::isoSigComponentSize(const std::string& sig) {
+size_t TriangulationBase<dim>::isoSigComponentSize(const std::string& sig) {
     const char* c = sig.c_str();
 
     // Examine the first character.
     // Note that SVALID also ensures that *c is non-null (i.e., it
     // detects premature end of string).
-    if (! SVALID(*c))
+    if (! IsoSigHelper::SVALID(*c))
         return 0;
-    size_t nSimp = SVAL(*c);
+    size_t nSimp = IsoSigHelper::SVAL(*c);
     if (nSimp < 63)
         return nSimp;
 
@@ -573,12 +579,12 @@ size_t NGenericTriangulation<dim>::isoSigComponentSize(const std::string& sig) {
     ++c;
     if (! *c)
         return 0;
-    size_t nChars = SVAL(*c++);
+    size_t nChars = IsoSigHelper::SVAL(*c++);
 
     for (const char* d = c; d < c + nChars; ++d)
-        if (! SVALID(*d))
+        if (! IsoSigHelper::SVALID(*d))
             return 0;
-    return SREAD<unsigned>(c, nChars);
+    return IsoSigHelper::SREAD<unsigned>(c, nChars);
 }
 
 } // namespace regina

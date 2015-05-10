@@ -611,23 +611,6 @@ class REGINA_API Triangulation<2> :
             bool perform = true);
 
         /*@}*/
-        /**
-         * \name Exporting Triangulations
-         */
-        /*@{*/
-
-        using NGenericTriangulation<2>::isoSig;
-
-        /*@}*/
-        /**
-         * \name Importing Triangulations
-         */
-        /*@{*/
-
-        using NGenericTriangulation<2>::fromIsoSig;
-        using NGenericTriangulation<2>::isoSigComponentSize;
-
-        /*@}*/
 
         static NXMLPacketReader* getXMLReader(NPacket* parent,
             NXMLTreeResolver& resolver);
