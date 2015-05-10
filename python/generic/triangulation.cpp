@@ -33,6 +33,7 @@
 /* end stub */
 
 #include <boost/python.hpp>
+#include "generic/isomorphism.h"
 #include "generic/triangulation.h"
 
 using namespace boost::python;
@@ -61,13 +62,13 @@ namespace {
 
         static boost::python::tuple isoSig_relabelling(
                 const Triangulation<dim>& t) {
-            regina::Isomorphism<dim>* iso;
+            typename regina::Isomorphism<dim>* iso;
             std::string sig = t.isoSig(&iso);
             return boost::python::make_tuple(
                 sig,
                 boost::python::object(boost::python::handle<>(
-                    boost::python::manage_new_object::
-                    apply<regina::Isomorphism<dim>*>::type()(iso))));
+                    typename boost::python::manage_new_object::
+                    apply<typename regina::Isomorphism<dim>*>::type()(iso))));
         }
     };
 }

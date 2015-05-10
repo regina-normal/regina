@@ -271,7 +271,7 @@ std::string TriangulationBase<dim>::isoSigFrom(size_t simp,
             joinDest[joinPos] = image[dest];
             joinGluing[joinPos] = (vertexMap[dest] *
                 s->adjacentGluing(facetSrc) * vertexMap[simpSrc].inverse()).
-                orderedSnIndex();
+                index();
             ++joinPos;
 
             facetAction[facetPos++] = 2;
