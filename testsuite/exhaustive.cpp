@@ -33,12 +33,12 @@
 /* end stub */
 
 #include "exhaustive.h"
-#include "dim4/dim4triangulation.h"
 #include "census/dim4gluingpermsearcher.h"
 #include "census/ncensus.h"
 #include "census/ngluingpermsearcher.h"
 #include "packet/ncontainer.h"
 #include "triangulation/ntriangulation.h"
+#include "dim4/dim4triangulation.h"
 
 // When we run tests over an entire census, do we use a larger census
 // (which takes a long time to run), or a smaller census?
