@@ -38,6 +38,7 @@
 
 using namespace boost::python;
 using regina::Dim4Isomorphism;
+using regina::Isomorphism;
 
 namespace {
     int (Dim4Isomorphism::*simpImage_const)(unsigned) const =
@@ -52,10 +53,10 @@ namespace {
 }
 
 void addDim4Isomorphism() {
-    class_<Dim4Isomorphism, std::auto_ptr<Dim4Isomorphism>, boost::noncopyable>
-            ("Dim4Isomorphism", init<const Dim4Isomorphism&>())
+    class_<Isomorphism<4>, std::auto_ptr<Isomorphism<4>>, boost::noncopyable>
+            ("Isomorphism4", init<const Dim4Isomorphism&>())
+        .def("size", &Dim4Isomorphism::size)
         .def("getSourceSimplices", &Dim4Isomorphism::getSourceSimplices)
-        .def("getSourcePentachora", &Dim4Isomorphism::getSourcePentachora)
         .def("simpImage", simpImage_const)
         .def("pentImage", simpImage_const)
         .def("facetPerm", facetPerm_const)
@@ -66,12 +67,17 @@ void addDim4Isomorphism() {
         .def("applyInPlace", &Dim4Isomorphism::applyInPlace)
         .def("random", &Dim4Isomorphism::random,
             return_value_policy<manage_new_object>())
+        .def("identity", &Dim4Isomorphism::identity,
+            return_value_policy<manage_new_object>())
         .def("str", &Dim4Isomorphism::str)
         .def("toString", &Dim4Isomorphism::toString)
         .def("detail", &Dim4Isomorphism::detail)
         .def("toStringLong", &Dim4Isomorphism::toStringLong)
         .def("__str__", &Dim4Isomorphism::str)
         .staticmethod("random")
+        .staticmethod("identity")
     ;
+
+    scope().attr("Dim4Isomorphism") = scope().attr("Isomorphism4");
 }
 
