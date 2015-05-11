@@ -191,7 +191,7 @@ bool Dim4Triangulation::simplifyToLocalMinimum(bool perform) {
             ensureSkeleton();
 
             // Crush edges if we can.
-            if (vertices_.size() > components_.size() &&
+            if (vertices_.size() > countComponents() &&
                     vertices_.size() > boundaryComponents_.size()) {
                 for (eit = edges_.begin(); eit != edges_.end(); ++eit) {
                     if (collapseEdge(*eit, true, perform)) {

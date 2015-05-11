@@ -46,8 +46,8 @@ unsigned long Dim4Triangulation::findIsomorphisms(
     other.ensureSkeleton();
 
     // Deal with the empty triangulation first.
-    if (pentachora_.empty()) {
-        if (completeIsomorphism && ! other.pentachora_.empty())
+    if (isEmpty()) {
+        if (completeIsomorphism && ! other.isEmpty())
             return 0;
         results.push_back(new Dim4Isomorphism(0));
         return 1;
@@ -59,7 +59,7 @@ unsigned long Dim4Triangulation::findIsomorphisms(
         // Must be boundary complete, 1-to-1 and onto.
         // That is, combinatorially the two triangulations must be
         // identical.
-        if (pentachora_.size() != other.pentachora_.size())
+        if (size() != other.size())
             return 0;
         if (tetrahedra_.size() != other.tetrahedra_.size())
             return 0;
@@ -69,11 +69,11 @@ unsigned long Dim4Triangulation::findIsomorphisms(
             return 0;
         if (vertices_.size() != other.vertices_.size())
             return 0;
-        if (components_.size() != other.components_.size())
+        if (countComponents() != other.countComponents())
             return 0;
         if (boundaryComponents_.size() != other.boundaryComponents_.size())
             return 0;
-        if (orientable_ ^ other.orientable_)
+        if (isOrientable() ^ other.isOrientable())
             return 0;
 
         // Test degree sequences and the like.
@@ -140,13 +140,13 @@ unsigned long Dim4Triangulation::findIsomorphisms(
         }
         {
             ComponentIterator it;
-            for (it = components_.begin(); it != components_.end(); it++) {
+            for (it = components().begin(); it != components().end(); it++) {
                 mapIt = map1.insert(
                     std::make_pair((*it)->getNumberOfPentachora(), 0)).first;
                 (*mapIt).second++;
             }
-            for (it = other.components_.begin();
-                    it != other.components_.end(); it++) {
+            for (it = other.components().begin();
+                    it != other.components().end(); it++) {
                 mapIt = map2.insert(
                     std::make_pair((*it)->getNumberOfPentachora(), 0)).first;
                 (*mapIt).second++;
@@ -178,9 +178,9 @@ unsigned long Dim4Triangulation::findIsomorphisms(
     } else {
         // May be boundary incomplete, and need not be onto.
         // Not much we can test for unfortunately.
-        if (pentachora_.size() > other.pentachora_.size())
+        if (size() > other.size())
             return 0;
-        if ((! orientable_) && other.orientable_)
+        if ((! isOrientable()) && other.isOrientable())
             return 0;
     }
 
@@ -188,9 +188,9 @@ unsigned long Dim4Triangulation::findIsomorphisms(
     // From the tests above, we are guaranteed that both triangulations
     // have at least one pentachoron.
     unsigned long nResults = 0;
-    unsigned long nPentachora = pentachora_.size();
-    unsigned long nDestPentachora = other.pentachora_.size();
-    unsigned long nComponents = components_.size();
+    unsigned long nPentachora = size();
+    unsigned long nDestPentachora = other.size();
+    unsigned long nComponents = countComponents();
     unsigned i;
 
     Dim4Isomorphism iso(nPentachora);
@@ -267,14 +267,14 @@ unsigned long Dim4Triangulation::findIsomorphisms(
         }
 
         // Be sure we're looking at a pentachoron we can use.
-        compSize = components_[comp]->getNumberOfPentachora();
+        compSize = component(comp)->size();
         if (completeIsomorphism) {
             // Conditions:
             // 1) The destination pentachoron is unused.
             // 2) The component sizes match precisely.
             while (startPent[comp] < nDestPentachora &&
                     (whichComp[startPent[comp]] >= 0 ||
-                     other.pentachora_[startPent[comp]]->getComponent()->
+                     other.simplices_[startPent[comp]]->getComponent()->
                      getNumberOfPentachora() != compSize))
                 startPent[comp]++;
         } else {
@@ -284,7 +284,7 @@ unsigned long Dim4Triangulation::findIsomorphisms(
             // the source component.
             while (startPent[comp] < nDestPentachora &&
                     (whichComp[startPent[comp]] >= 0 ||
-                     other.pentachora_[startPent[comp]]->getComponent()->
+                     other.simplices_[startPent[comp]]->getComponent()->
                      getNumberOfPentachora() < compSize))
                 startPent[comp]++;
         }
@@ -316,7 +316,7 @@ unsigned long Dim4Triangulation::findIsomorphisms(
         // Note that there is only one way of doing this (as seen by
         // following adjacent pentachoron gluings).  It either works or
         // it doesn't.
-        pentIndex = pentachoronIndex(components_[comp]->getPentachoron(0));
+        pentIndex = pentachoronIndex(component(comp)->simplex(0));
 
         whichComp[startPent[comp]] = comp;
         iso.simpImage(pentIndex) = startPent[comp];
@@ -327,10 +327,10 @@ unsigned long Dim4Triangulation::findIsomorphisms(
         while ((! broken) && (! toProcess.empty())) {
             pentIndex = toProcess.front();
             toProcess.pop();
-            pent = pentachora_[pentIndex];
+            pent = simplices_[pentIndex];
             pentPerm = iso.facetPerm(pentIndex);
             destPentIndex = iso.simpImage(pentIndex);
-            destPent = other.pentachora_[destPentIndex];
+            destPent = other.simplices_[destPentIndex];
 
             // If we are after a complete isomorphism, we might as well
             // test whether the lower-dimensional face degrees match.

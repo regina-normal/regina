@@ -50,13 +50,15 @@
 
 namespace regina {
 
-class Dim4Component;
 class Dim4Edge;
 class Dim4Tetrahedron;
-class Dim4Pentachoron;
 class Dim4Triangle;
 class Dim4Vertex;
-class NTriangulation;
+
+template <int> class Component;
+template <int> class Triangulation;
+typedef Component<4> Dim4Component;
+typedef Triangulation<3> NTriangulation;
 
 /**
  * \weakgroup dim4
@@ -344,7 +346,7 @@ class REGINA_API Dim4BoundaryComponent :
          */
         Dim4BoundaryComponent(Dim4Vertex* vertex);
 
-    friend class Dim4Triangulation;
+    friend class Triangulation<4>;
         /**< Allow access to private members. */
 };
 

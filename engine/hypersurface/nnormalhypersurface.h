@@ -61,11 +61,13 @@ namespace regina {
  */
 
 class Dim4Edge;
-class Dim4Triangulation;
 class Dim4Vertex;
 class NEnumConstraintList;
-class NTriangulation;
 class NXMLNormalHypersurfaceReader;
+
+template <int> class Triangulation;
+typedef Triangulation<3> NTriangulation;
+typedef Triangulation<4> Dim4Triangulation;
 
 /**
  * A template that stores information about a particular

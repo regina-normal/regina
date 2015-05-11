@@ -46,9 +46,11 @@
 
 namespace regina {
 
-class Dim4Triangulation;
-class NIsomorphism;
-class NTriangulation;
+template <int> class Isomorphism;
+template <int> class Triangulation;
+typedef Isomorphism<3> NIsomorphism;
+typedef Triangulation<3> NTriangulation;
+typedef Triangulation<4> Dim4Triangulation;
 
 /**
  * \weakgroup dim4

@@ -256,11 +256,11 @@ typedef Component<4> Dim4Component;
 
 // Inline functions for Component<4>
 
-inline Dim4Component::Dim4Component() : ComponentBase<4>, ideal_(false) {
+inline Dim4Component::Component() : ideal_(false) {
 }
 
 inline unsigned long Dim4Component::getNumberOfPentachora() const {
-    return pentachora_.size();
+    return size();
 }
 
 inline unsigned long Dim4Component::getNumberOfTetrahedra() const {
@@ -285,7 +285,7 @@ inline unsigned long Dim4Component::getNumberOfBoundaryComponents() const {
 
 inline Dim4Pentachoron* Dim4Component::getPentachoron(unsigned long index)
         const {
-    return pentachora_[index];
+    return simplex(index);
 }
 
 inline Dim4Tetrahedron* Dim4Component::getTetrahedron(unsigned long index)
@@ -319,7 +319,7 @@ inline bool Dim4Component::isClosed() const {
 }
 
 inline unsigned long Dim4Component::getNumberOfBoundaryTetrahedra() const {
-    return 2 * tetrahedra_.size() - 5 * pentachora_.size();
+    return 2 * tetrahedra_.size() - 5 * size();
 }
 
 } // namespace regina

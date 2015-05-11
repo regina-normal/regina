@@ -40,7 +40,7 @@
 namespace regina {
 
 void Dim4Triangulation::barycentricSubdivision() {
-    unsigned long nOldPent = pentachora_.size();
+    unsigned long nOldPent = size();
     if (nOldPent == 0)
         return;
 

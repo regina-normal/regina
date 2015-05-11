@@ -73,6 +73,7 @@ template <int> class Component;
 template <int> class Isomorphism;
 template <int> class SimplexBase;
 template <int> class Simplex;
+typedef Component<4> Dim4Component;
 typedef Isomorphism<4> Dim4Isomorphism;
 typedef Simplex<4> Dim4Pentachoron;
 
@@ -85,7 +86,7 @@ typedef Simplex<4> Dim4Pentachoron;
 #ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct PacketInfo<PACKET_DIM4TRIANGULATION> {
-    typedef Dim4Triangulation Class;
+    typedef Triangulation <4>Class;
     inline static const char* name() {
         return "4-Manifold Triangulation";
     }
@@ -115,9 +116,12 @@ struct PacketInfo<PACKET_DIM4TRIANGULATION> {
  * A 4-manifold triangulation is built from pentachora: a \e pentachoron is a
  * 4-dimensional simplex, with five vertices.
  */
-class REGINA_API Dim4Triangulation : public NPacket,
+template <>
+class REGINA_API Triangulation<4> :
+        public NPacket,
+        public TriangulationBase<4>,
         public NGenericTriangulation<4> {
-    REGINA_PACKET(Dim4Triangulation, PACKET_DIM4TRIANGULATION)
+    REGINA_PACKET(Triangulation<4>, PACKET_DIM4TRIANGULATION)
 
     public:
         typedef std::vector<Dim4Pentachoron*>::const_iterator
@@ -191,7 +195,7 @@ class REGINA_API Dim4Triangulation : public NPacket,
          *
          * @param copy the triangulation to copy.
          */
-        Triangulation(const Dim4Triangulation& copy);
+        Triangulation(const Triangulation& copy);
         /**
          * "Magic" constructor that tries to find some way to interpret
          * the given string as a triangulation.
@@ -674,7 +678,7 @@ class REGINA_API Dim4Triangulation : public NPacket,
          * See hasBoundaryFacets() for further information.
          */
         bool hasBoundaryTetrahedra() const;
-        size_t countBoundaryFacets(); const;
+        size_t countBoundaryFacets() const;
         /**
          * A dimension-specific alias for countBoundaryFacets().
          *
@@ -1237,7 +1241,7 @@ class REGINA_API Dim4Triangulation : public NPacket,
          * @param from the triangulation from which this triangulation
          * will be cloned.
          */
-        void cloneFrom(const Dim4Triangulation& from);
+        void cloneFrom(const Triangulation& from);
 
     private:
         /**
@@ -1331,7 +1335,7 @@ class REGINA_API Dim4Triangulation : public NPacket,
          * returned.
          * @return the total number of isomorphisms found.
          */
-        unsigned long findIsomorphisms(const Dim4Triangulation& other,
+        unsigned long findIsomorphisms(const Triangulation& other,
                 std::list<Dim4Isomorphism*>& results,
                 bool completeIsomorphism, bool firstOnly) const;
 
@@ -1385,199 +1389,199 @@ namespace regina {
 
 // Inline functions for Dim4Triangulation
 
-inline Dim4Triangulation::Dim4Triangulation() : knownSimpleLinks_(false) {
+inline Triangulation<4>::Triangulation() : knownSimpleLinks_(false) {
 }
 
-inline Dim4Triangulation::Dim4Triangulation(const Dim4Triangulation& cloneMe) :
+inline Triangulation<4>::Triangulation(const Triangulation& cloneMe) :
         knownSimpleLinks_(false) {
     cloneFrom(cloneMe);
 }
 
-inline Dim4Triangulation::~Dim4Triangulation() {
+inline Triangulation<4>::~Triangulation() {
     clearAllProperties();
 }
 
-inline void Dim4Triangulation::writeTextShort(std::ostream& out) const {
-    out << "Triangulation with " << pentachora_.size()
-        << (pentachora_.size() == 1 ? " pentachoron" : " pentachora");
+inline void Triangulation<4>::writeTextShort(std::ostream& out) const {
+    out << "Triangulation with " << size()
+        << (size() == 1 ? " pentachoron" : " pentachora");
 }
 
-inline bool Dim4Triangulation::dependsOnParent() const {
+inline bool Triangulation<4>::dependsOnParent() const {
     return false;
 }
 
-inline unsigned long Dim4Triangulation::getNumberOfPentachora() const {
+inline unsigned long Triangulation<4>::getNumberOfPentachora() const {
     return size();
 }
 
-inline const std::vector<Dim4Pentachoron*>& Dim4Triangulation::getPentachora()
+inline const std::vector<Dim4Pentachoron*>& Triangulation<4>::getPentachora()
         const {
     return getSimplices();
 }
 
-inline Dim4Pentachoron* Dim4Triangulation::getPentachoron(unsigned long index) {
+inline Dim4Pentachoron* Triangulation<4>::getPentachoron(unsigned long index) {
     return getSimplex(index);
 }
 
-inline const Dim4Pentachoron* Dim4Triangulation::getPentachoron(
+inline const Dim4Pentachoron* Triangulation<4>::getPentachoron(
         unsigned long index) const {
     return getSimplex(index);
 }
 
-inline long Dim4Triangulation::pentachoronIndex(const Dim4Pentachoron* pent)
+inline long Triangulation<4>::pentachoronIndex(const Dim4Pentachoron* pent)
         const {
     return pent->markedIndex();
 }
 
-inline Dim4Pentachoron* Dim4Triangulation::newPentachoron() {
+inline Dim4Pentachoron* Triangulation<4>::newPentachoron() {
     return newSimplex();
 }
 
-inline Dim4Pentachoron* Dim4Triangulation::newPentachoron(
+inline Dim4Pentachoron* Triangulation<4>::newPentachoron(
         const std::string& desc) {
     return newSimplex(desc);
 }
 
-inline void Dim4Triangulation::removePentachoron(Dim4Pentachoron* pent) {
+inline void Triangulation<4>::removePentachoron(Dim4Pentachoron* pent) {
     removeSimplex(pent);
 }
 
-inline void Dim4Triangulation::removePentachoronAt(unsigned long index) {
+inline void Triangulation<4>::removePentachoronAt(unsigned long index) {
     removeSimplexAt(index);
 }
 
-inline void Dim4Triangulation::removeAllPentachora() {
+inline void Triangulation<4>::removeAllPentachora() {
     removeAllSimplices();
 }
 
-inline unsigned long Dim4Triangulation::getNumberOfBoundaryComponents() const {
+inline unsigned long Triangulation<4>::getNumberOfBoundaryComponents() const {
     ensureSkeleton();
     return boundaryComponents_.size();
 }
 
-inline unsigned long Dim4Triangulation::getNumberOfVertices() const {
+inline unsigned long Triangulation<4>::getNumberOfVertices() const {
     ensureSkeleton();
     return vertices_.size();
 }
 
-inline unsigned long Dim4Triangulation::getNumberOfEdges() const {
+inline unsigned long Triangulation<4>::getNumberOfEdges() const {
     ensureSkeleton();
     return edges_.size();
 }
 
-inline unsigned long Dim4Triangulation::getNumberOfTriangles() const {
+inline unsigned long Triangulation<4>::getNumberOfTriangles() const {
     ensureSkeleton();
     return triangles_.size();
 }
 
-inline unsigned long Dim4Triangulation::getNumberOfTetrahedra() const {
+inline unsigned long Triangulation<4>::getNumberOfTetrahedra() const {
     ensureSkeleton();
     return tetrahedra_.size();
 }
 
 template <>
-inline unsigned long Dim4Triangulation::getNumberOfFaces<0>() const {
+inline unsigned long Triangulation<4>::getNumberOfFaces<0>() const {
     return getNumberOfVertices();
 }
 
 template <>
-inline unsigned long Dim4Triangulation::getNumberOfFaces<1>() const {
+inline unsigned long Triangulation<4>::getNumberOfFaces<1>() const {
     return getNumberOfEdges();
 }
 
 template <>
-inline unsigned long Dim4Triangulation::getNumberOfFaces<2>() const {
+inline unsigned long Triangulation<4>::getNumberOfFaces<2>() const {
     return getNumberOfTriangles();
 }
 
 template <>
-inline unsigned long Dim4Triangulation::getNumberOfFaces<3>() const {
+inline unsigned long Triangulation<4>::getNumberOfFaces<3>() const {
     return getNumberOfTetrahedra();
 }
 
 template <>
-inline unsigned long Dim4Triangulation::getNumberOfFaces<4>() const {
+inline unsigned long Triangulation<4>::getNumberOfFaces<4>() const {
     return getNumberOfPentachora();
 }
 
 inline const std::vector<Dim4BoundaryComponent*>&
-        Dim4Triangulation::getBoundaryComponents() const {
+        Triangulation<4>::getBoundaryComponents() const {
     ensureSkeleton();
     return (const std::vector<Dim4BoundaryComponent*>&)(boundaryComponents_);
 }
 
-inline const std::vector<Dim4Vertex*>& Dim4Triangulation::getVertices() const {
+inline const std::vector<Dim4Vertex*>& Triangulation<4>::getVertices() const {
     ensureSkeleton();
     return (const std::vector<Dim4Vertex*>&)(vertices_);
 }
 
-inline const std::vector<Dim4Edge*>& Dim4Triangulation::getEdges() const {
+inline const std::vector<Dim4Edge*>& Triangulation<4>::getEdges() const {
     ensureSkeleton();
     return (const std::vector<Dim4Edge*>&)(edges_);
 }
 
-inline const std::vector<Dim4Triangle*>& Dim4Triangulation::getTriangles()
+inline const std::vector<Dim4Triangle*>& Triangulation<4>::getTriangles()
         const {
     ensureSkeleton();
     return (const std::vector<Dim4Triangle*>&)(triangles_);
 }
 
-inline const std::vector<Dim4Tetrahedron*>& Dim4Triangulation::getTetrahedra()
+inline const std::vector<Dim4Tetrahedron*>& Triangulation<4>::getTetrahedra()
         const {
     ensureSkeleton();
     return (const std::vector<Dim4Tetrahedron*>&)(tetrahedra_);
 }
 
-inline Dim4BoundaryComponent* Dim4Triangulation::getBoundaryComponent(
+inline Dim4BoundaryComponent* Triangulation<4>::getBoundaryComponent(
         unsigned long index) const {
     ensureSkeleton();
     return boundaryComponents_[index];
 }
 
-inline Dim4Vertex* Dim4Triangulation::getVertex(unsigned long index) const {
+inline Dim4Vertex* Triangulation<4>::getVertex(unsigned long index) const {
     ensureSkeleton();
     return vertices_[index];
 }
 
-inline Dim4Edge* Dim4Triangulation::getEdge(unsigned long index) const {
+inline Dim4Edge* Triangulation<4>::getEdge(unsigned long index) const {
     ensureSkeleton();
     return edges_[index];
 }
 
-inline Dim4Triangle* Dim4Triangulation::getTriangle(unsigned long index) const {
+inline Dim4Triangle* Triangulation<4>::getTriangle(unsigned long index) const {
     ensureSkeleton();
     return triangles_[index];
 }
 
-inline Dim4Tetrahedron* Dim4Triangulation::getTetrahedron(unsigned long index)
+inline Dim4Tetrahedron* Triangulation<4>::getTetrahedron(unsigned long index)
         const {
     ensureSkeleton();
     return tetrahedra_[index];
 }
 
-inline long Dim4Triangulation::boundaryComponentIndex(
+inline long Triangulation<4>::boundaryComponentIndex(
         const Dim4BoundaryComponent* boundaryComponent) const {
     return boundaryComponent->markedIndex();
 }
 
-inline long Dim4Triangulation::vertexIndex(const Dim4Vertex* vertex) const {
+inline long Triangulation<4>::vertexIndex(const Dim4Vertex* vertex) const {
     return vertex->markedIndex();
 }
 
-inline long Dim4Triangulation::edgeIndex(const Dim4Edge* edge) const {
+inline long Triangulation<4>::edgeIndex(const Dim4Edge* edge) const {
     return edge->markedIndex();
 }
 
-inline long Dim4Triangulation::triangleIndex(const Dim4Triangle* tri) const {
+inline long Triangulation<4>::triangleIndex(const Dim4Triangle* tri) const {
     return tri->markedIndex();
 }
 
-inline long Dim4Triangulation::tetrahedronIndex(const Dim4Tetrahedron* tet)
+inline long Triangulation<4>::tetrahedronIndex(const Dim4Tetrahedron* tet)
         const {
     return tet->markedIndex();
 }
 
-inline long Dim4Triangulation::getEulerCharTri() const {
+inline long Triangulation<4>::getEulerCharTri() const {
     ensureSkeleton();
 
     // Cast away the unsignedness of std::vector::size().
@@ -1585,50 +1589,50 @@ inline long Dim4Triangulation::getEulerCharTri() const {
         - static_cast<long>(edges_.size())
         + static_cast<long>(triangles_.size())
         - static_cast<long>(tetrahedra_.size())
-        + static_cast<long>(pentachora_.size());
+        + static_cast<long>(size());
 }
 
-inline bool Dim4Triangulation::isValid() const {
+inline bool Triangulation<4>::isValid() const {
     ensureSkeleton();
     return valid_;
 }
 
-inline bool Dim4Triangulation::isIdeal() const {
+inline bool Triangulation<4>::isIdeal() const {
     ensureSkeleton();
     return ideal_;
 }
 
-inline bool Dim4Triangulation::hasBoundaryFacets() const {
+inline bool Triangulation<4>::hasBoundaryFacets() const {
     // Override, since we can do this faster in dimension 4.
     ensureSkeleton();
-    return (2 * tetrahedra_.size() > 5 * pentachora_.size());
+    return (2 * tetrahedra_.size() > 5 * size());
 }
 
-inline bool Dim4Triangulation::hasBoundaryTetrahedra() const {
+inline bool Triangulation<4>::hasBoundaryTetrahedra() const {
     return hasBoundaryFacets();
 }
 
-inline size_t Dim4Triangulation::countBoundaryFacets() const {
+inline size_t Triangulation<4>::countBoundaryFacets() const {
     // Override, since we can do this faster in dimension 4.
     ensureSkeleton();
-    return 2 * tetrahedra_.size() - 5 * pentachora_.size();
+    return 2 * tetrahedra_.size() - 5 * size();
 }
 
-inline size_t Dim4Triangulation::countBoundaryTetrahedra() const {
+inline size_t Triangulation<4>::countBoundaryTetrahedra() const {
     return countBoundaryFacets();
 }
 
-inline bool Dim4Triangulation::isClosed() const {
+inline bool Triangulation<4>::isClosed() const {
     ensureSkeleton();
     return boundaryComponents_.empty();
 }
 
-inline void Dim4Triangulation::simplifiedFundamentalGroup(
+inline void Triangulation<4>::simplifiedFundamentalGroup(
         NGroupPresentation* newGroup) {
     fundGroup_ = newGroup;
 }
 
-inline NPacket* Dim4Triangulation::internalClonePacket(NPacket*) const {
+inline NPacket* Triangulation<4>::internalClonePacket(NPacket*) const {
     return new Dim4Triangulation(*this);
 }
 

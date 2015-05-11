@@ -55,13 +55,15 @@
 
 namespace regina {
 
-class Dim4Triangulation;
 class NMatrixInt;
 class NNormalHypersurface;
 class NNormalHypersurfaceList;
 class NProgressTracker;
 class NXMLNormalHypersurfaceListReader;
 class NXMLPacketReader;
+
+template <int> class Triangulation;
+typedef Triangulation<4> Dim4Triangulation;
 
 /**
  * \weakgroup hypersurface

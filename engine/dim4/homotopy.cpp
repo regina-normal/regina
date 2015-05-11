@@ -56,8 +56,8 @@ const NGroupPresentation& Dim4Triangulation::getFundamentalGroup() const {
 
     // Cast away all unsignedness in case we run into problems subtracting.
     long nGens = static_cast<long>(tetrahedra_.size()) - nBdryTets
-        - static_cast<long>(pentachora_.size())
-        + static_cast<long>(components_.size());
+        - static_cast<long>(size())
+        + static_cast<long>(countComponents());
 
     // Insert the generators.
     ans->addGenerator(nGens);

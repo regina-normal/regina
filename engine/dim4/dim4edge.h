@@ -51,13 +51,17 @@
 
 namespace regina {
 
-class Dim2Triangulation;
-class Dim4Component;
 class Dim4BoundaryComponent;
-class Dim4Pentachoron;
 class Dim4Vertex;
-class Dim4Triangulation;
-class Dim4Isomorphism;
+
+template <int> class Component;
+template <int> class Isomorphism;
+template <int> class Simplex;
+template <int> class Triangulation;
+typedef Component<4> Dim4Component;
+typedef Isomorphism<4> Dim4Isomorphism;
+typedef Simplex<4> Dim4Pentachoron;
+typedef Triangulation<4> Dim4Triangulation;
 
 /**
  * \weakgroup dim4
@@ -250,7 +254,7 @@ class REGINA_API Dim4Edge :
             /**< Is this edge invalid?  This will be 0 if the edge is
                  valid, or a bitwise combination of \a INVALID_IDENTIFICATION
                  and/or \a INVALID_LINK if the edge is invalid. */
-        Dim2Triangulation* link_;
+        Triangulation<2>* link_;
             /**< A triangulation of the edge link.  This will only be
              * constructed on demand; until then it will be null. */
 
@@ -430,7 +434,7 @@ class REGINA_API Dim4Edge :
          *
          * @return the read-only triangulated link of this edge.
          */
-        const Dim2Triangulation* buildLink() const;
+        const Triangulation<2>* buildLink() const;
 
         /**
          * Returns a full 2-manifold triangulation describing
@@ -484,7 +488,7 @@ class REGINA_API Dim4Edge :
          *
          * @return a newly constructed triangulation of the link of this edge.
          */
-        Dim2Triangulation* buildLinkDetail(bool labels = true,
+        Triangulation<2>* buildLinkDetail(bool labels = true,
             Dim4Isomorphism** inclusion = 0) const;
 
         /**
@@ -518,7 +522,7 @@ class REGINA_API Dim4Edge :
          */
         Dim4Edge(Dim4Component* component);
 
-    friend class Dim4Triangulation;
+    friend class Triangulation<4>;
         /**< Allow access to private members. */
 };
 
@@ -631,7 +635,7 @@ inline bool Dim4Edge::hasBadLink() const {
     return (invalid_ & Dim4Edge::INVALID_LINK);
 }
 
-inline const Dim2Triangulation* Dim4Edge::buildLink() const {
+inline const Triangulation<2>* Dim4Edge::buildLink() const {
     if (! link_) {
         // This is a construct-on-demand member; cast away constness to
         // set it here.

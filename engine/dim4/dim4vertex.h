@@ -52,11 +52,15 @@
 namespace regina {
 
 class Dim4BoundaryComponent;
-class Dim4Component;
-class Dim4Isomorphism;
-class Dim4Pentachoron;
-class Dim4Triangulation;
-class NTriangulation;
+
+template <int> class Component;
+template <int> class Isomorphism;
+template <int> class Simplex;
+template <int> class Triangulation;
+typedef Component<4> Dim4Component;
+typedef Isomorphism<4> Dim4Isomorphism;
+typedef Simplex<4> Dim4Pentachoron;
+typedef Triangulation<4> Dim4Triangulation;
 
 /**
  * \weakgroup dim4
@@ -175,7 +179,7 @@ class REGINA_API Dim4Vertex :
         Dim4BoundaryComponent* boundaryComponent_;
             /**< The boundary component that this vertex is a part of,
                  or 0 if this vertex is internal. */
-        NTriangulation* link_;
+        Triangulation<3>* link_;
             /**< The link of this vertex, given as a full-blown
                  3-manifold triangulation.  It is guaranteed that 3-sphere
                  recognition has already been run over this triangulation
@@ -318,7 +322,7 @@ class REGINA_API Dim4Vertex :
          *
          * @return the read-only triangulated link of this vertex.
          */
-        const NTriangulation* buildLink() const;
+        const Triangulation<3>* buildLink() const;
 
         /**
          * Returns a full 3-manifold triangulation describing
@@ -370,18 +374,18 @@ class REGINA_API Dim4Vertex :
          *
          * @return a newly constructed triangulation of the link of this vertex.
          */
-        NTriangulation* buildLinkDetail(bool labels = true,
+        Triangulation<3>* buildLinkDetail(bool labels = true,
             Dim4Isomorphism** inclusion = 0) const;
 
         /**
          * A synonym for buildLink().  This is provided for consistency
-         * with the 3-dimensional analogue NTriangulation::getLink().
+         * with the 3-dimensional analogue Triangulation<3>::getLink().
          *
          * See buildLink() for further details.
          *
          * @return the read-only triangulated link of this vertex.
          */
-        const NTriangulation* getLink() const;
+        const Triangulation<3>* getLink() const;
 
         /**
          * Determines if this vertex is valid.
@@ -456,7 +460,7 @@ class REGINA_API Dim4Vertex :
          */
         Dim4Vertex(Dim4Component* component);
 
-    friend class Dim4Triangulation;
+    friend class Triangulation<4>;
         /**< Allow access to private members. */
 };
 
@@ -552,11 +556,11 @@ inline unsigned long Dim4Vertex::getDegree() const {
     return emb_.size();
 }
 
-inline const NTriangulation* Dim4Vertex::buildLink() const {
+inline const Triangulation<3>* Dim4Vertex::buildLink() const {
     return link_;
 }
 
-inline const NTriangulation* Dim4Vertex::getLink() const {
+inline const Triangulation<3>* Dim4Vertex::getLink() const {
     return link_;
 }
 

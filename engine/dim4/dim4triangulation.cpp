@@ -42,7 +42,7 @@
 
 namespace regina {
 
-Dim4Triangulation::Dim4Triangulation(const std::string& description) :
+Dim4Triangulation::Triangulation(const std::string& description) :
         knownSimpleLinks_(false) {
     Dim4Triangulation* attempt;
 
@@ -58,7 +58,7 @@ void Dim4Triangulation::writeTextLong(std::ostream& out) const {
     ensureSkeleton();
 
     out << "Size of the skeleton:\n";
-    out << "  Pentachora: " << pentachora_.size() << '\n';
+    out << "  Pentachora: " << simplices_.size() << '\n';
     out << "  Tetrahedra: " << tetrahedra_.size() << '\n';
     out << "  Triangles: " << triangles_.size() << '\n';
     out << "  Edges: " << edges_.size() << '\n';
@@ -74,8 +74,8 @@ void Dim4Triangulation::writeTextLong(std::ostream& out) const {
     out << "Pentachoron gluing:\n";
     out << "  Pent  |  glued to:     (0123)     (0124)     (0134)     (0234)     (1234)\n";
     out << "  ------+------------------------------------------------------------------\n";
-    for (pentPos=0; pentPos < pentachora_.size(); pentPos++) {
-        pent = pentachora_[pentPos];
+    for (pentPos=0; pentPos < simplices_.size(); pentPos++) {
+        pent = simplices_[pentPos];
         out << "  " << std::setw(4) << pentPos << "  |           ";
         for (i = 4; i >= 0; --i) {
             out << " ";
@@ -99,8 +99,8 @@ void Dim4Triangulation::writeTextLong(std::ostream& out) const {
     out << "Vertices:\n";
     out << "  Pent  |  vertex:    0   1   2   3   4\n";
     out << "  ------+------------------------------\n";
-    for (pentPos = 0; pentPos < pentachora_.size(); ++pentPos) {
-        pent = pentachora_[pentPos];
+    for (pentPos = 0; pentPos < simplices_.size(); ++pentPos) {
+        pent = simplices_[pentPos];
         out << "  " << std::setw(4) << pentPos << "  |          ";
         for (i = 0; i < 5; ++i)
             out << ' ' << std::setw(3) <<
@@ -112,8 +112,8 @@ void Dim4Triangulation::writeTextLong(std::ostream& out) const {
     out << "Edges:\n";
     out << "  Pent  |  edge:   01  02  03  04  12  13  14  23  24  34\n";
     out << "  ------+------------------------------------------------\n";
-    for (pentPos = 0; pentPos < pentachora_.size(); ++pentPos) {
-        pent = pentachora_[pentPos];
+    for (pentPos = 0; pentPos < simplices_.size(); ++pentPos) {
+        pent = simplices_[pentPos];
         out << "  " << std::setw(4) << pentPos << "  |        ";
         for (i = 0; i < 5; ++i)
             for (j = i + 1; j < 5; ++j)
@@ -126,8 +126,8 @@ void Dim4Triangulation::writeTextLong(std::ostream& out) const {
     out << "Triangles:\n";
     out << "  Pent  |  triangle:  012 013 014 023 024 034 123 124 134 234\n";
     out << "  ------+----------------------------------------------------\n";
-    for (pentPos = 0; pentPos < pentachora_.size(); ++pentPos) {
-        pent = pentachora_[pentPos];
+    for (pentPos = 0; pentPos < simplices_.size(); ++pentPos) {
+        pent = simplices_[pentPos];
         out << "  " << std::setw(4) << pentPos << "  |            ";
         for (i = 0; i < 5; ++i)
             for (j = i + 1; j < 5; ++j)
@@ -142,8 +142,8 @@ void Dim4Triangulation::writeTextLong(std::ostream& out) const {
     out << "Tetrahedra:\n";
     out << "  Pent  |  facet:  0123 0124 0134 0234 1234\n";
     out << "  ------+----------------------------------\n";
-    for (pentPos = 0; pentPos < pentachora_.size(); ++pentPos) {
-        pent = pentachora_[pentPos];
+    for (pentPos = 0; pentPos < simplices_.size(); ++pentPos) {
+        pent = simplices_[pentPos];
         out << "  " << std::setw(4) << pentPos << "  |         ";
         for (i = 4; i >= 0; --i)
             out << ' ' << std::setw(4) << tetrahedronIndex(
@@ -184,8 +184,8 @@ void Dim4Triangulation::writeXMLPacketData(std::ostream& out) const {
     Dim4Pentachoron* adjPent;
     int facet;
 
-    out << "  <pentachora npent=\"" << pentachora_.size() << "\">\n";
-    for (it = pentachora_.begin(); it != pentachora_.end(); ++it) {
+    out << "  <pentachora npent=\"" << simplices_.size() << "\">\n";
+    for (it = simplices_.begin(); it != simplices_.end(); ++it) {
         out << "    <pent desc=\"" <<
             xmlEncodeSpecialChars((*it)->getDescription()) << "\"> ";
         for (facet = 0; facet < 5; ++facet) {
@@ -223,7 +223,7 @@ void Dim4Triangulation::cloneFrom(const Dim4Triangulation& X) {
     removeAllPentachora();
 
     PentachoronIterator it;
-    for (it = X.pentachora_.begin(); it != X.pentachora_.end(); ++it)
+    for (it = X.simplices_.begin(); it != X.simplices_.end(); ++it)
         newPentachoron((*it)->getDescription());
 
     // Make the gluings.
@@ -233,7 +233,7 @@ void Dim4Triangulation::cloneFrom(const Dim4Triangulation& X) {
     NPerm5 adjPerm;
     int facet;
     pentPos = 0;
-    for (it = X.pentachora_.begin(); it != X.pentachora_.end(); ++it) {
+    for (it = X.simplices_.begin(); it != X.simplices_.end(); ++it) {
         pent = *it;
         for (facet = 0; facet < 5; ++facet) {
             adjPent = pent->adjacentPentachoron(facet);
@@ -242,8 +242,8 @@ void Dim4Triangulation::cloneFrom(const Dim4Triangulation& X) {
                 adjPerm = pent->adjacentGluing(facet);
                 if (adjPos > pentPos ||
                         (adjPos == pentPos && adjPerm[facet] > facet)) {
-                    pentachora_[pentPos]->joinTo(facet,
-                        pentachora_[adjPos], adjPerm);
+                    simplices_[pentPos]->joinTo(facet,
+                        simplices_[adjPos], adjPerm);
                 }
             }
         }

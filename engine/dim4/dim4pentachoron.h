@@ -117,7 +117,7 @@ class REGINA_API Simplex<4> : public SimplexBase<4> {
          *
          * See adjacentSimplex() for further information.
          */
-        Dim4Pentachoron* adjacentPentachoron(int facet) const;
+        Simplex* adjacentPentachoron(int facet) const;
 
         /**
          * Returns the vertex in the 4-manifold triangulation skeleton
@@ -324,7 +324,7 @@ class REGINA_API Simplex<4> : public SimplexBase<4> {
          *
          * @param tri the triangulation to which the new pentachoron belongs.
          */
-        Dim4Pentachoron(Dim4Triangulation* tri);
+        Simplex(Dim4Triangulation* tri);
         /**
          * Creates a new pentachoron with the given description and
          * no facets joined to anything.
@@ -332,7 +332,7 @@ class REGINA_API Simplex<4> : public SimplexBase<4> {
          * @param desc the description to give the new pentachoron.
          * @param tri the triangulation to which the new pentachoron belongs.
          */
-        Dim4Pentachoron(const std::string& desc, Dim4Triangulation* tri);
+        Simplex(const std::string& desc, Dim4Triangulation* tri);
 
     friend class Triangulation<4>;
     friend class TriangulationBase<4>;
@@ -354,46 +354,46 @@ namespace regina {
 // Inline functions for Dim4Pentachoron
 
 inline Dim4Pentachoron* Dim4Pentachoron::adjacentPentachoron(int facet) const {
-    return adj_[facet];
+    return adjacentSimplex(facet);
 }
 
 inline Dim4Vertex* Dim4Pentachoron::getVertex(int vertex) const {
-    tri_->ensureSkeleton();
+    getTriangulation()->ensureSkeleton();
     return vertex_[vertex];
 }
 
 inline Dim4Edge* Dim4Pentachoron::getEdge(int edge) const {
-    tri_->ensureSkeleton();
+    getTriangulation()->ensureSkeleton();
     return edge_[edge];
 }
 
 inline Dim4Triangle* Dim4Pentachoron::getTriangle(int triang) const {
-    tri_->ensureSkeleton();
+    getTriangulation()->ensureSkeleton();
     return triangle_[triang];
 }
 
 inline Dim4Tetrahedron* Dim4Pentachoron::getTetrahedron(int tet) const {
-    tri_->ensureSkeleton();
+    getTriangulation()->ensureSkeleton();
     return tet_[tet];
 }
 
 inline NPerm5 Dim4Pentachoron::getVertexMapping(int vertex) const {
-    tri_->ensureSkeleton();
+    getTriangulation()->ensureSkeleton();
     return vertexMapping_[vertex];
 }
 
 inline NPerm5 Dim4Pentachoron::getEdgeMapping(int edge) const {
-    tri_->ensureSkeleton();
+    getTriangulation()->ensureSkeleton();
     return edgeMapping_[edge];
 }
 
 inline NPerm5 Dim4Pentachoron::getTriangleMapping(int triang) const {
-    tri_->ensureSkeleton();
+    getTriangulation()->ensureSkeleton();
     return triangleMapping_[triang];
 }
 
 inline NPerm5 Dim4Pentachoron::getTetrahedronMapping(int tet) const {
-    tri_->ensureSkeleton();
+    getTriangulation()->ensureSkeleton();
     return tetMapping_[tet];
 }
 

@@ -76,13 +76,13 @@ class REGINA_API Isomorphism<4> : public IsomorphismBase<4> {
          * triangulation associated with this isomorphism.
          * This is allowed to be zero.
          */
-        Dim4Isomorphism(unsigned nPentachora);
+        Isomorphism(unsigned nPentachora);
         /**
          * Creates a new copy of the given isomorphism.
          *
          * @param copy the isomorphism to copy.
          */
-        Dim4Isomorphism(const Dim4Isomorphism& copy);
+        Isomorphism(const Isomorphism& copy);
 
         /**
          * A dimension-specific alias for simpImage().
@@ -106,21 +106,21 @@ typedef Isomorphism<4> Dim4Isomorphism;
 
 /*@}*/
 
-// Inline functions for Dim4Isomorphism
+// Inline functions for Isomorphism<4>
 
-inline Dim4Isomorphism::Dim4Isomorphism(unsigned sourcePentachora) :
+inline Isomorphism<4>::Isomorphism(unsigned sourcePentachora) :
         IsomorphismBase<4>(sourcePentachora) {
 }
 
-inline Dim4Isomorphism::Dim4Isomorphism(const Dim4Isomorphism& cloneMe) :
+inline Isomorphism<4>::Isomorphism(const Dim4Isomorphism& cloneMe) :
         IsomorphismBase<4>(cloneMe) {
 }
 
-inline int& Dim4Isomorphism::pentImage(unsigned sourcePent) {
+inline int& Isomorphism<4>::pentImage(unsigned sourcePent) {
     return simpImage_[sourcePent];
 }
 
-inline int Dim4Isomorphism::pentImage(unsigned sourcePent) const {
+inline int Isomorphism<4>::pentImage(unsigned sourcePent) const {
     return simpImage_[sourcePent];
 }
 

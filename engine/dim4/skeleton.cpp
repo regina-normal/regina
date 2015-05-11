@@ -51,7 +51,7 @@ void Dim4Triangulation::calculateSkeleton() const {
 
     // Get rid of the empty triangulation now, so that all the helper routines
     // can happily assume at least one pentachoron.
-    if (pentachora_.empty())
+    if (simplices_.empty())
         return;
 
     // Off we go!
@@ -117,7 +117,7 @@ void Dim4Triangulation::calculateSkeleton() const {
 
 void Dim4Triangulation::calculateTetrahedra() const {
     PentachoronIterator it;
-    for (it = pentachora_.begin(); it != pentachora_.end(); ++it)
+    for (it = simplices_.begin(); it != simplices_.end(); ++it)
         std::fill((*it)->tet_, (*it)->tet_ + 5,
             static_cast<Dim4Tetrahedron*>(0));
 
@@ -128,7 +128,7 @@ void Dim4Triangulation::calculateTetrahedra() const {
     // We process facets in lexicographical order, according to the
     // truncated permutation labels that are displayed to the user.
     // This means working through facets in the order 4,3,2,1,0.
-    for (it = pentachora_.begin(); it != pentachora_.end(); ++it) {
+    for (it = simplices_.begin(); it != simplices_.end(); ++it) {
         pent = *it;
         for (facet = 4; facet >= 0; --facet) {
             // Have we already checked out this facet from the other side?
@@ -167,19 +167,19 @@ void Dim4Triangulation::calculateTetrahedra() const {
 void Dim4Triangulation::calculateVertices() const {
     PentachoronIterator it;
     int loopVtx;
-    for (it = pentachora_.begin(); it != pentachora_.end(); ++it)
+    for (it = simplices_.begin(); it != simplices_.end(); ++it)
         for (loopVtx = 0; loopVtx < 5; ++loopVtx)
             (*it)->vertex_[loopVtx] = 0;
 
     Dim4Vertex* label;
     typedef std::pair<Dim4Pentachoron*, int> Spec; /* (pent, vertex) */
-    Spec* stack = new Spec[pentachora_.size() * 5];
+    Spec* stack = new Spec[simplices_.size() * 5];
     unsigned stackSize = 0;
     Dim4Pentachoron *loopPent, *pent, *adjPent;
     int vertex, adjVertex;
     int facet;
     NPerm5 adjMap;
-    for (it = pentachora_.begin(); it != pentachora_.end(); ++it) {
+    for (it = simplices_.begin(); it != simplices_.end(); ++it) {
         loopPent = *it;
         for (loopVtx = 0; loopVtx < 5; ++loopVtx) {
             if (loopPent->vertex_[loopVtx])
@@ -240,19 +240,19 @@ void Dim4Triangulation::calculateVertices() const {
 void Dim4Triangulation::calculateEdges() const {
     PentachoronIterator it;
     int loopEdge;
-    for (it = pentachora_.begin(); it != pentachora_.end(); ++it)
+    for (it = simplices_.begin(); it != simplices_.end(); ++it)
         for (loopEdge = 0; loopEdge < 10; ++loopEdge)
             (*it)->edge_[loopEdge] = 0;
 
     Dim4Edge* label;
     typedef std::pair<Dim4Pentachoron*, int> Spec; /* (pent, edge) */
-    Spec* stack = new Spec[pentachora_.size() * 10];
+    Spec* stack = new Spec[simplices_.size() * 10];
     unsigned stackSize = 0;
     Dim4Pentachoron *loopPent, *pent, *adjPent;
     int edge, adjEdge;
     int facet;
     NPerm5 adjMap;
-    for (it = pentachora_.begin(); it != pentachora_.end(); ++it) {
+    for (it = simplices_.begin(); it != simplices_.end(); ++it) {
         loopPent = *it;
         for (loopEdge = 0; loopEdge < 10; ++loopEdge) {
             if (loopPent->edge_[loopEdge])
@@ -326,7 +326,7 @@ void Dim4Triangulation::calculateEdges() const {
 void Dim4Triangulation::calculateTriangles() const {
     PentachoronIterator it;
     int loopTriangle;
-    for (it = pentachora_.begin(); it != pentachora_.end(); ++it)
+    for (it = simplices_.begin(); it != simplices_.end(); ++it)
         for (loopTriangle = 0; loopTriangle < 10; ++loopTriangle)
             (*it)->triangle_[loopTriangle] = 0;
 
@@ -335,7 +335,7 @@ void Dim4Triangulation::calculateTriangles() const {
     int tri, adjTri;
     NPerm5 map, adjMap;
     int dir, exitFacet;
-    for (it = pentachora_.begin(); it != pentachora_.end(); ++it) {
+    for (it = simplices_.begin(); it != simplices_.end(); ++it) {
         loopPent = *it;
         for (loopTriangle = 9; loopTriangle >= 0; --loopTriangle) {
             if (loopPent->triangle_[loopTriangle])
@@ -416,7 +416,7 @@ void Dim4Triangulation::calculateTriangles() const {
 
 void Dim4Triangulation::calculateBoundary() const {
     // Are there any boundary tetrahedra at all?
-    long nBdry = 2 * tetrahedra_.size() - 5 * pentachora_.size();
+    long nBdry = 2 * tetrahedra_.size() - 5 * simplices_.size();
     if (nBdry == 0)
         return;
 
@@ -606,7 +606,7 @@ void Dim4Triangulation::calculateBoundary() const {
 }
 
 void Dim4Triangulation::calculateVertexLinks() const {
-    long n = pentachora_.size();
+    long n = simplices_.size();
     if (n == 0)
         return;
 
@@ -637,7 +637,7 @@ void Dim4Triangulation::calculateVertexLinks() const {
 
     long index = 0; // Index into the tet[] array.
     for (pentIdx = 0; pentIdx < n; ++pentIdx) {
-        pent = pentachora_[pentIdx];
+        pent = simplices_[pentIdx];
         for (vertexIdx = 0; vertexIdx < 5; ++vertexIdx) {
             // Glue this piece of vertex link to any adjacent pieces of
             // vertex link.
