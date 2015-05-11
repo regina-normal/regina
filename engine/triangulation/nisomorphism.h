@@ -33,7 +33,7 @@
 /* end stub */
 
 /*! \file triangulation/nisomorphism.h
- *  \brief Deals with combinatorial isomorphisms of triangulations.
+ *  \brief Deals with combinatorial isomorphisms of 3-manifold triangulations.
  */
 
 #ifndef __NISOMORPHISM_H
@@ -43,8 +43,6 @@
 
 #include "regina-core.h"
 #include "generic/isomorphism.h"
-#include "maths/nperm4.h"
-#include "triangulation/ntetface.h"
 
 namespace regina {
 
@@ -73,17 +71,17 @@ class REGINA_API Isomorphism<3> : public IsomorphismBase<3> {
          *
          * \ifacespython Not present.
          *
-         * @param nSimplices the number of simplices in the source
+         * @param nTetrahedra the number of simplices in the source
          * triangulation associated with this isomorphism.
          * This is allowed to be zero.
          */
-        Isomorphism(unsigned sourceTetrahedra);
+        Isomorphism(unsigned nTetrahedra);
         /**
          * Creates a new copy of the given isomorphism.
          *
          * @param copy the isomorphism to copy.
          */
-        Isomorphism(const Isomorphism& cloneMe);
+        Isomorphism(const Isomorphism& copy);
 
         /**
          * A deprecated dimension-specific alias for size().
