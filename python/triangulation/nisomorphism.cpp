@@ -37,6 +37,7 @@
 #include "triangulation/ntriangulation.h"
 
 using namespace boost::python;
+using regina::Isomorphism;
 using regina::NIsomorphism;
 
 namespace {
@@ -52,8 +53,8 @@ namespace {
 }
 
 void addNIsomorphism() {
-    class_<NIsomorphism, std::auto_ptr<NIsomorphism>, boost::noncopyable>
-            ("NIsomorphism", init<const NIsomorphism&>())
+    class_<Isomorphism<3>, std::auto_ptr<Isomorphism<3>>, boost::noncopyable>
+            ("Isomorphism3", init<const NIsomorphism&>())
         .def("size", &NIsomorphism::size)
         .def("getSourceSimplices", &NIsomorphism::getSourceSimplices)
         .def("getSourceTetrahedra", &NIsomorphism::getSourceTetrahedra)
@@ -78,5 +79,7 @@ void addNIsomorphism() {
         .staticmethod("random")
         .staticmethod("identity")
     ;
+
+    scope().attr("NIsomorphism") = scope().attr("Isomorphism3");
 }
 

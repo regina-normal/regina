@@ -38,6 +38,7 @@
 
 using namespace boost::python;
 using regina::Dim2Isomorphism;
+using regina::Isomorphism;
 
 namespace {
     int (Dim2Isomorphism::*simpImage_const)(unsigned) const =
@@ -52,8 +53,8 @@ namespace {
 }
 
 void addDim2Isomorphism() {
-    class_<Dim2Isomorphism, std::auto_ptr<Dim2Isomorphism>, boost::noncopyable>
-            ("Dim2Isomorphism", init<const Dim2Isomorphism&>())
+    class_<Isomorphism<2>, std::auto_ptr<Isomorphism<2>>, boost::noncopyable>
+            ("Isomorphism2", init<const Dim2Isomorphism&>())
         .def("size", &Dim2Isomorphism::size)
         .def("getSourceSimplices", &Dim2Isomorphism::getSourceSimplices)
         .def("getSourceTriangles", &Dim2Isomorphism::getSourceTriangles)
@@ -78,5 +79,7 @@ void addDim2Isomorphism() {
         .staticmethod("random")
         .staticmethod("identity")
     ;
+
+    scope().attr("Dim2Isomorphism") = scope().attr("Isomorphism2");
 }
 

@@ -73,17 +73,17 @@ class REGINA_API Isomorphism<2> : public IsomorphismBase<2> {
          *
          * \ifacespython Not present.
          *
-         * @param nSimplices the number of simplices in the source
+         * @param nTriangles the number of simplices in the source
          * triangulation associated with this isomorphism.
          * This is allowed to be zero.
          */
-        Isomorphism(unsigned sourceTriangles);
+        Isomorphism(unsigned nTriangles);
         /**
          * Creates a new copy of the given isomorphism.
          *
          * @param copy the isomorphism to copy.
          */
-        Isomorphism(const Isomorphism& cloneMe);
+        Isomorphism(const Isomorphism& copy);
 
         /**
          * A deprecated dimension-specific alias for size().
