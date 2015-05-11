@@ -43,6 +43,7 @@
 
 #include "regina-core.h"
 #include "generic/isomorphism.h"
+#include "maths/nperm4.h"
 
 namespace regina {
 
