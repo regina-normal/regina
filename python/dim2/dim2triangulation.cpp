@@ -125,13 +125,17 @@ void addDim2Triangulation() {
             boost::noncopyable>("Triangulation2")
         .def(init<const Dim2Triangulation&>())
         .def(init<const std::string&>())
+        .def("size", &Dim2Triangulation::size)
         .def("getNumberOfTriangles", &Dim2Triangulation::getNumberOfTriangles)
         .def("getNumberOfSimplices", &Dim2Triangulation::getNumberOfSimplices)
         .def("getTriangles", Dim2_getTriangles_list)
         .def("getSimplices", Dim2_getTriangles_list)
+        .def("simplices", Dim2_getTriangles_list)
         .def("getTriangle", getTriangle_non_const,
             return_value_policy<reference_existing_object>())
         .def("getSimplex", getTriangle_non_const,
+            return_value_policy<reference_existing_object>())
+        .def("simplex", getTriangle_non_const,
             return_value_policy<reference_existing_object>())
         .def("triangleIndex", &Dim2Triangulation::triangleIndex)
         .def("simplexIndex", &Dim2Triangulation::simplexIndex)
@@ -184,7 +188,6 @@ void addDim2Triangulation() {
         .def("isContainedIn", isContainedIn_ptr,
             return_value_policy<manage_new_object>())
         .def("isEmpty", &Dim2Triangulation::isEmpty)
-        .def("size", &Dim2Triangulation::size)
         .def("isValid", &Dim2Triangulation::isValid)
         .def("getEulerChar", &Dim2Triangulation::getEulerChar)
         .def("isClosed", &Dim2Triangulation::isClosed)

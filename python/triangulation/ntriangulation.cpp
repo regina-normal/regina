@@ -208,11 +208,15 @@ void addNTriangulation() {
             boost::noncopyable>("Triangulation3")
         .def(init<const NTriangulation&>())
         .def(init<const std::string&>())
+        .def("size", &NTriangulation::size)
         .def("getNumberOfTetrahedra", &NTriangulation::getNumberOfTetrahedra)
         .def("getNumberOfSimplices", &NTriangulation::getNumberOfSimplices)
         .def("getTetrahedra", getTetrahedra_list)
         .def("getSimplices", getTetrahedra_list)
+        .def("simplices", getTetrahedra_list)
         .def("getTetrahedron", getTetrahedron_non_const,
+            return_value_policy<reference_existing_object>())
+        .def("simplex", getTetrahedron_non_const,
             return_value_policy<reference_existing_object>())
         .def("getSimplex", getTetrahedron_non_const,
             return_value_policy<reference_existing_object>())
@@ -279,7 +283,6 @@ void addNTriangulation() {
         .def("hasNegativeIdealBoundaryComponents",
             &NTriangulation::hasNegativeIdealBoundaryComponents)
         .def("isEmpty", &NTriangulation::isEmpty)
-        .def("size", &NTriangulation::size)
         .def("getEulerCharTri", &NTriangulation::getEulerCharTri)
         .def("getEulerCharManifold", &NTriangulation::getEulerCharManifold)
         .def("getEulerCharacteristic", &NTriangulation::getEulerCharacteristic)
