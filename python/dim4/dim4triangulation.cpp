@@ -39,6 +39,7 @@
 
 using namespace boost::python;
 using regina::Dim4Triangulation;
+using regina::Triangulation;
 
 namespace {
     regina::Dim4Pentachoron* (Dim4Triangulation::*newPentachoron_void)() =
@@ -159,16 +160,21 @@ namespace {
 }
 
 void addDim4Triangulation() {
-    scope s = class_<Dim4Triangulation, bases<regina::NPacket>,
-            std::auto_ptr<Dim4Triangulation>,
-            boost::noncopyable>("Dim4Triangulation")
+    {
+    scope s = class_<Triangulation<4>, bases<regina::NPacket>,
+            std::auto_ptr<Triangulation<4>>,
+            boost::noncopyable>("Triangulation4")
         .def(init<const Dim4Triangulation&>())
         .def(init<const std::string&>())
+        .def("size", &Dim4Triangulation::size)
         .def("getNumberOfPentachora", &Dim4Triangulation::getNumberOfPentachora)
         .def("getNumberOfSimplices", &Dim4Triangulation::getNumberOfSimplices)
         .def("getPentachora", Dim4_getPentachora_list)
         .def("getSimplices", Dim4_getPentachora_list)
+        .def("simplices", Dim4_getPentachora_list)
         .def("getPentachoron", getPentachoron_non_const,
+            return_value_policy<reference_existing_object>())
+        .def("simplex", getPentachoron_non_const,
             return_value_policy<reference_existing_object>())
         .def("getSimplex", getPentachoron_non_const,
             return_value_policy<reference_existing_object>())
@@ -190,6 +196,7 @@ void addDim4Triangulation() {
         .def("removeAllSimplices", &Dim4Triangulation::removeAllSimplices)
         .def("swapContents", &Dim4Triangulation::swapContents)
         .def("moveContentsTo", &Dim4Triangulation::moveContentsTo)
+        .def("countComponents", &Dim4Triangulation::countComponents)
         .def("getNumberOfComponents", &Dim4Triangulation::getNumberOfComponents)
         .def("getNumberOfBoundaryComponents",
             &Dim4Triangulation::getNumberOfBoundaryComponents)
@@ -197,12 +204,15 @@ void addDim4Triangulation() {
         .def("getNumberOfEdges", &Dim4Triangulation::getNumberOfEdges)
         .def("getNumberOfTriangles", &Dim4Triangulation::getNumberOfTriangles)
         .def("getNumberOfTetrahedra", &Dim4Triangulation::getNumberOfTetrahedra)
+        .def("components", Dim4_getComponents_list)
         .def("getComponents", Dim4_getComponents_list)
         .def("getBoundaryComponents", Dim4_getBoundaryComponents_list)
         .def("getVertices", Dim4_getVertices_list)
         .def("getEdges", Dim4_getEdges_list)
         .def("getTriangles", Dim4_getTriangles_list)
         .def("getTetrahedra", Dim4_getTetrahedra_list)
+        .def("component", &Dim4Triangulation::component,
+            return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim4Triangulation::getComponent,
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &Dim4Triangulation::getBoundaryComponent,
@@ -233,7 +243,9 @@ void addDim4Triangulation() {
         .def("getEulerCharManifold", &Dim4Triangulation::getEulerCharManifold)
         .def("isValid", &Dim4Triangulation::isValid)
         .def("isIdeal", &Dim4Triangulation::isIdeal)
+        .def("hasBoundaryFacets", &Dim4Triangulation::hasBoundaryFacets)
         .def("hasBoundaryTetrahedra", &Dim4Triangulation::hasBoundaryTetrahedra)
+        .def("countBoundaryFacets", &Dim4Triangulation::countBoundaryFacets)
         .def("getNumberOfBoundaryTetrahedra",
             &Dim4Triangulation::getNumberOfBoundaryTetrahedra)
         .def("isClosed", &Dim4Triangulation::isClosed)
@@ -270,13 +282,18 @@ void addDim4Triangulation() {
         .def("isoSigDetail", isoSig_relabelling)
         .def("fromIsoSig", &Dim4Triangulation::fromIsoSig,
             return_value_policy<manage_new_object>())
+        .def("isoSigComponentSize", &Dim4Triangulation::isoSigComponentSize)
         .def("dumpConstruction", &Dim4Triangulation::dumpConstruction)
         .staticmethod("fromIsoSig")
+        .staticmethod("isoSigComponentSize")
     ;
 
     s.attr("packetType") = regina::PacketType(Dim4Triangulation::packetType);
 
     implicitly_convertible<std::auto_ptr<Dim4Triangulation>,
         std::auto_ptr<regina::NPacket> >();
+    }
+
+    scope().attr("Dim4Triangulation") = scope().attr("Triangulation4");
 }
 
