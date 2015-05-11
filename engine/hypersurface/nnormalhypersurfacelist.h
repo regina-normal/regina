@@ -68,12 +68,7 @@ class NXMLPacketReader;
  * @{
  */
 
-/**
- * Stores information about the normal hypersurface list packet.
- * See the general PacketInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct PacketInfo<PACKET_NORMALHYPERSURFACELIST> {
     typedef NNormalHypersurfaceList Class;
@@ -81,6 +76,7 @@ struct PacketInfo<PACKET_NORMALHYPERSURFACELIST> {
         return "Normal Hypersurface List";
     }
 };
+#endif
 
 /**
  * A packet representing a collection of normal hypersurfaces in a 4-manifold

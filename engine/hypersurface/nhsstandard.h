@@ -55,12 +55,7 @@ class NNormalHypersurfaceVectorStandard;
  * @{
  */
 
-/**
- * Stores information about standard normal hypersurface coordinates.
- * See the general HyperInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct HyperInfo<HS_STANDARD> {
     typedef NNormalHypersurfaceVectorStandard Class;
@@ -68,6 +63,7 @@ struct HyperInfo<HS_STANDARD> {
         return "Standard normal (tet-prism)";
     }
 };
+#endif
 
 /**
  * A normal hypersurface vector using standard tetrahedron-prism coordinates.
