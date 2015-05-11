@@ -85,7 +85,7 @@ typedef Isomorphism<3> NIsomorphism;
 typedef Simplex<3> NTetrahedron;
 
 /**
- * \addtogroup triangulation Triangulations
+ * \addtogroup triangulation 3-Manifold Triangulations
  * Triangulations of 3-manifolds.
  * @{
  */
@@ -874,6 +874,7 @@ class REGINA_API Triangulation<3> :
          * standard.
          */
         bool isStandard() const;
+        bool hasBoundaryFacets() const;
         /**
          * A dimension-specific alias for hasBoundaryFacets().
          *
@@ -3275,7 +3276,7 @@ class REGINA_API Triangulation<3> :
          * In most cases this routine is followed immediately by firing
          * a packet change event.
          */
-        virtual void clearAllProperties();
+        void clearAllProperties();
 
         /**
          * Checks that the permutations on face gluings are valid and
@@ -3715,13 +3716,18 @@ inline bool Triangulation<3>::isStandard() const {
     return standard_;
 }
 
-inline bool Triangulation<3>::hasBoundaryTriangles() const {
+inline bool Triangulation<3>::hasBoundaryFacets() const {
+    // Override, since we can do this faster in dimension 3.
     ensureSkeleton();
     return (triangles_.size() > 2 * simplices_.size());
 }
 
+inline bool Triangulation<3>::hasBoundaryTriangles() const {
+    return hasBoundaryFacets();
+}
+
 inline bool Triangulation<3>::hasBoundaryFaces() const {
-    return hasBoundaryTriangles();
+    return hasBoundaryFacets();
 }
 
 inline size_t Triangulation<3>::countBoundaryFacets() const {
