@@ -358,50 +358,42 @@ inline Dim4Pentachoron* Dim4Pentachoron::adjacentPentachoron(int facet) const {
 }
 
 inline Dim4Vertex* Dim4Pentachoron::getVertex(int vertex) const {
-    if (! tri_->calculatedSkeleton_)
-        tri_->calculateSkeleton();
+    tri_->ensureSkeleton();
     return vertex_[vertex];
 }
 
 inline Dim4Edge* Dim4Pentachoron::getEdge(int edge) const {
-    if (! tri_->calculatedSkeleton_)
-        tri_->calculateSkeleton();
+    tri_->ensureSkeleton();
     return edge_[edge];
 }
 
 inline Dim4Triangle* Dim4Pentachoron::getTriangle(int triang) const {
-    if (! tri_->calculatedSkeleton_)
-        tri_->calculateSkeleton();
+    tri_->ensureSkeleton();
     return triangle_[triang];
 }
 
 inline Dim4Tetrahedron* Dim4Pentachoron::getTetrahedron(int tet) const {
-    if (! tri_->calculatedSkeleton_)
-        tri_->calculateSkeleton();
+    tri_->ensureSkeleton();
     return tet_[tet];
 }
 
 inline NPerm5 Dim4Pentachoron::getVertexMapping(int vertex) const {
-    if (! tri_->calculatedSkeleton_)
-        tri_->calculateSkeleton();
+    tri_->ensureSkeleton();
     return vertexMapping_[vertex];
 }
 
 inline NPerm5 Dim4Pentachoron::getEdgeMapping(int edge) const {
-    if (! tri_->calculatedSkeleton_)
-        tri_->calculateSkeleton();
+    tri_->ensureSkeleton();
     return edgeMapping_[edge];
 }
 
 inline NPerm5 Dim4Pentachoron::getTriangleMapping(int triang) const {
-    if (! tri_->calculatedSkeleton_)
-        tri_->calculateSkeleton();
+    tri_->ensureSkeleton();
     return triangleMapping_[triang];
 }
 
 inline NPerm5 Dim4Pentachoron::getTetrahedronMapping(int tet) const {
-    if (! tri_->calculatedSkeleton_)
-        tri_->calculateSkeleton();
+    tri_->ensureSkeleton();
     return tetMapping_[tet];
 }
 

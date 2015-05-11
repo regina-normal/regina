@@ -879,8 +879,7 @@ bool Dim4Triangulation::shellBoundary(Dim4Pentachoron* p,
         bool check, bool perform) {
     // To perform the move we don't even need a skeleton.
     if (check) {
-        if (! calculatedSkeleton_)
-            calculateSkeleton();
+        ensureSkeleton();
 
         // All edges and triangles must be valid.
         int i;

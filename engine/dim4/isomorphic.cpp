@@ -42,10 +42,8 @@ namespace regina {
 unsigned long Dim4Triangulation::findIsomorphisms(
         const Dim4Triangulation& other, std::list<Dim4Isomorphism*>& results,
         bool completeIsomorphism, bool firstOnly) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    if (! other.calculatedSkeleton_)
-        other.calculateSkeleton();
+    ensureSkeleton();
+    other.ensureSkeleton();
 
     // Deal with the empty triangulation first.
     if (pentachora_.empty()) {

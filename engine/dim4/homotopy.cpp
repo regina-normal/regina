@@ -45,8 +45,7 @@ const NGroupPresentation& Dim4Triangulation::getFundamentalGroup() const {
     if (getNumberOfPentachora() == 0)
         return *(fundGroup_ = ans);
 
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
 
     // Each non-boundary not-in-forest tetrahedron is a generator.
     // Each non-boundary triangle is a relation.

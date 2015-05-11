@@ -183,7 +183,7 @@ struct FaceTraits<4, 3> {
 
 template <>
 struct FaceTraits<4, 4> {
-    typedef Dim4Pentachoron Face;
+    typedef Simplex<4> Face;
 };
 #endif
 

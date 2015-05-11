@@ -33,7 +33,7 @@
 /* end stub */
 
 /*! \file dim4/dim4triangulation.h
- *  \brief Deals with 4-manifold triangulations.
+ *  \brief Deals with 4-dimensional triangulations.
  */
 
 #ifndef __DIM4TRIANGULATION_H
@@ -48,6 +48,7 @@
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "generic/ngenerictriangulation.h"
+#include "generic/triangulation.h"
 #include "packet/npacket.h"
 #include "utilities/nmarkedvector.h"
 #include "utilities/nproperty.h"
@@ -61,15 +62,19 @@
 namespace regina {
 
 class Dim4BoundaryComponent;
-class Dim4Component;
 class Dim4Edge;
-class Dim4Pentachoron;
 class Dim4Tetrahedron;
 class Dim4Triangle;
-class Dim4Triangulation;
 class Dim4Vertex;
 class NXMLDim4TriangulationReader;
 class NXMLPacketReader;
+
+template <int> class Component;
+template <int> class Isomorphism;
+template <int> class SimplexBase;
+template <int> class Simplex;
+typedef Isomorphism<4> Dim4Isomorphism;
+typedef Simplex<4> Dim4Pentachoron;
 
 /**
  * \addtogroup dim4 4-Manifold Triangulations
@@ -77,12 +82,7 @@ class NXMLPacketReader;
  * @{
  */
 
-/**
- * Stores information about the 4-manifold triangulation packet.
- * See the general PacketInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct PacketInfo<PACKET_DIM4TRIANGULATION> {
     typedef Dim4Triangulation Class;
@@ -90,22 +90,30 @@ struct PacketInfo<PACKET_DIM4TRIANGULATION> {
         return "4-Manifold Triangulation";
     }
 };
+#endif
 
 /**
- * Stores the triangulation of a 4-manifold along with its
- * various cellular structures and other information.  A 4-manifold
- * triangulation is built from pentachora; a \e pentachoron is a
+ * Represents a 4-dimensional triangulation, typically of a 4-manifold.
+ *
+ * This is a specialisation of the generic Triangulation class template;
+ * see the Triangulation documentation for a general overview of how
+ * the triangulation classes work.
+ *
+ * This 4-dimensional specialisation offers significant extra functionality,
+ * including many functions specific to 4-manifolds, plus rich details of
+ * the combinatorial structure of the triangulation.
+ *
+ * In particular, this class also tracks vertices, edges, triangles and
+ * tetrahedra of the triangulation (as represented by the classes Dim4Vertex,
+ * Dim4Edge, Dim4Triangle and Dim4Tetrahedron), as well as boundary components
+ * (as represented by the class Dim4BoundaryComponent).  Such objects are
+ * temporary: whenever the triangulation changes, these objects will be
+ * deleted and rebuilt, and so any pointers to them will become invalid.
+ * Likewise, if the triangulation is deleted then these objects will be
+ * deleted alongside it.
+ *
+ * A 4-manifold triangulation is built from pentachora: a \e pentachoron is a
  * 4-dimensional simplex, with five vertices.
- *
- * When the triangulation is deleted, the corresponding
- * pentachora, the cellular structure and all other properties
- * will be deallocated.
- *
- * Elements of the 3-, 2-, 1- and 0-skeletons (tetrahedra, triangles, edges,
- * vertices respectively) are always temporary, as are components and
- * boundary components.  Whenever a change occurs with the triangulation,
- * these objects will all be deleted and a new skeletal structure will be
- * calculated.  The same is true of various other triangulation properties.
  */
 class REGINA_API Dim4Triangulation : public NPacket,
         public NGenericTriangulation<4> {
@@ -114,7 +122,8 @@ class REGINA_API Dim4Triangulation : public NPacket,
     public:
         typedef std::vector<Dim4Pentachoron*>::const_iterator
                 PentachoronIterator;
-            /**< Used to iterate through pentachora. */
+            /**< A dimension-specific alias for SimplexIterator, used to
+                 iterate through pentachora. */
         typedef std::vector<Dim4Tetrahedron*>::const_iterator
                 TetrahedronIterator;
             /**< Used to iterate through tetrahedra. */
@@ -124,15 +133,11 @@ class REGINA_API Dim4Triangulation : public NPacket,
             /**< Used to iterate through edges. */
         typedef std::vector<Dim4Vertex*>::const_iterator VertexIterator;
             /**< Used to iterate through vertices. */
-        typedef std::vector<Dim4Component*>::const_iterator ComponentIterator;
-            /**< Used to iterate through components. */
         typedef std::vector<Dim4BoundaryComponent*>::const_iterator
                 BoundaryComponentIterator;
             /**< Used to iterate through boundary components. */
 
     private:
-        mutable bool calculatedSkeleton_;
-            /**< Has the skeleton been calculated? */
         mutable bool knownSimpleLinks_;
             /**< Is it known that all vertex links are 3-spheres or 3-balls?
                  This may be \c true even if the skeleton has not yet been
@@ -142,8 +147,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
                  links, or it may mean that the vertex links have not yet
                  been calculated. */
 
-        NMarkedVector<Dim4Pentachoron> pentachora_;
-            /**< The pentachora that form the triangulation. */
         mutable NMarkedVector<Dim4Tetrahedron> tetrahedra_;
             /**< The tetrahedra in the triangulation skeleton. */
         mutable NMarkedVector<Dim4Triangle> triangles_;
@@ -152,8 +155,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
             /**< The edges in the triangulation skeleton. */
         mutable NMarkedVector<Dim4Vertex> vertices_;
             /**< The vertices in the triangulation skeleton. */
-        mutable NMarkedVector<Dim4Component> components_;
-            /**< The components that form the triangulation. */
         mutable NMarkedVector<Dim4BoundaryComponent> boundaryComponents_;
             /**< The components that form the boundary of the
                  triangulation. */
@@ -162,8 +163,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
             /**< Is the triangulation valid? */
         mutable bool ideal_;
             /**< Is the triangulation ideal? */
-        mutable bool orientable_;
-            /**< Is the triangulation orientable? */
 
         mutable NProperty<NGroupPresentation, StoreManagedPtr> fundGroup_;
             /**< Fundamental group of the triangulation. */
@@ -183,16 +182,16 @@ class REGINA_API Dim4Triangulation : public NPacket,
          *
          * Creates an empty triangulation.
          */
-        Dim4Triangulation();
+        Triangulation();
         /**
          * Copy constructor.
          *
-         * Creates a new triangulation identical to the given triangulation.
+         * Creates a copy of the given triangulation.
          * The packet tree structure and packet label are \e not copied.
          *
-         * @param cloneMe the triangulation to clone.
+         * @param copy the triangulation to copy.
          */
-        Dim4Triangulation(const Dim4Triangulation& cloneMe);
+        Triangulation(const Dim4Triangulation& copy);
         /**
          * "Magic" constructor that tries to find some way to interpret
          * the given string as a triangulation.
@@ -212,14 +211,14 @@ class REGINA_API Dim4Triangulation : public NPacket,
          * @param description a string that describes a 4-manifold
          * triangulation.
          */
-        Dim4Triangulation(const std::string& description);
+        Triangulation(const std::string& description);
         /**
          * Destroys this triangulation.
          *
          * The constituent pentachora, the cellular structure and all other
          * properties will also be deallocated.
          */
-        virtual ~Dim4Triangulation();
+        virtual ~Triangulation();
 
         /*@}*/
         /**
@@ -238,247 +237,65 @@ class REGINA_API Dim4Triangulation : public NPacket,
         /*@{*/
 
         /**
-         * Returns the number of pentachora in the triangulation.
+         * A dimension-specific alias for size().
          *
-         * @return the number of pentachora.
+         * See size() for further information.
          */
         unsigned long getNumberOfPentachora() const;
         /**
-         * A dimension-agnostic alias for getNumberOfPentachora().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
+         * A dimension-specific alias for simplices().
          *
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 4-manifold triangulations means a pentachoron).
-         *
-         * See getNumberOfPentachora() for further information.
-         */
-        unsigned long getNumberOfSimplices() const;
-        /**
-         * Returns all pentachora in the triangulation.
-         *
-         * The reference returned will remain valid for as long as the
-         * triangulation exists, always reflecting the pentachora currently
-         * in the triangulation.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of all pentachora.
+         * See simplices() for further information.
          */
         const std::vector<Dim4Pentachoron*>& getPentachora() const;
         /**
-         * A dimension-agnostic alias for getPentachora().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
+         * A dimension-specific alias for simplex().
          *
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 4-manifold triangulations means a pentachoron).
-         *
-         * See getPentachora() for further information.
-         */
-        const std::vector<Dim4Pentachoron*>& getSimplices() const;
-        /**
-         * Returns the pentachoron with the given index number in the
-         * triangulation.  Note that pentachoron indexing may change when
-         * a pentachoron is added or removed from the triangulation.
-         *
-         * @param index specifies which pentachoron to return; this
-         * value should be between 0 and getNumberOfPentachora()-1 inclusive.
-         * @return the <tt>index</tt>th pentachoron in the triangulation.
+         * See simplex() for further information.
          */
         Dim4Pentachoron* getPentachoron(unsigned long index);
         /**
-         * A dimension-agnostic alias for getPentachoron().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
+         * A dimension-specific alias for simplex().
          *
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 4-manifold triangulations means a pentachoron).
-         *
-         * See getPentachoron() for further information.
-         */
-        Dim4Pentachoron* getSimplex(unsigned long index);
-        /**
-         * Returns the pentachoron with the given index number in the
-         * triangulation.  Note that pentachoron indexing may change when
-         * a pentachoron is added or removed from the triangulation.
-         *
-         * @param index specifies which pentachoron to return; this
-         * value should be between 0 and getNumberOfPentachora()-1 inclusive.
-         * @return the <tt>index</tt>th pentachoron in the triangulation.
+         * See simplex() for further information.
          */
         const Dim4Pentachoron* getPentachoron(unsigned long index) const;
         /**
-         * A dimension-agnostic alias for getPentachoron().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
+         * A dimension-specific alias for simplexIndex().
          *
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 4-manifold triangulations means a pentachoron).
-         *
-         * See getPentachoron() for further information.
+         * See simplexIndex() for further information.
          */
-        const Dim4Pentachoron* getSimplex(unsigned long index) const;
+        long pentachoronIndex(const Dim4Pentachoron* tet) const;
         /**
-         * Returns the index of the given pentachoron in the triangulation.
+         * A dimension-specific alias for newSimplex().
          *
-         * Note that pentachoron indexing may change when a pentachoron
-         * is added or removed from the triangulation.
-         *
-         * \pre The given pentachoron is contained in this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.  If you are passing the result of some other
-         * routine that \e might return null (such as
-         * Dim4Pentachoron::adjacentPentachoron), it might be worth explicitly
-         * testing for null beforehand.
-         *
-         * @param pent specifies which pentachoron to find in the triangulation.
-         * @return the index of the specified pentachoron, where 0 is
-         * the first pentachoron, 1 is the second and so on.
-         */
-        long pentachoronIndex(const Dim4Pentachoron* pent) const;
-        /**
-         * A dimension-agnostic alias for pentachoronIndex().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         *
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 4-manifold triangulations means a pentachoron).
-         *
-         * See pentachoronIndex() for further information.
-         */
-        long simplexIndex(const Dim4Pentachoron* pent) const;
-        /**
-         * Creates a new pentachoron and adds it to this triangulation.
-         * The new pentachoron will have an empty description.
-         * All five facets of the new pentachoron will be boundary facets.
-         *
-         * The new pentachoron will become the last pentachoron in this
-         * triangulation.
-         *
-         * @return the new pentachoron.
+         * See newSimplex() for further information.
          */
         Dim4Pentachoron* newPentachoron();
         /**
-         * A dimension-agnostic alias for newPentachoron().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
+         * A dimension-specific alias for newSimplex().
          *
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 4-manifold triangulations means a pentachoron).
-         *
-         * See newPentachoron() for further information.
-         */
-        Dim4Pentachoron* newSimplex();
-        /**
-         * Creates a new pentachoron with the given description and adds
-         * it to this triangulation.
-         * All five facets of the new pentachoron will be boundary facets.
-         *
-         * @param desc the description to assign to the new pentachoron.
-         * @return the new pentachoron.
+         * See newSimplex() for further information.
          */
         Dim4Pentachoron* newPentachoron(const std::string& desc);
         /**
-         * A dimension-agnostic alias for newPentachoron().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
+         * A dimension-specific alias for removeSimplex().
          *
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 4-manifold triangulations means a pentachoron).
-         *
-         * See newPentachoron() for further information.
+         * See removeSimplex() for further information.
          */
-        Dim4Pentachoron* newSimplex(const std::string& desc);
+        void removePentachoron(Dim4Pentachoron* tet);
         /**
-         * Removes the given pentachoron from the triangulation.
-         * All triangles glued to this pentachoron will be unglued.
-         * The pentachoron will be deallocated.
+         * A dimension-specific alias for removeSimplexAt().
          *
-         * \pre The given pentachoron exists in the triangulation.
-         *
-         * @param pent the pentachoron to remove.
-         */
-        void removePentachoron(Dim4Pentachoron* pent);
-        /**
-         * A dimension-agnostic alias for removePentachoron().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         *
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 4-manifold triangulations means a pentachoron).
-         *
-         * See removePentachoron() for further information.
-         */
-        void removeSimplex(Dim4Pentachoron* pent);
-        /**
-         * Removes the pentachoron with the given index number
-         * from the triangulation.  Note that pentachoron indexing may
-         * change when a pentachoron is added or removed from the
-         * triangulation.
-         *
-         * All triangles glued to this pentachoron will be unglued.
-         * The pentachoron will be deallocated.
-         *
-         * @param index specifies which pentachoron to remove; this
-         * should be between 0 and getNumberOfPentachora()-1 inclusive.
+         * See removeSimplexAt() for further information.
          */
         void removePentachoronAt(unsigned long index);
         /**
-         * A dimension-agnostic alias for removePentachoronAt().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
+         * A dimension-specific alias for removeAllSimplices().
          *
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 4-manifold triangulations means a pentachoron).
-         *
-         * See removePentachoronAt() for further information.
-         */
-        void removeSimplexAt(unsigned long index);
-        /**
-         * Removes all pentachora from the triangulation.
-         * All pentachora will be deallocated.
+         * See removeAllSimplices() for further information.
          */
         void removeAllPentachora();
-        /**
-         * A dimension-agnostic alias for removeAllPentachora().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         *
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 4-manifold triangulations means a pentachoron).
-         *
-         * See removeAllPentachora() for further information.
-         */
-        void removeAllSimplices();
-        /**
-         * Swaps the contents of this and the given triangulation.
-         * That is, all pentachora that belong to this triangulation
-         * will be moved to \a other, and all pentachora that belong to
-         * \a other will be moved to this triangulation.
-         *
-         * All Dim4Pentachoron pointers or references will remain valid.
-         *
-         * @param other the triangulation whose contents should be
-         * swapped with this.
-         */
-        void swapContents(Dim4Triangulation& other);
-        /**
-         * Moves the contents of this triangulation into the given
-         * destination triangulation, without destroying any pre-existing
-         * contents.  That is, all pentachora that currently belong to
-         * \a dest will remain there, and all pentachora that belong to this
-         * triangulation will be moved across as additional
-         * pentachora in \a dest.
-         *
-         * All Dim4Pentachoron pointers or references will remain valid.
-         * After this operation, this triangulation will be empty.
-         *
-         * @param dest the triangulation to which pentachora should be
-         * moved.
-         */
-        void moveContentsTo(Dim4Triangulation& dest);
 
         /*@}*/
         /**
@@ -496,12 +313,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
          * @return the number of boundary components.
          */
         unsigned long getNumberOfBoundaryComponents() const;
-        /**
-         * Returns the number of components in this triangulation.
-         *
-         * @return the number of components.
-         */
-        unsigned long getNumberOfComponents() const;
         /**
          * Returns the number of vertices in this triangulation.
          *
@@ -542,22 +353,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
         template <int dim>
         unsigned long getNumberOfFaces() const;
 
-        /**
-         * Returns all components of this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * components will be deleted and replaced with new
-         * ones.  Thus the objects contained in this list should be
-         * considered temporary only.
-         *
-         * This reference to the list however will remain valid and
-         * up-to-date for as long as the triangulation exists.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of all components.
-         */
-        const std::vector<Dim4Component*>& getComponents() const;
         /**
          * Returns all boundary components of this triangulation.
          *
@@ -644,18 +439,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
          */
         const std::vector<Dim4Tetrahedron*>& getTetrahedra() const;
         /**
-         * Returns the requested component of this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * components will be deleted and replaced with new
-         * ones.  Thus this object should be considered temporary only.
-         *
-         * @param index the index of the desired component, ranging from 0
-         * to getNumberOfComponents()-1 inclusive.
-         * @return the requested component.
-         */
-        Dim4Component* getComponent(unsigned long index) const;
-        /**
          * Returns the requested boundary component of this triangulation.
          *
          * Bear in mind that each time the triangulation changes, the
@@ -715,20 +498,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
          * @return the requested tetrahedron.
          */
         Dim4Tetrahedron* getTetrahedron(unsigned long index) const;
-        /**
-         * Returns the index of the given component in the triangulation.
-         *
-         * \pre The given component belongs to this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.
-         *
-         * @param component specifies which component to find in the
-         * triangulation.
-         * @return the index of the specified component, where 0 is the first
-         * component, 1 is the second and so on.
-         */
-        long componentIndex(const Dim4Component* component) const;
         /**
          * Returns the index of the given boundary component
          * in the triangulation.
@@ -803,7 +572,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
          */
         /*@{*/
 
-        using NGenericTriangulation<4>::isIdenticalTo;
         using NGenericTriangulation<4>::isIsomorphicTo;
         using NGenericTriangulation<4>::isContainedIn;
         using NGenericTriangulation<4>::findAllIsomorphisms;
@@ -815,8 +583,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
          * \name Basic Properties
          */
         /*@{*/
-
-        using NGenericTriangulation<4>::isEmpty;
 
         /**
          * Returns the Euler characteristic of this triangulation.
@@ -901,18 +667,20 @@ class REGINA_API Dim4Triangulation : public NPacket,
          * @return \c true if and only if this triangulation is ideal.
          */
         bool isIdeal() const;
+        bool hasBoundaryFacets() const;
         /**
-         * Determines if this triangulation has any boundary tetrahedra.
+         * A dimension-specific alias for hasBoundaryFacets().
          *
-         * @return \c true if and only if there are boundary tetrahedra.
+         * See hasBoundaryFacets() for further information.
          */
         bool hasBoundaryTetrahedra() const;
+        size_t countBoundaryFacets(); const;
         /**
-         * Returns the number of boundary tetrahedra in this triangulation.
+         * A dimension-specific alias for countBoundaryFacets().
          *
-         * @return the total number of boundary tetrahedra.
+         * See countBoundaryFacets() for further information.
          */
-        unsigned long getNumberOfBoundaryTetrahedra() const;
+        size_t countBoundaryTetrahedra() const;
         /**
          * Determines if this triangulation is closed.
          * This is the case if and only if it has no boundary components.
@@ -924,18 +692,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
          * @return \c true if and only if this triangulation is closed.
          */
         bool isClosed() const;
-        /**
-         * Determines if this triangulation is orientable.
-         *
-         * @return \c true if and only if this triangulation is orientable.
-         */
-        bool isOrientable() const;
-        /**
-         * Determines if this triangulation is connected.
-         *
-         * @return \c true if and only if this triangulation is connected.
-         */
-        bool isConnected() const;
 
         /*@}*/
         /**
@@ -1466,117 +1222,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
         bool idealToFinite();
 
         /*@}*/
-        /**
-         * \name Building Triangulations
-         */
-        /*@{*/
-
-        /**
-         * Inserts a copy of the given triangulation into this triangulation.
-         *
-         * The new pentachora will be inserted into this triangulation
-         * in the order in which they appear in the given triangulation,
-         * and the numbering of their vertices (0-4) will not change.
-         * They will be given the same descriptions as appear in the
-         * given triangulation.
-         *
-         * @param source the triangulation whose copy will be inserted.
-         */
-        void insertTriangulation(const Dim4Triangulation& source);
-        /**
-         * Inserts into this triangulation a set of pentachora and their
-         * gluings as described by the given integer arrays.
-         *
-         * This routine is provided to make it easy to hard-code a
-         * medium-sized triangulation in a C++ source file.  All of the
-         * pertinent data can be hard-coded into a pair of integer arrays at
-         * the beginning of the source file, avoiding an otherwise tedious
-         * sequence of many joinTo() calls.
-         *
-         * An additional \a nPentachora pentachora will be inserted into
-         * this triangulation.  The relationships between these pentachora
-         * should be stored in the two arrays as follows.  Note that the
-         * new pentachora are numbered from 0 to (\a nPentachora - 1), and
-         * individual pentachoron facets are numbered from 0 to 4.
-         *
-         * The \a adjacencies array describes which pentachoron facets are
-         * joined to which others.  Specifically, <tt>adjacencies[p][f]</tt>
-         * should contain the number of the pentachoron joined to facet \a f
-         * of pentachoron \a p.  If this facet is to be left as a
-         * boundary tetrahedron, <tt>adjacencies[p][f]</tt> should be -1.
-         *
-         * The \a gluings array describes the particular gluing permutations
-         * used when joining these pentachoron facets together.  Specifically,
-         * <tt>gluings[p][f][0..4]</tt> should describe the permutation
-         * used to join facet \a f of pentachoron \a p to its adjacent
-         * pentachoron.  These five integers should be 0, 1, 2, 3 and 4 in some
-         * order, so that <tt>gluings[p][f][i]</tt> contains the image of
-         * \a i under this permutation.  If facet \a f of pentachoron \a p
-         * is to be left as a boundary tetrahedron, <tt>gluings[p][f][0..4]</tt>
-         * may contain anything (and will be duly ignored).
-         *
-         * It is the responsibility of the caller of this routine to
-         * ensure that the given arrays are correct and consistent.
-         * No error checking will be performed by this routine.
-         *
-         * Note that, for an existing triangulation, dumpConstruction()
-         * will output a pair of C++ arrays that can be copied into a
-         * source file and used to reconstruct the triangulation via
-         * this routine.
-         *
-         * \ifacespython Not present.
-         *
-         * @param nPentachora the number of additional pentachora to insert.
-         * @param adjacencies describes which of the new pentachoron
-         * facets are to be identified.  This array must have initial
-         * dimension at least \a nPentachora.
-         * @param gluings describes the specific gluing permutations by
-         * which these new pentachoron facets should be identified.  This
-         * array must also have initial dimension at least \a nPentachora.
-         */
-        void insertConstruction(unsigned long nPentachora,
-            const int adjacencies[][5], const int gluings[][5][5]);
-
-        /*@}*/
-        /**
-         * \name Exporting Triangulations
-         */
-        /*@{*/
-
-        using NGenericTriangulation<4>::isoSig;
-
-        /**
-         * Returns C++ code that can be used with insertConstruction()
-         * to reconstruct this triangulation.
-         *
-         * The code produced will consist of the following:
-         *
-         * - the declaration and initialisation of two integer arrays,
-         *   describing the pentachoron gluings in this trianguation;
-         * - two additional lines that declare a new Dim4Triangulation and
-         *   call insertConstruction() to rebuild this triangulation.
-         *
-         * The main purpose of this routine is to generate the two integer
-         * arrays, which can be tedious and error-prone to code up by hand.
-         *
-         * Note that the number of lines of code produced grows linearly
-         * with the number of pentachora.  If this triangulation is very
-         * large, the returned string will be very large as well.
-         *
-         * @return the C++ code that was generated.
-         */
-        std::string dumpConstruction() const;
-
-        /*@}*/
-        /**
-         * \name Importing Triangulations
-         */
-        /*@{*/
-
-        using NGenericTriangulation<4>::fromIsoSig;
-        using NGenericTriangulation<4>::isoSigComponentSize;
-
-        /*@}*/
 
         static NXMLPacketReader* getXMLReader(NPacket* parent,
             NXMLTreeResolver& resolver);
@@ -1595,12 +1240,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
         void cloneFrom(const Dim4Triangulation& from);
 
     private:
-        void deletePentachora();
-            /**< Deallocates all pentachora and empties the list. */
-        void deleteSkeleton();
-            /**< Deallocates all skeletal objects and empties all
-                 corresponding lists. */
-
         /**
          * Clears any calculated properties and declares them all
          * unknown.  All dynamic memory used for storing known
@@ -1609,23 +1248,16 @@ class REGINA_API Dim4Triangulation : public NPacket,
          * In most cases this routine is followed immediately by firing
          * a packet change event.
          */
-        virtual void clearAllProperties();
+        void clearAllProperties();
 
-        /**
-         * Recalculates vertices, edges, triangles, tetrahedra, components and
-         * boundary components, as well as various other skeletal properties
-         * such as validity and vertex links.
-         * All appropriate lists are filled.
-         *
-         * \pre All skeletal lists are empty.
-         */
+        void deleteSkeleton();
         void calculateSkeleton() const;
 
         /**
          * Internal to calculateSkeleton().  See the comments within
          * calculateSkeleton() for precisely what this routine does.
          */
-        void calculateComponents() const;
+        void calculateTetrahedra() const;
         /**
          * Internal to calculateSkeleton().  See the comments within
          * calculateSkeleton() for precisely what this routine does.
@@ -1726,7 +1358,9 @@ class REGINA_API Dim4Triangulation : public NPacket,
         static bool compatiblePents(
                 Dim4Pentachoron* src, Dim4Pentachoron* dest, NPerm5 p);
 
-    friend class regina::Dim4Pentachoron;
+    friend class regina::Simplex<4>;
+    friend class regina::SimplexBase<4>;
+    friend class regina::TriangulationBase<4>;
     friend class regina::NGenericTriangulation<4>;
     friend class regina::NXMLDim4TriangulationReader;
 };
@@ -1751,18 +1385,16 @@ namespace regina {
 
 // Inline functions for Dim4Triangulation
 
-inline Dim4Triangulation::Dim4Triangulation() :
-        NPacket(), calculatedSkeleton_(false), knownSimpleLinks_(false) {
+inline Dim4Triangulation::Dim4Triangulation() : knownSimpleLinks_(false) {
 }
 
 inline Dim4Triangulation::Dim4Triangulation(const Dim4Triangulation& cloneMe) :
-        NPacket(), calculatedSkeleton_(false), knownSimpleLinks_(false) {
+        knownSimpleLinks_(false) {
     cloneFrom(cloneMe);
 }
 
 inline Dim4Triangulation::~Dim4Triangulation() {
     clearAllProperties();
-    deletePentachora();
 }
 
 inline void Dim4Triangulation::writeTextShort(std::ostream& out) const {
@@ -1775,39 +1407,21 @@ inline bool Dim4Triangulation::dependsOnParent() const {
 }
 
 inline unsigned long Dim4Triangulation::getNumberOfPentachora() const {
-    return pentachora_.size();
-}
-
-inline unsigned long Dim4Triangulation::getNumberOfSimplices() const {
-    return pentachora_.size();
+    return size();
 }
 
 inline const std::vector<Dim4Pentachoron*>& Dim4Triangulation::getPentachora()
         const {
-    return (const std::vector<Dim4Pentachoron*>&)(pentachora_);
-}
-
-inline const std::vector<Dim4Pentachoron*>& Dim4Triangulation::getSimplices()
-        const {
-    return (const std::vector<Dim4Pentachoron*>&)(pentachora_);
+    return getSimplices();
 }
 
 inline Dim4Pentachoron* Dim4Triangulation::getPentachoron(unsigned long index) {
-    return pentachora_[index];
-}
-
-inline Dim4Pentachoron* Dim4Triangulation::getSimplex(unsigned long index) {
-    return pentachora_[index];
+    return getSimplex(index);
 }
 
 inline const Dim4Pentachoron* Dim4Triangulation::getPentachoron(
         unsigned long index) const {
-    return pentachora_[index];
-}
-
-inline const Dim4Pentachoron* Dim4Triangulation::getSimplex(
-        unsigned long index) const {
-    return pentachora_[index];
+    return getSimplex(index);
 }
 
 inline long Dim4Triangulation::pentachoronIndex(const Dim4Pentachoron* pent)
@@ -1815,109 +1429,49 @@ inline long Dim4Triangulation::pentachoronIndex(const Dim4Pentachoron* pent)
     return pent->markedIndex();
 }
 
-inline long Dim4Triangulation::simplexIndex(const Dim4Pentachoron* pent)
-        const {
-    return pent->markedIndex();
-}
-
 inline Dim4Pentachoron* Dim4Triangulation::newPentachoron() {
-    ChangeEventSpan span(this);
-    Dim4Pentachoron* pent = new Dim4Pentachoron(this);
-    pentachora_.push_back(pent);
-    clearAllProperties();
-    return pent;
-}
-
-inline Dim4Pentachoron* Dim4Triangulation::newSimplex() {
-    return newPentachoron();
+    return newSimplex();
 }
 
 inline Dim4Pentachoron* Dim4Triangulation::newPentachoron(
         const std::string& desc) {
-    ChangeEventSpan span(this);
-    Dim4Pentachoron* pent = new Dim4Pentachoron(desc, this);
-    pentachora_.push_back(pent);
-    clearAllProperties();
-    return pent;
-}
-
-inline Dim4Pentachoron* Dim4Triangulation::newSimplex(
-        const std::string& desc) {
-    return newPentachoron(desc);
+    return newSimplex(desc);
 }
 
 inline void Dim4Triangulation::removePentachoron(Dim4Pentachoron* pent) {
-    ChangeEventSpan span(this);
-
-    pent->isolate();
-    pentachora_.erase(pentachora_.begin() + pentachoronIndex(pent));
-    delete pent;
-
-    clearAllProperties();
-}
-
-inline void Dim4Triangulation::removeSimplex(Dim4Pentachoron* pent) {
-    removePentachoron(pent);
+    removeSimplex(pent);
 }
 
 inline void Dim4Triangulation::removePentachoronAt(unsigned long index) {
-    ChangeEventSpan span(this);
-
-    Dim4Pentachoron* ans = pentachora_[index];
-    ans->isolate();
-    pentachora_.erase(pentachora_.begin() + index);
-    delete ans;
-
-    clearAllProperties();
-}
-
-inline void Dim4Triangulation::removeSimplexAt(unsigned long index) {
-    removePentachoronAt(index);
+    removeSimplexAt(index);
 }
 
 inline void Dim4Triangulation::removeAllPentachora() {
-    ChangeEventSpan span(this);
-    deletePentachora();
-    clearAllProperties();
-}
-
-inline void Dim4Triangulation::removeAllSimplices() {
-    removeAllPentachora();
+    removeAllSimplices();
 }
 
 inline unsigned long Dim4Triangulation::getNumberOfBoundaryComponents() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return boundaryComponents_.size();
 }
 
-inline unsigned long Dim4Triangulation::getNumberOfComponents() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return components_.size();
-}
-
 inline unsigned long Dim4Triangulation::getNumberOfVertices() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return vertices_.size();
 }
 
 inline unsigned long Dim4Triangulation::getNumberOfEdges() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return edges_.size();
 }
 
 inline unsigned long Dim4Triangulation::getNumberOfTriangles() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return triangles_.size();
 }
 
 inline unsigned long Dim4Triangulation::getNumberOfTetrahedra() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return tetrahedra_.size();
 }
 
@@ -1946,88 +1500,59 @@ inline unsigned long Dim4Triangulation::getNumberOfFaces<4>() const {
     return getNumberOfPentachora();
 }
 
-inline const std::vector<Dim4Component*>& Dim4Triangulation::getComponents()
-        const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return (const std::vector<Dim4Component*>&)(components_);
-}
-
 inline const std::vector<Dim4BoundaryComponent*>&
         Dim4Triangulation::getBoundaryComponents() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return (const std::vector<Dim4BoundaryComponent*>&)(boundaryComponents_);
 }
 
 inline const std::vector<Dim4Vertex*>& Dim4Triangulation::getVertices() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return (const std::vector<Dim4Vertex*>&)(vertices_);
 }
 
 inline const std::vector<Dim4Edge*>& Dim4Triangulation::getEdges() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return (const std::vector<Dim4Edge*>&)(edges_);
 }
 
 inline const std::vector<Dim4Triangle*>& Dim4Triangulation::getTriangles()
         const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return (const std::vector<Dim4Triangle*>&)(triangles_);
 }
 
 inline const std::vector<Dim4Tetrahedron*>& Dim4Triangulation::getTetrahedra()
         const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return (const std::vector<Dim4Tetrahedron*>&)(tetrahedra_);
-}
-
-inline Dim4Component* Dim4Triangulation::getComponent(unsigned long index)
-        const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return components_[index];
 }
 
 inline Dim4BoundaryComponent* Dim4Triangulation::getBoundaryComponent(
         unsigned long index) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return boundaryComponents_[index];
 }
 
 inline Dim4Vertex* Dim4Triangulation::getVertex(unsigned long index) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return vertices_[index];
 }
 
 inline Dim4Edge* Dim4Triangulation::getEdge(unsigned long index) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return edges_[index];
 }
 
 inline Dim4Triangle* Dim4Triangulation::getTriangle(unsigned long index) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return triangles_[index];
 }
 
 inline Dim4Tetrahedron* Dim4Triangulation::getTetrahedron(unsigned long index)
         const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return tetrahedra_[index];
-}
-
-inline long Dim4Triangulation::componentIndex(const Dim4Component* component)
-        const {
-    return component->markedIndex();
 }
 
 inline long Dim4Triangulation::boundaryComponentIndex(
@@ -2053,8 +1578,7 @@ inline long Dim4Triangulation::tetrahedronIndex(const Dim4Tetrahedron* tet)
 }
 
 inline long Dim4Triangulation::getEulerCharTri() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
 
     // Cast away the unsignedness of std::vector::size().
     return static_cast<long>(vertices_.size())
@@ -2065,45 +1589,38 @@ inline long Dim4Triangulation::getEulerCharTri() const {
 }
 
 inline bool Dim4Triangulation::isValid() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return valid_;
 }
 
 inline bool Dim4Triangulation::isIdeal() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return ideal_;
 }
 
-inline bool Dim4Triangulation::hasBoundaryTetrahedra() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+inline bool Dim4Triangulation::hasBoundaryFacets() const {
+    // Override, since we can do this faster in dimension 4.
+    ensureSkeleton();
     return (2 * tetrahedra_.size() > 5 * pentachora_.size());
 }
 
-inline unsigned long Dim4Triangulation::getNumberOfBoundaryTetrahedra() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+inline bool Dim4Triangulation::hasBoundaryTetrahedra() const {
+    return hasBoundaryFacets();
+}
+
+inline size_t Dim4Triangulation::countBoundaryFacets() const {
+    // Override, since we can do this faster in dimension 4.
+    ensureSkeleton();
     return 2 * tetrahedra_.size() - 5 * pentachora_.size();
 }
 
+inline size_t Dim4Triangulation::countBoundaryTetrahedra() const {
+    return countBoundaryFacets();
+}
+
 inline bool Dim4Triangulation::isClosed() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return boundaryComponents_.empty();
-}
-
-inline bool Dim4Triangulation::isOrientable() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return orientable_;
-}
-
-inline bool Dim4Triangulation::isConnected() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return (components_.size() <= 1);
 }
 
 inline void Dim4Triangulation::simplifiedFundamentalGroup(

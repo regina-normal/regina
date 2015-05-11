@@ -47,8 +47,7 @@ const NAbelianGroup& Dim4Triangulation::getHomologyH1() const {
         return *(H1_ = new NAbelianGroup());
 
     // Calculate the first homology.
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
 
     // Build a presentation matrix.
     // Each non-boundary not-in-forest tetrahedron is a generator.
@@ -129,8 +128,7 @@ const NAbelianGroup& Dim4Triangulation::getHomologyH2() const {
     if (getNumberOfPentachora() == 0)
         return *(H1_ = new NAbelianGroup());
 
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
 
     // A placeholder implementation until the heavy machinery is ready.
     // This is correct, but inefficient (uses the full chain maps)
