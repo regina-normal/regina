@@ -1731,6 +1731,11 @@ class REGINA_API Dim4Triangulation : public NPacket,
     friend class regina::NXMLDim4TriangulationReader;
 };
 
+/**
+ * A convenience typedef for Triangulation<4>.
+ */
+typedef Triangulation<4> Dim4Triangulation;
+
 /*@}*/
 
 } // namespace regina

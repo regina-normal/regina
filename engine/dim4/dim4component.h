@@ -307,6 +307,11 @@ class REGINA_API Dim4Component :
         /**< Allow access to private members. */
 };
 
+/**
+ * A convenience typedef for Component<4>.
+ */
+typedef Component<4> Dim4Component;
+
 /*@}*/
 
 // Inline functions for Dim4Component

@@ -338,6 +338,11 @@ class REGINA_API Dim4Pentachoron : public SimplexBase<4> {
         /**< Allow access to private members. */
 };
 
+/**
+ * A convenience typedef for Simplex<4>.
+ */
+typedef Simplex<4> Dim4Pentachoron;
+
 /*@}*/
 
 } // namespace regina
