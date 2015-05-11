@@ -416,6 +416,7 @@ class REGINA_API Isomorphism : public IsomorphismBase<dim> {
 // Do not explicitly drag in the specialised headers for now.
 template <> class Isomorphism<2>;
 template <> class Isomorphism<3>;
+template <> class Isomorphism<4>;
 
 /*@}*/
 

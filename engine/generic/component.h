@@ -265,6 +265,7 @@ class REGINA_API Component : public ComponentBase<dim> {
 // Do not explicitly drag in the specialised headers for now.
 template <> class Component<2>;
 template <> class Component<3>;
+template <> class Component<4>;
 
 /*@}*/
 

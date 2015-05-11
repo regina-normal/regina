@@ -430,6 +430,7 @@ class REGINA_API Simplex : public SimplexBase<dim> {
 // Do not explicitly drag in the specialised headers for now.
 template <> class Simplex<2>;
 template <> class Simplex<3>;
+template <> class Simplex<4>;
 
 /*@}*/
 

@@ -117,21 +117,13 @@ struct DimTraits<3> {
 
 class Dim4Edge;
 class Dim4FacetPairing;
-class Dim4Isomorphism;
 class Dim4Tetrahedron;
 class Dim4Triangle;
-class Dim4Triangulation;
-class Dim4Pentachoron;
 class Dim4Vertex;
-class NPerm5;
 
 template <>
 struct DimTraits<4> {
-    typedef Dim4Triangulation Triangulation;
-    typedef Dim4Pentachoron Simplex;
-    typedef Dim4Isomorphism Isomorphism;
     typedef Dim4FacetPairing FacetPairing;
-    typedef NPerm5 Perm;
 };
 
 template <>

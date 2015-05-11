@@ -1053,6 +1053,7 @@ class REGINA_API Triangulation :
 // Do not explicitly drag in the specialised headers for now.
 template <> class Triangulation<2>;
 template <> class Triangulation<3>;
+template <> class Triangulation<4>;
 
 /*@}*/
 
