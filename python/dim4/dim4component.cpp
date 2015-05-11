@@ -42,12 +42,24 @@
 #include "dim4/dim4vertex.h"
 
 using namespace boost::python;
+using regina::Component;
 using regina::Dim4Component;
 
+namespace {
+    boost::python::list getSimplices_list(Dim4Component& t) {
+        boost::python::list ans;
+        for (std::vector<regina::Simplex<4>*>::const_iterator it =
+                t.simplices().begin(); it != t.simplices().end(); ++it)
+            ans.append(boost::python::ptr(*it));
+        return ans;
+    }
+}
+
 void addDim4Component() {
-    class_<Dim4Component, std::auto_ptr<Dim4Component>, boost::noncopyable>
-            ("Dim4Component", no_init)
+    class_<Component<4>, std::auto_ptr<Component<4>>, boost::noncopyable>
+            ("Component4", no_init)
         .def("index", &Dim4Component::index)
+        .def("size", &Dim4Component::size)
         .def("getNumberOfPentachora", &Dim4Component::getNumberOfPentachora)
         .def("getNumberOfSimplices", &Dim4Component::getNumberOfSimplices)
         .def("getNumberOfTetrahedra", &Dim4Component::getNumberOfTetrahedra)
@@ -56,6 +68,10 @@ void addDim4Component() {
         .def("getNumberOfVertices", &Dim4Component::getNumberOfVertices)
         .def("getNumberOfBoundaryComponents",
             &Dim4Component::getNumberOfBoundaryComponents)
+        .def("simplices", getSimplices_list)
+        .def("getSimplices", getSimplices_list)
+        .def("simplex", &Dim4Component::simplex,
+            return_value_policy<reference_existing_object>())
         .def("getPentachoron", &Dim4Component::getPentachoron,
             return_value_policy<reference_existing_object>())
         .def("getSimplex", &Dim4Component::getSimplex,
@@ -73,6 +89,9 @@ void addDim4Component() {
         .def("isIdeal", &Dim4Component::isIdeal)
         .def("isOrientable", &Dim4Component::isOrientable)
         .def("isClosed", &Dim4Component::isClosed)
+        .def("countBoundaryFacets", &Dim4Component::countBoundaryFacets)
+        .def("getNumberOfBoundaryFacets",
+            &Dim4Component::getNumberOfBoundaryFacets)
         .def("getNumberOfBoundaryTetrahedra",
             &Dim4Component::getNumberOfBoundaryTetrahedra)
         .def("str", &Dim4Component::str)
@@ -81,5 +100,7 @@ void addDim4Component() {
         .def("toStringLong", &Dim4Component::toStringLong)
         .def("__str__", &Dim4Component::str)
     ;
+
+    scope().attr("Dim4Component") = scope().attr("Component4");
 }
 

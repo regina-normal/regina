@@ -38,23 +38,24 @@
 #endif
 
 /*! \file dim4/dim4component.h
- *  \brief Deals with components of a 4-manifold triangulation.
+ *  \brief Deals with connected components of a 4-manifold triangulation.
  */
 
-#include <vector>
 #include "regina-core.h"
-#include "output.h"
-#include "utilities/nmarkedvector.h"
-#include <boost/noncopyable.hpp>
+#include "generic/component.h"
 
 namespace regina {
 
 class Dim4BoundaryComponent;
 class Dim4Edge;
-class Dim4Pentachoron;
 class Dim4Tetrahedron;
 class Dim4Triangle;
 class Dim4Vertex;
+
+template <int> class Simplex;
+template <int> class Triangulation;
+typedef Simplex<4> Dim4Pentachoron;
+typedef Triangulation<4> Dim4Triangulation;
 
 /**
  * \weakgroup dim4
@@ -62,17 +63,19 @@ class Dim4Vertex;
  */
 
 /**
- * Represents a component of a 4-manifold triangulation.
- * Components are highly temporary; once a triangulation changes, all
- * its component objects will be deleted and new ones will be created.
+ * Represents a connected component of a 4-manifold triangulation.
+ *
+ * This is a specialisation of the generic Component class template; see
+ * the Component documentation for an overview of how this class works.
+ *
+ * This 4-dimensional specialisation contains some extra functionality.
+ * In particular, each 4-dimensional component also stores details on
+ * lower-dimensional faces (i.e., vertices, edges, triangles and tetrahedra),
+ * as well as boundary components.
  */
-class REGINA_API Dim4Component :
-        public Output<Dim4Component>,
-        public boost::noncopyable,
-        public NMarkedElement {
+template <>
+class REGINA_API Component<4> : public ComponentBase<4> {
     private:
-        std::vector<Dim4Pentachoron*> pentachora_;
-            /**< List of pentachora in the component. */
         std::vector<Dim4Tetrahedron*> tetrahedra_;
             /**< List of tetrahedra in the component. */
         std::vector<Dim4Triangle*> triangles_;
@@ -86,36 +89,14 @@ class REGINA_API Dim4Component :
 
         bool ideal_;
             /**< Is the component ideal? */
-        bool orientable_;
-            /**< Is the component orientable? */
 
     public:
         /**
-         * Returns the index of this component in the underlying
-         * triangulation.  This is identical to calling
-         * <tt>getTriangulation()->componentIndex(this)</tt>.
+         * A dimension-specific alias for size().
          *
-         * @return the index of this component tetrahedron.
-         */
-        unsigned long index() const;
-
-        /**
-         * Returns the number of pentachora in this component.
-         *
-         * @return the number of pentachora.
+         * See size() for further information.
          */
         unsigned long getNumberOfPentachora() const;
-        /**
-         * A dimension-agnostic alias for getNumberOfPentachora().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         *
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 4-manifold triangulations means a pentachoron).
-         *
-         * See getNumberOfPentachora() for further information.
-         */
-        unsigned long getNumberOfSimplices() const;
 
         /**
          * Returns the number of tetrahedra in this component.
@@ -153,28 +134,11 @@ class REGINA_API Dim4Component :
         unsigned long getNumberOfBoundaryComponents() const;
 
         /**
-         * Returns the requested pentachoron in this component.
+         * A dimension-specific alias for simplex().
          *
-         * @param index the index of the requested pentachoron in the
-         * component.  This should be between 0 and
-         * getNumberOfPentachora()-1 inclusive.
-         * Note that the index of a pentachoron in the component need
-         * not be the index of the same pentachoron in the entire
-         * triangulation.
-         * @return the requested pentachoron.
+         * See simplex() for further information.
          */
         Dim4Pentachoron* getPentachoron(unsigned long index) const;
-        /**
-         * A dimension-agnostic alias for getPentachoron().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         *
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 4-manifold triangulations means a pentachoron).
-         *
-         * See getPentachoron() for further information.
-         */
-        Dim4Pentachoron* getSimplex(unsigned long index) const;
 
         /**
          * Returns the requested tetrahedron in this component.
@@ -251,13 +215,6 @@ class REGINA_API Dim4Component :
         bool isIdeal() const;
 
         /**
-         * Determines if this component is orientable.
-         * 
-         * @return \c true if and only if this component is orientable.
-         */
-        bool isOrientable() const;
-
-        /**
          * Determines if this component is closed.
          * This is the case if and only if it has no boundary.
          *
@@ -276,34 +233,17 @@ class REGINA_API Dim4Component :
          */
         unsigned long getNumberOfBoundaryTetrahedra() const;
 
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
-
     private:
         /**
          * Default constructor.
          *
-         * Marks the component as orientable and not ideal.
+         * Marks the component as orientable and not ideal, with no
+         * boundary facets.
          */
-        Dim4Component();
+        Component();
 
-    friend class Dim4Triangulation;
+    friend class Triangulation<4>;
+    friend class TriangulationBase<4>;
         /**< Allow access to private members. */
 };
 
@@ -314,20 +254,12 @@ typedef Component<4> Dim4Component;
 
 /*@}*/
 
-// Inline functions for Dim4Component
+// Inline functions for Component<4>
 
-inline Dim4Component::Dim4Component() : ideal_(false), orientable_(true) {
-}
-
-inline unsigned long Dim4Component::index() const {
-    return markedIndex();
+inline Dim4Component::Dim4Component() : ComponentBase<4>, ideal_(false) {
 }
 
 inline unsigned long Dim4Component::getNumberOfPentachora() const {
-    return pentachora_.size();
-}
-
-inline unsigned long Dim4Component::getNumberOfSimplices() const {
     return pentachora_.size();
 }
 
@@ -356,10 +288,6 @@ inline Dim4Pentachoron* Dim4Component::getPentachoron(unsigned long index)
     return pentachora_[index];
 }
 
-inline Dim4Pentachoron* Dim4Component::getSimplex(unsigned long index) const {
-    return pentachora_[index];
-}
-
 inline Dim4Tetrahedron* Dim4Component::getTetrahedron(unsigned long index)
         const {
     return tetrahedra_[index];
@@ -384,10 +312,6 @@ inline Dim4BoundaryComponent* Dim4Component::getBoundaryComponent(
 
 inline bool Dim4Component::isIdeal() const {
     return ideal_;
-}
-
-inline bool Dim4Component::isOrientable() const {
-    return orientable_;
 }
 
 inline bool Dim4Component::isClosed() const {

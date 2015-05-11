@@ -77,7 +77,8 @@ typedef Triangulation<4> Dim4Triangulation;
  * An implementation note: the Dim4Triangulation class is responsible for
  * creating, maintaining and destroying this extra skeletal information.
  */
-class REGINA_API Dim4Pentachoron : public SimplexBase<4> {
+template <>
+class REGINA_API Simplex<4> : public SimplexBase<4> {
     private:
         Dim4Vertex* vertex_[5];
             /**< Vertices in the triangulation skeleton that are

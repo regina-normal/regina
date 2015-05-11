@@ -61,7 +61,8 @@ namespace regina {
  * This 4-dimensional specialisation contains additional dimension-specific
  * aliases for some commonly-used routines.
  */
-class REGINA_API Dim4Isomorphism : public IsomorphismBase<4> {
+template <>
+class REGINA_API Isomorphism<4> : public IsomorphismBase<4> {
     public:
         /**
          * Creates a new isomorphism with no initialisation.
