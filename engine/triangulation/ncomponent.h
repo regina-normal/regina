@@ -38,22 +38,23 @@
 #endif
 
 /*! \file triangulation/ncomponent.h
- *  \brief Deals with components of a triangulation.
+ *  \brief Deals with connected components of a 3-manifold triangulation.
  */
 
-#include <vector>
 #include "regina-core.h"
-#include "output.h"
-#include "utilities/nmarkedvector.h"
-#include <boost/noncopyable.hpp>
+#include "generic/component.h"
 
 namespace regina {
 
-class NTetrahedron;
 class NTriangle;
 class NEdge;
 class NVertex;
 class NBoundaryComponent;
+
+template <int> class Simplex;
+template <int> class Triangulation;
+typedef Simplex<3> NTetrahedron;
+typedef Triangulation<3> NTriangulation;
 
 /**
  * \weakgroup triangulation
@@ -61,17 +62,19 @@ class NBoundaryComponent;
  */
 
 /**
- * Represents a component of a triangulation.
- * Components are highly temporary; once a triangulation changes, all
- * its component objects will be deleted and new ones will be created.
+ * Represents a connected component of a 3-manifold triangulation.
+ *
+ * This is a specialisation of the generic Component class template; see
+ * the Component documentation for an overview of how this class works.
+ *
+ * This 3-dimensional specialisation contains some extra functionality.
+ * In particular, each 3-dimensional component also stores details on
+ * lower-dimensional faces (i.e., vertices, edges and triangles), as well as
+ * boundary components.
  */
-class REGINA_API NComponent :
-        public Output<NComponent>,
-        public boost::noncopyable,
-        public NMarkedElement {
+template <>
+class REGINA_API Component<3> : public ComponentBase<3> {
     private:
-        std::vector<NTetrahedron*> tetrahedra_;
-            /**< List of tetrahedra in the component. */
         std::vector<NTriangle*> triangles_;
             /**< List of triangles in the component. */
         std::vector<NEdge*> edges_;
@@ -83,44 +86,22 @@ class REGINA_API NComponent :
 
         bool ideal_;
             /**< Is the component ideal? */
-        bool orientable_;
-            /**< Is the component orientable? */
 
     public:
 
         /**
-         * Returns the index of this component in the underlying
-         * triangulation.  This is identical to calling
-         * <tt>getTriangulation()->componentIndex(this)</tt>.
+         * A dimension-specific alias for size().
          *
-         * @return the index of this component vertex.
+         * See size() for further information.
          */
-        unsigned long index() const;
-
-        /**
-         * Returns the number of tetrahedra in this component.
-         *
-         * @return the number of tetrahedra.
-         */
-        unsigned long getNumberOfTetrahedra() const;
-        /**
-         * A dimension-agnostic alias for getNumberOfTetrahedra().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 3-manifold triangulations means a tetrahedron).
-         * 
-         * See getNumberOfTetrahedra() for further information.
-         */
-        unsigned long getNumberOfSimplices() const;
+        size_t getNumberOfTetrahedra() const;
 
         /**
          * Returns the number of triangles in this component.
          *
          * @return the number of triangles.
          */
-        unsigned long getNumberOfTriangles() const;
+        size_t getNumberOfTriangles() const;
         /**
          * A deprecated alias for getNumberOfTriangles().
          *
@@ -132,52 +113,35 @@ class REGINA_API NComponent :
          *
          * @return the number of triangles.
          */
-        unsigned long getNumberOfFaces() const;
+        size_t getNumberOfFaces() const;
 
         /**
          * Returns the number of edges in this component.
          *
          * @return the number of edges.
          */
-        unsigned long getNumberOfEdges() const;
+        size_t getNumberOfEdges() const;
 
         /**
          * Returns the number of vertices in this component.
          *
          * @return the number of vertices.
          */
-        unsigned long getNumberOfVertices() const;
+        size_t getNumberOfVertices() const;
 
         /**
          * Returns the number of boundary components in this component.
          *
          * @return the number of boundary components.
          */
-        unsigned long getNumberOfBoundaryComponents() const;
+        size_t getNumberOfBoundaryComponents() const;
 
         /**
-         * Returns the requested tetrahedron in this component.
+         * A dimension-specific alias for simplex().
          *
-         * @param index the index of the requested tetrahedron in the
-         * component.  This should be between 0 and
-         * getNumberOfTetrahedra()-1 inclusive.
-         * Note that the index of a tetrahedron in the component need
-         * not be the index of the same tetrahedron in the entire
-         * triangulation.
-         * @return the requested tetrahedron.
+         * See simplex() for further information.
          */
-        NTetrahedron* getTetrahedron(unsigned long index) const;
-        /**
-         * A dimension-agnostic alias for getTetrahedron().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 3-manifold triangulations means a tetrahedron).
-         * 
-         * See getTetrahedron() for further information.
-         */
-        NTetrahedron* getSimplex(unsigned long index) const;
+        NTetrahedron* getTetrahedron(size_t index) const;
 
         /**
          * Returns the requested triangle in this component.
@@ -190,7 +154,7 @@ class REGINA_API NComponent :
          * triangulation.
          * @return the requested triangle.
          */
-        NTriangle* getTriangle(unsigned long index) const;
+        NTriangle* getTriangle(size_t index) const;
         /**
          * A deprecated alias for getTriangle().
          *
@@ -208,7 +172,7 @@ class REGINA_API NComponent :
          * triangulation.
          * @return the requested triangle.
          */
-        NTriangle* getFace(unsigned long index) const;
+        NTriangle* getFace(size_t index) const;
 
         /**
          * Returns the requested edge in this component.
@@ -221,7 +185,7 @@ class REGINA_API NComponent :
          * triangulation.
          * @return the requested edge.
          */
-        NEdge* getEdge(unsigned long index) const;
+        NEdge* getEdge(size_t index) const;
 
         /**
          * Returns the requested vertex in this component.
@@ -234,7 +198,7 @@ class REGINA_API NComponent :
          * triangulation.
          * @return the requested vertex.
          */
-        NVertex* getVertex(unsigned long index) const;
+        NVertex* getVertex(size_t index) const;
 
         /**
          * Returns the requested boundary component in this component.
@@ -247,7 +211,7 @@ class REGINA_API NComponent :
          * entire triangulation.
          * @return the requested boundary component.
          */
-        NBoundaryComponent* getBoundaryComponent(unsigned long index) const;
+        NBoundaryComponent* getBoundaryComponent(size_t index) const;
 
         /**
          * Determines if this component is ideal.
@@ -259,13 +223,6 @@ class REGINA_API NComponent :
         bool isIdeal() const;
 
         /**
-         * Determines if this component is orientable.
-         * 
-         * @return \c true if and only if this component is orientable.
-         */
-        bool isOrientable() const;
-
-        /**
          * Determines if this component is closed.
          * This is the case if and only if it has no boundary.
          * Note that ideal components are not closed.
@@ -274,123 +231,91 @@ class REGINA_API NComponent :
          */
         bool isClosed() const;
         /**
-         * Returns the number of boundary triangles in this component.
+         * A dimension-specific alias for getNumberOfBoundaryFacets().
          *
-         * @return the number of boundary triangles.
+         * See getNumberOfBoundaryFacets() for further information.
          */
-        unsigned long getNumberOfBoundaryTriangles() const;
-
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
+        size_t getNumberOfBoundaryTriangles() const;
 
     private:
         /**
          * Default constructor.
+         *
+         * Marks the component as orientable and non-ideal, with
+         * no boundary facets.
          */
-        NComponent();
+        Component();
 
-    friend class NTriangulation;
-        /**< Allow access to private members. */
+    friend class Triangulation<3>;
+    friend class TriangulationBase<3>;
 };
 
 /*@}*/
 
-// Inline functions for NComponent
+// Inline functions for Component<3>
 
-inline NComponent::NComponent() : ideal_(false), orientable_(true) {
+inline Component<3>::Component() : ComponentBase<3>(), ideal_(false) {
 }
 
-inline unsigned long NComponent::index() const {
-    return markedIndex();
+inline size_t Component<3>::getNumberOfTetrahedra() const {
+    return size();
 }
 
-inline unsigned long NComponent::getNumberOfTetrahedra() const {
-    return tetrahedra_.size();
-}
-
-inline unsigned long NComponent::getNumberOfSimplices() const {
-    return tetrahedra_.size();
-}
-
-inline unsigned long NComponent::getNumberOfTriangles() const {
+inline size_t Component<3>::getNumberOfTriangles() const {
     return triangles_.size();
 }
 
-inline unsigned long NComponent::getNumberOfFaces() const {
+inline size_t Component<3>::getNumberOfFaces() const {
     return triangles_.size();
 }
 
-inline unsigned long NComponent::getNumberOfEdges() const {
+inline size_t Component<3>::getNumberOfEdges() const {
     return edges_.size();
 }
 
-inline unsigned long NComponent::getNumberOfVertices() const {
+inline size_t Component<3>::getNumberOfVertices() const {
     return vertices_.size();
 }
 
-inline unsigned long NComponent::getNumberOfBoundaryComponents() const {
+inline size_t Component<3>::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
-inline NTetrahedron* NComponent::getTetrahedron(unsigned long index) const {
-    return tetrahedra_[index];
+inline NTetrahedron* Component<3>::getTetrahedron(size_t index) const {
+    return simplex(index);
 }
 
-inline NTetrahedron* NComponent::getSimplex(unsigned long index) const {
-    return tetrahedra_[index];
-}
-
-inline NTriangle* NComponent::getTriangle(unsigned long index) const {
+inline NTriangle* Component<3>::getTriangle(size_t index) const {
     return triangles_[index];
 }
 
-inline NTriangle* NComponent::getFace(unsigned long index) const {
+inline NTriangle* Component<3>::getFace(size_t index) const {
     return triangles_[index];
 }
 
-inline NEdge* NComponent::getEdge(unsigned long index) const {
+inline NEdge* Component<3>::getEdge(size_t index) const {
     return edges_[index];
 }
 
-inline NVertex* NComponent::getVertex(unsigned long index) const {
+inline NVertex* Component<3>::getVertex(size_t index) const {
     return vertices_[index];
 }
 
-inline NBoundaryComponent* NComponent::getBoundaryComponent(unsigned long index)
+inline NBoundaryComponent* Component<3>::getBoundaryComponent(size_t index)
         const {
     return boundaryComponents_[index];
 }
 
-inline bool NComponent::isIdeal() const {
+inline bool Component<3>::isIdeal() const {
     return ideal_;
 }
 
-inline bool NComponent::isOrientable() const {
-    return orientable_;
-}
-
-inline bool NComponent::isClosed() const {
+inline bool Component<3>::isClosed() const {
     return (boundaryComponents_.empty());
 }
 
-inline unsigned long NComponent::getNumberOfBoundaryTriangles() const {
-    return 2 * triangles_.size() - 4 * tetrahedra_.size();
+inline size_t Component<3>::getNumberOfBoundaryTriangles() const {
+    return getNumberOfBoundaryFacets();
 }
 
 } // namespace regina

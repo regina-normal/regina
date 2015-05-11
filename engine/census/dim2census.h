@@ -50,8 +50,10 @@ namespace regina {
 
 class Dim2GluingPerms;
 class Dim2GluingPermSearcher;
-class Dim2Triangulation;
 class NPacket;
+
+template <int> class Triangulation;
+typedef Triangulation<2> Dim2Triangulation;
 
 /**
  * \weakgroup census

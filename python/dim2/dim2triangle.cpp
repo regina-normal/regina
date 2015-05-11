@@ -43,8 +43,8 @@ using namespace boost::python;
 using regina::Dim2Triangle;
 
 void addDim2Triangle() {
-    class_<Dim2Triangle, std::auto_ptr<Dim2Triangle>, boost::noncopyable>(
-            "Dim2Triangle", no_init)
+    class_<regina::Simplex<2>, std::auto_ptr<regina::Simplex<2>>,
+            boost::noncopyable>("Simplex2", no_init)
         .def("getDescription", &Dim2Triangle::getDescription,
             return_value_policy<return_by_value>())
         .def("setDescription", &Dim2Triangle::setDescription)
@@ -58,10 +58,13 @@ void addDim2Triangle() {
         .def("adjacentFacet", &Dim2Triangle::adjacentFacet)
         .def("hasBoundary", &Dim2Triangle::hasBoundary)
         .def("joinTo", &Dim2Triangle::joinTo)
+        .def("join", &Dim2Triangle::join)
         .def("unjoin", &Dim2Triangle::unjoin,
             return_value_policy<reference_existing_object>())
         .def("isolate", &Dim2Triangle::isolate)
         .def("getTriangulation", &Dim2Triangle::getTriangulation,
+            return_value_policy<reference_existing_object>())
+        .def("component", &Dim2Triangle::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim2Triangle::getComponent,
             return_value_policy<reference_existing_object>())
@@ -78,5 +81,7 @@ void addDim2Triangle() {
         .def("toStringLong", &Dim2Triangle::toStringLong)
         .def("__str__", &Dim2Triangle::str)
     ;
+
+    scope().attr("Dim2Triangle") = scope().attr("Simplex2");
 }
 

@@ -48,7 +48,8 @@
 
 namespace regina {
     class NBoundaryComponent;
-    class NTriangulation;
+    template <int> class Triangulation;
+    typedef Triangulation<3> NTriangulation;
 };
 
 /**

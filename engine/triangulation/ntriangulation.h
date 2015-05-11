@@ -33,7 +33,7 @@
 /* end stub */
 
 /*! \file triangulation/ntriangulation.h
- *  \brief Deals with triangulations.
+ *  \brief Deals with 3-dimensional triangulations.
  */
 
 #ifndef __NTRIANGULATION_H
@@ -51,6 +51,7 @@
 #include "algebra/ngrouppresentation.h"
 #include "angle/nanglestructure.h"
 #include "generic/ngenerictriangulation.h"
+#include "generic/triangulation.h"
 #include "maths/ncyclotomic.h"
 #include "packet/npacket.h"
 #include "treewidth/ntreedecomposition.h"
@@ -68,17 +69,20 @@ namespace regina {
 
 class NAngleStructure;
 class NBoundaryComponent;
-class NComponent;
 class NEdge;
 class NTriangle;
-class NTetrahedron;
 class NVertex;
 class NGroupPresentation;
-class NIsomorphism;
 class NNormalSurface;
-class NTriangulation;
 class NXMLPacketReader;
 class NXMLTriangulationReader;
+
+template <int> class Component;
+template <int> class Isomorphism;
+template <int> class SimplexBase;
+template <int> class Simplex;
+typedef Isomorphism<3> NIsomorphism;
+typedef Simplex<3> NTetrahedron;
 
 /**
  * \addtogroup triangulation Triangulations
@@ -133,29 +137,23 @@ enum TuraevViroAlg {
 };
 
 /**
- * Stores the triangulation of a 3-manifold along with its
- * various cellular structures and other information.
+ * Represents a 3-dimensional triangulation, typically of a 3-manifold.
  *
- * When the triangulation is deleted, the corresponding
- * tetrahedra, the cellular structure and all other properties
- * will be deallocated.
+ * This is a specialisation of the generic Triangulation class template;
+ * see the Triangulation documentation for a general overview of how
+ * the triangulation classes work.
  *
- * Triangles, edges, vertices and components are always temporary;
- * whenever a change
- * occurs with the triangulation, these will be deleted and a new
- * skeletal structure will be calculated.  The same is true of various
- * other triangulation properties.
+ * This 3-dimensional specialisation offers significant extra functionality,
+ * including many functions specific to 3-manifolds, plus rich details of
+ * the combinatorial structure of the triangulation.
  *
- * The management of tetrahedra within a triangulation has become simpler and
- * safer as of Regina 4.90.  In older versions (Regina 4.6 and earlier),
- * users were required to create tetrahedra, individually add them to
- * triangulations, and manually notify a triangulation whenever its tetrahedron
- * gluings changed.  As of Regina 4.90, new tetrahedra are created using
- * NTriangulation::newTetrahedron() which automatically places them within
- * a triangulation, and all gluing changes are likewise communicated to the
- * triangulation automatically.  These are part of a larger suite of changes
- * (all designed to help the user avoid inconsistent states and accidental
- * crashes); see the NTetrahedron class notes for further details.
+ * In particular, this class also tracks vertices, edges and triangles of the
+ * triangulation (as represented by the classes NVertex, NEdge and NTriangle),
+ * as well as boundary components (as represented by the class
+ * NBoundaryComponent).  Such objects are temporary: whenever the
+ * triangulation changes, these objects will be deleted and rebuilt, and so
+ * any pointers to them will become invalid.  Likewise, if the triangulation
+ * is deleted then these objects will be deleted alongside it.
  *
  * \todo \feature Is the boundary incompressible?
  * \todo \featurelong Am I obviously a handlebody?  (Simplify and see
@@ -168,13 +166,17 @@ enum TuraevViroAlg {
  * subcomplex to a normal surface.
  * \todo \featurelong Implement writeTextLong() for skeletal objects.
  */
-class REGINA_API NTriangulation : public NPacket,
+template <>
+class REGINA_API Triangulation<3> :
+        public NPacket,
+        public TriangulationBase<3>,
         public NGenericTriangulation<3> {
-    REGINA_PACKET(NTriangulation, PACKET_TRIANGULATION)
+    REGINA_PACKET(Triangulation<3>, PACKET_TRIANGULATION)
 
     public:
         typedef std::vector<NTetrahedron*>::const_iterator TetrahedronIterator;
-            /**< Used to iterate through tetrahedra. */
+            /**< A dimension-specific alias for SimplexIterator,
+                 used to iterate through tetrahedra. */
         typedef std::vector<NTriangle*>::const_iterator TriangleIterator;
             /**< Used to iterate through triangles. */
         typedef std::vector<NTriangle*>::const_iterator FaceIterator;
@@ -183,8 +185,6 @@ class REGINA_API NTriangulation : public NPacket,
             /**< Used to iterate through edges. */
         typedef std::vector<NVertex*>::const_iterator VertexIterator;
             /**< Used to iterate through vertices. */
-        typedef std::vector<NComponent*>::const_iterator ComponentIterator;
-            /**< Used to iterate through components. */
         typedef std::vector<NBoundaryComponent*>::const_iterator
                 BoundaryComponentIterator;
             /**< Used to iterate through boundary components. */
@@ -195,19 +195,12 @@ class REGINA_API NTriangulation : public NPacket,
                  as described by turaevViro(). */
 
     private:
-        mutable bool calculatedSkeleton_;
-            /**< Has the skeleton been calculated? */
-
-        NMarkedVector<NTetrahedron> tetrahedra_;
-            /**< The tetrahedra that form the triangulation. */
         mutable NMarkedVector<NTriangle> triangles_;
             /**< The triangles in the triangulation skeleton. */
         mutable NMarkedVector<NEdge> edges_;
             /**< The edges in the triangulation skeleton. */
         mutable NMarkedVector<NVertex> vertices_;
             /**< The vertices in the triangulation skeleton. */
-        mutable NMarkedVector<NComponent> components_;
-            /**< The components that form the triangulation. */
         mutable NMarkedVector<NBoundaryComponent> boundaryComponents_;
             /**< The components that form the boundary of the
                  triangulation. */
@@ -218,8 +211,6 @@ class REGINA_API NTriangulation : public NPacket,
             /**< Is the triangulation ideal? */
         mutable bool standard_;
             /**< Is the triangulation standard? */
-        mutable bool orientable_;
-            /**< Is the triangulation orientable? */
 
         mutable NProperty<NGroupPresentation, StoreManagedPtr>
                 fundamentalGroup_;
@@ -288,16 +279,14 @@ class REGINA_API NTriangulation : public NPacket,
          *
          * Creates an empty triangulation.
          */
-        NTriangulation();
+        Triangulation();
         /**
-         * Copy constructor.
-         *
-         * Creates a new triangulation identical to the given triangulation.
+         * Creates a new copy of the given triangulation.
          * The packet tree structure and packet label are \e not copied.
          *
-         * @param cloneMe the triangulation to clone.
+         * @param copy the triangulation to copy.
          */
-        NTriangulation(const NTriangulation& cloneMe);
+        Triangulation(const Triangulation& copy);
         /**
          * "Magic" constructor that tries to find some way to interpret
          * the given string as a triangulation.
@@ -325,14 +314,14 @@ class REGINA_API NTriangulation : public NPacket,
          * @param description a string that describes a 3-manifold
          * triangulation.
          */
-        NTriangulation(const std::string& description);
+        Triangulation(const std::string& description);
         /**
          * Destroys this triangulation.
          *
          * The constituent tetrahedra, the cellular structure and all other
-         * properties will also be deallocated.
+         * properties will also be destroyed.
          */
-        virtual ~NTriangulation();
+        virtual ~Triangulation();
 
         /*@}*/
         /**
@@ -351,314 +340,65 @@ class REGINA_API NTriangulation : public NPacket,
         /*@{*/
 
         /**
-         * Returns the number of tetrahedra in the triangulation.
+         * A dimension-specific alias for size().
          *
-         * @return the number of tetrahedra.
+         * See size() for further information.
          */
         unsigned long getNumberOfTetrahedra() const;
         /**
-         * A dimension-agnostic alias for getNumberOfTetrahedra().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 3-manifold triangulations means a tetrahedron).
-         * 
-         * See getNumberOfTetrahedra() for further information.
-         */
-        unsigned long getNumberOfSimplices() const;
-        /**
-         * Returns all tetrahedra in the triangulation.
+         * A dimension-specific alias for simplices().
          *
-         * The reference returned will remain valid
-         * for as long as the triangulation exists,
-         * always reflecting the tetrahedra currently in the
-         * triangulation.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of all tetrahedra.
+         * See simplices() for further information.
          */
         const std::vector<NTetrahedron*>& getTetrahedra() const;
         /**
-         * A dimension-agnostic alias for getTetrahedra().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 3-manifold triangulations means a tetrahedron).
-         * 
-         * See getTetrahedra() for further information.
-         */
-        const std::vector<NTetrahedron*>& getSimplices() const;
-        /**
-         * Returns the tetrahedron with the given index number in the
-         * triangulation.
-         * Note that tetrahedron indexing may change when a tetrahedron
-         * is added or removed from the triangulation.
+         * A dimension-specific alias for simplex().
          *
-         * @param index specifies which tetrahedron to return; this
-         * value should be between 0 and getNumberOfTetrahedra()-1
-         * inclusive.
-         * @return the <tt>index</tt>th tetrahedron in the
-         * triangulation.
+         * See simplex() for further information.
          */
         NTetrahedron* getTetrahedron(unsigned long index);
         /**
-         * A dimension-agnostic alias for getTetrahedron().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 3-manifold triangulations means a tetrahedron).
-         * 
-         * See getTetrahedron() for further information.
-         */
-        NTetrahedron* getSimplex(unsigned long index);
-        /**
-         * Returns the tetrahedron with the given index number in the
-         * triangulation.
-         * Note that tetrahedron indexing may change when a tetrahedron
-         * is added or removed from the triangulation.
+         * A dimension-specific alias for simplex().
          *
-         * @param index specifies which tetrahedron to return; this
-         * value should be between 0 and getNumberOfTetrahedra()-1
-         * inclusive.
-         * @return the <tt>index</tt>th tetrahedron in the
-         * triangulation.
+         * See simplex() for further information.
          */
         const NTetrahedron* getTetrahedron(unsigned long index) const;
         /**
-         * A dimension-agnostic alias for getTetrahedron().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 3-manifold triangulations means a tetrahedron).
-         * 
-         * See getTetrahedron() for further information.
-         */
-        const NTetrahedron* getSimplex(unsigned long index) const;
-        /**
-         * Returns the index of the given tetrahedron in the
-         * triangulation.
+         * A dimension-specific alias for simplexIndex().
          *
-         * Note that tetrahedron indexing may change when a tetrahedron
-         * is added or removed from the triangulation.
-         *
-         * This routine was introduced in Regina 4.5, and replaces the
-         * old getTetrahedronIndex().  The name has been changed
-         * because, unlike the old routine, it requires that the given
-         * tetrahedron belongs to the triangulation (a consequence of
-         * some significant memory optimisations).
-         *
-         * \pre The given tetrahedron is contained in this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.  If you are passing the result of some other
-         * routine that \e might return null (such as
-         * NTetrahedron::adjacentTetrahedron), it might be worth explicitly
-         * testing for null beforehand.
-         *
-         * @param tet specifies which tetrahedron to find in the
-         * triangulation.
-         * @return the index of the specified tetrahedron, where 0 is
-         * the first tetrahedron, 1 is the second and so on.
+         * See simplexIndex() for further information.
          */
         long tetrahedronIndex(const NTetrahedron* tet) const;
         /**
-         * A dimension-agnostic alias for tetrahedronIndex().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 3-manifold triangulations means a tetrahedron).
-         * 
-         * See tetrahedronIndex() for further information.
-         */
-        long simplexIndex(const NTetrahedron* tet) const;
-        /**
-         * Creates a new tetrahedron and adds it to this triangulation.
-         * The new tetrahedron will have an empty description.
-         * All four faces of the new tetrahedron will be boundary triangles.
+         * A dimension-specific alias for newSimplex().
          *
-         * The new tetrahedron will become the last tetrahedron in this
-         * triangulation.
-         *
-         * @return the new tetrahedron.
+         * See newSimplex() for further information.
          */
         NTetrahedron* newTetrahedron();
         /**
-         * A dimension-agnostic alias for newTetrahedron().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 3-manifold triangulations means a tetrahedron).
-         * 
-         * See newTetrahedron() for further information.
-         */
-        NTetrahedron* newSimplex();
-        /**
-         * Creates a new tetrahedron with the given description and adds
-         * it to this triangulation.
-         * All four faces of the new tetrahedron will be boundary triangles.
+         * A dimension-specific alias for newSimplex().
          *
-         * @param desc the description to assign to the new tetrahedron.
-         * @return the new tetrahedron.
+         * See newSimplex() for further information.
          */
         NTetrahedron* newTetrahedron(const std::string& desc);
         /**
-         * A dimension-agnostic alias for newTetrahedron().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 3-manifold triangulations means a tetrahedron).
-         * 
-         * See newTetrahedron() for further information.
-         */
-        NTetrahedron* newSimplex(const std::string& desc);
-        /**
-         * Inserts the given tetrahedron into the triangulation.
-         * No face gluings anywhere will be examined or altered.
+         * A dimension-specific alias for removeSimplex().
          *
-         * The new tetrahedron will be assigned a higher index in the
-         * triangulation than all tetrahedra already present.
-         *
-         * \pre The given tetrahedron does not already belong to a
-         * different triangulation (though already belonging to \e this
-         * triangulation is perfectly fine).
-         *
-         * \deprecated Users should create tetrahedra by calling
-         * newTetrahedron() or newTetrahedron(const std::string&), which
-         * will add the tetrahedron to the triangulation automatically.
-         *
-         * \warning As of Regina 4.90, this routine will also add any
-         * neighbouring tetrahedra that do not yet belong to a
-         * triangulation; moreover, this addition is recursive.  This is done
-         * to ensure that, whenever one tetrahedron belongs to a
-         * triangulation, everything that it is joined to (directly or
-         * indirectly) also belongs to that same triangulation.
-         * See the NTetrahedron class notes for further details on how
-         * tetrahedron management has changed in Regina 4.90 and above.
-         *
-         * \ifacespython Since this triangulation takes ownership
-         * of the given tetrahedron, the python object containing the
-         * given tetrahedron becomes a null object and should no longer
-         * be used.
-         *
-         * @param tet the tetrahedron to insert.
-         */
-        void addTetrahedron(NTetrahedron* tet);
-        /**
-         * Removes the given tetrahedron from the triangulation.
-         * All faces glued to this tetrahedron will be unglued.
-         * The tetrahedron will be deallocated.
-         *
-         * \pre The given tetrahedron exists in the triangulation.
-         *
-         * \warning This routine has changed behaviour as of Regina 4.90.
-         * In older versions of Regina, the tetrahedron was returned to
-         * the user.  As of Regina 4.90, the tetrahedron is now destroyed
-         * immediately.
-         *
-         * @param tet the tetrahedron to remove.
+         * See removeSimplex() for further information.
          */
         void removeTetrahedron(NTetrahedron* tet);
         /**
-         * A dimension-agnostic alias for removeTetrahedron().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 3-manifold triangulations means a tetrahedron).
-         * 
-         * See removeTetrahedron() for further information.
-         */
-        void removeSimplex(NTetrahedron* tet);
-        /**
-         * Removes the tetrahedron with the given index number
-         * from the triangulation.  Note that tetrahedron indexing may
-         * change when a tetrahedron is added or removed from the
-         * triangulation.
+         * A dimension-specific alias for removeSimplexAt().
          *
-         * All faces glued to this tetrahedron will be unglued.
-         * The tetrahedron will be deallocated.
-         *
-         * \warning This routine has changed behaviour as of Regina 4.90.
-         * In older versions of Regina, the tetrahedron was returned to
-         * the user.  As of Regina 4.90, the tetrahedron is now destroyed
-         * immediately.
-         *
-         * @param index specifies which tetrahedron to remove; this
-         * should be between 0 and getNumberOfTetrahedra()-1 inclusive.
+         * See removeSimplexAt() for further information.
          */
         void removeTetrahedronAt(unsigned long index);
         /**
-         * A dimension-agnostic alias for removeTetrahedronAt().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 3-manifold triangulations means a tetrahedron).
-         * 
-         * See removeTetrahedronAt() for further information.
-         */
-        void removeSimplexAt(unsigned long index);
-        /**
-         * Removes all tetrahedra from the triangulation.
-         * All tetrahedra will be deallocated.
+         * A dimension-specific alias for removeAllSimplices().
+         *
+         * See removeAllSimplices() for further information.
          */
         void removeAllTetrahedra();
-        /**
-         * A dimension-agnostic alias for removeAllTetrahedra().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 3-manifold triangulations means a tetrahedron).
-         * 
-         * See removeAllTetrahedra() for further information.
-         */
-        void removeAllSimplices();
-        /**
-         * Swaps the contents of this and the given triangulation.
-         * That is, all tetrahedra that belong to this triangulation
-         * will be moved to \a other, and all tetrahedra that belong to
-         * \a other will be moved to this triangulation.
-         *
-         * All NTetrahedron pointers or references will remain valid.
-         *
-         * @param other the triangulation whose contents should be
-         * swapped with this.
-         */
-        void swapContents(NTriangulation& other);
-        /**
-         * Moves the contents of this triangulation into the given
-         * destination triangulation, without destroying any pre-existing
-         * contents.  That is, all tetrahedra that currently belong to
-         * \a dest will remain there, and all tetrahedra that belong to this
-         * triangulation will be moved across as additional
-         * tetrahedra in \a dest.
-         *
-         * All NTetrahedron pointers or references will remain valid.
-         * After this operation, this triangulation will be empty.
-         *
-         * @param dest the triangulation to which tetrahedra should be
-         * moved.
-         */
-        void moveContentsTo(NTriangulation& dest);
-        /**
-         * This routine now does nothing, and should not be used.
-         *
-         * \deprecated In Regina versions 4.6 and earlier, this routine
-         * was used to manually notify the triangulation that the gluings
-         * of tetrahedra had changed.  In Regina 4.90 and later this
-         * notification is automatic.  This routine now does nothing at
-         * all, and can safely be removed from any existing code.
-         */
-        void gluingsHaveChanged();
 
         /*@}*/
         /**
@@ -674,12 +414,6 @@ class REGINA_API NTriangulation : public NPacket,
          * @return the number of boundary components.
          */
         unsigned long getNumberOfBoundaryComponents() const;
-        /**
-         * Returns the number of components in this triangulation.
-         *
-         * @return the number of components.
-         */
-        unsigned long getNumberOfComponents() const;
         /**
          * Returns the number of vertices in this triangulation.
          *
@@ -729,22 +463,6 @@ class REGINA_API NTriangulation : public NPacket,
         template <int subdim>
         unsigned long getNumberOfFaces() const;
 
-        /**
-         * Returns all components of this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * components will be deleted and replaced with new
-         * ones.  Thus the objects contained in this list should be
-         * considered temporary only.
-         *
-         * This reference to the list however will remain valid and
-         * up-to-date for as long as the triangulation exists.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of all components.
-         */
-        const std::vector<NComponent*>& getComponents() const;
         /**
          * Returns all boundary components of this triangulation.
          * Note that each ideal vertex forms its own boundary component.
@@ -822,18 +540,6 @@ class REGINA_API NTriangulation : public NPacket,
          * @return the list of all triangles.
          */
         const std::vector<NTriangle*>& getFaces() const;
-        /**
-         * Returns the requested triangulation component.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * components will be deleted and replaced with new
-         * ones.  Thus this object should be considered temporary only.
-         *
-         * @param index the index of the desired component, ranging from 0
-         * to getNumberOfComponents()-1 inclusive.
-         * @return the requested component.
-         */
-        NComponent* getComponent(unsigned long index) const;
         /**
          * Returns the requested triangulation boundary component.
          *
@@ -918,26 +624,6 @@ class REGINA_API NTriangulation : public NPacket,
         template <int subdim>
         typename FaceTraits<3, subdim>::Face* getFace(unsigned long index)
             const;
-        /**
-         * Returns the index of the given component in the triangulation.
-         *
-         * This routine was introduced in Regina 4.5, and replaces the
-         * old getComponentIndex().  The name has been changed
-         * because, unlike the old routine, it requires that the given
-         * component belongs to the triangulation (a consequence of
-         * some significant memory optimisations).
-         *
-         * \pre The given component belongs to this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.
-         *
-         * @param component specifies which component to find in the
-         * triangulation.
-         * @return the index of the specified component, where 0 is the first
-         * component, 1 is the second and so on.
-         */
-        long componentIndex(const NComponent* component) const;
         /**
          * Returns the index of the given boundary component
          * in the triangulation.
@@ -1082,7 +768,6 @@ class REGINA_API NTriangulation : public NPacket,
          */
         /*@{*/
 
-        using NGenericTriangulation<3>::isIdenticalTo;
         using NGenericTriangulation<3>::isIsomorphicTo;
         using NGenericTriangulation<3>::isContainedIn;
         using NGenericTriangulation<3>::findAllIsomorphisms;
@@ -1094,8 +779,6 @@ class REGINA_API NTriangulation : public NPacket,
          * \name Basic Properties
          */
         /*@{*/
-
-        using NGenericTriangulation<3>::isEmpty;
 
         /**
          * Returns the Euler characteristic of this triangulation.
@@ -1192,29 +875,36 @@ class REGINA_API NTriangulation : public NPacket,
          */
         bool isStandard() const;
         /**
-         * Determines if this triangulation has any boundary triangles.
+         * A dimension-specific alias for hasBoundaryFacets().
          *
-         * @return \c true if and only if there are boundary triangles.
+         * See hasBoundaryFacets() for further information.
          */
         bool hasBoundaryTriangles() const;
         /**
-         * A deprecated alias for hasBoundaryTriangles().
-         *
-         * This routine determines whether this triangulation has any
-         * boundary triangles.  See hasBoundaryTriangles() for further details.
+         * A deprecated alias for hasBoundaryFacets().
          *
          * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use hasBoundaryTriangles() instead.
+         * of Regina.  Please use hasBoundaryFacets() instead.
          *
-         * @return \c true if and only if there are boundary triangles.
+         * See hasBoundaryFacets() for further information.
          */
         bool hasBoundaryFaces() const;
+        size_t countBoundaryFacets() const;
         /**
-         * Returns the number of boundary triangles in this triangulation.
+         * A dimension-specific alias for countBoundaryFacets().
          *
-         * @return the total number of boundary triangles.
+         * See countBoundaryFacets() for further information.
          */
-        unsigned long getNumberOfBoundaryTriangles() const;
+        size_t countBoundaryTriangles() const;
+        /**
+         * A deprecated alias for countBoundaryFacets().
+         *
+         * \deprecated Call countBoundaryTriangles() or countBoundaryFacets()
+         * instead.
+         *
+         * See countBoundaryFacets() for further information.
+         */
+        size_t getNumberOfBoundaryTriangles() const;
         /**
          * Determines if this triangulation is closed.
          * This is the case if and only if it has no boundary.
@@ -1223,13 +913,6 @@ class REGINA_API NTriangulation : public NPacket,
          * @return \c true if and only if this triangulation is closed.
          */
         bool isClosed() const;
-        /**
-         * Determines if this triangulation is orientable.
-         *
-         * @return \c true if and only if this triangulation is
-         * orientable.
-         */
-        bool isOrientable() const;
 
         /**
          * Determines if this triangulation is oriented; that is, if
@@ -1269,14 +952,6 @@ class REGINA_API NTriangulation : public NPacket,
          * @author Matthias Goerner
          */
         bool isOrdered() const;
-
-        /**
-         * Determines if this triangulation is connected.
-         *
-         * @return \c true if and only if this triangulation is
-         * connected.
-         */
-        bool isConnected() const;
 
         /*@}*/
         /**
@@ -3210,20 +2885,7 @@ class REGINA_API NTriangulation : public NPacket,
          *
          * @param other the triangulation to sum with this.
          */
-        void connectedSumWith(const NTriangulation& other);
-        /**
-         * Inserts a copy of the given triangulation into this
-         * triangulation.
-         *
-         * The new tetrahedra will be inserted into this triangulation
-         * in the order in which they appear in the given triangulation,
-         * and the numbering of their vertices (0-3) will not change.
-         * They will be given the same descriptions as appear in the
-         * given triangulation.
-         *
-         * @param source the triangulation whose copy will be inserted.
-         */
-        void insertTriangulation(const NTriangulation& source);
+        void connectedSumWith(const Triangulation& other);
         /**
          * Inserts the rehydration of the given string into this triangulation.
          * If you simply wish to convert a dehydration string into a
@@ -3257,67 +2919,12 @@ class REGINA_API NTriangulation : public NPacket,
          * @see rehydrate
          */
         bool insertRehydration(const std::string& dehydration);
-        /**
-         * Inserts into this triangulation a set of tetrahedra and their
-         * gluings as described by the given integer arrays.
-         *
-         * This routine is provided to make it easy to hard-code a
-         * medium-sized triangulation in a C++ source file.  All of the
-         * pertinent data can be hard-coded into a pair of integer arrays at
-         * the beginning of the source file, avoiding an otherwise tedious
-         * sequence of many joinTo() calls.
-         *
-         * An additional \a nTetrahedra tetrahedra will be inserted into
-         * this triangulation.  The relationships between these tetrahedra
-         * should be stored in the two arrays as follows.  Note that the
-         * new tetrahedra are numbered from 0 to (\a nTetrahedra - 1), and
-         * individual tetrahedron faces are numbered from 0 to 3.
-         *
-         * The \a adjacencies array describes which tetrahedron faces are
-         * joined to which others.  Specifically, <tt>adjacencies[t][f]</tt>
-         * should contain the number of the tetrahedron joined to face \a f
-         * of tetrahedron \a t.  If this face is to be left as a
-         * boundary triangle, <tt>adjacencies[t][f]</tt> should be -1.
-         *
-         * The \a gluings array describes the particular gluing permutations
-         * used when joining these tetrahedron faces together.  Specifically,
-         * <tt>gluings[t][f][0..3]</tt> should describe the permutation
-         * used to join face \a f of tetrahedron \a t to its adjacent
-         * tetrahedron.  These four integers should be 0, 1, 2 and 3 in some
-         * order, so that <tt>gluings[t][f][i]</tt> contains the image of
-         * \a i under this permutation.  If face \a f of tetrahedron \a t
-         * is to be left as a boundary triangle, <tt>gluings[t][f][0..3]</tt>
-         * may contain anything (and will be duly ignored).
-         *
-         * It is the responsibility of the caller of this routine to
-         * ensure that the given arrays are correct and consistent.
-         * No error checking will be performed by this routine.
-         *
-         * Note that, for an existing triangulation, dumpConstruction()
-         * will output a pair of C++ arrays that can be copied into a
-         * source file and used to reconstruct the triangulation via
-         * this routine.
-         *
-         * \ifacespython Not present.
-         *
-         * @param nTetrahedra the number of additional tetrahedra to insert.
-         * @param adjacencies describes which of the new tetrahedron
-         * faces are to be identified.  This array must have initial
-         * dimension at least \a nTetrahedra.
-         * @param gluings describes the specific gluing permutations by
-         * which these new tetrahedron faces should be identified.  This
-         * array must also have initial dimension at least \a nTetrahedra.
-         */
-        void insertConstruction(unsigned long nTetrahedra,
-            const int adjacencies[][4], const int gluings[][4][4]);
 
         /*@}*/
         /**
          * \name Exporting Triangulations
          */
         /*@{*/
-
-        using NGenericTriangulation<3>::isoSig;
 
         /**
          * Dehydrates this triangulation into an alphabetical string.
@@ -3360,28 +2967,6 @@ class REGINA_API NTriangulation : public NPacket,
          * @see insertRehydration
          */
         std::string dehydrate() const;
-
-        /**
-         * Returns C++ code that can be used with insertConstruction()
-         * to reconstruct this triangulation.
-         *
-         * The code produced will consist of the following:
-         *
-         * - the declaration and initialisation of two integer arrays,
-         *   describing the tetrahedron gluings in this trianguation;
-         * - two additional lines that declare a new NTriangulation and
-         *   call insertConstruction() to rebuild this triangulation.
-         *
-         * The main purpose of this routine is to generate the two integer
-         * arrays, which can be tedious and error-prone to code up by hand.
-         *
-         * Note that the number of lines of code produced grows linearly
-         * with the number of tetrahedra.  If this triangulation is very
-         * large, the returned string will be very large as well.
-         *
-         * @return the C++ code that was generated.
-         */
-        std::string dumpConstruction() const;
 
         /**
          * Returns a string containing the full contents of a SnapPea data
@@ -3625,9 +3210,6 @@ class REGINA_API NTriangulation : public NPacket,
          */
         static NTriangulation* rehydrate(const std::string& dehydration);
 
-        using NGenericTriangulation<3>::fromIsoSig;
-        using NGenericTriangulation<3>::isoSigComponentSize;
-
         /**
          * Extracts the tetrahedron gluings from a string that contains the
          * full contents of a SnapPea data file.  All other SnapPea-specific
@@ -3685,12 +3267,6 @@ class REGINA_API NTriangulation : public NPacket,
         void cloneFrom(const NTriangulation& from);
 
     private:
-        void deleteTetrahedra();
-            /**< Deallocates all tetrahedra and empties the list. */
-        void deleteSkeleton();
-            /**< Deallocates all skeletal objects and empties all
-                 corresponding lists. */
-
         /**
          * Clears any calculated properties and declares them all
          * unknown.  All dynamic memory used for storing known
@@ -3717,25 +3293,9 @@ class REGINA_API NTriangulation : public NPacket,
          * @author Matthias Goerner
          */
         void checkPermutations() const;
-        /**
-         * Recalculates vertices, edges, triangles, components and
-         * boundary components, as well as various other skeletal
-         * properties such as validity and vertex links.
-         * All appropriate lists are filled.
-         *
-         * \pre All skeletal lists are empty.
-         */
+
+        void deleteSkeleton();
         void calculateSkeleton() const;
-        /**
-         * Calculates the triangulation components and associated
-         * properties.
-         *
-         * \warning This should only be called from within
-         * calculateSkeleton().
-         */
-        void calculateComponents() const;
-        void labelComponent(NTetrahedron*, NComponent*) const;
-            /**< Internal to calculateComponents(). */
         /**
          * Calculates the triangulation vertices and associated
          * properties.
@@ -3868,10 +3428,17 @@ class REGINA_API NTriangulation : public NPacket,
                 std::set<NTetrahedron*>&) const;
             /**< Internal to maximalForestInDualSkeleton(). */
 
+    friend class regina::Simplex<3>;
+    friend class regina::SimplexBase<3>;
+    friend class regina::TriangulationBase<3>;
     friend class regina::NGenericTriangulation<3>;
-    friend class regina::NTetrahedron;
     friend class regina::NXMLTriangulationReader;
 };
+
+/**
+ * A convenience typedef for Triangulation<3>.
+ */
+typedef Triangulation<3> NTriangulation;
 
 /*@}*/
 
@@ -3887,442 +3454,325 @@ namespace regina {
 
 // Inline functions for NTriangulation
 
-inline NTriangulation::NTriangulation() : calculatedSkeleton_(false) {
+inline Triangulation<3>::Triangulation() {
 }
 
-inline NTriangulation::NTriangulation(const NTriangulation& cloneMe) :
-        NPacket(), calculatedSkeleton_(false) {
+inline Triangulation<3>::Triangulation(const NTriangulation& cloneMe) {
     cloneFrom(cloneMe);
 }
 
-inline NTriangulation::~NTriangulation() {
+inline Triangulation<3>::~Triangulation() {
     clearAllProperties();
-    deleteTetrahedra();
 }
 
-inline NPacket* NTriangulation::internalClonePacket(NPacket*) const {
+inline NPacket* Triangulation<3>::internalClonePacket(NPacket*) const {
     return new NTriangulation(*this);
 }
 
-inline bool NTriangulation::dependsOnParent() const {
+inline bool Triangulation<3>::dependsOnParent() const {
     return false;
 }
 
-inline unsigned long NTriangulation::getNumberOfTetrahedra() const {
-    return tetrahedra_.size();
+inline unsigned long Triangulation<3>::getNumberOfTetrahedra() const {
+    return simplices_.size();
 }
 
-inline unsigned long NTriangulation::getNumberOfSimplices() const {
-    return tetrahedra_.size();
+inline NTetrahedron* Triangulation<3>::getTetrahedron(unsigned long index) {
+    return simplices_[index];
 }
 
-inline NTetrahedron* NTriangulation::getTetrahedron(unsigned long index) {
-    return tetrahedra_[index];
-}
-
-inline NTetrahedron* NTriangulation::getSimplex(unsigned long index) {
-    return tetrahedra_[index];
-}
-
-inline const NTetrahedron* NTriangulation::getTetrahedron(unsigned long index)
+inline const NTetrahedron* Triangulation<3>::getTetrahedron(unsigned long index)
         const {
-    return tetrahedra_[index];
+    return simplices_[index];
 }
 
-inline const NTetrahedron* NTriangulation::getSimplex(unsigned long index)
-        const {
-    return tetrahedra_[index];
-}
-
-inline long NTriangulation::tetrahedronIndex(const NTetrahedron* tet) const {
+inline long Triangulation<3>::tetrahedronIndex(const NTetrahedron* tet) const {
     return tet->markedIndex();
 }
 
-inline long NTriangulation::simplexIndex(const NTetrahedron* tet) const {
-    return tet->markedIndex();
+inline NTetrahedron* Triangulation<3>::newTetrahedron() {
+    return newSimplex();
 }
 
-inline NTetrahedron* NTriangulation::newTetrahedron() {
-    ChangeEventSpan span(this);
-
-    NTetrahedron* tet = new NTetrahedron();
-    tet->tri_ = this;
-    tetrahedra_.push_back(tet);
-    clearAllProperties();
-
-    return tet;
+inline NTetrahedron* Triangulation<3>::newTetrahedron(const std::string& desc) {
+    return newSimplex(desc);
 }
 
-inline NTetrahedron* NTriangulation::newSimplex() {
-    return newTetrahedron();
+inline void Triangulation<3>::removeTetrahedronAt(unsigned long index) {
+    removeSimplexAt(index);
 }
 
-inline NTetrahedron* NTriangulation::newTetrahedron(const std::string& desc) {
-    ChangeEventSpan span(this);
-
-    NTetrahedron* tet = new NTetrahedron(desc);
-    tet->tri_ = this;
-    tetrahedra_.push_back(tet);
-    clearAllProperties();
-
-    return tet;
+inline void Triangulation<3>::removeTetrahedron(NTetrahedron* tet) {
+    removeSimplex(tet);
 }
 
-inline NTetrahedron* NTriangulation::newSimplex(const std::string& desc) {
-    return newTetrahedron(desc);
+inline void Triangulation<3>::removeAllTetrahedra() {
+    removeAllSimplices();
 }
 
-inline void NTriangulation::removeTetrahedronAt(unsigned long index) {
-    ChangeEventSpan span(this);
-
-    NTetrahedron* ans = tetrahedra_[index];
-    ans->isolate();
-    tetrahedra_.erase(tetrahedra_.begin() + index);
-    delete ans;
-
-    clearAllProperties();
-}
-
-inline void NTriangulation::removeSimplexAt(unsigned long index) {
-    removeTetrahedronAt(index);
-}
-
-inline void NTriangulation::removeTetrahedron(NTetrahedron* tet) {
-    ChangeEventSpan span(this);
-
-    tet->isolate();
-    tetrahedra_.erase(tetrahedra_.begin() + tetrahedronIndex(tet));
-    delete tet;
-
-    clearAllProperties();
-}
-
-inline void NTriangulation::removeSimplex(NTetrahedron* tet) {
-    removeTetrahedron(tet);
-}
-
-inline void NTriangulation::removeAllTetrahedra() {
-    ChangeEventSpan span(this);
-    deleteTetrahedra();
-    clearAllProperties();
-}
-
-inline void NTriangulation::removeAllSimplices() {
-    removeAllTetrahedra();
-}
-
-inline void NTriangulation::gluingsHaveChanged() {
-}
-
-inline unsigned long NTriangulation::getNumberOfBoundaryComponents() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+inline unsigned long Triangulation<3>::getNumberOfBoundaryComponents() const {
+    ensureSkeleton();
     return boundaryComponents_.size();
 }
 
-inline unsigned long NTriangulation::getNumberOfComponents() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return components_.size();
-}
-
-inline unsigned long NTriangulation::getNumberOfVertices() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+inline unsigned long Triangulation<3>::getNumberOfVertices() const {
+    ensureSkeleton();
     return vertices_.size();
 }
 
-inline unsigned long NTriangulation::getNumberOfEdges() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+inline unsigned long Triangulation<3>::getNumberOfEdges() const {
+    ensureSkeleton();
     return edges_.size();
 }
 
-inline unsigned long NTriangulation::getNumberOfTriangles() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+inline unsigned long Triangulation<3>::getNumberOfTriangles() const {
+    ensureSkeleton();
     return triangles_.size();
 }
 
-inline unsigned long NTriangulation::getNumberOfFaces() const {
+inline unsigned long Triangulation<3>::getNumberOfFaces() const {
     return getNumberOfTriangles();
 }
 
 template <>
-inline unsigned long NTriangulation::getNumberOfFaces<0>() const {
+inline unsigned long Triangulation<3>::getNumberOfFaces<0>() const {
     return getNumberOfVertices();
 }
 
 template <>
-inline unsigned long NTriangulation::getNumberOfFaces<1>() const {
+inline unsigned long Triangulation<3>::getNumberOfFaces<1>() const {
     return getNumberOfEdges();
 }
 
 template <>
-inline unsigned long NTriangulation::getNumberOfFaces<2>() const {
+inline unsigned long Triangulation<3>::getNumberOfFaces<2>() const {
     return getNumberOfTriangles();
 }
 
 template <>
-inline unsigned long NTriangulation::getNumberOfFaces<3>() const {
+inline unsigned long Triangulation<3>::getNumberOfFaces<3>() const {
     return getNumberOfTetrahedra();
 }
 
-inline long NTriangulation::getEulerCharTri() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+inline long Triangulation<3>::getEulerCharTri() const {
+    ensureSkeleton();
 
     // Cast away the unsignedness of std::vector::size().
     return static_cast<long>(vertices_.size())
         - static_cast<long>(edges_.size())
         + static_cast<long>(triangles_.size())
-        - static_cast<long>(tetrahedra_.size());
+        - static_cast<long>(simplices_.size());
 }
 
-inline long NTriangulation::getEulerCharacteristic() const {
+inline long Triangulation<3>::getEulerCharacteristic() const {
     return getEulerCharTri();
 }
 
-inline const std::vector<NTetrahedron*>& NTriangulation::getTetrahedra() const {
-    return (const std::vector<NTetrahedron*>&)(tetrahedra_);
-}
-
-inline const std::vector<NTetrahedron*>& NTriangulation::getSimplices() const {
-    return (const std::vector<NTetrahedron*>&)(tetrahedra_);
+inline const std::vector<NTetrahedron*>& Triangulation<3>::getTetrahedra()
+        const {
+    return getSimplices();
 }
 
 inline const std::vector<NBoundaryComponent*>&
-        NTriangulation::getBoundaryComponents() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+        Triangulation<3>::getBoundaryComponents() const {
+    ensureSkeleton();
     return (const std::vector<NBoundaryComponent*>&)(boundaryComponents_);
 }
 
-inline const std::vector<NComponent*>& NTriangulation::getComponents() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return (const std::vector<NComponent*>&)(components_);
-}
-
-inline const std::vector<NVertex*>& NTriangulation::getVertices() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+inline const std::vector<NVertex*>& Triangulation<3>::getVertices() const {
+    ensureSkeleton();
     return (const std::vector<NVertex*>&)(vertices_);
 }
 
-inline const std::vector<NEdge*>& NTriangulation::getEdges()
+inline const std::vector<NEdge*>& Triangulation<3>::getEdges()
         const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return (const std::vector<NEdge*>&)(edges_);
 }
 
-inline const std::vector<NTriangle*>& NTriangulation::getTriangles()
+inline const std::vector<NTriangle*>& Triangulation<3>::getTriangles()
         const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return (const std::vector<NTriangle*>&)(triangles_);
 }
 
-inline const std::vector<NTriangle*>& NTriangulation::getFaces() const {
+inline const std::vector<NTriangle*>& Triangulation<3>::getFaces() const {
     return getTriangles();
 }
 
-inline NComponent* NTriangulation::getComponent(unsigned long index) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return components_[index];
-}
-
-inline NBoundaryComponent* NTriangulation::getBoundaryComponent(
+inline NBoundaryComponent* Triangulation<3>::getBoundaryComponent(
         unsigned long index) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return boundaryComponents_[index];
 }
 
-inline NVertex* NTriangulation::getVertex(unsigned long index) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+inline NVertex* Triangulation<3>::getVertex(unsigned long index) const {
+    ensureSkeleton();
     return vertices_[index];
 }
 
-inline NEdge* NTriangulation::getEdge(unsigned long index) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+inline NEdge* Triangulation<3>::getEdge(unsigned long index) const {
+    ensureSkeleton();
     return edges_[index];
 }
 
-inline NTriangle* NTriangulation::getTriangle(unsigned long index) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+inline NTriangle* Triangulation<3>::getTriangle(unsigned long index) const {
+    ensureSkeleton();
     return triangles_[index];
 }
 
-inline NTriangle* NTriangulation::getFace(unsigned long index) const {
+inline NTriangle* Triangulation<3>::getFace(unsigned long index) const {
     return getTriangle(index);
 }
 
 template <>
-inline NVertex* NTriangulation::getFace<0>(unsigned long index) const {
+inline NVertex* Triangulation<3>::getFace<0>(unsigned long index) const {
     return vertices_[index];
 }
 
 template <>
-inline NEdge* NTriangulation::getFace<1>(unsigned long index) const {
+inline NEdge* Triangulation<3>::getFace<1>(unsigned long index) const {
     return edges_[index];
 }
 
 template <>
-inline NTriangle* NTriangulation::getFace<2>(unsigned long index) const {
+inline NTriangle* Triangulation<3>::getFace<2>(unsigned long index) const {
     return triangles_[index];
 }
 
 template <>
-inline NTetrahedron* NTriangulation::getFace<3>(unsigned long index) const {
-    return tetrahedra_[index];
+inline NTetrahedron* Triangulation<3>::getFace<3>(unsigned long index) const {
+    return simplices_[index];
 }
 
-inline long NTriangulation::componentIndex(const NComponent* component) const {
-    return component->markedIndex();
-}
-
-inline long NTriangulation::boundaryComponentIndex(
+inline long Triangulation<3>::boundaryComponentIndex(
         const NBoundaryComponent* boundaryComponent) const {
     return boundaryComponent->markedIndex();
 }
 
-inline long NTriangulation::vertexIndex(const NVertex* vertex) const {
+inline long Triangulation<3>::vertexIndex(const NVertex* vertex) const {
     return vertex->markedIndex();
 }
 
-inline long NTriangulation::edgeIndex(const NEdge* edge) const {
+inline long Triangulation<3>::edgeIndex(const NEdge* edge) const {
     return edge->markedIndex();
 }
 
-inline long NTriangulation::triangleIndex(const NTriangle* tri) const {
+inline long Triangulation<3>::triangleIndex(const NTriangle* tri) const {
     return tri->markedIndex();
 }
 
-inline long NTriangulation::faceIndex(const NTriangle* tri) const {
+inline long Triangulation<3>::faceIndex(const NTriangle* tri) const {
     return tri->markedIndex();
 }
 
 #ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
-inline long NTriangulation::faceIndex<0>(const NVertex* face) const {
+inline long Triangulation<3>::faceIndex<0>(const NVertex* face) const {
     return face->markedIndex();
 }
 
 template <>
-inline long NTriangulation::faceIndex<1>(const NEdge* face) const {
+inline long Triangulation<3>::faceIndex<1>(const NEdge* face) const {
     return face->markedIndex();
 }
 
 template <>
-inline long NTriangulation::faceIndex<2>(const NTriangle* face) const {
+inline long Triangulation<3>::faceIndex<2>(const NTriangle* face) const {
     return face->markedIndex();
 }
 
 template <>
-inline long NTriangulation::faceIndex<3>(const NTetrahedron* face) const {
+inline long Triangulation<3>::faceIndex<3>(const NTetrahedron* face) const {
     return face->markedIndex();
 }
 #endif
 
-inline bool NTriangulation::hasTwoSphereBoundaryComponents() const {
+inline bool Triangulation<3>::hasTwoSphereBoundaryComponents() const {
     if (! twoSphereBoundaryComponents_.known())
         calculateBoundaryProperties();
     return twoSphereBoundaryComponents_.value();
 }
 
-inline bool NTriangulation::hasNegativeIdealBoundaryComponents() const {
+inline bool Triangulation<3>::hasNegativeIdealBoundaryComponents() const {
     if (! negativeIdealBoundaryComponents_.known())
         calculateBoundaryProperties();
     return negativeIdealBoundaryComponents_.value();
 }
 
-inline bool NTriangulation::isValid() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+inline bool Triangulation<3>::isValid() const {
+    ensureSkeleton();
     return valid_;
 }
 
-inline bool NTriangulation::isIdeal() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+inline bool Triangulation<3>::isIdeal() const {
+    ensureSkeleton();
     return ideal_;
 }
 
-inline bool NTriangulation::isStandard() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+inline bool Triangulation<3>::isStandard() const {
+    ensureSkeleton();
     return standard_;
 }
 
-inline bool NTriangulation::hasBoundaryTriangles() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return (triangles_.size() > 2 * tetrahedra_.size());
+inline bool Triangulation<3>::hasBoundaryTriangles() const {
+    ensureSkeleton();
+    return (triangles_.size() > 2 * simplices_.size());
 }
 
-inline bool NTriangulation::hasBoundaryFaces() const {
+inline bool Triangulation<3>::hasBoundaryFaces() const {
     return hasBoundaryTriangles();
 }
 
-inline unsigned long NTriangulation::getNumberOfBoundaryTriangles() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return 2 * triangles_.size() - 4 * tetrahedra_.size();
+inline size_t Triangulation<3>::countBoundaryFacets() const {
+    // Override, since we can do this faster in dimension 3.
+    ensureSkeleton();
+    return 2 * triangles_.size() - 4 * simplices_.size();
 }
 
-inline bool NTriangulation::isClosed() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+inline size_t Triangulation<3>::countBoundaryTriangles() const {
+    return countBoundaryFacets();
+}
+
+inline size_t Triangulation<3>::getNumberOfBoundaryTriangles() const {
+    return countBoundaryFacets();
+}
+
+inline bool Triangulation<3>::isClosed() const {
+    ensureSkeleton();
     return boundaryComponents_.empty();
 }
 
-inline bool NTriangulation::isOrientable() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return orientable_;
-}
-
-inline bool NTriangulation::isConnected() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return (components_.size() <= 1);
-}
-
-inline void NTriangulation::simplifiedFundamentalGroup(
+inline void Triangulation<3>::simplifiedFundamentalGroup(
         NGroupPresentation* newGroup) {
     fundamentalGroup_ = newGroup;
 }
 
-inline bool NTriangulation::knowsZeroEfficient() const {
+inline bool Triangulation<3>::knowsZeroEfficient() const {
     return zeroEfficient_.known();
 }
 
-inline bool NTriangulation::knowsSplittingSurface() const {
+inline bool Triangulation<3>::knowsSplittingSurface() const {
     return splittingSurface_.known();
 }
 
-inline bool NTriangulation::hasStrictAngleStructure() const {
+inline bool Triangulation<3>::hasStrictAngleStructure() const {
     if (! strictAngleStructure_.known())
         findStrictAngleStructure();
     return (strictAngleStructure_.value() != 0);
 }
 
-inline unsigned long NTriangulation::getHomologyH2Z2() const {
+inline unsigned long Triangulation<3>::getHomologyH2Z2() const {
     return getHomologyH1Rel().getRank() + getHomologyH1Rel().getTorsionRank(2);
 }
 
-inline const NTriangulation::TuraevViroSet&
-        NTriangulation::allCalculatedTuraevViro() const {
+inline const Triangulation<3>::TuraevViroSet&
+        Triangulation<3>::allCalculatedTuraevViro() const {
     return turaevViroCache_;
 }
 
-inline const NTreeDecomposition& NTriangulation::niceTreeDecomposition() const {
+inline const NTreeDecomposition& Triangulation<3>::niceTreeDecomposition()
+        const {
     if (niceTreeDecomposition_.known())
         return *niceTreeDecomposition_.value();
 
@@ -4331,16 +3781,16 @@ inline const NTreeDecomposition& NTriangulation::niceTreeDecomposition() const {
     return *(niceTreeDecomposition_ = ans);
 }
 
-inline void NTriangulation::writeTextShort(std::ostream& out) const {
-    out << "Triangulation with " << tetrahedra_.size()
-        << (tetrahedra_.size() == 1 ? " tetrahedron" : " tetrahedra");
+inline void Triangulation<3>::writeTextShort(std::ostream& out) const {
+    out << "Triangulation with " << simplices_.size()
+        << (simplices_.size() == 1 ? " tetrahedron" : " tetrahedra");
 }
 
-inline void NTriangulation::recognizer(std::ostream& out) const {
+inline void Triangulation<3>::recognizer(std::ostream& out) const {
     recogniser(out);
 }
 
-inline bool NTriangulation::saveRecognizer(const char* filename) const {
+inline bool Triangulation<3>::saveRecognizer(const char* filename) const {
     return saveRecogniser(filename);
 }
 

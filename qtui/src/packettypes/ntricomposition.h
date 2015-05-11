@@ -53,13 +53,13 @@ class QTreeWidget;
 class QTreeWidgetItem;
 
 namespace regina {
-    class NIsomorphism;
     class NMatrix2;
     class NPacket;
-    class NPerm4;
     class NSatRegion;
     class NStandardTriangulation;
-    class NTriangulation;
+    template <int> class Isomorphism;
+    template <int> class Triangulation;
+    typedef Triangulation<3> NTriangulation;
 };
 
 /**
@@ -82,7 +82,7 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
          */
         regina::NTriangulation* tri;
         regina::NTriangulation* comparingTri;
-        std::auto_ptr<regina::NIsomorphism> isomorphism;
+        std::auto_ptr<regina::Isomorphism<3>> isomorphism;
         IsomorphismType isoType;
 
         /**

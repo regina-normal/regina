@@ -46,8 +46,7 @@
 
 namespace regina {
 
-NTriangulation::NTriangulation(const std::string& description) :
-        calculatedSkeleton_(false) {
+Triangulation<3>::Triangulation(const std::string& description) {
     NTriangulation* attempt;
 
     if ((attempt = fromIsoSig(description))) {
@@ -64,89 +63,8 @@ NTriangulation::NTriangulation(const std::string& description) :
     delete attempt;
 }
 
-void NTriangulation::addTetrahedron(NTetrahedron* t) {
-    // Make this a no-op if the tetrahedron has already been added.
-    if (t->tri_ == this)
-        return;
-    assert(t->tri_ == 0);
-
-    ChangeEventSpan span(this);
-
-    t->tri_ = this;
-    tetrahedra_.push_back(t);
-
-    // Aggressively add neighbours of t (recursively).
-    // First check whether this is even necessary.
-    bool moreToAdd = false;
-    int i;
-    for (i = 0; i < 4; ++i)
-        if (t->adjacentTetrahedron(i) && ! t->adjacentTetrahedron(i)->tri_) {
-            moreToAdd = true;
-            break;
-        }
-    if (moreToAdd) {
-        // Yep, it's necessary.. off we go.
-        std::stack<NTetrahedron*> toFollow;
-        toFollow.push(t);
-
-        NTetrahedron* next;
-        NTetrahedron* adj;
-        while (! toFollow.empty()) {
-            next = toFollow.top();
-            toFollow.pop();
-            for (i = 0; i < 4; ++i) {
-                adj = next->adjacentTetrahedron(i);
-                if (adj && ! adj->tri_) {
-                    adj->tri_ = this;
-                    tetrahedra_.push_back(adj);
-                    toFollow.push(adj);
-                }
-            }
-        }
-    }
-
-    clearAllProperties();
-}
-
-void NTriangulation::swapContents(NTriangulation& other) {
-    ChangeEventSpan span1(this);
-    ChangeEventSpan span2(&other);
-
-    clearAllProperties();
-    other.clearAllProperties();
-
-    tetrahedra_.swap(other.tetrahedra_);
-
-    TetrahedronIterator it;
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it)
-        (*it)->tri_ = this;
-    for (it = other.tetrahedra_.begin(); it != other.tetrahedra_.end(); ++it)
-        (*it)->tri_ = &other;
-}
-
-void NTriangulation::moveContentsTo(NTriangulation& dest) {
-    ChangeEventSpan span1(this);
-    ChangeEventSpan span2(&dest);
-
-    clearAllProperties();
-    dest.clearAllProperties();
-
-    TetrahedronIterator it;
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it) {
-        // This is an abuse of NMarkedVector, since for a brief moment
-        // each tetrahedron belongs to both vectors
-        // tetrahedra_ and dest.tetrahedra_.
-        // However, the subsequent clear() operation does not touch the
-        // tetrahedron markings (indices), and so we end up with the
-        // correct result (i.e., the markings are correct for dest).
-        (*it)->tri_ = &dest;
-        dest.tetrahedra_.push_back(*it);
-    }
-    tetrahedra_.clear();
-}
-
-void NTriangulation::clearAllProperties() {
-    if (calculatedSkeleton_)
+void Triangulation<3>::clearAllProperties() {
+    if (calculatedSkeleton())
         deleteSkeleton();
 
     fundamentalGroup_.clear();
@@ -170,12 +88,11 @@ void NTriangulation::clearAllProperties() {
     turaevViroCache_.clear();
 }
 
-void NTriangulation::writeTextLong(std::ostream& out) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+void Triangulation<3>::writeTextLong(std::ostream& out) const {
+    ensureSkeleton();
 
     out << "Size of the skeleton:\n";
-    out << "  Tetrahedra: " << tetrahedra_.size() << '\n';
+    out << "  Tetrahedra: " << simplices_.size() << '\n';
     out << "  Triangles: " << triangles_.size() << '\n';
     out << "  Edges: " << edges_.size() << '\n';
     out << "  Vertices: " << vertices_.size() << '\n';
@@ -190,8 +107,8 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
     out << "Tetrahedron gluing:\n";
     out << "  Tet  |  glued to:      (012)      (013)      (023)      (123)\n";
     out << "  -----+-------------------------------------------------------\n";
-    for (tetPos=0; tetPos<tetrahedra_.size(); tetPos++) {
-        tet = tetrahedra_[tetPos];
+    for (tetPos=0; tetPos<simplices_.size(); tetPos++) {
+        tet = simplices_[tetPos];
         out << "  " << std::setw(3) << tetPos << "  |           ";
         for (face=3; face>=0; face--) {
             out << "  ";
@@ -215,8 +132,8 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
     out << "Vertices:\n";
     out << "  Tet  |  vertex:    0   1   2   3\n";
     out << "  -----+--------------------------\n";
-    for (tetPos=0; tetPos<tetrahedra_.size(); tetPos++) {
-        tet = tetrahedra_[tetPos];
+    for (tetPos=0; tetPos<simplices_.size(); tetPos++) {
+        tet = simplices_[tetPos];
         out << "  " << std::setw(3) << tetPos << "  |          ";
         for (vertex=0; vertex<4; vertex++)
             out << ' ' << std::setw(3) <<
@@ -228,8 +145,8 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
     out << "Edges:\n";
     out << "  Tet  |  edge:   01  02  03  12  13  23\n";
     out << "  -----+--------------------------------\n";
-    for (tetPos=0; tetPos<tetrahedra_.size(); tetPos++) {
-        tet = tetrahedra_[tetPos];
+    for (tetPos=0; tetPos<simplices_.size(); tetPos++) {
+        tet = simplices_[tetPos];
         out << "  " << std::setw(3) << tetPos << "  |        ";
         for (start=0; start<4; start++)
             for (end=start+1; end<4; end++)
@@ -242,8 +159,8 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
     out << "Triangles:\n";
     out << "  Tet  |  face:  012 013 023 123\n";
     out << "  -----+------------------------\n";
-    for (tetPos=0; tetPos<tetrahedra_.size(); tetPos++) {
-        tet = tetrahedra_[tetPos];
+    for (tetPos=0; tetPos<simplices_.size(); tetPos++) {
+        tet = simplices_[tetPos];
         out << "  " << std::setw(3) << tetPos << "  |        ";
         for (face=3; face>=0; face--)
             out << ' ' << std::setw(3) << triangleIndex(tet->getTriangle(face));
@@ -252,7 +169,7 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
     out << '\n';
 }
 
-void NTriangulation::writeXMLPacketData(std::ostream& out) const {
+void Triangulation<3>::writeXMLPacketData(std::ostream& out) const {
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlValueTag;
 
@@ -261,8 +178,8 @@ void NTriangulation::writeXMLPacketData(std::ostream& out) const {
     NTetrahedron* adjTet;
     int face;
 
-    out << "  <tetrahedra ntet=\"" << tetrahedra_.size() << "\">\n";
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); it++) {
+    out << "  <tetrahedra ntet=\"" << simplices_.size() << "\">\n";
+    for (it = simplices_.begin(); it != simplices_.end(); it++) {
         out << "    <tet desc=\"" <<
             xmlEncodeSpecialChars((*it)->getDescription()) << "\"> ";
         for (face = 0; face < 4; face++) {
@@ -332,7 +249,7 @@ void NTriangulation::writeXMLPacketData(std::ostream& out) const {
         out << "  " << xmlValueTag("haken", haken_.value()) << '\n';
 }
 
-NTriangulation* NTriangulation::enterTextTriangulation(std::istream& in,
+NTriangulation* Triangulation<3>::enterTextTriangulation(std::istream& in,
         std::ostream& out) {
     NTriangulation* triang = new NTriangulation();
     NTetrahedron* tet;
@@ -373,8 +290,8 @@ NTriangulation* NTriangulation::enterTextTriangulation(std::istream& in,
                 << nTet-1 << " inclusive.\n";
             continue;
         }
-        tet = triang->tetrahedra_[tetPos];
-        altTet = triang->tetrahedra_[altPos];
+        tet = triang->simplices_[tetPos];
+        altTet = triang->simplices_[altPos];
         out << "Enter the three vertices of the first tetrahedron ("
             << tetPos << "), separated by spaces,\n";
         out << "    that will form one face of the gluing: ";
@@ -430,7 +347,7 @@ NTriangulation* NTriangulation::enterTextTriangulation(std::istream& in,
     return triang;
 }
 
-long NTriangulation::getEulerCharManifold() const {
+long Triangulation<3>::getEulerCharManifold() const {
     // Begin with V - E + F - T.
     // This call to getEulerCharTri() also ensures that the skeleton has
     // been calculated.
@@ -457,12 +374,7 @@ long NTriangulation::getEulerCharManifold() const {
     return ans;
 }
 
-void NTriangulation::deleteTetrahedra() {
-    for_each(tetrahedra_.begin(), tetrahedra_.end(), FuncDelete<NTetrahedron>());
-    tetrahedra_.clear();
-}
-
-void NTriangulation::deleteSkeleton() {
+void Triangulation<3>::deleteSkeleton() {
     // Now that skeletal destructors are private, we can't just use for_each.
     // How primitive.  Loop through each list indivually.
     for (VertexIterator it = vertices_.begin(); it != vertices_.end(); ++it)
@@ -471,9 +383,6 @@ void NTriangulation::deleteSkeleton() {
         delete *it;
     for (TriangleIterator it = triangles_.begin(); it != triangles_.end(); ++it)
         delete *it;
-    for (ComponentIterator it = components_.begin();
-            it != components_.end(); ++it)
-        delete *it;
     for (BoundaryComponentIterator it = boundaryComponents_.begin();
             it != boundaryComponents_.end(); ++it)
         delete *it;
@@ -481,19 +390,18 @@ void NTriangulation::deleteSkeleton() {
     vertices_.clear();
     edges_.clear();
     triangles_.clear();
-    components_.clear();
     boundaryComponents_.clear();
 
-    calculatedSkeleton_ = false;
+    TriangulationBase<3>::deleteSkeleton();
 }
 
-void NTriangulation::cloneFrom(const NTriangulation& X) {
+void Triangulation<3>::cloneFrom(const NTriangulation& X) {
     ChangeEventSpan span(this);
 
     removeAllTetrahedra();
 
     TetrahedronIterator it;
-    for (it = X.tetrahedra_.begin(); it != X.tetrahedra_.end(); it++)
+    for (it = X.simplices_.begin(); it != X.simplices_.end(); it++)
         newTetrahedron((*it)->getDescription());
 
     // Make the gluings.
@@ -503,7 +411,7 @@ void NTriangulation::cloneFrom(const NTriangulation& X) {
     NPerm4 adjPerm;
     int face;
     tetPos = 0;
-    for (it = X.tetrahedra_.begin(); it != X.tetrahedra_.end(); it++) {
+    for (it = X.simplices_.begin(); it != X.simplices_.end(); it++) {
         tet = *it;
         for (face=0; face<4; face++) {
             adjTet = tet->adjacentTetrahedron(face);
@@ -512,8 +420,8 @@ void NTriangulation::cloneFrom(const NTriangulation& X) {
                 adjPerm = tet->adjacentGluing(face);
                 if (adjPos > tetPos ||
                         (adjPos == tetPos && adjPerm[face] > face)) {
-                    tetrahedra_[tetPos]->joinTo(face,
-                        tetrahedra_[adjPos], adjPerm);
+                    simplices_[tetPos]->joinTo(face,
+                        simplices_[adjPos], adjPerm);
                 }
             }
         }
@@ -555,169 +463,15 @@ void NTriangulation::cloneFrom(const NTriangulation& X) {
     turaevViroCache_ = X.turaevViroCache_;
 }
 
-void NTriangulation::insertTriangulation(const NTriangulation& X) {
-    ChangeEventSpan span(this);
-
-    unsigned long norig = getNumberOfTetrahedra();
-    unsigned long nX = X.getNumberOfTetrahedra();
-
-    unsigned long tetPos;
-    for (tetPos = 0; tetPos < nX; ++tetPos)
-        newTetrahedron(X.tetrahedra_[tetPos]->getDescription());
-
-    // Make the gluings.
-    unsigned long adjPos;
-    NTetrahedron* tet;
-    NTetrahedron* adjTet;
-    NPerm4 adjPerm;
-    int face;
-    for (tetPos = 0; tetPos < nX; ++tetPos) {
-        tet = X.tetrahedra_[tetPos];
-        for (face=0; face<4; face++) {
-            adjTet = tet->adjacentTetrahedron(face);
-            if (adjTet) {
-                adjPos = X.tetrahedronIndex(adjTet);
-                adjPerm = tet->adjacentGluing(face);
-                if (adjPos > tetPos ||
-                        (adjPos == tetPos && adjPerm[face] > face)) {
-                    tetrahedra_[norig + tetPos]->joinTo(face,
-                        tetrahedra_[norig + adjPos], adjPerm);
-                }
-            }
-        }
-    }
-}
-
-void NTriangulation::insertConstruction(unsigned long nTetrahedra,
-        const int adjacencies[][4], const int gluings[][4][4]) {
-    if (nTetrahedra == 0)
-        return;
-
-    ChangeEventSpan span(this);
-
-    NTetrahedron** tet = new NTetrahedron*[nTetrahedra];
-
-    unsigned i, j;
-    NPerm4 p;
-
-    for (i = 0; i < nTetrahedra; i++)
-        tet[i] = newTetrahedron();
-
-    for (i = 0; i < nTetrahedra; i++)
-        for (j = 0; j < 4; j++)
-            if (adjacencies[i][j] >= 0 &&
-                    ! tet[i]->adjacentTetrahedron(j)) {
-                p = NPerm4(gluings[i][j][0], gluings[i][j][1],
-                    gluings[i][j][2], gluings[i][j][3]);
-                tet[i]->joinTo(j, tet[adjacencies[i][j]], p);
-            }
-
-    delete[] tet;
-}
-
-std::string NTriangulation::dumpConstruction() const {
-    std::ostringstream ans;
-    ans <<
-"/**\n";
-    if (! getPacketLabel().empty())
-        ans <<
-" * Triangulation: " << getPacketLabel() << "\n";
-    ans <<
-" * Code automatically generated by dumpConstruction().\n"
-" */\n"
-"\n";
-
-    if (tetrahedra_.empty()) {
-        ans <<
-"/* This triangulation is empty.  No code is being generated. */\n";
-        return ans.str();
-    }
-
-    ans <<
-"/**\n"
-" * The following arrays describe the individual gluings of\n"
-" * tetrahedron faces.\n"
-" */\n"
-"\n";
-
-    unsigned long nTetrahedra = tetrahedra_.size();
-    NTetrahedron* tet;
-    NPerm4 p;
-    unsigned long t;
-    int f, i;
-
-    ans << "const int adjacencies[" << nTetrahedra << "][4] = {\n";
-    for (t = 0; t < nTetrahedra; t++) {
-        tet = tetrahedra_[t];
-
-        ans << "    { ";
-        for (f = 0; f < 4; f++) {
-            if (tet->adjacentTetrahedron(f)) {
-                ans << tetrahedronIndex(tet->adjacentTetrahedron(f));
-            } else
-                ans << "-1";
-
-            if (f < 3)
-                ans << ", ";
-            else if (t != nTetrahedra - 1)
-                ans << "},\n";
-            else
-                ans << "}\n";
-        }
-    }
-    ans << "};\n\n";
-
-    ans << "const int gluings[" << nTetrahedra << "][4][4] = {\n";
-    for (t = 0; t < nTetrahedra; t++) {
-        tet = tetrahedra_[t];
-
-        ans << "    { ";
-        for (f = 0; f < 4; f++) {
-            if (tet->adjacentTetrahedron(f)) {
-                p = tet->adjacentGluing(f);
-                ans << "{ ";
-                for (i = 0; i < 4; i++) {
-                    ans << p[i];
-                    if (i < 3)
-                        ans << ", ";
-                    else
-                        ans << " }";
-                }
-            } else
-                ans << "{ 0, 0, 0, 0 }";
-
-            if (f < 3)
-                ans << ", ";
-            else if (t != nTetrahedra - 1)
-                ans << " },\n";
-            else
-                ans << " }\n";
-        }
-    }
-    ans << "};\n\n";
-
-    ans <<
-"/**\n"
-" * The following code actually constructs a triangulation based on\n"
-" * the information stored in the arrays above.\n"
-" */\n"
-"\n"
-"NTriangulation tri;\n"
-"tri.insertConstruction(" << nTetrahedra << ", adjacencies, gluings);\n"
-"\n";
-
-    return ans.str();
-}
-
-std::string NTriangulation::snapPea() const {
+std::string Triangulation<3>::snapPea() const {
     std::ostringstream out;
     snapPea(out);
     return out.str();
 }
 
-void NTriangulation::snapPea(std::ostream& out) const {
+void Triangulation<3>::snapPea(std::ostream& out) const {
     // Sanity checks.
-    if ((! isValid()) || hasBoundaryTriangles() || tetrahedra_.empty())
+    if ((! isValid()) || hasBoundaryTriangles() || simplices_.empty())
         return;
 
     // Write header information.
@@ -739,7 +493,7 @@ void NTriangulation::snapPea(std::ostream& out) const {
     out << getNumberOfTetrahedra() << '\n';
 
     int i, j;
-    for (NTriangulation::TetrahedronIterator it = getTetrahedra().begin();
+    for (Triangulation<3>::TetrahedronIterator it = getTetrahedra().begin();
             it != getTetrahedra().end(); it++) {
         // Although our precondition states that there are no boundary
         // triangles, we test for this anyway.  If somebody makes a mistake and
@@ -773,9 +527,9 @@ void NTriangulation::snapPea(std::ostream& out) const {
     }
 }
 
-bool NTriangulation::saveSnapPea(const char* filename) const {
+bool Triangulation<3>::saveSnapPea(const char* filename) const {
     // Sanity checks.
-    if ((! isValid()) || hasBoundaryTriangles() || tetrahedra_.empty())
+    if ((! isValid()) || hasBoundaryTriangles() || simplices_.empty())
         return false;
 
     std::ofstream out(filename);
@@ -785,19 +539,19 @@ bool NTriangulation::saveSnapPea(const char* filename) const {
     return true;
 }
 
-std::string NTriangulation::recogniser() const {
+std::string Triangulation<3>::recogniser() const {
     std::ostringstream out;
     recogniser(out);
     return out.str();
 }
 
-std::string NTriangulation::recognizer() const {
+std::string Triangulation<3>::recognizer() const {
     std::ostringstream out;
     recogniser(out);
     return out.str();
 }
 
-void NTriangulation::recogniser(std::ostream& out) const {
+void Triangulation<3>::recogniser(std::ostream& out) const {
     // Sanity checks.
     if ((! isValid()) || hasBoundaryTriangles())
         return;
@@ -835,7 +589,7 @@ void NTriangulation::recogniser(std::ostream& out) const {
     out << "end" << std::endl;
 }
 
-bool NTriangulation::saveRecogniser(const char* filename) const {
+bool Triangulation<3>::saveRecogniser(const char* filename) const {
     // Sanity checks.
     if ((! isValid()) || hasBoundaryTriangles())
         return false;
@@ -848,7 +602,7 @@ bool NTriangulation::saveRecogniser(const char* filename) const {
     return true;
 }
 
-NTriangulation* NTriangulation::fromSnapPea(const std::string& snapPeaData) {
+NTriangulation* Triangulation<3>::fromSnapPea(const std::string& snapPeaData) {
     std::istringstream in(snapPeaData);
     return readSnapPea(in);
 }

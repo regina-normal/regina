@@ -55,12 +55,14 @@
 
 namespace regina {
 
-class NTriangulation;
 class NMatrixInt;
 class NNormalSurfaceList;
 class NProgressTracker;
 class NXMLPacketReader;
 class NXMLNormalSurfaceListReader;
+
+template <int> class Triangulation;
+typedef Triangulation<3> NTriangulation;
 
 /**
  * \weakgroup surfaces

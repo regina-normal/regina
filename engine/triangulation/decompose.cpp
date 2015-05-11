@@ -49,7 +49,7 @@ namespace regina {
 unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
         bool setLabels) {
     // Knock off the empty triangulation first.
-    if (tetrahedra_.empty())
+    if (simplices_.empty())
         return 0;
 
     if (! componentParent)
@@ -66,7 +66,7 @@ unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
         newTris[whichComp] = new NTriangulation();
 
     // Clone the tetrahedra, sorting them into the new components.
-    unsigned long nTets = tetrahedra_.size();
+    unsigned long nTets = simplices_.size();
 
     NTetrahedron** newTets = new NTetrahedron*[nTets];
     NTetrahedron *tet, *adjTet;
@@ -76,12 +76,12 @@ unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
 
     for (tetPos = 0; tetPos < nTets; tetPos++)
         newTets[tetPos] =
-            newTris[componentIndex(tetrahedra_[tetPos]->getComponent())]->
-            newTetrahedron(tetrahedra_[tetPos]->getDescription());
+            newTris[componentIndex(simplices_[tetPos]->getComponent())]->
+            newTetrahedron(simplices_[tetPos]->getDescription());
 
     // Clone the tetrahedron gluings also.
     for (tetPos = 0; tetPos < nTets; tetPos++) {
-        tet = tetrahedra_[tetPos];
+        tet = simplices_[tetPos];
         for (face = 0; face < 4; face++) {
             adjTet = tet->adjacentTetrahedron(face);
             if (adjTet) {
@@ -1063,7 +1063,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
     // right through the tetrahedron.
     TetrahedronIterator tit;
     NSnappedBall* ball;
-    for (tit = use.tetrahedra_.begin(); tit != use.tetrahedra_.end(); ++tit) {
+    for (tit = use.simplices_.begin(); tit != use.simplices_.end(); ++tit) {
         ball = NSnappedBall::formsSnappedBall(*tit);
         if (! ball)
             continue;

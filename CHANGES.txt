@@ -27,6 +27,8 @@ Version 5.0  [ (under development) ]
 
 Version 4.97  [ (under development) ]
 
+    GENERAL:
+        - Now uses aspects of C++11, which your compiler will need to support.
     ENGINE:
         All:
             - Removed ShareableObject from the class hierarchy.  All classes
@@ -36,24 +38,87 @@ Version 4.97  [ (under development) ]
         Namespace regina::boost, regina::stl:
             - Removed these namespaces and all their members.  To fix
               code that used regina::boost, just use plain boost instead.
+        Class Component, ComponentBase:
+            - Component<dim> is now a generic class that replaces the old
+              Dim2Component, NComponent and so on.  ComponentBase<dim> is a
+              base class with functionality common to all dimensions,
+              whereas Component<dim> is specialised for dimensions 2, 3 and 4.
+            - The old class names Dim2Component and NComponent have
+              been kept as typedefs for convenience.
         Class CompressionBuffer, CompressionStream, DecompressionBuffer,
                 DecompressionStream, ZBuffer:
             - Removed entirely.  Regina now uses boost::iostreams instead.
         Class DegreeLessThan, DegreeGreaterThan:
             - New template-based helper classes for sorting subfaces of
               a triangulation by degree.
+        Class Dim2BoundaryComponent, Dim2Component, Dim2Edge, Dim2Vertex
+            - Now derive from Output instead of ShareableObject.
+        Class Dim2Component:
+            - New routine getNumberOfBoundaryFacets(), which is identical to
+              the dimension-specific getNumberOfBoundaryEdges().
+            - Routines getNumberOfSimplices(), getSimplices(), getSimplex()
+              and getNumberOfBoundaryFacets() have been renamed to size(),
+              simplices(), simplex() and countBoundaryFacets() respectively.
+              The old names are retained but deprecated.
+        Class Dim2Isomorphism:
+            - Now just a typedef for the new class Isomorphism<2>, which has
+              the same functionality as the old Dim2Isomorphism.
+            - New static routine identity().
+            - Routine getSourceSimplices() is deprecated, and has been
+              replaced with the easier-to-type size().
+        Class Dim2Triangle:
+            - Now just a typedef for the new class Simplex<2>, which has
+              the same functionality as the old Dim2Triangle.
+            - You can now safely call unjoin() on a boundary edge.
+            - Routine joinTo() has been renamed to join().  The old name
+              joinTo() has been kept but is now deprecated.
+            - Routine getComponent() has been renamed to component().
+              The old name getComponent() has been kept but is now deprecated.
         Class Dim2Triangulation:
+            - Now just a typedef for the new class Triangulation<2>, which has
+              the same functionality as the old Dim2Triangulation.
             - New dimension-agnostic getFace<subdim>() and
               faceIndex<subdim>() template functions.
+            - New dimension-agnostic function hasBoundaryFacets().
+            - Routines getNumberOfSimplices(), getSimplices() and getSimplex()
+              have been renamed to size(), simplices() and simplex()
+              respectively.  The old names are deprecated but have been
+              kept for backward compatibility.
+            - Renamed getNumberOfComponents(), getComponents(), getComponent()
+              to countComponents(), components() and component().  The
+              old names are deprecated but kept for backward compatibility.
+            - Renamed getNumberOfBoundaryEdges() to countBoundaryFacets();
+              added an alias countBoundaryEdges(); deprecated the old name.
+        Class DimTraits:
+            - Removed the Isomorphism typedef.  Juse use Isomorphism<dim>.
+            - Removed the Perm typedef.  Juse use NPerm<dim+1>.
+            - Removed the Simplex typedef.  Just use Simplex<dim>.
+            - Removed the Triangulation typedef.  Just use Triangulation<dim>.
         Class FaceTraits:
             - New template class to help with writing dimension-agnostic code.
               This class offers typedefs for (subdim)-dimensional faces
               within a (dim)-dimensional triangulation.
+        Class IntOfMinSize:
+            - Gives access to native integer types of a given minimum size.
+        Class Isomorphism, IsomorphismBase:
+            - Isomorphism<dim> is now a generic class that replaces the old
+              Dim2Isomorphism, NIsomorphism and so on.  IsomorphismBase<dim>
+              is a base class with functionality common to all dimensions,
+              whereas Isomorphism<dim> is specialised for dimensions 2, 3 and 4.
+            - The old class names Dim2Isomorphism and NIsomorphism have
+              been kept as typedefs for convenience.
         Class LightweightSequence:
             - New lightweight class for storing an array of objects.
         Class NAngleStructureList:
             - Renamed getNumberOfStructures() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
+        Class NComponent:
+            - New routine getNumberOfBoundaryFacets(), which is identical to
+              the dimension-specific getNumberOfBoundaryTriangles().
+            - Routines getNumberOfSimplices(), getSimplices(), getSimplex()
+              and getNumberOfBoundaryFacets() have been renamed to size(),
+              simplices(), simplex() and countBoundaryFacets() respectively.
+              The old names are retained but deprecated.
         Class NCyclotomic:
             - New class for exact arithmetic in cyclotomic fields.
         Class NExampleSnapPeaTriangulation:
@@ -66,14 +131,30 @@ Version 4.97  [ (under development) ]
         Class NGenericFacetPairing, NFacePairing, Dim2EdgePairing:
             - Routines dotHeader() and writeDotHeader() no longer set an
               explicit background colour.
+            - Removed the Perm typedef.  Juse use NPerm<dim+1> instead.
+            - Removed the Triangulation typedef.  Just use Triangulation<dim>.
+        Class NGenericGluingPermSearcher:
+            - Removed the Perm typedef.  Juse use NPerm<dim+1> instead.
+            - Removed the Triangulation typedef.  Just use Triangulation<dim>.
+        Class NGenericIsomorphism:
+            - Removed entirely.  Just use Isomorphism<dim> instead.
         Class NGenericTriangulation, NTriangulation, Dim2Triangulation:
-            - New routine size(), which is an alias for getNumberOfSimplices().
+            - Removed the Perm typedef.  Juse use NPerm<dim+1> instead.
+            - Removed the Triangulation typedef.  Just use Triangulation<dim>.
         Class NGlobalDirs:
             - The directory containing the machine-encoded census data is now
               independent of home().  It can be queried through the new census()
               routine, and set through an optional third argument to setDirs().
             - The homeDir argument to setDirs() may now be the empty string,
               which signals that the directory should not be changed.
+        Class NIsomorphism:
+            - Now just a typedef for the new class Isomorphism<3>, which has
+              the same functionality as the old NIsomorphism.
+            - New static routine identity().
+            - Routine getSourceSimplices() is deprecated, and has been
+              replaced with the easier-to-type size().
+        Class NIsomorphismDirect:
+            - Removed this class, which has been deprecated for some time now.
         Class NMatrix:
             - The destructor and writeMatrix() are no longer virtual.
             - Now derives from Output, and provides str() and detail()
@@ -93,6 +174,33 @@ Version 4.97  [ (under development) ]
             - New routine transferChildren() for bulk tree reorganisation.
         Class NPacketListener:
             - New events childToBeRenamed(), childWasRenamed().
+        Class NPerm:
+            - New generic template class for permutations of 2..16 objects.
+              The old NPerm3, NPerm4 and NPerm5 classes are now
+              specialisations of this template.
+            - Removed the old deprecated NPerm typedef (this was synonymous
+              with NPerm4).
+        Class NPerm3, NPerm4, NPerm5:
+            - These are now specialisations NPerm<3>, NPerm<4> and NPerm<5>.
+              The old names NPerm3, NPerm4 and NPerm5 remain as typedefs.
+            - Added a Code typedef for internal permutation codes.
+            - New routines atIndex() and index(), for consistency with the
+              new NPerm template.
+            - Added an Image typedef for use with index() and atIndex().
+            - Added imageBits const for NPerm5, in line with the new
+              generic NPerm template.
+            - The nPerms and nPerms_1 constants are now static const ints,
+              not enum constants.
+            - New trunc() routine that takes a length argument.
+            - New constructors that take two arrays.
+            - New static rand() routine for generating a random permutation.
+            - Removed deprecated toString() and setPerm() routines.
+            - Removed deprecated arrays from NPerm4::invS3 and NPerm4::invS2.
+            - Removed deprecated global arrays from nperm4.h, including
+              allPermsS{4,3,2}, allPermsS{4,3,2}Inv, and orderedPermsS{4,3}.
+            - Removed deprecated global functions from nperm4.h, including
+              faceOrdering(), faceDescription(), edgeOrdering(), and
+              edgeDescription().
         Class NPolynomial:
             - New class for working with single-variable polynomials
               over arbitrary rings.
@@ -103,6 +211,20 @@ Version 4.97  [ (under development) ]
               and can optionally overwrite the default writeTextLong function.
         Class NSurfaceFilterProperties:
             - New set-based routine setECs().
+        Class NTetrahedron:
+            - Now just a typedef for the new class Simplex<3>, which has
+              the same functionality as the old NTetrahedron.
+            - Removed the old deprecated public constructors.  The only way
+              to construct a new tetrahedron is via the triangulation, using
+              NTriangulation::newTetrahedron() or NTriangulation::newSimplex().
+            - Removed deprecated routines getAdjacentTetrahedron(),
+              getAdjacentTetrahedronGluing(), getAdjacentFace(), getFace()
+              and getFaceMapping().
+            - You can now safely call unjoin() on a boundary face.
+            - Routine joinTo() has been renamed to join().  The old name
+              joinTo() has been kept but is now deprecated.
+            - Routine getComponent() has been renamed to component().
+              The old name getComponent() has been kept but is now deprecated.
         Class NTreeBag, NTreeDecomposition:
             - Classes for computing tree decompositions of graphs
               (including facet pairing graphs of triangulations).
@@ -111,6 +233,8 @@ Version 4.97  [ (under development) ]
               the old triangle type constants.  Also added a new type
               constant UNKNOWN_TYPE.
         Class NTriangulation:
+            - Now just a typedef for the new class Triangulation<3>, which has
+              the same functionality as the old NTriangulation.
             - The routine turaevViro() now computes Turaev-Viro invariants
               using exact arithmetic, as elements of a cyclotomic field.  The
               old floating-point routine has been renamed to turaevViroApprox().
@@ -130,27 +254,61 @@ Version 4.97  [ (under development) ]
               (which will be floating-point approximations) will be ignored.
             - Removed the optional boolean argument (forceDivision) from
               idealToFinite().
+            - New dimension-agnostic function hasBoundaryFacets().
             - New dimension-agnostic getFace<subdim>() and
               faceIndex<subdim>() template functions.
             - New routine niceTreeDecomposition() for constructing and
               caching a nice tree decomposition of the face pairing graph.
+            - Routines getNumberOfSimplices(), getSimplices() and getSimplex()
+              have been renamed to size(), simplices() and simplex()
+              respectively.  The old names are deprecated but have been
+              kept for backward compatibility.
+            - Removed deprecated routines addTetrahedron() and
+              gluingsHaveChanged().
+            - Renamed getNumberOfComponents(), getComponents(), getComponent()
+              to countComponents(), components() and component().  The
+              old names are deprecated but kept for backward compatibility.
+            - Renamed getNumberOfBoundaryTriangles() to countBoundaryFacets();
+              added an alias countBoundaryTriangles(); deprecated the old name.
         Class NVertex:
             - Added a new LinkType enumeration, which encapsulates (and
               replaces) the old link type constants.
         Class Output, ShortOutput:
             - New classes that provide consistent APIs for objects to provide
-              short and detailed string output.  This has been introduced as a
-              lightweight replacement for ShareableObject, and eventually
-              it will replace ShareableObject completely.
+              short and detailed string output.  These have been introduced as
+              lightweight replacements for the now-defunct ShareableObject.
         Class ShareableObject:
-            - Deprecated.  This is no longer a base class for objects that
-              are mirrored in external interfaces.  Ultimately, the plan
-              is to remove ShareableObject entirely.
+            - Removed entirely.  This is no longer needed as a base class for
+              objects that are mirrored in external interfaces (e.g., python).
             - The string output routines str() and detail() are now provided
               by the Output template class instead.
+        Class Simplex, SimplexBase:
+            - Simplex<dim> is now a generic class that replaces the old
+              Dim2Triangle, NTetrahedron and so on.  SimplexBase<dim> is a
+              base class with functionality common to all dimensions,
+              whereas Simplex<dim> is specialised for dimensions 2, 3 and 4.
+            - The old class names Dim2Triangle and NTetrahedron have
+              been kept as typedefs for convenience.
+        Class Triangulation, TriangulationBase:
+            - Triangulation<dim> is now a generic class that replaces the old
+              Dim2Triangulation, NTriangulation, etc.  TriangulationBase<dim>
+              is a base class with functionality common to all dimensions,
+              whereas Triangulation<dim> is specialised for dimensions 2, 3, 4.
+            - The old class names Dim2Triangulation and NTriangulation have
+              been kept as typedefs for convenience.
+        Routine bitsRequired():
+            - New constexpr routine for counting bits in an integer.
+        Routine digit():
+            - New constexpr routine for converting integers into characters.
+        Routine factorial():
+            - New constexpr routine for computing factorials.
+        Routine nextPowerOfTwo():
+            - New constexpr routine for rounding up to a power of two.
         Routine open():
             - Added a variant that takes an input stream (as opposed to
               a filename).
+        Header nperm.h:
+            - Removed this deprecated header from the triangulation/ directory.
         Header zstream.h:
             - Removed entirely.  Regina now uses boost::iostreams instead.
     USER INTERFACE:

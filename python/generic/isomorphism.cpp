@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Python Interface                                                      *
  *                                                                        *
  *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,28 +32,60 @@
 
 /* end stub */
 
-#include "triangulation/ncomponent.h"
-#include "triangulation/ntetrahedron.h"
+#include <boost/python.hpp>
+#include "generic/isomorphism.h"
+#include "generic/triangulation.h"
 
-namespace regina {
+using namespace boost::python;
+using regina::Isomorphism;
 
-void NComponent::writeTextShort(std::ostream& out) const {
-    if (tetrahedra_.size() == 1)
-        out << "Component with 1 tetrahedron";
-    else
-        out << "Component with " << getNumberOfTetrahedra() << " tetrahedra";
+namespace {
+    template <int dim>
+    struct PyIsoHelper {
+        typedef int (Isomorphism<dim>::*simpImage_const_type)(unsigned) const;
+
+        typedef regina::NPerm<dim+1> (Isomorphism<dim>::*facetPerm_const_type)(
+            unsigned) const;
+
+        static regina::NFacetSpec<dim> iso_getItem(const Isomorphism<dim>& iso,
+                const regina::NFacetSpec<dim>& f) {
+            return iso[f];
+        }
+    };
 }
 
-void NComponent::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
-    out << std::endl;
-
-    out << (tetrahedra_.size() == 1 ? "Tetrahedron:" : "Tetrahedra:");
-    std::vector<NTetrahedron*>::const_iterator it;
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it)
-        out << ' ' << (*it)->markedIndex();
-    out << std::endl;
+template <int dim>
+void addIsomorphism(const char* name) {
+    class_<Isomorphism<dim>, std::auto_ptr<Isomorphism<dim>>,
+            boost::noncopyable>(name, init<const Isomorphism<dim>&>())
+        .def("size", &Isomorphism<dim>::size)
+        .def("getSourceSimplices", &Isomorphism<dim>::getSourceSimplices)
+        .def("simpImage", typename PyIsoHelper<dim>::simpImage_const_type(
+            &Isomorphism<dim>::simpImage))
+        .def("facetPerm", typename PyIsoHelper<dim>::facetPerm_const_type(
+            &Isomorphism<dim>::facetPerm))
+        .def("__getitem__", PyIsoHelper<dim>::iso_getItem)
+        .def("isIdentity", &Isomorphism<dim>::isIdentity)
+        .def("apply", &Isomorphism<dim>::apply,
+            return_value_policy<manage_new_object>())
+        .def("applyInPlace", &Isomorphism<dim>::applyInPlace)
+        .def("random", &Isomorphism<dim>::random,
+            return_value_policy<manage_new_object>())
+        .def("identity", &Isomorphism<dim>::identity,
+            return_value_policy<manage_new_object>())
+        .def("str", &Isomorphism<dim>::str)
+        .def("toString", &Isomorphism<dim>::toString)
+        .def("detail", &Isomorphism<dim>::detail)
+        .def("toStringLong", &Isomorphism<dim>::toStringLong)
+        .def("__str__", &Isomorphism<dim>::str)
+        .staticmethod("random")
+        .staticmethod("identity")
+    ;
 }
 
-} // namespace regina
+void addIsomorphism() {
+    addIsomorphism<5>("Isomorphism5");
+    addIsomorphism<8>("Isomorphism8");
+    addIsomorphism<15>("Isomorphism15");
+}
 

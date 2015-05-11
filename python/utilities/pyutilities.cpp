@@ -32,6 +32,7 @@
 
 /* end stub */
 
+void addIntUtils();
 void addLocale();
 void addNBoolSet();
 void addNTriBool();
@@ -39,6 +40,7 @@ void addOSUtils();
 void addStringUtils();
 
 void addUtilities() {
+    addIntUtils();
     addLocale();
     addNBoolSet();
     addNTriBool();

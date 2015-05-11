@@ -225,12 +225,10 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
 
         while (changedNow) {
             changedNow = false;
-            if (! calculatedSkeleton_) {
-                calculateSkeleton();
-            }
+            ensureSkeleton();
 
             // Crush edges if we can.
-            if (vertices_.size() > components_.size() &&
+            if (vertices_.size() > components().size() &&
                     vertices_.size() > boundaryComponents_.size()) {
                 for (eit = edges_.begin(); eit != edges_.end(); ++eit) {
                     edge = *eit;

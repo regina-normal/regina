@@ -17,11 +17,12 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     canonical-impl.h
     dimtraits.h
+    isomorphism.h
     isomorphism-impl.h
     isosig-impl.h
     nfacetspec.h
-    ngenericisomorphism-impl.h
-    ngenericisomorphism.h
     ngenerictriangulation.h
+    simplex.h
+    triangulation.h
     DESTINATION ${INCLUDEDIR}/generic COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

@@ -50,8 +50,10 @@
 namespace regina {
 
 class NMatrixInt;
-class NTriangulation;
 class NXMLAngleStructureReader;
+
+template <int> class Triangulation;
+typedef Triangulation<3> NTriangulation;
 
 /**
  * \addtogroup angle Angle Structures

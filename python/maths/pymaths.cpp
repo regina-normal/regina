@@ -41,6 +41,7 @@ void addNMatrixInt();
 void addNPerm3();
 void addNPerm4();
 void addNPerm5();
+void addNPerm();
 void addNPolynomial();
 void addNPrimes();
 void addNRational();
@@ -57,6 +58,7 @@ void addMaths() {
     addNPerm3();
     addNPerm4();
     addNPerm5();
+    addNPerm();
     addNPolynomial();
     addNPrimes();
     addNRational();

@@ -50,6 +50,9 @@ namespace regina {
 
 class NFacePair;
 
+template <int> class Triangulation;
+typedef Triangulation<3> NTriangulation;
+
 /**
  * \weakgroup census
  * @{

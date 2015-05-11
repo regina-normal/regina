@@ -44,11 +44,11 @@ namespace regina {
 // Instantiate templates:
 
 template NTreeDecomposition::NTreeDecomposition(
-    const NGenericTriangulation<2>&, TreeDecompositionAlg);
+    const Triangulation<2>&, TreeDecompositionAlg);
 template NTreeDecomposition::NTreeDecomposition(
-    const NGenericTriangulation<3>&, TreeDecompositionAlg);
+    const Triangulation<3>&, TreeDecompositionAlg);
 template NTreeDecomposition::NTreeDecomposition(
-    const NGenericTriangulation<4>&, TreeDecompositionAlg);
+    const Triangulation<4>&, TreeDecompositionAlg);
 
 template NTreeDecomposition::NTreeDecomposition(
     const NGenericFacetPairing<2>&, TreeDecompositionAlg);

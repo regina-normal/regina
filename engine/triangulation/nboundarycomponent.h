@@ -50,11 +50,16 @@
 
 namespace regina {
 
-class NComponent;
 class NEdge;
 class NTriangle;
-class NTetrahedron;
 class NVertex;
+
+template <int> class Component;
+template <int> class Simplex;
+template <int> class Triangulation;
+typedef Component<3> NComponent;
+typedef Simplex<3> NTetrahedron;
+typedef Triangulation<3> NTriangulation;
 
 /**
  * \weakgroup triangulation
@@ -293,7 +298,7 @@ class REGINA_API NBoundaryComponent :
          */
         NBoundaryComponent(NVertex* idealVertex);
 
-    friend class NTriangulation;
+    friend class Triangulation<3>;
         /**< Allow access to private members. */
 };
 

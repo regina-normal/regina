@@ -192,11 +192,13 @@ REGINA_API extern const NPerm4 __octDiscArcs[24];
 #endif
 
 class NEnumConstraintList;
-class NTriangulation;
 class NEdge;
 class NVertex;
 class NXMLNormalSurfaceReader;
 class NMatrixInt;
+
+template <int> class Triangulation;
+typedef Triangulation<3> NTriangulation;
 
 /**
  * A template that stores information about a particular

@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Python Interface                                                      *
  *                                                                        *
  *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,24 +32,44 @@
 
 /* end stub */
 
-#include <algorithm>
-#include <cstdlib>
-#include "dim2/dim2isomorphism.h"
-#include "dim2/dim2triangulation.h"
-#include "generic/ngenericisomorphism-impl.h"
+#include <boost/python.hpp>
+#include "generic/simplex.h"
+#include "generic/triangulation.h"
 
-namespace regina {
+using namespace boost::python;
+using regina::Simplex;
 
-// Instantiate all templates from the -impl.h file.
-template void NGenericIsomorphism<2>::writeTextShort(std::ostream&) const;
-template void NGenericIsomorphism<2>::writeTextLong(std::ostream&) const;
-template bool NGenericIsomorphism<2>::isIdentity() const;
-template NGenericIsomorphism<2>::NGenericIsomorphism(
-    const NGenericIsomorphism<2>&);
-template Dim2Isomorphism* NGenericIsomorphism<2>::random(unsigned);
-template Dim2Triangulation* NGenericIsomorphism<2>::apply(
-        const Dim2Triangulation*) const;
-template void NGenericIsomorphism<2>::applyInPlace(Dim2Triangulation*) const;
+template <int dim>
+void addSimplex(const char* name) {
+    class_<regina::Simplex<dim>, std::auto_ptr<regina::Simplex<dim>>,
+            boost::noncopyable>(name, no_init)
+        .def("getDescription", &Simplex<dim>::getDescription,
+            return_value_policy<return_by_value>())
+        .def("setDescription", &Simplex<dim>::setDescription)
+        .def("index", &Simplex<dim>::index)
+        .def("adjacentSimplex", &Simplex<dim>::adjacentSimplex,
+            return_value_policy<reference_existing_object>())
+        .def("adjacentGluing", &Simplex<dim>::adjacentGluing)
+        .def("adjacentFacet", &Simplex<dim>::adjacentFacet)
+        .def("hasBoundary", &Simplex<dim>::hasBoundary)
+        .def("joinTo", &Simplex<dim>::joinTo)
+        .def("join", &Simplex<dim>::join)
+        .def("unjoin", &Simplex<dim>::unjoin,
+            return_value_policy<reference_existing_object>())
+        .def("isolate", &Simplex<dim>::isolate)
+        .def("getTriangulation", &Simplex<dim>::getTriangulation,
+            return_value_policy<reference_existing_object>())
+        .def("str", &Simplex<dim>::str)
+        .def("toString", &Simplex<dim>::toString)
+        .def("detail", &Simplex<dim>::detail)
+        .def("toStringLong", &Simplex<dim>::toStringLong)
+        .def("__str__", &Simplex<dim>::str)
+    ;
+}
 
-} // namespace regina
+void addSimplex() {
+    addSimplex<5>("Simplex5");
+    addSimplex<8>("Simplex8");
+    addSimplex<15>("Simplex15");
+}
 

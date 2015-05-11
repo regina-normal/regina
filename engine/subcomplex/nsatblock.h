@@ -50,11 +50,15 @@
 
 namespace regina {
 
-class NIsomorphism;
 struct NSatAnnulus;
 class NSFSpace;
-class NTetrahedron;
-class NTriangulation;
+
+template <int> class Isomorphism;
+template <int> class Simplex;
+template <int> class Triangulation;
+typedef Isomorphism<3> NIsomorphism;
+typedef Simplex<3> NTetrahedron;
+typedef Triangulation<3> NTriangulation;
 
 /**
  * \weakgroup subcomplex

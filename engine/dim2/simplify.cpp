@@ -36,7 +36,7 @@
 
 namespace regina {
 
-bool Dim2Triangulation::oneThreeMove(Dim2Triangle* tri, bool /* check */,
+bool Triangulation<2>::oneThreeMove(Dim2Triangle* tri, bool /* check */,
         bool perform) {
     if ( !perform )
         return true; // You can always do this move.

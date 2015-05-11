@@ -77,8 +77,11 @@ void addNPerm5() {
         .def(self != self)
         .def("compareWith", &NPerm5::compareWith)
         .def("isIdentity", &NPerm5::isIdentity)
-        .def("toString", &NPerm5::toString)
+        .def("atIndex", &NPerm5::atIndex)
+        .def("index", &NPerm5::index)
+        .def("rand", &NPerm5::rand)
         .def("str", &NPerm5::str)
+        .def("trunc", &NPerm5::trunc)
         .def("trunc2", &NPerm5::trunc2)
         .def("trunc3", &NPerm5::trunc3)
         .def("trunc4", &NPerm5::trunc4)
@@ -89,7 +92,13 @@ void addNPerm5() {
         .def("__repr__", &NPerm5::str)
         .staticmethod("fromPermCode")
         .staticmethod("isPermCode")
+        .staticmethod("atIndex")
+        .staticmethod("rand")
     ;
+
+    s.attr("imageBits") = NPerm5::imageBits;
+    s.attr("nPerms") = NPerm5::nPerms;
+    s.attr("nPerms_1") = NPerm5::nPerms_1;
 
     s.attr("S5") = &NPerm5_S5_arr;
     s.attr("Sn") = &NPerm5_S5_arr;

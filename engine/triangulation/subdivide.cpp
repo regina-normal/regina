@@ -48,7 +48,7 @@ void NTriangulation::barycentricSubdivision() {
     // drillEdge() code must be rewritten as well (since it relies on
     // the specific labelling scheme that we use here).
 
-    unsigned long nOldTet = tetrahedra_.size();
+    unsigned long nOldTet = simplices_.size();
     if (nOldTet == 0)
         return;
 
@@ -159,7 +159,7 @@ void NTriangulation::drillEdge(NEdge* e) {
             // Remove all tetrahedra that touch each endpoint of the
             // resulting edge in the second barycentric subdivision.
             for (k = 0; k < 2; ++k) {
-                finalVertex = tetrahedra_[finalTet]->getEdge(edgeNum)->
+                finalVertex = simplices_[finalTet]->getEdge(edgeNum)->
                     getVertex(k);
                 for (it = finalVertex->getEmbeddings().begin();
                         it != finalVertex->getEmbeddings().end(); ++it)
@@ -183,7 +183,7 @@ bool NTriangulation::idealToFinite() {
         return false;
 
     int i,j,k,l;
-    long numOldTet = tetrahedra_.size();
+    long numOldTet = simplices_.size();
     if (! numOldTet)
         return false;
 
@@ -388,10 +388,10 @@ bool NTriangulation::finiteToIdeal() {
 void NTriangulation::puncture(NTetrahedron* tet) {
     if (! tet) {
         // Preconditions disallow empty triangulations, but anyway:
-        if (tetrahedra_.empty())
+        if (simplices_.empty())
             return;
 
-        tet = tetrahedra_.front();
+        tet = simplices_.front();
     }
 
     ChangeEventSpan span(this);
@@ -433,7 +433,7 @@ void NTriangulation::puncture(NTetrahedron* tet) {
 
 void NTriangulation::connectedSumWith(const NTriangulation& other) {
     // Precondition check.
-    if (tetrahedra_.empty() || ! isConnected())
+    if (simplices_.empty() || ! isConnected())
         return;
 
     ChangeEventSpan span(this);
@@ -442,20 +442,20 @@ void NTriangulation::connectedSumWith(const NTriangulation& other) {
 
     // Insert the other triangulation *before* puncturing, so that
     // things work in the case where we sum a triangulation with itself.
-    unsigned long n = tetrahedra_.size();
+    unsigned long n = simplices_.size();
     insertTriangulation(other);
-    toPuncture[0] = tetrahedra_[0];
-    toPuncture[1] = tetrahedra_[n];
+    toPuncture[0] = simplices_[0];
+    toPuncture[1] = simplices_[n];
 
     NTetrahedron* bdry[2][2];
 
     puncture(toPuncture[0]);
-    bdry[0][0] = tetrahedra_[tetrahedra_.size() - 2];
-    bdry[0][1] = tetrahedra_[tetrahedra_.size() - 1];
+    bdry[0][0] = simplices_[simplices_.size() - 2];
+    bdry[0][1] = simplices_[simplices_.size() - 1];
 
     puncture(toPuncture[1]);
-    bdry[1][0] = tetrahedra_[tetrahedra_.size() - 2];
-    bdry[1][1] = tetrahedra_[tetrahedra_.size() - 1];
+    bdry[1][0] = simplices_[simplices_.size() - 2];
+    bdry[1][1] = simplices_[simplices_.size() - 1];
 
     bdry[0][0]->joinTo(0, bdry[1][0], NPerm4(2, 3));
     bdry[0][1]->joinTo(0, bdry[1][1], NPerm4(2, 3));

@@ -51,10 +51,14 @@
 namespace regina {
 
 class Dim2BoundaryComponent;
-class Dim2Component;
-class Dim2Triangle;
-class Dim2Triangulation;
 class Dim2Vertex;
+
+template <int> class Component;
+template <int> class Simplex;
+template <int> class Triangulation;
+typedef Component<2> Dim2Component;
+typedef Simplex<2> Dim2Triangle;
+typedef Triangulation<2> Dim2Triangulation;
 
 /**
  * \weakgroup dim2
@@ -301,7 +305,7 @@ class REGINA_API Dim2Edge :
          */
         Dim2Edge(Dim2Component* component);
 
-    friend class Dim2Triangulation;
+    friend class Triangulation<2>;
         /**< Allow access to private members. */
 };
 

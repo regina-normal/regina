@@ -12,13 +12,10 @@ SET ( FILES
   insertlayered
   isomorphic
   nboundarycomponent
-  ncomponent
   nedge
   nexampletriangulation
   nfacepair
   nhomologicaldata
-  nisomorphism
-  ntetrahedron
   ntriangle
   ntriangulation
   nvertex
@@ -54,7 +51,6 @@ if (${REGINA_INSTALL_DEV})
     ngenericisomorphism.tcc
     nhomologicaldata.h
     nisomorphism.h
-    nperm.h
     npermit.h
     ntetface.h
     ntetrahedron.h

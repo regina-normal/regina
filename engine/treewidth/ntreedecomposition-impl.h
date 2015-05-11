@@ -45,16 +45,15 @@ namespace regina {
 
 template <int dim>
 NTreeDecomposition::NTreeDecomposition(
-        const NGenericTriangulation<dim>& triangulation,
+        const Triangulation<dim>& triangulation,
         TreeDecompositionAlg alg) :
         width_(0), root_(0) {
     Graph g(triangulation.size());
 
     int i, j;
-    const typename DimTraits<dim>::Simplex* simp;
+    const Simplex<dim>* simp;
     for (i = 0; i < g.order_; ++i) {
-        simp = static_cast<const typename DimTraits<dim>::Triangulation&>(
-            triangulation).getSimplex(i);
+        simp = triangulation.getSimplex(i);
         for (j = 0; j <= dim; ++j)
             if (simp->adjacentSimplex(j))
                 g.adj_[i][simp->adjacentSimplex(j)->index()] = true;

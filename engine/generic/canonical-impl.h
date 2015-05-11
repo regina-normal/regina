@@ -55,11 +55,11 @@ namespace {
      */
     template <int dim>
     bool extendIsomorphism(
-            const typename DimTraits<dim>::Triangulation* tri,
-            typename DimTraits<dim>::Isomorphism& current,
-            typename DimTraits<dim>::Isomorphism& currentInv,
-            const typename DimTraits<dim>::Isomorphism& best,
-            const typename DimTraits<dim>::Isomorphism& bestInv) {
+            const Triangulation<dim>* tri,
+            Isomorphism<dim>& current,
+            Isomorphism<dim>& currentInv,
+            const Isomorphism<dim>& best,
+            const Isomorphism<dim>& bestInv) {
         bool better = false;
 
         unsigned nSimp = tri->getNumberOfSimplices();
@@ -74,12 +74,12 @@ namespace {
         unsigned origTri, origTriBest;
         int origFacet, origFacetBest;
 
-        typename DimTraits<dim>::Simplex *adjTri, *adjTriBest;
+        Simplex<dim> *adjTri, *adjTriBest;
         unsigned adjTriIndex, adjTriIndexBest;
         unsigned finalImage, finalImageBest;
 
-        typename DimTraits<dim>::Perm gluingPerm, gluingPermBest;
-        typename DimTraits<dim>::Perm finalGluing, finalGluingBest;
+        NPerm<dim+1> gluingPerm, gluingPermBest;
+        NPerm<dim+1> finalGluing, finalGluingBest;
         int comp;
 
         bool justAssigned;
@@ -169,10 +169,8 @@ namespace {
 
 template <int dim>
 bool NGenericTriangulation<dim>::makeCanonical() {
-    typename DimTraits<dim>::Triangulation* me =
-        static_cast<typename DimTraits<dim>::Triangulation*>(this);
+    Triangulation<dim>* me = static_cast<Triangulation<dim>*>(this);
 
-    typedef typename DimTraits<dim>::Perm Perm;
     unsigned nSimp = me->getNumberOfSimplices();
 
     // Get the empty triangulation out of the way.
@@ -180,27 +178,28 @@ bool NGenericTriangulation<dim>::makeCanonical() {
         return false;
 
     // Prepare to search for isomorphisms.
-    typename DimTraits<dim>::Isomorphism current(nSimp), currentInv(nSimp);
-    typename DimTraits<dim>::Isomorphism best(nSimp), bestInv(nSimp);
+    Isomorphism<dim> current(nSimp), currentInv(nSimp);
+    Isomorphism<dim> best(nSimp), bestInv(nSimp);
 
     // The thing to best is the identity isomorphism.
     unsigned simp, inner;
     for (simp = 0; simp < nSimp; ++simp) {
         best.simpImage(simp) = bestInv.simpImage(simp) = simp;
-        best.facetPerm(simp) = bestInv.facetPerm(simp) = Perm();
+        best.facetPerm(simp) = bestInv.facetPerm(simp) = NPerm<dim+1>();
     }
 
     // Run through potential preimages of simplex 0.
     int perm;
     for (simp = 0; simp < nSimp; ++simp) {
-        for (perm = 0; perm < Perm::nPerms; ++perm) {
+        for (perm = 0; perm < NPerm<dim+1>::nPerms; ++perm) {
             // Build a "perhaps canonical" isomorphism based on this
             // preimage of simplex 0.
             current.simpImage(simp) = 0;
             currentInv.simpImage(0) = simp;
 
-            current.facetPerm(simp) = Perm::Sn[Perm::invSn[perm]];
-            currentInv.facetPerm(0) = Perm::Sn[perm];
+            current.facetPerm(simp) =
+                NPerm<dim+1>::Sn[NPerm<dim+1>::invSn[perm]];
+            currentInv.facetPerm(0) = NPerm<dim+1>::Sn[perm];
 
             if (extendIsomorphism<dim>(me, current, currentInv,
                     best, bestInv)) {

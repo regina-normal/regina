@@ -49,7 +49,9 @@ namespace regina {
 
 class NSigCensus;
 class NSigPartialIsomorphism;
-class NTriangulation;
+
+template <int> class Triangulation;
+typedef Triangulation<3> NTriangulation;
 
 /**
  * \addtogroup split Splitting Surfaces

@@ -39,6 +39,7 @@
 
 using namespace boost::python;
 using regina::Dim2Triangulation;
+using regina::Triangulation;
 
 namespace {
     regina::Dim2Triangle* (Dim2Triangulation::*newTriangle_void)() =
@@ -118,9 +119,10 @@ namespace {
 }
 
 void addDim2Triangulation() {
-    scope s = class_<Dim2Triangulation, bases<regina::NPacket>,
-            std::auto_ptr<Dim2Triangulation>,
-            boost::noncopyable>("Dim2Triangulation")
+    {
+    scope s = class_<Triangulation<2>, bases<regina::NPacket>,
+            std::auto_ptr<Triangulation<2>>,
+            boost::noncopyable>("Triangulation2")
         .def(init<const Dim2Triangulation&>())
         .def(init<const std::string&>())
         .def("getNumberOfTriangles", &Dim2Triangulation::getNumberOfTriangles)
@@ -149,15 +151,19 @@ void addDim2Triangulation() {
         .def("removeAllSimplices", &Dim2Triangulation::removeAllSimplices)
         .def("swapContents", &Dim2Triangulation::swapContents)
         .def("moveContentsTo", &Dim2Triangulation::moveContentsTo)
+        .def("countComponents", &Dim2Triangulation::countComponents)
         .def("getNumberOfComponents", &Dim2Triangulation::getNumberOfComponents)
         .def("getNumberOfBoundaryComponents",
             &Dim2Triangulation::getNumberOfBoundaryComponents)
         .def("getNumberOfVertices", &Dim2Triangulation::getNumberOfVertices)
         .def("getNumberOfEdges", &Dim2Triangulation::getNumberOfEdges)
+        .def("components", Dim2_getComponents_list)
         .def("getComponents", Dim2_getComponents_list)
         .def("getBoundaryComponents", Dim2_getBoundaryComponents_list)
         .def("getVertices", Dim2_getVertices_list)
         .def("getEdges", Dim2_getEdges_list)
+        .def("component", &Dim2Triangulation::component,
+            return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim2Triangulation::getComponent,
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &Dim2Triangulation::getBoundaryComponent,
@@ -182,7 +188,10 @@ void addDim2Triangulation() {
         .def("isValid", &Dim2Triangulation::isValid)
         .def("getEulerChar", &Dim2Triangulation::getEulerChar)
         .def("isClosed", &Dim2Triangulation::isClosed)
+        .def("hasBoundaryFacets", &Dim2Triangulation::hasBoundaryFacets)
         .def("hasBoundaryEdges", &Dim2Triangulation::hasBoundaryEdges)
+        .def("countBoundaryFacets", &Dim2Triangulation::countBoundaryFacets)
+        .def("countBoundaryEdges", &Dim2Triangulation::countBoundaryEdges)
         .def("getNumberOfBoundaryEdges",
             &Dim2Triangulation::getNumberOfBoundaryEdges)
         .def("isOrientable", &Dim2Triangulation::isOrientable)
@@ -206,5 +215,8 @@ void addDim2Triangulation() {
 
     implicitly_convertible<std::auto_ptr<Dim2Triangulation>,
         std::auto_ptr<regina::NPacket> >();
+    }
+
+    scope().attr("Dim2Triangulation") = scope().attr("Triangulation2");
 }
 

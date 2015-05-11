@@ -33,7 +33,7 @@
 /* end stub */
 
 /*! \file dim2/dim2triangulation.h
- *  \brief Deals with 2-manifold triangulations.
+ *  \brief Deals with 2-dimensional triangulations.
  */
 
 #ifndef __DIM2TRIANGULATION_H
@@ -45,6 +45,7 @@
 #include <vector>
 #include "regina-core.h"
 #include "generic/ngenerictriangulation.h"
+#include "generic/triangulation.h"
 #include "packet/npacket.h"
 #include "utilities/nmarkedvector.h"
 #include "utilities/nproperty.h"
@@ -58,13 +59,17 @@
 namespace regina {
 
 class Dim2BoundaryComponent;
-class Dim2Component;
 class Dim2Edge;
-class Dim2Triangle;
-class Dim2Triangulation;
 class Dim2Vertex;
 class NXMLDim2TriangulationReader;
 class NXMLPacketReader;
+
+template <int> class Component;
+template <int> class Isomorphism;
+template <int> class SimplexBase;
+template <int> class Simplex;
+typedef Isomorphism<2> Dim2Isomorphism;
+typedef Simplex<2> Dim2Triangle;
 
 /**
  * \addtogroup dim2 2-Manifold Triangulations
@@ -75,7 +80,7 @@ class NXMLPacketReader;
 #ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct PacketInfo<PACKET_DIM2TRIANGULATION> {
-    typedef Dim2Triangulation Class;
+    typedef Triangulation<2> Class;
     inline static const char* name() {
         return "2-Manifold Triangulation";
     }
@@ -83,55 +88,51 @@ struct PacketInfo<PACKET_DIM2TRIANGULATION> {
 #endif
 
 /**
- * Stores the triangulation of a 2-manifold along with its
- * various cellular structures and other information.  A 2-manifold
- * triangulation is built from triangular faces.
+ * Represents a 2-manifold triangulation.
  *
- * When the triangulation is deleted, the corresponding
- * triangles, the cellular structure and all other properties
- * will be deallocated.
+ * This is a specialisation of the generic Triangulation class template;
+ * see the Triangulation documentation for a general overview of how
+ * the triangulation classes work.
  *
- * Elements of the 1- and 0-skeletons (edges and vertices respectively) are
- * always temporary, as are components and
- * boundary components.  Whenever a change occurs with the triangulation,
- * these objects will all be deleted and a new skeletal structure will be
- * calculated.  The same is true of various other triangulation properties.
+ * This 2-dimensional specialisation offers significant extra functionality,
+ * including many functions specific to 2-manifolds, plus rich details of
+ * the combinatorial structure of the triangulation.
+ *
+ * In particular, this class also tracks the vertices and edges of the
+ * triangulation (as represented by the classes Dim2Vertex and Dim2Edge),
+ * as well as boundary components (as represented by the class
+ * Dim2BoundaryComponent).  Such objects are temporary: whenever the
+ * triangulation changes, these objects will be deleted and rebuilt, and so
+ * any pointers to them will become invalid.  Likewise, if the triangulation
+ * is deleted then these objects will be deleted alongside it.
  */
-class REGINA_API Dim2Triangulation : public NPacket,
+template <>
+class REGINA_API Triangulation<2> :
+        public NPacket,
+        public TriangulationBase<2>,
         public NGenericTriangulation<2> {
-    REGINA_PACKET(Dim2Triangulation, PACKET_DIM2TRIANGULATION)
+    REGINA_PACKET(Triangulation<2>, PACKET_DIM2TRIANGULATION)
 
     public:
         typedef std::vector<Dim2Triangle*>::const_iterator TriangleIterator;
-            /**< Used to iterate through triangles. */
+            /**< A dimension-specific alias for SimplexIterator,
+                 used to iterate through triangles. */
         typedef std::vector<Dim2Edge*>::const_iterator EdgeIterator;
             /**< Used to iterate through edges. */
         typedef std::vector<Dim2Vertex*>::const_iterator VertexIterator;
             /**< Used to iterate through vertices. */
-        typedef std::vector<Dim2Component*>::const_iterator ComponentIterator;
-            /**< Used to iterate through components. */
         typedef std::vector<Dim2BoundaryComponent*>::const_iterator
                 BoundaryComponentIterator;
             /**< Used to iterate through boundary components. */
 
     private:
-        mutable bool calculatedSkeleton_;
-            /**< Has the skeleton been calculated? */
-
-        NMarkedVector<Dim2Triangle> triangles_;
-            /**< The triangular faces that form the triangulation. */
         mutable NMarkedVector<Dim2Edge> edges_;
             /**< The edges in the triangulation skeleton. */
         mutable NMarkedVector<Dim2Vertex> vertices_;
             /**< The vertices in the triangulation skeleton. */
-        mutable NMarkedVector<Dim2Component> components_;
-            /**< The components that form the triangulation. */
         mutable NMarkedVector<Dim2BoundaryComponent> boundaryComponents_;
             /**< The components that form the boundary of the
                  triangulation. */
-
-        mutable bool orientable_;
-            /**< Is the triangulation orientable? */
 
     public:
         /**
@@ -144,16 +145,14 @@ class REGINA_API Dim2Triangulation : public NPacket,
          *
          * Creates an empty triangulation.
          */
-        Dim2Triangulation();
+        Triangulation();
         /**
-         * Copy constructor.
-         *
-         * Creates a new triangulation identical to the given triangulation.
+         * Creates a new copy of the given triangulation.
          * The packet tree structure and packet label are \e not copied.
          *
-         * @param cloneMe the triangulation to clone.
+         * @param copy the triangulation to copy.
          */
-        Dim2Triangulation(const Dim2Triangulation& cloneMe);
+        Triangulation(const Triangulation& copy);
         /**
          * "Magic" constructor that tries to find some way to interpret
          * the given string as a triangulation.
@@ -173,14 +172,14 @@ class REGINA_API Dim2Triangulation : public NPacket,
          * @param description a string that describes a 2-manifold
          * triangulation.
          */
-        Dim2Triangulation(const std::string& description);
+        Triangulation(const std::string& description);
         /**
          * Destroys this triangulation.
          *
          * The constituent triangles, the cellular structure and all other
-         * properties will also be deallocated.
+         * properties will also be destroyed.
          */
-        virtual ~Dim2Triangulation();
+        virtual ~Triangulation();
 
         /*@}*/
         /**
@@ -199,247 +198,65 @@ class REGINA_API Dim2Triangulation : public NPacket,
         /*@{*/
 
         /**
-         * Returns the number of triangular faces in the triangulation.
+         * A dimension-specific alias for size().
          *
-         * @return the number of triangles.
+         * See size() for further information.
          */
         unsigned long getNumberOfTriangles() const;
         /**
-         * A dimension-agnostic alias for getNumberOfTriangles().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 2-manifold triangulations means a triangle).
-         * 
-         * See getNumberOfTriangles() for further information.
-         */
-        unsigned long getNumberOfSimplices() const;
-        /**
-         * Returns all triangular faces in the triangulation.
+         * A dimension-specific alias for simplices().
          *
-         * The reference returned will remain valid for as long as the
-         * triangulation exists, always reflecting the triangles currently
-         * in the triangulation.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of all triangles.
+         * See simplices() for further information.
          */
         const std::vector<Dim2Triangle*>& getTriangles() const;
         /**
-         * A dimension-agnostic alias for getTriangles().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 2-manifold triangulations means a triangle).
-         * 
-         * See getTriangles() for further information.
-         */
-        const std::vector<Dim2Triangle*>& getSimplices() const;
-        /**
-         * Returns the triangle with the given index number in the
-         * triangulation.  Note that triangle indexing may change when
-         * a triangle is added or removed from the triangulation.
+         * A dimension-specific alias for simplex().
          *
-         * @param index specifies which triangle to return; this
-         * value should be between 0 and getNumberOfTriangles()-1 inclusive.
-         * @return the <tt>index</tt>th triangle in the triangulation.
+         * See simplex() for further information.
          */
         Dim2Triangle* getTriangle(unsigned long index);
         /**
-         * A dimension-agnostic alias for getTriangle().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 2-manifold triangulations means a triangle).
-         * 
-         * See getTriangle() for further information.
-         */
-        Dim2Triangle* getSimplex(unsigned long index);
-        /**
-         * Returns the triangle with the given index number in the
-         * triangulation.  Note that triangle indexing may change when
-         * a triangle is added or removed from the triangulation.
+         * A dimension-specific alias for simplex().
          *
-         * @param index specifies which triangle to return; this
-         * value should be between 0 and getNumberOfTriangles()-1 inclusive.
-         * @return the <tt>index</tt>th triangle in the triangulation.
+         * See simplex() for further information.
          */
         const Dim2Triangle* getTriangle(unsigned long index) const;
         /**
-         * A dimension-agnostic alias for getTriangle().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 2-manifold triangulations means a triangle).
-         * 
-         * See getTriangle() for further information.
-         */
-        const Dim2Triangle* getSimplex(unsigned long index) const;
-        /**
-         * Returns the index of the given triangle in the triangulation.
+         * A dimension-specific alias for simplexIndex().
          *
-         * Note that triangle indexing may change when a triangle
-         * is added or removed from the triangulation.
-         *
-         * \pre The given triangle is contained in this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.  If you are passing the result of some other
-         * routine that \e might return null (such as
-         * Dim2Triangle::adjacentTriangle), it might be worth explicitly
-         * testing for null beforehand.
-         *
-         * @param tri specifies which triangle to find in the triangulation.
-         * @return the index of the specified triangle, where 0 is
-         * the first triangle, 1 is the second and so on.
+         * See simplexIndex() for further information.
          */
         long triangleIndex(const Dim2Triangle* tri) const;
         /**
-         * A dimension-agnostic alias for triangleIndex().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 2-manifold triangulations means a triangle).
-         * 
-         * See triangleIndex() for further information.
-         */
-        long simplexIndex(const Dim2Triangle* tri) const;
-        /**
-         * Creates a new triangle and adds it to this triangulation.
-         * The new triangle will have an empty description.
-         * All three edges of the new triangle will be boundary edges.
+         * A dimension-specific alias for newSimplex().
          *
-         * The new triangle will become the last triangle in this
-         * triangulation.
-         *
-         * @return the new triangle.
+         * See newSimplex() for further information.
          */
         Dim2Triangle* newTriangle();
         /**
-         * A dimension-agnostic alias for newTriangle().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 2-manifold triangulations means a triangle).
-         * 
-         * See newTriangle() for further information.
-         */
-        Dim2Triangle* newSimplex();
-        /**
-         * Creates a new triangle with the given description and adds
-         * it to this triangulation.
-         * All three edges of the new triangle will be boundary edges.
+         * A dimension-specific alias for newSimplex().
          *
-         * @param desc the description to assign to the new triangle.
-         * @return the new triangle.
+         * See newSimplex() for further information.
          */
         Dim2Triangle* newTriangle(const std::string& desc);
         /**
-         * A dimension-agnostic alias for newTriangle().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 2-manifold triangulations means a triangle).
-         * 
-         * See newTriangle() for further information.
-         */
-        Dim2Triangle* newSimplex(const std::string& desc);
-        /**
-         * Removes the given triangle from the triangulation.
-         * All triangles glued to this triangle will be unglued.
-         * The triangle will be deallocated.
+         * A dimension-specific alias for removeSimplex().
          *
-         * \pre The given triangle exists in the triangulation.
-         *
-         * @param tri the triangle to remove.
+         * See removeSimplex() for further information.
          */
         void removeTriangle(Dim2Triangle* tri);
         /**
-         * A dimension-agnostic alias for removeTriangle().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 2-manifold triangulations means a triangle).
-         * 
-         * See removeTriangle() for further information.
-         */
-        void removeSimplex(Dim2Triangle* tri);
-        /**
-         * Removes the triangle with the given index number
-         * from the triangulation.  Note that triangle indexing may
-         * change when a triangle is added or removed from the
-         * triangulation.
+         * A dimension-specific alias for removeSimplexAt().
          *
-         * All triangles glued to this triangle will be unglued.
-         * The triangle will be deallocated.
-         *
-         * @param index specifies which triangle to remove; this
-         * should be between 0 and getNumberOfTriangles()-1 inclusive.
+         * See removeSimplexAt() for further information.
          */
         void removeTriangleAt(unsigned long index);
         /**
-         * A dimension-agnostic alias for removeTriangleAt().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 2-manifold triangulations means a triangle).
-         * 
-         * See removeTriangleAt() for further information.
-         */
-        void removeSimplexAt(unsigned long index);
-        /**
-         * Removes all triangles from the triangulation.
-         * All triangles will be deallocated.
+         * A dimension-specific alias for removeAllSimplices().
+         *
+         * See removeAllSimplices() for further information.
          */
         void removeAllTriangles();
-        /**
-         * A dimension-agnostic alias for removeAllTriangles().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         *
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 2-manifold triangulations means a triangle).
-         * 
-         * See removeAllTriangles() for further information.
-         */
-        void removeAllSimplices();
-        /**
-         * Swaps the contents of this and the given triangulation.
-         * That is, all triangles that belong to this triangulation
-         * will be moved to \a other, and all triangles that belong to
-         * \a other will be moved to this triangulation.
-         *
-         * All Dim2Triangle pointers or references will remain valid.
-         *
-         * @param other the triangulation whose contents should be
-         * swapped with this.
-         */
-        void swapContents(Dim2Triangulation& other);
-        /**
-         * Moves the contents of this triangulation into the given
-         * destination triangulation, without destroying any pre-existing
-         * contents.  That is, all triangles that currently belong to
-         * \a dest will remain there, and all triangles that belong to this
-         * triangulation will be moved across as additional
-         * triangles in \a dest.
-         *
-         * All Dim2Triangle pointers or references will remain valid.
-         * After this operation, this triangulation will be empty.
-         *
-         * @param dest the triangulation to which triangles should be
-         * moved.
-         */
-        void moveContentsTo(Dim2Triangulation& dest);
 
         /*@}*/
         /**
@@ -453,12 +270,6 @@ class REGINA_API Dim2Triangulation : public NPacket,
          * @return the number of boundary components.
          */
         unsigned long getNumberOfBoundaryComponents() const;
-        /**
-         * Returns the number of components in this triangulation.
-         *
-         * @return the number of components.
-         */
-        unsigned long getNumberOfComponents() const;
         /**
          * Returns the number of vertices in this triangulation.
          *
@@ -487,22 +298,6 @@ class REGINA_API Dim2Triangulation : public NPacket,
         template <int subdim>
         unsigned long getNumberOfFaces() const;
 
-        /**
-         * Returns all components of this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * components will be deleted and replaced with new
-         * ones.  Thus the objects contained in this list should be
-         * considered temporary only.
-         *
-         * This reference to the list however will remain valid and
-         * up-to-date for as long as the triangulation exists.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of all components.
-         */
-        const std::vector<Dim2Component*>& getComponents() const;
         /**
          * Returns all boundary components of this triangulation.
          *
@@ -552,18 +347,6 @@ class REGINA_API Dim2Triangulation : public NPacket,
          * @return the list of all edges.
          */
         const std::vector<Dim2Edge*>& getEdges() const;
-        /**
-         * Returns the requested triangulation component.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * components will be deleted and replaced with new
-         * ones.  Thus this object should be considered temporary only.
-         *
-         * @param index the index of the desired component, ranging from 0
-         * to getNumberOfComponents()-1 inclusive.
-         * @return the requested component.
-         */
-        Dim2Component* getComponent(unsigned long index) const;
         /**
          * Returns the requested triangulation boundary component.
          *
@@ -618,20 +401,6 @@ class REGINA_API Dim2Triangulation : public NPacket,
         template <int subdim>
         typename FaceTraits<2, subdim>::Face* getFace(unsigned long index)
             const;
-        /**
-         * Returns the index of the given component in the triangulation.
-         *
-         * \pre The given component belongs to this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.
-         *
-         * @param component specifies which component to find in the
-         * triangulation.
-         * @return the index of the specified component, where 0 is the first
-         * component, 1 is the second and so on.
-         */
-        long componentIndex(const Dim2Component* component) const;
         /**
          * Returns the index of the given boundary component
          * in the triangulation.
@@ -701,7 +470,6 @@ class REGINA_API Dim2Triangulation : public NPacket,
          */
         /*@{*/
 
-        using NGenericTriangulation<2>::isIdenticalTo;
         using NGenericTriangulation<2>::isIsomorphicTo;
         using NGenericTriangulation<2>::isContainedIn;
         using NGenericTriangulation<2>::findAllIsomorphisms;
@@ -713,8 +481,6 @@ class REGINA_API Dim2Triangulation : public NPacket,
          * \name Basic Properties
          */
         /*@{*/
-
-        using NGenericTriangulation<2>::isEmpty;
 
         /**
          * Always returns \c true.
@@ -745,34 +511,27 @@ class REGINA_API Dim2Triangulation : public NPacket,
          */
         bool isClosed() const;
         /**
-         * Determines if this triangulation has any boundary edges.
+         * A dimension-specific alias for hasBoundaryFacets().
          *
-         * This routine is redundant in dimension two, since it returns
-         * \c true if and only if isClosed() returns \c false.
-         * It is provided simply for compatibility with higher-dimensional
-         * triangulation classes.
-         *
-         * @return \c true if and only if there are boundary edges.
+         * See hasBoundaryFacets() for further information.
          */
         bool hasBoundaryEdges() const;
+        size_t countBoundaryFacets() const;
         /**
-         * Returns the number of boundary edges in this triangulation.
+         * A dimension-specific alias for countBoundaryFacets().
          *
-         * @return the total number of boundary edges.
+         * See countBoundaryFacets() for further information.
          */
-        unsigned long getNumberOfBoundaryEdges() const;
+        size_t countBoundaryEdges() const;
         /**
-         * Determines if this triangulation is orientable.
+         * A deprecated alias for countBoundaryFacets().
          *
-         * @return \c true if and only if this triangulation is orientable.
-         */
-        bool isOrientable() const;
-        /**
-         * Determines if this triangulation is connected.
+         * \deprecated Call countBoundaryEdges() or countBoundaryFacets()
+         * instead.
          *
-         * @return \c true if and only if this triangulation is connected.
+         * See countBoundaryFacets() for further information.
          */
-        bool isConnected() const;
+        size_t getNumberOfBoundaryEdges() const;
         /**
          * Always returns \c false.
          *
@@ -852,118 +611,6 @@ class REGINA_API Dim2Triangulation : public NPacket,
             bool perform = true);
 
         /*@}*/
-        /**
-         * \name Building Triangulations
-         */
-        /*@{*/
-
-        /**
-         * Inserts a copy of the given triangulation into this triangulation.
-         *
-         * The new triangles will be inserted into this triangulation
-         * in the order in which they appear in the given triangulation,
-         * and the numbering of their vertices (0-2) will not change.
-         * They will be given the same descriptions as appear in the
-         * given triangulation.
-         *
-         * @param source the triangulation whose copy will be inserted.
-         */
-        void insertTriangulation(const Dim2Triangulation& source);
-
-        /**
-         * Inserts into this triangulation a set of triangles and their
-         * gluings as described by the given integer arrays.
-         *
-         * This routine is provided to make it easy to hard-code a
-         * medium-sized triangulation in a C++ source file.  All of the
-         * pertinent data can be hard-coded into a pair of integer arrays at
-         * the beginning of the source file, avoiding an otherwise tedious
-         * sequence of many joinTo() calls.
-         *
-         * An additional \a nTriangles triangles will be inserted into
-         * this triangulation.  The relationships between these triangles
-         * should be stored in the two arrays as follows.  Note that the
-         * new triangles are numbered from 0 to (\a nTriangles - 1), and
-         * individual triangle edges are numbered from 0 to 2.
-         *
-         * The \a adjacencies array describes which triangle edges are
-         * joined to which others.  Specifically, <tt>adjacencies[f][e]</tt>
-         * should contain the number of the triangle joined to edge \a e
-         * of triangle \a f.  If this edge is to be left as a
-         * boundary edge, <tt>adjacencies[f][e]</tt> should be -1.
-         *
-         * The \a gluings array describes the particular gluing permutations
-         * used when joining these triangle edges together.  Specifically,
-         * <tt>gluings[f][e][0..2]</tt> should describe the permutation
-         * used to join edge \a e of triangle \a f to its adjacent
-         * triangle.  These three integers should be 0, 1 and 2 in some
-         * order, so that <tt>gluings[f][e][i]</tt> contains the image of
-         * \a i under this permutation.  If edge \a e of triangle \a f
-         * is to be left as a boundary edge, <tt>gluings[f][e][0..2]</tt>
-         * may contain anything (and will be duly ignored).
-         *
-         * It is the responsibility of the caller of this routine to
-         * ensure that the given arrays are correct and consistent.
-         * No error checking will be performed by this routine.
-         *
-         * Note that, for an existing triangulation, dumpConstruction()
-         * will output a pair of C++ arrays that can be copied into a
-         * source file and used to reconstruct the triangulation via
-         * this routine.
-         *
-         * \ifacespython Not present.
-         *
-         * @param nTriangles the number of additional triangles to insert.
-         * @param adjacencies describes which of the new triangle edges
-         * are to be identified.  This array must have initial
-         * dimension at least \a nTriangles.
-         * @param gluings describes the specific gluing permutations by
-         * which these new triangle edges should be identified.  This
-         * array must also have initial dimension at least \a nTriangles.
-         */
-        void insertConstruction(unsigned long nTriangles,
-            const int adjacencies[][3], const int gluings[][3][3]);
-
-        /*@}*/
-        /**
-         * \name Exporting Triangulations
-         */
-        /*@{*/
-
-        using NGenericTriangulation<2>::isoSig;
-
-        /**
-         * Returns C++ code that can be used with insertConstruction()
-         * to reconstruct this triangulation.
-         *
-         * The code produced will consist of the following:
-         *
-         * - the declaration and initialisation of two integer arrays,
-         *   describing the triangle gluings in this trianguation;
-         * - two additional lines that declare a new Dim2Triangulation and
-         *   call insertConstruction() to rebuild this triangulation.
-         *
-         * The main purpose of this routine is to generate the two integer
-         * arrays, which can be tedious and error-prone to code up by hand.
-         *
-         * Note that the number of lines of code produced grows linearly
-         * with the number of triangles.  If this triangulation is very
-         * large, the returned string will be very large as well.
-         *
-         * @return the C++ code that was generated.
-         */
-        std::string dumpConstruction() const;
-
-        /*@}*/
-        /**
-         * \name Importing Triangulations
-         */
-        /*@{*/
-
-        using NGenericTriangulation<2>::fromIsoSig;
-        using NGenericTriangulation<2>::isoSigComponentSize;
-
-        /*@}*/
 
         static NXMLPacketReader* getXMLReader(NPacket* parent,
             NXMLTreeResolver& resolver);
@@ -979,15 +626,9 @@ class REGINA_API Dim2Triangulation : public NPacket,
          * @param from the triangulation from which this triangulation
          * will be cloned.
          */
-        void cloneFrom(const Dim2Triangulation& from);
+        void cloneFrom(const Triangulation& from);
 
     private:
-        void deleteTriangles();
-            /**< Deallocates all triangles and empties the list. */
-        void deleteSkeleton();
-            /**< Deallocates all skeletal objects and empties all
-                 corresponding lists. */
-
         /**
          * Clears any calculated properties and declares them all
          * unknown.  All dynamic memory used for storing known
@@ -998,20 +639,14 @@ class REGINA_API Dim2Triangulation : public NPacket,
          */
         virtual void clearAllProperties();
 
-        /**
-         * Recalculates vertices, edges, components and
-         * boundary components, as well as various other skeletal properties.
-         * All appropriate lists are filled.
-         *
-         * \pre All skeletal lists are empty.
-         */
+        void deleteSkeleton();
         void calculateSkeleton() const;
 
         /**
          * Internal to calculateSkeleton().  See the comments within
          * calculateSkeleton() for precisely what this routine does.
          */
-        void calculateComponents() const;
+        void calculateEdges() const;
         /**
          * Internal to calculateSkeleton().  See the comments within
          * calculateSkeleton() for precisely what this routine does.
@@ -1065,7 +700,7 @@ class REGINA_API Dim2Triangulation : public NPacket,
          * returned.
          * @return the total number of isomorphisms found.
          */
-        unsigned long findIsomorphisms(const Dim2Triangulation& other,
+        unsigned long findIsomorphisms(const Triangulation& other,
                 std::list<Dim2Isomorphism*>& results,
                 bool completeIsomorphism, bool firstOnly) const;
 
@@ -1091,10 +726,17 @@ class REGINA_API Dim2Triangulation : public NPacket,
         static bool compatibleTriangles(Dim2Triangle* src, Dim2Triangle* dest,
             NPerm3 p);
 
+    friend class regina::Simplex<2>;
+    friend class regina::SimplexBase<2>;
+    friend class regina::TriangulationBase<2>;
     friend class regina::NGenericTriangulation<2>;
-    friend class regina::Dim2Triangle;
     friend class regina::NXMLDim2TriangulationReader;
 };
+
+/**
+ * A convenience typedef for Triangulation<2>.
+ */
+typedef Triangulation<2> Dim2Triangulation;
 
 /*@}*/
 
@@ -1107,325 +749,217 @@ class REGINA_API Dim2Triangulation : public NPacket,
 #include "dim2/dim2boundarycomponent.h"
 namespace regina {
 
-// Inline functions for Dim2Triangulation
+// Inline functions for Triangulation<2>
 
-inline Dim2Triangulation::Dim2Triangulation() :
-        NPacket(), calculatedSkeleton_(false) {
+inline Triangulation<2>::Triangulation() {
 }
 
-inline Dim2Triangulation::Dim2Triangulation(const Dim2Triangulation& cloneMe) :
-        NPacket(), calculatedSkeleton_(false) {
+inline Triangulation<2>::Triangulation(const Triangulation& cloneMe) {
     cloneFrom(cloneMe);
 }
 
-inline Dim2Triangulation::~Dim2Triangulation() {
+inline Triangulation<2>::~Triangulation() {
     clearAllProperties();
-    deleteTriangles();
 }
 
-inline void Dim2Triangulation::writeTextShort(std::ostream& out) const {
-    out << "Triangulation with " << triangles_.size()
-        << (triangles_.size() == 1 ? " triangle" : " triangles");
+inline void Triangulation<2>::writeTextShort(std::ostream& out) const {
+    out << "Triangulation with " << simplices_.size()
+        << (simplices_.size() == 1 ? " triangle" : " triangles");
 }
 
-inline bool Dim2Triangulation::dependsOnParent() const {
+inline bool Triangulation<2>::dependsOnParent() const {
     return false;
 }
 
-inline unsigned long Dim2Triangulation::getNumberOfTriangles() const {
-    return triangles_.size();
+inline unsigned long Triangulation<2>::getNumberOfTriangles() const {
+    return simplices_.size();
 }
 
-inline unsigned long Dim2Triangulation::getNumberOfSimplices() const {
-    return triangles_.size();
-}
-
-inline const std::vector<Dim2Triangle*>& Dim2Triangulation::getTriangles()
+inline const std::vector<Dim2Triangle*>& Triangulation<2>::getTriangles()
         const {
-    return (const std::vector<Dim2Triangle*>&)(triangles_);
+    return (const std::vector<Dim2Triangle*>&)(simplices_);
 }
 
-inline const std::vector<Dim2Triangle*>& Dim2Triangulation::getSimplices()
+inline Dim2Triangle* Triangulation<2>::getTriangle(unsigned long index) {
+    return simplices_[index];
+}
+
+inline const Dim2Triangle* Triangulation<2>::getTriangle(unsigned long index)
         const {
-    return (const std::vector<Dim2Triangle*>&)(triangles_);
+    return simplices_[index];
 }
 
-inline Dim2Triangle* Dim2Triangulation::getTriangle(unsigned long index) {
-    return triangles_[index];
-}
-
-inline Dim2Triangle* Dim2Triangulation::getSimplex(unsigned long index) {
-    return triangles_[index];
-}
-
-inline const Dim2Triangle* Dim2Triangulation::getTriangle(unsigned long index)
-        const {
-    return triangles_[index];
-}
-
-inline const Dim2Triangle* Dim2Triangulation::getSimplex(unsigned long index)
-        const {
-    return triangles_[index];
-}
-
-inline long Dim2Triangulation::triangleIndex(const Dim2Triangle* tri) const {
+inline long Triangulation<2>::triangleIndex(const Dim2Triangle* tri) const {
     return tri->markedIndex();
 }
 
-inline long Dim2Triangulation::simplexIndex(const Dim2Triangle* tri) const {
-    return tri->markedIndex();
+inline Dim2Triangle* Triangulation<2>::newTriangle() {
+    return newSimplex();
 }
 
-inline Dim2Triangle* Dim2Triangulation::newTriangle() {
-    ChangeEventSpan span(this);
-    Dim2Triangle* tri = new Dim2Triangle(this);
-    triangles_.push_back(tri);
-    clearAllProperties();
-    return tri;
+inline Dim2Triangle* Triangulation<2>::newTriangle(const std::string& desc) {
+    return newSimplex(desc);
 }
 
-inline Dim2Triangle* Dim2Triangulation::newSimplex() {
-    return newTriangle();
+inline void Triangulation<2>::removeTriangle(Dim2Triangle* tri) {
+    removeSimplex(tri);
 }
 
-inline Dim2Triangle* Dim2Triangulation::newTriangle(const std::string& desc) {
-    ChangeEventSpan span(this);
-    Dim2Triangle* tri = new Dim2Triangle(desc, this);
-    triangles_.push_back(tri);
-    clearAllProperties();
-    return tri;
+inline void Triangulation<2>::removeTriangleAt(unsigned long index) {
+    removeSimplexAt(index);
 }
 
-inline Dim2Triangle* Dim2Triangulation::newSimplex(const std::string& desc) {
-    return newTriangle(desc);
+inline void Triangulation<2>::removeAllTriangles() {
+    removeAllSimplices();
 }
 
-inline void Dim2Triangulation::removeTriangle(Dim2Triangle* tri) {
-    ChangeEventSpan span(this);
-
-    tri->isolate();
-    triangles_.erase(triangles_.begin() + triangleIndex(tri));
-    delete tri;
-
-    clearAllProperties();
-}
-
-inline void Dim2Triangulation::removeSimplex(Dim2Triangle* tri) {
-    removeTriangle(tri);
-}
-
-inline void Dim2Triangulation::removeTriangleAt(unsigned long index) {
-    ChangeEventSpan span(this);
-
-    Dim2Triangle* ans = triangles_[index];
-    ans->isolate();
-    triangles_.erase(triangles_.begin() + index);
-    delete ans;
-
-    clearAllProperties();
-}
-
-inline void Dim2Triangulation::removeSimplexAt(unsigned long index) {
-    removeTriangleAt(index);
-}
-
-inline void Dim2Triangulation::removeAllTriangles() {
-    ChangeEventSpan span(this);
-    deleteTriangles();
-    clearAllProperties();
-}
-
-inline void Dim2Triangulation::removeAllSimplices() {
-    removeAllTriangles();
-}
-
-inline unsigned long Dim2Triangulation::getNumberOfBoundaryComponents() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+inline unsigned long Triangulation<2>::getNumberOfBoundaryComponents() const {
+    ensureSkeleton();
     return boundaryComponents_.size();
 }
 
-inline unsigned long Dim2Triangulation::getNumberOfComponents() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return components_.size();
-}
-
-inline unsigned long Dim2Triangulation::getNumberOfVertices() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+inline unsigned long Triangulation<2>::getNumberOfVertices() const {
+    ensureSkeleton();
     return vertices_.size();
 }
 
-inline unsigned long Dim2Triangulation::getNumberOfEdges() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+inline unsigned long Triangulation<2>::getNumberOfEdges() const {
+    ensureSkeleton();
     return edges_.size();
 }
 
 template <>
-inline unsigned long Dim2Triangulation::getNumberOfFaces<0>() const {
+inline unsigned long Triangulation<2>::getNumberOfFaces<0>() const {
     return getNumberOfVertices();
 }
 
 template <>
-inline unsigned long Dim2Triangulation::getNumberOfFaces<1>() const {
+inline unsigned long Triangulation<2>::getNumberOfFaces<1>() const {
     return getNumberOfEdges();
 }
 
 template <>
-inline unsigned long Dim2Triangulation::getNumberOfFaces<2>() const {
+inline unsigned long Triangulation<2>::getNumberOfFaces<2>() const {
     return getNumberOfTriangles();
 }
 
-inline const std::vector<Dim2Component*>& Dim2Triangulation::getComponents()
-        const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return (const std::vector<Dim2Component*>&)(components_);
-}
-
 inline const std::vector<Dim2BoundaryComponent*>&
-        Dim2Triangulation::getBoundaryComponents() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+        Triangulation<2>::getBoundaryComponents() const {
+    ensureSkeleton();
     return (const std::vector<Dim2BoundaryComponent*>&)(boundaryComponents_);
 }
 
-inline const std::vector<Dim2Vertex*>& Dim2Triangulation::getVertices() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+inline const std::vector<Dim2Vertex*>& Triangulation<2>::getVertices() const {
+    ensureSkeleton();
     return (const std::vector<Dim2Vertex*>&)(vertices_);
 }
 
-inline const std::vector<Dim2Edge*>& Dim2Triangulation::getEdges() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+inline const std::vector<Dim2Edge*>& Triangulation<2>::getEdges() const {
+    ensureSkeleton();
     return (const std::vector<Dim2Edge*>&)(edges_);
 }
 
-inline Dim2Component* Dim2Triangulation::getComponent(unsigned long index)
-        const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return components_[index];
-}
-
-inline Dim2BoundaryComponent* Dim2Triangulation::getBoundaryComponent(
+inline Dim2BoundaryComponent* Triangulation<2>::getBoundaryComponent(
         unsigned long index) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
     return boundaryComponents_[index];
 }
 
-inline Dim2Vertex* Dim2Triangulation::getVertex(unsigned long index) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+inline Dim2Vertex* Triangulation<2>::getVertex(unsigned long index) const {
+    ensureSkeleton();
     return vertices_[index];
 }
 
-inline Dim2Edge* Dim2Triangulation::getEdge(unsigned long index) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+inline Dim2Edge* Triangulation<2>::getEdge(unsigned long index) const {
+    ensureSkeleton();
     return edges_[index];
 }
 
 template <>
-inline Dim2Vertex* Dim2Triangulation::getFace<0>(unsigned long index) const {
+inline Dim2Vertex* Triangulation<2>::getFace<0>(unsigned long index) const {
     return vertices_[index];
 }
 
 template <>
-inline Dim2Edge* Dim2Triangulation::getFace<1>(unsigned long index) const {
+inline Dim2Edge* Triangulation<2>::getFace<1>(unsigned long index) const {
     return edges_[index];
 }
 
 template <>
-inline Dim2Triangle* Dim2Triangulation::getFace<2>(unsigned long index) const {
-    return triangles_[index];
+inline Dim2Triangle* Triangulation<2>::getFace<2>(unsigned long index) const {
+    return simplices_[index];
 }
 
-inline long Dim2Triangulation::componentIndex(const Dim2Component* component)
-        const {
-    return component->markedIndex();
-}
-
-inline long Dim2Triangulation::boundaryComponentIndex(
+inline long Triangulation<2>::boundaryComponentIndex(
         const Dim2BoundaryComponent* boundaryComponent) const {
     return boundaryComponent->markedIndex();
 }
 
-inline long Dim2Triangulation::vertexIndex(const Dim2Vertex* vertex) const {
+inline long Triangulation<2>::vertexIndex(const Dim2Vertex* vertex) const {
     return vertex->markedIndex();
 }
 
-inline long Dim2Triangulation::edgeIndex(const Dim2Edge* edge) const {
+inline long Triangulation<2>::edgeIndex(const Dim2Edge* edge) const {
     return edge->markedIndex();
 }
 
 template <>
-inline long Dim2Triangulation::faceIndex<0>(const Dim2Vertex* face) const {
+inline long Triangulation<2>::faceIndex<0>(const Dim2Vertex* face) const {
     return face->markedIndex();
 }
 
 template <>
-inline long Dim2Triangulation::faceIndex<1>(const Dim2Edge* face) const {
+inline long Triangulation<2>::faceIndex<1>(const Dim2Edge* face) const {
     return face->markedIndex();
 }
 
 template <>
-inline long Dim2Triangulation::faceIndex<2>(const Dim2Triangle* face) const {
+inline long Triangulation<2>::faceIndex<2>(const Dim2Triangle* face) const {
     return face->markedIndex();
 }
 
-inline bool Dim2Triangulation::isValid() const {
+inline bool Triangulation<2>::isValid() const {
     return true;
 }
 
-inline long Dim2Triangulation::getEulerChar() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+inline long Triangulation<2>::getEulerChar() const {
+    ensureSkeleton();
 
     // Cast away the unsignedness of std::vector::size().
     return static_cast<long>(vertices_.size())
         - static_cast<long>(edges_.size())
-        + static_cast<long>(triangles_.size());
+        + static_cast<long>(simplices_.size());
 }
 
-inline bool Dim2Triangulation::isClosed() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+inline bool Triangulation<2>::isClosed() const {
+    ensureSkeleton();
     return boundaryComponents_.empty();
 }
 
-inline bool Dim2Triangulation::hasBoundaryEdges() const {
+inline bool Triangulation<2>::hasBoundaryEdges() const {
     return ! isClosed();
 }
 
-inline unsigned long Dim2Triangulation::getNumberOfBoundaryEdges() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return 2 * edges_.size() - 3 * triangles_.size();
+inline size_t Triangulation<2>::countBoundaryFacets() const {
+    // Override, since we can do this faster in dimension 2.
+    ensureSkeleton();
+    return 2 * edges_.size() - 3 * simplices_.size();
 }
 
-inline bool Dim2Triangulation::isOrientable() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return orientable_;
+inline size_t Triangulation<2>::countBoundaryEdges() const {
+    return countBoundaryFacets();
 }
 
-inline bool Dim2Triangulation::isIdeal() const {
+inline size_t Triangulation<2>::getNumberOfBoundaryEdges() const {
+    return countBoundaryFacets();
+}
+
+inline bool Triangulation<2>::isIdeal() const {
     return false;
 }
 
-inline bool Dim2Triangulation::isConnected() const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    return (components_.size() <= 1);
-}
-
-inline NPacket* Dim2Triangulation::internalClonePacket(NPacket*) const {
-    return new Dim2Triangulation(*this);
+inline NPacket* Triangulation<2>::internalClonePacket(NPacket*) const {
+    return new Triangulation(*this);
 }
 
 } // namespace regina

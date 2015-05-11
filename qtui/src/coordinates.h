@@ -47,7 +47,8 @@
 
 namespace regina {
     class NNormalSurface;
-    class NTriangulation;
+    template <int> class Triangulation;
+    typedef Triangulation<3> NTriangulation;
 }
 
 namespace Coordinates {

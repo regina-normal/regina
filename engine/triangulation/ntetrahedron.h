@@ -42,10 +42,9 @@
 #endif
 
 #include "regina-core.h"
-#include "output.h"
+#include "generic/simplex.h"
 #include "maths/nperm4.h"
 #include "utilities/nmarkedvector.h"
-#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
@@ -53,8 +52,10 @@ namespace regina {
 class NTriangle;
 class NEdge;
 class NVertex;
-class NComponent;
-class NTriangulation;
+
+template <int> class Component;
+template <int> class Triangulation;
+typedef Triangulation<3> NTriangulation;
 
 /**
  * \weakgroup triangulation
@@ -62,70 +63,22 @@ class NTriangulation;
  */
 
 /**
- * Represents a tetrahedron in a triangulation.
+ * Represents a tetrahedron within a 3-manifold triangulation.
  *
- * With each tetrahedron is stored various pieces of information
- * regarding the overall skeletal structure and component structure of
- * the triangulation.  This skeletal information will be allocated, calculated
- * and deallocated by the NTriangulation object containing the
- * corresponding tetrahedra.
+ * This is a specialisation of the generic Simplex class template; see the
+ * generic Simplex documentation for an overview of how this class works.
  *
- * The management of tetrahedra has changed significantly as of Regina 4.90:
+ * This 3-dimensional specialisation contains some extra functionality.
+ * In particular, each tetrahedron stores additional details on how this
+ * tetrahedron and its sub-faces integrate into the overall skeletal
+ * structure of the triangulation.
  *
- * - Users no longer need to call NTriangulation::gluingsHaveChanged()
- * when gluing or ungluing tetrahedra.  This notification is now handled
- * automatically, and NTriangulation::gluingsHaveChanged() now does nothing.
- *
- * - You should now create tetrahedra by calling
- * NTriangulation::newTetrahedron() or
- * NTriangulation::newTetrahedron(const std::string&), which will
- * automatically add the tetrahedron to the triangulation.  You should
- * not need to call NTriangulation::addTetrahedron() at all.
- *
- * - When you remove a tetrahedron using NTriangulation::removeTetrahedron()
- * or NTriangulation::removeTetrahedronAt(), the tetrahedron will now be
- * automatically destroyed.
- *
- * - The old way of adding tetrahedra (creating an NTetrahedron and then
- * calling NTriangulation::addTetrahedron()) is deprecated, and will
- * be removed completely in the near future.  In the meantime, you may
- * find that tetrahedra are now added to a triangulation automatically (both
- * NTriangulation::addTetrahedron() and NTetrahedron::joinTo() will
- * aggressively try to add nearby tetrahedra that do not already belong to
- * the current triangulation).  This is to avoid tetrahedra and
- * triangulations being in an inconsistent state.  Any redundant calls
- * to NTriangulation::addTetrahedron() (i.e., when the tetrahedron
- * already belongs to the triangulation) are harmless, and will have no
- * effect.
- *
- * These changes are designed to ensure that triangulations and
- * tetrahedra are always in a consistent state, and to make it more
- * difficult for users to inadvertently crash the program.
+ * An implementation note: the NTriangulation class is responsible for
+ * creating, maintaining and destroying this extra skeletal information.
  */
-class REGINA_API NTetrahedron :
-        public Output<NTetrahedron>,
-        public boost::noncopyable,
-        public NMarkedElement {
+template <>
+class REGINA_API Simplex<3> : public SimplexBase<3> {
     private:
-        NTetrahedron* tetrahedra_[4];
-            /**< Stores the tetrahedra glued to each face of this
-                 tetrahedron.  Specifically, <tt>tetrahedra[f]</tt>
-                 represents the tetrahedron joined to triangular face \c f
-                 of this tetrahedron, or is 0
-                 if face \c f lies on the triangulation boundary.  Faces are
-                 numbered from 0 to 3 inclusive, where face \c i is opposite
-                 vertex \c i. */
-        NPerm4 tetrahedronPerm_[4];
-            /**< Stores the corresponence between vertices of this
-                 tetrahedron and adjacent tetrahedra.  If face \c f is
-                 joined to another tetrahedron, <tt>tetrahedronPerm[f]</tt>
-                 represents the permutation \c p whereby vertex \c v of
-                 this tetrahedron is identified with vertex <tt>p[v]</tt> of
-                 the adjacent tetrahedron along face \c f. */
-        std::string description_;
-            /**< A text description of this tetrahedron.
-                 Descriptions are not mandatory and need not be unique. */
-
         NVertex* vertices_[4];
             /**< Vertices in the triangulation skeleton that are
                  vertices of this tetrahedron. */
@@ -155,288 +108,21 @@ class REGINA_API NTetrahedron :
         NPerm4 triMapping_[4];
             /**< Maps (0,1,2) to the vertices of this tetrahedron that form
                  each triangular face, as described in getTriangleMapping(). */
-        int tetOrientation_;
-            /**< The orientation of this tetrahedron in the triangulation.
-                 This will either be 1 or -1. */
-        NTriangulation* tri_;
-            /**< The triangulation to which this tetrahedron belongs. */
-        NComponent* component_;
-            /**< The component to which this tetrahedron belongs in the
-                 triangulation. */
 
     public:
         /**
-         * Creates a new tetrahedron with empty description and no
-         * faces joined to anything.
-         * The new tetrahedron will not belong to any triangulation.
+         * A dimension-specific alias for adjacentSimplex().
          *
-         * \deprecated Users should now create new tetrahedra by calling
-         * NTriangulation::newTetrahedron().  For details, see the changes in
-         * tetrahedron management outlined in the NTetrahedron class notes.
+         * See adjacentSimplex() for further information.
          */
-        NTetrahedron();
+        Simplex* adjacentTetrahedron(int face) const;
         /**
-         * Creates a new tetrahedron with the given description and
-         * no faces joined to anything.
-         * The new tetrahedron will not belong to any triangulation.
+         * A dimension-specific alias for adjacentFacet().
          *
-         * \deprecated Users should now create new tetrahedra by calling
-         * NTriangulation::newTetrahedron(const std::string&).  For details,
-         * see the changes in tetrahedron management outlined in the
-         * NTetrahedron class notes.
-         *
-         * @param desc the description to give the new tetrahedron.
-         */
-        NTetrahedron(const std::string& desc);
-
-        /**
-         * Returns the text description associated with this
-         * tetrahedron.
-         *
-         * @return the description of this tetrahedron.
-         */
-        const std::string& getDescription() const;
-
-        /**
-         * Sets the text description associated with this tetrahedron.
-         * Note that descriptions need not be unique, and may be empty.
-         *
-         * @param desc the new description to assign to this
-         * tetrahedron.
-         */
-        void setDescription(const std::string& desc);
-
-        /**
-         * Returns the index of this tetrahedron in the underlying
-         * triangulation.  This is identical to calling
-         * <tt>getTriangulation()->tetrahedronIndex(this)</tt>.
-         *
-         * Note that tetrahedron indexing may change when a tetrahedron is
-         * added or removed from the underlying triangulation.
-         *
-         * @return the index of this tetrahedron.
-         */
-        unsigned long index() const;
-
-        /**
-         * Returns the adjacent tetrahedron glued to the given face of this
-         * tetrahedron, or 0 if the given face is on the triangulation
-         * boundary.
-         *
-         * @param face the face of this tetrahedron to examine.  This
-         * should be between 0 and 3 inclusive, where face \c i is
-         * opposite vertex \c i of the tetrahedron.
-         * @return the adjacent tetrahedron glued to the given face, or 0
-         * if the given face lies on the boundary.
-         */
-        NTetrahedron* adjacentTetrahedron(int face) const;
-        /**
-         * A dimension-agnostic alias for adjacentTetrahedron().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 3-manifold triangulations means a tetrahedron).
-         * 
-         * See adjacentTetrahedron() for further information.
-         */
-        NTetrahedron* adjacentSimplex(int face) const;
-        /**
-         * Deprecated in favour of adjacentTetrahedron().  The old routine
-         * getAdjacentTetrahedron() has been renamed to adjacentTetrahedron()
-         * as part of an effort to make programming and scripting with
-         * Regina a little less work on the fingers.
-         *
-         * \deprecated This routine will eventually be removed in some future
-         * version of Regina.  Users are advised to use adjacentTetrahedron()
-         * instead, which is an identical routine with a shorter name.
-         *
-         * @param face the face of this tetrahedron to examine.  This
-         * should be between 0 and 3 inclusive, where face \c i is
-         * opposite vertex \c i of the tetrahedron.
-         * @return the adjacent tetrahedron glued to the given face, or 0
-         * if the given face lies on the boundary.
-         */
-        NTetrahedron* getAdjacentTetrahedron(int face) const;
-        /**
-         * Returns a permutation describing the correspondence between
-         * vertices of this tetrahedron and vertices of the adjacent
-         * tetrahedron glued to the given face of this tetrahedron.
-         *
-         * If we call this permutation \c p, then for each vertex \c v of this
-         * tetrahedron, <tt>p[v]</tt> will be the vertex of the adjacent
-         * tetrahedron that is identified with \c v according to the gluing
-         * along the given face of this tetrahedron.
-         *
-         * \pre The given face of this tetrahedron has some tetrahedron
-         * (possibly this one) glued to it.
-         *
-         * @param face the face of this tetrahedron whose gluing we
-         * will examine.  This should be between 0 and 3 inclusive, where
-         * face \c i is opposite vertex \c i of the tetrahedron.
-         * @return a permutation mapping the vertices of this
-         * tetrahedron to the vertices of the tetrahedron adjacent along
-         * the given face.
-         */
-        NPerm4 adjacentGluing(int face) const;
-        /**
-         * Deprecated in favour of adjacentGluing().  The old routine
-         * getAdjacentTetrahedronGluing() has been renamed to adjacentGluing()
-         * as part of an effort to make programming and scripting with
-         * Regina a little less work on the fingers.
-         *
-         * \deprecated This routine will eventually be removed in some future
-         * version of Regina.  Users are advised to use adjacentGluing()
-         * instead, which is an identical routine with a shorter name.
-         *
-         * @param face the face of this tetrahedron whose gluing we
-         * will examine.  This should be between 0 and 3 inclusive, where
-         * face \c i is opposite vertex \c i of the tetrahedron.
-         * @return a permutation mapping the vertices of this
-         * tetrahedron to the vertices of the tetrahedron adjacent along
-         * the given face.
-         */
-        NPerm4 getAdjacentTetrahedronGluing(int face) const;
-        /**
-         * Examines the tetrahedron glued to the given face of this
-         * tetrahedron, and returns the corresponding face of that
-         * tetrahedron.  That is, the returned face of the adjacent
-         * tetrahedron is glued to the given face of this tetrahedron.
-         *
-         * \pre The given face of this tetrahedron has some tetrahedron
-         * (possibly this one) glued to it.
-         *
-         * @param face the face of this tetrahedron whose gluing we
-         * will examine.  This
-         * should be between 0 and 3 inclusive, where face \c i is
-         * opposite vertex \c i of the tetrahedron.
-         * @return the face of the tetrahedron adjacent along the given
-         * face that is in fact glued to the given face of this
-         * tetrahedron.
+         * See adjacentFacet() for further information.
          */
         int adjacentFace(int face) const;
-        /**
-         * A dimension-agnostic alias for adjacentFace().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "facet" refers to a facet of a top-dimensional simplex
-         * (which for 3-manifold triangulations means a face of a tetrahedron).
-         * 
-         * See adjacentFace() for further information.
-         */
-        int adjacentFacet(int facet) const;
-        /**
-         * Deprecated in favour of adjacentFace().  The old routine
-         * getAdjacentFace() has been renamed to adjacentFace()
-         * as part of an effort to make programming and scripting with
-         * Regina a little less work on the fingers.
-         *
-         * \deprecated This routine will eventually be removed in some future
-         * version of Regina.  Users are advised to use adjacentFace()
-         * instead, which is an identical routine with a shorter name.
-         *
-         * @param face the face of this tetrahedron whose gluing we
-         * will examine.  This should be between 0 and 3 inclusive, where
-         * face \c i is opposite vertex \c i of the tetrahedron.
-         * @return the face of the tetrahedron adjacent along the given
-         * face that is in fact glued to the given face of this tetrahedron.
-         */
-        int getAdjacentFace(int face) const;
-        /**
-         * Determines if this tetrahedron has any faces that are
-         * boundary triangles.
-         *
-         * @return \c true if and only if this tetrahedron has any
-         * boundary triangles.
-         */
-        bool hasBoundary() const;
 
-        /**
-         * Joins the given face of this tetrahedron to another
-         * tetrahedron.  The other tetrahedron involved will be
-         * automatically updated.
-         *
-         * Neither tetrahedron needs to belong to a triangulation (i.e.,
-         * you can join tetrahedra together before or after calling
-         * NTriangulation::addTetrahedron()).  However, if both
-         * tetrahedra do belong to a triangulation then it must be the
-         * \e same triangulation.
-         *
-         * \pre This and the given tetrahedron do not belong to
-         * different triangulations.
-         * \pre The given face of this tetrahedron is not currently glued to
-         * anything.
-         * \pre The face of the other tetrahedron that will be glued to the
-         * given face of this tetrahedron is not currently glued to anything.
-         * \pre If the other tetrahedron involved is this tetrahedron, we are
-         * not attempting to glue a face to itself.
-         *
-         * \warning If one tetrahedron belongs to a triangulation but
-         * the other does not, the missing tetrahedron (along with anything
-         * that it is joined to, directly or indirectly) will be automatically
-         * added to the triangulation.  This is new behaviour as of
-         * Regina 4.90; see the NTetrahedron class notes for details.
-         *
-         * @param myFace the face of this tetrahedron that will be glued
-         * to the given other tetrahedron.  This
-         * should be between 0 and 3 inclusive, where face \c i is
-         * opposite vertex \c i of the tetrahedron.
-         * @param you the tetrahedron (possibly this one) that will be
-         * glued to the given face of this tetrahedron.
-         * @param gluing a permutation describing the mapping of
-         * vertices by which the two tetrahedra will be joined.  Each
-         * vertex \c v of this tetrahedron that lies on the given face will
-         * be identified with vertex <tt>gluing[v]</tt> of tetrahedron
-         * <tt>you</tt>.  In addition, the face of <tt>you</tt> that
-         * will be glued to the given face of this tetrahedron will be
-         * face number <tt>gluing[myFace]</tt>.
-         */
-        void joinTo(int myFace, NTetrahedron* you, NPerm4 gluing);
-        /**
-         * Unglues the given face of this tetrahedron from whatever is
-         * joined to it.  The other tetrahedron involved (possibly this
-         * one) will be automatically updated.
-         *
-         * \pre The given face of this tetrahedron has some tetrahedron
-         * (possibly this one) glued to it.
-         *
-         * @param myFace the face of this tetrahedron whose gluing we
-         * will undo.  This should be between 0 and 3 inclusive, where
-         * face \c i is opposite vertex \c i of the tetrahedron.
-         * @return the ex-adjacent tetrahedron that was originally glued
-         * to the given face of this tetrahedron.
-         */
-        NTetrahedron* unjoin(int myFace);
-        /**
-         * Undoes any face gluings involving this tetrahedron.
-         * Any other tetrahedra involved will be automatically updated.
-         */
-        void isolate();
-
-        /**
-         * Returns the triangulation to which this tetrahedron belongs.
-         *
-         * @return the triangulation containing this tetrahedron.
-         */
-        NTriangulation* getTriangulation() const;
-
-        /**
-         * Returns the triangulation component to which this tetrahedron
-         * belongs.
-         *
-         * As of Regina 4.90, if the skeletal information for the
-         * triangulation has not been computed then this will be done
-         * automatically.  There is no need for users to explicitly
-         * recompute the skeleton themselves.
-         *
-         * \pre This tetrahedron belongs to a triangulation (i.e., it
-         * was created using NTriangulation::newTetrahedron() or added
-         * using NTriangulation::addTetrahedron()).
-         *
-         * @return the component containing this tetrahedron.
-         */
-        NComponent* getComponent() const;
         /**
          * Returns the vertex in the triangulation skeleton
          * corresponding to the given vertex of this tetrahedron.
@@ -498,23 +184,6 @@ class REGINA_API NTetrahedron :
          * requested tetrahedron face.
          */
         NTriangle* getTriangle(int face) const;
-        /**
-         * A deprecated alias for getTriangle().
-         *
-         * This routine returns the triangle in the triangulation
-         * skeleton corresponding to the given face of this tetrahedron.
-         * See getTriangle() for further details.
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use getTriangle() instead.
-         *
-         * @param face the face of this tetrahedron to examine.
-         * This should be between 0 and 3 inclusive, where face \c i
-         * lies opposite vertex \c i.
-         * @return the triangle of the skeleton corresponding to the
-         * requested tetrahedron face.
-         */
-        NTriangle* getFace(int face) const;
         /**
          * Returns a permutation that maps 0 to the given vertex of this
          * tetrahedron, and that maps (1,2,3) to the three remaining vertices
@@ -646,70 +315,33 @@ class REGINA_API NTetrahedron :
          * triangle to the vertices of this tetrahedron.
          */
         NPerm4 getTriangleMapping(int face) const;
-        /**
-         * A deprecated alias for getTriangleMapping().
-         *
-         * This routine examines the given face of this tetrahedron, and
-         * returns a mapping from the "canonical" vertices of the corresponding
-         * triangle of the triangulation to the matching vertices of this
-         * tetrahedron.  See getTriangleMapping() for further details.
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use getTriangleMapping() instead.
-         *
-         * @param face the face of this tetrahedron to examine.
-         * This should be between 0 and 3 inclusive.
-         * @return a mapping from vertices (0,1,2) of the corresponding
-         * triangle to the vertices of this tetrahedron.
-         */
-        NPerm4 getFaceMapping(int face) const;
-        /**
-         * Returns the orientation of this tetrahedron in the
-         * triangulation.
-         *
-         * The orientation of each tetrahedron is always +1 or -1.
-         * In an orientable component of a triangulation,
-         * adjacent tetrahedra have the same orientations if one could be
-         * transposed onto the other without reflection, and they have
-         * opposite orientations if a reflection would be required.
-         * In a non-orientable component, orientations are still +1 and
-         * -1 but no further guarantees can be made.
-         *
-         * As of Regina 4.90, if the skeletal information for the
-         * triangulation has not been computed then this will be done
-         * automatically.  There is no need for users to explicitly
-         * recompute the skeleton themselves.
-         *
-         * \pre This tetrahedron belongs to a triangulation (i.e., it
-         * was created using NTriangulation::newTetrahedron() or added
-         * using NTriangulation::addTetrahedron()).
-         *
-         * @return +1 or -1 according to the orientation of this tetrahedron.
-         */
-        int orientation() const;
 
+    private:
         /**
-         * Writes a short text representation of this object to the
-         * given output stream.
+         * Creates a new tetrahedron with empty description and no
+         * faces joined to anything.
          *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
+         * @param tri the triangulation to which the new tetrahedron belongs.
          */
-        void writeTextShort(std::ostream& out) const;
+        Simplex(NTriangulation* tri);
         /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
+         * Creates a new tetrahedron with the given description and
+         * no edges joined to anything.
          *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
+         * @param desc the description to give the new tetrahedron.
+         * @param tri the triangulation to which the new tetrahedron belongs.
          */
-        void writeTextLong(std::ostream& out) const;
+        Simplex(const std::string& desc, NTriangulation* tri);
 
-    friend class NTriangulation;
+    friend class Triangulation<3>;
+    friend class TriangulationBase<3>;
         /**< Allow access to private members. */
 };
+
+/**
+ * A convenience typedef for Simplex<3>.
+ */
+typedef Simplex<3> NTetrahedron;
 
 /*@}*/
 
@@ -718,120 +350,51 @@ class REGINA_API NTetrahedron :
 #include "triangulation/ntriangulation.h"
 namespace regina {
 
-// Inline functions for NTetrahedron
+// Inline functions for Simplex<3>
 
-inline const std::string& NTetrahedron::getDescription() const {
-    return description_;
+inline Simplex<3>* Simplex<3>::adjacentTetrahedron(int face) const {
+    return adjacentSimplex(face);
 }
 
-inline void NTetrahedron::setDescription(const std::string& desc) {
-    NPacket::ChangeEventSpan span(tri_);
-    description_ = desc;
+inline int Simplex<3>::adjacentFace(int face) const {
+    return adjacentFacet(face);
 }
 
-inline unsigned long NTetrahedron::index() const {
-    return markedIndex();
-}
-
-inline NTetrahedron* NTetrahedron::adjacentTetrahedron(int face) const {
-    return tetrahedra_[face];
-}
-
-inline NTetrahedron* NTetrahedron::adjacentSimplex(int face) const {
-    return tetrahedra_[face];
-}
-
-inline NTetrahedron* NTetrahedron::getAdjacentTetrahedron(int face) const {
-    // Deprecated.
-    return tetrahedra_[face];
-}
-
-inline int NTetrahedron::adjacentFace(int face) const {
-    return tetrahedronPerm_[face][face];
-}
-
-inline int NTetrahedron::adjacentFacet(int facet) const {
-    return tetrahedronPerm_[facet][facet];
-}
-
-inline int NTetrahedron::getAdjacentFace(int face) const {
-    // Deprecated.
-    return tetrahedronPerm_[face][face];
-}
-
-inline NPerm4 NTetrahedron::adjacentGluing(int face) const {
-    return tetrahedronPerm_[face];
-}
-
-inline NPerm4 NTetrahedron::getAdjacentTetrahedronGluing(int face) const {
-    // Deprecated!  Finally.
-    return tetrahedronPerm_[face];
-}
-
-inline NTriangulation* NTetrahedron::getTriangulation() const {
-    return tri_;
-}
-
-inline NComponent* NTetrahedron::getComponent() const {
-    if (! tri_->calculatedSkeleton_)
-        tri_->calculateSkeleton();
-    return component_;
-}
-
-inline NVertex* NTetrahedron::getVertex(int vertex) const {
-    if (! tri_->calculatedSkeleton_)
-        tri_->calculateSkeleton();
+inline NVertex* Simplex<3>::getVertex(int vertex) const {
+    getTriangulation()->ensureSkeleton();
     return vertices_[vertex];
 }
 
-inline NEdge* NTetrahedron::getEdge(int edge) const {
-    if (! tri_->calculatedSkeleton_)
-        tri_->calculateSkeleton();
+inline NEdge* Simplex<3>::getEdge(int edge) const {
+    getTriangulation()->ensureSkeleton();
     return edges_[edge];
 }
 
-inline NTriangle* NTetrahedron::getTriangle(int face) const {
-    if (! tri_->calculatedSkeleton_)
-        tri_->calculateSkeleton();
+inline NTriangle* Simplex<3>::getTriangle(int face) const {
+    getTriangulation()->ensureSkeleton();
     return triangles_[face];
 }
 
-inline NTriangle* NTetrahedron::getFace(int face) const {
-    return getTriangle(face);
-}
-
-inline NPerm4 NTetrahedron::getVertexMapping(int vertex) const {
-    if (! tri_->calculatedSkeleton_)
-        tri_->calculateSkeleton();
+inline NPerm4 Simplex<3>::getVertexMapping(int vertex) const {
+    getTriangulation()->ensureSkeleton();
     return vertexMapping_[vertex];
 }
 
-inline NPerm4 NTetrahedron::getEdgeMapping(int edge) const {
-    if (! tri_->calculatedSkeleton_)
-        tri_->calculateSkeleton();
+inline NPerm4 Simplex<3>::getEdgeMapping(int edge) const {
+    getTriangulation()->ensureSkeleton();
     return edgeMapping_[edge];
 }
 
-inline NPerm4 NTetrahedron::getTriangleMapping(int face) const {
-    if (! tri_->calculatedSkeleton_)
-        tri_->calculateSkeleton();
+inline NPerm4 Simplex<3>::getTriangleMapping(int face) const {
+    getTriangulation()->ensureSkeleton();
     return triMapping_[face];
 }
 
-inline NPerm4 NTetrahedron::getFaceMapping(int face) const {
-    return getTriangleMapping(face);
+inline Simplex<3>::Simplex(NTriangulation* tri) : SimplexBase<3>(tri) {
 }
 
-inline int NTetrahedron::orientation() const {
-    if (! tri_->calculatedSkeleton_)
-        tri_->calculateSkeleton();
-    return tetOrientation_;
-}
-
-inline void NTetrahedron::writeTextShort(std::ostream& out) const {
-    out << "Tetrahedron";
-    if (description_.length() > 0)
-        out << ": " << description_;
+inline Simplex<3>::Simplex(const std::string& desc, NTriangulation* tri) :
+        SimplexBase<3>(desc, tri) {
 }
 
 } // namespace regina

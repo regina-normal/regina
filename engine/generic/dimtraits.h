@@ -46,6 +46,8 @@
 
 namespace regina {
 
+template <int n> class Simplex;
+
 /**
  * \addtogroup generic Generic code
  * Template code to work with triangulations of arbitrary dimension.
@@ -63,21 +65,8 @@ namespace regina {
  */
 template <int dim>
 struct DimTraits {
-    typedef void Triangulation;
-        /**< The main data type for a <i>dim</i>-manifold triangulation. */
-    typedef void Simplex;
-        /**< The data type for a top-dimensional simplex in a
-             <i>dim</i>-manifold triangulation. */
-    typedef void Isomorphism;
-        /**< The data type for an isomorphism between two
-             <i>dim</i>-manifold triangulations.
-             Typically this is a subclass of NGenericIsomorphism<dim>. */
     typedef void FacetPairing;
         /**< The data type that represents a pairing of facets of
-             top-dimensional simplices in a <i>dim</i>-manifold
-             triangulation. */
-    typedef void Perm;
-        /**< The permutation type used to describe gluings between
              top-dimensional simplices in a <i>dim</i>-manifold
              triangulation. */
 };
@@ -106,39 +95,24 @@ struct FaceTraits {
 };
 
 #ifndef __DOXYGEN
+
 class Dim2Edge;
-class Dim2Triangulation;
-class Dim2Triangle;
-class Dim2Isomorphism;
 class Dim2EdgePairing;
 class Dim2Vertex;
-class NPerm3;
 
 template <>
 struct DimTraits<2> {
-    typedef Dim2Triangulation Triangulation;
-    typedef Dim2Triangle Simplex;
-    typedef Dim2Isomorphism Isomorphism;
     typedef Dim2EdgePairing FacetPairing;
-    typedef NPerm3 Perm;
 };
 
 class NEdge;
 class NTriangle;
-class NTriangulation;
-class NTetrahedron;
-class NIsomorphism;
 class NFacePairing;
-class NPerm4;
 class NVertex;
 
 template <>
 struct DimTraits<3> {
-    typedef NTriangulation Triangulation;
-    typedef NTetrahedron Simplex;
-    typedef NIsomorphism Isomorphism;
     typedef NFacePairing FacetPairing;
-    typedef NPerm4 Perm;
 };
 
 class Dim4Edge;
@@ -172,7 +146,7 @@ struct FaceTraits<2, 1> {
 
 template <>
 struct FaceTraits<2, 2> {
-    typedef Dim2Triangle Face;
+    typedef Simplex<2> Face;
 };
 
 template <>
@@ -192,7 +166,7 @@ struct FaceTraits<3, 2> {
 
 template <>
 struct FaceTraits<3, 3> {
-    typedef NTetrahedron Face;
+    typedef Simplex<3> Face;
 };
 
 template <>

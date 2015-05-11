@@ -53,6 +53,9 @@
 
 namespace regina {
 
+template <int> class Isomorphism;
+template <int> class Triangulation;
+
 /**
  * \weakgroup census
  * @{
@@ -91,17 +94,6 @@ class REGINA_API NGenericFacetPairing : public NThread,
         typedef typename DimTraits<dim>::FacetPairing FacetPairing;
             /**< The facet pairing class specific to this dimension.
                  This is typically a subclass of NGenericFacetPairing<dim>. */
-        typedef typename DimTraits<dim>::Isomorphism Isomorphism;
-            /**< The isomorphism class used for triangulations in
-                 this dimension. */
-        typedef typename DimTraits<dim>::Perm Perm;
-            /**< The permutation class used to glue together facets of
-                 simplices when building triangulations in this dimension. */
-        typedef typename DimTraits<dim>::Simplex Simplex;
-            /**< The class that represents a top-level simplex of a
-                 triangulation in this dimension. */
-        typedef typename DimTraits<dim>::Triangulation Triangulation;
-            /**< The triangulation class specific to this dimension. */
 
         /**
          * A list of isomorphisms on pairwise matchings of simplex facets.
@@ -110,7 +102,7 @@ class REGINA_API NGenericFacetPairing : public NThread,
          * pairwise matching of simplex facets (as described by class
          * NGenericFacetPairing) into another.
          */
-        typedef std::list<Isomorphism*> IsoList;
+        typedef std::list<Isomorphism<dim>*> IsoList;
 
         /**
          * A routine that can do arbitrary processing upon a facet pairing
@@ -170,7 +162,7 @@ class REGINA_API NGenericFacetPairing : public NThread,
          * @param tri the triangulation whose facet pairing should
          * be constructed.
          */
-        NGenericFacetPairing(const Triangulation& tri);
+        NGenericFacetPairing(const Triangulation<dim>& tri);
 
         /**
          * Deallocates any memory used by this structure.

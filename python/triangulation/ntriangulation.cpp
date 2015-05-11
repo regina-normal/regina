@@ -41,6 +41,7 @@
 
 using namespace boost::python;
 using regina::NTriangulation;
+using regina::Triangulation;
 
 namespace {
     regina::NTetrahedron* (NTriangulation::*newTetrahedron_void)() =
@@ -104,12 +105,6 @@ namespace {
 
     NTriangulation* enterTextTriangulation_stdio() {
         return NTriangulation::enterTextTriangulation(std::cin, std::cout);
-    }
-
-    void addTetrahedron_own(NTriangulation& tri,
-            std::auto_ptr<regina::NTetrahedron> tet) {
-        tri.addTetrahedron(tet.get());
-        tet.release();
     }
 
     boost::python::list getTetrahedra_list(NTriangulation& t) {
@@ -193,6 +188,7 @@ namespace {
 }
 
 void addNTriangulation() {
+    {
     scope global;
 
     enum_<regina::TuraevViroAlg>("TuraevViroAlg")
@@ -207,9 +203,9 @@ void addNTriangulation() {
     global.attr("TV_TREEWIDTH") = regina::TV_TREEWIDTH;
     global.attr("TV_NAIVE") = regina::TV_NAIVE;
 
-    scope s = class_<NTriangulation, bases<regina::NPacket>,
-            std::auto_ptr<NTriangulation>,
-            boost::noncopyable>("NTriangulation")
+    scope s = class_<Triangulation<3>, bases<regina::NPacket>,
+            std::auto_ptr<Triangulation<3>>,
+            boost::noncopyable>("Triangulation3")
         .def(init<const NTriangulation&>())
         .def(init<const std::string&>())
         .def("getNumberOfTetrahedra", &NTriangulation::getNumberOfTetrahedra)
@@ -230,7 +226,6 @@ void addNTriangulation() {
             return_value_policy<reference_existing_object>())
         .def("newSimplex", newTetrahedron_string,
             return_value_policy<reference_existing_object>())
-        .def("addTetrahedron", addTetrahedron_own)
         .def("removeTetrahedron", &NTriangulation::removeTetrahedron)
         .def("removeSimplex", &NTriangulation::removeSimplex)
         .def("removeTetrahedronAt", &NTriangulation::removeTetrahedronAt)
@@ -239,7 +234,7 @@ void addNTriangulation() {
         .def("removeAllSimplices", &NTriangulation::removeAllSimplices)
         .def("swapContents", &NTriangulation::swapContents)
         .def("moveContentsTo", &NTriangulation::moveContentsTo)
-        .def("gluingsHaveChanged", &NTriangulation::gluingsHaveChanged)
+        .def("countComponents", &NTriangulation::countComponents)
         .def("getNumberOfComponents", &NTriangulation::getNumberOfComponents)
         .def("getNumberOfBoundaryComponents",
             &NTriangulation::getNumberOfBoundaryComponents)
@@ -247,12 +242,15 @@ void addNTriangulation() {
         .def("getNumberOfEdges", &NTriangulation::getNumberOfEdges)
         .def("getNumberOfFaces", &NTriangulation::getNumberOfTriangles)
         .def("getNumberOfTriangles", &NTriangulation::getNumberOfTriangles)
+        .def("components", getComponents_list)
         .def("getComponents", getComponents_list)
         .def("getBoundaryComponents", getBoundaryComponents_list)
         .def("getVertices", getVertices_list)
         .def("getEdges", getEdges_list)
         .def("getFaces", getTriangles_list)
         .def("getTriangles", getTriangles_list)
+        .def("component", &NTriangulation::component,
+            return_value_policy<reference_existing_object>())
         .def("getComponent", &NTriangulation::getComponent,
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &NTriangulation::getBoundaryComponent,
@@ -289,7 +287,10 @@ void addNTriangulation() {
         .def("isIdeal", &NTriangulation::isIdeal)
         .def("isStandard", &NTriangulation::isStandard)
         .def("hasBoundaryFaces", &NTriangulation::hasBoundaryFaces)
+        .def("hasBoundaryFacets", &NTriangulation::hasBoundaryFacets)
         .def("hasBoundaryTriangles", &NTriangulation::hasBoundaryTriangles)
+        .def("countBoundaryFacets", &NTriangulation::countBoundaryFacets)
+        .def("countBoundaryTriangles", &NTriangulation::countBoundaryTriangles)
         .def("getNumberOfBoundaryTriangles",
             &NTriangulation::getNumberOfBoundaryTriangles)
         .def("isClosed", &NTriangulation::isClosed)
@@ -419,5 +420,9 @@ void addNTriangulation() {
 
     implicitly_convertible<std::auto_ptr<NTriangulation>,
         std::auto_ptr<regina::NPacket> >();
+
+    }
+
+    scope().attr("NTriangulation") = scope().attr("Triangulation3");
 }
 

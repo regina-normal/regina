@@ -41,12 +41,24 @@
 #include "triangulation/nvertex.h"
 
 using namespace boost::python;
+using regina::Component;
 using regina::NComponent;
 
+namespace {
+    boost::python::list getSimplices_list(NComponent& t) {
+        boost::python::list ans;
+        for (std::vector<regina::Simplex<3>*>::const_iterator it =
+                t.simplices().begin(); it != t.simplices().end(); ++it)
+            ans.append(boost::python::ptr(*it));
+        return ans;
+    }
+}
+
 void addNComponent() {
-    class_<NComponent, std::auto_ptr<NComponent>, boost::noncopyable>
-            ("NComponent", no_init)
+    class_<Component<3>, std::auto_ptr<Component<3>>, boost::noncopyable>
+            ("Component3", no_init)
         .def("index", &NComponent::index)
+        .def("size", &NComponent::size)
         .def("getNumberOfTetrahedra", &NComponent::getNumberOfTetrahedra)
         .def("getNumberOfSimplices", &NComponent::getNumberOfSimplices)
         .def("getNumberOfFaces", &NComponent::getNumberOfFaces)
@@ -55,6 +67,10 @@ void addNComponent() {
         .def("getNumberOfVertices", &NComponent::getNumberOfVertices)
         .def("getNumberOfBoundaryComponents",
             &NComponent::getNumberOfBoundaryComponents)
+        .def("simplices", getSimplices_list)
+        .def("getSimplices", getSimplices_list)
+        .def("simplex", &NComponent::simplex,
+            return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &NComponent::getTetrahedron,
             return_value_policy<reference_existing_object>())
         .def("getSimplex", &NComponent::getSimplex,
@@ -72,13 +88,18 @@ void addNComponent() {
         .def("isIdeal", &NComponent::isIdeal)
         .def("isOrientable", &NComponent::isOrientable)
         .def("isClosed", &NComponent::isClosed)
+        .def("countBoundaryFacets", &NComponent::countBoundaryFacets)
         .def("getNumberOfBoundaryTriangles",
             &NComponent::getNumberOfBoundaryTriangles)
+        .def("getNumberOfBoundaryFacets",
+            &NComponent::getNumberOfBoundaryFacets)
         .def("str", &NComponent::str)
         .def("toString", &NComponent::toString)
         .def("detail", &NComponent::detail)
         .def("toStringLong", &NComponent::toStringLong)
         .def("__str__", &NComponent::str)
     ;
+
+    scope().attr("NComponent") = scope().attr("Component3");
 }
 

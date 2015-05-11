@@ -72,7 +72,7 @@ namespace regina {
 
 NNormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
     // Get the empty triangulation out of the way now.
-    if (tetrahedra_.empty())
+    if (simplices_.empty())
         return 0;
 
     // Do we already know the answer?
@@ -136,7 +136,7 @@ NNormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
 
 NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
     // Get the empty triangulation out of the way now.
-    if (tetrahedra_.empty())
+    if (simplices_.empty())
         return 0;
 
     // Use combinatorial optimisation if we can.
@@ -189,7 +189,7 @@ NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
             // Euler char = 2 implies no real boundary.
             found = false; // At least one octagon found so far?
             broken = false; // More than one octagon found so far?
-            for (tet = 0; tet < tetrahedra_.size() && ! broken; ++tet)
+            for (tet = 0; tet < simplices_.size() && ! broken; ++tet)
                 for (oct = 0; oct < 3; ++oct) {
                     coord = s->getOctCoord(tet, oct);
                     if (coord > 1) {

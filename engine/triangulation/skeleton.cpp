@@ -41,9 +41,10 @@
 namespace regina {
 
 void NTriangulation::calculateSkeleton() const {
+    TriangulationBase<3>::calculateSkeleton();
+
     ideal_ = false;
     valid_ = true;
-    orientable_ = true;
     standard_ = true;
 
 #if 0
@@ -53,13 +54,6 @@ void NTriangulation::calculateSkeleton() const {
         // used correctly)
 #endif
 
-    // Set this now so that any tetrahedron query routines do not try to
-    // recursively recompute the skeleton again.
-    calculatedSkeleton_ = true;
-
-    calculateComponents();
-        // Sets components, orientable, NComponent.orientable,
-        //     NTetrahedron.component
     calculateTriangles();
         // Sets triangles, NTriangle.component
     calculateVertices();
@@ -79,7 +73,7 @@ void NTriangulation::calculateSkeleton() const {
 void NTriangulation::checkPermutations() const {
     TetrahedronIterator it;
 
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); it++)
+    for (it = simplices_.begin(); it != simplices_.end(); it++)
         for (int face = 0; face < 4; face++) {
             NTetrahedron * adjacent = (*it) -> adjacentTetrahedron(face);
 
@@ -109,85 +103,18 @@ void NTriangulation::checkPermutations() const {
         }
 }
 
-void NTriangulation::calculateComponents() const {
-    TetrahedronIterator it;
-    NComponent* label;
-    NTetrahedron* tet;
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); it++)
-        (*it)->component_ = 0;
-
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); it++) {
-        tet = *it;
-        if (tet->component_ == 0) {
-            label = new NComponent();
-            labelComponent(tet, label);
-            components_.push_back(label);
-        }
-    }
-}
-
-void NTriangulation::labelComponent(NTetrahedron* firstTet,
-        NComponent* component) const {
-    // Now non-recursive; uses a queue instead.
-    // The queue contains tetrahedra from which we need to propagate
-    //     component labelling.
-
-    // Use plain C arrays for the queue.  Since each tetrahedron is pushed
-    // on at most once, the array size does not need to be very large.
-
-    // Note that we have >= 1 tetrahedron, since firstTet != 0.
-    NTetrahedron** queue = new NTetrahedron*[tetrahedra_.size()];
-
-    firstTet->component_ = component;
-    component->tetrahedra_.push_back(firstTet);
-    firstTet->tetOrientation_ = 1;
-
-    unsigned queueStart = 0, queueEnd = 1;
-    queue[0] = firstTet;
-
-    NTetrahedron* tet;
-    NTetrahedron* adjTet;
-    int face;
-    int yourOrientation;
-    while (queueStart < queueEnd) {
-        tet = queue[queueStart++];
-
-        for (face=0; face<4; face++) {
-            adjTet = tet->adjacentTetrahedron(face);
-            if (adjTet) {
-                yourOrientation = (tet->adjacentGluing(face).
-                    sign() == 1 ? -tet->tetOrientation_ : tet->tetOrientation_);
-                if (adjTet->component_) {
-                    if (yourOrientation != adjTet->tetOrientation_) {
-                        orientable_ = false;
-                        component->orientable_ = false;
-                    }
-                } else {
-                    adjTet->component_ = component;
-                    component->tetrahedra_.push_back(adjTet);
-                    adjTet->tetOrientation_ = yourOrientation;
-
-                    queue[queueEnd++] = adjTet;
-                }
-            }
-        }
-    }
-
-    delete[] queue;
-}
-
 void NTriangulation::calculateVertices() const {
     TetrahedronIterator it;
     int vertex;
     NTetrahedron* tet;
     NVertex* label;
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); it++) {
+    for (it = simplices_.begin(); it != simplices_.end(); it++) {
         tet = *it;
         for (vertex=0; vertex<4; vertex++)
             tet->vertices_[vertex] = 0;
     }
 
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); it++) {
+    for (it = simplices_.begin(); it != simplices_.end(); it++) {
         tet = *it;
         for (vertex=0; vertex<4; vertex++)
             if (! tet->vertices_[vertex]) {
@@ -206,8 +133,8 @@ void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
     // array size does not need to be very large.
 
     // Note that we have >= 1 tetrahedron, since firstTet != 0.
-    NTetrahedron** queueTet = new NTetrahedron*[tetrahedra_.size() * 4];
-    int* queueVtx = new int[tetrahedra_.size() * 4];
+    NTetrahedron** queueTet = new NTetrahedron*[simplices_.size() * 4];
+    int* queueVtx = new int[simplices_.size() * 4];
 
     firstTet->vertices_[firstVertex] = label;
     firstTet->vertexMapping_[firstVertex] = NPerm4(0, firstVertex);
@@ -282,13 +209,13 @@ void NTriangulation::calculateEdges() const {
     int edge;
     NTetrahedron* tet;
     NEdge* label;
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); it++) {
+    for (it = simplices_.begin(); it != simplices_.end(); it++) {
         tet = *it;
         for (edge=0; edge<6; edge++)
             tet->edges_[edge] = 0;
     }
 
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); it++) {
+    for (it = simplices_.begin(); it != simplices_.end(); it++) {
         tet = *it;
         for (edge=0; edge<6; edge++)
             if (! tet->edges_[edge]) {
@@ -373,13 +300,13 @@ void NTriangulation::calculateTriangles() const {
     NTriangle* label;
     NPerm4 adjVertices;
     int adjFace;
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); it++) {
+    for (it = simplices_.begin(); it != simplices_.end(); it++) {
         tet = *it;
         for (face=0; face<4; face++)
             tet->triangles_[face] = 0;
     }
 
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); it++) {
+    for (it = simplices_.begin(); it != simplices_.end(); it++) {
         tet = *it;
         for (face=3; face>=0; face--)
             if (! tet->triangles_[face]) {
@@ -605,8 +532,7 @@ void NTriangulation::calculateVertexLinks() const {
 
 void NTriangulation::calculateBoundaryProperties() const {
     // Make sure the skeleton has been calculated!
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
 
     bool localTwoSphereBoundaryComponents = false;
     bool localNegativeIdealBoundaryComponents = false;

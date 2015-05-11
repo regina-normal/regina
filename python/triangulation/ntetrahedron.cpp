@@ -45,9 +45,8 @@ using namespace boost::python;
 using regina::NTetrahedron;
 
 void addNTetrahedron() {
-    class_<NTetrahedron, std::auto_ptr<NTetrahedron>, boost::noncopyable>(
-            "NTetrahedron", init<>())
-        .def(init<const std::string&>())
+    class_<regina::Simplex<3>, std::auto_ptr<regina::Simplex<3>>,
+            boost::noncopyable>("Simplex3", no_init)
         .def("getDescription", &NTetrahedron::getDescription,
             return_value_policy<return_by_value>())
         .def("setDescription", &NTetrahedron::setDescription)
@@ -56,20 +55,18 @@ void addNTetrahedron() {
             return_value_policy<reference_existing_object>())
         .def("adjacentSimplex", &NTetrahedron::adjacentSimplex,
             return_value_policy<reference_existing_object>())
-        .def("getAdjacentTetrahedron", &NTetrahedron::getAdjacentTetrahedron,
-            return_value_policy<reference_existing_object>())
         .def("adjacentGluing", &NTetrahedron::adjacentGluing)
-        .def("getAdjacentTetrahedronGluing",
-            &NTetrahedron::getAdjacentTetrahedronGluing)
         .def("adjacentFace", &NTetrahedron::adjacentFace)
         .def("adjacentFacet", &NTetrahedron::adjacentFacet)
-        .def("getAdjacentFace", &NTetrahedron::getAdjacentFace)
         .def("hasBoundary", &NTetrahedron::hasBoundary)
         .def("joinTo", &NTetrahedron::joinTo)
+        .def("join", &NTetrahedron::join)
         .def("unjoin", &NTetrahedron::unjoin,
             return_value_policy<reference_existing_object>())
         .def("isolate", &NTetrahedron::isolate)
         .def("getTriangulation", &NTetrahedron::getTriangulation,
+            return_value_policy<reference_existing_object>())
+        .def("component", &NTetrahedron::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &NTetrahedron::getComponent,
             return_value_policy<reference_existing_object>())
@@ -77,13 +74,10 @@ void addNTetrahedron() {
             return_value_policy<reference_existing_object>())
         .def("getEdge", &NTetrahedron::getEdge,
             return_value_policy<reference_existing_object>())
-        .def("getFace", &NTetrahedron::getFace,
-            return_value_policy<reference_existing_object>())
         .def("getTriangle", &NTetrahedron::getTriangle,
             return_value_policy<reference_existing_object>())
         .def("getVertexMapping", &NTetrahedron::getVertexMapping)
         .def("getEdgeMapping", &NTetrahedron::getEdgeMapping)
-        .def("getFaceMapping", &NTetrahedron::getFaceMapping)
         .def("getTriangleMapping", &NTetrahedron::getTriangleMapping)
         .def("orientation", &NTetrahedron::orientation)
         .def("str", &NTetrahedron::str)
@@ -92,5 +86,7 @@ void addNTetrahedron() {
         .def("toStringLong", &NTetrahedron::toStringLong)
         .def("__str__", &NTetrahedron::str)
     ;
+
+    scope().attr("NTetrahedron") = scope().attr("Simplex3");
 }
 

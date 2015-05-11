@@ -656,7 +656,7 @@ class REGINA_API NTreeDecomposition :
          */
         template <int dim>
         NTreeDecomposition(
-            const NGenericTriangulation<dim>& triangulation,
+            const Triangulation<dim>& triangulation,
             TreeDecompositionAlg alg = TD_UPPER);
 
         /**

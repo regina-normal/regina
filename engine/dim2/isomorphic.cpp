@@ -39,17 +39,15 @@
 
 namespace regina {
 
-unsigned long Dim2Triangulation::findIsomorphisms(
+unsigned long Triangulation<2>::findIsomorphisms(
         const Dim2Triangulation& other, std::list<Dim2Isomorphism*>& results,
         bool completeIsomorphism, bool firstOnly) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-    if (! other.calculatedSkeleton_)
-        other.calculateSkeleton();
+    ensureSkeleton();
+    other.ensureSkeleton();
 
     // Deal with the empty triangulation first.
-    if (triangles_.empty()) {
-        if (completeIsomorphism && ! other.triangles_.empty())
+    if (simplices_.empty()) {
+        if (completeIsomorphism && ! other.simplices_.empty())
             return 0;
         results.push_back(new Dim2Isomorphism(0));
         return 1;
@@ -61,17 +59,17 @@ unsigned long Dim2Triangulation::findIsomorphisms(
         // Must be boundary complete, 1-to-1 and onto.
         // That is, combinatorially the two triangulations must be
         // identical.
-        if (triangles_.size() != other.triangles_.size())
+        if (simplices_.size() != other.simplices_.size())
             return 0;
         if (edges_.size() != other.edges_.size())
             return 0;
         if (vertices_.size() != other.vertices_.size())
             return 0;
-        if (components_.size() != other.components_.size())
+        if (components().size() != other.components().size())
             return 0;
         if (boundaryComponents_.size() != other.boundaryComponents_.size())
             return 0;
-        if (orientable_ ^ other.orientable_)
+        if (isOrientable() ^ other.isOrientable())
             return 0;
 
         // Test degree sequences and the like.
@@ -99,13 +97,13 @@ unsigned long Dim2Triangulation::findIsomorphisms(
         }
         {
             ComponentIterator it;
-            for (it = components_.begin(); it != components_.end(); it++) {
+            for (it = components().begin(); it != components().end(); it++) {
                 mapIt = map1.insert(
                     std::make_pair((*it)->getNumberOfTriangles(), 0)).first;
                 (*mapIt).second++;
             }
-            for (it = other.components_.begin();
-                    it != other.components_.end(); it++) {
+            for (it = other.components().begin();
+                    it != other.components().end(); it++) {
                 mapIt = map2.insert(
                     std::make_pair((*it)->getNumberOfTriangles(), 0)).first;
                 (*mapIt).second++;
@@ -137,9 +135,9 @@ unsigned long Dim2Triangulation::findIsomorphisms(
     } else {
         // May be boundary incomplete, and need not be onto.
         // Not much we can test for unfortunately.
-        if (triangles_.size() > other.triangles_.size())
+        if (simplices_.size() > other.simplices_.size())
             return 0;
-        if ((! orientable_) && other.orientable_)
+        if ((! isOrientable()) && other.isOrientable())
             return 0;
     }
 
@@ -147,9 +145,9 @@ unsigned long Dim2Triangulation::findIsomorphisms(
     // From the tests above, we are guaranteed that both triangulations
     // have at least one triangle.
     unsigned long nResults = 0;
-    unsigned long nTriangles = triangles_.size();
-    unsigned long nDestTriangles = other.triangles_.size();
-    unsigned long nComponents = components_.size();
+    unsigned long nTriangles = simplices_.size();
+    unsigned long nDestTriangles = other.simplices_.size();
+    unsigned long nComponents = components().size();
     unsigned i;
 
     Dim2Isomorphism iso(nTriangles);
@@ -226,14 +224,14 @@ unsigned long Dim2Triangulation::findIsomorphisms(
         }
 
         // Be sure we're looking at a triangle we can use.
-        compSize = components_[comp]->getNumberOfTriangles();
+        compSize = component(comp)->getNumberOfTriangles();
         if (completeIsomorphism) {
             // Conditions:
             // 1) The destination triangle is unused.
             // 2) The component sizes match precisely.
             while (startTri[comp] < nDestTriangles &&
                     (whichComp[startTri[comp]] >= 0 ||
-                     other.triangles_[startTri[comp]]->getComponent()->
+                     other.simplices_[startTri[comp]]->getComponent()->
                      getNumberOfTriangles() != compSize))
                 startTri[comp]++;
         } else {
@@ -243,7 +241,7 @@ unsigned long Dim2Triangulation::findIsomorphisms(
             // the source component.
             while (startTri[comp] < nDestTriangles &&
                     (whichComp[startTri[comp]] >= 0 ||
-                     other.triangles_[startTri[comp]]->getComponent()->
+                     other.simplices_[startTri[comp]]->getComponent()->
                      getNumberOfTriangles() < compSize))
                 startTri[comp]++;
         }
@@ -275,7 +273,7 @@ unsigned long Dim2Triangulation::findIsomorphisms(
         // Note that there is only one way of doing this (as seen by
         // following adjacent triangle gluings).  It either works or
         // it doesn't.
-        myTriIndex = triangleIndex(components_[comp]->getTriangle(0));
+        myTriIndex = triangleIndex(component(comp)->simplex(0));
 
         whichComp[startTri[comp]] = comp;
         iso.simpImage(myTriIndex) = startTri[comp];
@@ -286,10 +284,10 @@ unsigned long Dim2Triangulation::findIsomorphisms(
         while ((! broken) && (! toProcess.empty())) {
             myTriIndex = toProcess.front();
             toProcess.pop();
-            tri = triangles_[myTriIndex];
+            tri = simplices_[myTriIndex];
             triPerm = iso.facetPerm(myTriIndex);
             destTriIndex = iso.simpImage(myTriIndex);
-            destTri = other.triangles_[destTriIndex];
+            destTri = other.simplices_[destTriIndex];
 
             // If we are after a complete isomorphism, we might as well
             // test whether the lower-dimensional face degrees match.
@@ -383,7 +381,7 @@ unsigned long Dim2Triangulation::findIsomorphisms(
     return nResults;
 }
 
-bool Dim2Triangulation::compatibleTriangles(
+bool Triangulation<2>::compatibleTriangles(
         Dim2Triangle* src, Dim2Triangle* dest, NPerm3 p) {
     for (int vertex = 0; vertex < 3; vertex++)
         if (src->getVertex(vertex)->getNumberOfEmbeddings() !=

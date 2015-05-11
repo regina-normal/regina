@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Python Interface                                                      *
  *                                                                        *
  *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,22 +32,53 @@
 
 /* end stub */
 
-#include "generic/ngenericisomorphism-impl.h"
-#include "triangulation/ntriangulation.h"
-#include "triangulation/nisomorphism.h"
+#include <boost/python.hpp>
+#include "generic/component.h"
+#include "generic/simplex.h"
 
-namespace regina {
+using namespace boost::python;
+using regina::Component;
 
-// Instatiate all templates from the -impl.h file.
-template void NGenericIsomorphism<3>::writeTextShort(std::ostream&) const;
-template void NGenericIsomorphism<3>::writeTextLong(std::ostream&) const;
-template bool NGenericIsomorphism<3>::isIdentity() const;
-template NGenericIsomorphism<3>::NGenericIsomorphism(
-    const NGenericIsomorphism<3>&);
-template NIsomorphism* NGenericIsomorphism<3>::random(unsigned);
-template NTriangulation* NGenericIsomorphism<3>::apply(const NTriangulation*)
-    const;
-template void NGenericIsomorphism<3>::applyInPlace(NTriangulation*) const;
+namespace {
+    template <int dim>
+    struct PyComponentHelper {
+        boost::python::list simplices_list(Component<dim>& t) {
+            boost::python::list ans;
+            for (auto it = t.simplices().begin();
+                    it != t.simplices().end(); ++it)
+                ans.append(boost::python::ptr(*it));
+            return ans;
+        }
+    };
+}
 
-} // namespace regina
+template <int dim>
+void addComponent(const char* name) {
+    class_<Component<dim>, std::auto_ptr<Component<dim>>, boost::noncopyable>
+            (name, no_init)
+        .def("index", &Component<dim>::index)
+        .def("size", &Component<dim>::size)
+        .def("getNumberOfSimplices", &Component<dim>::getNumberOfSimplices)
+        .def("simplices", &PyComponentHelper<dim>::simplices_list)
+        .def("getSimplices", &PyComponentHelper<dim>::simplices_list)
+        .def("simplex", &Component<dim>::simplex,
+            return_value_policy<reference_existing_object>())
+        .def("getSimplex", &Component<dim>::getSimplex,
+            return_value_policy<reference_existing_object>())
+        .def("isOrientable", &Component<dim>::isOrientable)
+        .def("countBoundaryFacets", &Component<dim>::countBoundaryFacets)
+        .def("getNumberOfBoundaryFacets",
+            &Component<dim>::getNumberOfBoundaryFacets)
+        .def("str", &Component<dim>::str)
+        .def("toString", &Component<dim>::toString)
+        .def("detail", &Component<dim>::detail)
+        .def("toStringLong", &Component<dim>::toStringLong)
+        .def("__str__", &Component<dim>::str)
+    ;
+}
 
+void addComponent() {
+    addComponent<5>("Component5");
+    addComponent<8>("Component8");
+    addComponent<15>("Component15");
+}
