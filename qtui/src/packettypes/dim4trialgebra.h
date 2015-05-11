@@ -46,7 +46,9 @@ class QLabel;
 
 namespace regina {
     class NPacket;
-    class Dim4Triangulation;
+
+    template <int> class Triangulation;
+    typedef Triangulation<4> Dim4Triangulation;
 };
 
 /**

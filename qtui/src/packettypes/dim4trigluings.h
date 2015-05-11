@@ -50,8 +50,11 @@ class QToolBar;
 
 namespace regina {
     class NPacket;
-    class Dim4Pentachoron;
-    class Dim4Triangulation;
+
+    template <int> class Simplex;
+    template <int> class Triangulation;
+    typedef Simplex<4> Dim4Pentachoron;
+    typedef Triangulation<4> Dim4Triangulation;
 };
 
 class Dim4GluingsModel : public QAbstractItemModel {

@@ -43,8 +43,10 @@
 #include "skeletonwindow.h"
 
 namespace regina {
-    class Dim4Triangulation;
     class NPacket;
+
+    template <int> class Triangulation;
+    typedef Triangulation<4> Dim4Triangulation;
 };
 
 /**

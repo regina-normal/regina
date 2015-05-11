@@ -767,7 +767,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     if (! tri->getPentachoron(i)->adjacentPentachoron(j))
                         ++found;
 
-            if (found != tri->getNumberOfBoundaryTetrahedra()) {
+            if (found != tri->countBoundaryFacets()) {
                 std::ostringstream msg;
                 msg << tri->getPacketLabel()
                     << " reports the wrong number of boundary tetrahedra.";
@@ -785,7 +785,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                         if (! comp->getPentachoron(i)->adjacentPentachoron(j))
                             ++found;
 
-                if (found != comp->getNumberOfBoundaryTetrahedra()) {
+                if (found != comp->countBoundaryFacets()) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel()
                         << " reports the wrong number of "
@@ -1948,7 +1948,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             unsigned long expectBdryTets = 2 * tri->getNumberOfTetrahedra() +
                 20 * tri->getNumberOfBoundaryTriangles();
 
-            if (b->getNumberOfBoundaryTetrahedra() != expectBdryTets) {
+            if (b->countBoundaryFacets() != expectBdryTets) {
                 std::ostringstream msg;
                 msg << tri->getPacketLabel() << ": "
                     << "iBundle has the wrong number of "
@@ -2031,7 +2031,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             unsigned long expectBdryTets =
                 20 * tri->getNumberOfBoundaryTriangles();
 
-            if (b->getNumberOfBoundaryTetrahedra() != expectBdryTets) {
+            if (b->countBoundaryFacets() != expectBdryTets) {
                 std::ostringstream msg;
                 msg << tri->getPacketLabel() << ": "
                     << "s1Bundle has the wrong number of "
@@ -2129,7 +2129,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 unsigned long expectBdryTets =
                     20 * tri->getNumberOfBoundaryTriangles();
 
-                if (b->getNumberOfBoundaryTetrahedra() != expectBdryTets) {
+                if (b->countBoundaryFacets() != expectBdryTets) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel() << ": "
                         << "bundleWithMonodromy gives the wrong number of "

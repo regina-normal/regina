@@ -49,7 +49,8 @@ class PacketEditIface;
 class QLabel;
 
 namespace regina {
-    class Dim4Triangulation;
+    template <int> class Triangulation;
+    typedef Triangulation<4> Dim4Triangulation;
 };
 
 /**
