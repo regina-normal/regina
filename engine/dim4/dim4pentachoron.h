@@ -42,10 +42,8 @@
 #endif
 
 #include "regina-core.h"
-#include "output.h"
-#include "maths/nperm5.h"
+#include "generic/simplex.h"
 #include "utilities/nmarkedvector.h"
-#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
@@ -54,8 +52,10 @@ class Dim4Tetrahedron;
 class Dim4Triangle;
 class Dim4Edge;
 class Dim4Vertex;
-class Dim4Component;
-class Dim4Triangulation;
+
+template <int> class Component;
+template <int> class Triangulation;
+typedef Triangulation<4> Dim4Triangulation;
 
 /**
  * \weakgroup dim4
@@ -63,47 +63,22 @@ class Dim4Triangulation;
  */
 
 /**
- * Represents a pentachoron (a 4-dimensional simplex) in a
+ * Represents a pentachoron (a 4-dimensional simplex) within a
  * 4-manifold triangulation.
  *
- * With each pentachoron is stored various pieces of information
- * regarding the overall skeletal structure and component structure of
- * the triangulation.  This skeletal information will be allocated, calculated
- * and deallocated by the Dim4Triangulation object containing the
- * corresponding pentachora.
+ * This is a specialisation of the generic Simplex class template; see the
+ * generic Simplex documentation for an overview of how this class works.
  *
- * A pentachoron must always belong to a 4-manifold triangulation.  You can
- * construct new pentachora using either Dim4Triangulation::newPentachoron()
- * or Dim4Triangulation::newPentachoron(const std::string&); these
- * routines will automatically add the new pentachora to the triangulation.
- * You can destroy pentachora by calling Dim4Trianguation::removePentachoron(),
- * Dim4Trianguation::removePentachoronAt() or
- * Dim4Triangulation::removeAllPentachora(); these routines will
- * automatically destroy the pentachora as they are removed.
+ * This 4-dimensional specialisation contains some extra functionality.
+ * In particular, each pentachoron stores additional details on how this
+ * pentachoron and its sub-faces integrate into the overall skeletal
+ * structure of the triangulation.
+ *
+ * An implementation note: the Dim4Triangulation class is responsible for
+ * creating, maintaining and destroying this extra skeletal information.
  */
-class REGINA_API Dim4Pentachoron :
-        public Output<Dim4Pentachoron>,
-        public boost::noncopyable,
-        public NMarkedElement {
+class REGINA_API Dim4Pentachoron : public SimplexBase<4> {
     private:
-        Dim4Pentachoron* adj_[5];
-            /**< Stores the adjacent pentachora glued to each facet of this
-                 pentachoron.  Specifically, <tt>adj_[f]</tt>
-                 represents the pentachoron joined to facet \c f
-                 of this pentachoron, or is 0 if facet \c f lies on the
-                 triangulation boundary.  Facets are numbered from 0 to 4
-                 inclusive, where facet \c i is opposite vertex \c i. */
-        NPerm5 adjPerm_[5];
-            /**< Stores the corresponence between vertices of this
-                 pentachoron and adjacent pentachora.  If facet \c f is
-                 joined to another pentachoron, <tt>adjPerm_[f]</tt>
-                 represents the permutation \c p whereby vertex \c v of
-                 this pentachoron is identified with vertex <tt>p[v]</tt> of
-                 the adjacent pentachoron along facet \c f. */
-        std::string desc_;
-            /**< A text description of this pentachoron.
-                 Descriptions are not mandatory and need not be unique. */
-
         Dim4Vertex* vertex_[5];
             /**< Vertices in the triangulation skeleton that are
                  vertices of this pentachoron. */
@@ -134,177 +109,15 @@ class REGINA_API Dim4Pentachoron :
             /**< Maps (0,1,2,3) to the vertices of this pentachoron that form
                  each 3-dimensional facet, as described in
                  getTetrahedronMapping(). */
-        int orientation_;
-            /**< The orientation of this pentachoron in the triangulation.
-                 This will either be 1 or -1. */
-        Dim4Triangulation* tri_;
-            /**< The triangulation to which this pentachoron belongs. */
-        Dim4Component* component_;
-            /**< The component to which this pentachoron belongs in the
-                 triangulation. */
 
     public:
         /**
-         * Returns the text description associated with this
-         * pentachoron.
+         * A dimension-specific alias for adjacentSimplex().
          *
-         * @return the description of this pentachoron.
-         */
-        const std::string& getDescription() const;
-
-        /**
-         * Sets the text description associated with this pentachoron.
-         * Note that descriptions need not be unique, and may be empty.
-         *
-         * @param desc the new description to assign to this
-         * pentachoron.
-         */
-        void setDescription(const std::string& desc);
-
-        /**
-         * Returns the index of this pentachoron in the underlying
-         * triangulation.  This is identical to calling
-         * <tt>getTriangulation()->pentachoronIndex(this)</tt>.
-         *
-         * Note that pentachoron indexing may change when a triangle is
-         * added or removed from the underlying triangulation.
-         *
-         * @return the index of this pentachoron.
-         */
-        unsigned long index() const;
-
-        /**
-         * Returns the adjacent pentachoron glued to the given facet of this
-         * pentachoron, or 0 if the given facet is on the boundary of the
-         * 4-manifold triangulation.
-         *
-         * @param facet the facet of this pentachoron to examine.  This
-         * should be between 0 and 4 inclusive, where facet \c i is
-         * opposite vertex \c i of the pentachoron.
-         * @return the adjacent pentachoron glued to the given facet, or 0
-         * if the given facet lies on the boundary.
+         * See adjacentSimplex() for further information.
          */
         Dim4Pentachoron* adjacentPentachoron(int facet) const;
-        /**
-         * A dimension-agnostic alias for adjacentPentachoron().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 4-manifold triangulations means a pentachoron).
-         * 
-         * See adjacentPentachoron() for further information.
-         */
-        Dim4Pentachoron* adjacentSimplex(int facet) const;
-        /**
-         * Returns a permutation describing the correspondence between
-         * vertices of this pentachoron and vertices of the adjacent
-         * pentachoron glued to the given facet of this pentachoron.
-         *
-         * If we call this permutation \c p, then for each vertex \c v of this
-         * pentachoron, <tt>p[v]</tt> will be the vertex of the adjacent
-         * pentachoron that is identified with \c v according to the gluing
-         * along the given facet of this pentachoron.
-         *
-         * \pre The given facet of this pentachoron has some pentachoron
-         * (possibly this one) glued to it.
-         *
-         * @param facet the facet of this pentachoron whose gluing we
-         * will examine.  This should be between 0 and 4 inclusive, where
-         * facet \c i is opposite vertex \c i of the pentachoron.
-         * @return a permutation mapping the vertices of this
-         * pentachoron to the vertices of the pentachoron adjacent along
-         * the given facet.
-         */
-        NPerm5 adjacentGluing(int facet) const;
-        /**
-         * Examines the pentachoron glued to the given facet of this
-         * pentachoron, and returns the corresponding facet of that
-         * pentachoron.  That is, the returned facet of the adjacent
-         * pentachoron is glued to the given facet of this pentachoron.
-         *
-         * \pre The given facet of this pentachoron has some pentachoron
-         * (possibly this one) glued to it.
-         *
-         * @param facet the facet of this pentachoron whose gluing we
-         * will examine.  This should be between 0 and 4 inclusive, where
-         * facet \c i is opposite vertex \c i of the pentachoron.
-         * @return the facet of the pentachoron adjacent along the given
-         * facet that is in fact glued to the given facet of this pentachoron.
-         */
-        int adjacentFacet(int facet) const;
-        /**
-         * Determines if this pentachoron has any facets that are
-         * boundary facets.
-         *
-         * @return \c true if and only if this pentachoron has any
-         * boundary facets.
-         */
-        bool hasBoundary() const;
 
-        /**
-         * Joins the given facet of this pentachoron to another pentachoron.
-         * The other pentachoron involved will be automatically updated.
-         *
-         * \pre This and the given pentachoron do not belong to
-         * different triangulations.
-         * \pre The given facet of this pentachoron is not currently glued
-         * to anything.
-         * \pre The facet of the other pentachoron that will be glued to the
-         * given facet of this pentachoron is not currently glued to anything.
-         * \pre If the other pentachoron involved is this pentachoron, we are
-         * not attempting to glue a facet to itself.
-         *
-         * @param myFacet the facet of this pentachoron that will be glued to
-         * the given other pentachoron.  This should be between 0 and 4
-         * inclusive, where facet \c i is opposite vertex \c i of the
-         * pentachoron.
-         * @param you the pentachoron (possibly this one) that will be
-         * glued to the given facet of this pentachoron.
-         * @param gluing a permutation describing the mapping of
-         * vertices by which the two pentachora will be joined.  Each
-         * vertex \c v of this pentachoron that lies on the given facet will
-         * be identified with vertex <tt>gluing[v]</tt> of pentachoron
-         * <tt>you</tt>.  In addition, the facet of <tt>you</tt> that
-         * will be glued to the given facet of this pentachoron will be
-         * facet number <tt>gluing[myFacet]</tt>.
-         */
-        void joinTo(int myFacet, Dim4Pentachoron* you, NPerm5 gluing);
-        /**
-         * Unglues the given facet of this pentachoron from whatever is
-         * joined to it.  The other pentachoron involved (possibly this
-         * one) will be automatically updated.
-         *
-         * \pre The given facet of this pentachoron has some pentachoron
-         * (possibly this one) glued to it.
-         *
-         * @param myFacet the facet of this pentachoron whose gluing we
-         * will undo.  This should be between 0 and 4 inclusive, where
-         * facet \c i is opposite vertex \c i of the pentachoron.
-         * @return the ex-adjacent pentachoron that was originally glued to the
-         * given facet of this pentachoron.
-         */
-        Dim4Pentachoron* unjoin(int myFacet);
-        /**
-         * Undoes any facet gluings involving this pentachoron.
-         * Any other pentachora involved will be automatically updated.
-         */
-        void isolate();
-
-        /**
-         * Returns the triangulation to which this pentachoron belongs.
-         *
-         * @return the triangulation containing this pentachoron.
-         */
-        Dim4Triangulation* getTriangulation() const;
-
-        /**
-         * Returns the 4-manifold triangulation component to which this
-         * pentachoron belongs.
-         *
-         * @return the component containing this pentachoron.
-         */
-        Dim4Component* getComponent() const;
         /**
          * Returns the vertex in the 4-manifold triangulation skeleton
          * corresponding to the given vertex of this pentachoron.
@@ -502,40 +315,6 @@ class REGINA_API Dim4Pentachoron :
          * tetrahedron to the vertices of this pentachoron.
          */
         NPerm5 getTetrahedronMapping(int tet) const;
-        /**
-         * Returns the orientation of this pentachoron in the 4-manifold
-         * triangulation.
-         *
-         * The orientation of each pentachoron is always +1 or -1.
-         * In an orientable component of a triangulation,
-         * adjacent pentachora have the same orientations if one could be
-         * transposed onto the other without reflection, and they have
-         * opposite orientations if a reflection would be required.
-         * In a non-orientable component, orientations are still +1 and
-         * -1 but no further guarantees can be made.
-         *
-         * @return +1 or -1 according to the orientation of this pentachoron.
-         */
-        int orientation() const;
-
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
 
     private:
         /**
@@ -554,7 +333,8 @@ class REGINA_API Dim4Pentachoron :
          */
         Dim4Pentachoron(const std::string& desc, Dim4Triangulation* tri);
 
-    friend class Dim4Triangulation;
+    friend class Triangulation<4>;
+    friend class TriangulationBase<4>;
         /**< Allow access to private members. */
 };
 
@@ -567,42 +347,8 @@ namespace regina {
 
 // Inline functions for Dim4Pentachoron
 
-inline const std::string& Dim4Pentachoron::getDescription() const {
-    return desc_;
-}
-
-inline void Dim4Pentachoron::setDescription(const std::string& desc) {
-    desc_ = desc;
-}
-
-inline unsigned long Dim4Pentachoron::index() const {
-    return markedIndex();
-}
-
 inline Dim4Pentachoron* Dim4Pentachoron::adjacentPentachoron(int facet) const {
     return adj_[facet];
-}
-
-inline Dim4Pentachoron* Dim4Pentachoron::adjacentSimplex(int facet) const {
-    return adj_[facet];
-}
-
-inline NPerm5 Dim4Pentachoron::adjacentGluing(int facet) const {
-    return adjPerm_[facet];
-}
-
-inline int Dim4Pentachoron::adjacentFacet(int facet) const {
-    return adjPerm_[facet][facet];
-}
-
-inline Dim4Triangulation* Dim4Pentachoron::getTriangulation() const {
-    return tri_;
-}
-
-inline Dim4Component* Dim4Pentachoron::getComponent() const {
-    if (! tri_->calculatedSkeleton_)
-        tri_->calculateSkeleton();
-    return component_;
 }
 
 inline Dim4Vertex* Dim4Pentachoron::getVertex(int vertex) const {
@@ -653,16 +399,11 @@ inline NPerm5 Dim4Pentachoron::getTetrahedronMapping(int tet) const {
     return tetMapping_[tet];
 }
 
-inline int Dim4Pentachoron::orientation() const {
-    if (! tri_->calculatedSkeleton_)
-        tri_->calculateSkeleton();
-    return orientation_;
+inline Simplex<4>::Simplex(Dim4Triangulation* tri) : SimplexBase<4>(tri) {
 }
 
-inline void Dim4Pentachoron::writeTextShort(std::ostream& out) const {
-    out << "Pentachoron";
-    if (desc_.length() > 0)
-        out << ": " << desc_;
+inline Simplex<4>::Simplex(const std::string& desc, Dim4Triangulation* tri) :
+        SimplexBase<4>(desc, tri) {
 }
 
 } // namespace regina

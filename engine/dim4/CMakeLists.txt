@@ -8,7 +8,6 @@ SET ( FILES
   dim4exampletriangulation
   dim4triangle
   dim4isomorphism
-  dim4pentachoron
   dim4tetrahedron
   dim4triangulation
   dim4vertex

@@ -45,8 +45,8 @@ using namespace boost::python;
 using regina::Dim4Pentachoron;
 
 void addDim4Pentachoron() {
-    class_<Dim4Pentachoron, std::auto_ptr<Dim4Pentachoron>, boost::noncopyable>(
-            "Dim4Pentachoron", no_init)
+    class_<regina::Simplex<4>, std::auto_ptr<regina::Simplex<4>>,
+            boost::noncopyable>("Simplex4", no_init)
         .def("getDescription", &Dim4Pentachoron::getDescription,
             return_value_policy<return_by_value>())
         .def("setDescription", &Dim4Pentachoron::setDescription)
@@ -59,10 +59,13 @@ void addDim4Pentachoron() {
         .def("adjacentFacet", &Dim4Pentachoron::adjacentFacet)
         .def("hasBoundary", &Dim4Pentachoron::hasBoundary)
         .def("joinTo", &Dim4Pentachoron::joinTo)
+        .def("join", &Dim4Pentachoron::join)
         .def("unjoin", &Dim4Pentachoron::unjoin,
             return_value_policy<reference_existing_object>())
         .def("isolate", &Dim4Pentachoron::isolate)
         .def("getTriangulation", &Dim4Pentachoron::getTriangulation,
+            return_value_policy<reference_existing_object>())
+        .def("component", &Dim4Pentachoron::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim4Pentachoron::getComponent,
             return_value_policy<reference_existing_object>())
@@ -85,5 +88,7 @@ void addDim4Pentachoron() {
         .def("toStringLong", &Dim4Pentachoron::toStringLong)
         .def("__str__", &Dim4Pentachoron::str)
     ;
+
+    scope().attr("Dim4Pentachoron") = scope().attr("Simplex4");
 }
 
