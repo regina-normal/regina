@@ -69,6 +69,8 @@ Version 4.97  [ (under development) ]
         Class Dim2Triangle:
             - Now just a typedef for the new class Simplex<2>, which has
               the same functionality as the old Dim2Triangle.
+            - New routine facetInMaximalForest(), for examining a
+              precomputed maximal forest in the dual 1-skeleton.
             - You can now safely call unjoin() on a boundary edge.
             - Routine joinTo() has been renamed to join().  The old name
               joinTo() has been kept but is now deprecated.
@@ -214,6 +216,8 @@ Version 4.97  [ (under development) ]
         Class NTetrahedron:
             - Now just a typedef for the new class Simplex<3>, which has
               the same functionality as the old NTetrahedron.
+            - New routine facetInMaximalForest(), for examining a
+              precomputed maximal forest in the dual 1-skeleton.
             - Removed the old deprecated public constructors.  The only way
               to construct a new tetrahedron is via the triangulation, using
               NTriangulation::newTetrahedron() or NTriangulation::newSimplex().
