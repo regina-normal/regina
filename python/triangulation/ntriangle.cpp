@@ -69,6 +69,7 @@ void addNTriangle() {
                 boost::noncopyable>("NTriangle", no_init)
             .def("index", &NTriangle::index)
             .def("isBoundary", &NTriangle::isBoundary)
+            .def("inMaximalForest", &NTriangle::inMaximalForest)
             .def("getType", &NTriangle::getType)
             .def("getSubtype", &NTriangle::getSubtype)
             .def("isMobiusBand", &NTriangle::isMobiusBand)

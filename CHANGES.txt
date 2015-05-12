@@ -60,6 +60,9 @@ Version 4.97  [ (under development) ]
               and getNumberOfBoundaryFacets() have been renamed to size(),
               simplices(), simplex() and countBoundaryFacets() respectively.
               The old names are retained but deprecated.
+        Class Dim2Edge:
+            - New routine inMaximalForest() for working with the dual
+              1-skeleton.
         Class Dim2Isomorphism:
             - Now just a typedef for the new class Isomorphism<2>, which has
               the same functionality as the old Dim2Isomorphism.
@@ -236,6 +239,8 @@ Version 4.97  [ (under development) ]
             - Added a new Type enumeration, which encapsulates (and replaces)
               the old triangle type constants.  Also added a new type
               constant UNKNOWN_TYPE.
+            - New routine inMaximalForest() for working with the dual
+              1-skeleton.
         Class NTriangulation:
             - Now just a typedef for the new class Triangulation<3>, which has
               the same functionality as the old NTriangulation.
@@ -269,6 +274,8 @@ Version 4.97  [ (under development) ]
               kept for backward compatibility.
             - Removed deprecated routines addTetrahedron() and
               gluingsHaveChanged().
+            - Removed maximalForestInDualSkeleton().  Just use
+              NTriangle::inMaximalForest() instead.
             - Renamed getNumberOfComponents(), getComponents(), getComponent()
               to countComponents(), components() and component().  The
               old names are deprecated but kept for backward compatibility.

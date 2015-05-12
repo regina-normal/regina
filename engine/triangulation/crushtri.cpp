@@ -140,32 +140,5 @@ bool NTriangulation::stretchForestFromVertex(NVertex* from,
     return false;
 }
 
-void NTriangulation::maximalForestInDualSkeleton(std::set<NTriangle*>& triSet)
-        const {
-    ensureSkeleton();
-
-    triSet.clear();
-    std::set<NTetrahedron*> visited;
-    for (TetrahedronIterator it = simplices_.begin(); it != simplices_.end();
-            it++)
-        if (! (visited.count(*it)))
-            stretchDualForestFromTet(*it, triSet, visited);
-}
-
-void NTriangulation::stretchDualForestFromTet(NTetrahedron* tet,
-        std::set<NTriangle*>& triSet, std::set<NTetrahedron*>& visited) const {
-    visited.insert(tet);
-
-    NTetrahedron* adjTet;
-    for (int face = 0; face < 4; face++) {
-        adjTet = tet->adjacentTetrahedron(face);
-        if (adjTet)
-            if (! (visited.count(adjTet))) {
-                triSet.insert(tet->getTriangle(face));
-                stretchDualForestFromTet(adjTet, triSet, visited);
-            }
-    }
-}
-
 } // namespace regina
 

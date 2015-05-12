@@ -156,22 +156,6 @@ namespace {
         return ans;
     }
 
-    boost::python::list maximalForestInDualSkeleton_list(NTriangulation& t) {
-        std::set<regina::NTriangle*> triangleSet;
-        t.maximalForestInDualSkeleton(triangleSet);
-
-        // boost::python does not contain python sets. We use a python list
-        // here instead which needs a well-defined order, thus we iterate
-        // through getTriangles().
-
-        boost::python::list ans;
-        for (NTriangulation::TriangleIterator it =
-                t.getTriangles().begin(); it != t.getTriangles().end(); it++)
-            if (triangleSet.count(*it) > 0)
-                ans.append(boost::python::ptr(*it));
-        return ans;
-    }
-
     std::string isoSig_void(const NTriangulation& t) {
         return t.isoSig();
     }
@@ -333,7 +317,6 @@ void addNTriangulation() {
             &NTriangulation::hasStrictAngleStructure)
         .def("knowsStrictAngleStructure",
             &NTriangulation::knowsStrictAngleStructure)
-        .def("maximalForestInDualSkeleton", maximalForestInDualSkeleton_list)
         .def("intelligentSimplify", &NTriangulation::intelligentSimplify)
         .def("simplifyToLocalMinimum", &NTriangulation::simplifyToLocalMinimum,
             OL_simplifyToLocalMinimum())
