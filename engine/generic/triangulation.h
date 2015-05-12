@@ -1539,8 +1539,10 @@ void TriangulationBase<dim>::calculateSkeleton() const {
     orientable_ = true;
 
     SimplexIterator it;
-    for (it = simplices_.begin(); it != simplices_.end(); ++it)
+    for (it = simplices_.begin(); it != simplices_.end(); ++it) {
         (*it)->component_ = 0;
+        (*it)->dualForest_ = 0;
+    }
 
     // Our breadth-first search through simplices is non-recursive.
     // It uses a queue that contains simplices from which we need to propagate
@@ -1582,6 +1584,12 @@ void TriangulationBase<dim>::calculateSkeleton() const {
                             adj->component_ = c;
                             c->simplices_.push_back(adj);
                             adj->orientation_ = yourOrientation;
+
+                            s->dualForest_ |=
+                                (typename Simplex<dim>::FacetMask(1) << facet);
+                            adj->dualForest_ |=
+                                (typename Simplex<dim>::FacetMask(1) <<
+                                    s->adjacentFacet(facet));
 
                             queue[queueEnd++] = adj;
                         }

@@ -80,6 +80,7 @@ void addNTetrahedron() {
         .def("getEdgeMapping", &NTetrahedron::getEdgeMapping)
         .def("getTriangleMapping", &NTetrahedron::getTriangleMapping)
         .def("orientation", &NTetrahedron::orientation)
+        .def("facetInMaximalForest", &NTetrahedron::facetInMaximalForest)
         .def("str", &NTetrahedron::str)
         .def("toString", &NTetrahedron::toString)
         .def("detail", &NTetrahedron::detail)
