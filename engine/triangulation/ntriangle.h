@@ -270,6 +270,35 @@ class REGINA_API NTriangle :
         bool isBoundary() const;
 
         /**
+         * Determines whether this triangle represents a dual edge in the
+         * maximal forest that has been chosen for the dual 1-skeleton of the
+         * triangulation.
+         *
+         * When the skeletal structure of a triangulation is first computed,
+         * a maximal forest in the dual 1-skeleton of the triangulation is
+         * also constructed.  Each dual edge in this maximal forest
+         * represents a triangle of the (primal) triangulation.
+         *
+         * This maximal forest will remain fixed until the triangulation
+         * changes, at which point it will be recomputed (as will all
+         * other skeletal objects, such as connected components and so on).
+         * There is no guarantee that, when it is recomputed, the
+         * maximal forest will use the same dual edges as before.
+         *
+         * This routine identifies whether this triangle belongs to the
+         * dual forest.  In this sense it performs a similar role to
+         * Simplex::facetInMaximalForest(), but this routine is typically
+         * easier to use.
+         *
+         * If the skeleton has already been computed, then this routine is
+         * very fast (since it just returns a precomputed answer).
+         *
+         * @return \c true if and only if this triangle represents a
+         * dual edge in the maximal forest.
+         */
+        bool inMaximalForest() const;
+
+        /**
          * Returns a description of the triangle type.
          * This will be one of the eight shapes described by the Type
          * enumeration, indicating how the edges and vertices of the
@@ -483,6 +512,11 @@ inline NVertex* NTriangle::getVertex(int vertex) const {
 
 inline bool NTriangle::isBoundary() const {
     return (boundaryComponent_ != 0);
+}
+
+inline bool NTriangle::inMaximalForest() const {
+    return embeddings_[0]->getTetrahedron()->facetInMaximalForest(
+        embeddings_[0]->getTriangle());
 }
 
 inline int NTriangle::getSubtype() {

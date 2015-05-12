@@ -1480,24 +1480,6 @@ class REGINA_API Triangulation<3> :
          */
         void maximalForestInSkeleton(std::set<NEdge*>& edgeSet,
                 bool canJoinBoundaries = true) const;
-        /**
-         * Produces a maximal forest in the triangulation's dual
-         * 1-skeleton.  The given set will be emptied and will have the
-         * triangles corresponding to the edges of the maximal forest in the
-         * dual 1-skeleton placed into it.
-         *
-         * Note that the triangle pointers returned will become invalid once
-         * the triangulation has changed.
-         *
-         * \ifacespython This routine takes no arguments.  Instead it
-         * returns the maximal forest as a Python list of NTriangle
-         * objects, sorted by triangle index.
-         *
-         * @param triangleSet the set to be emptied and into which the
-         * triangles representing the maximal forest will be placed.
-         */
-        void maximalForestInDualSkeleton(std::set<NTriangle*>& triangleSet)
-            const;
 
         /**
          * Attempts to simplify the triangulation as intelligently as
@@ -3425,9 +3407,6 @@ class REGINA_API Triangulation<3> :
         bool stretchForestFromVertex(NVertex*, std::set<NEdge*>&,
                 std::set<NVertex*>&, std::set<NVertex*>&) const;
             /**< Internal to maximalForestInSkeleton(). */
-        void stretchDualForestFromTet(NTetrahedron*, std::set<NTriangle*>&,
-                std::set<NTetrahedron*>&) const;
-            /**< Internal to maximalForestInDualSkeleton(). */
 
     friend class regina::Simplex<3>;
     friend class regina::SimplexBase<3>;
