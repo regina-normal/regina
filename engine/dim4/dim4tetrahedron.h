@@ -203,9 +203,6 @@ class REGINA_API Dim4Tetrahedron :
         Dim4BoundaryComponent* boundaryComponent_;
             /**< The boundary component that this tetrahedron is a part of,
                  or 0 if this tetrahedron is internal. */
-        bool inDualMaximalForest_;
-            /**< Does this tetrahedron belong to the maximal forest in
-                 the dual 1-skeleton? */
 
     public:
         /**
@@ -462,8 +459,7 @@ inline bool Dim4TetrahedronEmbedding::operator !=
 // Inline functions for Dim4Tetrahedron
 
 inline Dim4Tetrahedron::Dim4Tetrahedron(Dim4Component* component) :
-        nEmb_(0), component_(component), boundaryComponent_(0),
-        inDualMaximalForest_(false) {
+        nEmb_(0), component_(component), boundaryComponent_(0) {
 }
 
 inline unsigned long Dim4Tetrahedron::index() const {
@@ -500,7 +496,8 @@ inline bool Dim4Tetrahedron::isBoundary() const {
 }
 
 inline bool Dim4Tetrahedron::inDualMaximalForest() const {
-    return inDualMaximalForest_;
+    return emb_[0].getPentachoron()->facetInMaximalForest(
+        emb_[0].getTetrahedron());
 }
 
 inline void Dim4Tetrahedron::writeTextShort(std::ostream& out) const {
