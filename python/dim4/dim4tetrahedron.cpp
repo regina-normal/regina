@@ -86,6 +86,7 @@ void addDim4Tetrahedron() {
         .def("getEdgeMapping", &Dim4Tetrahedron::getEdgeMapping)
         .def("getTriangleMapping", &Dim4Tetrahedron::getTriangleMapping)
         .def("isBoundary", &Dim4Tetrahedron::isBoundary)
+        .def("inMaximalForest", &Dim4Tetrahedron::inMaximalForest)
         .def("str", &Dim4Tetrahedron::str)
         .def("toString", &Dim4Tetrahedron::toString)
         .def("detail", &Dim4Tetrahedron::detail)
