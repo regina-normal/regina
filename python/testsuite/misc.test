@@ -41,9 +41,9 @@ t.insertLayeredLensSpace(5,1)
 print t.getHomologyH1()
 
 # Does equality work correctly?
-a = NPerm4(3,4)
+a = NPerm4(2,3)
 b = NPerm4()
-c = NPerm4(3,4)
+c = NPerm4(2,3)
 print a == c, a == b, b == c
 print a != c, a != b, b != c
 
