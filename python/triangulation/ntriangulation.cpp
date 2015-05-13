@@ -38,6 +38,7 @@
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NTriangulation;
@@ -413,6 +414,7 @@ void addNTriangulation() {
         .staticmethod("isoSigComponentSize")
         .staticmethod("fromSnapPea")
         .staticmethod("enterTextTriangulation")
+        EQUAL_BY_PTR(NTriangulation)
     ;
 
     s.attr("packetType") = regina::PacketType(NTriangulation::packetType);

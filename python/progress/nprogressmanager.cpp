@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "progress/nprogressmanager.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NProgress;
@@ -51,6 +52,7 @@ void addNProgressManager() {
         .def("detail", &NProgressManager::detail)
         .def("toStringLong", &NProgressManager::toStringLong)
         .def("__str__", &NProgressManager::str)
+        EQUAL_BY_PTR(NProgressManager)
     ;
 }
 

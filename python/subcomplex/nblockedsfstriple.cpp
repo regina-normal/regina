@@ -36,6 +36,7 @@
 #include "subcomplex/nblockedsfstriple.h"
 #include "subcomplex/nsatregion.h"
 #include "triangulation/ntriangulation.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NBlockedSFSTriple;
@@ -52,6 +53,7 @@ void addNBlockedSFSTriple() {
             return_internal_reference<>())
         .def("isBlockedSFSTriple", &NBlockedSFSTriple::isBlockedSFSTriple,
             return_value_policy<manage_new_object>())
+        EQUAL_BY_PTR(NBlockedSFSTriple)
         .staticmethod("isBlockedSFSTriple")
     ;
 

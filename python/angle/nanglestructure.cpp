@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "angle/nanglestructure.h"
 #include "triangulation/ntriangulation.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NAngleStructure;
@@ -55,6 +56,7 @@ void addNAngleStructure() {
         .def("detail", &NAngleStructure::detail)
         .def("toStringLong", &NAngleStructure::toStringLong)
         .def("__str__", &NAngleStructure::str)
+        EQUAL_BY_PTR(NAngleStructure)
     ;
 }
 

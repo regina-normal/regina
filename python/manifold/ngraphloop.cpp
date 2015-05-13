@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "manifold/ngraphloop.h"
 #include "manifold/nsfs.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NGraphLoop;
@@ -68,6 +69,7 @@ void addNGraphLoop() {
         .def("matchingReln", &NGraphLoop::matchingReln,
             return_internal_reference<>())
         .def(self < self)
+        EQUAL_BY_PTR(NGraphLoop)
     ;
 
     implicitly_convertible<std::auto_ptr<NGraphLoop>,

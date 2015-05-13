@@ -36,6 +36,7 @@
 #include "algebra/nabeliangroup.h"
 #include "manifold/nmanifold.h"
 #include "triangulation/ntriangulation.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NManifold;
@@ -72,6 +73,7 @@ void addNManifold() {
         .def("detail", &NManifold::detail)
         .def("toStringLong", &NManifold::toStringLong)
         .def("__str__", &NManifold::str)
+        EQUAL_BY_PTR(NManifold)
     ;
 }
 

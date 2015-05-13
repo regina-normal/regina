@@ -36,6 +36,7 @@
 #include "subcomplex/npillowtwosphere.h"
 #include "triangulation/ntriangle.h"
 #include "triangulation/ntriangulation.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NPillowTwoSphere;
@@ -59,6 +60,7 @@ void addNPillowTwoSphere() {
         .def("detail", &NPillowTwoSphere::detail)
         .def("toStringLong", &NPillowTwoSphere::toStringLong)
         .def("__str__", &NPillowTwoSphere::str)
+        EQUAL_BY_PTR(NPillowTwoSphere)
         .staticmethod("formsPillowTwoSphere")
     ;
 }

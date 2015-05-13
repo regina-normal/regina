@@ -36,6 +36,7 @@
 #include "algebra/ngrouppresentation.h"
 #include "dim2/dim2isomorphism.h"
 #include "dim2/dim2triangulation.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::Dim2Triangulation;
@@ -198,6 +199,7 @@ void addDim2Triangulation() {
             return_value_policy<manage_new_object>())
         .def("isoSigComponentSize", &Dim2Triangulation::isoSigComponentSize)
         .def("dumpConstruction", &Dim2Triangulation::dumpConstruction)
+        EQUAL_BY_PTR(Dim2Triangulation)
         .staticmethod("fromIsoSig")
         .staticmethod("isoSigComponentSize")
     ;

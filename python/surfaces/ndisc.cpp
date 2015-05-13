@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "surfaces/ndisc.h"
 #include "surfaces/nnormalsurface.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NDiscSpec;
@@ -71,6 +72,7 @@ void addNDisc() {
         .def("nDiscs", &NDiscSetTet::nDiscs)
         .def("arcFromDisc", &NDiscSetTet::arcFromDisc)
         .def("discFromArc", &NDiscSetTet::discFromArc)
+        EQUAL_BY_PTR(NDiscSetTet)
     ;
 
     class_<NDiscSetSurface, std::auto_ptr<NDiscSetSurface>,
@@ -82,6 +84,7 @@ void addNDisc() {
             return_internal_reference<>())
         .def("adjacentDisc", &NDiscSetSurface::adjacentDisc,
             return_value_policy<manage_new_object>())
+        EQUAL_BY_PTR(NDiscSetSurface)
     ;
 
     class_<NDiscSpecIterator, boost::noncopyable>("NDiscSpecIterator")

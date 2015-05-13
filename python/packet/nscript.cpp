@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "packet/nscript.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NScript;
@@ -71,6 +72,7 @@ void addNScript() {
         .def("removeVariable", removeVariable_long)
         .def("removeVariable", removeVariable_string)
         .def("removeAllVariables", &NScript::removeAllVariables)
+        EQUAL_BY_PTR(NScript)
     ;
 
     s.attr("packetType") = regina::PacketType(NScript::packetType);

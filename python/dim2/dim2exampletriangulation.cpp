@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "dim2/dim2exampletriangulation.h"
 #include "dim2/dim2triangulation.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::Dim2ExampleTriangulation;
@@ -64,6 +65,7 @@ void addDim2ExampleTriangulation() {
             return_value_policy<manage_new_object>())
         .def("kb", &Dim2ExampleTriangulation::kb,
             return_value_policy<manage_new_object>())
+        EQUAL_BY_PTR(Dim2ExampleTriangulation)
         .staticmethod("orientable")
         .staticmethod("nonOrientable")
         .staticmethod("sphere")

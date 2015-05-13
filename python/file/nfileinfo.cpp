@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "file/nfileinfo.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NFileInfo;
@@ -57,6 +58,7 @@ void addNFileInfo() {
         .def("detail", &NFileInfo::detail)
         .def("toStringLong", &NFileInfo::toStringLong)
         .def("__str__", &NFileInfo::str)
+        EQUAL_BY_PTR(NFileInfo)
         .staticmethod("identify")
     ;
 

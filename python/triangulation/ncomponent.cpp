@@ -39,6 +39,7 @@
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangle.h"
 #include "triangulation/nvertex.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NComponent;
@@ -79,6 +80,7 @@ void addNComponent() {
         .def("detail", &NComponent::detail)
         .def("toStringLong", &NComponent::toStringLong)
         .def("__str__", &NComponent::str)
+        EQUAL_BY_PTR(NComponent)
     ;
 }
 

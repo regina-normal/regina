@@ -38,6 +38,7 @@
 #include "subcomplex/ntxicore.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NPluggedTorusBundle;
@@ -56,6 +57,7 @@ void addNPluggedTorusBundle() {
             return_internal_reference<>())
         .def("isPluggedTorusBundle", &NPluggedTorusBundle::isPluggedTorusBundle,
             return_value_policy<manage_new_object>())
+        EQUAL_BY_PTR(NPluggedTorusBundle)
         .staticmethod("isPluggedTorusBundle")
     ;
 

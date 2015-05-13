@@ -36,6 +36,7 @@
 #include "subcomplex/nlayeredsolidtorus.h"
 #include "subcomplex/nsatblocktypes.h"
 #include "triangulation/ntriangulation.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NSatAnnulus;
@@ -86,6 +87,7 @@ void addNSatBlockTypes() {
         .def("position", &NSatMobius::position)
         .def("isBlockMobius", isBlockMobius_nolist,
             return_value_policy<manage_new_object>())
+        EQUAL_BY_PTR(NSatMobius)
         .staticmethod("isBlockMobius")
     ;
 
@@ -102,6 +104,7 @@ void addNSatBlockTypes() {
         .def("roles", &NSatLST::roles)
         .def("isBlockLST", isBlockLST_nolist,
             return_value_policy<manage_new_object>())
+        EQUAL_BY_PTR(NSatLST)
         .staticmethod("isBlockLST")
     ;
 
@@ -118,6 +121,7 @@ void addNSatBlockTypes() {
             return_value_policy<manage_new_object>())
         .def("insertBlock", &NSatTriPrism::insertBlock,
             return_value_policy<manage_new_object>())
+        EQUAL_BY_PTR(NSatTriPrism)
         .staticmethod("isBlockTriPrism")
         .staticmethod("insertBlock")
     ;
@@ -134,6 +138,7 @@ void addNSatBlockTypes() {
             return_value_policy<manage_new_object>())
         .def("insertBlock", &NSatCube::insertBlock,
             return_value_policy<manage_new_object>())
+        EQUAL_BY_PTR(NSatCube)
         .staticmethod("isBlockCube")
         .staticmethod("insertBlock")
     ;
@@ -150,6 +155,7 @@ void addNSatBlockTypes() {
             return_value_policy<manage_new_object>())
         .def("insertBlock", &NSatReflectorStrip::insertBlock,
             return_value_policy<manage_new_object>())
+        EQUAL_BY_PTR(NSatReflectorStrip)
         .staticmethod("isBlockReflectorStrip")
         .staticmethod("insertBlock")
     ;
@@ -165,6 +171,7 @@ void addNSatBlockTypes() {
         .def("overHorizontal", &NSatLayering::overHorizontal)
         .def("isBlockLayering", isBlockLayering_nolist,
             return_value_policy<manage_new_object>())
+        EQUAL_BY_PTR(NSatLayering)
         .staticmethod("isBlockLayering")
     ;
 

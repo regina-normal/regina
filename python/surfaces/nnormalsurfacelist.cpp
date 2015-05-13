@@ -39,6 +39,7 @@
 #include "progress/nprogresstracker.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NNormalSurfaceList;
@@ -240,6 +241,7 @@ void addNNormalSurfaceList() {
             OL_saveCSVStandard())
         .def("saveCSVEdgeWeight", &NNormalSurfaceList::saveCSVEdgeWeight,
             OL_saveCSVEdgeWeight())
+        EQUAL_BY_PTR(NNormalSurfaceList)
         .staticmethod("enumerate")
         .staticmethod("enumerateStandardDirect")
         .staticmethod("enumerateStandardANDirect")

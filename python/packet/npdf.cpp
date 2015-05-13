@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "packet/npdf.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NPDF;
@@ -50,6 +51,7 @@ void addNPDF() {
         .def("size", &NPDF::size)
         .def("reset", reset_empty)
         .def("savePDF", &NPDF::savePDF)
+        EQUAL_BY_PTR(NPDF)
     ;
 
     s.attr("packetType") = regina::PacketType(NPDF::packetType);

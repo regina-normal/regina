@@ -40,6 +40,7 @@
 #include "dim2/dim2triangulation.h"
 #include "dim2/dim2vertex.h"
 #include "../globalarray.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::Dim2Edge;
@@ -82,6 +83,7 @@ void addDim2Edge() {
         .def("detail", &Dim2Edge::detail)
         .def("toStringLong", &Dim2Edge::toStringLong)
         .def("__str__", &Dim2Edge::str)
+        EQUAL_BY_PTR(Dim2Edge)
     ;
 
     s.attr("ordering") = &Dim2Edge_ordering;

@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "dim2/dim2isomorphism.h"
 #include "dim2/dim2triangulation.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::Dim2Isomorphism;
@@ -72,6 +73,7 @@ void addDim2Isomorphism() {
         .def("detail", &Dim2Isomorphism::detail)
         .def("toStringLong", &Dim2Isomorphism::toStringLong)
         .def("__str__", &Dim2Isomorphism::str)
+        EQUAL_BY_PTR(Dim2Isomorphism)
         .staticmethod("random")
     ;
 }

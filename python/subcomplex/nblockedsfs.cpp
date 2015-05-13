@@ -36,6 +36,7 @@
 #include "subcomplex/nblockedsfs.h"
 #include "subcomplex/nsatregion.h"
 #include "triangulation/ntriangulation.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NBlockedSFS;
@@ -57,6 +58,7 @@ void addNBlockedSFS() {
         .def("isPluggedIBundle", isPluggedIBundle_tuple)
         .def("isBlockedSFS", &NBlockedSFS::isBlockedSFS,
             return_value_policy<manage_new_object>())
+        EQUAL_BY_PTR(NBlockedSFS)
         .staticmethod("isBlockedSFS")
     ;
 

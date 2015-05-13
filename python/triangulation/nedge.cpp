@@ -40,6 +40,7 @@
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
 #include "../globalarray.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NEdge;
@@ -108,6 +109,7 @@ void addNEdge() {
         .def("detail", &NEdge::detail)
         .def("toStringLong", &NEdge::toStringLong)
         .def("__str__", &NEdge::str)
+        EQUAL_BY_PTR(NEdge)
     ;
 
     s.attr("edgeNumber") = &NEdge_edgeNumber;

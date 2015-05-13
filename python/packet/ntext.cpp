@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "packet/ntext.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NText;
@@ -52,6 +53,7 @@ void addNText() {
             return_value_policy<return_by_value>())
         .def("setText", setText_string)
         .def("setText", setText_chars)
+        EQUAL_BY_PTR(NText)
     ;
 
     s.attr("packetType") = regina::PacketType(NText::packetType);

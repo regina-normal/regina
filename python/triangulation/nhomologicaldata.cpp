@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "triangulation/nhomologicaldata.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NHomologicalData;
@@ -78,6 +79,7 @@ void addNHomologicalData() {
         .def("detail", &NHomologicalData::detail)
         .def("toStringLong", &NHomologicalData::toStringLong)
         .def("__str__", &NHomologicalData::str)
+        EQUAL_BY_PTR(NHomologicalData)
     ;
 }
 

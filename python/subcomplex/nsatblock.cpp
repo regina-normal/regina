@@ -37,6 +37,7 @@
 #include "subcomplex/nsatblock.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NSatAnnulus;
@@ -99,6 +100,7 @@ void addNSatBlock() {
         .def("detail", &NSatBlock::detail)
         .def("toStringLong", &NSatBlock::toStringLong)
         .def("__str__", &NSatBlock::str)
+        EQUAL_BY_PTR(NSatBlock)
         .staticmethod("isBlock")
     ;
 }

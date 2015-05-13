@@ -38,6 +38,7 @@
 #include "dim2/dim2triangulation.h"
 #include "treewidth/ntreedecomposition.h"
 #include "triangulation/ntriangulation.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NTreeBag;
@@ -197,6 +198,7 @@ void addNTreeDecomposition() {
         .def("detail", &NTreeDecomposition::detail)
         .def("toStringLong", &NTreeDecomposition::toStringLong)
         .def("__str__", &NTreeDecomposition::str)
+        EQUAL_BY_PTR(NTreeDecomposition)
     ;
 }
 

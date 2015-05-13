@@ -43,6 +43,14 @@
 #define __EQUALITY_H
 #endif
 
+/**
+ * Macro to easily add the equality checks for various classes.
+ */
+
+#define EQUAL_BY_PTR(NClass) \
+        .def("__eq__", regina::python::EqualPtr<NClass>)\
+        .def("__ne__", regina::python::NotEqualPtr<NClass>)
+
 namespace regina {
 
 /**

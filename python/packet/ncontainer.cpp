@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "packet/ncontainer.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NContainer;
@@ -42,6 +43,7 @@ void addNContainer() {
     scope s = class_<NContainer, bases<regina::NPacket>,
             std::auto_ptr<NContainer>, boost::noncopyable>(
             "NContainer", init<>())
+        EQUAL_BY_PTR(NContainer)
     ;
 
     s.attr("packetType") = regina::PacketType(NContainer::packetType);

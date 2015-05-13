@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "surfaces/sfcombination.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NSurfaceFilterCombination;
@@ -45,6 +46,7 @@ void addNSurfaceFilterCombination() {
         .def(init<const NSurfaceFilterCombination&>())
         .def("getUsesAnd", &NSurfaceFilterCombination::getUsesAnd)
         .def("setUsesAnd", &NSurfaceFilterCombination::setUsesAnd)
+        EQUAL_BY_PTR(NSurfaceFilterCombination)
     ;
 
     s.attr("filterID") = regina::SurfaceFilterType(

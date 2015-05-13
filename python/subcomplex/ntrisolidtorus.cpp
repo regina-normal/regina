@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "subcomplex/ntrisolidtorus.h"
 #include "triangulation/ntetrahedron.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NTriSolidTorus;
@@ -54,6 +55,7 @@ void addNTriSolidTorus() {
         .def("areAnnuliLinkedAxis", &NTriSolidTorus::areAnnuliLinkedAxis)
         .def("formsTriSolidTorus", &NTriSolidTorus::formsTriSolidTorus,
             return_value_policy<manage_new_object>())
+        EQUAL_BY_PTR(NTriSolidTorus)
         .staticmethod("formsTriSolidTorus")
     ;
 

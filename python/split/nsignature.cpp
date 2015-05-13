@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "split/nsignature.h"
 #include "triangulation/ntriangulation.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NSignature;
@@ -60,6 +61,7 @@ void addNSignature() {
         .def("detail", &NSignature::detail)
         .def("toStringLong", &NSignature::toStringLong)
         .def("__str__", &NSignature::str)
+        EQUAL_BY_PTR(NSignature)
         .staticmethod("parse")
     ;
 }

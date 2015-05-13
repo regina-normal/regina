@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "maths/nmatrixint.h"
 #include "snappea/nsnappeatriangulation.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NCusp;
@@ -80,6 +81,7 @@ void addNSnapPeaTriangulation() {
         .def("detail", &NCusp::detail)
         .def("toStringLong", &NCusp::toStringLong)
         .def("__str__", &NCusp::str)
+        EQUAL_BY_PTR(NCusp)
     ;
 
     scope s = class_<NSnapPeaTriangulation, bases<regina::NTriangulation>,
@@ -145,6 +147,7 @@ void addNSnapPeaTriangulation() {
             OL_enableKernelMessages())
         .def("disableKernelMessages",
             &NSnapPeaTriangulation::disableKernelMessages)
+        EQUAL_BY_PTR(NSnapPeaTriangulation)
         .staticmethod("kernelMessagesEnabled")
         .staticmethod("enableKernelMessages")
         .staticmethod("disableKernelMessages")

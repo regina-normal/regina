@@ -37,6 +37,7 @@
 #include "algebra/ngrouppresentation.h"
 #include "algebra/nhomgrouppresentation.h"
 #include "algebra/nmarkedabeliangroup.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NGroupExpressionTerm;
@@ -211,6 +212,7 @@ void addNGroupPresentation() {
         .def("detail", &NGroupPresentation::detail)
         .def("toStringLong", &NGroupPresentation::toStringLong)
         .def("__str__", &NGroupPresentation::str)
+        EQUAL_BY_PTR(NGroupPresentation)
     ;
 }
 

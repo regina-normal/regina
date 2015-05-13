@@ -36,6 +36,7 @@
 #include "manifold/nsfs.h"
 #include "subcomplex/naugtrisolidtorus.h"
 #include "triangulation/ncomponent.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NAugTriSolidTorus;
@@ -57,6 +58,7 @@ void addNAugTriSolidTorus() {
         .def("hasLayeredChain", &NAugTriSolidTorus::hasLayeredChain)
         .def("isAugTriSolidTorus", &NAugTriSolidTorus::isAugTriSolidTorus,
             return_value_policy<manage_new_object>())
+        EQUAL_BY_PTR(NAugTriSolidTorus)
         .staticmethod("isAugTriSolidTorus")
     ;
 

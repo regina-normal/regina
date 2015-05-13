@@ -40,6 +40,7 @@
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
 #include "../globalarray.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NVertex;
@@ -118,6 +119,7 @@ void addNVertex() {
         .def("detail", &NVertex::detail)
         .def("toStringLong", &NVertex::toStringLong)
         .def("__str__", &NVertex::str)
+        EQUAL_BY_PTR(NVertex)
     ;
 
     enum_<regina::NVertex::LinkType>("LinkType")

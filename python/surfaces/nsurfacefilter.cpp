@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nsurfacefilter.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NSurfaceFilter;
@@ -49,6 +50,7 @@ void addNSurfaceFilter() {
         .def("getFilterID", &NSurfaceFilter::getFilterID)
         .def("getFilterTypeName", &NSurfaceFilter::getFilterTypeName)
         .def("getFilterName", &NSurfaceFilter::getFilterName)
+        EQUAL_BY_PTR(NSurfaceFilter)
     ;
 
     s.attr("packetType") = regina::PacketType(NSurfaceFilter::packetType);

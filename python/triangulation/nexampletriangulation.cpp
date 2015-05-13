@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NExampleTriangulation;
@@ -97,6 +98,7 @@ void addNExampleTriangulation() {
         .def("cuspedGenusTwoTorus",
             &NExampleTriangulation::cuspedGenusTwoTorus,
             return_value_policy<manage_new_object>())
+        EQUAL_BY_PTR(NExampleTriangulation)
         .staticmethod("threeSphere")
         .staticmethod("bingsHouse")
         .staticmethod("s2xs1")

@@ -36,6 +36,7 @@
 #include "algebra/nmarkedabeliangroup.h"
 #include "maths/nmatrixint.h"
 #include <boost/python/detail/api_placeholder.hpp> // For len().
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NHomMarkedAbelianGroup;
@@ -237,6 +238,7 @@ void addNMarkedAbelianGroup() {
         .def("detail", &NHomMarkedAbelianGroup::detail)
         .def("toStringLong", &NHomMarkedAbelianGroup::toStringLong)
         .def("__str__", &NHomMarkedAbelianGroup::str)
+        EQUAL_BY_PTR(NHomMarkedAbelianGroup)
     ;
 }
 

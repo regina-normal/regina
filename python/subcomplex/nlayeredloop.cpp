@@ -36,6 +36,7 @@
 #include "subcomplex/nlayeredloop.h"
 #include "triangulation/ncomponent.h"
 #include "triangulation/nedge.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NLayeredLoop;
@@ -53,6 +54,7 @@ void addNLayeredLoop() {
             return_value_policy<reference_existing_object>())
         .def("isLayeredLoop", &NLayeredLoop::isLayeredLoop,
             return_value_policy<manage_new_object>())
+        EQUAL_BY_PTR(NLayeredLoop)
         .staticmethod("isLayeredLoop")
     ;
 

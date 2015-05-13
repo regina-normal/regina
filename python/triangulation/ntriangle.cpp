@@ -41,6 +41,7 @@
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
 #include "../globalarray.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NTriangle;
@@ -92,6 +93,7 @@ void addNTriangle() {
             .def("detail", &NTriangle::detail)
             .def("toStringLong", &NTriangle::toStringLong)
             .def("__str__", &NTriangle::str)
+            EQUAL_BY_PTR(NTriangle)
         ;
 
         enum_<regina::NTriangle::Type>("Type")

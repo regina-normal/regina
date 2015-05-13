@@ -38,6 +38,7 @@
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/ncomponent.h"
 #include "triangulation/ntriangulation.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NStandardTriangulation;
@@ -76,6 +77,7 @@ void addNStandardTriangulation() {
         .def("detail", &NStandardTriangulation::detail)
         .def("toStringLong", &NStandardTriangulation::toStringLong)
         .def("__str__", &NStandardTriangulation::str)
+        EQUAL_BY_PTR(NStandardTriangulation)
         .staticmethod("isStandardTriangulation")
     ;
 }

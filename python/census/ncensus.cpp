@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "census/ncensus.h"
 #include "triangulation/ntriangulation.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NCensus;
@@ -79,6 +80,7 @@ void addNCensus() {
             return_internal_reference<>())
         .def("next", &NCensusHit::next,
             return_internal_reference<>())
+        EQUAL_BY_PTR(NCensusHit)
     ;
 
     class_<NCensusHits, std::auto_ptr<NCensusHits>,
@@ -87,6 +89,7 @@ void addNCensus() {
             return_internal_reference<>())
         .def("count", &NCensusHits::count)
         .def("empty", &NCensusHits::empty)
+        EQUAL_BY_PTR(NCensusHits)
     ;
 
     scope s = class_<NCensus, std::auto_ptr<NCensus>,
@@ -98,6 +101,7 @@ void addNCensus() {
         .def("formCensus", formCensus)
         .def("formPartialCensus", formPartialCensus)
         .def("mightBeMinimal", mightBeMinimal)
+        EQUAL_BY_PTR(NCensus)
         .staticmethod("lookup")
         .staticmethod("formCensus")
         .staticmethod("formPartialCensus")

@@ -36,6 +36,7 @@
 #include "manifold/nsfs.h"
 #include "subcomplex/nsatregion.h"
 #include <iostream>
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NSatBlock;
@@ -105,6 +106,7 @@ void addNSatRegion() {
         .def("detail", &NSatRegion::detail)
         .def("toStringLong", &NSatRegion::toStringLong)
         .def("__str__", &NSatRegion::str)
+        EQUAL_BY_PTR(NSatRegion)
     ;
 }
 

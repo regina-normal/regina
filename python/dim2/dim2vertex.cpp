@@ -39,6 +39,7 @@
 #include "dim2/dim2triangulation.h"
 #include "dim2/dim2vertex.h"
 #include "../globalarray.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::Dim2Vertex;
@@ -88,6 +89,7 @@ void addDim2Vertex() {
         .def("detail", &Dim2Vertex::detail)
         .def("toStringLong", &Dim2Vertex::toStringLong)
         .def("__str__", &Dim2Vertex::str)
+        EQUAL_BY_PTR(Dim2Vertex)
     ;
 }
 

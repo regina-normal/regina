@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "subcomplex/nlayeredchainpair.h"
 #include "triangulation/ncomponent.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NLayeredChainPair;
@@ -49,6 +50,7 @@ void addNLayeredChainPair() {
             return_internal_reference<>())
         .def("isLayeredChainPair", &NLayeredChainPair::isLayeredChainPair,
             return_value_policy<manage_new_object>())
+        EQUAL_BY_PTR(NLayeredChainPair)
         .staticmethod("isLayeredChainPair")
     ;
 

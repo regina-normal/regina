@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "packet/npacket.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NPacket;
@@ -168,7 +169,8 @@ void addNPacket() {
         .def("toString", &NPacket::toString)
         .def("detail", &NPacket::detail)
         .def("toStringLong", &NPacket::toStringLong)
-        .def("__str__", &NPacket::str);
+        .def("__str__", &NPacket::str)
+        EQUAL_BY_PTR(NPacket)
     ;
 
     def("open", open_filename, return_value_policy<manage_new_object>());

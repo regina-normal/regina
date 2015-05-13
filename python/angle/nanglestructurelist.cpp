@@ -36,6 +36,7 @@
 #include "angle/nanglestructurelist.h"
 #include "progress/nprogresstracker.h"
 #include "triangulation/ntriangulation.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NAngleStructureList;
@@ -79,6 +80,7 @@ void addNAngleStructureList() {
             return_value_policy<reference_existing_object>())
         .def("enumerateTautDD", &NAngleStructureList::enumerateTautDD,
             return_value_policy<reference_existing_object>())
+        EQUAL_BY_PTR(NAngleStructureList)
         .staticmethod("enumerate")
         .staticmethod("enumerateTautDD")
     ;

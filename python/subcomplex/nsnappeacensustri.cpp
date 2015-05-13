@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "subcomplex/nsnappeacensustri.h"
 #include "triangulation/ncomponent.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NSnapPeaCensusTri;
@@ -51,6 +52,7 @@ void addNSnapPeaCensusTri() {
         .def("isSmallSnapPeaCensusTri",
             &NSnapPeaCensusTri::isSmallSnapPeaCensusTri,
             return_value_policy<manage_new_object>())
+        EQUAL_BY_PTR(NSnapPeaCensusTri)
         .staticmethod("isSmallSnapPeaCensusTri")
     ;
 

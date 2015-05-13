@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "manifold/ngraphpair.h"
 #include "manifold/nsfs.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NGraphPair;
@@ -72,6 +73,7 @@ void addNGraphPair() {
         .def("matchingReln", &NGraphPair::matchingReln,
             return_internal_reference<>())
         .def(self < self)
+        EQUAL_BY_PTR(NGraphPair)
     ;
 
     implicitly_convertible<std::auto_ptr<NGraphPair>,

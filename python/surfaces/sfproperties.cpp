@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "surfaces/sfproperties.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NSurfaceFilterProperties;
@@ -67,6 +68,7 @@ void addNSurfaceFilterProperties() {
         .def("setOrientability", &NSurfaceFilterProperties::setOrientability)
         .def("setCompactness", &NSurfaceFilterProperties::setCompactness)
         .def("setRealBoundary", &NSurfaceFilterProperties::setRealBoundary)
+        EQUAL_BY_PTR(NSurfaceFilterProperties)
     ;
 
     s.attr("filterID") = regina::SurfaceFilterType(

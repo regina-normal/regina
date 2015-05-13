@@ -36,6 +36,7 @@
 #include "subcomplex/nlayeredsurfacebundle.h"
 #include "subcomplex/ntxicore.h"
 #include "triangulation/nisomorphism.h"
+#include "../utilities/equality.h"
 
 using namespace boost::python;
 using regina::NLayeredTorusBundle;
@@ -52,6 +53,7 @@ void addNLayeredSurfaceBundle() {
             return_value_policy<reference_existing_object>())
         .def("isLayeredTorusBundle", &NLayeredTorusBundle::isLayeredTorusBundle,
             return_value_policy<manage_new_object>())
+        EQUAL_BY_PTR(NLayeredTorusBundle)
         .staticmethod("isLayeredTorusBundle")
     ;
 
