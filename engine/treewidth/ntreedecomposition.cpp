@@ -564,4 +564,68 @@ void NTreeDecomposition::writeTextLong(std::ostream& out) const {
     }
 }
 
+std::string NTreeDecomposition::dotHeader(const char* graphName) {
+    std::ostringstream ans;
+    writeDotHeader(ans, graphName);
+    return ans.str();
+}
+
+void NTreeDecomposition::writeDotHeader(
+        std::ostream& out, const char* graphName) {
+    static const char defaultGraphName[] = "G";
+
+    if ((! graphName) || (! *graphName))
+        graphName = defaultGraphName;
+
+    out << "graph " << graphName << " {" << std::endl;
+    out << "edge [color=black];" << std::endl;
+    out << "node [shape=ellipse,style=filled,height=0.15,label=\"\",fontsize=9,fontcolor=\"#751010\"];" << std::endl;
+}
+
+std::string NTreeDecomposition::dot(
+        const char* prefix, bool subgraph) const {
+    std::ostringstream ans;
+    writeDot(ans, prefix, subgraph);
+    return ans.str();
+}
+
+void NTreeDecomposition::writeDot(std::ostream& out,
+        const char* prefix, bool subgraph) const {
+    static const char defaultPrefix[] = "g";
+
+    if ((! prefix) || (! *prefix))
+        prefix = defaultPrefix;
+
+    // We are guaranteed that prefix is a non-empty string.
+
+    if (subgraph)
+        out << "subgraph pairing_" << prefix << " {" << std::endl;
+    else
+        writeDotHeader(out, (prefix + std::string("_graph")).c_str());
+    NTreeBag *b = root_;
+
+    while (b) {
+        out << prefix << '_' << b->index_ << " [label=\"";
+        for (int i = 0; i < b->size_; ++i) {
+            out << b->elements_[i];
+            if ( i != (b->size_ -1)) // No comma after contents
+                out << ",";
+        }
+        out << "\"]" << std::endl;
+        if (b->parent_)
+            out << prefix << '_' << b->index_ << " -- " << prefix << '_' 
+                << b->parent_->index_ << ';' << std::endl;
+
+        if (b->children_) {
+            b = b->children_;
+        } else {
+            while (b && ! b->sibling_)
+                b = b->parent_;
+            if (b)
+                b = b->sibling_;
+        }
+    }
+    out << '}' << std::endl;
+}
+
 } // namespace regina

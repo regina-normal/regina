@@ -104,6 +104,34 @@ namespace {
     inline NTreeDecomposition* fromList(boost::python::list graph) {
         return fromListAlg(graph);
     }
+
+    void writeDot_stdout(const NTreeDecomposition& t, const char* prefix = 0,
+            bool subgraph = false) {
+        t.writeDot(std::cout, prefix, subgraph);
+    }
+
+    void writeDotHeader_stdout(const char* graphName = 0) {
+        NTreeDecomposition::writeDotHeader(std::cout, graphName);
+    }
+
+    // Write dot() and dotHeader() as standalone functions: it seems
+    // difficult using boost overloads in a way that keeps both gcc and
+    // LLVM happy. :/
+    std::string dot_standalone(const NTreeDecomposition& t,
+            const char* prefix = 0, bool subgraph = false) {
+        return t.dot(prefix, subgraph);
+    }
+
+    std::string dotHeader_standalone(const char* graphName = 0) {
+        return NTreeDecomposition::dotHeader(graphName);
+    }
+
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeDot, writeDot_stdout, 1, 3);
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeDotHeader, writeDotHeader_stdout,
+        0, 1);
+
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_dot, dot_standalone, 1, 3);
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_dotHeader, dotHeader_standalone, 0, 1);
 }
 
 void addNTreeDecomposition() {
@@ -192,6 +220,10 @@ void addNTreeDecomposition() {
             return_value_policy<reference_existing_object>())
         .def("compress", &NTreeDecomposition::compress)
         .def("makeNice", &NTreeDecomposition::makeNice)
+        .def("writeDot", writeDot_stdout, OL_writeDot())
+        .def("dot", dot_standalone, OL_dot())
+        .def("writeDotHeader", writeDotHeader_stdout, OL_writeDotHeader())
+        .def("dotHeader", dotHeader_standalone, OL_dotHeader())
         .def("str", &NTreeDecomposition::str)
         .def("toString", &NTreeDecomposition::toString)
         .def("detail", &NTreeDecomposition::detail)
