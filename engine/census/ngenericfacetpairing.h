@@ -298,6 +298,20 @@ class REGINA_API NGenericFacetPairing : public NThread,
          */
         bool isCanonical() const;
 
+
+        /**
+         * Makes the facet pairing canonical, i.e., applies an isomorphism such
+         * that the string representation is lexographically minimal of all
+         * isomorphic representations.
+         *
+         * \pre This facet pairing is connected, i.e., it is possible
+         * to reach any simplex from any other simplex via a
+         * series of matched facet pairs.
+         *
+         * @return the isomorphism used to make the pairing canonical.
+         */
+        Isomorphism * makeCanonical();
+
         /**
          * Fills the given list with the set of all combinatorial
          * automorphisms of this facet pairing.
@@ -620,6 +634,16 @@ class REGINA_API NGenericFacetPairing : public NThread,
         static bool findAllPairings(unsigned nSimplices,
             NBoolSet boundary, int nBdryFacets, Use use,
             void* useArgs = 0, bool newThread = false);
+
+        /**
+         * Remove a simplex from this facet pairing, and reorganise the result.
+         *
+         * \pre The facet pairing contains a simplex by the given index.
+         *
+         * @param toRemove the simplex to remove.
+         */
+        void removeSimplex(int toRemove);
+
 
     protected:
         /**

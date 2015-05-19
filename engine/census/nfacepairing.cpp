@@ -49,6 +49,7 @@ namespace regina {
 template NGenericFacetPairing<3>::NGenericFacetPairing(
     const NGenericFacetPairing<3>&);
 template NGenericFacetPairing<3>::NGenericFacetPairing(const NTriangulation&);
+template void NGenericFacetPairing<3>::removeSimplex(int);
 template bool NGenericFacetPairing<3>::isClosed() const;
 template std::string NGenericFacetPairing<3>::str() const;
 template std::string NGenericFacetPairing<3>::dotHeader(const char*);
