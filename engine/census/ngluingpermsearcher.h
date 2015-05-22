@@ -45,6 +45,7 @@
 #include "regina-core.h"
 #include "census/ngluingperms.h"
 #include "utilities/nqitmask.h"
+#include "triangulation/nfacepair.h"
 
 /**
  * Specifies whether the NClosedPrimeMinSearcher census generation code
@@ -2236,7 +2237,7 @@ class REGINA_API NCompactSearcher : public NGluingPermSearcher {
  * \ifacespython Not present.
  */
 class REGINA_API NClosedPrimeMinSearcher : public NCompactSearcher {
-    private:
+    protected:
         static const unsigned EDGE_CHAIN_END;
             /**< Represents the end of a one-ended chain in a face
                  pairing graph. */
@@ -2312,16 +2313,18 @@ class REGINA_API NClosedPrimeMinSearcher : public NCompactSearcher {
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 
-    private:
+    protected:
         unsigned* orderType;
             /**< For each edge in the face pairing graph stored in the
                  order[] array, a corresponding category for this edge is
                  stored in the orderType[] array.  Categories are described
                  by the EDGE_... constants defined in this class. */
 
+    private:
         unsigned nChainEdges;
             /**< The number of edges in the face pairing graph belonging
                  to one-ended chains. */
+    protected:
         int* chainPermIndices;
             /**< Stores the two possible gluing permutations that must be
                  tried for each face in the order[] array of type
@@ -2430,7 +2433,7 @@ class REGINA_API NClosedPrimeMinSearcher : public NCompactSearcher {
         // Overridden methods:
         virtual char dataTag() const;
 
-    private:
+    protected:
         /**
          * Merge the classes of tetrahedron edges as required by the
          * new gluing made at stage \a orderElt of the search.
@@ -2604,6 +2607,129 @@ class REGINA_API NHyperbolicMinSearcher : public NEulerSearcher {
          * mergeEdgeClasses().
          */
         void splitEdgeClasses();
+};
+
+class PartialCensusDB; // Member of OneStepSearcher
+class PartialTriangulationData; // Forward declared for friend specifier.
+
+/**
+ * TODO
+ * A gluing permutation search class that offers a specialised search
+ * algorithm for when (i) only closed prime minimal P2-irreducible
+ * triangulations are required, and (ii) the given face pairing has
+ * order at least three.
+ *
+ * The search algorithm is significantly different from the default
+ * algorithm provided by NGluingPermSearcher.  It is heavily optimised
+ * and takes advantage of a number of results regarding the underlying
+ * face pairing graph.
+ *
+ * Note that additional unwanted triangulations (e.g., non-prime or
+ * non-minimal triangulations) may still be produced by this search.
+ * However, significantly fewer unwanted triangulations will be produced
+ * when using this class instead of NGluingPermSearcher.
+ *
+ * \ifacespython Not present.
+ */
+class REGINA_API OneStepSearcher : public NClosedPrimeMinSearcher {
+
+    public:
+        static const char dataTag_;
+            /**< A character used to identify this class when reading
+                 and writing tagged data in text format. */
+
+    public:
+        /**
+         * Creates a new search manager for use when (i) only closed prime
+         * minimal P2-irreducible triangulations are required, and (ii) the
+         * given face pairing has order at least three.  Note that other
+         * unwanted triangulations may still be produced (e.g.,
+         * non-prime or non-minimal triangulations), but there will be
+         * far fewer of these than when using the NGluingPermSearcher
+         * class directly.
+         *
+         * For details on how a search manager is used, see the
+         * NGluingPermSearcher documentation.  Note in particular that
+         * this class will be automatically used by
+         * NGluingPermSearcher::findAllPerms() if possible, so there is
+         * often no need for an end user to instantiate this class
+         * directly.
+         *
+         * All constructor arguments are the same as for the
+         * NGluingPermSearcher constructor, though some arguments (such as
+         * \a finiteOnly and \a whichPurge) are not needed here since they
+         * are already implied by the specialised search context.
+         *
+         * \pre The given face pairing is connected, i.e., it is possible
+         * to reach any tetrahedron from any other tetrahedron via a
+         * series of matched face pairs.
+         * \pre The given face pairing is in canonical form as described
+         * by NFacePairing::isCanonical().  Note that all face pairings
+         * constructed by NFacePairing::findAllPairings() are of this form.
+         * \pre The given face pairing has no boundary faces and has at
+         * least three tetrahedra.
+         */
+        OneStepSearcher(const NFacePairing* pairing,
+                const NFacePairing::IsoList* autos, PartialCensusDB *db,
+                bool orientableOnly, bool isRoot,
+                UseGluingPerms use, void* useArgs = 0);
+
+        /**
+         * Initialises a new search manager based on data read from the
+         * given input stream.  This may be a new search or a partially
+         * completed search.
+         *
+         * This routine reads data in the format written by dumpData().
+         * If you wish to read data whose precise class is unknown,
+         * consider using dumpTaggedData() and readTaggedData() instead.
+         *
+         * If the data found in the input stream is invalid or incorrectly
+         * formatted, the routine inputError() will return \c true but
+         * the contents of this object will be otherwise undefined.
+         *
+         * The arguments \a use and \a useArgs are the same as for the
+         * NGluingPermSearcher constructor.
+         *
+         * \warning The data format is liable to change between Regina
+         * releases.  Data in this format should be used on a short-term
+         * temporary basis only.
+         *
+         * @param in the input stream from which to read.
+         */
+        //NClosedPrimeMinSearcher(std::istream& in,
+        //    UseGluingPerms use, void* useArgs = 0);
+
+        /**
+         * Destroys this search manager and all supporting data
+         * structures.
+         */
+        virtual ~OneStepSearcher();
+
+        // Overridden methods:
+        virtual void dumpData(std::ostream& out) const;
+        virtual void runSearch(long maxDepth = -1);
+        bool isChain(int simp, NFacePair pair);
+
+//    protected:
+        // Overridden methods:
+//        virtual char dataTag() const;
+    private:
+        PartialCensusDB* db_;
+        bool useDB;
+
+        bool isRoot_;
+        unsigned orderDone;
+
+        OneStepSearcher* child;
+        NFacePairing* childPairing;
+
+        unsigned chainSimp_;
+        NFacePair chainFaces_;
+
+        void buildUp(const PartialTriangulationData *); // Build up base of triangulation
+        void glue(); // Glue it all together
+
+    friend class PartialTriangulationData;
 };
 
 /*@}*/

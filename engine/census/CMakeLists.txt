@@ -14,6 +14,8 @@ SET ( FILES
   nfacepairing
   ngluingperms
   ngluingpermsearcher
+  onestepcensus
+  partialcensusdb
   )
 
 # Prepend folder name

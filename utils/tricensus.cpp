@@ -48,6 +48,7 @@
 #endif
 #include "census/nfacepairing.h"
 #include "census/ngluingpermsearcher.h"
+#include "census/partialcensusdb.h"
 #include "dim2/dim2triangulation.h"
 #if SUPPORT_DIM4
 #include "dim4/dim4triangulation.h"
@@ -82,10 +83,13 @@ int dim2 = 0;
 int dim4 = 0;
 int usePairs = 0;
 int sigs = 0;
+int oneStep = 0;
 int whichPurge = 0;
 int genPairs = 0;
 int subContainers = 0;
 std::string outFile;
+
+regina::PartialCensusDB *db;
 
 // Variables used for a dump of face pairings.
 std::auto_ptr<std::ostream> dumpStream;
@@ -122,6 +126,30 @@ struct Dim2Params {
 
     inline static const Pairing* pairingFor(const GluingPermSearcher* s) {
         return s->getFacetPairing();
+    }
+};
+
+struct Dim3OneStepParams {
+    typedef regina::NFacePairing Pairing;
+    typedef regina::NGluingPermSearcher GluingPermSearcher;
+    typedef regina::NTriangulation Triangulation;
+
+    inline static void findAllPerms(const Pairing* p,
+            const Pairing::IsoList* autos, bool orientableOnly,
+            bool finiteOnly, int whichPurge, regina::NPacket* dest) {
+            GluingPermSearcher *s = new GluingPermSearcher(p, autos, db,
+                    orientableOnly, true, foundGluingPerms<Dim3OneStepParams>,
+                    dest);
+        s->runSearch();
+        delete s;
+    }
+
+    inline static bool mightBeMinimal(Triangulation* tri) {
+        return ! tri->simplifyToLocalMinimum(false);
+    }
+
+    inline static const Pairing* pairingFor(const GluingPermSearcher* s) {
+        return s->getFacePairing();
     }
 };
 
@@ -366,6 +394,8 @@ int main(int argc, const char* argv[]) {
             "Ignore triangulations that are obviously not minimal ideal "
             "triangulations of cusped finite-volume hyperbolic 3-manifolds.  "
             "Implies --internal and --ideal.", 0 },
+        { "onestep", 'S', POPT_ARG_NONE, &oneStep, 0,
+            "Use OneStepSearcher.", 0 },
         { "dim2", '2', POPT_ARG_NONE, &dim2, 0,
             "Run a census of 2-manifold triangulations, "
             "not 3-manifold triangulations.  Here --tetrahedra counts "
@@ -452,6 +482,9 @@ int main(int argc, const char* argv[]) {
         broken = true;
     } else if (dim2 && (argFinite || argIdeal)) {
         std::cerr << "Finiteness options cannot be used with -2/--dim2.\n";
+        broken = true;
+    } else if (oneStep && !minimalPrimeP2) {
+        std::cerr << "OneStepSearcher only works with -N.\n";
         broken = true;
     } else if (dim4 &&
             (minimal || minimalPrime || minimalPrimeP2 || minimalHyp)) {
@@ -578,7 +611,10 @@ int main(int argc, const char* argv[]) {
     else if (dim4)
         return runCensus<Dim4Params>();
 #endif
-    else
+    else if (oneStep) {
+        db = new regina::PartialCensusDB();
+        return runCensus<Dim3OneStepParams>();
+    } else
         return runCensus<Dim3Params>();
 }
 

@@ -33,58 +33,286 @@
 /* end stub */
 
 #include <sstream>
+#include <cstring>
+#include <boost/next_prior.hpp>
 #include "census/ngluingpermsearcher.h"
+#include "census/partialcensusdb.h"
 #include "triangulation/nedge.h"
 #include "triangulation/nfacepair.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/memutils.h"
 
+
 namespace regina {
 
+const char OneStepSearcher::dataTag_ = 'o';
+
 OneStepSearcher::OneStepSearcher(const NFacePairing* pairing,
-        const NFacePairing::IsoList* autos, CensusDB* db, bool orientableOnly,
-        int whichPurge, UseGluingPerms use, void* useArgs) :
-        NGluingPermSearcher(pairing, autos, orientableOnly,
-            true /* finiteOnly */, whichPurge, use, useArgs), db_(db),
-        usedDB(false) {
-
-    // First check the database to see if results are available.
-
-    DBStatus status = db_->request(pairing); // TODO string rep?
-    while ( status == CensusDB::PairingRunning ) {
-        sleep(5);
-        status = db_->request(pairing);
-    }
-    if ( status == CensusDB::PairingDone ) {
-        useDB = true;
-        // TODO use each result from DB
-        // use(0, useArgs);
-        return;
-    }
-
-    if (pairing->size() > 1) {
-      NFacePairing childPairing(*pairing);
-      childPairing.removeSimplex(childPairing.size() - 1); // Remove last simplex
-      child = new OneStepSearcher(childPairing, 0, db, orientableOnly, whichPurge,
-          use, useArgs);
-    } else {
-      child = NULL;
-    }
-
-    // Initialise the internal arrays to accurately reflect the underlying
-    // face pairing.
+        const NFacePairing::IsoList* autos, PartialCensusDB* db, bool isRoot,
+        bool orientableOnly, UseGluingPerms use, void* useArgs) :
+        NClosedPrimeMinSearcher(pairing, autos, orientableOnly, use, useArgs),
+        db_(db), useDB(false), childPairing(NULL), isRoot_(isRoot) {
 
     unsigned nTets = size();
 
-    // ---------- Tracking of vertex / edge equivalence classes ----------
+    // First check the database to see if results are available.
 
-    unsigned i;
+    childPairing = new NFacePairing(*pairing);
 
-    nVertexClasses = nTets * 4;
-    vertexState = new TetVertexState[nTets * 4];
-    vertexStateChanged = new int[nTets * 8];
-    std::fill(vertexStateChanged, vertexStateChanged + nTets * 8, -1);
-    for (i = 0; i < nTets * 4; i++) {
+    PartialCensusDB::DBStatus status;
+    while (( childPairing->size() > 1 ) && ( status !=
+            PartialCensusDB::DBStatus::Found)) {
+        childPairing->removeSimplex(childPairing->size() - 1);
+        status = db_->request(pairing);
+    }
+
+    if (status == PartialCensusDB::DBStatus::Found) {
+        useDB = true;
+    }
+
+    // These are allocated when calling the constructor for NClosedPrimeMin.
+    //vertexState = new TetVertexState[nTets * 4];
+    //vertexStateChanged = new int[nTets * 8];
+
+    //edgeState = new TetEdgeState[nTets * 6];
+    //edgeStateChanged = new int[nTets * 8];
+
+    //orderType = new unsigned[4];
+
+    bool* orderAssigned = new bool[4];
+        /**< Have we placed a tetrahedron face or its partner in the
+             order[] array yet? */
+
+    // Hunt for structures within the face pairing graph.
+
+    NTetFace face(nTets-1,0), adj;
+    std::fill(orderAssigned, orderAssigned + 4, false);
+
+    // Begin by searching for tetrahedra that are joined to themselves.
+    // Note that each tetrahedra can be joined to itself at most once,
+    // since we are guaranteed that the face pairing is connected with
+    // order >= 3.
+
+    chainSimp_ = -1; // Marks no chain end
+    unsigned nChains = 0;
+    orderDone = 0;
+    NFacePair faces, comp;
+    NPerm4 trial1, trial2;
+    for (; ! face.isPastEnd(nTets, true); face++) {
+        if (orderAssigned[face.simp * 4 + face.facet])
+            continue;
+
+        adj = (*pairing)[face];
+        if (adj.simp != face.simp)
+            continue;
+
+        order[orderDone] = face;
+        orderType[orderDone] = EDGE_CHAIN_END;
+        orderAssigned[face.facet] = true;
+        orderAssigned[adj.facet] = true;
+        orderDone++;
+        chainSimp_ = face.simp;
+        chainFaces_ = NFacePair(face.facet, adj.facet);
+        faces = chainFaces_;
+        comp = faces.complement();
+
+        // Allocate the two permutations to try. Note that we will only have at
+        // most one EDGE_CHAIN_END at any one step in this search, so it will
+        // always be first.
+        chainPermIndices[0] = gluingToIndex(order[0],
+            NPerm4(faces.lower(), faces.upper(),
+                    faces.upper(), comp.lower(),
+                    comp.lower(), comp.upper(),
+                    comp.upper(), faces.lower()));
+        chainPermIndices[1] = gluingToIndex(order[0],
+            NPerm4(faces.lower(), faces.upper(),
+                    faces.upper(), comp.upper(),
+                    comp.upper(), comp.lower(),
+                    comp.lower(), faces.lower()));
+    }
+
+    // Check for chain-internal edges. Note that these require a child
+    // triangulation.
+
+    // A marker to tell if a chain end has been found. If one is found, then
+    // chain-internal edges are going to be in order[1] and order[2], else
+    // they'll be in order[0] and order[1]
+    if (child) {
+        NTetFace dest1, dest2;
+        NFacePair p, facesAdj, compAdj;
+        for ( NFacePair p; !p.isPastEnd(); p++ ) {
+            dest1 = pairing->dest(nTets-1, p.lower());
+            dest2 = pairing->dest(nTets-1, p.upper());
+            if (dest1.simp == dest2.simp) {
+                // Check for chain
+                NFacePair other = p.complement();
+                if ( child->isChain(dest1.simp, other) ) {
+                    // Insert this pair of edges into the ordering
+                    orderType[orderDone] = EDGE_CHAIN_INTERNAL_FIRST;
+                    orderType[orderDone + 1] = EDGE_CHAIN_INTERNAL_SECOND;
+
+                    order[orderDone] = NTetFace(nTets-1, p.lower());
+                    order[orderDone + 1] = NTetFace(nTets-1, p.upper());
+
+                    orderAssigned[p.lower()] = true;
+                    orderAssigned[p.upper()] = true;
+
+                    faces = p;
+                    comp = faces.complement();
+                    facesAdj = NFacePair(pairing->dest(order[orderDone]).facet,
+                        pairing->dest(order[orderDone + 1]).facet);
+                    compAdj = facesAdj.complement();
+
+                    // order[i].facet == faces.lower(),
+                    // order[i + 1].facet == faces.upper(),
+                    // pairing->dest(order[i]).facet == facesAdj.lower().
+                    // pairing->dest(order[i + 1]).facet == facesAdj.upper().
+                    trial1 = NPerm4(faces.lower(), facesAdj.lower(),
+                                    faces.upper(), compAdj.lower(),
+                                    comp.lower(), compAdj.upper(),
+                                    comp.upper(), facesAdj.upper());
+                    trial2 = NPerm4(faces.lower(), facesAdj.lower(),
+                                    faces.upper(), compAdj.upper(),
+                                    comp.lower(), compAdj.lower(),
+                                    comp.upper(), facesAdj.upper());
+                    if (trial1.compareWith(trial2) < 0) {
+                        chainPermIndices[2 * orderDone] =
+                            gluingToIndex(order[orderDone], trial1);
+                        chainPermIndices[2 * orderDone + 2] =
+                            gluingToIndex(order[orderDone + 1],
+                            NPerm4(faces.lower(), compAdj.upper(),
+                                faces.upper(), facesAdj.upper(),
+                                comp.lower(), facesAdj.lower(),
+                                comp.upper(), compAdj.lower()));
+                    } else {
+                        chainPermIndices[2 * orderDone] =
+                            gluingToIndex(order[orderDone], trial2);
+                        chainPermIndices[2 * orderDone + 2] =
+                            gluingToIndex(order[orderDone + 1],
+                            NPerm4(faces.lower(), compAdj.lower(),
+                                faces.upper(), facesAdj.upper(),
+                                comp.lower(), facesAdj.lower(),
+                                comp.upper(), compAdj.upper()));
+                    }
+
+                    trial1 = NPerm4(faces.lower(), facesAdj.lower(),
+                                    faces.upper(), compAdj.lower(),
+                                    comp.lower(), facesAdj.upper(),
+                                    comp.upper(), compAdj.upper());
+                    trial2 = NPerm4(faces.lower(), facesAdj.lower(),
+                                    faces.upper(), compAdj.upper(),
+                                    comp.lower(), facesAdj.upper(),
+                                    comp.upper(), compAdj.lower());
+                    if (trial1.compareWith(trial2) < 0) {
+                        chainPermIndices[2 * orderDone + 1] =
+                            gluingToIndex(order[orderDone], trial1);
+                        chainPermIndices[2 * orderDone + 3] =
+                            gluingToIndex(order[orderDone + 1],
+                            NPerm4(faces.lower(), compAdj.upper(),
+                                faces.upper(), facesAdj.upper(),
+                                comp.lower(), compAdj.lower(),
+                                comp.upper(), facesAdj.lower()));
+                    } else {
+                        chainPermIndices[2 * orderDone + 1] =
+                            gluingToIndex(order[orderDone], trial2);
+                        chainPermIndices[2 * orderDone + 3] =
+                            gluingToIndex(order[orderDone + 1],
+                            NPerm4(faces.lower(), compAdj.lower(),
+                                faces.upper(), facesAdj.upper(),
+                                comp.lower(), compAdj.upper(),
+                                comp.upper(), facesAdj.lower()));
+                    }
+                    // Remember that we are gluing "later" to "earlier" here,
+                    // so we invert.
+                    for(unsigned j=0; j<4; ++j)
+                        chainPermIndices[2 * orderDone + j] =
+                            NPerm4::invS3[chainPermIndices[2 * orderDone + j]];
+
+                    orderDone += 2;
+                }
+            }
+        }
+    }
+    // Run through the remaining faces (only on last tetrahedron).
+    for (face = NTetFace(nTets-1,0); ! face.isPastEnd(nTets, true); face++)
+        if (! orderAssigned[face.facet]) {
+            order[orderDone] = face;
+            if (face.facet < 3 && pairing->dest(boost::next(face)).simp ==
+                    pairing->dest(face).simp)
+                orderType[orderDone] = EDGE_DOUBLE_FIRST;
+            else if (face.facet > 0 && pairing->dest(boost::prior(face)).simp ==
+                    pairing->dest(face).simp)
+                orderType[orderDone] = EDGE_DOUBLE_SECOND;
+            else
+                orderType[orderDone] = EDGE_MISC;
+            orderDone++;
+
+            adj = (*pairing)[face];
+            orderAssigned[face.facet] = true;
+            orderAssigned[adj.facet] = true;
+        }
+
+    orderElt = 0;
+
+}
+
+OneStepSearcher::~OneStepSearcher() {
+    if (childPairing)
+        delete childPairing;
+    if (child)
+        delete child;
+    delete[] vertexState;
+    delete[] edgeState;
+    delete[] vertexStateChanged;
+    delete[] edgeStateChanged;
+}
+
+bool OneStepSearcher::isChain(int simp, NFacePair faces) {
+    // If we know this is the end of a chain
+    if ((simp == chainSimp_) && (faces == chainFaces_))
+        return true;
+    // If the child triangulation doesn't know about this simplex
+    if (simp == (size()-1))
+        return false;
+    // Note that child should exist here (as simp >= 0 and thus size() >= 2)
+    if (child)
+        return child->isChain(simp, faces);
+}
+
+void OneStepSearcher::runSearch(long maxDepth) {
+    if (useDB) {
+        // TODO use each result from DB
+        PartialCensusHits * results = db_->retrieve(childPairing);
+        PartialCensusHit * h;
+        for ( h = results->begin(); h != results->end(); h++ )
+            buildUp(*(*h));
+        use_(0, useArgs_);
+    } else
+        NClosedPrimeMinSearcher::runSearch(maxDepth);
+
+}
+
+void OneStepSearcher::buildUp(const PartialTriangulationData *data) {
+    int nTets = size();
+    std::memcpy(permIndices_, data->permIndices_,
+            sizeof(data->permIndices_));
+    std::memcpy(vertexState, data->vertexState,
+            sizeof(data->vertexState));
+    std::memcpy(vertexStateChanged, data->vertexStateChanged,
+            sizeof(data->vertexStateChanged));
+    std::memcpy(edgeState, data->edgeState,
+            sizeof(data->edgeState));
+    std::memcpy(edgeStateChanged, data->edgeStateChanged,
+            sizeof(data->edgeStateChanged));
+    if (orientableOnly_)
+        std::memcpy(orientation, data->orientation, sizeof(data->orientation));
+    nVertexClasses = data->nVertexClasses;
+    nEdgeClasses = data->nEdgeClasses;
+
+    // Set up edge + vertex states for the remaining tetrahedra
+    // Vertex states
+    std::fill(vertexStateChanged + childPairing->size()*8, vertexStateChanged + nTets * 8, -1);
+    for (unsigned i = childPairing->size() * 4; i < nTets * 4; ++i) {
         vertexState[i].bdryEdges = 3;
         vertexState[i].bdryNext[0] = vertexState[i].bdryNext[1] = i;
         vertexState[i].bdryTwist[0] = vertexState[i].bdryTwist[1] = 0;
@@ -93,17 +321,16 @@ OneStepSearcher::OneStepSearcher(const NFacePairing* pairing,
         vertexState[i].bdryNextOld[0] = vertexState[i].bdryNextOld[1] = -1;
         vertexState[i].bdryTwistOld[0] = vertexState[i].bdryTwistOld[1] = 0;
     }
+    nVertexClasses += 4;
 
-    nEdgeClasses = nTets * 6;
-    edgeState = new TetEdgeState[nTets * 6];
-    edgeStateChanged = new int[nTets * 8];
-    std::fill(edgeStateChanged, edgeStateChanged + nTets * 8, -1);
+    // Edge states
+    std::fill(edgeStateChanged + childPairing->size()*8, edgeStateChanged + nTets * 8, -1);
 
     // Since NQitmaskLen64 only supports 64 faces, only work with
     // the first 16 tetrahedra.  If n > 16, this just weakens the
     // optimisation; however, this is no great loss since for n > 16 the
     // census code is at present infeasibly slow anyway.
-    for (i = 0; i < nTets && i < 16; ++i) {
+    for (unsigned i = childPairing->size(); i < nTets && i < 16 ; ++i) {
         /* 01 on +012, +013             */
         edgeState[6 * i    ].facesPos.set(4 * i + 3, 1);
         edgeState[6 * i    ].facesPos.set(4 * i + 2, 1);
@@ -123,104 +350,152 @@ OneStepSearcher::OneStepSearcher(const NFacePairing* pairing,
         edgeState[6 * i + 5].facesPos.set(4 * i + 1, 1);
         edgeState[6 * i + 5].facesPos.set(4 * i + 0, 1);
     }
+    nEdgeClasses += 6;
+    orderElt = 0;
+    glue(); // Attempt first gluing
 }
 
-// TODO (net): See what was removed when we brought in vertex link checking.
-void OneStepSearcher::runSearch(long maxDepth) {
-    if (useDB) {
-        // TODO use each result from DB
-        use(0, useArgs);
-        return;
-    }
-    if (child)
-        child->runSearch( & (this->buildUp)) ; // TODO Check syntax
-    else
-        buildUp(NULL);
-}
+void OneStepSearcher::glue() {
+    NTetFace face, adj;
+    bool generic;
+    bool lastGluing;
+    unsigned nTets = size();
+    int mergeResult;
+    while ( orderElt >= 0 ) {
+        face = order[orderElt];
+        // Note that, unlike other GluingPermSearcher classes, here the "adjacent"
+        // facet is an earlier facet that has already been determined. We only have
+        // to iterate over four faces of the last tetrahedron, so we call those
+        // "face"
+        NTetFace adj = (*pairing_)[face];
 
-void buildUp(OneStepSearcher *child_) { // Note that child_ and child should
-                                        // always be identical.
-    if (child) {
-        std::memcpy(permIndex, child->permIndex, sizeof(child->permIndex));
-        std::memcpy(TetVertexState, child->TetVertexState,
-            sizeof(child->TetVertexState));
-        std::memcpy(TetVertexStateChanged, child->TetVertexStateChanged,
-            sizeof(child->TetVertexStateChanged));
-        std::memcpy(TetEdgeState, child->TetEdgeState,
-            sizeof(child->TetEdgeState));
-        std::memcpy(TetEdgeStateChanged, child->TetEdgeStateChanged,
-            sizeof(child->TetEdgeStateChanged));
-        if (orientableOnly_)
-          std::memcpy(orientation, child->orientation, sizeof(child->orientation));
-        // TODO Set up edge + vertex states for the last tetrahedron
-    }
-
-    permIndex(NFacetSpec(size()-1,0)) = 0; // First permutation in first gluing.
-
-    glue(0); // Attempt first gluing
-}
-
-void glue(int f, int step) {
-    NFacetSpec face(size()-1,f);
-    if (face.isPastEnd(size(),true)) { // Either this facet is not to be
-      // matched, or we have completed a triangulation. Either way, use the
-      // result.
-        if (isCanonical()) {
-            use_(this, useArgs);
-            db->sendResult(pairing_, this);
-        }
-        return;
-    }
-
-    // Note that, unlike other GluingPermSearcher classes, here the "adjacent"
-    // facet is an earlier facet that has already been determined. We only have
-    // to iterate over four faces of the last tetrahedron, so we call those
-    // "face"
-    NFacetSpec adj = (*pairing_)[face];
-
-    // Is this the last gluing before a closed triangulation is complete?
-    bool lastGluing = false;
-    if ((f == 3) || (( adj.simp == (size()-1) && adj.facet == 3)))
-        lastGluing = true;
-
-    for ( ; permIndex(facet) < 6; permIndex(face) += step ) {
-        // The first permutation to this new tetrahedron must be the identity
-        // permutation to be canonical.
-        if ( (f == 1) && (permIndex(facet) > 0) )
-            return;
-
-        // Merge edge links and run corresponding tests.
-        if (mergeEdgeClasses(face)) {
-            // We created a structure that should not appear in a final
-            // census triangulation (e.g., a low-degree or invalid edge,
-            // or a face whose edges are identified in certain ways).
-            splitEdgeClasses(face);
-            continue;
-        }
-
-        // Merge vertex links and run corresponding tests.
-        mergeResult = mergeVertexClasses(face);
-        if (mergeResult & VLINK_CLOSED) {
-            // We closed off a vertex link, which means we will end up
-            // with more than one vertex (unless this was our very last
-            // gluing).
-            if (!lastGluing) {
-                splitVertexClasses(face);
-                splitEdgeClasses(face);
-                continue;
+        // Is this the last gluing before a closed triangulation is complete?
+        lastGluing = false;
+        // Quick test if last two faces are being identified
+        if (( adj.simp == (nTets-1) && adj.facet == 3))
+            lastGluing = true;
+        // If we're now identifying the last face on the last tetrahedron, check
+        // for unmatched faces
+        if (face.facet == 3) {
+            lastGluing = true;
+            // Check for unmatched faces
+            for (NTetFace n(0,0); ! n.isPastEnd(nTets, false); ++n) {
+                if (n.isBoundary(nTets)) {
+                    lastGluing = false;
+                    break;
+                }
             }
         }
-        if (mergeResult & VLINK_NON_SPHERE) {
-            // Our vertex link will never be a 2-sphere.  Stop now.
-            splitVertexClasses(face);
-            splitEdgeClasses(face);
+
+        // Move to the next permutation.
+        if (orderType[orderElt] == EDGE_CHAIN_END ||
+                orderType[orderElt] == EDGE_CHAIN_INTERNAL_FIRST) {
+            // Choose from one of the two permutations stored in array
+            // chainPermIndices[].
+            generic = false;
+            if (permIndex(face) < 0)
+                permIndex(face) = chainPermIndices[2 * orderElt];
+            else if (permIndex(face) == chainPermIndices[2 * orderElt])
+                permIndex(face) = chainPermIndices[2 * orderElt + 1];
+            else
+                permIndex(face) = 6;
+        } else if (orderType[orderElt] == EDGE_CHAIN_INTERNAL_SECOND) {
+            // The permutation is predetermined.
+            generic = false;
+            if (permIndex(face) < 0) {
+                if (permIndex(order[orderElt - 1]) ==
+                        chainPermIndices[2 * orderElt - 2])
+                    permIndex(face) = chainPermIndices[2 * orderElt];
+                else
+                    permIndex(face) = chainPermIndices[2 * orderElt + 1];
+            } else
+                permIndex(face) = 6;
+        } else {
+            // Generic case.
+            generic = true;
+
+            // Be sure to preserve the orientation of the permutation if
+            // necessary.
+            if ((! orientableOnly_) || adj.facet == 0)
+                permIndex(face)++;
+            else
+                permIndex(face) += 2;
+        }
+
+        // Are we out of ideas for this face?
+        if (permIndex(face) >= 6) {
+            // Head back down to the previous face.
+            permIndex(face) = -1;
+            permIndex(adj) = -1;
+            orderElt--;
+
+            // Pull apart vertex and edge links at the previous level.
+            if (orderElt >= 0) {
+                splitVertexClasses();
+                splitEdgeClasses();
+            }
+
             continue;
         }
 
         // We are sitting on a new permutation to try.
         permIndex(adj) = NPerm4::invS3[permIndex(face)];
+
+        // TODO Does this make sense?
+        // The first permutation to this new tetrahedron must be the identity
+        // permutation for the triangulation to be canonical.
+        //if ( (f == 0) && (permIndex(facet) > 0) )
+        //    return;
+
+        // Merge edge links and run corresponding tests.
+        if (mergeEdgeClasses()) {
+            // We created a structure that should not appear in a final
+            // census triangulation (e.g., a low-degree or invalid edge,
+            // or a face whose edges are identified in certain ways).
+            splitEdgeClasses();
+            continue;
+        }
+        // The final triangulation should have precisely (nTets + 1) edges
+        // (since it must have precisely one vertex).
+        if (isRoot_ && (nEdgeClasses < nTets + 1)) {
+            // We already have too few edge classes, and the count can
+            // only get smaller.
+            // Note that the triangulations we are pruning include ideal
+            // triangulations (with vertex links of Euler characteristic < 2).
+            splitEdgeClasses();
+            continue;
+        }
+
+        // Merge vertex links and run corresponding tests.
+        mergeResult = mergeVertexClasses();
+        if (mergeResult & VLINK_CLOSED) {
+            // We closed off a vertex link, which means we will end up
+            // with more than one vertex (unless this was our very last
+            // gluing).
+            if (!lastGluing) {
+                splitVertexClasses();
+                splitEdgeClasses();
+                continue;
+            }
+        }
+        if (mergeResult & VLINK_NON_SPHERE) {
+            // Our vertex link will never be a 2-sphere.  Stop now.
+            splitVertexClasses();
+            splitEdgeClasses();
+            continue;
+        }
+        if (isRoot_ && (nVertexClasses > 1 + 3 * (nTets * 2 - orderElt - 1))) {
+            // We have (2n - orderElt - 1) more gluings to choose.
+            // Since each merge can reduce the number of vertex classes
+            // by at most 3, there is no way we can end up with just one
+            // vertex at the end.
+            splitVertexClasses();
+            splitEdgeClasses();
+            continue;
+        }
+
         // Fix the orientation if appropriate.
-        if ( (f == 0) && (orientableOnly_) {
+        if (generic && (face.facet == 0) && (orientableOnly_)) {
             // It's the first time we've hit this tetrahedron.
             if ((permIndex(face) + (face.facet == 3 ? 0 : 1) +
                     (adj.facet == 3 ? 0 : 1)) % 2 == 0)
@@ -228,49 +503,73 @@ void glue(int f, int step) {
             else
                 orientation[face.simp] = orientation[adj.simp];
         }
-        int nextFacet = f+1;
-        if (adj.simp = face.simp)
-            nextFacet++;
-        permIndex(NFacetSpec(size()-1,nextFacet)) = 0; // First permutation in next gluing.
-        glue(nextFacet);
+        // Move on to the next face.
+        orderElt++;
 
-        splitVertexClasses(face);
-        splitEdgeClasses(face);
+        // If we're at the end, try the solution and step back.
+        if (orderElt == orderDone) {
+            // We in fact have an entire triangulation.
+            // Run through the automorphisms and check whether our
+            // permutations are in canonical form.
+            if (isCanonical()) {
+                db_->store(this);
+                use_(this, useArgs_);
+            }
 
+            // Back to the previous face.
+            orderElt--;
+
+            // Pull apart vertex and edge links at the previous level.
+            if (orderElt >= 0) {
+                splitVertexClasses();
+                splitEdgeClasses();
+            }
+        } else {
+            // Not a full triangulation; just one level deeper.
+
+            // We've moved onto a new face.
+            // Be sure to get the orientation right.
+            face = order[orderElt];
+            if (orientableOnly_ && pairing_->dest(face).facet > 0) {
+                // permIndex(face) will be set to -1 or -2 as appropriate.
+                adj = (*pairing_)[face];
+                if (orientation[face.simp] == orientation[adj.simp])
+                    permIndex(face) = 1;
+                else
+                    permIndex(face) = 0;
+
+                if ((face.facet == 3 ? 0 : 1) + (adj.facet == 3 ? 0 : 1) == 1)
+                    permIndex(face) = (permIndex(face) + 1) % 2;
+
+                permIndex(face) -= 2;
+            }
+
+            // Remnant from NClosedPrimeMin, not needed? TODO
+//            if (orderElt == maxOrder) {
+//                // We haven't found an entire triangulation, but we've
+//                // gone as far as we need to.
+//                // Process it, then step back.
+//                use_(this, useArgs_);
+//
+//                // Back to the previous face.
+//                permIndex(face) = -1;
+//                orderElt--;
+//
+//                // Pull apart vertex links at the previous level.
+//                if (orderElt >= minOrder) {
+//                    splitVertexClasses();
+//                    splitEdgeClasses();
+//                }
+//            }
+        }
     }
+    use_(0, useArgs_);
+}
 
-
-
-
+// TODO Adjust (maybe)?
 void OneStepSearcher::dumpData(std::ostream& out) const {
-    NGluingPermSearcher::dumpData(out);
+    NClosedPrimeMinSearcher::dumpData(out);
 
-    unsigned nTets = getNumberOfTetrahedra();
-    unsigned i;
-
-    out << nVertexClasses << std::endl;
-    for (i = 0; i < 4 * nTets; i++) {
-        vertexState[i].dumpData(out);
-        out << std::endl;
-    }
-    for (i = 0; i < 8 * nTets; i++) {
-        if (i)
-            out << ' ';
-        out << vertexStateChanged[i];
-    }
-    out << std::endl;
-
-    out << nEdgeClasses << std::endl;
-    for (i = 0; i < 6 * nTets; i++) {
-        edgeState[i].dumpData(out, nTets);
-        out << std::endl;
-    }
-    for (i = 0; i < 8 * nTets; i++) {
-        if (i)
-            out << ' ';
-        out << edgeStateChanged[i];
-    }
-    out << std::endl;
 }
 
 //NCompactSearcher::NCompactSearcher(std::istream& in,
@@ -329,548 +628,6 @@ void OneStepSearcher::dumpData(std::ostream& out) const {
 //        inputError_ = true;
 //}
 
-int OneStepSearcher::mergeEdgeClasses(NTetFace face) {
-    NTetFace adj = (*pairing_)[face];
-
-    int retVal = 0;
-
-    NPerm4 p = gluingPerm(face);
-    int v1, w1, v2, w2;
-    int e, f;
-    int orderIdx;
-    int eRep, fRep;
-    int middleTet;
-
-    v1 = face.facet;
-    w1 = p[v1];
-
-    char parentTwists, hasTwist;
-    for (v2 = 0; v2 < 4; v2++) {
-        if (v2 == v1)
-            continue;
-
-        w2 = p[v2];
-
-        // Look at the edge opposite v1-v2.
-        e = 5 - NEdge::edgeNumber[v1][v2];
-        f = 5 - NEdge::edgeNumber[w1][w2];
-
-        orderIdx = v2 + 4 * orderElt;
-
-        // We declare the natural orientation of an edge to be smaller
-        // vertex to larger vertex.
-        hasTwist = (p[NEdge::edgeVertex[e][0]] > p[NEdge::edgeVertex[e][1]] ?
-            1 : 0);
-
-        parentTwists = 0;
-        eRep = findEdgeClass(e + 6 * face.simp, parentTwists);
-        fRep = findEdgeClass(f + 6 * adj.simp, parentTwists);
-
-        if (eRep == fRep) {
-            edgeState[eRep].bounded = false;
-
-            if (edgeState[eRep].size <= 2)
-                retVal |= ECLASS_LOWDEG;
-            else if (edgeState[eRep].size == 3) {
-                // Flag as LOWDEG only if three distinct tetrahedra are used.
-                middleTet = pairing_->dest(face.simp, v2).simp;
-                if (face.simp != adj.simp && adj.simp != middleTet &&
-                        middleTet != face.simp)
-                    retVal |= ECLASS_LOWDEG;
-            }
-            if (hasTwist ^ parentTwists)
-                retVal |= ECLASS_TWISTED;
-
-            edgeStateChanged[orderIdx] = -1;
-        } else {
-#if PRUNE_HIGH_DEG_EDGE_SET
-            if (edgeState[eRep].size >= highDegLimit) {
-                if (edgeState[fRep].size >= highDegLimit)
-                    highDegSum += highDegLimit;
-                else
-                    highDegSum += edgeState[fRep].size;
-            } else if (edgeState[fRep].size >= highDegLimit)
-                highDegSum += edgeState[eRep].size;
-            else if (edgeState[eRep].size + edgeState[fRep].size >
-                    highDegLimit)
-                highDegSum += (edgeState[eRep].size + edgeState[fRep].size -
-                    highDegLimit);
-#endif
-
-            if (edgeState[eRep].rank < edgeState[fRep].rank) {
-                // Join eRep beneath fRep.
-                edgeState[eRep].parent = fRep;
-                edgeState[eRep].twistUp = hasTwist ^ parentTwists;
-
-                edgeState[fRep].size += edgeState[eRep].size;
-#if PRUNE_HIGH_DEG_EDGE_SET
-#else
-                if (edgeState[fRep].size > 3 * getNumberOfTetrahedra())
-                    retVal |= ECLASS_HIGHDEG;
-#endif
-
-                if (edgeState[eRep].twistUp) {
-                    edgeState[fRep].facesPos += edgeState[eRep].facesNeg;
-                    edgeState[fRep].facesNeg += edgeState[eRep].facesPos;
-                } else {
-                    edgeState[fRep].facesPos += edgeState[eRep].facesPos;
-                    edgeState[fRep].facesNeg += edgeState[eRep].facesNeg;
-                }
-                if (edgeState[fRep].facesPos.hasNonZeroMatch(
-                        edgeState[fRep].facesNeg))
-                    retVal |= ECLASS_CONE;
-                if (edgeState[fRep].facesPos.has3() ||
-                        edgeState[fRep].facesNeg.has3())
-                    retVal |= ECLASS_L31;
-
-                edgeStateChanged[orderIdx] = eRep;
-            } else {
-                // Join fRep beneath eRep.
-                edgeState[fRep].parent = eRep;
-                edgeState[fRep].twistUp = hasTwist ^ parentTwists;
-                if (edgeState[eRep].rank == edgeState[fRep].rank) {
-                    edgeState[eRep].rank++;
-                    edgeState[fRep].hadEqualRank = true;
-                }
-
-                edgeState[eRep].size += edgeState[fRep].size;
-#if PRUNE_HIGH_DEG_EDGE_SET
-#else
-                if (edgeState[eRep].size > 3 * getNumberOfTetrahedra())
-                    retVal |= ECLASS_HIGHDEG;
-#endif
-
-                if (edgeState[fRep].twistUp) {
-                    edgeState[eRep].facesPos += edgeState[fRep].facesNeg;
-                    edgeState[eRep].facesNeg += edgeState[fRep].facesPos;
-                } else {
-                    edgeState[eRep].facesPos += edgeState[fRep].facesPos;
-                    edgeState[eRep].facesNeg += edgeState[fRep].facesNeg;
-                }
-                if (edgeState[eRep].facesPos.hasNonZeroMatch(
-                        edgeState[eRep].facesNeg))
-                    retVal |= ECLASS_CONE;
-                if (edgeState[eRep].facesPos.has3() ||
-                        edgeState[eRep].facesNeg.has3())
-                    retVal |= ECLASS_L31;
-
-                edgeStateChanged[orderIdx] = fRep;
-            }
-
-#if PRUNE_HIGH_DEG_EDGE_SET
-            if (highDegSum > highDegBound)
-                retVal |= ECLASS_HIGHDEG;
-#endif
-
-            nEdgeClasses--;
-        }
-    }
-
-    return retVal;
-}
-
-void OneStepSearcher::splitEdgeClasses(NTetFace face) {
-
-    int v1, v2;
-    int e;
-    int eIdx, orderIdx;
-    int rep, subRep;
-
-    v1 = face.facet;
-
-    for (v2 = 3; v2 >= 0; v2--) {
-        if (v2 == v1)
-            continue;
-
-        // Look at the edge opposite v1-v2.
-        e = 5 - NEdge::edgeNumber[v1][v2];
-
-        eIdx = e + 6 * face.simp;
-        orderIdx = v2 + 4 * orderElt;
-
-        if (edgeStateChanged[orderIdx] < 0)
-            edgeState[findEdgeClass(eIdx)].bounded = true;
-        else {
-            subRep = edgeStateChanged[orderIdx];
-            rep = edgeState[subRep].parent;
-
-            edgeState[subRep].parent = -1;
-            if (edgeState[subRep].hadEqualRank) {
-                edgeState[subRep].hadEqualRank = false;
-                edgeState[rep].rank--;
-            }
-
-            edgeState[rep].size -= edgeState[subRep].size;
-#if PRUNE_HIGH_DEG_EDGE_SET
-            if (edgeState[rep].size >= highDegLimit) {
-                if (edgeState[subRep].size >= highDegLimit)
-                    highDegSum -= highDegLimit;
-                else
-                    highDegSum -= edgeState[subRep].size;
-            } else if (edgeState[subRep].size >= highDegLimit)
-                highDegSum -= edgeState[rep].size;
-            else if (edgeState[rep].size + edgeState[subRep].size >
-                    highDegLimit)
-                highDegSum -= (edgeState[rep].size + edgeState[subRep].size
-                    - highDegLimit);
-#endif
-
-            if (edgeState[subRep].twistUp) {
-                edgeState[rep].facesPos -= edgeState[subRep].facesNeg;
-                edgeState[rep].facesNeg -= edgeState[subRep].facesPos;
-            } else {
-                edgeState[rep].facesPos -= edgeState[subRep].facesPos;
-                edgeState[rep].facesNeg -= edgeState[subRep].facesNeg;
-            }
-
-            edgeStateChanged[orderIdx] = -1;
-            nEdgeClasses++;
-        }
-    }
-}
-
-int OneStepSearcher::mergeVertexClasses(NTetFace face) {
-    // Merge all three vertex pairs for the current face.
-    NTetFace adj = (*pairing_)[face];
-
-    int retVal = 0;
-
-    int v, w;
-    int vIdx, wIdx, tmpIdx, nextIdx;
-    unsigned orderIdx;
-    int vRep, wRep;
-    int vNext[2], wNext[2];
-    char vTwist[2], wTwist[2];
-    NPerm4 p = gluingPerm(face);
-    char parentTwists, hasTwist, tmpTwist;
-    for (v = 0; v < 4; v++) {
-        if (v == face.facet)
-            continue;
-
-        w = p[v];
-        vIdx = v + 4 * face.simp;
-        wIdx = w + 4 * adj.simp;
-        orderIdx = v + 4 * orderElt;
-
-        // Are the natural 012 representations of the two faces joined
-        // with reversed orientations?
-        // Here we combine the sign of permutation p with the mappings
-        // from 012 to the native tetrahedron vertices, i.e., v <-> 3 and
-        // w <-> 3.
-        hasTwist = (p.sign() < 0 ? 0 : 1);
-        if ((v == 3 && w != 3) || (v != 3 && w == 3))
-            hasTwist ^= 1;
-
-        parentTwists = 0;
-        for (vRep = vIdx; vertexState[vRep].parent >= 0;
-                vRep = vertexState[vRep].parent)
-            parentTwists ^= vertexState[vRep].twistUp;
-        for (wRep = wIdx; vertexState[wRep].parent >= 0;
-                wRep = vertexState[wRep].parent)
-            parentTwists ^= vertexState[wRep].twistUp;
-
-        if (vRep == wRep) {
-            vertexState[vRep].bdry -= 2;
-            if (vertexState[vRep].bdry == 0)
-                retVal |= VLINK_CLOSED;
-
-            // Have we made the vertex link non-orientable?
-            if (hasTwist ^ parentTwists)
-                retVal |= VLINK_NON_SPHERE;
-
-            vertexStateChanged[orderIdx] = -1;
-
-            // Examine the cycles of boundary components.
-            if (vIdx == wIdx) {
-                // Either we are folding together two adjacent edges of the
-                // vertex link, or we are making the vertex link
-                // non-orientable.
-
-                // The possible cases are:
-                //
-                // 1) hasTwist is true.  The vertex becomes
-                // non-orientable, but we should already have flagged
-                // this above.  Don't touch anything.
-                //
-                // 2) hasTwist is false, and vertexState[vIdx].bdryEdges is 3.
-                // Here we are taking a stand-alone triangle and folding
-                // two of its edges together.  Nothing needs to change.
-                //
-                // 3) hasTwist is false, and vertexState[vIdx].bdryEdges is 2.
-                // This means we are folding together two edges of a
-                // triangle whose third edge is already joined elsewhere.
-                // We deal with this as follows:
-                //
-                if ((! hasTwist) && vertexState[vIdx].bdryEdges < 3) {
-                    // Although bdryEdges is 2, we don't bother keeping
-                    // a backup in bdryTwistOld[].  This is because
-                    // bdryEdges jumps straight from 2 to 0, and the
-                    // neighbours in bdryNext[] / bdryTwist[] never get
-                    // overwritten.
-                    if (vertexState[vIdx].bdryNext[0] == vIdx) {
-                        // We are closing off a single boundary of length
-                        // two.  All good.
-                    } else {
-                        // Adjust each neighbour to point to the other.
-                        vtxBdryJoin(vertexState[vIdx].bdryNext[0],
-                            1 ^ vertexState[vIdx].bdryTwist[0],
-                            vertexState[vIdx].bdryNext[1],
-                            vertexState[vIdx].bdryTwist[1] ^
-                                vertexState[vIdx].bdryTwist[0]);
-                    }
-                }
-
-                vertexState[vIdx].bdryEdges -= 2;
-            } else {
-                // We are joining two distinct tetrahedron vertices that
-                // already contribute to the same vertex link.
-                if (vertexState[vIdx].bdryEdges == 2)
-                    vtxBdryBackup(vIdx);
-                if (vertexState[wIdx].bdryEdges == 2)
-                    vtxBdryBackup(wIdx);
-
-                if (vtxBdryLength1(vIdx) && vtxBdryLength1(wIdx)) {
-                    // We are joining together two boundaries of length one.
-                    // Do nothing and mark the non-trivial genus.
-                    // std::cerr << "NON-SPHERE: 1 >-< 1" << std::endl;
-                    retVal |= VLINK_NON_SPHERE;
-                } else if (vtxBdryLength2(vIdx, wIdx)) {
-                    // We are closing off a single boundary of length two.
-                    // All good.
-                } else {
-                    vtxBdryNext(vIdx, face.simp, v, face.facet, vNext, vTwist);
-                    vtxBdryNext(wIdx, adj.simp, w, adj.facet, wNext, wTwist);
-
-                    if (vNext[0] == wIdx && wNext[1 ^ vTwist[0]] == vIdx) {
-                        // We are joining two adjacent edges of the vertex link.
-                        // Simply eliminate them.
-                        vtxBdryJoin(vNext[1], 0 ^ vTwist[1],
-                            wNext[0 ^ vTwist[0]],
-                            (vTwist[0] ^ wTwist[0 ^ vTwist[0]]) ^ vTwist[1]);
-                    } else if (vNext[1] == wIdx &&
-                            wNext[0 ^ vTwist[1]] == vIdx) {
-                        // Again, joining two adjacent edges of the vertex link.
-                        vtxBdryJoin(vNext[0], 1 ^ vTwist[0],
-                            wNext[1 ^ vTwist[1]],
-                            (vTwist[1] ^ wTwist[1 ^ vTwist[1]]) ^ vTwist[0]);
-                    } else {
-                        // See if we are joining two different boundary cycles
-                        // together; if so, we have created non-trivial genus in
-                        // the vertex link.
-                        tmpIdx = vertexState[vIdx].bdryNext[0];
-                        tmpTwist = vertexState[vIdx].bdryTwist[0];
-                        while (tmpIdx != vIdx && tmpIdx != wIdx) {
-                            nextIdx = vertexState[tmpIdx].
-                                bdryNext[0 ^ tmpTwist];
-                            tmpTwist ^= vertexState[tmpIdx].
-                                bdryTwist[0 ^ tmpTwist];
-                            tmpIdx = nextIdx;
-                        }
-
-                        if (tmpIdx == vIdx) {
-                            // Different boundary cycles.
-                            // Don't touch anything; just flag a
-                            // high genus error.
-                            // std::cerr << "NON-SPHERE: (X)" << std::endl;
-                            retVal |= VLINK_NON_SPHERE;
-                        } else {
-                            // Same boundary cycle.
-                            vtxBdryJoin(vNext[0], 1 ^ vTwist[0],
-                                wNext[1 ^ hasTwist],
-                                vTwist[0] ^ (hasTwist ^ wTwist[1 ^ hasTwist]));
-                            vtxBdryJoin(vNext[1], 0 ^ vTwist[1],
-                                wNext[0 ^ hasTwist],
-                                vTwist[1] ^ (hasTwist ^ wTwist[0 ^ hasTwist]));
-                        }
-                    }
-                }
-
-                vertexState[vIdx].bdryEdges--;
-                vertexState[wIdx].bdryEdges--;
-            }
-        } else {
-            // We are joining two distinct vertices together and merging
-            // their vertex links.
-            if (vertexState[vRep].rank < vertexState[wRep].rank) {
-                // Join vRep beneath wRep.
-                vertexState[vRep].parent = wRep;
-                vertexState[vRep].twistUp = hasTwist ^ parentTwists;
-
-                vertexState[wRep].bdry = vertexState[wRep].bdry +
-                    vertexState[vRep].bdry - 2;
-                if (vertexState[wRep].bdry == 0)
-                    retVal |= VLINK_CLOSED;
-
-                vertexStateChanged[orderIdx] = vRep;
-            } else {
-                // Join wRep beneath vRep.
-                vertexState[wRep].parent = vRep;
-                vertexState[wRep].twistUp = hasTwist ^ parentTwists;
-                if (vertexState[vRep].rank == vertexState[wRep].rank) {
-                    vertexState[vRep].rank++;
-                    vertexState[wRep].hadEqualRank = true;
-                }
-
-                vertexState[vRep].bdry = vertexState[vRep].bdry +
-                    vertexState[wRep].bdry - 2;
-                if (vertexState[vRep].bdry == 0)
-                    retVal |= VLINK_CLOSED;
-
-                vertexStateChanged[orderIdx] = wRep;
-            }
-
-            nVertexClasses--;
-
-            // Adjust the cycles of boundary components.
-            if (vertexState[vIdx].bdryEdges == 2)
-                vtxBdryBackup(vIdx);
-            if (vertexState[wIdx].bdryEdges == 2)
-                vtxBdryBackup(wIdx);
-
-            if (vtxBdryLength1(vIdx)) {
-                if (vtxBdryLength1(wIdx)) {
-                    // Both vIdx and wIdx form entire boundary components of
-                    // length one; these are joined together and the vertex
-                    // link is closed off.
-                    // No changes to make for the boundary cycles.
-                } else {
-                    // Here vIdx forms a boundary component of length one,
-                    // and wIdx does not.  Ignore vIdx, and simply excise the
-                    // relevant edge from wIdx.
-                    // There is nothing to do here unless wIdx only has one
-                    // boundary edge remaining (in which case we know it
-                    // joins to some different tetrahedron vertex).
-                    if (vertexState[wIdx].bdryEdges == 1) {
-                        wNext[0] = vertexState[wIdx].bdryNext[0];
-                        wNext[1] = vertexState[wIdx].bdryNext[1];
-                        wTwist[0] = vertexState[wIdx].bdryTwist[0];
-                        wTwist[1] = vertexState[wIdx].bdryTwist[1];
-
-                        vtxBdryJoin(wNext[0], 1 ^ wTwist[0], wNext[1],
-                            wTwist[0] ^ wTwist[1]);
-                    }
-                }
-            } else if (vtxBdryLength1(wIdx)) {
-                // As above, but with the two vertices the other way around.
-                if (vertexState[vIdx].bdryEdges == 1) {
-                    vNext[0] = vertexState[vIdx].bdryNext[0];
-                    vNext[1] = vertexState[vIdx].bdryNext[1];
-                    vTwist[0] = vertexState[vIdx].bdryTwist[0];
-                    vTwist[1] = vertexState[vIdx].bdryTwist[1];
-
-                    vtxBdryJoin(vNext[0], 1 ^ vTwist[0], vNext[1],
-                        vTwist[0] ^ vTwist[1]);
-                }
-            } else {
-                // Each vertex belongs to a boundary component of length
-                // at least two.  Merge the components together.
-                vtxBdryNext(vIdx, face.simp, v, face.facet, vNext, vTwist);
-                vtxBdryNext(wIdx, adj.simp, w, adj.facet, wNext, wTwist);
-
-                vtxBdryJoin(vNext[0], 1 ^ vTwist[0], wNext[1 ^ hasTwist],
-                    vTwist[0] ^ (hasTwist ^ wTwist[1 ^ hasTwist]));
-                vtxBdryJoin(vNext[1], 0 ^ vTwist[1], wNext[0 ^ hasTwist],
-                    vTwist[1] ^ (hasTwist ^ wTwist[0 ^ hasTwist]));
-            }
-
-            vertexState[vIdx].bdryEdges--;
-            vertexState[wIdx].bdryEdges--;
-        }
-    }
-
-    return retVal;
-}
-
-void OneStepSearcher::splitVertexClasses(NTetFace face) {
-    // Split all three vertex pairs for the current face.
-    NTetFace adj = (*pairing_)[face];
-
-    int v, w;
-    int vIdx, wIdx;
-    unsigned orderIdx;
-    int rep, subRep;
-    NPerm4 p = gluingPerm(face);
-    // Do everything in reverse.  This includes the loop over vertices.
-    for (v = 3; v >= 0; v--) {
-        if (v == face.facet)
-            continue;
-
-        w = p[v];
-        vIdx = v + 4 * face.simp;
-        wIdx = w + 4 * adj.simp;
-        orderIdx = v + 4 * orderElt;
-
-        if (vertexStateChanged[orderIdx] < 0) {
-            for (rep = vIdx; vertexState[rep].parent >= 0;
-                    rep = vertexState[rep].parent)
-                ;
-            vertexState[rep].bdry += 2;
-        } else {
-            subRep = vertexStateChanged[orderIdx];
-            rep = vertexState[subRep].parent;
-
-            vertexState[subRep].parent = -1;
-            if (vertexState[subRep].hadEqualRank) {
-                vertexState[subRep].hadEqualRank = false;
-                vertexState[rep].rank--;
-            }
-
-            vertexState[rep].bdry = vertexState[rep].bdry + 2 -
-                vertexState[subRep].bdry;
-
-            vertexStateChanged[orderIdx] = -1;
-            nVertexClasses++;
-        }
-
-        // Restore cycles of boundary components.
-        if (vIdx == wIdx) {
-            vertexState[vIdx].bdryEdges += 2;
-
-            // Adjust neighbours to point back to vIdx if required.
-            if (vertexState[vIdx].bdryEdges == 2)
-                vtxBdryFixAdj(vIdx);
-        } else {
-            vertexState[wIdx].bdryEdges++;
-            vertexState[vIdx].bdryEdges++;
-
-            switch (vertexState[wIdx].bdryEdges) {
-                case 3: vertexState[wIdx].bdryNext[0] =
-                            vertexState[wIdx].bdryNext[1] = wIdx;
-                        vertexState[wIdx].bdryTwist[0] =
-                            vertexState[wIdx].bdryTwist[1] = 0;
-                        break;
-
-                case 2: vtxBdryRestore(wIdx);
-                        // Fall through to the next case, so we can
-                        // adjust the neighbours.
-
-                case 1: // Nothing was changed for wIdx during the merge,
-                        // so there is nothing there to restore.
-
-                        // Adjust neighbours to point back to wIdx.
-                        vtxBdryFixAdj(wIdx);
-            }
-
-            switch (vertexState[vIdx].bdryEdges) {
-                case 3: vertexState[vIdx].bdryNext[0] =
-                            vertexState[vIdx].bdryNext[1] = vIdx;
-                        vertexState[vIdx].bdryTwist[0] =
-                            vertexState[vIdx].bdryTwist[1] = 0;
-                        break;
-
-                case 2: vtxBdryRestore(vIdx);
-                        // Fall through to the next case, so we can
-                        // adjust the neighbours.
-
-                case 1: // Nothing was changed for vIdx during the merge,
-                        // so there is nothing there to restore.
-
-                        // Adjust neighbours to point back to vIdx.
-                        vtxBdryFixAdj(vIdx);
-            }
-        }
-    }
-}
 
 } // namespace regina
 
