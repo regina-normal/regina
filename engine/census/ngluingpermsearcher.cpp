@@ -393,17 +393,18 @@ NGluingPermSearcher::NGluingPermSearcher(std::istream& in,
         inputError_ = true;
 }
 
-bool NGluingPermSearcher::isCanonical() const {
+bool NGluingPermSearcher::isCanonical(int depth) const {
     NTetFace face, faceDest, faceImage;
     int ordering;
+    if (depth == -1)
+        depth = static_cast<int>(pairing_->getNumberOfTetrahedra());
 
     for (NFacePairing::IsoList::const_iterator it = autos_->begin();
             it != autos_->end(); it++) {
         // Compare the current set of gluing permutations with its
         // preimage under each face pairing automorphism, to see whether
         // our current permutation set is closest to canonical form.
-        for (face.setFirst(); face.simp <
-                static_cast<int>(pairing_->getNumberOfTetrahedra()); face++) {
+        for (face.setFirst(); face.simp < depth; face++) {
             faceDest = pairing_->dest(face);
             if (pairing_->isUnmatched(face) || faceDest < face)
                 continue;

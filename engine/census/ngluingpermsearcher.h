@@ -519,10 +519,14 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
          * in order to see whether the current set is in canonical form
          * (i.e., is lexicographically smallest).
          *
+         * @param depth How many tetrahedra worth of gluing permutations should
+         * be compared. This is useful when inspecting partially completed
+         * triangulations.
+         *
          * @return \c true if the current set is in canonical form,
          * or \c false otherwise.
          */
-        bool isCanonical() const;
+        bool isCanonical(int depth = -1) const;
 
         /**
          * Determines whether the permutations already constructed model
