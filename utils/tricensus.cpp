@@ -129,30 +129,6 @@ struct Dim2Params {
     }
 };
 
-struct Dim3OneStepParams {
-    typedef regina::NFacePairing Pairing;
-    typedef regina::NGluingPermSearcher GluingPermSearcher;
-    typedef regina::NTriangulation Triangulation;
-
-    inline static void findAllPerms(const Pairing* p,
-            const Pairing::IsoList* autos, bool orientableOnly,
-            bool finiteOnly, int whichPurge, regina::NPacket* dest) {
-            GluingPermSearcher *s = new GluingPermSearcher(p, autos, db,
-                    orientableOnly, true, foundGluingPerms<Dim3OneStepParams>,
-                    dest);
-        s->runSearch();
-        delete s;
-    }
-
-    inline static bool mightBeMinimal(Triangulation* tri) {
-        return ! tri->simplifyToLocalMinimum(false);
-    }
-
-    inline static const Pairing* pairingFor(const GluingPermSearcher* s) {
-        return s->getFacePairing();
-    }
-};
-
 struct Dim3Params {
     typedef regina::NFacePairing Pairing;
     typedef regina::NGluingPermSearcher GluingPermSearcher;
@@ -164,6 +140,29 @@ struct Dim3Params {
         GluingPermSearcher::findAllPerms(p, autos,
             orientableOnly, finiteOnly, whichPurge,
             foundGluingPerms<Dim3Params>, dest);
+    }
+
+    inline static bool mightBeMinimal(Triangulation* tri) {
+        return ! tri->simplifyToLocalMinimum(false);
+    }
+
+    inline static const Pairing* pairingFor(const GluingPermSearcher* s) {
+        return s->getFacePairing();
+    }
+};
+
+struct Dim3OneStepParams {
+    typedef regina::NFacePairing Pairing;
+    typedef regina::OneStepSearcher GluingPermSearcher;
+    typedef regina::NTriangulation Triangulation;
+
+    inline static void findAllPerms(const Pairing* p,
+            const Pairing::IsoList* autos, bool orientableOnly,
+            bool finiteOnly, int whichPurge, regina::NPacket* dest) {
+            GluingPermSearcher *s = new GluingPermSearcher(p, autos, db,
+                    orientableOnly, foundGluingPerms<Dim3Params>, dest);
+        s->runSearch();
+        delete s;
     }
 
     inline static bool mightBeMinimal(Triangulation* tri) {

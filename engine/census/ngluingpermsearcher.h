@@ -2642,6 +2642,10 @@ class REGINA_API OneStepSearcher : public NClosedPrimeMinSearcher {
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 
+        static const unsigned minSizeForDB;
+            /**< The minimum number of tetrahedra before we consider using the
+                 database. */
+
     public:
         /**
          * Creates a new search manager for use when (i) only closed prime
@@ -2675,8 +2679,7 @@ class REGINA_API OneStepSearcher : public NClosedPrimeMinSearcher {
          */
         OneStepSearcher(const NFacePairing* pairing,
                 const NFacePairing::IsoList* autos, PartialCensusDB *db,
-                bool orientableOnly, bool isRoot,
-                UseGluingPerms use, void* useArgs = 0);
+                bool orientableOnly, UseGluingPerms use, void* useArgs = 0);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -2721,14 +2724,11 @@ class REGINA_API OneStepSearcher : public NClosedPrimeMinSearcher {
         PartialCensusDB* db_;
         bool useDB;
 
-        bool isRoot_;
         unsigned orderDone;
+        int minOrder;
 
         OneStepSearcher* child;
         NFacePairing* childPairing;
-
-        unsigned chainSimp_;
-        NFacePair chainFaces_;
 
         void buildUp(const PartialTriangulationData *); // Build up base of triangulation
         void glue(); // Glue it all together
