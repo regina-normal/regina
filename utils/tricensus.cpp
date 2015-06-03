@@ -611,7 +611,9 @@ int main(int argc, const char* argv[]) {
         return runCensus<Dim4Params>();
 #endif
     else if (oneStep) {
-        db = new regina::PartialCensusDB();
+        db = new regina::InMemoryDB(5,2);
+        // TODO Object in census must have at least 5 tetrahedra and at most 2
+        // boundary faces
         return runCensus<Dim3OneStepParams>();
     } else
         return runCensus<Dim3Params>();
