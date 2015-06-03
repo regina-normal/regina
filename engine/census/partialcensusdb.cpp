@@ -36,8 +36,12 @@
 
 namespace regina {
 
-PartialTriangulationData::PartialTriangulationData(const OneStepSearcher *s) {
-    nTets = s->size();
+PartialTriangulationData::PartialTriangulationData(const OneStepSearcher *s,
+        int size) {
+    if (size < 0)
+        nTets = s->size();
+    else
+        nTets = size;
     nVertexClasses = s->nVertexClasses;
     nEdgeClasses = s->nEdgeClasses;
     vertexState = new OneStepSearcher::TetVertexState[nTets * 4];

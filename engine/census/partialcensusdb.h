@@ -64,7 +64,7 @@ class PartialTriangulationData {
         int *orientation;
         unsigned nTets;
 
-        PartialTriangulationData(const OneStepSearcher *s);
+        PartialTriangulationData(const OneStepSearcher *s, int size);
         ~PartialTriangulationData();
 };
 
@@ -88,7 +88,7 @@ class PartialCensusHit : public boost::noncopyable {
         PartialTriangulationData* data_;
 
     public:
-        PartialCensusHit(const OneStepSearcher *);
+        PartialCensusHit(const OneStepSearcher *, int s);
         ~PartialCensusHit();
         /**
          * Returns details of the census database in which the
@@ -110,11 +110,12 @@ class PartialCensusHit : public boost::noncopyable {
          * @return the next hit after this in the list, or 0 if this is the
          * last hit.
          */
-        const PartialCensusHit * next() const;
+        PartialCensusHit * next() const;
 
         const PartialCensusHit * operator++(int);
         const bool operator!=(const PartialCensusHit &) const;
-        const PartialTriangulationData * operator*() const;
+
+        const PartialTriangulationData * data() { return data_; }
 
 
     friend class PartialCensusDB;
@@ -191,7 +192,7 @@ class PartialCensusHits : public boost::noncopyable {
          *
          * @param hit the hit to append to this list.
          */
-        void append(const OneStepSearcher* s);
+        void append(const OneStepSearcher* s, int size);
 };
 
 /**
@@ -225,6 +226,9 @@ class PartialCensusDB {
         std::string desc_;
             /**< A human-readable description of this database. */
 
+        int minSize_;
+        int maxBoundary;
+
     public:
         /**
          * Creates a new reference to one of Regina's census databases.
@@ -239,19 +243,20 @@ class PartialCensusDB {
          * See the desc() routine for further information on how this
          * description might be used.
          */
-        PartialCensusDB();
+        PartialCensusDB(int minSize, int maxBoundary);
 
+        virtual bool viable(const NFacePairing *) const;
 
         /**
          * Returns the filename where this database is stored.
          *
          * @return the database filename.
          */
-        virtual DBStatus request(const NFacePairing *);
+        virtual DBStatus request(const std::string) const;
 
-        virtual PartialCensusHits * retrieve(const NFacePairing *);
+        virtual PartialCensusHits * retrieve(const std::string);
 
-        virtual void store(const OneStepSearcher *);
+        virtual void store(const OneStepSearcher *, int, std::string);
 };
 
 
@@ -259,17 +264,33 @@ class PartialCensusDB {
 
 // Inline functions for PartialCensusDB:
 
-inline PartialCensusDB::PartialCensusDB() {
+inline PartialCensusDB::PartialCensusDB(int min, int max) : minSize_(min),
+    maxBoundary(max) {
 }
 
-inline PartialCensusDB::DBStatus PartialCensusDB::request(const NFacePairing *) {
+inline bool PartialCensusDB::viable(const NFacePairing *p) const {
+    if (p->size() < minSize_)
+        return false;
+    NTetFace f;
+    int boundaryCount = 0;
+    for (f.setFirst() ; ! f.isPastEnd(p->size(),false); f++) {
+        if (p->dest(f).isBoundary(p->size())) {
+            boundaryCount++;
+            if (boundaryCount > maxBoundary)
+                return false;
+        }
+    }
+    return true;
+}
+
+inline PartialCensusDB::DBStatus PartialCensusDB::request(const std::string) const {
     return DBStatus::NotFound;
 }
 
-inline void PartialCensusDB::store(const OneStepSearcher *) {
+inline void PartialCensusDB::store(const OneStepSearcher *, int, std::string) {
 }
 
-inline PartialCensusHits * PartialCensusDB::retrieve(const NFacePairing *) {
+inline PartialCensusHits * PartialCensusDB::retrieve(const std::string) {
     return NULL;
 }
 
@@ -285,17 +306,17 @@ inline PartialCensusHits::PartialCensusHits() : count_(0) {
     first_ = last_ = NULL;
 }
 
-inline const PartialCensusHit * PartialCensusHit::operator++(int i) {
-    const PartialCensusHit *n = this;
-    while (( i > 0 ) && (n->next())) {
-        n = n->next();
-        i--;
-    }
-    return n;
+inline PartialCensusHit * PartialCensusHit::next() const {
+    return next_;
 }
 
-inline const PartialTriangulationData * PartialCensusHit::operator*() const {
-    return data_;
+inline const PartialCensusHit * PartialCensusHit::operator++(int i) {
+//    const PartialCensusHit *n = this;
+//    while (( i > 0 ) && (n->next())) {
+//        n = n->next();
+//        i--;
+//    }
+    return this->next();
 }
 
 inline const bool PartialCensusHit::operator!=(const PartialCensusHit &other) const {
@@ -304,39 +325,48 @@ inline const bool PartialCensusHit::operator!=(const PartialCensusHit &other) co
 
 
 class InMemoryDB : public PartialCensusDB {
+    public:
+        InMemoryDB(int size, int maxBoundary);
 
+    private:
         std::unordered_map<std::string, PartialCensusHits*> data_;
 
-        virtual PartialCensusDB::DBStatus request(const NFacePairing *);
+    public:
+        virtual PartialCensusDB::DBStatus request(const std::string) const;
 
-        virtual PartialCensusHits * retrieve(const NFacePairing *);
+        virtual PartialCensusHits * retrieve(const std::string);
 
-        virtual void store(const OneStepSearcher *);
+        virtual void store(const OneStepSearcher *, int size, std::string);
 };
 
-inline PartialCensusDB::DBStatus InMemoryDB::request(const NFacePairing *s) {
-    if (data_.count(s->toString()))
+inline InMemoryDB::InMemoryDB(int s, int b) : PartialCensusDB(s,b) {
+}
+
+inline PartialCensusDB::DBStatus InMemoryDB::request(const std::string rep)
+    const {
+    if (data_.count(rep))
         return PartialCensusDB::DBStatus::Found;
     return PartialCensusDB::DBStatus::NotFound;
 }
 
-inline void InMemoryDB::store(const OneStepSearcher *s) {
+inline void InMemoryDB::store(const OneStepSearcher *s, int size, std::string
+        rep) {
     // Note that this creates the element if it doesn't exist already.
-    PartialCensusHits * hits = data_[s->getFacetPairing()->toString()];
+    PartialCensusHits * hits = data_[rep];
     if (hits == NULL) {
         hits = new PartialCensusHits;
-        data_[s->getFacetPairing()->toString()] = hits;
+        data_[rep] = hits;
     }
-    hits->append(s);
+    hits->append(s, size);
 }
 
-inline PartialCensusHits * InMemoryDB::retrieve(const NFacePairing *pairing) {
+inline PartialCensusHits * InMemoryDB::retrieve(const std::string rep) {
     // Hope it exists, else this will create an empty (NULL) entry.
-    return data_[pairing->toString()];
+    return data_[rep];
 }
 
-inline void PartialCensusHits::append(const OneStepSearcher *s) {
-    PartialCensusHit * hit = new PartialCensusHit(s);
+inline void PartialCensusHits::append(const OneStepSearcher *s, int size) {
+    PartialCensusHit * hit = new PartialCensusHit(s, size);
     if (first_) {
         last_->next_ = hit;
         last_ = hit;
@@ -346,8 +376,13 @@ inline void PartialCensusHits::append(const OneStepSearcher *s) {
     count_++;
 }
 
-inline PartialCensusHit::PartialCensusHit(const OneStepSearcher *s) {
-    data_ = new PartialTriangulationData(s);
+inline size_t PartialCensusHits::count() const {
+    return count_;
+}
+
+inline PartialCensusHit::PartialCensusHit(const OneStepSearcher *s, int size) :
+    next_(NULL) {
+    data_ = new PartialTriangulationData(s,size);
 }
 
 inline PartialCensusHit::~PartialCensusHit() {

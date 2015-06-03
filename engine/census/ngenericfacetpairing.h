@@ -644,7 +644,6 @@ class REGINA_API NGenericFacetPairing : public NThread,
          */
         void removeSimplex(int toRemove);
 
-
     protected:
         /**
          * Creates a new facet pairing.  All internal arrays will be

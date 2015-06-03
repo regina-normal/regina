@@ -2642,10 +2642,6 @@ class REGINA_API OneStepSearcher : public NClosedPrimeMinSearcher {
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 
-        static const unsigned minSizeForDB;
-            /**< The minimum number of tetrahedra before we consider using the
-                 database. */
-
     public:
         /**
          * Creates a new search manager for use when (i) only closed prime
@@ -2723,12 +2719,14 @@ class REGINA_API OneStepSearcher : public NClosedPrimeMinSearcher {
     private:
         PartialCensusDB* db_;
         bool useDB;
+        bool *viable;
 
         unsigned orderDone;
         int minOrder;
 
         OneStepSearcher* child;
         NFacePairing* childPairing;
+        std::string * pairingStrings;
 
         void buildUp(const PartialTriangulationData *); // Build up base of triangulation
         void glue(); // Glue it all together

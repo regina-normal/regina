@@ -47,9 +47,6 @@ namespace regina {
 
 const char OneStepSearcher::dataTag_ = 'o';
 
-    // TODO: Tweak
-const unsigned OneStepSearcher::minSizeForDB = 5;
-
 OneStepSearcher::OneStepSearcher(const NFacePairing* pairing,
         const NFacePairing::IsoList* autos, PartialCensusDB* db,
         bool orientableOnly, UseGluingPerms use, void* useArgs) :
@@ -61,13 +58,20 @@ OneStepSearcher::OneStepSearcher(const NFacePairing* pairing,
     // First check the database to see if results are available.
     childPairing = new NFacePairing(*pairing);
 
+    pairingStrings = new std::string[nTets];
+    viable = new bool[nTets];
+    for(unsigned i=0; i< nTets; i++)
+        viable[i] = false;
+
     minOrder = size();
     PartialCensusDB::DBStatus status;
-    while (( childPairing->size() >= minSizeForDB ) && ( status !=
-            PartialCensusDB::DBStatus::Found)) {
-        childPairing->removeSimplex(childPairing->size() - 1);
-        minOrder--;
-        status = db_->request(pairing);
+    while (db_->viable(childPairing) &&
+                ( status != PartialCensusDB::DBStatus::Found)) {
+        if (db_->viable(childPairing))
+            viable[childPairing->size()] = true;
+        childPairing->removeSimplex(childPairing->size()-1);
+        pairingStrings[childPairing->size()] = childPairing->str();
+        status = db_->request(pairingStrings[childPairing->size()]);
     }
 
     if (status == PartialCensusDB::DBStatus::Found) {
@@ -263,6 +267,17 @@ OneStepSearcher::OneStepSearcher(const NFacePairing* pairing,
             orderAssigned[adj.simp * 4 + adj.facet] = true;
         }
 
+    if (useDB) {
+        // Find where we have to start from
+        minOrder = 0;
+        NTetFace face = order[orderElt];
+        NTetFace adj = (*pairing_)[face];
+        while (adj.simp <= childPairing->size()) {
+            minOrder++;
+            face = order[minOrder];
+            adj = (*pairing_)[face];
+        }
+    }
 }
 
 OneStepSearcher::~OneStepSearcher() {
@@ -280,10 +295,12 @@ void OneStepSearcher::runSearch(long maxDepth) {
         // Immediate fall through to use_(0, useArgs_);
     } else if (useDB) {
         // TODO use each result from DB
-        PartialCensusHits * results = db_->retrieve(childPairing);
+        PartialCensusHits * results = db_->retrieve(childPairing->str());
         PartialCensusHit * h;
-        for ( h = results->begin(); h != results->end(); h++ )
-            buildUp(*(*h));
+        for ( h = results->begin(); h != results->end(); h = h->next() ) {
+            const PartialTriangulationData *d = h->data();
+            buildUp(d);
+        }
     } else {
         orderElt = minOrder = 0;
         glue();
@@ -351,6 +368,7 @@ void OneStepSearcher::buildUp(const PartialTriangulationData *data) {
         edgeState[6 * i + 5].facesPos.set(4 * i + 0, 1);
     }
     nEdgeClasses += 6 * tetDiff; // What if nTet >= 16?
+
     orderElt = minOrder;
     glue(); // Attempt first gluing
 }
@@ -366,10 +384,13 @@ void OneStepSearcher::glue() {
 
         // If we're about to identify onto a new tetrahedron, store the partial
         // triangulation we have at the moment. But only if it's only
-        // canonical up to this point.
-        if ((adj.simp > minSizeForDB) && (orderElt > minOrder) &&
-                (adj.facet == 0) && (isCanonical(adj.simp-1))) {
-            db_->store(this);
+        // canonical up to this point. Also no point calling database if it's
+        // the same size as what we're already pulling from the database
+        // TODO Could adj.simp == -1 at the start of this expression?
+        if (viable[adj.simp-1] && (orderElt > minOrder) &&
+                (adj.facet == 0) && (isCanonical(adj.simp-1)) &&
+                (adj.simp > (childPairing->size()+1) )) {
+            db_->store(this, adj.simp-1, pairingStrings[adj.simp-1]);
         }
 
         // Move to the next permutation.

@@ -83,37 +83,28 @@ bool NGenericFacetPairing<dim>::isClosed() const {
 
 template <int dim>
 void NGenericFacetPairing<dim>::removeSimplex(int toRemove) {
-    // Allocate new memory for pairs
-    NFacetSpec<dim> *newPairs = new NFacetSpec<dim>[ (size_-1)* (dim+1) ];
     for (NFacetSpec<dim> f(0, 0); ! f.isPastEnd(size_-1, true); ++f) {
-        // Copy from original, shifting by one simplex if required.
-        if (f.simp >= toRemove) {
-            newPairs[(dim + 1) * f.simp + f.facet] = pairs_[(dim + 1) *
+        // Shift by one simplex.
+        if (f.simp >= toRemove)
+            pairs_[(dim + 1) * f.simp + f.facet] = pairs_[(dim + 1) *
               (f.simp+1) + f.facet];
-        } else {
-            newPairs[(dim + 1) * f.simp + f.facet] = pairs_[(dim + 1) *
-              f.simp + f.facet];
-        }
         // If this facet is glued to the simplex being removed
         // then turn it into a boundary facet.
-        if (newPairs[(dim + 1) * f.simp + f.facet].simp == toRemove) {
-            newPairs[(dim + 1) * f.simp + f.facet].simp = size_-1;
-            newPairs[(dim + 1) * f.simp + f.facet].facet = 0;
+        if (pairs_[(dim + 1) * f.simp + f.facet].simp == toRemove) {
+            pairs_[(dim + 1) * f.simp + f.facet].simp = size_-1;
+            pairs_[(dim + 1) * f.simp + f.facet].facet = 0;
             continue;
         }
-        // If the current facet is already on the boundary, we are done.
-        if (newPairs[(dim + 1) * f.simp + f.facet].isBoundary(size_-1))
-            continue;
 
         // If this facet was glued to a simplex after the one being
         // removed, the simplex index is reduced by one.
-        if (newPairs[(dim + 1) * f.simp + f.facet].simp > toRemove) {
-            newPairs[(dim + 1) * f.simp + f.facet].simp--;
+        if (pairs_[(dim + 1) * f.simp + f.facet].simp > toRemove) {
+            pairs_[(dim + 1) * f.simp + f.facet].simp--;
         }
     }
     size_--; // Tetrahedron removed.
-    delete[] pairs_;
-    pairs_ = newPairs;
+    // Note that we don't shrink the size of pairs_. The only way to do this is
+    // to allocate a new store, copy to the new store, and delete the old.
 }
 
 template <int dim>
