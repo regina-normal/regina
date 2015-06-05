@@ -124,6 +124,7 @@ void addNFacePairing() {
         .def("isClosed", &NFacePairing::isClosed)
         .def("hasTripleEdge", &NFacePairing::hasTripleEdge)
         .def("followChain", &NFacePairing::followChain)
+        .def("removeSimplex", &NFacePairing::removeSimplex)
 
         // For reasons I do not understand, it seems I have to declare
         // these routines separately to avoid a compile error with
