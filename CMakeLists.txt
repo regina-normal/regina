@@ -361,6 +361,9 @@ IF(NOT DISABLE_MPI)
     "Build command-line tools for high-performance computing"
     "http://www.open-mpi.org/"
     REGINA_MANDATORY_MPI)
+    IF(${CMAKE_SIZEOF_VOID_P} LESS "8")
+        MESSAGE(WARNING "You are compiling tricensus-mpi on a 32-bit system. The timing results in the log file may not be valid, as on 32-bit systems overflow occurs after ~36 minutes.")
+    ENDIF(${CMAKE_SIZEOF_VOID_P} LESS "8")
 ENDIF(NOT DISABLE_MPI)
 
 FIND_PACKAGE(Doxygen)
