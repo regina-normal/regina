@@ -100,9 +100,66 @@ namespace {
             ans.append(*it);
         return ans;
     }
+
+    // STL Iterator over NPacket. This allows for functionality such as
+    // for child in packet.children():
+    //   print child.getHumanLabel()
+    class NPacket_iter {
+        public:
+            // Standard STL typedefs
+            typedef NPacket_iter iterator;
+            typedef NPacket  value_type;
+            typedef NPacket * pointer;
+            typedef NPacket & reference;
+            typedef ptrdiff_t difference_type;
+            typedef std::forward_iterator_tag iterator_category;
+
+            // Note that we need to look at the parent to find the first+last
+            // tree child
+            iterator begin() { return iterator(parent); }
+            iterator end() { return iterator(parent, parent->getLastTreeChild()); }
+
+            bool operator== ( const NPacket_iter & other )
+                    { return current == other.current; }
+            bool operator!= ( const NPacket_iter & other )
+                    { return current != other.current; }
+            // Return NPacket objects by reference.
+            reference operator*() { return *current; }
+            iterator & operator++() {
+                current = current->getNextTreeSibling();
+                return *this;
+            }
+            // Postfix increment operator.
+            iterator operator++(int) {
+                NPacket_iter clone(*this);
+                current = current->getNextTreeSibling();
+                return clone;
+            }
+        private:
+            NPacket * parent;
+            NPacket * current;
+
+        public:
+            // Constructors
+            NPacket_iter(NPacket * parent_) : parent(parent_),
+            current(parent->getFirstTreeChild()) {};
+            NPacket_iter(NPacket * parent_, NPacket * current_) : parent(parent_),
+            current(current_) {};
+    };
+
+    // Function to get the proper iterable from an NPacket object
+    inline NPacket_iter children(NPacket * item) {
+        return NPacket_iter(item);
+    }
+
 }
 
 void addNPacket() {
+    class_<NPacket_iter>("NPacket_iter", no_init)
+        .def("__iter__", range<return_value_policy<reference_existing_object> >
+                ( &NPacket_iter::begin, &NPacket_iter::end))
+    ;
+
     class_<NPacket, boost::noncopyable,
             std::auto_ptr<NPacket> >("NPacket", no_init)
         .def("getPacketType", &NPacket::getPacketType)
@@ -164,6 +221,7 @@ void addNPacket() {
             return_value_policy<reference_existing_object>()])
         .def("save", save_filename, OL_save())
         .def("internalID", &NPacket::internalID)
+        .def("children", &children)
         .def("str", &NPacket::str)
         .def("toString", &NPacket::toString)
         .def("detail", &NPacket::detail)
