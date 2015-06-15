@@ -320,8 +320,10 @@ void OneStepSearcher::buildUp(const PartialTriangulationData *data) {
             sizeof(data->edgeState));
     std::memcpy(edgeStateChanged, data->edgeStateChanged,
             sizeof(data->edgeStateChanged));
-    if (orientableOnly_)
+    if (orientableOnly_) {
         std::memcpy(orientation, data->orientation, sizeof(data->orientation));
+        std::fill(orientation + childPairing->size(), orientation + nTets, 0);
+    }
     nVertexClasses = data->nVertexClasses;
     nEdgeClasses = data->nEdgeClasses;
 
@@ -468,15 +470,19 @@ void OneStepSearcher::glue() {
             splitEdgeClasses();
             continue;
         }
-        // The final triangulation should have precisely (nTets + 1) edges
-        // (since it must have precisely one vertex).
-        if (nEdgeClasses < nTets + 1) {
-            // We already have too few edge classes, and the count can
-            // only get smaller.
-            // Note that the triangulations we are pruning include ideal
-            // triangulations (with vertex links of Euler characteristic < 2).
-            splitEdgeClasses();
-            continue;
+        // If we have identified with the last tetrahedron, we can check a
+        // bound on the number of remaining edges.
+        if ((face.simp == nTets) || (adj.simp == nTets)) {
+            // The final triangulation should have precisely (nTets + 1) edges
+            // (since it must have precisely one vertex).
+            if (nEdgeClasses < nTets + 1) {
+                // We already have too few edge classes, and the count can
+                // only get smaller.
+                // Note that the triangulations we are pruning include ideal
+                // triangulations (with vertex links of Euler characteristic < 2).
+                splitEdgeClasses();
+                continue;
+            }
         }
 
         // If we have identified with the last tetrahedron, we can check a
