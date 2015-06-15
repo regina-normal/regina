@@ -9,6 +9,7 @@ set(UTILS
   regfiledump
   regfiletype
   sigcensus
+  sig2rga
   tricensus
   trisetcmp
   )
