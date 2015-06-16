@@ -100,32 +100,16 @@ OneStepSearcher::OneStepSearcher(const NFacePairing* pairing,
     if (adj.simp == face.simp) {
         order[orderDone] = face;
         orderType[orderDone] = EDGE_CHAIN_END;
-        orderAssigned[face.facet] = true;
-        orderAssigned[adj.facet] = true;
+        orderAssigned[face.simp * 4 + face.facet] = true;
+        orderAssigned[adj.simp * 4 + adj.facet] = true;
         orderDone++;
-        NFacePair faces = NFacePair(face.facet, adj.facet);
-        NFacePair comp = faces.complement();
-
-        // Allocate the two permutations to try. Note that we will only have at
-        // most one EDGE_CHAIN_END at any one step in this search, so it will
-        // always be first.
-        chainPermIndices[0] = gluingToIndex(order[0],
-            NPerm4(faces.lower(), faces.upper(),
-                    faces.upper(), comp.lower(),
-                    comp.lower(), comp.upper(),
-                    comp.upper(), faces.lower()));
-        chainPermIndices[1] = gluingToIndex(order[0],
-            NPerm4(faces.lower(), faces.upper(),
-                    faces.upper(), comp.upper(),
-                    comp.upper(), comp.lower(),
-                    comp.lower(), faces.lower()));
 
         // Now try to follow said chain as far as possible.
         unsigned i = 0;
         int tet;
         NTetFace dest1, dest2;
         tet = order[i].simp;
-        faces = NFacePair(order[i].facet,
+        NFacePair faces = NFacePair(order[i].facet,
             (*pairing)[order[i]].facet).complement();
         dest1 = pairing->dest(tet, faces.lower());
         dest2 = pairing->dest(tet, faces.upper());
@@ -166,6 +150,7 @@ OneStepSearcher::OneStepSearcher(const NFacePairing* pairing,
             orderDone += 2;
         }
     }
+    unsigned lastChainEdge = orderDone;
 
     NFacePair faces, facesAdj, comp, compAdj;
     NPerm4 trial1, trial2;
@@ -266,6 +251,8 @@ OneStepSearcher::OneStepSearcher(const NFacePairing* pairing,
             orderAssigned[face.simp * 4 + face.facet] = true;
             orderAssigned[adj.simp * 4 + adj.facet] = true;
         }
+
+    orientation[order[lastChainEdge].simp] = 1;
 
     if (useDB) {
         // Find where we have to start from
