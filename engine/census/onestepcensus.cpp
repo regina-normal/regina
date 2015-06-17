@@ -65,14 +65,14 @@ OneStepSearcher::OneStepSearcher(const NFacePairing* pairing,
 
     minOrder = size();
     PartialCensusDB::DBStatus status;
-    while (db_->viable(childPairing) &&
-                ( status != PartialCensusDB::DBStatus::Found)) {
-        if (db_->viable(childPairing))
-            viable[childPairing->size()] = true;
+    do {
         childPairing->removeSimplex(childPairing->size()-1);
         pairingStrings[childPairing->size()] = childPairing->str();
+        if (db_->viable(childPairing))
+            viable[childPairing->size()] = true;
         status = db_->request(pairingStrings[childPairing->size()]);
     }
+    while (status != PartialCensusDB::DBStatus::Found && childPairing->size() > 1);
 
     if (status == PartialCensusDB::DBStatus::Found) {
         useDB = true;
@@ -257,13 +257,17 @@ OneStepSearcher::OneStepSearcher(const NFacePairing* pairing,
     if (useDB) {
         // Find where we have to start from
         minOrder = 0;
-        NTetFace face = order[orderElt];
+        NTetFace face = order[minOrder];
         NTetFace adj = (*pairing_)[face];
-        while (adj.simp <= childPairing->size()) {
+        while (adj.simp < childPairing->size()) {
             minOrder++;
             face = order[minOrder];
             adj = (*pairing_)[face];
         }
+        std::cout << "Restarting at minOrder = " << minOrder << std::endl;
+        std::cout << "child FPG = " << pairingStrings[childPairing->size()] << std::endl;
+        std::cout << "Face: " << face.simp << "." << face.facet <<std::endl;
+        std::cout << "adj: " << adj.simp << "." << adj.facet <<std::endl;
     }
 }
 
@@ -309,54 +313,57 @@ void OneStepSearcher::buildUp(const PartialTriangulationData *data) {
             sizeof(data->edgeStateChanged));
     if (orientableOnly_) {
         std::memcpy(orientation, data->orientation, sizeof(data->orientation));
-        std::fill(orientation + childPairing->size(), orientation + nTets, 0);
+        //std::fill(orientation + childPairing->size(), orientation + nTets, 0);
     }
+    // Note that anything stored in the database is still only relevant to nTet
+    // tetrahedra. That is, when doing a 6-tetrahedra census anything in the DB
+    // must already assume 6 tetrahedra are in the triangulation.
     nVertexClasses = data->nVertexClasses;
     nEdgeClasses = data->nEdgeClasses;
 
     // Set up edge + vertex states for the remaining tetrahedra
     // Vertex states
-    std::fill(vertexStateChanged + childPairing->size()*8, vertexStateChanged + nTets * 8, -1);
-    for (unsigned i = childPairing->size() * 4; i < nTets * 4; ++i) {
-        vertexState[i].bdryEdges = 3;
-        vertexState[i].bdryNext[0] = vertexState[i].bdryNext[1] = i;
-        vertexState[i].bdryTwist[0] = vertexState[i].bdryTwist[1] = 0;
-        // Initialise the backup members also so we're not writing
-        // uninitialised data via dumpData().
-        vertexState[i].bdryNextOld[0] = vertexState[i].bdryNextOld[1] = -1;
-        vertexState[i].bdryTwistOld[0] = vertexState[i].bdryTwistOld[1] = 0;
-    }
-    unsigned tetDiff = nTets - childPairing->size();
-    nVertexClasses += 4 * tetDiff;
+    //std::fill(vertexStateChanged + childPairing->size()*8, vertexStateChanged + nTets * 8, -1);
+    //for (unsigned i = childPairing->size() * 4; i < nTets * 4; ++i) {
+    //    vertexState[i].bdryEdges = 3;
+    //    vertexState[i].bdryNext[0] = vertexState[i].bdryNext[1] = i;
+    //    vertexState[i].bdryTwist[0] = vertexState[i].bdryTwist[1] = 0;
+    //    // Initialise the backup members also so we're not writing
+    //    // uninitialised data via dumpData().
+    //    vertexState[i].bdryNextOld[0] = vertexState[i].bdryNextOld[1] = -1;
+    //    vertexState[i].bdryTwistOld[0] = vertexState[i].bdryTwistOld[1] = 0;
+    //}
+    //unsigned tetDiff = nTets - childPairing->size();
+    ////nVertexClasses += 4 * tetDiff;
 
-    // Edge states
-    std::fill(edgeStateChanged + childPairing->size()*8, edgeStateChanged + nTets * 8, -1);
+    //// Edge states
+    //std::fill(edgeStateChanged + childPairing->size()*8, edgeStateChanged + nTets * 8, -1);
 
-    // Since NQitmaskLen64 only supports 64 faces, only work with
-    // the first 16 tetrahedra.  If n > 16, this just weakens the
-    // optimisation; however, this is no great loss since for n > 16 the
-    // census code is at present infeasibly slow anyway.
-    for (unsigned i = childPairing->size(); i < nTets && i < 16 ; ++i) {
-        /* 01 on +012, +013             */
-        edgeState[6 * i    ].facesPos.set(4 * i + 3, 1);
-        edgeState[6 * i    ].facesPos.set(4 * i + 2, 1);
-        /* 02 on -012        +023       */
-        edgeState[6 * i + 1].facesNeg.set(4 * i + 3, 1);
-        edgeState[6 * i + 1].facesPos.set(4 * i + 1, 1);
-        /* 03 on       -013, -023       */
-        edgeState[6 * i + 2].facesNeg.set(4 * i + 2, 1);
-        edgeState[6 * i + 2].facesNeg.set(4 * i + 1, 1);
-        /* 12 on +012,             +123 */
-        edgeState[6 * i + 3].facesPos.set(4 * i + 3, 1);
-        edgeState[6 * i + 3].facesPos.set(4 * i + 0, 1);
-        /* 13 on       +013        -123 */
-        edgeState[6 * i + 4].facesPos.set(4 * i + 2, 1);
-        edgeState[6 * i + 4].facesNeg.set(4 * i + 0, 1);
-        /* 23 on             +023, +123 */
-        edgeState[6 * i + 5].facesPos.set(4 * i + 1, 1);
-        edgeState[6 * i + 5].facesPos.set(4 * i + 0, 1);
-    }
-    nEdgeClasses += 6 * tetDiff; // What if nTet >= 16?
+    //// Since NQitmaskLen64 only supports 64 faces, only work with
+    //// the first 16 tetrahedra.  If n > 16, this just weakens the
+    //// optimisation; however, this is no great loss since for n > 16 the
+    //// census code is at present infeasibly slow anyway.
+    //for (unsigned i = childPairing->size(); i < nTets && i < 16 ; ++i) {
+    //    /* 01 on +012, +013             */
+    //    edgeState[6 * i    ].facesPos.set(4 * i + 3, 1);
+    //    edgeState[6 * i    ].facesPos.set(4 * i + 2, 1);
+    //    /* 02 on -012        +023       */
+    //    edgeState[6 * i + 1].facesNeg.set(4 * i + 3, 1);
+    //    edgeState[6 * i + 1].facesPos.set(4 * i + 1, 1);
+    //    /* 03 on       -013, -023       */
+    //    edgeState[6 * i + 2].facesNeg.set(4 * i + 2, 1);
+    //    edgeState[6 * i + 2].facesNeg.set(4 * i + 1, 1);
+    //    /* 12 on +012,             +123 */
+    //    edgeState[6 * i + 3].facesPos.set(4 * i + 3, 1);
+    //    edgeState[6 * i + 3].facesPos.set(4 * i + 0, 1);
+    //    /* 13 on       +013        -123 */
+    //    edgeState[6 * i + 4].facesPos.set(4 * i + 2, 1);
+    //    edgeState[6 * i + 4].facesNeg.set(4 * i + 0, 1);
+    //    /* 23 on             +023, +123 */
+    //    edgeState[6 * i + 5].facesPos.set(4 * i + 1, 1);
+    //    edgeState[6 * i + 5].facesPos.set(4 * i + 0, 1);
+    //}
+    //nEdgeClasses += 6 * tetDiff; // What if nTet >= 16?
 
     orderElt = minOrder;
     glue(); // Attempt first gluing
@@ -375,11 +382,22 @@ void OneStepSearcher::glue() {
         // triangulation we have at the moment. But only if it's only
         // canonical up to this point. Also no point calling database if it's
         // the same size as what we're already pulling from the database
-        // TODO Could adj.simp == -1 at the start of this expression?
-        if (viable[adj.simp-1] && (orderElt > minOrder) &&
-                (adj.facet == 0) && (isCanonical(adj.simp-1)) &&
-                (adj.simp > (childPairing->size()+1) )) {
-            db_->store(this, adj.simp-1, pairingStrings[adj.simp-1]);
+        if (viable[adj.simp] && (orderElt > minOrder) && (adj.facet == 0)) {
+            db_->store(this, nTets, pairingStrings[adj.simp]);
+            std::cout << "Storing at orderElt = " << orderElt << std::endl;
+            std::cout << "child FPG = " << pairingStrings[adj.simp] << std::endl;
+            std::cout << "permIndices: ";
+            NTetFace f;
+            for (f.setFirst(); ! f.isPastEnd(nTets, true); f++) {
+                std::cout << indexToGluing(f, permIndex(f));
+                if (f.facet == 3)
+                    std::cout << " | ";
+                else
+                    std::cout << " ";
+            }
+            std::cout << std::endl;
+            //std::cout << "Face: " << face.simp << "." << face.facet <<std::endl;
+            //std::cout << "adj: " << adj.simp << "." << adj.facet <<std::endl;
         }
 
         // Move to the next permutation.
