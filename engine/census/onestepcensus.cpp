@@ -265,9 +265,9 @@ OneStepSearcher::OneStepSearcher(const NFacePairing* pairing,
             adj = (*pairing_)[face];
         }
         std::cout << "Restarting at minOrder = " << minOrder << std::endl;
-        std::cout << "child FPG = " << pairingStrings[childPairing->size()] << std::endl;
-        std::cout << "Face: " << face.simp << "." << face.facet <<std::endl;
-        std::cout << "adj: " << adj.simp << "." << adj.facet <<std::endl;
+        //std::cout << "child FPG = " << pairingStrings[childPairing->size()] << std::endl;
+        //std::cout << "Face: " << face.simp << "." << face.facet <<std::endl;
+        //std::cout << "adj: " << adj.simp << "." << adj.facet <<std::endl;
     }
 }
 
@@ -382,20 +382,21 @@ void OneStepSearcher::glue() {
         // triangulation we have at the moment. But only if it's only
         // canonical up to this point. Also no point calling database if it's
         // the same size as what we're already pulling from the database
-        if (viable[adj.simp] && (orderElt > minOrder) && (adj.facet == 0)) {
+        if (viable[adj.simp] && (orderElt > minOrder) && (adj.facet == 0) &&
+                isCanonical(adj.simp)) {
             db_->store(this, nTets, pairingStrings[adj.simp]);
-            std::cout << "Storing at orderElt = " << orderElt << std::endl;
-            std::cout << "child FPG = " << pairingStrings[adj.simp] << std::endl;
-            std::cout << "permIndices: ";
-            NTetFace f;
-            for (f.setFirst(); ! f.isPastEnd(nTets, true); f++) {
-                std::cout << indexToGluing(f, permIndex(f));
-                if (f.facet == 3)
-                    std::cout << " | ";
-                else
-                    std::cout << " ";
-            }
-            std::cout << std::endl;
+            //std::cout << "Storing at orderElt = " << orderElt << std::endl;
+            //std::cout << "child FPG = " << pairingStrings[adj.simp] << std::endl;
+            //std::cout << "permIndices: ";
+            //NTetFace f;
+            //for (f.setFirst(); ! f.isPastEnd(nTets, true); f++) {
+            //    std::cout << indexToGluing(f, permIndex(f));
+            //    if (f.facet == 3)
+            //        std::cout << " | ";
+            //    else
+            //        std::cout << " ";
+            //}
+            //std::cout << std::endl;
             //std::cout << "Face: " << face.simp << "." << face.facet <<std::endl;
             //std::cout << "adj: " << adj.simp << "." << adj.facet <<std::endl;
         }
