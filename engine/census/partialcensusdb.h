@@ -358,6 +358,11 @@ inline void InMemoryDB::store(const OneStepSearcher *s, int size, std::string
         data_[rep] = hits;
     }
     hits->append(s, size);
+    //unsigned long l=0;
+    //for (auto theHits : data_) {
+    //    l+= theHits.second->count();
+    //}
+    //std::cout << "In memory storing " << l << " triangulations." << std::endl;
 }
 
 inline PartialCensusHits * InMemoryDB::retrieve(const std::string rep) {
