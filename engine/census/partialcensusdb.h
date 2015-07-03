@@ -54,14 +54,14 @@ class PartialCensusDB;
 
 class PartialTriangulationData {
     public:
-        OneStepSearcher::TetVertexState *vertexState;
-        int *vertexStateChanged;
-        int nVertexClasses;
-        OneStepSearcher::TetEdgeState *edgeState;
-        int *edgeStateChanged;
-        int nEdgeClasses;
+//        OneStepSearcher::TetVertexState *vertexState;
+//        int *vertexStateChanged;
+//        int nVertexClasses;
+//        OneStepSearcher::TetEdgeState *edgeState;
+//        int *edgeStateChanged;
+//        int nEdgeClasses;
         int *permIndices_;
-        int *orientation;
+//        int *orientation;
         unsigned nTets;
 
         PartialTriangulationData(const OneStepSearcher *s, int size);

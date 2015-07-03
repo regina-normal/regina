@@ -42,34 +42,34 @@ PartialTriangulationData::PartialTriangulationData(const OneStepSearcher *s,
         nTets = s->size();
     else
         nTets = size;
-    nVertexClasses = s->nVertexClasses;
-    nEdgeClasses = s->nEdgeClasses;
-    vertexState = new OneStepSearcher::TetVertexState[nTets * 4];
-    std::memcpy(vertexState, s->vertexState, sizeof(vertexState));
-    vertexStateChanged = new int[nTets * 8];
-    std::memcpy(vertexStateChanged, s->vertexStateChanged, sizeof(vertexStateChanged));
-    edgeState = new OneStepSearcher::TetEdgeState[nTets * 6];
-    std::memcpy(edgeState, s->edgeState, sizeof(edgeState));
-    edgeStateChanged = new int[nTets * 8];
-    std::memcpy(edgeStateChanged, s->edgeStateChanged, sizeof(edgeStateChanged));
+//    nVertexClasses = s->nVertexClasses;
+//    nEdgeClasses = s->nEdgeClasses;
+//    vertexState = new OneStepSearcher::TetVertexState[nTets * 4];
+//    std::memcpy(vertexState, s->vertexState, sizeof(vertexState));
+//    vertexStateChanged = new int[nTets * 8];
+//    std::memcpy(vertexStateChanged, s->vertexStateChanged, sizeof(vertexStateChanged));
+//    edgeState = new OneStepSearcher::TetEdgeState[nTets * 6];
+//    std::memcpy(edgeState, s->edgeState, sizeof(edgeState));
+//    edgeStateChanged = new int[nTets * 8];
+//    std::memcpy(edgeStateChanged, s->edgeStateChanged, sizeof(edgeStateChanged));
     permIndices_ = new int[nTets * 4];
     std::memcpy(permIndices_, s->permIndices_, sizeof(permIndices_));
-    if (s->orientableOnly_) {
-        orientation = new int[nTets];
-        std::memcpy(orientation, s->orientation, sizeof(orientation));
-    } else {
-        orientation = NULL;
-    }
+//    if (s->orientableOnly_) {
+//        orientation = new int[nTets];
+//        std::memcpy(orientation, s->orientation, sizeof(orientation));
+//    } else {
+//        orientation = NULL;
+//    }
 }
 
 PartialTriangulationData::~PartialTriangulationData() {
-    delete[] vertexState;
-    delete[] vertexStateChanged;
-    delete[] edgeState;
-    delete[] edgeStateChanged;
+//    delete[] vertexState;
+//    delete[] vertexStateChanged;
+//    delete[] edgeState;
+//    delete[] edgeStateChanged;
     delete[] permIndices_;
-    if (orientation)
-        delete[] orientation;
+//    if (orientation)
+//        delete[] orientation;
 }
 
 } // namespace regine
