@@ -366,6 +366,8 @@ int main(int argc, const char* argv[]) {
     int argNor = 0;
     int argFinite = 0;
     int argIdeal = 0;
+    int dbMinTet = 0;
+    int dbMaxBdry = 0;
     poptOption opts[] = {
         { "tetrahedra", 't', POPT_ARG_LONG, &nTet, 0,
             "Number of tetrahedra.", "<tetrahedra>" },
@@ -395,6 +397,10 @@ int main(int argc, const char* argv[]) {
             "Implies --internal and --ideal.", 0 },
         { "onestep", 'S', POPT_ARG_NONE, &oneStep, 0,
             "Use OneStepSearcher.", 0 },
+        { "dbmintet", '\0', POPT_ARG_INT, &dbMinTet, 0,
+            "Minimum tetrahedra to store result in DB", 0 },
+        { "dbmaxbdry", '\0', POPT_ARG_INT, &dbMaxBdry, 0,
+            "Maximum boundary faces to store result in DB", 0 },
         { "dim2", '2', POPT_ARG_NONE, &dim2, 0,
             "Run a census of 2-manifold triangulations, "
             "not 3-manifold triangulations.  Here --tetrahedra counts "
@@ -611,7 +617,11 @@ int main(int argc, const char* argv[]) {
         return runCensus<Dim4Params>();
 #endif
     else if (oneStep) {
-        db = new regina::InMemoryDB(5,2);
+        if (dbMinTet == 0)
+            dbMinTet = 5;
+        if (dbMaxBdry == 0)
+            dbMaxBdry = 2;
+        db = new regina::InMemoryDB(dbMinTet,dbMaxBdry);
         // TODO Object in census must have at least 5 tetrahedra and at most 2
         // boundary faces
         return runCensus<Dim3OneStepParams>();
