@@ -264,10 +264,6 @@ OneStepSearcher::OneStepSearcher(const NFacePairing* pairing,
             face = order[minOrder];
             adj = (*pairing_)[face];
         }
-        std::cout << "Restarting at minOrder = " << minOrder << std::endl;
-        //std::cout << "child FPG = " << pairingStrings[childPairing->size()] << std::endl;
-        //std::cout << "Face: " << face.simp << "." << face.facet <<std::endl;
-        //std::cout << "adj: " << adj.simp << "." << adj.facet <<std::endl;
     }
 }
 
@@ -301,29 +297,16 @@ void OneStepSearcher::runSearch(long maxDepth) {
 
 void OneStepSearcher::buildUp(const PartialTriangulationData *data) {
     int nTets = size();
-    std::memcpy(permIndices_, data->permIndices_,
-            sizeof(data->permIndices_));
-//    std::memcpy(vertexState, data->vertexState,
-//            sizeof(data->vertexState));
-//    std::memcpy(vertexStateChanged, data->vertexStateChanged,
-//            sizeof(data->vertexStateChanged));
-//    std::memcpy(edgeState, data->edgeState,
-//            sizeof(data->edgeState));
-//    std::memcpy(edgeStateChanged, data->edgeStateChanged,
-//            sizeof(data->edgeStateChanged));
-//    if (orientableOnly_) {
-//        std::memcpy(orientation, data->orientation, sizeof(data->orientation));
-//        //std::fill(orientation + childPairing->size(), orientation + nTets, 0);
-//    }
-    // Note that anything stored in the database is still only relevant to nTet
-    // tetrahedra. That is, when doing a 6-tetrahedra census anything in the DB
-    // must already assume 6 tetrahedra are in the triangulation.
-    nVertexClasses = 4*nTets;
+    std::fill(permIndices_, permIndices_ + 4*nTets, -1);
 
-    // Set up edge + vertex states for the remaining tetrahedra
-    // Vertex states
+    nVertexClasses = nTets * 4;
     std::fill(vertexStateChanged, vertexStateChanged + nTets * 8, -1);
-    for (unsigned i = 0; i < nTets * 4; ++i) {
+    for (unsigned i = 0; i < nTets * 4; i++) {
+        vertexState[i].parent = -1;
+        vertexState[i].rank = 0;
+        vertexState[i].bdry = 3;
+        vertexState[i].twistUp = 0;
+        vertexState[i].hadEqualRank = false;
         vertexState[i].bdryEdges = 3;
         vertexState[i].bdryNext[0] = vertexState[i].bdryNext[1] = i;
         vertexState[i].bdryTwist[0] = vertexState[i].bdryTwist[1] = 0;
@@ -332,11 +315,21 @@ void OneStepSearcher::buildUp(const PartialTriangulationData *data) {
         vertexState[i].bdryNextOld[0] = vertexState[i].bdryNextOld[1] = -1;
         vertexState[i].bdryTwistOld[0] = vertexState[i].bdryTwistOld[1] = 0;
     }
-    //unsigned tetDiff = nTets - childPairing->size();
-    ////nVertexClasses += 4 * tetDiff;
 
     //// Edge states
     std::fill(edgeStateChanged, edgeStateChanged + nTets * 8, -1);
+    for (unsigned i = 0; i < 6 * nTets; i++) {
+        edgeState[i].parent = -1;
+        edgeState[i].rank = 0;
+        edgeState[i].size = 1;
+        edgeState[i].bounded = true;
+        edgeState[i].twistUp = 0;
+        edgeState[i].hadEqualRank = false;
+        for (unsigned j = 0; j < 4 * nTets; j++) {
+            edgeState[i].facesPos.reset();
+            edgeState[i].facesNeg.reset();
+        }
+    }
 
     //// Since NQitmaskLen64 only supports 64 faces, only work with
     //// the first 16 tetrahedra.  If n > 16, this just weakens the
@@ -362,12 +355,31 @@ void OneStepSearcher::buildUp(const PartialTriangulationData *data) {
         edgeState[6 * i + 5].facesPos.set(4 * i + 1, 1);
         edgeState[6 * i + 5].facesPos.set(4 * i + 0, 1);
     }
-    nEdgeClasses += 6 * nTets; // What if nTet >= 16?
+    nEdgeClasses = 6 * nTets; // What if nTet >= 16?
+
+#if PRUNE_HIGH_DEG_EDGE_SET
+    // Reset high edge degree variables
+    highDegSum = 0;
+    highDegBound = (6 - highDegLimit) * nTets - highDegLimit;
+#endif
 
     for(orderElt = 0; orderElt < minOrder; orderElt++) {
+        // Copy over the new permIndices.
+        unsigned index = 4*order[orderElt].simp + order[orderElt].facet;
+        permIndices_[index] = data->permIndices_[index];
+        index = 4*(*pairing_)[order[orderElt]].simp +
+            (*pairing_)[order[orderElt]].facet;
+        permIndices_[index] = data->permIndices_[index];
+
         // These should not cause issues, we are trusting the database.
-        mergeEdgeClasses();
-        mergeVertexClasses();
+        if (mergeEdgeClasses()) {
+            std::cerr << "ERR: Something went wrong when re-constructing a"
+                " partial triangulation" << orderElt << std::endl;
+        }
+        if (mergeVertexClasses()) {
+            std::cerr << "ERR: Something went wrong when re-constructing a"
+                " partial triangulation" << orderElt << std::endl;
+        }
     }
 
     glue(); // Attempt first gluing
@@ -386,23 +398,9 @@ void OneStepSearcher::glue() {
         // triangulation we have at the moment. But only if it's only
         // canonical up to this point. Also no point calling database if it's
         // the same size as what we're already pulling from the database
-        if (viable[adj.simp] && (orderElt > minOrder) && (adj.facet == 0)) { // &&
-                //isCanonical(adj.simp)) {
+        if (viable[adj.simp] && (orderElt > minOrder) && (adj.facet == 0) &&
+                isCanonical(adj.simp)) {
             db_->store(this, nTets, pairingStrings[adj.simp]);
-            //std::cout << "Storing at orderElt = " << orderElt << std::endl;
-            //std::cout << "child FPG = " << pairingStrings[adj.simp] << std::endl;
-            //std::cout << "permIndices: ";
-            //NTetFace f;
-            //for (f.setFirst(); ! f.isPastEnd(nTets, true); f++) {
-            //    std::cout << indexToGluing(f, permIndex(f));
-            //    if (f.facet == 3)
-            //        std::cout << " | ";
-            //    else
-            //        std::cout << " ";
-            //}
-            //std::cout << std::endl;
-            //std::cout << "Face: " << face.simp << "." << face.facet <<std::endl;
-            //std::cout << "adj: " << adj.simp << "." << adj.facet <<std::endl;
         }
 
         // Move to the next permutation.

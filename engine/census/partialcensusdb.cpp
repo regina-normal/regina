@@ -53,7 +53,7 @@ PartialTriangulationData::PartialTriangulationData(const OneStepSearcher *s,
 //    edgeStateChanged = new int[nTets * 8];
 //    std::memcpy(edgeStateChanged, s->edgeStateChanged, sizeof(edgeStateChanged));
     permIndices_ = new int[nTets * 4];
-    std::memcpy(permIndices_, s->permIndices_, sizeof(permIndices_));
+    std::memcpy(permIndices_, s->permIndices_, 4*nTets*sizeof(int));
 //    if (s->orientableOnly_) {
 //        orientation = new int[nTets];
 //        std::memcpy(orientation, s->orientation, sizeof(orientation));
