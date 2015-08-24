@@ -117,18 +117,34 @@ INSTALL(TARGETS ${REGINA_APP_NAME} DESTINATION ${APPDIR} COMPONENT Runtime)
 
 if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
   # Extra steps for building self-contained MacOSX bundles.
-  set(BUNDLE_LIBDIRS ${QT_LIBRARY_DIRS})
+
   IF (BOOST_PYTHON_FOUND)
-    INSTALL(CODE "
-      include(BundleUtilities)
-      fixup_bundle(\"${BUNDLEDIR_ESCAPED}\" \"python/regina/engine.so\" \"${BUNDLE_LIBDIRS}\")
-      " COMPONENT Runtime)
+    set (ALL_PLUGINS "${BUNDLEDIR_ESCAPED}/Contents/MacOS/python/regina/engine.so")
   ELSE (BOOST_PYTHON_FOUND)
-    INSTALL(CODE "
-      include(BundleUtilities)
-      fixup_bundle(\"${BUNDLEDIR_ESCAPED}\" \"\" \"${BUNDLE_LIBDIRS}\")
-      " COMPONENT Runtime)
+    set (ALL_PLUGINS)
   ENDIF (BOOST_PYTHON_FOUND)
+
+  foreach (module Core Gui Widgets Svg)
+    foreach (plugin ${Qt5${module}_PLUGINS})
+      get_target_property(plugin_location ${plugin} LOCATION_Release)
+      get_filename_component(plugin_filename "${plugin_location}" NAME)
+
+      # Work out the correct plugins subdirectory.
+      get_filename_component(plugin_path "${plugin_location}" PATH)
+      get_filename_component(plugin_dirname "${plugin_path}" NAME)
+      INSTALL (FILES ${plugin_location}
+        DESTINATION ${PLUGINSDIR}/${plugin_dirname}
+        COMPONENT Runtime)
+
+      LIST (APPEND ALL_PLUGINS "${PLUGINSDIR_ESCAPED}/${plugin_dirname}/${plugin_filename}")
+    endforeach (plugin)
+  endforeach (module)
+
+  # Ensure that the bundle is self-contained for linking purposes.
+  INSTALL(CODE "
+    include(BundleUtilities)
+    fixup_bundle(\"${BUNDLEDIR_ESCAPED}\" \"${ALL_PLUGINS}\" \"\")
+    " COMPONENT Runtime)
 
   SET(FIX_BUNDLE_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/fix-bundle-paths)
   INSTALL(CODE "

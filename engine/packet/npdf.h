@@ -56,12 +56,7 @@ class NPDF;
  * @{
  */
 
-/**
- * Stores information about the PDF packet.
- * See the general PacketInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct PacketInfo<PACKET_PDF> {
     typedef NPDF Class;
@@ -69,6 +64,7 @@ struct PacketInfo<PACKET_PDF> {
         return "PDF";
     }
 };
+#endif
 
 /**
  * A packet that can hold a PDF document.

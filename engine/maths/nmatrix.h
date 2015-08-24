@@ -43,7 +43,9 @@
 
 #include <iostream>
 #include <memory>
+#include <boost/noncopyable.hpp>
 #include "regina-core.h"
+#include "output.h"
 
 namespace regina {
 
@@ -63,7 +65,7 @@ namespace regina {
  * \ifacespython Not present, although the subclass NMatrixInt is.
  */
 template <class T>
-class NMatrix {
+class NMatrix : public Output<NMatrix<T> >, public boost::noncopyable {
     protected:
         unsigned long nRows;
             /**< The number of rows in the matrix. */
@@ -108,7 +110,7 @@ class NMatrix {
         /**
          * Destroys this matrix.
          */
-        virtual ~NMatrix() {
+        ~NMatrix() {
             for (unsigned long i = 0; i < nRows; i++)
                 delete[] data[i];
             delete[] data;
@@ -268,7 +270,7 @@ class NMatrix {
          *
          * @param out the output stream to which to write.
          */
-        virtual void writeMatrix(std::ostream& out) const {
+        void writeMatrix(std::ostream& out) const {
             unsigned long r, c;
             for (r = 0; r < nRows; r++) {
                 for (c = 0; c < nCols; c++) {
@@ -310,6 +312,29 @@ class NMatrix {
                 data[i][first] = data[i][second];
                 data[i][second] = tmp;
             }
+        }
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const {
+            out << nRows << " x " << nCols << " matrix";
+        }
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const {
+            writeMatrix(out);
         }
 };
 

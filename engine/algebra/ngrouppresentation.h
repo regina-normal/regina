@@ -48,11 +48,12 @@
 #include <map>
 
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "utilities/memutils.h"
 #include "utilities/ptrutils.h"
 #include "algebra/nmarkedabeliangroup.h"
 #include "algebra/nabeliangroup.h"
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -169,7 +170,9 @@ REGINA_API std::ostream& operator << (std::ostream& out,
  * three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and <tt>g6^1</tt> in that
  * order.
  */
-class REGINA_API NGroupExpression : public ShareableObject {
+class REGINA_API NGroupExpression :
+        public ShortOutput<NGroupExpression>,
+        public boost::noncopyable {
     private:
         std::list<NGroupExpressionTerm> terms;
             /** The terms that make up this expression. */
@@ -613,10 +616,17 @@ class REGINA_API NGroupExpression : public ShareableObject {
         void writeText(std::ostream& out, bool shortword=false) const;
 
         /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
          * The text representation will be of the form
          * <tt>g2^4 g13^-5 g4</tt>.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
          */
-        virtual void writeTextShort(std::ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 };
 
 /**
@@ -635,7 +645,9 @@ class REGINA_API NGroupExpression : public ShareableObject {
  * NGroupPresentation( numGens, "abAAB", "bccd" ) etc., with arbitrary
  * numbers of relators. Maybe std::tuple.  Or "variadic templates"?
  */
-class REGINA_API NGroupPresentation : public ShareableObject {
+class REGINA_API NGroupPresentation :
+        public Output<NGroupPresentation>,
+        public boost::noncopyable {
     protected:
         unsigned long nGenerators;
             /**< The number of generators. */
@@ -686,7 +698,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * Destroys the group presentation.
          * All relations that are stored will be deallocated.
          */
-        virtual ~NGroupPresentation();
+        ~NGroupPresentation();
 
         /**
          * Assignment operator.
@@ -1228,8 +1240,24 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          */
         void writeTextCompact(std::ostream& out) const;
 
-        virtual void writeTextShort(std::ostream& out) const;
-        virtual void writeTextLong(std::ostream& out) const;
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**
@@ -1435,7 +1463,7 @@ inline NGroupExpression::NGroupExpression() {
 }
 
 inline NGroupExpression::NGroupExpression(const NGroupExpression& cloneMe) :
-        ShareableObject(), terms(cloneMe.terms) {
+        terms(cloneMe.terms) {
 }
 
 inline bool NGroupExpression::operator==(const NGroupExpression& comp) const {

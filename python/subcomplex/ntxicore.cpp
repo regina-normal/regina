@@ -50,8 +50,8 @@ namespace {
 }
 
 void addNTxICore() {
-    class_<NTxICore, bases<regina::ShareableObject>,
-            std::auto_ptr<NTxICore>, boost::noncopyable>("NTxICore", no_init)
+    class_<NTxICore, std::auto_ptr<NTxICore>, boost::noncopyable>
+            ("NTxICore", no_init)
         .def("core", &NTxICore::core,
             return_internal_reference<>())
         .def("bdryTet", &NTxICore::bdryTet)
@@ -64,6 +64,11 @@ void addNTxICore() {
         .def("getTeXName", &NTxICore::getTeXName)
         .def("writeName", writeName_stdio)
         .def("writeTeXName", writeTeXName_stdio)
+        .def("str", &NTxICore::str)
+        .def("toString", &NTxICore::toString)
+        .def("detail", &NTxICore::detail)
+        .def("toStringLong", &NTxICore::toStringLong)
+        .def("__str__", &NTxICore::str)
     ;
 
     class_<NTxIDiagonalCore, bases<regina::NTxICore>,

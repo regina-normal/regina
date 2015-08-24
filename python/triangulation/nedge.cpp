@@ -85,8 +85,8 @@ void addNEdge() {
         .def(self != self)
     ;
 
-    scope s = class_<NEdge, bases<regina::ShareableObject>,
-            std::auto_ptr<NEdge>, boost::noncopyable>("NEdge", no_init)
+    scope s = class_<NEdge, std::auto_ptr<NEdge>, boost::noncopyable>
+            ("NEdge", no_init)
         .def("index", &NEdge::index)
         .def("getEmbeddings", edge_getEmbeddings_list)
         .def("getNumberOfEmbeddings", &NEdge::getNumberOfEmbeddings)
@@ -103,6 +103,11 @@ void addNEdge() {
         .def("getDegree", &NEdge::getDegree)
         .def("isBoundary", &NEdge::isBoundary)
         .def("isValid", &NEdge::isValid)
+        .def("str", &NEdge::str)
+        .def("toString", &NEdge::toString)
+        .def("detail", &NEdge::detail)
+        .def("toStringLong", &NEdge::toStringLong)
+        .def("__str__", &NEdge::str)
     ;
 
     s.attr("edgeNumber") = &NEdge_edgeNumber;

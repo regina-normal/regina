@@ -69,8 +69,7 @@ namespace {
 }
 
 void addDim2Component() {
-    class_<Dim2Component, bases<regina::ShareableObject>,
-            std::auto_ptr<Dim2Component>, boost::noncopyable>
+    class_<Dim2Component, std::auto_ptr<Dim2Component>, boost::noncopyable>
             ("Dim2Component", no_init)
         .def("index", &Dim2Component::index)
         .def("getNumberOfTriangles", &Dim2Component::getNumberOfTriangles)
@@ -96,6 +95,11 @@ void addDim2Component() {
         .def("isClosed", &Dim2Component::isClosed)
         .def("getNumberOfBoundaryEdges",
             &Dim2Component::getNumberOfBoundaryEdges)
+        .def("str", &Dim2Component::str)
+        .def("toString", &Dim2Component::toString)
+        .def("detail", &Dim2Component::detail)
+        .def("toStringLong", &Dim2Component::toStringLong)
+        .def("__str__", &Dim2Component::str)
     ;
 }
 

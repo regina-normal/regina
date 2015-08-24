@@ -42,9 +42,10 @@
 #endif
 
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "maths/nrational.h"
 #include "maths/nray.h"
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -122,7 +123,9 @@ class REGINA_API NAngleStructureVector : public NRay {
  * Once the underlying triangulation changes, this angle structure
  * is no longer valid.
  */
-class REGINA_API NAngleStructure : public ShareableObject {
+class REGINA_API NAngleStructure :
+        public ShortOutput<NAngleStructure>,
+        public boost::noncopyable {
     private:
         NAngleStructureVector* vector;
             /**< Stores (indirectly) the individual angles in this angle
@@ -164,7 +167,7 @@ class REGINA_API NAngleStructure : public ShareableObject {
          * Destroys this angle structure.
          * The underlying vector of angles will also be deallocated.
          */
-        virtual ~NAngleStructure();
+        ~NAngleStructure();
 
         /**
          * Creates a newly allocated clone of this angle structure.
@@ -267,6 +270,14 @@ class REGINA_API NAngleStructure : public ShareableObject {
          */
         const NAngleStructureVector* rawVector() const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
 
         /**

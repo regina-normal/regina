@@ -43,8 +43,9 @@
 
 #include <vector>
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "surfaces/nnormalsurfacelist.h"
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -67,7 +68,9 @@ class NSurfaceFilter;
  * \pre As long as this subset is in use, the surface list upon which this
  * subset is based must never be deleted.
  */
-class REGINA_API NSurfaceSubset : public ShareableObject {
+class REGINA_API NSurfaceSubset :
+        public Output<NSurfaceSubset>,
+        public boost::noncopyable {
     private:
         std::vector<NNormalSurface*> surfaces;
             /**< Contains the surfaces contained in this subset.
@@ -88,11 +91,6 @@ class REGINA_API NSurfaceSubset : public ShareableObject {
          */
         NSurfaceSubset(const NNormalSurfaceList& list,
             const NSurfaceFilter& filter);
-        /**
-         * Destroys this normal surface subset.
-         */
-        virtual ~NSurfaceSubset();
-
         /**
          * Returns the coordinate system being used by the
          * surfaces stored in this set.
@@ -192,16 +190,29 @@ class REGINA_API NSurfaceSubset : public ShareableObject {
          */
         void writeAllSurfaces(std::ostream& out) const;
 
-        virtual void writeTextShort(std::ostream& out) const;
-        virtual void writeTextLong(std::ostream& out) const;
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
 };
 
 /*@}*/
 
 // Inline functions for NSurfaceSubset
-
-inline NSurfaceSubset::~NSurfaceSubset() {
-}
 
 inline NormalCoords NSurfaceSubset::getFlavour() const {
     return source.coords();

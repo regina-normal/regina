@@ -14,7 +14,7 @@ INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/engine)
 INCLUDE_DIRECTORIES(${TOKYOCABINET_INCLUDE_DIRS})
 LINK_DIRECTORIES(${TOKYOCABINET_LIBRARY_DIRS})
 
-SET ( SOURCES engine shareableobject )
+SET ( SOURCES engine )
 # Each of these subdirectories modifies the SOURCE variable,
 # adding more source files
 ADD_SUBDIRECTORY("algebra")
@@ -36,6 +36,7 @@ ENDIF (NOT EXCLUDE_SNAPPEA)
 ADD_SUBDIRECTORY("split")
 ADD_SUBDIRECTORY("subcomplex")
 ADD_SUBDIRECTORY("surfaces")
+ADD_SUBDIRECTORY("treewidth")
 ADD_SUBDIRECTORY("triangulation")
 ADD_SUBDIRECTORY("utilities")
 
@@ -58,7 +59,7 @@ TARGET_LINK_LIBRARIES(regina-engine
 SET_TARGET_PROPERTIES(regina-engine PROPERTIES VERSION ${PACKAGE_VERSION})
 SET_TARGET_PROPERTIES(regina-engine PROPERTIES SOVERSION ${PACKAGE_VERSION})
 
-SET( HEADERS ${HEADERS} docs.h engine.h regina-core.h shareableobject.h )
+SET( HEADERS ${HEADERS} docs.h engine.h output.h regina-core.h )
 SET( MANS ${MANS} regina-engine-config.1 )
 
 # Build space-separated lists of flags for regine-engine-config:

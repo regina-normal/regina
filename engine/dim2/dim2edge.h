@@ -42,9 +42,10 @@
 #endif
 
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "maths/nperm3.h"
 #include "utilities/nmarkedvector.h"
+#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
@@ -155,7 +156,10 @@ class REGINA_API Dim2EdgeEmbedding {
  * Edges are highly temporary; once a triangulation changes, all its
  * edge objects will be deleted and new ones will be created.
  */
-class REGINA_API Dim2Edge : public ShareableObject, public NMarkedElement {
+class REGINA_API Dim2Edge :
+        public Output<Dim2Edge>,
+        public boost::noncopyable,
+        public NMarkedElement {
     public:
         /**
          * An array that maps edge numbers within a triangle to the canonical
@@ -268,7 +272,23 @@ class REGINA_API Dim2Edge : public ShareableObject, public NMarkedElement {
          */
         bool isBoundary() const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 
     private:

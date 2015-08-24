@@ -42,7 +42,6 @@
 #endif
 
 #include "regina-core.h"
-#include "shareableobject.h"
 #include "generic/nfacetspec.h"
 #include "generic/ngenericisomorphism.h"
 #include "maths/nperm3.h"
@@ -60,39 +59,40 @@ class Dim2Triangulation;
  * Represents a combinatorial isomorphism from one 2-manifold triangulation
  * into another.
  *
- * In essence, a combinatorial isomorphism from triangulation T to
- * triangulation U is a one-to-one map from the triangles of T to the
- * triangles of U that allows relabelling of both the triangles and
+ * In essence, a combinatorial isomorphism from triangulation \a T to
+ * triangulation \a U is a one-to-one map from the triangles of \a T to the
+ * triangles of \a U that allows relabelling of both the triangles and
  * their edges (or equivalently, their vertices), and that preserves
  * gluings across adjacent triangles.
  *
- * More precisely:  An isomorphism consists of (i) a one-to-one map f
- * from the triangles of T to the triangles of U, and (ii) for each
- * triangle S of T, a permutation f_S of the edges (0,1,2) of S,
- * for which the following condition holds:
+ * More precisely:  An isomorphism consists of (i) a one-to-one map \a f
+ * from the triangles of \a T to the triangles of \a U, and (ii) for each
+ * triangle \a S of \a T, a permutation \a f<sub>S</sub> of the edges
+ * (0,1,2) of \a S, for which the following condition holds:
  *
- *   - If edge k of triangle S and edge k' of triangle S'
- *     are identified in T, then edge f_S(k) of f(S) and edge f_S'(k')
- *     of f(S') are identified in U.  Moreover, their gluing is consistent
- *     with the edge/vertex permutations; that is, there is a commutative
- *     square involving the gluing maps in T and U and the permutations
- *     f_S and f_S'.
+ *   - If edge \a k of triangle \a S and edge \a k' of triangle \a S'
+ *     are identified in \a T, then edge \a f<sub>S</sub>(\a k) of \a f(S)
+ *     and edge \a f<sub>S'</sub>(\a k') of \a f(S') are identified in \a U.
+ *     Moreover, their gluing is consistent with the edge/vertex permutations;
+ *     that is, there is a commutative square involving the gluing maps in
+ *     \a T and \a U and the permutations \a f<sub>S</sub> and
+ *     \a f<sub>S'</sub>.
  *
  * Isomorphisms can be <i>boundary complete</i> or
  * <i>boundary incomplete</i>.  A boundary complete isomorphism
  * satisfies the additional condition:
  *
- *   - If edge x is a boundary edge of T then edge f(x) is a boundary
- *     edge of U.
+ *   - If edge \a x is a boundary edge of \a T then edge \a f(x) is a
+ *     boundary edge of \a U.
  *
  * A boundary complete isomorphism thus indicates that a copy of
- * triangulation T is present as an entire component (or components) of U,
+ * triangulation \a T is present as an entire component (or components) of \a U,
  * whereas a boundary incomplete isomorphism represents an embedding of a
- * copy of triangulation T as a subcomplex of some possibly larger component
- * (or components) of U.
+ * copy of triangulation \a T as a subcomplex of some possibly larger component
+ * (or components) of \a U.
  *
- * Note that in all cases triangulation U may contain more triangles
- * than triangulation T.
+ * Note that for all types of isomorphism, triangulation \a U is allowed
+ * to contain more triangles than triangulation \a T.
  */
 class REGINA_API Dim2Isomorphism : public NGenericIsomorphism<2> {
     public:

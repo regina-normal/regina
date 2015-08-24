@@ -835,9 +835,8 @@ class NBitmask1 {
             return BitManipulator<T>::bits(mask) <= 1;
         }
 
-    template <typename X>
     friend std::ostream& operator << (std::ostream& out,
-        const NBitmask1<X>& mask);
+        const NBitmask1<T>& mask);
 };
 
 /**
@@ -1274,9 +1273,8 @@ class NBitmask2 {
                 BitManipulator<U>::bits(high)) <= 1;
         }
 
-    template <typename X, typename Y>
     friend std::ostream& operator << (std::ostream& out,
-        const NBitmask2<X, Y>& mask);
+        const NBitmask2<T, U>& mask);
 };
 
 /**

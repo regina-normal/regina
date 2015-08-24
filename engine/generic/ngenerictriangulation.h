@@ -492,6 +492,106 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
             typename DimTraits<dim>::Isomorphism* relabelling);
 };
 
+/**
+ * A function object used for sorting faces of triangulations by
+ * increasing degree.  This can (for instance) be used with std::sort().
+ *
+ * The template argument \a dim refers to the dimension of the overall
+ * triangluation(s) with which you are working.  The template argument
+ * \a subdim refers to the dimension of the faces that you are sorting.
+ * So, for instance, to sort edges of a 3-manifold triangulation by
+ * increasing edge degree, you would use DegreeLessThan<3, 1>.
+ *
+ * A single instance of this class works with faces of a single
+ * fixed triangulation (which is passed to the class constructor).
+ *
+ * \pre \a dim is one of the supported triangulation dimensions.
+ * \pre \a subdim is between 0 and \a dim-1 inclusive.
+ */
+template <int dim, int subdim>
+class REGINA_API DegreeLessThan {
+    private:
+        const typename DimTraits<dim>::Triangulation& tri_;
+            /**< The triangulation with which we are working. */
+
+    public:
+        /**
+         * Constructions a function object for working with faces of the
+         * given triangulation.
+         *
+         * @param tri the triangulation with which we are working.
+         */
+        DegreeLessThan(const typename DimTraits<dim>::Triangulation& tri);
+        /**
+         * Compares the degrees of the \a subdim-dimensional faces
+         * at the given indices within the working triangulation.
+         * The triangulation that is used will be the one that was
+         * passed to the class constructor.
+         *
+         * \pre Both \a a and \a b are non-negative, and are strictly
+         * less than the total number of \a subdim-dimensional faces in
+         * the triangulation.
+         *
+         * @param a the index of the first \a subdim-dimensional face
+         * within the triangulation.
+         * @param b the index of the second \a subdim-dimensional face
+         * within the triangulation.
+         * @return \c true if and only if face \a a has smaller degree than
+         * face \a b within the given triangulation.
+         */
+        bool operator() (unsigned a, unsigned b) const;
+};
+
+/**
+ * A function object used for sorting faces of triangulations by
+ * decreasing degree.  This can (for instance) be used with std::sort().
+ *
+ * The template argument \a dim refers to the dimension of the overall
+ * triangluation(s) with which you are working.  The template argument
+ * \a subdim refers to the dimension of the faces that you are sorting.
+ * So, for instance, to sort edges of a 3-manifold triangulation by
+ * decreasing edge degree, you would use DegreeGreaterThan<3, 1>.
+ *
+ * A single instance of this class works with faces of a single
+ * fixed triangulation (which is passed to the class constructor).
+ *
+ * \pre \a dim is one of the supported triangulation dimensions.
+ * \pre \a subdim is between 0 and \a dim-1 inclusive.
+ */
+template <int dim, int subdim>
+class REGINA_API DegreeGreaterThan {
+    private:
+        const typename DimTraits<dim>::Triangulation& tri_;
+            /**< The triangulation with which we are working. */
+
+    public:
+        /**
+         * Constructions a function object for working with faces of the
+         * given triangulation.
+         *
+         * @param tri the triangulation with which we are working.
+         */
+        DegreeGreaterThan(const typename DimTraits<dim>::Triangulation& tri);
+        /**
+         * Compares the degrees of the \a subdim-dimensional faces
+         * at the given indices within the working triangulation.
+         * The triangulation that is used will be the one that was
+         * passed to the class constructor.
+         *
+         * \pre Both \a a and \a b are non-negative, and are strictly
+         * less than the total number of \a subdim-dimensional faces in
+         * the triangulation.
+         *
+         * @param a the index of the first \a subdim-dimensional face
+         * within the triangulation.
+         * @param b the index of the second \a subdim-dimensional face
+         * within the triangulation.
+         * @return \c true if and only if face \a a has greater degree than
+         * face \a b within the given triangulation.
+         */
+        bool operator() (unsigned a, unsigned b) const;
+};
+
 /*@}*/
 
 // Inline functions:
@@ -506,6 +606,30 @@ template <int dim>
 inline unsigned long NGenericTriangulation<dim>::size() const {
     return static_cast<const typename DimTraits<dim>::Triangulation*>(this)->
         getNumberOfSimplices();
+}
+
+template <int dim, int subdim>
+inline DegreeLessThan<dim, subdim>::DegreeLessThan(
+        const typename DimTraits<dim>::Triangulation& tri) : tri_(tri) {
+}
+
+template <int dim, int subdim>
+inline bool DegreeLessThan<dim, subdim>::operator () (
+        unsigned a, unsigned b) const {
+    return (tri_.template getFace<subdim>(a)->getNumberOfEmbeddings() <
+            tri_.template getFace<subdim>(b)->getNumberOfEmbeddings());
+}
+
+template <int dim, int subdim>
+inline DegreeGreaterThan<dim, subdim>::DegreeGreaterThan(
+        const typename DimTraits<dim>::Triangulation& tri) : tri_(tri) {
+}
+
+template <int dim, int subdim>
+inline bool DegreeGreaterThan<dim, subdim>::operator () (
+        unsigned a, unsigned b) const {
+    return (tri_.template getFace<subdim>(a)->getNumberOfEmbeddings() >
+            tri_.template getFace<subdim>(b)->getNumberOfEmbeddings());
 }
 
 } // namespace regina

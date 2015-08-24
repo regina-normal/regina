@@ -42,9 +42,8 @@ using namespace boost::python;
 using regina::NBoundaryComponent;
 
 void addNBoundaryComponent() {
-    class_<NBoundaryComponent, bases<regina::ShareableObject>,
-            std::auto_ptr<NBoundaryComponent>, boost::noncopyable>
-            ("NBoundaryComponent", no_init)
+    class_<NBoundaryComponent, std::auto_ptr<NBoundaryComponent>,
+            boost::noncopyable> ("NBoundaryComponent", no_init)
         .def("index", &NBoundaryComponent::index)
         .def("getNumberOfFaces", &NBoundaryComponent::getNumberOfFaces)
         .def("getNumberOfTriangles", &NBoundaryComponent::getNumberOfTriangles)
@@ -65,6 +64,11 @@ void addNBoundaryComponent() {
             &NBoundaryComponent::getEulerCharacteristic)
         .def("isIdeal", &NBoundaryComponent::isIdeal)
         .def("isOrientable", &NBoundaryComponent::isOrientable)
+        .def("str", &NBoundaryComponent::str)
+        .def("toString", &NBoundaryComponent::toString)
+        .def("detail", &NBoundaryComponent::detail)
+        .def("toStringLong", &NBoundaryComponent::toStringLong)
+        .def("__str__", &NBoundaryComponent::str)
     ;
 }
 

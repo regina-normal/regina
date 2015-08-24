@@ -35,6 +35,7 @@
 #include <fstream>
 #include <sstream>
 
+#include "dim2/dim2triangulation.h"
 #include "foreign/isosig.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
@@ -68,6 +69,7 @@ NContainer* readIsoSigList(const char *filename, unsigned dimension,
 
     std::string isoSig;
     std::string label;
+    Dim2Triangulation* tri2;
     NTriangulation* tri3;
 
     while(! in.eof()) {
@@ -96,7 +98,13 @@ NContainer* readIsoSigList(const char *filename, unsigned dimension,
 
         if (! isoSig.empty()) {
             // Process this isomorphism signature.
-            if (dimension == 3) {
+            if (dimension == 2) {
+                if ((tri2 = Dim2Triangulation::fromIsoSig(isoSig))) {
+                    tri2->setPacketLabel(label.empty() ? isoSig : label);
+                    ans->insertChildLast(tri2);
+                } else
+                    errStrings = errStrings + '\n' + isoSig;
+            } else if (dimension == 3) {
                 if ((tri3 = NTriangulation::fromIsoSig(isoSig))) {
                     tri3->setPacketLabel(label.empty() ? isoSig : label);
                     ans->insertChildLast(tri3);

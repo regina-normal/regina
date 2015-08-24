@@ -55,8 +55,8 @@ namespace {
 }
 
 void addNHomGroupPresentation() {
-    class_<NHomGroupPresentation, bases<regina::ShareableObject>,
-            std::auto_ptr<NHomGroupPresentation>, boost::noncopyable>
+    class_<NHomGroupPresentation, std::auto_ptr<NHomGroupPresentation>,
+            boost::noncopyable>
             ("NHomGroupPresentation", init<const NHomGroupPresentation&>())
         .def(init<const NGroupPresentation&>())
         .def("getDomain", &NHomGroupPresentation::getDomain,
@@ -81,6 +81,11 @@ void addNHomGroupPresentation() {
         .def("verifyIsomorphism", &NHomGroupPresentation::verifyIsomorphism)
         .def("markedAbelianisation",
             &NHomGroupPresentation::markedAbelianisation)
+        .def("str", &NHomGroupPresentation::str)
+        .def("toString", &NHomGroupPresentation::toString)
+        .def("detail", &NHomGroupPresentation::detail)
+        .def("toStringLong", &NHomGroupPresentation::toStringLong)
+        .def("__str__", &NHomGroupPresentation::str)
     ;
 }
 

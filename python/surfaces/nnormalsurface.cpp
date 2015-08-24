@@ -107,9 +107,6 @@ namespace {
         return new NNormalSurface(t, v);
     }
 
-    void writeTextShort_stdio(const NNormalSurface& s) {
-        s.writeTextShort(std::cout);
-    }
     void writeRawVector_stdio(const NNormalSurface& s) {
         s.writeRawVector(std::cout);
     }
@@ -132,8 +129,7 @@ namespace {
 }
 
 void addNNormalSurface() {
-    class_<NNormalSurface, bases<regina::ShareableObject>,
-            std::auto_ptr<NNormalSurface>, boost::noncopyable>
+    class_<NNormalSurface, std::auto_ptr<NNormalSurface>, boost::noncopyable>
             ("NNormalSurface", no_init)
         .def("__init__", make_constructor(fromCoordinates))
         .def("clone", &NNormalSurface::clone,
@@ -156,7 +152,6 @@ void addNNormalSurface() {
         .def("getName", &NNormalSurface::getName,
             return_value_policy<return_by_value>())
         .def("setName", &NNormalSurface::setName)
-        .def("writeTextShort", writeTextShort_stdio)
         .def("writeRawVector", writeRawVector_stdio)
         .def("isEmpty", &NNormalSurface::isEmpty)
         .def("isCompact", &NNormalSurface::isCompact)
@@ -194,6 +189,11 @@ void addNNormalSurface() {
             return_value_policy<manage_new_object>())
         .def("findVtxOctAlmostNormalSphere", findVtxOctAlmostNormalSphere2,
             return_value_policy<manage_new_object>())
+        .def("str", &NNormalSurface::str)
+        .def("toString", &NNormalSurface::toString)
+        .def("detail", &NNormalSurface::detail)
+        .def("toStringLong", &NNormalSurface::toStringLong)
+        .def("__str__", &NNormalSurface::str)
         .staticmethod("findNonTrivialSphere")
         .staticmethod("findVtxOctAlmostNormalSphere")
     ;

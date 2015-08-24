@@ -57,12 +57,7 @@ class NSurfaceFilterProperties;
  * @{
  */
 
-/**
- * Stores information about the property-based surface filter.
- * See the general SurfaceFilterInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct SurfaceFilterInfo<NS_FILTER_PROPERTIES> {
     typedef NSurfaceFilterProperties Class;
@@ -70,6 +65,7 @@ struct SurfaceFilterInfo<NS_FILTER_PROPERTIES> {
         return "Filter by basic properties";
     }
 };
+#endif
 
 /**
  * A normal surface filter that filters by basic properties of the normal
