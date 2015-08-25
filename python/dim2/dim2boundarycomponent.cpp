@@ -41,9 +41,8 @@ using namespace boost::python;
 using regina::Dim2BoundaryComponent;
 
 void addDim2BoundaryComponent() {
-    class_<Dim2BoundaryComponent, bases<regina::ShareableObject>,
-            std::auto_ptr<Dim2BoundaryComponent>, boost::noncopyable>
-            ("Dim2BoundaryComponent", no_init)
+    class_<Dim2BoundaryComponent, std::auto_ptr<Dim2BoundaryComponent>,
+            boost::noncopyable> ("Dim2BoundaryComponent", no_init)
         .def("index", &Dim2BoundaryComponent::index)
         .def("getNumberOfEdges", &Dim2BoundaryComponent::getNumberOfEdges)
         .def("getNumberOfVertices", &Dim2BoundaryComponent::getNumberOfVertices)
@@ -53,6 +52,11 @@ void addDim2BoundaryComponent() {
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim2BoundaryComponent::getComponent,
             return_value_policy<reference_existing_object>())
+        .def("str", &Dim2BoundaryComponent::str)
+        .def("toString", &Dim2BoundaryComponent::toString)
+        .def("detail", &Dim2BoundaryComponent::detail)
+        .def("toStringLong", &Dim2BoundaryComponent::toStringLong)
+        .def("__str__", &Dim2BoundaryComponent::str)
     ;
 }
 

@@ -57,7 +57,6 @@ namespace {
 
 void addNStandardTriangulation() {
     class_<NStandardTriangulation, boost::noncopyable,
-            bases<regina::ShareableObject>,
             std::auto_ptr<NStandardTriangulation> >
             ("NStandardTriangulation", no_init)
         .def("getName", &NStandardTriangulation::getName)
@@ -72,6 +71,11 @@ void addNStandardTriangulation() {
             return_value_policy<manage_new_object>())
         .def("isStandardTriangulation", isStandardTri_tri,
             return_value_policy<manage_new_object>())
+        .def("str", &NStandardTriangulation::str)
+        .def("toString", &NStandardTriangulation::toString)
+        .def("detail", &NStandardTriangulation::detail)
+        .def("toStringLong", &NStandardTriangulation::toStringLong)
+        .def("__str__", &NStandardTriangulation::str)
         .staticmethod("isStandardTriangulation")
     ;
 }

@@ -39,8 +39,7 @@ using namespace boost::python;
 using regina::NFileInfo;
 
 void addNFileInfo() {
-    scope s = class_<NFileInfo, bases<regina::ShareableObject>,
-            std::auto_ptr<NFileInfo>, boost::noncopyable>
+    scope s = class_<NFileInfo, std::auto_ptr<NFileInfo>, boost::noncopyable>
             ("NFileInfo", no_init)
         .def("getPathname", &NFileInfo::getPathname,
             return_value_policy<return_by_value>())
@@ -51,9 +50,14 @@ void addNFileInfo() {
             return_value_policy<return_by_value>())
         .def("isCompressed", &NFileInfo::isCompressed)
         .def("isInvalid", &NFileInfo::isInvalid)
-        .def("NFileInfo_identify", &NFileInfo::identify,
+        .def("identify", &NFileInfo::identify,
             return_value_policy<manage_new_object>())
-        .staticmethod("NFileInfo_identify")
+        .def("str", &NFileInfo::str)
+        .def("toString", &NFileInfo::toString)
+        .def("detail", &NFileInfo::detail)
+        .def("toStringLong", &NFileInfo::toStringLong)
+        .def("__str__", &NFileInfo::str)
+        .staticmethod("identify")
     ;
 
     // Apparently there is no way in python to make a module attribute

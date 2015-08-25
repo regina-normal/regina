@@ -42,9 +42,10 @@
 #endif
 
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "maths/nperm3.h"
 #include "utilities/nmarkedvector.h"
+#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
@@ -77,7 +78,10 @@ class Dim2Triangulation;
  * Dim2Triangulation::removeAllTriangles(); these routines will
  * automatically destroy the triangles as they are removed.
  */
-class REGINA_API Dim2Triangle : public ShareableObject, public NMarkedElement {
+class REGINA_API Dim2Triangle :
+        public Output<Dim2Triangle>,
+        public boost::noncopyable,
+        public NMarkedElement {
     private:
         Dim2Triangle* adj_[3];
             /**< Stores the adjacent triangles glued to each edge of this
@@ -121,10 +125,6 @@ class REGINA_API Dim2Triangle : public ShareableObject, public NMarkedElement {
                  triangulation. */
 
     public:
-        /**
-         * Destroys this triangle.
-         */
-        virtual ~Dim2Triangle();
 
         /**
          * Returns the text description associated with this
@@ -390,7 +390,23 @@ class REGINA_API Dim2Triangle : public ShareableObject, public NMarkedElement {
          */
         int orientation() const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 
     private:
@@ -422,9 +438,6 @@ class REGINA_API Dim2Triangle : public ShareableObject, public NMarkedElement {
 namespace regina {
 
 // Inline functions for Dim2Triangle
-
-inline Dim2Triangle::~Dim2Triangle() {
-}
 
 inline const std::string& Dim2Triangle::getDescription() const {
     return desc_;

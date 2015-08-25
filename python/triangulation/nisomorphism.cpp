@@ -52,8 +52,7 @@ namespace {
 }
 
 void addNIsomorphism() {
-    class_<NIsomorphism, bases<regina::ShareableObject>,
-            std::auto_ptr<NIsomorphism>, boost::noncopyable>
+    class_<NIsomorphism, std::auto_ptr<NIsomorphism>, boost::noncopyable>
             ("NIsomorphism", init<const NIsomorphism&>())
         .def("getSourceSimplices", &NIsomorphism::getSourceSimplices)
         .def("getSourceTetrahedra", &NIsomorphism::getSourceTetrahedra)
@@ -68,6 +67,11 @@ void addNIsomorphism() {
         .def("applyInPlace", &NIsomorphism::applyInPlace)
         .def("random", &NIsomorphism::random,
             return_value_policy<manage_new_object>())
+        .def("str", &NIsomorphism::str)
+        .def("toString", &NIsomorphism::toString)
+        .def("detail", &NIsomorphism::detail)
+        .def("toStringLong", &NIsomorphism::toStringLong)
+        .def("__str__", &NIsomorphism::str)
         .staticmethod("random")
     ;
 }

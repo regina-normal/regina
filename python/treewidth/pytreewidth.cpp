@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Python Interface                                                      *
  *                                                                        *
  *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,22 +32,9 @@
 
 /* end stub */
 
-#include <sstream>
-#include "shareableobject.h"
+void addNTreeDecomposition();
 
-namespace regina {
-
-std::string ShareableObject::str() const {
-    std::ostringstream out;
-    writeTextShort(out);
-    return out.str();
+void addTreewidth() {
+    addNTreeDecomposition();
 }
-
-std::string ShareableObject::detail() const {
-    std::ostringstream out;
-    writeTextLong(out);
-    return out.str();
-}
-
-} // namespace regina
 

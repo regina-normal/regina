@@ -3,6 +3,7 @@
 # Files to compile
 SET ( FILES
   matrixops
+  ncyclotomic
   ninteger
   nlargeinteger
   nmatrixint
@@ -10,6 +11,7 @@ SET ( FILES
   nperm3
   nperm4
   nperm5
+  npolynomial
   nprimes
   nrational
   numbertheory

@@ -42,6 +42,7 @@
 #endif
 
 #include "regina-core.h"
+#include "output.h"
 #include "algebra/nmarkedabeliangroup.h"
 #include "maths/nrational.h"
 #include "triangulation/ntriangulation.h"
@@ -50,6 +51,7 @@
 #include <memory>
 #include <vector>
 #include <cstddef>
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -120,7 +122,9 @@ class NTriangulation;
  *
  * @author Ryan Budney
  */
-class REGINA_API NHomologicalData : public ShareableObject {
+class REGINA_API NHomologicalData :
+    public ShortOutput<NHomologicalData>,
+    public boost::noncopyable {
 private:
     /**
      * A fairly primitive class that implements sorted arrays of
@@ -468,17 +472,20 @@ public:
     /**
      * Destructor.
      */
-    virtual ~NHomologicalData();
+    ~NHomologicalData();
     /**
-     * Short text representation as required by SharableObject.
+     * Writes a short text representation of this object to the
+     * given output stream.
      *
      * Note this only writes pre-computed data.  Thus if you have
      * not yet asked NHomologicalData to compute anything about this
-     * triangulation, writeTextShort may be empty. 
+     * triangulation, writeTextShort may be empty.
      *
-     * @param out the stream to write to.
+     * \ifacespython Not present.
+     *
+     * @param out the output stream to which to write.
      */
-    virtual void writeTextShort(std::ostream& out) const;
+    void writeTextShort(std::ostream& out) const;
 
     /**
      * This routine gives access to the manifold's homology computed
@@ -761,7 +768,6 @@ public:
 
 // constructor
 inline NHomologicalData::NHomologicalData(const NTriangulation& input):
-        ShareableObject(),
 
         tri(new NTriangulation(input)),
 
@@ -780,7 +786,6 @@ inline NHomologicalData::NHomologicalData(const NTriangulation& input):
 
 // copy constructor
 inline NHomologicalData::NHomologicalData(const NHomologicalData& g) :
-        ShareableObject(),
 
         tri(clonePtr(g.tri)),
 

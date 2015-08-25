@@ -42,7 +42,6 @@
 #endif
 
 #include "regina-core.h"
-#include "shareableobject.h"
 #include "generic/ngenericisomorphism.h"
 #include "maths/nperm4.h"
 #include "triangulation/ntetface.h"
@@ -60,39 +59,40 @@ class NTriangulation;
  * Represents a combinatorial isomorphism from one triangulation into
  * another.
  *
- * In essence, a combinatorial isomorphism from triangulation T to
- * triangulation U is a one-to-one map from the tetrahedra of T to the
- * tetrahedra of U that allows relabelling of both the tetrahedra and
- * their faces (or equivalently, their vertices), and that preserves
- * gluings across adjacent tetrahedra.
+ * In essence, a combinatorial isomorphism from triangulation \a T to
+ * triangulation \a U is a one-to-one map from the tetrahedra of \a T to the
+ * tetrahedra of \a U that allows relabelling of both the tetrahedra and
+ * their 2-dimensional faces (or equivalently, their vertices), and that
+ * preserves gluings across adjacent tetrahedra.
  *
- * More precisely:  An isomorphism consists of (i) a one-to-one map f
- * from the tetrahedra of T to the tetrahedra of U, and (ii) for each
- * tetrahedron S of T, a permutation f_S of the faces (0,1,2,3) of S,
- * for which the following condition holds:
+ * More precisely:  An isomorphism consists of (i) a one-to-one map \a f
+ * from the tetrahedra of \a T to the tetrahedra of \a U, and (ii) for each
+ * tetrahedron \a S of \a T, a permutation \a f<sub>S</sub> of the faces
+ * (0,1,2,3) of \a S, for which the following condition holds:
  *
- *   - If face k of tetrahedron S and face k' of tetrahedron S'
- *     are identified in T, then face f_S(k) of f(S) and face f_S'(k')
- *     of f(S') are identified in U.  Moreover, their gluing is consistent
- *     with the face/vertex permutations; that is, there is a commutative
- *     square involving the gluing maps in T and U and the permutations
- *     f_S and f_S'.
+ *   - If face \a k of tetrahedron \a S and face \a k' of tetrahedron \a S'
+ *     are identified in \a T, then face \a f<sub>S</sub>(\a k) of \a f(S)
+ *     and face \a f<sub>S'</sub>(\a k') of \a f(S') are identified in \a U.
+ *     Moreover, their gluing is consistent with the face/vertex permutations;
+ *     that is, there is a commutative square involving the gluing maps in
+ *     \a T and \a U and the permutations \a f<sub>S</sub> and
+ *     \a f<sub>S'</sub>.
  *
  * Isomorphisms can be <i>boundary complete</i> or
  * <i>boundary incomplete</i>.  A boundary complete isomorphism
  * satisfies the additional condition:
  *
- *   - If face x is a boundary triangle of T then face f(x) is a boundary
- *     triangle of U.
+ *   - If face \a x is a boundary face of \a T then face \a f(x) is a
+ *     boundary face of \a U.
  *
  * A boundary complete isomorphism thus indicates that a copy of
- * triangulation T is present as an entire component (or components) of U,
+ * triangulation \a T is present as an entire component (or components) of \a U,
  * whereas a boundary incomplete isomorphism represents an embedding of a
- * copy of triangulation T as a subcomplex of some possibly larger component
- * (or components) of U.
+ * copy of triangulation \a T as a subcomplex of some possibly larger component
+ * (or components) of \a U.
  *
- * Note that in all cases triangulation U may contain more tetrahedra
- * than triangulation T.
+ * Note that for all types of isomorphism, triangulation \a U is allowed
+ * to contain more tetrahedra than triangulation \a T.
  *
  * \todo \feature Composition of isomorphisms.
  */

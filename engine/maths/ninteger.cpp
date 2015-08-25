@@ -111,7 +111,7 @@ NIntegerBase<supportInfinity>::NIntegerBase(
         // Note that in the case of overflow, we may have errno != 0 but
         // *endptr == 0.
         bool maybeTrailingWhitespace = (*endptr && ! errno);
-        large_ = new mpz_t;
+        large_ = new __mpz_struct[1];
         if (valid)
             *valid = (mpz_init_set_str(large_, value, base) == 0);
         else
@@ -139,7 +139,7 @@ NIntegerBase<supportInfinity>::NIntegerBase(
         // Note that in the case of overflow, we may have errno != 0 but
         // *endptr == 0.
         bool maybeTrailingWhitespace = (*endptr && ! errno);
-        large_ = new mpz_t;
+        large_ = new __mpz_struct[1];
         if (valid)
             *valid = (mpz_init_set_str(large_, value.c_str(), base) == 0);
         else
@@ -195,7 +195,7 @@ NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator =(
         if (large_)
             mpz_set_str(large_, value, 10 /* base */);
         else {
-            large_ = new mpz_t;
+            large_ = new __mpz_struct[1];
             mpz_init_set_str(large_, value, 10 /* base */);
         }
         // If the error was just trailing whitespace, we might still fit
@@ -298,7 +298,7 @@ NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator *=(
         else
             mpz_mul_si(large_, large_, other.small_);
     } else if (other.large_) {
-        large_ = new mpz_t;
+        large_ = new __mpz_struct[1];
         mpz_init(large_);
         mpz_mul_si(large_, other.large_, small_);
     } else {
@@ -306,7 +306,7 @@ NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator *=(
         Wide ans = static_cast<Wide>(small_) * static_cast<Wide>(other.small_);
         if (ans > LONG_MAX || ans < LONG_MIN) {
             // Overflow.
-            large_ = new mpz_t;
+            large_ = new __mpz_struct[1];
             mpz_init_set_si(large_, small_);
             mpz_mul_si(large_, large_, other.small_);
         } else
@@ -326,7 +326,7 @@ NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator *=(long o
         Wide ans = static_cast<Wide>(small_) * static_cast<Wide>(other);
         if (ans > LONG_MAX || ans < LONG_MIN) {
             // Overflow.
-            large_ = new mpz_t;
+            large_ = new __mpz_struct[1];
             mpz_init_set_si(large_, small_);
             mpz_mul_si(large_, large_, other);
         } else
@@ -372,7 +372,7 @@ NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator /=(
                 // The result is -LONG_MIN, which requires large integers.
                 // Reduce other while we're at it.
                 const_cast<NIntegerBase<supportInfinity>&>(other).forceReduce();
-                large_ = new mpz_t;
+                large_ = new __mpz_struct[1];
                 mpz_init_set_si(large_, LONG_MIN);
                 mpz_neg(large_, large_);
                 return *this;
@@ -435,7 +435,7 @@ NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator /=(long o
     } else if (small_ == LONG_MIN && other == -1) {
         // This is the special case where we must switch from native to
         // large integers.
-        large_ = new mpz_t;
+        large_ = new __mpz_struct[1];
         mpz_init_set_si(large_, LONG_MIN);
         mpz_neg(large_, large_);
     } else {
@@ -476,7 +476,7 @@ NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::divByExact(
 
             if (other.small_ == -1) {
                 // The result is -LONG_MIN, which requires large integers.
-                large_ = new mpz_t;
+                large_ = new __mpz_struct[1];
                 mpz_init_set_si(large_, LONG_MIN);
                 mpz_neg(large_, large_);
             } else {
@@ -514,7 +514,7 @@ NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::divByExact(long ot
     } else if (small_ == LONG_MIN && other == -1) {
         // This is the special case where we must switch from native to
         // large integers.
-        large_ = new mpz_t;
+        large_ = new __mpz_struct[1];
         mpz_init_set_si(large_, LONG_MIN);
         mpz_neg(large_, large_);
     } else {
@@ -645,7 +645,7 @@ void NIntegerBase<supportInfinity>::gcdWith(
                 (b == LONG_MIN && a == 0)) {
             // gcd(a,b) = LONG_MIN, which means we can't make it
             // non-negative without switching to large integers.
-            large_ = new mpz_t;
+            large_ = new __mpz_struct[1];
             mpz_init_set_si(large_, LONG_MIN);
             mpz_neg(large_, large_);
             return;
@@ -947,11 +947,11 @@ int NIntegerBase<supportInfinity>::legendre(
     mpz_ptr gmp_p = p.large_;
 
     if (! large_) {
-        gmp_this = new mpz_t;
+        gmp_this = new __mpz_struct[1];
         mpz_init_set_si(gmp_this, small_);
     }
     if (! p.large_) {
-        gmp_p = new mpz_t;
+        gmp_p = new __mpz_struct[1];
         mpz_init_set_si(gmp_p, p.small_);
     }
 

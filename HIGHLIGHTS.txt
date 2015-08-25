@@ -6,6 +6,19 @@ Regina - A Normal Surface Theory Calculator
     For a full list of changes, including all changes to the C++/Python API,
     see the file CHANGES.txt.
 
+Version 4.97  [ (under development) ]
+
+    Features:
+        - Supports high-resolution displays (e.g., Macs with retina displays).
+        - Regina can now build and manipulate tree decompositions of graphs,
+          including dual graphs of triangulations.  This is particularly
+          useful for fixed-parameter tractable algorithms.
+        - Turaev-Viro invariants are now computed using exact arithmetic.
+    Optimisations:
+        - Turaev-Viro invariants now use faster treewidth-based algorithms.
+        - Significant structural changes under the hood, in preparation for
+          the coming 5.0 release.
+
 Version 4.96  [ 29 August, 2014 ]
 
     Features:

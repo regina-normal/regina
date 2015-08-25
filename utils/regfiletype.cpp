@@ -34,6 +34,7 @@
 
 #include "file/nfileinfo.h"
 #include <cstdlib>
+#include <iostream>
 
 void usage(const char* progName) {
     std::cerr << "Usage:\n";

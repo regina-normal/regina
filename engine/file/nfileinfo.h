@@ -42,7 +42,8 @@
 #endif
 
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -63,7 +64,9 @@ namespace regina {
  * that this class now recognises is TYPE_XML (compressed or uncompressed
  * XML data files).
  */
-class REGINA_API NFileInfo : public ShareableObject {
+class REGINA_API NFileInfo :
+        public Output<NFileInfo>,
+        public boost::noncopyable {
     public:
         static const int TYPE_XML;
             /**< Represents a new-style XML data file. */
@@ -148,7 +151,23 @@ class REGINA_API NFileInfo : public ShareableObject {
          */
         static NFileInfo* identify(const std::string& idPathname);
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 
     private:

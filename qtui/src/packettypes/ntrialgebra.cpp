@@ -358,7 +358,8 @@ void NTriTuraevViroUI::refresh() {
     for (NTriangulation::TuraevViroSet::const_iterator it = invs.begin();
             it != invs.end(); it++)
         invariants->addTopLevelItem(new TuraevViroItem(
-            (*it).first.first, (*it).first.second, (*it).second));
+            (*it).first.first, (*it).first.second,
+            (*it).second.evaluate((*it).first.second).real()));
 }
 
 void NTriTuraevViroUI::calculateInvariant() {
@@ -439,7 +440,7 @@ void NTriTuraevViroUI::calculateInvariant() {
     }
 
     // Calculate the invariant!
-    double value = tri->turaevViro(r, root);
+    double value = tri->turaevViro(r, root).evaluate(root).real();
     TuraevViroItem* item = new TuraevViroItem(r, root, value);
 
     // Insert the invariant in the right place in the table, and delete

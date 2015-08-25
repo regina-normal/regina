@@ -64,26 +64,54 @@ namespace regina {
 template <int dim>
 struct DimTraits {
     typedef void Triangulation;
-        /**< The main data type for a \a dim-manifold triangulation. */
+        /**< The main data type for a <i>dim</i>-manifold triangulation. */
     typedef void Simplex;
         /**< The data type for a top-dimensional simplex in a
-             \a dim-manifold triangulation. */
+             <i>dim</i>-manifold triangulation. */
     typedef void Isomorphism;
         /**< The data type for an isomorphism between two
-             \a dim-manifold triangulations. */
+             <i>dim</i>-manifold triangulations.
+             Typically this is a subclass of NGenericIsomorphism<dim>. */
     typedef void FacetPairing;
         /**< The data type that represents a pairing of facets of
-             top-dimensional simplices in a \a dim-manifold triangulation. */
+             top-dimensional simplices in a <i>dim</i>-manifold
+             triangulation. */
     typedef void Perm;
         /**< The permutation type used to describe gluings between
-             top-dimensional simplices in a \a dim-manifold triangulation. */
+             top-dimensional simplices in a <i>dim</i>-manifold
+             triangulation. */
+};
+
+/**
+ * A template class that provides typedefs and other information about
+ * faces of triangulations in each of the supported dimensions.
+ *
+ * The template argument \a dim refers to the dimension of the overall
+ * triangulation, and the template argument \a subdim refers to the
+ * dimension of a face within such a triangulation.
+ *
+ * This class is defined for all values of \a subdim between 0 and \a dim
+ * inclusive.
+ *
+ * Note that this file does not bring in all of the headers for the
+ * individual types.
+ *
+ * \ifacespython Not present.
+ */
+template <int dim, int subdim>
+struct FaceTraits {
+    typedef void Face;
+        /**< The main data type for a </i>subdim</i>-dimensional face in a
+             <i>dim</i>-manifold triangulation. */
 };
 
 #ifndef __DOXYGEN
+class Dim2Edge;
 class Dim2Triangulation;
 class Dim2Triangle;
 class Dim2Isomorphism;
 class Dim2EdgePairing;
+class Dim2Vertex;
 class NPerm3;
 
 template <>
@@ -95,11 +123,14 @@ struct DimTraits<2> {
     typedef NPerm3 Perm;
 };
 
+class NEdge;
+class NTriangle;
 class NTriangulation;
 class NTetrahedron;
 class NIsomorphism;
 class NFacePairing;
 class NPerm4;
+class NVertex;
 
 template <>
 struct DimTraits<3> {
@@ -108,6 +139,41 @@ struct DimTraits<3> {
     typedef NIsomorphism Isomorphism;
     typedef NFacePairing FacetPairing;
     typedef NPerm4 Perm;
+};
+
+template <>
+struct FaceTraits<2, 0> {
+    typedef Dim2Vertex Face;
+};
+
+template <>
+struct FaceTraits<2, 1> {
+    typedef Dim2Edge Face;
+};
+
+template <>
+struct FaceTraits<2, 2> {
+    typedef Dim2Triangle Face;
+};
+
+template <>
+struct FaceTraits<3, 0> {
+    typedef NVertex Face;
+};
+
+template <>
+struct FaceTraits<3, 1> {
+    typedef NEdge Face;
+};
+
+template <>
+struct FaceTraits<3, 2> {
+    typedef NTriangle Face;
+};
+
+template <>
+struct FaceTraits<3, 3> {
+    typedef NTetrahedron Face;
 };
 #endif
 

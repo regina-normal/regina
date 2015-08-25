@@ -66,7 +66,6 @@ bool NGenericIsomorphism<dim>::isIdentity() const {
 template <int dim>
 NGenericIsomorphism<dim>::NGenericIsomorphism(
         const NGenericIsomorphism<dim>& cloneMe) :
-        ShareableObject(),
         nSimplices_(cloneMe.nSimplices_),
         simpImage_(cloneMe.nSimplices_ > 0 ?
             new int[cloneMe.nSimplices_] : 0),

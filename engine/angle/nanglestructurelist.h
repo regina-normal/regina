@@ -64,12 +64,7 @@ class NXMLAngleStructureListReader;
  * @{
  */
 
-/**
- * Stores information about the angle structure list packet.
- * See the general PacketInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct PacketInfo<PACKET_ANGLESTRUCTURELIST> {
     typedef NAngleStructureList Class;
@@ -77,6 +72,7 @@ struct PacketInfo<PACKET_ANGLESTRUCTURELIST> {
         return "Angle Structure List";
     }
 };
+#endif
 
 /**
  * A packet representing a collection of angle structures on a triangulation.

@@ -41,8 +41,8 @@ using namespace boost::python;
 using regina::NPillowTwoSphere;
 
 void addNPillowTwoSphere() {
-    class_<NPillowTwoSphere, bases<regina::ShareableObject>,
-            std::auto_ptr<NPillowTwoSphere>, boost::noncopyable>
+    class_<NPillowTwoSphere, std::auto_ptr<NPillowTwoSphere>,
+            boost::noncopyable>
             ("NPillowTwoSphere", no_init)
         .def("clone", &NPillowTwoSphere::clone,
             return_value_policy<manage_new_object>())
@@ -54,6 +54,11 @@ void addNPillowTwoSphere() {
         .def("getTriangleMapping", &NPillowTwoSphere::getTriangleMapping)
         .def("formsPillowTwoSphere", &NPillowTwoSphere::formsPillowTwoSphere,
             return_value_policy<manage_new_object>())
+        .def("str", &NPillowTwoSphere::str)
+        .def("toString", &NPillowTwoSphere::toString)
+        .def("detail", &NPillowTwoSphere::detail)
+        .def("toStringLong", &NPillowTwoSphere::toStringLong)
+        .def("__str__", &NPillowTwoSphere::str)
         .staticmethod("formsPillowTwoSphere")
     ;
 }

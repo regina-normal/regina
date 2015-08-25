@@ -51,7 +51,9 @@
 #include "algebra/ngrouppresentation.h"
 #include "angle/nanglestructure.h"
 #include "generic/ngenerictriangulation.h"
+#include "maths/ncyclotomic.h"
 #include "packet/npacket.h"
+#include "treewidth/ntreedecomposition.h"
 #include "utilities/nbooleans.h"
 #include "utilities/nmarkedvector.h"
 #include "utilities/nproperty.h"
@@ -84,18 +86,50 @@ class NXMLTriangulationReader;
  * @{
  */
 
-/**
- * Stores information about the 3-manifold triangulation packet.
- * See the general PacketInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct PacketInfo<PACKET_TRIANGULATION> {
     typedef NTriangulation Class;
     inline static const char* name() {
         return "3-Manifold Triangulation";
     }
+};
+#endif
+
+/**
+ * Represents the various algorithms available for computing Turaev-Viro
+ * invariants.
+ */
+enum TuraevViroAlg {
+    /**
+     * The default algorithm.  Here Regina will choose whichever
+     * algorithm it thinks (rightly or wrongly) is most appropriate.
+     */
+    TV_DEFAULT = 0,
+    /**
+     * An optimised backtracking algorithm.  This enumerates edge colourings
+     * and sums their corresponding weights.  This can be slow in general
+     * (since there could be exponentially many edge colourings),
+     * but it has very small memory usage.
+     */
+    TV_BACKTRACK = 1,
+    /**
+     * A treewidth-based algorithm.  This uses dynamic programming over
+     * a tree decomposition of the face pairing graph.  This can be fast
+     * for triangulations whose face pairing graphs have small treewidth,
+     * but it may require extremely large amounts of memory.
+     */
+    TV_TREEWIDTH = 2,
+    /**
+     * An unoptimised backtracking algorithm.  Like TV_BACKTRACK, this
+     * enumerates edge colourings and sums weights.  However, the
+     * implementation is more naive.
+     *
+     * \warning This algorithm should only be used for comparison and
+     * experimentation.  Due to its slow performance, it is not suitable
+     * for "real" applications.
+     */
+    TV_NAIVE = 3
 };
 
 /**
@@ -155,9 +189,10 @@ class REGINA_API NTriangulation : public NPacket,
                 BoundaryComponentIterator;
             /**< Used to iterate through boundary components. */
 
-        typedef std::map<std::pair<unsigned long, unsigned long>, double>
+        typedef std::map<std::pair<unsigned long, bool>, NCyclotomic>
                 TuraevViroSet;
-            /**< A map from (r, whichRoot) pairs to Turaev-Viro invariants. */
+            /**< A map from (\a r, \a parity) pairs to Turaev-Viro invariants,
+                 as described by turaevViro(). */
 
     private:
         mutable bool calculatedSkeleton_;
@@ -232,9 +267,15 @@ class REGINA_API NTriangulation : public NPacket,
             /**< A strict angle structure on this triangulation, or the
                  null pointer if none exists. */
 
+        mutable NProperty<NTreeDecomposition, StoreManagedPtr>
+                niceTreeDecomposition_;
+            /**< A nice tree decomposition of the face pairing graph of
+                 this triangulation. */
+
         mutable TuraevViroSet turaevViroCache_;
             /**< The set of Turaev-Viro invariants that have already
-                 been calculated. */
+                 been calculated.  See allCalculatedTuraevViro() for
+                 details. */
 
     public:
         /**
@@ -664,7 +705,7 @@ class REGINA_API NTriangulation : public NPacket,
          * triangulation.  See getNumberOfTriangles() for further details.
          *
          * Do not confuse this deprecated alias with the
-         * (non-deprecated) tempate function getNumberOfFaces<dim>().
+         * (non-deprecated) tempate function getNumberOfFaces<subdim>().
          *
          * \deprecated This routine will be removed in a future version
          * of Regina.  Please use getNumberOfTriangles() instead.
@@ -679,13 +720,13 @@ class REGINA_API NTriangulation : public NPacket,
          * This template function is to assist with writing dimension-agnostic
          * code that can be reused to work in different dimensions.
          *
-         * \pre the template argument \a dim is between 0 and 3 inclusive.
+         * \pre The template argument \a subdim is between 0 and 3 inclusive.
          *
          * \ifacespython Not present.
          *
          * @return the number of faces of the given dimension.
          */
-        template <int dim>
+        template <int subdim>
         unsigned long getNumberOfFaces() const;
 
         /**
@@ -848,6 +889,9 @@ class REGINA_API NTriangulation : public NPacket,
          * This routine returns the requested triangular face in the
          * triangulation.  See getTriangle() for further details.
          *
+         * Do not confuse this deprecated alias with the
+         * (non-deprecated) tempate function getFace<subdim>().
+         *
          * \deprecated This routine will be removed in a future version
          * of Regina.  Please use getTriangle() instead.
          *
@@ -856,6 +900,24 @@ class REGINA_API NTriangulation : public NPacket,
          * @return the requested triangle.
          */
         NTriangle* getFace(unsigned long index) const;
+        /**
+         * Returns the requested face of the given dimension in this
+         * triangulation.
+         *
+         * This template function is to assist with writing dimension-agnostic
+         * code that can be reused to work in different dimensions.
+         *
+         * \pre The template argument \a subdim is between 0 and 3 inclusive.
+         *
+         * \ifacespython Not present.
+         *
+         * @param index the index of the desired face, ranging from 0 to
+         * getNumberOfFaces<subdim>()-1 inclusive.
+         * @return the requested face.
+         */
+        template <int subdim>
+        typename FaceTraits<3, subdim>::Face* getFace(unsigned long index)
+            const;
         /**
          * Returns the index of the given component in the triangulation.
          *
@@ -963,6 +1025,9 @@ class REGINA_API NTriangulation : public NPacket,
          * This routine returns the index of the given triangle in the
          * triangulation.  See triangleIndex() for further details.
          *
+         * Do not confuse this deprecated alias with the
+         * (non-deprecated) tempate function faceIndex<subdim>().
+         *
          * \deprecated This routine will be removed in a future version
          * of Regina.  Please use triangleIndex() instead.
          *
@@ -972,6 +1037,27 @@ class REGINA_API NTriangulation : public NPacket,
          * triangle, 1 is the second and so on.
          */
         long faceIndex(const NTriangle* triangle) const;
+        /**
+         * Returns the index of the given face of the given dimension in this
+         * triangulation.
+         *
+         * This template function is to assist with writing dimension-agnostic
+         * code that can be reused to work in different dimensions.
+         *
+         * \pre The template argument \a subdim is between 0 and 3 inclusive.
+         * \pre The given face belongs to this triangulation.
+         *
+         * \warning Passing a null pointer to this routine will probably
+         * crash your program.
+         *
+         * \ifacespython Not present.
+         *
+         * @param face specifies which face to find in the triangulation.
+         * @return the index of the specified face, where 0 is the first
+         * \a subdim-face, 1 is the second \a subdim-face, and so on.
+         */
+        template <int subdim>
+        long faceIndex(const typename FaceTraits<3, subdim>::Face* face) const;
 
         /**
          * Determines if this triangulation contains any two-sphere
@@ -1364,50 +1450,141 @@ class REGINA_API NTriangulation : public NPacket,
          */
         unsigned long getHomologyH2Z2() const;
         /**
-         * Computes the Turaev-Viro state sum invariant of this
-         * 3-manifold based upon the given initial data.
+         * Computes the given Turaev-Viro state sum invariant of this
+         * 3-manifold using exact arithmetic.
          *
-         * The initial data is as described in the paper of Turaev and
-         * Viro, "State sum invariants of 3-manifolds and quantum
-         * 6j-symbols", Topology, vol. 31, no. 4, 1992, pp 865-902.
-         *
-         * In particular, Section 7 describes the initial data as
-         * determined by an integer r >=3 and a root of unity q0 of
+         * The initial data for the Turaev-Viro invariant is as described in
+         * the paper of Turaev and Viro, "State sum invariants of 3-manifolds
+         * and quantum 6j-symbols", Topology, vol. 31, no. 4, 1992, pp 865-902.
+         * In particular, Section 7 of this paper describes the initial data
+         * as determined by an integer r >= 3, and a root of unity q0 of
          * degree 2r for which q0^2 is a primitive root of unity of
-         * degree r.
+         * degree r.  There are several cases to consider:
+         *
+         * - \a r may be even.  In this case \a q0 must be a primitive
+         *   (<i>2r</i>)th root of unity, and the invariant is computed as an
+         *   element of the cyclotomic field of order \a 2r.  There is no need
+         *   to specify \e which root of unity is used, since switching between
+         *   different roots of unity corresponds to an automorphism of
+         *   the underlying cyclotomic field (i.e., it does not yield
+         *   any new information).  Therefore, if \a r is even, the
+         *   additional argument \a parity is ignored.
+         *
+         * - \a r may be odd, and \a q0 may be a primitive (<i>2r</i>)th
+         *   root of unity.  This case corresponds to passing the argument
+         *   \a parity as \c true.  Here the invariant is again computed
+         *   as an element of the cyclotomic field of order \a 2r.  As before,
+         *   there is no need to give further information as to which
+         *   root of unity is used, since switching between roots of unity
+         *   does not yield new information.
+         *
+         * - \a r may be odd, and \a q0 may be a primitive (<i>r</i>)th
+         *   root of unity.  This case corresponds to passing the argument
+         *   \a parity as \c false.  In this case the invariant is computed
+         *   as an element of the cyclotomic field of order \a r.  Again,
+         *   there is no need to give further information as to which
+         *   root of unity is used.
+         *
+         * This routine works entirely within the relevant cyclotomic field,
+         * which yields exact results but adds a significant overhead to the
+         * running time.  If you want a fast floating-point approximation,
+         * you can call turaevViroApprox() instead.
+         *
+         * Unlike this routine, turaevViroApprox() requires a precise
+         * specification of which root of unity is used (since it
+         * returns a numerical real value).  The numerical value
+         * obtained by calling
+         * <tt>turaevViroApprox(r, whichRoot)</tt>
+         * should be the same as
+         * <tt>turaevViro(r, parity).evaluate(whichRoot)</tt>,
+         * where \a parity is \c true or \c false according to whether
+         * \a whichRoot is odd or even respectively.  Of course in practice the
+         * numerical values might be very different, since turaevViroApprox()
+         * performs significantly more floating point operations, and so is
+         * subject to a much larger potential numerical error.
+         *
+         * \pre This triangulation is valid, closed and non-empty.
+         *
+         * @param r the integer \a r as described above; this must be at
+         * least 3.
+         * @param parity determines for odd \a r whether \a q0 is a primitive
+         * <i>2r</i>th or <i>r</i>th root of unity, as described above.
+         * @param alg the algorithm with which to compute the invariant.
+         * If you are not sure, the default value (TV_DEFAULT) is a safe choice.
+         * @return the requested Turaev-Viro invariant.
+         *
+         * @see allCalculatedTuraevViro
+         */
+        NCyclotomic turaevViro(unsigned long r, bool parity = true,
+            TuraevViroAlg alg = TV_DEFAULT) const;
+        /**
+         * Computes the given Turaev-Viro state sum invariant of this
+         * 3-manifold using a fast but inexact floating-point approximation.
+         *
+         * The initial data for the Turaev-Viro invariant is as described in
+         * the paper of Turaev and Viro, "State sum invariants of 3-manifolds
+         * and quantum 6j-symbols", Topology, vol. 31, no. 4, 1992, pp 865-902.
+         * In particular, Section 7 describes the initial data as
+         * determined by an integer \a r >= 3 and a root of unity \a q0 of
+         * degree \a 2r for which \a q0^2 is a primitive root of unity of
+         * degree \a r.
+         *
+         * The argument \a whichRoot specifies which root of unity is
+         * used for \a q0.  Specifically, \a q0 will be the root of unity
+         * <tt>e^(2i * Pi * whichRoot / 2r)</tt>.  There are additional
+         * preconditions on \a whichRoot to ensure that \a q0^2 is a
+         * \e primitive root of unity of degree \a r; see below for details.
+         *
+         * This same invariant can be computed by calling
+         * <tt>turaevViro(r, parity).evaluate(whichRoot)</tt>,
+         * where \a parity is \c true or \c false according to whether
+         * \a whichRoot is odd or even respectively.
+         * Calling turaevViroApprox() is significantly faster (since it avoids
+         * the overhead of working in cyclotomic fields), but may also
+         * lead to a much larger numerical error (since this routine might
+         * perform an exponential number of floating point operations,
+         * whereas the alternative only uses floating point for
+         * the final call to NCyclotomic::evaluate()).
          *
          * These invariants, although computed in the complex field,
          * should all be reals.  Thus the return type is an ordinary
          * double.
          *
          * \pre This triangulation is valid, closed and non-empty.
+         * \pre The argument \a whichRoot is strictly between 0 and <i>2r</i>,
+         * and has no common factors with \a r.
          *
-         * @param r the integer r as described above; this must be at
+         * @param r the integer \a r as described above; this must be at
          * least 3.
-         * @param whichRoot determines q0 to be the root of unity
-         * e^(2i * Pi * whichRoot / 2r); this argument must be strictly
-         * between 0 and 2r and must have no common factors with r.
+         * @param whichRoot specifies which root of unity is used for \a q0,
+         * as described above.
+         * @param alg the algorithm with which to compute the invariant.
+         * If you are not sure, the default value (TV_DEFAULT) is a safe choice.
          * @return the requested Turaev-Viro invariant.
          *
          * @see allCalculatedTuraevViro
          */
-        double turaevViro(unsigned long r, unsigned long whichRoot) const;
+        double turaevViroApprox(unsigned long r, unsigned long whichRoot = 1,
+            TuraevViroAlg alg = TV_DEFAULT) const;
         /**
-         * Returns the set of all Turaev-Viro state sum invariants that
-         * have already been calculated for this 3-manifold.
+         * Returns the cache of all Turaev-Viro state sum invariants that
+         * have been calculated for this 3-manifold.
+         * This cache is updated every time turaevViro() is called, and
+         * is emptied whenever the triangulation is modified.
          *
-         * Turaev-Viro invariants are described by an (r, whichRoot)
-         * pair as described in the turaevViro() notes.  The set
-         * returned by this routine maps (r, whichRoot) pairs to the
+         * Turaev-Viro invariants are identified by an (r, parity)
+         * pair as described in the turaevViro() documentation.  The
+         * cache is just a set that maps (r, parity) pairs to the
          * corresponding invariant values.
          *
-         * Each time turaevViro() is called, the result will be stored
-         * in this set (as well as being returned to the user).  This
-         * set will be emptied whenever the triangulation is modified.
+         * \note All invariants in this cache are now computed using exact
+         * arithmetic, as elements of a cyclotomic field.  This is a
+         * change from Regina 4.96 and earlier, which computed
+         * floating-point approximations instead.
          *
          * \ifacespython Not present.
          *
-         * @return the set of all Turaev-Viro invariants that have
+         * @return the cache of all Turaev-Viro invariants that have
          * already been calculated.
          *
          * @see turaevViro
@@ -2698,6 +2875,31 @@ class REGINA_API NTriangulation : public NPacket,
          */
         bool hasSimpleCompressingDisc() const;
 
+        /**
+         * Returns a nice tree decomposition of the face pairing graph
+         * of this triangulation.  This can (for example) be used in
+         * implementing algorithms that are fixed-parameter tractable
+         * in the treewidth of the face pairing graph.
+         *
+         * See NTreeDecomposition for further details on tree
+         * decompositions, and see NTreeDecomposition::makeNice() for
+         * details on what it means to be a \e nice tree decomposition.
+         *
+         * This routine is fast: it will use a greedy algorithm to find a
+         * tree decomposition with (hopefully) small width, but with
+         * no guarantees that the width of this tree decomposition is the
+         * smallest possible.
+         *
+         * The tree decomposition will be cached, so that if this routine is
+         * called a second time (and the underlying triangulation has not
+         * been changed) then the same tree decomposition will be returned
+         * immediately.
+         *
+         * @return a nice tree decomposition of the face pairing graph
+         * of this triangulation.
+         */
+        const NTreeDecomposition& niceTreeDecomposition() const;
+
         /*@}*/
         /**
          * \name Subdivisions, Extensions and Covers
@@ -2732,12 +2934,6 @@ class REGINA_API NTriangulation : public NPacket,
          *
          * \todo \optlong Have this routine only use as many tetrahedra
          * as are necessary, leaving finite vertices alone.
-         *
-         * @param forceDivision specifies what to do if the triangulation
-         * has no ideal or non-standard vertices.
-         * If \c true, the triangulation will be
-         * subdivided anyway, as if all vertices were ideal.  If
-         * \c false (the default), the triangulation will be left alone.
          *
          * @return \c true if and only if the triangulation was changed.
          * @author David Letscher
@@ -3967,6 +4163,26 @@ inline NTriangle* NTriangulation::getFace(unsigned long index) const {
     return getTriangle(index);
 }
 
+template <>
+inline NVertex* NTriangulation::getFace<0>(unsigned long index) const {
+    return vertices_[index];
+}
+
+template <>
+inline NEdge* NTriangulation::getFace<1>(unsigned long index) const {
+    return edges_[index];
+}
+
+template <>
+inline NTriangle* NTriangulation::getFace<2>(unsigned long index) const {
+    return triangles_[index];
+}
+
+template <>
+inline NTetrahedron* NTriangulation::getFace<3>(unsigned long index) const {
+    return tetrahedra_[index];
+}
+
 inline long NTriangulation::componentIndex(const NComponent* component) const {
     return component->markedIndex();
 }
@@ -3991,6 +4207,28 @@ inline long NTriangulation::triangleIndex(const NTriangle* tri) const {
 inline long NTriangulation::faceIndex(const NTriangle* tri) const {
     return tri->markedIndex();
 }
+
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
+template <>
+inline long NTriangulation::faceIndex<0>(const NVertex* face) const {
+    return face->markedIndex();
+}
+
+template <>
+inline long NTriangulation::faceIndex<1>(const NEdge* face) const {
+    return face->markedIndex();
+}
+
+template <>
+inline long NTriangulation::faceIndex<2>(const NTriangle* face) const {
+    return face->markedIndex();
+}
+
+template <>
+inline long NTriangulation::faceIndex<3>(const NTetrahedron* face) const {
+    return face->markedIndex();
+}
+#endif
 
 inline bool NTriangulation::hasTwoSphereBoundaryComponents() const {
     if (! twoSphereBoundaryComponents_.known())
@@ -4082,6 +4320,15 @@ inline unsigned long NTriangulation::getHomologyH2Z2() const {
 inline const NTriangulation::TuraevViroSet&
         NTriangulation::allCalculatedTuraevViro() const {
     return turaevViroCache_;
+}
+
+inline const NTreeDecomposition& NTriangulation::niceTreeDecomposition() const {
+    if (niceTreeDecomposition_.known())
+        return *niceTreeDecomposition_.value();
+
+    NTreeDecomposition* ans = new NTreeDecomposition(*this, TD_UPPER);
+    ans->makeNice();
+    return *(niceTreeDecomposition_ = ans);
 }
 
 inline void NTriangulation::writeTextShort(std::ostream& out) const {

@@ -52,8 +52,7 @@ namespace {
 }
 
 void addDim2Isomorphism() {
-    class_<Dim2Isomorphism, bases<regina::ShareableObject>,
-            std::auto_ptr<Dim2Isomorphism>, boost::noncopyable>
+    class_<Dim2Isomorphism, std::auto_ptr<Dim2Isomorphism>, boost::noncopyable>
             ("Dim2Isomorphism", init<const Dim2Isomorphism&>())
         .def("getSourceSimplices", &Dim2Isomorphism::getSourceSimplices)
         .def("getSourceTriangles", &Dim2Isomorphism::getSourceTriangles)
@@ -68,6 +67,11 @@ void addDim2Isomorphism() {
         .def("applyInPlace", &Dim2Isomorphism::applyInPlace)
         .def("random", &Dim2Isomorphism::random,
             return_value_policy<manage_new_object>())
+        .def("str", &Dim2Isomorphism::str)
+        .def("toString", &Dim2Isomorphism::toString)
+        .def("detail", &Dim2Isomorphism::detail)
+        .def("toStringLong", &Dim2Isomorphism::toStringLong)
+        .def("__str__", &Dim2Isomorphism::str)
         .staticmethod("random")
     ;
 }

@@ -2287,7 +2287,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                          tri->isOrientable() &&
                          tri->isConnected() &&
                          tri->getHomologyH1().isTrivial() &&
-                         tri->turaevViro(5, 1) < 0.5);
+                         tri->turaevViroApprox(5, 1) < 0.5);
 
             if (expected && ! found) {
                 std::ostringstream msg;
@@ -2871,7 +2871,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 if (q0 == 3)
                     continue;
 
-                double tv = t.turaevViro(3, q0);
+                double tv = t.turaevViroApprox(3, q0);
                 double expectedTV = 0.5;
                 for (unsigned long i = 0; i < t.getHomologyH2Z2(); i++)
                     expectedTV += expectedTV;
@@ -2895,7 +2895,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 if (regina::gcd(q0, r) > 1)
                     continue;
 
-                double tv = s3.turaevViro(r, q0);
+                double tv = s3.turaevViroApprox(r, q0);
 
                 double expectedTV = 2 * sin(M_PI * q0 / static_cast<double>(r));
                 expectedTV = (expectedTV * expectedTV) /
@@ -2919,7 +2919,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 if (regina::gcd(q0, r) > 1)
                     continue;
 
-                double tv = rp3_2.turaevViro(r, q0);
+                double tv = rp3_2.turaevViroApprox(r, q0);
 
                 double expectedTV;
                 if (q0 % 2 == r % 2)
@@ -2950,7 +2950,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 if (regina::gcd(q0, r) > 1)
                     continue;
 
-                double tv = lens3_1.turaevViro(r, q0);
+                double tv = lens3_1.turaevViroApprox(r, q0);
 
                 unsigned q0pow = ((r - 2) / 3) + 1;
                 double expectedTV = 2 * sin(M_PI * q0 * q0pow /
@@ -2977,7 +2977,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 if (regina::gcd(q0, r) > 1)
                     continue;
 
-                double tv = s2xs1.turaevViro(r, q0);
+                double tv = s2xs1.turaevViroApprox(r, q0);
 
                 double expectedTV = 1.0;
 

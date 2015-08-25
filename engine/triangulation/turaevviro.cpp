@@ -36,28 +36,57 @@
 #include <cmath>
 #include <complex>
 #include "regina-config.h"
+#include "enumerate/normaliz/cone.h"
 #include "maths/approx.h"
+#include "maths/ncyclotomic.h"
 #include "maths/numbertheory.h"
+#include "treewidth/ntreedecomposition.h"
 #include "triangulation/ntriangulation.h"
+#include "utilities/sequence.h"
+#include <gmpxx.h>
+#include <map>
+
+// #define TV_BACKTRACK_DUMP_COLOURINGS
+// #define TV_IGNORE_CACHE
+
+#define TV_UNCOLOURED -1
+#define TV_AGGREGATED -2
 
 namespace regina {
 
 namespace {
+    template <bool exact>
+    struct TuraevViroDetails;
+
+    template <>
+    struct TuraevViroDetails<true> {
+        typedef NCyclotomic TVType;
+        typedef NCyclotomic TVResult;
+    };
+
+    template <>
+    struct TuraevViroDetails<false> {
+        typedef std::complex<double> TVType;
+        typedef double TVResult;
+    };
+
     /**
      * Allows calculation of [n]! for arbitrary n.
      * Values are cached as they are calculated.
      */
+    template <bool exact>
     class BracketFactorial {
+        public:
+            typedef typename TuraevViroDetails<exact>::TVType TVType;
+            typedef typename TuraevViroDetails<exact>::TVResult TVResult;
+
         private:
-            double* fact;
+            TVResult* bracket_;
+                /**< The cached brackets [0], [1], ..., [r-1] . */
+            TVResult* fact_;
                 /**< The cached values [0]!, [1]!, ..., [r-1]! . */
-            double* inv;
+            TVResult* inv_;
                 /**< The cached inverses of the values stored in fact[]. */
-            double angle;
-                /**< The angle arg(q0). */
-            unsigned long r;
-                /**< The integer r, for which 2r * angle is some integer
-                     multiple of 2 * Pi. */
 
         public:
             /**
@@ -65,72 +94,121 @@ namespace {
              *
              * Requires r >= 3.
              */
-            BracketFactorial(double newAngle, unsigned long newR) :
-                    fact(new double[newR]), inv(new double[newR]),
-                    angle(newAngle), r(newR) {
-                fact[0] = fact[1] = inv[0] = inv[1] = 1.0;
-                for (unsigned long i = 2; i < r; i++) {
-                    fact[i] = fact[i - 1] * sin(angle * i) / sin(angle);
-                    inv[i] = inv[i - 1] * sin(angle) / sin(angle * i);
-                }
-            }
+            BracketFactorial(unsigned long r, unsigned long whichRoot);
 
             /**
              * Clean up memory.
              */
             ~BracketFactorial() {
-                delete[] fact;
-                delete[] inv;
+                delete[] bracket_;
+                delete[] fact_;
+                delete[] inv_;
             }
 
             /**
-             * Calculates the single value [n] (note that there is no
-             * factorial symbol included).
-             * These values are individually easy to calculate and so
-             * are not cached.
+             * Returns the single value [index] (with no factorial symbol).
+             * Requires index < r.
              */
-            double bracket(unsigned long index) const {
-                if (index == 0 || index == 1)
-                    return 1;
-                return sin(angle * index) / sin(angle);
+            const TVResult& bracket(unsigned long index) const {
+                return bracket_[index];
             }
 
             /**
              * Returns the value [index]!.
+             * Requires index < r.
              */
-            double operator [] (unsigned long index) const {
-                return (index < r ? fact[index] : 0.0);
+            const TVResult& operator [] (unsigned long index) const {
+                return fact_[index];
             }
 
             /**
              * Returns the value [index]! ^ -1.
-             *
              * Requires index < r.
              */
-            double inverse(unsigned long index) const {
-                return inv[index];
+            const TVResult& inverse(unsigned long index) const {
+                return inv_[index];
             }
     };
+
+    template <>
+    BracketFactorial<true>::BracketFactorial(
+            unsigned long r, unsigned long whichRoot) :
+            bracket_(new TVResult[r]),
+            fact_(new TVResult[r]),
+            inv_(new TVResult[r]) {
+        bool halfField = (r % 2 != 0 && whichRoot % 2 == 0);
+        bracket_[0].init(halfField ? r : 2 * r);
+        bracket_[0][0] = 1;
+        fact_[0] = fact_[1] = inv_[0] = inv_[1] =
+            bracket_[1] = bracket_[0];
+
+        TVResult q(halfField ? r : 2 * r);
+        q[1] = 1;
+        TVResult qInv(q);
+        qInv.invert();
+
+        TVResult base(q);
+        base -= qInv;
+        base.invert();
+
+        TVResult qPow(q);
+        TVResult qPowInv(qInv);
+
+        TVResult tmp;
+        for (unsigned long i = 2; i < r; i++) {
+            qPow *= q;
+            qPowInv *= qInv;
+
+            bracket_[i] = qPow;
+            bracket_[i] -= qPowInv;
+            bracket_[i] *= base;
+            fact_[i] = fact_[i - 1];
+            fact_[i] *= bracket_[i];
+            inv_[i] = inv_[i - 1];
+            inv_[i] /= bracket_[i];
+        }
+    }
+
+    template <>
+    BracketFactorial<false>::BracketFactorial(
+            unsigned long r, unsigned long whichRoot) :
+            bracket_(new TVResult[r]),
+            fact_(new TVResult[r]),
+            inv_(new TVResult[r]) {
+        TVResult angle = (M_PI * whichRoot) / r;
+        bracket_[0] = bracket_[1] = fact_[0] = fact_[1] =
+            inv_[0] = inv_[1] = 1.0;
+        for (unsigned long i = 2; i < r; i++) {
+            bracket_[i] = sin(angle * i) / sin(angle);
+            fact_[i] = fact_[i - 1] * bracket_[i];
+            inv_[i] = inv_[i - 1] / bracket_[i];
+        }
+    }
 
     /**
      * Represents the initial data as described in Section 7 of Turaev
      * and Viro's paper.
      */
+    template <bool exact>
     struct InitialData {
-        unsigned long r;
-            /**< The integer r. */
-        double angle;
-            /**< The angle arg(q0). */
-        BracketFactorial fact;
+        typedef typename TuraevViroDetails<exact>::TVType TVType;
+        typedef typename TuraevViroDetails<exact>::TVResult TVResult;
+
+        unsigned long r, whichRoot;
+            /**< The Turaev-Viro parameters. */
+        bool halfField;
+        BracketFactorial<exact> fact;
             /**< The cached values [n]!. */
-        double vertexContrib;
+        TVType vertexContrib;
             /**< The vertex-based contribution to the Turaev-Viro invariant;
                  this is the inverse square of the distinguished value w. */
 
-        InitialData(unsigned long newR, double newAngle) :
-                r(newR), angle(newAngle), fact(angle, r) {
-            vertexContrib = 2.0 * sin(angle) * sin(angle) / r;
-        }
+        InitialData(unsigned long newR, unsigned long newWhichRoot);
+
+        static void negate(TVType& x);
+
+        void initZero(TVType& x) const;
+        void initOne(TVType& x) const;
 
         /**
          * Determines whether (i/2, j/2, k/2) is an admissible triple.
@@ -143,41 +221,43 @@ namespace {
         }
 
         /**
-         * Determines the triangle-based contribution to the Turaev-Viro
+         * Multiplies ans by the triangle-based contribution to the Turaev-Viro
          * invariant.  This corresponds to +/- Delta(i/2, j/2, k/2)^2.
          */
-        std::complex<double> triContrib(unsigned long i, unsigned long j,
-                unsigned long k) const {
+        void triContrib(unsigned long i, unsigned long j, unsigned long k,
+                TVType& ans) const {
             // By admissibility, (i + j + k) is guaranteed to be even.
-            std::complex<double> ans =
-                fact[(i + j - k) / 2] *
-                fact[(j + k - i) / 2] *
-                fact[(k + i - j) / 2] *
-                fact.inverse((i + j + k + 2) / 2);
-
-            return ((i + j + k) % 4 == 0 ? ans : -ans);
+            ans *= fact[(i + j - k) / 2];
+            ans *= fact[(j + k - i) / 2];
+            ans *= fact[(k + i - j) / 2];
+            ans *= fact.inverse((i + j + k + 2) / 2);
+            if ((i + j + k) % 4 != 0)
+                negate(ans);
         }
 
         /**
-         * Determines the edge-based contribution to the Turaev-Viro
+         * Multiplies ans by the edge-based contribution to the Turaev-Viro
          * invariant.  This corresponds to w(i/2)^2.
          */
-        std::complex<double> edgeContrib(unsigned long i) const {
-            return (i % 2 == 0 ? fact.bracket(i + 1) : - fact.bracket(i + 1));
+        void edgeContrib(unsigned long i, TVType& ans) const {
+            ans *= fact.bracket(i + 1);
+            if (i % 2 != 0)
+                negate(ans);
         }
 
         /**
-         * Determines the tetrahedron-based contribution to the Turaev-Viro
-         * invariant.  This combines with the square roots of the triangle-based
-         * contributions for the four tetrahedron faces to give the symbol
+         * Sets ansToOverwrite to the tetrahedron-based contribution to the
+         * Turaev-Viro invariant.  This combines with the square roots of the
+         * triangle-based contributions for the four tetrahedron faces to
+         * give the symbol
          *
          *     | i/2 j/2 k/2 |
          *     | l/2 m/2 n/2 | .
          */
-        std::complex<double> tetContrib(unsigned long i, unsigned long j,
+        void tetContrib(unsigned long i, unsigned long j,
                 unsigned long k, unsigned long l, unsigned long m,
-                unsigned long n) {
-            std::complex<double> ans = 0.0;
+                unsigned long n, TVType& ansToOverwrite) const {
+            ansToOverwrite = 0;
 
             unsigned long minZ = i + j + k;
             if (minZ < i + m + n)
@@ -193,39 +273,910 @@ namespace {
             if (maxZ > j + k + m + n)
                 maxZ = j + k + m + n;
 
-            double term;
+            TVType term;
             for (unsigned long z = minZ; z <= maxZ; z++) {
                 if (z % 2 != 0)
                     continue;
 
                 // We are guaranteed that z / 2 is an integer.
-                term = fact[(z + 2) / 2] *
-                    fact.inverse((z - i - j - k) / 2) *
-                    fact.inverse((z - i - m - n) / 2) *
-                    fact.inverse((z - j - l - n) / 2) *
-                    fact.inverse((z - k - l - m) / 2) *
-                    fact.inverse((i + j + l + m - z) / 2) *
-                    fact.inverse((i + k + l + n - z) / 2) *
-                    fact.inverse((j + k + m + n - z) / 2);
+                if (((z + 2) / 2) < r) {
+                    term = fact[(z + 2) / 2];
+                    term *= fact.inverse((z - i - j - k) / 2);
+                    term *= fact.inverse((z - i - m - n) / 2);
+                    term *= fact.inverse((z - j - l - n) / 2);
+                    term *= fact.inverse((z - k - l - m) / 2);
+                    term *= fact.inverse((i + j + l + m - z) / 2);
+                    term *= fact.inverse((i + k + l + n - z) / 2);
+                    term *= fact.inverse((j + k + m + n - z) / 2);
 
-                if (z % 4 == 0)
-                    ans += term;
-                else
-                    ans -= term;
+                    if (z % 4 == 0)
+                        ansToOverwrite += term;
+                    else
+                        ansToOverwrite -= term;
+                }
             }
-            return ans;
+        }
+
+        /**
+         * Multiplies ans by a single tetrahedron-based contribution
+         * along with all triangle and edge contributions for which that
+         * tetrahedron is responsible.  A tetrahedron is "responsible" for
+         * a triangle or edge contribution iff it is the tetrahedron
+         * referenced by getEmbedding(0) for that triangle or edge.
+         *
+         * The six arguments colour0, ..., colour5 refer to the colours
+         * on tetrahedron edges 0, ..., 5 respectively.
+         */
+        void tetContrib(const NTetrahedron* tet,
+                unsigned long colour0, unsigned long colour1,
+                unsigned long colour2, unsigned long colour3,
+                unsigned long colour4, unsigned long colour5,
+                TVType& ans) const {
+            TVType tmp(halfField ? r : 2 * r);
+            tetContrib(colour0, colour1, colour3, colour5, colour4, colour2,
+                tmp);
+            ans *= tmp;
+
+            int i;
+            const NTriangle* triangle;
+            const NEdge* edge;
+            for (i = 0; i < 4; ++i) {
+                triangle = tet->getTriangle(i);
+                if (triangle->getEmbedding(0).getTetrahedron() == tet &&
+                        triangle->getEmbedding(0).getTriangle() == i) {
+                    switch (i) {
+                        case 0:
+                            triContrib(colour3, colour4, colour5, ans);
+                            break;
+                        case 1:
+                            triContrib(colour1, colour2, colour5, ans);
+                            break;
+                        case 2:
+                            triContrib(colour0, colour2, colour4, ans);
+                            break;
+                        case 3:
+                            triContrib(colour0, colour1, colour3, ans);
+                            break;
+                    }
+                }
+            }
+            for (i = 0; i < 6; ++i) {
+                edge = tet->getEdge(i);
+                if (edge->getEmbedding(0).getTetrahedron() == tet &&
+                        edge->getEmbedding(0).getEdge() == i) {
+                    switch (i) {
+                        case 0: edgeContrib(colour0, ans); break;
+                        case 1: edgeContrib(colour1, ans); break;
+                        case 2: edgeContrib(colour2, ans); break;
+                        case 3: edgeContrib(colour3, ans); break;
+                        case 4: edgeContrib(colour4, ans); break;
+                        case 5: edgeContrib(colour5, ans); break;
+                    }
+                }
+            }
         }
     };
+
+    template <>
+    InitialData<true>::InitialData(
+            unsigned long newR, unsigned long newWhichRoot) :
+            r(newR),
+            whichRoot(newWhichRoot),
+            halfField(r % 2 != 0 && whichRoot % 2 == 0),
+            fact(r, whichRoot) {
+        // vertexContrib should be |q - q^-1|^2 / 2r.
+        vertexContrib.init(halfField ? r : 2 * r);
+        vertexContrib[1] = 1;
+        TVResult inv(vertexContrib);
+        inv.invert();
+
+        vertexContrib -= inv;           // Pure imaginary.
+        vertexContrib *= vertexContrib; // Gives -|..|^2
+        vertexContrib.negate();         // Gives +|..|^2
+        vertexContrib /= (2 * r);
+    }
+
+    template <>
+    InitialData<false>::InitialData(
+            unsigned long newR, unsigned long newWhichRoot) :
+            r(newR),
+            whichRoot(newWhichRoot),
+            halfField(r % 2 != 0 && whichRoot % 2 == 0),
+            fact(r, whichRoot) {
+        double tmp = sin(M_PI * whichRoot / r);
+        vertexContrib = 2.0 * tmp * tmp / r;
+    }
+
+    template <>
+    inline void InitialData<true>::negate(InitialData<true>::TVType& x) {
+        x.negate();
+    }
+
+    template <>
+    inline void InitialData<false>::negate(InitialData<false>::TVType& x) {
+        x = -x;
+    }
+
+    template <>
+    inline void InitialData<true>::initZero(InitialData<true>::TVType& x)
+            const {
+        x.init(halfField ? r : 2 * r);
+    }
+
+    template <>
+    inline void InitialData<false>::initZero(InitialData<false>::TVType& x)
+            const {
+        x = 0.0;
+    }
+
+    template <>
+    inline void InitialData<true>::initOne(InitialData<true>::TVType& x)
+            const {
+        x.init(halfField ? r : 2 * r);
+        x[0] = 1;
+    }
+
+    template <>
+    inline void InitialData<false>::initOne(InitialData<false>::TVType& x)
+            const {
+        x = 1.0;
+    }
+
+    template <bool exact>
+    typename InitialData<exact>::TVType turaevViroBacktrack(
+            const NTriangulation& tri,
+            const InitialData<exact>& init) {
+        typedef typename InitialData<exact>::TVType TVType;
+
+        unsigned long nEdges = tri.getNumberOfEdges();
+        unsigned long nTriangles = tri.getNumberOfTriangles();
+        unsigned long nTet = tri.getNumberOfTetrahedra();
+
+        // Our plan is to run through all admissible colourings via a
+        // backtracking search, with the high-degree edges towards the root
+        // of the search tree and the low-degree edges towards the leaves.
+
+        // We first sort the edges by degree.
+        unsigned long i, j;
+        unsigned long* sortedEdges = new unsigned long[nEdges];
+        unsigned long* edgePos = new unsigned long[nEdges];
+
+        for (i = 0; i < nEdges; ++i)
+            sortedEdges[i] = i;
+        std::sort(sortedEdges, sortedEdges + nEdges,
+            DegreeGreaterThan<3, 1>(tri));
+        for (i = 0; i < nEdges; ++i)
+            edgePos[sortedEdges[i]] = i;
+
+        // Work out which triangles and tetrahedra will be completely
+        // coloured at each level of the search tree.
+        //
+        // The following code contains some quadratic loops; we don't
+        // worry about this since it makes the code simpler and the
+        // overall algorithm is much slower (exponential) anyway.
+        std::deque<NEdgeEmbedding>::const_iterator embit;
+        unsigned long* tmp;
+
+        tmp = new unsigned long[nTriangles];
+        for (i = 0; i < nEdges; ++i) {
+            const std::deque<NEdgeEmbedding>& embs(
+                tri.getEdge(sortedEdges[i])->getEmbeddings());
+            for (embit = embs.begin(); embit != embs.end(); embit++)
+                tmp[(*embit).getTetrahedron()->
+                    getTriangle((*embit).getVertices()[2])->index()] = i;
+        }
+        unsigned long* triDone = new unsigned long[nTriangles];
+        unsigned long* triDoneStart = new unsigned long[nEdges + 1];
+        triDoneStart[0] = 0;
+        for (i = 0; i < nEdges; ++i) {
+            triDoneStart[i + 1] = triDoneStart[i];
+            for (j = 0; j < nTriangles; ++j)
+                if (tmp[j] == i)
+                    triDone[triDoneStart[i + 1]++] = j;
+        }
+        delete[] tmp;
+
+        tmp = new unsigned long[nTet];
+        for (i = 0; i < nEdges; ++i) {
+            const std::deque<NEdgeEmbedding>& embs(
+                tri.getEdge(sortedEdges[i])->getEmbeddings());
+            for (embit = embs.begin(); embit != embs.end(); embit++)
+                tmp[(*embit).getTetrahedron()->index()] = i;
+        }
+        unsigned long* tetDone = new unsigned long[nTet];
+        unsigned long* tetDoneStart = new unsigned long[nEdges + 1];
+        tetDoneStart[0] = 0;
+        for (i = 0; i < nEdges; ++i) {
+            tetDoneStart[i + 1] = tetDoneStart[i];
+            for (j = 0; j < nTet; ++j)
+                if (tmp[j] == i)
+                    tetDone[tetDoneStart[i + 1]++] = j;
+        }
+        delete[] tmp;
+
+        // Caches for partially computed weights of colourings:
+        TVType* edgeCache = new TVType[nEdges + 1];
+        init.initOne(edgeCache[0]);
+
+        TVType* triangleCache = new TVType[nEdges + 1];
+        init.initOne(triangleCache[0]);
+
+        TVType* tetCache = new TVType[nEdges + 1];
+        init.initOne(tetCache[0]);
+
+        // Run through all admissible colourings.
+        TVType ans;
+        init.initZero(ans);
+
+        // Now hunt for colourings.
+        unsigned long* colour = new unsigned long[nEdges];
+
+        std::fill(colour, colour + nEdges, 0);
+        long curr = 0;
+        TVType valColour(init.halfField ? init.r : 2 * init.r);
+        TVType tmpTVType(init.halfField ? init.r : 2 * init.r);
+        bool admissible;
+        long index1, index2;
+        const NTetrahedron* tet;
+        const NTriangle* triangle;
+        while (curr >= 0) {
+            // Have we found an admissible colouring?
+            if (curr >= static_cast<long>(nEdges)) {
+#ifdef TV_BACKTRACK_DUMP_COLOURINGS
+                for (i = 0; i < nEdges; ++i) {
+                    if (i > 0)
+                        std::cout << ' ';
+                    std::cout << colour[i];
+                }
+#endif
+                // Increment ans appropriately.
+                valColour = edgeCache[curr];
+                valColour *= triangleCache[curr];
+                valColour *= tetCache[curr];
+
+#ifdef TV_BACKTRACK_DUMP_COLOURINGS
+                std::cout << "  -->  " << valColour << std::endl;
+#endif
+                ans += valColour;
+
+                // Step back down one level.
+                curr--;
+                if (curr >= 0)
+                    colour[sortedEdges[curr]]++;
+                continue;
+            }
+
+            // Have we run out of values to try at this level?
+            if (colour[sortedEdges[curr]] > init.r - 2) {
+                colour[sortedEdges[curr]] = 0;
+                curr--;
+                if (curr >= 0)
+                    colour[sortedEdges[curr]]++;
+                continue;
+            }
+
+            // Does the current value for colour[sortedEdges[curr]]
+            // preserve admissibility?
+            admissible = true;
+            for (i = triDoneStart[curr];
+                    admissible && i < triDoneStart[curr + 1]; ++i) {
+                triangle = tri.getTriangle(triDone[i]);
+                if (! init.isAdmissible(
+                        colour[triangle->getEdge(0)->index()],
+                        colour[triangle->getEdge(1)->index()],
+                        colour[triangle->getEdge(2)->index()]))
+                    admissible = false;
+            }
+
+            // Use the current value for colour[curr] if appropriate;
+            // otherwise step forwards to the next value.
+            if (admissible) {
+                curr++;
+
+                edgeCache[curr] = edgeCache[curr - 1];
+                init.edgeContrib(colour[sortedEdges[curr - 1]],
+                    edgeCache[curr]);
+
+                triangleCache[curr] = triangleCache[curr - 1];
+                for (i = triDoneStart[curr - 1]; i < triDoneStart[curr]; ++i) {
+                    triangle = tri.getTriangle(triDone[i]);
+                    init.triContrib(
+                        colour[triangle->getEdge(0)->index()],
+                        colour[triangle->getEdge(1)->index()],
+                        colour[triangle->getEdge(2)->index()],
+                        triangleCache[curr]);
+                }
+
+                tetCache[curr] = tetCache[curr - 1];
+                for (i = tetDoneStart[curr - 1]; i < tetDoneStart[curr]; ++i) {
+                    // Unlike the others, this call overwrites tmpTVType.
+                    tet = tri.getTetrahedron(tetDone[i]);
+                    init.tetContrib(
+                        colour[tet->getEdge(0)->index()],
+                        colour[tet->getEdge(1)->index()],
+                        colour[tet->getEdge(3)->index()],
+                        colour[tet->getEdge(5)->index()],
+                        colour[tet->getEdge(4)->index()],
+                        colour[tet->getEdge(2)->index()],
+                        tmpTVType);
+                    tetCache[curr] *= tmpTVType;
+                }
+            } else
+                colour[sortedEdges[curr]]++;
+        }
+
+        delete[] colour;
+        delete[] sortedEdges;
+        delete[] edgePos;
+        delete[] triDone;
+        delete[] triDoneStart;
+        delete[] tetDone;
+        delete[] tetDoneStart;
+
+        delete[] edgeCache;
+        delete[] triangleCache;
+        delete[] tetCache;
+
+        // Compute the vertex contributions separately, since these are
+        // constant.
+        for (i = 0; i < tri.getNumberOfVertices(); i++)
+            ans *= init.vertexContrib;
+
+        return ans;
+    }
+
+    template <bool exact>
+    typename InitialData<exact>::TVType turaevViroNaive(
+            const NTriangulation& tri,
+            const InitialData<exact>& init) {
+        typedef typename InitialData<exact>::TVType TVType;
+
+        unsigned long nEdges = tri.getNumberOfEdges();
+        unsigned long nTriangles = tri.getNumberOfTriangles();
+
+        // Our plan is to run through all admissible colourings via a
+        // backtracking search, with the high-degree edges towards the root
+        // of the search tree and the low-degree edges towards the leaves.
+
+        // We first sort the edges by degree.
+        unsigned long i;
+        unsigned long* sortedEdges = new unsigned long[nEdges];
+        unsigned long* edgePos = new unsigned long[nEdges];
+
+        for (i = 0; i < nEdges; ++i)
+            sortedEdges[i] = i;
+        std::sort(sortedEdges, sortedEdges + nEdges,
+            DegreeGreaterThan<3, 1>(tri));
+        for (i = 0; i < nEdges; ++i)
+            edgePos[sortedEdges[i]] = i;
+
+        // Run through all admissible colourings.
+        TVType ans;
+        init.initZero(ans);
+
+        // Now hunt for colourings.
+        unsigned long* colour = new unsigned long[nEdges];
+
+        std::fill(colour, colour + nEdges, 0);
+        long curr = 0;
+        TVType valColour(init.halfField ? init.r : 2 * init.r);
+        bool admissible;
+        std::deque<NEdgeEmbedding>::const_iterator embit;
+        long index1, index2;
+        const NTetrahedron* tet;
+        while (curr >= 0) {
+            // Have we found an admissible colouring?
+            if (curr >= static_cast<long>(nEdges)) {
+#ifdef TV_BACKTRACK_DUMP_COLOURINGS
+                for (i = 0; i < nEdges; ++i) {
+                    if (i > 0)
+                        std::cout << ' ';
+                    std::cout << colour[i];
+                }
+#endif
+                // Increment ans appropriately.
+                valColour = 1;
+                for (i = 0; i < tri.getNumberOfTetrahedra(); i++) {
+                    tet = tri.getTetrahedron(i);
+                    init.tetContrib(tet,
+                        colour[tet->getEdge(0)->index()],
+                        colour[tet->getEdge(1)->index()],
+                        colour[tet->getEdge(2)->index()],
+                        colour[tet->getEdge(3)->index()],
+                        colour[tet->getEdge(4)->index()],
+                        colour[tet->getEdge(5)->index()],
+                        valColour);
+                }
+
+#ifdef TV_BACKTRACK_DUMP_COLOURINGS
+                std::cout << "  -->  " << valColour << std::endl;
+#endif
+                ans += valColour;
+
+                // Step back down one level.
+                curr--;
+                if (curr >= 0)
+                    colour[sortedEdges[curr]]++;
+                continue;
+            }
+
+            // Have we run out of values to try at this level?
+            if (colour[sortedEdges[curr]] > init.r - 2) {
+                colour[sortedEdges[curr]] = 0;
+                curr--;
+                if (curr >= 0)
+                    colour[sortedEdges[curr]]++;
+                continue;
+            }
+
+            // Does the current value for colour[curr] preserve admissibility?
+            admissible = true;
+            const std::deque<NEdgeEmbedding>&
+                embs(tri.getEdge(sortedEdges[curr])->getEmbeddings());
+            for (embit = embs.begin(); embit != embs.end(); embit++) {
+                index1 = tri.edgeIndex((*embit).getTetrahedron()->getEdge(
+                    NEdge::edgeNumber[(*embit).getVertices()[0]]
+                    [(*embit).getVertices()[2]]));
+                index2 = tri.edgeIndex((*embit).getTetrahedron()->getEdge(
+                    NEdge::edgeNumber[(*embit).getVertices()[1]]
+                    [(*embit).getVertices()[2]]));
+                if (edgePos[index1] <= curr && edgePos[index2] <= curr) {
+                    // We've decided upon colours for all three edges of
+                    // this triangle containing the current edge.
+                    if (! init.isAdmissible(colour[index1], colour[index2],
+                            colour[sortedEdges[curr]])) {
+                        admissible = false;
+                        break;
+                    }
+                }
+            }
+
+            // Use the current value for colour[curr] if appropriate;
+            // otherwise step forwards to the next value.
+            if (admissible)
+                curr++;
+            else
+                colour[sortedEdges[curr]]++;
+        }
+
+        delete[] colour;
+        delete[] sortedEdges;
+        delete[] edgePos;
+
+        // Compute the vertex contributions separately, since these are
+        // constant.
+        for (i = 0; i < tri.getNumberOfVertices(); i++)
+            ans *= init.vertexContrib;
+
+        return ans;
+    }
+
+    template <bool exact>
+    typename InitialData<exact>::TVType turaevViroTreewidth(
+            const NTriangulation& tri,
+            InitialData<exact>& init) {
+        typedef typename InitialData<exact>::TVType TVType;
+
+        const NTreeDecomposition& d = tri.niceTreeDecomposition();
+
+        int nEdges = tri.getNumberOfEdges();
+        int nBags = d.size();
+        const NTreeBag *bag, *child, *sibling;
+        int i, j;
+        int index;
+        const NTetrahedron* tet;
+        const NEdge* edge;
+
+        // In the seenDegree[] array, an edge that has been seen in all
+        // of its tetrahedra will be marked as seenDegree[i] = -1 (as
+        // opposed to seenDegree[i] = tri.getEdge(i)->getDegree()).
+        // This is simply to make such a condition easier to test.
+        LightweightSequence<int>* seenDegree =
+            new LightweightSequence<int>[nBags];
+
+        for (bag = d.first(); bag; bag = bag->next()) {
+            index = bag->index();
+            seenDegree[index].init(nEdges);
+
+            if (bag->isLeaf()) {
+                std::fill(seenDegree[index].begin(),
+                    seenDegree[index].end(), 0);
+            } else if (bag->type() == NICE_INTRODUCE) {
+                // Introduce bag.
+                child = bag->children();
+                std::copy(seenDegree[child->index()].begin(),
+                    seenDegree[child->index()].end(),
+                    seenDegree[index].begin());
+            } else if (bag->type() == NICE_FORGET) {
+                // Forget bag.
+                child = bag->children();
+                tet = tri.getTetrahedron(child->element(bag->subtype()));
+                std::copy(seenDegree[child->index()].begin(),
+                    seenDegree[child->index()].end(),
+                    seenDegree[index].begin());
+                for (i = 0; i < 6; ++i) {
+                    edge = tet->getEdge(i);
+                    ++seenDegree[index][edge->index()];
+                    if (seenDegree[index][edge->index()] == edge->getDegree())
+                        seenDegree[index][edge->index()] = -1;
+                }
+            } else {
+                // Join bag.
+                child = bag->children();
+                sibling = child->sibling();
+                for (i = 0; i < nEdges; ++i) {
+                    seenDegree[index][i] = seenDegree[child->index()][i] +
+                        seenDegree[sibling->index()][i];
+                    if (seenDegree[index][i] == tri.getEdge(i)->getDegree())
+                        seenDegree[index][i] = -1;
+                }
+            }
+        }
+
+        typedef std::map<LightweightSequence<int>*, TVType,
+            LightweightSequence<int>::Less> SolnSet;
+        typedef typename SolnSet::iterator SolnIterator;
+
+        SolnSet** partial = new SolnSet*[nBags];
+        LightweightSequence<int>* seq;
+        SolnIterator it, it2;
+        std::pair<SolnIterator, bool> existingSoln;
+        int e1, e2;
+        int tetEdge[6];
+        int colour[6];
+        int level;
+        bool ok;
+        TVType val;
+
+        size_t* overlap = new size_t[nEdges];
+        size_t nOverlap;
+        SolnIterator *leftIndexed, *rightIndexed;
+        size_t nLeft, nRight;
+        SolnIterator *subit, *subit2;
+        std::pair<SolnIterator*, SolnIterator*> subrange, subrange2;
+
+        // For each new tetrahedron that appears in a forget bag, we
+        // colour its edges in the order 5,4,3,2,1,0.
+        // This is so that we get triangles appearing as soon as possible
+        // (edges 5-4-3 form a triangle, but edges 0-1-2 do not).
+        //
+        // To help in the decision making, choiceType[i] stores for
+        // tetrahedron edge i:
+        // * 0 if we must colour the edge here;
+        // * -1 if the edge was already coloured in the child bag;
+        // * x ∈ {5,...,1} if the edge was already coloured in this bag
+        //   when it appeared as edge x of this same new tetrahedron.
+        int choiceType[6];
+
+        for (bag = d.first(); bag; bag = bag->next()) {
+            index = bag->index();
+
+            if (bag->isLeaf()) {
+                // A single empty colouring.
+                seq = new LightweightSequence<int>(nEdges);
+                std::fill(seq->begin(), seq->end(), TV_UNCOLOURED);
+
+                partial[index] = new SolnSet;
+                init.initOne(val);
+                partial[index]->insert(std::make_pair(seq, val));
+            } else if (bag->type() == NICE_INTRODUCE) {
+                // Introduce bag.
+                child = bag->children();
+                partial[index] = partial[child->index()];
+                partial[child->index()] = 0;
+            } else if (bag->type() == NICE_FORGET) {
+                // Forget bag.
+                child = bag->children();
+                tet = tri.getTetrahedron(child->element(bag->subtype()));
+
+                for (i = 5; i >= 0; --i) {
+                    tetEdge[i] = tet->getEdge(i)->index();
+                    if (seenDegree[child->index()][tetEdge[i]] > 0) {
+                        // The child will have already coloured this edge.
+                        choiceType[i] = -1;
+                    } else {
+                        choiceType[i] = 0;
+                        for (j = 5; j > i; --j)
+                            if (tetEdge[j] == tetEdge[i]) {
+                                // We will have already coloured this edge
+                                // because it reappears as a higher-numbered
+                                // edge of this same tetrahedron.
+                                choiceType[i] = j;
+                                break;
+                            }
+                    }
+                }
+
+                partial[index] = new SolnSet;
+
+                for (it = partial[child->index()]->begin();
+                        it != partial[child->index()]->end(); ++it) {
+                    for (i = 0; i < 6; ++i)
+                        colour[i] = (choiceType[i] < 0 ?
+                            (*(it->first))[tetEdge[i]] : -1);
+
+                    level = 5;
+                    while (level < 6) {
+                        if (level < 0) {
+                            // We have an admissible partial colouring.
+
+                            // First, compute its (partial) weight:
+                            val = it->second;
+                            init.tetContrib(tet,
+                                colour[0], colour[1], colour[2],
+                                colour[3], colour[4], colour[5], val);
+
+                            // Next, compute the sequence of colours
+                            // that we will use as a lookup key.
+                            // For any edges that never appear beyond
+                            // this bag, we mark them for aggregation.
+                            seq = new LightweightSequence<int>(nEdges);
+                            for (i = 0; i < nEdges; ++i)
+                                if (seenDegree[index][i] < 0)
+                                    (*seq)[i] = TV_AGGREGATED;
+                                else
+                                    (*seq)[i] = (*it->first)[i];
+                            for (i = 0; i < 6; ++i)
+                                if (choiceType[i] == 0 &&
+                                        (*seq)[tetEdge[i]] != TV_AGGREGATED)
+                                    (*seq)[tetEdge[i]] = colour[i];
+
+                            // Finally, insert the solution into the
+                            // lookup table, aggregating with existing
+                            // solutions if need be.
+                            existingSoln = partial[index]->insert(
+                                std::make_pair(seq, val));
+                            if (! existingSoln.second) {
+                                existingSoln.first->second += val;
+                                delete seq;
+                            }
+
+                            ++level;
+                            while (level < 6 && choiceType[level] != 0)
+                                ++level;
+                            continue;
+                        }
+
+                        if (choiceType[level] > 0)
+                            colour[level] = colour[choiceType[level]];
+                        else if (choiceType[level] == 0) {
+                            if (colour[level] <
+                                    static_cast<long>(init.r) - 2)
+                                ++colour[level];
+                            else {
+                                // Out of choices at this level.
+                                colour[level] = -1;
+                                ++level;
+                                while (level < 6 && choiceType[level] != 0)
+                                    ++level;
+                                continue;
+                            }
+                        }
+
+                        ok = true;
+                        if (level == 3 && ! init.isAdmissible(
+                                colour[3], colour[4], colour[5]))
+                            ok = false;
+                        if (level == 1 && ! init.isAdmissible(
+                                colour[1], colour[2], colour[5]))
+                            ok = false;
+                        if (level == 0 && ! init.isAdmissible(
+                                colour[0], colour[2], colour[4]))
+                            ok = false;
+                        if (level == 0 && ! init.isAdmissible(
+                                colour[0], colour[1], colour[3]))
+                            ok = false;
+                        if (! ok) {
+                            // This colouring is inadmissible.
+                            // If we have a choice for this edge then
+                            // move on to the next colour.
+                            // If the colour of this edge is forced then
+                            // backtrack.
+                            while (level < 6 && choiceType[level] != 0)
+                                ++level;
+                            continue;
+                        }
+
+                        --level;
+                    }
+                }
+
+                for (it = partial[child->index()]->begin();
+                        it != partial[child->index()]->end(); ++it)
+                    delete it->first;
+                delete partial[child->index()];
+                partial[child->index()] = 0;
+            } else {
+                // Join bag.
+                partial[index] = new SolnSet;
+
+                child = bag->children();
+                sibling = child->sibling();
+
+                nOverlap = 0;
+                for (i = 0; i < nEdges; ++i)
+                    if (seenDegree[child->index()][i] != 0 &&
+                            seenDegree[sibling->index()][i] != 0)
+                    overlap[nOverlap++] = i;
+
+                LightweightSequence<int>::SubsequenceCompareFirstPtr<
+                    SolnIterator> compare(nOverlap, overlap);
+
+                nLeft = 0;
+                leftIndexed = new SolnIterator[partial[child->index()]->size()];
+                for (it = partial[child->index()]->begin();
+                        it != partial[child->index()]->end(); ++it)
+                    leftIndexed[nLeft++] = it;
+                std::sort(leftIndexed, leftIndexed + nLeft, compare);
+
+                nRight = 0;
+                rightIndexed = new SolnIterator[
+                    partial[sibling->index()]->size()];
+                for (it = partial[sibling->index()]->begin();
+                        it != partial[sibling->index()]->end(); ++it)
+                    rightIndexed[nRight++] = it;
+                std::sort(rightIndexed, rightIndexed + nRight, compare);
+
+                subrange.second = leftIndexed;
+                subrange2.second = rightIndexed;
+
+                while (subrange.second != leftIndexed + nLeft &&
+                        subrange2.second != rightIndexed + nRight) {
+                    subrange.first = subrange.second;
+                    while (subrange.second != leftIndexed + nLeft &&
+                            compare.equal(*subrange.first, *subrange.second))
+                        ++subrange.second;
+
+                    subrange2.first = subrange2.second;
+                    while (subrange2.first != rightIndexed + nRight &&
+                            compare.less(*subrange2.first, *subrange.first))
+                        ++subrange2.first;
+
+                    if (subrange2.first == rightIndexed + nRight)
+                        break;
+                    if (compare.less(*subrange.first, *subrange2.first))
+                        continue;
+
+                    subrange2.second = subrange2.first;
+                    while (subrange2.second != rightIndexed + nRight &&
+                            compare.equal(*subrange2.first, *subrange2.second))
+                        ++subrange2.second;
+
+                    for (subit = subrange.first;
+                            subit != subrange.second; ++subit)
+                        for (subit2 = subrange2.first;
+                                subit2 != subrange2.second; ++subit2) {
+                            // We have two compatible solutions.
+                            // Combine them and store the corresponding
+                            // value, again aggregating if necessary.
+                            val = (*subit)->second;
+                            val *= (*subit2)->second;
+
+                            seq = new LightweightSequence<int>(nEdges);
+                            for (i = 0; i < nEdges; ++i)
+                                if (seenDegree[index][i] < 0)
+                                    (*seq)[i] = TV_AGGREGATED;
+                                else if (seenDegree[child->index()][i] > 0)
+                                    (*seq)[i] = (*((*subit)->first))[i];
+                                else
+                                    (*seq)[i] = (*((*subit2)->first))[i];
+
+                            existingSoln = partial[index]->insert(
+                                std::make_pair(seq, val));
+                            if (! existingSoln.second) {
+                                existingSoln.first->second += val;
+                                delete seq;
+                            }
+                        }
+                }
+
+                delete[] leftIndexed;
+                delete[] rightIndexed;
+
+                for (it2 = partial[child->index()]->begin();
+                        it2 != partial[child->index()]->end(); ++it2)
+                    delete it2->first;
+                delete partial[child->index()];
+                partial[child->index()] = 0;
+
+                for (it2 = partial[sibling->index()]->begin();
+                        it2 != partial[sibling->index()]->end(); ++it2)
+                    delete it2->first;
+                delete partial[sibling->index()];
+                partial[sibling->index()] = 0;
+            }
+
+#ifdef TV_BACKTRACK_DUMP_COLOURINGS
+            std::cout << "Bag " << bag->index() << ":" << std::endl;
+            for (it = partial[index]->begin(); it != partial[index]->end();
+                    ++it)
+                std::cout << *(it->first) << " -> "
+                    << it->second << std::endl;
+#endif
+        }
+
+        // The final bag contains no tetrahedra, and so there should be
+        // only one colouring stored (in which all edge colours are aggregated).
+        TVType ans = partial[nBags - 1]->begin()->second;
+        for (i = 0; i < tri.getNumberOfVertices(); i++)
+            ans *= init.vertexContrib;
+
+        for (it = partial[nBags - 1]->begin(); it != partial[nBags - 1]->end();
+                ++it)
+            delete it->first;
+        delete partial[nBags - 1];
+        partial[nBags - 1] = 0;
+
+        delete[] seenDegree;
+        delete[] partial;
+        delete[] overlap;
+
+        return ans;
+    }
+
+    template <bool exact>
+    typename InitialData<exact>::TVType turaevViroPolytope(
+            const NTriangulation& tri,
+            InitialData<exact>& init) {
+        typedef typename InitialData<exact>::TVType TVType;
+
+        std::vector<std::vector<mpz_class> > input;
+        unsigned long nTri = tri.getNumberOfTriangles();
+
+        NTriangulation::EdgeIterator eit;
+        std::deque<NEdgeEmbedding>::const_iterator emb;
+        const NTetrahedron* tet;
+        NPerm4 p;
+        unsigned long i;
+        for (eit = tri.getEdges().begin(); eit != tri.getEdges().end(); ++eit) {
+            for (emb = (*eit)->getEmbeddings().begin();
+                    emb != (*eit)->getEmbeddings().end(); ++emb) {
+                input.push_back(std::vector<mpz_class>());
+                std::vector<mpz_class>& v(input.back());
+                v.reserve(3 * nTri);
+
+                for (i = 0; i < 3 * nTri; ++i)
+                    v.push_back(long(0));
+
+                tet = emb->getTetrahedron();
+                p = emb->getVertices();
+
+                ++v[3 * tet->getTriangle(p[2])->index() +
+                    tet->getTriangleMapping(p[2]).preImageOf(p[0])];
+                ++v[3 * tet->getTriangle(p[2])->index() +
+                    tet->getTriangleMapping(p[2]).preImageOf(p[1])];
+                --v[3 * tet->getTriangle(p[3])->index() +
+                    tet->getTriangleMapping(p[3]).preImageOf(p[0])];
+                --v[3 * tet->getTriangle(p[3])->index() +
+                    tet->getTriangleMapping(p[3]).preImageOf(p[1])];
+            }
+        }
+
+        libnormaliz::Cone<mpz_class> cone(input, libnormaliz::Type::equations);
+        libnormaliz::ConeProperties wanted(
+            libnormaliz::ConeProperty::HilbertBasis);
+        cone.compute(wanted);
+
+        if (! cone.isComputed(libnormaliz::ConeProperty::HilbertBasis)) {
+            std::cerr << "ERROR: Hilbert basis not computed!" << std::endl;
+            return TVType(init.halfField ? init.r : 2 * init.r);
+        }
+        const std::vector<std::vector<mpz_class> > basis =
+            cone.getHilbertBasis();
+
+        unsigned long j;
+        for (i = 0; i < basis.size(); ++i) {
+            for (j = 0; j < basis[i].size(); ++j)
+                std::cout << basis[i][j] << ' ';
+            std::cout << std::endl;
+        }
+
+        return TVType(init.halfField ? init.r : 2 * init.r);
+    }
 }
 
-double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
-        const {
-    // Have we already calculated this invariant?
-    std::pair<unsigned long, unsigned long> tvParams(r, whichRoot);
-    TuraevViroSet::const_iterator it = turaevViroCache_.find(tvParams);
-    if (it != turaevViroCache_.end())
-        return (*it).second;
-
+double NTriangulation::turaevViroApprox(unsigned long r,
+        unsigned long whichRoot, TuraevViroAlg alg) const {
     // Do some basic parameter checks.
     if (r < 3)
         return 0;
@@ -235,95 +1186,21 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
         return 0;
 
     // Set up our initial data.
-    double angle = (M_PI * whichRoot) / r;
-    InitialData init(r, angle);
+    InitialData<false> init(r, whichRoot);
 
-    // Run through all admissible colourings.
-    std::complex<double> ans = 0.0;
-
-    unsigned long nEdges = getNumberOfEdges();
-    unsigned long nTriangles = getNumberOfTriangles();
-    unsigned long* colour = new unsigned long[nEdges];
-
-    std::fill(colour, colour + nEdges, 0);
-    long curr = 0;
-    std::complex<double> valColour;
-    bool admissible;
-    std::deque<NEdgeEmbedding>::const_iterator embit;
-    long index1, index2;
-    unsigned long i;
-    while (curr >= 0) {
-        // Have we found an admissible colouring?
-        if (curr >= static_cast<long>(nEdges)) {
-            // Increment ans appropriately.
-            valColour = 1.0;
-            for (i = 0; i < vertices_.size(); i++)
-                valColour *= init.vertexContrib;
-            for (i = 0; i < nEdges; i++)
-                valColour *= init.edgeContrib(colour[i]);
-            for (i = 0; i < nTriangles; i++)
-                valColour *= init.triContrib(
-                    colour[edgeIndex(triangles_[i]->getEdge(0))],
-                    colour[edgeIndex(triangles_[i]->getEdge(1))],
-                    colour[edgeIndex(triangles_[i]->getEdge(2))]);
-            for (i = 0; i < tetrahedra_.size(); i++)
-                valColour *= init.tetContrib(
-                    colour[edgeIndex(tetrahedra_[i]->getEdge(0))],
-                    colour[edgeIndex(tetrahedra_[i]->getEdge(1))],
-                    colour[edgeIndex(tetrahedra_[i]->getEdge(3))],
-                    colour[edgeIndex(tetrahedra_[i]->getEdge(5))],
-                    colour[edgeIndex(tetrahedra_[i]->getEdge(4))],
-                    colour[edgeIndex(tetrahedra_[i]->getEdge(2))]
-                    );
-
-            ans += valColour;
-
-            // Step back down one level.
-            curr--;
-            if (curr >= 0)
-                colour[curr]++;
-            continue;
-        }
-
-        // Have we run out of values to try at this level?
-        if (colour[curr] > r - 2) {
-            colour[curr] = 0;
-            curr--;
-            if (curr >= 0)
-                colour[curr]++;
-            continue;
-        }
-
-        // Does the current value for colour[curr] preserve admissibility?
-        admissible = true;
-        const std::deque<NEdgeEmbedding>& embs(edges_[curr]->getEmbeddings());
-        for (embit = embs.begin(); embit != embs.end(); embit++) {
-            index1 = edgeIndex((*embit).getTetrahedron()->getEdge(
-                NEdge::edgeNumber[(*embit).getVertices()[0]]
-                [(*embit).getVertices()[2]]));
-            index2 = edgeIndex((*embit).getTetrahedron()->getEdge(
-                NEdge::edgeNumber[(*embit).getVertices()[1]]
-                [(*embit).getVertices()[2]]));
-            if (index1 <= curr && index2 <= curr) {
-                // We've decided upon colours for all three edges of
-                // this triangle containing the current edge.
-                if (! init.isAdmissible(colour[index1], colour[index2],
-                        colour[curr])) {
-                    admissible = false;
-                    break;
-                }
-            }
-        }
-
-        // Use the current value for colour[curr] if appropriate;
-        // otherwise step forwards to the next value.
-        if (admissible)
-            curr++;
-        else
-            colour[curr]++;
+    InitialData<false>::TVType ans;
+    switch (alg) {
+        case TV_DEFAULT:
+        case TV_BACKTRACK:
+            ans = turaevViroBacktrack(*this, init);
+            break;
+        case TV_TREEWIDTH:
+            ans = turaevViroTreewidth(*this, init);
+            break;
+        case TV_NAIVE:
+            ans = turaevViroNaive(*this, init);
+            break;
     }
-
-    delete[] colour;
 
     if (isNonZero(ans.imag())) {
         // This should never happen, since the Turaev-Viro invariant is the
@@ -334,8 +1211,43 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
             "         Please report this (along with the 3-manifold that"
             "         was used) to " << PACKAGE_BUGREPORT << "." << std::endl;
     }
-    turaevViroCache_[tvParams] = ans.real();
     return ans.real();
+}
+
+NCyclotomic NTriangulation::turaevViro(unsigned long r, bool parity,
+        TuraevViroAlg alg) const {
+    // Do some basic parameter checks.
+    if (r < 3)
+        return NCyclotomic();
+    if (r % 2 == 0)
+        parity = false;
+
+    // Have we already calculated this invariant?
+    std::pair<unsigned long, bool> tvParams(r, parity);
+#ifndef TV_IGNORE_CACHE
+    TuraevViroSet::const_iterator it = turaevViroCache_.find(tvParams);
+    if (it != turaevViroCache_.end())
+        return (*it).second;
+#endif
+
+    // Set up our initial data.
+    InitialData<true> init(r, (parity ? 1 : 0));
+
+    InitialData<true>::TVType ans;
+    switch (alg) {
+        case TV_DEFAULT:
+        case TV_BACKTRACK:
+            ans = turaevViroBacktrack(*this, init);
+            break;
+        case TV_TREEWIDTH:
+            ans = turaevViroTreewidth(*this, init);
+            break;
+        case TV_NAIVE:
+            ans = turaevViroNaive(*this, init);
+            break;
+    }
+
+    return (turaevViroCache_[tvParams] = ans);
 }
 
 } // namespace regina

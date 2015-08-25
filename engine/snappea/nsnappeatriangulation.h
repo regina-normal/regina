@@ -110,12 +110,7 @@ struct SnapPeaFatalError : public SnapPeaException {
 struct SnapPeaMemoryFull : public SnapPeaException {
 };
 
-/**
- * Stores information about the SnapPea triangulation packet.
- * See the general PacketInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct PacketInfo<PACKET_SNAPPEATRIANGULATION> {
     typedef NSnapPeaTriangulation Class;
@@ -123,6 +118,7 @@ struct PacketInfo<PACKET_SNAPPEATRIANGULATION> {
         return "SnapPea Triangulation";
     }
 };
+#endif
 
 /**
  * Represents a single cusp of a SnapPea triangulation.
@@ -135,7 +131,9 @@ struct PacketInfo<PACKET_SNAPPEATRIANGULATION> {
  * be deleted and replaced with new ones (using fresh data re-fetched from
  * the SnapPea kernel).
  */
-class REGINA_API NCusp : public ShareableObject {
+class REGINA_API NCusp :
+        public ShortOutput<NCusp>,
+        public boost::noncopyable {
     private:
         NVertex* vertex_;
             /**< The corresponding vertex of the Regina triangulation. */
@@ -147,11 +145,6 @@ class REGINA_API NCusp : public ShareableObject {
                  cusp is complete. */
 
     public:
-        /**
-         * Default destructor.
-         */
-        virtual ~NCusp();
-
         /**
          * Returns the corresponding vertex of the Regina triangulation
          * (i.e., of the NTriangulation structure that is inherited by
@@ -200,6 +193,14 @@ class REGINA_API NCusp : public ShareableObject {
          */
         int l() const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
 
     private:
@@ -1482,9 +1483,6 @@ inline SnapPeaFatalError::SnapPeaFatalError(
 }
 
 // Inline functions for NCusp
-
-inline NCusp::~NCusp() {
-}
 
 inline NCusp::NCusp() {
 }

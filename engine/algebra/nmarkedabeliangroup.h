@@ -44,8 +44,10 @@
 #include <vector>
 #include <memory>
 #include "regina-core.h"
+#include "output.h"
 #include "maths/nmatrixint.h"
 #include "utilities/ptrutils.h"
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -89,7 +91,9 @@ class NHomMarkedAbelianGroup;
  * \todo Testsuite additions: isBoundary(), boundaryMap(), writeAsBdry(),
  * cycleGen().
  */
-class REGINA_API NMarkedAbelianGroup : public ShareableObject {
+class REGINA_API NMarkedAbelianGroup :
+        public ShortOutput<NMarkedAbelianGroup>,
+        public boost::noncopyable {
     private:
         /** Internal original M */
         NMatrixInt OM; // copy of initializing M
@@ -217,11 +221,6 @@ class REGINA_API NMarkedAbelianGroup : public ShareableObject {
          * @return \c true if and only if M*N = 0.
          */
         bool isChainComplex() const;
-
-        /**
-         * Destroys the group.
-         */
-        ~NMarkedAbelianGroup();
 
         /**
          * Returns the rank of the group.
@@ -939,7 +938,9 @@ class REGINA_API NMarkedAbelianGroup : public ShareableObject {
  *
  * @author Ryan Budney
  */
-class REGINA_API NHomMarkedAbelianGroup : public ShareableObject {
+class REGINA_API NHomMarkedAbelianGroup :
+        public Output<NHomMarkedAbelianGroup>,
+        public boost::noncopyable {
     private:
         /** internal rep of domain of the homomorphism */
         NMarkedAbelianGroup domain;
@@ -1286,7 +1287,6 @@ class REGINA_API NHomMarkedAbelianGroup : public ShareableObject {
 
 // copy constructor
 inline NMarkedAbelianGroup::NMarkedAbelianGroup(const NMarkedAbelianGroup& g) :
-        ShareableObject(),
         OM(g.OM), ON(g.ON), OMR(g.OMR), OMC(g.OMC), OMRi(g.OMRi), OMCi(g.OMCi),
         rankOM(g.rankOM),
         ornR(clonePtr(g.ornR)), ornC(clonePtr(g.ornC)),
@@ -1298,10 +1298,6 @@ inline NMarkedAbelianGroup::NMarkedAbelianGroup(const NMarkedAbelianGroup& g) :
         ifNum(g.ifNum), ifLoc(g.ifLoc), coeff(g.coeff), TORLoc(g.TORLoc),
         TORVec(g.TORVec), tensorIfLoc(g.tensorIfLoc),
         tensorIfNum(g.tensorIfNum), tensorInvFacList(g.tensorInvFacList) {
-}
-
-// destructor
-inline NMarkedAbelianGroup::~NMarkedAbelianGroup() {
 }
 
 inline unsigned long NMarkedAbelianGroup::getTorsionRank(unsigned long degree)

@@ -96,7 +96,9 @@ namespace regina {
  * \deprecated This class is deprecated.  Please use the more flexible
  * and more streamlined NProgressTracker class instead.
  */
-class NProgressManager : public ShareableObject {
+class NProgressManager :
+        public ShortOutput<NProgressManager>,
+        public boost::noncopyable {
     private:
         NProgress* progress;
             /**< The progress report object that we are managing. */
@@ -165,6 +167,14 @@ class NProgressManager : public ShareableObject {
          */
         void setProgress(NProgress* newProgress);
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
 };
 

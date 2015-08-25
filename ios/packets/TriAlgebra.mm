@@ -234,7 +234,7 @@
     computed = [[NSMutableArray alloc] init];
     const regina::NTriangulation::TuraevViroSet& s = self.packet->allCalculatedTuraevViro();
     for (regina::NTriangulation::TuraevViroSet::const_iterator it = s.begin(); it != s.end(); ++it)
-        [computed addObject:[TVItem itemWithValue:it->second r:it->first.first root:it->first.second]];
+        [computed addObject:[TVItem itemWithValue:it->second.evaluate(it->first.second).real() r:it->first.first root:it->first.second]];
 
     [self.tvValues reloadData];
 }
@@ -322,7 +322,7 @@
         return;
     }
 
-    double value = self.packet->turaevViro(r, root);
+    double value = self.packet->turaevViro(r, root).evaluate(root).real();
     TVItem* item = [TVItem itemWithValue:value r:r root:root];
 
     NSUInteger index = [computed indexOfObject:item

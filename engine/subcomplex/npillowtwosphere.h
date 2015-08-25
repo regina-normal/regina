@@ -43,8 +43,9 @@
 #endif
 
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "maths/nperm4.h"
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -71,7 +72,9 @@ class NTriangulation;
  * 2-sphere was separating, the resulting triangulation will contain the
  * two terms of the corresponding connected sum.
  */
-class REGINA_API NPillowTwoSphere : public ShareableObject {
+class REGINA_API NPillowTwoSphere :
+        public ShortOutput<NPillowTwoSphere>,
+        public boost::noncopyable {
     private:
         NTriangle* triangle[2];
             /**< The two triangles whose edges are joined. */
@@ -153,6 +156,14 @@ class REGINA_API NPillowTwoSphere : public ShareableObject {
         static NPillowTwoSphere* formsPillowTwoSphere(NTriangle* tri1,
             NTriangle* tri2);
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
 
     private:
