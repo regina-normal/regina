@@ -9,6 +9,8 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.97  [ (under development) ]
 
+    GENERAL:
+        - Merged sources for the iPad version into the main source tree.
     ENGINE:
         All:
             - Removed ShareableObject from the class hierarchy.  All classes
