@@ -26,8 +26,6 @@
 		0513753E1809B8D3002E525B /* coordregistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753C1809B8D2002E525B /* coordregistry.h */; };
 		051806D4181202BD008EBB01 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 051806D3181202BD008EBB01 /* icons */; };
 		051806D6181202E0008EBB01 /* examples in Resources */ = {isa = PBXBuildFile; fileRef = 051806D5181202E0008EBB01 /* examples */; };
-		051806D7181203BB008EBB01 /* regina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 05561D181811F27A00FD6E2E /* regina.icns */; };
-		051806D8181203BB008EBB01 /* x-regina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 05561D191811F27A00FD6E2E /* x-regina.icns */; };
 		0523D88A180B54850094DAAD /* PacketManagerIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0523D889180B54850094DAAD /* PacketManagerIOS.mm */; };
 		052F9E83180600FB00FAE4DF /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C00180600FA00FAE4DF /* nabeliangroup.cpp */; };
 		052F9E84180600FB00FAE4DF /* nabeliangroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C01180600FA00FAE4DF /* nabeliangroup.h */; };
@@ -957,8 +955,6 @@
 		0564A9841811D921002CC2AE /* sharedtempfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5F31811D920002CC2AE /* sharedtempfile.cpp */; };
 		0564A9851811D921002CC2AE /* shortrunner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5F51811D920002CC2AE /* shortrunner.cpp */; };
 		0564A99B1811D921002CC2AE /* treenav.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A6161811D921002CC2AE /* treenav.cpp */; };
-		0564A9A01811DB02002CC2AE /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0564A99E1811DB01002CC2AE /* QtCore.framework */; };
-		0564A9A11811DB02002CC2AE /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0564A99F1811DB02002CC2AE /* QtGui.framework */; };
 		0564A9A21811DB2F002CC2AE /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
 		0569F93019B3655C00051091 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0569F92F19B3655C00051091 /* libtokyocabinet.framework */; };
 		0569F93219B3658200051091 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0569F93119B3658200051091 /* libbz2.dylib */; };
@@ -1079,6 +1075,12 @@
 		05A73CE419B2F9DC0099C617 /* nsnappeagluings.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CC519B2F1AB0099C617 /* nsnappeagluings.h */; };
 		05A73CE519B2F9DC0099C617 /* nsnappeashapes.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CC719B2F1AB0099C617 /* nsnappeashapes.h */; };
 		05A73CE619B2F9DC0099C617 /* nsnappeaui.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CC919B2F1AB0099C617 /* nsnappeaui.h */; };
+		05AB5ECF1B8ED9FA007034C8 /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5ECC1B8ED9F9007034C8 /* QtCore.framework */; };
+		05AB5ED01B8ED9FA007034C8 /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5ECD1B8ED9F9007034C8 /* QtGui.framework */; };
+		05AB5ED11B8ED9FA007034C8 /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5ECE1B8ED9FA007034C8 /* QtWidgets.framework */; };
+		05AB5ED31B8EDC27007034C8 /* QtSvg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5ED21B8EDC27007034C8 /* QtSvg.framework */; };
+		05AB5ED61B8EDFBF007034C8 /* regina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 05561D181811F27A00FD6E2E /* regina.icns */; };
+		05AB5ED71B8EDFBF007034C8 /* x-regina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 05561D191811F27A00FD6E2E /* x-regina.icns */; };
 		05B14EB519B4240D002138C0 /* mkcensusdb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B14EB419B4240D002138C0 /* mkcensusdb.cpp */; };
 		05B14EB719B424D8002138C0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A51806047E00FAE4DF /* libz.dylib */; };
 		05B14EB919B424F9002138C0 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
@@ -1154,7 +1156,7 @@
 			outputFiles = (
 				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_moc.cxx",
 			);
-			script = "/Developer/Tools/Qt/moc \\\n-I/Library/Frameworks/QtGui.framework/Headers \\\n-I/Library/Frameworks/QtCore.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx ${INPUT_FILE_PATH}";
+			script = "~/Qt5/5.5/clang_64/bin/moc \\\n-I${HOME}/Qt5/5.5/clang_64/lib/QtCore.framework/Headers \\\n-I${HOME}/Qt5/5.5/clang_64/lib/QtGui.framework/Headers \\\n-I${HOME}/Qt5/5.5/clang_64/lib/QtSvg.framework/Headers \\\n-I${HOME}/Qt5/5.5/clang_64/lib/QtWidgets.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx ${INPUT_FILE_PATH}";
 		};
 		054BC4C219B4A708005E01A0 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -1931,8 +1933,8 @@
 		054F7E2A180B96AC0090B1F3 /* welcome.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = welcome.html; sourceTree = "<group>"; };
 		054F7E2C180B99270090B1F3 /* regina.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = regina.css; sourceTree = "<group>"; };
 		05500A1019B422360074CE5D /* cppunit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = cppunit.framework; path = ../../Library/Frameworks/cppunit.framework; sourceTree = "<group>"; };
-		05561D181811F27A00FD6E2E /* regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = regina.icns; path = icons/regina.icns; sourceTree = SOURCE_ROOT; };
-		05561D191811F27A00FD6E2E /* x-regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "x-regina.icns"; path = "icons/x-regina.icns"; sourceTree = SOURCE_ROOT; };
+		05561D181811F27A00FD6E2E /* regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = regina.icns; path = src/regina.icns; sourceTree = "<group>"; };
+		05561D191811F27A00FD6E2E /* x-regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "x-regina.icns"; path = "src/x-regina.icns"; sourceTree = "<group>"; };
 		05583A6019B8041F00076187 /* ReginaDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReginaDocument.h; sourceTree = "<group>"; };
 		05583A6119B8041F00076187 /* ReginaDocument.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ReginaDocument.mm; sourceTree = "<group>"; };
 		055ABE9E19B499DC00044C1B /* closed-hyp-census-full.zsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-hyp-census-full.zsig"; sourceTree = "<group>"; };
@@ -2153,8 +2155,6 @@
 		0564A6161811D921002CC2AE /* treenav.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = treenav.cpp; sourceTree = "<group>"; };
 		0564A6171811D921002CC2AE /* x-regina.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = "x-regina.ico"; sourceTree = "<group>"; };
 		0564A6181811D921002CC2AE /* TODO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO.txt; sourceTree = "<group>"; };
-		0564A99E1811DB01002CC2AE /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = ../../../../Library/Frameworks/QtCore.framework; sourceTree = "<group>"; };
-		0564A99F1811DB02002CC2AE /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = ../../../../Library/Frameworks/QtGui.framework; sourceTree = "<group>"; };
 		0569F92F19B3655C00051091 /* libtokyocabinet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libtokyocabinet.framework; path = ../../Library/Frameworks/libtokyocabinet.framework; sourceTree = "<group>"; };
 		0569F93119B3658200051091 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/usr/lib/libbz2.dylib; sourceTree = DEVELOPER_DIR; };
 		057118B119B308F8009FEDC5 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
@@ -2320,6 +2320,10 @@
 		05A73CD919B2F24A0099C617 /* cusped-hyp-nor-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-nor-census.rga"; sourceTree = "<group>"; };
 		05A73CDA19B2F24A0099C617 /* cusped-hyp-or-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-or-census.rga"; sourceTree = "<group>"; };
 		05A73CDB19B2F24A0099C617 /* hyp-knot-link-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "hyp-knot-link-census.rga"; sourceTree = "<group>"; };
+		05AB5ECC1B8ED9F9007034C8 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = ../../Qt5.5.0/5.5/clang_64/lib/QtCore.framework; sourceTree = "<group>"; };
+		05AB5ECD1B8ED9F9007034C8 /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = ../../Qt5.5.0/5.5/clang_64/lib/QtGui.framework; sourceTree = "<group>"; };
+		05AB5ECE1B8ED9FA007034C8 /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = ../../Qt5.5.0/5.5/clang_64/lib/QtWidgets.framework; sourceTree = "<group>"; };
+		05AB5ED21B8EDC27007034C8 /* QtSvg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtSvg.framework; path = ../../Qt5.5.0/5.5/clang_64/lib/QtSvg.framework; sourceTree = "<group>"; };
 		05B14EA319B423A0002138C0 /* mkcensusdb */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mkcensusdb; sourceTree = BUILT_PRODUCTS_DIR; };
 		05B14EB019B4240D002138C0 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05B14EB419B4240D002138C0 /* mkcensusdb.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mkcensusdb.cpp; sourceTree = "<group>"; };
@@ -2404,8 +2408,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				0564A9A21811DB2F002CC2AE /* libregina-engine.dylib in Frameworks */,
-				0564A9A01811DB02002CC2AE /* QtCore.framework in Frameworks */,
-				0564A9A11811DB02002CC2AE /* QtGui.framework in Frameworks */,
+				05AB5ECF1B8ED9FA007034C8 /* QtCore.framework in Frameworks */,
+				05AB5ED01B8ED9FA007034C8 /* QtGui.framework in Frameworks */,
+				05AB5ED31B8EDC27007034C8 /* QtSvg.framework in Frameworks */,
+				05AB5ED11B8ED9FA007034C8 /* QtWidgets.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3296,9 +3302,11 @@
 		052FA0AF180604A900FAE4DF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				05AB5ECC1B8ED9F9007034C8 /* QtCore.framework */,
+				05AB5ECD1B8ED9F9007034C8 /* QtGui.framework */,
+				05AB5ED21B8EDC27007034C8 /* QtSvg.framework */,
+				05AB5ECE1B8ED9FA007034C8 /* QtWidgets.framework */,
 				05F4947B19BDDD5D00CD887C /* DBChooser.framework */,
-				0564A99E1811DB01002CC2AE /* QtCore.framework */,
-				0564A99F1811DB02002CC2AE /* QtGui.framework */,
 				0569F93119B3658200051091 /* libbz2.dylib */,
 				057FA74F180615F5008E25F6 /* libiconv.dylib */,
 				057FA750180615F5008E25F6 /* libxml2.dylib */,
@@ -4454,8 +4462,8 @@
 				058637F3181DBC5900E95307 /* syntax in Resources */,
 				051806D6181202E0008EBB01 /* examples in Resources */,
 				058637F5181DBCE100E95307 /* pylib in Resources */,
-				051806D7181203BB008EBB01 /* regina.icns in Resources */,
-				051806D8181203BB008EBB01 /* x-regina.icns in Resources */,
+				05AB5ED61B8EDFBF007034C8 /* regina.icns in Resources */,
+				05AB5ED71B8EDFBF007034C8 /* x-regina.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5462,6 +5470,7 @@
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 					"$(USER_LIBRARY_DIR)/Frameworks",
+					"$(HOME)/Qt5.5.0/5.5/clang_64/lib",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5480,8 +5489,10 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 					"\"$(SRCROOT)/qtui/src\"",
-					/Library/Frameworks/QtCore.framework/Headers,
-					/Library/Frameworks/QtGui.framework/Headers,
+					"$(HOME)/Qt5/5.5/clang_64/lib/QtCore.framework/Headers",
+					"$(HOME)/Qt5/5.5/clang_64/lib/QtGui.framework/Headers",
+					"$(HOME)/Qt5/5.5/clang_64/lib/QtSvg.framework/Headers",
+					"$(HOME)/Qt5/5.5/clang_64/lib/QtWidgets.framework/Headers",
 				);
 				INFOPLIST_FILE = qtui/src/regina.plist;
 				INFOPLIST_PREFIX_HEADER = "preconfig/osx-xcode5/regina-config.h";
@@ -5505,6 +5516,7 @@
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 					"$(USER_LIBRARY_DIR)/Frameworks",
+					"$(HOME)/Qt5.5.0/5.5/clang_64/lib",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5521,8 +5533,10 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 					"\"$(SRCROOT)/qtui/src\"",
-					/Library/Frameworks/QtCore.framework/Headers,
-					/Library/Frameworks/QtGui.framework/Headers,
+					"$(HOME)/Qt5/5.5/clang_64/lib/QtCore.framework/Headers",
+					"$(HOME)/Qt5/5.5/clang_64/lib/QtGui.framework/Headers",
+					"$(HOME)/Qt5/5.5/clang_64/lib/QtSvg.framework/Headers",
+					"$(HOME)/Qt5/5.5/clang_64/lib/QtWidgets.framework/Headers",
 				);
 				INFOPLIST_FILE = qtui/src/regina.plist;
 				INFOPLIST_PREFIX_HEADER = "preconfig/osx-xcode5/regina-config.h";
