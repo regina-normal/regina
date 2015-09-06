@@ -9,6 +9,11 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>Python.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
+		</dict>
 		<key>Qt.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -27,6 +32,11 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>050F5CDC1B9BAAAA00C1F681</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>052FA0C01806072900FAE4DF</key>
 		<dict>
 			<key>primary</key>
