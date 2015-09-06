@@ -5250,6 +5250,9 @@
 				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = "Regina Development Team";
 				TargetAttributes = {
+					050F5CDC1B9BAAAA00C1F681 = {
+						CreatedOnToolsVersion = 6.4;
+					};
 					052FA1271806102F00FAE4DF = {
 						DevelopmentTeam = 67JTSH67LZ;
 					};
