@@ -5280,11 +5280,11 @@
 			projectRoot = "";
 			targets = (
 				0575E6581805F36D009E3FC4 /* Engine */,
+				050F5CDC1B9BAAAA00C1F681 /* Python */,
 				052FA0C01806072900FAE4DF /* Test Suite */,
 				0564A1DE1811D6F8002CC2AE /* Qt */,
 				052FA1271806102F00FAE4DF /* iOS */,
 				05B14EA219B423A0002138C0 /* Census Tools */,
-				050F5CDC1B9BAAAA00C1F681 /* Python */,
 			);
 		};
 /* End PBXProject section */

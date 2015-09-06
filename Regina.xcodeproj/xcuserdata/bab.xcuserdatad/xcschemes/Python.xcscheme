@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "050F5CDC1B9BAAAA00C1F681"
-               BuildableName = "libPython.dylib"
+               BuildableName = "regina.so"
                BlueprintName = "Python"
                ReferencedContainer = "container:Regina.xcodeproj">
             </BuildableReference>
@@ -43,7 +43,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "050F5CDC1B9BAAAA00C1F681"
-            BuildableName = "libPython.dylib"
+            BuildableName = "regina.so"
             BlueprintName = "Python"
             ReferencedContainer = "container:Regina.xcodeproj">
          </BuildableReference>
@@ -61,7 +61,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "050F5CDC1B9BAAAA00C1F681"
-            BuildableName = "libPython.dylib"
+            BuildableName = "regina.so"
             BlueprintName = "Python"
             ReferencedContainer = "container:Regina.xcodeproj">
          </BuildableReference>
