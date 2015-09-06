@@ -18,7 +18,7 @@
 #define NUMERIC_64_LL_FOUND
 
 /* Define if Boost.Python is available. */
-/* #undef BOOST_PYTHON_FOUND */
+#define BOOST_PYTHON_FOUND
 
 /* Define if langinfo.h and nl_langinfo() are available. */
 #define LANGINFO_FOUND

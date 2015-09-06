@@ -171,6 +171,14 @@
 		050F5E6A1B9BD2ED00C1F681 /* engine.so in CopyFiles */ = {isa = PBXBuildFile; fileRef = 050F5CDD1B9BAAAA00C1F681 /* engine.so */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		050F5E6D1B9BD34100C1F681 /* __init__.py in CopyFiles */ = {isa = PBXBuildFile; fileRef = 050F5E6B1B9BD30700C1F681 /* __init__.py */; };
 		050F5E711B9BD51B00C1F681 /* libregina-engine.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		050F5E7D1B9BD6F400C1F681 /* commandedit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E741B9BD6F400C1F681 /* commandedit.cpp */; };
+		050F5E7E1B9BD6F400C1F681 /* pythonconsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E761B9BD6F400C1F681 /* pythonconsole.cpp */; };
+		050F5E7F1B9BD6F400C1F681 /* pythoninterpreter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E781B9BD6F400C1F681 /* pythoninterpreter.cpp */; };
+		050F5E801B9BD6F400C1F681 /* pythonoutputstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E7A1B9BD6F400C1F681 /* pythonoutputstream.cpp */; };
+		050F5E871B9BD7EF00C1F681 /* libpython2.7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 050F5E851B9BD7EF00C1F681 /* libpython2.7.dylib */; };
+		050F5E891B9BD8D100C1F681 /* boost-python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 050F5E631B9BAC6A00C1F681 /* boost-python.framework */; };
+		050F5E8A1B9BD9C100C1F681 /* commandedit.h in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E751B9BD6F400C1F681 /* commandedit.h */; };
+		050F5E8B1B9BD9C100C1F681 /* pythonconsole.h in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E771B9BD6F400C1F681 /* pythonconsole.h */; };
 		0513753D1809B8D3002E525B /* coordregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753B1809B8D2002E525B /* coordregistry-impl.h */; };
 		0513753E1809B8D3002E525B /* coordregistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753C1809B8D2002E525B /* coordregistry.h */; };
 		051806D4181202BD008EBB01 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 051806D3181202BD008EBB01 /* icons */; };
@@ -1762,6 +1770,16 @@
 		050F5DD21B9BAB9C00C1F681 /* globalarray.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = globalarray.cpp; sourceTree = "<group>"; };
 		050F5E631B9BAC6A00C1F681 /* boost-python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "boost-python.framework"; path = "../../Library/Frameworks/boost-python.framework"; sourceTree = "<group>"; };
 		050F5E6B1B9BD30700C1F681 /* __init__.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = __init__.py; path = regina/__init__.py; sourceTree = "<group>"; };
+		050F5E731B9BD6F400C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		050F5E741B9BD6F400C1F681 /* commandedit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = commandedit.cpp; sourceTree = "<group>"; };
+		050F5E751B9BD6F400C1F681 /* commandedit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = commandedit.h; sourceTree = "<group>"; };
+		050F5E761B9BD6F400C1F681 /* pythonconsole.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pythonconsole.cpp; sourceTree = "<group>"; };
+		050F5E771B9BD6F400C1F681 /* pythonconsole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pythonconsole.h; sourceTree = "<group>"; };
+		050F5E781B9BD6F400C1F681 /* pythoninterpreter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pythoninterpreter.cpp; sourceTree = "<group>"; };
+		050F5E791B9BD6F400C1F681 /* pythoninterpreter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pythoninterpreter.h; sourceTree = "<group>"; };
+		050F5E7A1B9BD6F400C1F681 /* pythonoutputstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pythonoutputstream.cpp; sourceTree = "<group>"; };
+		050F5E7B1B9BD6F400C1F681 /* pythonoutputstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pythonoutputstream.h; sourceTree = "<group>"; };
+		050F5E851B9BD7EF00C1F681 /* libpython2.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpython2.7.dylib; path = usr/lib/libpython2.7.dylib; sourceTree = SDKROOT; };
 		0513753B1809B8D2002E525B /* coordregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "coordregistry-impl.h"; sourceTree = "<group>"; };
 		0513753C1809B8D2002E525B /* coordregistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = coordregistry.h; sourceTree = "<group>"; };
 		051806D3181202BD008EBB01 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = src/icons; sourceTree = "<group>"; };
@@ -2909,6 +2927,8 @@
 				05AB5ED01B8ED9FA007034C8 /* QtGui.framework in Frameworks */,
 				05AB5ED31B8EDC27007034C8 /* QtSvg.framework in Frameworks */,
 				05AB5ED11B8ED9FA007034C8 /* QtWidgets.framework in Frameworks */,
+				050F5E871B9BD7EF00C1F681 /* libpython2.7.dylib in Frameworks */,
+				050F5E891B9BD8D100C1F681 /* boost-python.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3359,6 +3379,22 @@
 				050F5DD11B9BAB9C00C1F681 /* snappea.cpp */,
 			);
 			path = foreign;
+			sourceTree = "<group>";
+		};
+		050F5E721B9BD6F400C1F681 /* python */ = {
+			isa = PBXGroup;
+			children = (
+				050F5E731B9BD6F400C1F681 /* CMakeLists.txt */,
+				050F5E741B9BD6F400C1F681 /* commandedit.cpp */,
+				050F5E751B9BD6F400C1F681 /* commandedit.h */,
+				050F5E761B9BD6F400C1F681 /* pythonconsole.cpp */,
+				050F5E771B9BD6F400C1F681 /* pythonconsole.h */,
+				050F5E781B9BD6F400C1F681 /* pythoninterpreter.cpp */,
+				050F5E791B9BD6F400C1F681 /* pythoninterpreter.h */,
+				050F5E7A1B9BD6F400C1F681 /* pythonoutputstream.cpp */,
+				050F5E7B1B9BD6F400C1F681 /* pythonoutputstream.h */,
+			);
+			path = python;
 			sourceTree = "<group>";
 		};
 		052F9BFD180600FA00FAE4DF /* engine */ = {
@@ -4144,7 +4180,6 @@
 		052FA0AF180604A900FAE4DF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				050F5E631B9BAC6A00C1F681 /* boost-python.framework */,
 				05AB5ECC1B8ED9F9007034C8 /* QtCore.framework */,
 				05AB5ECD1B8ED9F9007034C8 /* QtGui.framework */,
 				05AB5ED21B8EDC27007034C8 /* QtSvg.framework */,
@@ -4165,6 +4200,8 @@
 				055B7317181D7F2400449D14 /* libiconv.dylib */,
 				055B7319181D7F2B00449D14 /* libxml2.dylib */,
 				052FA0A51806047E00FAE4DF /* libz.dylib */,
+				050F5E851B9BD7EF00C1F681 /* libpython2.7.dylib */,
+				050F5E631B9BAC6A00C1F681 /* boost-python.framework */,
 				052FA1291806102F00FAE4DF /* Foundation.framework */,
 				057FA7551806184A008E25F6 /* UIKit.framework */,
 				052FA12B1806102F00FAE4DF /* CoreGraphics.framework */,
@@ -4468,6 +4505,7 @@
 				0564A5CF1811D920002CC2AE /* patiencedialog.h */,
 				0564A5D01811D920002CC2AE /* progressdialogs.cpp */,
 				0564A5D11811D920002CC2AE /* progressdialogs.h */,
+				050F5E721B9BD6F400C1F681 /* python */,
 				0564A5DC1811D920002CC2AE /* pythonmanager.cpp */,
 				0564A5DD1811D920002CC2AE /* pythonmanager.h */,
 				0564A5DE1811D920002CC2AE /* recentfilesaction.cpp */,
@@ -5914,7 +5952,10 @@
 				055ABEB819B49F6800044C1B /* closed-or-census-11.zsig in Sources */,
 				055ABEB919B49F6800044C1B /* cusped-hyp-nor-census-9.zsig in Sources */,
 				055ABEBA19B49F6800044C1B /* cusped-hyp-or-census-9.zsig in Sources */,
+				050F5E7E1B9BD6F400C1F681 /* pythonconsole.cpp in Sources */,
 				055ABEBB19B49F6800044C1B /* hyp-knot-link-census.zsig in Sources */,
+				050F5E8A1B9BD9C100C1F681 /* commandedit.h in Sources */,
+				050F5E8B1B9BD9C100C1F681 /* pythonconsole.h in Sources */,
 				0543AE931811E12A002758F8 /* boundarycomponentchooser.h in Sources */,
 				05A73CE119B2F97B0099C617 /* cuspchooser.h in Sources */,
 				0543AE941811E12A002758F8 /* edgechooser.h in Sources */,
@@ -5933,6 +5974,7 @@
 				0543AEA01811E12A002758F8 /* packeteditiface.h in Sources */,
 				0543AEA11811E12A002758F8 /* packettabui.h in Sources */,
 				0543AEA21811E12A002758F8 /* packettreeview.h in Sources */,
+				050F5E7D1B9BD6F400C1F681 /* commandedit.cpp in Sources */,
 				0543AEA31811E12A002758F8 /* dim2trigluings.h in Sources */,
 				0543AEA41811E12A002758F8 /* dim2triskeleton.h in Sources */,
 				0543AEA51811E12A002758F8 /* dim2triui.h in Sources */,
@@ -6045,6 +6087,7 @@
 				0564A94D1811D921002CC2AE /* dim2tricreator.cpp in Sources */,
 				0564A9641811D921002CC2AE /* ntrialgebra.cpp in Sources */,
 				0564A9491811D921002CC2AE /* packetmanager.cpp in Sources */,
+				050F5E801B9BD6F400C1F681 /* pythonoutputstream.cpp in Sources */,
 				0564A9481811D921002CC2AE /* packeteditiface.cpp in Sources */,
 				0564A94B1811D921002CC2AE /* packettreeview.cpp in Sources */,
 				0564A8131811D921002CC2AE /* sourcehandler.cpp in Sources */,
@@ -6060,6 +6103,7 @@
 				0564A9411811D921002CC2AE /* main.cpp in Sources */,
 				0564A8031811D921002CC2AE /* coordinatechooser.cpp in Sources */,
 				05A73CD819B2F2180099C617 /* cuspchooser.cpp in Sources */,
+				050F5E7F1B9BD6F400C1F681 /* pythoninterpreter.cpp in Sources */,
 				05A73CCB19B2F1AB0099C617 /* nsnappeaalgebra.cpp in Sources */,
 				0564A9581811D921002CC2AE /* nnormalsurfacecreator.cpp in Sources */,
 				0564A7F91811D921002CC2AE /* bigwidget.cpp in Sources */,
@@ -6640,6 +6684,7 @@
 					"$(HOME)/Qt5/5.5/clang_64/lib/QtGui.framework/Headers",
 					"$(HOME)/Qt5/5.5/clang_64/lib/QtSvg.framework/Headers",
 					"$(HOME)/Qt5/5.5/clang_64/lib/QtWidgets.framework/Headers",
+					/usr/include/python2.7,
 				);
 				INFOPLIST_FILE = qtui/src/regina.plist;
 				INFOPLIST_PREFIX_HEADER = "preconfig/osx-xcode5/regina-config.h";
@@ -6684,6 +6729,7 @@
 					"$(HOME)/Qt5/5.5/clang_64/lib/QtGui.framework/Headers",
 					"$(HOME)/Qt5/5.5/clang_64/lib/QtSvg.framework/Headers",
 					"$(HOME)/Qt5/5.5/clang_64/lib/QtWidgets.framework/Headers",
+					/usr/include/python2.7,
 				);
 				INFOPLIST_FILE = qtui/src/regina.plist;
 				INFOPLIST_PREFIX_HEADER = "preconfig/osx-xcode5/regina-config.h";
