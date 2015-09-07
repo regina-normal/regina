@@ -18,7 +18,7 @@
 #
 # Original script by Rolf Eike Beer
 # Modifications by Andreas Weis
-# Further modifications by William Pettersson
+# Further modifications by William Pettersson and Ben Burton
 #
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.3)
 
@@ -109,6 +109,7 @@ CXX11_CHECK_FEATURE("static_assert"      1720 HAS_CXX11_STATIC_ASSERT)
 CXX11_CHECK_FEATURE("constexpr"          2235 HAS_CXX11_CONSTEXPR)
 #CXX11_CHECK_FEATURE("sizeof_member"      2253 HAS_CXX11_SIZEOF_MEMBER)
 #CXX11_CHECK_FEATURE("__func__"           2340 HAS_CXX11_FUNC)
+CXX11_CHECK_FEATURE("stdthread"           ""  HAS_CXX11_STDTHREAD)
 
 MACRO(NEED_CXX11_FEATURE FEATURE)
     STRING(TOUPPER ${FEATURE} FEATURE_U)
@@ -117,6 +118,8 @@ MACRO(NEED_CXX11_FEATURE FEATURE)
         MESSAGE(STATUS "Error: C++11 feature \"${FEATURE}\" not found.")
         SET(HAVE_CXX11_FEATURES FALSE)
         LIST(APPEND MISSING_FEATURES ${FEATURE})
+    ELSE()
+        MESSAGE(STATUS "C++11 feature \"${FEATURE}\" found.")
     ENDIF()
 ENDMACRO()
 
