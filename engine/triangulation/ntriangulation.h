@@ -1879,12 +1879,24 @@ class REGINA_API NTriangulation : public NPacket,
         /**
          * TODO.
          *
+         * If \a height is negative, then this routine will do nothing
+         * and immediately return \c false.
+         *
+         * The routine \a action is allowed to make changes to this
+         * triangulation.  However, this will not affect the search:
+         * all retriangulations will be with respect to the original
+         * form of this triangulation, before any changes were made.
+         *
          * \pre This triangulation is connected.
          *
          * \ifacespython Not present.
+         *
+         * @return \c true if and only if a triangulation was found for
+         * which \a action requested termination; that is, for which
+         * \a action returned \c true.
          */
         bool retriangulate(int height,
-            bool (*action)(const std::string& isoSig, void*),
+            bool (*action)(const NTriangulation& t, void*),
             void* arg = 0,
             unsigned nThreads = 1) const;
 
