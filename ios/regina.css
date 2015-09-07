@@ -1,0 +1,65 @@
+body {
+  background-color: #FFFFFF;
+  font-family: -apple-system-font;
+}
+
+p {
+  text-indent: 0px;
+  color: #000000;
+}
+
+p b {
+  font-weight: bold;
+  color: #3D3F53;
+}
+
+h1 {
+  font-size: x-large;
+  font-weight: bold;
+  color: #212960;
+  text-align: left;
+  background-color: #FFFFFF;
+  margin: 1em 0px 1em 0px;
+  padding: 5px 0px 5px 0px;
+  border-width: 0px 0px 3px 0px;
+  border-color: #00007D;
+  border-style: solid;
+}
+
+h1.alt {
+  font-size: x-large;
+  font-weight: bold;
+  color: #3D3F53;
+  text-align: center;
+  background-color: #FFFFFF;
+  margin: 2em 0px 1em 0px;
+  padding: 5px 0px 5px 0px;
+  border-width: 4px 0px 4px 0px;
+  border-color: #B5BCF8;
+  border-style: solid;
+}
+
+h2 {
+  font-size: large;
+  font-weight: bold;
+  color: #3D3F53;
+  background-color: #B5BCF8;
+  padding: 5px;
+  margin: 2em 0px 1em 0px;
+}
+
+h3 {
+  font-size: larger;
+  font-weight: bold;
+  color: #3D3F53;
+}
+
+h4 {
+  font-size: medium;
+  font-weight: bold;
+  color: #3D3F53;
+  border-width: 0px 0px 0px 0px;
+  border-color: #B5BCF8;
+  border-style: solid;
+}
+

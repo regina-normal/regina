@@ -1,0 +1,76 @@
+NEXT RELEASE:
+
+- Support files without container roots
+
+CLEAN UP:
+
+- MasterViewController
+- WelcomePopupController
+- PacketTreeController
+- ReginaDocument
+- NewPacketMenu
+- NewPacketController
+- NewPacketPageViewController
+
+- DetailViewController
+- PacketViewer and PacketEditor protocols
+
+- PacketManagerIOS
+
+- packets/TriGluingsViewController
+- packets/TriRecognitionViewController
+
+- packets/NewAnglesController
+- packets/NewSurfacesController
+
+WRITE VIEWERS:
+
+- 2-D triangulation:      2 tabs, editor
+- 3-D triangulation:      6 tabs, editor
+- SnapPea triangulation:  7 tabs, editor
+- Normal surfaces:        4 tabs
+
+SHORT-TERM:
+
+- Rerender AppIcon, Packets/Document, launch images
+
+TEST:
+
+- Return to the app during facetime (status bar is thicker), and make sure
+  the UI is still laid out correctly.
+- Test composition tab over the census.
+
+LONG-TERM:
+
+- Move packets around the tree.
+- Find a way to install *.tdb in a subdirectory beneath Resources/.
+- Rename actions: ensure table view insets are OK if the device is rotated while the keyboard is shown
+- Audit the use of UIAlert (should we use banners instead)?
+- See if we can't arrange syntax highlighting for the script viewer.
+- PDF viewer: use a filename based on the packet label.
+- Surface coordinates viewer: support filters
+- Implement connectedSumWith.
+- Decide what to do about "ambiguous row height" warning in iOS 8 (FilterViewController, ScriptViewController)
+- Test suite failure: mail the developers automatically?
+- NewSurfacesController::updateProgress: replace switch statements with something more robust against GUI changes?
+- SurfacesCoords: on long press, view details (in case cells are too narrow).
+- Work out why horizontal alert views end up cropped (check autolayout
+  messages dumped to the log).
+- Centre face(t) pairing graphs in the UIWebView.
+
+- Support state preservation and restoration.  See:
+  https://developer.apple.com/library/ios/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/StatePreservation/StatePreservation.html
+
+- iCloud:
+  + Support, including moving files to/from iCloud storage.
+  + Indicate error conditions and handle document-version conflicts.
+  + All documents in iCloud or none.  See: https://developer.apple.com/Library/ios/documentation/DataManagement/Conceptual/DocumentBasedAppPGiOS/ManageDocumentLifeCycle/ManageDocumentLifeCycle.html
+
+NOTES:
+
+- The UITabBarController Xcode bug:
+
+  2014-09-24 08:37:08.504 Regina[2650:700914] CUICatalog: Invalid asset name supplied: (null)
+  2014-09-24 08:37:08.504 Regina[2650:700914] CUICatalog: Invalid asset name supplied: (null)
+  2014-09-24 08:37:08.505 Regina[2650:700914] Could not load the "(null)" image referenced from a nib in the bundle with identifier "net.sourceforge.regina.Regina"
+

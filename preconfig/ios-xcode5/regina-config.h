@@ -5,11 +5,15 @@
 /* #undef INT128_T_FOUND */
 
 /* Define if both __int128_t and __uint128_t types are available. */
-/* #undef __INT128_T_FOUND */
+#if __LP64__
+#define __INT128_T_FOUND
+#endif
 
 /* Define if native 128-bit arithmetic is available through either
    of the types defined above. */
-/* #undef INT128_AVAILABLE */
+#if __LP64__
+#define INT128_AVAILABLE
+#endif
 
 /* Define if 64-bit integer literals are available with no suffix */
 #define NUMERIC_64_FOUND

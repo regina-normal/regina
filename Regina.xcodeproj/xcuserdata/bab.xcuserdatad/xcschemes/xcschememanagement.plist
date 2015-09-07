@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>SchemeUserState</key>
+	<dict>
+		<key>Engine.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>0</integer>
+		</dict>
+		<key>Qt.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
+		<key>iOS debug.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+		<key>iOS release.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>052FA0C01806072900FAE4DF</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>052FA1271806102F00FAE4DF</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>052FA1491806103000FAE4DF</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>0564A1DE1811D6F8002CC2AE</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>0564A2001811D6F9002CC2AE</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>0575E6581805F36D009E3FC4</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>05B14EA219B423A0002138C0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+	</dict>
+</dict>
+</plist>
