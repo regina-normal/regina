@@ -62,6 +62,8 @@ namespace {
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
         NTriangulation::simplifyToLocalMinimum, 0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyExhaustive,
+        NTriangulation::simplifyExhaustive, 0, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_threeTwoMove,
         NTriangulation::threeTwoMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_twoThreeMove,
@@ -333,6 +335,8 @@ void addNTriangulation() {
         .def("intelligentSimplify", &NTriangulation::intelligentSimplify)
         .def("simplifyToLocalMinimum", &NTriangulation::simplifyToLocalMinimum,
             OL_simplifyToLocalMinimum())
+        .def("simplifyExhaustive", &NTriangulation::simplifyExhaustive,
+            OL_simplifyExhaustive())
         .def("threeTwoMove", &NTriangulation::threeTwoMove, OL_threeTwoMove())
         .def("twoThreeMove", &NTriangulation::twoThreeMove, OL_twoThreeMove())
         .def("oneFourMove", &NTriangulation::oneFourMove, OL_oneFourMove())

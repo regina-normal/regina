@@ -1870,6 +1870,25 @@ class REGINA_API NTriangulation : public NPacket,
         bool simplifyToLocalMinimum(bool perform = true);
 
         /**
+         * TODO.
+         *
+         * \pre This triangulation is connected.
+         */
+        bool simplifyExhaustive(int height = 1, unsigned nThreads = 1);
+
+        /**
+         * TODO.
+         *
+         * \pre This triangulation is connected.
+         *
+         * \ifacespython Not present.
+         */
+        bool retriangulate(int height,
+            bool (*action)(const std::string& isoSig, void*),
+            void* arg = 0,
+            unsigned nThreads = 1) const;
+
+        /**
          * Checks the eligibility of and/or performs a 3-2 move
          * about the given edge.
          * This involves replacing the three tetrahedra joined at that
