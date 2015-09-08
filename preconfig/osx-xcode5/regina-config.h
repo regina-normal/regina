@@ -17,6 +17,9 @@
 /* Define if 64-bit integer literals are available using the LL suffix */
 #define NUMERIC_64_LL_FOUND
 
+/* Define if std::thread is available */
+#define HAS_CXX11_STDTHREAD
+
 /* Define if Boost.Python is available. */
 #define BOOST_PYTHON_FOUND
 
