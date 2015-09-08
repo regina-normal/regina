@@ -3705,10 +3705,8 @@ class REGINA_API NTriangulation : public NPacket,
         virtual void writeXMLPacketData(std::ostream& out) const;
 
         /**
-         * Turns this triangulation into a clone of the given
-         * triangulation.
-         * The tree structure and label of this triangulation are not
-         * touched.
+         * Turns this triangulation into a clone of the given triangulation.
+         * The tree structure and label of this triangulation are not touched.
          *
          * @param from the triangulation from which this triangulation
          * will be cloned.
