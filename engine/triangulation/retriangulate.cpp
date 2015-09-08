@@ -36,6 +36,9 @@
 #include "utilities/nthread.h"
 #include <queue>
 #include <set>
+#ifdef HAS_CXX11_STDTHREAD
+#include <thread>
+#endif
 
 namespace regina {
 
@@ -180,11 +183,32 @@ bool NTriangulation::retriangulate(int height,
     if (height < 0)
         return false;
 
-    TriBFS<false> bfs(getNumberOfTetrahedra() + height, action, arg);
-    if (bfs.seed(*this))
-        return true;
-    bfs.run(); // TODO: Multithreading!
-    return bfs.done();
+#ifdef HAS_CXX11_STDTHREAD
+    if (nThreads <= 1) {
+#endif
+        TriBFS<false> bfs(getNumberOfTetrahedra() + height, action, arg);
+        if (bfs.seed(*this))
+            return true;
+        bfs.run();
+        return bfs.done();
+#ifdef HAS_CXX11_STDTHREAD
+    } else {
+        TriBFS<true> bfs(getNumberOfTetrahedra() + height, action, arg);
+        if (bfs.seed(*this))
+            return true;
+
+        std::thread* t = new std::thread[nThreads];
+        unsigned i;
+        // In the std::thread constructor, the pointer to bfs is essential -
+        // otherwise we may end up making copies of bfs instead.
+        for (i = 0; i < nThreads; ++i)
+            t[i] = std::thread(&TriBFS<true>::run, &bfs);
+        for (i = 0; i < nThreads; ++i)
+            t[i].join();
+
+        return bfs.done();
+    }
+#endif
 }
 
 } // namespace regina
