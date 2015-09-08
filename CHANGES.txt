@@ -36,6 +36,12 @@ Version 4.97  [ (under development) ]
               within a (dim)-dimensional triangulation.
         Class LightweightSequence:
             - New lightweight class for storing an array of objects.
+        Class Mutex:
+            - New template class that allows multithreading to be enabled or
+              disabled at compile time.  Mutex<true> is the original mutex
+              class, for use when multithreading is enabled; NMutex is now a
+              typedef for it.  Mutex<false> is for use when multithreading is
+              disabled: it offers the same API as Mutex<true>, but does nothing.
         Class NAngleStructureList:
             - Renamed getNumberOfStructures() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
@@ -63,6 +69,8 @@ Version 4.97  [ (under development) ]
             - The destructor and writeMatrix() are no longer virtual.
             - Now derives from Output, and provides str() and detail()
               output routines.
+        Class NMutex:
+            - Now a typedef for Mutex<true>; see the Mutex notes above.
         Class NNormalSurface:
             - New convenience routines normal() and embedded().
         Class NNormalSurfaceList:
