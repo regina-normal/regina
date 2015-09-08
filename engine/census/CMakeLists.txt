@@ -4,6 +4,7 @@
 SET ( FILES
   closedprimemin
   compact
+  decomp
   dim2census
   dim2edgepairing
   dim2gluingperms
@@ -24,6 +25,7 @@ SET(SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
+    decomp.h
     dim2census.h
     dim2edgepairing.h
     dim2gluingperms.h
