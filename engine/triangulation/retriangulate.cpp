@@ -39,12 +39,13 @@
 #ifdef HAS_CXX11_STDTHREAD
 #include <thread>
 #endif
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
 namespace {
     template <bool threading>
-    class TriBFS {
+    class TriBFS : public boost::noncopyable {
         private:
             typedef std::set<std::string> SigSet;
 
@@ -144,16 +145,18 @@ namespace {
         return false;
     }
 
-    struct TriSimplify {
-        NTriangulation& original;
-        size_t minTet;
+    class TriSimplify : public boost::noncopyable {
+        private:
+            NTriangulation& original;
+            size_t minTet;
 
-        TriSimplify(NTriangulation& original_) :
-                original(original_),
-                minTet(original_.getNumberOfTetrahedra()) {
-        }
+        public:
+            TriSimplify(NTriangulation& original_) :
+                    original(original_),
+                    minTet(original_.getNumberOfTetrahedra()) {
+            }
 
-        static bool found(const NTriangulation& alt, void* simp);
+            static bool found(const NTriangulation& alt, void* simp);
     };
 
     bool TriSimplify::found(const NTriangulation& alt, void* simp) {
