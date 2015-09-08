@@ -33,12 +33,14 @@
 /* end stub */
 
 #include "triangulation/ntriangulation.h"
+#include "utilities/nthread.h"
 #include <queue>
 #include <set>
 
 namespace regina {
 
 namespace {
+    template <bool threading>
     class TriBFS {
         private:
             typedef std::set<std::string> SigSet;
@@ -50,6 +52,8 @@ namespace {
 
             SigSet sigs_;
             std::queue<SigSet::iterator> process_;
+
+            Mutex<threading> mutex_;
 
         public:
             TriBFS(size_t maxTet,
@@ -67,7 +71,8 @@ namespace {
             bool found(const NTriangulation& alt);
     };
 
-    inline bool TriBFS::seed(const NTriangulation& tri) {
+    template <bool threading>
+    inline bool TriBFS<threading>::seed(const NTriangulation& tri) {
         if ((*action_)(tri, arg_))
             return (done_ = true);
 
@@ -75,12 +80,13 @@ namespace {
         return false;
     }
 
-    void TriBFS::run() {
+    template <bool threading>
+    void TriBFS<threading>::run() {
         SigSet::iterator next;
         size_t i;
         while (true) {
             {
-                // TODO: bfs lock
+                typename Mutex<threading>::MutexLock lock(mutex_);
                 if (done_ || process_.empty())
                     return;
                 next = process_.front();
@@ -113,14 +119,16 @@ namespace {
         }
     }
 
-    inline bool TriBFS::done() const {
+    template <bool threading>
+    inline bool TriBFS<threading>::done() const {
         return done_;
     }
 
-    bool TriBFS::found(const NTriangulation& alt) {
+    template <bool threading>
+    bool TriBFS<threading>::found(const NTriangulation& alt) {
         const std::string sig = alt.isoSig();
 
-        // TODO: bfs lock
+        typename Mutex<threading>::MutexLock lock(mutex_);
         if (done_)
             return false;
 
@@ -172,7 +180,7 @@ bool NTriangulation::retriangulate(int height,
     if (height < 0)
         return false;
 
-    TriBFS bfs(getNumberOfTetrahedra() + height, action, arg);
+    TriBFS<false> bfs(getNumberOfTetrahedra() + height, action, arg);
     if (bfs.seed(*this))
         return true;
     bfs.run(); // TODO: Multithreading!
