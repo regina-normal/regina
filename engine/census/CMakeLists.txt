@@ -7,7 +7,6 @@ SET ( FILES
   dim2census
   dim2gluingperms
   dim2gluingpermsearcher
-  dim4facetpairing
   dim4gluingperms
   dim4gluingpermsearcher
   euler

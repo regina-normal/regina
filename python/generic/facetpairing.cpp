@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "dim2/dim2triangulation.h"
+#include "dim4/dim4triangulation.h"
 #include "generic/facetpairing.h"
 #include "generic/isomorphism.h"
 #include "generic/triangulation.h"
@@ -142,6 +143,9 @@ void addFacetPairing(const char* name) {
 void addFacetPairing() {
     addFacetPairing<2>("FacetPairing2");
     scope().attr("Dim2EdgePairing") = scope().attr("FacetPairing2");
+
+    addFacetPairing<4>("FacetPairing4");
+    scope().attr("Dim4FacetPairing") = scope().attr("FacetPairing4");
 
     addFacetPairing<5>("FacetPairing5");
     addFacetPairing<6>("FacetPairing6");
