@@ -89,6 +89,9 @@ Version 4.97  [ (under development) ]
         Class NPolynomial:
             - New class for working with single-variable polynomials
               over arbitrary rings.
+        Class NProgress, NProgressFinished, NProgressManager,
+                NProgressMessage, NProgressNumber, NProgressStateNumeric:
+            - Removed these old deprecated classes entirely.
         Class NRational:
             - The destructor is no longer virtual.
         Class NSatBlock:
