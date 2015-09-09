@@ -57,9 +57,7 @@ namespace regina {
  *
  * This class is designed to work in conjunction with the old NThread class,
  * which is also deprecated.  New code should use the C++11 std::thread,
- * std::mutex and std::lock_guard classes instead (and perhaps
- * regina::Mutex<bool> if you need to support both single-threaded and
- * multithreaded variants of your code).
+ * std::mutex and related classes instead.
  *
  * This class provides a mutual exclusion device (mutex), used to ensure 
  * that different threads do not interfere when working with the same data.
@@ -167,9 +165,7 @@ typedef pthread_t NThreadID;
  *
  * This class is designed to work in conjunction with the old NMutex class,
  * which is also deprecated.  New code should use the C++11 std::thread,
- * std::mutex and std::lock_guard classes instead (and perhaps
- * regina::Mutex<bool> if you need to support both single-threaded and
- * multithreaded variants of your code).
+ * std::mutex and related classes instead.
  *
  * Throughout this documentation, "thread object" refers to an instance
  * of an NThread subclass, and otherwise "thread" has its usual meaning

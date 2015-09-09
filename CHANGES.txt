@@ -36,10 +36,6 @@ Version 4.97  [ (under development) ]
               within a (dim)-dimensional triangulation.
         Class LightweightSequence:
             - New lightweight class for storing an array of objects.
-        Class Mutex:
-            - New template class that allows multithreading to be enabled or
-              disabled at compile time.  Code that is always multithreaded
-              should just use std::mutex and std::lock_guard instead.
         Class NAngleStructureList:
             - Renamed getNumberOfStructures() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
@@ -68,9 +64,7 @@ Version 4.97  [ (under development) ]
             - Now derives from Output, and provides str() and detail()
               output routines.
         Class NMutex:
-            - Deprecated; just use std::mutex and std::lock_guard instead
-              (and/or regina::Mutex<bool> if you wish to support both
-              multithreaded and single-threaded code).
+            - Deprecated; just use std::mutex and related classes instead.
         Class NNormalSurface:
             - New convenience routines normal() and embedded().
         Class NNormalSurfaceList:
@@ -100,7 +94,7 @@ Version 4.97  [ (under development) ]
         Class NSurfaceFilterProperties:
             - New set-based routine setECs().
         Class NThread:
-            - Deprecated; just use std::thread instead.
+            - Deprecated; just use std::thread and related classes instead.
         Class NTreeBag, NTreeDecomposition:
             - Classes for computing tree decompositions of graphs
               (including facet pairing graphs of triangulations).
