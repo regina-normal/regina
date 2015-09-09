@@ -73,7 +73,7 @@ const NAbelianGroup& Dim4Triangulation::getHomologyH1() const {
     long i = 0;
     for (TetrahedronIterator tit = tetrahedra_.begin();
             tit != tetrahedra_.end(); ++tit)
-        if (! ((*tit)->isBoundary() || (*tit)->inDualMaximalForest()))
+        if (! ((*tit)->isBoundary() || (*tit)->inMaximalForest()))
             genIndex[tit - tetrahedra_.begin()] = i++;
 
     // Run through each triangle and put the corresponding relations into
@@ -95,7 +95,7 @@ const NAbelianGroup& Dim4Triangulation::getHomologyH1() const {
             facet = (*embit).getVertices()[3];
 
             tet = pent->tet_[facet];
-            if (tet->inDualMaximalForest())
+            if (tet->inMaximalForest())
                 continue;
 
             // We define the "direction" for this dual edge to point

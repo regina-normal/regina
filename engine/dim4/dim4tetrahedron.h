@@ -203,9 +203,6 @@ class REGINA_API Dim4Tetrahedron :
         Dim4BoundaryComponent* boundaryComponent_;
             /**< The boundary component that this tetrahedron is a part of,
                  or 0 if this tetrahedron is internal. */
-        bool inDualMaximalForest_;
-            /**< Does this tetrahedron belong to the maximal forest in
-                 the dual 1-skeleton? */
 
     public:
         /**
@@ -355,25 +352,33 @@ class REGINA_API Dim4Tetrahedron :
         bool isBoundary() const;
 
         /**
-         * Determines whether this tetrahedron represents an edge in the
-         * maximal forest in the dual 1-skeleton of the triangulation.
+         * Determines whether this tetrahedron represents a dual edge in the
+         * maximal forest that has been chosen for the dual 1-skeleton of the
+         * triangulation.
          *
-         * For each triangulation, a maximal forest in the dual 1-skeleton
-         * is computed.  Each dual edge in this maximal forest is
-         * represented by a tetrahedron in the "real" triangulation.
-         * The purpose of this routine is to identify whether this
-         * particular tetrahedron represents one of these dual edges
-         * in the maximal forest.
+         * When the skeletal structure of a triangulation is first computed,
+         * a maximal forest in the dual 1-skeleton of the triangulation is
+         * also constructed.  Each dual edge in this maximal forest
+         * represents a tetrahedron of the (primal) triangulation.
          *
-         * Note that this routine is very fast, since the maximal forest
-         * in the dual 1-skeleton will have already been computed (it is
-         * constructed at the same time as the overall skeletal structure
-         * of the triangulation).
+         * This maximal forest will remain fixed until the triangulation
+         * changes, at which point it will be recomputed (as will all
+         * other skeletal objects, such as connected components and so on).
+         * There is no guarantee that, when it is recomputed, the
+         * maximal forest will use the same dual edges as before.
+         *
+         * This routine identifies whether this tetrahedron belongs to the
+         * dual forest.  In this sense it performs a similar role to
+         * Simplex::facetInMaximalForest(), but this routine is typically
+         * easier to use.
+         *
+         * If the skeleton has already been computed, then this routine is
+         * very fast (since it just returns a precomputed answer).
          *
          * @return \c true if and only if this tetrahedron represents a
          * dual edge in the maximal forest.
          */
-        bool inDualMaximalForest() const;
+        bool inMaximalForest() const;
 
         /**
          * Writes a short text representation of this object to the
@@ -462,8 +467,7 @@ inline bool Dim4TetrahedronEmbedding::operator !=
 // Inline functions for Dim4Tetrahedron
 
 inline Dim4Tetrahedron::Dim4Tetrahedron(Dim4Component* component) :
-        nEmb_(0), component_(component), boundaryComponent_(0),
-        inDualMaximalForest_(false) {
+        nEmb_(0), component_(component), boundaryComponent_(0) {
 }
 
 inline unsigned long Dim4Tetrahedron::index() const {
@@ -499,8 +503,8 @@ inline bool Dim4Tetrahedron::isBoundary() const {
     return (boundaryComponent_ != 0);
 }
 
-inline bool Dim4Tetrahedron::inDualMaximalForest() const {
-    return inDualMaximalForest_;
+inline bool Dim4Tetrahedron::inMaximalForest() const {
+    return emb_[0].getPentachoron()->facetInMaximalForest(emb_[0].getTetrahedron());
 }
 
 inline void Dim4Tetrahedron::writeTextShort(std::ostream& out) const {

@@ -67,7 +67,7 @@ const NGroupPresentation& Dim4Triangulation::getFundamentalGroup() const {
     long i = 0;
     for (TetrahedronIterator tit = tetrahedra_.begin();
             tit != tetrahedra_.end(); ++tit)
-        if (! ((*tit)->isBoundary() || (*tit)->inDualMaximalForest()))
+        if (! ((*tit)->isBoundary() || (*tit)->inMaximalForest()))
             genIndex[tit - tetrahedra_.begin()] = i++;
 
     // Run through each triangle and insert the corresponding relations.
@@ -89,7 +89,7 @@ const NGroupPresentation& Dim4Triangulation::getFundamentalGroup() const {
             facet = (*embit).getVertices()[3];
 
             tet = pent->tet_[facet];
-            if (tet->inDualMaximalForest())
+            if (tet->inMaximalForest())
                 continue;
 
             // We define the "direction" for this dual edge to point
