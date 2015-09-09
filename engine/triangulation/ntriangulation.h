@@ -1529,6 +1529,43 @@ class REGINA_API Triangulation<3> :
         bool simplifyToLocalMinimum(bool perform = true);
 
         /**
+         * TODO.
+         *
+         * \pre This triangulation is connected.
+         */
+        bool simplifyExhaustive(int height = 1, unsigned nThreads = 1);
+
+        /**
+         * TODO.
+         *
+         * If \a height is negative, then this routine will do nothing
+         * and immediately return \c false.
+         *
+         * The routine \a action is allowed to make changes to this
+         * triangulation.  However, this will not affect the search:
+         * all retriangulations will be with respect to the original
+         * form of this triangulation, before any changes were made.
+         *
+         * By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you should wrap them in
+         * std::ref or std::cref.
+         *
+         * \pre This triangulation is connected.
+         *
+         * \apinotfinal
+         *
+         * \ifacespython Not present.
+         *
+         * @return \c true if and only if a triangulation was found for
+         * which \a action requested termination; that is, for which
+         * \a action returned \c true.
+         */
+        template <typename Action, typename... Args>
+        bool retriangulate(int height, unsigned nThreads,
+            Action&& action, Args&&... args) const;
+
+        /**
          * Checks the eligibility of and/or performs a 3-2 move
          * about the given edge.
          * This involves replacing the three tetrahedra joined at that
@@ -3240,10 +3277,8 @@ class REGINA_API Triangulation<3> :
         virtual void writeXMLPacketData(std::ostream& out) const;
 
         /**
-         * Turns this triangulation into a clone of the given
-         * triangulation.
-         * The tree structure and label of this triangulation are not
-         * touched.
+         * Turns this triangulation into a clone of the given triangulation.
+         * The tree structure and label of this triangulation are not touched.
          *
          * @param from the triangulation from which this triangulation
          * will be cloned.

@@ -165,6 +165,8 @@ Version 4.97  [ (under development) ]
             - The destructor and writeMatrix() are no longer virtual.
             - Now derives from Output, and provides str() and detail()
               output routines.
+        Class NMutex:
+            - Deprecated; just use std::mutex and related classes instead.
         Class NNormalSurface:
             - New convenience routines normal() and embedded().
         Class NNormalSurfaceList:
@@ -210,6 +212,9 @@ Version 4.97  [ (under development) ]
         Class NPolynomial:
             - New class for working with single-variable polynomials
               over arbitrary rings.
+        Class NProgress, NProgressFinished, NProgressManager,
+                NProgressMessage, NProgressNumber, NProgressStateNumeric:
+            - Removed these old deprecated classes entirely.
         Class NRational:
             - The destructor is no longer virtual.
         Class NSatBlock:
@@ -233,6 +238,8 @@ Version 4.97  [ (under development) ]
               joinTo() has been kept but is now deprecated.
             - Routine getComponent() has been renamed to component().
               The old name getComponent() has been kept but is now deprecated.
+        Class NThread:
+            - Deprecated; just use std::thread and related classes instead.
         Class NTreeBag, NTreeDecomposition:
             - Classes for computing tree decompositions of graphs
               (including facet pairing graphs of triangulations).
@@ -269,6 +276,8 @@ Version 4.97  [ (under development) ]
               faceIndex<subdim>() template functions.
             - New routine niceTreeDecomposition() for constructing and
               caching a nice tree decomposition of the face pairing graph.
+            - New routines retriangulate() and simplifyExhaustive() for
+              breadth-first searching through the Pachner graph.
             - Routines getNumberOfSimplices(), getSimplices() and getSimplex()
               have been renamed to size(), simplices() and simplex()
               respectively.  The old names are deprecated but have been
