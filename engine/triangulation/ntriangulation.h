@@ -1887,6 +1887,11 @@ class REGINA_API NTriangulation : public NPacket,
          * all retriangulations will be with respect to the original
          * form of this triangulation, before any changes were made.
          *
+         * By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you should wrap them in
+         * std::ref or std::cref.
+         *
          * \pre This triangulation is connected.
          *
          * \apinotfinal
@@ -1897,10 +1902,9 @@ class REGINA_API NTriangulation : public NPacket,
          * which \a action requested termination; that is, for which
          * \a action returned \c true.
          */
-        bool retriangulate(int height,
-            bool (*action)(const NTriangulation& t, void*),
-            void* arg = 0,
-            unsigned nThreads = 1) const;
+        template <typename Action, typename... Args>
+        bool retriangulate(int height, unsigned nThreads,
+            Action&& action, Args&&... args) const;
 
         /**
          * Checks the eligibility of and/or performs a 3-2 move

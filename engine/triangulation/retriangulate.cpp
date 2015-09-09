@@ -61,8 +61,7 @@ namespace {
             typedef std::set<std::string> SigSet;
 
             const size_t maxTet_;
-            bool (*const action_)(const NTriangulation&, void*);
-            void *const arg_;
+            std::function<bool(const NTriangulation&)> action_;
             bool done_;
 
             SigSet sigs_;
@@ -70,9 +69,8 @@ namespace {
 
         public:
             TriBFS(size_t maxTet,
-                bool (*const action)(const NTriangulation& isoSig, void*),
-                void *const arg) :
-                maxTet_(maxTet), action_(action), arg_(arg), done_(false) {
+                const std::function<bool(const NTriangulation&)>& action) :
+                maxTet_(maxTet), action_(action), done_(false) {
             }
 
             bool seed(const NTriangulation& tri);
@@ -88,7 +86,7 @@ namespace {
 
     template <bool threading>
     inline bool TriBFS<threading>::seed(const NTriangulation& tri) {
-        if ((*action_)(tri, arg_))
+        if (action_(tri))
             return (done_ = true);
 
         process_.push(sigs_.insert(tri.isoSig()).first);
@@ -218,7 +216,7 @@ namespace {
             } else
                 process_.push(result.first);
 
-            if ((*action_)(alt, arg_))
+            if (action_(alt))
                 return (done_ = true);
         }
         return false;
@@ -233,34 +231,19 @@ namespace {
             // We have not seen this triangulation before.
             process_.push(result.first);
 
-            if ((*action_)(alt, arg_))
+            if (action_(alt))
                 return (done_ = true);
         }
         return false;
     }
 
-    class TriSimplify : public boost::noncopyable {
-        private:
-            NTriangulation& original;
-            size_t minTet;
-
-        public:
-            TriSimplify(NTriangulation& original_) :
-                    original(original_),
-                    minTet(original_.getNumberOfTetrahedra()) {
-            }
-
-            static bool found(const NTriangulation& alt, void* simp);
-    };
-
-    bool TriSimplify::found(const NTriangulation& alt, void* simp) {
-        if (alt.getNumberOfTetrahedra() <
-                static_cast<TriSimplify*>(simp)->minTet) {
-            NTriangulation& t(static_cast<TriSimplify*>(simp)->original);
+    bool simplifyFound(const NTriangulation& alt,
+            NTriangulation& original, size_t minTet) {
+        if (alt.getNumberOfTetrahedra() < minTet) {
             // TODO: Make t.cloneFrom(alt) public.
-            t.removeAllTetrahedra();
-            t.insertTriangulation(alt);
-            t.intelligentSimplify();
+            original.removeAllTetrahedra();
+            original.insertTriangulation(alt);
+            original.intelligentSimplify();
             return true;
         } else
             return false;
@@ -268,25 +251,26 @@ namespace {
 }
 
 bool NTriangulation::simplifyExhaustive(int height, unsigned nThreads) {
-    TriSimplify simp(*this);
-    // TODO: Template, callable object.
-    return retriangulate(height, &TriSimplify::found, &simp, nThreads);
+    return retriangulate(height, nThreads, &simplifyFound,
+        std::ref(*this), getNumberOfTetrahedra());
 }
 
-bool NTriangulation::retriangulate(int height,
-        bool (*action)(const NTriangulation&, void*),
-        void* arg, unsigned nThreads) const {
+template <typename Action, typename... Args>
+bool NTriangulation::retriangulate(int height, unsigned nThreads,
+        Action&& action, Args&&... args) const {
     if (height < 0)
         return false;
 
     if (nThreads <= 1) {
-        TriBFS<false> bfs(getNumberOfTetrahedra() + height, action, arg);
+        TriBFS<false> bfs(getNumberOfTetrahedra() + height,
+            std::bind(action, std::placeholders::_1, args...));
         if (bfs.seed(*this))
             return true;
         bfs.processQueue();
         return bfs.done();
     } else {
-        TriBFS<true> bfs(getNumberOfTetrahedra() + height, action, arg);
+        TriBFS<true> bfs(getNumberOfTetrahedra() + height,
+            std::bind(action, std::placeholders::_1, args...));
         if (bfs.seed(*this))
             return true;
         bfs.processQueueParallel(nThreads);
