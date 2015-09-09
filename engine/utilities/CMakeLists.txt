@@ -28,6 +28,7 @@ if (${REGINA_INSTALL_DEV})
     i18nutils.h
     intutils.h
     memutils.h
+    mutex.h
     nbitmask.h
     nbooleans.h
     nlistoncall.h
