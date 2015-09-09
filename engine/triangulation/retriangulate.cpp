@@ -33,12 +33,10 @@
 /* end stub */
 
 #include "triangulation/ntriangulation.h"
-#include "utilities/nthread.h"
+#include "utilities/mutex.h"
 #include <queue>
 #include <set>
-#ifdef HAS_CXX11_STDTHREAD
 #include <thread>
-#endif
 #include <boost/noncopyable.hpp>
 
 namespace regina {
@@ -90,7 +88,7 @@ namespace {
         size_t i;
         while (true) {
             {
-                typename Mutex<threading>::MutexLock lock(mutex_);
+                typename Mutex<threading>::Lock lock(mutex_);
                 if (done_ || process_.empty())
                     return;
                 next = process_.front();
@@ -132,7 +130,7 @@ namespace {
     bool TriBFS<threading>::found(const NTriangulation& alt) {
         const std::string sig = alt.isoSig();
 
-        typename Mutex<threading>::MutexLock lock(mutex_);
+        typename Mutex<threading>::Lock lock(mutex_);
         if (done_)
             return false;
 
@@ -186,15 +184,12 @@ bool NTriangulation::retriangulate(int height,
     if (height < 0)
         return false;
 
-#ifdef HAS_CXX11_STDTHREAD
     if (nThreads <= 1) {
-#endif
         TriBFS<false> bfs(getNumberOfTetrahedra() + height, action, arg);
         if (bfs.seed(*this))
             return true;
         bfs.run();
         return bfs.done();
-#ifdef HAS_CXX11_STDTHREAD
     } else {
         TriBFS<true> bfs(getNumberOfTetrahedra() + height, action, arg);
         if (bfs.seed(*this))
@@ -211,7 +206,6 @@ bool NTriangulation::retriangulate(int height,
 
         return bfs.done();
     }
-#endif
 }
 
 } // namespace regina
