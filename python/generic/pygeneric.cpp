@@ -33,12 +33,14 @@
 /* end stub */
 
 void addComponent();
+void addFacetPairing();
 void addIsomorphism();
 void addSimplex();
 void addTriangulations();
 
 void addGeneric() {
     addComponent();
+    addFacetPairing();
     addIsomorphism();
     addSimplex();
     addTriangulations();

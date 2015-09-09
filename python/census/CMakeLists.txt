@@ -3,7 +3,6 @@
 # Files to compile
 SET ( FILES
   dim2census
-  dim2edgepairing
   ncensus
   nfacepairing
   ngluingpermsearcher
