@@ -40,21 +40,21 @@
 #include <sstream>
 #include <popt.h>
 #include <unistd.h>
-#include "census/dim2edgepairing.h"
 #include "census/dim2gluingpermsearcher.h"
 #if SUPPORT_DIM4
-#include "census/dim4facetpairing.h"
 #include "census/dim4gluingpermsearcher.h"
 #endif
-#include "census/nfacepairing.h"
 #include "census/ngluingpermsearcher.h"
+#include "dim2/dim2edgepairing.h"
 #include "dim2/dim2triangulation.h"
 #if SUPPORT_DIM4
+#include "dim4/dim4facetpairing.h"
 #include "dim4/dim4triangulation.h"
 #endif
 #include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
+#include "triangulation/nfacepairing.h"
 #include "triangulation/ntriangulation.h"
 
 #define WORD_face (dim4 ? "facet" : dim2 ? "edge" : "face")

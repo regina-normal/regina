@@ -33,7 +33,7 @@
 /* end stub */
 
 // Regina core includes:
-#include "census/nfacepairing.h"
+#include "triangulation/nfacepairing.h"
 #include "triangulation/ntriangulation.h"
 
 // UI includes:

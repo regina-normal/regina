@@ -15,6 +15,7 @@ SET ( FILES
   nedge
   nexampletriangulation
   nfacepair
+  nfacepairing
   nhomologicaldata
   ntriangle
   ntriangulation
@@ -46,6 +47,7 @@ if (${REGINA_INSTALL_DEV})
     nexampletriangulation.h
     nface.h
     nfacepair.h
+    nfacepairing.h
     nfacetspec.h
     ngenericisomorphism.h
     ngenericisomorphism.tcc

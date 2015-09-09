@@ -43,7 +43,7 @@
 #endif
 
 #include "regina-core.h"
-#include "census/dim2edgepairing.h"
+#include "dim2/dim2edgepairing.h"
 #include "utilities/nbooleans.h"
 
 namespace regina {

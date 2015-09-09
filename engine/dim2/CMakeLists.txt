@@ -24,6 +24,7 @@ if (${REGINA_INSTALL_DEV})
     dim2boundarycomponent.h
     dim2component.h
     dim2edge.h
+    dim2edgepairing.h
     dim2exampletriangulation.h
     dim2triangle.h
     dim2isomorphism.h

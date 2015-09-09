@@ -44,7 +44,7 @@
 
 #include <boost/noncopyable.hpp>
 #include "regina-core.h"
-#include "census/nfacepairing.h"
+#include "triangulation/nfacepairing.h"
 #include "utilities/nbooleans.h"
 
 namespace regina {

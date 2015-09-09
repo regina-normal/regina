@@ -33,7 +33,7 @@
 /* end stub */
 
 /*! \file generic/dimtraits.h
- *  \brief A template class that provides information on working in
+ *  \brief Template classes that provide information on working in
  *  different dimensions.
  */
 
