@@ -49,6 +49,7 @@
 namespace regina {
 
 template <int> class FacetPairing;
+template <int> class Triangulation;
 
 /**
  * \weakgroup census

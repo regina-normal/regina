@@ -10,7 +10,6 @@ SET ( FILES
   euler
   hyperbolic
   ncensus
-  nfacepairing
   ngluingperms
   ngluingpermsearcher
   )

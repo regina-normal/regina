@@ -134,6 +134,9 @@ Version 4.97  [ (under development) ]
               explicit background colour.
             - Removed the Perm typedef.  Juse use NPerm<dim+1> instead.
             - Removed the Triangulation typedef.  Just use Triangulation<dim>.
+            - Dimension-specific headers dim2edgepairing.h and nfacepairing.h
+              have moved from census/ into the dimension-specific directories
+              dim2/ and triangulation/ respectively.
         Class NGenericGluingPerms:
             - Removed the FacetPairing typedef.  Just use FacetPairing<dim>.
         Class NGenericGluingPermSearcher:
@@ -316,6 +319,9 @@ Version 4.97  [ (under development) ]
         Routine open():
             - Added a variant that takes an input stream (as opposed to
               a filename).
+        Header dim2edgepairing.h, nfacepairing.h:
+            - Relocated from census/ into dim2/ and triangulation/ respectively.
+              Deprecated headers have been kept in the old census/ folder.
         Header ngenericfacetpairing.h, ngenericfacetpairing-impl.h:
             - Moved to generic/facetpairing.h and generic/facetpairing-impl.h.
               The old headers are kept but deprecated.

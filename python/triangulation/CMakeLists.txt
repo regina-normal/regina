@@ -7,6 +7,7 @@ SET ( FILES
   nedge
   nexampletriangulation
   nfacepair
+  nfacepairing
   nhomologicaldata
   nisomorphism
   ntetface

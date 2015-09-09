@@ -35,8 +35,8 @@
 #include <algorithm>
 #include <sstream>
 #include <vector>
-#include "census/nfacepairing.h"
 #include "triangulation/nfacepair.h"
+#include "triangulation/nfacepairing.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/memutils.h"

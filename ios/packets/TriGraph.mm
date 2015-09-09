@@ -33,7 +33,7 @@
 #import "SnapPeaViewController.h"
 #import "TriangulationViewController.h"
 #import "TriGraph.h"
-#import "census/nfacepairing.h"
+#import "triangulation/nfacepairing.h"
 #import "triangulation/ntriangulation.h"
 #import "gvc.h"
 

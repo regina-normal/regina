@@ -43,8 +43,8 @@
 #endif
 
 #include "regina-core.h"
-#include "census/dim2edgepairing.h"
 #include "census/ngenericgluingperms.h"
+#include "dim2/dim2edgepairing.h"
 
 namespace regina {
 

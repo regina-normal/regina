@@ -4,7 +4,6 @@
 SET ( FILES
   dim2census
   ncensus
-  nfacepairing
   ngluingpermsearcher
   pycensus
   )

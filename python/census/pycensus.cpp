@@ -33,13 +33,11 @@
 /* end stub */
 
 void addNCensus();
-void addNFacePairing();
 void addNGluingPermSearcher();
 void addDim2Census();
 
 void addCensus() {
     addNCensus();
-    addNFacePairing();
     addNGluingPermSearcher();
     addDim2Census();
 }

@@ -33,8 +33,8 @@
 /* end stub */
 
 #include <boost/python.hpp>
-#include "census/nfacepairing.h"
 #include "triangulation/nfacepair.h"
+#include "triangulation/nfacepairing.h"
 #include "triangulation/ntriangulation.h"
 
 using namespace boost::python;
