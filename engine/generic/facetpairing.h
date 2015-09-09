@@ -155,7 +155,7 @@ class REGINA_API FacetPairingBase :
         /**
          * Deallocates any memory used by this structure.
          */
-        virtual ~FacetPairingBase();
+        ~FacetPairingBase();
 
         /*@}*/
         /**
