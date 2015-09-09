@@ -2,8 +2,6 @@
 
 # Files to compile
 SET ( FILES
-  nprogress
-  nprogressmanager
   nprogresstracker
   pyprogress
   )

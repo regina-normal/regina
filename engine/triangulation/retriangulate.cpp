@@ -33,15 +33,17 @@
 /* end stub */
 
 #include "triangulation/ntriangulation.h"
-#include "utilities/nthread.h"
+#include "utilities/mutex.h"
 #include <queue>
 #include <set>
+#include <thread>
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
 namespace {
     template <bool threading>
-    class TriBFS {
+    class TriBFS : public boost::noncopyable {
         private:
             typedef std::set<std::string> SigSet;
 
@@ -87,7 +89,7 @@ namespace {
         size_t i;
         while (true) {
             {
-                typename Mutex<threading>::MutexLock lock(mutex_);
+                typename Mutex<threading>::Lock lock(mutex_);
                 if (done_ || process_.empty())
                     return;
                 next = process_.front();
@@ -129,7 +131,7 @@ namespace {
     bool TriBFS<threading>::candidate(const NTriangulation& alt) {
         const std::string sig = alt.isoSig();
 
-        typename Mutex<threading>::MutexLock lock(mutex_);
+        typename Mutex<threading>::Lock lock(mutex_);
         if (done_)
             return false;
 
@@ -150,16 +152,18 @@ namespace {
         return false;
     }
 
-    struct TriSimplify {
-        NTriangulation& original;
-        size_t minTet;
+    class TriSimplify : public boost::noncopyable {
+        private:
+            NTriangulation& original;
+            size_t minTet;
 
-        TriSimplify(NTriangulation& original_) :
-                original(original_),
-                minTet(original_.getNumberOfTetrahedra()) {
-        }
+        public:
+            TriSimplify(NTriangulation& original_) :
+                    original(original_),
+                    minTet(original_.getNumberOfTetrahedra()) {
+            }
 
-        static bool found(const NTriangulation& alt, void* simp);
+            static bool found(const NTriangulation& alt, void* simp);
     };
 
     bool TriSimplify::found(const NTriangulation& alt, void* simp) {
@@ -189,11 +193,28 @@ bool NTriangulation::retriangulate(int height,
     if (height < 0)
         return false;
 
-    TriBFS<false> bfs(getNumberOfTetrahedra() + height, action, arg);
-    if (bfs.seed(*this))
-        return true;
-    bfs.run(); // TODO: Multithreading!
-    return bfs.done();
+    if (nThreads <= 1) {
+        TriBFS<false> bfs(getNumberOfTetrahedra() + height, action, arg);
+        if (bfs.seed(*this))
+            return true;
+        bfs.run();
+        return bfs.done();
+    } else {
+        TriBFS<true> bfs(getNumberOfTetrahedra() + height, action, arg);
+        if (bfs.seed(*this))
+            return true;
+
+        std::thread* t = new std::thread[nThreads];
+        unsigned i;
+        // In the std::thread constructor, the pointer to bfs is essential -
+        // otherwise we may end up making copies of bfs instead.
+        for (i = 0; i < nThreads; ++i)
+            t[i] = std::thread(&TriBFS<true>::run, &bfs);
+        for (i = 0; i < nThreads; ++i)
+            t[i].join();
+
+        return bfs.done();
+    }
 }
 
 } // namespace regina

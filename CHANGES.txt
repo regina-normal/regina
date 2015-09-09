@@ -38,10 +38,8 @@ Version 4.97  [ (under development) ]
             - New lightweight class for storing an array of objects.
         Class Mutex:
             - New template class that allows multithreading to be enabled or
-              disabled at compile time.  Mutex<true> is the original mutex
-              class, for use when multithreading is enabled; NMutex is now a
-              typedef for it.  Mutex<false> is for use when multithreading is
-              disabled: it offers the same API as Mutex<true>, but does nothing.
+              disabled at compile time.  Code that is always multithreaded
+              should just use std::mutex and std::lock_guard instead.
         Class NAngleStructureList:
             - Renamed getNumberOfStructures() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
@@ -70,7 +68,9 @@ Version 4.97  [ (under development) ]
             - Now derives from Output, and provides str() and detail()
               output routines.
         Class NMutex:
-            - Now a typedef for Mutex<true>; see the Mutex notes above.
+            - Deprecated; just use std::mutex and std::lock_guard instead
+              (and/or regina::Mutex<bool> if you wish to support both
+              multithreaded and single-threaded code).
         Class NNormalSurface:
             - New convenience routines normal() and embedded().
         Class NNormalSurfaceList:
@@ -89,6 +89,9 @@ Version 4.97  [ (under development) ]
         Class NPolynomial:
             - New class for working with single-variable polynomials
               over arbitrary rings.
+        Class NProgress, NProgressFinished, NProgressManager,
+                NProgressMessage, NProgressNumber, NProgressStateNumeric:
+            - Removed these old deprecated classes entirely.
         Class NRational:
             - The destructor is no longer virtual.
         Class NSatBlock:
@@ -96,6 +99,8 @@ Version 4.97  [ (under development) ]
               and can optionally overwrite the default writeTextLong function.
         Class NSurfaceFilterProperties:
             - New set-based routine setECs().
+        Class NThread:
+            - Deprecated; just use std::thread instead.
         Class NTreeBag, NTreeDecomposition:
             - Classes for computing tree decompositions of graphs
               (including facet pairing graphs of triangulations).
