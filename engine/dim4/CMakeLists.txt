@@ -33,6 +33,7 @@ if (${REGINA_INSTALL_DEV})
     dim4component.h
     dim4edge.h
     dim4exampletriangulation.h
+    dim4facetpairing.h
     dim4triangle.h
     dim4isomorphism.h
     dim4pentachoron.h

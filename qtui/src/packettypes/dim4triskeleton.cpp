@@ -33,7 +33,7 @@
 /* end stub */
 
 // Regina core includes:
-#include "census/dim4facetpairing.h"
+#include "dim4/dim4facetpairing.h"
 #include "dim4/dim4triangulation.h"
 
 // UI includes:

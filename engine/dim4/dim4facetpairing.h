@@ -37,7 +37,7 @@
 #define __DIM4FACETPAIRING_H
 #endif
 
-/*! \file census/dim4facetpairing.h
+/*! \file dim4/dim4facetpairing.h
  *  \brief Deals with dual graphs of 4-manifold triangulations.
  */
 

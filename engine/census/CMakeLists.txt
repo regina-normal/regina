@@ -28,7 +28,6 @@ if (${REGINA_INSTALL_DEV})
     dim2edgepairing.h
     dim2gluingperms.h
     dim2gluingpermsearcher.h
-    dim4facetpairing.h
     dim4gluingperms.h
     dim4gluingpermsearcher.h
     ncensus.h

@@ -34,7 +34,7 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "census/dim4facetpairing.h"
+#include "dim4/dim4facetpairing.h"
 #include "testsuite/census/testcensus.h"
 
 using regina::Dim4FacetPairing;
