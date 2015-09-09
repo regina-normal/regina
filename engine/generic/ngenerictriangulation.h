@@ -42,7 +42,6 @@
 #endif
 
 #include "regina-core.h"
-#include "generic/dimtraits.h"
 #include "maths/nperm.h"
 #include <list>
 #include <memory>

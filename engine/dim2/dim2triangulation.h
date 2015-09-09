@@ -44,6 +44,7 @@
 #include <memory>
 #include <vector>
 #include "regina-core.h"
+#include "generic/dimtraits.h"
 #include "generic/ngenerictriangulation.h"
 #include "generic/triangulation.h"
 #include "packet/npacket.h"

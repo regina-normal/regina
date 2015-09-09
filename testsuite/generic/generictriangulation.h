@@ -33,9 +33,7 @@
 /* end stub */
 
 #include <cppunit/extensions/HelperMacros.h>
-#include "generic/dimtraits.h"
 
-using regina::DimTraits;
 using regina::Isomorphism;
 using regina::Triangulation;
 

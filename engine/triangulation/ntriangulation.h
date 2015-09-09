@@ -50,6 +50,7 @@
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "angle/nanglestructure.h"
+#include "generic/dimtraits.h"
 #include "generic/ngenerictriangulation.h"
 #include "generic/triangulation.h"
 #include "maths/ncyclotomic.h"

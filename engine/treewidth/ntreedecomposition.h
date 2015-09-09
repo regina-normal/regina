@@ -44,7 +44,7 @@
 
 #include "regina-core.h"
 #include "output.h"
-#include "census/ngenericfacetpairing.h"
+#include "generic/facetpairing.h"
 #include "generic/ngenerictriangulation.h"
 #include <boost/noncopyable.hpp>
 
@@ -672,7 +672,7 @@ class REGINA_API NTreeDecomposition :
          */
         template <int dim>
         NTreeDecomposition(
-            const NGenericFacetPairing<dim>& pairing,
+            const FacetPairing<dim>& pairing,
             TreeDecompositionAlg alg = TD_UPPER);
 
         /**

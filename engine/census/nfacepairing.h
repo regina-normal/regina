@@ -32,19 +32,19 @@
 
 /* end stub */
 
-/*! \file census/nfacepairing.h
- *  \brief Deals with pairing off tetrahedron faces in a census of
- *  3-manifold triangulations.
- */
-
 #ifndef __NFACEPAIRING_H
 #ifndef __DOXYGEN
 #define __NFACEPAIRING_H
 #endif
 
+/*! \file census/nfacepairing.h
+ *  \brief Deals with dual graphs of 3-manifold triangulations.
+ */
+
 #include "regina-core.h"
-#include "census/ngenericfacetpairing.h"
+#include "generic/facetpairing.h"
 #include "triangulation/nisomorphism.h"
+#include "triangulation/ntriangulation.h"
 
 namespace regina {
 
@@ -54,12 +54,12 @@ template <int> class Triangulation;
 typedef Triangulation<3> NTriangulation;
 
 /**
- * \weakgroup census
+ * \weakgroup triangulation
  * @{
  */
 
 /**
- * A legacy typedef provided for backward compatibility only.
+ * A deprecated typedef provided for backward compatibility only.
  *
  * \deprecated As of Regina 4.94, this typedef is now available as
  * NFacePairing::IsoList.  The old typedef NFacePairingIsoList is
@@ -69,32 +69,29 @@ typedef Triangulation<3> NTriangulation;
 typedef std::list<NIsomorphism*> NFacePairingIsoList;
 
 /**
- * A legacy typedef provided for backward compatibility only.
+ * A deprecated typedef provided for backward compatibility only.
  *
  * \deprecated As of Regina 4.94, this typedef is now available as
  * NFacePairing::Use.  The old typedef UseFacePairing is
  * provided for backward compatibility, but will be removed in some
  * future version of Regina.
  */
-typedef void (*UseFacePairing)(const NFacePairing*, const NFacePairingIsoList*,
-    void*);
+typedef void (*UseFacePairing)(const FacetPairing<3>*,
+    const NFacePairingIsoList*, void*);
 
 /**
- * Represents a specific pairwise matching of tetrahedron faces.
- * Given a fixed number of tetrahedra, each tetrahedron face is either
- * paired with some other tetrahedron face (which is in turn paired with
- * it) or remains unmatched.  A tetrahedron face cannot be paired with
- * itself.
+ * Represents the dual graph of a 3-manifold triangulation.
  *
- * Such a matching models part of the structure of a triangulation, in
- * which each tetrahedron face is either glued to some other tetrahedron
- * face (which is in turn glued to it) or is an unglued boundary face.
+ * This is a specialisation of the generic FacetPairing class template;
+ * see the FacetPairing documentation for an overview of how this class works.
  *
- * Note that if this pairing is used to construct an actual
- * triangulation, the individual gluing permutations will still need to
- * be specified; they are not a part of this structure.
+ * This 3-dimensional specialisation contains some extra functionality.
+ * In particular, it provides routines for finding informative subgraphs
+ * within the dual graph, and it also provides dimension-specific aliases
+ * for some routines.
  */
-class REGINA_API NFacePairing : public NGenericFacetPairing<3> {
+template <>
+class REGINA_API FacetPairing<3> : public FacetPairingBase<3> {
     public:
         /**
          * Creates a new face pairing that is a clone of the given face
@@ -102,7 +99,7 @@ class REGINA_API NFacePairing : public NGenericFacetPairing<3> {
          *
          * @param cloneMe the face pairing to clone.
          */
-        NFacePairing(const NFacePairing& cloneMe);
+        FacetPairing(const FacetPairing& cloneMe);
 
         /**
          * Creates the face pairing of the given 3-manifold triangulation.
@@ -115,10 +112,10 @@ class REGINA_API NFacePairing : public NGenericFacetPairing<3> {
          * @param tri the triangulation whose face pairing should be
          * constructed.
          */
-        NFacePairing(const NTriangulation& tri);
+        FacetPairing(const NTriangulation& tri);
 
         /**
-         * A legacy alias for size(), provided for backward
+         * A deprecated alias for size(), provided for backward
          * compatibility only.
          *
          * This routine returns the number of tetrahedra whose faces are
@@ -444,12 +441,12 @@ class REGINA_API NFacePairing : public NGenericFacetPairing<3> {
          * Creates a new face pairing.  All internal arrays will be
          * allocated but not initialised.
          *
-         * \pre \a nTetrahedra is at least 1.
+         * \pre \a size is at least 1.
          *
-         * @param nTetrahedra the number of tetrahedra under
+         * @param size the number of tetrahedra under
          * consideration in this new face pairing.
          */
-        NFacePairing(unsigned nTetrahedra);
+        FacetPairing(unsigned size);
 
         /**
          * Internal to hasBrokenDoubleEndedChain().  This routine assumes
@@ -553,26 +550,31 @@ class REGINA_API NFacePairing : public NGenericFacetPairing<3> {
         bool hasTripleOneEndedChain(unsigned tet, unsigned face) const;
 
     // Make sure the parent class can call the private constructor.
-    friend class NGenericFacetPairing<3>;
+    friend class FacetPairingBase<3>;
 };
+
+/**
+ * A convenience typedef for FacetPairing<3>.
+ */
+typedef FacetPairing<3> NFacePairing;
 
 /*@}*/
 
-// Inline functions for NFacePairing
+// Inline functions for FacetPairing<3>
 
-inline NFacePairing::NFacePairing(const NFacePairing& cloneMe) :
-        NGenericFacetPairing<3>(cloneMe) {
+inline FacetPairing<3>::FacetPairing(const FacetPairing& cloneMe) :
+        FacetPairingBase<3>(cloneMe) {
 }
 
-inline NFacePairing::NFacePairing(const NTriangulation& tri) :
-        NGenericFacetPairing<3>(tri) {
+inline FacetPairing<3>::FacetPairing(const NTriangulation& tri) :
+        FacetPairingBase<3>(tri) {
 }
 
-inline NFacePairing::NFacePairing(unsigned nTetrahedra) :
-        NGenericFacetPairing<3>(nTetrahedra) {
+inline FacetPairing<3>::FacetPairing(unsigned size) :
+        FacetPairingBase<3>(size) {
 }
 
-inline unsigned NFacePairing::getNumberOfTetrahedra() const {
+inline unsigned FacetPairing<3>::getNumberOfTetrahedra() const {
     return size_;
 }
 

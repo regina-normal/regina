@@ -36,7 +36,6 @@
 #include <sstream>
 #include <vector>
 #include "census/nfacepairing.h"
-#include "census/ngenericfacetpairing-impl.h"
 #include "triangulation/nfacepair.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
@@ -45,31 +44,7 @@
 
 namespace regina {
 
-// Instantiate all templates from the -impl.h file.
-template NGenericFacetPairing<3>::NGenericFacetPairing(
-    const NGenericFacetPairing<3>&);
-template NGenericFacetPairing<3>::NGenericFacetPairing(const NTriangulation&);
-template bool NGenericFacetPairing<3>::isClosed() const;
-template std::string NGenericFacetPairing<3>::str() const;
-template std::string NGenericFacetPairing<3>::dotHeader(const char*);
-template void NGenericFacetPairing<3>::writeDotHeader(std::ostream&,
-    const char*);
-template std::string NGenericFacetPairing<3>::dot(const char*, bool, bool)
-    const;
-template void NGenericFacetPairing<3>::writeDot(std::ostream&, const char*,
-    bool, bool) const;
-template std::string NGenericFacetPairing<3>::toTextRep() const;
-template NFacePairing* NGenericFacetPairing<3>::fromTextRep(const std::string&);
-template bool NGenericFacetPairing<3>::isCanonical() const;
-template bool NGenericFacetPairing<3>::isCanonicalInternal(
-    NGenericFacetPairing<3>::IsoList&) const;
-template void NGenericFacetPairing<3>::findAutomorphisms(
-    NGenericFacetPairing<3>::IsoList&) const;
-template bool NGenericFacetPairing<3>::findAllPairings(unsigned, NBoolSet,
-    int, NGenericFacetPairing<3>::Use, void*, bool);
-template void* NGenericFacetPairing<3>::run(void*);
-
-bool NFacePairing::hasTripleEdge() const {
+bool FacetPairing<3>::hasTripleEdge() const {
     unsigned equal, i, j;
     for (unsigned tet = 0; tet < size_; tet++) {
         // Is there a triple edge coming from this tetrahedron?
@@ -92,7 +67,7 @@ bool NFacePairing::hasTripleEdge() const {
     return false;
 }
 
-void NFacePairing::followChain(unsigned& tet, NFacePair& faces) const {
+void FacetPairing<3>::followChain(unsigned& tet, NFacePair& faces) const {
     NTetFace dest1, dest2;
     while (true) {
         // Does the first face lead to a real tetrahedron?
@@ -115,7 +90,7 @@ void NFacePairing::followChain(unsigned& tet, NFacePair& faces) const {
     }
 }
 
-bool NFacePairing::hasBrokenDoubleEndedChain() const {
+bool FacetPairing<3>::hasBrokenDoubleEndedChain() const {
     // Search for the end edge of the first chain.
     unsigned baseTet;
     unsigned baseFace;
@@ -138,7 +113,7 @@ bool NFacePairing::hasBrokenDoubleEndedChain() const {
     return false;
 }
 
-bool NFacePairing::hasBrokenDoubleEndedChain(unsigned baseTet,
+bool FacetPairing<3>::hasBrokenDoubleEndedChain(unsigned baseTet,
         unsigned baseFace) const {
     // Follow the chain along and see how far we get.
     NFacePair bdryFaces =
@@ -186,7 +161,7 @@ bool NFacePairing::hasBrokenDoubleEndedChain(unsigned baseTet,
     return false;
 }
 
-bool NFacePairing::hasOneEndedChainWithDoubleHandle() const {
+bool FacetPairing<3>::hasOneEndedChainWithDoubleHandle() const {
     // Search for the end edge of the chain.
     unsigned baseTet;
     unsigned baseFace;
@@ -208,7 +183,7 @@ bool NFacePairing::hasOneEndedChainWithDoubleHandle() const {
     return false;
 }
 
-bool NFacePairing::hasOneEndedChainWithDoubleHandle(unsigned baseTet,
+bool FacetPairing<3>::hasOneEndedChainWithDoubleHandle(unsigned baseTet,
         unsigned baseFace) const {
     // Follow the chain along and see how far we get.
     NFacePair bdryFaces =
@@ -239,7 +214,7 @@ bool NFacePairing::hasOneEndedChainWithDoubleHandle(unsigned baseTet,
     return (handle >= 2);
 }
 
-bool NFacePairing::hasWedgedDoubleEndedChain() const {
+bool FacetPairing<3>::hasWedgedDoubleEndedChain() const {
     // Search for the end edge of the first chain.
     unsigned baseTet;
     unsigned baseFace;
@@ -262,7 +237,7 @@ bool NFacePairing::hasWedgedDoubleEndedChain() const {
     return false;
 }
 
-bool NFacePairing::hasWedgedDoubleEndedChain(unsigned baseTet,
+bool FacetPairing<3>::hasWedgedDoubleEndedChain(unsigned baseTet,
         unsigned baseFace) const {
     // Follow the chain along and see how far we get.
     NFacePair bdryFaces =
@@ -334,7 +309,7 @@ bool NFacePairing::hasWedgedDoubleEndedChain(unsigned baseTet,
     return false;
 }
 
-bool NFacePairing::hasOneEndedChainWithStrayBigon() const {
+bool FacetPairing<3>::hasOneEndedChainWithStrayBigon() const {
     // Search for the end edge of the chain.
     unsigned baseTet;
     unsigned baseFace;
@@ -356,7 +331,7 @@ bool NFacePairing::hasOneEndedChainWithStrayBigon() const {
     return false;
 }
 
-bool NFacePairing::hasOneEndedChainWithStrayBigon(unsigned baseTet,
+bool FacetPairing<3>::hasOneEndedChainWithStrayBigon(unsigned baseTet,
         unsigned baseFace) const {
     // Follow the chain along and see how far we get.
     NFacePair bdryFaces =
@@ -437,7 +412,7 @@ bool NFacePairing::hasOneEndedChainWithStrayBigon(unsigned baseTet,
     return false;
 }
 
-bool NFacePairing::hasTripleOneEndedChain() const {
+bool FacetPairing<3>::hasTripleOneEndedChain() const {
     // Search for the end edge of the first chain.
     unsigned baseTet;
     unsigned baseFace;
@@ -460,7 +435,7 @@ bool NFacePairing::hasTripleOneEndedChain() const {
     return false;
 }
 
-bool NFacePairing::hasTripleOneEndedChain(unsigned baseTet,
+bool FacetPairing<3>::hasTripleOneEndedChain(unsigned baseTet,
         unsigned baseFace) const {
     // Follow the chain along and see how far we get.
     NFacePair bdryFaces =
@@ -530,7 +505,7 @@ bool NFacePairing::hasTripleOneEndedChain(unsigned baseTet,
     return false;
 }
 
-bool NFacePairing::hasSingleStar() const {
+bool FacetPairing<3>::hasSingleStar() const {
     int half[4], all[8];
 
     unsigned first, second;
@@ -583,7 +558,7 @@ bool NFacePairing::hasSingleStar() const {
     return false;
 }
 
-bool NFacePairing::hasDoubleStar() const {
+bool FacetPairing<3>::hasDoubleStar() const {
     int all[7];
 
     unsigned first, second;
@@ -643,7 +618,7 @@ bool NFacePairing::hasDoubleStar() const {
     return false;
 }
 
-bool NFacePairing::hasDoubleSquare() const {
+bool FacetPairing<3>::hasDoubleSquare() const {
     unsigned t1;
     NTetFace t2;
     int join, fa, fb;

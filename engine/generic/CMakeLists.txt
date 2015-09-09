@@ -17,6 +17,8 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     canonical-impl.h
     dimtraits.h
+    facetpairing.h
+    facetpairing-impl.h
     isomorphism.h
     isomorphism-impl.h
     isosig-impl.h

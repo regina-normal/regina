@@ -45,10 +45,10 @@ namespace {
     const Dim2TriangleEdge& (Dim2EdgePairing::*dest_facet)(
         const Dim2TriangleEdge&) const = &Dim2EdgePairing::dest;
     const Dim2TriangleEdge& (Dim2EdgePairing::*dest_unsigned)(
-        unsigned, unsigned) const = &Dim2EdgePairing::dest;
+        size_t, unsigned) const = &Dim2EdgePairing::dest;
     bool (Dim2EdgePairing::*isUnmatched_facet)(const Dim2TriangleEdge&) const =
         &Dim2EdgePairing::isUnmatched;
-    bool (Dim2EdgePairing::*isUnmatched_unsigned)(unsigned, unsigned) const =
+    bool (Dim2EdgePairing::*isUnmatched_unsigned)(size_t, unsigned) const =
         &Dim2EdgePairing::isUnmatched;
 
     const Dim2TriangleEdge& getItem(const Dim2EdgePairing& p,

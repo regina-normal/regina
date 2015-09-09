@@ -64,7 +64,7 @@ NTreeDecomposition::NTreeDecomposition(
 
 template <int dim>
 NTreeDecomposition::NTreeDecomposition(
-        const NGenericFacetPairing<dim>& pairing,
+        const FacetPairing<dim>& pairing,
         TreeDecompositionAlg alg) :
         width_(0), root_(0) {
     Graph g(pairing.size());
