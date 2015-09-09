@@ -254,11 +254,10 @@ namespace {
     };
 
     bool TriSimplify::found(const NTriangulation& alt, void* simp) {
-        std::cout << "Found: " << alt.isoSig() << std::endl; // TODO: Remove
         if (alt.getNumberOfTetrahedra() <
                 static_cast<TriSimplify*>(simp)->minTet) {
             NTriangulation& t(static_cast<TriSimplify*>(simp)->original);
-            // TODO: t.cloneFrom(alt);
+            // TODO: Make t.cloneFrom(alt) public.
             t.removeAllTetrahedra();
             t.insertTriangulation(alt);
             t.intelligentSimplify();
