@@ -48,7 +48,6 @@
 #include "output.h"
 #include "generic/nfacetspec.h"
 #include "utilities/nbooleans.h"
-#include "utilities/nthread.h"
 
 namespace regina {
 

@@ -87,8 +87,7 @@ typedef void (*UseFacePairing)(const FacetPairing<3>*,
  *
  * This 3-dimensional specialisation contains some extra functionality.
  * In particular, it provides routines for finding informative subgraphs
- * within the dual graph, and it also provides dimension-specific aliases
- * for some routines.
+ * within the dual graph.
  */
 template <>
 class REGINA_API FacetPairing<3> : public FacetPairingBase<3> {
@@ -103,9 +102,8 @@ class REGINA_API FacetPairing<3> : public FacetPairingBase<3> {
 
         /**
          * Creates the face pairing of the given 3-manifold triangulation.
-         * This is the face pairing that describes how the tetrahedron faces
-         * of the given triangulation are joined together, as described in the
-         * class notes.
+         * This describes how the tetrahedron faces of the given triangulation
+         * are joined together in pairs.
          *
          * \pre The given triangulation is not empty.
          *
