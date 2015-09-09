@@ -49,6 +49,7 @@ namespace {
             bool (*const action_)(const NTriangulation&, void*);
             void *const arg_;
             bool done_;
+            unsigned nRunning_;
 
             SigSet sigs_;
             std::queue<SigSet::iterator> process_;
@@ -68,7 +69,7 @@ namespace {
             bool done() const;
 
         private:
-            bool found(const NTriangulation& alt);
+            bool candidate(const NTriangulation& alt);
     };
 
     template <bool threading>
@@ -102,7 +103,7 @@ namespace {
                 if (t->threeTwoMove(t->getEdge(i), true, false)) {
                     NTriangulation alt(*t);
                     alt.threeTwoMove(alt.getEdge(i), false, true);
-                    if (found(alt))
+                    if (candidate(alt))
                         return;
                 }
 
@@ -111,7 +112,7 @@ namespace {
                     if (t->twoThreeMove(t->getFace(i), true, false)) {
                         NTriangulation alt(*t);
                         alt.twoThreeMove(alt.getFace(i), false, true);
-                        if (found(alt))
+                        if (candidate(alt))
                             return;
                     }
 
@@ -125,18 +126,26 @@ namespace {
     }
 
     template <bool threading>
-    bool TriBFS<threading>::found(const NTriangulation& alt) {
+    bool TriBFS<threading>::candidate(const NTriangulation& alt) {
         const std::string sig = alt.isoSig();
 
         typename Mutex<threading>::MutexLock lock(mutex_);
         if (done_)
             return false;
 
-        if (sigs_.find(sig) == sigs_.end()) {
+        auto result = sigs_.insert(sig);
+        if (result.second) {
+            // We have not seen this triangulation before.
+            if (threading && process.empty()) {
+                process_.push(result.first);
+                // TODO
+                // Wake up any other threads that had previously emptied
+                // the queue.
+            } else
+                process_.push(result.first);
+
             if ((*action_)(alt, arg_))
                 return (done_ = true);
-
-            process_.push(sigs_.insert(sig).first);
         }
         return false;
     }
