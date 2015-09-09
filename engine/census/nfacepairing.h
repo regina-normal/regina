@@ -128,7 +128,7 @@ class REGINA_API FacetPairing<3> : public FacetPairingBase<3> {
          *
          * @return the number of tetrahedra under consideration.
          */
-        unsigned getNumberOfTetrahedra() const;
+        size_t getNumberOfTetrahedra() const;
 
         /**
          * Follows a chain as far as possible from the given point.
@@ -173,7 +173,7 @@ class REGINA_API FacetPairing<3> : public FacetPairingBase<3> {
          * tetrahedron at which we begin.  This parameter will also be
          * modified directly by this routine as a way of returning results.
          */
-        void followChain(unsigned& tet, NFacePair& faces) const;
+        void followChain(size_t& tet, NFacePair& faces) const;
 
         /**
          * Determines whether this face pairing contains a triple edge.
@@ -446,7 +446,7 @@ class REGINA_API FacetPairing<3> : public FacetPairingBase<3> {
          * @param size the number of tetrahedra under
          * consideration in this new face pairing.
          */
-        FacetPairing(unsigned size);
+        FacetPairing(size_t size);
 
         /**
          * Internal to hasBrokenDoubleEndedChain().  This routine assumes
@@ -466,7 +466,7 @@ class REGINA_API FacetPairing<3> : public FacetPairingBase<3> {
          * @return \c true if and only if this face pairing contains a
          * broken double-ended chain as described above.
          */
-        bool hasBrokenDoubleEndedChain(unsigned tet, unsigned face) const;
+        bool hasBrokenDoubleEndedChain(size_t tet, unsigned face) const;
 
         /**
          * Internal to hasOneEndedChainWithDoubleHandle().  This routine
@@ -486,8 +486,7 @@ class REGINA_API FacetPairing<3> : public FacetPairingBase<3> {
          * @return \c true if and only if this face pairing contains a
          * one-ended chain with a double handle as described above.
          */
-        bool hasOneEndedChainWithDoubleHandle(unsigned tet,
-            unsigned face) const;
+        bool hasOneEndedChainWithDoubleHandle(size_t tet, unsigned face) const;
 
         /**
          * Internal to hasWedgedDoubleEndedChain().  This routine assumes
@@ -507,7 +506,7 @@ class REGINA_API FacetPairing<3> : public FacetPairingBase<3> {
          * @return \c true if and only if this face pairing contains a
          * wedged double-ended chain as described above.
          */
-        bool hasWedgedDoubleEndedChain(unsigned tet, unsigned face) const;
+        bool hasWedgedDoubleEndedChain(size_t tet, unsigned face) const;
 
         /**
          * Internal to hasOneEndedChainWithStrayBigon().  This routine assumes
@@ -527,7 +526,7 @@ class REGINA_API FacetPairing<3> : public FacetPairingBase<3> {
          * @return \c true if and only if this face pairing contains a
          * one-ended chain with stray bigon as described above.
          */
-        bool hasOneEndedChainWithStrayBigon(unsigned tet, unsigned face) const;
+        bool hasOneEndedChainWithStrayBigon(size_t tet, unsigned face) const;
 
         /**
          * Internal to hasTripleOneEndedChain().  This routine assumes
@@ -547,7 +546,7 @@ class REGINA_API FacetPairing<3> : public FacetPairingBase<3> {
          * @return \c true if and only if this face pairing contains a
          * triple one-ended chain as described above.
          */
-        bool hasTripleOneEndedChain(unsigned tet, unsigned face) const;
+        bool hasTripleOneEndedChain(size_t tet, unsigned face) const;
 
     // Make sure the parent class can call the private constructor.
     friend class FacetPairingBase<3>;
@@ -570,11 +569,11 @@ inline FacetPairing<3>::FacetPairing(const NTriangulation& tri) :
         FacetPairingBase<3>(tri) {
 }
 
-inline FacetPairing<3>::FacetPairing(unsigned size) :
+inline FacetPairing<3>::FacetPairing(size_t size) :
         FacetPairingBase<3>(size) {
 }
 
-inline unsigned FacetPairing<3>::getNumberOfTetrahedra() const {
+inline size_t FacetPairing<3>::getNumberOfTetrahedra() const {
     return size_;
 }
 

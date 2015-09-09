@@ -46,7 +46,7 @@ namespace regina {
 
 bool FacetPairing<3>::hasTripleEdge() const {
     unsigned equal, i, j;
-    for (unsigned tet = 0; tet < size_; tet++) {
+    for (size_t tet = 0; tet < size_; tet++) {
         // Is there a triple edge coming from this tetrahedron?
         equal = 0;
         for (i = 0; i < 4; i++)
@@ -67,7 +67,7 @@ bool FacetPairing<3>::hasTripleEdge() const {
     return false;
 }
 
-void FacetPairing<3>::followChain(unsigned& tet, NFacePair& faces) const {
+void FacetPairing<3>::followChain(size_t& tet, NFacePair& faces) const {
     NTetFace dest1, dest2;
     while (true) {
         // Does the first face lead to a real tetrahedron?
@@ -92,7 +92,7 @@ void FacetPairing<3>::followChain(unsigned& tet, NFacePair& faces) const {
 
 bool FacetPairing<3>::hasBrokenDoubleEndedChain() const {
     // Search for the end edge of the first chain.
-    unsigned baseTet;
+    size_t baseTet;
     unsigned baseFace;
     // Skip the last tetrahedron -- any of the two ends will do.
     for (baseTet = 0; baseTet + 1 < size_; baseTet++)
@@ -113,12 +113,12 @@ bool FacetPairing<3>::hasBrokenDoubleEndedChain() const {
     return false;
 }
 
-bool FacetPairing<3>::hasBrokenDoubleEndedChain(unsigned baseTet,
+bool FacetPairing<3>::hasBrokenDoubleEndedChain(size_t baseTet,
         unsigned baseFace) const {
     // Follow the chain along and see how far we get.
     NFacePair bdryFaces =
         NFacePair(baseFace, dest(baseTet, baseFace).facet).complement();
-    unsigned bdryTet = baseTet;
+    size_t bdryTet = baseTet;
     followChain(bdryTet, bdryFaces);
 
     // Here's where we must diverge and move into the second chain.
@@ -130,7 +130,7 @@ bool FacetPairing<3>::hasBrokenDoubleEndedChain(unsigned baseTet,
     // Try each possible direction away from the working faces into the
     // second chain.
     NFacePair chainFaces;
-    unsigned chainTet;
+    size_t chainTet;
     NTetFace destFace;
     unsigned ignoreFace;
     int i;
@@ -163,7 +163,7 @@ bool FacetPairing<3>::hasBrokenDoubleEndedChain(unsigned baseTet,
 
 bool FacetPairing<3>::hasOneEndedChainWithDoubleHandle() const {
     // Search for the end edge of the chain.
-    unsigned baseTet;
+    size_t baseTet;
     unsigned baseFace;
     for (baseTet = 0; baseTet < size_; baseTet++)
         for (baseFace = 0; baseFace < 3; baseFace++)
@@ -183,12 +183,12 @@ bool FacetPairing<3>::hasOneEndedChainWithDoubleHandle() const {
     return false;
 }
 
-bool FacetPairing<3>::hasOneEndedChainWithDoubleHandle(unsigned baseTet,
+bool FacetPairing<3>::hasOneEndedChainWithDoubleHandle(size_t baseTet,
         unsigned baseFace) const {
     // Follow the chain along and see how far we get.
     NFacePair bdryFaces =
         NFacePair(baseFace, dest(baseTet, baseFace).facet).complement();
-    unsigned bdryTet = baseTet;
+    size_t bdryTet = baseTet;
     followChain(bdryTet, bdryFaces);
 
     // Here's where we must diverge and create the double handle.
@@ -216,7 +216,7 @@ bool FacetPairing<3>::hasOneEndedChainWithDoubleHandle(unsigned baseTet,
 
 bool FacetPairing<3>::hasWedgedDoubleEndedChain() const {
     // Search for the end edge of the first chain.
-    unsigned baseTet;
+    size_t baseTet;
     unsigned baseFace;
     // Skip the last tetrahedron -- any of the two ends will do.
     for (baseTet = 0; baseTet + 1 < size_; baseTet++)
@@ -237,12 +237,12 @@ bool FacetPairing<3>::hasWedgedDoubleEndedChain() const {
     return false;
 }
 
-bool FacetPairing<3>::hasWedgedDoubleEndedChain(unsigned baseTet,
+bool FacetPairing<3>::hasWedgedDoubleEndedChain(size_t baseTet,
         unsigned baseFace) const {
     // Follow the chain along and see how far we get.
     NFacePair bdryFaces =
         NFacePair(baseFace, dest(baseTet, baseFace).facet).complement();
-    unsigned bdryTet = baseTet;
+    size_t bdryTet = baseTet;
     followChain(bdryTet, bdryFaces);
 
     // Here we expect to find the wedge.
@@ -289,7 +289,7 @@ bool FacetPairing<3>::hasWedgedDoubleEndedChain(unsigned baseTet,
     // unseen tetrahedra.
     // Hunt for the other half of the double-ended chain.
     NFacePair chainFaces;
-    unsigned chainTet;
+    size_t chainTet;
     for (i = 0; i < nThroughFaces[0]; i++)
         for (j = 0; j < nThroughFaces[1]; j++)
             if (throughFace[0][i].simp == throughFace[1][j].simp) {
@@ -311,7 +311,7 @@ bool FacetPairing<3>::hasWedgedDoubleEndedChain(unsigned baseTet,
 
 bool FacetPairing<3>::hasOneEndedChainWithStrayBigon() const {
     // Search for the end edge of the chain.
-    unsigned baseTet;
+    size_t baseTet;
     unsigned baseFace;
     for (baseTet = 0; baseTet < size_; baseTet++)
         for (baseFace = 0; baseFace < 3; baseFace++)
@@ -331,12 +331,12 @@ bool FacetPairing<3>::hasOneEndedChainWithStrayBigon() const {
     return false;
 }
 
-bool FacetPairing<3>::hasOneEndedChainWithStrayBigon(unsigned baseTet,
+bool FacetPairing<3>::hasOneEndedChainWithStrayBigon(size_t baseTet,
         unsigned baseFace) const {
     // Follow the chain along and see how far we get.
     NFacePair bdryFaces =
         NFacePair(baseFace, dest(baseTet, baseFace).facet).complement();
-    unsigned bdryTet = baseTet;
+    size_t bdryTet = baseTet;
     followChain(bdryTet, bdryFaces);
 
     // Here's where we must diverge and create the stray bigon.
@@ -414,7 +414,7 @@ bool FacetPairing<3>::hasOneEndedChainWithStrayBigon(unsigned baseTet,
 
 bool FacetPairing<3>::hasTripleOneEndedChain() const {
     // Search for the end edge of the first chain.
-    unsigned baseTet;
+    size_t baseTet;
     unsigned baseFace;
     // Skip the last two tetrahedra -- any of the three chains will do.
     for (baseTet = 0; baseTet + 2 < size_; baseTet++)
@@ -435,12 +435,12 @@ bool FacetPairing<3>::hasTripleOneEndedChain() const {
     return false;
 }
 
-bool FacetPairing<3>::hasTripleOneEndedChain(unsigned baseTet,
+bool FacetPairing<3>::hasTripleOneEndedChain(size_t baseTet,
         unsigned baseFace) const {
     // Follow the chain along and see how far we get.
     NFacePair bdryFaces =
         NFacePair(baseFace, dest(baseTet, baseFace).facet).complement();
-    unsigned bdryTet = baseTet;
+    size_t bdryTet = baseTet;
     followChain(bdryTet, bdryFaces);
 
     // Here's where we must diverge and hunt for the other two chains.
@@ -463,7 +463,7 @@ bool FacetPairing<3>::hasTripleOneEndedChain(unsigned baseTet,
     int exit1, exit2;
     NTetFace arrive1, arrive2;
     int nChains = 1;
-    unsigned newChainTet;
+    size_t newChainTet;
     NFacePair newChainFaces;
     for (exit1 = 0; exit1 < 4; exit1++) {
         if (exit1 == axis1.facet)
@@ -508,7 +508,7 @@ bool FacetPairing<3>::hasTripleOneEndedChain(unsigned baseTet,
 bool FacetPairing<3>::hasSingleStar() const {
     int half[4], all[8];
 
-    unsigned first, second;
+    size_t first, second;
     unsigned f1, f2;
     int i;
 
@@ -561,7 +561,7 @@ bool FacetPairing<3>::hasSingleStar() const {
 bool FacetPairing<3>::hasDoubleStar() const {
     int all[7];
 
-    unsigned first, second;
+    size_t first, second;
     int f, i;
 
     // Skip the last tetrahedron, since we're already testing every
@@ -619,7 +619,7 @@ bool FacetPairing<3>::hasDoubleStar() const {
 }
 
 bool FacetPairing<3>::hasDoubleSquare() const {
-    unsigned t1;
+    size_t t1;
     NTetFace t2;
     int join, fa, fb;
     int adj1 = 0, adj2 = 0;
