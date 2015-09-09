@@ -56,7 +56,7 @@ namespace {
     };
 
     template <bool threading>
-    class TriBFS : public SyncData<threading>, public boost::noncopyable {
+    class TriBFS : protected SyncData<threading>, public boost::noncopyable {
         private:
             typedef std::set<std::string> SigSet;
 

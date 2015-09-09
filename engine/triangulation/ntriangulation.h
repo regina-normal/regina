@@ -1889,6 +1889,8 @@ class REGINA_API NTriangulation : public NPacket,
          *
          * \pre This triangulation is connected.
          *
+         * \apinotfinal
+         *
          * \ifacespython Not present.
          *
          * @return \c true if and only if a triangulation was found for
