@@ -17,9 +17,6 @@
 /* Define if 64-bit integer literals are available using the LL suffix */
 #cmakedefine NUMERIC_64_LL_FOUND
 
-/* Define if std::thread is available */
-#cmakedefine HAS_CXX11_STDTHREAD
-
 /* Define if Boost.Python is available. */
 #cmakedefine BOOST_PYTHON_FOUND
 

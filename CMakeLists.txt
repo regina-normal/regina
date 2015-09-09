@@ -115,17 +115,11 @@ SET(HAVE_CXX11_FEATURES TRUE)
 NEED_CXX11_FEATURE("auto")
 NEED_CXX11_FEATURE("constexpr")
 NEED_CXX11_FEATURE("static_assert")
-OPTIONAL_CXX11_FEATURE("stdthread")
+NEED_CXX11_FEATURE("stdthread")
 IF(NOT HAVE_CXX11_FEATURES)
   MESSAGE(FATAL_ERROR "Regina requires C++11 support to compile.")
 ENDIF()
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11_SWITCH}")
-
-MACRO_LOG_FEATURE(HAS_CXX11_STDTHREAD
-  "std::thread"
-  "Multithreading support"
-  "C++11 standard"
-  REGINA_MANDATORY)
 
 # All the user to exclude various pieces of third-party code that are
 # typically built directly into Regina's engine.
