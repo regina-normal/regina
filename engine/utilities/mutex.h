@@ -43,12 +43,7 @@
 
 #include "regina-core.h"
 #include "regina-config.h"
-
-#ifdef HAS_CXX11_STDTHREAD
 #include <mutex>
-#endif
-
-#include "regina-core.h"
 
 namespace regina {
 
@@ -88,7 +83,6 @@ namespace regina {
 template <bool threadingSupport>
 class REGINA_API Mutex;
 
-#ifdef HAS_CXX11_STDTHREAD
 /**
  * A mutual exclusion device (mutex) used to ensure that different
  * threads do not interfere when working with the same data.
@@ -142,7 +136,6 @@ class REGINA_API Mutex<true> {
                 Lock(Mutex<true>& mutex);
         };
 };
-#endif // ifdef HAS_CXX11_STDTHREAD
 
 /**
  * An empty class that provides the Mutex API but does nothing at all.
@@ -174,10 +167,8 @@ class REGINA_API Mutex<false> {
 
 // Inline functions for Mutex::Lock
 
-#ifdef HAS_CXX11_STDTHREAD
 inline Mutex<true>::Lock::Lock(Mutex<true>& mutex) : lock_(mutex.mutex_) {
 }
-#endif // ifdef HAS_CXX11_STDTHREAD
 
 inline Mutex<false>::Lock::Lock(Mutex<false>&) {
 }
