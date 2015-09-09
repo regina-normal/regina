@@ -11,6 +11,7 @@ Version 4.97  [ (under development) ]
 
     GENERAL:
         - Now uses aspects of C++11, which your compiler will need to support.
+        - Merged sources for the iPad version into the main source tree.
     ENGINE:
         All:
             - Removed ShareableObject from the class hierarchy.  All classes

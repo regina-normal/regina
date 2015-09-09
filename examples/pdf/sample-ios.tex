@@ -1,0 +1,49 @@
+%&biglatex
+\documentclass[a4paper,10pt]{article}
+
+% Page size (you'll presumably want to remove this for the journal):
+%
+\usepackage[hmargin=35mm,vmargin=40mm]{geometry}
+
+% Packages used within the main body of the paper:
+%
+\usepackage{graphicx}     % For embedding figures
+
+\begin{document}
+
+\thispagestyle{empty}
+\centerline{\large \bf{Welcome to Regina!}}
+
+\bigskip
+
+Did you know that you can embed PDF documents directly inside your
+Regina data files?
+This means that you can annotate your data with diagrams:
+
+\bigskip
+
+\centerline{
+    \includegraphics[scale=0.35]{fig1}\qquad\qquad
+    \includegraphics[scale=0.7]{fig2}}
+
+\medskip
+
+\noindent
+and also with equations:
+
+\[ \ldots
+    \longrightarrow H_n(A \cap B)
+    \stackrel{\Phi}{\longrightarrow} H_n(A) \oplus H_n(B)
+    \stackrel{\Psi}{\longrightarrow} H_n(X)
+    \stackrel{\partial}{\longrightarrow} H_{n-1}(A \cap B)
+    \longrightarrow \ldots
+\]
+
+The iPad version of Regina allows you to \emph{view} embedded PDF documents,
+but not create them.
+If you wish to embed new PDF documents inside your data files,
+please download a desktop version of Regina from
+\texttt{regina.sourceforge.net}.
+
+\end{document}
+
