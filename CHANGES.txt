@@ -67,6 +67,10 @@ Version 4.97  [ (under development) ]
             - The destructor and writeMatrix() are no longer virtual.
             - Now derives from Output, and provides str() and detail()
               output routines.
+        Class NMutex:
+            - Deprecated; just use std::mutex and std::lock_guard instead
+              (and/or regina::Mutex<bool> if you wish to support both
+              multithreaded and single-threaded code).
         Class NNormalSurface:
             - New convenience routines normal() and embedded().
         Class NNormalSurfaceList:
@@ -92,6 +96,8 @@ Version 4.97  [ (under development) ]
               and can optionally overwrite the default writeTextLong function.
         Class NSurfaceFilterProperties:
             - New set-based routine setECs().
+        Class NThread:
+            - Deprecated; just use std::thread instead.
         Class NTreeBag, NTreeDecomposition:
             - Classes for computing tree decompositions of graphs
               (including facet pairing graphs of triangulations).

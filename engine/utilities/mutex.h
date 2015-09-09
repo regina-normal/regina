@@ -76,11 +76,11 @@ namespace regina {
  * See the documentation for Mutex<true> for further information on how
  * this class should be used.
  *
- * The implementation of Mutex<true> is based on the standard C++11 threading
- * classes.  If you do not have these standard classes available (i.e., if
- * your compiler does not implement enough of the C++11 standard), then you
- * can still use Mutex<false>, but any attempt to use Mutex<true> will cause
- * a compile failure.
+ * This class is designed to work in conjunction with the standard C++11
+ * threading classes (in particular, std::thread).  If you do not have these
+ * standard classes available (i.e., if your compiler does not implement
+ * enough of the C++11 standard), then you can still use Mutex<false>,
+ * but any attempt to use Mutex<true> will cause a compile failure.
  *
  * \tparam threadingSupport \c true if this class should provide full
  * mutex support, or \c false if this class should do nothing.
@@ -103,6 +103,9 @@ class REGINA_API Mutex;
  *
  * A mutex is locked by declaring a local variable of type Mutex::Lock,
  * and is unlocked when this Mutex::Lock variable goes out of scope.
+ *
+ * This class uses the default constructor, which is not explicitly
+ * declared here.  Mutexes are always created in the unlocked state.
  *
  * \ifacespython Not present.
  */
@@ -149,6 +152,9 @@ class REGINA_API Mutex<true> {
  *
  * This Mutex<false> class can be used even if the C++11 standard
  * threading classes are unavailable.
+ *
+ * This class uses the default constructor, which is not explicitly
+ * declared here.
  *
  * See Mutex<true> for details of how the API should be used.
  */
