@@ -44,6 +44,7 @@
 #include <memory>
 #include <vector>
 #include "regina-core.h"
+#include "generic/dimtraits.h"
 #include "generic/ngenerictriangulation.h"
 #include "generic/triangulation.h"
 #include "packet/npacket.h"
@@ -510,6 +511,7 @@ class REGINA_API Triangulation<2> :
          * @return \c true if and only if this triangulation is closed.
          */
         bool isClosed() const;
+        bool hasBoundaryFacets() const;
         /**
          * A dimension-specific alias for hasBoundaryFacets().
          *
@@ -637,7 +639,7 @@ class REGINA_API Triangulation<2> :
          * In most cases this routine is followed immediately by firing
          * a packet change event.
          */
-        virtual void clearAllProperties();
+        void clearAllProperties();
 
         void deleteSkeleton();
         void calculateSkeleton() const;
@@ -936,8 +938,13 @@ inline bool Triangulation<2>::isClosed() const {
     return boundaryComponents_.empty();
 }
 
-inline bool Triangulation<2>::hasBoundaryEdges() const {
+inline bool Triangulation<2>::hasBoundaryFacets() const {
+    // Override, since we can do this faster in dimension 2.
     return ! isClosed();
+}
+
+inline bool Triangulation<2>::hasBoundaryEdges() const {
+    return hasBoundaryFacets();
 }
 
 inline size_t Triangulation<2>::countBoundaryFacets() const {

@@ -45,18 +45,13 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
     if (getNumberOfTetrahedra() == 0)
         return *(fundamentalGroup_ = ans);
 
-    // Find a maximal forest in the dual 1-skeleton.
-    // Note that this will ensure the skeleton has been calculated.
-    std::set<NTriangle*> forest;
-    maximalForestInDualSkeleton(forest);
+    // Calculate a maximal forest in the dual 1-skeleton.
+    ensureSkeleton();
 
     // Each non-boundary not-in-forest triangle is a generator.
     // Each non-boundary edge is a relation.
-    unsigned long nBdryTri = 0;
-    for (BoundaryComponentIterator bit = boundaryComponents_.begin();
-            bit != boundaryComponents_.end(); bit++)
-        nBdryTri += (*bit)->getNumberOfTriangles();
-    long nGens = getNumberOfTriangles() - nBdryTri - forest.size();
+    long nGens = getNumberOfTriangles() - countBoundaryFacets()
+        + countComponents() - size();
 
     // Insert the generators.
     ans->addGenerator(nGens);
@@ -64,8 +59,8 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
     // Find out which triangle corresponds to which generator.
     long *genIndex = new long[getNumberOfTriangles()];
     long i = 0;
-    for (TriangleIterator fit = triangles_.begin(); fit != triangles_.end(); fit++)
-        if ((*fit)->isBoundary() || forest.count(*fit))
+    for (auto fit = triangles_.begin(); fit != triangles_.end(); ++fit)
+        if ((*fit)->isBoundary() || (*fit)->inMaximalForest())
             genIndex[fit - triangles_.begin()] = -1;
         else
             genIndex[fit - triangles_.begin()] = i++;

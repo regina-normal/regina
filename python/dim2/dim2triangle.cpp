@@ -75,6 +75,7 @@ void addDim2Triangle() {
         .def("getVertexMapping", &Dim2Triangle::getVertexMapping)
         .def("getEdgeMapping", &Dim2Triangle::getEdgeMapping)
         .def("orientation", &Dim2Triangle::orientation)
+        .def("facetInMaximalForest", &Dim2Triangle::facetInMaximalForest)
         .def("str", &Dim2Triangle::str)
         .def("toString", &Dim2Triangle::toString)
         .def("detail", &Dim2Triangle::detail)

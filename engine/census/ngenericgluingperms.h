@@ -43,11 +43,12 @@
 #endif
 
 #include "regina-core.h"
-#include "generic/dimtraits.h"
 #include "generic/nfacetspec.h"
 #include "maths/nperm.h"
 
 namespace regina {
+
+template <int> class FacetPairing;
 
 /**
  * \weakgroup census
@@ -62,7 +63,7 @@ namespace regina {
  * Users should not need to work with this template base class directly.
  *
  * Given a pairwise
- * matching of facets (as described by class NGenericFacetPairing<dim>),
+ * matching of facets (as described by class FacetPairing<dim>),
  * each facet that is matched with some other facet will have an associated
  * permutation of (\a dim + 1) elements.
  *
@@ -81,10 +82,8 @@ namespace regina {
  */
 template <int dim>
 class REGINA_API NGenericGluingPerms {
-    public:
-        typedef typename DimTraits<dim>::FacetPairing FacetPairing;
     protected:
-        const FacetPairing* pairing_;
+        const FacetPairing<dim>* pairing_;
             /**< The facet pairing that this permutation set complements.
                  This is guaranteed to be the minimal representative of
                  its facet pairing isomorphism class. */
@@ -161,7 +160,7 @@ class REGINA_API NGenericGluingPerms {
          *
          * @return the corresponding simplex facet pairing.
          */
-        const FacetPairing* getFacetPairing() const;
+        const FacetPairing<dim>* getFacetPairing() const;
 
         /**
          * Returns the gluing permutation associated with the given
@@ -242,14 +241,13 @@ class REGINA_API NGenericGluingPerms {
          * to reach any simplex from any other simplex via a
          * series of matched facet pairs.
          * \pre The given facet pairing is in canonical form as described
-         * by NGenericFacetPairing::isCanonical().  Note that all facet pairings
-         * constructed by NGenericFacetPairing::findAllPairings() are of this
-         * form.
+         * by FacetPairing::isCanonical().  Note that all facet pairings
+         * constructed by FacetPairing::findAllPairings() are of this form.
          *
          * @param pairing the specific pairing of simplex facets
          * that this permutation set will complement.
          */
-        NGenericGluingPerms(const FacetPairing* pairing);
+        NGenericGluingPerms(const FacetPairing<dim>* pairing);
 
         /**
          * Returns the index into array NPerm<dim+1>::Sn_1 describing how the
@@ -440,7 +438,7 @@ class REGINA_API NGenericGluingPerms {
 
 template <int dim>
 inline NGenericGluingPerms<dim>::NGenericGluingPerms(
-        const FacetPairing* pairing) :
+        const FacetPairing<dim>* pairing) :
         pairing_(pairing),
         permIndices_(new int[pairing->size() * (dim + 1)]),
         inputError_(false) {
@@ -462,8 +460,8 @@ inline unsigned NGenericGluingPerms<dim>::size() const {
 }
 
 template <int dim>
-inline const typename NGenericGluingPerms<dim>::FacetPairing*
-        NGenericGluingPerms<dim>::getFacetPairing() const {
+inline const FacetPairing<dim>* NGenericGluingPerms<dim>::getFacetPairing()
+        const {
     return pairing_;
 }
 

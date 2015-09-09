@@ -211,6 +211,11 @@ class REGINA_API Component<2> : public ComponentBase<2> {
     friend class TriangulationBase<2>;
 };
 
+/**
+ * A convenience typedef for Component<2>.
+ */
+typedef Component<2> Dim2Component;
+
 /*@}*/
 
 // Inline functions for Component<2>

@@ -44,34 +44,27 @@ const NAbelianGroup& NTriangulation::getHomologyH1() const {
     if (getNumberOfTetrahedra() == 0)
         return *(H1_ = new NAbelianGroup());
 
-    // Calculate the first homology.
-    // Find a maximal forest in the dual 1-skeleton.
-    // Note that this will ensure the skeleton has been calculated.
-    std::set<NTriangle*> forest;
-    maximalForestInDualSkeleton(forest);
+    // Calculate a maximal forest in the dual 1-skeleton.
+    ensureSkeleton();
 
     // Build a presentation matrix.
     // Each non-boundary not-in-forest triangle is a generator.
     // Each non-boundary edge is a relation.
     unsigned long nBdryEdges = 0;
-    unsigned long nBdryTri = 0;
-    for (BoundaryComponentIterator bit = boundaryComponents_.begin();
+    for (auto bit = boundaryComponents_.begin();
             bit != boundaryComponents_.end(); bit++) {
         nBdryEdges += (*bit)->getNumberOfEdges();
-        nBdryTri += (*bit)->getNumberOfTriangles();
     }
-    long nGens = getNumberOfTriangles() - nBdryTri - forest.size();
+    long nGens = getNumberOfTriangles() - countBoundaryFacets()
+        + countComponents() - size();
     long nRels = getNumberOfEdges() - nBdryEdges;
     NMatrixInt pres(nRels, nGens);
 
     // Find out which triangle corresponds to which generator.
     long* genIndex = new long[getNumberOfTriangles()];
     long i = 0;
-    for (TriangleIterator fit = triangles_.begin(); fit != triangles_.end();
-            fit++) {
-        if ((*fit)->isBoundary())
-            genIndex[fit - triangles_.begin()] = -1;
-        else if (forest.count(*fit))
+    for (auto fit = triangles_.begin(); fit != triangles_.end(); ++fit) {
+        if ((*fit)->isBoundary() || (*fit)->inMaximalForest())
             genIndex[fit - triangles_.begin()] = -1;
         else {
             genIndex[fit - triangles_.begin()] = i;
@@ -134,13 +127,11 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
     // Each non-boundary triangle is a relation.
     unsigned long nBdryVertices = 0;
     unsigned long nBdryEdges = 0;
-    unsigned long nBdryTri = 0;
     unsigned long nClosedComponents = 0;
     for (BoundaryComponentIterator bit = boundaryComponents_.begin();
             bit != boundaryComponents_.end(); bit++) {
         nBdryVertices += (*bit)->getNumberOfVertices();
         nBdryEdges += (*bit)->getNumberOfEdges();
-        nBdryTri += (*bit)->getNumberOfTriangles();
     }
     for (ComponentIterator cit = components().begin();
             cit != components().end(); cit++)
@@ -149,7 +140,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
     long nGens = getNumberOfEdges() - nBdryEdges
         - getNumberOfVertices() + nBdryVertices
         + nClosedComponents;
-    long nRels = getNumberOfTriangles() - nBdryTri;
+    long nRels = getNumberOfTriangles() - countBoundaryFacets();
     NMatrixInt pres(nRels, nGens);
 
     // Find out which edge corresponds to which generator.

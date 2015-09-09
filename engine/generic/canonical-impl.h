@@ -36,6 +36,8 @@
 
 namespace regina {
 
+template <int> class Simplex;
+
 namespace {
     /**
      * For internal use by makeCanonical().  This routines assumes that

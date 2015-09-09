@@ -83,6 +83,12 @@ class REGINA_API SimplexBase :
         public Output<SimplexBase<dim>>,
         public boost::noncopyable {
     static_assert(dim >= 2, "Simplex requires dimension >= 2.");
+    public:
+        typedef typename IntOfMinSize<(dim + 1) / 8>::utype FacetMask;
+            /**< An unsigned integer type with at least <i>dim</i>+1 bits.
+                 This can be used as a bitmask for the <i>dim</i>+1 facets
+                 (or vertices) of a <i>dim</i>-simplex. */
+
     private:
         Simplex<dim>* adj_[dim + 1];
             /**< Stores the adjacent simplex glued to each facet of this
@@ -110,6 +116,13 @@ class REGINA_API SimplexBase :
             /**< The component to which this simplex belongs in the
                  triangulation.  This will only be set if/when the
                  skeleton of the triangulation is computed. */
+
+        FacetMask dualForest_;
+            /**< The <i>i</i>th bit of this integer indicates whether facet
+                 \a i of this simplex belongs to the maximal forest in the
+                 dual 1-skeleton.  See facetInMaximalForest() for details.
+                 This will only be set if/when the skeleton is computed. */
+
     public:
         /**
          * Returns the description associated with this simplex.
@@ -327,6 +340,39 @@ class REGINA_API SimplexBase :
         int orientation() const;
 
         /**
+         * Determines whether the given facet of this simplex belongs to the
+         * maximal forest that has been chosen for the dual 1-skeleton of the
+         * underlying triangulation.
+         *
+         * When the skeletal structure of a triangulation is first computed,
+         * a maximal forest in the dual 1-skeleton of the triangulation is
+         * also constructed.  Each dual edge in this maximal forest
+         * represents a (<i>dim</i>-1)-face of the (primal) triangulation.
+         *
+         * This maximal forest will remain fixed until the triangulation
+         * changes, at which point it will be recomputed (as will all
+         * other skeletal objects, such as connected components and so on).
+         * There is no guarantee that, when it is recomputed, the
+         * maximal forest will use the same dual edges as before.
+         *
+         * This routine identifies which (<i>dim</i>-1)-faces of the
+         * triangulation belong to the dual forest.  Because it lives in the
+         * Simplex class, this routine can even be used for those dimensions
+         * that do not have explicit classes for (<i>dim</i>-1)-faces of the
+         * triangulation.
+         *
+         * If the skeleton has already been computed, then this routine is
+         * very fast (since it just returns a precomputed answer).
+         *
+         * @param facet the facet of this simplex that we are examining.
+         * This must be between 0 and \a dim inclusive.
+         * @return \c true if and only if the given facet of this simplex
+         * corresponds to a dual edge in the maximal forest chosen for the
+         * dual 1-skeleton.
+         */
+        bool facetInMaximalForest(int facet) const;
+
+        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -501,6 +547,12 @@ template <int dim>
 inline int SimplexBase<dim>::orientation() const {
     getTriangulation()->ensureSkeleton();
     return orientation_;
+}
+
+template <int dim>
+inline bool SimplexBase<dim>::facetInMaximalForest(int facet) const {
+    getTriangulation()->ensureSkeleton();
+    return dualForest_ & (FacetMask(1) << facet);
 }
 
 template <int dim>

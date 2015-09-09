@@ -127,7 +127,7 @@ NGenericGluingPerms<dim>::NGenericGluingPerms(std::istream& in) :
             break;
     }
 
-    pairing_ = FacetPairing::fromTextRep(line);
+    pairing_ = FacetPairing<dim>::fromTextRep(line);
     if (! pairing_) {
         inputError_ = true; return;
     }

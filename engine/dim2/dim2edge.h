@@ -277,6 +277,36 @@ class REGINA_API Dim2Edge :
         bool isBoundary() const;
 
         /**
+         * Determines whether this edge represents a dual edge in the
+         * maximal forest that has been chosen for the dual 1-skeleton of the
+         * triangulation.
+         *
+         * When the skeletal structure of a triangulation is first computed,
+         * a maximal forest in the dual 1-skeleton of the triangulation is
+         * also constructed.  Each dual edge in this maximal forest
+         * represents a (transverse) edge in the primal skeleton of the
+         * triangulation.
+         *
+         * This maximal forest will remain fixed until the triangulation
+         * changes, at which point it will be recomputed (as will all
+         * other skeletal objects, such as connected components and so on).
+         * There is no guarantee that, when it is recomputed, the
+         * maximal forest will use the same dual edges as before.
+         *
+         * This routine identifies whether this edge corresponds to a
+         * member of this dual forest.  In this sense it performs a similar
+         * role to Simplex::facetInMaximalForest(), but this routine is
+         * typically easier to use.
+         *
+         * If the skeleton has already been computed, then this routine is
+         * very fast (since it just returns a precomputed answer).
+         *
+         * @return \c true if and only if this edge represents a
+         * dual edge in the maximal forest.
+         */
+        bool inMaximalForest() const;
+
+        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -400,6 +430,10 @@ inline Dim2Vertex* Dim2Edge::getVertex(int vertex) const {
 
 inline bool Dim2Edge::isBoundary() const {
     return (boundaryComponent_ != 0);
+}
+
+inline bool Dim2Edge::inMaximalForest() const {
+    return emb_[0].getTriangle()->facetInMaximalForest(emb_[0].getEdge());
 }
 
 inline void Dim2Edge::writeTextShort(std::ostream& out) const {

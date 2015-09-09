@@ -5,7 +5,6 @@ SET ( FILES
   closedprimemin
   compact
   dim2census
-  dim2edgepairing
   dim2gluingperms
   dim2gluingpermsearcher
   dim4facetpairing

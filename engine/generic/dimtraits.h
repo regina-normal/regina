@@ -56,23 +56,6 @@ template <int n> class Simplex;
 
 /**
  * A template class that provides typedefs and other information about
- * working in each of the supported dimensions.
- *
- * Note that this file does not bring in all of the headers for the
- * individual types.
- *
- * \ifacespython Not present.
- */
-template <int dim>
-struct DimTraits {
-    typedef void FacetPairing;
-        /**< The data type that represents a pairing of facets of
-             top-dimensional simplices in a <i>dim</i>-manifold
-             triangulation. */
-};
-
-/**
- * A template class that provides typedefs and other information about
  * faces of triangulations in each of the supported dimensions.
  *
  * The template argument \a dim refers to the dimension of the overall
@@ -97,34 +80,16 @@ struct FaceTraits {
 #ifndef __DOXYGEN
 
 class Dim2Edge;
-class Dim2EdgePairing;
 class Dim2Vertex;
-
-template <>
-struct DimTraits<2> {
-    typedef Dim2EdgePairing FacetPairing;
-};
 
 class NEdge;
 class NTriangle;
-class NFacePairing;
 class NVertex;
 
-template <>
-struct DimTraits<3> {
-    typedef NFacePairing FacetPairing;
-};
-
 class Dim4Edge;
-class Dim4FacetPairing;
 class Dim4Tetrahedron;
 class Dim4Triangle;
 class Dim4Vertex;
-
-template <>
-struct DimTraits<4> {
-    typedef Dim4FacetPairing FacetPairing;
-};
 
 template <>
 struct FaceTraits<2, 0> {

@@ -250,6 +250,11 @@ class REGINA_API Component<3> : public ComponentBase<3> {
     friend class TriangulationBase<3>;
 };
 
+/**
+ * A convenience typedef for Component<3>.
+ */
+typedef Component<3> NComponent;
+
 /*@}*/
 
 // Inline functions for Component<3>

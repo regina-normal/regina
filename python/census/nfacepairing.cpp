@@ -45,11 +45,11 @@ using regina::NTriangulation;
 namespace {
     const NTetFace& (NFacePairing::*dest_face)(const NTetFace&) const =
         &NFacePairing::dest;
-    const NTetFace& (NFacePairing::*dest_unsigned)(unsigned, unsigned) const =
+    const NTetFace& (NFacePairing::*dest_unsigned)(size_t, unsigned) const =
         &NFacePairing::dest;
     bool (NFacePairing::*isUnmatched_face)(const NTetFace&) const =
         &NFacePairing::isUnmatched;
-    bool (NFacePairing::*isUnmatched_unsigned)(unsigned, unsigned) const =
+    bool (NFacePairing::*isUnmatched_unsigned)(size_t, unsigned) const =
         &NFacePairing::isUnmatched;
 
     bool (NFacePairing::*query_bdec)() const =

@@ -50,6 +50,7 @@
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "angle/nanglestructure.h"
+#include "generic/dimtraits.h"
 #include "generic/ngenerictriangulation.h"
 #include "generic/triangulation.h"
 #include "maths/ncyclotomic.h"
@@ -85,7 +86,7 @@ typedef Isomorphism<3> NIsomorphism;
 typedef Simplex<3> NTetrahedron;
 
 /**
- * \addtogroup triangulation Triangulations
+ * \addtogroup triangulation 3-Manifold Triangulations
  * Triangulations of 3-manifolds.
  * @{
  */
@@ -874,6 +875,7 @@ class REGINA_API Triangulation<3> :
          * standard.
          */
         bool isStandard() const;
+        bool hasBoundaryFacets() const;
         /**
          * A dimension-specific alias for hasBoundaryFacets().
          *
@@ -1479,24 +1481,6 @@ class REGINA_API Triangulation<3> :
          */
         void maximalForestInSkeleton(std::set<NEdge*>& edgeSet,
                 bool canJoinBoundaries = true) const;
-        /**
-         * Produces a maximal forest in the triangulation's dual
-         * 1-skeleton.  The given set will be emptied and will have the
-         * triangles corresponding to the edges of the maximal forest in the
-         * dual 1-skeleton placed into it.
-         *
-         * Note that the triangle pointers returned will become invalid once
-         * the triangulation has changed.
-         *
-         * \ifacespython This routine takes no arguments.  Instead it
-         * returns the maximal forest as a Python list of NTriangle
-         * objects, sorted by triangle index.
-         *
-         * @param triangleSet the set to be emptied and into which the
-         * triangles representing the maximal forest will be placed.
-         */
-        void maximalForestInDualSkeleton(std::set<NTriangle*>& triangleSet)
-            const;
 
         /**
          * Attempts to simplify the triangulation as intelligently as
@@ -3275,7 +3259,7 @@ class REGINA_API Triangulation<3> :
          * In most cases this routine is followed immediately by firing
          * a packet change event.
          */
-        virtual void clearAllProperties();
+        void clearAllProperties();
 
         /**
          * Checks that the permutations on face gluings are valid and
@@ -3424,9 +3408,6 @@ class REGINA_API Triangulation<3> :
         bool stretchForestFromVertex(NVertex*, std::set<NEdge*>&,
                 std::set<NVertex*>&, std::set<NVertex*>&) const;
             /**< Internal to maximalForestInSkeleton(). */
-        void stretchDualForestFromTet(NTetrahedron*, std::set<NTriangle*>&,
-                std::set<NTetrahedron*>&) const;
-            /**< Internal to maximalForestInDualSkeleton(). */
 
     friend class regina::Simplex<3>;
     friend class regina::SimplexBase<3>;
@@ -3715,13 +3696,18 @@ inline bool Triangulation<3>::isStandard() const {
     return standard_;
 }
 
-inline bool Triangulation<3>::hasBoundaryTriangles() const {
+inline bool Triangulation<3>::hasBoundaryFacets() const {
+    // Override, since we can do this faster in dimension 3.
     ensureSkeleton();
     return (triangles_.size() > 2 * simplices_.size());
 }
 
+inline bool Triangulation<3>::hasBoundaryTriangles() const {
+    return hasBoundaryFacets();
+}
+
 inline bool Triangulation<3>::hasBoundaryFaces() const {
-    return hasBoundaryTriangles();
+    return hasBoundaryFacets();
 }
 
 inline size_t Triangulation<3>::countBoundaryFacets() const {

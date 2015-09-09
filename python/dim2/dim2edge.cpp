@@ -77,6 +77,7 @@ void addDim2Edge() {
         .def("getVertex", &Dim2Edge::getVertex,
             return_value_policy<reference_existing_object>())
         .def("isBoundary", &Dim2Edge::isBoundary)
+        .def("inMaximalForest", &Dim2Edge::inMaximalForest)
         .def("str", &Dim2Edge::str)
         .def("toString", &Dim2Edge::toString)
         .def("detail", &Dim2Edge::detail)

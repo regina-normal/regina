@@ -36,7 +36,7 @@
  *  \brief Deprecated header.
  */
 
-#warning This header is deprecated; please use generic/ngenericisomorphism.h instead.
+#warning This header is deprecated; please use generic/isomorphism.h instead.
 
-#include "generic/ngenericisomorphism.h"
+#include "generic/isomorphism.h"
 

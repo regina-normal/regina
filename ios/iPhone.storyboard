@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Rmj-b5-erL">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+    </dependencies>
+    <scenes>
+        <!--Detail-->
+        <scene sceneID="4Ie-ck-3IT">
+            <objects>
+                <viewController storyboardIdentifier="welcome" title="Detail" id="Rmj-b5-erL" customClass="WelcomeViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Ldh-Wa-4li"/>
+                        <viewControllerLayoutGuide type="bottom" id="DRb-EU-3kH"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="GOH-U7-1CT">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ReginaLarge" translatesAutoresizingMaskIntoConstraints="NO" id="jsn-jp-v8c">
+                                <rect key="frame" x="32" y="317" width="310" height="310"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="310" id="Qzk-n9-eBK"/>
+                                    <constraint firstAttribute="height" constant="310" id="xpk-JX-Car"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z1m-ql-Jnc">
+                                <rect key="frame" x="140" y="20" width="95" height="30"/>
+                                <state key="normal" title="Run test suite">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="runTestSuite:" destination="Rmj-b5-erL" eventType="touchUpInside" id="qV0-WO-Pef"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="DRb-EU-3kH" firstAttribute="top" secondItem="jsn-jp-v8c" secondAttribute="bottom" constant="40" id="6cF-QQ-BFw"/>
+                            <constraint firstAttribute="trailing" secondItem="jsn-jp-v8c" secondAttribute="trailing" constant="20" id="Rer-FZ-fXB"/>
+                            <constraint firstItem="z1m-ql-Jnc" firstAttribute="top" secondItem="Ldh-Wa-4li" secondAttribute="bottom" constant="20" id="hpt-fj-SSP"/>
+                            <constraint firstAttribute="centerX" secondItem="jsn-jp-v8c" secondAttribute="centerX" id="qqO-6q-7JV"/>
+                            <constraint firstAttribute="centerX" secondItem="z1m-ql-Jnc" secondAttribute="centerX" id="sgj-W4-9PR"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="Rer-FZ-fXB"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="rOb-kd-UhH"/>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                    <connections>
+                        <outlet property="icon" destination="jsn-jp-v8c" id="lhG-NL-Z9s"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WxV-rr-iPm" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-403.5" y="1040.5"/>
+        </scene>
+        <!--Test Suite Controller-->
+        <scene sceneID="e4i-3w-c89">
+            <objects>
+                <viewController storyboardIdentifier="testSuite" modalPresentationStyle="formSheet" id="C4z-iY-8CN" customClass="TestSuiteController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="8A1-ih-ETi"/>
+                        <viewControllerLayoutGuide type="bottom" id="xhK-27-XUl"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="1V0-BB-Agn">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5Q0-dp-ddq">
+                                <rect key="frame" x="0.0" y="44" width="375" height="579"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <attributedString key="attributedText"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k7O-py-ull">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                <items>
+                                    <navigationItem title="Regina Test Suite" id="kZH-f4-4DY"/>
+                                </items>
+                            </navigationBar>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d8u-B0-FtO">
+                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="7qm-aX-u9D"/>
+                                    <barButtonItem title="Close" id="gVB-jV-GDC">
+                                        <connections>
+                                            <action selector="close:" destination="C4z-iY-8CN" id="iAm-FA-q2p"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="1qU-oG-e6o"/>
+                                </items>
+                            </toolbar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="k7O-py-ull" secondAttribute="trailing" id="5LY-KF-Ktr"/>
+                            <constraint firstItem="5Q0-dp-ddq" firstAttribute="top" secondItem="k7O-py-ull" secondAttribute="bottom" id="EkI-UQ-c3k"/>
+                            <constraint firstItem="k7O-py-ull" firstAttribute="leading" secondItem="1V0-BB-Agn" secondAttribute="leading" id="FUQ-Bp-sQW"/>
+                            <constraint firstAttribute="trailing" secondItem="d8u-B0-FtO" secondAttribute="trailing" id="JZE-ik-8SH"/>
+                            <constraint firstItem="d8u-B0-FtO" firstAttribute="leading" secondItem="1V0-BB-Agn" secondAttribute="leading" id="R5Y-95-1rq"/>
+                            <constraint firstItem="k7O-py-ull" firstAttribute="top" secondItem="8A1-ih-ETi" secondAttribute="bottom" id="VKh-LE-Iqy"/>
+                            <constraint firstItem="d8u-B0-FtO" firstAttribute="top" secondItem="5Q0-dp-ddq" secondAttribute="bottom" id="bGN-gn-toQ"/>
+                            <constraint firstAttribute="trailing" secondItem="5Q0-dp-ddq" secondAttribute="trailing" id="dNs-VO-Mai"/>
+                            <constraint firstItem="xhK-27-XUl" firstAttribute="top" secondItem="d8u-B0-FtO" secondAttribute="bottom" id="vEj-kh-0ed"/>
+                            <constraint firstItem="5Q0-dp-ddq" firstAttribute="leading" secondItem="1V0-BB-Agn" secondAttribute="leading" id="x5z-rx-cCd"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                    <connections>
+                        <outlet property="closeButton" destination="gVB-jV-GDC" id="2Kc-8f-4yq"/>
+                        <outlet property="output" destination="5Q0-dp-ddq" id="ipP-xD-l07"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zuo-70-lMW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="190.5" y="1040.5"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="ReginaLarge" width="310" height="310"/>
+    </resources>
+</document>

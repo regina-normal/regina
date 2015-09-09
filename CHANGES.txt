@@ -29,6 +29,7 @@ Version 4.97  [ (under development) ]
 
     GENERAL:
         - Now uses aspects of C++11, which your compiler will need to support.
+        - Merged sources for the iPad version into the main source tree.
     ENGINE:
         All:
             - Removed ShareableObject from the class hierarchy.  All classes
@@ -60,6 +61,9 @@ Version 4.97  [ (under development) ]
               and getNumberOfBoundaryFacets() have been renamed to size(),
               simplices(), simplex() and countBoundaryFacets() respectively.
               The old names are retained but deprecated.
+        Class Dim2Edge:
+            - New routine inMaximalForest() for working with the dual
+              1-skeleton.
         Class Dim2Isomorphism:
             - Now just a typedef for the new class Isomorphism<2>, which has
               the same functionality as the old Dim2Isomorphism.
@@ -69,6 +73,8 @@ Version 4.97  [ (under development) ]
         Class Dim2Triangle:
             - Now just a typedef for the new class Simplex<2>, which has
               the same functionality as the old Dim2Triangle.
+            - New routine facetInMaximalForest(), for examining a
+              precomputed maximal forest in the dual 1-skeleton.
             - You can now safely call unjoin() on a boundary edge.
             - Routine joinTo() has been renamed to join().  The old name
               joinTo() has been kept but is now deprecated.
@@ -90,14 +96,21 @@ Version 4.97  [ (under development) ]
             - Renamed getNumberOfBoundaryEdges() to countBoundaryFacets();
               added an alias countBoundaryEdges(); deprecated the old name.
         Class DimTraits:
-            - Removed the Isomorphism typedef.  Juse use Isomorphism<dim>.
-            - Removed the Perm typedef.  Juse use NPerm<dim+1>.
-            - Removed the Simplex typedef.  Just use Simplex<dim>.
-            - Removed the Triangulation typedef.  Just use Triangulation<dim>.
+            - Removed entirely.  For the typedefs that it used to provide
+              (e.g., Triangulation, Simplex, FacetPairing, etc.), just use
+              Triangulation<dim>, Simplex<dim>, FacetPairing<dim>, and so on.
         Class FaceTraits:
             - New template class to help with writing dimension-agnostic code.
               This class offers typedefs for (subdim)-dimensional faces
               within a (dim)-dimensional triangulation.
+        Class FacetPairing, FacetPairingBase:
+            - FacetPairing<dim> is now a generic class that replaces the old
+              Dim2EdgePairing, NFacePairing and so on.  FacetPairingBase<dim>
+              is a base class with functionality common to all dimensions
+              (replacing NGenericFacetPairing<dim>), and FacetPairing<dim>
+              is specialised for dimension 3.
+            - The old class names Dim2EdgePairing and NFacePairing have
+              been kept as typedefs for convenience.
         Class IntOfMinSize:
             - Gives access to native integer types of a given minimum size.
         Class Isomorphism, IsomorphismBase:
@@ -129,10 +142,18 @@ Version 4.97  [ (under development) ]
               and whiteheadLink() respectively.  The old names are kept
               but deprecated.
         Class NGenericFacetPairing, NFacePairing, Dim2EdgePairing:
+            - The template base class NGenericFacetPairing<dim> has been
+              renamed FacetPairingBase<dim>, and its header has moved to
+              generic/facetpairing.h.
+            - No longer derives from NThread.  The old public run() routine
+              is now private (and has been renamed and redesigned).
+            - Now derives from ShortOutput.
             - Routines dotHeader() and writeDotHeader() no longer set an
               explicit background colour.
             - Removed the Perm typedef.  Juse use NPerm<dim+1> instead.
             - Removed the Triangulation typedef.  Just use Triangulation<dim>.
+        Class NGenericGluingPerms:
+            - Removed the FacetPairing typedef.  Just use FacetPairing<dim>.
         Class NGenericGluingPermSearcher:
             - Removed the Perm typedef.  Juse use NPerm<dim+1> instead.
             - Removed the Triangulation typedef.  Just use Triangulation<dim>.
@@ -214,6 +235,8 @@ Version 4.97  [ (under development) ]
         Class NTetrahedron:
             - Now just a typedef for the new class Simplex<3>, which has
               the same functionality as the old NTetrahedron.
+            - New routine facetInMaximalForest(), for examining a
+              precomputed maximal forest in the dual 1-skeleton.
             - Removed the old deprecated public constructors.  The only way
               to construct a new tetrahedron is via the triangulation, using
               NTriangulation::newTetrahedron() or NTriangulation::newSimplex().
@@ -232,6 +255,8 @@ Version 4.97  [ (under development) ]
             - Added a new Type enumeration, which encapsulates (and replaces)
               the old triangle type constants.  Also added a new type
               constant UNKNOWN_TYPE.
+            - New routine inMaximalForest() for working with the dual
+              1-skeleton.
         Class NTriangulation:
             - Now just a typedef for the new class Triangulation<3>, which has
               the same functionality as the old NTriangulation.
@@ -265,6 +290,8 @@ Version 4.97  [ (under development) ]
               kept for backward compatibility.
             - Removed deprecated routines addTetrahedron() and
               gluingsHaveChanged().
+            - Removed maximalForestInDualSkeleton().  Just use
+              NTriangle::inMaximalForest() instead.
             - Renamed getNumberOfComponents(), getComponents(), getComponent()
               to countComponents(), components() and component().  The
               old names are deprecated but kept for backward compatibility.
@@ -307,6 +334,9 @@ Version 4.97  [ (under development) ]
         Routine open():
             - Added a variant that takes an input stream (as opposed to
               a filename).
+        Header ngenericfacetpairing.h, ngenericfacetpairing-impl.h:
+            - Moved to generic/facetpairing.h and generic/facetpairing-impl.h.
+              The old headers are kept but deprecated.
         Header nperm.h:
             - Removed this deprecated header from the triangulation/ directory.
         Header zstream.h:

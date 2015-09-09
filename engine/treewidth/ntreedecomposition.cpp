@@ -33,6 +33,8 @@
 /* end stub */
 
 #include <algorithm>
+#include "census/dim2edgepairing.h"
+#include "census/nfacepairing.h"
 #include "dim2/dim2triangulation.h"
 #include "dim4/dim4triangulation.h"
 #include "treewidth/ntreedecomposition.h"
@@ -51,11 +53,11 @@ template NTreeDecomposition::NTreeDecomposition(
     const Triangulation<4>&, TreeDecompositionAlg);
 
 template NTreeDecomposition::NTreeDecomposition(
-    const NGenericFacetPairing<2>&, TreeDecompositionAlg);
+    const FacetPairing<2>&, TreeDecompositionAlg);
 template NTreeDecomposition::NTreeDecomposition(
-    const NGenericFacetPairing<3>&, TreeDecompositionAlg);
+    const FacetPairing<3>&, TreeDecompositionAlg);
 template NTreeDecomposition::NTreeDecomposition(
-    const NGenericFacetPairing<4>&, TreeDecompositionAlg);
+    const FacetPairing<4>&, TreeDecompositionAlg);
 
 template NTreeDecomposition::NTreeDecomposition(
     unsigned, bool const**, TreeDecompositionAlg);
