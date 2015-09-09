@@ -68,6 +68,7 @@ template void NGenericFacetPairing<3>::findAutomorphisms(
 template bool NGenericFacetPairing<3>::findAllPairings(unsigned, NBoolSet,
     int, NGenericFacetPairing<3>::Use, void*, bool);
 template void* NGenericFacetPairing<3>::run(void*);
+template bool NGenericFacetPairing<3>::nextPairing(NBoolSet, int);
 
 bool NFacePairing::hasTripleEdge() const {
     unsigned equal, i, j;

@@ -820,5 +820,239 @@ void* NGenericFacetPairing<dim>::run(void* param) {
     return 0;
 }
 
+template <int dim>
+bool NGenericFacetPairing<dim>::nextPairing(NBoolSet boundary,
+        int nBdryFacets) {
+    NFacetSpec<dim> trying(size_, 0);
+        /**< The facet we're currently trying to match. */
+    int boundaryFacets = 0; // TODO
+        /**< How many (deliberately) unmatched facets do we currently have? */
+    int usedFacets = size_ * (dim + 1);
+        /**< How many facets have we already determined matchings for? */
+
+    // Head back down to the last gluing and undo it, ready
+    // for the next loop.
+    // TODO: This is only working for the closed case.
+    trying = dest(size_ - 1, dim);
+    if (isUnmatched(trying)) {
+        --usedFacets;
+        --boundaryFacets;
+    } else {
+        usedFacets -= 2;
+        dest(dest(trying)) = dest(trying);
+    }
+
+    // Run through and find all possible matchings.
+    NFacetSpec<dim> oldTrying, tmpFacet;
+    while (true) {
+        // TODO: Check for cancellation,
+
+        // INVARIANT: Facet trying needs to be joined to something.
+        // dest(trying) represents the last tried destination for the
+        // join, and there is no reciprocal join from dest(trying) back
+        // to trying.
+        // The current value of dest(trying) is >= trying.
+
+        // Move to the next destination.
+        ++dest(trying);
+
+        // If we're about to close off the current set of simplices
+        // and it's not all the simplices, we will have something
+        // disconnected!
+        // We will now avoid tying the last two facets in a set together,
+        // and later we will avoid sending the last facet of a set to the
+        // boundary.
+        if (usedFacets % (dim + 1) == (dim - 1) &&
+                usedFacets < (dim + 1) * static_cast<int>(size_) - 2 &&
+                noDest((usedFacets / (dim + 1)) + 1, 0) &&
+                dest(trying).simp <= (usedFacets / (dim + 1))) {
+            // Move to the first unused simplex.
+            dest(trying).simp = (usedFacets / (dim + 1)) + 1;
+            dest(trying).facet = 0;
+        }
+
+        // We'd better make sure we're not going to glue together so
+        // many facets that there is no room for the required number of
+        // boundary facets.
+        if (boundary.hasTrue()) {
+            // We're interested in triangulations with boundary.
+            if (nBdryFacets < 0) {
+                // We don't care how many boundary facets.
+                if (! boundary.hasFalse()) {
+                    // We must have some boundary though.
+                    if (boundaryFacets == 0 &&
+                            usedFacets ==
+                                (dim + 1) * static_cast<int>(size_) - 2 &&
+                            dest(trying).simp <
+                                static_cast<int>(size_))
+                        dest(trying).setBoundary(size_);
+                }
+            } else {
+                // We're specific about the number of boundary facets.
+                if (usedFacets - boundaryFacets + nBdryFacets ==
+                        (dim + 1) * static_cast<int>(size_) &&
+                        dest(trying).simp < static_cast<int>(size_))
+                    // We've used our entire quota of non-boundary facets.
+                    dest(trying).setBoundary(size_);
+            }
+        }
+
+        // dest(trying) is now the first remaining candidate destination.
+        // We still don't know whether this destination is valid however.
+        while(true) {
+            // Move onwards to the next free destination.
+            while (dest(trying).simp < static_cast<int>(size_) &&
+                    ! noDest(dest(trying)))
+                ++dest(trying);
+
+            // If we are past facet 0 of a simplex and the previous facet
+            // was not used, we can't do anything with this simplex.
+            // Move to the next simplex.
+            if (dest(trying).simp < static_cast<int>(size_) &&
+                    dest(trying).facet > 0 &&
+                    noDest(dest(trying).simp, dest(trying).facet - 1)) {
+                ++dest(trying).simp;
+                dest(trying).facet = 0;
+                continue;
+            }
+
+            break;
+        }
+
+        // If we're still at an illegitimate destination, it must be
+        // facet 0 of a simplex where the previous simplex is
+        // unused.  Note that facet == 0 implies simp > 0.
+        // In this case, we've passed the last sane choice; head
+        // straight to the boundary.
+        if (dest(trying).simp < static_cast<int>(size_) &&
+                dest(trying).facet == 0 &&
+                noDest(dest(trying).simp - 1, 0))
+            dest(trying).setBoundary(size_);
+
+        // Finally, return to the issue of prematurely closing off a
+        // set of simplices.  This time we will avoid sending the last
+        // facet of a set of simplices to the boundary.
+        if (usedFacets % (dim + 1) == dim &&
+                usedFacets < (dim + 1) * static_cast<int>(size_) - 1 &&
+                noDest((usedFacets / (dim + 1)) + 1, 0) &&
+                isUnmatched(trying)) {
+            // Can't use the boundary; all we can do is push past the
+            // end.
+            ++dest(trying);
+        }
+
+        // And so we're finally looking at the next real candidate for
+        // dest(trying) that we know we're actually allowed to use.
+
+        // Check if after all that we've been pushed past the end.
+        if (dest(trying).isPastEnd(size_,
+                (! boundary.hasTrue()) ||
+                boundaryFacets == nBdryFacets)) {
+            // We can't join trying to anything else.  Step back.
+            dest(trying) = trying;
+            --trying;
+
+            // Keep heading back until we find a facet that joins
+            // forwards or to the boundary.
+            while (! trying.isBeforeStart()) {
+                if (dest(trying) < trying)
+                    --trying;
+                else
+                    break;
+            }
+
+            // Is the search over?
+            if (trying.isBeforeStart())
+                break;
+
+            // Otherwise undo the previous gluing and prepare to loop
+            // again trying the next option.
+            if (isUnmatched(trying)) {
+                --usedFacets;
+                --boundaryFacets;
+            } else {
+                usedFacets -= 2;
+                dest(dest(trying)) = dest(trying);
+            }
+
+            continue;
+        }
+
+        // Let's match it up and head to the next free facet!
+        if (isUnmatched(trying)) {
+            ++usedFacets;
+            ++boundaryFacets;
+        } else {
+            usedFacets += 2;
+            dest(dest(trying)) = trying;
+        }
+
+        // Now we increment trying to move to the next unmatched facet.
+        oldTrying = trying;
+        ++trying;
+        while (trying.simp < static_cast<int>(size_) && ! noDest(trying))
+            ++trying;
+
+        // Have we got a solution?
+        if (trying.simp == static_cast<int>(size_)) {
+            // Deal with the solution!
+            if (isCanonical())
+                return true;
+
+            // Head back down to the previous gluing and undo it, ready
+            // for the next loop.
+            trying = oldTrying;
+            if (isUnmatched(trying)) {
+                --usedFacets;
+                --boundaryFacets;
+            } else {
+                usedFacets -= 2;
+                dest(dest(trying)) = dest(trying);
+            }
+        } else {
+            // We're about to start working on a new unmatched facet.
+            // Set dest(trying) to one step *before* the first feasible
+            // destination.
+
+            // Note that currently the destination is set to trying.
+
+            // Ensure the destination is at least the
+            // previous forward destination from an earlier facet of this
+            // simplex.
+            if (trying.facet > 0) {
+                tmpFacet = trying;
+                for (--tmpFacet; tmpFacet.simp == trying.simp; --tmpFacet)
+                    if (tmpFacet < dest(tmpFacet)) {
+                        // Here is the previous forward destination in
+                        // this simplex.
+                        if (dest(trying) < dest(tmpFacet)) {
+                            dest(trying) = dest(tmpFacet);
+
+                            // Remember that dest(trying) will be
+                            // incremented before it is used.  This
+                            // should not happen if we're already on the
+                            // boundary, so we need to move back one
+                            // step so we will be pushed back onto the
+                            // boundary.
+                            if (isUnmatched(trying))
+                                --dest(trying);
+                        }
+                        break;
+                    }
+            }
+
+            // If the first simplex doesn't glue to itself and this
+            // is not the first simplex, it can't glue to itself either.
+            // (Note that we already know there is at least 1 simplex.)
+            if (dest(trying).simp == trying.simp && dest(trying).facet < dim &&
+                    trying.simp > 0)
+                if (dest(0, 0).simp != 0)
+                    dest(trying).facet = dim;
+        }
+    }
+
+    return false;
+}
+
 } // namespace regina
 
