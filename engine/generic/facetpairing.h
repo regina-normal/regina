@@ -61,8 +61,8 @@ template <int> class Triangulation;
  */
 
 /**
- * Provides core functionality for facet pairings in <i>dim</i>-dimensional
- * triangulations.
+ * Provides core functionality for facet pairings (that is, dual graphs) of
+ * <i>dim</i>-dimensional triangulations.
  *
  * Such a facet pairing is represented by the class FacetPairing<dim>,
  * which uses this as a base class.  End users should not need to refer

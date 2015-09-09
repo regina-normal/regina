@@ -596,7 +596,9 @@ void FacetPairingBase<dim>::internalEnumerate(NBoolSet boundary,
     int usedFacets = 0;
         /**< How many facets have we already determined matchings for? */
     IsoList allAutomorphisms;
-        /**< The set of all automorphisms of the current facet pairing. */
+        /**< The set of all automorphisms of the current facet pairing.
+             This is only ever used when we find a candidate face pairing,
+             and it is cleared immediately after use() is called. */
 
     // Run through and find all possible matchings.
     NFacetSpec<dim> oldTrying, tmpFacet;
