@@ -56,49 +56,24 @@ namespace regina {
  * A mutual exclusion device (mutex) used to ensure that different
  * threads do not interfere when working with the same data.
  *
- * The template argument allows multithreading to be enabled or disabled
- * at compile time.  If \a threadingSupport is \c true, then this class
- * behaves correctly as a mutex.  If \a threadingSupport is \c false,
- * then this class offers the same mutex API but does nothing.
- *
- * If your code will always be multithreaded then you should use NMutex,
- * which is a typedef for Mutex<true>.  If you need both single-threaded and
- * multithreaded variants of your code, then the Mutex template offers a
- * clean way to support mutexes in a way that avoids tedious if/else blocks
- * and that generates very little overhead for the single-threaded variant.
- *
- * See the documentation for Mutex<true> for further information on how
- * this class is used.
- *
- * \tparam threadingSupport \c true if this class should provide full
- * mutex support, or \c false if this class should do nothing.
- */
-template <bool threadingSupport>
-class REGINA_API Mutex;
-
-/**
- * A mutual exclusion device (mutex) used to ensure that different
- * threads do not interfere when working with the same data.
- *
  * A mutex can be either locked or unlocked, and can only be locked by
  * one thread at a time.  If a second thread tries to lock the mutex,
  * it will be suspended until the mutex is unlocked by the original
  * locking thread.
  *
- * A mutex is locked by declaring a local variable of type Mutex::MutexLock.
- * See the Mutex::MutexLock class notes for details.
+ * A mutex is locked by declaring a local variable of type NMutex::MutexLock.
+ * See the NMutex::MutexLock class notes for details.
  *
- * Classes can inherit from Mutex to provide mutex protection for
+ * Classes can inherit from NMutex to provide mutex protection for
  * their internal data; it is recommended that such inheritance be
  * \c protected and that the member functions alone take full
  * responsibility for locking and unlocking the mutex when appropriate.
- * Alternatively, a standalone Mutex object can be passed about between
+ * Alternatively, a standalone NMutex object can be passed about between
  * routines.
  *
  * \ifacespython Not present.
  */
-template <>
-class REGINA_API Mutex<true> {
+class REGINA_API NMutex {
     private:
         pthread_mutex_t mutex;
             /**< The C mutex used by internal function calls. */
@@ -108,24 +83,24 @@ class REGINA_API Mutex<true> {
          * Creates a new mutex.
          * The mutex will be created unlocked.
          */
-        Mutex();
+        NMutex();
         /**
          * Destroys this mutex.
          *
          * \pre This mutex is unlocked.
          */
-        ~Mutex();
+        ~NMutex();
 
         /**
          * A utility class for locking and unlocking a mutex.
          *
          * A mutex is locked by simply declaring a local variable
-         * of type Mutex::MutexLock.  The mutex will be unlocked when
+         * of type NMutex::MutexLock.  The mutex will be unlocked when
          * this variable goes out of scope.
          */
         class MutexLock {
             private:
-                const Mutex* mutex_;
+                const NMutex* mutex_;
                     /**< The mutex locked by this object. */
 
             public:
@@ -139,9 +114,9 @@ class REGINA_API Mutex<true> {
                  *
                  * @param mutex the mutex to be locked by this object.
                  * This is \c const to simplify using mutex locks with
-                 * data retrieval routines for subclasses of Mutex.
+                 * data retrieval routines for subclasses of NMutex.
                  */
-                MutexLock(const Mutex* mutex);
+                MutexLock(const NMutex* mutex);
                 /**
                  * Creates a lock for the given mutex.
                  *
@@ -152,9 +127,9 @@ class REGINA_API Mutex<true> {
                  *
                  * @param mutex the mutex to be locked by this object.
                  * This is \c const to simplify using mutex locks with
-                 * data retrieval routines for subclasses of Mutex.
+                 * data retrieval routines for subclasses of NMutex.
                  */
-                MutexLock(const Mutex& mutex);
+                MutexLock(const NMutex& mutex);
                 /**
                  * Unlocks the mutex handled by this object.
                  */
@@ -169,7 +144,7 @@ class REGINA_API Mutex<true> {
          * and will then lock this mutex itself.
          *
          * This routine is \c const to simplify using it in data
-         * retrieval routines for subclasses of Mutex.
+         * retrieval routines for subclasses of NMutex.
          *
          * \pre The mutex is not already locked by <i>this</i> thread.
          * Failure to adhere to this precondition will <b>almost certainly
@@ -180,43 +155,11 @@ class REGINA_API Mutex<true> {
          * Unlocks this mutex.
          *
          * This routine is \c const to simplify using it in data
-         * retrieval routines for subclasses of Mutex.
+         * retrieval routines for subclasses of NMutex.
          *
          * \pre The mutex is currently locked by this thread.
          */
         void mutexUnlock() const;
-};
-
-/**
- * A convenience typedef for Mutex<true>.
- * This is recommended for code that is always multithreaded, and does
- * not require both multithreaded and single-threaded variants.
- */
-typedef Mutex<true> NMutex;
-
-/**
- * An empty class that provides the Mutex API but does nothing at all.
- * This is (of course) intended for single-threaded code only, and it
- * generates very little overhead.
- *
- * See Mutex<true> for details of how the API should be used.
- *
- * Multithreaded code should use Mutex<true> instead.
- */
-template <>
-class REGINA_API Mutex<false> {
-    public:
-        class MutexLock {
-            public:
-                /**
-                 * A do-nothing constructor.  The argument is ignored.
-                 */
-                MutexLock(const Mutex*);
-                /**
-                 * A do-nothing constructor.  The argument is ignored.
-                 */
-                MutexLock(const Mutex&);
-        };
 };
 
 typedef pthread_t NThreadID;
@@ -346,40 +289,34 @@ class REGINA_API NThread {
 
 /*@}*/
 
-// Inline functions for Mutex
+// Inline functions for NMutex
 
-inline Mutex<true>::Mutex() {
+inline NMutex::NMutex() {
     pthread_mutex_init(&mutex, 0);
 }
-inline Mutex<true>::~Mutex() {
+inline NMutex::~NMutex() {
     pthread_mutex_destroy(&mutex);
 }
 
-inline void Mutex<true>::mutexLock() const {
-    pthread_mutex_lock(& const_cast<Mutex<true>*>(this)->mutex);
+inline void NMutex::mutexLock() const {
+    pthread_mutex_lock(& const_cast<NMutex*>(this)->mutex);
 }
-inline void Mutex<true>::mutexUnlock() const {
-    pthread_mutex_unlock(& const_cast<Mutex<true>*>(this)->mutex);
+inline void NMutex::mutexUnlock() const {
+    pthread_mutex_unlock(& const_cast<NMutex*>(this)->mutex);
 }
 
-// Inline functions for Mutex::MutexLock
+// Inline functions for NMutex::MutexLock
 
-inline Mutex<true>::MutexLock::MutexLock(const Mutex* mutex) : mutex_(mutex) {
+inline NMutex::MutexLock::MutexLock(const NMutex* mutex) : mutex_(mutex) {
     mutex_->mutexLock();
 }
 
-inline Mutex<true>::MutexLock::MutexLock(const Mutex& mutex) : mutex_(&mutex) {
+inline NMutex::MutexLock::MutexLock(const NMutex& mutex) : mutex_(&mutex) {
     mutex_->mutexLock();
 }
 
-inline Mutex<true>::MutexLock::~MutexLock() {
+inline NMutex::MutexLock::~MutexLock() {
     mutex_->mutexUnlock();
-}
-
-inline Mutex<false>::MutexLock::MutexLock(const Mutex*) {
-}
-
-inline Mutex<false>::MutexLock::MutexLock(const Mutex&) {
 }
 
 // Inline functions for NThread
