@@ -33,7 +33,6 @@
 /* end stub */
 
 #include "triangulation/ntriangulation.h"
-#include "utilities/mutex.h"
 #include <queue>
 #include <set>
 #include <thread>
@@ -42,8 +41,22 @@
 namespace regina {
 
 namespace {
+    template <bool threading> class SyncData;
+
+    template <>
+    class SyncData<true> {
+        protected:
+            unsigned nRunning_;
+            std::mutex mutex_;
+            std::condition_variable cond_;
+    };
+
+    template <>
+    class SyncData<false> {
+    };
+
     template <bool threading>
-    class TriBFS : public boost::noncopyable {
+    class TriBFS : public SyncData<threading>, public boost::noncopyable {
         private:
             typedef std::set<std::string> SigSet;
 
@@ -51,12 +64,9 @@ namespace {
             bool (*const action_)(const NTriangulation&, void*);
             void *const arg_;
             bool done_;
-            unsigned nRunning_;
 
             SigSet sigs_;
             std::queue<SigSet::iterator> process_;
-
-            Mutex<threading> mutex_;
 
         public:
             TriBFS(size_t maxTet,
@@ -66,12 +76,14 @@ namespace {
             }
 
             bool seed(const NTriangulation& tri);
-            void run();
+            void processQueue();
+            void processQueueParallel(unsigned nThreads);
 
             bool done() const;
 
         private:
             bool candidate(const NTriangulation& alt);
+            void propagateFrom(const SigSet::iterator& it);
     };
 
     template <bool threading>
@@ -84,42 +96,101 @@ namespace {
     }
 
     template <bool threading>
-    void TriBFS<threading>::run() {
-        SigSet::iterator next;
+    void TriBFS<threading>::propagateFrom(const SigSet::iterator& it) {
+        // We can do all of this outside the mutex, since the C++ standard
+        // requres that insertion into a std::set does not invalidate
+        // iterators.
+
+        NTriangulation* t = NTriangulation::fromIsoSig(*it);
         size_t i;
-        while (true) {
-            {
-                typename Mutex<threading>::Lock lock(mutex_);
-                if (done_ || process_.empty())
+        for (i = 0; i < t->getNumberOfEdges(); ++i)
+            if (t->threeTwoMove(t->getEdge(i), true, false)) {
+                NTriangulation alt(*t);
+                alt.threeTwoMove(alt.getEdge(i), false, true);
+                if (candidate(alt))
                     return;
-                next = process_.front();
-                process_.pop();
             }
 
-            // We can work with next outside the mutex, since the C++ standard
-            // requres that insertion into a std::set does not invalidate
-            // iterators.
-
-            NTriangulation* t = NTriangulation::fromIsoSig(*next);
-            for (i = 0; i < t->getNumberOfEdges(); ++i)
-                if (t->threeTwoMove(t->getEdge(i), true, false)) {
+        if (t->getNumberOfTetrahedra() < maxTet_)
+            for (i = 0; i < t->getNumberOfFaces(); ++i)
+                if (t->twoThreeMove(t->getFace(i), true, false)) {
                     NTriangulation alt(*t);
-                    alt.threeTwoMove(alt.getEdge(i), false, true);
+                    alt.twoThreeMove(alt.getFace(i), false, true);
                     if (candidate(alt))
                         return;
                 }
 
-            if (t->getNumberOfTetrahedra() < maxTet_)
-                for (i = 0; i < t->getNumberOfFaces(); ++i)
-                    if (t->twoThreeMove(t->getFace(i), true, false)) {
-                        NTriangulation alt(*t);
-                        alt.twoThreeMove(alt.getFace(i), false, true);
-                        if (candidate(alt))
-                            return;
-                    }
+        delete t;
+        return;
+    }
 
-            delete t;
+    template <>
+    void TriBFS<false>::processQueue() {
+        SigSet::iterator next;
+        size_t i;
+        while (! (done_ || process_.empty())) {
+            next = process_.front();
+            process_.pop();
+
+            propagateFrom(next);
         }
+    }
+
+    template <>
+    void TriBFS<true>::processQueue() {
+        SigSet::iterator next;
+
+        std::unique_lock<std::mutex> lock(mutex_);
+
+        while (true) {
+            // Process the queue until either done_ is true, or there is
+            // nothing left to process.
+            while (! (done_ || process_.empty())) {
+                next = process_.front();
+                process_.pop();
+
+                lock.unlock();
+                propagateFrom(next);
+                lock.lock();
+            }
+
+            if (--nRunning_ == 0) {
+                // Everybody has finished.
+                // Wake up the other threads so they can exit also.
+                cond_.notify_all();
+                return;
+            } else {
+                // We have finished, but somebody else is still running.
+                // It is possible (but not certain) that the queue will be
+                // refilled from another thread and we will need to resume
+                // processing.
+                cond_.wait(lock);
+
+                // We woke up for one of two reasons:
+                // 1) nRunning = 0, which means we are done;
+                // 2) nRunning > 0, and somebody pushed something new
+                // onto the queue.
+                if (nRunning_ == 0 || done_)
+                    return;
+                else
+                    ++nRunning_;
+            }
+        }
+    }
+
+    template <>
+    void TriBFS<true>::processQueueParallel(unsigned nThreads) {
+        nRunning_ = nThreads;
+
+        std::thread* t = new std::thread[nThreads];
+        unsigned i;
+
+        // In the std::thread constructor, passing this as a pointer is
+        // essential - otherwise we may end up making copies of this instead.
+        for (i = 0; i < nThreads; ++i)
+            t[i] = std::thread(&TriBFS<true>::processQueue, this);
+        for (i = 0; i < nThreads; ++i)
+            t[i].join();
     }
 
     template <bool threading>
@@ -127,24 +198,40 @@ namespace {
         return done_;
     }
 
-    template <bool threading>
-    bool TriBFS<threading>::candidate(const NTriangulation& alt) {
+    template <>
+    bool TriBFS<true>::candidate(const NTriangulation& alt) {
         const std::string sig = alt.isoSig();
 
-        typename Mutex<threading>::Lock lock(mutex_);
+        std::lock_guard<std::mutex> lock(mutex_);
         if (done_)
             return false;
 
         auto result = sigs_.insert(sig);
         if (result.second) {
             // We have not seen this triangulation before.
-            if (threading && process.empty()) {
+            if (process_.empty()) {
                 process_.push(result.first);
-                // TODO
+
                 // Wake up any other threads that had previously emptied
                 // the queue.
+                cond_.notify_all();
             } else
                 process_.push(result.first);
+
+            if ((*action_)(alt, arg_))
+                return (done_ = true);
+        }
+        return false;
+    }
+
+    template <>
+    bool TriBFS<false>::candidate(const NTriangulation& alt) {
+        const std::string sig = alt.isoSig();
+
+        auto result = sigs_.insert(sig);
+        if (result.second) {
+            // We have not seen this triangulation before.
+            process_.push(result.first);
 
             if ((*action_)(alt, arg_))
                 return (done_ = true);
@@ -197,22 +284,13 @@ bool NTriangulation::retriangulate(int height,
         TriBFS<false> bfs(getNumberOfTetrahedra() + height, action, arg);
         if (bfs.seed(*this))
             return true;
-        bfs.run();
+        bfs.processQueue();
         return bfs.done();
     } else {
         TriBFS<true> bfs(getNumberOfTetrahedra() + height, action, arg);
         if (bfs.seed(*this))
             return true;
-
-        std::thread* t = new std::thread[nThreads];
-        unsigned i;
-        // In the std::thread constructor, the pointer to bfs is essential -
-        // otherwise we may end up making copies of bfs instead.
-        for (i = 0; i < nThreads; ++i)
-            t[i] = std::thread(&TriBFS<true>::run, &bfs);
-        for (i = 0; i < nThreads; ++i)
-            t[i].join();
-
+        bfs.processQueueParallel(nThreads);
         return bfs.done();
     }
 }
