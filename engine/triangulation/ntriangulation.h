@@ -1930,20 +1930,63 @@ class REGINA_API NTriangulation : public NPacket,
         bool simplifyExhaustive(int height = 1, unsigned nThreads = 1);
 
         /**
-         * TODO.
+         * Explores all triangulations that can be reached from this via
+         * Pachner moves, without exceeding a given number of additional
+         * tetrahedra.
+         *
+         * Specifically, this routine will iterate through all
+         * triangulations that can be reached from this triangulation
+         * via 2-3 and 3-2 Pachner moves, without ever exceeding
+         * \a height additional tetrahedra beyond the original number.
+         *
+         * For every such triangulation (including this starting
+         * triangulation), this routine will call \a action (which must
+         * be a function or some other callable object).
+         *
+         * - \a action must take at least one argument.  The first argument
+         *   will be of type (const NTriangulation&), and will reference
+         *   the triangulation that has been found.  If there are any
+         *   additional arguments supplied in the list \a args, then
+         *   these will be passed as subsequent arguments to \a action.
+         *
+         * - \a action must return a boolean.  If \a action ever returns
+         *   \c true, then this indicates that processing should stop
+         *   immediately (i.e., no more triangulations will be processed).
+         *
+         * - \a action may, if it chooses, make changes to this triangulation
+         *   (i.e., the original triangulation upon which retriangulate()
+         *   was called).  This will not affect the search: all triangulations
+         *   that this routine visits will be obtained via Pachner moves
+         *   from the original form of this triangulation, before any
+         *   subsequent changes (if any) were made.
+         *
+         * - \a action will only be called once for each triangulation
+         *   (including this starting triangulation).  In other words, no
+         *   triangulation will be revisited a second time in a single call
+         *   to retriangulate().
+         *
+         * This routine can be very slow and very memory-intensive, since the
+         * number of triangulations it visits may be superexponential in
+         * the number of tetrahedra, and it records every triangulation
+         * that it visits (so as to avoid revisiting the same triangulation
+         * again).  It is highly recommended that you begin with \a height = 1,
+         * and if necessary try increasing \a height one at a time until
+         * this routine becomes too expensive to run.
+         *
+         * To assist with performance, this routine can run in
+         * parallel (multithreaded) mode; simply pass the number of
+         * parallel threads in the argument \a nThreads.  Even in
+         * multithreaded mode, this routine will not return until
+         * processing has finished (i.e., either \a action returned \c true,
+         * or the search was exhausted).
          *
          * If \a height is negative, then this routine will do nothing
          * and immediately return \c false.
          *
-         * The routine \a action is allowed to make changes to this
-         * triangulation.  However, this will not affect the search:
-         * all retriangulations will be with respect to the original
-         * form of this triangulation, before any changes were made.
-         *
-         * By default, the arguments \a args will be copied (or moved)
+         * \warning By default, the arguments \a args will be copied (or moved)
          * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you should wrap them in
-         * std::ref or std::cref.
+         * argument(s) by reference, you must wrap them in std::ref or
+         * std::cref.
          *
          * \pre This triangulation is connected.
          *
@@ -1951,9 +1994,18 @@ class REGINA_API NTriangulation : public NPacket,
          *
          * \ifacespython Not present.
          *
-         * @return \c true if and only if a triangulation was found for
-         * which \a action requested termination; that is, for which
-         * \a action returned \c true.
+         * @param height the maximum number of \e additional tetrahedra to
+         * allow, beyond the number of tetrahedra originally present in the
+         * triangulation.
+         * @param nThreads the number of threads to use.  If this is
+         * 1 or smaller then the routine will run single-threaded.
+         * @param action a function (or other callable object) to call
+         * upon each triangulation that is found.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial triangulation argument.
+         * @return \c true if some call to \a action returned \c true
+         * (thereby terminating the search early), or \c false if the
+         * search ran to completion.
          */
         template <typename Action, typename... Args>
         bool retriangulate(int height, unsigned nThreads,
