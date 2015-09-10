@@ -1978,7 +1978,9 @@ class REGINA_API NTriangulation : public NPacket,
          * parallel threads in the argument \a nThreads.  Even in
          * multithreaded mode, this routine will not return until
          * processing has finished (i.e., either \a action returned \c true,
-         * or the search was exhausted).
+         * or the search was exhausted).  All calls to \a action will be
+         * protected by a mutex (i.e., different threads will never be
+         * calling \a action at the same time).
          *
          * If \a height is negative, then this routine will do nothing
          * and immediately return \c false.
