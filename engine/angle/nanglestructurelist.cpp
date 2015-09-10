@@ -40,16 +40,18 @@
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/xmlutils.h"
+#include <thread>
 
 namespace regina {
 
 typedef std::vector<NAngleStructure*>::const_iterator StructureIteratorConst;
 
-void* NAngleStructureList::Enumerator::run(void*) {
+void NAngleStructureList::enumerateInternal(NTriangulation* triang,
+        NProgressTracker* tracker) {
     // Form the matching equations.
     NMatrixInt* eqns = NAngleStructureVector::makeAngleEquations(triang);
 
-    if (list->tautOnly_ && triang->getNumberOfTetrahedra() > 0) {
+    if (tautOnly_ && triang->getNumberOfTetrahedra() > 0) {
         // For now just stick to arbitrary precision arithmetic.
         // TODO: Use native integer types when the angle equation matrix
         // is sufficiently small / simple.
@@ -58,13 +60,13 @@ void* NAngleStructureList::Enumerator::run(void*) {
 
         NTautEnumeration<LPConstraintNone, BanNone, NInteger> search(triang);
         while (search.next(tracker)) {
-            list->structures.push_back(search.buildStructure());
+            structures.push_back(search.buildStructure());
             if (tracker && tracker->isCancelled())
                 break;
         }
 
         if (! (tracker && tracker->isCancelled()))
-            triang->insertChildLast(list);
+            triang->insertChildLast(this);
 
         if (tracker)
             tracker->setFinished();
@@ -80,37 +82,31 @@ void* NAngleStructureList::Enumerator::run(void*) {
 
         // Find the angle structures.
         NDoubleDescription::enumerateExtremalRays<NAngleStructureVector>(
-            StructureInserter(*list, triang), *eqns, 0 /* constraints */,
+            StructureInserter(*this, triang), *eqns, 0 /* constraints */,
             tracker);
 
         // All done!
         if (! (tracker && tracker->isCancelled()))
-            triang->insertChildLast(list);
+            triang->insertChildLast(this);
 
         if (tracker)
             tracker->setFinished();
     }
 
     delete eqns;
-    return 0;
 }
 
 NAngleStructureList* NAngleStructureList::enumerate(NTriangulation* owner,
         bool tautOnly, NProgressTracker* tracker) {
     NAngleStructureList* ans = new NAngleStructureList(tautOnly);
-    Enumerator* e = new Enumerator(ans, owner, tracker);
 
     if (tracker) {
-        if (! e->start(0, true)) {
-            delete ans;
-            return 0;
-        }
-        return ans;
-    } else {
-        e->run(0);
-        delete e;
-        return ans;
-    }
+        std::thread t(&NAngleStructureList::enumerateInternal,
+            ans, owner, tracker);
+        t.detach();
+    } else
+        ans->enumerateInternal(owner);
+    return ans;
 }
 
 NAngleStructureList* NAngleStructureList::enumerateTautDD(

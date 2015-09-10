@@ -39,6 +39,7 @@ Version 4.97  [ (under development) ]
         Class NAngleStructureList:
             - Renamed getNumberOfStructures() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
+            - Now uses C++11 std::thread internally instead of the old NThread.
         Class NCyclotomic:
             - New class for exact arithmetic in cyclotomic fields.
         Class NExampleSnapPeaTriangulation:
