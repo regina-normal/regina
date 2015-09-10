@@ -255,22 +255,19 @@ bool NTriangulation::simplifyExhaustive(int height, unsigned nThreads) {
         std::ref(*this), getNumberOfTetrahedra());
 }
 
-template <typename Action, typename... Args>
-bool NTriangulation::retriangulate(int height, unsigned nThreads,
-        Action&& action, Args&&... args) const {
+bool NTriangulation::retriangulateInternal(int height, unsigned nThreads,
+        const std::function<bool(const NTriangulation&)>& action) const {
     if (height < 0)
         return false;
 
     if (nThreads <= 1) {
-        TriBFS<false> bfs(getNumberOfTetrahedra() + height,
-            std::bind(action, std::placeholders::_1, args...));
+        TriBFS<false> bfs(getNumberOfTetrahedra() + height, action);
         if (bfs.seed(*this))
             return true;
         bfs.processQueue();
         return bfs.done();
     } else {
-        TriBFS<true> bfs(getNumberOfTetrahedra() + height,
-            std::bind(action, std::placeholders::_1, args...));
+        TriBFS<true> bfs(getNumberOfTetrahedra() + height, action);
         if (bfs.seed(*this))
             return true;
         bfs.processQueueParallel(nThreads);

@@ -3825,6 +3825,20 @@ class REGINA_API NTriangulation : public NPacket,
         void calculateBoundaryProperties() const;
 
         /**
+         * A non-templated version of retriangulate().
+         *
+         * This is identical to retriangulate(), except that the action
+         * function is given in the form of a std::function.
+         * This routine contains the bulk of the implementation of
+         * retriangulate().
+         *
+         * Because this routine is not templated, its implementation
+         * can be kept out of the main headers.
+         */
+        bool retriangulateInternal(int height, unsigned nThreads,
+            const std::function<bool(const NTriangulation&)>& action) const;
+
+        /**
          * Determines if an isomorphic copy of this triangulation is
          * contained within the given triangulation.
          *
@@ -4355,6 +4369,13 @@ inline unsigned long NTriangulation::getHomologyH2Z2() const {
 inline const NTriangulation::TuraevViroSet&
         NTriangulation::allCalculatedTuraevViro() const {
     return turaevViroCache_;
+}
+
+template <typename Action, typename... Args>
+inline bool NTriangulation::retriangulate(int height, unsigned nThreads,
+        Action&& action, Args&&... args) const {
+    return retriangulateInternal(height, nThreads,
+        std::bind(action, std::placeholders::_1, args...));
 }
 
 inline const NTreeDecomposition& NTriangulation::niceTreeDecomposition() const {
