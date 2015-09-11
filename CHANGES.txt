@@ -45,6 +45,10 @@ Version 4.97  [ (under development) ]
             - Now uses C++11 std::thread internally instead of the old NThread.
         Class NCyclotomic:
             - New class for exact arithmetic in cyclotomic fields.
+        Struct NewFunction, NewFunction1:
+            - NewFunction1 is deprecated in favour of the new and more
+              flexible NewFunction, which allows arbitrary arguments and
+              has less overhead.
         Class NExampleSnapPeaTriangulation:
             - New class for building ready-made SnapPea examples.
         Class NExampleTriangulation:

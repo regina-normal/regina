@@ -168,11 +168,47 @@ struct ReturnsTraits : public ReturnsTraitsImplementation<T,
  * typically be one of the registry helper classes, such as PacketInfo or
  * NormalInfo.
  *
+ * This routine is intended for use with registry routines, such as the
+ * non-void variants of forPacket() and forCoords().
+ *
+ * \ifacespython Not present.
+ */
+template <class Base>
+struct NewFunction : public Returns<Base*> {
+    /**
+     * Creates a new object of the subclass Info::Class.
+     *
+     * \pre It is known in advance that Info::Class will be a subclass of
+     * \a Base.
+     *
+     * @param args any additional arguments to pass to the Info::Class
+     * constructor.  These will be copied/moved, so if you wish to pass
+     * a reference then you should wrap it in std::ref or std::cref.
+     * @return a new object of the subclass Info::Class.
+     */
+    template <typename Info, typename... Args>
+    inline Base* operator() (Info, Args&&... args) const {
+        return new typename Info::Class(std::forward<Args>(args)...);
+    }
+};
+
+/**
+ * Deprecated function object for creating new objects subclassed from \a Base.
+ *
+ * This is a function object that creates a new object subclassed from \a Base,
+ * where the particular subclass is chosen according to the template argument
+ * to operator().  The template argument to the bracket operator would
+ * typically be one of the registry helper classes, such as PacketInfo or
+ * NormalInfo.
+ *
  * The new object will be created using a single-argument constructor,
  * where the argument is of type \a Arg.
  *
  * This routine is intended for use with registry routines, such as the
  * three-argument variants of forPacket() and forCoords().
+ *
+ * \deprecated This has been deprecated.  Instead you should use NewFunction,
+ * which is more flexible and has less overhead.
  *
  * \ifacespython Not present.
  */
