@@ -1490,7 +1490,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * becomes a compile-time constant.  The run() routine simply
          * farms out the real work to some instantiation of operator().
          */
-        class Enumerator : public NThread {
+        class Enumerator : public NThread, public boost::noncopyable {
             private:
                 NNormalSurfaceList* list_;
                     /**< The surface list to be filled. */
