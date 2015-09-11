@@ -63,6 +63,7 @@
 
 #include "surfaces/normalcoords.h"
 #include "utilities/registryutils.h"
+#include <type_traits>
 
 namespace regina {
 
@@ -89,35 +90,41 @@ class NNormalSurfaceVector; // For the deprecated NewNormalSurfaceVector.
  * considered invalid for our purposes here.
  *
  * In detail: the function object \a func must define a templated
- * unary bracket operator, so that <tt>func(NormalInfo<c>)</tt> is
+ * bracket operator, so that <tt>func(NormalInfo<c>, ...)</tt> is
  * defined for any valid NormalCoords enum value \a c.  Then,
- * when the user calls <tt>forCoords(coords, func, defaultReturn)</tt>,
- * this routine will call <tt>func(NormalInfo<coords>)</tt> and pass back
+ * when the user calls <tt>forCoords(coords, func, ..., defaultReturn)</tt>,
+ * this routine will call <tt>func(NormalInfo<coords>, ...)</tt> and pass back
  * the corresponding return value.  If \a coords does not denote a valid
  * coordinate system as described above, then forCoords() will pass back
  * \a defaultReturn instead.
  *
- * There is also a two-argument variant of forCoords() that works with
- * void functions.
+ * There is also a variant of forCoords() that works with void functions,
+ * and so does not take the extra \a defaultReturn argument.
  *
- * \pre The function object must have a typedef \a ReturnType indicating
- * the return type of the corresponding templated unary bracket operator.
- * Inheriting from Returns<...> is a convenient way to ensure this.
+ * \pre The function object must be derived from Returns<T>, where \a T
+ * is the return type of the corresponding templated bracket operator.
+ * This is because the template code distinguishes between the void and
+ * non-void variants of forCoords() according to whether or not FunctionType
+ * derives from Returns<T>.
  *
  * \ifacespython Not present.
  *
  * @param coords the given normal coordinate system.
- * @param func the function object whose unary bracket operator we will
+ * @param func the function object whose bracket operator we will
  * call with a NormalInfo<coords> object.
+ * @param args any additional arguments to pass to the bracket operator
+ * for \a func.  These will be copied/moved, so if you wish to pass
+ * references then you must wrap then in std::ref or std::cref.
  * @param defaultReturn the value to return if the given
  * coordinate system is invalid.
- * @return the return value from the corresponding unary bracket
+ * @return the return value from the corresponding bracket
  * operator of \a func, or \a defaultReturn if the given
  * coordinate system is invalid.
  */
-template <typename FunctionObject>
-typename FunctionObject::ReturnType forCoords(
-        NormalCoords coords, FunctionObject func,
+template <typename FunctionObject, typename... Args>
+typename std::enable_if<std::is_base_of<ReturnsBase, FunctionObject>::value,
+        typename FunctionObject::ReturnType>::type
+forCoords(NormalCoords coords, FunctionObject func, Args&&... args,
         typename FunctionObject::ReturnType defaultReturn);
 
 /**
@@ -136,24 +143,34 @@ typename FunctionObject::ReturnType forCoords(
  * considered invalid for our purposes here.
  *
  * In detail: the function object \a func must define a templated
- * unary bracket operator, so that <tt>func(NormalInfo<c>)</tt> is
+ * bracket operator, so that <tt>func(NormalInfo<c>, ...)</tt> is
  * defined for any valid NormalCoords enum value \a c.  Then,
- * when the user calls <tt>forCoords(coords, func)</tt>,
- * this routine will call <tt>func(NormalInfo<coords>)</tt> in turn.
+ * when the user calls <tt>forCoords(coords, func, ...)</tt>,
+ * this routine will call <tt>func(NormalInfo<coords>, ...)</tt> in turn.
  * If \a coords does not denote a valid coordinate system as described above,
  * then forCoords() will do nothing.
  *
- * There is also a three-argument variant of forCoords() that works with
- * functions with return values.
+ * There is also a variant of forCoords() that works with functions with
+ * return values, and which takes an extra \a defaultReturn argument.
+ *
+ * \pre The function object is not derived from Returns<T> (for any type \a T).
+ * This is because the template code distinguishes between the void and
+ * non-void variants of forCoords() according to whether or not FunctionType
+ * derives from Returns<T>.
  *
  * \ifacespython Not present.
  *
  * @param coords the given normal coordinate system.
- * @param func the function object whose unary bracket operator we will
+ * @param func the function object whose bracket operator we will
  * call with a NormalInfo<coords> object.
+ * @param args any additional arguments to pass to the bracket operator
+ * for \a func.  These will be copied/moved, so if you wish to pass
+ * references then you must wrap then in std::ref or std::cref.
  */
-template <typename VoidFunctionObject>
-void forCoords(NormalCoords coords, VoidFunctionObject func);
+template <typename FunctionObject, typename... Args>
+typename std::enable_if<! std::is_base_of<ReturnsBase, FunctionObject>::value,
+        void>::type
+forCoords(NormalCoords coords, FunctionObject func, Args&&... args);
 
 /**
  * A legacy typedef provided for backward compatibility only.

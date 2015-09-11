@@ -141,6 +141,11 @@ Version 4.97  [ (under development) ]
               objects that are mirrored in external interfaces (e.g., python).
             - The string output routines str() and detail() are now provided
               by the Output template class instead.
+        Routine forCoords():
+            - Now allows additional arguments to be passed to the bracket
+              operator.
+            - The void / non-void variants now require that the function
+              object must / must not be derived from Returns<T> respectively.
         Routine open():
             - Added a variant that takes an input stream (as opposed to
               a filename).

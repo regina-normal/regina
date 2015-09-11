@@ -47,6 +47,14 @@
 namespace regina {
 
 /**
+ * A base class for the Returns template.
+ * This is to help test whether a given type derives from any template
+ * Returns<T>.
+ */
+struct ReturnsBase {
+};
+
+/**
  * A convenience base class for a function object, which does nothing
  * beyond provide a \a ReturnType typedef.
  *
@@ -60,7 +68,7 @@ namespace regina {
  * \ifacespython Not present.
  */
 template <typename ReturnType_>
-struct Returns {
+struct Returns : public ReturnsBase {
     /**
      * Indicates the return type for a function object.
      */

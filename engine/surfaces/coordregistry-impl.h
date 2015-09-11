@@ -60,30 +60,47 @@
 
 namespace regina {
 
-template <typename FunctionObject>
-inline typename FunctionObject::ReturnType forCoords(
-        NormalCoords coords, FunctionObject func,
+template <typename FunctionObject, typename... Args>
+inline
+typename std::enable_if<std::is_base_of<ReturnsBase, FunctionObject>::value,
+        typename FunctionObject::ReturnType>::type
+forCoords(NormalCoords coords, FunctionObject func, Args&&... args,
         typename FunctionObject::ReturnType defaultReturn) {
     switch (coords) {
-        case NS_STANDARD : return func(NormalInfo<NS_STANDARD>());
-        case NS_AN_STANDARD : return func(NormalInfo<NS_AN_STANDARD>());
-        case NS_QUAD : return func(NormalInfo<NS_QUAD>());
-        case NS_AN_QUAD_OCT : return func(NormalInfo<NS_AN_QUAD_OCT>());
-        case NS_ORIENTED : return func(NormalInfo<NS_ORIENTED>());
-        case NS_ORIENTED_QUAD : return func(NormalInfo<NS_ORIENTED_QUAD>());
+        case NS_STANDARD : return func(NormalInfo<NS_STANDARD>(),
+            std::forward<Args>(args)...);
+        case NS_AN_STANDARD : return func(NormalInfo<NS_AN_STANDARD>(),
+            std::forward<Args>(args)...);
+        case NS_QUAD : return func(NormalInfo<NS_QUAD>(),
+            std::forward<Args>(args)...);
+        case NS_AN_QUAD_OCT : return func(NormalInfo<NS_AN_QUAD_OCT>(),
+            std::forward<Args>(args)...);
+        case NS_ORIENTED : return func(NormalInfo<NS_ORIENTED>(),
+            std::forward<Args>(args)...);
+        case NS_ORIENTED_QUAD : return func(NormalInfo<NS_ORIENTED_QUAD>(),
+            std::forward<Args>(args)...);
         default: return defaultReturn;
     }
 }
 
-template <typename VoidFunctionObject>
-inline void forCoords(NormalCoords coords, VoidFunctionObject func) {
+template <typename FunctionObject, typename... Args>
+inline
+typename std::enable_if<! std::is_base_of<ReturnsBase, FunctionObject>::value,
+        void>::type
+forCoords(NormalCoords coords, FunctionObject func, Args&&... args) {
     switch (coords) {
-        case NS_STANDARD : func(NormalInfo<NS_STANDARD>()); break;
-        case NS_AN_STANDARD : func(NormalInfo<NS_AN_STANDARD>()); break;
-        case NS_QUAD : func(NormalInfo<NS_QUAD>()); break;
-        case NS_AN_QUAD_OCT : func(NormalInfo<NS_AN_QUAD_OCT>()); break;
-        case NS_ORIENTED : func(NormalInfo<NS_ORIENTED>()); break;
-        case NS_ORIENTED_QUAD : func(NormalInfo<NS_ORIENTED_QUAD>()); break;
+        case NS_STANDARD : func(NormalInfo<NS_STANDARD>(),
+            std::forward<Args>(args)...); break;
+        case NS_AN_STANDARD : func(NormalInfo<NS_AN_STANDARD>(),
+            std::forward<Args>(args)...); break;
+        case NS_QUAD : func(NormalInfo<NS_QUAD>(),
+            std::forward<Args>(args)...); break;
+        case NS_AN_QUAD_OCT : func(NormalInfo<NS_AN_QUAD_OCT>(),
+            std::forward<Args>(args)...); break;
+        case NS_ORIENTED : func(NormalInfo<NS_ORIENTED>(),
+            std::forward<Args>(args)...); break;
+        case NS_ORIENTED_QUAD : func(NormalInfo<NS_ORIENTED_QUAD>(),
+            std::forward<Args>(args)...); break;
         default: break;
     }
 }
