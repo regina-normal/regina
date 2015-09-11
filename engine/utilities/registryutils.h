@@ -205,7 +205,7 @@ struct NewFunction : public Returns<Base*> {
  * where the argument is of type \a Arg.
  *
  * This routine is intended for use with registry routines, such as the
- * three-argument variants of forPacket() and forCoords().
+ * non-void variants of forPacket() and forCoords().
  *
  * \deprecated This has been deprecated.  Instead you should use NewFunction,
  * which is more flexible and has less overhead.
