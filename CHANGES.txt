@@ -139,6 +139,8 @@ Version 4.97  [ (under development) ]
             - New classes that provide consistent APIs for objects to provide
               short and detailed string output.  These have been introduced as
               lightweight replacements for the now-defunct ShareableObject.
+        Class ReturnsTraits:
+            - Helper class for compile-time analysis of function objects.
         Class ShareableObject:
             - Removed entirely.  This is no longer needed as a base class for
               objects that are mirrored in external interfaces (e.g., python).

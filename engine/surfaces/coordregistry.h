@@ -120,10 +120,9 @@ class NNormalSurfaceVector; // For the deprecated NewNormalSurfaceVector.
  * coordinate system is invalid.
  */
 template <typename FunctionObject, typename... Args>
-typename std::enable_if<HasReturnType<FunctionObject>::value,
-        typename FunctionObject::ReturnType>::type
-forCoords(NormalCoords coords, FunctionObject func, Args&&... args,
-        typename FunctionObject::ReturnType defaultReturn);
+typename ReturnsTraits<FunctionObject>::ReturnType
+forCoords(NormalCoords coords, FunctionObject&& func, Args&&... args,
+        typename ReturnsTraits<FunctionObject>::ReturnType defaultReturn);
 
 /**
  * Allows the user to call a template function whose template parameter
@@ -163,10 +162,12 @@ forCoords(NormalCoords coords, FunctionObject func, Args&&... args,
  * @param args any additional arguments to pass to the bracket operator
  * for \a func.  These will be copied/moved, so if you wish to pass
  * references then you must wrap then in std::ref or std::cref.
+ * @return nothing; the return type <tt>ReturnsTraits<FunctionObject>::Void</tt>
+ * simply evaluates to \c void.
  */
 template <typename FunctionObject, typename... Args>
-typename std::enable_if<! HasReturnType<FunctionObject>::value, void>::type
-forCoords(NormalCoords coords, FunctionObject func, Args&&... args);
+typename ReturnsTraits<FunctionObject>::Void
+forCoords(NormalCoords coords, FunctionObject&& func, Args&&... args);
 
 /**
  * A legacy typedef provided for backward compatibility only.
