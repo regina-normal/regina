@@ -82,7 +82,7 @@ NXMLElementReader* NXMLPacketReader::startSubElement(
             return new NXMLPacketReader(resolver_);
 
         NXMLElementReader* ans = forPacket(static_cast<PacketType>(typeID),
-            XMLReaderFunction(), 0, me, std::ref(resolver_));
+            XMLReaderFunction(), 0, me, resolver_);
         if (ans)
             return ans;
         else
