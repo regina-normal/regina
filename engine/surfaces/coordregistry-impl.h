@@ -62,8 +62,9 @@ namespace regina {
 
 template <typename FunctionObject, typename... Args>
 inline typename ReturnsTraits<FunctionObject>::ReturnType
-forCoords(NormalCoords coords, FunctionObject&& func, Args&&... args,
-        typename ReturnsTraits<FunctionObject>::ReturnType defaultReturn) {
+forCoords(NormalCoords coords, FunctionObject&& func,
+        typename ReturnsTraits<FunctionObject>::ReturnType defaultReturn,
+        Args&&... args) {
     switch (coords) {
         case NS_STANDARD : return func(NormalInfo<NS_STANDARD>(),
             std::forward<Args>(args)...);

@@ -110,19 +110,20 @@ class NNormalSurfaceVector; // For the deprecated NewNormalSurfaceVector.
  * @param coords the given normal coordinate system.
  * @param func the function object whose bracket operator we will
  * call with a NormalInfo<coords> object.
+ * @param defaultReturn the value to return if the given
+ * coordinate system is invalid.
  * @param args any additional arguments to pass to the bracket operator
  * for \a func.  These will be copied/moved, so if you wish to pass
  * references then you must wrap then in std::ref or std::cref.
- * @param defaultReturn the value to return if the given
- * coordinate system is invalid.
  * @return the return value from the corresponding bracket
  * operator of \a func, or \a defaultReturn if the given
  * coordinate system is invalid.
  */
 template <typename FunctionObject, typename... Args>
 typename ReturnsTraits<FunctionObject>::ReturnType
-forCoords(NormalCoords coords, FunctionObject&& func, Args&&... args,
-        typename ReturnsTraits<FunctionObject>::ReturnType defaultReturn);
+forCoords(NormalCoords coords, FunctionObject&& func,
+        typename ReturnsTraits<FunctionObject>::ReturnType defaultReturn,
+        Args&&... args);
 
 /**
  * Allows the user to call a template function whose template parameter
