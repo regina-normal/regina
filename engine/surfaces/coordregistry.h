@@ -101,11 +101,9 @@ class NNormalSurfaceVector; // For the deprecated NewNormalSurfaceVector.
  * There is also a variant of forCoords() that works with void functions,
  * and so does not take the extra \a defaultReturn argument.
  *
- * \pre The function object must be derived from Returns<T>, where \a T
- * is the return type of the corresponding templated bracket operator.
- * This is because the template code distinguishes between the void and
- * non-void variants of forCoords() according to whether or not FunctionType
- * derives from Returns<T>.
+ * \pre The function object must have a typedef \a ReturnType indicating
+ * the return type of the corresponding templated bracket operator.
+ * Inheriting from Returns<...> is a convenient way to ensure this.
  *
  * \ifacespython Not present.
  *
@@ -122,7 +120,7 @@ class NNormalSurfaceVector; // For the deprecated NewNormalSurfaceVector.
  * coordinate system is invalid.
  */
 template <typename FunctionObject, typename... Args>
-typename std::enable_if<std::is_base_of<ReturnsBase, FunctionObject>::value,
+typename std::enable_if<HasReturnType<FunctionObject>::value,
         typename FunctionObject::ReturnType>::type
 forCoords(NormalCoords coords, FunctionObject func, Args&&... args,
         typename FunctionObject::ReturnType defaultReturn);
@@ -153,10 +151,9 @@ forCoords(NormalCoords coords, FunctionObject func, Args&&... args,
  * There is also a variant of forCoords() that works with functions with
  * return values, and which takes an extra \a defaultReturn argument.
  *
- * \pre The function object is not derived from Returns<T> (for any type \a T).
- * This is because the template code distinguishes between the void and
- * non-void variants of forCoords() according to whether or not FunctionType
- * derives from Returns<T>.
+ * \pre There must not exist a type \a FunctionObject::ReturnType.
+ * The existence of a type \a FunctionObject::ReturnType will cause the
+ * non-void variant of forCoords() to be used instead.
  *
  * \ifacespython Not present.
  *
@@ -168,8 +165,7 @@ forCoords(NormalCoords coords, FunctionObject func, Args&&... args,
  * references then you must wrap then in std::ref or std::cref.
  */
 template <typename FunctionObject, typename... Args>
-typename std::enable_if<! std::is_base_of<ReturnsBase, FunctionObject>::value,
-        void>::type
+typename std::enable_if<! HasReturnType<FunctionObject>::value, void>::type
 forCoords(NormalCoords coords, FunctionObject func, Args&&... args);
 
 /**

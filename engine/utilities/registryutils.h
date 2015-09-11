@@ -47,14 +47,6 @@
 namespace regina {
 
 /**
- * A base class for the Returns template.
- * This is to help test whether a given type derives from any template
- * Returns<T>.
- */
-struct ReturnsBase {
-};
-
-/**
  * A convenience base class for a function object, which does nothing
  * beyond provide a \a ReturnType typedef.
  *
@@ -68,11 +60,38 @@ struct ReturnsBase {
  * \ifacespython Not present.
  */
 template <typename ReturnType_>
-struct Returns : public ReturnsBase {
+struct Returns {
     /**
      * Indicates the return type for a function object.
      */
     typedef ReturnType_ ReturnType;
+};
+
+/**
+ * Detects at compile time whether the type <tt>T::ReturnType</tt> exists.
+ * This can be used in conjunction with constructs such as std::enable_if.
+ *
+ * If T::ReturnType exists, the enum constant <tt>HasReturnType<T>::value</tt>
+ * will be non-zero (i.e., true).  Otherwise <tt>HasReturnType<T>::value</tt>
+ * will be zero (i.e., false).
+ */
+template <typename T>
+class HasReturnType {
+    private:
+        typedef char yes;
+        typedef long no;
+
+        template <typename U> static yes test(typename U::ReturnType *);
+        template <typename U> static no test(...);
+
+    public:
+        enum {
+            /**
+             * Evaluates to non-zero (true) or zero (false) according to
+             * whether or not the type <tt>T::ReturnType</tt> exists.
+             */
+            value = (sizeof(test<T>(0)) == sizeof(yes))
+        };
 };
 
 /**

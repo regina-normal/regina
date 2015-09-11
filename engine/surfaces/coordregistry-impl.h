@@ -62,7 +62,7 @@ namespace regina {
 
 template <typename FunctionObject, typename... Args>
 inline
-typename std::enable_if<std::is_base_of<ReturnsBase, FunctionObject>::value,
+typename std::enable_if<HasReturnType<FunctionObject>::value,
         typename FunctionObject::ReturnType>::type
 forCoords(NormalCoords coords, FunctionObject func, Args&&... args,
         typename FunctionObject::ReturnType defaultReturn) {
@@ -85,8 +85,7 @@ forCoords(NormalCoords coords, FunctionObject func, Args&&... args,
 
 template <typename FunctionObject, typename... Args>
 inline
-typename std::enable_if<! std::is_base_of<ReturnsBase, FunctionObject>::value,
-        void>::type
+typename std::enable_if<! HasReturnType<FunctionObject>::value, void>::type
 forCoords(NormalCoords coords, FunctionObject func, Args&&... args) {
     switch (coords) {
         case NS_STANDARD : func(NormalInfo<NS_STANDARD>(),
