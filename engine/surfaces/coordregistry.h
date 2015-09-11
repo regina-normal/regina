@@ -113,7 +113,7 @@ class NNormalSurfaceVector; // For the deprecated NewNormalSurfaceVector.
  * coordinate system is invalid.
  * @param args any additional arguments to pass to the bracket operator
  * for \a func.  These will be copied/moved, so if you wish to pass
- * references then you must wrap then in std::ref or std::cref.
+ * references then you may need to wrap them in std::ref or std::cref.
  * @return the return value from the corresponding bracket
  * operator of \a func, or \a defaultReturn if the given
  * coordinate system is invalid.
@@ -163,7 +163,7 @@ forCoords(NormalCoords coords, FunctionObject&& func,
  * call with a NormalInfo<coords> object.
  * @param args any additional arguments to pass to the bracket operator
  * for \a func.  These will be copied/moved, so if you wish to pass
- * references then you must wrap then in std::ref or std::cref.
+ * references then you may need to wrap them in std::ref or std::cref.
  * @return nothing; the return type <tt>ReturnsTraits<FunctionObject>::Void</tt>
  * simply evaluates to \c void.
  */

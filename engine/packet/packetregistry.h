@@ -104,7 +104,7 @@ namespace regina {
  * is not valid.
  * @param args any additional arguments to pass to the bracket operator
  * for \a func.  These will be copied/moved, so if you wish to pass
- * references then you must wrap them in std::ref or std::cref.
+ * references then you may need to wrap them in std::ref or std::cref.
  * @return the return value from the corresponding bracket
  * operator of \a func, or \a defaultReturn if the given packet type
  * is not valid.
@@ -148,6 +148,11 @@ forPacket(PacketType packetType, FunctionObject&& func,
  * @param packetType the given packet type.
  * @param func the function object whose bracket operator we will
  * call with a PacketInfo<packetType> object.
+ * @param args any additional arguments to pass to the bracket operator
+ * for \a func.  These will be copied/moved, so if you wish to pass
+ * references then you may need to wrap them in std::ref or std::cref.
+ * @return nothing; the return type <tt>ReturnsTraits<FunctionObject>::Void</tt>
+ * simply evaluates to \c void.
  */
 template <typename FunctionObject, typename... Args>
 typename ReturnsTraits<FunctionObject>::Void
