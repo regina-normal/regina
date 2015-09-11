@@ -56,14 +56,13 @@
 #error "The old REGISTER_FLAVOUR macros have been removed.  Use forCoords() instead."
 #endif
 
-#ifndef __FLAVOURREGISTRY_H
+#ifndef __COORDREGISTRY_H
 #ifndef __DOXYGEN
-#define __FLAVOURREGISTRY_H
+#define __COORDREGISTRY_H
 #endif
 
 #include "surfaces/normalcoords.h"
 #include "utilities/registryutils.h"
-#include <type_traits>
 
 namespace regina {
 
@@ -92,7 +91,7 @@ class NNormalSurfaceVector; // For the deprecated NewNormalSurfaceVector.
  * In detail: the function object \a func must define a templated
  * bracket operator, so that <tt>func(NormalInfo<c>, ...)</tt> is
  * defined for any valid NormalCoords enum value \a c.  Then,
- * when the user calls <tt>forCoords(coords, func, ..., defaultReturn)</tt>,
+ * when the user calls <tt>forCoords(coords, func, defaultReturn, ...)</tt>,
  * this routine will call <tt>func(NormalInfo<coords>, ...)</tt> and pass back
  * the corresponding return value.  If \a coords does not denote a valid
  * coordinate system as described above, then forCoords() will pass back
@@ -152,6 +151,8 @@ forCoords(NormalCoords coords, FunctionObject&& func,
  * return values, and which takes an extra \a defaultReturn argument.
  *
  * \pre There must not exist a type \a FunctionObject::ReturnType.
+ * (or, if \a FunctionObject is a reference to a class/struct \a F,
+ * there must likewise not exist a type \a F::ReturnType).
  * The existence of a type \a FunctionObject::ReturnType will cause the
  * non-void variant of forCoords() to be used instead.
  *

@@ -45,9 +45,9 @@
  *  See coordregistry.h for how other routines can use this registry.
  */
 
-#ifndef __FLAVOURREGISTRY_IMPL_H
+#ifndef __COORDREGISTRY_IMPL_H
 #ifndef __DOXYGEN
-#define __FLAVOURREGISTRY_IMPL_H
+#define __COORDREGISTRY_IMPL_H
 #endif
 
 #include "surfaces/coordregistry.h"
