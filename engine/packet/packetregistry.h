@@ -141,7 +141,7 @@ forPacket(PacketType packetType, FunctionObject&& func,
  * (or, if \a FunctionObject is a reference to a class/struct \a F,
  * there must likewise not exist a type \a F::ReturnType).
  * The existence of a type \a FunctionObject::ReturnType will cause the
- * non-void variant of forCoords() to be used instead.
+ * non-void variant of forPacket() to be used instead.
  *
  * \ifacespython Not present.
  *
