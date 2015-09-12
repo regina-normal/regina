@@ -45,8 +45,7 @@ namespace regina {
 
 template <int dim>
 NGenericFacetPairing<dim>::NGenericFacetPairing(
-        const NGenericFacetPairing<dim>& cloneMe) : NThread(),
-        size_(cloneMe.size_),
+        const NGenericFacetPairing<dim>& cloneMe) : size_(cloneMe.size_),
         pairs_(new NFacetSpec<dim>[cloneMe.size_ * (dim + 1)]) {
     std::copy(cloneMe.pairs_, cloneMe.pairs_ + (size_ * (dim + 1)), pairs_);
 }
@@ -546,45 +545,19 @@ bool NGenericFacetPairing<dim>::isCanonicalInternal(
 }
 
 template <int dim>
-bool NGenericFacetPairing<dim>::findAllPairings(unsigned nSimplices,
-        NBoolSet boundary, int nBdryFacets,
-        typename NGenericFacetPairing<dim>::Use use,
-        void* useArgs, bool newThread) {
-    // Create a set of arguments.
-    Args* args = new Args;
-    args->boundary = boundary;
-    args->nBdryFacets = nBdryFacets;
-    args->use = use;
-    args->useArgs = useArgs;
-
-    // Start the facet pairing generation.
-    FacetPairing* pairing = new FacetPairing(nSimplices);
-    if (newThread)
-        return pairing->start(args, true);
-    else {
-        pairing->run(args);
-        delete pairing;
-        return true;
-    }
-}
-
-template <int dim>
-void* NGenericFacetPairing<dim>::run(void* param) {
-    Args* args = static_cast<Args*>(param);
-
+void NGenericFacetPairing<dim>::enumerateInternal(NBoolSet boundary,
+        int nBdryFacets, Use use, void* useArgs) {
     // Bail if it's obvious that nothing will happen.
-    if (args->boundary == NBoolSet::sNone || size_ == 0) {
-        args->use(0, 0, args->useArgs);
-        delete args;
-        return 0;
+    if (boundary == NBoolSet::sNone || size_ == 0) {
+        use(0, 0, useArgs);
+        return;
     }
-    if (args->boundary.hasTrue() && args->nBdryFacets >= 0 &&
-            (args->nBdryFacets % 2 != ((dim+1) * static_cast<int>(size_)) % 2 ||
-            args->nBdryFacets > (dim - 1) * static_cast<int>(size_) + 2
-            || (args->nBdryFacets == 0 && ! args->boundary.hasFalse()))) {
-        args->use(0, 0, args->useArgs);
-        delete args;
-        return 0;
+    if (boundary.hasTrue() && nBdryFacets >= 0 &&
+            (nBdryFacets % 2 != ((dim+1) * static_cast<int>(size_)) % 2 ||
+            nBdryFacets > (dim - 1) * static_cast<int>(size_) + 2
+            || (nBdryFacets == 0 && ! boundary.hasFalse()))) {
+        use(0, 0, useArgs);
+        return;
     }
 
     // Initialise the pairings to unspecified (i.e., facet -> itself).
@@ -633,11 +606,11 @@ void* NGenericFacetPairing<dim>::run(void* param) {
         // We'd better make sure we're not going to glue together so
         // many facets that there is no room for the required number of
         // boundary facets.
-        if (args->boundary.hasTrue()) {
+        if (boundary.hasTrue()) {
             // We're interested in triangulations with boundary.
-            if (args->nBdryFacets < 0) {
+            if (nBdryFacets < 0) {
                 // We don't care how many boundary facets.
-                if (! args->boundary.hasFalse()) {
+                if (! boundary.hasFalse()) {
                     // We must have some boundary though.
                     if (boundaryFacets == 0 &&
                             usedFacets ==
@@ -648,7 +621,7 @@ void* NGenericFacetPairing<dim>::run(void* param) {
                 }
             } else {
                 // We're specific about the number of boundary facets.
-                if (usedFacets - boundaryFacets + args->nBdryFacets ==
+                if (usedFacets - boundaryFacets + nBdryFacets ==
                         (dim + 1) * static_cast<int>(size_) &&
                         dest(trying).simp < static_cast<int>(size_))
                     // We've used our entire quota of non-boundary facets.
@@ -704,9 +677,8 @@ void* NGenericFacetPairing<dim>::run(void* param) {
         // dest(trying) that we know we're actually allowed to use.
 
         // Check if after all that we've been pushed past the end.
-        if (dest(trying).isPastEnd(size_,
-                (! args->boundary.hasTrue()) ||
-                boundaryFacets == args->nBdryFacets)) {
+        if (dest(trying).isPastEnd(size_, (! boundary.hasTrue()) ||
+                boundaryFacets == nBdryFacets)) {
             // We can't join trying to anything else.  Step back.
             dest(trying) = trying;
             --trying;
@@ -756,8 +728,8 @@ void* NGenericFacetPairing<dim>::run(void* param) {
         if (trying.simp == static_cast<int>(size_)) {
             // Deal with the solution!
             if (isCanonicalInternal(allAutomorphisms)) {
-                args->use(static_cast<FacetPairing*>(this),
-                    &allAutomorphisms, args->useArgs);
+                use(static_cast<FacetPairing*>(this),
+                    &allAutomorphisms, useArgs);
                 for_each(allAutomorphisms.begin(), allAutomorphisms.end(),
                     FuncDelete<Isomorphism>());
                 allAutomorphisms.clear();
@@ -815,9 +787,8 @@ void* NGenericFacetPairing<dim>::run(void* param) {
         }
     }
 
-    args->use(0, 0, args->useArgs);
-    delete args;
-    return 0;
+    use(0, 0, useArgs);
+    return;
 }
 
 } // namespace regina
