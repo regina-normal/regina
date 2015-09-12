@@ -58,9 +58,8 @@ void NXMLNormalHypersurfaceReader::initialChars(const std::string& chars) {
 
     // Create a new vector and read all non-zero entries.
     // Bring in cases from the coordinate system registry...
-    NNormalHypersurfaceVector* vec =
-        forCoords(coords_,
-            NewFunction1<NNormalHypersurfaceVector, size_t>(vecLen_), 0);
+    NNormalHypersurfaceVector* vec = forCoords(coords_,
+        NewFunction<NNormalHypersurfaceVector>(), 0, vecLen_);
     if (! vec)
         return;
 

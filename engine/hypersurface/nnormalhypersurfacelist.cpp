@@ -47,56 +47,47 @@ namespace regina {
 
 namespace {
     struct ZeroVector : public Returns<NNormalHypersurfaceVector*> {
-        const Dim4Triangulation* tri_;
-
-        ZeroVector(const Dim4Triangulation* tri) : tri_(tri) {}
-
         template <typename Coords>
-        inline NNormalHypersurfaceVector* operator() (Coords) {
-            return Coords::Class::makeZeroVector(tri_);
+        inline NNormalHypersurfaceVector* operator() (Coords,
+                const Dim4Triangulation* tri) {
+            return Coords::Class::makeZeroVector(tri);
         }
     };
 }
 
 NNormalHypersurfaceVector* makeZeroVector(
         const Dim4Triangulation* triangulation, HyperCoords coords) {
-    return forCoords(coords, ZeroVector(triangulation), 0);
+    return forCoords(coords, ZeroVector(), 0, triangulation);
 }
 
 namespace {
     struct MatchingEquations : public Returns<NMatrixInt*> {
-        const Dim4Triangulation* tri_;
-
-        MatchingEquations(const Dim4Triangulation* tri) : tri_(tri) {}
-
         template <typename Coords>
-        inline NMatrixInt* operator() (Coords) {
-            return Coords::Class::makeMatchingEquations(tri_);
+        inline NMatrixInt* operator() (Coords,
+                const Dim4Triangulation* tri) {
+            return Coords::Class::makeMatchingEquations(tri);
         }
     };
 }
 
 NMatrixInt* makeMatchingEquations(const Dim4Triangulation* triangulation,
         HyperCoords coords) {
-    return forCoords(coords, MatchingEquations(triangulation), 0);
+    return forCoords(coords, MatchingEquations(), 0, triangulation);
 }
 
 namespace {
     struct EmbeddedConstraints : public Returns<NEnumConstraintList*> {
-        const Dim4Triangulation* tri_;
-
-        EmbeddedConstraints(const Dim4Triangulation* tri) : tri_(tri) {}
-
         template <typename Coords>
-        inline NEnumConstraintList* operator() (Coords) {
-            return Coords::Class::makeEmbeddedConstraints(tri_);
+        inline NEnumConstraintList* operator() (Coords,
+                const Dim4Triangulation* tri) {
+            return Coords::Class::makeEmbeddedConstraints(tri);
         }
     };
 }
 
 NEnumConstraintList* makeEmbeddedConstraints(
         const Dim4Triangulation* triangulation, HyperCoords coords) {
-    return forCoords(coords, EmbeddedConstraints(triangulation), 0);
+    return forCoords(coords, EmbeddedConstraints(), 0, triangulation);
 }
 
 void* NNormalHypersurfaceList::VertexEnumerator::run(void*) {
