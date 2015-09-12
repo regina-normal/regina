@@ -44,9 +44,8 @@ using namespace boost::python;
 using regina::Dim4BoundaryComponent;
 
 void addDim4BoundaryComponent() {
-    class_<Dim4BoundaryComponent, bases<regina::ShareableObject>,
-            std::auto_ptr<Dim4BoundaryComponent>, boost::noncopyable>
-            ("Dim4BoundaryComponent", no_init)
+    class_<Dim4BoundaryComponent, std::auto_ptr<Dim4BoundaryComponent>,
+            boost::noncopyable>("Dim4BoundaryComponent", no_init)
         .def("index", &Dim4BoundaryComponent::index)
         .def("getNumberOfTetrahedra",
             &Dim4BoundaryComponent::getNumberOfTetrahedra)
@@ -68,6 +67,11 @@ void addDim4BoundaryComponent() {
             return_value_policy<reference_existing_object>())
         .def("isIdeal", &Dim4BoundaryComponent::isIdeal)
         .def("isInvalidVertex", &Dim4BoundaryComponent::isInvalidVertex)
+        .def("str", &Dim4BoundaryComponent::str)
+        .def("toString", &Dim4BoundaryComponent::toString)
+        .def("detail", &Dim4BoundaryComponent::detail)
+        .def("toStringLong", &Dim4BoundaryComponent::toStringLong)
+        .def("__str__", &Dim4BoundaryComponent::str)
     ;
 }
 

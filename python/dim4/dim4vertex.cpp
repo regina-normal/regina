@@ -86,8 +86,7 @@ void addDim4Vertex() {
         .def(self != self)
     ;
 
-    scope s = class_<Dim4Vertex, bases<regina::ShareableObject>,
-            std::auto_ptr<Dim4Vertex>, boost::noncopyable>
+    scope s = class_<Dim4Vertex, std::auto_ptr<Dim4Vertex>, boost::noncopyable>
             ("Dim4Vertex", no_init)
         .def("index", &Dim4Vertex::index)
         .def("getEmbeddings", Dim4Vertex_getEmbeddings_list)
@@ -110,6 +109,11 @@ void addDim4Vertex() {
         .def("isValid", &Dim4Vertex::isValid)
         .def("isIdeal", &Dim4Vertex::isIdeal)
         .def("isBoundary", &Dim4Vertex::isBoundary)
+        .def("str", &Dim4Vertex::str)
+        .def("toString", &Dim4Vertex::toString)
+        .def("detail", &Dim4Vertex::detail)
+        .def("toStringLong", &Dim4Vertex::toStringLong)
+        .def("__str__", &Dim4Vertex::str)
     ;
 }
 

@@ -43,9 +43,10 @@
 
 #include <deque>
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "maths/nperm5.h"
 #include "utilities/nmarkedvector.h"
+#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
@@ -162,7 +163,10 @@ class REGINA_API Dim4TriangleEmbedding {
  * Triangles are highly temporary; once a triangulation changes, all its
  * triangle objects will be deleted and new ones will be created.
  */
-class REGINA_API Dim4Triangle : public ShareableObject, public NMarkedElement {
+class REGINA_API Dim4Triangle :
+        public Output<Dim4Triangle>,
+        public boost::noncopyable,
+        public NMarkedElement {
     public:
         /**
          * A table that maps vertices of a pentachoron to triangle numbers.
@@ -235,11 +239,6 @@ class REGINA_API Dim4Triangle : public ShareableObject, public NMarkedElement {
             /**< Is this triangle valid? */
 
     public:
-        /**
-         * Default destructor.
-         */
-        ~Dim4Triangle();
-
         /**
          * Returns the index of this triangle in the underlying
          * triangulation.  This is identical to calling
@@ -387,7 +386,23 @@ class REGINA_API Dim4Triangle : public ShareableObject, public NMarkedElement {
          */
         bool isValid() const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 
     private:
@@ -459,9 +474,6 @@ inline bool Dim4TriangleEmbedding::operator !=
 
 inline Dim4Triangle::Dim4Triangle(Dim4Component* component) :
         component_(component), boundaryComponent_(0), valid_(true) {
-}
-
-inline Dim4Triangle::~Dim4Triangle() {
 }
 
 inline unsigned long Dim4Triangle::index() const {

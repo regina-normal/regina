@@ -79,9 +79,8 @@ void addDim4Triangle() {
         .def(self != self)
     ;
 
-    scope s = class_<Dim4Triangle, bases<regina::ShareableObject>,
-            std::auto_ptr<Dim4Triangle>, boost::noncopyable>("Dim4Triangle",
-            no_init)
+    scope s = class_<Dim4Triangle, std::auto_ptr<Dim4Triangle>,
+            boost::noncopyable>("Dim4Triangle", no_init)
         .def("index", &Dim4Triangle::index)
         .def("getEmbeddings", Dim4Triangle_getEmbeddings_list)
         .def("getNumberOfEmbeddings", &Dim4Triangle::getNumberOfEmbeddings)
@@ -101,6 +100,11 @@ void addDim4Triangle() {
         .def("getDegree", &Dim4Triangle::getDegree)
         .def("isBoundary", &Dim4Triangle::isBoundary)
         .def("isValid", &Dim4Triangle::isValid)
+        .def("str", &Dim4Triangle::str)
+        .def("toString", &Dim4Triangle::toString)
+        .def("detail", &Dim4Triangle::detail)
+        .def("toStringLong", &Dim4Triangle::toStringLong)
+        .def("__str__", &Dim4Triangle::str)
     ;
 
     s.attr("triangleNumber") = &Dim4Triangle_triangleNumber;

@@ -43,8 +43,9 @@
 
 #include <vector>
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "utilities/nmarkedvector.h"
+#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
@@ -90,7 +91,9 @@ class NTriangulation;
  * ones will be created.
  */
 class REGINA_API Dim4BoundaryComponent :
-        public ShareableObject, public NMarkedElement {
+        public Output<Dim4BoundaryComponent>,
+        public boost::noncopyable,
+        public NMarkedElement {
     private:
         std::vector<Dim4Tetrahedron*> tetrahedra_;
             /**< List of tetrahedra in the boundary component. */
@@ -112,7 +115,7 @@ class REGINA_API Dim4BoundaryComponent :
         /**
          * Default destructor.
          */
-        virtual ~Dim4BoundaryComponent();
+        ~Dim4BoundaryComponent();
 
         /**
          * Returns the index of this boundary component in the underlying
@@ -304,7 +307,23 @@ class REGINA_API Dim4BoundaryComponent :
          */
         bool isInvalidVertex() const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 
     private:

@@ -43,9 +43,10 @@
 
 #include <vector>
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "maths/nperm5.h"
 #include "utilities/nmarkedvector.h"
+#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
@@ -161,7 +162,10 @@ class REGINA_API Dim4VertexEmbedding {
  * Vertices are highly temporary; once a triangulation changes, all its
  * vertex objects will be deleted and new ones will be created.
  */
-class REGINA_API Dim4Vertex : public ShareableObject, public NMarkedElement {
+class REGINA_API Dim4Vertex :
+        public Output<Dim4Vertex>,
+        public boost::noncopyable,
+        public NMarkedElement {
     private:
         std::vector<Dim4VertexEmbedding> emb_;
             /**< A list of descriptors telling how this vertex forms a part of
@@ -185,7 +189,7 @@ class REGINA_API Dim4Vertex : public ShareableObject, public NMarkedElement {
         /**
          * Default destructor.
          */
-        virtual ~Dim4Vertex();
+        ~Dim4Vertex();
 
         /**
          * Returns the index of this vertex in the underlying
@@ -423,7 +427,23 @@ class REGINA_API Dim4Vertex : public ShareableObject, public NMarkedElement {
          */
         bool isBoundary() const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 
     private:

@@ -43,8 +43,9 @@
 
 #include <vector>
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "utilities/nmarkedvector.h"
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -65,7 +66,10 @@ class Dim4Vertex;
  * Components are highly temporary; once a triangulation changes, all
  * its component objects will be deleted and new ones will be created.
  */
-class REGINA_API Dim4Component : public ShareableObject, public NMarkedElement {
+class REGINA_API Dim4Component :
+        public Output<Dim4Component>,
+        public boost::noncopyable,
+        public NMarkedElement {
     private:
         std::vector<Dim4Pentachoron*> pentachora_;
             /**< List of pentachora in the component. */
@@ -86,11 +90,6 @@ class REGINA_API Dim4Component : public ShareableObject, public NMarkedElement {
             /**< Is the component orientable? */
 
     public:
-        /**
-         * Default destructor.
-         */
-        virtual ~Dim4Component();
-
         /**
          * Returns the index of this component in the underlying
          * triangulation.  This is identical to calling
@@ -277,7 +276,23 @@ class REGINA_API Dim4Component : public ShareableObject, public NMarkedElement {
          */
         unsigned long getNumberOfBoundaryTetrahedra() const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 
     private:
@@ -297,9 +312,6 @@ class REGINA_API Dim4Component : public ShareableObject, public NMarkedElement {
 // Inline functions for Dim4Component
 
 inline Dim4Component::Dim4Component() : ideal_(false), orientable_(true) {
-}
-
-inline Dim4Component::~Dim4Component() {
 }
 
 inline unsigned long Dim4Component::index() const {

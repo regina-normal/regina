@@ -43,9 +43,10 @@
 #endif
 
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "maths/nperm5.h"
 #include "utilities/nmarkedvector.h"
+#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
@@ -162,7 +163,9 @@ class REGINA_API Dim4TetrahedronEmbedding {
  * tetrahedron objects will be deleted and new ones will be created.
  */
 class REGINA_API Dim4Tetrahedron :
-        public ShareableObject, public NMarkedElement {
+        public Output<Dim4Tetrahedron>,
+        public boost::noncopyable,
+        public NMarkedElement {
     public:
         /**
          * An array that maps tetrahedron numbers within a pentachoron
@@ -201,11 +204,6 @@ class REGINA_API Dim4Tetrahedron :
                  the dual 1-skeleton? */
 
     public:
-        /**
-         * Default destructor.
-         */
-        ~Dim4Tetrahedron();
-
         /**
          * Returns the index of this tetrahedron in the underlying
          * triangulation.  This is identical to calling
@@ -373,7 +371,23 @@ class REGINA_API Dim4Tetrahedron :
          */
         bool inDualMaximalForest() const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 
     private:
@@ -446,9 +460,6 @@ inline bool Dim4TetrahedronEmbedding::operator !=
 inline Dim4Tetrahedron::Dim4Tetrahedron(Dim4Component* component) :
         nEmb_(0), component_(component), boundaryComponent_(0),
         inDualMaximalForest_(false) {
-}
-
-inline Dim4Tetrahedron::~Dim4Tetrahedron() {
 }
 
 inline unsigned long Dim4Tetrahedron::index() const {

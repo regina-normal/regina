@@ -93,8 +93,8 @@ void addDim4Edge() {
         .def(self != self)
     ;
 
-    scope s = class_<Dim4Edge, bases<regina::ShareableObject>,
-            std::auto_ptr<Dim4Edge>, boost::noncopyable>("Dim4Edge", no_init)
+    scope s = class_<Dim4Edge, std::auto_ptr<Dim4Edge>,
+            boost::noncopyable>("Dim4Edge", no_init)
         .def("index", &Dim4Edge::index)
         .def("getEmbeddings", Dim4Edge_getEmbeddings_list)
         .def("getNumberOfEmbeddings", &Dim4Edge::getNumberOfEmbeddings)
@@ -117,6 +117,11 @@ void addDim4Edge() {
             return_value_policy<reference_existing_object>())
         .def("buildLinkDetail", edge_buildLinkDetail_void)
         .def("buildLinkDetail", edge_buildLinkDetail_bool)
+        .def("str", &Dim4Edge::str)
+        .def("toString", &Dim4Edge::toString)
+        .def("detail", &Dim4Edge::detail)
+        .def("toStringLong", &Dim4Edge::toStringLong)
+        .def("__str__", &Dim4Edge::str)
     ;
 
     s.attr("edgeNumber") = &Dim4Edge_edgeNumber;

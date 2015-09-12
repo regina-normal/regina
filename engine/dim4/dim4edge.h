@@ -43,9 +43,10 @@
 
 #include <vector>
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "maths/nperm5.h"
 #include "utilities/nmarkedvector.h"
+#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
@@ -162,7 +163,10 @@ class REGINA_API Dim4EdgeEmbedding {
  * Edges are highly temporary; once a triangulation changes, all its
  * edge objects will be deleted and new ones will be created.
  */
-class REGINA_API Dim4Edge : public ShareableObject, public NMarkedElement {
+class REGINA_API Dim4Edge :
+        public Output<Dim4Edge>,
+        public boost::noncopyable,
+        public NMarkedElement {
     public:
         /**
          * A table that maps vertices of a pentachoron to edge numbers.
@@ -251,11 +255,6 @@ class REGINA_API Dim4Edge : public ShareableObject, public NMarkedElement {
              * constructed on demand; until then it will be null. */
 
     public:
-        /**
-         * Default destructor.
-         */
-        ~Dim4Edge();
-
         /**
          * Returns the index of this edge in the underlying
          * triangulation.  This is identical to calling
@@ -488,7 +487,23 @@ class REGINA_API Dim4Edge : public ShareableObject, public NMarkedElement {
         Dim2Triangulation* buildLinkDetail(bool labels = true,
             Dim4Isomorphism** inclusion = 0) const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 
     private:
@@ -560,9 +575,6 @@ inline bool Dim4EdgeEmbedding::operator != (const Dim4EdgeEmbedding& other)
 
 inline Dim4Edge::Dim4Edge(Dim4Component* component) :
         component_(component), boundaryComponent_(0), invalid_(0), link_(0) {
-}
-
-inline Dim4Edge::~Dim4Edge() {
 }
 
 inline unsigned long Dim4Edge::index() const {
