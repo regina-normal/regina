@@ -111,6 +111,9 @@ Version 4.97  [ (under development) ]
               is specialised for dimension 3.
             - The old class names Dim2EdgePairing and NFacePairing have
               been kept as typedefs for convenience.
+        Class HasReturnType:
+            - New class to detect at compile time whether the type
+              T::ReturnType exists.
         Class IntOfMinSize:
             - Gives access to native integer types of a given minimum size.
         Class Isomorphism, IsomorphismBase:
@@ -125,6 +128,7 @@ Version 4.97  [ (under development) ]
         Class NAngleStructureList:
             - Renamed getNumberOfStructures() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
+            - Now uses C++11 std::thread internally instead of the old NThread.
         Class NComponent:
             - New routine getNumberOfBoundaryFacets(), which is identical to
               the dimension-specific getNumberOfBoundaryTriangles().
@@ -134,6 +138,10 @@ Version 4.97  [ (under development) ]
               The old names are retained but deprecated.
         Class NCyclotomic:
             - New class for exact arithmetic in cyclotomic fields.
+        Struct NewFunction, NewFunction1:
+            - NewFunction1 is deprecated in favour of the new and more
+              flexible NewFunction, which allows arbitrary arguments and
+              has less overhead.
         Class NExampleSnapPeaTriangulation:
             - New class for building ready-made SnapPea examples.
         Class NExampleTriangulation:
@@ -183,6 +191,8 @@ Version 4.97  [ (under development) ]
             - The destructor and writeMatrix() are no longer virtual.
             - Now derives from Output, and provides str() and detail()
               output routines.
+        Class NMutex:
+            - Deprecated; just use std::mutex and related classes instead.
         Class NNormalSurface:
             - New convenience routines normal() and embedded().
         Class NNormalSurfaceList:
@@ -228,6 +238,9 @@ Version 4.97  [ (under development) ]
         Class NPolynomial:
             - New class for working with single-variable polynomials
               over arbitrary rings.
+        Class NProgress, NProgressFinished, NProgressManager,
+                NProgressMessage, NProgressNumber, NProgressStateNumeric:
+            - Removed these old deprecated classes entirely.
         Class NRational:
             - The destructor is no longer virtual.
         Class NSatBlock:
@@ -251,6 +264,8 @@ Version 4.97  [ (under development) ]
               joinTo() has been kept but is now deprecated.
             - Routine getComponent() has been renamed to component().
               The old name getComponent() has been kept but is now deprecated.
+        Class NThread:
+            - Deprecated; just use std::thread and related classes instead.
         Class NTreeBag, NTreeDecomposition:
             - Classes for computing tree decompositions of graphs
               (including facet pairing graphs of triangulations).
@@ -287,6 +302,8 @@ Version 4.97  [ (under development) ]
               faceIndex<subdim>() template functions.
             - New routine niceTreeDecomposition() for constructing and
               caching a nice tree decomposition of the face pairing graph.
+            - New routines retriangulate() and simplifyExhaustive() for
+              breadth-first searching through the Pachner graph.
             - Routines getNumberOfSimplices(), getSimplices() and getSimplex()
               have been renamed to size(), simplices() and simplex()
               respectively.  The old names are deprecated but have been
@@ -307,6 +324,8 @@ Version 4.97  [ (under development) ]
             - New classes that provide consistent APIs for objects to provide
               short and detailed string output.  These have been introduced as
               lightweight replacements for the now-defunct ShareableObject.
+        Class ReturnsTraits:
+            - Helper class for compile-time analysis of function objects.
         Class ShareableObject:
             - Removed entirely.  This is no longer needed as a base class for
               objects that are mirrored in external interfaces (e.g., python).
@@ -332,6 +351,10 @@ Version 4.97  [ (under development) ]
             - New constexpr routine for converting integers into characters.
         Routine factorial():
             - New constexpr routine for computing factorials.
+        Routine forCoords(), forFilter(), forPacket():
+            - Can now pass additional arguments to the bracket operator.
+            - The void / non-void variants now require that the function
+              object must / must not be derived from Returns<T> respectively.
         Routine nextPowerOfTwo():
             - New constexpr routine for rounding up to a power of two.
         Routine open():

@@ -40,13 +40,9 @@ namespace regina {
 
 namespace {
     struct XMLReaderFunction : public Returns<NXMLElementReader*> {
-        NPacket* parent_;
-
-        XMLReaderFunction(NPacket* parent) : parent_(parent) {}
-
         template <typename Filter>
-        inline NXMLElementReader* operator() (Filter) {
-            return Filter::Class::getXMLFilterReader(parent_);
+        inline NXMLElementReader* operator() (Filter, NPacket* parent) {
+            return Filter::Class::getXMLFilterReader(parent);
         }
     };
 }
@@ -60,7 +56,7 @@ NXMLElementReader* NXMLFilterPacketReader::startContentSubElement(
             if (valueOf(props.lookup("typeid"), type)) {
                 NXMLElementReader* ans = forFilter(
                     static_cast<SurfaceFilterType>(type),
-                    XMLReaderFunction(parent), 0);
+                    XMLReaderFunction(), 0, parent);
                 if (ans)
                     return ans;
                 else

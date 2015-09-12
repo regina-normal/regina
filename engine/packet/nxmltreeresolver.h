@@ -45,6 +45,7 @@
 #include "regina-core.h"
 #include <list>
 #include <map>
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -126,7 +127,7 @@ class REGINA_API NXMLTreeResolutionTask {
  * whose virtual resolve() function is overridden to perform whatever
  * "fleshing out" work is required for the type of packet under consideration.
  */
-class REGINA_API NXMLTreeResolver {
+class REGINA_API NXMLTreeResolver : boost::noncopyable {
     public:
         typedef std::map<std::string, NPacket*> IDMap;
             /**< A type that maps internal IDs from the data file to the

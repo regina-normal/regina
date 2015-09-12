@@ -83,35 +83,39 @@ namespace regina {
  * needs to be extended to incorporate it.
  *
  * In detail: the function object \a func must define a templated
- * unary bracket operator, so that <tt>func(SurfaceFilterInfo<t>)</tt> is
+ * bracket operator, so that <tt>func(SurfaceFilterInfo<t>, ...)</tt> is
  * defined for any valid SurfaceFilterType enum value \a t.  Then,
- * when the user calls <tt>forFilter(filter, func, defaultReturn)</tt>,
- * this routine will call <tt>func(SurfaceFilterInfo<filter>)</tt> and pass
+ * when the user calls <tt>forFilter(filter, func, defaultReturn, ...)</tt>,
+ * this routine will call <tt>func(SurfaceFilterInfo<filter>, ...)</tt> and pass
  * back the corresponding return value.  If \a filter does not denote a valid
  * filter type, then forFilter() will pass back \a defaultReturn instead.
  *
- * There is also a two-argument variant of forFilter() that works with
- * void functions.
+ * There is also a variant of forFilter() that works with void functions,
+ * and so does not take the extra \a defaultReturn argument.
  *
  * \pre The function object must have a typedef \a ReturnType indicating
- * the return type of the corresponding templated unary bracket operator.
+ * the return type of the corresponding templated bracket operator.
  * Inheriting from Returns<...> is a convenient way to ensure this.
  *
  * \ifacespython Not present.
  *
  * @param filter the given type of normal surface filter.
- * @param func the function object whose unary bracket operator we will
+ * @param func the function object whose bracket operator we will
  * call with a SurfaceFilterInfo<filter> object.
  * @param defaultReturn the value to return if the given filter type
  * is not valid.
- * @return the return value from the corresponding unary bracket
+ * @param args any additional arguments to pass to the bracket operator
+ * for \a func.  These will be copied/moved, so if you wish to pass
+ * references then you may need to wrap then in std::ref or std::cref.
+ * @return the return value from the corresponding bracket
  * operator of \a func, or \a defaultReturn if the given filter type
  * is not valid.
  */
-template <typename FunctionObject>
-typename FunctionObject::ReturnType forFilter(
-        SurfaceFilterType filter, FunctionObject func,
-        typename FunctionObject::ReturnType defaultReturn);
+template <typename FunctionObject, typename... Args>
+typename ReturnsTraits<FunctionObject>::ReturnType
+forFilter(SurfaceFilterType filter, FunctionObject&& func,
+        typename ReturnsTraits<FunctionObject>::ReturnType defaultReturn,
+        Args&&... args);
 
 /**
  * Allows the user to call a template function whose template parameter
@@ -125,24 +129,36 @@ typename FunctionObject::ReturnType forFilter(
  * needs to be extended to incorporate it.
  *
  * In detail: the function object \a func must define a templated
- * unary bracket operator, so that <tt>func(SurfaceFilterInfo<t>)</tt> is
+ * bracket operator, so that <tt>func(SurfaceFilterInfo<t>, ...)</tt> is
  * defined for any valid SurfaceFilterType enum value \a t.  Then,
- * when the user calls <tt>forFilter(filter, func)</tt>,
- * this routine will call <tt>func(SurfaceFilterInfo<filter>)</tt> in turn.
+ * when the user calls <tt>forFilter(filter, func, ...)</tt>,
+ * this routine will call <tt>func(SurfaceFilterInfo<filter>, ...)</tt> in turn.
  * If \a filter does not denote a valid filter type, then forFilter()
  * will do nothing.
  *
- * There is also a three-argument variant of forFilter() that works with
- * functions with return values.
+ * There is also a variant of forFilter() that works with functions with
+ * return values, and which takes an extra \a defaultReturn argument.
+ *
+ * \pre There must not exist a type \a FunctionObject::ReturnType
+ * (or, if \a FunctionObject is a reference to a class/struct \a F,
+ * there must likewise not exist a type \a F::ReturnType).
+ * The existence of a type \a FunctionObject::ReturnType will cause the
+ * non-void variant of forFilter() to be used instead.
  *
  * \ifacespython Not present.
  *
  * @param filter the given type of normal surface filter.
- * @param func the function object whose unary bracket operator we will
+ * @param func the function object whose bracket operator we will
  * call with a SurfaceFilterInfo<filter> object.
+ * @param args any additional arguments to pass to the bracket operator
+ * for \a func.  These will be copied/moved, so if you wish to pass
+ * references then you may need to wrap then in std::ref or std::cref.
+ * @return nothing; the return type <tt>ReturnsTraits<FunctionObject>::Void</tt>
+ * simply evaluates to \c void.
  */
-template <typename VoidFunctionObject>
-void forFilter(SurfaceFilterType filter, VoidFunctionObject func);
+template <typename FunctionObject, typename... Args>
+typename ReturnsTraits<FunctionObject>::Void
+forFilter(SurfaceFilterType filter, FunctionObject&& func, Args&&... args);
 
 /*@}*/
 

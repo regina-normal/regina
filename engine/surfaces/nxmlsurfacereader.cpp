@@ -62,8 +62,7 @@ void NXMLNormalSurfaceReader::initialChars(const std::string& chars) {
     if (coords == NS_AN_LEGACY)
         vec = new NNormalSurfaceVectorANStandard(vecLen);
     else
-        vec = forCoords(coords,
-            NewFunction1<NNormalSurfaceVector, size_t>(vecLen), 0);
+        vec = forCoords(coords, NewFunction<NNormalSurfaceVector>(), 0, vecLen);
     if (! vec)
         return;
 

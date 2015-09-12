@@ -22,6 +22,7 @@ SET ( FILES
   nvertex
   nxmltrireader
   reorder
+  retriangulate
   simplify
   simplifyglobal
   skeleton

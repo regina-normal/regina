@@ -593,7 +593,6 @@ void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
         std::set<unsigned long>::const_iterator sit;
         NNormalSurfaceVector* v;
         NLargeInteger tmpInt;
-        NewFunction1<NNormalSurfaceVector, size_t> newVec(dim);
 
         const std::vector<std::vector<mpz_class> > basis =
             cone.getHilbertBasis();
@@ -617,7 +616,8 @@ void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
             }
             if (! broken) {
                 // Insert a new surface.
-                v = forCoords(list_->coords_, newVec, 0);
+                v = forCoords(list_->coords_,
+                    NewFunction<NNormalSurfaceVector>(), 0, dim);
                 if (! v) {
                     // Coordinate system not recognised.
                     // Return an empty list to indicate that something broke.
