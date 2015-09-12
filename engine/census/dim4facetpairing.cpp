@@ -61,9 +61,10 @@ template bool NGenericFacetPairing<4>::isCanonicalInternal(
     NGenericFacetPairing<4>::IsoList&) const;
 template void NGenericFacetPairing<4>::findAutomorphisms(
     NGenericFacetPairing<4>::IsoList&) const;
-template bool NGenericFacetPairing<4>::findAllPairings(unsigned, NBoolSet,
-    int, NGenericFacetPairing<4>::Use, void*, bool);
-template void* NGenericFacetPairing<4>::run(void*);
+template void NGenericFacetPairing<4>::findAllPairings(unsigned, NBoolSet,
+    int, NGenericFacetPairing<4>::Use, void*);
+template void NGenericFacetPairing<4>::enumerateInternal(NBoolSet, int,
+    NGenericFacetPairing<4>::Use, void*);
 
 } // namespace regina
 

@@ -78,7 +78,7 @@ class Dim4FacetPairingTest : public CppUnit::TestFixture {
             for (size = 0; size <= 5; ++size) {
                 count = 0;
                 Dim4FacetPairing::findAllPairings(size, NBoolSet::sFalse,
-                    0, countFacetPairings, &count, false);
+                    0, countFacetPairings, &count);
 
                 if (count != nPairs[size]) {
                     std::ostringstream msg;
@@ -103,7 +103,7 @@ class Dim4FacetPairingTest : public CppUnit::TestFixture {
             for (size = 0; size <= 6; ++size) {
                 count = 0;
                 Dim4FacetPairing::findAllPairings(size, NBoolSet::sTrue,
-                    1, countFacetPairings, &count, false);
+                    1, countFacetPairings, &count);
 
                 if (count != nBdry1[size]) {
                     std::ostringstream msg;
@@ -118,7 +118,7 @@ class Dim4FacetPairingTest : public CppUnit::TestFixture {
             for (size = 0; size <= 5; ++size) {
                 count = 0;
                 Dim4FacetPairing::findAllPairings(size, NBoolSet::sTrue,
-                    2, countFacetPairings, &count, false);
+                    2, countFacetPairings, &count);
 
                 if (count != nBdry2[size]) {
                     std::ostringstream msg;
@@ -133,7 +133,7 @@ class Dim4FacetPairingTest : public CppUnit::TestFixture {
             for (size = 0; size <= 4; ++size) {
                 count = 0;
                 Dim4FacetPairing::findAllPairings(size, NBoolSet::sTrue,
-                    -1, countFacetPairings, &count, false);
+                    -1, countFacetPairings, &count);
 
                 if (count != nBdry[size]) {
                     std::ostringstream msg;
