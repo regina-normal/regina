@@ -181,17 +181,6 @@ typedef pthread_t NThreadID;
  * running.  Instead, if you wish to run multiple instances of the same task
  * in parallel, you must start these from different thread objects.
  *
- * \warning At the time of writing (admittedly long ago now), Qt has only
- * limited support for multithreading.  When working with an existing packet
- * tree in a new thread, the \e only modification that you may make is to
- * insert new packets.
- * Modifications of any other type (such as changing, renaming, deleting
- * or reordering existing packets) could lead to a crash within Qt or Xlib
- * when running the GUI.
- * Of course, a new thread may create, modify and delete its own temporary
- * packet trees as it chooses (and it may in fact insert them into a
- * pre-existing packet tree once all modifications are completed).
- *
  * \ifacespython Not present.
  *
  * \deprecated NThread and NMutex are deprecated; new code should use

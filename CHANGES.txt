@@ -93,6 +93,9 @@ Version 4.97  [ (under development) ]
               is specialised for dimension 3.
             - The old class names Dim2EdgePairing and NFacePairing have
               been kept as typedefs for convenience.
+        Class HasReturnType:
+            - New class to detect at compile time whether the type
+              T::ReturnType exists.
         Class IntOfMinSize:
             - Gives access to native integer types of a given minimum size.
         Class Isomorphism, IsomorphismBase:
@@ -107,6 +110,7 @@ Version 4.97  [ (under development) ]
         Class NAngleStructureList:
             - Renamed getNumberOfStructures() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
+            - Now uses C++11 std::thread internally instead of the old NThread.
         Class NComponent:
             - New routine getNumberOfBoundaryFacets(), which is identical to
               the dimension-specific getNumberOfBoundaryTriangles().
@@ -116,6 +120,10 @@ Version 4.97  [ (under development) ]
               The old names are retained but deprecated.
         Class NCyclotomic:
             - New class for exact arithmetic in cyclotomic fields.
+        Struct NewFunction, NewFunction1:
+            - NewFunction1 is deprecated in favour of the new and more
+              flexible NewFunction, which allows arbitrary arguments and
+              has less overhead.
         Class NExampleSnapPeaTriangulation:
             - New class for building ready-made SnapPea examples.
         Class NExampleTriangulation:
@@ -298,6 +306,8 @@ Version 4.97  [ (under development) ]
             - New classes that provide consistent APIs for objects to provide
               short and detailed string output.  These have been introduced as
               lightweight replacements for the now-defunct ShareableObject.
+        Class ReturnsTraits:
+            - Helper class for compile-time analysis of function objects.
         Class ShareableObject:
             - Removed entirely.  This is no longer needed as a base class for
               objects that are mirrored in external interfaces (e.g., python).
@@ -323,6 +333,10 @@ Version 4.97  [ (under development) ]
             - New constexpr routine for converting integers into characters.
         Routine factorial():
             - New constexpr routine for computing factorials.
+        Routine forCoords(), forFilter(), forPacket():
+            - Can now pass additional arguments to the bracket operator.
+            - The void / non-void variants now require that the function
+              object must / must not be derived from Returns<T> respectively.
         Routine nextPowerOfTwo():
             - New constexpr routine for rounding up to a power of two.
         Routine open():

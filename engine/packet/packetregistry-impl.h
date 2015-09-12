@@ -61,58 +61,80 @@
 
 namespace regina {
 
-template <typename FunctionObject>
-inline typename FunctionObject::ReturnType forPacket(
-        PacketType packetType, FunctionObject func,
-        typename FunctionObject::ReturnType defaultReturn) {
+template <typename FunctionObject, typename... Args>
+inline typename ReturnsTraits<FunctionObject>::ReturnType
+forPacket(PacketType packetType, FunctionObject&& func,
+        typename ReturnsTraits<FunctionObject>::ReturnType defaultReturn,
+        Args&&... args) {
     switch (packetType) {
         case PACKET_CONTAINER :
-            return func(PacketInfo<PACKET_CONTAINER>());
+            return func(PacketInfo<PACKET_CONTAINER>(),
+            std::forward<Args>(args)...);
         case PACKET_TEXT :
-            return func(PacketInfo<PACKET_TEXT>());
+            return func(PacketInfo<PACKET_TEXT>(),
+            std::forward<Args>(args)...);
         case PACKET_TRIANGULATION :
-            return func(PacketInfo<PACKET_TRIANGULATION>());
+            return func(PacketInfo<PACKET_TRIANGULATION>(),
+            std::forward<Args>(args)...);
         case PACKET_NORMALSURFACELIST :
-            return func(PacketInfo<PACKET_NORMALSURFACELIST>());
+            return func(PacketInfo<PACKET_NORMALSURFACELIST>(),
+            std::forward<Args>(args)...);
         case PACKET_SCRIPT :
-            return func(PacketInfo<PACKET_SCRIPT>());
+            return func(PacketInfo<PACKET_SCRIPT>(),
+            std::forward<Args>(args)...);
         case PACKET_SURFACEFILTER :
-            return func(PacketInfo<PACKET_SURFACEFILTER>());
+            return func(PacketInfo<PACKET_SURFACEFILTER>(),
+            std::forward<Args>(args)...);
         case PACKET_ANGLESTRUCTURELIST :
-            return func(PacketInfo<PACKET_ANGLESTRUCTURELIST>());
+            return func(PacketInfo<PACKET_ANGLESTRUCTURELIST>(),
+            std::forward<Args>(args)...);
         case PACKET_PDF :
-            return func(PacketInfo<PACKET_PDF>());
+            return func(PacketInfo<PACKET_PDF>(),
+            std::forward<Args>(args)...);
         case PACKET_DIM2TRIANGULATION :
-            return func(PacketInfo<PACKET_DIM2TRIANGULATION>());
+            return func(PacketInfo<PACKET_DIM2TRIANGULATION>(),
+            std::forward<Args>(args)...);
         case PACKET_SNAPPEATRIANGULATION :
-            return func(PacketInfo<PACKET_SNAPPEATRIANGULATION>());
+            return func(PacketInfo<PACKET_SNAPPEATRIANGULATION>(),
+            std::forward<Args>(args)...);
         default: return defaultReturn;
     }
 }
 
-template <typename VoidFunctionObject>
-inline void forPacket(PacketType packetType, VoidFunctionObject func) {
+template <typename FunctionObject, typename... Args>
+inline typename ReturnsTraits<FunctionObject>::Void
+forPacket(PacketType packetType, FunctionObject&& func, Args&&... args) {
     switch (packetType) {
         case PACKET_CONTAINER :
-            func(PacketInfo<PACKET_CONTAINER>()); break;
+            func(PacketInfo<PACKET_CONTAINER>(),
+            std::forward<Args>(args)...); break;
         case PACKET_TEXT :
-            func(PacketInfo<PACKET_TEXT>()); break;
+            func(PacketInfo<PACKET_TEXT>(),
+            std::forward<Args>(args)...); break;
         case PACKET_TRIANGULATION :
-            func(PacketInfo<PACKET_TRIANGULATION>()); break;
+            func(PacketInfo<PACKET_TRIANGULATION>(),
+            std::forward<Args>(args)...); break;
         case PACKET_NORMALSURFACELIST :
-            func(PacketInfo<PACKET_NORMALSURFACELIST>()); break;
+            func(PacketInfo<PACKET_NORMALSURFACELIST>(),
+            std::forward<Args>(args)...); break;
         case PACKET_SCRIPT :
-            func(PacketInfo<PACKET_SCRIPT>()); break;
+            func(PacketInfo<PACKET_SCRIPT>(),
+            std::forward<Args>(args)...); break;
         case PACKET_SURFACEFILTER :
-            func(PacketInfo<PACKET_SURFACEFILTER>()); break;
+            func(PacketInfo<PACKET_SURFACEFILTER>(),
+            std::forward<Args>(args)...); break;
         case PACKET_ANGLESTRUCTURELIST :
-            func(PacketInfo<PACKET_ANGLESTRUCTURELIST>()); break;
+            func(PacketInfo<PACKET_ANGLESTRUCTURELIST>(),
+            std::forward<Args>(args)...); break;
         case PACKET_PDF :
-            func(PacketInfo<PACKET_PDF>()); break;
+            func(PacketInfo<PACKET_PDF>(),
+            std::forward<Args>(args)...); break;
         case PACKET_DIM2TRIANGULATION :
-            func(PacketInfo<PACKET_DIM2TRIANGULATION>()); break;
+            func(PacketInfo<PACKET_DIM2TRIANGULATION>(),
+            std::forward<Args>(args)...); break;
         case PACKET_SNAPPEATRIANGULATION :
-            func(PacketInfo<PACKET_SNAPPEATRIANGULATION>()); break;
+            func(PacketInfo<PACKET_SNAPPEATRIANGULATION>(),
+            std::forward<Args>(args)...); break;
         default: break;
     }
 }
