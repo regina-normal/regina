@@ -42,7 +42,6 @@
 #endif
 
 #include "regina-core.h"
-#include "shareableobject.h"
 #include "generic/nfacetspec.h"
 #include "generic/ngenericisomorphism.h"
 #include "maths/nperm5.h"
