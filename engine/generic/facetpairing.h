@@ -506,9 +506,6 @@ class REGINA_API FacetPairingBase :
          * \a use will be called once more, this time with \c null as its
          * first two arguments (for the facet pairing and its automorphisms).
          *
-         * The facet pairing generation may be run in the current thread
-         * or as a separate thread.
-         *
          * Because this class cannot represent an empty facet pairing,
          * if the argument \a nSimplices is zero then no facet pairings
          * will be generated at all.
@@ -550,18 +547,9 @@ class REGINA_API FacetPairingBase :
          * to this routine.
          * @param useArgs the pointer to pass as the final parameter for
          * the function \a use which will be called upon each pairing found.
-         * @param newThread \c true if facet pairing generation should be
-         * performed in a separate thread, or \c false if generation
-         * should take place in the current thread.  If this parameter is
-         * \c true, this routine will exit immediately (after spawning
-         * the new thread).
-         * @return \c true if the new thread was successfully started (or
-         * if facet pairing generation has taken place in the current thread),
-         * or \c false if the new thread could not be started.
          */
-        static bool findAllPairings(size_t nSimplices,
-            NBoolSet boundary, int nBdryFacets, Use use,
-            void* useArgs = 0, bool newThread = false);
+        static void findAllPairings(size_t nSimplices,
+            NBoolSet boundary, int nBdryFacets, Use use, void* useArgs = 0);
 
     protected:
         /**
@@ -678,21 +666,18 @@ class REGINA_API FacetPairingBase :
 
     private:
         /**
-         * Performs the actual enumeration of facet pairings.
+         * Internal to findAllPairings().
+         *
+         * Performs the actual enumeration of facet pairings.  At most one
+         * copy of this routine should be running at any given time for a
+         * particular FacetPairingBase instance.
          *
          * \pre This object is known to be of the dimension-specific subclass
-         * FacetPairing, not an instance of the parent class
+         * FacetPairing<dim>, not an instance of the parent class
          * FacetPairingBase<dim>.
          */
-        void internalEnumerate(NBoolSet boundary, int nBdryFacets,
+        void enumerateInternal(NBoolSet boundary, int nBdryFacets,
             Use use, void* useArgs);
-
-        /**
-         * Calls internalEnumerate() on the given pairing, and then
-         * deletes it.
-         */
-        static void enumerateAndDestroy(FacetPairing<dim>* pairing,
-            NBoolSet boundary, int nBdryFacets, Use use, void* useArgs);
 };
 
 /**
@@ -859,11 +844,11 @@ inline void FacetPairingBase<dim>::findAutomorphisms(
 }
 
 template <int dim>
-inline void FacetPairingBase<dim>::enumerateAndDestroy(
-        FacetPairing<dim>* pairing, NBoolSet boundary, int nBdryFacets,
-        Use use, void* useArgs) {
-    pairing->internalEnumerate(boundary, nBdryFacets, use, useArgs);
-    delete pairing;
+inline void FacetPairingBase<dim>::findAllPairings(size_t nSimplices,
+        NBoolSet boundary, int nBdryFacets,
+        typename FacetPairingBase<dim>::Use use, void* useArgs) {
+    FacetPairing<dim> pairing(nSimplices);
+    pairing.enumerateInternal(boundary, nBdryFacets, use, useArgs);
 }
 
 // Inline functions for FacetPairing

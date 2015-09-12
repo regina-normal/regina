@@ -551,25 +551,7 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
 }
 
 template <int dim>
-bool FacetPairingBase<dim>::findAllPairings(size_t nSimplices,
-        NBoolSet boundary, int nBdryFacets,
-        typename FacetPairingBase<dim>::Use use,
-        void* useArgs, bool newThread) {
-    // Start the facet pairing generation.
-    FacetPairing<dim>* pairing = new FacetPairing<dim>(nSimplices);
-    if (newThread) {
-        std::thread t(FacetPairingBase<dim>::enumerateAndDestroy,
-            pairing, boundary, nBdryFacets, use, useArgs);
-        t.detach();
-        return true;
-    } else {
-        enumerateAndDestroy(pairing, boundary, nBdryFacets, use, useArgs);
-        return true;
-    }
-}
-
-template <int dim>
-void FacetPairingBase<dim>::internalEnumerate(NBoolSet boundary,
+void FacetPairingBase<dim>::enumerateInternal(NBoolSet boundary,
         int nBdryFacets, Use use, void* useArgs) {
     // Bail if it's obvious that nothing will happen.
     if (boundary == NBoolSet::sNone || size_ == 0) {
@@ -703,8 +685,8 @@ void FacetPairingBase<dim>::internalEnumerate(NBoolSet boundary,
         // dest(trying) that we know we're actually allowed to use.
 
         // Check if after all that we've been pushed past the end.
-        if (dest(trying).isPastEnd(size_,
-                (! boundary.hasTrue()) || boundaryFacets == nBdryFacets)) {
+        if (dest(trying).isPastEnd(size_, (! boundary.hasTrue()) ||
+                boundaryFacets == nBdryFacets)) {
             // We can't join trying to anything else.  Step back.
             dest(trying) = trying;
             --trying;
