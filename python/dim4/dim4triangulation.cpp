@@ -150,7 +150,7 @@ namespace {
     boost::python::tuple isoSig_relabelling(const Dim4Triangulation& t) {
         regina::Dim4Isomorphism* iso;
         std::string sig = t.isoSig(&iso);
-        return make_tuple(
+        return boost::python::make_tuple(
             sig,
             boost::python::object(boost::python::handle<>(
                 boost::python::manage_new_object::
