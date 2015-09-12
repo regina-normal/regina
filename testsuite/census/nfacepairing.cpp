@@ -132,7 +132,7 @@ class NFacePairingTest : public CppUnit::TestFixture {
             for (nTets = 0; nTets <= 8; nTets++) {
                 count = 0;
                 NFacePairing::findAllPairings(nTets, NBoolSet::sFalse,
-                    0, countFacePairings, &count, false);
+                    0, countFacePairings, &count);
 
                 if (count != nPairs[nTets]) {
                     std::ostringstream msg;
@@ -155,7 +155,7 @@ class NFacePairingTest : public CppUnit::TestFixture {
             for (nTets = 0; nTets <= 8; nTets++) {
                 count = 0;
                 NFacePairing::findAllPairings(nTets, NBoolSet::sTrue,
-                    1, countFacePairings, &count, false);
+                    1, countFacePairings, &count);
 
                 if (count != 0) {
                     std::ostringstream msg;
@@ -170,7 +170,7 @@ class NFacePairingTest : public CppUnit::TestFixture {
             for (nTets = 0; nTets <= 7; nTets++) {
                 count = 0;
                 NFacePairing::findAllPairings(nTets, NBoolSet::sTrue,
-                    2, countFacePairings, &count, false);
+                    2, countFacePairings, &count);
 
                 if (count != nBdry2[nTets]) {
                     std::ostringstream msg;
@@ -185,7 +185,7 @@ class NFacePairingTest : public CppUnit::TestFixture {
             for (nTets = 0; nTets <= 6; nTets++) {
                 count = 0;
                 NFacePairing::findAllPairings(nTets, NBoolSet::sTrue,
-                    -1, countFacePairings, &count, false);
+                    -1, countFacePairings, &count);
 
                 if (count != nBdry[nTets]) {
                     std::ostringstream msg;
@@ -224,7 +224,7 @@ class NFacePairingTest : public CppUnit::TestFixture {
             for (nTets = 1; nTets <= 8; nTets++) {
                 BadGraphs bad;
                 NFacePairing::findAllPairings(nTets, NBoolSet::sFalse,
-                    0, countBadGraphs, &bad, false);
+                    0, countBadGraphs, &bad);
 
                 if (bad.tripleEdge != nTriple[nTets]) {
                     std::ostringstream msg;

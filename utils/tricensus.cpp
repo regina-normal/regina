@@ -598,7 +598,7 @@ int runCensus() {
         }
 
         CensusType::Pairing::findAllPairings(nTet, boundary,
-            nBdryFaces, dumpPairing<CensusType>, 0, false);
+            nBdryFaces, dumpPairing<CensusType>, 0);
         std::cerr << "Total " << WORD_face << " pairings: "
             << totPairings << std::endl;
         return 0;

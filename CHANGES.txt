@@ -59,6 +59,8 @@ Version 4.97  [ (under development) ]
         Class NGenericFacetPairing, NFacePairing, Dim2EdgePairing:
             - Routines dotHeader() and writeDotHeader() no longer set an
               explicit background colour.
+            - Routine findAllPairings() now always runs in the current thread,
+              and no longer takes the final optional newThread argument.
         Class NGenericTriangulation, NTriangulation, Dim2Triangulation:
             - New routine size(), which is an alias for getNumberOfSimplices().
         Class NGlobalDirs:

@@ -65,9 +65,10 @@ template bool NGenericFacetPairing<3>::isCanonicalInternal(
     NGenericFacetPairing<3>::IsoList&) const;
 template void NGenericFacetPairing<3>::findAutomorphisms(
     NGenericFacetPairing<3>::IsoList&) const;
-template bool NGenericFacetPairing<3>::findAllPairings(unsigned, NBoolSet,
-    int, NGenericFacetPairing<3>::Use, void*, bool);
-template void* NGenericFacetPairing<3>::run(void*);
+template void NGenericFacetPairing<3>::findAllPairings(unsigned, NBoolSet,
+    int, NGenericFacetPairing<3>::Use, void*);
+template void NGenericFacetPairing<3>::enumerateInternal(NBoolSet, int,
+    NGenericFacetPairing<3>::Use, void*);
 
 bool NFacePairing::hasTripleEdge() const {
     unsigned equal, i, j;
