@@ -53,8 +53,14 @@ namespace regina {
  */
 
 /**
- * A mutual exclusion device (mutex) used to ensure that different
- * threads do not interfere when working with the same data.
+ * Deprecated class that provides mutexes for use with multithreaded code.
+ *
+ * This class is designed to work in conjunction with the old NThread class,
+ * which is also deprecated.  New code should use the C++11 std::thread,
+ * std::mutex and related classes instead.
+ *
+ * This class provides a mutual exclusion device (mutex), used to ensure 
+ * that different threads do not interfere when working with the same data.
  *
  * A mutex can be either locked or unlocked, and can only be locked by
  * one thread at a time.  If a second thread tries to lock the mutex,
@@ -64,14 +70,10 @@ namespace regina {
  * A mutex is locked by declaring a local variable of type NMutex::MutexLock.
  * See the NMutex::MutexLock class notes for details.
  *
- * Classes can inherit from NMutex to provide mutex protection for
- * their internal data; it is recommended that such inheritance be
- * \c protected and that the member functions alone take full
- * responsibility for locking and unlocking the mutex when appropriate.
- * Alternatively, a standalone NMutex object can be passed about between
- * routines.
- *
  * \ifacespython Not present.
+ *
+ * \deprecated NThread and NMutex are deprecated; new code should use
+ * the C++11 std::thread, std::mutex and std::lock_guard classes instead.
  */
 class REGINA_API NMutex {
     private:
@@ -113,8 +115,6 @@ class REGINA_API NMutex {
                  * This thread will then lock the mutex itself.
                  *
                  * @param mutex the mutex to be locked by this object.
-                 * This is \c const to simplify using mutex locks with
-                 * data retrieval routines for subclasses of NMutex.
                  */
                 MutexLock(const NMutex* mutex);
                 /**
@@ -126,8 +126,6 @@ class REGINA_API NMutex {
                  * This thread will then lock the mutex itself.
                  *
                  * @param mutex the mutex to be locked by this object.
-                 * This is \c const to simplify using mutex locks with
-                 * data retrieval routines for subclasses of NMutex.
                  */
                 MutexLock(const NMutex& mutex);
                 /**
@@ -142,9 +140,6 @@ class REGINA_API NMutex {
          * If any thread has already locked this mutex, this thread will
          * be suspended until the mutex is unlocked by the other thread,
          * and will then lock this mutex itself.
-         *
-         * This routine is \c const to simplify using it in data
-         * retrieval routines for subclasses of NMutex.
          *
          * \pre The mutex is not already locked by <i>this</i> thread.
          * Failure to adhere to this precondition will <b>almost certainly
@@ -166,7 +161,11 @@ typedef pthread_t NThreadID;
     /**< The type used for a thread identifier. */
 
 /**
- * Provides very basic thread handling.
+ * Deprecated class that provides very basic thread handling.
+ *
+ * This class is designed to work in conjunction with the old NMutex class,
+ * which is also deprecated.  New code should use the C++11 std::thread,
+ * std::mutex and related classes instead.
  *
  * Throughout this documentation, "thread object" refers to an instance
  * of an NThread subclass, and otherwise "thread" has its usual meaning
@@ -182,18 +181,10 @@ typedef pthread_t NThreadID;
  * running.  Instead, if you wish to run multiple instances of the same task
  * in parallel, you must start these from different thread objects.
  *
- * \warning At the time of writing (admittedly long ago now), Qt has only
- * limited support for multithreading.  When working with an existing packet
- * tree in a new thread, the \e only modification that you may make is to
- * insert new packets.
- * Modifications of any other type (such as changing, renaming, deleting
- * or reordering existing packets) could lead to a crash within Qt or Xlib
- * when running the GUI.
- * Of course, a new thread may create, modify and delete its own temporary
- * packet trees as it chooses (and it may in fact insert them into a
- * pre-existing packet tree once all modifications are completed).
- *
  * \ifacespython Not present.
+ *
+ * \deprecated NThread and NMutex are deprecated; new code should use
+ * the C++11 std::thread, std::mutex and std::lock_guard classes instead.
  */
 class REGINA_API NThread {
     private:

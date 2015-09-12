@@ -69,13 +69,17 @@ namespace {
 }
 
 void addNSnapPeaTriangulation() {
-    class_<NCusp, bases<regina::ShareableObject>,
-            std::auto_ptr<NCusp>, boost::noncopyable>("NCusp", no_init)
+    class_<NCusp, std::auto_ptr<NCusp>, boost::noncopyable>("NCusp", no_init)
         .def("vertex", &NCusp::vertex,
             return_value_policy<reference_existing_object>())
         .def("complete", &NCusp::complete)
         .def("m", &NCusp::m)
         .def("l", &NCusp::l)
+        .def("str", &NCusp::str)
+        .def("toString", &NCusp::toString)
+        .def("detail", &NCusp::detail)
+        .def("toStringLong", &NCusp::toStringLong)
+        .def("__str__", &NCusp::str)
     ;
 
     scope s = class_<NSnapPeaTriangulation, bases<regina::NTriangulation>,

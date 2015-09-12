@@ -65,8 +65,7 @@ void addNTriangle() {
     ;
 
     {
-        scope s = class_<NTriangle, bases<regina::ShareableObject>,
-                std::auto_ptr<NTriangle>,
+        scope s = class_<NTriangle, std::auto_ptr<NTriangle>,
                 boost::noncopyable>("NTriangle", no_init)
             .def("index", &NTriangle::index)
             .def("isBoundary", &NTriangle::isBoundary)
@@ -88,6 +87,11 @@ void addNTriangle() {
             .def("getEdge", &NTriangle::getEdge,
                 return_value_policy<reference_existing_object>())
             .def("getEdgeMapping", &NTriangle::getEdgeMapping)
+            .def("str", &NTriangle::str)
+            .def("toString", &NTriangle::toString)
+            .def("detail", &NTriangle::detail)
+            .def("toStringLong", &NTriangle::toStringLong)
+            .def("__str__", &NTriangle::str)
         ;
 
         enum_<regina::NTriangle::Type>("Type")

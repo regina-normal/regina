@@ -75,6 +75,9 @@ class NXMLFilterReader;
  *   human-readable name of the filter type.
  *
  * \ifacespython Not present.
+ *
+ * \tparam filterType one of the #SurfaceFilterType constants, indicating
+ * which type of filter we are querying.
  */
 template <SurfaceFilterType filterType>
 struct SurfaceFilterInfo;
@@ -116,12 +119,7 @@ struct SurfaceFilterInfo;
             return SurfaceFilterInfo<id>::name(); \
         }
 
-/**
- * Stores information about the normal surface filter packet type.
- * See the general PacketInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct PacketInfo<PACKET_SURFACEFILTER> {
     typedef NSurfaceFilter Class;
@@ -130,12 +128,6 @@ struct PacketInfo<PACKET_SURFACEFILTER> {
     }
 };
 
-/**
- * Stores information about the default accept-all surface filter.
- * See the general SurfaceFilterInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
 template <>
 struct SurfaceFilterInfo<NS_FILTER_DEFAULT> {
     typedef NSurfaceFilter Class;
@@ -143,6 +135,7 @@ struct SurfaceFilterInfo<NS_FILTER_DEFAULT> {
         return "Default filter";
     }
 };
+#endif
 
 /**
  * A packet that accepts or rejects normal surfaces.

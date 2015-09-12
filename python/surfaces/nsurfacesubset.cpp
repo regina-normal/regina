@@ -47,8 +47,7 @@ namespace {
 }
 
 void addNSurfaceSubset() {
-    scope s = class_<NSurfaceSubset, bases<regina::ShareableObject>,
-            std::auto_ptr<NSurfaceSubset>,
+    scope s = class_<NSurfaceSubset, std::auto_ptr<NSurfaceSubset>,
             boost::noncopyable>("NSurfaceSubset",
             init<const regina::NNormalSurfaceList&,
                 const regina::NSurfaceFilter&>())
@@ -65,6 +64,11 @@ void addNSurfaceSubset() {
         .def("getSurface", &NSurfaceSubset::getSurface,
             return_internal_reference<>())
         .def("writeAllSurfaces", writeAllSurfaces_stdio)
+        .def("str", &NSurfaceSubset::str)
+        .def("toString", &NSurfaceSubset::toString)
+        .def("detail", &NSurfaceSubset::detail)
+        .def("toStringLong", &NSurfaceSubset::toStringLong)
+        .def("__str__", &NSurfaceSubset::str)
     ;
 }
 

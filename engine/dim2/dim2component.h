@@ -43,8 +43,9 @@
 
 #include <vector>
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "utilities/nmarkedvector.h"
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -63,7 +64,10 @@ class Dim2Vertex;
  * Components are highly temporary; once a triangulation changes, all
  * its component objects will be deleted and new ones will be created.
  */
-class REGINA_API Dim2Component : public ShareableObject, public NMarkedElement {
+class REGINA_API Dim2Component :
+        public Output<Dim2Component>,
+        public boost::noncopyable,
+        public NMarkedElement {
     private:
         std::vector<Dim2Triangle*> triangles_;
             /**< List of triangles in the component. */
@@ -78,10 +82,6 @@ class REGINA_API Dim2Component : public ShareableObject, public NMarkedElement {
             /**< Is the component orientable? */
 
     public:
-        /**
-         * Default destructor.
-         */
-        virtual ~Dim2Component();
 
         /**
          * Returns the index of this component in the underlying
@@ -249,7 +249,23 @@ class REGINA_API Dim2Component : public ShareableObject, public NMarkedElement {
          */
         unsigned long getNumberOfBoundaryEdges() const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 
     private:
@@ -269,9 +285,6 @@ class REGINA_API Dim2Component : public ShareableObject, public NMarkedElement {
 // Inline functions for Dim2Component
 
 inline Dim2Component::Dim2Component() : orientable_(true) {
-}
-
-inline Dim2Component::~Dim2Component() {
 }
 
 inline unsigned long Dim2Component::index() const {

@@ -42,9 +42,10 @@
 #endif
 
 #include "regina-core.h"
-#include "shareableobject.h"
+#include "output.h"
 #include "maths/nperm4.h"
 #include "utilities/nmarkedvector.h"
+#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
@@ -101,7 +102,10 @@ class NTriangulation;
  * tetrahedra are always in a consistent state, and to make it more
  * difficult for users to inadvertently crash the program.
  */
-class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
+class REGINA_API NTetrahedron :
+        public Output<NTetrahedron>,
+        public boost::noncopyable,
+        public NMarkedElement {
     private:
         NTetrahedron* tetrahedra_[4];
             /**< Stores the tetrahedra glued to each face of this
@@ -184,10 +188,6 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
          * @param desc the description to give the new tetrahedron.
          */
         NTetrahedron(const std::string& desc);
-        /**
-         * Destroys this tetrahedron.
-         */
-        virtual ~NTetrahedron();
 
         /**
          * Returns the text description associated with this
@@ -688,7 +688,23 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
          */
         int orientation() const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         void writeTextLong(std::ostream& out) const;
 
     friend class NTriangulation;
@@ -703,9 +719,6 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
 namespace regina {
 
 // Inline functions for NTetrahedron
-
-inline NTetrahedron::~NTetrahedron() {
-}
 
 inline const std::string& NTetrahedron::getDescription() const {
     return description_;

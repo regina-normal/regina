@@ -54,12 +54,7 @@ class NSurfaceFilterCombination;
  * @{
  */
 
-/**
- * Stores information about the combination surface filter.
- * See the general SurfaceFilterInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct SurfaceFilterInfo<NS_FILTER_COMBINATION> {
     typedef NSurfaceFilterCombination Class;
@@ -67,6 +62,7 @@ struct SurfaceFilterInfo<NS_FILTER_COMBINATION> {
         return "Combination filter";
     }
 };
+#endif
 
 /**
  * A normal surface filter that simply combines other filters.

@@ -852,7 +852,7 @@ NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(const NMatrixInt &tobeRedMat,
 
 
 NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(const NHomMarkedAbelianGroup& g):
-        ShareableObject(), domain(g.domain), range(g.range), matrix(g.matrix) {
+        domain(g.domain), range(g.range), matrix(g.matrix) {
     if (g.reducedMatrix) { reducedMatrix = new NMatrixInt(*g.reducedMatrix); } 
      else reducedMatrix = 0;
     if (g.kernel) { kernel = new NMarkedAbelianGroup(*g.kernel); } 

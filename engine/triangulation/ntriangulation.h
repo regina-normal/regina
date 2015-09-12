@@ -86,12 +86,7 @@ class NXMLTriangulationReader;
  * @{
  */
 
-/**
- * Stores information about the 3-manifold triangulation packet.
- * See the general PacketInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct PacketInfo<PACKET_TRIANGULATION> {
     typedef NTriangulation Class;
@@ -99,6 +94,7 @@ struct PacketInfo<PACKET_TRIANGULATION> {
         return "3-Manifold Triangulation";
     }
 };
+#endif
 
 /**
  * Represents the various algorithms available for computing Turaev-Viro
@@ -1828,34 +1824,42 @@ class REGINA_API NTriangulation : public NPacket,
             const;
 
         /**
-         * Attempts to simplify the triangulation as intelligently as
-         * possible without further input.  This routine will attempt to
-         * reduce both the number of tetrahedra and the number of boundary
-         * triangles (with the number of tetrahedra as its priority).
+         * Attempts to simplify the triangulation using fast and greedy
+         * heuristics.  This routine will attempt to reduce both the number
+         * of tetrahedra and the number of boundary triangles (with the
+         * number of tetrahedra as its priority).
          *
          * Currently this routine uses simplifyToLocalMinimum() in
          * combination with random 4-4 moves, book opening moves and
          * book closing moves.
+         *
+         * Although intelligentSimplify() works very well most of the time,
+         * it can occasionally get stuck; in such cases you may wish to try
+         * the more powerful but (much) slower simplifyExhaustive() instead.
          *
          * \warning The specific behaviour of this routine may well
          * change between releases.
          *
          * \todo \opt Include random 2-3 moves to get out of wells.
          *
-         * @return \c true if and only if the triangulation was changed.
+         * @return \c true if and only if the triangulation was successfully
+         * simplified.  Otherwise this triangulation will not be changed.
          */
         bool intelligentSimplify();
         /**
          * Uses all known simplification moves to reduce the triangulation
          * monotonically to some local minimum number of tetrahedra.
-         * Note that this will probably not give a globally minimal
-         * triangulation; see intelligentSimplify() for further
-         * assistance in achieving this goal.
          *
-         * The moves used include 3-2, 2-0 (edge and vertex),
+         * End users will probably not want to call this routine.
+         * You should call intelligentSimplify() if you want a fast (and
+         * usually effective) means of simplifying a triangulation, or
+         * you should call simplifyExhaustive() if you are still stuck
+         * and you want to try a slower but more powerful method instead.
+         *
+         * The moves used by this routine include 3-2, 2-0 (edge and vertex),
          * 2-1 and boundary shelling moves.
          *
-         * Note that moves that do not reduce the number of tetrahedra
+         * Moves that do not reduce the number of tetrahedra
          * (such as 4-4 moves or book opening moves) are not used in this
          * routine.  Such moves do however feature in intelligentSimplify().
          *
@@ -1872,6 +1876,142 @@ class REGINA_API NTriangulation : public NPacket,
          * that it is capable of performing such a change.
          */
         bool simplifyToLocalMinimum(bool perform = true);
+
+        /**
+         * Attempts to simplify this triangulation using a slow but
+         * exhaustive search through the Pachner graph.  This routine is
+         * more powerful but much slower than intelligentSimplify().
+         *
+         * Specifically, this routine will iterate through all
+         * triangulations that can be reached from this triangulation
+         * via 2-3 and 3-2 Pachner moves, without ever exceeding
+         * \a height additional tetrahedra beyond the original number.
+         *
+         * If at any stage it finds a triangulation with \e fewer
+         * tetrahedra than the original, then this routine will call
+         * intelligentSimplify() to shrink the triangulation further if
+         * possible and will then return \c true.  If it cannot find a
+         * triangulation with fewer tetrahedra then it will leave this
+         * triangulation unchanged and return \c false.
+         *
+         * This routine can be very slow and very memory-intensive: the
+         * number of triangulations it visits may be superexponential in
+         * the number of tetrahedra, and it records every triangulation
+         * that it visits (so as to avoid revisiting the same triangulation
+         * again).  It is highly recommended that you begin with \a height = 1,
+         * and if this fails then try increasing \a height one at a time until
+         * either you find a simplification or the routine becomes
+         * too expensive to run.
+         *
+         * If you want a \e fast simplification routine, you should call
+         * intelligentSimplify() instead.  The benefit of simplifyExhaustive()
+         * is that, for very stubborn triangulations where intelligentSimplify()
+         * finds itself stuck at a local minimum, simplifyExhaustive() is able
+         * to "climb out" of such wells.
+         *
+         * To assist with performance, this routine can run in
+         * parallel (multithreaded) mode; simply pass the number of
+         * parallel threads in the argument \a nThreads.  Even in
+         * multithreaded mode, this routine will not return until
+         * processing has finished (i.e., either the triangulation was
+         * simplified or the search was exhausted).
+         *
+         * \pre This triangulation is connected.
+         *
+         * @param height the maximum number of \e additional tetrahedra to
+         * allow, beyond the number of tetrahedra originally present in the
+         * triangulation.
+         * @param nThreads the number of threads to use.  If this is
+         * 1 or smaller then the routine will run single-threaded.
+         * @return \c true if and only if the triangulation was successfully
+         * simplified to fewer tetrahedra.  Otherwise this triangulation
+         * will not be changed.
+         */
+        bool simplifyExhaustive(int height = 1, unsigned nThreads = 1);
+
+        /**
+         * Explores all triangulations that can be reached from this via
+         * Pachner moves, without exceeding a given number of additional
+         * tetrahedra.
+         *
+         * Specifically, this routine will iterate through all
+         * triangulations that can be reached from this triangulation
+         * via 2-3 and 3-2 Pachner moves, without ever exceeding
+         * \a height additional tetrahedra beyond the original number.
+         *
+         * For every such triangulation (including this starting
+         * triangulation), this routine will call \a action (which must
+         * be a function or some other callable object).
+         *
+         * - \a action must take at least one argument.  The first argument
+         *   will be of type (const NTriangulation&), and will reference
+         *   the triangulation that has been found.  If there are any
+         *   additional arguments supplied in the list \a args, then
+         *   these will be passed as subsequent arguments to \a action.
+         *
+         * - \a action must return a boolean.  If \a action ever returns
+         *   \c true, then this indicates that processing should stop
+         *   immediately (i.e., no more triangulations will be processed).
+         *
+         * - \a action may, if it chooses, make changes to this triangulation
+         *   (i.e., the original triangulation upon which retriangulate()
+         *   was called).  This will not affect the search: all triangulations
+         *   that this routine visits will be obtained via Pachner moves
+         *   from the original form of this triangulation, before any
+         *   subsequent changes (if any) were made.
+         *
+         * - \a action will only be called once for each triangulation
+         *   (including this starting triangulation).  In other words, no
+         *   triangulation will be revisited a second time in a single call
+         *   to retriangulate().
+         *
+         * This routine can be very slow and very memory-intensive, since the
+         * number of triangulations it visits may be superexponential in
+         * the number of tetrahedra, and it records every triangulation
+         * that it visits (so as to avoid revisiting the same triangulation
+         * again).  It is highly recommended that you begin with \a height = 1,
+         * and if necessary try increasing \a height one at a time until
+         * this routine becomes too expensive to run.
+         *
+         * To assist with performance, this routine can run in
+         * parallel (multithreaded) mode; simply pass the number of
+         * parallel threads in the argument \a nThreads.  Even in
+         * multithreaded mode, this routine will not return until
+         * processing has finished (i.e., either \a action returned \c true,
+         * or the search was exhausted).  All calls to \a action will be
+         * protected by a mutex (i.e., different threads will never be
+         * calling \a action at the same time).
+         *
+         * If \a height is negative, then this routine will do nothing
+         * and immediately return \c false.
+         *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap them in std::ref or
+         * std::cref.
+         *
+         * \pre This triangulation is connected.
+         *
+         * \apinotfinal
+         *
+         * \ifacespython Not present.
+         *
+         * @param height the maximum number of \e additional tetrahedra to
+         * allow, beyond the number of tetrahedra originally present in the
+         * triangulation.
+         * @param nThreads the number of threads to use.  If this is
+         * 1 or smaller then the routine will run single-threaded.
+         * @param action a function (or other callable object) to call
+         * upon each triangulation that is found.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial triangulation argument.
+         * @return \c true if some call to \a action returned \c true
+         * (thereby terminating the search early), or \c false if the
+         * search ran to completion.
+         */
+        template <typename Action, typename... Args>
+        bool retriangulate(int height, unsigned nThreads,
+            Action&& action, Args&&... args) const;
 
         /**
          * Checks the eligibility of and/or performs a 3-2 move
@@ -2939,12 +3079,6 @@ class REGINA_API NTriangulation : public NPacket,
          * \todo \optlong Have this routine only use as many tetrahedra
          * as are necessary, leaving finite vertices alone.
          *
-         * @param forceDivision specifies what to do if the triangulation
-         * has no ideal or non-standard vertices.
-         * If \c true, the triangulation will be
-         * subdivided anyway, as if all vertices were ideal.  If
-         * \c false (the default), the triangulation will be left alone.
-         *
          * @return \c true if and only if the triangulation was changed.
          * @author David Letscher
          */
@@ -3684,10 +3818,8 @@ class REGINA_API NTriangulation : public NPacket,
         virtual void writeXMLPacketData(std::ostream& out) const;
 
         /**
-         * Turns this triangulation into a clone of the given
-         * triangulation.
-         * The tree structure and label of this triangulation are not
-         * touched.
+         * Turns this triangulation into a clone of the given triangulation.
+         * The tree structure and label of this triangulation are not touched.
          *
          * @param from the triangulation from which this triangulation
          * will be cloned.
@@ -3798,6 +3930,20 @@ class REGINA_API NTriangulation : public NPacket,
          * its boundary components.
          */
         void calculateBoundaryProperties() const;
+
+        /**
+         * A non-templated version of retriangulate().
+         *
+         * This is identical to retriangulate(), except that the action
+         * function is given in the form of a std::function.
+         * This routine contains the bulk of the implementation of
+         * retriangulate().
+         *
+         * Because this routine is not templated, its implementation
+         * can be kept out of the main headers.
+         */
+        bool retriangulateInternal(int height, unsigned nThreads,
+            const std::function<bool(const NTriangulation&)>& action) const;
 
         /**
          * Determines if an isomorphic copy of this triangulation is
@@ -4218,6 +4364,7 @@ inline long NTriangulation::faceIndex(const NTriangle* tri) const {
     return tri->markedIndex();
 }
 
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 inline long NTriangulation::faceIndex<0>(const NVertex* face) const {
     return face->markedIndex();
@@ -4237,6 +4384,7 @@ template <>
 inline long NTriangulation::faceIndex<3>(const NTetrahedron* face) const {
     return face->markedIndex();
 }
+#endif
 
 inline bool NTriangulation::hasTwoSphereBoundaryComponents() const {
     if (! twoSphereBoundaryComponents_.known())
@@ -4328,6 +4476,13 @@ inline unsigned long NTriangulation::getHomologyH2Z2() const {
 inline const NTriangulation::TuraevViroSet&
         NTriangulation::allCalculatedTuraevViro() const {
     return turaevViroCache_;
+}
+
+template <typename Action, typename... Args>
+inline bool NTriangulation::retriangulate(int height, unsigned nThreads,
+        Action&& action, Args&&... args) const {
+    return retriangulateInternal(height, nThreads,
+        std::bind(action, std::placeholders::_1, args...));
 }
 
 inline const NTreeDecomposition& NTriangulation::niceTreeDecomposition() const {

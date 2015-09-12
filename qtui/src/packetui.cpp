@@ -305,6 +305,9 @@ bool PacketPane::close() {
     // We'll come back to this class when they call queryClose().
     if (frame)
         return frame->close();
+
+    // Nothing was closed.
+    return false;
 }
 
 void PacketPane::floatPane() {

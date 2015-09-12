@@ -81,35 +81,39 @@ namespace regina {
  * needs to be extended to incorporate it.
  *
  * In detail: the function object \a func must define a templated
- * unary bracket operator, so that <tt>func(PacketInfo<t>)</tt> is
+ * bracket operator, so that <tt>func(PacketInfo<t>, ...)</tt> is
  * defined for any valid PacketType enum value \a t.  Then,
- * when the user calls <tt>forPacket(packetType, func, defaultReturn)</tt>,
- * this routine will call <tt>func(PacketInfo<packetType>)</tt> and pass
+ * when the user calls <tt>forPacket(packetType, func, defaultReturn, ...)</tt>,
+ * this routine will call <tt>func(PacketInfo<packetType>, ...)</tt> and pass
  * back the corresponding return value.  If \a packetType does not denote a
  * valid packet type, then forPacket() will pass back \a defaultReturn instead.
  *
- * There is also a two-argument variant of forPacket() that works with
- * void functions.
+ * There is also a variant of forPacket() that works with void functions,
+ * and so does not take the extra \a defaultReturn argument.
  *
  * \pre The function object must have a typedef \a ReturnType indicating
- * the return type of the corresponding templated unary bracket operator.
+ * the return type of the corresponding templated bracket operator.
  * Inheriting from Returns<...> is a convenient way to ensure this.
  *
  * \ifacespython Not present.
  *
  * @param packetType the given packet type.
- * @param func the function object whose unary bracket operator we will
+ * @param func the function object whose bracket operator we will
  * call with a PacketInfo<packetType> object.
  * @param defaultReturn the value to return if the given packet type
  * is not valid.
- * @return the return value from the corresponding unary bracket
+ * @param args any additional arguments to pass to the bracket operator
+ * for \a func.  These will be copied/moved, so if you wish to pass
+ * references then you may need to wrap them in std::ref or std::cref.
+ * @return the return value from the corresponding bracket
  * operator of \a func, or \a defaultReturn if the given packet type
  * is not valid.
  */
-template <typename FunctionObject>
-typename FunctionObject::ReturnType forPacket(
-        PacketType packetType, FunctionObject func,
-        typename FunctionObject::ReturnType defaultReturn);
+template <typename FunctionObject, typename... Args>
+typename ReturnsTraits<FunctionObject>::ReturnType
+forPacket(PacketType packetType, FunctionObject&& func,
+        typename ReturnsTraits<FunctionObject>::ReturnType defaultReturn,
+        Args&&... args);
 
 /**
  * Allows the user to call a template function whose template parameter
@@ -123,24 +127,36 @@ typename FunctionObject::ReturnType forPacket(
  * needs to be extended to incorporate it.
  *
  * In detail: the function object \a func must define a templated
- * unary bracket operator, so that <tt>func(PacketInfo<t>)</tt> is
+ * bracket operator, so that <tt>func(PacketInfo<t>, ...)</tt> is
  * defined for any valid PacketType enum value \a t.  Then,
- * when the user calls <tt>forPacket(packetType, func)</tt>,
- * this routine will call <tt>func(PacketInfo<packetType>)</tt> in turn.
+ * when the user calls <tt>forPacket(packetType, func, ...)</tt>,
+ * this routine will call <tt>func(PacketInfo<packetType>, ...)</tt> in turn.
  * If \a packetType does not denote a valid packet type, then forPacket()
  * will do nothing.
  *
- * There is also a three-argument variant of forPacket() that works with
- * functions with return values.
+ * There is also a variant of forPacket() that works with functions with
+ * return values, and which takes an extra \a defaultReturn argument.
+ *
+ * \pre There must not exist a type \a FunctionObject::ReturnType
+ * (or, if \a FunctionObject is a reference to a class/struct \a F,
+ * there must likewise not exist a type \a F::ReturnType).
+ * The existence of a type \a FunctionObject::ReturnType will cause the
+ * non-void variant of forCoords() to be used instead.
  *
  * \ifacespython Not present.
  *
  * @param packetType the given packet type.
- * @param func the function object whose unary bracket operator we will
+ * @param func the function object whose bracket operator we will
  * call with a PacketInfo<packetType> object.
+ * @param args any additional arguments to pass to the bracket operator
+ * for \a func.  These will be copied/moved, so if you wish to pass
+ * references then you may need to wrap them in std::ref or std::cref.
+ * @return nothing; the return type <tt>ReturnsTraits<FunctionObject>::Void</tt>
+ * simply evaluates to \c void.
  */
-template <typename VoidFunctionObject>
-void forPacket(PacketType packetType, VoidFunctionObject func);
+template <typename FunctionObject, typename... Args>
+typename ReturnsTraits<FunctionObject>::Void
+forPacket(PacketType packetType, FunctionObject&& func, Args&&... args);
 
 /*@}*/
 

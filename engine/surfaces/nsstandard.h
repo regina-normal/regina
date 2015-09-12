@@ -55,12 +55,7 @@ class NNormalSurfaceVectorStandard;
  * @{
  */
 
-/**
- * Stores information about standard normal coordinates.
- * See the general NormalInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct NormalInfo<NS_STANDARD> {
     typedef NNormalSurfaceVectorStandard Class;
@@ -75,6 +70,7 @@ struct NormalInfo<NS_STANDARD> {
         oriented = 0
     };
 };
+#endif
 
 /**
  * A normal surface vector using standard triangle-quad coordinates.

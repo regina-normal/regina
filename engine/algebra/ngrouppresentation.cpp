@@ -208,7 +208,7 @@ bool NGroupExpression::substitute(unsigned long generator,
 }
 
 NGroupPresentation::NGroupPresentation(const NGroupPresentation& cloneMe) :
-        ShareableObject(), nGenerators(cloneMe.nGenerators) {
+        nGenerators(cloneMe.nGenerators) {
     transform(cloneMe.relations.begin(), cloneMe.relations.end(),
         back_inserter(relations), FuncNewCopyPtr<NGroupExpression>());
 }

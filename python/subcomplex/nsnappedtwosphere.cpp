@@ -51,9 +51,8 @@ namespace {
 }
 
 void addNSnappedTwoSphere() {
-    class_<NSnappedTwoSphere, bases<regina::ShareableObject>,
-            std::auto_ptr<NSnappedTwoSphere>, boost::noncopyable>
-            ("NSnappedTwoSphere", no_init)
+    class_<NSnappedTwoSphere, std::auto_ptr<NSnappedTwoSphere>,
+            boost::noncopyable> ("NSnappedTwoSphere", no_init)
         .def("clone", &NSnappedTwoSphere::clone,
             return_value_policy<manage_new_object>())
         .def("getSnappedBall", &NSnappedTwoSphere::getSnappedBall,
@@ -62,6 +61,11 @@ void addNSnappedTwoSphere() {
             return_value_policy<manage_new_object>())
         .def("formsSnappedTwoSphere", formsStructure_balls,
             return_value_policy<manage_new_object>())
+        .def("str", &NSnappedTwoSphere::str)
+        .def("toString", &NSnappedTwoSphere::toString)
+        .def("detail", &NSnappedTwoSphere::detail)
+        .def("toStringLong", &NSnappedTwoSphere::toStringLong)
+        .def("__str__", &NSnappedTwoSphere::str)
         .staticmethod("formsSnappedTwoSphere")
     ;
 }

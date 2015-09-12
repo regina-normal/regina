@@ -50,7 +50,6 @@
 #include "packet/npacket.h"
 #include "utilities/memutils.h"
 #include "utilities/nproperty.h"
-#include "utilities/nthread.h"
 
 namespace regina {
 
@@ -64,12 +63,7 @@ class NXMLAngleStructureListReader;
  * @{
  */
 
-/**
- * Stores information about the angle structure list packet.
- * See the general PacketInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct PacketInfo<PACKET_ANGLESTRUCTURELIST> {
     typedef NAngleStructureList Class;
@@ -77,6 +71,7 @@ struct PacketInfo<PACKET_ANGLESTRUCTURELIST> {
         return "Angle Structure List";
     }
 };
+#endif
 
 /**
  * A packet representing a collection of angle structures on a triangulation.
@@ -408,37 +403,21 @@ class REGINA_API NAngleStructureList : public NPacket {
 
     private:
         /**
-         * A thread class that actually performs the angle structure
+         * The main code that actually performs the angle structure
          * enumeration.
+         *
+         * \pre This list is empty (i.e., contains no angle structures),
+         * but all of its enumeration parameters have been set.
+         * \pre This list has not yet been inserted into the packet tree.
+         *
+         * @param triang the triangulation upon which this angle
+         * structure list will be based.
+         * @param tracker the progress tracker to use for progress
+         * reporting and cancellation polling, or 0 if these
+         * capabilities are not required.
          */
-        class Enumerator : public NThread {
-            private:
-                NAngleStructureList* list;
-                    /**< The angle structure list to be filled. */
-                NTriangulation* triang;
-                    /**< The triangulation upon which this angle
-                         structure list will be based. */
-                NProgressTracker* tracker;
-                    /**< The progress tracker through which progress is
-                         reported, or 0 if no progress tracker is in use. */
-
-            public:
-                /**
-                 * Creates a new enumerator thread with the given
-                 * parameters.
-                 *
-                 * @param newList the angle structure list to be filled.
-                 * @param useTriang the triangulation upon which this
-                 * angle structure list will be based.
-                 * @param useTracker the progress tracker to use for
-                 * progress reporting, or 0 if progress reporting is not
-                 * required.
-                 */
-                Enumerator(NAngleStructureList* newList,
-                    NTriangulation* useTriang, NProgressTracker* useTracker);
-
-                void* run(void*);
-        };
+        void enumerateInternal(NTriangulation* triang,
+            NProgressTracker* tracker = 0);
 
     friend class regina::NXMLAngleStructureListReader;
 };
@@ -545,11 +524,6 @@ inline NAngleStructureList::StructureInserter&
 inline NAngleStructureList::StructureInserter&
         NAngleStructureList::StructureInserter::operator ++(int) {
     return *this;
-}
-
-inline NAngleStructureList::Enumerator::Enumerator(NAngleStructureList* newList,
-        NTriangulation* useTriang, NProgressTracker* useTracker) :
-        list(newList), triang(useTriang), tracker(useTracker) {
 }
 
 } // namespace regina

@@ -272,7 +272,7 @@ class GlobalArray2D {
          * be wrapped.
          * @param newRows the number of rows in this C++ array, i.e.,
          * the first array dimension.
-         * @param newCols the number of columns in this C++ array, i.e.,
+         * @tparam newCols the number of columns in this C++ array, i.e.,
          * the second array dimension.  This must be a compile-time constant.
          */
         template<size_t newCols>
@@ -521,9 +521,9 @@ class GlobalArray3D {
          * @param newData the constant 3-dimensional C++ array that is to
          * be wrapped.
          * @param newDim1 the first array dimension of this C++ array.
-         * @param newDim2 the second array dimension of this C++ array.
+         * @tparam newDim2 the second array dimension of this C++ array.
          * This must be a compile-time constant.
-         * @param newDim3 the third array dimension of this C++ array.
+         * @tparam newDim3 the third array dimension of this C++ array.
          * This must be a compile-time constant.
          */
         template<size_t newDim2, size_t newDim3>

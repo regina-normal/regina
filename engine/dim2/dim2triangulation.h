@@ -72,12 +72,7 @@ class NXMLPacketReader;
  * @{
  */
 
-/**
- * Stores information about the 2-manifold triangulation packet.
- * See the general PacketInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct PacketInfo<PACKET_DIM2TRIANGULATION> {
     typedef Dim2Triangulation Class;
@@ -85,6 +80,7 @@ struct PacketInfo<PACKET_DIM2TRIANGULATION> {
         return "2-Manifold Triangulation";
     }
 };
+#endif
 
 /**
  * Stores the triangulation of a 2-manifold along with its

@@ -54,12 +54,7 @@ class NText;
  * @{
  */
 
-/**
- * Stores information about the text packet.
- * See the general PacketInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct PacketInfo<PACKET_TEXT> {
     typedef NText Class;
@@ -67,6 +62,7 @@ struct PacketInfo<PACKET_TEXT> {
         return "Text";
     }
 };
+#endif
 
 /**
  * A packet representing a text string.

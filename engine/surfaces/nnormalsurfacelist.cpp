@@ -67,56 +67,47 @@ void NNormalSurfaceList::writeAllSurfaces(std::ostream& out) const {
 
 namespace {
     struct ZeroVector : public Returns<NNormalSurfaceVector*> {
-        const NTriangulation* tri_;
-
-        ZeroVector(const NTriangulation* tri) : tri_(tri) {}
-
         template <typename Coords>
-        inline NNormalSurfaceVector* operator() (Coords) {
-            return Coords::Class::makeZeroVector(tri_);
+        inline NNormalSurfaceVector* operator() (Coords,
+                const NTriangulation* tri) {
+            return Coords::Class::makeZeroVector(tri);
         }
     };
 }
 
 NNormalSurfaceVector* makeZeroVector(const NTriangulation* triangulation,
         NormalCoords coords) {
-    return forCoords(coords, ZeroVector(triangulation), 0);
+    return forCoords(coords, ZeroVector(), 0, triangulation);
 }
 
 namespace {
     struct MatchingEquations : public Returns<NMatrixInt*> {
-        const NTriangulation* tri_;
-
-        MatchingEquations(const NTriangulation* tri) : tri_(tri) {}
-
         template <typename Coords>
-        inline NMatrixInt* operator() (Coords) {
-            return Coords::Class::makeMatchingEquations(tri_);
+        inline NMatrixInt* operator() (Coords,
+                const NTriangulation* tri) {
+            return Coords::Class::makeMatchingEquations(tri);
         }
     };
 }
 
 NMatrixInt* makeMatchingEquations(const NTriangulation* triangulation,
         NormalCoords coords) {
-    return forCoords(coords, MatchingEquations(triangulation), 0);
+    return forCoords(coords, MatchingEquations(), 0, triangulation);
 }
 
 namespace {
     struct EmbeddedConstraints : public Returns<NEnumConstraintList*> {
-        const NTriangulation* tri_;
-
-        EmbeddedConstraints(const NTriangulation* tri) : tri_(tri) {}
-
         template <typename Coords>
-        inline NEnumConstraintList* operator() (Coords) {
-            return Coords::Class::makeEmbeddedConstraints(tri_);
+        inline NEnumConstraintList* operator() (Coords,
+                const NTriangulation* tri) {
+            return Coords::Class::makeEmbeddedConstraints(tri);
         }
     };
 }
 
 NEnumConstraintList* makeEmbeddedConstraints(
         const NTriangulation* triangulation, NormalCoords coords) {
-    return forCoords(coords, EmbeddedConstraints(triangulation), 0);
+    return forCoords(coords, EmbeddedConstraints(), 0, triangulation);
 }
 
 NTriangulation* NNormalSurfaceList::getTriangulation() const {

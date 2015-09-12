@@ -263,9 +263,8 @@ class NTritmask1 {
             return (mask1 == other.mask1 && mask2 == other.mask2);
         }
 
-    template <typename X>
     friend std::ostream& operator << (std::ostream& out,
-        const NTritmask1<X>& mask);
+        const NTritmask1<T>& mask);
 };
 
 /**
@@ -530,9 +529,8 @@ class NTritmask2 {
                 high1 == other.high1 && high2 == other.high2);
         }
 
-    template <typename X, typename Y>
     friend std::ostream& operator << (std::ostream& out,
-        const NTritmask2<X, Y>& mask);
+        const NTritmask2<T, U>& mask);
 };
 
 /**

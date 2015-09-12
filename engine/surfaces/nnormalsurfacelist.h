@@ -137,12 +137,7 @@ enum SurfaceExportFields {
              value of this constant may change as a result. */
 };
 
-/**
- * Stores information about the normal surface list packet.
- * See the general PacketInfo template notes for further details.
- *
- * \ifacespython Not present.
- */
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct PacketInfo<PACKET_NORMALSURFACELIST> {
     typedef NNormalSurfaceList Class;
@@ -150,6 +145,7 @@ struct PacketInfo<PACKET_NORMALSURFACELIST> {
         return "Normal Surface List";
     }
 };
+#endif
 
 /**
  * A packet representing a collection of normal surfaces in a 3-manifold.
@@ -1494,7 +1490,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * becomes a compile-time constant.  The run() routine simply
          * farms out the real work to some instantiation of operator().
          */
-        class Enumerator : public NThread {
+        class Enumerator : public NThread, public boost::noncopyable {
             private:
                 NNormalSurfaceList* list_;
                     /**< The surface list to be filled. */

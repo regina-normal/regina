@@ -359,9 +359,9 @@ Triangulation with 0 tetrahedra.
 Traceback (most recent call last):
   File "&lt;console&gt;", line 1, in &lt;module&gt;
 Boost.Python.ArgumentError: Python argument types in
-    ShareableObject.__str__(NTriangulation)
+    NPacket.__str__(NTriangulation)
 did not match C++ signature:
-    __str__(regina::ShareableObject {lvalue})
+    __str__(regina::NPacket {lvalue})
 ...
 </programlisting>
    <para>

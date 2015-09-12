@@ -40,8 +40,7 @@ using namespace boost::python;
 using regina::NAngleStructure;
 
 void addNAngleStructure() {
-    class_<NAngleStructure, bases<regina::ShareableObject>,
-            std::auto_ptr<NAngleStructure>, boost::noncopyable>
+    class_<NAngleStructure, std::auto_ptr<NAngleStructure>, boost::noncopyable>
             ("NAngleStructure", no_init)
         .def("clone", &NAngleStructure::clone,
             return_value_policy<manage_new_object>())
@@ -51,6 +50,11 @@ void addNAngleStructure() {
         .def("isStrict", &NAngleStructure::isStrict)
         .def("isTaut", &NAngleStructure::isTaut)
         .def("isVeering", &NAngleStructure::isVeering)
+        .def("str", &NAngleStructure::str)
+        .def("toString", &NAngleStructure::toString)
+        .def("detail", &NAngleStructure::detail)
+        .def("toStringLong", &NAngleStructure::toStringLong)
+        .def("__str__", &NAngleStructure::str)
     ;
 }
 

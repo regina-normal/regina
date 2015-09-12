@@ -86,8 +86,8 @@ void addNVertex() {
         .def(self != self)
     ;
 
-    scope s = class_<NVertex, bases<regina::ShareableObject>,
-            std::auto_ptr<NVertex>, boost::noncopyable>("NVertex", no_init)
+    scope s = class_<NVertex, std::auto_ptr<NVertex>, boost::noncopyable>
+            ("NVertex", no_init)
         .def("index", &NVertex::index)
         .def("getEmbeddings", vertex_getEmbeddings_list)
         .def("getNumberOfEmbeddings", &NVertex::getNumberOfEmbeddings)
@@ -113,6 +113,11 @@ void addNVertex() {
         .def("getLinkEulerChar", &NVertex::getLinkEulerChar)
         .def("getLinkEulerCharacteristic",
             &NVertex::getLinkEulerCharacteristic)
+        .def("str", &NVertex::str)
+        .def("toString", &NVertex::toString)
+        .def("detail", &NVertex::detail)
+        .def("toStringLong", &NVertex::toStringLong)
+        .def("__str__", &NVertex::str)
     ;
 
     enum_<regina::NVertex::LinkType>("LinkType")
