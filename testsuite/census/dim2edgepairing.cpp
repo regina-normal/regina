@@ -77,7 +77,7 @@ class Dim2EdgePairingTest : public CppUnit::TestFixture {
             for (nTri = 0; nTri <= 12; nTri++) {
                 count = 0;
                 Dim2EdgePairing::findAllPairings(nTri, NBoolSet::sFalse,
-                    0, countEdgePairings, &count, false);
+                    0, countEdgePairings, &count);
 
                 std::ostringstream msg;
                 msg << "Edge pairing count for " << nTri
