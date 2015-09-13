@@ -202,14 +202,13 @@ NNormalHypersurfaceList* NNormalHypersurfaceList::enumerate(
     NNormalHypersurfaceList* ans = new NNormalHypersurfaceList(
         coords, embeddedOnly);
 
-    if (tracker) {
-        std::thread t([=]{
-            forCoords(coords, VertexEnumerator(), ans, owner, tracker);
-        });
-        t.detach();
-    } else {
+    if (tracker)
+        std::thread(&forCoords<VertexEnumerator, NNormalHypersurfaceList*,
+                Dim4Triangulation*, NProgressTracker*>,
+            coords, VertexEnumerator(), ans, owner, tracker)
+            .detach();
+    else
         forCoords(coords, VertexEnumerator(), ans, owner, tracker);
-    }
     return ans;
 }
 
@@ -219,14 +218,15 @@ NNormalHypersurfaceList* NNormalHypersurfaceList::enumerateFundPrimal(
     NNormalHypersurfaceList* ans = new NNormalHypersurfaceList(
         coords, embeddedOnly);
 
-    if (tracker) {
-        std::thread t([=](){
-            forCoords(coords, FundPrimalEnumerator(), ans, owner, vtxSurfaces, tracker);
-        });
-        t.detach();
-    } else {
-        forCoords(coords, FundPrimalEnumerator(), ans, owner, vtxSurfaces, tracker);
-    }
+    if (tracker)
+        std::thread(forCoords<FundPrimalEnumerator, NNormalHypersurfaceList*,
+                Dim4Triangulation*, NNormalHypersurfaceList*,
+                NProgressTracker*>,
+            coords, FundPrimalEnumerator(), ans, owner, vtxSurfaces, tracker)
+            .detach();
+    else
+        forCoords(coords, FundPrimalEnumerator(), ans, owner, vtxSurfaces,
+            tracker);
     return ans;
 }
 
@@ -236,14 +236,13 @@ NNormalHypersurfaceList* NNormalHypersurfaceList::enumerateFundDual(
     NNormalHypersurfaceList* ans = new NNormalHypersurfaceList(
         coords, embeddedOnly);
 
-    if (tracker) {
-        std::thread t([=](){
-            forCoords(coords, FundDualEnumerator(), ans, owner, tracker);
-        });
-        t.detach();
-    } else {
+    if (tracker)
+        std::thread(forCoords<FundDualEnumerator, NNormalHypersurfaceList*,
+                Dim4Triangulation*, NProgressTracker*>,
+            coords, FundDualEnumerator(), ans, owner, tracker)
+            .detach();
+    else
         forCoords(coords, FundDualEnumerator(), ans, owner, tracker);
-    }
     return ans;
 }
 
