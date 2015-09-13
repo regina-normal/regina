@@ -78,8 +78,6 @@
 		050F5E091B9BAB9C00C1F681 /* ntext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D441B9BAB9C00C1F681 /* ntext.cpp */; };
 		050F5E0A1B9BAB9C00C1F681 /* packettype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D451B9BAB9C00C1F681 /* packettype.cpp */; };
 		050F5E0B1B9BAB9C00C1F681 /* pypacket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D461B9BAB9C00C1F681 /* pypacket.cpp */; };
-		050F5E0C1B9BAB9C00C1F681 /* nprogress.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D491B9BAB9C00C1F681 /* nprogress.cpp */; };
-		050F5E0D1B9BAB9C00C1F681 /* nprogressmanager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D4A1B9BAB9C00C1F681 /* nprogressmanager.cpp */; };
 		050F5E0E1B9BAB9C00C1F681 /* nprogresstracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D4B1B9BAB9C00C1F681 /* nprogresstracker.cpp */; };
 		050F5E0F1B9BAB9C00C1F681 /* pyprogress.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D4C1B9BAB9C00C1F681 /* pyprogress.cpp */; };
 		050F5E101B9BAB9C00C1F681 /* nexamplesnappeatriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D4F1B9BAB9C00C1F681 /* nexamplesnappeatriangulation.cpp */; };
@@ -390,11 +388,7 @@
 		052F9F61180600FB00FAE4DF /* nxmlpacketreaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D0B180600FA00FAE4DF /* nxmlpacketreaders.cpp */; };
 		052F9F62180600FB00FAE4DF /* nxmlpacketreaders.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D0C180600FA00FAE4DF /* nxmlpacketreaders.h */; };
 		052F9F63180600FB00FAE4DF /* packetregistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D0D180600FA00FAE4DF /* packetregistry.h */; };
-		052F9F64180600FB00FAE4DF /* nprogress.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D10180600FA00FAE4DF /* nprogress.h */; };
-		052F9F65180600FB00FAE4DF /* nprogressmanager.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D11180600FA00FAE4DF /* nprogressmanager.h */; };
 		052F9F66180600FB00FAE4DF /* nprogresstracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D12180600FA00FAE4DF /* nprogresstracker.h */; };
-		052F9F67180600FB00FAE4DF /* nprogresstypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D13180600FA00FAE4DF /* nprogresstypes.cpp */; };
-		052F9F68180600FB00FAE4DF /* nprogresstypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D14180600FA00FAE4DF /* nprogresstypes.h */; };
 		052F9F69180600FB00FAE4DF /* regina-core.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D17180600FA00FAE4DF /* regina-core.h */; };
 		052F9F6C180600FB00FAE4DF /* canonize.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D1F180600FA00FAE4DF /* canonize.c */; };
 		052F9F6D180600FB00FAE4DF /* canonize.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D20180600FA00FAE4DF /* canonize.h */; };
@@ -766,7 +760,6 @@
 		052FA1AB1806129B00FAE4DF /* ntext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D07180600FA00FAE4DF /* ntext.cpp */; };
 		052FA1AC1806129B00FAE4DF /* nxmlpacketreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D09180600FA00FAE4DF /* nxmlpacketreader.cpp */; };
 		052FA1AD1806129B00FAE4DF /* nxmlpacketreaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D0B180600FA00FAE4DF /* nxmlpacketreaders.cpp */; };
-		052FA1AE1806129B00FAE4DF /* nprogresstypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D13180600FA00FAE4DF /* nprogresstypes.cpp */; };
 		052FA1B01806129B00FAE4DF /* nsnappeatriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D92180600FB00FAE4DF /* nsnappeatriangulation.cpp */; };
 		052FA1B11806129B00FAE4DF /* uimessages.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D99180600FB00FAE4DF /* uimessages.cpp */; };
 		052FA1B21806129B00FAE4DF /* nsigcensus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D9C180600FB00FAE4DF /* nsigcensus.cpp */; };
@@ -1640,8 +1633,6 @@
 		050F5D451B9BAB9C00C1F681 /* packettype.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = packettype.cpp; sourceTree = "<group>"; };
 		050F5D461B9BAB9C00C1F681 /* pypacket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pypacket.cpp; sourceTree = "<group>"; };
 		050F5D481B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		050F5D491B9BAB9C00C1F681 /* nprogress.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nprogress.cpp; sourceTree = "<group>"; };
-		050F5D4A1B9BAB9C00C1F681 /* nprogressmanager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nprogressmanager.cpp; sourceTree = "<group>"; };
 		050F5D4B1B9BAB9C00C1F681 /* nprogresstracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nprogresstracker.cpp; sourceTree = "<group>"; };
 		050F5D4C1B9BAB9C00C1F681 /* pyprogress.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pyprogress.cpp; sourceTree = "<group>"; };
 		050F5D4E1B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
@@ -2027,11 +2018,7 @@
 		052F9D0C180600FA00FAE4DF /* nxmlpacketreaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nxmlpacketreaders.h; sourceTree = "<group>"; };
 		052F9D0D180600FA00FAE4DF /* packetregistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packetregistry.h; sourceTree = "<group>"; };
 		052F9D0F180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		052F9D10180600FA00FAE4DF /* nprogress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nprogress.h; sourceTree = "<group>"; };
-		052F9D11180600FA00FAE4DF /* nprogressmanager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nprogressmanager.h; sourceTree = "<group>"; };
 		052F9D12180600FA00FAE4DF /* nprogresstracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nprogresstracker.h; sourceTree = "<group>"; };
-		052F9D13180600FA00FAE4DF /* nprogresstypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nprogresstypes.cpp; sourceTree = "<group>"; };
-		052F9D14180600FA00FAE4DF /* nprogresstypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nprogresstypes.h; sourceTree = "<group>"; };
 		052F9D15180600FA00FAE4DF /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		052F9D16180600FA00FAE4DF /* regina-config.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "regina-config.h.in"; sourceTree = "<group>"; };
 		052F9D17180600FA00FAE4DF /* regina-core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "regina-core.h"; sourceTree = "<group>"; };
@@ -3180,8 +3167,6 @@
 			isa = PBXGroup;
 			children = (
 				050F5D481B9BAB9C00C1F681 /* CMakeLists.txt */,
-				050F5D491B9BAB9C00C1F681 /* nprogress.cpp */,
-				050F5D4A1B9BAB9C00C1F681 /* nprogressmanager.cpp */,
 				050F5D4B1B9BAB9C00C1F681 /* nprogresstracker.cpp */,
 				050F5D4C1B9BAB9C00C1F681 /* pyprogress.cpp */,
 			);
@@ -3781,11 +3766,7 @@
 			isa = PBXGroup;
 			children = (
 				052F9D0F180600FA00FAE4DF /* CMakeLists.txt */,
-				052F9D10180600FA00FAE4DF /* nprogress.h */,
-				052F9D11180600FA00FAE4DF /* nprogressmanager.h */,
 				052F9D12180600FA00FAE4DF /* nprogresstracker.h */,
-				052F9D13180600FA00FAE4DF /* nprogresstypes.cpp */,
-				052F9D14180600FA00FAE4DF /* nprogresstypes.h */,
 			);
 			path = progress;
 			sourceTree = "<group>";
@@ -4948,7 +4929,6 @@
 				052FA039180600FB00FAE4DF /* nsmirrored.h in Headers */,
 				052F9F8E180600FB00FAE4DF /* kernel_typedefs.h in Headers */,
 				0513753D1809B8D3002E525B /* coordregistry-impl.h in Headers */,
-				052F9F65180600FB00FAE4DF /* nprogressmanager.h in Headers */,
 				052FA08B180600FB00FAE4DF /* nbitmask.h in Headers */,
 				052FA00F180600FB00FAE4DF /* nsatregion.h in Headers */,
 				052F9EEC180600FB00FAE4DF /* simplex.h in Headers */,
@@ -4974,7 +4954,6 @@
 				052F9ECD180600FB00FAE4DF /* nhilbertprimal.h in Headers */,
 				052F9EDC180600FB00FAE4DF /* HilbertSeries.h in Headers */,
 				052F9F8D180600FB00FAE4DF /* kernel_prototypes.h in Headers */,
-				052F9F68180600FB00FAE4DF /* nprogresstypes.h in Headers */,
 				052FA08D180600FB00FAE4DF /* nbooleans.h in Headers */,
 				052F9F35180600FB00FAE4DF /* ntorusbundle.h in Headers */,
 				052F9F24180600FB00FAE4DF /* ngraphtriple.h in Headers */,
@@ -5122,7 +5101,6 @@
 				052F9F3A180600FB00FAE4DF /* matrixops.h in Headers */,
 				052F9F95180600FB00FAE4DF /* positioned_tet.h in Headers */,
 				052F9ED0180600FB00FAE4DF /* nmaxadmissible.h in Headers */,
-				052F9F64180600FB00FAE4DF /* nprogress.h in Headers */,
 				052F9F9E180600FB00FAE4DF /* tables.h in Headers */,
 				052F9EA1180600FB00FAE4DF /* ngenericfacetpairing-impl.h in Headers */,
 				052FA00B180600FB00FAE4DF /* nsatblockstarter.h in Headers */,
@@ -5464,7 +5442,6 @@
 				050F5E351B9BAB9C00C1F681 /* nnormalsurfacelist.cpp in Sources */,
 				050F5E491B9BAB9C00C1F681 /* ntetrahedron.cpp in Sources */,
 				050F5DFB1B9BAB9C00C1F681 /* nperm3.cpp in Sources */,
-				050F5E0D1B9BAB9C00C1F681 /* nprogressmanager.cpp in Sources */,
 				050F5E2B1B9BAB9C00C1F681 /* nsnappedtwosphere.cpp in Sources */,
 				050F5E2A1B9BAB9C00C1F681 /* nsnappedball.cpp in Sources */,
 				050F5E571B9BAB9C00C1F681 /* ngluingpermsearcher.cpp in Sources */,
@@ -5542,7 +5519,6 @@
 				050F5E3E1B9BAB9C00C1F681 /* surfacefiltertype.cpp in Sources */,
 				050F5E041B9BAB9C00C1F681 /* modulemain.cpp in Sources */,
 				050F5E3A1B9BAB9C00C1F681 /* nsurfacesubset.cpp in Sources */,
-				050F5E0C1B9BAB9C00C1F681 /* nprogress.cpp in Sources */,
 				050F5E111B9BAB9C00C1F681 /* nsnappeatriangulation.cpp in Sources */,
 				050F5E161B9BAB9C00C1F681 /* nblockedsfs.cpp in Sources */,
 				050F5E4A1B9BAB9C00C1F681 /* ntriangle.cpp in Sources */,
@@ -5788,7 +5764,6 @@
 				052FA1CB1806129B00FAE4DF /* nsnappedball.cpp in Sources */,
 				052FA1FF1806129B00FAE4DF /* nvertex.cpp in Sources */,
 				0586426B19D92D550019E056 /* SurfacesMatching.mm in Sources */,
-				052FA1AE1806129B00FAE4DF /* nprogresstypes.cpp in Sources */,
 				052FA23B180612DD00FAE4DF /* unix_file_io.c in Sources */,
 				05D1174519EE01A1003BEC55 /* ncensus.cpp in Sources */,
 				05D1174219EE019D003BEC55 /* dim2triangulation.cpp in Sources */,
@@ -6209,7 +6184,6 @@
 				052FA095180600FB00FAE4DF /* nthread.cpp in Sources */,
 				052F9EDF180600FB00FAE4DF /* libnormaliz-templated.cpp in Sources */,
 				05A73C7519B2EDBF0099C617 /* hyperbolic.cpp in Sources */,
-				052F9F67180600FB00FAE4DF /* nprogresstypes.cpp in Sources */,
 				052F9F93180600FB00FAE4DF /* peripheral_curves.c in Sources */,
 				052F9F70180600FB00FAE4DF /* canonize_result.c in Sources */,
 				052FA07C180600FB00FAE4DF /* simplify.cpp in Sources */,
