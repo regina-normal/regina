@@ -75,7 +75,7 @@ NNormalSurfaceList* NNormalSurfaceList::enumerate(
 }
 
 template <typename Coords>
-void NNormalSurfaceList::Enumerator::operator() (Coords) {
+void NNormalSurfaceList::Enumerator::operator() () {
     // Clean up the "type of list" flag.
     list_->which_ &= (
         NS_EMBEDDED_ONLY | NS_IMMERSED_SINGULAR | NS_VERTEX | NS_FUNDAMENTAL);

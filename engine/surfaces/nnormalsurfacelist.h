@@ -1525,7 +1525,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * class.
                  */
                 template <typename Coords>
-                void operator() (Coords);
+                void operator() ();
 
             private:
                 /**

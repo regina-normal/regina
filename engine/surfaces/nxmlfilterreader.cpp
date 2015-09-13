@@ -41,7 +41,7 @@ namespace regina {
 namespace {
     struct XMLReaderFunction : public Returns<NXMLElementReader*> {
         template <typename Filter>
-        inline NXMLElementReader* operator() (Filter, NPacket* parent) {
+        inline NXMLElementReader* operator() (NPacket* parent) {
             return Filter::Class::getXMLFilterReader(parent);
         }
     };
