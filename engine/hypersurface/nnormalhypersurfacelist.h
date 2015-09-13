@@ -51,7 +51,6 @@
 #include "hypersurface/nnormalhypersurface.h"
 #include "packet/npacket.h"
 #include "utilities/memutils.h"
-#include "utilities/nthread.h"
 
 namespace regina {
 
@@ -607,169 +606,99 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
         NNormalHypersurfaceList(HyperCoords coords, bool embeddedOnly);
 
         /**
-         * A thread class that actually performs the vertex normal
-         * hypersurface enumeration.
-         *
-         * The "real work" is in operator(), where the coordinate system
-         * becomes a compile-time constant.  The run() routine simply
-         * farms out the real work to some instantiation of operator().
+         * A functor that performs the vertex normal hypersurface enumeration.
          */
-        class VertexEnumerator : public NThread {
-            private:
-                NNormalHypersurfaceList* list_;
-                    /**< The normal hypersurface list to be filled. */
-                Dim4Triangulation* triang_;
-                    /**< The triangulation upon which this normal
-                         hypersurface list will be based. */
-                NProgressTracker* tracker_;
-                    /**< The progress tracker through which progress is
-                         reported and cancellation requests are accepted,
-                         or 0 if no progress tracker is in use. */
-
-            public:
-                /**
-                 * Creates a new enumerator thread with the given
-                 * parameters.
-                 *
-                 * @param list the normal hypersurface list to be filled.
-                 * @param triang the triangulation upon which this
-                 * normal hypersurface list will be based.
-                 * @param tracker the progress tracker to use for
-                 * progress reporting and cancellation polling, or 0 if
-                 * these capabilities are not required.
-                 */
-                VertexEnumerator(NNormalHypersurfaceList* list,
-                    Dim4Triangulation* triang, NProgressTracker* tracker);
-
-                void* run(void*);
-
-                /**
-                 * Performs the real enumeration work, in a setting
-                 * where the underlying coordinate system is
-                 * a compile-time constant.
-                 *
-                 * We assume here that neither list_->which_ nor
-                 * list_->algorithm_ have been sanity-checked.
-                 *
-                 * This routine fills \a list_ with surfaces, and then once
-                 * this is finished it inserts \a list_ into the packet
-                 * tree as a child of \a triang_.
-                 */
-                template <typename Coords>
-                void operator() (Coords);
+        struct VertexEnumerator {
+            /**
+             * Performs the real enumeration work, in a setting
+             * where the underlying coordinate system is
+             * a compile-time constant.
+             *
+             * We assume here that neither list_->which_ nor
+             * list_->algorithm_ have been sanity-checked.
+             *
+             * This routine fills \a list_ with surfaces, and then once
+             * this is finished it inserts \a list_ into the packet
+             * tree as a child of \a triang_.
+             *
+             * \tparam Coords an instance of the HyperInfo<> template class.
+             *
+             * @param list the normal hypersurface list to be filled.
+             * @param triang the triangulation upon which this
+             * normal hypersurface list will be based.
+             * @param tracker the progress tracker to use for
+             * progress reporting and cancellation polling, or 0 if
+             * these capabilities are not required.
+             */
+            template <typename Coords>
+            void operator() (Coords, NNormalHypersurfaceList* list,
+                Dim4Triangulation* triang, NProgressTracker* tracker);
         };
 
         /**
-         * A thread class that performs fundamental normal hypersurface
+         * A functor that performs fundamental normal hypersurface
          * enumeration using the primal Hilbert basis algorithm.
-         *
-         * The "real work" is in operator(), where the coordinate system
-         * becomes a compile-time constant.  The run() routine simply
-         * farms out the real work to some instantiation of operator().
          */
-        class FundPrimalEnumerator : public NThread {
-            private:
-                NNormalHypersurfaceList* list_;
-                    /**< The normal hypersurface list to be filled. */
-                Dim4Triangulation* triang_;
-                    /**< The triangulation upon which this normal
-                         hypersurface list will be based. */
-                NNormalHypersurfaceList* vtxSurfaces_;
-                    /**< The list of all vertex normal hypersurfaces in
-                         \a triang_, or 0 if this information is not known. */
-                NProgressTracker* tracker_;
-                    /**< The progress tracker through which progress is
-                         reported and cancellation requests are accepted,
-                         or 0 if no progress tracker is in use. */
-
-            public:
-                /**
-                 * Creates a new enumerator thread with the given
-                 * parameters.
-                 *
-                 * @param list the normal hypersurface list to be filled.
-                 * @param triang the triangulation upon which this
-                 * normal hypersurface list will be based.
-                 * @param vtxSurfaces the vertex normal hypersurfaces in
-                 * \a triang, or 0 if this information is not known.
-                 * @param tracker the progress tracker to use for
-                 * progress reporting and cancellation polling, or 0 if
-                 * these capabilities are not required.
-                 */
-                FundPrimalEnumerator(NNormalHypersurfaceList* list,
-                    Dim4Triangulation* triang,
-                    NNormalHypersurfaceList* vtxSurfaces,
-                    NProgressTracker* tracker);
-
-                void* run(void*);
-
-                /**
-                 * Performs the real enumeration work, in a setting
-                 * where the underlying coordinate system is
-                 * a compile-time constant.
-                 *
-                 * We assume here that neither list_->which_ nor
-                 * list_->algorithm_ have been sanity-checked.
-                 *
-                 * This routine fills \a list_ with surfaces, and then once
-                 * this is finished it inserts \a list_ into the packet
-                 * tree as a child of \a triang_.
-                 */
-                template <typename Coords>
-                void operator() (Coords);
+        struct FundPrimalEnumerator {
+            /**
+             * Performs the real enumeration work, in a setting
+             * where the underlying coordinate system is
+             * a compile-time constant.
+             *
+             * We assume here that neither list_->which_ nor
+             * list_->algorithm_ have been sanity-checked.
+             *
+             * This routine fills \a list_ with surfaces, and then once
+             * this is finished it inserts \a list_ into the packet
+             * tree as a child of \a triang_.
+             *
+             * \tparam Coords an instance of the HyperInfo<> template class.
+             *
+             * @param list the normal hypersurface list to be filled.
+             * @param triang the triangulation upon which this
+             * normal hypersurface list will be based.
+             * @param vtxSurfaces the vertex normal hypersurfaces in
+             * \a triang, or 0 if this information is not known.
+             * @param tracker the progress tracker to use for
+             * progress reporting and cancellation polling, or 0 if
+             * these capabilities are not required.
+             */
+            template <typename Coords>
+            void operator() (Coords, NNormalHypersurfaceList* list,
+                Dim4Triangulation* triang,
+                NNormalHypersurfaceList* vtxSurfaces,
+                NProgressTracker* tracker);
         };
 
         /**
-         * A thread class that performs fundamental normal hypersurface
+         * A functor that performs fundamental normal hypersurface
          * enumeration using the dual Hilbert basis algorithm.
-         *
-         * The "real work" is in operator(), where the coordinate system
-         * becomes a compile-time constant.  The run() routine simply
-         * farms out the real work to some instantiation of operator().
          */
-        class FundDualEnumerator : public NThread {
-            private:
-                NNormalHypersurfaceList* list_;
-                    /**< The normal hypersurface list to be filled. */
-                Dim4Triangulation* triang_;
-                    /**< The triangulation upon which this normal
-                         hypersurface list will be based. */
-                NProgressTracker* tracker_;
-                    /**< The progress tracker through which progress is
-                         reported and cancellation requests are accepted,
-                         or 0 if no progress tracker is in use. */
-
-            public:
-                /**
-                 * Creates a new enumerator thread with the given
-                 * parameters.
-                 *
-                 * @param list the normal hypersurface list to be filled.
-                 * @param triang the triangulation upon which this
-                 * normal hypersurface list will be based.
-                 * @param tracker the progress tracker to use for
-                 * progress reporting and cancellation polling, or 0 if
-                 * these capabilities are not required.
-                 */
-                FundDualEnumerator(NNormalHypersurfaceList* list,
-                    Dim4Triangulation* triang, NProgressTracker* tracker);
-
-                void* run(void*);
-
-                /**
-                 * Performs the real enumeration work, in a setting
-                 * where the underlying coordinate system is
-                 * a compile-time constant.
-                 *
-                 * We assume here that neither list_->which_ nor
-                 * list_->algorithm_ have been sanity-checked.
-                 *
-                 * This routine fills \a list_ with surfaces, and then once
-                 * this is finished it inserts \a list_ into the packet
-                 * tree as a child of \a triang_.
-                 */
-                template <typename Coords>
-                void operator() (Coords);
+        struct FundDualEnumerator {
+            /**
+             * Performs the real enumeration work, in a setting
+             * where the underlying coordinate system is
+             * a compile-time constant.
+             *
+             * We assume here that neither list_->which_ nor
+             * list_->algorithm_ have been sanity-checked.
+             *
+             * This routine fills \a list_ with surfaces, and then once
+             * this is finished it inserts \a list_ into the packet
+             * tree as a child of \a triang_.
+             *
+             * \tparam Coords an instance of the HyperInfo<> template class.
+             *
+             * @param list the normal hypersurface list to be filled.
+             * @param triang the triangulation upon which this
+             * normal hypersurface list will be based.
+             * @param tracker the progress tracker to use for
+             * progress reporting and cancellation polling, or 0 if
+             * these capabilities are not required.
+             */
+            template <typename Coords>
+            void operator() (Coords, NNormalHypersurfaceList* list,
+                Dim4Triangulation* triang, NProgressTracker* tracker);
         };
 
     friend class regina::NXMLNormalHypersurfaceListReader;
@@ -988,25 +917,6 @@ inline NNormalHypersurfaceList::HypersurfaceInserter&
 
 inline NNormalHypersurfaceList::NNormalHypersurfaceList(HyperCoords coords,
         bool embeddedOnly) : coords_(coords), embedded_(embeddedOnly) {
-}
-
-inline NNormalHypersurfaceList::VertexEnumerator::VertexEnumerator(
-        NNormalHypersurfaceList* list, Dim4Triangulation* triang,
-        NProgressTracker* tracker) :
-        list_(list), triang_(triang), tracker_(tracker) {
-}
-
-inline NNormalHypersurfaceList::FundPrimalEnumerator::FundPrimalEnumerator(
-        NNormalHypersurfaceList* list, Dim4Triangulation* triang,
-        NNormalHypersurfaceList* vtxSurfaces, NProgressTracker* tracker) :
-        list_(list), triang_(triang), vtxSurfaces_(vtxSurfaces),
-        tracker_(tracker) {
-}
-
-inline NNormalHypersurfaceList::FundDualEnumerator::FundDualEnumerator(
-        NNormalHypersurfaceList* list, Dim4Triangulation* triang,
-        NProgressTracker* tracker) :
-        list_(list), triang_(triang), tracker_(tracker) {
 }
 
 } // namespace regina

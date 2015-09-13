@@ -33,6 +33,7 @@
 /* end stub */
 
 #include <list>
+#include <thread>
 #include "dim4/dim4triangulation.h"
 #include "enumerate/ndoubledescription.h"
 #include "enumerate/nhilbertdual.h"
@@ -90,119 +91,109 @@ NEnumConstraintList* makeEmbeddedConstraints(
     return forCoords(coords, EmbeddedConstraints(), 0, triangulation);
 }
 
-void* NNormalHypersurfaceList::VertexEnumerator::run(void*) {
-    forCoords(list_->coords_, *this);
-    return 0;
-}
-
 template <typename Coords>
-void NNormalHypersurfaceList::VertexEnumerator::operator() (Coords) {
-    if (tracker_)
-        tracker_->newStage("Enumerating vertex hypersurfaces");
+void NNormalHypersurfaceList::VertexEnumerator::operator() (Coords,
+        NNormalHypersurfaceList* list, Dim4Triangulation* triang,
+        NProgressTracker* tracker) {
+    if (tracker)
+        tracker->newStage("Enumerating vertex hypersurfaces");
 
     // Fetch any necessary validity constraints.
     NEnumConstraintList* constraints = 0;
-    if (list_->embedded_)
-        constraints = makeEmbeddedConstraints(triang_, list_->coords_);
+    if (list->embedded_)
+        constraints = makeEmbeddedConstraints(triang, list->coords_);
 
     // Form the matching equations and starting cone.
-    NMatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
+    NMatrixInt* eqns = makeMatchingEquations(triang, list->coords_);
 
     // Find the normal hypersurfaces.
     NDoubleDescription::enumerateExtremalRays<typename Coords::Class>(
-        HypersurfaceInserter(*list_, triang_), *eqns, constraints, tracker_);
+        HypersurfaceInserter(*list, triang), *eqns, constraints, tracker);
 
     delete eqns;
     delete constraints;
 
     // All done!
-    if (! (tracker_ && tracker_->isCancelled()))
-        triang_->insertChildLast(list_);
+    if (! (tracker && tracker->isCancelled()))
+        triang->insertChildLast(list);
 
-    if (tracker_)
-        tracker_->setFinished();
-}
-
-void* NNormalHypersurfaceList::FundPrimalEnumerator::run(void*) {
-    forCoords(list_->coords_, *this);
-    return 0;
+    if (tracker)
+        tracker->setFinished();
 }
 
 template <typename Coords>
-void NNormalHypersurfaceList::FundPrimalEnumerator::operator() (Coords) {
-    if (tracker_)
-        tracker_->newStage("Initialising Hilbert basis enumeration", 0.1);
+void NNormalHypersurfaceList::FundPrimalEnumerator::operator() (Coords,
+        NNormalHypersurfaceList* list, Dim4Triangulation* triang,
+        NNormalHypersurfaceList* vtxSurfaces, NProgressTracker* tracker) {
+    if (tracker)
+        tracker->newStage("Initialising Hilbert basis enumeration", 0.1);
 
     // Fetch any necessary validity constraints.
     NEnumConstraintList* constraints = 0;
-    if (list_->embedded_)
-        constraints = makeEmbeddedConstraints(triang_, list_->coords_);
+    if (list->embedded_)
+        constraints = makeEmbeddedConstraints(triang, list->coords_);
 
-    if (tracker_)
-        tracker_->newStage("Enumerating extremal rays", 0.4);
+    if (tracker)
+        tracker->newStage("Enumerating extremal rays", 0.4);
 
-    NNormalHypersurfaceList* useVtxSurfaces = vtxSurfaces_;
-    if (! vtxSurfaces_) {
+    NNormalHypersurfaceList* useVtxSurfaces = vtxSurfaces;
+    if (! vtxSurfaces) {
         // Enumerate all vertex normal hypersurfaces using the default
         // (and hopefully best possible) algorithm.
-        useVtxSurfaces = new NNormalHypersurfaceList(list_->coords_,
-            list_->embedded_);
-        VertexEnumerator e(useVtxSurfaces, triang_, 0);
-        e.run(0);
+        useVtxSurfaces = new NNormalHypersurfaceList(list->coords_,
+            list->embedded_);
+        VertexEnumerator()(Coords(), useVtxSurfaces, triang, 0);
     }
 
-    if (tracker_)
-        tracker_->newStage("Expanding to Hilbert basis", 0.5);
+    if (tracker)
+        tracker->newStage("Expanding to Hilbert basis", 0.5);
 
     // Find the normal hypersurfaces.
     NHilbertPrimal::enumerateHilbertBasis<typename Coords::Class>(
-        HypersurfaceInserter(*list_, triang_),
+        HypersurfaceInserter(*list, triang),
         useVtxSurfaces->beginVectors(), useVtxSurfaces->endVectors(),
-        constraints, tracker_);
+        constraints, tracker);
 
     delete constraints;
-    if (! vtxSurfaces_)
+    if (! vtxSurfaces)
         delete useVtxSurfaces;
 
     // All done!
-    if (! (tracker_ && tracker_->isCancelled()))
-        triang_->insertChildLast(list_);
+    if (! (tracker && tracker->isCancelled()))
+        triang->insertChildLast(list);
 
-    if (tracker_)
-        tracker_->setFinished();
-}
-
-void* NNormalHypersurfaceList::FundDualEnumerator::run(void*) {
-    forCoords(list_->coords_, *this);
-    return 0;
+    if (tracker)
+        tracker->setFinished();
 }
 
 template <typename Coords>
-void NNormalHypersurfaceList::FundDualEnumerator::operator() (Coords) {
-    if (tracker_)
-        tracker_->newStage("Enumerating Hilbert basis\n(dual method)");
+void NNormalHypersurfaceList::FundDualEnumerator::operator() (Coords,
+        NNormalHypersurfaceList* list, Dim4Triangulation* triang,
+        NProgressTracker* tracker) {
+    if (tracker)
+        tracker->newStage("Enumerating Hilbert basis\n(dual method)");
 
     // Fetch any necessary validity constraints.
     NEnumConstraintList* constraints = 0;
-    if (list_->embedded_)
-        constraints = makeEmbeddedConstraints(triang_, list_->coords_);
+    if (list->embedded_)
+        constraints = makeEmbeddedConstraints(triang, list->coords_);
 
     // Form the matching equations and starting cone.
-    NMatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
+    NMatrixInt* eqns = makeMatchingEquations(triang, list->coords_);
 
     // Find the normal hypersurfaces.
     NHilbertDual::enumerateHilbertBasis<typename Coords::Class>(
-        HypersurfaceInserter(*list_, triang_), *eqns, constraints, tracker_);
+        HypersurfaceInserter(*list, triang), *eqns, constraints, tracker);
 
     delete eqns;
     delete constraints;
 
     // All done!
-    if (! (tracker_ && tracker_->isCancelled()))
-        triang_->insertChildLast(list_);
+    if (! (tracker && tracker->isCancelled()))
+        triang->insertChildLast(list);
 
-    if (tracker_)
-        tracker_->setFinished();
+    if (tracker)
+        tracker->setFinished();
 }
 
 NNormalHypersurfaceList* NNormalHypersurfaceList::enumerate(
@@ -210,19 +201,15 @@ NNormalHypersurfaceList* NNormalHypersurfaceList::enumerate(
         NProgressTracker* tracker) {
     NNormalHypersurfaceList* ans = new NNormalHypersurfaceList(
         coords, embeddedOnly);
-    VertexEnumerator* e = new VertexEnumerator(ans, owner, tracker);
 
-    if (tracker) {
-        if (! e->start(0, true)) {
-            delete ans;
-            return 0;
-        }
-        return ans;
-    } else {
-        e->run(0);
-        delete e;
-        return ans;
-    }
+    if (tracker)
+        std::thread(&forCoords<VertexEnumerator, NNormalHypersurfaceList*,
+                Dim4Triangulation*, NProgressTracker*>,
+            coords, VertexEnumerator(), ans, owner, tracker)
+            .detach();
+    else
+        forCoords(coords, VertexEnumerator(), ans, owner, tracker);
+    return ans;
 }
 
 NNormalHypersurfaceList* NNormalHypersurfaceList::enumerateFundPrimal(
@@ -230,20 +217,17 @@ NNormalHypersurfaceList* NNormalHypersurfaceList::enumerateFundPrimal(
         NNormalHypersurfaceList* vtxSurfaces, NProgressTracker* tracker) {
     NNormalHypersurfaceList* ans = new NNormalHypersurfaceList(
         coords, embeddedOnly);
-    FundPrimalEnumerator* e = new FundPrimalEnumerator(ans, owner, vtxSurfaces,
-        tracker);
 
-    if (tracker) {
-        if (! e->start(0, true)) {
-            delete ans;
-            return 0;
-        }
-        return ans;
-    } else {
-        e->run(0);
-        delete e;
-        return ans;
-    }
+    if (tracker)
+        std::thread(forCoords<FundPrimalEnumerator, NNormalHypersurfaceList*,
+                Dim4Triangulation*, NNormalHypersurfaceList*,
+                NProgressTracker*>,
+            coords, FundPrimalEnumerator(), ans, owner, vtxSurfaces, tracker)
+            .detach();
+    else
+        forCoords(coords, FundPrimalEnumerator(), ans, owner, vtxSurfaces,
+            tracker);
+    return ans;
 }
 
 NNormalHypersurfaceList* NNormalHypersurfaceList::enumerateFundDual(
@@ -251,19 +235,15 @@ NNormalHypersurfaceList* NNormalHypersurfaceList::enumerateFundDual(
         NProgressTracker* tracker) {
     NNormalHypersurfaceList* ans = new NNormalHypersurfaceList(
         coords, embeddedOnly);
-    FundDualEnumerator* e = new FundDualEnumerator(ans, owner, tracker);
 
-    if (tracker) {
-        if (! e->start(0, true)) {
-            delete ans;
-            return 0;
-        }
-        return ans;
-    } else {
-        e->run(0);
-        delete e;
-        return ans;
-    }
+    if (tracker)
+        std::thread(forCoords<FundDualEnumerator, NNormalHypersurfaceList*,
+                Dim4Triangulation*, NProgressTracker*>,
+            coords, FundDualEnumerator(), ans, owner, tracker)
+            .detach();
+    else
+        forCoords(coords, FundDualEnumerator(), ans, owner, tracker);
+    return ans;
 }
 
 Dim4Triangulation* NNormalHypersurfaceList::getTriangulation() const {
