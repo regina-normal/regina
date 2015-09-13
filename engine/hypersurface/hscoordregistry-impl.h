@@ -61,7 +61,8 @@ forCoords(HyperCoords coords, FunctionObject&& func,
         typename ReturnsTraits<FunctionObject>::ReturnType defaultReturn,
         Args&&... args) {
     switch (coords) {
-        case HS_STANDARD : return func(HyperInfo<HS_STANDARD>(),
+        case HS_STANDARD : return
+            func.template operator()<HyperInfo<HS_STANDARD>>(
             std::forward<Args>(args)...);
         default: return defaultReturn;
     }
@@ -71,7 +72,8 @@ template <typename FunctionObject, typename... Args>
 inline typename ReturnsTraits<FunctionObject>::Void
 forCoords(HyperCoords coords, FunctionObject&& func, Args&&... args) {
     switch (coords) {
-        case HS_STANDARD : func(HyperInfo<HS_STANDARD>(),
+        case HS_STANDARD :
+            func.template operator()<HyperInfo<HS_STANDARD>>(
             std::forward<Args>(args)...); break;
         default: break;
     }

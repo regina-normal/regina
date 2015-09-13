@@ -79,10 +79,10 @@ namespace regina {
  * systems are considered invalid for our purposes here.
  *
  * In detail: the function object \a func must define a templated
- * bracket operator, so that <tt>func(HyperInfo<c>, ...)</tt> is
- * defined for any valid HyperCoords enum value \a c.  Then,
- * when the user calls <tt>forCoords(coords, func, defaultReturn, ...)</tt>,
- * this routine will call <tt>func(HyperInfo<coords>, ...)</tt> and pass back
+ * bracket operator, so that <tt>func.operator()<HyperInfo<c>>(...)</tt> is
+ * defined for any valid HyperCoords enum value \a c.  Then, when the user
+ * calls <tt>forCoords(coords, func, defaultReturn, ...)</tt>, this routine
+ * will call <tt>func.operator()<HyperInfo<coords>>(...)</tt> and pass back
  * the corresponding return value.  If \a coords does not denote a valid
  * coordinate system as described above, then forCoords() will pass back
  * \a defaultReturn instead.
@@ -130,10 +130,10 @@ forCoords(HyperCoords coords, FunctionObject&& func,
  * systems are considered invalid for our purposes here.
  *
  * In detail: the function object \a func must define a templated
- * bracket operator, so that <tt>func(HyperInfo<c>, ...)</tt> is
+ * bracket operator, so that <tt>func.operator()<HyperInfo<c>>(...)</tt> is
  * defined for any valid HyperCoords enum value \a c.  Then,
- * when the user calls <tt>forCoords(coords, func, ...)</tt>,
- * this routine will call <tt>func(HyperInfo<coords>, ...)</tt> in turn.
+ * when the user calls <tt>forCoords(coords, func, ...)</tt>, this routine
+ * will call <tt>func.operator()<HyperInfo<coords>>(...)</tt> in turn.
  * If \a coords does not denote a valid coordinate system as described above,
  * then forCoords() will do nothing.
  *

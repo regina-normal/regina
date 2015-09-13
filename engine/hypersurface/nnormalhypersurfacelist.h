@@ -633,7 +633,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
              * these capabilities are not required.
              */
             template <typename Coords>
-            void operator() (Coords, NNormalHypersurfaceList* list,
+            void operator() (NNormalHypersurfaceList* list,
                 Dim4Triangulation* triang, NProgressTracker* tracker);
         };
 
@@ -666,7 +666,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
              * these capabilities are not required.
              */
             template <typename Coords>
-            void operator() (Coords, NNormalHypersurfaceList* list,
+            void operator() (NNormalHypersurfaceList* list,
                 Dim4Triangulation* triang,
                 NNormalHypersurfaceList* vtxSurfaces,
                 NProgressTracker* tracker);
@@ -699,7 +699,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
              * these capabilities are not required.
              */
             template <typename Coords>
-            void operator() (Coords, NNormalHypersurfaceList* list,
+            void operator() (NNormalHypersurfaceList* list,
                 Dim4Triangulation* triang, NProgressTracker* tracker);
         };
 
