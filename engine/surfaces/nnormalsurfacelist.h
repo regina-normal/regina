@@ -51,7 +51,6 @@
 #include "surfaces/normalflags.h"
 #include "surfaces/normalcoords.h"
 #include "utilities/memutils.h"
-#include "utilities/nthread.h"
 
 namespace regina {
 
@@ -1484,13 +1483,9 @@ class REGINA_API NNormalSurfaceList : public NPacket {
         NNormalSurfaceList* internalStandardToReduced() const;
 
         /**
-         * A thread class that performs all normal surface enumeration.
-         *
-         * The "real work" is in operator(), where the coordinate system
-         * becomes a compile-time constant.  The run() routine simply
-         * farms out the real work to some instantiation of operator().
+         * A functor that performs all normal surface enumeration.
          */
-        class Enumerator : public NThread, public boost::noncopyable {
+        class Enumerator {
             private:
                 NNormalSurfaceList* list_;
                     /**< The surface list to be filled. */
@@ -1503,8 +1498,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
 
             public:
                 /**
-                 * Creates a new enumerator thread with the given
-                 * parameters.
+                 * Creates a new functor with the given parameters.
                  *
                  * @param list the surface list to be filled.
                  * @param triang the triangulation in which these surfaces lie.
@@ -1514,8 +1508,6 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  */
                 Enumerator(NNormalSurfaceList* list,
                     NTriangulation* triang, NProgressTracker* tracker);
-
-                void* run(void*);
 
                 /**
                  * Performs the real enumeration work, in a setting
@@ -1528,6 +1520,9 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * This routine fills \a list_ with surfaces, and then once
                  * this is finished it inserts \a list_ into the packet
                  * tree as a child of \a triang_.
+                 *
+                 * \tparam Coords an instance of the NormalInfo<> template
+                 * class.
                  */
                 template <typename Coords>
                 void operator() (Coords);
