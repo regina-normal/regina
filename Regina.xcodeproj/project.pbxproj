@@ -6895,6 +6895,7 @@
 				050F5CE61B9BAAAB00C1F681 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		052FA0C91806072A00FAE4DF /* Build configuration list for PBXNativeTarget "Test Suite" */ = {
 			isa = XCConfigurationList;
