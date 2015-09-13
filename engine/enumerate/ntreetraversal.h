@@ -42,10 +42,10 @@
 #define __NTREETRAVERSAL_H
 #endif
 
+#include <mutex>
 #include "enumerate/ntreeconstraint.h"
 #include "enumerate/ntreelp.h"
 #include "enumerate/ntypetrie.h"
-#include "utilities/nthread.h"
 
 namespace regina {
 
@@ -1305,7 +1305,7 @@ class REGINA_API NTreeSingleSoln :
         bool cancelled_;
             /**< Has the search been cancelled by another thread?
                  See the cancel() and cancelled() routines for details. */
-        regina::NMutex mCancel_;
+        std::mutex mCancel_;
             /**< A mutex used to serialise cancellation tests and requests. */
 
 
@@ -1378,7 +1378,7 @@ class REGINA_API NTreeSingleSoln :
          *
          * @return \c true if some thread has called cancel() on this object.
          */
-        bool cancelled() const;
+        bool cancelled();
 };
 
 // Inline functions
@@ -1512,14 +1512,13 @@ inline NTreeSingleSoln<LPConstraint, BanConstraint, Integer>::NTreeSingleSoln(
 
 template <class LPConstraint, typename BanConstraint, typename Integer>
 inline void NTreeSingleSoln<LPConstraint, BanConstraint, Integer>::cancel() {
-    regina::NMutex::MutexLock lock(mCancel_);
+    std::lock_guard<std::mutex> lock(mCancel_);
     cancelled_ = true;
 }
 
 template <class LPConstraint, typename BanConstraint, typename Integer>
-inline bool NTreeSingleSoln<LPConstraint, BanConstraint, Integer>::cancelled()
-        const {
-    regina::NMutex::MutexLock lock(mCancel_);
+inline bool NTreeSingleSoln<LPConstraint, BanConstraint, Integer>::cancelled() {
+    std::lock_guard<std::mutex> lock(mCancel_);
     return cancelled_;
 }
 
