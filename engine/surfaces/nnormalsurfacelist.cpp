@@ -68,8 +68,7 @@ void NNormalSurfaceList::writeAllSurfaces(std::ostream& out) const {
 namespace {
     struct ZeroVector : public Returns<NNormalSurfaceVector*> {
         template <typename Coords>
-        inline NNormalSurfaceVector* operator() (Coords,
-                const NTriangulation* tri) {
+        inline NNormalSurfaceVector* operator() (const NTriangulation* tri) {
             return Coords::Class::makeZeroVector(tri);
         }
     };
@@ -83,8 +82,7 @@ NNormalSurfaceVector* makeZeroVector(const NTriangulation* triangulation,
 namespace {
     struct MatchingEquations : public Returns<NMatrixInt*> {
         template <typename Coords>
-        inline NMatrixInt* operator() (Coords,
-                const NTriangulation* tri) {
+        inline NMatrixInt* operator() (const NTriangulation* tri) {
             return Coords::Class::makeMatchingEquations(tri);
         }
     };
@@ -98,8 +96,7 @@ NMatrixInt* makeMatchingEquations(const NTriangulation* triangulation,
 namespace {
     struct EmbeddedConstraints : public Returns<NEnumConstraintList*> {
         template <typename Coords>
-        inline NEnumConstraintList* operator() (Coords,
-                const NTriangulation* tri) {
+        inline NEnumConstraintList* operator() (const NTriangulation* tri) {
             return Coords::Class::makeEmbeddedConstraints(tri);
         }
     };
@@ -117,7 +114,7 @@ NTriangulation* NNormalSurfaceList::getTriangulation() const {
 namespace {
     struct AlmostNormalFunction : public Returns<bool> {
         template <typename Coords>
-        inline bool operator() (Coords f) { return f.almostNormal; }
+        inline bool operator() () { return Coords::almostNormal; }
     };
 }
 
@@ -131,7 +128,7 @@ bool NNormalSurfaceList::allowsAlmostNormal() const {
 namespace {
     struct SpunFunction : public Returns<bool> {
         template <typename Coords>
-        inline bool operator() (Coords f) { return f.spun; }
+        inline bool operator() () { return Coords::spun; }
     };
 }
 
@@ -143,7 +140,7 @@ bool NNormalSurfaceList::allowsSpun() const {
 namespace {
     struct OrientedFunction : public Returns<bool> {
         template <typename Coords>
-        inline bool operator() (Coords f) { return f.oriented; }
+        inline bool operator() () { return Coords::oriented; }
     };
 }
 
@@ -155,7 +152,7 @@ bool NNormalSurfaceList::allowsOriented() const {
 namespace {
     struct NameFunction : public Returns<const char*> {
         template <typename Coords>
-        inline const char* operator() (Coords f) { return f.name(); }
+        inline const char* operator() () { return Coords::name(); }
     };
 }
 

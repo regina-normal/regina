@@ -69,41 +69,41 @@ forPacket(PacketType packetType, FunctionObject&& func,
         typename ReturnsTraits<FunctionObject>::ReturnType defaultReturn,
         Args&&... args) {
     switch (packetType) {
-        case PACKET_CONTAINER :
-            return func(PacketInfo<PACKET_CONTAINER>(),
+        case PACKET_CONTAINER : return
+            func.template operator()<PacketInfo<PACKET_CONTAINER>>(
             std::forward<Args>(args)...);
-        case PACKET_TEXT :
-            return func(PacketInfo<PACKET_TEXT>(),
+        case PACKET_TEXT : return
+            func.template operator()<PacketInfo<PACKET_TEXT>>(
             std::forward<Args>(args)...);
-        case PACKET_TRIANGULATION :
-            return func(PacketInfo<PACKET_TRIANGULATION>(),
+        case PACKET_TRIANGULATION : return
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION>>(
             std::forward<Args>(args)...);
-        case PACKET_NORMALSURFACELIST :
-            return func(PacketInfo<PACKET_NORMALSURFACELIST>(),
+        case PACKET_NORMALSURFACELIST : return
+            func.template operator()<PacketInfo<PACKET_NORMALSURFACELIST>>(
             std::forward<Args>(args)...);
-        case PACKET_SCRIPT :
-            return func(PacketInfo<PACKET_SCRIPT>(),
+        case PACKET_SCRIPT : return
+            func.template operator()<PacketInfo<PACKET_SCRIPT>>(
             std::forward<Args>(args)...);
-        case PACKET_SURFACEFILTER :
-            return func(PacketInfo<PACKET_SURFACEFILTER>(),
+        case PACKET_SURFACEFILTER : return
+            func.template operator()<PacketInfo<PACKET_SURFACEFILTER>>(
             std::forward<Args>(args)...);
-        case PACKET_ANGLESTRUCTURELIST :
-            return func(PacketInfo<PACKET_ANGLESTRUCTURELIST>(),
+        case PACKET_ANGLESTRUCTURELIST : return
+            func.template operator()<PacketInfo<PACKET_ANGLESTRUCTURELIST>>(
             std::forward<Args>(args)...);
-        case PACKET_PDF :
-            return func(PacketInfo<PACKET_PDF>(),
+        case PACKET_PDF : return
+            func.template operator()<PacketInfo<PACKET_PDF>>(
             std::forward<Args>(args)...);
-        case PACKET_DIM2TRIANGULATION :
-            return func(PacketInfo<PACKET_DIM2TRIANGULATION>(),
+        case PACKET_DIM2TRIANGULATION : return
+            func.template operator()<PacketInfo<PACKET_DIM2TRIANGULATION>>(
             std::forward<Args>(args)...);
-        case PACKET_DIM4TRIANGULATION :
-            return func(PacketInfo<PACKET_DIM4TRIANGULATION>(),
+        case PACKET_DIM4TRIANGULATION : return
+            func.template operator()<PacketInfo<PACKET_DIM4TRIANGULATION>>(
             std::forward<Args>(args)...);
-        case PACKET_NORMALHYPERSURFACELIST :
-            return func(PacketInfo<PACKET_NORMALHYPERSURFACELIST>(),
+        case PACKET_NORMALHYPERSURFACELIST : return
+            func.template operator()<PacketInfo<PACKET_NORMALHYPERSURFACELIST>>(
             std::forward<Args>(args)...);
-        case PACKET_SNAPPEATRIANGULATION :
-            return func(PacketInfo<PACKET_SNAPPEATRIANGULATION>(),
+        case PACKET_SNAPPEATRIANGULATION : return
+            func.template operator()<PacketInfo<PACKET_SNAPPEATRIANGULATION>>(
             std::forward<Args>(args)...);
         default: return defaultReturn;
     }
@@ -114,40 +114,40 @@ inline typename ReturnsTraits<FunctionObject>::Void
 forPacket(PacketType packetType, FunctionObject&& func, Args&&... args) {
     switch (packetType) {
         case PACKET_CONTAINER :
-            func(PacketInfo<PACKET_CONTAINER>(),
+            func.template operator()<PacketInfo<PACKET_CONTAINER>>(
             std::forward<Args>(args)...); break;
         case PACKET_TEXT :
-            func(PacketInfo<PACKET_TEXT>(),
+            func.template operator()<PacketInfo<PACKET_TEXT>>(
             std::forward<Args>(args)...); break;
         case PACKET_TRIANGULATION :
-            func(PacketInfo<PACKET_TRIANGULATION>(),
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION>>(
             std::forward<Args>(args)...); break;
         case PACKET_NORMALSURFACELIST :
-            func(PacketInfo<PACKET_NORMALSURFACELIST>(),
+            func.template operator()<PacketInfo<PACKET_NORMALSURFACELIST>>(
             std::forward<Args>(args)...); break;
         case PACKET_SCRIPT :
-            func(PacketInfo<PACKET_SCRIPT>(),
+            func.template operator()<PacketInfo<PACKET_SCRIPT>>(
             std::forward<Args>(args)...); break;
         case PACKET_SURFACEFILTER :
-            func(PacketInfo<PACKET_SURFACEFILTER>(),
+            func.template operator()<PacketInfo<PACKET_SURFACEFILTER>>(
             std::forward<Args>(args)...); break;
         case PACKET_ANGLESTRUCTURELIST :
-            func(PacketInfo<PACKET_ANGLESTRUCTURELIST>(),
+            func.template operator()<PacketInfo<PACKET_ANGLESTRUCTURELIST>>(
             std::forward<Args>(args)...); break;
         case PACKET_PDF :
-            func(PacketInfo<PACKET_PDF>(),
+            func.template operator()<PacketInfo<PACKET_PDF>>(
             std::forward<Args>(args)...); break;
         case PACKET_DIM2TRIANGULATION :
-            func(PacketInfo<PACKET_DIM2TRIANGULATION>(),
+            func.template operator()<PacketInfo<PACKET_DIM2TRIANGULATION>>(
             std::forward<Args>(args)...); break;
         case PACKET_DIM4TRIANGULATION :
-            func(PacketInfo<PACKET_DIM4TRIANGULATION>(),
+            func.template operator()<PacketInfo<PACKET_DIM4TRIANGULATION>>(
             std::forward<Args>(args)...); break;
         case PACKET_NORMALHYPERSURFACELIST :
-            func(PacketInfo<PACKET_NORMALHYPERSURFACELIST>(),
+            func.template operator()<PacketInfo<PACKET_NORMALHYPERSURFACELIST>>(
             std::forward<Args>(args)...); break;
         case PACKET_SNAPPEATRIANGULATION :
-            func(PacketInfo<PACKET_SNAPPEATRIANGULATION>(),
+            func.template operator()<PacketInfo<PACKET_SNAPPEATRIANGULATION>>(
             std::forward<Args>(args)...); break;
         default: break;
     }
