@@ -100,11 +100,10 @@ NAngleStructureList* NAngleStructureList::enumerate(NTriangulation* owner,
         bool tautOnly, NProgressTracker* tracker) {
     NAngleStructureList* ans = new NAngleStructureList(tautOnly);
 
-    if (tracker) {
-        std::thread t(&NAngleStructureList::enumerateInternal,
-            ans, owner, tracker);
-        t.detach();
-    } else
+    if (tracker)
+        std::thread(&NAngleStructureList::enumerateInternal,
+            ans, owner, tracker).detach();
+    else
         ans->enumerateInternal(owner);
     return ans;
 }

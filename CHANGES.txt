@@ -158,6 +158,8 @@ Version 4.97  [ (under development) ]
             - Now derives from ShortOutput.
             - Routines dotHeader() and writeDotHeader() no longer set an
               explicit background colour.
+            - Routine findAllPairings() now always runs in the current thread,
+              and no longer takes the final optional newThread argument.
             - Removed the Perm typedef.  Juse use NPerm<dim+1> instead.
             - Removed the Triangulation typedef.  Just use Triangulation<dim>.
             - Dimension-specific headers dim2edgepairing.h and nfacepairing.h
@@ -198,6 +200,7 @@ Version 4.97  [ (under development) ]
         Class NNormalSurfaceList:
             - Renamed getNumberOfSurfaces() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
+            - Now uses C++11 std::thread internally instead of the old NThread.
         Class NNormalSurfaceSubset:
             - Renamed getNumberOfSurfaces() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
