@@ -35,6 +35,7 @@
 #include "regina-config.h" // For EXCLUDE_NORMALIZ.
 
 #include <iterator>
+#include <thread>
 #include "enumerate/ndoubledescription.h"
 #include "enumerate/nhilbertcd.h"
 #include "enumerate/nhilbertdual.h"
@@ -64,23 +65,13 @@ NNormalSurfaceList* NNormalSurfaceList::enumerate(
         NProgressTracker* tracker) {
     NNormalSurfaceList* list = new NNormalSurfaceList(
         coords, which, algHints);
-    Enumerator* e = new Enumerator(list, owner, tracker);
 
-    if (tracker) {
-        if (! e->start(0, true)) {
-            delete list;
-            list = 0;
-        }
-    } else {
-        e->run(0);
-        delete e;
-    }
+    if (tracker)
+        std::thread(forCoords<Enumerator>,
+            coords, Enumerator(list, owner, tracker)).detach();
+    else
+        forCoords(coords, Enumerator(list, owner, tracker));
     return list;
-}
-
-void* NNormalSurfaceList::Enumerator::run(void*) {
-    forCoords(list_->coords_, *this);
-    return 0;
 }
 
 template <typename Coords>

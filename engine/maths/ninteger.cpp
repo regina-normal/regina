@@ -34,9 +34,9 @@
 
 #include <cerrno>
 #include <cstdlib>
+#include <mutex>
 #include "maths/ninteger.h"
 #include "maths/numbertheory.h"
-#include "utilities/nthread.h"
 
 // We instantiate both variants of the NIntegerBase template at the bottom
 // of this file.
@@ -78,7 +78,7 @@ namespace {
     /**
      * Global variables for the GMP random state data.
      */
-    NMutex randMutex;
+    std::mutex randMutex;
     gmp_randstate_t randState;
     bool randInitialised(false);
 }
@@ -972,7 +972,7 @@ int NIntegerBase<supportInfinity>::legendre(
 template <bool supportInfinity>
 NIntegerBase<supportInfinity>
         NIntegerBase<supportInfinity>::randomBoundedByThis() const {
-    NMutex::MutexLock ml(randMutex);
+    std::lock_guard<std::mutex> ml(randMutex);
     if (! randInitialised) {
         gmp_randinit_default(randState);
         randInitialised = true;
@@ -1001,7 +1001,7 @@ NIntegerBase<supportInfinity>
 template <bool supportInfinity>
 NIntegerBase<supportInfinity>
         NIntegerBase<supportInfinity>::randomBinary(unsigned long n) {
-    NMutex::MutexLock ml(randMutex);
+    std::lock_guard<std::mutex> ml(randMutex);
     if (! randInitialised) {
         gmp_randinit_default(randState);
         randInitialised = true;
@@ -1020,7 +1020,7 @@ NIntegerBase<supportInfinity>
 template <bool supportInfinity>
 NIntegerBase<supportInfinity>
         NIntegerBase<supportInfinity>::randomCornerBinary(unsigned long n) {
-    NMutex::MutexLock ml(randMutex);
+    std::lock_guard<std::mutex> ml(randMutex);
     if (! randInitialised) {
         gmp_randinit_default(randState);
         randInitialised = true;

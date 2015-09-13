@@ -42,7 +42,7 @@
 #endif
 
 #include "regina-core.h"
-#include "utilities/nthread.h"
+#include <mutex>
 #include <string>
 
 namespace regina {
@@ -133,7 +133,7 @@ class REGINA_API NProgressTracker {
             /**< The fractional weight assigned to the current stage;
                  this must be between 0 and 1 inclusive. */
 
-        NMutex lock_;
+        std::mutex lock_;
             /**< A mutex to stop the reading and writing threads from
                  interfering with each other. */
 
@@ -159,7 +159,7 @@ class REGINA_API NProgressTracker {
          * @return \c true if and only if the writing thread has
          * finished all processing.
          */
-        bool isFinished() const;
+        bool isFinished();
         /**
          * Queries whether the percentage progress has changed since the
          * last call to percentChanged().  If this is the first time
@@ -169,7 +169,7 @@ class REGINA_API NProgressTracker {
          *
          * @return \c true if and only if the percentage progress has changed.
          */
-        bool percentChanged() const;
+        bool percentChanged();
         /**
          * Queries whether the stage description has changed since the
          * last call to descriptionChanged().  If this is the first time
@@ -179,7 +179,7 @@ class REGINA_API NProgressTracker {
          *
          * @return \c true if and only if the stage description has changed.
          */
-        bool descriptionChanged() const;
+        bool descriptionChanged();
         /**
          * Returns the percentage progress through the entire operation.
          * This combines the progress through the current stage with all
@@ -190,7 +190,7 @@ class REGINA_API NProgressTracker {
          *
          * @return \c the current percentage progress.
          */
-        double percent() const;
+        double percent();
         /**
          * Returns the human-readable description of the current stage.
          *
@@ -198,7 +198,7 @@ class REGINA_API NProgressTracker {
          *
          * @return \c the current stage description.
          */
-        std::string description() const;
+        std::string description();
         /**
          * Indicates to the writing thread that the user wishes to
          * cancel the operation.  The writing thread might not detect
@@ -237,7 +237,7 @@ class REGINA_API NProgressTracker {
          * @return \c true if and only if a cancellation request has
          * been made.
          */
-        bool isCancelled() const;
+        bool isCancelled();
         /**
          * Used by the writing thread to indicate the level of progress
          * through the current stage.
@@ -287,13 +287,13 @@ inline NProgressTracker::NProgressTracker() :
     desc_ = "Initialising";
 }
 
-inline bool NProgressTracker::isFinished() const {
-    NMutex::MutexLock lock(lock_);
+inline bool NProgressTracker::isFinished() {
+    std::lock_guard<std::mutex> lock(lock_);
     return finished_;
 }
 
-inline bool NProgressTracker::percentChanged() const {
-    NMutex::MutexLock lock(lock_);
+inline bool NProgressTracker::percentChanged() {
+    std::lock_guard<std::mutex> lock(lock_);
     if (percentChanged_) {
         const_cast<NProgressTracker*>(this)->percentChanged_ = false;
         return true;
@@ -301,8 +301,8 @@ inline bool NProgressTracker::percentChanged() const {
         return false;
 }
 
-inline bool NProgressTracker::descriptionChanged() const {
-    NMutex::MutexLock lock(lock_);
+inline bool NProgressTracker::descriptionChanged() {
+    std::lock_guard<std::mutex> lock(lock_);
     if (descChanged_) {
         const_cast<NProgressTracker*>(this)->descChanged_ = false;
         return true;
@@ -310,23 +310,23 @@ inline bool NProgressTracker::descriptionChanged() const {
         return false;
 }
 
-inline double NProgressTracker::percent() const {
-    NMutex::MutexLock lock(lock_);
+inline double NProgressTracker::percent() {
+    std::lock_guard<std::mutex> lock(lock_);
     return prevPercent_ + currWeight_ * percent_;
 }
 
-inline std::string NProgressTracker::description() const {
-    NMutex::MutexLock lock(lock_);
+inline std::string NProgressTracker::description() {
+    std::lock_guard<std::mutex> lock(lock_);
     return desc_;
 }
 
 inline void NProgressTracker::cancel() {
-    NMutex::MutexLock lock(lock_);
+    std::lock_guard<std::mutex> lock(lock_);
     cancelled_ = true;
 }
 
 inline void NProgressTracker::newStage(const char* desc, double weight) {
-    NMutex::MutexLock lock(lock_);
+    std::lock_guard<std::mutex> lock(lock_);
     desc_ = desc;
     percent_ = 0;
     prevPercent_ += 100 * currWeight_;
@@ -334,20 +334,20 @@ inline void NProgressTracker::newStage(const char* desc, double weight) {
     percentChanged_ = descChanged_ = true;
 }
 
-inline bool NProgressTracker::isCancelled() const {
-    NMutex::MutexLock lock(lock_);
+inline bool NProgressTracker::isCancelled() {
+    std::lock_guard<std::mutex> lock(lock_);
     return cancelled_;
 }
 
 inline bool NProgressTracker::setPercent(double percent) {
-    NMutex::MutexLock lock(lock_);
+    std::lock_guard<std::mutex> lock(lock_);
     percent_ = percent;
     percentChanged_ = true;
     return ! cancelled_;
 }
 
 inline void NProgressTracker::setFinished() {
-    NMutex::MutexLock lock(lock_);
+    std::lock_guard<std::mutex> lock(lock_);
     prevPercent_ = 100;
     currWeight_ = 0;
     percent_ = 0;

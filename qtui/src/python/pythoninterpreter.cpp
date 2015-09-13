@@ -80,12 +80,12 @@
  * operating system, we simply choose to ignore the problem.
  */
 
-regina::NMutex PythonInterpreter::globalMutex;
+std::mutex PythonInterpreter::globalMutex;
 bool PythonInterpreter::pythonInitialised = false;
 
 PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
         PythonOutputStream* pyStdErr) {
-    regina::NMutex::MutexLock lock(globalMutex);
+    std::lock_guard<std::mutex> lock(globalMutex);
 
     // Acquire the global interpreter lock.
     if (pythonInitialised)
@@ -124,7 +124,7 @@ PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
 }
 
 PythonInterpreter::~PythonInterpreter() {
-    regina::NMutex::MutexLock lock(globalMutex);
+    std::lock_guard<std::mutex> lock(globalMutex);
 
     // Acquire the global interpreter lock.
     PyEval_RestoreThread(state);
