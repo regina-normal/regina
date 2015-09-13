@@ -98,6 +98,7 @@ Version 4.97  [ (under development) ]
         Class NNormalSurfaceList:
             - Renamed getNumberOfSurfaces() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
+            - Now uses C++11 std::thread internally instead of the old NThread.
         Class NNormalSurfaceSubset:
             - Renamed getNumberOfSurfaces() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
