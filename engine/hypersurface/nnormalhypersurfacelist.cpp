@@ -203,7 +203,7 @@ NNormalHypersurfaceList* NNormalHypersurfaceList::enumerate(
         coords, embeddedOnly);
 
     if (tracker) {
-        std::thread t([coords, ans, owner, tracker](){
+        std::thread t([=]{
             forCoords(coords, VertexEnumerator(), ans, owner, tracker);
         });
         t.detach();
@@ -220,7 +220,7 @@ NNormalHypersurfaceList* NNormalHypersurfaceList::enumerateFundPrimal(
         coords, embeddedOnly);
 
     if (tracker) {
-        std::thread t([coords, ans, owner, vtxSurfaces, tracker](){
+        std::thread t([=](){
             forCoords(coords, FundPrimalEnumerator(), ans, owner, vtxSurfaces, tracker);
         });
         t.detach();
@@ -237,7 +237,7 @@ NNormalHypersurfaceList* NNormalHypersurfaceList::enumerateFundDual(
         coords, embeddedOnly);
 
     if (tracker) {
-        std::thread t([coords, ans, owner, tracker](){
+        std::thread t([=](){
             forCoords(coords, FundDualEnumerator(), ans, owner, tracker);
         });
         t.detach();
