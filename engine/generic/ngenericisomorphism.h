@@ -390,14 +390,14 @@ inline int NGenericIsomorphism<dim>::simpImage(unsigned sourceSimp) const {
 }
 
 template <int dim>
-inline typename NGenericIsomorphism<dim>::Perm&
+inline typename DimTraits<dim>::Perm&
         NGenericIsomorphism<dim>::facetPerm(
         unsigned sourceSimp) {
     return facetPerm_[sourceSimp];
 }
 
 template <int dim>
-inline typename NGenericIsomorphism<dim>::Perm
+inline typename DimTraits<dim>::Perm
         NGenericIsomorphism<dim>::facetPerm(
         unsigned sourceSimp) const {
     return facetPerm_[sourceSimp];

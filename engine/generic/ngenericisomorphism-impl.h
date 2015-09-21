@@ -78,7 +78,7 @@ NGenericIsomorphism<dim>::NGenericIsomorphism(
 }
 
 template <int dim>
-typename NGenericIsomorphism<dim>::Isomorphism* NGenericIsomorphism<dim>::
+typename DimTraits<dim>::Isomorphism* NGenericIsomorphism<dim>::
         random(unsigned nSimplices) {
     Isomorphism* ans = new Isomorphism(nSimplices);
 
@@ -90,16 +90,15 @@ typename NGenericIsomorphism<dim>::Isomorphism* NGenericIsomorphism<dim>::
 
     // Randomly choose the individual permutations.
     for (i = 0; i < nSimplices; i++)
-        ans->facetPerm_[i] = Perm::Sn[rand() % Perm::nPerms];
+        ans->facetPerm_[i] = DimTraits<dim>::Perm::Sn[rand() %
+            DimTraits<dim>::Perm::nPerms];
 
     return ans;
 }
 
 template <int dim>
-typename NGenericIsomorphism<dim>::Triangulation*
-        NGenericIsomorphism<dim>::apply(
-        const typename NGenericIsomorphism<dim>::Triangulation* original)
-        const {
+typename DimTraits<dim>::Triangulation* NGenericIsomorphism<dim>::apply(
+        const typename DimTraits<dim>::Triangulation* original) const {
     if (original->getNumberOfSimplices() != nSimplices_)
         return 0;
 
@@ -146,7 +145,7 @@ typename NGenericIsomorphism<dim>::Triangulation*
 
 template <int dim>
 void NGenericIsomorphism<dim>::applyInPlace(
-        typename NGenericIsomorphism<dim>::Triangulation* tri) const {
+        typename DimTraits<dim>::Triangulation* tri) const {
     if (tri->getNumberOfSimplices() != nSimplices_)
         return;
 
