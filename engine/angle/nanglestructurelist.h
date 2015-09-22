@@ -422,6 +422,28 @@ class REGINA_API NAngleStructureList : public NPacket {
     friend class regina::NXMLAngleStructureListReader;
 };
 
+/**
+ * Creates a new set of angle structure equations for the given triangulation.
+ *
+ * Each equation will be represented as a row of the matrix, and
+ * each column will represent a coordinate in the underlying
+ * coordinate system (which is described in the NAngleStructureVector
+ * class notes).
+ *
+ * The returned matrix will be newly allocated and its destruction
+ * will be the responsibility of the caller of this routine.
+ *
+ * This routine is identical to the static class method
+ * NAngleStructureVector::makeAngleEquations().  It is offered again here
+ * as a global routine so that it is accessible to Python users (who cannot
+ * access the NAngleStructureVector class).
+ *
+ * @param tri the triangulation upon which these angle structure
+ * equations will be based.
+ * @return a newly allocated set of equations.
+ */
+static NMatrixInt* makeAngleEquations(const NTriangulation* tri);
+
 /*@}*/
 
 // Inline functions for NAngleStructureList
@@ -524,6 +546,10 @@ inline NAngleStructureList::StructureInserter&
 inline NAngleStructureList::StructureInserter&
         NAngleStructureList::StructureInserter::operator ++(int) {
     return *this;
+}
+
+inline NMatrixInt* makeAngleEquations(const NTriangulation* tri) {
+    return NAngleStructureVector::makeAngleEquations(tri);
 }
 
 } // namespace regina

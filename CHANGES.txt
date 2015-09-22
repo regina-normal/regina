@@ -161,6 +161,9 @@ Version 4.97  [ (under development) ]
               passed through to the bracket operator.
             - The void / non-void variants now require that the function
               object must / must not be derived from Returns<T> respectively.
+        Routine makeAngleEquations():
+            - Added as a global routine so that Python users can access it.
+              This is identical to NAngleStructureVector::makeAngleEquations().
         Routine open():
             - Added a variant that takes an input stream (as opposed to
               a filename).
