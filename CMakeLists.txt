@@ -109,6 +109,12 @@ INCLUDE(MacroLogFeature)
 INCLUDE( CheckCXXSourceCompiles )
 INCLUDE( CheckFunctionExists )
 
+# We need to determine threading flags *before* testing for C++11 std::thread.
+FIND_PACKAGE(Threads REQUIRED)
+IF(NOT Threads_FOUND)
+  MESSAGE(FATAL_ERROR "Regina requires threading support.")
+ENDIF(NOT Threads_FOUND)
+
 # C++11 requirements
 INCLUDE(CheckCXX11Features)
 SET(HAVE_CXX11_FEATURES TRUE)
@@ -353,11 +359,6 @@ ELSE (QDBM)
     TRUE)
   SET (DB_EXT "tdb")
 ENDIF (QDBM)
-
-FIND_PACKAGE(Threads REQUIRED)
-IF(NOT CMAKE_USE_PTHREADS_INIT)
-  MESSAGE(FATAL_ERROR "Regina requires pthread support.")
-ENDIF(NOT CMAKE_USE_PTHREADS_INIT)
 
 # Dependencies used by only some components of Regina
 FIND_PACKAGE(POPT)
