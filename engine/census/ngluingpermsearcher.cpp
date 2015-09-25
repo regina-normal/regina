@@ -96,7 +96,7 @@ NGluingPermSearcher* NGluingPermSearcher::bestSearcher(
         UseGluingPerms use, void* useArgs) {
     // Use an optimised algorithm if possible.
     if (finiteOnly) {
-        if (pairing->isClosed() && pairing->getNumberOfTetrahedra() >= 3 &&
+        if (pairing->getNumberOfTetrahedra() >= 3 &&
                 (whichPurge & PURGE_NON_MINIMAL) &&
                 (whichPurge & PURGE_NON_PRIME) &&
                 (orientableOnly || (whichPurge & PURGE_P2_REDUCIBLE))) {

@@ -139,7 +139,8 @@ struct Dim3Params {
     }
 
     inline static bool mightBeMinimal(Triangulation* tri) {
-        return ! tri->simplifyToLocalMinimum(false);
+        // return ! tri->simplifyToLocalMinimum(false);
+        return true;
     }
 
     inline static const Pairing* pairingFor(const GluingPermSearcher* s) {
@@ -188,13 +189,14 @@ void foundGluingPerms(const typename CensusType::GluingPermSearcher* perms,
         // and no low-degree edges).
 
         bool ok = true;
+        /*
         if (! tri->isValid())
             ok = false;
         else if ((! finiteness.hasFalse()) && tri->isIdeal())
             ok = false;
         else if ((! finiteness.hasTrue()) && (! tri->isIdeal()))
             ok = false;
-        else if ((! orientability.hasTrue()) && tri->isOrientable())
+        else */ if ((! orientability.hasTrue()) && tri->isOrientable())
             ok = false;
         else if ((minimal || minimalPrime || minimalPrimeP2) &&
                 ! CensusType::mightBeMinimal(tri))

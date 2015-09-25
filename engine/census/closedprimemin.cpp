@@ -152,7 +152,8 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
 
         // Currently tet and faces refer to the two faces of the base
         // tetrahedron that are pointing outwards.
-        while (dest1.simp == dest2.simp && dest1.simp != tet &&
+        while (dest1.simp != nTets &&
+                dest1.simp == dest2.simp && dest1.simp != tet &&
                 (! orderAssigned[tet * 4 + faces.lower()]) &&
                 (! orderAssigned[tet * 4 + faces.upper()])) {
             // Insert this pair of edges into the ordering and follow
@@ -193,7 +194,8 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
 
     // Run through the remaining faces.
     for (face.setFirst(); ! face.isPastEnd(nTets, true); face++)
-        if (! orderAssigned[face.simp * 4 + face.facet]) {
+        if (! (pairing->isUnmatched(face) ||
+                orderAssigned[face.simp * 4 + face.facet])) {
             order[orderDone] = face;
             if (face.facet < 3 && pairing->dest(boost::next(face)).simp ==
                     pairing->dest(face).simp)
@@ -211,6 +213,8 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
         }
 
     // All done for the order[] array.  Tidy up.
+    if (orderDone != orderSize)
+        std::cerr << "ERROR: orderDone != orderSize";
     delete[] orderAssigned;
 
     // ---------- Calculating the possible gluing permutations ----------
@@ -305,6 +309,7 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
 
     // ---------- Tracking of vertex / edge equivalence classes ----------
 
+/*
 #if PRUNE_HIGH_DEG_EDGE_SET
     // Only allow degree three edges if the face pairing graph supports
     // a (1,3,4) layered solid torus.  We can test this easily using the
@@ -317,6 +322,7 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
     highDegSum = 0;
     highDegBound = (6 - highDegLimit) * nTets - highDegLimit;
 #endif
+*/
 }
 
 // TODO (net): See what was removed when we brought in vertex link checking.
@@ -348,12 +354,12 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
         }
 
         orderElt = 0;
-        if (nChainEdges < nTets * 2)
+        if (nChainEdges < orderSize)
             orientation[order[nChainEdges].simp] = 1;
     }
 
     // Is it a partial search that has already finished?
-    if (orderElt == static_cast<int>(nTets) * 2) {
+    if (orderElt == orderSize) {
         if (isCanonical())
             use_(this, useArgs_);
         use_(0, useArgs_);
@@ -464,6 +470,7 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
             splitEdgeClasses();
             continue;
         }
+        /*
         // The final triangulation should have precisely (nTets + 1) edges
         // (since it must have precisely one vertex).
         if (nEdgeClasses < nTets + 1) {
@@ -487,6 +494,7 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
             splitEdgeClasses();
             continue;
         }
+        */
 
         // Merge vertex links and run corresponding tests.
         mergeResult = mergeVertexClasses();
@@ -494,7 +502,7 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
             // We closed off a vertex link, which means we will end up
             // with more than one vertex (unless this was our very last
             // gluing).
-            if (orderElt + 1 < static_cast<int>(nTets) * 2) {
+            if (orderElt + 1 < orderSize) {
                 splitVertexClasses();
                 splitEdgeClasses();
                 continue;
@@ -506,6 +514,7 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
             splitEdgeClasses();
             continue;
         }
+/*
         if (nVertexClasses > 1 + 3 * (nTets * 2 - orderElt - 1)) {
             // We have (2n - orderElt - 1) more gluings to choose.
             // Since each merge can reduce the number of vertex classes
@@ -515,6 +524,7 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
             splitEdgeClasses();
             continue;
         }
+*/
 
         // Fix the orientation if appropriate.
         if (generic && adj.facet == 0 && orientableOnly_) {
@@ -530,7 +540,7 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
         orderElt++;
 
         // If we're at the end, try the solution and step back.
-        if (orderElt == static_cast<int>(nTets) * 2) {
+        if (orderElt == orderSize) {
             // We in fact have an entire triangulation.
             // Run through the automorphisms and check whether our
             // permutations are in canonical form.
@@ -659,11 +669,13 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
                     << edgeStateChanged[i] << " at end of search!"
                     << std::endl;
 
+/*
 #if PRUNE_HIGH_DEG_EDGE_SET
         if (highDegSum != 0)
             std::cerr << "ERROR: highDegSum == " << highDegSum
                 << " at end of search!" << std::endl;
 #endif
+*/
     }
 
     use_(0, useArgs_);
@@ -690,11 +702,13 @@ void NClosedPrimeMinSearcher::dumpData(std::ostream& out) const {
         out << std::endl;
     }
 
+/*
 #if PRUNE_HIGH_DEG_EDGE_SET
     out << highDegLimit << ' '
         << highDegSum << ' '
         << highDegBound << std::endl;
 #endif
+*/
 }
 
 NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(std::istream& in,
@@ -726,6 +740,7 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(std::istream& in,
         }
     }
 
+/*
 #if PRUNE_HIGH_DEG_EDGE_SET
     in >> highDegLimit >> highDegSum >> highDegBound;
     if (highDegLimit < 3 || highDegLimit > 4 || highDegSum < 0 ||
@@ -734,6 +749,7 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(std::istream& in,
         inputError_ = true; return;
     }
 #endif
+*/
 
     // Did we hit an unexpected EOF?
     if (in.eof())
@@ -795,6 +811,7 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
 
             edgeStateChanged[orderIdx] = -1;
         } else {
+/*
 #if PRUNE_HIGH_DEG_EDGE_SET
             if (edgeState[eRep].size >= highDegLimit) {
                 if (edgeState[fRep].size >= highDegLimit)
@@ -808,6 +825,7 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
                 highDegSum += (edgeState[eRep].size + edgeState[fRep].size -
                     highDegLimit);
 #endif
+*/
 
             if (edgeState[eRep].rank < edgeState[fRep].rank) {
                 // Join eRep beneath fRep.
@@ -815,11 +833,13 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
                 edgeState[eRep].twistUp = hasTwist ^ parentTwists;
 
                 edgeState[fRep].size += edgeState[eRep].size;
+/*
 #if PRUNE_HIGH_DEG_EDGE_SET
 #else
                 if (edgeState[fRep].size > 3 * getNumberOfTetrahedra())
                     retVal |= ECLASS_HIGHDEG;
 #endif
+*/
 
                 if (edgeState[eRep].twistUp) {
                     edgeState[fRep].facesPos += edgeState[eRep].facesNeg;
@@ -846,11 +866,13 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
                 }
 
                 edgeState[eRep].size += edgeState[fRep].size;
+/*
 #if PRUNE_HIGH_DEG_EDGE_SET
 #else
                 if (edgeState[eRep].size > 3 * getNumberOfTetrahedra())
                     retVal |= ECLASS_HIGHDEG;
 #endif
+*/
 
                 if (edgeState[fRep].twistUp) {
                     edgeState[eRep].facesPos += edgeState[fRep].facesNeg;
@@ -869,10 +891,12 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
                 edgeStateChanged[orderIdx] = fRep;
             }
 
+/*
 #if PRUNE_HIGH_DEG_EDGE_SET
             if (highDegSum > highDegBound)
                 retVal |= ECLASS_HIGHDEG;
 #endif
+*/
 
             nEdgeClasses--;
         }
@@ -914,6 +938,7 @@ void NClosedPrimeMinSearcher::splitEdgeClasses() {
             }
 
             edgeState[rep].size -= edgeState[subRep].size;
+/*
 #if PRUNE_HIGH_DEG_EDGE_SET
             if (edgeState[rep].size >= highDegLimit) {
                 if (edgeState[subRep].size >= highDegLimit)
@@ -927,6 +952,7 @@ void NClosedPrimeMinSearcher::splitEdgeClasses() {
                 highDegSum -= (edgeState[rep].size + edgeState[subRep].size
                     - highDegLimit);
 #endif
+*/
 
             if (edgeState[subRep].twistUp) {
                 edgeState[rep].facesPos -= edgeState[subRep].facesNeg;
