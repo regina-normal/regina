@@ -624,7 +624,9 @@ int main(int argc, const char* argv[]) {
         db = new regina::InMemoryDB(dbMinTet,dbMaxBdry);
         // TODO Object in census must have at least 5 tetrahedra and at most 2
         // boundary faces
-        return runCensus<Dim3OneStepParams>();
+        auto r = runCensus<Dim3OneStepParams>();
+        delete db;
+        return r;
     } else
         return runCensus<Dim3Params>();
 }
