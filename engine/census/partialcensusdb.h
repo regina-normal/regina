@@ -244,6 +244,7 @@ class PartialCensusDB {
          * description might be used.
          */
         PartialCensusDB(int minSize, int maxBoundary);
+        virtual ~PartialCensusDB();
 
         virtual bool viable(const NFacePairing *) const;
 
@@ -266,6 +267,8 @@ class PartialCensusDB {
 
 inline PartialCensusDB::PartialCensusDB(int min, int max) : minSize_(min),
     maxBoundary(max) {
+}
+inline PartialCensusDB::~PartialCensusDB() {
 }
 
 inline bool PartialCensusDB::viable(const NFacePairing *p) const {
@@ -327,6 +330,7 @@ inline const bool PartialCensusHit::operator!=(const PartialCensusHit &other) co
 class InMemoryDB : public PartialCensusDB {
     public:
         InMemoryDB(int size, int maxBoundary);
+        virtual ~InMemoryDB();
 
     private:
         std::unordered_map<std::string, PartialCensusHits*> data_;
@@ -340,6 +344,16 @@ class InMemoryDB : public PartialCensusDB {
 };
 
 inline InMemoryDB::InMemoryDB(int s, int b) : PartialCensusDB(s,b) {
+}
+
+inline InMemoryDB::~InMemoryDB() {
+    unsigned long l=0;
+    for (auto theHits : data_) {
+        l+= theHits.second->count();
+        std::cout << "Graph: " << theHits.first << " has " <<
+            theHits.second->count() << " hits." << std::endl;
+    }
+    std::cout << "In memory storing " << l << " triangulations in total." << std::endl;
 }
 
 inline PartialCensusDB::DBStatus InMemoryDB::request(const std::string rep)
