@@ -346,7 +346,7 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
         if (pairing_->hasTripleEdge() ||
                 pairing_->hasBrokenDoubleEndedChain() ||
                 pairing_->hasOneEndedChainWithDoubleHandle() ||
-                pairing_->hasOneEndedChainWithStrayBigon() ||
+                // pairing_->hasOneEndedChainWithStrayBigon() ||
                 pairing_->hasWedgedDoubleEndedChain() ||
                 pairing_->hasTripleOneEndedChain()) {
             use_(0, useArgs_);

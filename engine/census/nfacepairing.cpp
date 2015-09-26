@@ -172,8 +172,24 @@ bool NFacePairing::hasBrokenDoubleEndedChain(unsigned baseTet,
             // Try to follow the chain along from tetrahedron
             // destFace.simp, using the two faces that are *not*
             // destFace.facet or ignoreFace.
+            if (isUnmatched(destFace.simp, ignoreFace) &&
+                    isUnmatched(bdryTet, i == 0 ? bdryFaces.upper() :
+                        bdryFaces.lower())) {
+                // The "break" in the broken chain consists of two
+                // boundary faces, which - even if we do find a broken
+                // double-ended chain here - could potentially be joined
+                // together to form a complete double-ended chain in an
+                // extension of this graph.
+                // Moreover, the existence of these boundary faces means
+                // there is no other choice of (i, ignoreFace) for which
+                // this can be made to work.
+                return false;
+            }
             chainTet = destFace.simp;
             chainFaces = NFacePair(destFace.facet, ignoreFace).complement();
+            if (isUnmatched(chainTet, chainFaces.lower()) ||
+                    isUnmatched(chainTet, chainFaces.upper()))
+                continue;
             followChain(chainTet, chainFaces);
 
             // Did we reach an end edge of the second chain?
