@@ -34,6 +34,8 @@
 #include "census/partialcensusdb.h"
 #include "census/ngluingpermsearcher.h"
 
+#include "triangulation/ntriangulation.h"
+
 namespace regina {
 
 PartialTriangulationData::PartialTriangulationData(const OneStepSearcher *s,
@@ -54,6 +56,23 @@ PartialTriangulationData::PartialTriangulationData(const OneStepSearcher *s,
 //    std::memcpy(edgeStateChanged, s->edgeStateChanged, sizeof(edgeStateChanged));
     permIndices_ = new int[nTets * 4];
     std::memcpy(permIndices_, s->permIndices_, 4*nTets*sizeof(int));
+    NTriangulation* ans = new NTriangulation;
+    NTetrahedron** simp = new NTetrahedron*[nTets];
+
+    unsigned t, facet;
+    for (t = 0; t < nTets; ++t)
+        simp[t] = ans->newSimplex();
+
+    for (t = 0; t < nTets; ++t)
+        for (facet = 0; facet <= 3; ++facet)
+            if ((! s->pairing_->isUnmatched(t, facet)) &&
+                    (! simp[t]->adjacentSimplex(facet)))
+                simp[t]->joinTo(facet, simp[s->pairing_->dest(t, facet).simp],
+                    s->gluingPerm(t,facet));
+
+    rep_ = std::string(ans->isoSig());
+    delete[] simp;
+    delete ans;
 //    if (s->orientableOnly_) {
 //        orientation = new int[nTets];
 //        std::memcpy(orientation, s->orientation, sizeof(orientation));

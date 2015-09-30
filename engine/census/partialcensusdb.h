@@ -63,6 +63,7 @@ class PartialTriangulationData {
         int *permIndices_;
 //        int *orientation;
         unsigned nTets;
+        std::string rep_;
 
         PartialTriangulationData(const OneStepSearcher *s, int size);
         ~PartialTriangulationData();
@@ -77,9 +78,6 @@ class PartialTriangulationData {
 class PartialCensusHit : public boost::noncopyable {
 
     private:
-        const std::string rep_;
-            /**< The human-readable name associated with the triangulation
-                 in the database. */
         const PartialCensusDB* db_;
             /**< The database in which the triangulation was found. */
         PartialCensusHit* next_;
@@ -116,6 +114,8 @@ class PartialCensusHit : public boost::noncopyable {
         const bool operator!=(const PartialCensusHit &) const;
 
         const PartialTriangulationData * data() { return data_; }
+
+        const std::string str() const;
 
 
     friend class PartialCensusDB;
@@ -305,6 +305,10 @@ inline PartialCensusHit * PartialCensusHits::end() const {
     return last_;
 }
 
+const inline std::string PartialCensusHit::str() const {
+    return data_->rep_;
+}
+
 inline PartialCensusHits::PartialCensusHits() : count_(0) {
     first_ = last_ = NULL;
 }
@@ -352,6 +356,10 @@ inline InMemoryDB::~InMemoryDB() {
         l+= theHits.second->count();
         std::cout << "Graph: " << theHits.first << " has " <<
             theHits.second->count() << " hits." << std::endl;
+        if (theHits.second->count() < 100)
+            for ( auto hit = theHits.second->begin() ; hit !=
+                    theHits.second->end(); hit = hit->next() )
+                std::cout << hit->str() << std::endl;
     }
     std::cout << "In memory storing " << l << " triangulations in total." << std::endl;
 }

@@ -398,8 +398,10 @@ void OneStepSearcher::glue() {
         // triangulation we have at the moment. But only if it's only
         // canonical up to this point. Also no point calling database if it's
         // the same size as what we're already pulling from the database
-        if (viable[adj.simp] && (orderElt > minOrder) && (adj.facet == 0) &&
-                isCanonical()) {
+        if (viable[adj.simp] && (orderElt > minOrder) && (adj.facet == 0)
+                && permIndex(face) == -1 // Only store this once
+                && isCanonical() // Store only canonical
+                ) {
             db_->store(this, nTets, pairingStrings[adj.simp]);
         }
 
