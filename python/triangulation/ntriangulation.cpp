@@ -164,18 +164,18 @@ namespace {
     }
 
     boost::python::list findAllIsomorphisms_list(
-	const NTriangulation& t, const NTriangulation& other) {
-	boost::python::list ans;
+        const NTriangulation& t, const NTriangulation& other) {
+        boost::python::list ans;
 
-	std::list<regina::NIsomorphism*> isos;
-	t.findAllIsomorphisms(other, isos);
+        std::list<regina::NIsomorphism*> isos;
+        t.findAllIsomorphisms(other, isos);
 
-	for (std::list<regina::NIsomorphism*>::iterator it =
-		 isos.begin(); it != isos.end(); it++) {
-	    const std::auto_ptr<regina::NIsomorphism> iso(*it);
-	    ans.append(iso);
-	}
-	return ans;
+        for (std::list<regina::NIsomorphism*>::iterator it =
+                 isos.begin(); it != isos.end(); it++) {
+            std::auto_ptr<regina::NIsomorphism> iso(*it);
+            ans.append(iso);
+        }
+        return ans;
     }
 
     boost::python::list maximalForestInDualSkeleton_list(NTriangulation& t) {
@@ -291,7 +291,7 @@ void addNTriangulation() {
         .def("triangleIndex", &NTriangulation::triangleIndex)
         .def("isIdenticalTo", &NTriangulation::isIdenticalTo)
         .def("isIsomorphicTo", &NTriangulation::isIsomorphicTo)
-	.def("findAllIsomorphisms", findAllIsomorphisms_list)
+        .def("findAllIsomorphisms", findAllIsomorphisms_list)
         .def("makeCanonical", &NTriangulation::makeCanonical)
         .def("isContainedIn", &NTriangulation::isContainedIn)
         .def("hasTwoSphereBoundaryComponents",
