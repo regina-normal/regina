@@ -611,7 +611,7 @@ cleanUpGluing:
     editLabel = nil;
     
     if (toReload.count)
-        [self.tetrahedra reloadRowsAtIndexPaths:toReload withRowAnimation:NO];
+        [self.tetrahedra reloadRowsAtIndexPaths:toReload withRowAnimation:UITableViewRowAnimationFade];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField

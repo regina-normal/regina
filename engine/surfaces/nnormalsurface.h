@@ -1150,7 +1150,7 @@ class REGINA_API NNormalSurface :
          *
          * @param out the output stream to which the XML should be written.
          */
-        virtual void writeXMLData(std::ostream& out) const;
+        void writeXMLData(std::ostream& out) const;
 
         /**
          * Determines if this normal surface is empty (has no discs
@@ -1286,7 +1286,7 @@ class REGINA_API NNormalSurface :
          * @return the vertex linked by this surface, or 0 if this
          * surface is not the link of a single vertex.
          */
-        virtual const NVertex* isVertexLink() const;
+        const NVertex* isVertexLink() const;
         /**
          * Determines whether or not a rational multiple of this surface
          * is the thin link of a single edge.
@@ -1311,7 +1311,7 @@ class REGINA_API NNormalSurface :
          * @return a pair containing the edge(s) linked by this surface,
          * as described above.
          */
-        virtual std::pair<const NEdge*, const NEdge*> isThinEdgeLink() const;
+        std::pair<const NEdge*, const NEdge*> isThinEdgeLink() const;
         /**
          * Determines whether or not this surface is a splitting surface.
          * A \a splitting surface is a compact surface containing

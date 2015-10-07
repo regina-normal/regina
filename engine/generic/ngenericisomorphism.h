@@ -196,7 +196,7 @@ class REGINA_API NGenericIsomorphism :
          * @return a read-write reference to the permutation applied to the
          * facets of the source simplex.
          */
-        Perm& facetPerm(unsigned sourceSimp);
+        typename DimTraits<dim>::Perm& facetPerm(unsigned sourceSimp);
         /**
          * Determines the permutation that is applied to the (\a dim + 1)
          * facets of the given source simplex under this isomorphism.
@@ -210,7 +210,7 @@ class REGINA_API NGenericIsomorphism :
          * @return the permutation applied to the facets of the
          * source simplex.
          */
-        Perm facetPerm(unsigned sourceSimp) const;
+        typename DimTraits<dim>::Perm facetPerm(unsigned sourceSimp) const;
         /**
          * Determines the image of the given source simplex facet
          * under this isomorphism.  Note that a value only is returned; this
@@ -276,7 +276,8 @@ class REGINA_API NGenericIsomorphism :
          * @return the resulting new triangulation, or 0 if a problem
          * was encountered (i.e., an unmet precondition was noticed).
          */
-        Triangulation* apply(const Triangulation* original) const;
+        typename DimTraits<dim>::Triangulation* apply(
+            const typename DimTraits<dim>::Triangulation* original) const;
 
         /**
          * Applies this isomorphism to the given triangulation,
@@ -310,7 +311,7 @@ class REGINA_API NGenericIsomorphism :
          * @param tri the triangulation to which this isomorphism
          * should be applied.
          */
-        void applyInPlace(Triangulation* tri) const;
+        void applyInPlace(typename DimTraits<dim>::Triangulation* tri) const;
 
         /**
          * Writes a short text representation of this object to the
@@ -353,7 +354,8 @@ class REGINA_API NGenericIsomorphism :
          * isomorphism should operate upon.
          * @return the newly constructed random isomorphism.
          */
-        static Isomorphism* random(unsigned nSimplices);
+        static typename DimTraits<dim>::Isomorphism* random(
+            unsigned nSimplices);
 };
 
 /*@}*/
@@ -390,14 +392,14 @@ inline int NGenericIsomorphism<dim>::simpImage(unsigned sourceSimp) const {
 }
 
 template <int dim>
-inline typename NGenericIsomorphism<dim>::Perm&
+inline typename DimTraits<dim>::Perm&
         NGenericIsomorphism<dim>::facetPerm(
         unsigned sourceSimp) {
     return facetPerm_[sourceSimp];
 }
 
 template <int dim>
-inline typename NGenericIsomorphism<dim>::Perm
+inline typename DimTraits<dim>::Perm
         NGenericIsomorphism<dim>::facetPerm(
         unsigned sourceSimp) const {
     return facetPerm_[sourceSimp];

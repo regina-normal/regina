@@ -128,19 +128,19 @@ void addDim2Triangulation() {
         .def("getTriangles", Dim2_getTriangles_list)
         .def("getSimplices", Dim2_getTriangles_list)
         .def("getTriangle", getTriangle_non_const,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("getSimplex", getTriangle_non_const,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("triangleIndex", &Dim2Triangulation::triangleIndex)
         .def("simplexIndex", &Dim2Triangulation::simplexIndex)
         .def("newTriangle", newTriangle_void,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("newSimplex", newTriangle_void,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("newTriangle", newTriangle_string,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("newSimplex", newTriangle_string,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("removeTriangle", &Dim2Triangulation::removeTriangle)
         .def("removeSimplex", &Dim2Triangulation::removeSimplex)
         .def("removeTriangleAt", &Dim2Triangulation::removeTriangleAt)
@@ -159,13 +159,13 @@ void addDim2Triangulation() {
         .def("getVertices", Dim2_getVertices_list)
         .def("getEdges", Dim2_getEdges_list)
         .def("getComponent", &Dim2Triangulation::getComponent,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("getBoundaryComponent", &Dim2Triangulation::getBoundaryComponent,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("getVertex", &Dim2Triangulation::getVertex,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("getEdge", &Dim2Triangulation::getEdge,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("componentIndex", &Dim2Triangulation::componentIndex)
         .def("boundaryComponentIndex",
             &Dim2Triangulation::boundaryComponentIndex)
