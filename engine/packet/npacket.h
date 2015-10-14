@@ -48,6 +48,7 @@
 
 #include "regina-core.h"
 #include "output.h"
+#include "utilities/nsemiweakbase.h"
 #include "packet/npacketlistener.h"
 #include "packet/packettype.h"
 #include <boost/noncopyable.hpp>
@@ -154,7 +155,8 @@ struct PacketInfo;
  */
 class REGINA_API NPacket :
         public Output<NPacket>,
-        public boost::noncopyable {
+        public boost::noncopyable,
+        public NSemiWeakBase {
     private:
         std::string packetLabel;
             /**< The unique label for this individual packet of information. */
@@ -1270,6 +1272,8 @@ class REGINA_API NPacket :
          * @param out the output stream to which the XML should be written.
          */
         virtual void writeXMLPacketData(std::ostream& out) const = 0;
+
+        virtual bool hasOwningParent() const;
 
     private:
         /**

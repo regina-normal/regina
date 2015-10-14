@@ -5,6 +5,9 @@ SET ( FILES
   base64
   i18nutils
   nbooleans
+  nsemiweakbase
+  nsemiweakptr
+  nsemiweakremnant
   nthread
   nxmlcallback
   osutils
@@ -37,6 +40,9 @@ if (${REGINA_INSTALL_DEV})
     nproperty.h
     nqitmask.h
     nrational.h
+    nsemiweakbase.h
+    nsemiweakptr.h
+    nsemiweakremnant.h
     nthread.h
     ntrieset.h
     ntritmask.h

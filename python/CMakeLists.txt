@@ -1,4 +1,4 @@
-SET ( SOURCES globalarray modulemain )
+SET ( SOURCES globalarray semiweakheldtype modulemain )
 ADD_SUBDIRECTORY("algebra")
 ADD_SUBDIRECTORY("angle")
 ADD_SUBDIRECTORY("census")
