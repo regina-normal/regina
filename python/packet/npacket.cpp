@@ -97,7 +97,7 @@ void addNPacket() {
 
     class_<
         NPacket, boost::noncopyable, SemiWeakHeldType<NPacket> >(
-            "NPacket", boost::python::no_init)
+            "NPacket", no_init)
         .def("getPacketType", &NPacket::getPacketType)
         .def("getPacketTypeName", &NPacket::getPacketTypeName)
         .def("getPacketLabel", &NPacket::getPacketLabel,
@@ -132,12 +132,9 @@ void addNPacket() {
         .def("getNumberOfChildren", &NPacket::getNumberOfChildren)
         .def("getNumberOfDescendants", &NPacket::getNumberOfDescendants)
         .def("getTotalTreeSize", &NPacket::getTotalTreeSize)
-        .def("insertChildFirst", &NPacket::insertChildFirst,
-             return_value_policy<to_held_type<> >())
-        .def("insertChildLast", &NPacket::insertChildLast,
-             return_value_policy<to_held_type<> >())
-        .def("insertChildAfter", &NPacket::insertChildAfter,
-             return_value_policy<to_held_type<> >())
+        .def("insertChildFirst", &NPacket::insertChildFirst)
+        .def("insertChildLast", &NPacket::insertChildLast)
+        .def("insertChildAfter", &NPacket::insertChildAfter)
         .def("makeOrphan", makeOrphan_return,
              return_value_policy<to_held_type<> >())
         .def("reparent", reparent_check, OL_reparent())
