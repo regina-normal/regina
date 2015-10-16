@@ -98,6 +98,7 @@ def reginaSetup(quiet = False, readline = True, banner = False,
                 if os.path.exists(snappyLib):
                     sys.path.append(snappyLib)
                     sys.path.append(snappyLib + '/site-packages.zip')
+                    sys.path.append(snappyLib + '/lib-dynload')
 
     if libs:
         if __execLibs(namespace, quiet):
