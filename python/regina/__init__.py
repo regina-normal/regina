@@ -88,7 +88,7 @@ def reginaSetup(quiet = False, readline = True, banner = False,
                     app = subprocess.check_output(['mdfind',
                         'kMDItemDisplayName==SnapPy&&kMDItemKind==Application'])
                     if app:
-                        app = app.strip()
+                        app = app.strip().split('\n')[0]
                 except:
                     app = None
 
