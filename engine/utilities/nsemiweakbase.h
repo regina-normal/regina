@@ -42,6 +42,9 @@ private:
     // constructor, which it should because it sets the remnant_ to zero on
     // the copied object.
     NSemiWeakBase(const NSemiWeakBase &);
+
+    // Similarly, for operator=
+    NSemiWeakBase & operator=(const NSemiWeakBase &);
     
     friend class NSemiWeakRemnant;
     NSemiWeakRemnant *remnant_;

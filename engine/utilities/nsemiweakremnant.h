@@ -3,7 +3,16 @@
 #define __NSEMIWEAKREMNANT_H
 #endif
 
+#include <boost/version.hpp>
+#if BOOST_VERSION >= 105500
+#define USE_BOOST_INTRUSIVE_REF_COUNTER
+#endif
+
+#ifdef USE_BOOST_INTRUSIVE_REF_COUNTER
 #include <boost/smart_ptr/intrusive_ref_counter.hpp>
+#else
+#include "utilities/nintrusiverefcounter.h"
+#endif
 
 namespace regina {
 
@@ -20,7 +29,11 @@ class NSemiWeakBase;
  */
 
 class NSemiWeakRemnant :
+#ifdef USE_BOOST_INTRUSIVE_REF_COUNTER
     public boost::intrusive_ref_counter<NSemiWeakRemnant> {
+#else
+    public regina::temporary::NIntrusiveRefCounter<NSemiWeakRemnant> {
+#endif
 
 public:
     /**

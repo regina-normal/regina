@@ -36,6 +36,7 @@
 #include "packet/ncontainer.h"
 #include "../semiweakheldtype.h"
 
+// Held type must be declared before boost/python.hpp
 #include <boost/python.hpp>
 
 using namespace boost::python;

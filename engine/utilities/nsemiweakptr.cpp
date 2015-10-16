@@ -1,5 +1,5 @@
-#include "utilities/nsemiweakptr.h"
 #include "utilities/nsemiweakremnant.h"
+#include "utilities/nsemiweakptr.h"
 
 namespace regina {
 

@@ -35,8 +35,7 @@
 #include "packet/npacket.h"
 #include "../semiweakheldtype.h"
 
-// hold types must be declared before boost/python.hpp
-
+// Held type must be declared before boost/python.hpp
 #include <boost/python.hpp>
 
 using namespace boost::python;
