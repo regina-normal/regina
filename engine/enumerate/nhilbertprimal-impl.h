@@ -139,8 +139,8 @@ void NHilbertPrimal::enumerateUsingBitmask(OutputIterator results,
                         v.push_back(mpz_class((**rit)[i].rawData()));
                 }
             }
-        libnormaliz::Cone<mpz_class> cone(input,
-            libnormaliz::Type::integral_closure);
+        libnormaliz::Cone<mpz_class> cone(
+            libnormaliz::Type::integral_closure, input);
         libnormaliz::ConeProperties wanted(
             libnormaliz::ConeProperty::HilbertBasis);
         cone.compute(wanted);

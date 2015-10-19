@@ -1152,7 +1152,7 @@ namespace {
             }
         }
 
-        libnormaliz::Cone<mpz_class> cone(input, libnormaliz::Type::equations);
+        libnormaliz::Cone<mpz_class> cone(libnormaliz::Type::equations, input);
         libnormaliz::ConeProperties wanted(
             libnormaliz::ConeProperty::HilbertBasis);
         cone.compute(wanted);
