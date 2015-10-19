@@ -7,7 +7,6 @@ SET ( FILES
   cone_property
   libnormaliz-templated
   offload_handler
-  reduction
   )
 
 # Prepend folder name
