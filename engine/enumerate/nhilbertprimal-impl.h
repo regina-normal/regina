@@ -143,6 +143,7 @@ void NHilbertPrimal::enumerateUsingBitmask(OutputIterator results,
             libnormaliz::Type::integral_closure, input);
         libnormaliz::ConeProperties wanted(
             libnormaliz::ConeProperty::HilbertBasis);
+        cone.deactivateChangeOfPrecision();
         cone.compute(wanted);
 
         if (! cone.isComputed(libnormaliz::ConeProperty::HilbertBasis)) {
