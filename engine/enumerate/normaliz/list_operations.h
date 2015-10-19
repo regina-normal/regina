@@ -46,7 +46,7 @@ ostream& operator<< (ostream& out, const list<T>& l) {
     for (i =l.begin(); i != l.end(); i++) {
         out << *i << " ";
     }
-    out << endl;
+    out << std::endl;
     return out;
 }
 

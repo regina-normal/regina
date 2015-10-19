@@ -1,10 +1,7 @@
---- general.h	(revision 7811)
-+++ general.h	(working copy)
-@@ -21,11 +21,15 @@
- 
- 
+--- general.h
++++ general.h
+@@ -28,9 +28,12 @@
  #include <iostream>
-+#include <cstring>
  #include <assert.h>
  
 +/*
@@ -18,12 +15,22 @@
      #include <mpirxx.h>
 --- list_operations.h
 +++ list_operations.h
-@@ -41,7 +41,7 @@ ostream& operator<< (ostream& out, const list<T>& l) {
+@@ -46,7 +46,7 @@ ostream& operator<< (ostream& out, const list<T>& l) {
      for (i =l.begin(); i != l.end(); i++) {
-         out << *i <<" ";
+         out << *i << " ";
      }
 -    out << endl;
 +    out << std::endl;
      return out;
  }
+ 
+--- offload_handler.cpp
++++ offload_handler.cpp
+@@ -9,6 +9,7 @@
+ #include "libnormaliz/vector_operations.h"
+ #include "libnormaliz/my_omp.h"
+ #include "libnormaliz/HilbertSeries.h"
++#include <cstring>
+ #include <iostream>
+ #include <fstream>
  
