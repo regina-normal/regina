@@ -12,7 +12,7 @@ SET ( FILES
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )
-  SET ( SOURCES ${SOURCES} enumerate/normaliz/${SOURCE_FILE})
+  SET ( SOURCES ${SOURCES} enumerate/libnormaliz/${SOURCE_FILE})
 ENDFOREACH(SOURCE_FILE)
 
 # Set the variable in the parent directory
