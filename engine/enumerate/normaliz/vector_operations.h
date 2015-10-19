@@ -1,6 +1,6 @@
 /*
  * Normaliz
- * Copyright (C) 2007-2013  Winfried Bruns, Bogdan Ichim, Christof Soeger
+ * Copyright (C) 2007-2014  Winfried Bruns, Bogdan Ichim, Christof Soeger
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,6 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
+ * As an exception, when this program is distributed through (i) the App Store
+ * by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or (iii) Google Play
+ * by Google Inc., then that store may impose any digital rights management,
+ * device limits and/or redistribution restrictions that are required by its
+ * terms of service.
  */
 //---------------------------------------------------------------------------
 #ifndef VECTOR_OPERATIONS_H
@@ -22,8 +27,11 @@
 
 #include <vector>
 #include <ostream>
+#include <list>
 
-#include "libnormaliz.h"
+#include <libnormaliz/libnormaliz.h>
+#include <libnormaliz/integer.h>
+#include <libnormaliz/convert.h>
 
 namespace libnormaliz {
 using std::vector;
@@ -36,7 +44,7 @@ using std::ostream;
 template <typename T>
 ostream& operator<< (ostream& out, const vector<T>& vec) {
     for (size_t i=0; i<vec.size(); ++i) {
-        out << vec[i]<<" ";
+        out << vec[i] << " ";
     }
     out << std::endl;
     return out;
@@ -55,6 +63,10 @@ Integer v_scalar_product_unequal_vectors_end(const vector<Integer>& a,const vect
 //returns the addition a + b, vectors must be of equal size
 template<typename Integer>
 vector<Integer> v_add(const vector<Integer>& a,const vector<Integer>& b);
+template<typename Integer>
+vector<Integer> v_add_overflow_check(const vector<Integer>& a,const vector<Integer>& b);
+template<typename Integer>
+void v_add_result(vector<Integer>& result, const size_t length, const vector<Integer>& a,const vector<Integer>& b);
 
 //adds b to a reduces the result modulo m, a and b must be reduced modulo m!
 template<typename Integer>
@@ -64,9 +76,13 @@ vector<Integer>& v_add_to_mod(vector<Integer>& a, const vector<Integer>& b, cons
 //							abs, gcd and lcm
 //---------------------------------------------------------------------------
 
-//takes the absolute value of the elements and returns a reference to the changed vector
+// takes the absolute value of the elements and returns a reference to the changed vector
 template<typename Integer>
 vector<Integer>& v_abs(vector<Integer>& v);
+
+// returns the vector of absolute values, does not change the argument
+template<typename Integer>
+vector<Integer> v_abs_value(vector<Integer>& v);
 
 //returns gcd of the elements of v
 template<typename Integer>
@@ -94,9 +110,9 @@ void v_scalar_multiplication(vector<Integer>& v, const Integer& scalar){
     }
 }
 
-//returns v * scalar
+//returns v * scalar mod modulus
 template<typename Integer>
-vector<Integer> v_scalar_multiplication_two(const vector<Integer>& v, const Integer& scalar);
+vector<Integer> v_scalar_mult_mod(const vector<Integer>& v, const Integer& scalar, const Integer& modulus, bool& success);
 
 template<typename Integer>
 void v_scalar_division(vector<Integer>& v, const Integer& scalar);
@@ -145,10 +161,49 @@ bool compare_last (const vector<Integer>& a, const vector<Integer>& b)
 
 //returns a key vector containing the positions of non-zero entrys of v
 template<typename Integer>
-vector<key_t> v_non_zero_pos(vector<Integer> v);
+vector<key_t> v_non_zero_pos(const vector<Integer>& v);
+
+// check whether the vector only contains 0
+template<typename Integer>
+bool v_is_zero(const vector<Integer>& v);
 
 
+template<typename Integer>
+Integer v_max_abs(const vector<Integer>& v){
+	Integer tmp = 0;
+	for (size_t i=0; i<v.size(); i++){
+		if (Iabs(v[i])>tmp) tmp=Iabs(v[i]);
+	}
+	return tmp;
 }
+
+//---------------------------------------------------------------------------
+//							   bool vector operations
+//---------------------------------------------------------------------------
+
+vector<bool> v_bool_andnot(const vector<bool>& a, const vector<bool>& b);
+
+// swaps entry i and j of the vector<bool> v
+void v_bool_entry_swap(vector<bool>& v, size_t i, size_t j);
+
+//---------------------------------------------------------------------------
+//							  Special
+//---------------------------------------------------------------------------
+
+// computes integral simplex containing a rational vector
+template<typename Integer>
+void approx_simplex(const vector<Integer>& q, std::list<vector<Integer> >& approx,const long k);
+
+vector<key_t> identity_key(size_t n);
+
+//---------------------------------------------------------------------------
+//                            Sorting
+//---------------------------------------------------------------------------
+
+template <typename T>
+void order_by_perm(vector<T>& v, const vector<key_t>& permfix);
+
+} // namespace
 
 //---------------------------------------------------------------------------
 #endif

@@ -1,6 +1,6 @@
 /*
  * Normaliz
- * Copyright (C) 2007-2013  Winfried Bruns, Bogdan Ichim, Christof Soeger
+ * Copyright (C) 2007-2014  Winfried Bruns, Bogdan Ichim, Christof Soeger
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,12 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
+ * As an exception, when this program is distributed through (i) the App Store
+ * by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or (iii) Google Play
+ * by Google Inc., then that store may impose any digital rights management,
+ * device limits and/or redistribution restrictions that are required by its
+ * terms of service.
  */
 
 #ifndef INTEGER_H_
 #define INTEGER_H_
 
-#include "general.h"
+#include <libnormaliz/general.h>
+
+#include <list>
+#include <vector>
+#include <iostream>
+#include <limits.h>
+
 
 // Integer should (may) support:
 // Integer abs(Integer); here implemented as Iabs
@@ -28,34 +39,7 @@
 //---------------------------------------------------------------------------
 
 namespace libnormaliz {
-
-//---------------------------------------------------------------------------
-
-
-bool fits_long_range(long long a);
-
-mpz_class to_mpz(long a);
-mpz_class to_mpz(long long a);
-inline mpz_class to_mpz(const mpz_class& a) {return a;}
-
-
-template<typename Integer> inline long explicit_cast_to_long(const Integer& a) {
-    // check for overflow
-    if (!fits_long_range(a)) {
-        throw ArithmeticException();
-    }
-    return (long)a;
-}
-template<> inline long explicit_cast_to_long(const long& a) {
-    return a;
-}
-template<> inline long explicit_cast_to_long<mpz_class> (const mpz_class& a) {
-    // check for overflow
-    if (!a.fits_slong_p()) {
-        throw ArithmeticException();
-    }
-    return a.get_si();
-}
+using namespace std;
 
 //---------------------------------------------------------------------------
 //                     Basic functions
@@ -73,6 +57,83 @@ template<> mpz_class gcd<mpz_class>(const mpz_class& a, const mpz_class& b);
 //returns lcm of a and b,   returns 0 if one is 0
 template<typename Integer> Integer lcm(const Integer& a, const Integer& b);
 template<> mpz_class lcm(const mpz_class& a, const mpz_class& b);
+
+// integer division a/b. Returns quot and rem = minimal remainder <= |b|/2
+ template<typename Integer>
+void minimal_remainder(const Integer& a, const Integer&b, Integer& quot, Integer& rem);
+
+// extended Euclidean algorithm: d=ua+vb
+template <typename Integer>
+Integer ext_gcd(const Integer& a, const Integer& b, Integer& u, Integer&v);
+
+// minimizes u and v and makes d >= 0.
+template <typename Integer>
+void sign_adjust_and_minimize(const Integer& a, const Integer& b, Integer& d, Integer& u, Integer&v);
+
+//---------------------------------------------------------------------------
+//                     Conversions and checks
+//---------------------------------------------------------------------------
+
+// convert val to ret
+// does the conversion and returns false if it fails
+bool try_convert(long& ret, const long long& val);
+inline bool try_convert(long long& ret, const long& val) {ret = val; return true;}
+bool try_convert(long& ret, const mpz_class& val);
+bool try_convert(long long& ret, const mpz_class& val);
+inline bool try_convert(mpz_class& ret, const long& val) {ret = val; return true;}
+bool try_convert(mpz_class& ret, const long long& val);
+
+// template for same typ "conversion"
+template<typename Type>
+inline bool try_convert(Type& ret, const Type& val) {ret = val; return true;}
+
+
+bool fits_long_range(long long a);
+
+template<typename Integer>
+inline bool using_GMP() {
+  return false;
+}
+
+template<>
+inline bool using_GMP<mpz_class>() {
+  return true;
+} 
+
+template<typename Integer>
+Integer int_max_value_dual();
+
+template<typename Integer>
+Integer int_max_value_primary();
+
+//---------------------------------------------------------------------------
+
+template<typename Integer>
+inline bool check_range(const Integer& m) {
+    const Integer max_primary = int_max_value_primary<Integer>();
+    return (Iabs(m) <= max_primary);
+}
+
+template<>
+inline bool check_range<mpz_class>(const mpz_class& m) {
+  return true;
+}
+
+//---------------------------------------------------------------------------
+
+template<typename Integer>
+void check_range_list(const std::list<std::vector<Integer> >& ll);
+
+template<typename Integer> class CandidateList;
+template<typename Integer> class Candidate;
+
+template<typename Integer>
+void check_range_list(const CandidateList<Integer>& ll);
+template<typename Integer>
+void check_range_list(const std::list<Candidate<Integer> >& ll);
+
+
+
 //---------------------------------------------------------------------------
 //                     Special functions
 //---------------------------------------------------------------------------

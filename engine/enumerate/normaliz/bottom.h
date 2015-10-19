@@ -1,6 +1,6 @@
 /*
  * Normaliz
- * Copyright (C) 2012,2013 Christof Soeger
+ * Copyright (C) 2007-2014  Winfried Bruns, Bogdan Ichim, Christof Soeger
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -21,41 +21,24 @@
  * terms of service.
  */
 
-/* 
- * This header provide some dummy replacements of OpenMP functions. We use it
- * to compile Normaliz without OpenMP.
- */
+#ifndef BOTTOM_H
+#define BOTTOM_H
 
-#ifndef MY_OMP_H_
-#define MY_OMP_H_
 
-#ifdef _OPENMP
-#include <omp.h>
-#else
+#include <vector>
+#include <list>
 
-inline int omp_in_parallel() {
-    return false;
-}
+#include "libnormaliz/matrix.h"
 
-inline int omp_get_level(){
-    return 0;
-}
+namespace libnormaliz {
+using namespace std;
 
-inline int omp_get_active_level() {
-    return 0;
-}
+extern long ScipBound;
 
-inline int omp_get_thread_num() {
-    return 0;
-}
+template<typename Integer>
+void bottom_points(list< vector<Integer> >& new_points, Matrix<Integer> gens,const vector<Integer>& grading, long app_level, long recursion_depth);
 
-inline int omp_get_max_threads() {
-    return 1;
-}
+} // namespace
 
-inline int omp_get_ancestor_thread_num(int level) {
-    return 0;
-}
 
-#endif /* ifndef _OPENMP */
-#endif /* MY_OMP_H_ */
+#endif // BOTTOM_H

@@ -3,8 +3,11 @@
 # Files to compile
 SET ( FILES
   HilbertSeries
+  bottom
   cone_property
   libnormaliz-templated
+  offload_handler
+  reduction
   )
 
 # Prepend folder name

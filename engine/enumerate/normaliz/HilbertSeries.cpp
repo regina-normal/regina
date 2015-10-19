@@ -1,6 +1,6 @@
 /*
  * Normaliz
- * Copyright (C) 2007-2013  Winfried Bruns, Bogdan Ichim, Christof Soeger
+ * Copyright (C) 2007-2014  Winfried Bruns, Bogdan Ichim, Christof Soeger
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,22 +14,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
+ * As an exception, when this program is distributed through (i) the App Store
+ * by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or (iii) Google Play
+ * by Google Inc., then that store may impose any digital rights management,
+ * device limits and/or redistribution restrictions that are required by its
+ * terms of service.
  */
+
+#ifdef NMZ_MIC_OFFLOAD
+#pragma offload_attribute (push, target(mic))
+#endif
+
 #include <cassert>
 #include <iostream>
+#include <sstream>
 #include <map>
 #include <algorithm>
-#include "HilbertSeries.h"
-#include "vector_operations.h"
-#include "map_operations.h"
-#include "integer.h"
 
-#include "matrix.h"
+#include "libnormaliz/HilbertSeries.h"
+#include "libnormaliz/vector_operations.h"
+#include "libnormaliz/map_operations.h"
+#include "libnormaliz/integer.h"
+#include "libnormaliz/convert.h"
+
+#include "libnormaliz/matrix.h"
 
 //---------------------------------------------------------------------------
 
 namespace libnormaliz {
 using std::cout; using std::endl; using std::flush;
+using std::istringstream; using std::ostringstream;
 
 long lcm_of_keys(const map<long, denom_t>& m){
     long l = 1;
@@ -47,12 +61,16 @@ long lcm_of_keys(const map<long, denom_t>& m){
 HilbertSeries::HilbertSeries() {
     num = vector<mpz_class>(1,0);
     //denom just default constructed
+    shift = 0;
+    verbose = false;
 }
 
 // Constructor, creates num/denom, see class description for format
 HilbertSeries::HilbertSeries(const vector<num_t>& numerator, const vector<denom_t>& gen_degrees) {
     num = vector<mpz_class>(1,0);
     add(numerator, gen_degrees);
+    shift = 0;
+    verbose = false;
 }
 
 // Constructor, creates num/denom, see class description for format
@@ -60,6 +78,15 @@ HilbertSeries::HilbertSeries(const vector<mpz_class>& numerator, const map<long,
     num = numerator;
     denom = denominator;
     is_simplified = false;
+    shift = 0;
+    verbose = false;
+}
+
+// Constructor, string as created by to_string_rep
+HilbertSeries::HilbertSeries(const string& str) {
+    from_string_rep(str);
+    shift = 0;
+    verbose = false;
 }
 
 
@@ -68,6 +95,7 @@ void HilbertSeries::reset() {
     num.push_back(0);
     denom.clear();
     denom_classes.clear();
+    shift = 0;
     is_simplified = false;
 }
 
@@ -105,11 +133,8 @@ void HilbertSeries::performAdd(const vector<num_t>& numerator, const vector<deno
         other_denom[gen_degrees[i]]++;
     }
     // convert numerator to mpz
-    s = numerator.size();
-    vector<mpz_class> other_num(s);
-    for (i=0; i<s; ++i) {
-        other_num[i] = to_mpz(numerator[i]);
-    }
+    vector<mpz_class> other_num(numerator.size());
+    convert(other_num, numerator);
     performAdd(other_num, other_denom);
 }
 
@@ -144,13 +169,14 @@ void HilbertSeries::performAdd(vector<mpz_class>& other_num, const map<long, den
 }
 
 void HilbertSeries::collectData() const {
-	 if (verbose) verboseOutput() << "Adding " << denom_classes.size() << " denominator classes..." << flush;
+    if (denom_classes.empty()) return;
+	if (verbose) verboseOutput() << "Adding " << denom_classes.size() << " denominator classes..." << flush;
     map< vector<denom_t>, vector<num_t> >::iterator it;
     for (it = denom_classes.begin(); it != denom_classes.end(); ++it) {
         performAdd(it->second, it->first);
     }
     denom_classes.clear();
-	 if (verbose) verboseOutput() << " done." << endl;
+	if (verbose) verboseOutput() << " done." << endl;
 }
 
 // simplify, see class description
@@ -159,7 +185,7 @@ void HilbertSeries::simplify() const {
         return;
     collectData();
 /*    if (verbose) {
-        cout << "Hilbert series before simplification: "<< endl << *this;
+        verboseOutput() << "Hilbert series before simplification: "<< endl << *this;
     }*/
     vector<mpz_class> q, r, poly; //polynomials
     // In denom_cyclo we collect cyclotomic polynomials in the denominator.
@@ -207,7 +233,7 @@ void HilbertSeries::simplify() const {
         poly = cyclotomicPoly<mpz_class>(i);
         while (cyclo_i > 0) {
             poly_div(q, r, num, poly);
-            if (r.size() == 0) { // numerator is divisable by poly
+            if (r.empty()) { // numerator is divisable by poly
                 num = q;
                 cyclo_i--;
             }
@@ -235,8 +261,8 @@ void HilbertSeries::simplify() const {
         dim = 0;
     period = lcm_of_keys(cdenom);
     i = period;
-    if (period > 2000) {
-        errorOutput() << "WARNING: Period is to big, the representation of the Hilbert series may have more than dimensional many factors in the denominator!" << endl;
+    if (period > 10000) {
+        errorOutput() << "WARNING: Period is too big, the representation of the Hilbert series may have more than dimensional many factors in the denominator!" << endl;
         i = cdenom.rbegin()->first;
     }
     while (!cdenom.empty()) {
@@ -256,15 +282,32 @@ void HilbertSeries::simplify() const {
             }
         }
         i = lcm_of_keys(cdenom);
-        if (i > 2000) {
+        if (i > 10000) {
             i = cdenom.rbegin()->first;
         }
     }
 
 /*    if (verbose) {
-        cout << "Simplified Hilbert series: " << endl << *this;
+        verboseOutput() << "Simplified Hilbert series: " << endl << *this;
     }*/
     is_simplified = true;
+    computeDegreeAsRationalFunction();
+    quasi_poly.clear();
+}
+
+void HilbertSeries::computeDegreeAsRationalFunction() const {
+    simplify();
+    long num_deg = num.size() - 1 + shift;
+    long denom_deg = 0;
+    for (auto it = denom.begin(); it != denom.end(); ++it) {
+            denom_deg += it->first * it->second;
+    }
+    degree = num_deg - denom_deg;
+}
+
+long HilbertSeries::getDegreeAsRationalFunction() const {
+    simplify();
+    return degree;
 }
 
 long HilbertSeries::getPeriod() const {
@@ -272,25 +315,32 @@ long HilbertSeries::getPeriod() const {
     return period;
 }
 
+long HilbertSeries::isHilbertQuasiPolynomialComputed() const {
+    return is_simplified && !quasi_poly.empty();
+}
+
 vector< vector<mpz_class> > HilbertSeries::getHilbertQuasiPolynomial() const {
-    if(!is_simplified || quasi_poly.size()==0) {
-        computeHilbertQuasiPolynomial();
-    }
+    computeHilbertQuasiPolynomial();
+    if (quasi_poly.empty()) throw NotComputableException();
     return quasi_poly;
 }
 
 mpz_class HilbertSeries::getHilbertQuasiPolynomialDenom() const {
-    if(!is_simplified || quasi_poly.size()==0) {
-        computeHilbertQuasiPolynomial();
-    }
+    computeHilbertQuasiPolynomial();
+    if (quasi_poly.empty()) throw NotComputableException();
     return quasi_denom;
 }
 
 void HilbertSeries::computeHilbertQuasiPolynomial() const {
+    if (isHilbertQuasiPolynomialComputed()) return;
     simplify();
-    if (period > 2000) {
-        errorOutput()<<"WARNING: We skip the computation of the Hilbert-quasi-polynomial because the period "<< period <<" is to big!" <<endl;
+    if (period > 200000) {
+        errorOutput()<<"WARNING: We skip the computation of the Hilbert-quasi-polynomial because the period "<< period <<" is too big!" <<endl;
         return;
+    }
+    if (verbose && period > 1) {
+        verboseOutput() << "Computing Hilbert quasipolynomial of period "
+                        << period <<" ..." << flush;
     }
     long i,j;
     //period und dim encode the denominator
@@ -298,7 +348,7 @@ void HilbertSeries::computeHilbertQuasiPolynomial() const {
     long num_size = num.size();
     vector<mpz_class> norm_num(num_size);  //normalized numerator
     for (i = 0;  i < num_size;  ++i) {
-        norm_num[i] = to_mpz(num[i]);
+        norm_num[i] = num[i];
     }
     map<long, denom_t>::reverse_iterator rit;
     long d;
@@ -309,9 +359,8 @@ void HilbertSeries::computeHilbertQuasiPolynomial() const {
         if (d != period) {
             //norm_num *= (1-t^p / 1-t^d)^denom[d]
             poly_div(factor, r, coeff_vector<mpz_class>(period), coeff_vector<mpz_class>(d));
-            assert(r.size()==0); //assert remainder r is 0
+            assert(r.empty()); //assert remainder r is 0
             //TODO more efficient method *=
-            //TODO Exponentiation by squaring of factor, then *=
             for (i=0; i < rit->second; ++i) {
                 norm_num = poly_mult(norm_num, factor);
             }
@@ -324,7 +373,7 @@ void HilbertSeries::computeHilbertQuasiPolynomial() const {
         quasi_poly[j].reserve(dim);
     }
     for (i=0; i<nn_size; ++i) {
-        quasi_poly[i%period].push_back((norm_num[i]));
+        quasi_poly[i%period].push_back(norm_num[i]);
     }
 
     for (j=0; j<period; ++j) {
@@ -344,7 +393,8 @@ void HilbertSeries::computeHilbertQuasiPolynomial() const {
     quasi_denom = permutations<mpz_class>(1,dim) * pp;
     //substitute t by t-j
     for (j=0; j<period; ++j) {
-        linear_substitution<mpz_class>(quasi_poly[j], j); // replaces quasi_poly[j]
+        // X |--> X - (j + shift)
+        linear_substitution<mpz_class>(quasi_poly[j], j + shift); // replaces quasi_poly[j]
     }
     //divide by gcd //TODO operate directly on vector
     Matrix<mpz_class> QP(quasi_poly);
@@ -352,15 +402,25 @@ void HilbertSeries::computeHilbertQuasiPolynomial() const {
     g = gcd(g,quasi_denom);
     quasi_denom /= g;
     QP.scalar_division(g);
-    quasi_poly = QP.get_elements();
+    //we use a normed shift, so that the cylcic shift % period always yields a non-negative integer
+    long normed_shift = -shift;
+    while (normed_shift < 0) normed_shift += period;
+    for (j=0; j<period; ++j) {
+        quasi_poly[j] = QP[(j+normed_shift)%period]; // QP[ (j - shift) % p ]
+    }
+    if (verbose && period > 1) {
+        verboseOutput() << " done." << endl;
+    }
 }
 
 // returns the numerator, repr. as vector of coefficients, the h-vector
 const vector<mpz_class>& HilbertSeries::getNum() const {
+    simplify();
     return num;
 }
 // returns the denominator, repr. as a map of the exponents of (1-t^i)^e
 const map<long, denom_t>& HilbertSeries::getDenom() const {
+    simplify();
     return denom;
 }
 
@@ -375,17 +435,83 @@ const map<long, denom_t>& HilbertSeries::getCyclotomicDenom() const {
     return cyclo_denom;
 }
 
+// shift
+void HilbertSeries::setShift(long s) {
+    if (shift != s) {
+        is_simplified = false;
+        // remove quasi-poly //TODO could also be adjusted
+        quasi_poly.clear();
+        quasi_denom = 1;
+        shift = s;
+    }
+}
 
+long HilbertSeries::getShift() const {
+    return shift;
+}
 
+void HilbertSeries::adjustShift() {
+    collectData();
+    size_t adj = 0; // adjust shift by
+    while (adj < num.size() && num[adj] == 0) adj++;
+    if (adj > 0) {
+        shift += adj;
+        num.erase(num.begin(),num.begin()+adj);
+        if (cyclo_num.size() != 0) {
+            assert (cyclo_num.size() >= adj);
+            cyclo_num.erase(cyclo_num.begin(),cyclo_num.begin()+adj);
+        }
+    }
+}
+
+// methods for textual transfer of a Hilbert Series
+string HilbertSeries::to_string_rep() const {
+
+    collectData();
+    ostringstream s;
+
+    s << num.size() << " ";
+    s << num;
+    vector<denom_t> denom_vector(to_vector(denom));
+    s << denom_vector.size() << " ";
+    s << denom_vector;
+    return s.str();
+}
+
+void HilbertSeries::from_string_rep(const string& input) {
+
+    istringstream s(input);
+    long i,size;
+
+    s >> size;
+    num.resize(size);
+    for (i = 0; i < size; ++i) {
+        s >> num[i];
+    }
+
+    vector<denom_t> denom_vector;
+    s >> size;
+    denom_vector.resize(size);
+    for (i = 0; i < size; ++i) {
+        s >> denom_vector[i];
+    }
+
+    denom = count_in_map<long,denom_t>(denom_vector);
+    is_simplified = false;
+}
+
+// writes in a human readable format
 ostream& operator<< (ostream& out, const HilbertSeries& HS) {
     HS.collectData();
     out << "(";
+    // i == 0
     if (HS.num.size()>0) out << " " << HS.num[0];
+    if (HS.shift != 0)   out << "*t^" << HS.shift;
     for (size_t i=1; i<HS.num.size(); ++i) {
-             if ( HS.num[i]== 1 ) out << " +t^"<<i;
-        else if ( HS.num[i]==-1 ) out << " -t^"<<i;
-        else if ( HS.num[i] > 0 ) out << " +"<<HS.num[i]<<"*t^"<<i;
-        else if ( HS.num[i] < 0 ) out << " -"<<-HS.num[i]<<"*t^"<<i;
+             if ( HS.num[i]== 1 ) out << " +t^"<< i + HS.shift;
+        else if ( HS.num[i]==-1 ) out << " -t^"<< i + HS.shift;
+        else if ( HS.num[i] > 0 ) out << " +"  << HS.num[i] << "*t^" << i + HS.shift;
+        else if ( HS.num[i] < 0 ) out << " -"  <<-HS.num[i] << "*t^" << i + HS.shift;
     }
     out << " ) / (";
     if (HS.denom.empty()) {
@@ -398,8 +524,6 @@ ostream& operator<< (ostream& out, const HilbertSeries& HS) {
     out << " )" << std::endl;
     return out;
 }
-
-
 
 //---------------------------------------------------------------------------
 // polynomial operations, for polynomials repr. as vector of coefficients
@@ -436,7 +560,7 @@ void poly_add_to (vector<Integer>& a, const vector<Integer>& b) {
     }
     remove_zeros(a);
 }
-// a -= b  (also possible to define the += op for vector)
+// a -= b  (also possible to define the -= op for vector)
 template<typename Integer>
 void poly_sub_to (vector<Integer>& a, const vector<Integer>& b) {
     size_t b_size = b.size();
@@ -530,7 +654,7 @@ vector<Integer> cyclotomicPoly(long n) {
                 for (long d = 1; d < i; ++d) { // <= i/2 should be ok
                     if( i % d == 0) {
                         poly_div(q, r, poly, CyclotomicPoly[d]);
-                        assert(r.size()==0);
+                        assert(r.empty());
                         poly = q;
                     }
                 }
@@ -549,17 +673,26 @@ vector<Integer> cyclotomicPoly(long n) {
 // computing the Hilbert polynomial from h-vector
 //---------------------------------------------------------------------------
 
+// The algorithm follows "Cohen-Macaulay rings", 4.1.5 and 4.1.9.
+// The E_vector is the vector of higher multiplicities.
+// It is assumed that (d-1)! is used as a common denominator in the calling routine.
+
 template<typename Integer>
 vector<Integer> compute_e_vector(vector<Integer> Q, int dim){
-    int i,j;
-    vector <Integer> E_Vector(dim,0);
-    Q.resize(dim+1);
-    for (i = 0; i <dim; i++) {
-        for (j = 0; j <dim; j++) {
+    size_t j;
+    int i;
+    vector <Integer> E_Vector(dim,0); 
+    // cout << "QQQ " << Q;  
+    // Q.resize(dim+1);
+    int bound=Q.size();
+    if(bound>dim)
+        bound=dim;  
+    for (i = 0; i <bound; i++) {
+        for (j = 0; j < Q.size()-i; j++) {  
             E_Vector[i] += Q[j];
         }
         E_Vector[i]/=permutations<Integer>(1,i);
-        for (j = 1; j <=dim; j++) {
+        for (j = 1; j <Q.size()-i; j++) {
             Q[j-1]=j*Q[j];
         }
     }
@@ -618,3 +751,7 @@ void linear_substitution(vector<Integer>& poly, const Integer& a) {
 }
 
 } //end namespace libnormaliz
+
+#ifdef NMZ_MIC_OFFLOAD
+#pragma offload_attribute (pop)
+#endif

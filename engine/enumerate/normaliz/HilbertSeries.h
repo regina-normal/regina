@@ -1,6 +1,6 @@
 /*
  * Normaliz
- * Copyright (C) 2007-2013  Winfried Bruns, Bogdan Ichim, Christof Soeger
+ * Copyright (C) 2007-2014  Winfried Bruns, Bogdan Ichim, Christof Soeger
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,6 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
+ * As an exception, when this program is distributed through (i) the App Store
+ * by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or (iii) Google Play
+ * by Google Inc., then that store may impose any digital rights management,
+ * device limits and/or redistribution restrictions that are required by its
+ * terms of service.
  */
 
 /*
@@ -43,8 +48,9 @@
 #include <vector>
 #include <map>
 #include <ostream>
+#include <string>
 
-#include "general.h"
+#include <libnormaliz/general.h>
 
 //---------------------------------------------------------------------------
 
@@ -52,6 +58,7 @@ namespace libnormaliz {
 using std::vector;
 using std::map;
 using std::ostream;
+using std::string;
 
 class HilbertSeries;
 
@@ -70,6 +77,8 @@ public:
     HilbertSeries(const vector<num_t>& num, const vector<denom_t>& gen_degrees);
     // Constructor, creates num/denom, see class description for format
     HilbertSeries(const vector<mpz_class>& num, const map<long, denom_t>& denom);
+    // Constructor, string as created by to_string_rep
+    HilbertSeries(const string& str);
 
     // resets to 0/1
     void reset();
@@ -97,9 +106,29 @@ public:
     // returns the denominator, repr. as a map of the exponents of the cyclotomic polynomials
     const map<long, denom_t>& getCyclotomicDenom() const;
 
+    long getDegreeAsRationalFunction() const;
+
     long getPeriod() const;
+
+    void computeHilbertQuasiPolynomial() const;
+    long isHilbertQuasiPolynomialComputed() const;
     vector< vector<mpz_class> > getHilbertQuasiPolynomial() const;
     mpz_class getHilbertQuasiPolynomialDenom() const;
+
+    // setting the shift will not change the numerator directly, only its interpretation
+    // the shift will be considered in the computation of the (quasi) polynomial
+    void setShift(long s);
+    // adjust the shift so that the series starts in degree 0
+    // it does not change the (quasi) polynomial
+    void adjustShift();
+    // returns the shift of the Hilbert series, that is the lowest degree of an element
+    long getShift() const;
+
+    // methods for textual transfer of a Hilbert Series
+    string to_string_rep() const;
+    void from_string_rep(const string&);
+
+    void setVerbose(bool v) { verbose = v; }
 
 private:
     // collected data in denominator classes
@@ -120,15 +149,19 @@ private:
     mutable bool is_simplified;
     mutable long dim;
     mutable long period;
+    mutable long degree; // as rational function
+    long shift;
     // the quasi polynomial, can have big coefficients
     mutable vector< vector<mpz_class> > quasi_poly;
     mutable mpz_class quasi_denom;
+
+    bool verbose;
 
     // these are only const when used properly!!
     void performAdd(const vector<num_t>& num, const vector<denom_t>& gen_degrees) const;
     void performAdd(vector<mpz_class>& num, const map<long, denom_t>& denom) const;
 
-    void computeHilbertQuasiPolynomial() const;
+    void computeDegreeAsRationalFunction() const;
 
     friend ostream& operator<< (ostream& out, const HilbertSeries& HS);
 

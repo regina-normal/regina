@@ -23,56 +23,42 @@
 
 //---------------------------------------------------------------------------
 
-#ifndef MAP_OPERATIONS_H
-#define MAP_OPERATIONS_H
+#ifndef CONVERT_H
+#define CONVERT_H
 
 //---------------------------------------------------------------------------
 
-#include <map>
-#include <ostream>
+//#include <ostream>
+#include <libnormaliz/normaliz_exception.h>
+#include <libnormaliz/integer.h>
 
 namespace libnormaliz {
-using std::ostream;
+//using std::ostream;
 
-template<typename key, typename T>
-ostream& operator<< (ostream& out, const map<key, T> M) {
-    typename map<key, T>::const_iterator it;
-    for (it = M.begin(); it != M.end(); ++it) {
-        out << it->first << ": " << it-> second << "  ";
+// conversion for integers, throws ArithmeticException if conversion fails
+template<typename ToType, typename FromType>
+void convert(ToType& ret, const FromType& val) {
+    if (!try_convert(ret,val)) {
+        errorOutput() << "Cannot convert " << val << endl;
+        throw ArithmeticException();
     }
-    out << std::endl;
-    return out;
 }
 
-//---------------------------------------------------------------------------
-
-template<typename key, typename T>
-bool exists_element(const map<key, T>& m, const key& k){
-    return (m.find(k) != m.end());
+// conversion of vectors
+template<typename ToType, typename FromType>
+void convert(vector<ToType>& ret_vect, const vector<FromType>& from_vect){
+    size_t s = from_vect.size();
+    ret_vect.resize(s);
+    for (size_t i=0; i<s; ++i)
+        convert(ret_vect[i], from_vect[i]);
 }
 
-//---------------------------------------------------------------------------
-
-template<typename key, typename T>
-map<key, T> count_in_map (const vector<key> v) {
-    map<key, T> m;
-    T size = v.size();
-    for (T i = 0; i < size; ++i) {
-        m[v[i]]++;
-    }
-    return m;
-}
-
-template<typename key, typename T>
-vector<key> to_vector (const map<key, T> M) {
-    vector<key> v;
-    typename map<key, T>::const_iterator it;
-    for (it = M.begin(); it != M.end(); ++it) {
-        for (T i = 0; i < it->second; i++) {
-            v.push_back(it->first);
-        }
-    }
-    return v;
+// general conversion with return, throws ArithmeticException if conversion fails
+template<typename ToType, typename FromType>
+ToType convertTo(const FromType& val) {
+    ToType copy;
+    convert(copy,val);
+    return copy;
 }
 
 }  //end namespace
