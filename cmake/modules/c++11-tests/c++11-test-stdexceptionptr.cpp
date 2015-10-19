@@ -7,7 +7,7 @@ int main() {
     try {
         std::string().at(1);
     } catch(...) {
-        e = std::current_exception();
+        p = std::current_exception();
         return 0;
     }
     return 1;
