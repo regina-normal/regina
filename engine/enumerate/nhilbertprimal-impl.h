@@ -44,7 +44,7 @@
 #include "enumerate/nenumconstraint.h"
 #include "enumerate/nhilbertprimal.h"
 #include "enumerate/nmaxadmissible.h"
-#include "enumerate/normaliz/cone.h"
+#include "libnormaliz/cone.h"
 #include "maths/nray.h"
 #include "progress/nprogresstracker.h"
 #include <list>

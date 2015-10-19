@@ -36,7 +36,7 @@
 #include <cmath>
 #include <complex>
 #include "regina-config.h"
-#include "enumerate/normaliz/cone.h"
+#include "libnormaliz/cone.h"
 #include "maths/approx.h"
 #include "maths/ncyclotomic.h"
 #include "maths/numbertheory.h"
