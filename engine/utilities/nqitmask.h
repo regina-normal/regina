@@ -553,16 +553,8 @@ struct InternalQitmaskLen64<true> {
 
 template <>
 struct InternalQitmaskLen64<false> {
-#ifdef LONG_LONG_FOUND
     // The C standard guarantees that sizeof(long long) >= 8.
-    // However, the C++ standard does not require long long to exist at
-    // all (hence the LONG_LONG_FOUND test).
     typedef NQitmask1<unsigned long long> Type;
-#else
-    // The standard guarantees that sizeof(long) >= 4.
-    // Therefore two longs will be enough for 64 bits.
-    typedef NQitmask2<unsigned long> Type;
-#endif
 };
 #endif // End block for doxygen to ignore.
 

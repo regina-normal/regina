@@ -70,7 +70,6 @@ void NHilbertDual::enumerateHilbertBasis(OutputIterator results,
     else if (dim <= 8 * sizeof(unsigned long))
         enumerateUsingBitmask<RayClass, NBitmask1<unsigned long> >(results,
             subspace, constraints, tracker, initialRows);
-#ifdef LONG_LONG_FOUND
     else if (dim <= 8 * sizeof(unsigned long long))
         enumerateUsingBitmask<RayClass, NBitmask1<unsigned long long> >(results,
             subspace, constraints, tracker, initialRows);
@@ -86,15 +85,6 @@ void NHilbertDual::enumerateHilbertBasis(OutputIterator results,
     else if (dim <= 16 * sizeof(unsigned long long))
         enumerateUsingBitmask<RayClass, NBitmask2<unsigned long long> >(results,
             subspace, constraints, tracker, initialRows);
-#else
-    else if (dim <= 8 * sizeof(unsigned long) + 8 * sizeof(unsigned))
-        enumerateUsingBitmask<RayClass,
-            NBitmask2<unsigned long, unsigned> >(results,
-            subspace, constraints, tracker, initialRows);
-    else if (dim <= 16 * sizeof(unsigned long))
-        enumerateUsingBitmask<RayClass, NBitmask2<unsigned long> >(results,
-            subspace, constraints, tracker, initialRows);
-#endif
     else
         enumerateUsingBitmask<RayClass, NBitmask>(results,
             subspace, constraints, tracker, initialRows);

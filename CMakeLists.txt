@@ -120,6 +120,7 @@ INCLUDE(CheckCXX11Features)
 SET(HAVE_CXX11_FEATURES TRUE)
 NEED_CXX11_FEATURE("auto")
 NEED_CXX11_FEATURE("constexpr")
+NEED_CXX11_FEATURE("long_long")
 NEED_CXX11_FEATURE("rvalue_references")
 NEED_CXX11_FEATURE("static_assert")
 NEED_CXX11_FEATURE("stdthread")
@@ -223,14 +224,6 @@ if(NOT LANGINFO_FOUND)
   MESSAGE(WARNING "langinfo not found: UTF-8 will be used always, and the locale-specific encoding will be ignored.")
 endif(NOT LANGINFO_FOUND)
 
-# Large integer checks
-CHECK_CXX_SOURCE_COMPILES("
-  long long x;
-  signed long long y;
-  unsigned long long z;
-  int main() { return 0; }"
-  LONG_LONG_FOUND )
-
 CHECK_CXX_SOURCE_COMPILES("
   #include <stdint.h>
   int128_t x;
@@ -249,16 +242,14 @@ IF (INT128_T_FOUND OR __INT128_T_FOUND)
   SET(INT128_AVAILABLE TRUE)
 ENDIF (INT128_T_FOUND OR __INT128_T_FOUND)
 
-IF(LONG_LONG_FOUND)
-  CHECK_CXX_SOURCE_COMPILES("
-    unsigned long long x = 0xFFFFFFFFFFFFFFFF;
-    int main() { return 0; }"
-    NUMERIC_64_FOUND)
-  CHECK_CXX_SOURCE_COMPILES("
-    unsigned long long x = 0xFFFFFFFFFFFFFFFFLL;
-    int main() { return 0; }"
-    NUMERIC_64_LL_FOUND)
-ENDIF(LONG_LONG_FOUND)
+CHECK_CXX_SOURCE_COMPILES("
+  unsigned long long x = 0xFFFFFFFFFFFFFFFF;
+  int main() { return 0; }"
+  NUMERIC_64_FOUND)
+CHECK_CXX_SOURCE_COMPILES("
+  unsigned long long x = 0xFFFFFFFFFFFFFFFFLL;
+  int main() { return 0; }"
+  NUMERIC_64_LL_FOUND)
 
 # Dependencies used by all components of Regina
 FIND_PACKAGE(ZLIB)
