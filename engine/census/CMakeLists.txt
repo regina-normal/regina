@@ -12,6 +12,7 @@ SET ( FILES
   hyperbolic
   ncensus
   nfacepairing
+  ngenericfacetpairing
   ngluingperms
   ngluingpermsearcher
   )

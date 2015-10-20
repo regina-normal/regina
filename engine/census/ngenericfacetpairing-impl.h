@@ -32,7 +32,15 @@
 
 /* end stub */
 
-/* Template definitions for ngenericfacetpairing.h. */
+/*! \file census/ngenericfacetpairing-impl.h
+ *  \brief Contains implementation details for the NGenericFacetPairing
+ *  class template.
+ *
+ *  This file is \e not included automatically by ngenericfacetpairing.h.
+ *  However, typical end users should never need to include it, since
+ *  Regina's calculation engine provides full explicit instantiations
+ *  of NGenericFacetPairing for \ref stddim "standard dimensions".
+ */
 
 #include <algorithm>
 #include <sstream>
