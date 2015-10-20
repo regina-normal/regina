@@ -32,7 +32,12 @@
 
 /* end stub */
 
-/* To be included from nhilbertdual.h. */
+/*! \file enumerate/nhilbertdual-impl.h
+ *  \brief Contains implementations of template functions from nhilbertdual.h.
+ *
+ *  This file is automatically included from nhilbertdual.h; there
+ *  is no need for end users to include it explicitly.
+ */
 
 #ifndef __NHILBERTDUAL_IMPL_H
 #ifndef __DOXYGEN

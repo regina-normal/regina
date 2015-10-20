@@ -32,7 +32,12 @@
 
 /* end stub */
 
-/* To be included from stringutils.h. */
+/*! \file utilities/stringutils-impl.h
+ *  \brief Contains implementations of template functions from stringutils.h.
+ *
+ *  This file is automatically included from stringutils.h; there
+ *  is no need for end users to include it explicitly.
+ */
 
 #include <cctype>
 #include <string>
