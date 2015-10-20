@@ -2472,6 +2472,137 @@ class REGINA_API NClosedPrimeMinSearcher : public NCompactSearcher {
 
 /**
  * A gluing permutation search class that offers a specialised search
+ * algorithm for when (i) only closed prime minimal P2-irreducible
+ * triangulations are required, (ii) the given face pairing has
+ * order at least three, and (iii) the given face pairing has a chain of length
+ * at least one.
+ *
+ * The search algorithm is significantly different from the default
+ * algorithm provided by NGluingPermSearcher.  It is heavily optimised
+ * and takes advantage of a number of results regarding the underlying
+ * face pairing graph.
+ *
+ * Note that additional unwanted triangulations (e.g., non-prime or
+ * non-minimal triangulations) may still be produced by this search.
+ * However, significantly fewer unwanted triangulations will be produced
+ * when using this class instead of NGluingPermSearcher.
+ *
+ * \ifacespython Not present.
+ */
+class REGINA_API NCollapsedChainSearcher : public NGluingPermSearcher {
+    public:
+        static const char dataTag_;
+            /**< A character used to identify this class when reading
+                 and writing tagged data in text format. */
+
+    private:
+        NFacePairing modified;
+            /**< The modified face pairing graph. */
+        NIsomorphism iso;
+            /**< The isomorphism to apply to modified to retrieve the original
+                 labels of all simplices in modified.
+
+                 Note that since modified contains fewer simplices than the
+                 original face pairing, these extra simplices will have to be
+                 added back in first. Then the isomorphism can be applied, and
+                 lastly the chains can be rebuilt using the data from
+                 chainFaces and chainLength. */
+        unsigned nChains;
+            /**< The number of chains collapsed. */
+        NFacePair* chainFaces;
+            /**< The two faces which form the start of the chain which was
+                 collapsed. */
+        unsigned* chainLength;
+            /**< The lengths of the chains (before being collapsed). This is
+                 consistent with notation in [TODO]; that is, a chain of length n
+                 consists of n+1 tetrahedra. */
+
+    public:
+        /**
+         * Creates a new search manager for use when (i) only closed prime
+         * minimal P2-irreducible triangulations are required, (ii) the
+         * given face pairing has order at least three, and (iii) the given
+         * face pairing contains a chain of length at least one. Note that
+         * other unwanted triangulations may still be produced (e.g., non-prime
+         * or non-minimal triangulations), but there will be far fewer of these
+         * than when using the NGluingPermSearcher class directly.
+         *
+         * For details on how a search manager is used, see the
+         * NGluingPermSearcher documentation.  Note in particular that
+         * this class will be automatically used by
+         * NGluingPermSearcher::findAllPerms() if possible, so there is
+         * often no need for an end user to instantiate this class
+         * directly.
+         *
+         * All constructor arguments are the same as for the
+         * NGluingPermSearcher constructor, though some arguments (such as
+         * \a finiteOnly and \a whichPurge) are not needed here since they
+         * are already implied by the specialised search context.
+         *
+         * \pre The given face pairing is connected, i.e., it is possible
+         * to reach any tetrahedron from any other tetrahedron via a
+         * series of matched face pairs.
+         * \pre The given face pairing is in canonical form as described
+         * by NFacePairing::isCanonical().  Note that all face pairings
+         * constructed by NFacePairing::findAllPairings() are of this form.
+         * \pre The given face pairing has no boundary faces and has at
+         * least three tetrahedra.
+         */
+        CollapsedChainSearcher(const NFacePairing* pairing,
+                const NFacePairing::IsoList* autos,
+                bool orientableOnly, UseGluingPerms use, void* useArgs = 0);
+
+        /**
+         * Initialises a new search manager based on data read from the
+         * given input stream.  This may be a new search or a partially
+         * completed search.
+         *
+         * This routine reads data in the format written by dumpData().
+         * If you wish to read data whose precise class is unknown,
+         * consider using dumpTaggedData() and readTaggedData() instead.
+         *
+         * If the data found in the input stream is invalid or incorrectly
+         * formatted, the routine inputError() will return \c true but
+         * the contents of this object will be otherwise undefined.
+         *
+         * The arguments \a use and \a useArgs are the same as for the
+         * NGluingPermSearcher constructor.
+         *
+         * \warning The data format is liable to change between Regina
+         * releases.  Data in this format should be used on a short-term
+         * temporary basis only.
+         *
+         * @param in the input stream from which to read.
+         */
+        CollapsedChainSearcher(std::istream& in,
+            UseGluingPerms use, void* useArgs = 0);
+
+        /**
+         * Destroys this search manager and all supporting data
+         * structures.
+         */
+        virtual ~CollapsedChainSearcher();
+
+        // Overridden methods:
+        virtual void dumpData(std::ostream& out) const;
+        virtual void runSearch(long maxDepth = -1);
+
+    protected:
+        // Overridden methods:
+        virtual char dataTag() const;
+
+    private:
+        /**
+         * Collapse the chain on the given pair of faces. Note that collapsing
+         * here does not remove the tetrahedra, it only disconnects them. They
+         * will be removed when the resulting NFacePairing is made canonical.
+         */
+        collapseChain(NFacePair);
+
+};
+
+/**
+ * A gluing permutation search class that offers a specialised search
  * algorithm for when only minimal ideal triangulations of cusped
  * finite-volume hyperbolic 3-manifolds are required.  Here every vertex
  * link will be a torus or Klein bottle.
