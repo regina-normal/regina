@@ -78,7 +78,7 @@ namespace regina {
  * triangulation, the individual gluing permutations will still need to
  * be specified; they are not a part of this structure.
  *
- * \pre The dimension argument \a dim is one of Regina's
+ * \pre The template argument \a dim is one of Regina's
  * \ref stddim "standard dimensions".
  *
  * \headers Parts of this template class are implemented in a separate header

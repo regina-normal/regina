@@ -32,7 +32,7 @@
 
 /* end stub */
 
-/*! \file census/ngenericisomorphism-impl.h
+/*! \file generic/ngenericisomorphism-impl.h
  *  \brief Contains implementation details for the NGenericIsomorphism
  *  class template.
  *

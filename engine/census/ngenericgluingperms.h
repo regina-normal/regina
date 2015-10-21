@@ -74,7 +74,7 @@ namespace regina {
  * facet has a corresponding gluing permutation (and the matched facet has
  * the inverse gluing permutation).
  *
- * \pre The dimension argument \a dim is one of Regina's
+ * \pre The template argument \a dim is one of Regina's
  * \ref stddim "standard dimensions".
  *
  * \headers Parts of this template class are implemented in a separate header
