@@ -46,14 +46,14 @@ template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const NGenericTriangulation<2>&, TreeDecompositionAlg);
 template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const NGenericTriangulation<3>&, TreeDecompositionAlg);
-template NTreeDecomposition::NTreeDecomposition(
+template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const NGenericTriangulation<4>&, TreeDecompositionAlg);
 
 template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const NGenericFacetPairing<2>&, TreeDecompositionAlg);
 template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const NGenericFacetPairing<3>&, TreeDecompositionAlg);
-template NTreeDecomposition::NTreeDecomposition(
+template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const NGenericFacetPairing<4>&, TreeDecompositionAlg);
 
 // Instantiate templates for common types:

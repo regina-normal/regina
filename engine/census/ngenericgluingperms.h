@@ -446,6 +446,7 @@ class NGenericGluingPerms {
 // Help the compiler by noting which explicit instantiations we offer.
 extern template class REGINA_API NGenericGluingPerms<2>;
 extern template class REGINA_API NGenericGluingPerms<3>;
+extern template class REGINA_API NGenericGluingPerms<4>;
 
 // Inline functions for NGenericGluingPerms
 

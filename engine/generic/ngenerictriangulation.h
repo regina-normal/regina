@@ -603,6 +603,7 @@ class DegreeGreaterThan {
 // Help the compiler by noting which explicit instantiations we offer.
 extern template class REGINA_API NGenericTriangulation<2>;
 extern template class REGINA_API NGenericTriangulation<3>;
+extern template class REGINA_API NGenericTriangulation<4>;
 
 // Inline functions:
 

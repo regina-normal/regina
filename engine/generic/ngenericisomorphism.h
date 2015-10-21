@@ -369,6 +369,7 @@ class NGenericIsomorphism :
 // Help the compiler by noting which explicit instantiations we offer.
 extern template class REGINA_API NGenericIsomorphism<2>;
 extern template class REGINA_API NGenericIsomorphism<3>;
+extern template class REGINA_API NGenericIsomorphism<4>;
 
 // Inline functions for NGenericIsomorphism
 

@@ -43,4 +43,5 @@
 // Instantiate templates for standard dimensions.
 template class REGINA_API regina::NGenericGluingPerms<2>;
 template class REGINA_API regina::NGenericGluingPerms<3>;
+template class REGINA_API regina::NGenericGluingPerms<4>;
 

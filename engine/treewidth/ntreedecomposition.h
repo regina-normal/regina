@@ -921,11 +921,15 @@ extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const NGenericTriangulation<2>&, TreeDecompositionAlg);
 extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const NGenericTriangulation<3>&, TreeDecompositionAlg);
+extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
+    const NGenericTriangulation<4>&, TreeDecompositionAlg);
 
 extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const NGenericFacetPairing<2>&, TreeDecompositionAlg);
 extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const NGenericFacetPairing<3>&, TreeDecompositionAlg);
+extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
+    const NGenericFacetPairing<4>&, TreeDecompositionAlg);
 
 extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
     unsigned, bool const**, TreeDecompositionAlg);
