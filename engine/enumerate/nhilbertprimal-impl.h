@@ -32,7 +32,12 @@
 
 /* end stub */
 
-/* To be included from nhilbertprimal.h. */
+/*! \file enumerate/nhilbertprimal-impl.h
+ *  \brief Contains implementations of template functions from nhilbertprimal.h.
+ *
+ *  This file is automatically included from nhilbertprimal.h; there
+ *  is no need for end users to include it explicitly.
+ */
 
 #ifndef __NHILBERTPRIMAL_IMPL_H
 #ifndef __DOXYGEN
@@ -44,7 +49,7 @@
 #include "enumerate/nenumconstraint.h"
 #include "enumerate/nhilbertprimal.h"
 #include "enumerate/nmaxadmissible.h"
-#include "enumerate/normaliz/cone.h"
+#include "libnormaliz/cone.h"
 #include "maths/nray.h"
 #include "progress/nprogresstracker.h"
 #include <list>
@@ -78,7 +83,6 @@ void NHilbertPrimal::enumerateHilbertBasis(OutputIterator results,
     else if (dim <= 8 * sizeof(unsigned long))
         enumerateUsingBitmask<RayClass, NBitmask1<unsigned long> >(results,
             raysBegin, raysEnd, constraints, tracker);
-#ifdef LONG_LONG_FOUND
     else if (dim <= 8 * sizeof(unsigned long long))
         enumerateUsingBitmask<RayClass, NBitmask1<unsigned long long> >(results,
             raysBegin, raysEnd, constraints, tracker);
@@ -94,15 +98,6 @@ void NHilbertPrimal::enumerateHilbertBasis(OutputIterator results,
     else if (dim <= 16 * sizeof(unsigned long long))
         enumerateUsingBitmask<RayClass, NBitmask2<unsigned long long> >(results,
             raysBegin, raysEnd, constraints, tracker);
-#else
-    else if (dim <= 8 * sizeof(unsigned long) + 8 * sizeof(unsigned))
-        enumerateUsingBitmask<RayClass,
-            NBitmask2<unsigned long, unsigned> >(results,
-            raysBegin, raysEnd, constraints, tracker);
-    else if (dim <= 16 * sizeof(unsigned long))
-        enumerateUsingBitmask<RayClass, NBitmask2<unsigned long> >(results,
-            raysBegin, raysEnd, constraints, tracker);
-#endif
     else
         enumerateUsingBitmask<RayClass, NBitmask>(results,
             raysBegin, raysEnd, constraints, tracker);
@@ -149,10 +144,11 @@ void NHilbertPrimal::enumerateUsingBitmask(OutputIterator results,
                         v.push_back(mpz_class((**rit)[i].rawData()));
                 }
             }
-        libnormaliz::Cone<mpz_class> cone(input,
-            libnormaliz::Type::integral_closure);
+        libnormaliz::Cone<mpz_class> cone(
+            libnormaliz::Type::integral_closure, input);
         libnormaliz::ConeProperties wanted(
             libnormaliz::ConeProperty::HilbertBasis);
+        cone.deactivateChangeOfPrecision();
         cone.compute(wanted);
 
         if (! cone.isComputed(libnormaliz::ConeProperty::HilbertBasis)) {

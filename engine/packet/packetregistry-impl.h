@@ -41,6 +41,9 @@
  * - add a corresponding case to each implementation of forPacket().
  *
  * See packetregistry.h for how other routines can use this registry.
+ *
+ * This file is automatically included from packetregistry.h; there
+ * is no need for end users to include it explicitly.
  */
 
 #ifndef __PACKETREGISTRY_IMPL_H

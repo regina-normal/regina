@@ -26,9 +26,15 @@
 #
 macro (REGINA_CREATE_HANDBOOK _lang)
   # Build the docbook documentation.
-  set(_input ${CMAKE_CURRENT_SOURCE_DIR}/index.docbook)
+
   set(_doc ${CMAKE_CURRENT_BINARY_DIR}/index.html)
-  set(_custom ${CMAKE_CURRENT_SOURCE_DIR}/../ksgmltools2/customization)
+
+  # The source variables below are relative to ${CMAKE_CURRENT_SOURCE_DIR}.
+  # We use relative paths here because xsltproc on Windows seems to have
+  # trouble with the format that cmake uses for absolute paths.
+  #
+  set(_input index.docbook)
+  set(_custom ../ksgmltools2/customization)
   set(_dtd ${_custom}/dtd)
   set(_ssheet ${_custom}/regina.xsl)
 

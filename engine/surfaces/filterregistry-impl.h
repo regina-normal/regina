@@ -42,6 +42,9 @@
  * - add a corresponding case to each implementation of forFilter().
  *
  * See filterregistry.h for how other routines can use this registry.
+ *
+ * This file is automatically included from filterregistry.h; there
+ * is no need for end users to include it explicitly.
  */
 
 #ifndef __FILTERREGISTRY_IMPL_H

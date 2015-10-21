@@ -2,6 +2,7 @@
 
 # Files to compile
 SET ( FILES
+  ngenericisomorphism
   ngenerictriangulation
   )
 

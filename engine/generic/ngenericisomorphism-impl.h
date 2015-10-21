@@ -32,7 +32,15 @@
 
 /* end stub */
 
-/* Template definitions for ngenericisomorphism.h. */
+/*! \file generic/ngenericisomorphism-impl.h
+ *  \brief Contains implementation details for the NGenericIsomorphism
+ *  class template.
+ *
+ *  This file is \e not included automatically by ngenericisomorphism.h.
+ *  However, typical end users should never need to include it, since
+ *  Regina's calculation engine provides full explicit instantiations
+ *  of NGenericIsomorphism for \ref stddim "standard dimensions".
+ */
 
 #include <algorithm>
 #include <cstdlib>

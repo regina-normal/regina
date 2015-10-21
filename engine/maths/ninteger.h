@@ -1504,39 +1504,6 @@ template <bool supportInfinity>
 REGINA_API NIntegerBase<supportInfinity> operator * (long lhs,
     const NIntegerBase<supportInfinity>& rhs);
 
-/*@}*/
-
-} // namespace regina
-
-#ifndef __DOXYGEN
-namespace libnormaliz {
-/**
- * Explicit integer cast functions, for compatibility with Normaliz.
- *
- * We define functions separately for each variant of \a supportInfinity
- * to avoid partial template specialisation.
- *
- * @param a an instance of some arbitrary integer type.
- * @return the given integer, cast as a native long.
- */
-template <typename Integer>
-long explicit_cast_to_long(const Integer& a);
-
-template <>
-inline long explicit_cast_to_long<regina::NIntegerBase<true> >(
-        const regina::NIntegerBase<true>& a) {
-    return a.longValue();
-}
-template <>
-inline long explicit_cast_to_long<regina::NIntegerBase<false> >(
-        const regina::NIntegerBase<false>& a) {
-    return a.longValue();
-}
-} //namespace libnormaliz
-#endif
-
-namespace regina {
-
 /**
  * A wrapper class for a native, fixed-precision integer type of the
  * given size.

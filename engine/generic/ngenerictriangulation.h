@@ -65,15 +65,21 @@ namespace regina {
  * call the corresponding member functions from the corresponding
  * triangulation classes (NTriangulation and so on).
  *
+ * \pre The template argument \a dim is one of Regina's
+ * \ref stddim "standard dimensions".
+ *
+ * \headers Parts of this template class are implemented in separate headers,
+ * which are not included automatically by this file.  However, typical
+ * end users should never need these extra headers, since Regina's
+ * calculation engine already includes explicit instantiations
+ * for \ref stddim "standard dimensions".
+ *
  * \apinotfinal
  *
  * \ifacespython Not present.
- *
- * \pre The template argument \a dim must be one of the dimensions that
- * Regina supports.
  */
 template <int dim>
-class REGINA_API NGenericTriangulation : public DimTraits<dim> {
+class NGenericTriangulation : public DimTraits<dim> {
     public:
         using typename DimTraits<dim>::Isomorphism;
         using typename DimTraits<dim>::Perm;
@@ -509,7 +515,7 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
  * \pre \a subdim is between 0 and \a dim-1 inclusive.
  */
 template <int dim, int subdim>
-class REGINA_API DegreeLessThan {
+class DegreeLessThan {
     private:
         const typename DimTraits<dim>::Triangulation& tri_;
             /**< The triangulation with which we are working. */
@@ -559,7 +565,7 @@ class REGINA_API DegreeLessThan {
  * \pre \a subdim is between 0 and \a dim-1 inclusive.
  */
 template <int dim, int subdim>
-class REGINA_API DegreeGreaterThan {
+class DegreeGreaterThan {
     private:
         const typename DimTraits<dim>::Triangulation& tri_;
             /**< The triangulation with which we are working. */
@@ -593,6 +599,10 @@ class REGINA_API DegreeGreaterThan {
 };
 
 /*@}*/
+
+// Help the compiler by noting which explicit instantiations we offer.
+extern template class REGINA_API NGenericTriangulation<2>;
+extern template class REGINA_API NGenericTriangulation<3>;
 
 // Inline functions:
 

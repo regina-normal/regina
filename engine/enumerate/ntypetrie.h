@@ -41,6 +41,7 @@
 #define __NTYPETRIE_H
 #endif
 
+#include "regina-core.h"
 #include <cstring>
 
 namespace regina {
@@ -151,6 +152,11 @@ class NTypeTrie {
          */
         bool dominates(const char* vec, unsigned len) const;
 };
+
+/*@}*/
+
+// Help the compiler by noting which explicit instantiations we offer.
+extern template class REGINA_API NTypeTrie<7>;
 
 // Inline functions for NTypeTrie
 

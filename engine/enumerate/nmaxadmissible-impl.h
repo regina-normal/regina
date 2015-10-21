@@ -32,7 +32,12 @@
 
 /* end stub */
 
-/* To be included from nmaxadmissible.h. */
+/*! \file enumerate/nmaxadmissible-impl.h
+ *  \brief Contains implementations of template functions from nmaxadmissible.h.
+ *
+ *  This file is automatically included from nmaxadmissible.h; there
+ *  is no need for end users to include it explicitly.
+ */
 
 #ifndef __NMAXADMISSIBLE_IMPL_H
 #ifndef __DOXYGEN

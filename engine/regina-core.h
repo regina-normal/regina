@@ -52,12 +52,12 @@
   /**
    * All non-templated, non-static functions, classes and global variables
    * that are part of Regina's public interface \b must be declared with
-   * REGINA_API.
-   * In addition, global variables must also be declared with \c extern
-   * as per normal.
-   * Otherwise things may (and in some environments will) break when external
-   * applications try to use Regina with optimisations such as gcc's
-   * <tt>-fvisibility=hidden</tt>.
+   * REGINA_API.  Template classes or functions should not be declared
+   * with REGINA_API, but any explicit instantiations should.
+   * Global variables must also be declared with \c extern, as per normal.
+   *
+   * This is required for DLL linking under Windows, and also to avoid
+   * breakage with optimisations such as gcc's <tt>-fvisibility=hidden</tt>.
    *
    * Note:  When building the Regina calculation engine shared library,
    * REGINA_DLL_EXPORTS must be defined (this ensures that API symbols are

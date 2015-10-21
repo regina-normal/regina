@@ -78,13 +78,20 @@ namespace regina {
  * triangulation, the individual gluing permutations will still need to
  * be specified; they are not a part of this structure.
  *
- * \pre The dimension argument \a dim is either 2, 3 or 4.
+ * \pre The template argument \a dim is one of Regina's
+ * \ref stddim "standard dimensions".
+ *
+ * \headers Parts of this template class are implemented in a separate header
+ * (ngenericfacetpairing-impl.h), which is not included automatically by
+ * this file.  However, typical end users should never need this extra header,
+ * since Regina's calculation engine already includes explicit instantiations
+ * for \ref stddim "standard dimensions".
  *
  * \ifacespython Not present, though the dimension-specific subclasses
  * (such as NFacePairing and Dim4FacetPairing) are available for Python users.
  */
 template <int dim>
-class REGINA_API NGenericFacetPairing : public boost::noncopyable {
+class NGenericFacetPairing : public boost::noncopyable {
     public:
         typedef typename DimTraits<dim>::FacetPairing FacetPairing;
             /**< The facet pairing class specific to this dimension.
@@ -708,6 +715,10 @@ class REGINA_API NGenericFacetPairing : public boost::noncopyable {
 };
 
 /*@}*/
+
+// Help the compiler by noting which explicit instantiations we offer.
+extern template class REGINA_API NGenericFacetPairing<2>;
+extern template class REGINA_API NGenericFacetPairing<3>;
 
 // Inline functions for NGenericFacetPairing
 

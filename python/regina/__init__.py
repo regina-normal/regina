@@ -88,7 +88,7 @@ def reginaSetup(quiet = False, readline = True, banner = False,
                     app = subprocess.check_output(['mdfind',
                         'kMDItemDisplayName==SnapPy&&kMDItemKind==Application'])
                     if app:
-                        app = app.strip()
+                        app = app.strip().split('\n')[0]
                 except:
                     app = None
 
@@ -98,6 +98,7 @@ def reginaSetup(quiet = False, readline = True, banner = False,
                 if os.path.exists(snappyLib):
                     sys.path.append(snappyLib)
                     sys.path.append(snappyLib + '/site-packages.zip')
+                    sys.path.append(snappyLib + '/lib-dynload')
 
     if libs:
         if __execLibs(namespace, quiet):

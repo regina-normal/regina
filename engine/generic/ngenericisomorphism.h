@@ -59,7 +59,7 @@ namespace regina {
  * A dimension-agnostic base class that represents a combinatorial
  * isomorphism from one <i>dim</i>-manifold triangulation into another.
  *
- * Each dimension that Regina works with (2, 3 and 4) offers its own
+ * Each of Regina's \ref stddim "standard dimensions" offers its own
  * subclass with richer functionality; users typically do not need to
  * work with this template base class directly.
  *
@@ -98,13 +98,19 @@ namespace regina {
  * Note that for all types of isomorphism, triangulation \a U is allowed
  * to contain more simplices than triangulation \a T.
  *
+ * \headers Parts of this template class are implemented in a separate header
+ * (ngenericisomorphism-impl.h), which is not included automatically by
+ * this file.  However, typical end users should never need this extra header,
+ * since Regina's calculation engine already includes explicit instantiations
+ * for \ref stddim "standard dimensions".
+ *
  * \ifacespython Not present, though the dimension-specific subclasses
- * (such as NIsomorphism and Dim4Isomorphism) are available for Python users.
+ * (such as NIsomorphism and Dim2Isomorphism) are available for Python users.
  *
  * \tparam dim The dimension of the underlying triangulation.
  */
 template <int dim>
-class REGINA_API NGenericIsomorphism :
+class NGenericIsomorphism :
         public DimTraits<dim>,
         public Output<NGenericIsomorphism<dim> >,
         public boost::noncopyable {
@@ -359,6 +365,10 @@ class REGINA_API NGenericIsomorphism :
 };
 
 /*@}*/
+
+// Help the compiler by noting which explicit instantiations we offer.
+extern template class REGINA_API NGenericIsomorphism<2>;
+extern template class REGINA_API NGenericIsomorphism<3>;
 
 // Inline functions for NGenericIsomorphism
 
