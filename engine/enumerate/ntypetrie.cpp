@@ -118,7 +118,7 @@ bool NTypeTrie<nTypes>::dominates(const char* vec, unsigned len) const {
     return false;
 }
 
-// Instantiate the templates!
+// Instantiate templates for standard cases.
 template class NTypeTrie<7>;
 
 } // namespace regina
