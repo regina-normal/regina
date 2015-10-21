@@ -75,7 +75,7 @@ namespace regina {
  * template class NPolynomial<NRational>.
  */
 template <typename T>
-class REGINA_API NPolynomial {
+class NPolynomial {
     private:
         size_t degree_;
             /**< The degree of the polynomial.  Here the zero polynomial
@@ -474,8 +474,7 @@ class REGINA_API NPolynomial {
  * @return a reference to the given output stream.
  */
 template <typename T>
-REGINA_API std::ostream& operator << (std::ostream& out,
-    const NPolynomial<T>& p);
+std::ostream& operator << (std::ostream& out, const NPolynomial<T>& p);
 
 /*@}*/
 

@@ -91,7 +91,7 @@ namespace regina {
  * (such as NFacePairing) are available for Python users.
  */
 template <int dim>
-class REGINA_API NGenericFacetPairing : public boost::noncopyable {
+class NGenericFacetPairing : public boost::noncopyable {
     public:
         typedef typename DimTraits<dim>::FacetPairing FacetPairing;
             /**< The facet pairing class specific to this dimension.

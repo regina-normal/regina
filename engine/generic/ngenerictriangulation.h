@@ -79,7 +79,7 @@ namespace regina {
  * \ifacespython Not present.
  */
 template <int dim>
-class REGINA_API NGenericTriangulation : public DimTraits<dim> {
+class NGenericTriangulation : public DimTraits<dim> {
     public:
         using typename DimTraits<dim>::Isomorphism;
         using typename DimTraits<dim>::Perm;
@@ -515,7 +515,7 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
  * \pre \a subdim is between 0 and \a dim-1 inclusive.
  */
 template <int dim, int subdim>
-class REGINA_API DegreeLessThan {
+class DegreeLessThan {
     private:
         const typename DimTraits<dim>::Triangulation& tri_;
             /**< The triangulation with which we are working. */
@@ -565,7 +565,7 @@ class REGINA_API DegreeLessThan {
  * \pre \a subdim is between 0 and \a dim-1 inclusive.
  */
 template <int dim, int subdim>
-class REGINA_API DegreeGreaterThan {
+class DegreeGreaterThan {
     private:
         const typename DimTraits<dim>::Triangulation& tri_;
             /**< The triangulation with which we are working. */

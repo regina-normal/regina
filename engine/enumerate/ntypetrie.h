@@ -41,6 +41,7 @@
 #define __NTYPETRIE_H
 #endif
 
+#include "regina-core.h"
 #include <cstring>
 
 namespace regina {

@@ -110,7 +110,7 @@ namespace regina {
  * \tparam dim The dimension of the underlying triangulation.
  */
 template <int dim>
-class REGINA_API NGenericIsomorphism :
+class NGenericIsomorphism :
         public DimTraits<dim>,
         public Output<NGenericIsomorphism<dim> >,
         public boost::noncopyable {
