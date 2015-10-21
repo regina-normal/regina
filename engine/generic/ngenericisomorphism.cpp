@@ -33,21 +33,14 @@
 /* end stub */
 
 #include "generic/ngenericisomorphism-impl.h"
-#include "triangulation/ntriangulation.h"
+
+// Headers required for our template instantiations:
+#include "dim2/dim2isomorphism.h"
+#include "dim2/dim2triangulation.h"
 #include "triangulation/nisomorphism.h"
+#include "triangulation/ntriangulation.h"
 
-namespace regina {
-
-// Instatiate all templates from the -impl.h file.
-template void NGenericIsomorphism<3>::writeTextShort(std::ostream&) const;
-template void NGenericIsomorphism<3>::writeTextLong(std::ostream&) const;
-template bool NGenericIsomorphism<3>::isIdentity() const;
-template NGenericIsomorphism<3>::NGenericIsomorphism(
-    const NGenericIsomorphism<3>&);
-template NIsomorphism* NGenericIsomorphism<3>::random(unsigned);
-template NTriangulation* NGenericIsomorphism<3>::apply(const NTriangulation*)
-    const;
-template void NGenericIsomorphism<3>::applyInPlace(NTriangulation*) const;
-
-} // namespace regina
+// Instantiate templates for standard dimensions.
+template class regina::NGenericIsomorphism<2>;
+template class regina::NGenericIsomorphism<3>;
 
