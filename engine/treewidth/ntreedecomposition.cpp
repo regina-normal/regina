@@ -40,8 +40,7 @@
 
 namespace regina {
 
-// Instantiate templates:
-
+// Instantiate templates for standard dimensions:
 template NTreeDecomposition::NTreeDecomposition(
     const NGenericTriangulation<2>&, TreeDecompositionAlg);
 template NTreeDecomposition::NTreeDecomposition(
@@ -52,6 +51,7 @@ template NTreeDecomposition::NTreeDecomposition(
 template NTreeDecomposition::NTreeDecomposition(
     const NGenericFacetPairing<3>&, TreeDecompositionAlg);
 
+// Instantiate templates for common types:
 template NTreeDecomposition::NTreeDecomposition(
     unsigned, bool const**, TreeDecompositionAlg);
 template NTreeDecomposition::NTreeDecomposition(
