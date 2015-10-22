@@ -423,7 +423,7 @@ typename DimTraits<dim>::Triangulation*
     typedef typename DimTraits<dim>::Simplex Simplex;
     typedef typename DimTraits<dim>::Triangulation Triangulation;
 
-    std::auto_ptr<Triangulation> ans(new Triangulation());
+    std::unique_ptr<Triangulation> ans(new Triangulation());
 
     NPacket::ChangeEventSpan span(ans.get());
 

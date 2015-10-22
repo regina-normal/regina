@@ -41,8 +41,7 @@ namespace regina {
 NMarkedAbelianGroup::NMarkedAbelianGroup(unsigned long rk, 
                                          const NLargeInteger &p) : 
     OM(rk, rk), ON(rk,rk), OMR(rk,rk), OMC(rk,rk), OMRi(rk, rk), OMCi(rk, rk), 
-    rankOM(0), ornR(0), ornC(0), ornRi(0), ornCi(0), otR(0), otC(0), otRi(0), 
-    otCi(0), InvFacList(0), snfrank(0), snffreeindex(0), ifNum(0), ifLoc(0), 
+    rankOM(0), InvFacList(0), snfrank(0), snffreeindex(0), ifNum(0), ifLoc(0), 
     coeff(NLargeInteger::zero), TORLoc(0), TORVec(0), tensorIfLoc(0), 
     tensorIfNum(0), tensorInvFacList(0)
 {
@@ -66,7 +65,7 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
     OM(M), ON(N), OMR(M.columns(),M.columns()),
     OMC(M.rows(),M.rows()), OMRi(M.columns(),M.columns()),
     OMCi(M.rows(),M.rows()),
-    rankOM(0),  ornR(0), ornC(0), ornRi(0), ornCi(0),
+    rankOM(0),
     InvFacList(0), snfrank(0), snffreeindex(0), ifNum(0), ifLoc(0), 
     coeff(NLargeInteger::zero), TORLoc(0), TORVec(0), tensorIfLoc(0), 
     tensorIfNum(0), tensorInvFacList(0)
@@ -80,7 +79,7 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
     TORLoc = rankOM; // to keep mod-p calculations happy. 
 
     // construct the internal presentation matrix.
-    std::auto_ptr<NMatrixRing<NLargeInteger> > prod=OMRi*ON;
+    std::unique_ptr<NMatrixRing<NLargeInteger> > prod=OMRi*ON;
     NMatrixInt ORN(N.rows()-rankOM, N.columns());
     ornR.reset( new NMatrixInt( ORN.columns(), ORN.columns() ) );
     ornRi.reset(new NMatrixInt( ORN.columns(), ORN.columns() ) );
@@ -132,8 +131,7 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
     OM(M), ON(N), OMR(M.columns(),M.columns()),
     OMC(M.rows(),M.rows()), OMRi(M.columns(),M.columns()),
     OMCi(M.rows(),M.rows()),
-    rankOM(0),  ornR(0), ornC(0), ornRi(0), ornCi(0), otR(0), otC(0), 
-    otRi(0), otCi(0), InvFacList(0), snfrank(0), snffreeindex(0), 
+    rankOM(0), InvFacList(0), snfrank(0), snffreeindex(0), 
     ifNum(0), ifLoc(0), coeff(pcoeff), 
     TORLoc(0), TORVec(0), tensorIfLoc(0), tensorInvFacList(0)
 {
@@ -155,7 +153,7 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
     // starting by computing the trunc[OMRi*N] matrix and padding with 
     // a diagonal p matrix
 
-    std::auto_ptr<NMatrixRing<NLargeInteger> > OMRiN = OMRi*ON;
+    std::unique_ptr<NMatrixRing<NLargeInteger> > OMRiN = OMRi*ON;
 
     // hmm, if we're using p == 0 coefficients, lets keep it simple
     if (coeff > 0)
@@ -247,7 +245,7 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
 bool NMarkedAbelianGroup::isChainComplex() const
 {
     if (OM.columns() != ON.rows()) return false;
-    std::auto_ptr<NMatrixRing<NLargeInteger> > prod = OM*ON;
+    std::unique_ptr<NMatrixRing<NLargeInteger> > prod = OM*ON;
     for (unsigned long i=0; i<prod->rows(); i++) 
       for (unsigned long j=0; j<prod->columns(); j++)
         if (prod->entry(i,j) != 0) return false;
@@ -714,18 +712,18 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::cycleProjection(
 
 
 // the trivially presented torsion subgroup
-std::auto_ptr<NMarkedAbelianGroup> NMarkedAbelianGroup::torsionSubgroup()
+std::unique_ptr<NMarkedAbelianGroup> NMarkedAbelianGroup::torsionSubgroup()
         const {
     NMatrixInt dM(1, getNumberOfInvariantFactors() );
     NMatrixInt dN(getNumberOfInvariantFactors(),
        getNumberOfInvariantFactors() );
     for (unsigned long i=0; i<getNumberOfInvariantFactors(); i++)
         dN.entry(i,i) = getInvariantFactor(i);
-    return std::auto_ptr<NMarkedAbelianGroup>(new NMarkedAbelianGroup(dM, dN));
+    return std::unique_ptr<NMarkedAbelianGroup>(new NMarkedAbelianGroup(dM, dN));
 }
 
 // and its canonical inclusion map
-std::auto_ptr<NHomMarkedAbelianGroup> NMarkedAbelianGroup::torsionInclusion()
+std::unique_ptr<NHomMarkedAbelianGroup> NMarkedAbelianGroup::torsionInclusion()
         const {
     NMatrixInt iM( getRankCC(), getNumberOfInvariantFactors() );
     for (unsigned long j=0; j<iM.columns(); j++) {
@@ -733,7 +731,7 @@ std::auto_ptr<NHomMarkedAbelianGroup> NMarkedAbelianGroup::torsionInclusion()
         for (unsigned long i=0; i<iM.rows(); i++)
             iM.entry(i,j) = jtor[i];
     }
-    return std::auto_ptr<NHomMarkedAbelianGroup>(new NHomMarkedAbelianGroup(
+    return std::unique_ptr<NHomMarkedAbelianGroup>(new NHomMarkedAbelianGroup(
         *torsionSubgroup(), (*this), iM));
 }
 
@@ -982,15 +980,15 @@ void NHomMarkedAbelianGroup::computeImage() {
     }
 }
 
-std::auto_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::operator * (const 
+std::unique_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::operator * (const 
       NHomMarkedAbelianGroup &X) const
 {
-    std::auto_ptr<NMatrixRing<NLargeInteger> > prod=matrix*X.matrix;
+    std::unique_ptr<NMatrixRing<NLargeInteger> > prod=matrix*X.matrix;
     NMatrixInt compMat(matrix.rows(), X.matrix.columns() );
     for (unsigned long i=0;i<prod->rows();i++) 
       for (unsigned long j=0;j<prod->columns();j++)
         compMat.entry(i,j) = prod->entry(i, j);
-    return std::auto_ptr<NHomMarkedAbelianGroup>(new 
+    return std::unique_ptr<NHomMarkedAbelianGroup>(new 
         NHomMarkedAbelianGroup(X.domain, range, compMat));
 }
 
@@ -1098,10 +1096,10 @@ bool NHomMarkedAbelianGroup::isCycleMap() const
 
 //  Returns an NHomMarkedAbelianGroup representing the induced map
 //  on the torsion subgroups. 
-std::auto_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::torsionSubgroup()
+std::unique_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::torsionSubgroup()
         const {
-    std::auto_ptr<NMarkedAbelianGroup> dom = domain.torsionSubgroup();
-    std::auto_ptr<NMarkedAbelianGroup> ran = range.torsionSubgroup();
+    std::unique_ptr<NMarkedAbelianGroup> dom = domain.torsionSubgroup();
+    std::unique_ptr<NMarkedAbelianGroup> ran = range.torsionSubgroup();
 
     NMatrixInt mat(range.getNumberOfInvariantFactors(),
         domain.getNumberOfInvariantFactors() );
@@ -1113,7 +1111,7 @@ std::auto_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::torsionSubgroup()
             mat.entry(i,j) = temp[i];
     }
 
-    return std::auto_ptr<NHomMarkedAbelianGroup>(new NHomMarkedAbelianGroup(
+    return std::unique_ptr<NHomMarkedAbelianGroup>(new NHomMarkedAbelianGroup(
         *dom, *ran, mat));
 }
 
@@ -1137,9 +1135,9 @@ bool NHomMarkedAbelianGroup::isChainMap(
     ) return false;
  if ( (getRange().getM() != other.getRange().getN()) ||
       (getDomain().getM() != other.getDomain().getN()) ) return false;
- std::auto_ptr< NMatrixRing<NLargeInteger> > 
+ std::unique_ptr< NMatrixRing<NLargeInteger> > 
   prodLU = range.getM() * getDefiningMatrix();
- std::auto_ptr< NMatrixRing<NLargeInteger> > 
+ std::unique_ptr< NMatrixRing<NLargeInteger> > 
   prodBR = other.getDefiningMatrix() * domain.getM();
  if ( (*prodLU) != (*prodBR) ) return false;
  return true;
@@ -1165,11 +1163,11 @@ bool NHomMarkedAbelianGroup::isChainMap(
 // computes the matrix representing the inverse automorphism.  
 // So to do this we'll need a new matrixops.cpp command -- call it 
 // torsionAutInverse.  
-std::auto_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::inverseHom() const
+std::unique_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::inverseHom() const
 {
  const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
  NMatrixInt invMat( reducedMatrix->columns(), reducedMatrix->rows() );
- if (!isIsomorphism()) return std::auto_ptr<NHomMarkedAbelianGroup>(
+ if (!isIsomorphism()) return std::unique_ptr<NHomMarkedAbelianGroup>(
      new NHomMarkedAbelianGroup( invMat, range, domain ));
  // get A, B, D from reducedMatrix
  // A must be square with domain/range.getNumberOfInvariantFactors() columns
@@ -1203,7 +1201,7 @@ std::auto_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::inverseHom() const
  std::vector<NLargeInteger> invF(domain.getNumberOfInvariantFactors());
  for (unsigned long i=0; i<invF.size(); i++) 
     invF[i] = domain.getInvariantFactor(i);
- std::auto_ptr<NMatrixInt> Ai = torsionAutInverse( A, invF);
+ std::unique_ptr<NMatrixInt> Ai = torsionAutInverse( A, invF);
  // then Bi is given by Bi = -AiBDi
     NMatrixInt Bi(range.getNumberOfInvariantFactors(), domain.getRank());
     NMatrixInt Btemp(range.getNumberOfInvariantFactors(), domain.getRank());
@@ -1248,7 +1246,7 @@ std::auto_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::inverseHom() const
  for (unsigned long i=0; i<Bi.rows(); i++) 
    for (unsigned long j=0; j<Bi.columns(); j++)
      invMat.entry(i,j+Ai->columns()) = Bi.entry(i,j);
- return std::auto_ptr<NHomMarkedAbelianGroup>(
+ return std::unique_ptr<NHomMarkedAbelianGroup>(
    new NHomMarkedAbelianGroup( invMat, range, domain ));
 }
 

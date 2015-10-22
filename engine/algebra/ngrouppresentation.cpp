@@ -226,7 +226,7 @@ std::string NGroupPresentation::recogniseGroup() const {
         { out << 0; return out.str(); }
 
     // Let's record the abelianisation.
-    std::auto_ptr< NAbelianGroup > ab( abelianisation() );
+    std::unique_ptr< NAbelianGroup > ab( abelianisation() );
 
     // abelian test
     if (identifyAbelian()) {
@@ -246,9 +246,9 @@ std::string NGroupPresentation::recogniseGroup() const {
     //   for those.
     if (ab.get()->getRank()==1) {
         NGroupPresentation presCopy( *this );
-        std::auto_ptr< NHomGroupPresentation > AUT(
+        std::unique_ptr< NHomGroupPresentation > AUT(
             presCopy.identifyExtensionOverZ() );
-        if (AUT.get() != NULL) {
+        if (AUT.get() != nullptr) {
             // Let's try to identify the fibre.
             std::string domStr( AUT.get()->getDomain().recogniseGroup() );
             if (domStr.length()>0) {
@@ -294,7 +294,7 @@ std::string NGroupPresentation::recogniseGroup() const {
     return std::string(); // returns empty string if not recognised.
 }
 
-std::auto_ptr<NAbelianGroup> NGroupPresentation::abelianisation() const
+std::unique_ptr<NAbelianGroup> NGroupPresentation::abelianisation() const
 {
     // create presentation matrices to pass to NAbelianGroup(M, N)
     NMatrixInt M(1, getNumberOfGenerators() ); // zero matrix
@@ -305,10 +305,10 @@ std::auto_ptr<NAbelianGroup> NGroupPresentation::abelianisation() const
         for (unsigned long i=0; i<Rj.getNumberOfTerms(); i++)
             N.entry( Rj.getGenerator(i), j ) += Rj.getExponent(i);
     }
-    return std::auto_ptr<NAbelianGroup>(new NAbelianGroup(M,N));
+    return std::unique_ptr<NAbelianGroup>(new NAbelianGroup(M,N));
 }
 
-std::auto_ptr<NMarkedAbelianGroup> NGroupPresentation::markedAbelianisation()
+std::unique_ptr<NMarkedAbelianGroup> NGroupPresentation::markedAbelianisation()
 const
 {
     // create presentation matrices to pass to NMarkedAbelianGroup(M, N)
@@ -320,7 +320,7 @@ const
         for (unsigned long i=0; i<Rj.getNumberOfTerms(); i++)
             N.entry( Rj.getGenerator(i), j ) += Rj.getExponent(i);
     }
-    return std::auto_ptr<NMarkedAbelianGroup>(new NMarkedAbelianGroup(M,N));
+    return std::unique_ptr<NMarkedAbelianGroup>(new NMarkedAbelianGroup(M,N));
 }
 
 void NGroupPresentation::dehnAlgorithmSubMetric(
@@ -764,16 +764,16 @@ bool NGroupPresentation::simplifyWord( NGroupExpression &input ) const
 // 3) Loop back to (1) until nothing happens in either (1) or (2).
 // TODO: consider a homological alignment call if the abelianization
 //       has rank 1 or any other situation where we know it can be useful.
-std::auto_ptr<NHomGroupPresentation>
+std::unique_ptr<NHomGroupPresentation>
 NGroupPresentation::intelligentSimplifyDetail()
 {
     bool doRep(true), bool1(false), bool2(false);
-    std::auto_ptr<NHomGroupPresentation> redHom;
+    std::unique_ptr<NHomGroupPresentation> redHom;
     while (doRep) {
         doRep = false;
         bool1 = false;
         bool2 = false;
-        std::auto_ptr<NHomGroupPresentation> tempHom(
+        std::unique_ptr<NHomGroupPresentation> tempHom(
             smallCancellationDetail() );
         if (tempHom.get()) {
             bool1 = true;
@@ -781,7 +781,7 @@ NGroupPresentation::intelligentSimplifyDetail()
             else redHom.reset( tempHom->composeWith( *redHom.get() ).release() );
         }
 
-        std::auto_ptr<NHomGroupPresentation> temp2Hom(
+        std::unique_ptr<NHomGroupPresentation> temp2Hom(
             intelligentNielsenDetail() );
         if (temp2Hom.get()) {
             bool2 = true;
@@ -791,14 +791,14 @@ NGroupPresentation::intelligentSimplifyDetail()
         if ( bool2 ) doRep = true;
     }
 
-    std::auto_ptr<NHomGroupPresentation> temp3Hom(
+    std::unique_ptr<NHomGroupPresentation> temp3Hom(
         prettyRewritingDetail() );
     if (temp3Hom.get()) {
         if (!redHom.get()) redHom.reset( temp3Hom.release() );
         else redHom.reset( temp3Hom->composeWith( *redHom.get() ).release() );
     }
 
-    return std::auto_ptr<NHomGroupPresentation>( redHom.release() );
+    return std::unique_ptr<NHomGroupPresentation>( redHom.release() );
 }
 
 bool NGroupPresentation::intelligentSimplify()
@@ -811,7 +811,7 @@ bool NGroupPresentation::smallCancellation()
     return smallCancellationDetail().get();
 }
 
-std::auto_ptr<NHomGroupPresentation>
+std::unique_ptr<NHomGroupPresentation>
 NGroupPresentation::smallCancellationDetail()
 {
     bool didSomething(false);
@@ -958,10 +958,10 @@ found_a_generator_killer:
 
     if (didSomething) {
         // now we can initialize reductionMap
-        return std::auto_ptr<NHomGroupPresentation>(new NHomGroupPresentation(
+        return std::unique_ptr<NHomGroupPresentation>(new NHomGroupPresentation(
                     oldGroup, *this, substitutionTable, revMap));
     } else
-        return std::auto_ptr<NHomGroupPresentation>();
+        return std::unique_ptr<NHomGroupPresentation>();
 }// end smallCancellation()
 
 NGroupPresentation& NGroupPresentation::operator=(
@@ -981,13 +981,13 @@ bool NGroupPresentation::intelligentNielsen()
     return intelligentNielsenDetail().get();
 }
 
-std::auto_ptr<NHomGroupPresentation>
+std::unique_ptr<NHomGroupPresentation>
 NGroupPresentation::intelligentNielsenDetail()
 {
-    if (nGenerators < 2) return std::auto_ptr<NHomGroupPresentation>(NULL);
+    if (nGenerators < 2) return std::unique_ptr<NHomGroupPresentation>();
     // let's keep a record of the best possible substitution,
     bool didSomething(true);
-    std::auto_ptr<NHomGroupPresentation> retval(NULL);
+    std::unique_ptr<NHomGroupPresentation> retval;
     while (didSomething) {
         didSomething = false;
         unsigned long bSubi(0), bSubj(0), bSubType(0); // IJ IJi JI or JIi 0,1,2,3
@@ -1100,7 +1100,7 @@ NGroupPresentation::intelligentNielsenDetail()
                 RanToDom[ bSubi ].addTermFirst( NGroupExpressionTerm( bSubj, -1 ) );
             }
             NGroupPresentation newPres(*this);
-            std::auto_ptr<NHomGroupPresentation> tempHom(new
+            std::unique_ptr<NHomGroupPresentation> tempHom(new
                     NHomGroupPresentation(oldPres,newPres,DomToRan,RanToDom));
             if (!retval.get()) retval.reset( tempHom.release() );
             else retval.reset( tempHom->composeWith( *retval.get() ).release() );
@@ -1108,7 +1108,7 @@ NGroupPresentation::intelligentNielsenDetail()
         }
     } // the while loop
 
-    return std::auto_ptr<NHomGroupPresentation>(retval.release());
+    return std::unique_ptr<NHomGroupPresentation>(retval.release());
 }
 
 bool NGroupPresentation::homologicalAlignment()
@@ -1116,12 +1116,12 @@ bool NGroupPresentation::homologicalAlignment()
     return homologicalAlignmentDetail().get();
 }
 
-std::auto_ptr<NHomGroupPresentation>
+std::unique_ptr<NHomGroupPresentation>
 NGroupPresentation::homologicalAlignmentDetail()
 {
-    std::auto_ptr<NHomGroupPresentation> retval; // only allocate if appropriate.
+    std::unique_ptr<NHomGroupPresentation> retval; // only allocate if appropriate.
     // step 1: compute abelianization and how generators map to abelianization.
-    std::auto_ptr< NMarkedAbelianGroup > abelianized( markedAbelianisation() );
+    std::unique_ptr< NMarkedAbelianGroup > abelianized( markedAbelianisation() );
     NMatrixInt abMat( abelianized->minNumberOfGenerators(),
                       getNumberOfGenerators() );
 
@@ -1175,7 +1175,7 @@ NGroupPresentation::homologicalAlignmentDetail()
             }
             // manufacture the Nielsen automorphism...
             nielsenCombine(colFlag ? j1 : j0, colFlag ? j0 : j1, -q.longValue() );
-            std::auto_ptr<NHomGroupPresentation> tempHom(
+            std::unique_ptr<NHomGroupPresentation> tempHom(
                 new NHomGroupPresentation( oldPres, *this, fVec, bVec ) );
             if (!retval.get()) retval.reset( tempHom.release() );
             else
@@ -1230,7 +1230,7 @@ NGroupPresentation::homologicalAlignmentDetail()
             }
             // manufacture the Nielsen automorphism...
             nielsenCombine(colFlag ? j1 : j0, colFlag ? j0 : j1, -q.longValue() );
-            std::auto_ptr<NHomGroupPresentation> tempHom(
+            std::unique_ptr<NHomGroupPresentation> tempHom(
                 new NHomGroupPresentation( oldPres, *this, fVec, bVec ) );
             if (!retval.get()) retval.reset( tempHom.release() );
             else
@@ -1245,12 +1245,12 @@ NGroupPresentation::homologicalAlignmentDetail()
     //              [ 0 D 0 ] so we're essentially done.
 
     // call prettify
-    std::auto_ptr<NHomGroupPresentation> tempHom( prettyRewritingDetail() );
+    std::unique_ptr<NHomGroupPresentation> tempHom( prettyRewritingDetail() );
     if (!retval.get() && tempHom.get()) retval.reset( tempHom.release() );
     else if (retval.get() && tempHom.get())
         retval.reset( tempHom->composeWith( *retval.get() ).release() );
 
-    return std::auto_ptr<NHomGroupPresentation>( retval.release() );
+    return std::unique_ptr<NHomGroupPresentation>( retval.release() );
 }
 
 // This algorithm has to be at least moderately sophisticated to ensure it
@@ -1673,14 +1673,14 @@ bool NGroupPresentation::nielsenCombine(unsigned long i, unsigned long j,
 // Short-term we can recognise the fibre as being abelian and check
 // invertibility using HomMarkedAbelianGroup routines.
 //
-std::auto_ptr< NHomGroupPresentation >
+std::unique_ptr< NHomGroupPresentation >
 NGroupPresentation::identifyExtensionOverZ()
 {
     // step 1: let's build the abelianization homomorphism.
     homologicalAlignment();
-    std::auto_ptr< NMarkedAbelianGroup > abelianized( markedAbelianisation() );
+    std::unique_ptr< NMarkedAbelianGroup > abelianized( markedAbelianisation() );
     if (abelianized->getRank() != 1) return
-            std::auto_ptr< NHomGroupPresentation >(NULL);
+            std::unique_ptr< NHomGroupPresentation >();
     if (abelianized->getNumberOfInvariantFactors()>0)  // put Z generator at 0-th
         nielsenTransposition(0, abelianized->getNumberOfInvariantFactors() );
 
@@ -1793,7 +1793,7 @@ NGroupPresentation::identifyExtensionOverZ()
     // generators
     unsigned long nGm1( nGenerators - 1 );
     if ( (maxKiller.size() != nGm1) || (minKiller.size() != nGm1) )
-        return std::auto_ptr< NHomGroupPresentation >(NULL);
+        return std::unique_ptr< NHomGroupPresentation >();
 
     unsigned long maxWidth(0);
     unsigned long liftCount(0); // how many lifts of our generators do we need?
@@ -1909,8 +1909,8 @@ NGroupPresentation::identifyExtensionOverZ()
             autVec[i] = temp;
         }
 
-    std::auto_ptr< NHomGroupPresentation >
-    retval(new NHomGroupPresentation( kerPres, kerPres, autVec ) );
+    std::unique_ptr< NHomGroupPresentation > retval(
+        new NHomGroupPresentation( kerPres, kerPres, autVec ) );
     retval->intelligentSimplify();
 
     // Modify this presentation to reflect the semi-direct product
@@ -1937,7 +1937,7 @@ NGroupPresentation::identifyExtensionOverZ()
         relations[ i+retval->getDomain().relations.size() ] = temp;
     }
 
-    return std::auto_ptr< NHomGroupPresentation >( retval );
+    return retval;
 }
 
 
@@ -2026,7 +2026,7 @@ bool NGroupPresentation::prettyRewriting()
 
 // this routine iteratively finds length 1 relators, and uses them to simplify
 // other relators.  In the end it deletes all length 0 relators and re-indexes.
-std::auto_ptr<NHomGroupPresentation> NGroupPresentation::prettyRewritingDetail()
+std::unique_ptr<NHomGroupPresentation> NGroupPresentation::prettyRewritingDetail()
 {
     // keep the relators in a list for now.
     std::list<NGroupExpression*> relatorPile;
@@ -2071,7 +2071,7 @@ std::auto_ptr<NHomGroupPresentation> NGroupPresentation::prettyRewritingDetail()
     for (unsigned long i=0; i<relations.size(); i++)
         relatorPile.push_back( relations[i] );
 
-    std::auto_ptr< NHomGroupPresentation > redMap;
+    std::unique_ptr< NHomGroupPresentation > redMap;
     if (genToDel.size()>0) {
         std::set< unsigned long > interval, compDelete; // complement
         for (unsigned long i=0; i<nGenerators; i++)
@@ -2138,7 +2138,7 @@ std::auto_ptr<NHomGroupPresentation> NGroupPresentation::prettyRewritingDetail()
                 relations[i]->cycleRight();
         }
 
-    return std::auto_ptr<NHomGroupPresentation>( redMap.release() );
+    return std::unique_ptr<NHomGroupPresentation>( redMap.release() );
 }
 
 

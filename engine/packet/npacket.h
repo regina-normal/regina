@@ -96,7 +96,7 @@ struct PacketInfo;
  *
  * This macro provides the class with:
  *
- * - a compile-time enum constant \a packetType, which is equal to the
+ * - a compile-time constant \a packetType, which is equal to the
  *   corresponding PacketType constant;
  * - declarations and implementations of the virtual functions
  *   NPacket::getPacketType() and NPacket::getPacketTypeName().
@@ -106,7 +106,7 @@ struct PacketInfo;
  */
 #define REGINA_PACKET(class_, id) \
     public: \
-        enum { packetType = id }; \
+        static constexpr const PacketType packetType = id; \
         inline virtual PacketType getPacketType() const { \
             return id; \
         } \
@@ -170,10 +170,10 @@ class REGINA_API NPacket :
         NPacket* nextTreeSibling;
             /**< Next sibling packet in the tree structure (0 if none). */
 
-        std::auto_ptr<std::set<std::string> > tags;
+        std::unique_ptr<std::set<std::string>> tags;
             /**< The set of all tags associated with this packet. */
 
-        std::auto_ptr<std::set<NPacketListener*> > listeners;
+        std::unique_ptr<std::set<NPacketListener*>> listeners;
             /**< All objects listening for events on this packet. */
         unsigned changeEventSpans;
             /**< The number of change event spans currently registered.

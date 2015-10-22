@@ -47,7 +47,7 @@ namespace {
     void (NMatrixInt::*addCol_triple)(unsigned long, unsigned long,
         regina::NLargeInteger) = &NMatrixInt::addCol;
 
-    std::auto_ptr<NMatrixInt> multiply(const NMatrixInt& m1,
+    std::unique_ptr<NMatrixInt> multiply(const NMatrixInt& m1,
             const NMatrixInt& m2) {
         return m1.multiplyAs<NMatrixInt>(m2);
     }
