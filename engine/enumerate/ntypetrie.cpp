@@ -35,5 +35,6 @@
 #include "enumerate/ntypetrie.h"
 
 // Instantiate templates for standard cases.
+// The header has matching "extern template class REGINA_API" declarations.
 template class regina::NTypeTrie<7>;
 

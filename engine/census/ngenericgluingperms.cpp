@@ -41,6 +41,7 @@
 #include "triangulation/ntriangulation.h"
 
 // Instantiate templates for standard dimensions.
+// The header has matching "extern template class REGINA_API" declarations.
 template class regina::NGenericGluingPerms<2>;
 template class regina::NGenericGluingPerms<3>;
 
