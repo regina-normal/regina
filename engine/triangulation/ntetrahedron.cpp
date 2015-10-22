@@ -64,7 +64,7 @@ void NTetrahedron::isolate() {
 
 NTetrahedron* NTetrahedron::unjoin(int myFace) {
     // TODO: Make this a stack variable once we know that tri != 0 always.
-    std::auto_ptr<NPacket::ChangeEventSpan>
+    std::unique_ptr<NPacket::ChangeEventSpan>
         span(tri_ ? new NPacket::ChangeEventSpan(tri_) : 0);
 
     NTetrahedron* you = tetrahedra_[myFace];
@@ -82,7 +82,7 @@ NTetrahedron* NTetrahedron::unjoin(int myFace) {
 
 void NTetrahedron::joinTo(int myFace, NTetrahedron* you, NPerm4 gluing) {
     // TODO: Make this a stack variable once we know that tri != 0 always.
-    std::auto_ptr<NPacket::ChangeEventSpan>
+    std::unique_ptr<NPacket::ChangeEventSpan>
         span(tri_ ? new NPacket::ChangeEventSpan(tri_) :
         you->tri_ ? new NPacket::ChangeEventSpan(you->tri_) : 0);
 

@@ -306,7 +306,7 @@ REGINA_API void columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
  *
  * \author Ryan Budney
  */
-REGINA_API std::auto_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
+REGINA_API std::unique_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
         const std::vector<NLargeInteger>& sublattice);
 
 /**
@@ -335,8 +335,8 @@ REGINA_API std::auto_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
  *
  * \author Ryan Budney
  */
-REGINA_API std::auto_ptr<NMatrixInt> torsionAutInverse(const NMatrixInt& input,
-    const std::vector<NLargeInteger> &invF);
+REGINA_API std::unique_ptr<NMatrixInt> torsionAutInverse(
+    const NMatrixInt& input, const std::vector<NLargeInteger> &invF);
 
 /*@}*/
 

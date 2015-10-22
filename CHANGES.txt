@@ -13,6 +13,7 @@ Version 4.97  [ (under development) ]
         - Now uses aspects of C++11, which your compiler will need to support.
         - Merged sources for the iPad version into the main source tree.
         - Updated the bundled copy of Normaliz to version 3.0.0 (28 Sep 2015).
+        - Switched from std::auto_ptr to std::unique_ptr throughout the API.
     ENGINE:
         All:
             - Removed ShareableObject from the class hierarchy.  All classes

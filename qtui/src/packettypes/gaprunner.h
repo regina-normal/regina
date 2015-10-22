@@ -86,7 +86,7 @@ class GAPRunner : public QDialog {
          * Group information.
          */
         const regina::NGroupPresentation& origGroup;
-        std::auto_ptr<regina::NGroupPresentation> newGroup;
+        std::unique_ptr<regina::NGroupPresentation> newGroup;
 
     public:
         /**
@@ -107,7 +107,7 @@ class GAPRunner : public QDialog {
          * If no simplified group has been created, a null pointer will
          * be returned.
          */
-        std::auto_ptr<regina::NGroupPresentation> simplifiedGroup();
+        std::unique_ptr<regina::NGroupPresentation> simplifiedGroup();
 
     protected slots:
         /**

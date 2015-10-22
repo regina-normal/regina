@@ -88,7 +88,7 @@ int subContainers = 0;
 std::string outFile;
 
 // Variables used for a dump of face pairings.
-std::auto_ptr<std::ostream> dumpStream;
+std::unique_ptr<std::ostream> dumpStream;
 unsigned long totPairings = 0;
 
 // Variables used for output.

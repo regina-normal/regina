@@ -92,7 +92,7 @@ GAPRunner::GAPRunner(QWidget* parent, const QString& useExec,
         const regina::NGroupPresentation& useOrigGroup) :
         QDialog(parent),
         proc(0), currOutput(""), partialLine(""), stage(GAP_init),
-        cancelled(false), origGroup(useOrigGroup), newGroup(0) {
+        cancelled(false), origGroup(useOrigGroup) {
     setWindowTitle(tr("Running GAP"));
 
     // Disable the window manager buttons (including Close).
@@ -363,7 +363,7 @@ regina::NGroupExpression* GAPRunner::parseRelation(const QString& reln) {
         return 0;
     }
 
-    std::auto_ptr<regina::NGroupExpression> ans(new regina::NGroupExpression);
+    std::unique_ptr<regina::NGroupExpression> ans(new regina::NGroupExpression);
 
     // Make the regex local to this function since we're capturing text.
     QRegExp reGAPTerm("(f[0-9]+)(\\^(-?[0-9]+))?");
@@ -511,10 +511,10 @@ QSize GAPRunner::sizeHint() const {
     return QSize(300, 100);
 }
 
-std::auto_ptr<regina::NGroupPresentation> GAPRunner::simplifiedGroup() {
+std::unique_ptr<regina::NGroupPresentation> GAPRunner::simplifiedGroup() {
     if (stage == GAP_done)
-        return newGroup;
+        return std::move(newGroup);
     else
-        return std::auto_ptr<regina::NGroupPresentation>(0);
+        return nullptr;
 }
 

@@ -129,7 +129,7 @@ namespace {
         h.writeReducedMatrix(std::cout);
     }
 
-    std::auto_ptr<NHomMarkedAbelianGroup> multiplyHom(
+    std::unique_ptr<NHomMarkedAbelianGroup> multiplyHom(
             const NHomMarkedAbelianGroup& h1,
             const NHomMarkedAbelianGroup& h2) {
         return h1 * h2;

@@ -170,10 +170,10 @@ class REGINA_API NPacket :
         NPacket* nextTreeSibling;
             /**< Next sibling packet in the tree structure (0 if none). */
 
-        std::auto_ptr<std::set<std::string> > tags;
+        std::unique_ptr<std::set<std::string>> tags;
             /**< The set of all tags associated with this packet. */
 
-        std::auto_ptr<std::set<NPacketListener*> > listeners;
+        std::unique_ptr<std::set<NPacketListener*>> listeners;
             /**< All objects listening for events on this packet. */
         unsigned changeEventSpans;
             /**< The number of change event spans currently registered.

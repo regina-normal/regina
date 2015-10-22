@@ -1320,7 +1320,7 @@ bool NNormalSurface::isCompressingDisc(bool knownConnected) const {
     // Now cut along the disc, and see if we get an extra sphere as a
     // result.  If not, the disc boundary is non-trivial and so the disc
     // is compressing.
-    std::auto_ptr<NTriangulation> cut(cutAlong());
+    std::unique_ptr<NTriangulation> cut(cutAlong());
 
     if (cut->getNumberOfBoundaryComponents() ==
             getTriangulation()->getNumberOfBoundaryComponents()) {

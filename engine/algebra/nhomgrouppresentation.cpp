@@ -80,11 +80,11 @@ NGroupExpression NHomGroupPresentation::invEvaluate(
 
 }
 
-std::auto_ptr< NHomMarkedAbelianGroup >
+std::unique_ptr< NHomMarkedAbelianGroup >
     NHomGroupPresentation::markedAbelianisation() const
 {
- std::auto_ptr<NMarkedAbelianGroup> DOM( domain_->markedAbelianisation() );
- std::auto_ptr<NMarkedAbelianGroup> RAN( range_->markedAbelianisation() );
+ std::unique_ptr<NMarkedAbelianGroup> DOM( domain_->markedAbelianisation() );
+ std::unique_ptr<NMarkedAbelianGroup> RAN( range_->markedAbelianisation() );
  NMatrixInt ccMat( RAN->getRankCC(), DOM->getRankCC() );
  for (unsigned long j=0; j<ccMat.columns(); j++)
   {
@@ -92,7 +92,7 @@ std::auto_ptr< NHomMarkedAbelianGroup >
    for (unsigned long i=0; i<COLj.getNumberOfTerms(); i++)
     ccMat.entry( COLj.getGenerator(i), j ) += COLj.getExponent(i);
   }
- return std::auto_ptr<NHomMarkedAbelianGroup>(
+ return std::unique_ptr<NHomMarkedAbelianGroup>(
         new NHomMarkedAbelianGroup( *DOM, *RAN, ccMat ) );
 }
 
@@ -133,9 +133,9 @@ void NHomGroupPresentation::writeTextLong(std::ostream& out) const
 
 bool NHomGroupPresentation::smallCancellation()
 {
- std::auto_ptr<regina::NHomGroupPresentation> rangeMap =
+ std::unique_ptr<regina::NHomGroupPresentation> rangeMap =
     range_->smallCancellationDetail();
- std::auto_ptr<regina::NHomGroupPresentation> domainMap =
+ std::unique_ptr<regina::NHomGroupPresentation> domainMap =
     domain_->smallCancellationDetail();
  if (! domainMap.get())
     domainMap.reset(new NHomGroupPresentation(*domain_));
@@ -179,21 +179,21 @@ bool NHomGroupPresentation::smallCancellation()
  return retval;
 }
 
-std::auto_ptr<NHomGroupPresentation> NHomGroupPresentation::composeWith(
+std::unique_ptr<NHomGroupPresentation> NHomGroupPresentation::composeWith(
             const NHomGroupPresentation& input) const
 {
  std::vector<NGroupExpression> evalVec(input.domain_->getNumberOfGenerators());
  for (unsigned long i=0; i<evalVec.size(); i++)
   evalVec[i] = evaluate( input.evaluate(i) );
  if ( (! inv_) || (! input.inv_) )
-  return std::auto_ptr<NHomGroupPresentation>(new NHomGroupPresentation(
+  return std::unique_ptr<NHomGroupPresentation>(new NHomGroupPresentation(
     *input.domain_, *range_, evalVec) );
  else
   {
     std::vector<NGroupExpression> invVec( range_->getNumberOfGenerators());
     for (unsigned long i=0; i<invVec.size(); i++)
      invVec[i] = input.invEvaluate( invEvaluate(i) );
-    return std::auto_ptr<NHomGroupPresentation>(new NHomGroupPresentation(
+    return std::unique_ptr<NHomGroupPresentation>(new NHomGroupPresentation(
         *input.domain_, *range_, evalVec, invVec ) );
   }
 }
@@ -202,9 +202,9 @@ std::auto_ptr<NHomGroupPresentation> NHomGroupPresentation::composeWith(
 
 bool NHomGroupPresentation::intelligentNielsen()
 { // modelled on intelligentSimplify
- std::auto_ptr<regina::NHomGroupPresentation> rangeMap =
+ std::unique_ptr<regina::NHomGroupPresentation> rangeMap =
     range_->intelligentNielsenDetail();
- std::auto_ptr<regina::NHomGroupPresentation> domainMap =
+ std::unique_ptr<regina::NHomGroupPresentation> domainMap =
     domain_->intelligentNielsenDetail();
  if (! domainMap.get())
     domainMap.reset(new NHomGroupPresentation(*domain_));
@@ -251,9 +251,9 @@ bool NHomGroupPresentation::intelligentNielsen()
 bool NHomGroupPresentation::intelligentSimplify()
 {
  // step 1: simplify presentation of domain and range
- std::auto_ptr<regina::NHomGroupPresentation> rangeMap =
+ std::unique_ptr<regina::NHomGroupPresentation> rangeMap =
     range_->intelligentSimplifyDetail();
- std::auto_ptr<regina::NHomGroupPresentation> domainMap =
+ std::unique_ptr<regina::NHomGroupPresentation> domainMap =
     domain_->intelligentSimplifyDetail();
  // build identity maps if either of the above is null.
  if (! domainMap.get())

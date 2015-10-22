@@ -268,7 +268,7 @@ class REGINA_API NHomGroupPresentation :
          * @param input the homomorphism to compose with this.
          * @return the composition of both homomorphisms.
          */
-        std::auto_ptr<NHomGroupPresentation> composeWith(
+        std::unique_ptr<NHomGroupPresentation> composeWith(
             const NHomGroupPresentation& input) const;
 
         /**
@@ -347,7 +347,7 @@ class REGINA_API NHomGroupPresentation :
          *
          * @return the induced map on the abelianizations.
          */
-        std::auto_ptr< NHomMarkedAbelianGroup > markedAbelianisation() const;
+        std::unique_ptr< NHomMarkedAbelianGroup > markedAbelianisation() const;
 
         /**
          * Writes a short text representation of this object to the

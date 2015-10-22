@@ -77,29 +77,29 @@ bool NGenericTriangulation<dim>::isIdenticalTo(
 }
 
 template <int dim>
-inline std::auto_ptr<typename DimTraits<dim>::Isomorphism>
+inline std::unique_ptr<typename DimTraits<dim>::Isomorphism>
         NGenericTriangulation<dim>::isIsomorphicTo(
         const typename DimTraits<dim>::Triangulation& other) const {
     std::list<typename DimTraits<dim>::Isomorphism*> results;
     if (static_cast<const typename DimTraits<dim>::Triangulation&>(*this).
             findIsomorphisms(other, results, true, true))
-        return std::auto_ptr<typename DimTraits<dim>::Isomorphism>(
+        return std::unique_ptr<typename DimTraits<dim>::Isomorphism>(
             results.front());
     else
-        return std::auto_ptr<typename DimTraits<dim>::Isomorphism>(0);
+        return nullptr;
 }
 
 template <int dim>
-inline std::auto_ptr<typename DimTraits<dim>::Isomorphism>
+inline std::unique_ptr<typename DimTraits<dim>::Isomorphism>
         NGenericTriangulation<dim>::isContainedIn(
         const typename DimTraits<dim>::Triangulation& other) const {
     std::list<typename DimTraits<dim>::Isomorphism*> results;
     if (static_cast<const typename DimTraits<dim>::Triangulation&>(*this).
             findIsomorphisms(other, results, false, true))
-        return std::auto_ptr<typename DimTraits<dim>::Isomorphism>(
+        return std::unique_ptr<typename DimTraits<dim>::Isomorphism>(
             results.front());
     else
-        return std::auto_ptr<typename DimTraits<dim>::Isomorphism>(0);
+        return nullptr;
 }
 
 template <int dim>
