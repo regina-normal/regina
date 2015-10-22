@@ -35,5 +35,5 @@
 #include "enumerate/ntypetrie.h"
 
 // Instantiate templates for standard cases.
-template class REGINA_API regina::NTypeTrie<7>;
+template class regina::NTypeTrie<7>;
 
