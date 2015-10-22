@@ -113,17 +113,17 @@ class NTypeTrie {
         /**
          * Initialises an empty trie.
          */
-        inline NTypeTrie();
+        NTypeTrie();
 
         /**
          * Destroys this trie.
          */
-        inline ~NTypeTrie();
+        ~NTypeTrie();
 
         /**
          * Resets this to the empty trie.
          */
-        inline void clear();
+        void clear();
 
         /**
          * Inserts the given type vector into this trie.
