@@ -36,7 +36,8 @@
 
 namespace regina {
 
-// Instantiate templates:
+// Instantiate templates for standard combinations of template arguments.
+// The header has matching "extern template class REGINA_API" declarations.
 template class NTreeTraversal<LPConstraintNone, BanNone, NInteger>;
 template class NTreeTraversal<LPConstraintNone, BanNone, NNativeLong>;
 template class NTreeEnumeration<LPConstraintNone, BanNone, NInteger>;

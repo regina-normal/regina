@@ -105,6 +105,12 @@ class NTriangulation;
  * each new integer to zero.  The classes NInteger and NNativeInteger,
  * for instance, have this property.
  *
+ * \headers Parts of this template class are implemented in a separate header
+ * (ntreelp-impl.h), which is not included automatically by this file.
+ * Most end users should not need this extra header, since Regina's calculation
+ * engine already includes explicit instantiations for common combinations of
+ * template arguments.
+ *
  * \apinotfinal
  *
  * \ifacespython Not present.
@@ -412,6 +418,12 @@ class LPMatrix {
  *
  * \pre The template parameter LPConstraint must be one of the subclasses of
  * LPConstraintBase.  See the LPConstraintBase class notes for further details.
+ *
+ * \headers Parts of this template class are implemented in a separate header
+ * (ntreelp-impl.h), which is not included automatically by this file.
+ * Most end users should not need this extra header, since Regina's calculation
+ * engine already includes explicit instantiations for common combinations of
+ * template arguments.
  *
  * \apinotfinal
  *
@@ -883,6 +895,12 @@ class LPInitialTableaux {
  * \pre The default constructor for the template class Integer must intialise
  * each new integer to zero.  The classes NInteger and NNativeInteger,
  * for instance, have this property.
+ *
+ * \headers Parts of this template class are implemented in a separate header
+ * (ntreelp-impl.h), which is not included automatically by this file.
+ * Most end users should not need this extra header, since Regina's calculation
+ * engine already includes explicit instantiations for common combinations of
+ * template arguments.
  *
  * \apinotfinal
  *
@@ -1386,6 +1404,35 @@ class LPData {
          */
         void verify() const;
 };
+
+/*@}*/
+
+extern template class REGINA_API LPMatrix<NInteger>;
+extern template class REGINA_API LPMatrix<NNativeLong>;
+
+extern template class REGINA_API LPInitialTableaux<LPConstraintNone>;
+extern template class REGINA_API LPInitialTableaux<LPConstraintEuler>;
+#ifndef EXCLUDE_SNAPPEA
+extern template class REGINA_API LPInitialTableaux<LPConstraintNonSpun>;
+#endif
+
+extern template class REGINA_API LPData<LPConstraintNone, NInteger>;
+extern template class REGINA_API LPData<LPConstraintNone, NNativeLong>;
+extern template class REGINA_API LPData<LPConstraintEuler, NInteger>;
+extern template class REGINA_API LPData<LPConstraintEuler, NNativeLong>;
+#ifndef EXCLUDE_SNAPPEA
+extern template class REGINA_API LPData<LPConstraintNonSpun, NInteger>;
+extern template class REGINA_API LPData<LPConstraintNonSpun, NNativeLong>;
+#endif
+
+#ifdef INT128_AVAILABLE
+extern template class REGINA_API LPData<LPConstraintNone, NNativeInteger<16> >;
+extern template class REGINA_API LPData<LPConstraintEuler, NNativeInteger<16> >;
+#ifndef EXCLUDE_SNAPPEA
+extern template class REGINA_API LPData<LPConstraintNonSpun,
+    NNativeInteger<16> >;
+#endif
+#endif
 
 // Inline functions for LPMatrix
 

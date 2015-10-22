@@ -36,7 +36,11 @@
 
 namespace regina {
 
-// Instantiate templates:
+// Instantiate templates for standard combinations of template arguments.
+// The header has matching "extern template class REGINA_API" declarations.
+template class LPMatrix<NInteger>;
+template class LPMatrix<NNativeLong>;
+
 template class LPInitialTableaux<LPConstraintNone>;
 template class LPInitialTableaux<LPConstraintEuler>;
 #ifndef EXCLUDE_SNAPPEA

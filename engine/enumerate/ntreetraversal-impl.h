@@ -32,12 +32,15 @@
 
 /* end stub */
 
-/* Definitions of template member functions from ntreetraversal.h.
-   For common combinations of template arguments, the templates are
-   already instatiated and so you will not need to include this file.
-   For more exotic combinations of template arguments, or if the
-   template arguments are your own classes, then you will need to
-   include this file. */
+/*! \file enumerate/ntreetraversal-impl.h
+ *  \brief Contains implementation details for the various tree traversal
+ *  class templates.
+ *
+ *  This file is \e not included automatically by ntreetraversal.h.
+ *  However, most end users should not need to include it, since
+ *  Regina's calculation engine provides full explicit instantiations
+ *  of these classes for common combinations of template arguments.
+ */
 
 #ifndef __NTREETRAVERSAL_IMPL_H
 #ifndef __DOXYGEN

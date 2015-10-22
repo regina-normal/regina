@@ -32,11 +32,15 @@
 
 /* end stub */
 
-/* Definitions of template member functions from ntreelp.h.
-   If your template arguments are classes from ntreeconstraint.h,
-   then you never need to include this file (since all templates will already
-   be instantiated for you).  You will, however, need to include this
-   file if you provide your own custom classes as template arguments. */
+/*! \file enumerate/ntreelp-impl.h
+ *  \brief Contains implementation details for the various linear programming
+ *  class templates.
+ *
+ *  This file is \e not included automatically by ntreelp.h.
+ *  However, most end users should not need to include it, since
+ *  Regina's calculation engine provides full explicit instantiations
+ *  of these classes for common combinations of template arguments.
+ */
 
 #ifndef __NTREELP_IMPL_H
 #ifndef __DOXYGEN
