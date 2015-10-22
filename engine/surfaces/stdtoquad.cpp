@@ -32,10 +32,11 @@
 
 /* end stub */
 
-#include "surfaces/normalspec-impl.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/nsstandard.h"
 #include "surfaces/nsquad.h"
+#include "surfaces/nsanstandard.h"
 #include "surfaces/nsquadoct.h"
 #include "triangulation/ntriangulation.h"
 
@@ -46,6 +47,9 @@ namespace regina {
 //
 // The following definitions should ensure that the template is fully
 // instantiated where it needs to be.
+//
+// Since the template funtcions are private, we do not need to declare
+// them with REGINA_API.
 
 NNormalSurfaceList* NNormalSurfaceList::standardToQuad() const {
     return internalStandardToReduced<NormalSpec>();
