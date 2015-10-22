@@ -726,9 +726,66 @@ void NCollapsedChainSearcher::collapseChain(NFacePair faces, int tet) {
     // Currently tet and faces refer to the two faces of the base
     // tetrahedron that are pointing outwards.
     while (dest1.simp == dest2.simp && dest1.simp != tet) {
+        order[orderDone] = NTetFace(tet, faces.lower());
+        order[orderDone+1] = NTetFace(tet, faces.upper());
+
+        NFacePair comp = faces.complement();
+        NFacePair facesAdj = NFacePair(dest1.facet, dest2.facet);
+        NFacePair compAdj = facesAdj.complement();
+
+        // ABC -> A'B'C'
+        // BCD -> C'D'B'
+
+        perm1 = NPerm4(
+
+        trial1 = NPerm4(faces.lower(), facesAdj.lower(),
+                        faces.upper(), compAdj.lower(),
+                        comp.lower(), compAdj.upper(),
+                        comp.upper(), facesAdj.upper());
+        trial2 = NPerm4(faces.lower(), facesAdj.lower(),
+                        faces.upper(), compAdj.upper(),
+                        comp.lower(), compAdj.lower(),
+                        comp.upper(), facesAdj.upper());
+        chainPermIndices[3 * i] = gluingToIndex(order[i], trial1);
+        chainPermIndices[3 * i + 3] = gluingToIndex(order[i + 1],
+            NPerm4(faces.lower(), compAdj.upper(),
+                    faces.upper(), facesAdj.upper(),
+                    comp.lower(), facesAdj.lower(),
+                    comp.upper(), compAdj.lower()));
+        chainPermIndices[3 * i] = gluingToIndex(order[i], trial2);
+        chainPermIndices[3 * i + 3] = gluingToIndex(order[i + 1],
+            NPerm4(faces.lower(), compAdj.lower(),
+                    faces.upper(), facesAdj.upper(),
+                    comp.lower(), facesAdj.lower(),
+                    comp.upper(), compAdj.upper()));
+
+        trial1 = NPerm4(faces.lower(), facesAdj.lower(),
+                        faces.upper(), compAdj.lower(),
+                        comp.lower(), facesAdj.upper(),
+                        comp.upper(), compAdj.upper());
+        trial2 = NPerm4(faces.lower(), facesAdj.lower(),
+                        faces.upper(), compAdj.upper(),
+                        comp.lower(), facesAdj.upper(),
+                        comp.upper(), compAdj.lower());
+        if (trial1.compareWith(trial2) < 0) {
+            chainPermIndices[2 * i + 1] = gluingToIndex(order[i], trial1);
+            chainPermIndices[2 * i + 3] = gluingToIndex(order[i + 1],
+                NPerm4(faces.lower(), compAdj.upper(),
+                        faces.upper(), facesAdj.upper(),
+                        comp.lower(), compAdj.lower(),
+                        comp.upper(), facesAdj.lower()));
+        } else {
+            chainPermIndices[2 * i + 1] = gluingToIndex(order[i], trial2);
+            chainPermIndices[2 * i + 3] = gluingToIndex(order[i + 1],
+                NPerm4(faces.lower(), compAdj.lower(),
+                        faces.upper(), facesAdj.upper(),
+                        comp.lower(), compAdj.upper(),
+                        comp.upper(), facesAdj.lower()));
+        }
         pairing->unMatch(tet,faces,lower());
         pairing->unMatch(tet,faces,upper());
         faces = NFacePair(dest1.facet, dest2.facet).complement;
+        orderDone += 2;
 
         // Store this tetrahedron as part of the chain.
         chainTet[nChains].append(tet);
