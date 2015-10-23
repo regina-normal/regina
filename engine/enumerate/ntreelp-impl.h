@@ -153,7 +153,7 @@ LPInitialTableaux<LPConstraint>::LPInitialTableaux(
     reorder(enumeration);
 
     // Create and fill the sparse columns.
-    col_ = new Col[cols_];
+    col_ = new LPCol<LPConstraint>[cols_];
     for (c = 0; c < eqns_->columns() - (scaling_ ? 1 : 0); ++c)
         for (r = 0; r < rank_; ++r)
             if (eqns_->entry(r, c) != 0)
