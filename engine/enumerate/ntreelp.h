@@ -1407,6 +1407,11 @@ class LPData {
 
 /*@}*/
 
+class LPConstraintNone;
+class LPConstraintEuler;
+class LPConstraintNonSpun;
+
+/*
 extern template class REGINA_API LPMatrix<NInteger>;
 extern template class REGINA_API LPMatrix<NNativeLong>;
 
@@ -1433,6 +1438,7 @@ extern template class REGINA_API LPData<LPConstraintNonSpun,
     NNativeInteger<16> >;
 #endif
 #endif
+*/
 
 // Inline functions for LPMatrix
 

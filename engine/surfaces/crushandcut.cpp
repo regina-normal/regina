@@ -1460,7 +1460,7 @@ namespace {
                     }
 
                     NTreeSingleSoln<LPConstraintEuler, BanNone> search(t_[side],
-                        NNormalSurfaceList::STANDARD);
+                        NS_STANDARD);
                     {
                         std::lock_guard<std::mutex> lock(searchMutex_[side]);
                         currSearch_[side] = &search;

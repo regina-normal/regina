@@ -44,7 +44,8 @@
 #include "regina-config.h" // For EXCLUDE_SNAPPEA
 #include "enumerate/ntreelp.h"
 #include "maths/ninteger.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalcoords.h"
+#include "surfaces/nnormalsurface.h"
 
 namespace regina {
 
@@ -52,8 +53,8 @@ class NAngleStructure;
 class NNormalSurface;
 class NTriangulation;
 
-template <typename Integer>
-class LPMatrix;
+template <typename Integer> class LPMatrix;
+template <class LPConstraint> class LPInitialTableaux;
 
 /**
  * \weakgroup enumerate

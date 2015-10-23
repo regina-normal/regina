@@ -56,7 +56,6 @@
 // #define REGINA_NOOPT_REORDER_COLUMNS
 
 #include "angle/nanglestructure.h"
-#include "enumerate/ntreeconstraint.h"
 #include "enumerate/ntreelp.h"
 #include "maths/matrixops.h"
 #include "surfaces/nnormalsurfacelist.h"
