@@ -36,8 +36,10 @@
 
 // Headers required for our template instantiations:
 #include "census/dim2gluingperms.h"
+#include "census/dim4gluingperms.h"
 #include "census/ngluingperms.h"
 #include "dim2/dim2triangulation.h"
+#include "dim4/dim4triangulation.h"
 #include "triangulation/ntriangulation.h"
 
 // Instantiate templates for standard dimensions.

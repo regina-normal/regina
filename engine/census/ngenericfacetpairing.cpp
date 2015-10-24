@@ -36,8 +36,10 @@
 
 // Headers required for our template instantiations:
 #include "census/dim2edgepairing.h"
+#include "census/dim4facetpairing.h"
 #include "census/nfacepairing.h"
 #include "dim2/dim2triangulation.h"
+#include "dim4/dim4triangulation.h"
 #include "triangulation/ntriangulation.h"
 
 // Instantiate templates for standard dimensions.
