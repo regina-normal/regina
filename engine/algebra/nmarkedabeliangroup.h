@@ -113,13 +113,13 @@ class REGINA_API NMarkedAbelianGroup :
         // first rankOM rows.
 
         /** Internal change of basis. ornC * ORN * ornR is the SNF(ORN). */
-        std::auto_ptr<NMatrixInt> ornR, ornC;
+        std::unique_ptr<NMatrixInt> ornR, ornC;
         /** Internal change of basis. These are the inverses of ornR and ornC
             respectively. */
-        std::auto_ptr<NMatrixInt> ornRi, ornCi; 
+        std::unique_ptr<NMatrixInt> ornRi, ornCi; 
         /** Internal change of basis matrix for homology with coefficents.
             otC * tensorPres * otR == SNF(tensorPres) */
-        std::auto_ptr<NMatrixInt> otR, otC, otRi, otCi;
+        std::unique_ptr<NMatrixInt> otR, otC, otRi, otCi;
 
         /** Internal list of invariant factors. */
         std::vector<NLargeInteger> InvFacList;
@@ -885,13 +885,13 @@ class REGINA_API NMarkedAbelianGroup :
          *  Returns an NMarkedAbelianGroup representing the torsion subgroup
          *  of this group. 
          */
-        std::auto_ptr<NMarkedAbelianGroup> torsionSubgroup() const;
+        std::unique_ptr<NMarkedAbelianGroup> torsionSubgroup() const;
 
         /**
          *  Returns an NHomMarkedAbelianGroup representing the inclusion of the
          *  torsion subgroup into this group. 
          */
-        std::auto_ptr<NHomMarkedAbelianGroup> torsionInclusion() const;
+        std::unique_ptr<NHomMarkedAbelianGroup> torsionInclusion() const;
 };
 
 /**
@@ -1227,7 +1227,7 @@ class REGINA_API NHomMarkedAbelianGroup :
          * @return the inverse homomorphism, or the zero homomorphism if
          * this is not invertible.
          */
-        std::auto_ptr<NHomMarkedAbelianGroup> inverseHom() const;
+        std::unique_ptr<NHomMarkedAbelianGroup> inverseHom() const;
 
         /**
          * Returns the composition of two homomorphisms.
@@ -1239,14 +1239,14 @@ class REGINA_API NHomMarkedAbelianGroup :
          * @param X the homomorphism to compose this with.
          * @return a newly created composite homomorphism.
          */
-        std::auto_ptr<NHomMarkedAbelianGroup> operator * (
+        std::unique_ptr<NHomMarkedAbelianGroup> operator * (
             const NHomMarkedAbelianGroup &X) const;
 
         /**
          *  Returns an NHomMarkedAbelianGroup representing the induced map
          *  on the torsion subgroups. 
          */
-        std::auto_ptr<NHomMarkedAbelianGroup> torsionSubgroup() const;
+        std::unique_ptr<NHomMarkedAbelianGroup> torsionSubgroup() const;
 
         /**
          * Writes a human-readable version of the reduced matrix to the

@@ -42,6 +42,11 @@
  *  of NGenericIsomorphism for \ref stddim "standard dimensions".
  */
 
+#ifndef __NGENERICISOMORPHISM_IMPL_H
+#ifndef __DOXYGEN
+#define __NGENERICISOMORPHISM_IMPL_H
+#endif
+
 #include <algorithm>
 #include <cstdlib>
 #include "packet/npacket.h"
@@ -203,3 +208,4 @@ void NGenericIsomorphism<dim>::applyInPlace(
 
 } // namespace regina
 
+#endif

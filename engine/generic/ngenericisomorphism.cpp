@@ -41,7 +41,8 @@
 #include "triangulation/ntriangulation.h"
 
 // Instantiate templates for standard dimensions.
-template class REGINA_API regina::NGenericIsomorphism<2>;
-template class REGINA_API regina::NGenericIsomorphism<3>;
-template class REGINA_API regina::NGenericIsomorphism<4>;
+// The header has matching "extern template class REGINA_API" declarations.
+template class regina::NGenericIsomorphism<2>;
+template class regina::NGenericIsomorphism<3>;
+template class regina::NGenericIsomorphism<4>;
 

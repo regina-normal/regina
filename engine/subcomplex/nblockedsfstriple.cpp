@@ -235,7 +235,7 @@ bool NBlockedSFSTripleSearcher::useStarterBlock(NSatBlock* starter) {
 
     // Hunt for layerings, but gently gently -- we don't want to loop
     // from one boundary back onto the other.
-    std::auto_ptr<NLayering> layering[2];
+    std::unique_ptr<NLayering> layering[2];
 
     int e;
     for (e = 0; e < 2; e++) {

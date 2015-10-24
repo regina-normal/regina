@@ -174,7 +174,7 @@ class NGenericTriangulation : public DimTraits<dim> {
          * If a boundary complete isomorphism is found, the details of
          * this isomorphism are returned.  The isomorphism is newly
          * constructed, and so to assist with memory management is
-         * returned as a std::auto_ptr.  Thus, to test whether an
+         * returned as a std::unique_ptr.  Thus, to test whether an
          * isomorphism exists without having to explicitly deal with the
          * isomorphism itself, you can call
          * <tt>if (isIsomorphicTo(other).get())</tt> and the newly
@@ -193,7 +193,7 @@ class NGenericTriangulation : public DimTraits<dim> {
          * @return details of the isomorphism if the two triangulations
          * are combinatorially isomorphic, or a null pointer otherwise.
          */
-        std::auto_ptr<typename DimTraits<dim>::Isomorphism> isIsomorphicTo(
+        std::unique_ptr<typename DimTraits<dim>::Isomorphism> isIsomorphicTo(
             const typename DimTraits<dim>::Triangulation& other) const;
 
         /**
@@ -214,7 +214,7 @@ class NGenericTriangulation : public DimTraits<dim> {
          * If a boundary incomplete isomorphism is found, the details of
          * this isomorphism are returned.  The isomorphism is newly
          * constructed, and so to assist with memory management is
-         * returned as a std::auto_ptr.  Thus, to test whether an
+         * returned as a std::unique_ptr.  Thus, to test whether an
          * isomorphism exists without having to explicitly deal with the
          * isomorphism itself, you can call
          * <tt>if (isContainedIn(other).get())</tt> and the newly
@@ -230,7 +230,7 @@ class NGenericTriangulation : public DimTraits<dim> {
          * @return details of the isomorphism if such a copy is found,
          * or a null pointer otherwise.
          */
-        std::auto_ptr<typename DimTraits<dim>::Isomorphism> isContainedIn(
+        std::unique_ptr<typename DimTraits<dim>::Isomorphism> isContainedIn(
             const typename DimTraits<dim>::Triangulation& other) const;
 
         /**

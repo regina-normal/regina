@@ -873,7 +873,7 @@ void NTriGluingsUI::drillEdge() {
             tr("Regina will drill out a regular neighbourhood around whichever "
                 "edge you choose."));
         if (chosen) {
-            std::auto_ptr<PatienceDialog> dlg(PatienceDialog::warn(tr(
+            std::unique_ptr<PatienceDialog> dlg(PatienceDialog::warn(tr(
                 "Drilling requires multiple subdivisions, and\n"
                 "can be quite slow for larger triangulations.\n\n"
                 "Please be patient."), ui));
@@ -1014,7 +1014,7 @@ void NTriGluingsUI::connectedSumDecomposition() {
             "currently only available for closed, connected "
             "3-manifold triangulations."));
     else {
-        std::auto_ptr<PatienceDialog> dlg(PatienceDialog::warn(tr(
+        std::unique_ptr<PatienceDialog> dlg(PatienceDialog::warn(tr(
             "Connected sum decomposition can be quite\n"
             "slow for larger triangulations.\n\n"
             "Please be patient."), ui));
@@ -1122,14 +1122,14 @@ void NTriGluingsUI::makeZeroEfficient() {
         return;
     }
 
-    std::auto_ptr<PatienceDialog> dlg(PatienceDialog::warn(tr(
+    std::unique_ptr<PatienceDialog> dlg(PatienceDialog::warn(tr(
         "0-efficiency reduction can be quite\n"
         "slow for larger triangulations.\n\n"
         "Please be patient."), ui));
 
     // If it's possible that the triangulation but not the number of
     // tetrahedra is changed, remember the original.
-    std::auto_ptr<NTriangulation> orig;
+    std::unique_ptr<NTriangulation> orig;
     if (initTets <= 2)
         orig.reset(new NTriangulation(*tri));
 

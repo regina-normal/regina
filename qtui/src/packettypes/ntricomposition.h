@@ -82,7 +82,7 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
          */
         regina::NTriangulation* tri;
         regina::NTriangulation* comparingTri;
-        std::auto_ptr<regina::NIsomorphism> isomorphism;
+        std::unique_ptr<regina::NIsomorphism> isomorphism;
         IsomorphismType isoType;
 
         /**
