@@ -114,6 +114,12 @@ FIND_PACKAGE(Threads REQUIRED)
 IF(NOT Threads_FOUND)
   MESSAGE(FATAL_ERROR "Regina requires threading support.")
 ENDIF(NOT Threads_FOUND)
+IF(CMAKE_COMPILER_IS_GNUCXX)
+  # The FindThreads module picks up -lpthread, not -pthread.
+  # This is unfortunate, because std::thread must be built with -pthread
+  # under g++; otherwise it builds but throws an exception at runtime.
+  SET(CMAKE_CXX_FLAGS "-pthread ${CMAKE_CXX_FLAGS}")
+ENDIF(CMAKE_COMPILER_IS_GNUCXX)
 
 # C++11 requirements
 INCLUDE(CheckCXX11Features)
