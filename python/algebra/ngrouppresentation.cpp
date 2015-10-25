@@ -64,7 +64,8 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_nielsenCombine,
         NGroupPresentation::nielsenCombine, 3, 4);
 
-    std::auto_ptr<NGroupExpression> newExpression_str(const std::string& str) {
+    std::auto_ptr<NGroupExpression> newExpression_str(
+            const std::string& str) {
         return std::auto_ptr<NGroupExpression>(new NGroupExpression(str, 0));
     }
 
