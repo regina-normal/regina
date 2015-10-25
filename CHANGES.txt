@@ -45,6 +45,8 @@ Version 4.97  [ (under development) ]
             - Renamed getNumberOfStructures() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
             - Now uses C++11 std::thread internally instead of the old NThread.
+        Class NContainer:
+            - New constructor that takes a packet label.
         Class NCyclotomic:
             - New class for exact arithmetic in cyclotomic fields.
         Struct NewFunction, NewFunction1:

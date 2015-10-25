@@ -78,6 +78,17 @@ class REGINA_API NContainer : public NPacket {
          */
         NContainer();
 
+        /**
+         * Constructs a new container with the given packet label.
+         *
+         * This constructor is (for example) helpful when you are
+         * building a complex packet tree to save to a Regina data file,
+         * and you are using containers to organise the data in this tree.
+         *
+         * @param label the packet label for this new container.
+         */
+        NContainer(const std::string& label);
+
         virtual void writeTextShort(std::ostream& out) const;
         static NXMLPacketReader* getXMLReader(NPacket* parent,
             NXMLTreeResolver& resolver);
@@ -93,6 +104,10 @@ class REGINA_API NContainer : public NPacket {
 // Inline functions for NContainer
 
 inline NContainer::NContainer() {
+}
+
+inline NContainer::NContainer(const std::string& label) {
+    setPacketLabel(label);
 }
 
 inline void NContainer::writeTextShort(std::ostream& o) const {
