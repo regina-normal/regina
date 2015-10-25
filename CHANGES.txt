@@ -32,6 +32,8 @@ Version 4.97  [ (under development) ]
         Class Dim2Triangulation:
             - New dimension-agnostic getFace<subdim>() and
               faceIndex<subdim>() template functions.
+            - Reconstruction from isomorphism signatures now allows
+              leading and/or trailing whitespace.
         Class FaceTraits:
             - New template class to help with writing dimension-agnostic code.
               This class offers typedefs for (subdim)-dimensional faces
@@ -143,6 +145,8 @@ Version 4.97  [ (under development) ]
               caching a nice tree decomposition of the face pairing graph.
             - New routines retriangulate() and simplifyExhaustive() for
               breadth-first searching through the Pachner graph.
+            - Reconstruction from isomorphism signatures now allows
+              leading and/or trailing whitespace.
         Class NVertex:
             - Added a new LinkType enumeration, which encapsulates (and
               replaces) the old link type constants.
