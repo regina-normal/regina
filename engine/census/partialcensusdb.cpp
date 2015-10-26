@@ -66,6 +66,7 @@ PartialTriangulationData::PartialTriangulationData(const OneStepSearcher *s,
     for (t = 0; t < nTets; ++t)
         for (facet = 0; facet <= 3; ++facet)
             if ((! s->pairing_->isUnmatched(t, facet)) &&
+                    (s->pairing_->dest(t, facet).simp < nTets) && // Don't glue too far
                     (! simp[t]->adjacentSimplex(facet)))
                 simp[t]->joinTo(facet, simp[s->pairing_->dest(t, facet).simp],
                     s->gluingPerm(t,facet));

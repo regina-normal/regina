@@ -402,7 +402,7 @@ void OneStepSearcher::glue() {
                 && permIndex(face) == -1 // Only store this once
                 && isCanonical() // Store only canonical
                 ) {
-            db_->store(this, nTets, pairingStrings[adj.simp]);
+            db_->store(this, adj.simp, pairingStrings[adj.simp]);
         }
 
         // Move to the next permutation.

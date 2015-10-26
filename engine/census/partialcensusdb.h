@@ -356,10 +356,12 @@ inline InMemoryDB::~InMemoryDB() {
         l+= theHits.second->count();
         std::cout << "Graph: " << theHits.first << " has " <<
             theHits.second->count() << " hits." << std::endl;
-        if (theHits.second->count() < 100)
+        if (theHits.second->count() < 100) {
             for ( auto hit = theHits.second->begin() ; hit !=
                     theHits.second->end(); hit = hit->next() )
                 std::cout << hit->str() << std::endl;
+            std::cout << theHits.second->end()->str() << std::endl; // Last one 
+        }
     }
     std::cout << "In memory storing " << l << " triangulations in total." << std::endl;
 }
