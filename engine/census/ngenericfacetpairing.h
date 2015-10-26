@@ -304,6 +304,28 @@ class NGenericFacetPairing : public boost::noncopyable {
         bool isCanonical() const;
 
         /**
+         * Finds and applies the appropriate isomorphism such that the
+         * resulting facet pairing is in canonical form, i.e., is a
+         * lexicographically minimal representative of its isomorphism class.
+         *
+         * Isomorphisms of facet pairings correspond to relabellings of
+         * simplices and relabellings of the (\a dim + 1) facets within each
+         * simplex.
+         *
+         * Facet pairings are ordered by lexicographical comparison of
+         * <tt>dest(0,0)</tt>, <tt>dest(0,1)</tt>, ...,
+         * <tt>dest(size()-1,\a dim)</tt>.
+         *
+         * \pre This facet pairing contains at most one connected component
+         * which itself is not an isolated simplex with zero facets
+         * identified.
+         *
+         * @return \c The isomorphism which maps the original facet pairing
+         * into the canonical representation.
+         */
+        Isomorphism* makeCanonical();
+
+        /**
          * Fills the given list with the set of all combinatorial
          * automorphisms of this facet pairing.
          *

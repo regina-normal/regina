@@ -553,6 +553,351 @@ bool NGenericFacetPairing<dim>::isCanonicalInternal(
 }
 
 template <int dim>
+typename NGenericFacetPairing<dim>::Isomorphism* NGenericFacetPairing<dim>::makeCanonical() {
+    // Create the automorphisms one simplex at a time, selecting the
+    // preimage of 0 first, then the preimage of 1 and so on.
+
+    // We're going to skip over any completely isolated simplex, and put all
+    // such simplices at the end of any canonical representation. Thus, we want
+    // to find the first simplex that is connected to something.
+#define toInt(fs) ((fs.simp) * (dim + 1) + (fs.facet))
+    int numIsolated = 0;
+
+    // First count how many isolated simplices we have.
+    for ( int i = 0; i < size_; i++ ) {
+        bool isolated = true;
+        for (int j = 0; j < (dim + 1); j++) {
+            if (! isUnmatched(i, j)) {
+                isolated = false;
+                break;
+            }
+        }
+        if (isolated)
+            numIsolated += 1;
+    }
+
+    // Now find a suitable place to start.
+    int startSimplex = 0;
+    bool isolated = true;
+    while (isolated && startSimplex < size_) {
+        for (int facet = 0 ; facet < (dim + 1); facet++) {
+            if (! isUnmatched(startSimplex, facet)) {
+                isolated = false;
+                break;
+            }
+        }
+        if ( isolated )
+            startSimplex += 1;
+    }
+
+    if ( startSimplex == size_ ) {
+        Isomorphism* ans;
+        // Only isolated simplices, so already canonical.
+        ans = new Isomorphism(size_);
+        for ( int i = 0; i < size_ ; i++ ) {
+            ans->simpImage(i) = i;
+            ans->facetPerm(i) = Perm::Sn[0];
+        }
+        return ans;
+    }
+
+    // Now we know that at least one gluing exists.
+
+    NFacetSpec<dim>* best = new NFacetSpec<dim>[size_ * (dim + 1)];
+        /**< The best representation found so far. */
+    NFacetSpec<dim>* image = new NFacetSpec<dim>[size_ * (dim + 1)];
+        /**< The automorphism currently under construction. */
+    NFacetSpec<dim>* preImage = new NFacetSpec<dim>[size_ * (dim + 1)];
+        /**< The inverse of this automorphism. */
+
+    for (unsigned i = 0; i < size_ ; ++i) {
+        for (unsigned j = 0; j < (dim + 1); ++j) {
+            image[i * (dim + 1) + j].setBeforeStart();
+            preImage[i * (dim + 1) + j].setBeforeStart();
+            NFacetSpec<dim> &b = dest(i,j);
+            best[i * (dim + 1) + j].simp = b.simp;
+            best[i * (dim + 1) + j].facet = b.facet;
+        }
+    }
+
+    // Note that we know size_ >= 1.
+    // For the preimage of facet 0 of simplex 0 we simply cycle
+    // through all possibilities.
+    NFacetSpec<dim> firstFace(0, 0);
+    NFacetSpec<dim> firstFaceDest(dest(firstFace));
+    NFacetSpec<dim> trying;
+    NFacetSpec<dim> fImg, fPre;
+    bool stepDown;
+    int simp, facet;
+    int permImg[dim + 1];
+
+    // We need to track whether the automorphism we are working on is better
+    // than anything we have found so far (in which case we no longer care
+    // about comparisons but instead just want to fill out the automorphism).
+    // isBetterAt is used to track this. -1 means "currently equal" whereas a
+    // positive value means "up until this point we were equal but at this
+    // point we were better".
+    // That is, if isBetterAt is positive and we are trying to fill out the
+    // automorphism after this point, stop doing comparisons.
+    int isBetterAt = -1;
+
+    Isomorphism* ans = NULL;
+    for (preImage[0] = firstFace ; ! preImage[0].isPastEnd(size_, true);
+            ++preImage[0]) {
+        // Note that we know firstFace is not unmatched.
+        if (isUnmatched(preImage[0]))
+            continue;
+
+        // We can use this facet.
+        // Set the corresponding reverse mapping and off we go.
+        image[toInt(preImage[0])] = firstFace;
+
+
+        // We will step forwards to the next facet whose preimage is undetermined.
+        trying = firstFace;
+        ++trying;
+
+        // But first set up mappings for the first destination.
+        firstFaceDest = dest(preImage[0]);
+        if (firstFaceDest.simp == preImage[0].simp) {
+            // Different facet on same simplex
+            image[toInt(firstFaceDest)].simp = 0;
+            image[toInt(firstFaceDest)].facet = 1;
+            preImage[1] = firstFaceDest;
+
+            // If the new first facet is identified with the second facet, we
+            // need to skip one further ahead before searching.
+            ++trying;
+        } else {
+            image[toInt(firstFaceDest)].simp = 1;
+            image[toInt(firstFaceDest)].facet = 0;
+            preImage[dim + 1] = firstFaceDest;
+        }
+        if (image[toInt(firstFaceDest)] < best[0]) {
+            isBetterAt = 0;
+        } else if (image[toInt(firstFaceDest)] > best[0]) {
+            continue;
+        }
+
+        while (! (trying == firstFace)) {
+            // INV: We've successfully selected preimages for all facets
+            // before trying.  We're currently looking at the last
+            // attempted candidate for the preimage of trying.
+
+            // Note that if preimage facet A is glued to preimage facet B
+            // and the image of A is earlier than the image of B, then
+            // the image of A will be selected whereas the image of B
+            // will be automatically derived.
+
+            stepDown = false;
+            NFacetSpec<dim>& pre =
+                preImage[trying.simp * (dim + 1) + trying.facet];
+
+            // Note that we ignore the last numIsolated simplices. We know that
+            // the facet pairing contains at most one connected component which
+            // does not represent an isolated simplex. The algorithm below
+            // follows identifications in this connected component, which
+            // ensures that this whole connected component will appear first in
+            // any representation.
+            if (trying.isPastEnd(size_ - numIsolated, true)) {
+                // We almost have a complete automorphism!
+                if (ans != NULL)
+                    delete ans;
+                ans = new Isomorphism(size_);
+                for (unsigned i = 0; i < (size_ - numIsolated); i++) {
+                    ans->simpImage(i) = image[i * (dim + 1)].simp;
+                    for (unsigned j = 0; j <= dim; ++j) {
+                        permImg[j] = image[i * (dim + 1) + j].facet;
+                        NFacetSpec<dim> &other = dest(preImage[i * (dim + 1) + j]);
+                        if (! other.isBoundary(size_))
+                            best[i * (dim + 1) + j] = image[toInt(other)];
+                        else
+                            best[i * (dim + 1) + j].setBoundary(size_);
+                    }
+                    ans->facetPerm(i) = Perm(permImg);
+                }
+                stepDown = true;
+            } else {
+                // Move to the next candidate.
+                if (pre.simp >= 0 && pre.facet == dim) {
+                    // We're all out of candidates.
+                    pre.setBeforeStart();
+                    stepDown = true;
+                } else {
+                    if (pre.isBeforeStart()) {
+                        // Which simplex must we look in?
+                        // Note that this simplex will already have been
+                        // determined.
+                        pre.simp = preImage[trying.simp * (dim + 1)].simp;
+                        pre.facet = 0;
+                    } else
+                        ++pre.facet;
+
+                    // Step forwards until we have a preimage whose image
+                    // has not already been set.
+                    for ( ; pre.facet <= dim; ++pre.facet) {
+                        if (! image[pre.simp * (dim + 1) + pre.facet].
+                                isBeforeStart())
+                            continue;
+                        break;
+                    }
+                    while (pre.facet <= dim &&
+                            ! image[pre.simp * (dim + 1) + pre.facet].
+                            isBeforeStart())
+                        ++pre.facet;
+                    if (pre.facet == (dim + 1)) {
+                        pre.setBeforeStart();
+                        stepDown = true;
+                    }
+                }
+            }
+
+            if (! stepDown) {
+                // We found a candidate.
+                image[pre.simp * (dim + 1) + pre.facet] = trying;
+                if (! isUnmatched(pre)) {
+                    fPre = dest(pre);
+                    if (image[fPre.simp * (dim + 1) + fPre.facet].
+                            isBeforeStart()) {
+                        // The image of fPre (the partner of the preimage
+                        // facet) can be determined at this point.
+                        // Specifically, it should go into the next
+                        // available slot.
+
+                        // Do we already know which simplex we should
+                        // be looking into?
+                        unsigned i;
+                        for (i = 0; i <= dim; i++)
+                            if (! image[fPre.simp * (dim + 1) + i].
+                                    isBeforeStart()) {
+                                // Here's the simplex!
+                                // Find the first available facet.
+                                simp = image[fPre.simp * (dim + 1) + i].simp;
+                                for (facet = 0;
+                                        ! preImage[simp * (dim + 1) + facet].
+                                        isBeforeStart(); ++facet)
+                                    ;
+                                image[fPre.simp * (dim + 1) +
+                                    fPre.facet].simp = simp;
+                                image[fPre.simp * (dim + 1) +
+                                    fPre.facet].facet = facet;
+                                break;
+                            }
+                        if (i == (dim + 1)) {
+                            // We need to map to a new simplex.
+                            // Find the first available simplex.
+                            for (simp = trying.simp + 1;
+                                    ! preImage[simp * (dim + 1)].
+                                    isBeforeStart();
+                                    ++simp)
+                                ;
+                            image[fPre.simp * (dim + 1) + fPre.facet].simp =
+                                simp;
+                            image[fPre.simp * (dim + 1) + fPre.facet].facet = 0;
+                        }
+
+                        // Set the corresponding preimage.
+                        fImg = image[fPre.simp * (dim + 1) + fPre.facet];
+                        preImage[fImg.simp * (dim + 1) + fImg.facet] = fPre;
+                    }
+                }
+
+                // Do a lexicographical comparison and shunt trying up
+                // if need be.
+                do {
+                    // Do we need to check?
+                    if ( isBetterAt == -1 ) {
+                        // In the best known isomorphism, trying is glued to fImg.
+                        fImg = best[trying.simp * (dim + 1) + trying.facet];
+                        fPre = dest(preImage[trying.simp * (dim + 1) +
+                            trying.facet]);
+                        if (! fPre.isBoundary(size_))
+                            fPre = image[fPre.simp * (dim + 1) + fPre.facet];
+
+                        // After applying our isomorphism, trying will be
+                        // glued to fPre.
+
+                        if (fImg < fPre) {
+                            // This isomorphism will lead to a
+                            // lexicographically greater representation.
+                            // Ignore it.
+                            stepDown = true;
+                        } else if (fImg > fPre) {
+                            // This isomorphism will lead to a
+                            // lexicographically lesser representation.
+                            // Always use it.
+                            isBetterAt = trying.simp * (dim + 1) +
+                                trying.facet;
+                        } // else leave isBetterAt = -1 and check at next step.
+                    }
+                    // What we have so far is consistent with an automorphism.
+                    ++trying;
+                } while (! (stepDown || trying.isPastEnd(size_, true) ||
+                        preImage[trying.simp * (dim + 1) + trying.facet].
+                        isBeforeStart()));
+            }
+
+            if (stepDown) {
+                // We're shunting trying back down.
+                --trying;
+                while (true) {
+                    fPre = preImage[trying.simp * (dim + 1) + trying.facet];
+                    if (! isUnmatched(fPre)) {
+                        fPre = dest(fPre);
+                        if (image[fPre.simp * (dim + 1) + fPre.facet] <
+                                trying) {
+                            // This preimage/image was automatically derived.
+                            --trying;
+                            continue;
+                        }
+                    }
+                    break;
+                }
+                if ( isBetterAt >= trying.simp * (dim + 1) + trying.facet )
+                    isBetterAt = -1;
+
+                // Note that this resetting of facets that follows will
+                // also take place when trying makes it all the way back
+                // down to firstFace.
+                fPre = preImage[trying.simp * (dim + 1) + trying.facet];
+                image[fPre.simp * (dim + 1) + fPre.facet].setBeforeStart();
+                if (! isUnmatched(fPre)) {
+                    fPre = dest(fPre);
+                    fImg = image[fPre.simp * (dim + 1) + fPre.facet];
+                    preImage[fImg.simp * (dim + 1) + fImg.facet].
+                        setBeforeStart();
+                    image[fPre.simp * (dim + 1) + fPre.facet].setBeforeStart();
+                }
+            }
+        }
+    }
+#undef toInt
+
+    // Apply the isomorphism we found.
+
+    // First "remove" extra isolated tetrahedra
+    size_ -= numIsolated;
+    // Recreate storage room for pairs_.
+    delete[] pairs_;
+    pairs_ = new NFacetSpec<dim>[size_ * (dim + 1)];
+    // Then use our "best" representation.
+    for ( unsigned i = 0; i < size_ * (dim + 1); ++i ) {
+        pairs_[i].simp = best[i].simp;
+        if (pairs_[i].simp == (size_ + numIsolated)) // Boundary changed
+            pairs_[i].simp = size_;
+        pairs_[i].facet = best[i].facet;
+    }
+    // Note that in the above, size_ has been changed since allocating best, so
+    // just using best results in slight memory loss.
+
+    // Memory cleanup
+    delete[] image;
+    delete[] preImage;
+    delete[] best;
+    return ans;
+}
+
+template <int dim>
 void NGenericFacetPairing<dim>::enumerateInternal(NBoolSet boundary,
         int nBdryFacets, Use use, void* useArgs) {
     // Bail if it's obvious that nothing will happen.
