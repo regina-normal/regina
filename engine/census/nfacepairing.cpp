@@ -63,6 +63,7 @@ template NFacePairing* NGenericFacetPairing<3>::fromTextRep(const std::string&);
 template bool NGenericFacetPairing<3>::isCanonical() const;
 template bool NGenericFacetPairing<3>::isCanonicalInternal(
     NGenericFacetPairing<3>::IsoList&) const;
+template NGenericFacetPairing<3>::Isomorphism* NGenericFacetPairing<3>::makeCanonical();
 template void NGenericFacetPairing<3>::findAutomorphisms(
     NGenericFacetPairing<3>::IsoList&) const;
 template bool NGenericFacetPairing<3>::findAllPairings(unsigned, NBoolSet,

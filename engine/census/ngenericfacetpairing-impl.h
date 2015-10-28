@@ -546,30 +546,44 @@ bool NGenericFacetPairing<dim>::isCanonicalInternal(
 }
 
 template <int dim>
-Isomorphism* NGenericFacetPairing<dim>::makeCanonicalInternal(
-        typename NGenericFacetPairing<dim>::IsoList& list) const {
+typename NGenericFacetPairing<dim>::Isomorphism* NGenericFacetPairing<dim>::makeCanonical() {
     // Create the automorphisms one simplex at a time, selecting the
     // preimage of 0 first, then the preimage of 1 and so on.
 
     // We're going to skip over any completely isolated simplex, and put all
     // such simplices at the end of any canonical representation. Thus, we want
     // to find the first simplex that is connected to something.
+#define toInt(fs) ((fs.simp) * (dim + 1) + (fs.facet))
+    int numIsolated = 0;
 
-    int startSimplex = 0;
-    int startFacet = 0;
-    bool isolated = true;
-    while (isolated && startSimplex < size_) {
-        for (startFacet = 0 ; startFacet < dim; startFacet++) {
-            if (! isUnmatched(startSimplex, startFacet)) {
+    // First count how many isolated simplices we have.
+    for ( int i = 0; i < size_; i++ ) {
+        bool isolated = true;
+        for (int j = 0; j < (dim + 1); j++) {
+            if (! isUnmatched(i, j)) {
                 isolated = false;
                 break;
             }
         }
         if (isolated)
+            numIsolated += 1;
+    }
+
+    // Now find a suitable place to start.
+    int startSimplex = 0;
+    bool isolated = true;
+    while (isolated && startSimplex < size_) {
+        for (int facet = 0 ; facet < (dim + 1); facet++) {
+            if (! isUnmatched(startSimplex, facet)) {
+                isolated = false;
+                break;
+            }
+        }
+        if ( isolated )
             startSimplex += 1;
     }
 
-    if (( startSimplex == size_ ) || (size_ == 1)) {
+    if ( startSimplex == size_ ) {
         Isomorphism* ans;
         // Only isolated simplices, so already canonical.
         ans = new Isomorphism(size_);
@@ -580,7 +594,7 @@ Isomorphism* NGenericFacetPairing<dim>::makeCanonicalInternal(
         return ans;
     }
 
-    // Now we know that startFacet startSimplex is glued to something.
+    // Now we know that at least one gluing exists.
 
     NFacetSpec<dim>* best = new NFacetSpec<dim>[size_ * (dim + 1)];
         /**< The best representation found so far. */
@@ -590,50 +604,74 @@ Isomorphism* NGenericFacetPairing<dim>::makeCanonicalInternal(
         /**< The inverse of this automorphism. */
 
     for (unsigned i = 0; i < size_ ; ++i) {
-        for (unsigned j = 0; j < dim; ++j) {
+        for (unsigned j = 0; j < (dim + 1); ++j) {
             image[i * (dim + 1) + j].setBeforeStart();
             preImage[i * (dim + 1) + j].setBeforeStart();
-            best[i * (dim + 1) + j](dest(i,j));
+            NFacetSpec<dim> &b = dest(i,j);
+            best[i * (dim + 1) + j].simp = b.simp;
+            best[i * (dim + 1) + j].facet = b.facet;
         }
     }
 
     // Note that we know size_ >= 1.
     // For the preimage of facet 0 of simplex 0 we simply cycle
     // through all possibilities.
-    const NFacetSpec<dim> firstFace(0, 0);
-    const NFacetSpec<dim> firstFaceDest(dest(firstFace));
-    NFacetSpec<dim> firstDestPre;
+    NFacetSpec<dim> firstFace(0, 0);
+    NFacetSpec<dim> firstFaceDest(dest(firstFace));
     NFacetSpec<dim> trying;
     NFacetSpec<dim> fImg, fPre;
     bool stepDown;
     int simp, facet;
     int permImg[dim + 1];
-    Isomorphism* ans;
+
+    // We need to track whether the automorphism we are working on is better
+    // than anything we have found so far (in which case we no longer care
+    // about comparisons but instead just want to fill out the automorphism).
+    // isBetterAt is used to track this. -1 means "currently equal" whereas a
+    // positive value means "up until this point we were equal but at this
+    // point we were better".
+    // That is, if isBetterAt is positive and we are trying to fill out the
+    // automorphism after this point, stop doing comparisons.
+    int isBetterAt = -1;
+
+    Isomorphism* ans = NULL;
     for (preImage[0] = firstFace ; ! preImage[0].isPastEnd(size_, true);
             ++preImage[0]) {
         // Note that we know firstFace is not unmatched.
         if (isUnmatched(preImage[0]))
             continue;
 
-        // If the first facet in the best representation so far glues to the
-        // same simplex and this facet doesn't, we can ignore this permutation.
-        firstDestPre = dest(preImage[0]);
-        if (best[0].simp == 0 && firstDestPre.simp != preImage[0].simp)
-            continue;
+        // We can use this facet.
+        // Set the corresponding reverse mapping and off we go.
+        image[toInt(preImage[0])] = firstFace;
 
-        // We can use this facet.  Set the corresponding reverse mapping
-        // and off we go.
-        image[preImage[0].simp * (dim + 1) + preImage[0].facet] = firstFace;
-        preImage[firstFaceDest.simp * (dim + 1) + firstFaceDest.facet] =
-            firstDestPre;
-        image[firstDestPre.simp * (dim + 1) + firstDestPre.facet] =
-            firstFaceDest;
 
-        // Step forwards to the next facet whose preimage is undetermined.
+        // We will step forwards to the next facet whose preimage is undetermined.
         trying = firstFace;
         ++trying;
-        if (trying == firstFaceDest)
+
+        // But first set up mappings for the first destination.
+        firstFaceDest = dest(preImage[0]);
+        if (firstFaceDest.simp == preImage[0].simp) {
+            // Different facet on same simplex
+            image[toInt(firstFaceDest)].simp = 0;
+            image[toInt(firstFaceDest)].facet = 1;
+            preImage[1] = firstFaceDest;
+
+            // If the new first facet is identified with the second facet, we
+            // need to skip one further ahead before searching.
             ++trying;
+        } else {
+            image[toInt(firstFaceDest)].simp = 1;
+            image[toInt(firstFaceDest)].facet = 0;
+            preImage[dim + 1] = firstFaceDest;
+        }
+        if (image[toInt(firstFaceDest)] < best[0]) {
+            isBetterAt = 0;
+        } else if (image[toInt(firstFaceDest)] > best[0]) {
+            continue;
+        }
+
         while (! (trying == firstFace)) {
             // INV: We've successfully selected preimages for all facets
             // before trying.  We're currently looking at the last
@@ -648,16 +686,26 @@ Isomorphism* NGenericFacetPairing<dim>::makeCanonicalInternal(
             NFacetSpec<dim>& pre =
                 preImage[trying.simp * (dim + 1) + trying.facet];
 
-            if (trying.isPastEnd(size_, true)) {
-                // We have a complete automorphism!
+            // Note that we ignore the last numIsolated simplices. We know that
+            // the facet pairing contains at most one connected component which
+            // does not represent an isolated simplex. The algorithm below
+            // follows identifications in this connected component, which
+            // ensures that this whole connected component will appear first in
+            // any representation.
+            if (trying.isPastEnd(size_ - numIsolated, true)) {
+                // We almost have a complete automorphism!
                 if (ans != NULL)
                     delete ans;
                 ans = new Isomorphism(size_);
-                for (unsigned i = 0; i < size_; i++) {
+                for (unsigned i = 0; i < (size_ - numIsolated); i++) {
                     ans->simpImage(i) = image[i * (dim + 1)].simp;
                     for (unsigned j = 0; j <= dim; ++j) {
                         permImg[j] = image[i * (dim + 1) + j].facet;
-                        best[i * (dim + 1) + j] = image[i * (dim + 1) + j];
+                        NFacetSpec<dim> &other = dest(preImage[i * (dim + 1) + j]);
+                        if (! other.isBoundary(size_))
+                            best[i * (dim + 1) + j] = image[toInt(other)];
+                        else
+                            best[i * (dim + 1) + j].setBoundary(size_);
                     }
                     ans->facetPerm(i) = Perm(permImg);
                 }
@@ -684,10 +732,6 @@ Isomorphism* NGenericFacetPairing<dim>::makeCanonicalInternal(
                         if (! image[pre.simp * (dim + 1) + pre.facet].
                                 isBeforeStart())
                             continue;
-                        // Either both or neither of trying and pre must be
-                        // matched to something.
-                        if (isUnmatched(trying) != isUnmatched(pre))
-                            continue;
                         break;
                     }
                     while (pre.facet <= dim &&
@@ -703,8 +747,6 @@ Isomorphism* NGenericFacetPairing<dim>::makeCanonicalInternal(
 
             if (! stepDown) {
                 // We found a candidate.
-                // We also know that trying is unmatched iff the preimage
-                // is unmatched.
                 image[pre.simp * (dim + 1) + pre.facet] = trying;
                 if (! isUnmatched(pre)) {
                     fPre = dest(pre);
@@ -756,21 +798,30 @@ Isomorphism* NGenericFacetPairing<dim>::makeCanonicalInternal(
                 // Do a lexicographical comparison and shunt trying up
                 // if need be.
                 do {
-                    // In the best known isomorphism, trying is glued to fImg.
-                    fImg = best[trying.simp * (dim + 1) + trying.facet];
-                    fPre = dest(preImage[trying.simp * (dim + 1) +
-                        trying.facet]);
-                    if (! fPre.isBoundary(size_))
-                        fPre = image[fPre.simp * (dim + 1) + fPre.facet];
+                    // Do we need to check?
+                    if ( isBetterAt == -1 ) {
+                        // In the best known isomorphism, trying is glued to fImg.
+                        fImg = best[trying.simp * (dim + 1) + trying.facet];
+                        fPre = dest(preImage[trying.simp * (dim + 1) +
+                            trying.facet]);
+                        if (! fPre.isBoundary(size_))
+                            fPre = image[fPre.simp * (dim + 1) + fPre.facet];
 
-                    // After applying our isomorphism, trying will be
-                    // glued to fPre.
+                        // After applying our isomorphism, trying will be
+                        // glued to fPre.
 
-                    if (fImg < fPre) {
-                        // This isomorphism will lead to a
-                        // lexicographically greater representation.
-                        // Ignore it.
-                        stepDown = true;
+                        if (fImg < fPre) {
+                            // This isomorphism will lead to a
+                            // lexicographically greater representation.
+                            // Ignore it.
+                            stepDown = true;
+                        } else if (fImg > fPre) {
+                            // This isomorphism will lead to a
+                            // lexicographically lesser representation.
+                            // Always use it.
+                            isBetterAt = trying.simp * (dim + 1) +
+                                trying.facet;
+                        } // else leave isBetterAt = -1 and check at next step.
                     }
                     // What we have so far is consistent with an automorphism.
                     ++trying;
@@ -795,6 +846,8 @@ Isomorphism* NGenericFacetPairing<dim>::makeCanonicalInternal(
                     }
                     break;
                 }
+                if ( isBetterAt >= trying.simp * (dim + 1) + trying.facet )
+                    isBetterAt = -1;
 
                 // Note that this resetting of facets that follows will
                 // also take place when trying makes it all the way back
@@ -811,9 +864,29 @@ Isomorphism* NGenericFacetPairing<dim>::makeCanonicalInternal(
             }
         }
     }
+#undef toInt
 
-    // We have our isomorphism in ans, apply it.
-    applyIsomorphism(ans);
+    // Apply the isomorphism we found.
+
+    // First "remove" extra isolated tetrahedra
+    size_ -= numIsolated;
+    // Recreate storage room for pairs_.
+    delete[] pairs_;
+    pairs_ = new NFacetSpec<dim>[size_ * (dim + 1)];
+    // Then use our "best" representation.
+    for ( unsigned i = 0; i < size_ * (dim + 1); ++i ) {
+        pairs_[i].simp = best[i].simp;
+        if (pairs_[i].simp == (size_ + numIsolated)) // Boundary changed
+            pairs_[i].simp = size_;
+        pairs_[i].facet = best[i].facet;
+    }
+    // Note that in the above, size_ has been changed since allocating best, so
+    // just using best results in slight memory loss.
+
+    // Memory cleanup
+    delete[] image;
+    delete[] preImage;
+    delete[] best;
     return ans;
 }
 

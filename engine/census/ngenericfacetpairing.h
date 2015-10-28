@@ -298,6 +298,28 @@ class REGINA_API NGenericFacetPairing : public NThread,
          */
         bool isCanonical() const;
 
+        /** TODO
+         * Determines whether this facet pairing is in canonical form,
+         * i.e., is a lexicographically minimal representative of its
+         * isomorphism class.
+         *
+         * Isomorphisms of facet pairings correspond to relabellings of
+         * simplices and relabellings of the (\a dim + 1) facets within each
+         * simplex.
+         *
+         * Facet pairings are ordered by lexicographical comparison of
+         * <tt>dest(0,0)</tt>, <tt>dest(0,1)</tt>, ...,
+         * <tt>dest(size()-1,\a dim)</tt>.
+         *
+         * \pre This facet pairing is connected, i.e., it is possible
+         * to reach any simplex from any other simplex via a
+         * series of matched facet pairs.
+         *
+         * @return \c true if and only if this facet pairing is in
+         * canonical form.
+         */
+        Isomorphism* makeCanonical();
+
         /**
          * Fills the given list with the set of all combinatorial
          * automorphisms of this facet pairing.

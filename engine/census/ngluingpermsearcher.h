@@ -2548,7 +2548,7 @@ class REGINA_API NCollapsedChainSearcher : public NGluingPermSearcher {
          * \pre The given face pairing has no boundary faces and has at
          * least three tetrahedra.
          */
-        CollapsedChainSearcher(const NFacePairing* pairing,
+        NCollapsedChainSearcher(const NFacePairing* pairing,
                 const NFacePairing::IsoList* autos,
                 bool orientableOnly, UseGluingPerms use, void* useArgs = 0);
 
@@ -2574,14 +2574,14 @@ class REGINA_API NCollapsedChainSearcher : public NGluingPermSearcher {
          *
          * @param in the input stream from which to read.
          */
-        CollapsedChainSearcher(std::istream& in,
+        NCollapsedChainSearcher(std::istream& in,
             UseGluingPerms use, void* useArgs = 0);
 
         /**
          * Destroys this search manager and all supporting data
          * structures.
          */
-        virtual ~CollapsedChainSearcher();
+        virtual ~NCollapsedChainSearcher();
 
         // Overridden methods:
         virtual void dumpData(std::ostream& out) const;
@@ -2597,7 +2597,7 @@ class REGINA_API NCollapsedChainSearcher : public NGluingPermSearcher {
          * here does not remove the tetrahedra, it only disconnects them. They
          * will be removed when the resulting NFacePairing is made canonical.
          */
-        collapseChain(NFacePair);
+        void collapseChain(NFacePair);
 
 };
 
