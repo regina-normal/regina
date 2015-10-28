@@ -258,6 +258,22 @@ struct NFacetSpec {
      * @return \c true if and only if this is less than or equal to
      * the given specifier.
      */
+    bool operator >= (const NFacetSpec<dim>& other) const;
+    /**
+     * Determines if this is greater than the given specifier.
+     *
+     * @param other the specifier to compare with this.
+     * @return \c true if and only if this is greater than the given
+     * specifier.
+     */
+    bool operator > (const NFacetSpec<dim>& other) const;
+    /**
+     * Determines if this is greater than or equal to the given specifier.
+     *
+     * @param other the specifier to compare with this.
+     * @return \c true if and only if this is greater than or equal to
+     * the given specifier.
+     */
     bool operator <= (const NFacetSpec<dim>& other) const;
 };
 
@@ -406,6 +422,16 @@ inline bool NFacetSpec<dim>::operator < (const NFacetSpec<dim>& other) const {
 template <int dim>
 inline bool NFacetSpec<dim>::operator <= (const NFacetSpec<dim>& other) const {
     return (simp < other.simp || (simp == other.simp && facet <= other.facet));
+}
+
+template <int dim>
+inline bool NFacetSpec<dim>::operator > (const NFacetSpec<dim>& other) const {
+    return (simp > other.simp || (simp == other.simp && facet > other.facet));
+}
+
+template <int dim>
+inline bool NFacetSpec<dim>::operator >= (const NFacetSpec<dim>& other) const {
+    return (simp > other.simp || (simp == other.simp && facet >= other.facet));
 }
 
 } // namespace regina
