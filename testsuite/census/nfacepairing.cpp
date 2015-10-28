@@ -105,6 +105,7 @@ class NFacePairingTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(rawCountsClosed);
     CPPUNIT_TEST(rawCountsBounded);
     CPPUNIT_TEST(badSubgraphs);
+    CPPUNIT_TEST(makeCanonical);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -140,6 +141,32 @@ class NFacePairingTest : public CppUnit::TestFixture {
                         << " tetrahedra (closed) should be " << nPairs[nTets]
                         << ", not " << count << '.';
 
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void makeCanonical() {
+            const int numTests = 3;
+            const char* before[] = {
+                "1 0 1 0 0 3 0 2",
+                "2 0 1 1 2 0 2 0 2 0 0 1 2 0 2 0",
+                "2 0 2 0 0 3 0 2 2 0 2 0 2 0 2 0"
+            };
+            const char* after[] = {
+                "0 1 0 0 1 0 1 0",
+                "1 0 2 0 2 0 2 0 0 0 2 0 2 0 2 0",
+                "0 1 0 0 1 0 1 0"
+            };
+            for (int i = 0; i < numTests; i++) {
+                std::string rep(before[i]);
+                NFacePairing* f = NFacePairing::fromTextRep(rep);
+                f->makeCanonical();
+                if ( f->toTextRep().compare(after[i]) != 0 ) {
+                    std::ostringstream msg;
+                    msg << "The canonical representation of " << before[i]
+                        << " is " << after[i] << " but we got "
+                        << f->toTextRep() << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
