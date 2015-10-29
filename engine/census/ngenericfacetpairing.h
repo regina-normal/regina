@@ -756,6 +756,54 @@ class REGINA_API NGenericFacetPairing : public NThread,
          */
         bool isCanonicalInternal(IsoList& list) const;
 
+        /**
+         * Given two boundary facets, matches them together.
+         *
+         * \pre The two given facets are both boundary facets.
+         *
+         * @param facet1 the first facet
+         * @param facet2 the second facet
+         *
+         */
+        void match(const NFacetSpec<dim>& facet1, const NFacetSpec<dim>&
+                facet2);
+
+        /**
+         * Given two boundary facets, matches them together.
+         *
+         * \pre The two given facets are both boundary facets.
+         *
+         * @param tet1 the tetrahedron the first facet belongs to
+         * @param facet1 the first facet
+         * @param tet2 the tetrahedron the second facet belongs to
+         * @param facet2 the second facet
+         *
+         */
+        void match(int tet1, int facet1, int tet2, int facet2);
+
+        /**
+         * Given a non-boundary facet, disconnects the identification between
+         * this facet and its partner.
+         *
+         * \pre The given facet is not a boundary facet.
+         *
+         * @param facet the facet in question
+         *
+         */
+        void unMatch(const NFacetSpec<dim>& facet1);
+
+        /**
+         * Given a non-boundary facet, disconnects the identification between
+         * this facet and its partner.
+         *
+         * \pre The given facet is not a boundary facet.
+         *
+         * @param tet the tetrahedron the facet belongs to
+         * @param facet the facet index
+         *
+         */
+        void unMatch(int tet, int facet);
+
     private:
         /**
          * Holds the arguments passed to findAllPairings().
@@ -766,6 +814,8 @@ class REGINA_API NGenericFacetPairing : public NThread,
             Use use;
             void* useArgs;
         };
+
+    friend class NCollapsedChainSearcher;
 };
 
 /*@}*/
@@ -803,6 +853,34 @@ template <int dim>
 inline const NFacetSpec<dim>& NGenericFacetPairing<dim>::operator [](
         const NFacetSpec<dim>& source) const {
     return pairs_[(dim + 1) * source.simp + source.facet];
+}
+
+template <int dim>
+inline void NGenericFacetPairing<dim>::match(const NFacetSpec<dim>& facet1, const NFacetSpec<dim>&
+                facet2) {
+    pairs_[(dim + 1) * facet1.simp + facet1.facet] = facet2;
+    pairs_[(dim + 1) * facet2.simp + facet2.facet] = facet1;
+}
+
+template <int dim>
+inline void NGenericFacetPairing<dim>::match(int tet1, int facet1,
+        const int tet2, const int facet2) {
+    NFacetSpec<dim> f1(tet1, facet1);
+    NFacetSpec<dim> f2(tet2, facet2);
+    match(f1,f2);
+}
+
+template <int dim>
+inline void NGenericFacetPairing<dim>::unMatch(const NFacetSpec<dim>& facet) {
+    NFacetSpec<dim> &f2 = pairs_[(dim + 1) * facet.simp + facet.facet];
+    pairs_[(dim + 1) * facet.simp + facet.facet].setBoundary(size_);
+    pairs_[(dim + 1) * f2.simp + f2.facet].setBoundary(size_);
+}
+
+template <int dim>
+inline void NGenericFacetPairing<dim>::unMatch(int tet, int facet) {
+    NFacetSpec<dim> f = NFacetSpec<dim>(tet,facet);
+    unMatch(f);
 }
 
 template <int dim>

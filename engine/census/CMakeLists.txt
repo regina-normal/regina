@@ -4,6 +4,7 @@
 SET ( FILES
   closedprimemin
   compact
+  collapsechain
   dim2census
   dim2edgepairing
   dim2gluingperms

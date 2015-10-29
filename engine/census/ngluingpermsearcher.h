@@ -2496,9 +2496,9 @@ class REGINA_API NCollapsedChainSearcher : public NGluingPermSearcher {
                  and writing tagged data in text format. */
 
     private:
-        NFacePairing modified;
+        FacetPairing *modified;
             /**< The modified face pairing graph. */
-        NIsomorphism iso;
+        NIsomorphism *iso;
             /**< The isomorphism to apply to modified to retrieve the original
                  labels of all simplices in modified.
 
@@ -2507,15 +2507,18 @@ class REGINA_API NCollapsedChainSearcher : public NGluingPermSearcher {
                  added back in first. Then the isomorphism can be applied, and
                  lastly the chains can be rebuilt using the data from
                  chainFaces and chainLength. */
+        unsigned maxOrder;
         unsigned nChains;
-            /**< The number of chains collapsed. */
-        NFacePair* chainFaces;
-            /**< The two faces which form the start of the chain which was
-                 collapsed. */
-        unsigned* chainLength;
-            /**< The lengths of the chains (before being collapsed). This is
-                 consistent with notation in [TODO]; that is, a chain of length n
-                 consists of n+1 tetrahedra. */
+            /**< TODO. */
+        int* chainPermIndices;
+            /**< Stores the two possible gluing permutations that must be
+                 tried for each face in the order[] array.
+
+                 Note that for each face, the gluing permutation can be derived
+                 from the permutation chosen for the previous face.  In this
+                 case we store the two permutations for this face that
+                 correspond to the two possible permutations for the previous
+                 face.  */
 
     public:
         /**
@@ -2587,6 +2590,8 @@ class REGINA_API NCollapsedChainSearcher : public NGluingPermSearcher {
         virtual void dumpData(std::ostream& out) const;
         virtual void runSearch(long maxDepth = -1);
 
+        void extendTri(NTriangulation *);
+        static void extendTriHelper(const NGluingPermSearcher *, void *);
     protected:
         // Overridden methods:
         virtual char dataTag() const;
@@ -2597,7 +2602,7 @@ class REGINA_API NCollapsedChainSearcher : public NGluingPermSearcher {
          * here does not remove the tetrahedra, it only disconnects them. They
          * will be removed when the resulting NFacePairing is made canonical.
          */
-        void collapseChain(NFacePair);
+        void collapseChain(NFacePair pair, int tet);
 
 };
 
@@ -3044,6 +3049,12 @@ inline char NClosedPrimeMinSearcher::dataTag() const {
 
 inline char NHyperbolicMinSearcher::dataTag() const {
     return NHyperbolicMinSearcher::dataTag_;
+}
+
+// Inline functions for NCollapsedChainSearcher
+
+inline char NCollapsedChainSearcher::dataTag() const {
+    return NCollapsedChainSearcher::dataTag_;
 }
 
 } // namespace regina
