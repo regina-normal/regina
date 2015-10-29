@@ -57,6 +57,13 @@
 #include <QStackedWidget>
 #include <QTemporaryFile>
 
+#if TODO
+#include "graphviz/gvc.h"
+#endif
+
+extern gvplugin_library_t gvplugin_neato_layout_LTX_library;
+extern gvplugin_library_t gvplugin_core_LTX_library;
+
 FacetGraphTab::FacetGraphTab(FacetGraphData* useData,
         PacketTabbedViewerTab* useParentUI) :
         PacketViewerTab(useParentUI),
@@ -131,6 +138,16 @@ QWidget* FacetGraphTab::getInterface() {
 }
 
 void FacetGraphTab::refresh() {
+#if TODO
+    showError(tr("<qt>This copy of Regina was not built with "
+        "Graphviz support.  Because of this, it cannot display "
+        "graphs.<p>"
+        "If you downloaded a pre-built package, please contact "
+        "the package maintainer for a Graphviz-enabled build.<p>"
+        "If you built Regina yourself, please ensure that you have "
+        "the Graphviz libraries installed on your system.</qt>"));
+    return;
+#else
     neverDrawn = false;
 
     unsigned long n = data->numberOfSimplices();
@@ -145,123 +162,26 @@ void FacetGraphTab::refresh() {
         return;
     }
 
-    // TODO: Tell them that we're processing, in case the graphviz call
-    // should lock up for some reason.
+    std::string dot = data->dot(graphvizLabels);
 
-    // Check out the status of the current graphviz installation.
-    QString useExec;
-    GraphvizStatus gvStatus = GraphvizStatus::status(graphvizExec, useExec);
+    char* svg;
+    unsigned svgLen;
 
-    if (useExec.isNull() || ! gvStatus.usable()) {
-        // There seems to be a problem.
-        QString header = tr("<qt>Regina uses <i>Graphviz</i> to display "
-            "facet pairing graphs.  ");
-        QString footer = tr("<p>You can install Graphviz from "
-            "<a href=\"http://www.graphviz.org\">www.graphviz.org</a>.  "
-            "If it is already installed, please visit Regina's <i>Tools</i> "
-            "configuration and tell me where I can find it.</qt>");
+    GVC_t* gvc = gvContext();
+    gvAddLibrary(gvc, &gvplugin_core_LTX_library);
+    gvAddLibrary(gvc, &gvplugin_neato_layout_LTX_library);
+    Agraph_t* g = agmemread(dot.c_str());
+    gvLayout(gvc, g, "neato");
+    gvRenderData(gvc, g, "svg", &svg, &svgLen);
+    gvFreeLayout(gvc, g);
+    agclose(g);
+    gvFreeContext(gvc);
 
-        QString error;
-        if (gvStatus == GraphvizStatus::unknown)
-            error = tr("However, Regina could not determine the status "
-                "of your Graphviz installation.");
-        else if (gvStatus == GraphvizStatus::notFound)
-            error = tr("However, I could not find the Graphviz "
-                "executable \"%1\" on the default search "
-                "path.").arg(graphvizExec);
-        else if (gvStatus == GraphvizStatus::notExist)
-            error = tr("However, the Graphviz executable \"%1\" "
-                "does not exist.").arg(graphvizExec);
-        else if (gvStatus == GraphvizStatus::notExecutable)
-            error = tr("However, the Graphviz executable \"%1\" "
-                "does not appear to be an executable "
-                "file.").arg(graphvizExec);
-        else if (gvStatus == GraphvizStatus::notStartable)
-            error = tr("However, I could not start "    
-                "the Graphviz executable \"%1\".").arg(graphvizExec);
-        else if (gvStatus == GraphvizStatus::unsupported) {
-#ifdef Q_OS_MACX
-            if (QSysInfo::MacintoshVersion == QSysInfo::MV_LEOPARD)
-                error = tr("However, I cannot determine the version of "
-                    "Graphviz that you are running.<p>"
-                    "<b>MacOS Leopard users:</b> "
-                    "Graphviz 2.28.0 is broken under Leopard, and can "
-                    "cause this error.  The older Graphviz 2.26.3 "
-                    "should work fine.");
-            else
-                error = tr("However, I cannot determine the version of "
-                    "Graphviz that you are running.  Perhaps your Graphviz "
-                    "is too old (version 0.x), or perhaps the program "
-                    "\"%1\" is not from Graphviz at all.").arg(graphvizExec);
-#else
-            error = tr("However, I cannot determine the version of "
-                "Graphviz that you are running.  Perhaps your Graphviz "
-                "is too old (version 0.x), or perhaps the program "
-                "\"%1\" is not from Graphviz at all.").arg(graphvizExec);
-#endif
-        } else if (gvStatus == GraphvizStatus::version1NotDot)
-            error = tr("Your Graphviz seems to be very old (version 1.x).  "
-                "Many tools in older versions of Graphviz cannot handle "
-                "multiple edges, including the tool <i>neato</i> which "
-                "Regina normally uses by default.<p>"
-                "For this reason, you will need to change your Graphviz "
-                "executable to <i>dot</i>, which handles multiple edges "
-                "correctly even in this old version.");
-
-        showError(header + error + footer);
-        return;
-    }
-
-    QTemporaryFile tmpDot(QString("%1/XXXXXX.dot").arg(QDir::tempPath()));
-    if (! tmpDot.open()) {
-        showError(tr("<qt>The temporary DOT file <i>%1</i> "
-            "could not be created.</qt>").arg(tmpDot.fileName()));
-        return;
-    }
-    tmpDot.close();
-
-    std::ofstream outDot(
-        static_cast<const char*>(QFile::encodeName(tmpDot.fileName())));
-    if (! outDot) {
-        showError(tr("<qt>The temporary DOT file <i>%1</i> "
-            "could not be opened for writing.</qt>").arg(tmpDot.fileName()));
-        return;
-    }
-
-    data->writeDot(outDot, graphvizLabels);
-    outDot.close();
-
-    QTemporaryFile tmpSvg(QString("%1/XXXXXX.svg").arg(QDir::tempPath()));;
-    if (! tmpSvg.open()) {
-        showError(tr("<qt>The temporary SVG file <i>%1</i> "
-            "could not be created.</qt>").arg(tmpSvg.fileName()));
-        return;
-    }
-    tmpSvg.close();
-
-    QProcess graphviz;
-    QStringList args;
-    args << "-Tsvg" // << "-Gsize=2.5,4"
-        << "-o" << tmpSvg.fileName() << tmpDot.fileName();
-    graphviz.start(useExec,args);
-    graphviz.waitForFinished();
-    if ( graphviz.exitStatus() != QProcess::NormalExit) {
-        if ( graphviz.error() == QProcess::FailedToStart ) {
-            showError(tr("<qt>The Graphviz executable <i>%1</i> "
-                "could not be started.</qt>").arg(useExec));
-            return;
-        }
-        showError(tr("<qt>The Graphviz executable <i>%1</i> "
-            "did not exit normally, and may have encountered an "
-            "internal error.  It finished with exit status %2.</qt>")
-            .arg(useExec).arg(graphviz.exitCode()));
-        return;
-    }
-
-    graph->load(tmpSvg.fileName());
+    // graph->load(tmpSvg.fileName()); TODO
     graph->resize(graph->sizeHint());
 
     stack->setCurrentWidget(layerGraph);
+#endif
 }
 
 void FacetGraphTab::showInfo(const QString& msg) {
@@ -274,10 +194,12 @@ void FacetGraphTab::showError(const QString& msg) {
     stack->setCurrentWidget(layerError);
 }
 
-void Dim2EdgeGraphData::writeDot(std::ostream& out, bool withLabels) {
+std::string Dim2EdgeGraphData::dot(bool withLabels) {
     regina::Dim2EdgePairing* pairing = new regina::Dim2EdgePairing(*tri_);
-    pairing->writeDot(out, 0 /* prefix */, false /* subgraphs */, withLabels);
+    std::string ans = pairing->dot(0 /* prefix */, false /* subgraphs */,
+        withLabels);
     delete pairing;
+    return ans;
 }
 
 unsigned long Dim2EdgeGraphData::numberOfSimplices() {
@@ -300,10 +222,12 @@ regina::NPacket* Dim2EdgeGraphData::getPacket() {
     return tri_;
 }
 
-void Dim3FaceGraphData::writeDot(std::ostream& out, bool withLabels) {
+std::string Dim3FaceGraphData::dot(bool withLabels) {
     regina::NFacePairing* pairing = new regina::NFacePairing(*tri_);
-    pairing->writeDot(out, 0 /* prefix */, false /* subgraphs */, withLabels);
+    std::string ans = pairing->dot(0 /* prefix */, false /* subgraphs */,
+        withLabels);
     delete pairing;
+    return ans;
 }
 
 unsigned long Dim3FaceGraphData::numberOfSimplices() {
