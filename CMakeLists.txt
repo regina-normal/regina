@@ -498,6 +498,13 @@ ELSE(DISABLE_GUI)
   FIND_PACKAGE(Qt5Widgets)
   FIND_PACKAGE(Qt5Svg)
 
+  PKG_CHECK_MODULES(LIBGVC libgvc)
+  MACRO_LOG_FEATURE(LIBGVC_FOUND
+    "GraphViz libraries"
+    "Visualising graphs"
+    "http://graphviz.org/"
+    REGINA_MANDATORY)
+
   FIND_PACKAGE(SourceHighlight)
   MACRO_LOG_FEATURE(SRCHILITE_FOUND
     "Source-highlight"
