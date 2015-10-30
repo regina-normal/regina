@@ -17,6 +17,9 @@
 /* Define if Boost.Python is available. */
 #define BOOST_PYTHON_FOUND
 
+/* Define if the Graphviz libraries are available. */
+#define LIBGVC_FOUND
+
 /* Define if langinfo.h and nl_langinfo() are available. */
 #define LANGINFO_FOUND
 
