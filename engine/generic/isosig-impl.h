@@ -99,16 +99,6 @@ namespace {
     }
 
     /**
-     * Does the given string contain at least nChars characters?
-     */
-    inline bool SHASCHARS(const char* s, unsigned nChars) {
-        for ( ; nChars > 0; --nChars)
-            if (! *s)
-                return false;
-        return true;
-    }
-
-    /**
      * Append an encoding of the given integer to the given string.
      * The integer is broken into nChars distinct 6-bit blocks, and the
      * lowest-significance blocks are written first.
@@ -429,24 +419,36 @@ typename DimTraits<dim>::Triangulation*
 
     const char* c = sig.c_str();
 
+    // Skip any leading whitespace.
+    while (*c && ::isspace(*c))
+        ++c;
+
+    // Find the end of the string.
+    const char* end = c;
+    while (*end && ! ::isspace(*end))
+        ++end;
+
     // Initial check for invalid characters.
     const char* d;
-    for (d = c; *d; ++d)
+    for (d = c; d != end; ++d)
         if (! SVALID(*d))
+            return 0;
+    for (d = end; *d; ++d)
+        if (! ::isspace(*d))
             return 0;
 
     unsigned i, j;
     unsigned nSimp, nChars;
-    while (*c) {
+    while (c != end) {
         // Read one component at a time.
         nSimp = SVAL(*c++);
         if (nSimp < 63)
             nChars = 1;
         else {
-            if (! *c)
+            if (c == end)
                 return 0;
             nChars = SVAL(*c++);
-            if (! SHASCHARS(c, nChars))
+            if (c + nChars > end)
                 return 0;
             nSimp = SREAD(c, nChars);
             c += nChars;
@@ -464,7 +466,7 @@ typename DimTraits<dim>::Triangulation*
         unsigned nJoins = 0;
 
         for ( ; nFacets < (dim+1) * nSimp; facetPos += 3) {
-            if (! *c) {
+            if (c == end) {
                 delete[] facetAction;
                 return 0;
             }
@@ -500,7 +502,7 @@ typename DimTraits<dim>::Triangulation*
 
         unsigned* joinDest = new unsigned[nJoins + 1];
         for (i = 0; i < nJoins; ++i) {
-            if (! SHASCHARS(c, nChars)) {
+            if (c + nChars > end) {
                 delete[] facetAction;
                 delete[] joinDest;
                 return 0;
@@ -512,7 +514,7 @@ typename DimTraits<dim>::Triangulation*
 
         unsigned* joinGluing = new unsigned[nJoins + 1];
         for (i = 0; i < nJoins; ++i) {
-            if (! SHASCHARS(c, 1)) {
+            if (c + CHARS_PER_PERM(dim) > end) {
                 delete[] facetAction;
                 delete[] joinDest;
                 delete[] joinGluing;
