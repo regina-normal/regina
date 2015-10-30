@@ -255,10 +255,12 @@ regina::NPacket* Dim3FaceGraphData::getPacket() {
     return tri_;
 }
 
-void Dim4FacetGraphData::writeDot(std::ostream& out, bool withLabels) {
+std::string Dim4FacetGraphData::dot(bool withLabels) {
     regina::Dim4FacetPairing* pairing = new regina::Dim4FacetPairing(*tri_);
-    pairing->writeDot(out, 0 /* prefix */, false /* subgraphs */, withLabels);
+    std::string ans = pairing->dot(0 /* prefix */, false /* subgraphs */,
+        withLabels);
     delete pairing;
+    return ans;
 }
 
 unsigned long Dim4FacetGraphData::numberOfSimplices() {
