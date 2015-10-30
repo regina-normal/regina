@@ -127,7 +127,6 @@ class FacetGraphTab : public QObject, public PacketViewerTab {
         /**
          * Graphviz options.
          */
-        QString graphvizExec;
         bool graphvizLabels;
 
     public:

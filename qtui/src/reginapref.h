@@ -163,7 +163,6 @@ class ReginaPrefTools: public QWidget {
         QLineEdit* editPDFViewer;
         QLabel* labelPDFViewer;
         QLineEdit* editGAPExec;
-        QLineEdit* editGraphvizExec;
 
     public:
         ReginaPrefTools(QWidget* parent = 0);

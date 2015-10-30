@@ -33,6 +33,7 @@
 /* end stub */
 
 // Regina core includes:
+#include "regina-config.h" // for LIBGVC_FOUND
 #include "census/dim2edgepairing.h"
 #include "census/nfacepairing.h"
 #include "dim2/dim2triangulation.h"
@@ -57,7 +58,7 @@
 #include <QStackedWidget>
 #include <QTemporaryFile>
 
-#if TODO
+#ifdef LIBGVC_FOUND
 #include "graphviz/gvc.h"
 #endif
 
@@ -68,7 +69,6 @@ FacetGraphTab::FacetGraphTab(FacetGraphData* useData,
         PacketTabbedViewerTab* useParentUI) :
         PacketViewerTab(useParentUI),
         data(useData), neverDrawn(true),
-        graphvizExec(ReginaPrefSet::global().triGraphvizExec),
         graphvizLabels(ReginaPrefSet::global().triGraphvizLabels) {
     ui = new QWidget();
     QBoxLayout* baseLayout = new QVBoxLayout(ui);
@@ -100,25 +100,20 @@ FacetGraphTab::FacetGraphTab(FacetGraphData* useData,
 }
 
 void FacetGraphTab::updatePreferences() {
-    QString newGraphvizExec = ReginaPrefSet::global().triGraphvizExec;
     bool newGraphvizLabels = ReginaPrefSet::global().triGraphvizLabels;
 
-    // If the graphviz executable or options have changed, redraw the graph.
+    // If the graphviz options have changed, redraw the graph.
     // Otherwise do nothing.
     //
-    // Note that if the executable *path* hasn't changed but somebody did a
-    // reinstall (i.e., the graphviz *behaviour* has changed), they
-    // can always hit refresh anyway.
-    if (graphvizExec == newGraphvizExec && graphvizLabels == newGraphvizLabels)
+    if (graphvizLabels == newGraphvizLabels)
         return;
 
-    graphvizExec = newGraphvizExec;
     graphvizLabels = newGraphvizLabels;
 
     // If we wanted to be polite, we could queue this refresh till
     // later.  In practice there shouldn't be too many viewers
     // actively open and we shouldn't be changing the graphviz
-    // executable too often, so it doesn't really seem worth losing
+    // options too often, so it doesn't really seem worth losing
     // sleep over.
 
     // Actually, we can be a little polite.  If the face pairing
@@ -138,7 +133,7 @@ QWidget* FacetGraphTab::getInterface() {
 }
 
 void FacetGraphTab::refresh() {
-#if TODO
+#ifndef LIBGVC_FOUND
     showError(tr("<qt>This copy of Regina was not built with "
         "Graphviz support.  Because of this, it cannot display "
         "graphs.<p>"
@@ -177,7 +172,7 @@ void FacetGraphTab::refresh() {
     agclose(g);
     gvFreeContext(gvc);
 
-    // graph->load(tmpSvg.fileName()); TODO
+    graph->load(QByteArray(svg, svgLen));
     graph->resize(graph->sizeHint());
 
     stack->setCurrentWidget(layerGraph);
