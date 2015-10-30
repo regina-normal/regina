@@ -60,10 +60,16 @@
 
 #ifdef LIBGVC_FOUND
 #include "graphviz/gvc.h"
-#endif
 
 extern gvplugin_library_t gvplugin_neato_layout_LTX_library;
 extern gvplugin_library_t gvplugin_core_LTX_library;
+
+lt_symlist_t lt_preloaded_symbols[] = {
+    { "gvplugin_neato_layout_LTX_library", &gvplugin_neato_layout_LTX_library },
+    { "gvplugin_core_LTX_library", &gvplugin_core_LTX_library },
+    { 0, 0 }
+};
+#endif
 
 FacetGraphTab::FacetGraphTab(FacetGraphData* useData,
         PacketTabbedViewerTab* useParentUI) :
@@ -162,7 +168,9 @@ void FacetGraphTab::refresh() {
     char* svg;
     unsigned svgLen;
 
-    GVC_t* gvc = gvContext();
+    // Manually specify our plugins to avoid on-demand loading.
+    GVC_t* gvc = gvContextPlugins(lt_preloaded_symbols, 0);
+
     gvAddLibrary(gvc, &gvplugin_core_LTX_library);
     gvAddLibrary(gvc, &gvplugin_neato_layout_LTX_library);
     Agraph_t* g = agmemread(dot.c_str());
