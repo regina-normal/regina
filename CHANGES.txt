@@ -186,6 +186,7 @@ Version 4.97  [ (under development) ]
           to modifying the current triangulation.
         - Puncturing a triangulation, making it ideal or truncating ideal
           vertices now automatically simplify the resulting triangulation.
+        - Now links against Graphviz instead of running it externally.
     PYTHON:
         - For all classes, writeTextShort() and writeTextLong() are no
           longer exposed to Python.  Simply use str() and detail() instead.
