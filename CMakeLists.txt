@@ -504,22 +504,29 @@ ELSE(DISABLE_GUI)
       # FindPkgConfig has a nasty habit of converting paths like
       # "Program Files" into lists like "Program;Files".
       #
-      # The following fix is a bit of a hack, and will break in several
-      # unusual situations (e.g., if the path contains a semicolon, or if
-      # there are multiple paths).  Since this code is only activated for
-      # the Windows build (so perhaps nobody but Regina's windows maintainer
-      # ever uses it), we accept this for now.
+      # Here we convert these paths back; moreover, we convert them to
+      # the ugly 8.3 filename format since windres.exe cannot (yet) cope
+      # with paths containing spaces.  Sigh.
       #
-      # Note that FindPkgConfig sets many LIBGVC_... variables.  We only fix
-      # the ones that we use in our build system.
+      # Notes:
+      # - This code assumes the Graphviz path does not contain semicolons.
+      # - Although FindPkgConfig sets many LIBGVC_... variables, we only fix
+      #   those that we use in our build system.
       #
-      string(REPLACE ";" " " _TMP_STR "${LIBGVC_INCLUDE_DIRS}")
-      set(LIBGVC_INCLUDE_DIRS "${_TMP_STR}" CACHE INTERNAL "")
       string(REPLACE ";" " " _TMP_STR "${LIBGVC_INCLUDEDIR}")
+      execute_process(
+        COMMAND cmd /c for %A in ("${_TMP_STR}") do @echo %~sA
+        RESULT_VARIABLE _conv_res
+        OUTPUT_VARIABLE _TMP_STR)
+      string(REGEX REPLACE "\n" "" _TMP_STR "${_TMP_STR}")
       set(LIBGVC_INCLUDEDIR "${_TMP_STR}" CACHE INTERNAL "")
-      string(REPLACE ";" " " _TMP_STR "${LIBGVC_LIBRARY_DIRS}")
-      set(LIBGVC_LIBRARY_DIRS "${_TMP_STR}" CACHE INTERNAL "")
+
       string(REPLACE ";" " " _TMP_STR "${LIBGVC_LIBDIR}")
+      execute_process(
+        COMMAND cmd /c for %A in ("${_TMP_STR}") do @echo %~sA
+        RESULT_VARIABLE _conv_res
+        OUTPUT_VARIABLE _TMP_STR)
+      string(REGEX REPLACE "\n" "" _TMP_STR "${_TMP_STR}")
       set(LIBGVC_LIBDIR "${_TMP_STR}" CACHE INTERNAL "")
     ENDIF(WIN32)
   ENDIF(LIBGVC_FOUND)

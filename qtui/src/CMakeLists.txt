@@ -21,12 +21,27 @@ IF(BOOST_PYTHON_FOUND)
 ENDIF(BOOST_PYTHON_FOUND)
 
 IF(LIBGVC_FOUND)
-  SET(LINK_LIBS ${LINK_LIBS} ${LIBGVC_LIBRARIES})
-  SET(LINK_LIBS ${LINK_LIBS} gvplugin_core gvplugin_neato_layout)
-  INCLUDE_DIRECTORIES("${LIBGVC_INCLUDE_DIRS}")
-  LINK_DIRECTORIES(${LIBGVC_LIBRARY_DIRS} "${LIBGVC_LIBDIR}/graphviz")
+  # Alas, the pkg-config files shipped with Graphviz under windows are wrong.
+  # They give the wrong library directory, and even worse they give the
+  # wrong library *names* (graph.dll instead of cgraph.dll).
+  # For now, we hard-code fixes for these errors in the WIN32 code below.
+  INCLUDE_DIRECTORIES("${LIBGVC_INCLUDEDIR}")
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${LIBGVC_CFLAGS_OTHER}")
   SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LIBGVC_LDFLAGS_OTHER}")
+  IF(WIN32)
+    # We do some hard-coding to fix the pkg-config errors described above.
+    # Note that, under windows, Graphviz ships its plugins in the same
+    # directory as its core library DLLs.
+    SET(LINK_LIBS ${LINK_LIBS} gvc cgraph cdt)
+    LINK_DIRECTORIES("${LIBGVC_LIBDIR}/release/dll")
+  ELSE(WIN32)
+    # Assume that pkg-config is telling us the truth.
+    # Note, however, that the graphviz plugins typically live in a
+    # subdirectory graphviz/ beneath the main library path.
+    SET(LINK_LIBS ${LINK_LIBS} ${LIBGVC_LIBRARIES})
+    LINK_DIRECTORIES("${LIBGVC_LIBDIR}" "${LIBGVC_LIBDIR}/graphviz")
+  ENDIF(WIN32)
+  SET(LINK_LIBS ${LINK_LIBS} gvplugin_core gvplugin_neato_layout)
 ENDIF(LIBGVC_FOUND)
 
 IF(SRCHILITE_FOUND)
