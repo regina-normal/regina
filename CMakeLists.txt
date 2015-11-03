@@ -499,6 +499,30 @@ ELSE(DISABLE_GUI)
   FIND_PACKAGE(Qt5Svg)
 
   PKG_CHECK_MODULES(LIBGVC libgvc)
+  IF(LIBGVC_FOUND)
+    IF(WIN32)
+      # FindPkgConfig has a nasty habit of converting paths like
+      # "Program Files" into lists like "Program;Files".
+      #
+      # The following fix is a bit of a hack, and will break in several
+      # unusual situations (e.g., if the path contains a semicolon, or if
+      # there are multiple paths).  Since this code is only activated for
+      # the Windows build (so perhaps nobody but Regina's windows maintainer
+      # ever uses it), we accept this for now.
+      #
+      # Note that FindPkgConfig sets many LIBGVC_... variables.  We only fix
+      # the ones that we use in our build system.
+      #
+      string(REPLACE ";" " " _TMP_STR "${LIBGVC_INCLUDE_DIRS}")
+      set(LIBGVC_INCLUDE_DIRS "${_TMP_STR}" CACHE INTERNAL "")
+      string(REPLACE ";" " " _TMP_STR "${LIBGVC_INCLUDEDIR}")
+      set(LIBGVC_INCLUDEDIR "${_TMP_STR}" CACHE INTERNAL "")
+      string(REPLACE ";" " " _TMP_STR "${LIBGVC_LIBRARY_DIRS}")
+      set(LIBGVC_LIBRARY_DIRS "${_TMP_STR}" CACHE INTERNAL "")
+      string(REPLACE ";" " " _TMP_STR "${LIBGVC_LIBDIR}")
+      set(LIBGVC_LIBDIR "${_TMP_STR}" CACHE INTERNAL "")
+    ENDIF(WIN32)
+  ENDIF(LIBGVC_FOUND)
   MACRO_LOG_FEATURE(LIBGVC_FOUND
     "GraphViz libraries"
     "Visualising graphs"
