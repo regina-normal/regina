@@ -55,6 +55,9 @@ PacketWindow::PacketWindow(PacketPane* newPane, ReginaMain* parent) :
 
     setWindowTitle(heldPane->getPacket()->getHumanLabel().c_str());
 
+    // On windows, the close button does not seem to appear automatically.
+    setWindowFlags(windowFlags() | Qt::WindowCloseButtonHint);
+
     // Set up the widgets and menu bar.
     heldPane->setParent(this);
     setCentralWidget(newPane);
