@@ -1473,8 +1473,14 @@ typedef NIntegerBase<false> NInteger;
  * @return a reference to \a out.
  */
 template <bool supportInfinity>
-REGINA_API std::ostream& operator << (std::ostream& out,
+std::ostream& operator << (std::ostream& out,
     const NIntegerBase<supportInfinity>& i);
+
+// Help the compiler by noting which explicit instantiations we offer.
+extern template REGINA_API std::ostream& operator << (std::ostream& out,
+    const NIntegerBase<true>& i);
+extern template REGINA_API std::ostream& operator << (std::ostream& out,
+    const NIntegerBase<false>& i);
 
 /**
  * Adds the given native integer to the given large integer.
@@ -1487,8 +1493,14 @@ REGINA_API std::ostream& operator << (std::ostream& out,
  * @return the sum \a lhs plus \a rhs.
  */
 template <bool supportInfinity>
-REGINA_API NIntegerBase<supportInfinity> operator + (long lhs,
+NIntegerBase<supportInfinity> operator + (long lhs,
     const NIntegerBase<supportInfinity>& rhs);
+
+// Help the compiler by noting which explicit instantiations we offer.
+extern template REGINA_API NIntegerBase<true> operator +(long lhs,
+    const NIntegerBase<true>& rhs);
+extern template REGINA_API NIntegerBase<false> operator +(long lhs,
+    const NIntegerBase<false>& rhs);
 
 /**
  * Multiplies the given native integer with the given large integer.
@@ -1501,8 +1513,14 @@ REGINA_API NIntegerBase<supportInfinity> operator + (long lhs,
  * @return the product \a lhs times \a rhs.
  */
 template <bool supportInfinity>
-REGINA_API NIntegerBase<supportInfinity> operator * (long lhs,
+NIntegerBase<supportInfinity> operator * (long lhs,
     const NIntegerBase<supportInfinity>& rhs);
+
+// Help the compiler by noting which explicit instantiations we offer.
+extern template REGINA_API NIntegerBase<true> operator *(long lhs,
+    const NIntegerBase<true>& rhs);
+extern template REGINA_API NIntegerBase<false> operator *(long lhs,
+    const NIntegerBase<false>& rhs);
 
 /**
  * A wrapper class for a native, fixed-precision integer type of the
