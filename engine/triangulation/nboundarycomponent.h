@@ -245,6 +245,7 @@ class REGINA_API NBoundaryComponent :
          * @return \c true if and only if this boundary component is
          * ideal.
          */
+        REGINA_INLINE_REQUIRED
         bool isIdeal() const;
 
         /**

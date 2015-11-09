@@ -114,6 +114,7 @@ class REGINA_API NVertexEmbedding {
          *
          * @return the tetrahedron.
          */
+        REGINA_INLINE_REQUIRED
         NTetrahedron* getTetrahedron() const;
 
         /**
