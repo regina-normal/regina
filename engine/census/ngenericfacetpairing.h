@@ -716,7 +716,7 @@ class NGenericFacetPairing : public boost::noncopyable {
 
 /*@}*/
 
-// Help the compiler by noting which explicit instantiations we offer.
+// Indicate which templates we explicitly instantiate in the shared library.
 extern template class REGINA_API NGenericFacetPairing<2>;
 extern template class REGINA_API NGenericFacetPairing<3>;
 
