@@ -1591,7 +1591,7 @@ extern template REGINA_API NIntegerBase<false> operator *(long lhs,
  * \ifacespython Not present.
  */
 template <int bytes>
-class REGINA_API NNativeInteger {
+class NNativeInteger {
     public:
         typedef typename IntOfSize<bytes>::type Native;
             /**< The native data type used to store this integer. */
@@ -2230,7 +2230,7 @@ class REGINA_API NNativeInteger {
  * @return a reference to \a out.
  */
 template <int bytes>
-REGINA_API std::ostream& operator << (std::ostream& out, const NNativeInteger<bytes>& i);
+std::ostream& operator << (std::ostream& out, const NNativeInteger<bytes>& i);
 
 /**
  * NNativeLong is a typedef for the NNativeInteger template class whose
