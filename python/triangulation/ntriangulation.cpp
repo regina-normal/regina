@@ -249,7 +249,6 @@ void addNTriangulation() {
         .def("removeAllSimplices", &NTriangulation::removeAllSimplices)
         .def("swapContents", &NTriangulation::swapContents)
         .def("moveContentsTo", &NTriangulation::moveContentsTo)
-        .def("gluingsHaveChanged", &NTriangulation::gluingsHaveChanged)
         .def("getNumberOfComponents", &NTriangulation::getNumberOfComponents)
         .def("getNumberOfBoundaryComponents",
             &NTriangulation::getNumberOfBoundaryComponents)
