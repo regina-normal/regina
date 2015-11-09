@@ -20,6 +20,10 @@ Version 4.97  [ (under development) ]
               constructors, have been deprecated since 2011; they are now
               removed completely.  To add tetrahedra to a triangulation,
               call NTriangulation::newTetrahedron() instead.
+            * NTriangulation::gluingsHaveChanged() has likewise been deprecated
+              since 2011, and has now been removed completely.  This routine
+              is no longer necessary (it has done nothing since it was
+              deprecated), and you can simply remove it from your code.
             * NProgress, NProgressManager and related classes have been
               deprecated since 2013; they are also removed completely.
               All the code that used to work with these classes now

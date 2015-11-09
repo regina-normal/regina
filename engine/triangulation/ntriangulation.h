@@ -617,16 +617,6 @@ class REGINA_API NTriangulation : public NPacket,
          * moved.
          */
         void moveContentsTo(NTriangulation& dest);
-        /**
-         * This routine now does nothing, and should not be used.
-         *
-         * \deprecated In Regina versions 4.6 and earlier, this routine
-         * was used to manually notify the triangulation that the gluings
-         * of tetrahedra had changed.  In Regina 4.90 and later this
-         * notification is automatic.  This routine now does nothing at
-         * all, and can safely be removed from any existing code.
-         */
-        void gluingsHaveChanged();
 
         /*@}*/
         /**
@@ -4131,9 +4121,6 @@ inline void NTriangulation::removeAllTetrahedra() {
 
 inline void NTriangulation::removeAllSimplices() {
     removeAllTetrahedra();
-}
-
-inline void NTriangulation::gluingsHaveChanged() {
 }
 
 inline unsigned long NTriangulation::getNumberOfBoundaryComponents() const {
