@@ -698,10 +698,7 @@ class REGINA_API NPerm4 {
  * @param p the permutation to write.
  * @return a reference to \a out.
  */
-inline REGINA_API std::ostream& operator << (std::ostream& out,
-        const NPerm4& p) {
-    return (out << p.str());
-}
+REGINA_API std::ostream& operator << (std::ostream& out, const NPerm4& p);
 
 // Constants
 
@@ -1079,6 +1076,10 @@ inline std::string faceDescription(const NPerm4& facePerm) {
 
 inline std::string edgeDescription(const NPerm4& edgePerm) {
     return edgePerm.trunc2();
+}
+
+inline std::ostream& operator << (std::ostream& out, const NPerm4& p) {
+    return (out << p.str());
 }
 
 } // namespace regina

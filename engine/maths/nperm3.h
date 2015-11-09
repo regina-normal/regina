@@ -504,10 +504,7 @@ class REGINA_API NPerm3 {
  * @param p the permutation to write.
  * @return a reference to \a out.
  */
-inline REGINA_API std::ostream& operator << (std::ostream& out,
-        const NPerm3& p) {
-    return (out << p.str());
-}
+REGINA_API std::ostream& operator << (std::ostream& out, const NPerm3& p);
 
 /*@}*/
 
@@ -642,6 +639,10 @@ inline int NPerm3::orderedS3Index() const {
 
 inline int NPerm3::orderedSnIndex() const {
     return orderedS3Index();
+}
+
+inline std::ostream& operator << (std::ostream& out, const NPerm3& p) {
+    return (out << p.str());
 }
 
 } // namespace regina
