@@ -33,6 +33,8 @@
 /* end stub */
 
 #include "triangulation/ntriangulation.h"
+#include <condition_variable>
+#include <mutex>
 #include <queue>
 #include <set>
 #include <thread>

@@ -110,6 +110,7 @@ class NTriangulationTest : public TriangulationTest<3> {
     CPPUNIT_TEST(connectedSumWithSelf);
     CPPUNIT_TEST(dehydration);
     CPPUNIT_TEST(simplification);
+    CPPUNIT_TEST(retriangulation);
     CPPUNIT_TEST(reordering);
     CPPUNIT_TEST(propertyUpdates);
     CPPUNIT_TEST(eltMove14);
@@ -3944,6 +3945,50 @@ class NTriangulationTest : public TriangulationTest<3> {
                 CPPUNIT_FAIL("Custom solid torus simplifies to "
                     "something different.");
             delete tri;
+        }
+
+        void verifyRetriangulation(const char* isoSig,
+                unsigned heightNeeded, unsigned nThreads) {
+            NTriangulation t(isoSig);
+            if (t.isEmpty())
+                CPPUNIT_FAIL("Triangulation not constructed from isosig.");
+
+            unsigned nInit = t.size();
+
+            for (unsigned h = 0; h < heightNeeded; ++h) {
+                if (t.simplifyExhaustive(h, nThreads)) {
+                    std::ostringstream msg;
+                    msg << "Triangulation " << isoSig
+                        << " incorrectly simplifies with height " << h << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (t.size() != nInit) {
+                    std::ostringstream msg;
+                    msg << "Triangulation " << isoSig
+                        << " was changed during unsuccessful exhaustive "
+                        "simplification with height " << h << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            if (! t.simplifyExhaustive(heightNeeded, nThreads)) {
+                std::ostringstream msg;
+                msg << "Triangulation " << isoSig
+                    << " fails to simplify with height " << heightNeeded << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (t.size() == nInit) {
+                    std::ostringstream msg;
+                    msg << "Triangulation " << isoSig
+                        << " did not reduce during successful exhaustive "
+                        "simplification with height " << heightNeeded << ".";
+                    CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void retriangulation() {
+            verifyRetriangulation("hLALPkbcbefgfghxwnxark", 3, 1);
+            verifyRetriangulation("hLALPkbcbefgfghxwnxark", 3, 2);
         }
 
         static void testReordering(NTriangulation* t) {
