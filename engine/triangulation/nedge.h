@@ -163,6 +163,7 @@ class REGINA_API NEdgeEmbedding {
          *
          * @return the tetrahedron.
          */
+        REGINA_INLINE_REQUIRED
         NTetrahedron* getTetrahedron() const;
 
         /**
@@ -183,6 +184,7 @@ class REGINA_API NEdgeEmbedding {
          * @return a mapping from the vertices of this edge to the
          * vertices of getTetrahedron().
          */
+        REGINA_INLINE_REQUIRED
         NPerm4 getVertices() const;
 
         /**

@@ -600,6 +600,7 @@ class REGINA_API NPerm4 {
          * @return the index \a i for which this permutation is equal to
          * NPerm4::S4[i].  This will be between 0 and 23 inclusive.
          */
+        REGINA_INLINE_REQUIRED
         int S4Index() const;
 
         /**
@@ -617,6 +618,7 @@ class REGINA_API NPerm4 {
          * @return the index \a i for which this permutation is equal to
          * NPerm4::orderedS4[i].  This will be between 0 and 23 inclusive.
          */
+        REGINA_INLINE_REQUIRED
         int orderedS4Index() const;
 
         /**
@@ -681,6 +683,7 @@ class REGINA_API NPerm4 {
          * @return the index \a i for which the given permutation is equal to
          * NPerm4::S4[i].  This will be between 0 and 23 inclusive.
          */
+        REGINA_INLINE_REQUIRED
         static int S4Index(int a, int b, int c, int d);
 
     friend std::ostream& operator << (std::ostream& out, const NPerm4& p);
@@ -695,10 +698,7 @@ class REGINA_API NPerm4 {
  * @param p the permutation to write.
  * @return a reference to \a out.
  */
-inline REGINA_API std::ostream& operator << (std::ostream& out,
-        const NPerm4& p) {
-    return (out << p.str());
-}
+REGINA_API std::ostream& operator << (std::ostream& out, const NPerm4& p);
 
 // Constants
 
@@ -1076,6 +1076,10 @@ inline std::string faceDescription(const NPerm4& facePerm) {
 
 inline std::string edgeDescription(const NPerm4& edgePerm) {
     return edgePerm.trunc2();
+}
+
+inline std::ostream& operator << (std::ostream& out, const NPerm4& p) {
+    return (out << p.str());
 }
 
 } // namespace regina

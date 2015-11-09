@@ -88,9 +88,7 @@ namespace regina {
  * @param bytes the number of raw input bytes.
  * @return the corresponding number of base64 printable output characters.
  */
-inline REGINA_API size_t base64Length(size_t bytes) {
-    return (((bytes + 2) / 3) * 4);
-}
+REGINA_API size_t base64Length(size_t bytes);
 
 /**
  * Determines whether the given character is a base64 printable character as
@@ -107,10 +105,7 @@ inline REGINA_API size_t base64Length(size_t bytes) {
  * @return \c true if the given character is one of the base64 printable
  * characters used in Regina, or \c false if it is not.
  */
-inline REGINA_API bool isBase64(char ch) {
-    return ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') ||
-            (ch >= '0' && ch <= '9') || ch == '+' || ch == '/');
-}
+REGINA_API bool isBase64(char ch);
 
 /**
  * Encodes the given sequence of raw bytes in base64, and writes the
@@ -244,6 +239,17 @@ REGINA_API bool base64Decode(const char* in, size_t inlen, char** out,
     size_t* outlen);
 
 /*@}*/
+
+// Inline functions:
+
+inline size_t base64Length(size_t bytes) {
+    return (((bytes + 2) / 3) * 4);
+}
+
+inline bool isBase64(char ch) {
+    return ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') ||
+            (ch >= '0' && ch <= '9') || ch == '+' || ch == '/');
+}
 
 } // namespace regina
 

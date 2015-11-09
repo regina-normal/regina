@@ -92,7 +92,7 @@ typedef bool (*AcceptTriangulation)(NTriangulation*, void*);
  * should only search census databases using high-level routines such as
  * NCensus::lookup() and NCensusDB::lookup().
  */
-class NCensusDB {
+class REGINA_API NCensusDB {
     private:
         std::string filename_;
             /**< The filename where the database is stored. */
@@ -159,7 +159,7 @@ class NCensusDB {
  * NCensusHits class, which essentially represents a list of individual
  * NCensusHit objects.
  */
-class NCensusHit : public boost::noncopyable {
+class REGINA_API NCensusHit : public boost::noncopyable {
     private:
         const std::string name_;
             /**< The human-readable name associated with the triangulation
@@ -230,7 +230,7 @@ class NCensusHit : public boost::noncopyable {
  * individual hit, you can call NCensusHit::next() to retrieve the next hit
  * in the list (this will return 0 if no more hits were found).
  */
-class NCensusHits : public boost::noncopyable {
+class REGINA_API NCensusHits : public boost::noncopyable {
     private:
         NCensusHit* first_;
             /**< The first hit in the list, or 0 if there are no hits. */

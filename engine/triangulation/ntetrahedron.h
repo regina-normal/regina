@@ -365,6 +365,7 @@ class REGINA_API NTetrahedron :
          *
          * @return the triangulation containing this tetrahedron.
          */
+        REGINA_INLINE_REQUIRED
         NTriangulation* getTriangulation() const;
 
         /**
@@ -393,6 +394,7 @@ class REGINA_API NTetrahedron :
          * @return the vertex of the skeleton corresponding to the
          * requested tetrahedron vertex.
          */
+        REGINA_INLINE_REQUIRED
         NVertex* getVertex(int vertex) const;
         /**
          * Returns the edge in the triangulation skeleton
@@ -470,6 +472,7 @@ class REGINA_API NTetrahedron :
          * @return a permutation that maps 0 to the given vertex of this
          * tetrahedron, with the properties outlined above.
          */
+        REGINA_INLINE_REQUIRED
         NPerm4 getVertexMapping(int vertex) const;
         /**
          * Examines the given edge of this tetrahedron, and returns a
@@ -525,6 +528,7 @@ class REGINA_API NTetrahedron :
          * @return a mapping from vertices (0,1) of the requested
          * triangulation edge to the vertices of this tetrahedron.
          */
+        REGINA_INLINE_REQUIRED
         NPerm4 getEdgeMapping(int edge) const;
         /**
          * Examines the given face of this tetrahedron, and returns a
@@ -563,6 +567,7 @@ class REGINA_API NTetrahedron :
          * @return a mapping from vertices (0,1,2) of the corresponding
          * triangle to the vertices of this tetrahedron.
          */
+        REGINA_INLINE_REQUIRED
         NPerm4 getTriangleMapping(int face) const;
         /**
          * A deprecated alias for getTriangleMapping().

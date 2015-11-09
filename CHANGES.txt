@@ -122,11 +122,16 @@ Version 4.97  [ (under development) ]
         Class NNormalSurfaceSubset:
             - Renamed getNumberOfSurfaces() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
+        Class NNormalSurfaceVector:
+            - The subclass constant coordType is now a constant of type
+              NormalCoords, not an anonymous enum type.
         Class NPacket:
             - Added a variant of save() that takes an output stream (as
               opposed to a filename).
             - New routine adornedLabel() for creating modified packet labels.
             - New routine transferChildren() for bulk tree reorganisation.
+            - The subclass constant packetType is now a constant of type
+              PacketType, not an anonymous enum type.
         Class NPacketListener:
             - New events childToBeRenamed(), childWasRenamed().
         Class NPolynomial:
@@ -140,6 +145,9 @@ Version 4.97  [ (under development) ]
         Class NSatBlock:
             - Classes inheriting from this must now implement writeTextShort,
               and can optionally overwrite the default writeTextLong function.
+        Class NSurfaceFilter:
+            - The subclass constant filterType is now a constant of type
+              SurfaceFilterType, not an anonymous enum type.
         Class NSurfaceFilterProperties:
             - New set-based routine setECs().
         Class NTetrahedron:
@@ -211,6 +219,8 @@ Version 4.97  [ (under development) ]
         Routine open():
             - Added a variant that takes an input stream (as opposed to
               a filename).
+        Macro REGINA_INLINE_REQUIRED:
+            - New macro to help reduce noisy warnings under windows.
         Header zstream.h:
             - Removed entirely.  Regina now uses boost::iostreams instead.
     USER INTERFACE:
