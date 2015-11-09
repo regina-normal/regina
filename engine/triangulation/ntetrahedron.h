@@ -70,37 +70,14 @@ class NTriangulation;
  * and deallocated by the NTriangulation object containing the
  * corresponding tetrahedra.
  *
- * The management of tetrahedra has changed significantly as of Regina 4.90:
- *
- * - Users no longer need to call NTriangulation::gluingsHaveChanged()
- * when gluing or ungluing tetrahedra.  This notification is now handled
- * automatically, and NTriangulation::gluingsHaveChanged() now does nothing.
- *
- * - You should now create tetrahedra by calling
- * NTriangulation::newTetrahedron() or
- * NTriangulation::newTetrahedron(const std::string&), which will
- * automatically add the tetrahedron to the triangulation.  You should
- * not need to call NTriangulation::addTetrahedron() at all.
- *
- * - When you remove a tetrahedron using NTriangulation::removeTetrahedron()
- * or NTriangulation::removeTetrahedronAt(), the tetrahedron will now be
- * automatically destroyed.
- *
- * - The old way of adding tetrahedra (creating an NTetrahedron and then
- * calling NTriangulation::addTetrahedron()) is deprecated, and will
- * be removed completely in the near future.  In the meantime, you may
- * find that tetrahedra are now added to a triangulation automatically (both
- * NTriangulation::addTetrahedron() and NTetrahedron::joinTo() will
- * aggressively try to add nearby tetrahedra that do not already belong to
- * the current triangulation).  This is to avoid tetrahedra and
- * triangulations being in an inconsistent state.  Any redundant calls
- * to NTriangulation::addTetrahedron() (i.e., when the tetrahedron
- * already belongs to the triangulation) are harmless, and will have no
- * effect.
- *
- * These changes are designed to ensure that triangulations and
- * tetrahedra are always in a consistent state, and to make it more
- * difficult for users to inadvertently crash the program.
+ * A tetrahedron must always belong to a 3-manifold triangulation.  You
+ * can construct new tetrahedra using either NTriangulation::newTetrahedron()
+ * or NTriangulation::newTetrahedron(const std::string&), which will
+ * automatically add the new tetrahedron to the corresponding triangulation.
+ * You can destroy tetrahedra by calling NTriangulation::removeTetrahedron(),
+ * NTriangulation::removeTetrahedronAt() or
+ * NTriangulation::removeAllTetrahedra(); these routines will automatically
+ * destroy the tetrahedra as they are removed.
  */
 class REGINA_API NTetrahedron :
         public Output<NTetrahedron>,
@@ -165,30 +142,6 @@ class REGINA_API NTetrahedron :
                  triangulation. */
 
     public:
-        /**
-         * Creates a new tetrahedron with empty description and no
-         * faces joined to anything.
-         * The new tetrahedron will not belong to any triangulation.
-         *
-         * \deprecated Users should now create new tetrahedra by calling
-         * NTriangulation::newTetrahedron().  For details, see the changes in
-         * tetrahedron management outlined in the NTetrahedron class notes.
-         */
-        NTetrahedron();
-        /**
-         * Creates a new tetrahedron with the given description and
-         * no faces joined to anything.
-         * The new tetrahedron will not belong to any triangulation.
-         *
-         * \deprecated Users should now create new tetrahedra by calling
-         * NTriangulation::newTetrahedron(const std::string&).  For details,
-         * see the changes in tetrahedron management outlined in the
-         * NTetrahedron class notes.
-         *
-         * @param desc the description to give the new tetrahedron.
-         */
-        NTetrahedron(const std::string& desc);
-
         /**
          * Returns the text description associated with this
          * tetrahedron.
@@ -357,14 +310,7 @@ class REGINA_API NTetrahedron :
          * tetrahedron.  The other tetrahedron involved will be
          * automatically updated.
          *
-         * Neither tetrahedron needs to belong to a triangulation (i.e.,
-         * you can join tetrahedra together before or after calling
-         * NTriangulation::addTetrahedron()).  However, if both
-         * tetrahedra do belong to a triangulation then it must be the
-         * \e same triangulation.
-         *
-         * \pre This and the given tetrahedron do not belong to
-         * different triangulations.
+         * \pre This and the given tetrahedron belong to the same triangulation.
          * \pre The given face of this tetrahedron is not currently glued to
          * anything.
          * \pre The face of the other tetrahedron that will be glued to the
@@ -430,10 +376,6 @@ class REGINA_API NTetrahedron :
          * automatically.  There is no need for users to explicitly
          * recompute the skeleton themselves.
          *
-         * \pre This tetrahedron belongs to a triangulation (i.e., it
-         * was created using NTriangulation::newTetrahedron() or added
-         * using NTriangulation::addTetrahedron()).
-         *
          * @return the component containing this tetrahedron.
          */
         NComponent* getComponent() const;
@@ -445,10 +387,6 @@ class REGINA_API NTetrahedron :
          * triangulation has not been computed then this will be done
          * automatically.  There is no need for users to explicitly
          * recompute the skeleton themselves.
-         *
-         * \pre This tetrahedron belongs to a triangulation (i.e., it
-         * was created using NTriangulation::newTetrahedron() or added
-         * using NTriangulation::addTetrahedron()).
          *
          * @param vertex the vertex of this tetrahedron to examine.
          * This should be between 0 and 3 inclusive.
@@ -468,10 +406,6 @@ class REGINA_API NTetrahedron :
          * automatically.  There is no need for users to explicitly
          * recompute the skeleton themselves.
          *
-         * \pre This tetrahedron belongs to a triangulation (i.e., it
-         * was created using NTriangulation::newTetrahedron() or added
-         * using NTriangulation::addTetrahedron()).
-         *
          * @param edge the edge of this tetrahedron to examine.
          * This should be between 0 and 5 inclusive.
          * @return the edge of the skeleton corresponding to the
@@ -486,10 +420,6 @@ class REGINA_API NTetrahedron :
          * triangulation has not been computed then this will be done
          * automatically.  There is no need for users to explicitly
          * recompute the skeleton themselves.
-         *
-         * \pre This tetrahedron belongs to a triangulation (i.e., it
-         * was created using NTriangulation::newTetrahedron() or added
-         * using NTriangulation::addTetrahedron()).
          *
          * @param face the face of this tetrahedron to examine.
          * This should be between 0 and 3 inclusive, where face \c i
@@ -534,10 +464,6 @@ class REGINA_API NTetrahedron :
          * triangulation has not been computed then this will be done
          * automatically.  There is no need for users to explicitly
          * recompute the skeleton themselves.
-         *
-         * \pre This tetrahedron belongs to a triangulation (i.e., it
-         * was created using NTriangulation::newTetrahedron() or added
-         * using NTriangulation::addTetrahedron()).
          *
          * @param vertex the vertex of this tetrahedron to examine.
          * This should be between 0 and 3 inclusive.
@@ -594,10 +520,6 @@ class REGINA_API NTetrahedron :
          * automatically.  There is no need for users to explicitly
          * recompute the skeleton themselves.
          *
-         * \pre This tetrahedron belongs to a triangulation (i.e., it
-         * was created using NTriangulation::newTetrahedron() or added
-         * using NTriangulation::addTetrahedron()).
-         *
          * @param edge the edge of this tetrahedron to examine.
          * This should be between 0 and 5 inclusive.
          * @return a mapping from vertices (0,1) of the requested
@@ -635,10 +557,6 @@ class REGINA_API NTetrahedron :
          * triangulation has not been computed then this will be done
          * automatically.  There is no need for users to explicitly
          * recompute the skeleton themselves.
-         *
-         * \pre This tetrahedron belongs to a triangulation (i.e., it
-         * was created using NTriangulation::newTetrahedron() or added
-         * using NTriangulation::addTetrahedron()).
          *
          * @param face the face of this tetrahedron to examine.
          * This should be between 0 and 3 inclusive.
@@ -680,10 +598,6 @@ class REGINA_API NTetrahedron :
          * automatically.  There is no need for users to explicitly
          * recompute the skeleton themselves.
          *
-         * \pre This tetrahedron belongs to a triangulation (i.e., it
-         * was created using NTriangulation::newTetrahedron() or added
-         * using NTriangulation::addTetrahedron()).
-         *
          * @return +1 or -1 according to the orientation of this tetrahedron.
          */
         int orientation() const;
@@ -706,6 +620,23 @@ class REGINA_API NTetrahedron :
          * @param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
+
+    private:
+        /**
+         * Creates a new tetrahedron with empty description and no
+         * faces joined to anything.
+         *
+         * @param tri the triangulation to which the new tetrahedron belongs.
+         */
+        NTetrahedron(NTriangulation* tri);
+        /**
+         * Creates a new tetrahedron with the given description and
+         * no faces joined to anything.
+         *
+         * @param desc the description to give the new tetrahedron.
+         * @param tri the triangulation to which the new tetrahedron belongs.
+         */
+        NTetrahedron(const std::string& desc, NTriangulation* tri);
 
     friend class NTriangulation;
         /**< Allow access to private members. */

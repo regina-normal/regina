@@ -1040,8 +1040,19 @@ NIntegerBase<supportInfinity>
 template class NIntegerBase<true>;
 template class NIntegerBase<false>;
 
+// Instantiate templates for all possible template arguments.
+// The header has matching "extern template REGINA_API" declarations.
 template std::ostream& operator << (std::ostream&, const NIntegerBase<true>&);
 template std::ostream& operator << (std::ostream&, const NIntegerBase<false>&);
+
+template NIntegerBase<true> operator +(long lhs,
+    const NIntegerBase<true>& rhs);
+template NIntegerBase<false> operator +(long lhs,
+    const NIntegerBase<false>& rhs);
+template NIntegerBase<true> operator *(long lhs,
+    const NIntegerBase<true>& rhs);
+template NIntegerBase<false> operator *(long lhs,
+    const NIntegerBase<false>& rhs);
 
 } // namespace regina
 

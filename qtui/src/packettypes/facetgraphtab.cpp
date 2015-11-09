@@ -61,7 +61,7 @@
 #include <QTemporaryFile>
 
 #ifdef LIBGVC_FOUND
-#include "graphviz/gvc.h"
+#include "gvc.h"
 
 extern gvplugin_library_t gvplugin_neato_layout_LTX_library;
 extern gvplugin_library_t gvplugin_core_LTX_library;
@@ -142,13 +142,13 @@ QWidget* FacetGraphTab::getInterface() {
 
 void FacetGraphTab::refresh() {
 #ifndef LIBGVC_FOUND
-    showError(tr("<qt>This copy of Regina was not built with "
-        "Graphviz support.  Because of this, it cannot display "
-        "graphs.<p>"
-        "If you downloaded a pre-built package, please contact "
-        "the package maintainer for a Graphviz-enabled build.<p>"
-        "If you built Regina yourself, please ensure that you have "
-        "the Graphviz libraries installed on your system.</qt>"));
+    showError(tr("<qt>This copy of <i>Regina</i> was built without "
+        "<i>Graphviz</i> support.  Therefore I cannot draw graphs.<p>"
+        "If you downloaded <i>Regina</i> as a ready-made package, please "
+        "contact the package maintainer for a <i>Graphviz</i>-enabled build.<p>"
+        "If you compiled <i>Regina</i> yourself, try installing the "
+        "<i>Graphviz</i> libraries on your system and then compiling "
+        "<i>Regina</i> again.</qt>"));
     return;
 #else
     neverDrawn = false;
