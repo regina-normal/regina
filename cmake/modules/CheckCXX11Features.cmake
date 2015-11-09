@@ -30,7 +30,7 @@ IF(CMAKE_COMPILER_IS_GNUCXX) # G++ uses gnu++0x on older versions.
 		SET(CXX11_OPTION "-std=c++11")
 	ELSEIF(GCC_VERSION VERSION_GREATER 4.3 OR GCC_VERSION VERSION_EQUAL 4.3)
 		MESSAGE(WARNING "C++0x activated. If you get any errors update to a compiler which fully supports C++11")
-		SET(CXX11_OPTION"-std=gnu++0x")
+		SET(CXX11_OPTION "-std=gnu++0x")
 	ELSE()
 			MESSAGE(FATAL_ERROR "C++11 needed. Therefore a gcc compiler with a version higher than 4.3 is needed.")
 	endif()

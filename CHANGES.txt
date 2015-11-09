@@ -337,7 +337,11 @@ Version 4.97  [ (under development) ]
         Routine factorial():
             - New constexpr routine for computing factorials.
         Routine forCoords(), forFilter(), forPacket():
-            - Can now pass additional arguments to the bracket operator.
+            - Removed the initial Coords / Filter / PacketType argument,
+              which was only used to convey type information and never
+              contained any real data.
+            - Now supports additional trailing arguments, which are
+              passed through to the bracket operator.
             - The void / non-void variants now require that the function
               object must / must not be derived from Returns<T> respectively.
         Routine nextPowerOfTwo():

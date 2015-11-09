@@ -7,18 +7,18 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>rga</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>x-regina.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>Regina Data File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSHandlerRank</key>
 			<string>Owner</string>
-			<key>CFBundleTypeIconFile</key>
-			<string>x-regina.icns</string>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>rga</string>
-			</array>
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
@@ -26,7 +26,7 @@
 	<key>CFBundleIconFile</key>
 	<string>regina.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>net.sourceforge.regina</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -41,11 +41,11 @@
 	<string></string>
 	<key>CSResourcesFileMapped</key>
 	<true/>
+	<key>NSHighResolutionCapable</key>
+	<string>True</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>GNU General Public License, with some additional permissions</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-	<key>NSHighResolutionCapable</key>
-	<string>True</string>
 </dict>
 </plist>

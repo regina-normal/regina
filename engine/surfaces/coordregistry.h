@@ -89,10 +89,10 @@ class NNormalSurfaceVector; // For the deprecated NewNormalSurfaceVector.
  * considered invalid for our purposes here.
  *
  * In detail: the function object \a func must define a templated
- * bracket operator, so that <tt>func(NormalInfo<c>, ...)</tt> is
- * defined for any valid NormalCoords enum value \a c.  Then,
- * when the user calls <tt>forCoords(coords, func, defaultReturn, ...)</tt>,
- * this routine will call <tt>func(NormalInfo<coords>, ...)</tt> and pass back
+ * bracket operator, so that <tt>func.operator()<NormalInfo<c>>(...)</tt> is
+ * defined for any valid NormalCoords enum value \a c.  Then, when the user
+ * calls <tt>forCoords(coords, func, defaultReturn, ...)</tt>, this routine
+ * will call <tt>func.operator()<NormalInfo<coords>>(...)</tt> and pass back
  * the corresponding return value.  If \a coords does not denote a valid
  * coordinate system as described above, then forCoords() will pass back
  * \a defaultReturn instead.
@@ -140,10 +140,10 @@ forCoords(NormalCoords coords, FunctionObject&& func,
  * considered invalid for our purposes here.
  *
  * In detail: the function object \a func must define a templated
- * bracket operator, so that <tt>func(NormalInfo<c>, ...)</tt> is
+ * bracket operator, so that <tt>func.operator()<NormalInfo<c>>(...)</tt> is
  * defined for any valid NormalCoords enum value \a c.  Then,
- * when the user calls <tt>forCoords(coords, func, ...)</tt>,
- * this routine will call <tt>func(NormalInfo<coords>, ...)</tt> in turn.
+ * when the user calls <tt>forCoords(coords, func, ...)</tt>, this routine
+ * will call <tt>func.operator()<NormalInfo<coords>>(...)</tt> in turn.
  * If \a coords does not denote a valid coordinate system as described above,
  * then forCoords() will do nothing.
  *

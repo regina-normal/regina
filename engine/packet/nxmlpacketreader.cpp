@@ -43,8 +43,8 @@ namespace regina {
 namespace {
     struct XMLReaderFunction : public Returns<NXMLElementReader*> {
         template <typename Packet>
-        inline NXMLElementReader* operator() (Packet,
-                NPacket* me, NXMLTreeResolver& resolver) {
+        inline NXMLElementReader* operator() (NPacket* me,
+                NXMLTreeResolver& resolver) {
             return Packet::Class::getXMLReader(me, resolver);
         }
     };

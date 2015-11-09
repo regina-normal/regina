@@ -82,13 +82,14 @@ namespace regina {
  * a new filter type is added then only a small amount of code
  * needs to be extended to incorporate it.
  *
- * In detail: the function object \a func must define a templated
- * bracket operator, so that <tt>func(SurfaceFilterInfo<t>, ...)</tt> is
- * defined for any valid SurfaceFilterType enum value \a t.  Then,
- * when the user calls <tt>forFilter(filter, func, defaultReturn, ...)</tt>,
- * this routine will call <tt>func(SurfaceFilterInfo<filter>, ...)</tt> and pass
- * back the corresponding return value.  If \a filter does not denote a valid
- * filter type, then forFilter() will pass back \a defaultReturn instead.
+ * In detail: the function object \a func must define a templated bracket
+ * operator, so that <tt>func.operator()<SurfaceFilterInfo<t>>(...)</tt> is
+ * defined for any valid SurfaceFilterType enum value \a t.  Then, when the
+ * user calls <tt>forFilter(filter, func, defaultReturn, ...)</tt>, this
+ * routine will call <tt>func.operator()<SurfaceFilterInfo<filter>>(...)</tt>
+ * and pass back the corresponding return value.  If \a filter does not denote
+ * a valid filter type, then forFilter() will pass back \a defaultReturn
+ * instead.
  *
  * There is also a variant of forFilter() that works with void functions,
  * and so does not take the extra \a defaultReturn argument.
@@ -128,11 +129,11 @@ forFilter(SurfaceFilterType filter, FunctionObject&& func,
  * a new filter type is added then only a small amount of code
  * needs to be extended to incorporate it.
  *
- * In detail: the function object \a func must define a templated
- * bracket operator, so that <tt>func(SurfaceFilterInfo<t>, ...)</tt> is
+ * In detail: the function object \a func must define a templated bracket
+ * operator, so that <tt>func.operator()<SurfaceFilterInfo<t>>(...)</tt> is
  * defined for any valid SurfaceFilterType enum value \a t.  Then,
- * when the user calls <tt>forFilter(filter, func, ...)</tt>,
- * this routine will call <tt>func(SurfaceFilterInfo<filter>, ...)</tt> in turn.
+ * when the user calls <tt>forFilter(filter, func, ...)</tt>, this routine
+ * will call <tt>func.operator()<SurfaceFilterInfo<filter>>(...)</tt> in turn.
  * If \a filter does not denote a valid filter type, then forFilter()
  * will do nothing.
  *

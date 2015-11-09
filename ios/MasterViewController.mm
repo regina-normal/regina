@@ -337,7 +337,7 @@ enum DocSource {
     NSArray* contents = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:[ReginaDocument docsDir]
                                                       includingPropertiesForKeys:@[NSURLContentModificationDateKey,
                                                                                    NSURLIsDirectoryKey]
-                                                                         options:nil
+                                                                         options:0
                                                                            error:nil];
 
     NSError* err;

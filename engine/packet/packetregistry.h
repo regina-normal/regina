@@ -80,11 +80,11 @@ namespace regina {
  * a new packet type is added then only a small amount of code
  * needs to be extended to incorporate it.
  *
- * In detail: the function object \a func must define a templated
- * bracket operator, so that <tt>func(PacketInfo<t>, ...)</tt> is
- * defined for any valid PacketType enum value \a t.  Then,
- * when the user calls <tt>forPacket(packetType, func, defaultReturn, ...)</tt>,
- * this routine will call <tt>func(PacketInfo<packetType>, ...)</tt> and pass
+ * In detail: the function object \a func must define a templated bracket
+ * operator, so that <tt>func.operator()<PacketInfo<t>>(...)</tt> is defined
+ * for any valid PacketType enum value \a t.  Then, when the user calls
+ * <tt>forPacket(packetType, func, defaultReturn, ...)</tt>, this routine
+ * will call <tt>func.operator()<PacketInfo<packetType>>(...)</tt> and pass
  * back the corresponding return value.  If \a packetType does not denote a
  * valid packet type, then forPacket() will pass back \a defaultReturn instead.
  *
@@ -127,10 +127,10 @@ forPacket(PacketType packetType, FunctionObject&& func,
  * needs to be extended to incorporate it.
  *
  * In detail: the function object \a func must define a templated
- * bracket operator, so that <tt>func(PacketInfo<t>, ...)</tt> is
+ * bracket operator, so that <tt>func.operator()<PacketInfo<t>>(...)</tt> is
  * defined for any valid PacketType enum value \a t.  Then,
- * when the user calls <tt>forPacket(packetType, func, ...)</tt>,
- * this routine will call <tt>func(PacketInfo<packetType>, ...)</tt> in turn.
+ * when the user calls <tt>forPacket(packetType, func, ...)</tt>, this routine
+ * will call <tt>func.operator()<PacketInfo<packetType>>(...)</tt> in turn.
  * If \a packetType does not denote a valid packet type, then forPacket()
  * will do nothing.
  *

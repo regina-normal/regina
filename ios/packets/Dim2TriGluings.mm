@@ -360,7 +360,7 @@ cleanUpGluing:
     editLabel = nil;
     
     if (toReload.count)
-        [self.triangles reloadRowsAtIndexPaths:toReload withRowAnimation:NO];
+        [self.triangles reloadRowsAtIndexPaths:toReload withRowAnimation:UITableViewRowAnimationFade];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField

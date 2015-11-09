@@ -334,7 +334,7 @@
     // The table needs to be updated in the main queue.
     dispatch_async(dispatch_get_main_queue(), ^{
         NSIndexPath* path = [NSIndexPath indexPathForRow:index inSection:0];
-        [self.tvValues insertRowsAtIndexPaths:@[path] withRowAnimation:YES];
+        [self.tvValues insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationRight];
     });
 }
 
