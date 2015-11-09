@@ -32,21 +32,20 @@
 
 /* end stub */
 
+#include <algorithm>
 #include <cassert>
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
 
-NTetrahedron::NTetrahedron() : tri_(0) {
-    for (int i=0; i<4; i++)
-        tetrahedra_[i] = 0;
+NTetrahedron::NTetrahedron(NTriangulation* tri) : tri_(tri) {
+    std::fill(tetrahedra_, tetrahedra_ + 4, nullptr);
 }
 
-NTetrahedron::NTetrahedron(const std::string& desc) :
-        description_(desc), tri_(0) {
-    for (int i=0; i<4; i++)
-        tetrahedra_[i] = 0;
+NTetrahedron::NTetrahedron(const std::string& desc, NTriangulation* tri) :
+        description_(desc), tri_(tri) {
+    std::fill(tetrahedra_, tetrahedra_ + 4, nullptr);
 }
 
 bool NTetrahedron::hasBoundary() const {
@@ -63,9 +62,7 @@ void NTetrahedron::isolate() {
 }
 
 NTetrahedron* NTetrahedron::unjoin(int myFace) {
-    // TODO: Make this a stack variable once we know that tri != 0 always.
-    std::unique_ptr<NPacket::ChangeEventSpan>
-        span(tri_ ? new NPacket::ChangeEventSpan(tri_) : 0);
+    NPacket::ChangeEventSpan span(tri_);
 
     NTetrahedron* you = tetrahedra_[myFace];
     int yourFace = tetrahedronPerm_[myFace][myFace];
@@ -74,28 +71,17 @@ NTetrahedron* NTetrahedron::unjoin(int myFace) {
     you->tetrahedra_[yourFace] = 0;
     tetrahedra_[myFace] = 0;
 
-    if (tri_)
-        tri_->clearAllProperties();
+    tri_->clearAllProperties();
 
     return you;
 }
 
 void NTetrahedron::joinTo(int myFace, NTetrahedron* you, NPerm4 gluing) {
-    // TODO: Make this a stack variable once we know that tri != 0 always.
-    std::unique_ptr<NPacket::ChangeEventSpan>
-        span(tri_ ? new NPacket::ChangeEventSpan(tri_) :
-        you->tri_ ? new NPacket::ChangeEventSpan(you->tri_) : 0);
+    NPacket::ChangeEventSpan span(tri_);
 
     assert((! tetrahedra_[myFace]) ||
         (tetrahedra_[myFace] == you &&
             tetrahedronPerm_[myFace] == gluing));
-
-    // TODO: Temporary measure while we transition from old-style to
-    // new-style tetrahedron management.
-    if (tri_ && ! you->tri_)
-        tri_->addTetrahedron(you);
-    else if (you->tri_ && ! tri_)
-        you->tri_->addTetrahedron(this);
 
     assert(tri_ == you->tri_);
 
@@ -109,8 +95,7 @@ void NTetrahedron::joinTo(int myFace, NTetrahedron* you, NPerm4 gluing) {
     you->tetrahedra_[yourFace] = this;
     you->tetrahedronPerm_[yourFace] = gluing.inverse();
 
-    if (tri_)
-        tri_->clearAllProperties();
+    tri_->clearAllProperties();
 }
 
 void NTetrahedron::writeTextLong(std::ostream& out) const {
