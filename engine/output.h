@@ -91,7 +91,7 @@ namespace regina {
  * be provided directly through the various subclasses.
  */
 template <class T>
-struct REGINA_API Output {
+struct Output {
     /**
      * Returns a short text representation of this object.
      * This text should be human-readable, should fit on a single line,
@@ -162,7 +162,7 @@ struct REGINA_API Output {
  * be provided directly through the various subclasses.
  */
 template <class T>
-struct REGINA_API ShortOutput : public Output<T> {
+struct ShortOutput : public Output<T> {
     /**
      * A default implementation for detailed output.
      * This routine simply calls \a T::writeTextShort() and appends

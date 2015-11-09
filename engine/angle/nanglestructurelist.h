@@ -442,7 +442,7 @@ class REGINA_API NAngleStructureList : public NPacket {
  * equations will be based.
  * @return a newly allocated set of equations.
  */
-static NMatrixInt* makeAngleEquations(const NTriangulation* tri);
+REGINA_API NMatrixInt* makeAngleEquations(const NTriangulation* tri);
 
 /*@}*/
 
