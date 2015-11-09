@@ -1,6 +1,3 @@
-/* Define if both signed and unsigned long long types are available. */
-#define LONG_LONG_FOUND
-
 /* Define if both int128_t and uint128_t types are available. */
 /* #undef INT128_T_FOUND */
 

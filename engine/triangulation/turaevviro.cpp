@@ -32,11 +32,13 @@
 
 /* end stub */
 
+#define _USE_MATH_DEFINES // for M_PI, which is non-standard
+
 #include <algorithm>
 #include <cmath>
 #include <complex>
 #include "regina-config.h"
-#include "enumerate/normaliz/cone.h"
+#include "libnormaliz/cone.h"
 #include "maths/approx.h"
 #include "maths/ncyclotomic.h"
 #include "maths/numbertheory.h"
@@ -1152,9 +1154,10 @@ namespace {
             }
         }
 
-        libnormaliz::Cone<mpz_class> cone(input, libnormaliz::Type::equations);
+        libnormaliz::Cone<mpz_class> cone(libnormaliz::Type::equations, input);
         libnormaliz::ConeProperties wanted(
             libnormaliz::ConeProperty::HilbertBasis);
+        cone.deactivateChangeOfPrecision();
         cone.compute(wanted);
 
         if (! cone.isComputed(libnormaliz::ConeProperty::HilbertBasis)) {

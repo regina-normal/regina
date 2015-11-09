@@ -557,11 +557,10 @@ void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
     }
     delete eqns;
 
-    libnormaliz::Cone<mpz_class> cone(input,
-        libnormaliz::Type::equations);
-    libnormaliz::ConeProperties wanted(
-        libnormaliz::ConeProperty::HilbertBasis);
+    libnormaliz::Cone<mpz_class> cone(libnormaliz::Type::equations, input);
+    libnormaliz::ConeProperties wanted(libnormaliz::ConeProperty::HilbertBasis);
 
+    cone.deactivateChangeOfPrecision();
     cone.compute(wanted);
 
     if (! cone.isComputed(libnormaliz::ConeProperty::HilbertBasis)) {
