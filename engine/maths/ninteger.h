@@ -143,6 +143,11 @@ struct InfinityBase<false> {
  * Thanks to Menelaos Karavelas for encouraging me to take another look at
  * these ideas.
  *
+ * \headers Parts of this template class are implemented in a C++ source
+ * file that is not available through the headers.  However, this should
+ * not affect users since the calculation engine includes explicit
+ * instantiations for all possible template parameters.
+ *
  * \ifacespython Both variants of this template are available through Python.
  * For \a supportInfinity = \c false (the default), simply use NIntegerBase.
  * For \a supportInfinity = \c true, use NLargeInteger.
@@ -1448,6 +1453,44 @@ class REGINA_API NIntegerBase : private InfinityBase<supportInfinity> {
     friend std::ostream& operator << (std::ostream& out,
         const NIntegerBase<supportInfinity_>& large);
 };
+
+// Although we explicitly instantiate NIntegerBase in the library, we do not
+// declare this through an "extern template class REGINA_API ..." line here.
+//
+// The short story: windows is a nightmare.
+//
+// The long story:
+//
+// - Symbols that are part of the public library interface *must* be marked as
+//   dllexport; otherwise code that links with the library cannot use them.
+//
+// - It seems that the presence or absence of the dllexport attribute is
+//   determined at the *first* instantiation of a template class.  Typically
+//   this is either an implicit instantiation, or an "extern template class"
+//   line, whichever the compiler sees first.
+//
+// - In general we cannot control the attributes for implicit instantiations,
+//   since it does not make sense to mark an entire template as REGINA_API -
+//   generally a template is exported only for some template parameters.
+//
+// - This means that we typically use "extern template class" lines to manage
+//   the dllexport attribute.
+//
+// - HOWEVER: For NIntegerBase, this breaks because:
+//
+//     * The "extern template class" lines must come after any specialisations
+//       of member functions (otherwise the compile fails);
+//
+//     * As a result, the specialisations trigger implicit instantiations,
+//       which render the "extern template class" lines ineffective.
+//
+// - The solution for NIntegerBase is to mark the entire template as
+//   REGINA_API.  This is possible because our library explicitly instantiates
+//   NIntegerBase for all possible template parameters.
+//
+// I would *love* to hear of a better way of doing this that correctly
+// sets the dllexport / dllimport attributes under windows, and that
+// doesn't require marking the entire template as REGINA_API.
 
 /**
  * NLargeInteger is a typedef for NIntegerBase<true>, which offers
