@@ -158,6 +158,37 @@ namespace {
         return ans;
     }
 
+    boost::python::list findAllIsomorphisms_list(
+        const NTriangulation& t, const NTriangulation& other) {
+        boost::python::list ans;
+
+        std::list<regina::NIsomorphism*> isos;
+        t.findAllIsomorphisms(other, isos);
+
+        for (std::list<regina::NIsomorphism*>::iterator it =
+                 isos.begin(); it != isos.end(); it++) {
+            std::auto_ptr<regina::NIsomorphism> iso(*it);
+            ans.append(iso);
+        }
+        return ans;
+    }
+
+    boost::python::list maximalForestInDualSkeleton_list(NTriangulation& t) {
+        std::set<regina::NTriangle*> triangleSet;
+        t.maximalForestInDualSkeleton(triangleSet);
+
+        // boost::python does not contain python sets. We use a python list
+        // here instead which needs a well-defined order, thus we iterate
+        // through getTriangles().
+
+        boost::python::list ans;
+        for (NTriangulation::TriangleIterator it =
+                t.getTriangles().begin(); it != t.getTriangles().end(); it++)
+            if (triangleSet.count(*it) > 0)
+                ans.append(boost::python::ptr(*it));
+        return ans;
+    }
+
     std::string isoSig_void(const NTriangulation& t) {
         return t.isoSig();
     }
@@ -201,21 +232,21 @@ void addNTriangulation() {
         .def("getSimplices", getTetrahedra_list)
         .def("simplices", getTetrahedra_list)
         .def("getTetrahedron", getTetrahedron_non_const,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("simplex", getTetrahedron_non_const,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("getSimplex", getTetrahedron_non_const,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("tetrahedronIndex", &NTriangulation::tetrahedronIndex)
         .def("simplexIndex", &NTriangulation::simplexIndex)
         .def("newTetrahedron", newTetrahedron_void,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("newSimplex", newTetrahedron_void,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("newTetrahedron", newTetrahedron_string,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("newSimplex", newTetrahedron_string,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("removeTetrahedron", &NTriangulation::removeTetrahedron)
         .def("removeSimplex", &NTriangulation::removeSimplex)
         .def("removeTetrahedronAt", &NTriangulation::removeTetrahedronAt)
@@ -242,17 +273,17 @@ void addNTriangulation() {
         .def("component", &NTriangulation::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &NTriangulation::getComponent,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("getBoundaryComponent", &NTriangulation::getBoundaryComponent,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("getVertex", &NTriangulation::getVertex,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("getEdge", &NTriangulation::getEdge,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("getFace", &NTriangulation::getTriangle,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("getTriangle", &NTriangulation::getTriangle,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("componentIndex", &NTriangulation::componentIndex)
         .def("boundaryComponentIndex",
             &NTriangulation::boundaryComponentIndex)
@@ -262,6 +293,7 @@ void addNTriangulation() {
         .def("triangleIndex", &NTriangulation::triangleIndex)
         .def("isIdenticalTo", &NTriangulation::isIdenticalTo)
         .def("isIsomorphicTo", &NTriangulation::isIsomorphicTo)
+        .def("findAllIsomorphisms", findAllIsomorphisms_list)
         .def("makeCanonical", &NTriangulation::makeCanonical)
         .def("isContainedIn", &NTriangulation::isContainedIn)
         .def("hasTwoSphereBoundaryComponents",
