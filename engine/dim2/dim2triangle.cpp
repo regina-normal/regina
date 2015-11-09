@@ -39,12 +39,12 @@
 namespace regina {
 
 Dim2Triangle::Dim2Triangle(Dim2Triangulation* tri) : tri_(tri) {
-    std::fill(adj_, adj_ + 3, static_cast<Dim2Triangle*>(0));
+    std::fill(adj_, adj_ + 3, nullptr);
 }
 
 Dim2Triangle::Dim2Triangle(const std::string& desc, Dim2Triangulation* tri) :
         desc_(desc), tri_(tri) {
-    std::fill(adj_, adj_ + 3, static_cast<Dim2Triangle*>(0));
+    std::fill(adj_, adj_ + 3, nullptr);
 }
 
 bool Dim2Triangle::hasBoundary() const {

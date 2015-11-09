@@ -71,8 +71,8 @@ class Dim2Triangulation;
  *
  * A triangle must always belong to a 2-manifold triangulation.  You can
  * construct new triangles using either Dim2Triangulation::newTriangle()
- * or Dim2Triangulation::newTriangle(const std::string&); these
- * routines will automatically add the new triangles to the triangulation.
+ * or Dim2Triangulation::newTriangle(const std::string&); these routines will
+ * automatically add the new triangles to the corresponding triangulation.
  * You can destroy triangles by calling Dim2Trianguation::removeTriangle(),
  * Dim2Trianguation::removeTriangleAt() or
  * Dim2Triangulation::removeAllTriangles(); these routines will
@@ -125,7 +125,6 @@ class REGINA_API Dim2Triangle :
                  triangulation. */
 
     public:
-
         /**
          * Returns the text description associated with this
          * triangle.
