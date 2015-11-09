@@ -281,6 +281,7 @@ class REGINA_API NVertex :
          *
          * @return the component containing this vertex.
          */
+        REGINA_INLINE_REQUIRED
         NComponent* getComponent() const;
 
         /**
@@ -475,6 +476,7 @@ class REGINA_API NVertex :
          *
          * @return the Euler characteristic of the vertex link.
          */
+        REGINA_INLINE_REQUIRED
         long getLinkEulerChar() const;
 
         /**

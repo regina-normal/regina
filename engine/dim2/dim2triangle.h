@@ -285,6 +285,7 @@ class REGINA_API Dim2Triangle :
          *
          * @return the triangulation containing this triangle.
          */
+        REGINA_INLINE_REQUIRED
         Dim2Triangulation* getTriangulation() const;
 
         /**
@@ -340,6 +341,7 @@ class REGINA_API Dim2Triangle :
          * @return a permutation that maps 0 to the given vertex of this
          * triangle, with the properties outlined above.
          */
+        REGINA_INLINE_REQUIRED
         NPerm3 getVertexMapping(int vertex) const;
         /**
          * Examines the given edge of this triangle, and returns a mapping from
