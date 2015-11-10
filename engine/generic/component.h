@@ -75,7 +75,7 @@ template <int> class TriangulationBase;
  * at least 2.
  */
 template <int dim>
-class REGINA_API ComponentBase :
+class ComponentBase :
         public Output<ComponentBase<dim>>,
         public boost::noncopyable,
         public NMarkedElement {
@@ -249,7 +249,7 @@ class REGINA_API ComponentBase :
  * This must be at least 2.
  */
 template <int dim>
-class REGINA_API Component : public ComponentBase<dim> {
+class Component : public ComponentBase<dim> {
     private:
         /**
          * Default constructor.
