@@ -42,8 +42,6 @@
 #define __NNORMALSURFACE_H
 #endif
 
-#include "regina-config.h" // For EXCLUDE_SNAPPEA
-
 #include <utility>
 #include "regina-core.h"
 #include "output.h"
@@ -1596,7 +1594,6 @@ class REGINA_API NNormalSurface :
          */
         bool disjoint(const NNormalSurface& other) const;
 
-#ifndef EXCLUDE_SNAPPEA
         /**
          * Computes the information about the boundary slopes of this surface
          * at each cusp of the triangulation.  This is for use with spun-normal
@@ -1651,7 +1648,6 @@ class REGINA_API NNormalSurface :
          * preconditions outlined above).
          */
         NMatrixInt* boundaryIntersections() const;
-#endif // EXCLUDE_SNAPPEA
 
         /**
          * Gives read-only access to the raw vector that sits beneath this

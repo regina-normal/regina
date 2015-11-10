@@ -1427,32 +1427,24 @@ extern template class REGINA_API LPMatrix<NNativeLong>;
 
 extern template class REGINA_API LPCol<LPConstraintNone>;
 extern template class REGINA_API LPCol<LPConstraintEuler>;
-#ifndef EXCLUDE_SNAPPEA
 extern template class REGINA_API LPCol<LPConstraintNonSpun>;
-#endif
 
 extern template class REGINA_API LPInitialTableaux<LPConstraintNone>;
 extern template class REGINA_API LPInitialTableaux<LPConstraintEuler>;
-#ifndef EXCLUDE_SNAPPEA
 extern template class REGINA_API LPInitialTableaux<LPConstraintNonSpun>;
-#endif
 
 extern template class REGINA_API LPData<LPConstraintNone, NInteger>;
 extern template class REGINA_API LPData<LPConstraintNone, NNativeLong>;
 extern template class REGINA_API LPData<LPConstraintEuler, NInteger>;
 extern template class REGINA_API LPData<LPConstraintEuler, NNativeLong>;
-#ifndef EXCLUDE_SNAPPEA
 extern template class REGINA_API LPData<LPConstraintNonSpun, NInteger>;
 extern template class REGINA_API LPData<LPConstraintNonSpun, NNativeLong>;
-#endif
 
 #ifdef INT128_AVAILABLE
 extern template class REGINA_API LPData<LPConstraintNone, NNativeInteger<16> >;
 extern template class REGINA_API LPData<LPConstraintEuler, NNativeInteger<16> >;
-#ifndef EXCLUDE_SNAPPEA
 extern template class REGINA_API LPData<LPConstraintNonSpun,
     NNativeInteger<16> >;
-#endif
 #endif
 
 // Inline functions for LPMatrix

@@ -32,8 +32,6 @@
 
 /* end stub */
 
-#include "regina-config.h" // For EXCLUDE_NORMALIZ
-
 // Regina core includes:
 #include "progress/nprogresstracker.h"
 #include "surfaces/nnormalsurfacelist.h"
