@@ -698,16 +698,18 @@ class FacetPairingBase :
  * triangulation, the individual gluing permutations will still need to
  * be specified; they are not a part of this structure.
  *
- * For dimensions 2 and 3, this template is specialised and offers more
- * functionality.  In order to use these specialised classes, you will need
- * to include the corresponding headers (dim2/dim2edgepairing.h for \a dim = 2,
- * or triangulation/nfacepairing.h for \a dim = 3).  For convenience,
- * there are typedefs available for these specialised classes (Dim2EdgePairing
- * and NFacePairing respectively).
+ * For Regina's \ref stddim "standard dimensions", this template is specialised
+ * and offers more functionality.  In order to use these specialised classes,
+ * you will need to include the corresponding headers (for instance,
+ * dim2/dim2edgepairing.h for \a dim = 2, or triangulation/nfacepairing.h for
+ * \a dim = 3).  For convenience, there are typedefs available for these
+ * specialised classes (such as Dim2EdgePairing and NFacePairing respectively).
  *
- * \ifacespython Python does not support templates.  For \a dim = 2 and 3,
- * this class is available under the names FacetPairing2 and FacetPairing3
- * respectively (as well as the typedefs mentioned above).
+ * \ifacespython Python does not support templates.
+ * For \ref stddim "standard dimensions" this class can be used by
+ * appending the dimension as a suffix (e.g., FacetPairing2 and FacetPairing3
+ * for dimensions 2 and 3).  The typedefs mentioned above (e.g.,
+ * Dim2EdgePairing and NFacePairing) are also available.
  * Higher-dimensional classes are not available in Python for the time being.
  *
  * \tparam dim the dimension of the underlying triangulation.
