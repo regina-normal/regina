@@ -32,16 +32,12 @@
 
 /* end stub */
 
-#include "regina-config.h" // For EXCLUDE_NORMALIZ.
-
 #include <iterator>
 #include <thread>
 #include "enumerate/ndoubledescription.h"
 #include "enumerate/nhilbertcd.h"
 #include "enumerate/nhilbertdual.h"
-#ifndef EXCLUDE_NORMALIZ
 #include "enumerate/nhilbertprimal.h"
-#endif
 #include "enumerate/ntreetraversal.h"
 #include "maths/matrixops.h"
 #include "maths/nmatrixint.h"
@@ -469,24 +465,6 @@ void NNormalSurfaceList::Enumerator::fillFundamentalCD() {
     delete eqns;
 }
 
-#ifdef EXCLUDE_NORMALIZ
-
-template <typename Coords>
-void NNormalSurfaceList::Enumerator::fillFundamentalPrimal() {
-    // This build of Regina does not include normaliz.
-    // Fall back to some other option.
-    fillFundamentalDual<Coords>();
-}
-
-template <typename Coords>
-void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
-    // This build of Regina does not include normaliz.
-    // Fall back to some other option.
-    fillFundamentalDual<Coords>();
-}
-
-#else
-
 template <typename Coords>
 void NNormalSurfaceList::Enumerator::fillFundamentalPrimal() {
     // We will not set algorithm_ until after the extremal ray
@@ -629,8 +607,6 @@ void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
         delete constraints;
     }
 }
-
-#endif // EXCLUDE_NORMALIZ
 
 } // namespace regina
 

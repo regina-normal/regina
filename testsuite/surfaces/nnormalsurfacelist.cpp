@@ -32,8 +32,6 @@
 
 /* end stub */
 
-#include "regina-config.h" // For EXCLUDE_NORMALIZ
-
 #include <algorithm>
 #include <cppunit/extensions/HelperMacros.h>
 #include <memory>
@@ -1736,20 +1734,6 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 tri, coords, NS_FUNDAMENTAL, NS_HILBERT_PRIMAL);
             NNormalSurfaceList* dual = NNormalSurfaceList::enumerate(
                 tri, coords, NS_FUNDAMENTAL, NS_HILBERT_DUAL);
-#ifdef EXCLUDE_NORMALIZ
-            // If we build without Normaliz, the primal algorithm falls
-            // through to the dual algorithm.
-            if (tri->getNumberOfTetrahedra() > 0 &&
-                    (primal->algorithm().has(NS_HILBERT_PRIMAL) ||
-                    ! primal->algorithm().has(NS_HILBERT_DUAL))) {
-                std::ostringstream msg;
-                msg << "Primal Hilbert basis enumeration in coordinate system "
-                    << coords << " does not fall through to dual Hilbert "
-                    "basis enumeration when Normaliz is excluded for "
-                    << tri->getPacketLabel() << '.';
-                CPPUNIT_FAIL(msg.str());
-            }
-#else
             if (tri->getNumberOfTetrahedra() > 0 &&
                     (primal->algorithm().has(NS_HILBERT_DUAL) ||
                     ! primal->algorithm().has(NS_HILBERT_PRIMAL))) {
@@ -1759,7 +1743,6 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                     << tri->getPacketLabel() << '.';
                 CPPUNIT_FAIL(msg.str());
             }
-#endif
             if (tri->getNumberOfTetrahedra() > 0 &&
                     (dual->algorithm().has(NS_HILBERT_PRIMAL) ||
                     ! dual->algorithm().has(NS_HILBERT_DUAL))) {

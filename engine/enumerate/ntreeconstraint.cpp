@@ -76,7 +76,6 @@ bool LPConstraintEuler::addRows(
     return true;
 }
 
-#ifndef EXCLUDE_SNAPPEA
 bool LPConstraintNonSpun::addRows(
         LPCol<regina::LPConstraintNonSpun>* col,
         const int* columnPerm, const NTriangulation* tri) {
@@ -121,7 +120,6 @@ bool LPConstraintNonSpun::addRows(
     delete coeffs;
     return true;
 }
-#endif // EXCLUDE_SNAPPEA
 
 BanConstraintBase::BanConstraintBase(const NTriangulation* tri, int coords) :
         tri_(tri), coords_(coords) {

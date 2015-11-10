@@ -30,12 +30,6 @@
 /* Define if we are replacing Tokyo Cabinet with the older QDBM. */
 /* #undef QDBM_AS_TOKYOCABINET */
 
-/* Define if we are excluding Normaliz from the build. */
-/* #undef EXCLUDE_NORMALIZ */
-
-/* Define if we are excluding SnapPea / SnapPy from the build. */
-/* #undef EXCLUDE_SNAPPEA */
-
 /* Define as const if the declaration of iconv() needs const, or empty if not. */
 #define ICONV_CONST 
 
