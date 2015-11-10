@@ -41,8 +41,6 @@
 #define __NSNAPPEATRIANGULATION_H
 #endif
 
-#include "regina-config.h" // For EXCLUDE_SNAPPEA
-
 #include "regina-core.h"
 #include "triangulation/ntriangulation.h"
 #include <complex>
@@ -63,8 +61,6 @@ class NXMLSnapPeaReader;
  * \weakgroup triangulation
  * @{
  */
-
-#ifndef EXCLUDE_SNAPPEA
 
 /**
  * A base class for all exceptions that are thrown from within the
@@ -1554,8 +1550,6 @@ inline void NSnapPeaTriangulation::randomise() {
 inline NPacket* NSnapPeaTriangulation::internalClonePacket(NPacket*) const {
     return new NSnapPeaTriangulation(*this);
 }
-
-#endif // EXCLUDE_SNAPPEA
 
 } // namespace regina
 

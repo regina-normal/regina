@@ -147,24 +147,6 @@ IF(NOT HAVE_CXX11_FEATURES)
 ENDIF()
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11_SWITCH}")
 
-# All the user to exclude various pieces of third-party code that are
-# typically built directly into Regina's engine.
-IF (NOT EXCLUDE_NORMALIZ)
-  SET (EXCLUDE_NORMALIZ OFF CACHE STRING
-    "Exclude all Normaliz code from the build." FORCE)
-ENDIF (NOT EXCLUDE_NORMALIZ)
-IF (NOT EXCLUDE_SNAPPEA)
-  SET (EXCLUDE_SNAPPEA OFF CACHE STRING
-    "Exclude all SnapPea / SnapPy code from the build." FORCE)
-ENDIF (NOT EXCLUDE_SNAPPEA)
-
-IF (EXCLUDE_NORMALIZ)
-  MESSAGE(STATUS "Excluding Normaliz from the build")
-ENDIF (EXCLUDE_NORMALIZ)
-IF (EXCLUDE_SNAPPEA)
-  MESSAGE(STATUS "Excluding SnapPea / SnapPy from the build")
-ENDIF (EXCLUDE_SNAPPEA)
-
 # Regina's own cmake scripts:
 INCLUDE( ReginaMacros )
 

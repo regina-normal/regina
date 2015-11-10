@@ -36,9 +36,7 @@
 
 #include "file/nfileinfo.h"
 #include "file/nglobaldirs.h"
-#ifndef EXCLUDE_SNAPPEA
 #include "snappea/nsnappeatriangulation.h"
-#endif
 
 #include "codecchooser.h"
 #include "coordinatechooser.h"
@@ -182,10 +180,8 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     }
     pythonPrefs->updateActiveCount();
 
-#ifndef EXCLUDE_SNAPPEA
     toolsPrefs->cbSnapPeaMessages->setChecked(
         regina::NSnapPeaTriangulation::kernelMessagesEnabled());
-#endif
     if (prefSet.pdfExternalViewer.isEmpty()) {
         toolsPrefs->cbDefaultPDFViewer->setChecked(true);
         toolsPrefs->editPDFViewer->setEnabled(false);
@@ -291,10 +287,8 @@ void ReginaPreferences::slotApply() {
             dynamic_cast<ReginaFilePrefItem*>(item)->getData());
     }
 
-#ifndef EXCLUDE_SNAPPEA
     regina::NSnapPeaTriangulation::enableKernelMessages(
         toolsPrefs->cbSnapPeaMessages->isChecked());
-#endif
     // Don't be too fussy about what they put in the PDF viewer field, since
     // Regina tries hard to find a suitable PDF viewer regardless.
     if (toolsPrefs->cbDefaultPDFViewer->isChecked())

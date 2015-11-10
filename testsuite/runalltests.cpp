@@ -32,7 +32,6 @@
 
 /* end stub */
 
-#include "regina-config.h" // For EXCLUDE_SNAPPEA
 #include "testsuite.h"
 
 #include <cctype>
