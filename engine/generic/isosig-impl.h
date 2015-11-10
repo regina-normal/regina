@@ -417,7 +417,7 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
         if (! ::isspace(*d))
             return 0;
 
-    unsigned i;
+    unsigned j;
     size_t pos, nSimp, nChars;
     while (c != end) {
         // Read one component at a time.
@@ -451,22 +451,22 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
                 return 0;
             }
             IsoSigHelper::SREADTRITS(*c++, facetAction + facetPos);
-            for (i = 0; i < 3; ++i) {
+            for (j = 0; j < 3; ++j) {
                 // If we're already finished, make sure the leftover trits
                 // are zero.
                 if (nFacets == (dim+1) * nSimp) {
-                    if (facetAction[facetPos + i] != 0) {
+                    if (facetAction[facetPos + j] != 0) {
                         delete[] facetAction;
                         return 0;
                     }
                     continue;
                 }
 
-                if (facetAction[facetPos + i] == 0)
+                if (facetAction[facetPos + j] == 0)
                     ++nFacets;
-                else if (facetAction[facetPos + i] == 1)
+                else if (facetAction[facetPos + j] == 1)
                     nFacets += 2;
-                else if (facetAction[facetPos + i] == 2) {
+                else if (facetAction[facetPos + j] == 2) {
                     nFacets += 2;
                     ++nJoins;
                 } else {
@@ -481,7 +481,7 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
         }
 
         size_t* joinDest = new size_t[nJoins + 1];
-        for (i = 0; i < nJoins; ++i) {
+        for (pos = 0; pos < nJoins; ++pos) {
             if (c + nChars > end) {
                 delete[] facetAction;
                 delete[] joinDest;
@@ -526,9 +526,9 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
         size_t joinPos = 0;
         NPerm<dim+1> gluing;
         for (pos = 0; pos < nSimp; ++pos)
-            for (i = 0; i <= dim; ++i) {
+            for (j = 0; j <= dim; ++j) {
                 // Already glued from the other side:
-                if (simp[pos]->adjacentSimplex(i))
+                if (simp[pos]->adjacentSimplex(j))
                     continue;
 
                 if (facetAction[facetPos] == 0) {
@@ -542,20 +542,20 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
                         delete[] simp;
                         return 0;
                     }
-                    simp[pos]->joinTo(i, simp[nextUnused++], NPerm<dim+1>());
+                    simp[pos]->joinTo(j, simp[nextUnused++], NPerm<dim+1>());
                 } else {
                     // Join to existing simplex.
                     gluing = NPerm<dim+1>::atIndex(joinGluing[joinPos]);
                     if (joinDest[joinPos] >= nextUnused ||
                             simp[joinDest[joinPos]]->adjacentSimplex(
-                            gluing[i])) {
+                            gluing[j])) {
                         delete[] facetAction;
                         delete[] joinDest;
                         delete[] joinGluing;
                         delete[] simp;
                         return 0;
                     }
-                    simp[pos]->joinTo(i, simp[joinDest[joinPos]], gluing);
+                    simp[pos]->joinTo(j, simp[joinDest[joinPos]], gluing);
                     ++joinPos;
                 }
 
