@@ -437,8 +437,8 @@ typename DimTraits<dim>::Triangulation*
         if (! ::isspace(*d))
             return 0;
 
-    unsigned i, j;
-    unsigned nSimp, nChars;
+    unsigned j;
+    unsigned pos, nSimp, nChars;
     while (c != end) {
         // Read one component at a time.
         nSimp = SVAL(*c++);
@@ -471,22 +471,22 @@ typename DimTraits<dim>::Triangulation*
                 return 0;
             }
             SREADTRITS(*c++, facetAction + facetPos);
-            for (i = 0; i < 3; ++i) {
+            for (j = 0; j < 3; ++j) {
                 // If we're already finished, make sure the leftover trits
                 // are zero.
                 if (nFacets == (dim+1) * nSimp) {
-                    if (facetAction[facetPos + i] != 0) {
+                    if (facetAction[facetPos + j] != 0) {
                         delete[] facetAction;
                         return 0;
                     }
                     continue;
                 }
 
-                if (facetAction[facetPos + i] == 0)
+                if (facetAction[facetPos + j] == 0)
                     ++nFacets;
-                else if (facetAction[facetPos + i] == 1)
+                else if (facetAction[facetPos + j] == 1)
                     nFacets += 2;
-                else if (facetAction[facetPos + i] == 2) {
+                else if (facetAction[facetPos + j] == 2) {
                     nFacets += 2;
                     ++nJoins;
                 } else {
@@ -501,19 +501,19 @@ typename DimTraits<dim>::Triangulation*
         }
 
         unsigned* joinDest = new unsigned[nJoins + 1];
-        for (i = 0; i < nJoins; ++i) {
+        for (pos = 0; pos < nJoins; ++pos) {
             if (c + nChars > end) {
                 delete[] facetAction;
                 delete[] joinDest;
                 return 0;
             }
 
-            joinDest[i] = SREAD(c, nChars);
+            joinDest[pos] = SREAD(c, nChars);
             c += nChars;
         }
 
         unsigned* joinGluing = new unsigned[nJoins + 1];
-        for (i = 0; i < nJoins; ++i) {
+        for (pos = 0; pos < nJoins; ++pos) {
             if (c + CHARS_PER_PERM(dim) > end) {
                 delete[] facetAction;
                 delete[] joinDest;
@@ -521,10 +521,10 @@ typename DimTraits<dim>::Triangulation*
                 return 0;
             }
 
-            joinGluing[i] = SREAD(c, CHARS_PER_PERM(dim));
+            joinGluing[pos] = SREAD(c, CHARS_PER_PERM(dim));
             c += CHARS_PER_PERM(dim);
 
-            if (joinGluing[i] >= Perm::nPerms) {
+            if (joinGluing[pos] >= Perm::nPerms) {
                 delete[] facetAction;
                 delete[] joinDest;
                 delete[] joinGluing;
@@ -534,16 +534,16 @@ typename DimTraits<dim>::Triangulation*
 
         // End of component!
         Simplex** simp = new Simplex*[nSimp];
-        for (i = 0; i < nSimp; ++i)
-            simp[i] = ans->newSimplex();
+        for (pos = 0; pos < nSimp; ++pos)
+            simp[pos] = ans->newSimplex();
 
         facetPos = 0;
         unsigned nextUnused = 1;
         unsigned joinPos = 0;
-        for (i = 0; i < nSimp; ++i)
+        for (pos = 0; pos < nSimp; ++pos)
             for (j = 0; j <= dim; ++j) {
                 // Already glued from the other side:
-                if (simp[i]->adjacentSimplex(j))
+                if (simp[pos]->adjacentSimplex(j))
                     continue;
 
                 if (facetAction[facetPos] == 0) {
@@ -557,7 +557,7 @@ typename DimTraits<dim>::Triangulation*
                         delete[] simp;
                         return 0;
                     }
-                    simp[i]->joinTo(j, simp[nextUnused++], Perm());
+                    simp[pos]->joinTo(j, simp[nextUnused++], Perm());
                 } else {
                     // Join to existing simplex.
                     if (joinDest[joinPos] >= nextUnused ||
@@ -569,7 +569,7 @@ typename DimTraits<dim>::Triangulation*
                         delete[] simp;
                         return 0;
                     }
-                    simp[i]->joinTo(j, simp[joinDest[joinPos]],
+                    simp[pos]->joinTo(j, simp[joinDest[joinPos]],
                         Perm::orderedSn[joinGluing[joinPos]]);
                     ++joinPos;
                 }
