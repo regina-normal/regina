@@ -918,14 +918,14 @@ class REGINA_API NTreeDecomposition :
 // Help the compiler by noting which explicit instantiations we offer.
 
 extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
-    const NGenericTriangulation<2>&, TreeDecompositionAlg);
+    const Triangulation<2>&, TreeDecompositionAlg);
 extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
-    const NGenericTriangulation<3>&, TreeDecompositionAlg);
+    const Triangulation<3>&, TreeDecompositionAlg);
 
 extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
-    const NGenericFacetPairing<2>&, TreeDecompositionAlg);
+    const FacetPairing<2>&, TreeDecompositionAlg);
 extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
-    const NGenericFacetPairing<3>&, TreeDecompositionAlg);
+    const FacetPairing<3>&, TreeDecompositionAlg);
 
 extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
     unsigned, bool const**, TreeDecompositionAlg);

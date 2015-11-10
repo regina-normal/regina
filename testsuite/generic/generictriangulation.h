@@ -127,7 +127,7 @@ class TriangulationTest : public CppUnit::TestFixture {
             delete rebuild;
 
             // Does rebuilding still work if the signature has whitespace?
-            rebuild = Triangulation::fromIsoSig(
+            rebuild = Triangulation<dim>::fromIsoSig(
                 std::string("\t " + sig + "\t \n"));
             if (! rebuild) {
                 std::ostringstream msg;

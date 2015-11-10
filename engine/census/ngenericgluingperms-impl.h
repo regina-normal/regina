@@ -49,6 +49,8 @@
 
 namespace regina {
 
+template <int> class Simplex;
+
 template <int dim>
 NGenericGluingPerms<dim>::NGenericGluingPerms(
         const NGenericGluingPerms<dim>& cloneMe) :
