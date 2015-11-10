@@ -53,7 +53,7 @@
 #include "utilities/nmarkedvector.h"
 #include "utilities/nproperty.h"
 
-// The following headers are necessary so that std::auto_ptr can invoke
+// The following headers are necessary so that std::unique_ptr can invoke
 // destructors where necessary.
 #include "dim4/dim4isomorphism.h"
 

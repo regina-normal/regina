@@ -110,7 +110,7 @@ class Dim4FacetGraphData : public FacetGraphData {
         Dim4FacetGraphData(regina::Dim4Triangulation* tri) : tri_(tri) {}
 
         regina::NPacket* getPacket();
-        void writeDot(std::ostream& out, bool withLabels);
+        std::string dot(bool withLabels);
         unsigned long numberOfSimplices();
         QString simplicesName();
         QString overview();

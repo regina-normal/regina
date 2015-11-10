@@ -921,11 +921,15 @@ extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const Triangulation<2>&, TreeDecompositionAlg);
 extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const Triangulation<3>&, TreeDecompositionAlg);
+extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
+    const Triangulation<4>&, TreeDecompositionAlg);
 
 extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const FacetPairing<2>&, TreeDecompositionAlg);
 extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const FacetPairing<3>&, TreeDecompositionAlg);
+extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
+    const FacetPairing<4>&, TreeDecompositionAlg);
 
 extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
     unsigned, bool const**, TreeDecompositionAlg);

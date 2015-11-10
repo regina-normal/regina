@@ -173,21 +173,21 @@ void addDim4Triangulation() {
         .def("getSimplices", Dim4_getPentachora_list)
         .def("simplices", Dim4_getPentachora_list)
         .def("getPentachoron", getPentachoron_non_const,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("simplex", getPentachoron_non_const,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("getSimplex", getPentachoron_non_const,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("pentachoronIndex", &Dim4Triangulation::pentachoronIndex)
         .def("simplexIndex", &Dim4Triangulation::simplexIndex)
         .def("newPentachoron", newPentachoron_void,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("newSimplex", newPentachoron_void,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("newPentachoron", newPentachoron_string,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("newSimplex", newPentachoron_string,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("removePentachoron", &Dim4Triangulation::removePentachoron)
         .def("removeSimplex", &Dim4Triangulation::removeSimplex)
         .def("removePentachoronAt", &Dim4Triangulation::removePentachoronAt)
@@ -214,17 +214,17 @@ void addDim4Triangulation() {
         .def("component", &Dim4Triangulation::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim4Triangulation::getComponent,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("getBoundaryComponent", &Dim4Triangulation::getBoundaryComponent,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("getVertex", &Dim4Triangulation::getVertex,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("getEdge", &Dim4Triangulation::getEdge,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("getTriangle", &Dim4Triangulation::getTriangle,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("getTetrahedron", &Dim4Triangulation::getTetrahedron,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("componentIndex", &Dim4Triangulation::componentIndex)
         .def("boundaryComponentIndex",
             &Dim4Triangulation::boundaryComponentIndex)

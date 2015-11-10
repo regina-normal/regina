@@ -48,14 +48,14 @@ template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const Triangulation<2>&, TreeDecompositionAlg);
 template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const Triangulation<3>&, TreeDecompositionAlg);
-template NTreeDecomposition::NTreeDecomposition(
+template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const Triangulation<4>&, TreeDecompositionAlg);
 
 template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const FacetPairing<2>&, TreeDecompositionAlg);
 template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const FacetPairing<3>&, TreeDecompositionAlg);
-template NTreeDecomposition::NTreeDecomposition(
+template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const FacetPairing<4>&, TreeDecompositionAlg);
 
 // Instantiate templates for common types:

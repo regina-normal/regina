@@ -49,7 +49,7 @@ namespace regina {
 namespace {
     struct ZeroVector : public Returns<NNormalHypersurfaceVector*> {
         template <typename Coords>
-        inline NNormalHypersurfaceVector* operator() (Coords,
+        inline NNormalHypersurfaceVector* operator() (
                 const Dim4Triangulation* tri) {
             return Coords::Class::makeZeroVector(tri);
         }
@@ -64,8 +64,7 @@ NNormalHypersurfaceVector* makeZeroVector(
 namespace {
     struct MatchingEquations : public Returns<NMatrixInt*> {
         template <typename Coords>
-        inline NMatrixInt* operator() (Coords,
-                const Dim4Triangulation* tri) {
+        inline NMatrixInt* operator() (const Dim4Triangulation* tri) {
             return Coords::Class::makeMatchingEquations(tri);
         }
     };
@@ -79,8 +78,7 @@ NMatrixInt* makeMatchingEquations(const Dim4Triangulation* triangulation,
 namespace {
     struct EmbeddedConstraints : public Returns<NEnumConstraintList*> {
         template <typename Coords>
-        inline NEnumConstraintList* operator() (Coords,
-                const Dim4Triangulation* tri) {
+        inline NEnumConstraintList* operator() (const Dim4Triangulation* tri) {
             return Coords::Class::makeEmbeddedConstraints(tri);
         }
     };
@@ -92,7 +90,7 @@ NEnumConstraintList* makeEmbeddedConstraints(
 }
 
 template <typename Coords>
-void NNormalHypersurfaceList::VertexEnumerator::operator() (Coords,
+void NNormalHypersurfaceList::VertexEnumerator::operator() (
         NNormalHypersurfaceList* list, Dim4Triangulation* triang,
         NProgressTracker* tracker) {
     if (tracker)
@@ -122,7 +120,7 @@ void NNormalHypersurfaceList::VertexEnumerator::operator() (Coords,
 }
 
 template <typename Coords>
-void NNormalHypersurfaceList::FundPrimalEnumerator::operator() (Coords,
+void NNormalHypersurfaceList::FundPrimalEnumerator::operator() (
         NNormalHypersurfaceList* list, Dim4Triangulation* triang,
         NNormalHypersurfaceList* vtxSurfaces, NProgressTracker* tracker) {
     if (tracker)
@@ -142,7 +140,7 @@ void NNormalHypersurfaceList::FundPrimalEnumerator::operator() (Coords,
         // (and hopefully best possible) algorithm.
         useVtxSurfaces = new NNormalHypersurfaceList(list->coords_,
             list->embedded_);
-        VertexEnumerator()(Coords(), useVtxSurfaces, triang, 0);
+        VertexEnumerator().operator()<Coords>(useVtxSurfaces, triang, 0);
     }
 
     if (tracker)
@@ -167,7 +165,7 @@ void NNormalHypersurfaceList::FundPrimalEnumerator::operator() (Coords,
 }
 
 template <typename Coords>
-void NNormalHypersurfaceList::FundDualEnumerator::operator() (Coords,
+void NNormalHypersurfaceList::FundDualEnumerator::operator() (
         NNormalHypersurfaceList* list, Dim4Triangulation* triang,
         NProgressTracker* tracker) {
     if (tracker)
@@ -253,7 +251,7 @@ Dim4Triangulation* NNormalHypersurfaceList::getTriangulation() const {
 namespace {
     struct NameFunction : public Returns<const char*> {
         template <typename Coords>
-        inline const char* operator() (Coords f) { return f.name(); }
+        inline const char* operator() () { return Coords::name(); }
     };
 }
 
