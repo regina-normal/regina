@@ -26,8 +26,8 @@ if (${REGINA_INSTALL_DEV})
     dim2edge.h
     dim2edgepairing.h
     dim2exampletriangulation.h
-    dim2triangle.h
     dim2isomorphism.h
+    dim2triangle.h
     dim2triangulation.h
     dim2vertex.h
     nxmldim2trireader.h

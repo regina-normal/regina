@@ -5,12 +5,11 @@ SET ( FILES
   closedprimemin
   compact
   dim2census
-  dim2gluingperms
   dim2gluingpermsearcher
   euler
   hyperbolic
   ncensus
-  ngluingperms
+  ngenericgluingperms
   ngluingpermsearcher
   )
 

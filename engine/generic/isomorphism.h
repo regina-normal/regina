@@ -76,7 +76,7 @@ template <int dim> class Triangulation;
  * class works with.  This must be at least 2.
  */
 template <int dim>
-class REGINA_API IsomorphismBase :
+class IsomorphismBase :
         public Output<IsomorphismBase<dim>>,
         public boost::noncopyable {
     static_assert(dim >= 2, "Isomorphism requires dimension >= 2.");
@@ -373,9 +373,9 @@ class REGINA_API IsomorphismBase :
  * Note that for all types of isomorphism, triangulation \a U is allowed
  * to contain more simplices than triangulation \a T.
  *
- * For dimensions 2 and 3, this template is specialised and offers
- * some extra functionality.  In order to use these specialised classes,
- * you will need to include the corresponding headers
+ * For Regina's \ref stddim "standard dimensions", this template is specialised
+ * and offers some extra functionality.  In order to use these specialised
+ * classes, you will need to include the corresponding headers
  * (dim2/dim2isomorphism.h for \a dim = 2, or
  * triangulation/nisomorphism.h for \a dim = 3).  For convenience, there
  * are typedefs available for these specialised classes (Dim2Isomorphism and
@@ -390,7 +390,7 @@ class REGINA_API IsomorphismBase :
  * This must be at least 2.
  */
 template <int dim>
-class REGINA_API Isomorphism : public IsomorphismBase<dim> {
+class Isomorphism : public IsomorphismBase<dim> {
     public:
         /**
          * Creates a new isomorphism with no initialisation.
@@ -418,10 +418,6 @@ template <> class Isomorphism<2>;
 template <> class Isomorphism<3>;
 
 /*@}*/
-
-// Help the compiler by noting which explicit instantiations we offer.
-extern template class REGINA_API NGenericIsomorphism<2>;
-extern template class REGINA_API NGenericIsomorphism<3>;
 
 // Inline functions for IsomorphismBase
 

@@ -36,7 +36,8 @@
  *  \brief Deprecated header.
  */
 
-#warning This header is deprecated; please use generic/isomorphism-impl.h instead.
+#warning This header is deprecated; please use generic/isomorphism.h instead.
 
-#include "generic/isomorphism-impl.h"
+#include "generic/isomorphism.h"
 
+// Note: There is no generic/isomorphism-impl.h.

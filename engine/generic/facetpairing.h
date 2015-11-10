@@ -76,7 +76,7 @@ template <int> class Triangulation;
  * \tparam dim the dimension of the triangulation.  This must be at least 2.
  */
 template <int dim>
-class REGINA_API FacetPairingBase :
+class FacetPairingBase :
         public ShortOutput<FacetPairingBase<dim>>,
         public boost::noncopyable {
     static_assert(dim >= 2, "FacetPairing requires dimension >= 2.");
@@ -714,7 +714,7 @@ class REGINA_API FacetPairingBase :
  * This must be at least 2.
  */
 template <int dim>
-class REGINA_API FacetPairing : public FacetPairingBase<dim> {
+class FacetPairing : public FacetPairingBase<dim> {
     public:
         /**
          * Creates a new clone of the given facet pairing.
