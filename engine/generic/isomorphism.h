@@ -419,6 +419,10 @@ template <> class Isomorphism<3>;
 
 /*@}*/
 
+// Help the compiler by noting which explicit instantiations we offer.
+extern template class REGINA_API NGenericIsomorphism<2>;
+extern template class REGINA_API NGenericIsomorphism<3>;
+
 // Inline functions for IsomorphismBase
 
 template <int dim>

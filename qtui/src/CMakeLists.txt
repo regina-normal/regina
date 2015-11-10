@@ -23,6 +23,11 @@ IF(SRCHILITE_FOUND)
   ADD_SUBDIRECTORY(syntax)
   SET(LINK_LIBS ${LINK_LIBS} ${SRCHILITE_LIBRARY})
   INCLUDE_DIRECTORIES(${SRCHILITE_INCLUDE_DIR})
+  IF(WIN32)
+    # It seems that under Windows we need to explicitly link our code against
+    # boost-regex, which is used internally by libsource-highlight.
+    SET(LINK_LIBS ${LINK_LIBS} ${Boost_REGEX_LIBRARY})
+  ENDIF(WIN32)
 ELSE(SRCHILITE_FOUND)
   ADD_DEFINITIONS(-DNO_SRCHILITE=1)
 ENDIF(SRCHILITE_FOUND)

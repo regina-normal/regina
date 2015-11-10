@@ -32,7 +32,12 @@
 
 /* end stub */
 
-/* To be included from nhilbertcd.h. */
+/*! \file enumerate/nhilbertcd-impl.h
+ *  \brief Contains implementations of template functions from nhilbertcd.h.
+ *
+ *  This file is automatically included from nhilbertcd.h; there
+ *  is no need for end users to include it explicitly.
+ */
 
 #ifndef __NHILBERTCD_IMPL_H
 #ifndef __DOXYGEN

@@ -32,7 +32,12 @@
 
 /* end stub */
 
-/* To be included from nhilbertprimal.h. */
+/*! \file enumerate/nhilbertprimal-impl.h
+ *  \brief Contains implementations of template functions from nhilbertprimal.h.
+ *
+ *  This file is automatically included from nhilbertprimal.h; there
+ *  is no need for end users to include it explicitly.
+ */
 
 #ifndef __NHILBERTPRIMAL_IMPL_H
 #ifndef __DOXYGEN

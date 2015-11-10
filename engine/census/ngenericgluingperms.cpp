@@ -32,22 +32,16 @@
 
 /* end stub */
 
-#include "census/dim2gluingperms.h"
 #include "census/ngenericgluingperms-impl.h"
+
+// Headers required for our template instantiations:
+#include "census/dim2gluingperms.h"
+#include "census/ngluingperms.h"
 #include "dim2/dim2triangulation.h"
+#include "triangulation/ntriangulation.h"
 
-namespace regina {
-
-// Instantiate all templates from the -impl.h file.
-template NGenericGluingPerms<2>::NGenericGluingPerms(
-        const NGenericGluingPerms<2>&);
-template NGenericGluingPerms<2>::NGenericGluingPerms(std::istream&);
-template Dim2Triangulation* NGenericGluingPerms<2>::triangulate() const;
-template int NGenericGluingPerms<2>::gluingToIndex(
-        const Dim2TriangleEdge&, const NPerm3&) const;
-template int NGenericGluingPerms<2>::gluingToIndex(
-        unsigned, unsigned, const NPerm3&) const;
-template void NGenericGluingPerms<2>::dumpData(std::ostream&) const;
-
-} // namespace regina
+// Instantiate templates for standard dimensions.
+// The header has matching "extern template class REGINA_API" declarations.
+template class regina::NGenericGluingPerms<2>;
+template class regina::NGenericGluingPerms<3>;
 

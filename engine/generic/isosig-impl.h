@@ -32,6 +32,16 @@
 
 /* end stub */
 
+/*! \file generic/isosig-impl.h
+ *  \brief Contains some of the implementation details for the
+ *  NGenericTriangulation class template.
+ *
+ *  This file is \e not included automatically by ngenerictriangulation.h.
+ *  However, typical end users should never need to include it, since
+ *  Regina's calculation engine provides full explicit instantiations
+ *  of NGenericTriangulation for \ref stddim "standard dimensions".
+ */
+
 #include <algorithm>
 
 namespace regina {
@@ -85,16 +95,6 @@ struct IsoSigHelper {
     static bool SVALID(char c) {
         return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
             (c >= '0' && c <= '9') || c == '+' || c == '-');
-    }
-
-    /**
-     * Does the given string contain at least nChars characters?
-     */
-    static bool SHASCHARS(const char* s, unsigned nChars) {
-        for ( ; nChars > 0; --nChars)
-            if (! *s)
-                return false;
-        return true;
     }
 
     /**
@@ -395,30 +395,41 @@ std::string TriangulationBase<dim>::isoSig(
 template <int dim>
 Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
         const std::string& sig) {
-    std::auto_ptr<Triangulation<dim>> ans(new Triangulation<dim>());
+    std::unique_ptr<Triangulation<dim>> ans(new Triangulation<dim>());
 
     typename Triangulation<dim>::ChangeEventSpan span(ans.get());
 
     const char* c = sig.c_str();
 
+    // Skip any leading whitespace.
+    while (*c && ::isspace(*c))
+        ++c;
+
+    // Find the end of the string.
+    const char* end = c;
+    while (*end && ! ::isspace(*end))
+        ++end;
+
     // Initial check for invalid characters.
     const char* d;
-    for (d = c; *d; ++d)
+    for (d = c; d != end; ++d)
         if (! IsoSigHelper::SVALID(*d))
             return 0;
+    for (d = end; *d; ++d)
+        if (! ::isspace(*d))
+            return 0;
 
-    unsigned i;
-    size_t nSimp, pos, nChars;
-    while (*c) {
+    size_t i, nSimp, nChars;
+    while (c != end) {
         // Read one component at a time.
         nSimp = IsoSigHelper::SVAL(*c++);
         if (nSimp < 63)
             nChars = 1;
         else {
-            if (! *c)
+            if (c == end)
                 return 0;
             nChars = IsoSigHelper::SVAL(*c++);
-            if (! IsoSigHelper::SHASCHARS(c, nChars))
+            if (c + nChars > end)
                 return 0;
             nSimp = IsoSigHelper::SREAD<unsigned>(c, nChars);
             c += nChars;
@@ -436,7 +447,7 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
         size_t nJoins = 0;
 
         for ( ; nFacets < (dim+1) * nSimp; facetPos += 3) {
-            if (! *c) {
+            if (c == end) {
                 delete[] facetAction;
                 return 0;
             }
@@ -471,8 +482,8 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
         }
 
         size_t* joinDest = new size_t[nJoins + 1];
-        for (pos = 0; pos < nJoins; ++pos) {
-            if (! IsoSigHelper::SHASCHARS(c, nChars)) {
+        for (i = 0; i < nJoins; ++i) {
+            if (c + nChars > end) {
                 delete[] facetAction;
                 delete[] joinDest;
                 return 0;
@@ -484,8 +495,8 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
 
         typename NPerm<dim+1>::Index* joinGluing =
             new typename NPerm<dim+1>::Index[nJoins + 1];
-        for (pos = 0; pos < nJoins; ++pos) {
-            if (! IsoSigHelper::SHASCHARS(c, 1)) {
+        for (i = 0; i < nJoins; ++i) {
+            if (c + IsoSigHelper::CHARS_PER_PERM(dim) > end) {
                 delete[] facetAction;
                 delete[] joinDest;
                 delete[] joinGluing;

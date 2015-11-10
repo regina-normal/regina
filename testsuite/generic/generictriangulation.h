@@ -126,6 +126,25 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
             delete rebuild;
 
+            // Does rebuilding still work if the signature has whitespace?
+            rebuild = Triangulation::fromIsoSig(
+                std::string("\t " + sig + "\t \n"));
+            if (! rebuild) {
+                std::ostringstream msg;
+                msg << tri->getPacketLabel()
+                    << ": Cannot reconstruct from isomorphism "
+                    "signature \"" << sig << "\" with whitespace.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! rebuild->isIsomorphicTo(*tri).get()) {
+                std::ostringstream msg;
+                msg << tri->getPacketLabel()
+                    << ": Reconstruction from \"" << sig
+                    << "\" with whitespace is not isomorphic to the original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            delete rebuild;
+
             if (tri->getNumberOfSimplices() == 0)
                 return;
 

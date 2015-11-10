@@ -84,7 +84,7 @@ inline T* clonePtr(T* cloneMe) {
  * object, created using the copy constructor for type \a T.  Otherwise
  * this routine simply returns a null pointer.
  *
- * Note that, even though this routine takes a std::auto_ptr, it returns
+ * Note that, even though this routine takes a std::unique_ptr, it returns
  * a raw pointer.  The caller of this routine is responsible for
  * deleting the new clone when it is no longer required.
  *
@@ -98,7 +98,7 @@ inline T* clonePtr(T* cloneMe) {
  * pointer if \a cloneMe is null.
  */
 template <typename T>
-inline T* clonePtr(const std::auto_ptr<T>& cloneMe) {
+inline T* clonePtr(const std::unique_ptr<T>& cloneMe) {
     return (cloneMe.get() ? new T(*cloneMe) : 0);
 }
 

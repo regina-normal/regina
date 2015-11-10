@@ -55,6 +55,25 @@ namespace regina {
  * @{
  */
 
+class NBitmask;
+
+/**
+ * Writes the given bitmask to the given output stream as a sequence of
+ * zeroes and ones.
+ *
+ * Since the length of the bitmask is not stored, the number of bits
+ * written might be greater than the length initially assigned to this
+ * bitmask (specifically, the length will be rounded up to the next "raw
+ * unit of storage").
+ *
+ * \ifacespython Not present.
+ *
+ * @param out the output stream to which to write.
+ * @param mask the bitmask to write.
+ * @return a reference to the given output stream.
+ */
+REGINA_API std::ostream& operator << (std::ostream& out, const NBitmask& mask);
+
 /**
  * A bitmask that can store arbitrarily many true-or-false bits.
  *
@@ -457,14 +476,15 @@ class REGINA_API NBitmask {
     friend std::ostream& operator << (std::ostream& out, const NBitmask& mask);
 };
 
+template <typename T>
+class NBitmask1;
+
 /**
  * Writes the given bitmask to the given output stream as a sequence of
  * zeroes and ones.
  *
  * Since the length of the bitmask is not stored, the number of bits
- * written might be greater than the length initially assigned to this
- * bitmask (specifically, the length will be rounded up to the next "raw
- * unit of storage").
+ * written will be 8 * sizeof(\a T).
  *
  * \ifacespython Not present.
  *
@@ -472,7 +492,12 @@ class REGINA_API NBitmask {
  * @param mask the bitmask to write.
  * @return a reference to the given output stream.
  */
-REGINA_API std::ostream& operator << (std::ostream& out, const NBitmask& mask);
+template <typename T>
+std::ostream& operator << (std::ostream& out, const NBitmask1<T>& mask) {
+    for (T bit = 1; bit; bit <<= 1)
+        out << ((mask.mask & bit) ? '1' : '0');
+    return out;
+}
 
 /**
  * A small but extremely fast bitmask class that can store up to
@@ -835,16 +860,19 @@ class NBitmask1 {
             return BitManipulator<T>::bits(mask) <= 1;
         }
 
-    friend std::ostream& operator << (std::ostream& out,
+    friend std::ostream& operator << <T>(std::ostream& out,
         const NBitmask1<T>& mask);
 };
+
+template <typename T, typename U>
+class NBitmask2;
 
 /**
  * Writes the given bitmask to the given output stream as a sequence of
  * zeroes and ones.
  *
  * Since the length of the bitmask is not stored, the number of bits
- * written will be 8 * sizeof(\a T).
+ * written will be 8 * sizeof(\a T) + 8 * sizeof(\a U).
  *
  * \ifacespython Not present.
  *
@@ -852,10 +880,12 @@ class NBitmask1 {
  * @param mask the bitmask to write.
  * @return a reference to the given output stream.
  */
-template <typename T>
-std::ostream& operator << (std::ostream& out, const NBitmask1<T>& mask) {
+template <typename T, typename U>
+std::ostream& operator << (std::ostream& out, const NBitmask2<T, U>& mask) {
     for (T bit = 1; bit; bit <<= 1)
-        out << ((mask.mask & bit) ? '1' : '0');
+        out << ((mask.low & bit) ? '1' : '0');
+    for (U bit = 1; bit; bit <<= 1)
+        out << ((mask.high & bit) ? '1' : '0');
     return out;
 }
 
@@ -1273,31 +1303,9 @@ class NBitmask2 {
                 BitManipulator<U>::bits(high)) <= 1;
         }
 
-    friend std::ostream& operator << (std::ostream& out,
+    friend std::ostream& operator << <T, U>(std::ostream& out,
         const NBitmask2<T, U>& mask);
 };
-
-/**
- * Writes the given bitmask to the given output stream as a sequence of
- * zeroes and ones.
- *
- * Since the length of the bitmask is not stored, the number of bits
- * written will be 8 * sizeof(\a T) + 8 * sizeof(\a U).
- *
- * \ifacespython Not present.
- *
- * @param out the output stream to which to write.
- * @param mask the bitmask to write.
- * @return a reference to the given output stream.
- */
-template <typename T, typename U>
-std::ostream& operator << (std::ostream& out, const NBitmask2<T, U>& mask) {
-    for (T bit = 1; bit; bit <<= 1)
-        out << ((mask.low & bit) ? '1' : '0');
-    for (U bit = 1; bit; bit <<= 1)
-        out << ((mask.high & bit) ? '1' : '0');
-    return out;
-}
 
 #ifndef __DOXYGEN
 /**

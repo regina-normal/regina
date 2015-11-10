@@ -206,88 +206,88 @@ private:
      * triangulation as reference.
      * This is the triangulation that it is initialized by.
      */
-    std::auto_ptr<NTriangulation> tri;
+    std::unique_ptr<NTriangulation> tri;
 
     /**
      * Pointer to the 0-th homology group in standard cellular coordinates,
      * or 0 if it has not yet been computed.
      */
-    std::auto_ptr<NMarkedAbelianGroup> mHomology0;
+    std::unique_ptr<NMarkedAbelianGroup> mHomology0;
     /**
      * Pointer to the 1st homology group in standard cellular coordinates,
      * or 0 if it has not yet been computed.
      */
-    std::auto_ptr<NMarkedAbelianGroup> mHomology1;
+    std::unique_ptr<NMarkedAbelianGroup> mHomology1;
     /**
      * Pointer to the 2nd homology group in standard cellular coordinates,
      * or 0 if it has not yet been computed.
      */
-    std::auto_ptr<NMarkedAbelianGroup> mHomology2;
+    std::unique_ptr<NMarkedAbelianGroup> mHomology2;
     /**
      * Pointer to the 3rd homology group in standard cellular coordinates,
      * or 0 if it has not yet been computed.
      */
-    std::auto_ptr<NMarkedAbelianGroup> mHomology3;
+    std::unique_ptr<NMarkedAbelianGroup> mHomology3;
 
     /**
      * Pointer to the 0-th boundary homology group in standard cellular
      * coordinates, or 0 if it has not yet been computed.
      */
-    std::auto_ptr<NMarkedAbelianGroup> bHomology0;
+    std::unique_ptr<NMarkedAbelianGroup> bHomology0;
     /**
      * Pointer to the 1st boundary homology group in standard cellular
      * coordinates, or 0 if it has not yet been computed.
      */
-    std::auto_ptr<NMarkedAbelianGroup> bHomology1;
+    std::unique_ptr<NMarkedAbelianGroup> bHomology1;
     /**
      * Pointer to the 2nd boundary homology group in standard cellular
      * coordinates, or 0 if it has not yet been computed.
      */
-    std::auto_ptr<NMarkedAbelianGroup> bHomology2;
+    std::unique_ptr<NMarkedAbelianGroup> bHomology2;
 
     /**
      * Pointer to the boundary inclusion on 0-th homology, standard
      * cellular coordinates, or 0 if it has not yet been computed.
      */
-    std::auto_ptr<NHomMarkedAbelianGroup> bmMap0;
+    std::unique_ptr<NHomMarkedAbelianGroup> bmMap0;
     /**
      * Pointer to the boundary inclusion on 1st homology, standard
      * cellular coordinates, or 0 if it has not yet been computed.
      */
-    std::auto_ptr<NHomMarkedAbelianGroup> bmMap1;
+    std::unique_ptr<NHomMarkedAbelianGroup> bmMap1;
     /**
      * Pointer to the boundary inclusion on 2nd homology, standard
      * cellular coordinates, or 0 if it has not yet been computed.
      */
-    std::auto_ptr<NHomMarkedAbelianGroup> bmMap2;
+    std::unique_ptr<NHomMarkedAbelianGroup> bmMap2;
 
     /**
      * Pointer to the 0-th homology group in dual cellular coordinates, or
      * 0 if it has not yet been computed.
      */
-    std::auto_ptr<NMarkedAbelianGroup> dmHomology0;
+    std::unique_ptr<NMarkedAbelianGroup> dmHomology0;
     /**
      * Pointer to the 1st homology group in dual cellular coordinates, or
      * 0 if it has not yet been computed.
      */
-    std::auto_ptr<NMarkedAbelianGroup> dmHomology1;
+    std::unique_ptr<NMarkedAbelianGroup> dmHomology1;
     /**
      * Pointer to the 2nd homology group in dual cellular coordinates, or
      * 0 if it has not yet been computed.
      */
-    std::auto_ptr<NMarkedAbelianGroup> dmHomology2;
+    std::unique_ptr<NMarkedAbelianGroup> dmHomology2;
     /**
      * Pointer to the 3rd homology group in dual cellular coordinates, or
      * 0 if it has not yet been computed.
      */
-    std::auto_ptr<NMarkedAbelianGroup> dmHomology3;
+    std::unique_ptr<NMarkedAbelianGroup> dmHomology3;
 
     /**
      * Pointer to the cellular approx of the identity H1(M) --> H1(M)
      * from dual to standard cellular coordinates, or 0 if it has not yet
      * been computed.
      */
-    std::auto_ptr<NHomMarkedAbelianGroup> dmTomMap1;
+    std::unique_ptr<NHomMarkedAbelianGroup> dmTomMap1;
 
     // below here and the public declaration go the internal bits of
     // data that are not publicly accessible...
@@ -331,49 +331,49 @@ private:
 
     /** 0th term in chain complex for cellular homology, using standard
         CW-complex struc */
-    std::auto_ptr<NMatrixInt> A0;
+    std::unique_ptr<NMatrixInt> A0;
     /** 1st term in chain complex for cellular homology, using standard
         CW-complex struc */
-    std::auto_ptr<NMatrixInt> A1;
+    std::unique_ptr<NMatrixInt> A1;
     /** 2nd term in chain complex for cellular homology, using standard
         CW-complex struc */
-    std::auto_ptr<NMatrixInt> A2;
+    std::unique_ptr<NMatrixInt> A2;
     /** 3rd term in chain complex for cellular homology, using standard
         CW-complex struc */
-    std::auto_ptr<NMatrixInt> A3;
+    std::unique_ptr<NMatrixInt> A3;
     /** 4th term in chain complex for cellular homology, using standard
         CW-complex struc */
-    std::auto_ptr<NMatrixInt> A4;
+    std::unique_ptr<NMatrixInt> A4;
 
     /** 0-th term in chain complex for dual cellular homology */
-    std::auto_ptr<NMatrixInt> B0_; // B0 is #defined in some system headers :/
+    std::unique_ptr<NMatrixInt> B0_; // B0 is #defined in some system headers :/
     /** 1st term in chain complex for dual cellular homology */
-    std::auto_ptr<NMatrixInt> B1;
+    std::unique_ptr<NMatrixInt> B1;
     /** 2nd term in chain complex for dual cellular homology */
-    std::auto_ptr<NMatrixInt> B2;
+    std::unique_ptr<NMatrixInt> B2;
     /** 3rd term in chain complex for dual cellular homology */
-    std::auto_ptr<NMatrixInt> B3;
+    std::unique_ptr<NMatrixInt> B3;
     /** 4th term in chain complex for dual cellular homology */
-    std::auto_ptr<NMatrixInt> B4;
+    std::unique_ptr<NMatrixInt> B4;
 
     /** 0th term in chain complex for boundary cellular homology */
-    std::auto_ptr<NMatrixInt> Bd0;
+    std::unique_ptr<NMatrixInt> Bd0;
     /** 1st term in chain complex for boundary cellular homology */
-    std::auto_ptr<NMatrixInt> Bd1;
+    std::unique_ptr<NMatrixInt> Bd1;
     /** 2nd term in chain complex for boundary cellular homology */
-    std::auto_ptr<NMatrixInt> Bd2;
+    std::unique_ptr<NMatrixInt> Bd2;
     /** 3rd term in chain complex for boundary cellular homology */
-    std::auto_ptr<NMatrixInt> Bd3;
+    std::unique_ptr<NMatrixInt> Bd3;
 
     /** Chain map from C_0 boundary to C_0 manifold, standard coords */
-    std::auto_ptr<NMatrixInt> B0Incl;
+    std::unique_ptr<NMatrixInt> B0Incl;
     /** Chain map from C_1 boundary to C_1 manifold, standard coords */
-    std::auto_ptr<NMatrixInt> B1Incl;
+    std::unique_ptr<NMatrixInt> B1Incl;
     /** Chain map from C_2 boundary to C_2 manifold, standard coords */
-    std::auto_ptr<NMatrixInt> B2Incl;
+    std::unique_ptr<NMatrixInt> B2Incl;
 
     /** Isomorphism from C_1 dual to C_1 standard */
-    std::auto_ptr<NMatrixInt> H1map;
+    std::unique_ptr<NMatrixInt> H1map;
 
     /** Call this routine to demand the indexing of the chain complexes. */
     void computeccIndexing();

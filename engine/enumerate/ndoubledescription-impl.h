@@ -32,7 +32,13 @@
 
 /* end stub */
 
-/* To be included from ndoubledescription.h. */
+/*! \file enumerate/ndoubledescription-impl.h
+ *  \brief Contains implementations of template functions from
+ *  ndoubledescription.h.
+ *
+ *  This file is automatically included from ndoubledescription.h; there
+ *  is no need for end users to include it explicitly.
+ */
 
 #ifndef __NDOUBLEDESCRIPTION_IMPL_H
 #ifndef __DOXYGEN

@@ -32,32 +32,42 @@
 
 /* end stub */
 
+/*! \file generic/isomorphism-impl.h
+ *  \brief Contains some of the implementation details for the
+ *  NGenericTriangulation class template.
+ *
+ *  This file is \e not included automatically by ngenerictriangulation.h.
+ *  However, typical end users should never need to include it, since
+ *  Regina's calculation engine provides full explicit instantiations
+ *  of NGenericTriangulation for \ref stddim "standard dimensions".
+ */
+
 #include "generic/ngenerictriangulation.h"
 
 namespace regina {
 
 template <int dim>
-inline std::auto_ptr<Isomorphism<dim>>
+inline std::unique_ptr<Isomorphism<dim>>
         NGenericTriangulation<dim>::isIsomorphicTo(
         const Triangulation<dim>& other) const {
     std::list<Isomorphism<dim>*> results;
     if (static_cast<const Triangulation<dim>&>(*this).
             findIsomorphisms(other, results, true, true))
-        return std::auto_ptr<Isomorphism<dim>>(results.front());
+        return std::unique_ptr<Isomorphism<dim>>(results.front());
     else
-        return std::auto_ptr<Isomorphism<dim>>(0);
+        return nullptr;
 }
 
 template <int dim>
-inline std::auto_ptr<Isomorphism<dim>>
+inline std::unique_ptr<Isomorphism<dim>>
         NGenericTriangulation<dim>::isContainedIn(
         const Triangulation<dim>& other) const {
     std::list<Isomorphism<dim>*> results;
     if (static_cast<const Triangulation<dim>&>(*this).
             findIsomorphisms(other, results, false, true))
-        return std::auto_ptr<Isomorphism<dim>>(results.front());
+        return std::unique_ptr<Isomorphism<dim>>(results.front());
     else
-        return std::auto_ptr<Isomorphism<dim>>(0);
+        return nullptr;
 }
 
 template <int dim>

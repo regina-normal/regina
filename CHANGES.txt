@@ -13,6 +13,7 @@ Version 4.97  [ (under development) ]
         - Now uses aspects of C++11, which your compiler will need to support.
         - Merged sources for the iPad version into the main source tree.
         - Updated the bundled copy of Normaliz to version 3.0.0 (28 Sep 2015).
+        - Switched from std::auto_ptr to std::unique_ptr throughout the API.
     ENGINE:
         All:
             - Removed ShareableObject from the class hierarchy.  All classes
@@ -69,6 +70,8 @@ Version 4.97  [ (under development) ]
             - New dimension-agnostic getFace<subdim>() and
               faceIndex<subdim>() template functions.
             - New dimension-agnostic function hasBoundaryFacets().
+            - Reconstruction from isomorphism signatures now allows
+              leading and/or trailing whitespace.
             - Routines getNumberOfSimplices(), getSimplices() and getSimplex()
               have been renamed to size(), simplices() and simplex()
               respectively.  The old names are deprecated but have been
@@ -119,6 +122,8 @@ Version 4.97  [ (under development) ]
               and getNumberOfBoundaryFacets() have been renamed to size(),
               simplices(), simplex() and countBoundaryFacets() respectively.
               The old names are retained but deprecated.
+        Class NContainer:
+            - New constructor that takes a packet label.
         Class NCyclotomic:
             - New class for exact arithmetic in cyclotomic fields.
         Struct NewFunction, NewFunction1:
@@ -290,6 +295,8 @@ Version 4.97  [ (under development) ]
               caching a nice tree decomposition of the face pairing graph.
             - New routines retriangulate() and simplifyExhaustive() for
               breadth-first searching through the Pachner graph.
+            - Reconstruction from isomorphism signatures now allows
+              leading and/or trailing whitespace.
             - Routines getNumberOfSimplices(), getSimplices() and getSimplex()
               have been renamed to size(), simplices() and simplex()
               respectively.  The old names are deprecated but have been

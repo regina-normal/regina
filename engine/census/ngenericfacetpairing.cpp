@@ -32,22 +32,16 @@
 
 /* end stub */
 
-#include "census/ngluingperms.h"
-#include "census/ngenericgluingperms-impl.h"
+#include "census/ngenericfacetpairing-impl.h"
+
+// Headers required for our template instantiations:
+#include "census/dim2edgepairing.h"
+#include "census/nfacepairing.h"
+#include "dim2/dim2triangulation.h"
 #include "triangulation/ntriangulation.h"
 
-namespace regina {
-
-// Instantiate all templates from the -impl.h file.
-template NGenericGluingPerms<3>::NGenericGluingPerms(
-        const NGenericGluingPerms<3>&);
-template NGenericGluingPerms<3>::NGenericGluingPerms(std::istream&);
-template NTriangulation* NGenericGluingPerms<3>::triangulate() const;
-template int NGenericGluingPerms<3>::gluingToIndex(
-        const NTetFace&, const NPerm4&) const;
-template int NGenericGluingPerms<3>::gluingToIndex(
-        unsigned, unsigned, const NPerm4&) const;
-template void NGenericGluingPerms<3>::dumpData(std::ostream&) const;
-
-} // namespace regina
+// Instantiate templates for standard dimensions.
+// The header has matching "extern template class REGINA_API" declarations.
+template class regina::NGenericFacetPairing<2>;
+template class regina::NGenericFacetPairing<3>;
 

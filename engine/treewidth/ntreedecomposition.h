@@ -648,6 +648,12 @@ class REGINA_API NTreeDecomposition :
          * The nodes of the graph will be numbered in the same way as
          * the top-dimensional simplices of the given triangulation.
          *
+         * \headers This routine is implemented in a separate header
+         * (ntreedecomposition-impl.h), which is not included automatically
+         * by this file.  However, typical end users should never need this
+         * extra header, since Regina's calculation engine already includes
+         * explicit instantiations for \ref stddim "standard dimensions".
+         *
          * @param triangulation the triangulation whose facet pairing
          * graph we are working with.
          * @param alg the algorithm that should be used to compute the
@@ -664,6 +670,12 @@ class REGINA_API NTreeDecomposition :
          *
          * The nodes of the graph will be numbered in the same way as
          * the top-dimensional simplices of the given triangulation.
+         *
+         * \headers This routine is implemented in a separate header
+         * (ntreedecomposition-impl.h), which is not included automatically
+         * by this file.  However, typical end users should never need this
+         * extra header, since Regina's calculation engine already includes
+         * explicit instantiations for \ref stddim "standard dimensions".
          *
          * @param pairing the facet pairing graph that we are working with.
          * @param alg the algorithm that should be used to compute the
@@ -684,6 +696,13 @@ class REGINA_API NTreeDecomposition :
          * However, the contents of this matrix will be interpreted as
          * booleans: an arc runs from node \a i to node \a j if and
          * only if \a graph[i][j] is \c true when interpreted as a boolean.
+         *
+         * \headers This routine is implemented in a separate header
+         * (ntreedecomposition-impl.h), which is not included automatically
+         * by this file.  Regina's calculation engine already includes
+         * explicit instantiations for types \c bool and \c int, but for
+         * other types you will need to include ntreedecomposition-impl.h
+         * along with this header.
          *
          * \ifacespython The adjacency matrix should be given as a
          * list of lists.  There is no need to use the same data type \a T
@@ -895,6 +914,23 @@ class REGINA_API NTreeDecomposition :
 };
 
 /*@}*/
+
+// Help the compiler by noting which explicit instantiations we offer.
+
+extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
+    const NGenericTriangulation<2>&, TreeDecompositionAlg);
+extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
+    const NGenericTriangulation<3>&, TreeDecompositionAlg);
+
+extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
+    const NGenericFacetPairing<2>&, TreeDecompositionAlg);
+extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
+    const NGenericFacetPairing<3>&, TreeDecompositionAlg);
+
+extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
+    unsigned, bool const**, TreeDecompositionAlg);
+extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
+    unsigned, int const**, TreeDecompositionAlg);
 
 // Inline functions for NTreeBag
 

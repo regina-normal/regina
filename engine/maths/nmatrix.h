@@ -565,9 +565,9 @@ class NMatrixRing : public NMatrix<T> {
          * @return a newly allocated matrix representing
          * <tt>this * other</tt>.
          */
-        std::auto_ptr<NMatrixRing<T> > operator * (const NMatrixRing<T>& other)
+        std::unique_ptr<NMatrixRing<T>> operator * (const NMatrixRing<T>& other)
                 const {
-            std::auto_ptr<NMatrixRing<T> > ans(new NMatrixRing<T>(
+            std::unique_ptr<NMatrixRing<T> > ans(new NMatrixRing<T>(
                 this->nRows, other.nCols));
 
             unsigned long row, col, k;
@@ -602,9 +602,9 @@ class NMatrixRing : public NMatrix<T> {
          * <tt>this * other</tt>.
          */
         template <class MatrixClass>
-        std::auto_ptr<MatrixClass> multiplyAs(const NMatrixRing<T>& other)
+        std::unique_ptr<MatrixClass> multiplyAs(const NMatrixRing<T>& other)
                 const {
-            std::auto_ptr<MatrixClass> ans(new MatrixClass(
+            std::unique_ptr<MatrixClass> ans(new MatrixClass(
                 this->nRows, other.nCols));
 
             unsigned long row, col, k;
