@@ -32,7 +32,13 @@
 
 /* end stub */
 
-/* Template definitions for facetpairing.h. */
+/*! \file generic/facetpairing-impl.h
+ *  \brief Contains some of the implementation details for the generic
+ *  FacetPairing class template.
+ *
+ *  This file is automatically included from facetpairing.h; there is
+ *  no need for end users to include it explicitly.
+ */
 
 #ifndef __FACETPAIRING_IMPL_H
 #ifndef __DOXYGEN

@@ -50,6 +50,7 @@ ALIASES = \
     "tidyurgent=<i><b>Tidy (urgent):</b></i>" \
     "tidy=<i>Tidy:</i>" \
     "tidylong=<i>Tidy (long-term):</i>" \
+    "headers=\par Headers:\n" \
     "apinotfinal=\warning The API for this class has not yet been finalised.  This means that the class interface may change in new versions of Regina, without maintaining backward compatibility.  If you use this class directly in your own code, please watch the detailed changelogs upon new releases to see if you need to make changes to your code."
 
 # Warning and progress related options:
@@ -69,7 +70,7 @@ EXCLUDE = \
     @PROJECT_SOURCE_DIR@/engine/utilities/nmatrix2.h \
     @PROJECT_SOURCE_DIR@/engine/utilities/nmpi.h \
     @PROJECT_SOURCE_DIR@/engine/utilities/nrational.h \
-    @PROJECT_SOURCE_DIR@/engine/enumerate/normaliz \
+    @PROJECT_SOURCE_DIR@/engine/libnormaliz \
     @PROJECT_SOURCE_DIR@/engine/foreign/casson.h \
     @PROJECT_SOURCE_DIR@/engine/snappea/kernel
 EXCLUDE_PATTERNS = *-impl.h

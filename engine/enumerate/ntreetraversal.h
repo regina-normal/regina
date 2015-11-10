@@ -156,12 +156,18 @@ typedef Triangulation<3> NTriangulation;
  * each new integer to zero.  The classes NInteger and NNativeInteger,
  * for instance, have this property.
  *
+ * \headers Parts of this template class are implemented in a separate header
+ * (ntreetraversal-impl.h), which is not included automatically by this file.
+ * Most end users should not need this extra header, since Regina's calculation
+ * engine already includes explicit instantiations for common combinations of
+ * template arguments.
+ *
  * \apinotfinal
  *
  * \ifacespython Not present.
  */
 template <class LPConstraint, typename BanConstraint, typename Integer>
-class REGINA_API NTreeTraversal : public BanConstraint {
+class NTreeTraversal : public BanConstraint {
     protected:
         // Global information about the search:
         const LPInitialTableaux<LPConstraint> origTableaux_;
@@ -667,6 +673,12 @@ class REGINA_API NTreeTraversal : public BanConstraint {
  * then run the conversion procedure NNormalSurfaceList::quadToStandard()
  * or NNormalSurfaceList::quadOctToStandardAN().
  *
+ * \headers Parts of this template class are implemented in a separate header
+ * (ntreetraversal-impl.h), which is not included automatically by this file.
+ * Most end users should not need this extra header, since Regina's calculation
+ * engine already includes explicit instantiations for common combinations of
+ * template arguments.
+ *
  * \apinotfinal
  *
  * \ifacespython Not present.
@@ -674,7 +686,7 @@ class REGINA_API NTreeTraversal : public BanConstraint {
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
           typename Integer = NInteger>
-class REGINA_API NTreeEnumeration :
+class NTreeEnumeration :
         public NTreeTraversal<LPConstraint, BanConstraint, Integer> {
     public:
         using NTreeTraversal<LPConstraint, BanConstraint, Integer>::dumpTypes;
@@ -953,6 +965,12 @@ class REGINA_API NTreeEnumeration :
  * each new integer to zero.  The classes NInteger and NNativeInteger,
  * for instance, have this property.
  *
+ * \headers Parts of this template class are implemented in a separate header
+ * (ntreetraversal-impl.h), which is not included automatically by this file.
+ * Most end users should not need this extra header, since Regina's calculation
+ * engine already includes explicit instantiations for common combinations of
+ * template arguments.
+ *
  * \apinotfinal
  *
  * \ifacespython Not present.
@@ -960,7 +978,7 @@ class REGINA_API NTreeEnumeration :
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
           typename Integer = NInteger>
-class REGINA_API NTautEnumeration :
+class NTautEnumeration :
         public NTreeTraversal<LPConstraint, BanConstraint, Integer> {
     public:
         using NTreeTraversal<LPConstraint, BanConstraint, Integer>::dumpTypes;
@@ -1262,6 +1280,12 @@ class REGINA_API NTautEnumeration :
  * each new integer to zero.  The classes NInteger and NNativeInteger,
  * for instance, have this property.
  *
+ * \headers Parts of this template class are implemented in a separate header
+ * (ntreetraversal-impl.h), which is not included automatically by this file.
+ * Most end users should not need this extra header, since Regina's calculation
+ * engine already includes explicit instantiations for common combinations of
+ * template arguments.
+ *
  * \apinotfinal
  *
  * \ifacespython Not present.
@@ -1269,7 +1293,7 @@ class REGINA_API NTautEnumeration :
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
           typename Integer = NInteger>
-class REGINA_API NTreeSingleSoln :
+class NTreeSingleSoln :
         public NTreeTraversal<LPConstraint, BanConstraint, Integer> {
     public:
         using NTreeTraversal<LPConstraint, BanConstraint, Integer>::dumpTypes;
@@ -1382,6 +1406,46 @@ class REGINA_API NTreeSingleSoln :
          */
         bool cancelled();
 };
+
+/*@}*/
+
+// Help the compiler by noting which explicit instantiations we offer.
+extern template class REGINA_API NTreeTraversal<LPConstraintNone, BanNone,
+    NInteger>;
+extern template class REGINA_API NTreeTraversal<LPConstraintNone, BanNone,
+    NNativeLong>;
+extern template class REGINA_API NTreeEnumeration<LPConstraintNone, BanNone,
+    NInteger>;
+extern template class REGINA_API NTreeEnumeration<LPConstraintNone, BanNone,
+    NNativeLong>;
+extern template class REGINA_API NTautEnumeration<LPConstraintNone, BanNone,
+    NInteger>;
+extern template class REGINA_API NTautEnumeration<LPConstraintNone, BanNone,
+    NNativeLong>;
+
+extern template class REGINA_API NTreeTraversal<LPConstraintEuler, BanNone,
+    NInteger>;
+extern template class REGINA_API NTreeTraversal<LPConstraintEuler, BanNone,
+    NNativeLong>;
+extern template class REGINA_API NTreeSingleSoln<LPConstraintEuler, BanNone,
+    NInteger>;
+extern template class REGINA_API NTreeSingleSoln<LPConstraintEuler, BanNone,
+    NNativeLong>;
+
+#ifdef INT128_AVAILABLE
+extern template class REGINA_API NTreeTraversal<LPConstraintNone, BanNone,
+    NNativeInteger<16> >;
+extern template class REGINA_API NTreeEnumeration<LPConstraintNone, BanNone,
+    NNativeInteger<16> >;
+extern template class REGINA_API NTautEnumeration<LPConstraintNone, BanNone,
+    NNativeInteger<16> >;
+
+extern template class REGINA_API NTreeTraversal<LPConstraintEuler, BanNone,
+    NNativeInteger<16> >;
+extern template class REGINA_API NTreeSingleSoln<LPConstraintEuler, BanNone,
+    NNativeInteger<16> >;
+#endif
+
 
 // Inline functions
 

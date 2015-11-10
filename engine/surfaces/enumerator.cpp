@@ -32,16 +32,12 @@
 
 /* end stub */
 
-#include "regina-config.h" // For EXCLUDE_NORMALIZ.
-
 #include <iterator>
 #include <thread>
 #include "enumerate/ndoubledescription.h"
 #include "enumerate/nhilbertcd.h"
 #include "enumerate/nhilbertdual.h"
-#ifndef EXCLUDE_NORMALIZ
 #include "enumerate/nhilbertprimal.h"
-#endif
 #include "enumerate/ntreetraversal.h"
 #include "maths/matrixops.h"
 #include "maths/nmatrixint.h"
@@ -75,7 +71,7 @@ NNormalSurfaceList* NNormalSurfaceList::enumerate(
 }
 
 template <typename Coords>
-void NNormalSurfaceList::Enumerator::operator() (Coords) {
+void NNormalSurfaceList::Enumerator::operator() () {
     // Clean up the "type of list" flag.
     list_->which_ &= (
         NS_EMBEDDED_ONLY | NS_IMMERSED_SINGULAR | NS_VERTEX | NS_FUNDAMENTAL);
@@ -469,24 +465,6 @@ void NNormalSurfaceList::Enumerator::fillFundamentalCD() {
     delete eqns;
 }
 
-#ifdef EXCLUDE_NORMALIZ
-
-template <typename Coords>
-void NNormalSurfaceList::Enumerator::fillFundamentalPrimal() {
-    // This build of Regina does not include normaliz.
-    // Fall back to some other option.
-    fillFundamentalDual<Coords>();
-}
-
-template <typename Coords>
-void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
-    // This build of Regina does not include normaliz.
-    // Fall back to some other option.
-    fillFundamentalDual<Coords>();
-}
-
-#else
-
 template <typename Coords>
 void NNormalSurfaceList::Enumerator::fillFundamentalPrimal() {
     // We will not set algorithm_ until after the extremal ray
@@ -557,11 +535,10 @@ void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
     }
     delete eqns;
 
-    libnormaliz::Cone<mpz_class> cone(input,
-        libnormaliz::Type::equations);
-    libnormaliz::ConeProperties wanted(
-        libnormaliz::ConeProperty::HilbertBasis);
+    libnormaliz::Cone<mpz_class> cone(libnormaliz::Type::equations, input);
+    libnormaliz::ConeProperties wanted(libnormaliz::ConeProperty::HilbertBasis);
 
+    cone.deactivateChangeOfPrecision();
     cone.compute(wanted);
 
     if (! cone.isComputed(libnormaliz::ConeProperty::HilbertBasis)) {
@@ -630,8 +607,6 @@ void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
         delete constraints;
     }
 }
-
-#endif // EXCLUDE_NORMALIZ
 
 } // namespace regina
 

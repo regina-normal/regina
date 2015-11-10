@@ -41,10 +41,9 @@
 #define __NTREECONSTRAINT_H
 #endif
 
-#include "regina-config.h" // For EXCLUDE_SNAPPEA
-#include "enumerate/ntreelp.h"
 #include "maths/ninteger.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalcoords.h"
+#include "surfaces/nnormalsurface.h"
 
 namespace regina {
 
@@ -54,8 +53,12 @@ class NNormalSurface;
 template <int> class Triangulation;
 typedef Triangulation<3> NTriangulation;
 
-template <typename Integer>
-class LPMatrix;
+template <typename Integer> class LPMatrix;
+template <class LPConstraint> class LPCol;
+template <class LPConstraint> class LPInitialTableaux;
+template <class LPConstraint, typename Integer> class LPData;
+
+class LPConstraintNone;
 
 /**
  * \weakgroup enumerate
@@ -233,8 +236,8 @@ class LPConstraintBase {
          * column for the corresponding new variable.
          *
          * For each subclass \a S of LPConstraintBase, the array \a col
-         * must be an array of objects of type LPInitialTableaux<S>::Col.
-         * The class LPInitialTableaux<S>::Col is itself a larger subclass of
+         * must be an array of objects of type LPCol<S>.
+         * The class LPCol<S> is itself a larger subclass of
          * the Coefficients class.  This exact type must be used because the
          * compiler must know how large each column object is in
          * order to correct access each element of the given array.
@@ -271,7 +274,7 @@ class LPConstraintBase {
          * constructed, or \c false if not (in which case they will be
          * replaced with the zero functions instead).
          */
-        static bool addRows(LPInitialTableaux<LPConstraintBase>::Col* col,
+        static bool addRows(LPCol<LPConstraintBase>* col,
             const int* columnPerm, const NTriangulation* tri);
 
         /**
@@ -409,7 +412,7 @@ class LPConstraintNone : public LPConstraintSubspace {
             Integer innerProductOct(const LPMatrix<Integer>&, unsigned) const;
         };
 
-        static bool addRows(LPInitialTableaux<regina::LPConstraintNone>::Col*,
+        static bool addRows(LPCol<regina::LPConstraintNone>*,
             const int*, const NTriangulation*);
         template<typename Integer>
         static void constrain(
@@ -474,7 +477,7 @@ class LPConstraintEuler : public LPConstraintBase {
         };
 
         static bool addRows(
-            LPInitialTableaux<regina::LPConstraintEuler>::Col* col,
+            LPCol<regina::LPConstraintEuler>* col,
             const int* columnPerm, const NTriangulation* tri);
         template<typename Integer>
         static void constrain(
@@ -485,7 +488,6 @@ class LPConstraintEuler : public LPConstraintBase {
         static bool supported(NormalCoords coords);
 };
 
-#ifndef EXCLUDE_SNAPPEA
 /**
  * A class that constraints the tableaux of normal surface matching equations
  * to ensure that normal surfaces in an ideal triangulation are compact
@@ -548,7 +550,7 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
         };
 
         static bool addRows(
-            LPInitialTableaux<regina::LPConstraintNonSpun>::Col* col,
+            LPCol<regina::LPConstraintNonSpun>* col,
             const int* columnPerm, const NTriangulation* tri);
         template <typename Integer>
         static void constrain(
@@ -558,7 +560,6 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
         static bool verify(const NAngleStructure*);
         static bool supported(NormalCoords coords);
 };
-#endif // EXCLUDE_SNAPPEA
 
 /**
  * A base class for additional banning and marking constraints that we
@@ -836,6 +837,12 @@ class BanTorusBoundary : public BanConstraintBase {
         static bool supported(NormalCoords coords);
 };
 
+}
+
+#include "enumerate/ntreelp.h"
+
+namespace regina {
+
 // Inline functions
 
 inline LPConstraintNone::Coefficients::Coefficients() {
@@ -859,7 +866,7 @@ inline Integer LPConstraintNone::Coefficients::innerProductOct(
 }
 
 inline bool LPConstraintNone::addRows(
-        LPInitialTableaux<regina::LPConstraintNone>::Col*,
+        LPCol<regina::LPConstraintNone>*,
         const int*, const NTriangulation*) {
     return true;
 }
@@ -935,7 +942,6 @@ inline bool LPConstraintEuler::supported(NormalCoords coords) {
     return (coords == NS_STANDARD || coords == NS_AN_STANDARD);
 }
 
-#ifndef EXCLUDE_SNAPPEA
 inline LPConstraintNonSpun::Coefficients::Coefficients() :
         meridian(0), longitude(0) {
 }
@@ -986,7 +992,6 @@ inline bool LPConstraintNonSpun::verify(const NAngleStructure*) {
 inline bool LPConstraintNonSpun::supported(NormalCoords coords) {
     return (coords == NS_QUAD);
 }
-#endif // EXCLUDE_SNAPPEA
 
 inline BanConstraintBase::~BanConstraintBase() {
     delete[] banned_;

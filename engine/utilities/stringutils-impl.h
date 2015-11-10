@@ -32,11 +32,22 @@
 
 /* end stub */
 
-/* To be included from stringutils.h. */
+/*! \file utilities/stringutils-impl.h
+ *  \brief Contains implementations of template functions from stringutils.h.
+ *
+ *  This file is automatically included from stringutils.h; there
+ *  is no need for end users to include it explicitly.
+ */
+
+// Make sure stringutils.h is included first.
+#include "utilities/stringutils.h"
+
+#ifndef __STRINGUTILS_IMPL_H
+#ifndef __DOXYGEN
+#define __STRINGUTILS_IMPL_H
+#endif
 
 #include <cctype>
-#include <string>
-#include "regina-core.h"
 #include "maths/ninteger.h"
 
 namespace regina {
@@ -81,3 +92,4 @@ unsigned basicTokenise(OutputIterator results, const std::string& str) {
 
 } // namespace regina
 
+#endif

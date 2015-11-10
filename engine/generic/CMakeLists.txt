@@ -16,6 +16,7 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     canonical-impl.h
+    component.h
     dimtraits.h
     facetpairing.h
     facetpairing-impl.h

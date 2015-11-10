@@ -68,15 +68,21 @@ template <int> class Triangulation;
  * call the corresponding member functions from the corresponding
  * triangulation classes (NTriangulation and so on).
  *
+ * \pre The template argument \a dim is one of Regina's
+ * \ref stddim "standard dimensions".
+ *
+ * \headers Parts of this template class are implemented in separate headers,
+ * which are not included automatically by this file.  However, typical
+ * end users should never need these extra headers, since Regina's
+ * calculation engine already includes explicit instantiations
+ * for \ref stddim "standard dimensions".
+ *
  * \apinotfinal
  *
  * \ifacespython Not present.
- *
- * \pre The template argument \a dim must be one of the dimensions that
- * Regina supports.
  */
 template <int dim>
-class REGINA_API NGenericTriangulation {
+class NGenericTriangulation {
     public:
         /**
          * \name Isomorphism Testing
@@ -105,7 +111,7 @@ class REGINA_API NGenericTriangulation {
          * If the triangulations are isomorphic, then this routine returns
          * one such boundary complete isomorphism (i.e., one such relabelling).
          * The isomorphism will be newly constructed, and to assist with
-         * memory management, it will be returned as a std::auto_ptr.
+         * memory management, it will be returned as a std::unique_ptr.
          * Thus, to test whether an isomorphism exists without having to
          * explicitly manage with the isomorphism itself, you can just call
          * <tt>if (isIsomorphicTo(other).get())</tt>, in which case the newly
@@ -129,7 +135,7 @@ class REGINA_API NGenericTriangulation {
          * @return details of the isomorphism if the two triangulations
          * are combinatorially isomorphic, or a null pointer otherwise.
          */
-        std::auto_ptr<Isomorphism<dim>> isIsomorphicTo(
+        std::unique_ptr<Isomorphism<dim>> isIsomorphicTo(
             const Triangulation<dim>& other) const;
 
         /**
@@ -150,7 +156,7 @@ class REGINA_API NGenericTriangulation {
          * If a boundary incomplete isomorphism is found, the details of
          * this isomorphism are returned.  The isomorphism is newly
          * constructed, and so to assist with memory management is
-         * returned as a std::auto_ptr.  Thus, to test whether an
+         * returned as a std::unique_ptr.  Thus, to test whether an
          * isomorphism exists without having to explicitly deal with the
          * isomorphism itself, you can call
          * <tt>if (isContainedIn(other).get())</tt> and the newly
@@ -166,7 +172,7 @@ class REGINA_API NGenericTriangulation {
          * @return details of the isomorphism if such a copy is found,
          * or a null pointer otherwise.
          */
-        std::auto_ptr<Isomorphism<dim>> isContainedIn(
+        std::unique_ptr<Isomorphism<dim>> isContainedIn(
             const Triangulation<dim>& other) const;
 
         /**
@@ -268,7 +274,7 @@ class REGINA_API NGenericTriangulation {
  * \pre \a subdim is between 0 and \a dim-1 inclusive.
  */
 template <int dim, int subdim>
-class REGINA_API DegreeLessThan {
+class DegreeLessThan {
     private:
         const Triangulation<dim>& tri_;
             /**< The triangulation with which we are working. */
@@ -318,7 +324,7 @@ class REGINA_API DegreeLessThan {
  * \pre \a subdim is between 0 and \a dim-1 inclusive.
  */
 template <int dim, int subdim>
-class REGINA_API DegreeGreaterThan {
+class DegreeGreaterThan {
     private:
         const Triangulation<dim>& tri_;
             /**< The triangulation with which we are working. */
@@ -352,6 +358,10 @@ class REGINA_API DegreeGreaterThan {
 };
 
 /*@}*/
+
+// Help the compiler by noting which explicit instantiations we offer.
+extern template class REGINA_API NGenericTriangulation<2>;
+extern template class REGINA_API NGenericTriangulation<3>;
 
 // Inline functions:
 

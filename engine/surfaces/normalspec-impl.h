@@ -32,14 +32,28 @@
 
 /* end stub */
 
-#include "regina-core.h"
+/*! \file utilities/normalspec-impl.h
+ *  \brief Contains implementations of template classes from
+ *  nnormalsurfacelist.h.
+ *
+ *  This file is automatically included from nnormalsurfacelist.h; there
+ *  is no need for end users to include it explicitly.
+ */
+
+// Make sure nnormalsurfacelist.h is included first.
 #include "surfaces/nnormalsurfacelist.h"
-#include "surfaces/nsstandard.h"
-#include "surfaces/nsquad.h"
-#include "surfaces/nsanstandard.h"
-#include "surfaces/nsquadoct.h"
+
+#ifndef __NORMALSPEC_IMPL_H
+#ifndef __DOXYGEN
+#define __NORMALSPEC_IMPL_H
+#endif
 
 namespace regina {
+
+class NNormalSurfaceVectorStandard;
+class NNormalSurfaceVectorQuad;
+class NNormalSurfaceVectorANStandard;
+class NNormalSurfaceVectorQuadOct;
 
 /**
  * Constants, typedefs and operations for working with normal (as
@@ -209,3 +223,4 @@ struct REGINA_API NNormalSurfaceList::AlmostNormalSpec {
 
 } // namespace regina
 
+#endif

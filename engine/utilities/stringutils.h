@@ -185,8 +185,7 @@ REGINA_API bool valueOf(const std::string& str, unsigned long& dest);
  * otherwise.
  */
 template <bool supportInfinity>
-REGINA_API bool valueOf(const std::string& str,
-    NIntegerBase<supportInfinity>& dest);
+bool valueOf(const std::string& str, NIntegerBase<supportInfinity>& dest);
 /**
  * Converts the entire given string to a double precision real number and
  * reports whether this conversion was successful.
@@ -275,7 +274,7 @@ REGINA_API bool valueOf(const std::string& str, NBoolSet& dest);
  * @return the number of tokens found.
  */
 template <class OutputIterator>
-REGINA_API unsigned basicTokenise(OutputIterator results, const std::string& str);
+unsigned basicTokenise(OutputIterator results, const std::string& str);
 
 /**
  * Returns a token derived from the given string.

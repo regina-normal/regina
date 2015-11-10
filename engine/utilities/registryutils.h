@@ -44,6 +44,7 @@
 
 #include <cstddef>
 #include <type_traits>
+#include <utility>
 
 namespace regina {
 
@@ -187,7 +188,7 @@ struct NewFunction : public Returns<Base*> {
      * @return a new object of the subclass Info::Class.
      */
     template <typename Info, typename... Args>
-    inline Base* operator() (Info, Args&&... args) const {
+    inline Base* operator() (Args&&... args) const {
         return new typename Info::Class(std::forward<Args>(args)...);
     }
 };

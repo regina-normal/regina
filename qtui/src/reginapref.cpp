@@ -36,9 +36,7 @@
 
 #include "file/nfileinfo.h"
 #include "file/nglobaldirs.h"
-#ifndef EXCLUDE_SNAPPEA
 #include "snappea/nsnappeatriangulation.h"
-#endif
 
 #include "codecchooser.h"
 #include "coordinatechooser.h"
@@ -182,10 +180,8 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     }
     pythonPrefs->updateActiveCount();
 
-#ifndef EXCLUDE_SNAPPEA
     toolsPrefs->cbSnapPeaMessages->setChecked(
         regina::NSnapPeaTriangulation::kernelMessagesEnabled());
-#endif
     if (prefSet.pdfExternalViewer.isEmpty()) {
         toolsPrefs->cbDefaultPDFViewer->setChecked(true);
         toolsPrefs->editPDFViewer->setEnabled(false);
@@ -197,7 +193,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     }
     toolsPrefs->editPDFViewer->setText(prefSet.pdfExternalViewer);
     toolsPrefs->editGAPExec->setText(prefSet.triGAPExec);
-    toolsPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
 
     // Finish off.
     connect(generalPrefs->cbSupportOriented, SIGNAL(stateChanged(int)),
@@ -292,10 +287,8 @@ void ReginaPreferences::slotApply() {
             dynamic_cast<ReginaFilePrefItem*>(item)->getData());
     }
 
-#ifndef EXCLUDE_SNAPPEA
     regina::NSnapPeaTriangulation::enableKernelMessages(
         toolsPrefs->cbSnapPeaMessages->isChecked());
-#endif
     // Don't be too fussy about what they put in the PDF viewer field, since
     // Regina tries hard to find a suitable PDF viewer regardless.
     if (toolsPrefs->cbDefaultPDFViewer->isChecked())
@@ -359,140 +352,6 @@ void ReginaPreferences::slotApply() {
                 .arg(pathList.join("\n")));
         }
         prefSet.triGAPExec = strVal;
-    }
-
-    strVal = toolsPrefs->editGraphvizExec->text().trimmed();
-    if (strVal.isEmpty()) {
-        // No no no.
-        // Disallow the change.
-        toolsPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
-    } else if (strVal == "graphviz" || strVal.endsWith("/graphviz")) {
-        // The user is trying to use "graphviz" as the executable name.
-        // Disallow the change.
-        ReginaSupport::info(this,
-            tr("Graphviz is the name of a software suite, "
-            "not the executable."),
-            tr("<qt>Graphviz supplies several different executables "
-            "for drawing graphs in several "
-            "different ways.  The recommended executable for use with "
-            "Regina is <i>neato</i>.  "
-            "See <i>http://www.graphviz.org/</i> for further details.<p>"
-            "I have reset this back to its old value.</qt>"));
-        toolsPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
-    } else {
-        // Time to check it out.
-        QString gvFullExec;
-        GraphvizStatus gvStatus =
-            GraphvizStatus::status(strVal, gvFullExec, true);
-
-        if (gvStatus == GraphvizStatus::version1 ||
-                gvStatus == GraphvizStatus::version2) {
-            // Looking fine.
-            // Allow the change, and make the path absolute.
-            prefSet.triGraphvizExec = gvFullExec;
-            toolsPrefs->editGraphvizExec->setText(gvFullExec);
-        } else if (strVal == ReginaPrefSet::defaultGraphvizExec &&
-                gvStatus != GraphvizStatus::version1NotDot) {
-            // Since we have stayed with the default, allow it with almost
-            // no checks -- Graphviz might not even be installed.  However,
-            // we still warn users if it's likely to give _wrong_ answers
-            // (as in the case version1NotDot).
-            //
-            // Do not make the path absolute, since we want it to stay
-            // looking like the default.
-            prefSet.triGraphvizExec = strVal;
-        } else {
-            // We have a problem.
-            // We will need to ask the user for confirmation before
-            // making the change.
-            // Treat the individual error types as appropriate.
-            QMessageBox box(this);
-            box.setWindowTitle(tr("Sorry"));
-            box.setIcon(QMessageBox::Information);
-            box.setStandardButtons(QMessageBox::Save |
-                QMessageBox::Discard | QMessageBox::RestoreDefaults);
-            box.setDefaultButton(QMessageBox::Save);
-            box.setInformativeText(
-                tr("A misconfigured Graphviz is not really "
-                "a problem.  It just means that Regina cannot "
-                "display the face pairing graphs of triangulations.<p>"
-                "Are you sure you wish to save your new Graphviz "
-                "setting?"));
-
-            if (gvStatus == GraphvizStatus::notFound) {
-                box.setText(
-                    tr("<qt>I could not find the Graphviz executable <i>%1</i> "
-                    "on the search path.</qt>").arg(strVal.toHtmlEscaped()));
-                box.setDetailedText(
-                    tr("The following directories are in the search path:\n%1")
-                    .arg(pathList.join("\n")));
-            } else if (gvStatus == GraphvizStatus::notExist) {
-                box.setText(
-                    tr("<qt>The Graphviz executable <i>%1</i> "
-                        "does not exist.</qt>").arg(strVal.toHtmlEscaped()));
-            } else if (gvStatus == GraphvizStatus::notExecutable) {
-                box.setText(
-                    tr("<qt>The Graphviz executable <i>%1</i> "
-                        "is not an executable program.</qt>")
-                        .arg(strVal.toHtmlEscaped()));
-            } else if (gvStatus == GraphvizStatus::notStartable) {
-                box.setText(
-                    tr("<qt>The Graphviz executable <i>%1</i> "
-                    "cannot be started.</qt>").arg(strVal.toHtmlEscaped()));
-            } else if (gvStatus == GraphvizStatus::unsupported) {
-                box.setText(
-                    tr("I cannot determine which "
-                    "version of Graphviz you are running."));
-                box.setInformativeText(
-                    tr("<qt>This is a bad sign: your Graphviz version might "
-                    "be too old (version 0.x), or the program <i>%1</i> might "
-                    "not be from Graphviz at all.<p>"
-                    "Please double-check this "
-                    "setting.  This should be a Graphviz graph drawing "
-                    "program, such as <i>neato</i> or <i>dot</i> (see "
-                    "<i>http://www.graphviz.org/</i>).<p>"
-                    "If you believe this message is in error, "
-                    "please notify the Regina authors at <i>%2</i>.<p>"
-                    "Are you sure you wish to save your new Graphviz "
-                    "setting?</qt>").
-                    arg(strVal.toHtmlEscaped()).arg(PACKAGE_BUGREPORT));
-            } else if (gvStatus == GraphvizStatus::version1NotDot) {
-                box.setText(
-                    tr("You appear to be running "
-                    "a very old version of Graphviz (version 1.x)."));
-                box.setInformativeText(
-                    tr("<qt>Many tools in older versions of Graphviz "
-                    "cannot handle graphs with multiple edges.<p>"
-                    "It is <b>highly recommended</b> that you change this "
-                    "setting to <i>dot</i>, which handles multiple edges "
-                    "correctly even in this old version.<p>"
-                    "Alternatively, you could upgrade to a more recent "
-                    "version of Graphviz (see "
-                    "<i>http://www.graphviz.org/</i>).<p>"
-                    "Are you sure you wish to save your new Graphviz "
-                    "setting?</qt>"));
-            } else {
-                box.setText(tr(
-                    "I could not determine the status of your Graphviz "
-                    "installation."));
-                box.setInformativeText(
-                    tr("<qt>This is very unusual: the authors would be "
-                    "grateful if you could file a bug report at "
-                    "<i>%1</i>.<p>"
-                    "Are you sure you wish to save your new Graphviz "
-                    "setting?</qt>").arg(PACKAGE_BUGREPORT));
-            }
-            
-            int ret = box.exec();
-            if (ret == QMessageBox::Save)
-                prefSet.triGraphvizExec = strVal;
-            else if (ret == QMessageBox::RestoreDefaults) {
-                toolsPrefs->editGraphvizExec->setText(
-                    ReginaPrefSet::defaultGraphvizExec);
-                prefSet.triGraphvizExec = ReginaPrefSet::defaultGraphvizExec;
-            } else
-                toolsPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
-        }
     }
 
     // Save these preferences to the global configuration.
@@ -670,30 +529,6 @@ ReginaPrefTools::ReginaPrefTools(QWidget* parent) : QWidget(parent) {
         arg(ReginaPrefSet::defaultGAPExec);
     label->setWhatsThis(msg);
     editGAPExec->setWhatsThis(msg);
-    layout->addLayout(box);
-
-    // Set up the Graphviz executable.
-    box = new QHBoxLayout();
-    label = new QLabel(tr("Graphviz executable:"));
-    box->addWidget(label);
-    editGraphvizExec = new QLineEdit();
-    box->addWidget(editGraphvizExec);
-    msg = tr("<qt>The command used to run Graphviz for drawing "
-        "undirected graphs.  The recommended Graphviz command for this "
-        "job is <i>neato</i>, though you are of course welcome to use "
-        "others.<p>"
-        "This should be a single executable name (e.g., <i>%1</i>).  You "
-        "may specify the full path to the executable if you wish "
-        "(e.g., <i>/usr/bin/%1</i>); otherwise the default search path "
-        "will be used.<p>"
-        "There is no trouble if Graphviz is not installed; this just means "
-        "that Regina will not be able to display the face pairing graphs "
-        "of triangulations.<p>"
-        "For more information on Graphviz, see "
-        "<i>http://www.graphviz.org/</i>.</qt>").
-        arg(ReginaPrefSet::defaultGraphvizExec);
-    label->setWhatsThis(msg);
-    editGraphvizExec->setWhatsThis(msg);
     layout->addLayout(box);
 
     // Add some space at the end.

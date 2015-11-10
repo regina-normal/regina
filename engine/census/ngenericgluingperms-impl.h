@@ -32,7 +32,15 @@
 
 /* end stub */
 
-/* Template definitions for ngenericgluingperms.h. */
+/*! \file census/ngenericgluingperms-impl.h
+ *  \brief Contains implementation details for the NGenericGluingPerms
+ *  class template.
+ *
+ *  This file is \e not included automatically by ngenericgluingperms.h.
+ *  However, typical end users should never need to include it, since
+ *  Regina's calculation engine provides full explicit instantiations
+ *  of NGenericGluingPerms for \ref stddim "standard dimensions".
+ */
 
 #include <algorithm>
 #include <iostream>
@@ -40,6 +48,8 @@
 #include "utilities/stringutils.h"
 
 namespace regina {
+
+template <int> class Simplex;
 
 template <int dim>
 NGenericGluingPerms<dim>::NGenericGluingPerms(

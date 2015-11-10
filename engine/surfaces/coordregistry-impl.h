@@ -43,6 +43,9 @@
  *  - add a corresponding case to each implementation of forCoords().
  *
  *  See coordregistry.h for how other routines can use this registry.
+ *
+ *  This file is automatically included from coordregistry.h; there
+ *  is no need for end users to include it explicitly.
  */
 
 #ifndef __COORDREGISTRY_IMPL_H
@@ -66,17 +69,23 @@ forCoords(NormalCoords coords, FunctionObject&& func,
         typename ReturnsTraits<FunctionObject>::ReturnType defaultReturn,
         Args&&... args) {
     switch (coords) {
-        case NS_STANDARD : return func(NormalInfo<NS_STANDARD>(),
+        case NS_STANDARD : return
+            func.template operator()<NormalInfo<NS_STANDARD>>(
             std::forward<Args>(args)...);
-        case NS_AN_STANDARD : return func(NormalInfo<NS_AN_STANDARD>(),
+        case NS_AN_STANDARD : return
+            func.template operator()<NormalInfo<NS_AN_STANDARD>>(
             std::forward<Args>(args)...);
-        case NS_QUAD : return func(NormalInfo<NS_QUAD>(),
+        case NS_QUAD : return
+            func.template operator()<NormalInfo<NS_QUAD>>(
             std::forward<Args>(args)...);
-        case NS_AN_QUAD_OCT : return func(NormalInfo<NS_AN_QUAD_OCT>(),
+        case NS_AN_QUAD_OCT : return
+            func.template operator()<NormalInfo<NS_AN_QUAD_OCT>>(
             std::forward<Args>(args)...);
-        case NS_ORIENTED : return func(NormalInfo<NS_ORIENTED>(),
+        case NS_ORIENTED : return
+            func.template operator()<NormalInfo<NS_ORIENTED>>(
             std::forward<Args>(args)...);
-        case NS_ORIENTED_QUAD : return func(NormalInfo<NS_ORIENTED_QUAD>(),
+        case NS_ORIENTED_QUAD : return
+            func.template operator()<NormalInfo<NS_ORIENTED_QUAD>>(
             std::forward<Args>(args)...);
         default: return defaultReturn;
     }
@@ -86,17 +95,23 @@ template <typename FunctionObject, typename... Args>
 inline typename ReturnsTraits<FunctionObject>::Void
 forCoords(NormalCoords coords, FunctionObject&& func, Args&&... args) {
     switch (coords) {
-        case NS_STANDARD : func(NormalInfo<NS_STANDARD>(),
+        case NS_STANDARD :
+            func.template operator()<NormalInfo<NS_STANDARD>>(
             std::forward<Args>(args)...); break;
-        case NS_AN_STANDARD : func(NormalInfo<NS_AN_STANDARD>(),
+        case NS_AN_STANDARD :
+            func.template operator()<NormalInfo<NS_AN_STANDARD>>(
             std::forward<Args>(args)...); break;
-        case NS_QUAD : func(NormalInfo<NS_QUAD>(),
+        case NS_QUAD :
+            func.template operator()<NormalInfo<NS_QUAD>>(
             std::forward<Args>(args)...); break;
-        case NS_AN_QUAD_OCT : func(NormalInfo<NS_AN_QUAD_OCT>(),
+        case NS_AN_QUAD_OCT :
+            func.template operator()<NormalInfo<NS_AN_QUAD_OCT>>(
             std::forward<Args>(args)...); break;
-        case NS_ORIENTED : func(NormalInfo<NS_ORIENTED>(),
+        case NS_ORIENTED :
+            func.template operator()<NormalInfo<NS_ORIENTED>>(
             std::forward<Args>(args)...); break;
-        case NS_ORIENTED_QUAD : func(NormalInfo<NS_ORIENTED_QUAD>(),
+        case NS_ORIENTED_QUAD :
+            func.template operator()<NormalInfo<NS_ORIENTED_QUAD>>(
             std::forward<Args>(args)...); break;
         default: break;
     }

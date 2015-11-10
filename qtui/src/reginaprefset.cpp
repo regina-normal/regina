@@ -34,9 +34,7 @@
 
 #include "regina-config.h"
 #include "file/nglobaldirs.h"
-#ifndef EXCLUDE_SNAPPEA
 #include "snappea/nsnappeatriangulation.h"
-#endif
 #include "surfaces/nnormalsurfacelist.h"
 #include "utilities/stringutils.h"
 
@@ -61,32 +59,13 @@ namespace {
     QString INACTIVE("## INACTIVE ##");
 }
 
-const GraphvizStatus GraphvizStatus::unknown(0);
-const GraphvizStatus GraphvizStatus::notFound(-1);
-const GraphvizStatus GraphvizStatus::notExist(-2);
-const GraphvizStatus GraphvizStatus::notExecutable(-3);
-const GraphvizStatus GraphvizStatus::notStartable(-4);
-const GraphvizStatus GraphvizStatus::unsupported(-5);
-const GraphvizStatus GraphvizStatus::version1(1);
-const GraphvizStatus GraphvizStatus::version1NotDot(2);
-const GraphvizStatus GraphvizStatus::version2(3);
-
 ReginaPrefSet ReginaPrefSet::instance_;
 
 #ifdef Q_OS_WIN32
     const char* ReginaPrefSet::defaultGAPExec = "gap.exe";
-    const char* ReginaPrefSet::defaultGraphvizExec = "neato.exe";
 #else
     const char* ReginaPrefSet::defaultGAPExec = "gap";
-    const char* ReginaPrefSet::defaultGraphvizExec = "neato";
 #endif
-
-// No need to initialise these, since the cache is only used when the
-// given executable matches cacheGraphvizExec (which begins life as null).
-QMutex GraphvizStatus::cacheGraphvizMutex;
-QString GraphvizStatus::cacheGraphvizExec;
-QString GraphvizStatus::cacheGraphvizExecFull;
-GraphvizStatus GraphvizStatus::cacheGraphvizStatus;
 
 ReginaFilePref::ReginaFilePref(const QString& filename,
         const QString& displayName, const QString& systemKey,
@@ -152,86 +131,6 @@ void ReginaFilePref::readUserKey(QList<ReginaFilePref>& list,
     }
 }
 
-GraphvizStatus GraphvizStatus::status(const QString& userExec,
-        QString& fullExec, bool forceRecheck) {
-    QMutexLocker lock(&cacheGraphvizMutex);
-
-    if ((! forceRecheck) && cacheGraphvizStatus != unknown &&
-            userExec == cacheGraphvizExec) {
-        fullExec = cacheGraphvizExecFull;
-        return cacheGraphvizStatus;
-    }
-
-    // We need a full requery.
-    if (! userExec.contains(QDir::separator())) {
-        // Hunt on the search path.
-        QString paths = QProcessEnvironment::systemEnvironment().value("PATH");
-#ifdef Q_OS_WIN32
-        // Windows uses a different separator in $PATH
-        QString pathSeparator = ";";
-#else
-        QString pathSeparator = ":";
-#endif
-        QStringList pathList = paths.split(pathSeparator);
-
-        // Add the "usual" location of Graphviz to the search path.
-#ifdef Q_OS_MACX
-        pathList.push_back("/usr/local/bin");
-#endif
-
-        bool found = false;
-        for( QStringList::iterator it = pathList.begin(); it != pathList.end();
-            ++it) {
-            QDir dir(*it);
-            if ( dir.exists(userExec) ) {
-                fullExec = dir.absoluteFilePath(userExec);
-                found = true;
-                break;
-            }
-        }
-        if (! found) {
-            fullExec = QString();
-            return notFound;
-        }
-    } else
-        fullExec = QFileInfo(userExec).absoluteFilePath();
-
-    // We have a full path to the Graphviz executable.
-    QFileInfo info(fullExec);
-    if (! info.exists())
-        return notExist;
-    if (! (info.isFile() && info.isExecutable()))
-        return notExecutable;
-
-    // Run to extract a version string.
-    ShortRunner graphviz;
-    graphviz << fullExec << "-V";
-    QString output = graphviz.run(true);
-    if (output.isNull()) {
-        if (graphviz.timedOut())
-            return unsupported;
-        else
-            return notStartable;
-    }
-
-    if (output.contains("version 1.")) {
-        // Only test for "dot", not "/dot".  I'd rather not get tripped
-        // up with alternate path separators, and this still
-        // distinguishes between the different 1.x graph drawing tools.
-        if (userExec.endsWith("dot", Qt::CaseInsensitive))
-            return version1;
-        return version1NotDot;
-    } else if (output.contains("version 0."))
-        return unsupported;
-    else if (output.contains("version")) {
-        // Assume any other version is >= 2.x.
-        return version2;
-    } else {
-        // Could not find a version string at all.
-        return unsupported;
-    }
-}
-
 ReginaPrefSet::ReginaPrefSet() :
         anglesCreationTaut(false),
         fileRecentMax(10),
@@ -258,7 +157,6 @@ ReginaPrefSet::ReginaPrefSet() :
         tabSnapPeaTriAlgebra(0),
         tabSurfaceList(0),
         triGAPExec(defaultGAPExec),
-        triGraphvizExec(defaultGraphvizExec),
         triGraphvizLabels(true),
         triSurfacePropsThreshold(6),
         warnOnNonEmbedded(true) {
@@ -468,10 +366,8 @@ void ReginaPrefSet::readInternal() {
     settings.endGroup();
 
     settings.beginGroup("SnapPea");
-#ifndef EXCLUDE_SNAPPEA
     regina::NSnapPeaTriangulation::enableKernelMessages(
         settings.value("KernelMessages", false).toBool());
-#endif
     settings.endGroup();
 
     settings.beginGroup("Surfaces");
@@ -517,8 +413,6 @@ void ReginaPrefSet::readInternal() {
     settings.beginGroup("Tools");
     pdfExternalViewer = settings.value("PDFViewer").toString().trimmed();
     triGAPExec = settings.value("GAPExec", defaultGAPExec).toString().trimmed();
-    triGraphvizExec = settings.value("GraphvizExec", defaultGraphvizExec).
-        toString().trimmed();
     settings.endGroup();
 
     readPythonLibraries();
@@ -571,12 +465,8 @@ void ReginaPrefSet::saveInternal() const {
     settings.endGroup();
 
     settings.beginGroup("SnapPea");
-#ifndef EXCLUDE_SNAPPEA
     settings.setValue("KernelMessages",
         regina::NSnapPeaTriangulation::kernelMessagesEnabled());
-#else
-    settings.setValue("KernelMessages", false);
-#endif
     settings.endGroup();
 
     settings.beginGroup("Surfaces");
@@ -619,7 +509,6 @@ void ReginaPrefSet::saveInternal() const {
     settings.beginGroup("Tools");
     settings.setValue("PDFViewer", pdfExternalViewer);
     settings.setValue("GAPExec", triGAPExec);
-    settings.setValue("GraphvizExec", triGraphvizExec);
     settings.endGroup();
 
     savePythonLibraries();

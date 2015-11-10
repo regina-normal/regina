@@ -32,6 +32,14 @@
 
 /* end stub */
 
+/*! \file generic/isosig-impl.h
+ *  \brief Contains some of the implementation details for the generic
+ *  Triangulation class template.
+ *
+ *  This file is automatically included from triangulation.h; there is
+ *  no need for end users to include it explicitly.
+ */
+
 #include <algorithm>
 
 namespace regina {
@@ -85,16 +93,6 @@ struct IsoSigHelper {
     static bool SVALID(char c) {
         return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
             (c >= '0' && c <= '9') || c == '+' || c == '-');
-    }
-
-    /**
-     * Does the given string contain at least nChars characters?
-     */
-    static bool SHASCHARS(const char* s, unsigned nChars) {
-        for ( ; nChars > 0; --nChars)
-            if (! *s)
-                return false;
-        return true;
     }
 
     /**
@@ -395,30 +393,42 @@ std::string TriangulationBase<dim>::isoSig(
 template <int dim>
 Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
         const std::string& sig) {
-    std::auto_ptr<Triangulation<dim>> ans(new Triangulation<dim>());
+    std::unique_ptr<Triangulation<dim>> ans(new Triangulation<dim>());
 
     typename Triangulation<dim>::ChangeEventSpan span(ans.get());
 
     const char* c = sig.c_str();
 
+    // Skip any leading whitespace.
+    while (*c && ::isspace(*c))
+        ++c;
+
+    // Find the end of the string.
+    const char* end = c;
+    while (*end && ! ::isspace(*end))
+        ++end;
+
     // Initial check for invalid characters.
     const char* d;
-    for (d = c; *d; ++d)
+    for (d = c; d != end; ++d)
         if (! IsoSigHelper::SVALID(*d))
             return 0;
+    for (d = end; *d; ++d)
+        if (! ::isspace(*d))
+            return 0;
 
-    unsigned i;
-    size_t nSimp, pos, nChars;
-    while (*c) {
+    unsigned j;
+    size_t pos, nSimp, nChars;
+    while (c != end) {
         // Read one component at a time.
         nSimp = IsoSigHelper::SVAL(*c++);
         if (nSimp < 63)
             nChars = 1;
         else {
-            if (! *c)
+            if (c == end)
                 return 0;
             nChars = IsoSigHelper::SVAL(*c++);
-            if (! IsoSigHelper::SHASCHARS(c, nChars))
+            if (c + nChars > end)
                 return 0;
             nSimp = IsoSigHelper::SREAD<unsigned>(c, nChars);
             c += nChars;
@@ -436,27 +446,27 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
         size_t nJoins = 0;
 
         for ( ; nFacets < (dim+1) * nSimp; facetPos += 3) {
-            if (! *c) {
+            if (c == end) {
                 delete[] facetAction;
                 return 0;
             }
             IsoSigHelper::SREADTRITS(*c++, facetAction + facetPos);
-            for (i = 0; i < 3; ++i) {
+            for (j = 0; j < 3; ++j) {
                 // If we're already finished, make sure the leftover trits
                 // are zero.
                 if (nFacets == (dim+1) * nSimp) {
-                    if (facetAction[facetPos + i] != 0) {
+                    if (facetAction[facetPos + j] != 0) {
                         delete[] facetAction;
                         return 0;
                     }
                     continue;
                 }
 
-                if (facetAction[facetPos + i] == 0)
+                if (facetAction[facetPos + j] == 0)
                     ++nFacets;
-                else if (facetAction[facetPos + i] == 1)
+                else if (facetAction[facetPos + j] == 1)
                     nFacets += 2;
-                else if (facetAction[facetPos + i] == 2) {
+                else if (facetAction[facetPos + j] == 2) {
                     nFacets += 2;
                     ++nJoins;
                 } else {
@@ -472,7 +482,7 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
 
         size_t* joinDest = new size_t[nJoins + 1];
         for (pos = 0; pos < nJoins; ++pos) {
-            if (! IsoSigHelper::SHASCHARS(c, nChars)) {
+            if (c + nChars > end) {
                 delete[] facetAction;
                 delete[] joinDest;
                 return 0;
@@ -485,7 +495,7 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
         typename NPerm<dim+1>::Index* joinGluing =
             new typename NPerm<dim+1>::Index[nJoins + 1];
         for (pos = 0; pos < nJoins; ++pos) {
-            if (! IsoSigHelper::SHASCHARS(c, 1)) {
+            if (c + IsoSigHelper::CHARS_PER_PERM<dim>() > end) {
                 delete[] facetAction;
                 delete[] joinDest;
                 delete[] joinGluing;
@@ -516,9 +526,9 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
         size_t joinPos = 0;
         NPerm<dim+1> gluing;
         for (pos = 0; pos < nSimp; ++pos)
-            for (i = 0; i <= dim; ++i) {
+            for (j = 0; j <= dim; ++j) {
                 // Already glued from the other side:
-                if (simp[pos]->adjacentSimplex(i))
+                if (simp[pos]->adjacentSimplex(j))
                     continue;
 
                 if (facetAction[facetPos] == 0) {
@@ -532,20 +542,20 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
                         delete[] simp;
                         return 0;
                     }
-                    simp[pos]->joinTo(i, simp[nextUnused++], NPerm<dim+1>());
+                    simp[pos]->joinTo(j, simp[nextUnused++], NPerm<dim+1>());
                 } else {
                     // Join to existing simplex.
                     gluing = NPerm<dim+1>::atIndex(joinGluing[joinPos]);
                     if (joinDest[joinPos] >= nextUnused ||
                             simp[joinDest[joinPos]]->adjacentSimplex(
-                            gluing[i])) {
+                            gluing[j])) {
                         delete[] facetAction;
                         delete[] joinDest;
                         delete[] joinGluing;
                         delete[] simp;
                         return 0;
                     }
-                    simp[pos]->joinTo(i, simp[joinDest[joinPos]], gluing);
+                    simp[pos]->joinTo(j, simp[joinDest[joinPos]], gluing);
                     ++joinPos;
                 }
 

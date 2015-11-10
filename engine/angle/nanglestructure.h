@@ -113,6 +113,10 @@ class REGINA_API NAngleStructureVector : public NRay {
          * The returned matrix will be newly allocated and its destruction
          * will be the responsibility of the caller of this routine.
          *
+         * This is identical to the global function makeAngleEquations().
+         * It is offered again here in the vector class for consistency
+         * with the normal surface vector classes.
+         *
          * @param tri the triangulation upon which these angle structure
          * equations will be based.
          * @return a newly allocated set of equations.

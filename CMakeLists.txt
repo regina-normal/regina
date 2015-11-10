@@ -33,6 +33,15 @@ IF(NOT CMAKE_BUILD_TYPE)
   FORCE)
 ENDIF(NOT CMAKE_BUILD_TYPE)
 
+# Every year I swear I will drop windows support, and this year is no different.
+# The windows build (as of November 2015) crashes in the test suite with -O3.
+# It looks as though this might be a compiler problem: the ipa-cp-clone
+# optimisation has been known to cause crashes under mingw in other projects
+# in the past also.
+IF (WIN32)
+  SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-ipa-cp-clone")
+ENDIF (WIN32)
+
 # Distinguish between the different Regina installation types:
 # XDG = standard freedesktop.org filesystem installation in a fixed location.
 # Bundle = self-contained app bundle for MacOS that users can drag and drop.
@@ -109,37 +118,34 @@ INCLUDE(MacroLogFeature)
 INCLUDE( CheckCXXSourceCompiles )
 INCLUDE( CheckFunctionExists )
 
+# We need to determine threading flags *before* testing for C++11 std::thread.
+FIND_PACKAGE(Threads REQUIRED)
+IF(NOT Threads_FOUND)
+  MESSAGE(FATAL_ERROR "Regina requires threading support.")
+ENDIF(NOT Threads_FOUND)
+IF(CMAKE_COMPILER_IS_GNUCXX)
+  # The FindThreads module picks up -lpthread, not -pthread.
+  # This is unfortunate, because std::thread must be built with -pthread
+  # under g++; otherwise it builds but throws an exception at runtime.
+  SET(CMAKE_CXX_FLAGS "-pthread ${CMAKE_CXX_FLAGS}")
+ENDIF(CMAKE_COMPILER_IS_GNUCXX)
+
 # C++11 requirements
 INCLUDE(CheckCXX11Features)
 SET(HAVE_CXX11_FEATURES TRUE)
 NEED_CXX11_FEATURE("auto")
 NEED_CXX11_FEATURE("constexpr")
+NEED_CXX11_FEATURE("long_long")
+NEED_CXX11_FEATURE("nullptr")
 NEED_CXX11_FEATURE("rvalue_references")
 NEED_CXX11_FEATURE("static_assert")
+NEED_CXX11_FEATURE("stdexceptionptr")
 NEED_CXX11_FEATURE("stdthread")
 NEED_CXX11_FEATURE("variadic_templates")
 IF(NOT HAVE_CXX11_FEATURES)
   MESSAGE(FATAL_ERROR "Regina requires C++11 support to compile.")
 ENDIF()
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11_SWITCH}")
-
-# All the user to exclude various pieces of third-party code that are
-# typically built directly into Regina's engine.
-IF (NOT EXCLUDE_NORMALIZ)
-  SET (EXCLUDE_NORMALIZ OFF CACHE STRING
-    "Exclude all Normaliz code from the build." FORCE)
-ENDIF (NOT EXCLUDE_NORMALIZ)
-IF (NOT EXCLUDE_SNAPPEA)
-  SET (EXCLUDE_SNAPPEA OFF CACHE STRING
-    "Exclude all SnapPea / SnapPy code from the build." FORCE)
-ENDIF (NOT EXCLUDE_SNAPPEA)
-
-IF (EXCLUDE_NORMALIZ)
-  MESSAGE(STATUS "Excluding Normaliz from the build")
-ENDIF (EXCLUDE_NORMALIZ)
-IF (EXCLUDE_SNAPPEA)
-  MESSAGE(STATUS "Excluding SnapPea / SnapPy from the build")
-ENDIF (EXCLUDE_SNAPPEA)
 
 # Regina's own cmake scripts:
 INCLUDE( ReginaMacros )
@@ -217,14 +223,6 @@ if(NOT LANGINFO_FOUND)
   MESSAGE(WARNING "langinfo not found: UTF-8 will be used always, and the locale-specific encoding will be ignored.")
 endif(NOT LANGINFO_FOUND)
 
-# Large integer checks
-CHECK_CXX_SOURCE_COMPILES("
-  long long x;
-  signed long long y;
-  unsigned long long z;
-  int main() { return 0; }"
-  LONG_LONG_FOUND )
-
 CHECK_CXX_SOURCE_COMPILES("
   #include <stdint.h>
   int128_t x;
@@ -243,16 +241,14 @@ IF (INT128_T_FOUND OR __INT128_T_FOUND)
   SET(INT128_AVAILABLE TRUE)
 ENDIF (INT128_T_FOUND OR __INT128_T_FOUND)
 
-IF(LONG_LONG_FOUND)
-  CHECK_CXX_SOURCE_COMPILES("
-    unsigned long long x = 0xFFFFFFFFFFFFFFFF;
-    int main() { return 0; }"
-    NUMERIC_64_FOUND)
-  CHECK_CXX_SOURCE_COMPILES("
-    unsigned long long x = 0xFFFFFFFFFFFFFFFFLL;
-    int main() { return 0; }"
-    NUMERIC_64_LL_FOUND)
-ENDIF(LONG_LONG_FOUND)
+CHECK_CXX_SOURCE_COMPILES("
+  unsigned long long x = 0xFFFFFFFFFFFFFFFF;
+  int main() { return 0; }"
+  NUMERIC_64_FOUND)
+CHECK_CXX_SOURCE_COMPILES("
+  unsigned long long x = 0xFFFFFFFFFFFFFFFFLL;
+  int main() { return 0; }"
+  NUMERIC_64_LL_FOUND)
 
 # Dependencies used by all components of Regina
 FIND_PACKAGE(ZLIB)
@@ -353,11 +349,6 @@ ELSE (QDBM)
     TRUE)
   SET (DB_EXT "tdb")
 ENDIF (QDBM)
-
-FIND_PACKAGE(Threads REQUIRED)
-IF(NOT CMAKE_USE_PTHREADS_INIT)
-  MESSAGE(FATAL_ERROR "Regina requires pthread support.")
-ENDIF(NOT CMAKE_USE_PTHREADS_INIT)
 
 # Dependencies used by only some components of Regina
 FIND_PACKAGE(POPT)
@@ -488,7 +479,7 @@ IF(DISABLE_GUI)
   set(GUI_REQUIRED FALSE)
   if (NOT ${REGINA_INSTALL_TYPE} STREQUAL XDG)
     MESSAGE(FATAL_ERROR
-	  "You can only set DISABLE_GUI=1 with REGINA_INSTALL_TYPE=XDG.")
+      "You can only set DISABLE_GUI=1 with REGINA_INSTALL_TYPE=XDG.")
   endif (NOT ${REGINA_INSTALL_TYPE} STREQUAL XDG)
 
   MESSAGE(WARNING "User set DISABLE_GUI=1: graphical user interface disabled.")
@@ -497,6 +488,44 @@ ELSE(DISABLE_GUI)
   set(CMAKE_AUTOMOC ON)
   FIND_PACKAGE(Qt5Widgets)
   FIND_PACKAGE(Qt5Svg)
+
+  PKG_CHECK_MODULES(LIBGVC libgvc)
+  IF(LIBGVC_FOUND)
+    IF(WIN32)
+      # FindPkgConfig has a nasty habit of converting paths like
+      # "Program Files" into lists like "Program;Files".
+      #
+      # Here we convert these paths back; moreover, we convert them to
+      # the ugly 8.3 filename format since windres.exe cannot (yet) cope
+      # with paths containing spaces.  Sigh.
+      #
+      # Notes:
+      # - This code assumes the Graphviz path does not contain semicolons.
+      # - Although FindPkgConfig sets many LIBGVC_... variables, we only fix
+      #   those that we use in our build system.
+      #
+      string(REPLACE ";" " " _TMP_STR "${LIBGVC_INCLUDEDIR}")
+      execute_process(
+        COMMAND cmd /c for %A in ("${_TMP_STR}") do @echo %~sA
+        RESULT_VARIABLE _conv_res
+        OUTPUT_VARIABLE _TMP_STR)
+      string(REGEX REPLACE "\n" "" _TMP_STR "${_TMP_STR}")
+      set(LIBGVC_INCLUDEDIR "${_TMP_STR}" CACHE INTERNAL "")
+
+      string(REPLACE ";" " " _TMP_STR "${LIBGVC_LIBDIR}")
+      execute_process(
+        COMMAND cmd /c for %A in ("${_TMP_STR}") do @echo %~sA
+        RESULT_VARIABLE _conv_res
+        OUTPUT_VARIABLE _TMP_STR)
+      string(REGEX REPLACE "\n" "" _TMP_STR "${_TMP_STR}")
+      set(LIBGVC_LIBDIR "${_TMP_STR}" CACHE INTERNAL "")
+    ENDIF(WIN32)
+  ENDIF(LIBGVC_FOUND)
+  MACRO_LOG_FEATURE(LIBGVC_FOUND
+    "GraphViz libraries"
+    "Visualising graphs"
+    "http://graphviz.org/"
+    REGINA_MANDATORY)
 
   FIND_PACKAGE(SourceHighlight)
   MACRO_LOG_FEATURE(SRCHILITE_FOUND

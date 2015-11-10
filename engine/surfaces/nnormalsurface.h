@@ -42,8 +42,6 @@
 #define __NNORMALSURFACE_H
 #endif
 
-#include "regina-config.h" // For EXCLUDE_SNAPPEA
-
 #include <utility>
 #include "regina-core.h"
 #include "output.h"
@@ -244,7 +242,7 @@ struct NormalInfo;
  *
  * This macro provides the class with:
  *
- * - a compile-time enum constant \a coordType, which is equal to the
+ * - a compile-time constant \a coordType, which is equal to the
  *   corresponding NormalCoords constant;
  * - a typedef \a Info, which refers to the corresponding specialisation
  *   of the NormalInfo<> template;
@@ -260,7 +258,7 @@ struct NormalInfo;
 #define REGINA_NORMAL_SURFACE_FLAVOUR(class_, id) \
     public: \
         typedef NormalInfo<id> Info; \
-        enum { coordType = id }; \
+        static constexpr const NormalCoords coordType = id; \
         inline virtual NNormalSurfaceVector* clone() const { \
             return new class_(*this); \
         } \
@@ -1152,7 +1150,7 @@ class REGINA_API NNormalSurface :
          *
          * @param out the output stream to which the XML should be written.
          */
-        virtual void writeXMLData(std::ostream& out) const;
+        void writeXMLData(std::ostream& out) const;
 
         /**
          * Determines if this normal surface is empty (has no discs
@@ -1288,7 +1286,7 @@ class REGINA_API NNormalSurface :
          * @return the vertex linked by this surface, or 0 if this
          * surface is not the link of a single vertex.
          */
-        virtual const NVertex* isVertexLink() const;
+        const NVertex* isVertexLink() const;
         /**
          * Determines whether or not a rational multiple of this surface
          * is the thin link of a single edge.
@@ -1313,7 +1311,7 @@ class REGINA_API NNormalSurface :
          * @return a pair containing the edge(s) linked by this surface,
          * as described above.
          */
-        virtual std::pair<const NEdge*, const NEdge*> isThinEdgeLink() const;
+        std::pair<const NEdge*, const NEdge*> isThinEdgeLink() const;
         /**
          * Determines whether or not this surface is a splitting surface.
          * A \a splitting surface is a compact surface containing
@@ -1596,7 +1594,6 @@ class REGINA_API NNormalSurface :
          */
         bool disjoint(const NNormalSurface& other) const;
 
-#ifndef EXCLUDE_SNAPPEA
         /**
          * Computes the information about the boundary slopes of this surface
          * at each cusp of the triangulation.  This is for use with spun-normal
@@ -1651,7 +1648,6 @@ class REGINA_API NNormalSurface :
          * preconditions outlined above).
          */
         NMatrixInt* boundaryIntersections() const;
-#endif // EXCLUDE_SNAPPEA
 
         /**
          * Gives read-only access to the raw vector that sits beneath this

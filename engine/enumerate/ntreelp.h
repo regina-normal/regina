@@ -107,6 +107,12 @@ typedef Triangulation<3> NTriangulation;
  * each new integer to zero.  The classes NInteger and NNativeInteger,
  * for instance, have this property.
  *
+ * \headers Parts of this template class are implemented in a separate header
+ * (ntreelp-impl.h), which is not included automatically by this file.
+ * Most end users should not need this extra header, since Regina's calculation
+ * engine already includes explicit instantiations for common combinations of
+ * template arguments.
+ *
  * \apinotfinal
  *
  * \ifacespython Not present.
@@ -355,6 +361,60 @@ class LPMatrix {
 };
 
 /**
+ * Used by LPInitialTableaux<LPConstraint> to store a single column of the
+ * adjusted matching equation matrix in sparse form.
+ *
+ * See the LPInitialTableaux class notes for details on what the
+ * "adjusted matching equation matrix" means.
+ *
+ * Specifically, an LPCol object stores the location of each +1 entry,
+ * and the location of each -1 entry.  If some entry in the matrix
+ * is greater than +1 or less than -1, we represent it using
+ * multiple +1 or -1 entries in the same matrix location.
+ *
+ * For any additional rows that represent extra linear constraints,
+ * we inherit the coefficients directly from LPConstraint::Coefficients.
+ *
+ * \apinotfinal
+ *
+ * \ifacespython Not present.
+ */
+template <class LPConstraint>
+struct LPCol : public LPConstraint::Coefficients {
+    unsigned nPlus;
+        /**< The total number of +1 entries in this column. */
+    unsigned plus[4];
+        /**< The rows containing these +1 entries, in any order.
+             The same row may appear in this list more than once
+             (indicating a +2, +3 or +4 entry in the matrix). */
+    unsigned nMinus;
+        /**< The total number of -1 entries in this column. */
+    unsigned minus[4];
+        /**< The rows containing these -1 entries, in any order.
+             The same row may appear in this list more than once
+             (indicating a -2, -3 or -4 entry in the matrix). */
+
+    /**
+     * Initialises an empty column.
+     */
+    inline LPCol();
+
+    /**
+     * Adds the given entry in the given row to this column.
+     *
+     * \pre No entry in the given row has been added to this column
+     * yet.
+     *
+     * \pre The sum of absolute values of all entries in this
+     * column must never exceed 4.
+     *
+     * @param row the row containing the given value.
+     * @param val the value at this location in the matrix.
+     */
+    inline void push(unsigned row, int val);
+};
+
+/**
  * Stores an adjusted matrix of homogeneous linear matching equations based on
  * a given triangulation, in sparse form.  Typically these will be
  * the normal surface matching equations in some coordinate system,
@@ -415,59 +475,18 @@ class LPMatrix {
  * \pre The template parameter LPConstraint must be one of the subclasses of
  * LPConstraintBase.  See the LPConstraintBase class notes for further details.
  *
+ * \headers Parts of this template class are implemented in a separate header
+ * (ntreelp-impl.h), which is not included automatically by this file.
+ * Most end users should not need this extra header, since Regina's calculation
+ * engine already includes explicit instantiations for common combinations of
+ * template arguments.
+ *
  * \apinotfinal
  *
  * \ifacespython Not present.
  */
 template <class LPConstraint>
 class LPInitialTableaux {
-    public:
-        /**
-         * Stores a single column of the adjusted matching equation matrix
-         * in sparse form.
-         *
-         * Specifically, this stores the location of each +1 entry,
-         * and the location of each -1 entry.  If some entry in the matrix
-         * is greater than +1 or less than -1, we represent it using
-         * multiple +1 or -1 entries in the same matrix location.
-         *
-         * For any additional rows that represent extra linear constraints,
-         * we inherit the coefficients directly from LPConstraint::Coefficients.
-         */
-        struct Col : public LPConstraint::Coefficients {
-            unsigned nPlus;
-                /**< The total number of +1 entries in this column. */
-            unsigned plus[4];
-                /**< The rows containing these +1 entries, in any order.
-                     The same row may appear in this list more than once
-                     (indicating a +2, +3 or +4 entry in the matrix). */
-            unsigned nMinus;
-                /**< The total number of -1 entries in this column. */
-            unsigned minus[4];
-                /**< The rows containing these -1 entries, in any order.
-                     The same row may appear in this list more than once
-                     (indicating a -2, -3 or -4 entry in the matrix). */
-
-            /**
-             * Initialises an empty column.
-             */
-            inline Col();
-
-            /**
-             * Adds the given entry in the given row to this column.
-             *
-             * \pre No entry in the given row has been added to this column
-             * yet.
-             *
-             * \pre The sum of absolute values of all entries in this
-             * column must never exceed 4.
-             *
-             * @param row the row containing the given value.
-             * @param val the value at this location in the matrix.
-             */
-            inline void push(unsigned row, int val);
-        };
-
     private:
         const NTriangulation* tri_;
             /**< The underlying triangulation. */
@@ -496,7 +515,7 @@ class LPInitialTableaux {
                  coordinateColumns()-1 of the matrix is equal to \a scaling_.
                  In all normal surface coordinate systems (which do not
                  need to be projectivised), \a scaling_ will be zero. */
-        Col* col_;
+        LPCol<LPConstraint>* col_;
             /**< An array of size \a cols_ that stores the individual columns
                  of this adjusted matrix in sparse form.  In angle structure
                  coordinates, the column col_[coordinateColumns()-1] will be
@@ -885,6 +904,12 @@ class LPInitialTableaux {
  * \pre The default constructor for the template class Integer must intialise
  * each new integer to zero.  The classes NInteger and NNativeInteger,
  * for instance, have this property.
+ *
+ * \headers Parts of this template class are implemented in a separate header
+ * (ntreelp-impl.h), which is not included automatically by this file.
+ * Most end users should not need this extra header, since Regina's calculation
+ * engine already includes explicit instantiations for common combinations of
+ * template arguments.
  *
  * \apinotfinal
  *
@@ -1389,6 +1414,39 @@ class LPData {
         void verify() const;
 };
 
+/*@}*/
+
+}
+
+#include "enumerate/ntreeconstraint.h"
+
+namespace regina {
+
+extern template class REGINA_API LPMatrix<NInteger>;
+extern template class REGINA_API LPMatrix<NNativeLong>;
+
+extern template class REGINA_API LPCol<LPConstraintNone>;
+extern template class REGINA_API LPCol<LPConstraintEuler>;
+extern template class REGINA_API LPCol<LPConstraintNonSpun>;
+
+extern template class REGINA_API LPInitialTableaux<LPConstraintNone>;
+extern template class REGINA_API LPInitialTableaux<LPConstraintEuler>;
+extern template class REGINA_API LPInitialTableaux<LPConstraintNonSpun>;
+
+extern template class REGINA_API LPData<LPConstraintNone, NInteger>;
+extern template class REGINA_API LPData<LPConstraintNone, NNativeLong>;
+extern template class REGINA_API LPData<LPConstraintEuler, NInteger>;
+extern template class REGINA_API LPData<LPConstraintEuler, NNativeLong>;
+extern template class REGINA_API LPData<LPConstraintNonSpun, NInteger>;
+extern template class REGINA_API LPData<LPConstraintNonSpun, NNativeLong>;
+
+#ifdef INT128_AVAILABLE
+extern template class REGINA_API LPData<LPConstraintNone, NNativeInteger<16> >;
+extern template class REGINA_API LPData<LPConstraintEuler, NNativeInteger<16> >;
+extern template class REGINA_API LPData<LPConstraintNonSpun,
+    NNativeInteger<16> >;
+#endif
+
 // Inline functions for LPMatrix
 
 template <typename Integer>
@@ -1465,14 +1523,14 @@ inline void LPMatrix<Integer>::negateRow(unsigned row) {
         p->negate();
 }
 
-// Inline functions for LPInitialTableaux
+// Inline functions for LPCol
 
 template <class LPConstraint>
-inline LPInitialTableaux<LPConstraint>::Col::Col() : nPlus(0), nMinus(0) {
+inline LPCol<LPConstraint>::LPCol() : nPlus(0), nMinus(0) {
 }
 
 template <class LPConstraint>
-inline void LPInitialTableaux<LPConstraint>::Col::push(unsigned row, int val) {
+inline void LPCol<LPConstraint>::push(unsigned row, int val) {
 #ifdef REGINA_VERIFY_LPDATA
     if ((val > 0 && val + nPlus > 4) ||
             (val < 0 && val - nMinus < -4)) {
@@ -1485,6 +1543,8 @@ inline void LPInitialTableaux<LPConstraint>::Col::push(unsigned row, int val) {
     for (; val < 0; ++val)
         minus[nMinus++] = row;
 }
+
+// Inline functions for LPInitialTableaux
 
 template <class LPConstraint>
 inline LPInitialTableaux<LPConstraint>::~LPInitialTableaux() {

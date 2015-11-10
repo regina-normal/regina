@@ -132,15 +132,12 @@ class REGINA_API Simplex<3> : public SimplexBase<3> {
          * automatically.  There is no need for users to explicitly
          * recompute the skeleton themselves.
          *
-         * \pre This tetrahedron belongs to a triangulation (i.e., it
-         * was created using NTriangulation::newTetrahedron() or added
-         * using NTriangulation::addTetrahedron()).
-         *
          * @param vertex the vertex of this tetrahedron to examine.
          * This should be between 0 and 3 inclusive.
          * @return the vertex of the skeleton corresponding to the
          * requested tetrahedron vertex.
          */
+        REGINA_INLINE_REQUIRED
         NVertex* getVertex(int vertex) const;
         /**
          * Returns the edge in the triangulation skeleton
@@ -153,10 +150,6 @@ class REGINA_API Simplex<3> : public SimplexBase<3> {
          * triangulation has not been computed then this will be done
          * automatically.  There is no need for users to explicitly
          * recompute the skeleton themselves.
-         *
-         * \pre This tetrahedron belongs to a triangulation (i.e., it
-         * was created using NTriangulation::newTetrahedron() or added
-         * using NTriangulation::addTetrahedron()).
          *
          * @param edge the edge of this tetrahedron to examine.
          * This should be between 0 and 5 inclusive.
@@ -172,10 +165,6 @@ class REGINA_API Simplex<3> : public SimplexBase<3> {
          * triangulation has not been computed then this will be done
          * automatically.  There is no need for users to explicitly
          * recompute the skeleton themselves.
-         *
-         * \pre This tetrahedron belongs to a triangulation (i.e., it
-         * was created using NTriangulation::newTetrahedron() or added
-         * using NTriangulation::addTetrahedron()).
          *
          * @param face the face of this tetrahedron to examine.
          * This should be between 0 and 3 inclusive, where face \c i
@@ -204,15 +193,12 @@ class REGINA_API Simplex<3> : public SimplexBase<3> {
          * automatically.  There is no need for users to explicitly
          * recompute the skeleton themselves.
          *
-         * \pre This tetrahedron belongs to a triangulation (i.e., it
-         * was created using NTriangulation::newTetrahedron() or added
-         * using NTriangulation::addTetrahedron()).
-         *
          * @param vertex the vertex of this tetrahedron to examine.
          * This should be between 0 and 3 inclusive.
          * @return a permutation that maps 0 to the given vertex of this
          * tetrahedron, with the properties outlined above.
          */
+        REGINA_INLINE_REQUIRED
         NPerm4 getVertexMapping(int vertex) const;
         /**
          * Examines the given edge of this tetrahedron, and returns a
@@ -263,15 +249,12 @@ class REGINA_API Simplex<3> : public SimplexBase<3> {
          * automatically.  There is no need for users to explicitly
          * recompute the skeleton themselves.
          *
-         * \pre This tetrahedron belongs to a triangulation (i.e., it
-         * was created using NTriangulation::newTetrahedron() or added
-         * using NTriangulation::addTetrahedron()).
-         *
          * @param edge the edge of this tetrahedron to examine.
          * This should be between 0 and 5 inclusive.
          * @return a mapping from vertices (0,1) of the requested
          * triangulation edge to the vertices of this tetrahedron.
          */
+        REGINA_INLINE_REQUIRED
         NPerm4 getEdgeMapping(int edge) const;
         /**
          * Examines the given face of this tetrahedron, and returns a
@@ -305,15 +288,12 @@ class REGINA_API Simplex<3> : public SimplexBase<3> {
          * automatically.  There is no need for users to explicitly
          * recompute the skeleton themselves.
          *
-         * \pre This tetrahedron belongs to a triangulation (i.e., it
-         * was created using NTriangulation::newTetrahedron() or added
-         * using NTriangulation::addTetrahedron()).
-         *
          * @param face the face of this tetrahedron to examine.
          * This should be between 0 and 3 inclusive.
          * @return a mapping from vertices (0,1,2) of the corresponding
          * triangle to the vertices of this tetrahedron.
          */
+        REGINA_INLINE_REQUIRED
         NPerm4 getTriangleMapping(int face) const;
 
     private:

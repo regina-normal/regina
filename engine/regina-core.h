@@ -46,18 +46,43 @@
  * @{
  */
 
+/**
+ * A synonym for \c inline, used in some special cases to avoid
+ * noisy warnings under Windows.
+ *
+ * Typically this macro is used with inline functions of some class or struct
+ * that are called by \e other inline function(s).
+ *
+ * Such a function should:
+ *
+ * - be declared as \c REGINA_INLINE_REQUIRED at the point where the function
+ *   is first declared inside the class definition;
+ *
+ * - be declared again as \c inline when the function is later defined
+ *   (as Regina does with all its inline functions).
+ *
+ * The reason for using REGINA_INLINE_REQUIRED in such situations is to
+ * avoid noisy warnings about \c dllimport attributes under Windows.
+ * The reason for using this particular macro instead of just the
+ * keyword \c inline is to remind the Regina developers not to remove it.
+ *
+ * This is not the first, and will surely not be the last, piece of code
+ * bloat that Windows forces upon us.  Sigh.
+ */
+#define REGINA_INLINE_REQUIRED inline
+
 #ifdef __DOXYGEN
   // Fake definitions just for doxygen.
 
   /**
    * All non-templated, non-static functions, classes and global variables
    * that are part of Regina's public interface \b must be declared with
-   * REGINA_API.
-   * In addition, global variables must also be declared with \c extern
-   * as per normal.
-   * Otherwise things may (and in some environments will) break when external
-   * applications try to use Regina with optimisations such as gcc's
-   * <tt>-fvisibility=hidden</tt>.
+   * REGINA_API.  Template classes or functions should not be declared
+   * with REGINA_API, but any explicit instantiations should.
+   * Global variables must also be declared with \c extern, as per normal.
+   *
+   * This is required for DLL linking under Windows, and also to avoid
+   * breakage with optimisations such as gcc's <tt>-fvisibility=hidden</tt>.
    *
    * Note:  When building the Regina calculation engine shared library,
    * REGINA_DLL_EXPORTS must be defined (this ensures that API symbols are

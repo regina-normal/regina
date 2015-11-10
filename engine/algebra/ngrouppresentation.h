@@ -810,7 +810,7 @@ class REGINA_API NGroupPresentation :
          * presentation, or a null pointer if this presentation was not
          * changed.
          */
-        std::auto_ptr<NHomGroupPresentation> intelligentSimplifyDetail();
+        std::unique_ptr<NHomGroupPresentation> intelligentSimplifyDetail();
 
         /**
          * Attempts to simplify the group presentation using only small
@@ -848,7 +848,7 @@ class REGINA_API NGroupPresentation :
          * presentation, or a null pointer if this presentation was not
          * changed.
          */
-        std::auto_ptr<NHomGroupPresentation> smallCancellationDetail();
+        std::unique_ptr<NHomGroupPresentation> smallCancellationDetail();
 
         /**
          * Uses small cancellation theory to reduce the input word,
@@ -950,7 +950,7 @@ class REGINA_API NGroupPresentation :
          *
          * @return a newly allocated abelianisation of this group.
          */
-        std::auto_ptr<NAbelianGroup> abelianisation() const;
+        std::unique_ptr<NAbelianGroup> abelianisation() const;
 
         /**
          * Computes the abelianisation of this group.
@@ -959,7 +959,7 @@ class REGINA_API NGroupPresentation :
          *
          * @return a newly allocated abelianisation of this group.
          */
-        std::auto_ptr<NMarkedAbelianGroup> markedAbelianisation() const;
+        std::unique_ptr<NMarkedAbelianGroup> markedAbelianisation() const;
 
         /**
          * Attempts to determine if the group is abelian.
@@ -1067,7 +1067,7 @@ class REGINA_API NGroupPresentation :
          * map from the original presentation to the new presentation,
          * or a null pointer if no move was performed.
          */
-        std::auto_ptr<NHomGroupPresentation> intelligentNielsenDetail();
+        std::unique_ptr<NHomGroupPresentation> intelligentNielsenDetail();
 
         /**
          * Rewrites the presentation so that generators
@@ -1108,7 +1108,7 @@ class REGINA_API NGroupPresentation :
          * from the old presentation to the new, or a null pointer if
          * this presentation was not changed.
          */
-        std::auto_ptr<NHomGroupPresentation> homologicalAlignmentDetail();
+        std::unique_ptr<NHomGroupPresentation> homologicalAlignmentDetail();
 
         /**
          * An entirely cosmetic re-writing of the presentation, which is
@@ -1150,7 +1150,7 @@ class REGINA_API NGroupPresentation :
          * map from the original presentation to the new presentation,
          * or a null pointer if the choice of generators did not change.
          */
-        std::auto_ptr<NHomGroupPresentation> prettyRewritingDetail();
+        std::unique_ptr<NHomGroupPresentation> prettyRewritingDetail();
 
         /**
          * Attempts to prove that this and the given group presentation are
@@ -1271,7 +1271,7 @@ class REGINA_API NGroupPresentation :
          * This is an algorithmic
          * implementation of the Reidemeister-Schrier algorithm, which isn't
          * actually an algorithm.  So sometimes this procedure works, and
-         * sometimes it does not.  The return value is an allocated auto_ptr
+         * sometimes it does not.  The return value is an allocated unique_ptr
          * if and only if the algorithm is successful.  Even if the algorithm
          * is unsuccessful, its application will likely result in a
          * modification of the presentation.
@@ -1285,7 +1285,7 @@ class REGINA_API NGroupPresentation :
          * it will be an automorphism of a presentation of the kernel of the
          * map this to the integers.
          */
-        std::auto_ptr< NHomGroupPresentation > identifyExtensionOverZ();
+        std::unique_ptr< NHomGroupPresentation > identifyExtensionOverZ();
 
         /**
          * Attempts to determine if this group is clearly a free

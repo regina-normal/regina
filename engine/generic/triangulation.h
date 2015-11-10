@@ -88,7 +88,7 @@ template <int> class Triangulation;
  * \tparam dim the dimension of the triangulation.  This must be at least 2.
  */
 template <int dim>
-class REGINA_API TriangulationBase : public boost::noncopyable {
+class TriangulationBase : public boost::noncopyable {
     static_assert(dim >= 2, "Triangulation requires dimension >= 2.");
 
     public:
@@ -937,7 +937,7 @@ class REGINA_API TriangulationBase : public boost::noncopyable {
  * This must be at least 2.
  */
 template <int dim>
-class REGINA_API Triangulation :
+class Triangulation :
         public TriangulationBase<dim>,
         public Output<Triangulation<dim>> {
     protected:

@@ -1,6 +1,3 @@
-/* Define if both signed and unsigned long long types are available. */
-#define LONG_LONG_FOUND
-
 /* Define if both int128_t and uint128_t types are available. */
 /* #undef INT128_T_FOUND */
 
@@ -20,17 +17,14 @@
 /* Define if Boost.Python is available. */
 #define BOOST_PYTHON_FOUND
 
+/* Define if the Graphviz libraries are available. */
+#define LIBGVC_FOUND
+
 /* Define if langinfo.h and nl_langinfo() are available. */
 #define LANGINFO_FOUND
 
 /* Define if we are replacing Tokyo Cabinet with the older QDBM. */
 /* #undef QDBM_AS_TOKYOCABINET */
-
-/* Define if we are excluding Normaliz from the build. */
-/* #undef EXCLUDE_NORMALIZ */
-
-/* Define if we are excluding SnapPea / SnapPy from the build. */
-/* #undef EXCLUDE_SNAPPEA */
 
 /* Define as const if the declaration of iconv() needs const, or empty if not. */
 #define ICONV_CONST 

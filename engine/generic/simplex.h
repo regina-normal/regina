@@ -78,7 +78,7 @@ template <int dim> class TriangulationBase;
  * This must be at least 2.
  */
 template <int dim>
-class REGINA_API SimplexBase :
+class SimplexBase :
         public NMarkedElement,
         public Output<SimplexBase<dim>>,
         public boost::noncopyable {
@@ -450,7 +450,7 @@ class REGINA_API SimplexBase :
  * This must be at least 2.
  */
 template <int dim>
-class REGINA_API Simplex : public SimplexBase<dim> {
+class Simplex : public SimplexBase<dim> {
     protected:
         /**
          * Creates a new simplex with no description and no facets joined

@@ -32,6 +32,16 @@
 
 /* end stub */
 
+/*! \file generic/canonical-impl.h
+ *  \brief Contains some of the implementation details for the
+ *  NGenericTriangulation class template.
+ *
+ *  This file is \e not included automatically by ngenerictriangulation.h.
+ *  However, typical end users should never need to include it, since
+ *  Regina's calculation engine provides full explicit instantiations
+ *  of NGenericTriangulation for \ref stddim "standard dimensions".
+ */
+
 #include "generic/ngenerictriangulation.h"
 
 namespace regina {
