@@ -326,6 +326,7 @@ class REGINA_API NMarkedAbelianGroup :
          * @param other the group with which this should be compared.
          * @return \c true if and only if the two groups are isomorphic.
          */
+        REGINA_INLINE_REQUIRED
         bool isIsomorphicTo(const NMarkedAbelianGroup &other) const;
 
         /**
@@ -1081,6 +1082,7 @@ class REGINA_API NHomMarkedAbelianGroup :
          *
          * @return true if this homomorphism is an isomorphism.
          */
+        REGINA_INLINE_REQUIRED
         bool isIsomorphism() const;
         /**
          * Is this the zero map?
@@ -1102,18 +1104,21 @@ class REGINA_API NHomMarkedAbelianGroup :
          *
          * @return the kernel of the homomorphism, as a marked abelian group.
          */
+        REGINA_INLINE_REQUIRED
         const NMarkedAbelianGroup& getKernel() const;
         /**
          * Returns the cokernel of this homomorphism.
          *
          * @return the cokernel of the homomorphism, as a marked abelian group.
          */
+        REGINA_INLINE_REQUIRED
         const NMarkedAbelianGroup& getCokernel() const;
         /**
          * Returns the image of this homomorphism.
          *
          * @return the image of the homomorphism, as a marked abelian group.
          */
+        REGINA_INLINE_REQUIRED
         const NMarkedAbelianGroup& getImage() const;
 
         /**

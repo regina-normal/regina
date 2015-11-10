@@ -442,7 +442,7 @@ class NGenericGluingPerms {
 
 /*@}*/
 
-// Help the compiler by noting which explicit instantiations we offer.
+// Indicate which templates we explicitly instantiate in the shared library.
 extern template class REGINA_API NGenericGluingPerms<2>;
 extern template class REGINA_API NGenericGluingPerms<3>;
 

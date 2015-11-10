@@ -14,6 +14,20 @@ Version 4.97  [ (under development) ]
         - Merged sources for the iPad version into the main source tree.
         - Updated the bundled copy of Normaliz to version 3.0.0 (28 Sep 2015).
         - Switched from std::auto_ptr to std::unique_ptr throughout the API.
+    BACKWARD COMPATIBILITY:
+        - Some routines have been removed, which may break your old code:
+            * NTriangulation::addTetrahedron(), as well as the NTetrahedron
+              constructors, have been deprecated since 2011; they are now
+              removed completely.  To add tetrahedra to a triangulation,
+              call NTriangulation::newTetrahedron() instead.
+            * NTriangulation::gluingsHaveChanged() has likewise been deprecated
+              since 2011, and has now been removed completely.  This routine
+              is no longer necessary (it has done nothing since it was
+              deprecated), and you can simply remove it from your code.
+            * NProgress, NProgressManager and related classes have been
+              deprecated since 2013; they are also removed completely.
+              All the code that used to work with these classes now
+              works with the newer and more flexible NProgressTracker instead.
     ENGINE:
         All:
             - Removed ShareableObject from the class hierarchy.  All classes
@@ -192,11 +206,16 @@ Version 4.97  [ (under development) ]
         Class NNormalSurfaceSubset:
             - Renamed getNumberOfSurfaces() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
+        Class NNormalSurfaceVector:
+            - The subclass constant coordType is now a constant of type
+              NormalCoords, not an anonymous enum type.
         Class NPacket:
             - Added a variant of save() that takes an output stream (as
               opposed to a filename).
             - New routine adornedLabel() for creating modified packet labels.
             - New routine transferChildren() for bulk tree reorganisation.
+            - The subclass constant packetType is now a constant of type
+              PacketType, not an anonymous enum type.
         Class NPacketListener:
             - New events childToBeRenamed(), childWasRenamed().
         Class NPerm:
@@ -237,6 +256,9 @@ Version 4.97  [ (under development) ]
         Class NSatBlock:
             - Classes inheriting from this must now implement writeTextShort,
               and can optionally overwrite the default writeTextLong function.
+        Class NSurfaceFilter:
+            - The subclass constant filterType is now a constant of type
+              SurfaceFilterType, not an anonymous enum type.
         Class NSurfaceFilterProperties:
             - New set-based routine setECs().
         Class NTetrahedron:
@@ -255,6 +277,8 @@ Version 4.97  [ (under development) ]
               joinTo() has been kept but is now deprecated.
             - Routine getComponent() has been renamed to component().
               The old name getComponent() has been kept but is now deprecated.
+            - Removed the long-deprecated public constructors.  To create new
+              tetrahedra, call NTriangulation::newTetrahedron() instead.
         Class NThread:
             - Deprecated; just use std::thread and related classes instead.
         Class NTreeBag, NTreeDecomposition:
@@ -310,6 +334,7 @@ Version 4.97  [ (under development) ]
               old names are deprecated but kept for backward compatibility.
             - Renamed getNumberOfBoundaryTriangles() to countBoundaryFacets();
               added an alias countBoundaryTriangles(); deprecated the old name.
+            - Removed the long-deprecated addTetrahedron().
         Class NVertex:
             - Added a new LinkType enumeration, which encapsulates (and
               replaces) the old link type constants.
@@ -370,6 +395,8 @@ Version 4.97  [ (under development) ]
             - Removed this deprecated header from the triangulation/ directory.
         Header zstream.h:
             - Removed entirely.  Regina now uses boost::iostreams instead.
+        Macro REGINA_INLINE_REQUIRED:
+            - New macro to help reduce noisy warnings under windows.
     USER INTERFACE:
         - Now builds against Qt5, not Qt4.
         - Supports hi-resolution (e.g., retina) displays.
@@ -379,6 +406,7 @@ Version 4.97  [ (under development) ]
           to modifying the current triangulation.
         - Puncturing a triangulation, making it ideal or truncating ideal
           vertices now automatically simplify the resulting triangulation.
+        - Now links against Graphviz instead of running it externally.
     PYTHON:
         - For all classes, writeTextShort() and writeTextLong() are no
           longer exposed to Python.  Simply use str() and detail() instead.

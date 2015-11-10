@@ -71,48 +71,6 @@ typedef std::list<NSigPartialIsomorphism*> NSigIsoList;
 typedef void (*UseSignature)(const NSignature&, const NSigIsoList&, void *);
 
 /**
- * Forms a census of all splitting surface signatures of the given order.
- * The order of a signature is the number of quads in the corresponding
- * splitting surface.
- *
- * Each signature will be produced precisely once up to equivalence.
- * Signatures are considered equivalent if they are related by some
- * combination of:
- * - relabelling symbols;
- * - rotating an individual cycle;
- * - inverting an individual cycle (i.e., reversing the cycle and
- *   changing the case of each symbol in the cycle);
- * - reversing all cycles without changing the case of any symbols.
- *
- * Each signature produced will have its cycles ordered by decreasing
- * length.  Each cycle will have at least half of its symbols lower-case.
- *
- * For each signature that is generated, routine \a use (as passed to this
- * function) will be called with that signature and its automorphisms as
- * arguments.
- *
- * \warning Currently upper-case symbols in signatures are not supported
- * by this routine; only signatures whose symbols are all lower-case will
- * be produced.
- *
- * \todo \feature Add support for symbols of differing case.
- *
- * \ifacespython Not present.
- *
- * @param order the order of signatures to generate.
- * @param use the function to call upon each signature that is found.
- * The first parameter passed to this function will be a splitting
- * surface signature.  The second parameter will be a list of all its
- * automorphisms.  The third parameter will be parameter \a useArgs as
- * was passed to this routine.
- * @param useArgs the pointer to pass as the final parameter for the
- * function \a use which will be called upon each signature found.
- * @return the total number of non-equivalent signatures that were found.
- */
-REGINA_API unsigned long formSigCensus(unsigned order, UseSignature use,
-    void* useArgs = 0);
-
-/**
  * A utility class used by formSigCensus().  Other routines should never
  * refer to this class directly.  It is used to store temporary
  * information when forming the census.
@@ -203,6 +161,48 @@ class REGINA_API NSigCensus {
     friend unsigned long formSigCensus(unsigned order, UseSignature use,
         void* useArgs);
 };
+
+/**
+ * Forms a census of all splitting surface signatures of the given order.
+ * The order of a signature is the number of quads in the corresponding
+ * splitting surface.
+ *
+ * Each signature will be produced precisely once up to equivalence.
+ * Signatures are considered equivalent if they are related by some
+ * combination of:
+ * - relabelling symbols;
+ * - rotating an individual cycle;
+ * - inverting an individual cycle (i.e., reversing the cycle and
+ *   changing the case of each symbol in the cycle);
+ * - reversing all cycles without changing the case of any symbols.
+ *
+ * Each signature produced will have its cycles ordered by decreasing
+ * length.  Each cycle will have at least half of its symbols lower-case.
+ *
+ * For each signature that is generated, routine \a use (as passed to this
+ * function) will be called with that signature and its automorphisms as
+ * arguments.
+ *
+ * \warning Currently upper-case symbols in signatures are not supported
+ * by this routine; only signatures whose symbols are all lower-case will
+ * be produced.
+ *
+ * \todo \feature Add support for symbols of differing case.
+ *
+ * \ifacespython Not present.
+ *
+ * @param order the order of signatures to generate.
+ * @param use the function to call upon each signature that is found.
+ * The first parameter passed to this function will be a splitting
+ * surface signature.  The second parameter will be a list of all its
+ * automorphisms.  The third parameter will be parameter \a useArgs as
+ * was passed to this routine.
+ * @param useArgs the pointer to pass as the final parameter for the
+ * function \a use which will be called upon each signature found.
+ * @return the total number of non-equivalent signatures that were found.
+ */
+REGINA_API unsigned long formSigCensus(unsigned order, UseSignature use,
+    void* useArgs = 0);
 
 /*@}*/
 

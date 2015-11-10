@@ -47,14 +47,17 @@
 #include <QMenuBar>
 
 PacketWindow::PacketWindow(PacketPane* newPane, ReginaMain* parent) :
-        QMainWindow(parent, 
+        QMainWindow(parent,
         Qt::Window | Qt::WindowContextHelpButtonHint),
         heldPane(newPane), mainWindow(parent) {
     // Set destructive close
     setAttribute(Qt::WA_DeleteOnClose);
 
     setWindowTitle(heldPane->getPacket()->getHumanLabel().c_str());
-    
+
+    // On windows, the close button does not seem to appear automatically.
+    setWindowFlags(windowFlags() | Qt::WindowCloseButtonHint);
+
     // Set up the widgets and menu bar.
     heldPane->setParent(this);
     setCentralWidget(newPane);
@@ -114,7 +117,7 @@ void PacketWindow::setupMenus() {
         "mathematical engine."));
     connect(actPython, SIGNAL(triggered()), this, SLOT(pythonConsole()));
     toolMenu->addAction(actPython);
-    
+
     toolMenu->addSeparator();
 
     QAction* act = new QAction(this);
