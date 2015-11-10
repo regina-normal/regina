@@ -417,7 +417,8 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
         if (! ::isspace(*d))
             return 0;
 
-    size_t i, nSimp, nChars;
+    unsigned i;
+    size_t pos, nSimp, nChars;
     while (c != end) {
         // Read one component at a time.
         nSimp = IsoSigHelper::SVAL(*c++);
@@ -493,8 +494,8 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
 
         typename NPerm<dim+1>::Index* joinGluing =
             new typename NPerm<dim+1>::Index[nJoins + 1];
-        for (i = 0; i < nJoins; ++i) {
-            if (c + IsoSigHelper::CHARS_PER_PERM(dim) > end) {
+        for (pos = 0; pos < nJoins; ++pos) {
+            if (c + IsoSigHelper::CHARS_PER_PERM<dim>() > end) {
                 delete[] facetAction;
                 delete[] joinDest;
                 delete[] joinGluing;
