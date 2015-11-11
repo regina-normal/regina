@@ -42,15 +42,18 @@
 #endif
 
 #include "regina-core.h"
+#include "generic/triangulation.h"
 #include "maths/nperm.h"
 #include <list>
 #include <memory>
 #include <string>
 
-namespace regina {
+// Note: We must include generic/triangulation.h, since otherwise the
+// "extern template class" lines in this file cause the compiler to
+// instantiate Triangulation<dim> in standard dimensions with the generic
+// template instead of the specialisation.
 
-template <int> class Isomorphism;
-template <int> class Triangulation;
+namespace regina {
 
 /**
  * \weakgroup generic
