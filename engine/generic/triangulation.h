@@ -1175,9 +1175,13 @@ bool TriangulationBase<2>::compatible(const Triangulation<2>&, bool) const;
 template <> template <typename OutputIterator>
 bool TriangulationBase<3>::compatible(const Triangulation<3>&, bool) const;
 template <> template <typename OutputIterator>
+bool TriangulationBase<4>::compatible(const Triangulation<4>&, bool) const;
+template <> template <typename OutputIterator>
 bool TriangulationBase<2>::compatible(Simplex<2>*, Simplex<2>* dest, NPerm<3>);
 template <> template <typename OutputIterator>
 bool TriangulationBase<3>::compatible(Simplex<3>*, Simplex<3>* dest, NPerm<4>);
+template <> template <typename OutputIterator>
+bool TriangulationBase<4>::compatible(Simplex<4>*, Simplex<4>* dest, NPerm<5>);
 
 /**
  * A <i>dim</i>-dimensional triangulation, built by gluing together
