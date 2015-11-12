@@ -520,6 +520,174 @@ class TriangulationBase : public boost::noncopyable {
         bool isIdenticalTo(const Triangulation<dim>& other) const;
 
         /**
+         * Determines if this triangulation is combinatorially
+         * isomorphic to the given triangulation.
+         *
+         * Two triangulations are \e isomorphic if and only it is
+         * possible to relabel their top-dimensional simplices and the
+         * (<i>dim</i>+1) vertices of each simplex in a way that makes
+         * the two triangulations combinatorially identical, as returned
+         * by isIdenticalTo().
+         *
+         * Equivalently, two triangulations are isomorphic if and only if
+         * there is a one-to-one and onto boundary complete combinatorial
+         * isomorphism from this triangulation to \a other, as described
+         * in the Isomorphism class notes.
+         *
+         * In particular, note that this triangulation and \a other must
+         * contain the same number of top-dimensional simplices for such an
+         * isomorphism to exist.
+         *
+         * If the triangulations are isomorphic, then this routine returns
+         * one such boundary complete isomorphism (i.e., one such relabelling).
+         * The isomorphism will be newly constructed, and to assist with
+         * memory management, it will be returned as a std::unique_ptr.
+         * Thus, to test whether an isomorphism exists without having to
+         * explicitly manage with the isomorphism itself, you can just call
+         * <tt>if (isIsomorphicTo(other).get())</tt>, in which case the newly
+         * created isomorphism (if it exists) will be automatically
+         * destroyed.
+         *
+         * There may be many such isomorphisms between the two triangulations.
+         * If you need to find \e all such isomorphisms, you may call
+         * findAllIsomorphisms() instead.
+         *
+         * If you need to ensure that top-dimensional simplices are labelled
+         * the same in both triangulations (i.e., that the triangulations are
+         * related by the \e identity isomorphism), you should call the
+         * stricter test isIdenticalTo() instead.
+         *
+         * \warning For large dimensions, this routine can become
+         * extremely slow: its running time includes a factor of
+         * (<i>dim</i>+1)!.
+         *
+         * \todo \opt Improve the complexity by choosing a simplex
+         * mapping from each component and following gluings to
+         * determine the others.
+         *
+         * @param other the triangulation to compare with this one.
+         * @return details of the isomorphism if the two triangulations
+         * are combinatorially isomorphic, or a null pointer otherwise.
+         */
+        std::unique_ptr<Isomorphism<dim>> isIsomorphicTo(
+            const Triangulation<dim>& other) const;
+
+        /**
+         * Determines if an isomorphic copy of this triangulation is
+         * contained within the given triangulation, possibly as a
+         * subcomplex of some larger component (or components).
+         *
+         * Specifically, this routine determines if there is a boundary
+         * incomplete combinatorial isomorphism from this triangulation
+         * to \a other.  Boundary incomplete isomorphisms are described
+         * in detail in the Isomorphism class notes.
+         *
+         * In particular, note that facets of top-dimensional simplices that
+         * lie on the boundary of this triangulation need not correspond to
+         * boundary facets of \a other, and that \a other may contain more
+         * top-dimensional simplices than this triangulation.
+         *
+         * If a boundary incomplete isomorphism is found, the details of
+         * this isomorphism are returned.  The isomorphism is newly
+         * constructed, and so to assist with memory management is
+         * returned as a std::unique_ptr.  Thus, to test whether an
+         * isomorphism exists without having to explicitly deal with the
+         * isomorphism itself, you can call
+         * <tt>if (isContainedIn(other).get())</tt> and the newly
+         * created isomorphism (if it exists) will be automatically
+         * destroyed.
+         *
+         * If more than one such isomorphism exists, only one will be
+         * returned.  For a routine that returns all such isomorphisms,
+         * see findAllSubcomplexesIn().
+         *
+         * \warning For large dimensions, this routine can become
+         * extremely slow: its running time includes a factor of
+         * (<i>dim</i>+1)!.
+         *
+         * @param other the triangulation in which to search for an
+         * isomorphic copy of this triangulation.
+         * @return details of the isomorphism if such a copy is found,
+         * or a null pointer otherwise.
+         */
+        std::unique_ptr<Isomorphism<dim>> isContainedIn(
+            const Triangulation<dim>& other) const;
+
+        /**
+         * Finds all ways in which this triangulation is combinatorially
+         * isomorphic to the given triangulation.
+         *
+         * This routine behaves identically to isIsomorphicTo(), except that
+         * instead of returning just one isomorphism, all such isomorphisms
+         * are returned.
+         *
+         * See the isIsomorphicTo() notes for additional information.
+         *
+         * The isomorphisms that are found will be written to the given
+         * output iterator.  This iterator must accept objects of type
+         * Isomorphism<dim>*.  As an example, \a output might be a
+         * back_insert_iterator for a std::vector<Isomorphism<dim>*>.
+         *
+         * The isomorphisms that are written to the given output iterator
+         * will be newly created, and the caller of this routine is
+         * responsible for destroying them.
+         *
+         * \ifacespython The \a output argument is not present.
+         * Instead, this routine returns a python list containing all of
+         * the isomorphisms that were found.
+         *
+         * \warning For large dimensions, this routine can become
+         * extremely slow: its running time includes a factor of
+         * (<i>dim</i>+1)!.
+         *
+         * @param other the triangulation to compare with this one.
+         * @param output the output iterator to which the isomorphisms
+         * will be written.
+         * @return the number of isomorphisms that were found.
+         */
+        template <typename OutputIterator>
+        size_t findAllIsomorphisms(const Triangulation<dim>& other,
+            OutputIterator output) const;
+
+        /**
+         * Finds all ways in which an isomorphic copy of this triangulation
+         * is contained within the given triangulation, possibly as a
+         * subcomplex of some larger component (or components).
+         *
+         * This routine behaves identically to isContainedIn(), except
+         * that instead of returning just one isomorphism (which may be
+         * boundary incomplete and need not be onto), all such isomorphisms
+         * are returned.
+         *
+         * See the isContainedIn() notes for additional information.
+         *
+         * The isomorphisms that are found will be written to the given
+         * output iterator.  This iterator must accept objects of type
+         * Isomorphism<dim>*.  As an example, \a output might be a
+         * back_insert_iterator for a std::vector<Isomorphism<dim>*>.
+         *
+         * The isomorphisms that are written to the given output iterator
+         * will be newly created, and the caller of this routine is
+         * responsible for destroying them.
+         *
+         * \warning For large dimensions, this routine can become
+         * extremely slow: its running time includes a factor of
+         * (<i>dim</i>+1)!.
+         *
+         * \ifacespython Not present.
+         *
+         * @param other the triangulation in which to search for
+         * isomorphic copies of this triangulation.
+         * @param output the output iterator to which the isomorphisms
+         * will be written.
+         * @return the number of isomorphisms that were found.
+         */
+        template <typename OutputIterator>
+        size_t findAllSubcomplexesIn(const Triangulation<dim>& other,
+            OutputIterator output) const;
+
+        /*@}*/
+        /**
          * Relabel the top-dimensional simplices and their vertices so that
          * this triangulation is in canonical form.  This is essentially
          * the lexicographically smallest labelling when the facet
@@ -899,7 +1067,117 @@ class TriangulationBase : public boost::noncopyable {
          */
         std::string isoSigFrom(size_t simp, const NPerm<dim+1>& vertices,
             Isomorphism<dim>* relabelling) const;
+
+        /**
+         * Determines if an isomorphic copy of this triangulation is
+         * contained within the given triangulation.
+         *
+         * If the argument \a completeIsomorphism is \c true, the
+         * isomorphism must be onto and boundary complete.
+         * That is, this triangulation must be combinatorially
+         * isomorphic to the given triangulation.
+         *
+         * If the argument \a completeIsomorphism is \c false, the
+         * isomorphism may be boundary incomplete and may or may not be
+         * onto.  That is, this triangulation must appear as a
+         * subcomplex of the given triangulation, possibly with some
+         * original boundary triangles joined to new tetrahedra.
+         *
+         * See the Isomorphism class notes for further details
+         * regarding boundary complete and boundary incomplete
+         * isomorphisms.
+         *
+         * The isomorphisms that are found will be written to the given
+         * output iterator.  This iterator must accept objects of type
+         * Isomorphism<dim>*.  As an example, \a output might be a
+         * back_insert_iterator for a std::vector<Isomorphism<dim>*>.
+         *
+         * The isomorphisms that are written to the given output iterator
+         * will be newly created, and the caller of this routine is
+         * responsible for destroying them.
+         *
+         * If \a firstOnly is passed as \c true, only the first
+         * isomorphism found (if any) will be returned, after which the
+         * routine will return immediately.  Otherwise all isomorphisms
+         * will be returned.
+         *
+         * @param other the triangulation in which to search for an
+         * isomorphic copy of this triangulation.
+         * @param output the output iterator to which the isomorphisms
+         * will be written.
+         * @param completeIsomorphism \c true if isomorphisms must be
+         * onto and boundary complete, or \c false if neither of these
+         * restrictions should be imposed.
+         * @param firstOnly \c true if only one isomorphism should be
+         * returned (if any), or \c false if all isomorphisms should be
+         * returned.
+         * @return the total number of isomorphisms found.
+         */
+        template <typename OutputIterator>
+        size_t findIsomorphisms(const Triangulation<dim>& other,
+                OutputIterator output, bool complete, bool firstOnly) const;
+
+        /**
+         * Internal to findIsomorphisms().
+         *
+         * Examines basic properties of this and the given triangulation to
+         * find any immediate evidence that there can be no isomorphic copy
+         * of this triangulation within the given triangulation.
+         *
+         * The generic implementation of this routine tests basic
+         * properties such as orientability and the sizes of the components.
+         * Specialisations for \ref stddim "standard dimensions" may examine
+         * properties of the vertices, edges and so on.
+         *
+         * \pre The skeleton of both this and the given triangulation
+         * have been computed.
+         * \pre This triangulation is non-empty.
+         *
+         * @param other the triangulation in which we are searching for an
+         * isomorphic copy of this triangulation.
+         * @param completeIsomorphism \c true if the isomorphism must be
+         * onto and boundary complete, or \c false if neither of these
+         * restrictions should be imposed.
+         * @return \c true if no immediate obstructions were found, or
+         * \c false if evidence was found that such an isomorphism
+         * cannot exist.
+         */
+        bool compatible(const Triangulation<dim>& other, bool complete) const;
+
+        /**
+         * Internal to findIsomorphisms().
+         *
+         * Examines properties of the given top-dimensional simplices to find
+         * any immediate evidence that \a src cannot map to \a dest in a
+         * boundary complete isomorphism for which the vertices of \a src
+         * map to the vertices of \a dest according to the permutation \a p.
+         *
+         * The generic implementation of this routine simply returns \c true,
+         * indicating that no such evidence was found.  Specialisations
+         * for \ref stddim "standard dimensions" may examine properties
+         * of the vertices, edges and so on.
+         *
+         * @param src the first of the two simplices to examine.
+         * @param dest the second of the two simplices to examine.
+         * @param p the permutation under which the vertices of \a src
+         * must map to the vertices of \a dest.
+         * @return \c true if no immediate incompatibilities between the
+         * simplices were found, or \c false if evidence was found that
+         * \a src cannot map to \a dest.
+         */
+        static bool compatible(Simplex<dim>* src, Simplex<dim>* dest,
+                NPerm<dim+1> p);
 };
+
+// Note that some of our routines are specialised for standard dimensions.
+template <> template <typename OutputIterator>
+bool TriangulationBase<2>::compatible(const Triangulation<2>&, bool) const;
+template <> template <typename OutputIterator>
+bool TriangulationBase<3>::compatible(const Triangulation<3>&, bool) const;
+template <> template <typename OutputIterator>
+bool TriangulationBase<2>::compatible(Simplex<2>*, Simplex<2>* dest, NPerm<3>);
+template <> template <typename OutputIterator>
+bool TriangulationBase<3>::compatible(Simplex<3>*, Simplex<3>* dest, NPerm<4>);
 
 /**
  * A <i>dim</i>-dimensional triangulation, built by gluing together
@@ -944,18 +1222,20 @@ class TriangulationBase : public boost::noncopyable {
  * pointers to them will become invalid.  Likewise, if the triangulation
  * is deleted then all component objects will be deleted alongside it.
  *
- * For dimensions 2 and 3, this template is specialised and offers
- * \e much more functionality.  In order to use these specialised
- * classes, you will need to include the corresponding headers
- * (dim2/dim2triangulation.h for \a dim = 2, or triangulation/ntriangulation.h
+ * For Regina's \ref stddim "standard dimensions", this template is specialised
+ * and offers \e much more functionality.  In order to use these specialised
+ * classes, you will need to include the corresponding headers (e.g.,
+ * dim2/dim2triangulation.h for \a dim = 2, or triangulation/ntriangulation.h
  * for \a dim = 3).  For convenience, there are typedefs available for
- * these specialised classes (Dim2Triangulation and NTriangulation
+ * these specialised classes (such as Dim2Triangulation and NTriangulation
  * respectively).
  *
- * \ifacespython Python does not support templates.  For \a dim = 2 and 3,
- * this class is available in Python under the names Triangulation2 and
- * Triangulation3 respectively (as well as the typedefs mentioned above).
- * Higher-dimensional classes are not available in Python for the time being.
+ * \ifacespython Python does not support templates.  For standard dimensions
+ * this class can be used by appending the dimension as a suffix
+ * (e.g., Triangulation2 and Triangulation3 for dimensions 2 and 3).
+ * The typedefs mentioned above (e.g., Dim2Triangulation and NTriangulation)
+ * are also available.  Higher-dimensional classes are not available
+ * in Python for the time being.
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be at least 2.
@@ -964,6 +1244,10 @@ template <int dim>
 class Triangulation :
         public TriangulationBase<dim>,
         public Output<Triangulation<dim>> {
+    static_assert(! standardDim(dim),
+        "The generic implementation of Triangulation<dim> "
+        "should not be used for Regina's standard dimensions.");
+
     protected:
         using TriangulationBase<dim>::simplices_;
 
@@ -1077,6 +1361,112 @@ class Triangulation :
 // Do not explicitly drag in the specialised headers for now.
 template <> class Triangulation<2>;
 template <> class Triangulation<3>;
+
+/**
+ * A function object used for sorting faces of triangulations by
+ * increasing degree.  This can (for instance) be used with std::sort().
+ *
+ * The template argument \a dim refers to the dimension of the overall
+ * triangluation(s) with which you are working.  The template argument
+ * \a subdim refers to the dimension of the faces that you are sorting.
+ * So, for instance, to sort edges of a 3-manifold triangulation by
+ * increasing edge degree, you would use DegreeLessThan<3, 1>.
+ *
+ * A single instance of this class works with faces of a single
+ * fixed triangulation (which is passed to the class constructor).
+ *
+ * \pre \a dim is one of Regina's \ref stddim "standard dimensions".
+ * \pre \a subdim is between 0 and \a dim-1 inclusive.
+ */
+template <int dim, int subdim>
+class DegreeLessThan {
+    static_assert(standardDim(dim),
+        "DegreeLessThan is only available for Regina's standard dimensions.");
+
+    private:
+        const Triangulation<dim>& tri_;
+            /**< The triangulation with which we are working. */
+
+    public:
+        /**
+         * Constructions a function object for working with faces of the
+         * given triangulation.
+         *
+         * @param tri the triangulation with which we are working.
+         */
+        DegreeLessThan(const Triangulation<dim>& tri);
+        /**
+         * Compares the degrees of the \a subdim-dimensional faces
+         * at the given indices within the working triangulation.
+         * The triangulation that is used will be the one that was
+         * passed to the class constructor.
+         *
+         * \pre Both \a a and \a b are non-negative, and are strictly
+         * less than the total number of \a subdim-dimensional faces in
+         * the triangulation.
+         *
+         * @param a the index of the first \a subdim-dimensional face
+         * within the triangulation.
+         * @param b the index of the second \a subdim-dimensional face
+         * within the triangulation.
+         * @return \c true if and only if face \a a has smaller degree than
+         * face \a b within the given triangulation.
+         */
+        bool operator() (unsigned a, unsigned b) const;
+};
+
+/**
+ * A function object used for sorting faces of triangulations by
+ * decreasing degree.  This can (for instance) be used with std::sort().
+ *
+ * The template argument \a dim refers to the dimension of the overall
+ * triangluation(s) with which you are working.  The template argument
+ * \a subdim refers to the dimension of the faces that you are sorting.
+ * So, for instance, to sort edges of a 3-manifold triangulation by
+ * decreasing edge degree, you would use DegreeGreaterThan<3, 1>.
+ *
+ * A single instance of this class works with faces of a single
+ * fixed triangulation (which is passed to the class constructor).
+ *
+ * \pre \a dim is one of Regina's \ref stddim "standard dimensions".
+ * \pre \a subdim is between 0 and \a dim-1 inclusive.
+ */
+template <int dim, int subdim>
+class DegreeGreaterThan {
+    static_assert(standardDim(dim),
+        "DegreeGreaterThan is only available for Regina's standard dimensions.");
+
+    private:
+        const Triangulation<dim>& tri_;
+            /**< The triangulation with which we are working. */
+
+    public:
+        /**
+         * Constructions a function object for working with faces of the
+         * given triangulation.
+         *
+         * @param tri the triangulation with which we are working.
+         */
+        DegreeGreaterThan(const Triangulation<dim>& tri);
+        /**
+         * Compares the degrees of the \a subdim-dimensional faces
+         * at the given indices within the working triangulation.
+         * The triangulation that is used will be the one that was
+         * passed to the class constructor.
+         *
+         * \pre Both \a a and \a b are non-negative, and are strictly
+         * less than the total number of \a subdim-dimensional faces in
+         * the triangulation.
+         *
+         * @param a the index of the first \a subdim-dimensional face
+         * within the triangulation.
+         * @param b the index of the second \a subdim-dimensional face
+         * within the triangulation.
+         * @return \c true if and only if face \a a has greater degree than
+         * face \a b within the given triangulation.
+         */
+        bool operator() (unsigned a, unsigned b) const;
+};
 
 /*@}*/
 
@@ -1369,6 +1759,40 @@ bool TriangulationBase<dim>::isIdenticalTo(const Triangulation<dim>& other)
     }
 
     return true;
+}
+
+template <int dim>
+inline std::unique_ptr<Isomorphism<dim>> TriangulationBase<dim>::isIsomorphicTo(
+        const Triangulation<dim>& other) const {
+    Isomorphism<dim>* results[1];
+    if (findIsomorphisms(other, results, true, true))
+        return std::unique_ptr<Isomorphism<dim>>(results[0]);
+    else
+        return nullptr;
+}
+
+template <int dim>
+inline std::unique_ptr<Isomorphism<dim>> TriangulationBase<dim>::isContainedIn(
+        const Triangulation<dim>& other) const {
+    Isomorphism<dim>* results[1];
+    if (findIsomorphisms(other, results, false, true))
+        return std::unique_ptr<Isomorphism<dim>>(results[0]);
+    else
+        return nullptr;
+}
+
+template <int dim>
+template <typename OutputIterator>
+inline size_t TriangulationBase<dim>::findAllIsomorphisms(
+        const Triangulation<dim>& other, OutputIterator output) const {
+    return findIsomorphisms(other, output, true, false);
+}
+
+template <int dim>
+template <typename OutputIterator>
+inline size_t TriangulationBase<dim>::findAllSubcomplexesIn(
+        const Triangulation<dim>& other, OutputIterator output) const {
+    return findIsomorphisms(other, output, false, false);
 }
 
 template <int dim>
@@ -1717,6 +2141,32 @@ void Triangulation<dim>::writeTextLong(std::ostream& out) const {
         out << '\n';
     }
     out << '\n';
+}
+
+// Inline functions for DegreeLessThan / DegreeGreaterThan
+
+template <int dim, int subdim>
+inline DegreeLessThan<dim, subdim>::DegreeLessThan(
+        const Triangulation<dim>& tri) : tri_(tri) {
+}
+
+template <int dim, int subdim>
+inline bool DegreeLessThan<dim, subdim>::operator () (
+        unsigned a, unsigned b) const {
+    return (tri_.template getFace<subdim>(a)->getNumberOfEmbeddings() <
+            tri_.template getFace<subdim>(b)->getNumberOfEmbeddings());
+}
+
+template <int dim, int subdim>
+inline DegreeGreaterThan<dim, subdim>::DegreeGreaterThan(
+        const Triangulation<dim>& tri) : tri_(tri) {
+}
+
+template <int dim, int subdim>
+inline bool DegreeGreaterThan<dim, subdim>::operator () (
+        unsigned a, unsigned b) const {
+    return (tri_.template getFace<subdim>(a)->getNumberOfEmbeddings() >
+            tri_.template getFace<subdim>(b)->getNumberOfEmbeddings());
 }
 
 } // namespace regina

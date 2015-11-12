@@ -115,7 +115,8 @@ void NSatBlockStarterSearcher::findStarterBlocks(NTriangulation* tri) {
 
         // Find all isomorphisms of the starter block within the given
         // triangulation.
-        if (! (*it)->triangulation().findAllSubcomplexesIn(*tri, isos))
+        if (! (*it)->triangulation().findAllSubcomplexesIn(*tri,
+                back_inserter(isos)))
             continue;
 
         // Run through each isomorphism in the list and see if it leads

@@ -123,7 +123,7 @@ NLayeredTorusBundle* NLayeredTorusBundle::isLayeredTorusBundle(
 NLayeredTorusBundle* NLayeredTorusBundle::hunt(NTriangulation* tri,
         const NTxICore& core) {
     std::list<NIsomorphism*> isos;
-    if (! core.core().findAllSubcomplexesIn(*tri, isos))
+    if (! core.core().findAllSubcomplexesIn(*tri, back_inserter(isos)))
         return 0;
 
     // Run through each isomorphism and look for the corresponding layering.

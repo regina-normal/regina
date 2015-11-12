@@ -146,7 +146,7 @@ NPluggedTorusBundle* NPluggedTorusBundle::isPluggedTorusBundle(
 NPluggedTorusBundle* NPluggedTorusBundle::hunt(NTriangulation* triang,
         const NTxICore& bundle) {
     std::list<NIsomorphism*> isos;
-    if (! bundle.core().findAllSubcomplexesIn(*triang, isos))
+    if (! bundle.core().findAllSubcomplexesIn(*triang, back_inserter(isos)))
         return 0;
 
     int regionPos;

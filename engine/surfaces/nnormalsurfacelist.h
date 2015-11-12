@@ -61,6 +61,9 @@ class NXMLPacketReader;
 class NXMLNormalSurfaceListReader;
 
 template <int> class Triangulation;
+// We *must* declare the specialisation here; otherwise this header has
+// the side-effect of instantiating Trianglation<3> using the generic template.
+template <> class Triangulation<3>;
 typedef Triangulation<3> NTriangulation;
 
 /**

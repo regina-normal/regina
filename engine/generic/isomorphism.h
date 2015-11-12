@@ -376,21 +376,27 @@ class IsomorphismBase :
  * For Regina's \ref stddim "standard dimensions", this template is specialised
  * and offers some extra functionality.  In order to use these specialised
  * classes, you will need to include the corresponding headers
- * (dim2/dim2isomorphism.h for \a dim = 2, or
+ * (e.g., dim2/dim2isomorphism.h for \a dim = 2, or
  * triangulation/nisomorphism.h for \a dim = 3).  For convenience, there
- * are typedefs available for these specialised classes (Dim2Isomorphism and
- * NIsomorphism respectively).
+ * are typedefs available for these specialised classes (such as
+ * Dim2Isomorphism and NIsomorphism respectively).
  *
- * \ifacespython Python does not support templates.  For \a dim = 2 and 3,
- * this class is available in Python under the names Isomorphism2 and
- * Isomorphism3 respectively (as well as the typedefs mentioned above).
- * Higher-dimensional classes are not available in Python for the time being.
+ * \ifacespython Python does not support templates.  For standard dimensions
+ * this class can be used by appending the dimension as a suffix
+ * (e.g., Isomorphism2 and Isomorphism3 for dimensions 2 and 3).
+ * The typedefs mentioned above (e.g., Dim2Isomorphism and NIsomorphism)
+ * are also available.  Higher-dimensional classes are not available
+ * in Python for the time being.
  *
  * \tparam dim The dimension of the underlying triangulation.
  * This must be at least 2.
  */
 template <int dim>
 class Isomorphism : public IsomorphismBase<dim> {
+    static_assert(! standardDim(dim),
+        "The generic implementation of Isomorphism<dim> "
+        "should not be used for Regina's standard dimensions.");
+
     public:
         /**
          * Creates a new isomorphism with no initialisation.

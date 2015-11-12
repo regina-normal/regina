@@ -163,7 +163,7 @@ namespace {
         boost::python::list ans;
 
         std::list<regina::NIsomorphism*> isos;
-        t.findAllIsomorphisms(other, isos);
+        t.findAllIsomorphisms(other, back_inserter(isos));
 
         for (std::list<regina::NIsomorphism*>::iterator it =
                  isos.begin(); it != isos.end(); it++) {
