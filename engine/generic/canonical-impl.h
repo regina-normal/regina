@@ -33,22 +33,19 @@
 /* end stub */
 
 /*! \file generic/canonical-impl.h
- *  \brief Contains some of the implementation details for the
- *  NGenericTriangulation class template.
+ *  \brief Contains some of the implementation details for the generic
+ *  Triangulation class template.
  *
- *  This file is \e not included automatically by ngenerictriangulation.h.
- *  However, typical end users should never need to include it, since
- *  Regina's calculation engine provides full explicit instantiations
- *  of NGenericTriangulation for \ref stddim "standard dimensions".
+ *  This file is automatically included from triangulation.h; there is
+ *  no need for end users to include it explicitly.
  */
 
-#include "generic/ngenerictriangulation.h"
+#include <queue>
 
 namespace regina {
 
-template <int> class Simplex;
-
-namespace {
+#ifndef __DOXYGEN
+struct CanonicalHelper {
     /**
      * For internal use by makeCanonical().  This routines assumes that
      * the preimage of simplex 0 has been fixed (along with the
@@ -66,8 +63,8 @@ namespace {
      * This routine currently only works for connected triangulations.
      */
     template <int dim>
-    bool extendIsomorphism(
-            const Triangulation<dim>* tri,
+    static bool extendIsomorphism(
+            const TriangulationBase<dim>* tri,
             Isomorphism<dim>& current,
             Isomorphism<dim>& currentInv,
             const Isomorphism<dim>& best,
@@ -177,13 +174,12 @@ namespace {
 
         return better;
     }
-}
+};
+#endif
 
 template <int dim>
-bool NGenericTriangulation<dim>::makeCanonical() {
-    Triangulation<dim>* me = static_cast<Triangulation<dim>*>(this);
-
-    unsigned nSimp = me->getNumberOfSimplices();
+bool TriangulationBase<dim>::makeCanonical() {
+    unsigned nSimp = getNumberOfSimplices();
 
     // Get the empty triangulation out of the way.
     if (nSimp == 0)
@@ -213,8 +209,8 @@ bool NGenericTriangulation<dim>::makeCanonical() {
                 NPerm<dim+1>::Sn[NPerm<dim+1>::invSn[perm]];
             currentInv.facetPerm(0) = NPerm<dim+1>::Sn[perm];
 
-            if (extendIsomorphism<dim>(me, current, currentInv,
-                    best, bestInv)) {
+            if (CanonicalHelper::extendIsomorphism<dim>(this, current,
+                    currentInv, best, bestInv)) {
                 // This is better than anything we've seen before.
                 for (inner = 0; inner < nSimp; ++inner) {
                     best.simpImage(inner) = current.simpImage(inner);
@@ -231,7 +227,335 @@ bool NGenericTriangulation<dim>::makeCanonical() {
         return false;
 
     // Do it.
-    best.applyInPlace(me);
+    best.applyInPlace(static_cast<Triangulation<dim>*>(this));
+    return true;
+}
+
+template <int dim>
+template <typename OutputIterator>
+size_t TriangulationBase<dim>::findIsomorphisms(
+        const Triangulation<dim>& other, OutputIterator output,
+        bool complete, bool firstOnly) const {
+    ensureSkeleton();
+    other.ensureSkeleton();
+
+    // Deal with the empty triangulation first.
+    if (simplices_.empty()) {
+        if (complete && ! other.simplices_.empty())
+            return 0;
+        *output++ = new Isomorphism<dim>(0);
+        return 1;
+    }
+
+    // Basic property checks.
+    if (! compatible(other, complete))
+        return 0;
+
+    // Start searching for the isomorphism.
+    // From the tests above, we are guaranteed that both triangulations
+    // have at least one triangle.
+    size_t nResults = 0;
+    size_t nSimplices = simplices_.size();
+    size_t nDestSimplices = other.simplices_.size();
+    size_t nComponents = components().size();
+    unsigned i;
+
+    Isomorphism<dim> iso(nSimplices);
+    for (i = 0; i < nSimplices; i++)
+        iso.simpImage(i) = -1;
+
+    // Which source component does each destination simplex correspond to?
+    long* whichComp = new long[nDestSimplices];
+    std::fill(whichComp, whichComp + nDestSimplices, -1);
+
+    // The image of the first source simplex of each component.  The
+    // remaining images can be derived by following gluings.
+    size_t* startSimp = new size_t[nComponents];
+    std::fill(startSimp, startSimp + nComponents, 0);
+
+    typename NPerm<dim+1>::Index* startPerm =
+        new typename NPerm<dim+1>::Index[nComponents];
+    std::fill(startPerm, startPerm + nComponents, 0);
+
+    // The simplices whose neighbours must be processed when filling
+    // out the current component.
+    std::queue<long> toProcess;
+
+    // Temporary variables.
+    size_t compSize;
+    Simplex<dim>* tri;
+    Simplex<dim>* adj;
+    Simplex<dim>* destSimp;
+    Simplex<dim>* destAdj;
+    size_t myIndex, adjIndex;
+    size_t destIndex, destAdjIndex;
+    NPerm<dim+1> myPerm, adjPerm;
+    int facet;
+    bool broken;
+
+    long comp = 0;
+    while (comp >= 0) {
+        // Continue trying to find a mapping for the current component.
+        // The next mapping to try is the one that starts with
+        // startSimp[comp] and startPerm[comp].
+        if (comp == static_cast<long>(nComponents)) {
+            // We have an isomorphism!!!
+            *output++ = new Isomorphism<dim>(iso);
+
+            if (firstOnly) {
+                delete[] whichComp;
+                delete[] startSimp;
+                delete[] startPerm;
+                return 1;
+            } else
+                nResults++;
+
+            // Back down to the previous component, and clear the
+            // mapping for that previous component so we can make way
+            // for a new one.
+            // Since nComponents > 0, we are guaranteed that comp > 0 also.
+            comp--;
+
+            for (i = 0; i < nSimplices; i++)
+                if (iso.simpImage(i) >= 0 &&
+                        whichComp[iso.simpImage(i)] == comp) {
+                    whichComp[iso.simpImage(i)] = -1;
+                    iso.simpImage(i) = -1;
+                }
+            startPerm[comp]++;
+
+            continue;
+        }
+
+        // Sort out the results of any previous startPerm++.
+        if (startPerm[comp] == NPerm<dim+1>::nPerms) {
+            // Move on to the next destination simplex.
+            startSimp[comp]++;
+            startPerm[comp] = 0;
+        }
+
+        // Be sure we're looking at a simplex we can use.
+        compSize = component(comp)->size();
+        if (complete) {
+            // Conditions:
+            // 1) The destination simplex is unused.
+            // 2) The component sizes match precisely.
+            while (startSimp[comp] < nDestSimplices &&
+                    (whichComp[startSimp[comp]] >= 0 ||
+                     other.simplices_[startSimp[comp]]->getComponent()->size()
+                        != compSize))
+                startSimp[comp]++;
+        } else {
+            // Conditions:
+            // 1) The destination simplex is unused.
+            // 2) The destination component is at least as large as
+            // the source component.
+            while (startSimp[comp] < nDestSimplices &&
+                    (whichComp[startSimp[comp]] >= 0 ||
+                     other.simplices_[startSimp[comp]]->getComponent()->size()
+                        < compSize))
+                startSimp[comp]++;
+        }
+
+        // Have we run out of possibilities?
+        if (startSimp[comp] == nDestSimplices) {
+            // No more possibilities for filling this component.
+            // Move back to the previous component, and clear the
+            // mapping for that previous component.
+            startSimp[comp] = 0;
+            startPerm[comp] = 0;
+
+            comp--;
+            if (comp >= 0) {
+                for (i = 0; i < nSimplices; i++)
+                    if (iso.simpImage(i) >= 0 &&
+                            whichComp[iso.simpImage(i)] == comp) {
+                        whichComp[iso.simpImage(i)] = -1;
+                        iso.simpImage(i) = -1;
+                    }
+                startPerm[comp]++;
+            }
+
+            continue;
+        }
+
+        // Try to fill the image of this component based on the selected
+        // image of its first source simplex.
+        // Note that there is only one way of doing this (as seen by
+        // following adjacent simplex gluings).  It either works or it doesn't.
+        myIndex = simplexIndex(component(comp)->simplex(0));
+
+        whichComp[startSimp[comp]] = comp;
+        iso.simpImage(myIndex) = startSimp[comp];
+        iso.facetPerm(myIndex) = NPerm<dim+1>::atIndex(startPerm[comp]);
+        toProcess.push(myIndex);
+
+        broken = false;
+        while ((! broken) && (! toProcess.empty())) {
+            myIndex = toProcess.front();
+            toProcess.pop();
+            tri = simplices_[myIndex];
+            myPerm = iso.facetPerm(myIndex);
+            destIndex = iso.simpImage(myIndex);
+            destSimp = other.simplices_[destIndex];
+
+            // If we are after a complete isomorphism, test whether the
+            // simplices are a potential match.
+            if (complete && ! compatible(tri, destSimp, myPerm)) {
+                broken = true;
+                break;
+            }
+
+            for (facet = 0; facet <= dim; ++facet) {
+                adj = tri->adjacentSimplex(facet);
+                if (adj) {
+                    // There is an adjacent source simplex.
+                    // Is there an adjacent destination simplex?
+                    destAdj = destSimp->adjacentSimplex(myPerm[facet]);
+                    if (! destAdj) {
+                        broken = true;
+                        break;
+                    }
+                    // Work out what the isomorphism *should* say.
+                    adjIndex = simplexIndex(adj);
+                    destAdjIndex = other.simplexIndex(destAdj);
+                    adjPerm =
+                        destSimp->adjacentGluing(myPerm[facet]) * myPerm *
+                        tri->adjacentGluing(facet).inverse();
+
+                    if (iso.simpImage(adjIndex) >= 0) {
+                        // We've already decided upon an image for this
+                        // source simplex.  Does it match?
+                        if (static_cast<long>(destAdjIndex) !=
+                                iso.simpImage(adjIndex) ||
+                                adjPerm != iso.facetPerm(adjIndex)) {
+                            broken = true;
+                            break;
+                        }
+                    } else if (whichComp[destAdjIndex] >= 0) {
+                        // We haven't decided upon an image for this
+                        // source simplex but the destination
+                        // simplex has already been used.
+                        broken = true;
+                        break;
+                    } else {
+                        // We haven't seen either the source or the
+                        // destination simplex.
+                        whichComp[destAdjIndex] = comp;
+                        iso.simpImage(adjIndex) = destAdjIndex;
+                        iso.facetPerm(adjIndex) = adjPerm;
+                        toProcess.push(adjIndex);
+                    }
+                } else if (complete) {
+                    // There is no adjacent source simplex, and we
+                    // are after a boundary complete isomorphism.
+                    // There had better be no adjacent destination
+                    // simplex also.
+                    if (destSimp->adjacentSimplex(myPerm[facet])) {
+                        broken = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (! broken) {
+            // Therefore toProcess is empty.
+            // The image for this component was successfully filled out.
+            // Move on to the next component.
+            comp++;
+        } else {
+            // The image for this component was not successfully filled out.
+            // Undo our partially created image, and then try another
+            // starting image for this component.
+            while (! toProcess.empty())
+                toProcess.pop();
+
+            for (i = 0; i < nSimplices; i++)
+                if (iso.simpImage(i) >= 0 &&
+                        whichComp[iso.simpImage(i)] == comp) {
+                    whichComp[iso.simpImage(i)] = -1;
+                    iso.simpImage(i) = -1;
+                }
+
+            startPerm[comp]++;
+        }
+    }
+
+    // All out of options.
+    delete[] whichComp;
+    delete[] startSimp;
+    delete[] startPerm;
+    return nResults;
+}
+
+template <int dim>
+bool TriangulationBase<dim>::compatible(const Triangulation<dim>& other,
+        bool complete) const {
+    // Specialised implementations in standard dimensions can be
+    // more sophisticated.
+    static_assert(! standardDim(dim),
+        "The generic implementation of TriangulationBase<dim>::compatible() "
+        "should not be used for Regina's standard dimensions.");
+
+    // Unfortunately, if we allow boundary incomplete isomorphisms then
+    // we can't test that many properties.
+    if (complete) {
+        // Must be boundary complete, 1-to-1 and onto.
+        // That is, combinatorially the two triangulations must be
+        // identical.
+        if (simplices_.size() != other.simplices_.size())
+            return false;
+        if (components().size() != other.components().size())
+            return false;
+        if (isOrientable() ^ other.isOrientable())
+            return false;
+
+        // Test component sizes.
+        size_t *list1, *list2;
+        size_t len, i;
+
+        len = components_.size();
+        list1 = new size_t[len];
+        list2 = new size_t[len];
+
+        for (i = 0; i < len; ++i)
+            list1[i] = components_[i]->size();
+        for (i = 0; i < len; ++i)
+            list2[i] = other.components_[i]->size();
+
+        std::sort(list1, list1 + len);
+        std::sort(list2, list2 + len);
+
+        if (! std::equal(list1, list1 + len, list2)) {
+            delete[] list1;
+            delete[] list2;
+            return false;
+        }
+
+        delete[] list1;
+        delete[] list2;
+    } else {
+        // May be boundary incomplete, and need not be onto.
+        // Not much we can test for unfortunately.
+        if (simplices_.size() > other.simplices_.size())
+            return false;
+        if ((! isOrientable()) && other.isOrientable())
+            return false;
+    }
+
+    return true;
+}
+
+template <int dim>
+inline bool TriangulationBase<dim>::compatible(
+        Simplex<dim>* src, Simplex<dim>* dest, NPerm<dim+1> p) {
+    // Specialised implementations in standard dimensions can be
+    // more sophisticated.
+    static_assert(! standardDim(dim),
+        "The generic implementation of TriangulationBase<dim>::compatible() "
+        "should not be used for Regina's standard dimensions.");
+
     return true;
 }
 

@@ -264,7 +264,7 @@ class NIsomorphismTest : public CppUnit::TestFixture {
             std::list<NIsomorphism*>::iterator it;
             unsigned long count;
 
-            count = t2.findAllSubcomplexesIn(t, isos);
+            count = t2.findAllSubcomplexesIn(t, back_inserter(isos));
             if (count != symmetries) {
                 std::ostringstream msg;
                 msg << "Triangulation " << name << " has "

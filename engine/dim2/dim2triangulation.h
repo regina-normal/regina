@@ -45,7 +45,6 @@
 #include <vector>
 #include "regina-core.h"
 #include "generic/dimtraits.h"
-#include "generic/ngenerictriangulation.h"
 #include "generic/triangulation.h"
 #include "packet/npacket.h"
 #include "utilities/nmarkedvector.h"
@@ -110,8 +109,7 @@ struct PacketInfo<PACKET_DIM2TRIANGULATION> {
 template <>
 class REGINA_API Triangulation<2> :
         public NPacket,
-        public TriangulationBase<2>,
-        public NGenericTriangulation<2> {
+        public TriangulationBase<2> {
     REGINA_PACKET(Triangulation<2>, PACKET_DIM2TRIANGULATION)
 
     public:
@@ -467,18 +465,6 @@ class REGINA_API Triangulation<2> :
 
         /*@}*/
         /**
-         * \name Isomorphism Testing
-         */
-        /*@{*/
-
-        using NGenericTriangulation<2>::isIsomorphicTo;
-        using NGenericTriangulation<2>::isContainedIn;
-        using NGenericTriangulation<2>::findAllIsomorphisms;
-        using NGenericTriangulation<2>::findAllSubcomplexesIn;
-        using NGenericTriangulation<2>::makeCanonical;
-
-        /*@}*/
-        /**
          * \name Basic Properties
          */
         /*@{*/
@@ -660,78 +646,9 @@ class REGINA_API Triangulation<2> :
          */
         void calculateBoundary() const;
 
-        /**
-         * Determines if an isomorphic copy of this triangulation is
-         * contained within the given triangulation.
-         *
-         * If the argument \a completeIsomorphism is \c true, the
-         * isomorphism must be onto and boundary complete.
-         * That is, this triangulation must be combinatorially
-         * isomorphic to the given triangulation.
-         *
-         * If the argument \a completeIsomorphism is \c false, the
-         * isomorphism may be boundary incomplete and may or may not be
-         * onto.  That is, this triangulation must appear as a
-         * subcomplex of the given triangulation, possibly with some
-         * original boundary edges joined to new triangles.
-         *
-         * See the Dim2Isomorphism class notes for further details
-         * regarding boundary complete and boundary incomplete
-         * isomorphisms.
-         *
-         * The isomorphisms found, if any, will be appended to the
-         * list \a results.  This list will not be emptied before
-         * calculations begin.  All isomorphisms will be newly created,
-         * and the caller of this routine is responsible for destroying
-         * them.
-         *
-         * If \a firstOnly is passed as \c true, only the first
-         * isomorphism found (if any) will be returned, after which the
-         * routine will return immediately.  Otherwise all isomorphisms
-         * will be returned.
-         *
-         * @param other the triangulation in which to search for an
-         * isomorphic copy of this triangulation.
-         * @param results the list in which any isomorphisms found will
-         * be stored.
-         * @param completeIsomorphism \c true if isomorphisms must be
-         * onto and boundary complete, or \c false if neither of these
-         * restrictions should be imposed.
-         * @param firstOnly \c true if only one isomorphism should be
-         * returned (if any), or \c false if all isomorphisms should be
-         * returned.
-         * @return the total number of isomorphisms found.
-         */
-        unsigned long findIsomorphisms(const Triangulation& other,
-                std::list<Dim2Isomorphism*>& results,
-                bool completeIsomorphism, bool firstOnly) const;
-
-        /**
-         * Internal to findIsomorphisms().
-         *
-         * Examines properties of the given triangle to find any
-         * immediate evidence that \a src may not map to \a dest in a
-         * boundary complete isomorphism (in which the vertices of \a src
-         * are mapped to the vertices of \a dest according to the
-         * permutation \a p).
-         *
-         * In particular, the degrees of vertices are examined.
-         *
-         * @param src the first of the two triangles to examine.
-         * @param dest the second of the two triangles to examine.
-         * @param p the permutation under which the vertices of \a src
-         * must map to the vertices of \a dest.
-         * @return \c true if no immediate incompatibilities between the
-         * triangles were found, or \c false if properties of the
-         * triangles were found that differ between \a src and \a dest.
-         */
-        static bool compatibleTriangles(Dim2Triangle* src, Dim2Triangle* dest,
-            NPerm3 p);
-
     friend class regina::Simplex<2>;
     friend class regina::SimplexBase<2>;
     friend class regina::TriangulationBase<2>;
-    friend class regina::NGenericTriangulation<2>;
     friend class regina::NXMLDim2TriangulationReader;
 };
 

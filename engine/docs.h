@@ -186,15 +186,3 @@
  *  fixed!
  */
 
-/*! \page stddim Standard dimensions
- *
- *  Whilst Regina was originally designed for working with 3-manifolds,
- *  it offers varying levels of support for manifolds and triangulations
- *  in other dimensions.
- *
- *  Regina's <i>standard dimensions</i> are those for which it offers
- *  rich support (as opposed to very basic support, or none at all).
- *  For the current release, the <b>standard dimensions are 2, 3 and 4</b>.
- *
- *  This list is expected to grow in future releases.
- */

@@ -116,6 +116,21 @@ namespace {
                 boost::python::manage_new_object::
                 apply<regina::Dim2Isomorphism*>::type()(iso))));
     }
+
+    boost::python::list findAllIsomorphisms_list(
+        const Dim2Triangulation& t, const Dim2Triangulation& other) {
+        boost::python::list ans;
+
+        std::list<regina::Dim2Isomorphism*> isos;
+        t.findAllIsomorphisms(other, back_inserter(isos));
+
+        for (std::list<regina::Dim2Isomorphism*>::iterator it =
+                 isos.begin(); it != isos.end(); it++) {
+            std::auto_ptr<regina::Dim2Isomorphism> iso(*it);
+            ans.append(iso);
+        }
+        return ans;
+    }
 }
 
 void addDim2Triangulation() {
@@ -184,6 +199,7 @@ void addDim2Triangulation() {
         .def("isIdenticalTo", &Dim2Triangulation::isIdenticalTo)
         .def("isIsomorphicTo", isIsomorphicTo_ptr,
             return_value_policy<manage_new_object>())
+        .def("findAllIsomorphisms", findAllIsomorphisms_list)
         .def("makeCanonical", &Dim2Triangulation::makeCanonical)
         .def("isContainedIn", isContainedIn_ptr,
             return_value_policy<manage_new_object>())

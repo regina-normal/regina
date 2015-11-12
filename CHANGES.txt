@@ -86,6 +86,9 @@ Version 4.97  [ (under development) ]
             - New static routine identity().
             - Routine getSourceSimplices() is deprecated, and has been
               replaced with the easier-to-type size().
+            - Routines findAllIsomorphisms() and findAllSubcomplexesIn() now
+              take an arbitrary output iterator, instead of the user passing a
+              std::list to fill with results.
         Class Dim2Triangle:
             - Now just a typedef for the new class Simplex<2>, which has
               the same functionality as the old Dim2Triangle.
@@ -193,6 +196,8 @@ Version 4.97  [ (under development) ]
         Class NGenericIsomorphism:
             - Removed entirely.  Just use Isomorphism<dim> instead.
         Class NGenericTriangulation, NTriangulation, Dim2Triangulation:
+            - Removed the NGenericTriangulation class entirely.  This class
+              has been merged into the new generic TriangulationBase.
             - Removed the Perm typedef.  Juse use NPerm<dim+1> instead.
             - Removed the Triangulation typedef.  Just use Triangulation<dim>.
         Class NGlobalDirs:
@@ -343,6 +348,9 @@ Version 4.97  [ (under development) ]
               have been renamed to size(), simplices() and simplex()
               respectively.  The old names are deprecated but have been
               kept for backward compatibility.
+            - Routines findAllIsomorphisms() and findAllSubcomplexesIn() now
+              take an arbitrary output iterator, instead of the user passing a
+              std::list to fill with results.
             - Removed deprecated routines addTetrahedron() and
               gluingsHaveChanged().
             - Removed maximalForestInDualSkeleton().  Just use

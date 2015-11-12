@@ -51,7 +51,6 @@
 #include "algebra/ngrouppresentation.h"
 #include "angle/nanglestructure.h"
 #include "generic/dimtraits.h"
-#include "generic/ngenerictriangulation.h"
 #include "generic/triangulation.h"
 #include "maths/ncyclotomic.h"
 #include "packet/npacket.h"
@@ -170,8 +169,7 @@ enum TuraevViroAlg {
 template <>
 class REGINA_API Triangulation<3> :
         public NPacket,
-        public TriangulationBase<3>,
-        public NGenericTriangulation<3> {
+        public TriangulationBase<3> {
     REGINA_PACKET(Triangulation<3>, PACKET_TRIANGULATION)
 
     public:
@@ -762,18 +760,6 @@ class REGINA_API Triangulation<3> :
          * boundary component.
          */
         bool hasNegativeIdealBoundaryComponents() const;
-
-        /*@}*/
-        /**
-         * \name Isomorphism Testing
-         */
-        /*@{*/
-
-        using NGenericTriangulation<3>::isIsomorphicTo;
-        using NGenericTriangulation<3>::isContainedIn;
-        using NGenericTriangulation<3>::findAllIsomorphisms;
-        using NGenericTriangulation<3>::findAllSubcomplexesIn;
-        using NGenericTriangulation<3>::makeCanonical;
 
         /*@}*/
         /**
@@ -3489,75 +3475,6 @@ class REGINA_API Triangulation<3> :
         bool retriangulateInternal(int height, unsigned nThreads,
             const std::function<bool(const NTriangulation&)>& action) const;
 
-        /**
-         * Determines if an isomorphic copy of this triangulation is
-         * contained within the given triangulation.
-         *
-         * If the argument \a completeIsomorphism is \c true, the
-         * isomorphism must be onto and boundary complete.
-         * That is, this triangulation must be combinatorially
-         * isomorphic to the given triangulation.
-         *
-         * If the argument \a completeIsomorphism is \c false, the
-         * isomorphism may be boundary incomplete and may or may not be
-         * onto.  That is, this triangulation must appear as a
-         * subcomplex of the given triangulation, possibly with some
-         * original boundary triangles joined to new tetrahedra.
-         *
-         * See the NIsomorphism class notes for further details
-         * regarding boundary complete and boundary incomplete
-         * isomorphisms.
-         *
-         * The isomorphisms found, if any, will be appended to the
-         * list \a results.  This list will not be emptied before
-         * calculations begin.  All isomorphisms will be newly created,
-         * and the caller of this routine is responsible for destroying
-         * them.
-         *
-         * If \a firstOnly is passed as \c true, only the first
-         * isomorphism found (if any) will be returned, after which the
-         * routine will return immediately.  Otherwise all isomorphisms
-         * will be returned.
-         *
-         * @param other the triangulation in which to search for an
-         * isomorphic copy of this triangulation.
-         * @param results the list in which any isomorphisms found will
-         * be stored.
-         * @param completeIsomorphism \c true if isomorphisms must be
-         * onto and boundary complete, or \c false if neither of these
-         * restrictions should be imposed.
-         * @param firstOnly \c true if only one isomorphism should be
-         * returned (if any), or \c false if all isomorphisms should be
-         * returned.
-         * @return the total number of isomorphisms found.
-         */
-        unsigned long findIsomorphisms(const NTriangulation& other,
-                std::list<NIsomorphism*>& results,
-                bool completeIsomorphism, bool firstOnly) const;
-
-        /**
-         * Internal to findIsomorphisms().
-         *
-         * Examines properties of the given tetrahedra to find any
-         * immediate evidence that \a src may not map to \a dest in a
-         * boundary complete isomorphism (in which the vertices of \a src
-         * are mapped to the vertices of \a dest according to the
-         * permutation \a p).
-         *
-         * In particular, properties such as edge degrees and vertex links
-         * are examined.
-         *
-         * @param src the first of the two tetrahedra to examine.
-         * @param dest the second of the two tetrahedra to examine.
-         * @param p the permutation under which the vertices of \a src
-         * must map to the vertices of \a dest.
-         * @return \c true if no immediate incompatibilities between the
-         * tetrahedra were found, or \c false if properties of the
-         * tetrahedra were found that differ between \a src and \a dest.
-         */
-        static bool compatibleTets(NTetrahedron* src, NTetrahedron* dest,
-                NPerm4 p);
-
         void stretchBoundaryForestFromVertex(NVertex*, std::set<NEdge*>&,
                 std::set<NVertex*>&) const;
             /**< Internal to maximalForestInBoundary(). */
@@ -3568,7 +3485,6 @@ class REGINA_API Triangulation<3> :
     friend class regina::Simplex<3>;
     friend class regina::SimplexBase<3>;
     friend class regina::TriangulationBase<3>;
-    friend class regina::NGenericTriangulation<3>;
     friend class regina::NXMLTriangulationReader;
 };
 
