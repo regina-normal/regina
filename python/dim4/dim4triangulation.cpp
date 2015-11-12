@@ -128,13 +128,13 @@ namespace {
         return ans;
     }
 
-    regina::Dim4Isomorphism* isIsomorphicTo_ptr(Dim4Triangulation& t,
-            Dim4Triangulation& s) {
+    regina::Dim4Isomorphism* isIsomorphicTo_ptr(const Dim4Triangulation& t,
+            const Dim4Triangulation& s) {
         return t.isIsomorphicTo(s).release();
     }
 
-    regina::Dim4Isomorphism* isContainedIn_ptr(Dim4Triangulation& t,
-            Dim4Triangulation& s) {
+    regina::Dim4Isomorphism* isContainedIn_ptr(const Dim4Triangulation& t,
+            const Dim4Triangulation& s) {
         return t.isContainedIn(s).release();
     }
 
