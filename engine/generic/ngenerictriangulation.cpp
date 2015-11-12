@@ -32,7 +32,6 @@
 
 /* end stub */
 
-#include "generic/canonical-impl.h"
 #include "generic/isomorphism-impl.h"
 
 // Headers required for our template instantiations:

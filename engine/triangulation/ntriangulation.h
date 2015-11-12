@@ -773,7 +773,6 @@ class REGINA_API Triangulation<3> :
         using NGenericTriangulation<3>::isContainedIn;
         using NGenericTriangulation<3>::findAllIsomorphisms;
         using NGenericTriangulation<3>::findAllSubcomplexesIn;
-        using NGenericTriangulation<3>::makeCanonical;
 
         /*@}*/
         /**

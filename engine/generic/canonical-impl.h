@@ -33,22 +33,17 @@
 /* end stub */
 
 /*! \file generic/canonical-impl.h
- *  \brief Contains some of the implementation details for the
- *  NGenericTriangulation class template.
+ *  \brief Contains some of the implementation details for the generic
+ *  Triangulation class template.
  *
- *  This file is \e not included automatically by ngenerictriangulation.h.
- *  However, typical end users should never need to include it, since
- *  Regina's calculation engine provides full explicit instantiations
- *  of NGenericTriangulation for \ref stddim "standard dimensions".
+ *  This file is automatically included from triangulation.h; there is
+ *  no need for end users to include it explicitly.
  */
-
-#include "generic/ngenerictriangulation.h"
 
 namespace regina {
 
-template <int> class Simplex;
-
-namespace {
+#ifndef __DOXYGEN
+struct CanonicalHelper {
     /**
      * For internal use by makeCanonical().  This routines assumes that
      * the preimage of simplex 0 has been fixed (along with the
@@ -66,8 +61,8 @@ namespace {
      * This routine currently only works for connected triangulations.
      */
     template <int dim>
-    bool extendIsomorphism(
-            const Triangulation<dim>* tri,
+    static bool extendIsomorphism(
+            const TriangulationBase<dim>* tri,
             Isomorphism<dim>& current,
             Isomorphism<dim>& currentInv,
             const Isomorphism<dim>& best,
@@ -177,13 +172,12 @@ namespace {
 
         return better;
     }
-}
+};
+#endif
 
 template <int dim>
-bool NGenericTriangulation<dim>::makeCanonical() {
-    Triangulation<dim>* me = static_cast<Triangulation<dim>*>(this);
-
-    unsigned nSimp = me->getNumberOfSimplices();
+bool TriangulationBase<dim>::makeCanonical() {
+    unsigned nSimp = getNumberOfSimplices();
 
     // Get the empty triangulation out of the way.
     if (nSimp == 0)
@@ -213,8 +207,8 @@ bool NGenericTriangulation<dim>::makeCanonical() {
                 NPerm<dim+1>::Sn[NPerm<dim+1>::invSn[perm]];
             currentInv.facetPerm(0) = NPerm<dim+1>::Sn[perm];
 
-            if (extendIsomorphism<dim>(me, current, currentInv,
-                    best, bestInv)) {
+            if (CanonicalHelper::extendIsomorphism<dim>(this, current,
+                    currentInv, best, bestInv)) {
                 // This is better than anything we've seen before.
                 for (inner = 0; inner < nSimp; ++inner) {
                     best.simpImage(inner) = current.simpImage(inner);
@@ -231,7 +225,7 @@ bool NGenericTriangulation<dim>::makeCanonical() {
         return false;
 
     // Do it.
-    best.applyInPlace(me);
+    best.applyInPlace(static_cast<Triangulation<dim>*>(this));
     return true;
 }
 
