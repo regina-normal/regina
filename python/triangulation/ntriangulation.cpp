@@ -173,6 +173,21 @@ namespace {
         return ans;
     }
 
+    boost::python::list findAllSubcomplexesIn_list(
+        const NTriangulation& t, const NTriangulation& other) {
+        boost::python::list ans;
+
+        std::list<regina::NIsomorphism*> isos;
+        t.findAllSubcomplexesIn(other, isos);
+
+        for (std::list<regina::NIsomorphism*>::iterator it =
+                 isos.begin(); it != isos.end(); it++) {
+            std::auto_ptr<regina::NIsomorphism> iso(*it);
+            ans.append(iso);
+        }
+        return ans;
+    }
+
     regina::NIsomorphism* isIsomorphicTo_ptr(const NTriangulation& t,
             const NTriangulation& s) {
         return t.isIsomorphicTo(s).release();
@@ -289,6 +304,7 @@ void addNTriangulation() {
         .def("isIsomorphicTo", isIsomorphicTo_ptr,
             return_value_policy<manage_new_object>())
         .def("findAllIsomorphisms", findAllIsomorphisms_list)
+        .def("findAllSubcomplexesIn", findAllSubcomplexesIn_list)
         .def("makeCanonical", &NTriangulation::makeCanonical)
         .def("isContainedIn", isContainedIn_ptr,
             return_value_policy<manage_new_object>())
