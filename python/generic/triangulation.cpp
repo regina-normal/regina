@@ -32,6 +32,7 @@
 
 /* end stub */
 
+#include <list>
 #include <boost/python.hpp>
 #include "generic/isomorphism.h"
 #include "generic/triangulation.h"
@@ -53,6 +54,44 @@ namespace {
             boost::python::list ans;
             for (auto i = t.simplices().begin(); i != t.simplices().end(); ++i)
                 ans.append(boost::python::ptr(*i));
+            return ans;
+        }
+
+        static regina::Isomorphism<dim>* isIsomorphicTo(
+                const Triangulation<dim>& t, const Triangulation<dim>& s) {
+            return t.isIsomorphicTo(s).release();
+        }
+
+        static regina::Isomorphism<dim>* isContainedIn(
+                const Triangulation<dim>& t, const Triangulation<dim>& s) {
+            return t.isContainedIn(s).release();
+        }
+
+        static boost::python::list findAllIsomorphisms(
+            const Triangulation<dim>& t, const Triangulation<dim>& other) {
+            boost::python::list ans;
+
+            std::list<regina::Isomorphism<dim>*> isos;
+            t.findAllIsomorphisms(other, back_inserter(isos));
+
+            for (auto it = isos.begin(); it != isos.end(); it++) {
+                std::auto_ptr<regina::Isomorphism<dim>> iso(*it);
+                ans.append(iso);
+            }
+            return ans;
+        }
+
+        static boost::python::list findAllSubcomplexesIn(
+            const Triangulation<dim>& t, const Triangulation<dim>& other) {
+            boost::python::list ans;
+
+            std::list<regina::Isomorphism<dim>*> isos;
+            t.findAllSubcomplexesIn(other, back_inserter(isos));
+
+            for (auto it = isos.begin(); it != isos.end(); it++) {
+                std::auto_ptr<regina::Isomorphism<dim>> iso(*it);
+                ans.append(iso);
+            }
             return ans;
         }
 
@@ -103,6 +142,13 @@ void addTriangulation(const char* name) {
         .def("isEmpty", &Triangulation<dim>::isEmpty)
         .def("hasBoundaryFacets", &Triangulation<dim>::hasBoundaryFacets)
         .def("isIdenticalTo", &Triangulation<dim>::isIdenticalTo)
+        .def("isIsomorphicTo", PyTriHelper<dim>::isIsomorphicTo,
+            return_value_policy<manage_new_object>())
+        .def("isContainedIn", PyTriHelper<dim>::isContainedIn,
+            return_value_policy<manage_new_object>())
+        .def("findAllIsomorphisms", PyTriHelper<dim>::findAllIsomorphisms)
+        .def("findAllSubcomplexesIn", PyTriHelper<dim>::findAllSubcomplexesIn)
+        .def("makeCanonical", &Triangulation<dim>::makeCanonical)
         .def("insertTriangulation", &Triangulation<dim>::insertTriangulation)
         .def("isoSig", PyTriHelper<dim>::isoSig_void)
         .def("isoSigDetail", PyTriHelper<dim>::isoSig_relabelling)
