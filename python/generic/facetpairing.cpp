@@ -143,6 +143,7 @@ void addFacetPairing() {
     addFacetPairing<2>("FacetPairing2");
     scope().attr("Dim2EdgePairing") = scope().attr("FacetPairing2");
 
+    addFacetPairing<4>("FacetPairing4");
     addFacetPairing<5>("FacetPairing5");
     addFacetPairing<6>("FacetPairing6");
     addFacetPairing<7>("FacetPairing7");

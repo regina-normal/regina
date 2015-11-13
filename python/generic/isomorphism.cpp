@@ -84,6 +84,7 @@ void addIsomorphism(const char* name) {
 }
 
 void addIsomorphism() {
+    addIsomorphism<4>("Isomorphism4");
     addIsomorphism<5>("Isomorphism5");
     addIsomorphism<6>("Isomorphism6");
     addIsomorphism<7>("Isomorphism7");

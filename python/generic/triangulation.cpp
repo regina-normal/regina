@@ -167,6 +167,7 @@ void addTriangulation(const char* name) {
 }
 
 void addTriangulations() {
+    addTriangulation<4>("Triangulation4");
     addTriangulation<5>("Triangulation5");
     addTriangulation<6>("Triangulation6");
     addTriangulation<7>("Triangulation7");

@@ -78,6 +78,7 @@ void addComponent(const char* name) {
 }
 
 void addComponent() {
+    addComponent<4>("Component4");
     addComponent<5>("Component5");
     addComponent<6>("Component6");
     addComponent<7>("Component7");
