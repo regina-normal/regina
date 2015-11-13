@@ -56,6 +56,15 @@ const NormalCoords NNormalSurfaceList::FACE_ARCS = NS_TRIANGLE_ARCS;
 const NormalCoords NNormalSurfaceList::ORIENTED = NS_ORIENTED;
 const NormalCoords NNormalSurfaceList::ORIENTED_QUAD = NS_ORIENTED_QUAD;
 
+// This should really be inline.  However, when inline, it seems to
+// trigger an instantiation of the generic Triangulation<3> as opposed
+// to the specialised Triangulation<3>.  A forward declaration of the
+// specialisation is not enough to stop it.  I wish I understood how to
+// avoid this, but in the meantime, here we are.
+NMatrixInt* NNormalSurfaceList::recreateMatchingEquations() const {
+    return makeMatchingEquations(getTriangulation(), coords_);
+}
+
 void NNormalSurfaceList::writeAllSurfaces(std::ostream& out) const {
     unsigned long n = size();
     out << "Number of surfaces is " << n << '\n';

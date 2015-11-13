@@ -1859,10 +1859,6 @@ inline NNormalSurfaceList* NNormalSurfaceList::enumerateFundFullCone(
         NS_HILBERT_FULLCONE);
 }
 
-inline NMatrixInt* NNormalSurfaceList::recreateMatchingEquations() const {
-    return makeMatchingEquations(getTriangulation(), coords_);
-}
-
 inline NNormalSurfaceList::VectorIterator::VectorIterator() {
 }
 

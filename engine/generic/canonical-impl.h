@@ -71,8 +71,8 @@ struct CanonicalHelper {
             const Isomorphism<dim>& bestInv) {
         bool better = false;
 
-        unsigned nSimp = tri->getNumberOfSimplices();
-        unsigned simplex;
+        size_t nSimp = tri->getNumberOfSimplices();
+        size_t simplex;
 
         for (simplex = 0; simplex < nSimp; ++simplex)
             if (simplex != currentInv.simpImage(0))
@@ -80,19 +80,19 @@ struct CanonicalHelper {
 
         int facet;
 
-        unsigned origTri, origTriBest;
+        size_t origTri, origTriBest;
         int origFacet, origFacetBest;
 
         Simplex<dim> *adjTri, *adjTriBest;
-        unsigned adjTriIndex, adjTriIndexBest;
-        unsigned finalImage, finalImageBest;
+        size_t adjTriIndex, adjTriIndexBest;
+        size_t finalImage, finalImageBest;
 
         NPerm<dim+1> gluingPerm, gluingPermBest;
         NPerm<dim+1> finalGluing, finalGluingBest;
         int comp;
 
         bool justAssigned;
-        unsigned lastAssigned = 0;
+        size_t lastAssigned = 0;
         for (simplex = 0; simplex < nSimp; ++simplex) {
             // INV: We have already selected the preimage of simplex and
             // the corresponding facet permutation by the time we reach
@@ -179,7 +179,7 @@ struct CanonicalHelper {
 
 template <int dim>
 bool TriangulationBase<dim>::makeCanonical() {
-    unsigned nSimp = getNumberOfSimplices();
+    size_t nSimp = getNumberOfSimplices();
 
     // Get the empty triangulation out of the way.
     if (nSimp == 0)
@@ -190,14 +190,14 @@ bool TriangulationBase<dim>::makeCanonical() {
     Isomorphism<dim> best(nSimp), bestInv(nSimp);
 
     // The thing to best is the identity isomorphism.
-    unsigned simp, inner;
+    size_t simp, inner;
     for (simp = 0; simp < nSimp; ++simp) {
         best.simpImage(simp) = bestInv.simpImage(simp) = simp;
         best.facetPerm(simp) = bestInv.facetPerm(simp) = NPerm<dim+1>();
     }
 
     // Run through potential preimages of simplex 0.
-    int perm;
+    typename NPerm<dim+1>::Index perm;
     for (simp = 0; simp < nSimp; ++simp) {
         for (perm = 0; perm < NPerm<dim+1>::nPerms; ++perm) {
             // Build a "perhaps canonical" isomorphism based on this
@@ -205,9 +205,8 @@ bool TriangulationBase<dim>::makeCanonical() {
             current.simpImage(simp) = 0;
             currentInv.simpImage(0) = simp;
 
-            current.facetPerm(simp) =
-                NPerm<dim+1>::Sn[NPerm<dim+1>::invSn[perm]];
-            currentInv.facetPerm(0) = NPerm<dim+1>::Sn[perm];
+            currentInv.facetPerm(0) = NPerm<dim+1>::atIndex(perm);
+            current.facetPerm(simp) = currentInv.facetPerm(0).inverse();
 
             if (CanonicalHelper::extendIsomorphism<dim>(this, current,
                     currentInv, best, bestInv)) {
