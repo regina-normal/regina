@@ -139,6 +139,36 @@ namespace {
         return t.isContainedIn(s).release();
     }
 
+    boost::python::list findAllIsomorphisms_list(
+        const Dim4Triangulation& t, const Dim4Triangulation& other) {
+        boost::python::list ans;
+
+        std::list<regina::Dim4Isomorphism*> isos;
+        t.findAllIsomorphisms(other, isos);
+
+        for (std::list<regina::Dim4Isomorphism*>::iterator it =
+                 isos.begin(); it != isos.end(); it++) {
+            std::auto_ptr<regina::Dim4Isomorphism> iso(*it);
+            ans.append(iso);
+        }
+        return ans;
+    }
+
+    boost::python::list findAllSubcomplexesIn_list(
+        const Dim4Triangulation& t, const Dim4Triangulation& other) {
+        boost::python::list ans;
+
+        std::list<regina::Dim4Isomorphism*> isos;
+        t.findAllSubcomplexesIn(other, isos);
+
+        for (std::list<regina::Dim4Isomorphism*>::iterator it =
+                 isos.begin(); it != isos.end(); it++) {
+            std::auto_ptr<regina::Dim4Isomorphism> iso(*it);
+            ans.append(iso);
+        }
+        return ans;
+    }
+
     void simplifiedFundamentalGroup_own(Dim4Triangulation& tri,
             std::auto_ptr<regina::NGroupPresentation> group) {
         tri.simplifiedFundamentalGroup(group.release());
@@ -238,6 +268,8 @@ void addDim4Triangulation() {
         .def("makeCanonical", &Dim4Triangulation::makeCanonical)
         .def("isContainedIn", isContainedIn_ptr,
             return_value_policy<manage_new_object>())
+        .def("findAllIsomorphisms", findAllIsomorphisms_list)
+        .def("findAllSubcomplexesIn", findAllSubcomplexesIn_list)
         .def("isEmpty", &Dim4Triangulation::isEmpty)
         .def("getEulerCharTri", &Dim4Triangulation::getEulerCharTri)
         .def("getEulerCharManifold", &Dim4Triangulation::getEulerCharManifold)
