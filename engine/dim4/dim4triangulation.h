@@ -47,7 +47,6 @@
 #include "regina-core.h"
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
-#include "generic/ngenerictriangulation.h"
 #include "generic/triangulation.h"
 #include "packet/npacket.h"
 #include "utilities/nmarkedvector.h"
@@ -119,8 +118,7 @@ struct PacketInfo<PACKET_DIM4TRIANGULATION> {
 template <>
 class REGINA_API Triangulation<4> :
         public NPacket,
-        public TriangulationBase<4>,
-        public NGenericTriangulation<4> {
+        public TriangulationBase<4> {
     REGINA_PACKET(Triangulation<4>, PACKET_DIM4TRIANGULATION)
 
     public:
@@ -569,18 +567,6 @@ class REGINA_API Triangulation<4> :
          * first tetrahedron, 1 is the second and so on.
          */
         long tetrahedronIndex(const Dim4Tetrahedron* tet) const;
-
-        /*@}*/
-        /**
-         * \name Isomorphism Testing
-         */
-        /*@{*/
-
-        using NGenericTriangulation<4>::isIsomorphicTo;
-        using NGenericTriangulation<4>::isContainedIn;
-        using NGenericTriangulation<4>::findAllIsomorphisms;
-        using NGenericTriangulation<4>::findAllSubcomplexesIn;
-        using NGenericTriangulation<4>::makeCanonical;
 
         /*@}*/
         /**
@@ -1293,79 +1279,9 @@ class REGINA_API Triangulation<4> :
          */
         void calculateEdgeLinks() const;
 
-        /**
-         * Determines if an isomorphic copy of this triangulation is
-         * contained within the given triangulation.
-         *
-         * If the argument \a completeIsomorphism is \c true, the
-         * isomorphism must be onto and boundary complete.
-         * That is, this triangulation must be combinatorially
-         * isomorphic to the given triangulation.
-         *
-         * If the argument \a completeIsomorphism is \c false, the
-         * isomorphism may be boundary incomplete and may or may not be
-         * onto.  That is, this triangulation must appear as a
-         * subcomplex of the given triangulation, possibly with some
-         * original boundary facets joined to new pentachora.
-         *
-         * See the Dim4Isomorphism class notes for further details
-         * regarding boundary complete and boundary incomplete
-         * isomorphisms.
-         *
-         * The isomorphisms found, if any, will be appended to the
-         * list \a results.  This list will not be emptied before
-         * calculations begin.  All isomorphisms will be newly created,
-         * and the caller of this routine is responsible for destroying
-         * them.
-         *
-         * If \a firstOnly is passed as \c true, only the first
-         * isomorphism found (if any) will be returned, after which the
-         * routine will return immediately.  Otherwise all isomorphisms
-         * will be returned.
-         *
-         * @param other the triangulation in which to search for an
-         * isomorphic copy of this triangulation.
-         * @param results the list in which any isomorphisms found will
-         * be stored.
-         * @param completeIsomorphism \c true if isomorphisms must be
-         * onto and boundary complete, or \c false if neither of these
-         * restrictions should be imposed.
-         * @param firstOnly \c true if only one isomorphism should be
-         * returned (if any), or \c false if all isomorphisms should be
-         * returned.
-         * @return the total number of isomorphisms found.
-         */
-        unsigned long findIsomorphisms(const Triangulation& other,
-                std::list<Dim4Isomorphism*>& results,
-                bool completeIsomorphism, bool firstOnly) const;
-
-        /**
-         * Internal to findIsomorphisms().
-         *
-         * Examines properties of the given pentachoron to find any
-         * immediate evidence that \a src may not map to \a dest in a
-         * boundary complete isomorphism (in which the vertices of \a src
-         * are mapped to the vertices of \a dest according to the
-         * permutation \a p).
-         *
-         * In particular, the degrees of triangles, edges and vertices are
-         * examined.
-         *
-         * @param src the first of the two pentachora to examine.
-         * @param dest the second of the two pentachora to examine.
-         * @param p the permutation under which the vertices of \a src
-         * must map to the vertices of \a dest.
-         * @return \c true if no immediate incompatibilities between the
-         * pentachora were found, or \c false if properties of the
-         * pentachora were found that differ between \a src and \a dest.
-         */
-        static bool compatiblePents(
-                Dim4Pentachoron* src, Dim4Pentachoron* dest, NPerm5 p);
-
     friend class regina::Simplex<4>;
     friend class regina::SimplexBase<4>;
     friend class regina::TriangulationBase<4>;
-    friend class regina::NGenericTriangulation<4>;
     friend class regina::NXMLDim4TriangulationReader;
 };
 

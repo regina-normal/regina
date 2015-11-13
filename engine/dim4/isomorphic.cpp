@@ -39,39 +39,30 @@
 
 namespace regina {
 
-unsigned long Dim4Triangulation::findIsomorphisms(
-        const Dim4Triangulation& other, std::list<Dim4Isomorphism*>& results,
-        bool completeIsomorphism, bool firstOnly) const {
-    ensureSkeleton();
-    other.ensureSkeleton();
+template <>
+bool TriangulationBase<4>::compatible(
+        const Dim4Triangulation& other, bool complete) const {
+    const Dim4Triangulation* me = static_cast<const Dim4Triangulation*>(this);
 
-    // Deal with the empty triangulation first.
-    if (isEmpty()) {
-        if (completeIsomorphism && ! other.isEmpty())
-            return 0;
-        results.push_back(new Dim4Isomorphism(0));
-        return 1;
-    }
-
-    // Basic property checks.  Unfortunately, if we allow boundary
-    // incomplete isomorphisms then we can't test that many properties.
-    if (completeIsomorphism) {
+    // Unfortunately, if we allow boundary incomplete isomorphisms then
+    // we can't test that many properties.
+    if (complete) {
         // Must be boundary complete, 1-to-1 and onto.
         // That is, combinatorially the two triangulations must be
         // identical.
         if (size() != other.size())
             return 0;
-        if (tetrahedra_.size() != other.tetrahedra_.size())
+        if (me->tetrahedra_.size() != other.tetrahedra_.size())
             return 0;
-        if (triangles_.size() != other.triangles_.size())
+        if (me->triangles_.size() != other.triangles_.size())
             return 0;
-        if (edges_.size() != other.edges_.size())
+        if (me->edges_.size() != other.edges_.size())
             return 0;
-        if (vertices_.size() != other.vertices_.size())
+        if (me->vertices_.size() != other.vertices_.size())
             return 0;
         if (countComponents() != other.countComponents())
             return 0;
-        if (boundaryComponents_.size() != other.boundaryComponents_.size())
+        if (me->boundaryComponents_.size() != other.boundaryComponents_.size())
             return 0;
         if (isOrientable() ^ other.isOrientable())
             return 0;
@@ -82,8 +73,8 @@ unsigned long Dim4Triangulation::findIsomorphisms(
         std::map<unsigned long, unsigned long>::iterator mapIt;
 
         {
-            TriangleIterator it;
-            for (it = triangles_.begin(); it != triangles_.end(); it++) {
+            Dim4Triangulation::TriangleIterator it;
+            for (it = me->triangles_.begin(); it != me->triangles_.end(); it++) {
                 // Find this degree, or insert it with frequency 0 if it's
                 // not already present.
                 mapIt = map1.insert(
@@ -102,8 +93,8 @@ unsigned long Dim4Triangulation::findIsomorphisms(
             map2.clear();
         }
         {
-            EdgeIterator it;
-            for (it = edges_.begin(); it != edges_.end(); it++) {
+            Dim4Triangulation::EdgeIterator it;
+            for (it = me->edges_.begin(); it != me->edges_.end(); it++) {
                 // Find this degree, or insert it with frequency 0 if it's
                 // not already present.
                 mapIt = map1.insert(
@@ -121,8 +112,8 @@ unsigned long Dim4Triangulation::findIsomorphisms(
             map2.clear();
         }
         {
-            VertexIterator it;
-            for (it = vertices_.begin(); it != vertices_.end(); it++) {
+            Dim4Triangulation::VertexIterator it;
+            for (it = me->vertices_.begin(); it != me->vertices_.end(); it++) {
                 mapIt = map1.insert(
                     std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
                 (*mapIt).second++;
@@ -157,9 +148,9 @@ unsigned long Dim4Triangulation::findIsomorphisms(
             map2.clear();
         }
         {
-            BoundaryComponentIterator it;
-            for (it = boundaryComponents_.begin();
-                    it != boundaryComponents_.end(); it++) {
+            Dim4Triangulation::BoundaryComponentIterator it;
+            for (it = me->boundaryComponents_.begin();
+                    it != me->boundaryComponents_.end(); it++) {
                 mapIt = map1.insert(
                     std::make_pair((*it)->getNumberOfTetrahedra(), 0)).first;
                 (*mapIt).second++;
@@ -184,248 +175,12 @@ unsigned long Dim4Triangulation::findIsomorphisms(
             return 0;
     }
 
-    // Start searching for the isomorphism.
-    // From the tests above, we are guaranteed that both triangulations
-    // have at least one pentachoron.
-    unsigned long nResults = 0;
-    unsigned long nPentachora = size();
-    unsigned long nDestPentachora = other.size();
-    unsigned long nComponents = countComponents();
-    unsigned i;
-
-    Dim4Isomorphism iso(nPentachora);
-    for (i = 0; i < nPentachora; i++)
-        iso.simpImage(i) = -1;
-
-    // Which source component does each destination pentachoron correspond to?
-    long* whichComp = new long[nDestPentachora];
-    std::fill(whichComp, whichComp + nDestPentachora, -1);
-
-    // The image of the first source pentachoron of each component.  The
-    // remaining images can be derived by following gluings.
-    unsigned long* startPent = new unsigned long[nComponents];
-    std::fill(startPent, startPent + nComponents, 0);
-
-    int* startPerm = new int[nComponents];
-    std::fill(startPerm, startPerm + nComponents, 0);
-
-    // The pentachora whose neighbours must be processed when filling
-    // out the current component.
-    std::queue<long> toProcess;
-
-    // Temporary variables.
-    unsigned long compSize;
-    Dim4Pentachoron* pent;
-    Dim4Pentachoron* adj;
-    Dim4Pentachoron* destPent;
-    Dim4Pentachoron* destAdj;
-    unsigned long pentIndex, adjIndex;
-    unsigned long destPentIndex, destAdjIndex;
-    NPerm5 pentPerm, adjPerm;
-    int facet;
-    bool broken;
-
-    long comp = 0;
-    while (comp >= 0) {
-        // Continue trying to find a mapping for the current component.
-        // The next mapping to try is the one that starts with
-        // startPent[comp] and startPerm[comp].
-        if (comp == static_cast<long>(nComponents)) {
-            // We have an isomorphism!!!
-            results.push_back(new Dim4Isomorphism(iso));
-
-            if (firstOnly) {
-                delete[] whichComp;
-                delete[] startPent;
-                delete[] startPerm;
-                return 1;
-            } else
-                nResults++;
-
-            // Back down to the previous component, and clear the
-            // mapping for that previous component so we can make way
-            // for a new one.
-            // Since nComponents > 0, we are guaranteed that comp > 0 also.
-            comp--;
-
-            for (i = 0; i < nPentachora; i++)
-                if (iso.simpImage(i) >= 0 &&
-                        whichComp[iso.simpImage(i)] == comp) {
-                    whichComp[iso.simpImage(i)] = -1;
-                    iso.simpImage(i) = -1;
-                }
-            startPerm[comp]++;
-
-            continue;
-        }
-
-        // Sort out the results of any previous startPerm++.
-        if (startPerm[comp] == 120) {
-            // Move on to the next destination pentachoron.
-            startPent[comp]++;
-            startPerm[comp] = 0;
-        }
-
-        // Be sure we're looking at a pentachoron we can use.
-        compSize = component(comp)->size();
-        if (completeIsomorphism) {
-            // Conditions:
-            // 1) The destination pentachoron is unused.
-            // 2) The component sizes match precisely.
-            while (startPent[comp] < nDestPentachora &&
-                    (whichComp[startPent[comp]] >= 0 ||
-                     other.simplices_[startPent[comp]]->getComponent()->
-                     getNumberOfPentachora() != compSize))
-                startPent[comp]++;
-        } else {
-            // Conditions:
-            // 1) The destination pentachoron is unused.
-            // 2) The destination component is at least as large as
-            // the source component.
-            while (startPent[comp] < nDestPentachora &&
-                    (whichComp[startPent[comp]] >= 0 ||
-                     other.simplices_[startPent[comp]]->getComponent()->
-                     getNumberOfPentachora() < compSize))
-                startPent[comp]++;
-        }
-
-        // Have we run out of possibilities?
-        if (startPent[comp] == nDestPentachora) {
-            // No more possibilities for filling this component.
-            // Move back to the previous component, and clear the
-            // mapping for that previous component.
-            startPent[comp] = 0;
-            startPerm[comp] = 0;
-
-            comp--;
-            if (comp >= 0) {
-                for (i = 0; i < nPentachora; i++)
-                    if (iso.simpImage(i) >= 0 &&
-                            whichComp[iso.simpImage(i)] == comp) {
-                        whichComp[iso.simpImage(i)] = -1;
-                        iso.simpImage(i) = -1;
-                    }
-                startPerm[comp]++;
-            }
-
-            continue;
-        }
-
-        // Try to fill the image of this component based on the selected
-        // image of its first source pentachoron.
-        // Note that there is only one way of doing this (as seen by
-        // following adjacent pentachoron gluings).  It either works or
-        // it doesn't.
-        pentIndex = pentachoronIndex(component(comp)->simplex(0));
-
-        whichComp[startPent[comp]] = comp;
-        iso.simpImage(pentIndex) = startPent[comp];
-        iso.facetPerm(pentIndex) = NPerm5::S5[startPerm[comp]];
-        toProcess.push(pentIndex);
-
-        broken = false;
-        while ((! broken) && (! toProcess.empty())) {
-            pentIndex = toProcess.front();
-            toProcess.pop();
-            pent = simplices_[pentIndex];
-            pentPerm = iso.facetPerm(pentIndex);
-            destPentIndex = iso.simpImage(pentIndex);
-            destPent = other.simplices_[destPentIndex];
-
-            // If we are after a complete isomorphism, we might as well
-            // test whether the lower-dimensional face degrees match.
-            if (completeIsomorphism && ! compatiblePents(pent, destPent,
-                    pentPerm)) {
-                broken = true;
-                break;
-            }
-
-            for (facet = 0; facet < 5; ++facet) {
-                adj = pent->adjacentPentachoron(facet);
-                if (adj) {
-                    // There is an adjacent source pentachoron.
-                    // Is there an adjacent destination pentachoron?
-                    destAdj = destPent->adjacentPentachoron(pentPerm[facet]);
-                    if (! destAdj) {
-                        broken = true;
-                        break;
-                    }
-                    // Work out what the isomorphism *should* say.
-                    adjIndex = pentachoronIndex(adj);
-                    destAdjIndex = other.pentachoronIndex(destAdj);
-                    adjPerm =
-                        destPent->adjacentGluing(pentPerm[facet]) *
-                        pentPerm *
-                        pent->adjacentGluing(facet).inverse();
-
-                    if (iso.simpImage(adjIndex) >= 0) {
-                        // We've already decided upon an image for this
-                        // source pentachoron.  Does it match?
-                        if (static_cast<long>(destAdjIndex) !=
-                                iso.simpImage(adjIndex) ||
-                                adjPerm != iso.facetPerm(adjIndex)) {
-                            broken = true;
-                            break;
-                        }
-                    } else if (whichComp[destAdjIndex] >= 0) {
-                        // We haven't decided upon an image for this
-                        // source pentachoron but the destination
-                        // pentachoron has already been used.
-                        broken = true;
-                        break;
-                    } else {
-                        // We haven't seen either the source or the
-                        // destination pentachoron.
-                        whichComp[destAdjIndex] = comp;
-                        iso.simpImage(adjIndex) = destAdjIndex;
-                        iso.facetPerm(adjIndex) = adjPerm;
-                        toProcess.push(adjIndex);
-                    }
-                } else if (completeIsomorphism) {
-                    // There is no adjacent source pentachoron, and we
-                    // are after a boundary complete isomorphism.
-                    // There had better be no adjacent destination
-                    // pentachoron also.
-                    if (destPent->adjacentPentachoron(pentPerm[facet])) {
-                        broken = true;
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (! broken) {
-            // Therefore toProcess is empty.
-            // The image for this component was successfully filled out.
-            // Move on to the next component.
-            comp++;
-        } else {
-            // The image for this component was not successfully filled out.
-            // Undo our partially created image, and then try another
-            // starting image for this component.
-            while (! toProcess.empty())
-                toProcess.pop();
-
-            for (i = 0; i < nPentachora; i++)
-                if (iso.simpImage(i) >= 0 &&
-                        whichComp[iso.simpImage(i)] == comp) {
-                    whichComp[iso.simpImage(i)] = -1;
-                    iso.simpImage(i) = -1;
-                }
-
-            startPerm[comp]++;
-        }
-    }
-
-    // All out of options.
-    delete[] whichComp;
-    delete[] startPent;
-    delete[] startPerm;
-    return nResults;
+    return true;
 }
 
-bool Dim4Triangulation::compatiblePents(
-        Dim4Pentachoron* src, Dim4Pentachoron* dest, NPerm5 p) {
+template <>
+bool TriangulationBase<4>::compatible(
+        Simplex<4>* src, Simplex<4>* dest, NPerm<5> p) {
     for (int triangle = 0; triangle < 10; triangle++)
         if (src->getTriangle(triangle)->getNumberOfEmbeddings() !=
                 dest->getTriangle(Dim4Triangle::triangleNumber

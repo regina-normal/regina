@@ -2077,7 +2077,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 return;
 
             std::list<NIsomorphism*> autos;
-            tri->findAllIsomorphisms(*tri, autos);
+            tri->findAllIsomorphisms(*tri, back_inserter(autos));
 
             for (std::list<NIsomorphism*>::const_iterator it = autos.begin();
                     it != autos.end(); ++it) {
