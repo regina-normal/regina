@@ -102,6 +102,36 @@ namespace {
         return t.isContainedIn(s).release();
     }
 
+    boost::python::list findAllIsomorphisms_list(
+        const Dim2Triangulation& t, const Dim2Triangulation& other) {
+        boost::python::list ans;
+
+        std::list<regina::Dim2Isomorphism*> isos;
+        t.findAllIsomorphisms(other, isos);
+
+        for (std::list<regina::Dim2Isomorphism*>::iterator it =
+                 isos.begin(); it != isos.end(); it++) {
+            std::auto_ptr<regina::Dim2Isomorphism> iso(*it);
+            ans.append(iso);
+        }
+        return ans;
+    }
+
+    boost::python::list findAllSubcomplexesIn_list(
+        const Dim2Triangulation& t, const Dim2Triangulation& other) {
+        boost::python::list ans;
+
+        std::list<regina::Dim2Isomorphism*> isos;
+        t.findAllSubcomplexesIn(other, isos);
+
+        for (std::list<regina::Dim2Isomorphism*>::iterator it =
+                 isos.begin(); it != isos.end(); it++) {
+            std::auto_ptr<regina::Dim2Isomorphism> iso(*it);
+            ans.append(iso);
+        }
+        return ans;
+    }
+
     std::string isoSig_void(const Dim2Triangulation& t) {
         return t.isoSig();
     }
@@ -177,6 +207,8 @@ void addDim2Triangulation() {
         .def("makeCanonical", &Dim2Triangulation::makeCanonical)
         .def("isContainedIn", isContainedIn_ptr,
             return_value_policy<manage_new_object>())
+        .def("findAllIsomorphisms", findAllIsomorphisms_list)
+        .def("findAllSubcomplexesIn", findAllSubcomplexesIn_list)
         .def("isEmpty", &Dim2Triangulation::isEmpty)
         .def("size", &Dim2Triangulation::size)
         .def("isValid", &Dim2Triangulation::isValid)
