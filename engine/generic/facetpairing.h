@@ -717,9 +717,9 @@ class FacetPairingBase :
  */
 template <int dim>
 class FacetPairing : public FacetPairingBase<dim> {
-    static_assert(! standardDim(dim),
+    static_assert(dim != 3,
         "The generic implementation of FacetPairing<dim> "
-        "should not be used for Regina's standard dimensions.");
+        "should not be used for dimension 3.");
 
     public:
         /**
