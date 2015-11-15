@@ -43,6 +43,7 @@
 #endif
 
 #include "regina-core.h"
+#include <iostream>
 
 namespace regina {
 
@@ -244,6 +245,14 @@ struct NFacetSpec {
      */
     bool operator == (const NFacetSpec<dim>& other) const;
     /**
+     * Determines if this and the given specifier are not identical.
+     *
+     * @param other the specifier to compare with this.
+     * @return \c true if and only if this and the given specifier are
+     * not equal.
+     */
+    bool operator != (const NFacetSpec<dim>& other) const;
+    /**
      * Determines if this is less than the given specifier.
      *
      * @param other the specifier to compare with this.
@@ -275,6 +284,18 @@ struct NFacetSpec {
      * the given specifier.
      */
     bool operator <= (const NFacetSpec<dim>& other) const;
+
+    /**
+     * Gives a nice string representation of this object.
+     *
+     * @param os the stream to insert the representation.
+     * @return the extended stringstream object
+     */
+    friend std::ostream& operator << (std::ostream& os, const NFacetSpec<dim>&
+            obj) {
+        return os << obj.simp << ":" << obj.facet;
+    }
+
 };
 
 /**
@@ -412,6 +433,11 @@ inline NFacetSpec<dim> NFacetSpec<dim>::operator -- (int) {
 template <int dim>
 inline bool NFacetSpec<dim>::operator == (const NFacetSpec<dim>& other) const {
     return (simp == other.simp && facet == other.facet);
+}
+
+template <int dim>
+inline bool NFacetSpec<dim>::operator != (const NFacetSpec<dim>& other) const {
+    return (simp != other.simp || facet != other.facet);
 }
 
 template <int dim>
