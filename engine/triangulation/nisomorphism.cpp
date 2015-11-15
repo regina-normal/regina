@@ -45,6 +45,7 @@ template bool NGenericIsomorphism<3>::isIdentity() const;
 template NGenericIsomorphism<3>::NGenericIsomorphism(
     const NGenericIsomorphism<3>&);
 template NIsomorphism* NGenericIsomorphism<3>::random(unsigned);
+template NIsomorphism* NGenericIsomorphism<3>::inverse() const;
 template NTriangulation* NGenericIsomorphism<3>::apply(const NTriangulation*)
     const;
 template void NGenericIsomorphism<3>::applyInPlace(NTriangulation*) const;

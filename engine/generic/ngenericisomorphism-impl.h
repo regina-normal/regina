@@ -79,6 +79,20 @@ NGenericIsomorphism<dim>::NGenericIsomorphism(
 
 template <int dim>
 typename NGenericIsomorphism<dim>::Isomorphism* NGenericIsomorphism<dim>::
+        inverse() const {
+    Isomorphism* ans = new Isomorphism(nSimplices_);
+
+    unsigned i;
+    for (int i = 0; i < nSimplices_; i++) {
+        ans->simpImage_[simpImage_[i]] = i;
+        ans->facetPerm_[simpImage_[i]] = facetPerm_[i].inverse();
+    }
+    return ans;
+
+}
+
+template <int dim>
+typename NGenericIsomorphism<dim>::Isomorphism* NGenericIsomorphism<dim>::
         random(unsigned nSimplices) {
     Isomorphism* ans = new Isomorphism(nSimplices);
 

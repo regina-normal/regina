@@ -225,6 +225,13 @@ class REGINA_API NGenericIsomorphism :
         NFacetSpec<dim> operator [] (const NFacetSpec<dim>& source) const;
 
         /**
+         * Returns the inverse of this isomorphism. Note that this returned
+         * isomorphism should be deleted by the caller when it is no longer
+         * required.
+         */
+        Isomorphism* inverse() const;
+
+        /**
          * Determines whether or not this is an identity isomorphism.
          *
          * In an identity isomorphism, each simplex image is itself,
