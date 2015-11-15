@@ -872,9 +872,10 @@ inline void NGenericFacetPairing<dim>::match(int tet1, int facet1,
 
 template <int dim>
 inline void NGenericFacetPairing<dim>::unMatch(const NFacetSpec<dim>& facet) {
-    NFacetSpec<dim> &f2 = pairs_[(dim + 1) * facet.simp + facet.facet];
+    int f2simp = pairs_[(dim + 1) * facet.simp + facet.facet].simp;
+    int f2facet = pairs_[(dim + 1) * facet.simp + facet.facet].facet;
     pairs_[(dim + 1) * facet.simp + facet.facet].setBoundary(size_);
-    pairs_[(dim + 1) * f2.simp + f2.facet].setBoundary(size_);
+    pairs_[(dim + 1) * f2simp + f2facet].setBoundary(size_);
 }
 
 template <int dim>
