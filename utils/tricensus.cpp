@@ -83,6 +83,7 @@ int dim4 = 0;
 int usePairs = 0;
 int sigs = 0;
 int whichPurge = 0;
+int collapse = 0;
 int genPairs = 0;
 int subContainers = 0;
 std::string outFile;
@@ -112,8 +113,7 @@ struct Dim2Params {
             const Pairing::IsoList* autos, bool orientableOnly,
             bool finiteOnly, int whichPurge, regina::NPacket* dest) {
         GluingPermSearcher::findAllPerms(p, autos,
-            orientableOnly,
-            foundGluingPerms<Dim2Params>, dest);
+            orientableOnly, foundGluingPerms<Dim2Params>, dest);
     }
 
     inline static bool mightBeMinimal(Triangulation* tri) {
@@ -134,7 +134,7 @@ struct Dim3Params {
             const Pairing::IsoList* autos, bool orientableOnly,
             bool finiteOnly, int whichPurge, regina::NPacket* dest) {
         GluingPermSearcher::findAllPerms(p, autos,
-            orientableOnly, finiteOnly, whichPurge,
+            orientableOnly, finiteOnly, collapse, whichPurge,
             foundGluingPerms<Dim3Params>, dest);
     }
 
@@ -366,6 +366,8 @@ int main(int argc, const char* argv[]) {
             "Ignore triangulations that are obviously not minimal ideal "
             "triangulations of cusped finite-volume hyperbolic 3-manifolds.  "
             "Implies --internal and --ideal.", 0 },
+        { "collapse", 'C', POPT_ARG_NONE, &collapse, 0,
+            "Collapse chains before running census.", 0 },
         { "dim2", '2', POPT_ARG_NONE, &dim2, 0,
             "Run a census of 2-manifold triangulations, "
             "not 3-manifold triangulations.  Here --tetrahedra counts "

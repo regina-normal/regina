@@ -117,14 +117,15 @@ struct Dim3Params {
     inline static GluingPermSearcher* bestSearcher(Pairing* p,
             bool orientableOnly, bool finiteOnly, int whichPurge) {
         return GluingPermSearcher::bestSearcher(p, 0 /* autos */,
-            orientableOnly, finiteOnly, whichPurge,
+            orientableOnly, finiteOnly, false, // collapse
+            whichPurge,
             ctrlFarmPartialSearch<Dim3Params>);
     }
 
     inline static void findAllPerms(Pairing* p, bool orientableOnly,
             bool finiteOnly, int whichPurge, regina::NPacket* dest) {
         GluingPermSearcher::findAllPerms(p, 0,
-            orientableOnly, finiteOnly, whichPurge,
+            orientableOnly, finiteOnly, whichPurge, false, // collapse
             slaveFoundGluingPerms<Dim3Params>, dest);
     }
 
