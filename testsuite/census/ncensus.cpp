@@ -264,7 +264,7 @@ class NCensusTest : public CppUnit::TestFixture {
                 CensusSpec* s = static_cast<CensusSpec*>(spec);
                 NGluingPermSearcher::findAllPerms(pairing, autos,
                     ! s->orbl_.hasFalse(), ! s->finite_.hasFalse(),
-                    s->purge_, foundPerms, spec);
+                    false /* collapse */, s->purge_, foundPerms, spec);
             }
         }
 
