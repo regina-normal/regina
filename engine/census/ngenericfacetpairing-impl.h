@@ -338,7 +338,6 @@ bool NGenericFacetPairing<dim>::isCanonicalInternal(
             firstDestPre;
         image[firstDestPre.simp * (dim + 1) + firstDestPre.facet] =
             firstFaceDest;
-
         // Step forwards to the next facet whose preimage is undetermined.
         trying = firstFace;
         ++trying;
@@ -568,7 +567,6 @@ typename NGenericFacetPairing<dim>::Isomorphism* NGenericFacetPairing<dim>::make
         if (isolated)
             numIsolated += 1;
     }
-
     // Now find a suitable place to start.
     int startSimplex = 0;
     bool isolated = true;
@@ -669,6 +667,13 @@ typename NGenericFacetPairing<dim>::Isomorphism* NGenericFacetPairing<dim>::make
         if (image[toInt(firstFaceDest)] < best[0]) {
             isBetterAt = 0;
         } else if (image[toInt(firstFaceDest)] > best[0]) {
+            image[toInt(preImage[0])].setBeforeStart();
+            image[toInt(firstFaceDest)].setBeforeStart();
+            // Technically only one of these two should be needed. I wonder which
+            // is faster though, the if statement or the extra two variable
+            // assignments.
+            preImage[1].setBeforeStart();
+            preImage[dim + 1].setBeforeStart();
             continue;
         }
 
@@ -693,21 +698,47 @@ typename NGenericFacetPairing<dim>::Isomorphism* NGenericFacetPairing<dim>::make
             // ensures that this whole connected component will appear first in
             // any representation.
             if (trying.isPastEnd(size_ - numIsolated, true)) {
-                // We almost have a complete automorphism!
-                if (ans != NULL)
-                    delete ans;
-                ans = new Isomorphism(size_);
-                for (unsigned i = 0; i < (size_ - numIsolated); i++) {
-                    ans->simpImage(i) = image[i * (dim + 1)].simp;
-                    for (unsigned j = 0; j <= dim; ++j) {
-                        permImg[j] = image[i * (dim + 1) + j].facet;
-                        NFacetSpec<dim> &other = dest(preImage[i * (dim + 1) + j]);
-                        if (! other.isBoundary(size_))
-                            best[i * (dim + 1) + j] = image[toInt(other)];
-                        else
-                            best[i * (dim + 1) + j].setBoundary(size_);
+                // If isBetterAt == -1, then we have an isomorphism that is "as
+                // good" as the best we've found. Since we iterate through
+                // isomorphisms lexicographically, we just keep this first one.
+                if ((ans == NULL) || (isBetterAt != -1)) {
+                    // We almost have a complete automorphism!
+                    if (ans != NULL)
+                        delete ans;
+                    ans = new Isomorphism(size_);
+                    int k = 0; // How many isolated simps have we encountered.
+                    for (unsigned i = 0; i < size_ ; i++) {
+                        if (image[i * (dim + 1)].isBeforeStart()) {
+                            // Isolated.
+                            ans->simpImage(i) = size_ - numIsolated + k;
+                            k+=1;
+                            ans->facetPerm(i) = Perm::Sn[0];
+                        } else {
+                            ans->simpImage(i) = image[i * (dim + 1)].simp;
+                            for (unsigned j = 0; j <= dim; ++j)
+                                permImg[j] = image[i * (dim + 1) + j].facet;
+                            ans->facetPerm(i) = Perm(permImg);
+                        }
+                        if (preImage[i * (dim + 1)].isBeforeStart()) {
+                            // Isolated.
+                            for (unsigned j = 0; j <= dim; j++)
+                                best[i * (dim  + 1) + j].setBoundary(size_);
+                        } else {
+                            for (unsigned j = 0; j <= dim; ++j) {
+                                NFacetSpec<dim> &other = dest(preImage[i * (dim + 1) + j]);
+                                if (! other.isBoundary(size_))
+                                    best[i * (dim + 1) + j] = image[toInt(other)];
+                                else
+                                    best[i * (dim + 1) + j].setBoundary(size_);
+                            }
+                        }
                     }
-                    ans->facetPerm(i) = Perm(permImg);
+                    isBetterAt = -1;
+                    // We've got a new "best", so when stepping through any
+                    // other isomorphisms we have to assume they start of "as
+                    // good". Note that any worse candidates will thus be
+                    // examined and we will step down, while any better
+                    // candidates will again mark isBetterAt.
                 }
                 stepDown = true;
             } else {

@@ -295,6 +295,7 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
          * \c false if there is no such requirement.  Note that
          * regardless of this value, some non-finite triangulations
          * might still be produced; see the notes above for details.
+         * @param collapse TODO
          * @param whichPurge specifies which permutation sets we may avoid
          * constructing (see the function notes above for details).  This
          * should be a bitwise OR of constants from the PurgeFlags enumeration,
@@ -432,6 +433,7 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
          * corresponding subclass of NGluingPermSearcher and then calls
          * runSearch().
          *
+         * @param collapse TODO Where to document?
          * See the NGluingPermSearcher constructor for documentation on
          * the arguments to this routine.  See the runSearch() method
          * for documentation on how the search runs and returns its
@@ -446,8 +448,8 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
          */
         static void findAllPerms(const NFacePairing* pairing,
                 const NFacePairing::IsoList* autos,
-                bool orientableOnly, bool finiteOnly, int whichPurge,
-                UseGluingPerms use, void* useArgs = 0);
+                bool orientableOnly, bool finiteOnly, bool collapse,
+                int whichPurge, UseGluingPerms use, void* useArgs = 0);
 
         /**
          * Constructs a search manager of the best possible class for the
@@ -477,8 +479,8 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
          * @return the newly created search manager.
          */
         static NGluingPermSearcher* bestSearcher(const NFacePairing* pairing,
-                const NFacePairing::IsoList* autos,
-                bool orientableOnly, bool finiteOnly, int whichPurge,
+                const NFacePairing::IsoList* autos, bool orientableOnly,
+                bool finiteOnly, bool collapse, int whichPurge,
                 UseGluingPerms use, void* useArgs = 0);
 
         /**
@@ -2499,17 +2501,35 @@ class REGINA_API NCollapsedChainSearcher : public NGluingPermSearcher {
         FacetPairing *modified;
             /**< The modified face pairing graph. */
         NIsomorphism *iso;
+            /**< The isomorphism applied to the original pairing to retrieve
+                 create modified.
+
+                 Note that since modified contains fewer simplices than the
+                 original face pairing, these extra simplices will have to be
+                 added back in first. Then the isomorphism can be applied, and
+                 lastly the chains can be rebuilt. */
+        NIsomorphism *isoInv;
             /**< The isomorphism to apply to modified to retrieve the original
                  labels of all simplices in modified.
 
                  Note that since modified contains fewer simplices than the
                  original face pairing, these extra simplices will have to be
                  added back in first. Then the isomorphism can be applied, and
-                 lastly the chains can be rebuilt using the data from
-                 chainFaces and chainLength. */
+                 lastly the chains can be rebuilt. */
+        int *chainNo;
+        bool *chainSym;
+        bool *shortChain;
+        bool collapse;
         unsigned maxOrder;
-        unsigned nChains;
             /**< TODO. */
+        enum edgeType { EDGE_CHAIN_END,
+                    EDGE_CHAIN_INTERNAL_FIRST,
+                    EDGE_CHAIN_INTERNAL_SECOND };
+        edgeType* orderType;
+            /**< For each edge in the face pairing graph stored in the
+                 order[] array, a corresponding category for this edge is
+                 stored in the orderType[] array.  Categories are described
+                 by the EDGE_... constants defined in this class. */
         int* chainPermIndices;
             /**< Stores the two possible gluing permutations that must be
                  tried for each face in the order[] array.
@@ -2590,7 +2610,7 @@ class REGINA_API NCollapsedChainSearcher : public NGluingPermSearcher {
         virtual void dumpData(std::ostream& out) const;
         virtual void runSearch(long maxDepth = -1);
 
-        void extendTri(NTriangulation *);
+        void extendTri(const NGluingPermSearcher *);
         static void extendTriHelper(const NGluingPermSearcher *, void *);
     protected:
         // Overridden methods:
@@ -2601,8 +2621,14 @@ class REGINA_API NCollapsedChainSearcher : public NGluingPermSearcher {
          * Collapse the chain on the given pair of faces. Note that collapsing
          * here does not remove the tetrahedra, it only disconnects them. They
          * will be removed when the resulting NFacePairing is made canonical.
+         * Note that chains of length 0 (so a tetrahedron with two faces
+         * identified together and remaining two faces identified with two
+         * other distinct tetrahedra) will not be collapsed.
+         *
+         * Returns true if a chain was collapsed, false otherwise (most likely
+         * due to finding a short chain).
          */
-        void collapseChain(NFacePair pair, int tet);
+        bool collapseChain(NFacePair pair, int tet, int numChains);
 
 };
 

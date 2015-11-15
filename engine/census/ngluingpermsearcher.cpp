@@ -92,7 +92,7 @@ NGluingPermSearcher::~NGluingPermSearcher() {
 
 NGluingPermSearcher* NGluingPermSearcher::bestSearcher(
         const NFacePairing* pairing, const NFacePairing::IsoList* autos,
-        bool orientableOnly, bool finiteOnly, int whichPurge,
+        bool orientableOnly, bool finiteOnly, bool collapse, int whichPurge,
         UseGluingPerms use, void* useArgs) {
     // Use an optimised algorithm if possible.
     if (finiteOnly) {
@@ -102,8 +102,11 @@ NGluingPermSearcher* NGluingPermSearcher::bestSearcher(
                 (orientableOnly || (whichPurge & PURGE_P2_REDUCIBLE))) {
                 // Closed prime minimal P2-irreducible triangulations with >= 3
                 // tetrahedra.
-                return new NClosedPrimeMinSearcher(pairing, autos,
-                    orientableOnly, use, useArgs);
+                if (collapse) {
+                    return new NCollapsedChainSearcher(pairing, autos, orientableOnly, use, useArgs);
+                } else {
+                    return new NClosedPrimeMinSearcher(pairing, autos, orientableOnly, use, useArgs);
+                }
             }
         return new NCompactSearcher(pairing, autos, orientableOnly,
             whichPurge, use, useArgs);
@@ -120,9 +123,9 @@ NGluingPermSearcher* NGluingPermSearcher::bestSearcher(
 
 void NGluingPermSearcher::findAllPerms(const NFacePairing* pairing,
         const NFacePairing::IsoList* autos, bool orientableOnly,
-        bool finiteOnly, int whichPurge, UseGluingPerms use, void* useArgs) {
+        bool finiteOnly, bool collapse, int whichPurge, UseGluingPerms use, void* useArgs) {
     NGluingPermSearcher* searcher = bestSearcher(pairing, autos,
-        orientableOnly, finiteOnly, whichPurge, use, useArgs);
+        orientableOnly, finiteOnly, collapse, whichPurge, use, useArgs);
     searcher->runSearch();
     delete searcher;
 }

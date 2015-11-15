@@ -49,7 +49,7 @@ NCollapsedChainSearcher::NCollapsedChainSearcher(const NFacePairing* pairing,
         UseGluingPerms use, void* useArgs) :
         NGluingPermSearcher(pairing, autos, orientableOnly, true, // finiteOnly
             PURGE_NON_MINIMAL_PRIME | PURGE_P2_REDUCIBLE,
-            use, useArgs), maxOrder(0), nChains(0) {
+            use, useArgs), maxOrder(0) {
     // Preconditions:
     //     Only closed prime minimal P2-irreducible triangulations are needed.
     //     The given face pairing is closed with order >= 3.
@@ -57,25 +57,59 @@ NCollapsedChainSearcher::NCollapsedChainSearcher(const NFacePairing* pairing,
     unsigned nTets = getNumberOfTetrahedra();
 
     modified = new NFacePairing(*pairing);
-
+    chainPermIndices = new int[8 * nTets];
+    orderType = new edgeType[2 * nTets];
     // Begin by searching for tetrahedra that are joined to themselves.
     // Note that each tetrahedra can be joined to itself at most once,
     // since we are guaranteed that the face pairing is connected with
     // order >= 3.
 
+    int numChains = 0;
+    chainNo = new int [2*nTets];
+    shortChain = new bool [nTets] {false};
+    collapse = true;
     NTetFace face;
-    for (face.setFirst(); ! face.isPastEnd(nTets, true); face++) {
-
-        NTetFace adj = (*pairing)[face];
+    for (face.setFirst(); collapse && ! face.isPastEnd(nTets, true); face++) {
+        NTetFace adj = (*pairing_)[face];
         if (adj.simp != face.simp)
-            continue;
-        collapseChain(NFacePair(face.facet, adj.facet), adj.simp);
+            continue; // Not a loop
+        if (face.facet > adj.facet)
+            continue; // Only traverse loops once
+        if (collapseChain(NFacePair(face.facet, adj.facet), adj.simp,
+                    numChains))
+            numChains++;
     }
     maxOrder = orderElt;
+    std::cout << "maxOrder = " << maxOrder << std::endl;
+    std::cout << "numChains= " << numChains << std::endl;
+    for (int i=0; i<orderElt; i++) {
+        std::cout << order[i] << "  ";
+    }
+    std::cout << std::endl;
+    for (int i=0; i<orderElt; i++) {
+        for (int j=0; j<4; j++) {
+            std::cout << indexToGluing(order[i], chainPermIndices[4*i+j]).str() << "  ";
+        }
+    }
+    std::cout << std::endl;
+    chainSym = new bool [numChains] {false};
+    iso = modified->makeCanonical();
+    isoInv = iso->inverse();
+    if (pairing_->size() == modified->size())
+        collapse = false;
+    if (modified->size() < 3)
+        collapse = false;
 }
 
 NCollapsedChainSearcher::~NCollapsedChainSearcher() {
+    delete iso;
+    delete isoInv;
     delete modified;
+    delete[] chainNo;
+    delete[] chainSym;
+    delete[] chainPermIndices;
+    delete[] shortChain;
+    delete[] orderType;
 }
 
 void NCollapsedChainSearcher::runSearch(long maxDepth) {
@@ -93,15 +127,23 @@ void NCollapsedChainSearcher::runSearch(long maxDepth) {
 //        return;
 //    }
 
-    if (modified->size() < 3) {
-        NClosedPrimeMinSearcher s(pairing_, autos_, orientableOnly_, use_,
-                useArgs_);
-        s.runSearch();
-    } else {
-        //void extendTri(const NGluingPermSearcher *s, void *useArgs);
+    if (collapse) {
+//        std::cout << "From " << pairing_->toString() << std::endl;
+//        std::cout << "To   " << modified->toString() << std::endl;
+//        for (int i = 0; i < maxOrder; i++) {
+//            NTetFace face = order[i];
+//            NTetFace adj = (*pairing_)[face];
+//            std::cout << face << " to " << adj << " ";
+//            std::cout << indexToGluing(face, chainPermIndices[2*i]).str() << " and ";
+//            std::cout << indexToGluing(face, chainPermIndices[2*i+ 1]).str() << std::endl;
+//        }
         UseGluingPerms func = &NCollapsedChainSearcher::extendTriHelper;
         NClosedPrimeMinSearcher s(modified, NULL, orientableOnly_, func,
                 this);
+        s.runSearch();
+    } else {
+        NClosedPrimeMinSearcher s(pairing_, autos_, orientableOnly_, use_,
+                useArgs_);
         s.runSearch();
     }
     use_(0, useArgs_);
@@ -109,33 +151,116 @@ void NCollapsedChainSearcher::runSearch(long maxDepth) {
 
 void NCollapsedChainSearcher::extendTriHelper(const NGluingPermSearcher *s, void *
         useArgs) {
+    // End of search
+    if (s == 0)
+        return;
+
     NCollapsedChainSearcher *c = static_cast<NCollapsedChainSearcher*>(useArgs);
-    c->extendTri(c->triangulate());
+    c->extendTri(s);
 }
 
-void NCollapsedChainSearcher::extendTri(NTriangulation *t) {
+void NCollapsedChainSearcher::extendTri(const NGluingPermSearcher *s) {
     orderElt = 0;
-    // for each triangulation found.
-    // apply reverse isomorphism
-    // for each chain, move the gluing on the loop of the collapsed chain to the
-    // loop of the full chain. then:
-    while (orderElt < maxOrder) {
-        NTetFace face = order[orderElt];
-        NTetFace adj = (*pairing_)[face];
+    // For each triangulation found.
+    // copy pairing_ and apply reverse of iso
+    // Note that iso is the isomorphism from this to s
 
-        // Note that we are only ever identifying faces corresponding to
-        // parallel arcs that are part of a one-ended chain. That means we
-        // have at most 2 options to test at each pair of arcs.
-        if (permIndex(face) < 0)
-            permIndex(face) = chainPermIndices[2*orderElt];
-        else if (permIndex(face) == chainPermIndices[orderElt])
-            permIndex(face) = chainPermIndices[2*orderElt+1];
-        else {
-            permIndex(face) = -1;
-            permIndex(adj) = -1;
-            orderElt--;
+    std::cout << "Original " << pairing_->str() << std::endl;
+    NTriangulation *tri = s->triangulate();
+    std::cout << "Started with " << tri->isoSig() << std::endl;
+    std::cout << "Modified " << modified->str() << std::endl;
+
+    for (NTetFace f(0,0); ! f.isPastEnd(s->size(), true); f++) {
+        NTetFace adj = (*modified)[f];
+        if ((adj.simp == f.simp) && (!shortChain[isoInv->simpImage(f.simp)])) {
+            // This is a loop that is not just a short chain.
             continue;
         }
+        int mySimp = isoInv->simpImage(f.simp);
+        NPerm4 perm = isoInv->facetPerm(f.simp);
+        int myFacet = perm[f.facet];
+        NTetFace my(mySimp, myFacet);
+        if (permIndex(my) != -1)
+            continue; // Already done.
+        int myAdjSimp = isoInv->simpImage(adj.simp);
+        NPerm4 adjPerm = isoInv->facetPerm(adj.simp);
+        int myAdjFacet = adjPerm[adj.facet];
+        NTetFace myAdj(myAdjSimp, myAdjFacet);
+
+        NPerm4 gluing = (adjPerm.inverse() * s->gluingPerm(f) * perm);
+//        std::cout << my << " to " << myAdj << " : " << gluing.str() <<
+//            std::endl;
+        if ( gluing[myFacet] != myAdjFacet ) {
+            std::cerr << "Error: Invalid gluing " << std::endl;
+        }
+        permIndex(my) = gluingToIndex(my, gluing);
+        permIndex(myAdj) = gluingToIndex(myAdj, gluing.inverse());
+    }
+    orderElt = 0;
+    while (orderElt >= 0) {
+        if (orderElt >= maxOrder) {
+            //NTriangulation *newTri = triangulate();
+            //std::cout << "Found " << newTri->isoSig() << std::endl;
+            use_(this, useArgs_);
+            orderElt -= 1;
+            continue;
+        }
+        NTetFace face = order[orderElt];
+        NTetFace adj = (*pairing_)[face];
+        if (orderType[orderElt] == EDGE_CHAIN_END ) {
+            if (permIndex(face) < 0) {
+                permIndex(face) = chainPermIndices[4*orderElt];
+            } else if (permIndex(face) == chainPermIndices[4*orderElt]) {
+                permIndex(face) = chainPermIndices[4*orderElt+1];
+            } else {
+                // Try flipping the whole chain.
+                int chain = chainNo[orderElt];
+                if (chainSym[chain] == false) {
+                    permIndex(face) = chainPermIndices[4*orderElt];
+                    chainSym[chain] = true;
+                } else {
+                    chainSym[chain] = false;
+                    permIndex(face) = -1;
+                    permIndex(adj) = -1;
+                    orderElt--;
+                    continue;
+                }
+            }
+            permIndex(adj) = NPerm4::invS3[permIndex(face)];
+            orderElt++;
+            continue;
+        }
+        // If chainSym is true, add 2 to each index into chainPermIndices
+        int symAdd = chainSym[chainNo[orderElt]] ? 2 : 0;
+        if (orderType[orderElt] == EDGE_CHAIN_INTERNAL_FIRST) {
+            if (permIndex(face) < 0) {
+                permIndex(face) = chainPermIndices[4*orderElt + symAdd];
+            } else if (permIndex(face) == chainPermIndices[4*orderElt + symAdd]) {
+                permIndex(face) = chainPermIndices[4*orderElt+1 + symAdd];
+            } else {
+                permIndex(face) = -1;
+                permIndex(adj) = -1;
+                orderElt--;
+                continue;
+            }
+        } else { // orderType[orderElt] == EDGE_CHAIN_INTERNAL_SECOND
+            if (permIndex(face) == -1) {
+                permIndex(face) = chainPermIndices[4*orderElt + symAdd];
+            } else if (permIndex(face) == chainPermIndices[4*orderElt + symAdd]) {
+                permIndex(face) = chainPermIndices[4*orderElt+1 + symAdd];
+            } else {
+                permIndex(face) = -1;
+                permIndex(adj) = -1;
+                orderElt--;
+                continue;
+            }
+        }
+        permIndex(adj) = NPerm4::invS3[permIndex(face)];
+        orderElt++;
+    }
+    // Reset
+    for (NTetFace f(0,0); ! f.isPastEnd(pairing_->size(), true); f++) {
+        permIndex(f) = -1;
     }
 }
 
@@ -195,22 +320,46 @@ NCollapsedChainSearcher::NCollapsedChainSearcher(std::istream& in,
 //        inputError_ = true;
 }
 
-void NCollapsedChainSearcher::collapseChain(NFacePair faces, int tet) {
-
-    modified->unMatch(tet,faces.lower()); // Unmatch loop
+bool NCollapsedChainSearcher::collapseChain(NFacePair faces, int tet, int
+        numChains) {
+    NFacePair comp = faces.complement();
+    order[orderElt] = NTetFace(tet, faces.lower());
+    chainNo[orderElt] = numChains;
+    chainPermIndices[4 * orderElt] = gluingToIndex(order[orderElt],
+        NPerm4(faces.lower(), faces.upper(),
+                faces.upper(), comp.lower(),
+                comp.lower(), comp.upper(),
+                comp.upper(), faces.lower()));
+    chainPermIndices[4 * orderElt + 1] = gluingToIndex(order[orderElt],
+        NPerm4(faces.lower(), faces.upper(),
+                faces.upper(), comp.upper(),
+                comp.upper(), comp.lower(),
+                comp.lower(), faces.lower()));
+    orderType[orderElt] = EDGE_CHAIN_END;
+    orderElt+=1;
     faces = faces.complement();
-
     NTetFace dest1, dest2;
-    dest1 = pairing_->dest(tet, faces.lower());
-    //dest1 = modified->dest(tet, faces.lower());
+    dest1 = modified->dest(tet, faces.lower());
     dest2 = modified->dest(tet, faces.upper());
+    if (dest1.simp != dest2.simp) {
+        // Short chain here. Bail early, reset things.
+        shortChain[tet] = true;
+        orderElt-=1;
+        // order, chainNo and other arrays will be overwritten, if required, so
+        // no need to reset them.
+        return false;
+    }
     // Currently tet and faces refer to the two faces of the base
     // tetrahedron that are pointing outwards.
     while (dest1.simp == dest2.simp && dest1.simp != tet) {
         order[orderElt] = NTetFace(tet, faces.lower());
         order[orderElt+1] = NTetFace(tet, faces.upper());
+        orderType[orderElt] = EDGE_CHAIN_INTERNAL_FIRST;
+        orderType[orderElt+1] = EDGE_CHAIN_INTERNAL_SECOND;
+        chainNo[orderElt] = numChains;
+        chainNo[orderElt+1] = numChains;
 
-        NFacePair comp = faces.complement();
+        comp = faces.complement();
         NFacePair facesAdj = NFacePair(dest1.facet, dest2.facet);
         NFacePair compAdj = facesAdj.complement();
 
@@ -223,19 +372,31 @@ void NCollapsedChainSearcher::collapseChain(NFacePair faces, int tet) {
                         comp.lower(), compAdj.lower(),
                         comp.upper(), facesAdj.upper());
         if (trial1.compareWith(trial2) < 0) {
-            chainPermIndices[2 * orderElt] = gluingToIndex(order[orderElt], trial1);
-            chainPermIndices[2 * orderElt + 2] = gluingToIndex(order[orderElt + 1],
+            chainPermIndices[4 * orderElt] = gluingToIndex(order[orderElt], trial1);
+            chainPermIndices[4 * orderElt + 4] = gluingToIndex(order[orderElt + 1],
                 NPerm4(faces.lower(), compAdj.upper(),
                         faces.upper(), facesAdj.upper(),
                         comp.lower(), facesAdj.lower(),
                         comp.upper(), compAdj.lower()));
-        } else {
-            chainPermIndices[2 * orderElt] = gluingToIndex(order[orderElt], trial2);
-            chainPermIndices[2 * orderElt + 2] = gluingToIndex(order[orderElt + 1],
+            chainPermIndices[4 * orderElt + 2] = gluingToIndex(order[orderElt], trial2);
+            chainPermIndices[4 * orderElt + 6] = gluingToIndex(order[orderElt + 1],
                 NPerm4(faces.lower(), compAdj.lower(),
                         faces.upper(), facesAdj.upper(),
                         comp.lower(), facesAdj.lower(),
                         comp.upper(), compAdj.upper()));
+        } else {
+            chainPermIndices[4 * orderElt] = gluingToIndex(order[orderElt], trial2);
+            chainPermIndices[4 * orderElt + 4] = gluingToIndex(order[orderElt + 1],
+                NPerm4(faces.lower(), compAdj.lower(),
+                        faces.upper(), facesAdj.upper(),
+                        comp.lower(), facesAdj.lower(),
+                        comp.upper(), compAdj.upper()));
+            chainPermIndices[4 * orderElt + 2] = gluingToIndex(order[orderElt], trial1);
+            chainPermIndices[4 * orderElt + 6] = gluingToIndex(order[orderElt + 1],
+                NPerm4(faces.lower(), compAdj.upper(),
+                        faces.upper(), facesAdj.upper(),
+                        comp.lower(), facesAdj.lower(),
+                        comp.upper(), compAdj.lower()));
         }
 
         trial1 = NPerm4(faces.lower(), facesAdj.lower(),
@@ -247,36 +408,58 @@ void NCollapsedChainSearcher::collapseChain(NFacePair faces, int tet) {
                         comp.lower(), facesAdj.upper(),
                         comp.upper(), compAdj.lower());
         if (trial1.compareWith(trial2) < 0) {
-            chainPermIndices[2 * orderElt + 1] = gluingToIndex(order[orderElt], trial1);
-            chainPermIndices[2 * orderElt + 3] = gluingToIndex(order[orderElt + 1],
+            chainPermIndices[4 * orderElt + 1] = gluingToIndex(order[orderElt], trial1);
+            chainPermIndices[4 * orderElt + 5] = gluingToIndex(order[orderElt + 1],
                 NPerm4(faces.lower(), compAdj.upper(),
                         faces.upper(), facesAdj.upper(),
                         comp.lower(), compAdj.lower(),
                         comp.upper(), facesAdj.lower()));
-        } else {
-            chainPermIndices[2 * orderElt + 1] = gluingToIndex(order[orderElt], trial2);
-            chainPermIndices[2 * orderElt + 3] = gluingToIndex(order[orderElt + 1],
+            chainPermIndices[4 * orderElt + 3] = gluingToIndex(order[orderElt], trial2);
+            chainPermIndices[4 * orderElt + 7] = gluingToIndex(order[orderElt + 1],
                 NPerm4(faces.lower(), compAdj.lower(),
                         faces.upper(), facesAdj.upper(),
                         comp.lower(), compAdj.upper(),
                         comp.upper(), facesAdj.lower()));
+        } else {
+            chainPermIndices[4 * orderElt + 1] = gluingToIndex(order[orderElt], trial2);
+            chainPermIndices[4 * orderElt + 5] = gluingToIndex(order[orderElt + 1],
+                NPerm4(faces.lower(), compAdj.lower(),
+                        faces.upper(), facesAdj.upper(),
+                        comp.lower(), compAdj.upper(),
+                        comp.upper(), facesAdj.lower()));
+            chainPermIndices[4 * orderElt + 3] = gluingToIndex(order[orderElt], trial1);
+            chainPermIndices[4 * orderElt + 7] = gluingToIndex(order[orderElt + 1],
+                NPerm4(faces.lower(), compAdj.upper(),
+                        faces.upper(), facesAdj.upper(),
+                        comp.lower(), compAdj.lower(),
+                        comp.upper(), facesAdj.lower()));
         }
-        modified->unMatch(tet,faces.lower());
-        modified->unMatch(tet,faces.upper());
+        // If we are not unmatching a loop, unmatch the extra edge
+        if (modified->dest(tet, comp.lower()) != NTetFace(tet, comp.upper())) {
+            modified->unMatch(tet,comp.lower());
+        }
+        modified->unMatch(tet,comp.upper());
         faces = NFacePair(dest1.facet, dest2.facet);
         faces = faces.complement();
         orderElt += 2;
-
-        // Store this tetrahedron as part of the chain.
-        // chainTet[nChains].append(tet);
 
         tet = dest1.simp;
         dest1 = modified->dest(tet, faces.lower());
         dest2 = modified->dest(tet, faces.upper());
 
     }
-    modified->match(dest1, dest2); // Add back the original loop.
-    nChains+=1;
+    if (dest1.simp == tet)  // Chain ended on loop, aka this face pairing is a
+        collapse = false;   // double-chain
+    faces = faces.complement();
+    // Need to unmatch the final pair of parallel edges (as long as its not a loop).
+    if (modified->dest(tet, faces.lower()) != NTetFace(tet, faces.upper())) {
+        dest1 = NTetFace(tet, faces.lower());
+        dest2 = NTetFace(tet, faces.upper());
+        modified->unMatch(dest1);
+        modified->unMatch(dest2);
+        modified->match(dest1, dest2); // Add back the original loop.
+    }
+    return true;
 }
 
 } // namespace regina
