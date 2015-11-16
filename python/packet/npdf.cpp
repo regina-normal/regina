@@ -32,10 +32,13 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
 #include "packet/npdf.h"
+#include "../semiweakheldtype.h"
+
+#include <boost/python.hpp>
 
 using namespace boost::python;
+using regina::python::SemiWeakHeldType;
 using regina::NPDF;
 
 namespace {
@@ -43,18 +46,16 @@ namespace {
 }
 
 void addNPDF() {
-    scope s = class_<NPDF, bases<regina::NPacket>,
-            std::auto_ptr<NPDF>, boost::noncopyable>("NPDF", init<>())
+    class_<NPDF, bases<regina::NPacket>,
+            SemiWeakHeldType<NPDF>, boost::noncopyable>("NPDF", init<>())
         .def(init<const char*>())
         .def("isNull", &NPDF::isNull)
         .def("size", &NPDF::size)
         .def("reset", reset_empty)
         .def("savePDF", &NPDF::savePDF)
-    ;
+        .attr("packetType") = regina::PacketType(NPDF::packetType);
 
-    s.attr("packetType") = regina::PacketType(NPDF::packetType);
-
-    implicitly_convertible<std::auto_ptr<NPDF>,
-        std::auto_ptr<regina::NPacket> >();
+    implicitly_convertible<SemiWeakHeldType<NPDF>,
+        SemiWeakHeldType<regina::NPacket> >();
 }
 

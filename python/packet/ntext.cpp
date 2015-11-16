@@ -32,10 +32,15 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
+
 #include "packet/ntext.h"
+#include "../semiweakheldtype.h"
+
+// Held type must be declared before boost/python.hpp
+#include <boost/python.hpp>
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::NText;
 
 namespace {
@@ -44,19 +49,19 @@ namespace {
 }
 
 void addNText() {
-    scope s = class_<NText, bases<regina::NPacket>,
-            std::auto_ptr<NText>, boost::noncopyable>("NText", init<>())
+    class_<
+        NText, bases<regina::NPacket>, SemiWeakHeldType<NText>,
+        boost::noncopyable>(
+            "NText", init<>())
         .def(init<const std::string&>())
         .def(init<const char*>())
         .def("getText", &NText::getText,
             return_value_policy<return_by_value>())
         .def("setText", setText_string)
         .def("setText", setText_chars)
-    ;
+        .attr("packetType") = regina::PacketType(NText::packetType);
 
-    s.attr("packetType") = regina::PacketType(NText::packetType);
-
-    implicitly_convertible<std::auto_ptr<NText>,
-        std::auto_ptr<regina::NPacket> >();
+    implicitly_convertible<SemiWeakHeldType<NText>,
+                           SemiWeakHeldType<regina::NPacket> >();
 }
 
