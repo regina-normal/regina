@@ -44,7 +44,7 @@ using regina::python::SemiWeakHeldType;
 using regina::NContainer;
 
 void addNContainer() {
-    class_<
+    scope s = class_<
         NContainer, bases<regina::NPacket>, SemiWeakHeldType<NContainer>,
         boost::noncopyable>(
             "NContainer", init<>())
