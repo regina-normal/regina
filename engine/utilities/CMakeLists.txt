@@ -5,9 +5,6 @@ SET ( FILES
   base64
   i18nutils
   nbooleans
-  nsemiweakbase
-  nsemiweakptr
-  nsemiweakremnant
   nthread
   nxmlcallback
   osutils

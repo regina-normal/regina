@@ -7,10 +7,11 @@
 
 namespace regina {
 
-class NSemiWeakBase;
-class NSemiWeakRemnant;
+template <class> class NSemiWeakBase;
+template <class> class NSemiWeakRemnant;
 
 // Base class for \c NSemiWeakPtr. Users should always use \c NSemiWeakPtr.
+template <class T>
 class NSemiWeakPtrBase {
 public:
     ~NSemiWeakPtrBase();
@@ -20,12 +21,12 @@ private:
 
 protected:
     // Create a \c NSemiWeakPtr with given pointee \p object.
-    NSemiWeakPtrBase(NSemiWeakBase* object);
+    NSemiWeakPtrBase(T* object);
     NSemiWeakPtrBase(const NSemiWeakPtrBase &);
     // Get the pointee.
-    NSemiWeakBase* getBase_() const;
+    T* getBase_() const;
 private:
-    boost::intrusive_ptr<NSemiWeakRemnant> remnant_;
+    boost::intrusive_ptr<NSemiWeakRemnant<T>> remnant_;
     /**< The remnant that points to the pointee. */
 };
 
@@ -47,7 +48,7 @@ private:
  */
 
 template<class T>
-class NSemiWeakPtr : protected NSemiWeakPtrBase
+class NSemiWeakPtr : protected NSemiWeakPtrBase<T>
 {
 public:
     // For the boost infrastructure.
@@ -71,15 +72,38 @@ public:
 
 namespace boost {
 // Dereferencable concept for \c NSemiWeakPtr's.
-template<class T> T* get_pointer(regina::NSemiWeakPtr<T> const& ptr) {
+template<class T> T* get_pointer(
+        regina::NSemiWeakPtr<T> const& ptr) {
     return ptr.get();
 }
 } // namespace boost
 
 namespace regina {
 
+template <class T>
+NSemiWeakPtrBase<T>::NSemiWeakPtrBase(const NSemiWeakPtrBase& other)
+    : remnant_(other.remnant_) { }
+
+template <class T>
+NSemiWeakPtrBase<T>::NSemiWeakPtrBase(T* object) {
+    if (object) {
+        remnant_.reset(NSemiWeakRemnant<T>::getOrCreate(object));
+    }
+}
+    
+template <class T>
+NSemiWeakPtrBase<T>::~NSemiWeakPtrBase() { }
+
+template <class T>
+T* NSemiWeakPtrBase<T>::getBase_() const {
+    if (not remnant_) {
+        return 0;
+    }
+    return remnant_->get();
+}
+
 template<class T> NSemiWeakPtr<T>::NSemiWeakPtr(T* object)
-    : NSemiWeakPtrBase(object) { }
+    : NSemiWeakPtrBase<T>(object) { }
 
 // This template can only be instantiated if T (whose constructor is called)
 // is a base class of Y (returned by other.get()).
@@ -90,7 +114,7 @@ NSemiWeakPtr<T>::NSemiWeakPtr(const NSemiWeakPtr<Y> &other)
 // By virtue of how \c NSemiWeakPtr's are constructed, getBase_() always holds
 // a pointer to T or a dervied class of T.
 template<class T> T* NSemiWeakPtr<T>::get() const {
-    return static_cast<T*>(getBase_());
+    return static_cast<T*>(NSemiWeakPtrBase<T>::getBase_());
 }
 
 } // namespace regina

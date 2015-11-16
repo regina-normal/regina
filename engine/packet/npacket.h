@@ -156,7 +156,7 @@ struct PacketInfo;
 class REGINA_API NPacket :
         public Output<NPacket>,
         public boost::noncopyable,
-        public NSemiWeakBase {
+        public NSemiWeakBase<NPacket> {
     private:
         std::string packetLabel;
             /**< The unique label for this individual packet of information. */

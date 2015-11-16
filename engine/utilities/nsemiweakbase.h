@@ -3,9 +3,9 @@
 #define __NSEMIWEAKBASE_H
 #endif
 
-namespace regina {
+#include "utilities/nsemiweakremnant.h"
 
-class NSemiWeakRemnant;
+namespace regina {
 
 /**
  * A base class for objects to be referenceable by a \c NSemiWeakPtr (referred
@@ -19,22 +19,16 @@ class NSemiWeakRemnant;
  *
  * Most classes subcleass from \c NSemiWeakBase for python wrapping.
  */
+template <class T>
 class NSemiWeakBase {
 public:
-    virtual ~NSemiWeakBase();
+    ~NSemiWeakBase();
 
 protected:
     /**
      * Default constructor.
      */
     NSemiWeakBase() : remnant_(0) { }
-
-    /**
-     * Every derived class must implement this method. It must return true
-     * if some other C++ object has a non-NSemiWeakPtr pointer (e.g., raw
-     * pointer) pointing to this object.
-     */
-    virtual bool hasOwner() const = 0;
 
 private:
     // Prevent derived classes from accidentally calling copy constructor.
@@ -46,10 +40,19 @@ private:
     // Similarly, for operator=
     NSemiWeakBase & operator=(const NSemiWeakBase &);
     
-    friend class NSemiWeakRemnant;
-    NSemiWeakRemnant *remnant_;
+    friend class NSemiWeakRemnant<T>;
+    NSemiWeakRemnant<T> *remnant_;
     /**< Points to the corresponding persistent object. */
 };
+
+template <class T>
+NSemiWeakBase<T>::~NSemiWeakBase() {
+    // If existing, expire the remnant. Thus, all NSemiWeakPtr's pointing to
+    // this object know that they cannot be dereferenced anylonger.
+    if (remnant_) {
+        remnant_->expire();
+    }
+}
 
 } // namespace regina
 
