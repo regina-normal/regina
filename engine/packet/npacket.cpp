@@ -831,10 +831,5 @@ std::string NPacket::internalID() const {
     return ans;
 }
 
-/* virtual */
-bool NPacket::hasOwningParent() const {
-    return treeParent;
-}
-
 } // namespace regina
 

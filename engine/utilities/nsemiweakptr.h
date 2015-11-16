@@ -34,13 +34,13 @@ private:
  * cannot be destroyed because some other C++ class not using this smart pointer
  * owns it:
  *
- * - A pointee must subclass from \c NSemiWeakBase and implement hasOwningParent
+ * - A pointee must subclass from \c NSemiWeakBase and implement hasOwner
  *   to indicate whether it is not safe to destroy it because some other
  *   object is having a non-NSemiWeakPtr pointing to the pointee.
  * - If a pointee's destructor is called, all \c NSemiWeakPtr pointing to it
  *   will be expired and become non-dereferencable (get() returning 0).
  * - \c NSemiWeakPtr will destroy a pointee if the last \c NSemiWeakPtr pointing
- *   to the pointee goes out of scope and if the pointee's hasOwningParent
+ *   to the pointee goes out of scope and if the pointee's hasOwner
  *   returns false.
  *
  * Under the hood, \c NSemiWeakPtr is using \c NSemiWeakRemnant to achieve this.

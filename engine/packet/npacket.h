@@ -1273,8 +1273,6 @@ class REGINA_API NPacket :
          */
         virtual void writeXMLPacketData(std::ostream& out) const = 0;
 
-        virtual bool hasOwningParent() const;
-
     private:
         /**
          * Clones the descendants of this packet and inserts them as
@@ -1375,6 +1373,16 @@ class REGINA_API NPacket :
          */
          virtual void writeTextLong(std::ostream& out) const;
 
+        /**
+         * Indicates whether some other object in the calculation engine
+         * is responsible for ultimately destroying this object.
+         *
+         * For packets, this returns \c true if and only if this packet
+         * has a parent in the packet tree (i.e., is not the root).
+         *
+         * @return \c true if and only if some other object owns this object.
+         */
+        bool hasOwner() const;
 };
 
 /**
@@ -1494,6 +1502,10 @@ inline unsigned NPacket::levelsUpTo(const NPacket* ancestor) const {
 
 inline unsigned long NPacket::getNumberOfDescendants() const {
     return getTotalTreeSize() - 1;
+}
+
+inline bool NPacket::hasOwner() const {
+    return treeParent;
 }
 
 inline NPacket::ChangeEventSpan::ChangeEventSpan(NPacket* packet) :

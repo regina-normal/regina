@@ -10,7 +10,7 @@ class NSemiWeakRemnant;
 /**
  * A base class for objects to be referenceable by a \c NSemiWeakPtr (referred
  * to as pointee's of \c NSemiWeakPtr). Every derived class needs to implement
- * hasOwningParent to indicate whether any non-NSemiWeakPtr claims ownership of
+ * hasOwner to indicate whether any non-NSemiWeakPtr claims ownership of
  * it. Details of ownership semantics are explained in \c NSemiWeakPtr.
  *
  * The overhead introduced by subclassing from \c NSemiWeakBase without using
@@ -34,7 +34,7 @@ protected:
      * if some other C++ object has a non-NSemiWeakPtr pointer (e.g., raw
      * pointer) pointing to this object.
      */
-    virtual bool hasOwningParent() const = 0;
+    virtual bool hasOwner() const = 0;
 
 private:
     // Prevent derived classes from accidentally calling copy constructor.

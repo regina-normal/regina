@@ -30,7 +30,7 @@ NSemiWeakRemnant::~NSemiWeakRemnant() {
         // to zero so that pointee's destructor won't call it.
         object_->remnant_ = 0;
         // If no other C++ object claims ownership, delete the pointee.
-        if (not object_->hasOwningParent()) {
+        if (not object_->hasOwner()) {
             delete object_;
         }
     }
