@@ -26,7 +26,7 @@ protected:
     // Get the pointee.
     T* getBase_() const;
 private:
-    boost::intrusive_ptr<NSemiWeakRemnant<T>> remnant_;
+    boost::intrusive_ptr<NSemiWeakRemnant<typename T::SemiWeakHeldType>> remnant_;
     /**< The remnant that points to the pointee. */
 };
 
@@ -87,7 +87,7 @@ NSemiWeakPtrBase<T>::NSemiWeakPtrBase(const NSemiWeakPtrBase& other)
 template <class T>
 NSemiWeakPtrBase<T>::NSemiWeakPtrBase(T* object) {
     if (object) {
-        remnant_.reset(NSemiWeakRemnant<T>::getOrCreate(object));
+        remnant_.reset(NSemiWeakRemnant<typename T::SemiWeakHeldType>::getOrCreate(object));
     }
 }
     
@@ -99,7 +99,7 @@ T* NSemiWeakPtrBase<T>::getBase_() const {
     if (not remnant_) {
         return 0;
     }
-    return remnant_->get();
+    return static_cast<T*>(remnant_->get());
 }
 
 template<class T> NSemiWeakPtr<T>::NSemiWeakPtr(T* object)

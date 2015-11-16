@@ -24,6 +24,8 @@ class NSemiWeakBase {
 public:
     ~NSemiWeakBase();
 
+    typedef T SemiWeakHeldType;
+
 protected:
     /**
      * Default constructor.
