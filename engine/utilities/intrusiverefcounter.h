@@ -2,9 +2,9 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2014, Ben Burton                                   *
+ *  Copyright (c) 1999-2015, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,30 +32,47 @@
 
 /* end stub */
 
-#include "packet/npdf.h"
-#include "../safeheldtype.h"
+/*! \file utilities/intrusiverefcounter.h
+ *  \brief Provides a temporary replacement for boost::intrusive_ref_counter.
+ */
 
-#include <boost/python.hpp>
+#ifndef __INTRUSIVEREFCOUNTER_H
+#ifndef __DOXYGEN
+#define __INTRUSIVEREFCOUNTER_H
+#endif
 
-using namespace boost::python;
-using regina::python::SafeHeldType;
-using regina::NPDF;
+namespace regina {
+namespace temporary {
 
-namespace {
-    void (NPDF::*reset_empty)() = &NPDF::reset;
+/**
+ * A crude replacement for boost::intrusive_ref_counter so that the code
+ * compiles against versions of boost prior 1.55. It is only a stop-gap
+ * measure.
+ */
+
+template<typename T> class IntrusiveRefCounter {
+public:
+    IntrusiveRefCounter() : refCounter(0) { }
+    mutable int refCounter;
+};
+
+} } // namespace regina::temporary
+
+namespace boost {
+
+template<typename T>
+inline void intrusive_ptr_add_ref(const ::regina::temporary::IntrusiveRefCounter<T>* p) {
+    p->refCounter++;
 }
 
-void addNPDF() {
-    class_<NPDF, bases<regina::NPacket>,
-            SafeHeldType<NPDF>, boost::noncopyable>("NPDF", init<>())
-        .def(init<const char*>())
-        .def("isNull", &NPDF::isNull)
-        .def("size", &NPDF::size)
-        .def("reset", reset_empty)
-        .def("savePDF", &NPDF::savePDF)
-        .attr("packetType") = regina::PacketType(NPDF::packetType);
-
-    implicitly_convertible<SafeHeldType<NPDF>,
-        SafeHeldType<regina::NPacket> >();
+template<typename T>
+inline void intrusive_ptr_release(const ::regina::temporary::IntrusiveRefCounter<T>* p) {
+    p->refCounter--;
+    if (p->refCounter == 0) {
+        delete static_cast<const T*>(p);
+    }
 }
 
+} // namespace boost
+
+#endif

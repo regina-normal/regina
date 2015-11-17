@@ -48,7 +48,7 @@
 
 #include "regina-core.h"
 #include "output.h"
-#include "utilities/nsemiweakbase.h"
+#include "utilities/safepointeebase.h"
 #include "packet/npacketlistener.h"
 #include "packet/packettype.h"
 #include <boost/noncopyable.hpp>
@@ -156,7 +156,7 @@ struct PacketInfo;
 class REGINA_API NPacket :
         public Output<NPacket>,
         public boost::noncopyable,
-        public NSemiWeakBase<NPacket> {
+        public SafePointeeBase<NPacket> {
     private:
         std::string packetLabel;
             /**< The unique label for this individual packet of information. */

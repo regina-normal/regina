@@ -34,18 +34,18 @@
 
 
 #include "packet/ncontainer.h"
-#include "../semiweakheldtype.h"
+#include "../safeheldtype.h"
 
 // Held type must be declared before boost/python.hpp
 #include <boost/python.hpp>
 
 using namespace boost::python;
-using regina::python::SemiWeakHeldType;
+using regina::python::SafeHeldType;
 using regina::NContainer;
 
 void addNContainer() {
     scope s = class_<
-        NContainer, bases<regina::NPacket>, SemiWeakHeldType<NContainer>,
+        NContainer, bases<regina::NPacket>, SafeHeldType<NContainer>,
         boost::noncopyable>(
             "NContainer", init<>())
         .def(init<const std::string&>())
@@ -53,7 +53,7 @@ void addNContainer() {
 
     s.attr("packetType") = regina::PacketType(NContainer::packetType);
 
-    implicitly_convertible<SemiWeakHeldType<NContainer>,
-                           SemiWeakHeldType<regina::NPacket>>();
+    implicitly_convertible<SafeHeldType<NContainer>,
+                           SafeHeldType<regina::NPacket>>();
 }
 

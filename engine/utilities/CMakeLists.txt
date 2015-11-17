@@ -37,9 +37,6 @@ if (${REGINA_INSTALL_DEV})
     nproperty.h
     nqitmask.h
     nrational.h
-    nsemiweakbase.h
-    nsemiweakptr.h
-    nsemiweakremnant.h
     nthread.h
     ntrieset.h
     ntritmask.h
@@ -48,6 +45,9 @@ if (${REGINA_INSTALL_DEV})
     osutils.h
     ptrutils.h
     registryutils.h
+    safepointeebase.h
+    safeptr.h
+    saferemnant.h
     sequence.h
     stringutils.h
     stringutils-impl.h

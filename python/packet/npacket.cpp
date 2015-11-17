@@ -33,7 +33,7 @@
 /* end stub */
 
 #include "packet/npacket.h"
-#include "../semiweakheldtype.h"
+#include "../safeheldtype.h"
 
 // Held type must be declared before boost/python.hpp
 #include <boost/python.hpp>
@@ -95,7 +95,7 @@ namespace {
 void addNPacket() {
 
     class_<
-        NPacket, boost::noncopyable, SemiWeakHeldType<NPacket> >(
+        NPacket, boost::noncopyable, SafeHeldType<NPacket> >(
             "NPacket", no_init)
         .def("getPacketType", &NPacket::getPacketType)
         .def("getPacketTypeName", &NPacket::getPacketTypeName)

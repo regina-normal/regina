@@ -37,7 +37,7 @@
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
-#include "../semiweakheldtype.h"
+#include "../safeheldtype.h"
 
 // Held type must be declared before boost/python.hpp
 #include <boost/python.hpp>
@@ -248,7 +248,7 @@ void addNTriangulation() {
     global.attr("TV_NAIVE") = regina::TV_NAIVE;
 
     class_<NTriangulation, bases<regina::NPacket>,
-        SemiWeakHeldType<NTriangulation>, boost::noncopyable>(
+        SafeHeldType<NTriangulation>, boost::noncopyable>(
             "NTriangulation")
         .def(init<const NTriangulation&>())
         .def(init<const std::string&>())
@@ -459,7 +459,7 @@ void addNTriangulation() {
         .staticmethod("enterTextTriangulation")
         .attr("packetType") = regina::PacketType(NTriangulation::packetType);
 
-    implicitly_convertible<SemiWeakHeldType<NTriangulation>,
-                           SemiWeakHeldType<regina::NPacket> >();
+    implicitly_convertible<SafeHeldType<NTriangulation>,
+                           SafeHeldType<regina::NPacket> >();
 }
 

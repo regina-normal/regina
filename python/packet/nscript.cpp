@@ -33,7 +33,7 @@
 /* end stub */
 
 #include "packet/nscript.h"
-#include "../semiweakheldtype.h"
+#include "../safeheldtype.h"
 
 // Held type must be declared before boost/python.hpp
 #include <boost/python.hpp>
@@ -55,7 +55,7 @@ namespace {
 }
 
 void addNScript() {
-    class_<NScript, bases<regina::NPacket>, SemiWeakHeldType<NScript>,
+    class_<NScript, bases<regina::NPacket>, SafeHeldType<NScript>,
            boost::noncopyable>(
                "NScript", init<>())
         .def("getText", &NScript::getText,
@@ -78,7 +78,7 @@ void addNScript() {
         .def("removeAllVariables", &NScript::removeAllVariables)
         .attr("packetType") = regina::PacketType(NScript::packetType);
 
-    implicitly_convertible<SemiWeakHeldType<NScript>,
-                           SemiWeakHeldType<regina::NPacket> >();
+    implicitly_convertible<SafeHeldType<NScript>,
+                           SafeHeldType<regina::NPacket> >();
 }
 
