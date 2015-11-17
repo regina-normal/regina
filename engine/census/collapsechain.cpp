@@ -69,26 +69,42 @@ NCollapsedChainSearcher::NCollapsedChainSearcher(const NFacePairing* pairing,
     shortChain = new bool [nTets] {false};
     collapse = true;
     NTetFace face;
-    for (face.setFirst(); collapse && ! face.isPastEnd(nTets, true); face++) {
-        NTetFace adj = (*pairing_)[face];
-        if (adj.simp != face.simp)
-            continue; // Not a loop
-        if (face.facet > adj.facet)
-            continue; // Only traverse loops once
-        if (collapseChain(NFacePair(face.facet, adj.facet), adj.simp,
-                    numChains))
-            numChains++;
-    }
-    maxOrder = orderElt;
-    std::cout << "maxOrder = " << maxOrder << std::endl;
-    std::cout << "numChains= " << numChains << std::endl;
-    for (int i=0; i<orderElt; i++) {
-        std::cout << order[i] << "  ";
-    }
-    std::cout << std::endl;
-    for (int i=0; i<orderElt; i++) {
-        for (int j=0; j<4; j++) {
-            std::cout << indexToGluing(order[i], chainPermIndices[4*i+j]).str() << "  ";
+    std::cout << "From " << pairing_->toString() << std::endl;
+    if (pairing_->hasTripleEdge() ||
+            pairing_->hasBrokenDoubleEndedChain() ||
+            pairing_->hasOneEndedChainWithDoubleHandle() ||
+            pairing_->hasOneEndedChainWithStrayBigon() ||
+            pairing_->hasWedgedDoubleEndedChain() ||
+            pairing_->hasTripleOneEndedChain()) {
+        // Empty anyway
+        chainSym = NULL;
+        iso = NULL;
+        isoInv = NULL;
+    } else {
+        for (face.setFirst(); collapse && ! face.isPastEnd(nTets, true); face++) {
+            NTetFace adj = (*pairing_)[face];
+            if (adj.simp != face.simp)
+                continue; // Not a loop
+            if (face.facet > adj.facet)
+                continue; // Only traverse loops once
+            if (collapseChain(NFacePair(face.facet, adj.facet), adj.simp,
+                        numChains))
+                numChains++;
+        }
+        if (numChains > 0) {
+            maxOrder = orderElt;
+            chainSym = new bool [numChains] {false};
+            iso = modified->makeCanonical();
+            isoInv = iso->inverse();
+            if (pairing_->size() == modified->size())
+                collapse = false;
+            if (modified->size() < 3)
+                collapse = false;
+        } else {
+            collapse = false;
+            chainSym = NULL;
+            iso = NULL;
+            isoInv = NULL;
         }
     }
     std::cout << std::endl;
@@ -102,11 +118,14 @@ NCollapsedChainSearcher::NCollapsedChainSearcher(const NFacePairing* pairing,
 }
 
 NCollapsedChainSearcher::~NCollapsedChainSearcher() {
-    delete iso;
-    delete isoInv;
+    if (iso)
+        delete iso;
+    if (isoInv)
+        delete isoInv;
     delete modified;
     delete[] chainNo;
-    delete[] chainSym;
+    if (chainSym)
+        delete[] chainSym;
     delete[] chainPermIndices;
     delete[] shortChain;
     delete[] orderType;
@@ -171,9 +190,9 @@ void NCollapsedChainSearcher::extendTri(const NGluingPermSearcher *s) {
     std::cout << "Modified " << modified->str() << std::endl;
 
     for (NTetFace f(0,0); ! f.isPastEnd(s->size(), true); f++) {
-        NTetFace adj = (*modified)[f];
-        if ((adj.simp == f.simp) && (!shortChain[isoInv->simpImage(f.simp)])) {
-            // This is a loop that is not just a short chain.
+        NTetFace adj = (*(s->getFacetPairing()))[f];
+        if ((adj.simp == f.simp)) {
+            // This is a loop
             continue;
         }
         int mySimp = isoInv->simpImage(f.simp);
