@@ -107,14 +107,18 @@ NCollapsedChainSearcher::NCollapsedChainSearcher(const NFacePairing* pairing,
             isoInv = NULL;
         }
     }
-    std::cout << std::endl;
-    chainSym = new bool [numChains] {false};
-    iso = modified->makeCanonical();
-    isoInv = iso->inverse();
-    if (pairing_->size() == modified->size())
-        collapse = false;
-    if (modified->size() < 3)
-        collapse = false;
+//    std::cout << "maxOrder = " << maxOrder << std::endl;
+//    std::cout << "numChains= " << numChains << std::endl;
+//    for (int i=0; i<orderElt; i++) {
+//        std::cout << order[i] << "  ";
+//    }
+//    std::cout << std::endl;
+//    for (int i=0; i<orderElt; i++) {
+//        for (int j=0; j<4; j++) {
+//            std::cout << indexToGluing(order[i], chainPermIndices[4*i+j]).str() << "  ";
+//        }
+//    }
+//    std::cout << std::endl;
 }
 
 NCollapsedChainSearcher::~NCollapsedChainSearcher() {
@@ -147,8 +151,8 @@ void NCollapsedChainSearcher::runSearch(long maxDepth) {
 //    }
 
     if (collapse) {
-//        std::cout << "From " << pairing_->toString() << std::endl;
-//        std::cout << "To   " << modified->toString() << std::endl;
+        std::cout << "From " << pairing_->toString() << std::endl;
+        std::cout << "To   " << modified->toString() << std::endl;
 //        for (int i = 0; i < maxOrder; i++) {
 //            NTetFace face = order[i];
 //            NTetFace adj = (*pairing_)[face];
@@ -184,10 +188,29 @@ void NCollapsedChainSearcher::extendTri(const NGluingPermSearcher *s) {
     // copy pairing_ and apply reverse of iso
     // Note that iso is the isomorphism from this to s
 
-    std::cout << "Original " << pairing_->str() << std::endl;
     NTriangulation *tri = s->triangulate();
-    std::cout << "Started with " << tri->isoSig() << std::endl;
-    std::cout << "Modified " << modified->str() << std::endl;
+    std::string testCase("gLLMQacdefefjkaknkr");
+    std::string thisCase = tri->isoSig();
+    bool debug = (testCase.compare(thisCase) == 0);
+    if (debug) {
+        std::cout << "Original " << pairing_->str() << std::endl;
+        std::cout << "Modified " << modified->str() << std::endl;
+        std::cout << "Started with " << thisCase << std::endl;
+//        for (NTetFace f(0,0); ! f.isPastEnd(s->size(), true); f++) {
+//            NTetFace adj = (*modified)[f];
+//            if (f < adj) {
+//                std::cout << "From " << f << " to " << adj.simp << " (" <<
+//                    (s->gluingPerm(f)*NTriangle::ordering[f.facet]).trunc3() <<
+//                    ")";
+//                std::cout << "\t\tFrom " << f << " to " << adj << " : " <<
+//                    s->gluingPerm(f) << std::endl;
+//            }
+//        }
+//        for (int simp = 0; simp < s->size(); simp++) {
+//            std::cout << simp << " isoInv -> " << isoInv->simpImage(simp)
+//                << " : " << isoInv->facetPerm(simp) << std::endl;
+//        }
+    }
 
     for (NTetFace f(0,0); ! f.isPastEnd(s->size(), true); f++) {
         NTetFace adj = (*(s->getFacetPairing()))[f];
@@ -207,8 +230,15 @@ void NCollapsedChainSearcher::extendTri(const NGluingPermSearcher *s) {
         NTetFace myAdj(myAdjSimp, myAdjFacet);
 
         NPerm4 gluing = (adjPerm.inverse() * s->gluingPerm(f) * perm);
-//        std::cout << my << " to " << myAdj << " : " << gluing.str() <<
-//            std::endl;
+        if (debug) {
+            if (f < adj) {
+                std::cout << "From " << f << " to " << adj.simp << " (" <<
+                    (s->gluingPerm(f)*NTriangle::ordering[f.facet]).trunc3() <<
+                    ")";
+                std::cout << "\t\tFrom " << f << " to " << adj << " : " <<
+                    s->gluingPerm(f) << std::endl;
+            }
+        }
         if ( gluing[myFacet] != myAdjFacet ) {
             std::cerr << "Error: Invalid gluing " << std::endl;
         }
@@ -218,8 +248,10 @@ void NCollapsedChainSearcher::extendTri(const NGluingPermSearcher *s) {
     orderElt = 0;
     while (orderElt >= 0) {
         if (orderElt >= maxOrder) {
-            //NTriangulation *newTri = triangulate();
-            //std::cout << "Found " << newTri->isoSig() << std::endl;
+//            if (debug) {
+//                NTriangulation *newTri = triangulate();
+//                std::cout << "Found " << newTri->isoSig() << std::endl;
+//            }
             use_(this, useArgs_);
             orderElt -= 1;
             continue;
