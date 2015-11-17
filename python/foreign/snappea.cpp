@@ -35,8 +35,10 @@
 #include <boost/python.hpp>
 #include "foreign/snappea.h"
 #include "triangulation/ntriangulation.h"
+#include "../safeheldtype.h"
 
 using namespace boost::python;
+using namespace regina::python;
 
 namespace {
     regina::NTriangulation* (*readSnapPea_file)(const char*) =
@@ -47,7 +49,7 @@ namespace {
 
 void addForeignSnapPea() {
     def("readSnapPea", readSnapPea_file,
-        return_value_policy<manage_new_object>());
+        return_value_policy<to_held_type<> >());
     def("writeSnapPea", writeSnapPea_file);
 }
 

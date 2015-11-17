@@ -35,8 +35,10 @@
 #include <boost/python.hpp>
 #include "file/nxmlfile.h"
 #include "packet/npacket.h"
+#include "../safeheldtype.h"
 
 using namespace boost::python;
+using namespace regina::python;
 
 namespace {
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeXMLFile,
@@ -46,8 +48,8 @@ namespace {
 void addNXMLFile() {
     def("writeXMLFile", regina::writeXMLFile, OL_writeXMLFile());
     def("readXMLFile", regina::readXMLFile,
-        return_value_policy<manage_new_object>());
+        return_value_policy<to_held_type<> >());
     def("readFileMagic", regina::readFileMagic,
-        return_value_policy<manage_new_object>());
+        return_value_policy<to_held_type<> >());
 }
 

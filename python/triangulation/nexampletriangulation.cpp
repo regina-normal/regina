@@ -35,68 +35,70 @@
 #include <boost/python.hpp>
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
+#include "../safeheldtype.h"
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::NExampleTriangulation;
 using regina::NTriangulation;
 
 void addNExampleTriangulation() {
     class_<NExampleTriangulation>("NExampleTriangulation", no_init)
         .def("threeSphere", &NExampleTriangulation::threeSphere,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("bingsHouse", &NExampleTriangulation::bingsHouse,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("s2xs1", &NExampleTriangulation::s2xs1,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("rp2xs1", &NExampleTriangulation::rp2xs1,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("rp3rp3", &NExampleTriangulation::rp3rp3,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("lens8_3", &NExampleTriangulation::lens8_3,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("poincareHomologySphere",
             &NExampleTriangulation::poincareHomologySphere,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("weeks", &NExampleTriangulation::weeks,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("seifertWeber",
             &NExampleTriangulation::seifertWeber,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("weberSeifert",
             &NExampleTriangulation::weberSeifert,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("smallClosedOrblHyperbolic",
             &NExampleTriangulation::smallClosedOrblHyperbolic,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("smallClosedNonOrblHyperbolic",
             &NExampleTriangulation::smallClosedNonOrblHyperbolic,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("sphere600", &NExampleTriangulation::sphere600,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("lst3_4_7", &NExampleTriangulation::lst3_4_7,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("solidKleinBottle", &NExampleTriangulation::solidKleinBottle,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("figureEight", &NExampleTriangulation::figureEight,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("figureEightKnotComplement",
             &NExampleTriangulation::figureEightKnotComplement,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("trefoil", &NExampleTriangulation::trefoil,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("trefoilKnotComplement",
             &NExampleTriangulation::trefoilKnotComplement,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("whiteheadLink", &NExampleTriangulation::whiteheadLink,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("whiteheadLinkComplement",
             &NExampleTriangulation::whiteheadLinkComplement,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("gieseking", &NExampleTriangulation::gieseking,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("cuspedGenusTwoTorus",
             &NExampleTriangulation::cuspedGenusTwoTorus,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .staticmethod("threeSphere")
         .staticmethod("bingsHouse")
         .staticmethod("s2xs1")

@@ -32,12 +32,14 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
 #include "surfaces/nsurfacefilter.h"
 #include "surfaces/nsurfacesubset.h"
 #include "triangulation/ntriangulation.h"
+#include "../safeheldtype.h"
+#include <boost/python.hpp>
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::NSurfaceSubset;
 
 namespace {
@@ -58,7 +60,7 @@ void addNSurfaceSubset() {
         .def("allowsOriented", &NSurfaceSubset::allowsOriented)
         .def("isEmbeddedOnly", &NSurfaceSubset::isEmbeddedOnly)
         .def("getTriangulation", &NSurfaceSubset::getTriangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("size", &NSurfaceSubset::size)
         .def("getNumberOfSurfaces", &NSurfaceSubset::getNumberOfSurfaces)
         .def("getSurface", &NSurfaceSubset::getSurface,

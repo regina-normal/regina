@@ -40,8 +40,10 @@
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
 #include "../globalarray.h"
+#include "../safeheldtype.h"
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::NTetrahedron;
 
 void addNTetrahedron() {
@@ -69,7 +71,7 @@ void addNTetrahedron() {
             return_value_policy<reference_existing_object>())
         .def("isolate", &NTetrahedron::isolate)
         .def("getTriangulation", &NTetrahedron::getTriangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("getComponent", &NTetrahedron::getComponent,
             return_value_policy<reference_existing_object>())
         .def("getVertex", &NTetrahedron::getVertex,

@@ -32,12 +32,15 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
 #include "algebra/ngrouppresentation.h"
 #include "dim2/dim2isomorphism.h"
 #include "dim2/dim2triangulation.h"
+#include "../safeheldtype.h"
+
+#include <boost/python.hpp>
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::Dim2Triangulation;
 
 namespace {
@@ -149,7 +152,7 @@ namespace {
 
 void addDim2Triangulation() {
     scope s = class_<Dim2Triangulation, bases<regina::NPacket>,
-            std::auto_ptr<Dim2Triangulation>,
+            SafeHeldType<Dim2Triangulation>,
             boost::noncopyable>("Dim2Triangulation")
         .def(init<const Dim2Triangulation&>())
         .def(init<const std::string&>())
@@ -227,7 +230,7 @@ void addDim2Triangulation() {
         .def("isoSig", isoSig_void)
         .def("isoSigDetail", isoSig_relabelling)
         .def("fromIsoSig", &Dim2Triangulation::fromIsoSig,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("isoSigComponentSize", &Dim2Triangulation::isoSigComponentSize)
         .def("dumpConstruction", &Dim2Triangulation::dumpConstruction)
         .staticmethod("fromIsoSig")
@@ -236,7 +239,7 @@ void addDim2Triangulation() {
 
     s.attr("packetType") = regina::PacketType(Dim2Triangulation::packetType);
 
-    implicitly_convertible<std::auto_ptr<Dim2Triangulation>,
-        std::auto_ptr<regina::NPacket> >();
+    implicitly_convertible<SafeHeldType<Dim2Triangulation>,
+        SafeHeldType<regina::NPacket> >();
 }
 

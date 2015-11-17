@@ -35,10 +35,12 @@
 #include <boost/python.hpp>
 #include "foreign/orb.h"
 #include "triangulation/ntriangulation.h"
+#include "../safeheldtype.h"
 
 using namespace boost::python;
+using namespace regina::python;
 
 void addForeignOrb() {
-    def("readOrb", regina::readOrb, return_value_policy<manage_new_object>());
+    def("readOrb", regina::readOrb, return_value_policy<to_held_type<> >());
 }
 
