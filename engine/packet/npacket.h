@@ -48,9 +48,9 @@
 
 #include "regina-core.h"
 #include "output.h"
-#include "utilities/nsemiweakbase.h"
 #include "packet/npacketlistener.h"
 #include "packet/packettype.h"
+#include "utilities/nsemiweakbase.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {
@@ -155,8 +155,8 @@ struct PacketInfo;
  */
 class REGINA_API NPacket :
         public Output<NPacket>,
-        public boost::noncopyable,
-        public NSemiWeakBase<NPacket> {
+        public NSemiWeakBase<NPacket>,
+        public boost::noncopyable {
     private:
         std::string packetLabel;
             /**< The unique label for this individual packet of information. */
