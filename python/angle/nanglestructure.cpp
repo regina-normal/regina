@@ -35,9 +35,18 @@
 #include <boost/python.hpp>
 #include "angle/nanglestructure.h"
 #include "triangulation/ntriangulation.h"
+#include "../safeheldtype.h"
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::NAngleStructure;
+using regina::NTriangulation;
+
+namespace {
+    NTriangulation* getTriangulation_nonconst(const NAngleStructure &s) {
+        return const_cast<NTriangulation*>(s.getTriangulation());
+    }
+}
 
 void addNAngleStructure() {
     class_<NAngleStructure, std::auto_ptr<NAngleStructure>, boost::noncopyable>
@@ -45,8 +54,8 @@ void addNAngleStructure() {
         .def("clone", &NAngleStructure::clone,
             return_value_policy<manage_new_object>())
         .def("getAngle", &NAngleStructure::getAngle)
-        .def("getTriangulation", &NAngleStructure::getTriangulation,
-            return_value_policy<reference_existing_object>())
+        .def("getTriangulation", &getTriangulation_nonconst,
+            return_value_policy<to_held_type<> >())
         .def("isStrict", &NAngleStructure::isStrict)
         .def("isTaut", &NAngleStructure::isTaut)
         .def("isVeering", &NAngleStructure::isVeering)

@@ -32,11 +32,14 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
 #include "dim2/dim2isomorphism.h"
 #include "dim2/dim2triangulation.h"
+#include "../safeheldtype.h"
+
+#include <boost/python.hpp>
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::Dim2Isomorphism;
 
 namespace {
@@ -63,7 +66,7 @@ void addDim2Isomorphism() {
         .def("__getitem__", Dim2iso_getItem)
         .def("isIdentity", &Dim2Isomorphism::isIdentity)
         .def("apply", &Dim2Isomorphism::apply,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("applyInPlace", &Dim2Isomorphism::applyInPlace)
         .def("random", &Dim2Isomorphism::random,
             return_value_policy<manage_new_object>())

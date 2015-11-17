@@ -32,15 +32,17 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
 #include "dim2/dim2boundarycomponent.h"
 #include "dim2/dim2component.h"
 #include "dim2/dim2triangle.h"
 #include "dim2/dim2triangulation.h"
 #include "dim2/dim2vertex.h"
 #include "../globalarray.h"
+#include "../safeheldtype.h"
+#include <boost/python.hpp>
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::Dim2Vertex;
 using regina::Dim2VertexEmbedding;
 
@@ -76,7 +78,7 @@ void addDim2Vertex() {
         .def("getEmbedding", &Dim2Vertex::getEmbedding,
             return_internal_reference<>())
         .def("getTriangulation", &Dim2Vertex::getTriangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("getComponent", &Dim2Vertex::getComponent,
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &Dim2Vertex::getBoundaryComponent,

@@ -35,8 +35,10 @@
 #include <boost/python.hpp>
 #include "foreign/dehydration.h"
 #include "packet/ncontainer.h"
+#include "../safeheldtype.h"
 
 using namespace boost::python;
+using namespace regina::python;
 
 namespace {
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_readDehydrationList,
@@ -45,6 +47,6 @@ namespace {
 
 void addForeignDehydration() {
     def("readDehydrationList", regina::readDehydrationList,
-        OL_readDehydrationList()[return_value_policy<manage_new_object>()]);
+        OL_readDehydrationList()[return_value_policy<to_held_type<> >()]);
 }
 
