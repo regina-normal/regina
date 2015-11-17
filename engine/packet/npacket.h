@@ -50,7 +50,7 @@
 #include "output.h"
 #include "packet/npacketlistener.h"
 #include "packet/packettype.h"
-#include "utilities/nsemiweakbase.h"
+#include "utilities/safepointeebase.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {
@@ -155,7 +155,7 @@ struct PacketInfo;
  */
 class REGINA_API NPacket :
         public Output<NPacket>,
-        public NSemiWeakBase<NPacket>,
+        public SafePointeeBase<NPacket>,
         public boost::noncopyable {
     private:
         std::string packetLabel;

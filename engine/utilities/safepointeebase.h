@@ -2,9 +2,9 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2014, Ben Burton                                   *
+ *  Copyright (c) 1999-2015, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,30 +32,68 @@
 
 /* end stub */
 
-#include "packet/npdf.h"
-#include "../safeheldtype.h"
+/*! \file utilities/safepointeebase.h
+ *  \brief Provides a base class for objects pointable by SafePtr.
+ */
 
-#include <boost/python.hpp>
+#ifndef __SAFEPOINTEEBASE_H
+#ifndef __DOXYGEN
+#define __SAFEPOINTEEBASE_H
+#endif
 
-using namespace boost::python;
-using regina::python::SafeHeldType;
-using regina::NPDF;
+#include "utilities/saferemnant.h"
 
-namespace {
-    void (NPDF::*reset_empty)() = &NPDF::reset;
+namespace regina {
+
+/**
+ * A base class for objects to be referenceable by a \c SafePtr (referred
+ * to as pointee's of \c SafePtr). Every derived class needs to implement
+ * hasOwner to indicate whether any non-SafePtr claims ownership of
+ * it. Details of ownership semantics are explained in \c SafePtr.
+ *
+ * The overhead introduced by subclassing from \c SafePointeeBase without using
+ * the features of the accompanying smart pointer \c SafePtr are minimal:
+ * one extra pointer that needs to be zero'd upon construction.
+ *
+ * Most classes subcleass from \c SafePointeeBase for python wrapping.
+ */
+template <class T>
+class SafePointeeBase {
+public:
+    ~SafePointeeBase();
+
+    typedef T SafePointeeType;
+
+protected:
+    /**
+     * Default constructor.
+     */
+    SafePointeeBase() : remnant_(0) { }
+
+private:
+    // Prevent derived classes from accidentally calling copy constructor.
+    // A derived classes copy constructor by default calls the above default
+    // constructor, which it should because it sets the remnant_ to zero on
+    // the copied object.
+    SafePointeeBase(const SafePointeeBase &);
+
+    // Similarly, for operator=
+    SafePointeeBase & operator=(const SafePointeeBase &);
+    
+    friend class SafeRemnant<T>;
+    SafeRemnant<T> *remnant_;
+    /**< Points to the corresponding persistent object. */
+};
+
+template <class T>
+SafePointeeBase<T>::~SafePointeeBase() {
+    // If existing, expire the remnant. Thus, all SafePtr's pointing to
+    // this object know that they cannot be dereferenced anylonger.
+    if (remnant_) {
+        remnant_->expire();
+    }
 }
 
-void addNPDF() {
-    class_<NPDF, bases<regina::NPacket>,
-            SafeHeldType<NPDF>, boost::noncopyable>("NPDF", init<>())
-        .def(init<const char*>())
-        .def("isNull", &NPDF::isNull)
-        .def("size", &NPDF::size)
-        .def("reset", reset_empty)
-        .def("savePDF", &NPDF::savePDF)
-        .attr("packetType") = regina::PacketType(NPDF::packetType);
+} // namespace regina
 
-    implicitly_convertible<SafeHeldType<NPDF>,
-        SafeHeldType<regina::NPacket> >();
-}
-
+#endif

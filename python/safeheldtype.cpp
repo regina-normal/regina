@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2014, Ben Burton                                   *
+ *  Copyright (c) 1999-2015, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,30 +32,36 @@
 
 /* end stub */
 
-#include "packet/npdf.h"
-#include "../safeheldtype.h"
+#include <Python.h>
 
-#include <boost/python.hpp>
+#include "safeheldtype.h"
 
-using namespace boost::python;
-using regina::python::SafeHeldType;
-using regina::NPDF;
 
-namespace {
-    void (NPDF::*reset_empty)() = &NPDF::reset;
+#include <boost/version.hpp>
+#if BOOST_VERSION >= 105600
+#define USE_BOOST_DEMANGLE
+#endif
+#ifdef USE_BOOST_DEMANGLE
+#include <boost/core/demangle.hpp>
+#endif
+
+
+
+namespace regina {
+namespace python {
+
+void raiseExpiredException(const std::type_info& info)
+{
+    #ifdef USE_BOOST_DEMANGLE
+    const std::string typeName = boost::core::demangle(info.name());
+    #else
+    const std::string typeName = info.name();
+    #endif
+
+    const std::string msg =
+        "Python reference to object of type " + typeName + " expired.";
+    
+    PyErr_SetString(PyExc_RuntimeError, msg.c_str());
 }
 
-void addNPDF() {
-    class_<NPDF, bases<regina::NPacket>,
-            SafeHeldType<NPDF>, boost::noncopyable>("NPDF", init<>())
-        .def(init<const char*>())
-        .def("isNull", &NPDF::isNull)
-        .def("size", &NPDF::size)
-        .def("reset", reset_empty)
-        .def("savePDF", &NPDF::savePDF)
-        .attr("packetType") = regina::PacketType(NPDF::packetType);
-
-    implicitly_convertible<SafeHeldType<NPDF>,
-        SafeHeldType<regina::NPacket> >();
-}
-
+} } // regina::python
