@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "algebra/nabeliangroup.h"
 #include "maths/nmatrixint.h"
+#include "../equality.h"
 #include <boost/python/detail/api_placeholder.hpp> // For len().
 
 using namespace boost::python;
@@ -118,13 +119,12 @@ void addNAbelianGroup() {
         .def("isTrivial", &NAbelianGroup::isTrivial)
         .def("isZ", &NAbelianGroup::isZ)
         .def("isZn", &NAbelianGroup::isZn)
-        .def(self == self)
-        .def(self != self)
         .def("str", &NAbelianGroup::str)
         .def("toString", &NAbelianGroup::toString)
         .def("detail", &NAbelianGroup::detail)
         .def("toStringLong", &NAbelianGroup::toStringLong)
         .def("__str__", &NAbelianGroup::str)
+        .def(regina::python::add_eq_operators())
     ;
 }
 

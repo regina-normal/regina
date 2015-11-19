@@ -34,8 +34,9 @@
 
 #include <boost/python.hpp>
 
-#include "engine.h"
 #include "regina-config.h"
+#include "engine.h"
+#include "equality.h"
 
 void addGlobalArray();
 
@@ -72,9 +73,14 @@ BOOST_PYTHON_MODULE(engine) {
 
     boost::python::def("welcome", welcome);
 
-    // Wrappers for global array classes:
+    // Wrappers for regina::python helpers:
 
     addGlobalArray();
+
+    boost::python::enum_<regina::python::EqualityType>("EqualityType")
+        .value("BY_VALUE", regina::python::BY_VALUE)
+        .value("BY_REFERENCE", regina::python::BY_REFERENCE)
+        ;
 
     // Core engine routines:
 
