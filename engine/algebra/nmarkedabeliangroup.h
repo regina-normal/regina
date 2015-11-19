@@ -321,6 +321,19 @@ class REGINA_API NMarkedAbelianGroup :
 
         /**
          * Determines whether this and the given abelian group are
+         * non-isomorphic.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Users should switch to the less ambiguously named
+         * routine isIsomorphicTo() instead.
+         *
+         * @param other the group with which this should be compared.
+         * @return \c true if and only if the two groups are non-isomorphic.
+         */
+        bool operator != (const NMarkedAbelianGroup &other) const;
+
+        /**
+         * Determines whether this and the given abelian group are
          * isomorphic.
          *
          * @param other the group with which this should be compared.
@@ -1352,6 +1365,11 @@ inline bool NMarkedAbelianGroup::equalTo(const NMarkedAbelianGroup& other)
 inline bool NMarkedAbelianGroup::operator == (
         const NMarkedAbelianGroup &other) const {
     return isIsomorphicTo(other);
+}
+
+inline bool NMarkedAbelianGroup::operator != (
+        const NMarkedAbelianGroup &other) const {
+    return ! isIsomorphicTo(other);
 }
 
 inline bool NMarkedAbelianGroup::isIsomorphicTo(

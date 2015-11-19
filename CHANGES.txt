@@ -93,6 +93,8 @@ Version 4.97  [ (under development) ]
               which signals that the directory should not be changed.
         Class NGroupExpression, NGroupExpressionTerm:
             - Added != operators to complement the existing == operators.
+        Class NMarkedAbelianGroup:
+            - Added != operator to complement the existing == operator.
         Class NMatrix:
             - The destructor and writeMatrix() are no longer virtual.
             - Now derives from Output, and provides str() and detail()
