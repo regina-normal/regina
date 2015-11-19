@@ -144,7 +144,7 @@ namespace {
         boost::python::list ans;
 
         std::list<regina::Dim4Isomorphism*> isos;
-        t.findAllIsomorphisms(other, isos);
+        t.findAllIsomorphisms(other, back_inserter(isos));
 
         for (std::list<regina::Dim4Isomorphism*>::iterator it =
                  isos.begin(); it != isos.end(); it++) {
@@ -159,7 +159,7 @@ namespace {
         boost::python::list ans;
 
         std::list<regina::Dim4Isomorphism*> isos;
-        t.findAllSubcomplexesIn(other, isos);
+        t.findAllSubcomplexesIn(other, back_inserter(isos));
 
         for (std::list<regina::Dim4Isomorphism*>::iterator it =
                  isos.begin(); it != isos.end(); it++) {
