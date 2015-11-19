@@ -35,7 +35,7 @@
 #include <boost/python.hpp>
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
-#include "../equality.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NExampleTriangulation;

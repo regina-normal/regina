@@ -34,7 +34,7 @@
 
 #include <boost/python.hpp>
 #include "triangulation/nfacepair.h"
-#include "../equality.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NFacePair;

@@ -34,7 +34,7 @@
 
 #include <boost/python.hpp>
 #include "triangulation/nhomologicaldata.h"
-#include "../equality.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NHomologicalData;

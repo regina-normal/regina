@@ -38,7 +38,7 @@
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
-#include "../equality.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NTriangulation;

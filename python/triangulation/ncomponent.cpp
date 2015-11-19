@@ -39,7 +39,7 @@
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangle.h"
 #include "triangulation/nvertex.h"
-#include "../equality.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NComponent;

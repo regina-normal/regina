@@ -35,7 +35,7 @@
 #include <boost/python.hpp>
 #include "algebra/nabeliangroup.h"
 #include "maths/nmatrixint.h"
-#include "../equality.h"
+#include "../helpers.h"
 #include <boost/python/detail/api_placeholder.hpp> // For len().
 
 using namespace boost::python;

@@ -36,7 +36,7 @@
 
 #include "regina-config.h"
 #include "engine.h"
-#include "equality.h"
+#include "helpers.h"
 
 void addGlobalArray();
 
