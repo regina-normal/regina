@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "generic/isomorphism.h"
 #include "generic/triangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Isomorphism;
@@ -78,6 +79,7 @@ void addIsomorphism(const char* name) {
         .def("detail", &Isomorphism<dim>::detail)
         .def("toStringLong", &Isomorphism<dim>::toStringLong)
         .def("__str__", &Isomorphism<dim>::str)
+        .def(regina::python::add_eq_operators())
         .staticmethod("random")
         .staticmethod("identity")
     ;

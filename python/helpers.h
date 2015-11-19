@@ -32,48 +32,16 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
-#include "algebra/nabeliangroup.h"
-#include "manifold/nmanifold.h"
-#include "triangulation/ntriangulation.h"
-#include "../helpers.h"
+/*! \file python/helpers.h
+ *  \brief Various tools to assist with Python bindings for Regina.
+ */
 
-using namespace boost::python;
-using regina::NManifold;
+#ifndef __HELPERS_H
+#ifndef __DOXYGEN
+#define __HELPERS_H
+#endif
 
-namespace {
-    void writeName_stdio(const NManifold& m) {
-        m.writeName(std::cout);
-    }
-    void writeTeXName_stdio(const NManifold& m) {
-        m.writeTeXName(std::cout);
-    }
-    void writeStructure_stdio(const NManifold& m) {
-        m.writeStructure(std::cout);
-    }
-}
+// Tools for wrapping == and != operators correctly:
+#include "helpers/equality.h"
 
-void addNManifold() {
-    class_<NManifold, boost::noncopyable, std::auto_ptr<NManifold> >
-            ("NManifold", no_init)
-        .def("getName", &NManifold::getName)
-        .def("getTeXName", &NManifold::getTeXName)
-        .def("getStructure", &NManifold::getStructure)
-        .def("construct", &NManifold::construct,
-            return_value_policy<manage_new_object>())
-        .def("getHomologyH1", &NManifold::getHomologyH1,
-            return_value_policy<manage_new_object>())
-        .def("isHyperbolic", &NManifold::isHyperbolic)
-        .def("writeName", writeName_stdio)
-        .def("writeTeXName", writeTeXName_stdio)
-        .def("writeStructure", writeStructure_stdio)
-        .def(self < self)
-        .def("str", &NManifold::str)
-        .def("toString", &NManifold::toString)
-        .def("detail", &NManifold::detail)
-        .def("toStringLong", &NManifold::toStringLong)
-        .def("__str__", &NManifold::str)
-        .def(regina::python::add_eq_operators())
-    ;
-}
-
+#endif

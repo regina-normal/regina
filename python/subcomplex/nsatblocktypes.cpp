@@ -36,6 +36,7 @@
 #include "subcomplex/nlayeredsolidtorus.h"
 #include "subcomplex/nsatblocktypes.h"
 #include "triangulation/ntriangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NSatAnnulus;
@@ -86,6 +87,7 @@ void addNSatBlockTypes() {
         .def("position", &NSatMobius::position)
         .def("isBlockMobius", isBlockMobius_nolist,
             return_value_policy<manage_new_object>())
+        .def(regina::python::add_eq_operators())
         .staticmethod("isBlockMobius")
     ;
 
@@ -102,6 +104,7 @@ void addNSatBlockTypes() {
         .def("roles", &NSatLST::roles)
         .def("isBlockLST", isBlockLST_nolist,
             return_value_policy<manage_new_object>())
+        .def(regina::python::add_eq_operators())
         .staticmethod("isBlockLST")
     ;
 
@@ -118,6 +121,7 @@ void addNSatBlockTypes() {
             return_value_policy<manage_new_object>())
         .def("insertBlock", &NSatTriPrism::insertBlock,
             return_value_policy<manage_new_object>())
+        .def(regina::python::add_eq_operators())
         .staticmethod("isBlockTriPrism")
         .staticmethod("insertBlock")
     ;
@@ -134,6 +138,7 @@ void addNSatBlockTypes() {
             return_value_policy<manage_new_object>())
         .def("insertBlock", &NSatCube::insertBlock,
             return_value_policy<manage_new_object>())
+        .def(regina::python::add_eq_operators())
         .staticmethod("isBlockCube")
         .staticmethod("insertBlock")
     ;
@@ -150,6 +155,7 @@ void addNSatBlockTypes() {
             return_value_policy<manage_new_object>())
         .def("insertBlock", &NSatReflectorStrip::insertBlock,
             return_value_policy<manage_new_object>())
+        .def(regina::python::add_eq_operators())
         .staticmethod("isBlockReflectorStrip")
         .staticmethod("insertBlock")
     ;
@@ -165,6 +171,7 @@ void addNSatBlockTypes() {
         .def("overHorizontal", &NSatLayering::overHorizontal)
         .def("isBlockLayering", isBlockLayering_nolist,
             return_value_policy<manage_new_object>())
+        .def(regina::python::add_eq_operators())
         .staticmethod("isBlockLayering")
     ;
 

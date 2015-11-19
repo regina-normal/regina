@@ -517,9 +517,9 @@ TypeError: bad argument type for built-in operation
   </para>
   <programlisting>
 bab@ember:~$ regina-python 
-Regina 4.96
+Regina 4.97
 Software for 3-manifold topology and normal surface theory
-Copyright (c) 1999-2013, The Regina development team
+Copyright (c) 1999-2015, The Regina development team
 &gt;&gt;&gt; import snappy
 &gt;&gt;&gt; m = snappy.Manifold('m001')
 &gt;&gt;&gt; t = NSnapPeaTriangulation(m._to_string())

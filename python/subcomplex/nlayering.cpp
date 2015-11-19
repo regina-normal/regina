@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "subcomplex/nlayering.h"
 #include "triangulation/ntetrahedron.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NLayering;
@@ -56,6 +57,7 @@ void addNLayering() {
         .def("extendOne", &NLayering::extendOne)
         .def("extend", &NLayering::extend)
         .def("matchesTop", &NLayering::matchesTop)
+        .def(regina::python::add_eq_operators())
     ;
 }
 

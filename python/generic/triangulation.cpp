@@ -36,6 +36,7 @@
 #include <boost/python.hpp>
 #include "generic/isomorphism.h"
 #include "generic/triangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Triangulation;
@@ -161,6 +162,7 @@ void addTriangulation(const char* name) {
         .def("detail", &Triangulation<dim>::detail)
         .def("toStringLong", &Triangulation<dim>::toStringLong)
         .def("__str__", &Triangulation<dim>::str)
+        .def(regina::python::add_eq_operators())
         .staticmethod("fromIsoSig")
         .staticmethod("isoSigComponentSize")
     ;

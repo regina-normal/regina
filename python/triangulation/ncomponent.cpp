@@ -39,6 +39,7 @@
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangle.h"
 #include "triangulation/nvertex.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Component;
@@ -98,6 +99,7 @@ void addNComponent() {
         .def("detail", &NComponent::detail)
         .def("toStringLong", &NComponent::toStringLong)
         .def("__str__", &NComponent::str)
+        .def(regina::python::add_eq_operators())
     ;
 
     scope().attr("NComponent") = scope().attr("Component3");

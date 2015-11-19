@@ -244,6 +244,14 @@ struct NFacetSpec {
      */
     bool operator == (const NFacetSpec<dim>& other) const;
     /**
+     * Determines if this and the given specifier are not identical.
+     *
+     * @param other the specifier to compare with this.
+     * @return \c true if and only if this and the given specifier are
+     * not equal.
+     */
+    bool operator != (const NFacetSpec<dim>& other) const;
+    /**
      * Determines if this is less than the given specifier.
      *
      * @param other the specifier to compare with this.
@@ -396,6 +404,11 @@ inline NFacetSpec<dim> NFacetSpec<dim>::operator -- (int) {
 template <int dim>
 inline bool NFacetSpec<dim>::operator == (const NFacetSpec<dim>& other) const {
     return (simp == other.simp && facet == other.facet);
+}
+
+template <int dim>
+inline bool NFacetSpec<dim>::operator != (const NFacetSpec<dim>& other) const {
+    return (simp != other.simp || facet != other.facet);
 }
 
 template <int dim>

@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "subcomplex/nlayeredchain.h"
 #include "triangulation/ntetrahedron.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NLayeredChain;
@@ -56,6 +57,7 @@ void addNLayeredChain() {
         .def("extendMaximal", &NLayeredChain::extendMaximal)
         .def("reverse", &NLayeredChain::reverse)
         .def("invert", &NLayeredChain::invert)
+        .def(regina::python::add_eq_operators())
     ;
 
     implicitly_convertible<std::auto_ptr<NLayeredChain>,

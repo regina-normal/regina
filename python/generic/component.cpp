@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "generic/component.h"
 #include "generic/simplex.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Component;
@@ -74,6 +75,7 @@ void addComponent(const char* name) {
         .def("detail", &Component<dim>::detail)
         .def("toStringLong", &Component<dim>::toStringLong)
         .def("__str__", &Component<dim>::str)
+        .def(regina::python::add_eq_operators())
     ;
 }
 

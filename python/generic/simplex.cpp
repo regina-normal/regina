@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "generic/simplex.h"
 #include "generic/triangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Simplex;
@@ -64,6 +65,7 @@ void addSimplex(const char* name) {
         .def("detail", &Simplex<dim>::detail)
         .def("toStringLong", &Simplex<dim>::toStringLong)
         .def("__str__", &Simplex<dim>::str)
+        .def(regina::python::add_eq_operators())
     ;
 }
 

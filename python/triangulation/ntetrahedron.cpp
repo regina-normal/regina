@@ -40,6 +40,7 @@
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
 #include "../globalarray.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NTetrahedron;
@@ -86,6 +87,7 @@ void addNTetrahedron() {
         .def("detail", &NTetrahedron::detail)
         .def("toStringLong", &NTetrahedron::toStringLong)
         .def("__str__", &NTetrahedron::str)
+        .def(regina::python::add_eq_operators())
     ;
 
     scope().attr("NTetrahedron") = scope().attr("Simplex3");

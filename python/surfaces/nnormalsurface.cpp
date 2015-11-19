@@ -38,6 +38,7 @@
 #include "surfaces/nnormalsurfacelist.h" // for makeZeroVector()
 #include "triangulation/ntriangulation.h"
 #include "../globalarray.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NNormalSurface;
@@ -190,6 +191,7 @@ void addNNormalSurface() {
         .def("detail", &NNormalSurface::detail)
         .def("toStringLong", &NNormalSurface::toStringLong)
         .def("__str__", &NNormalSurface::str)
+        .def(regina::python::add_eq_operators())
         .staticmethod("findNonTrivialSphere")
         .staticmethod("findVtxOctAlmostNormalSphere")
     ;

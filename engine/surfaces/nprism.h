@@ -108,6 +108,15 @@ struct REGINA_API NPrismSpec {
      * contain identical information.
      */
     bool operator == (const NPrismSpec& other) const;
+    /**
+     * Determines if this and the given prism specifier contain different
+     * information.
+     *
+     * @param other the prism specifier to compare with this.
+     * @return \c true if and only if this and the given prism specifier
+     * contain different information.
+     */
+    bool operator != (const NPrismSpec& other) const;
 
     friend std::ostream& operator << (std::ostream& out,
         const NPrismSpec& spec);
@@ -135,7 +144,9 @@ REGINA_API std::ostream& operator << (std::ostream& out,
  * \pre This class should only be used with \e embedded normal surfaces
  * containing no octagonal discs.
  *
- * \warning This class doesn't really do much as yet.
+ * \deprecated This class has essentially been a placeholder for the
+ * last 12 years, and was never fleshed out in that time.  It will be
+ * removed in a future release.
  */
 class REGINA_API NPrismSetSurface {
     private:
@@ -201,6 +212,9 @@ inline NPrismSpec& NPrismSpec::operator = (const NPrismSpec& cloneMe) {
 }
 inline bool NPrismSpec::operator == (const NPrismSpec& other) const {
     return (tetIndex == other.tetIndex && edge == other.edge);
+}
+inline bool NPrismSpec::operator != (const NPrismSpec& other) const {
+    return (tetIndex != other.tetIndex || edge != other.edge);
 }
 
 // Inline functions for NPrismSetSurface

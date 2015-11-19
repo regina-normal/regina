@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "maths/nmatrixint.h"
 #include "snappea/nsnappeatriangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NCusp;
@@ -80,6 +81,7 @@ void addNSnapPeaTriangulation() {
         .def("detail", &NCusp::detail)
         .def("toStringLong", &NCusp::toStringLong)
         .def("__str__", &NCusp::str)
+        .def(regina::python::add_eq_operators())
     ;
 
     scope s = class_<NSnapPeaTriangulation, bases<regina::NTriangulation>,

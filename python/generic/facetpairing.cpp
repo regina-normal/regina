@@ -37,6 +37,7 @@
 #include "generic/facetpairing.h"
 #include "generic/isomorphism.h"
 #include "generic/triangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::FacetPairing;
@@ -133,6 +134,7 @@ void addFacetPairing(const char* name) {
         .def("dotHeader", PyFacetPairingHelper<dim>::dotHeader_standalone,
             typename PyFacetPairingHelper<dim>::OL_dotHeader())
         .def("__str__", &FacetPairing<dim>::str)
+        .def(regina::python::add_eq_operators())
         .staticmethod("fromTextRep")
         .staticmethod("writeDotHeader")
         .staticmethod("dotHeader")

@@ -143,6 +143,10 @@ Version 4.97  [ (under development) ]
             - New constructor that takes a packet label.
         Class NCyclotomic:
             - New class for exact arithmetic in cyclotomic fields.
+        Class NDiscSpec:
+            - Added != operator to complement the existing == operator.
+        Class NDiscSpecIterator:
+            - Added == and != comparison operators.
         Struct NewFunction, NewFunction1:
             - NewFunction1 is deprecated in favour of the new and more
               flexible NewFunction, which allows arbitrary arguments and
@@ -154,6 +158,8 @@ Version 4.97  [ (under development) ]
               and whiteheadLinkComplement() to figureEight(), trefoil()
               and whiteheadLink() respectively.  The old names are kept
               but deprecated.
+        Class NFacePair, NFacetSpec:
+            - Added != operators to complement the existing == operators.
         Class NGenericFacetPairing, NFacePairing, Dim2EdgePairing:
             - The template base class NGenericFacetPairing<dim> has been
               renamed FacetPairingBase<dim>, and its header has moved to
@@ -188,6 +194,10 @@ Version 4.97  [ (under development) ]
               routine, and set through an optional third argument to setDirs().
             - The homeDir argument to setDirs() may now be the empty string,
               which signals that the directory should not be changed.
+        Class NGroupExpression, NGroupExpressionTerm:
+            - Added != operators to complement the existing == operators.
+        Class NHandlebody, NLensSpace:
+            - Added != operator to complement the existing == operator.
         Class NIsomorphism:
             - Now just a typedef for the new class Isomorphism<3>, which has
               the same functionality as the old NIsomorphism.
@@ -196,6 +206,8 @@ Version 4.97  [ (under development) ]
               replaced with the easier-to-type size().
         Class NIsomorphismDirect:
             - Removed this class, which has been deprecated for some time now.
+        Class NMarkedAbelianGroup:
+            - Added != operator to complement the existing == operator.
         Class NMatrix:
             - The destructor and writeMatrix() are no longer virtual.
             - Now derives from Output, and provides str() and detail()
@@ -253,6 +265,11 @@ Version 4.97  [ (under development) ]
         Class NPolynomial:
             - New class for working with single-variable polynomials
               over arbitrary rings.
+        Class NPrismSpec:
+            - Added != operator to complement the existing == operator.
+        Class NPrismSetSurface:
+            - Deprecated this class, which has been little more than a
+              placeholder for 12 years.  Also removed its python bindings.
         Class NProgress, NProgressFinished, NProgressManager,
                 NProgressMessage, NProgressNumber, NProgressStateNumeric:
             - Removed these old deprecated classes entirely.
@@ -261,6 +278,12 @@ Version 4.97  [ (under development) ]
         Class NSatBlock:
             - Classes inheriting from this must now implement writeTextShort,
               and can optionally overwrite the default writeTextLong function.
+        Class NSatBlockSpec:
+            - Added == and != comparison operators.
+        Class NSFSpace, NSFSSpaceFibre:
+            - Added != operators to complement the existing == operators.
+        Class NSimpleSurfaceBundle, NSnapPeaCensusManifold, NSnapPeaCensusTri:
+            - Added != operators to complement the existing == operators.
         Class NSurfaceFilter:
             - The subclass constant filterType is now a constant of type
               SurfaceFilterType, not an anonymous enum type.
@@ -418,6 +441,13 @@ Version 4.97  [ (under development) ]
     PYTHON:
         - For all classes, writeTextShort() and writeTextLong() are no
           longer exposed to Python.  Simply use str() and detail() instead.
+        - The behaviour of == and != under python has been formalised.
+          For those classes that have == and != operators in C++, the
+          python == and != operators compare by value (i.e., they call the
+          C++ operators).  For those classes that have neither == nor != in
+          C++, the python == and != operators compare by reference.
+          Every wrapped C++ class has an equalityType attribute in
+          python to indicate which behaviour it uses.
 
 Version 4.96  [ 29 August, 2014 ]
 

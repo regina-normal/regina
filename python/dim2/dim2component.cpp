@@ -38,6 +38,7 @@
 #include "dim2/dim2edge.h"
 #include "dim2/dim2triangle.h"
 #include "dim2/dim2vertex.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Component;
@@ -108,6 +109,7 @@ void addDim2Component() {
         .def("detail", &Dim2Component::detail)
         .def("toStringLong", &Dim2Component::toStringLong)
         .def("__str__", &Dim2Component::str)
+        .def(regina::python::add_eq_operators())
     ;
 
     scope().attr("Dim2Component") = scope().attr("Component2");

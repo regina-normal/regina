@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "subcomplex/ntrivialtri.h"
 #include "triangulation/ncomponent.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NTrivialTri;
@@ -48,6 +49,7 @@ void addNTrivialTri() {
         .def("getType", &NTrivialTri::getType)
         .def("isTrivialTriangulation", &NTrivialTri::isTrivialTriangulation,
             return_value_policy<manage_new_object>())
+        .def(regina::python::add_eq_operators())
         .staticmethod("isTrivialTriangulation")
     ;
 

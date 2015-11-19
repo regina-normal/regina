@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "surfaces/nprism.h"
 #include "surfaces/nnormalsurface.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NPrismSpec;
@@ -46,14 +47,8 @@ void addNPrism() {
         .def(init<const NPrismSpec&>())
         .def_readwrite("tetIndex", &NPrismSpec::tetIndex)
         .def_readwrite("edge", &NPrismSpec::edge)
-        .def(self == self)
         .def(self_ns::str(self))
-    ;
-
-    class_<NPrismSetSurface, std::auto_ptr<NPrismSetSurface>,
-            boost::noncopyable>("NPrismSetSurface",
-            init<const regina::NNormalSurface&>())
-        .def("getQuadType", &NPrismSetSurface::getQuadType)
+        .def(regina::python::add_eq_operators())
     ;
 }
 

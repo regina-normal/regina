@@ -36,6 +36,7 @@
 #include "algebra/nmarkedabeliangroup.h"
 #include "maths/nmatrixint.h"
 #include <boost/python/detail/api_placeholder.hpp> // For len().
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NHomMarkedAbelianGroup;
@@ -197,7 +198,7 @@ void addNMarkedAbelianGroup() {
         .def("detail", &NMarkedAbelianGroup::detail)
         .def("toStringLong", &NMarkedAbelianGroup::toStringLong)
         .def("__str__", &NMarkedAbelianGroup::str)
-        .def(self == self)
+        .def(regina::python::add_eq_operators())
     ;
 
     class_<NHomMarkedAbelianGroup, std::auto_ptr<NHomMarkedAbelianGroup>,
@@ -237,6 +238,7 @@ void addNMarkedAbelianGroup() {
         .def("detail", &NHomMarkedAbelianGroup::detail)
         .def("toStringLong", &NHomMarkedAbelianGroup::toStringLong)
         .def("__str__", &NHomMarkedAbelianGroup::str)
+        .def(regina::python::add_eq_operators())
     ;
 }
 
