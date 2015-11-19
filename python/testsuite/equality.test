@@ -31,14 +31,13 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+print NAbelianGroup.equalityType
+print NInteger.equalityType
+print NTriangulation.equalityType
 
 # Test == and != for objects that are equal by value but have different
 # underlying C++ pointers.
 # The behaviour should be different for different classes.
-
-print NAbelianGroup.equalityType
-print NInteger.equalityType
-print NTriangulation.equalityType
 
 # Cases that should be reported as equal (by value):
 
