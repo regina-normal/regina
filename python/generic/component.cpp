@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "generic/component.h"
 #include "generic/simplex.h"
+#include "maths/nperm5.h" // Specialisation needed for 4-D case.
 #include "../helpers.h"
 
 using namespace boost::python;
