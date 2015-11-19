@@ -161,6 +161,13 @@ class REGINA_API NFacePair {
          */
         bool operator == (const NFacePair& other) const;
         /**
+         * Determines if this and the given face pair are not equal.
+         *
+         * @param other the pair to compare with this.
+         * @return \c true if and only if this and the given pair are not equal.
+         */
+        bool operator != (const NFacePair& other) const;
+        /**
          * Determines if this is less than the given face pair.
          *
          * @param other the pair to compare with this.
@@ -245,6 +252,10 @@ inline NFacePair& NFacePair::operator = (const NFacePair& cloneMe) {
 
 inline bool NFacePair::operator == (const NFacePair& other) const {
     return (first_ == other.first_ && second_ == other.second_);
+}
+
+inline bool NFacePair::operator != (const NFacePair& other) const {
+    return (first_ != other.first_ || second_ != other.second_);
 }
 
 inline bool NFacePair::operator < (const NFacePair& other) const {
