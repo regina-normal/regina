@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "generic/nfacetspec.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Dim4PentFacet;
@@ -63,9 +64,9 @@ void addDim4PentFacet() {
         .def("setPastEnd", &Dim4PentFacet::setPastEnd)
         .def("inc", pentfacet_inc_operator)
         .def("dec", pentfacet_dec_operator)
-        .def(self == self)
         .def(self < self)
         .def(self <= self)
+        .def(regina::python::add_eq_operators())
     ;
 }
 

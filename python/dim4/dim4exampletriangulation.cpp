@@ -36,6 +36,7 @@
 #include "dim4/dim4exampletriangulation.h"
 #include "dim4/dim4triangulation.h"
 #include "triangulation/ntriangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Dim4ExampleTriangulation;
@@ -63,6 +64,7 @@ void addDim4ExampleTriangulation() {
         .def("bundleWithMonodromy",
             &Dim4ExampleTriangulation::bundleWithMonodromy,
             return_value_policy<manage_new_object>())
+        .def(regina::python::no_eq_operators())
         .staticmethod("fourSphere")
         .staticmethod("rp4")
         .staticmethod("s3xs1")

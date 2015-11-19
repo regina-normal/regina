@@ -42,6 +42,7 @@
 #include "dim4/dim4triangulation.h"
 #include "dim4/dim4vertex.h"
 #include "../globalarray.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Dim4Tetrahedron;
@@ -61,8 +62,7 @@ void addDim4Tetrahedron() {
             return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &Dim4TetrahedronEmbedding::getTetrahedron)
         .def("getVertices", &Dim4TetrahedronEmbedding::getVertices)
-        .def(self == self)
-        .def(self != self)
+        .def(regina::python::add_eq_operators())
     ;
 
     scope s = class_<Dim4Tetrahedron, std::auto_ptr<Dim4Tetrahedron>,
@@ -92,6 +92,7 @@ void addDim4Tetrahedron() {
         .def("detail", &Dim4Tetrahedron::detail)
         .def("toStringLong", &Dim4Tetrahedron::toStringLong)
         .def("__str__", &Dim4Tetrahedron::str)
+        .def(regina::python::add_eq_operators())
     ;
 
     s.attr("ordering") = &Dim4Tetrahedron_ordering;

@@ -36,6 +36,7 @@
 #include "dim4/dim4triangulation.h"
 #include "hypersurface/nnormalhypersurface.h"
 #include "triangulation/ntriangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NNormalHypersurface;
@@ -84,6 +85,7 @@ void addNNormalHypersurface() {
         .def("detail", &NNormalHypersurface::detail)
         .def("toStringLong", &NNormalHypersurface::toStringLong)
         .def("__str__", &NNormalHypersurface::str)
+        .def(regina::python::add_eq_operators())
     ;
 }
 

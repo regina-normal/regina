@@ -41,6 +41,7 @@
 #include "dim4/dim4triangulation.h"
 #include "dim4/dim4vertex.h"
 #include "../globalarray.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Dim4Triangle;
@@ -75,8 +76,7 @@ void addDim4Triangle() {
             return_value_policy<reference_existing_object>())
         .def("getTriangle", &Dim4TriangleEmbedding::getTriangle)
         .def("getVertices", &Dim4TriangleEmbedding::getVertices)
-        .def(self == self)
-        .def(self != self)
+        .def(regina::python::add_eq_operators())
     ;
 
     scope s = class_<Dim4Triangle, std::auto_ptr<Dim4Triangle>,
@@ -105,6 +105,7 @@ void addDim4Triangle() {
         .def("detail", &Dim4Triangle::detail)
         .def("toStringLong", &Dim4Triangle::toStringLong)
         .def("__str__", &Dim4Triangle::str)
+        .def(regina::python::add_eq_operators())
     ;
 
     s.attr("triangleNumber") = &Dim4Triangle_triangleNumber;

@@ -40,6 +40,7 @@
 #include "dim4/dim4tetrahedron.h"
 #include "dim4/dim4triangle.h"
 #include "dim4/dim4vertex.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Component;
@@ -99,6 +100,7 @@ void addDim4Component() {
         .def("detail", &Dim4Component::detail)
         .def("toStringLong", &Dim4Component::toStringLong)
         .def("__str__", &Dim4Component::str)
+        .def(regina::python::add_eq_operators())
     ;
 
     scope().attr("Dim4Component") = scope().attr("Component4");

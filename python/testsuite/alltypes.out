@@ -79,6 +79,54 @@ Equality type : BY_REFERENCE
 Dim2VertexEmbedding : class
 Equality type : BY_VALUE
 
+Dim4BoundaryComponent : class
+Equality type : BY_REFERENCE
+
+Dim4Component : class
+Equality type : BY_REFERENCE
+
+Dim4Edge : class
+Equality type : BY_REFERENCE
+
+Dim4EdgeEmbedding : class
+Equality type : BY_VALUE
+
+Dim4ExampleTriangulation : class
+Equality type : NEVER_INSTANTIATED
+
+Dim4FacetPairing : class
+Equality type : BY_REFERENCE
+
+Dim4Isomorphism : class
+Equality type : BY_REFERENCE
+
+Dim4PentFacet : class
+Equality type : BY_VALUE
+
+Dim4Pentachoron : class
+Equality type : BY_REFERENCE
+
+Dim4Tetrahedron : class
+Equality type : BY_REFERENCE
+
+Dim4TetrahedronEmbedding : class
+Equality type : BY_VALUE
+
+Dim4Triangle : class
+Equality type : BY_REFERENCE
+
+Dim4TriangleEmbedding : class
+Equality type : BY_VALUE
+
+Dim4Triangulation : class
+Equality type : BY_REFERENCE
+
+Dim4Vertex : class
+Equality type : BY_REFERENCE
+
+Dim4VertexEmbedding : class
+Equality type : BY_VALUE
+
 FacetPairing10 : class
 Equality type : BY_REFERENCE
 
@@ -377,6 +425,12 @@ NMatrix2Row : class
 Equality type : BY_VALUE
 
 NMatrixInt : class
+Equality type : BY_REFERENCE
+
+NNormalHypersurface : class
+Equality type : BY_REFERENCE
+
+NNormalHypersurfaceList : class
 Equality type : BY_REFERENCE
 
 NNormalSurface : class

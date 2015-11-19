@@ -40,6 +40,7 @@
 #include "dim4/dim4triangle.h"
 #include "dim4/dim4triangulation.h"
 #include "dim4/dim4vertex.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Dim4Pentachoron;
@@ -87,6 +88,7 @@ void addDim4Pentachoron() {
         .def("detail", &Dim4Pentachoron::detail)
         .def("toStringLong", &Dim4Pentachoron::toStringLong)
         .def("__str__", &Dim4Pentachoron::str)
+        .def(regina::python::add_eq_operators())
     ;
 
     scope().attr("Dim4Pentachoron") = scope().attr("Simplex4");
