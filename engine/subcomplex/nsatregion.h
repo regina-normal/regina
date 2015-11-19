@@ -114,6 +114,27 @@ struct REGINA_API NSatBlockSpec {
      * within the larger region, or \c false otherwise.
      */
     NSatBlockSpec(NSatBlock* useBlock, bool useRefVert, bool useRefHoriz);
+    /**
+     * Determines whether this and the given structure contain identical
+     * information.  In particular, their \a block pointers must be
+     * identical (not pointing to different blocks with the same contents).
+     *
+     * @param other the structure to compare against this.
+     * @return \c true if and only if this and \a other contain
+     * identical information.
+     */
+    bool operator == (const NSatBlockSpec& other) const;
+    /**
+     * Determines whether this and the given structure contain different
+     * information.  In particular, they are considered different if their
+     * \a block pointers are different (even if they point to different blocks
+     * with the same contents).
+     *
+     * @param other the structure to compare against this.
+     * @return \c true if and only if this and \a other contain
+     * different information.
+     */
+    bool operator != (const NSatBlockSpec& other) const;
 };
 
 /**
@@ -628,6 +649,16 @@ inline NSatBlockSpec::NSatBlockSpec() {
 inline NSatBlockSpec::NSatBlockSpec(NSatBlock* useBlock, bool useRefVert,
         bool useRefHoriz) : block(useBlock), refVert(useRefVert),
         refHoriz(useRefHoriz) {
+}
+
+inline bool NSatBlockSpec::operator == (const NSatBlockSpec& other) const {
+    return block == other.block && refVert == other.refVert &&
+        refHoriz == other.refHoriz;
+}
+
+inline bool NSatBlockSpec::operator != (const NSatBlockSpec& other) const {
+    return block != other.block || refVert != other.refVert ||
+        refHoriz != other.refHoriz;
 }
 
 // Inline functions for NSatRegion

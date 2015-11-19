@@ -129,6 +129,15 @@ struct REGINA_API NDiscSpec {
      * contain identical information.
      */
     bool operator == (const NDiscSpec& other) const;
+    /**
+     * Determines if this and the given disc specifier contain different
+     * information.
+     *
+     * @param other the disc specifier to compare with this.
+     * @return \c true if and only if this and the given disc specifier
+     * contain different information.
+     */
+    bool operator != (const NDiscSpec& other) const;
 
     friend std::ostream& operator << (std::ostream& out, const NDiscSpec& spec);
 };
@@ -723,6 +732,32 @@ class REGINA_API NDiscSpecIterator {
          * @return \c true if and only if this iterator is past-the-end.
          */
         bool done() const;
+        /**
+         * Determines if this and the given iterator are equal.
+         *
+         * Two iterators are considered equal if (i) they were constructed
+         * from the same NDiscSetSurface object (not two different
+         * NDiscSetSurface objects with identical contents), and (ii) they
+         * point to the same disc of the same tetrahedron.
+         *
+         * @param other the iterator to compare with this.
+         * @return \c true if and only if this and the given iterator
+         * are equal.
+         */
+        bool operator == (const NDiscSpecIterator& other) const;
+        /**
+         * Determines if this and the given iterator are different.
+         *
+         * Two iterators are considered equal if (i) they were constructed
+         * from the same NDiscSetSurface object (not two different
+         * NDiscSetSurface objects with identical contents), and (ii) they
+         * point to the same disc of the same tetrahedron.
+         *
+         * @param other the iterator to compare with this.
+         * @return \c true if and only if this and the given iterator
+         * are equal.
+         */
+        bool operator != (const NDiscSpecIterator& other) const;
 
     private:
         /**
@@ -761,6 +796,10 @@ inline NDiscSpec& NDiscSpec::operator = (const NDiscSpec& cloneMe) {
 inline bool NDiscSpec::operator == (const NDiscSpec& other) const {
     return (tetIndex == other.tetIndex && type == other.type &&
         number == other.number);
+}
+inline bool NDiscSpec::operator != (const NDiscSpec& other) const {
+    return (tetIndex != other.tetIndex || type != other.type ||
+        number != other.number);
 }
 
 // Inline functions for NDiscSetTet
@@ -816,6 +855,16 @@ inline const NDiscSpec& NDiscSpecIterator::operator *() const {
 }
 inline bool NDiscSpecIterator::done() const {
     return (current.tetIndex == internalDiscSet->nTets());
+}
+
+inline bool NDiscSpecIterator::operator == (
+        const NDiscSpecIterator& other) const {
+    return internalDiscSet == other.internalDiscSet && current == other.current;
+}
+
+inline bool NDiscSpecIterator::operator != (
+        const NDiscSpecIterator& other) const {
+    return internalDiscSet != other.internalDiscSet || current != other.current;
 }
 
 } // namespace regina

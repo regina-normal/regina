@@ -108,6 +108,15 @@ struct REGINA_API NPrismSpec {
      * contain identical information.
      */
     bool operator == (const NPrismSpec& other) const;
+    /**
+     * Determines if this and the given prism specifier contain different
+     * information.
+     *
+     * @param other the prism specifier to compare with this.
+     * @return \c true if and only if this and the given prism specifier
+     * contain different information.
+     */
+    bool operator != (const NPrismSpec& other) const;
 
     friend std::ostream& operator << (std::ostream& out,
         const NPrismSpec& spec);
@@ -201,6 +210,9 @@ inline NPrismSpec& NPrismSpec::operator = (const NPrismSpec& cloneMe) {
 }
 inline bool NPrismSpec::operator == (const NPrismSpec& other) const {
     return (tetIndex == other.tetIndex && edge == other.edge);
+}
+inline bool NPrismSpec::operator != (const NPrismSpec& other) const {
+    return (tetIndex != other.tetIndex || edge != other.edge);
 }
 
 // Inline functions for NPrismSetSurface
