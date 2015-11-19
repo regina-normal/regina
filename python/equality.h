@@ -1,3 +1,38 @@
+/**************************************************************************
+ *                                                                        *
+ *  Regina - A Normal Surface Theory Calculator                           *
+ *  Python Interface                                                      *
+ *                                                                        *
+ *  Copyright (c) 1999-2015, Ben Burton                                   *
+ *  For further details contact Ben Burton (bab@debian.org).              *
+ *                                                                        *
+ *  This program is free software; you can redistribute it and/or         *
+ *  modify it under the terms of the GNU General Public License as        *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  As an exception, when this program is distributed through (i) the     *
+ *  App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or     *
+ *  (iii) Google Play by Google Inc., then that store may impose any      *
+ *  digital rights management, device limits and/or redistribution        *
+ *  restrictions that are required by its terms of service.               *
+ *                                                                        *
+ *  This program is distributed in the hope that it will be useful, but   *
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
+ *  General Public License for more details.                              *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public             *
+ *  License along with this program; if not, write to the Free            *
+ *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,       *
+ *  MA 02110-1301, USA.                                                   *
+ *                                                                        *
+ **************************************************************************/
+
+/*! \file python/equality.h
+ *  \brief Assists with wrapping == and != operators in Python.
+ */
+
 #include <type_traits>
 #include <boost/python/def_visitor.hpp>
 
@@ -5,26 +40,32 @@ namespace regina {
 namespace python {
 
 /**
- * TODO: Document.
+ * Indicates the different ways in which the equality (==) and inequality (!=)
+ * operators can behave under Python.  This behaviour differs according
+ * to the underlying class of the objects being compared.
+ *
+ * Specifically, suppose we have two python objects \a x and \a y that
+ * wrap instances of some underlying C++ class \a C.  Then, if we
+ * test <tt>x == y</tt> or <tt>x != y</tt> under python, the possible
+ * behaviours are:
  */
 enum EqualityType {
     /**
-     * Indicates that, when comparing two python objects using == or !=, the
-     * underlying C++ operators == and != will be used.
+     * The objects are compared by value.  This means that the underlying
+     * C++ operators == and != for the class \a C are used.
      */
     BY_VALUE = 1,
     /**
-     * Indicates that, when comparing two python objects using == or !=, the
-     * code will test whether or not these wrap the same underlying C++
-     * object.  In other words, they will test whether the wrapped C++ pointers
-     * are the same.
+     * The objects are compared by reference.  This means that the
+     * python operators == and != simply test whether \a x and \a y refer to
+     * the same instance of the C++ class \a C.  In other words, they test
+     * whether the underlying C++ \e pointers to \a x and \a y are the same.
      */
-    BY_REFERENCE = 2
+    BY_REFERENCE = 2,
 };
 
 /**
- * Adds appropriate == and != operators to the python bindings for
- * Regina's C++ classes.
+ * Adds appropriate == and != operators to the python bindings for a C++ class.
  *
  * To use this for some C++ class \a T in Regina, simply call
  * <t>c.def(regina::python::add_eq_operators())</t>, where \a c is the
