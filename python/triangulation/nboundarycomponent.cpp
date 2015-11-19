@@ -37,6 +37,7 @@
 #include "triangulation/nedge.h"
 #include "triangulation/ntriangle.h"
 #include "triangulation/nvertex.h"
+#include "../equality.h"
 
 using namespace boost::python;
 using regina::NBoundaryComponent;
@@ -69,6 +70,7 @@ void addNBoundaryComponent() {
         .def("detail", &NBoundaryComponent::detail)
         .def("toStringLong", &NBoundaryComponent::toStringLong)
         .def("__str__", &NBoundaryComponent::str)
+        .def(regina::python::add_eq_operators())
     ;
 }
 

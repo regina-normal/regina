@@ -39,6 +39,7 @@
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
+#include "../equality.h"
 #include "../globalarray.h"
 
 using namespace boost::python;
@@ -81,8 +82,7 @@ void addNEdge() {
             return_value_policy<reference_existing_object>())
         .def("getEdge", &NEdgeEmbedding::getEdge)
         .def("getVertices", &NEdgeEmbedding::getVertices)
-        .def(self == self)
-        .def(self != self)
+        .def(regina::python::add_eq_operators())
     ;
 
     scope s = class_<NEdge, std::auto_ptr<NEdge>, boost::noncopyable>
@@ -108,6 +108,7 @@ void addNEdge() {
         .def("detail", &NEdge::detail)
         .def("toStringLong", &NEdge::toStringLong)
         .def("__str__", &NEdge::str)
+        .def(regina::python::add_eq_operators())
     ;
 
     s.attr("edgeNumber") = &NEdge_edgeNumber;

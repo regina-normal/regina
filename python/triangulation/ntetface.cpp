@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "triangulation/ntetface.h"
+#include "../equality.h"
 
 using namespace boost::python;
 using regina::NTetFace;
@@ -65,9 +66,9 @@ void addNTetFace() {
         .def("setPastEnd", &NTetFace::setPastEnd)
         .def("inc", tetface_inc_operator)
         .def("dec", tetface_dec_operator)
-        .def(self == self)
         .def(self < self)
         .def(self <= self)
+        .def(regina::python::add_eq_operators())
     ;
 }
 

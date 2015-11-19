@@ -97,6 +97,7 @@ void addNExampleTriangulation() {
         .def("cuspedGenusTwoTorus",
             &NExampleTriangulation::cuspedGenusTwoTorus,
             return_value_policy<manage_new_object>())
+        // No add_eq_operators() since this class is never instantiated.
         .staticmethod("threeSphere")
         .staticmethod("bingsHouse")
         .staticmethod("s2xs1")

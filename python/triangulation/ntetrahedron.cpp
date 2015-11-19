@@ -39,6 +39,7 @@
 #include "triangulation/ntriangle.h"
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
+#include "../equality.h"
 #include "../globalarray.h"
 
 using namespace boost::python;
@@ -90,6 +91,7 @@ void addNTetrahedron() {
         .def("detail", &NTetrahedron::detail)
         .def("toStringLong", &NTetrahedron::toStringLong)
         .def("__str__", &NTetrahedron::str)
+        .def(regina::python::add_eq_operators())
     ;
 }
 
