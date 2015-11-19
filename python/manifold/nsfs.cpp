@@ -36,6 +36,7 @@
 #include "algebra/nabeliangroup.h"
 #include "manifold/nlensspace.h"
 #include "manifold/nsfs.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NSFSFibre;
@@ -65,9 +66,9 @@ void addNSFSpace() {
         .def(init<const NSFSFibre&>())
         .def_readwrite("alpha", &NSFSFibre::alpha)
         .def_readwrite("beta", &NSFSFibre::beta)
-        .def(self == self)
         .def(self < self)
         .def(self_ns::str(self))
+        .def(regina::python::add_eq_operators())
     ;
 
     scope s = class_<NSFSpace, bases<regina::NManifold>,
@@ -99,8 +100,8 @@ void addNSFSpace() {
         .def("reduce", &NSFSpace::reduce, OL_reduce())
         .def("isLensSpace", &NSFSpace::isLensSpace,
             return_value_policy<manage_new_object>())
-        .def(self == self)
         .def(self < self)
+        .def(regina::python::add_eq_operators())
     ;
 
     enum_<NSFSpace::classType>("classType")

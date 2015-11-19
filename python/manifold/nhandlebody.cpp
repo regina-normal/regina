@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "manifold/nhandlebody.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NHandlebody;
@@ -45,7 +46,7 @@ void addNHandlebody() {
         .def(init<const NHandlebody&>())
         .def("getHandles", &NHandlebody::getHandles)
         .def("isOrientable", &NHandlebody::isOrientable)
-        .def(self == self)
+        .def(regina::python::add_eq_operators())
     ;
 
     implicitly_convertible<std::auto_ptr<NHandlebody>,

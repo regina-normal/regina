@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "manifold/nsimplesurfacebundle.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NSimpleSurfaceBundle;
@@ -44,7 +45,7 @@ void addNSimpleSurfaceBundle() {
             ("NSimpleSurfaceBundle", init<int>())
         .def(init<const NSimpleSurfaceBundle&>())
         .def("getType", &NSimpleSurfaceBundle::getType)
-        .def(self == self)
+        .def(regina::python::add_eq_operators())
     ;
 
     s.attr("S2xS1") = NSimpleSurfaceBundle::S2xS1;

@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "subcomplex/nsnappeacensustri.h"
 #include "triangulation/ncomponent.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NSnapPeaCensusTri;
@@ -47,10 +48,10 @@ void addNSnapPeaCensusTri() {
             return_value_policy<manage_new_object>())
         .def("getSection", &NSnapPeaCensusTri::getSection)
         .def("getIndex", &NSnapPeaCensusTri::getIndex)
-        .def(self == self)
         .def("isSmallSnapPeaCensusTri",
             &NSnapPeaCensusTri::isSmallSnapPeaCensusTri,
             return_value_policy<manage_new_object>())
+        .def(regina::python::add_eq_operators())
         .staticmethod("isSmallSnapPeaCensusTri")
     ;
 

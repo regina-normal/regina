@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "surfaces/ndisctype.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NDiscType;
@@ -44,10 +45,9 @@ void addNDiscType() {
         .def(init<const NDiscType&>())
         .def_readwrite("tetIndex", &NDiscType::tetIndex)
         .def_readwrite("type", &NDiscType::type)
-        .def(self == self)
-        .def(self != self)
         .def(self < self)
         .def(self_ns::str(self))
+        .def(regina::python::add_eq_operators())
     ;
 
     s.attr("NONE") = &NDiscType::NONE;

@@ -36,6 +36,7 @@
 #include "surfaces/nsurfacefilter.h"
 #include "surfaces/nsurfacesubset.h"
 #include "triangulation/ntriangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NSurfaceSubset;
@@ -69,6 +70,7 @@ void addNSurfaceSubset() {
         .def("detail", &NSurfaceSubset::detail)
         .def("toStringLong", &NSurfaceSubset::toStringLong)
         .def("__str__", &NSurfaceSubset::str)
+        .def(regina::python::add_eq_operators())
     ;
 }
 

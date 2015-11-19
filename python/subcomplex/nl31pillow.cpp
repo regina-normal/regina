@@ -36,6 +36,7 @@
 #include "subcomplex/nl31pillow.h"
 #include "triangulation/ncomponent.h"
 #include "triangulation/ntetrahedron.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NL31Pillow;
@@ -51,6 +52,7 @@ void addNL31Pillow() {
         .def("getInteriorVertex", &NL31Pillow::getInteriorVertex)
         .def("isL31Pillow", &NL31Pillow::isL31Pillow,
             return_value_policy<manage_new_object>())
+        .def(regina::python::add_eq_operators())
         .staticmethod("isL31Pillow")
     ;
 

@@ -36,6 +36,7 @@
 #include "manifold/nsfs.h"
 #include "subcomplex/nsatregion.h"
 #include <iostream>
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NSatBlock;
@@ -84,6 +85,7 @@ void addNSatRegion() {
         .def_readonly("block", &NSatBlockSpec::block)
         .def_readonly("refVert", &NSatBlockSpec::refVert)
         .def_readonly("refHoriz", &NSatBlockSpec::refHoriz)
+        .def(regina::python::add_eq_operators())
     ;
 
     class_<NSatRegion, boost::noncopyable,
@@ -105,6 +107,7 @@ void addNSatRegion() {
         .def("detail", &NSatRegion::detail)
         .def("toStringLong", &NSatRegion::toStringLong)
         .def("__str__", &NSatRegion::str)
+        .def(regina::python::add_eq_operators())
     ;
 }
 
