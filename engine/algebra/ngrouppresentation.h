@@ -108,6 +108,14 @@ struct REGINA_API NGroupExpressionTerm {
      * same generator and exponent.
      */
     bool operator == (const NGroupExpressionTerm& other) const;
+    /**
+     * Determines whether this and the given term do not contain identical data.
+     *
+     * @param other the term with which this term will be compared.
+     * @return \c true if and only if this and the given term do not have
+     * both the same generator and exponent.
+     */
+    bool operator != (const NGroupExpressionTerm& other) const;
 
     /**
      * Imposes an ordering on terms.
@@ -235,6 +243,16 @@ class REGINA_API NGroupExpression :
          * @return \c true if this and the given string literal are identical.
          */
         bool operator == (const NGroupExpression& comp) const;
+
+        /**
+         * Inequality operator. Checks to see whether or not these two words
+         * represent different literal strings.
+         *
+         * @param comp the expression to compare against this.
+         * @return \c true if this and the given string literal are not
+         * identical.
+         */
+        bool operator != (const NGroupExpression& comp) const;
 
         /**
          * Returns the list of terms in this expression.
@@ -1437,6 +1455,11 @@ inline bool NGroupExpressionTerm::operator == (
     return (generator == other.generator) && (exponent == other.exponent);
 }
 
+inline bool NGroupExpressionTerm::operator != (
+        const NGroupExpressionTerm& other) const {
+    return (generator != other.generator) || (exponent != other.exponent);
+}
+
 inline NGroupExpressionTerm NGroupExpressionTerm::inverse() const {
     return NGroupExpressionTerm(generator, -exponent);
 }
@@ -1466,8 +1489,12 @@ inline NGroupExpression::NGroupExpression(const NGroupExpression& cloneMe) :
         terms(cloneMe.terms) {
 }
 
-inline bool NGroupExpression::operator==(const NGroupExpression& comp) const {
+inline bool NGroupExpression::operator ==(const NGroupExpression& comp) const {
     return terms == comp.terms;
+}
+
+inline bool NGroupExpression::operator !=(const NGroupExpression& comp) const {
+    return terms != comp.terms;
 }
 
 inline NGroupExpression& NGroupExpression::operator=(

@@ -32,49 +32,16 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
-#include "triangulation/nisomorphism.h"
-#include "triangulation/ntriangulation.h"
-#include "../helpers.h"
+/*! \file python/helpers.h
+ *  \brief Various tools to assist with Python bindings for Regina.
+ */
 
-using namespace boost::python;
-using regina::NIsomorphism;
+#ifndef __HELPERS_H
+#ifndef __DOXYGEN
+#define __HELPERS_H
+#endif
 
-namespace {
-    int (NIsomorphism::*simpImage_const)(unsigned) const =
-        &NIsomorphism::simpImage;
-    regina::NPerm4 (NIsomorphism::*facetPerm_const)(unsigned) const =
-        &NIsomorphism::facetPerm;
+// Tools for wrapping == and != operators correctly:
+#include "helpers/equality.h"
 
-    regina::NTetFace iso_getItem(const NIsomorphism& iso,
-            const regina::NTetFace& f) {
-        return iso[f];
-    }
-}
-
-void addNIsomorphism() {
-    class_<NIsomorphism, std::auto_ptr<NIsomorphism>, boost::noncopyable>
-            ("NIsomorphism", init<const NIsomorphism&>())
-        .def("getSourceSimplices", &NIsomorphism::getSourceSimplices)
-        .def("getSourceTetrahedra", &NIsomorphism::getSourceTetrahedra)
-        .def("simpImage", simpImage_const)
-        .def("tetImage", simpImage_const)
-        .def("facetPerm", facetPerm_const)
-        .def("facePerm", facetPerm_const)
-        .def("__getitem__", iso_getItem)
-        .def("isIdentity", &NIsomorphism::isIdentity)
-        .def("apply", &NIsomorphism::apply,
-            return_value_policy<manage_new_object>())
-        .def("applyInPlace", &NIsomorphism::applyInPlace)
-        .def("random", &NIsomorphism::random,
-            return_value_policy<manage_new_object>())
-        .def("str", &NIsomorphism::str)
-        .def("toString", &NIsomorphism::toString)
-        .def("detail", &NIsomorphism::detail)
-        .def("toStringLong", &NIsomorphism::toStringLong)
-        .def("__str__", &NIsomorphism::str)
-        .def(regina::python::add_eq_operators())
-        .staticmethod("random")
-    ;
-}
-
+#endif

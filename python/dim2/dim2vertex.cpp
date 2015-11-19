@@ -39,6 +39,7 @@
 #include "dim2/dim2triangulation.h"
 #include "dim2/dim2vertex.h"
 #include "../globalarray.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Dim2Vertex;
@@ -64,8 +65,7 @@ void addDim2Vertex() {
             return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim2VertexEmbedding::getVertex)
         .def("getVertices", &Dim2VertexEmbedding::getVertices)
-        .def(self == self)
-        .def(self != self)
+        .def(regina::python::add_eq_operators())
     ;
 
     scope s = class_<Dim2Vertex, std::auto_ptr<Dim2Vertex>, boost::noncopyable>
@@ -88,6 +88,7 @@ void addDim2Vertex() {
         .def("detail", &Dim2Vertex::detail)
         .def("toStringLong", &Dim2Vertex::toStringLong)
         .def("__str__", &Dim2Vertex::str)
+        .def(regina::python::add_eq_operators())
     ;
 }
 

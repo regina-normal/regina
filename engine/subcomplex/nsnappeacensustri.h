@@ -152,6 +152,16 @@ class REGINA_API NSnapPeaCensusTri: public NStandardTriangulation {
         bool operator == (const NSnapPeaCensusTri& compare) const;
 
         /**
+         * Determines whether this and the given structure represent
+         * different triangulations from the SnapPea census.
+         *
+         * @param compare the structure with which this will be compared.
+         * @return \c true if and only if this and the given structure
+         * represent different SnapPea census triangulations.
+         */
+        bool operator != (const NSnapPeaCensusTri& compare) const;
+
+        /**
          * Determines if the given triangulation component is one of the
          * smallest SnapPea census triangulations.
          *
@@ -204,6 +214,11 @@ inline unsigned long NSnapPeaCensusTri::getIndex() const {
 inline bool NSnapPeaCensusTri::operator == (const NSnapPeaCensusTri& compare)
         const {
     return (section == compare.section && index == compare.index);
+}
+
+inline bool NSnapPeaCensusTri::operator != (const NSnapPeaCensusTri& compare)
+        const {
+    return (section != compare.section || index != compare.index);
 }
 
 inline NSnapPeaCensusTri::NSnapPeaCensusTri(char newSection,

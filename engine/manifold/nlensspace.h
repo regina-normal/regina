@@ -122,6 +122,16 @@ class REGINA_API NLensSpace : public NManifold {
          * are homeomorphic.
          */
         bool operator == (const NLensSpace& compare) const;
+        /**
+         * Determines whether this and the given lens space are
+         * non-homeomorphic 3-manifolds.  Note that the manifolds may be
+         * homeomorphic even if they were initialised with different parameters.
+         *
+         * @param compare the lens space with which this will be compared.
+         * @return \c true if and only if this and the given lens space
+         * are non-homeomorphic.
+         */
+        bool operator != (const NLensSpace& compare) const;
 
         NTriangulation* construct() const;
         NAbelianGroup* getHomologyH1() const;
@@ -158,6 +168,9 @@ inline unsigned long NLensSpace::getQ() const {
 }
 inline bool NLensSpace::operator == (const NLensSpace& compare) const {
     return (p == compare.p && q == compare.q);
+}
+inline bool NLensSpace::operator != (const NLensSpace& compare) const {
+    return (p != compare.p || q != compare.q);
 }
 
 inline bool NLensSpace::isHyperbolic() const {

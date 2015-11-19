@@ -110,6 +110,15 @@ class REGINA_API NSimpleSurfaceBundle : public NManifold {
          * are homeomorphic.
          */
         bool operator == (const NSimpleSurfaceBundle& compare) const;
+        /**
+         * Determines whether this and the given surface bundle represent
+         * different 3-manifolds.
+         *
+         * @param compare the surface bundle with which this will be compared.
+         * @return \c true if and only if this and the given surface bundle
+         * are non-homeomorphic.
+         */
+        bool operator != (const NSimpleSurfaceBundle& compare) const;
 
         virtual NTriangulation* construct() const;
         NAbelianGroup* getHomologyH1() const;
@@ -135,6 +144,10 @@ inline int NSimpleSurfaceBundle::getType() const {
 inline bool NSimpleSurfaceBundle::operator ==
         (const NSimpleSurfaceBundle& compare) const {
     return (type == compare.type);
+}
+inline bool NSimpleSurfaceBundle::operator !=
+        (const NSimpleSurfaceBundle& compare) const {
+    return (type != compare.type);
 }
 
 inline bool NSimpleSurfaceBundle::isHyperbolic() const {

@@ -36,6 +36,7 @@
 #include "subcomplex/nspiralsolidtorus.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NSpiralSolidTorus;
@@ -57,6 +58,7 @@ void addNSpiralSolidTorus() {
         .def("isCanonical", &NSpiralSolidTorus::isCanonical)
         .def("formsSpiralSolidTorus", &NSpiralSolidTorus::formsSpiralSolidTorus,
             return_value_policy<manage_new_object>())
+        .def(regina::python::add_eq_operators())
         .staticmethod("formsSpiralSolidTorus")
     ;
 

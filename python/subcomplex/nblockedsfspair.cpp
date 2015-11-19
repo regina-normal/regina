@@ -36,6 +36,7 @@
 #include "subcomplex/nblockedsfspair.h"
 #include "subcomplex/nsatregion.h"
 #include "triangulation/ntriangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NBlockedSFSPair;
@@ -50,6 +51,7 @@ void addNBlockedSFSPair() {
             return_internal_reference<>())
         .def("isBlockedSFSPair", &NBlockedSFSPair::isBlockedSFSPair,
             return_value_policy<manage_new_object>())
+        .def(regina::python::add_eq_operators())
         .staticmethod("isBlockedSFSPair")
     ;
 

@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "subcomplex/nsnappedball.h"
 #include "triangulation/ntetrahedron.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NSnappedBall;
@@ -53,6 +54,7 @@ void addNSnappedBall() {
         .def("getInternalEdge", &NSnappedBall::getInternalEdge)
         .def("formsSnappedBall", &NSnappedBall::formsSnappedBall,
             return_value_policy<manage_new_object>())
+        .def(regina::python::add_eq_operators())
         .staticmethod("formsSnappedBall")
     ;
 

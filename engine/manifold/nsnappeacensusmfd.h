@@ -163,6 +163,15 @@ class REGINA_API NSnapPeaCensusManifold : public NManifold {
          * represent the same SnapPea census manifold.
          */
         bool operator == (const NSnapPeaCensusManifold& compare) const;
+        /**
+         * Determines whether this and the given structure represent
+         * different 3-manifolds from the SnapPea census.
+         *
+         * @param compare the structure with which this will be compared.
+         * @return \c true if and only if this and the given structure
+         * represent different SnapPea census manifolds.
+         */
+        bool operator != (const NSnapPeaCensusManifold& compare) const;
 
         NTriangulation* construct() const;
         NAbelianGroup* getHomologyH1() const;
@@ -195,6 +204,10 @@ inline unsigned long NSnapPeaCensusManifold::getIndex() const {
 inline bool NSnapPeaCensusManifold::operator == (
         const NSnapPeaCensusManifold& compare) const {
     return (section == compare.section && index == compare.index);
+}
+inline bool NSnapPeaCensusManifold::operator != (
+        const NSnapPeaCensusManifold& compare) const {
+    return (section != compare.section || index != compare.index);
 }
 inline bool NSnapPeaCensusManifold::isHyperbolic() const {
     return true;

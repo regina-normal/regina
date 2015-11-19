@@ -106,6 +106,15 @@ class REGINA_API NHandlebody : public NManifold {
          * are homeomorphic.
          */
         bool operator == (const NHandlebody& compare) const;
+        /**
+         * Determines whether this and the given handlebody represent
+         * different 3-manifolds.
+         *
+         * @param compare the handlebody with which this will be compared.
+         * @return \c true if and only if this and the given handlebody
+         * are not homeomorphic.
+         */
+        bool operator != (const NHandlebody& compare) const;
 
         NAbelianGroup* getHomologyH1() const;
         bool isHyperbolic() const;
@@ -137,6 +146,13 @@ inline bool NHandlebody::operator == (const NHandlebody& compare) const {
     if (compare.orientable && ! orientable)
         return false;
     return (nHandles == compare.nHandles);
+}
+inline bool NHandlebody::operator != (const NHandlebody& compare) const {
+    if (orientable && ! compare.orientable)
+        return true;
+    if (compare.orientable && ! orientable)
+        return true;
+    return (nHandles != compare.nHandles);
 }
 
 inline bool NHandlebody::isHyperbolic() const {

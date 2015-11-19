@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "maths/nrational.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NLargeInteger;
@@ -78,8 +79,6 @@ void addNRational() {
         .def(self /= self)
         .def("negate", &NRational::negate)
         .def("invert", &NRational::invert)
-        .def(self == self)
-        .def(self != self)
         .def(self < self)
         .def(self > self)
         .def(self <= self)
@@ -90,6 +89,7 @@ void addNRational() {
         .def("writeTeX", writeTeX_stdio)
         .def(self_ns::str(self))
         .def(self_ns::repr(self))
+        .def(regina::python::add_eq_operators())
     ;
 
     // Apparently there is no way in python to make a module attribute

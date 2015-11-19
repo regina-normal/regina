@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "subcomplex/nplugtrisolidtorus.h"
 #include "triangulation/ntriangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NPlugTriSolidTorus;
@@ -53,6 +54,7 @@ void addNPlugTriSolidTorus() {
         .def("getEquatorType", &NPlugTriSolidTorus::getEquatorType)
         .def("isPlugTriSolidTorus", &NPlugTriSolidTorus::isPlugTriSolidTorus,
             return_value_policy<manage_new_object>())
+        .def(regina::python::add_eq_operators())
         .staticmethod("isPlugTriSolidTorus")
     ;
 

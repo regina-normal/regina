@@ -38,6 +38,7 @@
 #include <boost/python.hpp>
 #include "maths/nperm3.h"
 #include "../globalarray.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NPerm3;
@@ -68,8 +69,6 @@ void addNPerm3() {
         .def("sign", &NPerm3::sign)
         .def("__getitem__", perm3_getItem)
         .def("preImageOf", &NPerm3::preImageOf)
-        .def(self == self)
-        .def(self != self)
         .def("compareWith", &NPerm3::compareWith)
         .def("isIdentity", &NPerm3::isIdentity)
         .def("toString", &NPerm3::toString)
@@ -80,6 +79,7 @@ void addNPerm3() {
         .def("orderedSnIndex", &NPerm3::orderedS3Index)
         .def("__str__", &NPerm3::str)
         .def("__repr__", &NPerm3::str)
+        .def(regina::python::add_eq_operators())
         .staticmethod("fromPermCode")
         .staticmethod("isPermCode")
     ;

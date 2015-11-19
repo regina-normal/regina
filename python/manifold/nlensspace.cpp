@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "manifold/nlensspace.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NLensSpace;
@@ -45,7 +46,7 @@ void addNLensSpace() {
         .def(init<const NLensSpace&>())
         .def("getP", &NLensSpace::getP)
         .def("getQ", &NLensSpace::getQ)
-        .def(self == self)
+        .def(regina::python::add_eq_operators())
     ;
 
     implicitly_convertible<std::auto_ptr<NLensSpace>,

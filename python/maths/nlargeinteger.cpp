@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "maths/ninteger.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NLargeInteger;
@@ -73,10 +74,8 @@ void addNLargeInteger() {
         .def("longValue", &NLargeInteger::longValue)
         .def("stringValue", &NLargeInteger::stringValue, OL_stringValue())
         .def("swap", &NLargeInteger::swap)
-        .def(self == self)
         .def(self == long())
         .def(self == regina::NInteger())
-        .def(self != self)
         .def(self != long())
         .def(self != regina::NInteger())
         .def(self < self)
@@ -131,6 +130,7 @@ void addNLargeInteger() {
         .def(long() * self)
         .def(self_ns::str(self))
         .def(self_ns::repr(self))
+        .def(regina::python::add_eq_operators())
         .staticmethod("randomBinary")
         .staticmethod("randomCornerBinary")
     ;

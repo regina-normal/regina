@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "surfaces/normalflags.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NormalAlg;
@@ -54,8 +55,6 @@ void addNormalFlags() {
         .def("has", has_list)
         .def("intValue", &NormalList::intValue)
         .def("fromInt", &NormalList::fromInt)
-        .def(self == self)
-        .def(self != self)
         .def(self |= self)
         .def(self &= self)
         .def(self ^= self)
@@ -63,6 +62,7 @@ void addNormalFlags() {
         .def(self & self)
         .def(self ^ self)
         .def("clear", clear_list)
+        .def(regina::python::add_eq_operators())
         .staticmethod("fromInt")
         ;
 
@@ -79,8 +79,6 @@ void addNormalFlags() {
         .def("has", has_alg)
         .def("intValue", &NormalAlg::intValue)
         .def("fromInt", &NormalAlg::fromInt)
-        .def(self == self)
-        .def(self != self)
         .def(self |= self)
         .def(self &= self)
         .def(self ^= self)
@@ -88,6 +86,7 @@ void addNormalFlags() {
         .def(self & self)
         .def(self ^ self)
         .def("clear", clear_alg)
+        .def(regina::python::add_eq_operators())
         .staticmethod("fromInt")
         ;
 

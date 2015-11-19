@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "maths/ncyclotomic.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NCyclotomic;
@@ -68,8 +69,6 @@ void addNCyclotomic() {
         .def("polynomial", &NCyclotomic::polynomial,
             return_value_policy<manage_new_object>())
         .def("evaluate", &NCyclotomic::evaluate, OL_evaluate())
-        .def(self == self)
-        .def(self != self)
         .def("negate", &NCyclotomic::invert)
         .def("invert", &NCyclotomic::invert)
         .def(self *= regina::NRational())
@@ -82,6 +81,7 @@ void addNCyclotomic() {
             return_value_policy<manage_new_object>())
         .def(self_ns::str(self))
         .def(self_ns::repr(self))
+        .def(regina::python::add_eq_operators())
         .staticmethod("cyclotomic")
     ;
 }
