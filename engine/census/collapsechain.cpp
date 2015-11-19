@@ -151,8 +151,8 @@ void NCollapsedChainSearcher::runSearch(long maxDepth) {
 //    }
 
     if (collapse) {
-        std::cout << "From " << pairing_->toString() << std::endl;
-        std::cout << "To   " << modified->toString() << std::endl;
+//        std::cout << "From " << pairing_->toString() << std::endl;
+//        std::cout << "To   " << modified->toString() << std::endl;
 //        for (int i = 0; i < maxOrder; i++) {
 //            NTetFace face = order[i];
 //            NTetFace adj = (*pairing_)[face];
@@ -183,15 +183,19 @@ void NCollapsedChainSearcher::extendTriHelper(const NGluingPermSearcher *s, void
 }
 
 void NCollapsedChainSearcher::extendTri(const NGluingPermSearcher *s) {
-    orderElt = 0;
     // For each triangulation found.
     // copy pairing_ and apply reverse of iso
     // Note that iso is the isomorphism from this to s
 
     NTriangulation *tri = s->triangulate();
-    std::string testCase("gLLMQacdefefjkaknkr");
+    std::list<NIsomorphism*> automorphs;
+    tri->findAllIsomorphisms(*tri, automorphs);
     std::string thisCase = tri->isoSig();
-    bool debug = (testCase.compare(thisCase) == 0);
+    //std::string testCase("gLLMQacdefefjkaknkr");
+    //std::string testCase("fLLQcacddeenkaikr");
+    //std::string textCase("gLLAQaceefefnkuxxnn");
+    //bool debug = (testCase.compare(thisCase) == 0);
+    bool debug = true;
     if (debug) {
         std::cout << "Original " << pairing_->str() << std::endl;
         std::cout << "Modified " << modified->str() << std::endl;
@@ -211,66 +215,118 @@ void NCollapsedChainSearcher::extendTri(const NGluingPermSearcher *s) {
 //                << " : " << isoInv->facetPerm(simp) << std::endl;
 //        }
     }
+    for (auto automorph : automorphs) {
+        orderElt = 0;
 
-    for (NTetFace f(0,0); ! f.isPastEnd(s->size(), true); f++) {
-        NTetFace adj = (*(s->getFacetPairing()))[f];
-        if ((adj.simp == f.simp)) {
-            // This is a loop
-            continue;
-        }
-        int mySimp = isoInv->simpImage(f.simp);
-        NPerm4 perm = isoInv->facetPerm(f.simp);
-        int myFacet = perm[f.facet];
-        NTetFace my(mySimp, myFacet);
-        if (permIndex(my) != -1)
-            continue; // Already done.
-        int myAdjSimp = isoInv->simpImage(adj.simp);
-        NPerm4 adjPerm = isoInv->facetPerm(adj.simp);
-        int myAdjFacet = adjPerm[adj.facet];
-        NTetFace myAdj(myAdjSimp, myAdjFacet);
-
-        NPerm4 gluing = (adjPerm.inverse() * s->gluingPerm(f) * perm);
-        if (debug) {
-            if (f < adj) {
-                std::cout << "From " << f << " to " << adj.simp << " (" <<
-                    (s->gluingPerm(f)*NTriangle::ordering[f.facet]).trunc3() <<
-                    ")";
-                std::cout << "\t\tFrom " << f << " to " << adj << " : " <<
-                    s->gluingPerm(f) << std::endl;
+        //for (NTetFace a(0,0); ! a.isPastEnd(s->size(), true); a++) {
+        //    std::cout << a << " ";
+        //    if (a.facet == 3)
+        //        std::cout << "| ";
+        //}
+        //std::cout << std::endl;
+        //for (NTetFace a(0,0); ! a.isPastEnd(s->size(), true); a++) {
+        //    int ffacet = automorph->facetPerm(a.simp)[a.facet];
+        //    NTetFace f(automorph->simpImage(a.simp),ffacet);
+        //    std::cout << f << " ";
+        //    if (a.facet == 3)
+        //        std::cout << "| ";
+        //}
+        std::cout << std::endl;
+        for (NTetFace f(0,0); ! f.isPastEnd(s->size(), true); f++) {
+            int afacet = automorph->facetPerm(f.simp)[f.facet];
+            NTetFace aut(automorph->simpImage(f.simp),afacet);
+            NTetFace adj = (*(s->getFacetPairing()))[f];
+            NTetFace autAdj(automorph->simpImage(adj.simp),
+                    automorph->facetPerm(adj.simp)[adj.facet]);
+            if ((aut.simp == autAdj.simp) &&
+                    (!shortChain[isoInv->simpImage(aut.simp)])) {
+                // This is a loop, but not a short one.
+                if (debug)
+                    std::cout << "Not short chain on " << f.simp << std::endl;
+                continue;
             }
+            int mySimp = isoInv->simpImage(aut.simp);
+            NPerm4 perm = isoInv->facetPerm(aut.simp);
+            int myFacet = perm[aut.facet];
+            NTetFace my(mySimp, myFacet);
+            if (permIndex(my) != -1)
+                continue; // Already done.
+            int myAdjSimp = isoInv->simpImage(autAdj.simp);
+            NPerm4 adjPerm = isoInv->facetPerm(autAdj.simp);
+            int myAdjFacet = adjPerm[autAdj.facet];
+            NTetFace myAdj(myAdjSimp, myAdjFacet);
+
+            NPerm4 gluing = (adjPerm.inverse() * s->gluingPerm(aut) * perm);
+            if (debug) {
+                if (f < adj) {
+                    std::cout << "From " << aut << " to " << autAdj.simp << " (" <<
+                        (s->gluingPerm(aut)*NTriangle::ordering[aut.facet]).trunc3() <<
+                        ")";
+                    std::cout << "\t\tFrom " << aut << " to " << autAdj << " : " <<
+                        s->gluingPerm(aut) << std::endl;
+                }
+            }
+            if ( gluing[myFacet] != myAdjFacet ) {
+                std::cerr << "Error: Invalid gluing " << std::endl;
+            }
+            permIndex(my) = gluingToIndex(my, gluing);
+            permIndex(myAdj) = gluingToIndex(myAdj, gluing.inverse());
         }
-        if ( gluing[myFacet] != myAdjFacet ) {
-            std::cerr << "Error: Invalid gluing " << std::endl;
-        }
-        permIndex(my) = gluingToIndex(my, gluing);
-        permIndex(myAdj) = gluingToIndex(myAdj, gluing.inverse());
-    }
-    orderElt = 0;
-    while (orderElt >= 0) {
-        if (orderElt >= maxOrder) {
-//            if (debug) {
-//                NTriangulation *newTri = triangulate();
-//                std::cout << "Found " << newTri->isoSig() << std::endl;
-//            }
-            use_(this, useArgs_);
-            orderElt -= 1;
-            continue;
-        }
-        NTetFace face = order[orderElt];
-        NTetFace adj = (*pairing_)[face];
-        if (orderType[orderElt] == EDGE_CHAIN_END ) {
-            if (permIndex(face) < 0) {
-                permIndex(face) = chainPermIndices[4*orderElt];
-            } else if (permIndex(face) == chainPermIndices[4*orderElt]) {
-                permIndex(face) = chainPermIndices[4*orderElt+1];
-            } else {
-                // Try flipping the whole chain.
-                int chain = chainNo[orderElt];
-                if (chainSym[chain] == false) {
+        orderElt = 0;
+        while (orderElt >= 0) {
+            if (orderElt >= maxOrder) {
+    //            if (debug) {
+    //                NTriangulation *newTri = triangulate();
+    //                std::cout << "Found " << newTri->isoSig() << std::endl;
+    //            }
+                use_(this, useArgs_);
+                orderElt -= 1;
+                continue;
+            }
+            NTetFace face = order[orderElt];
+            NTetFace adj = (*pairing_)[face];
+            if (orderType[orderElt] == EDGE_CHAIN_END ) {
+                if (permIndex(face) < 0) {
                     permIndex(face) = chainPermIndices[4*orderElt];
-                    chainSym[chain] = true;
+                } else if (permIndex(face) == chainPermIndices[4*orderElt]) {
+                    permIndex(face) = chainPermIndices[4*orderElt+1];
                 } else {
-                    chainSym[chain] = false;
+                    // Try flipping the whole chain.
+                    int chain = chainNo[orderElt];
+                    if (chainSym[chain] == false) {
+                        permIndex(face) = chainPermIndices[4*orderElt];
+                        chainSym[chain] = true;
+                    } else {
+                        chainSym[chain] = false;
+                        permIndex(face) = -1;
+                        permIndex(adj) = -1;
+                        orderElt--;
+                        continue;
+                    }
+                }
+                permIndex(adj) = NPerm4::invS3[permIndex(face)];
+                orderElt++;
+                continue;
+            }
+            // If chainSym is true, add 2 to each index into chainPermIndices
+            int symAdd = chainSym[chainNo[orderElt]] ? 2 : 0;
+            if (orderType[orderElt] == EDGE_CHAIN_INTERNAL_FIRST) {
+                if (permIndex(face) < 0) {
+                    permIndex(face) = chainPermIndices[4*orderElt + symAdd];
+                } else if (permIndex(face) == chainPermIndices[4*orderElt + symAdd]) {
+                    permIndex(face) = chainPermIndices[4*orderElt+1 + symAdd];
+                } else {
+                    permIndex(face) = -1;
+                    permIndex(adj) = -1;
+                    orderElt--;
+                    continue;
+                }
+            } else { // orderType[orderElt] == EDGE_CHAIN_INTERNAL_SECOND
+                if (permIndex(face) == -1) {
+                    permIndex(face) = chainPermIndices[4*orderElt + symAdd];
+                } else if (permIndex(face) == chainPermIndices[4*orderElt + symAdd]) {
+                    permIndex(face) = chainPermIndices[4*orderElt+1 + symAdd];
+                } else {
                     permIndex(face) = -1;
                     permIndex(adj) = -1;
                     orderElt--;
@@ -279,39 +335,11 @@ void NCollapsedChainSearcher::extendTri(const NGluingPermSearcher *s) {
             }
             permIndex(adj) = NPerm4::invS3[permIndex(face)];
             orderElt++;
-            continue;
         }
-        // If chainSym is true, add 2 to each index into chainPermIndices
-        int symAdd = chainSym[chainNo[orderElt]] ? 2 : 0;
-        if (orderType[orderElt] == EDGE_CHAIN_INTERNAL_FIRST) {
-            if (permIndex(face) < 0) {
-                permIndex(face) = chainPermIndices[4*orderElt + symAdd];
-            } else if (permIndex(face) == chainPermIndices[4*orderElt + symAdd]) {
-                permIndex(face) = chainPermIndices[4*orderElt+1 + symAdd];
-            } else {
-                permIndex(face) = -1;
-                permIndex(adj) = -1;
-                orderElt--;
-                continue;
-            }
-        } else { // orderType[orderElt] == EDGE_CHAIN_INTERNAL_SECOND
-            if (permIndex(face) == -1) {
-                permIndex(face) = chainPermIndices[4*orderElt + symAdd];
-            } else if (permIndex(face) == chainPermIndices[4*orderElt + symAdd]) {
-                permIndex(face) = chainPermIndices[4*orderElt+1 + symAdd];
-            } else {
-                permIndex(face) = -1;
-                permIndex(adj) = -1;
-                orderElt--;
-                continue;
-            }
+        // Reset
+        for (NTetFace f(0,0); ! f.isPastEnd(pairing_->size(), true); f++) {
+            permIndex(f) = -1;
         }
-        permIndex(adj) = NPerm4::invS3[permIndex(face)];
-        orderElt++;
-    }
-    // Reset
-    for (NTetFace f(0,0); ! f.isPastEnd(pairing_->size(), true); f++) {
-        permIndex(f) = -1;
     }
 }
 
