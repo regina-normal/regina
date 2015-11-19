@@ -248,6 +248,7 @@ Version 4.97  [ (under development) ]
           C++, the python == and != operators compare by reference.
           Every wrapped C++ class has an equalityType attribute in
           python to indicate which behaviour it uses.
+          Thanks to Matthias Goerner for his help with this.
 
 Version 4.96  [ 29 August, 2014 ]
 
