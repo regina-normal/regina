@@ -55,7 +55,7 @@ namespace regina {
  * the features of the accompanying smart pointer \c SafePtr are minimal:
  * one extra pointer that needs to be zero'd upon construction.
  *
- * Most classes subcleass from \c SafePointeeBase for python wrapping.
+ * Most classes subclass from \c SafePointeeBase for python wrapping.
  */
 template <class T>
 class SafePointeeBase {

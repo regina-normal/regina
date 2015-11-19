@@ -54,8 +54,6 @@
 
 namespace regina {
 
-template <class> class SafePointeeBase;
-
 /**
  * A helper class for \c SafePtr. The dereferencing of a \c SafePtr
  * is indirected through this class, i.e., \c SafePtr is pointing to this
