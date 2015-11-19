@@ -122,6 +122,16 @@ struct REGINA_API NSFSFibre {
      */
     bool operator == (const NSFSFibre& compare) const;
     /**
+     * Determines if this and the given exceptional fibre are different.
+     * This requires the fibres to have different values for \a alpha and/or
+     * to have different values for \a beta.
+     *
+     * @param compare the fibre with which this will be compared.
+     * @return \c true if and only if this and the given fibre are
+     * different.
+     */
+    bool operator != (const NSFSFibre& compare) const;
+    /**
      * Determines if this exceptional fibre is smaller than the given
      * fibre.  Fibres are sorted by \a alpha and then by \a beta.
      *
@@ -719,6 +729,21 @@ class REGINA_API NSFSpace : public NManifold {
         bool operator == (const NSFSpace& compare) const;
 
         /**
+         * Determines whether this and the given structure do not contain
+         * precisely the same representations of precisely the same
+         * Seifert fibred spaces.
+         *
+         * Note that this routine examines the particular representation of
+         * the Seifert fibred space.  Different Seifert parameters that give
+         * the same 3-manifold will be regarded as different by this routine.
+         *
+         * @param compare the representation with which this will be compared.
+         * @return \c true if and only if this and the given Seifert
+         * fibred space representations are different.
+         */
+        bool operator != (const NSFSpace& compare) const;
+
+        /**
          * Determines in a fairly ad-hoc fashion whether this representation
          * of this space is "smaller" than the given representation of the
          * given space.
@@ -826,12 +851,13 @@ inline void NSFSFibre::operator = (const NSFSFibre& cloneMe) {
     alpha = cloneMe.alpha;
     beta = cloneMe.beta;
 }
-inline bool NSFSFibre::operator == (const NSFSFibre& compare)
-        const {
+inline bool NSFSFibre::operator == (const NSFSFibre& compare) const {
     return (alpha == compare.alpha && beta == compare.beta);
 }
-inline bool NSFSFibre::operator < (const NSFSFibre& compare)
-        const {
+inline bool NSFSFibre::operator != (const NSFSFibre& compare) const {
+    return (alpha != compare.alpha || beta != compare.beta);
+}
+inline bool NSFSFibre::operator < (const NSFSFibre& compare) const {
     return (alpha < compare.alpha ||
         (alpha == compare.alpha && beta < compare.beta));
 }
@@ -864,6 +890,10 @@ inline NSFSpace::NSFSpace(const NSFSpace& cloneMe) : NManifold(),
 }
 
 inline NSFSpace::~NSFSpace() {
+}
+
+inline bool NSFSpace::operator != (const NSFSpace& compare) const {
+    return ! ((*this) == compare);
 }
 
 inline NSFSpace::classType NSFSpace::baseClass() const {
