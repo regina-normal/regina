@@ -80,6 +80,7 @@ BOOST_PYTHON_MODULE(engine) {
     boost::python::enum_<regina::python::EqualityType>("EqualityType")
         .value("BY_VALUE", regina::python::BY_VALUE)
         .value("BY_REFERENCE", regina::python::BY_REFERENCE)
+        .value("NEVER_INSTANTIATED", regina::python::NEVER_INSTANTIATED)
         ;
 
     // Core engine routines:

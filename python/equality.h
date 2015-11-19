@@ -62,6 +62,12 @@ enum EqualityType {
      * whether the underlying C++ \e pointers to \a x and \a y are the same.
      */
     BY_REFERENCE = 2,
+    /**
+     * No objects of the class \a C are ever instantiated.  This means that
+     * no comparisons are ever made.  An example of such a class is
+     * NExampleTriangulation, which consists entirely of static functions.
+     */
+    NEVER_INSTANTIATED = 3
 };
 
 /**
@@ -86,6 +92,28 @@ enum EqualityType {
  * EqualityType enum (either \a BY_VALUE or \a BY_REFERENCE).
  */
 struct add_eq_operators;
+
+/**
+ * Indicates that a C++ class is never instantiated, and that its python
+ * wrapper class should not support the operators == or !=.
+ *
+ * This should only be used with C++ classes that are never instantiated (such
+ * as NExampleTriangulation, which consists entirely of static methods).
+ * As such, it should be impossible to even call the == and != operators
+ * under python.
+ *
+ * To use this for some C++ class \a T in Regina, simply call
+ * <t>c.def(regina::python::no_eq_operators())</t>, where \a c is the
+ * boost::python::class_ object that wraps \a T.  The effect will be as follows:
+ *
+ * - Placeholder operators == and != will be added to the python wrapper class
+ *   (thus overriding any boost-provided default).  These operators will
+ *   throw python exceptions if they are ever called.
+ *
+ * - The attribute \a equalityType will be added to the python wrapper class.
+ *   Its value will be the EqualityType enum constant \a NEVER_INSTANTIATED.
+ */
+struct no_eq_operators;
 
 #ifndef __DOXYGEN
 namespace add_eq_operators_detail {
@@ -158,6 +186,27 @@ struct add_eq_operators : boost::python::def_visitor<add_eq_operators> {
             add_eq_operators_detail::EqualityOperators<Type>::equalityType();
     }
 };
+
+struct no_eq_operators : boost::python::def_visitor<no_eq_operators> {
+    friend class boost::python::def_visitor_access;
+
+    template <typename T>
+    static void no_equality_operators(const T&, const T&) {
+        PyErr_SetString(PyExc_RuntimeError,
+            "It should be impossible to create objects of this class, and so "
+            "there are no operators == or !=.");
+    }
+
+    template <typename Class>
+    void visit(Class& c) const {
+        typedef typename Class::wrapped_type Type;
+
+        c.def("__eq__", &no_equality_operators<Type>);
+        c.def("__ne__", &no_equality_operators<Type>);
+        c.attr("equalityType") = EqualityType::NEVER_INSTANTIATED;
+    }
+};
+
 #endif // __DOXYGEN
 
 } } // namespace regina::python

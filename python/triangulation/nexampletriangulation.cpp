@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
+#include "../equality.h"
 
 using namespace boost::python;
 using regina::NExampleTriangulation;
@@ -97,7 +98,7 @@ void addNExampleTriangulation() {
         .def("cuspedGenusTwoTorus",
             &NExampleTriangulation::cuspedGenusTwoTorus,
             return_value_policy<manage_new_object>())
-        // No add_eq_operators() since this class is never instantiated.
+        .def(regina::python::no_eq_operators())
         .staticmethod("threeSphere")
         .staticmethod("bingsHouse")
         .staticmethod("s2xs1")
