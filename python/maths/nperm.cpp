@@ -37,6 +37,7 @@
 #include "Python.h"
 #include <boost/python.hpp>
 #include "maths/nperm.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NPerm;
