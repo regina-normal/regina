@@ -87,6 +87,7 @@ enum EqualityType {
  */
 struct add_eq_operators;
 
+#ifndef __DOXYGEN
 namespace add_eq_operators_detail {
     template <class T> void operator == (const T& a, const T& b);
     template <class T> void operator != (const T& a, const T& b);
@@ -157,5 +158,6 @@ struct add_eq_operators : boost::python::def_visitor<add_eq_operators> {
             add_eq_operators_detail::EqualityOperators<Type>::equalityType();
     }
 };
+#endif // __DOXYGEN
 
 } } // namespace regina::python
