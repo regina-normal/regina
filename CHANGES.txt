@@ -76,6 +76,8 @@ Version 4.97  [ (under development) ]
               and whiteheadLinkComplement() to figureEight(), trefoil()
               and whiteheadLink() respectively.  The old names are kept
               but deprecated.
+        Class NFacePair, NFacetSpec:
+            - Added != operators to complement the existing == operators.
         Class NGenericFacetPairing, NFacePairing, Dim2EdgePairing:
             - Routines dotHeader() and writeDotHeader() no longer set an
               explicit background colour.
@@ -89,6 +91,8 @@ Version 4.97  [ (under development) ]
               routine, and set through an optional third argument to setDirs().
             - The homeDir argument to setDirs() may now be the empty string,
               which signals that the directory should not be changed.
+        Class NGroupExpression, NGroupExpressionTerm:
+            - Added != operators to complement the existing == operators.
         Class NMatrix:
             - The destructor and writeMatrix() are no longer virtual.
             - Now derives from Output, and provides str() and detail()
