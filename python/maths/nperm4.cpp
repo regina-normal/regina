@@ -38,6 +38,7 @@
 #include <boost/python.hpp>
 #include "maths/nperm4.h"
 #include "../globalarray.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NPerm4;
@@ -109,8 +110,6 @@ void addNPerm4() {
             .def("sign", &NPerm4::sign)
             .def("__getitem__", perm_getItem)
             .def("preImageOf", &NPerm4::preImageOf)
-            .def(self == self)
-            .def(self != self)
             .def("compareWith", &NPerm4::compareWith)
             .def("isIdentity", &NPerm4::isIdentity)
             .def("toString", &NPerm4::toString)
@@ -122,6 +121,7 @@ void addNPerm4() {
             .def("orderedSnIndex", &NPerm4::orderedS4Index)
             .def("__str__", &NPerm4::str)
             .def("__repr__", &NPerm4::str)
+            .def(regina::python::add_eq_operators())
             .staticmethod("fromPermCode")
             .staticmethod("fromPermCode2")
             .staticmethod("isPermCode")

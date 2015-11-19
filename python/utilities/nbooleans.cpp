@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "utilities/nbooleans.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NBoolSet;
@@ -50,9 +51,7 @@ void addNTriBool() {
         .def("setTrue", &NTriBool::setTrue)
         .def("setFalse", &NTriBool::setFalse)
         .def("setUnknown", &NTriBool::setUnknown)
-        .def(self == self)
         // .def(self == bool())
-        .def(self != self)
         // .def(self != bool())
         .def(self |= self)
         // .def(self |= bool())
@@ -64,6 +63,7 @@ void addNTriBool() {
         // .def(self & bool())
         .def(~ self)
         .def(self_ns::str(self))
+        .def(regina::python::add_eq_operators())
     ;
 
     // Apparently there is no way in python to make a module attribute
@@ -87,8 +87,6 @@ void addNBoolSet() {
         .def("removeFalse", &NBoolSet::removeFalse)
         .def("empty", &NBoolSet::empty)
         .def("fill", &NBoolSet::fill)
-        .def(self == self)
-        .def(self != self)
         .def(self < self)
         .def(self > self)
         .def(self <= self)
@@ -105,6 +103,7 @@ void addNBoolSet() {
         .def("fromByteCode", &NBoolSet::fromByteCode)
         .staticmethod("fromByteCode")
         .def(self_ns::str(self))
+        .def(regina::python::add_eq_operators())
     ;
 
     // Apparently there is no way in python to make a module attribute

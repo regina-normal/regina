@@ -38,6 +38,7 @@
 #include <boost/python.hpp>
 #include "maths/nperm5.h"
 #include "../globalarray.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NPerm5;
@@ -73,8 +74,6 @@ void addNPerm5() {
         .def("sign", &NPerm5::sign)
         .def("__getitem__", perm5_getItem)
         .def("preImageOf", &NPerm5::preImageOf)
-        .def(self == self)
-        .def(self != self)
         .def("compareWith", &NPerm5::compareWith)
         .def("isIdentity", &NPerm5::isIdentity)
         .def("toString", &NPerm5::toString)
@@ -87,6 +86,7 @@ void addNPerm5() {
         .def("orderedSnIndex", &NPerm5::orderedS5Index)
         .def("__str__", &NPerm5::str)
         .def("__repr__", &NPerm5::str)
+        .def(regina::python::add_eq_operators())
         .staticmethod("fromPermCode")
         .staticmethod("isPermCode")
     ;

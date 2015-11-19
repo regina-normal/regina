@@ -38,7 +38,6 @@
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
-#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NTriangulation;
@@ -449,7 +448,6 @@ void addNTriangulation() {
             return_value_policy<manage_new_object>())
         .def("enterTextTriangulation", enterTextTriangulation_stdio,
             return_value_policy<manage_new_object>())
-        .def(regina::python::add_eq_operators())
         .staticmethod("rehydrate")
         .staticmethod("fromIsoSig")
         .staticmethod("isoSigComponentSize")

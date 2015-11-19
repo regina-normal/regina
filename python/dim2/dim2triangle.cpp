@@ -38,6 +38,7 @@
 #include "dim2/dim2triangle.h"
 #include "dim2/dim2triangulation.h"
 #include "dim2/dim2vertex.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Dim2Triangle;
@@ -77,6 +78,7 @@ void addDim2Triangle() {
         .def("detail", &Dim2Triangle::detail)
         .def("toStringLong", &Dim2Triangle::toStringLong)
         .def("__str__", &Dim2Triangle::str)
+        .def(regina::python::add_eq_operators())
     ;
 }
 

@@ -42,6 +42,7 @@
 #endif
 
 #include <boost/python.hpp>
+#include "helpers.h"
 
 namespace regina {
 
@@ -182,6 +183,7 @@ class GlobalArray {
                     ::boost::python::return_value_policy<ReturnValuePolicy>())
                 .def("__len__", &GlobalArray<T, ReturnValuePolicy>::size)
                 .def(::boost::python::self_ns::str(::boost::python::self))
+                .def(regina::python::add_eq_operators())
             ;
         }
 
@@ -409,6 +411,7 @@ class GlobalArray2D {
                     ::boost::python::return_internal_reference<>())
                 .def("__len__", &GlobalArray2D<T, ReturnValuePolicy>::rows)
                 .def(::boost::python::self_ns::str(::boost::python::self))
+                .def(regina::python::add_eq_operators())
             ;
         }
 
@@ -649,6 +652,7 @@ class GlobalArray3D {
                 .def("__len__",
                     &GlobalArray3D<T, ReturnValuePolicy>::dim1)
                 .def(::boost::python::self_ns::str(::boost::python::self))
+                .def(regina::python::add_eq_operators())
             ;
         }
 };

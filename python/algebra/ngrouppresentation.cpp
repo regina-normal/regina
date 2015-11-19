@@ -37,6 +37,7 @@
 #include "algebra/ngrouppresentation.h"
 #include "algebra/nhomgrouppresentation.h"
 #include "algebra/nmarkedabeliangroup.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NGroupExpressionTerm;
@@ -112,11 +113,11 @@ void addNGroupPresentation() {
         .def_readwrite("exponent", &NGroupExpressionTerm::exponent)
         .def(init<unsigned long, long>())
         .def(init<const NGroupExpressionTerm&>())
-        .def(self == self)
         .def(self < self)
         .def("inverse", &NGroupExpressionTerm::inverse)
         .def(self += self)
         .def(self_ns::str(self))
+        .def(regina::python::add_eq_operators())
     ;
 
     class_<NGroupExpression,
@@ -124,7 +125,6 @@ void addNGroupPresentation() {
             ("NGroupExpression")
         .def(init<const NGroupExpression&>())
         .def("__init__", boost::python::make_constructor(newExpression_str))
-        .def(self == self)
         .def("getTerms", getTerms_list)
         .def("getNumberOfTerms", &NGroupExpression::getNumberOfTerms)
         .def("wordLength", &NGroupExpression::wordLength)
@@ -158,6 +158,7 @@ void addNGroupPresentation() {
         .def("detail", &NGroupExpression::detail)
         .def("toStringLong", &NGroupExpression::toStringLong)
         .def("__str__", &NGroupExpression::str)
+        .def(regina::python::add_eq_operators())
     ;
 
     class_<NGroupPresentation,
@@ -212,6 +213,7 @@ void addNGroupPresentation() {
         .def("detail", &NGroupPresentation::detail)
         .def("toStringLong", &NGroupPresentation::toStringLong)
         .def("__str__", &NGroupPresentation::str)
+        .def(regina::python::add_eq_operators())
     ;
 }
 

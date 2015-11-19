@@ -36,6 +36,7 @@
 #include "census/nfacepairing.h"
 #include "triangulation/nfacepair.h"
 #include "triangulation/ntriangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NFacePairing;
@@ -138,6 +139,7 @@ void addNFacePairing() {
         .def("hasDoubleStar", &NFacePairing::hasDoubleStar)
         .def("hasDoubleSquare", &NFacePairing::hasDoubleSquare)
         .def("__str__", &NFacePairing::str)
+        .def(regina::python::add_eq_operators())
         .staticmethod("fromTextRep")
         .staticmethod("writeDotHeader")
         .staticmethod("dotHeader")
