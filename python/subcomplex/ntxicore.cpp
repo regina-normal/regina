@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "subcomplex/ntxicore.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NTxICore;
@@ -69,6 +70,7 @@ void addNTxICore() {
         .def("detail", &NTxICore::detail)
         .def("toStringLong", &NTxICore::toStringLong)
         .def("__str__", &NTxICore::str)
+        .def(regina::python::add_eq_operators())
     ;
 
     class_<NTxIDiagonalCore, bases<regina::NTxICore>,
@@ -76,11 +78,13 @@ void addNTxICore() {
             ("NTxIDiagonalCore", init<unsigned long, unsigned long>())
         .def("size", &NTxIDiagonalCore::size)
         .def("k", &NTxIDiagonalCore::k)
+        .def(regina::python::add_eq_operators())
     ;
 
     class_<NTxIParallelCore, bases<regina::NTxICore>,
             std::auto_ptr<NTxIParallelCore>, boost::noncopyable>
             ("NTxIParallelCore", init<>())
+        .def(regina::python::add_eq_operators())
     ;
 
     implicitly_convertible<std::auto_ptr<NTxIDiagonalCore>,

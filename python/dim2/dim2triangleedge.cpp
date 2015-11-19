@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "generic/nfacetspec.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Dim2TriangleEdge;
@@ -63,9 +64,9 @@ void addDim2TriangleEdge() {
         .def("setPastEnd", &Dim2TriangleEdge::setPastEnd)
         .def("inc", triangleedge_inc_operator)
         .def("dec", triangleedge_dec_operator)
-        .def(self == self)
         .def(self < self)
         .def(self <= self)
+        .def(regina::python::add_eq_operators())
     ;
 }
 

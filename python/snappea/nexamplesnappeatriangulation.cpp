@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "snappea/nexamplesnappeatriangulation.h"
 #include "snappea/nsnappeatriangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NExampleSnapPeaTriangulation;
@@ -55,6 +56,7 @@ void addNExampleSnapPeaTriangulation() {
             return_value_policy<manage_new_object>())
         .def("x101", &NExampleSnapPeaTriangulation::x101,
             return_value_policy<manage_new_object>())
+        .def(regina::python::no_eq_operators())
         .staticmethod("figureEight")
         .staticmethod("trefoil")
         .staticmethod("whiteheadLink")

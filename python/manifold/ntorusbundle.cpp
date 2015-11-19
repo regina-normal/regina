@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "algebra/nabeliangroup.h"
 #include "manifold/ntorusbundle.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NMatrix2;
@@ -48,6 +49,7 @@ void addNTorusBundle() {
         .def(init<const NTorusBundle&>())
         .def("getMonodromy", &NTorusBundle::getMonodromy,
             return_internal_reference<>())
+        .def(regina::python::add_eq_operators())
     ;
 
     implicitly_convertible<std::auto_ptr<NTorusBundle>,

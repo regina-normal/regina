@@ -37,6 +37,7 @@
 #include "algebra/ngrouppresentation.h"
 #include "algebra/nhomgrouppresentation.h"
 #include "algebra/nmarkedabeliangroup.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NGroupExpression;
@@ -86,6 +87,7 @@ void addNHomGroupPresentation() {
         .def("detail", &NHomGroupPresentation::detail)
         .def("toStringLong", &NHomGroupPresentation::toStringLong)
         .def("__str__", &NHomGroupPresentation::str)
+        .def(regina::python::add_eq_operators())
     ;
 }
 

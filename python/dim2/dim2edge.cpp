@@ -40,6 +40,7 @@
 #include "dim2/dim2triangulation.h"
 #include "dim2/dim2vertex.h"
 #include "../globalarray.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Dim2Edge;
@@ -58,8 +59,7 @@ void addDim2Edge() {
             return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim2EdgeEmbedding::getEdge)
         .def("getVertices", &Dim2EdgeEmbedding::getVertices)
-        .def(self == self)
-        .def(self != self)
+        .def(regina::python::add_eq_operators())
     ;
 
     scope s = class_<Dim2Edge, std::auto_ptr<Dim2Edge>, boost::noncopyable>
@@ -83,6 +83,7 @@ void addDim2Edge() {
         .def("detail", &Dim2Edge::detail)
         .def("toStringLong", &Dim2Edge::toStringLong)
         .def("__str__", &Dim2Edge::str)
+        .def(regina::python::add_eq_operators())
     ;
 
     s.attr("ordering") = &Dim2Edge_ordering;

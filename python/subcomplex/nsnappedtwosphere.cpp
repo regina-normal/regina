@@ -37,6 +37,7 @@
 #include "subcomplex/nsnappedtwosphere.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NSnappedTwoSphere;
@@ -66,6 +67,7 @@ void addNSnappedTwoSphere() {
         .def("detail", &NSnappedTwoSphere::detail)
         .def("toStringLong", &NSnappedTwoSphere::toStringLong)
         .def("__str__", &NSnappedTwoSphere::str)
+        .def(regina::python::add_eq_operators())
         .staticmethod("formsSnappedTwoSphere")
     ;
 }

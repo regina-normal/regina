@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Isomorphism;
@@ -76,6 +77,7 @@ void addNIsomorphism() {
         .def("detail", &NIsomorphism::detail)
         .def("toStringLong", &NIsomorphism::toStringLong)
         .def("__str__", &NIsomorphism::str)
+        .def(regina::python::add_eq_operators())
         .staticmethod("random")
         .staticmethod("identity")
     ;

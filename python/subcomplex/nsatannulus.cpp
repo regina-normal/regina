@@ -37,6 +37,7 @@
 #include "subcomplex/nsatannulus.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NPerm4;
@@ -78,8 +79,6 @@ void addNSatAnnulus() {
         .def("roles", roles_read)
         .def("setTet", tet_write)
         .def("setRoles", roles_write)
-        .def(self == self)
-        .def(self != self)
         .def("meetsBoundary", &NSatAnnulus::meetsBoundary)
         .def("switchSides", &NSatAnnulus::switchSides)
         .def("otherSide", &NSatAnnulus::otherSide)
@@ -95,6 +94,7 @@ void addNSatAnnulus() {
         .def("transform", &NSatAnnulus::transform)
         .def("image", &NSatAnnulus::image)
         .def("attachLST", &NSatAnnulus::attachLST)
+        .def(regina::python::add_eq_operators())
     ;
 }
 

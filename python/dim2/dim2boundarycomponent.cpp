@@ -36,6 +36,7 @@
 #include "dim2/dim2boundarycomponent.h"
 #include "dim2/dim2edge.h"
 #include "dim2/dim2vertex.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Dim2BoundaryComponent;
@@ -57,6 +58,7 @@ void addDim2BoundaryComponent() {
         .def("detail", &Dim2BoundaryComponent::detail)
         .def("toStringLong", &Dim2BoundaryComponent::toStringLong)
         .def("__str__", &Dim2BoundaryComponent::str)
+        .def(regina::python::add_eq_operators())
     ;
 }
 

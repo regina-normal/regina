@@ -40,6 +40,7 @@
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
 #include "../globalarray.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NVertex;
@@ -82,8 +83,7 @@ void addNVertex() {
             return_value_policy<reference_existing_object>())
         .def("getVertex", &NVertexEmbedding::getVertex)
         .def("getVertices", &NVertexEmbedding::getVertices)
-        .def(self == self)
-        .def(self != self)
+        .def(regina::python::add_eq_operators())
     ;
 
     scope s = class_<NVertex, std::auto_ptr<NVertex>, boost::noncopyable>
@@ -118,6 +118,7 @@ void addNVertex() {
         .def("detail", &NVertex::detail)
         .def("toStringLong", &NVertex::toStringLong)
         .def("__str__", &NVertex::str)
+        .def(regina::python::add_eq_operators())
     ;
 
     enum_<regina::NVertex::LinkType>("LinkType")

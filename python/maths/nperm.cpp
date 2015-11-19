@@ -37,6 +37,7 @@
 #include "Python.h"
 #include <boost/python.hpp>
 #include "maths/nperm.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NPerm;
@@ -85,8 +86,6 @@ void addNPerm(const char* name) {
         .def("sign", &NPerm<n>::sign)
         .def("__getitem__", perm_getItem<n>)
         .def("preImageOf", &NPerm<n>::preImageOf)
-        .def(self == self)
-        .def(self != self)
         .def("compareWith", &NPerm<n>::compareWith)
         .def("isIdentity", &NPerm<n>::isIdentity)
         .def("atIndex", &NPerm<n>::atIndex)
@@ -96,6 +95,7 @@ void addNPerm(const char* name) {
         .def("trunc", &NPerm<n>::trunc)
         .def("__str__", &NPerm<n>::str)
         .def("__repr__", &NPerm<n>::str)
+        .def(regina::python::add_eq_operators())
         .staticmethod("fromPermCode")
         .staticmethod("isPermCode")
         .staticmethod("atIndex")

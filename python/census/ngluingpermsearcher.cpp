@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "census/ngluingpermsearcher.h"
 #include "triangulation/ntriangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NGluingPermSearcher;
@@ -44,6 +45,7 @@ void addNGluingPermSearcher() {
         scope s = class_<NGluingPermSearcher,
                 std::auto_ptr<NGluingPermSearcher>,
                 boost::noncopyable>("NGluingPermSearcher", no_init)
+            .def(regina::python::add_eq_operators())
         ;
 
         enum_<regina::NGluingPermSearcher::PurgeFlags>("PurgeFlags")

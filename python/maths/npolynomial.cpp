@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "maths/npolynomial.h"
 #include "maths/nrational.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NPolynomial;
@@ -130,8 +131,6 @@ void addNPolynomial() {
         .def("__getitem__", getItem, return_internal_reference<>())
         .def("__setitem__", setItem)
         .def("set", &NPolynomial<NRational>::set)
-        .def(self == self)
-        .def(self != self)
         .def("swap", &NPolynomial<NRational>::swap)
         .def(self *= NRational())
         .def(self /= NRational())
@@ -143,6 +142,7 @@ void addNPolynomial() {
         .def("gcdWithCoeffs", &NPolynomial<NRational>::gcdWithCoeffs<NRational>)
         .def(self_ns::str(self))
         .def(self_ns::repr(self))
+        .def(regina::python::add_eq_operators())
     ;
 }
 

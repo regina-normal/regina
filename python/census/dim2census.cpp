@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "census/dim2census.h"
 #include "dim2/dim2triangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Dim2Census;
@@ -55,6 +56,7 @@ void addDim2Census() {
             boost::noncopyable>("Dim2Census", no_init)
         .def("formCensus", formCensus)
         .def("formPartialCensus", formPartialCensus)
+        .def(regina::python::no_eq_operators())
         .staticmethod("formCensus")
         .staticmethod("formPartialCensus")
     ;

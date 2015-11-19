@@ -35,6 +35,8 @@
 #include <boost/python.hpp>
 #include "generic/simplex.h"
 #include "generic/triangulation.h"
+#include "maths/nperm5.h" // Specialisation needed for 4-D case.
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Simplex;
@@ -64,6 +66,7 @@ void addSimplex(const char* name) {
         .def("detail", &Simplex<dim>::detail)
         .def("toStringLong", &Simplex<dim>::toStringLong)
         .def("__str__", &Simplex<dim>::str)
+        .def(regina::python::add_eq_operators())
     ;
 }
 

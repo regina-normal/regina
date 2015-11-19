@@ -41,6 +41,7 @@
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
 #include "../globalarray.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NTriangle;
@@ -60,8 +61,7 @@ void addNTriangle() {
         .def("getFace", &NTriangleEmbedding::getFace)
         .def("getTriangle", &NTriangleEmbedding::getTriangle)
         .def("getVertices", &NTriangleEmbedding::getVertices)
-        .def(self == self)
-        .def(self != self)
+        .def(regina::python::add_eq_operators())
     ;
 
     {
@@ -93,6 +93,7 @@ void addNTriangle() {
             .def("detail", &NTriangle::detail)
             .def("toStringLong", &NTriangle::toStringLong)
             .def("__str__", &NTriangle::str)
+            .def(regina::python::add_eq_operators())
         ;
 
         enum_<regina::NTriangle::Type>("Type")

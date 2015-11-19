@@ -40,6 +40,7 @@
 #include "treewidth/ntreedecomposition.h"
 #include "triangulation/nfacepairing.h"
 #include "triangulation/ntriangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NTreeBag;
@@ -166,6 +167,7 @@ void addNTreeDecomposition() {
         .def("detail", &NTreeBag::detail)
         .def("toStringLong", &NTreeBag::toStringLong)
         .def("__str__", &NTreeBag::str)
+        .def(regina::python::add_eq_operators())
     ;
 
     class_<NTreeDecomposition, std::auto_ptr<NTreeDecomposition>,
@@ -205,6 +207,7 @@ void addNTreeDecomposition() {
         .def("detail", &NTreeDecomposition::detail)
         .def("toStringLong", &NTreeDecomposition::toStringLong)
         .def("__str__", &NTreeDecomposition::str)
+        .def(regina::python::add_eq_operators())
     ;
 }
 

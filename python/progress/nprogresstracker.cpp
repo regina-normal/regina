@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "progress/nprogresstracker.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NProgressTracker;
@@ -51,6 +52,7 @@ void addNProgressTracker() {
         .def("isCancelled", &NProgressTracker::isCancelled)
         .def("setPercent", &NProgressTracker::setPercent)
         .def("setFinished", &NProgressTracker::setFinished)
+        .def(regina::python::add_eq_operators())
     ;
 }
 

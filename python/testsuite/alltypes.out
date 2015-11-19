@@ -1,0 +1,678 @@
+Component10 : class
+Equality type : BY_REFERENCE
+
+Component11 : class
+Equality type : BY_REFERENCE
+
+Component12 : class
+Equality type : BY_REFERENCE
+
+Component13 : class
+Equality type : BY_REFERENCE
+
+Component14 : class
+Equality type : BY_REFERENCE
+
+Component15 : class
+Equality type : BY_REFERENCE
+
+Component2 : class
+Equality type : BY_REFERENCE
+
+Component3 : class
+Equality type : BY_REFERENCE
+
+Component4 : class
+Equality type : BY_REFERENCE
+
+Component5 : class
+Equality type : BY_REFERENCE
+
+Component6 : class
+Equality type : BY_REFERENCE
+
+Component7 : class
+Equality type : BY_REFERENCE
+
+Component8 : class
+Equality type : BY_REFERENCE
+
+Component9 : class
+Equality type : BY_REFERENCE
+
+Dim2BoundaryComponent : class
+Equality type : BY_REFERENCE
+
+Dim2Census : class
+Equality type : NEVER_INSTANTIATED
+
+Dim2Component : class
+Equality type : BY_REFERENCE
+
+Dim2Edge : class
+Equality type : BY_REFERENCE
+
+Dim2EdgeEmbedding : class
+Equality type : BY_VALUE
+
+Dim2EdgePairing : class
+Equality type : BY_REFERENCE
+
+Dim2ExampleTriangulation : class
+Equality type : NEVER_INSTANTIATED
+
+Dim2Isomorphism : class
+Equality type : BY_REFERENCE
+
+Dim2Triangle : class
+Equality type : BY_REFERENCE
+
+Dim2TriangleEdge : class
+Equality type : BY_VALUE
+
+Dim2Triangulation : class
+Equality type : BY_REFERENCE
+
+Dim2Vertex : class
+Equality type : BY_REFERENCE
+
+Dim2VertexEmbedding : class
+Equality type : BY_VALUE
+
+FacetPairing10 : class
+Equality type : BY_REFERENCE
+
+FacetPairing11 : class
+Equality type : BY_REFERENCE
+
+FacetPairing12 : class
+Equality type : BY_REFERENCE
+
+FacetPairing13 : class
+Equality type : BY_REFERENCE
+
+FacetPairing14 : class
+Equality type : BY_REFERENCE
+
+FacetPairing15 : class
+Equality type : BY_REFERENCE
+
+FacetPairing2 : class
+Equality type : BY_REFERENCE
+
+FacetPairing4 : class
+Equality type : BY_REFERENCE
+
+FacetPairing5 : class
+Equality type : BY_REFERENCE
+
+FacetPairing6 : class
+Equality type : BY_REFERENCE
+
+FacetPairing7 : class
+Equality type : BY_REFERENCE
+
+FacetPairing8 : class
+Equality type : BY_REFERENCE
+
+FacetPairing9 : class
+Equality type : BY_REFERENCE
+
+GlobalArray2D_NPerm4 : class
+Equality type : BY_REFERENCE
+
+GlobalArray2D_NPerm5 : class
+Equality type : BY_REFERENCE
+
+GlobalArray2D_int : class
+Equality type : BY_REFERENCE
+
+GlobalArray3D_NPerm5 : class
+Equality type : BY_REFERENCE
+
+GlobalArray3D_int : class
+Equality type : BY_REFERENCE
+
+GlobalArray_NPerm3 : class
+Equality type : BY_REFERENCE
+
+GlobalArray_NPerm4 : class
+Equality type : BY_REFERENCE
+
+GlobalArray_NPerm5 : class
+Equality type : BY_REFERENCE
+
+GlobalArray_char_string : class
+Equality type : BY_REFERENCE
+
+GlobalArray_int : class
+Equality type : BY_REFERENCE
+
+GlobalArray_unsigned : class
+Equality type : BY_REFERENCE
+
+Isomorphism10 : class
+Equality type : BY_REFERENCE
+
+Isomorphism11 : class
+Equality type : BY_REFERENCE
+
+Isomorphism12 : class
+Equality type : BY_REFERENCE
+
+Isomorphism13 : class
+Equality type : BY_REFERENCE
+
+Isomorphism14 : class
+Equality type : BY_REFERENCE
+
+Isomorphism15 : class
+Equality type : BY_REFERENCE
+
+Isomorphism2 : class
+Equality type : BY_REFERENCE
+
+Isomorphism3 : class
+Equality type : BY_REFERENCE
+
+Isomorphism4 : class
+Equality type : BY_REFERENCE
+
+Isomorphism5 : class
+Equality type : BY_REFERENCE
+
+Isomorphism6 : class
+Equality type : BY_REFERENCE
+
+Isomorphism7 : class
+Equality type : BY_REFERENCE
+
+Isomorphism8 : class
+Equality type : BY_REFERENCE
+
+Isomorphism9 : class
+Equality type : BY_REFERENCE
+
+Locale : class
+Equality type : NEVER_INSTANTIATED
+
+NAbelianGroup : class
+Equality type : BY_VALUE
+
+NAngleStructure : class
+Equality type : BY_REFERENCE
+
+NAngleStructureList : class
+Equality type : BY_REFERENCE
+
+NAugTriSolidTorus : class
+Equality type : BY_REFERENCE
+
+NBlockedSFS : class
+Equality type : BY_REFERENCE
+
+NBlockedSFSLoop : class
+Equality type : BY_REFERENCE
+
+NBlockedSFSPair : class
+Equality type : BY_REFERENCE
+
+NBlockedSFSTriple : class
+Equality type : BY_REFERENCE
+
+NBoolSet : class
+Equality type : BY_VALUE
+
+NBoundaryComponent : class
+Equality type : BY_REFERENCE
+
+NCensus : class
+Equality type : NEVER_INSTANTIATED
+
+NCensusDB : class
+Equality type : BY_REFERENCE
+
+NCensusHit : class
+Equality type : BY_REFERENCE
+
+NCensusHits : class
+Equality type : BY_REFERENCE
+
+NComponent : class
+Equality type : BY_REFERENCE
+
+NContainer : class
+Equality type : BY_REFERENCE
+
+NCusp : class
+Equality type : BY_REFERENCE
+
+NCyclotomic : class
+Equality type : BY_VALUE
+
+NDiscSetSurface : class
+Equality type : BY_REFERENCE
+
+NDiscSetTet : class
+Equality type : BY_REFERENCE
+
+NDiscSpec : class
+Equality type : BY_VALUE
+
+NDiscSpecIterator : class
+Equality type : BY_VALUE
+
+NDiscType : class
+Equality type : BY_VALUE
+
+NEdge : class
+Equality type : BY_REFERENCE
+
+NEdgeEmbedding : class
+Equality type : BY_VALUE
+
+NExampleSnapPeaTriangulation : class
+Equality type : NEVER_INSTANTIATED
+
+NExampleTriangulation : class
+Equality type : NEVER_INSTANTIATED
+
+NFace : class
+Equality type : BY_REFERENCE
+
+NFaceEmbedding : class
+Equality type : BY_VALUE
+
+NFacePair : class
+Equality type : BY_VALUE
+
+NFacePairing : class
+Equality type : BY_REFERENCE
+
+NFileInfo : class
+Equality type : BY_REFERENCE
+
+NGlobalDirs : class
+Equality type : NEVER_INSTANTIATED
+
+NGluingPermSearcher : class
+Equality type : BY_REFERENCE
+
+NGraphLoop : class
+Equality type : BY_REFERENCE
+
+NGraphPair : class
+Equality type : BY_REFERENCE
+
+NGraphTriple : class
+Equality type : BY_REFERENCE
+
+NGroupExpression : class
+Equality type : BY_VALUE
+
+NGroupExpressionTerm : class
+Equality type : BY_VALUE
+
+NGroupPresentation : class
+Equality type : BY_REFERENCE
+
+NHandlebody : class
+Equality type : BY_VALUE
+
+NHomGroupPresentation : class
+Equality type : BY_REFERENCE
+
+NHomMarkedAbelianGroup : class
+Equality type : BY_REFERENCE
+
+NHomologicalData : class
+Equality type : BY_REFERENCE
+
+NInteger : class
+Equality type : BY_VALUE
+
+NIsomorphism : class
+Equality type : BY_REFERENCE
+
+NL31Pillow : class
+Equality type : BY_REFERENCE
+
+NLargeInteger : class
+Equality type : BY_VALUE
+
+NLayeredChain : class
+Equality type : BY_REFERENCE
+
+NLayeredChainPair : class
+Equality type : BY_REFERENCE
+
+NLayeredLensSpace : class
+Equality type : BY_REFERENCE
+
+NLayeredLoop : class
+Equality type : BY_REFERENCE
+
+NLayeredSolidTorus : class
+Equality type : BY_REFERENCE
+
+NLayeredTorusBundle : class
+Equality type : BY_REFERENCE
+
+NLayering : class
+Equality type : BY_REFERENCE
+
+NLensSpace : class
+Equality type : BY_VALUE
+
+NManifold : class
+Equality type : BY_REFERENCE
+
+NMarkedAbelianGroup : class
+Equality type : BY_VALUE
+
+NMatrix2 : class
+Equality type : BY_VALUE
+
+NMatrix2Row : class
+Equality type : BY_VALUE
+
+NMatrixInt : class
+Equality type : BY_REFERENCE
+
+NNormalSurface : class
+Equality type : BY_REFERENCE
+
+NNormalSurfaceList : class
+Equality type : BY_REFERENCE
+
+NPDF : class
+Equality type : BY_REFERENCE
+
+NPacket : class
+Equality type : BY_REFERENCE
+
+NPerm10 : class
+Equality type : BY_VALUE
+
+NPerm11 : class
+Equality type : BY_VALUE
+
+NPerm12 : class
+Equality type : BY_VALUE
+
+NPerm13 : class
+Equality type : BY_VALUE
+
+NPerm14 : class
+Equality type : BY_VALUE
+
+NPerm15 : class
+Equality type : BY_VALUE
+
+NPerm16 : class
+Equality type : BY_VALUE
+
+NPerm3 : class
+Equality type : BY_VALUE
+
+NPerm4 : class
+Equality type : BY_VALUE
+
+NPerm5 : class
+Equality type : BY_VALUE
+
+NPerm6 : class
+Equality type : BY_VALUE
+
+NPerm7 : class
+Equality type : BY_VALUE
+
+NPerm8 : class
+Equality type : BY_VALUE
+
+NPerm9 : class
+Equality type : BY_VALUE
+
+NPillowTwoSphere : class
+Equality type : BY_REFERENCE
+
+NPlugTriSolidTorus : class
+Equality type : BY_REFERENCE
+
+NPluggedTorusBundle : class
+Equality type : BY_REFERENCE
+
+NPolynomial : class
+Equality type : BY_VALUE
+
+NPrimes : class
+Equality type : NEVER_INSTANTIATED
+
+NPrismSpec : class
+Equality type : BY_VALUE
+
+NProgressTracker : class
+Equality type : BY_REFERENCE
+
+NRational : class
+Equality type : BY_VALUE
+
+NSFSFibre : class
+Equality type : BY_VALUE
+
+NSFSpace : class
+Equality type : BY_VALUE
+
+NSatAnnulus : class
+Equality type : BY_VALUE
+
+NSatBlock : class
+Equality type : BY_REFERENCE
+
+NSatBlockSpec : class
+Equality type : BY_VALUE
+
+NSatCube : class
+Equality type : BY_REFERENCE
+
+NSatLST : class
+Equality type : BY_REFERENCE
+
+NSatLayering : class
+Equality type : BY_REFERENCE
+
+NSatMobius : class
+Equality type : BY_REFERENCE
+
+NSatReflectorStrip : class
+Equality type : BY_REFERENCE
+
+NSatRegion : class
+Equality type : BY_REFERENCE
+
+NSatTriPrism : class
+Equality type : BY_REFERENCE
+
+NScript : class
+Equality type : BY_REFERENCE
+
+NSignature : class
+Equality type : BY_REFERENCE
+
+NSimpleSurfaceBundle : class
+Equality type : BY_VALUE
+
+NSnapPeaCensusManifold : class
+Equality type : BY_VALUE
+
+NSnapPeaCensusTri : class
+Equality type : BY_VALUE
+
+NSnapPeaTriangulation : class
+Equality type : BY_REFERENCE
+
+NSnappedBall : class
+Equality type : BY_REFERENCE
+
+NSnappedTwoSphere : class
+Equality type : BY_REFERENCE
+
+NSpiralSolidTorus : class
+Equality type : BY_REFERENCE
+
+NStandardTriangulation : class
+Equality type : BY_REFERENCE
+
+NSurfaceFilter : class
+Equality type : BY_REFERENCE
+
+NSurfaceFilterCombination : class
+Equality type : BY_REFERENCE
+
+NSurfaceFilterProperties : class
+Equality type : BY_REFERENCE
+
+NSurfaceSubset : class
+Equality type : BY_REFERENCE
+
+NTetFace : class
+Equality type : BY_VALUE
+
+NTetrahedron : class
+Equality type : BY_REFERENCE
+
+NText : class
+Equality type : BY_REFERENCE
+
+NTorusBundle : class
+Equality type : BY_REFERENCE
+
+NTreeBag : class
+Equality type : BY_REFERENCE
+
+NTreeDecomposition : class
+Equality type : BY_REFERENCE
+
+NTriBool : class
+Equality type : BY_VALUE
+
+NTriSolidTorus : class
+Equality type : BY_REFERENCE
+
+NTriangle : class
+Equality type : BY_REFERENCE
+
+NTriangleEmbedding : class
+Equality type : BY_VALUE
+
+NTriangulation : class
+Equality type : BY_REFERENCE
+
+NTrivialTri : class
+Equality type : BY_REFERENCE
+
+NTxICore : class
+Equality type : BY_REFERENCE
+
+NTxIDiagonalCore : class
+Equality type : BY_REFERENCE
+
+NTxIParallelCore : class
+Equality type : BY_REFERENCE
+
+NVertex : class
+Equality type : BY_REFERENCE
+
+NVertexEmbedding : class
+Equality type : BY_VALUE
+
+NormalAlg : class
+Equality type : BY_VALUE
+
+NormalList : class
+Equality type : BY_VALUE
+
+Simplex10 : class
+Equality type : BY_REFERENCE
+
+Simplex11 : class
+Equality type : BY_REFERENCE
+
+Simplex12 : class
+Equality type : BY_REFERENCE
+
+Simplex13 : class
+Equality type : BY_REFERENCE
+
+Simplex14 : class
+Equality type : BY_REFERENCE
+
+Simplex15 : class
+Equality type : BY_REFERENCE
+
+Simplex2 : class
+Equality type : BY_REFERENCE
+
+Simplex3 : class
+Equality type : BY_REFERENCE
+
+Simplex4 : class
+Equality type : BY_REFERENCE
+
+Simplex5 : class
+Equality type : BY_REFERENCE
+
+Simplex6 : class
+Equality type : BY_REFERENCE
+
+Simplex7 : class
+Equality type : BY_REFERENCE
+
+Simplex8 : class
+Equality type : BY_REFERENCE
+
+Simplex9 : class
+Equality type : BY_REFERENCE
+
+Triangulation10 : class
+Equality type : BY_REFERENCE
+
+Triangulation11 : class
+Equality type : BY_REFERENCE
+
+Triangulation12 : class
+Equality type : BY_REFERENCE
+
+Triangulation13 : class
+Equality type : BY_REFERENCE
+
+Triangulation14 : class
+Equality type : BY_REFERENCE
+
+Triangulation15 : class
+Equality type : BY_REFERENCE
+
+Triangulation2 : class
+Equality type : BY_REFERENCE
+
+Triangulation3 : class
+Equality type : BY_REFERENCE
+
+Triangulation4 : class
+Equality type : BY_REFERENCE
+
+Triangulation5 : class
+Equality type : BY_REFERENCE
+
+Triangulation6 : class
+Equality type : BY_REFERENCE
+
+Triangulation7 : class
+Equality type : BY_REFERENCE
+
+Triangulation8 : class
+Equality type : BY_REFERENCE
+
+Triangulation9 : class
+Equality type : BY_REFERENCE
+

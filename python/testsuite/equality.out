@@ -1,0 +1,19 @@
+BY_VALUE
+BY_VALUE
+BY_REFERENCE
+NInteger:
+True False
+NAbelianGroup:
+True False
+NTriangulation:
+False True
+NGroupPresentation:
+False True
+NTriangulation:
+True False
+NTetrahedron:
+True False
+NAbelianGroup:
+True False
+NGroupPresentation:
+True False

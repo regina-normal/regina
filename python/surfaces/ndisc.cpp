@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "surfaces/ndisc.h"
 #include "surfaces/nnormalsurface.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NDiscSpec;
@@ -58,8 +59,8 @@ void addNDisc() {
         .def_readwrite("tetIndex", &NDiscSpec::tetIndex)
         .def_readwrite("type", &NDiscSpec::type)
         .def_readwrite("number", &NDiscSpec::number)
-        .def(self == self)
         .def(self_ns::str(self))
+        .def(regina::python::add_eq_operators())
     ;
 
     def("numberDiscsAwayFromVertex", regina::numberDiscsAwayFromVertex);
@@ -71,6 +72,7 @@ void addNDisc() {
         .def("nDiscs", &NDiscSetTet::nDiscs)
         .def("arcFromDisc", &NDiscSetTet::arcFromDisc)
         .def("discFromArc", &NDiscSetTet::discFromArc)
+        .def(regina::python::add_eq_operators())
     ;
 
     class_<NDiscSetSurface, std::auto_ptr<NDiscSetSurface>,
@@ -82,6 +84,7 @@ void addNDisc() {
             return_internal_reference<>())
         .def("adjacentDisc", &NDiscSetSurface::adjacentDisc,
             return_value_policy<manage_new_object>())
+        .def(regina::python::add_eq_operators())
     ;
 
     class_<NDiscSpecIterator, boost::noncopyable>("NDiscSpecIterator")
@@ -90,6 +93,7 @@ void addNDisc() {
         .def("inc", inc_operator)
         .def("deref", deref_operator, return_value_policy<return_by_value>())
         .def("done", &NDiscSpecIterator::done)
+        .def(regina::python::add_eq_operators())
     ;
 }
 

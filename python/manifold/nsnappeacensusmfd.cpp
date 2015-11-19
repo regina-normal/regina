@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "manifold/nsnappeacensusmfd.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NSnapPeaCensusManifold;
@@ -45,7 +46,7 @@ void addNSnapPeaCensusManifold() {
         .def(init<const NSnapPeaCensusManifold&>())
         .def("getSection", &NSnapPeaCensusManifold::getSection)
         .def("getIndex", &NSnapPeaCensusManifold::getIndex)
-        .def(self == self)
+        .def(regina::python::add_eq_operators())
     ;
 
     s.attr("SEC_5") = NSnapPeaCensusManifold::SEC_5;
