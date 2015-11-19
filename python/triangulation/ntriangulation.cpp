@@ -178,7 +178,7 @@ namespace {
         boost::python::list ans;
 
         std::list<regina::NIsomorphism*> isos;
-        t.findAllSubcomplexesIn(other, isos);
+        t.findAllSubcomplexesIn(other, back_inserter(isos));
 
         for (std::list<regina::NIsomorphism*>::iterator it =
                  isos.begin(); it != isos.end(); it++) {
