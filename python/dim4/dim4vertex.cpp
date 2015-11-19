@@ -40,6 +40,7 @@
 #include "dim4/dim4vertex.h"
 #include "triangulation/ntriangulation.h"
 #include "../globalarray.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Dim4Vertex;
@@ -82,8 +83,7 @@ void addDim4Vertex() {
             return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim4VertexEmbedding::getVertex)
         .def("getVertices", &Dim4VertexEmbedding::getVertices)
-        .def(self == self)
-        .def(self != self)
+        .def(regina::python::add_eq_operators())
     ;
 
     scope s = class_<Dim4Vertex, std::auto_ptr<Dim4Vertex>, boost::noncopyable>
@@ -114,6 +114,7 @@ void addDim4Vertex() {
         .def("detail", &Dim4Vertex::detail)
         .def("toStringLong", &Dim4Vertex::toStringLong)
         .def("__str__", &Dim4Vertex::str)
+        .def(regina::python::add_eq_operators())
     ;
 }
 

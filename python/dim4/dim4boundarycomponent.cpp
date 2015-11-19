@@ -39,6 +39,7 @@
 #include "dim4/dim4triangle.h"
 #include "dim4/dim4vertex.h"
 #include "triangulation/ntriangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Dim4BoundaryComponent;
@@ -72,6 +73,7 @@ void addDim4BoundaryComponent() {
         .def("detail", &Dim4BoundaryComponent::detail)
         .def("toStringLong", &Dim4BoundaryComponent::toStringLong)
         .def("__str__", &Dim4BoundaryComponent::str)
+        .def(regina::python::add_eq_operators())
     ;
 }
 

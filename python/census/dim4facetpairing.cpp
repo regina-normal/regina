@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "census/dim4facetpairing.h"
 #include "dim4/dim4triangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Dim4FacetPairing;
@@ -112,6 +113,7 @@ void addDim4FacetPairing() {
         .def("dotHeader", dotHeader_standalone, OL_dotHeader())
         .def("isClosed", &Dim4FacetPairing::isClosed)
         .def("__str__", &Dim4FacetPairing::str)
+        .def(regina::python::add_eq_operators())
         .staticmethod("fromTextRep")
         .staticmethod("writeDotHeader")
         .staticmethod("dotHeader")

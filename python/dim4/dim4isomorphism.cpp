@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "dim4/dim4isomorphism.h"
 #include "dim4/dim4triangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Dim4Isomorphism;
@@ -71,6 +72,7 @@ void addDim4Isomorphism() {
         .def("detail", &Dim4Isomorphism::detail)
         .def("toStringLong", &Dim4Isomorphism::toStringLong)
         .def("__str__", &Dim4Isomorphism::str)
+        .def(regina::python::add_eq_operators())
         .staticmethod("random")
     ;
 }

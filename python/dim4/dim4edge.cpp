@@ -41,6 +41,7 @@
 #include "dim4/dim4triangulation.h"
 #include "dim4/dim4vertex.h"
 #include "../globalarray.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Dim4Edge;
@@ -89,8 +90,7 @@ void addDim4Edge() {
             return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim4EdgeEmbedding::getEdge)
         .def("getVertices", &Dim4EdgeEmbedding::getVertices)
-        .def(self == self)
-        .def(self != self)
+        .def(regina::python::add_eq_operators())
     ;
 
     scope s = class_<Dim4Edge, std::auto_ptr<Dim4Edge>,
@@ -122,6 +122,7 @@ void addDim4Edge() {
         .def("detail", &Dim4Edge::detail)
         .def("toStringLong", &Dim4Edge::toStringLong)
         .def("__str__", &Dim4Edge::str)
+        .def(regina::python::add_eq_operators())
     ;
 
     s.attr("edgeNumber") = &Dim4Edge_edgeNumber;
