@@ -1,3 +1,45 @@
+Component10 : class
+Equality type : BY_REFERENCE
+
+Component11 : class
+Equality type : BY_REFERENCE
+
+Component12 : class
+Equality type : BY_REFERENCE
+
+Component13 : class
+Equality type : BY_REFERENCE
+
+Component14 : class
+Equality type : BY_REFERENCE
+
+Component15 : class
+Equality type : BY_REFERENCE
+
+Component2 : class
+Equality type : BY_REFERENCE
+
+Component3 : class
+Equality type : BY_REFERENCE
+
+Component4 : class
+Equality type : BY_REFERENCE
+
+Component5 : class
+Equality type : BY_REFERENCE
+
+Component6 : class
+Equality type : BY_REFERENCE
+
+Component7 : class
+Equality type : BY_REFERENCE
+
+Component8 : class
+Equality type : BY_REFERENCE
+
+Component9 : class
+Equality type : BY_REFERENCE
+
 Dim2BoundaryComponent : class
 Equality type : BY_REFERENCE
 
@@ -37,6 +79,45 @@ Equality type : BY_REFERENCE
 Dim2VertexEmbedding : class
 Equality type : BY_VALUE
 
+FacetPairing10 : class
+Equality type : BY_REFERENCE
+
+FacetPairing11 : class
+Equality type : BY_REFERENCE
+
+FacetPairing12 : class
+Equality type : BY_REFERENCE
+
+FacetPairing13 : class
+Equality type : BY_REFERENCE
+
+FacetPairing14 : class
+Equality type : BY_REFERENCE
+
+FacetPairing15 : class
+Equality type : BY_REFERENCE
+
+FacetPairing2 : class
+Equality type : BY_REFERENCE
+
+FacetPairing4 : class
+Equality type : BY_REFERENCE
+
+FacetPairing5 : class
+Equality type : BY_REFERENCE
+
+FacetPairing6 : class
+Equality type : BY_REFERENCE
+
+FacetPairing7 : class
+Equality type : BY_REFERENCE
+
+FacetPairing8 : class
+Equality type : BY_REFERENCE
+
+FacetPairing9 : class
+Equality type : BY_REFERENCE
+
 GlobalArray2D_NPerm4 : class
 Equality type : BY_REFERENCE
 
@@ -68,6 +149,48 @@ GlobalArray_int : class
 Equality type : BY_REFERENCE
 
 GlobalArray_unsigned : class
+Equality type : BY_REFERENCE
+
+Isomorphism10 : class
+Equality type : BY_REFERENCE
+
+Isomorphism11 : class
+Equality type : BY_REFERENCE
+
+Isomorphism12 : class
+Equality type : BY_REFERENCE
+
+Isomorphism13 : class
+Equality type : BY_REFERENCE
+
+Isomorphism14 : class
+Equality type : BY_REFERENCE
+
+Isomorphism15 : class
+Equality type : BY_REFERENCE
+
+Isomorphism2 : class
+Equality type : BY_REFERENCE
+
+Isomorphism3 : class
+Equality type : BY_REFERENCE
+
+Isomorphism4 : class
+Equality type : BY_REFERENCE
+
+Isomorphism5 : class
+Equality type : BY_REFERENCE
+
+Isomorphism6 : class
+Equality type : BY_REFERENCE
+
+Isomorphism7 : class
+Equality type : BY_REFERENCE
+
+Isomorphism8 : class
+Equality type : BY_REFERENCE
+
+Isomorphism9 : class
 Equality type : BY_REFERENCE
 
 Locale : class
@@ -268,7 +391,25 @@ Equality type : BY_REFERENCE
 NPacket : class
 Equality type : BY_REFERENCE
 
-NPerm : class
+NPerm10 : class
+Equality type : BY_VALUE
+
+NPerm11 : class
+Equality type : BY_VALUE
+
+NPerm12 : class
+Equality type : BY_VALUE
+
+NPerm13 : class
+Equality type : BY_VALUE
+
+NPerm14 : class
+Equality type : BY_VALUE
+
+NPerm15 : class
+Equality type : BY_VALUE
+
+NPerm16 : class
 Equality type : BY_VALUE
 
 NPerm3 : class
@@ -278,6 +419,18 @@ NPerm4 : class
 Equality type : BY_VALUE
 
 NPerm5 : class
+Equality type : BY_VALUE
+
+NPerm6 : class
+Equality type : BY_VALUE
+
+NPerm7 : class
+Equality type : BY_VALUE
+
+NPerm8 : class
+Equality type : BY_VALUE
+
+NPerm9 : class
 Equality type : BY_VALUE
 
 NPillowTwoSphere : class
@@ -438,4 +591,88 @@ Equality type : BY_VALUE
 
 NormalList : class
 Equality type : BY_VALUE
+
+Simplex10 : class
+Equality type : BY_REFERENCE
+
+Simplex11 : class
+Equality type : BY_REFERENCE
+
+Simplex12 : class
+Equality type : BY_REFERENCE
+
+Simplex13 : class
+Equality type : BY_REFERENCE
+
+Simplex14 : class
+Equality type : BY_REFERENCE
+
+Simplex15 : class
+Equality type : BY_REFERENCE
+
+Simplex2 : class
+Equality type : BY_REFERENCE
+
+Simplex3 : class
+Equality type : BY_REFERENCE
+
+Simplex4 : class
+Equality type : BY_REFERENCE
+
+Simplex5 : class
+Equality type : BY_REFERENCE
+
+Simplex6 : class
+Equality type : BY_REFERENCE
+
+Simplex7 : class
+Equality type : BY_REFERENCE
+
+Simplex8 : class
+Equality type : BY_REFERENCE
+
+Simplex9 : class
+Equality type : BY_REFERENCE
+
+Triangulation10 : class
+Equality type : BY_REFERENCE
+
+Triangulation11 : class
+Equality type : BY_REFERENCE
+
+Triangulation12 : class
+Equality type : BY_REFERENCE
+
+Triangulation13 : class
+Equality type : BY_REFERENCE
+
+Triangulation14 : class
+Equality type : BY_REFERENCE
+
+Triangulation15 : class
+Equality type : BY_REFERENCE
+
+Triangulation2 : class
+Equality type : BY_REFERENCE
+
+Triangulation3 : class
+Equality type : BY_REFERENCE
+
+Triangulation4 : class
+Equality type : BY_REFERENCE
+
+Triangulation5 : class
+Equality type : BY_REFERENCE
+
+Triangulation6 : class
+Equality type : BY_REFERENCE
+
+Triangulation7 : class
+Equality type : BY_REFERENCE
+
+Triangulation8 : class
+Equality type : BY_REFERENCE
+
+Triangulation9 : class
+Equality type : BY_REFERENCE
 
