@@ -48,15 +48,17 @@
  *  entities in the C++ calculation engine, as well as how these can
  *  be accessed through Python.
  *
- *  This API documentation is written in terms of C++.
- *  However, Python programmers can use exactly the same functions,
- *  classes, methods and so on.  If the Python version of a function
- *  differs from the C++ version, you will see a bold <b>Python:</b> note
- *  telling you how it differs.
- *
  *  To start: visit the <a href="modules.html">Modules</a> page and take
  *  a look around, or browse through the classes regina::NTriangulation and
  *  regina::NNormalSurfaceList.
+ *
+ *  <h3>Python</h3>
+ *
+ *  Although this documentation is written for C++ programmers, Python
+ *  programmers have access to many of the same functions, classes,
+ *  methods and so on.  See the special page for \ref pythonapi "Python users"
+ *  for a summary of the differences between C++ and Python, and some of the
+ *  extra features that Python offers.
  *
  *  <h3>Citation</h3>
  *
@@ -186,3 +188,102 @@
  *  fixed!
  */
 
+/*! \page stddim Standard dimensions
+ *
+ *  Whilst Regina was originally designed for working with 3-manifolds,
+ *  it offers varying levels of support for manifolds and triangulations
+ *  in other dimensions.
+ *
+ *  Regina's <i>standard dimensions</i> are those for which it offers
+ *  rich support (as opposed to very basic support, or none at all).
+ *  For the current release, the <b>standard dimensions are 2, 3 and 4</b>.
+ *
+ *  This list is expected to grow in future releases.
+ */
+
+// Put ourselves in the regina namespace so that automatic links work.
+namespace regina {
+
+/*! \page pythonapi Python users
+ *
+ *  Regina's calculation engine is provided as a shared C++ library, and
+ *  this API documentation describes the native C++ interface for
+ *  working with this library.
+ *
+ *  Regina also provides a Python module, which wraps many of the
+ *  classes, functions, methods and so on from this library so that
+ *  Python users can access them.
+ *
+ *  Python users should read this documentation as follows:
+ *
+ *  - Standard C++ types become native Python types.  For example, the C++ type
+ *    \c std::string becomes the native Python string type.
+ *
+ *  - Everything within the C++ namespace \a regina becomes part of the
+ *    Python module \a regina.  For example, the C++ class
+ *    regina::NTriangulation becomes the Python class regina.NTriangulation.
+ *
+ *  - Regina's most important C++ classes and functions are wrapped
+ *    in Python.  However, not all classes and functions are wrapped.
+ *    If a class or function is not available in Python then you will
+ *    see a bold <b>Python:</b> note indicating this.  See for instance
+ *    the class NBitmask, or the function duplicate().
+ *
+ *  - Most of Regina's classes and functions have the same interface
+ *    in both C++ and Python, but occasionally there are differences.
+ *    Again, you will see a bold <b>Python:</b> note indicating this.
+ *    See for instance the method NTriangulation::getTetrahedra(),
+ *    or the global function writeResUsage().
+ *
+ *  <h3>Testing equality</h3>
+ *
+ *  It is important to understand how Python's equality tests
+ *  <tt>x == y</tt> and <tt>x is y</tt> operate under Python.
+ *
+ *  If \a x is a Python variable representing one of Regina's objects, then
+ *  internally \a x stores a reference to one of Regina's native C++ objects.
+ *  Importantly, there may be \e many different Python variables that
+ *  all stores references to the \e same underlying C++ object.
+ *
+ *  This means that the Python test <tt>x is y</tt> is unreliable.
+ *  If <tt>x is y</tt> returns \c True then certainly \a x and \a y refer to
+ *  the same C++ object; however, if <tt>x is y</tt> returns \c False then
+ *  it is still possible that they refer to the same C++ object.
+ *
+ *  The solution is to always use the test <tt>x == y</tt>.  Regina
+ *  offers three types of classes, and these behave differently under Python:
+ *
+ *  - Some classes use <i>comparison by value</i>.  Here <tt>x == y</tt>
+ *    tests whether the contents of \a x and \a y are mathematically
+ *    equivalent.  Examples of such classes are \ref NIntegerBase "NInteger",
+ *    NRational, and NAbelianGroup.
+ *
+ *    These classes all provide C++ comparison operators == and !=.  You
+ *    can read the documentation for these operators to understand
+ *    exactly what mathematical condition(s) are being tested.
+ *
+ *  - Some classes use <i>comparison by reference</i>.  Here <tt>x == y</tt>
+ *    tests whether \a x and \a y refer to the same underlying C++ object.
+ *    This is similar to how the test <tt>x is y</tt> would behave in a
+ *    native Python application.  Examples of such classes are
+ *    NTriangulation and NTetrahedron.
+ *
+ *    These classes do not provide C++ comparison operators == or !=.
+ *
+ *  - Some classes are never instantiated, and so can never be compared
+ *    at all.  These classes typically contain only static methods.
+ *    Examples of such classes are NExampleTriangulation and
+ *    \ref regina::i18n::Locale "Locale".
+ *
+ *  If you wish to find out how a particular class \a C behaves, you can
+ *  examine the attribute <tt>C.equalityType</tt>.  This will return one of
+ *  the values \c BY_VALUE, \c BY_REFERENCE or \c NEVER_INSTANTIATED
+ *  respectively:
+ *
+ *  \code{.unparsed}
+ *  >>> print NTriangulation.equalityType
+ *  BY_REFERENCE
+ *  \endcode
+ */
+
+} // namespace regina

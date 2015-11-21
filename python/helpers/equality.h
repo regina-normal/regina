@@ -120,25 +120,40 @@ struct no_eq_operators;
 namespace add_eq_operators_detail {
     template <class T> void operator == (const T& a, const T& b);
     template <class T> void operator != (const T& a, const T& b);
-    template <class T> const T& makeRef();
+
+    template<class T>
+    struct EqOperatorTraits {
+        static const T& makeRef();
+
+        typedef decltype(makeRef() == makeRef()) EqType;
+        typedef decltype(makeRef() == makeRef()) IneqType;
+
+        static constexpr bool hasEqOperator =
+            ! std::is_same<void, EqType>::value;
+        static constexpr bool hasIneqOperator =
+            ! std::is_same<void, IneqType>::value;
+    };
 
     template <class T,
-        bool hasOperators = ! std::is_same<void,
-            decltype(makeRef<T>() == makeRef<T>())>::value>
-    struct EqualityOperators;
+              bool hasEqualityOperator = EqOperatorTraits<T>::hasEqOperator,
+              bool hasInequalityOperator = EqOperatorTraits<T>::hasIneqOperator>
+    struct EqualityOperators {
+        // This default template is instantiated only when T offers
+        // one of the operators == or !=, but not both.
+        // Force a compile-time error, and state which operator is missing.
+        static_assert(hasEqualityOperator,
+                      "Wrapped C++ type implements != but not ==.");
+        static_assert(hasInequalityOperator,
+                      "Wrapped C++ type implements == but not !=.");
+    };
 
     template <class T>
-    struct EqualityOperators<T, true> {
+    struct EqualityOperators<T, true, true> {
+        // Instantion of this template means we know that T offers both
+        // an operator == and an operator !=.
         static constexpr EqualityType equalityType() {
             return BY_VALUE;
         }
-
-        // If we are instantiating this template then we already know
-        // that type T offers an == operator.
-        // Ensure that we have an != operator also.
-        static_assert(! std::is_same<void,
-            decltype(makeRef<T>() != makeRef<T>())>::value,
-            "Wrapped C++ type implements == but not !=.");
 
         static bool are_equal(const T& a, const T& b) {
             return (a == b);
@@ -150,17 +165,12 @@ namespace add_eq_operators_detail {
     };
 
     template <class T>
-    struct EqualityOperators<T, false> {
+    struct EqualityOperators<T, false, false> {
+        // Instantion of this template means we know that T offers neither
+        // an operator == nor an operator !=.
         static constexpr EqualityType equalityType() {
             return BY_REFERENCE;
         }
-
-        // If we are instantiating this template then we know that type T
-        // does not offer an == operator.
-        // Ensure that there is no != operator either.
-        static_assert(std::is_same<void,
-            decltype(makeRef<T>() != makeRef<T>())>::value,
-            "Wrapped C++ type implements != but not ==.");
 
         static bool are_equal(const T& a, const T& b) {
             return (&a == &b);

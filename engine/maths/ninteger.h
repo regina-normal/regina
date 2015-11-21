@@ -148,8 +148,8 @@ struct InfinityBase<false> {
  * instantiations for all possible template parameters.
  *
  * \ifacespython Both variants of this template are available through Python.
- * For \a supportInfinity = \c false (the default), simply use NIntegerBase.
- * For \a supportInfinity = \c true, use NLargeInteger.
+ * For \a supportInfinity = \c false, use the name NInteger.
+ * For \a supportInfinity = \c true, use the name NLargeInteger.
  */
 template <bool supportInfinity = false>
 class REGINA_API NIntegerBase : private InfinityBase<supportInfinity> {

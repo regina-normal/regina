@@ -735,7 +735,7 @@ Integer Matrix<Integer>::matrix_gcd() const{
     Integer g=0,h;
     for (size_t i = 0; i <nr; i++) {
         h = v_gcd(elem[i]);
-        g = gcd<Integer>(g, h);
+        g = libnormaliz::gcd<Integer>(g, h);
         if (g==1) return g;
     }
     return g;
@@ -1766,7 +1766,7 @@ vector<Integer> Matrix<Integer>::solve_rectangular(const vector<Integer>& v, Int
             return vector<Integer>();
         }
     }
-    Integer total_gcd =gcd(denom,v_gcd(Linear_Form)); // extract the gcd of denom and solution
+    Integer total_gcd =libnormaliz::gcd(denom,v_gcd(Linear_Form)); // extract the gcd of denom and solution
     denom/=total_gcd;
     v_scalar_division(Linear_Form,total_gcd);
     return Linear_Form;
