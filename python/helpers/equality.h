@@ -124,7 +124,7 @@ namespace add_eq_operators_detail {
     template<class T>
     struct EqOperatorTraits {
         static const T& makeRef();
-        
+
         typedef decltype(makeRef() == makeRef()) EqType;
         typedef decltype(makeRef() == makeRef()) IneqType;
 
@@ -138,6 +138,9 @@ namespace add_eq_operators_detail {
               bool hasEqualityOperator = EqOperatorTraits<T>::hasEqOperator,
               bool hasInequalityOperator = EqOperatorTraits<T>::hasIneqOperator>
     struct EqualityOperators {
+        // This default template is instantiated only when T offers
+        // one of the operators == or !=, but not both.
+        // Force a compile-time error, and state which operator is missing.
         static_assert(hasEqualityOperator,
                       "Wrapped C++ type implements != but not ==.");
         static_assert(hasInequalityOperator,
@@ -146,8 +149,8 @@ namespace add_eq_operators_detail {
 
     template <class T>
     struct EqualityOperators<T, true, true> {
-        // Instantion of this template means we know that T offers an
-        // operator == and operator !=.
+        // Instantion of this template means we know that T offers both
+        // an operator == and an operator !=.
         static constexpr EqualityType equalityType() {
             return BY_VALUE;
         }
@@ -163,8 +166,8 @@ namespace add_eq_operators_detail {
 
     template <class T>
     struct EqualityOperators<T, false, false> {
-        // Instantion of this template means we know that T offers no
-        // operator == and operator !=.
+        // Instantion of this template means we know that T offers neither
+        // an operator == nor an operator !=.
         static constexpr EqualityType equalityType() {
             return BY_REFERENCE;
         }
