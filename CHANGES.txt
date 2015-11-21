@@ -168,6 +168,11 @@ Version 4.97  [ (under development) ]
             - Added != operators to complement the existing == operators.
         Class NSimpleSurfaceBundle, NSnapPeaCensusManifold, NSnapPeaCensusTri:
             - Added != operators to complement the existing == operators.
+        Class NSnapPeaCensusManifold:
+            - Change the behaviour of == and != to reflect the recent discovery
+              that the manifolds x101 and x103 are homeomorphic.  For details,
+              see B.B., "A duplicate pair in the SnapPea census",
+              Experimental Mathematics, 23:170-173, 2014.
         Class NSurfaceFilter:
             - The subclass constant filterType is now a constant of type
               SurfaceFilterType, not an anonymous enum type.
@@ -266,6 +271,7 @@ Version 4.97  [ (under development) ]
           C++, the python == and != operators compare by reference.
           Every wrapped C++ class has an equalityType attribute in
           python to indicate which behaviour it uses.
+          Thanks to Matthias Goerner for his help with this.
 
 Version 4.96  [ 29 August, 2014 ]
 
