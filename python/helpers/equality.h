@@ -158,13 +158,20 @@ namespace add_eq_operators_detail {
             ! std::is_same<void, IneqType>::value;
     };
 
+    /**
+     * The template EqualityOperators<T> provides the implementation
+     * that we use in python for == and != when wrapping the C++ class T.
+     */
     template <class T,
               bool hasEqualityOperator = EqOperatorTraits<T>::hasEqOperator,
               bool hasInequalityOperator = EqOperatorTraits<T>::hasIneqOperator>
     struct EqualityOperators {
-        // This default template is instantiated only when T offers
+        // This default template is instantiated precisely when T offers
         // one of the operators == or !=, but not both.
-        // Force a compile-time error, and state which operator is missing.
+        //
+        // In Regina, we insist on an all-or-nothing approach.
+        // Force a compile-time error, and tell the developers which
+        // operator is missing.
         static_assert(hasEqualityOperator,
                       "Wrapped C++ type implements != but not ==.");
         static_assert(hasInequalityOperator,
@@ -205,6 +212,9 @@ namespace add_eq_operators_detail {
         }
     };
 } // namespace add_eq_operators_detail
+
+// Implementation of add_eq_operators and no_eq_operators.
+// See the top of this header for their documentation.
 
 struct add_eq_operators : boost::python::def_visitor<add_eq_operators> {
     friend class boost::python::def_visitor_access;
