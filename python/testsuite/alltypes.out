@@ -254,7 +254,7 @@ NMatrix2Row : class
 Equality type : BY_VALUE
 
 NMatrixInt : class
-Equality type : BY_REFERENCE
+Equality type : BY_VALUE
 
 NNormalSurface : class
 Equality type : BY_REFERENCE

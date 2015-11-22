@@ -118,9 +118,33 @@ struct no_eq_operators;
 
 #ifndef __DOXYGEN
 namespace add_eq_operators_detail {
-    template <class T> void operator == (const T& a, const T& b);
-    template <class T> void operator != (const T& a, const T& b);
+    /**
+     * Provide default == and != operators that return void (a type that no
+     * sensible == or != operator should return).
+     *
+     * We follow the way that boost does this: we provide our default operators
+     * via the helper class Any, so that the implicit conversion from our type
+     * to Any makes these default == / != operators less preferred than any
+     * of regina's own operators.
+     *
+     * This is indeed necessary: if we just offer default == / != operators
+     * for an arbitrary type T, then these default operators are chosen for
+     * NMatrixInt *ahead* of the operators that NMatrixInt inherits from
+     * NMatrix<NLargeInteger>.  If we use the Any helper class (as seen below),
+     * then the inherited == / != operators are (correctly) chosen intsead.
+     */
+    struct Any {
+        template <typename T>
+        Any(const T&);
+    };
 
+    void operator == (const Any&, const Any&);
+    void operator != (const Any&, const Any&);
+
+    /**
+     * A helper struct that determines at compile time whether or not
+     * Regina provides == and/or != operators for type T.
+     */
     template<class T>
     struct EqOperatorTraits {
         static const T& makeRef();
