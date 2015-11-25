@@ -1170,13 +1170,13 @@ class TriangulationBase : public boost::noncopyable {
 };
 
 // Note that some of our routines are specialised for standard dimensions.
-template <> template <typename OutputIterator>
+template <>
 bool TriangulationBase<2>::compatible(const Triangulation<2>&, bool) const;
-template <> template <typename OutputIterator>
+template <>
 bool TriangulationBase<3>::compatible(const Triangulation<3>&, bool) const;
-template <> template <typename OutputIterator>
+template <>
 bool TriangulationBase<2>::compatible(Simplex<2>*, Simplex<2>* dest, NPerm<3>);
-template <> template <typename OutputIterator>
+template <>
 bool TriangulationBase<3>::compatible(Simplex<3>*, Simplex<3>* dest, NPerm<4>);
 
 /**
