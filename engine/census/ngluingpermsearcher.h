@@ -2516,20 +2516,12 @@ class REGINA_API NCollapsedChainSearcher : public NGluingPermSearcher {
                  original face pairing, these extra simplices will have to be
                  added back in first. Then the isomorphism can be applied, and
                  lastly the chains can be rebuilt. */
+        std::list<NIsomorphism*> automorphs;
         int *chainNo;
         bool *chainSym;
         bool *shortChain;
         bool collapse;
         unsigned maxOrder;
-            /**< TODO. */
-        enum edgeType { EDGE_CHAIN_END,
-                    EDGE_CHAIN_INTERNAL_FIRST,
-                    EDGE_CHAIN_INTERNAL_SECOND };
-        edgeType* orderType;
-            /**< For each edge in the face pairing graph stored in the
-                 order[] array, a corresponding category for this edge is
-                 stored in the orderType[] array.  Categories are described
-                 by the EDGE_... constants defined in this class. */
         int* chainPermIndices;
             /**< Stores the two possible gluing permutations that must be
                  tried for each face in the order[] array.
@@ -2628,7 +2620,7 @@ class REGINA_API NCollapsedChainSearcher : public NGluingPermSearcher {
          * Returns true if a chain was collapsed, false otherwise (most likely
          * due to finding a short chain).
          */
-        bool collapseChain(NFacePair pair, int tet, int numChains);
+        bool collapseChain(NFacePair pair, int tet);
 
 };
 
