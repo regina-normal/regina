@@ -33,6 +33,7 @@
 /* end stub */
 
 #include <boost/next_prior.hpp>
+#include <cassert>
 #include <sstream>
 #include "census/ngluingpermsearcher.h"
 #include "triangulation/nedge.h"
@@ -69,7 +70,6 @@ NCollapsedChainSearcher::NCollapsedChainSearcher(const NFacePairing* pairing,
     shortChain = new bool [nTets] {false};
     collapse = true;
     NTetFace face;
-    std::cout << "From " << pairing_->toString() << std::endl;
     if (pairing_->hasTripleEdge() ||
             pairing_->hasBrokenDoubleEndedChain() ||
             pairing_->hasOneEndedChainWithDoubleHandle() ||
@@ -151,15 +151,6 @@ void NCollapsedChainSearcher::runSearch(long maxDepth) {
 //    }
 
     if (collapse) {
-//        std::cout << "From " << pairing_->toString() << std::endl;
-//        std::cout << "To   " << modified->toString() << std::endl;
-//        for (int i = 0; i < maxOrder; i++) {
-//            NTetFace face = order[i];
-//            NTetFace adj = (*pairing_)[face];
-//            std::cout << face << " to " << adj << " ";
-//            std::cout << indexToGluing(face, chainPermIndices[2*i]).str() << " and ";
-//            std::cout << indexToGluing(face, chainPermIndices[2*i+ 1]).str() << std::endl;
-//        }
         UseGluingPerms func = &NCollapsedChainSearcher::extendTriHelper;
         NClosedPrimeMinSearcher s(modified, NULL, orientableOnly_, func,
                 this);
@@ -187,98 +178,46 @@ void NCollapsedChainSearcher::extendTri(const NGluingPermSearcher *s) {
     // copy pairing_ and apply reverse of iso
     // Note that iso is the isomorphism from this to s
 
-    NTriangulation *tri = s->triangulate();
     std::list<NIsomorphism*> automorphs;
-    tri->findAllIsomorphisms(*tri, automorphs);
-    std::string thisCase = tri->isoSig();
-    //std::string testCase("gLLMQacdefefjkaknkr");
-    //std::string testCase("fLLQcacddeenkaikr");
-    //std::string textCase("gLLAQaceefefnkuxxnn");
-    //bool debug = (testCase.compare(thisCase) == 0);
-    bool debug = true;
-    if (debug) {
-        std::cout << "Original " << pairing_->str() << std::endl;
-        std::cout << "Modified " << modified->str() << std::endl;
-        std::cout << "Started with " << thisCase << std::endl;
-//        for (NTetFace f(0,0); ! f.isPastEnd(s->size(), true); f++) {
-//            NTetFace adj = (*modified)[f];
-//            if (f < adj) {
-//                std::cout << "From " << f << " to " << adj.simp << " (" <<
-//                    (s->gluingPerm(f)*NTriangle::ordering[f.facet]).trunc3() <<
-//                    ")";
-//                std::cout << "\t\tFrom " << f << " to " << adj << " : " <<
-//                    s->gluingPerm(f) << std::endl;
-//            }
-//        }
-//        for (int simp = 0; simp < s->size(); simp++) {
-//            std::cout << simp << " isoInv -> " << isoInv->simpImage(simp)
-//                << " : " << isoInv->facetPerm(simp) << std::endl;
-//        }
-    }
+    // TODO remove loops that will be replaced from modified, to cut down
+    // number of automorphisms
+    modified->findAutomorphisms(automorphs);
     for (auto automorph : automorphs) {
         orderElt = 0;
-
-        //for (NTetFace a(0,0); ! a.isPastEnd(s->size(), true); a++) {
-        //    std::cout << a << " ";
-        //    if (a.facet == 3)
-        //        std::cout << "| ";
-        //}
-        //std::cout << std::endl;
-        //for (NTetFace a(0,0); ! a.isPastEnd(s->size(), true); a++) {
-        //    int ffacet = automorph->facetPerm(a.simp)[a.facet];
-        //    NTetFace f(automorph->simpImage(a.simp),ffacet);
-        //    std::cout << f << " ";
-        //    if (a.facet == 3)
-        //        std::cout << "| ";
-        //}
-        std::cout << std::endl;
         for (NTetFace f(0,0); ! f.isPastEnd(s->size(), true); f++) {
-            int afacet = automorph->facetPerm(f.simp)[f.facet];
-            NTetFace aut(automorph->simpImage(f.simp),afacet);
             NTetFace adj = (*(s->getFacetPairing()))[f];
-            NTetFace autAdj(automorph->simpImage(adj.simp),
-                    automorph->facetPerm(adj.simp)[adj.facet]);
-            if ((aut.simp == autAdj.simp) &&
-                    (!shortChain[isoInv->simpImage(aut.simp)])) {
-                // This is a loop, but not a short one.
-                if (debug)
-                    std::cout << "Not short chain on " << f.simp << std::endl;
+            if ((f.simp == adj.simp) &&
+                    (!shortChain[isoInv->simpImage(f.simp)])) {
+                // This is a loop, but not a short one. Don't copy the loop
+                // gluing.
                 continue;
             }
-            int mySimp = isoInv->simpImage(aut.simp);
-            NPerm4 perm = isoInv->facetPerm(aut.simp);
-            int myFacet = perm[aut.facet];
+            int mySimp = isoInv->simpImage(f.simp);
+            NPerm4 perm = isoInv->facetPerm(f.simp);
+            int myFacet = perm[f.facet];
             NTetFace my(mySimp, myFacet);
             if (permIndex(my) != -1)
                 continue; // Already done.
-            int myAdjSimp = isoInv->simpImage(autAdj.simp);
-            NPerm4 adjPerm = isoInv->facetPerm(autAdj.simp);
-            int myAdjFacet = adjPerm[autAdj.facet];
+            int myAdjSimp = isoInv->simpImage(adj.simp);
+            NPerm4 adjPerm = isoInv->facetPerm(adj.simp);
+            int myAdjFacet = adjPerm[adj.facet];
             NTetFace myAdj(myAdjSimp, myAdjFacet);
 
-            NPerm4 gluing = (adjPerm.inverse() * s->gluingPerm(aut) * perm);
-            if (debug) {
-                if (f < adj) {
-                    std::cout << "From " << aut << " to " << autAdj.simp << " (" <<
-                        (s->gluingPerm(aut)*NTriangle::ordering[aut.facet]).trunc3() <<
-                        ")";
-                    std::cout << "\t\tFrom " << aut << " to " << autAdj << " : " <<
-                        s->gluingPerm(aut) << std::endl;
-                }
-            }
-            if ( gluing[myFacet] != myAdjFacet ) {
-                std::cerr << "Error: Invalid gluing " << std::endl;
-            }
+            NTetFace aut(automorph->simpImage(f.simp),
+                    automorph->facetPerm(f.simp)[f.facet]);
+            NPerm4 autPerm = automorph->facetPerm(f.simp);
+            NPerm4 autAdjPerm = automorph->facetPerm(adj.simp);
+
+            NPerm4 gluing = (adjPerm.inverse() * autAdjPerm.inverse() *
+                            s->gluingPerm(aut) *
+                            autPerm * perm);
+            assert(gluing[myFacet] == myAdjFacet);
             permIndex(my) = gluingToIndex(my, gluing);
             permIndex(myAdj) = gluingToIndex(myAdj, gluing.inverse());
         }
         orderElt = 0;
         while (orderElt >= 0) {
             if (orderElt >= maxOrder) {
-    //            if (debug) {
-    //                NTriangulation *newTri = triangulate();
-    //                std::cout << "Found " << newTri->isoSig() << std::endl;
-    //            }
                 use_(this, useArgs_);
                 orderElt -= 1;
                 continue;
@@ -291,11 +230,17 @@ void NCollapsedChainSearcher::extendTri(const NGluingPermSearcher *s) {
                 } else if (permIndex(face) == chainPermIndices[4*orderElt]) {
                     permIndex(face) = chainPermIndices[4*orderElt+1];
                 } else {
-                    // Try flipping the whole chain.
                     int chain = chainNo[orderElt];
                     if (chainSym[chain] == false) {
                         permIndex(face) = chainPermIndices[4*orderElt];
                         chainSym[chain] = true;
+                        
+                        chainSym[chain] = false;
+                        permIndex(face) = -1;
+                        permIndex(adj) = -1;
+                        orderElt--;
+                        continue;
+
                     } else {
                         chainSym[chain] = false;
                         permIndex(face) = -1;
