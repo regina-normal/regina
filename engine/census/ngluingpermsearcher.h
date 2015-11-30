@@ -2517,6 +2517,9 @@ class REGINA_API NCollapsedChainSearcher : public NGluingPermSearcher {
                  added back in first. Then the isomorphism can be applied, and
                  lastly the chains can be rebuilt. */
         std::list<NIsomorphism*> automorphs;
+        enum EdgeType { EDGE_CHAIN_END, EDGE_CHAIN_INTERNAL_FIRST,
+            EDGE_CHAIN_INTERNAL_SECOND };
+        EdgeType *orderType;
         int *chainNo;
         bool *chainSym;
         bool *shortChain;

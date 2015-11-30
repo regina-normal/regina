@@ -59,6 +59,7 @@ NCollapsedChainSearcher::NCollapsedChainSearcher(const NFacePairing* pairing,
 
     modified = new NFacePairing(*pairing);
     chainPermIndices = new int[4 * nTets];
+    orderType = new EdgeType[2 * nTets];
 
     int numChains = 0;
     shortChain = new bool [nTets] {false};
@@ -105,6 +106,7 @@ NCollapsedChainSearcher::~NCollapsedChainSearcher() {
     if (isoInv)
         delete isoInv;
     delete modified;
+    delete[] orderType;
     delete[] chainPermIndices;
     delete[] shortChain;
     if (!automorphs.empty()) {
@@ -203,15 +205,31 @@ void NCollapsedChainSearcher::extendTri(const NGluingPermSearcher *s) {
             }
             NTetFace face = order[orderElt];
             NTetFace adj = (*pairing_)[face];
-            if (permIndex(face) < 0) {
-                permIndex(face) = chainPermIndices[2*orderElt];
-            } else if (permIndex(face) == chainPermIndices[2*orderElt]) {
-                permIndex(face) = chainPermIndices[2*orderElt+1];
-            } else {
-                permIndex(face) = -1;
-                permIndex(adj) = -1;
-                orderElt--;
-                continue;
+            if (orderType[orderElt] == EDGE_CHAIN_INTERNAL_SECOND) {
+                if (permIndex(face) < 0) {
+                    if (permIndex(order[orderElt - 1]) ==
+                            chainPermIndices[2 * orderElt - 2])
+                        permIndex(face) = chainPermIndices[2 * orderElt];
+                    else
+                        permIndex(face) = chainPermIndices[2 * orderElt + 1];
+                } else {
+                    permIndex(face) = -1;
+                    permIndex(face) = -1;
+                    permIndex(adj) = -1;
+                    orderElt--;
+                    continue;
+                }
+            } else { // EGE_CHAIN_END or EDGE_CHAIN_INTERNAL_FIRST
+                if (permIndex(face) < 0) {
+                    permIndex(face) = chainPermIndices[2*orderElt];
+                } else if (permIndex(face) == chainPermIndices[2*orderElt]) {
+                    permIndex(face) = chainPermIndices[2*orderElt+1];
+                } else {
+                    permIndex(face) = -1;
+                    permIndex(adj) = -1;
+                    orderElt--;
+                    continue;
+                }
             }
             permIndex(adj) = NPerm4::invS3[permIndex(face)];
             orderElt++;
@@ -292,6 +310,7 @@ bool NCollapsedChainSearcher::collapseChain(NFacePair faces, int tet) {
                 faces.upper(), comp.upper(),
                 comp.upper(), comp.lower(),
                 comp.lower(), faces.lower()));
+    orderType[orderElt] = EDGE_CHAIN_END;
     orderElt+=1;
     faces = faces.complement();
     NTetFace dest1, dest2;
@@ -301,7 +320,7 @@ bool NCollapsedChainSearcher::collapseChain(NFacePair faces, int tet) {
         // Short chain here. Bail early, reset things.
         shortChain[tet] = true;
         orderElt-=1;
-        // order and other arrays will be overwritten, if required, so
+        // order, orderType and other arrays will be overwritten, if required, so
         // no need to reset them.
         return false;
     }
@@ -310,7 +329,8 @@ bool NCollapsedChainSearcher::collapseChain(NFacePair faces, int tet) {
     while (dest1.simp == dest2.simp && dest1.simp != tet) {
         order[orderElt] = NTetFace(tet, faces.lower());
         order[orderElt+1] = NTetFace(tet, faces.upper());
-
+        orderType[orderElt] = EDGE_CHAIN_INTERNAL_FIRST;
+        orderType[orderElt+1] = EDGE_CHAIN_INTERNAL_SECOND;
         comp = faces.complement();
         NFacePair facesAdj = NFacePair(dest1.facet, dest2.facet);
         NFacePair compAdj = facesAdj.complement();
