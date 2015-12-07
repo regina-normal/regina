@@ -43,6 +43,7 @@
 
 #include "regina-core.h"
 #include "output.h"
+#include "generic/face.h"
 #include "maths/nperm3.h"
 #include "utilities/nmarkedvector.h"
 #include <boost/noncopyable.hpp>
@@ -66,94 +67,63 @@ typedef Triangulation<2> Dim2Triangulation;
  */
 
 /**
- * Details how an edge in the 1-skeleton of a 2-manifold triangulation
- * forms part of an individual triangle.
+ * Details how an edge of a 2-manifold triangulation appears within each
+ * triangle.
+ *
+ * This is a specialisation of the generic FaceEmbedding class template;
+ * see the documentation for FaceEmbedding (and also Face) for a general
+ * overview of how these face-related classes work.
+ *
+ * This 2-dimensional specialisation of FaceEmbedding offers additional
+ * dimension-specific aliases of some member functions.
  */
-class REGINA_API Dim2EdgeEmbedding {
-    private:
-        Dim2Triangle* triangle_;
-            /**< The triangle in which this edge is contained. */
-        int edge_;
-            /**< The edge number of the triangle that is this edge. */
-
+template <>
+class REGINA_API FaceEmbedding<2, 1> : public FaceEmbeddingBase<2, 1> {
     public:
         /**
-         * Default constructor.  The embedding descriptor created is
-         * unusable until it has some data assigned to it using
-         * <tt>operator =</tt>.
+         * Default constructor.  This object is unusable until it has
+         * some data assigned to it using <tt>operator =</tt>.
          *
          * \ifacespython Not present.
          */
-        Dim2EdgeEmbedding();
+        FaceEmbedding();
 
         /**
-         * Creates an embedding descriptor containing the given data.
+         * Creates a new object containing the given data.
          *
-         * @param tri the triangle in which this edge is contained.
-         * @param edge the edge number of \a tri that is this edge.
+         * @param tri the triangle in which the underlying edge
+         * of the triangulation is contained.
+         * @param edge the corresponding edge number of \a tri.
+         * This must be between 0 and 2 inclusive.
          */
-        Dim2EdgeEmbedding(Dim2Triangle* tri, int edge);
+        FaceEmbedding(Dim2Triangle* tri, int edge);
 
         /**
-         * Creates an embedding descriptor containing the same data as
-         * the given embedding descriptor.
+         * Creates a new copy of the given object.
          *
-         * @param cloneMe the embedding descriptor to clone.
+         * @param cloneMe the object to copy.
          */
-        Dim2EdgeEmbedding(const Dim2EdgeEmbedding& cloneMe);
+        FaceEmbedding(const FaceEmbedding& cloneMe);
 
         /**
-         * Assigns to this embedding descriptor the same data as is
-         * contained in the given embedding descriptor.
+         * A dimension-specific alias for getSimplex().
          *
-         * @param cloneMe the embedding descriptor to clone.
-         */
-        Dim2EdgeEmbedding& operator = (const Dim2EdgeEmbedding& cloneMe);
-
-        /**
-         * Returns the triangle in which this edge is contained.
-         *
-         * @return the triangle.
+         * See getSimplex() for further information.
          */
         Dim2Triangle* getTriangle() const;
 
         /**
-         * Returns the edge number within getTriangle() that is this edge.
+         * A dimension-specific alias for getFace().
          *
-         * @return the edge number that is this edge.
+         * See getFace() for further information.
          */
         int getEdge() const;
-
-        /**
-         * Returns a mapping from vertices (0,1) of this edge to the
-         * corresponding vertex numbers in getTriangle(), as described
-         * in Dim2Triangle::getEdgeMapping().
-         *
-         * @return a mapping from the vertices of this edge to the
-         * corresponding vertices of getTriangle().
-         */
-        NPerm3 getVertices() const;
-
-        /**
-         * Tests whether this and the given embedding are identical.
-         * Here "identical" means that they refer to the same edge of
-         * the same triangle.
-         *
-         * @param rhs the embedding to compare with this.
-         * @return \c true if and only if both embeddings are identical.
-         */
-        bool operator == (const Dim2EdgeEmbedding& rhs) const;
-
-        /**
-         * Tests whether this and the given embedding are different.
-         * Here "different" means that they do not refer to the same edge of
-         * the same triangle.
-         *
-         * @param rhs the embedding to compare with this.
-         * @return \c true if and only if both embeddings are identical.
-         */
-        bool operator != (const Dim2EdgeEmbedding& rhs) const;
 };
+
+/**
+ * A convenience typedef for FaceEmbedding<2, 1>.
+ */
+typedef FaceEmbedding<2, 1> Dim2EdgeEmbedding;
 
 /**
  * Represents an edge in the 1-skeleton of a 2-manifold triangulation.
@@ -348,46 +318,26 @@ namespace regina {
 
 // Inline functions for Dim2EdgeEmbedding
 
-inline Dim2EdgeEmbedding::Dim2EdgeEmbedding() : triangle_(0) {
+inline FaceEmbedding<2, 1>::FaceEmbedding() :
+        FaceEmbeddingBase<2, 1>() {
 }
 
-inline Dim2EdgeEmbedding::Dim2EdgeEmbedding(
+inline FaceEmbedding<2, 1>::FaceEmbedding(
         Dim2Triangle* tri, int edge) :
-        triangle_(tri), edge_(edge) {
+        FaceEmbeddingBase<2, 1>(tri, edge) {
 }
 
-inline Dim2EdgeEmbedding::Dim2EdgeEmbedding(
+inline FaceEmbedding<2, 1>::FaceEmbedding(
         const Dim2EdgeEmbedding& cloneMe) :
-        triangle_(cloneMe.triangle_), edge_(cloneMe.edge_) {
+        FaceEmbeddingBase<2, 1>(cloneMe) {
 }
 
-inline Dim2EdgeEmbedding& Dim2EdgeEmbedding::operator =
-        (const Dim2EdgeEmbedding& cloneMe) {
-    triangle_ = cloneMe.triangle_;
-    edge_ = cloneMe.edge_;
-    return *this;
+inline Dim2Triangle* FaceEmbedding<2, 1>::getTriangle() const {
+    return getSimplex();
 }
 
-inline Dim2Triangle* Dim2EdgeEmbedding::getTriangle() const {
-    return triangle_;
-}
-
-inline int Dim2EdgeEmbedding::getEdge() const {
-    return edge_;
-}
-
-inline NPerm3 Dim2EdgeEmbedding::getVertices() const {
-    return triangle_->getEdgeMapping(edge_);
-}
-
-inline bool Dim2EdgeEmbedding::operator == (const Dim2EdgeEmbedding& other)
-        const {
-    return ((triangle_ == other.triangle_) && (edge_ == other.edge_));
-}
-
-inline bool Dim2EdgeEmbedding::operator != (const Dim2EdgeEmbedding& other)
-        const {
-    return ((triangle_ != other.triangle_) || (edge_ != other.edge_));
+inline int FaceEmbedding<2, 1>::getEdge() const {
+    return getFace();
 }
 
 // Inline functions for Dim2Edge

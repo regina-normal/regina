@@ -44,6 +44,7 @@
 #include <vector>
 #include "regina-core.h"
 #include "output.h"
+#include "generic/face.h"
 #include "maths/nperm4.h"
 #include "utilities/nmarkedvector.h"
 #include <boost/noncopyable.hpp>
@@ -69,100 +70,64 @@ typedef Triangulation<3> NTriangulation;
  */
 
 /**
- * Details how a vertex in the skeleton forms part of an individual
+ * Details how a vertex in a 3-manifold triangulation appears within each
  * tetrahedron.
+ *
+ * This is a specialisation of the generic FaceEmbedding class template;
+ * see the documentation for FaceEmbedding (and also Face) for a general
+ * overview of how these face-related classes work.
+ *
+ * This 3-dimensional specialisation of FaceEmbedding offers additional
+ * dimension-specific aliases of some member functions.
  */
-class REGINA_API NVertexEmbedding {
-    private:
-        NTetrahedron* tetrahedron_;
-            /**< The tetrahedron in which this vertex is contained. */
-        int vertex_;
-            /**< The vertex number of the tetrahedron that is this vertex. */
-
+template <>
+class REGINA_API FaceEmbedding<3, 0> : public FaceEmbeddingBase<3, 0> {
     public:
         /**
-         * Default constructor.  The embedding descriptor created is
-         * unusable until it has some data assigned to it using
-         * <tt>operator =</tt>.
+         * Default constructor.  This object is unusable until it has
+         * some data assigned to it using <tt>operator =</tt>.
          *
          * \ifacespython Not present.
          */
-        NVertexEmbedding();
+        FaceEmbedding();
 
         /**
-         * Creates an embedding descriptor containing the given data.
+         * Creates a new object containing the given data.
          *
-         * @param newTet the tetrahedron in which this vertex is
-         * contained.
-         * @param newVertex the vertex number of \a newTet that is this vertex.
+         * @param tet the tetrahedron in which the underlying vertex
+         * of the triangulation is contained.
+         * @param vertex the corresponding vertex number of \a tet.
+         * This must be between 0 and 3 inclusive.
          */
-        NVertexEmbedding(NTetrahedron* newTet, int newVertex);
+        FaceEmbedding(NTetrahedron* tet, int vertex);
 
         /**
-         * Creates an embedding descriptor containing the same data as
-         * the given embedding descriptor.
+         * Creates a new copy of the given object.
          *
-         * @param cloneMe the embedding descriptor to clone.
+         * @param cloneMe the object to copy.
          */
-        NVertexEmbedding(const NVertexEmbedding& cloneMe);
+        FaceEmbedding(const FaceEmbedding& cloneMe);
 
         /**
-         * Assigns to this embedding descriptor the same data as is
-         * contained in the given embedding descriptor.
+         * A dimension-specific alias for getSimplex().
          *
-         * @param cloneMe the embedding descriptor to clone.
-         */
-        NVertexEmbedding& operator =(const NVertexEmbedding& cloneMe);
-
-        /**
-         * Returns the tetrahedron in which this vertex is contained.
-         *
-         * @return the tetrahedron.
+         * See getSimplex() for further information.
          */
         REGINA_INLINE_REQUIRED
         NTetrahedron* getTetrahedron() const;
 
         /**
-         * Returns the vertex number within getTetrahedron() that is
-         * this vertex.
+         * A dimension-specific alias for getFace().
          *
-         * @return the vertex number that is this vertex.
+         * See getFace() for further information.
          */
         int getVertex() const;
-
-        /**
-         * Returns a permutation that maps 0 to the vertex number within
-         * getTetrahedron() that is this vertex.  The real point of this
-         * routine is that (1,2,3) maps to the three remaining tetrahedron
-         * vertices in a manner that preserves orientation as you walk around
-         * the vertex (assuming this is actually possible).  See
-         * NTetrahedron::getVertexMapping() for details.
-         *
-         * @return a permutation that maps 0 to the vertex number that
-         * is this vertex.
-         */
-        NPerm4 getVertices() const;
-
-        /**
-         * Tests whether this and the given embedding are identical.
-         * Here "identical" means that they refer to the same vertex of
-         * the same tetrahedron.
-         *
-         * @param rhs the embedding to compare with this.
-         * @return \c true if and only if both embeddings are identical.
-         */
-        bool operator == (const NVertexEmbedding& rhs) const;
-
-        /**
-         * Tests whether this and the given embedding are different.
-         * Here "different" means that they do not refer to the same vertex of
-         * the same tetrahedron.
-         *
-         * @param rhs the embedding to compare with this.
-         * @return \c true if and only if both embeddings are identical.
-         */
-        bool operator != (const NVertexEmbedding& rhs) const;
 };
+
+/**
+ * A convenience typedef for FaceEmbedding<3, 0>.
+ */
+typedef FaceEmbedding<3, 0> NVertexEmbedding;
 
 /**
  * Represents a vertex in the skeleton of a triangulation.
@@ -540,6 +505,28 @@ class REGINA_API NVertex :
 #include "triangulation/ntetrahedron.h"
 namespace regina {
 
+// Inline functions for NVertexEmbedding
+
+inline FaceEmbedding<3, 0>::FaceEmbedding() :
+        FaceEmbeddingBase<3, 0>() {
+}
+
+inline FaceEmbedding<3, 0>::FaceEmbedding(NTetrahedron* tet, int vertex) :
+        FaceEmbeddingBase<3, 0>(tet, vertex) {
+}
+
+inline FaceEmbedding<3, 0>::FaceEmbedding(const NVertexEmbedding& cloneMe) :
+        FaceEmbeddingBase<3, 0>(cloneMe) {
+}
+
+inline NTetrahedron* FaceEmbedding<3, 0>::getTetrahedron() const {
+    return getSimplex();
+}
+
+inline int FaceEmbedding<3, 0>::getVertex() const {
+    return getFace();
+}
+
 // Inline functions for NVertex
 
 inline NVertex::NVertex(NComponent* myComponent) : component_(myComponent),
@@ -620,46 +607,6 @@ inline unsigned long NVertex::getNumberOfEmbeddings() const {
 inline const NVertexEmbedding& NVertex::getEmbedding(unsigned long index)
         const {
     return embeddings_[index];
-}
-
-inline NVertexEmbedding::NVertexEmbedding() : tetrahedron_(0) {
-}
-
-inline NVertexEmbedding::NVertexEmbedding(NTetrahedron* newTet, int newVertex) :
-        tetrahedron_(newTet), vertex_(newVertex) {
-}
-
-inline NVertexEmbedding::NVertexEmbedding(const NVertexEmbedding& cloneMe) :
-        tetrahedron_(cloneMe.tetrahedron_), vertex_(cloneMe.vertex_) {
-}
-
-inline NVertexEmbedding& NVertexEmbedding::operator =
-        (const NVertexEmbedding& cloneMe) {
-    tetrahedron_ = cloneMe.tetrahedron_;
-    vertex_ = cloneMe.vertex_;
-    return *this;
-}
-
-inline NTetrahedron* NVertexEmbedding::getTetrahedron() const {
-    return tetrahedron_;
-}
-
-inline int NVertexEmbedding::getVertex() const {
-    return vertex_;
-}
-
-inline NPerm4 NVertexEmbedding::getVertices() const {
-    return tetrahedron_->getVertexMapping(vertex_);
-}
-
-inline bool NVertexEmbedding::operator == (const NVertexEmbedding& other)
-        const {
-    return ((tetrahedron_ == other.tetrahedron_) && (vertex_ == other.vertex_));
-}
-
-inline bool NVertexEmbedding::operator != (const NVertexEmbedding& other)
-        const {
-    return ((tetrahedron_ != other.tetrahedron_) || (vertex_ != other.vertex_));
 }
 
 } // namespace regina

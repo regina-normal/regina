@@ -296,6 +296,10 @@ class REGINA_API Simplex<3> : public SimplexBase<3> {
         REGINA_INLINE_REQUIRED
         NPerm4 getTriangleMapping(int face) const;
 
+        template <int subdim>
+        REGINA_INLINE_REQUIRED
+        NPerm4 getFaceMapping(int face) const;
+
     private:
         /**
          * Creates a new tetrahedron with empty description and no
@@ -355,19 +359,34 @@ inline NTriangle* Simplex<3>::getTriangle(int face) const {
     return triangles_[face];
 }
 
-inline NPerm4 Simplex<3>::getVertexMapping(int vertex) const {
+template <>
+inline NPerm4 Simplex<3>::getFaceMapping<0>(int vertex) const {
     getTriangulation()->ensureSkeleton();
     return vertexMapping_[vertex];
 }
 
-inline NPerm4 Simplex<3>::getEdgeMapping(int edge) const {
+template <>
+inline NPerm4 Simplex<3>::getFaceMapping<1>(int edge) const {
     getTriangulation()->ensureSkeleton();
     return edgeMapping_[edge];
 }
 
-inline NPerm4 Simplex<3>::getTriangleMapping(int face) const {
+template <>
+inline NPerm4 Simplex<3>::getFaceMapping<2>(int triangle) const {
     getTriangulation()->ensureSkeleton();
-    return triMapping_[face];
+    return triMapping_[triangle];
+}
+
+inline NPerm4 Simplex<3>::getVertexMapping(int vertex) const {
+    return getFaceMapping<0>(vertex);
+}
+
+inline NPerm4 Simplex<3>::getEdgeMapping(int edge) const {
+    return getFaceMapping<1>(edge);
+}
+
+inline NPerm4 Simplex<3>::getTriangleMapping(int triangle) const {
+    return getFaceMapping<2>(triangle);
 }
 
 inline Simplex<3>::Simplex(NTriangulation* tri) : SimplexBase<3>(tri) {

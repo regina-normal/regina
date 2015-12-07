@@ -190,6 +190,10 @@ class REGINA_API Simplex<2> : public SimplexBase<2> {
         REGINA_INLINE_REQUIRED
         NPerm3 getEdgeMapping(int edge) const;
 
+        template <int subdim>
+        REGINA_INLINE_REQUIRED
+        NPerm3 getFaceMapping(int face) const;
+
     private:
         /**
          * Creates a new triangle with empty description and no
@@ -244,14 +248,24 @@ inline Dim2Edge* Simplex<2>::getEdge(int edge) const {
     return edge_[edge];
 }
 
-inline NPerm3 Simplex<2>::getVertexMapping(int vertex) const {
+template <>
+inline NPerm3 Simplex<2>::getFaceMapping<0>(int vertex) const {
     getTriangulation()->ensureSkeleton();
     return vertexMapping_[vertex];
 }
 
-inline NPerm3 Simplex<2>::getEdgeMapping(int edge) const {
+template <>
+inline NPerm3 Simplex<2>::getFaceMapping<1>(int edge) const {
     getTriangulation()->ensureSkeleton();
     return edgeMapping_[edge];
+}
+
+inline NPerm3 Simplex<2>::getVertexMapping(int vertex) const {
+    return getFaceMapping<0>(vertex);
+}
+
+inline NPerm3 Simplex<2>::getEdgeMapping(int edge) const {
+    return getFaceMapping<1>(edge);
 }
 
 inline Simplex<2>::Simplex(Dim2Triangulation* tri) : SimplexBase<2>(tri) {
