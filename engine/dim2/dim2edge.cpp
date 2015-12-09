@@ -48,8 +48,7 @@ void Dim2Edge::writeTextLong(std::ostream& out) const {
 
     out << "Appears as:" << std::endl;
     for (auto& emb : *this)
-        out << "  " << emb.getTriangle()->markedIndex()
-            << " (" << emb.getVertices().trunc2() << ')' << std::endl;
+        out << "  " << emb << std::endl;
 }
 
 } // namespace regina

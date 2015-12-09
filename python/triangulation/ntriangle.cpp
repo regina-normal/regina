@@ -68,6 +68,11 @@ void addNTriangle() {
         .def("getFace", &NTriangleEmbedding::getFace)
         .def("getTriangle", &NTriangleEmbedding::getTriangle)
         .def("getVertices", &NTriangleEmbedding::getVertices)
+        .def("str", &NTriangleEmbedding::str)
+        .def("toString", &NTriangleEmbedding::toString)
+        .def("detail", &NTriangleEmbedding::detail)
+        .def("toStringLong", &NTriangleEmbedding::toStringLong)
+        .def("__str__", &NTriangleEmbedding::str)
         .def(regina::python::add_eq_operators())
     ;
 

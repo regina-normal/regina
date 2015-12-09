@@ -66,6 +66,11 @@ void addDim2Edge() {
             return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim2EdgeEmbedding::getEdge)
         .def("getVertices", &Dim2EdgeEmbedding::getVertices)
+        .def("str", &Dim2EdgeEmbedding::str)
+        .def("toString", &Dim2EdgeEmbedding::toString)
+        .def("detail", &Dim2EdgeEmbedding::detail)
+        .def("toStringLong", &Dim2EdgeEmbedding::toStringLong)
+        .def("__str__", &Dim2EdgeEmbedding::str)
         .def(regina::python::add_eq_operators())
     ;
 

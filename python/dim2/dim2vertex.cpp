@@ -62,6 +62,11 @@ void addDim2Vertex() {
             return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim2VertexEmbedding::getVertex)
         .def("getVertices", &Dim2VertexEmbedding::getVertices)
+        .def("str", &Dim2VertexEmbedding::str)
+        .def("toString", &Dim2VertexEmbedding::toString)
+        .def("detail", &Dim2VertexEmbedding::detail)
+        .def("toStringLong", &Dim2VertexEmbedding::toStringLong)
+        .def("__str__", &Dim2VertexEmbedding::str)
         .def(regina::python::add_eq_operators())
     ;
 

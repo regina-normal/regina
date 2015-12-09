@@ -430,6 +430,8 @@ Version 4.97  [ (under development) ]
             - New classes that provide consistent APIs for objects to provide
               short and detailed string output.  These have been introduced as
               lightweight replacements for the now-defunct ShareableObject.
+            - These new classes also provide an output operator << that allows
+              any object derived from Output to be written to an output stream.
         Class ReturnsTraits:
             - Helper class for compile-time analysis of function objects.
         Class ShareableObject:

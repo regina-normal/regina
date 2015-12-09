@@ -62,8 +62,7 @@ void NVertex::writeTextLong(std::ostream& out) const {
 
     out << "Appears as:" << std::endl;
     for (auto& emb : *this)
-        out << "  " << emb.getTetrahedron()->markedIndex()
-            << " (" << emb.getVertex() << ')' << std::endl;
+        out << "  " << emb << std::endl;
 }
 
 Dim2Triangulation* NVertex::buildLinkDetail(bool labels,

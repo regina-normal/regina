@@ -42,8 +42,7 @@ void Dim2Vertex::writeTextLong(std::ostream& out) const {
 
     out << "Appears as:" << std::endl;
     for (auto& emb : *this)
-        out << "  " << emb.getTriangle()->markedIndex()
-            << " (" << emb.getVertex() << ')' << std::endl;
+        out << "  " << emb << std::endl;
 }
 
 } // namespace regina

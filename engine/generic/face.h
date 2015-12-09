@@ -80,7 +80,7 @@ template <int dim> class Triangulation;
  * This must be between 0 and \a dim-1 inclusive.
  */
 template <int dim, int subdim>
-class FaceEmbeddingBase {
+class FaceEmbeddingBase : public ShortOutput<FaceEmbeddingBase<dim, subdim>> {
     static_assert(dim >= 2, "FaceEmbedding requires dimension >= 2.");
     static_assert(0 <= subdim && subdim < dim,
         "FaceEmbedding requires 0 <= subdimension < dimension.");
@@ -181,6 +181,16 @@ class FaceEmbeddingBase {
          * @return \c true if and only if both object are identical.
          */
         bool operator != (const FaceEmbeddingBase& rhs) const;
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
 };
 
 /**
@@ -636,6 +646,18 @@ template <int dim, int subdim>
 bool FaceEmbeddingBase<dim, subdim>::operator != (
         const FaceEmbeddingBase& rhs) const {
     return ((simplex_ != rhs.simplex_) || (face_ != rhs.face_));
+}
+
+template <int dim, int subdim>
+void FaceEmbeddingBase<dim, subdim>::writeTextShort(std::ostream& out) const {
+    // It seems C++ will not let us do a partial specialisation for dim = 0.
+    // Let's see if the compiler can optimise this code instead, given that
+    // the if(...) test is a compile-time constant.
+    if (subdim == 0)
+        out << simplex_->index() << " (" << face_ << ')';
+    else
+        out << simplex_->index() << " ("
+            << getVertices().trunc(subdim + 1) << ')';
 }
 
 // Inline functions for FaceEmbedding

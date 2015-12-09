@@ -80,6 +80,11 @@ void addNVertex() {
             return_value_policy<reference_existing_object>())
         .def("getVertex", &NVertexEmbedding::getVertex)
         .def("getVertices", &NVertexEmbedding::getVertices)
+        .def("str", &NVertexEmbedding::str)
+        .def("toString", &NVertexEmbedding::toString)
+        .def("detail", &NVertexEmbedding::detail)
+        .def("toStringLong", &NVertexEmbedding::toStringLong)
+        .def("__str__", &NVertexEmbedding::str)
         .def(regina::python::add_eq_operators())
     ;
 

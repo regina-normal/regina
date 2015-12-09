@@ -126,9 +126,7 @@ void NTriangle::writeTextLong(std::ostream& out) const {
 
     out << "Appears as:" << std::endl;
     for (auto& emb : *this)
-        out << "  " << emb.getTetrahedron()->markedIndex()
-            << " (" << emb.getVertices().trunc3() << ')'
-            << std::endl;
+        out << "  " << emb << std::endl;
 }
 
 } // namespace regina

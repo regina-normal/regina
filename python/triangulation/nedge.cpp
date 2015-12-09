@@ -79,6 +79,11 @@ void addNEdge() {
             return_value_policy<reference_existing_object>())
         .def("getEdge", &NEdgeEmbedding::getEdge)
         .def("getVertices", &NEdgeEmbedding::getVertices)
+        .def("str", &NEdgeEmbedding::str)
+        .def("toString", &NEdgeEmbedding::toString)
+        .def("detail", &NEdgeEmbedding::detail)
+        .def("toStringLong", &NEdgeEmbedding::toStringLong)
+        .def("__str__", &NEdgeEmbedding::str)
         .def(regina::python::add_eq_operators())
     ;
 
