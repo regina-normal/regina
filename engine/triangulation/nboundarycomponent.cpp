@@ -44,11 +44,9 @@ void NBoundaryComponent::writeTextLong(std::ostream& out) const {
         NVertex* v = vertices_.front();
         out << "Vertex: " << v->markedIndex() << std::endl;
         out << "Appears as:" << std::endl;
-        std::vector<NVertexEmbedding>::const_iterator it;
-        for (it = v->getEmbeddings().begin(); it != v->getEmbeddings().end();
-                ++it)
-            out << "  " << it->getTetrahedron()->markedIndex()
-                << " (" << it->getVertex() << ')' << std::endl;
+        for (auto& emb : *v)
+            out << "  " << emb.getTetrahedron()->markedIndex()
+                << " (" << emb.getVertex() << ')' << std::endl;
     } else {
         out << "Triangles:" << std::endl;
         std::vector<NTriangle*>::const_iterator it;

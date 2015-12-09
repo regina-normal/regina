@@ -44,7 +44,6 @@
 #include <memory>
 #include <vector>
 #include "regina-core.h"
-#include "generic/dimtraits.h"
 #include "generic/triangulation.h"
 #include "packet/npacket.h"
 #include "utilities/nmarkedvector.h"
@@ -59,8 +58,6 @@
 namespace regina {
 
 class Dim2BoundaryComponent;
-class Dim2Edge;
-class Dim2Vertex;
 class NXMLDim2TriangulationReader;
 class NXMLPacketReader;
 
@@ -68,8 +65,11 @@ template <int> class Component;
 template <int> class Isomorphism;
 template <int> class SimplexBase;
 template <int> class Simplex;
+template <int, int> class Face;
 typedef Isomorphism<2> Dim2Isomorphism;
 typedef Simplex<2> Dim2Triangle;
+typedef Face<2, 0> Dim2Vertex;
+typedef Face<2, 1> Dim2Edge;
 
 /**
  * \addtogroup dim2 2-Manifold Triangulations
@@ -389,7 +389,7 @@ class REGINA_API Triangulation<2> :
          * This template function is to assist with writing dimension-agnostic
          * code that can be reused to work in different dimensions.
          *
-         * \pre The template argument \a subdim is between 0 and 2 inclusive.
+         * \pre The template argument \a subdim is between 0 and 1 inclusive.
          *
          * \ifacespython Not present.
          *
@@ -398,8 +398,7 @@ class REGINA_API Triangulation<2> :
          * @return the requested face.
          */
         template <int subdim>
-        typename FaceTraits<2, subdim>::Face* getFace(unsigned long index)
-            const;
+        Face<2, subdim>* getFace(unsigned long index) const;
         /**
          * Returns the index of the given boundary component
          * in the triangulation.
@@ -448,7 +447,7 @@ class REGINA_API Triangulation<2> :
          * This template function is to assist with writing dimension-agnostic
          * code that can be reused to work in different dimensions.
          *
-         * \pre The template argument \a subdim is between 0 and 2 inclusive.
+         * \pre The template argument \a subdim is between 0 and 1 inclusive.
          * \pre The given face belongs to this triangulation.
          *
          * \warning Passing a null pointer to this routine will probably
@@ -461,7 +460,7 @@ class REGINA_API Triangulation<2> :
          * \a subdim-face, 1 is the second \a subdim-face, and so on.
          */
         template <int subdim>
-        long faceIndex(const typename FaceTraits<2, subdim>::Face* face) const;
+        long faceIndex(const Face<2, subdim>* face) const;
 
         /*@}*/
         /**
@@ -804,11 +803,6 @@ inline Dim2Edge* Triangulation<2>::getFace<1>(unsigned long index) const {
     return edges_[index];
 }
 
-template <>
-inline Dim2Triangle* Triangulation<2>::getFace<2>(unsigned long index) const {
-    return simplices_[index];
-}
-
 inline long Triangulation<2>::boundaryComponentIndex(
         const Dim2BoundaryComponent* boundaryComponent) const {
     return boundaryComponent->markedIndex();
@@ -829,11 +823,6 @@ inline long Triangulation<2>::faceIndex<0>(const Dim2Vertex* face) const {
 
 template <>
 inline long Triangulation<2>::faceIndex<1>(const Dim2Edge* face) const {
-    return face->markedIndex();
-}
-
-template <>
-inline long Triangulation<2>::faceIndex<2>(const Dim2Triangle* face) const {
     return face->markedIndex();
 }
 

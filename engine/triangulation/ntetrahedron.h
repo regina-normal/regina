@@ -49,13 +49,13 @@
 
 namespace regina {
 
-class NTriangle;
-class NEdge;
-class NVertex;
-
 template <int> class Component;
 template <int> class Triangulation;
+template <int, int> class Face;
 typedef Triangulation<3> NTriangulation;
+typedef Face<3, 0> NVertex;
+typedef Face<3, 1> NEdge;
+typedef Face<3, 2> NTriangle;
 
 /**
  * \weakgroup triangulation

@@ -46,14 +46,11 @@
 #include "output.h"
 #include "generic/face.h"
 #include "maths/nperm4.h"
-#include "utilities/nmarkedvector.h"
-#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
 class NBoundaryComponent;
-class NVertex;
 
 template <int> class Component;
 template <int> class Simplex;
@@ -61,6 +58,7 @@ template <int> class Triangulation;
 typedef Component<3> NComponent;
 typedef Simplex<3> NTetrahedron;
 typedef Triangulation<3> NTriangulation;
+typedef Face<3, 0> NVertex;
 
 /**
  * \weakgroup triangulation
@@ -178,14 +176,16 @@ class REGINA_API FaceEmbedding<3, 1> : public FaceEmbeddingBase<3, 1> {
 typedef FaceEmbedding<3, 1> NEdgeEmbedding;
 
 /**
- * Represents an edge in the skeleton of a triangulation.
- * Edges are highly temporary; once a triangulation changes, all its
- * edge objects will be deleted and new ones will be created.
+ * Represents an edge in the skeleton of a 3-manifold triangulation.
+ *
+ * This is a specialisation of the generic Face class template; see the
+ * documentation for Face for a general overview of how this class works.
+ *
+ * These specialisations for Regina's \ref stddim "standard dimensions",
+ * offer significant extra functionality.
  */
-class REGINA_API NEdge :
-        public Output<NEdge>,
-        public boost::noncopyable,
-        public NMarkedElement {
+template <>
+class REGINA_API Face<3, 1> : public FaceBase<3, 1>, public Output<Face<3, 1>> {
     public:
         /**
          * A table that maps vertices of a tetrahedron to edge numbers.
@@ -258,11 +258,6 @@ class REGINA_API NEdge :
         static const NPerm4 ordering[6];
 
     private:
-        std::deque<NEdgeEmbedding> embeddings_;
-            /**< A list of descriptors telling how this edge forms a part of
-                 each individual tetrahedron that it belongs to. */
-        NComponent* component_;
-            /**< The component that this edge is a part of. */
         NBoundaryComponent* boundaryComponent_;
             /**< The boundary component that this edge is a part of,
                  or 0 if this edge is internal. */
@@ -270,69 +265,6 @@ class REGINA_API NEdge :
             /**< Is this edge valid? */
 
     public:
-
-        /**
-         * Returns the index of this edge in the underlying
-         * triangulation.  This is identical to calling
-         * <tt>getTriangulation()->edgeIndex(this)</tt>.
-         *
-         * @return the index of this edge.
-         */
-        unsigned long index() const;
-
-        /**
-         * Returns the list of descriptors detailing how this edge forms a
-         * part of various tetrahedra in the triangulation.
-         * Note that if this edge represents multiple edges of a
-         * particular tetrahedron, then there will be multiple embedding
-         * descriptors in the list regarding that tetrahedron.
-         *
-         * These embedding descriptors will be stored in order in the
-         * list, so that if you run through the list and follow in turn
-         * the edges of each tetrahedron defined by the images of (2,3)
-         * under NEdgeEmbedding::getVertices(), then you will obtain an
-         * ordered chain circling this edge.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of embedding descriptors.
-         * @see NEdgeEmbedding
-         */
-        const std::deque<NEdgeEmbedding>& getEmbeddings() const;
-
-        /**
-         * Returns the number of descriptors in the list returned by
-         * getEmbeddings().  Note that this is identical to getDegree().
-         *
-         * @return the number of embedding descriptors.
-         */
-        unsigned long getNumberOfEmbeddings() const;
-
-        /**
-         * Returns the requested descriptor from the list returned by
-         * getEmbeddings().
-         *
-         * @param index the index of the requested descriptor.  This
-         * should be between 0 and getNumberOfEmbeddings()-1 inclusive.
-         * @return the requested embedding descriptor.
-         */
-        const NEdgeEmbedding& getEmbedding(unsigned long index) const;
-
-        /**
-         * Returns the triangulation to which this edge belongs.
-         *
-         * @return the triangulation containing this edge.
-         */
-        NTriangulation* getTriangulation() const;
-
-        /**
-         * Returns the component of the triangulation to which this
-         * edge belongs.
-         *
-         * @return the component containing this edge.
-         */
-        NComponent* getComponent() const;
-
         /**
          * Returns the boundary component of the triangulation to which
          * this edge belongs.
@@ -351,14 +283,6 @@ class REGINA_API NEdge :
          * @return the corresponding vertex of the triangulation.
          */
         NVertex* getVertex(int vertex) const;
-
-        /**
-         * Returns the degree of this edge.  Note that this is identical
-         * to getNumberOfEmbeddings().
-         *
-         * @return the degree of this edge.
-         */
-        unsigned long getDegree() const;
 
         /**
          * Determines if this edge lies entirely on the boundary of the
@@ -404,11 +328,16 @@ class REGINA_API NEdge :
          * @param myComponent the triangulation component to which this
          * edge belongs.
          */
-        NEdge(NComponent* myComponent);
+        Face(NComponent* component);
 
     friend class Triangulation<3>;
         /**< Allow access to private members. */
 };
+
+/**
+ * A convenience typedef for Face<3, 1>.
+ */
+typedef Face<3, 1> NEdge;
 
 /*@}*/
 
@@ -441,58 +370,30 @@ inline int FaceEmbedding<3, 1>::getEdge() const {
 
 // Inline functions for NEdge
 
-inline NEdge::NEdge(NComponent* myComponent) : component_(myComponent),
+inline Face<3, 1>::Face(NComponent* component) :
+        FaceBase<3, 1>(component),
         boundaryComponent_(0), valid_(true) {
 }
 
-inline unsigned long NEdge::index() const {
-    return markedIndex();
-}
-
-inline NTriangulation* NEdge::getTriangulation() const {
-    return embeddings_.front().getTetrahedron()->getTriangulation();
-}
-
-inline NComponent* NEdge::getComponent() const {
-    return component_;
-}
-
-inline NBoundaryComponent* NEdge::getBoundaryComponent() const {
+inline NBoundaryComponent* Face<3, 1>::getBoundaryComponent() const {
     return boundaryComponent_;
 }
 
-inline NVertex* NEdge::getVertex(int vertex) const {
-    return embeddings_.front().getTetrahedron()->getVertex(
-        embeddings_.front().getVertices()[vertex]);
+inline NVertex* Face<3, 1>::getVertex(int vertex) const {
+    return front().getTetrahedron()->getVertex(front().getVertices()[vertex]);
 }
 
-inline unsigned long NEdge::getDegree() const {
-    return embeddings_.size();
-}
-
-inline bool NEdge::isBoundary() const {
+inline bool Face<3, 1>::isBoundary() const {
     return (boundaryComponent_ != 0);
 }
 
-inline bool NEdge::isValid() const {
+inline bool Face<3, 1>::isValid() const {
     return valid_;
 }
 
-inline const std::deque<NEdgeEmbedding> & NEdge::getEmbeddings() const {
-    return embeddings_;
-}
-
-inline unsigned long NEdge::getNumberOfEmbeddings() const {
-    return embeddings_.size();
-}
-
-inline const NEdgeEmbedding& NEdge::getEmbedding(unsigned long index) const {
-    return embeddings_[index];
-}
-
-inline void NEdge::writeTextShort(std::ostream& out) const {
+inline void Face<3, 1>::writeTextShort(std::ostream& out) const {
     out << (isBoundary() ? "Boundary " : "Internal ")
-        << "edge of degree " << getNumberOfEmbeddings();
+        << "edge of degree " << getDegree();
 }
 
 } // namespace regina

@@ -40,7 +40,7 @@
 
 namespace regina {
 
-NVertex::~NVertex() {
+NVertex::~Face() {
     delete linkTri_;
 }
 
@@ -53,7 +53,7 @@ void NVertex::writeTextShort(std::ostream& out) const {
         case NON_STANDARD_CUSP: out << "Non-standard cusp "; break;
         case NON_STANDARD_BDRY: out << "Non-standard boundary "; break;
     }
-    out << "vertex of degree " << getNumberOfEmbeddings();
+    out << "vertex of degree " << getDegree();
 }
 
 void NVertex::writeTextLong(std::ostream& out) const {
@@ -61,10 +61,9 @@ void NVertex::writeTextLong(std::ostream& out) const {
     out << std::endl;
 
     out << "Appears as:" << std::endl;
-    std::vector<NVertexEmbedding>::const_iterator it;
-    for (it = embeddings_.begin(); it != embeddings_.end(); ++it)
-        out << "  " << it->getTetrahedron()->markedIndex()
-            << " (" << it->getVertex() << ')' << std::endl;
+    for (auto& emb : *this)
+        out << "  " << emb.getTetrahedron()->markedIndex()
+            << " (" << emb.getVertex() << ')' << std::endl;
 }
 
 Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
@@ -74,12 +73,12 @@ Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
     NPacket::ChangeEventSpan span(ans);
 
     if (inclusion)
-        *inclusion = new NIsomorphism(embeddings_.size());
+        *inclusion = new NIsomorphism(getDegree());
 
     std::vector<NVertexEmbedding>::const_iterator it, adjIt;
     Dim2Triangle* tTri;
     int i;
-    for (it = embeddings_.begin(), i = 0; it != embeddings_.end(); ++it, ++i) {
+    for (it = begin(), i = 0; it != end(); ++it, ++i) {
         tTri = ans->newTriangle();
         if (labels) {
             std::stringstream s;
@@ -99,7 +98,7 @@ Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
     int edgeInLink;
     int adjIndex;
     int adjVertex;
-    for (it = embeddings_.begin(), i = 0; it != embeddings_.end(); ++it, ++i) {
+    for (it = begin(), i = 0; it != end(); ++it, ++i) {
         tet = it->getTetrahedron();
         v = it->getVertex();
 
@@ -125,8 +124,8 @@ Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
             // Currently we do a simple linear scan, which makes the
             // overall link construction quadratic.  This can surely be
             // made linear(ish) with the right data structure and/or algorithm.
-            for (adjIt = embeddings_.begin(), adjIndex = 0;
-                    adjIt != embeddings_.end(); ++adjIt, ++adjIndex)
+            for (adjIt = begin(), adjIndex = 0;
+                    adjIt != end(); ++adjIt, ++adjIndex)
                 if (adjIt->getTetrahedron() == adj &&
                         adjIt->getVertex() == adjVertex)
                     break; // Sets adjIndex to the right value.

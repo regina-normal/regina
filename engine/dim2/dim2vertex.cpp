@@ -41,10 +41,9 @@ void Dim2Vertex::writeTextLong(std::ostream& out) const {
     out << std::endl;
 
     out << "Appears as:" << std::endl;
-    std::deque<Dim2VertexEmbedding>::const_iterator it;
-    for (it = emb_.begin(); it != emb_.end(); ++it)
-        out << "  " << it->getTriangle()->markedIndex()
-            << " (" << it->getVertex() << ')' << std::endl;
+    for (auto& emb : *this)
+        out << "  " << emb.getTriangle()->markedIndex()
+            << " (" << emb.getVertex() << ')' << std::endl;
 }
 
 } // namespace regina

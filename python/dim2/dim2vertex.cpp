@@ -47,12 +47,9 @@ using regina::Dim2VertexEmbedding;
 
 namespace {
     boost::python::list Dim2Vertex_getEmbeddings_list(const Dim2Vertex* v) {
-        const std::deque<Dim2VertexEmbedding>& embs = v->getEmbeddings();
-        std::deque<Dim2VertexEmbedding>::const_iterator it;
-
         boost::python::list ans;
-        for (it = embs.begin(); it != embs.end(); it++)
-            ans.append(*it);
+        for (auto& emb: *v)
+            ans.append(emb);
         return ans;
     }
 }
@@ -72,8 +69,11 @@ void addDim2Vertex() {
             ("Dim2Vertex", no_init)
         .def("index", &Dim2Vertex::index)
         .def("getEmbeddings", Dim2Vertex_getEmbeddings_list)
-        .def("getNumberOfEmbeddings", &Dim2Vertex::getNumberOfEmbeddings)
         .def("getEmbedding", &Dim2Vertex::getEmbedding,
+            return_internal_reference<>())
+        .def("front", &Dim2Vertex::front,
+            return_internal_reference<>())
+        .def("back", &Dim2Vertex::back,
             return_internal_reference<>())
         .def("getTriangulation", &Dim2Vertex::getTriangulation,
             return_value_policy<reference_existing_object>())

@@ -48,12 +48,9 @@ using regina::NVertexEmbedding;
 
 namespace {
     boost::python::list vertex_getEmbeddings_list(const NVertex* v) {
-        const std::vector<NVertexEmbedding>& embs = v->getEmbeddings();
-        std::vector<NVertexEmbedding>::const_iterator it;
-
         boost::python::list ans;
-        for (it = embs.begin(); it != embs.end(); it++)
-            ans.append(*it);
+        for (auto& emb: *v)
+            ans.append(emb);
         return ans;
     }
 
@@ -90,8 +87,11 @@ void addNVertex() {
             ("NVertex", no_init)
         .def("index", &NVertex::index)
         .def("getEmbeddings", vertex_getEmbeddings_list)
-        .def("getNumberOfEmbeddings", &NVertex::getNumberOfEmbeddings)
         .def("getEmbedding", &NVertex::getEmbedding,
+            return_internal_reference<>())
+        .def("front", &NVertex::front,
+            return_internal_reference<>())
+        .def("back", &NVertex::back,
             return_internal_reference<>())
         .def("getTriangulation", &NVertex::getTriangulation,
             return_value_policy<reference_existing_object>())

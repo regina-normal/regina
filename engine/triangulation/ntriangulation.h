@@ -50,7 +50,6 @@
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "angle/nanglestructure.h"
-#include "generic/dimtraits.h"
 #include "generic/triangulation.h"
 #include "maths/ncyclotomic.h"
 #include "packet/npacket.h"
@@ -69,9 +68,6 @@ namespace regina {
 
 class NAngleStructure;
 class NBoundaryComponent;
-class NEdge;
-class NTriangle;
-class NVertex;
 class NGroupPresentation;
 class NNormalSurface;
 class NXMLPacketReader;
@@ -81,8 +77,12 @@ template <int> class Component;
 template <int> class Isomorphism;
 template <int> class SimplexBase;
 template <int> class Simplex;
+template <int, int> class Face;
 typedef Isomorphism<3> NIsomorphism;
 typedef Simplex<3> NTetrahedron;
+typedef Face<3, 0> NVertex;
+typedef Face<3, 1> NEdge;
+typedef Face<3, 2> NTriangle;
 
 /**
  * \addtogroup triangulation 3-Manifold Triangulations
@@ -612,7 +612,7 @@ class REGINA_API Triangulation<3> :
          * This template function is to assist with writing dimension-agnostic
          * code that can be reused to work in different dimensions.
          *
-         * \pre The template argument \a subdim is between 0 and 3 inclusive.
+         * \pre The template argument \a subdim is between 0 and 2 inclusive.
          *
          * \ifacespython Not present.
          *
@@ -621,8 +621,7 @@ class REGINA_API Triangulation<3> :
          * @return the requested face.
          */
         template <int subdim>
-        typename FaceTraits<3, subdim>::Face* getFace(unsigned long index)
-            const;
+        Face<3, subdim>* getFace(unsigned long index) const;
         /**
          * Returns the index of the given boundary component
          * in the triangulation.
@@ -729,7 +728,7 @@ class REGINA_API Triangulation<3> :
          * This template function is to assist with writing dimension-agnostic
          * code that can be reused to work in different dimensions.
          *
-         * \pre The template argument \a subdim is between 0 and 3 inclusive.
+         * \pre The template argument \a subdim is between 0 and 2 inclusive.
          * \pre The given face belongs to this triangulation.
          *
          * \warning Passing a null pointer to this routine will probably
@@ -742,7 +741,7 @@ class REGINA_API Triangulation<3> :
          * \a subdim-face, 1 is the second \a subdim-face, and so on.
          */
         template <int subdim>
-        long faceIndex(const typename FaceTraits<3, subdim>::Face* face) const;
+        long faceIndex(const Face<3, subdim>* face) const;
 
         /**
          * Determines if this triangulation contains any two-sphere
@@ -3693,11 +3692,6 @@ inline NTriangle* Triangulation<3>::getFace<2>(unsigned long index) const {
     return triangles_[index];
 }
 
-template <>
-inline NTetrahedron* Triangulation<3>::getFace<3>(unsigned long index) const {
-    return simplices_[index];
-}
-
 inline long Triangulation<3>::boundaryComponentIndex(
         const NBoundaryComponent* boundaryComponent) const {
     return boundaryComponent->markedIndex();
@@ -3732,11 +3726,6 @@ inline long Triangulation<3>::faceIndex<1>(const NEdge* face) const {
 
 template <>
 inline long Triangulation<3>::faceIndex<2>(const NTriangle* face) const {
-    return face->markedIndex();
-}
-
-template <>
-inline long Triangulation<3>::faceIndex<3>(const NTetrahedron* face) const {
     return face->markedIndex();
 }
 #endif

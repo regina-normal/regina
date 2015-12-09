@@ -66,7 +66,6 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
             genIndex[fit - triangles_.begin()] = i++;
 
     // Run through each edge and put the relations in the matrix.
-    std::deque<NEdgeEmbedding>::const_iterator embit;
     NTetrahedron* currTet;
     NTriangle* triangle;
     int currTetFace;
@@ -76,10 +75,9 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
         if (! (*eit)->isBoundary()) {
             // Put in the relation corresponding to this edge.
             rel = new NGroupExpression();
-            for (embit = (*eit)->getEmbeddings().begin();
-                    embit != (*eit)->getEmbeddings().end(); embit++) {
-                currTet = (*embit).getTetrahedron();
-                currTetFace = (*embit).getVertices()[2];
+            for (auto& emb : **eit) {
+                currTet = emb.getTetrahedron();
+                currTetFace = emb.getVertices()[2];
                 triangle = currTet->getTriangle(currTetFace);
                 triGenIndex = genIndex[triangleIndex(triangle)];
                 if (triGenIndex >= 0) {

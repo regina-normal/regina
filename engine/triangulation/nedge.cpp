@@ -76,10 +76,9 @@ void NEdge::writeTextLong(std::ostream& out) const {
     out << std::endl;
 
     out << "Appears as:" << std::endl;
-    std::deque<NEdgeEmbedding>::const_iterator it;
-    for (it = embeddings_.begin(); it != embeddings_.end(); ++it)
-        out << "  " << it->getTetrahedron()->markedIndex()
-            << " (" << it->getVertices().trunc2() << ')' << std::endl;
+    for (auto& emb : *this)
+        out << "  " << emb.getTetrahedron()->markedIndex()
+            << " (" << emb.getVertices().trunc2() << ')' << std::endl;
 }
 
 } // namespace regina

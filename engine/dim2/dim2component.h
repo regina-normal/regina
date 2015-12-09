@@ -47,13 +47,14 @@
 namespace regina {
 
 class Dim2BoundaryComponent;
-class Dim2Edge;
-class Dim2Vertex;
 
 template <int> class Simplex;
 template <int> class Triangulation;
+template <int, int> class Face;
 typedef Simplex<2> Dim2Triangle;
 typedef Triangulation<2> Dim2Triangulation;
+typedef Face<2, 0> Dim2Vertex;
+typedef Face<2, 1> Dim2Edge;
 
 /**
  * \weakgroup dim2

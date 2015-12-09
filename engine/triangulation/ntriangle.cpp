@@ -105,15 +105,15 @@ NTriangle::Type NTriangle::getType() {
 }
 
 NEdge* NTriangle::getEdge(int edge) const {
-    NPerm4 p = embeddings_[0]->getVertices();
-    return embeddings_[0]->getTetrahedron()->getEdge(
+    NPerm4 p = front().getVertices();
+    return front().getTetrahedron()->getEdge(
         NEdge::edgeNumber[p[(edge + 1) % 3]][p[(edge + 2) % 3]]);
 }
 
 NPerm4 NTriangle::getEdgeMapping(int edge) const {
-    NPerm4 triPerm = embeddings_[0]->getVertices();
+    NPerm4 triPerm = front().getVertices();
         // Maps triangle -> tetrahedron
-    NPerm4 edgePerm = embeddings_[0]->getTetrahedron()->getEdgeMapping(
+    NPerm4 edgePerm = front().getTetrahedron()->getEdgeMapping(
         NEdge::edgeNumber[triPerm[(edge + 1) % 3]][triPerm[(edge + 2) % 3]]);
         // Maps edge -> tetrahedron
     return NPerm4(triPerm.preImageOf(edgePerm[0]),
@@ -125,9 +125,9 @@ void NTriangle::writeTextLong(std::ostream& out) const {
     out << std::endl;
 
     out << "Appears as:" << std::endl;
-    for (int i = 0; i < nEmbeddings_; ++i)
-        out << "  " << embeddings_[i]->getTetrahedron()->markedIndex()
-            << " (" << embeddings_[i]->getVertices().trunc3() << ')'
+    for (auto& emb : *this)
+        out << "  " << emb.getTetrahedron()->markedIndex()
+            << " (" << emb.getVertices().trunc3() << ')'
             << std::endl;
 }
 

@@ -182,18 +182,11 @@ bool check_consistency_around_edge(const NTriangulation &trig,
                                    int edge_index,
                                    bool force_oriented)
 {
-    typedef std::deque<NEdgeEmbedding> NEmbed;
-    typedef NEmbed::const_iterator NEmbedIterator;
-
-    NEdge*           edge            = trig.getEdge(edge_index);
-    const NEmbed &   edge_embeddings = edge -> getEmbeddings();
-    NEmbedIterator   it;
-
     // iterate through all tetrahedra around an edge
 
-    for(it = edge_embeddings.begin(); it != edge_embeddings.end(); ++it)
+    for(auto& emb : *trig.getEdge(edge_index))
         if(!check_consistency_on_tet(trig, edge_orientations,
-                                     it->getTetrahedron(), force_oriented))
+                                     emb.getTetrahedron(), force_oriented))
             return false;
 
     return true;

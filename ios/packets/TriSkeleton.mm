@@ -272,7 +272,7 @@
                 regina::NEdge* e = self.packet->getEdge(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Edge" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%zd.", indexPath.row - 1];
-                cell.data1.text = [NSString stringWithFormat:@"%ld", e->getNumberOfEmbeddings()];
+                cell.data1.text = [NSString stringWithFormat:@"%ld", e->getDegree()];
 
                 if (! e->isValid())
                     cell.data0.attributedText = [TextHelper badString:@"Invalid"];
@@ -334,7 +334,7 @@
                 }
 
                 NSMutableString* pieces = [NSMutableString string];
-                for (unsigned i = 0; i < t->getNumberOfEmbeddings(); i++)
+                for (unsigned i = 0; i < t->getDegree(); i++)
                     [TextHelper appendToList:pieces
                                         item:[NSString stringWithFormat:@"%ld (%s)",
                                               self.packet->tetrahedronIndex(t->getEmbedding(i).getTetrahedron()),

@@ -46,7 +46,8 @@
 
 namespace regina {
 
-class NEdge;
+template <int, int> class Face;
+typedef Face<3, 1> NEdge;
 
 /**
  * \weakgroup subcomplex

@@ -43,8 +43,7 @@ namespace regina {
 NLargeInteger NNormalSurfaceVectorOriented::getEdgeWeight(
         unsigned long edgeIndex, const NTriangulation* triang) const {
     // Find a tetrahedron next to the edge in question.
-    const NEdgeEmbedding& emb = triang->getEdges()[edgeIndex]->
-        getEmbeddings().front();
+    const NEdgeEmbedding& emb = triang->getEdges()[edgeIndex]->front();
     long tetIndex = triang->tetrahedronIndex(emb.getTetrahedron());
     int start = emb.getVertices()[0];
     int end = emb.getVertices()[1];

@@ -373,12 +373,12 @@
      e0.getTetrahedron()->index(),
      e0.getVertex()];
 
-    if (vertex->getNumberOfEmbeddings() > 1) {
+    if (vertex->getDegree() > 1) {
         const regina::NVertexEmbedding& e1 = vertex->getEmbedding(1);
         [text appendFormat:@", %ld (%d)",
          e1.getTetrahedron()->index(),
          e1.getVertex()];
-        if (vertex->getNumberOfEmbeddings() > 2)
+        if (vertex->getDegree() > 2)
             [text appendString:@", …"];
     }
 
@@ -398,12 +398,12 @@
      e0.getTetrahedron()->index(),
      e0.getVertices().trunc2().c_str()];
 
-    if (edge->getNumberOfEmbeddings() > 1) {
+    if (edge->getDegree() > 1) {
         const regina::NEdgeEmbedding& e1 = edge->getEmbedding(1);
         [text appendFormat:@", %ld (%s)",
          e1.getTetrahedron()->index(),
          e1.getVertices().trunc2().c_str()];
-        if (edge->getNumberOfEmbeddings() > 2)
+        if (edge->getDegree() > 2)
             [text appendString:@", …"];
     }
 
@@ -426,12 +426,12 @@
      e0.getTetrahedron()->index(),
      e0.getVertices().trunc2().c_str()];
 
-    if (edge->getNumberOfEmbeddings() > 1) {
+    if (edge->getDegree() > 1) {
         const regina::NEdgeEmbedding& e1 = edge->getEmbedding(1);
         [text appendFormat:@", %ld (%s)",
          e1.getTetrahedron()->index(),
          e1.getVertices().trunc2().c_str()];
-        if (edge->getNumberOfEmbeddings() > 2)
+        if (edge->getDegree() > 2)
             [text appendString:@", …"];
     }
 
@@ -451,7 +451,7 @@
      e0.getTetrahedron()->index(),
      e0.getVertices().trunc3().c_str()];
 
-    if (triangle->getNumberOfEmbeddings() > 1) {
+    if (triangle->getDegree() > 1) {
         const regina::NTriangleEmbedding& e1 = triangle->getEmbedding(1);
         [text appendFormat:@", %ld (%s)",
          e1.getTetrahedron()->index(),

@@ -76,12 +76,12 @@ bool TriangulationBase<3>::compatible(
                 // Find this degree, or insert it with frequency 0 if it's
                 // not already present.
                 mapIt = map1.insert(
-                    std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
+                    std::make_pair((*it)->getDegree(), 0)).first;
                 (*mapIt).second++;
             }
             for (it = other.edges_.begin(); it != other.edges_.end(); it++) {
                 mapIt = map2.insert(
-                    std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
+                    std::make_pair((*it)->getDegree(), 0)).first;
                 (*mapIt).second++;
             }
             if (! (map1 == map2))
@@ -93,13 +93,13 @@ bool TriangulationBase<3>::compatible(
             NTriangulation::VertexIterator it;
             for (it = me->vertices_.begin(); it != me->vertices_.end(); it++) {
                 mapIt = map1.insert(
-                    std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
+                    std::make_pair((*it)->getDegree(), 0)).first;
                 (*mapIt).second++;
             }
             for (it = other.vertices_.begin();
                     it != other.vertices_.end(); it++) {
                 mapIt = map2.insert(
-                    std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
+                    std::make_pair((*it)->getDegree(), 0)).first;
                 (*mapIt).second++;
             }
             if (! (map1 == map2))
@@ -160,16 +160,15 @@ template <>
 bool TriangulationBase<3>::compatible(
         Simplex<3>* src, Simplex<3>* dest, NPerm<4> p) {
     for (int edge = 0; edge < 6; edge++) {
-        if (src->getEdge(edge)->getNumberOfEmbeddings() !=
+        if (src->getEdge(edge)->getDegree() !=
                 dest->getEdge(NEdge::edgeNumber[p[NEdge::edgeVertex[edge][0]]]
-                    [p[NEdge::edgeVertex[edge][1]]])
-                ->getNumberOfEmbeddings())
+                    [p[NEdge::edgeVertex[edge][1]]])->getDegree())
             return false;
     }
 
     for (int vertex = 0; vertex < 4; vertex++) {
-        if (src->getVertex(vertex)->getNumberOfEmbeddings() !=
-                dest->getVertex(p[vertex])->getNumberOfEmbeddings())
+        if (src->getVertex(vertex)->getDegree() !=
+                dest->getVertex(p[vertex])->getDegree())
             return false;
         if (src->getVertex(vertex)->getLink() !=
                 dest->getVertex(p[vertex])->getLink())

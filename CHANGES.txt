@@ -59,9 +59,17 @@ Version 4.97  [ (under development) ]
               and getNumberOfBoundaryFacets() have been renamed to size(),
               simplices(), simplex() and countBoundaryFacets() respectively.
               The old names are retained but deprecated.
-        Class Dim2Edge:
+        Class Dim2Edge, Dim2EdgeEmbedding:
+            - Now just typedefs for the new classes Face<2, 1> and
+              FaceEmbedding<2, 1>, which have the same functionality as
+              the old Dim2Edge and Dim2EdgeEmbedding respectively.
             - New routine inMaximalForest() for working with the dual
               1-skeleton.
+            - Added begin(), end(), front() and back() to Dim2Edge.
+              In particular, this class now supports C++11-style iteration.
+            - Added getEmbeddings() to Dim2Edge for Python (but not C++).
+            - Removed the old routine getNumberOfEmbeddings(), and replaced
+              it with the new (and equivalent) routine getDegree().
         Class Dim2Isomorphism:
             - Now just a typedef for the new class Isomorphism<2>, which has
               the same functionality as the old Dim2Isomorphism.
@@ -98,14 +106,33 @@ Version 4.97  [ (under development) ]
               old names are deprecated but kept for backward compatibility.
             - Renamed getNumberOfBoundaryEdges() to countBoundaryFacets();
               added an alias countBoundaryEdges(); deprecated the old name.
+        Class Dim2Vertex, Dim2VertexEmbedding:
+            - Now just typedefs for the new classes Face<2, 0> and
+              FaceEmbedding<2, 0>, which have the same functionality as
+              the old Dim2Vertex and Dim2VertexEmbedding respectively.
+            - Added begin(), end(), front() and back() to Dim2Vertex.
+              In particular, this class now supports C++11-style iteration.
+            - Removed getEmbeddings() for C++, but kept it for Python.
+            - Removed the old routine getNumberOfEmbeddings().  Just use
+              the equivalent routine getDegree() instead.
         Class DimTraits:
             - Removed entirely.  For the typedefs that it used to provide
               (e.g., Triangulation, Simplex, FacetPairing, etc.), just use
               Triangulation<dim>, Simplex<dim>, FacetPairing<dim>, and so on.
-        Class FaceTraits:
-            - New template class to help with writing dimension-agnostic code.
-              This class offers typedefs for (subdim)-dimensional faces
-              within a (dim)-dimensional triangulation.
+        Class Face, FaceEmbedding, FaceBase, FaceEmbeddingBase, FaceStorage:
+            - Face<dim, subdim> is now a generic class that replaces the
+              old face classes Dim2Vertex, Dim2Edge, NVertex, NEdge, NTriangle.
+              FaceBase<dim, subdim> and FaceStorage<dim, codim> are base
+              classes with functionality common to all dimensions, whereas
+              Face<dim, subdim> is specialised for dimensions dim = 2, 3 and 4.
+            - Likewise, FaceEmbedding<dim, subdim> is a generic class
+              that replaces Dim2VertexEmbedding, ..., NTriangleEmbedding.
+              Again, FaceEmbeddingBase<dim, subdim> is a base class with
+              common functionality, and FaceEmbedding<dim, subdim> is
+              specialised for dimensions dim = 2, 3 and 4.
+            - The old class names (Dim2Vertex, ..., NTriangle and
+              Dim2VertexEmbedding, ..., NTriangleEmbedding) have been kept
+              as typedefs for convenience.
         Class FacetPairing, FacetPairingBase:
             - FacetPairing<dim> is now a generic class that replaces the old
               Dim2EdgePairing, NFacePairing and so on.  FacetPairingBase<dim>
@@ -147,6 +174,15 @@ Version 4.97  [ (under development) ]
             - Added != operator to complement the existing == operator.
         Class NDiscSpecIterator:
             - Added == and != comparison operators.
+        Class NEdge, NEdgeEmbedding:
+            - Now just typedefs for the new classes Face<3, 1> and
+              FaceEmbedding<3, 1>, which have the same functionality as
+              the old NEdge and NEdgeEmbedding respectively.
+            - Added begin(), end(), front() and back() to NEdge.
+              In particular, this class now supports C++11-style iteration.
+            - Removed getEmbeddings() for C++, but kept it for Python.
+            - Removed the old routine getNumberOfEmbeddings().  Just use
+              the equivalent routine getDegree() instead.
         Struct NewFunction, NewFunction1:
             - NewFunction1 is deprecated in favour of the new and more
               flexible NewFunction, which allows arbitrary arguments and
@@ -317,12 +353,20 @@ Version 4.97  [ (under development) ]
         Class NTreeBag, NTreeDecomposition:
             - Classes for computing tree decompositions of graphs
               (including facet pairing graphs of triangulations).
-        Class NTriangle:
-            - Added a new Type enumeration, which encapsulates (and replaces)
-              the old triangle type constants.  Also added a new type
-              constant UNKNOWN_TYPE.
-            - New routine inMaximalForest() for working with the dual
-              1-skeleton.
+        Class NTriangle, NTriangleEmbedding:
+            - Now just typedefs for the new classes Face<3, 2> and
+              FaceEmbedding<3, 2>, which have the same functionality as
+              the old NTriangle and NTriangleEmbedding respectively.
+            - Added a new Type enumeration to NTriangle, which encapsulates
+              (and replaces) the old triangle type constants.  Also added a
+              new type constant UNKNOWN_TYPE.
+            - New routine inMaximalForest() in NTriangle for working with the
+              dual 1-skeleton.
+            - Added begin(), end(), front() and back() to NTriangle.
+              In particular, this class now supports C++11-style iteration.
+            - Added getEmbeddings() to NTriangle for Python (but not C++).
+            - Removed the old routine getNumberOfEmbeddings(), and replaced
+              it with the new (and equivalent) routine getDegree().
         Class NTriangulation:
             - Now just a typedef for the new class Triangulation<3>, which has
               the same functionality as the old NTriangulation.
@@ -372,8 +416,16 @@ Version 4.97  [ (under development) ]
               added an alias countBoundaryTriangles(); deprecated the old name.
             - Removed the long-deprecated addTetrahedron().
         Class NVertex:
-            - Added a new LinkType enumeration, which encapsulates (and
-              replaces) the old link type constants.
+            - Now just typedefs for the new classes Face<3, 0> and
+              FaceEmbedding<3, 0>, which have the same functionality as
+              the old NVertex and NVertexEmbedding respectively.
+            - Added a new LinkType enumeration to NVertex, which encapsulates
+              (and replaces) the old link type constants.
+            - Added begin(), end(), front() and back() to NVertex.
+              In particular, this class now supports C++11-style iteration.
+            - Removed getEmbeddings() for C++, but kept it for Python.
+            - Removed the old routine getNumberOfEmbeddings().  Just use
+              the equivalent routine getDegree() instead.
         Class Output, ShortOutput:
             - New classes that provide consistent APIs for objects to provide
               short and detailed string output.  These have been introduced as
@@ -424,6 +476,8 @@ Version 4.97  [ (under development) ]
         Header dim2edgepairing.h, nfacepairing.h:
             - Relocated from census/ into dim2/ and triangulation/ respectively.
               Deprecated headers have been kept in the old census/ folder.
+        Header dimtraits.h:
+            - Deprecated, since this header is now empty.
         Header ngenericfacetpairing.h, ngenericfacetpairing-impl.h:
             - Moved to generic/facetpairing.h and generic/facetpairing-impl.h.
               The old headers are kept but deprecated.

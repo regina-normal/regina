@@ -151,7 +151,6 @@ void NTriangulation::drillEdge(NEdge* e) {
     int i, j, k;
     unsigned long finalTet;
     NVertex* finalVertex;
-    std::vector<NVertexEmbedding>::const_iterator it;
     for (i = 0; i < 2; ++i)
         for (j = 0; j < 2; ++j) {
             finalTet = 24 * (24 * tetNum + oldToNew[i]) + oldToNew[j];
@@ -161,9 +160,8 @@ void NTriangulation::drillEdge(NEdge* e) {
             for (k = 0; k < 2; ++k) {
                 finalVertex = simplices_[finalTet]->getEdge(edgeNum)->
                     getVertex(k);
-                for (it = finalVertex->getEmbeddings().begin();
-                        it != finalVertex->getEmbeddings().end(); ++it)
-                    toRemove.insert(tetrahedronIndex(it->getTetrahedron()));
+                for (auto& emb : *finalVertex)
+                    toRemove.insert(tetrahedronIndex(emb.getTetrahedron()));
             }
         }
 
@@ -284,13 +282,11 @@ bool NTriangulation::idealToFinite() {
     // ideal vertices.
     // First we make a list of the tetrahedra.
     std::vector<NTetrahedron*> tetList;
-    std::vector<NVertexEmbedding>::const_iterator vembit;
     for (VertexIterator vIter = vertices_.begin();
             vIter != vertices_.end(); vIter++)
         if ((*vIter)->isIdeal() || ! (*vIter)->isStandard())
-            for (vembit = (*vIter)->getEmbeddings().begin();
-                    vembit != (*vIter)->getEmbeddings().end(); vembit++)
-                tetList.push_back((*vembit).getTetrahedron());
+            for (auto& emb : **vIter)
+                tetList.push_back(emb.getTetrahedron());
 
     // Now remove the tetrahedra.
     // For each tetrahedron, remove it and delete it.
@@ -349,8 +345,8 @@ bool NTriangulation::finiteToIdeal() {
 
             // This must be a valid boundary edge.
             // Find the boundary triangles at either end.
-            NEdgeEmbedding e1 = edge->getEmbeddings().front();
-            NEdgeEmbedding e2 = edge->getEmbeddings().back();
+            NEdgeEmbedding e1 = edge->front();
+            NEdgeEmbedding e2 = edge->back();
 
             tetTriangle1 = e1.getTetrahedron()->getTriangle(
                 e1.getVertices()[3])->markedIndex();

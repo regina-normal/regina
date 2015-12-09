@@ -49,6 +49,13 @@ using regina::python::GlobalArray;
 
 namespace {
     GlobalArray<regina::NPerm3> Dim2Edge_ordering(Dim2Edge::ordering, 3);
+
+    boost::python::list Dim2Edge_getEmbeddings_list(const Dim2Edge* e) {
+        boost::python::list ans;
+        for (auto& emb: *e)
+            ans.append(emb);
+        return ans;
+    }
 }
 
 void addDim2Edge() {
@@ -65,8 +72,13 @@ void addDim2Edge() {
     scope s = class_<Dim2Edge, std::auto_ptr<Dim2Edge>, boost::noncopyable>
             ("Dim2Edge", no_init)
         .def("index", &Dim2Edge::index)
-        .def("getNumberOfEmbeddings", &Dim2Edge::getNumberOfEmbeddings)
+        .def("getEmbeddings", Dim2Edge_getEmbeddings_list)
+        .def("getDegree", &Dim2Edge::getDegree)
         .def("getEmbedding", &Dim2Edge::getEmbedding,
+            return_internal_reference<>())
+        .def("front", &Dim2Edge::front,
+            return_internal_reference<>())
+        .def("back", &Dim2Edge::back,
             return_internal_reference<>())
         .def("getTriangulation", &Dim2Edge::getTriangulation,
             return_value_policy<reference_existing_object>())

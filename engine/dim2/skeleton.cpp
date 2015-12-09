@@ -108,13 +108,11 @@ void Triangulation<2>::calculateEdges() const {
                 adjTri->edgeMapping_[adjEdge] = tri->adjacentGluing(edge) *
                     Dim2Edge::ordering[edge];
 
-                e->emb_[0] = Dim2EdgeEmbedding(tri, edge);
-                e->emb_[1] = Dim2EdgeEmbedding(adjTri, adjEdge);
-                e->nEmb_ = 2;
+                e->push_back(Dim2EdgeEmbedding(tri, edge));
+                e->push_back(Dim2EdgeEmbedding(adjTri, adjEdge));
             } else {
                 // This is a boundary edge.
-                e->emb_[0] = Dim2EdgeEmbedding(tri, edge);
-                e->nEmb_ = 1;
+                e->push_back(Dim2EdgeEmbedding(tri, edge));
             }
         }
     }
@@ -150,7 +148,7 @@ void Triangulation<2>::calculateVertices() const {
             loopTri->vertex_[loopVtx] = label;
             loopTri->vertexMapping_[loopVtx] =
                 NPerm3(loopVtx, (loopVtx + 1) % 3, (loopVtx + 2) % 3);
-            label->emb_.push_back(Dim2VertexEmbedding(loopTri, loopVtx));
+            label->push_back(Dim2VertexEmbedding(loopTri, loopVtx));
 
             for (dir = 0; dir < 2; ++dir) {
                 // Start at the start and walk in one particular direction.
@@ -178,10 +176,10 @@ void Triangulation<2>::calculateVertices() const {
                     adjTri->vertexMapping_[adjVertex] = adjMap;
 
                     if (dir == 0)
-                        label->emb_.push_back(Dim2VertexEmbedding(
+                        label->push_back(Dim2VertexEmbedding(
                             adjTri, adjVertex));
                     else
-                        label->emb_.push_front(Dim2VertexEmbedding(
+                        label->push_front(Dim2VertexEmbedding(
                             adjTri, adjVertex));
 
                     tri = adjTri;
@@ -211,19 +209,19 @@ void Triangulation<2>::calculateBoundary() const {
         edge = *it;
 
         // We only care about boundary edges that we haven't yet seen..
-        if (edge->nEmb_ == 2 || edge->boundaryComponent_)
+        if (edge->getDegree() == 2 || edge->boundaryComponent_)
             continue;
 
         label = new Dim2BoundaryComponent();
         boundaryComponents_.push_back(label);
-        edge->component_->boundaryComponents_.push_back(label);
+        edge->getComponent()->boundaryComponents_.push_back(label);
 
         // Loop around from this boundary edge to
         // completely enumerate all edges in this boundary component.
 
-        tri = edge->emb_[0].getTriangle();
-        edgeId = edge->emb_[0].getEdge();
-        vertexId = edge->emb_[0].getVertices()[0];
+        tri = edge->front().getTriangle();
+        edgeId = edge->front().getEdge();
+        vertexId = edge->front().getVertices()[0];
         vertex = tri->vertex_[vertexId];
         while (true) {
             if (! edge->boundaryComponent_) {
@@ -242,13 +240,13 @@ void Triangulation<2>::calculateBoundary() const {
             // We can be clever about this.  The current
             // boundary edge is one end of the vertex link; the
             // *adjacent* boundary edge must be at the other.
-            vertexEmb = vertex->emb_.front();
+            vertexEmb = vertex->front();
             if (vertexEmb.getTriangle() == tri &&
                     vertexEmb.getVertices()[0] == vertexId &&
                     vertexEmb.getVertices()[2] == edgeId) {
                 // We are currently looking at the embedding at the
                 // front of the list.  Take the one at the back.
-                vertexEmb = vertex->emb_.back();
+                vertexEmb = vertex->back();
 
                 adjTri = vertexEmb.getTriangle();
                 adjEdgeId = vertexEmb.getVertices()[1];
@@ -264,7 +262,7 @@ void Triangulation<2>::calculateBoundary() const {
                 adjVertexId = vertexEmb.getVertices()[1];
 
                 // TODO: Sanity checking; remove this eventually.
-                vertexEmb = vertex->emb_.back();
+                vertexEmb = vertex->back();
                 if (! (vertexEmb.getTriangle() == tri &&
                         vertexEmb.getVertices()[0] == vertexId &&
                         vertexEmb.getVertices()[1] == edgeId)) {

@@ -50,6 +50,13 @@ using regina::python::GlobalArray;
 
 namespace {
     GlobalArray<regina::NPerm4> NTriangle_ordering(NTriangle::ordering, 4);
+
+    boost::python::list NTriangle_getEmbeddings_list(const NTriangle* t) {
+        boost::python::list ans;
+        for (auto& emb: *t)
+            ans.append(emb);
+        return ans;
+    }
 }
 
 void addNTriangle() {
@@ -68,14 +75,19 @@ void addNTriangle() {
         scope s = class_<NTriangle, std::auto_ptr<NTriangle>,
                 boost::noncopyable>("NTriangle", no_init)
             .def("index", &NTriangle::index)
+            .def("getEmbeddings", NTriangle_getEmbeddings_list)
+            .def("getEmbedding", &NTriangle::getEmbedding,
+                return_internal_reference<>())
             .def("isBoundary", &NTriangle::isBoundary)
             .def("inMaximalForest", &NTriangle::inMaximalForest)
             .def("getType", &NTriangle::getType)
             .def("getSubtype", &NTriangle::getSubtype)
             .def("isMobiusBand", &NTriangle::isMobiusBand)
             .def("isCone", &NTriangle::isCone)
-            .def("getNumberOfEmbeddings", &NTriangle::getNumberOfEmbeddings)
-            .def("getEmbedding", &NTriangle::getEmbedding,
+            .def("getDegree", &NTriangle::getDegree)
+            .def("front", &NTriangle::front,
+                return_internal_reference<>())
+            .def("back", &NTriangle::back,
                 return_internal_reference<>())
             .def("getTriangulation", &NTriangle::getTriangulation,
                 return_value_policy<reference_existing_object>())

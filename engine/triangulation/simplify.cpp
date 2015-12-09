@@ -92,11 +92,10 @@ namespace {
 }
 
 bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
-    const std::deque<NEdgeEmbedding>& embs = e->getEmbeddings();
     if (check) {
         if (e->isBoundary() || ! e->isValid())
             return false;
-        if (embs.size() != 3)
+        if (e->getDegree() != 3)
             return false;
     }
 
@@ -105,13 +104,12 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
     NPerm4 oldVertexPerm[3];
     std::set<NTetrahedron*> oldTets;
     int oldPos = 0;
-    for (std::deque<NEdgeEmbedding>::const_iterator it = embs.begin();
-            it != embs.end(); it++) {
-        oldTet[oldPos] =(*it).getTetrahedron();
+    for (auto& emb : *e) {
+        oldTet[oldPos] = emb.getTetrahedron();
         if (check)
             if (! oldTets.insert(oldTet[oldPos]).second)
                 return false;
-        oldVertexPerm[oldPos] = (*it).getVertices();
+        oldVertexPerm[oldPos] = emb.getVertices();
         oldPos++;
     }
 
@@ -215,7 +213,7 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
 
 bool NTriangulation::twoThreeMove(NTriangle* f, bool check, bool perform) {
     if (check) {
-        if (f->getNumberOfEmbeddings() != 2)
+        if (f->getDegree() != 2)
             return false;
         // We now know that the given triangle is not on the boundary.
     }
@@ -394,11 +392,10 @@ bool NTriangulation::oneFourMove(NTetrahedron* tet, bool /* check */,
 
 bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
         bool perform) {
-    const std::deque<NEdgeEmbedding>& embs = e->getEmbeddings();
     if (check) {
         if (e->isBoundary() || ! e->isValid())
             return false;
-        if (embs.size() != 4)
+        if (e->getDegree() != 4)
             return false;
     }
 
@@ -406,9 +403,8 @@ bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
     NTetrahedron* oldTet[4];
     std::set<NTetrahedron*> oldTets;
     int oldPos = 0;
-    for (std::deque<NEdgeEmbedding>::const_iterator it = embs.begin();
-            it != embs.end(); it++) {
-        oldTet[oldPos] =(*it).getTetrahedron();
+    for (auto& emb : *e) {
+        oldTet[oldPos] = emb.getTetrahedron();
         if (check)
             if (! oldTets.insert(oldTet[oldPos]).second)
                 return false;
@@ -425,9 +421,9 @@ bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
     // Perform the 4-4 move as a 2-3 move followed by a 3-2 move.
     ChangeEventSpan span(this);
     NTriangle* tri23 = (newAxis == 0 ?
-        oldTet[0]->getTriangle(embs[0].getVertices()[2]) :
-        oldTet[1]->getTriangle(embs[1].getVertices()[2]));
-    int edge32 = embs[3].getEdge();
+        oldTet[0]->getTriangle(e->getEmbedding(0).getVertices()[2]) :
+        oldTet[1]->getTriangle(e->getEmbedding(1).getVertices()[2]));
+    int edge32 = e->getEmbedding(3).getEdge();
 
     twoThreeMove(tri23, false, true);
     threeTwoMove(oldTet[3]->getEdge(edge32), false, true);
@@ -440,7 +436,7 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
     if (check) {
         if (e->isBoundary() || ! e->isValid())
             return false;
-        if (e->getNumberOfEmbeddings() != 2)
+        if (e->getDegree() != 2)
             return false;
     }
 
@@ -448,10 +444,9 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
     NPerm4 perm[2];
 
     int i = 0;
-    for (std::deque<NEdgeEmbedding>::const_iterator it =
-            e->getEmbeddings().begin(); it != e->getEmbeddings().end(); it++) {
-        tet[i] = (*it).getTetrahedron();
-        perm[i] = (*it).getVertices();
+    for (auto& emb : *e) {
+        tet[i] = emb.getTetrahedron();
+        perm[i] = emb.getVertices();
         i++;
     }
 
@@ -538,19 +533,17 @@ bool NTriangulation::twoZeroMove(NVertex* v, bool check, bool perform) {
     if (check) {
         if (v->getLink() != NVertex::SPHERE)
             return false;
-        if (v->getNumberOfEmbeddings() != 2)
+        if (v->getDegree() != 2)
             return false;
     }
 
     NTetrahedron* tet[2];
     int vertex[2];
 
-    std::vector<NVertexEmbedding>::const_iterator it;
     int i = 0;
-    for (it = v->getEmbeddings().begin(); it != v->getEmbeddings().end();
-            it++) {
-        tet[i] = (*it).getTetrahedron();
-        vertex[i] = (*it).getVertex();
+    for (auto& emb : *v) {
+        tet[i] = emb.getTetrahedron();
+        vertex[i] = emb.getVertex();
         i++;
     }
 
@@ -623,11 +616,11 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
     if (check) {
         if (e->isBoundary() || ! e->isValid())
             return false;
-        if (e->getNumberOfEmbeddings() != 1)
+        if (e->getDegree() != 1)
             return false;
     }
 
-    const NEdgeEmbedding& emb = e->getEmbeddings().front();
+    const NEdgeEmbedding& emb = e->front();
     NTetrahedron* oldTet = emb.getTetrahedron();
     NPerm4 oldVertices = emb.getVertices();
 
@@ -797,8 +790,8 @@ bool NTriangulation::closeBook(NEdge* e, bool check, bool perform) {
     }
 
     // Find the two triangles on either side of edge e.
-    const NEdgeEmbedding& front = e->getEmbeddings().front();
-    const NEdgeEmbedding& back = e->getEmbeddings().back();
+    const NEdgeEmbedding& front = e->front();
+    const NEdgeEmbedding& back = e->back();
 
     NTetrahedron* t0 = front.getTetrahedron();
     NTetrahedron* t1 = back.getTetrahedron();
@@ -896,8 +889,6 @@ bool NTriangulation::shellBoundary(NTetrahedron* t,
 
 bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
     // Find the tetrahedra to remove.
-    const std::deque<NEdgeEmbedding>& embs = e->getEmbeddings();
-
     std::deque<NEdgeEmbedding>::const_iterator it;
     NTetrahedron* tet = 0;
     NPerm4 p;
@@ -1009,9 +1000,9 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
             long id1, id2;
 
             // Run through all triangles containing e.
-            it = embs.begin();
+            it = e->begin();
 
-            for ( ; it != embs.end(); ++it) {
+            for ( ; it != e->end(); ++it) {
                 tet = it->getTetrahedron();
                 p = it->getVertices();
 
@@ -1033,7 +1024,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
                 // We do not need to worry about missing check 0 for
                 // the last boundary triangle, since if it fails there then
                 // it must also fail for the first.
-                if (e->isBoundary() && it == embs.begin())
+                if (e->isBoundary() && it == e->begin())
                     continue;
 
                 id1 = ((upper->isBoundary() || ! upper->isValid()) ?
@@ -1085,7 +1076,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
             NTriangle *upper, *lower;
             long id1, id2;
 
-            for (it = embs.begin(); it != embs.end(); ++it) {
+            for (it = e->begin(); it != e->end(); ++it) {
                 tet = it->getTetrahedron();
                 p = it->getVertices();
 
@@ -1123,12 +1114,12 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
 
     // Clone the edge embeddings because we cannot rely on skeletal
     // objects once we start changing the triangulation.
-    unsigned long degree = embs.size();
+    size_t degree = e->getDegree();
     NTetrahedron** embTet = new NTetrahedron*[degree];
     NPerm4* embVertices = new NPerm4[degree];
 
     unsigned i;
-    for (i = 0, it = embs.begin(); it != embs.end(); ++i, ++it) {
+    for (i = 0, it = e->begin(); it != e->end(); ++i, ++it) {
         embTet[i] = (*it).getTetrahedron();
         embVertices[i] = (*it).getVertices();
     }

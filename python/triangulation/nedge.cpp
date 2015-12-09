@@ -58,12 +58,9 @@ namespace {
     GlobalArray<regina::NPerm4> NEdge_ordering(NEdge::ordering, 6);
 
     boost::python::list edge_getEmbeddings_list(const NEdge* e) {
-        const std::deque<NEdgeEmbedding>& embs = e->getEmbeddings();
-        std::deque<NEdgeEmbedding>::const_iterator it;
-
         boost::python::list ans;
-        for (it = embs.begin(); it != embs.end(); it++)
-            ans.append(*it);
+        for (auto& emb: *e)
+            ans.append(emb);
         return ans;
     }
 }
@@ -89,8 +86,11 @@ void addNEdge() {
             ("NEdge", no_init)
         .def("index", &NEdge::index)
         .def("getEmbeddings", edge_getEmbeddings_list)
-        .def("getNumberOfEmbeddings", &NEdge::getNumberOfEmbeddings)
         .def("getEmbedding", &NEdge::getEmbedding,
+            return_internal_reference<>())
+        .def("front", &NEdge::front,
+            return_internal_reference<>())
+        .def("back", &NEdge::back,
             return_internal_reference<>())
         .def("getTriangulation", &NEdge::getTriangulation,
             return_value_policy<reference_existing_object>())
