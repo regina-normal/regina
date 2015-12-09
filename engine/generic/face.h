@@ -569,10 +569,30 @@ class FaceBase :
  * This must be between 0 and \a dim-1 inclusive.
  */
 template <int dim, int subdim>
-class Face : public FaceBase<dim, subdim> {
+class Face : public FaceBase<dim, subdim>, Output<Face<dim, subdim>> {
     static_assert(! standardDim(dim),
         "The generic implementation of Face<dim, subdim> "
         "should not be used for Regina's standard dimensions.");
+
+    public:
+        /**
+         * Writes a short text representation of this face to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this face to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
 
     protected:
         /**
@@ -835,6 +855,38 @@ inline FaceBase<dim, subdim>::FaceBase(Component<dim>* component) :
 template <int dim, int subdim>
 inline Face<dim, subdim>::Face(Component<dim>* component) :
         FaceBase<dim, subdim>(component) {
+}
+
+template <int dim, int subdim>
+inline void Face<dim, subdim>::writeTextShort(std::ostream& out) const {
+    // We can't do a partial specialisation on subdim.
+    // Instead take cases, which we hope the compiler can optimise given
+    // that subdim is a compile-time constant.
+    switch (subdim) {
+        case 0:
+            out << "Vertex"; break;
+        case 1:
+            out << "Edge"; break;
+        case 2:
+            out << "Triangle"; break;
+        case 3:
+            out << "Tetrahedron"; break;
+        case 4:
+            out << "Pentachoron"; break;
+        default:
+            out << subdim << "-face"; break;
+    }
+    out << " of degree " << FaceStorage<dim, dim - subdim>::getDegree();
+}
+
+template <int dim, int subdim>
+inline void Face<dim, subdim>::writeTextLong(std::ostream& out) const {
+    writeTextShort(out);
+    out << std::endl;
+
+    out << "Appears as:" << std::endl;
+    for (auto& emb : *this)
+        out << "  " << emb << std::endl;
 }
 
 } // namespace regina
