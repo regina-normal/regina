@@ -148,10 +148,10 @@ class SimplexBase :
         /**
          * Returns the index of this simplex in the underlying triangulation.
          * This is identical to calling
-         * <tt>getTriangulation()->simplexIndex(this)</tt>.
+         * <tt>triangulation()->simplexIndex(this)</tt>.
          *
          * The index will be an integer between 0 and
-         * <tt>getTriangulation()->size()-1</tt> inclusive.
+         * <tt>triangulation()->size()-1</tt> inclusive.
          *
          * Note that indexing may change when a simplex is added to or removed
          * from the underlying triangulation.
@@ -302,6 +302,15 @@ class SimplexBase :
          * Returns the triangulation to which this simplex belongs.
          *
          * @return the triangulation containing this simplex.
+         */
+        Triangulation<dim>* triangulation() const;
+        /**
+         * Deprecated alias for triangulation(), which returns the
+         * triangulation to which this simplex belongs.
+         *
+         * \deprecated Simply call triangulation() instead.
+         *
+         * See triangulation() for further details.
          */
         Triangulation<dim>* getTriangulation() const;
 
@@ -533,13 +542,18 @@ inline NPerm<dim+1> SimplexBase<dim>::adjacentGluing(int face) const {
 }
 
 template <int dim>
+inline Triangulation<dim>* SimplexBase<dim>::triangulation() const {
+    return tri_;
+}
+
+template <int dim>
 inline Triangulation<dim>* SimplexBase<dim>::getTriangulation() const {
     return tri_;
 }
 
 template <int dim>
 inline Component<dim>* SimplexBase<dim>::component() const {
-    getTriangulation()->ensureSkeleton();
+    triangulation()->ensureSkeleton();
     return component_;
 }
 
@@ -550,13 +564,13 @@ inline Component<dim>* SimplexBase<dim>::getComponent() const {
 
 template <int dim>
 inline int SimplexBase<dim>::orientation() const {
-    getTriangulation()->ensureSkeleton();
+    triangulation()->ensureSkeleton();
     return orientation_;
 }
 
 template <int dim>
 inline bool SimplexBase<dim>::facetInMaximalForest(int facet) const {
-    getTriangulation()->ensureSkeleton();
+    triangulation()->ensureSkeleton();
     return dualForest_ & (FacetMask(1) << facet);
 }
 

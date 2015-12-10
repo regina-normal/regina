@@ -129,36 +129,65 @@ class FaceEmbeddingBase : public ShortOutput<FaceEmbeddingBase<dim, subdim>> {
          *
          * @return the top-dimensional simplex.
          */
+        Simplex<dim>* simplex() const;
+        /**
+         * Deprecated routine that returns the top-dimensional simplex
+         * in which the underlying \a subdim-face of the triangulation
+         * is contained.
+         *
+         * \deprecated Simply call simplex() instead.
+         *
+         * See simplex() for further details.
+         */
         Simplex<dim>* getSimplex() const;
 
         /**
-         * Returns the corresponding face number of getSimplex().
+         * Returns the corresponding face number of simplex().
          * This identifies which face of the top-dimensional simplex
-         * getSimplex() refers to the underlying \a subdim-face of the
+         * simplex() refers to the underlying \a subdim-face of the
          * triangulation.
          *
          * @return the corresponding face number of the top-dimensional simplex.
          * This will be between 0 and (\a dim+1 choose \a subdim+1)-1 inclusive.
+         */
+        int face() const;
+        /**
+         * Deprecated routine that returns the corresponding face number
+         * of simplex().
+         *
+         * \deprecated Simply call face() instead.
+         *
+         * See face() for further details.
          */
         int getFace() const;
 
         /**
          * Maps vertices (0,...,\a subdim) of the underlying \a subdim-face
          * of the triangulation to the corresponding vertex numbers of
-         * getSimplex().
+         * simplex().
          *
          * If the link of the underlying \a subdim-face is orientable,
          * then this permutation also maps (\a subdim+1, ..., \a dim) to the
-         * remaining vertex numbers of getSimplex() in a manner that
+         * remaining vertex numbers of simplex() in a manner that
          * preserves orientation as you walk through the many different
          * FaceEmbedding objects for the same underlying \a subdim-face.
          *
          * This routine returns the same permutation as
-         * <tt>getSimplex().getFaceMapping<subdim>(getFace())</tt>.
+         * <tt>simplex().getFaceMapping<subdim>(face())</tt>.
          * See Simplex<dim>::getFaceMapping() for details.
          *
          * @return a mapping from the vertices of the underlying
-         * \a subdim-face to the corresponding vertices of getSimplex().
+         * \a subdim-face to the corresponding vertices of simplex().
+         */
+        NPerm<dim+1> vertices() const;
+        /**
+         * Deprecated routine that maps vertices (0,...,\a subdim) of the
+         * underlying \a subdim-face of the triangulation to the corresponding
+         * vertex numbers of simplex().
+         *
+         * \deprecated Simply call vertices() instead.
+         *
+         * See vertices() for further details.
          */
         NPerm<dim+1> getVertices() const;
 
@@ -512,8 +541,8 @@ class FaceBase :
          * triangulation.
          *
          * This is identical to calling
-         * <tt>getTriangulation()->faceIndex<subdim>(this)</tt>
-         * (or <tt>getTriangulation()->vertexIndex(this)</tt> for
+         * <tt>triangulation()->faceIndex<subdim>(this)</tt>
+         * (or <tt>triangulation()->vertexIndex(this)</tt> for
          * faces of dimension \a subdim = 1, and so on).
          *
          * @return the index of this face.
@@ -524,12 +553,30 @@ class FaceBase :
          *
          * @return the triangulation containing this face.
          */
+        Triangulation<dim>* triangulation() const;
+        /**
+         * Deprecated routine that returns the triangulation to which
+         * this face belongs.
+         *
+         * \deprecated Simply call triangulation() instead.
+         *
+         * See triangulation() for further details.
+         */
         Triangulation<dim>* getTriangulation() const;
         /**
          * Returns the component of the triangulation to which this
          * face belongs.
          *
          * @return the component containing this face.
+         */
+        Component<dim>* component() const;
+        /**
+         * Deprecated routine that returns the component of the
+         * triangulation to which this face belongs.
+         *
+         * \deprecated Simply call component() instead.
+         *
+         * See component() for further details.
          */
         Component<dim>* getComponent() const;
 
@@ -634,42 +681,58 @@ inline FaceEmbeddingBase<dim, subdim>::FaceEmbeddingBase(
 }
 
 template <int dim, int subdim>
-FaceEmbeddingBase<dim, subdim>& FaceEmbeddingBase<dim, subdim>::operator = (
-        const FaceEmbeddingBase& cloneMe) {
+inline FaceEmbeddingBase<dim, subdim>& FaceEmbeddingBase<dim, subdim>::
+        operator = (const FaceEmbeddingBase& cloneMe) {
     simplex_ = cloneMe.simplex_;
     face_ = cloneMe.face_;
     return *this;
 }
 
 template <int dim, int subdim>
-Simplex<dim>* FaceEmbeddingBase<dim, subdim>::getSimplex() const {
+inline Simplex<dim>* FaceEmbeddingBase<dim, subdim>::simplex() const {
     return simplex_;
 }
 
 template <int dim, int subdim>
-int FaceEmbeddingBase<dim, subdim>::getFace() const {
+inline Simplex<dim>* FaceEmbeddingBase<dim, subdim>::getSimplex() const {
+    return simplex_;
+}
+
+template <int dim, int subdim>
+inline int FaceEmbeddingBase<dim, subdim>::face() const {
     return face_;
 }
 
 template <int dim, int subdim>
-NPerm<dim+1> FaceEmbeddingBase<dim, subdim>::getVertices() const {
+inline int FaceEmbeddingBase<dim, subdim>::getFace() const {
+    return face_;
+}
+
+template <int dim, int subdim>
+inline NPerm<dim+1> FaceEmbeddingBase<dim, subdim>::vertices() const {
     return simplex_->template getFaceMapping<subdim>(face_);
 }
 
 template <int dim, int subdim>
-bool FaceEmbeddingBase<dim, subdim>::operator == (
+inline NPerm<dim+1> FaceEmbeddingBase<dim, subdim>::getVertices() const {
+    return vertices();
+}
+
+template <int dim, int subdim>
+inline bool FaceEmbeddingBase<dim, subdim>::operator == (
         const FaceEmbeddingBase& rhs) const {
     return ((simplex_ == rhs.simplex_) && (face_ == rhs.face_));
 }
 
 template <int dim, int subdim>
-bool FaceEmbeddingBase<dim, subdim>::operator != (
+inline bool FaceEmbeddingBase<dim, subdim>::operator != (
         const FaceEmbeddingBase& rhs) const {
     return ((simplex_ != rhs.simplex_) || (face_ != rhs.face_));
 }
 
 template <int dim, int subdim>
-void FaceEmbeddingBase<dim, subdim>::writeTextShort(std::ostream& out) const {
+inline void FaceEmbeddingBase<dim, subdim>::writeTextShort(std::ostream& out)
+        const {
     // It seems C++ will not let us do a partial specialisation for dim = 0.
     // Let's see if the compiler can optimise this code instead, given that
     // the if(...) test is a compile-time constant.
@@ -677,7 +740,7 @@ void FaceEmbeddingBase<dim, subdim>::writeTextShort(std::ostream& out) const {
         out << simplex_->index() << " (" << face_ << ')';
     else
         out << simplex_->index() << " ("
-            << getVertices().trunc(subdim + 1) << ')';
+            << vertices().trunc(subdim + 1) << ')';
 }
 
 // Inline functions for FaceEmbedding
@@ -835,9 +898,18 @@ inline size_t FaceBase<dim, subdim>::index() const {
 }
 
 template <int dim, int subdim>
+inline Triangulation<dim>* FaceBase<dim, subdim>::triangulation() const {
+    return FaceStorage<dim, dim - subdim>::front().simplex()->triangulation();
+}
+
+template <int dim, int subdim>
 inline Triangulation<dim>* FaceBase<dim, subdim>::getTriangulation() const {
-    return FaceStorage<dim, dim - subdim>::front().getSimplex()->
-        getTriangulation();
+    return triangulation();
+}
+
+template <int dim, int subdim>
+inline Component<dim>* FaceBase<dim, subdim>::component() const {
+    return component_;
 }
 
 template <int dim, int subdim>
