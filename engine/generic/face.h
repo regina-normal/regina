@@ -348,6 +348,14 @@ class FaceStorage {
          *
          * @return the degree of this face.
          */
+        size_t degree() const;
+        /**
+         * Deprecated routine that returns the degree of this face.
+         *
+         * \deprecated Simply call degree() instead.
+         *
+         * See degree() for further details.
+         */
         size_t getDegree() const;
         /**
          * Returns one of the ways in which this face appears within a
@@ -362,8 +370,18 @@ class FaceStorage {
          * (which in codimension 2 is always a path or a cycle).
          *
          * @param index the index of the requested appearance.  This
-         * must be between 0 and getDegree()-1 inclusive.
+         * must be between 0 and degree()-1 inclusive.
          * @return details of the requested appearance.
+         */
+        const FaceEmbedding<dim, dim - codim>& embedding(size_t index) const;
+        /**
+         * Deprecated routine that returns one of the ways in which this
+         * face appears within a top-dimensional simplex of the underlying
+         * triangulation.
+         *
+         * \deprecated Simply call embedding() instead.
+         *
+         * See embedding() for further details.
          */
         const FaceEmbedding<dim, dim - codim>& getEmbedding(size_t index) const;
 
@@ -378,10 +396,10 @@ class FaceStorage {
          * (which in codimension 2 is always a path or a cycle).
          *
          * An iteration from begin() to end() will run through
-         * getDegree() appearances in total.
+         * degree() appearances in total.
          *
          * \ifacespython Not present.  However, Python users can call
-         * the Python-only routine getEmbeddings(), which will return all
+         * the Python-only routine embeddings(), which will return all
          * appearances (from begin() through to end()) in a Python sequence.
          *
          * @return a iterator that points to the first appearance.
@@ -399,10 +417,10 @@ class FaceStorage {
          * (which in codimension 2 is always a path or a cycle).
          *
          * An iteration from begin() to end() will run through
-         * getDegree() appearances in total.
+         * degree() appearances in total.
          *
          * \ifacespython Not present.  However, Python users can call
-         * the Python-only routine getEmbeddings(), which will return all
+         * the Python-only routine embeddings(), which will return all
          * appearances (from begin() through to end()) in a Python sequence.
          *
          * @return a "beyond the end" iterator that comes immediately
@@ -416,7 +434,7 @@ class FaceStorage {
          * simplex of the underlying triangluation.
          *
          * This is equivalent to calling <tt>*begin()</tt>, or
-         * <tt>getEmbedding(0)</tt>.
+         * <tt>embedding(0)</tt>.
          *
          * In most cases, the ordering of appearances is arbitrary.
          * The exception is for codimension 2, where the appearances of
@@ -433,7 +451,7 @@ class FaceStorage {
          * Returns the last appearance of this face within a top-dimensional
          * simplex of the underlying triangluation.
          *
-         * This is equivalent to calling <tt>getEmbedding(getDegree()-1)</tt>.
+         * This is equivalent to calling <tt>embedding(degree()-1)</tt>.
          *
          * In most cases, the ordering of appearances is arbitrary.
          * The exception is for codimension 2, where the appearances of
@@ -468,7 +486,9 @@ class FaceStorage<dim, 2> {
         std::deque<FaceEmbedding<dim, dim-2>> embeddings_;
 
     public:
+        size_t degree() const;
         size_t getDegree() const;
+        const FaceEmbedding<dim, dim-2>& embedding(size_t index) const;
         const FaceEmbedding<dim, dim-2>& getEmbedding(size_t index) const;
 
         typename std::deque<FaceEmbedding<dim, dim-2>>::const_iterator
@@ -493,7 +513,9 @@ class FaceStorage<dim, 1> {
     public:
         FaceStorage();
 
+        size_t degree() const;
         size_t getDegree() const;
+        const FaceEmbedding<dim, dim-1>& embedding(size_t index) const;
         const FaceEmbedding<dim, dim-1>& getEmbedding(size_t index) const;
 
         const FaceEmbedding<dim, dim-1>* begin() const;
@@ -603,8 +625,8 @@ class FaceBase :
  * Each such appearance is described by a single FaceEmbedding object.  You can
  * iterate through these appearances using begin() and end(), or using the
  * standard C++11 construct <tt>for (auto& emb : F) { ... }</tt>.
- * You can count these appearances by calling getDegree(), and you can also
- * examine them using routines such as front(), back() and getEmbedding().
+ * You can count these appearances by calling degree(), and you can also
+ * examine them using routines such as front(), back() and embedding().
  *
  * \warning Face objects are highly temporary: whenever a triangulation
  * changes, all its face objects will be deleted and new ones will be
@@ -764,8 +786,19 @@ inline FaceEmbedding<dim, subdim>::FaceEmbedding(
 // Inline functions for FaceStorage
 
 template <int dim, int codim>
+inline size_t FaceStorage<dim, codim>::degree() const {
+    return embeddings_.size();
+}
+
+template <int dim, int codim>
 inline size_t FaceStorage<dim, codim>::getDegree() const {
     return embeddings_.size();
+}
+
+template <int dim, int codim>
+inline const FaceEmbedding<dim, dim - codim>& FaceStorage<dim, codim>::
+        embedding(size_t index) const {
+    return embeddings_[index];
 }
 
 template <int dim, int codim>
@@ -809,8 +842,19 @@ inline FaceStorage<dim, 1>::FaceStorage() : nEmb_(0) {
 }
 
 template <int dim>
+inline size_t FaceStorage<dim, 1>::degree() const {
+    return nEmb_;
+}
+
+template <int dim>
 inline size_t FaceStorage<dim, 1>::getDegree() const {
     return nEmb_;
+}
+
+template <int dim>
+inline const FaceEmbedding<dim, dim-1>& FaceStorage<dim, 1>::
+        embedding(size_t index) const {
+    return embeddings_[index];
 }
 
 template <int dim>
@@ -846,8 +890,19 @@ inline void FaceStorage<dim, 1>::push_back(
 }
 
 template <int dim>
+inline size_t FaceStorage<dim, 2>::degree() const {
+    return embeddings_.size();
+}
+
+template <int dim>
 inline size_t FaceStorage<dim, 2>::getDegree() const {
     return embeddings_.size();
+}
+
+template <int dim>
+inline const FaceEmbedding<dim, dim-2>& FaceStorage<dim, 2>::
+        embedding(size_t index) const {
+    return embeddings_[index];
 }
 
 template <int dim>
@@ -948,7 +1003,7 @@ inline void Face<dim, subdim>::writeTextShort(std::ostream& out) const {
         default:
             out << subdim << "-face"; break;
     }
-    out << " of degree " << FaceStorage<dim, dim - subdim>::getDegree();
+    out << " of degree " << FaceStorage<dim, dim - subdim>::degree();
 }
 
 template <int dim, int subdim>

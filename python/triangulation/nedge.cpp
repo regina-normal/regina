@@ -97,7 +97,10 @@ void addNEdge() {
     scope s = class_<NEdge, std::auto_ptr<NEdge>, boost::noncopyable>
             ("NEdge", no_init)
         .def("index", &NEdge::index)
+        .def("embeddings", edge_getEmbeddings_list)
         .def("getEmbeddings", edge_getEmbeddings_list)
+        .def("embedding", &NEdge::embedding,
+            return_internal_reference<>())
         .def("getEmbedding", &NEdge::getEmbedding,
             return_internal_reference<>())
         .def("front", &NEdge::front,
@@ -116,6 +119,7 @@ void addNEdge() {
             return_value_policy<reference_existing_object>())
         .def("getVertex", &NEdge::getVertex,
             return_value_policy<reference_existing_object>())
+        .def("degree", &NEdge::degree)
         .def("getDegree", &NEdge::getDegree)
         .def("isBoundary", &NEdge::isBoundary)
         .def("isValid", &NEdge::isValid)

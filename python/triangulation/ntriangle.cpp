@@ -86,7 +86,10 @@ void addNTriangle() {
         scope s = class_<NTriangle, std::auto_ptr<NTriangle>,
                 boost::noncopyable>("NTriangle", no_init)
             .def("index", &NTriangle::index)
+            .def("embeddings", NTriangle_getEmbeddings_list)
             .def("getEmbeddings", NTriangle_getEmbeddings_list)
+            .def("embedding", &NTriangle::embedding,
+                return_internal_reference<>())
             .def("getEmbedding", &NTriangle::getEmbedding,
                 return_internal_reference<>())
             .def("isBoundary", &NTriangle::isBoundary)
@@ -95,6 +98,7 @@ void addNTriangle() {
             .def("getSubtype", &NTriangle::getSubtype)
             .def("isMobiusBand", &NTriangle::isMobiusBand)
             .def("isCone", &NTriangle::isCone)
+            .def("degree", &NTriangle::degree)
             .def("getDegree", &NTriangle::getDegree)
             .def("front", &NTriangle::front,
                 return_internal_reference<>())

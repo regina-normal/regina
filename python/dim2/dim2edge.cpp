@@ -84,8 +84,12 @@ void addDim2Edge() {
     scope s = class_<Dim2Edge, std::auto_ptr<Dim2Edge>, boost::noncopyable>
             ("Dim2Edge", no_init)
         .def("index", &Dim2Edge::index)
+        .def("embeddings", Dim2Edge_getEmbeddings_list)
         .def("getEmbeddings", Dim2Edge_getEmbeddings_list)
+        .def("degree", &Dim2Edge::degree)
         .def("getDegree", &Dim2Edge::getDegree)
+        .def("embedding", &Dim2Edge::embedding,
+            return_internal_reference<>())
         .def("getEmbedding", &Dim2Edge::getEmbedding,
             return_internal_reference<>())
         .def("front", &Dim2Edge::front,

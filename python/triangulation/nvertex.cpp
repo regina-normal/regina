@@ -98,7 +98,10 @@ void addNVertex() {
     scope s = class_<NVertex, std::auto_ptr<NVertex>, boost::noncopyable>
             ("NVertex", no_init)
         .def("index", &NVertex::index)
+        .def("embeddings", vertex_getEmbeddings_list)
         .def("getEmbeddings", vertex_getEmbeddings_list)
+        .def("embedding", &NVertex::embedding,
+            return_internal_reference<>())
         .def("getEmbedding", &NVertex::getEmbedding,
             return_internal_reference<>())
         .def("front", &NVertex::front,
@@ -115,6 +118,7 @@ void addNVertex() {
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &NVertex::getBoundaryComponent,
             return_value_policy<reference_existing_object>())
+        .def("degree", &NVertex::degree)
         .def("getDegree", &NVertex::getDegree)
         .def("getLink", &NVertex::getLink)
         .def("buildLink", &NVertex::buildLink,

@@ -80,7 +80,10 @@ void addDim2Vertex() {
     scope s = class_<Dim2Vertex, std::auto_ptr<Dim2Vertex>, boost::noncopyable>
             ("Dim2Vertex", no_init)
         .def("index", &Dim2Vertex::index)
+        .def("embeddings", Dim2Vertex_getEmbeddings_list)
         .def("getEmbeddings", Dim2Vertex_getEmbeddings_list)
+        .def("embedding", &Dim2Vertex::embedding,
+            return_internal_reference<>())
         .def("getEmbedding", &Dim2Vertex::getEmbedding,
             return_internal_reference<>())
         .def("front", &Dim2Vertex::front,
@@ -97,6 +100,7 @@ void addDim2Vertex() {
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &Dim2Vertex::getBoundaryComponent,
             return_value_policy<reference_existing_object>())
+        .def("degree", &Dim2Vertex::degree)
         .def("getDegree", &Dim2Vertex::getDegree)
         .def("isBoundary", &Dim2Vertex::isBoundary)
         .def("str", &Dim2Vertex::str)
