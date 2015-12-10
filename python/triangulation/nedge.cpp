@@ -75,9 +75,16 @@ void addNEdge() {
     class_<NEdgeEmbedding>("NEdgeEmbedding",
             init<regina::NTetrahedron*, int>())
         .def(init<const NEdgeEmbedding&>())
+        .def("simplex", &NEdgeEmbedding::simplex,
+            return_value_policy<reference_existing_object>())
+        .def("getSimplex", &NEdgeEmbedding::getSimplex,
+            return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &NEdgeEmbedding::getTetrahedron,
             return_value_policy<reference_existing_object>())
+        .def("face", &NEdgeEmbedding::face)
+        .def("getFace", &NEdgeEmbedding::getFace)
         .def("getEdge", &NEdgeEmbedding::getEdge)
+        .def("vertices", &NEdgeEmbedding::vertices)
         .def("getVertices", &NEdgeEmbedding::getVertices)
         .def("str", &NEdgeEmbedding::str)
         .def("toString", &NEdgeEmbedding::toString)
@@ -97,7 +104,11 @@ void addNEdge() {
             return_internal_reference<>())
         .def("back", &NEdge::back,
             return_internal_reference<>())
+        .def("triangulation", &NEdge::triangulation,
+            return_value_policy<reference_existing_object>())
         .def("getTriangulation", &NEdge::getTriangulation,
+            return_value_policy<reference_existing_object>())
+        .def("component", &NEdge::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &NEdge::getComponent,
             return_value_policy<reference_existing_object>())

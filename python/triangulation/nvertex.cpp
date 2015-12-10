@@ -76,9 +76,16 @@ void addNVertex() {
     class_<NVertexEmbedding>("NVertexEmbedding",
             init<regina::NTetrahedron*, int>())
         .def(init<const NVertexEmbedding&>())
+        .def("simplex", &NVertexEmbedding::simplex,
+            return_value_policy<reference_existing_object>())
+        .def("getSimplex", &NVertexEmbedding::getSimplex,
+            return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &NVertexEmbedding::getTetrahedron,
             return_value_policy<reference_existing_object>())
+        .def("face", &NVertexEmbedding::face)
+        .def("getFace", &NVertexEmbedding::getFace)
         .def("getVertex", &NVertexEmbedding::getVertex)
+        .def("vertices", &NVertexEmbedding::vertices)
         .def("getVertices", &NVertexEmbedding::getVertices)
         .def("str", &NVertexEmbedding::str)
         .def("toString", &NVertexEmbedding::toString)
@@ -98,7 +105,11 @@ void addNVertex() {
             return_internal_reference<>())
         .def("back", &NVertex::back,
             return_internal_reference<>())
+        .def("triangulation", &NVertex::triangulation,
+            return_value_policy<reference_existing_object>())
         .def("getTriangulation", &NVertex::getTriangulation,
+            return_value_policy<reference_existing_object>())
+        .def("component", &NVertex::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &NVertex::getComponent,
             return_value_policy<reference_existing_object>())

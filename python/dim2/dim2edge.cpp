@@ -62,9 +62,16 @@ void addDim2Edge() {
     class_<Dim2EdgeEmbedding>("Dim2EdgeEmbedding",
             init<regina::Dim2Triangle*, int>())
         .def(init<const Dim2EdgeEmbedding&>())
+        .def("simplex", &Dim2EdgeEmbedding::simplex,
+            return_value_policy<reference_existing_object>())
+        .def("getSimplex", &Dim2EdgeEmbedding::getSimplex,
+            return_value_policy<reference_existing_object>())
         .def("getTriangle", &Dim2EdgeEmbedding::getTriangle,
             return_value_policy<reference_existing_object>())
+        .def("face", &Dim2EdgeEmbedding::face)
+        .def("getFace", &Dim2EdgeEmbedding::getFace)
         .def("getEdge", &Dim2EdgeEmbedding::getEdge)
+        .def("vertices", &Dim2EdgeEmbedding::vertices)
         .def("getVertices", &Dim2EdgeEmbedding::getVertices)
         .def("str", &Dim2EdgeEmbedding::str)
         .def("toString", &Dim2EdgeEmbedding::toString)
@@ -85,7 +92,11 @@ void addDim2Edge() {
             return_internal_reference<>())
         .def("back", &Dim2Edge::back,
             return_internal_reference<>())
+        .def("triangulation", &Dim2Edge::triangulation,
+            return_value_policy<reference_existing_object>())
         .def("getTriangulation", &Dim2Edge::getTriangulation,
+            return_value_policy<reference_existing_object>())
+        .def("component", &Dim2Edge::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim2Edge::getComponent,
             return_value_policy<reference_existing_object>())

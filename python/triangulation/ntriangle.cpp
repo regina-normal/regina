@@ -63,10 +63,16 @@ void addNTriangle() {
     class_<NTriangleEmbedding, boost::noncopyable>("NTriangleEmbedding",
             init<regina::NTetrahedron*, int>())
         .def(init<const NTriangleEmbedding&>())
+        .def("simplex", &NTriangleEmbedding::simplex,
+            return_value_policy<reference_existing_object>())
+        .def("getSimplex", &NTriangleEmbedding::getSimplex,
+            return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &NTriangleEmbedding::getTetrahedron,
             return_value_policy<reference_existing_object>())
+        .def("face", &NTriangleEmbedding::face)
         .def("getFace", &NTriangleEmbedding::getFace)
         .def("getTriangle", &NTriangleEmbedding::getTriangle)
+        .def("vertices", &NTriangleEmbedding::vertices)
         .def("getVertices", &NTriangleEmbedding::getVertices)
         .def("str", &NTriangleEmbedding::str)
         .def("toString", &NTriangleEmbedding::toString)
@@ -94,7 +100,11 @@ void addNTriangle() {
                 return_internal_reference<>())
             .def("back", &NTriangle::back,
                 return_internal_reference<>())
+            .def("triangulation", &NTriangle::triangulation,
+                return_value_policy<reference_existing_object>())
             .def("getTriangulation", &NTriangle::getTriangulation,
+                return_value_policy<reference_existing_object>())
+            .def("component", &NTriangle::component,
                 return_value_policy<reference_existing_object>())
             .def("getComponent", &NTriangle::getComponent,
                 return_value_policy<reference_existing_object>())

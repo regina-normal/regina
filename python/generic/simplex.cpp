@@ -59,6 +59,8 @@ void addSimplex(const char* name) {
         .def("unjoin", &Simplex<dim>::unjoin,
             return_value_policy<reference_existing_object>())
         .def("isolate", &Simplex<dim>::isolate)
+        .def("triangulation", &Simplex<dim>::triangulation,
+            return_value_policy<reference_existing_object>())
         .def("getTriangulation", &Simplex<dim>::getTriangulation,
             return_value_policy<reference_existing_object>())
         .def("str", &Simplex<dim>::str)
