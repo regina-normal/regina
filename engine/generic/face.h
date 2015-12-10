@@ -187,7 +187,7 @@ class FaceEmbeddingBase : public ShortOutput<FaceEmbeddingBase<dim, subdim>> {
          *
          * \deprecated Simply call vertices() instead.
          *
-         * See face() for further details.
+         * See vertices() for further details.
          */
         NPerm<dim+1> getVertices() const;
 
@@ -541,8 +541,8 @@ class FaceBase :
          * triangulation.
          *
          * This is identical to calling
-         * <tt>getTriangulation()->faceIndex<subdim>(this)</tt>
-         * (or <tt>getTriangulation()->vertexIndex(this)</tt> for
+         * <tt>triangulation()->faceIndex<subdim>(this)</tt>
+         * (or <tt>triangulation()->vertexIndex(this)</tt> for
          * faces of dimension \a subdim = 1, and so on).
          *
          * @return the index of this face.
@@ -553,12 +553,30 @@ class FaceBase :
          *
          * @return the triangulation containing this face.
          */
+        Triangulation<dim>* triangulation() const;
+        /**
+         * Deprecated routine that returns the triangulation to which
+         * this face belongs.
+         *
+         * \deprecated Simply call triangulation() instead.
+         *
+         * See triangulation() for further details.
+         */
         Triangulation<dim>* getTriangulation() const;
         /**
          * Returns the component of the triangulation to which this
          * face belongs.
          *
          * @return the component containing this face.
+         */
+        Component<dim>* component() const;
+        /**
+         * Deprecated routine that returns the component of the
+         * triangulation to which this face belongs.
+         *
+         * \deprecated Simply call component() instead.
+         *
+         * See component() for further details.
          */
         Component<dim>* getComponent() const;
 
@@ -860,9 +878,19 @@ inline size_t FaceBase<dim, subdim>::index() const {
 }
 
 template <int dim, int subdim>
-inline Triangulation<dim>* FaceBase<dim, subdim>::getTriangulation() const {
+inline Triangulation<dim>* FaceBase<dim, subdim>::triangulation() const {
     return FaceStorage<dim, dim - subdim>::front().simplex()->
         getTriangulation();
+}
+
+template <int dim, int subdim>
+inline Triangulation<dim>* FaceBase<dim, subdim>::getTriangulation() const {
+    return triangulation();
+}
+
+template <int dim, int subdim>
+inline Component<dim>* FaceBase<dim, subdim>::component() const {
+    return component_;
 }
 
 template <int dim, int subdim>
