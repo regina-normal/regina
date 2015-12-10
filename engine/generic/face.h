@@ -879,8 +879,7 @@ inline size_t FaceBase<dim, subdim>::index() const {
 
 template <int dim, int subdim>
 inline Triangulation<dim>* FaceBase<dim, subdim>::triangulation() const {
-    return FaceStorage<dim, dim - subdim>::front().simplex()->
-        getTriangulation();
+    return FaceStorage<dim, dim - subdim>::front().simplex()->triangulation();
 }
 
 template <int dim, int subdim>
