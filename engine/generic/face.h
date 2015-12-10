@@ -643,57 +643,58 @@ inline FaceEmbeddingBase<dim, subdim>::FaceEmbeddingBase(
 }
 
 template <int dim, int subdim>
-FaceEmbeddingBase<dim, subdim>& FaceEmbeddingBase<dim, subdim>::operator = (
-        const FaceEmbeddingBase& cloneMe) {
+inline FaceEmbeddingBase<dim, subdim>& FaceEmbeddingBase<dim, subdim>::
+        operator = (const FaceEmbeddingBase& cloneMe) {
     simplex_ = cloneMe.simplex_;
     face_ = cloneMe.face_;
     return *this;
 }
 
 template <int dim, int subdim>
-Simplex<dim>* FaceEmbeddingBase<dim, subdim>::simplex() const {
+inline Simplex<dim>* FaceEmbeddingBase<dim, subdim>::simplex() const {
     return simplex_;
 }
 
 template <int dim, int subdim>
-Simplex<dim>* FaceEmbeddingBase<dim, subdim>::getSimplex() const {
+inline Simplex<dim>* FaceEmbeddingBase<dim, subdim>::getSimplex() const {
     return simplex_;
 }
 
 template <int dim, int subdim>
-int FaceEmbeddingBase<dim, subdim>::face() const {
+inline int FaceEmbeddingBase<dim, subdim>::face() const {
     return face_;
 }
 
 template <int dim, int subdim>
-int FaceEmbeddingBase<dim, subdim>::getFace() const {
+inline int FaceEmbeddingBase<dim, subdim>::getFace() const {
     return face_;
 }
 
 template <int dim, int subdim>
-NPerm<dim+1> FaceEmbeddingBase<dim, subdim>::vertices() const {
+inline NPerm<dim+1> FaceEmbeddingBase<dim, subdim>::vertices() const {
     return simplex_->template getFaceMapping<subdim>(face_);
 }
 
 template <int dim, int subdim>
-NPerm<dim+1> FaceEmbeddingBase<dim, subdim>::getVertices() const {
+inline NPerm<dim+1> FaceEmbeddingBase<dim, subdim>::getVertices() const {
     return vertices();
 }
 
 template <int dim, int subdim>
-bool FaceEmbeddingBase<dim, subdim>::operator == (
+inline bool FaceEmbeddingBase<dim, subdim>::operator == (
         const FaceEmbeddingBase& rhs) const {
     return ((simplex_ == rhs.simplex_) && (face_ == rhs.face_));
 }
 
 template <int dim, int subdim>
-bool FaceEmbeddingBase<dim, subdim>::operator != (
+inline bool FaceEmbeddingBase<dim, subdim>::operator != (
         const FaceEmbeddingBase& rhs) const {
     return ((simplex_ != rhs.simplex_) || (face_ != rhs.face_));
 }
 
 template <int dim, int subdim>
-void FaceEmbeddingBase<dim, subdim>::writeTextShort(std::ostream& out) const {
+inline void FaceEmbeddingBase<dim, subdim>::writeTextShort(std::ostream& out)
+        const {
     // It seems C++ will not let us do a partial specialisation for dim = 0.
     // Let's see if the compiler can optimise this code instead, given that
     // the if(...) test is a compile-time constant.
