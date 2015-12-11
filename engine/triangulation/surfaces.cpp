@@ -80,7 +80,7 @@ NNormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
         return 0;
 
     // Use combinatorial optimisation if we can.
-    if (isValid() && vertices_.size() == 1) {
+    if (isValid() && getNumberOfVertices() == 1) {
         // For now, just use the safe arbitrary-precision NInteger type.
         NTreeSingleSoln<LPConstraintEuler> tree(this, NS_STANDARD);
         if (tree.find()) {
@@ -143,7 +143,7 @@ NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
     // This is good for large problems, but for small problems a full
     // enumeration is usually faster.  Still, the big problems are the
     // ones we need to be more fussy about.
-    if (vertices_.size() == 1) {
+    if (getNumberOfVertices() == 1) {
         // For now, just use the safe arbitrary-precision NInteger type.
         NTreeSingleSoln<LPConstraintEuler> tree(this, NS_AN_STANDARD);
         if (tree.find()) {

@@ -980,7 +980,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
                 return false;
 
         {
-            long nEdges = edges_.size();
+            size_t nEdges = getNumberOfEdges();
 
             // The parent of each edge in the union-find tree, or -1 if
             // an edge is at the root of a tree.
@@ -1058,7 +1058,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
         // overkill, since each vertex in the corresponding graph G will
         // have degree <= 2, but it's fast so we'll do it.
         {
-            long nTriangles = triangles_.size();
+            size_t nTriangles = getNumberOfTriangles();
 
             // The parent of each triangle in the union-find tree, or -1 if
             // a triangle is at the root of a tree.

@@ -52,11 +52,11 @@ bool TriangulationBase<3>::compatible(
         // identical.
         if (simplices_.size() != other.simplices_.size())
             return false;
-        if (me->triangles_.size() != other.triangles_.size())
+        if (me->getNumberOfTriangles() != other.getNumberOfTriangles())
             return false;
-        if (me->edges_.size() != other.edges_.size())
+        if (me->getNumberOfEdges() != other.getNumberOfEdges())
             return false;
-        if (me->vertices_.size() != other.vertices_.size())
+        if (me->getNumberOfVertices() != other.getNumberOfVertices())
             return false;
         if (components().size() != other.components().size())
             return false;
@@ -71,17 +71,14 @@ bool TriangulationBase<3>::compatible(
         std::map<unsigned long, unsigned long>::iterator mapIt;
 
         {
-            NTriangulation::EdgeIterator it;
-            for (it = me->edges_.begin(); it != me->edges_.end(); it++) {
+            for (auto e : me->getEdges()) {
                 // Find this degree, or insert it with frequency 0 if it's
                 // not already present.
-                mapIt = map1.insert(
-                    std::make_pair((*it)->getDegree(), 0)).first;
+                mapIt = map1.insert(std::make_pair(e->degree(), 0)).first;
                 (*mapIt).second++;
             }
-            for (it = other.edges_.begin(); it != other.edges_.end(); it++) {
-                mapIt = map2.insert(
-                    std::make_pair((*it)->getDegree(), 0)).first;
+            for (auto e : other.getEdges()) {
+                mapIt = map2.insert(std::make_pair(e->degree(), 0)).first;
                 (*mapIt).second++;
             }
             if (! (map1 == map2))
@@ -90,16 +87,12 @@ bool TriangulationBase<3>::compatible(
             map2.clear();
         }
         {
-            NTriangulation::VertexIterator it;
-            for (it = me->vertices_.begin(); it != me->vertices_.end(); it++) {
-                mapIt = map1.insert(
-                    std::make_pair((*it)->getDegree(), 0)).first;
+            for (auto v : me->getVertices()) {
+                mapIt = map1.insert(std::make_pair(v->degree(), 0)).first;
                 (*mapIt).second++;
             }
-            for (it = other.vertices_.begin();
-                    it != other.vertices_.end(); it++) {
-                mapIt = map2.insert(
-                    std::make_pair((*it)->getDegree(), 0)).first;
+            for (auto v : other.getVertices()) {
+                mapIt = map2.insert(std::make_pair(v->degree(), 0)).first;
                 (*mapIt).second++;
             }
             if (! (map1 == map2))

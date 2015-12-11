@@ -862,7 +862,7 @@ void NTriGluingsUI::puncture() {
 void NTriGluingsUI::drillEdge() {
     endEdit();
 
-    if (tri->getEdges().empty())
+    if (tri->getNumberOfEdges() == 0)
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any edges."));
     else {
@@ -939,7 +939,7 @@ void NTriGluingsUI::boundaryComponents() {
 void NTriGluingsUI::vertexLinks() {
     endEdit();
 
-    if (tri->getVertices().empty())
+    if (tri->getNumberOfVertices() == 0)
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any vertices."));
     else {

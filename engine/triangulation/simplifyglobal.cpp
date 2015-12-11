@@ -207,10 +207,7 @@ bool NTriangulation::intelligentSimplify() {
 }
 
 bool NTriangulation::simplifyToLocalMinimum(bool perform) {
-    EdgeIterator eit;
-    VertexIterator vit;
     BoundaryComponentIterator bit;
-    NEdge* edge;
     unsigned long nTriangles;
     unsigned long iTriangle;
     // unsigned long nEdges;
@@ -228,15 +225,13 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
             ensureSkeleton();
 
             // Crush edges if we can.
-            if (vertices_.size() > components().size() &&
-                    vertices_.size() > boundaryComponents_.size()) {
-                for (eit = edges_.begin(); eit != edges_.end(); ++eit) {
-                    edge = *eit;
+            if (getNumberOfVertices() > components().size() &&
+                    getNumberOfVertices() > boundaryComponents_.size()) {
+                for (NEdge* edge : getEdges())
                     if (collapseEdge(edge, true, perform)) {
                         changedNow = changed = true;
                         break;
                     }
-                }
                 if (changedNow) {
                     if (perform)
                         continue;
@@ -246,8 +241,7 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
             }
 
             // Look for internal simplifications.
-            for (eit = edges_.begin(); eit != edges_.end(); eit++) {
-                edge = *eit;
+            for (NEdge* edge : getEdges()) {
                 if (threeTwoMove(edge, true, perform)) {
                     changedNow = changed = true;
                     break;
@@ -271,12 +265,11 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
                 else
                     return true;
             }
-            for (vit = vertices_.begin(); vit != vertices_.end(); vit++) {
-                if (twoZeroMove(*vit, true, perform)) {
+            for (NVertex* vertex : getVertices())
+                if (twoZeroMove(vertex, true, perform)) {
                     changedNow = changed = true;
                     break;
                 }
-            }
             if (changedNow) {
                 if (perform)
                     continue;

@@ -59,11 +59,41 @@ namespace regina {
 template <int> class Component;
 template <int> class Isomorphism;
 template <int> class Triangulation;
+template <int, int> class Face;
 
 /**
  * \weakgroup generic
  * @{
  */
+
+template <int dim, int subdim>
+class FaceList {
+    public:
+        typedef typename std::vector<Face<dim, subdim>*>::const_iterator
+                Iterator;
+
+    protected:
+        mutable NMarkedVector<Face<dim, subdim>> faces_;
+            /**< The \a subdim-faces in the skeleton of the triangulation. */
+
+    public:
+        size_t countFaces() const;
+        Face<dim, subdim>* face(size_t index) const;
+        Face<dim, subdim>* operator [](size_t index) const;
+        size_t faceIndex(const Face<dim, subdim>* face) const;
+        Iterator begin() const;
+        Iterator end() const;
+};
+
+template <int dim, int subdim>
+class FaceLists :
+        public FaceLists<dim, subdim - 1>,
+        public FaceList<dim, subdim> {
+};
+
+template <int dim>
+class FaceLists<dim, 0> : public FaceList<dim, 0> {
+};
 
 /**
  * Provides core functionality for <i>dim</i>-dimensional triangulations.
@@ -88,7 +118,9 @@ template <int> class Triangulation;
  * \tparam dim the dimension of the triangulation.  This must be at least 2.
  */
 template <int dim>
-class TriangulationBase : public boost::noncopyable {
+class TriangulationBase :
+        public FaceLists<dim, dim - 1>,
+        public boost::noncopyable {
     static_assert(dim >= 2, "Triangulation requires dimension >= 2.");
 
     public:
@@ -366,6 +398,31 @@ class TriangulationBase : public boost::noncopyable {
         size_t getNumberOfComponents() const;
 
         /**
+         * Returns the number of faces of the given dimension in this
+         * triangulation.
+         *
+         * \pre The template argument \a subdim is between 0 and \a dim-1
+         * inclusive.
+         *
+         * \ifacespython TODO.
+         *
+         * @return the number of \a subdim-faces of the given dimension.
+         */
+        template <int subdim>
+        size_t countFaces() const;
+
+        /**
+         * Deprecated routine that returns the number of \a subdim-faces
+         * in this triangulation.
+         *
+         * \deprecated Simply call countFaces() instead.
+         *
+         * See countFaces() for further details.
+         */
+        template <int subdim>
+        size_t getNumberOfFaces() const;
+
+        /**
          * Returns all connected components of this triangulation.
          *
          * Note that each time the triangulation changes, all component
@@ -417,6 +474,33 @@ class TriangulationBase : public boost::noncopyable {
         Component<dim>* getComponent(size_t index) const;
 
         /**
+         * Returns the requested face of the given dimension in this
+         * triangulation.
+         *
+         * \pre The template argument \a subdim is between 0 and \a dim-1
+         * inclusive.
+         *
+         * \ifacespython TODO.
+         *
+         * @param index the index of the desired face, ranging from 0 to
+         * countFaces<subdim>()-1 inclusive.
+         * @return the requested face.
+         */
+        template <int subdim>
+        Face<dim, subdim>* face(size_t index) const;
+
+        /**
+         * Deprecated routine that returns the requested \a subdim-face
+         * of this triangulation.
+         *
+         * \deprecated Simply call face() instead.
+         *
+         * See face() for further details.
+         */
+        template <int subdim>
+        Face<dim, subdim>* getFace(size_t index) const;
+
+        /**
          * Returns the index of the given connected component in this
          * triangulation.
          *
@@ -431,6 +515,24 @@ class TriangulationBase : public boost::noncopyable {
          * integer between 0 and countComponents()-1 inclusive.
          */
         size_t componentIndex(const Component<dim>* component) const;
+
+        /**
+         * Returns the index of the given face of the given dimension in this
+         * triangulation.
+         *
+         * \pre The template argument \a subdim is between 0 and \a dim-1
+         * inclusive.
+         * \pre The given face belongs to this triangulation.
+         *
+         * \ifacespython TODO.
+         *
+         * @param face specifies which face to find in the
+         * triangulation.
+         * @return the index of the specified face, where 0 is the first
+         * \a subdim-face, 1 is the second \a subdim-face, and so on.
+         */
+        template <int subdim>
+        size_t faceIndex(const Face<dim, subdim>* face) const;
 
         /*@}*/
         /**
@@ -1470,6 +1572,42 @@ class DegreeGreaterThan {
 
 /*@}*/
 
+// Inline functions for FaceList
+
+template <int dim, int subdim>
+inline size_t FaceList<dim, subdim>::countFaces() const {
+    return faces_.size();
+}
+
+template <int dim, int subdim>
+inline Face<dim, subdim>* FaceList<dim, subdim>::face(size_t index) const {
+    return faces_[index];
+}
+
+template <int dim, int subdim>
+inline Face<dim, subdim>* FaceList<dim, subdim>::operator [](size_t index)
+        const {
+    return faces_[index];
+}
+
+template <int dim, int subdim>
+inline size_t FaceList<dim, subdim>::faceIndex(const Face<dim, subdim>* face)
+        const {
+    return face->index();
+}
+
+template <int dim, int subdim>
+inline typename FaceList<dim, subdim>::Iterator FaceList<dim, subdim>::begin()
+        const {
+    return faces_.begin();
+}
+
+template <int dim, int subdim>
+inline typename FaceList<dim, subdim>::Iterator FaceList<dim, subdim>::end()
+        const {
+    return faces_.end();
+}
+
 // Inline functions for TriangulationBase
 
 template <int dim>
@@ -1670,6 +1808,20 @@ inline size_t TriangulationBase<dim>::getNumberOfComponents() const {
 }
 
 template <int dim>
+template <int subdim>
+inline size_t TriangulationBase<dim>::countFaces() const {
+    ensureSkeleton();
+    return FaceList<dim, subdim>::countFaces();
+}
+
+template <int dim>
+template <int subdim>
+inline size_t TriangulationBase<dim>::getNumberOfFaces() const {
+    ensureSkeleton();
+    return FaceList<dim, subdim>::countFaces();
+}
+
+template <int dim>
 inline const std::vector<Component<dim>*>& TriangulationBase<dim>::components()
         const {
     ensureSkeleton();
@@ -1697,9 +1849,30 @@ inline Component<dim>* TriangulationBase<dim>::getComponent(size_t index)
 }
 
 template <int dim>
+template <int subdim>
+inline Face<dim, subdim>* TriangulationBase<dim>::face(size_t index) const {
+    ensureSkeleton();
+    return FaceList<dim, subdim>::face(index);
+}
+
+template <int dim>
+template <int subdim>
+inline Face<dim, subdim>* TriangulationBase<dim>::getFace(size_t index) const {
+    ensureSkeleton();
+    return FaceList<dim, subdim>::face(index);
+}
+
+template <int dim>
 inline size_t TriangulationBase<dim>::componentIndex(
         const Component<dim>* component) const {
     return component->markedIndex();
+}
+
+template <int dim>
+template <int subdim>
+inline size_t TriangulationBase<dim>::faceIndex(
+        const Face<dim, subdim>* face) const {
+    return face->markedIndex();
 }
 
 template <int dim>
@@ -2153,8 +2326,8 @@ inline DegreeLessThan<dim, subdim>::DegreeLessThan(
 template <int dim, int subdim>
 inline bool DegreeLessThan<dim, subdim>::operator () (
         unsigned a, unsigned b) const {
-    return (tri_.template getFace<subdim>(a)->getDegree() <
-            tri_.template getFace<subdim>(b)->getDegree());
+    return (tri_.template face<subdim>(a)->getDegree() <
+            tri_.template face<subdim>(b)->getDegree());
 }
 
 template <int dim, int subdim>
@@ -2165,8 +2338,8 @@ inline DegreeGreaterThan<dim, subdim>::DegreeGreaterThan(
 template <int dim, int subdim>
 inline bool DegreeGreaterThan<dim, subdim>::operator () (
         unsigned a, unsigned b) const {
-    return (tri_.template getFace<subdim>(a)->getDegree() >
-            tri_.template getFace<subdim>(b)->getDegree());
+    return (tri_.template face<subdim>(a)->getDegree() >
+            tri_.template face<subdim>(b)->getDegree());
 }
 
 } // namespace regina

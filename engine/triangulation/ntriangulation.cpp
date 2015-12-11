@@ -93,9 +93,9 @@ void Triangulation<3>::writeTextLong(std::ostream& out) const {
 
     out << "Size of the skeleton:\n";
     out << "  Tetrahedra: " << simplices_.size() << '\n';
-    out << "  Triangles: " << triangles_.size() << '\n';
-    out << "  Edges: " << edges_.size() << '\n';
-    out << "  Vertices: " << vertices_.size() << '\n';
+    out << "  Triangles: " << getNumberOfTriangles() << '\n';
+    out << "  Edges: " << getNumberOfEdges() << '\n';
+    out << "  Vertices: " << getNumberOfVertices() << '\n';
     out << '\n';
 
     NTetrahedron* tet;
@@ -363,11 +363,11 @@ long Triangulation<3>::getEulerCharManifold() const {
     // boundary vertices and invalid edges, and truncate those unwanted bits
     // also.
     if (! valid_) {
-        for (VertexIterator it = vertices_.begin(); it != vertices_.end(); ++it)
-            if ((*it)->getLink() == NVertex::NON_STANDARD_BDRY)
-                ans += (*it)->getLinkEulerChar() - 1;
-        for (EdgeIterator it = edges_.begin(); it != edges_.end(); ++it)
-            if (! (*it)->isValid())
+        for (NVertex* v : getVertices())
+            if (v->getLink() == NVertex::NON_STANDARD_BDRY)
+                ans += v->getLinkEulerChar() - 1;
+        for (NEdge* e : getEdges())
+            if (! e->isValid())
                 ++ans;
     }
 
@@ -377,19 +377,18 @@ long Triangulation<3>::getEulerCharManifold() const {
 void Triangulation<3>::deleteSkeleton() {
     // Now that skeletal destructors are private, we can't just use for_each.
     // How primitive.  Loop through each list indivually.
-    for (VertexIterator it = vertices_.begin(); it != vertices_.end(); ++it)
-        delete *it;
-    for (EdgeIterator it = edges_.begin(); it != edges_.end(); ++it)
-        delete *it;
-    for (TriangleIterator it = triangles_.begin(); it != triangles_.end(); ++it)
-        delete *it;
-    for (BoundaryComponentIterator it = boundaryComponents_.begin();
-            it != boundaryComponents_.end(); ++it)
-        delete *it;
+    for (auto f : FaceList<3, 0>::faces_)
+        delete f;
+    for (auto f : FaceList<3, 1>::faces_)
+        delete f;
+    for (auto f : FaceList<3, 2>::faces_)
+        delete f;
+    for (auto b : boundaryComponents_)
+        delete b;
 
-    vertices_.clear();
-    edges_.clear();
-    triangles_.clear();
+    FaceList<3, 0>::faces_.clear();
+    FaceList<3, 1>::faces_.clear();
+    FaceList<3, 2>::faces_.clear();
     boundaryComponents_.clear();
 
     TriangulationBase<3>::deleteSkeleton();

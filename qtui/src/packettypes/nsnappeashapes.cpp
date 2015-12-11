@@ -429,7 +429,7 @@ void NSnapPeaShapesUI::setReadWrite(bool readWrite) {
 void NSnapPeaShapesUI::vertexLinks() {
     endEdit();
 
-    if (tri->getVertices().empty())
+    if (tri->getNumberOfVertices() == 0)
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any vertices."));
     else {

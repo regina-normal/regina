@@ -121,7 +121,7 @@ void NTriangulation::calculateVertices() const {
                 label = new NVertex(tet->component_);
                 tet->component_->vertices_.push_back(label);
                 labelVertex(tet, vertex, label);
-                vertices_.push_back(label);
+                FaceList<3, 0>::faces_.push_back(label);
             }
     }
 }
@@ -222,7 +222,7 @@ void NTriangulation::calculateEdges() const {
                 label = new NEdge(tet->component_);
                 tet->component_->edges_.push_back(label);
                 labelEdge(tet, edge, label);
-                edges_.push_back(label);
+                FaceList<3, 1>::faces_.push_back(label);
             }
     }
 }
@@ -325,7 +325,7 @@ void NTriangulation::calculateTriangles() const {
                     adjTet->triMapping_[adjFace] = adjVertices;
                     label->push_back(NTriangleEmbedding(adjTet, adjFace));
                 }
-                triangles_.push_back(label);
+                FaceList<3, 2>::faces_.push_back(label);
             }
     }
 }
@@ -334,13 +334,10 @@ void NTriangulation::calculateBoundary() const {
     // Sets boundaryComponents, NTriangle.boundaryComponent,
     //     NEdge.boundaryComponent, NVertex.boundaryComponent,
     //     NComponent.boundaryComponents
-    TriangleIterator it;
-    NTriangle* triangle;
     NBoundaryComponent* label;
 
-    for (it = triangles_.begin(); it != triangles_.end(); it++) {
-        triangle = *it;
-        if (triangle->getDegree() < 2)
+    for (NTriangle* triangle : getTriangles()) {
+        if (triangle->degree() < 2)
             if (triangle->boundaryComponent_ == 0) {
                 label = new NBoundaryComponent();
                 label->orientable_ = true;
@@ -452,13 +449,10 @@ void NTriangulation::calculateVertexLinks() const {
     // the NVertex constructor.
 
     // Begin by calculating (2 v_int + v_bdry) for each vertex link.
-    NEdge* e;
     NVertex* end0;
     NVertex* end1;
     NTetrahedron* tet;
-    for (EdgeIterator eit = edges_.begin(); eit != edges_.end(); eit++) {
-        e = *eit;
-
+    for (NEdge* e : getEdges()) {
         // Try to compute e->getVertex(0) and e->getVertex(1), but
         // without calling e->getVertex() which will recursively try to
         // recompute the skeleton.
@@ -483,10 +477,7 @@ void NTriangulation::calculateVertexLinks() const {
     // Run through each vertex and finalise Euler characteristic, link
     // and more.
 
-    NVertex* vertex;
-    for (VertexIterator it = vertices_.begin(); it != vertices_.end(); it++) {
-        vertex = *it;
-
+    for (NVertex* vertex : getVertices()) {
         // Fix the Euler characteristic (subtract f, divide by two).
         vertex->linkEulerChar_ = (vertex->linkEulerChar_
             - static_cast<long>(vertex->getDegree())) / 2;

@@ -116,19 +116,15 @@ class REGINA_API Triangulation<2> :
         typedef std::vector<Dim2Triangle*>::const_iterator TriangleIterator;
             /**< A dimension-specific alias for SimplexIterator,
                  used to iterate through triangles. */
-        typedef std::vector<Dim2Edge*>::const_iterator EdgeIterator;
+        typedef FaceList<2, 1>::Iterator EdgeIterator;
             /**< Used to iterate through edges. */
-        typedef std::vector<Dim2Vertex*>::const_iterator VertexIterator;
+        typedef FaceList<2, 0>::Iterator VertexIterator;
             /**< Used to iterate through vertices. */
         typedef std::vector<Dim2BoundaryComponent*>::const_iterator
                 BoundaryComponentIterator;
             /**< Used to iterate through boundary components. */
 
     private:
-        mutable NMarkedVector<Dim2Edge> edges_;
-            /**< The edges in the triangulation skeleton. */
-        mutable NMarkedVector<Dim2Vertex> vertices_;
-            /**< The vertices in the triangulation skeleton. */
         mutable NMarkedVector<Dim2BoundaryComponent> boundaryComponents_;
             /**< The components that form the boundary of the
                  triangulation. */
@@ -274,28 +270,13 @@ class REGINA_API Triangulation<2> :
          *
          * @return the number of vertices.
          */
-        unsigned long getNumberOfVertices() const;
+        size_t getNumberOfVertices() const;
         /**
          * Returns the number of edges in this triangulation.
          *
          * @return the number of edges.
          */
-        unsigned long getNumberOfEdges() const;
-        /**
-         * Returns the number of faces of the given dimension in this
-         * triangulation.
-         *
-         * This template function is to assist with writing dimension-agnostic
-         * code that can be reused to work in different dimensions.
-         *
-         * \pre The template argument \a subdim is between 0 and 2 inclusive.
-         *
-         * \ifacespython Not present.
-         *
-         * @return the number of faces of the given dimension.
-         */
-        template <int subdim>
-        unsigned long getNumberOfFaces() const;
+        size_t getNumberOfEdges() const;
 
         /**
          * Returns all boundary components of this triangulation.
@@ -329,7 +310,7 @@ class REGINA_API Triangulation<2> :
          *
          * @return the list of all vertices.
          */
-        const std::vector<Dim2Vertex*>& getVertices() const;
+        const FaceList<2, 0>& getVertices() const;
         /**
          * Returns all edges of this triangulation.
          *
@@ -345,7 +326,7 @@ class REGINA_API Triangulation<2> :
          *
          * @return the list of all edges.
          */
-        const std::vector<Dim2Edge*>& getEdges() const;
+        const FaceList<2, 1>& getEdges() const;
         /**
          * Returns the requested triangulation boundary component.
          *
@@ -369,7 +350,7 @@ class REGINA_API Triangulation<2> :
          * to getNumberOfVertices()-1 inclusive.
          * @return the requested vertex.
          */
-        Dim2Vertex* getVertex(unsigned long index) const;
+        Dim2Vertex* getVertex(size_t index) const;
         /**
          * Returns the requested triangulation edge.
          *
@@ -381,24 +362,7 @@ class REGINA_API Triangulation<2> :
          * to getNumberOfEdges()-1 inclusive.
          * @return the requested edge.
          */
-        Dim2Edge* getEdge(unsigned long index) const;
-        /**
-         * Returns the requested face of the given dimension in this
-         * triangulation.
-         *
-         * This template function is to assist with writing dimension-agnostic
-         * code that can be reused to work in different dimensions.
-         *
-         * \pre The template argument \a subdim is between 0 and 1 inclusive.
-         *
-         * \ifacespython Not present.
-         *
-         * @param index the index of the desired face, ranging from 0 to
-         * getNumberOfFaces<subdim>()-1 inclusive.
-         * @return the requested face.
-         */
-        template <int subdim>
-        Face<2, subdim>* getFace(unsigned long index) const;
+        Dim2Edge* getEdge(size_t index) const;
         /**
          * Returns the index of the given boundary component
          * in the triangulation.
@@ -440,27 +404,6 @@ class REGINA_API Triangulation<2> :
          * edge, 1 is the second and so on.
          */
         long edgeIndex(const Dim2Edge* edge) const;
-        /**
-         * Returns the index of the given face of the given dimension in this
-         * triangulation.
-         *
-         * This template function is to assist with writing dimension-agnostic
-         * code that can be reused to work in different dimensions.
-         *
-         * \pre The template argument \a subdim is between 0 and 1 inclusive.
-         * \pre The given face belongs to this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.
-         *
-         * \ifacespython Not present.
-         *
-         * @param face specifies which face to find in the triangulation.
-         * @return the index of the specified face, where 0 is the first
-         * \a subdim-face, 1 is the second \a subdim-face, and so on.
-         */
-        template <int subdim>
-        long faceIndex(const Face<2, subdim>* face) const;
 
         /*@}*/
         /**
@@ -736,29 +679,12 @@ inline unsigned long Triangulation<2>::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
-inline unsigned long Triangulation<2>::getNumberOfVertices() const {
-    ensureSkeleton();
-    return vertices_.size();
+inline size_t Triangulation<2>::getNumberOfVertices() const {
+    return getNumberOfFaces<0>();
 }
 
-inline unsigned long Triangulation<2>::getNumberOfEdges() const {
-    ensureSkeleton();
-    return edges_.size();
-}
-
-template <>
-inline unsigned long Triangulation<2>::getNumberOfFaces<0>() const {
-    return getNumberOfVertices();
-}
-
-template <>
-inline unsigned long Triangulation<2>::getNumberOfFaces<1>() const {
-    return getNumberOfEdges();
-}
-
-template <>
-inline unsigned long Triangulation<2>::getNumberOfFaces<2>() const {
-    return getNumberOfTriangles();
+inline size_t Triangulation<2>::getNumberOfEdges() const {
+    return getNumberOfFaces<1>();
 }
 
 inline const std::vector<Dim2BoundaryComponent*>&
@@ -767,14 +693,14 @@ inline const std::vector<Dim2BoundaryComponent*>&
     return (const std::vector<Dim2BoundaryComponent*>&)(boundaryComponents_);
 }
 
-inline const std::vector<Dim2Vertex*>& Triangulation<2>::getVertices() const {
+inline const FaceList<2, 0>& Triangulation<2>::getVertices() const {
     ensureSkeleton();
-    return (const std::vector<Dim2Vertex*>&)(vertices_);
+    return *this;
 }
 
-inline const std::vector<Dim2Edge*>& Triangulation<2>::getEdges() const {
+inline const FaceList<2, 1>& Triangulation<2>::getEdges() const {
     ensureSkeleton();
-    return (const std::vector<Dim2Edge*>&)(edges_);
+    return *this;
 }
 
 inline Dim2BoundaryComponent* Triangulation<2>::getBoundaryComponent(
@@ -783,24 +709,12 @@ inline Dim2BoundaryComponent* Triangulation<2>::getBoundaryComponent(
     return boundaryComponents_[index];
 }
 
-inline Dim2Vertex* Triangulation<2>::getVertex(unsigned long index) const {
-    ensureSkeleton();
-    return vertices_[index];
+inline Dim2Vertex* Triangulation<2>::getVertex(size_t index) const {
+    return getFace<0>(index);
 }
 
-inline Dim2Edge* Triangulation<2>::getEdge(unsigned long index) const {
-    ensureSkeleton();
-    return edges_[index];
-}
-
-template <>
-inline Dim2Vertex* Triangulation<2>::getFace<0>(unsigned long index) const {
-    return vertices_[index];
-}
-
-template <>
-inline Dim2Edge* Triangulation<2>::getFace<1>(unsigned long index) const {
-    return edges_[index];
+inline Dim2Edge* Triangulation<2>::getEdge(size_t index) const {
+    return getFace<1>(index);
 }
 
 inline long Triangulation<2>::boundaryComponentIndex(
@@ -809,21 +723,11 @@ inline long Triangulation<2>::boundaryComponentIndex(
 }
 
 inline long Triangulation<2>::vertexIndex(const Dim2Vertex* vertex) const {
-    return vertex->markedIndex();
+    return faceIndex(vertex);
 }
 
 inline long Triangulation<2>::edgeIndex(const Dim2Edge* edge) const {
-    return edge->markedIndex();
-}
-
-template <>
-inline long Triangulation<2>::faceIndex<0>(const Dim2Vertex* face) const {
-    return face->markedIndex();
-}
-
-template <>
-inline long Triangulation<2>::faceIndex<1>(const Dim2Edge* face) const {
-    return face->markedIndex();
+    return faceIndex(edge);
 }
 
 inline bool Triangulation<2>::isValid() const {
@@ -834,8 +738,8 @@ inline long Triangulation<2>::getEulerChar() const {
     ensureSkeleton();
 
     // Cast away the unsignedness of std::vector::size().
-    return static_cast<long>(vertices_.size())
-        - static_cast<long>(edges_.size())
+    return static_cast<long>(getNumberOfVertices())
+        - static_cast<long>(getNumberOfEdges())
         + static_cast<long>(simplices_.size());
 }
 
@@ -856,7 +760,7 @@ inline bool Triangulation<2>::hasBoundaryEdges() const {
 inline size_t Triangulation<2>::countBoundaryFacets() const {
     // Override, since we can do this faster in dimension 2.
     ensureSkeleton();
-    return 2 * edges_.size() - 3 * simplices_.size();
+    return 2 * getNumberOfEdges() - 3 * simplices_.size();
 }
 
 inline size_t Triangulation<2>::countBoundaryEdges() const {

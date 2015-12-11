@@ -93,7 +93,7 @@ void Triangulation<2>::calculateEdges() const {
 
             // A new edge!
             e = new Dim2Edge(tri->component_);
-            edges_.push_back(e);
+            FaceList<2, 1>::faces_.push_back(e);
             tri->component_->edges_.push_back(e);
 
             tri->edge_[edge] = e;
@@ -137,7 +137,7 @@ void Triangulation<2>::calculateVertices() const {
                 continue;
 
             label = new Dim2Vertex(loopTri->component_);
-            vertices_.push_back(label);
+            FaceList<2, 0>::faces_.push_back(label);
             loopTri->component_->vertices_.push_back(label);
 
             // Since triangle vertices are joined together in a loop, the
@@ -192,22 +192,19 @@ void Triangulation<2>::calculateVertices() const {
 
 void Triangulation<2>::calculateBoundary() const {
     // Are there any boundary edges at all?
-    long nBdry = 2 * edges_.size() - 3 * simplices_.size();
+    long nBdry = 2 * getNumberOfEdges() - 3 * simplices_.size();
     if (nBdry == 0)
         return;
 
     Dim2BoundaryComponent* label;
-    EdgeIterator it;
     Dim2Triangle *tri, *adjTri;
     int edgeId, adjEdgeId;
     int vertexId, adjVertexId;
-    Dim2Edge *edge, *adjEdge;
+    Dim2Edge *adjEdge;
     Dim2Vertex* vertex;
     Dim2VertexEmbedding vertexEmb;
 
-    for (it = edges_.begin(); it != edges_.end(); ++it) {
-        edge = *it;
-
+    for (Dim2Edge* edge : getEdges()) {
         // We only care about boundary edges that we haven't yet seen..
         if (edge->getDegree() == 2 || edge->boundaryComponent_)
             continue;
