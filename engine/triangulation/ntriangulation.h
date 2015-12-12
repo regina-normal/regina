@@ -192,15 +192,14 @@ class REGINA_API Triangulation<3> :
                  as described by turaevViro(). */
 
     private:
-        mutable NMarkedVector<NBoundaryComponent> boundaryComponents_;
-            /**< The components that form the boundary of the
-                 triangulation. */
+        NMarkedVector<NBoundaryComponent> boundaryComponents_;
+            /**< The components that form the boundary of the triangulation. */
 
-        mutable bool valid_;
+        bool valid_;
             /**< Is the triangulation valid? */
-        mutable bool ideal_;
+        bool ideal_;
             /**< Is the triangulation ideal? */
-        mutable bool standard_;
+        bool standard_;
             /**< Is the triangulation standard? */
 
         mutable NProperty<NGroupPresentation, StoreManagedPtr>
@@ -3283,10 +3282,10 @@ class REGINA_API Triangulation<3> :
          *
          * @author Matthias Goerner
          */
-        void checkPermutations() const;
+        void checkPermutations();
 
         void deleteSkeleton();
-        void calculateSkeleton() const;
+        void calculateSkeleton();
         /**
          * Calculates the triangulation vertices and associated
          * properties.
@@ -3294,8 +3293,8 @@ class REGINA_API Triangulation<3> :
          * \warning This should only be called from within
          * calculateSkeleton().
          */
-        void calculateVertices() const;
-        void labelVertex(NTetrahedron*, int, NVertex*) const;
+        void calculateVertices();
+        void labelVertex(NTetrahedron*, int, NVertex*);
             /**< Internal to calculateVertices(). */
         /**
          * Calculates the triangulation edges and associated
@@ -3304,8 +3303,8 @@ class REGINA_API Triangulation<3> :
          * \warning This should only be called from within
          * calculateSkeleton().
          */
-        void calculateEdges() const;
-        void labelEdge(NTetrahedron*, int, NEdge*) const;
+        void calculateEdges();
+        void labelEdge(NTetrahedron*, int, NEdge*);
             /**< Internal to calculateEdges(). */
         /**
          * Calculates the triangles of this triangulation and associated
@@ -3314,7 +3313,7 @@ class REGINA_API Triangulation<3> :
          * \warning This should only be called from within
          * calculateSkeleton().
          */
-        void calculateTriangles() const;
+        void calculateTriangles();
         /**
          * Calculates the triangulation boundary components and
          * properties of these boundary components.
@@ -3322,8 +3321,8 @@ class REGINA_API Triangulation<3> :
          * \warning This should only be called from within
          * calculateSkeleton().
          */
-        void calculateBoundary() const;
-        void labelBoundaryTriangle(NTriangle*, NBoundaryComponent*) const;
+        void calculateBoundary();
+        void labelBoundaryTriangle(NTriangle*, NBoundaryComponent*);
             /**< Internal to calculateBoundary(). */
         /**
          * Calculates the triangulation vertex links and associated
@@ -3332,7 +3331,7 @@ class REGINA_API Triangulation<3> :
          * \warning This should only be called from within
          * calculateSkeleton().
          */
-        void calculateVertexLinks() const;
+        void calculateVertexLinks();
 
         /**
          * Calculates all properties of the triangulation relating to

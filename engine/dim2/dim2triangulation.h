@@ -572,23 +572,23 @@ class REGINA_API Triangulation<2> :
         void clearAllProperties();
 
         void deleteSkeleton();
-        void calculateSkeleton() const;
+        void calculateSkeleton();
 
         /**
          * Internal to calculateSkeleton().  See the comments within
          * calculateSkeleton() for precisely what this routine does.
          */
-        void calculateEdges() const;
+        void calculateEdges();
         /**
          * Internal to calculateSkeleton().  See the comments within
          * calculateSkeleton() for precisely what this routine does.
          */
-        void calculateVertices() const;
+        void calculateVertices();
         /**
          * Internal to calculateSkeleton().  See the comments within
          * calculateSkeleton() for precisely what this routine does.
          */
-        void calculateBoundary() const;
+        void calculateBoundary();
 
     friend class regina::Simplex<2>;
     friend class regina::SimplexBase<2>;

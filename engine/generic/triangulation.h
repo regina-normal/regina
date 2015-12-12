@@ -50,6 +50,7 @@
 #include "regina-core.h"
 #include "output.h"
 #include "generic/component.h"
+#include "generic/face.h"
 #include "generic/simplex.h"
 #include "maths/nperm.h"
 #include "utilities/nmarkedvector.h"
@@ -72,20 +73,19 @@ class FaceList {
         typedef typename std::vector<Face<dim, subdim>*>::const_iterator
                 Iterator;
 
-    protected:
-        mutable NMarkedVector<Face<dim, subdim>> faces_;
+    private:
+        NMarkedVector<Face<dim, subdim>> faces_;
             /**< The \a subdim-faces in the skeleton of the triangulation. */
 
     public:
-        size_t countFaces() const;
-        Face<dim, subdim>* face(size_t index) const;
+        size_t size() const;
         Face<dim, subdim>* operator [](size_t index) const;
-        size_t faceIndex(const Face<dim, subdim>* face) const;
         Iterator begin() const;
         Iterator end() const;
 
     protected:
-        void deleteFaces();
+        void push_back(Face<dim, subdim>* face);
+        void destroy();
 };
 
 template <int dim, int subdim>
@@ -143,14 +143,14 @@ class TriangulationBase :
             /**< The top-dimensional simplices that form the triangulation. */
 
     private:
-        mutable bool calculatedSkeleton_;
+        bool calculatedSkeleton_;
             /**< Has the skeleton been calculated?  This is only done
                  "on demand", when a skeletal property is first queried. */
-        mutable NMarkedVector<Component<dim>> components_;
+        NMarkedVector<Component<dim>> components_;
             /**< The connected components that form the triangulation.
                  This list is only filled if/when the skeleton of the
                  triangulation is computed. */
-        mutable bool orientable_;
+        bool orientable_;
             /**< Is the triangulation orientable?  This property is only set
                  if/when the skeleton of the triangulation is computed. */
 
@@ -1160,7 +1160,7 @@ class TriangulationBase :
          * parent implementation (unless of course you are reimplementing
          * calculateSkeleton() in a Triangulation<dim> subclass).
          */
-        void calculateSkeleton() const;
+        void calculateSkeleton();
 
         /**
          * Deallocates all skeletal objects that are managed by this
@@ -1612,25 +1612,14 @@ class DegreeGreaterThan {
 // Inline functions for FaceList and FaceLists
 
 template <int dim, int subdim>
-inline size_t FaceList<dim, subdim>::countFaces() const {
+inline size_t FaceList<dim, subdim>::size() const {
     return faces_.size();
-}
-
-template <int dim, int subdim>
-inline Face<dim, subdim>* FaceList<dim, subdim>::face(size_t index) const {
-    return faces_[index];
 }
 
 template <int dim, int subdim>
 inline Face<dim, subdim>* FaceList<dim, subdim>::operator [](size_t index)
         const {
     return faces_[index];
-}
-
-template <int dim, int subdim>
-inline size_t FaceList<dim, subdim>::faceIndex(const Face<dim, subdim>* face)
-        const {
-    return face->index();
 }
 
 template <int dim, int subdim>
@@ -1646,7 +1635,12 @@ inline typename FaceList<dim, subdim>::Iterator FaceList<dim, subdim>::end()
 }
 
 template <int dim, int subdim>
-inline void FaceList<dim, subdim>::deleteFaces() {
+inline void FaceList<dim, subdim>::push_back(Face<dim, subdim>* face) {
+    faces_.push_back(face);
+}
+
+template <int dim, int subdim>
+inline void FaceList<dim, subdim>::destroy() {
     for (auto f : faces_)
         delete f;
     faces_.clear();
@@ -1654,13 +1648,13 @@ inline void FaceList<dim, subdim>::deleteFaces() {
 
 template <int dim, int subdim>
 inline void FaceLists<dim, subdim>::deleteFaces() {
-    FaceList<dim, subdim>::deleteFaces();
+    FaceList<dim, subdim>::destroy();
     FaceLists<dim, subdim - 1>::deleteFaces();
 }
 
 template <int dim>
 inline void FaceLists<dim, 0>::deleteFaces() {
-    FaceList<dim, 0>::deleteFaces();
+    FaceList<dim, 0>::destroy();
 }
 
 // Inline functions for TriangulationBase
@@ -1866,14 +1860,14 @@ template <int dim>
 template <int subdim>
 inline size_t TriangulationBase<dim>::countFaces() const {
     ensureSkeleton();
-    return FaceList<dim, subdim>::countFaces();
+    return FaceList<dim, subdim>::size();
 }
 
 template <int dim>
 template <int subdim>
 inline size_t TriangulationBase<dim>::getNumberOfFaces() const {
     ensureSkeleton();
-    return FaceList<dim, subdim>::countFaces();
+    return FaceList<dim, subdim>::size();
 }
 
 template <int dim>
@@ -1921,14 +1915,14 @@ template <int dim>
 template <int subdim>
 inline Face<dim, subdim>* TriangulationBase<dim>::face(size_t index) const {
     ensureSkeleton();
-    return FaceList<dim, subdim>::face(index);
+    return FaceList<dim, subdim>::operator [](index);
 }
 
 template <int dim>
 template <int subdim>
 inline Face<dim, subdim>* TriangulationBase<dim>::getFace(size_t index) const {
     ensureSkeleton();
-    return FaceList<dim, subdim>::face(index);
+    return FaceList<dim, subdim>::operator [](index);
 }
 
 template <int dim>
@@ -2216,11 +2210,12 @@ TODO: output packet labels if we derive from NPacket
 template <int dim>
 inline void TriangulationBase<dim>::ensureSkeleton() const {
     if (! calculatedSkeleton_)
-        static_cast<const Triangulation<dim>*>(this)->calculateSkeleton();
+        const_cast<Triangulation<dim>*>(
+            static_cast<const Triangulation<dim>*>(this))->calculateSkeleton();
 }
 
 template <int dim>
-void TriangulationBase<dim>::calculateSkeleton() const {
+void TriangulationBase<dim>::calculateSkeleton() {
     // Set this now so that any tetrahedron query routines do not try to
     // recursively recompute the skeleton again.
     calculatedSkeleton_ = true;

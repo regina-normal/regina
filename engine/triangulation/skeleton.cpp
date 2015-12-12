@@ -40,7 +40,7 @@
 
 namespace regina {
 
-void NTriangulation::calculateSkeleton() const {
+void NTriangulation::calculateSkeleton() {
     TriangulationBase<3>::calculateSkeleton();
 
     ideal_ = false;
@@ -70,7 +70,7 @@ void NTriangulation::calculateSkeleton() const {
         //     boundaryComponents, NVertex.boundaryComponent
 }
 
-void NTriangulation::checkPermutations() const {
+void NTriangulation::checkPermutations() {
     TetrahedronIterator it;
 
     for (it = simplices_.begin(); it != simplices_.end(); it++)
@@ -103,7 +103,7 @@ void NTriangulation::checkPermutations() const {
         }
 }
 
-void NTriangulation::calculateVertices() const {
+void NTriangulation::calculateVertices() {
     TetrahedronIterator it;
     int vertex;
     NTetrahedron* tet;
@@ -121,13 +121,13 @@ void NTriangulation::calculateVertices() const {
                 label = new NVertex(tet->component_);
                 tet->component_->vertices_.push_back(label);
                 labelVertex(tet, vertex, label);
-                FaceList<3, 0>::faces_.push_back(label);
+                FaceList<3, 0>::push_back(label);
             }
     }
 }
 
 void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
-        NVertex* label) const {
+        NVertex* label) {
     // Create a queue using simple arrays.
     // Since each tetrahedron vertex is pushed on at most once, the
     // array size does not need to be very large.
@@ -204,7 +204,7 @@ void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
     delete[] queueVtx;
 }
 
-void NTriangulation::calculateEdges() const {
+void NTriangulation::calculateEdges() {
     TetrahedronIterator it;
     int edge;
     NTetrahedron* tet;
@@ -222,13 +222,13 @@ void NTriangulation::calculateEdges() const {
                 label = new NEdge(tet->component_);
                 tet->component_->edges_.push_back(label);
                 labelEdge(tet, edge, label);
-                FaceList<3, 1>::faces_.push_back(label);
+                FaceList<3, 1>::push_back(label);
             }
     }
 }
 
 void NTriangulation::labelEdge(NTetrahedron* firstTet, int firstEdge,
-        NEdge* label) const {
+        NEdge* label) {
     // Since tetrahedron edges are joined together in a loop, the depth-first
     // search is really just a straight line in either direction.
     // We therefore do away with the usual stack/queue and just keep track
@@ -292,7 +292,7 @@ void NTriangulation::labelEdge(NTetrahedron* firstTet, int firstEdge,
     }
 }
 
-void NTriangulation::calculateTriangles() const {
+void NTriangulation::calculateTriangles() {
     TetrahedronIterator it;
     int face;
     NTetrahedron* tet;
@@ -325,12 +325,12 @@ void NTriangulation::calculateTriangles() const {
                     adjTet->triMapping_[adjFace] = adjVertices;
                     label->push_back(NTriangleEmbedding(adjTet, adjFace));
                 }
-                FaceList<3, 2>::faces_.push_back(label);
+                FaceList<3, 2>::push_back(label);
             }
     }
 }
 
-void NTriangulation::calculateBoundary() const {
+void NTriangulation::calculateBoundary() {
     // Sets boundaryComponents, NTriangle.boundaryComponent,
     //     NEdge.boundaryComponent, NVertex.boundaryComponent,
     //     NComponent.boundaryComponents
@@ -349,7 +349,7 @@ void NTriangulation::calculateBoundary() const {
 }
 
 void NTriangulation::labelBoundaryTriangle(NTriangle* firstTriangle,
-        NBoundaryComponent* label) const {
+        NBoundaryComponent* label) {
     std::queue<NTriangle*> triangleQueue;
 
     const NTriangleEmbedding& emb = firstTriangle->front();
@@ -440,7 +440,7 @@ void NTriangulation::labelBoundaryTriangle(NTriangle* firstTriangle,
     }
 }
 
-void NTriangulation::calculateVertexLinks() const {
+void NTriangulation::calculateVertexLinks() {
     // Begin by calculating Euler characteristics.
     // Here we use the formula:  chi = (2 v_int + v_bdry - f) / 2, which
     // is easily proven with a little arithmetic.

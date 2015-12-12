@@ -39,7 +39,7 @@
 
 namespace regina {
 
-void Triangulation<2>::calculateSkeleton() const {
+void Triangulation<2>::calculateSkeleton() {
     TriangulationBase<2>::calculateSkeleton();
 
     // Get rid of the empty triangulation now, so that all the helper routines
@@ -72,7 +72,7 @@ void Triangulation<2>::calculateSkeleton() const {
         // - all Dim2BoundaryComponent members
 }
 
-void Triangulation<2>::calculateEdges() const {
+void Triangulation<2>::calculateEdges() {
     TriangleIterator it;
     for (it = simplices_.begin(); it != simplices_.end(); ++it)
         std::fill((*it)->edge_, (*it)->edge_ + 3, static_cast<Dim2Edge*>(0));
@@ -93,7 +93,7 @@ void Triangulation<2>::calculateEdges() const {
 
             // A new edge!
             e = new Dim2Edge(tri->component_);
-            FaceList<2, 1>::faces_.push_back(e);
+            FaceList<2, 1>::push_back(e);
             tri->component_->edges_.push_back(e);
 
             tri->edge_[edge] = e;
@@ -118,7 +118,7 @@ void Triangulation<2>::calculateEdges() const {
     }
 }
 
-void Triangulation<2>::calculateVertices() const {
+void Triangulation<2>::calculateVertices() {
     TriangleIterator it;
     int loopVtx;
     for (it = simplices_.begin(); it != simplices_.end(); ++it)
@@ -137,7 +137,7 @@ void Triangulation<2>::calculateVertices() const {
                 continue;
 
             label = new Dim2Vertex(loopTri->component_);
-            FaceList<2, 0>::faces_.push_back(label);
+            FaceList<2, 0>::push_back(label);
             loopTri->component_->vertices_.push_back(label);
 
             // Since triangle vertices are joined together in a loop, the
@@ -190,7 +190,7 @@ void Triangulation<2>::calculateVertices() const {
     }
 }
 
-void Triangulation<2>::calculateBoundary() const {
+void Triangulation<2>::calculateBoundary() {
     // Are there any boundary edges at all?
     long nBdry = 2 * getNumberOfEdges() - 3 * simplices_.size();
     if (nBdry == 0)
