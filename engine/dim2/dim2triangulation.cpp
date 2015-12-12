@@ -200,15 +200,8 @@ void Triangulation<2>::cloneFrom(const Dim2Triangulation& X) {
 }
 
 void Triangulation<2>::deleteSkeleton() {
-    for (auto f : FaceList<2, 0>::faces_)
-        delete f;
-    for (auto f : FaceList<2, 1>::faces_)
-        delete f;
     for (auto b : boundaryComponents_)
         delete b;
-
-    FaceList<2, 0>::faces_.clear();
-    FaceList<2, 1>::faces_.clear();
     boundaryComponents_.clear();
 
     TriangulationBase<2>::deleteSkeleton();

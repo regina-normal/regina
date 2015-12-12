@@ -83,16 +83,23 @@ class FaceList {
         size_t faceIndex(const Face<dim, subdim>* face) const;
         Iterator begin() const;
         Iterator end() const;
+
+    protected:
+        void deleteFaces();
 };
 
 template <int dim, int subdim>
 class FaceLists :
-        public FaceLists<dim, subdim - 1>,
-        public FaceList<dim, subdim> {
+        protected FaceLists<dim, subdim - 1>,
+        protected FaceList<dim, subdim> {
+    protected:
+        void deleteFaces();
 };
 
 template <int dim>
-class FaceLists<dim, 0> : public FaceList<dim, 0> {
+class FaceLists<dim, 0> : protected FaceList<dim, 0> {
+    protected:
+        void deleteFaces();
 };
 
 /**
@@ -119,7 +126,7 @@ class FaceLists<dim, 0> : public FaceList<dim, 0> {
  */
 template <int dim>
 class TriangulationBase :
-        public FaceLists<dim, dim - 1>,
+        protected FaceLists<dim, dim - 1>,
         public boost::noncopyable {
     static_assert(dim >= 2, "Triangulation requires dimension >= 2.");
 
@@ -1602,7 +1609,7 @@ class DegreeGreaterThan {
 
 /*@}*/
 
-// Inline functions for FaceList
+// Inline functions for FaceList and FaceLists
 
 template <int dim, int subdim>
 inline size_t FaceList<dim, subdim>::countFaces() const {
@@ -1636,6 +1643,24 @@ template <int dim, int subdim>
 inline typename FaceList<dim, subdim>::Iterator FaceList<dim, subdim>::end()
         const {
     return faces_.end();
+}
+
+template <int dim, int subdim>
+inline void FaceList<dim, subdim>::deleteFaces() {
+    for (auto f : faces_)
+        delete f;
+    faces_.clear();
+}
+
+template <int dim, int subdim>
+inline void FaceLists<dim, subdim>::deleteFaces() {
+    FaceList<dim, subdim>::deleteFaces();
+    FaceLists<dim, subdim - 1>::deleteFaces();
+}
+
+template <int dim>
+inline void FaceLists<dim, 0>::deleteFaces() {
+    FaceList<dim, 0>::deleteFaces();
 }
 
 // Inline functions for TriangulationBase
@@ -2270,10 +2295,11 @@ void TriangulationBase<dim>::calculateSkeleton() const {
 
 template <int dim>
 inline void TriangulationBase<dim>::deleteSkeleton() {
-    for (auto it = components_.begin(); it != components_.end(); ++it)
-        delete *it;
-
+    for (auto c : components_)
+        delete c;
     components_.clear();
+
+    FaceLists<dim, dim - 1>::deleteFaces();
 
     calculatedSkeleton_ = false;
 }

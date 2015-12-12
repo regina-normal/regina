@@ -375,20 +375,8 @@ long Triangulation<3>::getEulerCharManifold() const {
 }
 
 void Triangulation<3>::deleteSkeleton() {
-    // Now that skeletal destructors are private, we can't just use for_each.
-    // How primitive.  Loop through each list indivually.
-    for (auto f : FaceList<3, 0>::faces_)
-        delete f;
-    for (auto f : FaceList<3, 1>::faces_)
-        delete f;
-    for (auto f : FaceList<3, 2>::faces_)
-        delete f;
     for (auto b : boundaryComponents_)
         delete b;
-
-    FaceList<3, 0>::faces_.clear();
-    FaceList<3, 1>::faces_.clear();
-    FaceList<3, 2>::faces_.clear();
     boundaryComponents_.clear();
 
     TriangulationBase<3>::deleteSkeleton();
