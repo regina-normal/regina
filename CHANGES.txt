@@ -92,8 +92,9 @@ Version 4.97  [ (under development) ]
         Class Dim2Triangulation:
             - Now just a typedef for the new class Triangulation<2>, which has
               the same functionality as the old Dim2Triangulation.
-            - New dimension-agnostic getFace<subdim>() and
-              faceIndex<subdim>() template functions.
+            - New dimension-agnostic face<subdim>(), getFace<subdim>(),
+              faces<subdim>(), getFaces<subdim>() and faceIndex<subdim>()
+              template functions.
             - New dimension-agnostic function hasBoundaryFacets().
             - Reconstruction from isomorphism signatures now allows
               leading and/or trailing whitespace.
@@ -106,6 +107,12 @@ Version 4.97  [ (under development) ]
               old names are deprecated but kept for backward compatibility.
             - Renamed getNumberOfBoundaryEdges() to countBoundaryFacets();
               added an alias countBoundaryEdges(); deprecated the old name.
+            - Renamed template routine getNumberOfFaces<>() to countFaces<>();
+              deprecated the old name.
+            - Routines getVertices() and getEdges() no longer return a
+              reference to a std::vector.  Instead they return a FaceList
+              structure, which still supports C++11-style iteration and
+              operator [] (amongst other things).
         Class Dim2Vertex, Dim2VertexEmbedding:
             - Now just typedefs for the new classes Face<2, 0> and
               FaceEmbedding<2, 0>, which have the same functionality as
@@ -390,8 +397,9 @@ Version 4.97  [ (under development) ]
             - Removed the optional boolean argument (forceDivision) from
               idealToFinite().
             - New dimension-agnostic function hasBoundaryFacets().
-            - New dimension-agnostic getFace<subdim>() and
-              faceIndex<subdim>() template functions.
+            - New dimension-agnostic face<subdim>(), getFace<subdim>(),
+              faces<subdim>(), getFaces<subdim>() and faceIndex<subdim>()
+              template functions.
             - New routine niceTreeDecomposition() for constructing and
               caching a nice tree decomposition of the face pairing graph.
             - New routines retriangulate() and simplifyExhaustive() for
@@ -405,6 +413,10 @@ Version 4.97  [ (under development) ]
             - Routines findAllIsomorphisms() and findAllSubcomplexesIn() now
               take an arbitrary output iterator, instead of the user passing a
               std::list to fill with results.
+            - Routines getVertices(), getEdges() and getTriangles() no
+              longer return a reference to a std::vector.  Instead they
+              return a FaceList structure, which still supports C++11-style
+              iteration and operator [] (amongst other things).
             - Removed deprecated routines addTetrahedron() and
               gluingsHaveChanged().
             - Removed maximalForestInDualSkeleton().  Just use
@@ -414,7 +426,12 @@ Version 4.97  [ (under development) ]
               old names are deprecated but kept for backward compatibility.
             - Renamed getNumberOfBoundaryTriangles() to countBoundaryFacets();
               added an alias countBoundaryTriangles(); deprecated the old name.
+            - Renamed template routine getNumberOfFaces<>() to countFaces<>();
+              deprecated the old name.
             - Removed the long-deprecated addTetrahedron().
+            - Removed 2-face members FaceIterator, faceIndex(), getFace(),
+              getFaces() and getNumberOfFaces(), all of which were deprecated.
+              Instead use the names that replace "face" with "triangle".
         Class NVertex:
             - Now just typedefs for the new classes Face<3, 0> and
               FaceEmbedding<3, 0>, which have the same functionality as

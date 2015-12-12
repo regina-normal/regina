@@ -451,6 +451,36 @@ class TriangulationBase :
         const std::vector<Component<dim>*>& getComponents() const;
 
         /**
+         * Returns an object that allows iteration through and random access
+         * to all \a subdim-faces of this triangulation.
+         *
+         * Bear in mind that each time the triangulation changes, all
+         * face objects will be deleted and replaced with new ones.
+         * Therefore these face objects should be considered temporary only.
+         *
+         * In contrast, this reference to the \e list of all \a subdim-faces
+         * will remain valid and up-to-date for as long as the triangulation
+         * exists.
+         *
+         * \ifacespython This routine returns a python list.
+         *
+         * @return access to the list of all \a subdim-faces.
+         */
+        template <int subdim>
+        const FaceList<dim, subdim>& faces() const;
+
+        /**
+         * Deprecated routine that returns all \a subdim-faces of this
+         * triangulation.
+         *
+         * \deprecated Simply call faces() instead.
+         *
+         * See faces() for further details.
+         */
+        template <int subdim>
+        const FaceList<dim, subdim>& getFaces() const;
+
+        /**
          * Returns the requested connected component of this triangulation.
          *
          * Note that each time the triangulation changes, all component
@@ -1694,7 +1724,7 @@ inline const Simplex<dim>* TriangulationBase<dim>::getSimplex(size_t index)
 template <int dim>
 inline size_t TriangulationBase<dim>::simplexIndex(const Simplex<dim>* simplex)
         const {
-    return simplex->markedIndex();
+    return simplex->index();
 }
 
 template <int dim>
@@ -1724,7 +1754,7 @@ inline void TriangulationBase<dim>::removeSimplex(Simplex<dim>* simplex) {
         static_cast<Triangulation<dim>*>(this));
 
     simplex->isolate();
-    simplices_.erase(simplices_.begin() + simplex->markedIndex());
+    simplices_.erase(simplices_.begin() + simplex->index());
     delete simplex;
 
     static_cast<Triangulation<dim>*>(this)->clearAllProperties();
@@ -1836,6 +1866,20 @@ inline const std::vector<Component<dim>*>&
 }
 
 template <int dim>
+template <int subdim>
+inline const FaceList<dim, subdim>& TriangulationBase<dim>::faces() const {
+    ensureSkeleton();
+    return *this;
+}
+
+template <int dim>
+template <int subdim>
+inline const FaceList<dim, subdim>& TriangulationBase<dim>::getFaces() const {
+    ensureSkeleton();
+    return *this;
+}
+
+template <int dim>
 inline Component<dim>* TriangulationBase<dim>::component(size_t index) const {
     ensureSkeleton();
     return components_[index];
@@ -1865,14 +1909,14 @@ inline Face<dim, subdim>* TriangulationBase<dim>::getFace(size_t index) const {
 template <int dim>
 inline size_t TriangulationBase<dim>::componentIndex(
         const Component<dim>* component) const {
-    return component->markedIndex();
+    return component->index();
 }
 
 template <int dim>
 template <int subdim>
 inline size_t TriangulationBase<dim>::faceIndex(
         const Face<dim, subdim>* face) const {
-    return face->markedIndex();
+    return face->index();
 }
 
 template <int dim>
@@ -2303,7 +2347,7 @@ void Triangulation<dim>::writeTextLong(std::ostream& out) const {
                 out << "boundary";
             } else {
                 gluing = simp->adjacentGluing(i);
-                out << std::setw(4) << adj->markedIndex() << " (";
+                out << std::setw(4) << adj->index() << " (";
                 for (j = 0; j <= dim; ++j) {
                     if (j != i)
                         out << regina::digit(gluing[j]);
@@ -2326,8 +2370,8 @@ inline DegreeLessThan<dim, subdim>::DegreeLessThan(
 template <int dim, int subdim>
 inline bool DegreeLessThan<dim, subdim>::operator () (
         unsigned a, unsigned b) const {
-    return (tri_.template face<subdim>(a)->getDegree() <
-            tri_.template face<subdim>(b)->getDegree());
+    return (tri_.template face<subdim>(a)->degree() <
+            tri_.template face<subdim>(b)->degree());
 }
 
 template <int dim, int subdim>
@@ -2338,8 +2382,8 @@ inline DegreeGreaterThan<dim, subdim>::DegreeGreaterThan(
 template <int dim, int subdim>
 inline bool DegreeGreaterThan<dim, subdim>::operator () (
         unsigned a, unsigned b) const {
-    return (tri_.template face<subdim>(a)->getDegree() >
-            tri_.template face<subdim>(b)->getDegree());
+    return (tri_.template face<subdim>(a)->degree() >
+            tri_.template face<subdim>(b)->degree());
 }
 
 } // namespace regina

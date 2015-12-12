@@ -296,7 +296,8 @@ class REGINA_API Triangulation<2> :
         const std::vector<Dim2BoundaryComponent*>& getBoundaryComponents()
             const;
         /**
-         * Returns all vertices of this triangulation.
+         * Returns an object that allows iteration through and random access
+         * to all vertices of this triangulation.
          *
          * Bear in mind that each time the triangulation changes, the
          * vertices will be deleted and replaced with new
@@ -308,11 +309,12 @@ class REGINA_API Triangulation<2> :
          *
          * \ifacespython This routine returns a python list.
          *
-         * @return the list of all vertices.
+         * @return access to the list of all vertices.
          */
         const FaceList<2, 0>& getVertices() const;
         /**
-         * Returns all edges of this triangulation.
+         * Returns an object that allows iteration through and random access
+         * to all edges of this triangulation.
          *
          * Bear in mind that each time the triangulation changes, the
          * edges will be deleted and replaced with new
@@ -324,7 +326,7 @@ class REGINA_API Triangulation<2> :
          *
          * \ifacespython This routine returns a python list.
          *
-         * @return the list of all edges.
+         * @return access to the list of all edges.
          */
         const FaceList<2, 1>& getEdges() const;
         /**
@@ -680,11 +682,11 @@ inline unsigned long Triangulation<2>::getNumberOfBoundaryComponents() const {
 }
 
 inline size_t Triangulation<2>::getNumberOfVertices() const {
-    return getNumberOfFaces<0>();
+    return countFaces<0>();
 }
 
 inline size_t Triangulation<2>::getNumberOfEdges() const {
-    return getNumberOfFaces<1>();
+    return countFaces<1>();
 }
 
 inline const std::vector<Dim2BoundaryComponent*>&
@@ -694,13 +696,11 @@ inline const std::vector<Dim2BoundaryComponent*>&
 }
 
 inline const FaceList<2, 0>& Triangulation<2>::getVertices() const {
-    ensureSkeleton();
-    return *this;
+    return faces<0>();
 }
 
 inline const FaceList<2, 1>& Triangulation<2>::getEdges() const {
-    ensureSkeleton();
-    return *this;
+    return faces<1>();
 }
 
 inline Dim2BoundaryComponent* Triangulation<2>::getBoundaryComponent(
@@ -710,11 +710,11 @@ inline Dim2BoundaryComponent* Triangulation<2>::getBoundaryComponent(
 }
 
 inline Dim2Vertex* Triangulation<2>::getVertex(size_t index) const {
-    return getFace<0>(index);
+    return face<0>(index);
 }
 
 inline Dim2Edge* Triangulation<2>::getEdge(size_t index) const {
-    return getFace<1>(index);
+    return face<1>(index);
 }
 
 inline long Triangulation<2>::boundaryComponentIndex(
@@ -723,11 +723,11 @@ inline long Triangulation<2>::boundaryComponentIndex(
 }
 
 inline long Triangulation<2>::vertexIndex(const Dim2Vertex* vertex) const {
-    return faceIndex(vertex);
+    return vertex->index();
 }
 
 inline long Triangulation<2>::edgeIndex(const Dim2Edge* edge) const {
-    return faceIndex(edge);
+    return edge->index();
 }
 
 inline bool Triangulation<2>::isValid() const {

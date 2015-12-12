@@ -178,8 +178,6 @@ class REGINA_API Triangulation<3> :
                  used to iterate through tetrahedra. */
         typedef FaceList<3, 2>::Iterator TriangleIterator;
             /**< Used to iterate through triangles. */
-        typedef FaceList<3, 2>::Iterator FaceIterator;
-            /**< A deprecated alias for TriangleIterator. */
         typedef FaceList<3, 1>::Iterator EdgeIterator;
             /**< Used to iterate through edges. */
         typedef FaceList<3, 0>::Iterator VertexIterator;
@@ -444,7 +442,8 @@ class REGINA_API Triangulation<3> :
          */
         const std::vector<NBoundaryComponent*>& getBoundaryComponents() const;
         /**
-         * Returns all vertices of this triangulation.
+         * Returns an object that allows iteration through and random access
+         * to all vertices of this triangulation.
          *
          * Bear in mind that each time the triangulation changes, the
          * vertices will be deleted and replaced with new
@@ -456,11 +455,12 @@ class REGINA_API Triangulation<3> :
          *
          * \ifacespython This routine returns a python list.
          *
-         * @return the list of all vertices.
+         * @return access to the list of all vertices.
          */
         const FaceList<3, 0>& getVertices() const;
         /**
-         * Returns all edges of this triangulation.
+         * Returns an object that allows iteration through and random access
+         * to all edges of this triangulation.
          *
          * Bear in mind that each time the triangulation changes, the
          * edges will be deleted and replaced with new
@@ -472,11 +472,12 @@ class REGINA_API Triangulation<3> :
          *
          * \ifacespython This routine returns a python list.
          *
-         * @return the list of all edges.
+         * @return access to the list of all edges.
          */
         const FaceList<3, 1>& getEdges() const;
         /**
-         * Returns all triangular faces of this triangulation.
+         * Returns an object that allows iteration through and random access
+         * to all triangular faces of this triangulation.
          *
          * Bear in mind that each time the triangulation changes, the
          * triangles will be deleted and replaced with new
@@ -488,7 +489,7 @@ class REGINA_API Triangulation<3> :
          *
          * \ifacespython This routine returns a python list.
          *
-         * @return the list of all triangles.
+         * @return access to the list of all triangles.
          */
         const FaceList<3, 2>& getTriangles() const;
         /**
@@ -3447,15 +3448,15 @@ inline unsigned long Triangulation<3>::getNumberOfBoundaryComponents() const {
 }
 
 inline size_t Triangulation<3>::getNumberOfVertices() const {
-    return getNumberOfFaces<0>();
+    return countFaces<0>();
 }
 
 inline size_t Triangulation<3>::getNumberOfEdges() const {
-    return getNumberOfFaces<1>();
+    return countFaces<1>();
 }
 
 inline size_t Triangulation<3>::getNumberOfTriangles() const {
-    return getNumberOfFaces<2>();
+    return countFaces<2>();
 }
 
 inline long Triangulation<3>::getEulerCharTri() const {
@@ -3484,18 +3485,15 @@ inline const std::vector<NBoundaryComponent*>&
 }
 
 inline const FaceList<3, 0>& Triangulation<3>::getVertices() const {
-    ensureSkeleton();
-    return *this;
+    return faces<0>();
 }
 
 inline const FaceList<3, 1>& Triangulation<3>::getEdges() const {
-    ensureSkeleton();
-    return *this;
+    return faces<1>();
 }
 
 inline const FaceList<3, 2>& Triangulation<3>::getTriangles() const {
-    ensureSkeleton();
-    return *this;
+    return faces<2>();
 }
 
 inline NBoundaryComponent* Triangulation<3>::getBoundaryComponent(
@@ -3505,15 +3503,15 @@ inline NBoundaryComponent* Triangulation<3>::getBoundaryComponent(
 }
 
 inline NVertex* Triangulation<3>::getVertex(size_t index) const {
-    return getFace<0>(index);
+    return face<0>(index);
 }
 
 inline NEdge* Triangulation<3>::getEdge(size_t index) const {
-    return getFace<1>(index);
+    return face<1>(index);
 }
 
 inline NTriangle* Triangulation<3>::getTriangle(size_t index) const {
-    return getFace<2>(index);
+    return face<2>(index);
 }
 
 inline long Triangulation<3>::boundaryComponentIndex(
@@ -3522,15 +3520,15 @@ inline long Triangulation<3>::boundaryComponentIndex(
 }
 
 inline long Triangulation<3>::vertexIndex(const NVertex* vertex) const {
-    return faceIndex(vertex);
+    return vertex->index();
 }
 
 inline long Triangulation<3>::edgeIndex(const NEdge* edge) const {
-    return faceIndex(edge);
+    return edge->index();
 }
 
 inline long Triangulation<3>::triangleIndex(const NTriangle* tri) const {
-    return faceIndex(tri);
+    return tri->index();
 }
 
 inline bool Triangulation<3>::hasTwoSphereBoundaryComponents() const {
