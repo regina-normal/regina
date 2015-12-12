@@ -125,9 +125,8 @@ class REGINA_API Triangulation<2> :
             /**< Used to iterate through boundary components. */
 
     private:
-        mutable NMarkedVector<Dim2BoundaryComponent> boundaryComponents_;
-            /**< The components that form the boundary of the
-                 triangulation. */
+        NMarkedVector<Dim2BoundaryComponent> boundaryComponents_;
+            /**< The components that form the boundary of the triangulation. */
 
     public:
         /**
