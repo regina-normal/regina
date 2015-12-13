@@ -623,8 +623,8 @@ class FaceBase :
  * where \a n is the total number of tetrahedra.
  *
  * Each such appearance is described by a single FaceEmbedding object.  You can
- * iterate through these appearances using begin() and end(), or using the
- * standard C++11 construct <tt>for (auto& emb : F) { ... }</tt>.
+ * iterate through these appearances using begin() and end(), or using a
+ * C++11 range-based \c for loop: <tt>for (auto& emb : F) { ... }</tt>.
  * You can count these appearances by calling degree(), and you can also
  * examine them using routines such as front(), back() and embedding().
  *

@@ -60,47 +60,125 @@ namespace regina {
 template <int> class Component;
 template <int> class Isomorphism;
 template <int> class Triangulation;
-template <int, int> class Face;
 
 /**
  * \weakgroup generic
  * @{
  */
 
+/**
+ * Stores the list of all \a subdim-faces of a \a dim-dimensional triangulation.
+ *
+ * This object provides basic container-like behaviour.  It supports begin(),
+ * end(), size(), and the random access operator <tt>[]</tt>.
+ * In particular, you can iterate through all \a subdim-faces using C++11
+ * range-based \c for loops: <tt>for (auto f : faceList) { ... }</tt>.
+ *
+ * Strictly speaking, this list holds \e pointers to Face<dim, subdim> objects.
+ * So, for example, dereferencing an iterator will return a pointer of type
+ * <tt>Face<dim, subdim>*</tt>.  Likewise, the variable \a f in the range-based
+ * \c for loop above will be a pointer of type <tt>Face<dim, subdim>*</tt>.
+ *
+ * \warning Face objects are highly temporary: whenever a triangulation
+ * changes, all its face objects will be deleted and new ones will be
+ * created in their place.
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * This must be at least 2.
+ * \tparam subdim the dimension of the faces that this class stores.
+ * This must be between 0 and \a dim-1 inclusive.
+ */
 template <int dim, int subdim>
 class FaceList {
     public:
         typedef typename std::vector<Face<dim, subdim>*>::const_iterator
                 Iterator;
+            /**< An iterator type for iterating through this list of faces.
+                 Dereferencing such an iterator will return a pointer of type
+                 <tt>Face<dim, subdim>*</tt>. */
 
     private:
         NMarkedVector<Face<dim, subdim>> faces_;
-            /**< The \a subdim-faces in the skeleton of the triangulation. */
+            /**< All \a subdim-faces in the skeleton of the triangulation. */
 
     public:
+        FaceList(const FaceList&) = delete;
+        FaceList& operator = (const FaceList&) = delete;
+
+        /**
+         * Returns the number of \a subdim-faces in the triangulation.
+         *
+         * @return the number of \a subdim-faces.
+         */
         size_t size() const;
+        /**
+         * Returns the requested \a subdim-face.
+         *
+         * @param index indicates which face to return; this must be
+         * between 0 and size()-1 inclusive.
+         * @return the (\a index)th \a subdim-face.
+         */
         Face<dim, subdim>* operator [](size_t index) const;
+        /**
+         * Returns an iterator pointing to the first \a subdim-face.
+         *
+         * @return an iterator at the beginning of this list.
+         */
         Iterator begin() const;
+        /**
+         * Returns an iterator pointing beyond the last \a subdim-face.
+         *
+         * @return an iterator beyond the end of this list.
+         */
         Iterator end() const;
 
     protected:
+        /**
+         * Creates an empty list of \a subdim-faces.
+         */
+        FaceList() = default;
+        /**
+         * Pushes the given face onto the end of this list.
+         * This object will take ownership of the given face.
+         *
+         * @param face the face to push.
+         */
         void push_back(Face<dim, subdim>* face);
+        /**
+         * Destroys all faces in this list, and clears the list itself.
+         */
         void destroy();
 };
 
+/**
+ * Internal class that helps a triangulation store its lists of faces.
+ *
+ * This class is used with \a dim-dimensional triangulations.  It provides
+ * storage for all faces of dimension \a subdim and below.  The triangulation
+ * class Triangulation<dim> then derives from FaceLists<dim, dim-1>.
+ */
 template <int dim, int subdim>
 class FaceLists :
         protected FaceLists<dim, subdim - 1>,
         protected FaceList<dim, subdim> {
     protected:
+        /**
+         * Deletes all faces of dimension \a subdim and below.
+         * This routine destroys the corresponding Face objects and
+         * clears the lists that contain them.
+         */
         void deleteFaces();
 };
+
+#ifndef __DOXYGEN
 
 template <int dim>
 class FaceLists<dim, 0> : protected FaceList<dim, 0> {
     protected:
         void deleteFaces();
 };
+
+#endif // __DOXYGEN
 
 /**
  * Provides core functionality for <i>dim</i>-dimensional triangulations.
@@ -405,15 +483,17 @@ class TriangulationBase :
         size_t getNumberOfComponents() const;
 
         /**
-         * Returns the number of faces of the given dimension in this
-         * triangulation.
+         * Returns the number of \a subdim-faces in this triangulation.
          *
          * \pre The template argument \a subdim is between 0 and \a dim-1
          * inclusive.
          *
-         * \ifacespython TODO.
+         * \ifacespython Python does not support templates.  Instead,
+         * Python users should call this function in the form
+         * <tt>countFaces(subdim)</tt>; that is, the template parameter
+         * \a subdim becomes the first argument of the function.
          *
-         * @return the number of \a subdim-faces of the given dimension.
+         * @return the number of \a subdim-faces.
          */
         template <int subdim>
         size_t countFaces() const;
@@ -465,11 +545,12 @@ class TriangulationBase :
          * face objects will be deleted and replaced with new ones.
          * Therefore these face objects should be considered temporary only.
          *
-         * In contrast, this reference to the \e list of all \a subdim-faces
-         * will remain valid and up-to-date for as long as the triangulation
-         * exists.
+         * In contrast, this reference to the FaceList object itself will
+         * remain valid and up-to-date for as long as the triangulation exists.
          *
-         * \ifacespython This routine returns a python list.
+         * \ifacespython Python users should call this function in the
+         * form <tt>faces(subdim)</tt>.  It will then return a Python list
+         * containing all the \a subdim-faces of the triangulation.
          *
          * @return access to the list of all \a subdim-faces.
          */
@@ -477,8 +558,8 @@ class TriangulationBase :
         const FaceList<dim, subdim>& faces() const;
 
         /**
-         * Deprecated routine that returns all \a subdim-faces of this
-         * triangulation.
+         * Deprecated routine that allows iteration through and random
+         * access to all \a subdim-faces of this triangulation.
          *
          * \deprecated Simply call faces() instead.
          *
@@ -511,13 +592,15 @@ class TriangulationBase :
         Component<dim>* getComponent(size_t index) const;
 
         /**
-         * Returns the requested face of the given dimension in this
-         * triangulation.
+         * Returns the requested \a subdim-face of this triangulation.
          *
          * \pre The template argument \a subdim is between 0 and \a dim-1
          * inclusive.
          *
-         * \ifacespython TODO.
+         * \ifacespython Python does not support templates.  Instead,
+         * Python users should call this function in the form
+         * <tt>face(subdim, index)</tt>; that is, the template parameter
+         * \a subdim becomes the first argument of the function.
          *
          * @param index the index of the desired face, ranging from 0 to
          * countFaces<subdim>()-1 inclusive.
@@ -554,17 +637,15 @@ class TriangulationBase :
         size_t componentIndex(const Component<dim>* component) const;
 
         /**
-         * Returns the index of the given face of the given dimension in this
-         * triangulation.
+         * Returns the index of the given \a subdim-face in this triangulation.
+         *
+         * This is equivalent to calling <tt>faceIndex->index()</tt>.
          *
          * \pre The template argument \a subdim is between 0 and \a dim-1
          * inclusive.
          * \pre The given face belongs to this triangulation.
          *
-         * \ifacespython TODO.
-         *
-         * @param face specifies which face to find in the
-         * triangulation.
+         * @param face the face to query.
          * @return the index of the specified face, where 0 is the first
          * \a subdim-face, 1 is the second \a subdim-face, and so on.
          */
@@ -1693,8 +1774,8 @@ TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& copy) :
 
 template <int dim>
 inline TriangulationBase<dim>::~TriangulationBase() {
-    for (auto it = simplices_.begin(); it != simplices_.end(); ++it)
-        delete *it;
+    for (auto s : simplices_)
+        delete s;
 }
 
 template <int dim>
@@ -1797,8 +1878,8 @@ inline void TriangulationBase<dim>::removeAllSimplices() {
     typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>*>(this));
 
-    for (auto it = simplices_.begin(); it != simplices_.end(); ++it)
-        delete *it;
+    for (auto s : simplices_)
+        delete s;
     simplices_.clear();
 
     static_cast<Triangulation<dim>*>(this)->clearAllProperties();
@@ -1945,8 +2026,8 @@ inline bool TriangulationBase<dim>::isEmpty() const {
 
 template <int dim>
 inline bool TriangulationBase<dim>::hasBoundaryFacets() const {
-    for (auto it = components_.begin(); it != components_.end(); ++it)
-        if ((*it)->countBoundaryFacets())
+    for (auto c : components_)
+        if (c->countBoundaryFacets())
             return true;
     return false;
 }
@@ -1954,8 +2035,8 @@ inline bool TriangulationBase<dim>::hasBoundaryFacets() const {
 template <int dim>
 inline size_t TriangulationBase<dim>::countBoundaryFacets() const {
     size_t ans = 0;
-    for (auto it = components_.begin(); it != components_.end(); ++it)
-        ans += (*it)->countBoundaryFacets();
+    for (auto c : components_)
+        ans += c->countBoundaryFacets();
     return ans;
 }
 

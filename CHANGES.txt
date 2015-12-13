@@ -65,8 +65,8 @@ Version 4.97  [ (under development) ]
               the old Dim2Edge and Dim2EdgeEmbedding respectively.
             - New routine inMaximalForest() for working with the dual
               1-skeleton.
-            - Added begin(), end(), front() and back() to Dim2Edge.
-              In particular, this class now supports C++11-style iteration.
+            - Added begin(), end(), front() and back() to Dim2Edge.  In
+              particular, this class now supports C++11 range-based for loops.
             - Added getEmbeddings() to Dim2Edge for Python (but not C++).
             - Removed the old routine getNumberOfEmbeddings(), and replaced
               it with the new (and equivalent) routine getDegree().
@@ -111,14 +111,14 @@ Version 4.97  [ (under development) ]
               deprecated the old name.
             - Routines getVertices() and getEdges() no longer return a
               reference to a std::vector.  Instead they return a FaceList
-              structure, which still supports C++11-style iteration and
+              structure, which also supports C++11 range-based for loops and
               operator [] (amongst other things).
         Class Dim2Vertex, Dim2VertexEmbedding:
             - Now just typedefs for the new classes Face<2, 0> and
               FaceEmbedding<2, 0>, which have the same functionality as
               the old Dim2Vertex and Dim2VertexEmbedding respectively.
-            - Added begin(), end(), front() and back() to Dim2Vertex.
-              In particular, this class now supports C++11-style iteration.
+            - Added begin(), end(), front() and back() to Dim2Vertex.  In
+              particular, this class now supports C++11 range-based for loops.
             - Removed getEmbeddings() for C++, but kept it for Python.
             - Removed the old routine getNumberOfEmbeddings().  Just use
               the equivalent routine getDegree() instead.
@@ -185,8 +185,8 @@ Version 4.97  [ (under development) ]
             - Now just typedefs for the new classes Face<3, 1> and
               FaceEmbedding<3, 1>, which have the same functionality as
               the old NEdge and NEdgeEmbedding respectively.
-            - Added begin(), end(), front() and back() to NEdge.
-              In particular, this class now supports C++11-style iteration.
+            - Added begin(), end(), front() and back() to NEdge.  In
+              particular, this class now supports C++11 range-based for loops.
             - Removed getEmbeddings() for C++, but kept it for Python.
             - Removed the old routine getNumberOfEmbeddings().  Just use
               the equivalent routine getDegree() instead.
@@ -369,8 +369,8 @@ Version 4.97  [ (under development) ]
               new type constant UNKNOWN_TYPE.
             - New routine inMaximalForest() in NTriangle for working with the
               dual 1-skeleton.
-            - Added begin(), end(), front() and back() to NTriangle.
-              In particular, this class now supports C++11-style iteration.
+            - Added begin(), end(), front() and back() to NTriangle.  In
+              particular, this class now supports C++11 range-based for loops.
             - Added getEmbeddings() to NTriangle for Python (but not C++).
             - Removed the old routine getNumberOfEmbeddings(), and replaced
               it with the new (and equivalent) routine getDegree().
@@ -414,9 +414,9 @@ Version 4.97  [ (under development) ]
               take an arbitrary output iterator, instead of the user passing a
               std::list to fill with results.
             - Routines getVertices(), getEdges() and getTriangles() no
-              longer return a reference to a std::vector.  Instead they
-              return a FaceList structure, which still supports C++11-style
-              iteration and operator [] (amongst other things).
+              longer return a reference to a std::vector.  Instead they return
+              a FaceList structure, which also supports C++11 range-based for
+              loops and operator [] (amongst other things).
             - Removed deprecated routines addTetrahedron() and
               gluingsHaveChanged().
             - Removed maximalForestInDualSkeleton().  Just use
@@ -438,8 +438,8 @@ Version 4.97  [ (under development) ]
               the old NVertex and NVertexEmbedding respectively.
             - Added a new LinkType enumeration to NVertex, which encapsulates
               (and replaces) the old link type constants.
-            - Added begin(), end(), front() and back() to NVertex.
-              In particular, this class now supports C++11-style iteration.
+            - Added begin(), end(), front() and back() to NVertex.  In
+              particular, this class now supports C++11 range-based for loops.
             - Removed getEmbeddings() for C++, but kept it for Python.
             - Removed the old routine getNumberOfEmbeddings().  Just use
               the equivalent routine getDegree() instead.
