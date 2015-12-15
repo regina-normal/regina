@@ -172,12 +172,12 @@ void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
                     tet->vertexMapping_[vertex] * NPerm4(1, 2);
                 adjVertex = adjMap[0];
 
-                // We should actually be inverting NTriangle::ordering[adjVertex].
+                // We should actually be inverting NTriangle::ordering(adjVertex).
                 // However, all we care about is the sign of the permutation,
                 // so let's save ourselves those extra few CPU cycles.
-                if ((NTriangle::ordering[adjVertex] *
+                if ((NTriangle::ordering(adjVertex) *
                         tet->adjacentGluing(face) *
-                        NTriangle::ordering[vertex]).sign() > 0)
+                        NTriangle::ordering(vertex)).sign() > 0)
                     adjOrientation = -(tet->tmpOrientation_[vertex]);
                 else
                     adjOrientation = tet->tmpOrientation_[vertex];
@@ -235,7 +235,7 @@ void NTriangulation::labelEdge(NTetrahedron* firstTet, int firstEdge,
     // of the next edge to process in the current direction.
 
     firstTet->edges_[firstEdge] = label;
-    firstTet->edgeMapping_[firstEdge] = NEdge::ordering[firstEdge];
+    firstTet->edgeMapping_[firstEdge] = NEdge::ordering(firstEdge);
     label->push_back(NEdgeEmbedding(firstTet, firstEdge));
 
     // The last tetrahedron edge that was successfully processed.

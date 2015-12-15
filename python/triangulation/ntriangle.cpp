@@ -49,8 +49,6 @@ using regina::NTriangleEmbedding;
 using regina::python::GlobalArray;
 
 namespace {
-    GlobalArray<regina::NPerm4> NTriangle_ordering(NTriangle::ordering, 4);
-
     boost::python::list NTriangle_getEmbeddings_list(const NTriangle* t) {
         boost::python::list ans;
         for (auto& emb: *t)
@@ -124,7 +122,9 @@ void addNTriangle() {
             .def("detail", &NTriangle::detail)
             .def("toStringLong", &NTriangle::toStringLong)
             .def("__str__", &NTriangle::str)
+            .def("ordering", &NTriangle::ordering)
             .def(regina::python::add_eq_operators())
+            .staticmethod("ordering")
         ;
 
         enum_<regina::NTriangle::Type>("Type")
@@ -147,8 +147,6 @@ void addNTriangle() {
         s.attr("HORN") = NTriangle::HORN;
         s.attr("DUNCEHAT") = NTriangle::DUNCEHAT;
         s.attr("L31") = NTriangle::L31;
-
-        s.attr("ordering") = &NTriangle_ordering;
     }
 
     // Support for deprecated typedefs:

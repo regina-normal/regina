@@ -134,27 +134,14 @@ typedef FaceEmbedding<2, 1> Dim2EdgeEmbedding;
  */
 template <>
 class REGINA_API Face<2, 1> : public FaceBase<2, 1>, public Output<Face<2, 1>> {
-    public:
-        /**
-         * An array that maps edge numbers within a triangle to the canonical
-         * ordering of the individual triangle vertices that form each edge.
-         *
-         * This means that the vertices of edge \a i in a triangle
-         * are, in canonical order, <tt>ordering[i][0,1]</tt>.  As an
-         * immediate consequence, we obtain <tt>ordering[i][2] == i</tt>.
-         *
-         * Regina defines canonical order to be \e increasing order.
-         * That is, <tt>ordering[i][0] &lt; ordering[i][1]</tt>.
-         *
-         * This table does \e not describe the mapping from specific
-         * edges within a triangulation into individual triangles
-         * (for that, see Dim2Triangle::getEdgeMapping() instead).
-         * This table merely provides a neat and consistent way of
-         * listing the vertices of any given edge of a triangle.
-         */
-        static const NPerm3 ordering[3];
-
     private:
+        /**
+         * An array that hard-codes the results of ordering().
+         *
+         * See ordering() for further details.
+         */
+        static const NPerm3 ordering_[3];
+
         Dim2BoundaryComponent* boundaryComponent_;
             /**< The boundary component that this edge is a part of,
                  or 0 if this edge is internal. */
@@ -217,6 +204,29 @@ class REGINA_API Face<2, 1> : public FaceBase<2, 1>, public Output<Face<2, 1>> {
          * dual edge in the maximal forest.
          */
         bool inMaximalForest() const;
+
+        /**
+         * Given an edge number within a triangle, returns the canonical
+         * ordering of those triangle vertices that make up the given edge.
+         *
+         * This means that the vertices of edge \a i in a triangle are,
+         * in canonical order, <tt>ordering[i][0,1]</tt>.
+         *
+         * Regina defines canonical order to be \e increasing order.
+         * That is, <tt>ordering[i][0] &lt; ordering[i][1]</tt>.
+         *
+         * This routine does \e not describe the mapping from edges
+         * of the triangulation into individual triangles; for that, see
+         * the routine Dim2Triangle::getEdgeMapping().  Instead, this routine
+         * just provides a neat and consistent way of listing the vertices of
+         * any given edge of any given simplex.
+         *
+         * @param edge identifies which edge of a triangle to query.
+         * This must be between 0 and 2 inclusive.
+         * @return the canonical ordering of the triangle vertices that
+         * make up the given triangle edge.
+         */
+        static NPerm<3> ordering(unsigned edge);
 
         /**
          * Writes a short text representation of this object to the
@@ -307,6 +317,10 @@ inline bool Face<2, 1>::isBoundary() const {
 
 inline bool Face<2, 1>::inMaximalForest() const {
     return front().getTriangle()->facetInMaximalForest(front().getEdge());
+}
+
+inline NPerm<3> Face<2, 1>::ordering(unsigned edge) {
+    return ordering_[edge];
 }
 
 inline void Face<2, 1>::writeTextShort(std::ostream& out) const {

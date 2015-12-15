@@ -55,7 +55,6 @@ namespace {
 
     GlobalArray2D<int> NEdge_edgeNumber(NEdge::edgeNumber, 4);
     GlobalArray2D<int> NEdge_edgeVertex(NEdge::edgeVertex, 6);
-    GlobalArray<regina::NPerm4> NEdge_ordering(NEdge::ordering, 6);
 
     boost::python::list edge_getEmbeddings_list(const NEdge* e) {
         boost::python::list ans;
@@ -128,11 +127,12 @@ void addNEdge() {
         .def("detail", &NEdge::detail)
         .def("toStringLong", &NEdge::toStringLong)
         .def("__str__", &NEdge::str)
+        .def("ordering", &NEdge::ordering)
         .def(regina::python::add_eq_operators())
+        .staticmethod("ordering")
     ;
 
     s.attr("edgeNumber") = &NEdge_edgeNumber;
     s.attr("edgeVertex") = &NEdge_edgeVertex;
-    s.attr("ordering") = &NEdge_ordering;
 }
 

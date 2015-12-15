@@ -62,7 +62,7 @@ const int NEdge::edgeVertex[6][2] = {
     { 1, 3 },
     { 2, 3 }};
 
-const NPerm4 NEdge::ordering[6] = {
+const NPerm4 NEdge::ordering_[6] = {
     NPerm4(0, 1, 2, 3),
     NPerm4(0, 2, 3, 1),
     NPerm4(0, 3, 1, 2),

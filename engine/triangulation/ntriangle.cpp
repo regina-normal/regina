@@ -37,7 +37,7 @@
 
 namespace regina {
 
-const NPerm4 NTriangle::ordering[4] = {
+const NPerm4 NTriangle::ordering_[4] = {
     NPerm4(1, 2, 3, 0),
     NPerm4(0, 2, 3, 1),
     NPerm4(0, 1, 3, 2),

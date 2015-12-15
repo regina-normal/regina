@@ -48,8 +48,6 @@ using regina::Dim2EdgeEmbedding;
 using regina::python::GlobalArray;
 
 namespace {
-    GlobalArray<regina::NPerm3> Dim2Edge_ordering(Dim2Edge::ordering, 3);
-
     boost::python::list Dim2Edge_getEmbeddings_list(const Dim2Edge* e) {
         boost::python::list ans;
         for (auto& emb: *e)
@@ -81,7 +79,7 @@ void addDim2Edge() {
         .def(regina::python::add_eq_operators())
     ;
 
-    scope s = class_<Dim2Edge, std::auto_ptr<Dim2Edge>, boost::noncopyable>
+    class_<Dim2Edge, std::auto_ptr<Dim2Edge>, boost::noncopyable>
             ("Dim2Edge", no_init)
         .def("index", &Dim2Edge::index)
         .def("embeddings", Dim2Edge_getEmbeddings_list)
@@ -115,9 +113,9 @@ void addDim2Edge() {
         .def("detail", &Dim2Edge::detail)
         .def("toStringLong", &Dim2Edge::toStringLong)
         .def("__str__", &Dim2Edge::str)
+        .def("ordering", &Dim2Edge::ordering)
         .def(regina::python::add_eq_operators())
+        .staticmethod("ordering")
     ;
-
-    s.attr("ordering") = &Dim2Edge_ordering;
 }
 

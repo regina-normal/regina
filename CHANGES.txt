@@ -68,6 +68,7 @@ Version 4.97  [ (under development) ]
             - Added begin(), end(), front() and back() to Dim2Edge.  In
               particular, this class now supports C++11 range-based for loops.
             - Added getEmbeddings() to Dim2Edge for Python (but not C++).
+            - Changed the ordering[] array to a static ordering() function.
             - Removed the old routine getNumberOfEmbeddings(), and replaced
               it with the new (and equivalent) routine getDegree().
         Class Dim2Isomorphism:
@@ -187,6 +188,7 @@ Version 4.97  [ (under development) ]
               the old NEdge and NEdgeEmbedding respectively.
             - Added begin(), end(), front() and back() to NEdge.  In
               particular, this class now supports C++11 range-based for loops.
+            - Changed the ordering[] array to a static ordering() function.
             - Removed getEmbeddings() for C++, but kept it for Python.
             - Removed the old routine getNumberOfEmbeddings().  Just use
               the equivalent routine getDegree() instead.
@@ -372,6 +374,7 @@ Version 4.97  [ (under development) ]
             - Added begin(), end(), front() and back() to NTriangle.  In
               particular, this class now supports C++11 range-based for loops.
             - Added getEmbeddings() to NTriangle for Python (but not C++).
+            - Changed the ordering[] array to a static ordering() function.
             - Removed the old routine getNumberOfEmbeddings(), and replaced
               it with the new (and equivalent) routine getDegree().
         Class NTriangulation:

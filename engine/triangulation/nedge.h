@@ -236,28 +236,14 @@ class REGINA_API Face<3, 1> : public FaceBase<3, 1>, public Output<Face<3, 1>> {
          */
         static const int edgeVertex[6][2];
 
-        /**
-         * An array that maps edge numbers within a tetrahedron to the
-         * canonical ordering of the individual tetrahedron vertices
-         * that form each edge.
-         *
-         * This means that the vertices of edge \a i in a tetrahedron
-         * are, in canonical order, <tt>ordering[i][0,1]</tt>.  The
-         * images <tt>ordering[i][2,3]</tt> are chosen to make each
-         * permutation even.
-         *
-         * This table does \e not describe the mapping from specific
-         * triangulation edges into individual tetrahedra (for that,
-         * see NTetrahedron::getEdgeMapping() instead).  This table
-         * merely provides a neat and consistent way of listing the
-         * vertices of any given tetrahedron edge.
-         *
-         * This lookup table replaces the deprecated routine
-         * regina::edgeOrdering().
-         */
-        static const NPerm4 ordering[6];
-
     private:
+        /**
+         * An array that hard-codes the results of ordering().
+         *
+         * See ordering() for further details.
+         */
+        static const NPerm4 ordering_[6];
+
         NBoundaryComponent* boundaryComponent_;
             /**< The boundary component that this edge is a part of,
                  or 0 if this edge is internal. */
@@ -300,6 +286,32 @@ class REGINA_API Face<3, 1> : public FaceBase<3, 1>, public Output<Face<3, 1>> {
          * @return \c true if and only if this edge is valid.
          */
         bool isValid() const;
+
+        /**
+         * Given an edge number within a tetrahedron, returns the canonical
+         * ordering of those tetrahedron vertices that make up the given edge.
+         *
+         * This means that the vertices of edge \a i in a tetrahedron are,
+         * in canonical order, <tt>ordering[i][0,1]</tt>.
+         *
+         * Regina defines canonical order to be \e increasing order.
+         * That is, <tt>ordering[i][0] &lt; ordering[i][1]</tt>.
+         *
+         * The remaining images <tt>ordering[i][2,3]</tt> are chosen to make
+         * each permutation even.
+         *
+         * This routine does \e not describe the mapping from edges
+         * of the triangulation into individual tetrahedron; for that, see
+         * the routine NTetrahedron::getEdgeMapping().  Instead, this routine
+         * just provides a neat and consistent way of listing the vertices of
+         * any given edge of any given tetrahedron.
+         *
+         * @param edge identifies which edge of a tetrahedron to query.
+         * This must be between 0 and 5 inclusive.
+         * @return the canonical ordering of the tetrahedron vertices that
+         * make up the given tetrahedron edge.
+         */
+        static NPerm4 ordering(unsigned edge);
 
         /**
          * Writes a short text representation of this object to the
@@ -389,6 +401,10 @@ inline bool Face<3, 1>::isBoundary() const {
 
 inline bool Face<3, 1>::isValid() const {
     return valid_;
+}
+
+inline NPerm4 Face<3, 1>::ordering(unsigned edge) {
+    return ordering_[edge];
 }
 
 inline void Face<3, 1>::writeTextShort(std::ostream& out) const {

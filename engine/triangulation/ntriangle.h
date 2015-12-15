@@ -174,30 +174,14 @@ class REGINA_API Face<3, 2> : public FaceBase<3, 2>, public Output<Face<3, 2>> {
                      the Lens space L(3,1). */
         };
 
-        /**
-         * An array that maps triangle numbers within a tetrahedron
-         * (i.e., face numbers) to the canonical ordering of the individual
-         * tetrahedron vertices that form each triangle.
-         *
-         * This means that the vertices of triangle \a i in a tetrahedron
-         * are, in canonical order, <tt>ordering[i][0..2]</tt>.  As an
-         * immediate consequence, we obtain <tt>ordering[i][3] == i</tt>.
-         *
-         * Regina defines canonical order to be \e increasing order.
-         * That is, <tt>ordering[i][0] &lt; ... &lt; ordering[i][2]</tt>.
-         *
-         * This table does \e not describe the mapping from specific
-         * triangles within a triangulation into individual tetrahedra (for
-         * that, see NTetrahedron::getTriangleMapping() instead).  This table
-         * merely provides a neat and consistent way of listing the
-         * vertices of any given tetrahedron face.
-         *
-         * This lookup table replaces the deprecated routine
-         * regina::faceOrdering().
-         */
-        static const NPerm4 ordering[4];
-
     private:
+        /**
+         * An array that hard-codes the results of ordering().
+         *
+         * See ordering() for further details.
+         */
+        static const NPerm4 ordering_[4];
+
         NBoundaryComponent* boundaryComponent_;
             /**< The boundary component that this triangle is a part of,
                  or 0 if this triangle is internal. */
@@ -350,6 +334,30 @@ class REGINA_API Face<3, 2> : public FaceBase<3, 2>, public Output<Face<3, 2>> {
         NPerm4 getEdgeMapping(int edge) const;
 
         /**
+         * Given a triangle number within a tetrahedron, returns the canonical
+         * ordering of those tetrahedron vertices that make up the given
+         * triangle.
+         *
+         * This means that the vertices of triangle \a i in a tetrahedron are,
+         * in canonical order, <tt>ordering[i][0,1,2]</tt>.
+         *
+         * Regina defines canonical order to be \e increasing order.
+         * That is, <tt>ordering[i][0] &lt; ... &lt; ordering[i][2]</tt>.
+         *
+         * This routine does \e not describe the mapping from triangles
+         * of the triangulation into individual tetrahedra; for that, see the
+         * routine NTetrahedron::getTriangleMapping().  Instead, this routine
+         * just provides a neat and consistent way of listing the vertices of
+         * any given triangle of any given tetrahedron.
+         *
+         * @param triangle identifies which triangle of a tetrahedron to query.
+         * This must be between 0 and 3 inclusive.
+         * @return the canonical ordering of the tetrahedron vertices that
+         * make up the given triangle of the tetrahedron.
+         */
+        static NPerm<4> ordering(unsigned triangle);
+
+        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -454,6 +462,10 @@ inline bool Face<3, 2>::isMobiusBand() {
 inline bool Face<3, 2>::isCone() {
     getType();
     return (type_ == DUNCEHAT || type_ == CONE || type_ == HORN);
+}
+
+inline NPerm<4> Face<3, 2>::ordering(unsigned triangle) {
+    return ordering_[triangle];
 }
 
 inline void Face<3, 2>::writeTextShort(std::ostream& out) const {

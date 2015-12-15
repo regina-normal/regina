@@ -171,7 +171,7 @@ namespace Coordinates {
                 // "false" orientation.
                 if (stdCoord % 7 < 4)
                     return QString("%1: %2").arg(stdCoord / 7).
-                        arg(NTriangle::ordering[stdCoord % 7].trunc3().c_str());
+                        arg(NTriangle::ordering(stdCoord % 7).trunc3().c_str());
                 else
                     return QString("%1: %2%3").arg(stdCoord / 7).
                         arg(regina::vertexSplitDefn[(stdCoord % 7) - 4][2]).
@@ -268,7 +268,7 @@ namespace Coordinates {
                     return context->tr("Tetrahedron %1, "
                         "triangle oriented towards face %2").
                         arg(stdCoord / 7).
-                        arg(NTriangle::ordering[stdCoord % 7].trunc3().c_str());
+                        arg(NTriangle::ordering(stdCoord % 7).trunc3().c_str());
                 else
                     return context->tr("Tetrahedron %1, "
                         "quad oriented towards edge %2%3").

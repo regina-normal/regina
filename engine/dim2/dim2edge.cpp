@@ -36,7 +36,7 @@
 
 namespace regina {
 
-const NPerm3 Dim2Edge::ordering[3] = {
+const NPerm3 Dim2Edge::ordering_[3] = {
     NPerm3(1,2,0),
     NPerm3(0,2,1),
     NPerm3(0,1,2),
