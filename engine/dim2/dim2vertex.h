@@ -186,7 +186,7 @@ class REGINA_API Face<2, 0> : public FaceBase<2, 0>, public Output<Face<2, 0>> {
         Face(Dim2Component* component);
 
     friend class Triangulation<2>;
-        /**< Allow access to private members. */
+    friend class TriangulationBase<2>;
 };
 
 /**

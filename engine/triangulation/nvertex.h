@@ -425,7 +425,7 @@ class REGINA_API Face<3, 0> : public FaceBase<3, 0>, public Output<Face<3, 0>> {
         Face(NComponent* component);
 
     friend class Triangulation<3>;
-        /**< Allow access to private members. */
+    friend class TriangulationBase<3>;
 };
 
 /**

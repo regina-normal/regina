@@ -219,7 +219,7 @@ class REGINA_API Face<2, 1> : public FaceBase<2, 1>, public Output<Face<2, 1>> {
          * of the triangulation into individual triangles; for that, see
          * the routine Dim2Triangle::getEdgeMapping().  Instead, this routine
          * just provides a neat and consistent way of listing the vertices of
-         * any given edge of any given simplex.
+         * any given edge of any given triangle.
          *
          * @param edge identifies which edge of a triangle to query.
          * This must be between 0 and 2 inclusive.
@@ -258,7 +258,7 @@ class REGINA_API Face<2, 1> : public FaceBase<2, 1>, public Output<Face<2, 1>> {
         Face(Dim2Component* component);
 
     friend class Triangulation<2>;
-        /**< Allow access to private members. */
+    friend class TriangulationBase<2>;
 };
 
 /**
