@@ -81,17 +81,11 @@ class REGINA_API Simplex<2> : public SimplexBase<2> {
         Dim2Vertex* vertex_[3];
             /**< Vertices in the triangulation skeleton that are
                  vertices of this triangle. */
-        Dim2Edge* edge_[3];
-            /**< Edges in the triangulation skeleton that are
-                 edges of this triangle. */
 
         NPerm3 vertexMapping_[3];
             /**< Maps 0 to each vertex of this triangle in turn whilst
                  mapping (1,2) in a suitably "orientation-preserving" way,
                  as described in getVertexMapping(). */
-        NPerm3 edgeMapping_[3];
-            /**< Maps (0,1) to the vertices of this triangle that form
-                 each edge, as described in getEdgeMapping(). */
 
     public:
         /**
@@ -245,7 +239,7 @@ inline Dim2Vertex* Simplex<2>::getVertex(int vertex) const {
 
 inline Dim2Edge* Simplex<2>::getEdge(int edge) const {
     getTriangulation()->ensureSkeleton();
-    return edge_[edge];
+    return SimplexFaces<2, 1>::face_[edge];
 }
 
 template <>
@@ -257,7 +251,7 @@ inline NPerm3 Simplex<2>::getFaceMapping<0>(int vertex) const {
 template <>
 inline NPerm3 Simplex<2>::getFaceMapping<1>(int edge) const {
     getTriangulation()->ensureSkeleton();
-    return edgeMapping_[edge];
+    return SimplexFaces<2, 1>::mapping_[edge];
 }
 
 inline NPerm3 Simplex<2>::getVertexMapping(int vertex) const {

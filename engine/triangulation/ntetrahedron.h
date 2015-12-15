@@ -85,9 +85,6 @@ class REGINA_API Simplex<3> : public SimplexBase<3> {
         NEdge* edges_[6];
             /**< Edges in the triangulation skeleton that are
                  edges of this tetrahedron. */
-        NTriangle* triangles_[4];
-            /**< Triangles in the triangulation skeleton that are
-                 faces of this tetrahedron. */
 
         int tmpOrientation_[4];
             /**< Temporary array used to represent orientations
@@ -105,9 +102,6 @@ class REGINA_API Simplex<3> : public SimplexBase<3> {
             /**< Maps (0,1) to the vertices of this tetrahedron that form
                  each edge whilst mapping (2,3) in a suitably "orientation-
                  preserving" way, as described in getEdgeMapping(). */
-        NPerm4 triMapping_[4];
-            /**< Maps (0,1,2) to the vertices of this tetrahedron that form
-                 each triangular face, as described in getTriangleMapping(). */
 
     public:
         /**
@@ -172,7 +166,7 @@ class REGINA_API Simplex<3> : public SimplexBase<3> {
          * @return the triangle of the skeleton corresponding to the
          * requested tetrahedron face.
          */
-        NTriangle* getTriangle(int face) const;
+        NTriangle* getTriangle(int triangle) const;
         /**
          * Returns a permutation that maps 0 to the given vertex of this
          * tetrahedron, and that maps (1,2,3) to the three remaining vertices
@@ -294,7 +288,7 @@ class REGINA_API Simplex<3> : public SimplexBase<3> {
          * triangle to the vertices of this tetrahedron.
          */
         REGINA_INLINE_REQUIRED
-        NPerm4 getTriangleMapping(int face) const;
+        NPerm4 getTriangleMapping(int triangle) const;
 
         template <int subdim>
         REGINA_INLINE_REQUIRED
@@ -354,9 +348,9 @@ inline NEdge* Simplex<3>::getEdge(int edge) const {
     return edges_[edge];
 }
 
-inline NTriangle* Simplex<3>::getTriangle(int face) const {
+inline NTriangle* Simplex<3>::getTriangle(int triangle) const {
     getTriangulation()->ensureSkeleton();
-    return triangles_[face];
+    return SimplexFaces<3, 2>::face_[triangle];
 }
 
 template <>
@@ -374,7 +368,7 @@ inline NPerm4 Simplex<3>::getFaceMapping<1>(int edge) const {
 template <>
 inline NPerm4 Simplex<3>::getFaceMapping<2>(int triangle) const {
     getTriangulation()->ensureSkeleton();
-    return triMapping_[triangle];
+    return SimplexFaces<3, 2>::mapping_[triangle];
 }
 
 inline NPerm4 Simplex<3>::getVertexMapping(int vertex) const {

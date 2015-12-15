@@ -73,6 +73,8 @@ void addSimplex(const char* name) {
 }
 
 void addSimplex() {
+    boost::python::def("choose", regina::choose);
+
     addSimplex<4>("Simplex4");
     addSimplex<5>("Simplex5");
     addSimplex<6>("Simplex6");

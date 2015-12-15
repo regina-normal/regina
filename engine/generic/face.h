@@ -54,6 +54,7 @@ namespace regina {
 template <int dim> class Component;
 template <int dim> class Simplex;
 template <int dim> class Triangulation;
+template <int dim> class TriangulationBase;
 
 /**
  * \weakgroup generic
@@ -610,6 +611,9 @@ class FaceBase :
          * to which the new face belongs.
          */
         FaceBase(Component<dim>* component);
+
+    friend class Triangulation<dim>;
+    friend class TriangulationBase<dim>;
 };
 
 /**
@@ -645,6 +649,35 @@ class Face : public FaceBase<dim, subdim>, Output<Face<dim, subdim>> {
 
     public:
         /**
+         * Given a \a subdim-face number within a top-dimensional simplex,
+         * returns the canonical ordering of those simplex vertices that
+         * make up the given face.
+         *
+         * This means that the vertices of \a subdim-face \a i in a
+         * top-dimensional simplex are, in canonical order,
+         * <tt>ordering[i][0,...,subdim]</tt>.
+         *
+         * Regina defines canonical order to be \e increasing order.
+         * That is, <tt>ordering[i][0] &lt; ... &lt; ordering[i][subdim]</tt>.
+         *
+         * The remaining images <tt>ordering[i][\a subdim+1, ..., \a dim]</tt>
+         * are chosen to make each permutation even.
+         *
+         * This routine does \e not describe the mapping from \a subdim-faces
+         * of the triangulation into individual simplices; for that, see
+         * the routine Simplex<dim>::getFaceMapping().  Instead, this routine
+         * just provides a neat and consistent way of listing the vertices of
+         * any given \a subdim-face of any given simplex.
+         *
+         * @param face identifies which \a subdim-face of a
+         * top-dimensional simplex to query.  This must be between
+         * 0 and (\a dim+1 choose \a subdim+1)-1 inclusive.
+         * @return the canonical ordering of the simplex vertices that
+         * make up the given simplex face.
+         */
+        static NPerm<dim + 1> ordering(unsigned face);
+
+        /**
          * Writes a short text representation of this face to the
          * given output stream.
          *
@@ -671,6 +704,9 @@ class Face : public FaceBase<dim, subdim>, Output<Face<dim, subdim>> {
          * to which the new face belongs.
          */
         Face(Component<dim>* component);
+
+    friend class Triangulation<dim>;
+    friend class TriangulationBase<dim>;
 };
 
 // Note that some of our face-related classes are specialised elsewhere.
@@ -982,6 +1018,12 @@ inline FaceBase<dim, subdim>::FaceBase(Component<dim>* component) :
 template <int dim, int subdim>
 inline Face<dim, subdim>::Face(Component<dim>* component) :
         FaceBase<dim, subdim>(component) {
+}
+
+template <int dim, int subdim>
+inline NPerm<dim + 1> Face<dim, subdim>::ordering(unsigned face) {
+    // TODO
+    return NPerm<dim + 1>();
 }
 
 template <int dim, int subdim>

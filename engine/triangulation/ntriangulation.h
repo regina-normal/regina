@@ -3307,14 +3307,6 @@ class REGINA_API Triangulation<3> :
         void labelEdge(NTetrahedron*, int, NEdge*);
             /**< Internal to calculateEdges(). */
         /**
-         * Calculates the triangles of this triangulation and associated
-         * properties.
-         *
-         * \warning This should only be called from within
-         * calculateSkeleton().
-         */
-        void calculateTriangles();
-        /**
          * Calculates the triangulation boundary components and
          * properties of these boundary components.
          *

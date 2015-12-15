@@ -50,15 +50,65 @@
 
 namespace regina {
 
-template <int dim> class Component;
-template <int dim> class Simplex;
-template <int dim> class Triangulation;
-template <int dim> class TriangulationBase;
+template <int> class Component;
+template <int> class Simplex;
+template <int> class Triangulation;
+template <int> class TriangulationBase;
+template <int, int> class Face;
 
 /**
  * \weakgroup generic
  * @{
  */
+
+/**
+ * Returns the binomial coefficient \a n choose \a r.
+ *
+ * This routine puts no restrictions on the value of \a r.  If \a r is
+ * negative or greater than \a n, then it will simply return 0.
+ *
+ * @param n any non-negative integer; this must be at most 16
+ * (since otherwise the result may overflow).
+ * @param r any integer.
+ * @return \a n choose \a r.
+ */
+inline constexpr int choose(int n, int r) {
+    return (r < 0 || r > n ? 0 :
+            r == 0 || r == n ? 1 :
+            choose(n-1, r) + choose(n-1, r-1));
+}
+
+/**
+ * Helper class for mapping between the \a subdim-faces of a \a dim-dimensional
+ * triangulation and the \a subdim-faces of each individual top-dimensional
+ * simplex.
+ *
+ * TODO: Document this better.
+ */
+template <int dim, int subdim>
+class SimplexFaces {
+    public:
+        static constexpr int nFaces = regina::choose(dim + 1, subdim + 1);
+            /** The total number of \a subdim-faces in each
+                \a dim-dimensional simplex. */
+
+    public:
+        SimplexFaces(const SimplexFaces&) = delete;
+        SimplexFaces& operator = (const SimplexFaces&) = delete;
+
+    protected:
+        Face<dim, subdim>* face_[nFaces];
+            /**< The faces of the underlying triangulation that form the
+                 individual \a subdim-faces of this simplex. */
+
+        NPerm<dim+1> mapping_[nFaces];
+            /**< For each \a subdim-face of this simplex, maps vertices
+                 (0,1,...,\a subdim) of the underlying \a subdim-face of
+                 the triangulation to the corresponding vertices of this
+                 simplex, as described by getFaceMapping(). */
+    protected:
+        SimplexFaces() = default;
+};
 
 /**
  * Helper class that provides core functionality for a top-dimensional
@@ -81,6 +131,7 @@ template <int dim>
 class SimplexBase :
         public NMarkedElement,
         public Output<SimplexBase<dim>>,
+        protected SimplexFaces<dim, dim-1>,
         public boost::noncopyable {
     static_assert(dim >= 2, "Simplex requires dimension >= 2.");
     public:

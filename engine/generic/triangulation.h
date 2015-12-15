@@ -1224,10 +1224,10 @@ class TriangulationBase :
         /**
          * Calculates all skeletal objects for this triangulation.
          *
-         * For this parent class, calculateSkeleton() computes properties
-         * such as connected components and orientability.  Some
-         * Triangulation<dim> subclasses may track additional skeletal data,
-         * in which case they should reimplement this function.  Their
+         * For this parent class, calculateSkeleton() computes properties such
+         * as connected components, orientability, and lower-dimensional faces.
+         * Some Triangulation<dim> subclasses may track additional skeletal
+         * data, in which case they should reimplement this function.  Their
          * reimplementations \e must call this parent implementation.
          *
          * You should never call this function directly; instead call
@@ -2301,6 +2301,10 @@ void TriangulationBase<dim>::calculateSkeleton() {
     // recursively recompute the skeleton again.
     calculatedSkeleton_ = true;
 
+    // -----------------------------------------------------------------
+    // Components, including orientability and the dual forest
+    // -----------------------------------------------------------------
+
     // Triangulations are orientable until proven otherwise.
     orientable_ = true;
 
@@ -2367,6 +2371,59 @@ void TriangulationBase<dim>::calculateSkeleton() {
     }
 
     delete[] queue;
+
+    // -----------------------------------------------------------------
+    // Faces of codimension 1
+    // -----------------------------------------------------------------
+
+    {
+        for (auto s : simplices_)
+            std::fill(
+                s->SimplexFaces<dim, dim-1>::face_,
+                s->SimplexFaces<dim, dim-1>::face_ + (dim + 1),
+                nullptr);
+
+        Simplex<dim> *adj;
+        Face<dim, dim-1>* f;
+        int facet, adjFacet;
+
+        // We process the facets of each simplex in lexicographical order,
+        // according to the truncated permutation labels that are displayed to
+        // the user.  This means working through the faces of each simplex
+        // in *reverse*.
+        for (auto s : simplices_) {
+            for (facet = dim; facet >= 0; --facet) {
+                // Have we already checked out this facet from the other side?
+                if (s->SimplexFaces<dim, dim-1>::face_[facet])
+                    continue;
+
+                // A new face!
+                f = new Face<dim, dim-1>(s->component_);
+                FaceList<dim, dim-1>::push_back(f);
+
+                s->SimplexFaces<dim, dim-1>::face_[facet] = f;
+                s->SimplexFaces<dim, dim-1>::mapping_[facet] =
+                    Face<dim, dim-1>::ordering(facet);
+
+                adj = s->adjacentSimplex(facet);
+                if (adj) {
+                    // We have an adjacent simplex.
+                    adjFacet = s->adjacentFacet(facet);
+
+                    adj->SimplexFaces<dim, dim-1>::face_[adjFacet] = f;
+                    adj->SimplexFaces<dim, dim-1>::mapping_[adjFacet] =
+                        s->adjacentGluing(facet) *
+                        s->SimplexFaces<dim, dim-1>::mapping_[facet];
+
+                    f->push_back(FaceEmbedding<dim, dim-1>(s, facet));
+                    f->push_back(FaceEmbedding<dim, dim-1>(adj, adjFacet));
+                } else {
+                    // This is a boundary facet.
+                    f->push_back(FaceEmbedding<dim, dim-1>(s, facet));
+                }
+            }
+        }
+    }
 }
 
 template <int dim>
