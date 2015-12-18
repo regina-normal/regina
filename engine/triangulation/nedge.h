@@ -116,61 +116,6 @@ REGINA_API extern const int edgeStart[6];
 REGINA_API extern const int edgeEnd[6];
 
 /**
- * Details how an edge in a 3-manifold triangulation appears within each
- * tetrahedron.
- *
- * This is a specialisation of the generic FaceEmbedding class template;
- * see the documentation for FaceEmbedding (and also Face) for a general
- * overview of how these face-related classes work.
- *
- * This 3-dimensional specialisation of FaceEmbedding offers additional
- * dimension-specific aliases of some member functions.
- */
-template <>
-class REGINA_API FaceEmbedding<3, 1> : public detail::FaceEmbeddingBase<3, 1> {
-    public:
-        /**
-         * Default constructor.  This object is unusable until it has
-         * some data assigned to it using <tt>operator =</tt>.
-         *
-         * \ifacespython Not present.
-         */
-        FaceEmbedding();
-
-        /**
-         * Creates a new object containing the given data.
-         *
-         * @param tet the tetrahedron in which the underlying edge
-         * of the triangulation is contained.
-         * @param edge the corresponding edge number of \a tet.
-         * This must be between 0 and 5 inclusive.
-         */
-        FaceEmbedding(NTetrahedron* tet, int edge);
-
-        /**
-         * Creates a new copy of the given object.
-         *
-         * @param cloneMe the object to copy.
-         */
-        FaceEmbedding(const FaceEmbedding& cloneMe);
-
-        /**
-         * A dimension-specific alias for getSimplex().
-         *
-         * See getSimplex() for further information.
-         */
-        REGINA_INLINE_REQUIRED
-        NTetrahedron* getTetrahedron() const;
-
-        /**
-         * A dimension-specific alias for getFace().
-         *
-         * See getFace() for further information.
-         */
-        int getEdge() const;
-};
-
-/**
  * A convenience typedef for FaceEmbedding<3, 1>.
  */
 typedef FaceEmbedding<3, 1> NEdgeEmbedding;
@@ -389,28 +334,6 @@ typedef Face<3, 1> NEdge;
 // Some more headers that are required for inline functions:
 #include "triangulation/ntetrahedron.h"
 namespace regina {
-
-// Inline functions for NEdgeEmbedding
-
-inline FaceEmbedding<3, 1>::FaceEmbedding() :
-        detail::FaceEmbeddingBase<3, 1>() {
-}
-
-inline FaceEmbedding<3, 1>::FaceEmbedding(NTetrahedron* tet, int edge) :
-        detail::FaceEmbeddingBase<3, 1>(tet, edge) {
-}
-
-inline FaceEmbedding<3, 1>::FaceEmbedding(const NEdgeEmbedding& cloneMe) :
-        detail::FaceEmbeddingBase<3, 1>(cloneMe) {
-}
-
-inline NTetrahedron* FaceEmbedding<3, 1>::getTetrahedron() const {
-    return getSimplex();
-}
-
-inline int FaceEmbedding<3, 1>::getEdge() const {
-    return getFace();
-}
 
 // Inline functions for FaceNumbering
 

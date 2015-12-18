@@ -66,61 +66,6 @@ typedef Face<3, 1> NEdge;
  */
 
 /**
- * Details how a triangle in a 3-manifold triangulation appears within each
- * tetrahedron.
- *
- * This is a specialisation of the generic FaceEmbedding class template;
- * see the documentation for FaceEmbedding (and also Face) for a general
- * overview of how these face-related classes work.
- *
- * This 3-dimensional specialisation of FaceEmbedding offers additional
- * dimension-specific aliases of some member functions.
- */
-template <>
-class REGINA_API FaceEmbedding<3, 2> : public detail::FaceEmbeddingBase<3, 2> {
-    public:
-        /**
-         * Default constructor.  This object is unusable until it has
-         * some data assigned to it using <tt>operator =</tt>.
-         *
-         * \ifacespython Not present.
-         */
-        FaceEmbedding();
-
-        /**
-         * Creates a new object containing the given data.
-         *
-         * @param tet the tetrahedron in which the underlying triangle
-         * of the triangulation is contained.
-         * @param tri the corresponding triangle number of \a tet.
-         * This must be between 0 and 3 inclusive.
-         */
-        FaceEmbedding(NTetrahedron* tet, int tri);
-
-        /**
-         * Creates a new copy of the given object.
-         *
-         * @param cloneMe the object to copy.
-         */
-        FaceEmbedding(const FaceEmbedding& cloneMe);
-
-        /**
-         * A dimension-specific alias for getSimplex().
-         *
-         * See getSimplex() for further information.
-         */
-        REGINA_INLINE_REQUIRED
-        NTetrahedron* getTetrahedron() const;
-
-        /**
-         * A dimension-specific alias for getFace().
-         *
-         * See getFace() for further information.
-         */
-        int getTriangle() const;
-};
-
-/**
  * A convenience typedef for FaceEmbedding<3, 2>.
  */
 typedef FaceEmbedding<3, 2> NTriangleEmbedding;
@@ -442,29 +387,6 @@ typedef Face<3, 2> NTriangle;
 // Some more headers that are required for inline functions:
 #include "triangulation/ntetrahedron.h"
 namespace regina {
-
-// Inline functions for NTriangleEmbedding
-
-inline FaceEmbedding<3, 2>::FaceEmbedding() :
-        detail::FaceEmbeddingBase<3, 2>() {
-}
-
-inline FaceEmbedding<3, 2>::FaceEmbedding(NTetrahedron* tet, int tri) :
-        detail::FaceEmbeddingBase<3, 2>(tet, tri) {
-}
-
-inline FaceEmbedding<3, 2>::FaceEmbedding(
-        const NTriangleEmbedding& cloneMe) :
-        detail::FaceEmbeddingBase<3, 2>(cloneMe) {
-}
-
-inline NTetrahedron* FaceEmbedding<3, 2>::getTetrahedron() const {
-    return getSimplex();
-}
-
-inline int FaceEmbedding<3, 2>::getTriangle() const {
-    return getFace();
-}
 
 // Inline functions for FaceNumbering
 

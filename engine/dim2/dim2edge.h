@@ -65,60 +65,6 @@ typedef Face<2, 0> Dim2Vertex;
  */
 
 /**
- * Details how an edge of a 2-manifold triangulation appears within each
- * triangle.
- *
- * This is a specialisation of the generic FaceEmbedding class template;
- * see the documentation for FaceEmbedding (and also Face) for a general
- * overview of how these face-related classes work.
- *
- * This 2-dimensional specialisation of FaceEmbedding offers additional
- * dimension-specific aliases of some member functions.
- */
-template <>
-class REGINA_API FaceEmbedding<2, 1> : public detail::FaceEmbeddingBase<2, 1> {
-    public:
-        /**
-         * Default constructor.  This object is unusable until it has
-         * some data assigned to it using <tt>operator =</tt>.
-         *
-         * \ifacespython Not present.
-         */
-        FaceEmbedding();
-
-        /**
-         * Creates a new object containing the given data.
-         *
-         * @param tri the triangle in which the underlying edge
-         * of the triangulation is contained.
-         * @param edge the corresponding edge number of \a tri.
-         * This must be between 0 and 2 inclusive.
-         */
-        FaceEmbedding(Dim2Triangle* tri, int edge);
-
-        /**
-         * Creates a new copy of the given object.
-         *
-         * @param cloneMe the object to copy.
-         */
-        FaceEmbedding(const FaceEmbedding& cloneMe);
-
-        /**
-         * A dimension-specific alias for getSimplex().
-         *
-         * See getSimplex() for further information.
-         */
-        Dim2Triangle* getTriangle() const;
-
-        /**
-         * A dimension-specific alias for getFace().
-         *
-         * See getFace() for further information.
-         */
-        int getEdge() const;
-};
-
-/**
  * A convenience typedef for FaceEmbedding<2, 1>.
  */
 typedef FaceEmbedding<2, 1> Dim2EdgeEmbedding;
@@ -315,30 +261,6 @@ typedef Face<2, 1> Dim2Edge;
 // Some more headers that are required for inline functions:
 #include "dim2/dim2triangle.h"
 namespace regina {
-
-// Inline functions for Dim2EdgeEmbedding
-
-inline FaceEmbedding<2, 1>::FaceEmbedding() :
-        detail::FaceEmbeddingBase<2, 1>() {
-}
-
-inline FaceEmbedding<2, 1>::FaceEmbedding(
-        Dim2Triangle* tri, int edge) :
-        detail::FaceEmbeddingBase<2, 1>(tri, edge) {
-}
-
-inline FaceEmbedding<2, 1>::FaceEmbedding(
-        const Dim2EdgeEmbedding& cloneMe) :
-        detail::FaceEmbeddingBase<2, 1>(cloneMe) {
-}
-
-inline Dim2Triangle* FaceEmbedding<2, 1>::getTriangle() const {
-    return getSimplex();
-}
-
-inline int FaceEmbedding<2, 1>::getEdge() const {
-    return getFace();
-}
 
 // Inline functions for FaceNumbering
 

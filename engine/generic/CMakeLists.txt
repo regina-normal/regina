@@ -1,5 +1,6 @@
 # generic 
 
+ADD_SUBDIRECTORY("alias")
 ADD_SUBDIRECTORY("detail")
 
 if (${REGINA_INSTALL_DEV})

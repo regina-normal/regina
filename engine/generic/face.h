@@ -83,10 +83,6 @@ namespace regina {
  */
 template <int dim, int subdim>
 class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
-    static_assert(! standardDim(dim),
-        "The generic implementation of FaceEmbedding<dim, subdim> "
-        "should not be used for Regina's standard dimensions.");
-
     public:
         /**
          * Default constructor.  This object is unusable until it has
@@ -114,14 +110,6 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
          */
         FaceEmbedding(const FaceEmbedding& cloneMe);
 };
-
-// Note that some of our face-related classes are specialised elsewhere.
-// Do not explicitly drag in the specialised headers for now.
-template <> class FaceEmbedding<2, 1>;
-template <> class FaceEmbedding<2, 0>;
-template <> class FaceEmbedding<3, 2>;
-template <> class FaceEmbedding<3, 1>;
-template <> class FaceEmbedding<3, 0>;
 
 /**
  * Represents a <i>subdim</i>-face in the skeleton of a <i>dim</i>-dimensional

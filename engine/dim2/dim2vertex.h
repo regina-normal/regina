@@ -64,60 +64,6 @@ typedef Triangulation<2> Dim2Triangulation;
  */
 
 /**
- * Details how a vertex of a 2-manifold triangulation appears within each
- * triangle.
- *
- * This is a specialisation of the generic FaceEmbedding class template;
- * see the documentation for FaceEmbedding (and also Face) for a general
- * overview of how these face-related classes work.
- *
- * This 2-dimensional specialisation of FaceEmbedding offers additional
- * dimension-specific aliases of some member functions.
- */
-template <>
-class REGINA_API FaceEmbedding<2, 0> : public detail::FaceEmbeddingBase<2, 0> {
-    public:
-        /**
-         * Default constructor.  This object is unusable until it has
-         * some data assigned to it using <tt>operator =</tt>.
-         *
-         * \ifacespython Not present.
-         */
-        FaceEmbedding();
-
-        /**
-         * Creates a new object containing the given data.
-         *
-         * @param tri the triangle in which the underlying vertex
-         * of the triangulation is contained.
-         * @param vertex the corresponding vertex number of \a tri.
-         * This must be between 0 and 2 inclusive.
-         */
-        FaceEmbedding(Dim2Triangle* tri, int vertex);
-
-        /**
-         * Creates a new copy of the given object.
-         *
-         * @param cloneMe the object to copy.
-         */
-        FaceEmbedding(const FaceEmbedding& cloneMe);
-
-        /**
-         * A dimension-specific alias for getSimplex().
-         *
-         * See getSimplex() for further information.
-         */
-        Dim2Triangle* getTriangle() const;
-
-        /**
-         * A dimension-specific alias for getFace().
-         *
-         * See getFace() for further information.
-         */
-        int getVertex() const;
-};
-
-/**
  * A convenience typedef for FaceEmbedding<2, 0>.
  */
 typedef FaceEmbedding<2, 0> Dim2VertexEmbedding;
@@ -270,29 +216,6 @@ typedef Face<2, 0> Dim2Vertex;
 // Some more headers that are required for inline functions:
 #include "dim2/dim2triangle.h"
 namespace regina {
-
-// Inline functions for Dim2VertexEmbedding
-
-inline FaceEmbedding<2, 0>::FaceEmbedding() :
-        detail::FaceEmbeddingBase<2, 0>() {
-}
-
-inline FaceEmbedding<2, 0>::FaceEmbedding(Dim2Triangle* tri, int vertex) :
-        detail::FaceEmbeddingBase<2, 0>(tri, vertex) {
-}
-
-inline FaceEmbedding<2, 0>::FaceEmbedding(
-        const Dim2VertexEmbedding& cloneMe) :
-        detail::FaceEmbeddingBase<2, 0>(cloneMe) {
-}
-
-inline Dim2Triangle* FaceEmbedding<2, 0>::getTriangle() const {
-    return getSimplex();
-}
-
-inline int FaceEmbedding<2, 0>::getVertex() const {
-    return getFace();
-}
 
 // Inline functions for FaceNumbering
 
