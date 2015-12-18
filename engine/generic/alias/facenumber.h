@@ -36,9 +36,9 @@
  *  \brief Provides dimension-specific aliases for dimension-agnostic routines.
  */
 
-#ifndef __ALIAS_GETFACENUMBER_H
+#ifndef __ALIAS_FACENUMBER_H
 #ifndef __DOXYGEN
-#define __ALIAS_GETFACENUMBER_H
+#define __ALIAS_FACENUMBER_H
 #endif
 
 #include "regina-core.h"
@@ -67,8 +67,7 @@ class FaceNumber {
 };
 
 /**
- * Helper class that provides a dimension-specific alias for face(),
- * where reasonable.
+ * Helper class that provides a dimension-specific alias for face().
  *
  * This is inherited by the class \a Derived, which must provide a
  * routine of the form <tt>int face() const</tt>.
@@ -96,8 +95,7 @@ class FaceNumber<Derived, 0> {
 };
 
 /**
- * Helper class that provides a dimension-specific alias for face(),
- * where reasonable.
+ * Helper class that provides a dimension-specific alias for face().
  *
  * This is inherited by the class \a Derived, which must provide a
  * routine of the form <tt>int face() const</tt>.
@@ -125,8 +123,7 @@ class FaceNumber<Derived, 1> {
 };
 
 /**
- * Helper class that provides a dimension-specific alias for face(),
- * where reasonable.
+ * Helper class that provides a dimension-specific alias for face().
  *
  * This is inherited by the class \a Derived, which must provide a
  * routine of the form <tt>int face() const</tt>.
@@ -154,8 +151,7 @@ class FaceNumber<Derived, 2> {
 };
 
 /**
- * Helper class that provides a dimension-specific alias for face(),
- * where reasonable.
+ * Helper class that provides a dimension-specific alias for face().
  *
  * This is inherited by the class \a Derived, which must provide a
  * routine of the form <tt>int face() const</tt>.
@@ -183,8 +179,7 @@ class FaceNumber<Derived, 3> {
 };
 
 /**
- * Helper class that provides a dimension-specific alias for face(),
- * where reasonable.
+ * Helper class that provides a dimension-specific alias for face().
  *
  * This is inherited by the class \a Derived, which must provide a
  * routine of the form <tt>int face() const</tt>.

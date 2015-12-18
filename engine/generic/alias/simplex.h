@@ -36,9 +36,9 @@
  *  \brief Provides dimension-specific aliases for dimension-agnostic routines.
  */
 
-#ifndef __ALIAS_GETSIMPLEX_H
+#ifndef __ALIAS_SIMPLEX_H
 #ifndef __DOXYGEN
-#define __ALIAS_GETSIMPLEX_H
+#define __ALIAS_SIMPLEX_H
 #endif
 
 #include "regina-core.h"
@@ -66,18 +66,17 @@ namespace alias {
  * sufficiently small.
  */
 template <class Derived, int dim>
-class Simplex {
+class SimplexVoid {
 };
 
 /**
- * Helper class that provides a dimension-specific alias for simplex(),
- * where reasonable.
+ * Helper class that provides a dimension-specific alias for simplex().
  *
  * This is inherited by the class \a Derived, which must provide a
  * routine of the form <tt>Simplex<dim>* simplex() const</tt>.
  */
 template <class Derived>
-class Simplex<Derived, 2> {
+class SimplexVoid<Derived, 2> {
     public:
         /**
          * A dimension-specific alias for simplex().
@@ -99,14 +98,13 @@ class Simplex<Derived, 2> {
 };
 
 /**
- * Helper class that provides a dimension-specific alias for simplex(),
- * where reasonable.
+ * Helper class that provides a dimension-specific alias for simplex().
  *
  * This is inherited by the class \a Derived, which must provide a
  * routine of the form <tt>Simplex<dim>* simplex() const</tt>.
  */
 template <class Derived>
-class Simplex<Derived, 3> {
+class SimplexVoid<Derived, 3> {
     public:
         /**
          * A dimension-specific alias for simplex().
@@ -128,14 +126,13 @@ class Simplex<Derived, 3> {
 };
 
 /**
- * Helper class that provides a dimension-specific alias for simplex(),
- * where reasonable.
+ * Helper class that provides a dimension-specific alias for simplex().
  *
  * This is inherited by the class \a Derived, which must provide a
  * routine of the form <tt>Simplex<dim>* simplex() const</tt>.
  */
 template <class Derived>
-class Simplex<Derived, 4> {
+class SimplexVoid<Derived, 4> {
     public:
         /**
          * A dimension-specific alias for simplex().

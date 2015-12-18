@@ -19,6 +19,9 @@ Version 4.97  [ (under development) ]
           Likewise, many routines getNumberOfFoo() have been renamed to
           countFoo().  There are too many of these changes to mention, and
           so these are not listed individually below.
+        - Much of the triangulation-related code is now dimension-agnostic.
+          The new namespaces regina::detail and regina::alias contain
+          implementation details that should not concern the end user.
     BACKWARD COMPATIBILITY:
         - Some routines have been removed, which may break your old code:
             * NTriangulation::addTetrahedron(), as well as the NTetrahedron

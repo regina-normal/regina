@@ -90,7 +90,7 @@ template <int dim> class TriangulationBase;
 template <int dim, int subdim>
 class FaceEmbeddingBase :
         public ShortOutput<FaceEmbeddingBase<dim, subdim>>,
-        public alias::Simplex<FaceEmbeddingBase<dim, subdim>, dim>,
+        public alias::SimplexVoid<FaceEmbeddingBase<dim, subdim>, dim>,
         public alias::FaceNumber<FaceEmbeddingBase<dim, subdim>, subdim> {
     static_assert(dim >= 2, "FaceEmbedding requires dimension >= 2.");
     static_assert(0 <= subdim && subdim < dim,

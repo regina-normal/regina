@@ -189,7 +189,9 @@ void addDim2Triangulation() {
         .def("getNumberOfComponents", &Dim2Triangulation::getNumberOfComponents)
         .def("getNumberOfBoundaryComponents",
             &Dim2Triangulation::getNumberOfBoundaryComponents)
+        .def("countVertices", &Dim2Triangulation::countVertices)
         .def("getNumberOfVertices", &Dim2Triangulation::getNumberOfVertices)
+        .def("countEdges", &Dim2Triangulation::countEdges)
         .def("getNumberOfEdges", &Dim2Triangulation::getNumberOfEdges)
         .def("components", Dim2_getComponents_list)
         .def("getComponents", Dim2_getComponents_list)
@@ -202,7 +204,11 @@ void addDim2Triangulation() {
             return_internal_reference<>())
         .def("getBoundaryComponent", &Dim2Triangulation::getBoundaryComponent,
             return_internal_reference<>())
+        .def("vertex", &Dim2Triangulation::vertex,
+            return_internal_reference<>())
         .def("getVertex", &Dim2Triangulation::getVertex,
+            return_internal_reference<>())
+        .def("edge", &Dim2Triangulation::edge,
             return_internal_reference<>())
         .def("getEdge", &Dim2Triangulation::getEdge,
             return_internal_reference<>())

@@ -402,24 +402,6 @@ class REGINA_API Triangulation<3> :
          * @return the number of boundary components.
          */
         unsigned long getNumberOfBoundaryComponents() const;
-        /**
-         * Returns the number of vertices in this triangulation.
-         *
-         * @return the number of vertices.
-         */
-        size_t getNumberOfVertices() const;
-        /**
-         * Returns the number of edges in this triangulation.
-         *
-         * @return the number of edges.
-         */
-        size_t getNumberOfEdges() const;
-        /**
-         * Returns the number of triangular faces in this triangulation.
-         *
-         * @return the number of triangles.
-         */
-        size_t getNumberOfTriangles() const;
 
         /**
          * Returns all boundary components of this triangulation.
@@ -502,42 +484,6 @@ class REGINA_API Triangulation<3> :
          * @return the requested boundary component.
          */
         NBoundaryComponent* getBoundaryComponent(unsigned long index) const;
-        /**
-         * Returns the requested vertex in this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * vertices will be deleted and replaced with new
-         * ones.  Thus this object should be considered temporary only.
-         *
-         * @param index the index of the desired vertex, ranging from 0
-         * to getNumberOfVertices()-1 inclusive.
-         * @return the requested vertex.
-         */
-        NVertex* getVertex(size_t index) const;
-        /**
-         * Returns the requested edge in this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * edges will be deleted and replaced with new
-         * ones.  Thus this object should be considered temporary only.
-         *
-         * @param index the index of the desired edge, ranging from 0
-         * to getNumberOfEdges()-1 inclusive.
-         * @return the requested edge.
-         */
-        NEdge* getEdge(size_t index) const;
-        /**
-         * Returns the requested triangular face in this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * triangles will be deleted and replaced with new
-         * ones.  Thus this object should be considered temporary only.
-         *
-         * @param index the index of the desired triangle, ranging from 0
-         * to getNumberOfTriangles()-1 inclusive.
-         * @return the requested triangle.
-         */
-        NTriangle* getTriangle(size_t index) const;
         /**
          * Returns the index of the given boundary component
          * in the triangulation.
@@ -3415,25 +3361,13 @@ inline unsigned long Triangulation<3>::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
-inline size_t Triangulation<3>::getNumberOfVertices() const {
-    return countFaces<0>();
-}
-
-inline size_t Triangulation<3>::getNumberOfEdges() const {
-    return countFaces<1>();
-}
-
-inline size_t Triangulation<3>::getNumberOfTriangles() const {
-    return countFaces<2>();
-}
-
 inline long Triangulation<3>::getEulerCharTri() const {
     ensureSkeleton();
 
     // Cast away the unsignedness of std::vector::size().
-    return static_cast<long>(getNumberOfVertices())
-        - static_cast<long>(getNumberOfEdges())
-        + static_cast<long>(getNumberOfTriangles())
+    return static_cast<long>(countVertices())
+        - static_cast<long>(countEdges())
+        + static_cast<long>(countTriangles())
         - static_cast<long>(simplices_.size());
 }
 
@@ -3468,18 +3402,6 @@ inline NBoundaryComponent* Triangulation<3>::getBoundaryComponent(
         unsigned long index) const {
     ensureSkeleton();
     return boundaryComponents_[index];
-}
-
-inline NVertex* Triangulation<3>::getVertex(size_t index) const {
-    return face<0>(index);
-}
-
-inline NEdge* Triangulation<3>::getEdge(size_t index) const {
-    return face<1>(index);
-}
-
-inline NTriangle* Triangulation<3>::getTriangle(size_t index) const {
-    return face<2>(index);
 }
 
 inline long Triangulation<3>::boundaryComponentIndex(
@@ -3524,7 +3446,7 @@ inline bool Triangulation<3>::isStandard() const {
 inline bool Triangulation<3>::hasBoundaryFacets() const {
     // Override, since we can do this faster in dimension 3.
     ensureSkeleton();
-    return (getNumberOfTriangles() > 2 * simplices_.size());
+    return (countTriangles() > 2 * simplices_.size());
 }
 
 inline bool Triangulation<3>::hasBoundaryTriangles() const {
@@ -3538,7 +3460,7 @@ inline bool Triangulation<3>::hasBoundaryFaces() const {
 inline size_t Triangulation<3>::countBoundaryFacets() const {
     // Override, since we can do this faster in dimension 3.
     ensureSkeleton();
-    return 2 * getNumberOfTriangles() - 4 * simplices_.size();
+    return 2 * countTriangles() - 4 * simplices_.size();
 }
 
 inline size_t Triangulation<3>::countBoundaryTriangles() const {

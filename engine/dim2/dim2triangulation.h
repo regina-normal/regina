@@ -264,18 +264,6 @@ class REGINA_API Triangulation<2> :
          * @return the number of boundary components.
          */
         unsigned long getNumberOfBoundaryComponents() const;
-        /**
-         * Returns the number of vertices in this triangulation.
-         *
-         * @return the number of vertices.
-         */
-        size_t getNumberOfVertices() const;
-        /**
-         * Returns the number of edges in this triangulation.
-         *
-         * @return the number of edges.
-         */
-        size_t getNumberOfEdges() const;
 
         /**
          * Returns all boundary components of this triangulation.
@@ -340,30 +328,6 @@ class REGINA_API Triangulation<2> :
          * @return the requested boundary component.
          */
         Dim2BoundaryComponent* getBoundaryComponent(unsigned long index) const;
-        /**
-         * Returns the requested triangulation vertex.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * vertices will be deleted and replaced with new
-         * ones.  Thus this object should be considered temporary only.
-         *
-         * @param index the index of the desired vertex, ranging from 0
-         * to getNumberOfVertices()-1 inclusive.
-         * @return the requested vertex.
-         */
-        Dim2Vertex* getVertex(size_t index) const;
-        /**
-         * Returns the requested triangulation edge.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * edges will be deleted and replaced with new
-         * ones.  Thus this object should be considered temporary only.
-         *
-         * @param index the index of the desired edge, ranging from 0
-         * to getNumberOfEdges()-1 inclusive.
-         * @return the requested edge.
-         */
-        Dim2Edge* getEdge(size_t index) const;
         /**
          * Returns the index of the given boundary component
          * in the triangulation.
@@ -670,14 +634,6 @@ inline unsigned long Triangulation<2>::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
-inline size_t Triangulation<2>::getNumberOfVertices() const {
-    return countFaces<0>();
-}
-
-inline size_t Triangulation<2>::getNumberOfEdges() const {
-    return countFaces<1>();
-}
-
 inline const std::vector<Dim2BoundaryComponent*>&
         Triangulation<2>::getBoundaryComponents() const {
     ensureSkeleton();
@@ -696,14 +652,6 @@ inline Dim2BoundaryComponent* Triangulation<2>::getBoundaryComponent(
         unsigned long index) const {
     ensureSkeleton();
     return boundaryComponents_[index];
-}
-
-inline Dim2Vertex* Triangulation<2>::getVertex(size_t index) const {
-    return face<0>(index);
-}
-
-inline Dim2Edge* Triangulation<2>::getEdge(size_t index) const {
-    return face<1>(index);
 }
 
 inline long Triangulation<2>::boundaryComponentIndex(
@@ -727,8 +675,8 @@ inline long Triangulation<2>::getEulerChar() const {
     ensureSkeleton();
 
     // Cast away the unsignedness of std::vector::size().
-    return static_cast<long>(getNumberOfVertices())
-        - static_cast<long>(getNumberOfEdges())
+    return static_cast<long>(countVertices())
+        - static_cast<long>(countEdges())
         + static_cast<long>(simplices_.size());
 }
 
@@ -749,7 +697,7 @@ inline bool Triangulation<2>::hasBoundaryEdges() const {
 inline size_t Triangulation<2>::countBoundaryFacets() const {
     // Override, since we can do this faster in dimension 2.
     ensureSkeleton();
-    return 2 * getNumberOfEdges() - 3 * simplices_.size();
+    return 2 * countEdges() - 3 * simplices_.size();
 }
 
 inline size_t Triangulation<2>::countBoundaryEdges() const {

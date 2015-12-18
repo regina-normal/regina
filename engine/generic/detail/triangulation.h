@@ -52,6 +52,7 @@
 #include "generic/component.h"
 #include "generic/face.h"
 #include "generic/simplex.h"
+#include "generic/alias/face.h"
 #include "maths/nperm.h"
 
 namespace regina {
@@ -201,6 +202,7 @@ struct FaceCalculator<dim, 0, 2> {
 template <int dim>
 class TriangulationBase :
         protected FaceListSuite<dim, dim - 1>,
+        public alias::FaceOfTriangulation<TriangulationBase<dim>, dim>,
         public boost::noncopyable {
     static_assert(dim >= 2, "Triangulation requires dimension >= 2.");
 
