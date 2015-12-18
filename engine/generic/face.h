@@ -552,18 +552,11 @@ class FaceStorage<dim, 1> {
  * dimensions in which faces are always valid.
  */
 template <bool allowsInvalid>
-class FaceValidity;
+class FaceValidity {
+    static_assert(allowsInvalid,
+        "The generic FaceValidity template should only be used with "
+        "allowsInvalid = true.");
 
-/**
- * Helper class that stores whether a face is valid.
- * See the general FaceValidity template notes for further details.
- *
- * This specialisation is used for dimensions in which faces could
- * potentially be invalid.  In other words, this specialisation contains
- * the general implementation for storing face validity.
- */
-template <>
-class FaceValidity<true> {
     private:
         bool valid_;
             /**< Is this face valid?  See isValid() for what this means. */
@@ -579,10 +572,8 @@ class FaceValidity<true> {
          *    permutation (e.g., an edge is identified with itself in
          *    reverse, or a triangle is identified with itself under a
          *    rotation);
-         *
          * 2. if the face lies in the boundary of the triangulation but
          *    its link is not a (\a dim - \a subdim - 1)-ball;
-         *
          * 3. if the face is internal and not a vertex, and its link is
          *    not a (\a dim - \a subdim - 1)-sphere.
          *
@@ -662,18 +653,11 @@ class FaceValidity<false> {
  * this is used for dimensions in which face links are always orientable.
  */
 template <bool allowsNonorientable>
-class FaceOrientability;
+class FaceOrientability {
+    static_assert(allowsNonorientable,
+        "The generic FaceOrientability template should only be used with "
+        "allowsNonorientable = true.");
 
-/**
- * Helper class that stores whether the link of a face is orientable.
- * See the general FaceOrientability template notes for further details.
- *
- * This specialisation is used for dimensions in which face links could
- * potentially be non-orientable.  In other words, this specialisation contains
- * the general implementation for storing link orientability.
- */
-template <>
-class FaceOrientability<true> {
     private:
         bool linkOrientable_;
             /**< Is the link of this face orientable? */

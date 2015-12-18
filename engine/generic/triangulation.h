@@ -759,10 +759,8 @@ class TriangulationBase :
          *    permutation (e.g., an edge is identified with itself in
          *    reverse, or a triangle is identified with itself under a
          *    rotation);
-         *
          * 2. if some face lies in the boundary of the triangulation but
          *    its link is not a topological ball;
-         *
          * 3. if some face is internal and not a vertex, and its link is
          *    not a topological sphere.
          *
