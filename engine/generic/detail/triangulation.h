@@ -345,11 +345,14 @@ class TriangulationBase :
          */
         const Simplex<dim>* getSimplex(size_t index) const;
         /**
-         * Returns the index of the given top-dimensional simplex in the
-         * triangulation.
+         * Deprecated routine that returns the index of the given
+         * top-dimensional simplex in the triangulation.
          *
          * Note that indexing may change when a simplex is added to or
          * removed from the triangulation.
+         *
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call simplex->index() instead.
          *
          * \pre The given simplex is contained in this triangulation.
          *
@@ -622,13 +625,13 @@ class TriangulationBase :
         Face<dim, subdim>* getFace(size_t index) const;
 
         /**
-         * Returns the index of the given connected component in this
-         * triangulation.
+         * Deprecated routine that returns the index of the given
+         * connected component in this triangulation.
+         *
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call component->index() instead.
          *
          * \pre The given component belongs to this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.
          *
          * @param component specifies which component to find in the
          * triangulation.
@@ -636,23 +639,6 @@ class TriangulationBase :
          * integer between 0 and countComponents()-1 inclusive.
          */
         size_t componentIndex(const Component<dim>* component) const;
-
-        /**
-         * Returns the index of the given <i>subdim</i>-face in this
-         * triangulation.
-         *
-         * This is equivalent to calling <tt>faceIndex->index()</tt>.
-         *
-         * \pre The template argument \a subdim is between 0 and <i>dim</i>-1
-         * inclusive.
-         * \pre The given face belongs to this triangulation.
-         *
-         * @param face the face to query.
-         * @return the index of the specified face, where 0 is the first
-         * <i>subdim</i>-face, 1 is the second <i>subdim</i>-face, and so on.
-         */
-        template <int subdim>
-        size_t faceIndex(const Face<dim, subdim>* face) const;
 
         /*@}*/
         /**
@@ -1749,13 +1735,6 @@ template <int dim>
 inline size_t TriangulationBase<dim>::componentIndex(
         const Component<dim>* component) const {
     return component->index();
-}
-
-template <int dim>
-template <int subdim>
-inline size_t TriangulationBase<dim>::faceIndex(
-        const Face<dim, subdim>* face) const {
-    return face->index();
 }
 
 template <int dim>

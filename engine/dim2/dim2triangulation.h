@@ -216,7 +216,10 @@ class REGINA_API Triangulation<2> :
          */
         const Dim2Triangle* getTriangle(unsigned long index) const;
         /**
-         * A dimension-specific alias for simplexIndex().
+         * Deprecated dimension-specific alias for simplexIndex().
+         *
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call tri->index() instead.
          *
          * See simplexIndex() for further information.
          */
@@ -329,13 +332,13 @@ class REGINA_API Triangulation<2> :
          */
         Dim2BoundaryComponent* getBoundaryComponent(unsigned long index) const;
         /**
-         * Returns the index of the given boundary component
-         * in the triangulation.
+         * Deprecated routine that returns the index of the given
+         * boundary component in the triangulation.
+         *
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call bc->index() instead.
          *
          * \pre The given boundary component belongs to this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.
          *
          * @param bc specifies which boundary component to find in the
          * triangulation.
@@ -344,12 +347,13 @@ class REGINA_API Triangulation<2> :
          */
         long boundaryComponentIndex(const Dim2BoundaryComponent* bc) const;
         /**
-         * Returns the index of the given vertex in the triangulation.
+         * Deprecated routine that returns the index of the given vertex
+         * in the triangulation.
+         *
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call vertex->index() instead.
          *
          * \pre The given vertex belongs to this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.
          *
          * @param vertex specifies which vertex to find in the triangulation.
          * @return the index of the specified vertex, where 0 is the first
@@ -357,12 +361,13 @@ class REGINA_API Triangulation<2> :
          */
         long vertexIndex(const Dim2Vertex* vertex) const;
         /**
-         * Returns the index of the given edge in the triangulation.
+         * Deprecated routine that returns the index of the given edge
+         * in the triangulation.
+         *
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call edge->index() instead.
          *
          * \pre The given edge belongs to this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.
          *
          * @param edge specifies which edge to find in the triangulation.
          * @return the index of the specified edge, where 0 is the first

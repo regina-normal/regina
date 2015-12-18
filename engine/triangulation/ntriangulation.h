@@ -352,7 +352,10 @@ class REGINA_API Triangulation<3> :
          */
         const NTetrahedron* getTetrahedron(unsigned long index) const;
         /**
-         * A dimension-specific alias for simplexIndex().
+         * Deprecated dimension-specific alias for simplexIndex().
+         *
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call tet->index() instead.
          *
          * See simplexIndex() for further information.
          */
@@ -485,19 +488,13 @@ class REGINA_API Triangulation<3> :
          */
         NBoundaryComponent* getBoundaryComponent(unsigned long index) const;
         /**
-         * Returns the index of the given boundary component
-         * in the triangulation.
+         * Deprecated routine that returns the index of the given
+         * boundary component in the triangulation.
          *
-         * This routine was introduced in Regina 4.5, and replaces the
-         * old getBoundaryComponentIndex().  The name has been changed
-         * because, unlike the old routine, it requires that the given
-         * boundary component belongs to the triangulation (a consequence of
-         * some significant memory optimisations).
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call bc->index() instead.
          *
          * \pre The given boundary component belongs to this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.
          *
          * @param bc specifies which boundary component to find in the
          * triangulation.
@@ -506,18 +503,13 @@ class REGINA_API Triangulation<3> :
          */
         long boundaryComponentIndex(const NBoundaryComponent* bc) const;
         /**
-         * Returns the index of the given vertex in the triangulation.
+         * Deprecated routine that returns the index of the given vertex
+         * in the triangulation.
          *
-         * This routine was introduced in Regina 4.5, and replaces the
-         * old getVertexIndex().  The name has been changed
-         * because, unlike the old routine, it requires that the given
-         * vertex belongs to the triangulation (a consequence of
-         * some significant memory optimisations).
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call vertex->index() instead.
          *
          * \pre The given vertex belongs to this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.
          *
          * @param vertex specifies which vertex to find in the
          * triangulation.
@@ -526,18 +518,13 @@ class REGINA_API Triangulation<3> :
          */
         long vertexIndex(const NVertex* vertex) const;
         /**
-         * Returns the index of the given edge in the triangulation.
+         * Deprecated routine that returns the index of the given edge
+         * in the triangulation.
          *
-         * This routine was introduced in Regina 4.5, and replaces the
-         * old getEdgeIndex().  The name has been changed
-         * because, unlike the old routine, it requires that the given
-         * edge belongs to the triangulation (a consequence of
-         * some significant memory optimisations).
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call edge->index() instead.
          *
          * \pre The given edge belongs to this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.
          *
          * @param edge specifies which edge to find in the
          * triangulation.
@@ -546,18 +533,13 @@ class REGINA_API Triangulation<3> :
          */
         long edgeIndex(const NEdge* edge) const;
         /**
-         * Returns the index of the given triangle in the triangulation.
+         * Deprecated routine that returns the index of the given triangle
+         * in the triangulation.
          *
-         * This routine was introduced in Regina 4.5, and replaces the
-         * old getFaceIndex().  The name has been changed
-         * because, unlike the old routine, it requires that the given
-         * triangle belongs to the triangulation (a consequence of
-         * some significant memory optimisations).
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call triangle->index() instead.
          *
          * \pre The given triangle belongs to this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.
          *
          * @param triangle specifies which triangle to find in the
          * triangulation.

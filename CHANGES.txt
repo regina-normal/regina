@@ -110,8 +110,7 @@ Version 4.97  [ (under development) ]
             - Now just a typedef for the new class Triangulation<2>, which has
               the same functionality as the old Dim2Triangulation.
             - New dimension-agnostic face<subdim>(), getFace<subdim>(),
-              faces<subdim>(), getFaces<subdim>() and faceIndex<subdim>()
-              template functions.
+              faces<subdim>() and getFaces<subdim>() template functions.
             - New dimension-agnostic function hasBoundaryFacets().
             - Reconstruction from isomorphism signatures now allows
               leading and/or trailing whitespace.
@@ -122,6 +121,10 @@ Version 4.97  [ (under development) ]
               reference to a std::vector.  Instead they return a FaceList
               structure, which also supports C++11 range-based for loops and
               operator [] (amongst other things).
+            - Routines simplexIndex(), vertexIndex(), edgeIndex(),
+              triangleIndex(), componentIndex() and boundaryComponentIndex()
+              are all deprecated.  Just call Dim2Vertex::index() and so on
+              instead.
         Class Dim2Vertex, Dim2VertexEmbedding:
             - Now just typedefs for the new classes Face<2, 0> and
               FaceEmbedding<2, 0>, which have the same functionality as
@@ -433,8 +436,7 @@ Version 4.97  [ (under development) ]
               idealToFinite().
             - New dimension-agnostic function hasBoundaryFacets().
             - New dimension-agnostic face<subdim>(), getFace<subdim>(),
-              faces<subdim>(), getFaces<subdim>() and faceIndex<subdim>()
-              template functions.
+              faces<subdim>() and getFaces<subdim>() template functions.
             - New routine niceTreeDecomposition() for constructing and
               caching a nice tree decomposition of the face pairing graph.
             - New routines retriangulate() and simplifyExhaustive() for
@@ -450,6 +452,10 @@ Version 4.97  [ (under development) ]
               longer return a reference to a std::vector.  Instead they return
               a FaceList structure, which also supports C++11 range-based for
               loops and operator [] (amongst other things).
+            - Routines simplexIndex(), vertexIndex(), edgeIndex(),
+              triangleIndex(), tetrahedronIndex(), componentIndex() and
+              boundaryComponentIndex() are all deprecated.  Just call
+              NVertex::index() and so on instead.
             - Removed deprecated routines addTetrahedron() and
               gluingsHaveChanged().
             - Removed maximalForestInDualSkeleton().  Just use
