@@ -49,13 +49,8 @@
 
 namespace regina {
 
-template <int> class Component;
 template <int> class Triangulation;
-template <int, int> class Face;
 typedef Triangulation<3> NTriangulation;
-typedef Face<3, 0> NVertex;
-typedef Face<3, 1> NEdge;
-typedef Face<3, 2> NTriangle;
 
 /**
  * \weakgroup triangulation
@@ -100,179 +95,6 @@ class REGINA_API Simplex<3> : public detail::SimplexBase<3> {
          */
         int adjacentFace(int face) const;
 
-        /**
-         * Returns the vertex in the triangulation skeleton
-         * corresponding to the given vertex of this tetrahedron.
-         *
-         * As of Regina 4.90, if the skeletal information for the
-         * triangulation has not been computed then this will be done
-         * automatically.  There is no need for users to explicitly
-         * recompute the skeleton themselves.
-         *
-         * @param vertex the vertex of this tetrahedron to examine.
-         * This should be between 0 and 3 inclusive.
-         * @return the vertex of the skeleton corresponding to the
-         * requested tetrahedron vertex.
-         */
-        REGINA_INLINE_REQUIRED
-        NVertex* getVertex(int vertex) const;
-        /**
-         * Returns the edge in the triangulation skeleton
-         * corresponding to the given edge of this tetrahedron.
-         *
-         * See NEdge::edgeNumber and NEdge::edgeVertex for
-         * the conventions of how edges are numbered within a tetrahedron.
-         *
-         * As of Regina 4.90, if the skeletal information for the
-         * triangulation has not been computed then this will be done
-         * automatically.  There is no need for users to explicitly
-         * recompute the skeleton themselves.
-         *
-         * @param edge the edge of this tetrahedron to examine.
-         * This should be between 0 and 5 inclusive.
-         * @return the edge of the skeleton corresponding to the
-         * requested tetrahedron edge.
-         */
-        NEdge* getEdge(int edge) const;
-        /**
-         * Returns the triangle in the triangulation skeleton
-         * corresponding to the given face of this tetrahedron.
-         *
-         * As of Regina 4.90, if the skeletal information for the
-         * triangulation has not been computed then this will be done
-         * automatically.  There is no need for users to explicitly
-         * recompute the skeleton themselves.
-         *
-         * @param face the face of this tetrahedron to examine.
-         * This should be between 0 and 3 inclusive, where face \c i
-         * lies opposite vertex \c i.
-         * @return the triangle of the skeleton corresponding to the
-         * requested tetrahedron face.
-         */
-        NTriangle* getTriangle(int triangle) const;
-        /**
-         * Returns a permutation that maps 0 to the given vertex of this
-         * tetrahedron, and that maps (1,2,3) to the three remaining vertices
-         * in the following "orientation-preserving" fashion.
-         *
-         * The images of (1,2,3) under this permutation imply an
-         * orientation for the tetrahedron face opposite the given vertex.
-         * These orientations will be consistent for all tetrahedra
-         * containing the given vertex, if this is possible (i.e., if
-         * the vertex link is orientable).
-         *
-         * Note that there are still arbitrary decisions to be made for
-         * the images of (1,2,3), since there will always be three possible
-         * mappings that yield the correct orientation.
-         *
-         * As of Regina 4.90, if the skeletal information for the
-         * triangulation has not been computed then this will be done
-         * automatically.  There is no need for users to explicitly
-         * recompute the skeleton themselves.
-         *
-         * @param vertex the vertex of this tetrahedron to examine.
-         * This should be between 0 and 3 inclusive.
-         * @return a permutation that maps 0 to the given vertex of this
-         * tetrahedron, with the properties outlined above.
-         */
-        REGINA_INLINE_REQUIRED
-        NPerm4 getVertexMapping(int vertex) const;
-        /**
-         * Examines the given edge of this tetrahedron, and returns a
-         * permutation that maps the "canonical" vertices (0,1) of the
-         * corresponding edge of the triangulation to the matching vertices
-         * of this tetrahedron.  This permutation also maps (2,3) to the
-         * remaining tetrahedron vertices in an "orientation-preserving"
-         * way, as described below.
-         *
-         * In detail:  Suppose several edges of several tetrahedra are
-         * identified within the overall triangulation.  We call this a
-         * single "edge of the triangulation", and arbitrarily
-         * label its vertices (0,1).  This routine then maps the vertices
-         * (0,1) of this edge of the triangulation to the individual
-         * vertices of this tetrahedron that make up the given edge.
-         *
-         * Because we are passing the argument \a edge, we already know
-         * \e which vertices of this tetrahedron are involved.  What this
-         * routine tells us is the \a order in which they appear to form the
-         * overall edge of the triangulation.
-         *
-         * As a consequence:  Consider some collection of tetrahedron edges
-         * that are identified together as a single edge of the triangulation,
-         * and choose some \a i from the set {0,1}.  Then the vertices
-         * <tt>getEdgeMapping(...)[i]</tt> of the individual tetrahedra
-         * are all identified together, since they all become the same
-         * vertex of the same edge of the triangulation (assuming of
-         * course that we pass the correct edge number in each case to
-         * getEdgeMapping()).
-         *
-         * The images of 2 and 3 under the permutations that are returned
-         * have the following properties.  In each tetrahedron, the images
-         * of 2 and 3 under this map form a directed edge of the tetrahedron
-         * (running from the image of vertex 2 to the image of vertex 3).
-         * For any given edge of the triangulation, these corresponding
-         * directed edges together form an ordered path within the
-         * triangulation that circles the common edge of the triangulation
-         * (like an edge link, except that it is not near to the edge and so
-         * might intersect itself).  Furthermore, if we consider the individual
-         * tetrahedra in the order in which they appear in the list
-         * NEdge::getEmbeddings(), these corresponding directed edges
-         * appear in order from the start of this path to the finish
-         * (for internal edges this path is actually a cycle, and the
-         * starting point is arbitrary).
-         *
-         * As of Regina 4.90, if the skeletal information for the
-         * triangulation has not been computed then this will be done
-         * automatically.  There is no need for users to explicitly
-         * recompute the skeleton themselves.
-         *
-         * @param edge the edge of this tetrahedron to examine.
-         * This should be between 0 and 5 inclusive.
-         * @return a mapping from vertices (0,1) of the requested
-         * triangulation edge to the vertices of this tetrahedron.
-         */
-        REGINA_INLINE_REQUIRED
-        NPerm4 getEdgeMapping(int edge) const;
-        /**
-         * Examines the given face of this tetrahedron, and returns a
-         * mapping from the "canonical" vertices of the corresponding
-         * triangle of the triangulation to the matching vertices of this
-         * tetrahedron.
-         *
-         * In detail:  Suppose two faces of two tetrahedra are identified
-         * within the overall triangulation.  We call this a single
-         * "triangle of the triangulation", and arbitrarily label its
-         * vertices (0,1,2).  This routine then maps the vertices
-         * (0,1,2) of this triangle of the triangulation to the individual
-         * vertices of this tetrahedron that make up the given face.
-         *
-         * Because we are passing the argument \a face, we already know
-         * \e which vertices of this tetrahedron are involved.  What this
-         * routine tells us is the \a order in which they appear to form the
-         * overall face of the triangulation.
-         *
-         * As a consequence:  Consider some pair of tetrahedron faces that are
-         * identified together as a single triangle of the triangulation,
-         * and choose some \a i from the set {0,1,2}.  Then the vertices
-         * <tt>getTriangleMapping(...)[i]</tt> of the individual tetrahedra
-         * are identified together, since they both become the same
-         * vertex of the same triangle of the triangulation (assuming of
-         * course that we pass the correct face number in each case to
-         * getTriangleMapping()).
-         *
-         * As of Regina 4.90, if the skeletal information for the
-         * triangulation has not been computed then this will be done
-         * automatically.  There is no need for users to explicitly
-         * recompute the skeleton themselves.
-         *
-         * @param face the face of this tetrahedron to examine.
-         * This should be between 0 and 3 inclusive.
-         * @return a mapping from vertices (0,1,2) of the corresponding
-         * triangle to the vertices of this tetrahedron.
-         */
-        REGINA_INLINE_REQUIRED
-        NPerm4 getTriangleMapping(int triangle) const;
-
     private:
         /**
          * Creates a new tetrahedron with empty description and no
@@ -315,30 +137,6 @@ inline Simplex<3>* Simplex<3>::adjacentTetrahedron(int face) const {
 
 inline int Simplex<3>::adjacentFace(int face) const {
     return adjacentFacet(face);
-}
-
-inline NVertex* Simplex<3>::getVertex(int vertex) const {
-    return face<0>(vertex);
-}
-
-inline NEdge* Simplex<3>::getEdge(int edge) const {
-    return face<1>(edge);
-}
-
-inline NTriangle* Simplex<3>::getTriangle(int triangle) const {
-    return face<2>(triangle);
-}
-
-inline NPerm4 Simplex<3>::getVertexMapping(int vertex) const {
-    return faceMapping<0>(vertex);
-}
-
-inline NPerm4 Simplex<3>::getEdgeMapping(int edge) const {
-    return faceMapping<1>(edge);
-}
-
-inline NPerm4 Simplex<3>::getTriangleMapping(int triangle) const {
-    return faceMapping<2>(triangle);
 }
 
 inline Simplex<3>::Simplex(NTriangulation* tri) : detail::SimplexBase<3>(tri) {

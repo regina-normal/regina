@@ -71,11 +71,17 @@ void addDim2Triangle() {
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim2Triangle::getComponent,
             return_value_policy<reference_existing_object>())
+        .def("vertex", &Dim2Triangle::vertex,
+            return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim2Triangle::getVertex,
+            return_value_policy<reference_existing_object>())
+        .def("edge", &Dim2Triangle::edge,
             return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim2Triangle::getEdge,
             return_value_policy<reference_existing_object>())
+        .def("vertexMapping", &Dim2Triangle::vertexMapping)
         .def("getVertexMapping", &Dim2Triangle::getVertexMapping)
+        .def("edgeMapping", &Dim2Triangle::edgeMapping)
         .def("getEdgeMapping", &Dim2Triangle::getEdgeMapping)
         .def("orientation", &Dim2Triangle::orientation)
         .def("facetInMaximalForest", &Dim2Triangle::facetInMaximalForest)

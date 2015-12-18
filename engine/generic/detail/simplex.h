@@ -44,6 +44,7 @@
 
 #include "regina-core.h"
 #include "output.h"
+#include "generic/alias/face.h"
 #include "maths/nperm.h"
 #include "utilities/nmarkedvector.h"
 #include <cassert>
@@ -152,6 +153,7 @@ class SimplexBase :
         public NMarkedElement,
         public Output<SimplexBase<dim>>,
         protected SimplexFacesSuite<dim, dim-1>,
+        public alias::FaceOfSimplex<SimplexBase<dim>, dim>,
         public boost::noncopyable {
     static_assert(dim >= 2, "Simplex requires dimension >= 2.");
     public:
@@ -467,21 +469,26 @@ class SimplexBase :
          * (<i>subdim</i>+1, ..., \a dim) to the remaining vertex numbers of
          * this simplex in a manner that preserves orientation as you walk
          * through the many different simplices that contain the same
-         * underlying <i>subdim</i>-face.
+         * underlying <i>subdim</i>-face.  Specifically:
          *
-         * For faces of codimension one (e.g., edges in a 3-manifold
-         * triangulation), this orientation condition is even stronger.
-         * Here the link of the face \a F must be a path (for a boundary face)
-         * or a cycle (for an internal face).
-         * In each simplex we can form a directed edge from the image of
-         * <i>dim</i>-1 to the image of \a dim under this permutation, and
-         * together these directed edges form a directed path or cycle
-         * that follows the link of the face \a F.  Moreover, an iteration
-         * through the corresponding FaceEmbedding<dim, subdim> objects in
-         * order from <tt>F.begin()</tt> to <tt>F.end()</tt>, will follow
-         * this directed path in order from start to end.  (In the case where
-         * the link of \a F is a cycle, the start point in the list of
-         * FaceEmbedding objects will be arbitrary.)
+         * - The images of (<i>subdim</i>+1, ..., \a dim) under this permutation
+         *   imply an orientation for the (\a dim - \a subdim - 1)-face
+         *   opposite \a F in this simplex.  These orientations will be
+         *   consistent for all simplices containing \a F.
+         *
+         * - For faces of codimension one (e.g., edges in a 3-manifold
+         *   triangulation), this orientation condition is even stronger.
+         *   Here the link of the face \a F must be a path (for a boundary
+         *   face) or a cycle (for an internal face).
+         *   In each simplex we can form a directed edge from the image of
+         *   <i>dim</i>-1 to the image of \a dim under this permutation, and
+         *   together these directed edges form a directed path or cycle
+         *   that follows the link of the face \a F.  Moreover, an iteration
+         *   through the corresponding FaceEmbedding<dim, subdim> objects in
+         *   order from <tt>F.begin()</tt> to <tt>F.end()</tt>, will follow
+         *   this directed path in order from start to end.  (In the case where
+         *   the link of \a F is a cycle, the start point in the list of
+         *   FaceEmbedding objects will be arbitrary.)
          *
          * \note This routine returns the same permutation as
          * FaceEmbedding<dim, subdim>::vertices(), in the context of the
