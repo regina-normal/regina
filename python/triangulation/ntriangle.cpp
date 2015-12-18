@@ -96,6 +96,8 @@ void addNTriangle() {
             .def("getSubtype", &NTriangle::getSubtype)
             .def("isMobiusBand", &NTriangle::isMobiusBand)
             .def("isCone", &NTriangle::isCone)
+            .def("isValid", &NTriangle::isValid)
+            .def("isLinkOrientable", &NTriangle::isLinkOrientable)
             .def("degree", &NTriangle::degree)
             .def("getDegree", &NTriangle::getDegree)
             .def("front", &NTriangle::front,
@@ -123,8 +125,12 @@ void addNTriangle() {
             .def("toStringLong", &NTriangle::toStringLong)
             .def("__str__", &NTriangle::str)
             .def("ordering", &NTriangle::ordering)
+            .def("faceNumber", &NTriangle::faceNumber)
+            .def("containsVertex", &NTriangle::containsVertex)
             .def(regina::python::add_eq_operators())
             .staticmethod("ordering")
+            .staticmethod("faceNumber")
+            .staticmethod("containsVertex")
         ;
 
         enum_<regina::NTriangle::Type>("Type")

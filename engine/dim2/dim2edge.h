@@ -124,6 +124,74 @@ class REGINA_API FaceEmbedding<2, 1> : public FaceEmbeddingBase<2, 1> {
 typedef FaceEmbedding<2, 1> Dim2EdgeEmbedding;
 
 /**
+ * Helper class that specifies how edges are numbered within a triangle.
+ *
+ * See the general FaceNumbering<dim, subdim> template class notes for
+ * further details.
+ */
+template <>
+class FaceNumbering<2, 1> {
+    private:
+        static const NPerm3 ordering_[3];
+            /**< An array that hard-codes the results of ordering(). */
+
+    public:
+        /**
+         * Given an edge number within a triangle, returns the
+         * corresponding canonical ordering of the triangle vertices.
+         *
+         * If this canonical ordering is \a c, then <tt>c[0,1]</tt> will
+         * be the vertices of the given edge in increasing numerical order.
+         * That is, <tt>c[0]</tt> &lt; <tt>c[1]</tt>.
+         *
+         * Note that this is \e not the same permutation as returned by
+         * Dim2Triangle::getEdgeMapping():
+         *
+         * - ordering() is a static function, which returns the same
+         *   permutation for the same edge number, regardless of which
+         *   triangle we are looking at.  The images of 0,1 will always
+         *   appear in increasing order.
+         *
+         * - getEdgeMapping() examines the underlying edge \a E of the
+         *   triangulation, and chooses the images of 0,1 to map to the
+         *   same respective vertices of \a E for all appearances of
+         *   \a E in different triangles.
+         *
+         * @param edge identifies which edge of a triangle to query.
+         * This must be between 0 and 2 inclusive.
+         * @return the corresponding canonical ordering of the
+         * triangle vertices.
+         */
+        static NPerm3 ordering(unsigned edge);
+        /**
+         * Identifies which edge number in a triangle is represented
+         * by the first two elements of the given permutation.
+         *
+         * In other words, this routine identifies which edge number in
+         * a triangle joins vertices <tt>vertices[0]</tt> and
+         * <tt>vertices[1]</tt>.
+         *
+         * @param vertices a permutation whose first two elements
+         * represent some vertex numbers in a triangle.
+         * @return the corresponding edge number in a triangle.
+         * This will be between 0 and 2 inclusive.
+         */
+        static unsigned faceNumber(NPerm3 vertices);
+        /**
+         * Tests whether the given edge of a triangle contains the given
+         * vertex of the triangle.
+         *
+         * @param edge an edge number in a triangle; this must be
+         * between 0 and 2 inclusive.
+         * @param vertex a vertex number in a triangle; this must be
+         * between 0 and 2 inclusive.
+         * @return \c true if and only if the given edge contains the
+         * given vertex.
+         */
+        static bool containsVertex(unsigned edge, unsigned vertex);
+};
+
+/**
  * Represents an edge in the skeleton of a 2-manifold triangulation.
  *
  * This is a specialisation of the generic Face class template; see the
@@ -135,13 +203,6 @@ typedef FaceEmbedding<2, 1> Dim2EdgeEmbedding;
 template <>
 class REGINA_API Face<2, 1> : public FaceBase<2, 1>, public Output<Face<2, 1>> {
     private:
-        /**
-         * An array that hard-codes the results of ordering().
-         *
-         * See ordering() for further details.
-         */
-        static const NPerm3 ordering_[3];
-
         Dim2BoundaryComponent* boundaryComponent_;
             /**< The boundary component that this edge is a part of,
                  or 0 if this edge is internal. */
@@ -204,29 +265,6 @@ class REGINA_API Face<2, 1> : public FaceBase<2, 1>, public Output<Face<2, 1>> {
          * dual edge in the maximal forest.
          */
         bool inMaximalForest() const;
-
-        /**
-         * Given an edge number within a triangle, returns the canonical
-         * ordering of those triangle vertices that make up the given edge.
-         *
-         * This means that the vertices of edge \a i in a triangle are,
-         * in canonical order, <tt>ordering[i][0,1]</tt>.
-         *
-         * Regina defines canonical order to be \e increasing order.
-         * That is, <tt>ordering[i][0] &lt; ordering[i][1]</tt>.
-         *
-         * This routine does \e not describe the mapping from edges
-         * of the triangulation into individual triangles; for that, see
-         * the routine Dim2Triangle::getEdgeMapping().  Instead, this routine
-         * just provides a neat and consistent way of listing the vertices of
-         * any given edge of any given triangle.
-         *
-         * @param edge identifies which edge of a triangle to query.
-         * This must be between 0 and 2 inclusive.
-         * @return the canonical ordering of the triangle vertices that
-         * make up the given triangle edge.
-         */
-        static NPerm<3> ordering(unsigned edge);
 
         /**
          * Writes a short text representation of this object to the
@@ -297,6 +335,21 @@ inline int FaceEmbedding<2, 1>::getEdge() const {
     return getFace();
 }
 
+// Inline functions for FaceNumbering
+
+inline NPerm3 FaceNumbering<2, 1>::ordering(unsigned edge) {
+    return ordering_[edge];
+}
+
+inline unsigned FaceNumbering<2, 1>::faceNumber(NPerm3 vertices) {
+    return vertices[2];
+}
+
+inline bool FaceNumbering<2, 1>::containsVertex(unsigned edge,
+        unsigned vertex) {
+    return (edge != vertex);
+}
+
 // Inline functions for Dim2Edge
 
 inline Face<2, 1>::Face(Dim2Component* component) :
@@ -317,10 +370,6 @@ inline bool Face<2, 1>::isBoundary() const {
 
 inline bool Face<2, 1>::inMaximalForest() const {
     return front().getTriangle()->facetInMaximalForest(front().getEdge());
-}
-
-inline NPerm<3> Face<2, 1>::ordering(unsigned edge) {
-    return ordering_[edge];
 }
 
 inline void Face<2, 1>::writeTextShort(std::ostream& out) const {

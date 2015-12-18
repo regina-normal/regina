@@ -176,6 +176,77 @@ class REGINA_API FaceEmbedding<3, 1> : public FaceEmbeddingBase<3, 1> {
 typedef FaceEmbedding<3, 1> NEdgeEmbedding;
 
 /**
+ * Helper class that specifies how edges are numbered within a tetrahedron.
+ *
+ * See the general FaceNumbering<dim, subdim> template class notes for
+ * further details.
+ */
+template <>
+class FaceNumbering<3, 1> {
+    private:
+        static const NPerm4 ordering_[6];
+            /**< An array that hard-codes the results of ordering(). */
+
+    public:
+        /**
+         * Given an edge number within a tetrahedron, returns the
+         * corresponding canonical ordering of the tetrahedron vertices.
+         *
+         * If this canonical ordering is \a c, then <tt>c[0,1]</tt> will
+         * be the vertices of the given edge in increasing numerical order.
+         * That is, <tt>c[0]</tt> &lt; <tt>c[1]</tt>.  The remaining images
+         * <tt>c[2,3]</tt> will be chosen to make the permutation even.
+         *
+         * Note that this is \e not the same permutation as returned by
+         * NTetrahedron::getEdgeMapping():
+         *
+         * - ordering() is a static function, which returns the same
+         *   permutation for the same edge number, regardless of which
+         *   tetrahedron we are looking at.  The images of 0,1 will always
+         *   appear in increasing order, and the permutation will always
+         *   be even.
+         *
+         * - getEdgeMapping() examines the underlying edge \a E of the
+         *   triangulation and, across all appearances of \a E in different
+         *   tetrahedra: (i) chooses the images of 0,1 to map to the same
+         *   respective vertices of \a E; and (ii) chooses the images
+         *   of 2,3 to maintain a "consistent orientation" constraint.
+         *
+         * @param edge identifies which edge of a tetrahedron to query.
+         * This must be between 0 and 5 inclusive.
+         * @return the corresponding canonical ordering of the
+         * tetrahedron vertices.
+         */
+        static NPerm4 ordering(unsigned edge);
+        /**
+         * Identifies which edge number in a tetrahedron is represented
+         * by the first two elements of the given permutation.
+         *
+         * In other words, this routine identifies which edge number in
+         * a tetrahedron joins vertices <tt>vertices[0]</tt> and
+         * <tt>vertices[1]</tt>.
+         *
+         * @param vertices a permutation whose first two elements
+         * represent some vertex numbers in a tetrahedron.
+         * @return the corresponding edge number in a tetrahedron.
+         * This will be between 0 and 5 inclusive.
+         */
+        static unsigned faceNumber(NPerm4 vertices);
+        /**
+         * Tests whether the given edge of a tetrahedron contains the given
+         * vertex of the tetrahedron.
+         *
+         * @param edge an edge number in a tetrahedron; this must be
+         * between 0 and 5 inclusive.
+         * @param vertex a vertex number in a tetrahedron; this must be
+         * between 0 and 3 inclusive.
+         * @return \c true if and only if the given edge contains the
+         * given vertex.
+         */
+        static bool containsVertex(unsigned edge, unsigned vertex);
+};
+
+/**
  * Represents an edge in the skeleton of a 3-manifold triangulation.
  *
  * This is a specialisation of the generic Face class template; see the
@@ -237,18 +308,9 @@ class REGINA_API Face<3, 1> : public FaceBase<3, 1>, public Output<Face<3, 1>> {
         static const int edgeVertex[6][2];
 
     private:
-        /**
-         * An array that hard-codes the results of ordering().
-         *
-         * See ordering() for further details.
-         */
-        static const NPerm4 ordering_[6];
-
         NBoundaryComponent* boundaryComponent_;
             /**< The boundary component that this edge is a part of,
                  or 0 if this edge is internal. */
-        bool valid_;
-            /**< Is this edge valid? */
 
     public:
         /**
@@ -277,41 +339,6 @@ class REGINA_API Face<3, 1> : public FaceBase<3, 1>, public Output<Face<3, 1>> {
          * @return \c true if and only if this edge lies on the boundary.
          */
         bool isBoundary() const;
-
-        /**
-         * Determines if this edge is valid.
-         * An edge is valid if and only if it is not glued to itself
-         * in reverse.
-         *
-         * @return \c true if and only if this edge is valid.
-         */
-        bool isValid() const;
-
-        /**
-         * Given an edge number within a tetrahedron, returns the canonical
-         * ordering of those tetrahedron vertices that make up the given edge.
-         *
-         * This means that the vertices of edge \a i in a tetrahedron are,
-         * in canonical order, <tt>ordering[i][0,1]</tt>.
-         *
-         * Regina defines canonical order to be \e increasing order.
-         * That is, <tt>ordering[i][0] &lt; ordering[i][1]</tt>.
-         *
-         * The remaining images <tt>ordering[i][2,3]</tt> are chosen to make
-         * each permutation even.
-         *
-         * This routine does \e not describe the mapping from edges
-         * of the triangulation into individual tetrahedron; for that, see
-         * the routine NTetrahedron::getEdgeMapping().  Instead, this routine
-         * just provides a neat and consistent way of listing the vertices of
-         * any given edge of any given tetrahedron.
-         *
-         * @param edge identifies which edge of a tetrahedron to query.
-         * This must be between 0 and 5 inclusive.
-         * @return the canonical ordering of the tetrahedron vertices that
-         * make up the given tetrahedron edge.
-         */
-        static NPerm4 ordering(unsigned edge);
 
         /**
          * Writes a short text representation of this object to the
@@ -380,11 +407,27 @@ inline int FaceEmbedding<3, 1>::getEdge() const {
     return getFace();
 }
 
+// Inline functions for FaceNumbering
+
+inline NPerm4 FaceNumbering<3, 1>::ordering(unsigned edge) {
+    return ordering_[edge];
+}
+
+inline unsigned FaceNumbering<3, 1>::faceNumber(NPerm4 vertices) {
+    return edgeNumber[vertices[0]][vertices[1]];
+}
+
+inline bool FaceNumbering<3, 1>::containsVertex(unsigned edge,
+        unsigned vertex) {
+    return (vertex == NEdge::edgeVertex[edge][0] ||
+            vertex == NEdge::edgeVertex[edge][1]);
+}
+
 // Inline functions for NEdge
 
 inline Face<3, 1>::Face(NComponent* component) :
         FaceBase<3, 1>(component),
-        boundaryComponent_(0), valid_(true) {
+        boundaryComponent_(0) {
 }
 
 inline NBoundaryComponent* Face<3, 1>::getBoundaryComponent() const {
@@ -397,14 +440,6 @@ inline NVertex* Face<3, 1>::getVertex(int vertex) const {
 
 inline bool Face<3, 1>::isBoundary() const {
     return (boundaryComponent_ != 0);
-}
-
-inline bool Face<3, 1>::isValid() const {
-    return valid_;
-}
-
-inline NPerm4 Face<3, 1>::ordering(unsigned edge) {
-    return ordering_[edge];
 }
 
 inline void Face<3, 1>::writeTextShort(std::ostream& out) const {

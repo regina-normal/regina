@@ -128,6 +128,73 @@ class REGINA_API FaceEmbedding<3, 0> : public FaceEmbeddingBase<3, 0> {
 typedef FaceEmbedding<3, 0> NVertexEmbedding;
 
 /**
+ * Helper class that specifies how vertices are numbered within a tetrahedron.
+ *
+ * See the general FaceNumbering<dim, subdim> template class notes for
+ * further details.
+ */
+template <>
+class FaceNumbering<3, 0> {
+    public:
+        /**
+         * Given a vertex number within a tetrahedron, returns the
+         * corresponding canonical ordering of the tetrahedron vertices.
+         *
+         * If this canonical ordering is \a c, then <tt>c[0]</tt> will
+         * be the given vertex, and the images <tt>c[1,2,3]</tt> will
+         * be chosen to make the permutation even.
+         *
+         * Note that this is \e not the same permutation as returned by
+         * NTetrahedron::getVertexMapping():
+         *
+         * - ordering() is a static function, which returns the same
+         *   permutation for the same vertex number, regardless of which
+         *   tetrahedron we are looking at.  The permutation will always be
+         *   even.
+         *
+         * - getVertexMapping() examines the underlying vertex \a V of the
+         *   triangulation, and chooses the images of 1,2,3 to maintain
+         *   a "consistent orientation" constraint across the different
+         *   appearances of \a V in different tetrahedra.
+         *
+         * @param vertex identifies which vertex of a tetrahedron to query.
+         * This must be between 0 and 3 inclusive.
+         * @return the corresponding canonical ordering of the
+         * tetrahedron vertices.
+         */
+        static NPerm4 ordering(unsigned vertex);
+        /**
+         * Identifies which vertex number in a tetrahedron is represented
+         * by the first element of the given permutation.
+         *
+         * This routine is trivial: it simply returns
+         * <tt>vertices[0]</tt>.
+         * It is provided for consistency with higher-dimensional faces,
+         * where the faceNumber() routine has some genuine work to do.
+         *
+         * @param vertices a permutation whose first element represents
+         * some vertex number in a tetrahedron.
+         * @return the corresponding vertex number in a tetrahedron.
+         * * This will be be between 0 and 3 inclusive.
+         */
+        static unsigned faceNumber(NPerm4 vertices);
+        /**
+         * Tests whether the two given arguments are equal.
+         *
+         * This routine is trivial: it is provided for consistency with
+         * higher-dimensional faces, where Face::containsVertex<dim, subdim>()
+         * determines whether the given vertex belongs to the given face.
+         *
+         * @param face a vertex number in a triangle; this must be
+         * between 0 and 2 inclusive.
+         * @param vertex another vertex number in a triangle; this must be
+         * between 0 and 2 inclusive.
+         * @return \c true if and only if \a face and \a vertex are equal.
+         */
+        static bool containsVertex(unsigned face, unsigned vertex);
+};
+
+/**
  * Represents a vertex in the skeleton of a 3-manifold triangulation.
  *
  * This is a specialisation of the generic Face class template; see the
@@ -178,8 +245,6 @@ class REGINA_API Face<3, 0> : public FaceBase<3, 0>, public Output<Face<3, 0>> {
                  or 0 if this vertex is internal. */
         LinkType link_;
             /**< A broad categorisation of the topology of the vertex link. */
-        bool linkOrientable_;
-            /**< Specifies whether the vertex link is orientable. */
         long linkEulerChar_;
             /**< Specifies the Euler characteristic of the vertex link. */
         Dim2Triangulation* linkTri_;
@@ -357,17 +422,6 @@ class REGINA_API Face<3, 0> : public FaceBase<3, 0>, public Output<Face<3, 0>> {
         bool isStandard() const;
 
         /**
-         * Determines if the vertex link is orientable.
-         *
-         * This routine does not require a full triangulation of the
-         * vertex link, and so can be much faster than calling
-         * buildLink().isOrientable().
-         *
-         * @return \c true if and only if the vertex link is orientable.
-         */
-        bool isLinkOrientable() const;
-
-        /**
          * Returns the Euler characteristic of the vertex link.
          *
          * This routine does not require a full triangulation of the
@@ -462,12 +516,28 @@ inline int FaceEmbedding<3, 0>::getVertex() const {
     return getFace();
 }
 
+// Inline functions for FaceNumbering
+
+inline NPerm4 FaceNumbering<3, 0>::ordering(unsigned vertex) {
+    return (vertex % 2 == 0 ?
+        NPerm4(vertex, (vertex + 1) % 4, (vertex + 2) % 4, (vertex + 3) % 4) :
+        NPerm4(vertex, (vertex + 3) % 4, (vertex + 2) % 4, (vertex + 1) % 4));
+}
+
+inline unsigned FaceNumbering<3, 0>::faceNumber(NPerm4 vertices) {
+    return vertices[0];
+}
+
+inline bool FaceNumbering<3, 0>::containsVertex(unsigned face,
+        unsigned vertex) {
+    return (face == vertex);
+}
+
 // Inline functions for NVertex
 
 inline Face<3, 0>::Face(NComponent* component) :
         FaceBase<3, 0>(component),
-        boundaryComponent_(0), linkOrientable_(true),
-        linkEulerChar_(0), linkTri_(0) {
+        boundaryComponent_(0), linkEulerChar_(0), linkTri_(0) {
 }
 
 inline NBoundaryComponent* Face<3, 0>::getBoundaryComponent() const {
@@ -502,10 +572,6 @@ inline bool Face<3, 0>::isBoundary() const {
 
 inline bool Face<3, 0>::isStandard() const {
     return (link_ != NON_STANDARD_CUSP && link_ != NON_STANDARD_BDRY);
-}
-
-inline bool Face<3, 0>::isLinkOrientable() const {
-    return linkOrientable_;
 }
 
 inline long Face<3, 0>::getLinkEulerChar() const {

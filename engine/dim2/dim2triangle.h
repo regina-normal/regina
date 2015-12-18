@@ -77,16 +77,6 @@ typedef Face<2, 1> Dim2Edge;
  */
 template <>
 class REGINA_API Simplex<2> : public SimplexBase<2> {
-    private:
-        Dim2Vertex* vertex_[3];
-            /**< Vertices in the triangulation skeleton that are
-                 vertices of this triangle. */
-
-        NPerm3 vertexMapping_[3];
-            /**< Maps 0 to each vertex of this triangle in turn whilst
-                 mapping (1,2) in a suitably "orientation-preserving" way,
-                 as described in getVertexMapping(). */
-
     public:
         /**
          * A dimension-specific alias for adjacentSimplex().
@@ -184,10 +174,6 @@ class REGINA_API Simplex<2> : public SimplexBase<2> {
         REGINA_INLINE_REQUIRED
         NPerm3 getEdgeMapping(int edge) const;
 
-        template <int subdim>
-        REGINA_INLINE_REQUIRED
-        NPerm3 getFaceMapping(int face) const;
-
     private:
         /**
          * Creates a new triangle with empty description and no
@@ -233,33 +219,19 @@ inline int Simplex<2>::adjacentEdge(int edge) const {
 }
 
 inline Dim2Vertex* Simplex<2>::getVertex(int vertex) const {
-    getTriangulation()->ensureSkeleton();
-    return vertex_[vertex];
+    return face<0>(vertex);
 }
 
 inline Dim2Edge* Simplex<2>::getEdge(int edge) const {
-    getTriangulation()->ensureSkeleton();
-    return SimplexFaces<2, 1>::face_[edge];
-}
-
-template <>
-inline NPerm3 Simplex<2>::getFaceMapping<0>(int vertex) const {
-    getTriangulation()->ensureSkeleton();
-    return vertexMapping_[vertex];
-}
-
-template <>
-inline NPerm3 Simplex<2>::getFaceMapping<1>(int edge) const {
-    getTriangulation()->ensureSkeleton();
-    return SimplexFaces<2, 1>::mapping_[edge];
+    return face<1>(edge);
 }
 
 inline NPerm3 Simplex<2>::getVertexMapping(int vertex) const {
-    return getFaceMapping<0>(vertex);
+    return faceMapping<0>(vertex);
 }
 
 inline NPerm3 Simplex<2>::getEdgeMapping(int edge) const {
-    return getFaceMapping<1>(edge);
+    return faceMapping<1>(edge);
 }
 
 inline Simplex<2>::Simplex(Dim2Triangulation* tri) : SimplexBase<2>(tri) {

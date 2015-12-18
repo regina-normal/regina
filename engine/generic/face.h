@@ -63,8 +63,8 @@ template <int dim> class TriangulationBase;
 
 /**
  * Helper class that provides core functionality for describing how a
- * \a subdim-face of a \a dim-dimensional triangulation appears within each
- * top-dimensional simplex.
+ * <i>subdim</i>-face of a <i>dim</i>-dimensional triangulation appears within
+ * each top-dimensional simplex.
  *
  * Each such appearance is described by a FaceEmbedding<dim, subdim> object,
  * which uses this as a base class.  End users should not need to refer
@@ -78,7 +78,7 @@ template <int dim> class TriangulationBase;
  * \tparam dim the dimension of the underlying triangulation.
  * This must be at least 2.
  * \tparam subdim the dimension of the faces of the underlying triangulation.
- * This must be between 0 and \a dim-1 inclusive.
+ * This must be between 0 and <i>dim</i>-1 inclusive.
  */
 template <int dim, int subdim>
 class FaceEmbeddingBase : public ShortOutput<FaceEmbeddingBase<dim, subdim>> {
@@ -89,7 +89,7 @@ class FaceEmbeddingBase : public ShortOutput<FaceEmbeddingBase<dim, subdim>> {
     private:
         Simplex<dim>* simplex_;
             /**< The top-dimensional simplex in which the underlying
-             * \a subdim-face of the triangulation is contained. */
+             * <i>subdim</i>-face of the triangulation is contained. */
         int face_;
             /**< The corresponding face number of \a simplex_. */
 
@@ -105,9 +105,10 @@ class FaceEmbeddingBase : public ShortOutput<FaceEmbeddingBase<dim, subdim>> {
          * Creates a new object containing the given data.
          *
          * @param simplex the top-dimensional simplex in which the
-         * underlying \a subdim-face of the triangulation is contained.
+         * underlying <i>subdim</i>-face of the triangulation is contained.
          * @param face the corresponding face number of \a simplex.
-         * This must be between 0 and (\a dim+1 choose \a subdim+1)-1 inclusive.
+         * This must be between 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1
+         * inclusive.
          */
         FaceEmbeddingBase(Simplex<dim>* simplex, int face);
         /**
@@ -126,14 +127,14 @@ class FaceEmbeddingBase : public ShortOutput<FaceEmbeddingBase<dim, subdim>> {
 
         /**
          * Returns the top-dimensional simplex in which the underlying
-         * \a subdim-face of the triangulation is contained.
+         * <i>subdim</i>-face of the triangulation is contained.
          *
          * @return the top-dimensional simplex.
          */
         Simplex<dim>* simplex() const;
         /**
          * Deprecated routine that returns the top-dimensional simplex
-         * in which the underlying \a subdim-face of the triangulation
+         * in which the underlying <i>subdim</i>-face of the triangulation
          * is contained.
          *
          * \deprecated Simply call simplex() instead.
@@ -145,11 +146,12 @@ class FaceEmbeddingBase : public ShortOutput<FaceEmbeddingBase<dim, subdim>> {
         /**
          * Returns the corresponding face number of simplex().
          * This identifies which face of the top-dimensional simplex
-         * simplex() refers to the underlying \a subdim-face of the
+         * simplex() refers to the underlying <i>subdim</i>-face of the
          * triangulation.
          *
          * @return the corresponding face number of the top-dimensional simplex.
-         * This will be between 0 and (\a dim+1 choose \a subdim+1)-1 inclusive.
+         * This will be between 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1
+         * inclusive.
          */
         int face() const;
         /**
@@ -163,28 +165,28 @@ class FaceEmbeddingBase : public ShortOutput<FaceEmbeddingBase<dim, subdim>> {
         int getFace() const;
 
         /**
-         * Maps vertices (0,...,\a subdim) of the underlying \a subdim-face
+         * Maps vertices (0,...,\a subdim) of the underlying <i>subdim</i>-face
          * of the triangulation to the corresponding vertex numbers of
          * simplex().
          *
-         * If the link of the underlying \a subdim-face is orientable,
-         * then this permutation also maps (\a subdim+1, ..., \a dim) to the
-         * remaining vertex numbers of simplex() in a manner that
+         * If the link of the underlying <i>subdim</i>-face is orientable,
+         * then this permutation also maps (<i>subdim</i>+1, ..., \a dim) to
+         * the remaining vertex numbers of simplex() in a manner that
          * preserves orientation as you walk through the many different
-         * FaceEmbedding objects for the same underlying \a subdim-face.
+         * FaceEmbedding objects for the same underlying <i>subdim</i>-face.
          *
          * This routine returns the same permutation as
          * <tt>simplex().getFaceMapping<subdim>(face())</tt>.
          * See Simplex<dim>::getFaceMapping() for details.
          *
          * @return a mapping from the vertices of the underlying
-         * \a subdim-face to the corresponding vertices of simplex().
+         * <i>subdim</i>-face to the corresponding vertices of simplex().
          */
         NPerm<dim+1> vertices() const;
         /**
          * Deprecated routine that maps vertices (0,...,\a subdim) of the
-         * underlying \a subdim-face of the triangulation to the corresponding
-         * vertex numbers of simplex().
+         * underlying <i>subdim</i>-face of the triangulation to the
+         * corresponding vertex numbers of simplex().
          *
          * \deprecated Simply call vertices() instead.
          *
@@ -224,11 +226,11 @@ class FaceEmbeddingBase : public ShortOutput<FaceEmbeddingBase<dim, subdim>> {
 };
 
 /**
- * Details how a \a subdim-face of a \a dim-dimensional triangulation
+ * Details how a <i>subdim</i>-face of a <i>dim</i>-dimensional triangulation
  * appears within each top-dimensional simplex.
  *
- * For a \a dim-dimensional triangulation \a T, each \a subdim-face \a F
- * typically belongs to many top-dimensional simplices of \a T,
+ * For a <i>dim</i>-dimensional triangulation \a T, each <i>subdim</i>-face
+ * \a F typically belongs to many top-dimensional simplices of \a T,
  * and therefore has many associated FaceEmbedding objects.  These individual
  * FaceEmbedding objects correspond to the top-dimensional simplices of the
  * link of \a F (which is a (\a dim - \a subdim - 1)-dimensional triangulation).
@@ -252,7 +254,7 @@ class FaceEmbeddingBase : public ShortOutput<FaceEmbeddingBase<dim, subdim>> {
  * \tparam dim the dimension of the underlying triangulation.
  * This must be at least 2.
  * \tparam subdim the dimension of the faces of the underlying triangulation.
- * This must be between 0 and \a dim-1 inclusive.
+ * This must be between 0 and <i>dim</i>-1 inclusive.
  */
 template <int dim, int subdim>
 class FaceEmbedding : public FaceEmbeddingBase<dim, subdim> {
@@ -273,9 +275,10 @@ class FaceEmbedding : public FaceEmbeddingBase<dim, subdim> {
          * Creates a new object containing the given data.
          *
          * @param simplex the top-dimensional simplex in which the
-         * underlying \a subdim-face of the triangulation is contained.
+         * underlying <i>subdim</i>-face of the triangulation is contained.
          * @param face the corresponding face number of \a simplex.
-         * This must be between 0 and (\a dim+1 choose \a subdim+1)-1 inclusive.
+         * This must be between 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1
+         * inclusive.
          */
         FaceEmbedding(Simplex<dim>* simplex, int face);
 
@@ -297,7 +300,7 @@ template <> class FaceEmbedding<3, 0>;
 
 /**
  * Helper class for storing all the ways in which a given face of codimension
- * \a codim in a \a dim-dimensional triangulation appears within the
+ * \a codim in a <i>dim</i>-dimensional triangulation appears within the
  * various top-dimensional simplices.
  *
  * In essence, this class provides the data structures which which a
@@ -443,7 +446,7 @@ class FaceStorage {
          * (which in codimension 2 is always a path or a cycle).
          * In particular, for a boundary face of codimension 2, both
          * front() and back() will refer to the two appearances of this
-         * face on the (\a dim-1)-dimensional boundary.
+         * face on the (<i>dim</i>-1)-dimensional boundary.
          *
          * @return details of the first appearance.
          */
@@ -460,7 +463,7 @@ class FaceStorage {
          * (which in codimension 2 is always a path or a cycle).
          * In particular, for a boundary face of codimension 2, both
          * front() and back() will refer to the two appearances of this
-         * face on the (\a dim-1)-dimensional boundary.
+         * face on the (<i>dim</i>-1)-dimensional boundary.
          *
          * @return details of the last appearance.
          */
@@ -532,10 +535,309 @@ class FaceStorage<dim, 1> {
 #endif // __DOXYGEN
 
 /**
- * Helper class that provides core functionality for a \a subdim-face
- * in the skeleton of a \a dim-dimensional triangulation.
+ * Helper class that stores whether a face is valid.
+ * Every class Face<dim, subdim> inherits from this class.
  *
- * Each \a subdim-face is described by a Face<dim, subdim> object,
+ * This class takes a template argument to allow optimisation for those
+ * dimensions in which faces are always valid.  In particular, if
+ * \a allowsInvalid is \c false, then this class assumes that all faces
+ * will always be valid, and it optimises away all the implementation
+ * details to leave no overhead at all.
+ *
+ * See FaceValidity<true>::isValid() for details on what it means for a
+ * face to be valid.
+ *
+ * \tparam allowsInvalid \c true when this is used for dimensions in which
+ * faces could potentially be invalid, or \c false when this is used for
+ * dimensions in which faces are always valid.
+ */
+template <bool allowsInvalid>
+class FaceValidity;
+
+/**
+ * Helper class that stores whether a face is valid.
+ * See the general FaceValidity template notes for further details.
+ *
+ * This specialisation is used for dimensions in which faces could
+ * potentially be invalid.  In other words, this specialisation contains
+ * the general implementation for storing face validity.
+ */
+template <>
+class FaceValidity<true> {
+    private:
+        bool valid_;
+            /**< Is this face valid?  See isValid() for what this means. */
+
+    public:
+        /**
+         * Determines if this face is valid.
+         *
+         * There are several conditions that might make a <i>subdim</i>-face
+         * of a <i>dim</i>-dimensional triangulation invalid:
+         *
+         * 1. if the face is identified with itself under a non-identity
+         *    permutation (e.g., an edge is identified with itself in
+         *    reverse, or a triangle is identified with itself under a
+         *    rotation);
+         *
+         * 2. if the face lies in the boundary of the triangulation but
+         *    its link is not a (\a dim - \a subdim - 1)-ball;
+         *
+         * 3. if the face is internal and not a vertex, and its link is
+         *    not a (\a dim - \a subdim - 1)-sphere.
+         *
+         * Condition (1) is tested for all dimensions \a subdim and \a dim.
+         * Conditions (2) and (3) are more difficult, since they rely on
+         * undecidable problems.  As a result, they are \e only tested
+         * when \a dim is one of Regina's \ref stddim "standard dimensions".
+         *
+         * @return when \a dim is one of Regina's standard dimensions,
+         * this returns \c true if and only if this face is valid
+         * according to all conditions (1), (2) and (3) above;
+         * otherwise this returns \c true if and only if this face is
+         * valid according to condition (1) only.
+         */
+        bool isValid() const;
+
+    protected:
+        /**
+         * Initialises this face as valid.
+         */
+        FaceValidity();
+
+        /**
+         * Marks this face as invalid.
+         */
+        void markInvalid();
+};
+
+/**
+ * Helper class that stores whether a face is valid.
+ * See the general FaceValidity template notes for further details.
+ *
+ * This specialisation is used for dimensions in which faces are never
+ * invalid.  It optimises away all the implementation details (since
+ * there is nothing to store and nothing to compute).
+ */
+template <>
+class FaceValidity<false> {
+    public:
+        /**
+         * Determines if this face is valid.
+         * See FaceValidity<true>::isValid() for a discussion on what
+         * this means.
+         *
+         * This routine always returns \c true, since this specialisation
+         * of FaceValidity is for dimensions in which faces are always valid.
+         *
+         * @return \c true.
+         */
+        bool isValid() const;
+
+    protected:
+        /**
+         * Marks this face as invalid.
+         *
+         * This routine should never be called, since this specialisation
+         * of FaceValidity is for dimensions in which faces are always valid.
+         *
+         * It is provided to support dimension-agnostic code, but its
+         * implementation does nothing.
+         */
+        void markInvalid();
+};
+
+/**
+ * Helper class that stores whether the link of a face is orientable.
+ * Every class Face<dim, subdim> inherits from this class.
+ *
+ * This class takes a template argument to allow optimisation for those
+ * dimensions in which face links are always orientable.  In particular, if
+ * \a allowsNonorientable is \c false, then this class assumes that all faces
+ * will always have orientable links, and it optimises away all the
+ * implementation details to leave no overhead at all.
+ *
+ * \tparam allowsNonorientable \c true when this is used for dimensions in
+ * which face links could potentially be non-orientable, or \c false when
+ * this is used for dimensions in which face links are always orientable.
+ */
+template <bool allowsNonorientable>
+class FaceOrientability;
+
+/**
+ * Helper class that stores whether the link of a face is orientable.
+ * See the general FaceOrientability template notes for further details.
+ *
+ * This specialisation is used for dimensions in which face links could
+ * potentially be non-orientable.  In other words, this specialisation contains
+ * the general implementation for storing link orientability.
+ */
+template <>
+class FaceOrientability<true> {
+    private:
+        bool linkOrientable_;
+            /**< Is the link of this face orientable? */
+
+    public:
+        /**
+         * Determines if the link of this face is orientable.
+         *
+         * This routine is fast: it uses pre-computed information, and
+         * does not need to build a full triangulation of the link.
+         *
+         * \warning If this face is identified with itself under a
+         * non-identity permutation (which makes the face invalid), then
+         * the return value of this routine is undefined.
+         *
+         * @return \c true if and only if the link is orientable.
+         */
+        bool isLinkOrientable() const;
+
+    protected:
+        /**
+         * Initialises the link of this face as orientable.
+         */
+        FaceOrientability();
+
+        /**
+         * Marks the link of this face as non-orientable.
+         */
+        void markLinkNonorientable();
+};
+
+/**
+ * Helper class that stores whether the link of a face is orientable.
+ * See the general FaceOrientability template notes for further details.
+ *
+ * This specialisation is used for dimensions in which links of faces are
+ * always orientable.  It optimises away all the implementation details
+ * (since there is nothing to store and nothing to compute).
+ */
+template <>
+class FaceOrientability<false> {
+    public:
+        /**
+         * Determines if the link of this face is orientable.
+         *
+         * This routine always returns \c true, since this specialisation
+         * of FaceOrientability is for dimensions in which links of faces
+         * are always orientable.
+         *
+         * @return \c true.
+         */
+        bool isLinkOrientable() const;
+
+    protected:
+        /**
+         * Marks the link of this face as non-orientable.
+         *
+         * This routine should never be called, since this specialisation
+         * of FaceOrientability is for dimensions in which links of faces
+         * are always orientable.
+         *
+         * It is provided to support dimension-agnostic code, but its
+         * implementation does nothing.
+         */
+        void markLinkNonorientable();
+};
+
+/**
+ * Specifies how <i>subdim</i>-faces are numbered within a
+ * <i>dim</i>-dimensional simplex.
+ *
+ * Every class Face<dim, subdim> inherits from this class.
+ * End users should not need to reference this class directly - you can
+ * just call the inherited routines in Face<dim, subdim>, such as
+ * Face<dim, subdim>::ordering(), Face<dim, subdim>::faceNumber(), and so on.
+ *
+ * The routines in this class have been put into this separate FaceNumbering
+ * class (instead of FaceBase or Face) so that they can be specialised
+ * (and therefore optimised) in Regina's \ref stddim "standard dimensions".
+ */
+template <int dim, int subdim>
+class FaceNumbering {
+    public:
+        /**
+         * Given a <i>subdim</i>-face number within a <i>dim</i>-dimensional
+         * simplex, returns the corresponding canonical ordering of the
+         * simplex vertices.
+         *
+         * If this canonical ordering is \a c, then \a c[0,...,\a subdim]
+         * will be the vertices of the given face in increasing numerical
+         * order.  That is, \a c[0] &lt; ... &lt; \a c[\a subdim].
+         * For faces of dimension \a subdim &le; <i>dim</i>-2, the remaining
+         * images \a c[(\a subdim + 1),...,\a dim] will be chosen to make
+         * the permutation even.
+         *
+         * Note that this is \e not the same permutation as returned by
+         * Simplex<dim>::faceMapping<subdim>():
+         *
+         * - ordering() is a static function, which returns the same permutation
+         *   for the same face number, regardless of which <i>dim</i>-simplex
+         *   we are looking at.  The images of 0,...,\a subdim will always
+         *   appear in increasing order, and (for dimensions
+         *   \a subdim &le; <i>dim</i>-2) the permutation will always be even.
+         *
+         * - faceMapping() examines the underlying face \a F of the
+         *   triangulation and, across all appearances of \a F in different
+         *   <i>dim</i>-simplices: (i) chooses the images of 0,...,\a subdim to
+         *   map to the same respective vertices of \a F; and (ii) chooses the
+         *   images of (\a subdim + 1),...,\a dim to maintain a "consistent
+         *   orientation" constraint.
+         *
+         * @param face identifies which <i>subdim</i>-face of a
+         * <i>dim</i>-dimensional simplex to query.  This must be between
+         * 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1 inclusive.
+         * @return the corresponding canonical ordering of the simplex vertices.
+         */
+        static NPerm<dim + 1> ordering(unsigned face);
+
+        /**
+         * Identifies which <i>subdim</i>-face in a <i>dim</i>-dimensional
+         * simplex is represented by the first (\a subdim + 1) elements of the
+         * given permutation.
+         *
+         * In other words, this routine identifies which <i>subdim</i>-face
+         * number within a <i>dim</i>-dimensional simplex spans vertices
+         * <tt>vertices[0, ..., \a subdim]</tt>.
+         *
+         * @param vertices a permutation whose first (\a subdim + 1)
+         * elements represent some vertex numbers in a <i>dim</i>-simplex.
+         * @return the corresponding <i>subdim</i>-face number in the
+         * <i>dim</i>-simplex.  This will be between 0 and
+         * (<i>dim</i>+1 choose <i>subdim</i>+1)-1 inclusive.
+         */
+        static unsigned faceNumber(const NPerm<dim + 1>& vertices);
+
+        /**
+         * Tests whether the given <i>subdim</i>-face of a
+         * <i>dim</i>-dimensional simplex contains the given vertex
+         * of the simplex.
+         *
+         * @param face a <i>subdim</i>-face number in a <i>dim</i>-simplex;
+         * this must be between 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1
+         * inclusive.
+         * @param vertex a vertex number in a <i>dim</i>-simplex; this must be
+         * between 0 and \a dim inclusive.
+         * @return \c true if and only if the given <i>subdim</i>-face
+         * contains the given vertex.
+         */
+        static bool containsVertex(unsigned face, unsigned vertex);
+};
+
+// Note that FaceNumbering is specialised in standard dimensions.
+// Do not explicitly drag in the specialised headers for now.
+template <> class FaceNumbering<2, 1>;
+template <> class FaceNumbering<2, 0>;
+template <> class FaceNumbering<3, 2>;
+template <> class FaceNumbering<3, 1>;
+template <> class FaceNumbering<3, 0>;
+
+/**
+ * Helper class that provides core functionality for a <i>subdim</i>-face
+ * in the skeleton of a <i>dim</i>-dimensional triangulation.
+ *
+ * Each <i>subdim</i>-face is described by a Face<dim, subdim> object,
  * which uses this as a base class.  End users should not need to refer
  * to FaceBase directly.
  *
@@ -547,11 +849,14 @@ class FaceStorage<dim, 1> {
  * \tparam dim the dimension of the underlying triangulation.
  * This must be at least 2.
  * \tparam subdim the dimension of the faces that this class represents.
- * This must be between 0 and \a dim-1 inclusive.
+ * This must be between 0 and <i>dim</i>-1 inclusive.
  */
 template <int dim, int subdim>
 class FaceBase :
         public FaceStorage<dim, dim - subdim>,
+        public FaceValidity<dim >= 3 && subdim <= dim - 2>,
+        public FaceOrientability<dim >= 3 && subdim <= dim - 3>,
+        public FaceNumbering<dim, subdim>,
         public NMarkedElement,
         public boost::noncopyable {
     private:
@@ -617,10 +922,10 @@ class FaceBase :
 };
 
 /**
- * Represents a \a subdim-face in the skeleton of a \a dim-dimensional
+ * Represents a <i>subdim</i>-face in the skeleton of a <i>dim</i>-dimensional
  * triangulation.
  *
- * A given \a subdim-face \a F of the triangulation may appear many
+ * A given <i>subdim</i>-face \a F of the triangulation may appear many
  * times within the various top-dimensional simplices of the underlying
  * triangulation.  As an extreme example, in a 1-vertex triangulation of
  * a 3-manifold, the single vertex makes 4<i>n</i> such appearances,
@@ -639,7 +944,7 @@ class FaceBase :
  * \tparam dim the dimension of the underlying triangulation.
  * This must be at least 2.
  * \tparam subdim the dimension of the faces that this class represents.
- * This must be between 0 and \a dim-1 inclusive.
+ * This must be between 0 and <i>dim</i>-1 inclusive.
  */
 template <int dim, int subdim>
 class Face : public FaceBase<dim, subdim>, Output<Face<dim, subdim>> {
@@ -648,35 +953,6 @@ class Face : public FaceBase<dim, subdim>, Output<Face<dim, subdim>> {
         "should not be used for Regina's standard dimensions.");
 
     public:
-        /**
-         * Given a \a subdim-face number within a top-dimensional simplex,
-         * returns the canonical ordering of those simplex vertices that
-         * make up the given face.
-         *
-         * This means that the vertices of \a subdim-face \a i in a
-         * top-dimensional simplex are, in canonical order,
-         * <tt>ordering[i][0,...,subdim]</tt>.
-         *
-         * Regina defines canonical order to be \e increasing order.
-         * That is, <tt>ordering[i][0] &lt; ... &lt; ordering[i][subdim]</tt>.
-         *
-         * The remaining images <tt>ordering[i][\a subdim+1, ..., \a dim]</tt>
-         * are chosen to make each permutation even.
-         *
-         * This routine does \e not describe the mapping from \a subdim-faces
-         * of the triangulation into individual simplices; for that, see
-         * the routine Simplex<dim>::getFaceMapping().  Instead, this routine
-         * just provides a neat and consistent way of listing the vertices of
-         * any given \a subdim-face of any given simplex.
-         *
-         * @param face identifies which \a subdim-face of a
-         * top-dimensional simplex to query.  This must be between
-         * 0 and (\a dim+1 choose \a subdim+1)-1 inclusive.
-         * @return the canonical ordering of the simplex vertices that
-         * make up the given simplex face.
-         */
-        static NPerm<dim + 1> ordering(unsigned face);
-
         /**
          * Writes a short text representation of this face to the
          * given output stream.
@@ -981,6 +1257,77 @@ inline void FaceStorage<dim, 2>::push_back(
     embeddings_.push_back(emb);
 }
 
+// Inline functions for FaceValidity
+
+inline FaceValidity<true>::FaceValidity() : valid_(true) {
+}
+
+inline bool FaceValidity<true>::isValid() const {
+    return valid_;
+}
+
+inline void FaceValidity<true>::markInvalid() {
+    valid_ = false;
+}
+
+inline bool FaceValidity<false>::isValid() const {
+    return true;
+}
+
+inline void FaceValidity<false>::markInvalid() {
+}
+
+// Inline functions for FaceOrientability
+
+inline FaceOrientability<true>::FaceOrientability() : linkOrientable_(true) {
+}
+
+inline bool FaceOrientability<true>::isLinkOrientable() const {
+    return linkOrientable_;
+}
+
+inline void FaceOrientability<true>::markLinkNonorientable() {
+    linkOrientable_ = false;
+}
+
+inline bool FaceOrientability<false>::isLinkOrientable() const {
+    return true;
+}
+
+inline void FaceOrientability<false>::markLinkNonorientable() {
+}
+
+// Inline functions for FaceNumbering
+
+template <int dim, int subdim>
+inline NPerm<dim + 1> FaceNumbering<dim, subdim>::ordering(unsigned face) {
+    static_assert(! standardDim(dim),
+        "The generic implementation of FaceBase<dim, subdim>::ordering() "
+        "should not be used for Regina's standard dimensions.");
+    // TODO: Implement ordering().
+    return NPerm<dim + 1>();
+}
+
+template <int dim, int subdim>
+inline unsigned FaceNumbering<dim, subdim>::faceNumber(
+        const NPerm<dim + 1>& vertices) {
+    static_assert(! standardDim(dim),
+        "The generic implementation of FaceBase<dim, subdim>::faceNumber() "
+        "should not be used for Regina's standard dimensions.");
+    // TODO: Implement faceNumber().
+    return 0;
+}
+
+template <int dim, int subdim>
+inline bool FaceNumbering<dim, subdim>::containsVertex(unsigned face,
+        unsigned vertex) {
+    static_assert(! standardDim(dim),
+        "The generic implementation of FaceBase<dim, subdim>::containsVertex() "
+        "should not be used for Regina's standard dimensions.");
+    // TODO: Implement containsVertex().
+    return false;
+}
+
 // Inline functions for FaceBase
 
 template <int dim, int subdim>
@@ -1018,12 +1365,6 @@ inline FaceBase<dim, subdim>::FaceBase(Component<dim>* component) :
 template <int dim, int subdim>
 inline Face<dim, subdim>::Face(Component<dim>* component) :
         FaceBase<dim, subdim>(component) {
-}
-
-template <int dim, int subdim>
-inline NPerm<dim + 1> Face<dim, subdim>::ordering(unsigned face) {
-    // TODO
-    return NPerm<dim + 1>();
 }
 
 template <int dim, int subdim>

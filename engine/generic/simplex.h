@@ -79,18 +79,21 @@ inline constexpr int choose(int n, int r) {
 }
 
 /**
- * Helper class for mapping between the \a subdim-faces of a \a dim-dimensional
- * triangulation and the \a subdim-faces of each individual top-dimensional
+ * Helper class for storing which <i>subdim</i>-faces of a
+ * <i>dim</i>-dimensional triangulation appear within each top-dimensional
  * simplex.
  *
- * TODO: Document this better.
+ * This class is strongly related to FaceEmbedding<dim, subdim>.
+ * Whereas each FaceEmbedding object identifies some simplex in which a given
+ * <i>subdim</i>-face appears, each SimplexFaces object identifies all
+ * <i>subdim</i>-faces which appear within a given simplex.
  */
 template <int dim, int subdim>
 class SimplexFaces {
     public:
         static constexpr int nFaces = regina::choose(dim + 1, subdim + 1);
-            /** The total number of \a subdim-faces in each
-                \a dim-dimensional simplex. */
+            /** The total number of <i>subdim</i>-faces in each
+                <i>dim</i>-dimensional simplex. */
 
     public:
         SimplexFaces(const SimplexFaces&) = delete;
@@ -99,16 +102,46 @@ class SimplexFaces {
     protected:
         Face<dim, subdim>* face_[nFaces];
             /**< The faces of the underlying triangulation that form the
-                 individual \a subdim-faces of this simplex. */
+                 individual <i>subdim</i>-faces of this simplex. */
 
         NPerm<dim+1> mapping_[nFaces];
-            /**< For each \a subdim-face of this simplex, maps vertices
-                 (0,1,...,\a subdim) of the underlying \a subdim-face of
+            /**< For each <i>subdim</i>-face of this simplex, maps vertices
+                 (0,1,...,\a subdim) of the underlying <i>subdim</i>-face of
                  the triangulation to the corresponding vertices of this
                  simplex, as described by getFaceMapping(). */
     protected:
         SimplexFaces() = default;
+
+        /**
+         * Resets all face pointers to null.
+         *
+         * The faces themselves are not destroyed, and the mapping
+         * permutations are not touched.
+         */
+        void clear();
 };
+
+/**
+ * Internal class that helps a simplex store the details of its
+ * lower-dimensional faces.
+ *
+ * This class is used with <i>dim</i>-dimensional triangulations.  It provides
+ * storage for all faces of dimension \a subdim and below.  The simplex
+ * class Simplex<dim> then derives from SimplexFacesSuite<dim, dim-1>.
+ */
+template <int dim, int subdim>
+class SimplexFacesSuite :
+        protected SimplexFacesSuite<dim, subdim - 1>,
+        protected SimplexFaces<dim, subdim> {
+};
+
+#ifndef __DOXYGEN
+
+template <int dim>
+class SimplexFacesSuite<dim, 0> : protected SimplexFaces<dim, 0> {
+};
+
+#endif // __DOXYGEN
 
 /**
  * Helper class that provides core functionality for a top-dimensional
@@ -131,7 +164,7 @@ template <int dim>
 class SimplexBase :
         public NMarkedElement,
         public Output<SimplexBase<dim>>,
-        protected SimplexFaces<dim, dim-1>,
+        protected SimplexFacesSuite<dim, dim-1>,
         public boost::noncopyable {
     static_assert(dim >= 2, "Simplex requires dimension >= 2.");
     public:
@@ -384,8 +417,121 @@ class SimplexBase :
         Component<dim>* getComponent() const;
 
         /**
-         * Returns the orientation of this simplex in the 2-manifold
-         * triangulation.
+         * Returns the <i>subdim</i>-face of the underlying triangulation
+         * that appears as the given <i>subdim</i>-face of this simplex.
+         *
+         * See FaceNumbering<dim, subdim> for the conventions of how
+         * <i>subdim</i>-faces are numbered within a <i>dim</i>-simplex.
+         *
+         * \ifacespython Python does not support templates.  Instead,
+         * Python users should call this function in the form
+         * <tt>face(subdim, face)</tt>; that is, the template parameter
+         * \a subdim becomes the first argument of the function.
+         *
+         * @param face the <i>subdim</i>-face of this simplex to examine.
+         * This should be between 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1
+         * inclusive.
+         * @return the corresponding <i>subdim</i>-face of the triangulation.
+         */
+        template <int subdim>
+        Face<dim, subdim>* face(int face) const;
+
+        /**
+         * Deprecated alias for face(), which returns the <i>subdim</i>-face
+         * of the underlying triangulation that appears as the given
+         * <i>subdim</i>-face of this simplex.
+         *
+         * \deprecated Simply call face() instead.
+         *
+         * See face() for further details.
+         */
+        template <int subdim>
+        Face<dim, subdim>* getFace(int face) const;
+
+        /**
+         * Examines the given <i>subdim</i>-face of this simplex, and
+         * returns the mapping between the underlying <i>subdim</i>-face
+         * of the triangulation and the individual vertices of this simplex.
+         *
+         * Specifically:
+         *
+         * - Suppose several <i>subdim</i>-faces of several top-dimensional
+         *   simplices are identified within the overall triangulation.  Then
+         *   we call this a single "<i>subdim</i>-face of the triangulation",
+         *   and arbitrarily label its vertices (0, ..., \a subdim).
+         *
+         * - Now let \a F denote the <i>subdim</i>-face of the triangulation
+         *   that corresponds to <i>subdim</i>-face number \a face of this
+         *   simplex.  Then this routine returns a map from vertices
+         *   (0, ..., \a subdim) of \a F to the corresponding vertex numbers
+         *   of this simplex.
+         *
+         * - In particular, if this routine returns the permutation \a p,
+         *   then the images \a p[0,...,\a subdim] will be some permutation
+         *   of the vertices Face<dim, subdim>::ordering[0,...,\a subdim].
+         *
+         * - If \a F also appears as face number \a k in some other simplex
+         *   \a s, then for each \a i in the range 0 &le; \a i &le; \a subdim,
+         *   vertex <tt>p[i]</tt> of this simplex will be identified with
+         *   vertex <i>s</i>.faceMapping(\a k)[\a i] of simplex \a s.
+         *
+         * If the link of the underlying <i>subdim</i>-face is orientable,
+         * then this permutation maps the remaining numbers
+         * (<i>subdim</i>+1, ..., \a dim) to the remaining vertex numbers of
+         * this simplex in a manner that preserves orientation as you walk
+         * through the many different simplices that contain the same
+         * underlying <i>subdim</i>-face.
+         *
+         * For faces of codimension one (e.g., edges in a 3-manifold
+         * triangulation), this orientation condition is even stronger.
+         * Here the link of the face \a F must be a path (for a boundary face)
+         * or a cycle (for an internal face).
+         * In each simplex we can form a directed edge from the image of
+         * <i>dim</i>-1 to the image of \a dim under this permutation, and
+         * together these directed edges form a directed path or cycle
+         * that follows the link of the face \a F.  Moreover, an iteration
+         * through the corresponding FaceEmbedding<dim, subdim> objects in
+         * order from <tt>F.begin()</tt> to <tt>F.end()</tt>, will follow
+         * this directed path in order from start to end.  (In the case where
+         * the link of \a F is a cycle, the start point in the list of
+         * FaceEmbedding objects will be arbitrary.)
+         *
+         * \note This routine returns the same permutation as
+         * FaceEmbedding<dim, subdim>::vertices(), in the context of the
+         * FaceEmbedding<dim, subdim> object that refers to
+         * <i>subdim</i>-face number \a face of this simplex.
+         *
+         * \ifacespython Python does not support templates.  Instead,
+         * Python users should call this function in the form
+         * <tt>faceMapping(subdim, face)</tt>; that is, the template
+         * parameter \a subdim becomes the first argument of the function.
+         *
+         * @param face the <i>subdim</i>-face of this simplex to examine.
+         * This should be between 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1
+         * inclusive.
+         * @return a mapping from the vertices of the underlying
+         * <i>subdim</i>-face of the triangulation to the vertices of
+         * this simplex.
+         */
+        template <int subdim>
+        NPerm<dim + 1> faceMapping(int face) const;
+
+        /**
+         * Deprecated alias for faceMapping(), which examines the given
+         * <i>subdim</i>-face of this simplex, and returns the mapping
+         * between the underlying <i>subdim</i>-face of the triangulation and
+         * the individual vertices of this simplex.
+         *
+         * \deprecated Simply call faceMapping() instead.
+         *
+         * See faceMapping() for further details.
+         */
+        template <int subdim>
+        NPerm<dim + 1> getFaceMapping(int face) const;
+
+        /**
+         * Returns the orientation of this simplex in the
+         * <i>dim</i>-dimensional triangulation.
          *
          * The orientation of each top-dimensional simplex is always +1 or -1.
          * In an orientable component of a triangulation,
@@ -545,6 +691,13 @@ template <> class Simplex<3>;
 
 /*@}*/
 
+// Inline functions for SimplexFaces
+
+template <int dim, int subdim>
+inline void SimplexFaces<dim, subdim>::clear() {
+    std::fill(face_, face_ + nFaces, nullptr);
+}
+
 // Inline functions for SimplexBase
 
 template <int dim>
@@ -611,6 +764,34 @@ inline Component<dim>* SimplexBase<dim>::component() const {
 template <int dim>
 inline Component<dim>* SimplexBase<dim>::getComponent() const {
     return component();
+}
+
+template <int dim>
+template <int subdim>
+inline Face<dim, subdim>* SimplexBase<dim>::face(int face) const {
+    triangulation()->ensureSkeleton();
+    return SimplexFaces<dim, subdim>::face_[face];
+}
+
+template <int dim>
+template <int subdim>
+inline Face<dim, subdim>* SimplexBase<dim>::getFace(int face) const {
+    triangulation()->ensureSkeleton();
+    return SimplexFaces<dim, subdim>::face_[face];
+}
+
+template <int dim>
+template <int subdim>
+inline NPerm<dim + 1> SimplexBase<dim>::faceMapping(int face) const {
+    triangulation()->ensureSkeleton();
+    return SimplexFaces<dim, subdim>::mapping_[face];
+}
+
+template <int dim>
+template <int subdim>
+inline NPerm<dim + 1> SimplexBase<dim>::getFaceMapping(int face) const {
+    triangulation()->ensureSkeleton();
+    return SimplexFaces<dim, subdim>::mapping_[face];
 }
 
 template <int dim>

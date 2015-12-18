@@ -67,11 +67,12 @@ template <int> class Triangulation;
  */
 
 /**
- * Stores the list of all \a subdim-faces of a \a dim-dimensional triangulation.
+ * Stores the list of all <i>subdim</i>-faces of a <i>dim</i>-dimensional
+ * triangulation.
  *
  * This object provides basic container-like behaviour.  It supports begin(),
  * end(), size(), and the random access operator <tt>[]</tt>.
- * In particular, you can iterate through all \a subdim-faces using C++11
+ * In particular, you can iterate through all <i>subdim</i>-faces using C++11
  * range-based \c for loops: <tt>for (auto f : faceList) { ... }</tt>.
  *
  * Strictly speaking, this list holds \e pointers to Face<dim, subdim> objects.
@@ -86,7 +87,7 @@ template <int> class Triangulation;
  * \tparam dim the dimension of the underlying triangulation.
  * This must be at least 2.
  * \tparam subdim the dimension of the faces that this class stores.
- * This must be between 0 and \a dim-1 inclusive.
+ * This must be between 0 and <i>dim</i>-1 inclusive.
  */
 template <int dim, int subdim>
 class FaceList {
@@ -99,34 +100,34 @@ class FaceList {
 
     private:
         NMarkedVector<Face<dim, subdim>> faces_;
-            /**< All \a subdim-faces in the skeleton of the triangulation. */
+            /**< All <i>subdim</i>-faces of the underlying triangulation. */
 
     public:
         FaceList(const FaceList&) = delete;
         FaceList& operator = (const FaceList&) = delete;
 
         /**
-         * Returns the number of \a subdim-faces in the triangulation.
+         * Returns the number of <i>subdim</i>-faces in the triangulation.
          *
-         * @return the number of \a subdim-faces.
+         * @return the number of <i>subdim</i>-faces.
          */
         size_t size() const;
         /**
-         * Returns the requested \a subdim-face.
+         * Returns the requested <i>subdim</i>-face.
          *
          * @param index indicates which face to return; this must be
          * between 0 and size()-1 inclusive.
-         * @return the (\a index)th \a subdim-face.
+         * @return the (\a index)th <i>subdim</i>-face.
          */
         Face<dim, subdim>* operator [](size_t index) const;
         /**
-         * Returns an iterator pointing to the first \a subdim-face.
+         * Returns an iterator pointing to the first <i>subdim</i>-face.
          *
          * @return an iterator at the beginning of this list.
          */
         Iterator begin() const;
         /**
-         * Returns an iterator pointing beyond the last \a subdim-face.
+         * Returns an iterator pointing beyond the last <i>subdim</i>-face.
          *
          * @return an iterator beyond the end of this list.
          */
@@ -134,7 +135,7 @@ class FaceList {
 
     protected:
         /**
-         * Creates an empty list of \a subdim-faces.
+         * Creates an empty list of <i>subdim</i>-faces.
          */
         FaceList() = default;
         /**
@@ -153,13 +154,13 @@ class FaceList {
 /**
  * Internal class that helps a triangulation store its lists of faces.
  *
- * This class is used with \a dim-dimensional triangulations.  It provides
+ * This class is used with <i>dim</i>-dimensional triangulations.  It provides
  * storage for all faces of dimension \a subdim and below.  The triangulation
- * class Triangulation<dim> then derives from FaceLists<dim, dim-1>.
+ * class Triangulation<dim> then derives from FaceListSuite<dim, dim-1>.
  */
 template <int dim, int subdim>
-class FaceLists :
-        protected FaceLists<dim, subdim - 1>,
+class FaceListSuite :
+        protected FaceListSuite<dim, subdim - 1>,
         protected FaceList<dim, subdim> {
     protected:
         /**
@@ -173,9 +174,87 @@ class FaceLists :
 #ifndef __DOXYGEN
 
 template <int dim>
-class FaceLists<dim, 0> : protected FaceList<dim, 0> {
+class FaceListSuite<dim, 0> : protected FaceList<dim, 0> {
     protected:
         void deleteFaces();
+};
+
+#endif // __DOXYGEN
+
+/**
+ * Internal class used to calculate lower-dimensional faces in a
+ * triangulation.
+ *
+ * Specifically, this class is used to calculate all faces of dimension
+ * &le; \a subdim in a <i>dim</i>-dimensional triangulation.
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * \tparam subdim the maximum dimension of the faces to compute.
+ * \tparam codim the minimum codimension of the faces to compute; this
+ * must be equal to \a dim - \a subdim.  It is offered as a separate
+ * parameter so that this template class can be independently specialised
+ * on both \a subdim and \a codim.
+ */
+template <int dim, int subdim, int codim>
+struct FaceCalculator {
+    static_assert(dim == subdim + codim,
+        "FaceCalculator template arguments violate subdim + codim = dim.");
+    static_assert(codim > 2 && subdim > 0,
+        "The generic FaceCalculator template cannot be used for "
+        "small face dimension or codimension.");
+    static void calculate(TriangulationBase<dim>& t) {
+        t.template calculateSkeletonSubdim<subdim>();
+        FaceCalculator<dim, subdim - 1, codim + 1>::calculate(t);
+    }
+};
+
+#ifndef __DOXYGEN
+
+template <int dim, int subdim>
+struct FaceCalculator<dim, subdim, 1> {
+    static_assert(dim == subdim + 1,
+        "FaceCalculator specialisation violates subdim + codim = dim.");
+    static_assert(subdim > 0,
+        "FaceCalculator<dim, subdim, 1> specialisation cannot be used "
+        "with subdim = 0.");
+    static void calculate(TriangulationBase<dim>& t) {
+        t.calculateSkeletonCodim1();
+        FaceCalculator<dim, subdim - 1, 2>::calculate(t);
+    }
+};
+
+template <int dim, int subdim>
+struct FaceCalculator<dim, subdim, 2> {
+    static_assert(dim == subdim + 2,
+        "FaceCalculator specialisation violates subdim + codim = dim.");
+    static_assert(subdim > 0,
+        "FaceCalculator<dim, subdim, 2> specialisation cannot be used "
+        "with subdim = 0.");
+    static void calculate(TriangulationBase<dim>& t) {
+        t.calculateSkeletonCodim2();
+        FaceCalculator<dim, subdim - 1, 3>::calculate(t);
+    }
+};
+
+template <int dim, int codim>
+struct FaceCalculator<dim, 0, codim> {
+    static_assert(dim == codim,
+        "FaceCalculator specialisation violates subdim + codim = dim.");
+    static_assert(codim > 2,
+        "FaceCalculator<dim, 0, codim> specialisation cannot be used "
+        "with codim <= 2.");
+    static void calculate(TriangulationBase<dim>& t) {
+        t.template calculateSkeletonSubdim<0>();
+    }
+};
+
+template <int dim>
+struct FaceCalculator<dim, 0, 2> {
+    static_assert(dim == 2,
+        "FaceCalculator specialisation violates subdim + codim = dim.");
+    static void calculate(TriangulationBase<dim>& t) {
+        t.calculateSkeletonCodim2();
+    }
 };
 
 #endif // __DOXYGEN
@@ -204,7 +283,7 @@ class FaceLists<dim, 0> : protected FaceList<dim, 0> {
  */
 template <int dim>
 class TriangulationBase :
-        protected FaceLists<dim, dim - 1>,
+        protected FaceListSuite<dim, dim - 1>,
         public boost::noncopyable {
     static_assert(dim >= 2, "Triangulation requires dimension >= 2.");
 
@@ -219,6 +298,9 @@ class TriangulationBase :
     protected:
         NMarkedVector<Simplex<dim>> simplices_;
             /**< The top-dimensional simplices that form the triangulation. */
+        bool valid_;
+            /**< Is this triangulation valid?  See isValid() for details
+                 on what this means. */
 
     private:
         bool calculatedSkeleton_;
@@ -483,9 +565,9 @@ class TriangulationBase :
         size_t getNumberOfComponents() const;
 
         /**
-         * Returns the number of \a subdim-faces in this triangulation.
+         * Returns the number of <i>subdim</i>-faces in this triangulation.
          *
-         * \pre The template argument \a subdim is between 0 and \a dim-1
+         * \pre The template argument \a subdim is between 0 and <i>dim</i>-1
          * inclusive.
          *
          * \ifacespython Python does not support templates.  Instead,
@@ -493,13 +575,13 @@ class TriangulationBase :
          * <tt>countFaces(subdim)</tt>; that is, the template parameter
          * \a subdim becomes the first argument of the function.
          *
-         * @return the number of \a subdim-faces.
+         * @return the number of <i>subdim</i>-faces.
          */
         template <int subdim>
         size_t countFaces() const;
 
         /**
-         * Deprecated routine that returns the number of \a subdim-faces
+         * Deprecated routine that returns the number of <i>subdim</i>-faces
          * in this triangulation.
          *
          * \deprecated Simply call countFaces() instead.
@@ -539,7 +621,7 @@ class TriangulationBase :
 
         /**
          * Returns an object that allows iteration through and random access
-         * to all \a subdim-faces of this triangulation.
+         * to all <i>subdim</i>-faces of this triangulation.
          *
          * Bear in mind that each time the triangulation changes, all
          * face objects will be deleted and replaced with new ones.
@@ -550,16 +632,16 @@ class TriangulationBase :
          *
          * \ifacespython Python users should call this function in the
          * form <tt>faces(subdim)</tt>.  It will then return a Python list
-         * containing all the \a subdim-faces of the triangulation.
+         * containing all the <i>subdim</i>-faces of the triangulation.
          *
-         * @return access to the list of all \a subdim-faces.
+         * @return access to the list of all <i>subdim</i>-faces.
          */
         template <int subdim>
         const FaceList<dim, subdim>& faces() const;
 
         /**
          * Deprecated routine that allows iteration through and random
-         * access to all \a subdim-faces of this triangulation.
+         * access to all <i>subdim</i>-faces of this triangulation.
          *
          * \deprecated Simply call faces() instead.
          *
@@ -592,9 +674,9 @@ class TriangulationBase :
         Component<dim>* getComponent(size_t index) const;
 
         /**
-         * Returns the requested \a subdim-face of this triangulation.
+         * Returns the requested <i>subdim</i>-face of this triangulation.
          *
-         * \pre The template argument \a subdim is between 0 and \a dim-1
+         * \pre The template argument \a subdim is between 0 and <i>dim</i>-1
          * inclusive.
          *
          * \ifacespython Python does not support templates.  Instead,
@@ -610,7 +692,7 @@ class TriangulationBase :
         Face<dim, subdim>* face(size_t index) const;
 
         /**
-         * Deprecated routine that returns the requested \a subdim-face
+         * Deprecated routine that returns the requested <i>subdim</i>-face
          * of this triangulation.
          *
          * \deprecated Simply call face() instead.
@@ -637,17 +719,18 @@ class TriangulationBase :
         size_t componentIndex(const Component<dim>* component) const;
 
         /**
-         * Returns the index of the given \a subdim-face in this triangulation.
+         * Returns the index of the given <i>subdim</i>-face in this
+         * triangulation.
          *
          * This is equivalent to calling <tt>faceIndex->index()</tt>.
          *
-         * \pre The template argument \a subdim is between 0 and \a dim-1
+         * \pre The template argument \a subdim is between 0 and <i>dim</i>-1
          * inclusive.
          * \pre The given face belongs to this triangulation.
          *
          * @param face the face to query.
          * @return the index of the specified face, where 0 is the first
-         * \a subdim-face, 1 is the second \a subdim-face, and so on.
+         * <i>subdim</i>-face, 1 is the second <i>subdim</i>-face, and so on.
          */
         template <int subdim>
         size_t faceIndex(const Face<dim, subdim>* face) const;
@@ -665,6 +748,36 @@ class TriangulationBase :
          * @return \c true if and only if this triangulation is empty.
          */
         bool isEmpty() const;
+
+        /**
+         * Determines if this triangulation is valid.
+         *
+         * There are several conditions that might make a
+         * <i>dim</i>-dimensional triangulation invalid:
+         *
+         * 1. if some face is identified with itself under a non-identity
+         *    permutation (e.g., an edge is identified with itself in
+         *    reverse, or a triangle is identified with itself under a
+         *    rotation);
+         *
+         * 2. if some face lies in the boundary of the triangulation but
+         *    its link is not a topological ball;
+         *
+         * 3. if some face is internal and not a vertex, and its link is
+         *    not a topological sphere.
+         *
+         * Condition (1) is tested for all dimensions \a dim.
+         * Conditions (2) and (3) are more difficult, since they rely on
+         * undecidable problems.  As a result, they are \e only tested
+         * when \a dim is one of Regina's \ref stddim "standard dimensions".
+         *
+         * If a triangulation is invalid, you can call
+         * Face<dim, subdim>::isValid() to examine which face(s) are
+         * responsible.
+         *
+         * @return \c true if and only if this triangulation is valid.
+         */
+        bool isValid() const;
 
         /**
          * Determines if this triangulation has any boundary facets.
@@ -1268,6 +1381,37 @@ class TriangulationBase :
 
     private:
         /**
+         * Internal to calculateSkeleton().
+         *
+         * This routine calculates all codimension-1-faces.
+         *
+         * See calculateSkeleton() for further details.
+         */
+        void calculateSkeletonCodim1();
+
+        /**
+         * Internal to calculateSkeleton().
+         *
+         * This routine calculates all codimension-2-faces.
+         *
+         * See calculateSkeleton() for further details.
+         */
+        void calculateSkeletonCodim2();
+
+        /**
+         * Internal to calculateSkeleton().
+         *
+         * This routine calculates all <i>subdim</i>-faces.
+         *
+         * See calculateSkeleton() for further details.
+         *
+         * \tparam subdim the dimension of the faces to compute.
+         * This must be between 0 and (\a dim - 3) inclusive.
+         */
+        template <int subdim>
+        void calculateSkeletonSubdim();
+
+        /**
          * Internal to isoSig().
          *
          * Constructs a candidate isomorphism signature for a single
@@ -1387,6 +1531,8 @@ class TriangulationBase :
          */
         static bool compatible(Simplex<dim>* src, Simplex<dim>* dest,
                 NPerm<dim+1> p);
+
+    template <int, int, int> friend struct FaceCalculator;
 };
 
 // Note that some of our routines are specialised for standard dimensions.
@@ -1596,7 +1742,7 @@ template <> class Triangulation<3>;
  * fixed triangulation (which is passed to the class constructor).
  *
  * \pre \a dim is one of Regina's \ref stddim "standard dimensions".
- * \pre \a subdim is between 0 and \a dim-1 inclusive.
+ * \pre \a subdim is between 0 and <i>dim</i>-1 inclusive.
  */
 template <int dim, int subdim>
 class DegreeLessThan {
@@ -1616,18 +1762,18 @@ class DegreeLessThan {
          */
         DegreeLessThan(const Triangulation<dim>& tri);
         /**
-         * Compares the degrees of the \a subdim-dimensional faces
+         * Compares the degrees of the <i>subdim</i>-dimensional faces
          * at the given indices within the working triangulation.
          * The triangulation that is used will be the one that was
          * passed to the class constructor.
          *
          * \pre Both \a a and \a b are non-negative, and are strictly
-         * less than the total number of \a subdim-dimensional faces in
+         * less than the total number of <i>subdim</i>-dimensional faces in
          * the triangulation.
          *
-         * @param a the index of the first \a subdim-dimensional face
+         * @param a the index of the first <i>subdim</i>-dimensional face
          * within the triangulation.
-         * @param b the index of the second \a subdim-dimensional face
+         * @param b the index of the second <i>subdim</i>-dimensional face
          * within the triangulation.
          * @return \c true if and only if face \a a has smaller degree than
          * face \a b within the given triangulation.
@@ -1649,7 +1795,7 @@ class DegreeLessThan {
  * fixed triangulation (which is passed to the class constructor).
  *
  * \pre \a dim is one of Regina's \ref stddim "standard dimensions".
- * \pre \a subdim is between 0 and \a dim-1 inclusive.
+ * \pre \a subdim is between 0 and <i>dim</i>-1 inclusive.
  */
 template <int dim, int subdim>
 class DegreeGreaterThan {
@@ -1669,18 +1815,18 @@ class DegreeGreaterThan {
          */
         DegreeGreaterThan(const Triangulation<dim>& tri);
         /**
-         * Compares the degrees of the \a subdim-dimensional faces
+         * Compares the degrees of the <i>subdim</i>-dimensional faces
          * at the given indices within the working triangulation.
          * The triangulation that is used will be the one that was
          * passed to the class constructor.
          *
          * \pre Both \a a and \a b are non-negative, and are strictly
-         * less than the total number of \a subdim-dimensional faces in
+         * less than the total number of <i>subdim</i>-dimensional faces in
          * the triangulation.
          *
-         * @param a the index of the first \a subdim-dimensional face
+         * @param a the index of the first <i>subdim</i>-dimensional face
          * within the triangulation.
-         * @param b the index of the second \a subdim-dimensional face
+         * @param b the index of the second <i>subdim</i>-dimensional face
          * within the triangulation.
          * @return \c true if and only if face \a a has greater degree than
          * face \a b within the given triangulation.
@@ -1690,7 +1836,7 @@ class DegreeGreaterThan {
 
 /*@}*/
 
-// Inline functions for FaceList and FaceLists
+// Inline functions for FaceList and FaceListSuite
 
 template <int dim, int subdim>
 inline size_t FaceList<dim, subdim>::size() const {
@@ -1728,13 +1874,13 @@ inline void FaceList<dim, subdim>::destroy() {
 }
 
 template <int dim, int subdim>
-inline void FaceLists<dim, subdim>::deleteFaces() {
+inline void FaceListSuite<dim, subdim>::deleteFaces() {
     FaceList<dim, subdim>::destroy();
-    FaceLists<dim, subdim - 1>::deleteFaces();
+    FaceListSuite<dim, subdim - 1>::deleteFaces();
 }
 
 template <int dim>
-inline void FaceLists<dim, 0>::deleteFaces() {
+inline void FaceListSuite<dim, 0>::deleteFaces() {
     FaceList<dim, 0>::destroy();
 }
 
@@ -2025,6 +2171,12 @@ inline bool TriangulationBase<dim>::isEmpty() const {
 }
 
 template <int dim>
+inline bool TriangulationBase<dim>::isValid() const {
+    ensureSkeleton();
+    return valid_;
+}
+
+template <int dim>
 inline bool TriangulationBase<dim>::hasBoundaryFacets() const {
     for (auto c : components_)
         if (c->countBoundaryFacets())
@@ -2301,6 +2453,11 @@ void TriangulationBase<dim>::calculateSkeleton() {
     // recursively recompute the skeleton again.
     calculatedSkeleton_ = true;
 
+    // Triangulations are valid until proven otherwise.
+    // Validity may fail here in the generic skeleton computations,
+    // and/or in the specialised work that happens in standard dimensions.
+    valid_ = true;
+
     // -----------------------------------------------------------------
     // Components, including orientability and the dual forest
     // -----------------------------------------------------------------
@@ -2373,55 +2530,244 @@ void TriangulationBase<dim>::calculateSkeleton() {
     delete[] queue;
 
     // -----------------------------------------------------------------
-    // Faces of codimension 1
+    // Faces of all dimensions
     // -----------------------------------------------------------------
 
-    {
-        for (auto s : simplices_)
-            std::fill(
-                s->SimplexFaces<dim, dim-1>::face_,
-                s->SimplexFaces<dim, dim-1>::face_ + (dim + 1),
-                nullptr);
+    FaceCalculator<dim, dim - 1, 1>::calculate(*this);
+}
 
-        Simplex<dim> *adj;
-        Face<dim, dim-1>* f;
-        int facet, adjFacet;
+template <int dim>
+void TriangulationBase<dim>::calculateSkeletonCodim1() {
+    for (auto s : simplices_)
+        s->SimplexFaces<dim, dim-1>::clear();
 
-        // We process the facets of each simplex in lexicographical order,
-        // according to the truncated permutation labels that are displayed to
-        // the user.  This means working through the faces of each simplex
-        // in *reverse*.
-        for (auto s : simplices_) {
-            for (facet = dim; facet >= 0; --facet) {
-                // Have we already checked out this facet from the other side?
-                if (s->SimplexFaces<dim, dim-1>::face_[facet])
-                    continue;
+    Simplex<dim> *adj;
+    Face<dim, dim-1>* f;
+    int facet, adjFacet;
 
-                // A new face!
-                f = new Face<dim, dim-1>(s->component_);
-                FaceList<dim, dim-1>::push_back(f);
+    // We process the facets of each simplex in lexicographical order,
+    // according to the truncated permutation labels that are displayed to
+    // the user.  This means working through the faces of each simplex
+    // in *reverse*.
+    for (auto s : simplices_) {
+        for (facet = dim; facet >= 0; --facet) {
+            // Have we already checked out this facet from the other side?
+            if (s->SimplexFaces<dim, dim-1>::face_[facet])
+                continue;
 
-                s->SimplexFaces<dim, dim-1>::face_[facet] = f;
-                s->SimplexFaces<dim, dim-1>::mapping_[facet] =
-                    Face<dim, dim-1>::ordering(facet);
+            // A new face!
+            f = new Face<dim, dim-1>(s->component_);
+            FaceList<dim, dim-1>::push_back(f);
 
-                adj = s->adjacentSimplex(facet);
-                if (adj) {
-                    // We have an adjacent simplex.
-                    adjFacet = s->adjacentFacet(facet);
+            s->SimplexFaces<dim, dim-1>::face_[facet] = f;
+            s->SimplexFaces<dim, dim-1>::mapping_[facet] =
+                Face<dim, dim-1>::ordering(facet);
 
-                    adj->SimplexFaces<dim, dim-1>::face_[adjFacet] = f;
-                    adj->SimplexFaces<dim, dim-1>::mapping_[adjFacet] =
-                        s->adjacentGluing(facet) *
-                        s->SimplexFaces<dim, dim-1>::mapping_[facet];
+            adj = s->adjacentSimplex(facet);
+            if (adj) {
+                // We have an adjacent simplex.
+                adjFacet = s->adjacentFacet(facet);
 
-                    f->push_back(FaceEmbedding<dim, dim-1>(s, facet));
-                    f->push_back(FaceEmbedding<dim, dim-1>(adj, adjFacet));
-                } else {
-                    // This is a boundary facet.
-                    f->push_back(FaceEmbedding<dim, dim-1>(s, facet));
+                adj->SimplexFaces<dim, dim-1>::face_[adjFacet] = f;
+                adj->SimplexFaces<dim, dim-1>::mapping_[adjFacet] =
+                    s->adjacentGluing(facet) *
+                    s->SimplexFaces<dim, dim-1>::mapping_[facet];
+
+                f->push_back(FaceEmbedding<dim, dim-1>(s, facet));
+                f->push_back(FaceEmbedding<dim, dim-1>(adj, adjFacet));
+            } else {
+                // This is a boundary facet.
+                f->push_back(FaceEmbedding<dim, dim-1>(s, facet));
+            }
+        }
+    }
+}
+
+template <int dim>
+void TriangulationBase<dim>::calculateSkeletonCodim2() {
+    for (auto s : simplices_)
+        s->SimplexFaces<dim, dim-2>::clear();
+
+    int start;
+    Face<dim, dim-2>* f;
+    Simplex<dim> *simp, *adj;
+    int adjFace;
+    NPerm<dim+1> map, adjMap;
+    int dir, exitFacet;
+    for (auto s : simplices_) {
+        for (start = 0; start < SimplexFaces<dim, dim-2>::nFaces; ++start) {
+            if (s->SimplexFaces<dim, dim-2>::face_[start])
+                continue;
+
+            f = new Face<dim, dim-2>(s->component_);
+            FaceList<dim, dim-2>::push_back(f);
+
+            // Since the link of a codimension-2-face is a path or loop, the
+            // depth-first search is really just a straight line in either
+            // direction.  We therefore do away with the usual stack and
+            // just keep track of the next simplex to process in the current
+            // direction.
+            s->SimplexFaces<dim, dim-2>::face_[start] = f;
+            s->SimplexFaces<dim, dim-2>::mapping_[start] =
+                Face<dim, dim-2>::ordering(start);
+            f->push_back(FaceEmbedding<dim, dim-2>(s, start));
+
+            for (dir = 0; dir < 2; ++dir) {
+                // Start at the start and walk in one particular direction.
+                simp = s;
+                map = simp->SimplexFaces<dim, dim-2>::mapping_[start];
+
+                while (true) {
+                    // Move through to the next simplex.
+                    exitFacet = map[dir == 0 ? dim - 1 : dim];
+                    adj = simp->adjacentSimplex(exitFacet);
+                    if (! adj)
+                        break;
+
+                    adjMap = simp->adjacentGluing(exitFacet) * map *
+                        NPerm<dim+1>(dim - 1, dim);
+                    adjFace = Face<dim, dim-2>::faceNumber(adjMap);
+
+                    if (adj->SimplexFaces<dim, dim-2>::face_[adjFace]) {
+                        // We looped right around.
+                        if (dim > 2) {
+                            // Check that we are not mapping the face to
+                            // itself with a non-identity permutation.
+                            if (adj->SimplexFaces<dim, dim-2>::mapping_[
+                                    adjFace] != adjMap) {
+                                // The edge is being labelled in reverse!
+                                f->markInvalid();
+                                valid_ = false;
+                            }
+                        }
+                        break;
+                    }
+
+                    // We have not yet seen this face of this simplex.
+                    adj->SimplexFaces<dim, dim-2>::face_[adjFace] = f;
+                    adj->SimplexFaces<dim, dim-2>::mapping_[adjFace] =
+                        adjMap;
+
+                    if (dir == 0)
+                        f->push_back(FaceEmbedding<dim, dim-2>(
+                            adj, adjFace));
+                    else
+                        f->push_front(FaceEmbedding<dim, dim-2>(
+                            adj, adjFace));
+
+                    simp = adj;
+                    map = adjMap;
                 }
             }
+        }
+    }
+}
+
+template <int dim>
+template <int subdim>
+void TriangulationBase<dim>::calculateSkeletonSubdim() {
+    static_assert(subdim < dim - 2,
+        "The generic implementation of "
+        "TriangulationBase::calculateSkeletonSubdim() should only be "
+        "used for faces of codimension > 2.");
+
+    for (auto s : simplices_)
+        s->SimplexFaces<dim, subdim>::clear();
+
+    int start;
+    Face<dim, subdim>* f;
+    for (auto s : simplices_) {
+        for (start = 0; start < SimplexFaces<dim, subdim>::nFaces; ++start) {
+            if (s->SimplexFaces<dim, subdim>::face_[start])
+                continue;
+
+            f = new Face<dim, subdim>(s->component_);
+            FaceList<dim, subdim>::push_back(f);
+
+            // Create a queue using simple arrays.
+            // Since each subdim-face of each simplex is pushed on at most
+            // once, the array size does not need to be very large.
+            Simplex<dim>** queueSimp = new Simplex<dim>*
+                [size() * SimplexFaces<dim, subdim>::nFaces];
+            int* queueFace = new int
+                [size() * SimplexFaces<dim, subdim>::nFaces];
+
+            s->SimplexFaces<dim, subdim>::face_[start] = f;
+            s->SimplexFaces<dim, subdim>::mapping_[start] =
+                Face<dim, subdim>::ordering(start);
+            f->push_back(FaceEmbedding<dim, subdim>(s, start));
+
+            unsigned queueStart = 0, queueEnd = 1;
+            queueSimp[0] = s;
+            queueFace[0] = start;
+
+            Simplex<dim> *simp, *adj;
+            int face, adjFace;
+            NPerm<dim + 1> adjMap;
+            int facet;
+
+            while (queueStart < queueEnd) {
+                simp = queueSimp[queueStart];
+                face = queueFace[queueStart];
+                ++queueStart;
+
+                for (facet = 0; facet <= dim; ++facet) {
+                    if (Face<dim, subdim>::containsVertex(face, facet))
+                        continue;
+
+                    adj = simp->adjacentSimplex(facet);
+                    if (adj) {
+                        // When we choose an adjacent gluing map, throw in a
+                        // swap to preserve the "orientation" of the images
+                        // of (subdim+1),...,dim.  Note that this is only
+                        // possible if the link of the face is orientable.
+                        adjMap = simp->adjacentGluing(facet) *
+                            simp->SimplexFaces<dim, subdim>::mapping_[face] *
+                            NPerm<dim + 1>(dim - 1, dim);
+                        adjFace = Face<dim, subdim>::faceNumber(adjMap);
+
+                        if (adj->SimplexFaces<dim, subdim>::face_[adjFace]) {
+                            // We have looped back around to where we've
+                            // been before.
+
+                            if (subdim > 0) {
+                                // Have we mapped the face to itself with a
+                                // non-identity permutation?
+                                // TODO
+                                /*
+                                if (adj->SimplexFaces<dim, subdim>::
+                                        mapping_[adjFace][TODO] !=
+                                        adjMap[TODO]) {
+                                    f->markInvalid();
+                                    valid_ = false;
+                                }
+                                */
+                            }
+
+                            if (subdim <= dim - 3) {
+                                // Is the link non-orientable?
+                                if (adjMap.sign() !=
+                                        adj->SimplexFaces<dim, subdim>::
+                                        mapping_[adjFace].sign())
+                                    f->markLinkNonorientable();
+                            }
+                        } else {
+                            adj->SimplexFaces<dim, subdim>::face_[adjFace] = f;
+                            adj->SimplexFaces<dim, subdim>::mapping_[adjFace] =
+                                adjMap;
+                            f->push_back(FaceEmbedding<dim, subdim>(
+                                adj, adjFace));
+
+                            queueSimp[queueEnd] = adj;
+                            queueFace[queueEnd] = adjFace;
+                            ++queueEnd;
+                        }
+                    }
+                }
+            }
+
+            delete[] queueSimp;
+            delete[] queueFace;
         }
     }
 }
@@ -2432,7 +2778,7 @@ inline void TriangulationBase<dim>::deleteSkeleton() {
         delete c;
     components_.clear();
 
-    FaceLists<dim, dim - 1>::deleteFaces();
+    FaceListSuite<dim, dim - 1>::deleteFaces();
 
     calculatedSkeleton_ = false;
 }

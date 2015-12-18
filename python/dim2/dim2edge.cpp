@@ -82,6 +82,8 @@ void addDim2Edge() {
     class_<Dim2Edge, std::auto_ptr<Dim2Edge>, boost::noncopyable>
             ("Dim2Edge", no_init)
         .def("index", &Dim2Edge::index)
+        .def("isValid", &Dim2Edge::isValid)
+        .def("isLinkOrientable", &Dim2Edge::isLinkOrientable)
         .def("embeddings", Dim2Edge_getEmbeddings_list)
         .def("getEmbeddings", Dim2Edge_getEmbeddings_list)
         .def("degree", &Dim2Edge::degree)
@@ -114,8 +116,12 @@ void addDim2Edge() {
         .def("toStringLong", &Dim2Edge::toStringLong)
         .def("__str__", &Dim2Edge::str)
         .def("ordering", &Dim2Edge::ordering)
+        .def("faceNumber", &Dim2Edge::faceNumber)
+        .def("containsVertex", &Dim2Edge::containsVertex)
         .def(regina::python::add_eq_operators())
         .staticmethod("ordering")
+        .staticmethod("faceNumber")
+        .staticmethod("containsVertex")
     ;
 }
 

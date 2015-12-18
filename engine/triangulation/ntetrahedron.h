@@ -79,29 +79,12 @@ typedef Face<3, 2> NTriangle;
 template <>
 class REGINA_API Simplex<3> : public SimplexBase<3> {
     private:
-        NVertex* vertices_[4];
-            /**< Vertices in the triangulation skeleton that are
-                 vertices of this tetrahedron. */
-        NEdge* edges_[6];
-            /**< Edges in the triangulation skeleton that are
-                 edges of this tetrahedron. */
-
         int tmpOrientation_[4];
-            /**< Temporary array used to represent orientations
-                 of triangles and vertex link triangles when calculating
-                 orientability of boundary components and vertex links.
+            /**< Temporary array used to represent orientations of triangles
+                 when calculating orientability of boundary components.
                  Each orientation will be +/-1.
-                 The array should only be used within these
-                 orientability routines, and its contents afterwards are
-                 unpredictable. */
-        NPerm4 vertexMapping_[4];
-            /**< Maps 0 to each vertex of this tetrahedron in turn whilst
-                 mapping (1,2,3) in a suitably "orientation-preserving" way,
-                 as described in getVertexMapping(). */
-        NPerm4 edgeMapping_[6];
-            /**< Maps (0,1) to the vertices of this tetrahedron that form
-                 each edge whilst mapping (2,3) in a suitably "orientation-
-                 preserving" way, as described in getEdgeMapping(). */
+                 The array should only be used within these orientability
+                 routines, and its contents afterwards are unpredictable. */
 
     public:
         /**
@@ -290,10 +273,6 @@ class REGINA_API Simplex<3> : public SimplexBase<3> {
         REGINA_INLINE_REQUIRED
         NPerm4 getTriangleMapping(int triangle) const;
 
-        template <int subdim>
-        REGINA_INLINE_REQUIRED
-        NPerm4 getFaceMapping(int face) const;
-
     private:
         /**
          * Creates a new tetrahedron with empty description and no
@@ -339,48 +318,27 @@ inline int Simplex<3>::adjacentFace(int face) const {
 }
 
 inline NVertex* Simplex<3>::getVertex(int vertex) const {
-    getTriangulation()->ensureSkeleton();
-    return vertices_[vertex];
+    return face<0>(vertex);
 }
 
 inline NEdge* Simplex<3>::getEdge(int edge) const {
-    getTriangulation()->ensureSkeleton();
-    return edges_[edge];
+    return face<1>(edge);
 }
 
 inline NTriangle* Simplex<3>::getTriangle(int triangle) const {
-    getTriangulation()->ensureSkeleton();
-    return SimplexFaces<3, 2>::face_[triangle];
-}
-
-template <>
-inline NPerm4 Simplex<3>::getFaceMapping<0>(int vertex) const {
-    getTriangulation()->ensureSkeleton();
-    return vertexMapping_[vertex];
-}
-
-template <>
-inline NPerm4 Simplex<3>::getFaceMapping<1>(int edge) const {
-    getTriangulation()->ensureSkeleton();
-    return edgeMapping_[edge];
-}
-
-template <>
-inline NPerm4 Simplex<3>::getFaceMapping<2>(int triangle) const {
-    getTriangulation()->ensureSkeleton();
-    return SimplexFaces<3, 2>::mapping_[triangle];
+    return face<2>(triangle);
 }
 
 inline NPerm4 Simplex<3>::getVertexMapping(int vertex) const {
-    return getFaceMapping<0>(vertex);
+    return faceMapping<0>(vertex);
 }
 
 inline NPerm4 Simplex<3>::getEdgeMapping(int edge) const {
-    return getFaceMapping<1>(edge);
+    return faceMapping<1>(edge);
 }
 
 inline NPerm4 Simplex<3>::getTriangleMapping(int triangle) const {
-    return getFaceMapping<2>(triangle);
+    return faceMapping<2>(triangle);
 }
 
 inline Simplex<3>::Simplex(NTriangulation* tri) : SimplexBase<3>(tri) {

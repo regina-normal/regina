@@ -122,14 +122,19 @@ void addNEdge() {
         .def("getDegree", &NEdge::getDegree)
         .def("isBoundary", &NEdge::isBoundary)
         .def("isValid", &NEdge::isValid)
+        .def("isLinkOrientable", &NEdge::isLinkOrientable)
         .def("str", &NEdge::str)
         .def("toString", &NEdge::toString)
         .def("detail", &NEdge::detail)
         .def("toStringLong", &NEdge::toStringLong)
         .def("__str__", &NEdge::str)
         .def("ordering", &NEdge::ordering)
+        .def("faceNumber", &NEdge::faceNumber)
+        .def("containsVertex", &NEdge::containsVertex)
         .def(regina::python::add_eq_operators())
         .staticmethod("ordering")
+        .staticmethod("faceNumber")
+        .staticmethod("containsVertex")
     ;
 
     s.attr("edgeNumber") = &NEdge_edgeNumber;

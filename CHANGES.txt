@@ -69,6 +69,11 @@ Version 4.97  [ (under development) ]
               particular, this class now supports C++11 range-based for loops.
             - Added getEmbeddings() to Dim2Edge for Python (but not C++).
             - Changed the ordering[] array to a static ordering() function.
+            - New faceNumber() function as an "inverse" for ordering().
+            - New containsVertex() function for testing which vertices
+              belong to which edges.
+            - New trivial routines isValid() and isLinkOrientable(), for
+              consistency with faces in higher dimensions.
             - Removed the old routine getNumberOfEmbeddings(), and replaced
               it with the new (and equivalent) routine getDegree().
         Class Dim2Isomorphism:
@@ -85,6 +90,9 @@ Version 4.97  [ (under development) ]
               the same functionality as the old Dim2Triangle.
             - New routine facetInMaximalForest(), for examining a
               precomputed maximal forest in the dual 1-skeleton.
+            - New dimension-agnostic face<subdim>(), getFace<subdim>(),
+              faceMapping<subdim>() and getFaceMapping<subdim>()
+              template functions.
             - You can now safely call unjoin() on a boundary edge.
             - Routine joinTo() has been renamed to join().  The old name
               joinTo() has been kept but is now deprecated.
@@ -120,6 +128,10 @@ Version 4.97  [ (under development) ]
               the old Dim2Vertex and Dim2VertexEmbedding respectively.
             - Added begin(), end(), front() and back() to Dim2Vertex.  In
               particular, this class now supports C++11 range-based for loops.
+            - New routines ordering(), faceNumber() and containsVertex(), for
+              consistency with higher-dimensional faces.
+            - New trivial routines isValid() and isLinkOrientable(), for
+              consistency with faces in higher dimensions.
             - Removed getEmbeddings() for C++, but kept it for Python.
             - Removed the old routine getNumberOfEmbeddings().  Just use
               the equivalent routine getDegree() instead.
@@ -189,6 +201,11 @@ Version 4.97  [ (under development) ]
             - Added begin(), end(), front() and back() to NEdge.  In
               particular, this class now supports C++11 range-based for loops.
             - Changed the ordering[] array to a static ordering() function.
+            - New faceNumber() function as an "inverse" for ordering().
+            - New containsVertex() function for testing which vertices
+              belong to which edges.
+            - New trivial routine isLinkOrientable(), for consistency with
+              faces in higher dimensions.
             - Removed getEmbeddings() for C++, but kept it for Python.
             - Removed the old routine getNumberOfEmbeddings().  Just use
               the equivalent routine getDegree() instead.
@@ -344,6 +361,9 @@ Version 4.97  [ (under development) ]
               the same functionality as the old NTetrahedron.
             - New routine facetInMaximalForest(), for examining a
               precomputed maximal forest in the dual 1-skeleton.
+            - New dimension-agnostic face<subdim>(), getFace<subdim>(),
+              faceMapping<subdim>() and getFaceMapping<subdim>()
+              template functions.
             - Removed the old deprecated public constructors.  The only way
               to construct a new tetrahedron is via the triangulation, using
               NTriangulation::newTetrahedron() or NTriangulation::newSimplex().
@@ -375,6 +395,11 @@ Version 4.97  [ (under development) ]
               particular, this class now supports C++11 range-based for loops.
             - Added getEmbeddings() to NTriangle for Python (but not C++).
             - Changed the ordering[] array to a static ordering() function.
+            - New faceNumber() function as an "inverse" for ordering().
+            - New containsVertex() function for testing which vertices
+              belong to which triangles.
+            - New trivial routines isValid() and isLinkOrientable(), for
+              consistency with faces in higher dimensions.
             - Removed the old routine getNumberOfEmbeddings(), and replaced
               it with the new (and equivalent) routine getDegree().
         Class NTriangulation:
@@ -443,6 +468,10 @@ Version 4.97  [ (under development) ]
               (and replaces) the old link type constants.
             - Added begin(), end(), front() and back() to NVertex.  In
               particular, this class now supports C++11 range-based for loops.
+            - New routines ordering(), faceNumber() and containsVertex(), for
+              consistency with higher-dimensional faces.
+            - New routine isValid(), which is equivalent to testing whether
+              getLink() == NON_STANDARD_BDRY.
             - Removed getEmbeddings() for C++, but kept it for Python.
             - Removed the old routine getNumberOfEmbeddings().  Just use
               the equivalent routine getDegree() instead.

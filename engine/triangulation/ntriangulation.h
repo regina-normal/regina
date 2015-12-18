@@ -195,8 +195,6 @@ class REGINA_API Triangulation<3> :
         NMarkedVector<NBoundaryComponent> boundaryComponents_;
             /**< The components that form the boundary of the triangulation. */
 
-        bool valid_;
-            /**< Is the triangulation valid? */
         bool ideal_;
             /**< Is the triangulation ideal? */
         bool standard_;
@@ -710,17 +708,6 @@ class REGINA_API Triangulation<3> :
          */
         long getEulerCharacteristic() const;
 
-        /**
-         * Determines if this triangulation is valid.
-         * A triangulation is valid unless there is some vertex whose
-         * link has boundary but is not a disc (i.e., a vertex for which
-         * NVertex::getLink() returns NVertex::NON_STANDARD_BDRY),
-         * or unless there is some edge glued to itself in reverse
-         * (i.e., an edge for which NEdge::isValid() returns \c false).
-         *
-         * @return \c true if and only if this triangulation is valid.
-         */
-        bool isValid() const;
         /**
          * Determines if this triangulation is ideal.
          * This is the case if and only if one of the vertex links
@@ -3297,16 +3284,6 @@ class REGINA_API Triangulation<3> :
         void labelVertex(NTetrahedron*, int, NVertex*);
             /**< Internal to calculateVertices(). */
         /**
-         * Calculates the triangulation edges and associated
-         * properties.
-         *
-         * \warning This should only be called from within
-         * calculateSkeleton().
-         */
-        void calculateEdges();
-        void labelEdge(NTetrahedron*, int, NEdge*);
-            /**< Internal to calculateEdges(). */
-        /**
          * Calculates the triangulation boundary components and
          * properties of these boundary components.
          *
@@ -3532,11 +3509,6 @@ inline bool Triangulation<3>::hasNegativeIdealBoundaryComponents() const {
     if (! negativeIdealBoundaryComponents_.known())
         calculateBoundaryProperties();
     return negativeIdealBoundaryComponents_.value();
-}
-
-inline bool Triangulation<3>::isValid() const {
-    ensureSkeleton();
-    return valid_;
 }
 
 inline bool Triangulation<3>::isIdeal() const {

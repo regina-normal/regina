@@ -47,15 +47,6 @@ void Triangulation<2>::calculateSkeleton() {
     if (simplices_.empty())
         return;
 
-    // Off we go!
-    calculateVertices();
-        // Sets:
-        // - vertices_
-        // - Dim2Component::vertices_
-        // - Dim2Triangle::vertex_
-        // - Dim2Triangle::vertexMapping_
-        // - all Dim2Vertex members except boundaryComponent_
-
     calculateBoundary();
         // Sets:
         // - boundaryComponents_
@@ -64,80 +55,10 @@ void Triangulation<2>::calculateSkeleton() {
         // - all Dim2BoundaryComponent members
 
     // Flesh out the details of each component.
+    for (auto v : getVertices())
+        v->component()->vertices_.push_back(v);
     for (auto e : getEdges())
         e->component()->edges_.push_back(e);
-}
-
-void Triangulation<2>::calculateVertices() {
-    TriangleIterator it;
-    int loopVtx;
-    for (it = simplices_.begin(); it != simplices_.end(); ++it)
-        for (loopVtx = 0; loopVtx < 3; ++loopVtx)
-            (*it)->vertex_[loopVtx] = 0;
-
-    Dim2Vertex* label;
-    Dim2Triangle *loopTri, *tri, *adjTri;
-    int adjVertex;
-    NPerm3 map, adjMap;
-    int dir, exitEdge;
-    for (it = simplices_.begin(); it != simplices_.end(); ++it) {
-        loopTri = *it;
-        for (loopVtx = 2; loopVtx >= 0; --loopVtx) {
-            if (loopTri->vertex_[loopVtx])
-                continue;
-
-            label = new Dim2Vertex(loopTri->component_);
-            FaceList<2, 0>::push_back(label);
-            loopTri->component_->vertices_.push_back(label);
-
-            // Since triangle vertices are joined together in a loop, the
-            // depth-first search is really just a straight line in either
-            // direction.  We therefore do away with the usual stack and
-            // just keep track of the next triangle to process in the current
-            // direction.
-            loopTri->vertex_[loopVtx] = label;
-            loopTri->vertexMapping_[loopVtx] =
-                NPerm3(loopVtx, (loopVtx + 1) % 3, (loopVtx + 2) % 3);
-            label->push_back(Dim2VertexEmbedding(loopTri, loopVtx));
-
-            for (dir = 0; dir < 2; ++dir) {
-                // Start at the start and walk in one particular direction.
-                tri = loopTri;
-                map = tri->vertexMapping_[loopVtx];
-
-                while (true) {
-                    // Move through to the next triangle.
-                    exitEdge = map[dir == 0 ? 1 : 2];
-                    adjTri = tri->adjacentTriangle(exitEdge);
-                    if (! adjTri)
-                        break;
-
-                    adjMap = tri->adjacentGluing(exitEdge) * map *
-                        NPerm3(0, 2, 1);
-                    adjVertex = adjMap[0];
-
-                    if (adjTri->vertex_[adjVertex]) {
-                        // We looped right around.
-                        break;
-                    }
-
-                    // We have not yet seen this triangle vertex.  Label it.
-                    adjTri->vertex_[adjVertex] = label;
-                    adjTri->vertexMapping_[adjVertex] = adjMap;
-
-                    if (dir == 0)
-                        label->push_back(Dim2VertexEmbedding(
-                            adjTri, adjVertex));
-                    else
-                        label->push_front(Dim2VertexEmbedding(
-                            adjTri, adjVertex));
-
-                    tri = adjTri;
-                    map = adjMap;
-                }
-            }
-        }
-    }
 }
 
 void Triangulation<2>::calculateBoundary() {
@@ -169,7 +90,7 @@ void Triangulation<2>::calculateBoundary() {
         tri = edge->front().getTriangle();
         edgeId = edge->front().getEdge();
         vertexId = edge->front().getVertices()[0];
-        vertex = tri->vertex_[vertexId];
+        vertex = tri->SimplexFaces<2, 0>::face_[vertexId];
         while (true) {
             if (! edge->boundaryComponent_) {
                 edge->boundaryComponent_ = label;
@@ -224,7 +145,7 @@ void Triangulation<2>::calculateBoundary() {
             tri = adjTri;
             edgeId = adjEdgeId;
             vertexId = adjVertexId;
-            vertex = tri->vertex_[vertexId];
+            vertex = tri->SimplexFaces<2, 0>::face_[vertexId];
         }
     }
 }

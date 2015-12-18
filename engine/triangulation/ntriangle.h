@@ -126,6 +126,73 @@ class REGINA_API FaceEmbedding<3, 2> : public FaceEmbeddingBase<3, 2> {
 typedef FaceEmbedding<3, 2> NTriangleEmbedding;
 
 /**
+ * Helper class that specifies how triangles are numbered within a tetrahedron.
+ *
+ * See the general FaceNumbering<dim, subdim> template class notes for
+ * further details.
+ */
+template <>
+class FaceNumbering<3, 2> {
+    private:
+        static const NPerm4 ordering_[4];
+            /**< An array that hard-codes the results of ordering(). */
+
+    public:
+        /**
+         * Given a triangle number within a tetrahedron, returns the
+         * corresponding canonical ordering of the tetrahedron vertices.
+         *
+         * If this canonical ordering is \a c, then <tt>c[0,1,2]</tt> will
+         * be the vertices of the given triangle in increasing numerical order.
+         * That is, <tt>c[0]</tt> &lt; <tt>c[1]</tt> &lt; <tt>c[2]</tt>.
+         *
+         * Note that this is \e not the same permutation as returned by
+         * NTetrahedron::getTriangleMapping():
+         *
+         * - ordering() is a static function, which returns the same
+         *   permutation for the same triangle number, regardless of which
+         *   tetrahedron we are looking at.  The images of 0,1,2 will always
+         *   appear in increasing order.
+         *
+         * - getTriangleMapping() examines the underlying triangle \a T of the
+         *   triangulation, and chooses the images of 0,1,2 to map to the
+         *   same respective vertices of \a T for all appearances of
+         *   \a T in different tetrahedra.
+         *
+         * @param edge identifies which triangle of a tetrahedron to query.
+         * This must be between 0 and 3 inclusive.
+         * @return the corresponding canonical ordering of the
+         * tetrahedron vertices.
+         */
+        static NPerm4 ordering(unsigned edge);
+        /**
+         * Identifies which triangle number in a tetrahedron is represented
+         * by the first three elements of the given permutation.
+         *
+         * In other words, this routine identifies which triangle number in
+         * a tetrahedron spans vertices <tt>vertices[0,1,2]</tt>.
+         *
+         * @param vertices a permutation whose first three elements
+         * represent some vertex numbers in a tetrahedron.
+         * @return the corresponding triangle number in a tetrahedron.
+         * This will be between 0 and 3 inclusive.
+         */
+        static unsigned faceNumber(NPerm4 vertices);
+        /**
+         * Tests whether the given triangle of a tetrahedron contains the given
+         * vertex of the tetrahedron.
+         *
+         * @param edge an triangle number in a tetrahedron; this must be
+         * between 0 and 3 inclusive.
+         * @param vertex a vertex number in a tetrahedron; this must be
+         * between 0 and 3 inclusive.
+         * @return \c true if and only if the given triangle contains the
+         * given vertex.
+         */
+        static bool containsVertex(unsigned triangle, unsigned vertex);
+};
+
+/**
  * Represents a triangle in the skeleton of a 3-manifold triangulation.
  *
  * This is a specialisation of the generic Face class template; see the
@@ -175,13 +242,6 @@ class REGINA_API Face<3, 2> : public FaceBase<3, 2>, public Output<Face<3, 2>> {
         };
 
     private:
-        /**
-         * An array that hard-codes the results of ordering().
-         *
-         * See ordering() for further details.
-         */
-        static const NPerm4 ordering_[4];
-
         NBoundaryComponent* boundaryComponent_;
             /**< The boundary component that this triangle is a part of,
                  or 0 if this triangle is internal. */
@@ -334,30 +394,6 @@ class REGINA_API Face<3, 2> : public FaceBase<3, 2>, public Output<Face<3, 2>> {
         NPerm4 getEdgeMapping(int edge) const;
 
         /**
-         * Given a triangle number within a tetrahedron, returns the canonical
-         * ordering of those tetrahedron vertices that make up the given
-         * triangle.
-         *
-         * This means that the vertices of triangle \a i in a tetrahedron are,
-         * in canonical order, <tt>ordering[i][0,1,2]</tt>.
-         *
-         * Regina defines canonical order to be \e increasing order.
-         * That is, <tt>ordering[i][0] &lt; ... &lt; ordering[i][2]</tt>.
-         *
-         * This routine does \e not describe the mapping from triangles
-         * of the triangulation into individual tetrahedra; for that, see the
-         * routine NTetrahedron::getTriangleMapping().  Instead, this routine
-         * just provides a neat and consistent way of listing the vertices of
-         * any given triangle of any given tetrahedron.
-         *
-         * @param triangle identifies which triangle of a tetrahedron to query.
-         * This must be between 0 and 3 inclusive.
-         * @return the canonical ordering of the tetrahedron vertices that
-         * make up the given triangle of the tetrahedron.
-         */
-        static NPerm<4> ordering(unsigned triangle);
-
-        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -425,6 +461,21 @@ inline int FaceEmbedding<3, 2>::getTriangle() const {
     return getFace();
 }
 
+// Inline functions for FaceNumbering
+
+inline NPerm4 FaceNumbering<3, 2>::ordering(unsigned triangle) {
+    return ordering_[triangle];
+}
+
+inline unsigned FaceNumbering<3, 2>::faceNumber(NPerm4 vertices) {
+    return vertices[3];
+}
+
+inline bool FaceNumbering<3, 2>::containsVertex(unsigned triangle,
+        unsigned vertex) {
+    return (triangle != vertex);
+}
+
 // Inline functions for NTriangle
 
 inline Face<3, 2>::Face(NComponent* component) :
@@ -462,10 +513,6 @@ inline bool Face<3, 2>::isMobiusBand() {
 inline bool Face<3, 2>::isCone() {
     getType();
     return (type_ == DUNCEHAT || type_ == CONE || type_ == HORN);
-}
-
-inline NPerm<4> Face<3, 2>::ordering(unsigned triangle) {
-    return ordering_[triangle];
 }
 
 inline void Face<3, 2>::writeTextShort(std::ostream& out) const {

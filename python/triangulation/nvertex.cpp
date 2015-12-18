@@ -129,6 +129,7 @@ void addNVertex() {
         .def("isIdeal", &NVertex::isIdeal)
         .def("isBoundary", &NVertex::isBoundary)
         .def("isStandard", &NVertex::isStandard)
+        .def("isValid", &NVertex::isValid)
         .def("isLinkOrientable", &NVertex::isLinkOrientable)
         .def("getLinkEulerChar", &NVertex::getLinkEulerChar)
         .def("getLinkEulerCharacteristic",
@@ -138,7 +139,13 @@ void addNVertex() {
         .def("detail", &NVertex::detail)
         .def("toStringLong", &NVertex::toStringLong)
         .def("__str__", &NVertex::str)
+        .def("ordering", &NVertex::ordering)
+        .def("faceNumber", &NVertex::faceNumber)
+        .def("containsVertex", &NVertex::containsVertex)
         .def(regina::python::add_eq_operators())
+        .staticmethod("ordering")
+        .staticmethod("faceNumber")
+        .staticmethod("containsVertex")
     ;
 
     enum_<regina::NVertex::LinkType>("LinkType")

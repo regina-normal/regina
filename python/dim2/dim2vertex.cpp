@@ -80,6 +80,8 @@ void addDim2Vertex() {
     scope s = class_<Dim2Vertex, std::auto_ptr<Dim2Vertex>, boost::noncopyable>
             ("Dim2Vertex", no_init)
         .def("index", &Dim2Vertex::index)
+        .def("isValid", &Dim2Vertex::isValid)
+        .def("isLinkOrientable", &Dim2Vertex::isLinkOrientable)
         .def("embeddings", Dim2Vertex_getEmbeddings_list)
         .def("getEmbeddings", Dim2Vertex_getEmbeddings_list)
         .def("embedding", &Dim2Vertex::embedding,
@@ -108,7 +110,13 @@ void addDim2Vertex() {
         .def("detail", &Dim2Vertex::detail)
         .def("toStringLong", &Dim2Vertex::toStringLong)
         .def("__str__", &Dim2Vertex::str)
+        .def("ordering", &Dim2Vertex::ordering)
+        .def("faceNumber", &Dim2Vertex::faceNumber)
+        .def("containsVertex", &Dim2Vertex::containsVertex)
         .def(regina::python::add_eq_operators())
+        .staticmethod("ordering")
+        .staticmethod("faceNumber")
+        .staticmethod("containsVertex")
     ;
 }
 
