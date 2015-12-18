@@ -77,7 +77,7 @@ typedef Face<3, 1> NEdge;
  * dimension-specific aliases of some member functions.
  */
 template <>
-class REGINA_API FaceEmbedding<3, 2> : public FaceEmbeddingBase<3, 2> {
+class REGINA_API FaceEmbedding<3, 2> : public detail::FaceEmbeddingBase<3, 2> {
     public:
         /**
          * Default constructor.  This object is unusable until it has
@@ -124,6 +124,8 @@ class REGINA_API FaceEmbedding<3, 2> : public FaceEmbeddingBase<3, 2> {
  * A convenience typedef for FaceEmbedding<3, 2>.
  */
 typedef FaceEmbedding<3, 2> NTriangleEmbedding;
+
+namespace detail {
 
 /**
  * Helper class that specifies how triangles are numbered within a tetrahedron.
@@ -192,6 +194,8 @@ class FaceNumbering<3, 2> {
         static bool containsVertex(unsigned triangle, unsigned vertex);
 };
 
+} // namespace detail
+
 /**
  * Represents a triangle in the skeleton of a 3-manifold triangulation.
  *
@@ -202,7 +206,8 @@ class FaceNumbering<3, 2> {
  * offer significant extra functionality.
  */
 template <>
-class REGINA_API Face<3, 2> : public FaceBase<3, 2>, public Output<Face<3, 2>> {
+class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
+        public Output<Face<3, 2>> {
     public:
         /**
          * The \e type of a triangle, which indicates how the vertices and
@@ -423,7 +428,7 @@ class REGINA_API Face<3, 2> : public FaceBase<3, 2>, public Output<Face<3, 2>> {
         Face(NComponent* component);
 
     friend class Triangulation<3>;
-    friend class TriangulationBase<3>;
+    friend class detail::TriangulationBase<3>;
 };
 
 /**
@@ -441,16 +446,16 @@ namespace regina {
 // Inline functions for NTriangleEmbedding
 
 inline FaceEmbedding<3, 2>::FaceEmbedding() :
-        FaceEmbeddingBase<3, 2>() {
+        detail::FaceEmbeddingBase<3, 2>() {
 }
 
 inline FaceEmbedding<3, 2>::FaceEmbedding(NTetrahedron* tet, int tri) :
-        FaceEmbeddingBase<3, 2>(tet, tri) {
+        detail::FaceEmbeddingBase<3, 2>(tet, tri) {
 }
 
 inline FaceEmbedding<3, 2>::FaceEmbedding(
         const NTriangleEmbedding& cloneMe) :
-        FaceEmbeddingBase<3, 2>(cloneMe) {
+        detail::FaceEmbeddingBase<3, 2>(cloneMe) {
 }
 
 inline NTetrahedron* FaceEmbedding<3, 2>::getTetrahedron() const {
@@ -462,6 +467,8 @@ inline int FaceEmbedding<3, 2>::getTriangle() const {
 }
 
 // Inline functions for FaceNumbering
+
+namespace detail {
 
 inline NPerm4 FaceNumbering<3, 2>::ordering(unsigned triangle) {
     return ordering_[triangle];
@@ -475,6 +482,8 @@ inline bool FaceNumbering<3, 2>::containsVertex(unsigned triangle,
         unsigned vertex) {
     return (triangle != vertex);
 }
+
+} // namespace detail
 
 // Inline functions for NTriangle
 

@@ -72,7 +72,7 @@ typedef Face<2, 1> Dim2Edge;
  * lower-dimensional faces (i.e., vertices and edges) and boundary components.
  */
 template <>
-class REGINA_API Component<2> : public ComponentBase<2> {
+class REGINA_API Component<2> : public detail::ComponentBase<2> {
     private:
         std::vector<Dim2Edge*> edges_;
             /**< List of edges in the component. */
@@ -209,7 +209,7 @@ class REGINA_API Component<2> : public ComponentBase<2> {
         Component();
 
     friend class Triangulation<2>;
-    friend class TriangulationBase<2>;
+    friend class detail::TriangulationBase<2>;
 };
 
 /**
@@ -221,7 +221,7 @@ typedef Component<2> Dim2Component;
 
 // Inline functions for Component<2>
 
-inline Component<2>::Component() : ComponentBase<2>() {
+inline Component<2>::Component() : detail::ComponentBase<2>() {
 }
 
 inline size_t Component<2>::getNumberOfTriangles() const {

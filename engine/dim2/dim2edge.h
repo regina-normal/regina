@@ -76,7 +76,7 @@ typedef Face<2, 0> Dim2Vertex;
  * dimension-specific aliases of some member functions.
  */
 template <>
-class REGINA_API FaceEmbedding<2, 1> : public FaceEmbeddingBase<2, 1> {
+class REGINA_API FaceEmbedding<2, 1> : public detail::FaceEmbeddingBase<2, 1> {
     public:
         /**
          * Default constructor.  This object is unusable until it has
@@ -122,6 +122,8 @@ class REGINA_API FaceEmbedding<2, 1> : public FaceEmbeddingBase<2, 1> {
  * A convenience typedef for FaceEmbedding<2, 1>.
  */
 typedef FaceEmbedding<2, 1> Dim2EdgeEmbedding;
+
+namespace detail {
 
 /**
  * Helper class that specifies how edges are numbered within a triangle.
@@ -191,6 +193,8 @@ class FaceNumbering<2, 1> {
         static bool containsVertex(unsigned edge, unsigned vertex);
 };
 
+} // namespace detail
+
 /**
  * Represents an edge in the skeleton of a 2-manifold triangulation.
  *
@@ -201,7 +205,8 @@ class FaceNumbering<2, 1> {
  * offer significant extra functionality.
  */
 template <>
-class REGINA_API Face<2, 1> : public FaceBase<2, 1>, public Output<Face<2, 1>> {
+class REGINA_API Face<2, 1> : public detail::FaceBase<2, 1>,
+        public Output<Face<2, 1>> {
     private:
         Dim2BoundaryComponent* boundaryComponent_;
             /**< The boundary component that this edge is a part of,
@@ -296,7 +301,7 @@ class REGINA_API Face<2, 1> : public FaceBase<2, 1>, public Output<Face<2, 1>> {
         Face(Dim2Component* component);
 
     friend class Triangulation<2>;
-    friend class TriangulationBase<2>;
+    friend class detail::TriangulationBase<2>;
 };
 
 /**
@@ -314,17 +319,17 @@ namespace regina {
 // Inline functions for Dim2EdgeEmbedding
 
 inline FaceEmbedding<2, 1>::FaceEmbedding() :
-        FaceEmbeddingBase<2, 1>() {
+        detail::FaceEmbeddingBase<2, 1>() {
 }
 
 inline FaceEmbedding<2, 1>::FaceEmbedding(
         Dim2Triangle* tri, int edge) :
-        FaceEmbeddingBase<2, 1>(tri, edge) {
+        detail::FaceEmbeddingBase<2, 1>(tri, edge) {
 }
 
 inline FaceEmbedding<2, 1>::FaceEmbedding(
         const Dim2EdgeEmbedding& cloneMe) :
-        FaceEmbeddingBase<2, 1>(cloneMe) {
+        detail::FaceEmbeddingBase<2, 1>(cloneMe) {
 }
 
 inline Dim2Triangle* FaceEmbedding<2, 1>::getTriangle() const {
@@ -336,6 +341,8 @@ inline int FaceEmbedding<2, 1>::getEdge() const {
 }
 
 // Inline functions for FaceNumbering
+
+namespace detail {
 
 inline NPerm3 FaceNumbering<2, 1>::ordering(unsigned edge) {
     return ordering_[edge];
@@ -350,10 +357,12 @@ inline bool FaceNumbering<2, 1>::containsVertex(unsigned edge,
     return (edge != vertex);
 }
 
+} // namespace detail
+
 // Inline functions for Dim2Edge
 
 inline Face<2, 1>::Face(Dim2Component* component) :
-        FaceBase<2, 1>(component), boundaryComponent_(0) {
+        detail::FaceBase<2, 1>(component), boundaryComponent_(0) {
 }
 
 inline Dim2BoundaryComponent* Face<2, 1>::getBoundaryComponent() const {

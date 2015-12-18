@@ -32,7 +32,7 @@
 
 /* end stub */
 
-/*! \file generic/facetpairing-impl.h
+/*! \file generic/detail/facetpairing-impl.h
  *  \brief Contains some of the implementation details for the generic
  *  FacetPairing class template.
  *
@@ -57,6 +57,8 @@
 namespace regina {
 
 template <int> class Simplex;
+
+namespace detail {
 
 template <int dim>
 FacetPairingBase<dim>::FacetPairingBase(
@@ -805,6 +807,6 @@ void FacetPairingBase<dim>::enumerateInternal(NBoolSet boundary,
     return;
 }
 
-} // namespace regina
+} } // namespace regina::detail
 
 #endif

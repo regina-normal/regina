@@ -40,7 +40,7 @@
 namespace regina {
 
 template <>
-bool TriangulationBase<3>::compatible(
+bool detail::TriangulationBase<3>::compatible(
         const Triangulation<3>& other, bool complete) const {
     const NTriangulation* me = static_cast<const NTriangulation*>(this);
 
@@ -150,7 +150,7 @@ bool TriangulationBase<3>::compatible(
 }
 
 template <>
-bool TriangulationBase<3>::compatible(
+bool detail::TriangulationBase<3>::compatible(
         Simplex<3>* src, Simplex<3>* dest, NPerm<4> p) {
     for (int edge = 0; edge < 6; edge++) {
         if (src->getEdge(edge)->getDegree() !=

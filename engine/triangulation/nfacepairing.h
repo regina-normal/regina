@@ -90,7 +90,7 @@ typedef void (*UseFacePairing)(const FacetPairing<3>*,
  * within the dual graph.
  */
 template <>
-class REGINA_API FacetPairing<3> : public FacetPairingBase<3> {
+class REGINA_API FacetPairing<3> : public detail::FacetPairingBase<3> {
     public:
         /**
          * Creates a new face pairing that is a clone of the given face
@@ -547,7 +547,7 @@ class REGINA_API FacetPairing<3> : public FacetPairingBase<3> {
         bool hasTripleOneEndedChain(size_t tet, unsigned face) const;
 
     // Make sure the parent class can call the private constructor.
-    friend class FacetPairingBase<3>;
+    friend class detail::FacetPairingBase<3>;
 };
 
 /**
@@ -560,15 +560,15 @@ typedef FacetPairing<3> NFacePairing;
 // Inline functions for FacetPairing<3>
 
 inline FacetPairing<3>::FacetPairing(const FacetPairing& cloneMe) :
-        FacetPairingBase<3>(cloneMe) {
+        detail::FacetPairingBase<3>(cloneMe) {
 }
 
 inline FacetPairing<3>::FacetPairing(const NTriangulation& tri) :
-        FacetPairingBase<3>(tri) {
+        detail::FacetPairingBase<3>(tri) {
 }
 
 inline FacetPairing<3>::FacetPairing(size_t size) :
-        FacetPairingBase<3>(size) {
+        detail::FacetPairingBase<3>(size) {
 }
 
 inline size_t FacetPairing<3>::getNumberOfTetrahedra() const {

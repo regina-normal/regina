@@ -109,7 +109,7 @@ struct PacketInfo<PACKET_DIM2TRIANGULATION> {
 template <>
 class REGINA_API Triangulation<2> :
         public NPacket,
-        public TriangulationBase<2> {
+        public detail::TriangulationBase<2> {
     REGINA_PACKET(Triangulation<2>, PACKET_DIM2TRIANGULATION)
 
     public:
@@ -580,8 +580,8 @@ class REGINA_API Triangulation<2> :
         void calculateBoundary();
 
     friend class regina::Simplex<2>;
-    friend class regina::SimplexBase<2>;
-    friend class regina::TriangulationBase<2>;
+    friend class regina::detail::SimplexBase<2>;
+    friend class regina::detail::TriangulationBase<2>;
     friend class regina::NXMLDim2TriangulationReader;
 };
 

@@ -76,7 +76,7 @@ typedef Face<2, 1> Dim2Edge;
  * creating, maintaining and destroying this extra skeletal information.
  */
 template <>
-class REGINA_API Simplex<2> : public SimplexBase<2> {
+class REGINA_API Simplex<2> : public detail::SimplexBase<2> {
     public:
         /**
          * A dimension-specific alias for adjacentSimplex().
@@ -192,7 +192,7 @@ class REGINA_API Simplex<2> : public SimplexBase<2> {
         Simplex(const std::string& desc, Dim2Triangulation* tri);
 
     friend class Triangulation<2>;
-    friend class TriangulationBase<2>;
+    friend class detail::TriangulationBase<2>;
         /**< Allow access to private members. */
 };
 
@@ -234,11 +234,12 @@ inline NPerm3 Simplex<2>::getEdgeMapping(int edge) const {
     return faceMapping<1>(edge);
 }
 
-inline Simplex<2>::Simplex(Dim2Triangulation* tri) : SimplexBase<2>(tri) {
+inline Simplex<2>::Simplex(Dim2Triangulation* tri) :
+        detail::SimplexBase<2>(tri) {
 }
 
 inline Simplex<2>::Simplex(const std::string& desc,
-        Dim2Triangulation* tri) : SimplexBase<2>(desc, tri) {
+        Dim2Triangulation* tri) : detail::SimplexBase<2>(desc, tri) {
 }
 
 } // namespace regina

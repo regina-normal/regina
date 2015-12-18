@@ -169,7 +169,7 @@ enum TuraevViroAlg {
 template <>
 class REGINA_API Triangulation<3> :
         public NPacket,
-        public TriangulationBase<3> {
+        public detail::TriangulationBase<3> {
     REGINA_PACKET(Triangulation<3>, PACKET_TRIANGULATION)
 
     public:
@@ -3330,8 +3330,8 @@ class REGINA_API Triangulation<3> :
             /**< Internal to maximalForestInSkeleton(). */
 
     friend class regina::Simplex<3>;
-    friend class regina::SimplexBase<3>;
-    friend class regina::TriangulationBase<3>;
+    friend class regina::detail::SimplexBase<3>;
+    friend class regina::detail::TriangulationBase<3>;
     friend class regina::NXMLTriangulationReader;
 };
 

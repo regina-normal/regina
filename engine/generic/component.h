@@ -41,186 +41,14 @@
  *  \brief Deals with connected components of triangulations.
  */
 
-#include <vector>
-#include "regina-core.h"
-#include "output.h"
-#include "utilities/nmarkedvector.h"
-#include <boost/noncopyable.hpp>
+#include "generic/detail/component.h"
 
 namespace regina {
-
-template <int> class Simplex;
-template <int> class Triangulation;
-template <int> class TriangulationBase;
 
 /**
  * \weakgroup generic
  * @{
  */
-
-/**
- * Helper class that provides core functionality for a connected component
- * of a <i>dim</i>-manifold triangulation.
- *
- * Each connected component is represented by the class Component<dim>,
- * which uses this as a base class.  End users should not need to refer
- * to ComponentBase directly.
- *
- * See the Component class notes for further information.
- *
- * \ifacespython This base class is not present, but the "end user"
- * class Component<dim> is.
- *
- * \tparam the dimension of the underlying triangulation.  This must be
- * at least 2.
- */
-template <int dim>
-class ComponentBase :
-        public Output<ComponentBase<dim>>,
-        public boost::noncopyable,
-        public NMarkedElement {
-    private:
-        std::vector<Simplex<dim>*> simplices_;
-            /**< List of triangles in the component. */
-
-        size_t boundaryFacets_;
-            /**< The number of boundary facets. */
-        bool orientable_;
-            /**< Is the component orientable? */
-
-    public:
-        /**
-         * Returns the index of this component in the underlying
-         * triangulation.  <tt>t->componentIndex(this)</tt>, where
-         * \a t represents the underlying triangulation.
-         *
-         * @return the index of this component vertex.
-         */
-        size_t index() const;
-
-        /**
-         * Returns the number of top-dimensional simplices in this
-         * component.
-         *
-         * @return The number of top-dimensional simplices.
-         */
-        size_t size() const;
-        /**
-         * Deprecated routine that returns the number of top-dimensional
-         * simplices in this component.
-         *
-         * \deprecated Simply call size() instead.
-         *
-         * @return the number of top-dimensional simplices.
-         */
-        size_t getNumberOfSimplices() const;
-        /**
-         * Returns all top-dimensional simplices in this component.
-         *
-         * The reference that is returned will remain valid only for as long
-         * as this component object exists.  In particular, the reference
-         * will become invalid any time that the triangulation changes
-         * (since all component objects will be destroyed and others rebuilt
-         * in their place).
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of all top-dimensional simplices.
-         */
-        const std::vector<Simplex<dim>*>& simplices() const;
-        /**
-         * Deprecated routine that returns all of the top-dimensional
-         * simplices in this component.
-         *
-         * \deprecated Simply call simplices() instead.
-         *
-         * See simplices() for further details.
-         */
-        const std::vector<Simplex<dim>*>& getSimplices() const;
-        /**
-         * Returns the top-dimensional simplex at the given index in
-         * this component.
-         *
-         * Note that the index within this component may not be the same
-         * as the index within the overall triangulation.
-         *
-         * @param index specifies which simplex to return; this
-         * value should be between 0 and size()-1 inclusive.
-         * @return the <i>index</i>th top-dimensional simplex.
-         */
-        Simplex<dim>* simplex(size_t index) const;
-        /**
-         * Deprecated routine that returns the top-dimensional simplex
-         * at the given index in this component.
-         *
-         * \deprecated Simply call simplex() instead.
-         *
-         * See simplices() for further details.
-         */
-        Simplex<dim>* getSimplex(size_t index) const;
-
-        /**
-         * Determines if this component is orientable.
-         *
-         * This routine runs in constant time (since orientability is
-         * determined in advance, when the component is first created).
-         * 
-         * @return \c true if and only if this component is orientable.
-         */
-        bool isOrientable() const;
-
-        /**
-         * Returns the number of boundary facets in this component.
-         *
-         * A boundary facet is a (<i>dim</i>-1)-dimensional facet of a
-         * top-dimensional simplex that is not joined to any adjacent
-         * simplex.
-         *
-         * This routine runs in constant time (since the result is
-         * computed in advance, when the component is first created).
-         *
-         * @return the total number of boundary facets.
-         */
-        size_t countBoundaryFacets() const;
-        /**
-         * Deprecated routine that returns the number of boundary facets
-         * in this component.
-         *
-         * \deprecated Simply call countBoundaryFacets() instead.
-         *
-         * See countBoundaryFacets() for further details.
-         */
-        size_t getNumberOfBoundaryFacets() const;
-
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
-
-    protected:
-        /**
-         * Default constructor.
-         *
-         * Marks the component as orientable, with no boundary facets.
-         */
-        ComponentBase();
-
-    friend class TriangulationBase<dim>;
-};
 
 /**
  * A connected component of a <i>dim</i>-manifold triangulation.
@@ -251,7 +79,7 @@ class ComponentBase :
  * This must be at least 2.
  */
 template <int dim>
-class Component : public ComponentBase<dim> {
+class Component : public detail::ComponentBase<dim> {
     static_assert(! standardDim(dim),
         "The generic implementation of Component<dim> "
         "should not be used for Regina's standard dimensions.");
@@ -264,7 +92,7 @@ class Component : public ComponentBase<dim> {
          */
         Component();
 
-    friend class TriangulationBase<dim>;
+    friend class detail::TriangulationBase<dim>;
 };
 
 // Note that some of our component classes are specialised elsewhere.
@@ -274,88 +102,10 @@ template <> class Component<3>;
 
 /*@}*/
 
-// Inline functions for ComponentBase
-
-template <int dim>
-inline ComponentBase<dim>::ComponentBase() :
-        orientable_(true), boundaryFacets_(0) {
-}
-
-template <int dim>
-inline size_t ComponentBase<dim>::index() const {
-    return markedIndex();
-}
-
-template <int dim>
-inline size_t ComponentBase<dim>::size() const {
-    return simplices_.size();
-}
-
-template <int dim>
-inline size_t ComponentBase<dim>::getNumberOfSimplices() const {
-    return simplices_.size();
-}
-
-template <int dim>
-inline const std::vector<Simplex<dim>*>& ComponentBase<dim>::simplices() const {
-    return simplices_;
-}
-
-template <int dim>
-inline const std::vector<Simplex<dim>*>& ComponentBase<dim>::getSimplices()
-        const {
-    return simplices_;
-}
-
-template <int dim>
-inline Simplex<dim>* ComponentBase<dim>::simplex(size_t index) const {
-    return simplices_[index];
-}
-
-template <int dim>
-inline Simplex<dim>* ComponentBase<dim>::getSimplex(size_t index) const {
-    return simplices_[index];
-}
-
-template <int dim>
-inline bool ComponentBase<dim>::isOrientable() const {
-    return orientable_;
-}
-
-template <int dim>
-inline size_t ComponentBase<dim>::countBoundaryFacets() const {
-    return boundaryFacets_;
-}
-
-template <int dim>
-inline size_t ComponentBase<dim>::getNumberOfBoundaryFacets() const {
-    return boundaryFacets_;
-}
-
-template <int dim>
-void ComponentBase<dim>::writeTextShort(std::ostream& out) const {
-    if (simplices_.size() == 1)
-        out << "Component with 1 " << dim << "-simplex";
-    else
-        out << "Component with " << simplices_.size() << ' '
-            << dim << "-simplices";
-}
-
-template <int dim>
-void ComponentBase<dim>::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
-    out << std::endl;
-
-    out << (simplices_.size() == 1 ? "Simplex:" : "Simplices:");
-    for (auto it = simplices_.begin(); it != simplices_.end(); ++it)
-        out << ' ' << (*it)->markedIndex();
-    out << std::endl;
-}
-
 // Inline functions for Component
 
 template <int dim>
-inline Component<dim>::Component() : ComponentBase<dim>() {
+inline Component<dim>::Component() : detail::ComponentBase<dim>() {
 }
 
 } // namespace regina

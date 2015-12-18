@@ -75,7 +75,7 @@ typedef Triangulation<2> Dim2Triangulation;
  * dimension-specific aliases of some member functions.
  */
 template <>
-class REGINA_API FaceEmbedding<2, 0> : public FaceEmbeddingBase<2, 0> {
+class REGINA_API FaceEmbedding<2, 0> : public detail::FaceEmbeddingBase<2, 0> {
     public:
         /**
          * Default constructor.  This object is unusable until it has
@@ -121,6 +121,8 @@ class REGINA_API FaceEmbedding<2, 0> : public FaceEmbeddingBase<2, 0> {
  * A convenience typedef for FaceEmbedding<2, 0>.
  */
 typedef FaceEmbedding<2, 0> Dim2VertexEmbedding;
+
+namespace detail {
 
 /**
  * Helper class that specifies how vertices are numbered within a triangle.
@@ -187,6 +189,8 @@ class FaceNumbering<2, 0> {
         static bool containsVertex(unsigned face, unsigned vertex);
 };
 
+} // namespace detail
+
 /**
  * Represents a vertex in the skeleton of a 2-manifold triangulation.
  *
@@ -197,7 +201,8 @@ class FaceNumbering<2, 0> {
  * offer significant extra functionality.
  */
 template <>
-class REGINA_API Face<2, 0> : public FaceBase<2, 0>, public Output<Face<2, 0>> {
+class REGINA_API Face<2, 0> : public detail::FaceBase<2, 0>,
+        public Output<Face<2, 0>> {
     private:
         Dim2BoundaryComponent* boundaryComponent_;
             /**< The boundary component that this vertex is a part of,
@@ -251,7 +256,7 @@ class REGINA_API Face<2, 0> : public FaceBase<2, 0>, public Output<Face<2, 0>> {
         Face(Dim2Component* component);
 
     friend class Triangulation<2>;
-    friend class TriangulationBase<2>;
+    friend class detail::TriangulationBase<2>;
 };
 
 /**
@@ -269,16 +274,16 @@ namespace regina {
 // Inline functions for Dim2VertexEmbedding
 
 inline FaceEmbedding<2, 0>::FaceEmbedding() :
-        FaceEmbeddingBase<2, 0>() {
+        detail::FaceEmbeddingBase<2, 0>() {
 }
 
 inline FaceEmbedding<2, 0>::FaceEmbedding(Dim2Triangle* tri, int vertex) :
-        FaceEmbeddingBase<2, 0>(tri, vertex) {
+        detail::FaceEmbeddingBase<2, 0>(tri, vertex) {
 }
 
 inline FaceEmbedding<2, 0>::FaceEmbedding(
         const Dim2VertexEmbedding& cloneMe) :
-        FaceEmbeddingBase<2, 0>(cloneMe) {
+        detail::FaceEmbeddingBase<2, 0>(cloneMe) {
 }
 
 inline Dim2Triangle* FaceEmbedding<2, 0>::getTriangle() const {
@@ -290,6 +295,8 @@ inline int FaceEmbedding<2, 0>::getVertex() const {
 }
 
 // Inline functions for FaceNumbering
+
+namespace detail {
 
 inline NPerm3 FaceNumbering<2, 0>::ordering(unsigned vertex) {
     return NPerm<3>(vertex, (vertex + 1) % 3, (vertex + 2) % 3);
@@ -304,10 +311,12 @@ inline bool FaceNumbering<2, 0>::containsVertex(unsigned face,
     return (face == vertex);
 }
 
+} // namespace detail
+
 // Inline functions for Dim2Vertex
 
 inline Face<2, 0>::Face(Dim2Component* component) :
-        FaceBase<2, 0>(component), boundaryComponent_(0) {
+        detail::FaceBase<2, 0>(component), boundaryComponent_(0) {
 }
 
 inline Dim2BoundaryComponent* Face<2, 0>::getBoundaryComponent() const {

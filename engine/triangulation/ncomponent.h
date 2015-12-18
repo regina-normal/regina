@@ -74,7 +74,7 @@ typedef Face<3, 2> NTriangle;
  * boundary components.
  */
 template <>
-class REGINA_API Component<3> : public ComponentBase<3> {
+class REGINA_API Component<3> : public detail::ComponentBase<3> {
     private:
         std::vector<NTriangle*> triangles_;
             /**< List of triangles in the component. */
@@ -248,7 +248,7 @@ class REGINA_API Component<3> : public ComponentBase<3> {
         Component();
 
     friend class Triangulation<3>;
-    friend class TriangulationBase<3>;
+    friend class detail::TriangulationBase<3>;
 };
 
 /**
@@ -260,7 +260,7 @@ typedef Component<3> NComponent;
 
 // Inline functions for Component<3>
 
-inline Component<3>::Component() : ComponentBase<3>(), ideal_(false) {
+inline Component<3>::Component() : detail::ComponentBase<3>(), ideal_(false) {
 }
 
 inline size_t Component<3>::getNumberOfTetrahedra() const {

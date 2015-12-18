@@ -77,7 +77,7 @@ typedef Face<3, 2> NTriangle;
  * creating, maintaining and destroying this extra skeletal information.
  */
 template <>
-class REGINA_API Simplex<3> : public SimplexBase<3> {
+class REGINA_API Simplex<3> : public detail::SimplexBase<3> {
     private:
         int tmpOrientation_[4];
             /**< Temporary array used to represent orientations of triangles
@@ -291,7 +291,7 @@ class REGINA_API Simplex<3> : public SimplexBase<3> {
         Simplex(const std::string& desc, NTriangulation* tri);
 
     friend class Triangulation<3>;
-    friend class TriangulationBase<3>;
+    friend class detail::TriangulationBase<3>;
         /**< Allow access to private members. */
 };
 
@@ -341,11 +341,11 @@ inline NPerm4 Simplex<3>::getTriangleMapping(int triangle) const {
     return faceMapping<2>(triangle);
 }
 
-inline Simplex<3>::Simplex(NTriangulation* tri) : SimplexBase<3>(tri) {
+inline Simplex<3>::Simplex(NTriangulation* tri) : detail::SimplexBase<3>(tri) {
 }
 
 inline Simplex<3>::Simplex(const std::string& desc, NTriangulation* tri) :
-        SimplexBase<3>(desc, tri) {
+        detail::SimplexBase<3>(desc, tri) {
 }
 
 } // namespace regina
