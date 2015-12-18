@@ -81,6 +81,15 @@ class FaceNumber<Derived, 0> {
          *
          * See face() for further information.
          */
+        int vertex() const {
+            return static_cast<const Derived*>(this)->face();
+        }
+
+        /**
+         * Deprecated dimension-specific alias for face().
+         *
+         * \deprecated Simply call vertex() instead.
+         */
         int getVertex() const {
             return static_cast<const Derived*>(this)->face();
         }
@@ -100,6 +109,15 @@ class FaceNumber<Derived, 1> {
          * A dimension-specific alias for face().
          *
          * See face() for further information.
+         */
+        int edge() const {
+            return static_cast<const Derived*>(this)->face();
+        }
+
+        /**
+         * Deprecated dimension-specific alias for face().
+         *
+         * \deprecated Simply call edge() instead.
          */
         int getEdge() const {
             return static_cast<const Derived*>(this)->face();
@@ -121,6 +139,15 @@ class FaceNumber<Derived, 2> {
          *
          * See face() for further information.
          */
+        int triangle() const {
+            return static_cast<const Derived*>(this)->face();
+        }
+
+        /**
+         * Deprecated dimension-specific alias for face().
+         *
+         * \deprecated Simply call triangle() instead.
+         */
         int getTriangle() const {
             return static_cast<const Derived*>(this)->face();
         }
@@ -141,6 +168,15 @@ class FaceNumber<Derived, 3> {
          *
          * See face() for further information.
          */
+        int tetrahedron() const {
+            return static_cast<const Derived*>(this)->face();
+        }
+
+        /**
+         * Deprecated dimension-specific alias for face().
+         *
+         * \deprecated Simply call tetrahedron() instead.
+         */
         int getTetrahedron() const {
             return static_cast<const Derived*>(this)->face();
         }
@@ -160,6 +196,15 @@ class FaceNumber<Derived, 4> {
          * A dimension-specific alias for face().
          *
          * See face() for further information.
+         */
+        int pentachoron() const {
+            return static_cast<const Derived*>(this)->face();
+        }
+
+        /**
+         * Deprecated dimension-specific alias for face().
+         *
+         * \deprecated Simply call pentachoron() instead.
          */
         int getPentachoron() const {
             return static_cast<const Derived*>(this)->face();

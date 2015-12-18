@@ -64,10 +64,13 @@ void addDim2Edge() {
             return_value_policy<reference_existing_object>())
         .def("getSimplex", &Dim2EdgeEmbedding::getSimplex,
             return_value_policy<reference_existing_object>())
+        .def("triangle", &Dim2EdgeEmbedding::triangle,
+            return_value_policy<reference_existing_object>())
         .def("getTriangle", &Dim2EdgeEmbedding::getTriangle,
             return_value_policy<reference_existing_object>())
         .def("face", &Dim2EdgeEmbedding::face)
         .def("getFace", &Dim2EdgeEmbedding::getFace)
+        .def("edge", &Dim2EdgeEmbedding::edge)
         .def("getEdge", &Dim2EdgeEmbedding::getEdge)
         .def("vertices", &Dim2EdgeEmbedding::vertices)
         .def("getVertices", &Dim2EdgeEmbedding::getVertices)

@@ -78,10 +78,13 @@ void addNEdge() {
             return_value_policy<reference_existing_object>())
         .def("getSimplex", &NEdgeEmbedding::getSimplex,
             return_value_policy<reference_existing_object>())
+        .def("tetrahedron", &NEdgeEmbedding::tetrahedron,
+            return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &NEdgeEmbedding::getTetrahedron,
             return_value_policy<reference_existing_object>())
         .def("face", &NEdgeEmbedding::face)
         .def("getFace", &NEdgeEmbedding::getFace)
+        .def("edge", &NEdgeEmbedding::edge)
         .def("getEdge", &NEdgeEmbedding::getEdge)
         .def("vertices", &NEdgeEmbedding::vertices)
         .def("getVertices", &NEdgeEmbedding::getVertices)

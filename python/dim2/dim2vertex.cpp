@@ -62,10 +62,13 @@ void addDim2Vertex() {
             return_value_policy<reference_existing_object>())
         .def("getSimplex", &Dim2VertexEmbedding::getSimplex,
             return_value_policy<reference_existing_object>())
+        .def("triangle", &Dim2VertexEmbedding::triangle,
+            return_value_policy<reference_existing_object>())
         .def("getTriangle", &Dim2VertexEmbedding::getTriangle,
             return_value_policy<reference_existing_object>())
         .def("face", &Dim2VertexEmbedding::face)
         .def("getFace", &Dim2VertexEmbedding::getFace)
+        .def("vertex", &Dim2VertexEmbedding::vertex)
         .def("getVertex", &Dim2VertexEmbedding::getVertex)
         .def("vertices", &Dim2VertexEmbedding::vertices)
         .def("getVertices", &Dim2VertexEmbedding::getVertices)

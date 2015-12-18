@@ -14,6 +14,11 @@ Version 4.97  [ (under development) ]
         - Merged sources for the iPad version into the main source tree.
         - Updated the bundled copy of Normaliz to version 3.0.0 (28 Sep 2015).
         - Switched from std::auto_ptr to std::unique_ptr throughout the API.
+        - Many routines of the form getFoo() have been renamed to foo(),
+          with the old names deprecated but kept for backward compatibility.
+          Likewise, many routines getNumberOfFoo() have been renamed to
+          countFoo().  There are too many of these changes to mention, and
+          so these are not listed individually below.
     BACKWARD COMPATIBILITY:
         - Some routines have been removed, which may break your old code:
             * NTriangulation::addTetrahedron(), as well as the NTetrahedron
@@ -55,10 +60,8 @@ Version 4.97  [ (under development) ]
         Class Dim2Component:
             - New routine getNumberOfBoundaryFacets(), which is identical to
               the dimension-specific getNumberOfBoundaryEdges().
-            - Routines getNumberOfSimplices(), getSimplices(), getSimplex()
-              and getNumberOfBoundaryFacets() have been renamed to size(),
-              simplices(), simplex() and countBoundaryFacets() respectively.
-              The old names are retained but deprecated.
+            - Routine getNumberOfSimplices() has been renamed to size().
+              The old names is retained but deprecated.
         Class Dim2Edge, Dim2EdgeEmbedding:
             - Now just typedefs for the new classes Face<2, 1> and
               FaceEmbedding<2, 1>, which have the same functionality as
@@ -96,8 +99,6 @@ Version 4.97  [ (under development) ]
             - You can now safely call unjoin() on a boundary edge.
             - Routine joinTo() has been renamed to join().  The old name
               joinTo() has been kept but is now deprecated.
-            - Routine getComponent() has been renamed to component().
-              The old name getComponent() has been kept but is now deprecated.
         Class Dim2Triangulation:
             - Now just a typedef for the new class Triangulation<2>, which has
               the same functionality as the old Dim2Triangulation.
@@ -107,17 +108,9 @@ Version 4.97  [ (under development) ]
             - New dimension-agnostic function hasBoundaryFacets().
             - Reconstruction from isomorphism signatures now allows
               leading and/or trailing whitespace.
-            - Routines getNumberOfSimplices(), getSimplices() and getSimplex()
-              have been renamed to size(), simplices() and simplex()
-              respectively.  The old names are deprecated but have been
-              kept for backward compatibility.
-            - Renamed getNumberOfComponents(), getComponents(), getComponent()
-              to countComponents(), components() and component().  The
-              old names are deprecated but kept for backward compatibility.
-            - Renamed getNumberOfBoundaryEdges() to countBoundaryFacets();
-              added an alias countBoundaryEdges(); deprecated the old name.
-            - Renamed template routine getNumberOfFaces<>() to countFaces<>();
-              deprecated the old name.
+            - Routine getNumberOfSimplices() has been renamed to size().
+              The old name is deprecated but kept for backward compatibility.
+            - New dimension-agnostic routine countBoundaryFacets().
             - Routines getVertices() and getEdges() no longer return a
               reference to a std::vector.  Instead they return a FaceList
               structure, which also supports C++11 range-based for loops and
@@ -182,10 +175,8 @@ Version 4.97  [ (under development) ]
         Class NComponent:
             - New routine getNumberOfBoundaryFacets(), which is identical to
               the dimension-specific getNumberOfBoundaryTriangles().
-            - Routines getNumberOfSimplices(), getSimplices(), getSimplex()
-              and getNumberOfBoundaryFacets() have been renamed to size(),
-              simplices(), simplex() and countBoundaryFacets() respectively.
-              The old names are retained but deprecated.
+            - Routines getNumberOfSimplices() has been renamed to size().
+              The old name is retained but deprecated.
         Class NContainer:
             - New constructor that takes a packet label.
         Class NCyclotomic:
@@ -373,8 +364,6 @@ Version 4.97  [ (under development) ]
             - You can now safely call unjoin() on a boundary face.
             - Routine joinTo() has been renamed to join().  The old name
               joinTo() has been kept but is now deprecated.
-            - Routine getComponent() has been renamed to component().
-              The old name getComponent() has been kept but is now deprecated.
             - Removed the long-deprecated public constructors.  To create new
               tetrahedra, call NTriangulation::newTetrahedron() instead.
         Class NThread:
@@ -434,10 +423,8 @@ Version 4.97  [ (under development) ]
               breadth-first searching through the Pachner graph.
             - Reconstruction from isomorphism signatures now allows
               leading and/or trailing whitespace.
-            - Routines getNumberOfSimplices(), getSimplices() and getSimplex()
-              have been renamed to size(), simplices() and simplex()
-              respectively.  The old names are deprecated but have been
-              kept for backward compatibility.
+            - Routine getNumberOfSimplices() has been renamed to size().
+              The old names is deprecated but kept for backward compatibility.
             - Routines findAllIsomorphisms() and findAllSubcomplexesIn() now
               take an arbitrary output iterator, instead of the user passing a
               std::list to fill with results.
@@ -449,13 +436,7 @@ Version 4.97  [ (under development) ]
               gluingsHaveChanged().
             - Removed maximalForestInDualSkeleton().  Just use
               NTriangle::inMaximalForest() instead.
-            - Renamed getNumberOfComponents(), getComponents(), getComponent()
-              to countComponents(), components() and component().  The
-              old names are deprecated but kept for backward compatibility.
-            - Renamed getNumberOfBoundaryTriangles() to countBoundaryFacets();
-              added an alias countBoundaryTriangles(); deprecated the old name.
-            - Renamed template routine getNumberOfFaces<>() to countFaces<>();
-              deprecated the old name.
+            - New dimension-agnostic routine countBoundaryFacets().
             - Removed the long-deprecated addTetrahedron().
             - Removed 2-face members FaceIterator, faceIndex(), getFace(),
               getFaces() and getNumberOfFaces(), all of which were deprecated.

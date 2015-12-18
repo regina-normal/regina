@@ -84,6 +84,15 @@ class Simplex<Derived, 2> {
          *
          * See simplex() for further information.
          */
+        regina::Simplex<2>* triangle() const {
+            return static_cast<const Derived*>(this)->simplex();
+        }
+
+        /**
+         * Deprecated dimension-specific alias for simplex().
+         *
+         * \deprecated Simply call triangle() instead.
+         */
         regina::Simplex<2>* getTriangle() const {
             return static_cast<const Derived*>(this)->simplex();
         }
@@ -104,6 +113,15 @@ class Simplex<Derived, 3> {
          *
          * See simplex() for further information.
          */
+        regina::Simplex<3>* tetrahedron() const {
+            return static_cast<const Derived*>(this)->simplex();
+        }
+
+        /**
+         * Deprecated dimension-specific alias for simplex().
+         *
+         * \deprecated Simply call tetrahedron() instead.
+         */
         regina::Simplex<3>* getTetrahedron() const {
             return static_cast<const Derived*>(this)->simplex();
         }
@@ -123,6 +141,15 @@ class Simplex<Derived, 4> {
          * A dimension-specific alias for simplex().
          *
          * See simplex() for further information.
+         */
+        regina::Simplex<4>* pentachoron() const {
+            return static_cast<const Derived*>(this)->simplex();
+        }
+
+        /**
+         * Deprecated dimension-specific alias for simplex().
+         *
+         * \deprecated Simply call pentachoron() instead.
          */
         regina::Simplex<4>* getPentachoron() const {
             return static_cast<const Derived*>(this)->simplex();

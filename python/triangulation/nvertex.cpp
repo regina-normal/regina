@@ -80,10 +80,13 @@ void addNVertex() {
             return_value_policy<reference_existing_object>())
         .def("getSimplex", &NVertexEmbedding::getSimplex,
             return_value_policy<reference_existing_object>())
+        .def("tetrahedron", &NVertexEmbedding::tetrahedron,
+            return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &NVertexEmbedding::getTetrahedron,
             return_value_policy<reference_existing_object>())
         .def("face", &NVertexEmbedding::face)
         .def("getFace", &NVertexEmbedding::getFace)
+        .def("vertex", &NVertexEmbedding::vertex)
         .def("getVertex", &NVertexEmbedding::getVertex)
         .def("vertices", &NVertexEmbedding::vertices)
         .def("getVertices", &NVertexEmbedding::getVertices)

@@ -65,10 +65,13 @@ void addNTriangle() {
             return_value_policy<reference_existing_object>())
         .def("getSimplex", &NTriangleEmbedding::getSimplex,
             return_value_policy<reference_existing_object>())
+        .def("tetrahedron", &NTriangleEmbedding::tetrahedron,
+            return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &NTriangleEmbedding::getTetrahedron,
             return_value_policy<reference_existing_object>())
         .def("face", &NTriangleEmbedding::face)
         .def("getFace", &NTriangleEmbedding::getFace)
+        .def("triangle", &NTriangleEmbedding::triangle)
         .def("getTriangle", &NTriangleEmbedding::getTriangle)
         .def("vertices", &NTriangleEmbedding::vertices)
         .def("getVertices", &NTriangleEmbedding::getVertices)
