@@ -77,7 +77,9 @@ void addDim2Component() {
         .def("size", &Dim2Component::size)
         .def("getNumberOfTriangles", &Dim2Component::getNumberOfTriangles)
         .def("getNumberOfSimplices", &Dim2Component::getNumberOfSimplices)
+        .def("countEdges", &Dim2Component::countEdges)
         .def("getNumberOfEdges", &Dim2Component::getNumberOfEdges)
+        .def("countVertices", &Dim2Component::countVertices)
         .def("getNumberOfVertices", &Dim2Component::getNumberOfVertices)
         .def("getNumberOfBoundaryComponents",
             &Dim2Component::getNumberOfBoundaryComponents)
@@ -91,7 +93,11 @@ void addDim2Component() {
             return_value_policy<reference_existing_object>())
         .def("getSimplex", &Dim2Component::getSimplex,
             return_value_policy<reference_existing_object>())
+        .def("edge", &Dim2Component::edge,
+            return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim2Component::getEdge,
+            return_value_policy<reference_existing_object>())
+        .def("vertex", &Dim2Component::vertex,
             return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim2Component::getVertex,
             return_value_policy<reference_existing_object>())

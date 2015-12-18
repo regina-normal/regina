@@ -43,6 +43,7 @@
 
 #include "regina-core.h"
 #include "generic/component.h"
+#include "generic/alias/face.h"
 
 namespace regina {
 
@@ -72,7 +73,8 @@ typedef Face<2, 1> Dim2Edge;
  * lower-dimensional faces (i.e., vertices and edges) and boundary components.
  */
 template <>
-class REGINA_API Component<2> : public detail::ComponentBase<2> {
+class REGINA_API Component<2> : public detail::ComponentBase<2>,
+        public alias::FaceOfTriangulation<Component<2>, 2> {
     private:
         std::vector<Dim2Edge*> edges_;
             /**< List of edges in the component. */
@@ -90,18 +92,19 @@ class REGINA_API Component<2> : public detail::ComponentBase<2> {
         size_t getNumberOfTriangles() const;
 
         /**
-         * Returns the number of edges in this component.
+         * Returns the number of <i>subdim</i>-faces in this component.
          *
-         * @return the number of edges.
-         */
-        size_t getNumberOfEdges() const;
-
-        /**
-         * Returns the number of vertices in this component.
+         * \pre The template argument \a subdim is either 0 or 1.
          *
-         * @return the number of vertices.
+         * \ifacespython Python does not support templates.  Instead,
+         * Python users should call this function in the form
+         * <tt>countFaces(subdim)</tt>; that is, the template parameter
+         * \a subdim becomes the first argument of the function.
+         *
+         * @return the number of <i>subdim</i>-faces.
          */
-        size_t getNumberOfVertices() const;
+        template <int subdim>
+        size_t countFaces() const;
 
         /**
          * Returns the number of boundary components in this component.
@@ -147,30 +150,24 @@ class REGINA_API Component<2> : public detail::ComponentBase<2> {
         Dim2Triangle* getTriangle(size_t index) const;
 
         /**
-         * Returns the requested edge in this component.
+         * Returns the requested <i>subdim</i>-face in this component.
          *
-         * @param index the index of the requested edge in the
-         * component.  This should be between 0 and
-         * getNumberOfEdges()-1 inclusive.
-         * Note that the index of an edge in the component need
-         * not be the index of the same edge in the entire
-         * triangulation.
-         * @return the requested edge.
-         */
-        Dim2Edge* getEdge(size_t index) const;
-
-        /**
-         * Returns the requested vertex in this component.
+         * Note that the index of a face in the component need
+         * not be the index of the same face in the overall triangulation.
          *
-         * @param index the index of the requested vertex in the
-         * component.  This should be between 0 and
-         * getNumberOfVertices()-1 inclusive.
-         * Note that the index of a vertex in the component need
-         * not be the index of the same vertex in the entire
-         * triangulation.
-         * @return the requested vertex.
+         * \pre The template argument \a subdim is either 0 or 1.
+         *
+         * \ifacespython Python does not support templates.  Instead,
+         * Python users should call this function in the form
+         * <tt>face(subdim, index)</tt>; that is, the template parameter
+         * \a subdim becomes the first argument of the function.
+         *
+         * @param index the index of the desired face, ranging from 0 to
+         * countFaces<subdim>()-1 inclusive.
+         * @return the requested face.
          */
-        Dim2Vertex* getVertex(size_t index) const;
+        template <int subdim>
+        Face<2, subdim>* face(size_t index) const;
 
         /**
          * Returns the requested boundary component in this component.
@@ -228,11 +225,13 @@ inline size_t Component<2>::getNumberOfTriangles() const {
     return size();
 }
 
-inline size_t Component<2>::getNumberOfEdges() const {
+template <>
+inline size_t Component<2>::countFaces<1>() const {
     return edges_.size();
 }
 
-inline size_t Component<2>::getNumberOfVertices() const {
+template <>
+inline size_t Component<2>::countFaces<0>() const {
     return vertices_.size();
 }
 
@@ -256,11 +255,13 @@ inline Dim2Triangle* Component<2>::getTriangle(size_t index) const {
     return simplex(index);
 }
 
-inline Dim2Edge* Component<2>::getEdge(size_t index) const {
+template <>
+inline Dim2Edge* Component<2>::face<1>(size_t index) const {
     return edges_[index];
 }
 
-inline Dim2Vertex* Component<2>::getVertex(size_t index) const {
+template <>
+inline Dim2Vertex* Component<2>::face<0>(size_t index) const {
     return vertices_[index];
 }
 

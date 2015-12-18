@@ -65,6 +65,8 @@ Version 4.97  [ (under development) ]
         Class Dim2Component:
             - New routine getNumberOfBoundaryFacets(), which is identical to
               the dimension-specific getNumberOfBoundaryEdges().
+            - New dimension-agnostic routines countFaces<subdim>() and
+              face<subdim>().
             - Routine getNumberOfSimplices() has been renamed to size().
               The old names is retained but deprecated.
         Class Dim2Edge, Dim2EdgeEmbedding:
@@ -186,8 +188,13 @@ Version 4.97  [ (under development) ]
         Class NComponent:
             - New routine getNumberOfBoundaryFacets(), which is identical to
               the dimension-specific getNumberOfBoundaryTriangles().
+            - New dimension-agnostic routines countFaces<subdim>() and
+              face<subdim>().
             - Routines getNumberOfSimplices() has been renamed to size().
               The old name is retained but deprecated.
+            - Removed 2-face members getFace() and getNumberOfFaces(), both of
+              which were deprecated.  Instead use the names that replace
+              "face" with "triangle".
         Class NContainer:
             - New constructor that takes a packet label.
         Class NCyclotomic:
