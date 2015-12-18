@@ -46,15 +46,21 @@ void addNBoundaryComponent() {
     class_<NBoundaryComponent, std::auto_ptr<NBoundaryComponent>,
             boost::noncopyable> ("NBoundaryComponent", no_init)
         .def("index", &NBoundaryComponent::index)
-        .def("getNumberOfFaces", &NBoundaryComponent::getNumberOfFaces)
+        .def("countTriangles", &NBoundaryComponent::countTriangles)
         .def("getNumberOfTriangles", &NBoundaryComponent::getNumberOfTriangles)
+        .def("countEdges", &NBoundaryComponent::countEdges)
         .def("getNumberOfEdges", &NBoundaryComponent::getNumberOfEdges)
+        .def("countVertices", &NBoundaryComponent::countVertices)
         .def("getNumberOfVertices", &NBoundaryComponent::getNumberOfVertices)
-        .def("getFace", &NBoundaryComponent::getFace,
+        .def("triangle", &NBoundaryComponent::triangle,
             return_value_policy<reference_existing_object>())
         .def("getTriangle", &NBoundaryComponent::getTriangle,
             return_value_policy<reference_existing_object>())
+        .def("edge", &NBoundaryComponent::edge,
+            return_value_policy<reference_existing_object>())
         .def("getEdge", &NBoundaryComponent::getEdge,
+            return_value_policy<reference_existing_object>())
+        .def("vertex", &NBoundaryComponent::vertex,
             return_value_policy<reference_existing_object>())
         .def("getVertex", &NBoundaryComponent::getVertex,
             return_value_policy<reference_existing_object>())

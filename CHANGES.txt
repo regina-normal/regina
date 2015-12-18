@@ -59,6 +59,8 @@ Version 4.97  [ (under development) ]
             - New template-based helper classes for sorting subfaces of
               a triangulation by degree.
         Class Dim2BoundaryComponent, Dim2Component, Dim2Edge, Dim2Vertex
+            - New dimension-agnostic routines countFaces<subdim>() and
+              face<subdim>().
             - Now derive from Output instead of ShareableObject.
         Class Dim2Component:
             - New routine getNumberOfBoundaryFacets(), which is identical to
@@ -175,6 +177,12 @@ Version 4.97  [ (under development) ]
             - Renamed getNumberOfStructures() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
             - Now uses C++11 std::thread internally instead of the old NThread.
+        Class NBoundaryComponent:
+            - New dimension-agnostic routines countFaces<subdim>() and
+              face<subdim>().
+            - Removed 2-face members getFace() and getNumberOfFaces(), both of
+              which were deprecated.  Instead use the names that replace
+              "face" with "triangle".
         Class NComponent:
             - New routine getNumberOfBoundaryFacets(), which is identical to
               the dimension-specific getNumberOfBoundaryTriangles().

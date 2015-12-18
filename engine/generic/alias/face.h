@@ -44,6 +44,9 @@
 #include "regina-core.h"
 
 namespace regina {
+
+template <int, int> class Face;
+
 namespace alias {
 
 /**
