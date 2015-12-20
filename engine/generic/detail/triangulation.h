@@ -573,6 +573,9 @@ class TriangulationBase :
          * \ifacespython Python users should call this function in the
          * form <tt>faces(subdim)</tt>.  It will then return a Python list
          * containing all the <i>subdim</i>-faces of the triangulation.
+         * Be warned that, unlike in C++, this Python list will be a
+         * snapshot of the faces when this function is called, and will
+         * \e not be kept up-to-date as the triangulation changes.
          *
          * @return access to the list of all <i>subdim</i>-faces.
          */
