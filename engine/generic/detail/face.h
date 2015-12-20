@@ -753,6 +753,10 @@ template <> class FaceNumbering<2, 0>;
 template <> class FaceNumbering<3, 2>;
 template <> class FaceNumbering<3, 1>;
 template <> class FaceNumbering<3, 0>;
+template <> class FaceNumbering<4, 3>;
+template <> class FaceNumbering<4, 2>;
+template <> class FaceNumbering<4, 1>;
+template <> class FaceNumbering<4, 0>;
 
 /**
  * Helper class that indicates what data type \a Base uses to store its

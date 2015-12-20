@@ -1042,15 +1042,13 @@ QVariant Dim4VertexModel::data(const QModelIndex& index, int role) const {
                     return QString();
             }
             case 2:
-                return static_cast<unsigned>(item->getNumberOfEmbeddings());
+                return static_cast<unsigned>(item->degree());
             case 3:
                 QString ans;
-                std::vector<regina::Dim4VertexEmbedding>::const_iterator it;
-                for (it = item->getEmbeddings().begin();
-                        it != item->getEmbeddings().end(); it++)
+                for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
-                        arg(tri->pentachoronIndex((*it).getPentachoron())).
-                        arg((*it).getVertex()));
+                        arg(emb.getPentachoron()->index()).
+                        arg(emb.getVertex()));
                 return ans;
         }
         return QString();
@@ -1140,15 +1138,13 @@ QVariant Dim4EdgeModel::data(const QModelIndex& index, int role) const {
                 else
                     return QString();
             case 2:
-                return static_cast<unsigned>(item->getNumberOfEmbeddings());
+                return static_cast<unsigned>(item->degree());
             case 3:
                 QString ans;
-                std::vector<regina::Dim4EdgeEmbedding>::const_iterator it;
-                for (it = item->getEmbeddings().begin();
-                        it != item->getEmbeddings().end(); it++)
+                for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
-                        arg(tri->pentachoronIndex((*it).getPentachoron())).
-                        arg((*it).getVertices().trunc2().c_str()));
+                        arg(emb.getPentachoron()->index()).
+                        arg(emb.getVertices().trunc2().c_str()));
                 return ans;
         }
         return QString();
@@ -1231,15 +1227,13 @@ QVariant Dim4TriangleModel::data(const QModelIndex& index, int role) const {
                 else
                     return QString();
             case 2:
-                return static_cast<unsigned>(item->getNumberOfEmbeddings());
+                return static_cast<unsigned>(item->degree());
             case 3:
                 QString ans;
-                std::deque<regina::Dim4TriangleEmbedding>::const_iterator it;
-                for (it = item->getEmbeddings().begin();
-                        it != item->getEmbeddings().end(); it++)
+                for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
-                        arg(tri->pentachoronIndex((*it).getPentachoron())).
-                        arg((*it).getVertices().trunc3().c_str()));
+                        arg(emb.getPentachoron()->index()).
+                        arg(emb.getVertices().trunc3().c_str()));
                 return ans;
         }
         return QString();
@@ -1323,13 +1317,12 @@ QVariant Dim4TetrahedronModel::data(const QModelIndex& index, int role) const {
                 return QString();
             }
             case 2:
-                return static_cast<unsigned>(item->getNumberOfEmbeddings());
+                return static_cast<unsigned>(item->degree());
             case 3:
                 QString ans;
-                for (unsigned i = 0; i < item->getNumberOfEmbeddings(); i++)
+                for (unsigned i = 0; i < item->degree(); i++)
                     appendToList(ans, QString("%1 (%2)").
-                        arg(tri->pentachoronIndex(
-                            item->getEmbedding(i).getPentachoron())).
+                        arg(item->getEmbedding(i).getPentachoron()->index()).
                         arg(item->getEmbedding(i).getVertices().
                             trunc4().c_str()));
                 return ans;
@@ -1414,8 +1407,8 @@ QVariant Dim4ComponentModel::data(const QModelIndex& index, int role) const {
             case 3:
                 QString ans;
                 for (unsigned long i = 0; i < item->getNumberOfSimplices(); i++)
-                    appendToList(ans, QString::number(tri->simplexIndex(
-                        item->getSimplex(i))));
+                    appendToList(ans, QString::number(
+                        item->simplex(i)->index()));
                 return ans;
         }
         return QString();
@@ -1510,22 +1503,19 @@ QVariant Dim4BoundaryComponentModel::data(const QModelIndex& index,
                 if (item->isIdeal() || item->isInvalidVertex()) {
                     Dim4Vertex* v = item->getVertex(0);
                     QString ans;
-                    std::vector<regina::Dim4VertexEmbedding>::const_iterator it;
-                    for (it = v->getEmbeddings().begin();
-                            it != v->getEmbeddings().end(); it++)
+                    for (auto& emb : *v)
                         appendToList(ans, QString("%1 (%2)").
-                            arg(tri->pentachoronIndex((*it).getPentachoron())).
-                            arg((*it).getVertex()));
-                    return tr("Vertex %1 = ").arg(tri->vertexIndex(v)) + ans;
+                            arg(emb.getPentachoron()->index()).
+                            arg(emb.getVertex()));
+                    return tr("Vertex %1 = ").arg(v->index()) + ans;
                 } else {
                     QString ans;
                     for (unsigned long i = 0;
                             i < item->getNumberOfTetrahedra(); i++) {
                         const Dim4TetrahedronEmbedding& emb =
-                            item->getTetrahedron(i)->getEmbedding(0);
+                            item->getTetrahedron(i)->front();
                         appendToList(ans, QString("%1 (%2)").
-                            arg(tri->pentachoronIndex(
-                                emb.getPentachoron())).
+                            arg(emb.getPentachoron()->index()).
                             arg(emb.getVertices().trunc4().c_str()));
                     }
                     return ans;

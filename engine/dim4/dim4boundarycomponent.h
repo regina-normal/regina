@@ -44,21 +44,22 @@
 #include <vector>
 #include "regina-core.h"
 #include "output.h"
+#include "generic/alias/face.h"
 #include "utilities/nmarkedvector.h"
 #include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
-class Dim4Edge;
-class Dim4Tetrahedron;
-class Dim4Triangle;
-class Dim4Vertex;
-
 template <int> class Component;
 template <int> class Triangulation;
+template <int, int> class Face;
 typedef Component<4> Dim4Component;
 typedef Triangulation<3> NTriangulation;
+typedef Face<4, 3> Dim4Tetrahedron;
+typedef Face<4, 2> Dim4Triangle;
+typedef Face<4, 1> Dim4Edge;
+typedef Face<4, 0> Dim4Vertex;
 
 /**
  * \weakgroup dim4
@@ -94,6 +95,7 @@ typedef Triangulation<3> NTriangulation;
  */
 class REGINA_API Dim4BoundaryComponent :
         public Output<Dim4BoundaryComponent>,
+        public alias::FaceOfTriangulation<Dim4BoundaryComponent, 4>,
         public boost::noncopyable,
         public NMarkedElement {
     private:
@@ -129,116 +131,44 @@ class REGINA_API Dim4BoundaryComponent :
         unsigned long index() const;
 
         /**
-         * Returns the number of tetrahedra in this boundary component.
+         * Returns the number of <i>subdim</i>-faces in this boundary component.
          *
-         * @return the number of tetrahedra.
+         * \pre The template argument \a subdim is between 0 and 3 inclusive.
+         *
+         * \ifacespython Python does not support templates.  Instead,
+         * Python users should call this function in the form
+         * <tt>countFaces(subdim)</tt>; that is, the template parameter
+         * \a subdim becomes the first argument of the function.
+         *
+         * @return the number of <i>subdim</i>-faces.
          */
-        unsigned long getNumberOfTetrahedra() const;
+        template <int subdim>
+        size_t countFaces() const;
 
         /**
-         * Returns the number of triangles in this boundary component.
+         * Returns the requested <i>subdim</i>-face in this boundary component.
          *
-         * @return the number of triangles.
-         */
-        unsigned long getNumberOfTriangles() const;
-
-        /**
-         * Returns the number of edges in this boundary component.
-         *
-         * @return the number of edges.
-         */
-        unsigned long getNumberOfEdges() const;
-
-        /**
-         * Returns the number of vertices in this boundary component.
-         *
-         * @return the number of vertices.
-         */
-        unsigned long getNumberOfVertices() const;
-
-        /**
-         * Returns the requested tetrahedron in this boundary component.
-         *
-         * The index of a Dim4Tetrahedron in the boundary component need
-         * not be the index of the same tetrahedron in the entire
-         * 4-manifold triangulation.  However, if this boundary component
-         * is built from one or more tetrahedra (i.e., it is not ideal),
-         * then the index of each Dim4Tetrahedron in this boundary component
-         * matches the index of the corresponding NTetrahedron in the
+         * Note that the index of a face in the boundary component need
+         * not be the index of the same face in the overall triangulation.
+         * However, if this boundary component is built from one or more
+         * tetrahedra (i.e., it is not ideal), then the index of each
+         * <i>subdim</i>-face in this boundary component
+         * matches the index of the corresponding <i>subdim</i>-face in the
          * 3-manifold triangulation returned by getTriangulation().
          *
-         * For an ideal boundary component (which consists of a single
-         * vertex), there are no real tetrahedra in the boundary component
-         * and this routine cannot be used.
+         * \pre The template argument \a subdim is between 0 and 3 inclusive.
          *
-         * @param index the index of the requested tetrahedron in the boundary
-         * component.  This should be between 0 and getNumberOfTetrahedra()-1
-         * inclusive.
-         * @return the requested tetrahedron.
+         * \ifacespython Python does not support templates.  Instead,
+         * Python users should call this function in the form
+         * <tt>face(subdim, index)</tt>; that is, the template parameter
+         * \a subdim becomes the first argument of the function.
+         *
+         * @param index the index of the desired face, ranging from 0 to
+         * countFaces<subdim>()-1 inclusive.
+         * @return the requested face.
          */
-        Dim4Tetrahedron* getTetrahedron(unsigned long index) const;
-
-        /**
-         * Returns the requested triangle in this boundary component.
-         *
-         * The index of a Dim4Triangle in the boundary component need
-         * not be the index of the same triangle in the entire
-         * 4-manifold triangulation.  However, if this boundary component
-         * is built from one or more tetrahedra (i.e., it is not ideal),
-         * then the index of each Dim4Triangle in this boundary component
-         * matches the index of the corresponding NTriangle in the
-         * 3-manifold triangulation returned by getTriangulation().
-         *
-         * For an ideal boundary component (which consists of a single
-         * vertex), there are no real triangles in the boundary component
-         * and this routine cannot be used.
-         *
-         * @param index the index of the requested triangle in the boundary
-         * component.  This should be between 0 and getNumberOfTriangles()-1
-         * inclusive.
-         * @return the requested triangle.
-         */
-        Dim4Triangle* getTriangle(unsigned long index) const;
-
-        /**
-         * Returns the requested edge in this boundary component.
-         *
-         * The index of a Dim4Edge in the boundary component need
-         * not be the index of the same edge in the entire
-         * 4-manifold triangulation.  However, if this boundary component
-         * is built from one or more tetrahedra (i.e., it is not ideal),
-         * then the index of each Dim4Edge in this boundary component
-         * matches the index of the corresponding NEdge in the
-         * 3-manifold triangulation returned by getTriangulation().
-         *
-         * For an ideal boundary component (which consists of a single
-         * vertex), there are no real edges in the boundary component
-         * and this routine cannot be used.
-         *
-         * @param index the index of the requested edge in the boundary
-         * component.  This should be between 0 and getNumberOfEdges()-1
-         * inclusive.
-         * @return the requested edge.
-         */
-        Dim4Edge* getEdge(unsigned long index) const;
-
-        /**
-         * Returns the requested vertex in this boundary component.
-         *
-         * The index of a Dim4Vertex in the boundary component need
-         * not be the index of the same vertex in the entire
-         * 4-manifold triangulation.  However, if this boundary component
-         * is built from one or more tetrahedra (i.e., it is not ideal),
-         * then the index of each Dim4Vertex in this boundary component
-         * matches the index of the corresponding NVertex in the
-         * 3-manifold triangulation returned by getTriangulation().
-         *
-         * @param index the index of the requested vertex in the boundary
-         * component.  This should be between 0 and getNumberOfVertices()-1
-         * inclusive.
-         * @return the requested vertex.
-         */
-        Dim4Vertex* getVertex(unsigned long index) const;
+        template <int subdim>
+        Face<4, subdim>* face(size_t index) const;
 
         /**
          * Returns the component of the triangulation to which this
@@ -372,37 +302,43 @@ inline unsigned long Dim4BoundaryComponent::index() const {
     return markedIndex();
 }
 
-inline unsigned long Dim4BoundaryComponent::getNumberOfTetrahedra() const {
+template <>
+inline size_t Dim4BoundaryComponent::countFaces<3>() const {
     return tetrahedra_.size();
 }
 
-inline unsigned long Dim4BoundaryComponent::getNumberOfTriangles() const {
+template <>
+inline size_t Dim4BoundaryComponent::countFaces<2>() const {
     return triangles_.size();
 }
 
-inline unsigned long Dim4BoundaryComponent::getNumberOfEdges() const {
+template <>
+inline size_t Dim4BoundaryComponent::countFaces<1>() const {
     return edges_.size();
 }
 
-inline unsigned long Dim4BoundaryComponent::getNumberOfVertices() const {
+template <>
+inline size_t Dim4BoundaryComponent::countFaces<0>() const {
     return vertices_.size();
 }
 
-inline Dim4Tetrahedron* Dim4BoundaryComponent::getTetrahedron(
-        unsigned long index) const {
+template <>
+inline Dim4Tetrahedron* Dim4BoundaryComponent::face<3>(size_t index) const {
     return tetrahedra_[index];
 }
 
-inline Dim4Triangle* Dim4BoundaryComponent::getTriangle(unsigned long index)
-        const {
+template <>
+inline Dim4Triangle* Dim4BoundaryComponent::face<2>(size_t index) const {
     return triangles_[index];
 }
 
-inline Dim4Edge* Dim4BoundaryComponent::getEdge(unsigned long index) const {
+template <>
+inline Dim4Edge* Dim4BoundaryComponent::face<1>(size_t index) const {
     return edges_[index];
 }
 
-inline Dim4Vertex* Dim4BoundaryComponent::getVertex(unsigned long index) const {
+template <>
+inline Dim4Vertex* Dim4BoundaryComponent::face<0>(size_t index) const {
     return vertices_[index];
 }
 

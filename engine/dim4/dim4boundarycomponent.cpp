@@ -58,20 +58,16 @@ void Dim4BoundaryComponent::writeTextLong(std::ostream& out) const {
 
     if (isIdeal() || isInvalidVertex()) {
         Dim4Vertex* v = vertices_.front();
-        out << "Vertex: " << v->markedIndex() << std::endl;
+        out << "Vertex: " << v->index() << std::endl;
         out << "Appears as:" << std::endl;
-        std::vector<Dim4VertexEmbedding>::const_iterator it;
-        for (it = v->getEmbeddings().begin(); it != v->getEmbeddings().end();
-                ++it)
-            out << "  " << it->getPentachoron()->markedIndex()
-                << " (" << it->getVertex() << ')' << std::endl;
+        for (auto& emb : *v)
+            out << "  " << emb.getPentachoron()->index()
+                << " (" << emb.getVertex() << ')' << std::endl;
     } else {
         out << "Tetrahedra:" << std::endl;
-        std::vector<Dim4Tetrahedron*>::const_iterator it;
-        for (it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it) {
-            const Dim4TetrahedronEmbedding& emb((*it)->getEmbedding(0));
-            out << "  " << emb.getPentachoron()->markedIndex() << " ("
-                << emb.getVertices().trunc4() << ')' << std::endl;
+        for (auto tet : tetrahedra_)
+            out << "  " << tet->front().getPentachoron()->index() << " ("
+                << tet->front().getVertices().trunc4() << ')' << std::endl;
         }
     }
 }

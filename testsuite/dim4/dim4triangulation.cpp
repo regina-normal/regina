@@ -1628,8 +1628,8 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 NPerm5 perm;
                 const NTriangulation* vLink;
                 for (j = 0; j < 2; ++j) {
-                    p = e->getEmbeddings().front().getPentachoron();
-                    perm = e->getEmbeddings().front().getVertices();
+                    p = e->front().getPentachoron();
+                    perm = e->front().getVertices();
 
                     // In the vertex link at the jth end of this edge,
                     // find the vertex that this edge projects down to.

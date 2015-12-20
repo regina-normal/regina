@@ -40,7 +40,7 @@
 namespace regina {
 
 template <>
-bool TriangulationBase<4>::compatible(
+bool detail::TriangulationBase<4>::compatible(
         const Dim4Triangulation& other, bool complete) const {
     const Dim4Triangulation* me = static_cast<const Dim4Triangulation*>(this);
 
@@ -52,13 +52,13 @@ bool TriangulationBase<4>::compatible(
         // identical.
         if (size() != other.size())
             return 0;
-        if (me->tetrahedra_.size() != other.tetrahedra_.size())
+        if (me->countTetrahedra() != other.countTetrahedra())
             return 0;
-        if (me->triangles_.size() != other.triangles_.size())
+        if (me->countTriangles() != other.countTriangles())
             return 0;
-        if (me->edges_.size() != other.edges_.size())
+        if (me->countEdges() != other.countEdges())
             return 0;
-        if (me->vertices_.size() != other.vertices_.size())
+        if (me->countVertices() != other.countVertices())
             return 0;
         if (countComponents() != other.countComponents())
             return 0;
@@ -73,18 +73,14 @@ bool TriangulationBase<4>::compatible(
         std::map<unsigned long, unsigned long>::iterator mapIt;
 
         {
-            Dim4Triangulation::TriangleIterator it;
-            for (it = me->triangles_.begin(); it != me->triangles_.end(); it++) {
+            for (auto f : me->triangles()) {
                 // Find this degree, or insert it with frequency 0 if it's
                 // not already present.
-                mapIt = map1.insert(
-                    std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
+                mapIt = map1.insert(std::make_pair(f->degree(), 0)).first;
                 (*mapIt).second++;
             }
-            for (it = other.triangles_.begin(); it != other.triangles_.end();
-                    it++) {
-                mapIt = map2.insert(
-                    std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
+            for (auto f : other.triangles()) {
+                mapIt = map2.insert(std::make_pair(f->degree(), 0)).first;
                 (*mapIt).second++;
             }
             if (! (map1 == map2))
@@ -93,17 +89,14 @@ bool TriangulationBase<4>::compatible(
             map2.clear();
         }
         {
-            Dim4Triangulation::EdgeIterator it;
-            for (it = me->edges_.begin(); it != me->edges_.end(); it++) {
+            for (auto f : me->edges()) {
                 // Find this degree, or insert it with frequency 0 if it's
                 // not already present.
-                mapIt = map1.insert(
-                    std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
+                mapIt = map1.insert(std::make_pair(f->degree(), 0)).first;
                 (*mapIt).second++;
             }
-            for (it = other.edges_.begin(); it != other.edges_.end(); it++) {
-                mapIt = map2.insert(
-                    std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
+            for (auto f : other.edges()) {
+                mapIt = map2.insert(std::make_pair(f->degree(), 0)).first;
                 (*mapIt).second++;
             }
             if (! (map1 == map2))
@@ -112,16 +105,12 @@ bool TriangulationBase<4>::compatible(
             map2.clear();
         }
         {
-            Dim4Triangulation::VertexIterator it;
-            for (it = me->vertices_.begin(); it != me->vertices_.end(); it++) {
-                mapIt = map1.insert(
-                    std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
+            for (auto f : me->vertices()) {
+                mapIt = map1.insert(std::make_pair(f->degree(), 0)).first;
                 (*mapIt).second++;
             }
-            for (it = other.vertices_.begin();
-                    it != other.vertices_.end(); it++) {
-                mapIt = map2.insert(
-                    std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
+            for (auto f : other.vertices()) {
+                mapIt = map2.insert(std::make_pair(f->degree(), 0)).first;
                 (*mapIt).second++;
             }
             if (! (map1 == map2))
@@ -179,28 +168,28 @@ bool TriangulationBase<4>::compatible(
 }
 
 template <>
-bool TriangulationBase<4>::compatible(
+bool detail::TriangulationBase<4>::compatible(
         Simplex<4>* src, Simplex<4>* dest, NPerm<5> p) {
     for (int triangle = 0; triangle < 10; triangle++)
-        if (src->getTriangle(triangle)->getNumberOfEmbeddings() !=
+        if (src->getTriangle(triangle)->degree() !=
                 dest->getTriangle(Dim4Triangle::triangleNumber
                     [p[Dim4Triangle::triangleVertex[triangle][0]]]
                     [p[Dim4Triangle::triangleVertex[triangle][1]]]
                     [p[Dim4Triangle::triangleVertex[triangle][2]]])
-                ->getNumberOfEmbeddings())
+                ->degree())
             return false;
 
     for (int edge = 0; edge < 10; edge++)
-        if (src->getEdge(edge)->getNumberOfEmbeddings() !=
+        if (src->getEdge(edge)->degree() !=
                 dest->getEdge(Dim4Edge::edgeNumber
                     [p[Dim4Edge::edgeVertex[edge][0]]]
                     [p[Dim4Edge::edgeVertex[edge][1]]])
-                ->getNumberOfEmbeddings())
+                ->degree())
             return false;
 
     for (int vertex = 0; vertex < 5; vertex++)
-        if (src->getVertex(vertex)->getNumberOfEmbeddings() !=
-                dest->getVertex(p[vertex])->getNumberOfEmbeddings())
+        if (src->getVertex(vertex)->degree() !=
+                dest->getVertex(p[vertex])->degree())
             return false;
 
     return true;

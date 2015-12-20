@@ -98,7 +98,7 @@ const Dim4Vertex* NNormalHypersurfaceVector::isVertexLink(
     // surrounding vertex ans.  However, although it is already implied
     // by the matching equations, let's just ensure the number
     // of pieces of each type is the same.
-    for (unsigned long e = 0; e < ans->getNumberOfEmbeddings(); ++e)
+    for (unsigned long e = 0; e < ans->degree(); ++e)
         if (ansMult != getTetrahedronCoord(
                 triang->pentachoronIndex(ans->getEmbedding(e).getPentachoron()),
                 ans->getEmbedding(e).getVertex(), triang))
@@ -147,7 +147,7 @@ const Dim4Edge* NNormalHypersurfaceVector::isThinEdgeLink(
     // There are no unwanted prism piece types.  However, we must still
     // run through the prism types that do appear to make sure that they
     // each appear with the same multiple.
-    for (unsigned long e = 0; e < ans->getNumberOfEmbeddings(); ++e)
+    for (unsigned long e = 0; e < ans->degree(); ++e)
         if (ansMult != getPrismCoord(
                 triang->pentachoronIndex(ans->getEmbedding(e).getPentachoron()),
                 ans->getEmbedding(e).getEdge(), triang))

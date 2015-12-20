@@ -141,13 +141,12 @@ namespace {
 }
 
 bool Dim4Triangulation::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
-    const std::vector<Dim4EdgeEmbedding>& embs = e->getEmbeddings();
     if (check) {
         // e must be valid and non-boundary.
         if (e->isBoundary() || ! e->isValid())
             return false;
         // e must have degree four.
-        if (embs.size() != 4)
+        if (e->degree() != 4)
             return false;
     }
 
@@ -165,8 +164,8 @@ bool Dim4Triangulation::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
     // oldPent[2] / 34 -> oldPent[3] / 43
     // This is possible iff we have a 3-simplex link.
 
-    oldPent[0] = embs[0].getPentachoron();
-    oldVertices[0] = embs[0].getVertices();
+    oldPent[0] = front().getPentachoron();
+    oldVertices[0] = front().getVertices();
 
     int i,j;
     for (i = 1; i < 4; ++i) {
@@ -272,13 +271,12 @@ bool Dim4Triangulation::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
 
 bool Dim4Triangulation::threeThreeMove(Dim4Triangle* f, bool check,
         bool perform) {
-    const std::deque<Dim4TriangleEmbedding>& embs = f->getEmbeddings();
     if (check) {
         // f must be valid and non-boundary.
         if (f->isBoundary() || ! f->isValid())
             return false;
         // f must have degree three.
-        if (embs.size() != 3)
+        if (f->degree() != 3)
             return false;
     }
 
@@ -287,12 +285,12 @@ bool Dim4Triangulation::threeThreeMove(Dim4Triangle* f, bool check,
     NPerm5 oldVertices[3]; // 012 -> triangle, 34 -> link
     int i,j;
     for (i = 0; i < 3; ++i) {
-        oldPent[i] = embs[i].getPentachoron();
+        oldPent[i] = embedding(i).getPentachoron();
         if (check)
             for (j = 0; j < i; ++j)
                 if (oldPent[i] == oldPent[j])
                     return false;
-        oldVertices[i] = embs[i].getVertices();
+        oldVertices[i] = embedding(i).getVertices();
     }
 
     if (! perform)
@@ -372,7 +370,7 @@ bool Dim4Triangulation::threeThreeMove(Dim4Triangle* f, bool check,
 bool Dim4Triangulation::twoFourMove(Dim4Tetrahedron* f, bool check,
         bool perform) {
     if (check) {
-        if (f->getNumberOfEmbeddings() != 2)
+        if (f->degree() != 2)
             return false;
         // We now know that the given facet is not on the boundary.
     }
@@ -532,7 +530,7 @@ bool Dim4Triangulation::twoZeroMove(Dim4Triangle* t, bool check, bool perform) {
     if (check) {
         if (t->isBoundary() || ! t->isValid())
             return false;
-        if (t->getNumberOfEmbeddings() != 2)
+        if (t->degree() != 2)
             return false;
     }
 
@@ -707,7 +705,7 @@ bool Dim4Triangulation::twoZeroMove(Dim4Edge* e, bool check, bool perform) {
         // a 2-sphere.  See Dim4Edge::isValid() for details.
         if (e->isBoundary() || ! e->isValid())
             return false;
-        if (e->getNumberOfEmbeddings() != 2)
+        if (e->degree() != 2)
             return false;
     }
 
@@ -961,9 +959,6 @@ bool Dim4Triangulation::shellBoundary(Dim4Pentachoron* p,
 
 bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
     // Find the pentachora to remove.
-    const std::vector<Dim4EdgeEmbedding>& embs = e->getEmbeddings();
-
-    std::vector<Dim4EdgeEmbedding>::const_iterator it;
     Dim4Pentachoron* pent = 0;
     NPerm5 p;
 
@@ -1291,15 +1286,12 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
             Dim4Tetrahedron *upper, *lower;
             long id1, id2;
 
-            for (it = embs.begin(); it != embs.end(); ++it) {
-                pent = it->getPentachoron();
-                p = it->getVertices();
+            for (auto& emb : *e) {
+                upper = emb.simplex()->tetrahedron(emb.vertices()[0]);
+                lower = emb.simplex()->tetrahedron(emb.vertices()[1]);
 
-                upper = pent->getTetrahedron(p[0]);
-                lower = pent->getTetrahedron(p[1]);
-
-                id1 = (upper->isBoundary() ? nTets : upper->markedIndex());
-                id2 = (lower->isBoundary() ? nTets : lower->markedIndex());
+                id1 = (upper->isBoundary() ? nTets : upper->index());
+                id2 = (lower->isBoundary() ? nTets : lower->index());
 
                 // This 4-pillow joins nodes id1 and id2 in the graph G.
                 if (! unionFindInsert(parent, depth, id1, id2)) {
@@ -1327,13 +1319,15 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
 
     // Clone the edge embeddings because we cannot rely on skeletal
     // objects once we start changing the triangulation.
-    unsigned nEmbs = embs.size();
+    unsigned nEmbs = e->degree();
     Dim4Pentachoron** embPent = new Dim4Pentachoron*[nEmbs];
     NPerm5* embVert = new NPerm5[nEmbs];
-    unsigned i;
-    for (i = 0; i < embs.size(); ++i) {
-        embPent[i] = embs[i].getPentachoron();
-        embVert[i] = embs[i].getVertices();
+
+    unsigned i = 0;
+    for (auto& emb : *e) {
+        embPent[i] = emb.simplex();
+        embVert[i] = emb.vertices();
+        ++i;
     }
 
     for (i = 0; i < nEmbs; ++i) {

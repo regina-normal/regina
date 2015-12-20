@@ -46,9 +46,8 @@ namespace regina {
 NLargeInteger NNormalHypersurfaceVectorStandard::getEdgeWeight(
         unsigned long edgeIndex, const Dim4Triangulation* triang) const {
     // Find a pentachoron next to the edge in question.
-    const Dim4EdgeEmbedding& emb = triang->getEdges()[edgeIndex]->
-        getEmbeddings().front();
-    long pentIndex = triang->pentachoronIndex(emb.getPentachoron());
+    const Dim4EdgeEmbedding& emb = triang->edge(edgeIndex)->front();
+    long pentIndex = emb.getPentachoron()->index();
     int start = emb.getVertices()[0];
     int end = emb.getVertices()[1];
 

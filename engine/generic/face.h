@@ -182,6 +182,10 @@ template <> class Face<2, 0>;
 template <> class Face<3, 2>;
 template <> class Face<3, 1>;
 template <> class Face<3, 0>;
+template <> class Face<4, 3>;
+template <> class Face<4, 2>;
+template <> class Face<4, 1>;
+template <> class Face<4, 0>;
 
 /*@}*/
 
