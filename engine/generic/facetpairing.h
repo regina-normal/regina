@@ -38,7 +38,7 @@
 #endif
 
 /*! \file generic/facetpairing.h
- *  \brief Deals with dual graphs of \a n-dimensional triangulations.
+ *  \brief Deals with dual graphs of <i>n</i>-dimensional triangulations.
  */
 
 #include "generic/detail/facetpairing.h"
@@ -52,14 +52,14 @@ namespace regina {
 
 /**
  * Represents the dual graph of a <i>dim</i>-manifold triangulation;
- * that is, the pairwise matching of facets of \a dim-dimensional simplices.
+ * that is, the pairwise matching of facets of <i>dim</i>-dimensional simplices.
  *
- * Given a fixed number of \a dim-dimensional simplices,
+ * Given a fixed number of <i>dim</i>-dimensional simplices,
  * each facet of each simplex is either paired with some other simplex facet
  * (which is in turn paired with it) or remains unmatched.
  * A simplex facet cannot be paired with itself.
  *
- * Such a matching models part of the structure of a \a dim-manifold
+ * Such a matching models part of the structure of a <i>dim</i>-manifold
  * triangulation, in which each simplex facet is either glued to some
  * other simplex facet (which is in turn glued to it) or is an unglued
  * boundary facet.
