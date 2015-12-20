@@ -46,8 +46,8 @@ namespace {
         &Dim2Triangulation::newTriangle;
     regina::Dim2Triangle* (Dim2Triangulation::*newTriangle_string)(
         const std::string&) = &Dim2Triangulation::newTriangle;
-    regina::Dim2Triangle* (Dim2Triangulation::*getTriangle_non_const)(
-        unsigned long) = &Dim2Triangulation::getTriangle;
+    regina::Dim2Triangle* (Dim2Triangulation::*triangle_non_const)(
+        size_t) = &Dim2Triangulation::triangle;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_oneThreeMove,
         Dim2Triangulation::oneThreeMove, 1, 3);
@@ -77,18 +77,18 @@ namespace {
         return ans;
     }
 
-    boost::python::list Dim2_getVertices_list(Dim2Triangulation& t) {
+    boost::python::list Dim2_vertices_list(Dim2Triangulation& t) {
         boost::python::list ans;
         for (Dim2Triangulation::VertexIterator it =
-                t.getVertices().begin(); it != t.getVertices().end(); ++it)
+                t.vertices().begin(); it != t.vertices().end(); ++it)
             ans.append(boost::python::ptr(*it));
         return ans;
     }
 
-    boost::python::list Dim2_getEdges_list(Dim2Triangulation& t) {
+    boost::python::list Dim2_edges_list(Dim2Triangulation& t) {
         boost::python::list ans;
         for (Dim2Triangulation::EdgeIterator it =
-                t.getEdges().begin(); it != t.getEdges().end(); ++it)
+                t.edges().begin(); it != t.edges().end(); ++it)
             ans.append(boost::python::ptr(*it));
         return ans;
     }
@@ -161,11 +161,13 @@ void addDim2Triangulation() {
         .def("getTriangles", Dim2_getTriangles_list)
         .def("getSimplices", Dim2_getTriangles_list)
         .def("simplices", Dim2_getTriangles_list)
-        .def("getTriangle", getTriangle_non_const,
+        .def("triangle", triangle_non_const,
             return_internal_reference<>())
-        .def("getSimplex", getTriangle_non_const,
+        .def("getTriangle", triangle_non_const,
             return_internal_reference<>())
-        .def("simplex", getTriangle_non_const,
+        .def("getSimplex", triangle_non_const,
+            return_internal_reference<>())
+        .def("simplex", triangle_non_const,
             return_internal_reference<>())
         .def("triangleIndex", &Dim2Triangulation::triangleIndex)
         .def("simplexIndex", &Dim2Triangulation::simplexIndex)
@@ -189,20 +191,28 @@ void addDim2Triangulation() {
         .def("getNumberOfComponents", &Dim2Triangulation::getNumberOfComponents)
         .def("getNumberOfBoundaryComponents",
             &Dim2Triangulation::getNumberOfBoundaryComponents)
+        .def("countVertices", &Dim2Triangulation::countVertices)
         .def("getNumberOfVertices", &Dim2Triangulation::getNumberOfVertices)
+        .def("countEdges", &Dim2Triangulation::countEdges)
         .def("getNumberOfEdges", &Dim2Triangulation::getNumberOfEdges)
         .def("components", Dim2_getComponents_list)
         .def("getComponents", Dim2_getComponents_list)
         .def("getBoundaryComponents", Dim2_getBoundaryComponents_list)
-        .def("getVertices", Dim2_getVertices_list)
-        .def("getEdges", Dim2_getEdges_list)
+        .def("vertices", Dim2_vertices_list)
+        .def("getVertices", Dim2_vertices_list)
+        .def("edges", Dim2_edges_list)
+        .def("getEdges", Dim2_edges_list)
         .def("component", &Dim2Triangulation::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim2Triangulation::getComponent,
             return_internal_reference<>())
         .def("getBoundaryComponent", &Dim2Triangulation::getBoundaryComponent,
             return_internal_reference<>())
+        .def("vertex", &Dim2Triangulation::vertex,
+            return_internal_reference<>())
         .def("getVertex", &Dim2Triangulation::getVertex,
+            return_internal_reference<>())
+        .def("edge", &Dim2Triangulation::edge,
             return_internal_reference<>())
         .def("getEdge", &Dim2Triangulation::getEdge,
             return_internal_reference<>())

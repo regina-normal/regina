@@ -218,15 +218,13 @@ QVariant VertexModel::data(const QModelIndex& index, int role) const {
                 return QString();
             }
             case 2:
-                return static_cast<unsigned>(item->getNumberOfEmbeddings());
+                return static_cast<unsigned>(item->getDegree());
             case 3:
                 QString ans;
-                std::vector<regina::NVertexEmbedding>::const_iterator it;
-                for (it = item->getEmbeddings().begin();
-                        it != item->getEmbeddings().end(); ++it)
+                for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
-                        arg(tri->tetrahedronIndex(it->getTetrahedron())).
-                        arg(it->getVertex()));
+                        arg(emb.getTetrahedron()->index()).
+                        arg(emb.getVertex()));
                 return ans;
         }
         return QString();
@@ -310,15 +308,13 @@ QVariant EdgeModel::data(const QModelIndex& index, int role) const {
                 else
                     return QString();
             case 2:
-                return static_cast<unsigned>(item->getNumberOfEmbeddings());
+                return static_cast<unsigned>(item->getDegree());
             case 3:
                 QString ans;
-                std::deque<regina::NEdgeEmbedding>::const_iterator it;
-                for (it = item->getEmbeddings().begin();
-                        it != item->getEmbeddings().end(); ++it)
+                for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
-                        arg(tri->tetrahedronIndex(it->getTetrahedron())).
-                        arg(it->getVertices().trunc2().c_str()));
+                        arg(emb.getTetrahedron()->index()).
+                        arg(emb.getVertices().trunc2().c_str()));
                 return ans;
         }
         return QString();
@@ -418,15 +414,13 @@ QVariant TriangleModel::data(const QModelIndex& index, int role) const {
                 return prefix + tr("UNKNOWN");
             }
             case 2:
-                return static_cast<unsigned>(item->getNumberOfEmbeddings());
+                return static_cast<unsigned>(item->getDegree());
             case 3:
                 QString ans;
-                for (unsigned i = 0; i < item->getNumberOfEmbeddings(); i++)
+                for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
-                        arg(tri->tetrahedronIndex(
-                            item->getEmbedding(i).getTetrahedron())).
-                        arg(item->getEmbedding(i).getVertices().
-                            trunc3().c_str()));
+                        arg(emb.getTetrahedron()->index()).
+                        arg(emb.getVertices().trunc3().c_str()));
                 return ans;
         }
         return QString();
@@ -510,8 +504,8 @@ QVariant ComponentModel::data(const QModelIndex& index, int role) const {
                 QString ans;
                 for (unsigned long i = 0; i < item->getNumberOfTetrahedra();
                         i++)
-                    appendToList(ans, QString::number(tri->tetrahedronIndex(
-                        item->getTetrahedron(i))));
+                    appendToList(ans, QString::number(
+                        item->getTetrahedron(i)->index()));
                 return ans;
         }
         return QString();
@@ -603,21 +597,19 @@ QVariant BoundaryComponentModel::data(const QModelIndex& index,
                 if (item->isIdeal()) {
                     NVertex* v = item->getVertex(0);
                     QString ans;
-                    std::vector<regina::NVertexEmbedding>::const_iterator it;
-                    for (it = v->getEmbeddings().begin();
-                            it != v->getEmbeddings().end(); it++)
+                    for (auto& emb : *v)
                         appendToList(ans, QString("%1 (%2)").
-                            arg(tri->tetrahedronIndex((*it).getTetrahedron())).
-                            arg(it->getVertex()));
-                    return tr("Vertex %1 = ").arg(tri->vertexIndex(v)) + ans;
+                            arg(emb.getTetrahedron()->index()).
+                            arg(emb.getVertex()));
+                    return tr("Vertex %1 = ").arg(v->index()) + ans;
                 } else {
                     QString ans;
                     for (unsigned long i = 0;
                             i < item->getNumberOfTriangles(); ++i) {
                         const NTriangleEmbedding& emb =
-                            item->getTriangle(i)->getEmbedding(0);
+                            item->getTriangle(i)->front();
                         appendToList(ans, QString("%1 (%2)").
-                            arg(tri->tetrahedronIndex(emb.getTetrahedron())).
+                            arg(emb.getTetrahedron()->index()).
                             arg(emb.getVertices().trunc3().c_str()));
                     }
                     return ans;
@@ -706,15 +698,13 @@ QVariant Dim2VertexModel::data(const QModelIndex& index, int role) const {
                 else
                     return QString();
             case 2:
-                return static_cast<unsigned>(item->getNumberOfEmbeddings());
+                return static_cast<unsigned>(item->getDegree());
             case 3:
                 QString ans;
-                std::deque<regina::Dim2VertexEmbedding>::const_iterator it;
-                for (it = item->getEmbeddings().begin();
-                        it != item->getEmbeddings().end(); it++)
+                for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
-                        arg(tri->triangleIndex((*it).getTriangle())).
-                        arg((*it).getVertex()));
+                        arg(emb.getTriangle()->index()).
+                        arg(emb.getVertex()));
                 return ans;
         }
         return QString();
@@ -796,15 +786,13 @@ QVariant Dim2EdgeModel::data(const QModelIndex& index, int role) const {
                 else
                     return QString();
             case 2:
-                return static_cast<unsigned>(item->getNumberOfEmbeddings());
+                return static_cast<unsigned>(item->getDegree());
             case 3:
                 QString ans;
-                for (unsigned i = 0; i < item->getNumberOfEmbeddings(); i++)
+                for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
-                        arg(tri->triangleIndex(
-                            item->getEmbedding(i).getTriangle())).
-                        arg(item->getEmbedding(i).getVertices().
-                            trunc2().c_str()));
+                        arg(emb.getTriangle()->index()).
+                        arg(emb.getVertices().trunc2().c_str()));
                 return ans;
         }
         return QString();
@@ -885,8 +873,8 @@ QVariant Dim2ComponentModel::data(const QModelIndex& index, int role) const {
             case 3:
                 QString ans;
                 for (unsigned long i = 0; i < item->getNumberOfTriangles(); ++i)
-                    appendToList(ans, QString::number(tri->triangleIndex(
-                        item->getTriangle(i))));
+                    appendToList(ans, QString::number(
+                        item->getTriangle(i)->index()));
                 return ans;
         }
         return QString();
@@ -967,10 +955,9 @@ QVariant Dim2BoundaryComponentModel::data(const QModelIndex& index,
             case 2:
                 QString ans;
                 for (unsigned long i = 0; i < item->getNumberOfEdges(); ++i) {
-                    const Dim2EdgeEmbedding& emb =
-                        item->getEdge(i)->getEmbedding(0);
+                    const Dim2EdgeEmbedding& emb = item->getEdge(i)->front();
                     appendToList(ans, QString("%1 (%2)").
-                        arg(tri->triangleIndex(emb.getTriangle())).
+                        arg(emb.getTriangle()->index()).
                         arg(emb.getVertices().trunc2().c_str()));
                 }
                 return ans;

@@ -41,12 +41,10 @@
 #define __DIM2VERTEX_H
 #endif
 
-#include <deque>
 #include "regina-core.h"
 #include "output.h"
+#include "generic/face.h"
 #include "maths/nperm3.h"
-#include "utilities/nmarkedvector.h"
-#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
@@ -66,173 +64,97 @@ typedef Triangulation<2> Dim2Triangulation;
  */
 
 /**
- * Details how a vertex in the skeleton of a 2-manifold triangulation forms
- * part of an individual triangle.
+ * A convenience typedef for FaceEmbedding<2, 0>.
  */
-class REGINA_API Dim2VertexEmbedding {
-    private:
-        Dim2Triangle* triangle_;
-            /**< The triangle in which this vertex is contained. */
-        int vertex_;
-            /**< The vertex number of the triangle that is this vertex. */
+typedef FaceEmbedding<2, 0> Dim2VertexEmbedding;
 
+namespace detail {
+
+/**
+ * Helper class that specifies how vertices are numbered within a triangle.
+ *
+ * See the general FaceNumbering<dim, subdim> template class notes for
+ * further details.
+ */
+template <>
+class FaceNumbering<2, 0> {
     public:
         /**
-         * Default constructor.  The embedding descriptor created is
-         * unusable until it has some data assigned to it using
-         * <tt>operator =</tt>.
+         * Given a vertex number within a triangle, returns the
+         * corresponding canonical ordering of the triangle vertices.
          *
-         * \ifacespython Not present.
+         * If this canonical ordering is \a c, then <tt>c[0]</tt> will
+         * be the given vertex, and the images <tt>c[1,2]</tt> will
+         * be chosen to make the permutation even.
+         *
+         * Note that this is \e not the same permutation as returned by
+         * Dim2Triangle::getVertexMapping():
+         *
+         * - ordering() is a static function, which returns the same
+         *   permutation for the same vertex number, regardless of which
+         *   triangle we are looking at.  The permutation will always be even.
+         *
+         * - getVertexMapping() examines the underlying vertex \a V of the
+         *   triangulation, and chooses the images of 1,2 to maintain
+         *   a "consistent orientation" constraint across the different
+         *   appearances of \a V in different triangles.
+         *
+         * @param vertex identifies which vertex of a triangle to query.
+         * This must be between 0 and 2 inclusive.
+         * @return the corresponding canonical ordering of the
+         * triangle vertices.
          */
-        Dim2VertexEmbedding();
-
+        static NPerm3 ordering(unsigned vertex);
         /**
-         * Creates an embedding descriptor containing the given data.
+         * Identifies which vertex number in a triangle is represented
+         * by the first element of the given permutation.
          *
-         * @param tri the triangle in which this vertex is contained.
-         * @param vertex the vertex number of \a tri that is this vertex.
+         * This routine is trivial: it simply returns <tt>vertices[0]</tt>.
+         * It is provided for consistency with higher-dimensional faces,
+         * where the faceNumber() routine has some genuine work to do.
+         *
+         * @param vertices a permutation whose first element represents
+         * some vertex number in a triangle.
+         * @return the corresponding vertex number in a triangle.
+         * This will be be between 0 and 2 inclusive.
          */
-        Dim2VertexEmbedding(Dim2Triangle* tri, int vertex);
-
+        static unsigned faceNumber(NPerm3 vertices);
         /**
-         * Creates an embedding descriptor containing the same data as
-         * the given embedding descriptor.
+         * Tests whether the two given arguments are equal.
          *
-         * @param cloneMe the embedding descriptor to clone.
-         */
-        Dim2VertexEmbedding(const Dim2VertexEmbedding& cloneMe);
-
-        /**
-         * Assigns to this embedding descriptor the same data as is
-         * contained in the given embedding descriptor.
+         * This routine is trivial: it is provided for consistency with
+         * higher-dimensional faces, where Face::containsVertex<dim, subdim>()
+         * determines whether the given vertex belongs to the given face.
          *
-         * @param cloneMe the embedding descriptor to clone.
+         * @param face a vertex number in a triangle; this must be
+         * between 0 and 2 inclusive.
+         * @param vertex another vertex number in a triangle; this must be
+         * between 0 and 2 inclusive.
+         * @return \c true if and only if \a face and \a vertex are equal.
          */
-        Dim2VertexEmbedding& operator =(const Dim2VertexEmbedding& cloneMe);
-
-        /**
-         * Returns the triangle in which this vertex is contained.
-         *
-         * @return the triangle.
-         */
-        Dim2Triangle* getTriangle() const;
-
-        /**
-         * Returns the vertex number within getTriangle() that is this vertex.
-         *
-         * @return the vertex number that is this vertex.
-         */
-        int getVertex() const;
-
-        /**
-         * Returns a permutation that maps 0 to the vertex number within
-         * getTriangle() that is this vertex.  This permutation also maps
-         * (1,2) to the two remaining triangle vertices in a manner that
-         * preserves orientation as you walk around the vertex.
-         * See Dim2Triangle::getVertexMapping() for details.
-         *
-         * @return a permutation that maps 0 to the corresponding
-         * vertex number of getTriangle().
-         */
-        NPerm3 getVertices() const;
-
-        /**
-         * Tests whether this and the given embedding are identical.
-         * Here "identical" means that they refer to the same vertex of
-         * the same triangle.
-         *
-         * @param rhs the embedding to compare with this.
-         * @return \c true if and only if both embeddings are identical.
-         */
-        bool operator == (const Dim2VertexEmbedding& rhs) const;
-
-        /**
-         * Tests whether this and the given embedding are different.
-         * Here "different" means that they do not refer to the same vertex of
-         * the same triangle.
-         *
-         * @param rhs the embedding to compare with this.
-         * @return \c true if and only if both embeddings are identical.
-         */
-        bool operator != (const Dim2VertexEmbedding& rhs) const;
+        static bool containsVertex(unsigned face, unsigned vertex);
 };
+
+} // namespace detail
 
 /**
  * Represents a vertex in the skeleton of a 2-manifold triangulation.
- * Vertices are highly temporary; once a triangulation changes, all its
- * vertex objects will be deleted and new ones will be created.
+ *
+ * This is a specialisation of the generic Face class template; see the
+ * documentation for Face for a general overview of how this class works.
+ *
+ * These specialisations for Regina's \ref stddim "standard dimensions",
+ * offer significant extra functionality.
  */
-class REGINA_API Dim2Vertex :
-        public Output<Dim2Vertex>,
-        public boost::noncopyable,
-        public NMarkedElement {
+template <>
+class REGINA_API Face<2, 0> : public detail::FaceBase<2, 0>,
+        public Output<Face<2, 0>> {
     private:
-        std::deque<Dim2VertexEmbedding> emb_;
-            /**< A list of descriptors telling how this vertex forms a part of
-                 each individual triangle that it belongs to. */
-        Dim2Component* component_;
-            /**< The component that this vertex is a part of. */
         Dim2BoundaryComponent* boundaryComponent_;
             /**< The boundary component that this vertex is a part of,
                  or 0 if this vertex is internal. */
 
     public:
-        /**
-         * Returns the index of this vertex in the underlying
-         * triangulation.  This is identical to calling
-         * <tt>getTriangulation()->vertexIndex(this)</tt>.
-         *
-         * @return the index of this vertex.
-         */
-        unsigned long index() const;
-
-        /**
-         * Returns the list of descriptors detailing how this vertex forms
-         * a part of various triangles in the triangulation.
-         * Note that if this vertex represents multiple vertices of a
-         * particular triangle, then there will be multiple embedding
-         * descriptors in the list regarding that triangle.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of embedding descriptors.
-         * @see Dim2VertexEmbedding
-         */
-        const std::deque<Dim2VertexEmbedding>& getEmbeddings() const;
-
-        /**
-         * Returns the number of descriptors in the list returned by
-         * getEmbeddings().  Note that this is identical to getDegree().
-         *
-         * @return the number of embedding descriptors.
-         */
-        unsigned long getNumberOfEmbeddings() const;
-
-        /**
-         * Returns the requested descriptor from the list returned by
-         * getEmbeddings().
-         *
-         * @param index the index of the requested descriptor.  This
-         * should be between 0 and getNumberOfEmbeddings()-1 inclusive.
-         * @return the requested embedding descriptor.
-         */
-        const Dim2VertexEmbedding& getEmbedding(unsigned long index) const;
-
-        /**
-         * Returns the triangulation to which this vertex belongs.
-         *
-         * @return the triangulation containing this vertex.
-         */
-        Dim2Triangulation* getTriangulation() const;
-
-        /**
-         * Returns the component of the triangulation to which this
-         * vertex belongs.
-         *
-         * @return the component containing this vertex.
-         */
-        Dim2Component* getComponent() const;
-
         /**
          * Returns the boundary component of the triangulation to which
          * this vertex belongs.
@@ -241,14 +163,6 @@ class REGINA_API Dim2Vertex :
          * or 0 if this vertex is not on the boundary of the triangulation.
          */
         Dim2BoundaryComponent* getBoundaryComponent() const;
-
-        /**
-         * Returns the degree of this vertex.  Note that this is
-         * identical to getNumberOfEmbeddings().
-         *
-         * @return the degree of this vertex.
-         */
-        unsigned long getDegree() const;
 
         /**
          * Determines if this vertex lies on the boundary of the
@@ -285,11 +199,16 @@ class REGINA_API Dim2Vertex :
          * @param component the triangulation component to which this
          * vertex belongs.
          */
-        Dim2Vertex(Dim2Component* component);
+        Face(Dim2Component* component);
 
     friend class Triangulation<2>;
-        /**< Allow access to private members. */
+    friend class detail::TriangulationBase<2>;
 };
+
+/**
+ * A convenience typedef for Face<2, 0>.
+ */
+typedef Face<2, 0> Dim2Vertex;
 
 /*@}*/
 
@@ -298,97 +217,42 @@ class REGINA_API Dim2Vertex :
 #include "dim2/dim2triangle.h"
 namespace regina {
 
-// Inline functions for Dim2VertexEmbedding
+// Inline functions for FaceNumbering
 
-inline Dim2VertexEmbedding::Dim2VertexEmbedding() : triangle_(0) {
+namespace detail {
+
+inline NPerm3 FaceNumbering<2, 0>::ordering(unsigned vertex) {
+    return NPerm<3>(vertex, (vertex + 1) % 3, (vertex + 2) % 3);
 }
 
-inline Dim2VertexEmbedding::Dim2VertexEmbedding(Dim2Triangle* tri,
-        int vertex) :
-        triangle_(tri), vertex_(vertex) {
+inline unsigned FaceNumbering<2, 0>::faceNumber(NPerm3 vertices) {
+    return vertices[0];
 }
 
-inline Dim2VertexEmbedding::Dim2VertexEmbedding(
-        const Dim2VertexEmbedding& cloneMe) :
-        triangle_(cloneMe.triangle_), vertex_(cloneMe.vertex_) {
+inline bool FaceNumbering<2, 0>::containsVertex(unsigned face,
+        unsigned vertex) {
+    return (face == vertex);
 }
 
-inline Dim2VertexEmbedding& Dim2VertexEmbedding::operator =
-        (const Dim2VertexEmbedding& cloneMe) {
-    triangle_ = cloneMe.triangle_;
-    vertex_ = cloneMe.vertex_;
-    return *this;
-}
-
-inline Dim2Triangle* Dim2VertexEmbedding::getTriangle() const {
-    return triangle_;
-}
-
-inline int Dim2VertexEmbedding::getVertex() const {
-    return vertex_;
-}
-
-inline bool Dim2VertexEmbedding::operator == (const Dim2VertexEmbedding& other)
-        const {
-    return ((triangle_ == other.triangle_) && (vertex_ == other.vertex_));
-}
-
-inline bool Dim2VertexEmbedding::operator != (const Dim2VertexEmbedding& other)
-        const {
-    return ((triangle_ != other.triangle_) || (vertex_ != other.vertex_));
-}
+} // namespace detail
 
 // Inline functions for Dim2Vertex
 
-inline Dim2Vertex::Dim2Vertex(Dim2Component* component) :
-        component_(component), boundaryComponent_(0) {
+inline Face<2, 0>::Face(Dim2Component* component) :
+        detail::FaceBase<2, 0>(component), boundaryComponent_(0) {
 }
 
-inline unsigned long Dim2Vertex::index() const {
-    return markedIndex();
-}
-
-inline const std::deque<Dim2VertexEmbedding>& Dim2Vertex::getEmbeddings()
-        const {
-    return emb_;
-}
-
-inline unsigned long Dim2Vertex::getNumberOfEmbeddings() const {
-    return emb_.size();
-}
-
-inline const Dim2VertexEmbedding& Dim2Vertex::getEmbedding(unsigned long index)
-        const {
-    return emb_[index];
-}
-
-inline NPerm3 Dim2VertexEmbedding::getVertices() const {
-    return triangle_->getVertexMapping(vertex_);
-}
-
-inline Dim2Triangulation* Dim2Vertex::getTriangulation() const {
-    return emb_.front().getTriangle()->getTriangulation();
-}
-
-inline Dim2Component* Dim2Vertex::getComponent() const {
-    return component_;
-}
-
-inline Dim2BoundaryComponent* Dim2Vertex::getBoundaryComponent() const {
+inline Dim2BoundaryComponent* Face<2, 0>::getBoundaryComponent() const {
     return boundaryComponent_;
 }
 
-inline unsigned long Dim2Vertex::getDegree() const {
-    return emb_.size();
-}
-
-inline bool Dim2Vertex::isBoundary() const {
+inline bool Face<2, 0>::isBoundary() const {
     return (boundaryComponent_ != 0);
 }
 
-inline void Dim2Vertex::writeTextShort(std::ostream& out) const {
+inline void Face<2, 0>::writeTextShort(std::ostream& out) const {
     out << (boundaryComponent_ ? "Boundary " : "Internal ")
-        << "vertex of degree " << emb_.size();
+        << "vertex of degree " << getDegree();
 }
 
 } // namespace regina

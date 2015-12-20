@@ -49,10 +49,6 @@
 
 namespace regina {
 
-class Dim2Edge;
-class Dim2Vertex;
-
-template <int> class Component;
 template <int> class Triangulation;
 typedef Triangulation<2> Dim2Triangulation;
 
@@ -76,23 +72,7 @@ typedef Triangulation<2> Dim2Triangulation;
  * creating, maintaining and destroying this extra skeletal information.
  */
 template <>
-class REGINA_API Simplex<2> : public SimplexBase<2> {
-    private:
-        Dim2Vertex* vertex_[3];
-            /**< Vertices in the triangulation skeleton that are
-                 vertices of this triangle. */
-        Dim2Edge* edge_[3];
-            /**< Edges in the triangulation skeleton that are
-                 edges of this triangle. */
-
-        NPerm3 vertexMapping_[3];
-            /**< Maps 0 to each vertex of this triangle in turn whilst
-                 mapping (1,2) in a suitably "orientation-preserving" way,
-                 as described in getVertexMapping(). */
-        NPerm3 edgeMapping_[3];
-            /**< Maps (0,1) to the vertices of this triangle that form
-                 each edge, as described in getEdgeMapping(). */
-
+class REGINA_API Simplex<2> : public detail::SimplexBase<2> {
     public:
         /**
          * A dimension-specific alias for adjacentSimplex().
@@ -106,89 +86,6 @@ class REGINA_API Simplex<2> : public SimplexBase<2> {
          * See adjacentFacet() for further information.
          */
         int adjacentEdge(int edge) const;
-
-        /**
-         * Returns the vertex in the 2-manifold triangulation skeleton
-         * corresponding to the given vertex of this triangle.
-         *
-         * @param vertex the vertex of this triangle to examine.
-         * This should be between 0 and 2 inclusive.
-         * @return the vertex of the skeleton corresponding to the
-         * requested triangle vertex.
-         */
-        REGINA_INLINE_REQUIRED
-        Dim2Vertex* getVertex(int vertex) const;
-        /**
-         * Returns the edge in the 2-manifold triangulation skeleton
-         * corresponding to the given edge of this triangle.  Edge \c i
-         * of a triangle is always opposite vertex \c i of that triangle.
-         *
-         * @param edge the edge of this triangle to examine.
-         * This should be between 0 and 2 inclusive.
-         * @return the edge of the skeleton corresponding to the
-         * requested triangle edge.
-         */
-        Dim2Edge* getEdge(int edge) const;
-        /**
-         * Returns a permutation that maps 0 to the given vertex of this
-         * triangle, and that maps (1,2) to the two remaining vertices
-         * in the following "orientation-preserving" fashion.
-         *
-         * The images of 1 and 2 under the permutations that are returned
-         * have the following properties.  In each triangle, the images
-         * of 1 and 2 under this map form a directed edge of the triangle
-         * (running from the image of vertex 1 to the image of vertex 2).
-         * For any given vertex of the triangulation, these corresponding
-         * directed edges together form an ordered path within the
-         * triangulation that circles the common vertex of the triangulation
-         * (like a vertex link, except that it is not near to the vertex
-         * and so might intersect itself).  Furthermore, if we consider the
-         * individual triangles in the order in which they appear in the list
-         * Dim2Vertex::getEmbeddings(), these corresponding directed edges
-         * appear in order from the start of this path to the finish
-         * (for internal vertices this path is actually a cycle, and the
-         * starting point is arbitrary).
-         *
-         * @param vertex the vertex of this triangle to examine.
-         * This should be between 0 and 2 inclusive.
-         * @return a permutation that maps 0 to the given vertex of this
-         * triangle, with the properties outlined above.
-         */
-        REGINA_INLINE_REQUIRED
-        NPerm3 getVertexMapping(int vertex) const;
-        /**
-         * Examines the given edge of this triangle, and returns a mapping from
-         * the "canonical" vertices of the corresponding edge of the
-         * triangulation to the matching vertices of this triangle.
-         *
-         * In detail:  Suppose two edges of two triangles are
-         * identified within the overall 2-manifold triangulation.  We call
-         * this a single "edge of the triangulation", and arbitrarily
-         * label its vertices (0,1).  This routine then maps the vertices
-         * (0,1) of this edge of the triangulation to the individual
-         * vertices of this triangle that make up the given edge.
-         *
-         * Because we are passing the argument \a edge, we already know
-         * \e which vertices of this triangle are involved.  What this
-         * routine tells us is the \a order in which they appear to form the
-         * overall edge of the triangulation.
-         *
-         * As a consequence:  Consider two triangle edges that are
-         * identified together as a single edge of the triangulation,
-         * and choose some \a i from the set {0,1}.  Then the vertices
-         * <tt>getEdgeMapping(...)[i]</tt> of the individual triangles
-         * are identified together, since they both become the same
-         * vertex of the same edge of the triangulation (assuming of
-         * course that we pass the correct edge number in each case to
-         * getEdgeMapping()).
-         *
-         * @param edge the edge of this triangle to examine.
-         * This should be between 0 and 2 inclusive.
-         * @return a mapping from vertices (0,1) of the requested
-         * edge to the corresponding vertices of this triangle.
-         */
-        REGINA_INLINE_REQUIRED
-        NPerm3 getEdgeMapping(int edge) const;
 
     private:
         /**
@@ -208,7 +105,7 @@ class REGINA_API Simplex<2> : public SimplexBase<2> {
         Simplex(const std::string& desc, Dim2Triangulation* tri);
 
     friend class Triangulation<2>;
-    friend class TriangulationBase<2>;
+    friend class detail::TriangulationBase<2>;
         /**< Allow access to private members. */
 };
 
@@ -234,31 +131,12 @@ inline int Simplex<2>::adjacentEdge(int edge) const {
     return adjacentFacet(edge);
 }
 
-inline Dim2Vertex* Simplex<2>::getVertex(int vertex) const {
-    getTriangulation()->ensureSkeleton();
-    return vertex_[vertex];
-}
-
-inline Dim2Edge* Simplex<2>::getEdge(int edge) const {
-    getTriangulation()->ensureSkeleton();
-    return edge_[edge];
-}
-
-inline NPerm3 Simplex<2>::getVertexMapping(int vertex) const {
-    getTriangulation()->ensureSkeleton();
-    return vertexMapping_[vertex];
-}
-
-inline NPerm3 Simplex<2>::getEdgeMapping(int edge) const {
-    getTriangulation()->ensureSkeleton();
-    return edgeMapping_[edge];
-}
-
-inline Simplex<2>::Simplex(Dim2Triangulation* tri) : SimplexBase<2>(tri) {
+inline Simplex<2>::Simplex(Dim2Triangulation* tri) :
+        detail::SimplexBase<2>(tri) {
 }
 
 inline Simplex<2>::Simplex(const std::string& desc,
-        Dim2Triangulation* tri) : SimplexBase<2>(desc, tri) {
+        Dim2Triangulation* tri) : detail::SimplexBase<2>(desc, tri) {
 }
 
 } // namespace regina

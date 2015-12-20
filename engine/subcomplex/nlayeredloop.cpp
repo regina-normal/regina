@@ -117,12 +117,12 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
             if (twisted) {
                 if (base->getEdge(hinge0) != base->getEdge(hinge1))
                     continue;
-                if (base->getEdge(hinge0)->getNumberOfEmbeddings() != 2 * nTet)
+                if (base->getEdge(hinge0)->getDegree() != 2 * nTet)
                     continue;
             } else {
-                if (base->getEdge(hinge0)->getNumberOfEmbeddings() != nTet)
+                if (base->getEdge(hinge0)->getDegree() != nTet)
                     continue;
-                if (base->getEdge(hinge1)->getNumberOfEmbeddings() != nTet)
+                if (base->getEdge(hinge1)->getDegree() != nTet)
                     continue;
             }
 

@@ -63,29 +63,27 @@ const NAbelianGroup& NTriangulation::getHomologyH1() const {
     // Find out which triangle corresponds to which generator.
     long* genIndex = new long[getNumberOfTriangles()];
     long i = 0;
-    for (auto fit = triangles_.begin(); fit != triangles_.end(); ++fit) {
-        if ((*fit)->isBoundary() || (*fit)->inMaximalForest())
-            genIndex[fit - triangles_.begin()] = -1;
+    for (NTriangle* f : getTriangles()) {
+        if (f->isBoundary() || f->inMaximalForest())
+            genIndex[f->index()] = -1;
         else {
-            genIndex[fit - triangles_.begin()] = i;
+            genIndex[f->index()] = i;
             i++;
         }
     }
 
     // Run through each edge and put the relations in the matrix.
-    std::deque<NEdgeEmbedding>::const_iterator embit;
     NTetrahedron* currTet;
     NTriangle* triangle;
     int currTetFace;
     long triGenIndex;
     i = 0;
-    for (EdgeIterator eit = edges_.begin(); eit != edges_.end(); eit++) {
-        if (! (*eit)->isBoundary()) {
+    for (NEdge* e : getEdges()) {
+        if (! e->isBoundary()) {
             // Put in the relation corresponding to this edge.
-            for (embit = (*eit)->getEmbeddings().begin();
-                    embit != (*eit)->getEmbeddings().end(); embit++) {
-                currTet = (*embit).getTetrahedron();
-                currTetFace = (*embit).getVertices()[2];
+            for (auto& emb : *e) {
+                currTet = emb.getTetrahedron();
+                currTetFace = emb.getVertices()[2];
                 triangle = currTet->getTriangle(currTetFace);
                 triGenIndex = genIndex[triangleIndex(triangle)];
                 if (triGenIndex >= 0) {
@@ -146,13 +144,13 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
     // Find out which edge corresponds to which generator.
     long* genIndex = new long[getNumberOfEdges()];
     long i = 0;
-    for (EdgeIterator eit = edges_.begin(); eit != edges_.end(); eit++) {
-        if ((*eit)->isBoundary())
-            genIndex[eit - edges_.begin()] = -1;
-        else if (forest.count(*eit))
-            genIndex[eit - edges_.begin()] = -1;
+    for (NEdge* e : getEdges()) {
+        if (e->isBoundary())
+            genIndex[e->index()] = -1;
+        else if (forest.count(e))
+            genIndex[e->index()] = -1;
         else {
-            genIndex[eit - edges_.begin()] = i;
+            genIndex[e->index()] = i;
             i++;
         }
     }
@@ -163,12 +161,11 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
     long edgeGenIndex;
     i = 0;
     int triEdge, currEdgeStart, currEdgeEnd, currEdge;
-    for (TriangleIterator fit = triangles_.begin(); fit != triangles_.end();
-            fit++) {
-        if (! (*fit)->isBoundary()) {
+    for (NTriangle* f : getTriangles()) {
+        if (! f->isBoundary()) {
             // Put in the relation corresponding to this triangle.
-            currTet = (*fit)->getEmbedding(0).getTetrahedron();
-            currTetVertices = (*fit)->getEmbedding(0).getVertices();
+            currTet = f->getEmbedding(0).getTetrahedron();
+            currTetVertices = f->getEmbedding(0).getVertices();
             for (triEdge = 0; triEdge < 3; triEdge++) {
                 currEdgeStart = currTetVertices[triEdge];
                 currEdgeEnd = currTetVertices[(triEdge + 1) % 3];

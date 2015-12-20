@@ -83,7 +83,7 @@ void TriangleChooser::select(regina::NTriangle* option) {
 }
 
 QString TriangleChooser::description(regina::NTriangle* option) {
-    if (option->getNumberOfEmbeddings() == 1) {
+    if (option->getDegree() == 1) {
         const regina::NTriangleEmbedding& e0 = option->getEmbedding(0);
         return trUtf8("Triangle %2 — %3 (%4)")
             .arg(tri_->triangleIndex(option))

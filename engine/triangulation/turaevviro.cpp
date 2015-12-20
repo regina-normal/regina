@@ -456,16 +456,13 @@ namespace {
         // The following code contains some quadratic loops; we don't
         // worry about this since it makes the code simpler and the
         // overall algorithm is much slower (exponential) anyway.
-        std::deque<NEdgeEmbedding>::const_iterator embit;
         unsigned long* tmp;
 
         tmp = new unsigned long[nTriangles];
         for (i = 0; i < nEdges; ++i) {
-            const std::deque<NEdgeEmbedding>& embs(
-                tri.getEdge(sortedEdges[i])->getEmbeddings());
-            for (embit = embs.begin(); embit != embs.end(); embit++)
-                tmp[(*embit).getTetrahedron()->
-                    getTriangle((*embit).getVertices()[2])->index()] = i;
+            for (auto& emb : *tri.getEdge(sortedEdges[i]))
+                tmp[emb.getTetrahedron()->
+                    getTriangle(emb.getVertices()[2])->index()] = i;
         }
         unsigned long* triDone = new unsigned long[nTriangles];
         unsigned long* triDoneStart = new unsigned long[nEdges + 1];
@@ -479,12 +476,9 @@ namespace {
         delete[] tmp;
 
         tmp = new unsigned long[nTet];
-        for (i = 0; i < nEdges; ++i) {
-            const std::deque<NEdgeEmbedding>& embs(
-                tri.getEdge(sortedEdges[i])->getEmbeddings());
-            for (embit = embs.begin(); embit != embs.end(); embit++)
-                tmp[(*embit).getTetrahedron()->index()] = i;
-        }
+        for (i = 0; i < nEdges; ++i)
+            for (auto& emb : *tri.getEdge(sortedEdges[i]))
+                tmp[emb.getTetrahedron()->index()] = i;
         unsigned long* tetDone = new unsigned long[nTet];
         unsigned long* tetDoneStart = new unsigned long[nEdges + 1];
         tetDoneStart[0] = 0;
@@ -663,7 +657,6 @@ namespace {
         long curr = 0;
         TVType valColour(init.halfField ? init.r : 2 * init.r);
         bool admissible;
-        std::deque<NEdgeEmbedding>::const_iterator embit;
         long index1, index2;
         const NTetrahedron* tet;
         while (curr >= 0) {
@@ -713,15 +706,13 @@ namespace {
 
             // Does the current value for colour[curr] preserve admissibility?
             admissible = true;
-            const std::deque<NEdgeEmbedding>&
-                embs(tri.getEdge(sortedEdges[curr])->getEmbeddings());
-            for (embit = embs.begin(); embit != embs.end(); embit++) {
-                index1 = tri.edgeIndex((*embit).getTetrahedron()->getEdge(
-                    NEdge::edgeNumber[(*embit).getVertices()[0]]
-                    [(*embit).getVertices()[2]]));
-                index2 = tri.edgeIndex((*embit).getTetrahedron()->getEdge(
-                    NEdge::edgeNumber[(*embit).getVertices()[1]]
-                    [(*embit).getVertices()[2]]));
+            for (auto& emb : *tri.getEdge(sortedEdges[curr])) {
+                index1 = tri.edgeIndex(emb.getTetrahedron()->getEdge(
+                    NEdge::edgeNumber[emb.getVertices()[0]]
+                    [emb.getVertices()[2]]));
+                index2 = tri.edgeIndex(emb.getTetrahedron()->getEdge(
+                    NEdge::edgeNumber[emb.getVertices()[1]]
+                    [emb.getVertices()[2]]));
                 if (edgePos[index1] <= curr && edgePos[index2] <= curr) {
                     // We've decided upon colours for all three edges of
                     // this triangle containing the current edge.
@@ -1126,13 +1117,11 @@ namespace {
         unsigned long nTri = tri.getNumberOfTriangles();
 
         NTriangulation::EdgeIterator eit;
-        std::deque<NEdgeEmbedding>::const_iterator emb;
         const NTetrahedron* tet;
         NPerm4 p;
         unsigned long i;
         for (eit = tri.getEdges().begin(); eit != tri.getEdges().end(); ++eit) {
-            for (emb = (*eit)->getEmbeddings().begin();
-                    emb != (*eit)->getEmbeddings().end(); ++emb) {
+            for (auto& emb : **eit) {
                 input.push_back(std::vector<mpz_class>());
                 std::vector<mpz_class>& v(input.back());
                 v.reserve(3 * nTri);
@@ -1140,8 +1129,8 @@ namespace {
                 for (i = 0; i < 3 * nTri; ++i)
                     v.push_back(long(0));
 
-                tet = emb->getTetrahedron();
-                p = emb->getVertices();
+                tet = emb.getTetrahedron();
+                p = emb.getVertices();
 
                 ++v[3 * tet->getTriangle(p[2])->index() +
                     tet->getTriangleMapping(p[2]).preImageOf(p[0])];

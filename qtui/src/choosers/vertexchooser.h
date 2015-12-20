@@ -47,9 +47,10 @@
 #include <vector>
 
 namespace regina {
-    class NVertex;
     template <int> class Triangulation;
+    template <int, int> class Face;
     typedef Triangulation<3> NTriangulation;
+    typedef Face<3, 0> NVertex;
 };
 
 /**

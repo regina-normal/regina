@@ -48,12 +48,9 @@ using regina::NVertexEmbedding;
 
 namespace {
     boost::python::list vertex_getEmbeddings_list(const NVertex* v) {
-        const std::vector<NVertexEmbedding>& embs = v->getEmbeddings();
-        std::vector<NVertexEmbedding>::const_iterator it;
-
         boost::python::list ans;
-        for (it = embs.begin(); it != embs.end(); it++)
-            ans.append(*it);
+        for (auto& emb: *v)
+            ans.append(emb);
         return ans;
     }
 
@@ -79,26 +76,52 @@ void addNVertex() {
     class_<NVertexEmbedding>("NVertexEmbedding",
             init<regina::NTetrahedron*, int>())
         .def(init<const NVertexEmbedding&>())
+        .def("simplex", &NVertexEmbedding::simplex,
+            return_value_policy<reference_existing_object>())
+        .def("getSimplex", &NVertexEmbedding::getSimplex,
+            return_value_policy<reference_existing_object>())
+        .def("tetrahedron", &NVertexEmbedding::tetrahedron,
+            return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &NVertexEmbedding::getTetrahedron,
             return_value_policy<reference_existing_object>())
+        .def("face", &NVertexEmbedding::face)
+        .def("getFace", &NVertexEmbedding::getFace)
+        .def("vertex", &NVertexEmbedding::vertex)
         .def("getVertex", &NVertexEmbedding::getVertex)
+        .def("vertices", &NVertexEmbedding::vertices)
         .def("getVertices", &NVertexEmbedding::getVertices)
+        .def("str", &NVertexEmbedding::str)
+        .def("toString", &NVertexEmbedding::toString)
+        .def("detail", &NVertexEmbedding::detail)
+        .def("toStringLong", &NVertexEmbedding::toStringLong)
+        .def("__str__", &NVertexEmbedding::str)
         .def(regina::python::add_eq_operators())
     ;
 
     scope s = class_<NVertex, std::auto_ptr<NVertex>, boost::noncopyable>
             ("NVertex", no_init)
         .def("index", &NVertex::index)
+        .def("embeddings", vertex_getEmbeddings_list)
         .def("getEmbeddings", vertex_getEmbeddings_list)
-        .def("getNumberOfEmbeddings", &NVertex::getNumberOfEmbeddings)
+        .def("embedding", &NVertex::embedding,
+            return_internal_reference<>())
         .def("getEmbedding", &NVertex::getEmbedding,
             return_internal_reference<>())
+        .def("front", &NVertex::front,
+            return_internal_reference<>())
+        .def("back", &NVertex::back,
+            return_internal_reference<>())
+        .def("triangulation", &NVertex::triangulation,
+            return_value_policy<reference_existing_object>())
         .def("getTriangulation", &NVertex::getTriangulation,
+            return_value_policy<reference_existing_object>())
+        .def("component", &NVertex::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &NVertex::getComponent,
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &NVertex::getBoundaryComponent,
             return_value_policy<reference_existing_object>())
+        .def("degree", &NVertex::degree)
         .def("getDegree", &NVertex::getDegree)
         .def("getLink", &NVertex::getLink)
         .def("buildLink", &NVertex::buildLink,
@@ -109,6 +132,7 @@ void addNVertex() {
         .def("isIdeal", &NVertex::isIdeal)
         .def("isBoundary", &NVertex::isBoundary)
         .def("isStandard", &NVertex::isStandard)
+        .def("isValid", &NVertex::isValid)
         .def("isLinkOrientable", &NVertex::isLinkOrientable)
         .def("getLinkEulerChar", &NVertex::getLinkEulerChar)
         .def("getLinkEulerCharacteristic",
@@ -118,7 +142,13 @@ void addNVertex() {
         .def("detail", &NVertex::detail)
         .def("toStringLong", &NVertex::toStringLong)
         .def("__str__", &NVertex::str)
+        .def("ordering", &NVertex::ordering)
+        .def("faceNumber", &NVertex::faceNumber)
+        .def("containsVertex", &NVertex::containsVertex)
         .def(regina::python::add_eq_operators())
+        .staticmethod("ordering")
+        .staticmethod("faceNumber")
+        .staticmethod("containsVertex")
     ;
 
     enum_<regina::NVertex::LinkType>("LinkType")

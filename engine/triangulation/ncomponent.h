@@ -43,23 +43,45 @@
 
 #include "regina-core.h"
 #include "generic/component.h"
+#include "generic/alias/face.h"
 
 namespace regina {
 
-class NTriangle;
-class NEdge;
-class NVertex;
 class NBoundaryComponent;
 
 template <int> class Simplex;
 template <int> class Triangulation;
+template <int, int> class Face;
 typedef Simplex<3> NTetrahedron;
 typedef Triangulation<3> NTriangulation;
+typedef Face<3, 0> NVertex;
+typedef Face<3, 1> NEdge;
+typedef Face<3, 2> NTriangle;
 
 /**
  * \weakgroup triangulation
  * @{
  */
+
+namespace detail {
+
+/**
+ * Helper class that indicates what data type is used by a connected component
+ * of a triangulation to store a list of <i>subdim</i>-faces.
+ */
+template <int subdim>
+struct FaceListHolder<Component<3>, subdim> {
+    /**
+     * The data type used by Component<dim> to store the list of all
+     * <i>subdim</i>-faces of the connected component.
+     *
+     * The function Component<3>::faces<subdim>() returns a const
+     * reference to this type.
+     */
+    typedef std::vector<Face<3, subdim>*> Holder;
+};
+
+} // namespace regina::detail
 
 /**
  * Represents a connected component of a 3-manifold triangulation.
@@ -73,7 +95,9 @@ typedef Triangulation<3> NTriangulation;
  * boundary components.
  */
 template <>
-class REGINA_API Component<3> : public ComponentBase<3> {
+class REGINA_API Component<3> : public detail::ComponentBase<3>,
+        public alias::FaceOfTriangulation<Component<3>, 3>,
+        public alias::FacesOfTriangulation<Component<3>, 3> {
     private:
         std::vector<NTriangle*> triangles_;
             /**< List of triangles in the component. */
@@ -97,37 +121,19 @@ class REGINA_API Component<3> : public ComponentBase<3> {
         size_t getNumberOfTetrahedra() const;
 
         /**
-         * Returns the number of triangles in this component.
+         * Returns the number of <i>subdim</i>-faces in this component.
          *
-         * @return the number of triangles.
+         * \pre The template argument \a subdim is between 0 and 2 inclusive.
+         *
+         * \ifacespython Python does not support templates.  Instead,
+         * Python users should call this function in the form
+         * <tt>countFaces(subdim)</tt>; that is, the template parameter
+         * \a subdim becomes the first argument of the function.
+         *
+         * @return the number of <i>subdim</i>-faces.
          */
-        size_t getNumberOfTriangles() const;
-        /**
-         * A deprecated alias for getNumberOfTriangles().
-         *
-         * This routine returns the number of triangular faces in this
-         * component.  See getNumberOfTriangles() for further details.
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use getNumberOfTriangles() instead.
-         *
-         * @return the number of triangles.
-         */
-        size_t getNumberOfFaces() const;
-
-        /**
-         * Returns the number of edges in this component.
-         *
-         * @return the number of edges.
-         */
-        size_t getNumberOfEdges() const;
-
-        /**
-         * Returns the number of vertices in this component.
-         *
-         * @return the number of vertices.
-         */
-        size_t getNumberOfVertices() const;
+        template <int subdim>
+        size_t countFaces() const;
 
         /**
          * Returns the number of boundary components in this component.
@@ -137,68 +143,37 @@ class REGINA_API Component<3> : public ComponentBase<3> {
         size_t getNumberOfBoundaryComponents() const;
 
         /**
-         * A dimension-specific alias for simplex().
+         * Returns a reference to the list of all <i>subdim</i>-faces in
+         * this component.
          *
-         * See simplex() for further information.
+         * \ifacespython Python users should call this function in the
+         * form <tt>faces(subdim)</tt>.  It will then return a Python list
+         * containing all the <i>subdim</i>-faces of the triangulation.
+         *
+         * @return the list of all <i>subdim</i>-faces.
          */
-        NTetrahedron* getTetrahedron(size_t index) const;
+        template <int subdim>
+        const std::vector<Face<3, subdim>*>& faces() const;
 
         /**
-         * Returns the requested triangle in this component.
+         * Returns the requested <i>subdim</i>-face in this component.
          *
-         * @param index the index of the requested triangle in the
-         * component.  This should be between 0 and
-         * getNumberOfTriangles()-1 inclusive.
-         * Note that the index of a triangle in the component need
-         * not be the index of the same triangle in the entire
-         * triangulation.
-         * @return the requested triangle.
+         * Note that the index of a face in the component need
+         * not be the index of the same face in the overall triangulation.
+         *
+         * \pre The template argument \a subdim is between 0 and 2 inclusive.
+         *
+         * \ifacespython Python does not support templates.  Instead,
+         * Python users should call this function in the form
+         * <tt>face(subdim, index)</tt>; that is, the template parameter
+         * \a subdim becomes the first argument of the function.
+         *
+         * @param index the index of the desired face, ranging from 0 to
+         * countFaces<subdim>()-1 inclusive.
+         * @return the requested face.
          */
-        NTriangle* getTriangle(size_t index) const;
-        /**
-         * A deprecated alias for getTriangle().
-         *
-         * This routine returns the requested triangular face in this
-         * component.  See getTriangle() for further details.
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use getTriangle() instead.
-         *
-         * @param index the index of the requested triangle in the
-         * component.  This should be between 0 and
-         * getNumberOfTriangles()-1 inclusive.
-         * Note that the index of a triangle in the component need
-         * not be the index of the same triangle in the entire
-         * triangulation.
-         * @return the requested triangle.
-         */
-        NTriangle* getFace(size_t index) const;
-
-        /**
-         * Returns the requested edge in this component.
-         *
-         * @param index the index of the requested edge in the
-         * component.  This should be between 0 and
-         * getNumberOfEdges()-1 inclusive.
-         * Note that the index of an edge in the component need
-         * not be the index of the same edge in the entire
-         * triangulation.
-         * @return the requested edge.
-         */
-        NEdge* getEdge(size_t index) const;
-
-        /**
-         * Returns the requested vertex in this component.
-         *
-         * @param index the index of the requested vertex in the
-         * component.  This should be between 0 and
-         * getNumberOfVertices()-1 inclusive.
-         * Note that the index of a vertex in the component need
-         * not be the index of the same vertex in the entire
-         * triangulation.
-         * @return the requested vertex.
-         */
-        NVertex* getVertex(size_t index) const;
+        template <int subdim>
+        Face<3, subdim>* face(size_t index) const;
 
         /**
          * Returns the requested boundary component in this component.
@@ -247,7 +222,7 @@ class REGINA_API Component<3> : public ComponentBase<3> {
         Component();
 
     friend class Triangulation<3>;
-    friend class TriangulationBase<3>;
+    friend class detail::TriangulationBase<3>;
 };
 
 /**
@@ -259,26 +234,25 @@ typedef Component<3> NComponent;
 
 // Inline functions for Component<3>
 
-inline Component<3>::Component() : ComponentBase<3>(), ideal_(false) {
+inline Component<3>::Component() : detail::ComponentBase<3>(), ideal_(false) {
 }
 
 inline size_t Component<3>::getNumberOfTetrahedra() const {
     return size();
 }
 
-inline size_t Component<3>::getNumberOfTriangles() const {
+template <>
+inline size_t Component<3>::countFaces<2>() const {
     return triangles_.size();
 }
 
-inline size_t Component<3>::getNumberOfFaces() const {
-    return triangles_.size();
-}
-
-inline size_t Component<3>::getNumberOfEdges() const {
+template <>
+inline size_t Component<3>::countFaces<1>() const {
     return edges_.size();
 }
 
-inline size_t Component<3>::getNumberOfVertices() const {
+template <>
+inline size_t Component<3>::countFaces<0>() const {
     return vertices_.size();
 }
 
@@ -286,23 +260,33 @@ inline size_t Component<3>::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
-inline NTetrahedron* Component<3>::getTetrahedron(size_t index) const {
-    return simplex(index);
+template <>
+inline const std::vector<NTriangle*>& Component<3>::faces<2>() const {
+    return triangles_;
 }
 
-inline NTriangle* Component<3>::getTriangle(size_t index) const {
+template <>
+inline const std::vector<NEdge*>& Component<3>::faces<1>() const {
+    return edges_;
+}
+
+template <>
+inline const std::vector<NVertex*>& Component<3>::faces<0>() const {
+    return vertices_;
+}
+
+template <>
+inline NTriangle* Component<3>::face<2>(size_t index) const {
     return triangles_[index];
 }
 
-inline NTriangle* Component<3>::getFace(size_t index) const {
-    return triangles_[index];
-}
-
-inline NEdge* Component<3>::getEdge(size_t index) const {
+template <>
+inline NEdge* Component<3>::face<1>(size_t index) const {
     return edges_[index];
 }
 
-inline NVertex* Component<3>::getVertex(size_t index) const {
+template <>
+inline NVertex* Component<3>::face<0>(size_t index) const {
     return vertices_[index];
 }
 

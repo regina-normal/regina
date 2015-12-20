@@ -40,7 +40,7 @@
 namespace regina {
 
 template <>
-bool TriangulationBase<2>::compatible(
+bool detail::TriangulationBase<2>::compatible(
         const Dim2Triangulation& other, bool complete) const {
     const Dim2Triangulation* me = static_cast<const Dim2Triangulation*>(this);
 
@@ -52,9 +52,9 @@ bool TriangulationBase<2>::compatible(
         // identical.
         if (simplices_.size() != other.simplices_.size())
             return false;
-        if (me->edges_.size() != other.edges_.size())
+        if (me->getNumberOfEdges() != other.getNumberOfEdges())
             return false;
-        if (me->vertices_.size() != other.vertices_.size())
+        if (me->getNumberOfVertices() != other.getNumberOfVertices())
             return false;
         if (components().size() != other.components().size())
             return false;
@@ -69,16 +69,12 @@ bool TriangulationBase<2>::compatible(
         std::map<size_t, size_t>::iterator mapIt;
 
         {
-            Dim2Triangulation::VertexIterator it;
-            for (it = me->vertices_.begin(); it != me->vertices_.end(); it++) {
-                mapIt = map1.insert(
-                    std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
+            for (auto v : me->getVertices()) {
+                mapIt = map1.insert(std::make_pair(v->degree(), 0)).first;
                 (*mapIt).second++;
             }
-            for (it = other.vertices_.begin();
-                    it != other.vertices_.end(); it++) {
-                mapIt = map2.insert(
-                    std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
+            for (auto v : other.getVertices()) {
+                mapIt = map2.insert(std::make_pair(v->degree(), 0)).first;
                 (*mapIt).second++;
             }
             if (! (map1 == map2))
@@ -136,11 +132,11 @@ bool TriangulationBase<2>::compatible(
 }
 
 template <>
-bool TriangulationBase<2>::compatible(
+bool detail::TriangulationBase<2>::compatible(
         Simplex<2>* src, Simplex<2>* dest, NPerm<3> p) {
     for (int vertex = 0; vertex < 3; vertex++)
-        if (src->getVertex(vertex)->getNumberOfEmbeddings() !=
-                dest->getVertex(p[vertex])->getNumberOfEmbeddings())
+        if (src->getVertex(vertex)->getDegree() !=
+                dest->getVertex(p[vertex])->getDegree())
             return false;
 
     return true;

@@ -48,27 +48,62 @@ using regina::Dim2EdgeEmbedding;
 using regina::python::GlobalArray;
 
 namespace {
-    GlobalArray<regina::NPerm3> Dim2Edge_ordering(Dim2Edge::ordering, 3);
+    boost::python::list Dim2Edge_getEmbeddings_list(const Dim2Edge* e) {
+        boost::python::list ans;
+        for (auto& emb: *e)
+            ans.append(emb);
+        return ans;
+    }
 }
 
 void addDim2Edge() {
     class_<Dim2EdgeEmbedding>("Dim2EdgeEmbedding",
             init<regina::Dim2Triangle*, int>())
         .def(init<const Dim2EdgeEmbedding&>())
+        .def("simplex", &Dim2EdgeEmbedding::simplex,
+            return_value_policy<reference_existing_object>())
+        .def("getSimplex", &Dim2EdgeEmbedding::getSimplex,
+            return_value_policy<reference_existing_object>())
+        .def("triangle", &Dim2EdgeEmbedding::triangle,
+            return_value_policy<reference_existing_object>())
         .def("getTriangle", &Dim2EdgeEmbedding::getTriangle,
             return_value_policy<reference_existing_object>())
+        .def("face", &Dim2EdgeEmbedding::face)
+        .def("getFace", &Dim2EdgeEmbedding::getFace)
+        .def("edge", &Dim2EdgeEmbedding::edge)
         .def("getEdge", &Dim2EdgeEmbedding::getEdge)
+        .def("vertices", &Dim2EdgeEmbedding::vertices)
         .def("getVertices", &Dim2EdgeEmbedding::getVertices)
+        .def("str", &Dim2EdgeEmbedding::str)
+        .def("toString", &Dim2EdgeEmbedding::toString)
+        .def("detail", &Dim2EdgeEmbedding::detail)
+        .def("toStringLong", &Dim2EdgeEmbedding::toStringLong)
+        .def("__str__", &Dim2EdgeEmbedding::str)
         .def(regina::python::add_eq_operators())
     ;
 
-    scope s = class_<Dim2Edge, std::auto_ptr<Dim2Edge>, boost::noncopyable>
+    class_<Dim2Edge, std::auto_ptr<Dim2Edge>, boost::noncopyable>
             ("Dim2Edge", no_init)
         .def("index", &Dim2Edge::index)
-        .def("getNumberOfEmbeddings", &Dim2Edge::getNumberOfEmbeddings)
+        .def("isValid", &Dim2Edge::isValid)
+        .def("isLinkOrientable", &Dim2Edge::isLinkOrientable)
+        .def("embeddings", Dim2Edge_getEmbeddings_list)
+        .def("getEmbeddings", Dim2Edge_getEmbeddings_list)
+        .def("degree", &Dim2Edge::degree)
+        .def("getDegree", &Dim2Edge::getDegree)
+        .def("embedding", &Dim2Edge::embedding,
+            return_internal_reference<>())
         .def("getEmbedding", &Dim2Edge::getEmbedding,
             return_internal_reference<>())
+        .def("front", &Dim2Edge::front,
+            return_internal_reference<>())
+        .def("back", &Dim2Edge::back,
+            return_internal_reference<>())
+        .def("triangulation", &Dim2Edge::triangulation,
+            return_value_policy<reference_existing_object>())
         .def("getTriangulation", &Dim2Edge::getTriangulation,
+            return_value_policy<reference_existing_object>())
+        .def("component", &Dim2Edge::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim2Edge::getComponent,
             return_value_policy<reference_existing_object>())
@@ -83,9 +118,13 @@ void addDim2Edge() {
         .def("detail", &Dim2Edge::detail)
         .def("toStringLong", &Dim2Edge::toStringLong)
         .def("__str__", &Dim2Edge::str)
+        .def("ordering", &Dim2Edge::ordering)
+        .def("faceNumber", &Dim2Edge::faceNumber)
+        .def("containsVertex", &Dim2Edge::containsVertex)
         .def(regina::python::add_eq_operators())
+        .staticmethod("ordering")
+        .staticmethod("faceNumber")
+        .staticmethod("containsVertex")
     ;
-
-    s.attr("ordering") = &Dim2Edge_ordering;
 }
 

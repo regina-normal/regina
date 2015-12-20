@@ -64,17 +64,15 @@ NMatrixInt* NNormalSurfaceVectorQuadOct::makeMatchingEquations(
 
     // Run through each internal edge and add the corresponding
     // equation.
-    std::deque<NEdgeEmbedding>::const_iterator embit;
     NPerm4 perm;
     unsigned long tetIndex;
     for (NTriangulation::EdgeIterator eit = triangulation->getEdges().begin();
             eit != triangulation->getEdges().end(); eit++) {
         if (! (*eit)->isBoundary()) {
-            for (embit = (*eit)->getEmbeddings().begin();
-                    embit != (*eit)->getEmbeddings().end(); embit++) {
+            for (auto& emb : **eit) {
                 tetIndex = triangulation->tetrahedronIndex(
-                    (*embit).getTetrahedron());
-                perm = (*embit).getVertices();
+                    emb.getTetrahedron());
+                perm = emb.getVertices();
                 ans->entry(row, 6 * tetIndex +
                     vertexSplit[perm[0]][perm[2]]) += 1;
                 ans->entry(row, 6 * tetIndex +
@@ -170,7 +168,6 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
     int end;
     NEdge* edge;
     EdgeEnd current;
-    std::vector<NVertexEmbedding>::const_iterator vembit;
     std::deque<NEdgeEmbedding>::const_iterator eembit, backupit,
         endit, beginit;
     NTetrahedron* tet;
@@ -214,8 +211,8 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
             // Run around this edge end.
             // We know there is a pre-chosen coordinate somewhere; run
             // forwards and find this.
-            beginit = current.edge->getEmbeddings().begin();
-            endit = current.edge->getEmbeddings().end();
+            beginit = current.edge->begin();
+            endit = current.edge->end();
             for (eembit = beginit; eembit != endit; eembit++)
                 if (! (*ans)[10 * triang->tetrahedronIndex(
                         (*eembit).getTetrahedron()) +
@@ -323,10 +320,9 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
         // If the matching equations were broken, set every coordinate
         // to infinity.  Otherwise subtract min from every coordinate to
         // make the values as small as possible.
-        for (vembit = (*vit)->getEmbeddings().begin();
-                vembit != (*vit)->getEmbeddings().end(); vembit++) {
-            row = 10 * triang->tetrahedronIndex((*vembit).getTetrahedron())
-                + (*vembit).getVertex();
+        for (auto& emb : **vit) {
+            row = 10 * triang->tetrahedronIndex(emb.getTetrahedron())
+                + emb.getVertex();
             if (broken)
                 ans->setElement(row, NLargeInteger::infinity);
             else

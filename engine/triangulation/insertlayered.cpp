@@ -42,13 +42,11 @@ NTetrahedron* NTriangulation::layerOn(NEdge* edge) {
     // Locate the two boundary triangles.
     // Note that our preconditions ensure they exist and are distinct;
     // we won't test this again here.
-    const std::deque<NEdgeEmbedding>& embs(edge->getEmbeddings());
+    NTetrahedron* tet1 = edge->front().getTetrahedron();
+    NTetrahedron* tet2 = edge->back().getTetrahedron();
 
-    NTetrahedron* tet1 = embs.front().getTetrahedron();
-    NTetrahedron* tet2 = embs.back().getTetrahedron();
-
-    NPerm4 roles1 = embs.front().getVertices();
-    NPerm4 roles2 = embs.back().getVertices();
+    NPerm4 roles1 = edge->front().getVertices();
+    NPerm4 roles2 = edge->back().getVertices();
 
     // At this stage, roles1 maps (0,1,2) to the tet1 tetrahedron vertices
     // for the first boundary triangle, and roles2 maps (0,1,3) to the tet2

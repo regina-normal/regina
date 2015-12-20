@@ -1,14 +1,15 @@
 # generic 
 
+ADD_SUBDIRECTORY("alias")
+ADD_SUBDIRECTORY("detail")
+
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
-    canonical-impl.h
     component.h
     dimtraits.h
+    face.h
     facetpairing.h
-    facetpairing-impl.h
     isomorphism.h
-    isosig-impl.h
     nfacetspec.h
     simplex.h
     triangulation.h

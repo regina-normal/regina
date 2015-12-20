@@ -151,7 +151,6 @@ void NTriangulation::drillEdge(NEdge* e) {
     int i, j, k;
     unsigned long finalTet;
     NVertex* finalVertex;
-    std::vector<NVertexEmbedding>::const_iterator it;
     for (i = 0; i < 2; ++i)
         for (j = 0; j < 2; ++j) {
             finalTet = 24 * (24 * tetNum + oldToNew[i]) + oldToNew[j];
@@ -161,9 +160,8 @@ void NTriangulation::drillEdge(NEdge* e) {
             for (k = 0; k < 2; ++k) {
                 finalVertex = simplices_[finalTet]->getEdge(edgeNum)->
                     getVertex(k);
-                for (it = finalVertex->getEmbeddings().begin();
-                        it != finalVertex->getEmbeddings().end(); ++it)
-                    toRemove.insert(tetrahedronIndex(it->getTetrahedron()));
+                for (auto& emb : *finalVertex)
+                    toRemove.insert(tetrahedronIndex(emb.getTetrahedron()));
             }
         }
 
@@ -284,13 +282,10 @@ bool NTriangulation::idealToFinite() {
     // ideal vertices.
     // First we make a list of the tetrahedra.
     std::vector<NTetrahedron*> tetList;
-    std::vector<NVertexEmbedding>::const_iterator vembit;
-    for (VertexIterator vIter = vertices_.begin();
-            vIter != vertices_.end(); vIter++)
-        if ((*vIter)->isIdeal() || ! (*vIter)->isStandard())
-            for (vembit = (*vIter)->getEmbeddings().begin();
-                    vembit != (*vIter)->getEmbeddings().end(); vembit++)
-                tetList.push_back((*vembit).getTetrahedron());
+    for (NVertex* v : getVertices())
+        if (v->isIdeal() || ! v->isStandard())
+            for (auto& emb : *v)
+                tetList.push_back(emb.getTetrahedron());
 
     // Now remove the tetrahedra.
     // For each tetrahedron, remove it and delete it.
@@ -316,27 +311,25 @@ bool NTriangulation::finiteToIdeal() {
 
     ChangeEventSpan span1(&staging);
 
-    TriangleIterator fit;
-    unsigned i;
-    for (i = 0, fit = triangles_.begin(); fit != triangles_.end(); ++i, ++fit) {
-        if (! (*fit)->isBoundary()) {
-            bdry[i] = newTet[i] = 0;
+    for (NTriangle* t : getTriangles()) {
+        if (! t->isBoundary()) {
+            bdry[t->index()] = newTet[t->index()] = 0;
             continue;
         }
 
-        bdry[i] = (*fit)->getEmbedding(0).getTetrahedron();
-        bdryPerm[i] = (*fit)->getEmbedding(0).getVertices();
+        bdry[t->index()] = t->front().getTetrahedron();
+        bdryPerm[t->index()] = t->front().getVertices();
     }
 
     // Add the new tetrahedra one boundary component at a time, so that
     // the tetrahedron labels are compatible with previous versions of
     // regina (<= 4.6).
     BoundaryComponentIterator bit;
+    size_t i;
     for (bit = boundaryComponents_.begin();
             bit != boundaryComponents_.end(); bit++)
         for (i = 0; i < (*bit)->getNumberOfTriangles(); ++i)
-            newTet[(*bit)->getTriangle(i)->markedIndex()] =
-                staging.newTetrahedron();
+            newTet[(*bit)->getTriangle(i)->index()] = staging.newTetrahedron();
 
     // Glue the new tetrahedra to each other.
     NEdge* edge;
@@ -349,13 +342,13 @@ bool NTriangulation::finiteToIdeal() {
 
             // This must be a valid boundary edge.
             // Find the boundary triangles at either end.
-            NEdgeEmbedding e1 = edge->getEmbeddings().front();
-            NEdgeEmbedding e2 = edge->getEmbeddings().back();
+            NEdgeEmbedding e1 = edge->front();
+            NEdgeEmbedding e2 = edge->back();
 
             tetTriangle1 = e1.getTetrahedron()->getTriangle(
-                e1.getVertices()[3])->markedIndex();
+                e1.getVertices()[3])->index();
             tetTriangle2 = e2.getTetrahedron()->getTriangle(
-                e2.getVertices()[2])->markedIndex();
+                e2.getVertices()[2])->index();
 
             t1Perm = bdryPerm[tetTriangle1].inverse() * e1.getVertices();
             t2Perm = bdryPerm[tetTriangle2].inverse() * e2.getVertices() *

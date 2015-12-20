@@ -50,7 +50,6 @@
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "angle/nanglestructure.h"
-#include "generic/dimtraits.h"
 #include "generic/triangulation.h"
 #include "maths/ncyclotomic.h"
 #include "packet/npacket.h"
@@ -69,9 +68,6 @@ namespace regina {
 
 class NAngleStructure;
 class NBoundaryComponent;
-class NEdge;
-class NTriangle;
-class NVertex;
 class NGroupPresentation;
 class NNormalSurface;
 class NXMLPacketReader;
@@ -81,8 +77,12 @@ template <int> class Component;
 template <int> class Isomorphism;
 template <int> class SimplexBase;
 template <int> class Simplex;
+template <int, int> class Face;
 typedef Isomorphism<3> NIsomorphism;
 typedef Simplex<3> NTetrahedron;
+typedef Face<3, 0> NVertex;
+typedef Face<3, 1> NEdge;
+typedef Face<3, 2> NTriangle;
 
 /**
  * \addtogroup triangulation 3-Manifold Triangulations
@@ -169,20 +169,18 @@ enum TuraevViroAlg {
 template <>
 class REGINA_API Triangulation<3> :
         public NPacket,
-        public TriangulationBase<3> {
+        public detail::TriangulationBase<3> {
     REGINA_PACKET(Triangulation<3>, PACKET_TRIANGULATION)
 
     public:
         typedef std::vector<NTetrahedron*>::const_iterator TetrahedronIterator;
             /**< A dimension-specific alias for SimplexIterator,
                  used to iterate through tetrahedra. */
-        typedef std::vector<NTriangle*>::const_iterator TriangleIterator;
+        typedef FaceList<3, 2>::Iterator TriangleIterator;
             /**< Used to iterate through triangles. */
-        typedef std::vector<NTriangle*>::const_iterator FaceIterator;
-            /**< A deprecated alias for TriangleIterator. */
-        typedef std::vector<NEdge*>::const_iterator EdgeIterator;
+        typedef FaceList<3, 1>::Iterator EdgeIterator;
             /**< Used to iterate through edges. */
-        typedef std::vector<NVertex*>::const_iterator VertexIterator;
+        typedef FaceList<3, 0>::Iterator VertexIterator;
             /**< Used to iterate through vertices. */
         typedef std::vector<NBoundaryComponent*>::const_iterator
                 BoundaryComponentIterator;
@@ -194,21 +192,12 @@ class REGINA_API Triangulation<3> :
                  as described by turaevViro(). */
 
     private:
-        mutable NMarkedVector<NTriangle> triangles_;
-            /**< The triangles in the triangulation skeleton. */
-        mutable NMarkedVector<NEdge> edges_;
-            /**< The edges in the triangulation skeleton. */
-        mutable NMarkedVector<NVertex> vertices_;
-            /**< The vertices in the triangulation skeleton. */
-        mutable NMarkedVector<NBoundaryComponent> boundaryComponents_;
-            /**< The components that form the boundary of the
-                 triangulation. */
+        NMarkedVector<NBoundaryComponent> boundaryComponents_;
+            /**< The components that form the boundary of the triangulation. */
 
-        mutable bool valid_;
-            /**< Is the triangulation valid? */
-        mutable bool ideal_;
+        bool ideal_;
             /**< Is the triangulation ideal? */
-        mutable bool standard_;
+        bool standard_;
             /**< Is the triangulation standard? */
 
         mutable NProperty<NGroupPresentation, StoreManagedPtr>
@@ -351,19 +340,10 @@ class REGINA_API Triangulation<3> :
          */
         const std::vector<NTetrahedron*>& getTetrahedra() const;
         /**
-         * A dimension-specific alias for simplex().
+         * Deprecated dimension-specific alias for simplexIndex().
          *
-         * See simplex() for further information.
-         */
-        NTetrahedron* getTetrahedron(unsigned long index);
-        /**
-         * A dimension-specific alias for simplex().
-         *
-         * See simplex() for further information.
-         */
-        const NTetrahedron* getTetrahedron(unsigned long index) const;
-        /**
-         * A dimension-specific alias for simplexIndex().
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call tet->index() instead.
          *
          * See simplexIndex() for further information.
          */
@@ -413,54 +393,6 @@ class REGINA_API Triangulation<3> :
          * @return the number of boundary components.
          */
         unsigned long getNumberOfBoundaryComponents() const;
-        /**
-         * Returns the number of vertices in this triangulation.
-         *
-         * @return the number of vertices.
-         */
-        unsigned long getNumberOfVertices() const;
-        /**
-         * Returns the number of edges in this triangulation.
-         *
-         * @return the number of edges.
-         */
-        unsigned long getNumberOfEdges() const;
-        /**
-         * Returns the number of triangular faces in this triangulation.
-         *
-         * @return the number of triangles.
-         */
-        unsigned long getNumberOfTriangles() const;
-        /**
-         * A deprecated alias for getNumberOfTriangles().
-         *
-         * This routine returns the number of triangular faces in this
-         * triangulation.  See getNumberOfTriangles() for further details.
-         *
-         * Do not confuse this deprecated alias with the
-         * (non-deprecated) tempate function getNumberOfFaces<subdim>().
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use getNumberOfTriangles() instead.
-         *
-         * @return the number of triangles.
-         */
-        unsigned long getNumberOfFaces() const;
-        /**
-         * Returns the number of faces of the given dimension in this
-         * triangulation.
-         *
-         * This template function is to assist with writing dimension-agnostic
-         * code that can be reused to work in different dimensions.
-         *
-         * \pre The template argument \a subdim is between 0 and 3 inclusive.
-         *
-         * \ifacespython Not present.
-         *
-         * @return the number of faces of the given dimension.
-         */
-        template <int subdim>
-        unsigned long getNumberOfFaces() const;
 
         /**
          * Returns all boundary components of this triangulation.
@@ -480,66 +412,6 @@ class REGINA_API Triangulation<3> :
          */
         const std::vector<NBoundaryComponent*>& getBoundaryComponents() const;
         /**
-         * Returns all vertices of this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * vertices will be deleted and replaced with new
-         * ones.  Thus the objects contained in this list should be
-         * considered temporary only.
-         *
-         * This reference to the list however will remain valid and
-         * up-to-date for as long as the triangulation exists.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of all vertices.
-         */
-        const std::vector<NVertex*>& getVertices() const;
-        /**
-         * Returns all edges of this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * edges will be deleted and replaced with new
-         * ones.  Thus the objects contained in this list should be
-         * considered temporary only.
-         *
-         * This reference to the list however will remain valid and
-         * up-to-date for as long as the triangulation exists.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of all edges.
-         */
-        const std::vector<NEdge*>& getEdges() const;
-        /**
-         * Returns all triangular faces of this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * triangles will be deleted and replaced with new
-         * ones.  Thus the objects contained in this list should be
-         * considered temporary only.
-         *
-         * This reference to the list however will remain valid and
-         * up-to-date for as long as the triangulation exists.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of all triangles.
-         */
-        const std::vector<NTriangle*>& getTriangles() const;
-        /**
-         * A deprecated alias for getTriangles().
-         *
-         * This routine returns all triangular faces in this triangulation.
-         * See getTriangles() for further details.
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use getTriangles() instead.
-         *
-         * @return the list of all triangles.
-         */
-        const std::vector<NTriangle*>& getFaces() const;
-        /**
          * Returns the requested triangulation boundary component.
          *
          * Bear in mind that each time the triangulation changes, the
@@ -553,90 +425,13 @@ class REGINA_API Triangulation<3> :
          */
         NBoundaryComponent* getBoundaryComponent(unsigned long index) const;
         /**
-         * Returns the requested vertex in this triangulation.
+         * Deprecated routine that returns the index of the given
+         * boundary component in the triangulation.
          *
-         * Bear in mind that each time the triangulation changes, the
-         * vertices will be deleted and replaced with new
-         * ones.  Thus this object should be considered temporary only.
-         *
-         * @param index the index of the desired vertex, ranging from 0
-         * to getNumberOfVertices()-1 inclusive.
-         * @return the requested vertex.
-         */
-        NVertex* getVertex(unsigned long index) const;
-        /**
-         * Returns the requested edge in this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * edges will be deleted and replaced with new
-         * ones.  Thus this object should be considered temporary only.
-         *
-         * @param index the index of the desired edge, ranging from 0
-         * to getNumberOfEdges()-1 inclusive.
-         * @return the requested edge.
-         */
-        NEdge* getEdge(unsigned long index) const;
-        /**
-         * Returns the requested triangular face in this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * triangles will be deleted and replaced with new
-         * ones.  Thus this object should be considered temporary only.
-         *
-         * @param index the index of the desired triangle, ranging from 0
-         * to getNumberOfTriangles()-1 inclusive.
-         * @return the requested triangle.
-         */
-        NTriangle* getTriangle(unsigned long index) const;
-        /**
-         * A deprecated alias for getTriangle().
-         *
-         * This routine returns the requested triangular face in the
-         * triangulation.  See getTriangle() for further details.
-         *
-         * Do not confuse this deprecated alias with the
-         * (non-deprecated) tempate function getFace<subdim>().
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use getTriangle() instead.
-         *
-         * @param index the index of the desired triangle, ranging from 0
-         * to getNumberOfTriangles()-1 inclusive.
-         * @return the requested triangle.
-         */
-        NTriangle* getFace(unsigned long index) const;
-        /**
-         * Returns the requested face of the given dimension in this
-         * triangulation.
-         *
-         * This template function is to assist with writing dimension-agnostic
-         * code that can be reused to work in different dimensions.
-         *
-         * \pre The template argument \a subdim is between 0 and 3 inclusive.
-         *
-         * \ifacespython Not present.
-         *
-         * @param index the index of the desired face, ranging from 0 to
-         * getNumberOfFaces<subdim>()-1 inclusive.
-         * @return the requested face.
-         */
-        template <int subdim>
-        typename FaceTraits<3, subdim>::Face* getFace(unsigned long index)
-            const;
-        /**
-         * Returns the index of the given boundary component
-         * in the triangulation.
-         *
-         * This routine was introduced in Regina 4.5, and replaces the
-         * old getBoundaryComponentIndex().  The name has been changed
-         * because, unlike the old routine, it requires that the given
-         * boundary component belongs to the triangulation (a consequence of
-         * some significant memory optimisations).
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call bc->index() instead.
          *
          * \pre The given boundary component belongs to this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.
          *
          * @param bc specifies which boundary component to find in the
          * triangulation.
@@ -645,18 +440,13 @@ class REGINA_API Triangulation<3> :
          */
         long boundaryComponentIndex(const NBoundaryComponent* bc) const;
         /**
-         * Returns the index of the given vertex in the triangulation.
+         * Deprecated routine that returns the index of the given vertex
+         * in the triangulation.
          *
-         * This routine was introduced in Regina 4.5, and replaces the
-         * old getVertexIndex().  The name has been changed
-         * because, unlike the old routine, it requires that the given
-         * vertex belongs to the triangulation (a consequence of
-         * some significant memory optimisations).
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call vertex->index() instead.
          *
          * \pre The given vertex belongs to this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.
          *
          * @param vertex specifies which vertex to find in the
          * triangulation.
@@ -665,18 +455,13 @@ class REGINA_API Triangulation<3> :
          */
         long vertexIndex(const NVertex* vertex) const;
         /**
-         * Returns the index of the given edge in the triangulation.
+         * Deprecated routine that returns the index of the given edge
+         * in the triangulation.
          *
-         * This routine was introduced in Regina 4.5, and replaces the
-         * old getEdgeIndex().  The name has been changed
-         * because, unlike the old routine, it requires that the given
-         * edge belongs to the triangulation (a consequence of
-         * some significant memory optimisations).
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call edge->index() instead.
          *
          * \pre The given edge belongs to this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.
          *
          * @param edge specifies which edge to find in the
          * triangulation.
@@ -685,18 +470,13 @@ class REGINA_API Triangulation<3> :
          */
         long edgeIndex(const NEdge* edge) const;
         /**
-         * Returns the index of the given triangle in the triangulation.
+         * Deprecated routine that returns the index of the given triangle
+         * in the triangulation.
          *
-         * This routine was introduced in Regina 4.5, and replaces the
-         * old getFaceIndex().  The name has been changed
-         * because, unlike the old routine, it requires that the given
-         * triangle belongs to the triangulation (a consequence of
-         * some significant memory optimisations).
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call triangle->index() instead.
          *
          * \pre The given triangle belongs to this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.
          *
          * @param triangle specifies which triangle to find in the
          * triangulation.
@@ -704,45 +484,6 @@ class REGINA_API Triangulation<3> :
          * triangle, 1 is the second and so on.
          */
         long triangleIndex(const NTriangle* triangle) const;
-        /**
-         * A deprecated alias for triangleIndex().
-         *
-         * This routine returns the index of the given triangle in the
-         * triangulation.  See triangleIndex() for further details.
-         *
-         * Do not confuse this deprecated alias with the
-         * (non-deprecated) tempate function faceIndex<subdim>().
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use triangleIndex() instead.
-         *
-         * @param triangle specifies which triangle to find in the
-         * triangulation.
-         * @return the index of the specified triangle, where 0 is the first
-         * triangle, 1 is the second and so on.
-         */
-        long faceIndex(const NTriangle* triangle) const;
-        /**
-         * Returns the index of the given face of the given dimension in this
-         * triangulation.
-         *
-         * This template function is to assist with writing dimension-agnostic
-         * code that can be reused to work in different dimensions.
-         *
-         * \pre The template argument \a subdim is between 0 and 3 inclusive.
-         * \pre The given face belongs to this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.
-         *
-         * \ifacespython Not present.
-         *
-         * @param face specifies which face to find in the triangulation.
-         * @return the index of the specified face, where 0 is the first
-         * \a subdim-face, 1 is the second \a subdim-face, and so on.
-         */
-        template <int subdim>
-        long faceIndex(const typename FaceTraits<3, subdim>::Face* face) const;
 
         /**
          * Determines if this triangulation contains any two-sphere
@@ -832,17 +573,6 @@ class REGINA_API Triangulation<3> :
          */
         long getEulerCharacteristic() const;
 
-        /**
-         * Determines if this triangulation is valid.
-         * A triangulation is valid unless there is some vertex whose
-         * link has boundary but is not a disc (i.e., a vertex for which
-         * NVertex::getLink() returns NVertex::NON_STANDARD_BDRY),
-         * or unless there is some edge glued to itself in reverse
-         * (i.e., an edge for which NEdge::isValid() returns \c false).
-         *
-         * @return \c true if and only if this triangulation is valid.
-         */
-        bool isValid() const;
         /**
          * Determines if this triangulation is ideal.
          * This is the case if and only if one of the vertex links
@@ -3404,10 +3134,10 @@ class REGINA_API Triangulation<3> :
          *
          * @author Matthias Goerner
          */
-        void checkPermutations() const;
+        void checkPermutations();
 
         void deleteSkeleton();
-        void calculateSkeleton() const;
+        void calculateSkeleton();
         /**
          * Calculates the triangulation vertices and associated
          * properties.
@@ -3415,27 +3145,9 @@ class REGINA_API Triangulation<3> :
          * \warning This should only be called from within
          * calculateSkeleton().
          */
-        void calculateVertices() const;
-        void labelVertex(NTetrahedron*, int, NVertex*) const;
+        void calculateVertices();
+        void labelVertex(NTetrahedron*, int, NVertex*);
             /**< Internal to calculateVertices(). */
-        /**
-         * Calculates the triangulation edges and associated
-         * properties.
-         *
-         * \warning This should only be called from within
-         * calculateSkeleton().
-         */
-        void calculateEdges() const;
-        void labelEdge(NTetrahedron*, int, NEdge*) const;
-            /**< Internal to calculateEdges(). */
-        /**
-         * Calculates the triangles of this triangulation and associated
-         * properties.
-         *
-         * \warning This should only be called from within
-         * calculateSkeleton().
-         */
-        void calculateTriangles() const;
         /**
          * Calculates the triangulation boundary components and
          * properties of these boundary components.
@@ -3443,8 +3155,8 @@ class REGINA_API Triangulation<3> :
          * \warning This should only be called from within
          * calculateSkeleton().
          */
-        void calculateBoundary() const;
-        void labelBoundaryTriangle(NTriangle*, NBoundaryComponent*) const;
+        void calculateBoundary();
+        void labelBoundaryTriangle(NTriangle*, NBoundaryComponent*);
             /**< Internal to calculateBoundary(). */
         /**
          * Calculates the triangulation vertex links and associated
@@ -3453,7 +3165,7 @@ class REGINA_API Triangulation<3> :
          * \warning This should only be called from within
          * calculateSkeleton().
          */
-        void calculateVertexLinks() const;
+        void calculateVertexLinks();
 
         /**
          * Calculates all properties of the triangulation relating to
@@ -3483,8 +3195,8 @@ class REGINA_API Triangulation<3> :
             /**< Internal to maximalForestInSkeleton(). */
 
     friend class regina::Simplex<3>;
-    friend class regina::SimplexBase<3>;
-    friend class regina::TriangulationBase<3>;
+    friend class regina::detail::SimplexBase<3>;
+    friend class regina::detail::TriangulationBase<3>;
     friend class regina::NXMLTriangulationReader;
 };
 
@@ -3530,15 +3242,6 @@ inline unsigned long Triangulation<3>::getNumberOfTetrahedra() const {
     return simplices_.size();
 }
 
-inline NTetrahedron* Triangulation<3>::getTetrahedron(unsigned long index) {
-    return simplices_[index];
-}
-
-inline const NTetrahedron* Triangulation<3>::getTetrahedron(unsigned long index)
-        const {
-    return simplices_[index];
-}
-
 inline long Triangulation<3>::tetrahedronIndex(const NTetrahedron* tet) const {
     return tet->markedIndex();
 }
@@ -3568,52 +3271,13 @@ inline unsigned long Triangulation<3>::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
-inline unsigned long Triangulation<3>::getNumberOfVertices() const {
-    ensureSkeleton();
-    return vertices_.size();
-}
-
-inline unsigned long Triangulation<3>::getNumberOfEdges() const {
-    ensureSkeleton();
-    return edges_.size();
-}
-
-inline unsigned long Triangulation<3>::getNumberOfTriangles() const {
-    ensureSkeleton();
-    return triangles_.size();
-}
-
-inline unsigned long Triangulation<3>::getNumberOfFaces() const {
-    return getNumberOfTriangles();
-}
-
-template <>
-inline unsigned long Triangulation<3>::getNumberOfFaces<0>() const {
-    return getNumberOfVertices();
-}
-
-template <>
-inline unsigned long Triangulation<3>::getNumberOfFaces<1>() const {
-    return getNumberOfEdges();
-}
-
-template <>
-inline unsigned long Triangulation<3>::getNumberOfFaces<2>() const {
-    return getNumberOfTriangles();
-}
-
-template <>
-inline unsigned long Triangulation<3>::getNumberOfFaces<3>() const {
-    return getNumberOfTetrahedra();
-}
-
 inline long Triangulation<3>::getEulerCharTri() const {
     ensureSkeleton();
 
     // Cast away the unsignedness of std::vector::size().
-    return static_cast<long>(vertices_.size())
-        - static_cast<long>(edges_.size())
-        + static_cast<long>(triangles_.size())
+    return static_cast<long>(countVertices())
+        - static_cast<long>(countEdges())
+        + static_cast<long>(countTriangles())
         - static_cast<long>(simplices_.size());
 }
 
@@ -3632,70 +3296,10 @@ inline const std::vector<NBoundaryComponent*>&
     return (const std::vector<NBoundaryComponent*>&)(boundaryComponents_);
 }
 
-inline const std::vector<NVertex*>& Triangulation<3>::getVertices() const {
-    ensureSkeleton();
-    return (const std::vector<NVertex*>&)(vertices_);
-}
-
-inline const std::vector<NEdge*>& Triangulation<3>::getEdges()
-        const {
-    ensureSkeleton();
-    return (const std::vector<NEdge*>&)(edges_);
-}
-
-inline const std::vector<NTriangle*>& Triangulation<3>::getTriangles()
-        const {
-    ensureSkeleton();
-    return (const std::vector<NTriangle*>&)(triangles_);
-}
-
-inline const std::vector<NTriangle*>& Triangulation<3>::getFaces() const {
-    return getTriangles();
-}
-
 inline NBoundaryComponent* Triangulation<3>::getBoundaryComponent(
         unsigned long index) const {
     ensureSkeleton();
     return boundaryComponents_[index];
-}
-
-inline NVertex* Triangulation<3>::getVertex(unsigned long index) const {
-    ensureSkeleton();
-    return vertices_[index];
-}
-
-inline NEdge* Triangulation<3>::getEdge(unsigned long index) const {
-    ensureSkeleton();
-    return edges_[index];
-}
-
-inline NTriangle* Triangulation<3>::getTriangle(unsigned long index) const {
-    ensureSkeleton();
-    return triangles_[index];
-}
-
-inline NTriangle* Triangulation<3>::getFace(unsigned long index) const {
-    return getTriangle(index);
-}
-
-template <>
-inline NVertex* Triangulation<3>::getFace<0>(unsigned long index) const {
-    return vertices_[index];
-}
-
-template <>
-inline NEdge* Triangulation<3>::getFace<1>(unsigned long index) const {
-    return edges_[index];
-}
-
-template <>
-inline NTriangle* Triangulation<3>::getFace<2>(unsigned long index) const {
-    return triangles_[index];
-}
-
-template <>
-inline NTetrahedron* Triangulation<3>::getFace<3>(unsigned long index) const {
-    return simplices_[index];
 }
 
 inline long Triangulation<3>::boundaryComponentIndex(
@@ -3704,42 +3308,16 @@ inline long Triangulation<3>::boundaryComponentIndex(
 }
 
 inline long Triangulation<3>::vertexIndex(const NVertex* vertex) const {
-    return vertex->markedIndex();
+    return vertex->index();
 }
 
 inline long Triangulation<3>::edgeIndex(const NEdge* edge) const {
-    return edge->markedIndex();
+    return edge->index();
 }
 
 inline long Triangulation<3>::triangleIndex(const NTriangle* tri) const {
-    return tri->markedIndex();
+    return tri->index();
 }
-
-inline long Triangulation<3>::faceIndex(const NTriangle* tri) const {
-    return tri->markedIndex();
-}
-
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-inline long Triangulation<3>::faceIndex<0>(const NVertex* face) const {
-    return face->markedIndex();
-}
-
-template <>
-inline long Triangulation<3>::faceIndex<1>(const NEdge* face) const {
-    return face->markedIndex();
-}
-
-template <>
-inline long Triangulation<3>::faceIndex<2>(const NTriangle* face) const {
-    return face->markedIndex();
-}
-
-template <>
-inline long Triangulation<3>::faceIndex<3>(const NTetrahedron* face) const {
-    return face->markedIndex();
-}
-#endif
 
 inline bool Triangulation<3>::hasTwoSphereBoundaryComponents() const {
     if (! twoSphereBoundaryComponents_.known())
@@ -3751,11 +3329,6 @@ inline bool Triangulation<3>::hasNegativeIdealBoundaryComponents() const {
     if (! negativeIdealBoundaryComponents_.known())
         calculateBoundaryProperties();
     return negativeIdealBoundaryComponents_.value();
-}
-
-inline bool Triangulation<3>::isValid() const {
-    ensureSkeleton();
-    return valid_;
 }
 
 inline bool Triangulation<3>::isIdeal() const {
@@ -3771,7 +3344,7 @@ inline bool Triangulation<3>::isStandard() const {
 inline bool Triangulation<3>::hasBoundaryFacets() const {
     // Override, since we can do this faster in dimension 3.
     ensureSkeleton();
-    return (triangles_.size() > 2 * simplices_.size());
+    return (countTriangles() > 2 * simplices_.size());
 }
 
 inline bool Triangulation<3>::hasBoundaryTriangles() const {
@@ -3785,7 +3358,7 @@ inline bool Triangulation<3>::hasBoundaryFaces() const {
 inline size_t Triangulation<3>::countBoundaryFacets() const {
     // Override, since we can do this faster in dimension 3.
     ensureSkeleton();
-    return 2 * triangles_.size() - 4 * simplices_.size();
+    return 2 * countTriangles() - 4 * simplices_.size();
 }
 
 inline size_t Triangulation<3>::countBoundaryTriangles() const {

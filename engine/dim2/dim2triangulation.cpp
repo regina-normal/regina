@@ -63,10 +63,10 @@ bool Triangulation<2>::isMinimal() const {
 
     // All other closed manifolds:
     if (isClosed())
-        return (vertices_.size() == 1);
+        return (getNumberOfVertices() == 1);
 
     // All other bounded manifolds:
-    return (vertices_.size() == boundaryComponents_.size());
+    return (getNumberOfVertices() == boundaryComponents_.size());
 }
 
 void Triangulation<2>::writeTextLong(std::ostream& out) const {
@@ -74,8 +74,8 @@ void Triangulation<2>::writeTextLong(std::ostream& out) const {
 
     out << "Size of the skeleton:\n";
     out << "  Triangles: " << simplices_.size() << '\n';
-    out << "  Edges: " << edges_.size() << '\n';
-    out << "  Vertices: " << vertices_.size() << '\n';
+    out << "  Edges: " << getNumberOfEdges() << '\n';
+    out << "  Vertices: " << getNumberOfVertices() << '\n';
     out << '\n';
 
     Dim2Triangle* tri;
@@ -200,16 +200,8 @@ void Triangulation<2>::cloneFrom(const Dim2Triangulation& X) {
 }
 
 void Triangulation<2>::deleteSkeleton() {
-    for (VertexIterator it = vertices_.begin(); it != vertices_.end(); ++it)
-        delete *it;
-    for (EdgeIterator it = edges_.begin(); it != edges_.end(); ++it)
-        delete *it;
-    for (BoundaryComponentIterator it = boundaryComponents_.begin();
-            it != boundaryComponents_.end(); ++it)
-        delete *it;
-
-    vertices_.clear();
-    edges_.clear();
+    for (auto b : boundaryComponents_)
+        delete b;
     boundaryComponents_.clear();
 
     TriangulationBase<2>::deleteSkeleton();

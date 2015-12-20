@@ -49,18 +49,37 @@ using regina::NTriangleEmbedding;
 using regina::python::GlobalArray;
 
 namespace {
-    GlobalArray<regina::NPerm4> NTriangle_ordering(NTriangle::ordering, 4);
+    boost::python::list NTriangle_getEmbeddings_list(const NTriangle* t) {
+        boost::python::list ans;
+        for (auto& emb: *t)
+            ans.append(emb);
+        return ans;
+    }
 }
 
 void addNTriangle() {
     class_<NTriangleEmbedding, boost::noncopyable>("NTriangleEmbedding",
             init<regina::NTetrahedron*, int>())
         .def(init<const NTriangleEmbedding&>())
+        .def("simplex", &NTriangleEmbedding::simplex,
+            return_value_policy<reference_existing_object>())
+        .def("getSimplex", &NTriangleEmbedding::getSimplex,
+            return_value_policy<reference_existing_object>())
+        .def("tetrahedron", &NTriangleEmbedding::tetrahedron,
+            return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &NTriangleEmbedding::getTetrahedron,
             return_value_policy<reference_existing_object>())
+        .def("face", &NTriangleEmbedding::face)
         .def("getFace", &NTriangleEmbedding::getFace)
+        .def("triangle", &NTriangleEmbedding::triangle)
         .def("getTriangle", &NTriangleEmbedding::getTriangle)
+        .def("vertices", &NTriangleEmbedding::vertices)
         .def("getVertices", &NTriangleEmbedding::getVertices)
+        .def("str", &NTriangleEmbedding::str)
+        .def("toString", &NTriangleEmbedding::toString)
+        .def("detail", &NTriangleEmbedding::detail)
+        .def("toStringLong", &NTriangleEmbedding::toStringLong)
+        .def("__str__", &NTriangleEmbedding::str)
         .def(regina::python::add_eq_operators())
     ;
 
@@ -68,16 +87,31 @@ void addNTriangle() {
         scope s = class_<NTriangle, std::auto_ptr<NTriangle>,
                 boost::noncopyable>("NTriangle", no_init)
             .def("index", &NTriangle::index)
+            .def("embeddings", NTriangle_getEmbeddings_list)
+            .def("getEmbeddings", NTriangle_getEmbeddings_list)
+            .def("embedding", &NTriangle::embedding,
+                return_internal_reference<>())
+            .def("getEmbedding", &NTriangle::getEmbedding,
+                return_internal_reference<>())
             .def("isBoundary", &NTriangle::isBoundary)
             .def("inMaximalForest", &NTriangle::inMaximalForest)
             .def("getType", &NTriangle::getType)
             .def("getSubtype", &NTriangle::getSubtype)
             .def("isMobiusBand", &NTriangle::isMobiusBand)
             .def("isCone", &NTriangle::isCone)
-            .def("getNumberOfEmbeddings", &NTriangle::getNumberOfEmbeddings)
-            .def("getEmbedding", &NTriangle::getEmbedding,
+            .def("isValid", &NTriangle::isValid)
+            .def("isLinkOrientable", &NTriangle::isLinkOrientable)
+            .def("degree", &NTriangle::degree)
+            .def("getDegree", &NTriangle::getDegree)
+            .def("front", &NTriangle::front,
                 return_internal_reference<>())
+            .def("back", &NTriangle::back,
+                return_internal_reference<>())
+            .def("triangulation", &NTriangle::triangulation,
+                return_value_policy<reference_existing_object>())
             .def("getTriangulation", &NTriangle::getTriangulation,
+                return_value_policy<reference_existing_object>())
+            .def("component", &NTriangle::component,
                 return_value_policy<reference_existing_object>())
             .def("getComponent", &NTriangle::getComponent,
                 return_value_policy<reference_existing_object>())
@@ -93,7 +127,13 @@ void addNTriangle() {
             .def("detail", &NTriangle::detail)
             .def("toStringLong", &NTriangle::toStringLong)
             .def("__str__", &NTriangle::str)
+            .def("ordering", &NTriangle::ordering)
+            .def("faceNumber", &NTriangle::faceNumber)
+            .def("containsVertex", &NTriangle::containsVertex)
             .def(regina::python::add_eq_operators())
+            .staticmethod("ordering")
+            .staticmethod("faceNumber")
+            .staticmethod("containsVertex")
         ;
 
         enum_<regina::NTriangle::Type>("Type")
@@ -116,8 +156,6 @@ void addNTriangle() {
         s.attr("HORN") = NTriangle::HORN;
         s.attr("DUNCEHAT") = NTriangle::DUNCEHAT;
         s.attr("L31") = NTriangle::L31;
-
-        s.attr("ordering") = &NTriangle_ordering;
     }
 
     // Support for deprecated typedefs:

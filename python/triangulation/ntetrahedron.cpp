@@ -64,6 +64,8 @@ void addNTetrahedron() {
         .def("join", &NTetrahedron::join)
         .def("unjoin", &NTetrahedron::unjoin,
             return_value_policy<reference_existing_object>())
+        .def("triangulation", &NTetrahedron::triangulation,
+            return_value_policy<reference_existing_object>())
         .def("isolate", &NTetrahedron::isolate)
         .def("getTriangulation", &NTetrahedron::getTriangulation,
             return_value_policy<reference_existing_object>())
@@ -71,14 +73,23 @@ void addNTetrahedron() {
             return_value_policy<reference_existing_object>())
         .def("getComponent", &NTetrahedron::getComponent,
             return_value_policy<reference_existing_object>())
+        .def("vertex", &NTetrahedron::vertex,
+            return_value_policy<reference_existing_object>())
         .def("getVertex", &NTetrahedron::getVertex,
+            return_value_policy<reference_existing_object>())
+        .def("edge", &NTetrahedron::edge,
             return_value_policy<reference_existing_object>())
         .def("getEdge", &NTetrahedron::getEdge,
             return_value_policy<reference_existing_object>())
+        .def("triangle", &NTetrahedron::triangle,
+            return_value_policy<reference_existing_object>())
         .def("getTriangle", &NTetrahedron::getTriangle,
             return_value_policy<reference_existing_object>())
+        .def("vertexMapping", &NTetrahedron::vertexMapping)
         .def("getVertexMapping", &NTetrahedron::getVertexMapping)
+        .def("edgeMapping", &NTetrahedron::edgeMapping)
         .def("getEdgeMapping", &NTetrahedron::getEdgeMapping)
+        .def("triangleMapping", &NTetrahedron::triangleMapping)
         .def("getTriangleMapping", &NTetrahedron::getTriangleMapping)
         .def("orientation", &NTetrahedron::orientation)
         .def("facetInMaximalForest", &NTetrahedron::facetInMaximalForest)

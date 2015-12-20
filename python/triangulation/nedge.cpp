@@ -55,15 +55,11 @@ namespace {
 
     GlobalArray2D<int> NEdge_edgeNumber(NEdge::edgeNumber, 4);
     GlobalArray2D<int> NEdge_edgeVertex(NEdge::edgeVertex, 6);
-    GlobalArray<regina::NPerm4> NEdge_ordering(NEdge::ordering, 6);
 
     boost::python::list edge_getEmbeddings_list(const NEdge* e) {
-        const std::deque<NEdgeEmbedding>& embs = e->getEmbeddings();
-        std::deque<NEdgeEmbedding>::const_iterator it;
-
         boost::python::list ans;
-        for (it = embs.begin(); it != embs.end(); it++)
-            ans.append(*it);
+        for (auto& emb: *e)
+            ans.append(emb);
         return ans;
     }
 }
@@ -78,21 +74,46 @@ void addNEdge() {
     class_<NEdgeEmbedding>("NEdgeEmbedding",
             init<regina::NTetrahedron*, int>())
         .def(init<const NEdgeEmbedding&>())
+        .def("simplex", &NEdgeEmbedding::simplex,
+            return_value_policy<reference_existing_object>())
+        .def("getSimplex", &NEdgeEmbedding::getSimplex,
+            return_value_policy<reference_existing_object>())
+        .def("tetrahedron", &NEdgeEmbedding::tetrahedron,
+            return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &NEdgeEmbedding::getTetrahedron,
             return_value_policy<reference_existing_object>())
+        .def("face", &NEdgeEmbedding::face)
+        .def("getFace", &NEdgeEmbedding::getFace)
+        .def("edge", &NEdgeEmbedding::edge)
         .def("getEdge", &NEdgeEmbedding::getEdge)
+        .def("vertices", &NEdgeEmbedding::vertices)
         .def("getVertices", &NEdgeEmbedding::getVertices)
+        .def("str", &NEdgeEmbedding::str)
+        .def("toString", &NEdgeEmbedding::toString)
+        .def("detail", &NEdgeEmbedding::detail)
+        .def("toStringLong", &NEdgeEmbedding::toStringLong)
+        .def("__str__", &NEdgeEmbedding::str)
         .def(regina::python::add_eq_operators())
     ;
 
     scope s = class_<NEdge, std::auto_ptr<NEdge>, boost::noncopyable>
             ("NEdge", no_init)
         .def("index", &NEdge::index)
+        .def("embeddings", edge_getEmbeddings_list)
         .def("getEmbeddings", edge_getEmbeddings_list)
-        .def("getNumberOfEmbeddings", &NEdge::getNumberOfEmbeddings)
+        .def("embedding", &NEdge::embedding,
+            return_internal_reference<>())
         .def("getEmbedding", &NEdge::getEmbedding,
             return_internal_reference<>())
+        .def("front", &NEdge::front,
+            return_internal_reference<>())
+        .def("back", &NEdge::back,
+            return_internal_reference<>())
+        .def("triangulation", &NEdge::triangulation,
+            return_value_policy<reference_existing_object>())
         .def("getTriangulation", &NEdge::getTriangulation,
+            return_value_policy<reference_existing_object>())
+        .def("component", &NEdge::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &NEdge::getComponent,
             return_value_policy<reference_existing_object>())
@@ -100,19 +121,26 @@ void addNEdge() {
             return_value_policy<reference_existing_object>())
         .def("getVertex", &NEdge::getVertex,
             return_value_policy<reference_existing_object>())
+        .def("degree", &NEdge::degree)
         .def("getDegree", &NEdge::getDegree)
         .def("isBoundary", &NEdge::isBoundary)
         .def("isValid", &NEdge::isValid)
+        .def("isLinkOrientable", &NEdge::isLinkOrientable)
         .def("str", &NEdge::str)
         .def("toString", &NEdge::toString)
         .def("detail", &NEdge::detail)
         .def("toStringLong", &NEdge::toStringLong)
         .def("__str__", &NEdge::str)
+        .def("ordering", &NEdge::ordering)
+        .def("faceNumber", &NEdge::faceNumber)
+        .def("containsVertex", &NEdge::containsVertex)
         .def(regina::python::add_eq_operators())
+        .staticmethod("ordering")
+        .staticmethod("faceNumber")
+        .staticmethod("containsVertex")
     ;
 
     s.attr("edgeNumber") = &NEdge_edgeNumber;
     s.attr("edgeVertex") = &NEdge_edgeVertex;
-    s.attr("ordering") = &NEdge_ordering;
 }
 

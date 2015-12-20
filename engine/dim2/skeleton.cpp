@@ -39,7 +39,7 @@
 
 namespace regina {
 
-void Triangulation<2>::calculateSkeleton() const {
+void Triangulation<2>::calculateSkeleton() {
     TriangulationBase<2>::calculateSkeleton();
 
     // Get rid of the empty triangulation now, so that all the helper routines
@@ -47,184 +47,50 @@ void Triangulation<2>::calculateSkeleton() const {
     if (simplices_.empty())
         return;
 
-    // Off we go!
-    calculateEdges();
-        // Sets:
-        // - edges_
-        // - Dim2Component::edges_
-        // - Dim2Triangle::edge_
-        // - Dim2Triangle::edgeMapping_
-        // - all Dim2Edge members except boundaryComponent_
-
-    calculateVertices();
-        // Sets:
-        // - vertices_
-        // - Dim2Component::vertices_
-        // - Dim2Triangle::vertex_
-        // - Dim2Triangle::vertexMapping_
-        // - all Dim2Vertex members except boundaryComponent_
-
     calculateBoundary();
         // Sets:
         // - boundaryComponents_
         // - Dim2Component::boundaryComponents_
         // - Dim2 [ Edge, Vertex ]::boundaryComponent_
         // - all Dim2BoundaryComponent members
+
+    // Flesh out the details of each component.
+    for (auto v : getVertices())
+        v->component()->vertices_.push_back(v);
+    for (auto e : getEdges())
+        e->component()->edges_.push_back(e);
 }
 
-void Triangulation<2>::calculateEdges() const {
-    TriangleIterator it;
-    for (it = simplices_.begin(); it != simplices_.end(); ++it)
-        std::fill((*it)->edge_, (*it)->edge_ + 3, static_cast<Dim2Edge*>(0));
-
-    Dim2Triangle *tri, *adjTri;
-    Dim2Edge* e;
-    int edge, adjEdge;
-
-    // We process the edges in lexicographical order, according to the
-    // truncated permutation labels that are displayed to the user.
-    // This means working through the facets of each simplex in *reverse*.
-    for (it = simplices_.begin(); it != simplices_.end(); ++it) {
-        tri = *it;
-        for (edge = 2; edge >= 0; --edge) {
-            // Have we already checked out this edge from the other side?
-            if (tri->edge_[edge])
-                continue;
-
-            // A new edge!
-            e = new Dim2Edge(tri->component_);
-            edges_.push_back(e);
-            tri->component_->edges_.push_back(e);
-
-            tri->edge_[edge] = e;
-            tri->edgeMapping_[edge] = Dim2Edge::ordering[edge];
-
-            adjTri = tri->adjacentTriangle(edge);
-            if (adjTri) {
-                // We have an adjacent triangle.
-                adjEdge = tri->adjacentEdge(edge);
-
-                adjTri->edge_[adjEdge] = e;
-                adjTri->edgeMapping_[adjEdge] = tri->adjacentGluing(edge) *
-                    Dim2Edge::ordering[edge];
-
-                e->emb_[0] = Dim2EdgeEmbedding(tri, edge);
-                e->emb_[1] = Dim2EdgeEmbedding(adjTri, adjEdge);
-                e->nEmb_ = 2;
-            } else {
-                // This is a boundary edge.
-                e->emb_[0] = Dim2EdgeEmbedding(tri, edge);
-                e->nEmb_ = 1;
-            }
-        }
-    }
-}
-
-void Triangulation<2>::calculateVertices() const {
-    TriangleIterator it;
-    int loopVtx;
-    for (it = simplices_.begin(); it != simplices_.end(); ++it)
-        for (loopVtx = 0; loopVtx < 3; ++loopVtx)
-            (*it)->vertex_[loopVtx] = 0;
-
-    Dim2Vertex* label;
-    Dim2Triangle *loopTri, *tri, *adjTri;
-    int adjVertex;
-    NPerm3 map, adjMap;
-    int dir, exitEdge;
-    for (it = simplices_.begin(); it != simplices_.end(); ++it) {
-        loopTri = *it;
-        for (loopVtx = 2; loopVtx >= 0; --loopVtx) {
-            if (loopTri->vertex_[loopVtx])
-                continue;
-
-            label = new Dim2Vertex(loopTri->component_);
-            vertices_.push_back(label);
-            loopTri->component_->vertices_.push_back(label);
-
-            // Since triangle vertices are joined together in a loop, the
-            // depth-first search is really just a straight line in either
-            // direction.  We therefore do away with the usual stack and
-            // just keep track of the next triangle to process in the current
-            // direction.
-            loopTri->vertex_[loopVtx] = label;
-            loopTri->vertexMapping_[loopVtx] =
-                NPerm3(loopVtx, (loopVtx + 1) % 3, (loopVtx + 2) % 3);
-            label->emb_.push_back(Dim2VertexEmbedding(loopTri, loopVtx));
-
-            for (dir = 0; dir < 2; ++dir) {
-                // Start at the start and walk in one particular direction.
-                tri = loopTri;
-                map = tri->vertexMapping_[loopVtx];
-
-                while (true) {
-                    // Move through to the next triangle.
-                    exitEdge = map[dir == 0 ? 1 : 2];
-                    adjTri = tri->adjacentTriangle(exitEdge);
-                    if (! adjTri)
-                        break;
-
-                    adjMap = tri->adjacentGluing(exitEdge) * map *
-                        NPerm3(0, 2, 1);
-                    adjVertex = adjMap[0];
-
-                    if (adjTri->vertex_[adjVertex]) {
-                        // We looped right around.
-                        break;
-                    }
-
-                    // We have not yet seen this triangle vertex.  Label it.
-                    adjTri->vertex_[adjVertex] = label;
-                    adjTri->vertexMapping_[adjVertex] = adjMap;
-
-                    if (dir == 0)
-                        label->emb_.push_back(Dim2VertexEmbedding(
-                            adjTri, adjVertex));
-                    else
-                        label->emb_.push_front(Dim2VertexEmbedding(
-                            adjTri, adjVertex));
-
-                    tri = adjTri;
-                    map = adjMap;
-                }
-            }
-        }
-    }
-}
-
-void Triangulation<2>::calculateBoundary() const {
+void Triangulation<2>::calculateBoundary() {
     // Are there any boundary edges at all?
-    long nBdry = 2 * edges_.size() - 3 * simplices_.size();
+    long nBdry = 2 * getNumberOfEdges() - 3 * simplices_.size();
     if (nBdry == 0)
         return;
 
     Dim2BoundaryComponent* label;
-    EdgeIterator it;
     Dim2Triangle *tri, *adjTri;
     int edgeId, adjEdgeId;
     int vertexId, adjVertexId;
-    Dim2Edge *edge, *adjEdge;
+    Dim2Edge *adjEdge;
     Dim2Vertex* vertex;
     Dim2VertexEmbedding vertexEmb;
 
-    for (it = edges_.begin(); it != edges_.end(); ++it) {
-        edge = *it;
-
+    for (Dim2Edge* edge : getEdges()) {
         // We only care about boundary edges that we haven't yet seen..
-        if (edge->nEmb_ == 2 || edge->boundaryComponent_)
+        if (edge->getDegree() == 2 || edge->boundaryComponent_)
             continue;
 
         label = new Dim2BoundaryComponent();
         boundaryComponents_.push_back(label);
-        edge->component_->boundaryComponents_.push_back(label);
+        edge->getComponent()->boundaryComponents_.push_back(label);
 
         // Loop around from this boundary edge to
         // completely enumerate all edges in this boundary component.
 
-        tri = edge->emb_[0].getTriangle();
-        edgeId = edge->emb_[0].getEdge();
-        vertexId = edge->emb_[0].getVertices()[0];
-        vertex = tri->vertex_[vertexId];
+        tri = edge->front().getTriangle();
+        edgeId = edge->front().getEdge();
+        vertexId = edge->front().getVertices()[0];
+        vertex = tri->SimplexFaces<2, 0>::face_[vertexId];
         while (true) {
             if (! edge->boundaryComponent_) {
                 edge->boundaryComponent_ = label;
@@ -242,17 +108,17 @@ void Triangulation<2>::calculateBoundary() const {
             // We can be clever about this.  The current
             // boundary edge is one end of the vertex link; the
             // *adjacent* boundary edge must be at the other.
-            vertexEmb = vertex->emb_.front();
+            vertexEmb = vertex->front();
             if (vertexEmb.getTriangle() == tri &&
                     vertexEmb.getVertices()[0] == vertexId &&
                     vertexEmb.getVertices()[2] == edgeId) {
                 // We are currently looking at the embedding at the
                 // front of the list.  Take the one at the back.
-                vertexEmb = vertex->emb_.back();
+                vertexEmb = vertex->back();
 
                 adjTri = vertexEmb.getTriangle();
                 adjEdgeId = vertexEmb.getVertices()[1];
-                adjEdge = adjTri->edge_[adjEdgeId];
+                adjEdge = adjTri->SimplexFaces<2, 1>::face_[adjEdgeId];
                 adjVertexId = vertexEmb.getVertices()[2];
             } else {
                 // We must be looking at the embedding at the back
@@ -260,11 +126,11 @@ void Triangulation<2>::calculateBoundary() const {
                 // already stored in vertexEmb).
                 adjTri = vertexEmb.getTriangle();
                 adjEdgeId = vertexEmb.getVertices()[2];
-                adjEdge = adjTri->edge_[adjEdgeId];
+                adjEdge = adjTri->SimplexFaces<2, 1>::face_[adjEdgeId];
                 adjVertexId = vertexEmb.getVertices()[1];
 
                 // TODO: Sanity checking; remove this eventually.
-                vertexEmb = vertex->emb_.back();
+                vertexEmb = vertex->back();
                 if (! (vertexEmb.getTriangle() == tri &&
                         vertexEmb.getVertices()[0] == vertexId &&
                         vertexEmb.getVertices()[1] == edgeId)) {
@@ -279,7 +145,7 @@ void Triangulation<2>::calculateBoundary() const {
             tri = adjTri;
             edgeId = adjEdgeId;
             vertexId = adjVertexId;
-            vertex = tri->vertex_[vertexId];
+            vertex = tri->SimplexFaces<2, 0>::face_[vertexId];
         }
     }
 }

@@ -32,7 +32,7 @@
 
 /* end stub */
 
-/*! \file generic/isosig-impl.h
+/*! \file generic/detail/isosig-impl.h
  *  \brief Contains some of the implementation details for the generic
  *  Triangulation class template.
  *
@@ -43,6 +43,7 @@
 #include <algorithm>
 
 namespace regina {
+namespace detail {
 
 #ifndef __DOXYGEN
 struct IsoSigHelper {
@@ -597,5 +598,5 @@ size_t TriangulationBase<dim>::isoSigComponentSize(const std::string& sig) {
     return IsoSigHelper::SREAD<unsigned>(c, nChars);
 }
 
-} // namespace regina
+} } // namespace regina::detail
 

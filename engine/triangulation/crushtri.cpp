@@ -53,14 +53,11 @@ void NTriangulation::stretchBoundaryForestFromVertex(NVertex* from,
         std::set<NVertex*>& vertexSet) const {
     vertexSet.insert(from);
 
-    std::vector<NVertexEmbedding>::const_iterator it =
-        from->getEmbeddings().begin();
     NTetrahedron* tet;
     NVertex* otherVertex;
     NEdge* edge;
     int vertex, yourVertex;
-    while (it != from->getEmbeddings().end()) {
-        const NVertexEmbedding& emb = *it;
+    for (auto& emb : *from) {
         tet = emb.getTetrahedron();
         vertex = emb.getVertex();
         for (yourVertex = 0; yourVertex < 4; yourVertex++) {
@@ -76,7 +73,6 @@ void NTriangulation::stretchBoundaryForestFromVertex(NVertex* from,
                     vertexSet);
             }
         }
-        it++;
     }
 }
 
@@ -92,9 +88,9 @@ void NTriangulation::maximalForestInSkeleton(std::set<NEdge*>& edgeSet,
     else
         maximalForestInBoundary(edgeSet, vertexSet);
 
-    for (VertexIterator vit = vertices_.begin(); vit != vertices_.end(); vit++)
-        if (! (vertexSet.count(*vit))) {
-            stretchForestFromVertex(*vit, edgeSet, vertexSet, thisBranch);
+    for (NVertex* v : getVertices())
+        if (! (vertexSet.count(v))) {
+            stretchForestFromVertex(v, edgeSet, vertexSet, thisBranch);
             thisBranch.clear();
         }
 }
@@ -110,14 +106,11 @@ bool NTriangulation::stretchForestFromVertex(NVertex* from,
     vertexSet.insert(from);
     thisStretch.insert(from);
 
-    std::vector<NVertexEmbedding>::const_iterator it =
-        from->getEmbeddings().begin();
     NTetrahedron* tet;
     NVertex* otherVertex;
     int vertex, yourVertex;
     bool madeLink = false;
-    while (it != from->getEmbeddings().end()) {
-        const NVertexEmbedding& emb = *it;
+    for (auto& emb : *from) {
         tet = emb.getTetrahedron();
         vertex = emb.getVertex();
         for (yourVertex = 0; yourVertex < 4; yourVertex++) {
@@ -135,7 +128,6 @@ bool NTriangulation::stretchForestFromVertex(NVertex* from,
             if (madeLink)
                 return true;
         }
-        it++;
     }
     return false;
 }

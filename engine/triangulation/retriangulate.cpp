@@ -114,10 +114,10 @@ namespace {
             }
 
         if (t->getNumberOfTetrahedra() < maxTet_)
-            for (i = 0; i < t->getNumberOfFaces(); ++i)
-                if (t->twoThreeMove(t->getFace(i), true, false)) {
+            for (i = 0; i < t->getNumberOfTriangles(); ++i)
+                if (t->twoThreeMove(t->getTriangle(i), true, false)) {
                     NTriangulation alt(*t);
-                    alt.twoThreeMove(alt.getFace(i), false, true);
+                    alt.twoThreeMove(alt.getTriangle(i), false, true);
                     if (candidate(alt)) {
                         delete t;
                         return;

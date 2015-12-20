@@ -263,7 +263,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
                         continue;
 
                     tot = 0;
-                    for (k = 0; k < e->getNumberOfEmbeddings(); ++k) {
+                    for (k = 0; k < e->getDegree(); ++k) {
                         tot += s->getAngle(
                             e->getEmbedding(k).getTetrahedron()->markedIndex(),
                             regina::vertexSplit[

@@ -44,19 +44,20 @@
 #include <vector>
 #include "regina-core.h"
 #include "output.h"
+#include "generic/alias/face.h"
 #include "utilities/nmarkedvector.h"
 #include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
-class Dim2Edge;
-class Dim2Vertex;
-
 template <int> class Component;
 template <int> class Triangulation;
+template <int, int> class Face;
 typedef Component<2> Dim2Component;
 typedef Triangulation<2> Dim2Triangulation;
+typedef Face<2, 0> Dim2Vertex;
+typedef Face<2, 1> Dim2Edge;
 
 /**
  * \weakgroup dim2
@@ -72,6 +73,7 @@ typedef Triangulation<2> Dim2Triangulation;
  */
 class REGINA_API Dim2BoundaryComponent :
         public Output<Dim2BoundaryComponent>,
+        public alias::FaceOfTriangulation<Dim2BoundaryComponent, 2>,
         public boost::noncopyable,
         public NMarkedElement {
     private:
@@ -91,46 +93,39 @@ class REGINA_API Dim2BoundaryComponent :
         unsigned long index() const;
 
         /**
-         * Returns the number of edges in this boundary component.
+         * Returns the number of <i>subdim</i>-faces in this boundary component.
          *
-         * @return the number of edges.
+         * \pre The template argument \a subdim is either 0 or 1.
+         *
+         * \ifacespython Python does not support templates.  Instead,
+         * Python users should call this function in the form
+         * <tt>countFaces(subdim)</tt>; that is, the template parameter
+         * \a subdim becomes the first argument of the function.
+         *
+         * @return the number of <i>subdim</i>-faces.
          */
-        unsigned long getNumberOfEdges() const;
+        template <int subdim>
+        size_t countFaces() const;
 
         /**
-         * Returns the number of vertices in this boundary component.
+         * Returns the requested <i>subdim</i>-face in this boundary component.
          *
-         * @return the number of vertices.
+         * Note that the index of a face in the boundary component need
+         * not be the index of the same face in the overall triangulation.
+         *
+         * \pre The template argument \a subdim is either 0 or 1.
+         *
+         * \ifacespython Python does not support templates.  Instead,
+         * Python users should call this function in the form
+         * <tt>face(subdim, index)</tt>; that is, the template parameter
+         * \a subdim becomes the first argument of the function.
+         *
+         * @param index the index of the desired face, ranging from 0 to
+         * countFaces<subdim>()-1 inclusive.
+         * @return the requested face.
          */
-        unsigned long getNumberOfVertices() const;
-
-        /**
-         * Returns the requested edge in this boundary component.
-         *
-         * The index of a Dim2Edge in the boundary component need
-         * not be the index of the same edge in the entire
-         * 2-manifold triangulation.
-         *
-         * @param index the index of the requested edge in the boundary
-         * component.  This should be between 0 and getNumberOfEdges()-1
-         * inclusive.
-         * @return the requested edge.
-         */
-        Dim2Edge* getEdge(unsigned long index) const;
-
-        /**
-         * Returns the requested vertex in this boundary component.
-         *
-         * The index of a Dim2Vertex in the boundary component need
-         * not be the index of the same vertex in the entire
-         * 2-manifold triangulation.
-         *
-         * @param index the index of the requested vertex in the boundary
-         * component.  This should be between 0 and getNumberOfVertices()-1
-         * inclusive.
-         * @return the requested vertex.
-         */
-        Dim2Vertex* getVertex(unsigned long index) const;
+        template <int subdim>
+        Face<2, subdim>* face(size_t index) const;
 
         /**
          * Returns the component of the triangulation to which this
@@ -184,19 +179,23 @@ inline unsigned long Dim2BoundaryComponent::index() const {
     return markedIndex();
 }
 
-inline unsigned long Dim2BoundaryComponent::getNumberOfEdges() const {
+template <>
+inline size_t Dim2BoundaryComponent::countFaces<1>() const {
     return edges_.size();
 }
 
-inline unsigned long Dim2BoundaryComponent::getNumberOfVertices() const {
+template <>
+inline size_t Dim2BoundaryComponent::countFaces<0>() const {
     return vertices_.size();
 }
 
-inline Dim2Edge* Dim2BoundaryComponent::getEdge(unsigned long index) const {
+template <>
+inline Dim2Edge* Dim2BoundaryComponent::face<1>(size_t index) const {
     return edges_[index];
 }
 
-inline Dim2Vertex* Dim2BoundaryComponent::getVertex(unsigned long index) const {
+template <>
+inline Dim2Vertex* Dim2BoundaryComponent::face<0>(size_t index) const {
     return vertices_[index];
 }
 

@@ -410,12 +410,9 @@ void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
     for (i = 0; i < llen; ++i) {
         link[i] = new typename Variant::StandardVector(slen);
 
-        const std::vector<NVertexEmbedding>& emb = owner->getVertex(i)->
-            getEmbeddings();
-        std::vector<NVertexEmbedding>::const_iterator embit;
-        for (embit = emb.begin(); embit != emb.end(); ++embit)
+        for (auto& emb : *owner->getVertex(i))
             link[i]->setElement(Variant::stdPos(
-                embit->getTetrahedron()->markedIndex(), embit->getVertex()), 1);
+                emb.getTetrahedron()->markedIndex(), emb.getVertex()), 1);
     }
 
     // Create the initial set of rays:
@@ -463,10 +460,7 @@ void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
         list[workingList].push_back(new RaySpec<BitmaskType>(owner, vtx,
             Variant::totalPerTet));
 
-        const std::vector<NVertexEmbedding>& emb = owner->getVertex(vtx)->
-            getEmbeddings();
-        std::vector<NVertexEmbedding>::const_iterator embit;
-        for (embit = emb.begin(); embit != emb.end(); ++embit) {
+        for (auto& emb : *owner->getVertex(vtx)) {
             // Update the state of progress and test for cancellation.
             if (tracker && ! tracker->setPercent(25.0 * slices++ / n)) {
                 for (it = list[workingList].begin();
@@ -475,8 +469,8 @@ void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
                 return;
             }
 
-            tcoord = Variant::stdPos(embit->getTetrahedron()->markedIndex(),
-                embit->getVertex());
+            tcoord = Variant::stdPos(emb.getTetrahedron()->markedIndex(),
+                emb.getVertex());
 
             // Add the inequality v[tcoord] >= 0.
             for (it = list[workingList].begin(); it != list[workingList].end();

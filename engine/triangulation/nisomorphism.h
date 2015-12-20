@@ -63,7 +63,7 @@ namespace regina {
  * aliases for some commonly-used routines.
  */
 template <>
-class REGINA_API Isomorphism<3> : public IsomorphismBase<3> {
+class REGINA_API Isomorphism<3> : public detail::IsomorphismBase<3> {
     public:
         /**
          * Creates a new isomorphism with no initialisation.
@@ -129,11 +129,11 @@ typedef Isomorphism<3> NIsomorphism;
 // Inline functions for Isomorphism<3>
 
 inline Isomorphism<3>::Isomorphism(unsigned sourceTetrahedra) :
-        IsomorphismBase<3>(sourceTetrahedra) {
+        detail::IsomorphismBase<3>(sourceTetrahedra) {
 }
 
 inline Isomorphism<3>::Isomorphism(const Isomorphism& cloneMe) :
-        IsomorphismBase<3>(cloneMe) {
+        detail::IsomorphismBase<3>(cloneMe) {
 }
 
 inline unsigned Isomorphism<3>::getSourceTetrahedra() const {

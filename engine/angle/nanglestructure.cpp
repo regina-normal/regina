@@ -61,17 +61,15 @@ NMatrixInt* NAngleStructureVector::makeAngleEquations(
     NMatrixInt* eqns = new NMatrixInt(rows, cols);
     unsigned long row = 0;
 
-    std::deque<NEdgeEmbedding>::const_iterator embit;
     NPerm4 perm;
     unsigned long index;
     for (NTriangulation::EdgeIterator eit = tri->getEdges().begin();
             eit != tri->getEdges().end(); eit++) {
         if ((*eit)->isBoundary())
             continue;
-        for (embit = (*eit)->getEmbeddings().begin();
-                embit != (*eit)->getEmbeddings().end(); embit++) {
-            index = tri->tetrahedronIndex((*embit).getTetrahedron());
-            perm = (*embit).getVertices();
+        for (auto& emb : **eit) {
+            index = tri->tetrahedronIndex(emb.getTetrahedron());
+            perm = emb.getVertices();
             eqns->entry(row, 3 * index + vertexSplit[perm[0]][perm[1]]) += 1;
         }
         eqns->entry(row, cols - 1) = -2;

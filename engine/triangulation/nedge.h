@@ -44,15 +44,13 @@
 #include <deque>
 #include "regina-core.h"
 #include "output.h"
+#include "generic/face.h"
 #include "maths/nperm4.h"
-#include "utilities/nmarkedvector.h"
-#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
 class NBoundaryComponent;
-class NVertex;
 
 template <int> class Component;
 template <int> class Simplex;
@@ -60,6 +58,7 @@ template <int> class Triangulation;
 typedef Component<3> NComponent;
 typedef Simplex<3> NTetrahedron;
 typedef Triangulation<3> NTriangulation;
+typedef Face<3, 0> NVertex;
 
 /**
  * \weakgroup triangulation
@@ -117,110 +116,97 @@ REGINA_API extern const int edgeStart[6];
 REGINA_API extern const int edgeEnd[6];
 
 /**
- * Details how an edge in the skeleton forms part of an individual
- * tetrahedron.
+ * A convenience typedef for FaceEmbedding<3, 1>.
  */
-class REGINA_API NEdgeEmbedding {
+typedef FaceEmbedding<3, 1> NEdgeEmbedding;
+
+namespace detail {
+
+/**
+ * Helper class that specifies how edges are numbered within a tetrahedron.
+ *
+ * See the general FaceNumbering<dim, subdim> template class notes for
+ * further details.
+ */
+template <>
+class FaceNumbering<3, 1> {
     private:
-        NTetrahedron* tetrahedron_;
-            /**< The tetrahedron in which this edge is contained. */
-        int edge_;
-            /**< The edge number of the tetrahedron that is this edge. */
+        static const NPerm4 ordering_[6];
+            /**< An array that hard-codes the results of ordering(). */
 
     public:
         /**
-         * Default constructor.  The embedding descriptor created is
-         * unusable until it has some data assigned to it using
-         * <tt>operator =</tt>.
+         * Given an edge number within a tetrahedron, returns the
+         * corresponding canonical ordering of the tetrahedron vertices.
          *
-         * \ifacespython Not present.
+         * If this canonical ordering is \a c, then <tt>c[0,1]</tt> will
+         * be the vertices of the given edge in increasing numerical order.
+         * That is, <tt>c[0]</tt> &lt; <tt>c[1]</tt>.  The remaining images
+         * <tt>c[2,3]</tt> will be chosen to make the permutation even.
+         *
+         * Note that this is \e not the same permutation as returned by
+         * NTetrahedron::getEdgeMapping():
+         *
+         * - ordering() is a static function, which returns the same
+         *   permutation for the same edge number, regardless of which
+         *   tetrahedron we are looking at.  The images of 0,1 will always
+         *   appear in increasing order, and the permutation will always
+         *   be even.
+         *
+         * - getEdgeMapping() examines the underlying edge \a E of the
+         *   triangulation and, across all appearances of \a E in different
+         *   tetrahedra: (i) chooses the images of 0,1 to map to the same
+         *   respective vertices of \a E; and (ii) chooses the images
+         *   of 2,3 to maintain a "consistent orientation" constraint.
+         *
+         * @param edge identifies which edge of a tetrahedron to query.
+         * This must be between 0 and 5 inclusive.
+         * @return the corresponding canonical ordering of the
+         * tetrahedron vertices.
          */
-        NEdgeEmbedding();
-
+        static NPerm4 ordering(unsigned edge);
         /**
-         * Creates an embedding descriptor containing the given data.
+         * Identifies which edge number in a tetrahedron is represented
+         * by the first two elements of the given permutation.
          *
-         * @param newTet the tetrahedron in which this edge is
-         * contained.
-         * @param newEdge the edge number of \a newTet that is this edge.
+         * In other words, this routine identifies which edge number in
+         * a tetrahedron joins vertices <tt>vertices[0]</tt> and
+         * <tt>vertices[1]</tt>.
+         *
+         * @param vertices a permutation whose first two elements
+         * represent some vertex numbers in a tetrahedron.
+         * @return the corresponding edge number in a tetrahedron.
+         * This will be between 0 and 5 inclusive.
          */
-        NEdgeEmbedding(NTetrahedron* newTet, int newEdge);
-
+        static unsigned faceNumber(NPerm4 vertices);
         /**
-         * Creates an embedding descriptor containing the same data as
-         * the given embedding descriptor.
+         * Tests whether the given edge of a tetrahedron contains the given
+         * vertex of the tetrahedron.
          *
-         * @param cloneMe the embedding descriptor to clone.
+         * @param edge an edge number in a tetrahedron; this must be
+         * between 0 and 5 inclusive.
+         * @param vertex a vertex number in a tetrahedron; this must be
+         * between 0 and 3 inclusive.
+         * @return \c true if and only if the given edge contains the
+         * given vertex.
          */
-        NEdgeEmbedding(const NEdgeEmbedding& cloneMe);
-
-        /**
-         * Assigns to this embedding descriptor the same data as is
-         * contained in the given embedding descriptor.
-         *
-         * @param cloneMe the embedding descriptor to clone.
-         */
-        NEdgeEmbedding& operator =(const NEdgeEmbedding& cloneMe);
-
-        /**
-         * Returns the tetrahedron in which this edge is contained.
-         *
-         * @return the tetrahedron.
-         */
-        REGINA_INLINE_REQUIRED
-        NTetrahedron* getTetrahedron() const;
-
-        /**
-         * Returns the edge number within getTetrahedron() that is
-         * this edge.
-         *
-         * @return the edge number that is this edge.
-         */
-        int getEdge() const;
-
-        /**
-         * Returns a mapping from vertices (0,1) of this edge to the
-         * corresponding vertex numbers in getTetrahedron().  This
-         * permutation also maps (2,3) to the two remaining tetrahedron
-         * vertices in a manner that preserves orientation as you walk
-         * around the edge.  See NTetrahedron::getEdgeMapping() for details.
-         *
-         * @return a mapping from the vertices of this edge to the
-         * vertices of getTetrahedron().
-         */
-        REGINA_INLINE_REQUIRED
-        NPerm4 getVertices() const;
-
-        /**
-         * Tests whether this and the given embedding are identical.
-         * Here "identical" means that they refer to the same edge of
-         * the same tetrahedron.
-         *
-         * @param rhs the embedding to compare with this.
-         * @return \c true if and only if both embeddings are identical.
-         */
-        bool operator == (const NEdgeEmbedding& rhs) const;
-
-        /**
-         * Tests whether this and the given embedding are different.
-         * Here "different" means that they do not refer to the same edge of
-         * the same tetrahedron.
-         *
-         * @param rhs the embedding to compare with this.
-         * @return \c true if and only if both embeddings are identical.
-         */
-        bool operator != (const NEdgeEmbedding& rhs) const;
+        static bool containsVertex(unsigned edge, unsigned vertex);
 };
 
+} // namespace detail
+
 /**
- * Represents an edge in the skeleton of a triangulation.
- * Edges are highly temporary; once a triangulation changes, all its
- * edge objects will be deleted and new ones will be created.
+ * Represents an edge in the skeleton of a 3-manifold triangulation.
+ *
+ * This is a specialisation of the generic Face class template; see the
+ * documentation for Face for a general overview of how this class works.
+ *
+ * These specialisations for Regina's \ref stddim "standard dimensions",
+ * offer significant extra functionality.
  */
-class REGINA_API NEdge :
-        public Output<NEdge>,
-        public boost::noncopyable,
-        public NMarkedElement {
+template <>
+class REGINA_API Face<3, 1> : public detail::FaceBase<3, 1>,
+        public Output<Face<3, 1>> {
     public:
         /**
          * A table that maps vertices of a tetrahedron to edge numbers.
@@ -271,103 +257,12 @@ class REGINA_API NEdge :
          */
         static const int edgeVertex[6][2];
 
-        /**
-         * An array that maps edge numbers within a tetrahedron to the
-         * canonical ordering of the individual tetrahedron vertices
-         * that form each edge.
-         *
-         * This means that the vertices of edge \a i in a tetrahedron
-         * are, in canonical order, <tt>ordering[i][0,1]</tt>.  The
-         * images <tt>ordering[i][2,3]</tt> are chosen to make each
-         * permutation even.
-         *
-         * This table does \e not describe the mapping from specific
-         * triangulation edges into individual tetrahedra (for that,
-         * see NTetrahedron::getEdgeMapping() instead).  This table
-         * merely provides a neat and consistent way of listing the
-         * vertices of any given tetrahedron edge.
-         *
-         * This lookup table replaces the deprecated routine
-         * regina::edgeOrdering().
-         */
-        static const NPerm4 ordering[6];
-
     private:
-        std::deque<NEdgeEmbedding> embeddings_;
-            /**< A list of descriptors telling how this edge forms a part of
-                 each individual tetrahedron that it belongs to. */
-        NComponent* component_;
-            /**< The component that this edge is a part of. */
         NBoundaryComponent* boundaryComponent_;
             /**< The boundary component that this edge is a part of,
                  or 0 if this edge is internal. */
-        bool valid_;
-            /**< Is this edge valid? */
 
     public:
-
-        /**
-         * Returns the index of this edge in the underlying
-         * triangulation.  This is identical to calling
-         * <tt>getTriangulation()->edgeIndex(this)</tt>.
-         *
-         * @return the index of this edge.
-         */
-        unsigned long index() const;
-
-        /**
-         * Returns the list of descriptors detailing how this edge forms a
-         * part of various tetrahedra in the triangulation.
-         * Note that if this edge represents multiple edges of a
-         * particular tetrahedron, then there will be multiple embedding
-         * descriptors in the list regarding that tetrahedron.
-         *
-         * These embedding descriptors will be stored in order in the
-         * list, so that if you run through the list and follow in turn
-         * the edges of each tetrahedron defined by the images of (2,3)
-         * under NEdgeEmbedding::getVertices(), then you will obtain an
-         * ordered chain circling this edge.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of embedding descriptors.
-         * @see NEdgeEmbedding
-         */
-        const std::deque<NEdgeEmbedding>& getEmbeddings() const;
-
-        /**
-         * Returns the number of descriptors in the list returned by
-         * getEmbeddings().  Note that this is identical to getDegree().
-         *
-         * @return the number of embedding descriptors.
-         */
-        unsigned long getNumberOfEmbeddings() const;
-
-        /**
-         * Returns the requested descriptor from the list returned by
-         * getEmbeddings().
-         *
-         * @param index the index of the requested descriptor.  This
-         * should be between 0 and getNumberOfEmbeddings()-1 inclusive.
-         * @return the requested embedding descriptor.
-         */
-        const NEdgeEmbedding& getEmbedding(unsigned long index) const;
-
-        /**
-         * Returns the triangulation to which this edge belongs.
-         *
-         * @return the triangulation containing this edge.
-         */
-        NTriangulation* getTriangulation() const;
-
-        /**
-         * Returns the component of the triangulation to which this
-         * edge belongs.
-         *
-         * @return the component containing this edge.
-         */
-        NComponent* getComponent() const;
-
         /**
          * Returns the boundary component of the triangulation to which
          * this edge belongs.
@@ -388,29 +283,12 @@ class REGINA_API NEdge :
         NVertex* getVertex(int vertex) const;
 
         /**
-         * Returns the degree of this edge.  Note that this is identical
-         * to getNumberOfEmbeddings().
-         *
-         * @return the degree of this edge.
-         */
-        unsigned long getDegree() const;
-
-        /**
          * Determines if this edge lies entirely on the boundary of the
          * triangulation.
          *
          * @return \c true if and only if this edge lies on the boundary.
          */
         bool isBoundary() const;
-
-        /**
-         * Determines if this edge is valid.
-         * An edge is valid if and only if it is not glued to itself
-         * in reverse.
-         *
-         * @return \c true if and only if this edge is valid.
-         */
-        bool isValid() const;
 
         /**
          * Writes a short text representation of this object to the
@@ -439,11 +317,16 @@ class REGINA_API NEdge :
          * @param myComponent the triangulation component to which this
          * edge belongs.
          */
-        NEdge(NComponent* myComponent);
+        Face(NComponent* component);
 
     friend class Triangulation<3>;
-        /**< Allow access to private members. */
+    friend class detail::TriangulationBase<3>;
 };
+
+/**
+ * A convenience typedef for Face<3, 1>.
+ */
+typedef Face<3, 1> NEdge;
 
 /*@}*/
 
@@ -452,98 +335,48 @@ class REGINA_API NEdge :
 #include "triangulation/ntetrahedron.h"
 namespace regina {
 
+// Inline functions for FaceNumbering
+
+namespace detail {
+
+inline NPerm4 FaceNumbering<3, 1>::ordering(unsigned edge) {
+    return ordering_[edge];
+}
+
+inline unsigned FaceNumbering<3, 1>::faceNumber(NPerm4 vertices) {
+    return edgeNumber[vertices[0]][vertices[1]];
+}
+
+inline bool FaceNumbering<3, 1>::containsVertex(unsigned edge,
+        unsigned vertex) {
+    return (vertex == NEdge::edgeVertex[edge][0] ||
+            vertex == NEdge::edgeVertex[edge][1]);
+}
+
+} // namespace detail
+
 // Inline functions for NEdge
 
-inline NEdge::NEdge(NComponent* myComponent) : component_(myComponent),
-        boundaryComponent_(0), valid_(true) {
+inline Face<3, 1>::Face(NComponent* component) :
+        detail::FaceBase<3, 1>(component),
+        boundaryComponent_(0) {
 }
 
-inline unsigned long NEdge::index() const {
-    return markedIndex();
-}
-
-inline NTriangulation* NEdge::getTriangulation() const {
-    return embeddings_.front().getTetrahedron()->getTriangulation();
-}
-
-inline NComponent* NEdge::getComponent() const {
-    return component_;
-}
-
-inline NBoundaryComponent* NEdge::getBoundaryComponent() const {
+inline NBoundaryComponent* Face<3, 1>::getBoundaryComponent() const {
     return boundaryComponent_;
 }
 
-inline NVertex* NEdge::getVertex(int vertex) const {
-    return embeddings_.front().getTetrahedron()->getVertex(
-        embeddings_.front().getVertices()[vertex]);
+inline NVertex* Face<3, 1>::getVertex(int vertex) const {
+    return front().getTetrahedron()->getVertex(front().getVertices()[vertex]);
 }
 
-inline unsigned long NEdge::getDegree() const {
-    return embeddings_.size();
-}
-
-inline bool NEdge::isBoundary() const {
+inline bool Face<3, 1>::isBoundary() const {
     return (boundaryComponent_ != 0);
 }
 
-inline bool NEdge::isValid() const {
-    return valid_;
-}
-
-inline const std::deque<NEdgeEmbedding> & NEdge::getEmbeddings() const {
-    return embeddings_;
-}
-
-inline unsigned long NEdge::getNumberOfEmbeddings() const {
-    return embeddings_.size();
-}
-
-inline const NEdgeEmbedding& NEdge::getEmbedding(unsigned long index) const {
-    return embeddings_[index];
-}
-
-inline void NEdge::writeTextShort(std::ostream& out) const {
+inline void Face<3, 1>::writeTextShort(std::ostream& out) const {
     out << (isBoundary() ? "Boundary " : "Internal ")
-        << "edge of degree " << getNumberOfEmbeddings();
-}
-
-inline NEdgeEmbedding::NEdgeEmbedding() : tetrahedron_(0) {
-}
-
-inline NEdgeEmbedding::NEdgeEmbedding(const NEdgeEmbedding& cloneMe) :
-        tetrahedron_(cloneMe.tetrahedron_), edge_(cloneMe.edge_) {
-}
-
-inline NEdgeEmbedding::NEdgeEmbedding(NTetrahedron* newTet, int newEdge) :
-        tetrahedron_(newTet), edge_(newEdge) {
-}
-
-inline NEdgeEmbedding& NEdgeEmbedding::operator =
-        (const NEdgeEmbedding& cloneMe) {
-    tetrahedron_ = cloneMe.tetrahedron_;
-    edge_ = cloneMe.edge_;
-    return *this;
-}
-
-inline NTetrahedron* NEdgeEmbedding::getTetrahedron() const {
-    return tetrahedron_;
-}
-
-inline int NEdgeEmbedding::getEdge() const {
-    return edge_;
-}
-
-inline NPerm4 NEdgeEmbedding::getVertices() const {
-    return tetrahedron_->getEdgeMapping(edge_);
-}
-
-inline bool NEdgeEmbedding::operator == (const NEdgeEmbedding& other) const {
-    return ((tetrahedron_ == other.tetrahedron_) && (edge_ == other.edge_));
-}
-
-inline bool NEdgeEmbedding::operator != (const NEdgeEmbedding& other) const {
-    return ((tetrahedron_ != other.tetrahedron_) || (edge_ != other.edge_));
+        << "edge of degree " << getDegree();
 }
 
 } // namespace regina

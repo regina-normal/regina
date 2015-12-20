@@ -43,16 +43,13 @@
 
 #include "regina-core.h"
 #include "output.h"
+#include "generic/face.h"
 #include "maths/nperm4.h"
-#include "utilities/nmarkedvector.h"
-#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
 class NBoundaryComponent;
-class NEdge;
-class NVertex;
 
 template <int> class Component;
 template <int> class Simplex;
@@ -60,6 +57,8 @@ template <int> class Triangulation;
 typedef Component<3> NComponent;
 typedef Simplex<3> NTetrahedron;
 typedef Triangulation<3> NTriangulation;
+typedef Face<3, 0> NVertex;
+typedef Face<3, 1> NEdge;
 
 /**
  * \weakgroup triangulation
@@ -67,102 +66,93 @@ typedef Triangulation<3> NTriangulation;
  */
 
 /**
- * Details how a triangle in the skeleton forms part of an individual
- * tetrahedron.
+ * A convenience typedef for FaceEmbedding<3, 2>.
  */
-class REGINA_API NTriangleEmbedding {
+typedef FaceEmbedding<3, 2> NTriangleEmbedding;
+
+namespace detail {
+
+/**
+ * Helper class that specifies how triangles are numbered within a tetrahedron.
+ *
+ * See the general FaceNumbering<dim, subdim> template class notes for
+ * further details.
+ */
+template <>
+class FaceNumbering<3, 2> {
     private:
-        NTetrahedron* tetrahedron_;
-            /**< The tetrahedron in which this triangle is contained. */
-        int tri_;
-            /**< The face number of the tetrahedron that is this triangle. */
+        static const NPerm4 ordering_[4];
+            /**< An array that hard-codes the results of ordering(). */
 
     public:
         /**
-         * Creates an embedding descriptor containing the given data.
+         * Given a triangle number within a tetrahedron, returns the
+         * corresponding canonical ordering of the tetrahedron vertices.
          *
-         * @param tet the tetrahedron in which this triangle is contained.
-         * @param tri the face number of \a tet that is this triangle.
+         * If this canonical ordering is \a c, then <tt>c[0,1,2]</tt> will
+         * be the vertices of the given triangle in increasing numerical order.
+         * That is, <tt>c[0]</tt> &lt; <tt>c[1]</tt> &lt; <tt>c[2]</tt>.
+         *
+         * Note that this is \e not the same permutation as returned by
+         * NTetrahedron::getTriangleMapping():
+         *
+         * - ordering() is a static function, which returns the same
+         *   permutation for the same triangle number, regardless of which
+         *   tetrahedron we are looking at.  The images of 0,1,2 will always
+         *   appear in increasing order.
+         *
+         * - getTriangleMapping() examines the underlying triangle \a T of the
+         *   triangulation, and chooses the images of 0,1,2 to map to the
+         *   same respective vertices of \a T for all appearances of
+         *   \a T in different tetrahedra.
+         *
+         * @param edge identifies which triangle of a tetrahedron to query.
+         * This must be between 0 and 3 inclusive.
+         * @return the corresponding canonical ordering of the
+         * tetrahedron vertices.
          */
-        NTriangleEmbedding(NTetrahedron* tet, int tri);
-
+        static NPerm4 ordering(unsigned edge);
         /**
-         * Creates an embedding descriptor containing the same data as
-         * the given embedding descriptor.
+         * Identifies which triangle number in a tetrahedron is represented
+         * by the first three elements of the given permutation.
          *
-         * @param cloneMe the embedding descriptor to clone.
+         * In other words, this routine identifies which triangle number in
+         * a tetrahedron spans vertices <tt>vertices[0,1,2]</tt>.
+         *
+         * @param vertices a permutation whose first three elements
+         * represent some vertex numbers in a tetrahedron.
+         * @return the corresponding triangle number in a tetrahedron.
+         * This will be between 0 and 3 inclusive.
          */
-        NTriangleEmbedding(const NTriangleEmbedding& cloneMe);
-
+        static unsigned faceNumber(NPerm4 vertices);
         /**
-         * Returns the tetrahedron in which this triangle is contained.
+         * Tests whether the given triangle of a tetrahedron contains the given
+         * vertex of the tetrahedron.
          *
-         * @return the tetrahedron.
+         * @param edge an triangle number in a tetrahedron; this must be
+         * between 0 and 3 inclusive.
+         * @param vertex a vertex number in a tetrahedron; this must be
+         * between 0 and 3 inclusive.
+         * @return \c true if and only if the given triangle contains the
+         * given vertex.
          */
-        REGINA_INLINE_REQUIRED
-        NTetrahedron* getTetrahedron() const;
-
-        /**
-         * Returns the triangle number within getTetrahedron() that is
-         * this triangle.
-         *
-         * @return the triangle number that is this triangle.
-         */
-        int getTriangle() const;
-        /**
-         * A deprecated alias for getTriangle().
-         *
-         * This routine returns the triangle number within getTetrahedron()
-         * that is this triangle.  See getTriangle() for further details.
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use getTriangle() instead.
-         *
-         * @return the triangle number that is this triangle.
-         */
-        int getFace() const;
-
-        /**
-         * Returns a mapping from vertices (0,1,2) of this triangle to the
-         * corresponding vertex numbers in getTetrahedron(), as described
-         * in NTetrahedron::getTriangleMapping().
-         *
-         * @return a mapping from the vertices of this triangle to the
-         * vertices of getTetrahedron().
-         */
-        REGINA_INLINE_REQUIRED
-        NPerm4 getVertices() const;
-
-        /**
-         * Tests whether this and the given embedding are identical.
-         * Here "identical" means that they refer to the same face of
-         * the same tetrahedron.
-         *
-         * @param rhs the embedding to compare with this.
-         * @return \c true if and only if both embeddings are identical.
-         */
-        bool operator == (const NTriangleEmbedding& rhs) const;
-
-        /**
-         * Tests whether this and the given embedding are different.
-         * Here "different" means that they do not refer to the same
-         * face of the same tetrahedron.
-         *
-         * @param rhs the embedding to compare with this.
-         * @return \c true if and only if both embeddings are identical.
-         */
-        bool operator != (const NTriangleEmbedding& rhs) const;
+        static bool containsVertex(unsigned triangle, unsigned vertex);
 };
 
+} // namespace detail
+
 /**
- * Represents a triangle in the skeleton of a triangulation.
- * Triangles are highly temporary; once a triangulation changes, all its
- * triangle objects will be deleted and new ones will be created.
+ * Represents a triangle in the skeleton of a 3-manifold triangulation.
+ *
+ * This is a specialisation of the generic Face class template; see the
+ * documentation for Face for a general overview of how this class works.
+ *
+ * These specialisations for Regina's \ref stddim "standard dimensions",
+ * offer significant extra functionality.
  */
-class REGINA_API NTriangle :
-        public Output<NTriangle>,
-        public boost::noncopyable,
-        public NMarkedElement {
+template <>
+class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
+        public Output<Face<3, 2>> {
     public:
         /**
          * The \e type of a triangle, which indicates how the vertices and
@@ -201,40 +191,7 @@ class REGINA_API NTriangle :
                      the Lens space L(3,1). */
         };
 
-        /**
-         * An array that maps triangle numbers within a tetrahedron
-         * (i.e., face numbers) to the canonical ordering of the individual
-         * tetrahedron vertices that form each triangle.
-         *
-         * This means that the vertices of triangle \a i in a tetrahedron
-         * are, in canonical order, <tt>ordering[i][0..2]</tt>.  As an
-         * immediate consequence, we obtain <tt>ordering[i][3] == i</tt>.
-         *
-         * Regina defines canonical order to be \e increasing order.
-         * That is, <tt>ordering[i][0] &lt; ... &lt; ordering[i][2]</tt>.
-         *
-         * This table does \e not describe the mapping from specific
-         * triangles within a triangulation into individual tetrahedra (for
-         * that, see NTetrahedron::getTriangleMapping() instead).  This table
-         * merely provides a neat and consistent way of listing the
-         * vertices of any given tetrahedron face.
-         *
-         * This lookup table replaces the deprecated routine
-         * regina::faceOrdering().
-         */
-        static const NPerm4 ordering[4];
-
     private:
-        NTriangleEmbedding* embeddings_[2];
-            /**< An array of descriptors telling how this triangle forms a
-                 part of each individual tetrahedron that it belongs to.
-                 These embeddings will be automatically deleted when the
-                 triangle itself is deleted. */
-        int nEmbeddings_;
-            /**< The number of embedding descriptors stored in
-                 the embeddings array. */
-        NComponent* component_;
-            /**< The component that this triangle is a part of. */
         NBoundaryComponent* boundaryComponent_;
             /**< The boundary component that this triangle is a part of,
                  or 0 if this triangle is internal. */
@@ -247,22 +204,6 @@ class REGINA_API NTriangle :
                  relevant for some triangle types. */
 
     public:
-        /**
-         * Default destructor.
-         * All embedding descriptors stored in this triangle will be
-         * automatically deleted.
-         */
-        ~NTriangle();
-
-        /**
-         * Returns the index of this triangle in the underlying
-         * triangulation.  This is identical to calling
-         * <tt>getTriangulation()->triangleIndex(this)</tt>.
-         *
-         * @return the index of this triangle.
-         */
-        unsigned long index() const;
-
         /**
          * Determines if this triangle lies entirely on the boundary of the
          * triangulation.
@@ -344,42 +285,6 @@ class REGINA_API NTriangle :
          * @return \c true if and only if this triangle is a cone.
          */
         bool isCone();
-
-        /**
-         * Returns the number of descriptors available through getEmbedding().
-         * Note that this number will never be greater than two.
-         *
-         * @return the number of embedding descriptors.
-         */
-        unsigned getNumberOfEmbeddings() const;
-
-        /**
-         * Returns the requested descriptor detailing how this triangle forms a
-         * part of a particular tetrahedron in the triangulation.
-         * Note that if this triangle represents multiple faces of a
-         * particular tetrahedron, then there will be multiple embedding
-         * descriptors available regarding that tetrahedron.
-         *
-         * @param index the index of the requested descriptor.  This
-         * should be between 0 and getNumberOfEmbeddings()-1 inclusive.
-         * @return the requested embedding descriptor.
-         */
-        const NTriangleEmbedding& getEmbedding(unsigned index) const;
-
-        /**
-         * Returns the triangulation to which this triangle belongs.
-         *
-         * @return the triangulation containing this triangle.
-         */
-        NTriangulation* getTriangulation() const;
-
-        /**
-         * Returns the component of the triangulation to which this
-         * triangle belongs.
-         *
-         * @return the component containing this triangle.
-         */
-        NComponent* getComponent() const;
 
         /**
          * Returns the boundary component of the triangulation to which
@@ -465,11 +370,16 @@ class REGINA_API NTriangle :
          * @param myComponent the triangulation component to which this
          * triangle belongs.
          */
-        NTriangle(NComponent* myComponent);
+        Face(NComponent* component);
 
     friend class Triangulation<3>;
-        /**< Allow access to private members. */
+    friend class detail::TriangulationBase<3>;
 };
+
+/**
+ * A convenience typedef for Face<3, 2>.
+ */
+typedef Face<3, 2> NTriangle;
 
 /*@}*/
 
@@ -478,109 +388,66 @@ class REGINA_API NTriangle :
 #include "triangulation/ntetrahedron.h"
 namespace regina {
 
+// Inline functions for FaceNumbering
+
+namespace detail {
+
+inline NPerm4 FaceNumbering<3, 2>::ordering(unsigned triangle) {
+    return ordering_[triangle];
+}
+
+inline unsigned FaceNumbering<3, 2>::faceNumber(NPerm4 vertices) {
+    return vertices[3];
+}
+
+inline bool FaceNumbering<3, 2>::containsVertex(unsigned triangle,
+        unsigned vertex) {
+    return (triangle != vertex);
+}
+
+} // namespace detail
+
 // Inline functions for NTriangle
 
-inline NTriangle::NTriangle(NComponent* myComponent) : nEmbeddings_(0),
-        component_(myComponent), boundaryComponent_(0), type_(UNKNOWN_TYPE) {
+inline Face<3, 2>::Face(NComponent* component) :
+        FaceBase<3, 2>(component),
+        boundaryComponent_(0), type_(UNKNOWN_TYPE) {
 }
 
-inline NTriangle::~NTriangle() {
-    if (nEmbeddings_ > 0)
-        delete embeddings_[0];
-    if (nEmbeddings_ > 1)
-        delete embeddings_[1];
-}
-
-inline unsigned long NTriangle::index() const {
-    return markedIndex();
-}
-
-inline NTriangulation* NTriangle::getTriangulation() const {
-    return embeddings_[0]->getTetrahedron()->getTriangulation();
-}
-
-inline NComponent* NTriangle::getComponent() const {
-    return component_;
-}
-
-inline NBoundaryComponent* NTriangle::getBoundaryComponent() const {
+inline NBoundaryComponent* Face<3, 2>::getBoundaryComponent() const {
     return boundaryComponent_;
 }
 
-inline NVertex* NTriangle::getVertex(int vertex) const {
-    return embeddings_[0]->getTetrahedron()->getVertex(
-        embeddings_[0]->getVertices()[vertex]);
+inline NVertex* Face<3, 2>::getVertex(int vertex) const {
+    return front().getTetrahedron()->getVertex(front().getVertices()[vertex]);
 }
 
-inline bool NTriangle::isBoundary() const {
+inline bool Face<3, 2>::isBoundary() const {
     return (boundaryComponent_ != 0);
 }
 
-inline bool NTriangle::inMaximalForest() const {
-    return embeddings_[0]->getTetrahedron()->facetInMaximalForest(
-        embeddings_[0]->getTriangle());
+inline bool Face<3, 2>::inMaximalForest() const {
+    return front().getTetrahedron()->facetInMaximalForest(
+        front().getTriangle());
 }
 
-inline int NTriangle::getSubtype() {
+inline int Face<3, 2>::getSubtype() {
     getType();
     return subtype_;
 }
 
-inline bool NTriangle::isMobiusBand() {
+inline bool Face<3, 2>::isMobiusBand() {
     getType();
     return (type_ == L31 || type_ == DUNCEHAT || type_ == MOBIUS);
 }
 
-inline bool NTriangle::isCone() {
+inline bool Face<3, 2>::isCone() {
     getType();
     return (type_ == DUNCEHAT || type_ == CONE || type_ == HORN);
 }
 
-inline unsigned NTriangle::getNumberOfEmbeddings() const {
-    return nEmbeddings_;
-}
-
-inline const NTriangleEmbedding& NTriangle::getEmbedding(unsigned index) const {
-    return *(embeddings_[index]);
-}
-
-inline void NTriangle::writeTextShort(std::ostream& out) const {
+inline void Face<3, 2>::writeTextShort(std::ostream& out) const {
     out << (isBoundary() ? "Boundary " : "Internal ") << "triangle";
-}
-
-inline NTriangleEmbedding::NTriangleEmbedding(NTetrahedron* tet, int tri) :
-        tetrahedron_(tet), tri_(tri) {
-}
-
-inline NTriangleEmbedding::NTriangleEmbedding(
-        const NTriangleEmbedding& cloneMe) :
-        tetrahedron_(cloneMe.tetrahedron_), tri_(cloneMe.tri_) {
-}
-
-inline NTetrahedron* NTriangleEmbedding::getTetrahedron() const {
-    return tetrahedron_;
-}
-
-inline int NTriangleEmbedding::getTriangle() const {
-    return tri_;
-}
-
-inline int NTriangleEmbedding::getFace() const {
-    return tri_;
-}
-
-inline NPerm4 NTriangleEmbedding::getVertices() const {
-    return tetrahedron_->getTriangleMapping(tri_);
-}
-
-inline bool NTriangleEmbedding::operator == (const NTriangleEmbedding& other)
-        const {
-    return ((tetrahedron_ == other.tetrahedron_) && (tri_ == other.tri_));
-}
-
-inline bool NTriangleEmbedding::operator != (const NTriangleEmbedding& other)
-        const {
-    return ((tetrahedron_ != other.tetrahedron_) || (tri_ != other.tri_));
 }
 
 } // namespace regina

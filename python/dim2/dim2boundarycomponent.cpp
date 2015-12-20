@@ -45,9 +45,15 @@ void addDim2BoundaryComponent() {
     class_<Dim2BoundaryComponent, std::auto_ptr<Dim2BoundaryComponent>,
             boost::noncopyable> ("Dim2BoundaryComponent", no_init)
         .def("index", &Dim2BoundaryComponent::index)
+        .def("countEdges", &Dim2BoundaryComponent::countEdges)
         .def("getNumberOfEdges", &Dim2BoundaryComponent::getNumberOfEdges)
+        .def("countVertices", &Dim2BoundaryComponent::countVertices)
         .def("getNumberOfVertices", &Dim2BoundaryComponent::getNumberOfVertices)
+        .def("edge", &Dim2BoundaryComponent::edge,
+            return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim2BoundaryComponent::getEdge,
+            return_value_policy<reference_existing_object>())
+        .def("vertex", &Dim2BoundaryComponent::vertex,
             return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim2BoundaryComponent::getVertex,
             return_value_policy<reference_existing_object>())

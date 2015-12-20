@@ -32,7 +32,7 @@
 
 /* end stub */
 
-/*! \file generic/canonical-impl.h
+/*! \file generic/detail/canonical-impl.h
  *  \brief Contains some of the implementation details for the generic
  *  Triangulation class template.
  *
@@ -43,6 +43,7 @@
 #include <queue>
 
 namespace regina {
+namespace detail {
 
 #ifndef __DOXYGEN
 struct CanonicalHelper {
@@ -558,5 +559,5 @@ inline bool TriangulationBase<dim>::compatible(
     return true;
 }
 
-} // namespace regina
+} } // namespace regina::detail
 

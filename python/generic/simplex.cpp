@@ -59,6 +59,8 @@ void addSimplex(const char* name) {
         .def("unjoin", &Simplex<dim>::unjoin,
             return_value_policy<reference_existing_object>())
         .def("isolate", &Simplex<dim>::isolate)
+        .def("triangulation", &Simplex<dim>::triangulation,
+            return_value_policy<reference_existing_object>())
         .def("getTriangulation", &Simplex<dim>::getTriangulation,
             return_value_policy<reference_existing_object>())
         .def("str", &Simplex<dim>::str)
@@ -71,6 +73,8 @@ void addSimplex(const char* name) {
 }
 
 void addSimplex() {
+    boost::python::def("choose", regina::choose);
+
     addSimplex<5>("Simplex5");
     addSimplex<6>("Simplex6");
     addSimplex<7>("Simplex7");

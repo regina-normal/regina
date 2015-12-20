@@ -53,6 +53,27 @@ namespace {
             ans.append(boost::python::ptr(*it));
         return ans;
     }
+
+    boost::python::list vertices_list(NComponent& t) {
+        boost::python::list ans;
+        for (auto v : t.vertices())
+            ans.append(boost::python::ptr(v));
+        return ans;
+    }
+
+    boost::python::list edges_list(NComponent& t) {
+        boost::python::list ans;
+        for (auto e : t.edges())
+            ans.append(boost::python::ptr(e));
+        return ans;
+    }
+
+    boost::python::list triangles_list(NComponent& t) {
+        boost::python::list ans;
+        for (auto f : t.triangles())
+            ans.append(boost::python::ptr(f));
+        return ans;
+    }
 }
 
 void addNComponent() {
@@ -62,9 +83,11 @@ void addNComponent() {
         .def("size", &NComponent::size)
         .def("getNumberOfTetrahedra", &NComponent::getNumberOfTetrahedra)
         .def("getNumberOfSimplices", &NComponent::getNumberOfSimplices)
-        .def("getNumberOfFaces", &NComponent::getNumberOfFaces)
+        .def("countTriangles", &NComponent::countTriangles)
         .def("getNumberOfTriangles", &NComponent::getNumberOfTriangles)
+        .def("countEdges", &NComponent::countEdges)
         .def("getNumberOfEdges", &NComponent::getNumberOfEdges)
+        .def("countVertices", &NComponent::countVertices)
         .def("getNumberOfVertices", &NComponent::getNumberOfVertices)
         .def("getNumberOfBoundaryComponents",
             &NComponent::getNumberOfBoundaryComponents)
@@ -72,15 +95,27 @@ void addNComponent() {
         .def("getSimplices", getSimplices_list)
         .def("simplex", &NComponent::simplex,
             return_value_policy<reference_existing_object>())
+        .def("tetrahedron", &NComponent::tetrahedron,
+            return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &NComponent::getTetrahedron,
             return_value_policy<reference_existing_object>())
         .def("getSimplex", &NComponent::getSimplex,
             return_value_policy<reference_existing_object>())
-        .def("getFace", &NComponent::getFace,
+        .def("triangles", triangles_list)
+        .def("getTriangles", triangles_list)
+        .def("edges", edges_list)
+        .def("getEdges", edges_list)
+        .def("vertices", vertices_list)
+        .def("getVertices", vertices_list)
+        .def("triangle", &NComponent::triangle,
             return_value_policy<reference_existing_object>())
         .def("getTriangle", &NComponent::getTriangle,
             return_value_policy<reference_existing_object>())
+        .def("edge", &NComponent::edge,
+            return_value_policy<reference_existing_object>())
         .def("getEdge", &NComponent::getEdge,
+            return_value_policy<reference_existing_object>())
+        .def("vertex", &NComponent::vertex,
             return_value_policy<reference_existing_object>())
         .def("getVertex", &NComponent::getVertex,
             return_value_policy<reference_existing_object>())
