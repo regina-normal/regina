@@ -118,9 +118,33 @@ struct no_eq_operators;
 
 #ifndef __DOXYGEN
 namespace add_eq_operators_detail {
-    template <class T> void operator == (const T& a, const T& b);
-    template <class T> void operator != (const T& a, const T& b);
+    /**
+     * Provide default == and != operators that return void (a type that no
+     * sensible == or != operator should return).
+     *
+     * We follow the way that boost does this: we provide our default operators
+     * via the helper class Any, so that the implicit conversion from our type
+     * to Any makes these default == / != operators less preferred than any
+     * of regina's own operators.
+     *
+     * This is indeed necessary: if we just offer default == / != operators
+     * for an arbitrary type T, then these default operators are chosen for
+     * NMatrixInt *ahead* of the operators that NMatrixInt inherits from
+     * NMatrix<NLargeInteger>.  If we use the Any helper class (as seen below),
+     * then the inherited == / != operators are (correctly) chosen intsead.
+     */
+    struct Any {
+        template <typename T>
+        Any(const T&);
+    };
 
+    void operator == (const Any&, const Any&);
+    void operator != (const Any&, const Any&);
+
+    /**
+     * A helper struct that determines at compile time whether or not
+     * Regina provides == and/or != operators for type T.
+     */
     template<class T>
     struct EqOperatorTraits {
         static const T& makeRef();
@@ -134,13 +158,20 @@ namespace add_eq_operators_detail {
             ! std::is_same<void, IneqType>::value;
     };
 
+    /**
+     * The template EqualityOperators<T> provides the implementation
+     * that we use in python for == and != when wrapping the C++ class T.
+     */
     template <class T,
               bool hasEqualityOperator = EqOperatorTraits<T>::hasEqOperator,
               bool hasInequalityOperator = EqOperatorTraits<T>::hasIneqOperator>
     struct EqualityOperators {
-        // This default template is instantiated only when T offers
+        // This default template is instantiated precisely when T offers
         // one of the operators == or !=, but not both.
-        // Force a compile-time error, and state which operator is missing.
+        //
+        // In Regina, we insist on an all-or-nothing approach.
+        // Force a compile-time error, and tell the developers which
+        // operator is missing.
         static_assert(hasEqualityOperator,
                       "Wrapped C++ type implements != but not ==.");
         static_assert(hasInequalityOperator,
@@ -181,6 +212,9 @@ namespace add_eq_operators_detail {
         }
     };
 } // namespace add_eq_operators_detail
+
+// Implementation of add_eq_operators and no_eq_operators.
+// See the top of this header for their documentation.
 
 struct add_eq_operators : boost::python::def_visitor<add_eq_operators> {
     friend class boost::python::def_visitor_access;
