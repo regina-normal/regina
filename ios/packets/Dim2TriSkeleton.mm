@@ -145,12 +145,11 @@
                 cell.data1.text = [NSString stringWithFormat:@"%ld", v->getDegree()];
 
                 NSMutableString* pieces = [NSMutableString string];
-                std::deque<regina::Dim2VertexEmbedding>::const_iterator it;
-                for (it = v->getEmbeddings().begin(); it != v->getEmbeddings().end(); it++)
+                for (auto& emb : *v)
                     [TextHelper appendToList:pieces
                                         item:[NSString stringWithFormat:@"%ld (%d)",
-                                              self.packet->triangleIndex((*it).getTriangle()),
-                                              (*it).getVertex()]];
+                                              self.packet->triangleIndex(emb.getTriangle()),
+                                              emb.getVertex()]];
                 cell.data2.text = pieces;
             }
             break;

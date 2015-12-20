@@ -1510,7 +1510,7 @@ class REGINA_API Triangulation<3> :
          * @param newAxis Specifies which axis of the octahedron the new
          * tetrahedra should meet along; this should be 0 or 1.
          * Consider the four original tetrahedra in the order described
-         * by NEdge::getEmbeddings(); call these tetrahedra 0, 1, 2 and
+         * by NEdge::embedding(0,...,3); call these tetrahedra 0, 1, 2 and
          * 3.  If \a newAxis is 0, the new axis will separate tetrahedra
          * 0 and 1 from 2 and 3.  If \a newAxis is 1, the new axis will
          * separate tetrahedra 1 and 2 from 3 and 0.

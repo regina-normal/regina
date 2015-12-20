@@ -254,12 +254,11 @@
                 }
 
                 NSMutableString* pieces = [NSMutableString string];
-                std::vector<regina::NVertexEmbedding>::const_iterator it;
-                for (it = v->getEmbeddings().begin(); it != v->getEmbeddings().end(); ++it)
+                for (auto& emb : *v)
                     [TextHelper appendToList:pieces
                                         item:[NSString stringWithFormat:@"%ld (%d)",
-                                              self.packet->tetrahedronIndex(it->getTetrahedron()),
-                                              it->getVertex()]];
+                                              self.packet->tetrahedronIndex(emb.getTetrahedron()),
+                                              emb.getVertex()]];
                 cell.data2.text = pieces;
             }
             break;
@@ -282,12 +281,11 @@
                     cell.data0.text = @"Internal";
 
                 NSMutableString* pieces = [NSMutableString string];
-                std::deque<regina::NEdgeEmbedding>::const_iterator it;
-                for (it = e->getEmbeddings().begin(); it != e->getEmbeddings().end(); ++it)
+                for (auto& emb : *e)
                     [TextHelper appendToList:pieces
                                         item:[NSString stringWithFormat:@"%ld (%s)",
-                                              self.packet->tetrahedronIndex(it->getTetrahedron()),
-                                              it->getVertices().trunc2().c_str()]];
+                                              self.packet->tetrahedronIndex(emb.getTetrahedron()),
+                                              emb.getVertices().trunc2().c_str()]];
                 cell.data2.text = pieces;
             }
             break;
@@ -418,12 +416,11 @@
                 NSMutableString* pieces = [NSMutableString string];
                 if (b->isIdeal()) {
                     regina::NVertex* v = b->getVertex(0);
-                    std::vector<regina::NVertexEmbedding>::const_iterator it;
-                    for (it = v->getEmbeddings().begin(); it != v->getEmbeddings().end(); ++it)
+                    for (auto& emb : *v)
                         [TextHelper appendToList:pieces
                                             item:[NSString stringWithFormat:@"%ld (%d)",
-                                                  self.packet->tetrahedronIndex(it->getTetrahedron()),
-                                                  it->getVertex()]];
+                                                  self.packet->tetrahedronIndex(emb.getTetrahedron()),
+                                                  emb.getVertex()]];
                     cell.data2.text = [NSString stringWithFormat:@"Vertices %@", pieces];
                     // Parity says #vertices >= 2, so always use plural form.
                 } else {
