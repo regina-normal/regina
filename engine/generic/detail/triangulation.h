@@ -100,6 +100,22 @@ class FaceListSuite<dim, 0> : protected FaceList<dim, 0> {
 #endif // __DOXYGEN
 
 /**
+ * Helper class that indicates what data type is used by a triangulation
+ * class to store a list of <i>subdim</i>-faces.
+ */
+template <int dim, int subdim>
+struct FaceListHolder<detail::TriangulationBase<dim>, subdim> {
+    /**
+     * The data type used by Triangulation<dim> to store the list of all
+     * <i>subdim</i>-faces of the triangulation.
+     *
+     * The function Triangulation<dim>::faces<subdim>() returns a const
+     * reference to this type.
+     */
+    typedef FaceList<dim, subdim> Holder;
+};
+
+/**
  * Internal class used to calculate lower-dimensional faces in a
  * triangulation.
  *
@@ -202,7 +218,9 @@ struct FaceCalculator<dim, 0, 2> {
 template <int dim>
 class TriangulationBase :
         protected FaceListSuite<dim, dim - 1>,
+        public alias::SimplexAt<TriangulationBase<dim>, dim, true>,
         public alias::FaceOfTriangulation<TriangulationBase<dim>, dim>,
+        public alias::FacesOfTriangulation<TriangulationBase<dim>, dim>,
         public boost::noncopyable {
     static_assert(dim >= 2, "Triangulation requires dimension >= 2.");
 

@@ -62,6 +62,26 @@ typedef Face<2, 1> Dim2Edge;
  * @{
  */
 
+namespace detail {
+
+/**
+ * Helper class that indicates what data type is used by a connected component
+ * of a triangulation to store a list of <i>subdim</i>-faces.
+ */
+template <int subdim>
+struct FaceListHolder<Component<2>, subdim> {
+    /**
+     * The data type used by Component<dim> to store the list of all
+     * <i>subdim</i>-faces of the connected component.
+     *
+     * The function Component<2>::faces<subdim>() returns a const
+     * reference to this type.
+     */
+    typedef std::vector<Face<2, subdim>*> Holder;
+};
+
+} // namespace regina::detail
+
 /**
  * Represents a connected component of a 2-manifold triangulation.
  *
@@ -74,7 +94,8 @@ typedef Face<2, 1> Dim2Edge;
  */
 template <>
 class REGINA_API Component<2> : public detail::ComponentBase<2>,
-        public alias::FaceOfTriangulation<Component<2>, 2> {
+        public alias::FaceOfTriangulation<Component<2>, 2>,
+        public alias::FacesOfTriangulation<Component<2>, 2> {
     private:
         std::vector<Dim2Edge*> edges_;
             /**< List of edges in the component. */
@@ -121,33 +142,17 @@ class REGINA_API Component<2> : public detail::ComponentBase<2>,
         const std::vector<Dim2Triangle*>& getTriangles() const;
 
         /**
-         * Returns all edges in the component.
+         * Returns a reference to the list of all <i>subdim</i>-faces in
+         * this component.
          *
-         * The reference returned will remain valid for as long as this
-         * component object exists, always reflecting the edges currently 
-         * in the component.
+         * \ifacespython Python users should call this function in the
+         * form <tt>faces(subdim)</tt>.  It will then return a Python list
+         * containing all the <i>subdim</i>-faces of the triangulation.
          *
-         * \ifacespython This routine returns a python list.
+         * @return the list of all <i>subdim</i>-faces.
          */
-        const std::vector<Dim2Edge*>& getEdges() const;
-
-        /**
-         * Returns all vertices in the component.
-         *
-         * The reference returned will remain valid for as long as this
-         * component object exists, always reflecting the vertices currently 
-         * in the component.
-         *
-         * \ifacespython This routine returns a python list.
-         */
-        const std::vector<Dim2Vertex*>& getVertices() const;
-
-        /**
-         * A dimension-specific alias for simplex().
-         *
-         * See simplex() for further information.
-         */
-        Dim2Triangle* getTriangle(size_t index) const;
+        template <int subdim>
+        const std::vector<Face<2, subdim>*>& faces() const;
 
         /**
          * Returns the requested <i>subdim</i>-face in this component.
@@ -235,24 +240,22 @@ inline size_t Component<2>::countFaces<0>() const {
     return vertices_.size();
 }
 
+template <>
+inline const std::vector<Dim2Edge*>& Component<2>::faces<1>() const {
+    return edges_;
+}
+
+template <>
+inline const std::vector<Dim2Vertex*>& Component<2>::faces<0>() const {
+    return vertices_;
+}
+
 inline size_t Component<2>::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
 inline const std::vector<Dim2Triangle*>& Component<2>::getTriangles() const {
     return simplices();
-}
-
-inline const std::vector<Dim2Edge*>& Component<2>::getEdges() const {
-    return edges_;
-}
-
-inline const std::vector<Dim2Vertex*>& Component<2>::getVertices() const {
-    return vertices_;
-}
-
-inline Dim2Triangle* Component<2>::getTriangle(size_t index) const {
-    return simplex(index);
 }
 
 template <>

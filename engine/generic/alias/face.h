@@ -32,7 +32,7 @@
 
 /* end stub */
 
-/*! \file generic/alias/facenumber.h
+/*! \file generic/alias/face.h
  *  \brief Provides dimension-specific aliases for dimension-agnostic routines.
  */
 
@@ -47,6 +47,10 @@ namespace regina {
 
 template <int> class NPerm;
 template <int, int> class Face;
+
+namespace detail {
+    template <class, int> struct FaceListHolder;
+}
 
 namespace alias {
 
@@ -591,6 +595,205 @@ class FaceOfTriangulation<Derived, dim, 4> :
          */
         Face<dim, 4>* getPentachoron(size_t i) const {
             return static_cast<const Derived*>(this)->template face<4>(i);
+        }
+};
+
+/**
+ * Helper class that provides a dimension-specific alias for
+ * faces<subdim>(), where reasonable, for facial dimensions
+ * \a subdim &le; \a maxdim.
+ *
+ * This is inherited by the class \a Derived, which must provide a template
+ * function of the form <tt>T faces<subdim>() const</tt>,
+ * again for all facial dimensions \a subdim &le; \a maxdim.
+ *
+ * The return type \a T must be a const reference to the type
+ * detail::FaceListHolder<Derived, subdim>::Holder.
+ *
+ * The names of the aliases are determined by the facial dimensions \a subdim,
+ * and these aliases are only provided for sufficiently small \a subdim.
+ */
+template <class Derived, int dim, int maxdim = dim - 1>
+class FacesOfTriangulation :
+        public FacesOfTriangulation<Derived, dim, maxdim - 1> {
+};
+
+/**
+ * Helper class that provides a dimension-specific alias for
+ * faces<0>().
+ *
+ * This is inherited by the class \a Derived, which must provide a template
+ * function of the form <tt>T faces<subdim>() const</tt>,
+ * for facial dimension \a subdim = 0.
+ *
+ * The return type \a T must be a const reference to the type
+ * detail::FaceListHolder<Derived, subdim>::Holder.
+ */
+template <class Derived, int dim>
+class FacesOfTriangulation<Derived, dim, 0> {
+    public:
+        /**
+         * A dimension-specific alias for faces<0>().
+         *
+         * See faces() for further information.
+         */
+        const typename detail::FaceListHolder<Derived, 0>::Holder&
+                vertices() const {
+            return static_cast<const Derived*>(this)->template faces<0>();
+        }
+
+        /**
+         * Deprecated dimension-specific alias for faces<0>().
+         *
+         * \deprecated Simply call vertices() instead.
+         */
+        const typename detail::FaceListHolder<Derived, 0>::Holder&
+                getVertices() const {
+            return static_cast<const Derived*>(this)->template faces<0>();
+        }
+};
+
+/**
+ * Helper class that provides dimension-specific aliases for
+ * faces<0,1>().
+ *
+ * This is inherited by the class \a Derived, which must provide a template
+ * function of the form <tt>T faces<subdim>() const</tt>,
+ * for facial dimensions \a subdim &le; 1.
+ *
+ * The return type \a T must be a const reference to the type
+ * detail::FaceListHolder<Derived, subdim>::Holder.
+ */
+template <class Derived, int dim>
+class FacesOfTriangulation<Derived, dim, 1> :
+        public FacesOfTriangulation<Derived, dim, 0> {
+    public:
+        /**
+         * A dimension-specific alias for faces<1>().
+         *
+         * See faces() for further information.
+         */
+        const typename detail::FaceListHolder<Derived, 1>::Holder&
+                edges() const {
+            return static_cast<const Derived*>(this)->template faces<1>();
+        }
+
+        /**
+         * Deprecated dimension-specific alias for faces<1>().
+         *
+         * \deprecated Simply call edges() instead.
+         */
+        const typename detail::FaceListHolder<Derived, 1>::Holder&
+                getEdges() const {
+            return static_cast<const Derived*>(this)->template faces<1>();
+        }
+};
+
+/**
+ * Helper class that provides dimension-specific aliases for
+ * faces<0,1,2>().
+ *
+ * This is inherited by the class \a Derived, which must provide a template
+ * function of the form <tt>T faces<subdim>() const</tt>,
+ * for facial dimensions \a subdim &le; 2.
+ *
+ * The return type \a T must be a const reference to the type
+ * detail::FaceListHolder<Derived, subdim>::Holder.
+ */
+template <class Derived, int dim>
+class FacesOfTriangulation<Derived, dim, 2> :
+        public FacesOfTriangulation<Derived, dim, 1> {
+    public:
+        /**
+         * A dimension-specific alias for faces<2>().
+         *
+         * See faces() for further information.
+         */
+        const typename detail::FaceListHolder<Derived, 2>::Holder&
+                triangles() const {
+            return static_cast<const Derived*>(this)->template faces<2>();
+        }
+
+        /**
+         * Deprecated dimension-specific alias for faces<2>().
+         *
+         * \deprecated Simply call triangles() instead.
+         */
+        const typename detail::FaceListHolder<Derived, 2>::Holder&
+                getTriangles() const {
+            return static_cast<const Derived*>(this)->template faces<2>();
+        }
+};
+
+/**
+ * Helper class that provides dimension-specific aliases for
+ * faces<0,...,3>().
+ *
+ * This is inherited by the class \a Derived, which must provide a template
+ * function of the form <tt>T faces<subdim>() const</tt>,
+ * for facial dimensions \a subdim &le; 3.
+ *
+ * The return type \a T must be a const reference to the type
+ * detail::FaceListHolder<Derived, subdim>::Holder.
+ */
+template <class Derived, int dim>
+class FacesOfTriangulation<Derived, dim, 3> :
+        public FacesOfTriangulation<Derived, dim, 2> {
+    public:
+        /**
+         * A dimension-specific alias for faces<3>().
+         *
+         * See faces() for further information.
+         */
+        const typename detail::FaceListHolder<Derived, 3>::Holder&
+                tetrahedra() const {
+            return static_cast<const Derived*>(this)->template faces<3>();
+        }
+
+        /**
+         * Deprecated dimension-specific alias for faces<3>().
+         *
+         * \deprecated Simply call tetrahedra() instead.
+         */
+        const typename detail::FaceListHolder<Derived, 3>::Holder&
+                getTetrahedra() const {
+            return static_cast<const Derived*>(this)->template faces<3>();
+        }
+};
+
+/**
+ * Helper class that provides dimension-specific aliases for
+ * faces<0,...,4>().
+ *
+ * This is inherited by the class \a Derived, which must provide a template
+ * function of the form <tt>T faces<subdim>() const</tt>,
+ * for facial dimensions \a subdim &le; 4.
+ *
+ * The return type \a T must be a const reference to the type
+ * detail::FaceListHolder<Derived, subdim>::Holder.
+ */
+template <class Derived, int dim>
+class FacesOfTriangulation<Derived, dim, 4> :
+        public FacesOfTriangulation<Derived, dim, 3> {
+    public:
+        /**
+         * A dimension-specific alias for faces<4>().
+         *
+         * See faces() for further information.
+         */
+        const typename detail::FaceListHolder<Derived, 4>::Holder&
+                pentachora() const {
+            return static_cast<const Derived*>(this)->template faces<4>();
+        }
+
+        /**
+         * Deprecated dimension-specific alias for faces<4>().
+         *
+         * \deprecated Simply call pentachora() instead.
+         */
+        const typename detail::FaceListHolder<Derived, 4>::Holder&
+                getPentachora() const {
+            return static_cast<const Derived*>(this)->template faces<4>();
         }
 };
 

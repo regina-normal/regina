@@ -48,8 +48,8 @@ namespace {
         &NTriangulation::newTetrahedron;
     regina::NTetrahedron* (NTriangulation::*newTetrahedron_string)(
         const std::string&) = &NTriangulation::newTetrahedron;
-    regina::NTetrahedron* (NTriangulation::*getTetrahedron_non_const)(
-        unsigned long) = &NTriangulation::getTetrahedron;
+    regina::NTetrahedron* (NTriangulation::*tetrahedron_non_const)(
+        size_t) = &NTriangulation::tetrahedron;
     bool (NTriangulation::*twoZeroMove_vertex)(regina::NVertex*, bool, bool) =
         &NTriangulation::twoZeroMove;
     bool (NTriangulation::*twoZeroMove_edge)(regina::NEdge*, bool, bool) =
@@ -134,26 +134,26 @@ namespace {
         return ans;
     }
 
-    boost::python::list getVertices_list(NTriangulation& t) {
+    boost::python::list vertices_list(NTriangulation& t) {
         boost::python::list ans;
         for (NTriangulation::VertexIterator it =
-                t.getVertices().begin(); it != t.getVertices().end(); it++)
+                t.vertices().begin(); it != t.vertices().end(); it++)
             ans.append(boost::python::ptr(*it));
         return ans;
     }
 
-    boost::python::list getEdges_list(NTriangulation& t) {
+    boost::python::list edges_list(NTriangulation& t) {
         boost::python::list ans;
         for (NTriangulation::EdgeIterator it =
-                t.getEdges().begin(); it != t.getEdges().end(); it++)
+                t.edges().begin(); it != t.edges().end(); it++)
             ans.append(boost::python::ptr(*it));
         return ans;
     }
 
-    boost::python::list getTriangles_list(NTriangulation& t) {
+    boost::python::list triangles_list(NTriangulation& t) {
         boost::python::list ans;
         for (NTriangulation::TriangleIterator it =
-                t.getTriangles().begin(); it != t.getTriangles().end(); it++)
+                t.triangles().begin(); it != t.triangles().end(); it++)
             ans.append(boost::python::ptr(*it));
         return ans;
     }
@@ -240,11 +240,13 @@ void addNTriangulation() {
         .def("getTetrahedra", getTetrahedra_list)
         .def("getSimplices", getTetrahedra_list)
         .def("simplices", getTetrahedra_list)
-        .def("getTetrahedron", getTetrahedron_non_const,
+        .def("tetrahedron", tetrahedron_non_const,
             return_internal_reference<>())
-        .def("simplex", getTetrahedron_non_const,
+        .def("getTetrahedron", tetrahedron_non_const,
             return_internal_reference<>())
-        .def("getSimplex", getTetrahedron_non_const,
+        .def("simplex", tetrahedron_non_const,
+            return_internal_reference<>())
+        .def("getSimplex", tetrahedron_non_const,
             return_internal_reference<>())
         .def("tetrahedronIndex", &NTriangulation::tetrahedronIndex)
         .def("simplexIndex", &NTriangulation::simplexIndex)
@@ -278,10 +280,12 @@ void addNTriangulation() {
         .def("components", getComponents_list)
         .def("getComponents", getComponents_list)
         .def("getBoundaryComponents", getBoundaryComponents_list)
-        .def("getVertices", getVertices_list)
-        .def("getEdges", getEdges_list)
-        .def("getFaces", getTriangles_list)
-        .def("getTriangles", getTriangles_list)
+        .def("vertices", vertices_list)
+        .def("getVertices", vertices_list)
+        .def("edges", edges_list)
+        .def("getEdges", edges_list)
+        .def("triangles", triangles_list)
+        .def("getTriangles", triangles_list)
         .def("component", &NTriangulation::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &NTriangulation::getComponent,

@@ -63,6 +63,26 @@ typedef Face<3, 2> NTriangle;
  * @{
  */
 
+namespace detail {
+
+/**
+ * Helper class that indicates what data type is used by a connected component
+ * of a triangulation to store a list of <i>subdim</i>-faces.
+ */
+template <int subdim>
+struct FaceListHolder<Component<3>, subdim> {
+    /**
+     * The data type used by Component<dim> to store the list of all
+     * <i>subdim</i>-faces of the connected component.
+     *
+     * The function Component<3>::faces<subdim>() returns a const
+     * reference to this type.
+     */
+    typedef std::vector<Face<3, subdim>*> Holder;
+};
+
+} // namespace regina::detail
+
 /**
  * Represents a connected component of a 3-manifold triangulation.
  *
@@ -76,7 +96,8 @@ typedef Face<3, 2> NTriangle;
  */
 template <>
 class REGINA_API Component<3> : public detail::ComponentBase<3>,
-        public alias::FaceOfTriangulation<Component<3>, 3> {
+        public alias::FaceOfTriangulation<Component<3>, 3>,
+        public alias::FacesOfTriangulation<Component<3>, 3> {
     private:
         std::vector<NTriangle*> triangles_;
             /**< List of triangles in the component. */
@@ -122,11 +143,17 @@ class REGINA_API Component<3> : public detail::ComponentBase<3>,
         size_t getNumberOfBoundaryComponents() const;
 
         /**
-         * A dimension-specific alias for simplex().
+         * Returns a reference to the list of all <i>subdim</i>-faces in
+         * this component.
          *
-         * See simplex() for further information.
+         * \ifacespython Python users should call this function in the
+         * form <tt>faces(subdim)</tt>.  It will then return a Python list
+         * containing all the <i>subdim</i>-faces of the triangulation.
+         *
+         * @return the list of all <i>subdim</i>-faces.
          */
-        NTetrahedron* getTetrahedron(size_t index) const;
+        template <int subdim>
+        const std::vector<Face<3, subdim>*>& faces() const;
 
         /**
          * Returns the requested <i>subdim</i>-face in this component.
@@ -233,8 +260,19 @@ inline size_t Component<3>::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
-inline NTetrahedron* Component<3>::getTetrahedron(size_t index) const {
-    return simplex(index);
+template <>
+inline const std::vector<NTriangle*>& Component<3>::faces<2>() const {
+    return triangles_;
+}
+
+template <>
+inline const std::vector<NEdge*>& Component<3>::faces<1>() const {
+    return edges_;
+}
+
+template <>
+inline const std::vector<NVertex*>& Component<3>::faces<0>() const {
+    return vertices_;
 }
 
 template <>

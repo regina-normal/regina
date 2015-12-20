@@ -340,18 +340,6 @@ class REGINA_API Triangulation<3> :
          */
         const std::vector<NTetrahedron*>& getTetrahedra() const;
         /**
-         * A dimension-specific alias for simplex().
-         *
-         * See simplex() for further information.
-         */
-        NTetrahedron* getTetrahedron(unsigned long index);
-        /**
-         * A dimension-specific alias for simplex().
-         *
-         * See simplex() for further information.
-         */
-        const NTetrahedron* getTetrahedron(unsigned long index) const;
-        /**
          * Deprecated dimension-specific alias for simplexIndex().
          *
          * \deprecated This routine is deprecated, and will be removed in some
@@ -423,57 +411,6 @@ class REGINA_API Triangulation<3> :
          * @return the list of all boundary components.
          */
         const std::vector<NBoundaryComponent*>& getBoundaryComponents() const;
-        /**
-         * Returns an object that allows iteration through and random access
-         * to all vertices of this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * vertices will be deleted and replaced with new
-         * ones.  Thus the objects contained in this list should be
-         * considered temporary only.
-         *
-         * This reference to the list however will remain valid and
-         * up-to-date for as long as the triangulation exists.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return access to the list of all vertices.
-         */
-        const FaceList<3, 0>& getVertices() const;
-        /**
-         * Returns an object that allows iteration through and random access
-         * to all edges of this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * edges will be deleted and replaced with new
-         * ones.  Thus the objects contained in this list should be
-         * considered temporary only.
-         *
-         * This reference to the list however will remain valid and
-         * up-to-date for as long as the triangulation exists.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return access to the list of all edges.
-         */
-        const FaceList<3, 1>& getEdges() const;
-        /**
-         * Returns an object that allows iteration through and random access
-         * to all triangular faces of this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * triangles will be deleted and replaced with new
-         * ones.  Thus the objects contained in this list should be
-         * considered temporary only.
-         *
-         * This reference to the list however will remain valid and
-         * up-to-date for as long as the triangulation exists.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return access to the list of all triangles.
-         */
-        const FaceList<3, 2>& getTriangles() const;
         /**
          * Returns the requested triangulation boundary component.
          *
@@ -3305,15 +3242,6 @@ inline unsigned long Triangulation<3>::getNumberOfTetrahedra() const {
     return simplices_.size();
 }
 
-inline NTetrahedron* Triangulation<3>::getTetrahedron(unsigned long index) {
-    return simplices_[index];
-}
-
-inline const NTetrahedron* Triangulation<3>::getTetrahedron(unsigned long index)
-        const {
-    return simplices_[index];
-}
-
 inline long Triangulation<3>::tetrahedronIndex(const NTetrahedron* tet) const {
     return tet->markedIndex();
 }
@@ -3366,18 +3294,6 @@ inline const std::vector<NBoundaryComponent*>&
         Triangulation<3>::getBoundaryComponents() const {
     ensureSkeleton();
     return (const std::vector<NBoundaryComponent*>&)(boundaryComponents_);
-}
-
-inline const FaceList<3, 0>& Triangulation<3>::getVertices() const {
-    return faces<0>();
-}
-
-inline const FaceList<3, 1>& Triangulation<3>::getEdges() const {
-    return faces<1>();
-}
-
-inline const FaceList<3, 2>& Triangulation<3>::getTriangles() const {
-    return faces<2>();
 }
 
 inline NBoundaryComponent* Triangulation<3>::getBoundaryComponent(

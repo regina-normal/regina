@@ -204,18 +204,6 @@ class REGINA_API Triangulation<2> :
          */
         const std::vector<Dim2Triangle*>& getTriangles() const;
         /**
-         * A dimension-specific alias for simplex().
-         *
-         * See simplex() for further information.
-         */
-        Dim2Triangle* getTriangle(unsigned long index);
-        /**
-         * A dimension-specific alias for simplex().
-         *
-         * See simplex() for further information.
-         */
-        const Dim2Triangle* getTriangle(unsigned long index) const;
-        /**
          * Deprecated dimension-specific alias for simplexIndex().
          *
          * \deprecated This routine is deprecated, and will be removed in some
@@ -285,40 +273,6 @@ class REGINA_API Triangulation<2> :
          */
         const std::vector<Dim2BoundaryComponent*>& getBoundaryComponents()
             const;
-        /**
-         * Returns an object that allows iteration through and random access
-         * to all vertices of this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * vertices will be deleted and replaced with new
-         * ones.  Thus the objects contained in this list should be
-         * considered temporary only.
-         *
-         * This reference to the list however will remain valid and
-         * up-to-date for as long as the triangulation exists.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return access to the list of all vertices.
-         */
-        const FaceList<2, 0>& getVertices() const;
-        /**
-         * Returns an object that allows iteration through and random access
-         * to all edges of this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * edges will be deleted and replaced with new
-         * ones.  Thus the objects contained in this list should be
-         * considered temporary only.
-         *
-         * This reference to the list however will remain valid and
-         * up-to-date for as long as the triangulation exists.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return access to the list of all edges.
-         */
-        const FaceList<2, 1>& getEdges() const;
         /**
          * Returns the requested triangulation boundary component.
          *
@@ -601,15 +555,6 @@ inline const std::vector<Dim2Triangle*>& Triangulation<2>::getTriangles()
     return (const std::vector<Dim2Triangle*>&)(simplices_);
 }
 
-inline Dim2Triangle* Triangulation<2>::getTriangle(unsigned long index) {
-    return simplices_[index];
-}
-
-inline const Dim2Triangle* Triangulation<2>::getTriangle(unsigned long index)
-        const {
-    return simplices_[index];
-}
-
 inline long Triangulation<2>::triangleIndex(const Dim2Triangle* tri) const {
     return tri->markedIndex();
 }
@@ -643,14 +588,6 @@ inline const std::vector<Dim2BoundaryComponent*>&
         Triangulation<2>::getBoundaryComponents() const {
     ensureSkeleton();
     return (const std::vector<Dim2BoundaryComponent*>&)(boundaryComponents_);
-}
-
-inline const FaceList<2, 0>& Triangulation<2>::getVertices() const {
-    return faces<0>();
-}
-
-inline const FaceList<2, 1>& Triangulation<2>::getEdges() const {
-    return faces<1>();
 }
 
 inline Dim2BoundaryComponent* Triangulation<2>::getBoundaryComponent(

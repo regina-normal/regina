@@ -44,6 +44,7 @@
 #include <vector>
 #include "regina-core.h"
 #include "output.h"
+#include "generic/alias/simplex.h"
 #include "utilities/nmarkedvector.h"
 #include <boost/noncopyable.hpp>
 
@@ -80,6 +81,7 @@ template <int> class TriangulationBase;
 template <int dim>
 class ComponentBase :
         public Output<ComponentBase<dim>>,
+        public alias::SimplexAt<ComponentBase<dim>, dim, false>,
         public boost::noncopyable,
         public NMarkedElement {
     private:
