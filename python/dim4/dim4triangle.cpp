@@ -100,6 +100,8 @@ void addDim4Triangle() {
         .def("getDegree", &Dim4Triangle::getDegree)
         .def("isBoundary", &Dim4Triangle::isBoundary)
         .def("isValid", &Dim4Triangle::isValid)
+        .def("hasBadIdentification", &Dim4Triangle::hasBadIdentification)
+        .def("hasBadLink", &Dim4Triangle::hasBadLink)
         .def("str", &Dim4Triangle::str)
         .def("toString", &Dim4Triangle::toString)
         .def("detail", &Dim4Triangle::detail)

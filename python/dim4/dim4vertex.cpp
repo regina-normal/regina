@@ -107,6 +107,8 @@ void addDim4Vertex() {
         .def("buildLinkDetail", vertex_buildLinkDetail_void)
         .def("buildLinkDetail", vertex_buildLinkDetail_bool)
         .def("isValid", &Dim4Vertex::isValid)
+        .def("hasBadIdentification", &Dim4Vertex::hasBadIdentification)
+        .def("hasBadLink", &Dim4Vertex::hasBadLink)
         .def("isIdeal", &Dim4Vertex::isIdeal)
         .def("isBoundary", &Dim4Vertex::isBoundary)
         .def("str", &Dim4Vertex::str)
