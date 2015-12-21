@@ -37,6 +37,7 @@
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
+#include "cycledrawingtab.h"
 #include "facetgraphtab.h"
 #include "ntriskeleton.h"
 #include "skeletonwindow.h"
@@ -58,6 +59,8 @@ NTriSkeletonUI::NTriSkeletonUI(regina::NTriangulation* packet,
     addTab(new NTriSkelCompUI(packet, this), tr("&Skeletal Components"));
     addTab(new FacetGraphTab(new Dim3FaceGraphData(packet), this),
         tr("&Face Pairing Graph"));
+    addTab(new CycleDrawingTab(new Dim3CycleDrawingData(packet), this),
+            tr("&Cycle Drawing"));
 }
 
 NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,

@@ -1,4 +1,5 @@
 SET ( FILES
+  cycledrawingtab
   dim2tricreator
   dim2trigluings
   dim2triskeleton
