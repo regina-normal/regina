@@ -3139,16 +3139,6 @@ class REGINA_API Triangulation<3> :
         void deleteSkeleton();
         void calculateSkeleton();
         /**
-         * Calculates the triangulation vertices and associated
-         * properties.
-         *
-         * \warning This should only be called from within
-         * calculateSkeleton().
-         */
-        void calculateVertices();
-        void labelVertex(NTetrahedron*, int, NVertex*);
-            /**< Internal to calculateVertices(). */
-        /**
          * Calculates the triangulation boundary components and
          * properties of these boundary components.
          *

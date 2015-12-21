@@ -129,7 +129,7 @@ class FaceNumbering<3, 2> {
          * Tests whether the given triangle of a tetrahedron contains the given
          * vertex of the tetrahedron.
          *
-         * @param edge an triangle number in a tetrahedron; this must be
+         * @param triangle a triangle number in a tetrahedron; this must be
          * between 0 and 3 inclusive.
          * @param vertex a vertex number in a tetrahedron; this must be
          * between 0 and 3 inclusive.

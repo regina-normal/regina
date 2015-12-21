@@ -72,7 +72,7 @@ namespace detail {
 template <int subdim>
 struct FaceListHolder<Component<3>, subdim> {
     /**
-     * The data type used by Component<dim> to store the list of all
+     * The data type used by Component<3> to store the list of all
      * <i>subdim</i>-faces of the connected component.
      *
      * The function Component<3>::faces<subdim>() returns a const
@@ -145,6 +145,8 @@ class REGINA_API Component<3> : public detail::ComponentBase<3>,
         /**
          * Returns a reference to the list of all <i>subdim</i>-faces in
          * this component.
+         *
+         * \pre The template argument \a subdim is between 0 and 2 inclusive.
          *
          * \ifacespython Python users should call this function in the
          * form <tt>faces(subdim)</tt>.  It will then return a Python list
