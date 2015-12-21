@@ -39,25 +39,27 @@
 
 namespace regina {
 
-const NPerm5 Dim4Tetrahedron::ordering[5] = {
-    NPerm5(1,2,3,4,0),
-    NPerm5(0,2,3,4,1),
-    NPerm5(0,1,3,4,2),
-    NPerm5(0,1,2,4,3),
-    NPerm5(0,1,2,3,4)
-};
+namespace detail {
+    const NPerm5 FaceNumbering<4, 3>::ordering_[5] = {
+        NPerm5(1,2,3,4,0),
+        NPerm5(0,2,3,4,1),
+        NPerm5(0,1,3,4,2),
+        NPerm5(0,1,2,4,3),
+        NPerm5(0,1,2,3,4)
+    };
+}
 
 Dim4Edge* Dim4Tetrahedron::getEdge(int edge) const {
-    NPerm5 p = emb_[0].getVertices();
-    return emb_[0].getPentachoron()->getEdge(
+    NPerm5 p = front().getVertices();
+    return front().getPentachoron()->getEdge(
         Dim4Edge::edgeNumber
             [p[NEdge::edgeVertex[edge][0]]]
             [p[NEdge::edgeVertex[edge][1]]]);
 }
 
 Dim4Triangle* Dim4Tetrahedron::getTriangle(int tri) const {
-    NPerm5 p = emb_[0].getVertices();
-    return emb_[0].getPentachoron()->getTriangle(
+    NPerm5 p = front().getVertices();
+    return front().getPentachoron()->getTriangle(
         Dim4Triangle::triangleNumber
             [p[(tri + 1) % 4]]
             [p[(tri + 2) % 4]]
@@ -65,8 +67,8 @@ Dim4Triangle* Dim4Tetrahedron::getTriangle(int tri) const {
 }
 
 NPerm5 Dim4Tetrahedron::getEdgeMapping(int edge) const {
-    NPerm5 tetPerm = emb_[0].getVertices();
-    NPerm5 edgePerm = emb_[0].getPentachoron()->getEdgeMapping(
+    NPerm5 tetPerm = front().getVertices();
+    NPerm5 edgePerm = front().getPentachoron()->getEdgeMapping(
         Dim4Edge::edgeNumber[tetPerm[NEdge::edgeVertex[edge][0]]]
                             [tetPerm[NEdge::edgeVertex[edge][1]]]);
 
@@ -79,8 +81,8 @@ NPerm5 Dim4Tetrahedron::getEdgeMapping(int edge) const {
 }
 
 NPerm5 Dim4Tetrahedron::getTriangleMapping(int tri) const {
-    NPerm5 tetPerm = emb_[0].getVertices();
-    NPerm5 trianglePerm = emb_[0].getPentachoron()->getTriangleMapping(
+    NPerm5 tetPerm = front().getVertices();
+    NPerm5 trianglePerm = front().getPentachoron()->getTriangleMapping(
         Dim4Triangle::triangleNumber[tetPerm[(tri + 1) % 4]]
                             [tetPerm[(tri + 2) % 4]]
                             [tetPerm[(tri + 3) % 4]]);
@@ -97,10 +99,8 @@ void Dim4Tetrahedron::writeTextLong(std::ostream& out) const {
     out << std::endl;
 
     out << "Appears as:" << std::endl;
-    for (int i = 0; i < nEmb_; ++i)
-        out << "  " << emb_[i].getPentachoron()->markedIndex()
-            << " (" << emb_[i].getVertices().trunc4() << ')'
-            << std::endl;
+    for (auto& emb : *this)
+        out << "  " << emb << std::endl;
 }
 
 } // namespace regina

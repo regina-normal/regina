@@ -61,10 +61,6 @@
 namespace regina {
 
 class Dim4BoundaryComponent;
-class Dim4Edge;
-class Dim4Tetrahedron;
-class Dim4Triangle;
-class Dim4Vertex;
 class NXMLDim4TriangulationReader;
 class NXMLPacketReader;
 
@@ -72,9 +68,14 @@ template <int> class Component;
 template <int> class Isomorphism;
 template <int> class SimplexBase;
 template <int> class Simplex;
+template <int, int> class Face;
 typedef Component<4> Dim4Component;
 typedef Isomorphism<4> Dim4Isomorphism;
 typedef Simplex<4> Dim4Pentachoron;
+typedef Face<4, 3> Dim4Tetrahedron;
+typedef Face<4, 2> Dim4Triangle;
+typedef Face<4, 1> Dim4Edge;
+typedef Face<4, 0> Dim4Vertex;
 
 /**
  * \addtogroup dim4 4-Manifold Triangulations
@@ -118,7 +119,7 @@ struct PacketInfo<PACKET_DIM4TRIANGULATION> {
 template <>
 class REGINA_API Triangulation<4> :
         public NPacket,
-        public TriangulationBase<4> {
+        public detail::TriangulationBase<4> {
     REGINA_PACKET(Triangulation<4>, PACKET_DIM4TRIANGULATION)
 
     public:
@@ -126,21 +127,20 @@ class REGINA_API Triangulation<4> :
                 PentachoronIterator;
             /**< A dimension-specific alias for SimplexIterator, used to
                  iterate through pentachora. */
-        typedef std::vector<Dim4Tetrahedron*>::const_iterator
-                TetrahedronIterator;
+        typedef FaceList<4, 3>::Iterator TetrahedronIterator;
             /**< Used to iterate through tetrahedra. */
-        typedef std::vector<Dim4Triangle*>::const_iterator TriangleIterator;
+        typedef FaceList<4, 2>::Iterator TriangleIterator;
             /**< Used to iterate through triangles. */
-        typedef std::vector<Dim4Edge*>::const_iterator EdgeIterator;
+        typedef FaceList<4, 1>::Iterator EdgeIterator;
             /**< Used to iterate through edges. */
-        typedef std::vector<Dim4Vertex*>::const_iterator VertexIterator;
+        typedef FaceList<4, 0>::Iterator VertexIterator;
             /**< Used to iterate through vertices. */
         typedef std::vector<Dim4BoundaryComponent*>::const_iterator
                 BoundaryComponentIterator;
             /**< Used to iterate through boundary components. */
 
     private:
-        mutable bool knownSimpleLinks_;
+        bool knownSimpleLinks_;
             /**< Is it known that all vertex links are 3-spheres or 3-balls?
                  This may be \c true even if the skeleton has not yet been
                  calculated (thereby allowing us to avoid costly 3-sphere or
@@ -149,21 +149,11 @@ class REGINA_API Triangulation<4> :
                  links, or it may mean that the vertex links have not yet
                  been calculated. */
 
-        mutable NMarkedVector<Dim4Tetrahedron> tetrahedra_;
-            /**< The tetrahedra in the triangulation skeleton. */
-        mutable NMarkedVector<Dim4Triangle> triangles_;
-            /**< The triangles in the triangulation skeleton. */
-        mutable NMarkedVector<Dim4Edge> edges_;
-            /**< The edges in the triangulation skeleton. */
-        mutable NMarkedVector<Dim4Vertex> vertices_;
-            /**< The vertices in the triangulation skeleton. */
-        mutable NMarkedVector<Dim4BoundaryComponent> boundaryComponents_;
+        NMarkedVector<Dim4BoundaryComponent> boundaryComponents_;
             /**< The components that form the boundary of the
                  triangulation. */
 
-        mutable bool valid_;
-            /**< Is the triangulation valid? */
-        mutable bool ideal_;
+        bool ideal_;
             /**< Is the triangulation ideal? */
 
         mutable NProperty<NGroupPresentation, StoreManagedPtr> fundGroup_;
@@ -251,23 +241,14 @@ class REGINA_API Triangulation<4> :
          */
         const std::vector<Dim4Pentachoron*>& getPentachora() const;
         /**
-         * A dimension-specific alias for simplex().
+         * Deprecated dimension-specific alias for simplexIndex().
          *
-         * See simplex() for further information.
-         */
-        Dim4Pentachoron* getPentachoron(unsigned long index);
-        /**
-         * A dimension-specific alias for simplex().
-         *
-         * See simplex() for further information.
-         */
-        const Dim4Pentachoron* getPentachoron(unsigned long index) const;
-        /**
-         * A dimension-specific alias for simplexIndex().
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call pent->index() instead.
          *
          * See simplexIndex() for further information.
          */
-        long pentachoronIndex(const Dim4Pentachoron* tet) const;
+        long pentachoronIndex(const Dim4Pentachoron* pent) const;
         /**
          * A dimension-specific alias for newSimplex().
          *
@@ -315,45 +296,6 @@ class REGINA_API Triangulation<4> :
          * @return the number of boundary components.
          */
         unsigned long getNumberOfBoundaryComponents() const;
-        /**
-         * Returns the number of vertices in this triangulation.
-         *
-         * @return the number of vertices.
-         */
-        unsigned long getNumberOfVertices() const;
-        /**
-         * Returns the number of edges in this triangulation.
-         *
-         * @return the number of edges.
-         */
-        unsigned long getNumberOfEdges() const;
-        /**
-         * Returns the number of triangles in this triangulation.
-         *
-         * @return the number of triangles.
-         */
-        unsigned long getNumberOfTriangles() const;
-        /**
-         * Returns the number of tetrahedra in this triangulation.
-         *
-         * @return the number of tetrahedra.
-         */
-        unsigned long getNumberOfTetrahedra() const;
-        /**
-         * Returns the number of faces of the given dimension in this
-         * triangulation.
-         *
-         * This template function is to assist with writing dimension-agnostic
-         * code that can be reused to work in different dimensions.
-         *
-         * \pre the template argument \a dim is between 0 and 4 inclusive.
-         *
-         * \ifacespython Not present.
-         *
-         * @return the number of faces of the given dimension.
-         */
-        template <int dim>
-        unsigned long getNumberOfFaces() const;
 
         /**
          * Returns all boundary components of this triangulation.
@@ -377,70 +319,6 @@ class REGINA_API Triangulation<4> :
         const std::vector<Dim4BoundaryComponent*>& getBoundaryComponents()
             const;
         /**
-         * Returns all vertices of this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * vertices will be deleted and replaced with new
-         * ones.  Thus the objects contained in this list should be
-         * considered temporary only.
-         *
-         * This reference to the list however will remain valid and
-         * up-to-date for as long as the triangulation exists.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of all vertices.
-         */
-        const std::vector<Dim4Vertex*>& getVertices() const;
-        /**
-         * Returns all edges of this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * edges will be deleted and replaced with new
-         * ones.  Thus the objects contained in this list should be
-         * considered temporary only.
-         *
-         * This reference to the list however will remain valid and
-         * up-to-date for as long as the triangulation exists.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of all edges.
-         */
-        const std::vector<Dim4Edge*>& getEdges() const;
-        /**
-         * Returns all triangles of this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * triangles will be deleted and replaced with new
-         * ones.  Thus the objects contained in this list should be
-         * considered temporary only.
-         *
-         * This reference to the list however will remain valid and
-         * up-to-date for as long as the triangulation exists.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of all triangles.
-         */
-        const std::vector<Dim4Triangle*>& getTriangles() const;
-        /**
-         * Returns all tetrahedra of this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * tetrahedra will be deleted and replaced with new
-         * ones.  Thus the objects contained in this list should be
-         * considered temporary only.
-         *
-         * This reference to the list however will remain valid and
-         * up-to-date for as long as the triangulation exists.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of all triangles.
-         */
-        const std::vector<Dim4Tetrahedron*>& getTetrahedra() const;
-        /**
          * Returns the requested boundary component of this triangulation.
          *
          * Bear in mind that each time the triangulation changes, the
@@ -453,61 +331,13 @@ class REGINA_API Triangulation<4> :
          */
         Dim4BoundaryComponent* getBoundaryComponent(unsigned long index) const;
         /**
-         * Returns the requested vertex in this triangulation.
+         * Deprecated routine that returns the index of the given
+         * boundary component in the triangulation.
          *
-         * Bear in mind that each time the triangulation changes, the
-         * vertices will be deleted and replaced with new
-         * ones.  Thus this object should be considered temporary only.
-         *
-         * @param index the index of the desired vertex, ranging from 0
-         * to getNumberOfVertices()-1 inclusive.
-         * @return the requested vertex.
-         */
-        Dim4Vertex* getVertex(unsigned long index) const;
-        /**
-         * Returns the requested edge in this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * edges will be deleted and replaced with new
-         * ones.  Thus this object should be considered temporary only.
-         *
-         * @param index the index of the desired edge, ranging from 0
-         * to getNumberOfEdges()-1 inclusive.
-         * @return the requested edge.
-         */
-        Dim4Edge* getEdge(unsigned long index) const;
-        /**
-         * Returns the requested triangle in this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * triangles will be deleted and replaced with new
-         * ones.  Thus this object should be considered temporary only.
-         *
-         * @param index the index of the desired triangle, ranging from 0
-         * to getNumberOfTriangles()-1 inclusive.
-         * @return the requested triangle.
-         */
-        Dim4Triangle* getTriangle(unsigned long index) const;
-        /**
-         * Returns the requested tetrahedron in this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * tetrahedra will be deleted and replaced with new
-         * ones.  Thus this object should be considered temporary only.
-         *
-         * @param index the index of the desired tetrahedron, ranging from 0
-         * to getNumberOfTetrahedra()-1 inclusive.
-         * @return the requested tetrahedron.
-         */
-        Dim4Tetrahedron* getTetrahedron(unsigned long index) const;
-        /**
-         * Returns the index of the given boundary component
-         * in the triangulation.
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call bc->index() instead.
          *
          * \pre The given boundary component belongs to this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.
          *
          * @param bc specifies which boundary component to find in the
          * triangulation.
@@ -516,12 +346,13 @@ class REGINA_API Triangulation<4> :
          */
         long boundaryComponentIndex(const Dim4BoundaryComponent* bc) const;
         /**
-         * Returns the index of the given vertex in the triangulation.
+         * Deprecated routine that returns the index of the given vertex
+         * in the triangulation.
+         *
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call vertex->index() instead.
          *
          * \pre The given vertex belongs to this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.
          *
          * @param vertex specifies which vertex to find in the triangulation.
          * @return the index of the specified vertex, where 0 is the first
@@ -529,12 +360,13 @@ class REGINA_API Triangulation<4> :
          */
         long vertexIndex(const Dim4Vertex* vertex) const;
         /**
-         * Returns the index of the given edge in the triangulation.
+         * Deprecated routine that returns the index of the given edge
+         * in the triangulation.
+         *
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call edge->index() instead.
          *
          * \pre The given edge belongs to this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.
          *
          * @param edge specifies which edge to find in the triangulation.
          * @return the index of the specified edge, where 0 is the first
@@ -542,12 +374,13 @@ class REGINA_API Triangulation<4> :
          */
         long edgeIndex(const Dim4Edge* edge) const;
         /**
-         * Returns the index of the given triangle in the triangulation.
+         * Deprecated routine that returns the index of the given triangle
+         * in the triangulation.
+         *
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call tri->index() instead.
          *
          * \pre The given triangle belongs to this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.
          *
          * @param tri specifies which triangle to find in the triangulation.
          * @return the index of the specified triangle, where 0 is the first
@@ -555,12 +388,13 @@ class REGINA_API Triangulation<4> :
          */
         long triangleIndex(const Dim4Triangle* tri) const;
         /**
-         * Returns the index of the given tetrahedron in the triangulation.
+         * Deprecated routine that returns the index of the given tetrahedron
+         * in the triangulation.
+         *
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call tet->index() instead.
          *
          * \pre The given tetrahedron belongs to this triangulation.
-         *
-         * \warning Passing a null pointer to this routine will probably
-         * crash your program.
          *
          * @param tet specifies which tetrahedron to find in the triangulation.
          * @return the index of the specified tetrahedron, where 0 is the
@@ -618,29 +452,6 @@ class REGINA_API Triangulation<4> :
          */
         long getEulerCharManifold() const;
 
-        /**
-         * Determines if this triangulation is valid.
-         *
-         * A triangulation is valid unless it contains an invalid
-         * vertex, edge or triangle.
-         *
-         * - An invalid vertex has a bad vertex link (specifically, the
-         *   link is either an invalid 3-manifold triangulation, an ideal
-         *   3-manifold triangulation, or bounded but not a 3-ball).
-         *
-         * - An invalid edge has a bad edge link (neither a 2-sphere nor
-         *   a disc), and/or is identified with itself in reverse.
-         *
-         * - An invalid triangle is identified with itself using a
-         *   non-trivial rotation or reflection.
-         *
-         * If you wish to find out why a particular triangulation is
-         * invalid, see Dim4Vertex::isValid(), Dim4Edge::isValid() and
-         * Dim4Triangle::isValid() respectively.
-         *
-         * @return \c true if and only if this triangulation is valid.
-         */
-        bool isValid() const;
         /**
          * Determines if this triangulation is ideal.
          *
@@ -1241,47 +1052,27 @@ class REGINA_API Triangulation<4> :
         void clearAllProperties();
 
         void deleteSkeleton();
-        void calculateSkeleton() const;
+        void calculateSkeleton();
 
         /**
          * Internal to calculateSkeleton().  See the comments within
          * calculateSkeleton() for precisely what this routine does.
          */
-        void calculateTetrahedra() const;
+        void calculateBoundary();
         /**
          * Internal to calculateSkeleton().  See the comments within
          * calculateSkeleton() for precisely what this routine does.
          */
-        void calculateVertices() const;
+        void calculateVertexLinks();
         /**
          * Internal to calculateSkeleton().  See the comments within
          * calculateSkeleton() for precisely what this routine does.
          */
-        void calculateEdges() const;
-        /**
-         * Internal to calculateSkeleton().  See the comments within
-         * calculateSkeleton() for precisely what this routine does.
-         */
-        void calculateTriangles() const;
-        /**
-         * Internal to calculateSkeleton().  See the comments within
-         * calculateSkeleton() for precisely what this routine does.
-         */
-        void calculateBoundary() const;
-        /**
-         * Internal to calculateSkeleton().  See the comments within
-         * calculateSkeleton() for precisely what this routine does.
-         */
-        void calculateVertexLinks() const;
-        /**
-         * Internal to calculateSkeleton().  See the comments within
-         * calculateSkeleton() for precisely what this routine does.
-         */
-        void calculateEdgeLinks() const;
+        void calculateEdgeLinks();
 
     friend class regina::Simplex<4>;
-    friend class regina::SimplexBase<4>;
-    friend class regina::TriangulationBase<4>;
+    friend class regina::detail::SimplexBase<4>;
+    friend class regina::detail::TriangulationBase<4>;
     friend class regina::NXMLDim4TriangulationReader;
 };
 
@@ -1335,18 +1126,9 @@ inline const std::vector<Dim4Pentachoron*>& Triangulation<4>::getPentachora()
     return getSimplices();
 }
 
-inline Dim4Pentachoron* Triangulation<4>::getPentachoron(unsigned long index) {
-    return getSimplex(index);
-}
-
-inline const Dim4Pentachoron* Triangulation<4>::getPentachoron(
-        unsigned long index) const {
-    return getSimplex(index);
-}
-
 inline long Triangulation<4>::pentachoronIndex(const Dim4Pentachoron* pent)
         const {
-    return pent->markedIndex();
+    return pent->index();
 }
 
 inline Dim4Pentachoron* Triangulation<4>::newPentachoron() {
@@ -1375,77 +1157,10 @@ inline unsigned long Triangulation<4>::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
-inline unsigned long Triangulation<4>::getNumberOfVertices() const {
-    ensureSkeleton();
-    return vertices_.size();
-}
-
-inline unsigned long Triangulation<4>::getNumberOfEdges() const {
-    ensureSkeleton();
-    return edges_.size();
-}
-
-inline unsigned long Triangulation<4>::getNumberOfTriangles() const {
-    ensureSkeleton();
-    return triangles_.size();
-}
-
-inline unsigned long Triangulation<4>::getNumberOfTetrahedra() const {
-    ensureSkeleton();
-    return tetrahedra_.size();
-}
-
-template <>
-inline unsigned long Triangulation<4>::getNumberOfFaces<0>() const {
-    return getNumberOfVertices();
-}
-
-template <>
-inline unsigned long Triangulation<4>::getNumberOfFaces<1>() const {
-    return getNumberOfEdges();
-}
-
-template <>
-inline unsigned long Triangulation<4>::getNumberOfFaces<2>() const {
-    return getNumberOfTriangles();
-}
-
-template <>
-inline unsigned long Triangulation<4>::getNumberOfFaces<3>() const {
-    return getNumberOfTetrahedra();
-}
-
-template <>
-inline unsigned long Triangulation<4>::getNumberOfFaces<4>() const {
-    return getNumberOfPentachora();
-}
-
 inline const std::vector<Dim4BoundaryComponent*>&
         Triangulation<4>::getBoundaryComponents() const {
     ensureSkeleton();
     return (const std::vector<Dim4BoundaryComponent*>&)(boundaryComponents_);
-}
-
-inline const std::vector<Dim4Vertex*>& Triangulation<4>::getVertices() const {
-    ensureSkeleton();
-    return (const std::vector<Dim4Vertex*>&)(vertices_);
-}
-
-inline const std::vector<Dim4Edge*>& Triangulation<4>::getEdges() const {
-    ensureSkeleton();
-    return (const std::vector<Dim4Edge*>&)(edges_);
-}
-
-inline const std::vector<Dim4Triangle*>& Triangulation<4>::getTriangles()
-        const {
-    ensureSkeleton();
-    return (const std::vector<Dim4Triangle*>&)(triangles_);
-}
-
-inline const std::vector<Dim4Tetrahedron*>& Triangulation<4>::getTetrahedra()
-        const {
-    ensureSkeleton();
-    return (const std::vector<Dim4Tetrahedron*>&)(tetrahedra_);
 }
 
 inline Dim4BoundaryComponent* Triangulation<4>::getBoundaryComponent(
@@ -1454,63 +1169,37 @@ inline Dim4BoundaryComponent* Triangulation<4>::getBoundaryComponent(
     return boundaryComponents_[index];
 }
 
-inline Dim4Vertex* Triangulation<4>::getVertex(unsigned long index) const {
-    ensureSkeleton();
-    return vertices_[index];
-}
-
-inline Dim4Edge* Triangulation<4>::getEdge(unsigned long index) const {
-    ensureSkeleton();
-    return edges_[index];
-}
-
-inline Dim4Triangle* Triangulation<4>::getTriangle(unsigned long index) const {
-    ensureSkeleton();
-    return triangles_[index];
-}
-
-inline Dim4Tetrahedron* Triangulation<4>::getTetrahedron(unsigned long index)
-        const {
-    ensureSkeleton();
-    return tetrahedra_[index];
-}
-
 inline long Triangulation<4>::boundaryComponentIndex(
         const Dim4BoundaryComponent* boundaryComponent) const {
-    return boundaryComponent->markedIndex();
+    return boundaryComponent->index();
 }
 
 inline long Triangulation<4>::vertexIndex(const Dim4Vertex* vertex) const {
-    return vertex->markedIndex();
+    return vertex->index();
 }
 
 inline long Triangulation<4>::edgeIndex(const Dim4Edge* edge) const {
-    return edge->markedIndex();
+    return edge->index();
 }
 
 inline long Triangulation<4>::triangleIndex(const Dim4Triangle* tri) const {
-    return tri->markedIndex();
+    return tri->index();
 }
 
 inline long Triangulation<4>::tetrahedronIndex(const Dim4Tetrahedron* tet)
         const {
-    return tet->markedIndex();
+    return tet->index();
 }
 
 inline long Triangulation<4>::getEulerCharTri() const {
     ensureSkeleton();
 
     // Cast away the unsignedness of std::vector::size().
-    return static_cast<long>(vertices_.size())
-        - static_cast<long>(edges_.size())
-        + static_cast<long>(triangles_.size())
-        - static_cast<long>(tetrahedra_.size())
+    return static_cast<long>(countVertices())
+        - static_cast<long>(countEdges())
+        + static_cast<long>(countTriangles())
+        - static_cast<long>(countTetrahedra())
         + static_cast<long>(size());
-}
-
-inline bool Triangulation<4>::isValid() const {
-    ensureSkeleton();
-    return valid_;
 }
 
 inline bool Triangulation<4>::isIdeal() const {
@@ -1521,7 +1210,7 @@ inline bool Triangulation<4>::isIdeal() const {
 inline bool Triangulation<4>::hasBoundaryFacets() const {
     // Override, since we can do this faster in dimension 4.
     ensureSkeleton();
-    return (2 * tetrahedra_.size() > 5 * size());
+    return (2 * countTetrahedra() > 5 * size());
 }
 
 inline bool Triangulation<4>::hasBoundaryTetrahedra() const {
@@ -1531,7 +1220,7 @@ inline bool Triangulation<4>::hasBoundaryTetrahedra() const {
 inline size_t Triangulation<4>::countBoundaryFacets() const {
     // Override, since we can do this faster in dimension 4.
     ensureSkeleton();
-    return 2 * tetrahedra_.size() - 5 * size();
+    return 2 * countTetrahedra() - 5 * size();
 }
 
 inline size_t Triangulation<4>::countBoundaryTetrahedra() const {

@@ -44,17 +44,13 @@
 
 #include "regina-core.h"
 #include "output.h"
+#include "generic/face.h"
 #include "maths/nperm5.h"
-#include "utilities/nmarkedvector.h"
-#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
 class Dim4BoundaryComponent;
-class Dim4Edge;
-class Dim4Triangle;
-class Dim4Vertex;
 
 template <int> class Component;
 template <int> class Simplex;
@@ -62,6 +58,9 @@ template <int> class Triangulation;
 typedef Component<4> Dim4Component;
 typedef Simplex<4> Dim4Pentachoron;
 typedef Triangulation<4> Dim4Triangulation;
+typedef Face<4, 2> Dim4Triangle;
+typedef Face<4, 1> Dim4Edge;
+typedef Face<4, 0> Dim4Vertex;
 
 /**
  * \weakgroup dim4
@@ -69,187 +68,98 @@ typedef Triangulation<4> Dim4Triangulation;
  */
 
 /**
- * Details how a tetrahedron in the 3-skeleton of a 4-manifold triangulation
- * forms part of an individual pentachoron.
+ * A convenience typedef for FaceEmbedding<4, 3>.
  */
-class REGINA_API Dim4TetrahedronEmbedding {
-    private:
-        Dim4Pentachoron* pent_;
-            /**< The pentachoron in which this tetrahedron is contained. */
-        int tet_;
-            /**< The facet number of the pentachoron that is this
-                 tetrahedron. */
+typedef FaceEmbedding<4, 3> Dim4TetrahedronEmbedding;
 
-    public:
-        /**
-         * Default constructor.  The embedding descriptor created is
-         * unusable until it has some data assigned to it using
-         * <tt>operator =</tt>.
-         *
-         * \ifacespython Not present.
-         */
-        Dim4TetrahedronEmbedding();
-
-        /**
-         * Creates an embedding descriptor containing the given data.
-         *
-         * @param pent the pentachoron in which this tetrahedron is contained.
-         * @param tet the facet number of \a pent that is this tetrahedron.
-         */
-        Dim4TetrahedronEmbedding(Dim4Pentachoron* pent, int tet);
-
-        /**
-         * Creates an embedding descriptor containing the same data as
-         * the given embedding descriptor.
-         *
-         * @param cloneMe the embedding descriptor to clone.
-         */
-        Dim4TetrahedronEmbedding(const Dim4TetrahedronEmbedding& cloneMe);
-
-        /**
-         * Assigns to this embedding descriptor the same data as is
-         * contained in the given embedding descriptor.
-         *
-         * @param cloneMe the embedding descriptor to clone.
-         */
-        Dim4TetrahedronEmbedding& operator = (
-            const Dim4TetrahedronEmbedding& cloneMe);
-
-        /**
-         * Returns the pentachoron in which this tetrahedron is contained.
-         *
-         * @return the pentachoron.
-         */
-        Dim4Pentachoron* getPentachoron() const;
-
-        /**
-         * Returns the facet number within getPentachoron() that is this
-         * tetrahedron.
-         *
-         * @return the facet number that is this tetrahedron.
-         */
-        int getTetrahedron() const;
-
-        /**
-         * Returns a mapping from vertices (0,1,2,3) of this tetrahedron to the
-         * corresponding vertex numbers in getPentachoron(), as described
-         * in Dim4Pentachoron::getTetrahedronMapping().
-         *
-         * @return a mapping from the vertices of this tetrahedron to the
-         * vertices of getPentachoron().
-         */
-        NPerm5 getVertices() const;
-
-        /**
-         * Tests whether this and the given embedding are identical.
-         * Here "identical" means that they refer to the same facet of
-         * the same pentachoron.
-         *
-         * @param rhs the embedding to compare with this.
-         * @return \c true if and only if both embeddings are identical.
-         */
-        bool operator == (const Dim4TetrahedronEmbedding& rhs) const;
-
-        /**
-         * Tests whether this and the given embedding are different.
-         * Here "different" means that they do not refer to the same facet of
-         * the same pentachoron.
-         *
-         * @param rhs the embedding to compare with this.
-         * @return \c true if and only if both embeddings are identical.
-         */
-        bool operator != (const Dim4TetrahedronEmbedding& rhs) const;
-};
+namespace detail {
 
 /**
- * Represents a tetrahedron in the 3-skeleton of a 4-manifold triangulation.
- * Tetrahedra are highly temporary; once a triangulation changes, all its
- * tetrahedron objects will be deleted and new ones will be created.
+ * Helper class that specifies how tetrahedra are numbered within a pentachoron.
+ *
+ * See the general FaceNumbering<dim, subdim> template class notes for
+ * further details.
  */
-class REGINA_API Dim4Tetrahedron :
-        public Output<Dim4Tetrahedron>,
-        public boost::noncopyable,
-        public NMarkedElement {
+template <>
+class FaceNumbering<4, 3> {
+    private:
+        static const NPerm5 ordering_[5];
+            /**< An array that hard-codes the results of ordering(). */
+
     public:
         /**
-         * An array that maps tetrahedron numbers within a pentachoron
-         * (i.e., facet numbers) to the canonical ordering of the
-         * individual pentachoron vertices that form each tetrahedron.
+         * Given a tetrahedron number within a pentachoron, returns the
+         * corresponding canonical ordering of the pentachoron vertices.
          *
-         * This means that the vertices of tetrahedron \a i in a pentachoron
-         * are, in canonical order, <tt>ordering[i][0..3]</tt>.  As an
-         * immediate consequence, we obtain <tt>ordering[i][4] == i</tt>.
+         * If this canonical ordering is \a c, then <tt>c[0,...,3]</tt> will be
+         * the vertices of the given tetrahedron in increasing numerical order.
+         * That is, <tt>c[0]</tt> &lt; ... &lt; <tt>c[3]</tt>.
          *
-         * Regina defines canonical order to be \e increasing order.
-         * That is, <tt>ordering[i][0] &lt; ... &lt; ordering[i][3]</tt>.
+         * Note that this is \e not the same permutation as returned by
+         * Dim4Pentachoron::getTetrahedronMapping():
          *
-         * This table does \e not describe the mapping from specific
-         * tetrahedra within a triangulation into individual pentachora
-         * (for that, see Dim4Pentachoron::getTetrahedronMapping() instead).
-         * This table merely provides a neat and consistent way of
-         * listing the vertices of any given pentachoron facet.
+         * - ordering() is a static function, which returns the same
+         *   permutation for the same tetrahedron number, regardless of which
+         *   pentachoron we are looking at.  The images of 0,...,3 will always
+         *   appear in increasing order.
+         *
+         * - getTetrahedronMapping() examines the underlying tetrahedron \a T
+         *   of the triangulation, and chooses the images of 0,...,3 to map to
+         *   the same respective vertices of \a T for all appearances of
+         *   \a T in different pentachora.
+         *
+         * @param edge identifies which tetrahedron of a pentachoron to query.
+         * This must be between 0 and 4 inclusive.
+         * @return the corresponding canonical ordering of the
+         * pentachoron vertices.
          */
-        static const NPerm5 ordering[5];
+        static NPerm5 ordering(unsigned edge);
+        /**
+         * Identifies which tetrahedron number in a pentachoron is represented
+         * by the first four elements of the given permutation.
+         *
+         * In other words, this routine identifies which tetrahedron number in
+         * a pentachoron spans vertices <tt>vertices[0,...,3]</tt>.
+         *
+         * @param vertices a permutation whose first four elements
+         * represent some vertex numbers in a pentachoron.
+         * @return the corresponding tetrahedron number in a pentachoron.
+         * This will be between 0 and 4 inclusive.
+         */
+        static unsigned faceNumber(NPerm5 vertices);
+        /**
+         * Tests whether the given tetrahedron in a pentachoron contains the
+         * given vertex of the pentachoron.
+         *
+         * @param tetrahedron a tetrahedron number in a pentachoron; this must
+         * be between 0 and 4 inclusive.
+         * @param vertex a vertex number in a pentachoron; this must be
+         * between 0 and 4 inclusive.
+         * @return \c true if and only if the given tetrahedron contains the
+         * given vertex.
+         */
+        static bool containsVertex(unsigned tetrahedron, unsigned vertex);
+};
 
+} // namespace detail
+
+/**
+ * Represents a tetrahedron in the skeleton of a 4-dimensional triangulation.
+ *
+ * This is a specialisation of the generic Face class template; see the
+ * documentation for Face for a general overview of how this class works.
+ *
+ * These specialisations for Regina's \ref stddim "standard dimensions",
+ * offer significant extra functionality.
+ */
+class REGINA_API Face<4, 3> : public detail::Face<4, 3>,
+        public Output<Face<4, 3>> {
     private:
-        Dim4TetrahedronEmbedding emb_[2];
-            /**< A list of descriptors telling how this tetrahedron forms a
-                 part of each individual pentachoron that it belongs to. */
-        unsigned nEmb_;
-            /**< The number of descriptors stored in the list \a emb_.
-                 This will never exceed two. */
-        Dim4Component* component_;
-            /**< The component that this tetrahedron is a part of. */
         Dim4BoundaryComponent* boundaryComponent_;
             /**< The boundary component that this tetrahedron is a part of,
                  or 0 if this tetrahedron is internal. */
 
     public:
-        /**
-         * Returns the index of this tetrahedron in the underlying
-         * triangulation.  This is identical to calling
-         * <tt>getTriangulation()->tetrahedronIndex(this)</tt>.
-         *
-         * @return the index of this tetrahedron.
-         */
-        unsigned long index() const;
-
-        /**
-         * Returns the number of descriptors available through getEmbedding().
-         * Note that this number will never be greater than two.
-         *
-         * @return the number of embedding descriptors.
-         */
-        unsigned getNumberOfEmbeddings() const;
-
-        /**
-         * Returns the requested descriptor detailing how this tetrahedron
-         * forms a part of a particular pentachoron in the triangulation.
-         * Note that if this tetrahedron represents multiple facets of a
-         * particular pentachoron, then there will be multiple embedding
-         * descriptors available regarding that pentachoron.
-         *
-         * @param index the index of the requested descriptor.  This
-         * should be between 0 and getNumberOfEmbeddings()-1 inclusive.
-         * @return the requested embedding descriptor.
-         */
-        const Dim4TetrahedronEmbedding& getEmbedding(unsigned index) const;
-
-        /**
-         * Returns the triangulation to which this tetrahedron belongs.
-         *
-         * @return the triangulation containing this tetrahedron.
-         */
-        Dim4Triangulation* getTriangulation() const;
-
-        /**
-         * Returns the component of the triangulation to which this
-         * tetrahedron belongs.
-         *
-         * @return the component containing this tetrahedron.
-         */
-        Dim4Component* getComponent() const;
-
         /**
          * Returns the boundary component of the triangulation to which
          * this tetrahedron belongs.
@@ -407,11 +317,16 @@ class REGINA_API Dim4Tetrahedron :
          * @param component the triangulation component to which this
          * tetrahedron belongs.
          */
-        Dim4Tetrahedron(Dim4Component* component);
+        Face(Dim4Component* component);
 
     friend class Triangulation<4>;
-        /**< Allow access to private members. */
+    friend class detail::TriangulationBase<4>;
 };
+
+/**
+ * A convenience typedef for Face<4, 3>.
+ */
+typedef Face<4, 3> Dim4Tetrahedron;
 
 /*@}*/
 
@@ -420,94 +335,48 @@ class REGINA_API Dim4Tetrahedron :
 #include "dim4/dim4pentachoron.h"
 namespace regina {
 
-// Inline functions for Dim4TetrahedronEmbedding
+// Inline functions for FaceNumbering
 
-inline Dim4TetrahedronEmbedding::Dim4TetrahedronEmbedding() : pent_(0) {
+namespace detail {
+
+inline NPerm5 FaceNumbering<4, 3>::ordering(unsigned tetrahedron) {
+    return ordering_[tetrahedron];
 }
 
-inline Dim4TetrahedronEmbedding::Dim4TetrahedronEmbedding(
-        Dim4Pentachoron* pent, int tet) :
-        pent_(pent), tet_(tet) {
+inline unsigned FaceNumbering<4, 3>::faceNumber(NPerm5 vertices) {
+    return vertices[4];
 }
 
-inline Dim4TetrahedronEmbedding::Dim4TetrahedronEmbedding(
-        const Dim4TetrahedronEmbedding& cloneMe) :
-        pent_(cloneMe.pent_), tet_(cloneMe.tet_) {
+inline bool FaceNumbering<4, 3>::containsVertex(unsigned tetrahedron,
+        unsigned vertex) {
+    return (tetrahedron != vertex);
 }
 
-inline Dim4TetrahedronEmbedding& Dim4TetrahedronEmbedding::operator =
-        (const Dim4TetrahedronEmbedding& cloneMe) {
-    pent_ = cloneMe.pent_;
-    tet_ = cloneMe.tet_;
-    return *this;
-}
-
-inline Dim4Pentachoron* Dim4TetrahedronEmbedding::getPentachoron() const {
-    return pent_;
-}
-
-inline int Dim4TetrahedronEmbedding::getTetrahedron() const {
-    return tet_;
-}
-
-inline NPerm5 Dim4TetrahedronEmbedding::getVertices() const {
-    return pent_->getTetrahedronMapping(tet_);
-}
-
-inline bool Dim4TetrahedronEmbedding::operator ==
-        (const Dim4TetrahedronEmbedding& other) const {
-    return ((pent_ == other.pent_) && (tet_ == other.tet_));
-}
-
-inline bool Dim4TetrahedronEmbedding::operator !=
-        (const Dim4TetrahedronEmbedding& other) const {
-    return ((pent_ != other.pent_) || (tet_ != other.tet_));
-}
+} // namespace detail
 
 // Inline functions for Dim4Tetrahedron
 
-inline Dim4Tetrahedron::Dim4Tetrahedron(Dim4Component* component) :
-        nEmb_(0), component_(component), boundaryComponent_(0) {
+inline Face<4, 3>::Face(Dim4Component* component) :
+        FaceBase<4, 3>(component), boundaryComponent_(0) {
 }
 
-inline unsigned long Dim4Tetrahedron::index() const {
-    return markedIndex();
-}
-
-inline unsigned Dim4Tetrahedron::getNumberOfEmbeddings() const {
-    return nEmb_;
-}
-
-inline const Dim4TetrahedronEmbedding& Dim4Tetrahedron::getEmbedding(
-        unsigned index) const {
-    return emb_[index];
-}
-
-inline Dim4Triangulation* Dim4Tetrahedron::getTriangulation() const {
-    return emb_[0].getPentachoron()->getTriangulation();
-}
-
-inline Dim4Component* Dim4Tetrahedron::getComponent() const {
-    return component_;
-}
-
-inline Dim4BoundaryComponent* Dim4Tetrahedron::getBoundaryComponent() const {
+inline Dim4BoundaryComponent* Face<4, 3>::getBoundaryComponent() const {
     return boundaryComponent_;
 }
 
-inline Dim4Vertex* Dim4Tetrahedron::getVertex(int vertex) const {
-    return emb_[0].getPentachoron()->getVertex(emb_[0].getVertices()[vertex]);
+inline Dim4Vertex* Face<4, 3>::getVertex(int vertex) const {
+    return front().pentachoron()->vertex(front().vertices()[vertex]);
 }
 
-inline bool Dim4Tetrahedron::isBoundary() const {
+inline bool Face<4, 3>::isBoundary() const {
     return (boundaryComponent_ != 0);
 }
 
-inline bool Dim4Tetrahedron::inMaximalForest() const {
-    return emb_[0].getPentachoron()->facetInMaximalForest(emb_[0].getTetrahedron());
+inline bool Face<4, 3>::inMaximalForest() const {
+    return front().pentachoron()->facetInMaximalForest(front().tetrahedron());
 }
 
-inline void Dim4Tetrahedron::writeTextShort(std::ostream& out) const {
+inline void Face<4, 3>::writeTextShort(std::ostream& out) const {
     out << (boundaryComponent_ ? "Boundary " : "Internal ") << "tetrahedron";
 }
 

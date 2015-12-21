@@ -58,18 +58,20 @@ const int Dim4Edge::edgeVertex[10][2] = {
     { 2, 4 },
     { 3, 4 }};
 
-const NPerm5 Dim4Edge::ordering[10] = {
-    NPerm5(0, 1, 2, 3, 4),
-    NPerm5(0, 2, 1, 3, 4),
-    NPerm5(0, 3, 1, 2, 4),
-    NPerm5(0, 4, 1, 2, 3),
-    NPerm5(1, 2, 0, 3, 4),
-    NPerm5(1, 3, 0, 2, 4),
-    NPerm5(1, 4, 0, 2, 3),
-    NPerm5(2, 3, 0, 1, 4),
-    NPerm5(2, 4, 0, 1, 3),
-    NPerm5(3, 4, 0, 1, 2)
-};
+namespace detail {
+    const NPerm5 FaceNumber<4, 1>::ordering_[10] = {
+        NPerm5(0, 1, 2, 3, 4),
+        NPerm5(0, 2, 1, 3, 4),
+        NPerm5(0, 3, 1, 2, 4),
+        NPerm5(0, 4, 1, 2, 3),
+        NPerm5(1, 2, 0, 3, 4),
+        NPerm5(1, 3, 0, 2, 4),
+        NPerm5(1, 4, 0, 2, 3),
+        NPerm5(2, 3, 0, 1, 4),
+        NPerm5(2, 4, 0, 1, 3),
+        NPerm5(3, 4, 0, 1, 2)
+    };
+}
 
 Dim2Triangulation* Dim4Edge::buildLinkDetail(bool labels,
         Dim4Isomorphism** inclusion) const {
@@ -78,13 +80,13 @@ Dim2Triangulation* Dim4Edge::buildLinkDetail(bool labels,
     NPacket::ChangeEventSpan span(ans);
 
     if (inclusion)
-        *inclusion = new Dim4Isomorphism(emb_.size());
+        *inclusion = new Dim4Isomorphism(degree());
 
     std::vector<Dim4EdgeEmbedding>::const_iterator it, adjIt;
     Dim2Triangle* tTri;
     NPerm5 perm;
     int i;
-    for (it = emb_.begin(), i = 0; it != emb_.end(); ++it, ++i) {
+    for (it = begin(), i = 0; it != end(); ++it, ++i) {
         tTri = ans->newTriangle();
         if (labels) {
             std::stringstream s;
@@ -110,7 +112,7 @@ Dim2Triangulation* Dim4Edge::buildLinkDetail(bool labels,
     int edgeInLink;
     int adjIndex;
     int adjEdge;
-    for (it = emb_.begin(), i = 0; it != emb_.end(); ++it, ++i) {
+    for (it = begin(), i = 0; it != end(); ++it, ++i) {
         pent = it->getPentachoron();
         e = it->getEdge();
 
@@ -138,8 +140,8 @@ Dim2Triangulation* Dim4Edge::buildLinkDetail(bool labels,
             // Currently we do a simple linear scan, which makes the
             // overall link construction quadratic.  This can surely be
             // made linear(ish) with the right data structure and/or algorithm.
-            for (adjIt = emb_.begin(), adjIndex = 0;
-                    adjIt != emb_.end(); ++adjIt, ++adjIndex)
+            for (adjIt = begin(), adjIndex = 0;
+                    adjIt != end(); ++adjIt, ++adjIndex)
                 if (adjIt->getPentachoron() == adj &&
                         adjIt->getEdge() == adjEdge)
                     break; // Sets adjIndex to the right value.
@@ -159,10 +161,8 @@ void Dim4Edge::writeTextLong(std::ostream& out) const {
     out << std::endl;
 
     out << "Appears as:" << std::endl;
-    std::vector<Dim4EdgeEmbedding>::const_iterator it;
-    for (it = emb_.begin(); it != emb_.end(); ++it)
-        out << "  " << it->getPentachoron()->markedIndex()
-            << " (" << it->getVertices().trunc2() << ')' << std::endl;
+    for (auto& emb : *this)
+        out << "  " << emb << std::endl;
 }
 
 } // namespace regina

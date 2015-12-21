@@ -39,7 +39,7 @@
 
 namespace regina {
 
-Dim4Vertex::~Dim4Vertex() {
+Dim4Vertex::~Face() {
     // Deleting null is always safe.
     delete link_;
 }
@@ -52,7 +52,7 @@ void Dim4Vertex::writeTextShort(std::ostream& out) const {
     else
         out << "Ideal ";
 
-    out << "vertex of degree " << emb_.size();
+    out << "vertex of degree " << degree();
 }
 
 void Dim4Vertex::writeTextLong(std::ostream& out) const {
@@ -60,10 +60,8 @@ void Dim4Vertex::writeTextLong(std::ostream& out) const {
     out << std::endl;
 
     out << "Appears as:" << std::endl;
-    std::vector<Dim4VertexEmbedding>::const_iterator it;
-    for (it = emb_.begin(); it != emb_.end(); ++it)
-        out << "  " << it->getPentachoron()->markedIndex()
-            << " (" << it->getVertex() << ')' << std::endl;
+    for (auto& emb : *this)
+        out << "  " << emb << std::endl;
 }
 
 NTriangulation* Dim4Vertex::buildLinkDetail(bool labels,
@@ -73,12 +71,12 @@ NTriangulation* Dim4Vertex::buildLinkDetail(bool labels,
     NPacket::ChangeEventSpan span(ans);
 
     if (inclusion)
-        *inclusion = new Dim4Isomorphism(emb_.size());
+        *inclusion = new Dim4Isomorphism(degree());
 
     std::vector<Dim4VertexEmbedding>::const_iterator it, adjIt;
     NTetrahedron* tTet;
     int i;
-    for (it = emb_.begin(), i = 0; it != emb_.end(); ++it, ++i) {
+    for (it = begin(), i = 0; it != end(); ++it, ++i) {
         tTet = ans->newTetrahedron();
         if (labels) {
             std::stringstream s;
@@ -98,7 +96,7 @@ NTriangulation* Dim4Vertex::buildLinkDetail(bool labels,
     int faceInLink;
     int adjIndex;
     int adjVertex;
-    for (it = emb_.begin(), i = 0; it != emb_.end(); ++it, ++i) {
+    for (it = begin(), i = 0; it != end(); ++it, ++i) {
         pent = it->getPentachoron();
         v = it->getVertex();
 
@@ -124,8 +122,8 @@ NTriangulation* Dim4Vertex::buildLinkDetail(bool labels,
             // Currently we do a simple linear scan, which makes the
             // overall link construction quadratic.  This can surely be
             // made linear(ish) with the right data structure and/or algorithm.
-            for (adjIt = emb_.begin(), adjIndex = 0;
-                    adjIt != emb_.end(); ++adjIt, ++adjIndex)
+            for (adjIt = begin(), adjIndex = 0;
+                    adjIt != end(); ++adjIt, ++adjIndex)
                 if (adjIt->getPentachoron() == adj &&
                         adjIt->getVertex() == adjVertex)
                     break; // Sets adjIndex to the right value.

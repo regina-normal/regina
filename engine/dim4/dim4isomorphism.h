@@ -63,7 +63,7 @@ namespace regina {
  * aliases for some commonly-used routines.
  */
 template <>
-class REGINA_API Isomorphism<4> : public IsomorphismBase<4> {
+class REGINA_API Isomorphism<4> : public detail::IsomorphismBase<4> {
     public:
         /**
          * Creates a new isomorphism with no initialisation.
@@ -109,11 +109,11 @@ typedef Isomorphism<4> Dim4Isomorphism;
 // Inline functions for Isomorphism<4>
 
 inline Isomorphism<4>::Isomorphism(unsigned sourcePentachora) :
-        IsomorphismBase<4>(sourcePentachora) {
+        detail::IsomorphismBase<4>(sourcePentachora) {
 }
 
 inline Isomorphism<4>::Isomorphism(const Dim4Isomorphism& cloneMe) :
-        IsomorphismBase<4>(cloneMe) {
+        detail::IsomorphismBase<4>(cloneMe) {
 }
 
 inline int& Isomorphism<4>::pentImage(unsigned sourcePent) {

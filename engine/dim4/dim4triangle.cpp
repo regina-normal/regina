@@ -80,31 +80,30 @@ const int Dim4Triangle::triangleVertex[10][3] = {
     { 0, 1, 3 },
     { 0, 1, 2 } };
 
-const NPerm5 Dim4Triangle::ordering[10] = {
-    NPerm5(2, 3, 4, 0, 1),
-    NPerm5(1, 3, 4, 2, 0),
-    NPerm5(1, 2, 4, 0, 3),
-    NPerm5(1, 2, 3, 4, 0),
-    NPerm5(0, 3, 4, 1, 2),
-    NPerm5(0, 2, 4, 3, 1),
-    NPerm5(0, 2, 3, 1, 4),
-    NPerm5(0, 1, 4, 2, 3),
-    NPerm5(0, 1, 3, 4, 2),
-    NPerm5(0, 1, 2, 3, 4)
-};
+namespace detail {
+    const NPerm5 FaceNumbering<4, 2>::ordering_[10] = {
+        NPerm5(2, 3, 4, 0, 1),
+        NPerm5(1, 3, 4, 2, 0),
+        NPerm5(1, 2, 4, 0, 3),
+        NPerm5(1, 2, 3, 4, 0),
+        NPerm5(0, 3, 4, 1, 2),
+        NPerm5(0, 2, 4, 3, 1),
+        NPerm5(0, 2, 3, 1, 4),
+        NPerm5(0, 1, 4, 2, 3),
+        NPerm5(0, 1, 3, 4, 2),
+        NPerm5(0, 1, 2, 3, 4)
+    };
+}
 
 Dim4Edge* Dim4Triangle::getEdge(int edge) const {
-    const Dim4TriangleEmbedding& e(emb_.front());
-    NPerm5 p = e.getVertices();
-    return e.getPentachoron()->getEdge(
+    NPerm5 p = front.getVertices();
+    return front().getPentachoron()->getEdge(
         Dim4Edge::edgeNumber[p[(edge + 1) % 3]][p[(edge + 2) % 3]]);
 }
 
 NPerm5 Dim4Triangle::getEdgeMapping(int edge) const {
-    const Dim4TriangleEmbedding& e(emb_.front());
-
-    NPerm5 trianglePerm = e.getVertices();
-    NPerm5 edgePerm = e.getPentachoron()->getEdgeMapping(
+    NPerm5 trianglePerm = front().getVertices();
+    NPerm5 edgePerm = front().getPentachoron()->getEdgeMapping(
         Dim4Edge::edgeNumber[trianglePerm[(edge + 1) % 3]]
                             [trianglePerm[(edge + 2) % 3]]);
 
@@ -119,10 +118,8 @@ void Dim4Triangle::writeTextLong(std::ostream& out) const {
     out << std::endl;
 
     out << "Appears as:" << std::endl;
-    std::deque<Dim4TriangleEmbedding>::const_iterator it;
-    for (it = emb_.begin(); it != emb_.end(); ++it)
-        out << "  " << it->getPentachoron()->markedIndex()
-            << " (" << it->getVertices().trunc3() << ')' << std::endl;
+    for (auto& emb : *this)
+        out << "  " << emb << std::endl;
 }
 
 } // namespace regina

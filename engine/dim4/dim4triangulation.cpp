@@ -58,11 +58,11 @@ void Dim4Triangulation::writeTextLong(std::ostream& out) const {
     ensureSkeleton();
 
     out << "Size of the skeleton:\n";
-    out << "  Pentachora: " << simplices_.size() << '\n';
-    out << "  Tetrahedra: " << tetrahedra_.size() << '\n';
-    out << "  Triangles: " << triangles_.size() << '\n';
-    out << "  Edges: " << edges_.size() << '\n';
-    out << "  Vertices: " << vertices_.size() << '\n';
+    out << "  Pentachora: " << countPentachora() << '\n';
+    out << "  Tetrahedra: " << countTetrahedra() << '\n';
+    out << "  Triangles: " << countTriangles() << '\n';
+    out << "  Edges: " << countEdges() << '\n';
+    out << "  Vertices: " << countVertices() << '\n';
     out << '\n';
 
     Dim4Pentachoron* pent;
@@ -161,14 +161,13 @@ long Dim4Triangulation::getEulerCharManifold() const {
 
     // Truncate any ideal vertices.
     if (ideal_) {
-        for (BoundaryComponentIterator it = boundaryComponents_.begin();
-                it != boundaryComponents_.end(); ++it)
-            if ((*it)->isIdeal()) {
+        for (auto bc : boundaryComponents_)
+            if (bc->isIdeal()) {
                 // Because our 4-manifold triangulation is valid, all
                 // vertex links in the 3-manifold boundary must be
                 // spheres or discs.  We can therefore use V - E + F - T
                 // on this boundary component.
-                ans += (*it)->vertices_.front()->link_->getEulerCharTri() - 1;
+                ans += bc->vertices_.front()->link_->getEulerCharTri() - 1;
             }
     }
 
@@ -262,23 +261,8 @@ void Dim4Triangulation::cloneFrom(const Dim4Triangulation& X) {
 }
 
 void Dim4Triangulation::deleteSkeleton() {
-    for (VertexIterator it = vertices_.begin(); it != vertices_.end(); ++it)
-        delete *it;
-    for (EdgeIterator it = edges_.begin(); it != edges_.end(); ++it)
-        delete *it;
-    for (TriangleIterator it = triangles_.begin(); it != triangles_.end(); ++it)
-        delete *it;
-    for (TetrahedronIterator it = tetrahedra_.begin();
-            it != tetrahedra_.end(); ++it)
-        delete *it;
-    for (BoundaryComponentIterator it = boundaryComponents_.begin();
-            it != boundaryComponents_.end(); ++it)
-        delete *it;
-
-    vertices_.clear();
-    edges_.clear();
-    triangles_.clear();
-    tetrahedra_.clear();
+    for (auto b : boundaryComponents_)
+        delete b;
     boundaryComponents_.clear();
 
     TriangulationBase<4>::deleteSkeleton();

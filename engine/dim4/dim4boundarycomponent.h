@@ -70,7 +70,8 @@ typedef Face<4, 0> Dim4Vertex;
  * Represents a component of the boundary of a 4-manifold triangulation.
  *
  * Note that an ideal vertex constitutes a boundary component of its
- * own.  Likewise, an invalid vertex is placed in its own boundary
+ * own - it consists of one vertex, no edges, no triangles, and no tetrahedra.
+ * Likewise, an invalid vertex is placed in its own boundary
  * component if it does not already belong to some larger boundary
  * component.  See Dim4Vertex::isBoundary() for details.
  *

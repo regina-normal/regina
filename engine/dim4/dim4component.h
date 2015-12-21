@@ -43,24 +43,46 @@
 
 #include "regina-core.h"
 #include "generic/component.h"
+#include "generic/alias/face.h"
 
 namespace regina {
 
 class Dim4BoundaryComponent;
-class Dim4Edge;
-class Dim4Tetrahedron;
-class Dim4Triangle;
-class Dim4Vertex;
 
 template <int> class Simplex;
 template <int> class Triangulation;
+template <int, int> class Face;
 typedef Simplex<4> Dim4Pentachoron;
 typedef Triangulation<4> Dim4Triangulation;
+typedef Face<4, 3> Dim4Tetrahedron;
+typedef Face<4, 2> Dim4Triangle;
+typedef Face<4, 1> Dim4Edge;
+typedef Face<4, 0> Dim4Vertex;
 
 /**
  * \weakgroup dim4
  * @{
  */
+
+namespace detail {
+
+/**
+ * Helper class that indicates what data type is used by a connected component
+ * of a triangulation to store a list of <i>subdim</i>-faces.
+ */
+template <int subdim>
+struct FaceListHolder<Component<4>, subdim> {
+    /**
+     * The data type used by Component<4> to store the list of all
+     * <i>subdim</i>-faces of the connected component.
+     *
+     * The function Component<4>::faces<subdim>() returns a const
+     * reference to this type.
+     */
+    typedef std::vector<Face<4, subdim>*> Holder;
+};
+
+} // namespace regina::detail
 
 /**
  * Represents a connected component of a 4-manifold triangulation.
@@ -74,7 +96,9 @@ typedef Triangulation<4> Dim4Triangulation;
  * as well as boundary components.
  */
 template <>
-class REGINA_API Component<4> : public ComponentBase<4> {
+class REGINA_API Component<4> : public detail::ComponentBase<4>,
+        public alias::FaceOfTriangulation<Component<4>, 4>,
+        public alias::FacesOfTriangulation<Component<4>, 4>,
     private:
         std::vector<Dim4Tetrahedron*> tetrahedra_;
             /**< List of tetrahedra in the component. */
@@ -99,32 +123,19 @@ class REGINA_API Component<4> : public ComponentBase<4> {
         unsigned long getNumberOfPentachora() const;
 
         /**
-         * Returns the number of tetrahedra in this component.
+         * Returns the number of <i>subdim</i>-faces in this component.
          *
-         * @return the number of tetrahedra.
-         */
-        unsigned long getNumberOfTetrahedra() const;
-
-        /**
-         * Returns the number of triangles in this component.
+         * \pre The template argument \a subdim is between 0 and 3 inclusive.
          *
-         * @return the number of triangles.
-         */
-        unsigned long getNumberOfTriangles() const;
-
-        /**
-         * Returns the number of edges in this component.
+         * \ifacespython Python does not support templates.  Instead,
+         * Python users should call this function in the form
+         * <tt>countFaces(subdim)</tt>; that is, the template parameter
+         * \a subdim becomes the first argument of the function.
          *
-         * @return the number of edges.
+         * @return the number of <i>subdim</i>-faces.
          */
-        unsigned long getNumberOfEdges() const;
-
-        /**
-         * Returns the number of vertices in this component.
-         *
-         * @return the number of vertices.
-         */
-        unsigned long getNumberOfVertices() const;
+        template <int subdim>
+        size_t countFaces() const;
 
         /**
          * Returns the number of boundary components in this component.
@@ -141,56 +152,39 @@ class REGINA_API Component<4> : public ComponentBase<4> {
         Dim4Pentachoron* getPentachoron(unsigned long index) const;
 
         /**
-         * Returns the requested tetrahedron in this component.
+         * Returns a reference to the list of all <i>subdim</i>-faces in
+         * this component.
          *
-         * @param index the index of the requested tetrahedron in the
-         * component.  This should be between 0 and
-         * getNumberOfTetrahedra()-1 inclusive.
-         * Note that the index of a tetrahedron in the component need
-         * not be the index of the same tetrahedron in the entire
-         * triangulation.
-         * @return the requested tetrahedron.
+         * \pre The template argument \a subdim is between 0 and 3 inclusive.
+         *
+         * \ifacespython Python users should call this function in the
+         * form <tt>faces(subdim)</tt>.  It will then return a Python list
+         * containing all the <i>subdim</i>-faces of the triangulation.
+         *
+         * @return the list of all <i>subdim</i>-faces.
          */
-        Dim4Tetrahedron* getTetrahedron(unsigned long index) const;
+        template <int subdim>
+        const std::vector<Face<4, subdim>*>& faces() const;
 
         /**
-         * Returns the requested triangle in this component.
+         * Returns the requested <i>subdim</i>-face in this component.
          *
-         * @param index the index of the requested triangle in the
-         * component.  This should be between 0 and
-         * getNumberOfTriangles()-1 inclusive.
-         * Note that the index of a triangle in the component need
-         * not be the index of the same triangle in the entire
-         * triangulation.
-         * @return the requested triangle.
-         */
-        Dim4Triangle* getTriangle(unsigned long index) const;
-
-        /**
-         * Returns the requested edge in this component.
+         * Note that the index of a face in the component need
+         * not be the index of the same face in the overall triangulation.
          *
-         * @param index the index of the requested edge in the
-         * component.  This should be between 0 and
-         * getNumberOfEdges()-1 inclusive.
-         * Note that the index of an edge in the component need
-         * not be the index of the same edge in the entire
-         * triangulation.
-         * @return the requested edge.
-         */
-        Dim4Edge* getEdge(unsigned long index) const;
-
-        /**
-         * Returns the requested vertex in this component.
+         * \pre The template argument \a subdim is between 0 and 3 inclusive.
          *
-         * @param index the index of the requested vertex in the
-         * component.  This should be between 0 and
-         * getNumberOfVertices()-1 inclusive.
-         * Note that the index of a vertex in the component need
-         * not be the index of the same vertex in the entire
-         * triangulation.
-         * @return the requested vertex.
+         * \ifacespython Python does not support templates.  Instead,
+         * Python users should call this function in the form
+         * <tt>face(subdim, index)</tt>; that is, the template parameter
+         * \a subdim becomes the first argument of the function.
+         *
+         * @param index the index of the desired face, ranging from 0 to
+         * countFaces<subdim>()-1 inclusive.
+         * @return the requested face.
          */
-        Dim4Vertex* getVertex(unsigned long index) const;
+        template <int subdim>
+        Face<4, subdim>* face(size_t index) const;
 
         /**
          * Returns the requested boundary component in this component.
@@ -243,7 +237,7 @@ class REGINA_API Component<4> : public ComponentBase<4> {
         Component();
 
     friend class Triangulation<4>;
-    friend class TriangulationBase<4>;
+    friend class detail::TriangulationBase<4>;
         /**< Allow access to private members. */
 };
 
@@ -256,26 +250,30 @@ typedef Component<4> Dim4Component;
 
 // Inline functions for Component<4>
 
-inline Dim4Component::Component() : ideal_(false) {
+inline Dim4Component::Component() : detail::ComponentBase<4>, ideal_(false) {
 }
 
 inline unsigned long Dim4Component::getNumberOfPentachora() const {
     return size();
 }
 
-inline unsigned long Dim4Component::getNumberOfTetrahedra() const {
+template <>
+inline size_t Dim4Component::countFaces<3>() const {
     return tetrahedra_.size();
 }
 
-inline unsigned long Dim4Component::getNumberOfTriangles() const {
+template <>
+inline size_t Dim4Component::countFaces<2>() const {
     return triangles_.size();
 }
 
-inline unsigned long Dim4Component::getNumberOfEdges() const {
+template <>
+inline size_t Dim4Component::countFaces<1>() const {
     return edges_.size();
 }
 
-inline unsigned long Dim4Component::getNumberOfVertices() const {
+template <>
+inline size_t Dim4Component::countFaces<0>() const {
     return vertices_.size();
 }
 
@@ -283,25 +281,48 @@ inline unsigned long Dim4Component::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
+template <>
+inline const std::vector<Dim4Tetrahedron*>& Component<4>::faces<3>() const {
+    return tetrahedra_;
+}
+
+template <>
+inline const std::vector<Dim4Triangle*>& Component<4>::faces<2>() const {
+    return triangles_;
+}
+
+template <>
+inline const std::vector<Dim4Edge*>& Component<4>::faces<1>() const {
+    return edges_;
+}
+
+template <>
+inline const std::vector<Dim4Vertex*>& Component<4>::faces<0>() const {
+    return vertices_;
+}
+
 inline Dim4Pentachoron* Dim4Component::getPentachoron(unsigned long index)
         const {
     return simplex(index);
 }
 
-inline Dim4Tetrahedron* Dim4Component::getTetrahedron(unsigned long index)
-        const {
+template <>
+inline Dim4Tetrahedron* Dim4Component::face<3>(size_t index) const {
     return tetrahedra_[index];
 }
 
-inline Dim4Triangle* Dim4Component::getTriangle(unsigned long index) const {
+template <>
+inline Dim4Triangle* Dim4Component::face<2>(size_t index) const {
     return triangles_[index];
 }
 
-inline Dim4Edge* Dim4Component::getEdge(unsigned long index) const {
+template <>
+inline Dim4Edge* Dim4Component::face<1>(size_t index) const {
     return edges_[index];
 }
 
-inline Dim4Vertex* Dim4Component::getVertex(unsigned long index) const {
+template <>
+inline Dim4Vertex* Dim4Component::face<0>(size_t index) const {
     return vertices_[index];
 }
 
