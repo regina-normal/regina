@@ -164,8 +164,8 @@ bool Dim4Triangulation::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
     // oldPent[2] / 34 -> oldPent[3] / 43
     // This is possible iff we have a 3-simplex link.
 
-    oldPent[0] = front().getPentachoron();
-    oldVertices[0] = front().getVertices();
+    oldPent[0] = e->front().getPentachoron();
+    oldVertices[0] = e->front().getVertices();
 
     int i,j;
     for (i = 1; i < 4; ++i) {
@@ -285,12 +285,12 @@ bool Dim4Triangulation::threeThreeMove(Dim4Triangle* f, bool check,
     NPerm5 oldVertices[3]; // 012 -> triangle, 34 -> link
     int i,j;
     for (i = 0; i < 3; ++i) {
-        oldPent[i] = embedding(i).getPentachoron();
+        oldPent[i] = f->embedding(i).getPentachoron();
         if (check)
             for (j = 0; j < i; ++j)
                 if (oldPent[i] == oldPent[j])
                     return false;
-        oldVertices[i] = embedding(i).getVertices();
+        oldVertices[i] = f->embedding(i).getVertices();
     }
 
     if (! perform)
@@ -1034,7 +1034,7 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
         // dilemma as before but one dimension down, and we must test this
         // separately.
         {
-            long nEdges = edges_.size();
+            long nEdges = countEdges();
 
             // The parent of each edge in the union-find tree, or -1 if
             // an edge is at the root of a tree.
@@ -1049,8 +1049,6 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
             long* depth = new long[nEdges + 1];
 
             Dim4Edge *upper, *lower;
-            Dim4Triangle* triangle;
-            TriangleIterator fit;
             long id1, id2;
             int i;
 
@@ -1061,8 +1059,7 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
                 std::fill(depth, depth + nEdges + 1, 0);
 
                 // Run through all boundary triangles containing e.
-                for (fit = triangles_.begin(); fit != triangles_.end(); ++fit) {
-                    triangle = *fit;
+                for (Dim4Triangle* triangle : triangles()) {
                     if (! triangle->isBoundary())
                         continue;
 
@@ -1104,8 +1101,7 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
             std::fill(depth, depth + nEdges + 1, 0);
 
             // Run through all internal triangles containing e.
-            for (fit = triangles_.begin(); fit != triangles_.end(); ++fit) {
-                triangle = *fit;
+            for (Dim4Triangle* triangle : triangles()) {
                 if (triangle->isBoundary())
                     continue;
 
@@ -1157,7 +1153,7 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
         // to edges.  Again, we must treat internal pillows and
         // boundary pillows separately.
         {
-            long nTriangles = triangles_.size();
+            long nTriangles = countTriangles();
 
             // The parent of each triangle in the union-find tree, or -1 if
             // a triangle is at the root of a tree.
@@ -1172,8 +1168,6 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
             long* depth = new long[nTriangles + 1];
 
             Dim4Triangle *upper, *lower;
-            Dim4Tetrahedron* tet;
-            TetrahedronIterator tit;
             long id1, id2;
             int i;
 
@@ -1184,9 +1178,7 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
                 std::fill(depth, depth + nTriangles + 1, 0);
 
                 // Run through all boundary tetrahedra containing e.
-                for (tit = tetrahedra_.begin(); tit != tetrahedra_.end();
-                        ++tit) {
-                    tet = *tit;
+                for (Dim4Tetrahedron* tet : tetrahedra()) {
                     if (! tet->isBoundary())
                         continue;
 
@@ -1219,8 +1211,7 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
             std::fill(depth, depth + nTriangles + 1, 0);
 
             // Run through all internal tetrahedra containing e.
-            for (tit = tetrahedra_.begin(); tit != tetrahedra_.end(); ++tit) {
-                tet = *tit;
+            for (Dim4Tetrahedron* tet : tetrahedra()) {
                 if (tet->isBoundary())
                     continue;
 
@@ -1269,7 +1260,7 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
         // overkill, since each vertex in the corresponding graph G will
         // have degree <= 2, but it's fast so we'll do it.
         {
-            long nTets = tetrahedra_.size();
+            long nTets = countTetrahedra();
 
             // The parent of each tetrahedron in the union-find tree,
             // or -1 if a tetrahedron is at the root of a tree.

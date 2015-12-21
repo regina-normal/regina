@@ -39,12 +39,12 @@
 
 namespace regina {
 
-Dim4Vertex::~Face() {
+Face<4, 0>::~Face() {
     // Deleting null is always safe.
     delete link_;
 }
 
-void Dim4Vertex::writeTextShort(std::ostream& out) const {
+void Face<4, 0>::writeTextShort(std::ostream& out) const {
     if (! link_->isClosed())
         out << "Boundary ";
     else if (link_->isThreeSphere())
@@ -55,7 +55,7 @@ void Dim4Vertex::writeTextShort(std::ostream& out) const {
     out << "vertex of degree " << degree();
 }
 
-void Dim4Vertex::writeTextLong(std::ostream& out) const {
+void Face<4, 0>::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << std::endl;
 
@@ -64,7 +64,7 @@ void Dim4Vertex::writeTextLong(std::ostream& out) const {
         out << "  " << emb << std::endl;
 }
 
-NTriangulation* Dim4Vertex::buildLinkDetail(bool labels,
+NTriangulation* Face<4, 0>::buildLinkDetail(bool labels,
         Dim4Isomorphism** inclusion) const {
     // Build the triangulation.
     NTriangulation* ans = new NTriangulation();

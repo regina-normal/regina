@@ -173,8 +173,6 @@ bool Dim4Triangulation::intelligentSimplify() {
 }
 
 bool Dim4Triangulation::simplifyToLocalMinimum(bool perform) {
-    EdgeIterator eit;
-    TriangleIterator tit;
     BoundaryComponentIterator bit;
     Dim4BoundaryComponent* bc;
     unsigned long nTetrahedra;
@@ -191,10 +189,10 @@ bool Dim4Triangulation::simplifyToLocalMinimum(bool perform) {
             ensureSkeleton();
 
             // Crush edges if we can.
-            if (vertices_.size() > countComponents() &&
-                    vertices_.size() > boundaryComponents_.size()) {
-                for (eit = edges_.begin(); eit != edges_.end(); ++eit) {
-                    if (collapseEdge(*eit, true, perform)) {
+            if (countVertices() > countComponents() &&
+                    countVertices() > boundaryComponents_.size()) {
+                for (Dim4Edge* e : edges()) {
+                    if (collapseEdge(e, true, perform)) {
                         changedNow = changed = true;
                         break;
                     }
@@ -212,8 +210,8 @@ bool Dim4Triangulation::simplifyToLocalMinimum(bool perform) {
             // Experience suggests that 2-0 moves are more important to
             // "unblock" other moves, and we should leave the simpler
             // 4-2 moves until last.
-            for (tit = triangles_.begin(); tit != triangles_.end(); tit++) {
-                if (twoZeroMove(*tit, true, perform)) {
+            for (Dim4Triangle* t : triangles()) {
+                if (twoZeroMove(t, true, perform)) {
                     changedNow = changed = true;
                     break;
                 }
@@ -225,8 +223,8 @@ bool Dim4Triangulation::simplifyToLocalMinimum(bool perform) {
                     return true;
             }
 
-            for (eit = edges_.begin(); eit != edges_.end(); eit++) {
-                if (twoZeroMove(*eit, true, perform)) {
+            for (Dim4Edge* e : edges()) {
+                if (twoZeroMove(e, true, perform)) {
                     changedNow = changed = true;
                     break;
                 }
@@ -238,8 +236,8 @@ bool Dim4Triangulation::simplifyToLocalMinimum(bool perform) {
                     return true;
             }
 
-            for (eit = edges_.begin(); eit != edges_.end(); eit++) {
-                if (fourTwoMove(*eit, true, perform)) {
+            for (Dim4Edge* e : edges()) {
+                if (fourTwoMove(e, true, perform)) {
                     changedNow = changed = true;
                     break;
                 }

@@ -68,7 +68,6 @@ void Dim4BoundaryComponent::writeTextLong(std::ostream& out) const {
         for (auto tet : tetrahedra_)
             out << "  " << tet->front().getPentachoron()->index() << " ("
                 << tet->front().getVertices().trunc4() << ')' << std::endl;
-        }
     }
 }
 

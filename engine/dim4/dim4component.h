@@ -98,7 +98,7 @@ struct FaceListHolder<Component<4>, subdim> {
 template <>
 class REGINA_API Component<4> : public detail::ComponentBase<4>,
         public alias::FaceOfTriangulation<Component<4>, 4>,
-        public alias::FacesOfTriangulation<Component<4>, 4>,
+        public alias::FacesOfTriangulation<Component<4>, 4> {
     private:
         std::vector<Dim4Tetrahedron*> tetrahedra_;
             /**< List of tetrahedra in the component. */
@@ -250,7 +250,7 @@ typedef Component<4> Dim4Component;
 
 // Inline functions for Component<4>
 
-inline Dim4Component::Component() : detail::ComponentBase<4>, ideal_(false) {
+inline Dim4Component::Component() : detail::ComponentBase<4>(), ideal_(false) {
 }
 
 inline unsigned long Dim4Component::getNumberOfPentachora() const {

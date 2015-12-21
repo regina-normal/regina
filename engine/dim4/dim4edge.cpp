@@ -39,14 +39,14 @@
 
 namespace regina {
 
-const int Dim4Edge::edgeNumber[5][5] = {
+const int Face<4, 1>::edgeNumber[5][5] = {
     { -1, 0, 1, 2, 3 },
     { 0, -1, 4, 5, 6 },
     { 1, 4, -1, 7, 8 },
     { 2, 5, 7, -1, 9 },
     { 3, 6, 8, 9, -1 }};
 
-const int Dim4Edge::edgeVertex[10][2] = {
+const int Face<4, 1>::edgeVertex[10][2] = {
     { 0, 1 },
     { 0, 2 },
     { 0, 3 },
@@ -59,7 +59,7 @@ const int Dim4Edge::edgeVertex[10][2] = {
     { 3, 4 }};
 
 namespace detail {
-    const NPerm5 FaceNumber<4, 1>::ordering_[10] = {
+    const NPerm5 FaceNumbering<4, 1>::ordering_[10] = {
         NPerm5(0, 1, 2, 3, 4),
         NPerm5(0, 2, 1, 3, 4),
         NPerm5(0, 3, 1, 2, 4),
@@ -73,7 +73,7 @@ namespace detail {
     };
 }
 
-Dim2Triangulation* Dim4Edge::buildLinkDetail(bool labels,
+Dim2Triangulation* Face<4, 1>::buildLinkDetail(bool labels,
         Dim4Isomorphism** inclusion) const {
     // Build the triangulation.
     Dim2Triangulation* ans = new Dim2Triangulation();
@@ -156,7 +156,7 @@ Dim2Triangulation* Dim4Edge::buildLinkDetail(bool labels,
     return ans;
 }
 
-void Dim4Edge::writeTextLong(std::ostream& out) const {
+void Face<4, 1>::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << std::endl;
 

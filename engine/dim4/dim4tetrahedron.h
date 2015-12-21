@@ -43,7 +43,6 @@
 #endif
 
 #include "regina-core.h"
-#include "output.h"
 #include "generic/face.h"
 #include "maths/nperm5.h"
 // NOTE: More #includes follow after the class declarations.
@@ -52,9 +51,6 @@ namespace regina {
 
 class Dim4BoundaryComponent;
 
-template <int> class Component;
-template <int> class Simplex;
-template <int> class Triangulation;
 typedef Component<4> Dim4Component;
 typedef Simplex<4> Dim4Pentachoron;
 typedef Triangulation<4> Dim4Triangulation;
@@ -108,12 +104,12 @@ class FaceNumbering<4, 3> {
          *   the same respective vertices of \a T for all appearances of
          *   \a T in different pentachora.
          *
-         * @param edge identifies which tetrahedron of a pentachoron to query.
-         * This must be between 0 and 4 inclusive.
+         * @param tetrahedron identifies which tetrahedron of a pentachoron to
+         * query.  This must be between 0 and 4 inclusive.
          * @return the corresponding canonical ordering of the
          * pentachoron vertices.
          */
-        static NPerm5 ordering(unsigned edge);
+        static NPerm5 ordering(unsigned tetrahedron);
         /**
          * Identifies which tetrahedron number in a pentachoron is represented
          * by the first four elements of the given permutation.
@@ -152,7 +148,8 @@ class FaceNumbering<4, 3> {
  * These specialisations for Regina's \ref stddim "standard dimensions",
  * offer significant extra functionality.
  */
-class REGINA_API Face<4, 3> : public detail::Face<4, 3>,
+template <>
+class REGINA_API Face<4, 3> : public detail::FaceBase<4, 3>,
         public Output<Face<4, 3>> {
     private:
         Dim4BoundaryComponent* boundaryComponent_;

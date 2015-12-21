@@ -41,22 +41,16 @@
 #define __DIM4VERTEX_H
 #endif
 
-#include <vector>
 #include "regina-core.h"
-#include "output.h"
+#include "generic/face.h"
 #include "maths/nperm5.h"
-#include "utilities/nmarkedvector.h"
-#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
 class Dim4BoundaryComponent;
 
-template <int> class Component;
 template <int> class Isomorphism;
-template <int> class Simplex;
-template <int> class Triangulation;
 typedef Component<4> Dim4Component;
 typedef Isomorphism<4> Dim4Isomorphism;
 typedef Simplex<4> Dim4Pentachoron;
@@ -68,114 +62,93 @@ typedef Triangulation<4> Dim4Triangulation;
  */
 
 /**
- * Details how a vertex in the skeleton of a 4-manifold triangulation forms
- * part of an individual pentachoron.
+ * A convenience typedef for FaceEmbedding<4, 0>.
  */
-class REGINA_API Dim4VertexEmbedding {
-    private:
-        Dim4Pentachoron* pent_;
-            /**< The pentachoron in which this vertex is contained. */
-        int vertex_;
-            /**< The vertex number of the pentachoron that is this vertex. */
+typedef FaceEmbedding<4, 0> Dim4VertexEmbedding;
 
+namespace detail {
+
+/**
+ * Helper class that specifies how vertices are numbered within a pentachoron.
+ *
+ * See the general FaceNumbering<dim, subdim> template class notes for
+ * further details.
+ */
+template <>
+class FaceNumbering<4, 0> {
     public:
         /**
-         * Default constructor.  The embedding descriptor created is
-         * unusable until it has some data assigned to it using
-         * <tt>operator =</tt>.
+         * Given a vertex number within a pentachoron, returns the
+         * corresponding canonical ordering of the pentachoron vertices.
          *
-         * \ifacespython Not present.
+         * If this canonical ordering is \a c, then <tt>c[0]</tt> will be
+         * the given vertex, and the images <tt>c[1,...,4]</tt> will be
+         * chosen to make the permutation even.
+         *
+         * Note that this is \e not the same permutation as returned by
+         * Dim4Pentachoron::getVertexMapping():
+         *
+         * - ordering() is a static function, which returns the same
+         *   permutation for the same vertex number, regardless of which
+         *   pentachoron we are looking at.  The permutation will always be
+         *   even.
+         *
+         * - getVertexMapping() examines the underlying vertex \a V of the
+         *   triangulation, and chooses the images of 1,...,4 to maintain
+         *   a "consistent orientation" constraint across the different
+         *   appearances of \a V in different pentachora.
+         *
+         * @param vertex identifies which vertex of a pentachoron to query.
+         * This must be between 0 and 4 inclusive.
+         * @return the corresponding canonical ordering of the
+         * pentachoron vertices.
          */
-        Dim4VertexEmbedding();
-
+        static NPerm5 ordering(unsigned vertex);
         /**
-         * Creates an embedding descriptor containing the given data.
+         * Identifies which vertex number in a pentachoron is represented
+         * by the first element of the given permutation.
          *
-         * @param pent the pentachoron in which this vertex is contained.
-         * @param vertex the vertex number of \a pent that is this vertex.
+         * This routine is trivial: it simply returns <tt>vertices[0]</tt>.
+         * It is provided for consistency with higher-dimensional faces,
+         * where the faceNumber() routine has some genuine work to do.
+         *
+         * @param vertices a permutation whose first element represents
+         * some vertex number in a pentachoron.
+         * @return the corresponding vertex number in a pentachoron.
+         * This will be between 0 and 4 inclusive.
          */
-        Dim4VertexEmbedding(Dim4Pentachoron* pent, int vertex);
-
+        static unsigned faceNumber(NPerm5 vertices);
         /**
-         * Creates an embedding descriptor containing the same data as
-         * the given embedding descriptor.
+         * Tests whether the two given arguments are equal.
          *
-         * @param cloneMe the embedding descriptor to clone.
-         */
-        Dim4VertexEmbedding(const Dim4VertexEmbedding& cloneMe);
-
-        /**
-         * Assigns to this embedding descriptor the same data as is
-         * contained in the given embedding descriptor.
+         * This routine is trivial: it is provided for consistency with
+         * higher-dimensional faces, where Face::containsVertex<dim, subdim>()
+         * determines whether the given vertex belongs to the given face.
          *
-         * @param cloneMe the embedding descriptor to clone.
+         * @param face a vertex number in a pentachoron; this must
+         * be between 0 and 4 inclusive.
+         * @param vertex another vertex number in a pentachoron; this must be
+         * between 0 and 4 inclusive.
+         * @return \c true if and only if \a face and \a vertex are equal.
          */
-        Dim4VertexEmbedding& operator =(const Dim4VertexEmbedding& cloneMe);
-
-        /**
-         * Returns the pentachoron in which this vertex is contained.
-         *
-         * @return the pentachoron.
-         */
-        Dim4Pentachoron* getPentachoron() const;
-
-        /**
-         * Returns the vertex number within getPentachoron() that is
-         * this vertex.
-         *
-         * @return the vertex number that is this vertex.
-         */
-        int getVertex() const;
-
-        /**
-         * Returns a permutation that maps 0 to the vertex number within
-         * getPentachoron() that is this vertex.  The real point of this
-         * routine is that (1,2,3,4) maps to the four remaining pentachoron
-         * vertices in a manner that preserves orientation as you walk
-         * around the vertex (assuming this is actually possible).  See
-         * Dim4Pentachoron::getVertexMapping() for details.
-         *
-         * @return a permutation that maps 0 to the vertex number that
-         * is this vertex.
-         */
-        NPerm5 getVertices() const;
-
-        /**
-         * Tests whether this and the given embedding are identical.
-         * Here "identical" means that they refer to the same vertex of
-         * the same pentachoron.
-         *
-         * @param rhs the embedding to compare with this.
-         * @return \c true if and only if both embeddings are identical.
-         */
-        bool operator == (const Dim4VertexEmbedding& rhs) const;
-
-        /**
-         * Tests whether this and the given embedding are different.
-         * Here "different" means that they do not refer to the same vertex of
-         * the same pentachoron.
-         *
-         * @param rhs the embedding to compare with this.
-         * @return \c true if and only if both embeddings are identical.
-         */
-        bool operator != (const Dim4VertexEmbedding& rhs) const;
+        static bool containsVertex(unsigned face, unsigned vertex);
 };
+
+} // namespace detail
 
 /**
  * Represents a vertex in the skeleton of a 4-manifold triangulation.
- * Vertices are highly temporary; once a triangulation changes, all its
- * vertex objects will be deleted and new ones will be created.
+ *
+ * This is a specialisation of the generic Face class template; see the
+ * documentation for Face for a general overview of how this class works.
+ *
+ * These specialisations for Regina's \ref stddim "standard dimensions"
+ * offer significant extra functionality.
  */
-class REGINA_API Dim4Vertex :
-        public Output<Dim4Vertex>,
-        public boost::noncopyable,
-        public NMarkedElement {
+template <>
+class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
+        public Output<Face<4, 0>> {
     private:
-        std::vector<Dim4VertexEmbedding> emb_;
-            /**< A list of descriptors telling how this vertex forms a part of
-                 each individual pentachoron that it belongs to. */
-        Dim4Component* component_;
-            /**< The component that this vertex is a part of. */
         Dim4BoundaryComponent* boundaryComponent_;
             /**< The boundary component that this vertex is a part of,
                  or 0 if this vertex is internal. */
@@ -184,8 +157,6 @@ class REGINA_API Dim4Vertex :
                  3-manifold triangulation.  It is guaranteed that 3-sphere
                  recognition has already been run over this triangulation
                  (and so future 3-sphere queries will be very fast). */
-        bool valid_;
-            /**< Is this vertex valid? */
         bool ideal_;
             /**< Is this vertex ideal? */
 
@@ -193,63 +164,7 @@ class REGINA_API Dim4Vertex :
         /**
          * Default destructor.
          */
-        ~Dim4Vertex();
-
-        /**
-         * Returns the index of this vertex in the underlying
-         * triangulation.  This is identical to calling
-         * <tt>getTriangulation()->vertexIndex(this)</tt>.
-         *
-         * @return the index of this vertex.
-         */
-        unsigned long index() const;
-
-        /**
-         * Returns the list of descriptors detailing how this vertex forms
-         * a part of various pentachora in the triangulation.
-         * Note that if this vertex represents multiple vertices of a
-         * particular pentachoron, then there will be multiple embedding
-         * descriptors in the list regarding that pentachoron.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of embedding descriptors.
-         * @see Dim4VertexEmbedding
-         */
-        const std::vector<Dim4VertexEmbedding>& getEmbeddings() const;
-
-        /**
-         * Returns the number of descriptors in the list returned by
-         * getEmbeddings().  Note that this is identical to getDegree().
-         *
-         * @return the number of embedding descriptors.
-         */
-        unsigned long getNumberOfEmbeddings() const;
-
-        /**
-         * Returns the requested descriptor from the list returned by
-         * getEmbeddings().
-         *
-         * @param index the index of the requested descriptor.  This
-         * should be between 0 and getNumberOfEmbeddings()-1 inclusive.
-         * @return the requested embedding descriptor.
-         */
-        const Dim4VertexEmbedding& getEmbedding(unsigned long index) const;
-
-        /**
-         * Returns the triangulation to which this vertex belongs.
-         *
-         * @return the triangulation containing this vertex.
-         */
-        Dim4Triangulation* getTriangulation() const;
-
-        /**
-         * Returns the component of the triangulation to which this
-         * vertex belongs.
-         *
-         * @return the component containing this vertex.
-         */
-        Dim4Component* getComponent() const;
+        ~Face();
 
         /**
          * Returns the boundary component of the triangulation to which
@@ -272,14 +187,6 @@ class REGINA_API Dim4Vertex :
          * as determined by isBoundary().
          */
         Dim4BoundaryComponent* getBoundaryComponent() const;
-
-        /**
-         * Returns the degree of this vertex.  Note that this is
-         * identical to getNumberOfEmbeddings().
-         *
-         * @return the degree of this vertex.
-         */
-        unsigned long getDegree() const;
 
         /**
          * Returns a full 3-manifold triangulation describing
@@ -388,21 +295,6 @@ class REGINA_API Dim4Vertex :
         const Triangulation<3>* getLink() const;
 
         /**
-         * Determines if this vertex is valid.
-         *
-         * A vertex is valid if and only if its link is (i) a 3-ball,
-         * or (ii) a closed compact valid 3-manifold.  Conversely, a
-         * vertex is invalid if and only if its link is (i) invalid,
-         * (ii) ideal, and/or (iii) bounded but not a 3-ball.
-         *
-         * Note that all invalid vertices are considered to be on the
-         * boundary; see isBoundary() for details.
-         *
-         * @return \c true if and only if this vertex is valid.
-         */
-        bool isValid() const;
-
-        /**
          * Determines if this vertex is an ideal vertex.
          * To be an ideal, a vertex must (i) be valid, and (ii) have
          * a closed vertex link that is not a 3-sphere.
@@ -458,11 +350,16 @@ class REGINA_API Dim4Vertex :
          * @param component the triangulation component to which this
          * vertex belongs.
          */
-        Dim4Vertex(Dim4Component* component);
+        Face(Dim4Component* component);
 
     friend class Triangulation<4>;
-        /**< Allow access to private members. */
+    friend class detail::TriangulationBase<4>;
 };
+
+/**
+ * A convenience typedef for Face<4, 0>.
+ */
+typedef Face<4, 0> Dim4Vertex;
 
 /*@}*/
 
@@ -471,108 +368,50 @@ class REGINA_API Dim4Vertex :
 #include "dim4/dim4pentachoron.h"
 namespace regina {
 
-// Inline functions for Dim4VertexEmbedding
+// Inline functions for FaceNumbering
 
-inline Dim4VertexEmbedding::Dim4VertexEmbedding() : pent_(0) {
+namespace detail {
+
+inline NPerm5 FaceNumbering<4, 0>::ordering(unsigned vertex) {
+    return NPerm5(vertex, (vertex + 1) % 5, (vertex + 2) % 5,
+        (vertex + 3) % 5, (vertex + 4) % 5);
 }
 
-inline Dim4VertexEmbedding::Dim4VertexEmbedding(Dim4Pentachoron* pent,
-        int vertex) :
-        pent_(pent), vertex_(vertex) {
+inline unsigned FaceNumbering<4, 0>::faceNumber(NPerm5 vertices) {
+    return vertices[0];
 }
 
-inline Dim4VertexEmbedding::Dim4VertexEmbedding(
-        const Dim4VertexEmbedding& cloneMe) :
-        pent_(cloneMe.pent_), vertex_(cloneMe.vertex_) {
+inline bool FaceNumbering<4, 0>::containsVertex(unsigned face,
+        unsigned vertex) {
+    return (face == vertex);
 }
 
-inline Dim4VertexEmbedding& Dim4VertexEmbedding::operator =
-        (const Dim4VertexEmbedding& cloneMe) {
-    pent_ = cloneMe.pent_;
-    vertex_ = cloneMe.vertex_;
-    return *this;
-}
-
-inline Dim4Pentachoron* Dim4VertexEmbedding::getPentachoron() const {
-    return pent_;
-}
-
-inline int Dim4VertexEmbedding::getVertex() const {
-    return vertex_;
-}
-
-inline bool Dim4VertexEmbedding::operator == (const Dim4VertexEmbedding& other)
-        const {
-    return ((pent_ == other.pent_) && (vertex_ == other.vertex_));
-}
-
-inline bool Dim4VertexEmbedding::operator != (const Dim4VertexEmbedding& other)
-        const {
-    return ((pent_ != other.pent_) || (vertex_ != other.vertex_));
-}
+} // namespace detail
 
 // Inline functions for Dim4Vertex
 
-inline Dim4Vertex::Dim4Vertex(Dim4Component* component) :
-        component_(component), boundaryComponent_(0), link_(0),
-        valid_(true), ideal_(false) {
+inline Face<4, 0>::Face(Dim4Component* component) :
+        detail::FaceBase<4, 0>(component),
+        boundaryComponent_(0), link_(0), ideal_(false) {
 }
 
-inline unsigned long Dim4Vertex::index() const {
-    return markedIndex();
-}
-
-inline const std::vector<Dim4VertexEmbedding>& Dim4Vertex::getEmbeddings()
-        const {
-    return emb_;
-}
-
-inline unsigned long Dim4Vertex::getNumberOfEmbeddings() const {
-    return emb_.size();
-}
-
-inline const Dim4VertexEmbedding& Dim4Vertex::getEmbedding(unsigned long index)
-        const {
-    return emb_[index];
-}
-
-inline NPerm5 Dim4VertexEmbedding::getVertices() const {
-    return pent_->getVertexMapping(vertex_);
-}
-
-inline Dim4Triangulation* Dim4Vertex::getTriangulation() const {
-    return emb_.front().getPentachoron()->getTriangulation();
-}
-
-inline Dim4Component* Dim4Vertex::getComponent() const {
-    return component_;
-}
-
-inline Dim4BoundaryComponent* Dim4Vertex::getBoundaryComponent() const {
+inline Dim4BoundaryComponent* Face<4, 0>::getBoundaryComponent() const {
     return boundaryComponent_;
 }
 
-inline unsigned long Dim4Vertex::getDegree() const {
-    return emb_.size();
-}
-
-inline const Triangulation<3>* Dim4Vertex::buildLink() const {
+inline const Triangulation<3>* Face<4, 0>::buildLink() const {
     return link_;
 }
 
-inline const Triangulation<3>* Dim4Vertex::getLink() const {
+inline const Triangulation<3>* Face<4, 0>::getLink() const {
     return link_;
 }
 
-inline bool Dim4Vertex::isValid() const {
-    return valid_;
-}
-
-inline bool Dim4Vertex::isIdeal() const {
+inline bool Face<4, 0>::isIdeal() const {
     return ideal_;
 }
 
-inline bool Dim4Vertex::isBoundary() const {
+inline bool Face<4, 0>::isBoundary() const {
     return (boundaryComponent_ != 0);
 }
 

@@ -52,10 +52,10 @@ const NGroupPresentation& Dim4Triangulation::getFundamentalGroup() const {
     long nBdryTets = 0;
     for (BoundaryComponentIterator bit = boundaryComponents_.begin();
             bit != boundaryComponents_.end(); ++bit)
-        nBdryTets += (*bit)->tetrahedra_.size();
+        nBdryTets += (*bit)->countTetrahedra();
 
     // Cast away all unsignedness in case we run into problems subtracting.
-    long nGens = static_cast<long>(tetrahedra_.size()) - nBdryTets
+    long nGens = static_cast<long>(countTetrahedra()) - nBdryTets
         - static_cast<long>(size())
         + static_cast<long>(countComponents());
 
@@ -63,45 +63,41 @@ const NGroupPresentation& Dim4Triangulation::getFundamentalGroup() const {
     ans->addGenerator(nGens);
 
     // Find out which tetrahedron corresponds to which generator.
-    long* genIndex = new long[tetrahedra_.size()];
+    long* genIndex = new long[countTetrahedra()];
     long i = 0;
-    for (TetrahedronIterator tit = tetrahedra_.begin();
-            tit != tetrahedra_.end(); ++tit)
-        if (! ((*tit)->isBoundary() || (*tit)->inMaximalForest()))
-            genIndex[tit - tetrahedra_.begin()] = i++;
+    for (Dim4Tetrahedron* tet : tetrahedra())
+        if (! (tet->isBoundary() || tet->inMaximalForest()))
+            genIndex[tet->index()] = i++;
 
     // Run through each triangle and insert the corresponding relations.
-    std::deque<Dim4TriangleEmbedding>::const_iterator embit;
     Dim4Pentachoron* pent;
     int facet;
     Dim4Tetrahedron* tet;
     NGroupExpression* rel;
-    for (TriangleIterator fit = triangles_.begin(); fit != triangles_.end();
-            ++fit) {
-        if ((*fit)->isBoundary())
+    for (Dim4Triangle* f : triangles()) {
+        if (f->isBoundary())
             continue;
 
         // Put in the relation corresponding to this triangle.
         rel = new NGroupExpression();
-        for (embit = (*fit)->emb_.begin();
-                embit != (*fit)->emb_.end(); ++embit) {
-            pent = (*embit).getPentachoron();
-            facet = (*embit).getVertices()[3];
+        for (auto& emb : *f) {
+            pent = emb.getPentachoron();
+            facet = emb.getVertices()[3];
 
-            tet = pent->tet_[facet];
+            tet = pent->tetrahedron(facet);
             if (tet->inMaximalForest())
                 continue;
 
             // We define the "direction" for this dual edge to point
-            // from embedding tet->emb_[0] to embedding tet->emb_[1].
+            // from embedding tet->front() to embedding tet->back().
             //
             // Test whether we are traversing this dual edge forwards or
             // backwards as we walk around the triangle (*fit).
-            if ((tet->emb_[0].getPentachoron() == pent) &&
-                    (tet->emb_[0].getTetrahedron() == facet))
-                rel->addTermLast(genIndex[tet->markedIndex()], 1);
+            if ((tet->front().getPentachoron() == pent) &&
+                    (tet->front().getTetrahedron() == facet))
+                rel->addTermLast(genIndex[tet->index()], 1);
             else
-                rel->addTermLast(genIndex[tet->markedIndex()], -1);
+                rel->addTermLast(genIndex[tet->index()], -1);
         }
         ans->addRelation(rel);
     }

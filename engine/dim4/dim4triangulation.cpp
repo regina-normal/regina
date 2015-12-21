@@ -58,7 +58,7 @@ void Dim4Triangulation::writeTextLong(std::ostream& out) const {
     ensureSkeleton();
 
     out << "Size of the skeleton:\n";
-    out << "  Pentachora: " << countPentachora() << '\n';
+    out << "  Pentachora: " << size() << '\n';
     out << "  Tetrahedra: " << countTetrahedra() << '\n';
     out << "  Triangles: " << countTriangles() << '\n';
     out << "  Edges: " << countEdges() << '\n';

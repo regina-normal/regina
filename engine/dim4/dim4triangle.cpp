@@ -37,7 +37,7 @@
 
 namespace regina {
 
-const int Dim4Triangle::triangleNumber[5][5][5] = {
+const int Face<4, 2>::triangleNumber[5][5][5] = {
     { { -1,-1,-1,-1,-1 },
       { -1,-1, 9, 8, 7 },
       { -1, 9,-1, 6, 5 },
@@ -68,7 +68,7 @@ const int Dim4Triangle::triangleNumber[5][5][5] = {
       {  4, 1, 0,-1,-1 },
       { -1,-1,-1,-1,-1 } } };
 
-const int Dim4Triangle::triangleVertex[10][3] = {
+const int Face<4, 2>::triangleVertex[10][3] = {
     { 2, 3, 4 },
     { 1, 3, 4 },
     { 1, 2, 4 },
@@ -95,13 +95,13 @@ namespace detail {
     };
 }
 
-Dim4Edge* Dim4Triangle::getEdge(int edge) const {
-    NPerm5 p = front.getVertices();
+Dim4Edge* Face<4, 2>::getEdge(int edge) const {
+    NPerm5 p = front().getVertices();
     return front().getPentachoron()->getEdge(
         Dim4Edge::edgeNumber[p[(edge + 1) % 3]][p[(edge + 2) % 3]]);
 }
 
-NPerm5 Dim4Triangle::getEdgeMapping(int edge) const {
+NPerm5 Face<4, 2>::getEdgeMapping(int edge) const {
     NPerm5 trianglePerm = front().getVertices();
     NPerm5 edgePerm = front().getPentachoron()->getEdgeMapping(
         Dim4Edge::edgeNumber[trianglePerm[(edge + 1) % 3]]
@@ -113,7 +113,7 @@ NPerm5 Dim4Triangle::getEdgeMapping(int edge) const {
         edge, 3, 4);
 }
 
-void Dim4Triangle::writeTextLong(std::ostream& out) const {
+void Face<4, 2>::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << std::endl;
 
