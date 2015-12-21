@@ -42,7 +42,6 @@
 #endif
 
 #include "regina-core.h"
-#include "output.h"
 #include "generic/face.h"
 #include "maths/nperm3.h"
 // NOTE: More #includes follow after the class declarations.
@@ -83,9 +82,9 @@ class FaceNumbering<2, 0> {
          * Given a vertex number within a triangle, returns the
          * corresponding canonical ordering of the triangle vertices.
          *
-         * If this canonical ordering is \a c, then <tt>c[0]</tt> will
-         * be the given vertex, and the images <tt>c[1,2]</tt> will
-         * be chosen to make the permutation even.
+         * If this canonical ordering is \a c, then <tt>c[0]</tt> will be
+         * the given vertex, and the images <tt>c[1,2]</tt> will be
+         * chosen to make the permutation even.
          *
          * Note that this is \e not the same permutation as returned by
          * Dim2Triangle::getVertexMapping():
@@ -116,7 +115,7 @@ class FaceNumbering<2, 0> {
          * @param vertices a permutation whose first element represents
          * some vertex number in a triangle.
          * @return the corresponding vertex number in a triangle.
-         * This will be be between 0 and 2 inclusive.
+         * This will be between 0 and 2 inclusive.
          */
         static unsigned faceNumber(NPerm3 vertices);
         /**
@@ -143,7 +142,7 @@ class FaceNumbering<2, 0> {
  * This is a specialisation of the generic Face class template; see the
  * documentation for Face for a general overview of how this class works.
  *
- * These specialisations for Regina's \ref stddim "standard dimensions",
+ * These specialisations for Regina's \ref stddim "standard dimensions"
  * offer significant extra functionality.
  */
 template <>
@@ -252,7 +251,7 @@ inline bool Face<2, 0>::isBoundary() const {
 
 inline void Face<2, 0>::writeTextShort(std::ostream& out) const {
     out << (boundaryComponent_ ? "Boundary " : "Internal ")
-        << "vertex of degree " << getDegree();
+        << "vertex of degree " << degree();
 }
 
 } // namespace regina

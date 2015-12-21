@@ -42,7 +42,6 @@
 #endif
 
 #include "regina-core.h"
-#include "output.h"
 #include "generic/face.h"
 #include "maths/nperm4.h"
 // NOTE: More #includes follow after the class declarations.
@@ -89,8 +88,8 @@ class FaceNumbering<3, 2> {
          * Given a triangle number within a tetrahedron, returns the
          * corresponding canonical ordering of the tetrahedron vertices.
          *
-         * If this canonical ordering is \a c, then <tt>c[0,1,2]</tt> will
-         * be the vertices of the given triangle in increasing numerical order.
+         * If this canonical ordering is \a c, then <tt>c[0,1,2]</tt> will be
+         * the vertices of the given triangle in increasing numerical order.
          * That is, <tt>c[0]</tt> &lt; <tt>c[1]</tt> &lt; <tt>c[2]</tt>.
          *
          * Note that this is \e not the same permutation as returned by
@@ -101,17 +100,17 @@ class FaceNumbering<3, 2> {
          *   tetrahedron we are looking at.  The images of 0,1,2 will always
          *   appear in increasing order.
          *
-         * - getTriangleMapping() examines the underlying triangle \a T of the
-         *   triangulation, and chooses the images of 0,1,2 to map to the
-         *   same respective vertices of \a T for all appearances of
+         * - getTriangleMapping() examines the underlying triangle \a T
+         *   of the triangulation, and chooses the images of 0,1,2 to map to
+         *   the same respective vertices of \a T for all appearances of
          *   \a T in different tetrahedra.
          *
-         * @param edge identifies which triangle of a tetrahedron to query.
-         * This must be between 0 and 3 inclusive.
+         * @param triangle identifies which triangle of a tetrahedron to
+         * query.  This must be between 0 and 3 inclusive.
          * @return the corresponding canonical ordering of the
          * tetrahedron vertices.
          */
-        static NPerm4 ordering(unsigned edge);
+        static NPerm4 ordering(unsigned triangle);
         /**
          * Identifies which triangle number in a tetrahedron is represented
          * by the first three elements of the given permutation.
@@ -129,7 +128,7 @@ class FaceNumbering<3, 2> {
          * Tests whether the given triangle of a tetrahedron contains the given
          * vertex of the tetrahedron.
          *
-         * @param edge an triangle number in a tetrahedron; this must be
+         * @param triangle a triangle number in a tetrahedron; this must be
          * between 0 and 3 inclusive.
          * @param vertex a vertex number in a tetrahedron; this must be
          * between 0 and 3 inclusive.
@@ -147,7 +146,7 @@ class FaceNumbering<3, 2> {
  * This is a specialisation of the generic Face class template; see the
  * documentation for Face for a general overview of how this class works.
  *
- * These specialisations for Regina's \ref stddim "standard dimensions",
+ * These specialisations for Regina's \ref stddim "standard dimensions"
  * offer significant extra functionality.
  */
 template <>

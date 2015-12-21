@@ -41,9 +41,7 @@
 #define __NEDGE_H
 #endif
 
-#include <deque>
 #include "regina-core.h"
-#include "output.h"
 #include "generic/face.h"
 #include "maths/nperm4.h"
 // NOTE: More #includes follow after the class declarations.
@@ -139,8 +137,8 @@ class FaceNumbering<3, 1> {
          * Given an edge number within a tetrahedron, returns the
          * corresponding canonical ordering of the tetrahedron vertices.
          *
-         * If this canonical ordering is \a c, then <tt>c[0,1]</tt> will
-         * be the vertices of the given edge in increasing numerical order.
+         * If this canonical ordering is \a c, then <tt>c[0,1]</tt> will be
+         * the vertices of the given edge in increasing numerical order.
          * That is, <tt>c[0]</tt> &lt; <tt>c[1]</tt>.  The remaining images
          * <tt>c[2,3]</tt> will be chosen to make the permutation even.
          *
@@ -201,7 +199,7 @@ class FaceNumbering<3, 1> {
  * This is a specialisation of the generic Face class template; see the
  * documentation for Face for a general overview of how this class works.
  *
- * These specialisations for Regina's \ref stddim "standard dimensions",
+ * These specialisations for Regina's \ref stddim "standard dimensions"
  * offer significant extra functionality.
  */
 template <>
@@ -376,7 +374,7 @@ inline bool Face<3, 1>::isBoundary() const {
 
 inline void Face<3, 1>::writeTextShort(std::ostream& out) const {
     out << (isBoundary() ? "Boundary " : "Internal ")
-        << "edge of degree " << getDegree();
+        << "edge of degree " << degree();
 }
 
 } // namespace regina

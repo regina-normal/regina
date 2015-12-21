@@ -42,7 +42,6 @@
 #endif
 
 #include "regina-core.h"
-#include "output.h"
 #include "generic/face.h"
 #include "maths/nperm3.h"
 // NOTE: More #includes follow after the class declarations.
@@ -147,7 +146,7 @@ class FaceNumbering<2, 1> {
  * This is a specialisation of the generic Face class template; see the
  * documentation for Face for a general overview of how this class works.
  *
- * These specialisations for Regina's \ref stddim "standard dimensions",
+ * These specialisations for Regina's \ref stddim "standard dimensions"
  * offer significant extra functionality.
  */
 template <>

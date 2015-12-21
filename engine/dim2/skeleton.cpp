@@ -77,7 +77,7 @@ void Triangulation<2>::calculateBoundary() {
 
     for (Dim2Edge* edge : getEdges()) {
         // We only care about boundary edges that we haven't yet seen..
-        if (edge->getDegree() == 2 || edge->boundaryComponent_)
+        if (edge->degree() == 2 || edge->boundaryComponent_)
             continue;
 
         label = new Dim2BoundaryComponent();

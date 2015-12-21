@@ -41,9 +41,7 @@
 #define __NVERTEX_H
 #endif
 
-#include <vector>
 #include "regina-core.h"
-#include "output.h"
 #include "generic/face.h"
 #include "maths/nperm4.h"
 // NOTE: More #includes follow after the class declarations.
@@ -87,9 +85,9 @@ class FaceNumbering<3, 0> {
          * Given a vertex number within a tetrahedron, returns the
          * corresponding canonical ordering of the tetrahedron vertices.
          *
-         * If this canonical ordering is \a c, then <tt>c[0]</tt> will
-         * be the given vertex, and the images <tt>c[1,2,3]</tt> will
-         * be chosen to make the permutation even.
+         * If this canonical ordering is \a c, then <tt>c[0]</tt> will be
+         * the given vertex, and the images <tt>c[1,2,3]</tt> will be
+         * chosen to make the permutation even.
          *
          * Note that this is \e not the same permutation as returned by
          * NTetrahedron::getVertexMapping():
@@ -114,15 +112,14 @@ class FaceNumbering<3, 0> {
          * Identifies which vertex number in a tetrahedron is represented
          * by the first element of the given permutation.
          *
-         * This routine is trivial: it simply returns
-         * <tt>vertices[0]</tt>.
+         * This routine is trivial: it simply returns <tt>vertices[0]</tt>.
          * It is provided for consistency with higher-dimensional faces,
          * where the faceNumber() routine has some genuine work to do.
          *
          * @param vertices a permutation whose first element represents
          * some vertex number in a tetrahedron.
          * @return the corresponding vertex number in a tetrahedron.
-         * * This will be be between 0 and 3 inclusive.
+         * This will be between 0 and 3 inclusive.
          */
         static unsigned faceNumber(NPerm4 vertices);
         /**
@@ -149,7 +146,7 @@ class FaceNumbering<3, 0> {
  * This is a specialisation of the generic Face class template; see the
  * documentation for Face for a general overview of how this class works.
  *
- * These specialisations for Regina's \ref stddim "standard dimensions",
+ * These specialisations for Regina's \ref stddim "standard dimensions"
  * offer significant extra functionality.
  */
 template <>
@@ -251,7 +248,7 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * information, then call buildLinkDetail() instead.
          *
          * The triangulation of the vertex link is built as follows.
-         * Let \a i lie between 0 and getDegree()-1 inclusive, let
+         * Let \a i lie between 0 and degree()-1 inclusive, let
          * \a tet represent <tt>getEmbedding(i).getTetrahedron()</tt>,
          * and let \a v represent <tt>getEmbedding(i).getVertex()</tt>.
          * Then <tt>buildLink()->getTriangle(i)</tt> is the triangle

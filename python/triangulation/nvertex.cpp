@@ -133,6 +133,8 @@ void addNVertex() {
         .def("isBoundary", &NVertex::isBoundary)
         .def("isStandard", &NVertex::isStandard)
         .def("isValid", &NVertex::isValid)
+        .def("hasBadIdentification", &NVertex::hasBadIdentification)
+        .def("hasBadLink", &NVertex::hasBadLink)
         .def("isLinkOrientable", &NVertex::isLinkOrientable)
         .def("getLinkEulerChar", &NVertex::getLinkEulerChar)
         .def("getLinkEulerCharacteristic",

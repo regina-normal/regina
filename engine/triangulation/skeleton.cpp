@@ -63,11 +63,11 @@ void NTriangulation::calculateSkeleton() {
         //     boundaryComponents, NVertex.boundaryComponent
 
     // Flesh out the details of each component.
-    for (auto v : getVertices())
+    for (auto v : vertices())
         v->component()->vertices_.push_back(v);
-    for (auto e : getEdges())
+    for (auto e : edges())
         e->component()->edges_.push_back(e);
-    for (auto t : getTriangles())
+    for (auto t : triangles())
         t->component()->triangles_.push_back(t);
 }
 
@@ -267,7 +267,7 @@ void NTriangulation::calculateVertexLinks() {
                 vertex->link_ = NVertex::DISC;
             else {
                 vertex->link_ = NVertex::NON_STANDARD_BDRY;
-                vertex->markInvalid();
+                vertex->markBadLink();
                 valid_ = false;
                 standard_ = false;
             }

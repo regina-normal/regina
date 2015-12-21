@@ -685,19 +685,29 @@ class TriangulationBase :
          *    permutation (e.g., an edge is identified with itself in
          *    reverse, or a triangle is identified with itself under a
          *    rotation);
-         * 2. if some face lies in the boundary of the triangulation but
-         *    its link is not a topological ball;
-         * 3. if some face is internal and not a vertex, and its link is
-         *    not a topological sphere.
+         * 2. if some <i>subdim</i>-face does not have an appropriate link.
+         *    Here the meaning of "appropriate" depends upon the type of face:
+         *    - for a face that belongs to some boundary facet(s) of this
+         *      triangulation, its link must be a topological ball;
+         *    - for a vertex that does not belong to any boundary facets,
+         *      its link must be a closed (\a dim - 1)-manifold;
+         *    - for a (\a subdim &ge; 1)-face that does not belong to any
+         *      boundary facets, its link must be a topological sphere.
          *
          * Condition (1) is tested for all dimensions \a dim.
-         * Conditions (2) and (3) are more difficult, since they rely on
-         * undecidable problems.  As a result, they are \e only tested
-         * when \a dim is one of Regina's \ref stddim "standard dimensions".
+         * Condition (2) is more difficult, since it relies on undecidable
+         * problems.  As a result, (2) is \e only tested when \a dim is one
+         * of Regina's \ref stddim "standard dimensions".
          *
-         * If a triangulation is invalid, you can call
-         * Face<dim, subdim>::isValid() to examine which face(s) are
-         * responsible.
+         * If a triangulation is invalid then you can call
+         * Face<dim, subdim>::isValid() to discover exactly which face(s)
+         * are responsible, and you can call
+         * Face<dim, subdim>::hasBadIdentification() and/or
+         * Face<dim, subdim>::hasBadLink() to discover exactly which
+         * conditions fail.
+         *
+         * Note that all invalid vertices are considered to be on the
+         * boundary; see isBoundary() for details.
          *
          * @return \c true if and only if this triangulation is valid.
          */
@@ -2232,8 +2242,8 @@ void TriangulationBase<dim>::calculateSkeletonCodim2() {
                             // itself with a non-identity permutation.
                             if (adj->SimplexFaces<dim, dim-2>::mapping_[
                                     adjFace] != adjMap) {
-                                // The edge is being labelled in reverse!
-                                f->markInvalid();
+                                // You have chosen unwisely, my son.
+                                f->markBadIdentification();
                                 valid_ = false;
                             }
                         }
@@ -2273,6 +2283,15 @@ void TriangulationBase<dim>::calculateSkeletonSubdim() {
 
     int start;
     Face<dim, subdim>* f;
+
+    // The queue for our breadth-first search.
+    // We can do this using simple arrays - since each subdim-face of each
+    // simplex is pushed on at most once, the array size does not need to
+    // be very large.
+    typedef std::pair<Simplex<dim>*, int> Spec; /* (simplex, face) */
+    Spec* queue = new Spec[size() * SimplexFaces<dim, subdim>::nFaces];
+    unsigned queueStart, queueEnd;
+
     for (auto s : simplices_) {
         for (start = 0; start < SimplexFaces<dim, subdim>::nFaces; ++start) {
             if (s->SimplexFaces<dim, subdim>::face_[start])
@@ -2281,22 +2300,17 @@ void TriangulationBase<dim>::calculateSkeletonSubdim() {
             f = new Face<dim, subdim>(s->component_);
             FaceList<dim, subdim>::push_back(f);
 
-            // Create a queue using simple arrays.
-            // Since each subdim-face of each simplex is pushed on at most
-            // once, the array size does not need to be very large.
-            Simplex<dim>** queueSimp = new Simplex<dim>*
-                [size() * SimplexFaces<dim, subdim>::nFaces];
-            int* queueFace = new int
-                [size() * SimplexFaces<dim, subdim>::nFaces];
-
             s->SimplexFaces<dim, subdim>::face_[start] = f;
             s->SimplexFaces<dim, subdim>::mapping_[start] =
                 Face<dim, subdim>::ordering(start);
             f->push_back(FaceEmbedding<dim, subdim>(s, start));
 
-            unsigned queueStart = 0, queueEnd = 1;
-            queueSimp[0] = s;
-            queueFace[0] = start;
+            // Run a breadth-first search from this vertex to completely
+            // enumerate all identifications.
+            queueStart = 0;
+            queueEnd = 1;
+            queue[0].first = s;
+            queue[0].second = start;
 
             Simplex<dim> *simp, *adj;
             int face, adjFace;
@@ -2304,8 +2318,8 @@ void TriangulationBase<dim>::calculateSkeletonSubdim() {
             int facet;
 
             while (queueStart < queueEnd) {
-                simp = queueSimp[queueStart];
-                face = queueFace[queueStart];
+                simp = queue[queueStart].first;
+                face = queue[queueStart].second;
                 ++queueStart;
 
                 for (facet = 0; facet <= dim; ++facet) {
@@ -2335,7 +2349,7 @@ void TriangulationBase<dim>::calculateSkeletonSubdim() {
                                 if (adj->SimplexFaces<dim, subdim>::
                                         mapping_[adjFace][TODO] !=
                                         adjMap[TODO]) {
-                                    f->markInvalid();
+                                    f->markBadIdentification();
                                     valid_ = false;
                                 }
                                 */
@@ -2355,18 +2369,17 @@ void TriangulationBase<dim>::calculateSkeletonSubdim() {
                             f->push_back(FaceEmbedding<dim, subdim>(
                                 adj, adjFace));
 
-                            queueSimp[queueEnd] = adj;
-                            queueFace[queueEnd] = adjFace;
+                            queue[queueEnd].first = adj;
+                            queue[queueEnd].second = adjFace;
                             ++queueEnd;
                         }
                     }
                 }
             }
-
-            delete[] queueSimp;
-            delete[] queueFace;
         }
     }
+
+    delete[] queue;
 }
 
 template <int dim>
