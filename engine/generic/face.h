@@ -131,6 +131,20 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
  * changes, all its face objects will be deleted and new ones will be
  * created in their place.
  *
+ * If \a dim is one of Regina's \ref stddim "standard dimensions", then
+ * this template is specialised to offer additional functionality.
+ * In order to use these specialised classes, you will need to
+ * include the corresponding headers (e.g., dim2/dim2edge.h for
+ * (\a dim, \a subdim) = (2, 1), or triangulation/nvertex.h for
+ * (\a dim, \a subdim) = (3, 0)).  For convenience, there are typedefs
+ * for these specialised classes (such as Dim2Edge and NVertex respectively).
+ *
+ * \ifacespython Python does not support templates.  For standard dimensions
+ * this class can be used by appending dimensions \a dim and \a subdim as
+ * suffices (e.g., Face2_1 and Face3_0 for the two examples above).  The 
+ * typedefs mentioned above (e.g., Dim2Edge and NVertex) are also available.
+ * Higher-dimensional classes are not available in Python for the time being.
+ *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be at least 2.
  * \tparam subdim the dimension of the faces that this class represents.

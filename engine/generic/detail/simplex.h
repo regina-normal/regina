@@ -490,6 +490,12 @@ class SimplexBase :
          *   the link of \a F is a cycle, the start point in the list of
          *   FaceEmbedding objects will be arbitrary.)
          *
+         * Note that, even if the link is orientable, there are still
+         * arbitrary decisions to be made for the images of
+         * (<i>subdim</i>+1, ..., \a dim), since there will always be
+         * (<i>dim</i>-<i>subdim</i>)!/2 possible mappings that yield the
+         * correct orientation.
+         *
          * \note This routine returns the same permutation as
          * FaceEmbedding<dim, subdim>::vertices(), in the context of the
          * FaceEmbedding<dim, subdim> object that refers to

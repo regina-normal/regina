@@ -125,6 +125,8 @@ void addNEdge() {
         .def("getDegree", &NEdge::getDegree)
         .def("isBoundary", &NEdge::isBoundary)
         .def("isValid", &NEdge::isValid)
+        .def("hasBadIdentification", &NEdge::hasBadIdentification)
+        .def("hasBadLink", &NEdge::hasBadLink)
         .def("isLinkOrientable", &NEdge::isLinkOrientable)
         .def("str", &NEdge::str)
         .def("toString", &NEdge::toString)
