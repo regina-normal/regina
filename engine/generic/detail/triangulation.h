@@ -2291,6 +2291,7 @@ void TriangulationBase<dim>::calculateSkeletonSubdim() {
     typedef std::pair<Simplex<dim>*, int> Spec; /* (simplex, face) */
     Spec* queue = new Spec[size() * SimplexFaces<dim, subdim>::nFaces];
     unsigned queueStart, queueEnd;
+    unsigned pos;
 
     for (auto s : simplices_) {
         for (start = 0; start < SimplexFaces<dim, subdim>::nFaces; ++start) {
@@ -2344,15 +2345,18 @@ void TriangulationBase<dim>::calculateSkeletonSubdim() {
                             if (subdim > 0) {
                                 // Have we mapped the face to itself with a
                                 // non-identity permutation?
-                                // TODO
-                                /*
-                                if (adj->SimplexFaces<dim, subdim>::
-                                        mapping_[adjFace][TODO] !=
-                                        adjMap[TODO]) {
-                                    f->markBadIdentification();
-                                    valid_ = false;
-                                }
-                                */
+                                // Note that we only need to check the images
+                                // p[0,...,(subdim-1)] in the permutations
+                                // below, since p[subdim] will then come for
+                                // free.
+                                for (pos = 0; pos < subdim; ++pos)
+                                    if (adj->SimplexFaces<dim, subdim>::
+                                            mapping_[adjFace][pos] !=
+                                            adjMap[pos]) {
+                                        f->markBadIdentification();
+                                        valid_ = false;
+                                        break;
+                                    }
                             }
 
                             if (subdim <= dim - 3) {
