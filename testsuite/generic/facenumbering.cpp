@@ -41,10 +41,7 @@
 // For specialisations of FaceNumbering:
 #include "dim2/dim2vertex.h"
 #include "dim2/dim2edge.h"
-#include "dim4/dim4vertex.h"
-#include "dim4/dim4edge.h"
-#include "dim4/dim4triangle.h"
-#include "dim4/dim4tetrahedron.h"
+#include "maths/nperm5.h"
 #include "triangulation/nvertex.h"
 #include "triangulation/nedge.h"
 #include "triangulation/ntriangle.h"
