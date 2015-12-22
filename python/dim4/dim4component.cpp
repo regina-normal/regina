@@ -54,6 +54,34 @@ namespace {
             ans.append(boost::python::ptr(*it));
         return ans;
     }
+
+    boost::python::list vertices_list(Dim4Component& t) {
+        boost::python::list ans;
+        for (auto v : t.vertices())
+            ans.append(boost::python::ptr(v));
+        return ans;
+    }
+
+    boost::python::list edges_list(Dim4Component& t) {
+        boost::python::list ans;
+        for (auto e : t.edges())
+            ans.append(boost::python::ptr(e));
+        return ans;
+    }
+
+    boost::python::list triangles_list(Dim4Component& t) {
+        boost::python::list ans;
+        for (auto f : t.triangles())
+            ans.append(boost::python::ptr(f));
+        return ans;
+    }
+
+    boost::python::list tetrahedra_list(Dim4Component& t) {
+        boost::python::list ans;
+        for (auto f : t.tetrahedra())
+            ans.append(boost::python::ptr(f));
+        return ans;
+    }
 }
 
 void addDim4Component() {
@@ -63,25 +91,47 @@ void addDim4Component() {
         .def("size", &Dim4Component::size)
         .def("getNumberOfPentachora", &Dim4Component::getNumberOfPentachora)
         .def("getNumberOfSimplices", &Dim4Component::getNumberOfSimplices)
+        .def("countTetrahedra", &Dim4Component::countTetrahedra)
         .def("getNumberOfTetrahedra", &Dim4Component::getNumberOfTetrahedra)
+        .def("countTriangles", &Dim4Component::countTriangles)
         .def("getNumberOfTriangles", &Dim4Component::getNumberOfTriangles)
+        .def("countEdges", &Dim4Component::countEdges)
         .def("getNumberOfEdges", &Dim4Component::getNumberOfEdges)
+        .def("countVertices", &Dim4Component::countVertices)
         .def("getNumberOfVertices", &Dim4Component::getNumberOfVertices)
         .def("getNumberOfBoundaryComponents",
             &Dim4Component::getNumberOfBoundaryComponents)
         .def("simplices", getSimplices_list)
         .def("getSimplices", getSimplices_list)
+        .def("vertices", vertices_list)
+        .def("getVertices", vertices_list)
+        .def("edges", edges_list)
+        .def("getEdges", edges_list)
+        .def("triangles", triangles_list)
+        .def("getTriangles", triangles_list)
+        .def("tetrahedra", tetrahedra_list)
+        .def("getTetrahedra", tetrahedra_list)
         .def("simplex", &Dim4Component::simplex,
+            return_value_policy<reference_existing_object>())
+        .def("pentachoron", &Dim4Component::pentachoron,
             return_value_policy<reference_existing_object>())
         .def("getPentachoron", &Dim4Component::getPentachoron,
             return_value_policy<reference_existing_object>())
         .def("getSimplex", &Dim4Component::getSimplex,
             return_value_policy<reference_existing_object>())
+        .def("tetrahedron", &Dim4Component::tetrahedron,
+            return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &Dim4Component::getTetrahedron,
+            return_value_policy<reference_existing_object>())
+        .def("triangle", &Dim4Component::triangle,
             return_value_policy<reference_existing_object>())
         .def("getTriangle", &Dim4Component::getTriangle,
             return_value_policy<reference_existing_object>())
+        .def("edge", &Dim4Component::edge,
+            return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim4Component::getEdge,
+            return_value_policy<reference_existing_object>())
+        .def("vertex", &Dim4Component::vertex,
             return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim4Component::getVertex,
             return_value_policy<reference_existing_object>())

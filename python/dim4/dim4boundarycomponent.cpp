@@ -48,17 +48,30 @@ void addDim4BoundaryComponent() {
     class_<Dim4BoundaryComponent, std::auto_ptr<Dim4BoundaryComponent>,
             boost::noncopyable>("Dim4BoundaryComponent", no_init)
         .def("index", &Dim4BoundaryComponent::index)
+        .def("countTetrahedra",
+            &Dim4BoundaryComponent::countTetrahedra)
         .def("getNumberOfTetrahedra",
             &Dim4BoundaryComponent::getNumberOfTetrahedra)
+        .def("countTriangles", &Dim4BoundaryComponent::countTriangles)
         .def("getNumberOfTriangles",
             &Dim4BoundaryComponent::getNumberOfTriangles)
+        .def("countEdges", &Dim4BoundaryComponent::countEdges)
         .def("getNumberOfEdges", &Dim4BoundaryComponent::getNumberOfEdges)
+        .def("countVertices", &Dim4BoundaryComponent::countVertices)
         .def("getNumberOfVertices", &Dim4BoundaryComponent::getNumberOfVertices)
+        .def("tetrahedron", &Dim4BoundaryComponent::tetrahedron,
+            return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &Dim4BoundaryComponent::getTetrahedron,
+            return_value_policy<reference_existing_object>())
+        .def("triangle", &Dim4BoundaryComponent::triangle,
             return_value_policy<reference_existing_object>())
         .def("getTriangle", &Dim4BoundaryComponent::getTriangle,
             return_value_policy<reference_existing_object>())
+        .def("edge", &Dim4BoundaryComponent::edge,
+            return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim4BoundaryComponent::getEdge,
+            return_value_policy<reference_existing_object>())
+        .def("vertex", &Dim4BoundaryComponent::vertex,
             return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim4BoundaryComponent::getVertex,
             return_value_policy<reference_existing_object>())

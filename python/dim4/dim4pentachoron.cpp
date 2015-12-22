@@ -64,23 +64,37 @@ void addDim4Pentachoron() {
         .def("unjoin", &Dim4Pentachoron::unjoin,
             return_value_policy<reference_existing_object>())
         .def("isolate", &Dim4Pentachoron::isolate)
+        .def("triangulation", &Dim4Pentachoron::triangulation,
+            return_value_policy<reference_existing_object>())
         .def("getTriangulation", &Dim4Pentachoron::getTriangulation,
             return_value_policy<reference_existing_object>())
         .def("component", &Dim4Pentachoron::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim4Pentachoron::getComponent,
             return_value_policy<reference_existing_object>())
+        .def("vertex", &Dim4Pentachoron::vertex,
+            return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim4Pentachoron::getVertex,
+            return_value_policy<reference_existing_object>())
+        .def("edge", &Dim4Pentachoron::edge,
             return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim4Pentachoron::getEdge,
             return_value_policy<reference_existing_object>())
+        .def("triangle", &Dim4Pentachoron::triangle,
+            return_value_policy<reference_existing_object>())
         .def("getTriangle", &Dim4Pentachoron::getTriangle,
+            return_value_policy<reference_existing_object>())
+        .def("tetrahedron", &Dim4Pentachoron::tetrahedron,
             return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &Dim4Pentachoron::getTetrahedron,
             return_value_policy<reference_existing_object>())
+        .def("vertexMapping", &Dim4Pentachoron::vertexMapping)
         .def("getVertexMapping", &Dim4Pentachoron::getVertexMapping)
+        .def("edgeMapping", &Dim4Pentachoron::edgeMapping)
         .def("getEdgeMapping", &Dim4Pentachoron::getEdgeMapping)
+        .def("triangleMapping", &Dim4Pentachoron::triangleMapping)
         .def("getTriangleMapping", &Dim4Pentachoron::getTriangleMapping)
+        .def("tetrahedronMapping", &Dim4Pentachoron::tetrahedronMapping)
         .def("getTetrahedronMapping", &Dim4Pentachoron::getTetrahedronMapping)
         .def("orientation", &Dim4Pentachoron::orientation)
         .def("str", &Dim4Pentachoron::str)

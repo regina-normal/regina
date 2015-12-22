@@ -279,7 +279,7 @@ QString Dim4GluingsModel::destString(int srcFacet,
         return "";
     else
         return QString::number(destPent->markedIndex()) + " (" +
-            (gluing * regina::Dim4Tetrahedron::ordering[srcFacet]).
+            (gluing * regina::Dim4Tetrahedron::ordering(srcFacet)).
             trunc4().c_str() + ')';
 }
 
@@ -297,7 +297,7 @@ regina::NPerm5 Dim4GluingsModel::facetStringToPerm(int srcFacet,
 
     return regina::NPerm5(destVertex[0], destVertex[1], destVertex[2],
         destVertex[3], destVertex[4]) *
-        regina::Dim4Tetrahedron::ordering[srcFacet].inverse();
+        regina::Dim4Tetrahedron::ordering(srcFacet).inverse();
 }
 
 Dim4TriGluingsUI::Dim4TriGluingsUI(regina::Dim4Triangulation* packet,

@@ -52,15 +52,11 @@ using regina::python::GlobalArray2D;
 namespace {
     GlobalArray2D<int> Dim4Edge_edgeNumber(Dim4Edge::edgeNumber, 5);
     GlobalArray2D<int> Dim4Edge_edgeVertex(Dim4Edge::edgeVertex, 10);
-    GlobalArray<regina::NPerm5> Dim4Edge_ordering(Dim4Edge::ordering, 10);
 
     boost::python::list Dim4Edge_getEmbeddings_list(const Dim4Edge* e) {
-        const std::vector<Dim4EdgeEmbedding>& embs = e->getEmbeddings();
-        std::vector<Dim4EdgeEmbedding>::const_iterator it;
-
         boost::python::list ans;
-        for (it = embs.begin(); it != embs.end(); ++it)
-            ans.append(*it);
+        for (auto& emb : *e)
+            ans.append(emb);
         return ans;
     }
 
@@ -86,21 +82,46 @@ void addDim4Edge() {
     class_<Dim4EdgeEmbedding>("Dim4EdgeEmbedding",
             init<regina::Dim4Pentachoron*, int>())
         .def(init<const Dim4EdgeEmbedding&>())
+        .def("simplex", &Dim4EdgeEmbedding::simplex,
+            return_value_policy<reference_existing_object>())
+        .def("getSimplex", &Dim4EdgeEmbedding::getSimplex,
+            return_value_policy<reference_existing_object>())
+        .def("pentachoron", &Dim4EdgeEmbedding::pentachoron,
+            return_value_policy<reference_existing_object>())
         .def("getPentachoron", &Dim4EdgeEmbedding::getPentachoron,
             return_value_policy<reference_existing_object>())
+        .def("face", &Dim4EdgeEmbedding::face)
+        .def("getFace", &Dim4EdgeEmbedding::getFace)
+        .def("edge", &Dim4EdgeEmbedding::edge)
         .def("getEdge", &Dim4EdgeEmbedding::getEdge)
+        .def("vertices", &Dim4EdgeEmbedding::vertices)
         .def("getVertices", &Dim4EdgeEmbedding::getVertices)
+        .def("str", &Dim4EdgeEmbedding::str)
+        .def("toString", &Dim4EdgeEmbedding::toString)
+        .def("detail", &Dim4EdgeEmbedding::detail)
+        .def("toStringLong", &Dim4EdgeEmbedding::toStringLong)
+        .def("__str__", &Dim4EdgeEmbedding::str)
         .def(regina::python::add_eq_operators())
     ;
 
     scope s = class_<Dim4Edge, std::auto_ptr<Dim4Edge>,
             boost::noncopyable>("Dim4Edge", no_init)
         .def("index", &Dim4Edge::index)
+        .def("embeddings", Dim4Edge_getEmbeddings_list)
         .def("getEmbeddings", Dim4Edge_getEmbeddings_list)
-        .def("getNumberOfEmbeddings", &Dim4Edge::getNumberOfEmbeddings)
+        .def("embedding", &Dim4Edge::embedding,
+            return_internal_reference<>())
         .def("getEmbedding", &Dim4Edge::getEmbedding,
             return_internal_reference<>())
+        .def("front", &Dim4Edge::front,
+            return_internal_reference<>())
+        .def("back", &Dim4Edge::back,
+            return_internal_reference<>())
+        .def("triangulation", &Dim4Edge::triangulation,
+            return_value_policy<reference_existing_object>())
         .def("getTriangulation", &Dim4Edge::getTriangulation,
+            return_value_policy<reference_existing_object>())
+        .def("component", &Dim4Edge::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim4Edge::getComponent,
             return_value_policy<reference_existing_object>())
@@ -108,8 +129,10 @@ void addDim4Edge() {
             return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim4Edge::getVertex,
             return_value_policy<reference_existing_object>())
+        .def("degree", &Dim4Edge::degree)
         .def("getDegree", &Dim4Edge::getDegree)
         .def("isBoundary", &Dim4Edge::isBoundary)
+        .def("isLinkOrientable", &Dim4Edge::isLinkOrientable)
         .def("isValid", &Dim4Edge::isValid)
         .def("hasBadIdentification", &Dim4Edge::hasBadIdentification)
         .def("hasBadLink", &Dim4Edge::hasBadLink)
@@ -122,11 +145,16 @@ void addDim4Edge() {
         .def("detail", &Dim4Edge::detail)
         .def("toStringLong", &Dim4Edge::toStringLong)
         .def("__str__", &Dim4Edge::str)
+        .def("ordering", &Dim4Edge::ordering)
+        .def("faceNumber", &Dim4Edge::faceNumber)
+        .def("containsVertex", &Dim4Edge::containsVertex)
         .def(regina::python::add_eq_operators())
+        .staticmethod("ordering")
+        .staticmethod("faceNumber")
+        .staticmethod("containsVertex")
     ;
 
     s.attr("edgeNumber") = &Dim4Edge_edgeNumber;
     s.attr("edgeVertex") = &Dim4Edge_edgeVertex;
-    s.attr("ordering") = &Dim4Edge_ordering;
 }
 

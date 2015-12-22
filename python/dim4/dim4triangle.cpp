@@ -55,15 +55,11 @@ namespace {
         Dim4Triangle::triangleNumber, 5);
     GlobalArray2D<int> Dim4Triangle_triangleVertex(
         Dim4Triangle::triangleVertex, 10);
-    GlobalArray<regina::NPerm5> Dim4Triangle_ordering(Dim4Triangle::ordering, 10);
 
-    boost::python::list Dim4Triangle_getEmbeddings_list(const Dim4Triangle* f) {
-        const std::deque<Dim4TriangleEmbedding>& embs = f->getEmbeddings();
-        std::deque<Dim4TriangleEmbedding>::const_iterator it;
-
+    boost::python::list Dim4Triangle_getEmbeddings_list(const Dim4Triangle* t) {
         boost::python::list ans;
-        for (it = embs.begin(); it != embs.end(); ++it)
-            ans.append(*it);
+        for (auto& emb : *t)
+            ans.append(emb);
         return ans;
     }
 }
@@ -72,21 +68,46 @@ void addDim4Triangle() {
     class_<Dim4TriangleEmbedding, boost::noncopyable>("Dim4TriangleEmbedding",
             init<regina::Dim4Pentachoron*, int>())
         .def(init<const Dim4TriangleEmbedding&>())
+        .def("simplex", &Dim4TriangleEmbedding::simplex,
+            return_value_policy<reference_existing_object>())
+        .def("getSimplex", &Dim4TriangleEmbedding::getSimplex,
+            return_value_policy<reference_existing_object>())
+        .def("pentachoron", &Dim4TriangleEmbedding::pentachoron,
+            return_value_policy<reference_existing_object>())
         .def("getPentachoron", &Dim4TriangleEmbedding::getPentachoron,
             return_value_policy<reference_existing_object>())
+        .def("face", &Dim4TriangleEmbedding::face)
+        .def("getFace", &Dim4TriangleEmbedding::getFace)
+        .def("triangle", &Dim4TriangleEmbedding::triangle)
         .def("getTriangle", &Dim4TriangleEmbedding::getTriangle)
+        .def("vertices", &Dim4TriangleEmbedding::vertices)
         .def("getVertices", &Dim4TriangleEmbedding::getVertices)
+        .def("str", &Dim4TriangleEmbedding::str)
+        .def("toString", &Dim4TriangleEmbedding::toString)
+        .def("detail", &Dim4TriangleEmbedding::detail)
+        .def("toStringLong", &Dim4TriangleEmbedding::toStringLong)
+        .def("__str__", &Dim4TriangleEmbedding::str)
         .def(regina::python::add_eq_operators())
     ;
 
     scope s = class_<Dim4Triangle, std::auto_ptr<Dim4Triangle>,
             boost::noncopyable>("Dim4Triangle", no_init)
         .def("index", &Dim4Triangle::index)
+        .def("embeddings", Dim4Triangle_getEmbeddings_list)
         .def("getEmbeddings", Dim4Triangle_getEmbeddings_list)
-        .def("getNumberOfEmbeddings", &Dim4Triangle::getNumberOfEmbeddings)
+        .def("embedding", &Dim4Triangle::embedding,
+            return_internal_reference<>())
         .def("getEmbedding", &Dim4Triangle::getEmbedding,
             return_internal_reference<>())
+        .def("front", &Dim4Triangle::front,
+            return_internal_reference<>())
+        .def("back", &Dim4Triangle::back,
+            return_internal_reference<>())
+        .def("triangulation", &Dim4Triangle::triangulation,
+            return_value_policy<reference_existing_object>())
         .def("getTriangulation", &Dim4Triangle::getTriangulation,
+            return_value_policy<reference_existing_object>())
+        .def("component", &Dim4Triangle::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim4Triangle::getComponent,
             return_value_policy<reference_existing_object>())
@@ -97,8 +118,10 @@ void addDim4Triangle() {
         .def("getEdge", &Dim4Triangle::getEdge,
             return_value_policy<reference_existing_object>())
         .def("getEdgeMapping", &Dim4Triangle::getEdgeMapping)
+        .def("degree", &Dim4Triangle::degree)
         .def("getDegree", &Dim4Triangle::getDegree)
         .def("isBoundary", &Dim4Triangle::isBoundary)
+        .def("isLinkOrientable", &Dim4Triangle::isLinkOrientable)
         .def("isValid", &Dim4Triangle::isValid)
         .def("hasBadIdentification", &Dim4Triangle::hasBadIdentification)
         .def("hasBadLink", &Dim4Triangle::hasBadLink)
@@ -107,11 +130,16 @@ void addDim4Triangle() {
         .def("detail", &Dim4Triangle::detail)
         .def("toStringLong", &Dim4Triangle::toStringLong)
         .def("__str__", &Dim4Triangle::str)
+        .def("ordering", &Dim4Triangle::ordering)
+        .def("faceNumber", &Dim4Triangle::faceNumber)
+        .def("containsVertex", &Dim4Triangle::containsVertex)
         .def(regina::python::add_eq_operators())
+        .staticmethod("ordering")
+        .staticmethod("faceNumber")
+        .staticmethod("containsVertex")
     ;
 
     s.attr("triangleNumber") = &Dim4Triangle_triangleNumber;
     s.attr("triangleVertex") = &Dim4Triangle_triangleVertex;
-    s.attr("ordering") = &Dim4Triangle_ordering;
 }
 

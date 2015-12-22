@@ -50,28 +50,61 @@ using regina::Dim4TetrahedronEmbedding;
 using regina::python::GlobalArray;
 
 namespace {
-    GlobalArray<regina::NPerm5> Dim4Tetrahedron_ordering(
-        Dim4Tetrahedron::ordering, 5);
+    boost::python::list Dim4Tetrahedron_getEmbeddings_list(
+            const Dim4Tetrahedron* t) {
+        boost::python::list ans;
+        for (auto& emb : *t)
+            ans.append(emb);
+        return ans;
+    }
 }
 
 void addDim4Tetrahedron() {
     class_<Dim4TetrahedronEmbedding, boost::noncopyable>
             ("Dim4TetrahedronEmbedding", init<regina::Dim4Pentachoron*, int>())
         .def(init<const Dim4TetrahedronEmbedding&>())
+        .def("simplex", &Dim4TetrahedronEmbedding::simplex,
+            return_value_policy<reference_existing_object>())
+        .def("getSimplex", &Dim4TetrahedronEmbedding::getSimplex,
+            return_value_policy<reference_existing_object>())
+        .def("pentachoron", &Dim4TetrahedronEmbedding::pentachoron,
+            return_value_policy<reference_existing_object>())
         .def("getPentachoron", &Dim4TetrahedronEmbedding::getPentachoron,
             return_value_policy<reference_existing_object>())
+        .def("face", &Dim4TetrahedronEmbedding::face)
+        .def("getFace", &Dim4TetrahedronEmbedding::getFace)
+        .def("tetrahedron", &Dim4TetrahedronEmbedding::tetrahedron)
         .def("getTetrahedron", &Dim4TetrahedronEmbedding::getTetrahedron)
+        .def("vertices", &Dim4TetrahedronEmbedding::vertices)
         .def("getVertices", &Dim4TetrahedronEmbedding::getVertices)
+        .def("str", &Dim4TetrahedronEmbedding::str)
+        .def("toString", &Dim4TetrahedronEmbedding::toString)
+        .def("detail", &Dim4TetrahedronEmbedding::detail)
+        .def("toStringLong", &Dim4TetrahedronEmbedding::toStringLong)
+        .def("__str__", &Dim4TetrahedronEmbedding::str)
         .def(regina::python::add_eq_operators())
     ;
 
-    scope s = class_<Dim4Tetrahedron, std::auto_ptr<Dim4Tetrahedron>,
+    class_<Dim4Tetrahedron, std::auto_ptr<Dim4Tetrahedron>,
             boost::noncopyable>("Dim4Tetrahedron", no_init)
         .def("index", &Dim4Tetrahedron::index)
-        .def("getNumberOfEmbeddings", &Dim4Tetrahedron::getNumberOfEmbeddings)
+        .def("degree", &Dim4Tetrahedron::degree)
+        .def("getDegree", &Dim4Tetrahedron::getDegree)
+        .def("embeddings", Dim4Tetrahedron_getEmbeddings_list)
+        .def("getEmbeddings", Dim4Tetrahedron_getEmbeddings_list)
+        .def("embedding", &Dim4Tetrahedron::embedding,
+            return_internal_reference<>())
         .def("getEmbedding", &Dim4Tetrahedron::getEmbedding,
             return_internal_reference<>())
+        .def("front", &Dim4Tetrahedron::front,
+            return_internal_reference<>())
+        .def("back", &Dim4Tetrahedron::back,
+            return_internal_reference<>())
+        .def("triangulation", &Dim4Tetrahedron::triangulation,
+            return_value_policy<reference_existing_object>())
         .def("getTriangulation", &Dim4Tetrahedron::getTriangulation,
+            return_value_policy<reference_existing_object>())
+        .def("component", &Dim4Tetrahedron::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim4Tetrahedron::getComponent,
             return_value_policy<reference_existing_object>())
@@ -85,6 +118,8 @@ void addDim4Tetrahedron() {
             return_value_policy<reference_existing_object>())
         .def("getEdgeMapping", &Dim4Tetrahedron::getEdgeMapping)
         .def("getTriangleMapping", &Dim4Tetrahedron::getTriangleMapping)
+        .def("isValid", &Dim4Tetrahedron::isValid)
+        .def("isLinkOrientable", &Dim4Tetrahedron::isLinkOrientable)
         .def("isBoundary", &Dim4Tetrahedron::isBoundary)
         .def("inMaximalForest", &Dim4Tetrahedron::inMaximalForest)
         .def("str", &Dim4Tetrahedron::str)
@@ -92,9 +127,13 @@ void addDim4Tetrahedron() {
         .def("detail", &Dim4Tetrahedron::detail)
         .def("toStringLong", &Dim4Tetrahedron::toStringLong)
         .def("__str__", &Dim4Tetrahedron::str)
+        .def("ordering", &Dim4Tetrahedron::ordering)
+        .def("faceNumber", &Dim4Tetrahedron::faceNumber)
+        .def("containsVertex", &Dim4Tetrahedron::containsVertex)
         .def(regina::python::add_eq_operators())
+        .staticmethod("ordering")
+        .staticmethod("faceNumber")
+        .staticmethod("containsVertex")
     ;
-
-    s.attr("ordering") = &Dim4Tetrahedron_ordering;
 }
 

@@ -46,8 +46,8 @@ namespace {
         &Dim4Triangulation::newPentachoron;
     regina::Dim4Pentachoron* (Dim4Triangulation::*newPentachoron_string)(
         const std::string&) = &Dim4Triangulation::newPentachoron;
-    regina::Dim4Pentachoron* (Dim4Triangulation::*getPentachoron_non_const)(
-        unsigned long) = &Dim4Triangulation::getPentachoron;
+    regina::Dim4Pentachoron* (Dim4Triangulation::*pentachoron_non_const)(
+        unsigned long) = &Dim4Triangulation::pentachoron;
     bool (Dim4Triangulation::*twoZeroMove_triangle)(regina::Dim4Triangle*,
         bool, bool) = &Dim4Triangulation::twoZeroMove;
     bool (Dim4Triangulation::*twoZeroMove_edge)(regina::Dim4Edge*,
@@ -97,34 +97,34 @@ namespace {
         return ans;
     }
 
-    boost::python::list Dim4_getVertices_list(Dim4Triangulation& t) {
+    boost::python::list Dim4_vertices_list(Dim4Triangulation& t) {
         boost::python::list ans;
         for (Dim4Triangulation::VertexIterator it =
-                t.getVertices().begin(); it != t.getVertices().end(); ++it)
+                t.vertices().begin(); it != t.vertices().end(); ++it)
             ans.append(boost::python::ptr(*it));
         return ans;
     }
 
-    boost::python::list Dim4_getEdges_list(Dim4Triangulation& t) {
+    boost::python::list Dim4_edges_list(Dim4Triangulation& t) {
         boost::python::list ans;
         for (Dim4Triangulation::EdgeIterator it =
-                t.getEdges().begin(); it != t.getEdges().end(); ++it)
+                t.edges().begin(); it != t.edges().end(); ++it)
             ans.append(boost::python::ptr(*it));
         return ans;
     }
 
-    boost::python::list Dim4_getTriangles_list(Dim4Triangulation& t) {
+    boost::python::list Dim4_triangles_list(Dim4Triangulation& t) {
         boost::python::list ans;
         for (Dim4Triangulation::TriangleIterator it =
-                t.getTriangles().begin(); it != t.getTriangles().end(); ++it)
+                t.triangles().begin(); it != t.triangles().end(); ++it)
             ans.append(boost::python::ptr(*it));
         return ans;
     }
 
-    boost::python::list Dim4_getTetrahedra_list(Dim4Triangulation& t) {
+    boost::python::list Dim4_tetrahedra_list(Dim4Triangulation& t) {
         boost::python::list ans;
         for (Dim4Triangulation::TetrahedronIterator it =
-                t.getTetrahedra().begin(); it != t.getTetrahedra().end(); ++it)
+                t.tetrahedra().begin(); it != t.tetrahedra().end(); ++it)
             ans.append(boost::python::ptr(*it));
         return ans;
     }
@@ -202,11 +202,13 @@ void addDim4Triangulation() {
         .def("getPentachora", Dim4_getPentachora_list)
         .def("getSimplices", Dim4_getPentachora_list)
         .def("simplices", Dim4_getPentachora_list)
-        .def("getPentachoron", getPentachoron_non_const,
+        .def("pentachoron", pentachoron_non_const,
             return_internal_reference<>())
-        .def("simplex", getPentachoron_non_const,
+        .def("getPentachoron", pentachoron_non_const,
             return_internal_reference<>())
-        .def("getSimplex", getPentachoron_non_const,
+        .def("simplex", pentachoron_non_const,
+            return_internal_reference<>())
+        .def("getSimplex", pentachoron_non_const,
             return_internal_reference<>())
         .def("pentachoronIndex", &Dim4Triangulation::pentachoronIndex)
         .def("simplexIndex", &Dim4Triangulation::simplexIndex)
@@ -230,28 +232,44 @@ void addDim4Triangulation() {
         .def("getNumberOfComponents", &Dim4Triangulation::getNumberOfComponents)
         .def("getNumberOfBoundaryComponents",
             &Dim4Triangulation::getNumberOfBoundaryComponents)
+        .def("countVertices", &Dim4Triangulation::countVertices)
         .def("getNumberOfVertices", &Dim4Triangulation::getNumberOfVertices)
+        .def("countEdges", &Dim4Triangulation::countEdges)
         .def("getNumberOfEdges", &Dim4Triangulation::getNumberOfEdges)
+        .def("countTriangles", &Dim4Triangulation::countTriangles)
         .def("getNumberOfTriangles", &Dim4Triangulation::getNumberOfTriangles)
+        .def("countTetrahedra", &Dim4Triangulation::countTetrahedra)
         .def("getNumberOfTetrahedra", &Dim4Triangulation::getNumberOfTetrahedra)
         .def("components", Dim4_getComponents_list)
         .def("getComponents", Dim4_getComponents_list)
         .def("getBoundaryComponents", Dim4_getBoundaryComponents_list)
-        .def("getVertices", Dim4_getVertices_list)
-        .def("getEdges", Dim4_getEdges_list)
-        .def("getTriangles", Dim4_getTriangles_list)
-        .def("getTetrahedra", Dim4_getTetrahedra_list)
+        .def("vertices", Dim4_vertices_list)
+        .def("getVertices", Dim4_vertices_list)
+        .def("edges", Dim4_edges_list)
+        .def("getEdges", Dim4_edges_list)
+        .def("triangles", Dim4_triangles_list)
+        .def("getTriangles", Dim4_triangles_list)
+        .def("tetrahedra", Dim4_tetrahedra_list)
+        .def("getTetrahedra", Dim4_tetrahedra_list)
         .def("component", &Dim4Triangulation::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim4Triangulation::getComponent,
             return_internal_reference<>())
         .def("getBoundaryComponent", &Dim4Triangulation::getBoundaryComponent,
             return_internal_reference<>())
+        .def("vertex", &Dim4Triangulation::vertex,
+            return_internal_reference<>())
         .def("getVertex", &Dim4Triangulation::getVertex,
+            return_internal_reference<>())
+        .def("edge", &Dim4Triangulation::edge,
             return_internal_reference<>())
         .def("getEdge", &Dim4Triangulation::getEdge,
             return_internal_reference<>())
+        .def("triangle", &Dim4Triangulation::triangle,
+            return_internal_reference<>())
         .def("getTriangle", &Dim4Triangulation::getTriangle,
+            return_internal_reference<>())
+        .def("tetrahedron", &Dim4Triangulation::tetrahedron,
             return_internal_reference<>())
         .def("getTetrahedron", &Dim4Triangulation::getTetrahedron,
             return_internal_reference<>())

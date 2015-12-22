@@ -48,12 +48,9 @@ using regina::Dim4VertexEmbedding;
 
 namespace {
     boost::python::list Dim4Vertex_getEmbeddings_list(const Dim4Vertex* v) {
-        const std::vector<Dim4VertexEmbedding>& embs = v->getEmbeddings();
-        std::vector<Dim4VertexEmbedding>::const_iterator it;
-
         boost::python::list ans;
-        for (it = embs.begin(); it != embs.end(); it++)
-            ans.append(*it);
+        for (auto& emb : *v)
+            ans.append(emb);
         return ans;
     }
 
@@ -79,26 +76,52 @@ void addDim4Vertex() {
     class_<Dim4VertexEmbedding>("Dim4VertexEmbedding",
             init<regina::Dim4Pentachoron*, int>())
         .def(init<const Dim4VertexEmbedding&>())
+        .def("simplex", &Dim4VertexEmbedding::simplex,
+            return_value_policy<reference_existing_object>())
+        .def("getSimplex", &Dim4VertexEmbedding::getSimplex,
+            return_value_policy<reference_existing_object>())
+        .def("pentachoron", &Dim4VertexEmbedding::pentachoron,
+            return_value_policy<reference_existing_object>())
         .def("getPentachoron", &Dim4VertexEmbedding::getPentachoron,
             return_value_policy<reference_existing_object>())
+        .def("face", &Dim4VertexEmbedding::face)
+        .def("getFace", &Dim4VertexEmbedding::getFace)
+        .def("vertex", &Dim4VertexEmbedding::vertex)
         .def("getVertex", &Dim4VertexEmbedding::getVertex)
+        .def("vertices", &Dim4VertexEmbedding::vertices)
         .def("getVertices", &Dim4VertexEmbedding::getVertices)
+        .def("str", &Dim4VertexEmbedding::str)
+        .def("toString", &Dim4VertexEmbedding::toString)
+        .def("detail", &Dim4VertexEmbedding::detail)
+        .def("toStringLong", &Dim4VertexEmbedding::toStringLong)
+        .def("__str__", &Dim4VertexEmbedding::str)
         .def(regina::python::add_eq_operators())
     ;
 
-    scope s = class_<Dim4Vertex, std::auto_ptr<Dim4Vertex>, boost::noncopyable>
+    class_<Dim4Vertex, std::auto_ptr<Dim4Vertex>, boost::noncopyable>
             ("Dim4Vertex", no_init)
         .def("index", &Dim4Vertex::index)
+        .def("embeddings", Dim4Vertex_getEmbeddings_list)
         .def("getEmbeddings", Dim4Vertex_getEmbeddings_list)
-        .def("getNumberOfEmbeddings", &Dim4Vertex::getNumberOfEmbeddings)
+        .def("embedding", &Dim4Vertex::embedding,
+            return_internal_reference<>())
         .def("getEmbedding", &Dim4Vertex::getEmbedding,
             return_internal_reference<>())
+        .def("front", &Dim4Vertex::front,
+            return_internal_reference<>())
+        .def("back", &Dim4Vertex::back,
+            return_internal_reference<>())
+        .def("triangulation", &Dim4Vertex::triangulation,
+            return_value_policy<reference_existing_object>())
         .def("getTriangulation", &Dim4Vertex::getTriangulation,
+            return_value_policy<reference_existing_object>())
+        .def("component", &Dim4Vertex::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim4Vertex::getComponent,
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &Dim4Vertex::getBoundaryComponent,
             return_value_policy<reference_existing_object>())
+        .def("degree", &Dim4Vertex::degree)
         .def("getDegree", &Dim4Vertex::getDegree)
         .def("getLink", &Dim4Vertex::getLink,
             return_value_policy<reference_existing_object>())
@@ -106,6 +129,7 @@ void addDim4Vertex() {
             return_value_policy<reference_existing_object>())
         .def("buildLinkDetail", vertex_buildLinkDetail_void)
         .def("buildLinkDetail", vertex_buildLinkDetail_bool)
+        .def("isLinkOrientable", &Dim4Vertex::isLinkOrientable)
         .def("isValid", &Dim4Vertex::isValid)
         .def("hasBadIdentification", &Dim4Vertex::hasBadIdentification)
         .def("hasBadLink", &Dim4Vertex::hasBadLink)
@@ -116,7 +140,13 @@ void addDim4Vertex() {
         .def("detail", &Dim4Vertex::detail)
         .def("toStringLong", &Dim4Vertex::toStringLong)
         .def("__str__", &Dim4Vertex::str)
+        .def("ordering", &Dim4Vertex::ordering)
+        .def("faceNumber", &Dim4Vertex::faceNumber)
+        .def("containsVertex", &Dim4Vertex::containsVertex)
         .def(regina::python::add_eq_operators())
+        .staticmethod("ordering")
+        .staticmethod("faceNumber")
+        .staticmethod("containsVertex")
     ;
 }
 
