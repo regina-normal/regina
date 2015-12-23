@@ -56,8 +56,8 @@ void addNBoundaryComponent() {
         .def("getNumberOfEdges", &NBoundaryComponent::getNumberOfEdges)
         .def("countVertices", &NBoundaryComponent::countVertices)
         .def("getNumberOfVertices", &NBoundaryComponent::getNumberOfVertices)
-        .def("face", &regina::python::face<NBoundaryComponent, 3>)
-        .def("getFace", &regina::python::face<NBoundaryComponent, 3>)
+        .def("face", &regina::python::face<NBoundaryComponent, 3, size_t>)
+        .def("getFace", &regina::python::face<NBoundaryComponent, 3, size_t>)
         .def("triangle", &NBoundaryComponent::triangle,
             return_value_policy<reference_existing_object>())
         .def("getTriangle", &NBoundaryComponent::getTriangle,

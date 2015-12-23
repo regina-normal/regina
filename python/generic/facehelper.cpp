@@ -39,9 +39,9 @@
 namespace regina {
 namespace python {
 
-void invalidFaceDimension(const char* function, int dim) {
+void invalidFaceDimension(const char* functionName, int dim) {
     std::ostringstream s;
-    s << function << "() requires a face dimension in the range 0.."
+    s << functionName << "() requires a face dimension in the range 0.."
         << (dim - 1);
     PyErr_SetString(PyExc_AssertionError, s.str().c_str());
     ::boost::python::throw_error_already_set();

@@ -253,7 +253,6 @@ void addNTriangulation() {
         .def("getNumberOfVertices", &NTriangulation::getNumberOfVertices)
         .def("countEdges", &NTriangulation::countEdges)
         .def("getNumberOfEdges", &NTriangulation::getNumberOfEdges)
-        .def("getNumberOfFaces", &NTriangulation::getNumberOfTriangles)
         .def("countTriangles", &NTriangulation::countTriangles)
         .def("getNumberOfTriangles", &NTriangulation::getNumberOfTriangles)
         .def("components", getComponents_list)
@@ -273,8 +272,8 @@ void addNTriangulation() {
             return_internal_reference<>())
         .def("getBoundaryComponent", &NTriangulation::getBoundaryComponent,
             return_internal_reference<>())
-        .def("face", &regina::python::face<NTriangulation, 3>)
-        .def("getFace", &regina::python::face<NTriangulation, 3>)
+        .def("face", &regina::python::face<NTriangulation, 3, size_t>)
+        .def("getFace", &regina::python::face<NTriangulation, 3, size_t>)
         .def("vertex", &NTriangulation::vertex,
             return_internal_reference<>())
         .def("getVertex", &NTriangulation::getVertex,
@@ -282,8 +281,6 @@ void addNTriangulation() {
         .def("edge", &NTriangulation::edge,
             return_internal_reference<>())
         .def("getEdge", &NTriangulation::getEdge,
-            return_internal_reference<>())
-        .def("getFace", &NTriangulation::getTriangle,
             return_internal_reference<>())
         .def("triangle", &NTriangulation::triangle,
             return_internal_reference<>())

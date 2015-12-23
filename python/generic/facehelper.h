@@ -42,6 +42,13 @@ template <int, int> class Face;
 
 namespace python {
 
+/**
+ * A generic function that iterates through <tt>t.faces<subdim>()</tt>
+ * and returns the corresponding faces as a Python list.
+ *
+ * This is used as the Python binding for T.vertices(), T.edges() and so on,
+ * for several types T.
+ */
 template <class T, int dim, int subdim>
 boost::python::list faces_list(const T& t, int subdimArg) {
     boost::python::list ans;
@@ -50,6 +57,19 @@ boost::python::list faces_list(const T& t, int subdimArg) {
     return ans;
 }
 
+/**
+ * Implementation details for Python bindings of template member functions.
+ *
+ * Python does not support templates, and so we bind C++ template member
+ * functions (such as Triangulation::countFaces<subdim>() or
+ * Simplex::face<subdim>()) by converting the C++ template argument \a subdim
+ * into the the first argument of the Python function (i.e., the function in
+ * Python has one more argument than in C++).
+ *
+ * Note that some of these C++ functions return different types depending on
+ * the argument \a subdim; we resolve this by converting return values
+ * to \a PyObject pointers here, instead of letting Boost.Python do it later.
+ */
 template <class T, int dim, int subdim>
 struct FaceHelper {
     typedef regina::Face<dim, subdim> Face;
@@ -60,7 +80,8 @@ struct FaceHelper {
         return FaceHelper<T, dim, subdim - 1>::countFacesFrom(t, subdimArg);
     }
 
-    static PyObject* faceFrom(const T& t, int subdimArg, size_t f) {
+    template <typename Index>
+    static PyObject* faceFrom(const T& t, int subdimArg, Index f) {
         // TODO: Make this work with return_internal_reference.
         // That is, ensure a lifespan dependency between t and the result.
         if (subdimArg == subdim) {
@@ -68,7 +89,8 @@ struct FaceHelper {
                 boost::python::detail::make_reference_holder> convert;
             return convert(t.template face<subdim>(f));
         }
-        return FaceHelper<T, dim, subdim - 1>::faceFrom(t, subdimArg, f);
+        return FaceHelper<T, dim, subdim - 1>::template faceFrom<Index>(
+            t, subdimArg, f);
     }
 
     static boost::python::list facesFrom(const T& t, int subdimArg) {
@@ -80,8 +102,19 @@ struct FaceHelper {
         }
         return FaceHelper<T, dim, subdim - 1>::facesFrom(t, subdimArg);
     }
+
+    static NPerm<dim + 1> faceMappingFrom(const T& t, int subdimArg, int f) {
+        if (subdimArg == subdim)
+            return t.template faceMapping<subdim>(f);
+        return FaceHelper<T, dim, subdim - 1>::faceMappingFrom(t, subdimArg, f);
+    }
 };
 
+/**
+ * Implementation details for Python bindings of template member functions.
+ *
+ * See the notes above.
+ */
 template <class T, int dim>
 struct FaceHelper<T, dim, 0> {
     typedef regina::Face<dim, 0> Face;
@@ -90,7 +123,8 @@ struct FaceHelper<T, dim, 0> {
         return t.template countFaces<0>();
     }
 
-    static PyObject* faceFrom(const T& t, int, size_t f) {
+    template <typename Index>
+    static PyObject* faceFrom(const T& t, int, Index f) {
         // TODO: Make this work with return_internal_reference.
         // That is, ensure a lifespan dependency between t and the result.
         boost::python::to_python_indirect<regina::Face<dim, 0>&,
@@ -104,10 +138,25 @@ struct FaceHelper<T, dim, 0> {
             ans.append(boost::python::ptr(f));
         return ans;
     }
+
+    static NPerm<dim + 1> faceMappingFrom(const T& t, int, int f) {
+        return t.template faceMapping<0>(f);
+    }
 };
 
-void invalidFaceDimension(const char* function, int dim);
+/**
+ * Throws an exception.  The error message will state that the argument
+ * for the face dimension (which should be the first argument of the
+ * function, corresponding to the C++ template argument) must be in the
+ * range 0, ..., <i>dim</i>-1.
+ */
+void invalidFaceDimension(const char* functionName, int dim);
 
+/**
+ * The Python binding for the C++ template member function
+ * T::countFaces<subdimArg>(), where the valid range for the C++ template
+ * parameter \a subdimArg is 0, ..., <i>dim</i>-1.
+ */
 template <class T, int dim>
 size_t countFaces(const T& t, int subdimArg) {
     if (subdimArg < 0 || subdimArg >= dim)
@@ -115,18 +164,41 @@ size_t countFaces(const T& t, int subdimArg) {
     return FaceHelper<T, dim, dim - 1>::countFacesFrom(t, subdimArg);
 }
 
-template <class T, int dim>
-PyObject* face(const T& t, int subdimArg, size_t f) {
+/**
+ * The Python binding for the C++ template member function
+ * T::face<subdimArg>(f), where the valid range for the C++ template
+ * parameter \a subdimArg is 0, ..., <i>dim</i>-1.
+ */
+template <class T, int dim, typename Index>
+PyObject* face(const T& t, int subdimArg, Index f) {
     if (subdimArg < 0 || subdimArg >= dim)
         invalidFaceDimension("face", dim);
-    return FaceHelper<T, dim, dim - 1>::faceFrom(t, subdimArg, f);
+    return FaceHelper<T, dim, dim - 1>::template faceFrom<Index>(
+        t, subdimArg, f);
 }
 
+/**
+ * The Python binding for the C++ template member function
+ * T::faces<subdimArg>(), where the valid range for the C++ template
+ * parameter \a subdimArg is 0, ..., <i>dim</i>-1.
+ */
 template <class T, int dim>
 boost::python::list faces(const T& t, int subdimArg) {
     if (subdimArg < 0 || subdimArg >= dim)
         invalidFaceDimension("faces", dim);
     return FaceHelper<T, dim, dim - 1>::facesFrom(t, subdimArg);
+}
+
+/**
+ * The Python binding for the C++ template member function
+ * T::faceMapping<subdimArg>(f), where the valid range for the C++ template
+ * parameter \a subdimArg is 0, ..., <i>dim</i>-1.
+ */
+template <class T, int dim>
+NPerm<dim + 1> faceMapping(const T& t, int subdimArg, int f) {
+    if (subdimArg < 0 || subdimArg >= dim)
+        invalidFaceDimension("faceMapping", dim);
+    return FaceHelper<T, dim, dim - 1>::faceMappingFrom(t, subdimArg, f);
 }
 
 } } // namespace regina::python

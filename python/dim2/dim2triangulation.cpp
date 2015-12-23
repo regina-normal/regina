@@ -198,8 +198,8 @@ void addDim2Triangulation() {
             return_internal_reference<>())
         .def("getBoundaryComponent", &Dim2Triangulation::getBoundaryComponent,
             return_internal_reference<>())
-        .def("face", &regina::python::face<Dim2Triangulation, 2>)
-        .def("getFace", &regina::python::face<Dim2Triangulation, 2>)
+        .def("face", &regina::python::face<Dim2Triangulation, 2, size_t>)
+        .def("getFace", &regina::python::face<Dim2Triangulation, 2, size_t>)
         .def("vertex", &Dim2Triangulation::vertex,
             return_internal_reference<>())
         .def("getVertex", &Dim2Triangulation::getVertex,

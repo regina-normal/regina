@@ -86,8 +86,8 @@ void addDim2Component() {
             return_value_policy<reference_existing_object>())
         .def("getSimplex", &Dim2Component::getSimplex,
             return_value_policy<reference_existing_object>())
-        .def("face", &regina::python::face<Dim2Component, 2>)
-        .def("getFace", &regina::python::face<Dim2Component, 2>)
+        .def("face", &regina::python::face<Dim2Component, 2, size_t>)
+        .def("getFace", &regina::python::face<Dim2Component, 2, size_t>)
         .def("edge", &Dim2Component::edge,
             return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim2Component::getEdge,
