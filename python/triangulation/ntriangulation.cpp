@@ -38,6 +38,7 @@
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
+#include "../generic/facehelper.h"
 
 using namespace boost::python;
 using regina::NTriangulation;
@@ -130,30 +131,6 @@ namespace {
         for (NTriangulation::BoundaryComponentIterator it =
                 t.getBoundaryComponents().begin();
                 it != t.getBoundaryComponents().end(); it++)
-            ans.append(boost::python::ptr(*it));
-        return ans;
-    }
-
-    boost::python::list vertices_list(NTriangulation& t) {
-        boost::python::list ans;
-        for (NTriangulation::VertexIterator it =
-                t.vertices().begin(); it != t.vertices().end(); it++)
-            ans.append(boost::python::ptr(*it));
-        return ans;
-    }
-
-    boost::python::list edges_list(NTriangulation& t) {
-        boost::python::list ans;
-        for (NTriangulation::EdgeIterator it =
-                t.edges().begin(); it != t.edges().end(); it++)
-            ans.append(boost::python::ptr(*it));
-        return ans;
-    }
-
-    boost::python::list triangles_list(NTriangulation& t) {
-        boost::python::list ans;
-        for (NTriangulation::TriangleIterator it =
-                t.triangles().begin(); it != t.triangles().end(); it++)
             ans.append(boost::python::ptr(*it));
         return ans;
     }
@@ -270,28 +247,33 @@ void addNTriangulation() {
         .def("getNumberOfComponents", &NTriangulation::getNumberOfComponents)
         .def("getNumberOfBoundaryComponents",
             &NTriangulation::getNumberOfBoundaryComponents)
+        .def("countFaces", &regina::python::countFaces<NTriangulation, 3>)
+        .def("getNumberOfFaces", &regina::python::countFaces<NTriangulation, 3>)
         .def("countVertices", &NTriangulation::countVertices)
         .def("getNumberOfVertices", &NTriangulation::getNumberOfVertices)
         .def("countEdges", &NTriangulation::countEdges)
         .def("getNumberOfEdges", &NTriangulation::getNumberOfEdges)
-        .def("getNumberOfFaces", &NTriangulation::getNumberOfTriangles)
         .def("countTriangles", &NTriangulation::countTriangles)
         .def("getNumberOfTriangles", &NTriangulation::getNumberOfTriangles)
         .def("components", getComponents_list)
         .def("getComponents", getComponents_list)
         .def("getBoundaryComponents", getBoundaryComponents_list)
-        .def("vertices", vertices_list)
-        .def("getVertices", vertices_list)
-        .def("edges", edges_list)
-        .def("getEdges", edges_list)
-        .def("triangles", triangles_list)
-        .def("getTriangles", triangles_list)
+        .def("faces", &regina::python::faces<NTriangulation, 3>)
+        .def("getFaces", &regina::python::faces<NTriangulation, 3>)
+        .def("vertices", regina::python::faces_list<NTriangulation, 3, 0>)
+        .def("getVertices", regina::python::faces_list<NTriangulation, 3, 0>)
+        .def("edges", regina::python::faces_list<NTriangulation, 3, 1>)
+        .def("getEdges", regina::python::faces_list<NTriangulation, 3, 1>)
+        .def("triangles", regina::python::faces_list<NTriangulation, 3, 2>)
+        .def("getTriangles", regina::python::faces_list<NTriangulation, 3, 2>)
         .def("component", &NTriangulation::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &NTriangulation::getComponent,
             return_internal_reference<>())
         .def("getBoundaryComponent", &NTriangulation::getBoundaryComponent,
             return_internal_reference<>())
+        .def("face", &regina::python::face<NTriangulation, 3, size_t>)
+        .def("getFace", &regina::python::face<NTriangulation, 3, size_t>)
         .def("vertex", &NTriangulation::vertex,
             return_internal_reference<>())
         .def("getVertex", &NTriangulation::getVertex,
@@ -299,8 +281,6 @@ void addNTriangulation() {
         .def("edge", &NTriangulation::edge,
             return_internal_reference<>())
         .def("getEdge", &NTriangulation::getEdge,
-            return_internal_reference<>())
-        .def("getFace", &NTriangulation::getTriangle,
             return_internal_reference<>())
         .def("triangle", &NTriangulation::triangle,
             return_internal_reference<>())

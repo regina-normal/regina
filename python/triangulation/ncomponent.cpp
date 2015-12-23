@@ -40,6 +40,7 @@
 #include "triangulation/ntriangle.h"
 #include "triangulation/nvertex.h"
 #include "../helpers.h"
+#include "../generic/facehelper.h"
 
 using namespace boost::python;
 using regina::Component;
@@ -53,27 +54,6 @@ namespace {
             ans.append(boost::python::ptr(*it));
         return ans;
     }
-
-    boost::python::list vertices_list(NComponent& t) {
-        boost::python::list ans;
-        for (auto v : t.vertices())
-            ans.append(boost::python::ptr(v));
-        return ans;
-    }
-
-    boost::python::list edges_list(NComponent& t) {
-        boost::python::list ans;
-        for (auto e : t.edges())
-            ans.append(boost::python::ptr(e));
-        return ans;
-    }
-
-    boost::python::list triangles_list(NComponent& t) {
-        boost::python::list ans;
-        for (auto f : t.triangles())
-            ans.append(boost::python::ptr(f));
-        return ans;
-    }
 }
 
 void addNComponent() {
@@ -83,6 +63,8 @@ void addNComponent() {
         .def("size", &NComponent::size)
         .def("getNumberOfTetrahedra", &NComponent::getNumberOfTetrahedra)
         .def("getNumberOfSimplices", &NComponent::getNumberOfSimplices)
+        .def("countFaces", &regina::python::countFaces<NComponent, 3>)
+        .def("getNumberOfFaces", &regina::python::countFaces<NComponent, 3>)
         .def("countTriangles", &NComponent::countTriangles)
         .def("getNumberOfTriangles", &NComponent::getNumberOfTriangles)
         .def("countEdges", &NComponent::countEdges)
@@ -101,12 +83,16 @@ void addNComponent() {
             return_value_policy<reference_existing_object>())
         .def("getSimplex", &NComponent::getSimplex,
             return_value_policy<reference_existing_object>())
-        .def("triangles", triangles_list)
-        .def("getTriangles", triangles_list)
-        .def("edges", edges_list)
-        .def("getEdges", edges_list)
-        .def("vertices", vertices_list)
-        .def("getVertices", vertices_list)
+        .def("faces", &regina::python::faces<NComponent, 3>)
+        .def("getFaces", &regina::python::faces<NComponent, 3>)
+        .def("triangles", regina::python::faces_list<NComponent, 3, 2>)
+        .def("getTriangles", regina::python::faces_list<NComponent, 3, 2>)
+        .def("edges", regina::python::faces_list<NComponent, 3, 1>)
+        .def("getEdges", regina::python::faces_list<NComponent, 3, 1>)
+        .def("vertices", regina::python::faces_list<NComponent, 3, 0>)
+        .def("getVertices", regina::python::faces_list<NComponent, 3, 0>)
+        .def("face", &regina::python::face<NComponent, 3, size_t>)
+        .def("getFace", &regina::python::face<NComponent, 3, size_t>)
         .def("triangle", &NComponent::triangle,
             return_value_policy<reference_existing_object>())
         .def("getTriangle", &NComponent::getTriangle,

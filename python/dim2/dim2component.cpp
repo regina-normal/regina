@@ -39,26 +39,13 @@
 #include "dim2/dim2triangle.h"
 #include "dim2/dim2vertex.h"
 #include "../helpers.h"
+#include "../generic/facehelper.h"
 
 using namespace boost::python;
 using regina::Component;
 using regina::Dim2Component;
 
 namespace {
-    boost::python::list vertices_list(Dim2Component& t) {
-        boost::python::list ans;
-        for (auto f : t.vertices())
-            ans.append(boost::python::ptr(f));
-        return ans;
-    }
-
-    boost::python::list edges_list(Dim2Component& t) {
-        boost::python::list ans;
-        for (auto f : t.edges())
-            ans.append(boost::python::ptr(f));
-        return ans;
-    }
-
     boost::python::list getTriangles_list(Dim2Component& t) {
         boost::python::list ans;
         for (std::vector<regina::Dim2Triangle*>::const_iterator it =
@@ -75,6 +62,8 @@ void addDim2Component() {
         .def("size", &Dim2Component::size)
         .def("getNumberOfTriangles", &Dim2Component::getNumberOfTriangles)
         .def("getNumberOfSimplices", &Dim2Component::getNumberOfSimplices)
+        .def("countFaces", &regina::python::countFaces<Dim2Component, 2>)
+        .def("getNumberOfFaces", &regina::python::countFaces<Dim2Component, 2>)
         .def("countEdges", &Dim2Component::countEdges)
         .def("getNumberOfEdges", &Dim2Component::getNumberOfEdges)
         .def("countVertices", &Dim2Component::countVertices)
@@ -83,10 +72,12 @@ void addDim2Component() {
             &Dim2Component::getNumberOfBoundaryComponents)
         .def("simplices", getTriangles_list)
         .def("getTriangles", getTriangles_list)
-        .def("edges", edges_list)
-        .def("getEdges", edges_list)
-        .def("vertices", vertices_list)
-        .def("getVertices", vertices_list)
+        .def("faces", &regina::python::faces<Dim2Component, 2>)
+        .def("getFaces", &regina::python::faces<Dim2Component, 2>)
+        .def("edges", regina::python::faces_list<Dim2Component, 2, 1>)
+        .def("getEdges", regina::python::faces_list<Dim2Component, 2, 1>)
+        .def("vertices", regina::python::faces_list<Dim2Component, 2, 0>)
+        .def("getVertices", regina::python::faces_list<Dim2Component, 2, 0>)
         .def("triangle", &Dim2Component::triangle,
             return_value_policy<reference_existing_object>())
         .def("getTriangle", &Dim2Component::getTriangle,
@@ -95,6 +86,8 @@ void addDim2Component() {
             return_value_policy<reference_existing_object>())
         .def("getSimplex", &Dim2Component::getSimplex,
             return_value_policy<reference_existing_object>())
+        .def("face", &regina::python::face<Dim2Component, 2, size_t>)
+        .def("getFace", &regina::python::face<Dim2Component, 2, size_t>)
         .def("edge", &Dim2Component::edge,
             return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim2Component::getEdge,

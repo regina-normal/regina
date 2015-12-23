@@ -36,6 +36,7 @@
 #include "algebra/ngrouppresentation.h"
 #include "dim2/dim2isomorphism.h"
 #include "dim2/dim2triangulation.h"
+#include "../generic/facehelper.h"
 
 using namespace boost::python;
 using regina::Dim2Triangulation;
@@ -73,22 +74,6 @@ namespace {
         for (Dim2Triangulation::BoundaryComponentIterator it =
                 t.getBoundaryComponents().begin();
                 it != t.getBoundaryComponents().end(); ++it)
-            ans.append(boost::python::ptr(*it));
-        return ans;
-    }
-
-    boost::python::list Dim2_vertices_list(Dim2Triangulation& t) {
-        boost::python::list ans;
-        for (Dim2Triangulation::VertexIterator it =
-                t.vertices().begin(); it != t.vertices().end(); ++it)
-            ans.append(boost::python::ptr(*it));
-        return ans;
-    }
-
-    boost::python::list Dim2_edges_list(Dim2Triangulation& t) {
-        boost::python::list ans;
-        for (Dim2Triangulation::EdgeIterator it =
-                t.edges().begin(); it != t.edges().end(); ++it)
             ans.append(boost::python::ptr(*it));
         return ans;
     }
@@ -191,6 +176,9 @@ void addDim2Triangulation() {
         .def("getNumberOfComponents", &Dim2Triangulation::getNumberOfComponents)
         .def("getNumberOfBoundaryComponents",
             &Dim2Triangulation::getNumberOfBoundaryComponents)
+        .def("countFaces", &regina::python::countFaces<Dim2Triangulation, 2>)
+        .def("getNumberOfFaces",
+            &regina::python::countFaces<Dim2Triangulation, 2>)
         .def("countVertices", &Dim2Triangulation::countVertices)
         .def("getNumberOfVertices", &Dim2Triangulation::getNumberOfVertices)
         .def("countEdges", &Dim2Triangulation::countEdges)
@@ -198,16 +186,20 @@ void addDim2Triangulation() {
         .def("components", Dim2_getComponents_list)
         .def("getComponents", Dim2_getComponents_list)
         .def("getBoundaryComponents", Dim2_getBoundaryComponents_list)
-        .def("vertices", Dim2_vertices_list)
-        .def("getVertices", Dim2_vertices_list)
-        .def("edges", Dim2_edges_list)
-        .def("getEdges", Dim2_edges_list)
+        .def("faces", &regina::python::faces<Dim2Triangulation, 2>)
+        .def("getFaces", &regina::python::faces<Dim2Triangulation, 2>)
+        .def("vertices", regina::python::faces_list<Dim2Triangulation, 2, 0>)
+        .def("getVertices", regina::python::faces_list<Dim2Triangulation, 2, 0>)
+        .def("edges", regina::python::faces_list<Dim2Triangulation, 2, 1>)
+        .def("getEdges", regina::python::faces_list<Dim2Triangulation, 2, 1>)
         .def("component", &Dim2Triangulation::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim2Triangulation::getComponent,
             return_internal_reference<>())
         .def("getBoundaryComponent", &Dim2Triangulation::getBoundaryComponent,
             return_internal_reference<>())
+        .def("face", &regina::python::face<Dim2Triangulation, 2, size_t>)
+        .def("getFace", &regina::python::face<Dim2Triangulation, 2, size_t>)
         .def("vertex", &Dim2Triangulation::vertex,
             return_internal_reference<>())
         .def("getVertex", &Dim2Triangulation::getVertex,

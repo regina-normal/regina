@@ -1,6 +1,7 @@
 # Files to compile
 SET ( FILES
   component
+  facehelper
   facetpairing
   isomorphism
   simplex
