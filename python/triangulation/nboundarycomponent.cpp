@@ -38,6 +38,7 @@
 #include "triangulation/ntriangle.h"
 #include "triangulation/nvertex.h"
 #include "../helpers.h"
+#include "../generic/facehelper.h"
 
 using namespace boost::python;
 using regina::NBoundaryComponent;
@@ -46,12 +47,17 @@ void addNBoundaryComponent() {
     class_<NBoundaryComponent, std::auto_ptr<NBoundaryComponent>,
             boost::noncopyable> ("NBoundaryComponent", no_init)
         .def("index", &NBoundaryComponent::index)
+        .def("countFaces", &regina::python::countFaces<NBoundaryComponent, 3>)
+        .def("getNumberOfFaces",
+            &regina::python::countFaces<NBoundaryComponent, 3>)
         .def("countTriangles", &NBoundaryComponent::countTriangles)
         .def("getNumberOfTriangles", &NBoundaryComponent::getNumberOfTriangles)
         .def("countEdges", &NBoundaryComponent::countEdges)
         .def("getNumberOfEdges", &NBoundaryComponent::getNumberOfEdges)
         .def("countVertices", &NBoundaryComponent::countVertices)
         .def("getNumberOfVertices", &NBoundaryComponent::getNumberOfVertices)
+        .def("face", &regina::python::face<NBoundaryComponent, 3>)
+        .def("getFace", &regina::python::face<NBoundaryComponent, 3>)
         .def("triangle", &NBoundaryComponent::triangle,
             return_value_policy<reference_existing_object>())
         .def("getTriangle", &NBoundaryComponent::getTriangle,

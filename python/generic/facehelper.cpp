@@ -33,45 +33,19 @@
 /* end stub */
 
 #include <boost/python.hpp>
-#include "dim2/dim2boundarycomponent.h"
-#include "dim2/dim2edge.h"
-#include "dim2/dim2vertex.h"
-#include "../helpers.h"
-#include "../generic/facehelper.h"
+#include <sstream>
+#include "facehelper.h"
 
-using namespace boost::python;
-using regina::Dim2BoundaryComponent;
+namespace regina {
+namespace python {
 
-void addDim2BoundaryComponent() {
-    class_<Dim2BoundaryComponent, std::auto_ptr<Dim2BoundaryComponent>,
-            boost::noncopyable> ("Dim2BoundaryComponent", no_init)
-        .def("index", &Dim2BoundaryComponent::index)
-        .def("countFaces",
-            &regina::python::countFaces<Dim2BoundaryComponent, 2>)
-        .def("getNumberOfFaces",
-            &regina::python::countFaces<Dim2BoundaryComponent, 2>)
-        .def("countEdges", &Dim2BoundaryComponent::countEdges)
-        .def("getNumberOfEdges", &Dim2BoundaryComponent::getNumberOfEdges)
-        .def("countVertices", &Dim2BoundaryComponent::countVertices)
-        .def("getNumberOfVertices", &Dim2BoundaryComponent::getNumberOfVertices)
-        .def("face", &regina::python::face<Dim2BoundaryComponent, 2>)
-        .def("getFace", &regina::python::face<Dim2BoundaryComponent, 2>)
-        .def("edge", &Dim2BoundaryComponent::edge,
-            return_value_policy<reference_existing_object>())
-        .def("getEdge", &Dim2BoundaryComponent::getEdge,
-            return_value_policy<reference_existing_object>())
-        .def("vertex", &Dim2BoundaryComponent::vertex,
-            return_value_policy<reference_existing_object>())
-        .def("getVertex", &Dim2BoundaryComponent::getVertex,
-            return_value_policy<reference_existing_object>())
-        .def("getComponent", &Dim2BoundaryComponent::getComponent,
-            return_value_policy<reference_existing_object>())
-        .def("str", &Dim2BoundaryComponent::str)
-        .def("toString", &Dim2BoundaryComponent::toString)
-        .def("detail", &Dim2BoundaryComponent::detail)
-        .def("toStringLong", &Dim2BoundaryComponent::toStringLong)
-        .def("__str__", &Dim2BoundaryComponent::str)
-        .def(regina::python::add_eq_operators())
-    ;
+void invalidFaceDimension(const char* function, int dim) {
+    std::ostringstream s;
+    s << function << "() requires a face dimension in the range 0.."
+        << (dim - 1);
+    PyErr_SetString(PyExc_AssertionError, s.str().c_str());
+    ::boost::python::throw_error_already_set();
 }
+
+} } // namespace regina::python
 
