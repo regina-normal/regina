@@ -192,18 +192,6 @@ class REGINA_API Triangulation<2> :
         /*@{*/
 
         /**
-         * A dimension-specific alias for size().
-         *
-         * See size() for further information.
-         */
-        unsigned long getNumberOfTriangles() const;
-        /**
-         * A dimension-specific alias for simplices().
-         *
-         * See simplices() for further information.
-         */
-        const std::vector<Dim2Triangle*>& getTriangles() const;
-        /**
          * Deprecated dimension-specific alias for simplexIndex().
          *
          * \deprecated This routine is deprecated, and will be removed in some
@@ -364,28 +352,7 @@ class REGINA_API Triangulation<2> :
          */
         bool isClosed() const;
         bool hasBoundaryFacets() const;
-        /**
-         * A dimension-specific alias for hasBoundaryFacets().
-         *
-         * See hasBoundaryFacets() for further information.
-         */
-        bool hasBoundaryEdges() const;
         size_t countBoundaryFacets() const;
-        /**
-         * A dimension-specific alias for countBoundaryFacets().
-         *
-         * See countBoundaryFacets() for further information.
-         */
-        size_t countBoundaryEdges() const;
-        /**
-         * A deprecated alias for countBoundaryFacets().
-         *
-         * \deprecated Call countBoundaryEdges() or countBoundaryFacets()
-         * instead.
-         *
-         * See countBoundaryFacets() for further information.
-         */
-        size_t getNumberOfBoundaryEdges() const;
         /**
          * Always returns \c false.
          *
@@ -546,15 +513,6 @@ inline bool Triangulation<2>::dependsOnParent() const {
     return false;
 }
 
-inline unsigned long Triangulation<2>::getNumberOfTriangles() const {
-    return simplices_.size();
-}
-
-inline const std::vector<Dim2Triangle*>& Triangulation<2>::getTriangles()
-        const {
-    return (const std::vector<Dim2Triangle*>&)(simplices_);
-}
-
 inline long Triangulation<2>::triangleIndex(const Dim2Triangle* tri) const {
     return tri->markedIndex();
 }
@@ -632,22 +590,10 @@ inline bool Triangulation<2>::hasBoundaryFacets() const {
     return ! isClosed();
 }
 
-inline bool Triangulation<2>::hasBoundaryEdges() const {
-    return hasBoundaryFacets();
-}
-
 inline size_t Triangulation<2>::countBoundaryFacets() const {
     // Override, since we can do this faster in dimension 2.
     ensureSkeleton();
     return 2 * countEdges() - 3 * simplices_.size();
-}
-
-inline size_t Triangulation<2>::countBoundaryEdges() const {
-    return countBoundaryFacets();
-}
-
-inline size_t Triangulation<2>::getNumberOfBoundaryEdges() const {
-    return countBoundaryFacets();
 }
 
 inline bool Triangulation<2>::isIdeal() const {

@@ -61,6 +61,7 @@ void addNComponent() {
             ("Component3", no_init)
         .def("index", &NComponent::index)
         .def("size", &NComponent::size)
+        .def("countTetrahedra", &NComponent::countTetrahedra)
         .def("getNumberOfTetrahedra", &NComponent::getNumberOfTetrahedra)
         .def("getNumberOfSimplices", &NComponent::getNumberOfSimplices)
         .def("countFaces", &regina::python::countFaces<NComponent, 3>)
@@ -75,6 +76,8 @@ void addNComponent() {
             &NComponent::getNumberOfBoundaryComponents)
         .def("simplices", getSimplices_list)
         .def("getSimplices", getSimplices_list)
+        .def("tetrahedra", getSimplices_list)
+        .def("getTetrahedra", getSimplices_list)
         .def("simplex", &NComponent::simplex,
             return_value_policy<reference_existing_object>())
         .def("tetrahedron", &NComponent::tetrahedron,
@@ -110,11 +113,14 @@ void addNComponent() {
         .def("isIdeal", &NComponent::isIdeal)
         .def("isOrientable", &NComponent::isOrientable)
         .def("isClosed", &NComponent::isClosed)
+        .def("hasBoundaryFacets", &NComponent::hasBoundaryFacets)
+        .def("hasBoundaryTriangles", &NComponent::hasBoundaryTriangles)
         .def("countBoundaryFacets", &NComponent::countBoundaryFacets)
-        .def("getNumberOfBoundaryTriangles",
-            &NComponent::getNumberOfBoundaryTriangles)
         .def("getNumberOfBoundaryFacets",
             &NComponent::getNumberOfBoundaryFacets)
+        .def("countBoundaryTriangles", &NComponent::countBoundaryTriangles)
+        .def("getNumberOfBoundaryTriangles",
+            &NComponent::getNumberOfBoundaryTriangles)
         .def("str", &NComponent::str)
         .def("toString", &NComponent::toString)
         .def("detail", &NComponent::detail)

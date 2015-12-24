@@ -81,6 +81,7 @@ template <int> class TriangulationBase;
 template <int dim>
 class ComponentBase :
         public Output<ComponentBase<dim>>,
+        public alias::Simplices<ComponentBase<dim>, dim>,
         public alias::SimplexAt<ComponentBase<dim>, dim, false>,
         public boost::noncopyable,
         public NMarkedElement {
@@ -174,6 +175,16 @@ class ComponentBase :
          */
         bool isOrientable() const;
 
+        /**
+         * Determines if this component has any boundary facets.
+         *
+         * This routine returns \c true if and only if this component
+         * contains some top-dimensional simplex with at least one facet
+         * that is not glued to an adjacent simplex.
+         *
+         * @return \c true if and only if this component has boundary facet(s).
+         */
+        bool hasBoundaryFacets() const;
         /**
          * Returns the number of boundary facets in this component.
          *
@@ -275,6 +286,11 @@ inline Simplex<dim>* ComponentBase<dim>::getSimplex(size_t index) const {
 template <int dim>
 inline bool ComponentBase<dim>::isOrientable() const {
     return orientable_;
+}
+
+template <int dim>
+inline bool ComponentBase<dim>::hasBoundaryFacets() const {
+    return boundaryFacets_;
 }
 
 template <int dim>

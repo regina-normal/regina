@@ -53,6 +53,7 @@
 #include "generic/face.h"
 #include "generic/simplex.h"
 #include "generic/alias/face.h"
+#include "generic/alias/simplex.h"
 #include "maths/nperm.h"
 
 namespace regina {
@@ -218,6 +219,7 @@ struct FaceCalculator<dim, 0, 2> {
 template <int dim>
 class TriangulationBase :
         protected FaceListSuite<dim, dim - 1>,
+        public alias::Simplices<TriangulationBase<dim>, dim>,
         public alias::SimplexAt<TriangulationBase<dim>, dim, true>,
         public alias::FaceOfTriangulation<TriangulationBase<dim>, dim>,
         public alias::FacesOfTriangulation<TriangulationBase<dim>, dim>,
@@ -1781,6 +1783,7 @@ inline bool TriangulationBase<dim>::isValid() const {
 
 template <int dim>
 inline bool TriangulationBase<dim>::hasBoundaryFacets() const {
+    ensureSkeleton();
     for (auto c : components_)
         if (c->countBoundaryFacets())
             return true;
@@ -1789,6 +1792,7 @@ inline bool TriangulationBase<dim>::hasBoundaryFacets() const {
 
 template <int dim>
 inline size_t TriangulationBase<dim>::countBoundaryFacets() const {
+    ensureSkeleton();
     size_t ans = 0;
     for (auto c : components_)
         ans += c->countBoundaryFacets();

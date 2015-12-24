@@ -42,6 +42,7 @@
 #endif
 
 #include "regina-core.h"
+#include <vector>
 
 namespace regina {
 
@@ -53,6 +54,259 @@ namespace alias {
  * \weakgroup alias
  * @{
  */
+
+/**
+ * Helper class that provides dimension-specific aliases for size(),
+ * simplices(), hasBoundaryFacets() and countBoundaryFacets(),
+ * where reasonable.
+ *
+ * This is inherited by the class \a Derived, which must provide routines of
+ * the forms <tt>size_t size() const</tt>,
+ * <tt>const std::vector<Simplex<dim>*>& simplices() const</tt>,
+ * <tt>bool hasBoundaryFacets() const</tt>, and
+ * <tt>size_t countBoundaryFacets() const</tt>.
+ *
+ * The names of the aliases are determined by the dimension \a dim, and
+ * the aliases are only provided for those dimensions \a dim that are
+ * sufficiently small.
+ */
+template <class Derived, int dim>
+class Simplices {
+};
+
+/**
+ * Helper class that provides dimension-specific aliases for size(),
+ * simplices(), hasBoundaryFacets() and countBoundaryFacets(),
+ * where reasonable.
+ *
+ * This is inherited by the class \a Derived, which must provide routines of
+ * the forms <tt>size_t size() const</tt>,
+ * <tt>const std::vector<Simplex<dim>*>& simplices() const</tt>,
+ * <tt>bool hasBoundaryFacets() const</tt>, and
+ * <tt>size_t countBoundaryFacets() const</tt>.
+ */
+template <class Derived>
+class Simplices<Derived, 2> {
+    public:
+        /**
+         * A dimension-specific alias for size().
+         *
+         * See size() for further information.
+         */
+        size_t countTriangles() const {
+            return static_cast<const Derived*>(this)->size();
+        }
+
+        /**
+         * Deprecated dimension-specific alias for size().
+         *
+         * \deprecated Simply call countTriangles() instead.
+         */
+        size_t getNumberOfTriangles() const {
+            return static_cast<const Derived*>(this)->size();
+        }
+
+        /**
+         * A dimension-specific alias for simplices().
+         *
+         * See simplices() for further information.
+         */
+        const std::vector<Simplex<2>*>& triangles() const {
+            return static_cast<const Derived*>(this)->simplices();
+        }
+
+        /**
+         * Deprecated dimension-specific alias for simplices().
+         *
+         * \deprecated Simply call triangles() instead.
+         */
+        const std::vector<Simplex<2>*>& getTriangles() const {
+            return static_cast<const Derived*>(this)->simplices();
+        }
+
+        /**
+         * A dimension-specific alias for hasBoundaryFacets().
+         *
+         * See hasBoundaryFacets() for further information.
+         */
+        bool hasBoundaryEdges() const {
+            return static_cast<const Derived*>(this)->hasBoundaryFacets();
+        }
+
+        /**
+         * A dimension-specific alias for countBoundaryFacets().
+         *
+         * See countBoundaryFacets() for further information.
+         */
+        size_t countBoundaryEdges() const {
+            return static_cast<const Derived*>(this)->countBoundaryFacets();
+        }
+
+        /**
+         * Deprecated dimension-specific alias for countBoundaryFacets().
+         *
+         * \deprecated Simply call countBoundaryEdges() instead.
+         */
+        size_t getNumberOfBoundaryEdges() const {
+            return static_cast<const Derived*>(this)->countBoundaryFacets();
+        }
+};
+
+/**
+ * Helper class that provides dimension-specific aliases for size(),
+ * simplices(), hasBoundaryFacets() and countBoundaryFacets(),
+ * where reasonable.
+ *
+ * This is inherited by the class \a Derived, which must provide routines of
+ * the forms <tt>size_t size() const</tt>,
+ * <tt>const std::vector<Simplex<dim>*>& simplices() const</tt>,
+ * <tt>bool hasBoundaryFacets() const</tt>, and
+ * <tt>size_t countBoundaryFacets() const</tt>.
+ */
+template <class Derived>
+class Simplices<Derived, 3> {
+    public:
+        /**
+         * A dimension-specific alias for size().
+         *
+         * See size() for further information.
+         */
+        size_t countTetrahedra() const {
+            return static_cast<const Derived*>(this)->size();
+        }
+
+        /**
+         * Deprecated dimension-specific alias for size().
+         *
+         * \deprecated Simply call countTetrahedra() instead.
+         */
+        size_t getNumberOfTetrahedra() const {
+            return static_cast<const Derived*>(this)->size();
+        }
+
+        /**
+         * A dimension-specific alias for simplices().
+         *
+         * See simplices() for further information.
+         */
+        const std::vector<Simplex<3>*>& tetrahedra() const {
+            return static_cast<const Derived*>(this)->simplices();
+        }
+
+        /**
+         * Deprecated dimension-specific alias for simplices().
+         *
+         * \deprecated Simply call tetrahedra() instead.
+         */
+        const std::vector<Simplex<3>*>& getTetrahedra() const {
+            return static_cast<const Derived*>(this)->simplices();
+        }
+
+        /**
+         * A dimension-specific alias for hasBoundaryFacets().
+         *
+         * See hasBoundaryFacets() for further information.
+         */
+        bool hasBoundaryTriangles() const {
+            return static_cast<const Derived*>(this)->hasBoundaryFacets();
+        }
+
+        /**
+         * A dimension-specific alias for countBoundaryFacets().
+         *
+         * See countBoundaryFacets() for further information.
+         */
+        size_t countBoundaryTriangles() const {
+            return static_cast<const Derived*>(this)->countBoundaryFacets();
+        }
+
+        /**
+         * Deprecated dimension-specific alias for countBoundaryFacets().
+         *
+         * \deprecated Simply call countBoundaryTriangles() instead.
+         */
+        size_t getNumberOfBoundaryTriangles() const {
+            return static_cast<const Derived*>(this)->countBoundaryFacets();
+        }
+};
+
+/**
+ * Helper class that provides dimension-specific aliases for size(),
+ * simplices(), hasBoundaryFacets() and countBoundaryFacets(),
+ * where reasonable.
+ *
+ * This is inherited by the class \a Derived, which must provide routines of
+ * the forms <tt>size_t size() const</tt>,
+ * <tt>const std::vector<Simplex<dim>*>& simplices() const</tt>,
+ * <tt>bool hasBoundaryFacets() const</tt>, and
+ * <tt>size_t countBoundaryFacets() const</tt>.
+ */
+template <class Derived>
+class Simplices<Derived, 4> {
+    public:
+        /**
+         * A dimension-specific alias for size().
+         *
+         * See size() for further information.
+         */
+        size_t countPentachora() const {
+            return static_cast<const Derived*>(this)->size();
+        }
+
+        /**
+         * Deprecated dimension-specific alias for size().
+         *
+         * \deprecated Simply call countPentachora() instead.
+         */
+        size_t getNumberOfPentachora() const {
+            return static_cast<const Derived*>(this)->size();
+        }
+
+        /**
+         * A dimension-specific alias for simplices().
+         *
+         * See simplices() for further information.
+         */
+        const std::vector<Simplex<4>*>& pentachora() const {
+            return static_cast<const Derived*>(this)->simplices();
+        }
+
+        /**
+         * Deprecated dimension-specific alias for simplices().
+         *
+         * \deprecated Simply call pentachora() instead.
+         */
+        const std::vector<Simplex<4>*>& getPentachora() const {
+            return static_cast<const Derived*>(this)->simplices();
+        }
+
+        /**
+         * A dimension-specific alias for hasBoundaryFacets().
+         *
+         * See hasBoundaryFacets() for further information.
+         */
+        bool hasBoundaryTetrahedra() const {
+            return static_cast<const Derived*>(this)->hasBoundaryFacets();
+        }
+
+        /**
+         * A dimension-specific alias for countBoundaryFacets().
+         *
+         * See countBoundaryFacets() for further information.
+         */
+        size_t countBoundaryTetrahedra() const {
+            return static_cast<const Derived*>(this)->countBoundaryFacets();
+        }
+
+        /**
+         * Deprecated dimension-specific alias for countBoundaryFacets().
+         *
+         * \deprecated Simply call countBoundaryTetrahedra() instead.
+         */
+        size_t getNumberOfBoundaryTetrahedra() const {
+            return static_cast<const Derived*>(this)->countBoundaryFacets();
+        }
+};
 
 /**
  * Helper class that provides dimension-specific aliases for simplex(size_t),

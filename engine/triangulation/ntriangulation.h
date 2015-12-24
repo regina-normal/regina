@@ -328,18 +328,6 @@ class REGINA_API Triangulation<3> :
         /*@{*/
 
         /**
-         * A dimension-specific alias for size().
-         *
-         * See size() for further information.
-         */
-        unsigned long getNumberOfTetrahedra() const;
-        /**
-         * A dimension-specific alias for simplices().
-         *
-         * See simplices() for further information.
-         */
-        const std::vector<NTetrahedron*>& getTetrahedra() const;
-        /**
          * Deprecated dimension-specific alias for simplexIndex().
          *
          * \deprecated This routine is deprecated, and will be removed in some
@@ -592,37 +580,7 @@ class REGINA_API Triangulation<3> :
          */
         bool isStandard() const;
         bool hasBoundaryFacets() const;
-        /**
-         * A dimension-specific alias for hasBoundaryFacets().
-         *
-         * See hasBoundaryFacets() for further information.
-         */
-        bool hasBoundaryTriangles() const;
-        /**
-         * A deprecated alias for hasBoundaryFacets().
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use hasBoundaryFacets() instead.
-         *
-         * See hasBoundaryFacets() for further information.
-         */
-        bool hasBoundaryFaces() const;
         size_t countBoundaryFacets() const;
-        /**
-         * A dimension-specific alias for countBoundaryFacets().
-         *
-         * See countBoundaryFacets() for further information.
-         */
-        size_t countBoundaryTriangles() const;
-        /**
-         * A deprecated alias for countBoundaryFacets().
-         *
-         * \deprecated Call countBoundaryTriangles() or countBoundaryFacets()
-         * instead.
-         *
-         * See countBoundaryFacets() for further information.
-         */
-        size_t getNumberOfBoundaryTriangles() const;
         /**
          * Determines if this triangulation is closed.
          * This is the case if and only if it has no boundary.
@@ -3228,10 +3186,6 @@ inline bool Triangulation<3>::dependsOnParent() const {
     return false;
 }
 
-inline unsigned long Triangulation<3>::getNumberOfTetrahedra() const {
-    return simplices_.size();
-}
-
 inline long Triangulation<3>::tetrahedronIndex(const NTetrahedron* tet) const {
     return tet->markedIndex();
 }
@@ -3273,11 +3227,6 @@ inline long Triangulation<3>::getEulerCharTri() const {
 
 inline long Triangulation<3>::getEulerCharacteristic() const {
     return getEulerCharTri();
-}
-
-inline const std::vector<NTetrahedron*>& Triangulation<3>::getTetrahedra()
-        const {
-    return getSimplices();
 }
 
 inline const std::vector<NBoundaryComponent*>&
@@ -3337,26 +3286,10 @@ inline bool Triangulation<3>::hasBoundaryFacets() const {
     return (countTriangles() > 2 * simplices_.size());
 }
 
-inline bool Triangulation<3>::hasBoundaryTriangles() const {
-    return hasBoundaryFacets();
-}
-
-inline bool Triangulation<3>::hasBoundaryFaces() const {
-    return hasBoundaryFacets();
-}
-
 inline size_t Triangulation<3>::countBoundaryFacets() const {
     // Override, since we can do this faster in dimension 3.
     ensureSkeleton();
     return 2 * countTriangles() - 4 * simplices_.size();
-}
-
-inline size_t Triangulation<3>::countBoundaryTriangles() const {
-    return countBoundaryFacets();
-}
-
-inline size_t Triangulation<3>::getNumberOfBoundaryTriangles() const {
-    return countBoundaryFacets();
 }
 
 inline bool Triangulation<3>::isClosed() const {
