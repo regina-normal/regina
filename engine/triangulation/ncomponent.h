@@ -112,14 +112,6 @@ class REGINA_API Component<3> : public detail::ComponentBase<3>,
             /**< Is the component ideal? */
 
     public:
-
-        /**
-         * A dimension-specific alias for size().
-         *
-         * See size() for further information.
-         */
-        size_t getNumberOfTetrahedra() const;
-
         /**
          * Returns the number of <i>subdim</i>-faces in this component.
          *
@@ -207,12 +199,6 @@ class REGINA_API Component<3> : public detail::ComponentBase<3>,
          * @return \c true if and only if this component is closed.
          */
         bool isClosed() const;
-        /**
-         * A dimension-specific alias for getNumberOfBoundaryFacets().
-         *
-         * See getNumberOfBoundaryFacets() for further information.
-         */
-        size_t getNumberOfBoundaryTriangles() const;
 
     private:
         /**
@@ -237,10 +223,6 @@ typedef Component<3> NComponent;
 // Inline functions for Component<3>
 
 inline Component<3>::Component() : detail::ComponentBase<3>(), ideal_(false) {
-}
-
-inline size_t Component<3>::getNumberOfTetrahedra() const {
-    return size();
 }
 
 template <>
@@ -303,10 +285,6 @@ inline bool Component<3>::isIdeal() const {
 
 inline bool Component<3>::isClosed() const {
     return (boundaryComponents_.empty());
-}
-
-inline size_t Component<3>::getNumberOfBoundaryTriangles() const {
-    return getNumberOfBoundaryFacets();
 }
 
 } // namespace regina

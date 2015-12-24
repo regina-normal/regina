@@ -141,9 +141,11 @@ void addDim2Triangulation() {
         .def(init<const Dim2Triangulation&>())
         .def(init<const std::string&>())
         .def("size", &Dim2Triangulation::size)
+        .def("countTriangles", &Dim2Triangulation::countTriangles)
         .def("getNumberOfTriangles", &Dim2Triangulation::getNumberOfTriangles)
         .def("getNumberOfSimplices", &Dim2Triangulation::getNumberOfSimplices)
         .def("getTriangles", Dim2_getTriangles_list)
+        .def("triangles", Dim2_getTriangles_list)
         .def("getSimplices", Dim2_getTriangles_list)
         .def("simplices", Dim2_getTriangles_list)
         .def("triangle", triangle_non_const,

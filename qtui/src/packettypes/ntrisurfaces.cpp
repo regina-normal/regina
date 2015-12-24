@@ -584,7 +584,7 @@ void NTriSurfacesUI::refresh() {
         btnHaken->setVisible(false);
     }
 
-    if (tri->isIdeal() && ! tri->hasBoundaryFaces()) {
+    if (tri->isIdeal() && ! tri->hasBoundaryTriangles()) {
         titleStrict->setVisible(true);
         strict->setVisible(true);
         btnStrict->setVisible(true);

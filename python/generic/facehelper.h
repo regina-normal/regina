@@ -50,7 +50,7 @@ namespace python {
  * for several types T.
  */
 template <class T, int dim, int subdim>
-boost::python::list faces_list(const T& t, int subdimArg) {
+boost::python::list faces_list(const T& t) {
     boost::python::list ans;
     for (auto f : t.template faces<subdim>())
         ans.append(boost::python::ptr(f));

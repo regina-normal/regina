@@ -106,13 +106,6 @@ class REGINA_API Component<2> : public detail::ComponentBase<2>,
 
     public:
         /**
-         * A dimension-specific alias for size().
-         *
-         * See size() for further information.
-         */
-        size_t getNumberOfTriangles() const;
-
-        /**
          * Returns the number of <i>subdim</i>-faces in this component.
          *
          * \pre The template argument \a subdim is either 0 or 1.
@@ -133,13 +126,6 @@ class REGINA_API Component<2> : public detail::ComponentBase<2>,
          * @return the number of boundary components.
          */
         size_t getNumberOfBoundaryComponents() const;
-
-        /**
-         * A dimension-specific alias for simplices().
-         *
-         * See simplices() for further information.
-         */
-        const std::vector<Dim2Triangle*>& getTriangles() const;
 
         /**
          * Returns a reference to the list of all <i>subdim</i>-faces in
@@ -197,13 +183,6 @@ class REGINA_API Component<2> : public detail::ComponentBase<2>,
          */
         bool isClosed() const;
 
-        /**
-         * A dimension-specific alias for getNumberOfBoundaryFacets().
-         *
-         * See getNumberOfBoundaryFacets() for further information.
-         */
-        size_t getNumberOfBoundaryEdges() const;
-
     private:
         /**
          * Default constructor.
@@ -226,10 +205,6 @@ typedef Component<2> Dim2Component;
 // Inline functions for Component<2>
 
 inline Component<2>::Component() : detail::ComponentBase<2>() {
-}
-
-inline size_t Component<2>::getNumberOfTriangles() const {
-    return size();
 }
 
 template <>
@@ -256,10 +231,6 @@ inline size_t Component<2>::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
-inline const std::vector<Dim2Triangle*>& Component<2>::getTriangles() const {
-    return simplices();
-}
-
 template <>
 inline Dim2Edge* Component<2>::face<1>(size_t index) const {
     return edges_[index];
@@ -277,10 +248,6 @@ inline Dim2BoundaryComponent* Component<2>::getBoundaryComponent(size_t index)
 
 inline bool Component<2>::isClosed() const {
     return (boundaryComponents_.empty());
-}
-
-inline size_t Component<2>::getNumberOfBoundaryEdges() const {
-    return getNumberOfBoundaryFacets();
 }
 
 } // namespace regina

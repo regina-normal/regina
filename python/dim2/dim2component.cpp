@@ -60,6 +60,7 @@ void addDim2Component() {
             ("Component2", no_init)
         .def("index", &Dim2Component::index)
         .def("size", &Dim2Component::size)
+        .def("countTriangles", &Dim2Component::countTriangles)
         .def("getNumberOfTriangles", &Dim2Component::getNumberOfTriangles)
         .def("getNumberOfSimplices", &Dim2Component::getNumberOfSimplices)
         .def("countFaces", &regina::python::countFaces<Dim2Component, 2>)
@@ -71,6 +72,7 @@ void addDim2Component() {
         .def("getNumberOfBoundaryComponents",
             &Dim2Component::getNumberOfBoundaryComponents)
         .def("simplices", getTriangles_list)
+        .def("triangles", getTriangles_list)
         .def("getTriangles", getTriangles_list)
         .def("faces", &regina::python::faces<Dim2Component, 2>)
         .def("getFaces", &regina::python::faces<Dim2Component, 2>)
@@ -100,9 +102,12 @@ void addDim2Component() {
             return_value_policy<reference_existing_object>())
         .def("isOrientable", &Dim2Component::isOrientable)
         .def("isClosed", &Dim2Component::isClosed)
+        .def("hasBoundaryFacets", &Dim2Component::hasBoundaryFacets)
+        .def("hasBoundaryEdges", &Dim2Component::hasBoundaryEdges)
         .def("countBoundaryFacets", &Dim2Component::countBoundaryFacets)
         .def("getNumberOfBoundaryFacets",
             &Dim2Component::getNumberOfBoundaryFacets)
+        .def("countBoundaryEdges", &Dim2Component::countBoundaryEdges)
         .def("getNumberOfBoundaryEdges",
             &Dim2Component::getNumberOfBoundaryEdges)
         .def("str", &Dim2Component::str)

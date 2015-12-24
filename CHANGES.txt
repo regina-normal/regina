@@ -83,6 +83,7 @@ Version 4.97  [ (under development) ]
         Class Dim2Component:
             - New routine getNumberOfBoundaryFacets(), which is identical to
               the dimension-specific getNumberOfBoundaryEdges().
+            - New routine hasBoundaryFacets() and alias hasBoundaryEdges().
             - New dimension-agnostic routines countFaces<subdim>(),
               faces<subdim>() and face<subdim>().
             - Routine getNumberOfSimplices() has been renamed to size().
@@ -209,14 +210,15 @@ Version 4.97  [ (under development) ]
         Class NComponent:
             - New routine getNumberOfBoundaryFacets(), which is identical to
               the dimension-specific getNumberOfBoundaryTriangles().
+            - New routine hasBoundaryFacets() and alias hasBoundaryTriangles().
             - New dimension-agnostic routines countFaces<subdim>(),
               faces<subdim>() and face<subdim>().
-            - New routines vertices(), edges() and triangles().
+            - New routines vertices(), edges(), triangles() and tetrahedra().
             - Routines getNumberOfSimplices() has been renamed to size().
               The old name is retained but deprecated.
-            - Removed 2-face members getFace() and getNumberOfFaces(), both of
-              which were deprecated.  Instead use the names that replace
-              "face" with "triangle".
+            - Removed 2-face members getFace(), getNumberOfFaces() and
+              hasBoundaryFaces(), all of which were deprecated.  Instead use
+              the names that replace "face" with "triangle".
         Class NContainer:
             - New constructor that takes a packet label.
         Class NCyclotomic:
@@ -482,8 +484,9 @@ Version 4.97  [ (under development) ]
             - New dimension-agnostic routine countBoundaryFacets().
             - Removed the long-deprecated addTetrahedron().
             - Removed 2-face members FaceIterator, faceIndex(), getFace(),
-              getFaces() and getNumberOfFaces(), all of which were deprecated.
-              Instead use the names that replace "face" with "triangle".
+              getFaces(), getNumberOfFaces() and hasBoundaryFaces(), all of
+              which were deprecated.  Instead use the names that replace
+              "face" with "triangle".
         Class NVertex:
             - Now just typedefs for the new classes Face<3, 0> and
               FaceEmbedding<3, 0>, which have the same functionality as
