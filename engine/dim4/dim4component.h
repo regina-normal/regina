@@ -116,13 +116,6 @@ class REGINA_API Component<4> : public detail::ComponentBase<4>,
 
     public:
         /**
-         * A dimension-specific alias for size().
-         *
-         * See size() for further information.
-         */
-        unsigned long getNumberOfPentachora() const;
-
-        /**
          * Returns the number of <i>subdim</i>-faces in this component.
          *
          * \pre The template argument \a subdim is between 0 and 3 inclusive.
@@ -143,13 +136,6 @@ class REGINA_API Component<4> : public detail::ComponentBase<4>,
          * @return the number of boundary components.
          */
         unsigned long getNumberOfBoundaryComponents() const;
-
-        /**
-         * A dimension-specific alias for simplex().
-         *
-         * See simplex() for further information.
-         */
-        Dim4Pentachoron* getPentachoron(unsigned long index) const;
 
         /**
          * Returns a reference to the list of all <i>subdim</i>-faces in
@@ -220,13 +206,6 @@ class REGINA_API Component<4> : public detail::ComponentBase<4>,
          */
         bool isClosed() const;
 
-        /**
-         * Returns the number of boundary tetrahedra in this component.
-         *
-         * @return the number of boundary tetrahedra.
-         */
-        unsigned long getNumberOfBoundaryTetrahedra() const;
-
     private:
         /**
          * Default constructor.
@@ -251,10 +230,6 @@ typedef Component<4> Dim4Component;
 // Inline functions for Component<4>
 
 inline Dim4Component::Component() : detail::ComponentBase<4>(), ideal_(false) {
-}
-
-inline unsigned long Dim4Component::getNumberOfPentachora() const {
-    return size();
 }
 
 template <>
@@ -301,11 +276,6 @@ inline const std::vector<Dim4Vertex*>& Component<4>::faces<0>() const {
     return vertices_;
 }
 
-inline Dim4Pentachoron* Dim4Component::getPentachoron(unsigned long index)
-        const {
-    return simplex(index);
-}
-
 template <>
 inline Dim4Tetrahedron* Dim4Component::face<3>(size_t index) const {
     return tetrahedra_[index];
@@ -337,10 +307,6 @@ inline bool Dim4Component::isIdeal() const {
 
 inline bool Dim4Component::isClosed() const {
     return (boundaryComponents_.empty());
-}
-
-inline unsigned long Dim4Component::getNumberOfBoundaryTetrahedra() const {
-    return 2 * tetrahedra_.size() - 5 * size();
 }
 
 } // namespace regina

@@ -40,6 +40,7 @@
 #include "dim4/dim4vertex.h"
 #include "triangulation/ntriangulation.h"
 #include "../helpers.h"
+#include "../generic/facehelper.h"
 
 using namespace boost::python;
 using regina::Dim4BoundaryComponent;
@@ -48,6 +49,10 @@ void addDim4BoundaryComponent() {
     class_<Dim4BoundaryComponent, std::auto_ptr<Dim4BoundaryComponent>,
             boost::noncopyable>("Dim4BoundaryComponent", no_init)
         .def("index", &Dim4BoundaryComponent::index)
+        .def("countFaces",
+            &regina::python::countFaces<Dim4BoundaryComponent, 4>)
+        .def("getNumberOfFaces",
+            &regina::python::countFaces<Dim4BoundaryComponent, 4>)
         .def("countTetrahedra",
             &Dim4BoundaryComponent::countTetrahedra)
         .def("getNumberOfTetrahedra",
@@ -59,6 +64,8 @@ void addDim4BoundaryComponent() {
         .def("getNumberOfEdges", &Dim4BoundaryComponent::getNumberOfEdges)
         .def("countVertices", &Dim4BoundaryComponent::countVertices)
         .def("getNumberOfVertices", &Dim4BoundaryComponent::getNumberOfVertices)
+        .def("face", &regina::python::face<Dim4BoundaryComponent, 4, size_t>)
+        .def("getFace", &regina::python::face<Dim4BoundaryComponent, 4, size_t>)
         .def("tetrahedron", &Dim4BoundaryComponent::tetrahedron,
             return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &Dim4BoundaryComponent::getTetrahedron,

@@ -41,6 +41,7 @@
 #include "dim4/dim4triangulation.h"
 #include "dim4/dim4vertex.h"
 #include "../helpers.h"
+#include "../generic/facehelper.h"
 
 using namespace boost::python;
 using regina::Dim4Pentachoron;
@@ -72,6 +73,8 @@ void addDim4Pentachoron() {
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim4Pentachoron::getComponent,
             return_value_policy<reference_existing_object>())
+        .def("face", &regina::python::face<Dim4Pentachoron, 4, int>)
+        .def("getFace", &regina::python::face<Dim4Pentachoron, 4, int>)
         .def("vertex", &Dim4Pentachoron::vertex,
             return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim4Pentachoron::getVertex,
@@ -88,6 +91,8 @@ void addDim4Pentachoron() {
             return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &Dim4Pentachoron::getTetrahedron,
             return_value_policy<reference_existing_object>())
+        .def("faceMapping", &regina::python::faceMapping<Dim4Pentachoron, 4>)
+        .def("getFaceMapping", &regina::python::faceMapping<Dim4Pentachoron, 4>)
         .def("vertexMapping", &Dim4Pentachoron::vertexMapping)
         .def("getVertexMapping", &Dim4Pentachoron::getVertexMapping)
         .def("edgeMapping", &Dim4Pentachoron::edgeMapping)

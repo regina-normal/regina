@@ -1438,7 +1438,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     } else if (v->getBoundaryComponent()->
                             getNumberOfTetrahedra() > 0) {
                         // Link should have boundary faces but not be a 3-ball.
-                        if (! link->hasBoundaryFaces()) {
+                        if (! link->hasBoundaryTriangles()) {
                             std::ostringstream msg;
                             msg << tri->getPacketLabel() << ", vertex "
                                 << i << ": "
@@ -1457,7 +1457,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     } else {
                         // Link should have no boundary faces, but not
                         // be a closed 3-manifold.
-                        if (link->hasBoundaryFaces()) {
+                        if (link->hasBoundaryTriangles()) {
                             std::ostringstream msg;
                             msg << tri->getPacketLabel() << ", vertex "
                                 << i << ": "

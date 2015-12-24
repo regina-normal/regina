@@ -229,18 +229,6 @@ class REGINA_API Triangulation<4> :
         /*@{*/
 
         /**
-         * A dimension-specific alias for size().
-         *
-         * See size() for further information.
-         */
-        unsigned long getNumberOfPentachora() const;
-        /**
-         * A dimension-specific alias for simplices().
-         *
-         * See simplices() for further information.
-         */
-        const std::vector<Dim4Pentachoron*>& getPentachora() const;
-        /**
          * Deprecated dimension-specific alias for simplexIndex().
          *
          * \deprecated This routine is deprecated, and will be removed in some
@@ -469,19 +457,7 @@ class REGINA_API Triangulation<4> :
          */
         bool isIdeal() const;
         bool hasBoundaryFacets() const;
-        /**
-         * A dimension-specific alias for hasBoundaryFacets().
-         *
-         * See hasBoundaryFacets() for further information.
-         */
-        bool hasBoundaryTetrahedra() const;
         size_t countBoundaryFacets() const;
-        /**
-         * A dimension-specific alias for countBoundaryFacets().
-         *
-         * See countBoundaryFacets() for further information.
-         */
-        size_t countBoundaryTetrahedra() const;
         /**
          * Determines if this triangulation is closed.
          * This is the case if and only if it has no boundary components.
@@ -1117,15 +1093,6 @@ inline bool Triangulation<4>::dependsOnParent() const {
     return false;
 }
 
-inline unsigned long Triangulation<4>::getNumberOfPentachora() const {
-    return size();
-}
-
-inline const std::vector<Dim4Pentachoron*>& Triangulation<4>::getPentachora()
-        const {
-    return getSimplices();
-}
-
 inline long Triangulation<4>::pentachoronIndex(const Dim4Pentachoron* pent)
         const {
     return pent->index();
@@ -1213,18 +1180,10 @@ inline bool Triangulation<4>::hasBoundaryFacets() const {
     return (2 * countTetrahedra() > 5 * size());
 }
 
-inline bool Triangulation<4>::hasBoundaryTetrahedra() const {
-    return hasBoundaryFacets();
-}
-
 inline size_t Triangulation<4>::countBoundaryFacets() const {
     // Override, since we can do this faster in dimension 4.
     ensureSkeleton();
     return 2 * countTetrahedra() - 5 * size();
-}
-
-inline size_t Triangulation<4>::countBoundaryTetrahedra() const {
-    return countBoundaryFacets();
 }
 
 inline bool Triangulation<4>::isClosed() const {

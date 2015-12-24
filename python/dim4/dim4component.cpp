@@ -41,6 +41,7 @@
 #include "dim4/dim4triangle.h"
 #include "dim4/dim4vertex.h"
 #include "../helpers.h"
+#include "../generic/facehelper.h"
 
 using namespace boost::python;
 using regina::Component;
@@ -54,34 +55,6 @@ namespace {
             ans.append(boost::python::ptr(*it));
         return ans;
     }
-
-    boost::python::list vertices_list(Dim4Component& t) {
-        boost::python::list ans;
-        for (auto v : t.vertices())
-            ans.append(boost::python::ptr(v));
-        return ans;
-    }
-
-    boost::python::list edges_list(Dim4Component& t) {
-        boost::python::list ans;
-        for (auto e : t.edges())
-            ans.append(boost::python::ptr(e));
-        return ans;
-    }
-
-    boost::python::list triangles_list(Dim4Component& t) {
-        boost::python::list ans;
-        for (auto f : t.triangles())
-            ans.append(boost::python::ptr(f));
-        return ans;
-    }
-
-    boost::python::list tetrahedra_list(Dim4Component& t) {
-        boost::python::list ans;
-        for (auto f : t.tetrahedra())
-            ans.append(boost::python::ptr(f));
-        return ans;
-    }
 }
 
 void addDim4Component() {
@@ -89,8 +62,11 @@ void addDim4Component() {
             ("Component4", no_init)
         .def("index", &Dim4Component::index)
         .def("size", &Dim4Component::size)
+        .def("countPentachora", &Dim4Component::countPentachora)
         .def("getNumberOfPentachora", &Dim4Component::getNumberOfPentachora)
         .def("getNumberOfSimplices", &Dim4Component::getNumberOfSimplices)
+        .def("countFaces", &regina::python::countFaces<Dim4Component, 4>)
+        .def("getNumberOfFaces", &regina::python::countFaces<Dim4Component, 4>)
         .def("countTetrahedra", &Dim4Component::countTetrahedra)
         .def("getNumberOfTetrahedra", &Dim4Component::getNumberOfTetrahedra)
         .def("countTriangles", &Dim4Component::countTriangles)
@@ -103,14 +79,18 @@ void addDim4Component() {
             &Dim4Component::getNumberOfBoundaryComponents)
         .def("simplices", getSimplices_list)
         .def("getSimplices", getSimplices_list)
-        .def("vertices", vertices_list)
-        .def("getVertices", vertices_list)
-        .def("edges", edges_list)
-        .def("getEdges", edges_list)
-        .def("triangles", triangles_list)
-        .def("getTriangles", triangles_list)
-        .def("tetrahedra", tetrahedra_list)
-        .def("getTetrahedra", tetrahedra_list)
+        .def("pentachora", getSimplices_list)
+        .def("getPentachora", getSimplices_list)
+        .def("faces", &regina::python::faces<Dim4Component, 4>)
+        .def("getFaces", &regina::python::faces<Dim4Component, 4>)
+        .def("vertices", regina::python::faces_list<Dim4Component, 4, 0>)
+        .def("getVertices", regina::python::faces_list<Dim4Component, 4, 0>)
+        .def("edges", regina::python::faces_list<Dim4Component, 4, 1>)
+        .def("getEdges", regina::python::faces_list<Dim4Component, 4, 1>)
+        .def("triangles", regina::python::faces_list<Dim4Component, 4, 2>)
+        .def("getTriangles", regina::python::faces_list<Dim4Component, 4, 2>)
+        .def("tetrahedra", regina::python::faces_list<Dim4Component, 4, 3>)
+        .def("getTetrahedra", regina::python::faces_list<Dim4Component, 4, 3>)
         .def("simplex", &Dim4Component::simplex,
             return_value_policy<reference_existing_object>())
         .def("pentachoron", &Dim4Component::pentachoron,
@@ -119,6 +99,8 @@ void addDim4Component() {
             return_value_policy<reference_existing_object>())
         .def("getSimplex", &Dim4Component::getSimplex,
             return_value_policy<reference_existing_object>())
+        .def("face", &regina::python::face<Dim4Component, 4, size_t>)
+        .def("getFace", &regina::python::face<Dim4Component, 4, size_t>)
         .def("tetrahedron", &Dim4Component::tetrahedron,
             return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &Dim4Component::getTetrahedron,
@@ -140,9 +122,12 @@ void addDim4Component() {
         .def("isIdeal", &Dim4Component::isIdeal)
         .def("isOrientable", &Dim4Component::isOrientable)
         .def("isClosed", &Dim4Component::isClosed)
+        .def("hasBoundaryFacets", &Dim4Component::hasBoundaryFacets)
+        .def("hasBoundaryTetrahedra", &Dim4Component::hasBoundaryTetrahedra)
         .def("countBoundaryFacets", &Dim4Component::countBoundaryFacets)
         .def("getNumberOfBoundaryFacets",
             &Dim4Component::getNumberOfBoundaryFacets)
+        .def("countBoundaryTetrahedra", &Dim4Component::countBoundaryTetrahedra)
         .def("getNumberOfBoundaryTetrahedra",
             &Dim4Component::getNumberOfBoundaryTetrahedra)
         .def("str", &Dim4Component::str)
