@@ -456,8 +456,6 @@ class REGINA_API Triangulation<4> :
          * @return \c true if and only if this triangulation is ideal.
          */
         bool isIdeal() const;
-        bool hasBoundaryFacets() const;
-        size_t countBoundaryFacets() const;
         /**
          * Determines if this triangulation is closed.
          * This is the case if and only if it has no boundary components.
@@ -1172,18 +1170,6 @@ inline long Triangulation<4>::getEulerCharTri() const {
 inline bool Triangulation<4>::isIdeal() const {
     ensureSkeleton();
     return ideal_;
-}
-
-inline bool Triangulation<4>::hasBoundaryFacets() const {
-    // Override, since we can do this faster in dimension 4.
-    ensureSkeleton();
-    return (2 * countTetrahedra() > 5 * size());
-}
-
-inline size_t Triangulation<4>::countBoundaryFacets() const {
-    // Override, since we can do this faster in dimension 4.
-    ensureSkeleton();
-    return 2 * countTetrahedra() - 5 * size();
 }
 
 inline bool Triangulation<4>::isClosed() const {
