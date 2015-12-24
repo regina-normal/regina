@@ -579,8 +579,6 @@ class REGINA_API Triangulation<3> :
          * standard.
          */
         bool isStandard() const;
-        bool hasBoundaryFacets() const;
-        size_t countBoundaryFacets() const;
         /**
          * Determines if this triangulation is closed.
          * This is the case if and only if it has no boundary.
@@ -3278,18 +3276,6 @@ inline bool Triangulation<3>::isIdeal() const {
 inline bool Triangulation<3>::isStandard() const {
     ensureSkeleton();
     return standard_;
-}
-
-inline bool Triangulation<3>::hasBoundaryFacets() const {
-    // Override, since we can do this faster in dimension 3.
-    ensureSkeleton();
-    return (countTriangles() > 2 * simplices_.size());
-}
-
-inline size_t Triangulation<3>::countBoundaryFacets() const {
-    // Override, since we can do this faster in dimension 3.
-    ensureSkeleton();
-    return 2 * countTriangles() - 4 * simplices_.size();
 }
 
 inline bool Triangulation<3>::isClosed() const {

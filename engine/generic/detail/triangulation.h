@@ -1784,19 +1784,13 @@ inline bool TriangulationBase<dim>::isValid() const {
 template <int dim>
 inline bool TriangulationBase<dim>::hasBoundaryFacets() const {
     ensureSkeleton();
-    for (auto c : components_)
-        if (c->countBoundaryFacets())
-            return true;
-    return false;
+    return (2 * countFaces<dim - 1>() > (dim + 1) * simplices_.size());
 }
 
 template <int dim>
 inline size_t TriangulationBase<dim>::countBoundaryFacets() const {
     ensureSkeleton();
-    size_t ans = 0;
-    for (auto c : components_)
-        ans += c->countBoundaryFacets();
-    return ans;
+    return 2 * countFaces<dim - 1>() - (dim + 1) * simplices_.size();
 }
 
 template <int dim>

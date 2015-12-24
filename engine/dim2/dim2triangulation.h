@@ -351,8 +351,6 @@ class REGINA_API Triangulation<2> :
          * @return \c true if and only if this triangulation is closed.
          */
         bool isClosed() const;
-        bool hasBoundaryFacets() const;
-        size_t countBoundaryFacets() const;
         /**
          * Always returns \c false.
          *
@@ -583,17 +581,6 @@ inline long Triangulation<2>::getEulerChar() const {
 inline bool Triangulation<2>::isClosed() const {
     ensureSkeleton();
     return boundaryComponents_.empty();
-}
-
-inline bool Triangulation<2>::hasBoundaryFacets() const {
-    // Override, since we can do this faster in dimension 2.
-    return ! isClosed();
-}
-
-inline size_t Triangulation<2>::countBoundaryFacets() const {
-    // Override, since we can do this faster in dimension 2.
-    ensureSkeleton();
-    return 2 * countEdges() - 3 * simplices_.size();
 }
 
 inline bool Triangulation<2>::isIdeal() const {
