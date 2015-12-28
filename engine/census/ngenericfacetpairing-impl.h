@@ -928,30 +928,7 @@ typename NGenericFacetPairing<dim>::Isomorphism* NGenericFacetPairing<dim>::make
     return ans;
 }
 
-
 template <int dim>
-bool NGenericFacetPairing<dim>::findAllPairings(unsigned nSimplices,
-        NBoolSet boundary, int nBdryFacets,
-        typename NGenericFacetPairing<dim>::Use use,
-        void* useArgs, bool newThread) {
-    // Create a set of arguments.
-    Args* args = new Args;
-    args->boundary = boundary;
-    args->nBdryFacets = nBdryFacets;
-    args->use = use;
-    args->useArgs = useArgs;
-
-    // Start the facet pairing generation.
-    FacetPairing* pairing = new FacetPairing(nSimplices);
-    if (newThread)
-        return pairing->start(args, true);
-    else {
-        pairing->run(args);
-        delete pairing;
-        return true;
-    }
-}
-
 void NGenericFacetPairing<dim>::enumerateInternal(NBoolSet boundary,
         int nBdryFacets, Use use, void* useArgs) {
     // Bail if it's obvious that nothing will happen.
