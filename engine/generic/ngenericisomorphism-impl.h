@@ -91,7 +91,7 @@ NGenericIsomorphism<dim>::NGenericIsomorphism(
 }
 
 template <int dim>
-typename NGenericIsomorphism<dim>::Isomorphism* NGenericIsomorphism<dim>::
+typename DimTraits<dim>::Isomorphism* NGenericIsomorphism<dim>::
         inverse() const {
     Isomorphism* ans = new Isomorphism(nSimplices_);
 
@@ -105,7 +105,7 @@ typename NGenericIsomorphism<dim>::Isomorphism* NGenericIsomorphism<dim>::
 }
 
 template <int dim>
-typename NGenericIsomorphism<dim>::Isomorphism* NGenericIsomorphism<dim>::
+typename DimTraits<dim>::Isomorphism* NGenericIsomorphism<dim>::
         random(unsigned nSimplices) {
     Isomorphism* ans = new Isomorphism(nSimplices);
 
