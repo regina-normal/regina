@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "census/dim2edgepairing.h"
 #include "dim2/dim2triangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::Dim2EdgePairing;
@@ -112,6 +113,7 @@ void addDim2EdgePairing() {
         .def("dotHeader", dotHeader_standalone, OL_dotHeader())
         .def("isClosed", &Dim2EdgePairing::isClosed)
         .def("__str__", &Dim2EdgePairing::str)
+        .def(regina::python::add_eq_operators())
         .staticmethod("fromTextRep")
         .staticmethod("writeDotHeader")
         .staticmethod("dotHeader")

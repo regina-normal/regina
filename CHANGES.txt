@@ -9,6 +9,25 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.97  [ (under development) ]
 
+    GENERAL:
+        - Now uses aspects of C++11, which your compiler will need to support.
+        - Merged sources for the iPad version into the main source tree.
+        - Updated the bundled copy of Normaliz to version 3.0.0 (28 Sep 2015).
+        - Switched from std::auto_ptr to std::unique_ptr throughout the API.
+    BACKWARD COMPATIBILITY:
+        - Some routines have been removed, which may break your old code:
+            * NTriangulation::addTetrahedron(), as well as the NTetrahedron
+              constructors, have been deprecated since 2011; they are now
+              removed completely.  To add tetrahedra to a triangulation,
+              call NTriangulation::newTetrahedron() instead.
+            * NTriangulation::gluingsHaveChanged() has likewise been deprecated
+              since 2011, and has now been removed completely.  This routine
+              is no longer necessary (it has done nothing since it was
+              deprecated), and you can simply remove it from your code.
+            * NProgress, NProgressManager and related classes have been
+              deprecated since 2013; they are also removed completely.
+              All the code that used to work with these classes now
+              works with the newer and more flexible NProgressTracker instead.
     ENGINE:
         All:
             - Removed ShareableObject from the class hierarchy.  All classes
@@ -27,17 +46,33 @@ Version 4.97  [ (under development) ]
         Class Dim2Triangulation:
             - New dimension-agnostic getFace<subdim>() and
               faceIndex<subdim>() template functions.
+            - Reconstruction from isomorphism signatures now allows
+              leading and/or trailing whitespace.
         Class FaceTraits:
             - New template class to help with writing dimension-agnostic code.
               This class offers typedefs for (subdim)-dimensional faces
               within a (dim)-dimensional triangulation.
+        Class HasReturnType:
+            - New class to detect at compile time whether the type
+              T::ReturnType exists.
         Class LightweightSequence:
             - New lightweight class for storing an array of objects.
         Class NAngleStructureList:
             - Renamed getNumberOfStructures() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
+            - Now uses C++11 std::thread internally instead of the old NThread.
+        Class NContainer:
+            - New constructor that takes a packet label.
         Class NCyclotomic:
             - New class for exact arithmetic in cyclotomic fields.
+        Class NDiscSpec:
+            - Added != operator to complement the existing == operator.
+        Class NDiscSpecIterator:
+            - Added == and != comparison operators.
+        Struct NewFunction, NewFunction1:
+            - NewFunction1 is deprecated in favour of the new and more
+              flexible NewFunction, which allows arbitrary arguments and
+              has less overhead.
         Class NExampleSnapPeaTriangulation:
             - New class for building ready-made SnapPea examples.
         Class NExampleTriangulation:
@@ -45,9 +80,13 @@ Version 4.97  [ (under development) ]
               and whiteheadLinkComplement() to figureEight(), trefoil()
               and whiteheadLink() respectively.  The old names are kept
               but deprecated.
+        Class NFacePair, NFacetSpec:
+            - Added != operators to complement the existing == operators.
         Class NGenericFacetPairing, NFacePairing, Dim2EdgePairing:
             - Routines dotHeader() and writeDotHeader() no longer set an
               explicit background colour.
+            - Routine findAllPairings() now always runs in the current thread,
+              and no longer takes the final optional newThread argument.
         Class NGenericTriangulation, NTriangulation, Dim2Triangulation:
             - New routine size(), which is an alias for getNumberOfSimplices().
         Class NGlobalDirs:
@@ -56,35 +95,76 @@ Version 4.97  [ (under development) ]
               routine, and set through an optional third argument to setDirs().
             - The homeDir argument to setDirs() may now be the empty string,
               which signals that the directory should not be changed.
+        Class NGroupExpression, NGroupExpressionTerm:
+            - Added != operators to complement the existing == operators.
+        Class NHandlebody, NLensSpace:
+            - Added != operator to complement the existing == operator.
+        Class NMarkedAbelianGroup:
+            - Added != operator to complement the existing == operator.
         Class NMatrix:
             - The destructor and writeMatrix() are no longer virtual.
             - Now derives from Output, and provides str() and detail()
               output routines.
+        Class NMutex:
+            - Deprecated; just use std::mutex and related classes instead.
         Class NNormalSurface:
             - New convenience routines normal() and embedded().
         Class NNormalSurfaceList:
             - Renamed getNumberOfSurfaces() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
+            - Now uses C++11 std::thread internally instead of the old NThread.
         Class NNormalSurfaceSubset:
             - Renamed getNumberOfSurfaces() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
+        Class NNormalSurfaceVector:
+            - The subclass constant coordType is now a constant of type
+              NormalCoords, not an anonymous enum type.
         Class NPacket:
             - Added a variant of save() that takes an output stream (as
               opposed to a filename).
             - New routine adornedLabel() for creating modified packet labels.
             - New routine transferChildren() for bulk tree reorganisation.
+            - The subclass constant packetType is now a constant of type
+              PacketType, not an anonymous enum type.
         Class NPacketListener:
             - New events childToBeRenamed(), childWasRenamed().
         Class NPolynomial:
             - New class for working with single-variable polynomials
               over arbitrary rings.
+        Class NPrismSpec:
+            - Added != operator to complement the existing == operator.
+        Class NPrismSetSurface:
+            - Deprecated this class, which has been little more than a
+              placeholder for 12 years.  Also removed its python bindings.
+        Class NProgress, NProgressFinished, NProgressManager,
+                NProgressMessage, NProgressNumber, NProgressStateNumeric:
+            - Removed these old deprecated classes entirely.
         Class NRational:
             - The destructor is no longer virtual.
         Class NSatBlock:
             - Classes inheriting from this must now implement writeTextShort,
               and can optionally overwrite the default writeTextLong function.
+        Class NSatBlockSpec:
+            - Added == and != comparison operators.
+        Class NSFSpace, NSFSSpaceFibre:
+            - Added != operators to complement the existing == operators.
+        Class NSimpleSurfaceBundle, NSnapPeaCensusManifold, NSnapPeaCensusTri:
+            - Added != operators to complement the existing == operators.
+        Class NSnapPeaCensusManifold:
+            - Change the behaviour of == and != to reflect the recent discovery
+              that the manifolds x101 and x103 are homeomorphic.  For details,
+              see B.B., "A duplicate pair in the SnapPea census",
+              Experimental Mathematics, 23:170-173, 2014.
+        Class NSurfaceFilter:
+            - The subclass constant filterType is now a constant of type
+              SurfaceFilterType, not an anonymous enum type.
         Class NSurfaceFilterProperties:
             - New set-based routine setECs().
+        Class NTetrahedron:
+            - Removed the long-deprecated public constructors.  To create new
+              tetrahedra, call NTriangulation::newTetrahedron() instead.
+        Class NThread:
+            - Deprecated; just use std::thread and related classes instead.
         Class NTreeBag, NTreeDecomposition:
             - Classes for computing tree decompositions of graphs
               (including facet pairing graphs of triangulations).
@@ -116,6 +196,11 @@ Version 4.97  [ (under development) ]
               faceIndex<subdim>() template functions.
             - New routine niceTreeDecomposition() for constructing and
               caching a nice tree decomposition of the face pairing graph.
+            - New routines retriangulate() and simplifyExhaustive() for
+              breadth-first searching through the Pachner graph.
+            - Reconstruction from isomorphism signatures now allows
+              leading and/or trailing whitespace.
+            - Removed the long-deprecated addTetrahedron().
         Class NVertex:
             - Added a new LinkType enumeration, which encapsulates (and
               replaces) the old link type constants.
@@ -123,14 +208,29 @@ Version 4.97  [ (under development) ]
             - New classes that provide consistent APIs for objects to provide
               short and detailed string output.  These have been introduced as
               lightweight replacements for the now-defunct ShareableObject.
+        Class ReturnsTraits:
+            - Helper class for compile-time analysis of function objects.
         Class ShareableObject:
             - Removed entirely.  This is no longer needed as a base class for
               objects that are mirrored in external interfaces (e.g., python).
             - The string output routines str() and detail() are now provided
               by the Output template class instead.
+        Routine forCoords(), forFilter(), forPacket():
+            - Removed the initial Coords / Filter / PacketType argument,
+              which was only used to convey type information and never
+              contained any real data.
+            - Now supports additional trailing arguments, which are
+              passed through to the bracket operator.
+            - The void / non-void variants now require that the function
+              object must / must not be derived from Returns<T> respectively.
+        Routine makeAngleEquations():
+            - Added as a global routine so that Python users can access it.
+              This is identical to NAngleStructureVector::makeAngleEquations().
         Routine open():
             - Added a variant that takes an input stream (as opposed to
               a filename).
+        Macro REGINA_INLINE_REQUIRED:
+            - New macro to help reduce noisy warnings under windows.
         Header zstream.h:
             - Removed entirely.  Regina now uses boost::iostreams instead.
     USER INTERFACE:
@@ -142,9 +242,18 @@ Version 4.97  [ (under development) ]
           to modifying the current triangulation.
         - Puncturing a triangulation, making it ideal or truncating ideal
           vertices now automatically simplify the resulting triangulation.
+        - Now links against Graphviz instead of running it externally.
     PYTHON:
         - For all classes, writeTextShort() and writeTextLong() are no
           longer exposed to Python.  Simply use str() and detail() instead.
+        - The behaviour of == and != under python has been formalised.
+          For those classes that have == and != operators in C++, the
+          python == and != operators compare by value (i.e., they call the
+          C++ operators).  For those classes that have neither == nor != in
+          C++, the python == and != operators compare by reference.
+          Every wrapped C++ class has an equalityType attribute in
+          python to indicate which behaviour it uses.
+          Thanks to Matthias Goerner for his help with this.
 
 Version 4.96  [ 29 August, 2014 ]
 

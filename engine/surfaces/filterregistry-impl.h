@@ -42,6 +42,9 @@
  * - add a corresponding case to each implementation of forFilter().
  *
  * See filterregistry.h for how other routines can use this registry.
+ *
+ * This file is automatically included from filterregistry.h; there
+ * is no need for end users to include it explicitly.
  */
 
 #ifndef __FILTERREGISTRY_IMPL_H
@@ -55,30 +58,38 @@
 
 namespace regina {
 
-template <typename FunctionObject>
-inline typename FunctionObject::ReturnType forFilter(
-        SurfaceFilterType filter, FunctionObject func,
-        typename FunctionObject::ReturnType defaultReturn) {
+template <typename FunctionObject, typename... Args>
+inline typename ReturnsTraits<FunctionObject>::ReturnType
+forFilter(SurfaceFilterType filter, FunctionObject&& func,
+        typename ReturnsTraits<FunctionObject>::ReturnType defaultReturn,
+        Args&&... args) {
     switch (filter) {
-        case NS_FILTER_DEFAULT :
-            return func(SurfaceFilterInfo<NS_FILTER_DEFAULT>());
-        case NS_FILTER_PROPERTIES :
-            return func(SurfaceFilterInfo<NS_FILTER_PROPERTIES>());
-        case NS_FILTER_COMBINATION :
-            return func(SurfaceFilterInfo<NS_FILTER_COMBINATION>());
+        case NS_FILTER_DEFAULT : return
+            func.template operator()<SurfaceFilterInfo<NS_FILTER_DEFAULT>>(
+            std::forward<Args>(args)...);
+        case NS_FILTER_PROPERTIES : return
+            func.template operator()<SurfaceFilterInfo<NS_FILTER_PROPERTIES>>(
+            std::forward<Args>(args)...);
+        case NS_FILTER_COMBINATION : return
+            func.template operator()<SurfaceFilterInfo<NS_FILTER_COMBINATION>>(
+            std::forward<Args>(args)...);
         default: return defaultReturn;
     }
 }
 
-template <typename VoidFunctionObject>
-inline void forFilter(SurfaceFilterType filter, VoidFunctionObject func) {
+template <typename FunctionObject, typename... Args>
+inline typename ReturnsTraits<FunctionObject>::Void
+forFilter(SurfaceFilterType filter, FunctionObject&& func, Args&&... args) {
     switch (filter) {
         case NS_FILTER_DEFAULT :
-            func(SurfaceFilterInfo<NS_FILTER_DEFAULT>()); break;
+            func.template operator()<SurfaceFilterInfo<NS_FILTER_DEFAULT>>(
+            std::forward<Args>(args)...); break;
         case NS_FILTER_PROPERTIES :
-            func(SurfaceFilterInfo<NS_FILTER_PROPERTIES>()); break;
+            func.template operator()<SurfaceFilterInfo<NS_FILTER_PROPERTIES>>(
+            std::forward<Args>(args)...); break;
         case NS_FILTER_COMBINATION :
-            func(SurfaceFilterInfo<NS_FILTER_COMBINATION>()); break;
+            func.template operator()<SurfaceFilterInfo<NS_FILTER_COMBINATION>>(
+            std::forward<Args>(args)...); break;
         default: break;
     }
 }

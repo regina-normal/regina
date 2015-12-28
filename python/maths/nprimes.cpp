@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "maths/nprimes.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NLargeInteger;
@@ -93,6 +94,7 @@ void addNPrimes() {
         .def("primeDecompInt", primeDecomp_list_int)
         .def("primePowerDecomp", primePowerDecomp_list)
         .def("primePowerDecompInt", primePowerDecomp_list_int)
+        .def(regina::python::no_eq_operators())
         .staticmethod("size")
         .staticmethod("prime")
         .staticmethod("primeDecomp")

@@ -34,9 +34,9 @@
 
 #include <cerrno>
 #include <cstdlib>
+#include <mutex>
 #include "maths/ninteger.h"
 #include "maths/numbertheory.h"
-#include "utilities/nthread.h"
 
 // We instantiate both variants of the NIntegerBase template at the bottom
 // of this file.
@@ -78,7 +78,7 @@ namespace {
     /**
      * Global variables for the GMP random state data.
      */
-    NMutex randMutex;
+    std::mutex randMutex;
     gmp_randstate_t randState;
     bool randInitialised(false);
 }
@@ -972,7 +972,7 @@ int NIntegerBase<supportInfinity>::legendre(
 template <bool supportInfinity>
 NIntegerBase<supportInfinity>
         NIntegerBase<supportInfinity>::randomBoundedByThis() const {
-    NMutex::MutexLock ml(randMutex);
+    std::lock_guard<std::mutex> ml(randMutex);
     if (! randInitialised) {
         gmp_randinit_default(randState);
         randInitialised = true;
@@ -1001,7 +1001,7 @@ NIntegerBase<supportInfinity>
 template <bool supportInfinity>
 NIntegerBase<supportInfinity>
         NIntegerBase<supportInfinity>::randomBinary(unsigned long n) {
-    NMutex::MutexLock ml(randMutex);
+    std::lock_guard<std::mutex> ml(randMutex);
     if (! randInitialised) {
         gmp_randinit_default(randState);
         randInitialised = true;
@@ -1020,7 +1020,7 @@ NIntegerBase<supportInfinity>
 template <bool supportInfinity>
 NIntegerBase<supportInfinity>
         NIntegerBase<supportInfinity>::randomCornerBinary(unsigned long n) {
-    NMutex::MutexLock ml(randMutex);
+    std::lock_guard<std::mutex> ml(randMutex);
     if (! randInitialised) {
         gmp_randinit_default(randState);
         randInitialised = true;
@@ -1036,12 +1036,31 @@ NIntegerBase<supportInfinity>
     return retval;
 }
 
-// Instantiate the templates!
+// Instantiate templates for all possible template arguments.
+//
+// For the global functions below, the header has matching
+// "extern template REGINA_API" declarations.
+//
+// For the class NIntegerBase, the header has no such
+// "extern template class REGINA_API" declaration (a side-effect of what
+// appears to be a catch-22 with dllexport/dllimport attributes and template
+// specialisations).  Instead we mark the template itself as REGINA_API, which
+// is possible because we instantiate it here for all possible template
+// parameters.  See the notes in the header for further discussion.
 template class NIntegerBase<true>;
 template class NIntegerBase<false>;
 
 template std::ostream& operator << (std::ostream&, const NIntegerBase<true>&);
 template std::ostream& operator << (std::ostream&, const NIntegerBase<false>&);
+
+template NIntegerBase<true> operator +(long lhs,
+    const NIntegerBase<true>& rhs);
+template NIntegerBase<false> operator +(long lhs,
+    const NIntegerBase<false>& rhs);
+template NIntegerBase<true> operator *(long lhs,
+    const NIntegerBase<true>& rhs);
+template NIntegerBase<false> operator *(long lhs,
+    const NIntegerBase<false>& rhs);
 
 } // namespace regina
 

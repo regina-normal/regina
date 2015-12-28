@@ -32,7 +32,13 @@
 
 /* end stub */
 
-/* To be included from ndoubledescription.h. */
+/*! \file enumerate/ndoubledescription-impl.h
+ *  \brief Contains implementations of template functions from
+ *  ndoubledescription.h.
+ *
+ *  This file is automatically included from ndoubledescription.h; there
+ *  is no need for end users to include it explicitly.
+ */
 
 #ifndef __NDOUBLEDESCRIPTION_IMPL_H
 #ifndef __DOXYGEN
@@ -223,7 +229,6 @@ void NDoubleDescription::enumerateExtremalRays(OutputIterator results,
     else if (nFacets <= 8 * sizeof(unsigned long))
         enumerateUsingBitmask<RayClass, NBitmask1<unsigned long> >(results,
             subspace, constraints, tracker, initialRows);
-#ifdef LONG_LONG_FOUND
     else if (nFacets <= 8 * sizeof(unsigned long long))
         enumerateUsingBitmask<RayClass, NBitmask1<unsigned long long> >(results,
             subspace, constraints, tracker, initialRows);
@@ -239,15 +244,6 @@ void NDoubleDescription::enumerateExtremalRays(OutputIterator results,
     else if (nFacets <= 16 * sizeof(unsigned long long))
         enumerateUsingBitmask<RayClass, NBitmask2<unsigned long long> >(results,
             subspace, constraints, tracker, initialRows);
-#else
-    else if (nFacets <= 8 * sizeof(unsigned long) + 8 * sizeof(unsigned))
-        enumerateUsingBitmask<RayClass,
-            NBitmask2<unsigned long, unsigned> >(results,
-            subspace, constraints, tracker, initialRows);
-    else if (nFacets <= 16 * sizeof(unsigned long))
-        enumerateUsingBitmask<RayClass, NBitmask2<unsigned long> >(results,
-            subspace, constraints, tracker, initialRows);
-#endif
     else
         enumerateUsingBitmask<RayClass, NBitmask>(results,
             subspace, constraints, tracker, initialRows);

@@ -32,13 +32,9 @@
 
 /* end stub */
 
-void addNProgress();
-void addNProgressManager();
 void addNProgressTracker();
 
 void addProgress() {
-    addNProgress();
-    addNProgressManager();
     addNProgressTracker();
 }
 

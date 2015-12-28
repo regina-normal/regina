@@ -71,8 +71,8 @@ class Dim2Triangulation;
  *
  * A triangle must always belong to a 2-manifold triangulation.  You can
  * construct new triangles using either Dim2Triangulation::newTriangle()
- * or Dim2Triangulation::newTriangle(const std::string&); these
- * routines will automatically add the new triangles to the triangulation.
+ * or Dim2Triangulation::newTriangle(const std::string&); these routines will
+ * automatically add the new triangles to the corresponding triangulation.
  * You can destroy triangles by calling Dim2Trianguation::removeTriangle(),
  * Dim2Trianguation::removeTriangleAt() or
  * Dim2Triangulation::removeAllTriangles(); these routines will
@@ -125,7 +125,6 @@ class REGINA_API Dim2Triangle :
                  triangulation. */
 
     public:
-
         /**
          * Returns the text description associated with this
          * triangle.
@@ -286,6 +285,7 @@ class REGINA_API Dim2Triangle :
          *
          * @return the triangulation containing this triangle.
          */
+        REGINA_INLINE_REQUIRED
         Dim2Triangulation* getTriangulation() const;
 
         /**
@@ -304,6 +304,7 @@ class REGINA_API Dim2Triangle :
          * @return the vertex of the skeleton corresponding to the
          * requested triangle vertex.
          */
+        REGINA_INLINE_REQUIRED
         Dim2Vertex* getVertex(int vertex) const;
         /**
          * Returns the edge in the 2-manifold triangulation skeleton
@@ -341,6 +342,7 @@ class REGINA_API Dim2Triangle :
          * @return a permutation that maps 0 to the given vertex of this
          * triangle, with the properties outlined above.
          */
+        REGINA_INLINE_REQUIRED
         NPerm3 getVertexMapping(int vertex) const;
         /**
          * Examines the given edge of this triangle, and returns a mapping from
@@ -373,6 +375,7 @@ class REGINA_API Dim2Triangle :
          * @return a mapping from vertices (0,1) of the requested
          * edge to the corresponding vertices of this triangle.
          */
+        REGINA_INLINE_REQUIRED
         NPerm3 getEdgeMapping(int edge) const;
         /**
          * Returns the orientation of this triangle in the 2-manifold

@@ -38,7 +38,10 @@
 #include "maths/nray.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nnormalsurfacelist.h"
-#include "surfaces/normalspec-impl.h"
+#include "surfaces/nsstandard.h"
+#include "surfaces/nsquad.h"
+#include "surfaces/nsanstandard.h"
+#include "surfaces/nsquadoct.h"
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
 #include "utilities/nbitmask.h"
@@ -52,6 +55,9 @@ namespace regina {
 //
 // The following definitions and declarations should ensure that the
 // templates are fully instantiated where they need to be.
+//
+// Since the template funtcions are private, we do not need to declare
+// them with REGINA_API.
 
 NNormalSurfaceList* NNormalSurfaceList::quadToStandard() const {
     return internalReducedToStandard<NormalSpec>();
@@ -347,7 +353,6 @@ void NNormalSurfaceList::buildStandardFromReduced(NTriangulation* owner,
     else if (nFacets <= 8 * sizeof(unsigned long))
         buildStandardFromReducedUsing<Variant,
             NBitmask1<unsigned long> >(owner, reducedList, tracker);
-#ifdef LONG_LONG_FOUND
     else if (nFacets <= 8 * sizeof(unsigned long long))
         buildStandardFromReducedUsing<Variant,
             NBitmask1<unsigned long long> >(owner, reducedList, tracker);
@@ -363,14 +368,6 @@ void NNormalSurfaceList::buildStandardFromReduced(NTriangulation* owner,
     else if (nFacets <= 16 * sizeof(unsigned long long))
         buildStandardFromReducedUsing<Variant,
             NBitmask2<unsigned long long> >(owner, reducedList, tracker);
-#else
-    else if (nFacets <= 8 * sizeof(unsigned long) + 8 * sizeof(unsigned))
-        buildStandardFromReducedUsing<Variant,
-            NBitmask2<unsigned long, unsigned> >(owner, reducedList, tracker);
-    else if (nFacets <= 16 * sizeof(unsigned long))
-        buildStandardFromReducedUsing<Variant,
-            NBitmask2<unsigned long> >(owner, reducedList, tracker);
-#endif
     else
         buildStandardFromReducedUsing<Variant, NBitmask>(owner, reducedList,
             tracker);

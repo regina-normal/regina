@@ -32,7 +32,16 @@
 
 /* end stub */
 
-/* Template definitions for ntreedecomposition.h. */
+/*! \file treewidth/ntreedecomposition-impl.h
+ *  \brief Contains implementations of template member functions in the
+ *  NTreeDecomposition class.
+ *
+ *  This file is \e not included automatically by ntreedecomposition.h.
+ *  However, most end users should never need to include it, since
+ *  Regina's calculation engine provides full explicit instantiations
+ *  of these routines for \ref stddim "standard dimensions" and for
+ *  common types.
+ */
 
 #ifndef __NTREEDECOMPOSITION_IMPL_H
 #ifndef __DOXYGEN

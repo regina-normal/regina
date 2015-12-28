@@ -56,6 +56,9 @@ namespace {
 }
 
 void addNAngleStructureList() {
+    def("makeAngleEquations", regina::makeAngleEquations,
+        return_value_policy<manage_new_object>());
+
     scope s = class_<NAngleStructureList, bases<regina::NPacket>,
             std::auto_ptr<NAngleStructureList>, boost::noncopyable>
             ("NAngleStructureList", no_init)

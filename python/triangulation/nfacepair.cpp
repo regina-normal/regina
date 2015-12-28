@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "triangulation/nfacepair.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NFacePair;
@@ -57,13 +58,13 @@ void addNFacePair() {
         .def("isBeforeStart", &NFacePair::isBeforeStart)
         .def("isPastEnd", &NFacePair::isPastEnd)
         .def("complement", &NFacePair::complement)
-        .def(self == self)
         .def(self < self)
         .def(self > self)
         .def(self <= self)
         .def(self >= self)
         .def("inc", facepair_inc_operator)
         .def("dec", facepair_dec_operator)
+        .def(regina::python::add_eq_operators())
     ;
 }
 

@@ -42,15 +42,10 @@ namespace regina {
 
 namespace {
     struct XMLReaderFunction : public Returns<NXMLElementReader*> {
-        NPacket* me_;
-        NXMLTreeResolver& resolver_;
-
-        XMLReaderFunction(NPacket* me, NXMLTreeResolver& resolver) :
-            me_(me), resolver_(resolver) {}
-
         template <typename Packet>
-        inline NXMLElementReader* operator() (Packet) {
-            return Packet::Class::getXMLReader(me_, resolver_);
+        inline NXMLElementReader* operator() (NPacket* me,
+                NXMLTreeResolver& resolver) {
+            return Packet::Class::getXMLReader(me, resolver);
         }
     };
 }
@@ -86,9 +81,8 @@ NXMLElementReader* NXMLPacketReader::startSubElement(
         if (typeID <= 0)
             return new NXMLPacketReader(resolver_);
 
-        NXMLElementReader* ans = forPacket(
-            static_cast<PacketType>(typeID),
-            XMLReaderFunction(me, resolver_), 0);
+        NXMLElementReader* ans = forPacket(static_cast<PacketType>(typeID),
+            XMLReaderFunction(), 0, me, resolver_);
         if (ans)
             return ans;
         else

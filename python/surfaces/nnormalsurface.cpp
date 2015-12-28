@@ -32,14 +32,13 @@
 
 /* end stub */
 
-#include "regina-config.h" // For EXCLUDE_NORMALIZ
-
 #include <boost/python.hpp>
 #include "maths/nmatrixint.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nnormalsurfacelist.h" // for makeZeroVector()
 #include "triangulation/ntriangulation.h"
 #include "../globalarray.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NNormalSurface;
@@ -179,10 +178,8 @@ void addNNormalSurface() {
         .def("embedded", &NNormalSurface::embedded)
         .def("locallyCompatible", &NNormalSurface::locallyCompatible)
         .def("disjoint", &NNormalSurface::disjoint)
-#ifndef EXCLUDE_NORMALIZ
         .def("boundaryIntersections", &NNormalSurface::boundaryIntersections,
             return_value_policy<manage_new_object>())
-#endif
         .def("findNonTrivialSphere", &NNormalSurface::findNonTrivialSphere,
             return_value_policy<manage_new_object>())
         .def("findVtxOctAlmostNormalSphere", findVtxOctAlmostNormalSphere1,
@@ -194,6 +191,7 @@ void addNNormalSurface() {
         .def("detail", &NNormalSurface::detail)
         .def("toStringLong", &NNormalSurface::toStringLong)
         .def("__str__", &NNormalSurface::str)
+        .def(regina::python::add_eq_operators())
         .staticmethod("findNonTrivialSphere")
         .staticmethod("findVtxOctAlmostNormalSphere")
     ;

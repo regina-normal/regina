@@ -32,6 +32,16 @@
 
 /* end stub */
 
+/*! \file generic/isomorphism-impl.h
+ *  \brief Contains some of the implementation details for the
+ *  NGenericTriangulation class template.
+ *
+ *  This file is \e not included automatically by ngenerictriangulation.h.
+ *  However, typical end users should never need to include it, since
+ *  Regina's calculation engine provides full explicit instantiations
+ *  of NGenericTriangulation for \ref stddim "standard dimensions".
+ */
+
 #include "generic/ngenerictriangulation.h"
 
 namespace regina {
@@ -67,29 +77,29 @@ bool NGenericTriangulation<dim>::isIdenticalTo(
 }
 
 template <int dim>
-inline std::auto_ptr<typename DimTraits<dim>::Isomorphism>
+inline std::unique_ptr<typename DimTraits<dim>::Isomorphism>
         NGenericTriangulation<dim>::isIsomorphicTo(
         const typename DimTraits<dim>::Triangulation& other) const {
     std::list<typename DimTraits<dim>::Isomorphism*> results;
     if (static_cast<const typename DimTraits<dim>::Triangulation&>(*this).
             findIsomorphisms(other, results, true, true))
-        return std::auto_ptr<typename DimTraits<dim>::Isomorphism>(
+        return std::unique_ptr<typename DimTraits<dim>::Isomorphism>(
             results.front());
     else
-        return std::auto_ptr<typename DimTraits<dim>::Isomorphism>(0);
+        return nullptr;
 }
 
 template <int dim>
-inline std::auto_ptr<typename DimTraits<dim>::Isomorphism>
+inline std::unique_ptr<typename DimTraits<dim>::Isomorphism>
         NGenericTriangulation<dim>::isContainedIn(
         const typename DimTraits<dim>::Triangulation& other) const {
     std::list<typename DimTraits<dim>::Isomorphism*> results;
     if (static_cast<const typename DimTraits<dim>::Triangulation&>(*this).
             findIsomorphisms(other, results, false, true))
-        return std::auto_ptr<typename DimTraits<dim>::Isomorphism>(
+        return std::unique_ptr<typename DimTraits<dim>::Isomorphism>(
             results.front());
     else
-        return std::auto_ptr<typename DimTraits<dim>::Isomorphism>(0);
+        return nullptr;
 }
 
 template <int dim>

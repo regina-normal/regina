@@ -372,6 +372,7 @@ class REGINA_API NPerm5 {
          * should be between 0 and 4 inclusive.
          * @return the image of \a source.
          */
+        REGINA_INLINE_REQUIRED
         int operator[](int source) const;
 
         /**
@@ -532,6 +533,7 @@ class REGINA_API NPerm5 {
          * should be between 0 and 4 inclusive.
          * @return the image of \a source.
          */
+        REGINA_INLINE_REQUIRED
         int imageOf(int source) const;
 
     friend std::ostream& operator << (std::ostream& out, const NPerm5& p);
@@ -546,10 +548,7 @@ class REGINA_API NPerm5 {
  * @param p the permutation to write.
  * @return a reference to \a out.
  */
-inline REGINA_API std::ostream& operator << (std::ostream& out,
-        const NPerm5& p) {
-    return (out << p.str());
-}
+REGINA_API std::ostream& operator << (std::ostream& out, const NPerm5& p);
 
 /*@}*/
 
@@ -658,6 +657,10 @@ inline int NPerm5::SnIndex() const {
 
 inline int NPerm5::orderedSnIndex() const {
     return orderedS5Index();
+}
+
+inline std::ostream& operator << (std::ostream& out, const NPerm5& p) {
+    return (out << p.str());
 }
 
 } // namespace regina

@@ -6,14 +6,13 @@ SET ( FILES
   compact
   collapsechain
   dim2census
-  dim2edgepairing
-  dim2gluingperms
   dim2gluingpermsearcher
   euler
   hyperbolic
   ncensus
   nfacepairing
-  ngluingperms
+  ngenericfacetpairing
+  ngenericgluingperms
   ngluingpermsearcher
   )
 

@@ -1,15 +1,16 @@
-/* Define if both signed and unsigned long long types are available. */
-#define LONG_LONG_FOUND
-
 /* Define if both int128_t and uint128_t types are available. */
 /* #undef INT128_T_FOUND */
 
 /* Define if both __int128_t and __uint128_t types are available. */
-/* #undef __INT128_T_FOUND */
+#if __LP64__
+#define __INT128_T_FOUND
+#endif
 
 /* Define if native 128-bit arithmetic is available through either
    of the types defined above. */
-/* #undef INT128_AVAILABLE */
+#if __LP64__
+#define INT128_AVAILABLE
+#endif
 
 /* Define if 64-bit integer literals are available with no suffix */
 #define NUMERIC_64_FOUND
@@ -20,17 +21,14 @@
 /* Define if Boost.Python is available. */
 /* #undef BOOST_PYTHON_FOUND */
 
+/* Define if the Graphviz libraries are available. */
+#define LIBGVC_FOUND
+
 /* Define if langinfo.h and nl_langinfo() are available. */
 #define LANGINFO_FOUND
 
 /* Define if we are replacing Tokyo Cabinet with the older QDBM. */
 /* #undef QDBM_AS_TOKYOCABINET */
-
-/* Define if we are excluding Normaliz from the build. */
-/* #undef EXCLUDE_NORMALIZ */
-
-/* Define if we are excluding SnapPea / SnapPy from the build. */
-/* #undef EXCLUDE_SNAPPEA */
 
 /* Define as const if the declaration of iconv() needs const, or empty if not. */
 #define ICONV_CONST 
@@ -50,14 +48,14 @@
 #define PACKAGE_BUGREPORT "regina-user@lists.sourceforge.net"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "Regina 4.96"
+#define PACKAGE_STRING "Regina 4.97"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "4.96"
+#define PACKAGE_VERSION "4.97"
 
 /* Major version number of the package. */
 #define PACKAGE_VERSION_MAJOR 4
 
 /* Minor version number of the package. */
-#define PACKAGE_VERSION_MINOR 96
+#define PACKAGE_VERSION_MINOR 97
 

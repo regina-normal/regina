@@ -82,16 +82,18 @@ class NPacket;
  * from any packets to which it is currently listening.  Similarly, when
  * a packet is destroyed all listeners are automatically unregistered.
  *
- * When using multiple threads, there are restrictions upon what any thread
- * other than the main thread may do.  If these restrictions are properly
- * adhered to, packet listeners may assume that no routines other than
- * childWasAdded() will be called from a non-main thread.  Of course it is
- * up to the multithreading code to ensure that these restrictions are in
- * fact met; see the NThread class notes for further information.
- *
- * \warning If the multithreading restrictions noted above are \e not
- * adhered to, this can result in the GUI crashing within either Qt or
- * Xlib.  Again, see the NThread class notes for further information.
+ * \warning At the time of writing (admittedly long ago now), Qt has only
+ * limited support for multithreading.  When working with an existing packet
+ * tree in a new thread (not the main thread), the \e only modification that
+ * you may make is to insert new packets.  Modifications of any other type
+ * (such as changing, renaming, deleting or reordering existing packets)
+ * could lead to a crash within Qt or Xlib when running the GUI.
+ * Of course, a new thread may create, modify and delete its own temporary
+ * packet trees as it chooses (and it may in fact insert them into a
+ * pre-existing packet tree once all modifications are completed).
+ * Assuming these restrictions are respected, packet listeners may assume
+ * that no routines other than childWasAdded() will be called from a non-main
+ * thread.
  *
  * \ifacespython Not present.
  */

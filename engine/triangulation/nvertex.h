@@ -114,6 +114,7 @@ class REGINA_API NVertexEmbedding {
          *
          * @return the tetrahedron.
          */
+        REGINA_INLINE_REQUIRED
         NTetrahedron* getTetrahedron() const;
 
         /**
@@ -280,6 +281,7 @@ class REGINA_API NVertex :
          *
          * @return the component containing this vertex.
          */
+        REGINA_INLINE_REQUIRED
         NComponent* getComponent() const;
 
         /**
@@ -474,6 +476,7 @@ class REGINA_API NVertex :
          *
          * @return the Euler characteristic of the vertex link.
          */
+        REGINA_INLINE_REQUIRED
         long getLinkEulerChar() const;
 
         /**

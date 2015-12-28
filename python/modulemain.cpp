@@ -34,8 +34,9 @@
 
 #include <boost/python.hpp>
 
-#include "engine.h"
 #include "regina-config.h"
+#include "engine.h"
+#include "helpers.h"
 
 void addGlobalArray();
 
@@ -49,9 +50,7 @@ void addManifold();
 void addMaths();
 void addPacket();
 void addProgress();
-#ifndef EXCLUDE_SNAPPEA
 void addSnapPea();
-#endif
 void addSplit();
 void addSubcomplex();
 void addSurfaces();
@@ -74,7 +73,13 @@ BOOST_PYTHON_MODULE(engine) {
 
     boost::python::def("welcome", welcome);
 
-    // Wrappers for global array classes:
+    // Wrappers for regina::python helpers:
+
+    boost::python::enum_<regina::python::EqualityType>("EqualityType")
+        .value("BY_VALUE", regina::python::BY_VALUE)
+        .value("BY_REFERENCE", regina::python::BY_REFERENCE)
+        .value("NEVER_INSTANTIATED", regina::python::NEVER_INSTANTIATED)
+        ;
 
     addGlobalArray();
 
@@ -98,9 +103,7 @@ BOOST_PYTHON_MODULE(engine) {
     addFile();
     addForeign();
     addSplit();
-#ifndef EXCLUDE_SNAPPEA
     addSnapPea();
-#endif
     addSubcomplex();
     addManifold();
     addAngle();

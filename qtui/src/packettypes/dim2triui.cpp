@@ -32,8 +32,6 @@
 
 /* end stub */
 
-#include "regina-config.h" // For EXCLUDE_SNAPPEA
-
 // Regina core includes:
 #include "dim2/dim2triangulation.h"
 

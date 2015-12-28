@@ -49,7 +49,6 @@
 #include "generic/dimtraits.h"
 #include "generic/nfacetspec.h"
 #include "utilities/nbooleans.h"
-#include "utilities/nthread.h"
 
 namespace regina {
 
@@ -79,14 +78,20 @@ namespace regina {
  * triangulation, the individual gluing permutations will still need to
  * be specified; they are not a part of this structure.
  *
- * \pre The dimension argument \a dim is either 2 or 3.
+ * \pre The template argument \a dim is one of Regina's
+ * \ref stddim "standard dimensions".
+ *
+ * \headers Parts of this template class are implemented in a separate header
+ * (ngenericfacetpairing-impl.h), which is not included automatically by
+ * this file.  However, typical end users should never need this extra header,
+ * since Regina's calculation engine already includes explicit instantiations
+ * for \ref stddim "standard dimensions".
  *
  * \ifacespython Not present, though the dimension-specific subclasses
  * (such as NFacePairing) are available for Python users.
  */
 template <int dim>
-class REGINA_API NGenericFacetPairing : public NThread,
-        public boost::noncopyable {
+class NGenericFacetPairing : public boost::noncopyable {
     public:
         typedef typename DimTraits<dim>::FacetPairing FacetPairing;
             /**< The facet pairing class specific to this dimension.
@@ -464,35 +469,6 @@ class REGINA_API NGenericFacetPairing : public NThread,
         /*@}*/
 
         /**
-         * \name Internal Routines
-         */
-        /*@{*/
-
-        /**
-         * Internal to findAllPairings().  This routine should never be
-         * called directly.
-         *
-         * Performs the actual generation of facet pairings, possibly as a
-         * separate thread.  At most one copy of this routine should be
-         * running at any given time for a particular NGenericFacetPairing
-         * instance.
-         *
-         * \ifacespython Not present, even in the dimension-specific
-         * subclasses.
-         *
-         * \pre This object is known to be of the dimension-specific subclass
-         * FacetPairing, not an instance of the parent class
-         * NGenericFacetPairing<dim>.
-         *
-         * @param param a structure containing the parameters that were
-         * passed to findAllPairings().
-         * @return the value 0.
-         */
-        void* run(void* param);
-
-        /*@}*/
-
-        /**
          * Reconstructs a facet pairing from a text-based representation.
          * This text-based representation must be in the format produced
          * by routine toTextRep().
@@ -586,9 +562,6 @@ class REGINA_API NGenericFacetPairing : public NThread,
          * \a use will be called once more, this time with \c null as its
          * first two arguments (for the facet pairing and its automorphisms).
          *
-         * The facet pairing generation may be run in the current thread
-         * or as a separate thread.
-         *
          * Because this class cannot represent an empty facet pairing,
          * if the argument \a nSimplices is zero then no facet pairings
          * will be generated at all.
@@ -630,18 +603,9 @@ class REGINA_API NGenericFacetPairing : public NThread,
          * to this routine.
          * @param useArgs the pointer to pass as the final parameter for
          * the function \a use which will be called upon each pairing found.
-         * @param newThread \c true if facet pairing generation should be
-         * performed in a separate thread, or \c false if generation
-         * should take place in the current thread.  If this parameter is
-         * \c true, this routine will exit immediately (after spawning
-         * the new thread).
-         * @return \c true if the new thread was successfully started (or
-         * if facet pairing generation has taken place in the current thread),
-         * or \c false if the new thread could not be started.
          */
-        static bool findAllPairings(unsigned nSimplices,
-            NBoolSet boundary, int nBdryFacets, Use use,
-            void* useArgs = 0, bool newThread = false);
+        static void findAllPairings(unsigned nSimplices,
+            NBoolSet boundary, int nBdryFacets, Use use, void* useArgs = 0);
 
     protected:
         /**
@@ -806,19 +770,27 @@ class REGINA_API NGenericFacetPairing : public NThread,
 
     private:
         /**
-         * Holds the arguments passed to findAllPairings().
+         * Internal to findAllPairings().
+         *
+         * Performs the actual generation of facet pairings.  At most one
+         * copy of this routine should be running at any given time for a
+         * particular NGenericFacetPairing instance.
+         *
+         * \pre This object is known to be of the dimension-specific subclass
+         * FacetPairing, not an instance of the parent class
+         * NGenericFacetPairing<dim>.
          */
-        struct Args {
-            NBoolSet boundary;
-            int nBdryFacets;
-            Use use;
-            void* useArgs;
-        };
+        void enumerateInternal(NBoolSet boundary, int nBdryFacets,
+            Use use, void* useArgs);
 
     friend class NCollapsedChainSearcher;
 };
 
 /*@}*/
+
+// Indicate which templates we explicitly instantiate in the shared library.
+extern template class REGINA_API NGenericFacetPairing<2>;
+extern template class REGINA_API NGenericFacetPairing<3>;
 
 // Inline functions for NGenericFacetPairing
 
@@ -937,6 +909,14 @@ inline void NGenericFacetPairing<dim>::findAutomorphisms(
 template <int dim>
 inline std::string NGenericFacetPairing<dim>::toString() const {
     return str();
+}
+
+template <int dim>
+inline void NGenericFacetPairing<dim>::findAllPairings(unsigned nSimplices,
+        NBoolSet boundary, int nBdryFacets,
+        typename NGenericFacetPairing<dim>::Use use, void* useArgs) {
+    FacetPairing pairing(nSimplices);
+    pairing.enumerateInternal(boundary, nBdryFacets, use, useArgs);
 }
 
 } // namespace regina

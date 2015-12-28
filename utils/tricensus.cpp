@@ -89,7 +89,7 @@ int subContainers = 0;
 std::string outFile;
 
 // Variables used for a dump of face pairings.
-std::auto_ptr<std::ostream> dumpStream;
+std::unique_ptr<std::ostream> dumpStream;
 unsigned long totPairings = 0;
 
 // Variables used for output.
@@ -600,7 +600,7 @@ int runCensus() {
         }
 
         CensusType::Pairing::findAllPairings(nTet, boundary,
-            nBdryFaces, dumpPairing<CensusType>, 0, false);
+            nBdryFaces, dumpPairing<CensusType>, 0);
         std::cerr << "Total " << WORD_face << " pairings: "
             << totPairings << std::endl;
         return 0;

@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "census/ncensus.h"
 #include "triangulation/ntriangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NCensus;
@@ -69,6 +70,7 @@ void addNCensus() {
             return_value_policy<copy_const_reference>())
         .def("desc", &NCensusDB::desc,
             return_value_policy<copy_const_reference>())
+        .def(regina::python::add_eq_operators())
     ;
 
     class_<NCensusHit, std::auto_ptr<NCensusHit>,
@@ -79,6 +81,7 @@ void addNCensus() {
             return_internal_reference<>())
         .def("next", &NCensusHit::next,
             return_internal_reference<>())
+        .def(regina::python::add_eq_operators())
     ;
 
     class_<NCensusHits, std::auto_ptr<NCensusHits>,
@@ -87,6 +90,7 @@ void addNCensus() {
             return_internal_reference<>())
         .def("count", &NCensusHits::count)
         .def("empty", &NCensusHits::empty)
+        .def(regina::python::add_eq_operators())
     ;
 
     scope s = class_<NCensus, std::auto_ptr<NCensus>,
@@ -98,6 +102,7 @@ void addNCensus() {
         .def("formCensus", formCensus)
         .def("formPartialCensus", formPartialCensus)
         .def("mightBeMinimal", mightBeMinimal)
+        .def(regina::python::no_eq_operators())
         .staticmethod("lookup")
         .staticmethod("formCensus")
         .staticmethod("formPartialCensus")

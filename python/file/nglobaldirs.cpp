@@ -38,6 +38,7 @@
 
 #include <boost/python.hpp>
 #include "file/nglobaldirs.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NGlobalDirs;
@@ -64,6 +65,7 @@ void addNGlobalDirs() {
         .def("data", &NGlobalDirs::data)
         .def("setDirs", setDirs_2)
         .def("setDirs", setDirs_3)
+        .def(regina::python::no_eq_operators())
         .staticmethod("home")
         .staticmethod("pythonModule")
         .staticmethod("census")

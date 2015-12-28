@@ -36,7 +36,6 @@
 #include <sstream>
 #include <vector>
 #include "census/nfacepairing.h"
-#include "census/ngenericfacetpairing-impl.h"
 #include "triangulation/nfacepair.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
@@ -44,31 +43,6 @@
 #include "utilities/stringutils.h"
 
 namespace regina {
-
-// Instantiate all templates from the -impl.h file.
-template NGenericFacetPairing<3>::NGenericFacetPairing(
-    const NGenericFacetPairing<3>&);
-template NGenericFacetPairing<3>::NGenericFacetPairing(const NTriangulation&);
-template bool NGenericFacetPairing<3>::isClosed() const;
-template std::string NGenericFacetPairing<3>::str() const;
-template std::string NGenericFacetPairing<3>::dotHeader(const char*);
-template void NGenericFacetPairing<3>::writeDotHeader(std::ostream&,
-    const char*);
-template std::string NGenericFacetPairing<3>::dot(const char*, bool, bool)
-    const;
-template void NGenericFacetPairing<3>::writeDot(std::ostream&, const char*,
-    bool, bool) const;
-template std::string NGenericFacetPairing<3>::toTextRep() const;
-template NFacePairing* NGenericFacetPairing<3>::fromTextRep(const std::string&);
-template bool NGenericFacetPairing<3>::isCanonical() const;
-template bool NGenericFacetPairing<3>::isCanonicalInternal(
-    NGenericFacetPairing<3>::IsoList&) const;
-template NGenericFacetPairing<3>::Isomorphism* NGenericFacetPairing<3>::makeCanonical();
-template void NGenericFacetPairing<3>::findAutomorphisms(
-    NGenericFacetPairing<3>::IsoList&) const;
-template bool NGenericFacetPairing<3>::findAllPairings(unsigned, NBoolSet,
-    int, NGenericFacetPairing<3>::Use, void*, bool);
-template void* NGenericFacetPairing<3>::run(void*);
 
 bool NFacePairing::hasTripleEdge() const {
     unsigned equal, i, j;

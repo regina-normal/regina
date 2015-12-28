@@ -158,11 +158,30 @@ class REGINA_API NSnapPeaCensusManifold : public NManifold {
          * Determines whether this and the given structure represent
          * the same 3-manifold from the SnapPea census.
          *
+         * As of Regina 4.97, this test respects the recent discovery that
+         * the manifolds \c x101 and \c x103 are homeomorphic.
+         * For details, see B.B., <i>A duplicate pair in the SnapPea census</i>,
+         * Experimental Mathematics, 23:170-173, 2014.
+         *
          * @param compare the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * represent the same SnapPea census manifold.
          */
         bool operator == (const NSnapPeaCensusManifold& compare) const;
+        /**
+         * Determines whether this and the given structure represent
+         * different 3-manifolds from the SnapPea census.
+         *
+         * As of Regina 4.97, this test respects the recent discovery that
+         * the manifolds \c x101 and \c x103 are homeomorphic.
+         * For details, see B.B., <i>A duplicate pair in the SnapPea census</i>,
+         * Experimental Mathematics, 23:170-173, 2014.
+         *
+         * @param compare the structure with which this will be compared.
+         * @return \c true if and only if this and the given structure
+         * represent different SnapPea census manifolds.
+         */
+        bool operator != (const NSnapPeaCensusManifold& compare) const;
 
         NTriangulation* construct() const;
         NAbelianGroup* getHomologyH1() const;
@@ -194,7 +213,19 @@ inline unsigned long NSnapPeaCensusManifold::getIndex() const {
 }
 inline bool NSnapPeaCensusManifold::operator == (
         const NSnapPeaCensusManifold& compare) const {
+    if (section == SEC_6_NOR && compare.section == SEC_6_NOR &&
+            (index == 101 || index == 103) &&
+            (compare.index == 101 || compare.index == 103))
+        return true;
     return (section == compare.section && index == compare.index);
+}
+inline bool NSnapPeaCensusManifold::operator != (
+        const NSnapPeaCensusManifold& compare) const {
+    if (section == SEC_6_NOR && compare.section == SEC_6_NOR &&
+            (index == 101 || index == 103) &&
+            (compare.index == 101 || compare.index == 103))
+        return false;
+    return (section != compare.section || index != compare.index);
 }
 inline bool NSnapPeaCensusManifold::isHyperbolic() const {
     return true;

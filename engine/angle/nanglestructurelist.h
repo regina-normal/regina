@@ -50,7 +50,6 @@
 #include "packet/npacket.h"
 #include "utilities/memutils.h"
 #include "utilities/nproperty.h"
-#include "utilities/nthread.h"
 
 namespace regina {
 
@@ -404,40 +403,46 @@ class REGINA_API NAngleStructureList : public NPacket {
 
     private:
         /**
-         * A thread class that actually performs the angle structure
+         * The main code that actually performs the angle structure
          * enumeration.
+         *
+         * \pre This list is empty (i.e., contains no angle structures),
+         * but all of its enumeration parameters have been set.
+         * \pre This list has not yet been inserted into the packet tree.
+         *
+         * @param triang the triangulation upon which this angle
+         * structure list will be based.
+         * @param tracker the progress tracker to use for progress
+         * reporting and cancellation polling, or 0 if these
+         * capabilities are not required.
          */
-        class Enumerator : public NThread {
-            private:
-                NAngleStructureList* list;
-                    /**< The angle structure list to be filled. */
-                NTriangulation* triang;
-                    /**< The triangulation upon which this angle
-                         structure list will be based. */
-                NProgressTracker* tracker;
-                    /**< The progress tracker through which progress is
-                         reported, or 0 if no progress tracker is in use. */
-
-            public:
-                /**
-                 * Creates a new enumerator thread with the given
-                 * parameters.
-                 *
-                 * @param newList the angle structure list to be filled.
-                 * @param useTriang the triangulation upon which this
-                 * angle structure list will be based.
-                 * @param useTracker the progress tracker to use for
-                 * progress reporting, or 0 if progress reporting is not
-                 * required.
-                 */
-                Enumerator(NAngleStructureList* newList,
-                    NTriangulation* useTriang, NProgressTracker* useTracker);
-
-                void* run(void*);
-        };
+        void enumerateInternal(NTriangulation* triang,
+            NProgressTracker* tracker = 0);
 
     friend class regina::NXMLAngleStructureListReader;
 };
+
+/**
+ * Creates a new set of angle structure equations for the given triangulation.
+ *
+ * Each equation will be represented as a row of the matrix, and
+ * each column will represent a coordinate in the underlying
+ * coordinate system (which is described in the NAngleStructureVector
+ * class notes).
+ *
+ * The returned matrix will be newly allocated and its destruction
+ * will be the responsibility of the caller of this routine.
+ *
+ * This routine is identical to the static class method
+ * NAngleStructureVector::makeAngleEquations().  It is offered again here
+ * as a global routine so that it is accessible to Python users (who cannot
+ * access the NAngleStructureVector class).
+ *
+ * @param tri the triangulation upon which these angle structure
+ * equations will be based.
+ * @return a newly allocated set of equations.
+ */
+REGINA_API NMatrixInt* makeAngleEquations(const NTriangulation* tri);
 
 /*@}*/
 
@@ -543,9 +548,8 @@ inline NAngleStructureList::StructureInserter&
     return *this;
 }
 
-inline NAngleStructureList::Enumerator::Enumerator(NAngleStructureList* newList,
-        NTriangulation* useTriang, NProgressTracker* useTracker) :
-        list(newList), triang(useTriang), tracker(useTracker) {
+inline NMatrixInt* makeAngleEquations(const NTriangulation* tri) {
+    return NAngleStructureVector::makeAngleEquations(tri);
 }
 
 } // namespace regina

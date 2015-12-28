@@ -40,21 +40,21 @@
 
 namespace regina {
 
-// Instantiate templates:
-
-template NTreeDecomposition::NTreeDecomposition(
+// Instantiate templates for standard dimensions:
+template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const NGenericTriangulation<2>&, TreeDecompositionAlg);
-template NTreeDecomposition::NTreeDecomposition(
+template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const NGenericTriangulation<3>&, TreeDecompositionAlg);
 
-template NTreeDecomposition::NTreeDecomposition(
+template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const NGenericFacetPairing<2>&, TreeDecompositionAlg);
-template NTreeDecomposition::NTreeDecomposition(
+template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const NGenericFacetPairing<3>&, TreeDecompositionAlg);
 
-template NTreeDecomposition::NTreeDecomposition(
+// Instantiate templates for common types:
+template REGINA_API NTreeDecomposition::NTreeDecomposition(
     unsigned, bool const**, TreeDecompositionAlg);
-template NTreeDecomposition::NTreeDecomposition(
+template REGINA_API NTreeDecomposition::NTreeDecomposition(
     unsigned, int const**, TreeDecompositionAlg);
 
 bool NTreeBag::contains(int element) const {

@@ -34,6 +34,7 @@
 
 #include <climits>
 #include <cstring>
+#include <mutex>
 
 #include "maths/nmatrixint.h"
 #include "maths/numbertheory.h"
@@ -43,7 +44,6 @@
 #include "snappea/kernel/unix_file_io.h"
 #include "snappea/snappy/SnapPy.h"
 #include "triangulation/ntriangulation.h"
-#include "utilities/nthread.h"
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
 
@@ -53,7 +53,7 @@ namespace {
     /**
      * A mutex to protect kernelMessages.
      */
-    static NMutex snapMutex;
+    static std::mutex snapMutex;
 }
 
 std::complex<double> NSnapPeaTriangulation::zero_(0, 0);
@@ -710,17 +710,17 @@ void NSnapPeaTriangulation::writeTextLong(std::ostream& out) const {
 }
 
 bool NSnapPeaTriangulation::kernelMessagesEnabled() {
-    NMutex::MutexLock ml(snapMutex);
+    std::lock_guard<std::mutex> ml(snapMutex);
     return kernelMessages_;
 }
 
 void NSnapPeaTriangulation::enableKernelMessages(bool enabled) {
-    NMutex::MutexLock ml(snapMutex);
+    std::lock_guard<std::mutex> ml(snapMutex);
     kernelMessages_ = enabled;
 }
 
 void NSnapPeaTriangulation::disableKernelMessages() {
-    NMutex::MutexLock ml(snapMutex);
+    std::lock_guard<std::mutex> ml(snapMutex);
     kernelMessages_ = false;
 }
 

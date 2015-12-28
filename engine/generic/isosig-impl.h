@@ -32,6 +32,16 @@
 
 /* end stub */
 
+/*! \file generic/isosig-impl.h
+ *  \brief Contains some of the implementation details for the
+ *  NGenericTriangulation class template.
+ *
+ *  This file is \e not included automatically by ngenerictriangulation.h.
+ *  However, typical end users should never need to include it, since
+ *  Regina's calculation engine provides full explicit instantiations
+ *  of NGenericTriangulation for \ref stddim "standard dimensions".
+ */
+
 #include <algorithm>
 #include <string>
 #include "generic/ngenerictriangulation.h"
@@ -86,16 +96,6 @@ namespace {
     inline bool SVALID(char c) {
         return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
             (c >= '0' && c <= '9') || c == '+' || c == '-');
-    }
-
-    /**
-     * Does the given string contain at least nChars characters?
-     */
-    inline bool SHASCHARS(const char* s, unsigned nChars) {
-        for ( ; nChars > 0; --nChars)
-            if (! *s)
-                return false;
-        return true;
     }
 
     /**
@@ -413,30 +413,42 @@ typename DimTraits<dim>::Triangulation*
     typedef typename DimTraits<dim>::Simplex Simplex;
     typedef typename DimTraits<dim>::Triangulation Triangulation;
 
-    std::auto_ptr<Triangulation> ans(new Triangulation());
+    std::unique_ptr<Triangulation> ans(new Triangulation());
 
     NPacket::ChangeEventSpan span(ans.get());
 
     const char* c = sig.c_str();
 
+    // Skip any leading whitespace.
+    while (*c && ::isspace(*c))
+        ++c;
+
+    // Find the end of the string.
+    const char* end = c;
+    while (*end && ! ::isspace(*end))
+        ++end;
+
     // Initial check for invalid characters.
     const char* d;
-    for (d = c; *d; ++d)
+    for (d = c; d != end; ++d)
         if (! SVALID(*d))
             return 0;
+    for (d = end; *d; ++d)
+        if (! ::isspace(*d))
+            return 0;
 
-    unsigned i, j;
-    unsigned nSimp, nChars;
-    while (*c) {
+    unsigned j;
+    unsigned pos, nSimp, nChars;
+    while (c != end) {
         // Read one component at a time.
         nSimp = SVAL(*c++);
         if (nSimp < 63)
             nChars = 1;
         else {
-            if (! *c)
+            if (c == end)
                 return 0;
             nChars = SVAL(*c++);
-            if (! SHASCHARS(c, nChars))
+            if (c + nChars > end)
                 return 0;
             nSimp = SREAD(c, nChars);
             c += nChars;
@@ -454,27 +466,27 @@ typename DimTraits<dim>::Triangulation*
         unsigned nJoins = 0;
 
         for ( ; nFacets < (dim+1) * nSimp; facetPos += 3) {
-            if (! *c) {
+            if (c == end) {
                 delete[] facetAction;
                 return 0;
             }
             SREADTRITS(*c++, facetAction + facetPos);
-            for (i = 0; i < 3; ++i) {
+            for (j = 0; j < 3; ++j) {
                 // If we're already finished, make sure the leftover trits
                 // are zero.
                 if (nFacets == (dim+1) * nSimp) {
-                    if (facetAction[facetPos + i] != 0) {
+                    if (facetAction[facetPos + j] != 0) {
                         delete[] facetAction;
                         return 0;
                     }
                     continue;
                 }
 
-                if (facetAction[facetPos + i] == 0)
+                if (facetAction[facetPos + j] == 0)
                     ++nFacets;
-                else if (facetAction[facetPos + i] == 1)
+                else if (facetAction[facetPos + j] == 1)
                     nFacets += 2;
-                else if (facetAction[facetPos + i] == 2) {
+                else if (facetAction[facetPos + j] == 2) {
                     nFacets += 2;
                     ++nJoins;
                 } else {
@@ -489,30 +501,30 @@ typename DimTraits<dim>::Triangulation*
         }
 
         unsigned* joinDest = new unsigned[nJoins + 1];
-        for (i = 0; i < nJoins; ++i) {
-            if (! SHASCHARS(c, nChars)) {
+        for (pos = 0; pos < nJoins; ++pos) {
+            if (c + nChars > end) {
                 delete[] facetAction;
                 delete[] joinDest;
                 return 0;
             }
 
-            joinDest[i] = SREAD(c, nChars);
+            joinDest[pos] = SREAD(c, nChars);
             c += nChars;
         }
 
         unsigned* joinGluing = new unsigned[nJoins + 1];
-        for (i = 0; i < nJoins; ++i) {
-            if (! SHASCHARS(c, 1)) {
+        for (pos = 0; pos < nJoins; ++pos) {
+            if (c + CHARS_PER_PERM(dim) > end) {
                 delete[] facetAction;
                 delete[] joinDest;
                 delete[] joinGluing;
                 return 0;
             }
 
-            joinGluing[i] = SREAD(c, CHARS_PER_PERM(dim));
+            joinGluing[pos] = SREAD(c, CHARS_PER_PERM(dim));
             c += CHARS_PER_PERM(dim);
 
-            if (joinGluing[i] >= Perm::nPerms) {
+            if (joinGluing[pos] >= Perm::nPerms) {
                 delete[] facetAction;
                 delete[] joinDest;
                 delete[] joinGluing;
@@ -522,16 +534,16 @@ typename DimTraits<dim>::Triangulation*
 
         // End of component!
         Simplex** simp = new Simplex*[nSimp];
-        for (i = 0; i < nSimp; ++i)
-            simp[i] = ans->newSimplex();
+        for (pos = 0; pos < nSimp; ++pos)
+            simp[pos] = ans->newSimplex();
 
         facetPos = 0;
         unsigned nextUnused = 1;
         unsigned joinPos = 0;
-        for (i = 0; i < nSimp; ++i)
+        for (pos = 0; pos < nSimp; ++pos)
             for (j = 0; j <= dim; ++j) {
                 // Already glued from the other side:
-                if (simp[i]->adjacentSimplex(j))
+                if (simp[pos]->adjacentSimplex(j))
                     continue;
 
                 if (facetAction[facetPos] == 0) {
@@ -545,7 +557,7 @@ typename DimTraits<dim>::Triangulation*
                         delete[] simp;
                         return 0;
                     }
-                    simp[i]->joinTo(j, simp[nextUnused++], Perm());
+                    simp[pos]->joinTo(j, simp[nextUnused++], Perm());
                 } else {
                     // Join to existing simplex.
                     if (joinDest[joinPos] >= nextUnused ||
@@ -557,7 +569,7 @@ typename DimTraits<dim>::Triangulation*
                         delete[] simp;
                         return 0;
                     }
-                    simp[i]->joinTo(j, simp[joinDest[joinPos]],
+                    simp[pos]->joinTo(j, simp[joinDest[joinPos]],
                         Perm::orderedSn[joinGluing[joinPos]]);
                     ++joinPos;
                 }

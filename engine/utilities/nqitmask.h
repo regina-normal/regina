@@ -54,6 +54,29 @@ namespace regina {
  * @{
  */
 
+template <typename T>
+class NQitmask1;
+
+/**
+ * Writes the given qitmask to the given output stream as a sequence of
+ * digits (0, 1, 2 and/or 3).
+ *
+ * Since the length of the qitmask is not stored, the number of qits
+ * written will be 8 * sizeof(\a T).
+ *
+ * \ifacespython Not present.
+ *
+ * @param out the output stream to which to write.
+ * @param mask the qitmask to write.
+ * @return a reference to the given output stream.
+ */
+template <typename T>
+std::ostream& operator << (std::ostream& out, const NQitmask1<T>& mask) {
+    for (T bit = 1; bit; bit <<= 1)
+        out << int(((mask.mask1 & bit) ? 1 : 0) | ((mask.mask2 & bit) ? 2 : 0));
+    return out;
+}
+
 /**
  * A small but extremely fast "base 4 bitmask" class that can store up to
  * 8 * sizeof(\a T) "qits", each equal to 0, 1, 2 or 3.
@@ -238,16 +261,19 @@ class NQitmask1 {
             return ((mask1 | mask2) & (other.mask1 | other.mask2));
         }
 
-    friend std::ostream& operator << (std::ostream& out,
+    friend std::ostream& operator << <T>(std::ostream& out,
         const NQitmask1<T>& mask);
 };
+
+template <typename T, typename U>
+class NQitmask2;
 
 /**
  * Writes the given qitmask to the given output stream as a sequence of
  * digits (0, 1, 2 and/or 3).
  *
  * Since the length of the qitmask is not stored, the number of qits
- * written will be 8 * sizeof(\a T).
+ * written will be 8 * sizeof(\a T) + 8 * sizeof(\a U).
  *
  * \ifacespython Not present.
  *
@@ -255,10 +281,12 @@ class NQitmask1 {
  * @param mask the qitmask to write.
  * @return a reference to the given output stream.
  */
-template <typename T>
-std::ostream& operator << (std::ostream& out, const NQitmask1<T>& mask) {
+template <typename T, typename U>
+std::ostream& operator << (std::ostream& out, const NQitmask2<T, U>& mask) {
     for (T bit = 1; bit; bit <<= 1)
-        out << int(((mask.mask1 & bit) ? 1 : 0) | ((mask.mask2 & bit) ? 2 : 0));
+        out << int(((mask.low1 & bit) ? 1 : 0) | ((mask.low2 & bit) ? 2 : 0));
+    for (U bit = 1; bit; bit <<= 1)
+        out << int(((mask.high1 & bit) ? 1 : 0) | ((mask.high2 & bit) ? 2 : 0));
     return out;
 }
 
@@ -476,31 +504,9 @@ class NQitmask2 {
                 ((high1 | high2) & (other.high1 | other.high2));
         }
 
-    friend std::ostream& operator << (std::ostream& out,
+    friend std::ostream& operator << <T, U>(std::ostream& out,
         const NQitmask2<T, U>& mask);
 };
-
-/**
- * Writes the given qitmask to the given output stream as a sequence of
- * digits (0, 1, 2 and/or 3).
- *
- * Since the length of the qitmask is not stored, the number of qits
- * written will be 8 * sizeof(\a T) + 8 * sizeof(\a U).
- *
- * \ifacespython Not present.
- *
- * @param out the output stream to which to write.
- * @param mask the qitmask to write.
- * @return a reference to the given output stream.
- */
-template <typename T, typename U>
-std::ostream& operator << (std::ostream& out, const NQitmask2<T, U>& mask) {
-    for (T bit = 1; bit; bit <<= 1)
-        out << int(((mask.low1 & bit) ? 1 : 0) | ((mask.low2 & bit) ? 2 : 0));
-    for (U bit = 1; bit; bit <<= 1)
-        out << int(((mask.high1 & bit) ? 1 : 0) | ((mask.high2 & bit) ? 2 : 0));
-    return out;
-}
 
 #ifndef __DOXYGEN
 /**
@@ -553,16 +559,8 @@ struct InternalQitmaskLen64<true> {
 
 template <>
 struct InternalQitmaskLen64<false> {
-#ifdef LONG_LONG_FOUND
     // The C standard guarantees that sizeof(long long) >= 8.
-    // However, the C++ standard does not require long long to exist at
-    // all (hence the LONG_LONG_FOUND test).
     typedef NQitmask1<unsigned long long> Type;
-#else
-    // The standard guarantees that sizeof(long) >= 4.
-    // Therefore two longs will be enough for 64 bits.
-    typedef NQitmask2<unsigned long> Type;
-#endif
 };
 #endif // End block for doxygen to ignore.
 

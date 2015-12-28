@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "surfaces/normalcoords.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 

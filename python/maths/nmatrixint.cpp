@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "maths/nmatrixint.h"
 #include <boost/python/detail/api_placeholder.hpp> // For len().
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NMatrixInt;
@@ -47,7 +48,7 @@ namespace {
     void (NMatrixInt::*addCol_triple)(unsigned long, unsigned long,
         regina::NLargeInteger) = &NMatrixInt::addCol;
 
-    std::auto_ptr<NMatrixInt> multiply(const NMatrixInt& m1,
+    std::unique_ptr<NMatrixInt> multiply(const NMatrixInt& m1,
             const NMatrixInt& m2) {
         return m1.multiplyAs<NMatrixInt>(m2);
     }
@@ -130,14 +131,13 @@ void addNMatrixInt() {
         .def("gcdCol", &NMatrixInt::gcdCol)
         .def("reduceRow", &NMatrixInt::reduceRow)
         .def("reduceCol", &NMatrixInt::reduceCol)
-        .def(self == self)
-        .def(self != self)
         .def("__mul__", multiply)
         .def("str", &NMatrixInt::str)
         .def("toString", &NMatrixInt::toString)
         .def("detail", &NMatrixInt::detail)
         .def("toStringLong", &NMatrixInt::toStringLong)
         .def("__str__", &NMatrixInt::str)
+        .def(regina::python::add_eq_operators())
     ;
 
     s.attr("zero") = NMatrixInt::zero;

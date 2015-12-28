@@ -32,8 +32,6 @@
 
 /* end stub */
 
-#include "regina-config.h" // For EXCLUDE_NORMALIZ
-
 #include <algorithm>
 #include <cppunit/extensions/HelperMacros.h>
 #include <memory>
@@ -1522,10 +1520,10 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         static void verifyConversions(NTriangulation* tri) {
-            std::auto_ptr<NNormalSurfaceList> stdDirect(
+            std::unique_ptr<NNormalSurfaceList> stdDirect(
                 NNormalSurfaceList::enumerate(
                 tri, NS_STANDARD, NS_VERTEX, NS_VERTEX_STD_DIRECT));
-            std::auto_ptr<NNormalSurfaceList> stdConv(
+            std::unique_ptr<NNormalSurfaceList> stdConv(
                 NNormalSurfaceList::enumerate(
                 tri, NS_STANDARD, NS_VERTEX, NS_VERTEX_VIA_REDUCED));
             if (tri->getNumberOfTetrahedra() > 0 &&
@@ -1571,9 +1569,9 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             // Only test standard-to-quad if the preconditions for
             // standardToQuad() hold.
             if (tri->isValid() && ! tri->isIdeal()) {
-                std::auto_ptr<NNormalSurfaceList> quadDirect(
+                std::unique_ptr<NNormalSurfaceList> quadDirect(
                     NNormalSurfaceList::enumerate(tri, NS_QUAD));
-                std::auto_ptr<NNormalSurfaceList> quadConv(
+                std::unique_ptr<NNormalSurfaceList> quadConv(
                     stdDirect->standardToQuad());
                 if (! identical(quadDirect.get(), quadConv.get())) {
                     std::ostringstream msg;
@@ -1586,10 +1584,10 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         static void verifyConversionsAN(NTriangulation* tri) {
-            std::auto_ptr<NNormalSurfaceList> stdDirect(
+            std::unique_ptr<NNormalSurfaceList> stdDirect(
                 NNormalSurfaceList::enumerate(
                 tri, NS_AN_STANDARD, NS_VERTEX, NS_VERTEX_STD_DIRECT));
-            std::auto_ptr<NNormalSurfaceList> stdConv(
+            std::unique_ptr<NNormalSurfaceList> stdConv(
                 NNormalSurfaceList::enumerate(
                 tri, NS_AN_STANDARD, NS_VERTEX, NS_VERTEX_VIA_REDUCED));
             if (tri->getNumberOfTetrahedra() > 0 &&
@@ -1635,9 +1633,9 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             // Only test standard-to-quad if the preconditions for
             // standardToQuad() hold.
             if (tri->isValid() && ! tri->isIdeal()) {
-                std::auto_ptr<NNormalSurfaceList> quadDirect(
+                std::unique_ptr<NNormalSurfaceList> quadDirect(
                     NNormalSurfaceList::enumerate(tri, NS_AN_QUAD_OCT));
-                std::auto_ptr<NNormalSurfaceList> quadConv(
+                std::unique_ptr<NNormalSurfaceList> quadConv(
                     stdDirect->standardANToQuadOct());
                 if (! identical(quadDirect.get(), quadConv.get())) {
                     std::ostringstream msg;
@@ -1736,20 +1734,6 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 tri, coords, NS_FUNDAMENTAL, NS_HILBERT_PRIMAL);
             NNormalSurfaceList* dual = NNormalSurfaceList::enumerate(
                 tri, coords, NS_FUNDAMENTAL, NS_HILBERT_DUAL);
-#ifdef EXCLUDE_NORMALIZ
-            // If we build without Normaliz, the primal algorithm falls
-            // through to the dual algorithm.
-            if (tri->getNumberOfTetrahedra() > 0 &&
-                    (primal->algorithm().has(NS_HILBERT_PRIMAL) ||
-                    ! primal->algorithm().has(NS_HILBERT_DUAL))) {
-                std::ostringstream msg;
-                msg << "Primal Hilbert basis enumeration in coordinate system "
-                    << coords << " does not fall through to dual Hilbert "
-                    "basis enumeration when Normaliz is excluded for "
-                    << tri->getPacketLabel() << '.';
-                CPPUNIT_FAIL(msg.str());
-            }
-#else
             if (tri->getNumberOfTetrahedra() > 0 &&
                     (primal->algorithm().has(NS_HILBERT_DUAL) ||
                     ! primal->algorithm().has(NS_HILBERT_PRIMAL))) {
@@ -1759,7 +1743,6 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                     << tri->getPacketLabel() << '.';
                 CPPUNIT_FAIL(msg.str());
             }
-#endif
             if (tri->getNumberOfTetrahedra() > 0 &&
                     (dual->algorithm().has(NS_HILBERT_PRIMAL) ||
                     ! dual->algorithm().has(NS_HILBERT_DUAL))) {
@@ -2051,13 +2034,13 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             unsigned long n = list->size();
 
             const NNormalSurface *s;
-            std::auto_ptr<NTriangulation> t;
-            std::auto_ptr<NContainer> comp;
+            std::unique_ptr<NTriangulation> t;
+            std::unique_ptr<NContainer> comp;
             unsigned long nComp;
 
-            std::auto_ptr<NNormalSurface> sDouble;
-            std::auto_ptr<NTriangulation> tDouble;
-            std::auto_ptr<NContainer> compDouble;
+            std::unique_ptr<NNormalSurface> sDouble;
+            std::unique_ptr<NTriangulation> tDouble;
+            std::unique_ptr<NContainer> compDouble;
             unsigned long nCompDouble;
 
             bool separating;

@@ -32,7 +32,20 @@
 
 /* end stub */
 
-/* Template definitions for ngenericisomorphism.h. */
+/*! \file generic/ngenericisomorphism-impl.h
+ *  \brief Contains implementation details for the NGenericIsomorphism
+ *  class template.
+ *
+ *  This file is \e not included automatically by ngenericisomorphism.h.
+ *  However, typical end users should never need to include it, since
+ *  Regina's calculation engine provides full explicit instantiations
+ *  of NGenericIsomorphism for \ref stddim "standard dimensions".
+ */
+
+#ifndef __NGENERICISOMORPHISM_IMPL_H
+#ifndef __DOXYGEN
+#define __NGENERICISOMORPHISM_IMPL_H
+#endif
 
 #include <algorithm>
 #include <cstdlib>
@@ -104,16 +117,15 @@ typename NGenericIsomorphism<dim>::Isomorphism* NGenericIsomorphism<dim>::
 
     // Randomly choose the individual permutations.
     for (i = 0; i < nSimplices; i++)
-        ans->facetPerm_[i] = Perm::Sn[rand() % Perm::nPerms];
+        ans->facetPerm_[i] = DimTraits<dim>::Perm::Sn[rand() %
+            DimTraits<dim>::Perm::nPerms];
 
     return ans;
 }
 
 template <int dim>
-typename NGenericIsomorphism<dim>::Triangulation*
-        NGenericIsomorphism<dim>::apply(
-        const typename NGenericIsomorphism<dim>::Triangulation* original)
-        const {
+typename DimTraits<dim>::Triangulation* NGenericIsomorphism<dim>::apply(
+        const typename DimTraits<dim>::Triangulation* original) const {
     if (original->getNumberOfSimplices() != nSimplices_)
         return 0;
 
@@ -160,7 +172,7 @@ typename NGenericIsomorphism<dim>::Triangulation*
 
 template <int dim>
 void NGenericIsomorphism<dim>::applyInPlace(
-        typename NGenericIsomorphism<dim>::Triangulation* tri) const {
+        typename DimTraits<dim>::Triangulation* tri) const {
     if (tri->getNumberOfSimplices() != nSimplices_)
         return;
 
@@ -210,3 +222,4 @@ void NGenericIsomorphism<dim>::applyInPlace(
 
 } // namespace regina
 
+#endif

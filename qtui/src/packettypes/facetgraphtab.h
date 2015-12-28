@@ -65,7 +65,7 @@ class FacetGraphData {
         virtual ~FacetGraphData() {}
 
         virtual regina::NPacket* getPacket() = 0;
-        virtual void writeDot(std::ostream& out, bool withLabels) = 0;
+        virtual std::string dot(bool withLabels) = 0;
         virtual unsigned long numberOfSimplices() = 0;
         virtual QString simplicesName() = 0;
         virtual QString overview() = 0;
@@ -79,7 +79,7 @@ class Dim2EdgeGraphData : public FacetGraphData {
         Dim2EdgeGraphData(regina::Dim2Triangulation* tri) : tri_(tri) {}
 
         regina::NPacket* getPacket();
-        void writeDot(std::ostream& out, bool withLabels);
+        std::string dot(bool withLabels);
         unsigned long numberOfSimplices();
         QString simplicesName();
         QString overview();
@@ -93,7 +93,7 @@ class Dim3FaceGraphData : public FacetGraphData {
         Dim3FaceGraphData(regina::NTriangulation* tri) : tri_(tri) {}
 
         regina::NPacket* getPacket();
-        void writeDot(std::ostream& out, bool withLabels);
+        std::string dot(bool withLabels);
         unsigned long numberOfSimplices();
         QString simplicesName();
         QString overview();
@@ -127,7 +127,6 @@ class FacetGraphTab : public QObject, public PacketViewerTab {
         /**
          * Graphviz options.
          */
-        QString graphvizExec;
         bool graphvizLabels;
 
     public:

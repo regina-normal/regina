@@ -41,9 +41,8 @@
 #define __PYTHONINTERPRETER_H
 
 #include <Python.h>
+#include <mutex>
 #include <string>
-
-#include "utilities/nthread.h"
 
 class PythonOutputStream;
 
@@ -62,7 +61,7 @@ namespace regina {
  */
 class PythonInterpreter {
     private:
-        static regina::NMutex globalMutex;
+        static std::mutex globalMutex;
             /**< A mutual exclusion device for the creation and
                  destruction of subinterpreters. */
         static bool pythonInitialised;

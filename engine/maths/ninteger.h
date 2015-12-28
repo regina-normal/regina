@@ -143,9 +143,14 @@ struct InfinityBase<false> {
  * Thanks to Menelaos Karavelas for encouraging me to take another look at
  * these ideas.
  *
+ * \headers Parts of this template class are implemented in a C++ source
+ * file that is not available through the headers.  However, this should
+ * not affect users since the calculation engine includes explicit
+ * instantiations for all possible template parameters.
+ *
  * \ifacespython Both variants of this template are available through Python.
- * For \a supportInfinity = \c false (the default), simply use NIntegerBase.
- * For \a supportInfinity = \c true, use NLargeInteger.
+ * For \a supportInfinity = \c false, use the name NInteger.
+ * For \a supportInfinity = \c true, use the name NLargeInteger.
  */
 template <bool supportInfinity = false>
 class REGINA_API NIntegerBase : private InfinityBase<supportInfinity> {
@@ -1449,6 +1454,44 @@ class REGINA_API NIntegerBase : private InfinityBase<supportInfinity> {
         const NIntegerBase<supportInfinity_>& large);
 };
 
+// Although we explicitly instantiate NIntegerBase in the library, we do not
+// declare this through an "extern template class REGINA_API ..." line here.
+//
+// The short story: windows is a nightmare.
+//
+// The long story:
+//
+// - Symbols that are part of the public library interface *must* be marked as
+//   dllexport; otherwise code that links with the library cannot use them.
+//
+// - It seems that the presence or absence of the dllexport attribute is
+//   determined at the *first* instantiation of a template class.  Typically
+//   this is either an implicit instantiation, or an "extern template class"
+//   line, whichever the compiler sees first.
+//
+// - In general we cannot control the attributes for implicit instantiations,
+//   since it does not make sense to mark an entire template as REGINA_API -
+//   generally a template is exported only for some template parameters.
+//
+// - This means that we typically use "extern template class" lines to manage
+//   the dllexport attribute.
+//
+// - HOWEVER: For NIntegerBase, this breaks because:
+//
+//     * The "extern template class" lines must come after any specialisations
+//       of member functions (otherwise the compile fails);
+//
+//     * As a result, the specialisations trigger implicit instantiations,
+//       which render the "extern template class" lines ineffective.
+//
+// - The solution for NIntegerBase is to mark the entire template as
+//   REGINA_API.  This is possible because our library explicitly instantiates
+//   NIntegerBase for all possible template parameters.
+//
+// I would *love* to hear of a better way of doing this that correctly
+// sets the dllexport / dllimport attributes under windows, and that
+// doesn't require marking the entire template as REGINA_API.
+
 /**
  * NLargeInteger is a typedef for NIntegerBase<true>, which offers
  * arbitrary precision integers with support for infinity.
@@ -1473,8 +1516,14 @@ typedef NIntegerBase<false> NInteger;
  * @return a reference to \a out.
  */
 template <bool supportInfinity>
-REGINA_API std::ostream& operator << (std::ostream& out,
+std::ostream& operator << (std::ostream& out,
     const NIntegerBase<supportInfinity>& i);
+
+// Help the compiler by noting which explicit instantiations we offer.
+extern template REGINA_API std::ostream& operator << (std::ostream& out,
+    const NIntegerBase<true>& i);
+extern template REGINA_API std::ostream& operator << (std::ostream& out,
+    const NIntegerBase<false>& i);
 
 /**
  * Adds the given native integer to the given large integer.
@@ -1487,8 +1536,14 @@ REGINA_API std::ostream& operator << (std::ostream& out,
  * @return the sum \a lhs plus \a rhs.
  */
 template <bool supportInfinity>
-REGINA_API NIntegerBase<supportInfinity> operator + (long lhs,
+NIntegerBase<supportInfinity> operator + (long lhs,
     const NIntegerBase<supportInfinity>& rhs);
+
+// Help the compiler by noting which explicit instantiations we offer.
+extern template REGINA_API NIntegerBase<true> operator +(long lhs,
+    const NIntegerBase<true>& rhs);
+extern template REGINA_API NIntegerBase<false> operator +(long lhs,
+    const NIntegerBase<false>& rhs);
 
 /**
  * Multiplies the given native integer with the given large integer.
@@ -1501,41 +1556,14 @@ REGINA_API NIntegerBase<supportInfinity> operator + (long lhs,
  * @return the product \a lhs times \a rhs.
  */
 template <bool supportInfinity>
-REGINA_API NIntegerBase<supportInfinity> operator * (long lhs,
+NIntegerBase<supportInfinity> operator * (long lhs,
     const NIntegerBase<supportInfinity>& rhs);
 
-/*@}*/
-
-} // namespace regina
-
-#ifndef __DOXYGEN
-namespace libnormaliz {
-/**
- * Explicit integer cast functions, for compatibility with Normaliz.
- *
- * We define functions separately for each variant of \a supportInfinity
- * to avoid partial template specialisation.
- *
- * @param a an instance of some arbitrary integer type.
- * @return the given integer, cast as a native long.
- */
-template <typename Integer>
-long explicit_cast_to_long(const Integer& a);
-
-template <>
-inline long explicit_cast_to_long<regina::NIntegerBase<true> >(
-        const regina::NIntegerBase<true>& a) {
-    return a.longValue();
-}
-template <>
-inline long explicit_cast_to_long<regina::NIntegerBase<false> >(
-        const regina::NIntegerBase<false>& a) {
-    return a.longValue();
-}
-} //namespace libnormaliz
-#endif
-
-namespace regina {
+// Help the compiler by noting which explicit instantiations we offer.
+extern template REGINA_API NIntegerBase<true> operator *(long lhs,
+    const NIntegerBase<true>& rhs);
+extern template REGINA_API NIntegerBase<false> operator *(long lhs,
+    const NIntegerBase<false>& rhs);
 
 /**
  * A wrapper class for a native, fixed-precision integer type of the
@@ -1563,7 +1591,7 @@ namespace regina {
  * \ifacespython Not present.
  */
 template <int bytes>
-class REGINA_API NNativeInteger {
+class NNativeInteger {
     public:
         typedef typename IntOfSize<bytes>::type Native;
             /**< The native data type used to store this integer. */
@@ -2202,7 +2230,7 @@ class REGINA_API NNativeInteger {
  * @return a reference to \a out.
  */
 template <int bytes>
-REGINA_API std::ostream& operator << (std::ostream& out, const NNativeInteger<bytes>& i);
+std::ostream& operator << (std::ostream& out, const NNativeInteger<bytes>& i);
 
 /**
  * NNativeLong is a typedef for the NNativeInteger template class whose

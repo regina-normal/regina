@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "subcomplex/nlayeredlensspace.h"
 #include "triangulation/ncomponent.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NLayeredLensSpace;
@@ -55,6 +56,7 @@ void addNLayeredLensSpace() {
         .def("isTwisted", &NLayeredLensSpace::isTwisted)
         .def("isLayeredLensSpace", &NLayeredLensSpace::isLayeredLensSpace,
             return_value_policy<manage_new_object>())
+        .def(regina::python::add_eq_operators())
         .staticmethod("isLayeredLensSpace")
     ;
 

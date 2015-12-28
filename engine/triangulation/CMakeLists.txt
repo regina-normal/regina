@@ -17,13 +17,13 @@ SET ( FILES
   nexampletriangulation
   nfacepair
   nhomologicaldata
-  nisomorphism
   ntetrahedron
   ntriangle
   ntriangulation
   nvertex
   nxmltrireader
   reorder
+  retriangulate
   simplify
   simplifyglobal
   skeleton

@@ -65,7 +65,7 @@ namespace {
         regina::columnEchelonForm(m, r, rInv, rowListVector);
     }
 
-    std::auto_ptr<NMatrixInt> preImageOfLattice_list(const NMatrixInt& m,
+    std::unique_ptr<NMatrixInt> preImageOfLattice_list(const NMatrixInt& m,
             boost::python::list l) {
         if (boost::python::len(l) != m.rows()) {
             PyErr_SetString(PyExc_IndexError,
@@ -103,7 +103,7 @@ namespace {
         return regina::preImageOfLattice(m, lVector);
     }
 
-    std::auto_ptr<NMatrixInt> torsionAutInverse_list(const NMatrixInt& m,
+    std::unique_ptr<NMatrixInt> torsionAutInverse_list(const NMatrixInt& m,
             boost::python::list l) {
         if (boost::python::len(l) != m.rows()) {
             PyErr_SetString(PyExc_IndexError,

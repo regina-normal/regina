@@ -227,7 +227,7 @@ class NGroupPresentationTest : public CppUnit::TestFixture {
                 i!=presList.end(); i++) {
             NGroupPresentation tPres( *(*i) );
             tPres.homologicalAlignment();
-            std::auto_ptr<NMarkedAbelianGroup> mab( tPres.markedAbelianisation() );
+            std::unique_ptr<NMarkedAbelianGroup> mab( tPres.markedAbelianisation() );
             unsigned long N(mab->getNumberOfInvariantFactors());
             unsigned long M(mab->minNumberOfGenerators());
             /*

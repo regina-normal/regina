@@ -57,7 +57,21 @@ int main(int argc, char **argv) {
         static_cast<const char*>(QFile::encodeName(
             QCoreApplication::applicationDirPath() + "/../Resources")),
         static_cast<const char*>(QFile::encodeName(
-            QCoreApplication::applicationDirPath() + "/python")));
+            QCoreApplication::applicationDirPath() + "/python")),
+#ifdef REGINA_XCODE_BUNDLE
+        /* The Xcode bundle currently puts census databases in the
+           root resources directory.  This is difficult to avoid, since
+           these are "derived sources" and hence need to go in a
+           "copy bundle resources" phase, not a "copy files" phase. */
+        static_cast<const char*>(QFile::encodeName(
+            QCoreApplication::applicationDirPath() + "/../Resources")));
+#else
+        /* We are building a MacOS bundle via cmake, which puts the
+           census databases in the "normal" place beneath Resources/data/. */
+        static_cast<const char*>(QFile::encodeName(
+            QCoreApplication::applicationDirPath() +
+            "/../Resources/data/census")));
+#endif
 #endif
 #endif
 

@@ -163,7 +163,7 @@ unsigned long NCensus::formCensus(NPacket* parent, unsigned nTetrahedra,
         whichPurge, sieve, sieveArgs);
 
     NFacePairing::findAllPairings(nTetrahedra, boundary, nBdryFaces,
-        NCensus::foundFacePairing, census, false /* separate thread */);
+        NCensus::foundFacePairing, census);
     unsigned long ans = census->whichSoln - 1;
     delete census;
     return ans;

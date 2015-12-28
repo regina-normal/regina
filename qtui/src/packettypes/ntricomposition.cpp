@@ -192,13 +192,13 @@ void NTriCompositionUI::refresh() {
     components = lastComponent = 0;
 
     // Try to identify the 3-manifold.
-    std::auto_ptr<regina::NStandardTriangulation> standardTri(
+    std::unique_ptr<regina::NStandardTriangulation> standardTri(
         regina::NStandardTriangulation::isStandardTriangulation(tri));
     if (standardTri.get()) {
         addTopLevelSection(
             tr("Triangulation: ") + standardTri->getName().c_str());
 
-        std::auto_ptr<regina::NManifold> manifold(standardTri->getManifold());
+        std::unique_ptr<regina::NManifold> manifold(standardTri->getManifold());
         if (manifold.get())
             addTopLevelSection(
                 tr("3-manifold: ") + manifold->getName().c_str());

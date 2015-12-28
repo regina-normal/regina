@@ -42,6 +42,7 @@ void addNContainer() {
     scope s = class_<NContainer, bases<regina::NPacket>,
             std::auto_ptr<NContainer>, boost::noncopyable>(
             "NContainer", init<>())
+        .def(init<const std::string&>())
     ;
 
     s.attr("packetType") = regina::PacketType(NContainer::packetType);

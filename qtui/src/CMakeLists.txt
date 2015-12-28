@@ -13,16 +13,47 @@ ADD_SUBDIRECTORY(icons)
 ADD_SUBDIRECTORY(choosers)
 ADD_SUBDIRECTORY(foreign)
 ADD_SUBDIRECTORY(packettypes)
+
 IF(BOOST_PYTHON_FOUND)
   ADD_SUBDIRECTORY(python)
   SET(LINK_LIBS ${LINK_LIBS} ${PYTHON_LIBRARIES} ${Boost_PYTHON_LIBRARY})
   INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_DIRS})
 ENDIF(BOOST_PYTHON_FOUND)
+
+IF(LIBGVC_FOUND)
+  # Alas, the pkg-config files shipped with Graphviz under windows are wrong.
+  # They give the wrong library directory, and even worse they give the
+  # wrong library *names* (graph.dll instead of cgraph.dll).
+  # For now, we hard-code fixes for these errors in the WIN32 code below.
+  INCLUDE_DIRECTORIES("${LIBGVC_INCLUDEDIR}")
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${LIBGVC_CFLAGS_OTHER}")
+  SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LIBGVC_LDFLAGS_OTHER}")
+  IF(WIN32)
+    # We do some hard-coding to fix the pkg-config errors described above.
+    # Note that, under windows, Graphviz ships its plugins in the same
+    # directory as its core library DLLs.
+    SET(LINK_LIBS ${LINK_LIBS} gvc cgraph cdt)
+    LINK_DIRECTORIES("${LIBGVC_LIBDIR}/release/dll")
+  ELSE(WIN32)
+    # Assume that pkg-config is telling us the truth.
+    # Note, however, that the graphviz plugins typically live in a
+    # subdirectory graphviz/ beneath the main library path.
+    SET(LINK_LIBS ${LINK_LIBS} ${LIBGVC_LIBRARIES})
+    LINK_DIRECTORIES("${LIBGVC_LIBDIR}" "${LIBGVC_LIBDIR}/graphviz")
+  ENDIF(WIN32)
+  SET(LINK_LIBS ${LINK_LIBS} gvplugin_core gvplugin_neato_layout)
+ENDIF(LIBGVC_FOUND)
+
 IF(SRCHILITE_FOUND)
   ADD_SUBDIRECTORY(srchiliteqt)
   ADD_SUBDIRECTORY(syntax)
   SET(LINK_LIBS ${LINK_LIBS} ${SRCHILITE_LIBRARY})
   INCLUDE_DIRECTORIES(${SRCHILITE_INCLUDE_DIR})
+  IF(WIN32)
+    # It seems that under Windows we need to explicitly link our code against
+    # boost-regex, which is used internally by libsource-highlight.
+    SET(LINK_LIBS ${LINK_LIBS} ${Boost_REGEX_LIBRARY})
+  ENDIF(WIN32)
 ELSE(SRCHILITE_FOUND)
   ADD_DEFINITIONS(-DNO_SRCHILITE=1)
 ENDIF(SRCHILITE_FOUND)
@@ -102,6 +133,9 @@ ADD_EXECUTABLE(${REGINA_APP_NAME} MACOSX_BUNDLE WIN32 ${SOURCES})
 TARGET_LINK_LIBRARIES(${REGINA_APP_NAME} ${LINK_LIBS})
 
 if (APPLE)
+  set_target_properties(${REGINA_APP_NAME}
+    PROPERTIES INSTALL_RPATH_USE_LINK_PATH TRUE)
+
   # Prepare an Info.plist:
   set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${PACKAGE_VERSION}")
 

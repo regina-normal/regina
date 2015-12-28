@@ -40,14 +40,14 @@
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
 #include "../globalarray.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NTetrahedron;
 
 void addNTetrahedron() {
     class_<NTetrahedron, std::auto_ptr<NTetrahedron>, boost::noncopyable>(
-            "NTetrahedron", init<>())
-        .def(init<const std::string&>())
+            "NTetrahedron", no_init)
         .def("getDescription", &NTetrahedron::getDescription,
             return_value_policy<return_by_value>())
         .def("setDescription", &NTetrahedron::setDescription)
@@ -91,6 +91,7 @@ void addNTetrahedron() {
         .def("detail", &NTetrahedron::detail)
         .def("toStringLong", &NTetrahedron::toStringLong)
         .def("__str__", &NTetrahedron::str)
+        .def(regina::python::add_eq_operators())
     ;
 }
 

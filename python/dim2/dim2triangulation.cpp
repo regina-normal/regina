@@ -92,14 +92,44 @@ namespace {
         return ans;
     }
 
-    regina::Dim2Isomorphism* isIsomorphicTo_ptr(Dim2Triangulation& t,
-            Dim2Triangulation& s) {
+    regina::Dim2Isomorphism* isIsomorphicTo_ptr(const Dim2Triangulation& t,
+            const Dim2Triangulation& s) {
         return t.isIsomorphicTo(s).release();
     }
 
-    regina::Dim2Isomorphism* isContainedIn_ptr(Dim2Triangulation& t,
-            Dim2Triangulation& s) {
+    regina::Dim2Isomorphism* isContainedIn_ptr(const Dim2Triangulation& t,
+            const Dim2Triangulation& s) {
         return t.isContainedIn(s).release();
+    }
+
+    boost::python::list findAllIsomorphisms_list(
+        const Dim2Triangulation& t, const Dim2Triangulation& other) {
+        boost::python::list ans;
+
+        std::list<regina::Dim2Isomorphism*> isos;
+        t.findAllIsomorphisms(other, isos);
+
+        for (std::list<regina::Dim2Isomorphism*>::iterator it =
+                 isos.begin(); it != isos.end(); it++) {
+            std::auto_ptr<regina::Dim2Isomorphism> iso(*it);
+            ans.append(iso);
+        }
+        return ans;
+    }
+
+    boost::python::list findAllSubcomplexesIn_list(
+        const Dim2Triangulation& t, const Dim2Triangulation& other) {
+        boost::python::list ans;
+
+        std::list<regina::Dim2Isomorphism*> isos;
+        t.findAllSubcomplexesIn(other, isos);
+
+        for (std::list<regina::Dim2Isomorphism*>::iterator it =
+                 isos.begin(); it != isos.end(); it++) {
+            std::auto_ptr<regina::Dim2Isomorphism> iso(*it);
+            ans.append(iso);
+        }
+        return ans;
     }
 
     std::string isoSig_void(const Dim2Triangulation& t) {
@@ -128,19 +158,19 @@ void addDim2Triangulation() {
         .def("getTriangles", Dim2_getTriangles_list)
         .def("getSimplices", Dim2_getTriangles_list)
         .def("getTriangle", getTriangle_non_const,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("getSimplex", getTriangle_non_const,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("triangleIndex", &Dim2Triangulation::triangleIndex)
         .def("simplexIndex", &Dim2Triangulation::simplexIndex)
         .def("newTriangle", newTriangle_void,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("newSimplex", newTriangle_void,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("newTriangle", newTriangle_string,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("newSimplex", newTriangle_string,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("removeTriangle", &Dim2Triangulation::removeTriangle)
         .def("removeSimplex", &Dim2Triangulation::removeSimplex)
         .def("removeTriangleAt", &Dim2Triangulation::removeTriangleAt)
@@ -159,13 +189,13 @@ void addDim2Triangulation() {
         .def("getVertices", Dim2_getVertices_list)
         .def("getEdges", Dim2_getEdges_list)
         .def("getComponent", &Dim2Triangulation::getComponent,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("getBoundaryComponent", &Dim2Triangulation::getBoundaryComponent,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("getVertex", &Dim2Triangulation::getVertex,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("getEdge", &Dim2Triangulation::getEdge,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("componentIndex", &Dim2Triangulation::componentIndex)
         .def("boundaryComponentIndex",
             &Dim2Triangulation::boundaryComponentIndex)
@@ -177,6 +207,8 @@ void addDim2Triangulation() {
         .def("makeCanonical", &Dim2Triangulation::makeCanonical)
         .def("isContainedIn", isContainedIn_ptr,
             return_value_policy<manage_new_object>())
+        .def("findAllIsomorphisms", findAllIsomorphisms_list)
+        .def("findAllSubcomplexesIn", findAllSubcomplexesIn_list)
         .def("isEmpty", &Dim2Triangulation::isEmpty)
         .def("size", &Dim2Triangulation::size)
         .def("isValid", &Dim2Triangulation::isValid)

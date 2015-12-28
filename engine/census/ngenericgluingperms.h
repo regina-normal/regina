@@ -74,12 +74,19 @@ namespace regina {
  * facet has a corresponding gluing permutation (and the matched facet has
  * the inverse gluing permutation).
  *
- * \pre The dimension argument \a dim is either 2, 3 or 4.
+ * \pre The template argument \a dim is one of Regina's
+ * \ref stddim "standard dimensions".
+ *
+ * \headers Parts of this template class are implemented in a separate header
+ * (ngenericgluingperms-impl.h), which is not included automatically by
+ * this file.  However, typical end users should never need this extra header,
+ * since Regina's calculation engine already includes explicit instantiations
+ * for \ref stddim "standard dimensions".
  *
  * \ifacespython Not present.
  */
 template <int dim>
-class REGINA_API NGenericGluingPerms {
+class NGenericGluingPerms {
     public:
         typedef typename DimTraits<dim>::FacetPairing FacetPairing;
         typedef typename DimTraits<dim>::Perm Perm;
@@ -435,6 +442,10 @@ class REGINA_API NGenericGluingPerms {
 };
 
 /*@}*/
+
+// Indicate which templates we explicitly instantiate in the shared library.
+extern template class REGINA_API NGenericGluingPerms<2>;
+extern template class REGINA_API NGenericGluingPerms<3>;
 
 // Inline functions for NGenericGluingPerms
 

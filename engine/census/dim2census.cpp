@@ -57,7 +57,7 @@ unsigned long Dim2Census::formCensus(NPacket* parent, unsigned nTriangles,
         sieve, sieveArgs);
 
     Dim2EdgePairing::findAllPairings(nTriangles, boundary, nBdryEdges,
-        Dim2Census::foundEdgePairing, census, false);
+        Dim2Census::foundEdgePairing, census);
     unsigned long ans = census->whichSoln_ - 1;
     delete census;
     return ans;

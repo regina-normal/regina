@@ -33,11 +33,11 @@
 /* end stub */
 
 #include <algorithm>
+#include <thread>
 #include "enumerate/ntreetraversal.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nprism.h"
 #include "triangulation/ntriangulation.h"
-#include "utilities/nthread.h"
 
 namespace regina {
 
@@ -1320,7 +1320,7 @@ bool NNormalSurface::isCompressingDisc(bool knownConnected) const {
     // Now cut along the disc, and see if we get an extra sphere as a
     // result.  If not, the disc boundary is non-trivial and so the disc
     // is compressing.
-    std::auto_ptr<NTriangulation> cut(cutAlong());
+    std::unique_ptr<NTriangulation> cut(cutAlong());
 
     if (cut->getNumberOfBoundaryComponents() ==
             getTriangulation()->getNumberOfBoundaryComponents()) {
@@ -1347,110 +1347,88 @@ bool NNormalSurface::isCompressingDisc(bool knownConnected) const {
  * Supporting classes for isIncompressible().
  */
 namespace {
-    class CompressionTest;
-
     /**
      * Manages two parallel searches for compressing discs.
+     * Each search works with a single connected triangulation with boundary.
      * If one search reports that it has found a compressing disc,
-     * then it will cancel the other.
-     *
-     * Each individual search is run through a CompressingTest object
-     * (a subclass of NThread).  Before starting, each test thread should
-     * register itself via registerTest(), and if it finds a compressing
-     * disc then it should call hasFound() to cancel the other thread.
+     * then it will cancel the other (by calling hasFound()).
      */
     class SharedSearch {
         private:
-            NMutex mutex_;
+            // Information common to both threads:
             bool found_;
-            CompressionTest* ct_[2];
+            std::mutex foundMutex_;
+
+            // Information specific to each thread:
+            NTriangulation* t_[2];
+            NTreeSingleSoln<LPConstraintEuler, BanNone>* currSearch_[2];
+            std::mutex searchMutex_[2];
 
         public:
-            inline SharedSearch() : found_(false) {
-                ct_[0] = ct_[1] = 0;
+            inline SharedSearch(NTriangulation* t0, NTriangulation* t1) :
+                    found_(false) {
+                t_[0] = t0;
+                t_[1] = t1;
+                currSearch_[0] = currSearch_[1] = 0;
             }
 
-            inline void registerTest(CompressionTest* ct) {
-                if (! ct_[0])
-                    ct_[0] = ct;
-                else
-                    ct_[1] = ct;
-            }
-
-            inline bool hasFound() const {
-                NMutex::MutexLock lock(mutex_);
+            inline bool hasFound() {
+                std::lock_guard<std::mutex> lock(foundMutex_);
                 return found_;
             }
 
-            void markFound();
-    };
-
-    /**
-     * A thread class whose task is to locate a compressing disc in a
-     * single connected triangulation with boundary.
-     *
-     * IMPORTANT: A side-effect of run() is that it will always delete
-     * the underlying triangulation.
-     */
-    class CompressionTest : public NThread {
-        private:
-            NTriangulation* t_;
-
-            SharedSearch& ss_;
-            NTreeSingleSoln<LPConstraintEuler, BanNone>* currSearch_;
-            NMutex searchMutex_;
-
-        public:
-            inline CompressionTest(NTriangulation* t, SharedSearch& ss) :
-                    t_(t), ss_(ss), currSearch_(0) {
-                ss_.registerTest(this);
+            inline void markFound() {
+                std::lock_guard<std::mutex> lock(foundMutex_);
+                found_ = true;
+                for (int i = 0; i < 2; ++i)
+                    if (t_[i]) {
+                        std::lock_guard<std::mutex> lock(searchMutex_[i]);
+                        if (currSearch_[i])
+                            currSearch_[i]->cancel();
+                    }
             }
 
-            inline void cancel() {
-                NMutex::MutexLock lock(searchMutex_);
-                if (currSearch_)
-                    currSearch_->cancel();
-            }
-
-            void* run(void*) {
-                // Remember: run() must delete t_.
-                if (ss_.hasFound()) {
-                    delete t_;
-                    return 0;
+            /**
+             * Side-effect: runSearch(side) deletes t_[side].
+             */
+            void runSearch(const int side) {
+                if (hasFound()) {
+                    delete t_[side];
+                    return;
                 }
 
-                t_->intelligentSimplify();
+                t_[side]->intelligentSimplify();
 
-                if (ss_.hasFound()) {
-                    delete t_;
-                    return 0;
+                if (hasFound()) {
+                    delete t_[side];
+                    return;
                 }
 
                 // Try for a simple answer first.
-                if (t_->hasSimpleCompressingDisc()) {
-                    ss_.markFound();
-                    delete t_;
-                    return 0;
+                if (t_[side]->hasSimpleCompressingDisc()) {
+                    markFound();
+                    delete t_[side];
+                    return;
                 }
 
-                if (ss_.hasFound()) {
-                    delete t_;
-                    return 0;
+                if (hasFound()) {
+                    delete t_[side];
+                    return;
                 }
 
                 // The LP-and-crush method is only suitable for
                 // orientable triangulations with a single boundary component.
-                if (t_->getNumberOfBoundaryComponents() > 1 ||
-                        ! t_->isOrientable()) {
+                if (t_[side]->getNumberOfBoundaryComponents() > 1 ||
+                        ! t_[side]->isOrientable()) {
                     // Fall back to the slow and non-cancellable method.
-                    if (t_->hasCompressingDisc())
-                        ss_.markFound();
-                    delete t_;
-                    return 0;
+                    if (t_[side]->hasCompressingDisc())
+                        markFound();
+                    delete t_[side];
+                    return;
                 }
 
                 // Compute the Euler characteristic of the boundary component.
-                long ec = t_->getBoundaryComponent(0)->getEulerChar();
+                long ec = t_[side]->getBoundaryComponent(0)->getEulerChar();
 
                 // Look for a normal disc or sphere to crush.
                 NNormalSurface* ans;
@@ -1458,51 +1436,51 @@ namespace {
                 unsigned nComp;
                 bool found;
                 while (true) {
-                    t_->intelligentSimplify();
+                    t_[side]->intelligentSimplify();
 
                     // The LP-and-crushing method only works for
                     // 1-vertex triangulations (at present).
-                    if (t_->getNumberOfVertices() > 1) {
+                    if (t_[side]->getNumberOfVertices() > 1) {
                         // Try harder.
-                        t_->barycentricSubdivision();
-                        t_->intelligentSimplify();
-                        if (t_->getNumberOfVertices() > 1) {
+                        t_[side]->barycentricSubdivision();
+                        t_[side]->intelligentSimplify();
+                        if (t_[side]->getNumberOfVertices() > 1) {
                             // Fall back to the old (slow and uncancellable)
                             // method.
-                            if (t_->hasCompressingDisc())
-                                ss_.markFound();
-                            delete t_;
-                            return 0;
+                            if (t_[side]->hasCompressingDisc())
+                                markFound();
+                            delete t_[side];
+                            return;
                         }
                     }
 
-                    if (ss_.hasFound()) {
-                        delete t_;
-                        return 0;
+                    if (hasFound()) {
+                        delete t_[side];
+                        return;
                     }
 
-                    NTreeSingleSoln<LPConstraintEuler, BanNone> search(t_,
-                        NNormalSurfaceList::STANDARD);
+                    NTreeSingleSoln<LPConstraintEuler, BanNone> search(t_[side],
+                        NS_STANDARD);
                     {
-                        NMutex::MutexLock lock(searchMutex_);
-                        currSearch_ = &search;
+                        std::lock_guard<std::mutex> lock(searchMutex_[side]);
+                        currSearch_[side] = &search;
                     }
                     found = search.find();
                     {
-                        NMutex::MutexLock lock(searchMutex_);
-                        currSearch_ = 0;
+                        std::lock_guard<std::mutex> lock(searchMutex_[side]);
+                        currSearch_[side] = 0;
                     }
 
-                    if (ss_.hasFound()) {
-                        delete t_;
-                        return 0;
+                    if (hasFound()) {
+                        delete t_[side];
+                        return;
                     }
 
                     if (! found) {
                         // No discs or spheres.
                         // In particular, no compressing disc.
-                        delete t_;
-                        return 0;
+                        delete t_[side];
+                        return;
                     }
 
                     // NTreeSingleSoln guarantees that our solution is
@@ -1511,33 +1489,33 @@ namespace {
                     ans = search.buildSurface();
                     crush = ans->crush();
                     delete ans;
-                    delete t_;
+                    delete t_[side];
 
                     // Find the piece in the crushed triangulation with the
                     // right Euler characteristic on the boundary, if it exists.
                     nComp = crush->splitIntoComponents();
-                    t_ = static_cast<NTriangulation*>(
+                    t_[side] = static_cast<NTriangulation*>(
                         crush->getFirstTreeChild());
-                    while (t_) {
-                        if (t_->getNumberOfBoundaryComponents() == 1 &&
-                                t_->getBoundaryComponent(0)->
+                    while (t_[side]) {
+                        if (t_[side]->getNumberOfBoundaryComponents() == 1 &&
+                                t_[side]->getBoundaryComponent(0)->
                                     getEulerChar() == ec) {
                             // Found it.
-                            t_->makeOrphan();
+                            t_[side]->makeOrphan();
                             break;
                         }
 
-                        t_ = static_cast<NTriangulation*>(
-                            t_->getNextTreeSibling());
+                        t_[side] = static_cast<NTriangulation*>(
+                            t_[side]->getNextTreeSibling());
                     }
 
                     delete crush;
 
-                    if (! t_) {
+                    if (! t_[side]) {
                         // No boundary component with the right Euler
                         // characteristic.  We must have compressed.
-                        ss_.markFound();
-                        return 0;
+                        markFound();
+                        return;
                     }
 
                     // We now have a triangulation with fewer tetrahedra,
@@ -1546,14 +1524,6 @@ namespace {
                 }
             }
     };
-
-    inline void SharedSearch::markFound() {
-        NMutex::MutexLock lock(mutex_);
-        found_ = true;
-        if (ct_[0]) ct_[0]->cancel();
-        if (ct_[1]) ct_[1]->cancel();
-    }
-
 } // anonymous namespace
 
 bool NNormalSurface::isIncompressible() const {
@@ -1607,22 +1577,20 @@ bool NNormalSurface::isIncompressible() const {
         side[1]->makeOrphan();
     delete cut;
 
-    SharedSearch ss;
+    SharedSearch ss(side[0], side[1]);
 
     if (! side[1]) {
-        CompressionTest c(side[0], ss);
-        c.run(0);
+        ss.runSearch(0);
     } else {
         // Test both sides for compressing discs in parallel,
         // so we can terminate early if one side finds such a disc.
-        CompressionTest c1(side[0], ss);
-        CompressionTest c2(side[1], ss);
-
-        c1.start();
-        c2.start();
-
-        c1.join();
-        c2.join();
+        //
+        // Note that we need to pass &ss as a pointer, to avoid the
+        // std::thread constructor trying to make a deep copy of ss.
+        std::thread t0(&SharedSearch::runSearch, &ss, 0);
+        std::thread t1(&SharedSearch::runSearch, &ss, 1);
+        t0.join();
+        t1.join();
     }
 
     return ! ss.hasFound();

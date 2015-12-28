@@ -20,17 +20,14 @@
 /* Define if Boost.Python is available. */
 #cmakedefine BOOST_PYTHON_FOUND
 
+/* Define if the Graphviz libraries are available. */
+#cmakedefine LIBGVC_FOUND
+
 /* Define if langinfo.h and nl_langinfo() are available. */
 #cmakedefine LANGINFO_FOUND
 
 /* Define if we are replacing Tokyo Cabinet with the older QDBM. */
 #cmakedefine QDBM_AS_TOKYOCABINET
-
-/* Define if we are excluding Normaliz from the build. */
-#cmakedefine EXCLUDE_NORMALIZ
-
-/* Define if we are excluding SnapPea / SnapPy from the build. */
-#cmakedefine EXCLUDE_SNAPPEA
 
 /* Define as const if the declaration of iconv() needs const, or empty if not. */
 #define ICONV_CONST @ICONV_CONST@

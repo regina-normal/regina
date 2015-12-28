@@ -91,9 +91,9 @@ struct SurfaceFilterInfo;
  *
  * This macro provides the class with:
  *
- * - a compile-time enum constant \a filterType, which is equal to the
+ * - a compile-time constant \a filterType, which is equal to the
  *   corresponding SurfaceFilterType constant;
- * - a deprecated compile-time enum constant \a filterID, which is
+ * - a deprecated compile-time constant \a filterID, which is
  *   identical to \a filterType;
  * - declarations and implementations of the virtual functions
  *   NSurfaceFilter::getFilterType() and NSurfaceFilter::getFilterTypeName();
@@ -105,7 +105,8 @@ struct SurfaceFilterInfo;
  */
 #define REGINA_SURFACE_FILTER(class_, id) \
     public: \
-        enum { filterType = id, filterID = id }; \
+        static constexpr const SurfaceFilterType filterType = id; \
+        static constexpr const SurfaceFilterType filterID = id; \
         inline virtual SurfaceFilterType getFilterType() const { \
             return id; \
         } \

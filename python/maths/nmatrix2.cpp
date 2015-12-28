@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "maths/nmatrix2.h"
+#include "../helpers.h"
 
 namespace regina {
     /**
@@ -66,6 +67,14 @@ namespace regina {
                     ::boost::python::throw_error_already_set();
                 }
                 row[whichCol] = value;
+            }
+
+            bool operator == (const NMatrix2Row& other) const {
+                return (row[0] == other.row[0] && row[1] == other.row[1]);
+            }
+
+            bool operator != (const NMatrix2Row& other) const {
+                return (row[0] != other.row[0] || row[1] != other.row[1]);
             }
     };
 }
@@ -107,6 +116,7 @@ void addNMatrix2() {
         .def("__getitem__", &NMatrix2Row::getItem)
         .def("__setitem__", &NMatrix2Row::setItem)
         .def("__len__", size2<NMatrix2Row>)
+        .def(regina::python::add_eq_operators())
         ;
 
     class_<NMatrix2>("NMatrix2")
@@ -129,12 +139,11 @@ void addNMatrix2() {
         .def(self *= long())
         .def("negate", &NMatrix2::negate)
         .def("invert", &NMatrix2::invert)
-        .def(self == self)
-        .def(self != self)
         .def("determinant", &NMatrix2::determinant)
         .def("isIdentity", &NMatrix2::isIdentity)
         .def("isZero", &NMatrix2::isZero)
         .def(self_ns::str(self))
+        .def(regina::python::add_eq_operators())
     ;
 
     def("simpler", simpler1);

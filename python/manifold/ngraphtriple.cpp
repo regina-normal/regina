@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "manifold/ngraphtriple.h"
 #include "manifold/nsfs.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NGraphTriple;
@@ -66,6 +67,7 @@ void addNGraphTriple() {
         .def("matchingReln", &NGraphTriple::matchingReln,
             return_internal_reference<>())
         .def(self < self)
+        .def(regina::python::add_eq_operators())
     ;
 
     implicitly_convertible<std::auto_ptr<NGraphTriple>,

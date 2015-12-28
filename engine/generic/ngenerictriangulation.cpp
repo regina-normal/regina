@@ -32,19 +32,16 @@
 
 /* end stub */
 
-#include "generic/ngenerictriangulation.h"
-
-// Template implementations:
 #include "generic/canonical-impl.h"
 #include "generic/isomorphism-impl.h"
 #include "generic/isosig-impl.h"
 
-// Dimension-specific headers required for template instantiations:
+// Headers required for our template instantiations:
 #include "dim2/dim2triangulation.h"
 #include "triangulation/ntriangulation.h"
 
-// Instantiate the templates!
-
+// Instantiate templates for standard dimensions.
+// The header has matching "extern template class REGINA_API" declarations.
 template class regina::NGenericTriangulation<2>;
 template class regina::NGenericTriangulation<3>;
 

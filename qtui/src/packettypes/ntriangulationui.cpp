@@ -32,8 +32,6 @@
 
 /* end stub */
 
-#include "regina-config.h" // For EXCLUDE_SNAPPEA
-
 // Regina core includes:
 #include "triangulation/ntriangulation.h"
 
@@ -43,9 +41,7 @@
 #include "ntriangulationui.h"
 #include "ntrigluings.h"
 #include "ntriskeleton.h"
-#ifndef EXCLUDE_SNAPPEA
 #include "ntrisnappea.h"
-#endif
 #include "ntrisurfaces.h"
 #include "packeteditiface.h"
 #include "reginamain.h"
@@ -65,11 +61,7 @@ NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
     skeleton = new NTriSkeletonUI(packet, this);
     algebra = new NTriAlgebraUI(packet, this);
     surfaces = new NTriSurfacesUI(packet, this);
-#ifndef EXCLUDE_SNAPPEA
     snapPea = new NTriSnapPeaUI(packet, this);
-#else
-    snapPea = 0;
-#endif
 
     gluings->fillToolBar(header->getToolBar());
 
@@ -79,9 +71,7 @@ NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
     addTab(algebra, QObject::tr("&Algebra"));
     addTab(new NTriCompositionUI(packet, this), QObject::tr("&Composition"));
     addTab(surfaces, QObject::tr("&Recognition"));
-#ifndef EXCLUDE_SNAPPEA
     addTab(snapPea, QObject::tr("Snap&Pea"));
-#endif
 
     editIface = new PacketEditTabbedUI(this);
 }

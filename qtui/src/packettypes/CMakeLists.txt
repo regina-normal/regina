@@ -35,13 +35,11 @@ SET ( FILES
   ntricomposition
   ntrigluings
   ntriskeleton
+  ntrisnappea
   ntrisurfaces
   skeletonwindow
+  snappeacomponents
   )
-
-IF (NOT EXCLUDE_SNAPPEA)
-  SET (FILES ${FILES} ntrisnappea snappeacomponents)
-ENDIF (NOT EXCLUDE_SNAPPEA)
 
 FOREACH( FILE ${FILES} )
   SET( SOURCES ${SOURCES} packettypes/${FILE})

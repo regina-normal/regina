@@ -7,7 +7,6 @@ SET ( FILES
   dim2edge
   dim2exampletriangulation
   dim2triangle
-  dim2isomorphism
   dim2triangulation
   dim2vertex
   isomorphic

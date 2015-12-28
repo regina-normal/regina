@@ -32,32 +32,35 @@
 
 /* end stub */
 
+#include "enumerate/ntreeconstraint.h"
 #include "enumerate/ntreelp-impl.h"
 
 namespace regina {
 
-// Instantiate templates:
+// Instantiate templates for standard combinations of template arguments.
+// The header has matching "extern template class REGINA_API" declarations.
+template class LPMatrix<NInteger>;
+template class LPMatrix<NNativeLong>;
+
+template class LPCol<LPConstraintNone>;
+template class LPCol<LPConstraintEuler>;
+template class LPCol<LPConstraintNonSpun>;
+
 template class LPInitialTableaux<LPConstraintNone>;
 template class LPInitialTableaux<LPConstraintEuler>;
-#ifndef EXCLUDE_SNAPPEA
 template class LPInitialTableaux<LPConstraintNonSpun>;
-#endif
 
 template class LPData<LPConstraintNone, NInteger>;
 template class LPData<LPConstraintNone, NNativeLong>;
 template class LPData<LPConstraintEuler, NInteger>;
 template class LPData<LPConstraintEuler, NNativeLong>;
-#ifndef EXCLUDE_SNAPPEA
 template class LPData<LPConstraintNonSpun, NInteger>;
 template class LPData<LPConstraintNonSpun, NNativeLong>;
-#endif
 
 #ifdef INT128_AVAILABLE
 template class LPData<LPConstraintNone, NNativeInteger<16> >;
 template class LPData<LPConstraintEuler, NNativeInteger<16> >;
-#ifndef EXCLUDE_SNAPPEA
 template class LPData<LPConstraintNonSpun, NNativeInteger<16> >;
-#endif
 #endif
 
 } // namespace regina

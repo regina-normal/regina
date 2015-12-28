@@ -36,6 +36,7 @@
 #include "subcomplex/nlayeredsolidtorus.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
+#include "../helpers.h"
 
 using namespace boost::python;
 using regina::NLayeredSolidTorus;
@@ -70,6 +71,7 @@ void addNLayeredSolidTorus() {
             return_value_policy<manage_new_object>())
         .def("isLayeredSolidTorus", &NLayeredSolidTorus::isLayeredSolidTorus,
             return_value_policy<manage_new_object>())
+        .def(regina::python::add_eq_operators())
         .staticmethod("formsLayeredSolidTorusBase")
         .staticmethod("formsLayeredSolidTorusTop")
         .staticmethod("isLayeredSolidTorus")
