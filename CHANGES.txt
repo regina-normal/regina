@@ -314,8 +314,8 @@ Version 4.97  [ (under development) ]
             - New events childToBeRenamed(), childWasRenamed().
         Class NPerm:
             - New generic template class for permutations of 2..16 objects.
-              The old NPerm3, NPerm4 and NPerm5 classes are now
-              specialisations of this template.
+              The old NPerm3, NPerm4 and NPerm5 classes, as well as a
+              new NPerm2 class, are now specialisations of this template.
             - Removed the old deprecated NPerm typedef (this was synonymous
               with NPerm4).
         Class NPerm3, NPerm4, NPerm5:

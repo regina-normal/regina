@@ -32,39 +32,70 @@
 
 /* end stub */
 
-void addMatrixOps();
-void addNCyclotomic();
-void addNInteger();
-void addNLargeInteger();
-void addNMatrix2();
-void addNMatrixInt();
-void addNPerm2();
-void addNPerm3();
-void addNPerm4();
-void addNPerm5();
-void addNPerm();
-void addNPolynomial();
-void addNPrimes();
-void addNRational();
-void addNumberTheory();
-void addPermConv();
+// We need to see Python.h first to avoid a "portability fix" in pyport.h
+// that breaks boost.python on MacOSX.
+#include "Python.h"
+#include <boost/python.hpp>
+#include "maths/nperm2.h"
+#include "../globalarray.h"
+#include "../helpers.h"
 
-void addMaths() {
-    addMatrixOps();
-    addNCyclotomic();
-    addNInteger();
-    addNLargeInteger();
-    addNMatrix2();
-    addNMatrixInt();
-    addNPerm2();
-    addNPerm3();
-    addNPerm4();
-    addNPerm5();
-    addNPerm();
-    addNPolynomial();
-    addNPrimes();
-    addNRational();
-    addNumberTheory();
-    addPermConv();
+using namespace boost::python;
+using regina::NPerm2;
+using regina::python::GlobalArray;
+
+namespace {
+    GlobalArray<NPerm2> NPerm2_S2_arr(NPerm2::S2, 2);
+    GlobalArray<unsigned> NPerm2_invS2_arr(NPerm2::invS2, 2);
+    GlobalArray<NPerm2> NPerm2_S1_arr(NPerm2::S1, 1);
+
+    int perm2_getItem(const NPerm2& p, int index) {
+        return p[index];
+    }
+}
+
+void addNPerm2() {
+    scope s = class_<NPerm2>("NPerm2")
+        .def(init<int, int>())
+        .def(init<const NPerm2&>())
+        .def("getPermCode", &NPerm2::getPermCode)
+        .def("setPermCode", &NPerm2::setPermCode)
+        .def("fromPermCode", &NPerm2::fromPermCode)
+        .def("isPermCode", &NPerm2::isPermCode)
+        .def(self * self)
+        .def("inverse", &NPerm2::inverse)
+        .def("sign", &NPerm2::sign)
+        .def("__getitem__", perm2_getItem)
+        .def("preImageOf", &NPerm2::preImageOf)
+        .def("compareWith", &NPerm2::compareWith)
+        .def("isIdentity", &NPerm2::isIdentity)
+        .def("atIndex", &NPerm2::atIndex)
+        .def("index", &NPerm2::index)
+        .def("rand", &NPerm2::rand)
+        .def("str", &NPerm2::str)
+        .def("trunc", &NPerm2::trunc)
+        .def("S2Index", &NPerm2::S2Index)
+        .def("orderedS2Index", &NPerm2::orderedS2Index)
+        .def("orderedSnIndex", &NPerm2::orderedS2Index)
+        .def("__str__", &NPerm2::str)
+        .def("__repr__", &NPerm2::str)
+        .def(regina::python::add_eq_operators())
+        .staticmethod("fromPermCode")
+        .staticmethod("isPermCode")
+        .staticmethod("atIndex")
+        .staticmethod("rand")
+    ;
+
+    s.attr("nPerms") = NPerm2::nPerms;
+    s.attr("nPerms_1") = NPerm2::nPerms_1;
+
+    s.attr("S2") = &NPerm2_S2_arr;
+    s.attr("Sn") = &NPerm2_S2_arr;
+    s.attr("orderedS2") = &NPerm2_S2_arr;
+    s.attr("orderedSn") = &NPerm2_S2_arr;
+    s.attr("invS2") = &NPerm2_invS2_arr;
+    s.attr("invSn") = &NPerm2_invS2_arr;
+    s.attr("S1") = &NPerm2_S1_arr;
+    s.attr("Sn_1") = &NPerm2_S1_arr;
 }
 

@@ -9,6 +9,7 @@ SET ( FILES
   nmatrixint
   nmatrix2
   nperm
+  nperm2
   nperm3
   nperm4
   nperm5
