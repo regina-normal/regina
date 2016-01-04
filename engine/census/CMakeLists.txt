@@ -7,6 +7,7 @@ SET ( FILES
   collapsechain
   dim2census
   dim2gluingpermsearcher
+  enumerationdb
   euler
   hyperbolic
   ncensus
