@@ -4,6 +4,8 @@ SET(CENSUSDATADIR ${PKGDATADIR}/data/census)
 INCLUDE_DIRECTORIES(${ENGINE_INCLUDES})
 ADD_EXECUTABLE(mkcensusdb mkcensusdb.cpp)
 TARGET_LINK_LIBRARIES(mkcensusdb ${Boost_IOSTREAMS_LIBRARY} ${TOKYOCABINET_LIBRARIES})
+ADD_EXECUTABLE(mkenumerationdb mkenumerationdb.cpp)
+TARGET_LINK_LIBRARIES(mkenumerationdb ${ENGINE_LIBRARY} ${Boost_IOSTREAMS_LIBRARY} ${TOKYOCABINET_LIBRARIES})
 
 SET(censusdata_DATA
   closed-hyp-census-full.${DB_EXT}
