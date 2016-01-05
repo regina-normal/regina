@@ -371,7 +371,7 @@ int main(int argc, const char* argv[]) {
         { "collapse", 'C', POPT_ARG_NONE, &collapse, 0,
             "Collapse chains before running census.", 0 },
         { "enumerationDB", 'E', POPT_ARG_STRING, enumDB, 0,
-            "Full path and file name of an enumeration database.", 0 },
+            "Full path and file name of an enumeration database.", "<filename>" },
         { "dim2", '2', POPT_ARG_NONE, &dim2, 0,
             "Run a census of 2-manifold triangulations, "
             "not 3-manifold triangulations.  Here --tetrahedra counts "
