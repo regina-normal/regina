@@ -118,6 +118,7 @@ struct Dim3Params {
             bool orientableOnly, bool finiteOnly, int whichPurge) {
         return GluingPermSearcher::bestSearcher(p, 0 /* autos */,
             orientableOnly, finiteOnly, false, // collapse
+            0, // TODO enumDB
             whichPurge,
             ctrlFarmPartialSearch<Dim3Params>);
     }
@@ -125,7 +126,9 @@ struct Dim3Params {
     inline static void findAllPerms(Pairing* p, bool orientableOnly,
             bool finiteOnly, int whichPurge, regina::NPacket* dest) {
         GluingPermSearcher::findAllPerms(p, 0,
-            orientableOnly, finiteOnly, whichPurge, false, // collapse
+            orientableOnly, finiteOnly, false, // collapse
+            0, // TODO enumDB
+            whichPurge,
             slaveFoundGluingPerms<Dim3Params>, dest);
     }
 

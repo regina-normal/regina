@@ -100,10 +100,11 @@ namespace {
             NGluingPermSearcher::findAllPerms(pairing, autos,
                 false /* orientable only */,
                 ! h->finite_.hasFalse() /* finite only */,
+                    false, // collapse
+                    0, // enumDB
                 (h->minimal_ ?
                     NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME |
                     NGluingPermSearcher::PURGE_P2_REDUCIBLE : 0) /* purge */,
-                    false, // collapse
                 &foundGluingPerms3, holder);
         }
     }

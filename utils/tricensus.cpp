@@ -67,6 +67,7 @@
 // Constants.
 const long MAXTET = 15;
 const unsigned SLEEP_SECONDS = 1;
+const int MAX_FILENAME_LENGTH = 256;
 
 // Census parameters.
 long nTet = 0, nBdryFaces = -1;
@@ -87,6 +88,7 @@ int collapse = 0;
 int genPairs = 0;
 int subContainers = 0;
 std::string outFile;
+char enumDB[MAX_FILENAME_LENGTH];
 
 // Variables used for a dump of face pairings.
 std::unique_ptr<std::ostream> dumpStream;
@@ -134,7 +136,7 @@ struct Dim3Params {
             const Pairing::IsoList* autos, bool orientableOnly,
             bool finiteOnly, int whichPurge, regina::NPacket* dest) {
         GluingPermSearcher::findAllPerms(p, autos,
-            orientableOnly, finiteOnly, collapse, whichPurge,
+            orientableOnly, finiteOnly, collapse, enumDB, whichPurge,
             foundGluingPerms<Dim3Params>, dest);
     }
 
@@ -368,6 +370,8 @@ int main(int argc, const char* argv[]) {
             "Implies --internal and --ideal.", 0 },
         { "collapse", 'C', POPT_ARG_NONE, &collapse, 0,
             "Collapse chains before running census.", 0 },
+        { "enumerationDB", 'E', POPT_ARG_STRING, enumDB, 0,
+            "Full path and file name of an enumeration database.", 0 },
         { "dim2", '2', POPT_ARG_NONE, &dim2, 0,
             "Run a census of 2-manifold triangulations, "
             "not 3-manifold triangulations.  Here --tetrahedra counts "

@@ -76,6 +76,7 @@ namespace regina {
  */
 
 class NGluingPermSearcher;
+class EnumerationDB;
 
 /**
  * A routine used to do arbitrary processing upon a particular set of
@@ -434,6 +435,7 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
          * runSearch().
          *
          * @param collapse TODO Where to document?
+         * @param enumerationDB TODO Where to document?
          * See the NGluingPermSearcher constructor for documentation on
          * the arguments to this routine.  See the runSearch() method
          * for documentation on how the search runs and returns its
@@ -449,7 +451,8 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
         static void findAllPerms(const NFacePairing* pairing,
                 const NFacePairing::IsoList* autos,
                 bool orientableOnly, bool finiteOnly, bool collapse,
-                int whichPurge, UseGluingPerms use, void* useArgs = 0);
+                char* enumerationDB, int whichPurge, UseGluingPerms use,
+                void* useArgs = 0);
 
         /**
          * Constructs a search manager of the best possible class for the
@@ -480,7 +483,7 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
          */
         static NGluingPermSearcher* bestSearcher(const NFacePairing* pairing,
                 const NFacePairing::IsoList* autos, bool orientableOnly,
-                bool finiteOnly, bool collapse, int whichPurge,
+                bool finiteOnly, bool collapse, char *enumDB, int whichPurge,
                 UseGluingPerms use, void* useArgs = 0);
 
         /**
@@ -2498,6 +2501,10 @@ class REGINA_API NCollapsedChainSearcher : public NGluingPermSearcher {
                  and writing tagged data in text format. */
 
     private:
+        EnumerationDB *enumDB;
+            /**< A database of enumeration results sorted by face pairing
+                 graph. If possible, this searcher will use these results after
+                 a collapse rather than rebuilding smaller triangulations. */
         FacetPairing *modified;
             /**< The modified face pairing graph. */
         NIsomorphism *iso;
@@ -2567,8 +2574,8 @@ class REGINA_API NCollapsedChainSearcher : public NGluingPermSearcher {
          * least three tetrahedra.
          */
         NCollapsedChainSearcher(const NFacePairing* pairing,
-                const NFacePairing::IsoList* autos,
-                bool orientableOnly, UseGluingPerms use, void* useArgs = 0);
+                const NFacePairing::IsoList* autos, bool orientableOnly,
+                char* enumDBPath, UseGluingPerms use, void* useArgs = 0);
 
         /**
          * Initialises a new search manager based on data read from the

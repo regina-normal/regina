@@ -35,6 +35,7 @@
 #include <boost/next_prior.hpp>
 #include <cassert>
 #include <sstream>
+#include "census/enumerationdb.h"
 #include "census/ngluingpermsearcher.h"
 #include "triangulation/nedge.h"
 #include "triangulation/nfacepair.h"
@@ -47,10 +48,17 @@ const char NCollapsedChainSearcher::dataTag_ = 'h';
 
 NCollapsedChainSearcher::NCollapsedChainSearcher(const NFacePairing* pairing,
         const NFacePairing::IsoList* autos, bool orientableOnly,
-        UseGluingPerms use, void* useArgs) :
+        char* enumDBfile, UseGluingPerms use, void* useArgs) :
         NGluingPermSearcher(pairing, autos, orientableOnly, true, // finiteOnly
             PURGE_NON_MINIMAL_PRIME | PURGE_P2_REDUCIBLE,
             use, useArgs), maxOrder(0) {
+
+    // Create enumeration database if the file path is given, else mark the
+    // database as not present.
+    if (enumDBfile)
+        enumDB = new EnumerationDB(enumDBfile);
+    else
+        enumDB = 0;
     // Preconditions:
     //     Only closed prime minimal P2-irreducible triangulations are needed.
     //     The given face pairing is closed with order >= 3.
