@@ -2605,8 +2605,15 @@ class REGINA_API NCollapsedChainSearcher : public NGluingPermSearcher {
         virtual void dumpData(std::ostream& out) const;
         virtual void runSearch(long maxDepth = -1);
 
-        void extendTri(const NGluingPermSearcher *);
+        // Helper to call member function from static function
         static void extendTriHelper(const NGluingPermSearcher *, void *);
+        // Copy gluings from NGluingPermSearcher* to this
+        void extendTri(const NGluingPermSearcher *);
+        // Copy gluings from NTriangulation* to this
+        void extendTri(const NTriangulation *);
+        // Build up all possible triangulations with the pre-existing base.
+        // Note: Clears out permIndices_ before returning.
+        void buildUp();
     protected:
         // Overridden methods:
         virtual char dataTag() const;
