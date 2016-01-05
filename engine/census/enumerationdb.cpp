@@ -54,15 +54,14 @@
 
 namespace regina {
 
-bool EnumerationDB::lookup(const std::string& fpg, CensusHits* hits) {
+bool EnumerationDB::lookup(const std::string& fpg,
+        std::list<NTriangulation*> **result) {
     try {
-        const std::list<NTriangulation*> &results = store.at(fpg);
-        for(auto tri: results)
-            hits->append(new CensusHit(tri, this));
+        *result = & store.at(fpg);
         return true;
     } catch (const std::out_of_range& oor) {
         // Just means this fpg has not been cached into memory yet.
-        std::list<NTriangulation*> &results = store[fpg]; // Creates empty list
+        *result = new std::list<NTriangulation*>; // Creates empty list
 #ifdef QDBM_AS_TOKYOCABINET
         VILLA* db;
         if (! (db = vlopen(filename_.c_str(), VL_OREADER, VL_CMPLEX))) {
@@ -77,8 +76,7 @@ bool EnumerationDB::lookup(const std::string& fpg, CensusHits* hits) {
             for (int i = 0; i < n; ++i) {
                 NTriangulation *tri =
                     NTriangulation::fromIsoSig(cblistval(records, i, 0));
-                results.push_back(tri);
-                hits->append(new CensusHit(tri, this));
+                (*result)->push_back(tri);
             }
             cblistclose(records);
         }
@@ -91,15 +89,13 @@ bool EnumerationDB::lookup(const std::string& fpg, CensusHits* hits) {
                 << filename_ << std::endl;
             return false;
         }
-
         TCLIST* records = tcbdbget4(db, fpg.c_str(), fpg.length());
         if (records) {
             int n = tclistnum(records);
             for (int i = 0; i < n; ++i) {
                 NTriangulation *tri =
                     NTriangulation::fromIsoSig(tclistval2(records, i));
-                results.push_back(tri);
-                hits->append(new CensusHit(tri, this));
+                (*result)->push_back(tri);
             }
             tclistdel(records);
         }
@@ -107,14 +103,15 @@ bool EnumerationDB::lookup(const std::string& fpg, CensusHits* hits) {
         tcbdbclose(db);
         tcbdbdel(db);
 #endif
+        store[fpg] = **result;
     }
     return true;
 }
 
-CensusHits* EnumerationDB::lookup(const NFacePairing& fp) {
-    CensusHits *hits = new CensusHits;
-    lookup(fp.str(),hits);
-    return hits;
+std::list<NTriangulation*> EnumerationDB::lookup(const NFacePairing& fp) {
+    std::list<NTriangulation*> ** result = new std::list<NTriangulation*>*;
+    lookup(fp.str(),result);
+    return **result;
 }
 
 

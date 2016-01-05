@@ -142,11 +142,17 @@ void NCollapsedChainSearcher::runSearch(long maxDepth) {
         // TODO remove loops that will be replaced from modified, to cut down
         // number of automorphisms.
         modified->findAutomorphisms(automorphs);
-        UseGluingPerms func = &NCollapsedChainSearcher::extendTriHelper;
-        NClosedPrimeMinSearcher s(modified, NULL, orientableOnly_, func,
-                this);
-        s.runSearch();
-        use_(0, useArgs_);
+        if (enumDB) {
+            std::list<NTriangulation*> results = enumDB->lookup(*modified);
+            for(auto tri: results)
+                extendTri(tri);
+        } else {
+            UseGluingPerms func = &NCollapsedChainSearcher::extendTriHelper;
+            NClosedPrimeMinSearcher s(modified, NULL, orientableOnly_, func,
+                    this);
+            s.runSearch();
+            use_(0, useArgs_);
+        }
     } else {
         NClosedPrimeMinSearcher s(pairing_, autos_, orientableOnly_, use_,
                 useArgs_);
