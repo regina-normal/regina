@@ -553,13 +553,15 @@ bool NGenericFacetPairing<dim>::isCanonicalInternal(
 
 template <int dim>
 typename NGenericFacetPairing<dim>::Isomorphism* NGenericFacetPairing<dim>::makeCanonical() {
+    // Lazy helper define.
+#define toInt(fs) ((fs.simp) * (dim + 1) + (fs.facet))
+
     // Create the automorphisms one simplex at a time, selecting the
     // preimage of 0 first, then the preimage of 1 and so on.
 
     // We're going to skip over any completely isolated simplex, and put all
     // such simplices at the end of any canonical representation. Thus, we want
     // to find the first simplex that is connected to something.
-#define toInt(fs) ((fs.simp) * (dim + 1) + (fs.facet))
     int numIsolated = 0;
 
     // First count how many isolated simplices we have.
