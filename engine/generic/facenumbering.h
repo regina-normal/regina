@@ -69,7 +69,10 @@ namespace regina {
  *
  * - As a consequence, unless \a subdim = (<i>dim</i>-1)/2, we always have
  *   <i>subdim</i>-face number \a i opposite (<i>dim</i>-1-<i>subdim</i>)-face
- *   number \a i.
+ *   number \a i.  For the special "halfway case" \a subdim = (<i>dim</i>-1)/2,
+ *   where each <i>subdim</i>-face is opposite another <i>subdim</i>-face,
+ *   we always have <i>subdim</i>-face number \a i opposite
+ *   <i>subdim</i>-face number (<i>nFaces</i>-1-\a i).
  *
  * Every class Face<dim, subdim> inherits from this class, which means
  * you can access these routines as Face<dim, subdim>::ordering(),
