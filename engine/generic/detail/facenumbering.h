@@ -322,15 +322,14 @@ class FaceNumberingImpl<3, 2, false> {
         }
 };
 
-#if 0
 template <>
 class FaceNumberingImpl<4, 0, true> {
     public:
         static constexpr int nFaces = 5;
 
         static NPerm<5> ordering(unsigned face) {
-            // TODO: (4,0) implementation
-            return NPerm5();
+            return NPerm5(face, (face + 1) % 5, (face + 2) % 5,
+                (face + 3) % 5, (face + 4) % 5);
         }
 
         static unsigned faceNumber(NPerm<5> vertices) {
@@ -346,6 +345,8 @@ template <>
 class FaceNumberingImpl<4, 1, true> {
     private:
         static const NPerm<5> ordering_[10];
+        static const int faceNumber_[5][5];
+        static const int vertex_[10][2];
 
     public:
         static constexpr int nFaces = 10;
@@ -355,13 +356,12 @@ class FaceNumberingImpl<4, 1, true> {
         }
 
         static unsigned faceNumber(NPerm<5> vertices) {
-            // TODO: (4,1) implementation
-            return 0;
+            return faceNumber_[vertices[0]][vertices[1]];
         }
 
         static bool containsVertex(unsigned face, unsigned vertex) {
-            // TODO: (4,1) implementation
-            return false;
+            return (vertex == vertex_[face][0] ||
+                    vertex == vertex_[face][1]);
         }
 };
 
@@ -369,6 +369,8 @@ template <>
 class FaceNumberingImpl<4, 2, false> {
     private:
         static const NPerm<5> ordering_[10];
+        static const int faceNumber_[5][5][5];
+        static const int vertex_[10][3];
 
     public:
         static constexpr int nFaces = 10;
@@ -378,13 +380,13 @@ class FaceNumberingImpl<4, 2, false> {
         }
 
         static unsigned faceNumber(NPerm<5> vertices) {
-            // TODO: (4,2) implementation
-            return 0;
+            return faceNumber_[vertices[0]][vertices[1]][vertices[2]];
         }
 
         static bool containsVertex(unsigned face, unsigned vertex) {
-            // TODO: (4,2) implementation
-            return false;
+            return (vertex == vertex_[face][0] ||
+                    vertex == vertex_[face][1] ||
+                    vertex == vertex_[face][2]);
         }
 };
 
@@ -408,7 +410,6 @@ class FaceNumberingImpl<4, 3, false> {
             return (face != vertex);
         }
 };
-#endif
 
 #endif // __DOXYGEN
 
