@@ -2531,6 +2531,7 @@ class REGINA_API NCollapsedChainSearcher : public NGluingPermSearcher {
         bool *chainSym;
         bool *shortChain;
         bool collapse;
+        bool empty;
         unsigned maxOrder;
         int* chainPermIndices;
             /**< Stores the two possible gluing permutations that must be

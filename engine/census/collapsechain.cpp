@@ -72,6 +72,7 @@ NCollapsedChainSearcher::NCollapsedChainSearcher(const NFacePairing* pairing,
     int numChains = 0;
     shortChain = new bool [nTets] {false};
     collapse = true;
+    empty = false;
     NTetFace face;
     if (pairing_->hasTripleEdge() ||
             pairing_->hasBrokenDoubleEndedChain() ||
@@ -82,6 +83,8 @@ NCollapsedChainSearcher::NCollapsedChainSearcher(const NFacePairing* pairing,
         // Empty anyway
         iso = NULL;
         isoInv = NULL;
+        collapse = false;
+        empty = true;
     } else {
         for (face.setFirst(); collapse && ! face.isPastEnd(nTets, true); face++) {
             NTetFace adj = (*pairing_)[face];
@@ -137,6 +140,10 @@ void NCollapsedChainSearcher::runSearch(long maxDepth) {
 //        use_(0, useArgs_);
 //        return;
 //    }
+    if (empty) {
+        use_(0, useArgs_);
+        return;
+    }
 
     if (collapse) {
         // TODO remove loops that will be replaced from modified, to cut down
